@@ -1,9 +1,10 @@
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
-import { TokenLogo } from 'components/CurrencyLogo'
+import { AssetLogo } from 'components/Logo'
 import { L2NetworkLogo, LogoContainer } from 'components/Tokens/TokenTable/TokenRow'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { getChainInfo } from 'constants/chainInfo'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { getTokenDetailsURL } from 'graphql/data/util'
 import { Box } from 'nft/components/Box'
@@ -169,7 +170,13 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceE
     >
       <Row style={{ width: '65%' }}>
         <StyledLogoContainer>
-          <TokenLogo token={token} size="36px" />
+          <AssetLogo
+            isNative={token.address === NATIVE_CHAIN_ID}
+            address={token.address}
+            chainId={token.chainId}
+            symbol={token.symbol}
+            size="36px"
+          />
           <L2NetworkLogo networkUrl={L2Icon} size="16px" />
         </StyledLogoContainer>
         <Column className={styles.suggestionPrimaryContainer}>

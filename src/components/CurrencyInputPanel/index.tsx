@@ -17,8 +17,8 @@ import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useCurrencyBalance } from '../../state/connection/hooks'
 import { ThemedText } from '../../theme'
 import { ButtonGray } from '../Button'
-import { TokenLogo } from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
+import { CurrencyLogo } from '../Logo'
 import { Input as NumericalInput } from '../NumericalInput'
 import { RowBetween, RowFixed } from '../Row'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
@@ -269,7 +269,7 @@ export default function CurrencyInputPanel({
                     <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
                   </span>
                 ) : currency ? (
-                  <TokenLogo style={{ marginRight: '0.5rem' }} token={currency} size={'24px'} />
+                  <CurrencyLogo style={{ marginRight: '0.5rem' }} currency={currency} size={'24px'} />
                 ) : null}
                 {pair ? (
                   <StyledTokenName className="pair-name-container">

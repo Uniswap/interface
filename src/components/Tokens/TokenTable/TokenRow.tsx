@@ -3,7 +3,7 @@ import { ParentSize } from '@visx/responsive'
 import { sendAnalyticsEvent } from 'analytics'
 import { EventName } from 'analytics/constants'
 import SparklineChart from 'components/Charts/SparklineChart'
-import { TokenLogo } from 'components/CurrencyLogo'
+import { TokenLogo } from 'components/Logo'
 import { getChainInfo } from 'constants/chainInfo'
 import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
@@ -437,7 +437,8 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
 
   const lowercaseChainName = useParams<{ chainName?: string }>().chainName?.toUpperCase() ?? 'ethereum'
   const filterNetwork = lowercaseChainName.toUpperCase()
-  const L2Icon = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[filterNetwork])?.circleLogoUrl
+  const chainId = CHAIN_NAME_TO_CHAIN_ID[filterNetwork]
+  const L2Icon = getChainInfo(chainId)?.circleLogoUrl
   const timePeriod = useAtomValue(filterTimeAtom)
   const delta = token.market?.pricePercentChange?.value
   const arrow = getDeltaArrow(delta)
@@ -445,7 +446,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const rank = sortAscending ? tokenListLength - tokenListIndex : tokenListIndex + 1
 
   const exploreTokenSelectedEventProperties = {
-    chain_id: filterNetwork,
+    chain_id: chainId,
     token_address: tokenAddress,
     token_symbol: tokenSymbol,
     token_list_index: tokenListIndex,

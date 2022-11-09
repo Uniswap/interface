@@ -16,8 +16,8 @@ import { useCurrencyBalance } from '../../../state/connection/hooks'
 import { WrappedTokenInfo } from '../../../state/lists/wrappedTokenInfo'
 import { ThemedText } from '../../../theme'
 import Column, { AutoColumn } from '../../Column'
-import { TokenLogo } from '../../CurrencyLogo'
 import Loader from '../../Loader'
+import { CurrencyLogo } from '../../Logo'
 import Row, { RowFixed } from '../../Row'
 import { MouseoverTooltip } from '../../Tooltip'
 import { LoadingRows, MenuItem } from '../styleds'
@@ -149,7 +149,11 @@ export function CurrencyRow({
         dim={isBlockedToken}
       >
         <Column>
-          <TokenLogo token={currency} size={'36px'} style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }} />
+          <CurrencyLogo
+            currency={currency}
+            size={'36px'}
+            style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }}
+          />
         </Column>
         <AutoColumn style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }}>
           <Row>

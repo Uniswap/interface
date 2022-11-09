@@ -6,6 +6,7 @@ import { ElementName, Event, EventName } from 'analytics/constants'
 import { TraceEvent } from 'analytics/TraceEvent'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
+import { CurrencyLogo } from 'components/Logo'
 import { isSupportedChain } from 'constants/chains'
 import { darken } from 'polished'
 import { ReactNode, useCallback, useState } from 'react'
@@ -17,7 +18,6 @@ import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useCurrencyBalance } from '../../state/connection/hooks'
 import { ThemedText } from '../../theme'
 import { ButtonGray } from '../Button'
-import { TokenLogo } from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { Input as NumericalInput } from '../NumericalInput'
 import { RowBetween, RowFixed } from '../Row'
@@ -281,7 +281,7 @@ export default function SwapCurrencyInputPanel({
                     <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
                   </span>
                 ) : currency ? (
-                  <TokenLogo style={{ marginRight: '2px' }} token={currency} size={'24px'} />
+                  <CurrencyLogo style={{ marginRight: '2px' }} currency={currency} size={'24px'} />
                 ) : null}
                 {pair ? (
                   <StyledTokenName className="pair-name-container">
