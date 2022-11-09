@@ -23,7 +23,7 @@ export const ProfileAccountDetails = () => {
 
   return (
     <Row className={headlineLarge} marginBottom="48" gap="4">
-      <Identicon size={48} />
+      <Identicon size={60} />
       <Box textOverflow="ellipsis" overflow="hidden" marginLeft="8">
         {ENSName ?? shortenAddress(account)}
       </Box>
