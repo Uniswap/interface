@@ -183,7 +183,12 @@ export function Table<D extends Record<string, unknown>>({
             >
               {row.cells.map((cell, cellIndex) => {
                 return (
-                  <td className={styles.td} {...cell.getCellProps()} key={cellIndex}>
+                  <td
+                    className={styles.td}
+                    {...cell.getCellProps()}
+                    key={cellIndex}
+                    style={{ maxWidth: cellIndex === 0 && isMobile ? '300px' : '160px' }}
+                  >
                     {cellIndex === 0 ? (
                       <RankCellContainer>
                         {!isMobile && (
