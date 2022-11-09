@@ -60,13 +60,13 @@ const ListingModal = () => {
     token_ids: sellAssets.map((asset) => asset.tokenId),
     marketplaces: listings.map((asset) => asset.marketplace.name),
     list_quantity: listings.length,
-    usd_value: ethPriceInUSD,
+    usd_value: ethPriceInUSD * totalEthListingValue,
     ...trace,
   }
 
   const approvalEventProperties = {
     list_quantity: listings.length,
-    usd_value: ethPriceInUSD,
+    usd_value: ethPriceInUSD * totalEthListingValue,
     ...trace,
   }
 
