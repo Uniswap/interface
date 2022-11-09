@@ -11,25 +11,31 @@ interface RelativeChangeProps {
   absoluteChange?: number
   variant?: keyof Theme['textVariants']
   semanticColor?: boolean // If true, entire % change text will render green or red
+  isWarmLoading?: boolean
+  positiveChangeColor?: keyof Theme['colors']
+  negativeChangeColor?: keyof Theme['colors']
 }
 
-export function RelativeChange({
-  absoluteChange,
-  change,
-  variant = 'subheadSmall',
-  semanticColor,
-}: RelativeChangeProps) {
+export function RelativeChange(props: RelativeChangeProps) {
   const theme = useAppTheme()
+  const {
+    absoluteChange,
+    change,
+    variant = 'subheadSmall',
+    semanticColor,
+    positiveChangeColor = 'accentSuccess',
+    negativeChangeColor = 'accentCritical',
+  } = props
+
   const isPositiveChange = change !== undefined ? change >= 0 : undefined
+  const arrowColor = isPositiveChange
+    ? theme.colors[positiveChangeColor]
+    : theme.colors[negativeChangeColor]
 
   return (
     <Flex row alignItems="center" gap="xxs" justifyContent="flex-end">
       {change !== undefined && (
-        <Arrow
-          color={isPositiveChange ? theme.colors.accentSuccess : theme.colors.accentCritical}
-          direction={isPositiveChange ? 'ne' : 'se'}
-          size={16}
-        />
+        <Arrow color={arrowColor} direction={isPositiveChange ? 'ne' : 'se'} size={16} />
       )}
       <Text
         color={

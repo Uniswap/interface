@@ -4,6 +4,10 @@ export function isNonPollingRequestInFlight(networkStatus: NetworkStatus) {
   return networkStatus === NetworkStatus.loading || networkStatus === NetworkStatus.refetch
 }
 
+export function isWarmLoadingStatus(networkStatus: NetworkStatus) {
+  return networkStatus === NetworkStatus.loading
+}
+
 /**
  * Consider a query in an error state for UI purposes if query has no data, and
  * query has been loading at least once.

@@ -1,3 +1,4 @@
+import { NetworkStatus } from '@apollo/client'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { PollingInterval } from 'src/constants/misc'
@@ -17,15 +18,23 @@ type SortedPortfolioBalances = {
 
 /** Returns all balances indexed by currencyId for a given address */
 export function usePortfolioBalances(
-  address: Address
-): GqlResult<Record<CurrencyId, PortfolioBalance>> {
-  const { data: balancesData, loading } = usePortfolioBalancesQuery({
+  address: Address,
+  onCompleted?: () => void
+): GqlResult<Record<CurrencyId, PortfolioBalance>> & { networkStatus: NetworkStatus } {
+  const {
+    data: balancesData,
+    loading,
+    networkStatus,
+  } = usePortfolioBalancesQuery({
     variables: { ownerAddress: address },
     pollInterval: PollingInterval.Fast,
 
     // TODO: either default all error policies to 'all' or remove this once
     // BE fixes the type error here
     errorPolicy: 'all',
+    notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'cache-and-network',
+    onCompleted: onCompleted,
   })
   const balancesForAddress = balancesData?.portfolios?.[0]?.tokenBalances
 
@@ -83,7 +92,7 @@ export function usePortfolioBalances(
     return byId
   }, [balancesForAddress])
 
-  return { data: formattedData, loading }
+  return { data: formattedData, loading, networkStatus }
 }
 
 /**
@@ -99,9 +108,10 @@ export function usePortfolioBalances(
 export function useSortedPortfolioBalances(
   address: Address,
   hideSmallBalances?: boolean,
-  hideSpamTokens?: boolean
-): GqlResult<SortedPortfolioBalances> {
-  const { data: balancesById, loading } = usePortfolioBalances(address)
+  hideSpamTokens?: boolean,
+  onCompleted?: () => void
+): GqlResult<SortedPortfolioBalances> & { networkStatus: NetworkStatus } {
+  const { data: balancesById, loading, networkStatus } = usePortfolioBalances(address, onCompleted)
 
   const formattedData = useMemo(() => {
     if (!balancesById) return
@@ -130,7 +140,7 @@ export function useSortedPortfolioBalances(
     }
   }, [balancesById, hideSmallBalances, hideSpamTokens])
 
-  return { data: formattedData, loading }
+  return { data: formattedData, loading, networkStatus }
 }
 
 /** Helper hook to retrieve balance for a single currency for the active account. */

@@ -1,5 +1,5 @@
 import { SpacingShorthandProps } from '@shopify/restyle'
-import React, { ReactElement, useCallback } from 'react'
+import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ViewStyle } from 'react-native'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
@@ -15,6 +15,7 @@ import {
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
+import { isWarmLoadingStatus } from 'src/data/utils'
 import { useSortedPortfolioBalances } from 'src/features/dataApi/balances'
 import { PortfolioBalance } from 'src/features/dataApi/types'
 import {
@@ -46,7 +47,29 @@ export function TokenBalanceList({
   const hideSmallBalances = useAppSelector(makeSelectAccountHideSmallBalances(owner))
   const hideSpamTokens = useAppSelector(makeSelectAccountHideSpamTokens(owner))
 
-  const { data } = useSortedPortfolioBalances(owner, hideSmallBalances, hideSpamTokens)
+  // This function gets passed down through:
+  // useSortedPortfolioBalances -> usePortfolioBalances -> the usePortfolioBalancesQuery query's onCompleted argument.
+  const onCompleted = function () {
+    // This is better than using network status to check, because doing it that way we would have to wait
+    // for the network status to go back to "ready", which results in the numbers updating, and _then_ the
+    // shimmer disappearing. Using onCompleted it disappears at the same time as the data loads in.
+    setIsWarmLoading(false)
+  }
+
+  const { data, networkStatus } = useSortedPortfolioBalances(
+    owner,
+    hideSmallBalances,
+    hideSpamTokens,
+    onCompleted
+  )
+
+  const [isWarmLoading, setIsWarmLoading] = useState(false)
+
+  useEffect(() => {
+    if (!!data && isWarmLoadingStatus(networkStatus)) {
+      setIsWarmLoading(true)
+    }
+  }, [data, networkStatus])
 
   if (!data) {
     return (
@@ -70,10 +93,13 @@ export function TokenBalanceList({
       ListFooterComponent={
         <HiddenTokensRow address={owner} mb="xl" mt="sm" numHidden={numHiddenTokens} />
       }
+      // TODO(MOB-3482): add error component here using judo's new error wrapper component from #2302
+      // ListHeaderComponent={error ? <ErrorHandler>Oops!</ErrorHandler> : null}
       data={balances}
       keyExtractor={key}
       renderItem={({ item }: { item: PortfolioBalance }) => (
         <TokenBalanceItem
+          isWarmLoading={isWarmLoading}
           portfolioBalance={item}
           onPressToken={onPressToken}
           onPressTokenIn={onPressTokenIn}
