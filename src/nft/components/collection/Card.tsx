@@ -10,6 +10,7 @@ import {
   PlusIconLarge,
   PoolIcon,
   RarityVerifiedIcon,
+  VerifiedIcon,
 } from 'nft/components/icons'
 import { body, bodySmall, buttonTextSmall, subhead, subheadSmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
@@ -32,6 +33,7 @@ import {
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import { colors } from 'theme/colors'
 
 import * as styles from './Card.css'
 
@@ -47,6 +49,8 @@ export interface CardContextProps {
 }
 
 const CardContext = createContext<CardContextProps | undefined>(undefined)
+
+const BORDER_RADIUS = '16'
 
 const useCardContext = () => {
   const context = useContext(CardContext)
@@ -115,7 +119,7 @@ const Erc1155ControlsRow = styled.div`
 const Erc1155ControlsContainer = styled.div`
   display: flex;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
-  border-radius: 12px 12px 12px 12px;
+  border-radius: ${BORDER_RADIUS}px;
   overflow: hidden;
 `
 
@@ -198,9 +202,9 @@ const Container = ({ asset, selected, addAssetToBag, removeAssetFromBag, childre
       <Box
         position={'relative'}
         ref={assetRef}
-        borderRadius={'20'}
-        borderBottomLeftRadius={'12'}
-        borderBottomRightRadius={'12'}
+        borderRadius={BORDER_RADIUS}
+        borderBottomLeftRadius={BORDER_RADIUS}
+        borderBottomRightRadius={BORDER_RADIUS}
         className={selected ? styles.selectedCard : styles.notSelectedCard}
         draggable={false}
         onMouseEnter={() => toggleHovered()}
@@ -236,7 +240,7 @@ const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
   }
 
   return (
-    <Box display="flex" overflow="hidden" borderTopLeftRadius="20" borderTopRightRadius="20">
+    <Box display="flex" overflow="hidden" borderTopLeftRadius={BORDER_RADIUS} borderTopRightRadius={BORDER_RADIUS}>
       <Box
         as={'img'}
         width="full"
@@ -513,12 +517,14 @@ const ViewMyNftDetails = ({ asset }: ViewMyNftDetailsProps) => {
     return !!asset.name ? asset.name : `#${asset.tokenId}`
   }
 
-  console.log(asset.name)
   return (
     <Box overflow="hidden" width="full" flexWrap="nowrap">
-      <TruncatedTextRow className={bodySmall} style={{ color: themeVars.colors.textSecondary }}>
-        {!!asset.collectionName && <span>{asset.collectionName}</span>}
-      </TruncatedTextRow>
+      <Row justifyItems="flex-start">
+        <TruncatedTextRow className={bodySmall} style={{ color: themeVars.colors.textSecondary }}>
+          {!!asset.collectionName && <span>{asset.collectionName}</span>}
+        </TruncatedTextRow>
+        {asset.collectionIsVerified && <VerifiedIcon height="16px" width="16px" fill={colors.magentaVibrant} />}
+      </Row>
       <Row justifyItems="flex-start">
         <TruncatedTextRow
           className={subheadSmall}
