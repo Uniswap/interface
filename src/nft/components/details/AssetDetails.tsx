@@ -7,13 +7,7 @@ import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import { Center } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
 import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
-import {
-  ActivityEventResponse,
-  ActivityEventType,
-  CollectionInfoForAsset,
-  GenieAsset,
-  GenieCollection,
-} from 'nft/types'
+import { ActivityEventResponse, ActivityEventType, CollectionInfoForAsset, GenieAsset } from 'nft/types'
 import { shortenAddress } from 'nft/utils/address'
 import { formatEthPrice } from 'nft/utils/currency'
 import { isAudio } from 'nft/utils/isAudio'
@@ -281,10 +275,9 @@ enum MediaType {
 interface AssetDetailsProps {
   asset: GenieAsset
   collection: CollectionInfoForAsset
-  collectionStats: GenieCollection | undefined
 }
 
-export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetailsProps) => {
+export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   const [dominantColor] = useState<[number, number, number]>([0, 0, 0])
 
   const { rarityProvider } = useMemo(
@@ -405,12 +398,6 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
     [isSuccess, eventsData]
   )
 
-  // TODO: remove after switching to graphql
-  const externalUrl = collection.externalUrl ?? collectionStats?.externalUrl
-  const twitterUrl = collection.twitterUrl ?? collectionStats?.twitterUrl
-  const discordUrl = collection.discordUrl ?? collectionStats?.discordUrl
-  const isVerified = collection.isVerified ?? collectionStats?.isVerified
-
   return (
     <Column>
       <MediaContainer>
@@ -429,7 +416,7 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
       </MediaContainer>
       <DefaultLink to={`/nfts/collection/${asset.address}`}>
         <CollectionHeader>
-          {collection.collectionName} {isVerified && <VerifiedIcon />}
+          {collection.collectionName} {collection.isVerified && <VerifiedIcon />}
         </CollectionHeader>
       </DefaultLink>
 
@@ -449,9 +436,7 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
                     <img src={rarityProviderLogo} alt="cardLogo" width={16} />
                   </HoverImageContainer>
                   <ContainerText>
-                    {collectionStats?.rarityVerified
-                      ? `Verified by ${collectionStats?.name}`
-                      : `Ranking by ${rarity.provider === 'Genie' ? fallbackProvider : rarity.provider}`}
+                    {`Ranking by ${rarity.provider === 'Genie' ? fallbackProvider : rarity.provider}`}
                   </ContainerText>
                 </HoverContainer>
               }
@@ -514,9 +499,9 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
 
           <DescriptionText>{collection.collectionDescription}</DescriptionText>
           <SocialsContainer>
-            {externalUrl && <Resource name="Website" link={`${externalUrl}`} />}
-            {twitterUrl && <Resource name="Twitter" link={`https://twitter.com/${twitterUrl}`} />}
-            {discordUrl && <Resource name="Discord" link={discordUrl} />}
+            {collection.externalUrl && <Resource name="Website" link={`${collection.externalUrl}`} />}
+            {collection.twitterUrl && <Resource name="Twitter" link={`https://twitter.com/${collection.twitterUrl}`} />}
+            {collection.discordUrl && <Resource name="Discord" link={collection.discordUrl} />}
           </SocialsContainer>
         </>
       </InfoContainer>
