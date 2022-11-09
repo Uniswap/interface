@@ -11,12 +11,13 @@ import {
   PoolIcon,
   RarityVerifiedIcon,
 } from 'nft/components/icons'
-import { body, bodySmall, buttonTextSmall } from 'nft/css/common.css'
+import { body, bodySmall, buttonTextSmall, subhead, subheadSmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
 import { GenieAsset, Rarity, UniformHeight, UniformHeights, WalletAsset } from 'nft/types'
 import { isAudio, isVideo } from 'nft/utils'
 import { fallbackProvider, putCommas } from 'nft/utils'
+import { floorFormatter } from 'nft/utils/numbers'
 import {
   createContext,
   MouseEvent,
@@ -158,9 +159,10 @@ interface CardProps {
   addAssetToBag: () => void
   removeAssetFromBag: () => void
   children: ReactNode
+  onClick?: () => void
 }
 
-const Container = ({ asset, selected, addAssetToBag, removeAssetFromBag, children }: CardProps) => {
+const Container = ({ asset, selected, addAssetToBag, removeAssetFromBag, children, onClick }: CardProps) => {
   const [hovered, toggleHovered] = useReducer((s) => !s, false)
   const [href, setHref] = useState(baseHref(asset))
 
@@ -184,6 +186,13 @@ const Container = ({ asset, selected, addAssetToBag, removeAssetFromBag, childre
     if (hovered && assetRef.current?.matches(':hover') === false) toggleHovered()
   }, [hovered])
 
+  const handleAssetInBag = (e: MouseEvent) => {
+    if (!asset.notForSale) {
+      e.preventDefault()
+      !selected ? addAssetToBag() : removeAssetFromBag()
+    }
+  }
+
   return (
     <CardContext.Provider value={providerValue}>
       <Box
@@ -198,12 +207,7 @@ const Container = ({ asset, selected, addAssetToBag, removeAssetFromBag, childre
         onMouseLeave={() => toggleHovered()}
         transition="250"
         cursor={asset.notForSale ? 'default' : 'pointer'}
-        onClick={(e: MouseEvent) => {
-          if (!asset.notForSale) {
-            e.preventDefault()
-            !selected ? addAssetToBag() : removeAssetFromBag()
-          }
-        }}
+        onClick={onClick ?? handleAssetInBag}
       >
         {children}
       </Box>
@@ -489,6 +493,50 @@ const InfoContainer = ({ children }: { children: ReactNode }) => {
   )
 }
 
+const TruncatedTextRow = styled(Row)`
+  padding: 2px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
+  overflow: hidden;
+`
+
+interface ViewMyNftDetailsProps {
+  asset: WalletAsset
+}
+
+const ViewMyNftDetails = ({ asset }: ViewMyNftDetailsProps) => {
+  const assetName = () => {
+    if (!asset.name && !asset.tokenId) return
+    if (!!asset.name && !!asset.tokenId)
+      return asset.name.includes(`#${asset.tokenId}`) ? asset.name : `${asset.name} #${asset.tokenId}`
+    return !!asset.name ? asset.name : `#${asset.tokenId}`
+  }
+
+  console.log(asset.name)
+  return (
+    <Box overflow="hidden" width="full" flexWrap="nowrap">
+      <TruncatedTextRow className={bodySmall} style={{ color: themeVars.colors.textSecondary }}>
+        {!!asset.collectionName && <span>{asset.collectionName}</span>}
+      </TruncatedTextRow>
+      <Row justifyItems="flex-start">
+        <TruncatedTextRow
+          className={subheadSmall}
+          style={{
+            color: themeVars.colors.textPrimary,
+          }}
+        >
+          {assetName()}
+        </TruncatedTextRow>
+        {asset.susFlag && <Suspicious />}
+      </Row>
+      <TruncatedTextRow className={subhead} style={{ color: themeVars.colors.textSecondary }}>
+        {!!asset.floorPrice && <span>{`${floorFormatter(asset.floorPrice)} ETH Floor`}</span>}
+      </TruncatedTextRow>
+    </Box>
+  )
+}
+
 const PrimaryRow = ({ children }: { children: ReactNode }) => (
   <Row gap="8" justifyContent="space-between">
     {children}
@@ -762,4 +810,5 @@ export {
   useAssetMediaType,
   useNotForSale,
   Video,
+  ViewMyNftDetails,
 }

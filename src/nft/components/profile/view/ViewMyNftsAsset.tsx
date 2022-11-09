@@ -2,8 +2,10 @@ import * as Card from 'nft/components/collection/Card'
 import { AssetMediaType } from 'nft/components/collection/Card'
 import { useBag, useIsMobile, useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
-import { floorFormatter } from 'nft/utils/numbers'
 import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+const NFT_DETAILS_HREF = (asset: WalletAsset) => `/nfts/asset/${asset.address}/${asset.tokenId}?origin=collection`
 
 export const ViewMyNftsAsset = ({ asset, isSellMode }: { asset: WalletAsset; isSellMode: boolean }) => {
   const sellAssets = useSellAsset((state) => state.sellAssets)
@@ -12,6 +14,7 @@ export const ViewMyNftsAsset = ({ asset, isSellMode }: { asset: WalletAsset; isS
   const cartExpanded = useBag((state) => state.bagExpanded)
   const toggleCart = useBag((state) => state.toggleBag)
   const isMobile = useIsMobile()
+  const navigate = useNavigate()
 
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
   // const [boxHovered, toggleBoxHovered] = useReducer((state) => {
@@ -26,6 +29,10 @@ export const ViewMyNftsAsset = ({ asset, isSellMode }: { asset: WalletAsset; isS
       (item) => item.tokenId === asset.tokenId && item.asset_contract.address === asset.asset_contract.address
     )
   }, [asset, sellAssets])
+
+  const onCardClick = () => {
+    isSellMode ? handleSelect(isSelected) : navigate(NFT_DETAILS_HREF(asset))
+  }
 
   const handleSelect = (removeAsset: boolean) => {
     removeAsset ? removeSellAsset(asset) : selectSellAsset(asset)
@@ -46,14 +53,13 @@ export const ViewMyNftsAsset = ({ asset, isSellMode }: { asset: WalletAsset; isS
 
   const assetMediaType = Card.useAssetMediaType(asset)
 
-  console.log('name', asset.collectionName)
-  console.log('collection stats', asset.collection.stats)
   return (
     <Card.Container
       asset={asset}
       selected={isSelected}
       addAssetToBag={() => handleSelect(false)}
       removeAssetFromBag={() => handleSelect(true)}
+      onClick={onCardClick}
     >
       <Card.ImageContainer>
         {assetMediaType === AssetMediaType.Image ? (
@@ -71,20 +77,7 @@ export const ViewMyNftsAsset = ({ asset, isSellMode }: { asset: WalletAsset; isS
         )}
       </Card.ImageContainer>
       <Card.DetailsContainer>
-        <Card.InfoContainer>
-          <Card.PrimaryRow>
-            <Card.PrimaryDetails>
-              <Card.PrimaryInfo>{asset.name ? asset.name : `#${asset.tokenId}`}</Card.PrimaryInfo>
-              {asset.susFlag && <Card.Suspicious />}
-            </Card.PrimaryDetails>
-            <Card.DetailsLink />
-          </Card.PrimaryRow>
-          <Card.SecondaryRow>
-            <Card.SecondaryDetails>
-              <Card.SecondaryInfo>{`${floorFormatter(asset.floorPrice ?? 0)} ETH`}</Card.SecondaryInfo>
-            </Card.SecondaryDetails>
-          </Card.SecondaryRow>
-        </Card.InfoContainer>
+        <Card.ViewMyNftDetails asset={asset} />
       </Card.DetailsContainer>
     </Card.Container>
   )
