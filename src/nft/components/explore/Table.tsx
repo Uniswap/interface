@@ -13,6 +13,12 @@ import { ArrowRightIcon } from '../icons'
 import { ColumnHeaders } from './CollectionTable'
 import * as styles from './Explore.css'
 
+// Default table cell max width
+const CELL_WIDTH = '160px'
+// Collection Name cell max widths
+const MOBILE_CELL_WIDTH = '240px'
+const DESKTOP_CELL_WIDTH = '360px'
+
 const RankCellContainer = styled.div`
   display: flex;
   align-items: center;
@@ -187,7 +193,9 @@ export function Table<D extends Record<string, unknown>>({
                     className={styles.td}
                     {...cell.getCellProps()}
                     key={cellIndex}
-                    style={{ maxWidth: cellIndex === 0 ? (isMobile ? '300px' : '360px') : '160px' }}
+                    style={{
+                      maxWidth: cellIndex === 0 ? (isMobile ? MOBILE_CELL_WIDTH : DESKTOP_CELL_WIDTH) : CELL_WIDTH,
+                    }}
                   >
                     {cellIndex === 0 ? (
                       <RankCellContainer>
