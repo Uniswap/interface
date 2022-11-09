@@ -127,13 +127,13 @@ const Web3StatusConnectedNFTVersion = styled(Web3StatusGeneric)<{ pending?: bool
     }
   }
 
-  // @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-  //   width: ${({ pending }) => !pending && '44px'};
-  //   height: ${({ pending }) => pending && '44px'};
-  //   div {
-  //     margin-right: 0px;
-  //   }
-  // }
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    width: ${({ pending }) => !pending && '44px'};
+    height: ${({ pending }) => !pending && '44px'};
+    div {
+      margin-right: 0px;
+    }
+  }
 `
 
 const Text = styled.p`
@@ -251,26 +251,26 @@ function Web3StatusInner() {
       color: theme.textSecondary,
     }
 
-    // if (nftIsActive === NftVariant.Enabled) {
-    //   return (
-    //     <Web3StatusConnectedNFTVersion pending={hasPendingTransactions} onClick={toggleWallet}>
-    //       {!hasPendingTransactions && <StatusIcon size={24} connectionType={connectionType} />}
-    //       {hasPendingTransactions ? (
-    //         <RowBetween>
-    //           <Text>
-    //             <Trans>{pending?.length} Pending</Trans>
-    //           </Text>{' '}
-    //           <Loader stroke="white" />
-    //         </RowBetween>
-    //       ) : (
-    //         <AddressAndChevronContainer>
-    //           <Text>{ENSName || shortenAddress(account)}</Text>
-    //           {walletIsOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
-    //         </AddressAndChevronContainer>
-    //       )}
-    //     </Web3StatusConnectedNFTVersion>
-    //   )
-    // }
+    if (nftIsActive === NftVariant.Enabled) {
+      return (
+        <Web3StatusConnectedNFTVersion pending={hasPendingTransactions} onClick={toggleWallet}>
+          {!hasPendingTransactions && <StatusIcon size={24} connectionType={connectionType} />}
+          {hasPendingTransactions ? (
+            <RowBetween>
+              <Text>
+                <Trans>{pending?.length} Pending</Trans>
+              </Text>{' '}
+              <Loader stroke="white" />
+            </RowBetween>
+          ) : (
+            <AddressAndChevronContainer>
+              <Text>{ENSName || shortenAddress(account)}</Text>
+              {walletIsOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
+            </AddressAndChevronContainer>
+          )}
+        </Web3StatusConnectedNFTVersion>
+      )
+    }
 
     return (
       <Web3StatusConnected data-testid="web3-status-connected" onClick={toggleWallet} pending={hasPendingTransactions}>
