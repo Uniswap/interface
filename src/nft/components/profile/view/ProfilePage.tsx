@@ -51,12 +51,8 @@ const SellModeButton = styled.button<{ active: boolean }>`
 `
 
 const ProfilePageColumn = styled(Column)`
-  // overflow-x: hidden !important;
-  ${ScreenBreakpointsPaddings};
-  // position: absolute;
-  // top: 0;
-  // background-color: black;
-  // z-index: 100000;
+  overflow-x: hidden !important;
+  ${ScreenBreakpointsPaddings}
 `
 
 export const DEFAULT_WALLET_ASSET_QUERY_AMOUNT = 25
