@@ -89,13 +89,17 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
     ? formatCurrencyAmount(currencyAmount, NumberType.TokenTx)
     : ''
 
+  // the focus state for native Inputs can sometimes be out of sync with the controlled `focus`
+  // prop. When the internal focus state differs from our `focus` prop, sync the internal
+  // focus state to be what our prop says it should be
+  const isTextInputRefActuallyFocused = inputRef.current?.isFocused()
   useEffect(() => {
-    if (focus) {
+    if (focus && !isTextInputRefActuallyFocused) {
       inputRef.current?.focus()
-    } else {
+    } else if (!focus && isTextInputRefActuallyFocused) {
       inputRef.current?.blur()
     }
-  }, [focus, inputRef])
+  }, [focus, inputRef, isTextInputRefActuallyFocused])
 
   const { onLayout, fontSize, onSetFontSize } = useDynamicFontSizing(
     MAX_CHAR_PIXEL_WIDTH,

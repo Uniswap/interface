@@ -215,7 +215,7 @@ export function TransferTokenForm({
               pt="lg"
               px="md">
               <CurrencyInputPanel
-                autoFocus
+                focus
                 currency={currencyIn}
                 currencyAmount={currencyAmounts[CurrencyField.INPUT]}
                 currencyBalance={currencyBalances[CurrencyField.INPUT]}

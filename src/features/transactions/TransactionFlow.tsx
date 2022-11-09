@@ -1,7 +1,7 @@
 import { AnyAction } from '@reduxjs/toolkit'
 import { providers } from 'ethers'
 import React, { Dispatch, ReactElement, useCallback, useEffect } from 'react'
-import { Keyboard, TouchableWithoutFeedback } from 'react-native'
+import { TouchableWithoutFeedback } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import SortIcon from 'src/assets/icons/sort.svg'
@@ -88,12 +88,6 @@ export function TransactionFlow({
 }: TransactionFlowProps) {
   const theme = useAppTheme()
 
-  // enable tap to dismiss keyboard on whole modal screen
-  // this only applies when we show native keyboard on smaller devices
-  const onBackgroundPress = () => {
-    Keyboard.dismiss()
-  }
-
   const screenXOffset = useSharedValue(0)
   useEffect(() => {
     const screenOffset = showTokenSelector || showRecipientSelector ? 1 : 0
@@ -107,7 +101,7 @@ export function TransactionFlow({
   const { onToggleUSDInput } = useSwapActionHandlers(dispatch)
 
   return (
-    <TouchableWithoutFeedback onPress={onBackgroundPress}>
+    <TouchableWithoutFeedback>
       <AnimatedFlex grow row gap="none" height="100%" paddingBottom="xl" style={wrapperStyle}>
         <Flex gap="xs" px="md" width="100%">
           {step !== TransactionStep.SUBMITTED && (
