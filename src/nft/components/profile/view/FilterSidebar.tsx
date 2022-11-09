@@ -2,7 +2,8 @@ import { AnimatedBox, Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { XMarkIcon } from 'nft/components/icons'
 import { Checkbox } from 'nft/components/layout/Checkbox'
-import { buttonTextSmall, headlineSmall } from 'nft/css/common.css'
+import { Input } from 'nft/components/layout/Input'
+import { subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useFiltersExpanded, useIsMobile, useWalletCollections } from 'nft/hooks'
 import { WalletCollection } from 'nft/types'
@@ -16,8 +17,6 @@ export const FilterSidebar = () => {
   const setCollectionFilters = useWalletCollections((state) => state.setCollectionFilters)
 
   const walletCollections = useWalletCollections((state) => state.walletCollections)
-  const listFilter = useWalletCollections((state) => state.listFilter)
-  const setListFilter = useWalletCollections((state) => state.setListFilter)
 
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const isMobile = useIsMobile()
@@ -44,9 +43,6 @@ export const FilterSidebar = () => {
         width={{ sm: 'full', md: 'auto' }}
       >
         <Row width="full" justifyContent="space-between">
-          <Row as="span" className={headlineSmall} color="textPrimary">
-            Filters
-          </Row>
           {isMobile && (
             <Box
               as="button"
@@ -58,9 +54,6 @@ export const FilterSidebar = () => {
               <XMarkIcon fill={themeVars.colors.textPrimary} />
             </Box>
           )}
-        </Row>
-        <Row marginTop="14" marginLeft="2" gap="6" flexWrap="wrap" width="276">
-          <ListStatusFilterButtons listFilter={listFilter} setListFilter={setListFilter} />
         </Row>
         <CollectionSelect
           collections={walletCollections}
@@ -97,23 +90,16 @@ const CollectionSelect = ({
 
   return (
     <>
-      <Box className={headlineSmall} marginTop="20" marginBottom="12">
+      <Box className={subhead} marginTop="12" marginBottom="16" width="276">
         Collections
       </Box>
-      <Box paddingBottom="12" paddingTop="0" borderRadius="8">
-        <Column as="ul" paddingLeft="0" gap="10" style={{ maxHeight: '508px' }}>
+      <Box paddingBottom="12" borderRadius="8">
+        <Column as="ul" paddingLeft="0" gap="10" style={{ maxHeight: '80vh' }}>
           <CollectionFilterSearch
             collectionSearchText={collectionSearchText}
             setCollectionSearchText={setCollectionSearchText}
           />
-          <Box
-            background="backgroundSurface"
-            borderRadius="12"
-            paddingTop="8"
-            paddingBottom="8"
-            overflowY="scroll"
-            style={{ scrollbarWidth: 'none' }}
-          >
+          <Box paddingBottom="8" overflowY="scroll" style={{ scrollbarWidth: 'none' }}>
             {displayCollections?.map((collection, index) => (
               <CollectionItem
                 key={index}
@@ -137,19 +123,13 @@ const CollectionFilterSearch = ({
   setCollectionSearchText: Dispatch<SetStateAction<string>>
 }) => {
   return (
-    <Box
-      as="input"
-      borderColor={{ default: 'backgroundOutline', focus: 'genieBlue' }}
-      borderWidth="1px"
-      borderStyle="solid"
-      borderRadius="8"
-      padding="12"
-      marginLeft="0"
-      marginBottom="24"
-      backgroundColor="backgroundSurface"
-      fontSize="14"
-      color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
-      placeholder="Search collections"
+    <Input
+      placeholder="Search"
+      marginTop="8"
+      marginBottom="8"
+      autoComplete="off"
+      position="static"
+      width="full"
       value={collectionSearchText}
       onChange={(e: FormEvent<HTMLInputElement>) => setCollectionSearchText(e.currentTarget.value)}
     />
@@ -181,54 +161,46 @@ const CollectionItem = ({
   }
   return (
     <Row
+      maxWidth="full"
+      overflowX="hidden"
+      overflowY="hidden"
+      fontWeight="normal"
+      className={styles.subRowHover}
+      justifyContent="space-between"
       cursor="pointer"
-      paddingRight="14"
-      height="44"
+      paddingLeft="12"
+      paddingRight="16"
+      borderRadius="12"
+      style={{
+        paddingBottom: '22px',
+        paddingTop: '22px',
+      }}
+      maxHeight="44"
       as="li"
-      background={hovered ? 'backgroundOutline' : undefined}
       onMouseEnter={toggleHovered}
       onMouseLeave={toggleHovered}
       onClick={handleCheckbox}
     >
-      <Box as="img" borderRadius="round" marginLeft="16" width="20" height="20" src={collection.image} />
-      <Box as="span" marginLeft="6" marginRight="auto" className={styles.collectionName}>
-        {collection.name}{' '}
-      </Box>
+      <Row>
+        <Box as="img" borderRadius="round" width="20" height="20" src={collection.image} />
+        <Box
+          as="span"
+          whiteSpace="nowrap"
+          textOverflow="ellipsis"
+          overflow="hidden"
+          paddingLeft="12"
+          paddingRight="14"
+          style={{ minHeight: 15, maxWidth: '180px' }}
+        >
+          {collection.name}{' '}
+        </Box>
+      </Row>
+
       <Checkbox checked={isChecked(collection.address)} hovered={hovered} onChange={handleCheckbox}>
-        <Box as="span" color="textSecondary" marginRight="12" marginLeft="auto">
+        <Box as="span" color="textTertiary" marginRight="12" marginLeft="auto">
           {collection.count}
         </Box>
       </Checkbox>
     </Row>
-  )
-}
-
-const statusArray = ['All', 'Unlisted', 'Listed']
-
-const ListStatusFilterButtons = ({
-  listFilter,
-  setListFilter,
-}: {
-  listFilter: string
-  setListFilter: (value: string) => void
-}) => {
-  return (
-    <>
-      {statusArray.map((value, index) => (
-        <Row
-          key={index}
-          borderRadius="12"
-          backgroundColor="backgroundOutline"
-          height="44"
-          className={value === listFilter ? styles.buttonSelected : null}
-          onClick={() => setListFilter(value)}
-          width="max"
-          padding="14"
-          cursor="pointer"
-        >
-          <Box className={buttonTextSmall}>{value}</Box>
-        </Row>
-      ))}
-    </>
   )
 }

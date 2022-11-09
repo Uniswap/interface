@@ -28,7 +28,9 @@ export const WalletAssetDisplay = ({ asset, isSellMode }: { asset: WalletAsset; 
   }, false)
 
   const isSelected = useMemo(() => {
-    return sellAssets.some((item) => asset.id === item.id)
+    return sellAssets.some(
+      (item) => item.tokenId === asset.tokenId && item.asset_contract.address === asset.asset_contract.address
+    )
   }, [asset, sellAssets])
 
   const handleSelect = () => {
@@ -49,7 +51,7 @@ export const WalletAssetDisplay = ({ asset, isSellMode }: { asset: WalletAsset; 
   }
 
   const uniqueSellOrdersMarketplaces = useMemo(
-    () => [...new Set(asset.sellOrders.map((order) => order.marketplace))],
+    () => [...new Set(asset.sellOrders?.map((order) => order.marketplace))],
     [asset.sellOrders]
   )
 
@@ -84,7 +86,7 @@ export const WalletAssetDisplay = ({ asset, isSellMode }: { asset: WalletAsset; 
                 {asset.collectionIsVerified ? <VerifiedIcon className={styles.verifiedBadge} /> : null}
               </Box>
             </Column>
-            {asset.sellOrders.length > 0 && (
+            {asset.sellOrders && asset.sellOrders.length > 0 && (
               <Column gap="6" flex="1" justifyContent="flex-end" whiteSpace="nowrap" style={{ maxWidth: '33%' }}>
                 <>
                   <Row className={subhead} color="textPrimary">

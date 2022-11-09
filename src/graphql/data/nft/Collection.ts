@@ -105,7 +105,7 @@ export function useCollectionQuery(address: string): GenieCollection | undefined
     name: queryCollection?.name ?? undefined,
     description: queryCollection?.description ?? undefined,
     standard: queryCollection?.nftContracts ? queryCollection?.nftContracts[0]?.standard ?? undefined : undefined,
-    bannerImageUrl: queryCollection?.bannerImage?.url,
+    bannerImageUrl: queryCollection?.bannerImage?.url ?? undefined,
     stats: queryCollection?.markets
       ? {
           num_owners: market?.owners ?? undefined,

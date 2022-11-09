@@ -6,6 +6,8 @@ import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
+import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
+import { ProfilePageLoadingSkeleton } from 'nft/components/profile/view/ProfilePageLoadingSkeleton'
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -65,17 +67,14 @@ const BodyWrapper = styled.div`
   `};
 `
 
-const HeaderWrapper = styled.div<{ scrolledState?: boolean; nftFlagEnabled?: boolean }>`
+const HeaderWrapper = styled.div<{ scrolledState?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
-  background-color: ${({ theme, nftFlagEnabled, scrolledState }) =>
-    scrolledState && nftFlagEnabled && theme.backgroundSurface};
-  border-bottom: ${({ theme, nftFlagEnabled, scrolledState }) =>
-    scrolledState && nftFlagEnabled && `1px solid ${theme.backgroundOutline}`};
+  background-color: ${({ theme, scrolledState }) => scrolledState && theme.backgroundSurface};
+  border-bottom: ${({ theme, scrolledState }) => scrolledState && `1px solid ${theme.backgroundOutline}`};
   width: 100%;
   justify-content: space-between;
   position: fixed;
-  transition: ${({ theme, nftFlagEnabled }) =>
-    nftFlagEnabled &&
+  transition: ${({ theme }) =>
     `background-color ${theme.transition.duration.fast} ease-in-out,
     border-width ${theme.transition.duration.fast} ease-in-out`};
   top: 0;
@@ -171,7 +170,7 @@ export default function App() {
       <ApeModeQueryParamReader />
       <AppWrapper>
         <Trace page={currentPage}>
-          <HeaderWrapper scrolledState={scrolledState} nftFlagEnabled={nftFlag === NftVariant.Enabled}>
+          <HeaderWrapper scrolledState={scrolledState}>
             <NavBar />
           </HeaderWrapper>
           <BodyWrapper>
@@ -251,9 +250,30 @@ export default function App() {
                           </Suspense>
                         }
                       />
-                      <Route path="/nfts/profile" element={<Profile />} />
-                      <Route path="/nfts/collection/:contractAddress" element={<Collection />} />
-                      <Route path="/nfts/collection/:contractAddress/activity" element={<Collection />} />
+                      <Route
+                        path="/nfts/profile"
+                        element={
+                          <Suspense fallback={<ProfilePageLoadingSkeleton />}>
+                            <Profile />
+                          </Suspense>
+                        }
+                      />
+                      <Route
+                        path="/nfts/collection/:contractAddress"
+                        element={
+                          <Suspense fallback={<CollectionPageSkeleton />}>
+                            <Collection />
+                          </Suspense>
+                        }
+                      />
+                      <Route
+                        path="/nfts/collection/:contractAddress/activity"
+                        element={
+                          <Suspense fallback={<CollectionPageSkeleton />}>
+                            <Collection />
+                          </Suspense>
+                        }
+                      />
                     </>
                   )}
                 </Routes>
