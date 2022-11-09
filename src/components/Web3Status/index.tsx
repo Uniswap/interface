@@ -111,8 +111,8 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean; isNft
   }
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
-    width: ${({ isNftActive, pending }) => isNftActive && !pending && '44px'};
-    height: ${({ isNftActive, pending }) => isNftActive && !pending && '44px'};
+    width: ${({ isNftActive, pending }) => isNftActive && !pending && '36px'};
+
     ${IconWrapper} {
       margin-right: ${({ isNftActive }) => isNftActive && 0};
     }
