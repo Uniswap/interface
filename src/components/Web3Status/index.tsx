@@ -4,6 +4,7 @@ import { ElementName, Event, EventName } from 'analytics/constants'
 import { TraceEvent } from 'analytics/TraceEvent'
 import WalletDropdown from 'components/WalletDropdown'
 import { getConnection } from 'connection/utils'
+import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { Portal } from 'nft/components/common/Portal'
 import { getIsValidSwapQuote } from 'pages/Swap'
 import { darken } from 'polished'
@@ -12,7 +13,6 @@ import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
 import { useAppSelector } from 'state/hooks'
 import { useDerivedSwapInfo } from 'state/swap/hooks'
 import styled, { useTheme } from 'styled-components/macro'
-import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import {
@@ -202,10 +202,9 @@ function Web3StatusInner() {
   const walletIsOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
 
   const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
-  const nftIsActive = useNftFlag()
+  const isNftActive = useNftFlag() === NftVariant.Enabled
 
   const allTransactions = useAllTransactions()
-  const isNftActive = nftIsActive === NftVariant.Enabled
 
   const sortedRecentTransactions = useMemo(() => {
     const txs = Object.values(allTransactions)
