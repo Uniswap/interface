@@ -138,14 +138,14 @@ const ListingModal = () => {
     if (allListingsSigned) {
       setOpenIndex(0)
       setListingStatus(ListingStatus.APPROVED)
-      sendAnalyticsEvent(EventName.NFT_LISTING_SIGNED, {
-        signatures_requested: listings.length,
-        signatures_approved: listings.length,
-        ...approvalEventProperties,
-      })
     } else if (!paused) {
       setListingStatus(ListingStatus.FAILED)
     }
+    sendAnalyticsEvent(EventName.NFT_LISTING_COMPLETED, {
+      signatures_requested: listings.length,
+      signatures_approved: listings.filter((asset) => asset.status === ListingStatus.APPROVED),
+      ...approvalEventProperties,
+    })
     await logListing(listings, (await signer?.getAddress()) ?? '')
   }
 
@@ -207,7 +207,7 @@ const ListingModal = () => {
           {showSuccessScreen ? (
             <Trace
               name={EventName.NFT_LISTING_COMPLETED}
-              properties={{ list_quantity: listings.length, usd_value: ethPriceInUSD, ...trace }}
+              properties={{ list_quantity: listings.length, usd_value: ethPriceInUSD * totalEthListingValue, ...trace }}
             >
               <ListingSection
                 sectionTitle={`Listed ${listings.length} item${pluralize(listings.length)} for sale`}
