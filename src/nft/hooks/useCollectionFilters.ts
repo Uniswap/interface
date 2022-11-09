@@ -74,7 +74,7 @@ export const initialCollectionFilterState: State = {
   traits: [],
   markets: [],
   marketCount: {},
-  buyNow: true,
+  buyNow: false,
   search: '',
   sortBy: SortBy.LowToHigh,
   showFullTraitName: { shouldShow: false, trait_value: '', trait_type: '' },

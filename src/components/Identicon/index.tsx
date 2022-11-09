@@ -1,13 +1,13 @@
 import jazzicon from '@metamask/jazzicon'
 import { useWeb3React } from '@web3-react/core'
 import useENSAvatar from 'hooks/useENSAvatar'
-import { useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
 
 const StyledIdenticon = styled.div<{ iconSize: number }>`
   height: ${({ iconSize }) => `${iconSize}px`};
   width: ${({ iconSize }) => `${iconSize}px`};
-  border-radius: 1.125rem;
+  border-radius: 50%;
   background-color: ${({ theme }) => theme.deprecated_bg4};
   font-size: initial;
 `
@@ -41,10 +41,12 @@ export default function Identicon({ size }: { size?: number }) {
     return
   }, [icon, iconRef])
 
+  const handleError = useCallback(() => setFetchable(false), [])
+
   return (
     <StyledIdenticon iconSize={iconSize}>
       {avatar && fetchable ? (
-        <StyledAvatar alt="avatar" src={avatar} onError={() => setFetchable(false)}></StyledAvatar>
+        <StyledAvatar alt="avatar" src={avatar} onError={handleError}></StyledAvatar>
       ) : (
         <span ref={iconRef} />
       )}
