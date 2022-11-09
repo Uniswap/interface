@@ -50,7 +50,7 @@ export interface CardContextProps {
 
 const CardContext = createContext<CardContextProps | undefined>(undefined)
 
-const BORDER_RADIUS = '16'
+const BORDER_RADIUS = '12'
 
 const useCardContext = () => {
   const context = useContext(CardContext)
