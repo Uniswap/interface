@@ -12,6 +12,8 @@ import {
 } from 'src/data/__generated__/types-and-hooks'
 import extractTransactionDetails from 'src/features/transactions/history/conversion/extractTransactionDetails'
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
+import { fromGraphQLChain } from 'src/utils/chainId'
+import { getNativeCurrencyAddressForChain } from 'src/utils/currencyId'
 
 export interface AllFormattedTransactions {
   combinedTransactionList: TransactionDetails[]
@@ -119,12 +121,34 @@ export function deriveCurrencyAmountFromAssetResponse(
   const nativeCurrency = nativeOnChain(ChainId.Mainnet)
   return parseUnits(
     quantity,
-    tokenStandard === 'NATIVE'
+    tokenStandard === TokenStandard.Native
       ? BigNumber.from(nativeCurrency.decimals)
       : asset?.decimals
       ? BigNumber.from(asset.decimals)
       : undefined
   ).toString()
+}
+
+/**
+ * Parses an asset from API and returns either the token address or native currency address
+ * for the involved asset.
+ * @returns Token address, custom native address or null
+ */
+export function getAddressFromAsset({
+  asset,
+  tokenStandard,
+}: {
+  asset: Partial<Token>
+  tokenStandard: TokenStandard
+}) {
+  const supportedChainId = fromGraphQLChain(asset.chain)
+  if (!supportedChainId) {
+    return null
+  }
+  if (tokenStandard === TokenStandard.Native) {
+    return getNativeCurrencyAddressForChain(supportedChainId)
+  }
+  return asset?.address
 }
 
 /**

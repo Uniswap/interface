@@ -2,6 +2,7 @@ import { TransactionListQueryResponse } from 'src/components/TransactionList/Tra
 import { AssetType } from 'src/entities/assets'
 import {
   deriveCurrencyAmountFromAssetResponse,
+  getAddressFromAsset,
   parseUSDValueFromAssetChange,
 } from 'src/features/transactions/history/utils'
 import { SendTokenTransactionInfo, TransactionType } from 'src/features/transactions/types'
@@ -41,25 +42,28 @@ export default function parseSendTransaction(
   }
   // Found ERC20 transfer
   if (change.__typename === 'TokenTransfer') {
-    if (change.tokenStandard) {
-      const tokenAddress = change.asset?.address
-      const recipient = change.recipient
-      const currencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
-        change.tokenStandard,
-        change.asset,
-        change.quantity
-      )
-      const transactedUSDValue = parseUSDValueFromAssetChange(change.transactedValue)
+    const tokenAddress = getAddressFromAsset({
+      asset: change.asset,
+      tokenStandard: change.tokenStandard,
+    })
 
-      if (!(recipient && tokenAddress)) return undefined
-      return {
-        type: TransactionType.Send,
-        assetType: AssetType.Currency,
-        tokenAddress,
-        recipient,
-        currencyAmountRaw,
-        transactedUSDValue,
-      }
+    const recipient = change.recipient
+    const currencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
+      change.tokenStandard,
+      change.asset,
+      change.quantity
+    )
+    const transactedUSDValue = parseUSDValueFromAssetChange(change.transactedValue)
+
+    if (!(recipient && tokenAddress)) return undefined
+
+    return {
+      type: TransactionType.Send,
+      assetType: AssetType.Currency,
+      tokenAddress,
+      recipient,
+      currencyAmountRaw,
+      transactedUSDValue,
     }
   }
 

@@ -2,6 +2,7 @@ import { TransactionListQueryResponse } from 'src/components/TransactionList/Tra
 import { AssetType } from 'src/entities/assets'
 import {
   deriveCurrencyAmountFromAssetResponse,
+  getAddressFromAsset,
   parseUSDValueFromAssetChange,
 } from 'src/features/transactions/history/utils'
 import { ReceiveTokenTransactionInfo, TransactionType } from 'src/features/transactions/types'
@@ -42,17 +43,21 @@ export default function parseReceiveTransaction(
 
   // Found ERC20 transfer
   if (change.__typename === 'TokenTransfer') {
-    const tokenAddress = change.asset?.address
+    const tokenAddress = getAddressFromAsset({
+      asset: change.asset,
+      tokenStandard: change.tokenStandard,
+    })
+
     const sender = change.sender
     const currencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
       change.tokenStandard,
       change.asset,
       change.quantity
     )
-
     const transactedUSDValue = parseUSDValueFromAssetChange(change.transactedValue)
 
     if (!(sender && tokenAddress)) return undefined
+
     return {
       type: TransactionType.Receive,
       assetType: AssetType.Currency,
