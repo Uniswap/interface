@@ -9,6 +9,7 @@ import { CrossIcon, TagIcon } from 'nft/components/icons'
 import { FilterSidebar } from 'nft/components/profile/view/FilterSidebar'
 import { buttonTextMedium, subhead } from 'nft/css/common.css'
 import {
+  useBag,
   useFiltersExpanded,
   useIsMobile,
   useProfilePageState,
@@ -19,11 +20,12 @@ import {
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import { fetchWalletAssets, OSCollectionsFetcher } from 'nft/queries'
 import { ProfilePageStateType, WalletAsset, WalletCollection } from 'nft/types'
-import { Dispatch, SetStateAction, useEffect, useMemo, useReducer, useState } from 'react'
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery, useQuery } from 'react-query'
 import { useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
+import shallow from 'zustand/shallow'
 
 import { EmptyWalletContent } from './EmptyWalletContent'
 import { ProfileAccountDetails } from './ProfileAccountDetails'
@@ -69,19 +71,27 @@ export const ProfilePage = () => {
   const walletCollections = useWalletCollections((state) => state.walletCollections)
   const setWalletCollections = useWalletCollections((state) => state.setWalletCollections)
   const listFilter = useWalletCollections((state) => state.listFilter)
+  const { isSellMode, resetSellAssets, setIsSellMode } = useSellAsset(
+    ({ isSellMode, reset, setIsSellMode }) => ({
+      isSellMode,
+      resetSellAssets: reset,
+      setIsSellMode,
+    }),
+    shallow
+  )
   const sellAssets = useSellAsset((state) => state.sellAssets)
-  const reset = useSellAsset((state) => state.reset)
-  const resetSellAssets = useSellAsset((state) => state.reset)
+  const { setBagExpanded } = useBag(({ setBagExpanded }) => ({ setBagExpanded }), shallow)
+
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const isMobile = useIsMobile()
   const isNftGraphQl = useNftGraphQlFlag() === NftGraphQlVariant.Enabled
-  const [isSellMode, toggleSellMode] = useReducer((s) => !s, false)
 
-  const handleSellModeClick = () => {
+  const handleSellModeClick = useCallback(() => {
     resetSellAssets()
-    toggleSellMode()
-  }
+    setIsSellMode(!isSellMode)
+    setBagExpanded({ bagExpanded: !isSellMode })
+  }, [isSellMode, resetSellAssets, setBagExpanded, setIsSellMode])
 
   const { data: ownerCollections, isLoading: collectionsAreLoading } = useQuery(
     ['ownerCollections', address],
@@ -234,7 +244,7 @@ export const ProfilePage = () => {
             color="genieBlue"
             marginRight="20"
             marginLeft="auto"
-            onClick={reset}
+            onClick={resetSellAssets}
             lineHeight="16"
           >
             Clear

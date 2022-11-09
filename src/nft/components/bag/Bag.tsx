@@ -30,6 +30,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from 'react-query'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
+import shallow from 'zustand/shallow'
 
 import * as styles from './Bag.css'
 import { BagContent } from './BagContent'
@@ -67,24 +68,37 @@ const ScrollingIndicator = ({ top, show }: SeparatorProps) => (
 const Bag = () => {
   const { account, provider } = useWeb3React()
 
-  const bagStatus = useBag((s) => s.bagStatus)
-  const setBagStatus = useBag((s) => s.setBagStatus)
-  const didOpenUnavailableAssets = useBag((s) => s.didOpenUnavailableAssets)
-  const setDidOpenUnavailableAssets = useBag((s) => s.setDidOpenUnavailableAssets)
-  const bagIsLocked = useBag((s) => s.isLocked)
-  const setLocked = useBag((s) => s.setLocked)
-  const reset = useBag((s) => s.reset)
-  const resetSellAssets = useSellAsset((state) => state.reset)
-  const sellAssets = useSellAsset((state) => state.sellAssets)
-  const setProfilePageState = useProfilePageState((state) => state.setProfilePageState)
-  const profilePageState = useProfilePageState((state) => state.state)
-  const uncheckedItemsInBag = useBag((s) => s.itemsInBag)
-  const setItemsInBag = useBag((s) => s.setItemsInBag)
-  const bagExpanded = useBag((s) => s.bagExpanded)
-  const toggleBag = useBag((s) => s.toggleBag)
-  const setTotalEthPrice = useBag((s) => s.setTotalEthPrice)
-  const setTotalUsdPrice = useBag((s) => s.setTotalUsdPrice)
-  const setBagExpanded = useBag((state) => state.setBagExpanded)
+  const { resetSellAssets, sellAssets, setIsSellMode } = useSellAsset(
+    ({ isSellMode, reset, sellAssets, setIsSellMode }) => ({
+      isSellMode,
+      resetSellAssets: reset,
+      sellAssets,
+      setIsSellMode,
+    }),
+    shallow
+  )
+
+  const { profilePageState, setProfilePageState } = useProfilePageState(
+    ({ setProfilePageState, state }) => ({ profilePageState: state, setProfilePageState }),
+    shallow
+  )
+
+  const {
+    bagStatus,
+    setBagStatus,
+    didOpenUnavailableAssets,
+    setDidOpenUnavailableAssets,
+    bagIsLocked,
+    setLocked,
+    reset,
+    setItemsInBag,
+    bagExpanded,
+    toggleBag,
+    setTotalEthPrice,
+    setTotalUsdPrice,
+    setBagExpanded,
+  } = useBag((state) => ({ ...state, bagIsLocked: state.isLocked, uncheckedItemsInBag: state.itemsInBag }), shallow)
+  const { uncheckedItemsInBag } = useBag(({ itemsInBag }) => ({ uncheckedItemsInBag: itemsInBag }))
 
   const { pathname } = useLocation()
   const isProfilePage = pathname.startsWith('/nfts/profile')
@@ -101,9 +115,7 @@ const Bag = () => {
 
   const queryClient = useQueryClient()
 
-  const itemsInBag = useMemo(() => {
-    return recalculateBagUsingPooledAssets(uncheckedItemsInBag)
-  }, [uncheckedItemsInBag])
+  const itemsInBag = useMemo(() => recalculateBagUsingPooledAssets(uncheckedItemsInBag), [uncheckedItemsInBag])
 
   const [isOpen, setModalIsOpen] = useState(false)
   const [userCanScroll, setUserCanScroll] = useState(false)
@@ -153,7 +165,10 @@ const Bag = () => {
     }
   }
 
-  const handleCloseBag = useCallback(() => setBagExpanded({ bagExpanded: false, manualClose: true }), [setBagExpanded])
+  const handleCloseBag = useCallback(() => {
+    setIsSellMode(false)
+    setBagExpanded({ bagExpanded: false, manualClose: true })
+  }, [setBagExpanded, setIsSellMode])
 
   const fetchAssets = async () => {
     const itemsToBuy = itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset)
@@ -258,6 +273,14 @@ const Bag = () => {
     (!isProfilePage && !isBuyingAssets && bagStatus === BagStatus.ADDING_TO_BAG) || (isProfilePage && !isSellingAssets)
   )
 
+  const eventProperties = useMemo(
+    () => ({
+      usd_value: totalUsdPrice,
+      ...formatAssetEventProperties(itemsInBag.map((item) => item.asset)),
+    }),
+    [itemsInBag, totalUsdPrice]
+  )
+
   return (
     <>
       {bagExpanded && isNFTPage ? (
@@ -283,10 +306,7 @@ const Bag = () => {
                     totalUsdPrice={totalUsdPrice}
                     bagStatus={bagStatus}
                     fetchAssets={fetchAssets}
-                    eventProperties={{
-                      usd_value: totalUsdPrice,
-                      ...formatAssetEventProperties(itemsInBag.map((item) => item.asset)),
-                    }}
+                    eventProperties={eventProperties}
                   />
                 )}
                 {isSellingAssets && isProfilePage && (
