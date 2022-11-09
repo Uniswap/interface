@@ -90,6 +90,22 @@ const EmptyCollectionWrapper = styled.div`
   textalign: center;
 `
 
+const ViewFullCollection = styled.span`
+  &:hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+  }
+
+  &:active {
+    opacity: ${({ theme }) => theme.opacity.click};
+  }
+
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => `opacity ${duration.medium} ${timing.ease}`};
+`
+
 const ClearAllButton = styled.button`
   color: ${({ theme }) => theme.textTertiary};
   padding-left: 8px;
@@ -587,11 +603,17 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         {hasNfts ? (
           Nfts
         ) : collectionNfts?.length === 0 ? (
-          <Center width="full" color="textSecondary" style={{ height: '60vh' }}>
+          <Center width="full" color="textSecondary" textAlign="center" style={{ height: '60vh' }}>
             <EmptyCollectionWrapper>
               <p className={headlineMedium}>No NFTS found</p>
-              <Box className={clsx(bodySmall, buttonTextMedium)} color="blue" cursor="pointer">
-                View full collection
+              <Box
+                onClick={reset}
+                type="button"
+                className={clsx(bodySmall, buttonTextMedium)}
+                color="blue"
+                cursor="pointer"
+              >
+                <ViewFullCollection>View full collection</ViewFullCollection>
               </Box>
             </EmptyCollectionWrapper>
           </Center>

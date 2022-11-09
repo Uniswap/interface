@@ -224,11 +224,6 @@ const Bag = () => {
   }, [bagIsLocked, isOpen])
 
   useEffect(() => {
-    setBagExpanded({ bagExpanded: false })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname])
-
-  useEffect(() => {
     if (transactionStateRef.current === TxStateType.Confirming) setBagStatus(BagStatus.PROCESSING_TRANSACTION)
     if (transactionStateRef.current === TxStateType.Denied || transactionStateRef.current === TxStateType.Invalid) {
       if (transactionStateRef.current === TxStateType.Invalid) setBagStatus(BagStatus.WARNING)

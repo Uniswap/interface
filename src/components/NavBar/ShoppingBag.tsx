@@ -1,17 +1,13 @@
 import { NavIcon } from 'components/NavBar/NavIcon'
 import * as styles from 'components/NavBar/ShoppingBag.css'
 import { Box } from 'nft/components/Box'
-import { BagIcon, HundredsOverflowIcon, TagIcon } from 'nft/components/icons'
-import { useBag, useSellAsset } from 'nft/hooks'
+import { BagIcon, HundredsOverflowIcon } from 'nft/components/icons'
+import { useBag } from 'nft/hooks'
 import { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
 
 export const ShoppingBag = () => {
   const itemsInBag = useBag((state) => state.itemsInBag)
-  const sellAssets = useSellAsset((state) => state.sellAssets)
   const [bagQuantity, setBagQuantity] = useState(0)
-  const [sellQuantity, setSellQuantity] = useState(0)
-  const location = useLocation()
 
   const toggleBag = useBag((s) => s.toggleBag)
 
@@ -19,28 +15,13 @@ export const ShoppingBag = () => {
     setBagQuantity(itemsInBag.length)
   }, [itemsInBag])
 
-  useEffect(() => {
-    setSellQuantity(sellAssets.length)
-  }, [sellAssets])
-
-  const isProfilePage = location.pathname === '/nfts/profile'
+  const bagHasItems = bagQuantity > 0
 
   return (
     <NavIcon onClick={toggleBag}>
-      {isProfilePage ? (
-        <>
-          <TagIcon viewBox="0 0 20 20" width={24} height={24} />
-          {sellQuantity ? (
-            <Box className={styles.bagQuantity}>{sellQuantity > 99 ? <HundredsOverflowIcon /> : sellQuantity}</Box>
-          ) : null}
-        </>
-      ) : (
-        <>
-          <BagIcon viewBox="0 0 20 20" width={24} height={24} />
-          {bagQuantity ? (
-            <Box className={styles.bagQuantity}>{bagQuantity > 99 ? <HundredsOverflowIcon /> : bagQuantity}</Box>
-          ) : null}
-        </>
+      <BagIcon viewBox="0 0 20 20" width={24} height={24} />
+      {bagHasItems && (
+        <Box className={styles.bagQuantity}>{bagQuantity > 99 ? <HundredsOverflowIcon /> : bagQuantity}</Box>
       )}
     </NavIcon>
   )
