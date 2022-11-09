@@ -136,7 +136,6 @@ export default function Polling() {
   )
 
   //TODO - chainlink gas oracle is really slow. Can we get a better data source?
-  //
 
   return isNftPage ? null : (
     <>
