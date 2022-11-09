@@ -52,7 +52,6 @@ export const BaseButton = styled(RebassButton)<
 
 export const ButtonPrimary = styled(BaseButton)`
   background-color: ${({ theme }) => theme.accentAction};
-  font-size: 20px;
   font-weight: 600;
   padding: 16px;
   color: ${({ theme }) => theme.accentTextLightPrimary};
@@ -82,7 +81,6 @@ export const ButtonPrimary = styled(BaseButton)`
 export const ButtonLight = styled(BaseButton)`
   background-color: ${({ theme }) => theme.accentActionSoft};
   color: ${({ theme }) => theme.accentAction};
-  font-size: 20px;
   font-weight: 600;
 
   &:focus {
@@ -111,7 +109,6 @@ export const ButtonLight = styled(BaseButton)`
 export const ButtonGray = styled(BaseButton)`
   background-color: ${({ theme }) => theme.deprecated_bg1};
   color: ${({ theme }) => theme.deprecated_text2};
-  font-size: 16px;
   font-weight: 500;
 
   &:hover {
@@ -126,7 +123,6 @@ export const ButtonSecondary = styled(BaseButton)`
   border: 1px solid ${({ theme }) => theme.deprecated_primary4};
   color: ${({ theme }) => theme.deprecated_primary1};
   background-color: transparent;
-  font-size: 16px;
   border-radius: 12px;
   padding: ${({ padding }) => (padding ? padding : '10px')};
 
