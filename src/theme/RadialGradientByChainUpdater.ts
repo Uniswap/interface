@@ -1,4 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
+import useIsNftPage from 'hooks/useIsNftPage'
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useDarkModeManager } from 'state/user/hooks'
@@ -29,8 +30,7 @@ const setBackground = (newValues: TargetBackgroundStyles) =>
 export default function RadialGradientByChainUpdater(): null {
   const { chainId } = useWeb3React()
   const [darkMode] = useDarkModeManager()
-  const { pathname } = useLocation()
-  const isNftPage = pathname.startsWith('/nfts')
+  const isNftPage = useIsNftPage()
 
   // manage background color
   useEffect(() => {

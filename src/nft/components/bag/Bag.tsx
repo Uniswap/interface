@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther } from '@ethersproject/units'
 import { useWeb3React } from '@web3-react/core'
+import useIsNftPage from 'hooks/useIsNftPage'
 import { BagFooter } from 'nft/components/bag/BagFooter'
 import ListingModal from 'nft/components/bag/profile/ListingModal'
 import { Box } from 'nft/components/Box'
@@ -102,7 +103,7 @@ const Bag = () => {
 
   const { pathname } = useLocation()
   const isProfilePage = pathname.startsWith('/nfts/profile')
-  const isNFTPage = pathname.startsWith('/nfts')
+  const isNFTPage = useIsNftPage()
   const isMobile = useIsMobile()
 
   const isDetailsPage = pathname.includes('/nfts/asset/')

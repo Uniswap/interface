@@ -3,6 +3,7 @@ import { useWeb3React } from '@web3-react/core'
 import Web3Status from 'components/Web3Status'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { chainIdToBackendName } from 'graphql/data/util'
+import useIsNftPage from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { UniIcon } from 'nft/components/icons'
@@ -69,8 +70,7 @@ const PageTabs = () => {
 }
 
 const Navbar = () => {
-  const { pathname } = useLocation()
-  const isNftPage = pathname.startsWith('/nfts')
+  const isNftPage = useIsNftPage()
 
   return (
     <>
