@@ -137,28 +137,28 @@ export function useNftBalanceQuery(
   const walletAssets: WalletAsset[] = data.nftBalances?.edges?.map((queryAsset: NftBalanceQueryAsset) => {
     const asset = queryAsset.node.ownedAsset
     return {
-      id: asset?.id ?? undefined,
+      id: asset?.id,
       image_url: asset?.image?.url,
       image_preview_url: asset?.smallImage?.url,
       name: asset?.name,
       tokenId: asset?.tokenId,
       asset_contract: {
-        address: asset?.collection?.nftContracts && asset?.collection?.nftContracts[0]?.address,
-        schema_name: asset?.collection?.nftContracts && asset?.collection?.nftContracts[0]?.standard,
+        address: asset?.collection?.nftContracts?.[0]?.address,
+        schema_name: asset?.collection?.nftContracts?.[0]?.standard,
         name: asset?.collection?.name,
         description: asset?.description,
         image_url: asset?.collection?.image?.url,
-        payout_address: queryAsset.node.listingFees && queryAsset.node.listingFees[0]?.payoutAddress,
+        payout_address: queryAsset?.node?.listingFees?.[0]?.payoutAddress,
       },
       collection: asset?.collection,
       collectionIsVerified: asset?.collection?.isVerified,
       lastPrice: queryAsset.node.lastPrice?.value,
-      floorPrice: asset?.collection?.markets && asset.collection.markets[0]?.floorPrice?.value,
-      creatorPercentage: queryAsset.node.listingFees && (queryAsset.node.listingFees[0]?.basisPoints ?? 0) / 10000,
-      listing_date: asset?.listings?.edges[0] ? asset.listings?.edges[0]?.node?.createdAt : undefined,
+      floorPrice: asset?.collection?.markets?.[0]?.floorPrice?.value,
+      creatorPercentage: queryAsset?.node?.listingFees?.[0]?.basisPoints ?? 0 / 10000,
+      listing_date: asset?.listings?.edges?.[0]?.node?.createdAt,
       date_acquired: queryAsset.node.lastPrice?.timestamp,
       sellOrders: asset?.listings?.edges.map((edge: any) => edge.node),
-      floor_sell_order_price: asset?.listings?.edges[0] ? asset.listings?.edges[0]?.node?.price?.value : undefined,
+      floor_sell_order_price: asset?.listings?.edges?.[0]?.node?.price?.value,
     }
   })
   return { walletAssets, hasNext, isLoadingNext, loadNext }
