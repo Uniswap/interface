@@ -44,13 +44,19 @@ export function HomeScreen() {
   )
 
   const renderTab = useMemo(() => {
-    return (route: Route, scrollProps: TabViewScrollProps, loadingContainerStyle: ViewStyle) => {
+    return (
+      route: Route,
+      scrollProps: TabViewScrollProps,
+      loadingContainerStyle: ViewStyle,
+      setNftsTabReloadFn: (fn: () => void) => void
+    ) => {
       switch (route?.key) {
         case SectionName.HomeNFTsTab:
           return (
             <NftsTab
               loadingContainerStyle={loadingContainerStyle}
               owner={activeAccount.address ?? ''}
+              setReloadFn={setNftsTabReloadFn}
               tabViewScrollProps={scrollProps}
             />
           )

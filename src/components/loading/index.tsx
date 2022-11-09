@@ -117,7 +117,7 @@ const getChildFromType = (type: SkeletonType, repeat: number, height?: number) =
             const secondColOpacity = (repeat - ((repeat / 2) * i + 2) + 1) / repeat
             return (
               <React.Fragment key={i}>
-                <Flex row gap="none" px="xs">
+                <Flex row gap="none">
                   <NftCardLoader opacity={firstColOpacity} width="50%" />
                   <NftCardLoader opacity={secondColOpacity} width="50%" />
                 </Flex>

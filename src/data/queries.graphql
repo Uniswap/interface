@@ -112,7 +112,7 @@ query NFTItemScreen($contractAddress: String!, $filter: NftAssetsFilterInput) {
   }
 }
 
-query NFTsTabQuery($ownerAddress: String!, $first: Int, $after: String) {
+query NftsTab($ownerAddress: String!, $first: Int, $after: String) {
   nftBalances(ownerAddress: $ownerAddress, first: $first, after: $after) {
     edges {
       node {

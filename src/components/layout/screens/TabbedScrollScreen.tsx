@@ -36,7 +36,8 @@ type TabbedScrollScreenProps = {
   renderTab: (
     route: Route,
     scrollProps: TabViewScrollProps,
-    loadingContainerStyle: ViewStyle
+    loadingContainerStyle: ViewStyle,
+    setNftsTabReloadFn: (fn: () => void) => void
   ) => ReactElement | null
   tabs: { key: SectionName; title: string }[]
   disableOpenSidebarGesture?: boolean
@@ -211,6 +212,15 @@ export default function TabbedScrollScreen({
               // TODO (Thomas): Figure out smooth scrolling for RecyclerListView
               found.value.scrollToOffset(0)
             }
+
+            // We only want to trigger a reload if the tapped tab is already the current active tab, not when switching tabs
+            if (
+              route.key === SectionName.HomeNFTsTab &&
+              tabIndex ===
+                routes.findIndex((currentRoute) => currentRoute.key === SectionName.HomeNFTsTab)
+            ) {
+              nftsTabReloadFn?.()
+            }
           }}
         />
       </Animated.View>
@@ -280,6 +290,9 @@ export default function TabbedScrollScreen({
     // TODO (Thomas): Handle case where both tabs have scrolled but new tab has scrolled less than the other
   }
 
+  // Since only the child tab has access to the refetch function, we pass this setState function to the child so it can set a callback after tapping on the tab.
+  const [nftsTabReloadFn, setNftsTabReloadFn] = useState<() => void>()
+
   return (
     <Screen edges={['top', 'left', 'right']}>
       <TraceTabView
@@ -290,7 +303,12 @@ export default function TabbedScrollScreen({
         }}
         navigationState={{ index: tabIndex, routes }}
         renderScene={(props) =>
-          renderTab(props.route, scrollPropsForTab(props.route.key), loadingContainerStyle)
+          renderTab(
+            props.route,
+            scrollPropsForTab(props.route.key),
+            loadingContainerStyle,
+            setNftsTabReloadFn
+          )
         }
         renderTabBar={renderTabBar}
         onIndexChange={onTabIndexChange}

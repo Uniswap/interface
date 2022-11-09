@@ -7,7 +7,7 @@ import { AnimatedBox, Box } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
-import { EMPTY_ARRAY, PollingInterval } from 'src/constants/misc'
+import { EMPTY_ARRAY } from 'src/constants/misc'
 import { isNonPollingRequestInFlight } from 'src/data/utils'
 import {
   TransactionListQuery,
@@ -49,7 +49,6 @@ export default function TransactionList(props: TransactionListProps) {
   const { t } = useTranslation()
   const { error, refetch, networkStatus, data } = useTransactionListQuery({
     variables: { address: props.ownerAddress },
-    pollInterval: PollingInterval.Fast,
     errorPolicy: 'all',
     notifyOnNetworkStatusChange: true,
   })
