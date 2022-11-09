@@ -1,4 +1,3 @@
-import clsx from 'clsx'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { useIsMobile } from 'nft/hooks'
@@ -13,6 +12,12 @@ import { CollectionTableColumn } from '../../types'
 import { ArrowRightIcon } from '../icons'
 import { ColumnHeaders } from './CollectionTable'
 import * as styles from './Explore.css'
+
+// Default table cell max width
+const CELL_WIDTH = '160px'
+// Collection Name cell max widths
+const MOBILE_CELL_WIDTH = '240px'
+const DESKTOP_CELL_WIDTH = '360px'
 
 const RankCellContainer = styled.div`
   display: flex;
@@ -84,9 +89,6 @@ interface TableProps<D extends Record<string, unknown>> {
   smallHiddenColumns: IdType<D>[]
   mediumHiddenColumns: IdType<D>[]
   largeHiddenColumns: IdType<D>[]
-  classNames?: {
-    td: string
-  }
 }
 export function Table<D extends Record<string, unknown>>({
   columns,
@@ -94,7 +96,6 @@ export function Table<D extends Record<string, unknown>>({
   smallHiddenColumns,
   mediumHiddenColumns,
   largeHiddenColumns,
-  classNames,
   ...props
 }: TableProps<D>) {
   const theme = useTheme()
@@ -188,7 +189,14 @@ export function Table<D extends Record<string, unknown>>({
             >
               {row.cells.map((cell, cellIndex) => {
                 return (
-                  <td className={clsx(styles.td, classNames?.td)} {...cell.getCellProps()} key={cellIndex}>
+                  <td
+                    className={styles.td}
+                    {...cell.getCellProps()}
+                    key={cellIndex}
+                    style={{
+                      maxWidth: cellIndex === 0 ? (isMobile ? MOBILE_CELL_WIDTH : DESKTOP_CELL_WIDTH) : CELL_WIDTH,
+                    }}
+                  >
                     {cellIndex === 0 ? (
                       <RankCellContainer>
                         {!isMobile && (

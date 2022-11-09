@@ -3,7 +3,11 @@ import { useWeb3React } from '@web3-react/core'
 import Web3Status from 'components/Web3Status'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { chainIdToBackendName } from 'graphql/data/util'
+<<<<<<< HEAD
 import useIsNftPage from 'hooks/useIsNftPage'
+=======
+import { useIsNftPage } from 'hooks/useIsNftPage'
+>>>>>>> main
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { UniIcon } from 'nft/components/icons'
@@ -49,6 +53,8 @@ const PageTabs = () => {
     pathname.startsWith('/increase') ||
     pathname.startsWith('/find')
 
+  const isNftPage = useIsNftPage()
+
   return (
     <>
       <MenuItem href="/swap" isActive={pathname.startsWith('/swap')}>
@@ -58,7 +64,7 @@ const PageTabs = () => {
         <Trans>Tokens</Trans>
       </MenuItem>
       {nftFlag === NftVariant.Enabled && (
-        <MenuItem href="/nfts" isActive={pathname.startsWith('/nfts')}>
+        <MenuItem href="/nfts" isActive={isNftPage}>
           <Trans>NFTs</Trans>
         </MenuItem>
       )}

@@ -1,8 +1,8 @@
+import { useIsNftProfilePage } from 'hooks/useIsNftPage'
 import { Center, Column } from 'nft/components/Flex'
 import { LargeBagIcon, LargeTagIcon } from 'nft/components/icons'
 import { subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
-import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 const StyledColumn = styled(Column)<{ isProfilePage?: boolean }>`
@@ -14,8 +14,7 @@ const StyledColumn = styled(Column)<{ isProfilePage?: boolean }>`
 `
 
 const EmptyState = () => {
-  const { pathname } = useLocation()
-  const isProfilePage = pathname.startsWith('/nfts/profile')
+  const isProfilePage = useIsNftProfilePage()
 
   return (
     <StyledColumn isProfilePage={isProfilePage}>
