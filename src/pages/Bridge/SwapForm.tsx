@@ -248,6 +248,9 @@ export default function SwapForm() {
         }
       }
     }
+    if (!tryParseAmount(inputAmount, currencyIn)) {
+      return t`Your amount is invalid.`
+    }
 
     const isWrapInputError = wrapInputError && inputNumber > 0
     if (isWrapInputError) return t`Insufficient ${tokenInfoIn?.symbol} balance`
@@ -262,6 +265,7 @@ export default function SwapForm() {
     loadingToken,
     listTokenOut,
     listTokenIn,
+    currencyIn,
   ])
 
   const handleTypeInput = useCallback(
@@ -394,6 +398,8 @@ export default function SwapForm() {
                 text={typeof inputError === 'string' ? inputError : ''}
                 show={typeof inputError === 'string'}
                 placement="top"
+                width="fit-content"
+                style={{ maxWidth: '230px' }}
               >
                 <CurrencyInputPanelBridge
                   chainIds={listChainIn}

@@ -43,6 +43,16 @@ export function useActiveNetwork() {
   const dispatch = useAppDispatch()
   const notify = useNotify()
 
+  const showError = useCallback(
+    (chainId: ChainId) =>
+      notify({
+        title: t`Failed to switch network`,
+        type: NotificationType.ERROR,
+        summary: t`In order to use KyberSwap on ${NETWORKS_INFO[chainId].name}, you must change the network in your wallet.`,
+      }),
+    [notify],
+  )
+
   const locationWithoutNetworkId = useMemo(() => {
     // Delete networkId from qs object
     const { networkId, ...qsWithoutNetworkId } = qs
@@ -72,12 +82,12 @@ export function useActiveNetwork() {
             method: 'wallet_switchEthereumChain',
             params: [switchNetworkParams],
           })
-          successCallback && successCallback()
+          successCallback?.()
         } catch (switchError) {
           // This is a workaround solution for Coin98
           const isSwitchError = typeof switchError === 'object' && switchError && Object.keys(switchError)?.length === 0
           // This error code indicates that the chain has not been added to MetaMask.
-          if (switchError?.code === 4902 || switchError?.code === -32603 || isSwitchError) {
+          if ([4902, -32603, -32002].includes(switchError?.code) || isSwitchError) {
             try {
               await activeProvider.request({ method: 'wallet_addEthereumChain', params: [addNetworkParams] })
               try {
@@ -86,38 +96,27 @@ export function useActiveNetwork() {
                   params: [switchNetworkParams],
                 })
               } catch {
-                notify({
-                  title: t`Failed to switch network`,
-                  type: NotificationType.ERROR,
-                  summary: t`In order to use KyberSwap on ${NETWORKS_INFO[desiredChainId].name}, you must change the network in your wallet.`,
-                })
+                showError(desiredChainId)
               }
-              successCallback && successCallback()
+              successCallback?.()
             } catch (addError) {
-              console.error('add', addError)
+              console.error('retry switch network error', addError)
+              // user deny
               if (addError?.code === 4001) {
-                notify({
-                  title: t`Failed to switch network`,
-                  type: NotificationType.ERROR,
-                  summary: t`In order to use KyberSwap on ${NETWORKS_INFO[desiredChainId].name}, you must change the network in your wallet.`,
-                })
+                showError(desiredChainId)
               }
-              failureCallback && failureCallback()
+              failureCallback?.()
             }
           } else {
             // handle other "switch" errors
-            console.error('switch', switchError)
-            failureCallback && failureCallback()
-            notify({
-              title: t`Failed to switch network`,
-              type: NotificationType.ERROR,
-              summary: t`In order to use KyberSwap on ${NETWORKS_INFO[desiredChainId].name}, you must change the network in your wallet.`,
-            })
+            console.error('switch network error', switchError)
+            failureCallback?.()
+            showError(desiredChainId)
           }
         }
       }
     },
-    [dispatch, history, library, locationWithoutNetworkId, error, notify],
+    [dispatch, history, library, locationWithoutNetworkId, error, showError],
   )
 
   useEffect(() => {

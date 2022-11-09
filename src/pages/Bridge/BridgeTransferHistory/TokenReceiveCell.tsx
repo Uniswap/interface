@@ -1,6 +1,7 @@
 import { Text } from 'rebass'
 
 import { MultichainTransfer } from 'hooks/bridge/useGetBridgeTransfers'
+import { formatNumberWithPrecisionRange } from 'utils'
 
 type Props = {
   transfer: MultichainTransfer
@@ -16,7 +17,7 @@ const TokenReceiveCell: React.FC<Props> = ({ transfer }) => {
         lineHeight: '16px',
       }}
     >
-      {transfer.dstAmount} {transfer.dstTokenSymbol}
+      {formatNumberWithPrecisionRange(parseFloat(transfer.dstAmount.toString() ?? '0'), 0, 6)} {transfer.dstTokenSymbol}
     </Text>
   )
 }

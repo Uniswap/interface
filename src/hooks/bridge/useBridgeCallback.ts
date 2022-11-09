@@ -13,7 +13,7 @@ import { useAppSelector } from 'state/hooks'
 import { tryParseAmount } from 'state/swap/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { useCurrencyBalance, useETHBalances } from 'state/wallet/hooks'
-import { isAddress } from 'utils'
+import { formatNumberWithPrecisionRange, isAddress } from 'utils'
 
 const NOT_APPLICABLE = {
   execute: async () => {
@@ -160,10 +160,7 @@ function useRouterSwap(
             const from_network = NETWORKS_INFO[chainId].name
             const to_network = NETWORKS_INFO[chainIdOut].name
             const inputAmountStr = inputAmount.toSignificant(6)
-            const outputAmountStr = tryParseAmount(
-              outputInfo.outputAmount.toString(),
-              currencyOut ?? undefined,
-            )?.toSignificant(6)
+            const outputAmountStr = formatNumberWithPrecisionRange(parseFloat(outputInfo.outputAmount.toString()), 0, 6)
             const from_token = currencyIn?.symbol ?? ''
             const to_token = currencyOut?.symbol ?? ''
             addTransactionWithType(txReceipt, {
@@ -178,7 +175,15 @@ function useRouterSwap(
                 trade_qty: typedValue,
               },
             })
-            sendTxToKsSetting(chainId, chainIdOut, txHash, from_token, to_token, inputAmountStr, outputAmountStr ?? '')
+            sendTxToKsSetting(
+              chainId,
+              chainIdOut,
+              txHash,
+              from_token,
+              to_token,
+              inputAmountStr,
+              outputInfo?.outputAmount?.toString() ?? '',
+            )
           }
           return txHash ?? ''
         } catch (error) {
@@ -274,10 +279,7 @@ function useBridgeSwap(
             const from_network = NETWORKS_INFO[chainId].name
             const to_network = NETWORKS_INFO[chainIdOut].name
             const inputAmountStr = inputAmount.toSignificant(6)
-            const outputAmountStr = tryParseAmount(
-              outputInfo.outputAmount.toString(),
-              currencyOut ?? undefined,
-            )?.toSignificant(6)
+            const outputAmountStr = formatNumberWithPrecisionRange(parseFloat(outputInfo.outputAmount.toString()), 0, 6)
             const from_token = currencyIn?.symbol ?? ''
             const to_token = currencyOut?.symbol ?? ''
             addTransactionWithType(txReceipt, {
@@ -292,7 +294,15 @@ function useBridgeSwap(
                 trade_qty: typedValue,
               },
             })
-            sendTxToKsSetting(chainId, chainIdOut, txHash, from_token, to_token, inputAmountStr, outputAmountStr ?? '')
+            sendTxToKsSetting(
+              chainId,
+              chainIdOut,
+              txHash,
+              from_token,
+              to_token,
+              inputAmountStr,
+              outputInfo?.outputAmount?.toString() ?? '',
+            )
           }
           return txHash ?? ''
         } catch (error) {
