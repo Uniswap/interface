@@ -28,6 +28,12 @@ function renderFormat(template: string, options: { [x: string]: any; num?: any; 
       options[option] = options[option].replace('-', '')
       template = '-' + template
     }
+
+    if (options[option].indexOf('<') !== -1) {
+      options[option] = options[option].replace('<', '')
+      template = '<' + template
+    }
+
     template = template.replace('{{' + option + '}}', options[option])
   }
 
@@ -70,22 +76,22 @@ function commaThousDotDec(sNum: string) {
 
 function spaceThousCommaDec(sNum: string) {
   'worklet'
-  const seperators = {
+  const separators = {
     decimal: ',',
     thousands: '\u00A0',
   }
 
-  return replaceSeparators(sNum, seperators)
+  return replaceSeparators(sNum, separators)
 }
 
-function apostrophThousDotDec(sNum: string) {
+function apostropheThousDotDec(sNum: string) {
   'worklet'
-  const seperators = {
+  const separators = {
     decimal: '.',
     thousands: '\u0027',
   }
 
-  return replaceSeparators(sNum, seperators)
+  return replaceSeparators(sNum, separators)
 }
 
 const transformForLocale = {
@@ -97,8 +103,8 @@ const transformForLocale = {
   de: dotThousCommaDec,
   'de-DE': dotThousCommaDec,
   'de-AT': dotThousCommaDec,
-  'de-CH': apostrophThousDotDec,
-  'de-LI': apostrophThousDotDec,
+  'de-CH': apostropheThousDotDec,
+  'de-LI': apostropheThousDotDec,
   'de-BE': dotThousCommaDec,
   nl: dotThousCommaDec,
   'nl-BE': dotThousCommaDec,
@@ -271,6 +277,19 @@ interface OptionsType {
   currencyDisplay?: string
 }
 
+// need this function because JS will auto convert very small numbers to scientific notation
+function convertSmallSciNotationToDecimal(value: number) {
+  'worklet'
+  const num = value.toPrecision(3)
+  if (!num.includes('e-')) return num
+
+  const [base, exponent] = num.split('e-')
+  if (!base || !exponent) return '-'
+
+  const decimal = base.replace('.', '')
+  return '0.'.concat('0'.repeat(Number(exponent) - 1).concat(decimal))
+}
+
 export function numberToLocaleStringWorklet(
   value: number,
   locale: Language = 'en-US',
@@ -287,10 +306,15 @@ export function numberToLocaleStringWorklet(
 
   let sNum
 
-  if (options && (options.maximumFractionDigits || options.maximumFractionDigits === 0)) {
-    sNum = value.toFixed(options.maximumFractionDigits)
-  } else {
+  // if we encounter any coins with a unit price over $1M then add a shorthand case
+  if (value < 0) {
     sNum = value.toString()
+  } else if (value < 0.00000001) {
+    sNum = '<0.00000001'
+  } else if (value < 1) {
+    sNum = convertSmallSciNotationToDecimal(value)
+  } else {
+    sNum = value.toFixed(2)
   }
 
   sNum = (<(key: string, options?: OptionsType) => string>mapMatch(transformForLocale, locale))(

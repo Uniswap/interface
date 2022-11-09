@@ -21,46 +21,68 @@ describe('reanimated numberToLocaleStringWorklet', function () {
     expect(typeof numberToLocaleStringWorklet(num, locale)).toBe('string')
   })
 
+  it('returns <$0.00000001 if the value is below that amount', function () {
+    const num = 0.000000001
+
+    expect(
+      numberToLocaleStringWorklet(num, 'en-US', {
+        style: 'currency',
+        currency: 'USD',
+      })
+    ).toBe('<$0.00000001')
+  })
+
+  it('returns a string with 3 sig figs if it is between 0.00000001 and 1,', function () {
+    const num = 0.0000000123
+
+    expect(
+      numberToLocaleStringWorklet(num, 'en-US', {
+        style: 'currency',
+        currency: 'USD',
+      })
+    ).toBe('$0.0000000123')
+  })
+
   it('returns a string formatted in FR style (1\u00A0234.5) when passed FR', function () {
     const num = 1234.5
     const locale = 'fr'
 
-    expect(numberToLocaleStringWorklet(num, locale)).toEqual('1\u00A0234,5')
+    expect(numberToLocaleStringWorklet(num, locale)).toEqual('1\u00A0234,50')
   })
 
   it('returns a string formatted in US style (1,234.5) when passed US', function () {
     const num = 1234.5
     const locale = 'en-US'
 
-    expect(numberToLocaleStringWorklet(num, locale)).toBe('1,234.5')
+    expect(numberToLocaleStringWorklet(num, locale)).toBe('1,234.50')
   })
 
   it('returns a string formatted in IT style (1.234,5) when passed IT', function () {
     const num = 1234.5
     const locale = 'it'
 
-    expect(numberToLocaleStringWorklet(num, locale)).toBe('1.234,5')
+    expect(numberToLocaleStringWorklet(num, locale)).toBe('1.234,50')
   })
 
   it("returns a string formatted in de-CH style (1'234.5) when passed de-CH", function () {
     const num = 1234.5
     const locale = 'de-CH'
 
-    expect(numberToLocaleStringWorklet(num, locale)).toBe("1'234.5")
+    expect(numberToLocaleStringWorklet(num, locale)).toBe("1'234.50")
   })
 
   it('returns a string formatted in DK style (1.234,5) when passed da-DK', function () {
     const num = 1234.5
     const locale = 'da-DK'
 
-    expect(numberToLocaleStringWorklet(num, locale)).toBe('1.234,5')
+    expect(numberToLocaleStringWorklet(num, locale)).toBe('1.234,50')
   })
 
   it('returns a string formatted in NO style (1 234,5) when passed nb-NO', function () {
     const num = 1234.5
     const locale = 'nb-NO'
 
-    expect(numberToLocaleStringWorklet(num, locale)).toBe('1\u00A0234,5')
+    expect(numberToLocaleStringWorklet(num, locale)).toBe('1\u00A0234,50')
   })
 
   it('throws when the language tag does not conform to the standard', function () {
@@ -75,44 +97,14 @@ describe('reanimated numberToLocaleStringWorklet', function () {
     expect(testLocale).toThrow(new RangeError('Invalid language tag: ' + locale))
   })
 
-  it('should support options with maximumFractionDigits 2', function () {
-    const num = 1234
-    const locale = 'it'
-
-    expect(numberToLocaleStringWorklet(num, locale, { maximumFractionDigits: 2 })).toBe('1.234,00')
-  })
-
-  it('should support options with maximumFractionDigits 4', function () {
-    const num = 1234.0
-    const locale = 'it'
-
-    expect(numberToLocaleStringWorklet(num, locale, { maximumFractionDigits: 4 })).toBe(
-      '1.234,0000'
-    )
-  })
-
-  it('should support options with maximumFractionDigits with 0 value', function () {
-    const num = 1234.1234
-    const locale = 'it'
-    const currency = 'EUR'
-
-    expect(
-      numberToLocaleStringWorklet(num, locale, {
-        style: 'currency',
-        currency: currency,
-        maximumFractionDigits: 0,
-      })
-    ).toBe('1.234 €')
-  })
-
   it('returns a string formatted in US style (1,234.5) by default', function () {
     const num = 1234.5
 
-    expect(numberToLocaleStringWorklet(num)).toBe('1,234.5')
+    expect(numberToLocaleStringWorklet(num)).toBe('1,234.50')
     //@ts-ignore
-    expect(numberToLocaleStringWorklet(num, 'es')).toBe('1,234.5')
+    expect(numberToLocaleStringWorklet(num, 'es')).toBe('1,234.50')
     //@ts-ignore
-    expect(numberToLocaleStringWorklet(num, 'AU')).toBe('1,234.5')
+    expect(numberToLocaleStringWorklet(num, 'AU')).toBe('1,234.50')
   })
 
   it('returns a string formatted in Hungarian style (1 234,56) by default', function () {

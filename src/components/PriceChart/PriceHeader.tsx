@@ -56,7 +56,6 @@ export const PriceHeader = ({ price, percentChange, date }: HeaderProps) => {
   const priceFormatted = useDerivedValue(() => {
     // note. block runs inside a worklet, cannot re-use the existing price formatters as-is
     return numberToLocaleStringWorklet(price.value, 'en-US', {
-      maximumFractionDigits: 2,
       style: 'currency',
       currency: 'USD',
     })

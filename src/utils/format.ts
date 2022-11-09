@@ -78,18 +78,6 @@ const SHORTHAND_USD_ONE_DECIMAL = new Intl.NumberFormat('en-US', {
   style: 'currency',
 })
 
-const SCIENTIFIC = new Intl.NumberFormat('en-US', {
-  notation: 'scientific',
-  maximumSignificantDigits: 3,
-})
-
-const SCIENTIFIC_USD = new Intl.NumberFormat('en-US', {
-  notation: 'scientific',
-  maximumSignificantDigits: 3,
-  currency: 'USD',
-  style: 'currency',
-})
-
 const SIX_SIG_FIGS_TWO_DECIMALS = new Intl.NumberFormat('en-US', {
   notation: 'standard',
   maximumSignificantDigits: 6,
@@ -139,7 +127,7 @@ const tokenNonTxFormatter: FormatterRule[] = [
   { upperBound: 1, formatter: THREE_DECIMALS },
   { upperBound: 1e6, formatter: TWO_DECIMALS },
   { upperBound: 1e15, formatter: SHORTHAND_TWO_DECIMALS },
-  { upperBound: Infinity, formatter: SCIENTIFIC },
+  { upperBound: Infinity, formatter: '>999T' },
 ]
 
 const tokenTxFormatter: FormatterRule[] = [
@@ -158,7 +146,7 @@ const swapTradeAmountFormatter: FormatterRule[] = [
 ]
 
 const fiatTokenDetailsFormatter: FormatterRule[] = [
-  { upperBound: 0.000001, formatter: SCIENTIFIC_USD },
+  { upperBound: 0.00000001, formatter: '<$0.00000001' },
   { upperBound: 0.1, formatter: THREE_SIG_FIGS_USD },
   { upperBound: 1.05, formatter: THREE_DECIMALS_USD },
   { upperBound: 1e6, formatter: TWO_DECIMALS_USD },
@@ -166,7 +154,7 @@ const fiatTokenDetailsFormatter: FormatterRule[] = [
 ]
 
 const fiatTokenPricesFormatter: FormatterRule[] = [
-  { upperBound: 0.000001, formatter: SCIENTIFIC_USD },
+  { upperBound: 0.00000001, formatter: '<$0.00000001' },
   { upperBound: 1, formatter: THREE_SIG_FIGS_USD },
   { upperBound: 1e6, formatter: TWO_DECIMALS_USD },
   { upperBound: Infinity, formatter: SHORTHAND_USD_TWO_DECIMALS },
@@ -194,7 +182,7 @@ const ntfTokenFloorPriceFormatter: FormatterRule[] = [
   { upperBound: 1, formatter: THREE_DECIMALS },
   { upperBound: 1000, formatter: TWO_DECIMALS },
   { upperBound: 1e15, formatter: SHORTHAND_TWO_DECIMALS },
-  { upperBound: Infinity, formatter: SCIENTIFIC },
+  { upperBound: Infinity, formatter: '>999T' },
 ]
 
 const ntfCollectionStatsFormatter: FormatterRule[] = [
@@ -274,7 +262,7 @@ export function formatNumber(
 
   const formatter = getFormatterRule(input, type)
   if (typeof formatter === 'string') return formatter
-  return formatter.format(input).replace('E', 'e') // the E in scientific notation should be lowercase
+  return formatter.format(input)
 }
 
 export function formatCurrencyAmount(
