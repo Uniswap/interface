@@ -187,7 +187,7 @@ export function Table<D extends Record<string, unknown>>({
                     className={styles.td}
                     {...cell.getCellProps()}
                     key={cellIndex}
-                    style={{ maxWidth: cellIndex === 0 && isMobile ? '300px' : '160px' }}
+                    style={{ maxWidth: cellIndex === 0 ? (isMobile ? '300px' : '360px') : '160px' }}
                   >
                     {cellIndex === 0 ? (
                       <RankCellContainer>
