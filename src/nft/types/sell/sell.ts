@@ -12,24 +12,6 @@ export interface ListingWarning {
   message: string
 }
 
-export interface Deprecated_SellOrder {
-  assetId: string
-  ethPrice: number
-  basePrice: number
-  baseCurrency: string
-  baseCurrencyDecimal: number
-  orderCreatedDate: string
-  orderClosingDate: string
-  quantity: number
-  timestamp: string
-  marketplace: string
-  marketplaceUrl: string
-  orderHash: string
-  ammFeePercent?: number
-  ethReserves?: number
-  tokenReserves?: number
-}
-
 export interface SellOrder {
   address: string
   createdAt: number
@@ -78,7 +60,7 @@ export interface WalletAsset {
   creatorPercentage: number
   listing_date: string
   date_acquired: string
-  sellOrders: Deprecated_SellOrder[] | SellOrder[] // TODO remove Deprecated_SellOrder when full migration to GraphQL is complete
+  sellOrders: SellOrder[]
   floor_sell_order_price: number
   // Used for creating new listings
   expirationTime?: number

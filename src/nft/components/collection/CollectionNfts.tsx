@@ -4,7 +4,6 @@ import { TraceEvent } from 'analytics/TraceEvent'
 import clsx from 'clsx'
 import { loadingAnimation } from 'components/Loader/styled'
 import { parseEther } from 'ethers/lib/utils'
-import { NftGraphQlVariant, useNftGraphQlFlag } from 'featureFlags/flags/nftGraphQl'
 import { NftAssetTraitInput, NftMarketplace } from 'graphql/data/nft/__generated__/AssetQuery.graphql'
 import { useAssetsQuery } from 'graphql/data/nft/Asset'
 import useDebounce from 'hooks/useDebounce'
@@ -30,7 +29,6 @@ import {
 } from 'nft/hooks'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { usePriceRange } from 'nft/hooks/usePriceRange'
-import { AssetsFetcher } from 'nft/queries'
 import { DropDownOption, GenieCollection, TokenType, UniformHeight, UniformHeights } from 'nft/types'
 import { getRarityStatus } from 'nft/utils/asset'
 import { pluralize } from 'nft/utils/roundAndPluralize'
@@ -38,7 +36,6 @@ import { scrollToTop } from 'nft/utils/scrollToTop'
 import { applyFiltersFromURL, syncLocalFiltersWithURL } from 'nft/utils/urlParams'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { useInfiniteQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -223,7 +220,6 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const reset = useCollectionFilters((state) => state.reset)
   const setMin = useCollectionFilters((state) => state.setMinPrice)
   const setMax = useCollectionFilters((state) => state.setMaxPrice)
-  const isNftGraphQl = useNftGraphQlFlag() === NftGraphQlVariant.Enabled
 
   const toggleBag = useBag((state) => state.toggleBag)
   const bagExpanded = useBag((state) => state.bagExpanded)
@@ -235,75 +231,12 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const [sweepIsOpen, setSweepOpen] = useState(false)
 
   const {
-    data: collectionAssets,
-    isSuccess: AssetsFetchSuccess,
-    isLoading,
-    fetchNextPage,
-    hasNextPage,
-  } = useInfiniteQuery(
-    [
-      'collectionNfts',
-      {
-        traits,
-        contractAddress,
-        markets,
-        notForSale: !buyNow,
-        sortBy,
-        debouncedMinPrice,
-        debouncedMaxPrice,
-        searchText: debouncedSearchByNameText,
-      },
-    ],
-    async ({ pageParam = 0 }) => {
-      let sort = undefined
-      switch (sortBy) {
-        case SortBy.HighToLow: {
-          sort = { currentEthPrice: 'desc' }
-          break
-        }
-        case SortBy.RareToCommon: {
-          sort = { 'rarity.providers.0.rank': 1 }
-          break
-        }
-        case SortBy.CommonToRare: {
-          sort = { 'rarity.providers.0.rank': -1 }
-          break
-        }
-        default:
-      }
-
-      return await AssetsFetcher({
-        contractAddress,
-        sort,
-        markets,
-        notForSale: !buyNow,
-        searchText: debouncedSearchByNameText,
-        pageParam,
-        traits,
-        price: {
-          low: debouncedMinPrice,
-          high: debouncedMaxPrice,
-          symbol: 'ETH',
-        },
-      })
-    },
-    {
-      getNextPageParam: (lastPage, pages) => {
-        return lastPage?.flat().length === DEFAULT_ASSET_QUERY_AMOUNT ? pages.length : null
-      },
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchInterval: 5000,
-    }
-  )
-  const {
-    assets: nftQueryAssets,
+    assets: collectionNfts,
     loadNext,
     hasNext,
     isLoadingNext,
   } = useAssetsQuery(
-    isNftGraphQl ? contractAddress : '',
+    contractAddress,
     SortByQueries[sortBy].field,
     SortByQueries[sortBy].asc,
     {
@@ -328,23 +261,9 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const oldStateRef = useRef<CollectionFilters | null>(null)
   const isMobile = useIsMobile()
 
-  const collectionNfts = useMemo(() => {
-    if (
-      (isNftGraphQl && !nftQueryAssets && !isLoadingNext) ||
-      (!isNftGraphQl && !collectionAssets) ||
-      !AssetsFetchSuccess
-    )
-      return undefined
-
-    return isNftGraphQl ? nftQueryAssets : collectionAssets?.pages.flat()
-  }, [AssetsFetchSuccess, collectionAssets, isLoadingNext, isNftGraphQl, nftQueryAssets])
-
-  const wrappedLoadingState = isNftGraphQl ? isLoadingNext : isLoading
-  const wrappedHasNext = isNftGraphQl ? hasNext : hasNextPage ?? false
-
   useEffect(() => {
-    setIsCollectionNftsLoading(wrappedLoadingState)
-  }, [wrappedLoadingState, setIsCollectionNftsLoading])
+    setIsCollectionNftsLoading(isLoadingNext)
+  }, [isLoadingNext, setIsCollectionNftsLoading])
 
   const hasRarity = getRarityStatus(rarityStatusCache, collectionStats?.address, collectionNfts)
 
@@ -508,28 +427,24 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
               <CollectionSearch />
             </ActionsSubContainer>
             {!hasErc1155s ? (
-              isLoading ? (
-                <LoadingButton />
-              ) : (
-                <SweepButton
-                  toggled={sweepIsOpen}
-                  disabled={!buyNow}
-                  className={buttonTextMedium}
-                  onClick={() => {
-                    if (!buyNow || hasErc1155s) return
-                    if (!sweepIsOpen) {
-                      scrollToTop()
-                      if (!bagExpanded && !isMobile) toggleBag()
-                    }
-                    setSweepOpen(!sweepIsOpen)
-                  }}
-                >
-                  <SweepIcon viewBox="0 0 24 24" width="20px" height="20px" />
-                  <SweepText fontWeight={600} color="currentColor" lineHeight="20px">
-                    Sweep
-                  </SweepText>
-                </SweepButton>
-              )
+              <SweepButton
+                toggled={sweepIsOpen}
+                disabled={!buyNow}
+                className={buttonTextMedium}
+                onClick={() => {
+                  if (!buyNow || hasErc1155s) return
+                  if (!sweepIsOpen) {
+                    scrollToTop()
+                    if (!bagExpanded && !isMobile) toggleBag()
+                  }
+                  setSweepOpen(!sweepIsOpen)
+                }}
+              >
+                <SweepIcon viewBox="0 0 24 24" width="20px" height="20px" />
+                <SweepText fontWeight={600} color="currentColor" lineHeight="20px">
+                  Sweep
+                </SweepText>
+              </SweepButton>
             ) : null}
           </ActionsContainer>
           <Sweep
@@ -593,12 +508,12 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         </Box>
       </AnimatedBox>
       <InfiniteScroll
-        next={() => (isNftGraphQl ? loadNext(DEFAULT_ASSET_QUERY_AMOUNT) : fetchNextPage())}
-        hasMore={wrappedHasNext}
-        loader={wrappedHasNext && hasNfts ? loadingAssets : null}
+        next={() => loadNext(DEFAULT_ASSET_QUERY_AMOUNT)}
+        hasMore={hasNext}
+        loader={hasNext && hasNfts ? loadingAssets : null}
         dataLength={collectionNfts?.length ?? 0}
         style={{ overflow: 'unset' }}
-        className={hasNfts || wrappedLoadingState ? styles.assetList : undefined}
+        className={hasNfts || isLoadingNext ? styles.assetList : undefined}
       >
         {hasNfts ? (
           Nfts
@@ -617,10 +532,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
               </Box>
             </EmptyCollectionWrapper>
           </Center>
-        ) : isNftGraphQl ? (
-          <CollectionNftsLoading />
         ) : (
-          loadingAssets
+          <CollectionNftsLoading />
         )}
       </InfiniteScroll>
     </>

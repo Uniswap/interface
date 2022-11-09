@@ -1,13 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import {
-  BagItem,
-  BagItemStatus,
-  Deprecated_SellOrder,
-  GenieAsset,
-  Markets,
-  SellOrder,
-  UpdatedGenieAsset,
-} from 'nft/types'
+import { BagItem, BagItemStatus, GenieAsset, Markets, UpdatedGenieAsset } from 'nft/types'
 
 // TODO: a lot of the below typecasting logic can be simplified when GraphQL migration is complete
 export const calcPoolPrice = (asset: GenieAsset, position = 0) => {
@@ -15,11 +7,7 @@ export const calcPoolPrice = (asset: GenieAsset, position = 0) => {
   let marginalBuy: BigNumber = BigNumber.from(0)
   if (!asset.sellorders) return ''
 
-  const nft =
-    (asset.sellorders[0] as Deprecated_SellOrder).ammFeePercent === undefined
-      ? (asset.sellorders[0] as SellOrder).protocolParameters
-      : (asset.sellorders[0] as Deprecated_SellOrder)
-
+  const nft = asset.sellorders[0].protocolParameters
   const decimals = BigNumber.from(1).mul(10).pow(18)
   const ammFee = nft?.ammFeePercent ? (100 + (nft.ammFeePercent as number)) * 100 : 110 * 100
 
@@ -43,29 +31,23 @@ export const calcPoolPrice = (asset: GenieAsset, position = 0) => {
 
   const ethReserves = BigNumber.from(
     (
-      (nft?.ethReserves as number) ??
-      (
-        nft as Record<
-          string,
-          {
-            ethReserves: number
-          }
-        >
-      )?.poolMetadata?.ethReserves
-    )?.toLocaleString('fullwide', { useGrouping: false }) ?? 1
+      nft as Record<
+        string,
+        {
+          ethReserves: number
+        }
+      >
+    )?.poolMetadata?.ethReserves?.toLocaleString('fullwide', { useGrouping: false }) ?? 1
   )
   const tokenReserves = BigNumber.from(
     (
-      (nft?.tokenReserves as number) ??
-      (
-        nft as Record<
-          string,
-          {
-            tokenReserves: number
-          }
-        >
-      )?.poolMetadata?.tokenReserves
-    )?.toLocaleString('fullwide', { useGrouping: false }) ?? 1
+      nft as Record<
+        string,
+        {
+          tokenReserves: number
+        }
+      >
+    )?.poolMetadata?.tokenReserves?.toLocaleString('fullwide', { useGrouping: false }) ?? 1
   )
   const numerator = ethReserves.mul(amountToBuy).mul(1000)
   const denominator = tokenReserves.sub(amountToBuy).mul(997)
