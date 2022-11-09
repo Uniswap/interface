@@ -6,6 +6,7 @@ import { chainIdToBackendName } from 'graphql/data/util'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { UniIcon } from 'nft/components/icons'
+import { useIsMobile } from 'nft/hooks'
 import { ReactNode } from 'react'
 import { NavLink, NavLinkProps, useLocation } from 'react-router-dom'
 
@@ -68,11 +69,28 @@ const PageTabs = () => {
   )
 }
 
+const useShouldHideNavbar = () => {
+  const { pathname } = useLocation()
+  const isMobile = useIsMobile()
+  const paths = ['/nfts/profile']
+
+  if (!isMobile) return false
+
+  for (const path of paths) {
+    if (pathname.includes(path)) return true
+  }
+
+  return false
+}
+
 const Navbar = () => {
   const { pathname } = useLocation()
   const isNftPage = pathname.startsWith('/nfts')
+  const shouldHideNavbar = useShouldHideNavbar()
 
-  return (
+  console.log(shouldHideNavbar)
+
+  return shouldHideNavbar ? null : (
     <>
       <nav className={styles.nav}>
         <Box display="flex" height="full" flexWrap="nowrap" alignItems="stretch">

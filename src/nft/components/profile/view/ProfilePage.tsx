@@ -222,7 +222,7 @@ export const ProfilePage = () => {
       <Row
         display={{ sm: 'flex', md: 'none' }}
         position="fixed"
-        bottom="56"
+        bottom="40"
         left="16"
         height="56"
         borderRadius="12"
