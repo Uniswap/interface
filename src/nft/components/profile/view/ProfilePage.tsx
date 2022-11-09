@@ -22,11 +22,12 @@ import Portal from '@reach/portal'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import { fetchWalletAssets, OSCollectionsFetcher } from 'nft/queries'
 import { ProfilePageStateType, WalletAsset, WalletCollection } from 'nft/types'
-import { Dispatch, SetStateAction, useEffect, useMemo, useReducer, useState } from 'react'
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery, useQuery } from 'react-query'
 import { useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
+import shallow from 'zustand/shallow'
 
 import { EmptyWalletContent } from './EmptyWalletContent'
 import { ProfileAccountDetails } from './ProfileAccountDetails'
@@ -72,22 +73,27 @@ export const ProfilePage = () => {
   const walletCollections = useWalletCollections((state) => state.walletCollections)
   const setWalletCollections = useWalletCollections((state) => state.setWalletCollections)
   const listFilter = useWalletCollections((state) => state.listFilter)
+  const { isSellMode, resetSellAssets, setIsSellMode } = useSellAsset(
+    ({ isSellMode, reset, setIsSellMode }) => ({
+      isSellMode,
+      resetSellAssets: reset,
+      setIsSellMode,
+    }),
+    shallow
+  )
   const sellAssets = useSellAsset((state) => state.sellAssets)
-  const reset = useSellAsset((state) => state.reset)
-  const resetSellAssets = useSellAsset((state) => state.reset)
+  const { setBagExpanded } = useBag(({ setBagExpanded }) => ({ setBagExpanded }), shallow)
+
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const isMobile = useIsMobile()
   const isNftGraphQl = useNftGraphQlFlag() === NftGraphQlVariant.Enabled
-  const [isSellMode, toggleSellMode] = useReducer((s) => !s, false)
-  const toggleBag = useBag((s) => s.toggleBag)
-  const bagExpanded = useBag((s) => s.bagExpanded)
-  const location = useLocation()
 
-  const handleSellModeClick = () => {
+  const handleSellModeClick = useCallback(() => {
     resetSellAssets()
-    toggleSellMode()
-  }
+    setIsSellMode(!isSellMode)
+    setBagExpanded({ bagExpanded: !isSellMode })
+  }, [isSellMode, resetSellAssets, setBagExpanded, setIsSellMode])
 
   const { data: ownerCollections, isLoading: collectionsAreLoading } = useQuery(
     ['ownerCollections', address],
@@ -96,15 +102,6 @@ export const ProfilePage = () => {
       refetchOnWindowFocus: false,
     }
   )
-
-  useEffect(() => {
-    // if (bagExpanded) {
-    //   toggleBag()
-    // }
-    console.log('route changed')
-    console.log(location)
-    toggleBag()
-  }, [location])
 
   const {
     data: ownerAssetsData,
@@ -160,7 +157,7 @@ export const ProfilePage = () => {
   })
 
   return (
-    <div style={{ overflow: 'hidden' }}>
+    <div>
       {anyQueryIsLoading && !isNftGraphQl ? (
         <ProfileBodyLoadingSkeleton />
       ) : ownerAssets?.length === 0 ? (
@@ -228,53 +225,47 @@ export const ProfilePage = () => {
           )}
         </Row>
       )}
-
-      <Row
-        display={{ sm: 'flex', md: 'none' }}
-        position="fixed"
-        bottom="40"
-        left="16"
-        height="56"
-        borderRadius="12"
-        paddingX="16"
-        paddingY="12"
-        style={{ background: '#0d0e0ef2', width: 'calc(100% - 32px)', lineHeight: '24px' }}
-        className={subhead}
-      >
-        {sellAssets.length > 0 ? (
-          <>
-            {' '}
-            {sellAssets.length}&nbsp;{sellAssets.length === 1 ? 'selected item' : 'NFTs'}{' '}
-            <Box
-              fontWeight="semibold"
-              fontSize="14"
-              cursor="pointer"
-              color="genieBlue"
-              marginRight="20"
-              marginLeft="auto"
-              onClick={reset}
-              lineHeight="16"
-            >
-              Clear
-            </Box>
-            <Box
-              marginRight="0"
-              fontWeight="medium"
-              fontSize="14"
-              cursor="pointer"
-              backgroundColor="genieBlue"
-              onClick={() => setSellPageState(ProfilePageStateType.LISTING)}
-              lineHeight="16"
-              borderRadius="12"
-              padding="8"
-            >
-              Continue
-            </Box>
-          </>
-        ) : (
-          <span> No NFTs Selected</span>
-        )}
-      </Row>
+      {sellAssets.length > 0 && (
+        <Row
+          display={{ sm: 'flex', md: 'none' }}
+          position="fixed"
+          bottom="24"
+          left="16"
+          height="56"
+          borderRadius="12"
+          paddingX="16"
+          paddingY="12"
+          style={{ background: '#0d0e0ef2', width: 'calc(100% - 32px)', lineHeight: '24px' }}
+          className={subhead}
+        >
+          {sellAssets.length}&nbsp; selected item{sellAssets.length === 1 ? '' : 's'}
+          <Box
+            fontWeight="semibold"
+            fontSize="14"
+            cursor="pointer"
+            color="genieBlue"
+            marginRight="20"
+            marginLeft="auto"
+            onClick={resetSellAssets}
+            lineHeight="16"
+          >
+            Clear
+          </Box>
+          <Box
+            marginRight="0"
+            fontWeight="medium"
+            fontSize="14"
+            cursor="pointer"
+            backgroundColor="genieBlue"
+            onClick={() => setSellPageState(ProfilePageStateType.LISTING)}
+            lineHeight="16"
+            borderRadius="12"
+            padding="8"
+          >
+            Continue
+          </Box>
+        </Row>
+      )}
     </div>
   )
 }

@@ -9,7 +9,7 @@ import sockImg from '../../assets/svg/socks.svg'
 import { useHasSocks } from '../../hooks/useSocksBalance'
 import Identicon from '../Identicon'
 
-const IconWrapper = styled.div<{ size?: number }>`
+export const IconWrapper = styled.div<{ size?: number }>`
   position: relative;
   ${({ theme }) => theme.flexColumnNoWrap};
   align-items: center;

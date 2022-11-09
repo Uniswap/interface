@@ -534,7 +534,6 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
           </ActionsContainer>
           <Sweep
             contractAddress={contractAddress}
-            collectionStats={collectionStats}
             minPrice={debouncedMinPrice}
             maxPrice={debouncedMaxPrice}
             showSweep={sweepIsOpen && buyNow && !hasErc1155s}
