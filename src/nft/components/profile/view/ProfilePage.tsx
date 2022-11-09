@@ -1,3 +1,5 @@
+import { Event, EventName } from 'analytics/constants'
+import { TraceEvent } from 'analytics/TraceEvent'
 import { useNftBalanceQuery } from 'graphql/data/nft/NftBalance'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { assetList } from 'nft/components/collection/CollectionNfts.css'
@@ -137,10 +139,16 @@ export const ProfilePage = () => {
                   />
                   <Row gap="8" flexWrap="nowrap">
                     {isSellMode && <SelectAllButton ownerAssets={ownerAssets ?? []} />}
-                    <SellModeButton className={buttonTextMedium} active={isSellMode} onClick={handleSellModeClick}>
-                      <TagIcon height={20} width={20} />
-                      Sell
-                    </SellModeButton>
+                    <TraceEvent
+                      events={[Event.onClick]}
+                      name={EventName.NFT_SELL_SELECTED}
+                      shouldLogImpression={!isSellMode}
+                    >
+                      <SellModeButton className={buttonTextMedium} active={isSellMode} onClick={handleSellModeClick}>
+                        <TagIcon height={20} width={20} />
+                        Sell
+                      </SellModeButton>
+                    </TraceEvent>
                   </Row>
                 </Row>
                 <Row>

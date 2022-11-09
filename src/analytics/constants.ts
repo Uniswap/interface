@@ -24,6 +24,11 @@ export enum EventName {
   NFT_BUY_BAG_SUCCEEDED = 'NFT Buy Bag Succeeded',
   NFT_FILTER_OPENED = 'NFT Collection Filter Opened',
   NFT_FILTER_SELECTED = 'NFT Filter Selected',
+  NFT_LISTING_SIGNED = 'NFT Listing Signed',
+  NFT_LISTING_COMPLETED = 'NFT Listing Success',
+  NFT_SELL_ITEM_ADDED = 'NFT Sell Item Added',
+  NFT_SELL_SELECTED = 'NFT Sell Selected',
+  NFT_SELL_START_LISTING = 'NFT Sell Start Listing',
   NFT_TRENDING_ROW_SELECTED = 'Trending Row Selected',
   SWAP_AUTOROUTER_VISUALIZATION_EXPANDED = 'Swap Autorouter Visualization Expanded',
   SWAP_DETAILS_EXPANDED = 'Swap Details Expanded',
@@ -88,6 +93,7 @@ export enum PageName {
   NFT_COLLECTION_PAGE = 'nft-collection-page',
   NFT_DETAILS_PAGE = 'nft-details-page',
   NFT_EXPLORE_PAGE = 'nft-explore-page',
+  NFT_PROFILE_PAGE = 'nft-profile-page',
   TOKEN_DETAILS_PAGE = 'token-details',
   TOKENS_PAGE = 'tokens-page',
   POOL_PAGE = 'pool-page',
@@ -112,6 +118,7 @@ export enum SectionName {
 /** Known modals for analytics purposes. */
 export enum ModalName {
   CONFIRM_SWAP = 'confirm-swap-modal',
+  NFT_LISTING = 'nft-listing-modal',
   NFT_TX_COMPLETE = 'nft-tx-complete-modal',
   TOKEN_SELECTOR = 'token-selector-modal',
   // alphabetize additional modal names.
