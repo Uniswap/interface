@@ -6,7 +6,7 @@ import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
 import AnimatedInLineChart from 'components/Charts/AnimatedInLineChart'
 import { bisect, curveCardinal, NumberValue, scaleLinear, timeDay, timeHour, timeMinute, timeMonth } from 'd3'
-import { PricePoint } from 'graphql/data/TokenPrice'
+import { PricePoint } from 'graphql/data/util'
 import { TimePeriod } from 'graphql/data/util'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
@@ -237,9 +237,7 @@ export function PriceChart({ width, height, prices, timePeriod }: PriceChartProp
           width={width}
           height={graphHeight}
           message={
-            prices === null ? (
-              <Trans>Loading chart data</Trans>
-            ) : prices?.length === 0 ? (
+            prices?.length === 0 ? (
               <Trans>This token doesn&apos;t have chart data because it hasn&apos;t been traded on Uniswap v3</Trans>
             ) : (
               <Trans>Missing chart data</Trans>

@@ -16,8 +16,4 @@ export const tokenPriceQuery = graphql`
     }
   }
 `
-export type PricePoint = { timestamp: number; value: number }
-
-export function isPricePoint(p: PricePoint | null): p is PricePoint {
-  return p !== null
-}
+export type { TokenPriceQuery } from './__generated__/TokenPriceQuery.graphql'

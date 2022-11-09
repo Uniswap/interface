@@ -28,17 +28,17 @@ import { SupportedChainId } from 'constants/chains'
 import { DEFAULT_ERC20_DECIMALS, NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { TokenPriceQuery } from 'graphql/data/__generated__/TokenPriceQuery.graphql'
-import { Chain, TokenQuery } from 'graphql/data/__generated__/TokenQuery.graphql'
+import { Chain, TokenQuery } from 'graphql/data/Token'
 import { QueryToken, tokenQuery, TokenQueryData } from 'graphql/data/Token'
 import { TopToken } from 'graphql/data/TopTokens'
-import { CHAIN_NAME_TO_CHAIN_ID, validateUrlChainParam } from 'graphql/data/util'
+import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
 import { useIsUserAddedTokenOnChain } from 'hooks/Tokens'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import { useCallback, useMemo, useState, useTransition } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { RefetchPricesFunction } from './ChartSection'
@@ -55,6 +55,14 @@ const TokenActions = styled.div`
 
 export function useTokenLogoURI(token?: TokenQueryData | TopToken, nativeCurrency?: Token | NativeCurrency) {
   const chainId = token ? CHAIN_NAME_TO_CHAIN_ID[token.chain] : SupportedChainId.MAINNET
+  const test = [
+    ...useCurrencyLogoURIs(nativeCurrency),
+    ...useCurrencyLogoURIs({ ...token, chainId }),
+    token?.project?.logoUrl,
+  ]
+  if (token?.symbol === 'USDC') {
+    console.log(test)
+  }
   return [
     ...useCurrencyLogoURIs(nativeCurrency),
     ...useCurrencyLogoURIs({ ...token, chainId }),
@@ -63,17 +71,19 @@ export function useTokenLogoURI(token?: TokenQueryData | TopToken, nativeCurrenc
 }
 
 type TokenDetailsProps = {
+  tokenAddress: string
+  chain: Chain
   tokenQueryReference: PreloadedQuery<TokenQuery>
   priceQueryReference: PreloadedQuery<TokenPriceQuery> | null | undefined
   refetchTokenPrices: RefetchPricesFunction
 }
 export default function TokenDetails({
+  tokenAddress,
+  chain,
   tokenQueryReference,
   priceQueryReference,
   refetchTokenPrices,
 }: TokenDetailsProps) {
-  const { tokenAddress, chainName } = useParams<{ tokenAddress?: string; chainName?: string }>()
-  const chain = validateUrlChainParam(chainName)
   const pageChainId = CHAIN_NAME_TO_CHAIN_ID[chain]
   const nativeCurrency = nativeOnChain(pageChainId)
   const isNative = tokenAddress === NATIVE_CHAIN_ID
@@ -106,9 +116,9 @@ export default function TokenDetails({
   const navigateToWidgetSelectedToken = useCallback(
     (token: Currency) => {
       const address = token.isNative ? NATIVE_CHAIN_ID : token.address
-      startTokenTransition(() => navigate(`/tokens/${chainName}/${address}`))
+      startTokenTransition(() => navigate(`/tokens/${chain.toLowerCase()}/${address}`))
     },
-    [chainName, navigate]
+    [chain, navigate]
   )
 
   const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
@@ -132,11 +142,11 @@ export default function TokenDetails({
   const L2Icon = getChainInfo(pageChainId)?.circleLogoUrl
 
   return (
-    <Trace page={PageName.TOKEN_DETAILS_PAGE} properties={{ tokenAddress, tokenName: chainName }} shouldLogImpression>
+    <Trace page={PageName.TOKEN_DETAILS_PAGE} properties={{ tokenAddress, tokenName: token?.name }} shouldLogImpression>
       <TokenDetailsLayout>
         {tokenQueryData && !isPending ? (
           <LeftPanel>
-            <BreadcrumbNavLink to={`/tokens/${chainName}`}>
+            <BreadcrumbNavLink to={`/tokens/${chain.toLowerCase()}`}>
               <ArrowLeft size={14} /> Tokens
             </BreadcrumbNavLink>
             <TokenInfoContainer>
@@ -145,8 +155,8 @@ export default function TokenDetails({
                   <CurrencyLogo
                     src={logoSrc}
                     size={'32px'}
-                    symbol={nativeCurrency?.symbol ?? token?.symbol}
-                    currency={nativeCurrency ? undefined : token}
+                    symbol={isNative ? nativeCurrency?.symbol : token?.symbol}
+                    currency={isNative ? nativeCurrency : token}
                   />
                   <L2NetworkLogo networkUrl={L2Icon} size={'16px'} />
                 </LogoContainer>

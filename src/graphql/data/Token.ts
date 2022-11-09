@@ -55,6 +55,7 @@ export const tokenQuery = graphql`
     }
   }
 `
+export type { Chain, ContractInput, TokenQuery } from './__generated__/TokenQuery.graphql'
 
 export type TokenQueryData = NonNullable<TokenQuery$data['tokens']>[number]
 

@@ -12,7 +12,7 @@ import { fetchQuery, useLazyLoadQuery, useRelayEnvironment } from 'react-relay'
 
 import type { Chain, TopTokens100Query } from './__generated__/TopTokens100Query.graphql'
 import { TopTokensSparklineQuery } from './__generated__/TopTokensSparklineQuery.graphql'
-import { isPricePoint, PricePoint } from './TokenPrice'
+import { isPricePoint, PricePoint } from './util'
 import { CHAIN_NAME_TO_CHAIN_ID, toHistoryDuration, unwrapToken } from './util'
 
 const topTokens100Query = graphql`
