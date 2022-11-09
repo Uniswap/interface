@@ -405,6 +405,12 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
     [isSuccess, eventsData]
   )
 
+  // TODO: remove after switching to graphql
+  const externalUrl = collection.externalUrl ?? collectionStats?.externalUrl
+  const twitterUrl = collection.twitterUrl ?? collectionStats?.twitterUrl
+  const discordUrl = collection.discordUrl ?? collectionStats?.discordUrl
+  const isVerified = collection.isVerified ?? collectionStats?.isVerified
+
   return (
     <Column>
       <MediaContainer>
@@ -423,7 +429,7 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
       </MediaContainer>
       <DefaultLink to={`/nfts/collection/${asset.address}`}>
         <CollectionHeader>
-          {collection.collectionName} {collectionStats?.isVerified && <VerifiedIcon />}
+          {collection.collectionName} {isVerified && <VerifiedIcon />}
         </CollectionHeader>
       </DefaultLink>
 
@@ -508,11 +514,9 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
 
           <DescriptionText>{collection.collectionDescription}</DescriptionText>
           <SocialsContainer>
-            {collectionStats?.externalUrl && <Resource name="Website" link={`${collectionStats?.externalUrl}`} />}
-            {collectionStats?.twitterUrl && (
-              <Resource name="Twitter" link={`https://twitter.com/${collectionStats?.twitterUrl}`} />
-            )}
-            {collectionStats?.discordUrl && <Resource name="Discord" link={collectionStats?.discordUrl} />}
+            {externalUrl && <Resource name="Website" link={`${externalUrl}`} />}
+            {twitterUrl && <Resource name="Twitter" link={`https://twitter.com/${twitterUrl}`} />}
+            {discordUrl && <Resource name="Discord" link={discordUrl} />}
           </SocialsContainer>
         </>
       </InfoContainer>

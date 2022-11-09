@@ -2,8 +2,10 @@ import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { ElementName, Event, EventName } from 'analytics/constants'
 import { TraceEvent } from 'analytics/TraceEvent'
+import { IconWrapper } from 'components/Identicon/StatusIcon'
 import WalletDropdown from 'components/WalletDropdown'
 import { getConnection } from 'connection/utils'
+import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { Portal } from 'nft/components/common/Portal'
 import { getIsValidSwapQuote } from 'pages/Swap'
 import { darken } from 'polished'
@@ -92,7 +94,7 @@ const Web3StatusConnectWrapper = styled.div<{ faded?: boolean }>`
   }
 `
 
-const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
+const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean; isNftActive?: boolean }>`
   background-color: ${({ pending, theme }) => (pending ? theme.deprecated_primary1 : theme.deprecated_bg1)};
   border: 1px solid ${({ pending, theme }) => (pending ? theme.deprecated_primary1 : theme.deprecated_bg1)};
   color: ${({ pending, theme }) => (pending ? theme.deprecated_white : theme.deprecated_text1)};
@@ -106,6 +108,22 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
         ${({ pending, theme }) =>
           pending ? darken(0.1, theme.deprecated_primary1) : darken(0.1, theme.deprecated_bg2)};
     }
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
+    width: ${({ isNftActive, pending }) => isNftActive && !pending && '36px'};
+
+    ${IconWrapper} {
+      margin-right: ${({ isNftActive }) => isNftActive && 0};
+    }
+  }
+`
+
+const AddressAndChevronContainer = styled.div<{ isNftActive?: boolean }>`
+  display: flex;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
+    display: ${({ isNftActive }) => isNftActive && 'none'};
   }
 `
 
@@ -185,6 +203,7 @@ function Web3StatusInner() {
   const walletIsOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
 
   const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
+  const isNftActive = useNftFlag() === NftVariant.Enabled
 
   const allTransactions = useAllTransactions()
 
@@ -214,8 +233,14 @@ function Web3StatusInner() {
       ...CHEVRON_PROPS,
       color: theme.textSecondary,
     }
+
     return (
-      <Web3StatusConnected data-testid="web3-status-connected" onClick={toggleWallet} pending={hasPendingTransactions}>
+      <Web3StatusConnected
+        data-testid="web3-status-connected"
+        isNftActive={isNftActive}
+        onClick={toggleWallet}
+        pending={hasPendingTransactions}
+      >
         {!hasPendingTransactions && <StatusIcon size={24} connectionType={connectionType} />}
         {hasPendingTransactions ? (
           <RowBetween>
@@ -225,10 +250,10 @@ function Web3StatusInner() {
             <Loader stroke="white" />
           </RowBetween>
         ) : (
-          <>
+          <AddressAndChevronContainer isNftActive={isNftActive}>
             <Text>{ENSName || shortenAddress(account)}</Text>
             {walletIsOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
-          </>
+          </AddressAndChevronContainer>
         )}
       </Web3StatusConnected>
     )

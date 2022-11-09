@@ -23,10 +23,10 @@ export const radio = style([
   }),
 ])
 
-export const greyBorderRadio = style([
+export const grayBorderRadio = style([
   radio,
   sprinkles({
-    borderColor: 'grey400',
+    borderColor: 'gray400',
   }),
 ])
 

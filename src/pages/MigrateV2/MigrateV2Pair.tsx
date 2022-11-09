@@ -7,7 +7,7 @@ import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import Badge, { BadgeVariant } from 'components/Badge'
 import { ButtonConfirmed } from 'components/Button'
-import { BlueCard, DarkGreyCard, LightCard, YellowCard } from 'components/Card'
+import { BlueCard, DarkGrayCard, LightCard, YellowCard } from 'components/Card'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import FeeSelector from 'components/FeeSelector'
 import RangeSelector from 'components/RangeSelector'
@@ -585,7 +585,7 @@ function V2PairMigration({
           ) : null}
 
           {position ? (
-            <DarkGreyCard>
+            <DarkGrayCard>
               <AutoColumn gap="md">
                 <LiquidityInfo token0Amount={position.amount0} token1Amount={position.amount1} />
                 {chainId && refund0 && refund1 ? (
@@ -600,7 +600,7 @@ function V2PairMigration({
                   </ThemedText.DeprecatedBlack>
                 ) : null}
               </AutoColumn>
-            </DarkGreyCard>
+            </DarkGrayCard>
           ) : null}
 
           <AutoColumn gap="12px">

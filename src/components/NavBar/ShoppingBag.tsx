@@ -1,46 +1,46 @@
 import { NavIcon } from 'components/NavBar/NavIcon'
 import * as styles from 'components/NavBar/ShoppingBag.css'
 import { Box } from 'nft/components/Box'
-import { BagIcon, HundredsOverflowIcon, TagIcon } from 'nft/components/icons'
+import { BagIcon, HundredsOverflowIcon } from 'nft/components/icons'
 import { useBag, useSellAsset } from 'nft/hooks'
-import { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useCallback, useEffect, useState } from 'react'
+import shallow from 'zustand/shallow'
 
 export const ShoppingBag = () => {
   const itemsInBag = useBag((state) => state.itemsInBag)
-  const sellAssets = useSellAsset((state) => state.sellAssets)
   const [bagQuantity, setBagQuantity] = useState(0)
-  const [sellQuantity, setSellQuantity] = useState(0)
-  const location = useLocation()
 
-  const toggleBag = useBag((s) => s.toggleBag)
+  const { bagExpanded, setBagExpanded } = useBag(
+    ({ bagExpanded, setBagExpanded }) => ({ bagExpanded, setBagExpanded }),
+    shallow
+  )
+  const { isSellMode, resetSellAssets, setIsSellMode } = useSellAsset(
+    ({ isSellMode, reset, setIsSellMode }) => ({
+      isSellMode,
+      resetSellAssets: reset,
+      setIsSellMode,
+    }),
+    shallow
+  )
+  const handleIconClick = useCallback(() => {
+    if (isSellMode && bagExpanded) {
+      resetSellAssets()
+      setIsSellMode(false)
+    }
+    setBagExpanded({ bagExpanded: !bagExpanded })
+  }, [bagExpanded, isSellMode, resetSellAssets, setBagExpanded, setIsSellMode])
 
   useEffect(() => {
     setBagQuantity(itemsInBag.length)
   }, [itemsInBag])
 
-  useEffect(() => {
-    setSellQuantity(sellAssets.length)
-  }, [sellAssets])
-
-  const isProfilePage = location.pathname === '/nfts/profile'
+  const bagHasItems = bagQuantity > 0
 
   return (
-    <NavIcon onClick={toggleBag}>
-      {isProfilePage ? (
-        <>
-          <TagIcon viewBox="0 0 20 20" width={24} height={24} />
-          {sellQuantity ? (
-            <Box className={styles.bagQuantity}>{sellQuantity > 99 ? <HundredsOverflowIcon /> : sellQuantity}</Box>
-          ) : null}
-        </>
-      ) : (
-        <>
-          <BagIcon viewBox="0 0 20 20" width={24} height={24} />
-          {bagQuantity ? (
-            <Box className={styles.bagQuantity}>{bagQuantity > 99 ? <HundredsOverflowIcon /> : bagQuantity}</Box>
-          ) : null}
-        </>
+    <NavIcon onClick={handleIconClick}>
+      <BagIcon viewBox="0 0 20 20" width={24} height={24} />
+      {bagHasItems && (
+        <Box className={styles.bagQuantity}>{bagQuantity > 99 ? <HundredsOverflowIcon /> : bagQuantity}</Box>
       )}
     </NavIcon>
   )

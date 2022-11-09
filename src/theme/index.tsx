@@ -146,7 +146,7 @@ function oldColors(darkMode: boolean): Colors {
     deprecated_text4: darkMode ? ColorsPalette.gray200 : ColorsPalette.gray300,
     deprecated_text5: darkMode ? ColorsPalette.gray500 : ColorsPalette.gray50,
 
-    // backgrounds / greys
+    // backgrounds / grays
     deprecated_bg0: darkMode ? ColorsPalette.gray900 : ColorsPalette.white,
     deprecated_bg1: darkMode ? ColorsPalette.gray800 : ColorsPalette.gray50,
     deprecated_bg2: darkMode ? ColorsPalette.gray700 : ColorsPalette.gray100,

@@ -68,6 +68,11 @@ const collectionQuery = graphql`
               value
               currency
             }
+            marketplaces {
+              marketplace
+              listings
+              floorPrice
+            }
           }
         }
       }
@@ -89,11 +94,12 @@ export function useCollectionQuery(address: string): GenieCollection | undefined
   const traits = {} as Record<string, Trait[]>
   if (queryCollection?.traits) {
     queryCollection?.traits.forEach((trait) => {
-      if (trait.name && trait.values) {
-        traits[trait.name] = trait.values.map((value) => {
+      if (trait.name && trait.stats) {
+        traits[trait.name] = trait.stats.map((stats) => {
           return {
-            trait_type: trait.name,
-            trait_value: value,
+            trait_type: stats.name,
+            trait_value: stats.value,
+            trait_count: stats.assets,
           } as Trait
         })
       }
@@ -120,7 +126,15 @@ export function useCollectionQuery(address: string): GenieCollection | undefined
         }
       : {},
     traits,
-    // marketplaceCount: { marketplace: string; count: number }[], // TODO add when backend supports
+    marketplaceCount: queryCollection?.markets
+      ? market?.marketplaces?.map((market) => {
+          return {
+            marketplace: market.marketplace?.toLowerCase() ?? '',
+            count: market.listings ?? 0,
+            floorPrice: market.floorPrice ?? 0,
+          }
+        })
+      : undefined,
     imageUrl: queryCollection?.image?.url ?? '',
     twitterUrl: queryCollection?.twitterName ?? '',
     instagram: queryCollection?.instagramName ?? undefined,

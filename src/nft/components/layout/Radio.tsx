@@ -12,7 +12,7 @@ export const Radio = ({ hovered, checked, onClick }: RadioProps) => {
   return (
     <Box
       as="label"
-      className={checked ? styles.selectedRadio : hovered ? styles.blueBorderRadio : styles.greyBorderRadio}
+      className={checked ? styles.selectedRadio : hovered ? styles.blueBorderRadio : styles.grayBorderRadio}
       onClick={onClick}
     />
   )

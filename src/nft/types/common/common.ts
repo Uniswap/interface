@@ -125,7 +125,7 @@ export interface GenieCollection {
     total_volume?: number
   }
   traits?: Record<string, Trait[]>
-  marketplaceCount?: { marketplace: string; count: number }[]
+  marketplaceCount?: { marketplace: string; count: number; floorPrice: number }[]
   imageUrl: string
   twitterUrl?: string
   instagram?: string

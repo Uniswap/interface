@@ -4,6 +4,7 @@ import { devtools } from 'zustand/middleware'
 import { ListingMarket, ListingWarning, WalletAsset } from '../types'
 
 interface SellAssetState {
+  isSellMode: boolean
   sellAssets: WalletAsset[]
   selectSellAsset: (asset: WalletAsset) => void
   removeSellAsset: (asset: WalletAsset) => void
@@ -11,6 +12,7 @@ interface SellAssetState {
   setGlobalExpiration: (expirationTime: number) => void
   setAssetListPrice: (asset: WalletAsset, price?: number, marketplace?: ListingMarket) => void
   setGlobalMarketplaces: (marketplaces: ListingMarket[]) => void
+  setIsSellMode: (b: boolean) => void
   removeAssetMarketplace: (asset: WalletAsset, marketplace: ListingMarket) => void
   addMarketplaceWarning: (asset: WalletAsset, warning: ListingWarning) => void
   removeMarketplaceWarning: (asset: WalletAsset, warning: ListingWarning, setGlobalOverride?: boolean) => void
@@ -20,6 +22,7 @@ interface SellAssetState {
 export const useSellAsset = create<SellAssetState>()(
   devtools(
     (set) => ({
+      isSellMode: false,
       sellAssets: [],
       selectSellAsset: (asset) =>
         set(({ sellAssets }) => {
@@ -95,6 +98,7 @@ export const useSellAsset = create<SellAssetState>()(
           return { sellAssets: assetsCopy }
         })
       },
+      setIsSellMode: (isSellMode) => set(() => ({ isSellMode })),
       removeAssetMarketplace: (asset, marketplace) => {
         set(({ sellAssets }) => {
           const assetsCopy = [...sellAssets]

@@ -7,7 +7,7 @@ import { Marquee } from 'nft/components/layout/Marquee'
 import { headlineMedium } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
-import { GenieCollection } from 'nft/types'
+import { GenieCollection, TokenType } from 'nft/types'
 import { floorFormatter, quantityFormatter, roundWholePercentage, volumeFormatter } from 'nft/utils/numbers'
 import { ReactNode, useEffect, useReducer, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
@@ -326,7 +326,8 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
               {uniqueOwnersPercentage}%
             </StatsItem>
           ) : null}
-          {stats.stats?.total_listings && listedPercentageStr > 0 ? (
+
+          {stats.stats?.total_listings && stats.standard !== TokenType.ERC1155 && listedPercentageStr > 0 ? (
             <StatsItem label="Listed" shouldHide={isMobile ?? false}>
               {listedPercentageStr}%
             </StatsItem>
