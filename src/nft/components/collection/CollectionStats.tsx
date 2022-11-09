@@ -1,5 +1,6 @@
 import clsx from 'clsx'
 import { getDeltaArrow } from 'components/Tokens/TokenDetails/PriceChart'
+import { NftGraphQlVariant, useNftGraphQlFlag } from 'featureFlags/flags/nftGraphQl'
 import { Box, BoxProps } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { Marquee } from 'nft/components/layout/Marquee'
@@ -265,26 +266,23 @@ const statsLoadingSkeleton = (isMobile: boolean) =>
   )
 
 const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMobile?: boolean } & BoxProps) => {
-  const uniqueOwnersPercentage =
-    stats.stats && stats.stats.total_supply
-      ? roundWholePercentage(((stats.stats.num_owners ?? 0) / stats.stats.total_supply) * 100)
-      : 0
+  const isNftGraphQl = useNftGraphQlFlag() === NftGraphQlVariant.Enabled
+  const uniqueOwnersPercentage = stats?.stats?.total_supply
+    ? roundWholePercentage(((stats.stats.num_owners ?? 0) / stats.stats.total_supply) * 100)
+    : 0
   const totalSupplyStr = stats.stats ? quantityFormatter(stats.stats.total_supply ?? 0) : 0
-  const listedPercentageStr =
-    stats.stats && stats.stats.total_supply
-      ? roundWholePercentage(((stats.stats.total_listings ?? 0) / stats.stats.total_supply) * 100)
-      : 0
+  const listedPercentageStr = stats?.stats?.total_supply
+    ? roundWholePercentage(((stats.stats.total_listings ?? 0) / stats.stats.total_supply) * 100)
+    : 0
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
 
   // round daily volume & floorPrice to 3 decimals or less
   const totalVolumeStr = volumeFormatter(stats.stats?.total_volume ?? 0)
   const floorPriceStr = floorFormatter(stats.stats?.floor_price ?? 0)
-  const floorChangeStr =
-    stats.stats && stats.stats.one_day_floor_change ? Math.round(Math.abs(stats.stats.one_day_floor_change)) : 0
-  const arrow =
-    stats.stats && stats.stats.one_day_floor_change !== undefined
-      ? getDeltaArrow(stats.stats.one_day_floor_change)
-      : null
+  // graphQL formatted %age values out of 100, whereas v3 endpoint did a decimal between 0 & 1
+  // TODO: remove feature flag gated logic when graphql migration is complete
+  const floorChangeStr = Math.round(Math.abs(stats?.stats?.one_day_floor_change ?? 0)) * (isNftGraphQl ? 1 : 100)
+  const arrow = stats?.stats?.one_day_floor_change ? getDeltaArrow(stats.stats.one_day_floor_change) : undefined
 
   return (
     <Row gap={{ sm: '36', md: '60' }} {...props}>
