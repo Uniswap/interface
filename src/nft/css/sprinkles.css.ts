@@ -7,6 +7,7 @@ const themeContractValues = {
     accentFailureSoft: '',
     accentAction: '',
     accentActionSoft: '',
+    accentActive: '',
 
     explicitWhite: '',
     gold: '',
