@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther } from '@ethersproject/units'
 import { useWeb3React } from '@web3-react/core'
+import { useIsNftDetailsPage, useIsNftPage, useIsNftProfilePage } from 'hooks/useIsNftPage'
 import { BagFooter } from 'nft/components/bag/BagFooter'
 import ListingModal from 'nft/components/bag/profile/ListingModal'
 import { Box } from 'nft/components/Box'
@@ -28,7 +29,6 @@ import {
 import { combineBuyItemsWithTxRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from 'react-query'
-import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import shallow from 'zustand/shallow'
 
@@ -100,12 +100,10 @@ const Bag = () => {
   } = useBag((state) => ({ ...state, bagIsLocked: state.isLocked, uncheckedItemsInBag: state.itemsInBag }), shallow)
   const { uncheckedItemsInBag } = useBag(({ itemsInBag }) => ({ uncheckedItemsInBag: itemsInBag }))
 
-  const { pathname } = useLocation()
-  const isProfilePage = pathname.startsWith('/nfts/profile')
-  const isNFTPage = pathname.startsWith('/nfts')
+  const isProfilePage = useIsNftProfilePage()
+  const isDetailsPage = useIsNftDetailsPage()
+  const isNFTPage = useIsNftPage()
   const isMobile = useIsMobile()
-
-  const isDetailsPage = pathname.includes('/nfts/asset/')
 
   const sendTransaction = useSendTransaction((state) => state.sendTransaction)
   const transactionState = useSendTransaction((state) => state.state)
