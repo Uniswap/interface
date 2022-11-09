@@ -2,12 +2,13 @@ import graphql from 'babel-plugin-relay/macro'
 import { parseEther } from 'ethers/lib/utils'
 import useInterval from 'lib/hooks/useInterval'
 import ms from 'ms.macro'
-import { GenieAsset, Rarity, SellOrder } from 'nft/types'
+import { GenieAsset } from 'nft/types'
 import { useCallback, useMemo, useState } from 'react'
 import { fetchQuery, useLazyLoadQuery, usePaginationFragment, useRelayEnvironment } from 'react-relay'
 
 import { AssetPaginationQuery } from './__generated__/AssetPaginationQuery.graphql'
 import { AssetQuery, NftAssetsFilterInput, NftAssetSortableField } from './__generated__/AssetQuery.graphql'
+import { AssetQuery_nftAssets$data } from './__generated__/AssetQuery_nftAssets.graphql'
 
 const assetPaginationQuery = graphql`
   fragment AssetQuery_nftAssets on Query @refetchable(queryName: "AssetPaginationQuery") {
@@ -111,6 +112,10 @@ const assetQuery = graphql`
   }
 `
 
+type NftAssetsQueryAsset = NonNullable<
+  NonNullable<NonNullable<AssetQuery_nftAssets$data['nftAssets']>['edges']>[number]
+>
+
 export function useAssetsQuery(
   address: string,
   orderBy: NftAssetSortableField,
@@ -153,14 +158,14 @@ export function useAssetsQuery(
   // It is especially important for this to be memoized to avoid re-rendering from polling if data is unchanged.
   const assets: GenieAsset[] = useMemo(
     () =>
-      data.nftAssets?.edges?.map((queryAsset: { node: any }) => {
+      data.nftAssets?.edges?.map((queryAsset: NftAssetsQueryAsset) => {
         const asset = queryAsset.node
         const ethPrice = parseEther(
           asset.listings?.edges[0]?.node.price.value?.toLocaleString('fullwide', { useGrouping: false }) ?? '0'
         ).toString()
         return {
           id: asset.id,
-          address: asset.collection?.nftContracts[0]?.address,
+          address: asset?.collection?.nftContracts?.[0]?.address,
           notForSale: asset.listings?.edges?.length === 0,
           collectionName: asset.collection?.name,
           collectionSymbol: asset.collection?.image?.url,
@@ -177,7 +182,7 @@ export function useAssetsQuery(
               }
             : undefined,
           susFlag: asset.suspiciousFlag,
-          sellorders: asset.listings?.edges.map((listingNode: { node: SellOrder }) => {
+          sellorders: asset.listings?.edges.map((listingNode) => {
             return {
               ...listingNode.node,
               protocolParameters: listingNode.node?.protocolParameters
@@ -187,12 +192,12 @@ export function useAssetsQuery(
           }),
           smallImageUrl: asset.smallImage?.url,
           tokenId: asset.tokenId,
-          tokenType: asset.collection?.nftContracts[0]?.standard,
+          tokenType: asset.collection?.nftContracts?.[0]?.standard,
           totalCount: data.nftAssets?.totalCount,
           collectionIsVerified: asset.collection?.isVerified,
           rarity: {
             primaryProvider: 'Rarity Sniper', // TODO update when backend adds more providers
-            providers: asset.rarities?.map((rarity: Rarity) => {
+            providers: asset.rarities?.map((rarity) => {
               return {
                 ...rarity,
                 provider: 'Rarity Sniper',

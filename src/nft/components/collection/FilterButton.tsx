@@ -42,12 +42,7 @@ export const FilterButton = ({
       <FilterIcon />
       {!isMobile ? (
         <>
-          {!isFiltersExpanded && (
-            <Box className={buttonTextMedium}>
-              {' '}
-              Filter • {collectionCount > 0 ? putCommas(collectionCount) : 0} results
-            </Box>
-          )}
+          {!isFiltersExpanded && <Box className={buttonTextMedium}> Filter • {putCommas(collectionCount)} results</Box>}
         </>
       ) : null}
     </Box>
