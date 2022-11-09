@@ -498,6 +498,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
                 <FilterButton
                   isMobile={isMobile}
                   isFiltersExpanded={isFiltersExpanded}
+                  collectionCount={collectionNfts?.[0]?.totalCount ?? 0}
                   onClick={() => setFiltersExpanded(!isFiltersExpanded)}
                 />
               </TraceEvent>
