@@ -1,4 +1,3 @@
-import { NftGraphQlVariant, useNftGraphQlFlag } from 'featureFlags/flags/nftGraphQl'
 import { useNftBalanceQuery } from 'graphql/data/nft/NftBalance'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { assetList } from 'nft/components/collection/CollectionNfts.css'
@@ -18,11 +17,11 @@ import {
   useWalletCollections,
 } from 'nft/hooks'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
-import { fetchWalletAssets, OSCollectionsFetcher } from 'nft/queries'
+import { OSCollectionsFetcher } from 'nft/queries'
 import { ProfilePageStateType, WalletAsset, WalletCollection } from 'nft/types'
-import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { useInfiniteQuery, useQuery } from 'react-query'
+import { useQuery } from 'react-query'
 import { useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
 import shallow from 'zustand/shallow'
@@ -30,7 +29,6 @@ import shallow from 'zustand/shallow'
 import { EmptyWalletContent } from './EmptyWalletContent'
 import { ProfileAccountDetails } from './ProfileAccountDetails'
 import * as styles from './ProfilePage.css'
-import { ProfileBodyLoadingSkeleton } from './ProfilePageLoadingSkeleton'
 import { WalletAssetDisplay } from './WalletAssetDisplay'
 
 const SellModeButton = styled.button<{ active: boolean }>`
@@ -65,12 +63,8 @@ export const ProfilePage = () => {
   const collectionFilters = useWalletCollections((state) => state.collectionFilters)
   const setCollectionFilters = useWalletCollections((state) => state.setCollectionFilters)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
-  const walletAssets = useWalletCollections((state) => state.walletAssets)
-  const setWalletAssets = useWalletCollections((state) => state.setWalletAssets)
-  const setDisplayAssets = useWalletCollections((state) => state.setDisplayAssets)
   const walletCollections = useWalletCollections((state) => state.walletCollections)
   const setWalletCollections = useWalletCollections((state) => state.setWalletCollections)
-  const listFilter = useWalletCollections((state) => state.listFilter)
   const { isSellMode, resetSellAssets, setIsSellMode } = useSellAsset(
     ({ isSellMode, reset, setIsSellMode }) => ({
       isSellMode,
@@ -85,7 +79,6 @@ export const ProfilePage = () => {
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const isMobile = useIsMobile()
-  const isNftGraphQl = useNftGraphQlFlag() === NftGraphQlVariant.Enabled
 
   const handleSellModeClick = useCallback(() => {
     resetSellAssets()
@@ -93,7 +86,7 @@ export const ProfilePage = () => {
     setBagExpanded({ bagExpanded: !isSellMode })
   }, [isSellMode, resetSellAssets, setBagExpanded, setIsSellMode])
 
-  const { data: ownerCollections, isLoading: collectionsAreLoading } = useQuery(
+  const { data: ownerCollections } = useQuery(
     ['ownerCollections', address],
     () => OSCollectionsFetcher({ params: { asset_owner: address, offset: '0', limit: '300' } }),
     {
@@ -102,49 +95,10 @@ export const ProfilePage = () => {
   )
 
   const {
-    data: ownerAssetsData,
-    fetchNextPage,
-    hasNextPage,
-    isSuccess,
-    isLoading: assetsAreLoading,
-  } = useInfiniteQuery(
-    ['ownerAssets', address, collectionFilters],
-    async ({ pageParam = 0 }) => {
-      return await fetchWalletAssets({
-        ownerAddress: address ?? '',
-        collectionAddresses: collectionFilters,
-        pageParam,
-      })
-    },
-    {
-      getNextPageParam: (lastPage, pages) => {
-        return lastPage?.flat().length === DEFAULT_WALLET_ASSET_QUERY_AMOUNT ? pages.length : null
-      },
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-    }
-  )
-
-  const anyQueryIsLoading = collectionsAreLoading || assetsAreLoading
-
-  const {
-    walletAssets: gqlWalletAssets,
+    walletAssets: ownerAssets,
     loadNext,
     hasNext,
-  } = useNftBalanceQuery(isNftGraphQl ? address : '', collectionFilters, DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
-
-  const ownerAssets = useMemo(
-    () => (isNftGraphQl ? gqlWalletAssets : isSuccess ? ownerAssetsData?.pages.flat() : []),
-    [isNftGraphQl, gqlWalletAssets, isSuccess, ownerAssetsData]
-  )
-
-  useEffect(() => {
-    !isNftGraphQl && setWalletAssets(ownerAssets?.flat() ?? [])
-  }, [ownerAssets, setWalletAssets, isNftGraphQl])
-
-  useEffect(() => {
-    !isNftGraphQl && setDisplayAssets(walletAssets, listFilter)
-  }, [walletAssets, listFilter, setDisplayAssets, isNftGraphQl])
+  } = useNftBalanceQuery(address, collectionFilters, DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
 
   useEffect(() => {
     ownerCollections && setWalletCollections(ownerCollections)
@@ -156,9 +110,7 @@ export const ProfilePage = () => {
 
   return (
     <ProfilePageColumn width="full" paddingTop={{ sm: `${PADDING}`, md: '40' }}>
-      {anyQueryIsLoading && !isNftGraphQl ? (
-        <ProfileBodyLoadingSkeleton />
-      ) : ownerAssets?.length === 0 ? (
+      {ownerAssets?.length === 0 ? (
         <EmptyWalletContent />
       ) : (
         <Row alignItems="flex-start" position="relative">
@@ -200,8 +152,8 @@ export const ProfilePage = () => {
                   />
                 </Row>
                 <InfiniteScroll
-                  next={() => (isNftGraphQl ? loadNext(DEFAULT_WALLET_ASSET_QUERY_AMOUNT) : fetchNextPage())}
-                  hasMore={isNftGraphQl ? hasNext : hasNextPage ?? false}
+                  next={() => loadNext(DEFAULT_WALLET_ASSET_QUERY_AMOUNT)}
+                  hasMore={hasNext}
                   loader={
                     <Center>
                       <LoadingSparkle />
@@ -270,19 +222,12 @@ export const ProfilePage = () => {
 
 const SelectAllButton = ({ ownerAssets }: { ownerAssets: WalletAsset[] }) => {
   const [isAllSelected, setIsAllSelected] = useState(false)
-  const displayAssets = useWalletCollections((state) => state.displayAssets)
   const selectSellAsset = useSellAsset((state) => state.selectSellAsset)
   const resetSellAssets = useSellAsset((state) => state.reset)
-  const isNftGraphQl = useNftGraphQlFlag() === NftGraphQlVariant.Enabled
-
-  const allAssets = useMemo(
-    () => (isNftGraphQl ? ownerAssets : displayAssets),
-    [isNftGraphQl, ownerAssets, displayAssets]
-  )
 
   useEffect(() => {
     if (isAllSelected) {
-      allAssets.forEach((asset) => selectSellAsset(asset))
+      ownerAssets.forEach((asset) => selectSellAsset(asset))
     } else {
       resetSellAssets()
     }

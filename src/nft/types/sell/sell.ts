@@ -78,7 +78,7 @@ export interface WalletAsset {
   creatorPercentage: number
   listing_date: string
   date_acquired: string
-  sellOrders: Deprecated_SellOrder[] | SellOrder[] // TODO remove Deprecated_SellOrder when full migration to GraphQL is complete
+  sellOrders: SellOrder[]
   floor_sell_order_price: number
   // Used for creating new listings
   expirationTime?: number
