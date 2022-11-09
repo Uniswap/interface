@@ -163,6 +163,7 @@ export enum UserPropertyName {
   IsHideSpamTokensEnabled = 'is_hide_spam_tokens_enabled',
   IsPushEnabled = 'is_push_enabled',
   TransactionAuthMethod = 'transaction_auth_method',
+  WalletSignerAccounts = `wallet_signer_accounts`,
   WalletSignerCount = 'wallet_signer_count',
   WalletViewOnlyCount = 'wallet_view_only_count',
   // alphabetize additional values.

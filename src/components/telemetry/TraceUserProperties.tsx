@@ -37,6 +37,10 @@ export function TraceUserProperties() {
 
   useEffect(() => {
     setUserProperty(UserPropertyName.WalletSignerCount, signerAccounts.length)
+    setUserProperty(
+      UserPropertyName.WalletSignerAccounts,
+      signerAccounts.map((account) => account.address)
+    )
   }, [signerAccounts])
 
   useEffect(() => {
