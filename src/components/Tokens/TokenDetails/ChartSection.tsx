@@ -1,14 +1,10 @@
 import { Trans } from '@lingui/macro'
-import { Currency, NativeCurrency, Token } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { ParentSize } from '@visx/responsive'
 import { CurrencyLogo } from 'components/Logo'
 import { getChainInfo } from 'constants/chainInfo'
-import { TokenQueryData } from 'graphql/data/Token'
 import { PriceDurations } from 'graphql/data/TokenPrice'
-import { TopToken } from 'graphql/data/TopTokens'
-import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
-import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import styled from 'styled-components/macro'
 import { textFadeIn } from 'theme/animations'
 
@@ -53,31 +49,14 @@ const TokenActions = styled.div`
   color: ${({ theme }) => theme.textSecondary};
 `
 
-export function useTokenLogoURI(
-  token: NonNullable<TokenQueryData> | NonNullable<TopToken>,
-  nativeCurrency?: Token | NativeCurrency
-) {
-  const chainId = CHAIN_NAME_TO_CHAIN_ID[token.chain]
-  return [
-    ...useCurrencyLogoURIs(nativeCurrency),
-    ...useCurrencyLogoURIs({ ...token, chainId }),
-    token.project?.logoUrl,
-  ][0]
-}
-
 export default function ChartSection({
-  token,
   currency,
-  nativeCurrency,
   prices,
 }: {
-  token: NonNullable<TokenQueryData>
-  currency?: Currency | null
-  nativeCurrency?: Token | NativeCurrency
+  currency: Currency | null | undefined
   prices?: PriceDurations
 }) {
-  const chainId = CHAIN_NAME_TO_CHAIN_ID[token.chain]
-  const L2Icon = getChainInfo(chainId)?.circleLogoUrl
+  const L2Icon = getChainInfo(currency?.chainId)?.circleLogoUrl
   const timePeriod = useAtomValue(filterTimeAtom)
 
   return (
@@ -88,11 +67,11 @@ export default function ChartSection({
             <CurrencyLogo currency={currency} size={'32px'} />
             <L2NetworkLogo networkUrl={L2Icon} size={'16px'} />
           </LogoContainer>
-          {nativeCurrency?.name ?? token.name ?? <Trans>Name not found</Trans>}
-          <TokenSymbol>{nativeCurrency?.symbol ?? token.symbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
+          {currency?.name ?? <Trans>Name not found</Trans>}
+          <TokenSymbol>{currency?.symbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
         </TokenNameCell>
         <TokenActions>
-          {token.name && token.symbol && token.address && <ShareButton token={token} isNative={!!nativeCurrency} />}
+          {currency?.name && currency?.symbol && currency?.wrapped.address && <ShareButton currency={currency} />}
         </TokenActions>
       </TokenInfoContainer>
       <ChartContainer>

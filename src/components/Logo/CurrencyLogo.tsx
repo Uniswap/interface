@@ -1,4 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
+import { TokenInfo } from '@uniswap/token-lists'
 
 import { AssetLogo, AssetLogoBaseProps } from './AssetLogo'
 
@@ -7,11 +8,14 @@ export function CurrencyLogo(
     currency?: Currency | null
   }
 ) {
+  console.log((props.currency as TokenInfo).logoURI)
   return (
     <AssetLogo
       isNative={props.currency?.isNative}
       chainId={props.currency?.chainId}
       address={props.currency?.wrapped.address}
+      symbol={props.symbol ?? props.currency?.symbol}
+      backupImg={(props.currency as TokenInfo).logoURI}
       {...props}
     />
   )

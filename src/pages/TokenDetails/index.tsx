@@ -94,12 +94,7 @@ export default function TokenDetails() {
             <BreadcrumbNavLink to={`/tokens/${chainName}`}>
               <ArrowLeft size={14} /> Tokens
             </BreadcrumbNavLink>
-            <ChartSection
-              token={tokenQueryData}
-              currency={token}
-              nativeCurrency={isNative ? nativeCurrency : undefined}
-              prices={prices}
-            />
+            <ChartSection currency={token} prices={prices} />
             <StatsSection
               TVL={tokenQueryData.market?.totalValueLocked?.value}
               volume24H={tokenQueryData.market?.volume24H?.value}

@@ -38,25 +38,26 @@ function getInitialUrl(address?: string | null, chainId?: number | null, isNativ
 export default function useTokenLogoSource(
   address?: string | null,
   chainId?: number | null,
-  isNative?: boolean
+  isNative?: boolean,
+  backupImg?: string | null
 ): [string | undefined, () => void] {
   const [current, setCurrent] = useState<string | undefined>(getInitialUrl(address, chainId, isNative))
-  const [backupSrcs, setBackupSrcs] = useState<string[] | undefined>(undefined)
+  const [fallbackSrcs, setFallbackSrcs] = useState<string[] | undefined>(undefined)
 
   const nextSrc = useCallback(() => {
     if (current) {
+      console.log('bad:', current)
       BAD_SRCS[current] = true
     }
-    if (!backupSrcs) {
+    if (!fallbackSrcs) {
       const tokenListIcons = prioritizeLogoSources(TokenLogoLookupTable.getIcons(address) ?? [])
+      if (backupImg) tokenListIcons.push(backupImg)
       setCurrent(tokenListIcons.find((src) => !BAD_SRCS[src]))
-      if (address?.toLowerCase() === '0x7a58c0be72be218b41c608b7fe7c5bb630736c71') console.log(tokenListIcons)
-
-      setBackupSrcs(tokenListIcons)
+      setFallbackSrcs(tokenListIcons)
     } else {
-      setCurrent(backupSrcs.find((src) => !BAD_SRCS[src]))
+      setCurrent(fallbackSrcs.find((src) => !BAD_SRCS[src]))
     }
-  }, [address, backupSrcs, current])
+  }, [current, fallbackSrcs, address, backupImg])
 
   return [current, nextSrc]
 }

@@ -22,7 +22,12 @@ const NativeLogoImage = styled(LogoImage)`
   box-shadow: 0 0 1px white;
 `
 
-export type AssetLogoBaseProps = { symbol?: string | null; size?: string; style?: React.CSSProperties }
+export type AssetLogoBaseProps = {
+  symbol?: string | null
+  backupImg?: string | null
+  size?: string
+  style?: React.CSSProperties
+}
 type AssetLogoProps = AssetLogoBaseProps & { isNative?: boolean; address?: string | null; chainId?: number }
 
 /**
@@ -33,6 +38,7 @@ export function AssetLogo({
   address,
   chainId = SupportedChainId.MAINNET,
   symbol,
+  backupImg,
   size = '24px',
   style,
   ...rest
@@ -44,8 +50,9 @@ export function AssetLogo({
     ...rest,
   }
 
-  const [src, nextSrc] = useTokenLogoSource(address, chainId, isNative)
+  const [src, nextSrc] = useTokenLogoSource(address, chainId, isNative, backupImg)
 
+  console.log(src)
   if (src) {
     return isNative ? (
       <LogoImage {...imageProps} src={src} onError={nextSrc} />

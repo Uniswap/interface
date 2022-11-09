@@ -16,6 +16,8 @@ export function TokenLogo(
       isNative={props.token?.address === NATIVE_CHAIN_ID}
       chainId={chainId}
       address={props.token?.address}
+      symbol={props.token?.symbol}
+      backupImg={props.token?.project?.logoUrl}
       {...props}
     />
   )
