@@ -17,12 +17,6 @@ export const ViewMyNftsAsset = ({ asset, isSellMode }: { asset: WalletAsset; isS
   const navigate = useNavigate()
 
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
-  // const [boxHovered, toggleBoxHovered] = useReducer((state) => {
-  //   return !state
-  // }, false)
-  // const [buttonHovered, toggleButtonHovered] = useReducer((state) => {
-  //   return !state
-  // }, false)
 
   const isSelected = useMemo(() => {
     return sellAssets.some(
@@ -45,11 +39,6 @@ export const ViewMyNftsAsset = ({ asset, isSellMode }: { asset: WalletAsset; isS
     )
       toggleCart()
   }
-
-  // const uniqueSellOrdersMarketplaces = useMemo(
-  //   () => [...new Set(asset.sellOrders?.map((order) => order.marketplace))],
-  //   [asset.sellOrders]
-  // )
 
   const assetMediaType = Card.useAssetMediaType(asset)
 
