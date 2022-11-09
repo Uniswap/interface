@@ -63,7 +63,7 @@ export function useTokenLogoURI(token?: TokenQueryData | TopToken, nativeCurrenc
 }
 
 type TokenDetailsProps = {
-  tokenAddress: string
+  tokenAddress: string | undefined
   chain: Chain
   tokenQueryReference: PreloadedQuery<TokenQuery>
   priceQueryReference: PreloadedQuery<TokenPriceQuery> | null | undefined
@@ -76,13 +76,16 @@ export default function TokenDetails({
   priceQueryReference,
   refetchTokenPrices,
 }: TokenDetailsProps) {
+  if (!tokenAddress) {
+    throw new Error(`Invalid token details route: tokenAddress param is undefined`)
+  }
+
   const pageChainId = CHAIN_NAME_TO_CHAIN_ID[chain]
   const nativeCurrency = nativeOnChain(pageChainId)
   const isNative = tokenAddress === NATIVE_CHAIN_ID
 
   const tokenQueryData = usePreloadedQuery(tokenQuery, tokenQueryReference).tokens?.[0]
   const token = useMemo(() => {
-    if (!tokenAddress) return undefined
     if (isNative) return nativeCurrency
     if (tokenQueryData) return new QueryToken(tokenQueryData)
     return new Token(pageChainId, tokenAddress, DEFAULT_ERC20_DECIMALS)

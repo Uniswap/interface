@@ -10,8 +10,6 @@ import { Suspense, useCallback, useEffect, useMemo } from 'react'
 import { useQueryLoader } from 'react-relay'
 import { useParams } from 'react-router-dom'
 
-import { RedirectToExplore } from './redirects'
-
 export default function TokenDetailsPage() {
   const { tokenAddress, chainName } = useParams<{ tokenAddress?: string; chainName?: string }>()
   const chain = validateUrlChainParam(chainName)
@@ -40,10 +38,6 @@ export default function TokenDetailsPage() {
     },
     [contract, loadPriceQuery]
   )
-
-  if (!tokenAddress) {
-    return <RedirectToExplore />
-  }
 
   if (!tokenQueryReference) {
     return <TokenDetailsPageSkeleton />
