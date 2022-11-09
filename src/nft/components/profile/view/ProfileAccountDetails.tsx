@@ -17,9 +17,13 @@ export const ProfileAccountDetails = () => {
     setCopied(account ?? '')
   }, [account, setCopied])
 
-  return account ? (
+  if (!account) {
+    return null
+  }
+
+  return (
     <Row className={headlineLarge} marginBottom="48" gap="4">
-      <Identicon size={60} />
+      <Identicon size={48} />
       <Box textOverflow="ellipsis" overflow="hidden" marginLeft="8">
         {ENSName ?? shortenAddress(account)}
       </Box>
@@ -36,5 +40,5 @@ export const ProfileAccountDetails = () => {
         </Box>
       </MouseoverTooltip>
     </Row>
-  ) : null
+  )
 }
