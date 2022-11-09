@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { NavBarSearchTypes, SectionName } from 'analytics/constants'
 import { useTrace } from 'analytics/Trace'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
+import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { subheadSmall } from 'nft/css/common.css'
@@ -113,7 +114,7 @@ export const SearchBarDropdown = ({
   const { history: searchHistory, updateItem: updateSearchHistory } = useSearchHistory()
   const shortenedHistory = useMemo(() => searchHistory.slice(0, 2), [searchHistory])
   const { pathname } = useLocation()
-  const isNFTPage = pathname.includes('/nfts')
+  const isNFTPage = useIsNftPage()
   const isTokenPage = pathname.includes('/tokens')
   const phase1Flag = useNftFlag()
   const [resultsState, setResultsState] = useState<ReactNode>()
