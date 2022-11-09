@@ -12,30 +12,32 @@ import { Box } from '../../Box'
 import { Column, Row } from '../../Flex'
 import * as styles from './Cells.css'
 
-const truncatedText = `
+const TruncatedText = styled.div`
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 `
 
-const CollectionNameContainer = styled.div`
+const CollectionNameContainer = styled(TruncatedText)`
   display: flex;
   padding: 14px 0px 14px 8px;
   align-items: center;
-  ${truncatedText}
 `
 
-const CollectionName = styled.div`
+const CollectionName = styled(TruncatedText)`
   margin-left: 8px;
-  ${truncatedText}
 `
 
 const TruncatedSubHeader = styled(ThemedText.SubHeader)`
-  ${truncatedText}
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `
 const TruncatedSubHeaderSmall = styled(ThemedText.SubHeaderSmall)`
   color: ${({ theme }) => `${theme.textPrimary}`};
-  ${truncatedText};
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `
 
 const RoundedImage = styled.div<{ src?: string }>`
