@@ -3,11 +3,7 @@ import { useWeb3React } from '@web3-react/core'
 import Web3Status from 'components/Web3Status'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { chainIdToBackendName } from 'graphql/data/util'
-<<<<<<< HEAD
-import useIsNftPage from 'hooks/useIsNftPage'
-=======
 import { useIsNftPage } from 'hooks/useIsNftPage'
->>>>>>> main
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { UniIcon } from 'nft/components/icons'
