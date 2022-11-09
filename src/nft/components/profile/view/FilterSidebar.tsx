@@ -50,7 +50,7 @@ export const FilterSidebar = () => {
       position={{ sm: 'fixed', md: 'sticky' }}
       top={{ sm: '40', md: 'unset' }}
       left={{ sm: '0', md: 'unset' }}
-      width={{ sm: 'full', md: 'auto' }}
+      width={{ sm: 'full', md: '332', lg: '332' }}
       height={{ sm: 'full', md: 'auto' }}
       zIndex={{ sm: '3', md: 'auto' }}
       display={isFiltersExpanded ? 'flex' : 'none'}
@@ -60,7 +60,7 @@ export const FilterSidebar = () => {
         paddingTop={{ sm: '24', md: '0' }}
         paddingLeft={{ sm: '16', md: '0' }}
         paddingRight="16"
-        width={{ sm: 'full', md: 'auto' }}
+        width={{ sm: 'full', md: '332', lg: '332' }}
       >
         <Row width="full" justifyContent="space-between">
           {isMobile && (
@@ -75,6 +75,7 @@ export const FilterSidebar = () => {
             </Box>
           )}
         </Row>
+
         <CollectionSelect
           collections={walletCollections}
           collectionFilters={collectionFilters}
