@@ -42,7 +42,7 @@ export function FavoriteWalletsGrid({
   )
 
   return (
-    <AnimatedBox entering={FadeIn} mx="xs">
+    <AnimatedBox entering={FadeIn}>
       <FavoriteHeaderRow isEditing={isEditing} onPress={() => setIsEditing(!isEditing)} />
       <FlatList
         ItemSeparatorComponent={() => <Box height={GAP_SIZE} />}

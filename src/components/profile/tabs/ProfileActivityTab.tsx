@@ -1,14 +1,15 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { NoTransactions } from 'src/components/icons/NoTransactions'
-import { Box, Flex } from 'src/components/layout'
+import { Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
+import { TabStyles } from 'src/components/layout/screens/TabbedScrollScreen'
 import TransactionList from 'src/components/TransactionList/TransactionList'
 
 export default function ProfileActivityTab({ ownerAddress }: { ownerAddress: Address }) {
   const { t } = useTranslation()
   return (
-    <Box my="xs" px="sm">
+    <Flex grow style={TabStyles.tabContentContainerStandard}>
       <TransactionList
         emptyStateContent={
           <Flex centered grow height="100%">
@@ -22,6 +23,6 @@ export default function ProfileActivityTab({ ownerAddress }: { ownerAddress: Add
         ownerAddress={ownerAddress}
         readonly={true}
       />
-    </Box>
+    </Flex>
   )
 }

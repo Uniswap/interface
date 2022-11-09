@@ -124,7 +124,7 @@ export const TokenItem = memo(
             if (isEditing) return
             tokenDetailsNavigation.preload(_currencyId)
           }}>
-          <AnimatedFlex row alignItems="flex-start" justifyContent="space-between" p="xs">
+          <AnimatedFlex row alignItems="flex-start" justifyContent="space-between" py="xs">
             <Flex centered row flexShrink={1} gap="xs" overflow="hidden">
               <Flex centered row gap="xxs" overflow="hidden">
                 {index !== undefined && (

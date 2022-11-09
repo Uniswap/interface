@@ -1,11 +1,11 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet, ViewStyle } from 'react-native'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { ViewStyle } from 'react-native'
+import { useAppDispatch } from 'src/app/hooks'
 import { NoTokens } from 'src/components/icons/NoTokens'
 import { Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { TabViewScrollProps } from 'src/components/layout/screens/TabbedScrollScreen'
+import { TabStyles, TabViewScrollProps } from 'src/components/layout/screens/TabbedScrollScreen'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { TokenBalanceList } from 'src/components/TokenBalanceList/TokenBalanceList'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
@@ -23,7 +23,6 @@ export function TokensTab({
   tabViewScrollProps?: TabViewScrollProps
   loadingContainerStyle?: ViewStyle
 }) {
-  const theme = useAppTheme()
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
@@ -44,14 +43,8 @@ export function TokensTab({
     )
   }
 
-  const styles = StyleSheet.create({
-    tabContentStyle: {
-      padding: theme.spacing.sm,
-    },
-  })
-
   return (
-    <Flex grow style={styles.tabContentStyle}>
+    <Flex grow style={TabStyles.tabContentContainerStandard}>
       <TokenBalanceList
         empty={
           <Flex centered flex={1}>

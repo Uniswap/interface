@@ -39,7 +39,6 @@ export const TokenBalanceItem = memo(
         flexDirection="row"
         justifyContent="space-between"
         minHeight={56}
-        px="sm"
         py="xs"
         onPress={onPress}
         onPressIn={onPressIn}>

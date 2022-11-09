@@ -99,6 +99,7 @@ export function ExternalProfileScreen({
           renderLabel={renderTabLabel}
           style={[
             TabStyles.tab,
+            TabStyles.tabView,
             {
               backgroundColor: theme.colors.background0,
               borderBottomColor: theme.colors.backgroundOutline,
@@ -147,7 +148,6 @@ export function ExternalProfileScreen({
           navigationState={{ index: tabIndex, routes: tabs }}
           renderScene={renderTab}
           renderTabBar={renderTabBar}
-          style={TabStyles.tabView}
           onIndexChange={setIndex}
         />
       </Flex>

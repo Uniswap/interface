@@ -126,7 +126,7 @@ function ExploreTokensTab({ listRef }: ExploreTokensTabProps) {
             {hasFavoritedTokens ? (
               <FavoriteTokensGrid isEditing={isEditing} setIsEditing={setIsEditing} />
             ) : null}
-            <Flex row alignItems="center" justifyContent="space-between" mx="xs">
+            <Flex row alignItems="center" justifyContent="space-between">
               <Text color="textSecondary" variant="subheadSmall">
                 {t('Top tokens')}
               </Text>

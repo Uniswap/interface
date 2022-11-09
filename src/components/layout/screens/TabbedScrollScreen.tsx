@@ -84,9 +84,21 @@ export const TabStyles = StyleSheet.create({
     width: '100%',
     zIndex: 1,
   },
+  // Use on tab components as the parent wrapper, see TokensTab
+  // eslint-disable-next-line react-native/no-unused-styles
+  tabContentContainerStandard: {
+    paddingHorizontal: FixedTheme.spacing.lg,
+    paddingVertical: FixedTheme.spacing.sm,
+  },
+  // Use on tab components where the content should bleed over boundary, see NftTab
+  // eslint-disable-next-line react-native/no-unused-styles
+  tabContentContainerWide: {
+    paddingVertical: FixedTheme.spacing.sm,
+  },
+  // Used on screens that have a custom <TabView />, see ExploreScreen for example
   // eslint-disable-next-line react-native/no-unused-styles
   tabView: {
-    marginHorizontal: FixedTheme.spacing.md,
+    marginHorizontal: FixedTheme.spacing.lg,
   },
 })
 
