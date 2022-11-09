@@ -21,7 +21,7 @@ export const calcPoolPrice = (asset: GenieAsset, position = 0) => {
       : (asset.sellorders[0] as Deprecated_SellOrder)
 
   const decimals = BigNumber.from(1).mul(10).pow(18)
-  const ammFee = nft.ammFeePercent ? (100 + (nft.ammFeePercent as number)) * 100 : 110 * 100
+  const ammFee = nft?.ammFeePercent ? (100 + (nft.ammFeePercent as number)) * 100 : 110 * 100
 
   if (asset.marketplace === Markets.NFTX) {
     const sixteenmul = BigNumber.from(1).mul(10).pow(16)
@@ -43,7 +43,7 @@ export const calcPoolPrice = (asset: GenieAsset, position = 0) => {
 
   const ethReserves = BigNumber.from(
     (
-      (nft.ethReserves as number) ??
+      (nft?.ethReserves as number) ??
       (
         nft as Record<
           string,
@@ -51,12 +51,12 @@ export const calcPoolPrice = (asset: GenieAsset, position = 0) => {
             ethReserves: number
           }
         >
-      ).poolMetadata.ethReserves
+      )?.poolMetadata?.ethReserves
     )?.toLocaleString('fullwide', { useGrouping: false }) ?? 1
   )
   const tokenReserves = BigNumber.from(
     (
-      (nft.tokenReserves as number) ??
+      (nft?.tokenReserves as number) ??
       (
         nft as Record<
           string,
@@ -64,7 +64,7 @@ export const calcPoolPrice = (asset: GenieAsset, position = 0) => {
             tokenReserves: number
           }
         >
-      ).poolMetadata.tokenReserves
+      )?.poolMetadata?.tokenReserves
     )?.toLocaleString('fullwide', { useGrouping: false }) ?? 1
   )
   const numerator = ethReserves.mul(amountToBuy).mul(1000)
