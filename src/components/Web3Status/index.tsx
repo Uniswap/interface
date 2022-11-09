@@ -93,29 +93,11 @@ const Web3StatusConnectWrapper = styled.div<{ faded?: boolean }>`
   }
 `
 
-const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
+const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean; isNftActive?: boolean }>`
   background-color: ${({ pending, theme }) => (pending ? theme.deprecated_primary1 : theme.deprecated_bg1)};
   border: 1px solid ${({ pending, theme }) => (pending ? theme.deprecated_primary1 : theme.deprecated_bg1)};
   color: ${({ pending, theme }) => (pending ? theme.deprecated_white : theme.deprecated_text1)};
   font-weight: 500;
-  :hover,
-  :focus {
-    border: 1px solid ${({ theme }) => darken(0.05, theme.deprecated_bg3)};
-
-    :focus {
-      border: 1px solid
-        ${({ pending, theme }) =>
-          pending ? darken(0.1, theme.deprecated_primary1) : darken(0.1, theme.deprecated_bg2)};
-    }
-  }
-`
-
-const Web3StatusConnectedNFTVersion = styled(Web3StatusGeneric)<{ pending?: boolean }>`
-  background-color: ${({ pending, theme }) => (pending ? theme.deprecated_primary1 : theme.deprecated_bg1)};
-  border: 1px solid ${({ pending, theme }) => (pending ? theme.deprecated_primary1 : theme.deprecated_bg1)};
-  color: ${({ pending, theme }) => (pending ? theme.deprecated_white : theme.deprecated_text1)};
-  font-weight: 500;
-
   :hover,
   :focus {
     border: 1px solid ${({ theme }) => darken(0.05, theme.deprecated_bg3)};
@@ -128,11 +110,19 @@ const Web3StatusConnectedNFTVersion = styled(Web3StatusGeneric)<{ pending?: bool
   }
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    width: ${({ pending }) => !pending && '44px'};
-    height: ${({ pending }) => !pending && '44px'};
+    width: ${({ isNftActive, pending }) => isNftActive && !pending && '44px'};
+    height: ${({ isNftActive, pending }) => isNftActive && !pending && '44px'};
     div {
-      margin-right: 0px;
+      margin-right: ${({ isNftActive }) => isNftActive && 0};
     }
+  }
+`
+
+const AddressAndChevronContainer = styled.div<{ isNftActive?: boolean }>`
+  display: flex;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    display: ${({ isNftActive }) => isNftActive && 'none'};
   }
 `
 
@@ -158,14 +148,6 @@ const NetworkIcon = styled(AlertTriangle)`
 function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
   return b.addedTime - a.addedTime
 }
-
-const AddressAndChevronContainer = styled.div`
-  display: flex;
-
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    display: none;
-  }
-`
 
 const VerticalDivider = styled.div`
   height: 20px;
@@ -223,6 +205,7 @@ function Web3StatusInner() {
   const nftIsActive = useNftFlag()
 
   const allTransactions = useAllTransactions()
+  const isNftActive = nftIsActive === NftVariant.Enabled
 
   const sortedRecentTransactions = useMemo(() => {
     const txs = Object.values(allTransactions)
@@ -251,29 +234,13 @@ function Web3StatusInner() {
       color: theme.textSecondary,
     }
 
-    if (nftIsActive === NftVariant.Enabled) {
-      return (
-        <Web3StatusConnectedNFTVersion pending={hasPendingTransactions} onClick={toggleWallet}>
-          {!hasPendingTransactions && <StatusIcon size={24} connectionType={connectionType} />}
-          {hasPendingTransactions ? (
-            <RowBetween>
-              <Text>
-                <Trans>{pending?.length} Pending</Trans>
-              </Text>{' '}
-              <Loader stroke="white" />
-            </RowBetween>
-          ) : (
-            <AddressAndChevronContainer>
-              <Text>{ENSName || shortenAddress(account)}</Text>
-              {walletIsOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
-            </AddressAndChevronContainer>
-          )}
-        </Web3StatusConnectedNFTVersion>
-      )
-    }
-
     return (
-      <Web3StatusConnected data-testid="web3-status-connected" onClick={toggleWallet} pending={hasPendingTransactions}>
+      <Web3StatusConnected
+        data-testid="web3-status-connected"
+        isNftActive={isNftActive}
+        onClick={toggleWallet}
+        pending={hasPendingTransactions}
+      >
         {!hasPendingTransactions && <StatusIcon size={24} connectionType={connectionType} />}
         {hasPendingTransactions ? (
           <RowBetween>
@@ -283,10 +250,10 @@ function Web3StatusInner() {
             <Loader stroke="white" />
           </RowBetween>
         ) : (
-          <>
+          <AddressAndChevronContainer isNftActive={isNftActive}>
             <Text>{ENSName || shortenAddress(account)}</Text>
             {walletIsOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
-          </>
+          </AddressAndChevronContainer>
         )}
       </Web3StatusConnected>
     )
