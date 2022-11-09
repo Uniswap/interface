@@ -6,7 +6,6 @@ export const lightTheme: Theme = {
     accentFailureSoft: 'rgba(250, 43, 57, 0.12)',
     accentAction: vars.color.pink400,
     accentActionSoft: 'rgba(251, 17, 142, 0.12)',
-    accentActive: vars.color.blue400,
 
     explicitWhite: '#FFFFFF',
 
