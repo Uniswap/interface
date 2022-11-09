@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { ElementName, Event, EventName } from 'analytics/constants'
 import { TraceEvent } from 'analytics/TraceEvent'
+import { IconWrapper } from 'components/Identicon/StatusIcon'
 import WalletDropdown from 'components/WalletDropdown'
 import { getConnection } from 'connection/utils'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
@@ -112,7 +113,7 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean; isNft
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     width: ${({ isNftActive, pending }) => isNftActive && !pending && '44px'};
     height: ${({ isNftActive, pending }) => isNftActive && !pending && '44px'};
-    div {
+    ${IconWrapper} {
       margin-right: ${({ isNftActive }) => isNftActive && 0};
     }
   }
