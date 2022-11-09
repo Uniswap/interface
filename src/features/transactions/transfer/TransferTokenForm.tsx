@@ -1,5 +1,5 @@
 import { AnyAction } from '@reduxjs/toolkit'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
@@ -35,6 +35,7 @@ import { createTransactionId } from 'src/features/transactions/utils'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useIsBlockedActiveAddress } from 'src/features/trm/hooks'
 import { dimensions } from 'src/styles/sizing'
+import { usePrevious } from 'src/utils/hooks'
 
 interface TransferTokenProps {
   dispatch: React.Dispatch<AnyAction>
@@ -122,12 +123,51 @@ export function TransferTokenForm({
   }, [])
 
   const [inputSelection, setInputSelection] = useState<TextInputProps['selection']>()
+
   const resetSelection = useCallback(
     (start: number, end?: number) => {
       setInputSelection({ start, end: end ?? start })
     },
     [setInputSelection]
   )
+
+  const prevIsUSDInput = usePrevious(isUSDInput)
+
+  // when text changes on the screen, the default iOS input behavior is to use the same cursor
+  // position but from the END of the input. so for example, if the cursor is currently at
+  // 12.3|4 and the input changes to $1.232354, then new cursor will be at $1.23235|4
+  // this useEffect essentially calculates where the new cursor position is when the text has changed
+  // and that only happens on toggling USD <-> token input
+  useEffect(() => {
+    // only run this useEffect if isUSDInput has changed
+    // if inputSelection is undefined, then that means no text selection or cursor
+    // movement has happened yet, so let iOS do its default thang
+    if (isUSDInput === prevIsUSDInput || !inputSelection) return
+
+    if (inputSelection.start !== inputSelection.end) {
+      setInputSelection(undefined)
+      return
+    }
+
+    const [prevInput, newInput] = isUSDInput
+      ? [exactAmountToken, exactAmountUSD]
+      : [exactAmountUSD, exactAmountToken]
+    const positionFromEnd = prevInput.length - inputSelection.start
+    const newPositionFromStart = newInput.length - positionFromEnd
+    const newPositionFromStartWithPrefix = newPositionFromStart + (isUSDInput ? 1 : -1)
+
+    setInputSelection({
+      start: newPositionFromStartWithPrefix,
+      end: newPositionFromStartWithPrefix,
+    })
+  }, [
+    isUSDInput,
+    prevIsUSDInput,
+    inputSelection,
+    setInputSelection,
+    exactAmountToken,
+    exactAmountUSD,
+  ])
 
   const onTransferWarningClick = () => {
     Keyboard.dismiss()

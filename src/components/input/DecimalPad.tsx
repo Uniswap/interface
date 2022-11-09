@@ -131,8 +131,10 @@ function KeyButton({
   // so account for the extra prefix in `selection`
   // i.e. when cursor is in: "$5.|13", selection will give start === 3, end === 3, but we
   // should only be deleting/inserting at position 2 of "5.13"
+  // except in the case where start === 0 then also just treat it as start of the non-prefixed string (to avoid -1 index)
   const prefixLength = hasCurrencyPrefix ? 1 : 0
-  const start = selection && hasCurrencyPrefix ? selection.start - 1 : selection?.start
+  const start =
+    selection && selection.start > 0 && hasCurrencyPrefix ? selection.start - 1 : selection?.start
   const end = selection?.end && hasCurrencyPrefix ? selection.end - 1 : selection?.end
 
   // TODO(MOB-3433): in USD mode, prevent user from typing in more than 2 decimals
