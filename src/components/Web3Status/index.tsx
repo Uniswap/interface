@@ -109,7 +109,7 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean; isNft
     }
   }
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     width: ${({ isNftActive, pending }) => isNftActive && !pending && '44px'};
     height: ${({ isNftActive, pending }) => isNftActive && !pending && '44px'};
     div {
@@ -121,7 +121,7 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean; isNft
 const AddressAndChevronContainer = styled.div<{ isNftActive?: boolean }>`
   display: flex;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     display: ${({ isNftActive }) => isNftActive && 'none'};
   }
 `
