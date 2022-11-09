@@ -2,12 +2,19 @@ import graphql from 'babel-plugin-relay/macro'
 import { parseEther } from 'ethers/lib/utils'
 import useInterval from 'lib/hooks/useInterval'
 import ms from 'ms.macro'
-import { GenieAsset } from 'nft/types'
+import { GenieAsset, Trait } from 'nft/types'
 import { useCallback, useMemo, useState } from 'react'
 import { fetchQuery, useLazyLoadQuery, usePaginationFragment, useRelayEnvironment } from 'react-relay'
 
 import { AssetPaginationQuery } from './__generated__/AssetPaginationQuery.graphql'
-import { AssetQuery, NftAssetsFilterInput, NftAssetSortableField } from './__generated__/AssetQuery.graphql'
+import {
+  AssetQuery,
+  AssetQuery$variables,
+  NftAssetsFilterInput,
+  NftAssetSortableField,
+  NftAssetTraitInput,
+  NftMarketplace,
+} from './__generated__/AssetQuery.graphql'
 import { AssetQuery_nftAssets$data } from './__generated__/AssetQuery_nftAssets.graphql'
 
 const assetPaginationQuery = graphql`
@@ -116,6 +123,61 @@ type NftAssetsQueryAsset = NonNullable<
   NonNullable<NonNullable<AssetQuery_nftAssets$data['nftAssets']>['edges']>[number]
 >
 
+function formatAssetQueryData(queryAsset: NftAssetsQueryAsset, totalCount?: number) {
+  const asset = queryAsset.node
+  const ethPrice = parseEther(
+    asset.listings?.edges[0]?.node.price.value?.toLocaleString('fullwide', { useGrouping: false }) ?? '0'
+  ).toString()
+  return {
+    id: asset.id,
+    address: asset?.collection?.nftContracts?.[0]?.address,
+    notForSale: asset.listings?.edges?.length === 0,
+    collectionName: asset.collection?.name,
+    collectionSymbol: asset.collection?.image?.url,
+    imageUrl: asset.image?.url,
+    animationUrl: asset.animationUrl,
+    marketplace: asset.listings?.edges[0]?.node?.marketplace?.toLowerCase(),
+    name: asset.name,
+    priceInfo: asset.listings
+      ? {
+          ETHPrice: ethPrice,
+          baseAsset: 'ETH',
+          baseDecimals: '18',
+          basePrice: ethPrice,
+        }
+      : undefined,
+    susFlag: asset.suspiciousFlag,
+    sellorders: asset.listings?.edges.map((listingNode) => {
+      return {
+        ...listingNode.node,
+        protocolParameters: listingNode.node?.protocolParameters
+          ? JSON.parse(listingNode.node?.protocolParameters.toString())
+          : undefined,
+      }
+    }),
+    smallImageUrl: asset.smallImage?.url,
+    tokenId: asset.tokenId,
+    tokenType: asset.collection?.nftContracts?.[0]?.standard,
+    totalCount,
+    collectionIsVerified: asset.collection?.isVerified,
+    rarity: {
+      primaryProvider: 'Rarity Sniper', // TODO update when backend adds more providers
+      providers: asset.rarities?.map((rarity) => {
+        return {
+          ...rarity,
+          provider: 'Rarity Sniper',
+        }
+      }),
+    },
+    owner: asset.ownerAddress,
+    creator: {
+      profile_img_url: asset.collection?.creator?.profileImage?.url,
+      address: asset.collection?.creator?.address,
+    },
+    metadataUrl: asset.metadataUrl,
+  }
+}
+
 export function useAssetsQuery(
   address: string,
   orderBy: NftAssetSortableField,
@@ -159,61 +221,61 @@ export function useAssetsQuery(
   const assets: GenieAsset[] = useMemo(
     () =>
       data.nftAssets?.edges?.map((queryAsset: NftAssetsQueryAsset) => {
-        const asset = queryAsset.node
-        const ethPrice = parseEther(
-          asset.listings?.edges[0]?.node.price.value?.toLocaleString('fullwide', { useGrouping: false }) ?? '0'
-        ).toString()
-        return {
-          id: asset.id,
-          address: asset?.collection?.nftContracts?.[0]?.address,
-          notForSale: asset.listings?.edges?.length === 0,
-          collectionName: asset.collection?.name,
-          collectionSymbol: asset.collection?.image?.url,
-          imageUrl: asset.image?.url,
-          animationUrl: asset.animationUrl,
-          marketplace: asset.listings?.edges[0]?.node?.marketplace?.toLowerCase(),
-          name: asset.name,
-          priceInfo: asset.listings
-            ? {
-                ETHPrice: ethPrice,
-                baseAsset: 'ETH',
-                baseDecimals: '18',
-                basePrice: ethPrice,
-              }
-            : undefined,
-          susFlag: asset.suspiciousFlag,
-          sellorders: asset.listings?.edges.map((listingNode) => {
-            return {
-              ...listingNode.node,
-              protocolParameters: listingNode.node?.protocolParameters
-                ? JSON.parse(listingNode.node?.protocolParameters.toString())
-                : undefined,
-            }
-          }),
-          smallImageUrl: asset.smallImage?.url,
-          tokenId: asset.tokenId,
-          tokenType: asset.collection?.nftContracts?.[0]?.standard,
-          totalCount: data.nftAssets?.totalCount,
-          collectionIsVerified: asset.collection?.isVerified,
-          rarity: {
-            primaryProvider: 'Rarity Sniper', // TODO update when backend adds more providers
-            providers: asset.rarities?.map((rarity) => {
-              return {
-                ...rarity,
-                provider: 'Rarity Sniper',
-              }
-            }),
-          },
-          owner: asset.ownerAddress,
-          creator: {
-            profile_img_url: asset.collection?.creator?.profileImage?.url,
-            address: asset.collection?.creator?.address,
-          },
-          metadataUrl: asset.metadataUrl,
-        }
+        return formatAssetQueryData(queryAsset, data.nftAssets?.totalCount)
       }),
     [data.nftAssets?.edges, data.nftAssets?.totalCount]
   )
 
   return { assets, hasNext, isLoadingNext, loadNext }
+}
+
+const DEFAULT_SWEEP_AMOUNT = 50
+
+export function useSweepAssetsQuery({
+  contractAddress,
+  markets,
+  price,
+  traits,
+}: {
+  contractAddress: string
+  markets?: string[]
+  price?: { high?: number | string; low?: number | string; symbol: string }
+  traits?: Trait[]
+}): GenieAsset[] {
+  const filter: NftAssetsFilterInput = useMemo(() => {
+    return {
+      listed: true,
+      maxPrice: price?.high?.toString(),
+      minPrice: price?.low?.toString(),
+      traits:
+        traits && traits.length > 0
+          ? traits?.map((trait) => {
+              return { name: trait.trait_type, values: [trait.trait_value] } as unknown as NftAssetTraitInput
+            })
+          : undefined,
+      marketplaces:
+        markets && markets.length > 0 ? markets?.map((market) => market.toUpperCase() as NftMarketplace) : undefined,
+    }
+  }, [price, traits, markets])
+  const vars: AssetQuery$variables = useMemo(() => {
+    return {
+      address: contractAddress,
+      orderBy: 'PRICE',
+      asc: true,
+      first: DEFAULT_SWEEP_AMOUNT,
+      filter,
+    }
+  }, [contractAddress, filter])
+
+  const queryData = useLazyLoadQuery<AssetQuery>(assetQuery, vars)
+  const { data } = usePaginationFragment<AssetPaginationQuery, any>(assetPaginationQuery, queryData)
+  const assets: GenieAsset[] = useMemo(
+    () =>
+      data.nftAssets?.edges?.map((queryAsset: NftAssetsQueryAsset) => {
+        return formatAssetQueryData(queryAsset, data.nftAssets?.totalCount)
+      }),
+    [data.nftAssets?.edges, data.nftAssets?.totalCount]
+  )
+
+  return assets
 }
