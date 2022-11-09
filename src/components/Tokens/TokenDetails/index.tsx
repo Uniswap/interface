@@ -55,14 +55,6 @@ const TokenActions = styled.div`
 
 export function useTokenLogoURI(token?: TokenQueryData | TopToken, nativeCurrency?: Token | NativeCurrency) {
   const chainId = token ? CHAIN_NAME_TO_CHAIN_ID[token.chain] : SupportedChainId.MAINNET
-  const test = [
-    ...useCurrencyLogoURIs(nativeCurrency),
-    ...useCurrencyLogoURIs({ ...token, chainId }),
-    token?.project?.logoUrl,
-  ]
-  if (token?.symbol === 'USDC') {
-    console.log(test)
-  }
   return [
     ...useCurrencyLogoURIs(nativeCurrency),
     ...useCurrencyLogoURIs({ ...token, chainId }),
