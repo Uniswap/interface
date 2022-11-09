@@ -8,6 +8,7 @@ import { TraceEvent } from 'analytics/TraceEvent'
 import clsx from 'clsx'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import useDebounce from 'hooks/useDebounce'
+import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { organizeSearchResults } from 'lib/utils/searchBar'
 import { Box } from 'nft/components/Box'
@@ -60,7 +61,7 @@ export const SearchBar = () => {
     }
   )
 
-  const isNFTPage = pathname.includes('/nfts')
+  const isNFTPage = useIsNftPage()
 
   const [reducedTokens, reducedCollections] = organizeSearchResults(isNFTPage, tokens ?? [], collections ?? [])
 

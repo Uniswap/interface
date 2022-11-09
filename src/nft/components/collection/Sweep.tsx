@@ -2,13 +2,12 @@ import 'rc-slider/assets/index.css'
 
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther, parseEther } from '@ethersproject/units'
+import { useSweepAssetsQuery } from 'graphql/data/nft/Asset'
 import { useBag, useCollectionFilters } from 'nft/hooks'
-import { fetchSweep } from 'nft/queries'
-import { GenieAsset, GenieCollection, Markets } from 'nft/types'
+import { GenieAsset, Markets } from 'nft/types'
 import { calcPoolPrice, formatWeiToDecimal } from 'nft/utils'
 import { default as Slider } from 'rc-slider'
 import { useEffect, useMemo, useReducer, useState } from 'react'
-import { useQuery } from 'react-query'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -151,13 +150,12 @@ export const NftDisplay = ({ nfts }: NftDisplayProps) => {
 
 interface SweepProps {
   contractAddress: string
-  collectionStats: GenieCollection
   minPrice: string
   maxPrice: string
   showSweep: boolean
 }
 
-export const Sweep = ({ contractAddress, collectionStats, minPrice, maxPrice, showSweep }: SweepProps) => {
+export const Sweep = ({ contractAddress, minPrice, maxPrice, showSweep }: SweepProps) => {
   const theme = useTheme()
 
   const [isItemsToggled, toggleSweep] = useReducer((state) => !state, true)
@@ -211,52 +209,12 @@ export const Sweep = ({ contractAddress, collectionStats, minPrice, maxPrice, sh
     }
   }
 
-  const { data: collectionAssets, isFetched: isCollectionAssetsFetched } = useQuery(
-    ['sweepAssets', getSweepFetcherParams('others')],
-    () => fetchSweep(getSweepFetcherParams('others')),
-    {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-    }
-  )
-
-  const { data: nftxCollectionAssets, isFetched: isNftxCollectionAssetsFetched } = useQuery(
-    ['nftxSweepAssets', collectionStats, getSweepFetcherParams(Markets.NFTX)],
-    () =>
-      collectionStats.marketplaceCount?.some(
-        (marketStat) => marketStat.marketplace === Markets.NFTX && marketStat.count > 0
-      )
-        ? fetchSweep(getSweepFetcherParams(Markets.NFTX))
-        : [],
-
-    {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-    }
-  )
-
-  const { data: nft20CollectionAssets, isFetched: isNft20CollectionAssetsFetched } = useQuery(
-    ['nft20SweepAssets', getSweepFetcherParams(Markets.NFT20)],
-    () =>
-      collectionStats.marketplaceCount?.some(
-        (marketStat) => marketStat.marketplace === Markets.NFT20 && marketStat.count > 0
-      )
-        ? fetchSweep(getSweepFetcherParams(Markets.NFT20))
-        : [],
-
-    {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-    }
-  )
-
-  const allAssetsFetched = isCollectionAssetsFetched && isNftxCollectionAssetsFetched && isNft20CollectionAssetsFetched
+  const collectionAssets = useSweepAssetsQuery(getSweepFetcherParams('others'))
+  const nftxCollectionAssets = useSweepAssetsQuery(getSweepFetcherParams(Markets.NFTX))
+  const nft20CollectionAssets = useSweepAssetsQuery(getSweepFetcherParams(Markets.NFT20))
 
   const { sortedAssets, sortedAssetsTotalEth } = useMemo(() => {
-    if (!allAssetsFetched || !collectionAssets || !nftxCollectionAssets || !nft20CollectionAssets)
+    if (!collectionAssets || !nftxCollectionAssets || !nft20CollectionAssets)
       return { sortedAssets: undefined, sortedAssetsTotalEth: BigNumber.from(0) }
 
     let counterNFTX = 0
@@ -267,8 +225,11 @@ export const Sweep = ({ contractAddress, collectionStats, minPrice, maxPrice, sh
     jointCollections.forEach((asset) => {
       if (!asset.susFlag) {
         const isNFTX = asset.marketplace === Markets.NFTX
-        asset.priceInfo.ETHPrice = calcPoolPrice(asset, isNFTX ? counterNFTX : counterNFT20)
-        BigNumber.from(asset.priceInfo.ETHPrice).gte(0) && (isNFTX ? counterNFTX++ : counterNFT20++)
+        const poolPrice = calcPoolPrice(asset, isNFTX ? counterNFTX : counterNFT20)
+        if (BigNumber.from(poolPrice).gt(0)) {
+          isNFTX ? counterNFTX++ : counterNFT20++
+          asset.priceInfo.ETHPrice = poolPrice
+        }
       }
     })
 
@@ -294,7 +255,7 @@ export const Sweep = ({ contractAddress, collectionStats, minPrice, maxPrice, sh
         BigNumber.from(0)
       ),
     }
-  }, [collectionAssets, nftxCollectionAssets, nft20CollectionAssets, allAssetsFetched])
+  }, [collectionAssets, nftxCollectionAssets, nft20CollectionAssets])
 
   const { sweepItemsInBag, sweepEthPrice } = useMemo(() => {
     const sweepItemsInBag = itemsInBag
