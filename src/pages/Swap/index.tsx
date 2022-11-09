@@ -31,7 +31,7 @@ import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/for
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { GreyCard } from '../../components/Card'
+import { GrayCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import SwapCurrencyInputPanel from '../../components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import Loader from '../../components/Loader'
@@ -660,11 +660,11 @@ export default function Swap() {
                     ) : null}
                   </ButtonPrimary>
                 ) : routeNotFound && userHasSpecifiedInputOutput && !routeIsLoading && !routeIsSyncing ? (
-                  <GreyCard style={{ textAlign: 'center' }}>
+                  <GrayCard style={{ textAlign: 'center' }}>
                     <ThemedText.DeprecatedMain mb="4px">
                       <Trans>Insufficient liquidity for this trade.</Trans>
                     </ThemedText.DeprecatedMain>
-                  </GreyCard>
+                  </GrayCard>
                 ) : showApproveFlow ? (
                   <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
                     <AutoColumn style={{ width: '100%' }} gap="12px">

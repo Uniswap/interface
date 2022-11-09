@@ -98,7 +98,7 @@ const ActivityRow = ({ event, index, current }: { event: ActivityEvent; index: n
       <Box as="img" src={event.tokenMetadata?.imageUrl} borderRadius="12" marginRight="8" width="40" height="40" />
       <Box as="span" color="explicitWhite">
         <Box as="span">{ActivityEventTypeDisplay[event.eventType]}</Box>
-        <Box as="span" color="grey300" paddingLeft="4" paddingRight="4">
+        <Box as="span" color="gray300" paddingLeft="4" paddingRight="4">
           for
         </Box>
         {formattedPrice} ETH

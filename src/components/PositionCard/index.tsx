@@ -18,7 +18,7 @@ import { ExternalLink, ThemedText } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/unwrappedToken'
 import { ButtonEmpty, ButtonPrimary, ButtonSecondary } from '../Button'
-import { GreyCard, LightCard } from '../Card'
+import { GrayCard, LightCard } from '../Card'
 import { AutoColumn } from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
@@ -78,7 +78,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
   return (
     <>
       {userPoolBalance && JSBI.greaterThan(userPoolBalance.quotient, JSBI.BigInt(0)) ? (
-        <GreyCard border={border}>
+        <GrayCard border={border}>
           <AutoColumn gap="12px">
             <FixedHeightRow>
               <RowFixed>
@@ -139,7 +139,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
               </FixedHeightRow>
             </AutoColumn>
           </AutoColumn>
-        </GreyCard>
+        </GrayCard>
       ) : (
         <LightCard>
           <ThemedText.DeprecatedSubHeader style={{ textAlign: 'center' }}>

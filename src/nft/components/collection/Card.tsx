@@ -664,7 +664,7 @@ const NoContentContainer = ({ uniformHeight }: NoContentContainerProps) => (
           background: `linear-gradient(270deg, ${themeVars.colors.backgroundOutline} 0%, ${themeVars.colors.backgroundSurface} 100%)`,
         }}
         fontWeight="normal"
-        color="grey500"
+        color="gray500"
         className={body}
         justifyContent="center"
         alignItems="center"
@@ -690,7 +690,7 @@ const NoContentContainer = ({ uniformHeight }: NoContentContainerProps) => (
           top="1/2"
           style={{ transform: 'translate3d(-50%, -50%, 0)' }}
           fontWeight="normal"
-          color="grey500"
+          color="gray500"
           className={body}
         >
           Content not
