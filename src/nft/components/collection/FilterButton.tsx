@@ -4,15 +4,18 @@ import * as styles from 'nft/components/collection/FilterButton.css'
 import { FilterIcon } from 'nft/components/icons'
 import { buttonTextMedium } from 'nft/css/common.css'
 import { useIsCollectionLoading } from 'nft/hooks'
+import { putCommas } from 'nft/utils'
 
 export const FilterButton = ({
   onClick,
   isMobile,
   isFiltersExpanded,
+  collectionCount = 0,
 }: {
   isMobile: boolean
   isFiltersExpanded: boolean
   onClick: () => void
+  collectionCount?: number
 }) => {
   const isCollectionNftsLoading = useIsCollectionLoading((state) => state.isCollectionNftsLoading)
 
@@ -37,7 +40,11 @@ export const FilterButton = ({
       color="textPrimary"
     >
       <FilterIcon />
-      {!isMobile && !isFiltersExpanded && <Box className={buttonTextMedium}> Filter</Box>}
+      {!isMobile ? (
+        <>
+          {!isFiltersExpanded && <Box className={buttonTextMedium}> Filter • {putCommas(collectionCount)} results</Box>}
+        </>
+      ) : null}
     </Box>
   )
 }

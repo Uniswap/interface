@@ -1,6 +1,7 @@
 import { useIsMobile } from 'nft/hooks'
 import { fetchTrendingCollections } from 'nft/queries'
 import { TimePeriod } from 'nft/types'
+import { Suspense } from 'react'
 import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -88,11 +89,13 @@ const Banner = () => {
       {collections ? (
         <Carousel>
           {collections.map((collection) => (
-            <CarouselCard
-              key={collection.address}
-              collection={collection}
-              onClick={() => navigate(`/nfts/collection/${collection.address}`)}
-            />
+            <Suspense fallback={<LoadingCarouselCard />} key={collection.address}>
+              <CarouselCard
+                key={collection.address}
+                collection={collection}
+                onClick={() => navigate(`/nfts/collection/${collection.address}`)}
+              />
+            </Suspense>
           ))}
         </Carousel>
       ) : (

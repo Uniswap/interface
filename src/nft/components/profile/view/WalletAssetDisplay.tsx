@@ -91,17 +91,19 @@ export const WalletAssetDisplay = ({ asset, isSellMode }: { asset: WalletAsset; 
                   <Row justifyContent="flex-end">
                     {uniqueSellOrdersMarketplaces.map((market, index) => {
                       return (
-                        <Box
-                          as="img"
-                          key={index}
-                          alt={market}
-                          width="16"
-                          height="16"
-                          borderRadius="4"
-                          marginLeft="4"
-                          objectFit="cover"
-                          src={`/nft/svgs/marketplaces/${market.toLowerCase()}.svg`}
-                        />
+                        market && (
+                          <Box
+                            as="img"
+                            key={index}
+                            alt={market}
+                            width="16"
+                            height="16"
+                            borderRadius="4"
+                            marginLeft="4"
+                            objectFit="cover"
+                            src={`/nft/svgs/marketplaces/${market.toLowerCase()}.svg`}
+                          />
+                        )
                       )
                     })}
                   </Row>

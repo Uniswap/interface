@@ -4,6 +4,7 @@ import { useLazyLoadQuery, usePaginationFragment } from 'react-relay'
 
 import { NftBalancePaginationQuery } from './__generated__/NftBalancePaginationQuery.graphql'
 import { NftBalanceQuery } from './__generated__/NftBalanceQuery.graphql'
+import { NftBalanceQuery_nftBalances$data } from './__generated__/NftBalanceQuery_nftBalances.graphql'
 
 const nftBalancePaginationQuery = graphql`
   fragment NftBalanceQuery_nftBalances on Query @refetchable(queryName: "NftBalancePaginationQuery") {
@@ -18,6 +19,7 @@ const nftBalancePaginationQuery = graphql`
       edges {
         node {
           ownedAsset {
+            id
             animationUrl
             collection {
               isVerified
@@ -105,6 +107,11 @@ const nftBalanceQuery = graphql`
   }
 `
 
+type NftBalanceQueryAsset = NonNullable<
+  NonNullable<NonNullable<NftBalanceQuery_nftBalances$data['nftBalances']>['edges']>[number]
+>
+//
+// export type TokenQueryData = NonNullable<TokenQuery$data['tokens']>[number]
 export function useNftBalanceQuery(
   ownerAddress: string,
   collectionFilters?: string[],
@@ -127,31 +134,31 @@ export function useNftBalanceQuery(
     nftBalancePaginationQuery,
     queryData
   )
-  const walletAssets: WalletAsset[] = data.nftBalances?.edges?.map((queryAsset: { node: any }) => {
+  const walletAssets: WalletAsset[] = data.nftBalances?.edges?.map((queryAsset: NftBalanceQueryAsset) => {
     const asset = queryAsset.node.ownedAsset
     return {
-      id: asset.id,
-      image_url: asset.image?.url,
-      image_preview_url: asset.smallImage?.url,
-      name: asset.name,
-      tokenId: asset.tokenId,
+      id: asset?.id,
+      image_url: asset?.image?.url,
+      image_preview_url: asset?.smallImage?.url,
+      name: asset?.name,
+      tokenId: asset?.tokenId,
       asset_contract: {
-        address: asset.collection?.nftContracts[0].address,
-        schema_name: asset.collection?.nftContracts[0].standard,
-        name: asset.collection?.name,
-        description: asset.description,
-        image_url: asset.collection?.image?.url,
-        payout_address: queryAsset.node.listingFees && queryAsset.node.listingFees[0].payoutAddress,
+        address: asset?.collection?.nftContracts?.[0]?.address,
+        schema_name: asset?.collection?.nftContracts?.[0]?.standard,
+        name: asset?.collection?.name,
+        description: asset?.description,
+        image_url: asset?.collection?.image?.url,
+        payout_address: queryAsset?.node?.listingFees?.[0]?.payoutAddress,
       },
-      collection: asset.collection,
-      collectionIsVerified: asset.collection?.isVerified,
+      collection: asset?.collection,
+      collectionIsVerified: asset?.collection?.isVerified,
       lastPrice: queryAsset.node.lastPrice?.value,
-      floorPrice: asset.collection?.markets[0]?.floorPrice?.value,
-      creatorPercentage: queryAsset.node.listingFees && queryAsset.node.listingFees[0].basisPoints / 10000,
-      listing_date: asset.listings ? asset.listings[0]?.edges[0]?.node.createdAt : undefined,
+      floorPrice: asset?.collection?.markets?.[0]?.floorPrice?.value,
+      creatorPercentage: queryAsset?.node?.listingFees?.[0]?.basisPoints ?? 0 / 10000,
+      listing_date: asset?.listings?.edges?.[0]?.node?.createdAt,
       date_acquired: queryAsset.node.lastPrice?.timestamp,
-      sellOrders: asset.listings?.edges,
-      floor_sell_order_price: asset.listings ? asset.listings[0]?.edges[0]?.node.price.value : undefined,
+      sellOrders: asset?.listings?.edges.map((edge: any) => edge.node),
+      floor_sell_order_price: asset?.listings?.edges?.[0]?.node?.price?.value,
     }
   })
   return { walletAssets, hasNext, isLoadingNext, loadNext }
