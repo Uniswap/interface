@@ -63,7 +63,7 @@ const Profile = () => {
         </Box>
       </Row>
       {account != null ? (
-        <Box style={{ width: `calc(100% - ${cartExpanded ? SHOPPING_BAG_WIDTH : 0}px)` }}>
+        <Box overflow="hidden" style={{ width: `calc(100% - ${cartExpanded ? SHOPPING_BAG_WIDTH : 0}px)` }}>
           {sellPageState === ProfilePageStateType.VIEWING ? <ProfilePage /> : <ListPage />}
         </Box>
       ) : (

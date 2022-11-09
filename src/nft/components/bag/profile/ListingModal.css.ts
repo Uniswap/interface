@@ -53,6 +53,7 @@ export const listingModalIcon = style([
   {
     boxSizing: 'border-box',
     marginLeft: '-2px',
+    marginRight: '4px',
   },
 ])
 

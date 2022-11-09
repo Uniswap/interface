@@ -51,7 +51,7 @@ const SellModeButton = styled.button<{ active: boolean }>`
 `
 
 const ProfilePageColumn = styled(Column)`
-  overflow-x: hidden !important;
+  // overflow-x: hidden !important;
   ${ScreenBreakpointsPaddings}
 `
 
@@ -145,9 +145,10 @@ export const ProfilePage = () => {
     gridX: isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING,
   })
 
+  // ProfilePageColumn width="full" paddingTop={{ sm: `${PADDING}`, md: '40' }}
+
   return (
-    // <Portal>
-    <ProfilePageColumn width="full" paddingTop={{ sm: `${PADDING}`, md: '40' }}>
+    <div style={{ overflow: 'hidden' }}>
       {anyQueryIsLoading && !isNftGraphQl ? (
         <ProfileBodyLoadingSkeleton />
       ) : ownerAssets?.length === 0 ? (
@@ -157,7 +158,7 @@ export const ProfilePage = () => {
           <FilterSidebar />
 
           {(!isMobile || !isFiltersExpanded) && (
-            <Column width="full">
+            <Column width="full" overflow="hidden">
               <ProfileAccountDetails />
               <AnimatedBox
                 flexShrink="0"
@@ -262,8 +263,7 @@ export const ProfilePage = () => {
           <span> No NFTs Selected</span>
         )}
       </Row>
-    </ProfilePageColumn>
-    // </Portal>
+    </div>
   )
 }
 
