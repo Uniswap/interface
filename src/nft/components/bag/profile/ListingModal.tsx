@@ -89,6 +89,7 @@ const ListingModal = () => {
 
   const startListingFlow = async () => {
     if (!signer) return
+    sendAnalyticsEvent(EventName.NFT_SELL_START_LISTING, { ...startListingEventProperties })
     setListingStatus(ListingStatus.SIGNING)
     const addresses = addressesByNetwork[SupportedChainId.MAINNET]
     const signerAddress = await signer.getAddress()
@@ -173,7 +174,6 @@ const ListingModal = () => {
   const clickStartListingFlow = () => {
     resetAllRows()
     allCollectionsApproved ? signListings() : startListingFlow()
-    !allCollectionsApproved && sendAnalyticsEvent(EventName.NFT_SELL_START_LISTING, { ...startListingEventProperties })
   }
 
   const showSuccessScreen = useMemo(() => listingStatus === ListingStatus.APPROVED, [listingStatus])
