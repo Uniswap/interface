@@ -1,11 +1,14 @@
 import { TFunction } from 'i18next'
-import React, { ReactElement, useMemo } from 'react'
+import React, { ReactElement, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SectionList, SectionListData } from 'react-native'
-import { Box } from 'src/components/layout'
+import { FadeInDown, FadeOut } from 'react-native-reanimated'
+import { AnimatedBox, Box } from 'src/components/layout'
+import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { EMPTY_ARRAY, PollingInterval } from 'src/constants/misc'
+import { isNonPollingRequestInFlight } from 'src/data/utils'
 import {
   TransactionListQuery,
   useTransactionListQuery,
@@ -43,23 +46,57 @@ interface TransactionListProps {
 }
 
 export default function TransactionList(props: TransactionListProps) {
-  // Parse remote txn data from query and merge with local txn data
-  const { data, loading } = useTransactionListQuery({
+  const { t } = useTranslation()
+  const { error, refetch, networkStatus, data } = useTransactionListQuery({
     variables: { address: props.ownerAddress },
     pollInterval: PollingInterval.Fast,
     errorPolicy: 'all',
+    notifyOnNetworkStatusChange: true,
   })
 
-  if (!data) {
-    if (loading) {
-      return (
-        <Box>
-          <Loading type="transactions" />
-        </Box>
-      )
-    }
+  const loading = isNonPollingRequestInFlight(networkStatus)
+
+  const onRetry = useCallback(() => {
+    refetch({
+      address: props.ownerAddress,
+    })
+  }, [props.ownerAddress, refetch])
+
+  if (loading) {
+    return (
+      <Box>
+        <Loading type="transactions" />
+      </Box>
+    )
   }
-  return <TransactionListInner {...props} data={data} />
+
+  // If no data but error, show full screen error
+  if (!data && error) {
+    return (
+      <Box height="100%" pb="xxxl">
+        <BaseCard.ErrorState
+          description={t('Something went wrong on our side.')}
+          retryButtonLabel={t('Retry')}
+          title={t('Couldn’t load activity')}
+          onRetry={onRetry}
+        />
+      </Box>
+    )
+  }
+
+  return (
+    <>
+      {error ? (
+        <AnimatedBox entering={FadeInDown} exiting={FadeOut} pt="sm">
+          <BaseCard.InlineErrorState
+            title={t('Failed to fetch recent transactions')}
+            onRetry={onRetry}
+          />
+        </AnimatedBox>
+      ) : null}
+      <TransactionListInner {...props} data={data} />
+    </>
+  )
 }
 
 /** Displays historical and pending transactions for a given address. */
@@ -71,12 +108,13 @@ function TransactionListInner({
 }: TransactionListProps & { data: TransactionListQuery | undefined }) {
   const { t } = useTranslation()
 
-  // format local and remote fetched txns
+  // Parse remote txn data from query and merge with local txn data
   const formattedTransactions = useMemo(
     () => (data ? parseDataResponseToTransactionDetails(data) : []),
     [data]
   )
   const transactions = useMergeLocalAndRemoteTransactions(ownerAddress, formattedTransactions)
+
   // Format transactions for section list
   const {
     pending,
