@@ -154,7 +154,7 @@ export const ProfilePage = () => {
       ) : ownerAssets?.length === 0 ? (
         <EmptyWalletContent />
       ) : (
-        <Row alignItems="flex-start" position="relative">
+        <Row alignItems="flex-start" position="relative" paddingX="20">
           <FilterSidebar />
 
           {(!isMobile || !isFiltersExpanded) && (

@@ -13,6 +13,7 @@ export const chevron = style([
 
 export const chevronDown = style({
   transform: 'rotate(180deg)',
+  cursor: 'pointer',
 })
 
 export const sectionDivider = style([
