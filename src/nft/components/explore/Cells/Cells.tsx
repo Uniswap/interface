@@ -1,5 +1,6 @@
 import { formatEther } from '@ethersproject/units'
 import { SquareArrowDownIcon, SquareArrowUpIcon, VerifiedIcon } from 'nft/components/icons'
+import { useIsMobile } from 'nft/hooks'
 import { Denomination } from 'nft/types'
 import { volumeFormatter } from 'nft/utils'
 import styled from 'styled-components/macro'
@@ -11,27 +12,30 @@ import { Box } from '../../Box'
 import { Column, Row } from '../../Flex'
 import * as styles from './Cells.css'
 
+const truncatedText = `
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+`
+
 const CollectionNameContainer = styled.div`
   display: flex;
   padding: 14px 0px 14px 8px;
   align-items: center;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  ${truncatedText}
 `
 
 const CollectionName = styled.div`
   margin-left: 8px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  ${truncatedText}
 `
 
-const TruncatedSubHeader = styled(ThemedText.SubHeaderSmall)`
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  font-weight: 400;
+const TruncatedSubHeader = styled(ThemedText.SubHeader)`
+  ${truncatedText}
+`
+const TruncatedSubHeaderSmall = styled(ThemedText.SubHeaderSmall)`
+  color: ${({ theme }) => `${theme.textPrimary}`};
+  ${truncatedText};
 `
 
 const RoundedImage = styled.div<{ src?: string }>`
@@ -69,11 +73,16 @@ interface CellProps {
 }
 
 export const CollectionTitleCell = ({ value }: CellProps) => {
+  const isMobile = useIsMobile()
   return (
     <CollectionNameContainer>
       <RoundedImage src={value.logo} />
       <CollectionName>
-        <TruncatedSubHeader>{value.name}</TruncatedSubHeader>
+        {isMobile ? (
+          <TruncatedSubHeaderSmall>{value.name}</TruncatedSubHeaderSmall>
+        ) : (
+          <TruncatedSubHeader>{value.name}</TruncatedSubHeader>
+        )}
       </CollectionName>
       {value.isVerified && (
         <span className={styles.verifiedBadge}>
