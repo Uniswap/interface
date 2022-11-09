@@ -8,7 +8,9 @@ import { Center, Column, Row } from 'nft/components/Flex'
 import { CrossIcon, TagIcon } from 'nft/components/icons'
 import { FilterSidebar } from 'nft/components/profile/view/FilterSidebar'
 import { buttonTextMedium, subhead } from 'nft/css/common.css'
+import { useLocation } from 'react-router-dom'
 import {
+  useBag,
   useFiltersExpanded,
   useIsMobile,
   useProfilePageState,
@@ -78,6 +80,9 @@ export const ProfilePage = () => {
   const isMobile = useIsMobile()
   const isNftGraphQl = useNftGraphQlFlag() === NftGraphQlVariant.Enabled
   const [isSellMode, toggleSellMode] = useReducer((s) => !s, false)
+  const toggleBag = useBag((s) => s.toggleBag)
+  const bagExpanded = useBag((s) => s.bagExpanded)
+  const location = useLocation()
 
   const handleSellModeClick = () => {
     resetSellAssets()
@@ -91,6 +96,15 @@ export const ProfilePage = () => {
       refetchOnWindowFocus: false,
     }
   )
+
+  useEffect(() => {
+    // if (bagExpanded) {
+    //   toggleBag()
+    // }
+    console.log('route changed')
+    console.log(location)
+    toggleBag()
+  }, [location])
 
   const {
     data: ownerAssetsData,
@@ -144,8 +158,6 @@ export const ProfilePage = () => {
   const { gridX } = useSpring({
     gridX: isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING,
   })
-
-  // ProfilePageColumn width="full" paddingTop={{ sm: `${PADDING}`, md: '40' }}
 
   return (
     <div style={{ overflow: 'hidden' }}>
