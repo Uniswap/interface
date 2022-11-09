@@ -35,6 +35,7 @@ export function TokenDetailsHeader({
             <WarningIcon
               height={theme.iconSizes.md}
               safetyLevel={safetyLevel}
+              strokeColorOverride="textSecondary"
               width={theme.imageSizes.sm}
             />
           </TouchableArea>

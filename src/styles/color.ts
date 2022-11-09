@@ -421,7 +421,7 @@ export const colorsLight: Palette = {
   accentActionSoft: opacify(12, colors.magentaVibrant),
   accentActiveSoft: opacify(24, colors.blue400),
   accentSuccessSoft: opacify(24, colors.green300),
-  accentWarningSoft: opacify(24, colors.gold200),
+  accentWarningSoft: opacify(24, colors.goldVibrant),
   accentCriticalSoft: opacify(12, colors.red400),
 
   textOnBrightPrimary: colors.white,
