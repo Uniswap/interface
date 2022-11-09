@@ -12,24 +12,6 @@ export interface ListingWarning {
   message: string
 }
 
-export interface Deprecated_SellOrder {
-  assetId: string
-  ethPrice: number
-  basePrice: number
-  baseCurrency: string
-  baseCurrencyDecimal: number
-  orderCreatedDate: string
-  orderClosingDate: string
-  quantity: number
-  timestamp: string
-  marketplace: string
-  marketplaceUrl: string
-  orderHash: string
-  ammFeePercent?: number
-  ethReserves?: number
-  tokenReserves?: number
-}
-
 export interface SellOrder {
   address: string
   createdAt: number
