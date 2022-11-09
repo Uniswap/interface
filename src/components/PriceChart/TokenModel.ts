@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import { PriceChartLabel } from 'src/components/PriceChart/PriceChartLabels'
 import { GraphMetadatas } from 'src/components/PriceChart/types'
 import { buildGraph, GRAPH_PRECISION } from 'src/components/PriceChart/utils'
+import { PollingInterval } from 'src/constants/misc'
 import { useTokenPriceChartsQuery } from 'src/data/__generated__/types-and-hooks'
 import { GqlResult } from 'src/features/dataApi/types'
 import { currencyIdToContractInput } from 'src/features/dataApi/utils'
@@ -18,6 +19,7 @@ export function useTokenPriceGraphs(token: Token): GqlResult<GraphMetadatas> {
     variables: {
       contract: currencyIdToContractInput(currencyId(token)),
     },
+    pollInterval: PollingInterval.Normal,
   })
 
   const formattedData = useMemo(() => {
