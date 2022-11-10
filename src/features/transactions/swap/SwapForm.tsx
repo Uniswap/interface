@@ -79,8 +79,6 @@ export function SwapForm({
     onShowTokenSelector,
   } = useSwapActionHandlers(dispatch)
 
-  const { showNativeKeyboard, onLayout } = useShouldShowNativeKeyboard()
-
   const inputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.INPUT])
   const outputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.OUTPUT])
 
@@ -143,6 +141,10 @@ export function SwapForm({
     NumberType.SwapTradeAmount,
     ''
   )
+
+  const { showNativeKeyboard, onDecimalPadLayout, isLayoutPending, onInputPanelLayout } =
+    useShouldShowNativeKeyboard()
+
   return (
     <>
       {showWarningModal && swapWarning?.title && (
@@ -157,10 +159,16 @@ export function SwapForm({
           onConfirm={() => setShowWarningModal(false)}
         />
       )}
-      <Flex fill grow gap="xs" justifyContent="space-between" onLayout={onLayout}>
-        <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} gap="xxxs">
+      <Flex fill grow gap="xs" justifyContent="space-between">
+        <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} gap="xxxs" zIndex="fixed">
           <Trace section={SectionName.CurrencyInputPanel}>
-            <Flex backgroundColor="background2" borderRadius="xl" pb="md" pt="lg" px="md">
+            <Flex
+              backgroundColor="background2"
+              borderRadius="xl"
+              pb="md"
+              pt="lg"
+              px="md"
+              onLayout={onInputPanelLayout}>
               <CurrencyInputPanel
                 currency={currencies[CurrencyField.INPUT]}
                 currencyAmount={currencyAmounts[CurrencyField.INPUT]}
@@ -323,7 +331,15 @@ export function SwapForm({
             </Flex>
           </Trace>
         </AnimatedFlex>
-        <AnimatedFlex exiting={FadeOutDown} gap="xs">
+        <AnimatedFlex
+          bottom={0}
+          exiting={FadeOutDown}
+          gap="xs"
+          left={0}
+          opacity={isLayoutPending ? 0 : 1}
+          position="absolute"
+          right={0}
+          onLayout={onDecimalPadLayout}>
           {!showNativeKeyboard && (
             <DecimalPad
               resetSelection={resetSelection}

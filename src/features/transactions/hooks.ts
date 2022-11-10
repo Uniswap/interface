@@ -20,7 +20,6 @@ import {
   TransactionType,
 } from 'src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
-import { dimensions } from 'src/styles/sizing'
 
 // sorted oldest to newest
 export function useSortedTransactions(address: Address | null) {
@@ -178,26 +177,39 @@ export function useAllTransactionsBetweenAddresses(
   }, [recipient, sender, txnsToSearch])
 }
 
-const SCREEN_HEIGHT_BUFFER = 0.9
+const MIN_INPUT_DECIMALPAD_GAP = 50
 
 export function useShouldShowNativeKeyboard() {
-  // use initial content height only to determine native keyboard view
-  // because show/hiding the custom keyboard will change the content height
-  const [initialContentHeight, setInitialContentHeight] = useState<number | undefined>(undefined)
+  const [containerHeight, setContainerHeight] = useState<number | undefined>()
+  const [decimalPadY, setDecimalPadY] = useState<number | undefined>()
 
-  // TODO: onLayout doesn't work anymore after some formatting changes T_T
-  // investigate how to fix for smaller phones if we don't move fully to using native keyboards
-  const onLayout = (event: LayoutChangeEvent) => {
-    const totalHeight = event.nativeEvent.layout.height
-    if (initialContentHeight !== undefined) return
-
-    setInitialContentHeight(totalHeight)
+  const onInputPanelLayout = (event: LayoutChangeEvent) => {
+    if (containerHeight === undefined) {
+      // We measure a single input panel to get its real height since the dimensions of the outer container
+      // can be affected by the decimal pad (it's a flex layout)
+      setContainerHeight(event.nativeEvent.layout.height * 2)
+    }
   }
-  const isSmallDevice = Boolean(
-    initialContentHeight && dimensions.fullHeight * SCREEN_HEIGHT_BUFFER < initialContentHeight
-  )
 
-  return { onLayout, showNativeKeyboard: isSmallDevice }
+  const onDecimalPadLayout = (event: LayoutChangeEvent) => {
+    if (decimalPadY === undefined) {
+      setDecimalPadY(event.nativeEvent.layout.y)
+    }
+  }
+
+  const isLayoutPending = containerHeight === undefined || decimalPadY === undefined
+
+  // If decimal pad renders below the input panel, we need to show the native keyboard
+  const showNativeKeyboard = isLayoutPending
+    ? false
+    : containerHeight + MIN_INPUT_DECIMALPAD_GAP > decimalPadY
+
+  return {
+    onInputPanelLayout,
+    onDecimalPadLayout,
+    isLayoutPending,
+    showNativeKeyboard,
+  }
 }
 
 export function useDynamicFontSizing(

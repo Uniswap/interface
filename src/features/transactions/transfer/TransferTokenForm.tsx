@@ -70,8 +70,6 @@ export function TransferTokenForm({
     chainId,
   } = derivedTransferInfo
 
-  const { showNativeKeyboard, onLayout } = useShouldShowNativeKeyboard()
-
   useUSDTokenUpdater(
     dispatch,
     isUSDInput,
@@ -177,6 +175,9 @@ export function TransferTokenForm({
   const transferWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Medium)
   const transferWarningColor = getAlertColor(transferWarning?.severity)
 
+  const { showNativeKeyboard, onDecimalPadLayout, isLayoutPending, onInputPanelLayout } =
+    useShouldShowNativeKeyboard()
+
   return (
     <>
       {showWarningModal && transferWarning?.title && (
@@ -202,8 +203,8 @@ export function TransferTokenForm({
           onNext={goToNext}
         />
       </Suspense>
-      <Flex fill grow gap="xs" justifyContent="space-between" onLayout={onLayout}>
-        <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} gap="xxxs">
+      <Flex fill grow gap="xs" justifyContent="space-between">
+        <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xxxs" zIndex="fixed">
           {nftIn ? (
             <NFTTransfer asset={nftIn} nftSize={dimensions.fullHeight / 4} />
           ) : (
@@ -213,7 +214,8 @@ export function TransferTokenForm({
               justifyContent="center"
               pb="md"
               pt="lg"
-              px="md">
+              px="md"
+              onLayout={onInputPanelLayout}>
               <CurrencyInputPanel
                 focus
                 currency={currencyIn}
@@ -302,7 +304,15 @@ export function TransferTokenForm({
             ) : null}
           </Box>
         </AnimatedFlex>
-        <AnimatedFlex exiting={FadeOutDown} gap="xs">
+        <AnimatedFlex
+          bottom={0}
+          exiting={FadeOutDown}
+          gap="xs"
+          left={0}
+          opacity={isLayoutPending ? 0 : 1}
+          position="absolute"
+          right={0}
+          onLayout={onDecimalPadLayout}>
           {!nftIn && !showNativeKeyboard && (
             <DecimalPad
               hasCurrencyPrefix={isUSDInput}
