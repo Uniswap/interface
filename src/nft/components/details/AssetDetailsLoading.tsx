@@ -51,11 +51,19 @@ const BuyNowContainer = styled(LoadingBubble)`
   height: 180px;
   width: 360px;
   margin-top: 28px;
+
+  @media (max-width: ${BREAKPOINT}) {
+    width: 100%;
+  }
 `
 
 const PriceContainer = styled(LoadingBubble)`
   height: 16px;
   width: 136px;
+
+  @media (max-width: ${BREAKPOINT}) {
+    margin-top: 20px;
+  }
 `
 
 const LoadingContainer = styled.div`
@@ -70,6 +78,7 @@ const LoadingContainer = styled.div`
 
   @media (max-width: ${BREAKPOINT}) {
     max-width: 100%;
+    margin-top: 0;
   }
 `
 
