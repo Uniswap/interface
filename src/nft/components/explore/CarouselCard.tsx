@@ -229,7 +229,7 @@ export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
               )
               return (
                 <MarketplaceRow
-                  key={`CarouselCard-key-${collection.address}-${index}`}
+                  key={`CarouselCard-key-${collection.address}-${marketplace?.marketplace ?? index}`}
                   marketplace={MARKETS_ENUM_TO_NAME[market]}
                   listings={marketplace?.count?.toString()}
                   floor={marketplace?.floorPrice?.toString()}
