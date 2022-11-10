@@ -9,11 +9,8 @@ import {
   AttachPriceIcon,
   BackArrowIcon,
   EditPriceIcon,
-  FloorPriceIcon,
-  PrevListingIcon,
   RowsCollpsedIcon,
   RowsExpandedIcon,
-  SamePriceIcon,
   VerifiedIcon,
 } from 'nft/components/icons'
 import { NumericInput } from 'nft/components/layout/Input'
