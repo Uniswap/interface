@@ -67,6 +67,9 @@ export function useProAmmTotalFeeOwedByPosition(pool: Pool | null | undefined, t
           .then((res: { token0Owed: BigNumber; token1Owed: BigNumber }) =>
             setLast24hRes([res.token0Owed.toString(), res.token1Owed.toString()]),
           )
+          .catch((e: any) => {
+            console.debug('Failed to get last 24h data, maybe position is just created', e)
+          })
     }
   }, [blockLast24h, chainId, poolAddress, tokenID, tickReader])
   useEffect(() => {

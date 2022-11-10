@@ -92,7 +92,7 @@ const PROMM_USER_POSITIONS = gql`
     bundles {
       ethPriceUSD
     }
-    positions(where: { owner: $owner }) {
+    positions(where: { owner: $owner, liquidity_gt: 0 }) {
       id
       owner
       liquidity

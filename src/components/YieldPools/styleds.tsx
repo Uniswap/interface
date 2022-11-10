@@ -369,7 +369,7 @@ export const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
 `
 
 export const ProMMFarmTableHeader = styled(TableHeader)`
-  grid-template-columns: 200px 0.5fr 0.75fr 1fr 0.5fr 0.75fr 0.75fr;
+  grid-template-columns: 200px 0.5fr 0.75fr 1fr 1fr 0.75fr 120px;
   grid-template-areas: 'token_pairs staked_tvl apr ending_in my_deposit reward action';
   grid-gap: 2rem;
 
@@ -377,7 +377,7 @@ export const ProMMFarmTableHeader = styled(TableHeader)`
   border-top-right-radius: 0;
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    grid-template-columns: 170px 0.5fr 0.75fr 1fr 0.5fr 0.75fr 0.75fr;
+    grid-template-columns: 170px 0.5fr 0.75fr 1fr 1fr 0.75fr 120px;
     grid-gap: 1rem;
   `};
 `
@@ -393,6 +393,7 @@ export const ProMMFarmTableRow = styled(ProMMFarmTableHeader)`
 
 export const ClickableText = styled(Text)`
   display: flex;
+  gap: 4px;
   align-items: center;
   color: ${({ theme }) => theme.subText};
   user-select: none;

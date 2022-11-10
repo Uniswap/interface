@@ -30,7 +30,7 @@ const avaxTestnetInfo: NetworkInfo = {
     decimal: 18,
   },
   rpcUrl: 'https://api.avax-test.network/ext/bc/C/rpc',
-  routerUri: EMPTY,
+  routerUri: `https://aggregator-api.stg.kyberengineering.io/fuji/route/encode`,
   classic: {
     static: {
       zap: EMPTY,

@@ -9,19 +9,19 @@ export type CommonProps = {
   interval?: boolean
 }
 
-const FarmUpdater: React.FC<CommonProps> = props => {
+const FarmUpdater: React.FC<CommonProps> = ({ interval = true }) => {
   const { chainId } = useActiveWeb3React()
 
-  useGetUserFarmingInfo(props.interval)
+  useGetUserFarmingInfo(interval)
 
   if (!chainId) {
     return null
   }
 
   if (CHAINS_SUPPORT_NEW_POOL_FARM_API.includes(chainId)) {
-    return <FarmUpdaterV2 {...props} />
+    return <FarmUpdaterV2 interval={interval} />
   } else {
-    return <FarmUpdaterV1 {...props} />
+    return <FarmUpdaterV1 interval={interval} />
   }
 }
 

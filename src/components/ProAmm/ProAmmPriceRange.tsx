@@ -19,10 +19,12 @@ export default function ProAmmPriceRange({
   position,
   ticksAtLimit,
   layout = 0,
+  hideChart,
 }: {
   position: Position
   ticksAtLimit: { [bound: string]: boolean | undefined }
   layout?: number
+  hideChart?: boolean
 }) {
   const theme = useTheme()
 
@@ -67,7 +69,7 @@ export default function ProAmmPriceRange({
         </Flex>
 
         <div>
-          <Flex alignItems="center" justifyContent="center" sx={{ gap: '8px' }}>
+          <Flex alignItems="center" justifyContent={hideChart ? 'space-between' : 'center'} sx={{ gap: '8px' }}>
             <Text fontSize={12} fontWeight={500} color={theme.subText}>
               <Trans>Current Price</Trans>
             </Text>
@@ -81,24 +83,25 @@ export default function ProAmmPriceRange({
             </RowFixed>
           </Flex>
 
-          {/* <Divider /> */}
-          <LiquidityChartRangeInput
-            style={{ minHeight: '180px' }}
-            currencyA={baseCurrency}
-            currencyB={quoteCurrency}
-            feeAmount={position.pool.fee}
-            ticksAtLimit={ticksAtLimit}
-            price={price ? parseFloat(price.toSignificant(8)) : undefined}
-            leftPrice={priceLower}
-            rightPrice={priceUpper}
-            onLeftRangeInput={() => {
-              //
-            }}
-            onRightRangeInput={() => {
-              //
-            }}
-            interactive={false}
-          />
+          {!hideChart && (
+            <LiquidityChartRangeInput
+              style={{ minHeight: '180px' }}
+              currencyA={baseCurrency}
+              currencyB={quoteCurrency}
+              feeAmount={position.pool.fee}
+              ticksAtLimit={ticksAtLimit}
+              price={price ? parseFloat(price.toSignificant(8)) : undefined}
+              leftPrice={priceLower}
+              rightPrice={priceUpper}
+              onLeftRangeInput={() => {
+                //
+              }}
+              onRightRangeInput={() => {
+                //
+              }}
+              interactive={false}
+            />
+          )}
         </div>
         <RowBetween style={{ gap: '12px' }}>
           <Flex>

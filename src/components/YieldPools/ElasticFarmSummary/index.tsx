@@ -71,9 +71,8 @@ const ElasticFarmSummary = () => {
             }}
           >
             <Trans>
-              Our current farms are based on an innovative farming mechanism we call{' '}
-              <HighlightedText>Active Liquidity Time</HighlightedText>. Read the tips below to{' '}
-              <HighlightedText>maximize</HighlightedText> your rewards!
+              All farms are setup using one of our two innovative farming mechanisms. Read the tips below to{' '}
+              <HighlightedText>maximize</HighlightedText> your farming rewards!
             </Trans>
           </Text>
         </Flex>
