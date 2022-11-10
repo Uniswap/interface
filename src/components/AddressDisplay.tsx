@@ -91,9 +91,9 @@ export function AddressDisplay({
   }, [address, avatar, isViewOnly, size])
 
   return (
-    <Flex alignItems="center" flexDirection={direction} gap="xs">
+    <Flex shrink alignItems="center" flexDirection={direction} gap="xs">
       {showAccountIcon && icon}
-      <Box alignItems={itemAlignment} flexShrink={1}>
+      <Box alignItems={itemAlignment} flex={1}>
         <CopyButtonWrapper
           onPress={showCopy && !showAddressAsSubtitle ? onPressCopyAddress : undefined}>
           <Flex centered row gap="sm">

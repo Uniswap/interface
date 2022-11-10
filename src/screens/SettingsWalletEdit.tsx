@@ -17,6 +17,7 @@ import { ChainId } from 'src/constants/chains'
 import { useENS } from 'src/features/ens/useENS'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useAccounts } from 'src/features/wallet/hooks'
+import { flex } from 'src/styles/flex'
 import { shortenAddress } from 'src/utils/addresses'
 import { Screens } from './Screens'
 
@@ -56,48 +57,42 @@ export function SettingsWalletEdit({
       <BackHeader alignment="left" mx="md" pt="md">
         <Text variant="subheadLarge">{t('Nickname')}</Text>
       </BackHeader>
-      <Flex gap="xl" px="lg" py="lg">
-        <Flex gap="none">
-          <Flex alignItems="center" flexDirection="row">
-            {showEditInput ? (
-              <TextInput
-                autoFocus
-                autoCapitalize="none"
-                color={nickname === activeAccount?.name ? 'textTertiary' : 'textPrimary'}
-                fontFamily={theme.textVariants.headlineMedium.fontFamily}
-                fontSize={theme.textVariants.headlineMedium.fontSize}
-                margin="none"
-                maxLength={NICKNAME_MAX_LENGTH}
-                numberOfLines={1}
-                placeholder={shortenAddress(address)}
-                placeholderTextColor={theme.colors.textTertiary}
-                px="none"
-                py="none"
-                returnKeyType="done"
-                value={nickname}
-                width="100%"
-                onChangeText={setNickname}
-                onSubmitEditing={handleNicknameUpdate}
-              />
-            ) : (
-              <>
-                <Text color="textPrimary" variant="headlineMedium">
-                  {nickname || shortenAddress(address)}
-                </Text>
-                {!ensName && (
-                  <Box ml="sm">
-                    <Button
-                      IconName={PencilIcon}
-                      emphasis={ButtonEmphasis.Secondary}
-                      size={ButtonSize.Small}
-                      onPress={onPressShowEditInput}
-                    />
-                  </Box>
-                )}
-              </>
+      <Flex row alignItems="center" p="lg">
+        {showEditInput ? (
+          <TextInput
+            autoFocus
+            autoCapitalize="none"
+            color={nickname === activeAccount?.name ? 'textTertiary' : 'textPrimary'}
+            fontFamily={theme.textVariants.headlineMedium.fontFamily}
+            fontSize={theme.textVariants.headlineMedium.fontSize}
+            margin="none"
+            maxLength={NICKNAME_MAX_LENGTH}
+            placeholder={shortenAddress(address)}
+            placeholderTextColor={theme.colors.textTertiary}
+            px="none"
+            py="none"
+            returnKeyType="done"
+            value={nickname}
+            onChangeText={setNickname}
+            onSubmitEditing={handleNicknameUpdate}
+          />
+        ) : (
+          <>
+            <Text color="textPrimary" style={flex.shrink} variant="headlineMedium">
+              {nickname || shortenAddress(address)}
+            </Text>
+            {!ensName && (
+              <Box ml="sm">
+                <Button
+                  IconName={PencilIcon}
+                  emphasis={ButtonEmphasis.Secondary}
+                  size={ButtonSize.Small}
+                  onPress={onPressShowEditInput}
+                />
+              </Box>
             )}
-          </Flex>
-        </Flex>
+          </>
+        )}
       </Flex>
     </Screen>
   )
