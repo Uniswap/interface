@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import useScrollPosition from '@react-hook/window-scroll'
+import PerpModal from 'components/Perpetual/PerpModal'
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import { KROM } from 'constants/tokens'
 import useTheme from 'hooks/useTheme'
@@ -8,7 +9,8 @@ import { darken } from 'polished'
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Text } from 'rebass'
-import { useShowClaimPopup, useToggleSelfClaimModal } from 'state/application/hooks'
+import { useModalOpen, useShowClaimPopup, useTogglePerpModal, useToggleSelfClaimModal } from 'state/application/hooks'
+import { ApplicationModal } from 'state/application/reducer'
 import { useUserHasAvailableClaim } from 'state/claim/hooks'
 import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
 import { useDarkModeManager } from 'state/user/hooks'
@@ -293,6 +295,31 @@ const StyledPrice = styled.span`
   top: -2px;
 `
 
+const StyledNavLinkAlt = styled.button`
+  background-color: transparent;
+  border-color: transparent;
+  border-width: 0px;
+  cursor: pointer;
+  color: ${({ theme }) => theme.text2};
+  &.${activeClassName} {
+    border-radius: 12px;
+    font-weight: 600;
+    color: ${({ theme }) => theme.text1};
+  }
+  :hover,
+  :focus {
+    color: ${({ theme }) => darken(0.1, theme.text1)};
+    text-decoration: none;
+  }
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 8px 12px;
+  word-break: break-word;
+  overflow: hidden;
+  white-space: nowrap;
+  text-decoration: none;
+`
+
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
 
@@ -301,6 +328,29 @@ export default function Header() {
   const { white, black } = useTheme()
 
   const toggleClaimModal = useToggleSelfClaimModal()
+  const togglePerpModal = useTogglePerpModal()
+
+  function TopLevelModals() {
+    const open = useModalOpen(ApplicationModal.PERP_POPUP)
+    const toggle = useTogglePerpModal()
+    return <PerpModal isOpen={open} onDismiss={toggle} />
+  }
+
+  const handleTogglePerpModal = () => {
+    const tickingDate = localStorage.getItem('KromTOUTicked')
+
+    if (tickingDate == null) {
+      togglePerpModal()
+    } else {
+      const millis = Date.now() - (tickingDate as unknown as number)
+      // External redirection
+      if (Math.floor(millis / 1000 / 60 / 60 / 24) < 30) {
+        window.open('https://perp.kromatika.finance/', '_blank')
+      } else {
+        togglePerpModal()
+      }
+    }
+  }
 
   const availableClaim: boolean = useUserHasAvailableClaim(account)
 
@@ -328,108 +378,118 @@ export default function Header() {
     },
   } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
   return (
-    <HeaderFrame showBackground={true}>
-      <ClaimModal />
-      <Title href=".">
-        <UniIcon>
-          <MainLogo>
-            <Logo
-              fill={darkMode ? white : black}
-              transform="scale(9)"
-              width="100px"
-              height="35px"
-              title="logo"
-              z-index="1"
-              viewBox="0 0 350 840"
-            />
-          </MainLogo>
-          <PhoneLogo>
-            <PhoneScreenLogo fill={darkMode ? white : black} width="100px" height="35px" title="logo" z-index="1" />
-          </PhoneLogo>
-        </UniIcon>
-      </Title>
-      <HeaderLinks>
-        <StyledNavLink
-          id={`pool-nav-link`}
-          to={'/pool'}
-          isActive={(match, { pathname }) =>
-            Boolean(match) ||
-            pathname.startsWith('/add') ||
-            pathname.startsWith('/remove') ||
-            pathname.startsWith('/increase') ||
-            pathname.startsWith('/find')
-          }
-        >
-          <Trans>Dashboard</Trans>
-        </StyledNavLink>
-        <StyledNavLink id={`swap-nav-link`} to={'/limitorder'}>
-          <Trans>Limit</Trans>
-        </StyledNavLink>
-        <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-          <Trans>Swap</Trans>
-        </StyledNavLink>
-        {/* <StyledImage src={darkMode ? ComingSoon : ComingSoonLight}></StyledImage> */}
-      </HeaderLinks>
+    <>
+      <HeaderFrame showBackground={true}>
+        <ClaimModal />
+        <Title href=".">
+          <UniIcon>
+            <MainLogo>
+              <Logo
+                fill={darkMode ? white : black}
+                transform="scale(9)"
+                width="100px"
+                height="35px"
+                title="logo"
+                z-index="1"
+                viewBox="0 0 350 840"
+              />
+            </MainLogo>
+            <PhoneLogo>
+              <PhoneScreenLogo fill={darkMode ? white : black} width="100px" height="35px" title="logo" z-index="1" />
+            </PhoneLogo>
+          </UniIcon>
+        </Title>
+        <HeaderLinks>
+          <StyledNavLink
+            id={`pool-nav-link`}
+            to={'/pool'}
+            isActive={(match: any, { pathname }: any) =>
+              Boolean(match) ||
+              pathname.startsWith('/add') ||
+              pathname.startsWith('/remove') ||
+              pathname.startsWith('/increase') ||
+              pathname.startsWith('/find')
+            }
+          >
+            <Trans>Dashboard</Trans>
+          </StyledNavLink>
+          <StyledNavLink id={`swap-nav-link`} to={'/limitorder'}>
+            <Trans>Limit</Trans>
+          </StyledNavLink>
+          <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+            <Trans>Swap</Trans>
+          </StyledNavLink>
+          <StyledNavLinkAlt
+            id={`perp-nav-link`}
+            // target="_blank"
+            onClick={() => handleTogglePerpModal()}
+          >
+            <Trans>Perp</Trans>
+          </StyledNavLinkAlt>
+          {/* <StyledImage src={darkMode ? ComingSoon : ComingSoonLight}></StyledImage> */}
+        </HeaderLinks>
 
-      <HeaderControls>
-        <HeaderElement>
-          {chainId && (
-            <ExternalLink href={pools[chainId]}>
-              <KromPriceStyled>
-                {kromPrice ? (
-                  <BalanceText
-                    style={{
-                      flexShrink: 0,
-                      userSelect: 'none',
-                      backgroundColor: darkMode ? '#212429' : '#F5F5F5',
-                      borderRadius: '10px',
-                      padding: '9px 8px',
-                      color: darkMode ? 'white' : 'black',
-                    }}
-                    fontWeight={500}
-                  >
-                    <Trans>
-                      {' '}
-                      <img
-                        src={tokenLogo}
-                        width="20px"
-                        height="20px"
-                        style={{ position: 'relative', top: '2px', marginRight: '5px' }}
-                      />
-                      <StyledPrice> ${kromPrice?.toSignificant(2)}</StyledPrice>
-                    </Trans>
-                  </BalanceText>
-                ) : null}
-              </KromPriceStyled>
-            </ExternalLink>
-          )}
-        </HeaderElement>
-        <HeaderElement>
-          <NetworkSelector />
-        </HeaderElement>
-        <HeaderElement>
-          {availableClaim && !showClaimPopup && (
-            <UNIWrapper onClick={toggleClaimModal}>
-              <UNIAmount active={!!account && !availableClaim} style={{ pointerEvents: 'auto' }}>
-                <TYPE.white padding="0 2px">
-                  {claimTxn && !claimTxn?.receipt ? (
-                    <Dots>
-                      <Trans>Claiming UNI</Trans>
-                    </Dots>
-                  ) : (
-                    <Trans>Claim UNI</Trans>
-                  )}
-                </TYPE.white>
-              </UNIAmount>
-              <CardNoise />
-            </UNIWrapper>
-          )}
-          <Web3Status />
-        </HeaderElement>
-        <HeaderElement>
-          <Menu />
-        </HeaderElement>
-      </HeaderControls>
-    </HeaderFrame>
+        <HeaderControls>
+          <HeaderElement>
+            {chainId && (
+              <ExternalLink href={pools[chainId]}>
+                <KromPriceStyled>
+                  {kromPrice ? (
+                    <BalanceText
+                      style={{
+                        flexShrink: 0,
+                        userSelect: 'none',
+                        backgroundColor: darkMode ? '#212429' : '#F5F5F5',
+                        borderRadius: '10px',
+                        padding: '9px 8px',
+                        color: darkMode ? 'white' : 'black',
+                      }}
+                      fontWeight={500}
+                    >
+                      <Trans>
+                        {' '}
+                        <img
+                          src={tokenLogo}
+                          width="20px"
+                          height="20px"
+                          style={{ position: 'relative', top: '2px', marginRight: '5px' }}
+                        />
+                        <StyledPrice> ${kromPrice?.toSignificant(2)}</StyledPrice>
+                      </Trans>
+                    </BalanceText>
+                  ) : null}
+                </KromPriceStyled>
+              </ExternalLink>
+            )}
+          </HeaderElement>
+          <HeaderElement>
+            <NetworkSelector />
+          </HeaderElement>
+          <HeaderElement>
+            {availableClaim && !showClaimPopup && (
+              <UNIWrapper onClick={toggleClaimModal}>
+                <UNIAmount active={!!account && !availableClaim} style={{ pointerEvents: 'auto' }}>
+                  <TYPE.white padding="0 2px">
+                    {claimTxn && !claimTxn?.receipt ? (
+                      <Dots>
+                        <Trans>Claiming UNI</Trans>
+                      </Dots>
+                    ) : (
+                      <Trans>Claim UNI</Trans>
+                    )}
+                  </TYPE.white>
+                </UNIAmount>
+                <CardNoise />
+              </UNIWrapper>
+            )}
+            <Web3Status />
+          </HeaderElement>
+          <HeaderElement>
+            <Menu />
+          </HeaderElement>
+        </HeaderControls>
+      </HeaderFrame>
+      <TopLevelModals />
+    </>
   )
 }
