@@ -113,7 +113,7 @@ export function TokenBalanceList({
         isError(networkStatus, !!data) ? (
           <AnimatedBox entering={FadeInDown} exiting={FadeOut} py="xs">
             <BaseCard.InlineErrorState
-              title={t('Failed to fetch recent transactions')}
+              title={t('Failed to fetch token balances')}
               onRetry={refetch}
             />
           </AnimatedBox>

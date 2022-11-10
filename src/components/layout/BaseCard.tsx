@@ -227,15 +227,16 @@ function InlineErrorState(
     <Flex
       grow
       row
+      alignItems="center"
       bg="background2"
       borderRadius="lg"
       gap="lg"
       justifyContent="space-between"
       p="sm"
       width="100%">
-      <Flex row alignItems="center" gap="xs">
+      <Flex row shrink alignItems="center" gap="xs">
         {icon}
-        <Text textAlign="center" variant="subheadSmall">
+        <Text ellipsizeMode="tail" numberOfLines={1} textAlign="center" variant="subheadSmall">
           {title}
         </Text>
       </Flex>
