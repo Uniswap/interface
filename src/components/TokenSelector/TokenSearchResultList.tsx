@@ -64,12 +64,9 @@ export function useTokenSectionsByVariation(
     makeSelectAccountHideSmallBalances(activeAccount.address)
   )
 
-  const { data: popularTokens, loading: popularTokensLoading } = usePopularTokens()
-  const { data: portfolioBalancesById, loading: portfolioBalancesLoading } = usePortfolioBalances(
-    activeAccount.address
-  )
-  const { data: commonBaseCurrencies, loading: commonBaseCurrenciesLoading } =
-    useAllCommonBaseCurrencies()
+  const { data: popularTokens } = usePopularTokens()
+  const { data: portfolioBalancesById } = usePortfolioBalances(activeAccount.address)
+  const { data: commonBaseCurrencies } = useAllCommonBaseCurrencies()
 
   const portfolioBalances = useMemo(() => {
     if (!portfolioBalancesById) return
@@ -114,11 +111,7 @@ export function useTokenSectionsByVariation(
 
   // Only call search endpoint if searchFilter is non-null and TokenSelectorVariation includes tokens without balance
   const skipSearch = !searchFilter || variation === TokenSelectorVariation.BalancesOnly
-  const { data: searchResultCurrencies, loading: searchTokensLoading } = useSearchTokens(
-    searchFilter,
-    chainFilter,
-    skipSearch
-  )
+  const { data: searchResultCurrencies } = useSearchTokens(searchFilter, chainFilter, skipSearch)
   const searchResults = useMemo(() => {
     if (!searchResultCurrencies) return
 
@@ -215,10 +208,10 @@ export function useTokenSectionsByVariation(
   ])
 
   const loading =
-    commonBaseCurrenciesLoading ||
-    popularTokensLoading ||
-    portfolioBalancesLoading ||
-    searchTokensLoading
+    !portfolioBalances ||
+    !popularTokenOptions ||
+    !commonBaseTokenOptions ||
+    (!skipSearch && !searchResults)
 
   return useMemo(() => ({ data: sections, loading }), [sections, loading])
 }
