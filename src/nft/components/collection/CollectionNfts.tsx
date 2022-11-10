@@ -512,7 +512,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         hasMore={hasNext}
         loader={hasNext && hasNfts ? loadingAssets : null}
         dataLength={collectionNfts?.length ?? 0}
-        style={{ overflow: 'unset', marginLeft: 'auto', marginRight: 'auto' }}
+        style={{ overflow: 'unset' }}
         className={hasNfts || isLoadingNext ? styles.assetList : undefined}
       >
         {hasNfts ? (
