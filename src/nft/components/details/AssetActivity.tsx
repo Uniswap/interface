@@ -1,3 +1,4 @@
+import { ScrollBarStyles } from 'components/Common'
 import { ActivityEventResponse } from 'nft/types'
 import { shortenAddress } from 'nft/utils/address'
 import { formatEthPrice } from 'nft/utils/currency'
@@ -92,20 +93,7 @@ const ActivityContainer = styled.div`
   max-height: 310px;
   overflow: auto;
 
-  // Firefox scrollbar styling
-  scrollbar-width: thin;
-  scrollbar-color: ${({ theme }) => `${theme.backgroundOutline} transparent`};
-
-  // safari and chrome scrollbar styling
-  ::-webkit-scrollbar {
-    background: transparent;
-    width: 4px;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: ${({ theme }) => theme.backgroundOutline};
-    border-radius: 8px;
-  }
+  ${ScrollBarStyles}
 `
 
 const AssetActivity = ({ eventsData }: { eventsData: ActivityEventResponse | undefined }) => {

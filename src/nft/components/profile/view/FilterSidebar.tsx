@@ -1,3 +1,4 @@
+import { ScrollBarStyles } from 'components/Common'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { XMarkIcon } from 'nft/components/icons'
@@ -14,22 +15,7 @@ import styled from 'styled-components/macro'
 import * as styles from './ProfilePage.css'
 
 const ItemsContainer = styled.div`
-  // Firefox scrollbar styling
-  scrollbar-width: thin;
-  scrollbar-color: ${({ theme }) => `${theme.backgroundOutline} transparent`};
-  overflow-y: scroll;
-  height: 100%;
-
-  // safari and chrome scrollbar styling
-  ::-webkit-scrollbar {
-    background: transparent;
-    width: 4px;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: ${({ theme }) => theme.backgroundOutline};
-    border-radius: 8px;
-  }
+  ${ScrollBarStyles}
 `
 
 export const FilterSidebar = () => {
@@ -75,7 +61,6 @@ export const FilterSidebar = () => {
             </Box>
           )}
         </Row>
-
         <CollectionSelect
           collections={walletCollections}
           collectionFilters={collectionFilters}

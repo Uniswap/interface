@@ -117,7 +117,7 @@ export const ProfilePage = () => {
           <FilterSidebar />
 
           {(!isMobile || !isFiltersExpanded) && (
-            <Column width="full" overflow="hidden">
+            <Column width="full">
               <AnimatedBox
                 flexShrink="0"
                 style={{
