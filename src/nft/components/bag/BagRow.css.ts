@@ -115,6 +115,7 @@ export const removeButton = style([
 export const bagRowImage = sprinkles({
   width: '56',
   height: '56',
+  objectFit: 'cover',
   borderRadius: '8',
 })
 

@@ -29,7 +29,6 @@ import styled from 'styled-components/macro'
 import shallow from 'zustand/shallow'
 
 import { EmptyWalletContent } from './EmptyWalletContent'
-import { ProfileAccountDetails } from './ProfileAccountDetails'
 import * as styles from './ProfilePage.css'
 import { WalletAssetDisplay } from './WalletAssetDisplay'
 
@@ -52,7 +51,6 @@ const SellModeButton = styled.button<{ active: boolean }>`
 `
 
 const ProfilePageColumn = styled(Column)`
-  overflow-x: hidden !important;
   ${ScreenBreakpointsPaddings}
 `
 
@@ -115,12 +113,11 @@ export const ProfilePage = () => {
       {ownerAssets?.length === 0 ? (
         <EmptyWalletContent />
       ) : (
-        <Row alignItems="flex-start" position="relative">
+        <Row alignItems="flex-start" position="relative" paddingX="20">
           <FilterSidebar />
 
           {(!isMobile || !isFiltersExpanded) && (
             <Column width="full">
-              <ProfileAccountDetails />
               <AnimatedBox
                 flexShrink="0"
                 style={{
@@ -129,6 +126,7 @@ export const ProfilePage = () => {
                       `translate(${Number(x) - (!isMobile && isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING)}px)`
                   ),
                 }}
+                paddingY="20"
               >
                 <Row gap="8" flexWrap="nowrap" justifyContent="space-between">
                   <FilterButton
@@ -275,7 +273,7 @@ const CollectionFiltersRow = ({
     return collections?.find((collection) => collection.address === collectionAddress)
   }
   return (
-    <Row paddingTop="18" gap="8" flexWrap="wrap">
+    <Row paddingY="18" gap="8" flexWrap="wrap">
       {collectionFilters &&
         collectionFilters.map((collectionAddress, index) => (
           <CollectionFilterItem

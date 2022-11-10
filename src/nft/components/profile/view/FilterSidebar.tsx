@@ -1,3 +1,4 @@
+import { ScrollBarStyles } from 'components/Common'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { XMarkIcon } from 'nft/components/icons'
@@ -9,8 +10,13 @@ import { useFiltersExpanded, useIsMobile, useWalletCollections } from 'nft/hooks
 import { WalletCollection } from 'nft/types'
 import { Dispatch, FormEvent, SetStateAction, useCallback, useEffect, useReducer, useState } from 'react'
 import { useSpring } from 'react-spring'
+import styled from 'styled-components/macro'
 
 import * as styles from './ProfilePage.css'
+
+const ItemsContainer = styled.div`
+  ${ScrollBarStyles}
+`
 
 export const FilterSidebar = () => {
   const collectionFilters = useWalletCollections((state) => state.collectionFilters)
@@ -30,7 +36,7 @@ export const FilterSidebar = () => {
       position={{ sm: 'fixed', md: 'sticky' }}
       top={{ sm: '40', md: 'unset' }}
       left={{ sm: '0', md: 'unset' }}
-      width={{ sm: 'full', md: 'auto' }}
+      width={{ sm: 'full', md: '332', lg: '332' }}
       height={{ sm: 'full', md: 'auto' }}
       zIndex={{ sm: '3', md: 'auto' }}
       display={isFiltersExpanded ? 'flex' : 'none'}
@@ -40,7 +46,7 @@ export const FilterSidebar = () => {
         paddingTop={{ sm: '24', md: '0' }}
         paddingLeft={{ sm: '16', md: '0' }}
         paddingRight="16"
-        width={{ sm: 'full', md: 'auto' }}
+        width={{ sm: 'full', md: '332', lg: '332' }}
       >
         <Row width="full" justifyContent="space-between">
           {isMobile && (
@@ -99,16 +105,18 @@ const CollectionSelect = ({
             collectionSearchText={collectionSearchText}
             setCollectionSearchText={setCollectionSearchText}
           />
-          <Box paddingBottom="8" overflowY="scroll" style={{ scrollbarWidth: 'none' }}>
-            {displayCollections?.map((collection, index) => (
-              <CollectionItem
-                key={index}
-                collection={collection}
-                collectionFilters={collectionFilters}
-                setCollectionFilters={setCollectionFilters}
-              />
-            ))}
-          </Box>
+          <ItemsContainer>
+            <Box paddingBottom="8" style={{ scrollbarWidth: 'none' }}>
+              {displayCollections?.map((collection) => (
+                <CollectionItem
+                  key={collection.address}
+                  collection={collection}
+                  collectionFilters={collectionFilters}
+                  setCollectionFilters={setCollectionFilters}
+                />
+              ))}
+            </Box>
+          </ItemsContainer>
         </Column>
       </Box>
     </>
