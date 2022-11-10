@@ -44,6 +44,7 @@ export enum OnboardingScreens {
   // import
   ImportMethod = 'ImportMethod',
   SeedPhraseInput = 'SeedPhraseInput',
+  RestoreCloudBackupLoading = 'RestoreCloudBackupLoading',
   RestoreCloudBackup = 'RestoreCloudBackup',
   RestoreCloudBackupPassword = 'RestoreCloudBackupPassword',
   SelectWallet = 'SelectWallet',

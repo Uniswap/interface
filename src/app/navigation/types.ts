@@ -71,6 +71,7 @@ export type OnboardingStackParamList = {
 
   // import
   [OnboardingScreens.ImportMethod]: OnboardingStackBaseParams
+  [OnboardingScreens.RestoreCloudBackupLoading]: OnboardingStackBaseParams
   [OnboardingScreens.RestoreCloudBackup]: OnboardingStackBaseParams
   [OnboardingScreens.RestoreCloudBackupPassword]: {
     mnemonicId: string

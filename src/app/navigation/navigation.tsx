@@ -40,6 +40,7 @@ import { ExternalProfileScreen } from 'src/screens/ExternalProfileScreen'
 import { HiddenTokensScreen } from 'src/screens/HiddenTokensScreen'
 import { HomeScreen } from 'src/screens/HomeScreen'
 import { ImportMethodScreen } from 'src/screens/Import/ImportMethodScreen'
+import { RestoreCloudBackupLoadingScreen } from 'src/screens/Import/RestoreCloudBackupLoadingScreen'
 import { RestoreCloudBackupPasswordScreen } from 'src/screens/Import/RestoreCloudBackupPasswordScreen'
 import { RestoreCloudBackupScreen } from 'src/screens/Import/RestoreCloudBackupScreen'
 import { SeedPhraseInputScreen } from 'src/screens/Import/SeedPhraseInputScreen'
@@ -311,6 +312,10 @@ export function OnboardingStackNavigator() {
         <OnboardingStack.Screen
           component={ImportMethodScreen}
           name={OnboardingScreens.ImportMethod}
+        />
+        <OnboardingStack.Screen
+          component={RestoreCloudBackupLoadingScreen}
+          name={OnboardingScreens.RestoreCloudBackupLoading}
         />
         <OnboardingStack.Screen
           component={RestoreCloudBackupScreen}

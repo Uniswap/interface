@@ -3,6 +3,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { TFunction } from 'i18next'
 import React, { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Alert } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import CloudIcon from 'src/assets/icons/cloud.svg'
@@ -13,12 +14,7 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { useCloudBackups } from 'src/features/CloudBackup/hooks'
-import {
-  isICloudAvailable,
-  startFetchingICloudBackups,
-  stopFetchingICloudBackups,
-} from 'src/features/CloudBackup/RNICloudBackupsManager'
+import { isICloudAvailable } from 'src/features/CloudBackup/RNICloudBackupsManager'
 import { importAccountActions } from 'src/features/import/importAccountSaga'
 import { ImportAccountType } from 'src/features/import/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
@@ -32,6 +28,7 @@ import {
 } from 'src/features/wallet/pendingAcccountsSaga'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { Theme } from 'src/styles/theme'
+import { openSettings } from 'src/utils/linking'
 
 interface ImportMethodOption {
   title: (t: TFunction) => string
@@ -77,7 +74,6 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props) {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
-  const cloudBackups = useCloudBackups()
   const entryPoint = params?.entryPoint
 
   const accounts = useAccounts()
@@ -124,37 +120,26 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props) {
     }
   }, [navigation, theme.colors.textPrimary])
 
-  useEffect(() => {
-    async function fetchICloudBackups() {
-      const available = await isICloudAvailable()
-      if (available) {
-        startFetchingICloudBackups()
-      }
-    }
-
-    fetchICloudBackups()
-
-    return () => {
-      stopFetchingICloudBackups()
-    }
-  }, [])
-
   const handleOnPressRestoreBackup = async () => {
-    // Handle multiple backups found by showing screen with list of backups
-    if (cloudBackups.length > 1) {
-      navigation.navigate({
-        name: OnboardingScreens.RestoreCloudBackup,
-        params: { importType: ImportType.Restore, entryPoint },
-        merge: true,
-      })
+    const iCloudAvailable = await isICloudAvailable()
+
+    if (!iCloudAvailable) {
+      Alert.alert(
+        t('iCloud Drive not available'),
+        t(
+          'Please verify that you are logged in to an Apple ID with iCloud Drive enabled on this device and try again.'
+        ),
+        [
+          { text: t('Go to settings'), onPress: openSettings, style: 'default' },
+          { text: t('Not now'), style: 'cancel' },
+        ]
+      )
       return
     }
 
-    // Handle one backup found with user password
-    const backup = cloudBackups[0]
     navigation.navigate({
-      name: OnboardingScreens.RestoreCloudBackupPassword,
-      params: { importType: ImportType.Restore, entryPoint, mnemonicId: backup.mnemonicId },
+      name: OnboardingScreens.RestoreCloudBackupLoading,
+      params: { importType: ImportType.Restore, entryPoint },
       merge: true,
     })
   }
@@ -187,12 +172,8 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props) {
           <OptionCard
             key={'connection-option-' + title}
             blurb={blurb(t)}
-            disabled={name === ElementName.OnboardingImportBackup && cloudBackups.length === 0}
             icon={icon(theme)}
             name={name}
-            opacity={
-              name === ElementName.OnboardingImportBackup && cloudBackups.length === 0 ? 0.4 : 1
-            }
             title={title(t)}
             onPress={() => handleOnPress(nav, importType)}
           />
