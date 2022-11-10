@@ -17,16 +17,7 @@ import {
   VerifiedIcon,
 } from 'nft/components/icons'
 import { NumericInput } from 'nft/components/layout/Input'
-import {
-  badge,
-  body,
-  bodySmall,
-  buttonTextMedium,
-  caption,
-  headlineSmall,
-  subhead,
-  subheadSmall,
-} from 'nft/css/common.css'
+import { badge, body, bodySmall, buttonTextMedium, caption, headlineSmall, subheadSmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useNFTList, useProfilePageState, useSellAsset } from 'nft/hooks'
 import {
@@ -440,7 +431,7 @@ const PriceTextInput = ({
   return (
     <Column gap="12" position="relative">
       <Row
-        color="backgroundOutline"
+        color="textTertiary"
         height="44"
         width="min"
         padding="4"
@@ -463,7 +454,7 @@ const PriceTextInput = ({
           borderStyle="none"
           className={body}
           color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
-          placeholder="Set"
+          placeholder="0"
           marginRight="0"
           marginLeft="14"
           backgroundColor="none"
@@ -545,19 +536,15 @@ const EthPriceDisplay = ({ ethPrice = 0 }: { ethPrice?: number }) => {
     })
   }, [])
 
-  console.log(ethConversion)
-  console.log(ethPrice)
-
   return (
     <Column width="full">
       <Row width="full" justifyContent="flex-end">
-        <Box className={subhead} color={ethPrice !== 0 ? 'textPrimary' : 'textSecondary'} marginLeft="auto">
-          {ethPrice > 0 ? formatEth(ethPrice) : '-'} ETH
-        </Box>
-        {ethPrice !== 0 && (
+        {ethPrice !== 0 ? (
           <Box className={body} color="textSecondary" marginLeft="12" marginRight="0">
             {formatUsdPrice(ethPrice * ethConversion)}
           </Box>
+        ) : (
+          '- Eth'
         )}
       </Row>
     </Column>
