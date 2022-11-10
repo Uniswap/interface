@@ -5,7 +5,7 @@ import NFTApproveSummaryItem from 'src/features/transactions/SummaryCards/Summar
 import NFTMintSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/NFTMintSummaryItem'
 import NFTTradeSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/NFTTradeSummaryItem'
 import ReceiveSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/ReceiveSummaryItem'
-import SendSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/SendSumamryItem'
+import SendSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/SendSummaryItem'
 import SwapSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/SwapSummaryItem'
 import UnknownSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/UnknownSummaryItem'
 import WCSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/WCSummaryItem'
