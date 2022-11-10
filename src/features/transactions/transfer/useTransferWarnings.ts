@@ -1,6 +1,8 @@
+import { NetInfoState, useNetInfo } from '@react-native-community/netinfo'
 import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { TFunction } from 'react-i18next'
+import { getNetworkWarning } from 'src/components/modals/WarningModal/constants'
 import {
   Warning,
   WarningAction,
@@ -17,8 +19,14 @@ import { currencyAddress } from 'src/utils/currencyId'
 export function getTransferWarnings(
   t: TFunction,
   account: Account,
-  derivedTransferInfo: DerivedTransferInfo
+  derivedTransferInfo: DerivedTransferInfo,
+  networkStatus: NetInfoState
 ) {
+  const warnings: Warning[] = []
+  if (!networkStatus.isConnected) {
+    warnings.push(getNetworkWarning(t))
+  }
+
   const { currencyBalances, currencyAmounts, recipient, currencyIn, nftIn, chainId } =
     derivedTransferInfo
 
@@ -33,7 +41,6 @@ export function getTransferWarnings(
     !!currencyBalanceIn
   )
 
-  const warnings: Warning[] = []
   // insufficient balance
   if (currencyAmountIn && currencyBalanceIn?.lessThan(currencyAmountIn)) {
     warnings.push({
@@ -79,9 +86,10 @@ export function useTransferWarnings(
   account: Account,
   derivedTransferInfo: DerivedTransferInfo
 ) {
+  const networkStatus = useNetInfo()
   return useMemo(() => {
-    return getTransferWarnings(t, account, derivedTransferInfo)
-  }, [derivedTransferInfo, account, t])
+    return getTransferWarnings(t, account, derivedTransferInfo, networkStatus)
+  }, [account, derivedTransferInfo, networkStatus, t])
 }
 
 const checkIsMissingRequiredParams = (

@@ -7,7 +7,7 @@ import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { getSwapWarnings } from 'src/features/transactions/swap/useSwapWarnings'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
-import { account } from 'src/test/fixtures'
+import { account, networkDown, networkUp } from 'src/test/fixtures'
 
 const ETH = NativeCurrency.onChain(ChainId.Mainnet)
 
@@ -106,19 +106,31 @@ const mockTranslate = jest.fn()
 
 describe(getSwapWarnings, () => {
   it('catches incomplete form errors', async () => {
-    const warnings = getSwapWarnings(mockTranslate, account, swapState, undefined)
+    const warnings = getSwapWarnings(mockTranslate, account, swapState, networkUp, undefined)
     expect(warnings.length).toBe(1)
     expect(warnings[0].type).toEqual(WarningLabel.FormIncomplete)
   })
 
   it('catches insufficient balance errors', () => {
-    const warnings = getSwapWarnings(mockTranslate, account, insufficientBalanceState, undefined)
+    const warnings = getSwapWarnings(
+      mockTranslate,
+      account,
+      insufficientBalanceState,
+      networkUp,
+      undefined
+    )
     expect(warnings.length).toBe(1)
     expect(warnings[0].type).toEqual(WarningLabel.InsufficientFunds)
   })
 
   it('catches insufficient gas errors', () => {
-    const warnings = getSwapWarnings(mockTranslate, account, insufficientGasBalanceState, '100')
+    const warnings = getSwapWarnings(
+      mockTranslate,
+      account,
+      insufficientGasBalanceState,
+      networkUp,
+      '100'
+    )
     expect(
       warnings.find((warning) => warning.type === WarningLabel.InsufficientGasFunds)
     ).toBeTruthy()
@@ -133,12 +145,22 @@ describe(getSwapWarnings, () => {
       },
     }
 
-    const warnings = getSwapWarnings(mockTranslate, account, incompleteAndInsufficientBalanceState)
+    const warnings = getSwapWarnings(
+      mockTranslate,
+      account,
+      incompleteAndInsufficientBalanceState,
+      networkUp
+    )
     expect(warnings.length).toBe(2)
   })
 
   it('catches errors returned by the routing api', () => {
-    const warnings = getSwapWarnings(mockTranslate, account, tradeErrorState)
+    const warnings = getSwapWarnings(mockTranslate, account, tradeErrorState, networkUp)
     expect(warnings.find((warning) => warning.type === WarningLabel.SwapRouterError)).toBeTruthy()
+  })
+
+  it('errors if there is no internet', () => {
+    const warnings = getSwapWarnings(mockTranslate, account, tradeErrorState, networkDown)
+    expect(warnings.find((warning) => warning.type === WarningLabel.NetworkError)).toBeTruthy()
   })
 })

@@ -80,7 +80,7 @@ export const routingApi = createApi({
             : {}),
           ...(recipient && fetchSimulatedGasLimit ? { simulateFromAddress: recipient } : {}),
         })}`,
-      transformResponse: (result: QuoteResult, meta, arg): TradeQuoteResult => {
+      transformResponse: (result: QuoteResult, _, arg): TradeQuoteResult => {
         // TODO: we shouldn't rely on any of the request arguments and transform the data with only response data
         // Must figure out how to determine whether requested assets are native given the router always returns
         // wrapped token addresses

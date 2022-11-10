@@ -43,6 +43,7 @@ export enum WarningLabel {
   RecipientNewAddress = 'recipient_new_address',
   RecipientIsSmartContract = 'recipient_is_smart_contract',
   ViewOnlyAccount = 'view_only_account',
+  NetworkError = 'network_error',
 }
 
 export interface Warning {

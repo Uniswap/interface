@@ -1,6 +1,8 @@
+import { NetInfoState, useNetInfo } from '@react-native-community/netinfo'
 import { CurrencyAmount, NativeCurrency, Percent } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { TFunction } from 'react-i18next'
+import { getNetworkWarning } from 'src/components/modals/WarningModal/constants'
 import {
   Warning,
   WarningAction,
@@ -21,12 +23,17 @@ export function getSwapWarnings(
   t: TFunction,
   account: Account,
   derivedSwapInfo: DerivedSwapInfo,
+  networkStatus: NetInfoState,
   gasFee?: string
 ) {
+  const warnings: Warning[] = []
+  if (!networkStatus.isConnected) {
+    warnings.push(getNetworkWarning(t))
+  }
+
   const { currencyBalances, currencyAmounts, currencies, trade, nativeCurrencyBalance } =
     derivedSwapInfo
 
-  const warnings: Warning[] = []
   const priceImpact = trade.trade?.priceImpact
 
   // insufficient balance for swap
@@ -158,9 +165,10 @@ export function useSwapWarnings(
   derivedSwapInfo: DerivedSwapInfo,
   gasFee?: string
 ) {
+  const networkStatus = useNetInfo()
   return useMemo(() => {
-    return getSwapWarnings(t, account, derivedSwapInfo, gasFee)
-  }, [account, derivedSwapInfo, t, gasFee])
+    return getSwapWarnings(t, account, derivedSwapInfo, networkStatus, gasFee)
+  }, [account, derivedSwapInfo, t, gasFee, networkStatus])
 }
 
 const formIncomplete = (derivedSwapInfo: DerivedSwapInfo) => {
