@@ -110,7 +110,7 @@ export function TokenBalanceList({
         <HiddenTokensRow address={owner} mb="xl" mt="sm" numHidden={numHiddenTokens} />
       }
       ListHeaderComponent={
-        !isError(networkStatus, !!data) ? (
+        isError(networkStatus, !!data) ? (
           <AnimatedBox entering={FadeInDown} exiting={FadeOut} py="xs">
             <BaseCard.InlineErrorState
               title={t('Failed to fetch recent transactions')}
