@@ -3,6 +3,7 @@ import { Trace } from 'analytics/Trace'
 import { useDetailsQuery } from 'graphql/data/nft/Details'
 import { AssetDetails } from 'nft/components/details/AssetDetails'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
+import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
 import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -40,8 +41,11 @@ const Asset = () => {
   const data = useDetailsQuery(contractAddress, tokenId)
 
   const [asset, collection] = useMemo(() => data ?? [], [data])
+  const isLoading = true
 
-  return (
+  return isLoading ? (
+    <AssetDetailsLoading />
+  ) : (
     <>
       <Trace
         page={PageName.NFT_DETAILS_PAGE}
