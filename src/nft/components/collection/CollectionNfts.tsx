@@ -196,6 +196,39 @@ export const CollectionNftsAndMenuLoading = () => (
   </Column>
 )
 
+export const getSortDropdownOptions = (setSortBy: (sortBy: SortBy) => void, hasRarity: boolean): DropDownOption[] => {
+  const options = [
+    {
+      displayText: 'Low to High',
+      onClick: () => setSortBy(SortBy.LowToHigh),
+      icon: nonRarityIcon,
+      reverseIndex: 2,
+    },
+    {
+      displayText: 'High to Low',
+      onClick: () => setSortBy(SortBy.HighToLow),
+      icon: nonRarityIcon,
+      reverseIndex: 1,
+    },
+  ]
+  return hasRarity
+    ? options.concat([
+        {
+          displayText: 'Rare to Common',
+          onClick: () => setSortBy(SortBy.RareToCommon),
+          icon: rarityIcon,
+          reverseIndex: 4,
+        },
+        {
+          displayText: 'Common to Rare',
+          onClick: () => setSortBy(SortBy.CommonToRare),
+          icon: rarityIcon,
+          reverseIndex: 3,
+        },
+      ])
+    : options
+}
+
 export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerified }: CollectionNftsProps) => {
   const { chainId } = useWeb3React()
   const traits = useCollectionFilters((state) => state.traits)
@@ -220,6 +253,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const reset = useCollectionFilters((state) => state.reset)
   const setMin = useCollectionFilters((state) => state.setMinPrice)
   const setMax = useCollectionFilters((state) => state.setMaxPrice)
+  const setHasRarity = useCollectionFilters((state) => state.setHasRarity)
 
   const toggleBag = useBag((state) => state.toggleBag)
   const bagExpanded = useBag((state) => state.bagExpanded)
@@ -265,51 +299,14 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
     setIsCollectionNftsLoading(isLoadingNext)
   }, [isLoadingNext, setIsCollectionNftsLoading])
 
-  const hasRarity = getRarityStatus(rarityStatusCache, collectionStats?.address, collectionNfts)
+  const hasRarity = useMemo(() => {
+    const hasRarity = getRarityStatus(rarityStatusCache, collectionStats?.address, collectionNfts) ?? false
+    setHasRarity(hasRarity)
+    return hasRarity
+  }, [rarityStatusCache, collectionStats.address, collectionNfts, setHasRarity])
 
   const sortDropDownOptions: DropDownOption[] = useMemo(
-    () =>
-      hasRarity
-        ? [
-            {
-              displayText: 'Low to High',
-              onClick: () => setSortBy(SortBy.LowToHigh),
-              icon: nonRarityIcon,
-              reverseIndex: 2,
-            },
-            {
-              displayText: 'High to Low',
-              onClick: () => setSortBy(SortBy.HighToLow),
-              icon: nonRarityIcon,
-              reverseIndex: 1,
-            },
-            {
-              displayText: 'Rare to Common',
-              onClick: () => setSortBy(SortBy.RareToCommon),
-              icon: rarityIcon,
-              reverseIndex: 4,
-            },
-            {
-              displayText: 'Common to Rare',
-              onClick: () => setSortBy(SortBy.CommonToRare),
-              icon: rarityIcon,
-              reverseIndex: 3,
-            },
-          ]
-        : [
-            {
-              displayText: 'Low to High',
-              onClick: () => setSortBy(SortBy.LowToHigh),
-              icon: nonRarityIcon,
-              reverseIndex: 2,
-            },
-            {
-              displayText: 'High to Low',
-              onClick: () => setSortBy(SortBy.HighToLow),
-              icon: nonRarityIcon,
-              reverseIndex: 1,
-            },
-          ],
+    () => getSortDropdownOptions(setSortBy, hasRarity),
     [hasRarity, setSortBy]
   )
 
@@ -429,10 +426,10 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             {!hasErc1155s ? (
               <SweepButton
                 toggled={sweepIsOpen}
-                disabled={!buyNow}
+                disabled={hasErc1155s}
                 className={buttonTextMedium}
                 onClick={() => {
-                  if (!buyNow || hasErc1155s) return
+                  if (hasErc1155s) return
                   if (!sweepIsOpen) {
                     scrollToTop()
                     if (!bagExpanded && !isMobile) toggleBag()
@@ -451,7 +448,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             contractAddress={contractAddress}
             minPrice={debouncedMinPrice}
             maxPrice={debouncedMaxPrice}
-            showSweep={sweepIsOpen && buyNow && !hasErc1155s}
+            showSweep={sweepIsOpen && !hasErc1155s}
           />
           <Row
             paddingTop={!!markets.length || !!traits.length || minMaxPriceChipText ? '12' : '0'}
