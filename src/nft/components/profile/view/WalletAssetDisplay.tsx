@@ -1,3 +1,5 @@
+import { sendAnalyticsEvent } from 'analytics'
+import { EventName } from 'analytics/constants'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
@@ -33,6 +35,11 @@ export const WalletAssetDisplay = ({ asset, isSellMode }: { asset: WalletAsset; 
 
   const handleSelect = () => {
     isSelected ? removeSellAsset(asset) : selectSellAsset(asset)
+    !isSelected &&
+      sendAnalyticsEvent(EventName.NFT_SELL_ITEM_ADDED, {
+        collection_address: asset.asset_contract.address,
+        token_id: asset.tokenId,
+      })
     if (
       !cartExpanded &&
       !sellAssets.find(
