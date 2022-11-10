@@ -5,7 +5,8 @@ import { WalletAsset } from 'nft/types'
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const NFT_DETAILS_HREF = (asset: WalletAsset) => `/nfts/asset/${asset.address}/${asset.tokenId}?origin=collection`
+const NFT_DETAILS_HREF = (asset: WalletAsset) =>
+  `/nfts/asset/${asset.asset_contract.address}/${asset.tokenId}?origin=profile`
 
 export const ViewMyNftsAsset = ({ asset, isSellMode }: { asset: WalletAsset; isSellMode: boolean }) => {
   const sellAssets = useSellAsset((state) => state.sellAssets)
@@ -66,7 +67,7 @@ export const ViewMyNftsAsset = ({ asset, isSellMode }: { asset: WalletAsset; isS
         )}
       </Card.ImageContainer>
       <Card.DetailsContainer>
-        <Card.ViewMyNftDetails asset={asset} />
+        <Card.ProfileNftDetails asset={asset} />
       </Card.DetailsContainer>
     </Card.Container>
   )

@@ -43,12 +43,10 @@ export interface WalletAsset {
   id?: string
   imageUrl: string
   smallImageUrl: string
-  address: string
   notForSale: boolean
   animationUrl: string
   susFlag: boolean
   priceInfo: PriceInfo
-  tokenType: TokenType
   name: string
   tokenId: string
   asset_contract: {
@@ -58,10 +56,10 @@ export interface WalletAsset {
     description: string
     image_url: string
     payout_address: string
+    tokenType: TokenType
   }
   collection: GenieCollection
   collectionIsVerified: boolean
-  collectionName: string
   lastPrice: number
   floorPrice: number
   creatorPercentage: number

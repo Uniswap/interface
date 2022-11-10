@@ -85,7 +85,7 @@ const useAssetMediaType = (asset: GenieAsset | WalletAsset) =>
   }, [asset])
 
 const baseHref = (asset: GenieAsset | WalletAsset) =>
-  `/#/nfts/asset/${asset.address}/${asset.tokenId}?origin=collection`
+  'address' in asset ? `/#/nfts/asset/${asset.address}/${asset.tokenId}?origin=collection` : '/nfts/profile'
 
 const DetailsLinkContainer = styled.a`
   display: flex;
@@ -505,15 +505,15 @@ const TruncatedTextRow = styled(Row)`
   overflow: hidden;
 `
 
-interface ViewMyNftDetailsProps {
+interface ProfileNftDetailsProps {
   asset: WalletAsset
 }
 
-const ViewMyNftDetails = ({ asset }: ViewMyNftDetailsProps) => {
+const ProfileNftDetails = ({ asset }: ProfileNftDetailsProps) => {
   const assetName = () => {
     if (!asset.name && !asset.tokenId) return
     if (!!asset.name && !!asset.tokenId)
-      return asset.name.includes(`#${asset.tokenId}`) ? asset.name : `${asset.name} #${asset.tokenId}`
+      return asset.name.includes(`${asset.tokenId}`) ? asset.name : `${asset.name} #${asset.tokenId}`
     return !!asset.name ? asset.name : `#${asset.tokenId}`
   }
 
@@ -521,7 +521,7 @@ const ViewMyNftDetails = ({ asset }: ViewMyNftDetailsProps) => {
     <Box overflow="hidden" width="full" flexWrap="nowrap">
       <Row justifyItems="flex-start">
         <TruncatedTextRow className={bodySmall} style={{ color: themeVars.colors.textSecondary }}>
-          {!!asset.collectionName && <span>{asset.collectionName}</span>}
+          {!!asset.asset_contract.name && <span>{asset.asset_contract.name}</span>}
         </TruncatedTextRow>
         {asset.collectionIsVerified && <VerifiedIcon height="16px" width="16px" fill={colors.magentaVibrant} />}
       </Row>
@@ -688,7 +688,10 @@ const Ranking = ({ rarity, provider, rarityVerified, rarityLogo }: RankingProps)
                 </Box>
                 <Box width="full" className={bodySmall}>
                   {rarityVerified
-                    ? `Verified by ${asset.collectionName}`
+                    ? `Verified by ${
+                        ('collectionName' in asset && asset.collectionName) ||
+                        ('asset_contract' in asset && asset.asset_contract?.name)
+                      }`
                     : `Ranking by ${rarity.primaryProvider === 'Genie' ? fallbackProvider : rarity.primaryProvider}`}
                 </Box>
               </Row>
@@ -806,6 +809,7 @@ export {
   PrimaryDetails,
   PrimaryInfo,
   PrimaryRow,
+  ProfileNftDetails,
   Ranking,
   SecondaryDetails,
   SecondaryInfo,
@@ -816,5 +820,4 @@ export {
   useAssetMediaType,
   useNotForSale,
   Video,
-  ViewMyNftDetails,
 }

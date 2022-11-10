@@ -144,7 +144,6 @@ export function useNftBalanceQuery(
       id: asset?.id,
       imageUrl: asset?.image?.url,
       smallImageUrl: asset?.smallImage?.url,
-      address1: asset?.collection?.nftContracts?.[0].address,
       notForSale: asset?.listings?.edges?.length === 0,
       animationUrl: asset?.animationUrl,
       susFlag: asset?.suspiciousFlag,
@@ -156,7 +155,6 @@ export function useNftBalanceQuery(
             basePrice: ethPrice,
           }
         : undefined,
-      tokenType: asset?.collection?.nftContracts?.[0].standard,
       name: asset?.name,
       tokenId: asset?.tokenId,
       asset_contract: {
@@ -166,10 +164,10 @@ export function useNftBalanceQuery(
         description: asset?.description,
         image_url: asset?.collection?.image?.url,
         payout_address: queryAsset?.node?.listingFees?.[0]?.payoutAddress,
+        tokenType: asset?.collection?.nftContracts?.[0].standard,
       },
       collection: asset?.collection,
       collectionIsVerified: asset?.collection?.isVerified,
-      collectionName: asset?.collection?.name,
       lastPrice: queryAsset.node.lastPrice?.value,
       floorPrice: asset?.collection?.markets?.[0]?.floorPrice?.value,
       creatorPercentage: queryAsset?.node?.listingFees?.[0]?.basisPoints ?? 0 / 10000,
