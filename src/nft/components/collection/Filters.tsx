@@ -58,7 +58,7 @@ export const Filters = ({ traitsByGroup }: { traitsByGroup: Record<string, Trait
             <span />
           </Checkbox>
         </Row>
-        {isMobile && <FilterSortDropdown />}
+        {isMobile && <FilterSortDropdown sortDropDownOptions={sortDropDownOptions} />}
         <MarketplaceSelect />
         <PriceRange />
         {Object.entries(traitsByGroup).length > 0 && (

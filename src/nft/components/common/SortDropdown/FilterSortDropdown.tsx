@@ -1,80 +1,47 @@
+import { Box } from 'nft/components/Box'
 import { FilterDropdown, FilterItem } from 'nft/components/collection/MarketplaceSelect'
+import { useCollectionFilters } from 'nft/hooks'
+import { DropDownOption } from 'nft/types'
 import { useState } from 'react'
 
-export const FilterSortDropdown = () => {
+export const FilterSortDropdown = ({ sortDropDownOptions }: { sortDropDownOptions: DropDownOption[] }) => {
   const [isOpen, setOpen] = useState(false)
   const onClick: React.MouseEventHandler<HTMLElement> = (e) => {
     e.preventDefault()
     setOpen(!isOpen)
-    // setTraitsOpen(TraitPosition.MARKPLACE_INDEX, !isOpen)set sortby TODO: do I not need?
   }
-  const sortItems = new Array(4).fill(<>test</>)
+  const sortItems = sortDropDownOptions.map((option) => (
+    <SortByItem dropDownOption={option} parentOnClick={onClick} key={option.displayText} />
+  ))
   return <FilterDropdown title={'Sort by'} items={sortItems} onClick={onClick} isOpen={isOpen} />
 }
 
-const SortByItems = ({
-  title,
-  addMarket,
-  removeMarket,
-  isMarketSelected,
-  count,
+const SortByItem = ({
+  dropDownOption,
+  parentOnClick,
 }: {
-  title: string
-  addMarket: (market: string) => void
-  removeMarket: (market: string) => void
-  isMarketSelected: boolean
-  count?: number
+  dropDownOption: DropDownOption
+  parentOnClick: React.MouseEventHandler<HTMLElement>
 }) => {
-  const checkMark = <></> // if is selected show otherwise nothing
+  const sortBy = useCollectionFilters((state) => state.sortBy)
+  console.log(sortBy, dropDownOption.sortBy)
+  const checkMark =
+    dropDownOption.sortBy !== undefined && sortBy === dropDownOption.sortBy ? (
+      <Box
+        as="img"
+        alt={dropDownOption.displayText}
+        width="20"
+        height="20"
+        objectFit="cover"
+        src="/nft/svgs/checkmark.svg"
+      />
+    ) : (
+      <></>
+    )
   const onClick: React.MouseEventHandler<HTMLElement> = (e) => {
     e.preventDefault()
+    parentOnClick(e)
+    dropDownOption.onClick()
   }
-  return <FilterItem title={title} element={checkMark} onClick={onClick} key={title} />
+  return <FilterItem title={dropDownOption.displayText} element={checkMark} onClick={onClick} />
 }
-
-// const MarketplaceItem = ({
-//   title,
-//   value,
-//   addMarket,
-//   removeMarket,
-//   isMarketSelected,
-//   count,
-// }: {
-//   title: string
-//   value: string
-//   addMarket: (market: string) => void
-//   removeMarket: (market: string) => void
-//   isMarketSelected: boolean
-//   count?: number
-// }) => {
-//   const [isCheckboxSelected, setCheckboxSelected] = useState(false)
-//   const [hovered, toggleHover] = useReducer((state) => !state, false)
-//   useEffect(() => {
-//     setCheckboxSelected(isMarketSelected)
-//   }, [isMarketSelected])
-//   const handleCheckbox = (e: FormEvent) => {
-//     e.preventDefault()
-//     if (!isCheckboxSelected) {
-//       addMarket(value)
-//       setCheckboxSelected(true)
-//     } else {
-//       removeMarket(value)
-//       setCheckboxSelected(false)
-//     }
-//     sendAnalyticsEvent(EventName.NFT_FILTER_SELECTED, { filter_type: FilterTypes.MARKETPLACE })
-//   }
-
-//   const checkbox = (
-//     <Checkbox checked={isCheckboxSelected} hovered={hovered} onChange={handleCheckbox}>
-//       <Box as="span" color="textSecondary" marginLeft="4" paddingRight={'12'}>
-//         {count}
-//       </Box>
-//     </Checkbox>
-//   )
-
-//   return (
-//     <div key={value} onMouseEnter={toggleHover} onMouseLeave={toggleHover}>
-//       <FilterItem title={title} element={checkbox} onClick={handleCheckbox} />
-//     </div>
-//   )
-// }

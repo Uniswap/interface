@@ -199,31 +199,35 @@ export const CollectionNftsAndMenuLoading = () => (
 export const getSortDropdownOptions = (setSortBy: (sortBy: SortBy) => void, hasRarity: boolean): DropDownOption[] => {
   const options = [
     {
-      displayText: 'Low to High',
+      displayText: 'Price: Low to High',
       onClick: () => setSortBy(SortBy.LowToHigh),
       icon: nonRarityIcon,
       reverseIndex: 2,
+      sortBy: SortBy.LowToHigh,
     },
     {
-      displayText: 'High to Low',
+      displayText: 'Price: High to Low',
       onClick: () => setSortBy(SortBy.HighToLow),
       icon: nonRarityIcon,
       reverseIndex: 1,
+      sortBy: SortBy.HighToLow,
     },
   ]
   return hasRarity
     ? options.concat([
         {
-          displayText: 'Rare to Common',
+          displayText: 'Rarity: Rare to Common',
           onClick: () => setSortBy(SortBy.RareToCommon),
           icon: rarityIcon,
           reverseIndex: 4,
+          sortBy: SortBy.RareToCommon,
         },
         {
-          displayText: 'Common to Rare',
+          displayText: 'Rarity: Common to Rare',
           onClick: () => setSortBy(SortBy.CommonToRare),
           icon: rarityIcon,
           reverseIndex: 3,
+          sortBy: SortBy.CommonToRare,
         },
       ])
     : options
@@ -303,7 +307,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
     const hasRarity = getRarityStatus(rarityStatusCache, collectionStats?.address, collectionNfts) ?? false
     setHasRarity(hasRarity)
     return hasRarity
-  }, [rarityStatusCache, collectionStats.address, collectionNfts, setHasRarity])
+  }, [collectionStats.address, collectionNfts, setHasRarity])
 
   const sortDropDownOptions: DropDownOption[] = useMemo(
     () => getSortDropdownOptions(setSortBy, hasRarity),
