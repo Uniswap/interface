@@ -300,7 +300,11 @@ export function OnboardingStackNavigator() {
           component={ManualBackupScreen}
           name={OnboardingScreens.BackupManual}
         />
-        <OnboardingStack.Screen component={OutroScreen} name={OnboardingScreens.Outro} />
+        <OnboardingStack.Screen
+          component={OutroScreen}
+          name={OnboardingScreens.Outro}
+          options={{ headerShown: false, gestureEnabled: false }}
+        />
         <OnboardingStack.Screen
           component={CloudBackupProcessingScreen}
           name={OnboardingScreens.BackupCloudProcessing}
