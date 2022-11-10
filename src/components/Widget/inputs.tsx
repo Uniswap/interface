@@ -84,11 +84,15 @@ export function useSyncWidgetInputs({
 
       setType((type) => {
         // If flipping the tokens, also flip the type/amount.
-        if (isFlip) return invertTradeType(type)
+        if (isFlip) {
+          return invertTradeType(type)
+        }
 
         // Setting a new token should clear its amount, if it is set.
         const activeField = type === TradeType.EXACT_INPUT ? Field.INPUT : Field.OUTPUT
-        if (selectingField === activeField) setAmount(() => EMPTY_AMOUNT)
+        if (selectingField === activeField) {
+          setAmount(() => EMPTY_AMOUNT)
+        }
 
         return type
       })
