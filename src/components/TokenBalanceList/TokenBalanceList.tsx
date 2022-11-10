@@ -2,12 +2,14 @@ import { SpacingShorthandProps } from '@shopify/restyle'
 import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ViewStyle } from 'react-native'
+import { FadeInDown, FadeOut } from 'react-native-reanimated'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
-import { Box, Flex } from 'src/components/layout'
+import { AnimatedBox, Box, Flex } from 'src/components/layout'
 import { AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
+import { BaseCard } from 'src/components/layout/BaseCard'
 import {
   TabViewScrollProps,
   TAB_VIEW_SCROLL_THROTTLE,
@@ -15,7 +17,7 @@ import {
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
-import { isWarmLoadingStatus } from 'src/data/utils'
+import { isError, isNonPollingRequestInFlight, isWarmLoadingStatus } from 'src/data/utils'
 import { useSortedPortfolioBalances } from 'src/features/dataApi/balances'
 import { PortfolioBalance } from 'src/features/dataApi/types'
 import {
@@ -44,6 +46,8 @@ export function TokenBalanceList({
   tabViewScrollProps,
   loadingContainerStyle,
 }: TokenBalanceListProps) {
+  const { t } = useTranslation()
+
   const hideSmallBalances = useAppSelector(makeSelectAccountHideSmallBalances(owner))
   const hideSpamTokens = useAppSelector(makeSelectAccountHideSpamTokens(owner))
 
@@ -56,7 +60,7 @@ export function TokenBalanceList({
     setIsWarmLoading(false)
   }
 
-  const { data, networkStatus } = useSortedPortfolioBalances(
+  const { data, networkStatus, refetch } = useSortedPortfolioBalances(
     owner,
     hideSmallBalances,
     hideSpamTokens,
@@ -72,9 +76,21 @@ export function TokenBalanceList({
   }, [data, networkStatus])
 
   if (!data) {
+    if (isNonPollingRequestInFlight(networkStatus)) {
+      return (
+        <Box m="sm" style={loadingContainerStyle}>
+          <Loading repeat={4} type="token" />
+        </Box>
+      )
+    }
+
     return (
-      <Box m="sm" style={loadingContainerStyle}>
-        <Loading repeat={4} type="token" />
+      <Box flex={1} justifyContent="center">
+        <BaseCard.ErrorState
+          retryButtonLabel="Retry"
+          title={t("Couldn't load token balances")}
+          onRetry={() => refetch?.()}
+        />
       </Box>
     )
   }
@@ -93,8 +109,16 @@ export function TokenBalanceList({
       ListFooterComponent={
         <HiddenTokensRow address={owner} mb="xl" mt="sm" numHidden={numHiddenTokens} />
       }
-      // TODO(MOB-3482): add error component here using judo's new error wrapper component from #2302
-      // ListHeaderComponent={error ? <ErrorHandler>Oops!</ErrorHandler> : null}
+      ListHeaderComponent={
+        !isError(networkStatus, !!data) ? (
+          <AnimatedBox entering={FadeInDown} exiting={FadeOut} py="xs">
+            <BaseCard.InlineErrorState
+              title={t('Failed to fetch recent transactions')}
+              onRetry={refetch}
+            />
+          </AnimatedBox>
+        ) : null
+      }
       data={balances}
       keyExtractor={key}
       renderItem={({ item }: { item: PortfolioBalance }) => (

@@ -74,7 +74,6 @@ export default function TransactionList(props: TransactionListProps) {
     return (
       <Box height="100%" pb="xxxl">
         <BaseCard.ErrorState
-          description={t('Something went wrong on our side.')}
           retryButtonLabel={t('Retry')}
           title={t('Couldn’t load activity')}
           onRetry={onRetry}

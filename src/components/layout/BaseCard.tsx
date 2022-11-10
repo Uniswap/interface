@@ -155,19 +155,20 @@ function EmptyState({
 // Error State
 type ErrorStateProps = {
   title?: string
-  description: string
+  description?: string
   onRetry?: () => void
   retryButtonLabel?: string
   icon?: ReactNode
 }
 
 function ErrorState(props: ErrorStateProps) {
+  const { t } = useTranslation()
   const theme = useAppTheme()
   const {
     title,
-    description,
-    onRetry,
+    description = t('Something went wrong on our side'),
     retryButtonLabel,
+    onRetry,
     icon = (
       <AlertTriangle
         color={theme.colors.textTertiary}

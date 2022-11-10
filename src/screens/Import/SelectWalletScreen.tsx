@@ -130,7 +130,6 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
         title={!error ? t('Select addresses to import') : ''}>
         {error ? (
           <BaseCard.ErrorState
-            description={t('Something went wrong on our side.')}
             retryButtonLabel={t('Retry')}
             title={t("Couldn't load addresses")}
             onRetry={onRetry}

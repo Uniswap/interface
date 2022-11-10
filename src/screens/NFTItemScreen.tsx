@@ -129,7 +129,6 @@ export function NFTItemScreen({
             ) : (
               <Box aspectRatio={1} bg="background2" width="100%">
                 <BaseCard.ErrorState
-                  description={t('Something went wrong on our side')}
                   retryButtonLabel="Retry"
                   title={t("Couldn't load NFT details")}
                   onRetry={() => refetch?.()}

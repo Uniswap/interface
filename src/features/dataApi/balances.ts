@@ -1,6 +1,6 @@
 import { NetworkStatus } from '@apollo/client'
 import { Currency, Token } from '@uniswap/sdk-core'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { PollingInterval } from 'src/constants/misc'
 import { usePortfolioBalancesQuery } from 'src/data/__generated__/types-and-hooks'
 import { CurrencyInfo, GqlResult, PortfolioBalance } from 'src/features/dataApi/types'
@@ -25,6 +25,7 @@ export function usePortfolioBalances(
     data: balancesData,
     loading,
     networkStatus,
+    refetch,
   } = usePortfolioBalancesQuery({
     variables: { ownerAddress: address },
     pollInterval: PollingInterval.Fast,
@@ -92,7 +93,9 @@ export function usePortfolioBalances(
     return byId
   }, [balancesForAddress])
 
-  return { data: formattedData, loading, networkStatus }
+  const retry = useCallback(() => refetch({ ownerAddress: address }), [address, refetch])
+
+  return { data: formattedData, loading, networkStatus, refetch: retry }
 }
 
 /**
@@ -111,7 +114,12 @@ export function useSortedPortfolioBalances(
   hideSpamTokens?: boolean,
   onCompleted?: () => void
 ): GqlResult<SortedPortfolioBalances> & { networkStatus: NetworkStatus } {
-  const { data: balancesById, loading, networkStatus } = usePortfolioBalances(address, onCompleted)
+  const {
+    data: balancesById,
+    loading,
+    networkStatus,
+    refetch,
+  } = usePortfolioBalances(address, onCompleted)
 
   const formattedData = useMemo(() => {
     if (!balancesById) return
@@ -140,7 +148,7 @@ export function useSortedPortfolioBalances(
     }
   }, [balancesById, hideSmallBalances, hideSpamTokens])
 
-  return { data: formattedData, loading, networkStatus }
+  return { data: formattedData, loading, networkStatus, refetch }
 }
 
 /** Helper hook to retrieve balance for a single currency for the active account. */
