@@ -58,8 +58,7 @@ export const WalletAssetDisplay = ({ asset, isSellMode }: { asset: WalletAsset; 
   return (
     <Link to={getAssetHref(asset, DetailsOrigin.PROFILE)} style={{ textDecoration: 'none' }}>
       <Column
-        borderBottomLeftRadius="20"
-        borderBottomRightRadius="20"
+        borderRadius="20"
         paddingBottom="20"
         transition="250"
         backgroundColor={boxHovered ? 'backgroundOutline' : 'backgroundSurface'}

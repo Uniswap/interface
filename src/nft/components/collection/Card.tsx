@@ -515,11 +515,6 @@ const ProfileNftDetails = ({ asset, isSellMode }: ProfileNftDetailsProps) => {
     if (!asset.name && !asset.tokenId) return
     return !!asset.name ? asset.name : `#${asset.tokenId}`
   }
-  if (!asset.notForSale || (asset.newListings && asset.newListings.length > 0)) {
-    console.log('name', asset.asset_contract.name)
-    console.log('date', asset.listing_date)
-    console.log('not for sale', asset.floor_sell_order_price)
-  }
 
   return (
     <Box overflow="hidden" width="full" flexWrap="nowrap">

@@ -48,7 +48,7 @@ export const SearchBar = () => {
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,
-      enabled: !!debouncedSearchValue && phase1Flag === NftVariant.Enabled,
+      enabled: !!debouncedSearchValue.length && phase1Flag === NftVariant.Enabled,
     }
   )
 
@@ -59,6 +59,7 @@ export const SearchBar = () => {
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,
+      enabled: !!debouncedSearchValue.length,
     }
   )
 
