@@ -1,3 +1,4 @@
+import { useNetInfo } from '@react-native-community/netinfo'
 import { providers } from 'ethers'
 import React, { ComponentProps, PropsWithChildren, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -6,6 +7,7 @@ import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { Box, Flex } from 'src/components/layout'
+import { BaseCard } from 'src/components/layout/BaseCard'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { NetworkFee } from 'src/components/Network/NetworkFee'
 import { Text } from 'src/components/Text'
@@ -97,6 +99,8 @@ const spacerProps: ComponentProps<typeof Box> = {
 }
 
 export function WalletConnectRequestModal({ isVisible, onClose, request }: Props) {
+  const theme = useAppTheme()
+  const netInfo = useNetInfo()
   const chainId = toSupportedChainId(request.dapp.chain_id) ?? undefined
 
   const tx: providers.TransactionRequest | null = useMemo(() => {
@@ -120,6 +124,8 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
   const { isBlocked, isBlockedLoading } = useIsBlocked(request.account)
 
   const checkConfirmEnabled = () => {
+    if (!netInfo.isInternetReachable) return false
+
     if (!signerAccount) return false
 
     if (isBlocked || isBlockedLoading) return false
@@ -230,11 +236,26 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
               </SectionContainer>
             )}
           </Flex>
-          <WarningSection
-            isBlockedAddress={isBlocked}
-            request={request}
-            showUnsafeWarning={isPotentiallyUnsafe(request)}
-          />
+          {!netInfo.isInternetReachable ? (
+            <BaseCard.InlineErrorState
+              backgroundColor="accentWarningSoft"
+              icon={
+                <AlertTriangle
+                  color={theme.colors.accentWarning}
+                  height={theme.iconSizes.sm}
+                  width={theme.iconSizes.sm}
+                />
+              }
+              textColor="accentWarning"
+              title={t('Internet or network connection error')}
+            />
+          ) : (
+            <WarningSection
+              isBlockedAddress={isBlocked}
+              request={request}
+              showUnsafeWarning={isPotentiallyUnsafe(request)}
+            />
+          )}
           <Flex row gap="sm">
             <Button
               fill

@@ -167,9 +167,6 @@ function TransactionDetails({
           </Flex>
         ) : (
           <Flex row alignItems="center" gap="md">
-            <Text color="textSecondary" variant="bodySmall">
-              {t('Function')}:
-            </Text>
             <Box backgroundColor="backgroundOutline" borderRadius="xs" px="xs" py="xxs">
               <Text color="textPrimary" variant="monospace">
                 {parsedData ? parsedData.name : t('Unknown')}

@@ -205,12 +205,17 @@ function ErrorState(props: ErrorStateProps) {
   )
 }
 
-function InlineErrorState(
-  props: Pick<ErrorStateProps, 'icon' | 'title' | 'onRetry' | 'retryButtonLabel' | 'icon'>
-) {
+type InlineErrorStateProps = {
+  backgroundColor?: keyof Theme['colors']
+  textColor?: keyof Theme['colors']
+} & Pick<ErrorStateProps, 'icon' | 'title' | 'onRetry' | 'retryButtonLabel'>
+
+function InlineErrorState(props: InlineErrorStateProps) {
   const theme = useAppTheme()
   const { t } = useTranslation()
   const {
+    backgroundColor = 'background2',
+    textColor = 'textPrimary',
     title = t('Oops! Something went wrong.'),
     onRetry: retry,
     retryButtonLabel = t('Retry'),
@@ -228,7 +233,7 @@ function InlineErrorState(
       grow
       row
       alignItems="center"
-      bg="background2"
+      bg={backgroundColor}
       borderRadius="lg"
       gap="lg"
       justifyContent="space-between"
@@ -236,7 +241,12 @@ function InlineErrorState(
       width="100%">
       <Flex row shrink alignItems="center" gap="xs">
         {icon}
-        <Text ellipsizeMode="tail" numberOfLines={1} textAlign="center" variant="subheadSmall">
+        <Text
+          color={textColor}
+          ellipsizeMode="tail"
+          numberOfLines={1}
+          textAlign="center"
+          variant="subheadSmall">
           {title}
         </Text>
       </Flex>
