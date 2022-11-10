@@ -53,7 +53,7 @@ const SelectMarketplacesModal = ({
   selectedMarkets: ListingMarket[]
 }) => {
   return (
-    <Column alignSelf="flex-start" paddingRight="40" paddingBottom={{ sm: '20', lg: '0' }}>
+    <Column alignSelf="flex-start" paddingRight="40" paddingBottom={{ sm: '20', lg: '0' }} style={{ maxWidth: 1200 }}>
       <Row className={headlineSmall}>Select marketplaces</Row>
       <Row className={caption} color="textSecondary" marginTop="4">
         Increase the visibility of your listings by selecting multiple marketplaces.
@@ -544,11 +544,15 @@ const EthPriceDisplay = ({ ethPrice = 0 }: { ethPrice?: number }) => {
       setEthConversion(price ?? 0)
     })
   }, [])
+
+  console.log(ethConversion)
+  console.log(ethPrice)
+
   return (
     <Column width="full">
       <Row width="full" justifyContent="flex-end">
         <Box className={subhead} color={ethPrice !== 0 ? 'textPrimary' : 'textSecondary'} marginLeft="auto">
-          {formatEth(ethPrice)} ETH
+          {ethPrice > 0 ? formatEth(ethPrice) : '-'} ETH
         </Box>
         {ethPrice !== 0 && (
           <Box className={body} color="textSecondary" marginLeft="12" marginRight="0">
@@ -885,7 +889,15 @@ export const ListPage = () => {
           <BackArrowIcon fill={themeVars.colors.textSecondary} />
         </Box>
       </Column>
-      <Column as="section" gap="48" paddingLeft="18" paddingRight="48" width="full">
+      <Column
+        as="section"
+        gap="48"
+        paddingLeft="18"
+        paddingRight="48"
+        marginLeft="auto"
+        marginRight="auto"
+        style={{ maxWidth: 1200 }}
+      >
         <Row flexWrap={{ sm: 'wrap', lg: 'nowrap' }}>
           <SelectMarketplacesModal setSelectedMarkets={setSelectedMarkets} selectedMarkets={selectedMarkets} />
           <SetDurationModal />
