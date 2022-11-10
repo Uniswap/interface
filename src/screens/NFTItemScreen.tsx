@@ -50,7 +50,6 @@ export function NFTItemScreen({
   } = useNftItemScreenQuery({
     variables: { contractAddress: address, filter: { tokenIds: [tokenId] } },
     pollInterval: PollingInterval.Slow,
-    errorPolicy: 'all',
   })
   const asset = data?.nftAssets?.edges[0]?.node
   const assetChainId = fromGraphQLChain(asset?.nftContract?.chain)

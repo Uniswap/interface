@@ -55,7 +55,6 @@ function FavoriteTokenCard({
       contract: contractInput,
     },
     pollInterval: PollingInterval.Fast,
-    errorPolicy: 'all',
   })
 
   // Parse token fields from response

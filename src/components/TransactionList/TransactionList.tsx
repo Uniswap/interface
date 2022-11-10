@@ -49,7 +49,6 @@ export default function TransactionList(props: TransactionListProps) {
   const { t } = useTranslation()
   const { error, refetch, networkStatus, data } = useTransactionListQuery({
     variables: { address: props.ownerAddress },
-    errorPolicy: 'all',
     notifyOnNetworkStatusChange: true,
   })
 

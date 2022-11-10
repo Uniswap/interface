@@ -20,9 +20,7 @@ export function PortfolioBalance({ owner, variant, color }: PortfolioBalanceProp
   const { data, loading, networkStatus } = usePortfolioBalanceQuery({
     variables: { owner },
     pollInterval: PollingInterval.Fast,
-    errorPolicy: 'all',
     notifyOnNetworkStatusChange: true,
-    fetchPolicy: 'cache-and-network',
     // This is better than using network status to check, because doing it that way we would have to wait
     // for the network status to go back to "ready", which results in the numbers updating, and _then_ the
     // shimmer disappearing. Using onCompleted it disappears at the same time as the data loads in.

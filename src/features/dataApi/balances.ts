@@ -29,12 +29,7 @@ export function usePortfolioBalances(
   } = usePortfolioBalancesQuery({
     variables: { ownerAddress: address },
     pollInterval: PollingInterval.Fast,
-
-    // TODO: either default all error policies to 'all' or remove this once
-    // BE fixes the type error here
-    errorPolicy: 'all',
     notifyOnNetworkStatusChange: true,
-    fetchPolicy: 'cache-and-network',
     onCompleted: onCompleted,
   })
   const balancesForAddress = balancesData?.portfolios?.[0]?.tokenBalances

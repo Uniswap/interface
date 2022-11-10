@@ -61,6 +61,16 @@ export const usePersistedApolloClient = () => {
         new ApolloClient({
           link: httpLink,
           cache,
+          defaultOptions: {
+            watchQuery: {
+              // NOTE: when polling is enabled, if there is cached data, the first request is skipped.
+              // `cache-and-network` ensures we send a request on first query, keeping queries
+              // across the app in sync.
+              fetchPolicy: 'cache-and-network',
+              // ensures query is returning data even if some fields errored out
+              errorPolicy: 'all',
+            },
+          },
         })
       )
     }

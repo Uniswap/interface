@@ -90,8 +90,6 @@ export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDe
     },
     pollInterval: PollingInterval.Fast,
     notifyOnNetworkStatusChange: true,
-    errorPolicy: 'all',
-    fetchPolicy: 'cache-and-network',
   })
 
   const retry = useCallback(() => {
