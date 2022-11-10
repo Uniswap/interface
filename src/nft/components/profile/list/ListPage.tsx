@@ -836,6 +836,15 @@ const NFTListRow = ({ asset, globalPriceMethod, globalPrice, setGlobalPrice, sel
   )
 }
 
+const MarketWrap = styled.section`
+  gap: 48px;
+  padding-left: 18px;
+  padding-right: 48x;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1200px;
+`
+
 export const ListPage = () => {
   const { setProfilePageState: setSellPageState } = useProfilePageState()
   const setGlobalMarketplaces = useSellAsset((state) => state.setGlobalMarketplaces)
@@ -881,21 +890,13 @@ export const ListPage = () => {
           <BackArrowIcon fill={themeVars.colors.textSecondary} />
         </Box>
       </Column>
-      <Column
-        as="section"
-        gap="48"
-        paddingLeft="18"
-        paddingRight="48"
-        marginLeft="auto"
-        marginRight="auto"
-        style={{ maxWidth: 1200 }}
-      >
+      <MarketWrap>
         <Row flexWrap={{ sm: 'wrap', lg: 'nowrap' }}>
           <SelectMarketplacesModal setSelectedMarkets={setSelectedMarkets} selectedMarkets={selectedMarkets} />
           <SetDurationModal />
         </Row>
         <NFTListingsGrid selectedMarkets={selectedMarkets} />
-      </Column>
+      </MarketWrap>
       <Box display={{ sm: 'flex', md: 'none' }} marginTop="14" marginX="16" marginBottom="32">
         <ListingButton onClick={toggleBag} buttonText={'Continue listing'} />
       </Box>
