@@ -203,8 +203,8 @@ export function TransferTokenForm({
           onNext={goToNext}
         />
       </Suspense>
-      <Flex fill grow gap="xs" justifyContent="space-between">
-        <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xxxs" zIndex="fixed">
+      <Flex grow gap="xs" justifyContent="space-between">
+        <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xxxs" onLayout={onInputPanelLayout}>
           {nftIn ? (
             <NFTTransfer asset={nftIn} nftSize={dimensions.fullHeight / 4} />
           ) : (
@@ -214,8 +214,7 @@ export function TransferTokenForm({
               justifyContent="center"
               pb="md"
               pt="lg"
-              px="md"
-              onLayout={onInputPanelLayout}>
+              px="md">
               <CurrencyInputPanel
                 focus
                 currency={currencyIn}

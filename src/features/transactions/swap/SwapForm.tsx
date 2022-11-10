@@ -159,16 +159,10 @@ export function SwapForm({
           onConfirm={() => setShowWarningModal(false)}
         />
       )}
-      <Flex fill grow gap="xs" justifyContent="space-between">
-        <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} gap="xxxs" zIndex="fixed">
+      <Flex grow gap="xs" justifyContent="space-between">
+        <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xxxs" onLayout={onInputPanelLayout}>
           <Trace section={SectionName.CurrencyInputPanel}>
-            <Flex
-              backgroundColor="background2"
-              borderRadius="xl"
-              pb="md"
-              pt="lg"
-              px="md"
-              onLayout={onInputPanelLayout}>
+            <Flex backgroundColor="background2" borderRadius="xl" pb="md" pt="lg" px="md">
               <CurrencyInputPanel
                 currency={currencies[CurrencyField.INPUT]}
                 currencyAmount={currencyAmounts[CurrencyField.INPUT]}
@@ -202,7 +196,7 @@ export function SwapForm({
           </Box>
 
           <Trace section={SectionName.CurrencyOutputPanel}>
-            <Flex fill gap="none">
+            <Flex gap="none">
               <Flex
                 backgroundColor="background2"
                 borderBottomLeftRadius={swapWarning || showRate || isBlocked ? 'none' : 'xl'}

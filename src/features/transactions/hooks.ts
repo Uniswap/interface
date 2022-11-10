@@ -185,9 +185,7 @@ export function useShouldShowNativeKeyboard() {
 
   const onInputPanelLayout = (event: LayoutChangeEvent) => {
     if (containerHeight === undefined) {
-      // We measure a single input panel to get its real height since the dimensions of the outer container
-      // can be affected by the decimal pad (it's a flex layout)
-      setContainerHeight(event.nativeEvent.layout.height * 2)
+      setContainerHeight(event.nativeEvent.layout.height)
     }
   }
 
