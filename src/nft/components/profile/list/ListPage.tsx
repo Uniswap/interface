@@ -30,8 +30,19 @@ import { fetchPrice } from 'nft/utils/fetchPrice'
 import { ListingMarkets } from 'nft/utils/listNfts'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { Dispatch, FormEvent, useEffect, useMemo, useRef, useState } from 'react'
+import styled from 'styled-components/macro'
 
 import * as styles from './ListPage.css'
+
+const MarkplaceWrap = styled.div`
+  align-self: flex-start;
+  padding-right: 40px;
+  max-width: 1200px;
+
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    padding-bottom: 20px;
+  }
+`
 
 const SelectMarketplacesModal = ({
   setSelectedMarkets,
@@ -41,7 +52,7 @@ const SelectMarketplacesModal = ({
   selectedMarkets: ListingMarket[]
 }) => {
   return (
-    <Column alignSelf="flex-start" paddingRight="40" paddingBottom={{ sm: '20', lg: '0' }} style={{ maxWidth: 1200 }}>
+    <MarkplaceWrap>
       <Row className={headlineSmall}>Select marketplaces</Row>
       <Row className={caption} color="textSecondary" marginTop="4">
         Increase the visibility of your listings by selecting multiple marketplaces.
@@ -51,7 +62,7 @@ const SelectMarketplacesModal = ({
           return GlobalMarketplaceButton({ market, setSelectedMarkets, selectedMarkets })
         })}
       </Row>
-    </Column>
+    </MarkplaceWrap>
   )
 }
 
