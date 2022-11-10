@@ -544,7 +544,7 @@ const ProfileNftDetails = ({ asset }: ProfileNftDetailsProps) => {
       <TruncatedTextRow className={subhead} style={{ color: themeVars.colors.textSecondary }}>
         {!!asset.floorPrice && <span>{`${floorFormatter(asset.floorPrice)} ETH Floor`}</span>}
       </TruncatedTextRow>
-      <TruncatedTextRow className={subhead} style={{ color: themeVars.colors.textSecondary }}>
+      <TruncatedTextRow className={subhead} style={{ color: themeVars.colors.textPrimary }}>
         {!asset.notForSale && <span>{`${floorFormatter(asset.floor_sell_order_price)} ETH`}</span>}
       </TruncatedTextRow>
     </Box>
