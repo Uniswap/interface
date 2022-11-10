@@ -58,7 +58,7 @@ export const SearchBar = () => {
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,
-      enabled: !!searchValue,
+      enabled: !!debouncedSearchValue,
     }
   )
 
