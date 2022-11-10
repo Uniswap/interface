@@ -22,6 +22,39 @@ export const MARKETPLACE_ITEMS = {
   sudoswap: 'SudoSwap',
 }
 
+export const FilterItem = ({
+  title,
+  element,
+  onClick,
+}: {
+  title: string
+  element: JSX.Element
+  onClick: React.MouseEventHandler<HTMLElement>
+}) => {
+  return (
+    <Row
+      justifyContent="space-between"
+      maxWidth="full"
+      overflowX={'hidden'}
+      overflowY={'hidden'}
+      fontWeight="normal"
+      className={`${subheadSmall} ${styles.subRowHover}`}
+      paddingLeft="12"
+      paddingRight="16"
+      borderRadius="12"
+      cursor="pointer"
+      maxHeight="44"
+      style={{ paddingBottom: '22px', paddingTop: '22px' }}
+      onClick={onClick}
+    >
+      <Box as="span" fontSize="14" fontWeight="normal">
+        {title}{' '}
+      </Box>
+      {element}
+    </Row>
+  )
+}
+
 const MarketplaceItem = ({
   title,
   value,
@@ -54,34 +87,18 @@ const MarketplaceItem = ({
     sendAnalyticsEvent(EventName.NFT_FILTER_SELECTED, { filter_type: FilterTypes.MARKETPLACE })
   }
 
-  return (
-    <Row
-      key={value}
-      justifyContent="space-between"
-      maxWidth="full"
-      overflowX={'hidden'}
-      overflowY={'hidden'}
-      fontWeight="normal"
-      className={`${subheadSmall} ${styles.subRowHover}`}
-      paddingLeft="12"
-      paddingRight="16"
-      borderRadius="12"
-      cursor="pointer"
-      maxHeight="44"
-      style={{ paddingBottom: '22px', paddingTop: '22px' }}
-      onMouseEnter={toggleHover}
-      onMouseLeave={toggleHover}
-      onClick={handleCheckbox}
-    >
-      <Box as="span" fontSize="14" fontWeight="normal">
-        {title}{' '}
+  const checkbox = (
+    <Checkbox checked={isCheckboxSelected} hovered={hovered} onChange={handleCheckbox}>
+      <Box as="span" color="textSecondary" marginLeft="4" paddingRight={'12'}>
+        {count}
       </Box>
-      <Checkbox checked={isCheckboxSelected} hovered={hovered} onChange={handleCheckbox}>
-        <Box as="span" color="textSecondary" marginLeft="4" paddingRight={'12'}>
-          {count}
-        </Box>
-      </Checkbox>
-    </Row>
+    </Checkbox>
+  )
+
+  return (
+    <div key={value} onMouseEnter={toggleHover} onMouseLeave={toggleHover}>
+      <FilterItem title={title} element={checkbox} onClick={handleCheckbox} />
+    </div>
   )
 }
 
@@ -174,7 +191,6 @@ export const MarketplaceSelect = () => {
     e.preventDefault()
     setOpen(!isOpen)
     setTraitsOpen(TraitPosition.MARKPLACE_INDEX, !isOpen)
-    console.log(isOpen, TraitPosition.MARKPLACE_INDEX)
   }
 
   return <FilterDropdown title={'Marketplaces'} items={MarketplaceItems} onClick={onClick} isOpen={isOpen} />

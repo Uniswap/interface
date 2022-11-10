@@ -12,6 +12,7 @@ import { DropDownOption } from 'nft/types'
 import { useMemo, useReducer } from 'react'
 import { isMobile } from 'utils/userAgent'
 
+import { FilterSortDropdown } from '../common/SortDropdown'
 import { getSortDropdownOptions } from './CollectionNfts'
 import { TraitSelect } from './TraitSelect'
 
@@ -57,10 +58,7 @@ export const Filters = ({ traitsByGroup }: { traitsByGroup: Record<string, Trait
             <span />
           </Checkbox>
         </Row>
-        {isMobile && (
-          // Sort Dropdown
-          <></>
-        )}
+        {isMobile && <FilterSortDropdown />}
         <MarketplaceSelect />
         <PriceRange />
         {Object.entries(traitsByGroup).length > 0 && (
