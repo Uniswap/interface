@@ -5,12 +5,10 @@ import { EventType } from '@visx/event/lib/types'
 import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
 import AnimatedInLineChart from 'components/Charts/AnimatedInLineChart'
-import { filterTimeAtom } from 'components/Tokens/state'
 import { bisect, curveCardinal, NumberValue, scaleLinear, timeDay, timeHour, timeMinute, timeMonth } from 'd3'
-import { PricePoint } from 'graphql/data/TokenPrice'
+import { PricePoint } from 'graphql/data/util'
 import { TimePeriod } from 'graphql/data/util'
 import { useActiveLocale } from 'hooks/useActiveLocale'
-import { useAtom } from 'jotai'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight, TrendingUp } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
@@ -23,9 +21,6 @@ import {
   weekFormatter,
 } from 'utils/formatChartTimes'
 import { formatDollar } from 'utils/formatNumbers'
-
-import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
-import { DISPLAYS, ORDERED_TIMES } from '../TokenTable/TimeSelector'
 
 export const DATA_EMPTY = { value: 0, timestamp: 0 }
 
@@ -86,46 +81,6 @@ const ArrowCell = styled.div`
   padding-left: 2px;
   display: flex;
 `
-export const TimeOptionsWrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-`
-export const TimeOptionsContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 4px;
-  gap: 4px;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
-  border-radius: 16px;
-  height: 40px;
-  padding: 4px;
-  width: fit-content;
-
-  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    width: 100%;
-    justify-content: space-between;
-    border: none;
-  }
-`
-const TimeButton = styled.button<{ active: boolean }>`
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: ${({ theme, active }) => (active ? theme.backgroundInteractive : 'transparent')};
-  font-weight: 600;
-  font-size: 16px;
-  padding: 6px 12px;
-  border-radius: 12px;
-  line-height: 20px;
-  border: none;
-  cursor: pointer;
-  color: ${({ theme, active }) => (active ? theme.textPrimary : theme.textSecondary)};
-  transition-duration: ${({ theme }) => theme.transition.duration.fast};
-  :hover {
-    ${({ active, theme }) => !active && `opacity: ${theme.opacity.hover};`}
-  }
-`
 
 const margin = { top: 100, bottom: 48, crosshair: 72 }
 const timeOptionsHeight = 44
@@ -134,10 +89,10 @@ interface PriceChartProps {
   width: number
   height: number
   prices: PricePoint[] | undefined | null
+  timePeriod: TimePeriod
 }
 
-export function PriceChart({ width, height, prices }: PriceChartProps) {
-  const [timePeriod, setTimePeriod] = useAtom(filterTimeAtom)
+export function PriceChart({ width, height, prices, timePeriod }: PriceChartProps) {
   const locale = useActiveLocale()
   const theme = useTheme()
 
@@ -282,9 +237,7 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
           width={width}
           height={graphHeight}
           message={
-            prices === null ? (
-              <Trans>Loading chart data</Trans>
-            ) : prices?.length === 0 ? (
+            prices?.length === 0 ? (
               <Trans>This token doesn&apos;t have chart data because it hasn&apos;t been traded on Uniswap v3</Trans>
             ) : (
               <Trans>Missing chart data</Trans>
@@ -375,21 +328,6 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
           />
         </svg>
       )}
-      <TimeOptionsWrapper>
-        <TimeOptionsContainer>
-          {ORDERED_TIMES.map((time) => (
-            <TimeButton
-              key={DISPLAYS[time]}
-              active={timePeriod === time}
-              onClick={() => {
-                setTimePeriod(time)
-              }}
-            >
-              {DISPLAYS[time]}
-            </TimeButton>
-          ))}
-        </TimeOptionsContainer>
-      </TimeOptionsWrapper>
     </>
   )
 }

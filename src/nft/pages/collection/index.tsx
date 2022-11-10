@@ -1,19 +1,16 @@
 import { useWeb3React } from '@web3-react/core'
 import { PageName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
-import { NftGraphQlVariant, useNftGraphQlFlag } from 'featureFlags/flags/nftGraphQl'
 import { useCollectionQuery } from 'graphql/data/nft/Collection'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { Activity, ActivitySwitcher, CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
 import { CollectionNftsAndMenuLoading } from 'nft/components/collection/CollectionNfts'
 import { Column, Row } from 'nft/components/Flex'
-import { useBag, useCollectionFilters, useFiltersExpanded, useIsCollectionLoading, useIsMobile } from 'nft/hooks'
+import { useBag, useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
-import { CollectionStatsFetcher } from 'nft/queries'
 import { GenieCollection } from 'nft/types'
-import { Suspense, useEffect, useMemo } from 'react'
-import { useQuery } from 'react-query'
+import { Suspense, useEffect } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
@@ -35,7 +32,6 @@ const CollectionDisplaySection = styled(Row)`
 
 const Collection = () => {
   const { contractAddress } = useParams()
-  const setIsCollectionStatsLoading = useIsCollectionLoading((state) => state.setIsCollectionStatsLoading)
 
   const isMobile = useIsMobile()
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
@@ -44,23 +40,9 @@ const Collection = () => {
   const isActivityToggled = pathname.includes('/activity')
   const setMarketCount = useCollectionFilters((state) => state.setMarketCount)
   const isBagExpanded = useBag((state) => state.bagExpanded)
-  const isNftGraphQl = useNftGraphQlFlag() === NftGraphQlVariant.Enabled
   const { chainId } = useWeb3React()
 
-  const { data: queryCollection, isLoading } = useQuery(['collectionStats', contractAddress], () =>
-    CollectionStatsFetcher(contractAddress as string)
-  )
-
-  const gqlCollection = useCollectionQuery(contractAddress as string)
-
-  const collectionStats = useMemo(
-    () => (isNftGraphQl ? gqlCollection : queryCollection),
-    [isNftGraphQl, gqlCollection, queryCollection]
-  )
-
-  useEffect(() => {
-    setIsCollectionStatsLoading(isLoading)
-  }, [isLoading, setIsCollectionStatsLoading])
+  const collectionStats = useCollectionQuery(contractAddress as string)
 
   const { gridX, gridWidthOffset } = useSpring({
     gridX: isFiltersExpanded ? FILTER_WIDTH : 0,
@@ -100,26 +82,22 @@ const Collection = () => {
               {' '}
               <Box width="full" height="276">
                 <Box width="full" height="276">
-                  {isLoading ? (
-                    <CollectionBannerLoading />
-                  ) : (
-                    <Box
-                      as={collectionStats?.bannerImageUrl ? 'img' : 'div'}
-                      height="full"
-                      width="full"
-                      src={
-                        collectionStats?.bannerImageUrl
-                          ? `${collectionStats.bannerImageUrl}?w=${window.innerWidth}`
-                          : undefined
-                      }
-                      className={isLoading ? styles.loadingBanner : styles.bannerImage}
-                      background="none"
-                    />
-                  )}
+                  <Box
+                    as={collectionStats?.bannerImageUrl ? 'img' : 'div'}
+                    height="full"
+                    width="full"
+                    src={
+                      collectionStats?.bannerImageUrl
+                        ? `${collectionStats.bannerImageUrl}?w=${window.innerWidth}`
+                        : undefined
+                    }
+                    className={styles.bannerImage}
+                    background="none"
+                  />
                 </Box>
               </Box>
               <CollectionDescriptionSection>
-                {(isLoading || collectionStats !== undefined) && (
+                {collectionStats && (
                   <CollectionStats stats={collectionStats || ({} as GenieCollection)} isMobile={isMobile} />
                 )}
                 <div id="nft-anchor" />
@@ -153,7 +131,7 @@ const Collection = () => {
                         />
                       )
                     : contractAddress &&
-                      (isLoading || collectionStats !== undefined) && (
+                      collectionStats && (
                         <Suspense fallback={<CollectionNftsAndMenuLoading />}>
                           <CollectionNfts
                             collectionStats={collectionStats || ({} as GenieCollection)}
@@ -167,7 +145,7 @@ const Collection = () => {
             </>
           ) : (
             // TODO: Put no collection asset page here
-            !isLoading && <div className={styles.noCollectionAssets}>No collection assets exist at this address</div>
+            <div className={styles.noCollectionAssets}>No collection assets exist at this address</div>
           )}
         </Column>
       </Trace>

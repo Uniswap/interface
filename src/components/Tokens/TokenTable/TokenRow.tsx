@@ -31,7 +31,7 @@ import {
   TokenSortMethod,
   useSetSortMethod,
 } from '../state'
-import { useTokenLogoURI } from '../TokenDetails/ChartSection'
+import { useTokenLogoURI } from '../TokenDetails'
 import InfoTip from '../TokenDetails/InfoTip'
 import { formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
 

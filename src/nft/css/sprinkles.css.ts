@@ -200,6 +200,7 @@ export const vars = createGlobalTheme(':root', {
     outline: 'rgba(153, 161, 189, 0.24)',
     lightGrayOverlay: '#99A1BD14',
     accentActiveSoft: '#4c82fb3d',
+    accentActive: '#4C82FB',
   },
   border: {
     transculent: '1.5px solid rgba(0, 0, 0, 0.1)',
@@ -282,16 +283,6 @@ const overflow = ['hidden', 'inherit', 'scroll', 'visible', 'auto'] as const
 const borderWidth = ['0px', '0.5px', '1px', '1.5px', '2px', '3px', '4px']
 
 const borderStyle = ['none', 'solid'] as const
-
-// TODO: remove when code is done being ported over
-// I'm leaving this here as a reference of the old breakpoints while we port over the new code
-// tabletSm: 656,
-// tablet: 708,
-// tabletL: 784,
-// tabletXl: 830,
-// desktop: 948,
-// desktopL: 1030,
-// desktopXl: 1260,
 
 export const breakpoints = {
   sm: 640,

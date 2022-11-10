@@ -1,4 +1,4 @@
-import { Deprecated_SellOrder, SellOrder } from '../sell'
+import { SellOrder } from '../sell'
 
 export interface OpenSeaCollection {
   name: string
@@ -88,7 +88,7 @@ export interface GenieAsset {
   name?: string
   priceInfo: PriceInfo
   susFlag?: boolean
-  sellorders?: Deprecated_SellOrder[] | SellOrder[] // TODO remove Deprecated_SellOrder when full migration to GraphQL is complete
+  sellorders?: SellOrder[]
   smallImageUrl?: string
   tokenId: string
   tokenType: TokenType

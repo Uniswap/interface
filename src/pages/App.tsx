@@ -22,7 +22,6 @@ import ErrorBoundary from '../components/ErrorBoundary'
 import NavBar from '../components/NavBar'
 import Polling from '../components/Polling'
 import Popups from '../components/Popups'
-import { TokenDetailsPageSkeleton } from '../components/Tokens/TokenDetails/Skeleton'
 import { useIsExpertMode } from '../state/user/hooks'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
@@ -183,14 +182,7 @@ export default function App() {
                   <Route path="tokens" element={<Tokens />}>
                     <Route path=":chainName" />
                   </Route>
-                  <Route
-                    path="tokens/:chainName/:tokenAddress"
-                    element={
-                      <Suspense fallback={<TokenDetailsPageSkeleton />}>
-                        <TokenDetails />
-                      </Suspense>
-                    }
-                  />
+                  <Route path="tokens/:chainName/:tokenAddress" element={<TokenDetails />} />
                   <Route
                     path="vote/*"
                     element={
