@@ -1,19 +1,14 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { sendAnalyticsEvent } from 'analytics'
 import { EventName, PageName } from 'analytics/constants'
 import { useTrace } from 'analytics/Trace'
 import { useBag } from 'nft/hooks'
 import { GenieAsset, Markets, UniformHeight } from 'nft/types'
-import { formatWeiToDecimal, isAudio, isVideo, rarityProviderLogo } from 'nft/utils'
+import { formatWeiToDecimal, rarityProviderLogo } from 'nft/utils'
 import { useCallback, useMemo } from 'react'
 
+import { useAssetMediaType, useNotForSale } from './Card'
+import { AssetMediaType } from './Card'
 import * as Card from './Card'
-
-enum AssetMediaType {
-  Image,
-  Video,
-  Audio,
-}
 
 interface CollectionAssetProps {
   asset: GenieAsset
@@ -53,24 +48,8 @@ export const CollectionAsset = ({
     }
   }, [asset, itemsInBag])
 
-  const { notForSale, assetMediaType } = useMemo(() => {
-    let notForSale = true
-    let assetMediaType = AssetMediaType.Image
-
-    notForSale = asset.notForSale || BigNumber.from(asset.priceInfo ? asset.priceInfo.ETHPrice : 0).lt(0)
-    if (asset.animationUrl) {
-      if (isAudio(asset.animationUrl)) {
-        assetMediaType = AssetMediaType.Audio
-      } else if (isVideo(asset.animationUrl)) {
-        assetMediaType = AssetMediaType.Video
-      }
-    }
-
-    return {
-      notForSale,
-      assetMediaType,
-    }
-  }, [asset])
+  const notForSale = useNotForSale(asset)
+  const assetMediaType = useAssetMediaType(asset)
 
   const { provider, rarityLogo } = useMemo(() => {
     return {

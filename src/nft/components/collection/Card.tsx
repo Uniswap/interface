@@ -1,3 +1,4 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import clsx from 'clsx'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
@@ -9,12 +10,15 @@ import {
   PlusIconLarge,
   PoolIcon,
   RarityVerifiedIcon,
+  VerifiedIcon,
 } from 'nft/components/icons'
-import { body, bodySmall } from 'nft/css/common.css'
+import { body, bodySmall, buttonTextSmall, subhead, subheadSmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
-import { GenieAsset, Rarity, UniformHeight, UniformHeights } from 'nft/types'
+import { GenieAsset, Rarity, UniformHeight, UniformHeights, WalletAsset } from 'nft/types'
+import { isAudio, isVideo } from 'nft/utils'
 import { fallbackProvider, putCommas } from 'nft/utils'
+import { floorFormatter } from 'nft/utils/numbers'
 import {
   createContext,
   MouseEvent,
@@ -29,12 +33,13 @@ import {
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import { colors } from 'theme/colors'
 
 import * as styles from './Card.css'
 
 /* -------- ASSET CONTEXT -------- */
 export interface CardContextProps {
-  asset: GenieAsset
+  asset: GenieAsset | WalletAsset
   hovered: boolean
   selected: boolean
   href: string
@@ -45,25 +50,54 @@ export interface CardContextProps {
 
 const CardContext = createContext<CardContextProps | undefined>(undefined)
 
+const BORDER_RADIUS = '12'
+
 const useCardContext = () => {
   const context = useContext(CardContext)
   if (!context) throw new Error('Must use context inside of provider')
   return context
 }
 
-const baseHref = (asset: GenieAsset) => `/#/nfts/asset/${asset.address}/${asset.tokenId}?origin=collection`
+export enum AssetMediaType {
+  Image,
+  Video,
+  Audio,
+}
+
+const useNotForSale = (asset: GenieAsset) =>
+  useMemo(() => {
+    let notForSale = true
+    notForSale = asset.notForSale || BigNumber.from(asset.priceInfo ? asset.priceInfo.ETHPrice : 0).lt(0)
+    return notForSale
+  }, [asset])
+
+const useAssetMediaType = (asset: GenieAsset | WalletAsset) =>
+  useMemo(() => {
+    let assetMediaType = AssetMediaType.Image
+    if (asset.animationUrl) {
+      if (isAudio(asset.animationUrl)) {
+        assetMediaType = AssetMediaType.Audio
+      } else if (isVideo(asset.animationUrl)) {
+        assetMediaType = AssetMediaType.Video
+      }
+    }
+    return assetMediaType
+  }, [asset])
+
+const baseHref = (asset: GenieAsset | WalletAsset) =>
+  'address' in asset ? `/#/nfts/asset/${asset.address}/${asset.tokenId}?origin=collection` : '/nfts/profile'
 
 const DetailsLinkContainer = styled.a`
   display: flex;
   flex-shrink: 0;
   text-decoration: none;
   color: ${({ theme }) => theme.textSecondary};
-  font-size: 14px;
-  line-height: 20px;
-  weight: 400;
 
   :hover {
-    color: ${({ theme }) => theme.accentAction};
+    opacity: ${({ theme }) => theme.opacity.hover};
+  }
+  :focus {
+    opacity: ${({ theme }) => theme.opacity.click};
   }
 `
 
@@ -85,7 +119,7 @@ const Erc1155ControlsRow = styled.div`
 const Erc1155ControlsContainer = styled.div`
   display: flex;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
-  border-radius: 12px 12px 12px 12px;
+  border-radius: ${BORDER_RADIUS}px;
   overflow: hidden;
 `
 
@@ -124,14 +158,15 @@ const StyledImageContainer = styled.div`
 
 /* -------- ASSET CARD -------- */
 interface CardProps {
-  asset: GenieAsset
+  asset: GenieAsset | WalletAsset
   selected: boolean
   addAssetToBag: () => void
   removeAssetFromBag: () => void
   children: ReactNode
+  onClick?: () => void
 }
 
-const Container = ({ asset, selected, addAssetToBag, removeAssetFromBag, children }: CardProps) => {
+const Container = ({ asset, selected, addAssetToBag, removeAssetFromBag, children, onClick }: CardProps) => {
   const [hovered, toggleHovered] = useReducer((s) => !s, false)
   const [href, setHref] = useState(baseHref(asset))
 
@@ -155,26 +190,28 @@ const Container = ({ asset, selected, addAssetToBag, removeAssetFromBag, childre
     if (hovered && assetRef.current?.matches(':hover') === false) toggleHovered()
   }, [hovered])
 
+  const handleAssetInBag = (e: MouseEvent) => {
+    if (!asset.notForSale) {
+      e.preventDefault()
+      !selected ? addAssetToBag() : removeAssetFromBag()
+    }
+  }
+
   return (
     <CardContext.Provider value={providerValue}>
       <Box
         position={'relative'}
         ref={assetRef}
-        borderRadius={'20'}
-        borderBottomLeftRadius={'12'}
-        borderBottomRightRadius={'12'}
+        borderRadius={BORDER_RADIUS}
+        borderBottomLeftRadius={BORDER_RADIUS}
+        borderBottomRightRadius={BORDER_RADIUS}
         className={selected ? styles.selectedCard : styles.notSelectedCard}
         draggable={false}
         onMouseEnter={() => toggleHovered()}
         onMouseLeave={() => toggleHovered()}
         transition="250"
         cursor={asset.notForSale ? 'default' : 'pointer'}
-        onClick={(e: MouseEvent) => {
-          if (!asset.notForSale) {
-            e.preventDefault()
-            !selected ? addAssetToBag() : removeAssetFromBag()
-          }
-        }}
+        onClick={onClick ?? handleAssetInBag}
       >
         {children}
       </Box>
@@ -188,8 +225,8 @@ const ImageContainer = ({ children }: { children: ReactNode }) => (
 
 /* -------- CARD IMAGE -------- */
 interface ImageProps {
-  uniformHeight: UniformHeight
-  setUniformHeight: (height: UniformHeight) => void
+  uniformHeight?: UniformHeight
+  setUniformHeight?: (height: UniformHeight) => void
 }
 
 const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
@@ -199,11 +236,11 @@ const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
   const isMobile = useIsMobile()
 
   if (noContent) {
-    return <NoContentContainer uniformHeight={uniformHeight} />
+    return <NoContentContainer uniformHeight={uniformHeight ?? UniformHeights.unset} />
   }
 
   return (
-    <Box display="flex" overflow="hidden" borderTopLeftRadius="20" borderTopRightRadius="20">
+    <Box display="flex" overflow="hidden" borderTopLeftRadius={BORDER_RADIUS} borderTopRightRadius={BORDER_RADIUS}>
       <Box
         as={'img'}
         width="full"
@@ -216,10 +253,12 @@ const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
         draggable={false}
         onError={() => setNoContent(true)}
         onLoad={(e) => {
-          if (uniformHeight === UniformHeights.unset) {
-            setUniformHeight(e.currentTarget.clientHeight)
-          } else if (uniformHeight !== UniformHeights.notUniform && e.currentTarget.clientHeight !== uniformHeight) {
-            setUniformHeight(UniformHeights.notUniform)
+          if (setUniformHeight) {
+            if (uniformHeight === UniformHeights.unset) {
+              setUniformHeight(e.currentTarget.clientHeight)
+            } else if (uniformHeight !== UniformHeights.notUniform && e.currentTarget.clientHeight !== uniformHeight) {
+              setUniformHeight(UniformHeights.notUniform)
+            }
           }
           setLoaded(true)
         }}
@@ -230,8 +269,8 @@ const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
 }
 
 interface MediaProps {
-  uniformHeight: UniformHeight
-  setUniformHeight: (u: UniformHeight) => void
+  uniformHeight?: UniformHeight
+  setUniformHeight?: (u: UniformHeight) => void
   shouldPlay: boolean
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
 }
@@ -270,7 +309,7 @@ const Video = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPla
           draggable={false}
           onError={() => setNoContent(true)}
           onLoad={() => {
-            if (uniformHeight !== UniformHeights.notUniform) {
+            if (setUniformHeight && uniformHeight !== UniformHeights.notUniform) {
               setUniformHeight(UniformHeights.notUniform)
             }
 
@@ -347,7 +386,7 @@ const Audio = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPla
   }
 
   if (noContent) {
-    return <NoContentContainer uniformHeight={uniformHeight} />
+    return <NoContentContainer uniformHeight={uniformHeight ?? UniformHeights.unset} />
   }
 
   return (
@@ -366,10 +405,15 @@ const Audio = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPla
           draggable={false}
           onError={() => setNoContent(true)}
           onLoad={(e) => {
-            if (uniformHeight === UniformHeights.unset) {
-              setUniformHeight(e.currentTarget.clientHeight)
-            } else if (uniformHeight !== UniformHeights.notUniform && e.currentTarget.clientHeight !== uniformHeight) {
-              setUniformHeight(UniformHeights.notUniform)
+            if (setUniformHeight) {
+              if (uniformHeight === UniformHeights.unset) {
+                setUniformHeight(e.currentTarget.clientHeight)
+              } else if (
+                uniformHeight !== UniformHeights.notUniform &&
+                e.currentTarget.clientHeight !== uniformHeight
+              ) {
+                setUniformHeight(UniformHeights.notUniform)
+              }
             }
             setImageLoaded(true)
           }}
@@ -449,6 +493,51 @@ const InfoContainer = ({ children }: { children: ReactNode }) => {
   return (
     <Box overflow="hidden" width="full">
       {children}
+    </Box>
+  )
+}
+
+const TruncatedTextRow = styled(Row)`
+  padding: 2px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
+  overflow: hidden;
+`
+
+interface ProfileNftDetailsProps {
+  asset: WalletAsset
+  isSellMode: boolean
+}
+
+const ProfileNftDetails = ({ asset, isSellMode }: ProfileNftDetailsProps) => {
+  const assetName = () => {
+    if (!asset.name && !asset.tokenId) return
+    return !!asset.name ? asset.name : `#${asset.tokenId}`
+  }
+
+  return (
+    <Box overflow="hidden" width="full" flexWrap="nowrap">
+      <Row justifyItems="flex-start">
+        <TruncatedTextRow className={bodySmall} style={{ color: themeVars.colors.textSecondary }}>
+          {!!asset.asset_contract.name && <span>{asset.asset_contract.name}</span>}
+        </TruncatedTextRow>
+        {asset.collectionIsVerified && <VerifiedIcon height="16px" width="16px" fill={colors.magentaVibrant} />}
+      </Row>
+      <Row justifyItems="flex-start">
+        <TruncatedTextRow
+          className={subheadSmall}
+          style={{
+            color: themeVars.colors.textPrimary,
+          }}
+        >
+          {assetName()}
+        </TruncatedTextRow>
+        {asset.susFlag && <Suspicious />}
+      </Row>
+      <TruncatedTextRow className={subhead} style={{ color: themeVars.colors.textSecondary }}>
+        {!!asset.floorPrice && isSellMode && <span>{`${floorFormatter(asset.floorPrice)} ETH Floor`}</span>}
+      </TruncatedTextRow>
     </Box>
   )
 }
@@ -570,7 +659,7 @@ const DetailsLink = () => {
         e.stopPropagation()
       }}
     >
-      Details
+      <Box className={buttonTextSmall}>Details</Box>
     </DetailsLinkContainer>
   )
 }
@@ -598,7 +687,10 @@ const Ranking = ({ rarity, provider, rarityVerified, rarityLogo }: RankingProps)
                 </Box>
                 <Box width="full" className={bodySmall}>
                   {rarityVerified
-                    ? `Verified by ${asset.collectionName}`
+                    ? `Verified by ${
+                        ('collectionName' in asset && asset.collectionName) ||
+                        ('asset_contract' in asset && asset.asset_contract?.name)
+                      }`
                     : `Ranking by ${rarity.primaryProvider === 'Genie' ? fallbackProvider : rarity.primaryProvider}`}
                 </Box>
               </Row>
@@ -716,6 +808,7 @@ export {
   PrimaryDetails,
   PrimaryInfo,
   PrimaryRow,
+  ProfileNftDetails,
   Ranking,
   SecondaryDetails,
   SecondaryInfo,
@@ -723,5 +816,7 @@ export {
   Suspicious,
   SUSPICIOUS_TEXT,
   TertiaryInfo,
+  useAssetMediaType,
+  useNotForSale,
   Video,
 }

@@ -796,7 +796,7 @@ const NFTListRow = ({ asset, globalPriceMethod, globalPrice, setGlobalPrice, sel
             marginLeft={localMarkets.length > 1 ? '8' : '0'}
             marginRight="8"
             transition="500"
-            src={asset.image_url || '/nft/svgs/image-placeholder.svg'}
+            src={asset.imageUrl || '/nft/svgs/image-placeholder.svg'}
           />
         </Box>
         <Column gap="4" minWidth="0">

@@ -30,7 +30,7 @@ import shallow from 'zustand/shallow'
 
 import { EmptyWalletContent } from './EmptyWalletContent'
 import * as styles from './ProfilePage.css'
-import { WalletAssetDisplay } from './WalletAssetDisplay'
+import { ViewMyNftsAsset } from './ViewMyNftsAsset'
 
 const SellModeButton = styled.button<{ active: boolean }>`
   display: flex;
@@ -79,6 +79,7 @@ export const ProfilePage = () => {
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const isMobile = useIsMobile()
+  const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
 
   const handleSellModeClick = useCallback(() => {
     resetSellAssets()
@@ -171,7 +172,14 @@ export const ProfilePage = () => {
                   <div className={assetList}>
                     {ownerAssets?.length
                       ? ownerAssets.map((asset, index) => (
-                          <WalletAssetDisplay asset={asset} isSellMode={isSellMode} key={index} />
+                          <div key={index}>
+                            <ViewMyNftsAsset
+                              asset={asset}
+                              isSellMode={isSellMode}
+                              mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
+                              setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+                            />
+                          </div>
                         ))
                       : null}
                   </div>
