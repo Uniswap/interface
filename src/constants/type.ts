@@ -62,4 +62,5 @@ export type NetworkInfo = {
   readonly coingeckoNetworkId: string //https://api.coingecko.com/api/v3/asset_platforms
   readonly coingeckoNativeTokenId: string //https://api.coingecko.com/api/v3/coins/list
   readonly deBankSlug: string
+  readonly internalRoute: string // use this to get data from our internal BE
 }

@@ -59,6 +59,7 @@ const avaxTestnetInfo: NetworkInfo = {
   coingeckoNetworkId: EMPTY,
   coingeckoNativeTokenId: EMPTY,
   deBankSlug: EMPTY,
+  internalRoute: EMPTY,
 }
 
 export default avaxTestnetInfo

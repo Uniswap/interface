@@ -66,6 +66,7 @@ const bnbInfo: NetworkInfo = {
   coingeckoNetworkId: 'binance-smart-chain',
   coingeckoNativeTokenId: 'binancecoin',
   deBankSlug: 'bsc',
+  internalRoute: 'bsc',
 }
 
 export default bnbInfo

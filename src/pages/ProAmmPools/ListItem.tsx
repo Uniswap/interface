@@ -7,13 +7,14 @@ import { Link, useHistory } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
 import styled, { css } from 'styled-components'
 
+import { ReactComponent as ViewPositionIcon } from 'assets/svg/view_positions.svg'
 import { ButtonEmpty } from 'components/Button'
 import CopyHelper from 'components/Copy'
 import Divider from 'components/Divider'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { MoneyBag } from 'components/Icons'
 import { MouseoverTooltip } from 'components/Tooltip'
-import FarmingPoolAPRCell from 'components/YieldPools/FarmingPoolAPRCell'
+import FarmingPoolAPRCell, { APRTooltipContent } from 'components/YieldPools/FarmingPoolAPRCell'
 import { ELASTIC_BASE_FEE_UNIT, PROMM_ANALYTICS_URL } from 'constants/index'
 import { nativeOnChain } from 'constants/tokens'
 import { VERSION } from 'constants/v2'
@@ -25,15 +26,13 @@ import { ButtonIcon } from 'pages/Pools/styleds'
 import { useToggleEthPowAckModal } from 'state/application/hooks'
 import { useElasticFarms } from 'state/farms/elastic/hooks'
 import { useUrlOnEthPowAck } from 'state/pools/hooks'
-import { ProMMPoolData } from 'state/prommPools/hooks'
 import { ExternalLink } from 'theme'
+import { ElasticPoolDetail } from 'types/pool'
 import { isAddressString, shortenAddress } from 'utils'
 import { formatDollarAmount } from 'utils/numbers'
 
-import { ReactComponent as ViewPositionIcon } from '../../assets/svg/view_positions.svg'
-
 interface ListItemProps {
-  pair: ProMMPoolData[]
+  pair: ElasticPoolDetail[]
   idx: number
   onShared: (id: string) => void
   userPositions: { [key: string]: number }
@@ -148,6 +147,41 @@ export default function ProAmmPoolListItem({ pair, idx, onShared, userPositions,
 
         const isFarmingPool = !!fairlaunchAddress && pid !== -1
 
+        const renderPoolAPR = () => {
+          if (isFarmingPool) {
+            if (pool.farmAPR) {
+              return (
+                <Flex
+                  alignItems={'center'}
+                  sx={{
+                    gap: '4px',
+                  }}
+                >
+                  <Text as="span">{(pool.apr + pool.farmAPR).toFixed(2)}%</Text>
+                  <MouseoverTooltip
+                    width="fit-content"
+                    placement="top"
+                    text={<APRTooltipContent farmAPR={pool.farmAPR} poolAPR={pool.apr} />}
+                  >
+                    <MoneyBag size={16} color={theme.apr} />
+                  </MouseoverTooltip>
+                </Flex>
+              )
+            }
+
+            return <FarmingPoolAPRCell poolAPR={pool.apr} fairlaunchAddress={fairlaunchAddress} pid={pid} />
+          }
+
+          return (
+            <Flex
+              alignItems="center"
+              paddingRight="20px" // to make all the APR numbers vertically align
+            >
+              {pool.apr.toFixed(2)}%
+            </Flex>
+          )
+        }
+
         return (
           <TableRow
             isOpen={isOpen}
@@ -201,22 +235,11 @@ export default function ProAmmPoolListItem({ pair, idx, onShared, userPositions,
             </DataText>
             <DataText alignItems="flex-start">{formatDollarAmount(pool.tvlUSD)}</DataText>
             <DataText alignItems="flex-end" color={theme.apr}>
-              {isFarmingPool ? (
-                <FarmingPoolAPRCell poolAPR={pool.apr} fairlaunchAddress={fairlaunchAddress} pid={pid} />
-              ) : (
-                <Flex
-                  sx={{
-                    alignItems: 'center',
-                    paddingRight: '20px', // to make all the APR numbers vertically align
-                  }}
-                >
-                  {pool.apr.toFixed(2)}%
-                </Flex>
-              )}
+              {renderPoolAPR()}
             </DataText>
-            <DataText alignItems="flex-end">{formatDollarAmount(pool.volumeUSD)}</DataText>
+            <DataText alignItems="flex-end">{formatDollarAmount(pool.volumeUSDLast24h)}</DataText>
             <DataText alignItems="flex-end">
-              {formatDollarAmount(pool.volumeUSD * (pool.feeTier / ELASTIC_BASE_FEE_UNIT))}
+              {formatDollarAmount(pool.volumeUSDLast24h * (pool.feeTier / ELASTIC_BASE_FEE_UNIT))}
             </DataText>
             <DataText alignItems="flex-end">{myLiquidity ? formatDollarAmount(Number(myLiquidity)) : '-'}</DataText>
             <ButtonWrapper>

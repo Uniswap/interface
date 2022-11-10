@@ -11,34 +11,23 @@ import { ELASTIC_BASE_FEE_UNIT } from 'constants/index'
 import { NETWORKS_INFO } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import { getBlocksFromTimestamps } from 'utils'
-import { get2DayChange } from 'utils/data'
 
 import { AppState } from '../index'
 import { setSharedPoolId } from './actions'
 
+type GenericToken = {
+  address: string
+  name: string
+  symbol: string
+  decimals: number
+}
 export interface ProMMPoolData {
   // basic token info
   address: string
   feeTier: number
 
-  tokenA: Token
-  tokenB: Token
-
-  token0: {
-    name: string
-    symbol: string
-    address: string
-    decimals: number
-    derivedETH: number
-  }
-
-  token1: {
-    name: string
-    symbol: string
-    address: string
-    decimals: number
-    derivedETH: number
-  }
+  token0: GenericToken
+  token1: GenericToken
 
   // for tick math
   liquidity: string
@@ -47,9 +36,7 @@ export interface ProMMPoolData {
   tick: number
 
   // volume
-  volumeUSD: number
-  volumeUSDChange: number
-  // volumeUSDWeek: number
+  volumeUSDLast24h: number
 
   // liquidity
   tvlUSD: number
@@ -233,80 +220,53 @@ export const usePoolBlocks = () => {
   const { chainId } = useActiveWeb3React()
 
   const utcCurrentTime = dayjs()
-  const t1 = utcCurrentTime.subtract(1, 'day').startOf('minute').unix()
-  const t2 = utcCurrentTime.subtract(2, 'day').startOf('minute').unix()
-  const tWeek = utcCurrentTime.subtract(1, 'week').startOf('minute').unix()
+  const last24h = utcCurrentTime.subtract(1, 'day').startOf('minute').unix()
 
   const [blocks, setBlocks] = useState<{ number: number }[]>([])
 
   useEffect(() => {
     const getBlocks = async () => {
-      const blocks = await getBlocksFromTimestamps([t1, t2, tWeek], chainId)
+      const blocks = await getBlocksFromTimestamps([last24h], chainId)
       setBlocks(blocks)
     }
 
     getBlocks()
-  }, [t1, t2, tWeek, chainId])
+  }, [chainId, last24h])
 
-  // get blocks from historic timestamps
-  const [block24, block48, blockWeek] = blocks ?? []
+  const [blockLast24h] = blocks ?? []
 
-  return { block24: block24?.number, block48: block48?.number, blockWeek: blockWeek?.number }
+  return { blockLast24h: blockLast24h?.number }
 }
 
-export const parsedPoolData = (
+const parsedPoolData = (
   poolAddresses: Array<string>,
   data: PoolDataResponse | undefined,
   data24: PoolDataResponse | undefined,
-  data48: PoolDataResponse | undefined,
-  chainId: number,
-  // dataWeek: PoolDataResponse | undefined,
 ) => {
   const parsed = data?.pools
-    ? data.pools.reduce((accum: { [address: string]: ProMMPoolFields }, poolData) => {
-        accum[poolData.id] = poolData
-        return accum
+    ? data.pools.reduce((acc: { [address: string]: ProMMPoolFields }, poolData) => {
+        acc[poolData.id] = poolData
+        return acc
       }, {})
     : {}
   const parsed24 = data24?.pools
-    ? data24.pools.reduce((accum: { [address: string]: ProMMPoolFields }, poolData) => {
-        accum[poolData.id] = poolData
-        return accum
+    ? data24.pools.reduce((acc: { [address: string]: ProMMPoolFields }, poolData) => {
+        acc[poolData.id] = poolData
+        return acc
       }, {})
     : {}
-  const parsed48 = data48?.pools
-    ? data48.pools.reduce((accum: { [address: string]: ProMMPoolFields }, poolData) => {
-        accum[poolData.id] = poolData
-        return accum
-      }, {})
-    : {}
-  // const parsedWeek = dataWeek?.pools
-  //   ? dataWeek.pools.reduce((accum: { [address: string]: ProMMPoolFields }, poolData) => {
-  //       accum[poolData.id] = poolData
-  //       return accum
-  //     }, {})
-  //   : {}
 
   // format data and calculate daily changes
-  const formatted = poolAddresses.reduce((accum: { [address: string]: ProMMPoolData }, address) => {
+  const formatted = poolAddresses.reduce((acc: { [address: string]: ProMMPoolData }, address) => {
     const current: ProMMPoolFields | undefined = parsed[address]
     const oneDay: ProMMPoolFields | undefined = parsed24[address]
-    const twoDay: ProMMPoolFields | undefined = parsed48[address]
-    // const week: ProMMPoolFields | undefined = parsedWeek[address]
 
-    const [volumeUSD, volumeUSDChange] =
-      current && oneDay && twoDay
-        ? get2DayChange(current.volumeUSD, oneDay.volumeUSD, twoDay.volumeUSD)
+    const volumeUSDLast24h =
+      current && oneDay
+        ? parseFloat(current.volumeUSD) - parseFloat(oneDay.volumeUSD)
         : current
-        ? [parseFloat(current.volumeUSD), 0]
-        : [0, 0]
-
-    // const volumeUSDWeek =
-    //   current && week
-    //     ? parseFloat(current.volumeUSD) - parseFloat(week.volumeUSD)
-    //     : current
-    //     ? parseFloat(current.volumeUSD)
-    //     : 0
+        ? parseFloat(current.volumeUSD)
+        : 0
 
     const tvlUSD = current ? parseFloat(current.totalValueLockedUSD) : 0
 
@@ -323,44 +283,38 @@ export const parsedPoolData = (
     const feeTier = current ? parseInt(current.feeTier) : 0
 
     if (current) {
-      accum[address] = {
+      acc[address] = {
         address,
         feeTier,
         liquidity: current.liquidity,
         sqrtPrice: current.sqrtPrice,
         reinvestL: current.reinvestL,
         tick: parseFloat(current.tick),
-        tokenA: new Token(chainId, current.token0.id, Number(current.token0.decimals), current.token0.symbol),
-        tokenB: new Token(chainId, current.token1.id, Number(current.token1.decimals), current.token1.symbol),
 
         token0: {
           address: current.token0.id,
           name: current.token0.name,
           symbol: current.token0.symbol,
           decimals: parseInt(current.token0.decimals),
-          derivedETH: parseFloat(current.token0.derivedETH),
         },
         token1: {
           address: current.token1.id,
           name: current.token1.name,
           symbol: current.token1.symbol,
           decimals: parseInt(current.token1.decimals),
-          derivedETH: parseFloat(current.token1.derivedETH),
         },
         token0Price: parseFloat(current.token0Price),
         token1Price: parseFloat(current.token1Price),
-        volumeUSD,
-        volumeUSDChange,
-        // volumeUSDWeek,
+        volumeUSDLast24h,
         tvlUSD,
         tvlUSDChange,
         tvlToken0,
         tvlToken1,
-        apr: tvlUSD > 0 ? (volumeUSD * (feeTier / ELASTIC_BASE_FEE_UNIT) * 100 * 365) / tvlUSD : 0,
+        apr: tvlUSD > 0 ? (volumeUSDLast24h * (feeTier / ELASTIC_BASE_FEE_UNIT) * 100 * 365) / tvlUSD : 0,
       }
     }
 
-    return accum
+    return acc
   }, {})
 
   return formatted
@@ -381,7 +335,7 @@ export function usePoolDatas(poolAddresses: string[]): {
   const { chainId } = useActiveWeb3React()
   const dataClient = NETWORKS_INFO[chainId || ChainId.MAINNET].elasticClient
 
-  const { block24, block48 } = usePoolBlocks()
+  const { blockLast24h } = usePoolBlocks()
 
   const { loading, error, data } = useQuery<PoolDataResponse>(PROMM_POOLS_BULK(undefined, poolAddresses), {
     client: dataClient,
@@ -392,25 +346,13 @@ export function usePoolDatas(poolAddresses: string[]): {
     loading: loading24,
     error: error24,
     data: data24,
-  } = useQuery<PoolDataResponse>(PROMM_POOLS_BULK(block24, poolAddresses), {
+  } = useQuery<PoolDataResponse>(PROMM_POOLS_BULK(blockLast24h, poolAddresses), {
     client: dataClient,
     fetchPolicy: 'no-cache',
   })
-  const {
-    loading: loading48,
-    error: error48,
-    data: data48,
-  } = useQuery<PoolDataResponse>(PROMM_POOLS_BULK(block48, poolAddresses), {
-    client: dataClient,
-    fetchPolicy: 'no-cache',
-  })
-  // const { loading: loadingWeek, error: errorWeek, data: dataWeek } = useQuery<PoolDataResponse>(
-  //   PROMM_POOLS_BULK(blockWeek, poolAddresses),
-  //   { client: dataClient, fetchPolicy: 'no-cache' },
-  // )
 
-  const anyError = Boolean(error || error24 || error48)
-  const anyLoading = Boolean(loading || loading24 || loading48)
+  const anyError = Boolean(error || error24)
+  const anyLoading = Boolean(loading || loading24)
 
   // return early if not all data yet
   if (anyError || anyLoading) {
@@ -421,7 +363,7 @@ export function usePoolDatas(poolAddresses: string[]): {
     }
   }
 
-  const formatted = parsedPoolData(poolAddresses, data, data24, data48, chainId as ChainId)
+  const formatted = parsedPoolData(poolAddresses, data, data24)
   return {
     loading: anyLoading,
     error: anyError,

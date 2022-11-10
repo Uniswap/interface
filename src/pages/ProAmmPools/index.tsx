@@ -20,8 +20,10 @@ import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useOpenModal } from 'state/application/hooks'
 import { FarmUpdater, useElasticFarms } from 'state/farms/elastic/hooks'
 import { Field } from 'state/mint/proamm/actions'
-import { ProMMPoolData, usePoolDatas, useTopPoolAddresses, useUserProMMPositions } from 'state/prommPools/hooks'
+import { useTopPoolAddresses, useUserProMMPositions } from 'state/prommPools/hooks'
+import useGetElasticPools from 'state/prommPools/useGetElasticPools'
 import { useTokenPrices } from 'state/tokenPrices/hooks'
+import { ElasticPoolDetail } from 'types/pool'
 
 import ProAmmPoolCardItem from './CardItem'
 import ProAmmPoolListItem from './ListItem'
@@ -138,21 +140,23 @@ export default function ProAmmPoolList({
   const cbId = currencies[Field.CURRENCY_B]?.wrapped.address.toLowerCase()
 
   const { loading, addresses } = useTopPoolAddresses()
-  const { loading: poolDataLoading, data: poolDatas } = usePoolDatas(addresses || [])
+  const { isLoading: poolDataLoading, data: poolDatas } = useGetElasticPools(addresses || [])
 
   const { chainId, account } = useActiveWeb3React()
   const userLiquidityPositionsQueryResult = useUserProMMPositions()
   const loadingUserPositions = !account ? false : userLiquidityPositionsQueryResult.loading
   const userPositions = !account ? {} : userLiquidityPositionsQueryResult.userLiquidityUsdByPool
   const listComparator = useCallback(
-    (poolA: ProMMPoolData, poolB: ProMMPoolData): number => {
+    (poolA: ElasticPoolDetail, poolB: ElasticPoolDetail): number => {
       switch (sortedColumn) {
         case SORT_FIELD.TVL:
           return poolA.tvlUSD > poolB.tvlUSD ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
         case SORT_FIELD.VOL:
-          return poolA.volumeUSD > poolB.volumeUSD ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
+          return poolA.volumeUSDLast24h > poolB.volumeUSDLast24h
+            ? (sortDirection ? -1 : 1) * 1
+            : (sortDirection ? -1 : 1) * -1
         case SORT_FIELD.FEES:
-          return poolA.volumeUSD * poolA.feeTier > poolB.volumeUSD * poolB.feeTier
+          return poolA.volumeUSDLast24h * poolA.feeTier > poolB.volumeUSDLast24h * poolB.feeTier
             ? (sortDirection ? -1 : 1) * 1
             : (sortDirection ? -1 : 1) * -1
         case SORT_FIELD.APR:
@@ -173,7 +177,7 @@ export default function ProAmmPoolList({
 
   const anyLoading = loading || poolDataLoading || loadingUserPositions
   const pairDatas = useMemo(() => {
-    const initPairs: { [pairId: string]: ProMMPoolData[] } = {}
+    const initPairs: { [pairId: string]: ElasticPoolDetail[] } = {}
 
     let filteredPools = Object.values(poolDatas || []).filter(
       pool =>
@@ -218,6 +222,7 @@ export default function ProAmmPoolList({
 
     const poolsGroupByPair = filteredPools.reduce((pairs, pool) => {
       const pairId = pool.token0.address + '_' + pool.token1.address
+
       return {
         ...pairs,
         [pairId]: [...(pairs[pairId] || []), pool].sort((a, b) => b.tvlUSD - a.tvlUSD),
@@ -380,7 +385,7 @@ export default function ProAmmPoolList({
   }, [isShareModalOpen, setSharedPoolId])
   const pageData = pairDatas.slice((page - 1) * ITEM_PER_PAGE, page * ITEM_PER_PAGE)
 
-  if (!anyLoading && !Object.keys(pairDatas).length)
+  if (!anyLoading && !Object.keys(pairDatas).length) {
     return (
       <SelectPairInstructionWrapper>
         <div style={{ marginBottom: '1rem' }}>
@@ -391,6 +396,7 @@ export default function ProAmmPoolList({
         </div>
       </SelectPairInstructionWrapper>
     )
+  }
 
   return (
     <PageWrapper data-above1000={above1000}>

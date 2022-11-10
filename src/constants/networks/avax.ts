@@ -67,6 +67,7 @@ const avaxInfo: NetworkInfo = {
   coingeckoNetworkId: 'avalanche',
   coingeckoNativeTokenId: 'avalanche-2',
   deBankSlug: 'avax',
+  internalRoute: 'avalanche',
 }
 
 export default avaxInfo

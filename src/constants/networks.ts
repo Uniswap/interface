@@ -90,7 +90,4 @@ export const MAINNET_NETWORKS = [
   ChainId.OPTIMISM,
 ]
 
-export const chainIdMapping: Partial<Record<ChainId, string>> = {
-  [ChainId.BSCMAINNET]: 'bsc',
-  [ChainId.BTTC]: 'bttc',
-}
+export const CHAINS_SUPPORT_NEW_POOL_FARM_API = [ChainId.OPTIMISM, ChainId.AVAXMAINNET]

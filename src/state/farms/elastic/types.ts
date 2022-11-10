@@ -26,9 +26,12 @@ export interface FarmingPool {
   feesUSD: number
   tvlToken0: TokenAmount
   tvlToken1: TokenAmount
+  stakedTvl?: number // optional as it exists in V2 only
+  apr?: number // optional as it exists in V2 only
+  poolAPR?: number // optional as it exists in V2 only
 }
 export interface ElasticFarm {
-  id: string // farm contract
+  id: string // fair launch contract
   rewardLocker: string
   pools: Array<FarmingPool>
 }

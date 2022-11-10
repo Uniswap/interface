@@ -63,6 +63,7 @@ const velasInfo: NetworkInfo = {
   coingeckoNetworkId: 'velas',
   coingeckoNativeTokenId: 'velas',
   deBankSlug: EMPTY,
+  internalRoute: 'velas',
 }
 
 export default velasInfo

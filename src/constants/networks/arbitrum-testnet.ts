@@ -56,6 +56,7 @@ const arbitrumTestnetInfo: NetworkInfo = {
   coingeckoNetworkId: EMPTY,
   coingeckoNativeTokenId: 'ethereum',
   deBankSlug: EMPTY,
+  internalRoute: EMPTY,
 }
 
 export default arbitrumTestnetInfo

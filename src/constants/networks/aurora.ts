@@ -60,6 +60,7 @@ const auroraInfo: NetworkInfo = {
   coingeckoNetworkId: 'aurora',
   coingeckoNativeTokenId: 'ethereum',
   deBankSlug: 'aurora',
+  internalRoute: 'aurora',
 }
 
 export default auroraInfo

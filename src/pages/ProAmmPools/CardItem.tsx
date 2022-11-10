@@ -25,13 +25,13 @@ import { IconWrapper } from 'pages/Pools/styleds'
 import { useToggleEthPowAckModal } from 'state/application/hooks'
 import { useElasticFarms } from 'state/farms/elastic/hooks'
 import { useUrlOnEthPowAck } from 'state/pools/hooks'
-import { ProMMPoolData } from 'state/prommPools/hooks'
 import { ExternalLink } from 'theme'
+import { ElasticPoolDetail } from 'types/pool'
 import { isAddressString, shortenAddress } from 'utils'
 import { formatDollarAmount } from 'utils/numbers'
 
 interface ListItemProps {
-  pair: ProMMPoolData[]
+  pair: ElasticPoolDetail[]
   idx: number
   onShared: (id: string) => void
   userPositions: { [key: string]: number }
@@ -231,14 +231,14 @@ export default function ProAmmPoolCardItem({ pair, onShared, userPositions, idx 
               <Text color={theme.subText} fontWeight="500">
                 <Trans>Volume (24H)</Trans>
               </Text>
-              <Text>{formatDollarAmount(pool.volumeUSD)}</Text>
+              <Text>{formatDollarAmount(pool.volumeUSDLast24h)}</Text>
             </Flex>
 
             <Flex marginTop="16px" justifyContent="space-between">
               <Text color={theme.subText} fontWeight="500">
                 <Trans>Fees (24H)</Trans>
               </Text>
-              <Text>{formatDollarAmount(pool.volumeUSD * (pool.feeTier / ELASTIC_BASE_FEE_UNIT))}</Text>
+              <Text>{formatDollarAmount(pool.volumeUSDLast24h * (pool.feeTier / ELASTIC_BASE_FEE_UNIT))}</Text>
             </Flex>
 
             <Flex marginTop="16px" justifyContent="space-between">

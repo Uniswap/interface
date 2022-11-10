@@ -69,6 +69,7 @@ const cronosTestnetInfo: NetworkInfo = {
   coingeckoNetworkId: EMPTY,
   coingeckoNativeTokenId: EMPTY,
   deBankSlug: EMPTY,
+  internalRoute: EMPTY,
 }
 
 export default cronosTestnetInfo

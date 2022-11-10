@@ -62,6 +62,7 @@ const arbitrumInfo: NetworkInfo = {
   coingeckoNetworkId: 'arbitrum-one',
   coingeckoNativeTokenId: 'ethereum',
   deBankSlug: 'arb',
+  internalRoute: 'arbitrum',
 }
 
 export default arbitrumInfo

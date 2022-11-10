@@ -63,6 +63,7 @@ const oasisInfo: NetworkInfo = {
   coingeckoNetworkId: 'oasis',
   coingeckoNativeTokenId: 'oasis-network',
   deBankSlug: EMPTY,
+  internalRoute: 'oasis',
 }
 
 export default oasisInfo

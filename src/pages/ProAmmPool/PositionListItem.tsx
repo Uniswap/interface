@@ -178,14 +178,14 @@ function PositionListItem({
 
   const farmContract = useProMMFarmContract(farmAddress)
 
-  const { block24 } = usePoolBlocks()
+  const { blockLast24h } = usePoolBlocks()
 
   const tokenId = positionDetails.tokenId.toString()
 
   const [reward24h, setReward24h] = useState<BigNumber[] | null>(null)
   useEffect(() => {
     const getReward = async () => {
-      if (block24 && farmContract) {
+      if (blockLast24h && farmContract) {
         const [currentReward, last24hReward] = await Promise.all([
           farmContract
             .getUserInfo(tokenId, pid)
@@ -197,7 +197,7 @@ function PositionListItem({
             }),
           farmContract
             .getUserInfo(tokenId, pid, {
-              blockTag: Number(block24),
+              blockTag: Number(blockLast24h),
             })
             .then((res: any) => {
               return res.rewardPending
@@ -216,7 +216,7 @@ function PositionListItem({
     }
 
     getReward()
-  }, [block24, farmContract, tokenId, pid])
+  }, [blockLast24h, farmContract, tokenId, pid])
 
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)

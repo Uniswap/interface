@@ -59,6 +59,7 @@ const fantomInfo: NetworkInfo = {
   coingeckoNetworkId: 'fantom',
   coingeckoNativeTokenId: 'fantom',
   deBankSlug: 'ftm',
+  internalRoute: 'fantom',
 }
 
 export default fantomInfo

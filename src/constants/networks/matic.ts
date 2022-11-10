@@ -65,6 +65,7 @@ const maticInfo: NetworkInfo = {
   coingeckoNetworkId: 'polygon-pos',
   coingeckoNativeTokenId: 'matic-network',
   deBankSlug: 'matic',
+  internalRoute: 'polygon',
 }
 
 export default maticInfo

@@ -60,6 +60,7 @@ const görliInfo: NetworkInfo = {
   coingeckoNetworkId: EMPTY,
   coingeckoNativeTokenId: EMPTY,
   deBankSlug: EMPTY,
+  internalRoute: EMPTY,
 }
 
 export default görliInfo

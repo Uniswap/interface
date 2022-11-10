@@ -67,6 +67,7 @@ const bttcInfo: NetworkInfo = {
   coingeckoNetworkId: 'tron',
   coingeckoNativeTokenId: 'bittorrent',
   deBankSlug: EMPTY,
+  internalRoute: 'bttc',
 }
 
 export default bttcInfo

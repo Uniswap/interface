@@ -63,6 +63,7 @@ const ethereumInfo: NetworkInfo = {
   coingeckoNetworkId: '',
   coingeckoNativeTokenId: '',
   deBankSlug: '',
+  internalRoute: EMPTY,
 }
 
 export default ethereumInfo

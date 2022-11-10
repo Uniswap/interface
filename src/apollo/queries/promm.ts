@@ -1,11 +1,8 @@
 import { gql } from '@apollo/client'
 
 export const PROMM_POOLS_BULK = (block: number | undefined, pools: string[]) => {
-  let poolString = `[`
-  pools.map(address => {
-    return (poolString += `"${address}",`)
-  })
-  poolString += ']'
+  const poolString = '[' + pools.map(address => `"${address}"`).join(',') + ']'
+
   const queryString =
     `
     query pools {

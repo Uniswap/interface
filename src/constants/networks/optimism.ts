@@ -56,6 +56,7 @@ const optimismInfo: NetworkInfo = {
   coingeckoNetworkId: 'optimistic-ethereum',
   coingeckoNativeTokenId: 'ethereum',
   deBankSlug: 'op',
+  internalRoute: 'optimism',
 }
 
 export default optimismInfo

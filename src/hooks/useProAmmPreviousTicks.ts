@@ -47,28 +47,28 @@ export function useProAmmTotalFeeOwedByPosition(pool: Pool | null | undefined, t
   const tickReader = useProAmmTickReader()
   const poolAddress = useProAmmPoolInfo(pool?.token0, pool?.token1, pool?.fee)
   const { chainId } = useActiveWeb3React()
-  const { block24 } = usePoolBlocks()
+  const { blockLast24h } = usePoolBlocks()
 
   const [currentRes, setCurrentRes] = useState(['0', '0'])
   const [last24hRes, setLast24hRes] = useState(['0', '0'])
 
   useEffect(() => {
     if (chainId) {
-      if (block24)
+      if (blockLast24h)
         tickReader
           ?.getTotalFeesOwedToPosition(
             NETWORKS_INFO[chainId].elastic.nonfungiblePositionManager,
             poolAddress,
             tokenID,
             {
-              blockTag: Number(block24),
+              blockTag: Number(blockLast24h),
             },
           )
           .then((res: { token0Owed: BigNumber; token1Owed: BigNumber }) =>
             setLast24hRes([res.token0Owed.toString(), res.token1Owed.toString()]),
           )
     }
-  }, [block24, chainId, poolAddress, tokenID, tickReader])
+  }, [blockLast24h, chainId, poolAddress, tokenID, tickReader])
   useEffect(() => {
     if (chainId) {
       tickReader

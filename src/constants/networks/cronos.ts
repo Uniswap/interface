@@ -66,6 +66,7 @@ const cronosInfo: NetworkInfo = {
   coingeckoNetworkId: 'cronos',
   coingeckoNativeTokenId: 'crypto-com-chain',
   deBankSlug: 'cro',
+  internalRoute: 'cronos',
 }
 
 export default cronosInfo
