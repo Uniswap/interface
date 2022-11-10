@@ -85,6 +85,61 @@ const MarketplaceItem = ({
   )
 }
 
+export const FilterDropdown = ({
+  title,
+  items,
+  onClick,
+  isOpen,
+}: {
+  title: string
+  items: JSX.Element[]
+  onClick: React.MouseEventHandler<HTMLElement>
+  isOpen: boolean
+}) => {
+  return (
+    <>
+      <Box className={styles.detailsOpen} opacity={isOpen ? '1' : '0'} />
+      <Box
+        as="details"
+        className={clsx(subheadSmall, !isOpen && styles.rowHover)}
+        open={isOpen}
+        borderRadius={isOpen ? '0' : '12'}
+      >
+        <Box
+          as="summary"
+          className={`${styles.row} ${styles.rowHover}`}
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          fontSize="16"
+          paddingTop="12"
+          paddingLeft="12"
+          paddingBottom="12"
+          lineHeight="20"
+          borderRadius="12"
+          maxHeight="48"
+          onClick={onClick}
+        >
+          {title}
+          <Box display="flex" alignItems="center">
+            <Box
+              className={styles.chevronContainer}
+              style={{
+                transform: `rotate(${isOpen ? 0 : 180}deg)`,
+              }}
+            >
+              <ChevronUpIcon className={styles.chevronIcon} />
+            </Box>
+          </Box>
+        </Box>
+        <Column className={styles.filterDropDowns} paddingBottom="8" paddingLeft="0">
+          {items}
+        </Column>
+      </Box>
+    </>
+  )
+}
+
 export const MarketplaceSelect = () => {
   const {
     addMarket,
@@ -115,50 +170,12 @@ export const MarketplaceSelect = () => {
     [addMarket, marketCount, removeMarket, selectedMarkets]
   )
 
-  return (
-    <>
-      <Box className={styles.detailsOpen} opacity={isOpen ? '1' : '0'} />
-      <Box
-        as="details"
-        className={clsx(subheadSmall, !isOpen && styles.rowHover)}
-        open={isOpen}
-        borderRadius={isOpen ? '0' : '12'}
-      >
-        <Box
-          as="summary"
-          className={`${styles.row} ${styles.rowHover}`}
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          fontSize="16"
-          paddingTop="12"
-          paddingLeft="12"
-          paddingBottom="12"
-          lineHeight="20"
-          borderRadius="12"
-          maxHeight="48"
-          onClick={(e) => {
-            e.preventDefault()
-            setOpen(!isOpen)
-            setTraitsOpen(TraitPosition.MARKPLACE_INDEX, !isOpen)
-          }}
-        >
-          Marketplaces
-          <Box display="flex" alignItems="center">
-            <Box
-              className={styles.chevronContainer}
-              style={{
-                transform: `rotate(${isOpen ? 0 : 180}deg)`,
-              }}
-            >
-              <ChevronUpIcon className={styles.chevronIcon} />
-            </Box>
-          </Box>
-        </Box>
-        <Column className={styles.filterDropDowns} paddingBottom="8" paddingLeft="0">
-          {MarketplaceItems}
-        </Column>
-      </Box>
-    </>
-  )
+  const onClick: React.MouseEventHandler<HTMLElement> = (e) => {
+    e.preventDefault()
+    setOpen(!isOpen)
+    setTraitsOpen(TraitPosition.MARKPLACE_INDEX, !isOpen)
+    console.log(isOpen, TraitPosition.MARKPLACE_INDEX)
+  }
+
+  return <FilterDropdown title={'Marketplaces'} items={MarketplaceItems} onClick={onClick} isOpen={isOpen} />
 }
