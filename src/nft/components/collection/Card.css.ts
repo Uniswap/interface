@@ -25,6 +25,7 @@ export const notSelectedCard = style([
   sprinkles({
     backgroundColor: 'backgroundSurface',
     borderColor: 'backgroundOutline',
+    borderRadius: '14',
   }),
   {
     ':hover': {
@@ -43,6 +44,7 @@ export const selectedCard = style([
     background: 'backgroundSurface',
     borderColor: 'accentAction',
     borderWidth: '3px',
+    borderRadius: '18',
   }),
   {
     ':hover': {

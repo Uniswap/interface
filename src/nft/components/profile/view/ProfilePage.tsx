@@ -81,6 +81,7 @@ export const ProfilePage = () => {
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const isMobile = useIsMobile()
+  const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
 
   const handleSellModeClick = useCallback(() => {
     resetSellAssets()
@@ -173,9 +174,13 @@ export const ProfilePage = () => {
                   <div className={assetList}>
                     {ownerAssets?.length
                       ? ownerAssets.map((asset, index) => (
-                          // eslint-disable-next-line react/jsx-key
-                          <div>
-                            <ViewMyNftsAsset asset={asset} isSellMode={isSellMode} key={index} />
+                          <div key={index}>
+                            <ViewMyNftsAsset
+                              asset={asset}
+                              isSellMode={isSellMode}
+                              mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
+                              setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+                            />
                           </div>
                         ))
                       : null}
