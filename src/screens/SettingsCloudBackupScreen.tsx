@@ -1,4 +1,3 @@
-import { useHeaderHeight } from '@react-navigation/elements'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -33,7 +32,6 @@ export function SettingsCloudBackupScreen({
 }: Props) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
-  const headerHeight = useHeaderHeight()
   const theme = useAppTheme()
 
   const [showCloudBackupInfoModal, setShowCloudBackupInfoModal] = useState(true)
@@ -79,9 +77,9 @@ export function SettingsCloudBackupScreen({
   }, [accountBackups, address, navigation])
 
   return (
-    <Screen edges={['top', 'left', 'right']} pb="xxl" px="md" style={{ paddingTop: headerHeight }}>
+    <Screen mx="lg" my="md">
       <BackHeader alignment="left" mb="md" />
-      <Flex alignItems="center" justifyContent="space-between" mb="lg" mx="lg">
+      <Flex alignItems="center" justifyContent="space-between" mb="lg">
         <Text variant="headlineSmall">{t('Back up to iCloud')}</Text>
         <Text color="textSecondary" textAlign="center" variant="bodySmall">
           {t(
