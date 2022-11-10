@@ -507,9 +507,10 @@ const TruncatedTextRow = styled(Row)`
 
 interface ProfileNftDetailsProps {
   asset: WalletAsset
+  isSellMode: boolean
 }
 
-const ProfileNftDetails = ({ asset }: ProfileNftDetailsProps) => {
+const ProfileNftDetails = ({ asset, isSellMode }: ProfileNftDetailsProps) => {
   const assetName = () => {
     if (!asset.name && !asset.tokenId) return
     return !!asset.name ? asset.name : `#${asset.tokenId}`
@@ -535,7 +536,7 @@ const ProfileNftDetails = ({ asset }: ProfileNftDetailsProps) => {
         {asset.susFlag && <Suspicious />}
       </Row>
       <TruncatedTextRow className={subhead} style={{ color: themeVars.colors.textSecondary }}>
-        {!!asset.floorPrice && <span>{`${floorFormatter(asset.floorPrice)} ETH Floor`}</span>}
+        {!!asset.floorPrice && isSellMode && <span>{`${floorFormatter(asset.floorPrice)} ETH Floor`}</span>}
       </TruncatedTextRow>
     </Box>
   )

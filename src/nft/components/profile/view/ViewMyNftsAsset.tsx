@@ -71,7 +71,7 @@ export const ViewMyNftsAsset = ({
         )}
       </Card.ImageContainer>
       <Card.DetailsContainer>
-        <Card.ProfileNftDetails asset={asset} />
+        <Card.ProfileNftDetails asset={asset} isSellMode={isSellMode} />
       </Card.DetailsContainer>
     </Card.Container>
   )
