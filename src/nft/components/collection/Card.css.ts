@@ -44,9 +44,9 @@ export const selectedCard = style([
     background: 'backgroundSurface',
     borderColor: 'accentAction',
     borderWidth: '3px',
-    borderRadius: '18',
   }),
   {
+    borderRadius: '18px',
     ':hover': {
       backgroundColor: themeVars.colors.stateOverlayHover,
     },

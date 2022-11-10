@@ -507,13 +507,12 @@ const TruncatedTextRow = styled(Row)`
 
 interface ProfileNftDetailsProps {
   asset: WalletAsset
+  isSellMode: boolean
 }
 
-const ProfileNftDetails = ({ asset }: ProfileNftDetailsProps) => {
+const ProfileNftDetails = ({ asset, isSellMode }: ProfileNftDetailsProps) => {
   const assetName = () => {
     if (!asset.name && !asset.tokenId) return
-    if (!!asset.name && !!asset.tokenId)
-      return asset.name.includes(`${asset.tokenId}`) ? asset.name : `${asset.name} #${asset.tokenId}`
     return !!asset.name ? asset.name : `#${asset.tokenId}`
   }
   if (!asset.notForSale || (asset.newListings && asset.newListings.length > 0)) {
@@ -542,7 +541,9 @@ const ProfileNftDetails = ({ asset }: ProfileNftDetailsProps) => {
         {asset.susFlag && <Suspicious />}
       </Row>
       <TruncatedTextRow className={subhead} style={{ color: themeVars.colors.textSecondary }}>
-        {asset.notForSale && !!asset.floorPrice && <span>{`${floorFormatter(asset.floorPrice)} ETH Floor`}</span>}
+        {asset.notForSale && isSellMode && !!asset.floorPrice && (
+          <span>{`${floorFormatter(asset.floorPrice)} ETH Floor`}</span>
+        )}
       </TruncatedTextRow>
       <TruncatedTextRow className={subhead} style={{ color: themeVars.colors.textPrimary }}>
         {!asset.notForSale && <span>{`${floorFormatter(asset.floor_sell_order_price)} ETH`}</span>}
