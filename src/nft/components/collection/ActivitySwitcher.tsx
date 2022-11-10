@@ -6,7 +6,9 @@ import { useIsCollectionLoading } from 'nft/hooks'
 
 import * as styles from './ActivitySwitcher.css'
 
-export const ActivitySwitcherLoading = new Array(2).fill(<div className={styles.styledLoading} />)
+export const ActivitySwitcherLoading = new Array(2)
+  .fill(null)
+  .map((_, index) => <div className={styles.styledLoading} key={`ActivitySwitcherLoading-key-${index}`} />)
 
 export const ActivitySwitcher = ({
   showActivity,
