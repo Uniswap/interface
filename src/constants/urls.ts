@@ -7,6 +7,9 @@ export const uniswapUrls = {
   routingApiUrl: getUniswapRoutingApiUrl(),
   graphQLUrl: getUniswapGraphQLUrl(),
   trmUrl: getUniswapTrmUrl(),
+  termsOfServiceUrl: 'https://uniswap.org/terms-of-service',
+  // TODO(MOB-3579): update privacy policy URL
+  privacyPolicyUrl: 'https://uniswap.org/terms-of-service',
 }
 
 function getUniswapApiBaseUrl() {

@@ -912,6 +912,10 @@ PODS:
     - React-jsi (= 0.68.3)
     - React-logger (= 0.68.3)
     - React-perflogger (= 0.68.3)
+  - rive-react-native (3.0.41):
+    - React-Core
+    - RiveRuntime (= 2.0.12)
+  - RiveRuntime (2.0.12)
   - RNCAsyncStorage (1.17.10):
     - React-Core
   - RNCMaskedView (0.2.8):
@@ -1064,6 +1068,7 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - rive-react-native (from `../node_modules/rive-react-native`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
@@ -1126,6 +1131,7 @@ SPEC REPOS:
     - OneSignalXCFramework
     - PromisesObjC
     - Protobuf
+    - RiveRuntime
     - Sentry
     - Shake
     - Starscream
@@ -1252,6 +1258,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  rive-react-native:
+    :path: "../node_modules/rive-react-native"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCMaskedView:
@@ -1391,6 +1399,8 @@ SPEC CHECKSUMS:
   React-RCTVibration: f41f116aad644973f24653effb3db3de64fa0314
   React-runtimeexecutor: 8cdd80915ed6dabf2221a689f1f7ddb50ea5e9f3
   ReactCommon: 5b1b43a7d81a1ac4eec85f7c4db3283a14a3b13d
+  rive-react-native: c87587ed13ad58b8d6c57d1e4500a429128865cd
+  RiveRuntime: 00c431bf347aaad3a3d0ed381241cf945b537e1a
   RNCAsyncStorage: 0c357f3156fcb16c8589ede67cc036330b6698ca
   RNCMaskedView: bc0170f389056201c82a55e242e5d90070e18e5a
   RNDeviceInfo: 0a7c1d2532aa7691f9b9925a27e43af006db4dae

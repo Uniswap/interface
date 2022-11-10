@@ -20462,6 +20462,11 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
     hash-base "^3.0.0"
     inherits "^2.0.1"
 
+rive-react-native@3.0.41:
+  version "3.0.41"
+  resolved "https://registry.yarnpkg.com/rive-react-native/-/rive-react-native-3.0.41.tgz#6822ccad21fc4585ba859fe20a301b18e93824e5"
+  integrity sha512-N4BQuQwsPK98n8AITrMh/iG/AjCikKm6f1Wt+EMJa6hl987h68mM2z/4vul+CuigkMreiiIH6kUSOAMKMK98KA==
+
 rlp@^2.0.0, rlp@^2.2.3, rlp@^2.2.4:
   version "2.2.7"
   resolved "https://registry.yarnpkg.com/rlp/-/rlp-2.2.7.tgz#33f31c4afac81124ac4b283e2bd4d9720b30beaf"
