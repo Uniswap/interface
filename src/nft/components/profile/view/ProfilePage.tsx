@@ -273,7 +273,7 @@ const CollectionFiltersRow = ({
     return collections?.find((collection) => collection.address === collectionAddress)
   }
   return (
-    <Row paddingTop="18" gap="8" flexWrap="wrap" paddingBottom="18">
+    <Row paddingY="18" gap="8" flexWrap="wrap">
       {collectionFilters &&
         collectionFilters.map((collectionAddress, index) => (
           <CollectionFilterItem
