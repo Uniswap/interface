@@ -11,6 +11,7 @@ export const ScrollBarStyles = css<{ isHorizontalScroll?: boolean }>`
   ::-webkit-scrollbar {
     background: transparent;
 
+    // Set height for horizontal scrolls
     ${({ isHorizontalScroll }) => {
       return isHorizontalScroll ? 'height: 4px;' : 'width: 4px;'
     }}
