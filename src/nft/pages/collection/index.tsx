@@ -7,6 +7,8 @@ import { AnimatedBox, Box } from 'nft/components/Box'
 import { Activity, ActivitySwitcher, CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
 import { CollectionNftsAndMenuLoading } from 'nft/components/collection/CollectionNfts'
 import { Column, Row } from 'nft/components/Flex'
+import { BagCloseIcon } from 'nft/components/icons'
+import { headlineSmall } from 'nft/css/common.css'
 import { useBag, useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
 import { GenieCollection } from 'nft/types'
@@ -30,6 +32,24 @@ const CollectionDisplaySection = styled(Row)`
   position: relative;
 `
 
+const IconWrapper = styled.button`
+  background-color: transparent;
+  border-radius: 8px;
+  border: none;
+  color: ${({ theme }) => theme.textPrimary};
+  cursor: pointer;
+  display: flex;
+  padding: 2px 0px;
+  opacity: 1;
+  transition: 125ms ease opacity;
+  :hover {
+    opacity: 0.6;
+  }
+  :active {
+    opacity: 0.4;
+  }
+`
+
 const Collection = () => {
   const { contractAddress } = useParams()
 
@@ -45,14 +65,15 @@ const Collection = () => {
   const collectionStats = useCollectionQuery(contractAddress as string)
 
   const { gridX, gridWidthOffset } = useSpring({
-    gridX: isFiltersExpanded ? FILTER_WIDTH : 0,
-    gridWidthOffset: isFiltersExpanded
-      ? isBagExpanded
-        ? BAG_WIDTH + FILTER_WIDTH
-        : FILTER_WIDTH
-      : isBagExpanded
-      ? BAG_WIDTH
-      : 0,
+    gridX: isFiltersExpanded && !isMobile ? FILTER_WIDTH : 0,
+    gridWidthOffset:
+      isFiltersExpanded && !isMobile
+        ? isBagExpanded
+          ? BAG_WIDTH + FILTER_WIDTH
+          : FILTER_WIDTH
+        : isBagExpanded
+        ? BAG_WIDTH
+        : 0,
   })
 
   useEffect(() => {
@@ -110,8 +131,29 @@ const Collection = () => {
                 />
               </CollectionDescriptionSection>
               <CollectionDisplaySection>
-                <Box position="sticky" top="72" width="0">
-                  {isFiltersExpanded && <Filters traitsByGroup={collectionStats?.traits ?? {}} />}
+                <Box
+                  position={isMobile ? 'fixed' : 'sticky'}
+                  top="0"
+                  left="0"
+                  width={isMobile ? 'full' : '0'}
+                  height={isMobile && isFiltersExpanded ? 'full' : undefined}
+                  background={isMobile ? 'backgroundBackdrop' : undefined}
+                  zIndex={isMobile ? 'modalBackdrop' : undefined}
+                  overflowY="scroll"
+                >
+                  {isFiltersExpanded && (
+                    <>
+                      {isMobile && (
+                        <Row paddingY="20" paddingX="16" justifyContent="space-between" className={headlineSmall}>
+                          <span>Filter</span>
+                          <IconWrapper onClick={() => setFiltersExpanded(false)}>
+                            <BagCloseIcon />
+                          </IconWrapper>
+                        </Row>
+                      )}
+                      <Filters traitsByGroup={collectionStats?.traits ?? {}} />
+                    </>
+                  )}
                 </Box>
 
                 {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
