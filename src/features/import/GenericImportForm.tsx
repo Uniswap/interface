@@ -4,10 +4,11 @@ import { LayoutRectangle, StyleSheet, TextInput as NativeTextInput } from 'react
 import { useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import PasteButton from 'src/components/buttons/PasteButton'
-import { TextInput } from 'src/components/input/TextInput'
+import { TextInput, TextInputProps } from 'src/components/input/TextInput'
 import { Flex } from 'src/components/layout'
 import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
+import { flex } from 'src/styles/flex'
 import { SectionName } from '../telemetry/constants'
 
 const INPUT_VALUES = {
@@ -23,6 +24,7 @@ interface Props {
   endAdornment?: string //text to auto to end of input string
   liveCheck?: boolean
   autoCorrect?: boolean
+  textAlign?: TextInputProps['textAlign']
   onBlur?: () => void
   onFocus?: () => void
   beforePasteButtonPress?: () => void
@@ -45,6 +47,7 @@ export function GenericImportForm({
   beforePasteButtonPress,
   afterPasteButtonPress,
   blurOnSubmit,
+  textAlign = 'center',
 }: Props) {
   const { t } = useTranslation()
   const theme = useAppTheme()
@@ -86,28 +89,30 @@ export function GenericImportForm({
           flexShrink={1}
           gap="none"
           minHeight={INPUT_VALUES.height}
-          p="sm"
+          px="xl"
+          py="md"
           width="100%">
-          <Flex row alignItems="flex-end" gap="none">
+          <Flex row alignItems="flex-end" gap="none" pb="xxs">
             <TextInput
               ref={textInputRef}
               autoFocus
               autoCapitalize="none"
               autoCorrect={Boolean(autoCorrect)}
-              backgroundColor="background1"
+              backgroundColor="none"
               blurOnSubmit={blurOnSubmit ?? false}
               fontSize={18}
               justifyContent="center"
               multiline={true}
-              numberOfLines={5}
+              numberOfLines={4}
               px="none"
               py="none"
               returnKeyType="done"
               scrollEnabled={false}
               selectionColor={theme.colors.textPrimary}
               spellCheck={false}
+              style={flex.fill}
               testID="import_account_form/input"
-              textAlign={value ? 'center' : 'left'}
+              textAlign={textAlign}
               value={value}
               width={value ? 'auto' : (layout?.width || 0) + theme.spacing.xs}
               onBlur={handleBlur}
