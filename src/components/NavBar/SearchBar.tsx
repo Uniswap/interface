@@ -48,6 +48,7 @@ export const SearchBar = () => {
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,
+      enabled: phase1Flag === NftVariant.Enabled,
     }
   )
 
