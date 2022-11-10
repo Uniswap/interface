@@ -87,7 +87,7 @@ export function TokenDetailsStats({
   const { t } = useTranslation()
 
   const tokenData = data?.tokens?.[0]
-  const tokenProjectData = data?.tokenProjects?.[0]
+  const tokenProjectData = tokenData?.project
 
   const marketData = tokenProjectData?.markets ? tokenProjectData.markets[0] : null
 

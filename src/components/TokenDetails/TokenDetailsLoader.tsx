@@ -12,11 +12,17 @@ import { TokenDetailsActionButtons } from 'src/components/TokenDetails/TokenDeta
 import { TokenDetailsBackButtonRow } from 'src/components/TokenDetails/TokenDetailsBackButtonRow'
 import { TokenDetailsHeader } from 'src/components/TokenDetails/TokenDetailsHeader'
 import { TokenDetailsMarketData } from 'src/components/TokenDetails/TokenDetailsStats'
-import { SafetyLevel } from 'src/data/__generated__/types-and-hooks'
+import { TokenDetailsScreenQuery } from 'src/data/__generated__/types-and-hooks'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow, useDisplayName } from 'src/features/wallet/hooks'
 
-export function TokenDetailsLoader({ currency }: { currency: Currency }) {
+export function TokenDetailsLoader({
+  data,
+  currency,
+}: {
+  data?: TokenDetailsScreenQuery
+  currency: Currency
+}) {
   const { t } = useTranslation()
 
   const activeAccount = useActiveAccountWithThrow()
@@ -31,11 +37,7 @@ export function TokenDetailsLoader({ currency }: { currency: Currency }) {
           <TokenDetailsBackButtonRow currency={currency} />
           <Flex gap="xl">
             <Flex gap="xxs">
-              <TokenDetailsHeader
-                currency={currency}
-                safetyLevel={SafetyLevel.MediumWarning}
-                onPressWarningIcon={() => {}}
-              />
+              <TokenDetailsHeader data={data} onPressWarningIcon={() => {}} />
               <PriceChartLoading />
             </Flex>
             <Flex gap="lg">

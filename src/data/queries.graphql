@@ -229,6 +229,9 @@ query TransactionHistoryUpdater($addresses: [String!]!) {
 query TokenDetailsScreen($contract: ContractInput!) {
   tokens(contracts: [$contract]) {
     id
+    chain
+    name
+    symbol
     market(currency: USD) {
       id
       volume(duration: DAY) {
@@ -236,49 +239,42 @@ query TokenDetailsScreen($contract: ContractInput!) {
         value
       }
     }
-  }
-
-  tokenProjects(contracts: [$contract]) {
-    id
-    description
-    homepageUrl
-    twitterName
-    name
-    safetyLevel
-    markets(currencies: [USD]) {
+    project {
       id
-      price {
+      description
+      homepageUrl
+      twitterName
+      name
+      safetyLevel
+      logoUrl
+      markets(currencies: [USD]) {
         id
-        value
-        currency
+        price {
+          id
+          value
+          currency
+        }
+        marketCap {
+          id
+          value
+          currency
+        }
+        fullyDilutedMarketCap {
+          id
+          value
+          currency
+        }
+        priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {
+          id
+          value
+          currency
+        }
+        priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {
+          id
+          value
+          currency
+        }
       }
-      marketCap {
-        id
-        value
-        currency
-      }
-      fullyDilutedMarketCap {
-        id
-        value
-        currency
-      }
-      priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {
-        id
-        value
-        currency
-      }
-      priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {
-        id
-        value
-        currency
-      }
-    }
-    tokens {
-      id
-      chain
-      address
-      symbol
-      decimals
     }
   }
 }

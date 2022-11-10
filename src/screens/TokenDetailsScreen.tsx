@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
 import { useAppDispatch } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
-import { CurrencyLogo } from 'src/components/CurrencyLogo'
+import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
 import { AnimatedBox, Box, Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { BaseCard } from 'src/components/layout/BaseCard'
@@ -38,11 +38,16 @@ import {
 } from 'src/features/transactions/transactionState/transactionState'
 import { Screens } from 'src/screens/Screens'
 import { iconSizes } from 'src/styles/sizing'
+import { fromGraphQLChain } from 'src/utils/chainId'
 import { currencyAddress, currencyId } from 'src/utils/currencyId'
 import { formatUSDPrice } from 'src/utils/format'
 
 type Price = NonNullable<
-  NonNullable<NonNullable<NonNullable<TokenDetailsScreenQuery['tokenProjects']>[0]>['markets']>[0]
+  NonNullable<
+    NonNullable<
+      NonNullable<NonNullable<TokenDetailsScreenQuery['tokens']>[0]>['project']
+    >['markets']
+  >[0]
 >['price']
 
 function HeaderPriceLabel({ price }: { price: Price }) {
@@ -55,21 +60,24 @@ function HeaderPriceLabel({ price }: { price: Price }) {
   )
 }
 
-function HeaderTitleElement({
-  currency,
-  data,
-}: {
-  currency: Currency
-  data: TokenDetailsScreenQuery | undefined
-}) {
+function HeaderTitleElement({ data }: { data: TokenDetailsScreenQuery | undefined }) {
   const { t } = useTranslation()
+
+  const token = data?.tokens?.[0]
+  const tokenProject = token?.project
+
   return (
     <Flex centered gap="none">
       <Flex centered row gap="xs">
-        <CurrencyLogo currency={currency} size={iconSizes.sm} />
-        <Text variant="subheadLarge">{currency.name ?? t('Unknown token')}</Text>
+        <TokenLogo
+          chainId={fromGraphQLChain(token?.chain) ?? undefined}
+          size={iconSizes.sm}
+          symbol={token?.symbol ?? undefined}
+          url={tokenProject?.logoUrl ?? undefined}
+        />
+        <Text variant="subheadLarge">{token?.name ?? t('Unknown token')}</Text>
       </Flex>
-      <HeaderPriceLabel price={data?.tokenProjects?.[0]?.markets?.[0]?.price} />
+      <HeaderPriceLabel price={tokenProject?.markets?.[0]?.price} />
     </Flex>
   )
 }
@@ -103,7 +111,7 @@ export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDe
   }
 
   if (!data && isNonPollingRequestInFlight(networkStatus)) {
-    return <TokenDetailsLoader currency={currency} />
+    return <TokenDetailsLoader currency={currency} data={data} />
   }
 
   return (
@@ -139,7 +147,7 @@ function TokenDetails({
   const [showWarningModal, setShowWarningModal] = useState(false)
   const { tokenWarningDismissed, dismissWarningCallback } = useTokenWarningDismissed(_currencyId)
 
-  const safetyLevel = data?.tokenProjects?.[0]?.safetyLevel
+  const safetyLevel = data?.tokens?.[0]?.project?.safetyLevel
 
   const initialSendState = useMemo((): TransactionState => {
     return {
@@ -240,16 +248,12 @@ function TokenDetails({
         contentHeader={<TokenDetailsBackButtonRow currency={currency} />}
         fixedHeader={
           <BackHeader>
-            <HeaderTitleElement currency={currency} data={data} />
+            <HeaderTitleElement data={data} />
           </BackHeader>
         }>
         <Flex gap="xl" my="md">
           <Flex gap="xxs">
-            <TokenDetailsHeader
-              currency={currency}
-              safetyLevel={safetyLevel}
-              onPressWarningIcon={() => setShowWarningModal(true)}
-            />
+            <TokenDetailsHeader data={data} onPressWarningIcon={() => setShowWarningModal(true)} />
             <CurrencyPriceChart currency={currency} />
           </Flex>
           {error ? (
