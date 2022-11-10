@@ -2,7 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
-import { useAppSelector } from 'src/app/hooks'
+import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import { Box, Flex, Inset } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
@@ -224,6 +224,7 @@ function _TokenSearchResultList({
   variation,
 }: TokenSearchResultListProps) {
   const { t } = useTranslation()
+  const theme = useAppTheme()
   const sectionListRef = useRef<SectionList<TokenOption>>(null)
 
   const debouncedSearchFilter = useDebounce(searchFilter)
@@ -263,7 +264,14 @@ function _TokenSearchResultList({
   }, [variation, sectionsRef])
 
   if (loading) {
-    return <Loading repeat={5} type="token" />
+    return (
+      <Box>
+        <Box py="md" width={80}>
+          <Loading height={theme.textVariants.subheadSmall.lineHeight} type="text" />
+        </Box>
+        <Loading repeat={5} type="token" />
+      </Box>
+    )
   }
 
   return (
