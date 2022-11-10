@@ -96,12 +96,8 @@ function FavoriteTokenCard({
 
   const onPress = () => {
     if (isEditing) return
-    tokenDetailsNavigation.navigate(currencyId)
-  }
-
-  const onPressIn = () => {
-    if (isEditing) return
     tokenDetailsNavigation.preload(currencyId)
+    tokenDetailsNavigation.navigate(currencyId)
   }
 
   if (loading && !data) {
@@ -134,8 +130,7 @@ function FavoriteTokenCard({
         entering={FadeIn}
         exiting={FadeOut}
         testID={`token-box-${token?.symbol}`}
-        onPress={onPress}
-        onPressIn={onPressIn}>
+        onPress={onPress}>
         {isEditing ? (
           <RemoveButton position="absolute" right={-8} top={-8} onPress={onRemove} />
         ) : null}

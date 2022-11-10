@@ -43,14 +43,8 @@ export function HiddenTokensScreen({
 
   const onPressToken = useCallback(
     (currencyId: CurrencyId) => {
-      tokenDetailsNavigation.navigate(currencyId)
-    },
-    [tokenDetailsNavigation]
-  )
-
-  const onPressTokenIn = useCallback(
-    (currencyId: CurrencyId) => {
       tokenDetailsNavigation.preload(currencyId)
+      tokenDetailsNavigation.navigate(currencyId)
     },
     [tokenDetailsNavigation]
   )
@@ -88,7 +82,6 @@ export function HiddenTokensScreen({
                 isWarmLoading={false}
                 portfolioBalance={item}
                 onPressToken={onPressToken}
-                onPressTokenIn={onPressTokenIn}
               />
             )}
             renderSectionHeader={({ section: { title, items } }) =>

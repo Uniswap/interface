@@ -28,6 +28,7 @@ export function SearchTokenItem({ token }: SearchTokenItemProps) {
   const currencyId = address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId)
 
   const onPress = () => {
+    tokenDetailsNavigation.preload(currencyId)
     tokenDetailsNavigation.navigate(currencyId)
     dispatch(
       addToSearchHistory({
@@ -45,12 +46,7 @@ export function SearchTokenItem({ token }: SearchTokenItemProps) {
   }
 
   return (
-    <TouchableArea
-      name={ElementName.SearchTokenItem}
-      onPress={onPress}
-      onPressIn={() => {
-        tokenDetailsNavigation.preload(currencyId)
-      }}>
+    <TouchableArea name={ElementName.SearchTokenItem} onPress={onPress}>
       <Flex row alignItems="center" gap="sm" px="xs" py="sm">
         <TokenLogo symbol={symbol} url={logoUrl ?? undefined} />
         <Flex gap="none">

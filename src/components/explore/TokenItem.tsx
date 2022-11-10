@@ -117,11 +117,8 @@ export const TokenItem = memo(
           testID={`token-item-${name}`}
           onPress={() => {
             if (isEditing) return
-            tokenDetailsNavigation.navigate(_currencyId)
-          }}
-          onPressIn={() => {
-            if (isEditing) return
             tokenDetailsNavigation.preload(_currencyId)
+            tokenDetailsNavigation.navigate(_currencyId)
           }}>
           <AnimatedFlex row alignItems="flex-start" justifyContent="space-between" py="xs">
             <Flex centered row flexShrink={1} gap="xs" overflow="hidden">

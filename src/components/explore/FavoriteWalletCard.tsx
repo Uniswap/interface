@@ -59,8 +59,10 @@ export default function FavoriteWalletCard({
       {...rest}>
       <TouchableArea
         borderRadius="lg"
-        onPress={() => navigate(address)}
-        onPressIn={() => preload(address)}>
+        onPress={() => {
+          preload(address)
+          navigate(address)
+        }}>
         <BaseCard.Shadow>
           {isEditing ? (
             <RemoveButton position="absolute" right={-8} top={-8} onPress={onRemove} />

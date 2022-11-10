@@ -31,7 +31,6 @@ import { CurrencyId } from 'src/utils/currencyId'
 type TokenBalanceListProps = {
   owner: Address
   empty?: ReactElement | null
-  onPressTokenIn: (currencyId: CurrencyId) => void
   onPressToken: (currencyId: CurrencyId) => void
   onRefresh?: () => void
   tabViewScrollProps?: TabViewScrollProps
@@ -42,7 +41,6 @@ export function TokenBalanceList({
   owner,
   empty,
   onPressToken,
-  onPressTokenIn,
   tabViewScrollProps,
   loadingContainerStyle,
 }: TokenBalanceListProps) {
@@ -128,7 +126,6 @@ export function TokenBalanceList({
           isWarmLoading={isWarmLoading}
           portfolioBalance={item}
           onPressToken={onPressToken}
-          onPressTokenIn={onPressTokenIn}
         />
       )}
       scrollEventThrottle={TAB_VIEW_SCROLL_THROTTLE}

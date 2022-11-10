@@ -13,12 +13,11 @@ import { formatNumber, formatUSDPrice, NumberType } from 'src/utils/format'
 interface TokenBalanceItemProps {
   portfolioBalance: PortfolioBalance
   onPressToken?: (currencyId: CurrencyId) => void
-  onPressTokenIn?: (currencyId: CurrencyId) => void
   isWarmLoading?: boolean
 }
 
 export const TokenBalanceItem = memo(
-  ({ portfolioBalance, onPressToken, onPressTokenIn, isWarmLoading }: TokenBalanceItemProps) => {
+  ({ portfolioBalance, onPressToken, isWarmLoading }: TokenBalanceItemProps) => {
     const { quantity, currencyInfo, relativeChange24 } = portfolioBalance
     const { currency } = currencyInfo
 
@@ -26,21 +25,15 @@ export const TokenBalanceItem = memo(
       onPressToken?.(currencyInfo.currencyId)
     }
 
-    const onPressIn = () => {
-      onPressTokenIn?.(currencyInfo.currencyId)
-    }
-
     return (
       <TouchableArea
         alignItems="flex-start"
         bg="none"
-        delayPressIn={150}
         flexDirection="row"
         justifyContent="space-between"
         minHeight={56}
         py="xs"
-        onPress={onPress}
-        onPressIn={onPressIn}>
+        onPress={onPress}>
         <AnimatedFlex
           row
           alignItems="center"

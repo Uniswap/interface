@@ -25,11 +25,8 @@ export function SearchWalletItem({ wallet, isEditing, isFavorited }: SearchWalle
 
   const { address } = wallet
 
-  const onPressIn = () => {
-    preload(address)
-  }
-
   const onPress = () => {
+    preload(address)
     navigate(address)
     dispatch(addToSearchHistory({ searchResult: wallet }))
   }
@@ -47,8 +44,7 @@ export function SearchWalletItem({ wallet, isEditing, isFavorited }: SearchWalle
       <TouchableArea
         name={ElementName.SearchWalletItem}
         testID={`wallet-item-${address}`}
-        onPress={onPress}
-        onPressIn={onPressIn}>
+        onPress={onPress}>
         <Flex row justifyContent="space-between" px="xs" py="sm">
           <AddressDisplay
             address={address}

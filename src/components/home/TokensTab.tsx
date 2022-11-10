@@ -28,10 +28,8 @@ export function TokensTab({
   const tokenDetailsNavigation = useTokenDetailsNavigation()
 
   const onPressToken = (currencyId: CurrencyId) => {
-    tokenDetailsNavigation.navigate(currencyId)
-  }
-  const onPressTokenIn = (currencyId: CurrencyId) => {
     tokenDetailsNavigation.preload(currencyId)
+    tokenDetailsNavigation.navigate(currencyId)
   }
 
   // TODO: remove when buy flow ready
@@ -63,7 +61,6 @@ export function TokensTab({
         owner={owner}
         tabViewScrollProps={tabViewScrollProps}
         onPressToken={onPressToken}
-        onPressTokenIn={onPressTokenIn}
       />
     </Flex>
   )
