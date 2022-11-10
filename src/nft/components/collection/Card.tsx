@@ -512,8 +512,6 @@ interface ProfileNftDetailsProps {
 const ProfileNftDetails = ({ asset }: ProfileNftDetailsProps) => {
   const assetName = () => {
     if (!asset.name && !asset.tokenId) return
-    if (!!asset.name && !!asset.tokenId)
-      return asset.name.includes(`${asset.tokenId}`) ? asset.name : `${asset.name} #${asset.tokenId}`
     return !!asset.name ? asset.name : `#${asset.tokenId}`
   }
 
