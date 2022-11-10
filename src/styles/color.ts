@@ -353,7 +353,9 @@ export interface Palette {
   accentSuccess: string
   accentWarning: string
   accentCritical: string
+
   accentBranded: string
+  shadowBranded: string
 
   accentActionSoft: string
   accentActiveSoft: string
@@ -417,6 +419,7 @@ export const colorsLight: Palette = {
   accentCritical: colors.red400,
 
   accentBranded: colors.magentaVibrant,
+  shadowBranded: '#EFA2FA',
 
   accentActionSoft: opacify(12, colors.magentaVibrant),
   accentActiveSoft: opacify(24, colors.blue400),
@@ -477,6 +480,8 @@ export const colorsDark: Palette = {
   accentCritical: colors.red400,
 
   accentBranded: colors.magentaVibrant,
+  // TODO(MOB-3591): accommodate one-off color in cleaner way
+  shadowBranded: '#EFA2FA',
 
   accentActionSoft: opacify(24, colors.blue400),
   accentActiveSoft: opacify(24, colors.blue400),

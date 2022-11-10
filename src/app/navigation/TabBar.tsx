@@ -1,7 +1,7 @@
+import { ShadowProps } from '@shopify/restyle'
 import { selectionAsync } from 'expo-haptics'
 import React, { ComponentProps, memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet } from 'react-native'
 import { TapGestureHandler, TapGestureHandlerGestureEvent } from 'react-native-gesture-handler'
 import {
   cancelAnimation,
@@ -12,25 +12,22 @@ import {
   withSpring,
   WithSpringConfig,
 } from 'react-native-reanimated'
-import { SvgProps } from 'react-native-svg'
+import Svg, { Defs, LinearGradient, Rect, Stop, SvgProps } from 'react-native-svg'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import SwapTabButtonBgSVG from 'src/assets/backgrounds/swap-tab-button-bg.svg'
 import { AnimatedBox, Box } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { dimensions } from 'src/styles/sizing'
-import { theme } from 'src/styles/theme'
+import { Theme, theme } from 'src/styles/theme'
 
 export const TAB_NAVIGATOR_HEIGHT = 72
 
 const SWAP_BUTTON_CONTAINER_WIDTH = dimensions.fullWidth / 3 + theme.spacing.lg
 
-// Must be exact to match SVG bg
 export const SWAP_BUTTON_HEIGHT = 56
 const SWAP_BUTTON_WIDTH = 108
-const SWAP_BUTTON_BG_WIDTH = 164
-const SWAP_BUTTON_BG_HEIGHT = 58
+const SWAP_BUTTON_SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 0, height: 4 }
 
 export const TabBarButton = memo(
   ({
@@ -84,7 +81,6 @@ type PressableScale = {
 
 export const SwapTabBarButton = memo(({ activeScale = 0.95 }: PressableScale) => {
   const { t } = useTranslation()
-  const appTheme = useAppTheme()
   const dispatch = useAppDispatch()
 
   const onPress = useCallback(() => {
@@ -111,26 +107,41 @@ export const SwapTabBarButton = memo(({ activeScale = 0.95 }: PressableScale) =>
   return (
     <Box
       alignItems="center"
+      bg="background0"
       pointerEvents="box-none"
       position="relative"
       width={SWAP_BUTTON_CONTAINER_WIDTH}>
-      {/* SVG that follows the rounded shape of the swap button, placed below */}
-      <SwapTabButtonBg
-        bottom={TAB_NAVIGATOR_HEIGHT - SWAP_BUTTON_BG_HEIGHT}
-        color={appTheme.colors.background0}
-        position="absolute"
-      />
-      {/* Actual swap button with scale change */}
       <TapGestureHandler onGestureEvent={onGestureEvent}>
         <AnimatedBox
           alignItems="center"
-          backgroundColor="userThemeMagenta"
           height={SWAP_BUTTON_HEIGHT}
           justifyContent="center"
           position="absolute"
-          style={[styles.swapButton, animatedStyle]}
+          shadowColor="shadowBranded"
+          shadowOffset={SWAP_BUTTON_SHADOW_OFFSET}
+          shadowOpacity={0.5}
+          shadowRadius={20}
+          style={[animatedStyle]}
           top={-1 * (TAB_NAVIGATOR_HEIGHT - SWAP_BUTTON_HEIGHT + theme.spacing.xxxs)}
           width={SWAP_BUTTON_WIDTH}>
+          <Box
+            borderRadius="xxxl"
+            bottom={0}
+            left={0}
+            overflow="hidden"
+            position="absolute"
+            right={0}
+            top={0}>
+            <Svg height="100%" width="100%">
+              <Defs>
+                <LinearGradient id="background" x1="0%" x2="0%" y1="0%" y2="100%">
+                  <Stop offset="0" stopColor="#F160F9" stopOpacity="1" />
+                  <Stop offset="1" stopColor="#FB36D0" stopOpacity="1" />
+                </LinearGradient>
+              </Defs>
+              <Rect fill="url(#background)" height="100%" opacity={1} width="100%" x="0" y="0" />
+            </Svg>
+          </Box>
           <Text color="textOnBrightPrimary" variant="buttonLabelMedium">
             {t('Swap')}
           </Text>
@@ -138,25 +149,4 @@ export const SwapTabBarButton = memo(({ activeScale = 0.95 }: PressableScale) =>
       </TapGestureHandler>
     </Box>
   )
-})
-
-/** SVG that follows the rounded shape of the swap button to create an edge, and make it "float". */
-const SwapTabButtonBg = memo(
-  ({
-    color,
-    width = SWAP_BUTTON_BG_WIDTH,
-    ...props
-  }: { color: string; width?: number } & ComponentProps<typeof Box>) => {
-    return (
-      <Box {...props}>
-        <SwapTabButtonBgSVG color={color} width={width} />
-      </Box>
-    )
-  }
-)
-
-const styles = StyleSheet.create({
-  swapButton: {
-    borderRadius: 100,
-  },
 })

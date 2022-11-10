@@ -109,27 +109,15 @@ function TabNavigator() {
           alignItems: 'center',
           paddingBottom: 0,
           backgroundColor: 'textPrimary',
-          borderTopWidth: 0,
+          borderTopWidth: 1,
           display: 'flex',
+          borderTopColor: theme.colors.background3,
           height: TAB_NAVIGATOR_HEIGHT,
           justifyContent: 'center',
         },
       }}
       tabBar={(props) => (
-        <Box
-          bottom={0}
-          left={0}
-          position="absolute"
-          right={0}
-          shadowColor="backgroundOutline"
-          // adds a consistent shadow across tab bar
-          shadowOffset={{ width: 0, height: 0 }}
-          shadowOpacity={1}
-          shadowRadius={1}>
-          {/* given the tab bar has a transparent background, and tab bar buttons have their own background (solid, or
-          svg for center button), we need to add a background to the safe area on iOS  */}
-          <Box bg="background0" bottom={0} height={20} left={0} position="absolute" right={0} />
-
+        <Box bottom={0} left={0} position="absolute" right={0}>
           <BottomTabBar {...props} />
         </Box>
       )}>
@@ -137,9 +125,6 @@ function TabNavigator() {
         component={HomeStackNavigator}
         name={Tabs.Home}
         options={{
-          tabBarItemStyle: {
-            backgroundColor: theme.colors.background0,
-          },
           tabBarLabel: t('Home'),
           tabBarIcon: ({ focused, color }) => (
             <TabBarButton
@@ -164,7 +149,6 @@ function TabNavigator() {
         component={ExploreStackNavigator}
         name={Tabs.Explore}
         options={{
-          tabBarItemStyle: { backgroundColor: theme.colors.background0 },
           tabBarLabel: t('Explore'),
           tabBarShowLabel: false,
           tabBarIcon: ({ focused, color }) => (
