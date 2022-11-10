@@ -13,10 +13,9 @@ import { CollectionAsset } from 'nft/components/collection/CollectionAsset'
 import * as styles from 'nft/components/collection/CollectionNfts.css'
 import { SortDropdown } from 'nft/components/common/SortDropdown'
 import { Center, Column, Row } from 'nft/components/Flex'
-import { NonRarityIcon, RarityIcon, SweepIcon } from 'nft/components/icons'
+import { SweepIcon } from 'nft/components/icons'
 import { bodySmall, buttonTextMedium, headlineMedium } from 'nft/css/common.css'
 import { loadingAsset } from 'nft/css/loading.css'
-import { vars } from 'nft/css/sprinkles.css'
 import {
   CollectionFilters,
   initialCollectionFilterState,
@@ -52,8 +51,6 @@ interface CollectionNftsProps {
 }
 
 const rarityStatusCache = new Map<string, boolean>()
-const nonRarityIcon = <NonRarityIcon width="20" height="20" viewBox="2 2 22 22" color={vars.color.blue400} />
-const rarityIcon = <RarityIcon width="20" height="20" viewBox="2 2 24 24" color={vars.color.blue400} />
 
 const ActionsContainer = styled.div`
   display: flex;
@@ -201,14 +198,12 @@ export const getSortDropdownOptions = (setSortBy: (sortBy: SortBy) => void, hasR
     {
       displayText: 'Price: Low to High',
       onClick: () => setSortBy(SortBy.LowToHigh),
-      icon: nonRarityIcon,
       reverseIndex: 2,
       sortBy: SortBy.LowToHigh,
     },
     {
       displayText: 'Price: High to Low',
       onClick: () => setSortBy(SortBy.HighToLow),
-      icon: nonRarityIcon,
       reverseIndex: 1,
       sortBy: SortBy.HighToLow,
     },
@@ -218,14 +213,12 @@ export const getSortDropdownOptions = (setSortBy: (sortBy: SortBy) => void, hasR
         {
           displayText: 'Rarity: Rare to Common',
           onClick: () => setSortBy(SortBy.RareToCommon),
-          icon: rarityIcon,
           reverseIndex: 4,
           sortBy: SortBy.RareToCommon,
         },
         {
           displayText: 'Rarity: Common to Rare',
           onClick: () => setSortBy(SortBy.CommonToRare),
-          icon: rarityIcon,
           reverseIndex: 3,
           sortBy: SortBy.CommonToRare,
         },
