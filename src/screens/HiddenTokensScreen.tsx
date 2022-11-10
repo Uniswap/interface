@@ -6,11 +6,14 @@ import { useAppSelector } from 'src/app/hooks'
 import { AppStackParamList } from 'src/app/navigation/types'
 import { Box, Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
+import { BaseCard } from 'src/components/layout/BaseCard'
 import { Screen } from 'src/components/layout/Screen'
+import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { EMPTY_ARRAY } from 'src/constants/misc'
+import { isNonPollingRequestInFlight } from 'src/data/utils'
 import { useSortedPortfolioBalances } from 'src/features/dataApi/balances'
 import { PortfolioBalance } from 'src/features/dataApi/types'
 import {
@@ -32,7 +35,11 @@ export function HiddenTokensScreen({
   const hideSmallBalances = useAppSelector(makeSelectAccountHideSmallBalances(address))
   const hideSpamTokens = useAppSelector(makeSelectAccountHideSpamTokens(address))
 
-  const { data } = useSortedPortfolioBalances(address, hideSmallBalances, hideSpamTokens)
+  const { data, networkStatus, refetch } = useSortedPortfolioBalances(
+    address,
+    hideSmallBalances,
+    hideSpamTokens
+  )
 
   const onPressToken = useCallback(
     (currencyId: CurrencyId) => {
@@ -57,31 +64,41 @@ export function HiddenTokensScreen({
     ]
   }, [t, data])
 
-  // TODO: add loading state here
-  if (!data) return null
-
   return (
     <Screen>
       <BackHeader p="md">
         <Text variant="bodyLarge">{t('Hidden tokens')}</Text>
       </BackHeader>
-      <Box flex={1} px="sm">
-        <SectionList
-          keyExtractor={key}
-          renderItem={({ item }: { item: PortfolioBalance }) => (
-            <TokenBalanceItem
-              portfolioBalance={item}
-              onPressToken={onPressToken}
-              onPressTokenIn={onPressTokenIn}
+      <Box flex={1} px="lg">
+        {!data ? (
+          isNonPollingRequestInFlight(networkStatus) ? (
+            <Loading repeat={4} type="token" />
+          ) : (
+            <BaseCard.ErrorState
+              retryButtonLabel="Retry"
+              title={t("Couldn't load token balances")}
+              onRetry={() => refetch?.()}
             />
-          )}
-          renderSectionHeader={({ section: { title, items } }) =>
-            items?.length > 0 ? <SectionHeader title={title} /> : null
-          }
-          sections={sections}
-          showsVerticalScrollIndicator={false}
-          windowSize={5}
-        />
+          )
+        ) : (
+          <SectionList
+            keyExtractor={key}
+            renderItem={({ item }: { item: PortfolioBalance }) => (
+              <TokenBalanceItem
+                isWarmLoading={false}
+                portfolioBalance={item}
+                onPressToken={onPressToken}
+                onPressTokenIn={onPressTokenIn}
+              />
+            )}
+            renderSectionHeader={({ section: { title, items } }) =>
+              items?.length > 0 ? <SectionHeader title={title} /> : null
+            }
+            sections={sections}
+            showsVerticalScrollIndicator={false}
+            windowSize={5}
+          />
+        )}
       </Box>
     </Screen>
   )

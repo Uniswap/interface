@@ -78,7 +78,7 @@ export function TokenBalanceList({
   if (!data) {
     if (isNonPollingRequestInFlight(networkStatus)) {
       return (
-        <Box m="sm" style={loadingContainerStyle}>
+        <Box my="sm" style={loadingContainerStyle}>
           <Loading repeat={4} type="token" />
         </Box>
       )
@@ -102,12 +102,14 @@ export function TokenBalanceList({
     <AnimatedFlatList
       ListEmptyComponent={
         <>
-          <HiddenTokensRow address={owner} my="md" numHidden={numHiddenTokens} />
+          <HiddenTokensRow address={owner} mt="xs" numHidden={numHiddenTokens} />
           {empty}
         </>
       }
       ListFooterComponent={
-        <HiddenTokensRow address={owner} mb="xl" mt="sm" numHidden={numHiddenTokens} />
+        balances.length > 0 ? (
+          <HiddenTokensRow address={owner} mb="xl" mt="sm" numHidden={numHiddenTokens} />
+        ) : null
       }
       ListHeaderComponent={
         isError(networkStatus, !!data) ? (
@@ -161,7 +163,7 @@ function HiddenTokensRow({
 
   return (
     <TouchableArea onPress={onPressHiddenTokens} {...props}>
-      <Flex row justifyContent="space-between" mx="xs">
+      <Flex row justifyContent="space-between">
         <Text color="textSecondary" variant="subheadSmall">
           {t('Hidden ({{numHidden}})', { numHidden })}
         </Text>
