@@ -31,7 +31,7 @@ export const usePersistedApolloClient = () => {
           Query: {
             fields: {
               // relayStylePagination function unfortunately generates a field policy that ignores args
-              nftBalances: relayStylePagination(),
+              nftBalances: relayStylePagination(['ownerAddress']),
             },
           },
         },

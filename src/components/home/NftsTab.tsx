@@ -78,7 +78,6 @@ export function NftsTab({
     variables: { ownerAddress: owner, first: 30 },
     notifyOnNetworkStatusChange: true, // Used to trigger network state / loading on refetch or fetchMore
     errorPolicy: 'all', // Suppress non-null image.url fields from backend
-    fetchPolicy: 'network-only', // Ensure we pull from network to prevent weird issues when switching accounts and cache conflicts
   })
 
   useEffect(() => {
