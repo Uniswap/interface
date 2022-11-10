@@ -148,6 +148,7 @@ export const enum LogContext {
   ProviderManager = 'ProviderManager',
   SecurityConcern = 'SecurityConcern',
   Share = 'Share',
+  TokenModel = 'TokenModel',
   ValidateAddress = 'ValidateAddress',
   // alphabetize additional values.
 }

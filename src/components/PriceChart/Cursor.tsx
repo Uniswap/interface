@@ -17,7 +17,7 @@ import {
   AnimatedTranslation,
   GraphMetadatas,
 } from 'src/components/PriceChart/types'
-import { HEIGHT } from 'src/components/PriceChart/utils'
+import { CHART_HEIGHT } from 'src/components/PriceChart/utils'
 
 const CURSOR_INNER_SIZE = 12
 const CURSOR_SIZE = CURSOR_INNER_SIZE + 6
@@ -103,7 +103,7 @@ export const Cursor = ({ graphs, index, isActive, translation }: CursorProps) =>
             borderRadius="xs"
             borderStyle="dashed"
             borderWidth={1}
-            height={HEIGHT}
+            height={CHART_HEIGHT}
             style={[verticalLineAnimatedStyles, StyleSheet.absoluteFill]}
             width={LINE_WIDTH}
           />

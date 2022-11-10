@@ -2,10 +2,12 @@ import { scaleLinear } from 'd3-scale'
 import { curveBasis, line } from 'd3-shape'
 import { getYForX, parse, Path } from 'react-native-redash'
 import { GraphData, PriceList } from 'src/components/PriceChart/types'
+import { logException } from 'src/features/telemetry'
+import { LogContext } from 'src/features/telemetry/constants'
 import { dimensions } from 'src/styles/sizing'
 
-export const HEIGHT = 180
-export const WIDTH = dimensions.fullWidth
+export const CHART_HEIGHT = 300
+export const CHART_WIDTH = dimensions.fullWidth
 
 export const NUM_GRAPHS = 5
 // number of points in graph
@@ -51,8 +53,8 @@ export function normalizePath(path: Path, precision: number, width: number): Pat
 export function buildGraph(
   priceList: NullUndefined<PriceList>,
   precision: number,
-  width = WIDTH,
-  height = HEIGHT
+  width = CHART_WIDTH,
+  height = CHART_HEIGHT
 ): GraphData | null {
   if (!priceList || priceList.length === 0) return null
   priceList = priceList.slice().reverse()
@@ -76,25 +78,30 @@ export function buildGraph(
   const scaleX = scaleLinear().domain([openDate, closeDate]).range([0, width])
   const scaleY = scaleLinear().domain([lowPrice, highPrice]).range([height, 0])
 
-  // normalize brings all paths to the same precision (number of points)
-  const path = normalizePath(
-    parse(
-      line()
-        .x(([x]) => scaleX(x) as number)
-        .y(([, y]) => scaleY(y) as number)
-        .curve(curveBasis)(formattedValues) as string
-    ),
-    precision,
-    width
-  )
+  try {
+    // normalize brings all paths to the same precision (number of points)
+    const path = normalizePath(
+      parse(
+        line()
+          .x(([x]) => scaleX(x) as number)
+          .y(([, y]) => scaleY(y) as number)
+          .curve(curveBasis)(formattedValues) as string
+      ),
+      precision,
+      width
+    )
 
-  return {
-    openDate,
-    closeDate,
-    lowPrice,
-    highPrice,
-    openPrice,
-    closePrice,
-    path,
+    return {
+      openDate,
+      closeDate,
+      lowPrice,
+      highPrice,
+      openPrice,
+      closePrice,
+      path,
+    }
+  } catch (e: any) {
+    logException(LogContext.TokenModel, `Error while normalizing path. ${formattedValues}`)
+    return null
   }
 }

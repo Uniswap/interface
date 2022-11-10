@@ -8,9 +8,9 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
+import Wave from 'src/assets/backgrounds/wave.svg'
 import { Flex } from 'src/components/layout'
-import { HEIGHT } from 'src/components/PriceChart/utils'
-import Wave from './wave.svg'
+import { CHART_HEIGHT } from 'src/components/PriceChart/utils'
 
 const WAVE_WIDTH = 416
 const WAVE_DURATION = 2000
@@ -35,7 +35,13 @@ export function WaveLoader() {
   }))
 
   return (
-    <Flex row alignItems="center" flexGrow={1} gap="none" height={HEIGHT} justifyContent="center">
+    <Flex
+      row
+      alignItems="center"
+      flexGrow={1}
+      gap="none"
+      height={CHART_HEIGHT}
+      justifyContent="center">
       <Animated.View style={[StyleSheet.absoluteFill, animatedStyle]}>
         <Flex row alignItems="center" flexGrow={1} gap="none" height="100%" justifyContent="center">
           <Wave color={theme.colors.background3} />

@@ -1,5 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { PriceChartLabel } from 'src/components/PriceChart/PriceChartLabels'
 import { GraphMetadatas } from 'src/components/PriceChart/types'
 import { buildGraph, GRAPH_PRECISION } from 'src/components/PriceChart/utils'
@@ -15,12 +15,17 @@ export function useTokenPriceGraphs(token: Token): GqlResult<GraphMetadatas> {
     data: priceData,
     loading,
     error,
+    refetch,
   } = useTokenPriceChartsQuery({
     variables: {
       contract: currencyIdToContractInput(currencyId(token)),
     },
     pollInterval: PollingInterval.Normal,
   })
+
+  const retry = useCallback(() => {
+    refetch({ contract: currencyIdToContractInput(currencyId(token)) })
+  }, [refetch, token])
 
   const formattedData = useMemo(() => {
     if (!priceData) {
@@ -72,5 +77,5 @@ export function useTokenPriceGraphs(token: Token): GqlResult<GraphMetadatas> {
     return graphs as GraphMetadatas
   }, [priceData])
 
-  return { data: formattedData, loading, error }
+  return { data: formattedData, loading, error, refetch: retry }
 }

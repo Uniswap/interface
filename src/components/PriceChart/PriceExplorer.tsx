@@ -17,12 +17,12 @@ import { Cursor } from 'src/components/PriceChart/Cursor'
 import { PriceHeader } from 'src/components/PriceChart/PriceHeader'
 import { TimeRangeLabel } from 'src/components/PriceChart/TimeRangeLabel'
 import { GraphMetadatas } from 'src/components/PriceChart/types'
-import { HEIGHT, NUM_GRAPHS, WIDTH } from 'src/components/PriceChart/utils'
+import { CHART_HEIGHT, CHART_WIDTH, NUM_GRAPHS } from 'src/components/PriceChart/utils'
 
 const AnimatedPath = Animated.createAnimatedComponent(Path)
 
 export const BUTTON_PADDING = 20
-export const BUTTON_WIDTH = WIDTH / NUM_GRAPHS
+export const BUTTON_WIDTH = CHART_WIDTH / NUM_GRAPHS
 export const LABEL_WIDTH = BUTTON_WIDTH - BUTTON_PADDING * 2
 
 interface GraphProps {
@@ -79,7 +79,7 @@ export const PriceExplorer = ({
     if (isPanning.value) {
       return interpolate(
         translation.y.value,
-        [0, HEIGHT],
+        [0, CHART_HEIGHT],
         [currentIndexData.value.highPrice, currentIndexData.value.lowPrice]
       )
     }
@@ -106,7 +106,7 @@ export const PriceExplorer = ({
 
     const unix = interpolate(
       translation.x.value,
-      [0, WIDTH],
+      [0, CHART_WIDTH],
       [currentIndexData.value.openDate, currentIndexData.value.closeDate]
     )
 
@@ -117,7 +117,7 @@ export const PriceExplorer = ({
     <Box>
       <PriceHeader date={date} percentChange={percentChange} price={price} />
       <Box my="lg">
-        <Svg height={HEIGHT} width={WIDTH}>
+        <Svg height={CHART_HEIGHT} width={CHART_WIDTH}>
           <AnimatedPath
             animatedProps={graphTransitionAnimatedProps}
             fill="transparent"
@@ -139,7 +139,7 @@ export const PriceExplorer = ({
           translation={translation}
         />
       </Box>
-      <Box alignSelf="center" flexDirection="row" width={WIDTH}>
+      <Box alignSelf="center" flexDirection="row" width={CHART_WIDTH}>
         <View style={StyleSheet.absoluteFill}>
           <AnimatedBox
             bg="background3"

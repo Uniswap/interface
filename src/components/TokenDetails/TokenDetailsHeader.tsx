@@ -23,7 +23,7 @@ export function TokenDetailsHeader({
 }: TokenDetailsHeaderProps) {
   const { t } = useTranslation()
   return (
-    <Flex mx="sm">
+    <Flex mx="md">
       <CurrencyLogo currency={currency} />
       <Flex row alignItems="center" gap="xs">
         <Text color="textPrimary" numberOfLines={1} style={flex.shrink} variant="subheadLarge">
