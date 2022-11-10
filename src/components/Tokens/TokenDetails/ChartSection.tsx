@@ -1,112 +1,77 @@
-import { Trans } from '@lingui/macro'
-import { Currency, NativeCurrency, Token } from '@uniswap/sdk-core'
 import { ParentSize } from '@visx/responsive'
-import CurrencyLogo from 'components/CurrencyLogo'
-import { getChainInfo } from 'constants/chainInfo'
-import { TokenQueryData } from 'graphql/data/Token'
-import { PriceDurations } from 'graphql/data/TokenPrice'
-import { TopToken } from 'graphql/data/TopTokens'
-import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
+import { ChartContainer, LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
+import { TokenPriceQuery, tokenPriceQuery } from 'graphql/data/TokenPrice'
+import { isPricePoint, PricePoint } from 'graphql/data/util'
+import { TimePeriod } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
-import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
-import styled from 'styled-components/macro'
-import { textFadeIn } from 'theme/animations'
+import { startTransition, Suspense, useMemo, useState } from 'react'
+import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
 
 import { filterTimeAtom } from '../state'
-import { L2NetworkLogo, LogoContainer } from '../TokenTable/TokenRow'
 import PriceChart from './PriceChart'
-import ShareButton from './ShareButton'
+import TimePeriodSelector from './TimeSelector'
 
-export const ChartHeader = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  color: ${({ theme }) => theme.textPrimary};
-  gap: 4px;
-  margin-bottom: 24px;
-`
-export const TokenInfoContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`
-export const ChartContainer = styled.div`
-  display: flex;
-  height: 436px;
-  align-items: center;
-`
-export const TokenNameCell = styled.div`
-  display: flex;
-  gap: 8px;
-  font-size: 20px;
-  line-height: 28px;
-  align-items: center;
-  ${textFadeIn}
-`
-const TokenSymbol = styled.span`
-  text-transform: uppercase;
-  color: ${({ theme }) => theme.textSecondary};
-`
-const TokenActions = styled.div`
-  display: flex;
-  gap: 16px;
-  color: ${({ theme }) => theme.textSecondary};
-`
+function usePreloadedTokenPriceQuery(priceQueryReference: PreloadedQuery<TokenPriceQuery>): PricePoint[] | undefined {
+  const queryData = usePreloadedQuery(tokenPriceQuery, priceQueryReference)
 
-export function useTokenLogoURI(
-  token: NonNullable<TokenQueryData> | NonNullable<TopToken>,
-  nativeCurrency?: Token | NativeCurrency
-) {
-  const chainId = CHAIN_NAME_TO_CHAIN_ID[token.chain]
-  return [
-    ...useCurrencyLogoURIs(nativeCurrency),
-    ...useCurrencyLogoURIs({ ...token, chainId }),
-    token.project?.logoUrl,
-  ][0]
+  // Appends the current price to the end of the priceHistory array
+  const priceHistory = useMemo(() => {
+    const market = queryData.tokens?.[0]?.market
+    const priceHistory = market?.priceHistory?.filter(isPricePoint)
+    const currentPrice = market?.price?.value
+    if (Array.isArray(priceHistory) && currentPrice !== undefined) {
+      const timestamp = Date.now() / 1000
+      return [...priceHistory, { timestamp, value: currentPrice }]
+    }
+    return priceHistory
+  }, [queryData])
+
+  return priceHistory
 }
-
 export default function ChartSection({
-  token,
-  currency,
-  nativeCurrency,
-  prices,
+  priceQueryReference,
+  refetchTokenPrices,
 }: {
-  token: NonNullable<TokenQueryData>
-  currency?: Currency | null
-  nativeCurrency?: Token | NativeCurrency
-  prices?: PriceDurations
+  priceQueryReference: PreloadedQuery<TokenPriceQuery> | null | undefined
+  refetchTokenPrices: RefetchPricesFunction
 }) {
-  const chainId = CHAIN_NAME_TO_CHAIN_ID[token.chain]
-  const L2Icon = getChainInfo(chainId)?.circleLogoUrl
-  const timePeriod = useAtomValue(filterTimeAtom)
-
-  const logoSrc = useTokenLogoURI(token, nativeCurrency)
+  if (!priceQueryReference) {
+    return <LoadingChart />
+  }
 
   return (
-    <ChartHeader>
-      <TokenInfoContainer>
-        <TokenNameCell>
-          <LogoContainer>
-            <CurrencyLogo
-              src={logoSrc}
-              size={'32px'}
-              symbol={nativeCurrency?.symbol ?? token.symbol}
-              currency={nativeCurrency ? undefined : currency}
-            />
-            <L2NetworkLogo networkUrl={L2Icon} size={'16px'} />
-          </LogoContainer>
-          {nativeCurrency?.name ?? token.name ?? <Trans>Name not found</Trans>}
-          <TokenSymbol>{nativeCurrency?.symbol ?? token.symbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
-        </TokenNameCell>
-        <TokenActions>
-          {token.name && token.symbol && token.address && <ShareButton token={token} isNative={!!nativeCurrency} />}
-        </TokenActions>
-      </TokenInfoContainer>
+    <Suspense fallback={<LoadingChart />}>
       <ChartContainer>
-        <ParentSize>
-          {({ width }) => <PriceChart prices={prices ? prices?.[timePeriod] : null} width={width} height={436} />}
-        </ParentSize>
+        <Chart priceQueryReference={priceQueryReference} refetchTokenPrices={refetchTokenPrices} />
       </ChartContainer>
-    </ChartHeader>
+    </Suspense>
+  )
+}
+
+export type RefetchPricesFunction = (t: TimePeriod) => void
+function Chart({
+  priceQueryReference,
+  refetchTokenPrices,
+}: {
+  priceQueryReference: PreloadedQuery<TokenPriceQuery>
+  refetchTokenPrices: RefetchPricesFunction
+}) {
+  const prices = usePreloadedTokenPriceQuery(priceQueryReference)
+  // Initializes time period to global & maintain separate time period for subsequent changes
+  const [timePeriod, setTimePeriod] = useState(useAtomValue(filterTimeAtom))
+
+  return (
+    <ChartContainer>
+      <ParentSize>
+        {({ width }) => <PriceChart prices={prices ?? null} width={width} height={436} timePeriod={timePeriod} />}
+      </ParentSize>
+      <TimePeriodSelector
+        currentTimePeriod={timePeriod}
+        onTimeChange={(t: TimePeriod) => {
+          startTransition(() => refetchTokenPrices(t))
+          setTimePeriod(t)
+        }}
+      />
+    </ChartContainer>
   )
 }
