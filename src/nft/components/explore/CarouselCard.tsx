@@ -223,16 +223,19 @@ export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
             <HeaderRow>Uniswap</HeaderRow>
             <HeaderRow>{formatWeiToDecimal(collection.floor.toString())} ETH Floor</HeaderRow>
             <HeaderRow>{gqlCollection.marketplaceCount?.reduce((acc, cur) => acc + cur.count, 0)} Listings</HeaderRow>
-            {MARKETS_TO_CHECK.map((market, index) => {
+            {MARKETS_TO_CHECK.map((market) => {
               const marketplace = gqlCollection.marketplaceCount?.find(
                 (marketplace) => marketplace.marketplace === market
               )
+              if (!marketplace) {
+                return null
+              }
               return (
                 <MarketplaceRow
-                  key={`CarouselCard-key-${collection.address}-${marketplace?.marketplace ?? index}`}
+                  key={`CarouselCard-key-${collection.address}-${marketplace.marketplace}`}
                   marketplace={MARKETS_ENUM_TO_NAME[market]}
-                  listings={marketplace?.count?.toString()}
-                  floor={marketplace?.floorPrice?.toString()}
+                  listings={marketplace.count.toString()}
+                  floor={marketplace.floorPrice.toString()}
                 />
               )
             })}
