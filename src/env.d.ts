@@ -14,8 +14,6 @@ declare module 'react-native-dotenv' {
   export const INFURA_PROJECT_ID: string
   export const LOG_BUFFER_SIZE: string
   export const SENTRY_DSN: string
-  export const SHAKE_CLIENT_ID: string
-  export const SHAKE_CLIENT_SECRET: string
   export const VERSION: string
   export const ONESIGNAL_APP_ID: string
 }

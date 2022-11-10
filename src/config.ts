@@ -10,8 +10,6 @@ import {
   LOG_BUFFER_SIZE,
   ONESIGNAL_APP_ID,
   SENTRY_DSN,
-  SHAKE_CLIENT_ID,
-  SHAKE_CLIENT_SECRET,
   UNISWAP_API_BASE_URL,
   UNISWAP_API_KEY,
   UNISWAP_APP_URL,
@@ -37,8 +35,6 @@ export interface Config {
   logBufferSize: number
   onesignalAppId: string
   sentryDsn: string
-  shakeClientId: string
-  shakeClientSecret: string
   version: string
 }
 
@@ -58,8 +54,6 @@ const _config: Config = {
   logBufferSize: parseInt(LOG_BUFFER_SIZE, 10),
   onesignalAppId: process.env.ONESIGNAL_APP_ID || ONESIGNAL_APP_ID,
   sentryDsn: process.env.SENTRY_DSN || SENTRY_DSN,
-  shakeClientId: process.env.SHAKE_CLIENT_ID || SHAKE_CLIENT_ID,
-  shakeClientSecret: process.env.SHAKE_CLIENT_SECRET || SHAKE_CLIENT_SECRET,
   version: VERSION,
 }
 

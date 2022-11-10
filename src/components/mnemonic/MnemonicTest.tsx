@@ -1,5 +1,4 @@
-import Shake from '@shakebugs/react-native-shake'
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 import { requireNativeComponent, ViewProps } from 'react-native'
 import { dimensions } from 'src/styles/sizing'
 
@@ -25,19 +24,10 @@ const mnemonicTestStyle = (shouldShowSmallVersion: boolean) => {
 }
 
 export function MnemonicTest(props: MnemonicTestProps) {
-  const ref = useRef(null)
   const shouldShowSmallText = dimensions.fullHeight < 700
-
-  // Make sure that the input portion of the screen is not included in the ShakeBug screencapture
-  useEffect(() => {
-    if (ref.current) {
-      Shake.addPrivateView(ref.current)
-    }
-  }, [])
 
   return (
     <NativeMnemonicTest
-      ref={ref}
       shouldShowSmallText={shouldShowSmallText}
       style={mnemonicTestStyle(shouldShowSmallText)}
       {...props}
