@@ -29,6 +29,10 @@ export function initializeAnalytics() {
         region: false,
         dma: false, // designated market area
       },
+      // Configure the SDK to use batched events (to reduce network contention)
+      // by grouping events from the same render cycle
+      flushIntervalMillis: 50, // assuming 20fps renders
+      useBatch: true,
     }
   )
 }
