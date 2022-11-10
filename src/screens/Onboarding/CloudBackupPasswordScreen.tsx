@@ -27,7 +27,7 @@ export function CloudBackupPasswordScreen({ navigation }: Props) {
   return (
     <SafeKeyboardOnboardingScreen
       subtitle={t(
-        'Setting a password will encrypt your recovery phrase backup, adding an extra level of protection if your iCloud account is ever compromised.'
+        'Setting a password will encrypt your recovery phrase backup. You’ll need to enter this when restoring your wallet.'
       )}
       title={t('Create your backup password')}>
       <CloudBackupSetPassword doneButtonText={t('Continue')} onPressDone={onPressNext} />

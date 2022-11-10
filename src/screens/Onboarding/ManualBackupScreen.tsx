@@ -74,8 +74,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
       return (
         <OnboardingScreen
           paddingTop="xs"
-          subtitle={t('Keep the following steps in mind before backing up your recovery phrase:')}
-          title={t('Back up manually')}>
+          title={t('Instructions for backing up your recovery phrase')}>
           <WarningModal
             caption={t(
               'Uniswap Labs can’t restore lost recovery phrases. This is why it’s important to back up your recovery phrase.'
@@ -106,10 +105,10 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
       return (
         <OnboardingScreen
           subtitle={t('Remember to record your words in the same order as they appear below.')}
-          title={t('Write down your recovery phrase')}>
+          title={t('Write down your recovery phrase in order')}>
           <WarningModal
             caption={t(
-              'Storing your recovery phrase as a screenshot is easy, but it allows anyone with access to your device access to your wallet. We encourage you to delete the screenshot and write down your recovery phrase instead.'
+              'Anyone who gains access to your photos can access your wallet. We recommend that you write down your words instead.'
             )}
             confirmText={t('OK')}
             isVisible={showScreenShotWarningModal}
@@ -131,9 +130,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
     case View.Test:
       return (
         <OnboardingScreen
-          subtitle={t(
-            'Confirm that you correctly wrote down your recovery phrase. If your phrase is 12 words, select the missing words to continue.'
-          )}
+          subtitle={t('Select the missing words in order.')}
           title={t('Confirm your recovery phrase')}>
           <Flex grow>
             <MnemonicTest

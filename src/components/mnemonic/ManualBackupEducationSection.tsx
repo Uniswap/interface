@@ -26,15 +26,13 @@ export function ManualBackupEducationSection() {
           />
         }
         label={t('Write it down in private')}
-        sublabel={t(
-          "Ensure that you're in a private location and write down your recovery phrase's words in order."
-        )}
+        sublabel={t('Make sure your phrase isn’t seen by anyone.')}
       />
       {spacer}
       <EducationRow
         icon={<LockIcon color={theme.colors.accentBranded} height={ICON_SIZE} width={ICON_SIZE} />}
         label={t('Keep it somewhere safe')}
-        sublabel={t('Remember that anyone who has your recovery phrase can access your wallet.')}
+        sublabel={t('Anyone who finds it can access your wallet.')}
       />
       {spacer}
       <EducationRow
@@ -47,9 +45,7 @@ export function ManualBackupEducationSection() {
           />
         }
         label={t("Don't lose it")}
-        sublabel={t(
-          'If you lose your recovery phrase, you’ll lose access to your wallet and its contents.'
-        )}
+        sublabel={t('If you do, you won’t be able to recover your assets.')}
       />
     </Flex>
   )

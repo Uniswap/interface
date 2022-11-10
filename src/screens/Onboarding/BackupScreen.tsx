@@ -70,7 +70,7 @@ export function BackupScreen({ navigation, route: { params } }: Props) {
   return (
     <OnboardingScreen
       subtitle={t(
-        'You can use your recovery phrase to restore your wallet on another app or device. We recommend backing it up both manually and to iCloud.'
+        'Backups let you restore your wallet if you lose or damage your device. We recommend both backup types.'
       )}
       title={t('Back up your recovery phrase')}>
       <Flex grow>
@@ -118,7 +118,7 @@ function BackupOptions({
   return (
     <Flex gap="xs">
       <BackupOptionButton
-        caption={t('Easily restore your wallet by backing up your recovery phrase to your iCloud.')}
+        caption={t('Back your phrase up to iCloud and encrypt it with a password.')}
         completed={backupMethods?.includes(BackupType.Cloud)}
         icon={
           <Flex
@@ -157,7 +157,7 @@ function BackupOptions({
         }}
       />
       <BackupOptionButton
-        caption={t('Write down your recovery phrase and store it in a safe yet memorable place.')}
+        caption={t('Write your phrase down and store it in a safe place.')}
         completed={backupMethods?.includes(BackupType.Manual)}
         icon={
           <Flex

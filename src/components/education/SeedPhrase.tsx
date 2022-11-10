@@ -49,8 +49,8 @@ export const SeedPhraseEducationContent = () => [
     text={
       <Text fontSize={28} lineHeight={34} variant="headlineMedium">
         <Trans>
-          A recovery phrase is a set of 12 unique words that you can use to access to your wallet—
-          <Text color="accentAction">it's like your wallet's secret password.</Text>
+          A recovery phrase (or seed phrase) is a <Text color="accentAction">set of words</Text>{' '}
+          required to access your wallet, <Text color="accentAction">like a password.</Text>
         </Trans>
       </Text>
     }
@@ -59,11 +59,8 @@ export const SeedPhraseEducationContent = () => [
     text={
       <Text fontSize={28} lineHeight={34} variant="headlineMedium">
         <Trans>
-          You can{' '}
-          <Text color="accentAction">
-            enter your recovery phrase on a new device to recover your wallet
-          </Text>{' '}
-          and access your funds.
+          You can <Text color="accentAction">enter</Text> your recovery phrase on a new device{' '}
+          <Text color="accentAction">to restore your wallet</Text> and its contents.
         </Trans>
       </Text>
     }
@@ -72,9 +69,8 @@ export const SeedPhraseEducationContent = () => [
     text={
       <Text fontSize={28} lineHeight={34} variant="headlineMedium">
         <Trans>
-          Instead of memorizing your recovery phrase,{' '}
-          <Text color="accentAction">you can back it up to iCloud</Text> and protect it by setting a
-          password.
+          But, if you <Text color="accentAction">lose your recovery phrase</Text>, you’ll{' '}
+          <Text color="accentAction">lose access</Text> to your wallet.
         </Trans>
       </Text>
     }
@@ -83,9 +79,8 @@ export const SeedPhraseEducationContent = () => [
     text={
       <Text fontSize={28} lineHeight={34} variant="headlineMedium">
         <Trans>
-          You can also{' '}
-          <Text color="accentAction">manually back up your recovery phrase by writing it down</Text>{' '}
-          and storing it in a safe place.
+          Instead of memorizing your recovery phrase, you can{' '}
+          <Text color="accentAction">back it up to iCloud</Text> and protect it with a password.
         </Trans>
       </Text>
     }
@@ -94,10 +89,18 @@ export const SeedPhraseEducationContent = () => [
     text={
       <Text fontSize={28} lineHeight={34} variant="headlineMedium">
         <Trans>
-          We recommend using both types of backups, because{' '}
-          <Text color="accentAction">
-            if you lose all of your backups, you won’t be able to recover your wallet.
-          </Text>
+          You can also manually back up your recovery phrase by{' '}
+          <Text color="accentAction">writing it down</Text> and storing it in a safe place.
+        </Trans>
+      </Text>
+    }
+  />,
+  <Page
+    text={
+      <Text fontSize={28} lineHeight={34} variant="headlineMedium">
+        <Trans>
+          We recommend using <Text color="accentAction">both types of backups</Text>, because if you
+          lose your recovery phrase, you won’t be able to restore your wallet.
         </Trans>
       </Text>
     }

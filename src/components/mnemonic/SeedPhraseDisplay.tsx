@@ -91,7 +91,7 @@ export function SeedPhraseDisplay({ mnemonicId, onDismiss }: Props) {
       />
       <WarningModal
         caption={t(
-          'Storing your recovery phrase as a screenshot is easy, but it allows anyone with access to your device access to your wallet. We encourage you to delete the screenshot and write down your recovery phrase instead.'
+          'Anyone who gains access to your photos can access your wallet. We recommend that you write down your words instead.'
         )}
         confirmText={t('OK')}
         isVisible={showScreenShotWarningModal}
