@@ -136,6 +136,7 @@ export const SortDropdown = ({
         zIndex="3"
         width={inFilters ? 'auto' : 'inherit'}
         right={inFilters ? '16' : 'auto'}
+        paddingBottom="8"
         fontSize="14"
         background="backgroundInteractive"
         borderStyle="solid"
@@ -216,6 +217,11 @@ const DropDownItem = ({
       onClick={onClick}
       cursor="pointer"
     >
+      {option.icon && (
+        <Box width="20" height="20">
+          {option.icon}
+        </Box>
+      )}
       <Box marginLeft="8" className={buttonTextMedium}>
         {option.displayText}
       </Box>

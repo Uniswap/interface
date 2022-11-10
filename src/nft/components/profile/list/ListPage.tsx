@@ -306,17 +306,14 @@ const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingMarket[]
       {
         displayText: 'Same price',
         onClick: () => setGlobalPriceMethod(SetPriceMethod.SAME_PRICE),
-        icon: <SamePriceIcon />,
       },
       {
         displayText: 'Floor price',
         onClick: () => setGlobalPriceMethod(SetPriceMethod.FLOOR_PRICE),
-        icon: <FloorPriceIcon />,
       },
       {
         displayText: 'Prev. listing',
         onClick: () => setGlobalPriceMethod(SetPriceMethod.PREV_LISTING),
-        icon: <PrevListingIcon />,
       },
     ],
     []
