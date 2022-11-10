@@ -227,12 +227,15 @@ export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
               const marketplace = gqlCollection.marketplaceCount?.find(
                 (marketplace) => marketplace.marketplace === market
               )
+              if (!marketplace) {
+                return null
+              }
               return (
                 <MarketplaceRow
-                  key={'trendingCollection' + collection.address}
+                  key={`CarouselCard-key-${collection.address}-${marketplace.marketplace}`}
                   marketplace={MARKETS_ENUM_TO_NAME[market]}
-                  listings={marketplace?.count?.toString()}
-                  floor={marketplace?.floorPrice?.toString()}
+                  listings={marketplace.count.toString()}
+                  floor={marketplace.floorPrice.toString()}
                 />
               )
             })}

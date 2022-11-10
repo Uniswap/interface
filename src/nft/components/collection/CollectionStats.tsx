@@ -255,14 +255,19 @@ const StatsItem = ({ children, label, shouldHide }: { children: ReactNode; label
 }
 
 const statsLoadingSkeleton = (isMobile: boolean) =>
-  new Array(5).fill(
-    <>
-      <Box display="flex" flexDirection={isMobile ? 'row' : 'column'} alignItems="baseline" gap="2" height="min">
-        <div className={styles.statsLabelLoading} />
-        <span className={styles.statsValueLoading} />
-      </Box>
-    </>
-  )
+  new Array(5).fill(null).map((_, index) => (
+    <Box
+      display="flex"
+      flexDirection={isMobile ? 'row' : 'column'}
+      alignItems="baseline"
+      gap="2"
+      height="min"
+      key={`statsLoadingSkeleton-key-${index}`}
+    >
+      <div className={styles.statsLabelLoading} />
+      <span className={styles.statsValueLoading} />
+    </Box>
+  ))
 
 const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMobile?: boolean } & BoxProps) => {
   const uniqueOwnersPercentage = stats?.stats?.total_supply
