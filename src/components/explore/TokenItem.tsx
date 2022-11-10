@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
 import { FavoriteButton } from 'src/components/explore/FavoriteButton'
@@ -54,7 +54,6 @@ export const TokenItem = memo(
     isEditing,
   }: TokenItemProps) => {
     const { t } = useTranslation()
-    const theme = useAppTheme()
     const dispatch = useAppDispatch()
     const tokenDetailsNavigation = useTokenDetailsNavigation()
 
@@ -134,7 +133,7 @@ export const TokenItem = memo(
                     </Text>
                   </Box>
                 )}
-                <TokenLogo size={theme.imageSizes.xl} symbol={symbol} url={logoUrl} />
+                <TokenLogo symbol={symbol} url={logoUrl} />
               </Flex>
               <Flex alignItems="flex-start" flexShrink={1} gap="xxxs" marginLeft="xxs">
                 <Text adjustsFontSizeToFit numberOfLines={1} variant="bodyLarge">

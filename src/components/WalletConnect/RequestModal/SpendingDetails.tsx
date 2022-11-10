@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { CurrencyLogoOnly } from 'src/components/CurrencyLogo'
+import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
@@ -25,7 +25,7 @@ export function SpendingDetails({ value, chainId }: { value: string; chainId: Ch
         {t('Sending')}:
       </Text>
       <Flex row alignItems="center" gap="xxs">
-        <CurrencyLogoOnly currency={nativeCurrency} size={iconSizes.sm} />
+        <CurrencyLogo currency={nativeCurrency} size={iconSizes.sm} />
         <Text variant="bodySmall">
           {formatCurrencyAmount(nativeCurrencyAmount, NumberType.TokenTx)} {nativeCurrency.symbol}
         </Text>

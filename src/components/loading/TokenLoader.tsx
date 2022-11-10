@@ -2,7 +2,7 @@ import React from 'react'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { HiddenFromScreenReaders } from 'src/components/text/HiddenFromScreenReaders'
-import { theme } from 'src/styles/theme'
+import { iconSizes } from 'src/styles/sizing'
 
 interface TokenLoaderProps {
   opacity: number
@@ -17,12 +17,7 @@ export function TokenLoader({ opacity }: TokenLoaderProps) {
       justifyContent="space-between"
       opacity={opacity}
       overflow="hidden">
-      <Box
-        bg="background3"
-        borderRadius="full"
-        height={theme.imageSizes.xl}
-        width={theme.imageSizes.xl}
-      />
+      <Box bg="background3" borderRadius="full" height={iconSizes.xxxl} width={iconSizes.xxxl} />
       <Flex shrink alignItems="flex-start" gap="xs" width="100%">
         <Box bg="background3" borderRadius="xs" width="80%">
           <HiddenFromScreenReaders>

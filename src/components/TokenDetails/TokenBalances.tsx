@@ -1,6 +1,5 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppTheme } from 'src/app/hooks'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Flex } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
@@ -9,6 +8,7 @@ import { Text } from 'src/components/Text'
 import { PortfolioBalance } from 'src/features/dataApi/types'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount, useDisplayName } from 'src/features/wallet/hooks'
+import { iconSizes } from 'src/styles/sizing'
 import { formatNumber, NumberType } from 'src/utils/format'
 
 /**
@@ -92,11 +92,10 @@ export function CurrentChainBalance({
 }
 
 function OtherChainBalance({ balance }: { balance: PortfolioBalance }) {
-  const theme = useAppTheme()
   return (
     <Flex row alignItems="center" justifyContent="space-between">
       <Flex row alignItems="center" gap="xs">
-        <CurrencyLogo currency={balance.currencyInfo.currency} size={theme.imageSizes.xl} />
+        <CurrencyLogo currency={balance.currencyInfo.currency} size={iconSizes.xxl} />
         <Flex alignItems="center" gap="none">
           <Text variant="bodyLarge">
             {formatNumber(balance.balanceUSD, NumberType.FiatTokenDetails)}

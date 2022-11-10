@@ -2,6 +2,7 @@ import React, { ComponentProps } from 'react'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { Pill } from 'src/components/text/Pill'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
+import { iconSizes } from 'src/styles/sizing'
 import { useNetworkColors } from 'src/utils/colors'
 
 export type NetworkPillProps = {
@@ -26,7 +27,7 @@ export function NetworkPill({
       customBackgroundColor={showBackgroundColor ? colors?.background : undefined}
       customBorderColor={showBorder ? colors.foreground : 'transparent'}
       foregroundColor={colors.foreground}
-      icon={showIcon ? <NetworkLogo chainId={chainId} mr="xs" size={16} /> : null}
+      icon={showIcon ? <NetworkLogo chainId={chainId} mr="xs" size={iconSizes.sm} /> : null}
       label={info.label}
       {...rest}
     />

@@ -4,6 +4,7 @@ import { Image } from 'react-native'
 import { style } from 'src/components/CurrencyLogo/styles'
 import { Box } from 'src/components/layout/Box'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
+import { iconSizes } from 'src/styles/sizing'
 import { Theme } from 'src/styles/theme'
 import { useNetworkColors } from 'src/utils/colors'
 
@@ -14,7 +15,12 @@ type NetworkLogoProps = {
 } & SpacingProps<Theme> &
   SpacingShorthandProps<Theme>
 
-export function NetworkLogo({ chainId, borderWidth = 0, size = 10, ...rest }: NetworkLogoProps) {
+export function NetworkLogo({
+  chainId,
+  borderWidth = 0,
+  size = iconSizes.md,
+  ...rest
+}: NetworkLogoProps) {
   const { logo } = CHAIN_INFO[chainId]
   const { foreground } = useNetworkColors(chainId)
 

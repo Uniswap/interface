@@ -2,7 +2,7 @@ import React from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import Eye from 'src/assets/icons/eye.svg'
 import { RemoteImage } from 'src/components/images/RemoteImage'
-import { Box, Flex } from 'src/components/layout'
+import { Box } from 'src/components/layout'
 import { Unicon } from 'src/components/unicons/Unicon'
 
 interface Props {
@@ -14,9 +14,7 @@ interface Props {
 
 export function AccountIcon({ size, showViewOnlyBadge, address, avatarUri }: Props) {
   const theme = useAppTheme()
-
-  const floatingEyeSize = size > 24 ? 20 : 16 // size changes in different usages
-  const iconEyeSize = floatingEyeSize * 0.6 // according to design 12px and 9.6px
+  const iconEyeSize = size * (2 / 5)
 
   return (
     <Box position="relative">
@@ -26,17 +24,16 @@ export function AccountIcon({ size, showViewOnlyBadge, address, avatarUri }: Pro
         <Unicon address={address} size={size} />
       )}
       {showViewOnlyBadge && (
-        <Flex
-          centered
+        <Box
+          alignContent="center"
           backgroundColor="background0"
           borderRadius="full"
-          bottom={-4}
-          height={floatingEyeSize}
+          bottom={0}
+          justifyContent="center"
           position="absolute"
-          right={-4}
-          width={floatingEyeSize}>
+          right={0}>
           <Eye color={theme.colors.textPrimary} height={iconEyeSize} width={iconEyeSize} />
-        </Flex>
+        </Box>
       )}
     </Box>
   )

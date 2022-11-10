@@ -8,11 +8,9 @@ import OutgoingArrow from 'src/assets/icons/arrow-up-in-circle.svg'
 import UnknownStatus from 'src/assets/icons/question-in-circle.svg'
 import SlashCircleIcon from 'src/assets/icons/slash-circle.svg'
 import WalletConnectLogo from 'src/assets/icons/walletconnect.svg'
-import {
-  CurrencyLogoOrPlaceholder,
-  NFTLogoOrPlaceholder,
-} from 'src/components/CurrencyLogo/CurrencyLogoOrPlaceholder'
+import { CurrencyLogoOnly } from 'src/components/CurrencyLogo'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
+import { NFTViewer } from 'src/components/images/NFTViewer'
 import { RemoteImage } from 'src/components/images/RemoteImage'
 import { Box } from 'src/components/layout/Box'
 import { ChainId } from 'src/constants/chains'
@@ -58,15 +56,22 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps) {
   const { assetType, txType, txStatus, size } = props
   const theme = useAppTheme()
 
-  const currencySize = size
-  const statusSize = currencySize * (2 / 3)
-  const totalSize = currencySize + statusSize * (1 / 3)
+  const statusSize = size * (1 / 2)
 
   const logo =
     assetType === AssetType.Currency ? (
-      <CurrencyLogoOrPlaceholder currency={props.currency} size={currencySize} />
+      <CurrencyLogoOnly currency={props.currency} size={size} />
     ) : (
-      <NFTLogoOrPlaceholder nftImageUrl={props.nftImageUrl} size={currencySize} />
+      <Box
+        alignItems="center"
+        backgroundColor="background2"
+        borderRadius="xs"
+        height={size}
+        justifyContent="center"
+        overflow="hidden"
+        width={size}>
+        {props.nftImageUrl && <NFTViewer uri={props.nftImageUrl} />}
+      </Box>
     )
 
   const fill = theme.colors.background0
@@ -118,11 +123,9 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps) {
   }
   const statusIcon = getTxStatusIcon()
   return (
-    <Box height={totalSize} width={totalSize}>
-      <Box left={0} position="absolute" top={0}>
-        {logo}
-      </Box>
-      <Box bottom={0} position="absolute" right={0}>
+    <Box alignItems="center" height={size} justifyContent="center" width={size}>
+      {logo}
+      <Box bottom={-4} position="absolute" right={-4}>
         {statusIcon}
       </Box>
     </Box>
@@ -152,12 +155,12 @@ export function SwapLogoOrLogoWithTxStatus({
   }
 
   return (
-    <Box height={size * 1.5} width={size * 1.5}>
+    <Box height={size} width={size}>
       <Box left={0} position="absolute" testID="swap-success-toast" top={0}>
-        <CurrencyLogoOrPlaceholder currency={inputCurrency} size={size} />
+        <CurrencyLogoOnly currency={inputCurrency} size={size * (2 / 3)} />
       </Box>
       <Box bottom={0} position="absolute" right={0}>
-        <CurrencyLogoOrPlaceholder currency={outputCurrency} size={size} />
+        <CurrencyLogoOnly currency={outputCurrency} size={size * (2 / 3)} />
       </Box>
     </Box>
   )

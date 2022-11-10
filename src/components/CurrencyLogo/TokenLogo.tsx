@@ -6,7 +6,7 @@ import { SHADOW_OFFSET, style, THIN_BORDER } from 'src/components/CurrencyLogo/s
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
-import { theme as FixedTheme } from 'src/styles/theme'
+import { iconSizes } from 'src/styles/sizing'
 
 interface TokenLogoProps {
   url?: string
@@ -15,12 +15,7 @@ interface TokenLogoProps {
   size?: number
 }
 
-export function TokenLogo({
-  url,
-  symbol,
-  chainId,
-  size = FixedTheme.imageSizes.xl,
-}: TokenLogoProps) {
+export function TokenLogo({ url, symbol, chainId, size = iconSizes.xxxl }: TokenLogoProps) {
   const theme = useAppTheme()
   const showNetworkLogo = chainId && chainId !== ChainId.Mainnet
 
@@ -64,7 +59,7 @@ export function TokenLogo({
           shadowOffset={SHADOW_OFFSET}
           shadowOpacity={0.1}
           shadowRadius={2}>
-          <NetworkLogo chainId={chainId} size={theme.iconSizes.sm} />
+          <NetworkLogo chainId={chainId} size={size * (2 / 5)} />
         </Box>
       )}
     </Box>

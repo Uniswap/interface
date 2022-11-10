@@ -47,10 +47,11 @@ import { useCreateSwapFormState, useCreateWrapFormState } from 'src/features/tra
 import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
+import { iconSizes } from 'src/styles/sizing'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { buildCurrencyId } from 'src/utils/currencyId'
 
-export const NOTIFICATION_ICON_SIZE = 24
+export const NOTIFICATION_ICON_SIZE = iconSizes.xxl
 
 // Helpers to preload profile data, and dismiss swap and navigate
 const useNavigateToProfileTab = (address: string | undefined) => {
@@ -470,7 +471,13 @@ export function CopiedNotification({
     <NotificationToast
       useSmallDisplay
       hideDelay={hideDelay}
-      icon={<CheckCircle color={theme.colors.accentSuccess} height={20} width={20} />}
+      icon={
+        <CheckCircle
+          color={theme.colors.accentSuccess}
+          height={iconSizes.lg}
+          width={iconSizes.lg}
+        />
+      }
       title={t('Copied to clipboard')}
     />
   )
@@ -488,7 +495,7 @@ export function SwapNetworkNotification({
     <NotificationToast
       useSmallDisplay
       hideDelay={hideDelay}
-      icon={<NetworkLogo chainId={chainId} size={NOTIFICATION_ICON_SIZE} />}
+      icon={<NetworkLogo chainId={chainId} size={iconSizes.lg} />}
       title={t('Swapping on {{ network }}', { network })}
     />
   )

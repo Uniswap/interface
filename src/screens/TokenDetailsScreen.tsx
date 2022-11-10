@@ -37,6 +37,7 @@ import {
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
 import { Screens } from 'src/screens/Screens'
+import { iconSizes } from 'src/styles/sizing'
 import { currencyAddress, currencyId } from 'src/utils/currencyId'
 import { formatUSDPrice } from 'src/utils/format'
 
@@ -65,7 +66,7 @@ function HeaderTitleElement({
   return (
     <Flex centered gap="none">
       <Flex centered row gap="xs">
-        <CurrencyLogo currency={currency} size={16} />
+        <CurrencyLogo currency={currency} size={iconSizes.sm} />
         <Text variant="subheadLarge">{currency.name ?? t('Unknown token')}</Text>
       </Flex>
       <HeaderPriceLabel price={data?.tokenProjects?.[0]?.markets?.[0]?.price} />

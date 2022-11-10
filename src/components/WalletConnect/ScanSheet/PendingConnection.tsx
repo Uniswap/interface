@@ -101,7 +101,7 @@ const SwitchNetworkRow = ({ selectedChainId, setModalState }: SwitchNetworkProps
     <TouchableArea m="none" name={ElementName.WCDappSwitchNetwork} p="none" onPress={onPress}>
       <Flex row shrink alignItems="center" gap="sm" justifyContent="space-between" p="sm">
         <Flex row shrink gap="sm">
-          <NetworkLogo chainId={selectedChainId} size={20} />
+          <NetworkLogo chainId={selectedChainId} />
           <Text color="textPrimary" variant="subheadSmall">
             {CHAIN_INFO[selectedChainId].label}
           </Text>

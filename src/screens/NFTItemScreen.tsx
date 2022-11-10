@@ -24,7 +24,7 @@ import { logMessage } from 'src/features/telemetry'
 import { LogContext } from 'src/features/telemetry/constants'
 import { useDisplayName } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
-import { iconSizes } from 'src/styles/sizing'
+import { iconSizes, imageSizes } from 'src/styles/sizing'
 import { shortenAddress } from 'src/utils/addresses'
 import { fromGraphQLChain } from 'src/utils/chainId'
 import { formatNumber, NumberType } from 'src/utils/format'
@@ -171,9 +171,9 @@ export function NFTItemScreen({
                     {asset?.collection?.image?.url ? (
                       <Box
                         borderRadius="full"
-                        height={theme.iconSizes.xl}
+                        height={imageSizes.lg}
                         overflow="hidden"
-                        width={theme.iconSizes.xl}>
+                        width={imageSizes.lg}>
                         <NFTViewer uri={asset.collection.image.url} />
                       </Box>
                     ) : null}
@@ -190,8 +190,8 @@ export function NFTItemScreen({
                         {asset?.collection?.isVerified && (
                           <VerifiedIcon
                             color={theme.colors.userThemeMagenta}
-                            height={theme.iconSizes.sm}
-                            width={theme.iconSizes.sm}
+                            height={iconSizes.sm}
+                            width={iconSizes.sm}
                           />
                         )}
                       </Flex>

@@ -8,6 +8,7 @@ import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
+import { iconSizes } from 'src/styles/sizing'
 import { Theme } from 'src/styles/theme'
 
 interface SelectTokenButtonProps {
@@ -33,9 +34,9 @@ export function SelectTokenButton({
       testID={`currency-selector-toggle-${showNonZeroBalancesOnly ? 'in' : 'out'}`}
       onPress={onPress}>
       {selectedCurrency ? (
-        <Flex centered row flexDirection="row" gap="xs" pl="xxs" pr="xs" py="xxs">
-          <CurrencyLogo currency={selectedCurrency} size={28} />
-          <Text color="textPrimary" variant="buttonLabelLarge">
+        <Flex centered row flexDirection="row" gap="xxs" p="xs">
+          <CurrencyLogo currency={selectedCurrency} size={iconSizes.xl} />
+          <Text color="textPrimary" pl="xxs" variant="buttonLabelLarge">
             {selectedCurrency.symbol}
           </Text>
           <Chevron color={theme.colors.textPrimary} direction="e" />

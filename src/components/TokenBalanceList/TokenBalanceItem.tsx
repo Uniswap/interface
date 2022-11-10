@@ -7,7 +7,6 @@ import { WarmLoadingShimmer } from 'src/components/loading/WarmLoadingShimmer'
 import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { PortfolioBalance } from 'src/features/dataApi/types'
-import { iconSizes } from 'src/styles/sizing'
 import { CurrencyId } from 'src/utils/currencyId'
 import { formatNumber, formatUSDPrice, NumberType } from 'src/utils/format'
 
@@ -52,7 +51,6 @@ export const TokenBalanceItem = memo(
           overflow="hidden">
           <TokenLogo
             chainId={currency.chainId}
-            size={iconSizes.xxxl}
             symbol={currency.symbol}
             url={currencyInfo.logoUrl ?? undefined}
           />

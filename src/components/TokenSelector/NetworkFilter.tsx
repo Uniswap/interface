@@ -15,6 +15,7 @@ import { useNetworkOptions } from 'src/components/Network/hooks'
 import { Text } from 'src/components/Text'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
+import { iconSizes } from 'src/styles/sizing'
 
 interface NetworkFilterProps {
   selectedChain: ChainId | null
@@ -50,13 +51,17 @@ export function NetworkFilter({ selectedChain, onPressChain }: NetworkFilterProp
             <>
               <Separator />
               <Flex row alignItems="center" justifyContent="space-between" px="lg" py="md">
-                <Box height={24} width={24} />
+                <Box height={iconSizes.lg} width={iconSizes.lg} />
                 <Text color="textPrimary" variant="bodyLarge">
                   {t('All networks')}
                 </Text>
-                <Box height={24} width={24}>
+                <Box height={iconSizes.lg} width={iconSizes.lg}>
                   {!selectedChain && (
-                    <Check color={theme.colors.accentActive} height={24} width={24} />
+                    <Check
+                      color={theme.colors.accentActive}
+                      height={iconSizes.lg}
+                      width={iconSizes.lg}
+                    />
                   )}
                 </Box>
               </Flex>
@@ -76,7 +81,7 @@ export function NetworkFilter({ selectedChain, onPressChain }: NetworkFilterProp
           setShowModal(true)
         }}>
         <Flex centered row bg="background2" borderRadius="sm" gap="xxs" p="xs">
-          {selectedChain && <NetworkLogo chainId={selectedChain} size={16} />}
+          {selectedChain && <NetworkLogo chainId={selectedChain} size={iconSizes.sm} />}
           <Text color="textSecondary" pl="xxxs" textAlign="center" variant="buttonLabelSmall">
             {selectedChain ? CHAIN_INFO[selectedChain].label : t('All networks')}
           </Text>

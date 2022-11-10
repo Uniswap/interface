@@ -9,17 +9,21 @@ import { getCurrencyLogoSrcs } from 'src/components/CurrencyLogo/utils'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { ChainId, CHAIN_ID_TO_LOGO } from 'src/constants/chains'
-import { theme as FixedTheme } from 'src/styles/theme'
+import { iconSizes } from 'src/styles/sizing'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { uriToHttp } from 'src/utils/uriToHttp'
 
 interface CurrencyLogoProps {
-  currency: Currency
+  currency: NullUndefined<Currency>
   size?: number
 }
 
-export function CurrencyLogo({ currency, size = FixedTheme.imageSizes.xl }: CurrencyLogoProps) {
-  const notOnMainnet = currency.chainId !== ChainId.Mainnet
+interface CurrencyLogoOnlyProps extends CurrencyLogoProps {
+  size: number
+}
+
+export function CurrencyLogo({ currency, size = iconSizes.xxxl }: CurrencyLogoProps) {
+  const notOnMainnet = currency && currency.chainId !== ChainId.Mainnet
 
   return (
     <Box alignItems="center" height={size} justifyContent="center" width={size}>
@@ -33,23 +37,19 @@ export function CurrencyLogo({ currency, size = FixedTheme.imageSizes.xl }: Curr
           shadowOffset={SHADOW_OFFSET}
           shadowOpacity={0.1}
           shadowRadius={2}>
-          <NetworkLogo chainId={currency.chainId} size={FixedTheme.iconSizes.sm} />
+          <NetworkLogo chainId={currency.chainId} size={size * (2 / 5)} />
         </Box>
       )}
     </Box>
   )
 }
 
-export function CurrencyLogoOnly({ currency, size = 40 }: CurrencyLogoProps) {
-  const srcs: string[] = getCurrencyLogoSrcs(currency)
-
+export function CurrencyLogoOnly({ currency, size }: CurrencyLogoOnlyProps) {
   const [imageError, setImageError] = useState(false)
-
-  const onImageNotFound = () => {
-    setImageError(true)
-  }
-
+  const onImageNotFound = () => setImageError(true)
   const theme = useAppTheme()
+
+  const srcs: string[] = getCurrencyLogoSrcs(currency)
 
   if (currency?.isNative) {
     const chainId = toSupportedChainId(currency.chainId) ?? ChainId.Mainnet
@@ -83,7 +83,7 @@ export function CurrencyLogoOnly({ currency, size = 40 }: CurrencyLogoProps) {
         px="xs"
         width={size}>
         <Text adjustsFontSizeToFit color="textPrimary" numberOfLines={1} textAlign="center">
-          {currency.symbol?.slice(0, 3).toUpperCase()}
+          {currency?.symbol?.slice(0, 3).toUpperCase() ?? ''}
         </Text>
       </Box>
     )
@@ -111,11 +111,7 @@ export function CurrencyLogoOnly({ currency, size = 40 }: CurrencyLogoProps) {
 
   return (
     <Image
-      source={srcs.map((uri) => {
-        return {
-          uri: uriToHttp(uri)[0],
-        }
-      })}
+      source={srcs.map((uri) => ({ uri: uriToHttp(uri)[0] }))}
       style={[
         style.image,
         {

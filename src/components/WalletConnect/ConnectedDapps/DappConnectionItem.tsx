@@ -74,7 +74,7 @@ export function DappConnectionItem({
           p="xs">
           {chainId ? (
             <Flex fill row shrink gap="xs">
-              <NetworkLogo chainId={chainId} size={20} />
+              <NetworkLogo chainId={chainId} />
               <Flex shrink>
                 <Text color="textSecondary" numberOfLines={1} variant="bodySmall">
                   {CHAIN_INFO[chainId].label}

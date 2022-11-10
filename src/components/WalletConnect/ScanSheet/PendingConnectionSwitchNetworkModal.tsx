@@ -10,6 +10,7 @@ import { Text } from 'src/components/Text'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
+import { iconSizes } from 'src/styles/sizing'
 
 type Props = {
   selectedChainId: ChainId
@@ -37,7 +38,7 @@ export const PendingConnectionSwitchNetworkModal = ({
             <>
               <Separator />
               <Flex row alignItems="center" justifyContent="space-between" px="lg" py="md">
-                <NetworkLogo chainId={chainId} size={24} />
+                <NetworkLogo chainId={chainId} size={iconSizes.lg} />
                 <Text color="textPrimary" variant="bodyLarge">
                   {info.label}
                 </Text>

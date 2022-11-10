@@ -206,7 +206,7 @@ export function NotificationContentSmall({
         p="sm"
         onPress={onPress}
         onPressIn={onPressIn}>
-        <Flex row alignItems="center" gap="xxs" justifyContent="flex-start">
+        <Flex row alignItems="center" gap="xs" justifyContent="flex-start">
           {icon}
           <Text adjustsFontSizeToFit numberOfLines={1} variant="bodySmall">
             {title}

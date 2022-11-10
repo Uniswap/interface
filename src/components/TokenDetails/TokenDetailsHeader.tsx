@@ -24,7 +24,7 @@ export function TokenDetailsHeader({
   const { t } = useTranslation()
   return (
     <Flex mx="sm">
-      <CurrencyLogo currency={currency} size={36} />
+      <CurrencyLogo currency={currency} />
       <Flex row alignItems="center" gap="xs">
         <Text color="textPrimary" numberOfLines={1} style={flex.shrink} variant="subheadLarge">
           {currency.name ?? t('Unknown token')}

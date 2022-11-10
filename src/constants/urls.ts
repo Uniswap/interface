@@ -31,3 +31,6 @@ function getUniswapTrmUrl() {
 
 export const TOKEN_WARNING_HELP_PAGE_URL =
   'https://support.uniswap.org/hc/en-us/articles/8723118437133-What-are-token-warnings-'
+
+export const getTokenLogoURL = (address: string) =>
+  `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/${address}/logo.png`

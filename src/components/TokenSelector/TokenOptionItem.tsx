@@ -58,7 +58,6 @@ export function TokenOptionItem({ option, showNetworkPill, onPress }: OptionProp
           <Flex row shrink alignItems="center" gap="sm">
             <TokenLogo
               chainId={currency.chainId}
-              size={theme.imageSizes.lg}
               symbol={currency.symbol}
               url={currencyInfo.logoUrl ?? undefined}
             />

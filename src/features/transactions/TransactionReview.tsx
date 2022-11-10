@@ -17,7 +17,7 @@ import { Text } from 'src/components/Text'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
-import { dimensions } from 'src/styles/sizing'
+import { dimensions, iconSizes } from 'src/styles/sizing'
 
 interface BaseReviewProps {
   actionButtonProps: { disabled: boolean; label: string; name: ElementName; onPress: () => void }
@@ -172,7 +172,7 @@ export function TransactionReview({
 function CurrencyLogoWithLabel({ currency }: { currency: Currency }) {
   return (
     <Flex centered row gap="xs">
-      <CurrencyLogo currency={currency} size={28} />
+      <CurrencyLogo currency={currency} size={iconSizes.xl} />
       <Text color="textPrimary" variant="buttonLabelLarge">
         {currency.symbol}
       </Text>

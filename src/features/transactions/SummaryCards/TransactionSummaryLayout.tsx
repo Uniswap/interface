@@ -16,9 +16,10 @@ import AlertBanner, { FailedCancelBadge } from 'src/features/transactions/Summar
 import { CancelConfirmationView } from 'src/features/transactions/SummaryCards/CancelConfirmationView'
 import TransactionActionsModal from 'src/features/transactions/SummaryCards/TransactionActionsModal'
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
+import { iconSizes } from 'src/styles/sizing'
 import { openTransactionLink } from 'src/utils/linking'
 
-export const TXN_HISTORY_ICON_SIZE = 24
+export const TXN_HISTORY_ICON_SIZE = iconSizes.xxl
 const LOADING_SPINNER_SIZE = 20
 
 function TransactionSummaryLayout({

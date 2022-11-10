@@ -1,10 +1,11 @@
 import React, { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Image, ImageStyle, ViewProps } from 'react-native'
+import { ViewProps } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { AnimatedTouchableArea } from 'src/components/buttons/TouchableArea'
+import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
 import RemoveButton from 'src/components/explore/RemoveButton'
 import { Box } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
@@ -27,11 +28,6 @@ import {
 import { fromGraphQLChain } from 'src/utils/chainId'
 import { CurrencyId } from 'src/utils/currencyId'
 import { formatUSDPrice } from 'src/utils/format'
-
-const THIN_BORDER = 0.5
-
-const BOX_TOKEN_LOGO_SIZE = 36
-const boxTokenLogoStyle: ImageStyle = { width: BOX_TOKEN_LOGO_SIZE, height: BOX_TOKEN_LOGO_SIZE }
 
 type FavoriteTokenCardProps = {
   currencyId: CurrencyId
@@ -146,20 +142,11 @@ function FavoriteTokenCard({
         ) : null}
         <BaseCard.Shadow px="xs">
           <Flex alignItems="center" gap="xxs">
-            {tokenData?.logoUrl && (
-              <Image
-                source={{ uri: tokenData.logoUrl }}
-                style={[
-                  boxTokenLogoStyle,
-                  {
-                    backgroundColor: theme.colors.textTertiary,
-                    borderRadius: BOX_TOKEN_LOGO_SIZE / 2,
-                    borderColor: theme.colors.backgroundOutline,
-                    borderWidth: THIN_BORDER,
-                  },
-                ]}
-              />
-            )}
+            <TokenLogo
+              chainId={chainId ?? undefined}
+              symbol={token?.symbol ?? undefined}
+              url={tokenData?.logoUrl ?? undefined}
+            />
             <TokenMetadata align="center">
               <Box>
                 <Text adjustsFontSizeToFit numberOfLines={1} textAlign="center" variant="bodyLarge">
@@ -169,7 +156,7 @@ function FavoriteTokenCard({
               <RelativeChange
                 change={pricePercentChange ?? undefined}
                 semanticColor={true}
-                variant="subheadSmall"
+                variant="bodyMicro"
               />
             </TokenMetadata>
           </Flex>

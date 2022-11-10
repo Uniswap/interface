@@ -9,6 +9,7 @@ import { Text } from 'src/components/Text'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { ElementName } from 'src/features/telemetry/constants'
+import { iconSizes } from 'src/styles/sizing'
 
 export function useNetworkOptions(
   selectedChain: ChainId | null,
@@ -28,13 +29,17 @@ export function useNetworkOptions(
             <>
               <Separator />
               <Flex row alignItems="center" justifyContent="space-between" px="lg" py="md">
-                <NetworkLogo chainId={chainId} size={24} />
+                <NetworkLogo chainId={chainId} size={iconSizes.lg} />
                 <Text color="textPrimary" variant="bodyLarge">
                   {info.label}
                 </Text>
                 <Box height={24} width={24}>
                   {selectedChain === chainId && (
-                    <Check color={theme.colors.accentActive} height={24} width={24} />
+                    <Check
+                      color={theme.colors.accentActive}
+                      height={iconSizes.lg}
+                      width={iconSizes.lg}
+                    />
                   )}
                 </Box>
               </Flex>
