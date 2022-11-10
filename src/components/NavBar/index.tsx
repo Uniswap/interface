@@ -85,7 +85,7 @@ const useShouldHideNavbar = () => {
     }
 
     return false
-  }, [isMobile, pathname])
+  }, [isMobile, pathname, paths])
 
   return shouldHideNavbar
 }
