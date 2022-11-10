@@ -53,6 +53,7 @@ export function NotificationToast({
   const dispatch = useAppDispatch()
   const notifications = useAppSelector(selectActiveAccountNotifications)
   const currentNotification = notifications[0]
+  const hasQueuedNotification = !!notifications[1]
 
   const showOffset = useSafeAreaInsets().top
   const bannerOffset = useSharedValue(HIDE_OFFSET_Y)
@@ -75,7 +76,8 @@ export function NotificationToast({
     }
   }, [dispatch, bannerOffset, notifications, showOffset, address])
 
-  const delay = hideDelay ?? DEFAULT_HIDE_DELAY
+  // If there is another notification in the queue then hide the current one immediately
+  const delay = hasQueuedNotification ? 0 : hideDelay ?? DEFAULT_HIDE_DELAY
   const cancelDismiss = useTimeout(dismissLatest, delay)
 
   const onFling = ({ nativeEvent }: FlingGestureHandlerGestureEvent) => {
