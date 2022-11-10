@@ -280,7 +280,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
 
   // round daily volume & floorPrice to 3 decimals or less
-  const totalVolumeStr = volumeFormatter(stats.stats?.total_volume ?? 0)
+  const totalVolumeStr = volumeFormatter(Number(stats.stats?.total_volume) ?? 0)
   const floorPriceStr = floorFormatter(stats.stats?.floor_price ?? 0)
   // graphQL formatted %age values out of 100, whereas v3 endpoint did a decimal between 0 & 1
   const floorChangeStr = Math.round(Math.abs(stats?.stats?.one_day_floor_change ?? 0))

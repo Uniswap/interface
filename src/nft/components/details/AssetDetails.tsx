@@ -1,3 +1,4 @@
+import { ScrollBarStyles } from 'components/Common'
 import Resource from 'components/Tokens/TokenDetails/Resource'
 import { MouseoverTooltip } from 'components/Tooltip/index'
 import { Box } from 'nft/components/Box'
@@ -142,23 +143,7 @@ const ActivitySelectContainer = styled.div`
   gap: 8px;
   margin-bottom: 34px;
   overflow-x: auto;
-
-  // Firefox scrollbar styling
-  scrollbar-width: thin;
-  scrollbar-color: ${({ theme }) => `${theme.backgroundOutline} transparent`};
-
-  // safari and chrome scrollbar styling
-  ::-webkit-scrollbar {
-    background: transparent;
-    height: 4px;
-  }
-  ::-webkit-scrollbar-track {
-    margin-top: 40px;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: ${({ theme }) => theme.backgroundOutline};
-    border-radius: 8px;
-  }
+  ${ScrollBarStyles}
 
   @media (max-width: 720px) {
     padding-bottom: 8px;
@@ -454,7 +439,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
         secondaryHeader={formattedPrice ? `Last Sale: ${formattedPrice} ETH` : undefined}
       >
         <>
-          <ActivitySelectContainer>
+          <ActivitySelectContainer $isHorizontalScroll>
             <Filter eventType={ActivityEventType.Listing} />
             <Filter eventType={ActivityEventType.Sale} />
             <Filter eventType={ActivityEventType.Transfer} />
