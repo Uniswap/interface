@@ -45,7 +45,7 @@ interface ImportMethodOption {
 const options: ImportMethodOption[] = [
   {
     title: (t: TFunction) => t('Import a recovery phrase'),
-    blurb: (t: TFunction) => t('Enter, paste, or scan your words'),
+    blurb: (t: TFunction) => t('Enter or paste your words'),
     icon: (theme: Theme) => (
       <SeedPhraseIcon color={theme.colors.textPrimary} height={16} width={16} />
     ),
