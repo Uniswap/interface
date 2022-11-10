@@ -4,6 +4,7 @@ import { PriceChartLabel } from 'src/components/PriceChart/PriceChartLabels'
 import { GraphMetadatas } from 'src/components/PriceChart/types'
 import { buildGraph, GRAPH_PRECISION } from 'src/components/PriceChart/utils'
 import { PollingInterval } from 'src/constants/misc'
+import { isNonPollingRequestInFlight } from 'src/data/utils'
 import { useTokenPriceChartsQuery } from 'src/data/__generated__/types-and-hooks'
 import { GqlResult } from 'src/features/dataApi/types'
 import { currencyIdToContractInput } from 'src/features/dataApi/utils'
@@ -13,13 +14,14 @@ import { logger } from 'src/utils/logger'
 export function useTokenPriceGraphs(token: Token): GqlResult<GraphMetadatas> {
   const {
     data: priceData,
-    loading,
-    error,
     refetch,
+    networkStatus,
+    error,
   } = useTokenPriceChartsQuery({
     variables: {
       contract: currencyIdToContractInput(currencyId(token)),
     },
+    notifyOnNetworkStatusChange: true,
     pollInterval: PollingInterval.Normal,
   })
 
@@ -77,5 +79,10 @@ export function useTokenPriceGraphs(token: Token): GqlResult<GraphMetadatas> {
     return graphs as GraphMetadatas
   }, [priceData])
 
-  return { data: formattedData, loading, error, refetch: retry }
+  return {
+    data: formattedData,
+    loading: isNonPollingRequestInFlight(networkStatus),
+    error,
+    refetch: retry,
+  }
 }

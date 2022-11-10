@@ -9,17 +9,18 @@ import { GraphMetadatas } from 'src/components/PriceChart/types'
 import { useSpotPrice } from 'src/features/dataApi/spotPricesQuery'
 
 export function CurrencyPriceChart({ currency }: { currency: Currency }) {
-  const { data: graphs, loading, error, refetch } = useTokenPriceGraphs(currency.wrapped)
+  const { data: graphs, loading, refetch } = useTokenPriceGraphs(currency.wrapped)
   // using a separate query for spot price because 1/ most likely already cached
   // and 2/ `tokenPriceCharts` query is already computationally expensive on the backend
   const { data: spotPrice } = useSpotPrice(currency)
 
-  if (error) {
-    return <PriceChartError onRetry={refetch} />
-  }
+  if (!graphs) {
+    if (loading) {
+      return <PriceChartLoading />
+    }
 
-  if (!graphs && loading) {
-    return <PriceChartLoading />
+    // otherwise, assume error
+    return <PriceChartError onRetry={refetch} />
   }
 
   return (
