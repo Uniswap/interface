@@ -439,7 +439,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
         secondaryHeader={formattedPrice ? `Last Sale: ${formattedPrice} ETH` : undefined}
       >
         <>
-          <ActivitySelectContainer isHorizontalScroll>
+          <ActivitySelectContainer $isHorizontalScroll>
             <Filter eventType={ActivityEventType.Listing} />
             <Filter eventType={ActivityEventType.Sale} />
             <Filter eventType={ActivityEventType.Transfer} />

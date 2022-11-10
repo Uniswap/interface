@@ -8,7 +8,7 @@ import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { UniIcon } from 'nft/components/icons'
 import { useIsMobile } from 'nft/hooks'
-import { ReactNode } from 'react'
+import { ReactNode, useMemo } from 'react'
 import { NavLink, NavLinkProps, useLocation } from 'react-router-dom'
 
 import { ChainSelector } from './ChainSelector'
@@ -77,20 +77,26 @@ const useShouldHideNavbar = () => {
   const isMobile = useIsMobile()
   const paths = ['/nfts/profile']
 
-  if (!isMobile) return false
+  const shouldHideNavbar = useMemo(() => {
+    if (!isMobile) return false
 
-  for (const path of paths) {
-    if (pathname.includes(path)) return true
-  }
+    for (const path of paths) {
+      if (pathname.includes(path)) return true
+    }
 
-  return false
+    return false
+  }, [isMobile, pathname])
+
+  return shouldHideNavbar
 }
 
 const Navbar = () => {
   const shouldHideNavbar = useShouldHideNavbar()
   const isNftPage = useIsNftPage()
 
-  return shouldHideNavbar ? null : (
+  if (shouldHideNavbar) return null
+
+  return (
     <>
       <nav className={styles.nav}>
         <Box display="flex" height="full" flexWrap="nowrap" alignItems="stretch">

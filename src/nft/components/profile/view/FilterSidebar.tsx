@@ -107,9 +107,9 @@ const CollectionSelect = ({
           />
           <ItemsContainer>
             <Box paddingBottom="8" style={{ scrollbarWidth: 'none' }}>
-              {displayCollections?.map((collection, index) => (
+              {displayCollections?.map((collection) => (
                 <CollectionItem
-                  key={index}
+                  key={collection.address}
                   collection={collection}
                   collectionFilters={collectionFilters}
                   setCollectionFilters={setCollectionFilters}

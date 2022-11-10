@@ -1,10 +1,9 @@
 import { css } from 'styled-components/macro'
 
-export const ScrollBarStyles = css<{ isHorizontalScroll?: boolean }>`
+export const ScrollBarStyles = css<{ $isHorizontalScroll?: boolean }>`
   // Firefox scrollbar styling
   scrollbar-width: thin;
   scrollbar-color: ${({ theme }) => `${theme.backgroundOutline} transparent`};
-  overflow-y: scroll;
   height: 100%;
 
   // safari and chrome scrollbar styling
@@ -12,8 +11,16 @@ export const ScrollBarStyles = css<{ isHorizontalScroll?: boolean }>`
     background: transparent;
 
     // Set height for horizontal scrolls
-    ${({ isHorizontalScroll }) => {
-      return isHorizontalScroll ? 'height: 4px;' : 'width: 4px;'
+    ${({ $isHorizontalScroll }) => {
+      return $isHorizontalScroll
+        ? css`
+            height: 4px;
+            overflow-x: scroll;
+          `
+        : css`
+            width: 4px;
+            overflow-y: scroll;
+          `
     }}
   }
 
