@@ -1,11 +1,14 @@
 import useSWR from 'swr'
 
+import { VERSION } from 'constants/v2'
+
 interface APRResponse {
   max_apr: {
     value: number
     id: string
     chain_id: number
     is_farm: boolean
+    type?: VERSION.CLASSIC | VERSION.ELASTIC
   }
   total_earnings: number
 }

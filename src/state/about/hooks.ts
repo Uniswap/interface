@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 
 import { GLOBAL_DATA, GLOBAL_DATA_ELASTIC } from 'apollo/queries'
 import { MAINNET_NETWORKS, NETWORKS_INFO } from 'constants/networks'
-import { ELASTIC_NOT_SUPPORTED } from 'constants/v2'
+import { ELASTIC_NOT_SUPPORTED, VERSION } from 'constants/v2'
 import useAggregatorAPR from 'hooks/useAggregatorAPR'
 import useAggregatorVolume from 'hooks/useAggregatorVolume'
 
@@ -28,6 +28,7 @@ interface GlobalData {
       id: string
       chain_id: number
       is_farm: boolean
+      type?: VERSION.CLASSIC | VERSION.ELASTIC
     }
     totalEarnings?: number
   }
