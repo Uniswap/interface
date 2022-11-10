@@ -516,6 +516,11 @@ const ProfileNftDetails = ({ asset }: ProfileNftDetailsProps) => {
       return asset.name.includes(`${asset.tokenId}`) ? asset.name : `${asset.name} #${asset.tokenId}`
     return !!asset.name ? asset.name : `#${asset.tokenId}`
   }
+  if (!asset.notForSale || (asset.newListings && asset.newListings.length > 0)) {
+    console.log('name', asset.asset_contract.name)
+    console.log('date', asset.listing_date)
+    console.log('not for sale', asset.floor_sell_order_price)
+  }
 
   return (
     <Box overflow="hidden" width="full" flexWrap="nowrap">
@@ -538,6 +543,9 @@ const ProfileNftDetails = ({ asset }: ProfileNftDetailsProps) => {
       </Row>
       <TruncatedTextRow className={subhead} style={{ color: themeVars.colors.textSecondary }}>
         {!!asset.floorPrice && <span>{`${floorFormatter(asset.floorPrice)} ETH Floor`}</span>}
+      </TruncatedTextRow>
+      <TruncatedTextRow className={subhead} style={{ color: themeVars.colors.textSecondary }}>
+        {!asset.notForSale && <span>{`${floorFormatter(asset.floor_sell_order_price)} ETH`}</span>}
       </TruncatedTextRow>
     </Box>
   )
