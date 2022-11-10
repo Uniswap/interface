@@ -1,4 +1,4 @@
-import { initializeAnalytics, sendAnalyticsEvent, Trace, user } from '@uniswap/analytics'
+import { initializeAnalytics, OriginApplication, sendAnalyticsEvent, Trace, user } from '@uniswap/analytics'
 import { CustomUserProperties, EventName, getBrowser, PageName } from '@uniswap/analytics-events'
 import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
@@ -126,7 +126,7 @@ export default function App() {
   const [scrolledState, setScrolledState] = useState(false)
 
   useAnalyticsReporter()
-  initializeAnalytics(ANALYTICS_DUMMY_KEY, ANALYTICS_PROXY_URL)
+  initializeAnalytics(ANALYTICS_DUMMY_KEY, OriginApplication.INTERFACE, ANALYTICS_PROXY_URL)
 
   const scrollListener = (e: Event) => {
     if (window.scrollY > 0) {

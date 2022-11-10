@@ -4127,10 +4127,10 @@
   resolved "https://registry.yarnpkg.com/@uniswap/analytics-events/-/analytics-events-1.0.2.tgz#63d2b27ed8bc297335f7436b09d8c7a8e5d46f59"
   integrity sha512-slIJimkJMnnsLosLorNeU6+Nq5qnntQFuKTvL/F4NWasIOqcBXfaDI7Wg1p9tsHs1rpZsZyyCrn/5N403c37vQ==
 
-"@uniswap/analytics@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@uniswap/analytics/-/analytics-1.0.2.tgz#0c497bd26c6e58ff93267d90eaac4ad5a8cdcab9"
-  integrity sha512-59MYvTwHLWbIp3nOgIEOC9CsWxS39Fhe76Nj/1YlWNL+3yE/Z5Sooz6hqTlutFrSlIZN3O5pMLXQSpjUTAZEfA==
+"@uniswap/analytics@1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@uniswap/analytics/-/analytics-1.0.3.tgz#bb22cec8f722acd6b0937045f75c6e108e61016f"
+  integrity sha512-1DmKkGh5VlOQM8JXrCvvxkDn7KaDn/9aMrgVb9qOAXgBQ1QhsCkUeadsM2agDeJXQcY2JrOPbS04w/60vqHcXw==
   dependencies:
     "@amplitude/analytics-browser" "^1.5.8"
     react "^18.2.0"
