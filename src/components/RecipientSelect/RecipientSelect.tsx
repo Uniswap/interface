@@ -2,8 +2,10 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
+import { useAppTheme } from 'src/app/hooks'
+import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex, Flex } from 'src/components/layout'
-import { QRScannerIconButton } from 'src/components/QRCodeScanner/QRScannerIconButton'
 import { filterRecipientByNameAndAddress } from 'src/components/RecipientSelect/filter'
 import { useRecipients } from 'src/components/RecipientSelect/hooks'
 import { RecipientList, RecipientLoadingRow } from 'src/components/RecipientSelect/RecipientList'
@@ -11,11 +13,26 @@ import { RecipientScanModal } from 'src/components/RecipientSelect/RecipientScan
 import { filterSections } from 'src/components/RecipientSelect/utils'
 import { Text } from 'src/components/Text'
 import { SearchBar } from 'src/components/TokenSelector/SearchBar'
+import { ElementName } from 'src/features/telemetry/constants'
 
 interface RecipientSelectProps {
   onSelectRecipient: (newRecipientAddress: string) => void
   onToggleShowRecipientSelector: () => void
   recipient?: string
+}
+
+function QRScannerIconButton({ onPress }: { onPress: () => void }) {
+  const theme = useAppTheme()
+
+  return (
+    <TouchableArea hapticFeedback name={ElementName.SelectRecipient} onPress={onPress}>
+      <ScanQRIcon
+        color={theme.colors.textSecondary}
+        height={theme.iconSizes.md}
+        width={theme.iconSizes.md}
+      />
+    </TouchableArea>
+  )
 }
 
 export function RecipientSelect({
@@ -53,7 +70,7 @@ export function RecipientSelect({
         <SearchBar
           autoFocus
           backgroundColor="background2"
-          endAdornment={<QRScannerIconButton size={20} onPress={onPressQRScanner} />}
+          endAdornment={<QRScannerIconButton onPress={onPressQRScanner} />}
           hideBackButton={!recipient}
           placeholder={t('Search addresses or ENS names')}
           value={pattern ?? ''}

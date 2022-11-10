@@ -4,6 +4,7 @@ import React, { useCallback } from 'react'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
+import ScanQRWCIcon from 'src/assets/icons/scan-qr-wc.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
@@ -11,7 +12,6 @@ import { TxHistoryIconWithStatus } from 'src/components/icons/TxHistoryIconWithS
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
-import { QRScannerIconButton } from 'src/components/QRCodeScanner/QRScannerIconButton'
 import { openModal } from 'src/features/modals/modalSlice'
 import { PendingNotificationBadge } from 'src/features/notifications/PendingNotificationBadge'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
@@ -19,6 +19,20 @@ import { useSortedPendingTransactions } from 'src/features/transactions/hooks'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { iconSizes } from 'src/styles/sizing'
+
+function QRScannerIconButton({ onPress }: { onPress: () => void }) {
+  const theme = useAppTheme()
+
+  return (
+    <TouchableArea hapticFeedback name={ElementName.WalletConnectScan} onPress={onPress}>
+      <ScanQRWCIcon
+        color={theme.colors.textSecondary}
+        height={theme.iconSizes.lg}
+        width={theme.iconSizes.lg}
+      />
+    </TouchableArea>
+  )
+}
 
 export function AccountHeader() {
   const theme = useAppTheme()
