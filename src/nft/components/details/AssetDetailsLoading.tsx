@@ -1,6 +1,6 @@
 import Column from 'components/Column'
 import Loader from 'components/Loader'
-import styled from 'styled-components'
+import styled, { useTheme } from 'styled-components/macro'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 
@@ -45,6 +45,7 @@ const LoaderContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  color: pink;
 `
 
 const BuyNowContainer = styled(LoadingBubble)`
@@ -68,8 +69,7 @@ const PriceContainer = styled(LoadingBubble)`
 
 const LoadingContainer = styled.div`
   display: flex;
-  margin-top: 64px;
-  max-width: 1196px;
+  margin-top: 48px;
   width: 100%;
   margin-left: auto;
   margin-right: auto;
@@ -92,7 +92,7 @@ const StyledColumn = styled(Column)`
 `
 
 const BuyNowLoadingDesktop = styled.div`
-  padding-left: 56px;
+  padding-left: 60px;
 
   @media (max-width: ${BREAKPOINT}) {
     display: none;
@@ -116,11 +116,13 @@ const BuyNowLoading = () => (
 )
 
 export const AssetDetailsLoading = () => {
+  const theme = useTheme()
+
   return (
     <LoadingContainer>
       <StyledColumn>
         <LoaderContainer>
-          <Loader size="40px" />
+          <Loader stroke={theme.accentAction} size="40px" />
         </LoaderContainer>
         <Title />
         <SubTitle />

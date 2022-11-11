@@ -4,7 +4,7 @@ import { useDetailsQuery } from 'graphql/data/nft/Details'
 import { AssetDetails } from 'nft/components/details/AssetDetails'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
@@ -39,13 +39,15 @@ const AssetPriceDetailsContainer = styled.div`
 const Asset = () => {
   const { tokenId = '', contractAddress = '' } = useParams()
   const data = useDetailsQuery(contractAddress, tokenId)
+  const [isLoading, setIsLoading] = useState(true)
 
   const [asset, collection] = useMemo(() => data ?? [], [data])
-  const isLoading = true
 
-  return isLoading ? (
-    <AssetDetailsLoading />
-  ) : (
+  setTimeout(() => {
+    setIsLoading(false)
+  }, 2500)
+
+  return (
     <>
       <Trace
         page={PageName.NFT_DETAILS_PAGE}
@@ -59,9 +61,7 @@ const Asset = () => {
               <AssetPriceDetails collection={collection} asset={asset} />
             </AssetPriceDetailsContainer>
           </AssetContainer>
-        ) : (
-          <div>Holder for loading ...</div>
-        )}
+        ) : null}
       </Trace>
     </>
   )
