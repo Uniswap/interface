@@ -198,7 +198,7 @@ export function NftsTab({
   }
 
   return nftDataItems.length === 0 ? (
-    <Flex centered flex={1} style={loadingContainerStyle}>
+    <Flex centered grow flex={1} style={loadingContainerStyle}>
       <BaseCard.EmptyState
         buttonLabel={t('Receive NFTs')}
         description={t('Transfer NFTs from another wallet to get started.')}
