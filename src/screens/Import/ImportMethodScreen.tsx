@@ -60,7 +60,7 @@ const options: ImportMethodOption[] = [
   },
   {
     title: (t: TFunction) => t('Restore from iCloud'),
-    blurb: (t: TFunction) => t('Recover a backed-up recovery phrase'),
+    blurb: (t: TFunction) => t('Recover your backed up wallets'),
     icon: (theme: Theme) => <CloudIcon color={theme.colors.textPrimary} height={16} width={16} />,
     nav: OnboardingScreens.RestoreCloudBackup,
     importType: ImportType.Restore,
