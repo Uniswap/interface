@@ -115,20 +115,18 @@ const Collection = () => {
             <>
               {' '}
               <Box width="full" height={`${COLLECTION_BANNER_HEIGHT}`}>
-                <Box width="full" height={`${COLLECTION_BANNER_HEIGHT}`}>
-                  <Box
-                    as={collectionStats?.bannerImageUrl ? 'img' : 'div'}
-                    height="full"
-                    width="full"
-                    src={
-                      collectionStats?.bannerImageUrl
-                        ? `${collectionStats.bannerImageUrl}?w=${window.innerWidth}`
-                        : undefined
-                    }
-                    className={styles.bannerImage}
-                    background="none"
-                  />
-                </Box>
+                <Box
+                  as={collectionStats?.bannerImageUrl ? 'img' : 'div'}
+                  height="full"
+                  width="full"
+                  src={
+                    collectionStats?.bannerImageUrl
+                      ? `${collectionStats.bannerImageUrl}?w=${window.innerWidth}`
+                      : undefined
+                  }
+                  className={styles.bannerImage}
+                  background="none"
+                />
               </Box>
               <CollectionDescriptionSection>
                 {collectionStats && (

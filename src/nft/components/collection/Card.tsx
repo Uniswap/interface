@@ -549,7 +549,9 @@ const ProfileNftDetails = ({ asset, isSellMode }: ProfileNftDetailsProps) => {
         className={subhead}
         style={{ color: !asset.notForSale ? themeVars.colors.textPrimary : themeVars.colors.textSecondary }}
       >
-        {!asset.notForSale && <span>{`${floorFormatter(asset.floor_sell_order_price)} ETH`}</span>}
+        {asset.asset_contract.tokenType !== 'ERC1155'
+          ? isSellMode && !asset.notForSale
+          : asset.notForSale && <span>{`${floorFormatter(asset.floor_sell_order_price)} ETH`}</span>}
         {asset.notForSale && isSellMode && !!asset.floorPrice && (
           <span>{`${floorFormatter(asset.floorPrice)} ETH Floor`}</span>
         )}
