@@ -1,11 +1,13 @@
 import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { useCollectionQuery } from 'graphql/data/nft/Collection'
+import { useLoadAssetsQuery } from 'graphql/data/nft/Asset'
+import { useCollectionQuery, useLoadCollectionQuery } from 'graphql/data/nft/Collection'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { Activity, ActivitySwitcher, CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
 import { CollectionNftsAndMenuLoading } from 'nft/components/collection/CollectionNfts'
+import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
 import { Column, Row } from 'nft/components/Flex'
 import { useBag, useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
@@ -32,7 +34,6 @@ const CollectionDisplaySection = styled(Row)`
 
 const Collection = () => {
   const { contractAddress } = useParams()
-
   const isMobile = useIsMobile()
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const { pathname } = useLocation()
@@ -154,4 +155,21 @@ const Collection = () => {
   )
 }
 
-export default Collection
+// The page is responsible for any queries that must be run on initial load.
+// Triggering query load from the page prevents waterfalled requests, as lazy-loading them in components would prevent
+// any children from rendering.
+const CollectionPage = () => {
+  const { contractAddress } = useParams()
+  useLoadCollectionQuery(contractAddress)
+  useLoadAssetsQuery(contractAddress)
+
+  // The Collection must be wrapped in suspense so that it does not suspend the CollectionPage,
+  // which is needed to trigger query loads.
+  return (
+    <Suspense fallback={<CollectionPageSkeleton />}>
+      <Collection />
+    </Suspense>
+  )
+}
+
+export default CollectionPage
