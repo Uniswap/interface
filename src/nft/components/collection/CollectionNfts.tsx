@@ -165,17 +165,17 @@ export const LoadingButton = styled.div`
   background-size: 400%;
 `
 
-const loadingAssets = (
+const loadingAssets = (height?: number) => (
   <>
     {Array.from(Array(ASSET_PAGE_SIZE), (_, index) => (
-      <CollectionAssetLoading key={index} />
+      <CollectionAssetLoading key={index} height={height} />
     ))}
   </>
 )
 
 export const CollectionNftsLoading = () => (
   <Box width="full" className={styles.assetList}>
-    {loadingAssets}
+    {loadingAssets()}
   </Box>
 )
 
@@ -508,7 +508,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
       <InfiniteScroll
         next={() => loadNext(ASSET_PAGE_SIZE)}
         hasMore={hasNext}
-        loader={hasNext && hasNfts ? loadingAssets : null}
+        loader={hasNext && hasNfts ? loadingAssets(uniformHeight) : null}
         dataLength={collectionNfts?.length ?? 0}
         style={{ overflow: 'unset' }}
         className={hasNfts || isLoadingNext ? styles.assetList : undefined}
