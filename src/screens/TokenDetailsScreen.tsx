@@ -257,7 +257,7 @@ function TokenDetails({
             <CurrencyPriceChart currency={currency} />
           </Flex>
           {error ? (
-            <AnimatedBox entering={FadeInDown} exiting={FadeOutDown}>
+            <AnimatedBox entering={FadeInDown} exiting={FadeOutDown} paddingHorizontal="lg">
               <BaseCard.InlineErrorState onRetry={retry} />
             </AnimatedBox>
           ) : null}

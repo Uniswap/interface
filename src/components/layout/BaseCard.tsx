@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useColorScheme } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
+import ErrorLoadingIcon from 'src/assets/icons/error-loading.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
@@ -170,10 +171,10 @@ function ErrorState(props: ErrorStateProps) {
     retryButtonLabel,
     onRetry,
     icon = (
-      <AlertTriangle
+      <ErrorLoadingIcon
         color={theme.colors.textTertiary}
-        height={theme.iconSizes.xxxl}
-        width={theme.iconSizes.xxxl}
+        height={theme.imageSizes.xxl}
+        width={theme.imageSizes.xxl}
       />
     ),
   } = props
