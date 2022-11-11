@@ -100,11 +100,10 @@ export function useLoadCollectionQuery(address?: string | string[]): void {
 // This will *not* trigger a query - that must be done from a parent component to ensure proper query coalescing and to
 // prevent waterfalling. Use useLoadCollectionQuery to trigger the query.
 export function useCollectionQuery(address: string): GenieCollection | undefined {
-  // This will *not* suspend if not yet loaded - it will return empty results, because it is 'store-only'.
-  const queryData = useLazyLoadQuery<CollectionQuery>(
+  const queryData = useLazyLoadQuery<CollectionQuery>( // this will suspend if not yet loaded
     collectionQuery,
     { addresses: [address] },
-    { fetchPolicy: 'store-only' }
+    { fetchPolicy: 'store-or-network' }
   )
 
   const queryCollection = queryData.nftCollections?.edges[0]?.node

@@ -7,6 +7,7 @@ import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { Activity, ActivitySwitcher, CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
 import { CollectionNftsAndMenuLoading } from 'nft/components/collection/CollectionNfts'
+import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
 import { Column, Row } from 'nft/components/Flex'
 import { useBag, useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
@@ -162,7 +163,13 @@ const CollectionPage = () => {
   useLoadCollectionQuery(contractAddress)
   useLoadAssetsQuery(contractAddress)
 
-  return <Collection />
+  // The Collection must be wrapped in suspense so that it does not suspend the CollectionPage,
+  // which is needed to trigger query loads.
+  return (
+    <Suspense fallback={<CollectionPageSkeleton />}>
+      <Collection />
+    </Suspense>
+  )
 }
 
 export default CollectionPage
