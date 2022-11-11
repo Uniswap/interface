@@ -9,24 +9,12 @@ import {
   AttachPriceIcon,
   BackArrowIcon,
   EditPriceIcon,
-  FloorPriceIcon,
-  PrevListingIcon,
   RowsCollpsedIcon,
   RowsExpandedIcon,
-  SamePriceIcon,
   VerifiedIcon,
 } from 'nft/components/icons'
 import { NumericInput } from 'nft/components/layout/Input'
-import {
-  badge,
-  body,
-  bodySmall,
-  buttonTextMedium,
-  caption,
-  headlineSmall,
-  subhead,
-  subheadSmall,
-} from 'nft/css/common.css'
+import { badge, body, bodySmall, buttonTextMedium, caption, headlineSmall, subheadSmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useNFTList, useProfilePageState, useSellAsset } from 'nft/hooks'
 import {
@@ -42,8 +30,19 @@ import { fetchPrice } from 'nft/utils/fetchPrice'
 import { ListingMarkets } from 'nft/utils/listNfts'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { Dispatch, FormEvent, useEffect, useMemo, useRef, useState } from 'react'
+import styled from 'styled-components/macro'
 
 import * as styles from './ListPage.css'
+
+const MarkplaceWrap = styled.div`
+  align-self: flex-start;
+  padding-right: 40px;
+  max-width: 1200px;
+
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    padding-bottom: 20px;
+  }
+`
 
 const SelectMarketplacesModal = ({
   setSelectedMarkets,
@@ -53,7 +52,7 @@ const SelectMarketplacesModal = ({
   selectedMarkets: ListingMarket[]
 }) => {
   return (
-    <Column alignSelf="flex-start" paddingRight="40" paddingBottom={{ sm: '20', lg: '0' }}>
+    <MarkplaceWrap>
       <Row className={headlineSmall}>Select marketplaces</Row>
       <Row className={caption} color="textSecondary" marginTop="4">
         Increase the visibility of your listings by selecting multiple marketplaces.
@@ -63,7 +62,7 @@ const SelectMarketplacesModal = ({
           return GlobalMarketplaceButton({ market, setSelectedMarkets, selectedMarkets })
         })}
       </Row>
-    </Column>
+    </MarkplaceWrap>
   )
 }
 
@@ -315,17 +314,14 @@ const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingMarket[]
       {
         displayText: 'Same price',
         onClick: () => setGlobalPriceMethod(SetPriceMethod.SAME_PRICE),
-        icon: <SamePriceIcon />,
       },
       {
         displayText: 'Floor price',
         onClick: () => setGlobalPriceMethod(SetPriceMethod.FLOOR_PRICE),
-        icon: <FloorPriceIcon />,
       },
       {
         displayText: 'Prev. listing',
         onClick: () => setGlobalPriceMethod(SetPriceMethod.PREV_LISTING),
-        icon: <PrevListingIcon />,
       },
     ],
     []
@@ -440,7 +436,7 @@ const PriceTextInput = ({
   return (
     <Column gap="12" position="relative">
       <Row
-        color="backgroundOutline"
+        color="textTertiary"
         height="44"
         width="min"
         padding="4"
@@ -463,7 +459,7 @@ const PriceTextInput = ({
           borderStyle="none"
           className={body}
           color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
-          placeholder="Set"
+          placeholder="0"
           marginRight="0"
           marginLeft="14"
           backgroundColor="none"
@@ -544,16 +540,16 @@ const EthPriceDisplay = ({ ethPrice = 0 }: { ethPrice?: number }) => {
       setEthConversion(price ?? 0)
     })
   }, [])
+
   return (
     <Column width="full">
       <Row width="full" justifyContent="flex-end">
-        <Box className={subhead} color={ethPrice !== 0 ? 'textPrimary' : 'textSecondary'} marginLeft="auto">
-          {formatEth(ethPrice)} ETH
-        </Box>
-        {ethPrice !== 0 && (
+        {ethPrice !== 0 ? (
           <Box className={body} color="textSecondary" marginLeft="12" marginRight="0">
             {formatUsdPrice(ethPrice * ethConversion)}
           </Box>
+        ) : (
+          '- Eth'
         )}
       </Row>
     </Column>
@@ -840,6 +836,15 @@ const NFTListRow = ({ asset, globalPriceMethod, globalPrice, setGlobalPrice, sel
   )
 }
 
+const MarketWrap = styled.section`
+  gap: 48px;
+  padding-left: 18px;
+  padding-right: 48x;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1200px;
+`
+
 export const ListPage = () => {
   const { setProfilePageState: setSellPageState } = useProfilePageState()
   const setGlobalMarketplaces = useSellAsset((state) => state.setGlobalMarketplaces)
@@ -885,13 +890,13 @@ export const ListPage = () => {
           <BackArrowIcon fill={themeVars.colors.textSecondary} />
         </Box>
       </Column>
-      <Column as="section" gap="48" paddingLeft="18" paddingRight="48" width="full">
+      <MarketWrap>
         <Row flexWrap={{ sm: 'wrap', lg: 'nowrap' }}>
           <SelectMarketplacesModal setSelectedMarkets={setSelectedMarkets} selectedMarkets={selectedMarkets} />
           <SetDurationModal />
         </Row>
         <NFTListingsGrid selectedMarkets={selectedMarkets} />
-      </Column>
+      </MarketWrap>
       <Box display={{ sm: 'flex', md: 'none' }} marginTop="14" marginX="16" marginBottom="32">
         <ListingButton onClick={toggleBag} buttonText={'Continue listing'} />
       </Box>
