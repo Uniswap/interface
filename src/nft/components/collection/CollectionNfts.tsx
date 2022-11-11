@@ -166,17 +166,17 @@ export const LoadingButton = styled.div`
   background-size: 400%;
 `
 
-const loadingAssets = (
+const loadingAssets = (height?: number) => (
   <>
     {Array.from(Array(ASSET_PAGE_SIZE), (_, index) => (
-      <CollectionAssetLoading key={index} />
+      <CollectionAssetLoading key={index} height={height} />
     ))}
   </>
 )
 
 export const CollectionNftsLoading = () => (
   <Box width="full" className={styles.assetList}>
-    {loadingAssets}
+    {loadingAssets()}
   </Box>
 )
 
@@ -323,22 +323,21 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
     }
   }, [contractAddress])
 
-  const Nfts =
-    collectionNfts &&
-    collectionNfts.map((asset) =>
-      asset ? (
-        <CollectionAsset
-          key={asset.address + asset.tokenId}
-          asset={asset}
-          isMobile={isMobile}
-          uniformHeight={uniformHeight}
-          setUniformHeight={setUniformHeight}
-          mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
-          setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-          rarityVerified={rarityVerified}
-        />
-      ) : null
-    )
+  const assets = useMemo(() => {
+    if (!collectionNfts) return null
+    return collectionNfts.map((asset) => (
+      <CollectionAsset
+        key={asset.address + asset.tokenId}
+        asset={asset}
+        isMobile={isMobile}
+        uniformHeight={uniformHeight}
+        setUniformHeight={setUniformHeight}
+        mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
+        setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+        rarityVerified={rarityVerified}
+      />
+    ))
+  }, [collectionNfts, currentTokenPlayingMedia, isMobile, rarityVerified, uniformHeight])
 
   const hasNfts = collectionNfts && collectionNfts.length > 0
   const hasErc1155s = hasNfts && collectionNfts[0] && collectionNfts[0].tokenType === TokenType.ERC1155
@@ -509,13 +508,13 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
       <InfiniteScroll
         next={() => loadNext(ASSET_PAGE_SIZE)}
         hasMore={hasNext}
-        loader={hasNext && hasNfts ? loadingAssets : null}
+        loader={hasNext && hasNfts ? loadingAssets(uniformHeight) : null}
         dataLength={collectionNfts?.length ?? 0}
         style={{ overflow: 'unset' }}
         className={hasNfts || isLoadingNext ? styles.assetList : undefined}
       >
         {hasNfts ? (
-          Nfts
+          assets
         ) : collectionNfts?.length === 0 ? (
           <Center width="full" color="textSecondary" textAlign="center" style={{ height: '60vh' }}>
             <EmptyCollectionWrapper>
