@@ -9,8 +9,20 @@ import { subheadSmall } from 'nft/css/common.css'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { TraitPosition, useTraitsOpen } from 'nft/hooks/useTraitsOpen'
 import { FormEvent, useEffect, useMemo, useReducer, useState } from 'react'
+import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
 import { Checkbox } from '../layout/Checkbox'
+
+const FilterItemWrapper = styled(Row)`
+  justify-content: space-between;
+  padding: 10px 16px 10px 12px;
+  cursor: pointer;
+  border-radius: 12px;
+  &:hover {
+    background: ${({ theme }) => theme.backgroundInteractive};
+  }
+`
 
 export const MARKETPLACE_ITEMS = {
   looksrare: 'LooksRare',
@@ -32,26 +44,10 @@ export const FilterItem = ({
   onClick: React.MouseEventHandler<HTMLElement>
 }) => {
   return (
-    <Row
-      justifyContent="space-between"
-      maxWidth="full"
-      overflowX={'hidden'}
-      overflowY={'hidden'}
-      fontWeight="normal"
-      className={`${subheadSmall} ${styles.subRowHover}`}
-      paddingLeft="12"
-      paddingRight="16"
-      borderRadius="12"
-      cursor="pointer"
-      maxHeight="44"
-      style={{ paddingBottom: '22px', paddingTop: '22px' }}
-      onClick={onClick}
-    >
-      <Box as="span" fontSize="14" fontWeight="normal">
-        {title}{' '}
-      </Box>
-      {element}
-    </Row>
+    <FilterItemWrapper onClick={onClick}>
+      <ThemedText.BodyPrimary>{title}</ThemedText.BodyPrimary>
+      <ThemedText.SubHeaderSmall>{element}</ThemedText.SubHeaderSmall>
+    </FilterItemWrapper>
   )
 }
 
