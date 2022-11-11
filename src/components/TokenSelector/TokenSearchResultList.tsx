@@ -6,7 +6,6 @@ import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import { Box, Flex, Inset } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { filter } from 'src/components/TokenSelector/filter'
@@ -338,7 +337,6 @@ function _TokenSearchResultList({
     <Box>
       <SectionList
         ref={sectionListRef}
-        ItemSeparatorComponent={() => <Separator mx="xs" />}
         ListEmptyComponent={
           <Flex>
             <SectionHeader title={t('Search results')} />

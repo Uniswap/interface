@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
-import { Separator } from 'src/components/layout/Separator'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import { useSearchPopularTokensQuery } from 'src/data/__generated__/types-and-hooks'
 import { SearchResultType, TokenSearchResult } from 'src/features/explore/searchHistorySlice'
@@ -40,7 +39,6 @@ export function SearchPopularTokens() {
 
   return (
     <FlatList
-      ItemSeparatorComponent={() => <Separator mx="xs" />}
       data={popularTokens}
       keyExtractor={tokenKey}
       listKey="tokens"

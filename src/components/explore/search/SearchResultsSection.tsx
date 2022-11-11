@@ -7,7 +7,6 @@ import { SearchTokenItem } from 'src/components/explore/search/items/SearchToken
 import { SearchWalletItem } from 'src/components/explore/search/items/SearchWalletItem'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
@@ -111,7 +110,6 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }) {
     <Flex grow gap="xs">
       {tokenResults.length > 0 && (
         <FlatList
-          ItemSeparatorComponent={() => <Separator mx="xs" />}
           ListHeaderComponent={
             <Text color="textSecondary" mb="xxs" mx="xs" variant="subheadSmall">
               {t('Tokens')}

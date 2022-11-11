@@ -11,7 +11,6 @@ import { SearchWalletItem } from 'src/components/explore/search/items/SearchWall
 import { SearchPopularTokens } from 'src/components/explore/search/SearchPopularTokens'
 import { CloseIcon } from 'src/components/icons/CloseIcon'
 import { AnimatedFlex, Flex, Inset } from 'src/components/layout'
-import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import {
@@ -67,7 +66,6 @@ export function SearchEmptySection() {
       {searchHistory.length > 0 && (
         <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
           <FlatList
-            ItemSeparatorComponent={() => <Separator mx="xs" />}
             ListHeaderComponent={
               <Flex row justifyContent="space-between" mb="xxs" mx="xs">
                 <Text color="textSecondary" variant="subheadSmall">
@@ -102,7 +100,6 @@ export function SearchEmptySection() {
         </Suspense>
       </Flex>
       <FlatList
-        ItemSeparatorComponent={() => <Separator mx="xs" />}
         ListHeaderComponent={
           <Text color="textSecondary" mb="xxs" mx="xs" variant="subheadSmall">
             {t('Wallets')}
