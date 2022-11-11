@@ -43,7 +43,7 @@ export function NFTCollectionModal({
           <Flex alignItems="center" gap="sm">
             {collection.image?.url && (
               <Box borderRadius="full" height={60} overflow="hidden" width={60}>
-                <NFTViewer uri={collection.image.url} />
+                <NFTViewer squareGridView maxHeight={60} uri={collection.image.url} />
               </Box>
             )}
             <Flex centered row gap="xxs">

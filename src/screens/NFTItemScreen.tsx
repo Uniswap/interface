@@ -172,7 +172,7 @@ export function NFTItemScreen({
                         height={imageSizes.lg}
                         overflow="hidden"
                         width={imageSizes.lg}>
-                        <NFTViewer uri={asset.collection.image.url} />
+                        <NFTViewer squareGridView maxHeight={60} uri={asset.collection.image.url} />
                       </Box>
                     ) : null}
                     <Box flexShrink={1}>
