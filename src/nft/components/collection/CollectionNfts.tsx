@@ -29,7 +29,7 @@ import {
 } from 'nft/hooks'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { usePriceRange } from 'nft/hooks/usePriceRange'
-import { DropDownOption, GenieCollection, TokenType, UniformHeight, UniformHeights } from 'nft/types'
+import { DropDownOption, GenieCollection, Markets, TokenType, UniformHeight, UniformHeights } from 'nft/types'
 import { getRarityStatus } from 'nft/utils/asset'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { scrollToTop } from 'nft/utils/scrollToTop'
@@ -231,8 +231,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const [sweepIsOpen, setSweepOpen] = useState(false)
   // Load all sweep queries. Loading them on the parent allows lazy-loading, but avoids waterfalling requests.
   const collectionParams = useSweepFetcherParams(contractAddress, 'others', debouncedMinPrice, debouncedMaxPrice)
-  const nftxParams = useSweepFetcherParams(contractAddress, 'others', debouncedMinPrice, debouncedMaxPrice)
-  const nft20Params = useSweepFetcherParams(contractAddress, 'others', debouncedMinPrice, debouncedMaxPrice)
+  const nftxParams = useSweepFetcherParams(contractAddress, Markets.NFTX, debouncedMinPrice, debouncedMaxPrice)
+  const nft20Params = useSweepFetcherParams(contractAddress, Markets.NFT20, debouncedMinPrice, debouncedMaxPrice)
   useLoadSweepAssetsQuery(collectionParams, sweepIsOpen)
   useLoadSweepAssetsQuery(nftxParams, sweepIsOpen)
   useLoadSweepAssetsQuery(nft20Params, sweepIsOpen)
