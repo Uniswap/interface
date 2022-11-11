@@ -191,31 +191,29 @@ export interface AssetFetcherParams {
   before?: string
 }
 
-export const defaultAssetFetcherParams = (address?: string): AssetFetcherParams | undefined => {
-  return address
-    ? {
-        address,
-        orderBy: 'PRICE',
-        asc: true,
-        first: ASSET_PAGE_SIZE,
-        filter: { listed: false },
-      }
-    : undefined
+const defaultAssetFetcherParams: Omit<AssetQuery$variables, 'address'> = {
+  orderBy: 'PRICE',
+  asc: true,
+  // tokenSearchQuery must be specified so that this exactly matches the initial query.
+  filter: { listed: false, tokenSearchQuery: '' },
+  first: ASSET_PAGE_SIZE,
 }
 
-export function useLoadAssetsQuery(params?: AssetFetcherParams) {
+export function useLoadAssetsQuery(address?: string) {
   const [, loadQuery] = useQueryLoader<AssetQuery>(assetQuery)
   useEffect(() => {
-    if (params) {
-      loadQuery({ ...params })
+    if (address) {
+      loadQuery({ ...defaultAssetFetcherParams, address })
     }
-  }, [loadQuery, params])
+  }, [address, loadQuery])
 }
 
 export function useLazyLoadAssetsQuery(params: AssetFetcherParams) {
-  const vars = useMemo(() => ({ ...params }), [params])
-  const [queryOptions, setQueryOptions] = useState({ fetchKey: 0 })
-  const queryData = useLazyLoadQuery<AssetQuery>(assetQuery, vars, queryOptions)
+  const vars = useMemo(() => ({ ...defaultAssetFetcherParams, ...params }), [params])
+  const [fetchKey, setFetchKey] = useState(0)
+  // Use the store if it is available (eg from polling), or the network if it is not (eg from an incorrect preload).
+  const fetchPolicy = 'store-or-network'
+  const queryData = useLazyLoadQuery<AssetQuery>(assetQuery, vars, { fetchKey, fetchPolicy }) // this will suspend if not yet loaded
 
   const { data, hasNext, loadNext, isLoadingNext } = usePaginationFragment<AssetPaginationQuery, any>(
     assetPaginationQuery,
@@ -230,14 +228,11 @@ export function useLazyLoadAssetsQuery(params: AssetFetcherParams) {
     // Initiate a network request. When it resolves, refresh the UI from store (to avoid re-triggering Suspense);
     // see: https://relay.dev/docs/guided-tour/refetching/refreshing-queries/#if-you-need-to-avoid-suspense-1.
     await fetchQuery<AssetQuery>(environment, assetQuery, { ...vars, first: length }).toPromise()
-    setQueryOptions(({ fetchKey }) => ({
-      fetchKey: fetchKey + 1,
-      fetchPolicy: 'store-only',
-    }))
+    setFetchKey((fetchKey) => fetchKey + 1)
   }, [data.nftAssets?.edges?.length, environment, vars])
   // NB: This will poll every POLLING_INTERVAL, *not* every POLLING_INTERVAL from the last successful poll.
   // TODO(WEB-2004): Update useInterval to wait for the fn to complete before rescheduling.
-  useInterval(refresh, POLLING_INTERVAL)
+  useInterval(refresh, POLLING_INTERVAL, /* leading= */ false)
 
   // It is especially important for this to be memoized to avoid re-rendering from polling if data is unchanged.
   const assets: GenieAsset[] = useMemo(
@@ -304,8 +299,7 @@ export function useLoadSweepAssetsQuery(params: SweepFetcherParams, enabled = tr
 // prevent waterfalling. Use useLoadSweepAssetsQuery to trigger the query.
 export function useLazyLoadSweepAssetsQuery(params: SweepFetcherParams): GenieAsset[] {
   const vars = useSweepFetcherVars(params)
-  // This will suspend if not yet loaded - it will return empty results despite being 'store-only', because it is a fragment.
-  const queryData = useLazyLoadQuery(assetQuery, vars, { fetchPolicy: 'store-only' })
+  const queryData = useLazyLoadQuery(assetQuery, vars, { fetchPolicy: 'store-only' }) // this will suspend if not yet loaded
   const { data } = usePaginationFragment<AssetPaginationQuery, any>(assetPaginationQuery, queryData)
   return useMemo<GenieAsset[]>(
     () =>

@@ -1,7 +1,7 @@
 import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { defaultAssetFetcherParams, useLoadAssetsQuery } from 'graphql/data/nft/Asset'
+import { useLoadAssetsQuery } from 'graphql/data/nft/Asset'
 import { useCollectionQuery, useLoadCollectionQuery } from 'graphql/data/nft/Collection'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
 import { AnimatedBox, Box } from 'nft/components/Box'
@@ -160,7 +160,7 @@ const Collection = () => {
 const CollectionPage = () => {
   const { contractAddress } = useParams()
   useLoadCollectionQuery(contractAddress)
-  useLoadAssetsQuery(defaultAssetFetcherParams(contractAddress))
+  useLoadAssetsQuery(contractAddress)
 
   return <Collection />
 }
