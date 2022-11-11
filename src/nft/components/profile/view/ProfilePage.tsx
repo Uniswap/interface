@@ -82,9 +82,12 @@ export const ProfilePage = () => {
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
 
   const handleSellModeClick = useCallback(() => {
-    resetSellAssets()
+    // resetSellAssets()
     setIsSellMode(!isSellMode)
-    setBagExpanded({ bagExpanded: !isSellMode })
+
+    if (!isMobile) {
+      setBagExpanded({ bagExpanded: !isSellMode })
+    }
   }, [isSellMode, resetSellAssets, setBagExpanded, setIsSellMode])
 
   const { data: ownerCollections } = useQuery(
@@ -117,8 +120,8 @@ export const ProfilePage = () => {
         <Row alignItems="flex-start" position="relative" paddingX="20">
           <FilterSidebar />
 
-          {(!isMobile || !isFiltersExpanded) && (
-            <Column width="full">
+          {!isFiltersExpanded && (
+            <Column width="full" overflow="auto">
               <AnimatedBox
                 flexShrink="0"
                 style={{
@@ -189,7 +192,7 @@ export const ProfilePage = () => {
           )}
         </Row>
       )}
-      {sellAssets.length > 0 && (
+      {sellAssets.length > 0 ? (
         <Row
           display={{ sm: 'flex', md: 'none' }}
           position="fixed"
@@ -228,6 +231,21 @@ export const ProfilePage = () => {
           >
             Continue
           </Box>
+        </Row>
+      ) : (
+        <Row
+          display={{ sm: 'flex', md: 'none' }}
+          position="fixed"
+          bottom="24"
+          left="16"
+          height="56"
+          borderRadius="12"
+          paddingX="16"
+          paddingY="12"
+          style={{ background: '#0d0e0ef2', width: 'calc(100% - 32px)', lineHeight: '24px' }}
+          className={subhead}
+        >
+          No NFTs Selected
         </Row>
       )}
     </ProfilePageColumn>

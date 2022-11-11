@@ -48,7 +48,7 @@ const Profile = () => {
 
   return (
     <Trace page={PageName.NFT_PROFILE_PAGE} shouldLogImpression>
-      <Box className={styles.mobileSellWrapper}>
+      <Box className={styles.mobileSellWrapper} overflow="auto">
         {/* <Head> TODO: figure out metadata tagging
           <title>Genie | Sell</title>
         </Head> */}

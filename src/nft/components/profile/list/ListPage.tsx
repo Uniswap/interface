@@ -16,7 +16,7 @@ import {
 import { NumericInput } from 'nft/components/layout/Input'
 import { badge, body, bodySmall, buttonTextMedium, caption, headlineSmall, subheadSmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
-import { useBag, useNFTList, useProfilePageState, useSellAsset } from 'nft/hooks'
+import { useBag, useIsMobile, useNFTList, useProfilePageState, useSellAsset } from 'nft/hooks'
 import {
   DropDownOption,
   ListingMarket,
@@ -79,6 +79,9 @@ const GlobalMarketplaceButton = ({ market, setSelectedMarkets, selectedMarkets }
       ? setSelectedMarkets(selectedMarkets.filter((selected: ListingMarket) => selected !== market))
       : setSelectedMarkets([...selectedMarkets, market])
   }
+
+  const isMobile = useIsMobile()
+
   return (
     <Row
       gap="6"
@@ -100,7 +103,7 @@ const GlobalMarketplaceButton = ({ market, setSelectedMarkets, selectedMarkets }
         marginLeft={isSelected ? '8' : '12'}
         src={isSelected ? '/nft/svgs/checkmark.svg' : market.icon}
       />
-      <Box className={buttonTextMedium}>{market.name}</Box>
+      {!isMobile && <Box className={buttonTextMedium}>{market.name}</Box>}
       <Box color="textSecondary" className={caption} marginRight="12">
         {market.fee}% fee
       </Box>
@@ -155,7 +158,12 @@ const SetDurationModal = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [duration, amount])
   return (
-    <Column marginLeft={{ sm: '0', lg: 'auto' }} marginRight="auto" alignSelf="flex-start">
+    <Column
+      marginLeft={{ sm: '0', lg: 'auto' }}
+      marginTop={{ sm: '20', md: '0' }}
+      marginRight="auto"
+      alignSelf="flex-start"
+    >
       <Row className={headlineSmall}>Set duration</Row>
       <Row className={caption} color="textSecondary" marginTop="4">
         Select the amount of time your listings are available for purchase. Max 6 months.
@@ -185,6 +193,7 @@ const SetDurationModal = () => {
           setGlobalAmount={setAmount}
           setGlobalDuration={setDuration}
         />
+
         <Row
           color="backgroundOutline"
           paddingRight="8"
@@ -328,7 +337,7 @@ const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingMarket[]
   )
 
   return (
-    <Column>
+    <Column marginTop={{ sm: '20' }}>
       <Row className={headlineSmall}>Create your listings</Row>
       <Row marginTop="20">
         <Column
@@ -341,6 +350,7 @@ const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingMarket[]
           YOUR NFTS
         </Column>
         <Row flex={{ sm: '1', md: '3' }}>
+          {/* price here */}
           <Column className={subheadSmall} style={{ flex: '1.5' }}>
             <SortDropdown dropDownOptions={priceDropdownOptions} mini miniPrompt="Set price by" />
           </Column>
@@ -373,7 +383,7 @@ const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingMarket[]
           </Column>
         </Row>
       </Row>
-      {sellAssets.map((asset) => {
+      {sellAssets.map((asset, index) => {
         return (
           <>
             <NFTListRow
@@ -382,6 +392,7 @@ const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingMarket[]
               globalPrice={globalPrice}
               setGlobalPrice={setGlobalPrice}
               selectedMarkets={selectedMarkets}
+              key={index}
             />
             {sellAssets.indexOf(asset) < sellAssets.length - 1 && <hr className={styles.nftDivider} />}
           </>
