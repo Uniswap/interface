@@ -82,7 +82,8 @@ const Banner = () => {
   )
 
   // Trigger queries for the top trending collections, so that the data is immediately available if the user clicks through.
-  useLoadCollectionQuery(useMemo(() => collections?.map(({ address }) => address), [collections]))
+  const collectionAddresses = useMemo(() => collections?.map(({ address }) => address), [collections])
+  useLoadCollectionQuery(collectionAddresses)
 
   return (
     <BannerContainer>
