@@ -48,7 +48,7 @@ export function useSyncWidgetInputs({
       if (origin === 'max') {
         sendAnalyticsEvent(EventName.SWAP_MAX_TOKEN_AMOUNT_SELECTED, { ...trace })
       }
-      setType(toTradeType(field))
+      setType(field === Field.INPUT ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT)
       setAmount(amount)
     },
     [trace]
@@ -71,20 +71,34 @@ export function useSyncWidgetInputs({
   }, [])
 
   const onTokenSelect = useCallback(
-    (token: Currency) => {
+    (selectingToken: Currency) => {
       if (selectingField === undefined) return
-      setType(toTradeType(selectingField))
 
       const otherField = invertField(selectingField)
-      let otherToken = tokens[otherField]
-      otherToken = otherToken?.equals(token) ? tokens[selectingField] : otherToken
-      const update = {
-        [selectingField]: token,
-        [otherField]: otherToken,
+      const isFlip = tokens[otherField]?.equals(selectingToken)
+      const update: SwapTokens = {
+        [selectingField]: selectingToken,
+        [otherField]: isFlip ? tokens[selectingField] : tokens[otherField],
         default: tokens.default,
       }
+
+      setType((type) => {
+        // If flipping the tokens, also flip the type/amount.
+        if (isFlip) {
+          return invertTradeType(type)
+        }
+
+        // Setting a new token should clear its amount, if it is set.
+        const activeField = type === TradeType.EXACT_INPUT ? Field.INPUT : Field.OUTPUT
+        if (selectingField === activeField) {
+          setAmount(() => EMPTY_AMOUNT)
+        }
+
+        return type
+      })
+
       if (!includesDefaultToken(update)) {
-        onTokenChange?.(update[Field.OUTPUT] || update[Field.INPUT] || token)
+        onTokenChange?.(update[Field.OUTPUT] || selectingToken)
       }
       setTokens(update)
     },
@@ -124,16 +138,6 @@ function invertField(field: Field) {
       return Field.OUTPUT
     case Field.OUTPUT:
       return Field.INPUT
-  }
-}
-
-// TODO(zzmp): Move to @uniswap/widgets.
-function toTradeType(modifiedField: Field) {
-  switch (modifiedField) {
-    case Field.INPUT:
-      return TradeType.EXACT_INPUT
-    case Field.OUTPUT:
-      return TradeType.EXACT_OUTPUT
   }
 }
 
