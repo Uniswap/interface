@@ -1,8 +1,8 @@
 import Column from 'components/Column'
 import Loader from 'components/Loader'
-import styled, { useTheme } from 'styled-components/macro'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
+import styled, { useTheme } from 'styled-components/macro'
 
 const BREAKPOINT = '960px'
 
