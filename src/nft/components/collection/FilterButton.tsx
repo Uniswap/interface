@@ -17,8 +17,6 @@ export const FilterButton = ({
   onClick: () => void
   collectionCount?: number
 }) => {
-  const isCollectionNftsLoading = useIsCollectionLoading((state) => state.isCollectionNftsLoading)
-
   return (
     <Box
       className={clsx(styles.filterButton, !isFiltersExpanded && styles.filterButtonExpanded)}
