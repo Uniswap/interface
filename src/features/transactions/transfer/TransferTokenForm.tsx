@@ -41,6 +41,7 @@ interface TransferTokenProps {
   derivedTransferInfo: DerivedTransferInfo
   onNext: () => void
   warnings: Warning[]
+  showingSelectorScreen: boolean
 }
 
 export interface TransferSpeedbump {
@@ -53,6 +54,7 @@ export function TransferTokenForm({
   derivedTransferInfo,
   onNext,
   warnings,
+  showingSelectorScreen,
 }: TransferTokenProps) {
   const { t } = useTranslation()
   const theme = useAppTheme()
@@ -217,6 +219,7 @@ export function TransferTokenForm({
                 currency={currencyIn}
                 currencyAmount={currencyAmounts[CurrencyField.INPUT]}
                 currencyBalance={currencyBalances[CurrencyField.INPUT]}
+                isOnScreen={!showingSelectorScreen}
                 isUSDInput={isUSDInput}
                 selection={inputSelection}
                 showSoftInputOnFocus={showNativeKeyboard}

@@ -59,6 +59,7 @@ type InnerContentProps = Pick<
 > & {
   step: number
   setStep: (step: TransactionStep) => void
+  showingSelectorScreen: boolean
 }
 
 function isSwapInfo(
@@ -88,7 +89,7 @@ export function TransactionFlow({
 }: TransactionFlowProps) {
   const theme = useAppTheme()
 
-  const screenXOffset = useSharedValue(0)
+  const screenXOffset = useSharedValue(showTokenSelector || showRecipientSelector ? 1 : 0)
   useEffect(() => {
     const screenOffset = showTokenSelector || showRecipientSelector ? 1 : 0
     screenXOffset.value = withSpring(-(dimensions.fullWidth * screenOffset), ANIMATE_SPRING_CONFIG)
@@ -138,6 +139,7 @@ export function TransactionFlow({
             dispatch={dispatch}
             exactValue={exactValue}
             setStep={setStep}
+            showingSelectorScreen={showRecipientSelector || showTokenSelector}
             step={step}
             totalGasFee={totalGasFee}
             txRequest={txRequest}
@@ -205,6 +207,7 @@ function SwapInnerContent({
   onRetrySubmit,
   step,
   exactValue,
+  showingSelectorScreen,
 }: SwapInnerContentProps) {
   switch (step) {
     case TransactionStep.SUBMITTED:
@@ -218,6 +221,7 @@ function SwapInnerContent({
           derivedSwapInfo={derivedSwapInfo}
           dispatch={dispatch}
           exactValue={exactValue}
+          showingSelectorScreen={showingSelectorScreen}
           warnings={warnings}
           onNext={onFormNext}
         />
@@ -249,6 +253,7 @@ interface TransferInnerContentProps extends InnerContentProps {
 }
 
 function TransferInnerContent({
+  showingSelectorScreen,
   derivedTransferInfo,
   onClose,
   dispatch,
@@ -275,6 +280,7 @@ function TransferInnerContent({
         <TransferTokenForm
           derivedTransferInfo={derivedTransferInfo}
           dispatch={dispatch}
+          showingSelectorScreen={showingSelectorScreen}
           warnings={warnings}
           onNext={onFormNext}
         />

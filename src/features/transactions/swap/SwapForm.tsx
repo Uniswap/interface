@@ -44,6 +44,7 @@ interface SwapFormProps {
   derivedSwapInfo: DerivedSwapInfo
   warnings: Warning[]
   exactValue: string
+  showingSelectorScreen: boolean
 }
 
 export const ARROW_SIZE = 44
@@ -54,6 +55,7 @@ export function SwapForm({
   derivedSwapInfo,
   warnings,
   exactValue,
+  showingSelectorScreen,
 }: SwapFormProps) {
   const { t } = useTranslation()
   const theme = useAppTheme()
@@ -173,6 +175,7 @@ export function SwapForm({
                 currencyBalance={currencyBalances[CurrencyField.INPUT]}
                 dimTextColor={exactCurrencyField === CurrencyField.OUTPUT && swapDataRefreshing}
                 focus={focusOnCurrencyField === CurrencyField.INPUT}
+                isOnScreen={!showingSelectorScreen}
                 selection={showNativeKeyboard ? undefined : inputSelection}
                 showSoftInputOnFocus={showNativeKeyboard}
                 usdValue={inputCurrencyUSDValue}
@@ -224,6 +227,7 @@ export function SwapForm({
                   currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
                   dimTextColor={exactCurrencyField === CurrencyField.INPUT && swapDataRefreshing}
                   focus={focusOnCurrencyField === CurrencyField.OUTPUT}
+                  isOnScreen={!showingSelectorScreen}
                   selection={showNativeKeyboard ? undefined : outputSelection}
                   showNonZeroBalancesOnly={false}
                   showSoftInputOnFocus={showNativeKeyboard}

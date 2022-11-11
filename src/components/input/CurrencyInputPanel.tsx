@@ -37,6 +37,9 @@ type CurrentInputPanelProps = {
   selection?: TextInputProps['selection']
   onSelectionChange?: (start: number, end: number) => void
   usdValue: CurrencyAmount<Currency> | null
+
+  // sometimes CurrencyInputPanel rendered off screen like with Send input -> selector flow
+  isOnScreen?: boolean
 } & RestyleProps
 
 const MAX_INPUT_FONT_SIZE = 36
@@ -87,6 +90,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
     selection,
     onSelectionChange: selectionChange,
     usdValue,
+    isOnScreen,
     ...rest
   } = props
 
@@ -113,12 +117,12 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
   // focus state to be what our prop says it should be
   const isTextInputRefActuallyFocused = inputRef.current?.isFocused()
   useEffect(() => {
-    if (focus && !isTextInputRefActuallyFocused) {
+    if (focus && !isTextInputRefActuallyFocused && isOnScreen) {
       inputRef.current?.focus()
     } else if (!focus && isTextInputRefActuallyFocused) {
       inputRef.current?.blur()
     }
-  }, [focus, inputRef, isTextInputRefActuallyFocused])
+  }, [focus, inputRef, isTextInputRefActuallyFocused, isOnScreen])
 
   const { onLayout, fontSize, onSetFontSize } = useDynamicFontSizing(
     MAX_CHAR_PIXEL_WIDTH,
