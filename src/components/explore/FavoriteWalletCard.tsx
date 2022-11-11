@@ -71,7 +71,7 @@ export default function FavoriteWalletCard({
             hideAddressInSubtitle
             address={address}
             direction="column"
-            size={40}
+            size={theme.iconSizes.xxxl}
             variant="buttonLabelSmall"
           />
         </BaseCard.Shadow>

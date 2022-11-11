@@ -48,7 +48,7 @@ export function SearchWalletItem({ wallet, isEditing, isFavorited }: SearchWalle
         <Flex row justifyContent="space-between" px="xs" py="sm">
           <AddressDisplay
             address={address}
-            size={theme.imageSizes.xl}
+            size={theme.iconSizes.xxxl}
             subtitleOverrideText={wallet.category}
             variant="bodyLarge"
           />

@@ -40,8 +40,8 @@ export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProp
   return (
     <TouchableArea name={ElementName.SearchEtherscanItem} onPress={onPressViewEtherscan}>
       <Flex row alignItems="center" gap="sm" justifyContent="space-between" px="xs" py="sm">
-        <Flex centered row gap="md">
-          <EtherscanLogo height={35} width={35} />
+        <Flex centered row gap="sm">
+          <EtherscanLogo height={theme.iconSizes.xxxl} width={theme.iconSizes.xxxl} />
           <Text variant="buttonLabelMedium">{shortenAddress(address)}</Text>
         </Flex>
         <Arrow color={theme.colors.textSecondary} direction="ne" size={24} />
