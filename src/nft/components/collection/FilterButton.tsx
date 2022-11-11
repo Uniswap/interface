@@ -3,7 +3,6 @@ import { Box } from 'nft/components/Box'
 import * as styles from 'nft/components/collection/FilterButton.css'
 import { FilterIcon } from 'nft/components/icons'
 import { buttonTextMedium } from 'nft/css/common.css'
-import { useIsCollectionLoading } from 'nft/hooks'
 import { pluralize, putCommas } from 'nft/utils'
 
 export const FilterButton = ({
