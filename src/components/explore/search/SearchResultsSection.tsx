@@ -1,4 +1,4 @@
-import { default as React, useMemo } from 'react'
+import { default as React, useCallback, useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
@@ -6,6 +6,7 @@ import { SearchEtherscanItem } from 'src/components/explore/search/items/SearchE
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
 import { SearchWalletItem } from 'src/components/explore/search/items/SearchWalletItem'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
+import { BaseCard } from 'src/components/layout/BaseCard'
 import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
@@ -24,7 +25,12 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }) {
   const { t } = useTranslation()
 
   // Search for matching tokens
-  const { data: tokenResultsData, loading } = useSearchResultsQuery({
+  const {
+    data: tokenResultsData,
+    loading,
+    error,
+    refetch,
+  } = useSearchResultsQuery({
     variables: { searchQuery },
   })
 
@@ -71,7 +77,23 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }) {
   const noENSResults = !ensLoading && !ensName && !ensAddress
   const noResults = tokenResults.length === 0 && noENSResults && !etherscanAddress
 
+  const onRetry = useCallback(() => {
+    refetch()
+  }, [refetch])
+
   if (loading) return <SearchResultsLoader />
+
+  if (error) {
+    return (
+      <Flex pt="lg">
+        <BaseCard.ErrorState
+          retryButtonLabel="Retry"
+          title={t("Couldn't load search results")}
+          onRetry={onRetry}
+        />
+      </Flex>
+    )
+  }
 
   if (noResults) {
     return (
