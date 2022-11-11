@@ -1,3 +1,5 @@
+import { SortBy } from 'nft/hooks'
+
 import { SellOrder } from '../sell'
 
 export interface OpenSeaCollection {
@@ -160,10 +162,10 @@ export enum ToolTipType {
 // index starts at 1 for boolean reasons
 export interface DropDownOption {
   displayText: string
-  icon?: JSX.Element
   onClick: () => void
   reverseIndex?: number
   reverseOnClick?: () => void
+  sortBy?: SortBy
 }
 
 export enum DetailsOrigin {

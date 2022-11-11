@@ -1,12 +1,15 @@
 import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { useCollectionQuery } from 'graphql/data/nft/Collection'
+import { useLoadAssetsQuery } from 'graphql/data/nft/Asset'
+import { useCollectionQuery, useLoadCollectionQuery } from 'graphql/data/nft/Collection'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { Activity, ActivitySwitcher, CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
 import { CollectionNftsAndMenuLoading } from 'nft/components/collection/CollectionNfts'
+import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
 import { Column, Row } from 'nft/components/Flex'
+import { BagCloseIcon } from 'nft/components/icons'
 import { useBag, useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
 import { GenieCollection } from 'nft/types'
@@ -14,6 +17,7 @@ import { Suspense, useEffect } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
 const FILTER_WIDTH = 332
 const BAG_WIDTH = 324
@@ -24,15 +28,43 @@ const CollectionDescriptionSection = styled(Column)`
   ${styles.ScreenBreakpointsPaddings}
 `
 
+const MobileFilterHeader = styled(Row)`
+  padding: 20px 16px;
+  justify-content: space-between;
+`
+
 const CollectionDisplaySection = styled(Row)`
   ${styles.ScreenBreakpointsPaddings}
   align-items: flex-start;
   position: relative;
 `
 
+const IconWrapper = styled.button`
+  background-color: transparent;
+  border-radius: 8px;
+  border: none;
+  color: ${({ theme }) => theme.textPrimary};
+  cursor: pointer;
+  display: flex;
+  padding: 2px 0px;
+  opacity: 1;
+  &:hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+  }
+
+  &:active {
+    opacity: ${({ theme }) => theme.opacity.click};
+  }
+
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => `opacity ${duration.medium} ${timing.ease}`};
+`
+
 const Collection = () => {
   const { contractAddress } = useParams()
-
   const isMobile = useIsMobile()
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const { pathname } = useLocation()
@@ -45,14 +77,15 @@ const Collection = () => {
   const collectionStats = useCollectionQuery(contractAddress as string)
 
   const { gridX, gridWidthOffset } = useSpring({
-    gridX: isFiltersExpanded ? FILTER_WIDTH : 0,
-    gridWidthOffset: isFiltersExpanded
-      ? isBagExpanded
-        ? BAG_WIDTH + FILTER_WIDTH
-        : FILTER_WIDTH
-      : isBagExpanded
-      ? BAG_WIDTH
-      : 0,
+    gridX: isFiltersExpanded && !isMobile ? FILTER_WIDTH : 0,
+    gridWidthOffset:
+      isFiltersExpanded && !isMobile
+        ? isBagExpanded
+          ? BAG_WIDTH + FILTER_WIDTH
+          : FILTER_WIDTH
+        : isBagExpanded
+        ? BAG_WIDTH
+        : 0,
   })
 
   useEffect(() => {
@@ -110,12 +143,34 @@ const Collection = () => {
                 />
               </CollectionDescriptionSection>
               <CollectionDisplaySection>
-                <Box position="sticky" top="72" width="0">
-                  {isFiltersExpanded && <Filters traitsByGroup={collectionStats?.traits ?? {}} />}
+                <Box
+                  position={isMobile ? 'fixed' : 'sticky'}
+                  top="0"
+                  left="0"
+                  width={isMobile ? 'full' : '0'}
+                  height={isMobile && isFiltersExpanded ? 'full' : undefined}
+                  background={isMobile ? 'backgroundBackdrop' : undefined}
+                  zIndex={isMobile ? 'modalBackdrop' : undefined}
+                  overflowY={isMobile ? 'scroll' : undefined}
+                >
+                  {isFiltersExpanded && (
+                    <>
+                      {isMobile && (
+                        <MobileFilterHeader>
+                          <ThemedText.HeadlineSmall>Filter</ThemedText.HeadlineSmall>
+                          <IconWrapper onClick={() => setFiltersExpanded(false)}>
+                            <BagCloseIcon />
+                          </IconWrapper>
+                        </MobileFilterHeader>
+                      )}
+                      <Filters traitsByGroup={collectionStats?.traits ?? {}} />
+                    </>
+                  )}
                 </Box>
 
                 {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
                 <AnimatedBox
+                  position={isMobile && isFiltersExpanded ? 'fixed' : 'static'}
                   style={{
                     transform: gridX.to((x) => `translate(${x as number}px)`),
                     width: gridWidthOffset.to((x) => `calc(100% - ${x as number}px)`),
@@ -154,4 +209,21 @@ const Collection = () => {
   )
 }
 
-export default Collection
+// The page is responsible for any queries that must be run on initial load.
+// Triggering query load from the page prevents waterfalled requests, as lazy-loading them in components would prevent
+// any children from rendering.
+const CollectionPage = () => {
+  const { contractAddress } = useParams()
+  useLoadCollectionQuery(contractAddress)
+  useLoadAssetsQuery(contractAddress)
+
+  // The Collection must be wrapped in suspense so that it does not suspend the CollectionPage,
+  // which is needed to trigger query loads.
+  return (
+    <Suspense fallback={<CollectionPageSkeleton />}>
+      <Collection />
+    </Suspense>
+  )
+}
+
+export default CollectionPage

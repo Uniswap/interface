@@ -3,8 +3,14 @@ import { Box } from 'nft/components/Box'
 import * as styles from 'nft/components/collection/Filters.css'
 import { ChevronUpIcon } from 'nft/components/icons'
 import { subheadSmall } from 'nft/css/common.css'
+import { useIsMobile } from 'nft/hooks'
 import { TraitPosition, useTraitsOpen } from 'nft/hooks/useTraitsOpen'
 import { ReactNode, useEffect, useState } from 'react'
+import styled from 'styled-components/macro'
+
+const ChildreMobileWrapper = styled.div<{ isMobile: boolean }>`
+  padding: ${({ isMobile }) => (isMobile ? '0px 16px 0px 12px' : '0px')};
+`
 
 interface TraitsHeaderProps {
   title: string
@@ -18,6 +24,7 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
   const [isOpen, setOpen] = useState(false)
   const traitsOpen = useTraitsOpen((state) => state.traitsOpen)
   const setTraitsOpen = useTraitsOpen((state) => state.setTraitsOpen)
+  const isMobile = useIsMobile()
 
   const prevTraitIsOpen = index !== undefined ? traitsOpen[index - 1] : false
   const showBorderTop = index !== TraitPosition.TRAIT_START_INDEX
@@ -63,7 +70,7 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
             </Box>
           </Box>
         </Box>
-        {children}
+        <ChildreMobileWrapper isMobile={isMobile}>{children}</ChildreMobileWrapper>
       </Box>
     </>
   )

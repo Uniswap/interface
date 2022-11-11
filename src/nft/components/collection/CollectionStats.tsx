@@ -402,6 +402,7 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
       {(stats.description || isCollectionStatsLoading) && isMobile && (
         <CollectionDescription description={stats.description ?? ''} />
       )}
+      <div id="nft-anchor-mobile" />
       <StatsRow isMobile display={{ sm: 'flex', md: 'none' }} stats={stats} marginTop="20" marginBottom="12" />
     </Box>
   )
