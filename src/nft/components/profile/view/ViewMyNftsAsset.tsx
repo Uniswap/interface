@@ -93,7 +93,7 @@ export const ViewMyNftsAsset = ({
 
   const assetMediaType = Card.useAssetMediaType(asset)
 
-  const isDisabled = asset.asset_contract.tokenType === 'ERC1155' || (isSellMode && asset.susFlag)
+  const isDisabled = (isSellMode && asset.asset_contract.tokenType === 'ERC1155') || (isSellMode && asset.susFlag)
   const disabledTooltipText =
     asset.asset_contract.tokenType === 'ERC1155' ? 'ERC-1155 support coming soon' : 'Blocked from trading'
 
