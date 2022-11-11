@@ -178,20 +178,44 @@ function formatAssetQueryData(queryAsset: NftAssetsQueryAsset, totalCount?: numb
   }
 }
 
-export function useAssetsQuery(
-  address: string,
-  orderBy: NftAssetSortableField,
-  asc: boolean,
-  filter: NftAssetsFilterInput,
-  first?: number,
-  after?: string,
-  last?: number,
+export const DEFAULT_ASSETS_AMOUNT = 25
+
+export interface AssetFetcherParams {
+  address: string
+  orderBy: NftAssetSortableField
+  asc: boolean
+  filter: NftAssetsFilterInput
+  first?: number
+  after?: string
+  last?: number
   before?: string
-) {
-  const vars = useMemo(
-    () => ({ address, orderBy, asc, filter, first, after, last, before }),
-    [address, after, asc, before, filter, first, last, orderBy]
-  )
+}
+
+export const defaultAssetFetcherParams = (address?: string) => {
+  return address
+    ? <AssetFetcherParams>{
+        address,
+        orderBy: 'PRICE',
+        asc: true,
+        first: DEFAULT_ASSETS_AMOUNT,
+        filter: {
+          buyNow: false,
+        },
+      }
+    : undefined
+}
+
+export function useLoadAssetsQuery(params?: AssetFetcherParams) {
+  const [, loadQuery] = useQueryLoader<AssetQuery>(assetQuery)
+  useEffect(() => {
+    if (params) {
+      loadQuery({ ...params })
+    }
+  }, [loadQuery, params])
+}
+
+export function useLazyLoadAssetsQuery(params: AssetFetcherParams) {
+  const vars = useMemo(() => ({ ...params }), [params])
   const [queryOptions, setQueryOptions] = useState({ fetchKey: 0 })
   const queryData = useLazyLoadQuery<AssetQuery>(assetQuery, vars, queryOptions)
 
