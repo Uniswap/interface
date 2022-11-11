@@ -256,7 +256,6 @@ const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
         width="full"
         style={{
           aspectRatio: uniformHeight === UniformHeights.notUniform ? '1' : 'auto',
-          minHeight: uniformHeight,
           transition: 'transform 0.4s ease 0s',
         }}
         src={asset.imageUrl || asset.smallImageUrl}
@@ -268,7 +267,9 @@ const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
             if (uniformHeight === UniformHeights.unset) {
               setUniformHeight(e.currentTarget.clientHeight)
             } else if (uniformHeight !== UniformHeights.notUniform && e.currentTarget.clientHeight !== uniformHeight) {
-              setUniformHeight(UniformHeights.notUniform)
+              if (!uniformHeight || Math.abs(uniformHeight - e.currentTarget.clientHeight) > 1) {
+                setUniformHeight(UniformHeights.notUniform)
+              }
             }
           }
           setLoaded(true)
@@ -409,7 +410,6 @@ const Audio = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPla
           width="full"
           style={{
             aspectRatio: uniformHeight === UniformHeights.notUniform ? '1' : 'auto',
-            minHeight: uniformHeight,
             transition: 'transform 0.4s ease 0s',
           }}
           src={asset.imageUrl || asset.smallImageUrl}
@@ -424,7 +424,9 @@ const Audio = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPla
                 uniformHeight !== UniformHeights.notUniform &&
                 e.currentTarget.clientHeight !== uniformHeight
               ) {
-                setUniformHeight(UniformHeights.notUniform)
+                if (!uniformHeight || Math.abs(uniformHeight - e.currentTarget.clientHeight) > 1) {
+                  setUniformHeight(UniformHeights.notUniform)
+                }
               }
             }
             setImageLoaded(true)
