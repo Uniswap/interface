@@ -34,9 +34,7 @@ const SortByItem = ({
         objectFit="cover"
         src="/nft/svgs/checkmark.svg"
       />
-    ) : (
-      <></>
-    )
+    ) : null
   const onClick: React.MouseEventHandler<HTMLElement> = (e) => {
     e.preventDefault()
     parentOnClick(e)
