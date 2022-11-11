@@ -256,6 +256,7 @@ const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
         width="full"
         style={{
           aspectRatio: uniformHeight === UniformHeights.notUniform ? '1' : 'auto',
+          minHeight: uniformHeight,
           transition: 'transform 0.4s ease 0s',
         }}
         src={asset.imageUrl || asset.smallImageUrl}
@@ -408,6 +409,7 @@ const Audio = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPla
           width="full"
           style={{
             aspectRatio: uniformHeight === UniformHeights.notUniform ? '1' : 'auto',
+            minHeight: uniformHeight,
             transition: 'transform 0.4s ease 0s',
           }}
           src={asset.imageUrl || asset.smallImageUrl}
