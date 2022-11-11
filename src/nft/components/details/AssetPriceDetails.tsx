@@ -257,6 +257,7 @@ export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
   )
 }
 
+
 export const NotForSale = ({ collection }: { collection: CollectionInfoForAsset }) => {
   const theme = useTheme()
 
@@ -271,7 +272,7 @@ export const NotForSale = ({ collection }: { collection: CollectionInfoForAsset 
           <ThemedText.BodySecondary fontSize="14px" lineHeight="20px">
             Discover similar NFTs for sale in
           </ThemedText.BodySecondary>
-          <ThemedText.Link lineHeight="20px">{collection.collectionName}</ThemedText.Link>
+          <ThemedText.Link href={`/collection/${collection.}`} lineHeight="20px">{collection.collectionName}</ThemedText.Link>
         </DiscoveryContainer>
       </NotForSaleContainer>
     </BestPriceContainer>
@@ -372,7 +373,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
                     }
                   }}
                 >
-                  <SubHeader lineHeight={'20px'}>
+                  <SubHeader color="white" lineHeight={'20px'}>
                     <span>{assetInBag ? 'Remove' : 'Buy Now'}</span>
                   </SubHeader>
                 </BuyNowButton>
