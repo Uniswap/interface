@@ -223,16 +223,14 @@ export function useLazyLoadAssetsQuery(params: AssetFetcherParams) {
   // Poll for updates.
   const POLLING_INTERVAL = ms`5s`
   const environment = useRelayEnvironment()
-  const refresh = useCallback(async () => {
+  const poll = useCallback(async () => {
     const length = data.nftAssets?.edges?.length
     // Initiate a network request. When it resolves, refresh the UI from store (to avoid re-triggering Suspense);
     // see: https://relay.dev/docs/guided-tour/refetching/refreshing-queries/#if-you-need-to-avoid-suspense-1.
     await fetchQuery<AssetQuery>(environment, assetQuery, { ...vars, first: length }).toPromise()
     setFetchKey((fetchKey) => fetchKey + 1)
   }, [data.nftAssets?.edges?.length, environment, vars])
-  // NB: This will poll every POLLING_INTERVAL, *not* every POLLING_INTERVAL from the last successful poll.
-  // TODO(WEB-2004): Update useInterval to wait for the fn to complete before rescheduling.
-  useInterval(refresh, POLLING_INTERVAL, /* leading= */ false)
+  useInterval(poll, isLoadingNext ? null : POLLING_INTERVAL, /* leading= */ false)
 
   // It is especially important for this to be memoized to avoid re-rendering from polling if data is unchanged.
   const assets: GenieAsset[] = useMemo(
