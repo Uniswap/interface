@@ -32,7 +32,9 @@ export function BottomBanner({ text, icon, backgroundColor, translateY }: Bottom
       alignItems="center"
       alignSelf="stretch"
       backgroundColor={backgroundColor ? backgroundColor : 'accentActive'}
+      borderColor="backgroundOutline"
       borderRadius="sm"
+      borderWidth={1}
       bottom={0}
       entering={FadeIn}
       exiting={FadeOut}

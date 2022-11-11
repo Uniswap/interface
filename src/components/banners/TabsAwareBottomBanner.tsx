@@ -4,30 +4,28 @@ import { useAppSelector } from 'src/app/hooks'
 import { SWAP_BUTTON_HEIGHT, TAB_NAVIGATOR_HEIGHT } from 'src/app/navigation/TabBar'
 import { BANNER_HEIGHT, BottomBanner, BottomBannerProps } from 'src/components/banners/BottomBanner'
 import { selectModalsState } from 'src/features/modals/modalSlice'
-import { Stacks } from 'src/screens/Screens'
+import { Screens, Stacks } from 'src/screens/Screens'
 
 const EXTRA_MARGIN = 5
 
+const NO_NAV_SCREENS = [
+  Screens.SettingsStack,
+  Screens.OnboardingStack,
+  Screens.Activity,
+  Screens.ExternalProfile,
+  Screens.NFTItem,
+]
+
 export function TabsAwareBottomBanner({ icon, text, ...rest }: BottomBannerProps) {
-  const routes = useNavigationState((state) => state && state.routes)
+  const routes = useNavigationState((state) => state?.routes)
+
   const modalStates = useAppSelector(selectModalsState)
   const [bannerTranslateY, setBannerTranslateY] = React.useState(0)
 
   useEffect(() => {
-    let isTabsNavVisible
-    if (routes) {
-      const appStack = routes.find((route) => route.name === Stacks.AppStack)
-
-      if (appStack) {
-        // best guess at whether the TabNavigator is on top of the stack
-        const appStackTopRoute = appStack.state?.routes.at(-1)
-        isTabsNavVisible = appStackTopRoute?.name.includes('Tab')
-      }
-    }
-
-    if (isTabsNavVisible) {
-      isTabsNavVisible = !Object.values(modalStates).some((state) => state.isOpen)
-    }
+    const appStack = routes?.find((route) => route.name === Stacks.AppStack)
+    const currentPage = appStack?.state?.routes.at(-1)?.name
+    const isTabsNavVisible = !currentPage || !NO_NAV_SCREENS.includes(currentPage as Screens)
 
     setBannerTranslateY(
       isTabsNavVisible
@@ -36,5 +34,13 @@ export function TabsAwareBottomBanner({ icon, text, ...rest }: BottomBannerProps
     )
   }, [modalStates, routes])
 
-  return <BottomBanner icon={icon} text={text} translateY={bannerTranslateY} {...rest} />
+  return (
+    <BottomBanner
+      backgroundColor="background2"
+      icon={icon}
+      text={text}
+      translateY={bannerTranslateY}
+      {...rest}
+    />
+  )
 }
