@@ -1,6 +1,6 @@
 import { loadingAnimation } from 'components/Loader/styled'
 import { LoadingBubble } from 'components/Tokens/loading'
-import { useCollectionQuery } from 'graphql/data/nft/Collection'
+import { useCollectionQuery, useLoadCollectionQuery } from 'graphql/data/nft/Collection'
 import { VerifiedIcon } from 'nft/components/icons'
 import { Markets, TrendingCollection } from 'nft/types'
 import { formatWeiToDecimal } from 'nft/utils'
@@ -191,6 +191,7 @@ const MARKETS_ENUM_TO_NAME = {
 }
 
 export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
+  useLoadCollectionQuery(collection.address)
   const gqlCollection = useCollectionQuery(collection.address)
 
   const theme = useTheme()
