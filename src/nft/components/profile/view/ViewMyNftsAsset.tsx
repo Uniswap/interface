@@ -1,10 +1,14 @@
+import { Trans } from '@lingui/macro'
+import { MouseoverTooltip } from 'components/Tooltip'
+import { Box } from 'nft/components/Box'
 import * as Card from 'nft/components/collection/Card'
 import { AssetMediaType } from 'nft/components/collection/Card'
+import { bodySmall } from 'nft/css/common.css'
+import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile, useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-
 const NFT_DETAILS_HREF = (asset: WalletAsset) =>
   `/nfts/asset/${asset.asset_contract.address}/${asset.tokenId}?origin=profile`
 
@@ -13,6 +17,21 @@ interface ViewMyNftsAssetProps {
   isSellMode: boolean
   mediaShouldBePlaying: boolean
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
+}
+
+const getNftDisplayComponent = (
+  assetMediaType: AssetMediaType,
+  mediaShouldBePlaying: boolean,
+  setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
+) => {
+  switch (assetMediaType) {
+    case AssetMediaType.Image:
+      return <Card.Image />
+    case AssetMediaType.Video:
+      return <Card.Video shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
+    case AssetMediaType.Audio:
+      return <Card.Audio shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
+  }
 }
 
 export const ViewMyNftsAsset = ({
@@ -53,6 +72,10 @@ export const ViewMyNftsAsset = ({
 
   const assetMediaType = Card.useAssetMediaType(asset)
 
+  const isDisabled = asset.asset_contract.tokenType === 'ERC1155' || (isSellMode && asset.susFlag)
+  const disabledTooltipText =
+    asset.asset_contract.tokenType === 'ERC1155' ? 'ERC-1155 support coming soon' : 'Blocked from trading'
+
   return (
     <Card.Container
       asset={asset}
@@ -60,16 +83,24 @@ export const ViewMyNftsAsset = ({
       addAssetToBag={() => handleSelect(false)}
       removeAssetFromBag={() => handleSelect(true)}
       onClick={onCardClick}
+      isDisabled={isDisabled}
     >
-      <Card.ImageContainer>
-        {assetMediaType === AssetMediaType.Image ? (
-          <Card.Image />
-        ) : assetMediaType === AssetMediaType.Video ? (
-          <Card.Video shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
-        ) : (
-          <Card.Audio shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
-        )}
-      </Card.ImageContainer>
+      <MouseoverTooltip
+        text={
+          <Box as="span" className={bodySmall} style={{ color: themeVars.colors.textPrimary }}>
+            <Trans>{disabledTooltipText}</Trans>{' '}
+          </Box>
+        }
+        placement="bottom"
+        offsetX={0}
+        offsetY={-100}
+        style={{ display: 'block' }}
+        disableHover={!isDisabled}
+      >
+        <Card.ImageContainer>
+          {getNftDisplayComponent(assetMediaType, mediaShouldBePlaying, setCurrentTokenPlayingMedia)}
+        </Card.ImageContainer>
+      </MouseoverTooltip>
       <Card.DetailsContainer>
         <Card.ProfileNftDetails asset={asset} isSellMode={isSellMode} />
       </Card.DetailsContainer>

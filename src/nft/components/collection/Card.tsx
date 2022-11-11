@@ -163,10 +163,19 @@ interface CardProps {
   addAssetToBag: () => void
   removeAssetFromBag: () => void
   children: ReactNode
+  isDisabled?: boolean
   onClick?: () => void
 }
 
-const Container = ({ asset, selected, addAssetToBag, removeAssetFromBag, children, onClick }: CardProps) => {
+const Container = ({
+  asset,
+  selected,
+  addAssetToBag,
+  removeAssetFromBag,
+  children,
+  isDisabled,
+  onClick,
+}: CardProps) => {
   const [hovered, toggleHovered] = useReducer((s) => !s, false)
   const [href, setHref] = useState(baseHref(asset))
 
@@ -210,8 +219,9 @@ const Container = ({ asset, selected, addAssetToBag, removeAssetFromBag, childre
         onMouseEnter={() => toggleHovered()}
         onMouseLeave={() => toggleHovered()}
         transition="250"
-        cursor={asset.notForSale ? 'default' : 'pointer'}
-        onClick={onClick ?? handleAssetInBag}
+        opacity={isDisabled ? '0.5' : '1'}
+        cursor={isDisabled ? 'default' : 'pointer'}
+        onClick={isDisabled ? () => null : onClick ?? handleAssetInBag}
       >
         {children}
       </Box>

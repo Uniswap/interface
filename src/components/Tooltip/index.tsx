@@ -42,9 +42,10 @@ export function MouseoverTooltip({ text, disableHover, children, ...rest }: Omit
   const [show, setShow] = useState(false)
   const open = useCallback(() => setShow(true), [setShow])
   const close = useCallback(() => setShow(false), [setShow])
+  const noOp = () => null
   return (
     <Tooltip {...rest} show={show} text={disableHover ? null : text}>
-      <div onMouseEnter={open} onMouseLeave={close}>
+      <div onMouseEnter={disableHover ? noOp : open} onMouseLeave={disableHover ? noOp : close}>
         {children}
       </div>
     </Tooltip>
