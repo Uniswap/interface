@@ -8,7 +8,6 @@ import { Activity, ActivitySwitcher, CollectionNfts, CollectionStats, Filters } 
 import { CollectionNftsAndMenuLoading } from 'nft/components/collection/CollectionNfts'
 import { Column, Row } from 'nft/components/Flex'
 import { BagCloseIcon } from 'nft/components/icons'
-import { headlineSmall } from 'nft/css/common.css'
 import { useBag, useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
 import { GenieCollection } from 'nft/types'
@@ -16,6 +15,7 @@ import { Suspense, useEffect } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
 const FILTER_WIDTH = 332
 const BAG_WIDTH = 324
@@ -24,6 +24,11 @@ export const CollectionBannerLoading = () => <Box height="full" width="full" cla
 
 const CollectionDescriptionSection = styled(Column)`
   ${styles.ScreenBreakpointsPaddings}
+`
+
+const MobileFilterHeader = styled(Row)`
+  padding: 20px 16px;
+  justify-content: space-between;
 `
 
 const CollectionDisplaySection = styled(Row)`
@@ -150,12 +155,12 @@ const Collection = () => {
                   {isFiltersExpanded && (
                     <>
                       {isMobile && (
-                        <Row paddingY="20" paddingX="16" justifyContent="space-between" className={headlineSmall}>
-                          <span>Filter</span>
+                        <MobileFilterHeader>
+                          <ThemedText.HeadlineSmall>Filter</ThemedText.HeadlineSmall>
                           <IconWrapper onClick={() => setFiltersExpanded(false)}>
                             <BagCloseIcon />
                           </IconWrapper>
-                        </Row>
+                        </MobileFilterHeader>
                       )}
                       <Filters traitsByGroup={collectionStats?.traits ?? {}} />
                     </>
