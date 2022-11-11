@@ -271,6 +271,48 @@ const SelectAllButton = ({ ownerAssets }: { ownerAssets: WalletAsset[] }) => {
       {isAllSelected ? 'Deselect all' : 'Select all'}
     </Box>
   )
+}
+
+const CollectionFiltersRow = ({
+  collections,
+  collectionFilters,
+  setCollectionFilters,
+  clearCollectionFilters,
+}: {
+  collections: WalletCollection[]
+  collectionFilters: Array<string>
+  setCollectionFilters: (address: string) => void
+  clearCollectionFilters: Dispatch<SetStateAction<void>>
+}) => {
+  const getCollection = (collectionAddress: string) => {
+    return collections?.find((collection) => collection.address === collectionAddress)
+  }
+  return (
+    <Row paddingY="18" gap="8" flexWrap="wrap">
+      {collectionFilters &&
+        collectionFilters.map((collectionAddress, index) => (
+          <CollectionFilterItem
+            collection={getCollection(collectionAddress)}
+            key={index}
+            setCollectionFilters={setCollectionFilters}
+          />
+        ))}
+      {collectionFilters?.length ? (
+        <Box
+          as="button"
+          paddingLeft="8"
+          paddingRight="8"
+          color="genieBlue"
+          background="none"
+          fontSize="16"
+          border="none"
+          cursor="pointer"
+          onClick={() => clearCollectionFilters()}
+        >
+          Clear all
+        </Box>
+      ) : null}
+    </Row>
   )
 }
 
