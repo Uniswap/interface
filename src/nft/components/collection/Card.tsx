@@ -15,7 +15,7 @@ import {
 import { body, bodySmall, buttonTextSmall, subhead, subheadSmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
-import { GenieAsset, Rarity, UniformHeight, UniformHeights, WalletAsset } from 'nft/types'
+import { GenieAsset, Rarity, TokenType, UniformHeight, UniformHeights, WalletAsset } from 'nft/types'
 import { isAudio, isVideo } from 'nft/utils'
 import { fallbackProvider, putCommas } from 'nft/utils'
 import { floorFormatter } from 'nft/utils/numbers'
@@ -527,7 +527,9 @@ const ProfileNftDetails = ({ asset, isSellMode }: ProfileNftDetailsProps) => {
   }
 
   const shouldShowUserListedPrice =
-    !!asset.floor_sell_order_price && !asset.notForSale && (asset.asset_contract.tokenType !== 'ERC1155' || isSellMode)
+    !!asset.floor_sell_order_price &&
+    !asset.notForSale &&
+    (asset.asset_contract.tokenType !== TokenType.ERC1155 || isSellMode)
   const shouldShowFloorPrice = asset.notForSale && isSellMode && !!asset.floorPrice
 
   return (
