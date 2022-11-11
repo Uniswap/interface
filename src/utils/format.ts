@@ -176,6 +176,11 @@ const fiatGasPriceFormatter: FormatterRule[] = [
 
 const fiatTokenQuantityFormatter = [{ exact: 0, formatter: '$0.00' }, ...fiatGasPriceFormatter]
 
+const portfolioBalanceFormatter: FormatterRule[] = [
+  { exact: 0, formatter: '$0.00' },
+  { upperBound: Infinity, formatter: TWO_DECIMALS_USD },
+]
+
 const ntfTokenFloorPriceFormatter: FormatterRule[] = [
   { exact: 0, formatter: '0' },
   { upperBound: 0.001, formatter: '<0.001' },
@@ -216,6 +221,9 @@ export enum NumberType {
   // fiat gas prices
   FiatGasPrice = 'fiat-gas-price',
 
+  // portfolio balance
+  PortfolioBalance = 'portfolio-balance',
+
   // nft floor price denominated in a token (e.g, ETH)
   NFTTokenFloorPrice = 'nft-token-floor-price',
 
@@ -232,6 +240,7 @@ const TYPE_TO_FORMATTER_RULES = {
   [NumberType.FiatTokenPrice]: fiatTokenPricesFormatter,
   [NumberType.FiatTokenStats]: fiatTokenStatsFormatter,
   [NumberType.FiatGasPrice]: fiatGasPriceFormatter,
+  [NumberType.PortfolioBalance]: portfolioBalanceFormatter,
   [NumberType.NFTTokenFloorPrice]: ntfTokenFloorPriceFormatter,
   [NumberType.NFTCollectionStats]: ntfCollectionStatsFormatter,
 }
