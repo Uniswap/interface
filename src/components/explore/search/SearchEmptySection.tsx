@@ -28,12 +28,6 @@ import {
 export const SUGGESTED_WALLETS: WalletSearchResult[] = [
   {
     type: SearchResultType.Wallet,
-    address: '0xf894FeA045ECCB2927e2E0CB15C12debEE9f2BE8',
-    ensName: 'pleasrdao.eth',
-    category: WalletCategory.DAO,
-  },
-  {
-    type: SearchResultType.Wallet,
     address: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
     ensName: 'vitalik.eth',
     category: WalletCategory.Builder,
