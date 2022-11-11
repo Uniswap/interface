@@ -2,6 +2,7 @@ import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { useIsMobile } from 'nft/hooks'
 import { CollectionBannerLoading } from 'nft/pages/collection'
+import { COLLECTION_BANNER_HEIGHT } from 'nft/pages/collection'
 
 import { ActivitySwitcherLoading } from './ActivitySwitcher'
 import { CollectionNftsAndMenuLoading } from './CollectionNfts'
@@ -11,7 +12,7 @@ export const CollectionPageSkeleton = () => {
   const isMobile = useIsMobile()
   return (
     <Column width="full">
-      <Box width="full" height="160">
+      <Box width="full" height={`${COLLECTION_BANNER_HEIGHT}`}>
         <CollectionBannerLoading />
       </Box>
       <Column paddingX="32">

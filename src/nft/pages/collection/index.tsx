@@ -21,6 +21,7 @@ import { ThemedText } from 'theme'
 
 const FILTER_WIDTH = 332
 const BAG_WIDTH = 324
+export const COLLECTION_BANNER_HEIGHT = 276
 
 export const CollectionBannerLoading = () => <Box height="full" width="full" className={styles.loadingBanner} />
 
@@ -113,8 +114,8 @@ const Collection = () => {
           {contractAddress ? (
             <>
               {' '}
-              <Box width="full" height="276">
-                <Box width="full" height="276">
+              <Box width="full" height={`${COLLECTION_BANNER_HEIGHT}`}>
+                <Box width="full" height={`${COLLECTION_BANNER_HEIGHT}`}>
                   <Box
                     as={collectionStats?.bannerImageUrl ? 'img' : 'div'}
                     height="full"
