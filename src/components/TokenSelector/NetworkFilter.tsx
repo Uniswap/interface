@@ -50,7 +50,7 @@ export function NetworkFilter({ selectedChain, onPressChain }: NetworkFilterProp
           render: () => (
             <>
               <Separator />
-              <Flex row alignItems="center" justifyContent="space-between" px="lg" py="xxl">
+              <Flex row alignItems="center" justifyContent="space-between" px="lg" py="md">
                 <Box height={iconSizes.lg} width={iconSizes.lg} />
                 <Text color="textPrimary" variant="bodyLarge">
                   {t('All networks')}
