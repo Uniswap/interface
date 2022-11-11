@@ -2,6 +2,8 @@ import { NftMarketplace, OrderStatus, OrderType } from 'graphql/data/nft/__gener
 
 import { GenieCollection, PriceInfo, TokenType } from '../common'
 
+export const ERC_1155 = 'ERC1155'
+
 export interface ListingMarket {
   name: string
   fee: number
