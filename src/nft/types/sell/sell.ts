@@ -62,7 +62,7 @@ export interface WalletAsset {
   collectionIsVerified: boolean
   lastPrice: number
   floorPrice: number
-  creatorPercentage: number
+  basisPoints: number
   listing_date: string
   date_acquired: string
   sellOrders: SellOrder[]
