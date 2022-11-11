@@ -11,15 +11,15 @@
 
 
 #import "React/RCTViewManager.h"
+#import "React/RCTConvert.h"
 #import "React/RCTComponentData.h"
 #import "React/RCTBridgeModule.h"
 
 #define RCT_EXPORT_SWIFTUI_PROPERTY(name, type, proxyClass)                                                 \
-RCT_REMAP_VIEW_PROPERTY(name, __custom__, type)                                                             \
-- (void)set_##name:(id)json forView:(UIView *)view withDefaultView:(UIView *)defaultView RCT_DYNAMIC {      \
-  NSMutableDictionary *storage = [proxyClass storage];                                                      \
-  proxyClass *proxy = storage[[NSValue valueWithNonretainedObject:view]];                                   \
-  proxy.name = [json type##Value];                                                                          \
+RCT_CUSTOM_VIEW_PROPERTY(name, type, proxyClass) {                                                          \
+  NSMutableDictionary *storage = [proxyClass storage];                                                    \
+  proxyClass *proxy = storage[[NSValue valueWithNonretainedObject:view]];                                 \
+  proxy.name = [RCTConvert type:json];                                                                  \
 }
 
 #define RCT_EXPORT_SWIFTUI_CALLBACK(name, type, proxyClass)                                                 \

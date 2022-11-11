@@ -809,9 +809,6 @@ PODS:
     - React-Core
   - react-native-safe-area-context (3.3.2):
     - React-Core
-  - react-native-shake (15.3.0):
-    - React
-    - Shake (~> 15.3.0-rc)
   - react-native-skia (0.1.132):
     - React
     - React-callinvoker
@@ -983,7 +980,6 @@ PODS:
   - Sentry (7.27.1):
     - Sentry/Core (= 7.27.1)
   - Sentry/Core (7.27.1)
-  - Shake (15.3.0)
   - Starscream (3.1.1)
   - vision-camera-code-scanner (0.1.6):
     - GoogleMLKit/BarcodeScanning
@@ -1047,7 +1043,6 @@ DEPENDENCIES:
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-restart (from `../node_modules/react-native-restart`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
-  - "react-native-shake (from `../node_modules/@shakebugs/react-native-shake`)"
   - "react-native-skia (from `../node_modules/@shopify/react-native-skia`)"
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -1127,7 +1122,6 @@ SPEC REPOS:
     - Protobuf
     - RiveRuntime
     - Sentry
-    - Shake
     - Starscream
     - WalletConnectSwift
 
@@ -1218,8 +1212,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-restart"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
-  react-native-shake:
-    :path: "../node_modules/@shakebugs/react-native-shake"
   react-native-skia:
     :path: "../node_modules/@shopify/react-native-skia"
   react-native-webview:
@@ -1372,7 +1364,6 @@ SPEC CHECKSUMS:
   react-native-pager-view: 3051346698a0ba0c4e13e40097cc11b00ee03cca
   react-native-restart: 45c8dca02491980f2958595333cbccd6877cb57e
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
-  react-native-shake: 0b4da6b51ad566106a26d82e208ce4f03193b7de
   react-native-skia: 10ff062404f9b65e96f4fd934f4d3a33e6c31193
   react-native-webview: b83cf1aa6b4453fe53ffcc5896c36cdf37f0383f
   React-perflogger: fa15d1d29ff7557ee25ea48f7f59e65896fb3215
@@ -1406,7 +1397,6 @@ SPEC CHECKSUMS:
   RNSentry: f8591057d48d4f6d64196a76cbca67895667b033
   RNSVG: ecd661f380a07ba690c9c5929c475a44f432d674
   Sentry: bc644307e2eb6a4c9c55cf117a80b895bb2a25a7
-  Shake: 08e8dfbdc22838dee8784ab8382f3a58c2516f8d
   Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
   vision-camera-code-scanner: 75a4ac3c9ce9b4605f5d87cc0f0001bb64bfb4de
   VisionCamera: 1ba40d6529005f7985c28983cb4bacce0880a514

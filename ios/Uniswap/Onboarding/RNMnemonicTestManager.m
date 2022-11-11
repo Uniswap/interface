@@ -15,8 +15,8 @@
 @implementation MnemonicTestManager
 RCT_EXPORT_MODULE()
 
-RCT_EXPORT_SWIFTUI_PROPERTY(mnemonicId, string, MnemonicTestView);
-RCT_EXPORT_SWIFTUI_PROPERTY(shouldShowSmallText, bool, MnemonicTestView);
+RCT_EXPORT_SWIFTUI_PROPERTY(mnemonicId, NSString, MnemonicTestView);
+RCT_EXPORT_SWIFTUI_PROPERTY(shouldShowSmallText, BOOL, MnemonicTestView);
 RCT_EXPORT_SWIFTUI_CALLBACK(onTestComplete, RCTDirectEventBlock, MnemonicTestView);
 
 - (UIView *)view
