@@ -83,7 +83,6 @@ export const CollectionAsset = ({
       selected={isSelected}
       addAssetToBag={handleAddAssetToBag}
       removeAssetFromBag={handleRemoveAssetFromBag}
-      isDisabled={asset.notForSale}
     >
       <Card.ImageContainer>
         {asset.tokenType === 'ERC1155' && quantity > 0 && <Card.Erc1155Controls quantity={quantity.toString()} />}
