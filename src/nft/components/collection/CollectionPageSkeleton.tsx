@@ -11,7 +11,7 @@ export const CollectionPageSkeleton = () => {
   const isMobile = useIsMobile()
   return (
     <Column width="full">
-      <Box width="full" height="160">
+      <Box width="full" height="276">
         <CollectionBannerLoading />
       </Box>
       <Column paddingX="32">

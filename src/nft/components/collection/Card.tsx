@@ -255,7 +255,7 @@ const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
         as={'img'}
         width="full"
         style={{
-          aspectRatio: uniformHeight === UniformHeights.notUniform ? '1' : 'auto',
+          aspectRatio: '1',
           transition: 'transform 0.4s ease 0s',
         }}
         src={asset.imageUrl || asset.smallImageUrl}
@@ -263,13 +263,13 @@ const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
         draggable={false}
         onError={() => setNoContent(true)}
         onLoad={(e) => {
-          if (setUniformHeight) {
-            if (uniformHeight === UniformHeights.unset) {
-              setUniformHeight(e.currentTarget.clientHeight)
-            } else if (uniformHeight !== UniformHeights.notUniform && e.currentTarget.clientHeight !== uniformHeight) {
-              setUniformHeight(UniformHeights.notUniform)
-            }
-          }
+          // if (setUniformHeight) {
+          //   if (uniformHeight === UniformHeights.unset) {
+          //     setUniformHeight(e.currentTarget.clientHeight)
+          //   } else if (uniformHeight !== UniformHeights.notUniform && e.currentTarget.clientHeight !== uniformHeight) {
+          //     setUniformHeight(UniformHeights.notUniform)
+          //   }
+          // }
           setLoaded(true)
         }}
         className={clsx(hovered && !isMobile && styles.cardImageHover, !loaded && styles.loadingBackground)}
