@@ -324,20 +324,18 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   const assets = useMemo(() => {
     if (!collectionNfts) return null
-    return collectionNfts.map((asset) =>
-      asset ? (
-        <CollectionAsset
-          key={asset.address + asset.tokenId}
-          asset={asset}
-          isMobile={isMobile}
-          uniformHeight={uniformHeight}
-          setUniformHeight={setUniformHeight}
-          mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
-          setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-          rarityVerified={rarityVerified}
-        />
-      ) : null
-    )
+    return collectionNfts.map((asset) => (
+      <CollectionAsset
+        key={asset.address + asset.tokenId}
+        asset={asset}
+        isMobile={isMobile}
+        uniformHeight={uniformHeight}
+        setUniformHeight={setUniformHeight}
+        mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
+        setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+        rarityVerified={rarityVerified}
+      />
+    ))
   }, [collectionNfts, currentTokenPlayingMedia, isMobile, rarityVerified, uniformHeight])
 
   const hasNfts = collectionNfts && collectionNfts.length > 0
