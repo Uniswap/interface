@@ -258,12 +258,14 @@ function WalletSettings() {
             py="sm"
             onPress={() => handleNavigation(account.address)}>
             <Box alignItems="center" flexDirection="row" justifyContent="space-between">
-              <AddressDisplay
-                address={account.address}
-                captionVariant="buttonLabelMicro"
-                size={36}
-                variant="bodyLarge"
-              />
+              <Flex shrink>
+                <AddressDisplay
+                  address={account.address}
+                  captionVariant="buttonLabelMicro"
+                  size={36}
+                  variant="bodyLarge"
+                />
+              </Flex>
               <Chevron color={theme.colors.textSecondary} direction="e" height={24} width={24} />
             </Box>
           </TouchableArea>

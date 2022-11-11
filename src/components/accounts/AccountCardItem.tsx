@@ -44,10 +44,14 @@ export function AccountCardItem({ account, isViewOnly, isActive, onPress, onPres
   return (
     <TouchableArea hapticFeedback pb="sm" pt="xs" px="lg" onPress={() => onPress?.(address)}>
       <Flex row alignItems="center" testID={`account_item/${address.toLowerCase()}`}>
-        <NotificationBadge showIndicator={hasNotifications}>{icon}</NotificationBadge>
-        <Flex grow gap="none">
-          <Text variant="bodyLarge">{displayName?.name}</Text>
-          <PortfolioBalance color="textSecondary" owner={address} variant="bodySmall" />
+        <Flex row shrink>
+          <NotificationBadge showIndicator={hasNotifications}>{icon}</NotificationBadge>
+          <Flex fill gap="none">
+            <Text numberOfLines={1} variant="bodyLarge">
+              {displayName?.name}
+            </Text>
+            <PortfolioBalance color="textSecondary" owner={address} variant="bodySmall" />
+          </Flex>
         </Flex>
         <Flex row alignItems="center" gap="xs">
           {isActive && (

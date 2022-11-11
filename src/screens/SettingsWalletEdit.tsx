@@ -80,10 +80,12 @@ export function SettingsWalletEdit({
                 onSubmitEditing={handleNicknameUpdate}
               />
             ) : (
-              <>
-                <Text color="textPrimary" variant="headlineMedium">
-                  {nickname || shortenAddress(address)}
-                </Text>
+              <Flex row alignItems="center">
+                <Flex shrink>
+                  <Text color="textPrimary" variant="headlineMedium">
+                    {nickname || shortenAddress(address)}
+                  </Text>
+                </Flex>
                 {!ensName && (
                   <Box ml="sm">
                     <Button
@@ -94,7 +96,7 @@ export function SettingsWalletEdit({
                     />
                   </Box>
                 )}
-              </>
+              </Flex>
             )}
           </Flex>
         </Flex>

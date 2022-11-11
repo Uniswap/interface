@@ -91,7 +91,13 @@ export function AccountHeader() {
         onPress={onPressAccountHeader}>
         {activeAddress && (
           <Flex row gap="xs">
-            <AddressDisplay hideAddressInSubtitle address={activeAddress} variant="subheadLarge" />
+            <Flex shrink>
+              <AddressDisplay
+                hideAddressInSubtitle
+                address={activeAddress}
+                variant="subheadLarge"
+              />
+            </Flex>
             <Chevron
               color={theme.colors.textSecondary}
               direction="s"
