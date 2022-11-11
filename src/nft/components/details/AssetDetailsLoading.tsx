@@ -73,6 +73,7 @@ const LoadingContainer = styled.div`
   width: 100%;
   margin-left: auto;
   margin-right: auto;
+  max-width: 1296px;
 
   ${ScreenBreakpointsPaddings}
 

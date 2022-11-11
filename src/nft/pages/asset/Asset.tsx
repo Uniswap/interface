@@ -2,8 +2,9 @@ import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
 import { useDetailsQuery } from 'graphql/data/nft/Details'
 import { AssetDetails } from 'nft/components/details/AssetDetails'
-import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
+import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
+
 import { useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -29,7 +30,6 @@ const AssetContainer = styled.div`
 const AssetPriceDetailsContainer = styled.div`
   min-width: 360px;
   position: relative;
-  padding-right: 100px;
 
   @media (max-width: 960px) {
     display: none;
@@ -45,9 +45,11 @@ const Asset = () => {
 
   setTimeout(() => {
     setIsLoading(false)
-  }, 2500)
+  }, 2000)
 
-  return (
+  return isLoading ? (
+    <AssetDetailsLoading />
+  ) : (
     <>
       <Trace
         page={PageName.NFT_DETAILS_PAGE}

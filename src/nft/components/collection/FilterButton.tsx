@@ -21,11 +21,7 @@ export const FilterButton = ({
 
   return (
     <Box
-      className={
-        isCollectionNftsLoading
-          ? styles.filterButtonLoading
-          : clsx(styles.filterButton, !isFiltersExpanded && styles.filterButtonExpanded)
-      }
+      className={clsx(styles.filterButton, !isFiltersExpanded && styles.filterButtonExpanded)}
       display="flex"
       gap="8"
       borderRadius="12"
