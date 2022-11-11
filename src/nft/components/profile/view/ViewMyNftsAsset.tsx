@@ -77,6 +77,7 @@ export const ViewMyNftsAsset = ({
           </Box>
         }
         placement="bottom"
+        offsetX={0}
         offsetY={-100}
         style={{ display: 'block' }}
         disableHover={!isDisabled}

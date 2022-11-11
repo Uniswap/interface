@@ -86,7 +86,7 @@ export default function Popover({
   show,
   children,
   placement = 'auto',
-  offsetX = 0,
+  offsetX = 8,
   offsetY = 8,
   style,
 }: PopoverProps) {
