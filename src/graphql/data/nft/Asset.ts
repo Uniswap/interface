@@ -178,7 +178,7 @@ function formatAssetQueryData(queryAsset: NftAssetsQueryAsset, totalCount?: numb
   }
 }
 
-export const DEFAULT_ASSETS_AMOUNT = 25
+export const ASSET_PAGE_SIZE = 25
 
 export interface AssetFetcherParams {
   address: string
@@ -191,16 +191,14 @@ export interface AssetFetcherParams {
   before?: string
 }
 
-export const defaultAssetFetcherParams = (address?: string) => {
+export const defaultAssetFetcherParams = (address?: string): AssetFetcherParams | undefined => {
   return address
-    ? <AssetFetcherParams>{
+    ? {
         address,
         orderBy: 'PRICE',
         asc: true,
-        first: DEFAULT_ASSETS_AMOUNT,
-        filter: {
-          buyNow: false,
-        },
+        first: ASSET_PAGE_SIZE,
+        filter: { listed: false },
       }
     : undefined
 }

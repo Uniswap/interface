@@ -5,7 +5,12 @@ import clsx from 'clsx'
 import { loadingAnimation } from 'components/Loader/styled'
 import { parseEther } from 'ethers/lib/utils'
 import { NftAssetTraitInput, NftMarketplace } from 'graphql/data/nft/__generated__/AssetQuery.graphql'
-import { AssetFetcherParams, useLazyLoadAssetsQuery, useLoadSweepAssetsQuery } from 'graphql/data/nft/Asset'
+import {
+  ASSET_PAGE_SIZE,
+  AssetFetcherParams,
+  useLazyLoadAssetsQuery,
+  useLoadSweepAssetsQuery,
+} from 'graphql/data/nft/Asset'
 import useDebounce from 'hooks/useDebounce'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { CollectionSearch, FilterButton } from 'nft/components/collection'
@@ -163,11 +168,9 @@ export const LoadingButton = styled.div`
   background-size: 400%;
 `
 
-export const DEFAULT_ASSET_QUERY_AMOUNT = 25
-
 const loadingAssets = (
   <>
-    {Array.from(Array(DEFAULT_ASSET_QUERY_AMOUNT), (_, index) => (
+    {Array.from(Array(ASSET_PAGE_SIZE), (_, index) => (
       <CollectionAssetLoading key={index} />
     ))}
   </>
@@ -254,7 +257,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             })
           : undefined,
     },
-    first: DEFAULT_ASSET_QUERY_AMOUNT,
+    first: ASSET_PAGE_SIZE,
   }
 
   const { assets: collectionNfts, loadNext, hasNext, isLoadingNext } = useLazyLoadAssetsQuery(assetQueryParams)
@@ -509,7 +512,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         </Box>
       </AnimatedBox>
       <InfiniteScroll
-        next={() => loadNext(DEFAULT_ASSET_QUERY_AMOUNT)}
+        next={() => loadNext(ASSET_PAGE_SIZE)}
         hasMore={hasNext}
         loader={hasNext && hasNfts ? loadingAssets : null}
         dataLength={collectionNfts?.length ?? 0}
