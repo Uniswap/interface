@@ -473,13 +473,6 @@ const BaseThemeButton = styled.button<BaseButtonProps>`
   }
 `
 
-// enum idk {
-//   idle,
-//   hovered,
-//   pressed,
-//   disabled,
-// }
-
 interface ThemeButtonProps extends React.ComponentPropsWithoutRef<'button'>, BaseButtonProps {}
 
 export const ThemeButton = ({ ...rest }: ThemeButtonProps) => {

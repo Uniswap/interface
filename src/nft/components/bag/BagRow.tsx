@@ -20,7 +20,7 @@ import { GenieAsset, UpdatedGenieAsset } from 'nft/types'
 import { ethNumberStandardFormatter, formatWeiToDecimal, getAssetHref } from 'nft/utils'
 import { MouseEvent, useCallback, useEffect, useReducer, useState } from 'react'
 import { Link } from 'react-router-dom'
-import styled, { css } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 
 import * as styles from './BagRow.css'
 
@@ -31,18 +31,12 @@ const RemoveButton = styled(ThemeButton)`
   margin-left: 16px;
   padding: 12px 14px;
 `
-const ReviewButtonCss = css`
+const ReviewButton = styled(ThemeButton)`
   border-radius: 12px;
   flex: 1 1 auto;
   font-size: 14px;
   padding: 8px;
   width: 50%;
-`
-const RemoveReviewButton = styled(ThemeButton)`
-  ${ReviewButtonCss}
-`
-const KeepReviewButton = styled(ThemeButton)`
-  ${ReviewButtonCss}
 `
 
 const NoContentContainer = () => (
@@ -199,12 +193,12 @@ export const PriceChangeBagRow = ({ asset, usdPrice, markAssetAsReviewed, top, i
         <BagRow asset={asset} usdPrice={usdPrice} removeAsset={() => undefined} isMobile={isMobile} />
       </Box>
       <Row gap="8" justifyContent="space-between">
-        <RemoveReviewButton onClick={handleRemove} emphasis={ButtonEmphasis.medium} size={ButtonSize.small}>
+        <ReviewButton onClick={handleRemove} emphasis={ButtonEmphasis.medium} size={ButtonSize.small}>
           Remove
-        </RemoveReviewButton>
-        <KeepReviewButton onClick={handleKeep} emphasis={ButtonEmphasis.high} size={ButtonSize.small}>
+        </ReviewButton>
+        <ReviewButton onClick={handleKeep} emphasis={ButtonEmphasis.high} size={ButtonSize.small}>
           Keep
-        </KeepReviewButton>
+        </ReviewButton>
       </Row>
     </Column>
   )
