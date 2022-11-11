@@ -39,17 +39,10 @@ const AssetPriceDetailsContainer = styled.div`
 const Asset = () => {
   const { tokenId = '', contractAddress = '' } = useParams()
   const data = useDetailsQuery(contractAddress, tokenId)
-  const [isLoading, setIsLoading] = useState(true)
 
   const [asset, collection] = useMemo(() => data ?? [], [data])
 
-  setTimeout(() => {
-    setIsLoading(false)
-  }, 2000)
-
-  return isLoading ? (
-    <AssetDetailsLoading />
-  ) : (
+  return (
     <>
       <Trace
         page={PageName.NFT_DETAILS_PAGE}
