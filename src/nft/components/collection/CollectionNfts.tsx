@@ -122,6 +122,7 @@ const SweepButton = styled.div<{ toggled: boolean; disabled?: boolean }>`
   border: none;
   border-radius: 12px;
   padding: 12px 18px 12px 12px;
+  margin-right: 14px;
   cursor: ${({ disabled }) => (disabled ? 'auto' : 'pointer')};
   color: ${({ toggled, disabled, theme }) => (toggled && !disabled ? theme.accentTextLightPrimary : theme.textPrimary)};
   background: ${({ theme, toggled, disabled }) =>
