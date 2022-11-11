@@ -222,9 +222,7 @@ export function DrawerNavigator() {
 
 function getDrawerEnabled() {
   if (!navigationRef.isReady()) {
-    // On cases like app cold start, navigation reference may not be ready,
-    // and we should allow drawer immediately for home screen
-    return true
+    return false
   }
 
   const routeName = navigationRef.getCurrentRoute()?.name
