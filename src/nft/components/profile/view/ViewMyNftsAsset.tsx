@@ -19,6 +19,21 @@ interface ViewMyNftsAssetProps {
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
 }
 
+const getNftDisplayComponent = (
+  assetMediaType: AssetMediaType,
+  mediaShouldBePlaying: boolean,
+  setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
+) => {
+  switch (assetMediaType) {
+    case AssetMediaType.Image:
+      return <Card.Image />
+    case AssetMediaType.Video:
+      return <Card.Video shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
+    case AssetMediaType.Audio:
+      return <Card.Audio shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
+  }
+}
+
 export const ViewMyNftsAsset = ({
   asset,
   isSellMode,
@@ -83,13 +98,7 @@ export const ViewMyNftsAsset = ({
         disableHover={!isDisabled}
       >
         <Card.ImageContainer>
-          {assetMediaType === AssetMediaType.Image ? (
-            <Card.Image />
-          ) : assetMediaType === AssetMediaType.Video ? (
-            <Card.Video shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
-          ) : (
-            <Card.Audio shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
-          )}
+          {getNftDisplayComponent(assetMediaType, mediaShouldBePlaying, setCurrentTokenPlayingMedia)}
         </Card.ImageContainer>
       </MouseoverTooltip>
       <Card.DetailsContainer>
