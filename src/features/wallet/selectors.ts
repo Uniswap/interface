@@ -1,11 +1,11 @@
 import { createSelector } from '@reduxjs/toolkit'
 import type { RootState } from 'src/app/rootReducer'
-import { RemoteTokensOrderBy } from 'src/features/explore/types'
+import { TokenSortableField } from 'src/data/__generated__/types-and-hooks'
 import { DEMO_ACCOUNT_ADDRESS } from 'src/features/wallet/accounts/useTestAccount'
 import { NFTViewType, TokensMetadataDisplayType } from 'src/features/wallet/types'
 import { AccountType, SignerMnemonicAccount } from './accounts/types'
 
-const DEFAULT_TOKENS_ORDER_BY = RemoteTokensOrderBy.MarketCapDesc
+const DEFAULT_TOKENS_ORDER_BY = TokenSortableField.Volume
 const DEFAULT_TOKENS_METADATA_DISPLAY_TYPE = TokensMetadataDisplayType.PriceChangePercentage24h
 
 export const selectAccounts = (state: RootState) => state.wallet.accounts

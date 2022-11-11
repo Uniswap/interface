@@ -480,37 +480,31 @@ query SpotPrices($contracts: [ContractInput!]!) {
 }
 
 query ExploreTokensTab(
-  $topTokensOrderBy: MarketSortableField!
+  $topTokensOrderBy: TokenSortableField!
   $favoriteTokenContracts: [ContractInput!]!
 ) {
-  topTokenProjects(orderBy: $topTokensOrderBy, page: 1, pageSize: 100) {
-    id
+  topTokens(
+    chain: ETHEREUM
+    page: 1
+    pageSize: 100
+    orderBy: $topTokensOrderBy
+  ) {
     name
-    logoUrl
-    tokens {
-      id
-      chain
-      address
-      # HACK: Decimals included so Token Selector's top tokens query can reuse cached data
-      decimals
-      symbol
-    }
-    markets(currencies: USD) {
-      id
-      price {
-        id
-        currency
-        value
-      }
-      marketCap {
-        id
-        currency
-        value
-      }
-      pricePercentChange24h {
-        id
-        currency
-        value
+    symbol
+    chain
+    address
+    project {
+      logoUrl
+      markets(currencies: USD) {
+        price {
+          value
+        }
+        pricePercentChange24h {
+          value
+        }
+        marketCap {
+          value
+        }
       }
     }
   }

@@ -351,4 +351,11 @@ export const migrations = {
     delete newState.wallet.settings.showSmallBalances
     return newState
   },
+
+  27: (state: any) => {
+    const newState = { ...state }
+    // Reset tokensOrder by because of updated types of TokensOrderBy
+    delete newState.wallet.settings.tokensOrderBy
+    return newState
+  },
 }

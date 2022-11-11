@@ -1,11 +1,8 @@
-export enum RemoteTokensOrderBy {
-  MarketCapDesc = 'MarketCapDesc',
-  GlobalVolumeDesc = 'GlobalVolumeDesc',
-}
+import { TokenSortableField } from 'src/data/__generated__/types-and-hooks'
 
-export enum LocalTokensOrderBy {
+export enum ClientTokensOrderBy {
   PriceChangePercentage24hAsc = 'PriceChangePercentage24hAsc',
   PriceChangePercentage24hDesc = 'PriceChangePercentage24hDesc',
 }
 
-export type TokensOrderBy = RemoteTokensOrderBy | LocalTokensOrderBy
+export type TokensOrderBy = TokenSortableField | ClientTokensOrderBy

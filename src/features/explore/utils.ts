@@ -1,36 +1,44 @@
 import { TFunction } from 'i18next'
 import { TokenItemData } from 'src/components/explore/TokenItem'
-import { LocalTokensOrderBy, RemoteTokensOrderBy, TokensOrderBy } from 'src/features/explore/types'
+import { TokenSortableField } from 'src/data/__generated__/types-and-hooks'
+import { ClientTokensOrderBy, TokensOrderBy } from 'src/features/explore/types'
 
-export function getOrderByValues(orderBy: TokensOrderBy): {
-  localOrderBy: LocalTokensOrderBy | undefined
-  remoteOrderBy: RemoteTokensOrderBy
+/**
+ * Returns server and client orderBy values to use for topTokens query and client side sorting
+ *
+ * Uses server side sort by Volume if applying a client side sort after
+ * ex. % change sorting use the top 100 tokens by Uniswap Volume, then sorts by % change
+ *
+ * @param orderBy currently selected TokensOrderBy value to sort tokens by
+ * @returns serverOrderBy to be used in topTokens query, clientOrderBy to be used to determine if client side sort is necessary
+ */
+export function getTokensOrderByValues(orderBy: TokensOrderBy): {
+  serverOrderBy: TokenSortableField
+  clientOrderBy: ClientTokensOrderBy | undefined
 } {
-  const requiresLocalOrderBy = Object.values<string>(LocalTokensOrderBy).includes(orderBy)
+  const requiresClientOrderBy = Object.values<string>(ClientTokensOrderBy).includes(orderBy)
 
   return {
-    localOrderBy: requiresLocalOrderBy ? (orderBy as LocalTokensOrderBy) : undefined,
-    remoteOrderBy: requiresLocalOrderBy
-      ? RemoteTokensOrderBy.MarketCapDesc // Use remote order by market cap if doing local sort
-      : (orderBy as RemoteTokensOrderBy),
+    serverOrderBy: requiresClientOrderBy
+      ? TokenSortableField.Volume
+      : (orderBy as TokenSortableField),
+    clientOrderBy: requiresClientOrderBy ? (orderBy as ClientTokensOrderBy) : undefined,
   }
 }
 
 /**
- * Returns a compare function to sort tokens
- *
- * Market cap and volume use a server-side query and do not require client-side sorting
+ * Returns a compare function to sort tokens client side
  */
-export function getOrderByCompareFn(orderBy: LocalTokensOrderBy) {
+export function getClientTokensOrderByCompareFn(orderBy: ClientTokensOrderBy) {
   let compareField: keyof TokenItemData
   let direction = 0
 
   switch (orderBy) {
-    case LocalTokensOrderBy.PriceChangePercentage24hAsc:
+    case ClientTokensOrderBy.PriceChangePercentage24hAsc:
       compareField = 'pricePercentChange24h'
       direction = 1
       break
-    case LocalTokensOrderBy.PriceChangePercentage24hDesc:
+    case ClientTokensOrderBy.PriceChangePercentage24hDesc:
       compareField = 'pricePercentChange24h'
       direction = -1
       break
@@ -40,16 +48,16 @@ export function getOrderByCompareFn(orderBy: LocalTokensOrderBy) {
     Number(a[compareField]) - Number(b[compareField]) > 0 ? direction : -1 * direction
 }
 
-export function getOrderByLabel(orderBy: TokensOrderBy, t: TFunction) {
+export function getTokensOrderByLabel(orderBy: TokensOrderBy, t: TFunction) {
   switch (orderBy) {
-    case RemoteTokensOrderBy.MarketCapDesc:
+    case TokenSortableField.MarketCap:
       return t('Market cap')
-    case RemoteTokensOrderBy.GlobalVolumeDesc:
-      return t('Volume (24h)')
-    case LocalTokensOrderBy.PriceChangePercentage24hDesc:
-      return t('Percent change (24h) ↑')
-    case LocalTokensOrderBy.PriceChangePercentage24hAsc:
-      return t('Percent change (24h) ↓')
+    case TokenSortableField.Volume:
+      return t('Uniswap volume')
+    case ClientTokensOrderBy.PriceChangePercentage24hDesc:
+      return t('Price increase')
+    case ClientTokensOrderBy.PriceChangePercentage24hAsc:
+      return t('Price decrease')
     default:
       throw new Error('Unexpected order by value ' + orderBy)
   }

@@ -934,12 +934,12 @@ export type SpotPricesQueryVariables = Exact<{
 export type SpotPricesQuery = { __typename?: 'Query', tokenProjects?: Array<{ __typename?: 'TokenProject', id: string, markets?: Array<{ __typename?: 'TokenProjectMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null } | null> | null };
 
 export type ExploreTokensTabQueryVariables = Exact<{
-  topTokensOrderBy: MarketSortableField;
+  topTokensOrderBy: TokenSortableField;
   favoriteTokenContracts: Array<ContractInput> | ContractInput;
 }>;
 
 
-export type ExploreTokensTabQuery = { __typename?: 'Query', topTokenProjects?: Array<{ __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, tokens: Array<{ __typename?: 'Token', id: string, chain: Chain, address?: string | null, decimals?: number | null, symbol?: string | null }>, markets?: Array<{ __typename?: 'TokenProjectMarket', id: string, price?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null, marketCap?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null } | null> | null } | null> | null, favoriteTokensData?: Array<{ __typename?: 'TokenProject', id: string, logoUrl?: string | null, tokens: Array<{ __typename?: 'Token', id: string, chain: Chain, address?: string | null, symbol?: string | null }>, markets?: Array<{ __typename?: 'TokenProjectMarket', id: string, price?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null } | null> | null } | null> | null };
+export type ExploreTokensTabQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', name?: string | null, symbol?: string | null, chain: Chain, address?: string | null, project?: { __typename?: 'TokenProject', logoUrl?: string | null, markets?: Array<{ __typename?: 'TokenProjectMarket', price?: { __typename?: 'Amount', value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', value: number } | null, marketCap?: { __typename?: 'Amount', value: number } | null } | null> | null } | null } | null> | null, favoriteTokensData?: Array<{ __typename?: 'TokenProject', id: string, logoUrl?: string | null, tokens: Array<{ __typename?: 'Token', id: string, chain: Chain, address?: string | null, symbol?: string | null }>, markets?: Array<{ __typename?: 'TokenProjectMarket', id: string, price?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null } | null> | null } | null> | null };
 
 export type PortfolioBalanceQueryVariables = Exact<{
   owner: Scalars['String'];
@@ -1860,34 +1860,24 @@ export type SpotPricesQueryHookResult = ReturnType<typeof useSpotPricesQuery>;
 export type SpotPricesLazyQueryHookResult = ReturnType<typeof useSpotPricesLazyQuery>;
 export type SpotPricesQueryResult = Apollo.QueryResult<SpotPricesQuery, SpotPricesQueryVariables>;
 export const ExploreTokensTabDocument = gql`
-    query ExploreTokensTab($topTokensOrderBy: MarketSortableField!, $favoriteTokenContracts: [ContractInput!]!) {
-  topTokenProjects(orderBy: $topTokensOrderBy, page: 1, pageSize: 100) {
-    id
+    query ExploreTokensTab($topTokensOrderBy: TokenSortableField!, $favoriteTokenContracts: [ContractInput!]!) {
+  topTokens(chain: ETHEREUM, page: 1, pageSize: 100, orderBy: $topTokensOrderBy) {
     name
-    logoUrl
-    tokens {
-      id
-      chain
-      address
-      decimals
-      symbol
-    }
-    markets(currencies: USD) {
-      id
-      price {
-        id
-        currency
-        value
-      }
-      marketCap {
-        id
-        currency
-        value
-      }
-      pricePercentChange24h {
-        id
-        currency
-        value
+    symbol
+    chain
+    address
+    project {
+      logoUrl
+      markets(currencies: USD) {
+        price {
+          value
+        }
+        pricePercentChange24h {
+          value
+        }
+        marketCap {
+          value
+        }
       }
     }
   }
