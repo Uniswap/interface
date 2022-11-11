@@ -116,7 +116,6 @@
     "typescript": "^4.4.3"
   },
   "dependencies": {
-    "@amplitude/analytics-browser": "^1.1.4",
     "@coinbase/wallet-sdk": "^3.3.0",
     "@fontsource/ibm-plex-mono": "^4.5.1",
     "@fontsource/inter": "^4.5.1",
@@ -132,6 +131,8 @@
     "@react-hook/window-scroll": "^1.3.0",
     "@reduxjs/toolkit": "^1.6.1",
     "@types/react-relay": "^13.0.2",
+    "@uniswap/analytics": "1.0.3",
+    "@uniswap/analytics-events": "1.0.4",
     "@uniswap/governance": "^1.0.2",
     "@uniswap/liquidity-staker": "^1.0.2",
     "@uniswap/merkle-distributor": "1.0.1",

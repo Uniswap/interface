@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { ElementName, Event, EventName } from 'analytics/constants'
-import { TraceEvent } from 'analytics/TraceEvent'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Card, { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -131,7 +131,7 @@ export default function SwapDetailsDropdown({
     <Wrapper style={{ marginTop: '0' }}>
       <AutoColumn gap={'8px'} style={{ width: '100%', marginBottom: '-8px' }}>
         <TraceEvent
-          events={[Event.onClick]}
+          events={[BrowserEvent.onClick]}
           name={EventName.SWAP_DETAILS_EXPANDED}
           element={ElementName.SWAP_DETAILS_DROPDOWN}
           shouldLogImpression={!showDetails}

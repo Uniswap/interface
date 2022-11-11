@@ -142,7 +142,7 @@ export const getListings = (sellAssets: WalletAsset[]): [CollectionRow[], Listin
   sellAssets.forEach((asset) => {
     asset.marketplaces?.forEach((marketplace: ListingMarket) => {
       const newListing = {
-        images: [asset.image_preview_url, marketplace.icon],
+        images: [asset.smallImageUrl, marketplace.icon],
         name: asset.name || `#${asset.tokenId}`,
         status: ListingStatus.DEFINED,
         asset,

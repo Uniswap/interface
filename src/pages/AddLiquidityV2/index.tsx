@@ -1,10 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { ElementName, Event, EventName } from 'analytics/constants'
-import { TraceEvent } from 'analytics/TraceEvent'
 import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
@@ -436,7 +436,7 @@ export default function AddLiquidity() {
               </ButtonPrimary>
             ) : !account ? (
               <TraceEvent
-                events={[Event.onClick]}
+                events={[BrowserEvent.onClick]}
                 name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
                 properties={{ received_swap_quote: false }}
                 element={ElementName.CONNECT_WALLET_BUTTON}

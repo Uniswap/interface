@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { ElementName, Event, EventName } from 'analytics/constants'
-import { TraceEvent } from 'analytics/TraceEvent'
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
 import searchIcon from 'assets/svg/search.svg'
 import xIcon from 'assets/svg/x.svg'
 import useDebounce from 'hooks/useDebounce'
@@ -79,7 +79,7 @@ export default function SearchBar() {
       <Trans
         render={({ translation }) => (
           <TraceEvent
-            events={[Event.onFocus]}
+            events={[BrowserEvent.onFocus]}
             name={EventName.EXPLORE_SEARCH_SELECTED}
             element={ElementName.EXPLORE_SEARCH_INPUT}
           >

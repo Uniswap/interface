@@ -1,12 +1,9 @@
 import { Trans } from '@lingui/macro'
+import { sendAnalyticsEvent, Trace, TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName, PageName, SectionName } from '@uniswap/analytics-events'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent } from 'analytics'
-import { ElementName, Event, EventName, PageName, SectionName } from 'analytics/constants'
-import { Trace } from 'analytics/Trace'
-import { TraceEvent } from 'analytics/TraceEvent'
-import { formatSwapQuoteReceivedEventProperties } from 'analytics/utils'
 import { sendEvent } from 'components/analytics'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
@@ -18,6 +15,7 @@ import { isSupportedChain } from 'constants/chains'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
+import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ReactNode } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
@@ -557,7 +555,7 @@ export default function Swap() {
               </SwapSection>
               <ArrowWrapper clickable={isSupportedChain(chainId)}>
                 <TraceEvent
-                  events={[Event.onClick]}
+                  events={[BrowserEvent.onClick]}
                   name={EventName.SWAP_TOKENS_REVERSED}
                   element={ElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON}
                 >
@@ -640,7 +638,7 @@ export default function Swap() {
                   </ButtonPrimary>
                 ) : !account ? (
                   <TraceEvent
-                    events={[Event.onClick]}
+                    events={[BrowserEvent.onClick]}
                     name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
                     properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
                     element={ElementName.CONNECT_WALLET_BUTTON}

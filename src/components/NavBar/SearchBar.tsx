@@ -1,10 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
-import { sendAnalyticsEvent } from 'analytics'
-import { ElementName, Event, EventName, SectionName } from 'analytics/constants'
-import { Trace } from 'analytics/Trace'
-import { useTrace } from 'analytics/Trace'
-import { TraceEvent } from 'analytics/TraceEvent'
+import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName, SectionName } from '@uniswap/analytics-events'
 import clsx from 'clsx'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import useDebounce from 'hooks/useDebounce'
@@ -140,7 +137,7 @@ export const SearchBar = () => {
               </Box>
             </Box>
             <TraceEvent
-              events={[Event.onFocus]}
+              events={[BrowserEvent.onFocus]}
               name={EventName.NAVBAR_SEARCH_SELECTED}
               element={ElementName.NAVBAR_SEARCH_INPUT}
               properties={{ ...trace }}

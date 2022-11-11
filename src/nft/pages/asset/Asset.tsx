@@ -1,5 +1,5 @@
-import { PageName } from 'analytics/constants'
-import { Trace } from 'analytics/Trace'
+import { Trace } from '@uniswap/analytics'
+import { PageName } from '@uniswap/analytics-events'
 import { useDetailsQuery } from 'graphql/data/nft/Details'
 import { AssetDetails } from 'nft/components/details/AssetDetails'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
