@@ -1,6 +1,7 @@
 import graphql from 'babel-plugin-relay/macro'
 import { GenieCollection, Trait } from 'nft/types'
-import { useLazyLoadQuery } from 'react-relay'
+import { useEffect } from 'react'
+import { useLazyLoadQuery, useQueryLoader } from 'react-relay'
 
 import { CollectionQuery } from './__generated__/CollectionQuery.graphql'
 
@@ -86,8 +87,21 @@ const collectionQuery = graphql`
   }
 `
 
+export function useLoadCollectionQuery(address?: string): void {
+  const [, loadQuery] = useQueryLoader(collectionQuery)
+  useEffect(() => {
+    if (address) {
+      loadQuery({ address })
+    }
+  }, [address, loadQuery])
+}
+
+// Lazy-loads an already loaded CollectionQuery.
+// This will *not* trigger a query - that must be done from a parent component to ensure proper query coalescing and to
+// prevent waterfalling. Use useLoadCollectionQuery to trigger the query.
 export function useCollectionQuery(address: string): GenieCollection | undefined {
-  const queryData = useLazyLoadQuery<CollectionQuery>(collectionQuery, { address })
+  // This will *not* suspend if not yet loaded - it will return empty results, because it is 'store-only'.
+  const queryData = useLazyLoadQuery<CollectionQuery>(collectionQuery, { address }, { fetchPolicy: 'store-only' })
 
   const queryCollection = queryData.nftCollections?.edges[0]?.node
   const market = queryCollection?.markets && queryCollection?.markets[0]

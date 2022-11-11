@@ -1,7 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import { PageName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
-import { useCollectionQuery } from 'graphql/data/nft/Collection'
+import { useCollectionQuery, useLoadCollectionQuery } from 'graphql/data/nft/Collection'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { Activity, ActivitySwitcher, CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
@@ -32,7 +32,6 @@ const CollectionDisplaySection = styled(Row)`
 
 const Collection = () => {
   const { contractAddress } = useParams()
-
   const isMobile = useIsMobile()
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const { pathname } = useLocation()
@@ -154,4 +153,14 @@ const Collection = () => {
   )
 }
 
-export default Collection
+// The page is responsible for any queries that must be run on initial load.
+// Triggering query load from the page prevents waterfalled requests, as lazy-loading them in components would prevent
+// any children from rendering.
+const CollectionPage = () => {
+  const { contractAddress } = useParams()
+  useLoadCollectionQuery(contractAddress)
+
+  return <Collection />
+}
+
+export default CollectionPage
