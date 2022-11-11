@@ -26,8 +26,8 @@ interface TransactionDetailsProps {
 }
 
 export const TRANSACTION_DETAILS_SPACER: { color: keyof Theme['colors']; width: number } = {
-  color: 'backgroundOutline',
-  width: 0.5,
+  color: 'background1',
+  width: 2,
 }
 
 export function TransactionDetails({

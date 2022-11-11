@@ -1,6 +1,6 @@
 import { backgroundColor, BackgroundColorProps, useRestyle } from '@shopify/restyle'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TextInput, TextInputProps } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
@@ -45,6 +45,25 @@ const MIN_INPUT_FONT_SIZE = 18
 // if font changes from `fontFamily.sansSerif.regular` or `MAX_INPUT_FONT_SIZE`
 // changes from 36 then width value must be adjusted
 const MAX_CHAR_PIXEL_WIDTH = 23
+
+const getSwapPanelPaddingValues = (isOutputBox: boolean, hasCurrencyValue: boolean) => {
+  if (hasCurrencyValue) {
+    return {
+      // when there is a currency value, and the box is on the top, add a bit more
+      // padding (lg) to account for the swap direction button
+      paddingBottom: isOutputBox ? 'xmd' : 'lg',
+      paddingTop: 'xmd',
+      paddingHorizontal: 'md',
+    }
+  }
+  return {
+    // xxl to account for the direction button (on the top or the bottom, depending
+    // on whether this component is the top or bottom swap box)
+    paddingBottom: isOutputBox ? 'xl' : 'xxl',
+    paddingTop: isOutputBox ? 'xxl' : 'xl',
+    paddingHorizontal: 'md',
+  }
+}
 
 /** Input panel for a single side of a transfer action. */
 export function CurrencyInputPanel(props: CurrentInputPanelProps) {
@@ -124,14 +143,26 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
     [selectionChange]
   )
 
+  const paddingStyles = useMemo(
+    () => getSwapPanelPaddingValues(isOutput, Boolean(currency)),
+    [isOutput, currency]
+  )
+
+  const { paddingBottom, paddingTop, paddingHorizontal } = paddingStyles
+
   return (
-    <Flex gap="xxs" {...transformedProps}>
+    <Flex
+      gap="sm"
+      {...transformedProps}
+      pb={paddingBottom as keyof Theme['spacing']}
+      pt={paddingTop as keyof Theme['spacing']}
+      px={paddingHorizontal as keyof Theme['spacing']}>
       <Flex
         row
         alignItems="center"
         gap="xxxs"
         justifyContent={!currency ? 'center' : 'space-between'}
-        py={!currency ? 'sm' : 'none'}>
+        py="none">
         {!!currency && (
           <Flex fill grow row onLayout={onLayout}>
             <AmountInput
@@ -163,7 +194,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
             />
           </Flex>
         )}
-        <Flex row alignItems="center" gap="xs">
+        <Flex row alignItems="center" gap="none">
           <SelectTokenButton
             selectedCurrency={currency}
             showNonZeroBalancesOnly={showNonZeroBalancesOnly}
@@ -173,26 +204,23 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
       </Flex>
 
       {!!currency && (
-        <Flex row alignItems="center" gap="xs" justifyContent="space-between" py="xxs">
+        <Flex row alignItems="center" gap="xs" justifyContent="space-between" mb="xxs">
           {currency && (
             <Text color="textSecondary" variant="bodySmall">
               {!isUSDInput ? formattedUSDValue : formattedCurrencyAmount}
             </Text>
           )}
-          <Flex row alignItems="center" gap="xxs" justifyContent="flex-end">
+          <Flex row alignItems="center" gap="xs" justifyContent="flex-end">
             {showInsufficientBalanceWarning && (
               <Text color="accentWarning" variant="bodySmall">
                 {insufficientBalanceWarning.title}
               </Text>
             )}
-
             {currency && !showInsufficientBalanceWarning && (
               <Text color="textSecondary" variant="bodySmall">
-                {t('Balance')}: {formatCurrencyAmount(currencyBalance, NumberType.TokenTx)}{' '}
-                {currency.symbol}
+                {t('Balance')}: {formatCurrencyAmount(currencyBalance, NumberType.TokenTx)}
               </Text>
             )}
-
             {currency && onSetMax && (
               <MaxAmountButton
                 currencyAmount={currencyAmount}

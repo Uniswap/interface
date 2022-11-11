@@ -29,7 +29,8 @@ export function TransferArrowButton({
       disabled={disabled}
       justifyContent="center"
       name={name}
-      p="xs"
+      // border width applies inside the element so add more padding to account for it
+      p="sm"
       onPress={onPress}
       {...rest}>
       <Arrow color={theme.colors.textSecondary} direction="s" size={ICON_SIZE} />

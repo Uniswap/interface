@@ -1,6 +1,6 @@
 import React, { ComponentProps, useMemo } from 'react'
 import { useAppTheme } from 'src/app/hooks'
-import SwapArrow from 'src/assets/icons/swap-arrow.svg'
+import SwapArrowSVG from 'src/assets/icons/swap-direction.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 
 type SwapArrowButtonProps = Pick<
@@ -22,16 +22,17 @@ export function SwapArrowButton({
         alignItems="center"
         alignSelf="center"
         bg={bg}
-        borderColor="background3"
+        borderColor="background1"
         borderRadius="lg"
         borderWidth={4}
         disabled={disabled}
         justifyContent="center"
         name={name}
-        p="xs"
+        // border width applies inside the element so add more padding to account for it
+        p="sm"
         onPress={onPress}
         {...rest}>
-        <SwapArrow
+        <SwapArrowSVG
           color={theme.colors.textSecondary}
           height={theme.iconSizes.md}
           width={theme.iconSizes.md}

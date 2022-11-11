@@ -3,6 +3,7 @@ import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
+import { useUSDCValue } from 'src/features/routing/useUSDCPrice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { TransactionReview } from 'src/features/transactions/TransactionReview'
@@ -54,6 +55,8 @@ export function TransferReview({
     exactAmountUSD,
   } = derivedTransferInfo
 
+  const inputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.INPUT])
+
   const blockingWarning = warnings.some(
     (warning) =>
       warning.action === WarningAction.DisableSubmit ||
@@ -97,9 +100,14 @@ export function TransferReview({
   }
 
   const transferWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Medium)
+
+  const formattedCurrencyAmount = formatCurrencyAmount(
+    currencyAmounts[CurrencyField.INPUT],
+    NumberType.TokenTx
+  )
   const formattedAmountIn = isUSDInput
     ? formatNumberOrString(exactAmountUSD, NumberType.FiatTokenQuantity)
-    : formatCurrencyAmount(currencyAmounts[CurrencyField.INPUT], NumberType.TokenTx)
+    : formattedCurrencyAmount
 
   return (
     <>
@@ -121,6 +129,7 @@ export function TransferReview({
         actionButtonProps={actionButtonProps}
         currencyIn={currencyIn}
         formattedAmountIn={formattedAmountIn}
+        inputCurrencyUSDValue={inputCurrencyUSDValue}
         isUSDInput={isUSDInput}
         nftIn={nftIn}
         recipient={recipient}
@@ -133,6 +142,7 @@ export function TransferReview({
             onShowWarning={onShowWarning}
           />
         }
+        usdTokenEquivalentAmount={formattedCurrencyAmount}
         onPrev={onPrev}
       />
     </>

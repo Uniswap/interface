@@ -5,7 +5,7 @@ import { Keyboard, StyleSheet, TextInputProps } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import AlertTriangleIcon from 'src/assets/icons/alert-triangle.svg'
-import InfoCircle from 'src/assets/icons/info-circle.svg'
+import InfoCircle from 'src/assets/icons/info.svg'
 import { Button, ButtonSize } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
@@ -145,6 +145,10 @@ export function SwapForm({
   const { showNativeKeyboard, onDecimalPadLayout, isLayoutPending, onInputPanelLayout } =
     useShouldShowNativeKeyboard()
 
+  const SWAP_DIRECTION_BUTTON_SIZE = theme.iconSizes.md
+  const SWAP_DIRECTION_BUTTON_INNER_PADDING = theme.spacing.sm
+  const SWAP_DIRECTION_BUTTON_BORDER_WIDTH = theme.spacing.xxs
+
   return (
     <>
       {showWarningModal && swapWarning?.title && (
@@ -162,7 +166,7 @@ export function SwapForm({
       <Flex grow gap="xs" justifyContent="space-between">
         <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xxxs" onLayout={onInputPanelLayout}>
           <Trace section={SectionName.CurrencyInputPanel}>
-            <Flex backgroundColor="background2" borderRadius="xl" pb="md" pt="lg" px="md">
+            <Flex backgroundColor="background2" borderRadius="xl">
               <CurrencyInputPanel
                 currency={currencies[CurrencyField.INPUT]}
                 currencyAmount={currencyAmounts[CurrencyField.INPUT]}
@@ -188,9 +192,16 @@ export function SwapForm({
           </Trace>
 
           <Box zIndex="popover">
-            <Box alignItems="center" height={ARROW_SIZE} style={StyleSheet.absoluteFill}>
-              <Box alignItems="center" bottom={ARROW_SIZE / 2} position="absolute">
-                <SwapArrowButton bg="background1" onPress={onSwitchCurrencies} />
+            <Box
+              alignItems="center"
+              height={
+                SWAP_DIRECTION_BUTTON_SIZE +
+                SWAP_DIRECTION_BUTTON_INNER_PADDING +
+                SWAP_DIRECTION_BUTTON_BORDER_WIDTH
+              }
+              style={StyleSheet.absoluteFill}>
+              <Box alignItems="center" bottom={SWAP_DIRECTION_BUTTON_SIZE / 2} position="absolute">
+                <SwapArrowButton bg="background2" onPress={onSwitchCurrencies} />
               </Box>
             </Box>
           </Box>
@@ -205,10 +216,7 @@ export function SwapForm({
                 borderTopRightRadius="xl"
                 gap="none"
                 overflow="hidden"
-                pb="md"
-                position="relative"
-                pt="lg"
-                px="md">
+                position="relative">
                 <CurrencyInputPanel
                   isOutput
                   currency={currencies[CurrencyField.OUTPUT]}
@@ -288,20 +296,22 @@ export function SwapForm({
                     row
                     alignItems="center"
                     alignSelf="stretch"
-                    backgroundColor="background3"
+                    backgroundColor="background2"
                     borderBottomLeftRadius="lg"
                     borderBottomRightRadius="lg"
+                    borderTopColor="background0"
+                    borderTopWidth={1}
                     flexGrow={1}
                     gap="xs"
                     px="md"
                     py="sm">
                     {swapDataRefreshing ? (
-                      <SpinningLoader size={theme.iconSizes.md} />
+                      <SpinningLoader size={theme.iconSizes.sm} />
                     ) : (
                       <InfoCircle
                         color={theme.colors.textSecondary}
-                        height={theme.iconSizes.md}
-                        width={theme.iconSizes.md}
+                        height={theme.iconSizes.sm}
+                        width={theme.iconSizes.sm}
                       />
                     )}
                     <Flex row gap="none">

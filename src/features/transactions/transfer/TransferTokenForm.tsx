@@ -23,7 +23,6 @@ import { useUSDCValue } from 'src/features/routing/useUSDCPrice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useShouldShowNativeKeyboard } from 'src/features/transactions/hooks'
 import { useSwapActionHandlers, useUSDTokenUpdater } from 'src/features/transactions/swap/hooks'
-import { ARROW_SIZE } from 'src/features/transactions/swap/SwapForm'
 import {
   CurrencyField,
   transactionStateActions,
@@ -178,6 +177,10 @@ export function TransferTokenForm({
   const { showNativeKeyboard, onDecimalPadLayout, isLayoutPending, onInputPanelLayout } =
     useShouldShowNativeKeyboard()
 
+  const TRANSFER_DIRECTION_BUTTON_SIZE = theme.iconSizes.md
+  const TRANSFER_DIRECTION_BUTTON_INNER_PADDING = theme.spacing.sm
+  const TRANSFER_DIRECTION_BUTTON_BORDER_WIDTH = theme.spacing.xxs
+
   return (
     <>
       {showWarningModal && transferWarning?.title && (
@@ -204,17 +207,11 @@ export function TransferTokenForm({
         />
       </Suspense>
       <Flex grow gap="xs" justifyContent="space-between">
-        <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xxxs" onLayout={onInputPanelLayout}>
+        <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xxxxs" onLayout={onInputPanelLayout}>
           {nftIn ? (
             <NFTTransfer asset={nftIn} nftSize={dimensions.fullHeight / 4} />
           ) : (
-            <Flex
-              backgroundColor="background2"
-              borderRadius="xl"
-              justifyContent="center"
-              pb="md"
-              pt="lg"
-              px="md">
+            <Flex backgroundColor="background2" borderRadius="xl" justifyContent="center">
               <CurrencyInputPanel
                 focus
                 currency={currencyIn}
@@ -235,10 +232,21 @@ export function TransferTokenForm({
               />
             </Flex>
           )}
+
           <Box zIndex="popover">
-            <Box alignItems="center" height={ARROW_SIZE} style={StyleSheet.absoluteFill}>
-              <Box alignItems="center" bottom={ARROW_SIZE / 2} position="absolute">
-                <TransferArrowButton disabled bg={recipient ? 'background3' : 'background1'} />
+            <Box
+              alignItems="center"
+              height={
+                TRANSFER_DIRECTION_BUTTON_SIZE +
+                TRANSFER_DIRECTION_BUTTON_INNER_PADDING +
+                TRANSFER_DIRECTION_BUTTON_BORDER_WIDTH
+              }
+              style={StyleSheet.absoluteFill}>
+              <Box
+                alignItems="center"
+                bottom={TRANSFER_DIRECTION_BUTTON_SIZE / 2}
+                position="absolute">
+                <TransferArrowButton disabled bg={recipient ? 'background2' : 'background1'} />
               </Box>
             </Box>
           </Box>

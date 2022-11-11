@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { notificationAsync } from 'expo-haptics'
 import React, { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -18,6 +18,7 @@ import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biomet
 import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import { dimensions, iconSizes } from 'src/styles/sizing'
+import { formatNumberOrString, NumberType } from 'src/utils/format'
 
 interface BaseReviewProps {
   actionButtonProps: { disabled: boolean; label: string; name: ElementName; onPress: () => void }
@@ -30,6 +31,9 @@ interface BaseReviewProps {
   formattedAmountOut?: string
   recipient?: string
   onPrev: () => void
+  inputCurrencyUSDValue?: CurrencyAmount<Currency> | null
+  outputCurrencyUSDValue?: CurrencyAmount<Currency> | null
+  usdTokenEquivalentAmount?: string
 }
 
 interface TransferReviewProps extends BaseReviewProps {
@@ -51,10 +55,13 @@ export function TransactionReview({
   formattedAmountIn,
   currencyOut,
   formattedAmountOut,
+  inputCurrencyUSDValue,
+  outputCurrencyUSDValue,
   nftIn,
   recipient,
   isUSDInput = false,
   transactionDetails,
+  usdTokenEquivalentAmount,
   onPrev,
 }: TransactionReviewProps) {
   const theme = useAppTheme()
@@ -63,29 +70,50 @@ export function TransactionReview({
   const { trigger: actionButtonTrigger } = useBiometricPrompt(actionButtonProps.onPress)
   const { requiredForTransactions } = useBiometricAppSettings()
 
+  const formattedInputUsdValue = inputCurrencyUSDValue
+    ? formatNumberOrString(inputCurrencyUSDValue?.toExact(), NumberType.FiatTokenQuantity)
+    : ''
+  const formattedOutputUsdValue = outputCurrencyUSDValue
+    ? formatNumberOrString(outputCurrencyUSDValue?.toExact(), NumberType.FiatTokenQuantity)
+    : ''
+
   return (
     <>
       <AnimatedFlex centered grow entering={FadeInUp} exiting={FadeOut} gap="sm">
         {currencyIn ? (
-          <Flex centered gap="sm">
-            <AmountInput
-              alignSelf="stretch"
-              backgroundColor="none"
-              borderWidth={0}
-              editable={false}
-              fontFamily={theme.textVariants.headlineLarge.fontFamily}
-              fontSize={theme.textVariants.headlineLarge.fontSize}
-              height={theme.textVariants.headlineLarge.lineHeight}
-              maxFontSizeMultiplier={theme.textVariants.headlineLarge.maxFontSizeMultiplier}
-              px="md"
-              py="none"
-              // on review screen, number formatter will already include $ sign
-              showCurrencySign={false}
-              showSoftInputOnFocus={false}
-              testID="amount-input-in"
-              textAlign="center"
-              value={formattedAmountIn}
-            />
+          <Flex centered gap="md">
+            <Flex centered gap="none">
+              <AmountInput
+                alignSelf="stretch"
+                backgroundColor="none"
+                borderWidth={0}
+                editable={false}
+                fontFamily={theme.textVariants.headlineLarge.fontFamily}
+                fontSize={theme.textVariants.headlineLarge.fontSize}
+                height={theme.textVariants.headlineLarge.lineHeight}
+                maxFontSizeMultiplier={theme.textVariants.headlineLarge.maxFontSizeMultiplier}
+                my="none"
+                px="md"
+                py="none"
+                // on review screen, number formatter will already include $ sign
+                showCurrencySign={false}
+                showSoftInputOnFocus={false}
+                testID="amount-input-in"
+                textAlign="center"
+                value={formattedAmountIn}
+              />
+              {inputCurrencyUSDValue && !isUSDInput ? (
+                <Text color="textSecondary" variant="subheadLarge">
+                  {formattedInputUsdValue}
+                </Text>
+              ) : null}
+              {isUSDInput ? (
+                <Text color="textSecondary" variant="subheadLarge">
+                  {/* when sending a token with USD input, show the amount of the token being sent */}
+                  {usdTokenEquivalentAmount}
+                </Text>
+              ) : null}
+            </Flex>
             <CurrencyLogoWithLabel currency={currencyIn} />
           </Flex>
         ) : nftIn ? (
@@ -96,7 +124,7 @@ export function TransactionReview({
         <TransferArrowButton disabled bg="none" borderColor="none" />
         {currencyOut && formattedAmountOut ? (
           <Flex centered gap="md">
-            <Flex gap="sm">
+            <Flex centered gap="none">
               <AmountInput
                 alignSelf="stretch"
                 backgroundColor="none"
@@ -112,8 +140,13 @@ export function TransactionReview({
                 textAlign="center"
                 value={formattedAmountOut}
               />
-              <CurrencyLogoWithLabel currency={currencyOut} />
+              {outputCurrencyUSDValue ? (
+                <Text color="textSecondary" variant="subheadLarge">
+                  {formattedOutputUsdValue}
+                </Text>
+              ) : null}
             </Flex>
+            <CurrencyLogoWithLabel currency={currencyOut} />
           </Flex>
         ) : recipient ? (
           <Flex centered gap="sm">

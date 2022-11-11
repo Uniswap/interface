@@ -3,6 +3,7 @@ import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
+import { useUSDCValue } from 'src/features/routing/useUSDCPrice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import {
   DerivedSwapInfo,
@@ -77,6 +78,9 @@ export function SwapReview({
     txRequest,
     txId
   )
+
+  const inputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.INPUT])
+  const outputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.OUTPUT])
 
   const onSwap = useSwapCallback(approveTxRequest, txRequest, trade, onNext, txId)
 
@@ -175,6 +179,7 @@ export function SwapReview({
     exactCurrencyField === CurrencyField.INPUT
       ? [formattedExactValue, derivedAmount]
       : [derivedAmount, formattedExactValue]
+
   return (
     <>
       {showWarningModal && swapWarning?.title && (
@@ -197,6 +202,8 @@ export function SwapReview({
         currencyOut={currencyOut}
         formattedAmountIn={amountIn}
         formattedAmountOut={amountOut}
+        inputCurrencyUSDValue={inputCurrencyUSDValue}
+        outputCurrencyUSDValue={outputCurrencyUSDValue}
         transactionDetails={getTransactionDetails()}
         onPrev={onPrev}
       />

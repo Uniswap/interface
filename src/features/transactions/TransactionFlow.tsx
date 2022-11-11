@@ -103,10 +103,10 @@ export function TransactionFlow({
   return (
     <TouchableWithoutFeedback>
       <AnimatedFlex grow row gap="none" height="100%" paddingBottom="xl" style={wrapperStyle}>
-        <Flex gap="xs" px="md" width="100%">
+        <Flex gap="sm" px="md" width="100%">
           {step !== TransactionStep.SUBMITTED && (
             <Flex row alignItems="center" justifyContent="space-between" px="sm">
-              <Text py="xs" textAlign="left" variant="subheadLarge">
+              <Text pt="xs" textAlign="left" variant="subheadLarge">
                 {flowName}
               </Text>
               {step === TransactionStep.FORM && showUSDToggle && (

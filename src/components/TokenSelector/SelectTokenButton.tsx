@@ -28,18 +28,18 @@ export function SelectTokenButton({
   return (
     <TouchableArea
       hapticFeedback
-      bg={selectedCurrency ? 'background3' : 'userThemeMagenta'}
-      borderRadius="lg"
+      bg={selectedCurrency ? 'background3' : 'magentaVibrant'}
+      borderRadius="full"
       name={ElementName.TokenSelectorToggle}
       testID={`currency-selector-toggle-${showNonZeroBalancesOnly ? 'in' : 'out'}`}
       onPress={onPress}>
       {selectedCurrency ? (
-        <Flex centered row flexDirection="row" gap="xxs" p="xs">
+        <Flex centered row flexDirection="row" gap="xxs" p="xxs">
           <CurrencyLogo currency={selectedCurrency} size={iconSizes.xl} />
           <Text color="textPrimary" pl="xxs" variant="buttonLabelLarge">
             {selectedCurrency.symbol}
           </Text>
-          <Chevron color={theme.colors.textPrimary} direction="e" />
+          <Chevron color={theme.colors.textTertiary} direction="e" />
         </Flex>
       ) : (
         <Flex centered row py="xxs">
