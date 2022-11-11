@@ -154,7 +154,7 @@
   "Today": "Today",
   "This Month": "This Month",
   "Couldn’t load activity": "Couldn’t load activity",
-  "Failed to fetch recent transactions": "Failed to fetch recent transactions",
+  "Couldn't load activity": "Couldn't load activity",
   "Transactions": "Transactions",
   "Any transactions made by this wallet will appear here.": "Any transactions made by this wallet will appear here.",
   "No transactions yet": "No transactions yet",

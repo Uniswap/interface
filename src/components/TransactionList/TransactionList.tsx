@@ -2,8 +2,7 @@ import { TFunction } from 'i18next'
 import React, { ReactElement, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SectionList, SectionListData } from 'react-native'
-import { FadeInDown, FadeOut } from 'react-native-reanimated'
-import { AnimatedBox, Box } from 'src/components/layout'
+import { Box } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
@@ -47,18 +46,19 @@ interface TransactionListProps {
 
 export default function TransactionList(props: TransactionListProps) {
   const { t } = useTranslation()
-  const { error, refetch, networkStatus, data } = useTransactionListQuery({
+  const { refetch, networkStatus, data } = useTransactionListQuery({
     variables: { address: props.ownerAddress },
     notifyOnNetworkStatusChange: true,
   })
-
-  const loading = isNonPollingRequestInFlight(networkStatus)
 
   const onRetry = useCallback(() => {
     refetch({
       address: props.ownerAddress,
     })
   }, [props.ownerAddress, refetch])
+
+  const loading = isNonPollingRequestInFlight(networkStatus)
+  const hasData = !!data?.portfolios?.[0]?.assetActivities
 
   if (loading) {
     return (
@@ -68,8 +68,7 @@ export default function TransactionList(props: TransactionListProps) {
     )
   }
 
-  // If no data but error, show full screen error
-  if (!data && error) {
+  if (!hasData) {
     return (
       <Box height="100%" pb="xxxl">
         <BaseCard.ErrorState
@@ -81,19 +80,7 @@ export default function TransactionList(props: TransactionListProps) {
     )
   }
 
-  return (
-    <>
-      {error ? (
-        <AnimatedBox entering={FadeInDown} exiting={FadeOut} pt="sm">
-          <BaseCard.InlineErrorState
-            title={t('Failed to fetch recent transactions')}
-            onRetry={onRetry}
-          />
-        </AnimatedBox>
-      ) : null}
-      <TransactionListInner {...props} data={data} />
-    </>
-  )
+  return <TransactionListInner {...props} data={data} />
 }
 
 /** Displays historical and pending transactions for a given address. */
