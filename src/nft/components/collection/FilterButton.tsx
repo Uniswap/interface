@@ -34,6 +34,7 @@ export const FilterButton = ({
       position="relative"
       onClick={onClick}
       padding="12"
+      marginLeft="14"
       width={isMobile ? '44' : 'auto'}
       height="44"
       whiteSpace="nowrap"

@@ -120,6 +120,7 @@ const SweepButton = styled.div<{ toggled: boolean; disabled?: boolean }>`
   border: none;
   border-radius: 12px;
   padding: 12px 18px 12px 12px;
+  margin-right: 14px;
   cursor: ${({ disabled }) => (disabled ? 'auto' : 'pointer')};
   color: ${({ toggled, disabled, theme }) => (toggled && !disabled ? theme.accentTextLightPrimary : theme.textPrimary)};
   background: ${({ theme, toggled, disabled }) =>
@@ -512,7 +513,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         hasMore={hasNext}
         loader={hasNext && hasNfts ? loadingAssets : null}
         dataLength={collectionNfts?.length ?? 0}
-        style={{ overflow: 'unset' }}
+        style={{ overflow: 'unset', paddingLeft: 14, paddingRight: 14 }}
         className={hasNfts || isLoadingNext ? styles.assetList : undefined}
       >
         {hasNfts ? (
