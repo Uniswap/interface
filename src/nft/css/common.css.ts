@@ -41,7 +41,6 @@ export const commonButtonStyles = style([
   sprinkles({
     borderRadius: '12',
     transition: '250',
-    boxShadow: { hover: 'elevation' },
   }),
   {
     border: 'none',

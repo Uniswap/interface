@@ -13,10 +13,6 @@ const ClearButton = styled(ButtonText)`
   font-size: 14px;
   line-height: 16px;
   transition: 150ms ease color;
-
-  :hover {
-    color: ${({ theme }) => theme.accentActive};
-  }
 `
 const ControlRow = styled.div`
   align-items: center;
