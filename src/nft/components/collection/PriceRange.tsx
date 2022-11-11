@@ -14,6 +14,7 @@ import { default as Slider } from 'rc-slider'
 import { FocusEventHandler, FormEvent, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
+import { colorsDark } from 'theme/colors'
 
 import * as styles from './PriceRange.css'
 import { TraitsHeader } from './TraitsHeader'
@@ -190,7 +191,7 @@ export const PriceRange = () => {
             backgroundColor: `white`,
             borderRadius: '4px',
             border: 'none',
-            boxShadow: `4px 4px 10px rgba(0, 0, 0, 0.24), 2px 2px 4px rgba(0, 0, 0, 0.12), 1px 2px 2px rgba(0, 0, 0, 0.12)`,
+            boxShadow: colorsDark.shallowShadow.slice(0, -1),
           }}
           railStyle={{
             top: '3px',
