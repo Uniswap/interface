@@ -24,7 +24,6 @@ const SortByItem = ({
   parentOnClick: React.MouseEventHandler<HTMLElement>
 }) => {
   const sortBy = useCollectionFilters((state) => state.sortBy)
-  console.log(sortBy, dropDownOption.sortBy)
   const checkMark =
     dropDownOption.sortBy !== undefined && sortBy === dropDownOption.sortBy ? (
       <Box
