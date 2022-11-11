@@ -5,7 +5,7 @@ import clsx from 'clsx'
 import { loadingAnimation } from 'components/Loader/styled'
 import { parseEther } from 'ethers/lib/utils'
 import { NftAssetTraitInput, NftMarketplace } from 'graphql/data/nft/__generated__/AssetQuery.graphql'
-import { useAssetsQuery } from 'graphql/data/nft/Asset'
+import { useAssetsQuery, useLoadSweepAssetsQuery } from 'graphql/data/nft/Asset'
 import useDebounce from 'hooks/useDebounce'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { CollectionSearch, FilterButton } from 'nft/components/collection'
@@ -42,7 +42,7 @@ import { ThemedText } from 'theme'
 
 import { CollectionAssetLoading } from './CollectionAssetLoading'
 import { MARKETPLACE_ITEMS } from './MarketplaceSelect'
-import { Sweep } from './Sweep'
+import { Sweep, useSweepFetcherParams } from './Sweep'
 import { TraitChip } from './TraitChip'
 
 interface CollectionNftsProps {
@@ -229,6 +229,13 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const debouncedSearchByNameText = useDebounce(searchByNameText, 500)
 
   const [sweepIsOpen, setSweepOpen] = useState(false)
+  // Load all sweep queries. Loading them on the parent allows lazy-loading, but avoids waterfalling requests.
+  const collectionParams = useSweepFetcherParams(contractAddress, 'others', debouncedMinPrice, debouncedMaxPrice)
+  const nftxParams = useSweepFetcherParams(contractAddress, 'others', debouncedMinPrice, debouncedMaxPrice)
+  const nft20Params = useSweepFetcherParams(contractAddress, 'others', debouncedMinPrice, debouncedMaxPrice)
+  useLoadSweepAssetsQuery(collectionParams, sweepIsOpen)
+  useLoadSweepAssetsQuery(nftxParams, sweepIsOpen)
+  useLoadSweepAssetsQuery(nft20Params, sweepIsOpen)
 
   const {
     assets: collectionNfts,
@@ -447,12 +454,9 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
               </SweepButton>
             ) : null}
           </ActionsContainer>
-          <Sweep
-            contractAddress={contractAddress}
-            minPrice={debouncedMinPrice}
-            maxPrice={debouncedMaxPrice}
-            showSweep={sweepIsOpen && buyNow && !hasErc1155s}
-          />
+          {sweepIsOpen && (
+            <Sweep contractAddress={contractAddress} minPrice={debouncedMinPrice} maxPrice={debouncedMaxPrice} />
+          )}
           <Row
             paddingTop={!!markets.length || !!traits.length || minMaxPriceChipText ? '12' : '0'}
             gap="8"

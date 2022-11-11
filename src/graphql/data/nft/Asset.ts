@@ -3,8 +3,8 @@ import { parseEther } from 'ethers/lib/utils'
 import useInterval from 'lib/hooks/useInterval'
 import ms from 'ms.macro'
 import { GenieAsset, Trait } from 'nft/types'
-import { useCallback, useMemo, useState } from 'react'
-import { fetchQuery, useLazyLoadQuery, usePaginationFragment, useRelayEnvironment } from 'react-relay'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { fetchQuery, useLazyLoadQuery, usePaginationFragment, useQueryLoader, useRelayEnvironment } from 'react-relay'
 
 import { AssetPaginationQuery } from './__generated__/AssetPaginationQuery.graphql'
 import {
@@ -231,19 +231,16 @@ export function useAssetsQuery(
 
 const DEFAULT_SWEEP_AMOUNT = 50
 
-export function useSweepAssetsQuery({
-  contractAddress,
-  markets,
-  price,
-  traits,
-}: {
+export interface SweepFetcherParams {
   contractAddress: string
   markets?: string[]
   price?: { high?: number | string; low?: number | string; symbol: string }
   traits?: Trait[]
-}): GenieAsset[] {
-  const filter: NftAssetsFilterInput = useMemo(() => {
-    return {
+}
+
+function useSweepFetcherVars({ contractAddress, markets, price, traits }: SweepFetcherParams): AssetQuery$variables {
+  const filter: NftAssetsFilterInput = useMemo(
+    () => ({
       listed: true,
       maxPrice: price?.high?.toString(),
       minPrice: price?.low?.toString(),
@@ -255,27 +252,44 @@ export function useSweepAssetsQuery({
           : undefined,
       marketplaces:
         markets && markets.length > 0 ? markets?.map((market) => market.toUpperCase() as NftMarketplace) : undefined,
-    }
-  }, [price, traits, markets])
-  const vars: AssetQuery$variables = useMemo(() => {
-    return {
+    }),
+    [markets, price?.high, price?.low, traits]
+  )
+  return useMemo(
+    () => ({
       address: contractAddress,
       orderBy: 'PRICE',
       asc: true,
       first: DEFAULT_SWEEP_AMOUNT,
       filter,
-    }
-  }, [contractAddress, filter])
+    }),
+    [contractAddress, filter]
+  )
+}
 
-  const queryData = useLazyLoadQuery<AssetQuery>(assetQuery, vars)
+export function useLoadSweepAssetsQuery(params: SweepFetcherParams, enabled = true) {
+  const [, loadQuery] = useQueryLoader<AssetQuery>(assetQuery)
+  const vars = useSweepFetcherVars(params)
+  useEffect(() => {
+    if (enabled) {
+      loadQuery(vars)
+    }
+  }, [loadQuery, enabled, vars])
+}
+
+// Lazy-loads an already loaded AssetsQuery.
+// This will *not* trigger a query - that must be done from a parent component to ensure proper query coalescing and to
+// prevent waterfalling. Use useLoadSweepAssetsQuery to trigger the query.
+export function useLazyLoadSweepAssetsQuery(params: SweepFetcherParams): GenieAsset[] {
+  const vars = useSweepFetcherVars(params)
+  // This will suspend if not yet loaded - it will return empty results despite being 'store-only', because it is a fragment.
+  const queryData = useLazyLoadQuery(assetQuery, vars, { fetchPolicy: 'store-only' })
   const { data } = usePaginationFragment<AssetPaginationQuery, any>(assetPaginationQuery, queryData)
-  const assets: GenieAsset[] = useMemo(
+  return useMemo<GenieAsset[]>(
     () =>
       data.nftAssets?.edges?.map((queryAsset: NftAssetsQueryAsset) => {
         return formatAssetQueryData(queryAsset, data.nftAssets?.totalCount)
       }),
     [data.nftAssets?.edges, data.nftAssets?.totalCount]
   )
-
-  return assets
 }
