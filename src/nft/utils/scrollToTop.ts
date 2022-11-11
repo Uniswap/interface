@@ -1,5 +1,10 @@
+import { getIsMobile } from 'nft/hooks'
+
 export const scrollToTop = () => {
-  window.document.getElementById('nft-anchor')?.scrollIntoView({
+  const isMobile = getIsMobile()
+  const anchorElement = isMobile ? 'nft-anchor-mobile' : 'nft-anchor'
+
+  window.document.getElementById(anchorElement)?.scrollIntoView({
     behavior: 'smooth',
   })
 }

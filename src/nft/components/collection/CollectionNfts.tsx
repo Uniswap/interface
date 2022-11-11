@@ -18,10 +18,9 @@ import { CollectionAsset } from 'nft/components/collection/CollectionAsset'
 import * as styles from 'nft/components/collection/CollectionNfts.css'
 import { SortDropdown } from 'nft/components/common/SortDropdown'
 import { Center, Column, Row } from 'nft/components/Flex'
-import { NonRarityIcon, RarityIcon, SweepIcon } from 'nft/components/icons'
+import { SweepIcon } from 'nft/components/icons'
 import { bodySmall, buttonTextMedium, headlineMedium } from 'nft/css/common.css'
 import { loadingAsset } from 'nft/css/loading.css'
-import { vars } from 'nft/css/sprinkles.css'
 import {
   CollectionFilters,
   initialCollectionFilterState,
@@ -57,8 +56,6 @@ interface CollectionNftsProps {
 }
 
 const rarityStatusCache = new Map<string, boolean>()
-const nonRarityIcon = <NonRarityIcon width="20" height="20" viewBox="2 2 22 22" color={vars.color.blue400} />
-const rarityIcon = <RarityIcon width="20" height="20" viewBox="2 2 24 24" color={vars.color.blue400} />
 
 const ActionsContainer = styled.div`
   display: flex;
@@ -199,6 +196,39 @@ export const CollectionNftsAndMenuLoading = () => (
   </Column>
 )
 
+export const getSortDropdownOptions = (setSortBy: (sortBy: SortBy) => void, hasRarity: boolean): DropDownOption[] => {
+  const options = [
+    {
+      displayText: 'Price: Low to High',
+      onClick: () => setSortBy(SortBy.LowToHigh),
+      reverseIndex: 2,
+      sortBy: SortBy.LowToHigh,
+    },
+    {
+      displayText: 'Price: High to Low',
+      onClick: () => setSortBy(SortBy.HighToLow),
+      reverseIndex: 1,
+      sortBy: SortBy.HighToLow,
+    },
+  ]
+  return hasRarity
+    ? options.concat([
+        {
+          displayText: 'Rarity: Rare to Common',
+          onClick: () => setSortBy(SortBy.RareToCommon),
+          reverseIndex: 4,
+          sortBy: SortBy.RareToCommon,
+        },
+        {
+          displayText: 'Rarity: Common to Rare',
+          onClick: () => setSortBy(SortBy.CommonToRare),
+          reverseIndex: 3,
+          sortBy: SortBy.CommonToRare,
+        },
+      ])
+    : options
+}
+
 export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerified }: CollectionNftsProps) => {
   const { chainId } = useWeb3React()
   const traits = useCollectionFilters((state) => state.traits)
@@ -223,6 +253,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const reset = useCollectionFilters((state) => state.reset)
   const setMin = useCollectionFilters((state) => state.setMinPrice)
   const setMax = useCollectionFilters((state) => state.setMaxPrice)
+  const setHasRarity = useCollectionFilters((state) => state.setHasRarity)
 
   const toggleBag = useBag((state) => state.toggleBag)
   const bagExpanded = useBag((state) => state.bagExpanded)
@@ -272,51 +303,14 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
     setIsCollectionNftsLoading(isLoadingNext)
   }, [isLoadingNext, setIsCollectionNftsLoading])
 
-  const hasRarity = getRarityStatus(rarityStatusCache, collectionStats?.address, collectionNfts)
+  const hasRarity = useMemo(() => {
+    const hasRarity = getRarityStatus(rarityStatusCache, collectionStats?.address, collectionNfts) ?? false
+    setHasRarity(hasRarity)
+    return hasRarity
+  }, [collectionStats.address, collectionNfts, setHasRarity])
 
   const sortDropDownOptions: DropDownOption[] = useMemo(
-    () =>
-      hasRarity
-        ? [
-            {
-              displayText: 'Low to High',
-              onClick: () => setSortBy(SortBy.LowToHigh),
-              icon: nonRarityIcon,
-              reverseIndex: 2,
-            },
-            {
-              displayText: 'High to Low',
-              onClick: () => setSortBy(SortBy.HighToLow),
-              icon: nonRarityIcon,
-              reverseIndex: 1,
-            },
-            {
-              displayText: 'Rare to Common',
-              onClick: () => setSortBy(SortBy.RareToCommon),
-              icon: rarityIcon,
-              reverseIndex: 4,
-            },
-            {
-              displayText: 'Common to Rare',
-              onClick: () => setSortBy(SortBy.CommonToRare),
-              icon: rarityIcon,
-              reverseIndex: 3,
-            },
-          ]
-        : [
-            {
-              displayText: 'Low to High',
-              onClick: () => setSortBy(SortBy.LowToHigh),
-              icon: nonRarityIcon,
-              reverseIndex: 2,
-            },
-            {
-              displayText: 'High to Low',
-              onClick: () => setSortBy(SortBy.HighToLow),
-              icon: nonRarityIcon,
-              reverseIndex: 1,
-            },
-          ],
+    () => getSortDropdownOptions(setSortBy, hasRarity),
     [hasRarity, setSortBy]
   )
 
@@ -436,10 +430,10 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             {!hasErc1155s ? (
               <SweepButton
                 toggled={sweepIsOpen}
-                disabled={!buyNow}
+                disabled={hasErc1155s}
                 className={buttonTextMedium}
                 onClick={() => {
-                  if (!buyNow || hasErc1155s) return
+                  if (hasErc1155s) return
                   if (!sweepIsOpen) {
                     scrollToTop()
                     if (!bagExpanded && !isMobile) toggleBag()

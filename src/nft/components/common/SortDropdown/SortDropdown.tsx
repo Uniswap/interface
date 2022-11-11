@@ -5,8 +5,7 @@ import { Row } from 'nft/components/Flex'
 import { ArrowsIcon, ChevronUpIcon, ReversedArrowsIcon } from 'nft/components/icons'
 import { buttonTextMedium } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
-import { useIsCollectionLoading } from 'nft/hooks'
-import { useCollectionFilters } from 'nft/hooks'
+import { useCollectionFilters, useIsCollectionLoading } from 'nft/hooks'
 import { DropDownOption } from 'nft/types'
 import { useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react'
 
@@ -217,11 +216,6 @@ const DropDownItem = ({
       onClick={onClick}
       cursor="pointer"
     >
-      {option.icon && (
-        <Box width="20" height="20">
-          {option.icon}
-        </Box>
-      )}
       <Box marginLeft="8" className={buttonTextMedium}>
         {option.displayText}
       </Box>
