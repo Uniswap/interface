@@ -50,7 +50,7 @@ export function NetworkFilter({ selectedChain, onPressChain }: NetworkFilterProp
           render: () => (
             <>
               <Separator />
-              <Flex row alignItems="center" justifyContent="space-between" px="lg" py="md">
+              <Flex row alignItems="center" justifyContent="space-between" px="lg" py="xxl">
                 <Box height={iconSizes.lg} width={iconSizes.lg} />
                 <Text color="textPrimary" variant="bodyLarge">
                   {t('All networks')}
@@ -80,7 +80,7 @@ export function NetworkFilter({ selectedChain, onPressChain }: NetworkFilterProp
           Keyboard.dismiss()
           setShowModal(true)
         }}>
-        <Flex centered row bg="background2" borderRadius="sm" gap="xxs" p="xs">
+        <Flex centered row bg="background2" borderRadius="xl" gap="xxs" p="xs">
           {selectedChain && <NetworkLogo chainId={selectedChain} size={iconSizes.sm} />}
           <Text color="textSecondary" pl="xxxs" textAlign="center" variant="buttonLabelSmall">
             {selectedChain ? CHAIN_INFO[selectedChain].label : t('All networks')}

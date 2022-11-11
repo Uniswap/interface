@@ -366,7 +366,7 @@ function _TokenSearchResultList({
 
 function SectionHeader({ title }: { title: string }) {
   return (
-    <Flex backgroundColor="background1" py="sm">
+    <Flex backgroundColor="background1" py="md">
       <Text color="textSecondary" variant="subheadSmall">
         {title}
       </Text>
