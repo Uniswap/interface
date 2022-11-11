@@ -5,7 +5,8 @@ import { useAppDispatch } from 'src/app/hooks'
 import { NoTokens } from 'src/components/icons/NoTokens'
 import { Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { TabStyles, TabViewScrollProps } from 'src/components/layout/screens/TabbedScrollScreen'
+import { TabViewScrollProps } from 'src/components/layout/screens/TabbedScrollScreen'
+import { TAB_STYLES } from 'src/components/layout/TabHelpers'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { TokenBalanceList } from 'src/components/TokenBalanceList/TokenBalanceList'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
@@ -42,7 +43,7 @@ export function TokensTab({
   }
 
   return (
-    <Flex grow style={TabStyles.tabContentContainerStandard}>
+    <Flex grow style={TAB_STYLES.tabContentContainerStandard}>
       <TokenBalanceList
         empty={
           <Flex centered flex={1}>

@@ -13,7 +13,7 @@ import { NftsTab } from 'src/components/home/NftsTab'
 import { TokensTab } from 'src/components/home/TokensTab'
 import { Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
-import { renderTabLabel, TabStyles } from 'src/components/layout/screens/TabbedScrollScreen'
+import { renderTabLabel, TAB_STYLES } from 'src/components/layout/TabHelpers'
 import ProfileActivityTab from 'src/components/profile/tabs/ProfileActivityTab'
 import TraceTabView from 'src/components/telemetry/TraceTabView'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
@@ -94,12 +94,11 @@ export function ExternalProfileScreen({
       return (
         <TabBar
           {...sceneProps}
-          indicatorStyle={[TabStyles.indicator]}
+          indicatorStyle={TAB_STYLES.activeTabIndicator}
           navigationState={{ index: tabIndex, routes: tabs }}
           renderLabel={renderTabLabel}
           style={[
-            TabStyles.tab,
-            TabStyles.tabView,
+            TAB_STYLES.tabBar,
             {
               backgroundColor: theme.colors.background0,
               borderBottomColor: theme.colors.backgroundOutline,

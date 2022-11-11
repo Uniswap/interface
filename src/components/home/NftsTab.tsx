@@ -12,7 +12,8 @@ import { NFTViewer } from 'src/components/images/NFTViewer'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
-import { TabStyles, TabViewScrollProps } from 'src/components/layout/screens/TabbedScrollScreen'
+import { TabViewScrollProps } from 'src/components/layout/screens/TabbedScrollScreen'
+import { TAB_STYLES } from 'src/components/layout/TabHelpers'
 import { Loading } from 'src/components/loading'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { Text } from 'src/components/Text'
@@ -208,7 +209,7 @@ export function NftsTab({
       />
     </Flex>
   ) : (
-    <Flex flexGrow={1} style={TabStyles.tabContentContainerWide}>
+    <Flex flexGrow={1} style={TAB_STYLES.tabContentContainerWide}>
       <FlashList
         ref={tabViewScrollProps?.ref}
         ListFooterComponent={

@@ -10,10 +10,8 @@ import { Chevron } from 'src/components/icons/Chevron'
 import { AnimatedBox, Box, Flex } from 'src/components/layout'
 import { AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import {
-  TabViewScrollProps,
-  TAB_VIEW_SCROLL_THROTTLE,
-} from 'src/components/layout/screens/TabbedScrollScreen'
+import { TabViewScrollProps } from 'src/components/layout/screens/TabbedScrollScreen'
+import { TAB_VIEW_SCROLL_THROTTLE } from 'src/components/layout/TabHelpers'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'

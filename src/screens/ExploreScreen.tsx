@@ -20,8 +20,8 @@ import {
   panHeaderGestureAction,
   panSidebarContainerGestureAction,
   renderTabLabel,
-  TabStyles,
-} from 'src/components/layout/screens/TabbedScrollScreen'
+  TAB_STYLES,
+} from 'src/components/layout/TabHelpers'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { Loading } from 'src/components/loading'
 import TraceTabView from 'src/components/telemetry/TraceTabView'
@@ -98,11 +98,11 @@ export function ExploreScreen({ navigation }: Props) {
       return (
         <TabBar
           {...sceneProps}
-          indicatorStyle={[TabStyles.indicator]}
+          indicatorStyle={TAB_STYLES.activeTabIndicator}
           navigationState={{ index: tabIndex, routes: tabs }}
           renderLabel={renderTabLabel}
           style={[
-            TabStyles.tab,
+            TAB_STYLES.tabBar,
             {
               backgroundColor: theme.colors.background0,
               borderBottomColor: theme.colors.backgroundOutline,
@@ -159,7 +159,6 @@ export function ExploreScreen({ navigation }: Props) {
             navigationState={{ index: tabIndex, routes: tabs }}
             renderScene={renderTab}
             renderTabBar={renderTabBar}
-            style={TabStyles.tabView}
             onIndexChange={setIndex}
           />
         )}
@@ -182,7 +181,7 @@ export function ExploreScreen({ navigation }: Props) {
 export function ExploreTokensTabLoader() {
   const { t } = useTranslation()
   return (
-    <Flex gap="lg" my="sm">
+    <Flex gap="lg" my="sm" style={TAB_STYLES.tabContentContainerStandard}>
       <Flex gap="sm">
         <Text color="textSecondary" variant="subheadSmall">
           {t('Favorites')}

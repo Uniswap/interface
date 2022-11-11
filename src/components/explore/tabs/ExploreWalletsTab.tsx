@@ -6,6 +6,7 @@ import { FavoriteWalletsGrid } from 'src/components/explore/FavoriteWalletsGrid'
 import { SearchWalletItem } from 'src/components/explore/search/items/SearchWalletItem'
 import { SUGGESTED_WALLETS } from 'src/components/explore/search/SearchEmptySection'
 import { Flex } from 'src/components/layout/Flex'
+import { TAB_STYLES } from 'src/components/layout/TabHelpers'
 import { Text } from 'src/components/Text'
 import { WalletSearchResult } from 'src/features/explore/searchHistorySlice'
 import { selectHasWatchedWallets, selectWatchedAddressSet } from 'src/features/favorites/selectors'
@@ -47,6 +48,7 @@ function ExploreWalletsTab({ listRef }: { listRef?: React.MutableRefObject<null>
       renderItem={renderWalletItem}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
+      style={TAB_STYLES.tabContentContainerStandard}
     />
   )
 }

@@ -1,17 +1,10 @@
 import { DrawerActions } from '@react-navigation/core'
 import React, { ReactElement, Ref, useCallback, useMemo, useRef, useState } from 'react'
-import {
-  LayoutChangeEvent,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  StyleSheet,
-  ViewStyle,
-} from 'react-native'
-import { Gesture, GestureDetector } from 'react-native-gesture-handler'
+import { LayoutChangeEvent, NativeScrollEvent, NativeSyntheticEvent, ViewStyle } from 'react-native'
+import { GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   Extrapolate,
   interpolate,
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
@@ -22,11 +15,16 @@ import { useAppStackNavigation } from 'src/app/navigation/types'
 import { Box } from 'src/components/layout/Box'
 import { AnimatedFlex } from 'src/components/layout/Flex'
 import { Screen } from 'src/components/layout/Screen'
+import {
+  panHeaderGestureAction,
+  panSidebarContainerGestureAction,
+  renderTabLabel,
+  TAB_BAR_HEIGHT,
+  TAB_STYLES,
+} from 'src/components/layout/TabHelpers'
 import TraceTabView from 'src/components/telemetry/TraceTabView'
-import { Text } from 'src/components/Text'
 import { SectionName } from 'src/features/telemetry/constants'
 import { dimensions } from 'src/styles/sizing'
-import { theme as FixedTheme } from 'src/styles/theme'
 
 const SIDEBAR_SWIPE_CONTAINER_WIDTH = 50
 
@@ -49,89 +47,7 @@ export type TabViewScrollProps = {
   contentContainerStyle: ViewStyle
 }
 
-export const TAB_VIEW_SCROLL_THROTTLE = 16
-const TAB_BAR_HEIGHT = 48
 const INITIAL_TAB_BAR_HEIGHT = 100
-const SWIPE_THRESHOLD = 5
-
-export const TabStyles = StyleSheet.create({
-  header: {
-    marginBottom: 0,
-    paddingBottom: 0,
-    position: 'absolute',
-    width: '100%',
-  },
-  indicator: {
-    backgroundColor: FixedTheme.colors.userThemeMagenta,
-    bottom: -1,
-    height: 2,
-    position: 'absolute',
-  },
-  tab: {
-    // add inactive border to bottom of tab bar
-    borderBottomWidth: 1,
-    margin: 0,
-    padding: 0,
-    // remove default shadow border under tab bar
-    shadowColor: FixedTheme.colors.none,
-    shadowOpacity: 0,
-    shadowRadius: 0,
-    top: 0,
-  },
-  tabBar: {
-    paddingHorizontal: FixedTheme.spacing.lg,
-    position: 'absolute',
-    top: 0,
-    width: '100%',
-    zIndex: 1,
-  },
-  // Use on tab components as the parent wrapper, see TokensTab
-  // eslint-disable-next-line react-native/no-unused-styles
-  tabContentContainerStandard: {
-    paddingHorizontal: FixedTheme.spacing.lg,
-    paddingTop: FixedTheme.spacing.sm,
-  },
-  // Use on tab components where the content should bleed over boundary, see NftTab
-  // eslint-disable-next-line react-native/no-unused-styles
-  tabContentContainerWide: {
-    paddingTop: FixedTheme.spacing.sm,
-  },
-  // Used on screens that have a custom <TabView />, see ExploreScreen for example
-  // eslint-disable-next-line react-native/no-unused-styles
-  tabView: {
-    marginHorizontal: FixedTheme.spacing.lg,
-  },
-})
-
-export const renderTabLabel = ({ route, focused }: { route: Route; focused: boolean }) => {
-  return (
-    <Text color={focused ? 'textPrimary' : 'textTertiary'} variant="buttonLabelMedium">
-      {route.title}
-    </Text>
-  )
-}
-
-export const panSidebarContainerGestureAction = (openSidebar: () => void) =>
-  Gesture.Pan().onStart(({ translationX }) => {
-    // only register as a side swipe above a certain threshold
-    if (Math.abs(translationX) < SWIPE_THRESHOLD) {
-      return
-    }
-
-    if (translationX > 0) {
-      runOnJS(openSidebar)()
-    }
-  })
-
-export const panHeaderGestureAction = (openSidebar: () => void) =>
-  Gesture.Pan().onStart(({ translationX }) => {
-    // only register as a side swipe above a certain threshold
-    if (Math.abs(translationX) < SWIPE_THRESHOLD || translationX < 0) {
-      return
-    }
-
-    runOnJS(openSidebar)()
-  })
 
 export default function TabbedScrollScreen({
   contentHeader,
@@ -185,17 +101,17 @@ export default function TabbedScrollScreen({
     return (
       <Animated.View
         style={[
-          TabStyles.tabBar,
+          TAB_STYLES.header,
           tabBarAnimatedStyle,
           { backgroundColor: theme.colors.background0 },
         ]}>
         <TabBar
           {...sceneProps}
-          indicatorStyle={[TabStyles.indicator]}
+          indicatorStyle={TAB_STYLES.activeTabIndicator}
           navigationState={{ index: tabIndex, routes }}
           renderLabel={renderTabLabel}
           style={[
-            TabStyles.tab,
+            TAB_STYLES.tabBar,
             {
               backgroundColor: theme.colors.background0,
               borderBottomColor: theme.colors.backgroundOutline,
@@ -327,7 +243,7 @@ export default function TabbedScrollScreen({
       <GestureDetector gesture={panHeaderGesture}>
         {contentHeader && (
           <AnimatedFlex
-            style={[TabStyles.header, headerAnimatedStyle, { marginTop: insets.top }]}
+            style={[TAB_STYLES.header, headerAnimatedStyle, { marginTop: insets.top }]}
             onLayout={(event: LayoutChangeEvent) =>
               setHeaderHeight(event.nativeEvent.layout.height)
             }>

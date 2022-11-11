@@ -7,6 +7,7 @@ import { SortButton } from 'src/components/explore/SortButton'
 import { TokenItem, TokenItemData } from 'src/components/explore/TokenItem'
 import { Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
+import { TAB_STYLES } from 'src/components/layout/TabHelpers'
 import { Text } from 'src/components/Text'
 import { EMPTY_ARRAY, PollingInterval } from 'src/constants/misc'
 import { isNonPollingRequestInFlight } from 'src/data/utils'
@@ -167,6 +168,7 @@ function ExploreTokensTab({ listRef }: ExploreTokensTabProps) {
       renderItem={renderItem}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
+      style={TAB_STYLES.tabContentContainerStandard}
       windowSize={5}
     />
   )
