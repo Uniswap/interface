@@ -83,7 +83,7 @@ export function TokenBalanceList({
     }
 
     return (
-      <Box flex={1} justifyContent="center">
+      <Box flex={1} flexGrow={1} justifyContent="center" style={loadingContainerStyle}>
         <BaseCard.ErrorState
           retryButtonLabel="Retry"
           title={t("Couldn't load token balances")}
@@ -96,18 +96,15 @@ export function TokenBalanceList({
   const { balances, smallBalances, spamBalances } = data
   const numHiddenTokens = smallBalances.length + spamBalances.length
 
-  return (
+  return balances.length === 0 ? (
+    <Flex centered grow style={loadingContainerStyle}>
+      <HiddenTokensRow address={owner} mt="xs" numHidden={numHiddenTokens} />
+      {empty}
+    </Flex>
+  ) : (
     <AnimatedFlatList
-      ListEmptyComponent={
-        <>
-          <HiddenTokensRow address={owner} mt="xs" numHidden={numHiddenTokens} />
-          {empty}
-        </>
-      }
       ListFooterComponent={
-        balances.length > 0 ? (
-          <HiddenTokensRow address={owner} mb="xl" mt="sm" numHidden={numHiddenTokens} />
-        ) : null
+        <HiddenTokensRow address={owner} mb="xl" mt="sm" numHidden={numHiddenTokens} />
       }
       ListHeaderComponent={
         isError(networkStatus, !!data) ? (
