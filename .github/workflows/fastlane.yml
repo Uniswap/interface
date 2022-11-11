@@ -159,4 +159,4 @@ jobs:
           delete-branch: true
           title: 'chore: [bot] Update version number'
           body: Version number has been updated
-          reviewers: leggechr,justindomingue,spenciefy,dalmendray,thomasthachil,danielcolinjames,ianlapham,tarikbellamine,tinaszheng,unipadmini
+          reviewers: leggechr,justindomingue,spenciefy,thomasthachil,danielcolinjames,ianlapham,tarikbellamine,tinaszheng,unipadmini
