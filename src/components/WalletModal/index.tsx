@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
+import { sendAnalyticsEvent, user } from '@uniswap/analytics'
+import { CustomUserProperties, EventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
-import { sendAnalyticsEvent, user } from 'analytics'
-import { CUSTOM_USER_PROPERTIES, EventName, WALLET_CONNECTION_RESULT } from 'analytics/constants'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
@@ -126,17 +126,17 @@ const sendAnalyticsEventAndUserInfo = (
   isReconnect: boolean
 ) => {
   sendAnalyticsEvent(EventName.WALLET_CONNECT_TXN_COMPLETED, {
-    result: WALLET_CONNECTION_RESULT.SUCCEEDED,
+    result: WalletConnectionResult.SUCCEEDED,
     wallet_address: account,
     wallet_type: walletType,
     is_reconnect: isReconnect,
   })
-  user.set(CUSTOM_USER_PROPERTIES.WALLET_ADDRESS, account)
-  user.set(CUSTOM_USER_PROPERTIES.WALLET_TYPE, walletType)
+  user.set(CustomUserProperties.WALLET_ADDRESS, account)
+  user.set(CustomUserProperties.WALLET_TYPE, walletType)
   if (chainId) {
-    user.postInsert(CUSTOM_USER_PROPERTIES.ALL_WALLET_CHAIN_IDS, chainId)
+    user.postInsert(CustomUserProperties.ALL_WALLET_CHAIN_IDS, chainId)
   }
-  user.postInsert(CUSTOM_USER_PROPERTIES.ALL_WALLET_ADDRESSES_CONNECTED, account)
+  user.postInsert(CustomUserProperties.ALL_WALLET_ADDRESSES_CONNECTED, account)
 }
 
 export default function WalletModal({
@@ -232,7 +232,7 @@ export default function WalletModal({
         dispatch(updateConnectionError({ connectionType, error: error.message }))
 
         sendAnalyticsEvent(EventName.WALLET_CONNECT_TXN_COMPLETED, {
-          result: WALLET_CONNECTION_RESULT.FAILED,
+          result: WalletConnectionResult.FAILED,
           wallet_type: getConnectionName(connectionType, getIsMetaMask()),
         })
       }

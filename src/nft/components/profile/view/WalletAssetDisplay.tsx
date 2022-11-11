@@ -1,5 +1,5 @@
-import { sendAnalyticsEvent } from 'analytics'
-import { EventName } from 'analytics/constants'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { EventName } from '@uniswap/analytics-events'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'

@@ -1,6 +1,5 @@
-import { sendAnalyticsEvent } from 'analytics'
-import { EventName, PageName } from 'analytics/constants'
-import { useTrace } from 'analytics/Trace'
+import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
+import { EventName, PageName } from '@uniswap/analytics-events'
 import { useBag } from 'nft/hooks'
 import { GenieAsset, Markets, UniformHeight } from 'nft/types'
 import { formatWeiToDecimal, rarityProviderLogo } from 'nft/utils'

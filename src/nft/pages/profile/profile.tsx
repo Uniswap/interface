@@ -1,6 +1,6 @@
+import { Trace } from '@uniswap/analytics'
+import { PageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { PageName } from 'analytics/constants'
-import { Trace } from 'analytics/Trace'
 import { Box } from 'nft/components/Box'
 import { Center, Column, Row } from 'nft/components/Flex'
 import { ChevronLeftIcon, XMarkIcon } from 'nft/components/icons'

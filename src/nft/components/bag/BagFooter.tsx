@@ -1,9 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { parseEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { ElementName, Event, EventName } from 'analytics/constants'
-import { TraceEvent } from 'analytics/TraceEvent'
 import Loader from 'components/Loader'
 import { SupportedChainId } from 'constants/chains'
 import { Box } from 'nft/components/Box'
@@ -169,7 +169,7 @@ export const BagFooter = ({
           </Row>
         </Column>
         <TraceEvent
-          events={[Event.onClick]}
+          events={[BrowserEvent.onClick]}
           name={EventName.NFT_BUY_BAG_PAY}
           element={ElementName.NFT_BUY_BAG_PAY_BUTTON}
           properties={{ ...eventProperties }}

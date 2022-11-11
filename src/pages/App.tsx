@@ -1,6 +1,5 @@
-import { initializeAnalytics, sendAnalyticsEvent, user } from 'analytics'
-import { CUSTOM_USER_PROPERTIES, EventName, PageName } from 'analytics/constants'
-import { Trace } from 'analytics/Trace'
+import { initializeAnalytics, OriginApplication, sendAnalyticsEvent, Trace, user } from '@uniswap/analytics'
+import { CustomUserProperties, EventName, getBrowser, PageName } from '@uniswap/analytics-events'
 import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
@@ -14,7 +13,6 @@ import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { SpinnerSVG } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
-import { getBrowser } from 'utils/browser'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import { useAnalyticsReporter } from '../components/analytics'
@@ -47,6 +45,10 @@ const NftExplore = lazy(() => import('nft/pages/explore'))
 const Collection = lazy(() => import('nft/pages/collection'))
 const Profile = lazy(() => import('nft/pages/profile/profile'))
 const Asset = lazy(() => import('nft/pages/asset/Asset'))
+
+// Placeholder API key. Actual API key used in the proxy server
+const ANALYTICS_DUMMY_KEY = '00000000000000000000000000000000'
+const ANALYTICS_PROXY_URL = process.env.REACT_APP_AMPLITUDE_PROXY_URL
 
 const AppWrapper = styled.div`
   display: flex;
@@ -124,7 +126,7 @@ export default function App() {
   const [scrolledState, setScrolledState] = useState(false)
 
   useAnalyticsReporter()
-  initializeAnalytics()
+  initializeAnalytics(ANALYTICS_DUMMY_KEY, OriginApplication.INTERFACE, ANALYTICS_PROXY_URL)
 
   const scrollListener = (e: Event) => {
     if (window.scrollY > 0) {
@@ -141,10 +143,10 @@ export default function App() {
 
   useEffect(() => {
     sendAnalyticsEvent(EventName.APP_LOADED)
-    user.set(CUSTOM_USER_PROPERTIES.USER_AGENT, navigator.userAgent)
-    user.set(CUSTOM_USER_PROPERTIES.BROWSER, getBrowser())
-    user.set(CUSTOM_USER_PROPERTIES.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
-    user.set(CUSTOM_USER_PROPERTIES.SCREEN_RESOLUTION_WIDTH, window.screen.width)
+    user.set(CustomUserProperties.USER_AGENT, navigator.userAgent)
+    user.set(CustomUserProperties.BROWSER, getBrowser())
+    user.set(CustomUserProperties.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
+    user.set(CustomUserProperties.SCREEN_RESOLUTION_WIDTH, window.screen.width)
     getCLS(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { cumulative_layout_shift: delta }))
     getFCP(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { first_contentful_paint_ms: delta }))
     getFID(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { first_input_delay_ms: delta }))
@@ -152,11 +154,11 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    user.set(CUSTOM_USER_PROPERTIES.DARK_MODE, isDarkMode)
+    user.set(CustomUserProperties.DARK_MODE, isDarkMode)
   }, [isDarkMode])
 
   useEffect(() => {
-    user.set(CUSTOM_USER_PROPERTIES.EXPERT_MODE, isExpertMode)
+    user.set(CustomUserProperties.EXPERT_MODE, isExpertMode)
   }, [isExpertMode])
 
   useEffect(() => {
