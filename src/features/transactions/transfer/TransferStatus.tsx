@@ -102,6 +102,7 @@ export function TransferStatus({ derivedTransferInfo, onNext, onTryAgain }: Tran
       description={description}
       title={title}
       transaction={transaction}
+      transactionType="send"
       onNext={onClose}
       onTryAgain={onTryAgain}
     />

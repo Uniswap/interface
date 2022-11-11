@@ -17,6 +17,7 @@ type TransactionStatusProps = {
   description: string
   onNext: () => void
   onTryAgain: () => void
+  transactionType: 'swap' | 'send'
 }
 
 function isFinalizedState(status: TransactionStatus) {
@@ -30,6 +31,7 @@ export function TransactionPending({
   description,
   onNext,
   onTryAgain,
+  transactionType,
 }: TransactionStatusProps) {
   const { t } = useTranslation()
 
@@ -37,7 +39,7 @@ export function TransactionPending({
     <AnimatedFlex flexGrow={1} px="sm">
       <Flex centered flexGrow={1}>
         <Flex centered>
-          <StatusAnimation status={transaction?.status} />
+          <StatusAnimation status={transaction?.status} transactionType={transactionType} />
         </Flex>
         <Flex centered gap="sm">
           <Text variant="headlineSmall">{title}</Text>

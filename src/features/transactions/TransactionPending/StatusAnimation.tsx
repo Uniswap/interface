@@ -1,48 +1,41 @@
-import { default as LottieView } from 'lottie-react-native'
-import React, { memo, useEffect, useRef } from 'react'
-import TransactionFailedAnimation from 'src/assets/lottie/transaction_failed.json'
-import TransactionPendingAnimation from 'src/assets/lottie/transaction_pending.json'
-import TransactionSuccessAnimation from 'src/assets/lottie/transaction_success.json'
+import React, { useEffect, useRef } from 'react'
+import Rive, { Alignment, Fit, RiveRef } from 'rive-react-native'
 import { TransactionStatus } from 'src/features/transactions/types'
 
-function getStatusAnimationProps(status?: TransactionStatus) {
-  switch (status) {
-    case TransactionStatus.Success:
-      return {
-        source: TransactionSuccessAnimation,
-        loop: false,
-      }
-    case TransactionStatus.Failed:
-      return {
-        source: TransactionFailedAnimation,
-        loop: false,
-      }
-    default:
-      return {
-        source: TransactionPendingAnimation,
-        loop: true,
-      }
-  }
-}
+const ANIMATION_WIDTH = 250
+const ANIMATION_HEIGHT = 250
+const stateMachineName = 'State Machine 1'
 
-function _StatusAnimation({ status }: { status?: TransactionStatus }) {
-  const animationRef = useRef<LottieView | null>(null)
+export function StatusAnimation({
+  status,
+  transactionType,
+}: {
+  status?: TransactionStatus
+  transactionType: 'swap' | 'send'
+}) {
+  const animationRef = useRef<RiveRef>(null)
 
   useEffect(() => {
-    // whenever status changes, play the relevant animation
-    animationRef.current?.play()
+    if (status === TransactionStatus.Success) {
+      animationRef.current?.setInputState(stateMachineName, 'isLoaded', true)
+    } else if (status === TransactionStatus.Failed) {
+      animationRef.current?.setInputState(stateMachineName, 'isError', true)
+    }
   }, [status])
 
-  const { source, loop } = getStatusAnimationProps(status)
-
   return (
-    <LottieView
-      ref={(animation) => (animationRef.current = animation)}
-      autoSize
-      loop={loop}
-      source={source}
+    <Rive
+      ref={animationRef}
+      autoplay
+      alignment={Alignment.Center}
+      artboardName={transactionType === 'swap' ? 'Pending swap graphic' : 'Pending send graphic'}
+      fit={Fit.FitWidth}
+      resourceName="Transactions"
+      stateMachineName={stateMachineName}
+      style={{
+        maxHeight: ANIMATION_HEIGHT,
+        width: ANIMATION_WIDTH,
+      }}
     />
   )
 }
-
-export const StatusAnimation = memo(_StatusAnimation)

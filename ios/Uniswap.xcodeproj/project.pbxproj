@@ -39,6 +39,7 @@
 		D63928FC27D70B510004F5CC /* RNWalletConnect.m in Sources */ = {isa = PBXBuildFile; fileRef = D63928FB27D70B510004F5CC /* RNWalletConnect.m */; };
 		E3C8C9E0291C4D4A000E00EA /* OnboardingDark.riv in Resources */ = {isa = PBXBuildFile; fileRef = E3C8C9DE291C4D4A000E00EA /* OnboardingDark.riv */; };
 		E3C8C9E1291C4D4A000E00EA /* OnboardingLight.riv in Resources */ = {isa = PBXBuildFile; fileRef = E3C8C9DF291C4D4A000E00EA /* OnboardingLight.riv */; };
+		E3C8C9E3291D769E000E00EA /* Transactions.riv in Resources */ = {isa = PBXBuildFile; fileRef = E3C8C9E2291D769E000E00EA /* Transactions.riv */; };
 		E58AFCB5279DB5F9297D2D0D /* libPods-Uniswap-UniswapTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAAE6F1B194B03FAC33323D /* libPods-Uniswap-UniswapTests.a */; };
 		E6063F6CDE8D4D9F84B2945E /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D720622E155642CCBAEDD803 /* Inter-Bold.ttf */; };
 		F35AFD3E27EE49990011A725 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35AFD3D27EE49990011A725 /* NotificationService.swift */; };
@@ -127,6 +128,7 @@
 		E23718F30E2E4B749C40C8F2 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-SemiBold.ttf"; path = "../src/assets/fonts/Inter-SemiBold.ttf"; sourceTree = "<group>"; };
 		E3C8C9DE291C4D4A000E00EA /* OnboardingDark.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = OnboardingDark.riv; sourceTree = "<group>"; };
 		E3C8C9DF291C4D4A000E00EA /* OnboardingLight.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = OnboardingLight.riv; sourceTree = "<group>"; };
+		E3C8C9E2291D769E000E00EA /* Transactions.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = Transactions.riv; sourceTree = "<group>"; };
 		EC813AD85060898D4DD580C5 /* Pods-Uniswap-UniswapTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap-UniswapTests.debug.xcconfig"; path = "Target Support Files/Pods-Uniswap-UniswapTests/Pods-Uniswap-UniswapTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F35AFD3627EE49230011A725 /* Uniswap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Uniswap.entitlements; path = Uniswap/Uniswap.entitlements; sourceTree = "<group>"; };
@@ -194,8 +196,6 @@
 		13B07FAE1A68108700A75B9A /* Uniswap */ = {
 			isa = PBXGroup;
 			children = (
-				E3C8C9DE291C4D4A000E00EA /* OnboardingDark.riv */,
-				E3C8C9DF291C4D4A000E00EA /* OnboardingLight.riv */,
 				E3C8C9DD291C4D2C000E00EA /* RiveAssets */,
 				F35AFD3627EE49230011A725 /* Uniswap.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -348,6 +348,9 @@
 		E3C8C9DD291C4D2C000E00EA /* RiveAssets */ = {
 			isa = PBXGroup;
 			children = (
+				E3C8C9E2291D769E000E00EA /* Transactions.riv */,
+				E3C8C9DE291C4D4A000E00EA /* OnboardingDark.riv */,
+				E3C8C9DF291C4D4A000E00EA /* OnboardingLight.riv */,
 			);
 			path = RiveAssets;
 			sourceTree = "<group>";
@@ -482,6 +485,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E3C8C9E3291D769E000E00EA /* Transactions.riv in Resources */,
 				FD7304CE28A364FC0085BDEA /* Colors.xcassets in Resources */,
 				A32F9FBD272343C9002CFCDB /* GoogleService-Info.plist in Resources */,
 				E3C8C9E0291C4D4A000E00EA /* OnboardingDark.riv in Resources */,

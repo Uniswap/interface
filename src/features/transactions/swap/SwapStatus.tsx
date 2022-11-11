@@ -205,6 +205,7 @@ export function SwapStatus({ derivedSwapInfo, onNext, onTryAgain }: SwapStatusPr
       description={description}
       title={title}
       transaction={transaction}
+      transactionType="swap"
       onNext={onNext}
       onTryAgain={onTryAgain}
     />
