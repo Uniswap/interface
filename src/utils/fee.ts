@@ -7,6 +7,8 @@ import { FeeConfig } from 'hooks/useSwapV2Callback'
 import { Aggregator } from 'utils/aggregator'
 import { formattedNum } from 'utils/index'
 
+import { toFixed } from './numbers'
+
 /**
  * Get Fee Amount in a Trade (unit: USD)
  * @param trade
@@ -15,16 +17,16 @@ import { formattedNum } from 'utils/index'
 export function getFormattedFeeAmountUsd(trade: Aggregator, feeConfig: FeeConfig | undefined) {
   if (feeConfig) {
     const amountInUsd = new Fraction(
-      parseUnits(trade.amountInUsd.toString(), RESERVE_USD_DECIMALS).toString(),
+      parseUnits(toFixed(trade.amountInUsd), RESERVE_USD_DECIMALS).toString(),
       JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(RESERVE_USD_DECIMALS)),
     )
-    // feeAmount might < 1.
-    const feeAmountFraction = new Fraction(
-      parseUnits(feeConfig.feeAmount, RESERVE_USD_DECIMALS).toString(),
-      JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(RESERVE_USD_DECIMALS)),
-    )
-    const feeAmountDecimal = feeAmountFraction.divide(BIPS_BASE)
     if (amountInUsd) {
+      // feeAmount might < 1.
+      const feeAmountFraction = new Fraction(
+        parseUnits(feeConfig.feeAmount, RESERVE_USD_DECIMALS).toString(),
+        JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(RESERVE_USD_DECIMALS)),
+      )
+      const feeAmountDecimal = feeAmountFraction.divide(BIPS_BASE)
       const feeAmountUsd = amountInUsd.multiply(feeAmountDecimal).toSignificant(RESERVE_USD_DECIMALS)
       return formattedNum(feeAmountUsd, true)
     }
