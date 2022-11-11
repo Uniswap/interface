@@ -51,7 +51,7 @@ export function SpinningLoader({
   }
   return (
     <AnimatedBox style={[animatedStyles]}>
-      <Loader color={theme.colors[color ?? 'blue300']} height={size} width={size} />
+      <Loader color={theme.colors[color ?? 'accentActive']} height={size} width={size} />
     </AnimatedBox>
   )
 }

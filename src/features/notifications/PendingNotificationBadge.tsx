@@ -14,7 +14,7 @@ import { TransactionDetails, TransactionStatus } from 'src/features/transactions
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 
 const PENDING_TX_TIME_LIMIT = 60_000 * 5 // 5 mins
-const LOADING_SPINNER_SIZE = 26
+const LOADING_SPINNER_SIZE = 24
 
 interface Props {
   size?: number
@@ -66,12 +66,10 @@ export function PendingNotificationBadge({ size = 24, sortedPendingTransactions 
         alignItems="center"
         height={size}
         justifyContent="center"
-        left={1}
         position="absolute"
-        top={2}
         width={size}
         zIndex="modal">
-        <Text textAlign="center" variant="buttonLabelMicro">
+        <Text color="textSecondary" textAlign="center" variant="buttonLabelMicro">
           {countToDisplay}
         </Text>
       </Box>
