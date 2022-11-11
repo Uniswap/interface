@@ -13,7 +13,7 @@ export default function TransactionLoader() {
         bg="background3"
         borderRadius="xs"
         maxHeight={HIDDEN_TEXT_HEIGHT}
-        ml="md"
+        ml="xs"
         my="sm"
         width="30%">
         <HiddenFromScreenReaders>
@@ -27,7 +27,7 @@ export default function TransactionLoader() {
         bg="background3"
         borderRadius="xs"
         maxHeight={HIDDEN_TEXT_HEIGHT}
-        ml="md"
+        ml="xs"
         my="sm"
         width="30%">
         <HiddenFromScreenReaders>

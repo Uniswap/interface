@@ -96,18 +96,15 @@ function TransactionSummaryLayout({
           bg={bg ?? 'background0'}
           gap="md"
           justifyContent="space-between"
-          px="sm"
+          px="xxs"
           py="sm">
-          <Flex row alignItems="center" gap="xs" height="100%" justifyContent="flex-start">
+          <Flex row alignItems="center" gap="sm" height="100%" justifyContent="flex-start">
             {icon && (
-              <Flex
-                centered
-                height={TXN_HISTORY_ICON_SIZE * 1.5}
-                width={TXN_HISTORY_ICON_SIZE * 1.5}>
+              <Flex centered height={TXN_HISTORY_ICON_SIZE} width={TXN_HISTORY_ICON_SIZE}>
                 {icon}
               </Flex>
             )}
-            <Flex grow gap="xxxs">
+            <Flex grow gap="none">
               <Flex row alignItems="center" gap="xxs">
                 <Text numberOfLines={1} variant="bodyLarge">
                   {title}
@@ -181,7 +178,7 @@ export function AssetUpdateLayout({
   caption?: string | undefined
 }) {
   return (
-    <Flex shrink alignItems="flex-end" gap="xxxs">
+    <Flex shrink alignItems="flex-end" gap="none">
       <Text numberOfLines={1} variant="bodyLarge">
         {title}
       </Text>

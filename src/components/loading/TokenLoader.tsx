@@ -13,7 +13,7 @@ export function TokenLoader({ opacity }: TokenLoaderProps) {
     <Flex
       row
       alignItems="center"
-      gap="xs"
+      gap="sm"
       justifyContent="space-between"
       opacity={opacity}
       overflow="hidden">

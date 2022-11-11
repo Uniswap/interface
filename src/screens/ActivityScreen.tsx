@@ -57,7 +57,7 @@ export function ActivityScreen() {
       <BackHeader p="md">
         <Text variant="buttonLabelMedium">{t('Activity')}</Text>
       </BackHeader>
-      <Flex pb="lg" px="sm">
+      <Flex pb="lg" px="md">
         <TransactionList
           emptyStateContent={
             <Flex centered grow height="100%">
