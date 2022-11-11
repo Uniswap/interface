@@ -1,5 +1,5 @@
-import { Event, EventName } from 'analytics/constants'
-import { TraceEvent } from 'analytics/TraceEvent'
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, EventName } from '@uniswap/analytics-events'
 import { useNftBalanceQuery } from 'graphql/data/nft/NftBalance'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { assetList } from 'nft/components/collection/CollectionNfts.css'
@@ -30,7 +30,7 @@ import shallow from 'zustand/shallow'
 
 import { EmptyWalletContent } from './EmptyWalletContent'
 import * as styles from './ProfilePage.css'
-import { WalletAssetDisplay } from './WalletAssetDisplay'
+import { ViewMyNftsAsset } from './ViewMyNftsAsset'
 
 const SellModeButton = styled.button<{ active: boolean }>`
   display: flex;
@@ -79,6 +79,7 @@ export const ProfilePage = () => {
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const isMobile = useIsMobile()
+  const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
 
   const handleSellModeClick = useCallback(() => {
     resetSellAssets()
@@ -138,7 +139,7 @@ export const ProfilePage = () => {
                   <Row gap="8" flexWrap="nowrap">
                     {isSellMode && <SelectAllButton ownerAssets={ownerAssets ?? []} />}
                     <TraceEvent
-                      events={[Event.onClick]}
+                      events={[BrowserEvent.onClick]}
                       name={EventName.NFT_SELL_SELECTED}
                       shouldLogImpression={!isSellMode}
                     >
@@ -171,7 +172,14 @@ export const ProfilePage = () => {
                   <div className={assetList}>
                     {ownerAssets?.length
                       ? ownerAssets.map((asset, index) => (
-                          <WalletAssetDisplay asset={asset} isSellMode={isSellMode} key={index} />
+                          <div key={index}>
+                            <ViewMyNftsAsset
+                              asset={asset}
+                              isSellMode={isSellMode}
+                              mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
+                              setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+                            />
+                          </div>
                         ))
                       : null}
                   </div>

@@ -1,3 +1,5 @@
+import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
+import { EventName, SectionName } from '@uniswap/analytics-events'
 import {
   TradeType,
   Transaction,
@@ -6,12 +8,8 @@ import {
   TransactionType as WidgetTransactionType,
 } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent } from 'analytics'
-import { EventName, SectionName } from 'analytics/constants'
-import { useTrace } from 'analytics/Trace'
-import { formatToDecimal, getTokenAddress } from 'analytics/utils'
-import { formatSwapSignedAnalyticsEventProperties } from 'analytics/utils'
 import { WrapType } from 'hooks/useWrapCallback'
+import { formatSwapSignedAnalyticsEventProperties, formatToDecimal, getTokenAddress } from 'lib/utils/analytics'
 import { useCallback, useMemo } from 'react'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import {

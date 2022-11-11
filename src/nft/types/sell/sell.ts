@@ -1,6 +1,6 @@
 import { NftMarketplace, OrderStatus, OrderType } from 'graphql/data/nft/__generated__/DetailsQuery.graphql'
 
-import { GenieCollection } from '../common'
+import { GenieCollection, PriceInfo, TokenType } from '../common'
 
 export interface ListingMarket {
   name: string
@@ -41,8 +41,12 @@ export interface Listing {
 
 export interface WalletAsset {
   id?: string
-  image_url: string
-  image_preview_url: string
+  imageUrl: string
+  smallImageUrl: string
+  notForSale: boolean
+  animationUrl: string
+  susFlag: boolean
+  priceInfo: PriceInfo
   name: string
   tokenId: string
   asset_contract: {
@@ -52,6 +56,7 @@ export interface WalletAsset {
     description: string
     image_url: string
     payout_address: string
+    tokenType: TokenType
   }
   collection: GenieCollection
   collectionIsVerified: boolean

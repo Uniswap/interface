@@ -3,7 +3,6 @@ import { body } from 'nft/css/common.css'
 import { sprinkles } from 'nft/css/sprinkles.css'
 
 export const footerContainer = sprinkles({
-  marginTop: '20',
   paddingX: '16',
 })
 

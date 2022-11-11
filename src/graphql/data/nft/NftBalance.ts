@@ -1,4 +1,5 @@
 import graphql from 'babel-plugin-relay/macro'
+import { parseEther } from 'ethers/lib/utils'
 import { WalletAsset } from 'nft/types'
 import { useLazyLoadQuery, usePaginationFragment } from 'react-relay'
 
@@ -136,10 +137,24 @@ export function useNftBalanceQuery(
   )
   const walletAssets: WalletAsset[] = data.nftBalances?.edges?.map((queryAsset: NftBalanceQueryAsset) => {
     const asset = queryAsset.node.ownedAsset
+    const ethPrice = parseEther(
+      asset?.listings?.edges[0]?.node.price.value?.toLocaleString('fullwide', { useGrouping: false }) ?? '0'
+    ).toString()
     return {
       id: asset?.id,
-      image_url: asset?.image?.url,
-      image_preview_url: asset?.smallImage?.url,
+      imageUrl: asset?.image?.url,
+      smallImageUrl: asset?.smallImage?.url,
+      notForSale: asset?.listings?.edges?.length === 0,
+      animationUrl: asset?.animationUrl,
+      susFlag: asset?.suspiciousFlag,
+      priceInfo: asset?.listings
+        ? {
+            ETHPrice: ethPrice,
+            baseAsset: 'ETH',
+            baseDecimals: '18',
+            basePrice: ethPrice,
+          }
+        : undefined,
       name: asset?.name,
       tokenId: asset?.tokenId,
       asset_contract: {
@@ -149,6 +164,7 @@ export function useNftBalanceQuery(
         description: asset?.description,
         image_url: asset?.collection?.image?.url,
         payout_address: queryAsset?.node?.listingFees?.[0]?.payoutAddress,
+        tokenType: asset?.collection?.nftContracts?.[0].standard,
       },
       collection: asset?.collection,
       collectionIsVerified: asset?.collection?.isVerified,

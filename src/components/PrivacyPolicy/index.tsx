@@ -137,12 +137,12 @@ export function PrivacyPolicy() {
             </ExternalLink>
           </StyledExternalCard>
           <StyledExternalCard>
-            <ExternalLink href={'https://uniswap.org/disclaimer/'}>
+            <ExternalLink href={'https://uniswap.org/privacy-policy/'}>
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />
                   <ThemedText.DeprecatedMain fontSize={14} color={'deprecated_primaryText1'}>
-                    <Trans>Protocol Disclaimer</Trans>
+                    <Trans>Privacy Policy</Trans>
                   </ThemedText.DeprecatedMain>
                 </AutoRow>
                 <StyledLinkOut size={20} />

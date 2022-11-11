@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { EventName, SwapPriceUpdateUserResponse } from '@uniswap/analytics-events'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { sendAnalyticsEvent } from 'analytics'
-import { EventName, SWAP_PRICE_UPDATE_USER_RESPONSE } from 'analytics/constants'
-import { getPriceUpdateBasisPoints } from 'analytics/utils'
+import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useEffect, useState } from 'react'
 import { AlertTriangle, ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
@@ -44,7 +44,7 @@ const ArrowWrapper = styled.div`
 const formatAnalyticsEventProperties = (
   trade: InterfaceTrade<Currency, Currency, TradeType>,
   priceUpdate: number | undefined,
-  response: SWAP_PRICE_UPDATE_USER_RESPONSE
+  response: SwapPriceUpdateUserResponse
 ) => ({
   chain_id:
     trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
@@ -93,7 +93,7 @@ export default function SwapModalHeader({
     if (shouldLogModalCloseEvent && showAcceptChanges)
       sendAnalyticsEvent(
         EventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED,
-        formatAnalyticsEventProperties(trade, priceUpdate, SWAP_PRICE_UPDATE_USER_RESPONSE.REJECTED)
+        formatAnalyticsEventProperties(trade, priceUpdate, SwapPriceUpdateUserResponse.REJECTED)
       )
     setShouldLogModalCloseEvent(false)
   }, [shouldLogModalCloseEvent, showAcceptChanges, setShouldLogModalCloseEvent, trade, priceUpdate])

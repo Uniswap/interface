@@ -1,10 +1,10 @@
 import { Trans } from '@lingui/macro'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { EventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent } from 'analytics'
-import { EventName } from 'analytics/constants'
-import { formatToDecimal, getTokenAddress } from 'analytics/utils'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
+import { formatToDecimal, getTokenAddress } from 'lib/utils/analytics'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useState } from 'react'
 

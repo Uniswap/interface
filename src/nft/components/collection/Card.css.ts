@@ -25,6 +25,7 @@ export const notSelectedCard = style([
   sprinkles({
     backgroundColor: 'backgroundSurface',
     borderColor: 'backgroundOutline',
+    borderRadius: '14',
   }),
   {
     ':hover': {
@@ -45,6 +46,7 @@ export const selectedCard = style([
     borderWidth: '3px',
   }),
   {
+    borderRadius: '18px',
     ':hover': {
       backgroundColor: themeVars.colors.stateOverlayHover,
     },

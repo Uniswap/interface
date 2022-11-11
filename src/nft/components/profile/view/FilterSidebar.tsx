@@ -16,6 +16,7 @@ import * as styles from './ProfilePage.css'
 
 const ItemsContainer = styled.div`
   ${ScrollBarStyles}
+  overflow-y: auto;
 `
 
 export const FilterSidebar = () => {
