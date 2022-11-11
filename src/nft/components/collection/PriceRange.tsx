@@ -186,10 +186,11 @@ export const PriceRange = () => {
             top: '3px',
             width: '12px',
             height: '20px',
-            backgroundColor: `${theme.textPrimary}`,
+            opacity: '1',
+            backgroundColor: `white`,
             borderRadius: '4px',
             border: 'none',
-            boxShadow: `${theme.shallowShadow.slice(0, -1)}`,
+            boxShadow: `4px 4px 10px rgba(0, 0, 0, 0.24), 2px 2px 4px rgba(0, 0, 0, 0.12), 1px 2px 2px rgba(0, 0, 0, 0.12)`,
           }}
           railStyle={{
             top: '3px',
