@@ -158,6 +158,7 @@ const Collection = () => {
 
                 {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
                 <AnimatedBox
+                  position={isMobile && isFiltersExpanded ? 'sticky' : 'static'}
                   style={{
                     transform: gridX.to((x) => `translate(${x as number}px)`),
                     width: gridWidthOffset.to((x) => `calc(100% - ${x as number}px)`),
