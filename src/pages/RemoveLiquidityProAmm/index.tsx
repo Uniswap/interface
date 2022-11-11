@@ -180,6 +180,9 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     VERSION.ELASTIC,
   )
 
+  const totalFeeRewardUSD =
+    parseFloat(feeValue0?.toExact() || '0') * usdPrices[0] + parseFloat(feeValue1?.toExact() || '0') * usdPrices[1]
+
   const estimatedUsdCurrencyA =
     parsedAmounts[Field.CURRENCY_A] && usdPrices[0]
       ? parseFloat((parsedAmounts[Field.CURRENCY_A] as CurrencyAmount<Currency>).toSignificant(6)) * usdPrices[0]
@@ -377,7 +380,13 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                   title={t`Remove Amount`}
                 />
                 {positionSDK ? (
-                  <ProAmmFee feeValue0={feeValue0} feeValue1={feeValue1} position={positionSDK} tokenId={tokenId} />
+                  <ProAmmFee
+                    totalFeeRewardUSD={totalFeeRewardUSD}
+                    feeValue0={feeValue0}
+                    feeValue1={feeValue1}
+                    position={positionSDK}
+                    tokenId={tokenId}
+                  />
                 ) : (
                   <Loader />
                 )}
@@ -421,6 +430,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                 <ProAmmPooledTokens pooled liquidityValue0={pooledAmount0} liquidityValue1={pooledAmount1} />
                 {positionSDK ? (
                   <ProAmmFee
+                    totalFeeRewardUSD={totalFeeRewardUSD}
                     position={positionSDK}
                     tokenId={tokenId}
                     text={t`When you remove liquidity (even partially), you will receive 100% of your fee earnings`}
