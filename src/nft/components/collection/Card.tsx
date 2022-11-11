@@ -163,10 +163,19 @@ interface CardProps {
   addAssetToBag: () => void
   removeAssetFromBag: () => void
   children: ReactNode
+  isDisabled?: boolean
   onClick?: () => void
 }
 
-const Container = ({ asset, selected, addAssetToBag, removeAssetFromBag, children, onClick }: CardProps) => {
+const Container = ({
+  asset,
+  selected,
+  addAssetToBag,
+  removeAssetFromBag,
+  children,
+  isDisabled,
+  onClick,
+}: CardProps) => {
   const [hovered, toggleHovered] = useReducer((s) => !s, false)
   const [href, setHref] = useState(baseHref(asset))
 
@@ -210,8 +219,9 @@ const Container = ({ asset, selected, addAssetToBag, removeAssetFromBag, childre
         onMouseEnter={() => toggleHovered()}
         onMouseLeave={() => toggleHovered()}
         transition="250"
-        cursor={asset.notForSale ? 'default' : 'pointer'}
-        onClick={onClick ?? handleAssetInBag}
+        opacity={isDisabled ? '0.5' : '1'}
+        cursor={isDisabled ? 'default' : 'pointer'}
+        onClick={isDisabled ? () => null : onClick ?? handleAssetInBag}
       >
         {children}
       </Box>
@@ -535,8 +545,14 @@ const ProfileNftDetails = ({ asset, isSellMode }: ProfileNftDetailsProps) => {
         </TruncatedTextRow>
         {asset.susFlag && <Suspicious />}
       </Row>
-      <TruncatedTextRow className={subhead} style={{ color: themeVars.colors.textSecondary }}>
-        {!!asset.floorPrice && isSellMode && <span>{`${floorFormatter(asset.floorPrice)} ETH Floor`}</span>}
+      <TruncatedTextRow
+        className={subhead}
+        style={{ color: !asset.notForSale ? themeVars.colors.textPrimary : themeVars.colors.textSecondary }}
+      >
+        {!asset.notForSale && <span>{`${floorFormatter(asset.floor_sell_order_price)} ETH`}</span>}
+        {asset.notForSale && isSellMode && !!asset.floorPrice && (
+          <span>{`${floorFormatter(asset.floorPrice)} ETH Floor`}</span>
+        )}
       </TruncatedTextRow>
     </Box>
   )
