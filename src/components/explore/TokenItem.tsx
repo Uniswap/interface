@@ -97,6 +97,8 @@ export const TokenItem = memo(
           ]
     }, [isFavorited, t])
 
+    const opacity = isFavorited && isEditing ? 0.3 : 1
+
     return (
       <ContextMenu
         actions={menuActions}
@@ -113,14 +115,18 @@ export const TokenItem = memo(
         }}>
         <TouchableArea
           disabled={isEditing}
-          opacity={isFavorited && isEditing ? 0.3 : 1}
           testID={`token-item-${name}`}
           onPress={() => {
             if (isEditing) return
             tokenDetailsNavigation.preload(_currencyId)
             tokenDetailsNavigation.navigate(_currencyId)
           }}>
-          <AnimatedFlex row alignItems="flex-start" justifyContent="space-between" py="xs">
+          <AnimatedFlex
+            row
+            alignItems="flex-start"
+            justifyContent="space-between"
+            opacity={opacity}
+            py="xs">
             <Flex centered row flexShrink={1} gap="xs" overflow="hidden">
               <Flex centered row gap="xxs" overflow="hidden">
                 {index !== undefined && (

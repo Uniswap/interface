@@ -6,14 +6,17 @@ import { FavoriteTokensGrid } from 'src/components/explore/FavoriteTokensGrid'
 import { useOrderByModal } from 'src/components/explore/Modals'
 import { SortButton } from 'src/components/explore/SortButton'
 import { TokenItem, TokenItemData } from 'src/components/explore/TokenItem'
-import { Flex } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
+import { BaseCard } from 'src/components/layout/BaseCard'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY, PollingInterval } from 'src/constants/misc'
+import { isNonPollingRequestInFlight } from 'src/data/utils'
 import {
   MarketSortableField,
   useExploreTokensTabQuery,
 } from 'src/data/__generated__/types-and-hooks'
+import { currencyIdToContractInput } from 'src/features/dataApi/utils'
 import { useTokensMetadataDisplayType } from 'src/features/explore/hooks'
 import { getOrderByCompareFn, getOrderByValues } from 'src/features/explore/utils'
 import { selectFavoriteTokensSet, selectHasFavoriteTokens } from 'src/features/favorites/selectors'
@@ -28,22 +31,36 @@ type ExploreTokensTabProps = {
 function ExploreTokensTab({ listRef }: ExploreTokensTabProps) {
   const { t } = useTranslation()
 
-  const { data, loading } = useExploreTokensTabQuery({
+  // Favorite tokens
+  const [isEditing, setIsEditing] = useState(false)
+  const favoriteCurrencyIdsSet = useAppSelector(selectFavoriteTokensSet)
+  const hasFavoritedTokens = useAppSelector(selectHasFavoriteTokens)
+
+  // format favorite tokens for data lookup
+  const favoriteCurrencyContractInputs = useMemo(
+    () =>
+      Array.from(favoriteCurrencyIdsSet).map((currencyId) => currencyIdToContractInput(currencyId)),
+    [favoriteCurrencyIdsSet]
+  )
+
+  const {
+    data,
+    networkStatus,
+    error: requestError,
+    refetch,
+  } = useExploreTokensTabQuery({
     variables: {
       topTokensOrderBy: MarketSortableField.MarketCap,
+      favoriteTokenContracts: favoriteCurrencyContractInputs,
     },
     pollInterval: PollingInterval.Fast,
+    returnPartialData: true,
   })
 
   // Sorting and filtering
   const { orderBy, setOrderByModalIsVisible, orderByModal } = useOrderByModal()
   const [tokensMetadataDisplayType, cycleTokensMetadataDisplayType] = useTokensMetadataDisplayType()
   const { localOrderBy } = getOrderByValues(orderBy)
-
-  // Editing favorite tokens
-  const [isEditing, setIsEditing] = useState(false)
-  const favoriteCurrencyIdsSet = useAppSelector(selectFavoriteTokensSet)
-  const hasFavoritedTokens = useAppSelector(selectHasFavoriteTokens)
 
   // TODO(spencer): Handle reloading query with remote sort order
   const topTokenItems = useMemo(() => {
@@ -113,8 +130,27 @@ function ExploreTokensTab({ listRef }: ExploreTokensTabProps) {
     [setOrderByModalIsVisible]
   )
 
-  if (loading && !data) {
+  const loading = isNonPollingRequestInFlight(networkStatus)
+  const hasAllData = !!data?.favoriteTokensData && !!data.topTokenProjects
+
+  const onRetry = useCallback(() => {
+    refetch()
+  }, [refetch])
+
+  if (loading) {
     return <ExploreTokensTabLoader />
+  }
+
+  if (!hasAllData && requestError) {
+    return (
+      <Box height="100%" pb="xxxl">
+        <BaseCard.ErrorState
+          retryButtonLabel={t('Retry')}
+          title={t('Couldn’t load tokens')}
+          onRetry={onRetry}
+        />
+      </Box>
+    )
   }
 
   return (
@@ -123,8 +159,15 @@ function ExploreTokensTab({ listRef }: ExploreTokensTabProps) {
         ref={listRef}
         ListHeaderComponent={
           <Flex mt="sm">
+            {requestError ? (
+              <BaseCard.InlineErrorState retryButtonLabel="Retry" onRetry={onRetry} />
+            ) : null}
             {hasFavoritedTokens ? (
-              <FavoriteTokensGrid isEditing={isEditing} setIsEditing={setIsEditing} />
+              <FavoriteTokensGrid
+                favoriteTokensData={data?.favoriteTokensData}
+                isEditing={isEditing}
+                setIsEditing={setIsEditing}
+              />
             ) : null}
             <Flex row alignItems="center" justifyContent="space-between">
               <Text color="textSecondary" variant="subheadSmall">

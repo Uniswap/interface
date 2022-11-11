@@ -933,19 +933,13 @@ export type SpotPricesQueryVariables = Exact<{
 
 export type SpotPricesQuery = { __typename?: 'Query', tokenProjects?: Array<{ __typename?: 'TokenProject', id: string, markets?: Array<{ __typename?: 'TokenProjectMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null } | null> | null };
 
-export type FavoriteTokenCardQueryQueryVariables = Exact<{
-  contract: ContractInput;
-}>;
-
-
-export type FavoriteTokenCardQueryQuery = { __typename?: 'Query', tokenProjects?: Array<{ __typename?: 'TokenProject', id: string, logoUrl?: string | null, tokens: Array<{ __typename?: 'Token', id: string, chain: Chain, address?: string | null, symbol?: string | null }>, markets?: Array<{ __typename?: 'TokenProjectMarket', id: string, price?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null } | null> | null } | null> | null };
-
 export type ExploreTokensTabQueryVariables = Exact<{
   topTokensOrderBy: MarketSortableField;
+  favoriteTokenContracts: Array<ContractInput> | ContractInput;
 }>;
 
 
-export type ExploreTokensTabQuery = { __typename?: 'Query', topTokenProjects?: Array<{ __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, tokens: Array<{ __typename?: 'Token', id: string, chain: Chain, address?: string | null, decimals?: number | null, symbol?: string | null }>, markets?: Array<{ __typename?: 'TokenProjectMarket', id: string, price?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null, marketCap?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null } | null> | null } | null> | null };
+export type ExploreTokensTabQuery = { __typename?: 'Query', topTokenProjects?: Array<{ __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, tokens: Array<{ __typename?: 'Token', id: string, chain: Chain, address?: string | null, decimals?: number | null, symbol?: string | null }>, markets?: Array<{ __typename?: 'TokenProjectMarket', id: string, price?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null, marketCap?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null } | null> | null } | null> | null, favoriteTokensData?: Array<{ __typename?: 'TokenProject', id: string, logoUrl?: string | null, tokens: Array<{ __typename?: 'Token', id: string, chain: Chain, address?: string | null, symbol?: string | null }>, markets?: Array<{ __typename?: 'TokenProjectMarket', id: string, price?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null } | null> | null } | null> | null };
 
 export type PortfolioBalanceQueryVariables = Exact<{
   owner: Scalars['String'];
@@ -1865,63 +1859,8 @@ export function useSpotPricesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type SpotPricesQueryHookResult = ReturnType<typeof useSpotPricesQuery>;
 export type SpotPricesLazyQueryHookResult = ReturnType<typeof useSpotPricesLazyQuery>;
 export type SpotPricesQueryResult = Apollo.QueryResult<SpotPricesQuery, SpotPricesQueryVariables>;
-export const FavoriteTokenCardQueryDocument = gql`
-    query FavoriteTokenCardQuery($contract: ContractInput!) {
-  tokenProjects(contracts: [$contract]) {
-    id
-    tokens {
-      id
-      chain
-      address
-      symbol
-    }
-    logoUrl
-    markets(currencies: USD) {
-      id
-      price {
-        id
-        currency
-        value
-      }
-      pricePercentChange24h {
-        id
-        currency
-        value
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useFavoriteTokenCardQueryQuery__
- *
- * To run a query within a React component, call `useFavoriteTokenCardQueryQuery` and pass it any options that fit your needs.
- * When your component renders, `useFavoriteTokenCardQueryQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useFavoriteTokenCardQueryQuery({
- *   variables: {
- *      contract: // value for 'contract'
- *   },
- * });
- */
-export function useFavoriteTokenCardQueryQuery(baseOptions: Apollo.QueryHookOptions<FavoriteTokenCardQueryQuery, FavoriteTokenCardQueryQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<FavoriteTokenCardQueryQuery, FavoriteTokenCardQueryQueryVariables>(FavoriteTokenCardQueryDocument, options);
-      }
-export function useFavoriteTokenCardQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FavoriteTokenCardQueryQuery, FavoriteTokenCardQueryQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<FavoriteTokenCardQueryQuery, FavoriteTokenCardQueryQueryVariables>(FavoriteTokenCardQueryDocument, options);
-        }
-export type FavoriteTokenCardQueryQueryHookResult = ReturnType<typeof useFavoriteTokenCardQueryQuery>;
-export type FavoriteTokenCardQueryLazyQueryHookResult = ReturnType<typeof useFavoriteTokenCardQueryLazyQuery>;
-export type FavoriteTokenCardQueryQueryResult = Apollo.QueryResult<FavoriteTokenCardQueryQuery, FavoriteTokenCardQueryQueryVariables>;
 export const ExploreTokensTabDocument = gql`
-    query ExploreTokensTab($topTokensOrderBy: MarketSortableField!) {
+    query ExploreTokensTab($topTokensOrderBy: MarketSortableField!, $favoriteTokenContracts: [ContractInput!]!) {
   topTokenProjects(orderBy: $topTokensOrderBy, page: 1, pageSize: 100) {
     id
     name
@@ -1952,6 +1891,29 @@ export const ExploreTokensTabDocument = gql`
       }
     }
   }
+  favoriteTokensData: tokenProjects(contracts: $favoriteTokenContracts) {
+    id
+    tokens {
+      id
+      chain
+      address
+      symbol
+    }
+    logoUrl
+    markets(currencies: USD) {
+      id
+      price {
+        id
+        currency
+        value
+      }
+      pricePercentChange24h {
+        id
+        currency
+        value
+      }
+    }
+  }
 }
     `;
 
@@ -1968,6 +1930,7 @@ export const ExploreTokensTabDocument = gql`
  * const { data, loading, error } = useExploreTokensTabQuery({
  *   variables: {
  *      topTokensOrderBy: // value for 'topTokensOrderBy'
+ *      favoriteTokenContracts: // value for 'favoriteTokenContracts'
  *   },
  * });
  */

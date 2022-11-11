@@ -14,10 +14,8 @@ import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { TokenMetadata } from 'src/components/tokens/TokenMetadata'
-import { PollingInterval } from 'src/constants/misc'
-import { useFavoriteTokenCardQueryQuery } from 'src/data/__generated__/types-and-hooks'
+import { ExploreTokensTabQuery } from 'src/data/__generated__/types-and-hooks'
 import { AssetType } from 'src/entities/assets'
-import { currencyIdToContractInput } from 'src/features/dataApi/utils'
 import { removeFavoriteToken } from 'src/features/favorites/slice'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
@@ -26,17 +24,17 @@ import {
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
 import { fromGraphQLChain } from 'src/utils/chainId'
-import { CurrencyId } from 'src/utils/currencyId'
+import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 import { formatUSDPrice } from 'src/utils/format'
 
 type FavoriteTokenCardProps = {
-  currencyId: CurrencyId
+  tokenData: NonNullable<ExploreTokensTabQuery['favoriteTokensData']>[0]
   isEditing?: boolean
   setIsEditing: (update: boolean) => void
 } & ViewProps
 
 function FavoriteTokenCard({
-  currencyId,
+  tokenData,
   isEditing,
   setIsEditing,
   ...rest
@@ -45,30 +43,24 @@ function FavoriteTokenCard({
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
-  const contractInput = useMemo(() => currencyIdToContractInput(currencyId), [currencyId])
 
-  // TODO: this TODO is now obsolete, and can be completed with Apollo
-  // Do one query per item to avoid suspense on entire screen / container
-  // @TODO: Find way to load at the root of explore without a rerender when favorite token state changes
-  const { data, loading } = useFavoriteTokenCardQueryQuery({
-    variables: {
-      contract: contractInput,
-    },
-    pollInterval: PollingInterval.Fast,
-  })
-
-  // Parse token fields from response
-  const tokenData = data?.tokenProjects?.[0]
+  const token = tokenData?.tokens[0]
   // Mirror behavior in top tokens list, use first chain the token is on for the symbol
-  const token = data?.tokenProjects?.[0]?.tokens?.[0]
   const chainId = fromGraphQLChain(token?.chain)
+  const currencyId =
+    chainId && token?.address
+      ? buildCurrencyId(chainId, token?.address)
+      : chainId
+      ? buildNativeCurrencyId(chainId)
+      : undefined
   const usdPrice = tokenData?.markets?.[0]?.price?.value
   const pricePercentChange = tokenData?.markets?.[0]?.pricePercentChange24h?.value
 
-  const onRemove = useCallback(
-    () => dispatch(removeFavoriteToken({ currencyId })),
-    [currencyId, dispatch]
-  )
+  const onRemove = useCallback(() => {
+    if (currencyId) {
+      dispatch(removeFavoriteToken({ currencyId }))
+    }
+  }, [currencyId, dispatch])
 
   const navigateToSwapSell = useCallback(() => {
     if (!token?.address || !chainId) return
@@ -95,13 +87,9 @@ function FavoriteTokenCard({
   }, [t])
 
   const onPress = () => {
-    if (isEditing) return
+    if (isEditing || !currencyId) return
     tokenDetailsNavigation.preload(currencyId)
     tokenDetailsNavigation.navigate(currencyId)
-  }
-
-  if (loading && !data) {
-    return <BaseCard.Shadow aspectRatio={1} px="xs" {...rest} />
   }
 
   return (

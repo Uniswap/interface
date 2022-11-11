@@ -8,6 +8,7 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { useAppTheme } from 'src/app/hooks'
 import { ExploreStackParamList, TabNavigationProp } from 'src/app/navigation/types'
+import { FavoriteTokensGridLoader } from 'src/components/explore/FavoriteTokensGrid'
 import { SearchEmptySection } from 'src/components/explore/search/SearchEmptySection'
 import { SearchResultsSection } from 'src/components/explore/search/SearchResultsSection'
 import ExploreTokensTab from 'src/components/explore/tabs/ExploreTokensTab'
@@ -181,12 +182,12 @@ export function ExploreScreen({ navigation }: Props) {
 export function ExploreTokensTabLoader() {
   const { t } = useTranslation()
   return (
-    <Flex gap="lg" mx="xs" my="sm">
+    <Flex gap="lg" my="sm">
       <Flex gap="sm">
         <Text color="textSecondary" variant="subheadSmall">
           {t('Favorites')}
         </Text>
-        <Loading repeat={3} type="favorite" />
+        <FavoriteTokensGridLoader />
       </Flex>
       <Flex gap="md">
         <Flex row alignItems="center" justifyContent="space-between" py="sm">

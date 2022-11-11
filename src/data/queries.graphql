@@ -479,33 +479,10 @@ query SpotPrices($contracts: [ContractInput!]!) {
   }
 }
 
-query FavoriteTokenCardQuery($contract: ContractInput!) {
-  tokenProjects(contracts: [$contract]) {
-    id
-    tokens {
-      id
-      chain
-      address
-      symbol
-    }
-    logoUrl
-    markets(currencies: USD) {
-      id
-      price {
-        id
-        currency
-        value
-      }
-      pricePercentChange24h {
-        id
-        currency
-        value
-      }
-    }
-  }
-}
-
-query ExploreTokensTab($topTokensOrderBy: MarketSortableField!) {
+query ExploreTokensTab(
+  $topTokensOrderBy: MarketSortableField!
+  $favoriteTokenContracts: [ContractInput!]!
+) {
   topTokenProjects(orderBy: $topTokensOrderBy, page: 1, pageSize: 100) {
     id
     name
@@ -526,6 +503,30 @@ query ExploreTokensTab($topTokensOrderBy: MarketSortableField!) {
         value
       }
       marketCap {
+        id
+        currency
+        value
+      }
+      pricePercentChange24h {
+        id
+        currency
+        value
+      }
+    }
+  }
+  # Favorite tokens grid data
+  favoriteTokensData: tokenProjects(contracts: $favoriteTokenContracts) {
+    id
+    tokens {
+      id
+      chain
+      address
+      symbol
+    }
+    logoUrl
+    markets(currencies: USD) {
+      id
+      price {
         id
         currency
         value

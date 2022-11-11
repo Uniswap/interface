@@ -2,7 +2,7 @@ import { BottomTabBar, createBottomTabNavigator } from '@react-navigation/bottom
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createStackNavigator } from '@react-navigation/stack'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
@@ -24,10 +24,6 @@ import WalletIconFilled from 'src/assets/icons/wallet-filled.svg'
 import WalletIcon from 'src/assets/icons/wallet.svg'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box } from 'src/components/layout'
-import {
-  MarketSortableField,
-  useExploreTokensTabLazyQuery,
-} from 'src/data/__generated__/types-and-hooks'
 import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
 import { OnboardingHeader } from 'src/features/onboarding/OnboardingHeader'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
@@ -89,14 +85,7 @@ const NullComponent = () => {
 function TabNavigator() {
   const { t } = useTranslation()
   const theme = useAppTheme()
-
   useBiometricCheck()
-
-  const [load] = useExploreTokensTabLazyQuery()
-
-  useEffect(() => {
-    load({ variables: { topTokensOrderBy: MarketSortableField.MarketCap } })
-  }, [load])
 
   return (
     <Tab.Navigator
