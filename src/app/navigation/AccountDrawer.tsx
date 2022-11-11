@@ -324,7 +324,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
 
       <Separator mb="md" />
 
-      <Flex gap="lg" pb="lg" px="lg">
+      <Flex gap="lg" pb="lg" px="md">
         <SettingsButton
           Icon={GlobalIcon}
           label={t('Manage connections')}
@@ -422,7 +422,7 @@ function SettingsButton({
 
   return (
     <TouchableArea name={name} testID={name} onPress={onPress}>
-      <Flex row alignItems="center" gap="sm">
+      <Flex row alignItems="center" gap="xs">
         <Box alignItems="center" width={UNICON_SIZE}>
           <Icon
             color={theme.colors.textSecondary}
