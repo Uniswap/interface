@@ -322,9 +322,9 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
     }
   }, [contractAddress])
 
-  const Nfts =
-    collectionNfts &&
-    collectionNfts.map((asset) =>
+  const assets = useMemo(() => {
+    if (!collectionNfts) return null
+    return collectionNfts.map((asset) =>
       asset ? (
         <CollectionAsset
           key={asset.address + asset.tokenId}
@@ -338,6 +338,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         />
       ) : null
     )
+  }, [collectionNfts, currentTokenPlayingMedia, isMobile, rarityVerified, uniformHeight])
 
   const hasNfts = collectionNfts && collectionNfts.length > 0
   const hasErc1155s = hasNfts && collectionNfts[0] && collectionNfts[0].tokenType === TokenType.ERC1155
@@ -514,7 +515,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         className={hasNfts || isLoadingNext ? styles.assetList : undefined}
       >
         {hasNfts ? (
-          Nfts
+          assets
         ) : collectionNfts?.length === 0 ? (
           <Center width="full" color="textSecondary" textAlign="center" style={{ height: '60vh' }}>
             <EmptyCollectionWrapper>
