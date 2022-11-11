@@ -20,6 +20,7 @@ import {
 } from 'nft/hooks'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import { OSCollectionsFetcher } from 'nft/queries'
+import { UniformHeight, UniformHeights } from 'nft/types'
 import { ProfilePageStateType, WalletAsset, WalletCollection } from 'nft/types'
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
@@ -80,6 +81,7 @@ export const ProfilePage = () => {
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const isMobile = useIsMobile()
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
+  const [uniformHeight, setUniformHeight] = useState<UniformHeight>(UniformHeights.unset)
 
   const handleSellModeClick = useCallback(() => {
     resetSellAssets()
@@ -178,6 +180,8 @@ export const ProfilePage = () => {
                               isSellMode={isSellMode}
                               mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
                               setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+                              uniformHeight={uniformHeight}
+                              setUniformHeight={setUniformHeight}
                             />
                           </div>
                         ))
