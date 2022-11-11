@@ -475,8 +475,7 @@ const BaseThemeButton = styled.button<BaseButtonProps>`
 
 interface ThemeButtonProps extends React.ComponentPropsWithoutRef<'button'>, BaseButtonProps {}
 
-export const ThemeButton = ({ ...rest }: ThemeButtonProps) => {
-  const { children } = rest
+export const ThemeButton = ({ children, ...rest }: ThemeButtonProps) => {
   return (
     <BaseThemeButton {...rest}>
       <ButtonOverlay />
