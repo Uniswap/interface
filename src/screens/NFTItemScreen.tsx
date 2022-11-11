@@ -181,7 +181,7 @@ export function NFTItemScreen({
                       </Text>
                       <Flex row alignItems="center" gap="xs">
                         <Box flexShrink={1}>
-                          <Text color="textSecondary" numberOfLines={1} variant="bodyLarge">
+                          <Text color="textPrimary" numberOfLines={1} variant="bodyLarge">
                             {asset?.collection?.name || '-'}
                           </Text>
                         </Box>
