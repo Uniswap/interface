@@ -33,13 +33,19 @@ const IconWrapper = styled.button`
   display: flex;
   padding: 2px;
   opacity: 1;
-  transition: 125ms ease opacity;
-  :hover {
-    opacity: 0.6;
+  &:hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
   }
-  :active {
-    opacity: 0.4;
+
+  &:active {
+    opacity: ${({ theme }) => theme.opacity.click};
   }
+
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => `opacity ${duration.medium} ${timing.ease}`};
 `
 interface BagHeaderProps {
   numberOfAssets: number
