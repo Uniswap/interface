@@ -5160,6 +5160,11 @@
     xcode "3.0.1"
     yargs "^16.2.0"
 
+"@shakebugs/react-native-shake@15.3.0":
+  version "15.3.0"
+  resolved "https://registry.yarnpkg.com/@shakebugs/react-native-shake/-/react-native-shake-15.3.0.tgz#34d4d6ed0ffb05e5af2f5b82d188e7a8cf8e5786"
+  integrity sha512-orVet1b4TW3/tC1yYV+von09qjDwDynRZ4O3ChOJcgH0y/yD+yAYibqHai4cO98GzOdadqzamaBBpyvaNszrcQ==
+
 "@shopify/flash-list@1.3.1":
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/@shopify/flash-list/-/flash-list-1.3.1.tgz#0bf5816028049a26fec09117ad70b761a8258a99"
