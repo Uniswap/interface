@@ -1,7 +1,8 @@
+import { useLoadCollectionQuery } from 'graphql/data/nft/Collection'
 import { useIsMobile } from 'nft/hooks'
 import { fetchTrendingCollections } from 'nft/queries'
 import { TimePeriod } from 'nft/types'
-import { Suspense } from 'react'
+import { Suspense, useMemo } from 'react'
 import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -79,6 +80,9 @@ const Banner = () => {
       refetchOnMount: false,
     }
   )
+
+  // Trigger queries for the top trending collections, so that the data is immediately available if the user clicks through.
+  useLoadCollectionQuery(useMemo(() => collections?.map(({ address }) => address), [collections]))
 
   return (
     <BannerContainer>

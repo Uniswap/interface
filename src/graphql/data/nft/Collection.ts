@@ -1,13 +1,13 @@
 import graphql from 'babel-plugin-relay/macro'
 import { GenieCollection, Trait } from 'nft/types'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useLazyLoadQuery, useQueryLoader } from 'react-relay'
 
 import { CollectionQuery } from './__generated__/CollectionQuery.graphql'
 
 const collectionQuery = graphql`
   query CollectionQuery($address: String!) {
-    nftCollections(filter: { addresses: [$address] }) {
+    nftCollections(filter: { addresses: $addresses }) {
       edges {
         cursor
         node {
@@ -87,13 +87,17 @@ const collectionQuery = graphql`
   }
 `
 
-export function useLoadCollectionQuery(address?: string): void {
+export function useLoadCollectionQuery(address?: string | string[]): void {
   const [, loadQuery] = useQueryLoader(collectionQuery)
+  const addresses = useMemo(() => {
+    if (!address) return undefined
+    return Array.isArray(address) ? address : [address]
+  }, [address])
   useEffect(() => {
-    if (address) {
-      loadQuery({ address })
+    if (addresses) {
+      loadQuery({ addresses })
     }
-  }, [address, loadQuery])
+  }, [addresses, loadQuery])
 }
 
 // Lazy-loads an already loaded CollectionQuery.
