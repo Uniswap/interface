@@ -225,10 +225,6 @@ export function useLazyLoadAssetsQuery(params: AssetFetcherParams) {
   const environment = useRelayEnvironment()
   const poll = useCallback(async () => {
     const length = data.nftAssets?.edges?.length
-
-    // The backend does not allowing polling more than 100 assets.
-    if (length > 100) return
-
     // Initiate a network request. When it resolves, refresh the UI from store (to avoid re-triggering Suspense);
     // see: https://relay.dev/docs/guided-tour/refetching/refreshing-queries/#if-you-need-to-avoid-suspense-1.
     await fetchQuery<AssetQuery>(environment, assetQuery, { ...vars, first: length }).toPromise()
