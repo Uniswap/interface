@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTokenProjectsQuery } from 'src/data/__generated__/types-and-hooks'
 import { CurrencyInfo, GqlResult } from 'src/features/dataApi/types'
 import { currencyIdToContractInput, tokenProjectToCurrencyInfos } from 'src/features/dataApi/utils'
@@ -14,7 +14,7 @@ export function useTokenProjects(currencyIds: CurrencyId[]): GqlResult<CurrencyI
     [currencyIds]
   )
 
-  const { data, loading } = useTokenProjectsQuery({
+  const { data, loading, refetch } = useTokenProjectsQuery({
     variables: { contracts },
   })
 
@@ -24,5 +24,7 @@ export function useTokenProjects(currencyIds: CurrencyId[]): GqlResult<CurrencyI
     return tokenProjectToCurrencyInfos(data.tokenProjects)
   }, [data])
 
-  return { data: formattedData, loading }
+  const retry = useCallback(() => refetch({ contracts }), [contracts, refetch])
+
+  return { data: formattedData, loading, refetch: retry }
 }

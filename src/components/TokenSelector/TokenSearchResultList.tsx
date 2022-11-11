@@ -3,7 +3,9 @@ import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
+import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import { Box, Flex, Inset } from 'src/components/layout'
+import { BaseCard } from 'src/components/layout/BaseCard'
 import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
@@ -64,9 +66,21 @@ export function useTokenSectionsByVariation(
     makeSelectAccountHideSmallBalances(activeAccount.address)
   )
 
-  const { data: popularTokens } = usePopularTokens()
-  const { data: portfolioBalancesById } = usePortfolioBalances(activeAccount.address)
-  const { data: commonBaseCurrencies } = useAllCommonBaseCurrencies()
+  const {
+    data: popularTokens,
+    error: populateTokensError,
+    refetch: refetchPopularTokens,
+  } = usePopularTokens()
+  const {
+    data: portfolioBalancesById,
+    error: portfolioBalancesByIdError,
+    refetch: refetchPortfolioBalances,
+  } = usePortfolioBalances(activeAccount.address)
+  const {
+    data: commonBaseCurrencies,
+    error: commonBaseCurrenciesError,
+    refetch: refetchCommonBaseCurrencies,
+  } = useAllCommonBaseCurrencies()
 
   const portfolioBalances = useMemo(() => {
     if (!portfolioBalancesById) return
@@ -111,7 +125,11 @@ export function useTokenSectionsByVariation(
 
   // Only call search endpoint if searchFilter is non-null and TokenSelectorVariation includes tokens without balance
   const skipSearch = !searchFilter || variation === TokenSelectorVariation.BalancesOnly
-  const { data: searchResultCurrencies } = useSearchTokens(searchFilter, chainFilter, skipSearch)
+  const {
+    data: searchResultCurrencies,
+    error: searchTokensError,
+    refetch: refetchSearchTokens,
+  } = useSearchTokens(searchFilter, chainFilter, skipSearch)
   const searchResults = useMemo(() => {
     if (!searchResultCurrencies) return
 
@@ -207,13 +225,34 @@ export function useTokenSectionsByVariation(
     searchFilter,
   ])
 
+  const refetchAll = useCallback(() => {
+    refetchPopularTokens?.()
+    refetchCommonBaseCurrencies?.()
+    refetchPortfolioBalances?.()
+    refetchSearchTokens?.()
+  }, [
+    refetchPopularTokens,
+    refetchCommonBaseCurrencies,
+    refetchPortfolioBalances,
+    refetchSearchTokens,
+  ])
+
   const loading =
     !portfolioBalances ||
     !popularTokenOptions ||
     !commonBaseTokenOptions ||
     (!skipSearch && !searchResults)
 
-  return useMemo(() => ({ data: sections, loading }), [sections, loading])
+  const error =
+    (!portfolioBalancesById && portfolioBalancesByIdError) ||
+    (!popularTokens && populateTokensError) ||
+    (!commonBaseCurrencies && commonBaseCurrenciesError) ||
+    (!skipSearch && !searchResults && searchTokensError)
+
+  return useMemo(
+    () => ({ data: sections, loading, error: error || undefined, refetch: refetchAll }),
+    [sections, loading, error, refetchAll]
+  )
 }
 
 function _TokenSearchResultList({
@@ -228,11 +267,12 @@ function _TokenSearchResultList({
   const sectionListRef = useRef<SectionList<TokenOption>>(null)
 
   const debouncedSearchFilter = useDebounce(searchFilter)
-  const { data: sections, loading } = useTokenSectionsByVariation(
-    variation,
-    chainFilter,
-    debouncedSearchFilter
-  )
+  const {
+    data: sections,
+    loading,
+    error,
+    refetch,
+  } = useTokenSectionsByVariation(variation, chainFilter, debouncedSearchFilter)
 
   const sectionsRef = useRef(sections)
   useEffect(() => {
@@ -262,6 +302,26 @@ function _TokenSearchResultList({
       })
     }
   }, [variation, sectionsRef])
+
+  if (error) {
+    return (
+      <Box justifyContent="center" pt="xxxl">
+        <BaseCard.ErrorState
+          icon={
+            <AlertTriangle
+              color={theme.colors.textTertiary}
+              height={48}
+              strokeWidth={1}
+              width={55}
+            />
+          }
+          retryButtonLabel="Retry"
+          title={t("Couldn't load search results")}
+          onRetry={() => refetch?.()}
+        />
+      </Box>
+    )
+  }
 
   if (loading) {
     return (

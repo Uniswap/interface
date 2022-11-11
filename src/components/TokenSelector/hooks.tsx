@@ -5,6 +5,7 @@ import { ChainId } from 'src/constants/chains'
 import { DAI, nativeOnChain, USDC, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import { useTokenProjects } from 'src/features/dataApi/tokenProjects'
 import { CurrencyInfo, GqlResult } from 'src/features/dataApi/types'
+import { usePersistedError } from 'src/features/dataApi/utils'
 import { areAddressesEqual } from 'src/utils/addresses'
 import { currencyId } from 'src/utils/currencyId'
 
@@ -22,7 +23,8 @@ const baseCurrencies = [
 export const baseCurrencyIds = baseCurrencies.map(currencyId)
 
 export function useAllCommonBaseCurrencies(): GqlResult<CurrencyInfo[]> {
-  const { data: baseCurrencyInfos, loading } = useTokenProjects(baseCurrencyIds)
+  const { data: baseCurrencyInfos, loading, error, refetch } = useTokenProjects(baseCurrencyIds)
+  const persistedError = usePersistedError(loading, error)
 
   // TokenProjects returns MATIC on Mainnet and Polygon, but we only want MATIC on Polygon
   const filteredBaseCurrencyInfos = useMemo(() => {
@@ -32,7 +34,7 @@ export function useAllCommonBaseCurrencies(): GqlResult<CurrencyInfo[]> {
     )
   }, [baseCurrencyInfos])
 
-  return { data: filteredBaseCurrencyInfos, loading }
+  return { data: filteredBaseCurrencyInfos, loading, error: persistedError, refetch }
 }
 
 export function useFilterCallbacks(chainId: ChainId | null) {

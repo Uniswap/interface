@@ -148,6 +148,7 @@
   "Search results": "Search results",
   "Your tokens": "Your tokens",
   "Suggested": "Suggested",
+  "Couldn't load search results": "Couldn't load search results",
   "No results found for <1>\"{searchFilter}\"</1>": "No results found for <1>\"{searchFilter}\"</1>",
   "Search tokens": "Search tokens",
   "Pending": "Pending",

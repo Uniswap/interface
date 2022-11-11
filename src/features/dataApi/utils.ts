@@ -1,4 +1,6 @@
+import { ApolloError } from '@apollo/client'
 import { Token } from '@uniswap/sdk-core'
+import { useEffect, useState } from 'react'
 import { ChainId } from 'src/constants/chains'
 import { Chain, ContractInput, TopTokensQuery } from 'src/data/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'src/features/dataApi/types'
@@ -47,4 +49,25 @@ export function tokenProjectToCurrencyInfos(
       })
     )
     .filter(Boolean) as CurrencyInfo[]
+}
+
+/*
+Apollo client clears errors when repolling, so if there's an error and we have a 
+polling interval defined for the endpoint, then `error` will flicker between
+being defined and not defined. This hook helps persist returned errors when polling
+until the network request returns.
+
+Feature request to enable persisted errors: https://github.com/apollographql/apollo-feature-requests/issues/348
+*/
+export function usePersistedError(loading: boolean, error?: ApolloError) {
+  const [persistedError, setPersistedError] = useState<ApolloError>()
+
+  useEffect(() => {
+    if (error || !loading) {
+      setPersistedError(error)
+      return
+    }
+  }, [error, loading, setPersistedError])
+
+  return persistedError
 }

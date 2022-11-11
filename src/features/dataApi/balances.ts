@@ -4,6 +4,7 @@ import { useCallback, useMemo } from 'react'
 import { PollingInterval } from 'src/constants/misc'
 import { usePortfolioBalancesQuery } from 'src/data/__generated__/types-and-hooks'
 import { CurrencyInfo, GqlResult, PortfolioBalance } from 'src/features/dataApi/types'
+import { usePersistedError } from 'src/features/dataApi/utils'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { HIDE_SMALL_USD_BALANCES_THRESHOLD } from 'src/features/wallet/walletSlice'
@@ -26,12 +27,15 @@ export function usePortfolioBalances(
     loading,
     networkStatus,
     refetch,
+    error,
   } = usePortfolioBalancesQuery({
     variables: { ownerAddress: address },
     pollInterval: PollingInterval.Fast,
     notifyOnNetworkStatusChange: true,
     onCompleted: onCompleted,
   })
+
+  const persistedError = usePersistedError(loading, error)
   const balancesForAddress = balancesData?.portfolios?.[0]?.tokenBalances
 
   const formattedData = useMemo(() => {
@@ -90,7 +94,7 @@ export function usePortfolioBalances(
 
   const retry = useCallback(() => refetch({ ownerAddress: address }), [address, refetch])
 
-  return { data: formattedData, loading, networkStatus, refetch: retry }
+  return { data: formattedData, loading, networkStatus, refetch: retry, error: persistedError }
 }
 
 /**
