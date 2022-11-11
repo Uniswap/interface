@@ -57,7 +57,6 @@ const FailedText = ({ transactionState }: { transactionState: TransactionState }
 const FormattedCurrencyAmount = ({
   rawAmount,
   currencyId,
-  sigFigs = 2,
 }: {
   rawAmount: string
   currencyId: string
@@ -67,7 +66,7 @@ const FormattedCurrencyAmount = ({
 
   return currency ? (
     <HighlightText>
-      {formatAmount(rawAmount, currency.decimals, sigFigs)} {currency.symbol}
+      {formatAmount(rawAmount, currency.decimals, /* sigFigs= */ 6)} {currency.symbol}
     </HighlightText>
   ) : null
 }

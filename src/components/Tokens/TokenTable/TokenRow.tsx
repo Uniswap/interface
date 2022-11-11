@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { EventName } from '@uniswap/analytics-events'
 import { ParentSize } from '@visx/responsive'
-import { sendAnalyticsEvent } from 'analytics'
-import { EventName } from 'analytics/constants'
 import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
@@ -31,7 +31,7 @@ import {
   TokenSortMethod,
   useSetSortMethod,
 } from '../state'
-import { useTokenLogoURI } from '../TokenDetails/ChartSection'
+import { useTokenLogoURI } from '../TokenDetails'
 import InfoTip from '../TokenDetails/InfoTip'
 import { formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
 

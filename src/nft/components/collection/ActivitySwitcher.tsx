@@ -1,12 +1,14 @@
-import { ElementName, Event, EventName } from 'analytics/constants'
-import { TraceEvent } from 'analytics/TraceEvent'
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { useIsCollectionLoading } from 'nft/hooks'
 
 import * as styles from './ActivitySwitcher.css'
 
-export const ActivitySwitcherLoading = new Array(2).fill(<div className={styles.styledLoading} />)
+export const ActivitySwitcherLoading = new Array(2)
+  .fill(null)
+  .map((_, index) => <div className={styles.styledLoading} key={`ActivitySwitcherLoading-key-${index}`} />)
 
 export const ActivitySwitcher = ({
   showActivity,
@@ -31,7 +33,7 @@ export const ActivitySwitcher = ({
             Items
           </Box>
           <TraceEvent
-            events={[Event.onClick]}
+            events={[BrowserEvent.onClick]}
             element={ElementName.NFT_ACTIVITY_TAB}
             name={EventName.NFT_ACTIVITY_SELECTED}
           >

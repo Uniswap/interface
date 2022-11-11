@@ -255,14 +255,19 @@ const StatsItem = ({ children, label, shouldHide }: { children: ReactNode; label
 }
 
 const statsLoadingSkeleton = (isMobile: boolean) =>
-  new Array(5).fill(
-    <>
-      <Box display="flex" flexDirection={isMobile ? 'row' : 'column'} alignItems="baseline" gap="2" height="min">
-        <div className={styles.statsLabelLoading} />
-        <span className={styles.statsValueLoading} />
-      </Box>
-    </>
-  )
+  new Array(5).fill(null).map((_, index) => (
+    <Box
+      display="flex"
+      flexDirection={isMobile ? 'row' : 'column'}
+      alignItems="baseline"
+      gap="2"
+      height="min"
+      key={`statsLoadingSkeleton-key-${index}`}
+    >
+      <div className={styles.statsLabelLoading} />
+      <span className={styles.statsValueLoading} />
+    </Box>
+  ))
 
 const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMobile?: boolean } & BoxProps) => {
   const uniqueOwnersPercentage = stats?.stats?.total_supply
@@ -275,7 +280,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
 
   // round daily volume & floorPrice to 3 decimals or less
-  const totalVolumeStr = volumeFormatter(stats.stats?.total_volume ?? 0)
+  const totalVolumeStr = volumeFormatter(Number(stats.stats?.total_volume) ?? 0)
   const floorPriceStr = floorFormatter(stats.stats?.floor_price ?? 0)
   // graphQL formatted %age values out of 100, whereas v3 endpoint did a decimal between 0 & 1
   const floorChangeStr = Math.round(Math.abs(stats?.stats?.one_day_floor_change ?? 0))

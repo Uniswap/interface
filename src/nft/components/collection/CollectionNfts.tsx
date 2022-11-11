@@ -1,11 +1,16 @@
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { ElementName, Event, EventName } from 'analytics/constants'
-import { TraceEvent } from 'analytics/TraceEvent'
 import clsx from 'clsx'
 import { loadingAnimation } from 'components/Loader/styled'
 import { parseEther } from 'ethers/lib/utils'
 import { NftAssetTraitInput, NftMarketplace } from 'graphql/data/nft/__generated__/AssetQuery.graphql'
-import { useAssetsQuery } from 'graphql/data/nft/Asset'
+import {
+  ASSET_PAGE_SIZE,
+  AssetFetcherParams,
+  useLazyLoadAssetsQuery,
+  useLoadSweepAssetsQuery,
+} from 'graphql/data/nft/Asset'
 import useDebounce from 'hooks/useDebounce'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { CollectionSearch, FilterButton } from 'nft/components/collection'
@@ -28,7 +33,7 @@ import {
 } from 'nft/hooks'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { usePriceRange } from 'nft/hooks/usePriceRange'
-import { DropDownOption, GenieCollection, TokenType, UniformHeight, UniformHeights } from 'nft/types'
+import { DropDownOption, GenieCollection, Markets, TokenType, UniformHeight, UniformHeights } from 'nft/types'
 import { getRarityStatus } from 'nft/utils/asset'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { scrollToTop } from 'nft/utils/scrollToTop'
@@ -41,7 +46,7 @@ import { ThemedText } from 'theme'
 
 import { CollectionAssetLoading } from './CollectionAssetLoading'
 import { MARKETPLACE_ITEMS } from './MarketplaceSelect'
-import { Sweep } from './Sweep'
+import { Sweep, useSweepFetcherParams } from './Sweep'
 import { TraitChip } from './TraitChip'
 
 interface CollectionNftsProps {
@@ -160,11 +165,9 @@ export const LoadingButton = styled.div`
   background-size: 400%;
 `
 
-export const DEFAULT_ASSET_QUERY_AMOUNT = 25
-
 const loadingAssets = (
   <>
-    {Array.from(Array(DEFAULT_ASSET_QUERY_AMOUNT), (_, index) => (
+    {Array.from(Array(ASSET_PAGE_SIZE), (_, index) => (
       <CollectionAssetLoading key={index} />
     ))}
   </>
@@ -260,17 +263,19 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const debouncedSearchByNameText = useDebounce(searchByNameText, 500)
 
   const [sweepIsOpen, setSweepOpen] = useState(false)
+  // Load all sweep queries. Loading them on the parent allows lazy-loading, but avoids waterfalling requests.
+  const collectionParams = useSweepFetcherParams(contractAddress, 'others', debouncedMinPrice, debouncedMaxPrice)
+  const nftxParams = useSweepFetcherParams(contractAddress, Markets.NFTX, debouncedMinPrice, debouncedMaxPrice)
+  const nft20Params = useSweepFetcherParams(contractAddress, Markets.NFT20, debouncedMinPrice, debouncedMaxPrice)
+  useLoadSweepAssetsQuery(collectionParams, sweepIsOpen)
+  useLoadSweepAssetsQuery(nftxParams, sweepIsOpen)
+  useLoadSweepAssetsQuery(nft20Params, sweepIsOpen)
 
-  const {
-    assets: collectionNfts,
-    loadNext,
-    hasNext,
-    isLoadingNext,
-  } = useAssetsQuery(
-    contractAddress,
-    SortByQueries[sortBy].field,
-    SortByQueries[sortBy].asc,
-    {
+  const assetQueryParams: AssetFetcherParams = {
+    address: contractAddress,
+    orderBy: SortByQueries[sortBy].field,
+    asc: SortByQueries[sortBy].asc,
+    filter: {
       listed: buyNow,
       marketplaces: markets.length > 0 ? markets.map((market) => market.toUpperCase() as NftMarketplace) : undefined,
       maxPrice: debouncedMaxPrice ? parseEther(debouncedMaxPrice).toString() : undefined,
@@ -283,8 +288,10 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             })
           : undefined,
     },
-    DEFAULT_ASSET_QUERY_AMOUNT
-  )
+    first: ASSET_PAGE_SIZE,
+  }
+
+  const { assets: collectionNfts, loadNext, hasNext, isLoadingNext } = useLazyLoadAssetsQuery(assetQueryParams)
 
   const [uniformHeight, setUniformHeight] = useState<UniformHeight>(UniformHeights.unset)
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
@@ -402,7 +409,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
           <ActionsContainer>
             <ActionsSubContainer>
               <TraceEvent
-                events={[Event.onClick]}
+                events={[BrowserEvent.onClick]}
                 element={ElementName.NFT_FILTER_BUTTON}
                 name={EventName.NFT_FILTER_OPENED}
                 shouldLogImpression={!isFiltersExpanded}
@@ -441,12 +448,9 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
               </SweepButton>
             ) : null}
           </ActionsContainer>
-          <Sweep
-            contractAddress={contractAddress}
-            minPrice={debouncedMinPrice}
-            maxPrice={debouncedMaxPrice}
-            showSweep={sweepIsOpen && !hasErc1155s}
-          />
+          {sweepIsOpen && (
+            <Sweep contractAddress={contractAddress} minPrice={debouncedMinPrice} maxPrice={debouncedMaxPrice} />
+          )}
           <Row
             paddingTop={!!markets.length || !!traits.length || minMaxPriceChipText ? '12' : '0'}
             gap="8"
@@ -502,7 +506,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         </Box>
       </AnimatedBox>
       <InfiniteScroll
-        next={() => loadNext(DEFAULT_ASSET_QUERY_AMOUNT)}
+        next={() => loadNext(ASSET_PAGE_SIZE)}
         hasMore={hasNext}
         loader={hasNext && hasNfts ? loadingAssets : null}
         dataLength={collectionNfts?.length ?? 0}

@@ -27,6 +27,12 @@ export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
   }
 }
 
+export type PricePoint = { timestamp: number; value: number }
+
+export function isPricePoint(p: PricePoint | null): p is PricePoint {
+  return p !== null
+}
+
 export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
   [SupportedChainId.MAINNET]: 'ETHEREUM',
   [SupportedChainId.GOERLI]: 'ETHEREUM_GOERLI',

@@ -1,5 +1,5 @@
-import { sendAnalyticsEvent } from 'analytics'
-import { EventName } from 'analytics/constants'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { EventName } from '@uniswap/analytics-events'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
@@ -58,8 +58,7 @@ export const WalletAssetDisplay = ({ asset, isSellMode }: { asset: WalletAsset; 
   return (
     <Link to={getAssetHref(asset, DetailsOrigin.PROFILE)} style={{ textDecoration: 'none' }}>
       <Column
-        borderBottomLeftRadius="20"
-        borderBottomRightRadius="20"
+        borderRadius="20"
         paddingBottom="20"
         transition="250"
         backgroundColor={boxHovered ? 'backgroundOutline' : 'backgroundSurface'}
@@ -72,7 +71,7 @@ export const WalletAssetDisplay = ({ asset, isSellMode }: { asset: WalletAsset; 
           width="full"
           borderTopLeftRadius="20"
           borderTopRightRadius="20"
-          src={asset.image_url ?? '/nft/svgs/image-placeholder.svg'}
+          src={asset.imageUrl ?? '/nft/svgs/image-placeholder.svg'}
           style={{ aspectRatio: '1' }}
         />
         <Column paddingTop="12" paddingX="12">

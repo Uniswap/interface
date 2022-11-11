@@ -22,7 +22,6 @@ export const mobileSellWrapper = style([
     zIndex: { sm: '3', md: 'auto' },
     height: { sm: 'full', md: 'auto' },
     width: 'full',
-    overflowY: 'scroll',
   }),
   {
     scrollbarWidth: 'none',

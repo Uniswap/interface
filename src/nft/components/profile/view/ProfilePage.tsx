@@ -1,5 +1,5 @@
-import { Event, EventName } from 'analytics/constants'
-import { TraceEvent } from 'analytics/TraceEvent'
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, EventName } from '@uniswap/analytics-events'
 import { useNftBalanceQuery } from 'graphql/data/nft/NftBalance'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { assetList } from 'nft/components/collection/CollectionNfts.css'
@@ -20,6 +20,7 @@ import {
 } from 'nft/hooks'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import { OSCollectionsFetcher } from 'nft/queries'
+import { UniformHeight, UniformHeights } from 'nft/types'
 import { ProfilePageStateType, WalletAsset, WalletCollection } from 'nft/types'
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
@@ -29,9 +30,8 @@ import styled from 'styled-components/macro'
 import shallow from 'zustand/shallow'
 
 import { EmptyWalletContent } from './EmptyWalletContent'
-import { ProfileAccountDetails } from './ProfileAccountDetails'
 import * as styles from './ProfilePage.css'
-import { WalletAssetDisplay } from './WalletAssetDisplay'
+import { ViewMyNftsAsset } from './ViewMyNftsAsset'
 
 const SellModeButton = styled.button<{ active: boolean }>`
   display: flex;
@@ -52,7 +52,6 @@ const SellModeButton = styled.button<{ active: boolean }>`
 `
 
 const ProfilePageColumn = styled(Column)`
-  overflow-x: hidden !important;
   ${ScreenBreakpointsPaddings}
 `
 
@@ -81,6 +80,8 @@ export const ProfilePage = () => {
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const isMobile = useIsMobile()
+  const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
+  const [uniformHeight, setUniformHeight] = useState<UniformHeight>(UniformHeights.unset)
 
   const handleSellModeClick = useCallback(() => {
     resetSellAssets()
@@ -115,12 +116,11 @@ export const ProfilePage = () => {
       {ownerAssets?.length === 0 ? (
         <EmptyWalletContent />
       ) : (
-        <Row alignItems="flex-start" position="relative">
+        <Row alignItems="flex-start" position="relative" paddingX="20">
           <FilterSidebar />
 
           {(!isMobile || !isFiltersExpanded) && (
             <Column width="full">
-              <ProfileAccountDetails />
               <AnimatedBox
                 flexShrink="0"
                 style={{
@@ -129,6 +129,7 @@ export const ProfilePage = () => {
                       `translate(${Number(x) - (!isMobile && isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING)}px)`
                   ),
                 }}
+                paddingY="20"
               >
                 <Row gap="8" flexWrap="nowrap" justifyContent="space-between">
                   <FilterButton
@@ -140,7 +141,7 @@ export const ProfilePage = () => {
                   <Row gap="8" flexWrap="nowrap">
                     {isSellMode && <SelectAllButton ownerAssets={ownerAssets ?? []} />}
                     <TraceEvent
-                      events={[Event.onClick]}
+                      events={[BrowserEvent.onClick]}
                       name={EventName.NFT_SELL_SELECTED}
                       shouldLogImpression={!isSellMode}
                     >
@@ -173,7 +174,16 @@ export const ProfilePage = () => {
                   <div className={assetList}>
                     {ownerAssets?.length
                       ? ownerAssets.map((asset, index) => (
-                          <WalletAssetDisplay asset={asset} isSellMode={isSellMode} key={index} />
+                          <div key={index}>
+                            <ViewMyNftsAsset
+                              asset={asset}
+                              isSellMode={isSellMode}
+                              mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
+                              setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+                              uniformHeight={uniformHeight}
+                              setUniformHeight={setUniformHeight}
+                            />
+                          </div>
                         ))
                       : null}
                   </div>
@@ -275,7 +285,7 @@ const CollectionFiltersRow = ({
     return collections?.find((collection) => collection.address === collectionAddress)
   }
   return (
-    <Row paddingTop="18" gap="8" flexWrap="wrap">
+    <Row paddingY="18" gap="8" flexWrap="wrap">
       {collectionFilters &&
         collectionFilters.map((collectionAddress, index) => (
           <CollectionFilterItem
