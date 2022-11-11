@@ -4,7 +4,8 @@
     "pkief.material-icon-theme",
     "davidanson.vscode-markdownlint",
     "mikestead.dotenv",
-    "Orta.vscode-jest"
+    "Orta.vscode-jest",
+    "GraphQL.vscode-graphql",
   ],
   "unwantedRecommendations": []
 }
