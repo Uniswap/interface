@@ -49,6 +49,7 @@ const Asset = lazy(() => import('nft/pages/asset/Asset'))
 // Placeholder API key. Actual API key used in the proxy server
 const ANALYTICS_DUMMY_KEY = '00000000000000000000000000000000'
 const ANALYTICS_PROXY_URL = process.env.REACT_APP_AMPLITUDE_PROXY_URL
+initializeAnalytics(ANALYTICS_DUMMY_KEY, OriginApplication.INTERFACE, ANALYTICS_PROXY_URL)
 
 const AppWrapper = styled.div`
   display: flex;
@@ -126,7 +127,6 @@ export default function App() {
   const [scrolledState, setScrolledState] = useState(false)
 
   useAnalyticsReporter()
-  initializeAnalytics(ANALYTICS_DUMMY_KEY, OriginApplication.INTERFACE, ANALYTICS_PROXY_URL)
 
   const scrollListener = (e: Event) => {
     if (window.scrollY > 0) {
