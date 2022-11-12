@@ -15,7 +15,7 @@ import {
 import { body, bodySmall, buttonTextSmall, subhead, subheadSmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
-import { GenieAsset, Rarity, UniformHeight, UniformHeights, WalletAsset } from 'nft/types'
+import { GenieAsset, Rarity, TokenType, UniformHeight, UniformHeights, WalletAsset } from 'nft/types'
 import { isAudio, isVideo } from 'nft/utils'
 import { fallbackProvider, putCommas } from 'nft/utils'
 import { floorFormatter } from 'nft/utils/numbers'
@@ -530,6 +530,12 @@ const ProfileNftDetails = ({ asset, isSellMode }: ProfileNftDetailsProps) => {
     return !!asset.name ? asset.name : `#${asset.tokenId}`
   }
 
+  const shouldShowUserListedPrice =
+    !!asset.floor_sell_order_price &&
+    !asset.notForSale &&
+    (asset.asset_contract.tokenType !== TokenType.ERC1155 || isSellMode)
+  const shouldShowFloorPrice = asset.notForSale && isSellMode && !!asset.floorPrice
+
   return (
     <Box overflow="hidden" width="full" flexWrap="nowrap">
       <Row justifyItems="flex-start">
@@ -549,15 +555,16 @@ const ProfileNftDetails = ({ asset, isSellMode }: ProfileNftDetailsProps) => {
         </TruncatedTextRow>
         {asset.susFlag && <Suspicious />}
       </Row>
-      <TruncatedTextRow
-        className={subhead}
-        style={{ color: !asset.notForSale ? themeVars.colors.textPrimary : themeVars.colors.textSecondary }}
-      >
-        {!asset.notForSale && <span>{`${floorFormatter(asset.floor_sell_order_price)} ETH`}</span>}
-        {asset.notForSale && isSellMode && !!asset.floorPrice && (
-          <span>{`${floorFormatter(asset.floorPrice)} ETH Floor`}</span>
-        )}
-      </TruncatedTextRow>
+      {shouldShowUserListedPrice && (
+        <TruncatedTextRow className={subhead} style={{ color: themeVars.colors.textPrimary }}>
+          {`${floorFormatter(asset.floor_sell_order_price)} ETH`}
+        </TruncatedTextRow>
+      )}
+      {shouldShowFloorPrice && (
+        <TruncatedTextRow className={subhead} style={{ color: themeVars.colors.textSecondary }}>
+          {`${floorFormatter(asset.floorPrice)} ETH Floor`}
+        </TruncatedTextRow>
+      )}
     </Box>
   )
 }
