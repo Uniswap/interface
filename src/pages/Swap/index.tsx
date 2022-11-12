@@ -677,7 +677,15 @@ export default function Swap() {
                         }
                       >
                         <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }} height="20px">
-                          <span style={{ display: 'flex', alignItems: 'center' }}>
+                          <span
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              fontSize: '16px',
+                              width: '100%',
+                              justifyContent: 'center',
+                            }}
+                          >
                             {/* we need to shorten this string on mobile */}
                             {approvalState === ApprovalState.APPROVED ||
                             signatureState === UseERC20PermitState.SIGNED ? (
