@@ -4,7 +4,15 @@ import useInterval from 'lib/hooks/useInterval'
 import ms from 'ms.macro'
 import { GenieAsset, Trait } from 'nft/types'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { fetchQuery, useLazyLoadQuery, usePaginationFragment, useQueryLoader, useRelayEnvironment } from 'react-relay'
+import {
+  commitLocalUpdate,
+  ConnectionHandler,
+  fetchQuery,
+  useLazyLoadQuery,
+  usePaginationFragment,
+  useQueryLoader,
+  useRelayEnvironment,
+} from 'react-relay'
 
 import { AssetPaginationQuery } from './__generated__/AssetPaginationQuery.graphql'
 import {
@@ -228,27 +236,43 @@ export function useLazyLoadAssetsQuery(params: AssetFetcherParams) {
     // Initiate a network request. When it resolves, refresh the UI from store (to avoid re-triggering Suspense);
     // see: https://relay.dev/docs/guided-tour/refetching/refreshing-queries/#if-you-need-to-avoid-suspense-1.
     const cursorFront = data.nftAssets.edges[ASSET_PAGE_SIZE]?.cursor
-    const cursorBack = data.nftAssets.edges[data.nftAssets.edges.length - ASSET_PAGE_SIZE /* 0-indexed: */ - 1]?.cursor
-    await Promise.all([
-      cursorFront
-        ? fetchQuery<AssetQuery>(environment, assetQuery, {
-            ...vars,
-            first: undefined,
-            last: ASSET_PAGE_SIZE,
-            before: cursorFront,
-          }).toPromise()
-        : fetchQuery<AssetQuery>(environment, assetQuery, {
-            ...vars,
-            first: ASSET_PAGE_SIZE,
-          }).toPromise(),
-      cursorBack &&
-        fetchQuery<AssetQuery>(environment, assetQuery, {
+    if (!cursorFront) {
+      await fetchQuery<AssetQuery>(environment, assetQuery, {
+        ...vars,
+        first: ASSET_PAGE_SIZE,
+      }).toPromise()
+    } else {
+      await new Promise<void>((resolve) => {
+        const pollVars = {
           ...vars,
-          first: ASSET_PAGE_SIZE,
-          last: undefined,
-          after: cursorBack,
-        }).toPromise(),
-    ])
+          first: undefined,
+          last: ASSET_PAGE_SIZE,
+          before: cursorFront,
+        }
+        fetchQuery<AssetQuery>(environment, assetQuery, pollVars).subscribe({
+          next: (data) => {
+            // Relay will not merge data unless it is from the start- or end-cursor.
+            commitLocalUpdate(environment, (store) => {
+              const assets = ConnectionHandler.getConnection(store.getRoot(), 'AssetQuery_nftAssets', {
+                address: vars.address,
+                orderBy: vars.orderBy,
+                asc: vars.asc,
+                filter: vars.filter,
+              })
+              const edges = assets?.getLinkedRecords('edges')
+              if (assets && edges) {
+                const data = store.getRoot().getLinkedRecord('nftAssets', vars)
+                const polledEdges = data?.getLinkedRecords('edges')
+                if (polledEdges) {
+                  assets.setLinkedRecords([...polledEdges, ...edges.slice(25)], 'edges')
+                }
+              }
+            })
+            resolve()
+          },
+        })
+      })
+    }
     setFetchKey((fetchKey) => fetchKey + 1)
   }, [data.nftAssets.edges, environment, vars])
   useInterval(poll, isLoadingNext ? null : POLLING_INTERVAL, /* leading= */ false)
