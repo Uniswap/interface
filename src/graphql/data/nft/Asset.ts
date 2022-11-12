@@ -220,16 +220,37 @@ export function useLazyLoadAssetsQuery(params: AssetFetcherParams) {
     queryData
   )
 
-  // Poll for updates.
+  // Poll for updates for the first and last 25 assets.
   const POLLING_INTERVAL = ms`5s`
   const environment = useRelayEnvironment()
+  // Poll using the cursor so as not to invalidate already cached data.
   const poll = useCallback(async () => {
-    const length = data.nftAssets?.edges?.length
     // Initiate a network request. When it resolves, refresh the UI from store (to avoid re-triggering Suspense);
     // see: https://relay.dev/docs/guided-tour/refetching/refreshing-queries/#if-you-need-to-avoid-suspense-1.
-    await fetchQuery<AssetQuery>(environment, assetQuery, { ...vars, first: length }).toPromise()
+    const cursorFront = data.nftAssets.edges[ASSET_PAGE_SIZE]?.cursor
+    const cursorBack = data.nftAssets.edges[data.nftAssets.edges.length - ASSET_PAGE_SIZE /* 0-indexed: */ - 1]?.cursor
+    await Promise.all([
+      cursorFront
+        ? fetchQuery<AssetQuery>(environment, assetQuery, {
+            ...vars,
+            first: undefined,
+            last: ASSET_PAGE_SIZE,
+            before: cursorFront,
+          }).toPromise()
+        : fetchQuery<AssetQuery>(environment, assetQuery, {
+            ...vars,
+            first: ASSET_PAGE_SIZE,
+          }).toPromise(),
+      cursorBack &&
+        fetchQuery<AssetQuery>(environment, assetQuery, {
+          ...vars,
+          first: ASSET_PAGE_SIZE,
+          last: undefined,
+          after: cursorBack,
+        }).toPromise(),
+    ])
     setFetchKey((fetchKey) => fetchKey + 1)
-  }, [data.nftAssets?.edges?.length, environment, vars])
+  }, [data.nftAssets.edges, environment, vars])
   useInterval(poll, isLoadingNext ? null : POLLING_INTERVAL, /* leading= */ false)
 
   // It is especially important for this to be memoized to avoid re-rendering from polling if data is unchanged.
