@@ -96,7 +96,7 @@ export function HeaderScrollScreen({
         ]}
         tint={isDarkMode ? 'dark' : 'default'}>
         <WithScrollToTop ref={listRef}>
-          <Box mx="md" my="sm">
+          <Box mx="md" my="xxs">
             {fixedHeader}
           </Box>
         </WithScrollToTop>

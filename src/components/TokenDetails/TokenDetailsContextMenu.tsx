@@ -48,7 +48,7 @@ export function TokenDetailsContextMenu({ currency }: TokenDetailsContextMenuPro
             )
         }
       }}>
-      <TouchableArea p="sm">
+      <TouchableArea px="xxxs" py="sm">
         <TripleDot />
       </TouchableArea>
     </ContextMenu>

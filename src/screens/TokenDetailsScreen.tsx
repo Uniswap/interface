@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next'
 import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
 import { useAppDispatch } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
+import { BackButton } from 'src/components/buttons/BackButton'
 import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
 import { AnimatedBox, Box, Flex } from 'src/components/layout'
-import { BackHeader } from 'src/components/layout/BackHeader'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { CurrencyPriceChart } from 'src/components/PriceChart'
@@ -15,6 +15,7 @@ import { useCrossChainBalances } from 'src/components/TokenDetails/hooks'
 import { TokenBalances } from 'src/components/TokenDetails/TokenBalances'
 import { TokenDetailsActionButtons } from 'src/components/TokenDetails/TokenDetailsActionButton'
 import { TokenDetailsBackButtonRow } from 'src/components/TokenDetails/TokenDetailsBackButtonRow'
+import { TokenDetailsContextMenu } from 'src/components/TokenDetails/TokenDetailsContextMenu'
 import { TokenDetailsHeader } from 'src/components/TokenDetails/TokenDetailsHeader'
 import { TokenDetailsLoader } from 'src/components/TokenDetails/TokenDetailsLoader'
 import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
@@ -54,7 +55,7 @@ function HeaderPriceLabel({ price }: { price: Price }) {
   const { t } = useTranslation()
 
   return (
-    <Text color="textSecondary" variant="buttonLabelMicro">
+    <Text color="textPrimary" variant="bodyLarge">
       {formatUSDPrice(price?.value) ?? t('Unknown token')}
     </Text>
   )
@@ -67,17 +68,19 @@ function HeaderTitleElement({ data }: { data: TokenDetailsScreenQuery | undefine
   const tokenProject = token?.project
 
   return (
-    <Flex centered gap="none">
-      <Flex centered row gap="xs">
+    <Flex gap="none" justifyContent="space-between" mb="xxs">
+      <HeaderPriceLabel price={tokenProject?.markets?.[0]?.price} />
+      <Flex centered row gap="xxs">
         <TokenLogo
           chainId={fromGraphQLChain(token?.chain) ?? undefined}
           size={iconSizes.sm}
           symbol={token?.symbol ?? undefined}
           url={tokenProject?.logoUrl ?? undefined}
         />
-        <Text variant="subheadLarge">{token?.name ?? t('Unknown token')}</Text>
+        <Text color="textSecondary" variant="subheadSmall">
+          {token?.symbol ?? t('Unknown token')}
+        </Text>
       </Flex>
-      <HeaderPriceLabel price={tokenProject?.markets?.[0]?.price} />
     </Flex>
   )
 }
@@ -247,9 +250,11 @@ function TokenDetails({
       <HeaderScrollScreen
         contentHeader={<TokenDetailsBackButtonRow currency={currency} />}
         fixedHeader={
-          <BackHeader>
+          <Flex row alignItems="center" justifyContent="space-between" pt="xxs" px="none">
+            <BackButton />
             <HeaderTitleElement data={data} />
-          </BackHeader>
+            <TokenDetailsContextMenu currency={currency} />
+          </Flex>
         }>
         <Flex gap="xl" my="md">
           <Flex gap="xxs">
@@ -266,7 +271,7 @@ function TokenDetails({
               currentChainBalance={currentChainBalance}
               otherChainBalances={otherChainBalances}
             />
-            <Box mx="lg">
+            <Box mx="md">
               <TokenDetailsStats currency={currency} data={data} />
             </Box>
           </Flex>

@@ -94,7 +94,7 @@ export function CurrentChainBalance({
 function OtherChainBalance({ balance }: { balance: PortfolioBalance }) {
   return (
     <Flex row alignItems="center" justifyContent="space-between">
-      <Flex row alignItems="center" gap="xs">
+      <Flex row alignItems="center" gap="xxs">
         <CurrencyLogo currency={balance.currencyInfo.currency} size={iconSizes.xxl} />
         <Flex alignItems="center" gap="none">
           <Text variant="bodyLarge">
