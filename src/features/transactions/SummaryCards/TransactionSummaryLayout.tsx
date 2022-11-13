@@ -115,7 +115,7 @@ function TransactionSummaryLayout({
                 )}
               </Flex>
               {caption && (
-                <Text color="textTertiary" variant="bodySmall">
+                <Text color="textSecondary" variant="bodySmall">
                   {caption}
                 </Text>
               )}
@@ -125,7 +125,7 @@ function TransactionSummaryLayout({
             <Flex alignItems="flex-end" gap="xxxs">
               <SpinningLoader disabled={queued} size={LOADING_SPINNER_SIZE} />
               {queued && (
-                <Text color="textTertiary" variant="bodySmall">
+                <Text color="textSecondary" variant="bodySmall">
                   {t('Queued')}
                 </Text>
               )}
@@ -183,7 +183,7 @@ export function AssetUpdateLayout({
         {title}
       </Text>
       {caption && (
-        <Text color="textTertiary" numberOfLines={1} variant="bodySmall">
+        <Text color="textSecondary" numberOfLines={1} variant="bodySmall">
           {caption}
         </Text>
       )}

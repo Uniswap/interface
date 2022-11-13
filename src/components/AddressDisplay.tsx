@@ -91,7 +91,7 @@ export function AddressDisplay({
   }, [address, avatar, isViewOnly, size])
 
   return (
-    <Flex alignItems="center" flexDirection={direction} gap="xs">
+    <Flex alignItems="center" flexDirection={direction} gap="sm">
       {showAccountIcon && icon}
       <Box alignItems={itemAlignment} flexShrink={1}>
         <CopyButtonWrapper
@@ -112,7 +112,7 @@ export function AddressDisplay({
         </CopyButtonWrapper>
         {/* If subtitle is defined show it, otherwise revert to address logic */}
         {subtitleOverrideText ? (
-          <Text color="textTertiary" variant={captionVariant}>
+          <Text color="textSecondary" variant={captionVariant}>
             {subtitleOverrideText}
           </Text>
         ) : (
