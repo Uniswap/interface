@@ -44,7 +44,7 @@ export function AccountCardItem({ account, isViewOnly, isActive, onPress, onPres
   return (
     <TouchableArea hapticFeedback pb="sm" pt="xs" px="lg" onPress={() => onPress?.(address)}>
       <Flex row alignItems="center" testID={`account_item/${address.toLowerCase()}`}>
-        <Flex row shrink>
+        <Flex row shrink alignItems="center">
           <NotificationBadge showIndicator={hasNotifications}>{icon}</NotificationBadge>
           <Flex fill gap="none">
             <Text numberOfLines={1} variant="bodyLarge">
