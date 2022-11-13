@@ -224,10 +224,10 @@ export function useLazyLoadAssetsQuery(params: AssetFetcherParams) {
   const POLLING_INTERVAL = ms`5s`
   const environment = useRelayEnvironment()
   const poll = useCallback(async () => {
-    const length = data.nftAssets?.edges?.length
+    if (data.nftAssets?.edges?.length > ASSET_PAGE_SIZE) return
     // Initiate a network request. When it resolves, refresh the UI from store (to avoid re-triggering Suspense);
     // see: https://relay.dev/docs/guided-tour/refetching/refreshing-queries/#if-you-need-to-avoid-suspense-1.
-    await fetchQuery<AssetQuery>(environment, assetQuery, { ...vars, first: length }).toPromise()
+    await fetchQuery<AssetQuery>(environment, assetQuery, { ...vars }).toPromise()
     setFetchKey((fetchKey) => fetchKey + 1)
   }, [data.nftAssets?.edges?.length, environment, vars])
   useInterval(poll, isLoadingNext ? null : POLLING_INTERVAL, /* leading= */ false)
