@@ -227,8 +227,8 @@ function OptionCard({
           {icon}
         </Box>
         <Flex fill alignItems="flex-start" gap="xxxs" justifyContent="space-around">
-          <Text variant="subheadSmall">{title}</Text>
-          <Text color="textSecondary" variant="buttonLabelMicro">
+          <Text variant="bodyLarge">{title}</Text>
+          <Text color="textSecondary" variant="bodySmall">
             {blurb}
           </Text>
         </Flex>
