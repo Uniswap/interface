@@ -8,7 +8,12 @@ import { ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { EthMethod } from 'src/features/walletConnect/types'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
-import { removePendingSession, removeRequest } from 'src/features/walletConnect/walletConnectSlice'
+import {
+  removePendingSession,
+  removeRequest,
+  SwitchChainRequest,
+  WalletConnectRequest,
+} from 'src/features/walletConnect/walletConnectSlice'
 
 export function WalletConnectModals() {
   const activeAccount = useActiveAccount()
@@ -40,12 +45,17 @@ export function WalletConnectModals() {
           onClose={onClose}
         />
       )}
-      {currRequest &&
-        (currRequest.type === EthMethod.SwitchChain ? (
+      {currRequest ? (
+        isSwitchNetworkRequest(currRequest) ? (
           <WalletConnectSwitchChainModal isVisible request={currRequest} onClose={onCloseRequest} />
         ) : (
           <WalletConnectRequestModal isVisible request={currRequest} onClose={onCloseRequest} />
-        ))}
+        )
+      ) : null}
     </>
   )
+}
+
+function isSwitchNetworkRequest(request: WalletConnectRequest): request is SwitchChainRequest {
+  return request.type === EthMethod.SwitchChain || request.type === EthMethod.AddChain
 }

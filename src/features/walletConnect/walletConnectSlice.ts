@@ -33,7 +33,7 @@ export interface TransactionRequest extends BaseRequest {
 }
 
 export interface SwitchChainRequest extends BaseRequest {
-  type: EthMethod.SwitchChain
+  type: EthMethod.SwitchChain | EthMethod.AddChain
   sessionId: string
   newChainId: number
 }

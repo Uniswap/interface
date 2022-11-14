@@ -6,6 +6,7 @@ export enum EthMethod {
   SignTypedData = 'eth_signTypedData',
   SignTypedDataV4 = 'eth_signTypedData_v4',
   SwitchChain = 'wallet_switchEthereumChain',
+  AddChain = 'wallet_addEthereumChain',
   PersonalSign = 'personal_sign',
 }
 
@@ -104,7 +105,7 @@ export interface SignRequestEvent {
 
 export interface SwitchChainRequestEvent {
   account: string
-  type: EthMethod.SwitchChain
+  type: EthMethod.SwitchChain | EthMethod.AddChain
   request_internal_id: string
   session_id: string
   new_chain_id: number
