@@ -463,7 +463,6 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             {markets.map((market) => (
               <TraitChip
                 key={market}
-                // value={MARKETPLACE_ITEMS[market as keyof typeof MARKETPLACE_ITEMS]}
                 value={
                   <MarketNameWrapper>
                     <MarketplaceLogo src={`/nft/svgs/marketplaces/${market.toLowerCase()}.svg`} />
