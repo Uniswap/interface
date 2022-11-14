@@ -53,8 +53,12 @@ export function HiddenTokensScreen({
     if (!data) return EMPTY_ARRAY
 
     return [
-      { title: t('Small balances'), data: data.smallBalances },
-      { title: t('Spam tokens'), data: data.spamBalances },
+      ...(data.smallBalances.length > 0
+        ? [{ title: t('Small balances'), data: data.smallBalances }]
+        : []),
+      ...(data.spamBalances.length > 0
+        ? [{ title: t('Spam tokens'), data: data.spamBalances }]
+        : []),
     ]
   }, [t, data])
 
@@ -84,9 +88,7 @@ export function HiddenTokensScreen({
                 onPressToken={onPressToken}
               />
             )}
-            renderSectionHeader={({ section: { title, items } }) =>
-              items?.length > 0 ? <SectionHeader title={title} /> : null
-            }
+            renderSectionHeader={({ section: { title } }) => <SectionHeader title={title} />}
             sections={sections}
             showsVerticalScrollIndicator={false}
             windowSize={5}
@@ -99,7 +101,7 @@ export function HiddenTokensScreen({
 
 function SectionHeader({ title }: { title: string }) {
   return (
-    <Flex backgroundColor="background1" p="sm">
+    <Flex backgroundColor="background0" py="sm">
       <Text color="textSecondary" variant="subheadSmall">
         {title}
       </Text>

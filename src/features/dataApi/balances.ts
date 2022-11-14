@@ -20,6 +20,8 @@ type SortedPortfolioBalances = {
 /** Returns all balances indexed by currencyId for a given address */
 export function usePortfolioBalances(
   address: Address,
+  hideSmallBalances?: boolean,
+  hideSpamTokens?: boolean,
   onCompleted?: () => void
 ): GqlResult<Record<CurrencyId, PortfolioBalance>> & { networkStatus: NetworkStatus } {
   const {
@@ -59,6 +61,10 @@ export function usePortfolioBalances(
       )
         return
 
+      if (hideSmallBalances && balance.denominatedValue.value < HIDE_SMALL_USD_BALANCES_THRESHOLD)
+        return null
+      if (hideSpamTokens && balance.tokenProjectMarket?.tokenProject?.isSpam) return null
+
       const currency = balance.token.address
         ? new Token(
             chainId,
@@ -90,7 +96,7 @@ export function usePortfolioBalances(
     })
 
     return byId
-  }, [balancesForAddress])
+  }, [balancesForAddress, hideSmallBalances, hideSpamTokens])
 
   const retry = useCallback(() => refetch({ ownerAddress: address }), [address, refetch])
 
@@ -113,12 +119,18 @@ export function useSortedPortfolioBalances(
   hideSpamTokens?: boolean,
   onCompleted?: () => void
 ): GqlResult<SortedPortfolioBalances> & { networkStatus: NetworkStatus } {
+  // Fetch all balances including small balances and spam tokens because we want to return those in separate arrays
   const {
     data: balancesById,
     loading,
     networkStatus,
     refetch,
-  } = usePortfolioBalances(address, onCompleted)
+  } = usePortfolioBalances(
+    address,
+    /*hideSmallBalances=*/ false,
+    /*hideSpamBalances=*/ false,
+    onCompleted
+  )
 
   const formattedData = useMemo(() => {
     if (!balancesById) return

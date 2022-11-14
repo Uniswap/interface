@@ -21,8 +21,10 @@ import { useSearchTokens } from 'src/features/dataApi/searchTokens'
 import { usePopularTokens } from 'src/features/dataApi/topTokens'
 import { CurrencyInfo, GqlResult, PortfolioBalance } from 'src/features/dataApi/types'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
-import { makeSelectAccountHideSmallBalances } from 'src/features/wallet/selectors'
-import { HIDE_SMALL_USD_BALANCES_THRESHOLD } from 'src/features/wallet/walletSlice'
+import {
+  makeSelectAccountHideSmallBalances,
+  makeSelectAccountHideSpamTokens,
+} from 'src/features/wallet/selectors'
 import { differenceWith } from 'src/utils/array'
 import { useDebounce } from 'src/utils/timing'
 
@@ -64,6 +66,7 @@ export function useTokenSectionsByVariation(
   const hideSmallBalances = useAppSelector(
     makeSelectAccountHideSmallBalances(activeAccount.address)
   )
+  const hideSpamTokens = useAppSelector(makeSelectAccountHideSpamTokens(activeAccount.address))
 
   const {
     data: popularTokens,
@@ -74,7 +77,7 @@ export function useTokenSectionsByVariation(
     data: portfolioBalancesById,
     error: portfolioBalancesByIdError,
     refetch: refetchPortfolioBalances,
-  } = usePortfolioBalances(activeAccount.address)
+  } = usePortfolioBalances(activeAccount.address, hideSmallBalances, hideSpamTokens)
   const {
     data: commonBaseCurrencies,
     error: commonBaseCurrenciesError,
@@ -87,13 +90,8 @@ export function useTokenSectionsByVariation(
     const allPortfolioBalances: PortfolioBalance[] = Object.values(portfolioBalancesById).sort(
       (a, b) => b.balanceUSD - a.balanceUSD
     )
-
-    return hideSmallBalances
-      ? allPortfolioBalances.filter(
-          (portfolioBalance) => portfolioBalance.balanceUSD > HIDE_SMALL_USD_BALANCES_THRESHOLD
-        )
-      : allPortfolioBalances
-  }, [portfolioBalancesById, hideSmallBalances])
+    return allPortfolioBalances
+  }, [portfolioBalancesById])
 
   const popularTokenOptions = useMemo(() => {
     if (!popularTokens) return
