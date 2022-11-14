@@ -114,13 +114,23 @@ type NftBalanceQueryAsset = NonNullable<
   NonNullable<NonNullable<NftBalanceQuery_nftBalances$data['nftBalances']>['edges']>[number]
 >
 
-export function useLoadNftBalanceQuery(ownerAddress?: string | string[]): void {
+export function useLoadNftBalanceQuery(
+  ownerAddress?: string,
+  collectionAddress?: string | string[],
+  tokenId?: string
+): void {
   const [, loadQuery] = useQueryLoader(nftBalanceQuery)
   useEffect(() => {
     if (ownerAddress) {
-      loadQuery({ ownerAddress, filter: { addresses: [] }, first: DEFAULT_WALLET_ASSET_QUERY_AMOUNT })
+      loadQuery({
+        ownerAddress,
+        filter: tokenId
+          ? { assets: [{ address: collectionAddress, tokenId }] }
+          : { addresses: Array.isArray(collectionAddress) ? collectionAddress : [collectionAddress] },
+        first: DEFAULT_WALLET_ASSET_QUERY_AMOUNT,
+      })
     }
-  }, [ownerAddress, loadQuery])
+  }, [ownerAddress, loadQuery, collectionAddress, tokenId])
 }
 
 export function useNftBalanceQuery(
