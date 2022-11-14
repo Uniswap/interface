@@ -243,10 +243,15 @@ const StyledNavLink = styled(NavLink).attrs({
   text-decoration: none;
   color: ${({ theme }) => theme.text2};
   font-size: 1rem;
+  overflow: hidden;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    font-size: 0.7rem;
+    overflow: visible
+  `};
   font-weight: 500;
   padding: 8px 12px;
   word-break: break-word;
-  overflow: hidden;
+
   white-space: nowrap;
   &.${activeClassName} {
     border-radius: 12px;
@@ -306,16 +311,21 @@ const StyledNavLinkAlt = styled.button`
     font-weight: 600;
     color: ${({ theme }) => theme.text1};
   }
+
   :hover,
   :focus {
     color: ${({ theme }) => darken(0.1, theme.text1)};
     text-decoration: none;
   }
   font-size: 1rem;
+  overflow: hidden;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    font-size: 0.7rem;
+    overflow: visible
+  `};
   font-weight: 500;
   padding: 8px 12px;
   word-break: break-word;
-  overflow: hidden;
   white-space: nowrap;
   text-decoration: none;
 `
