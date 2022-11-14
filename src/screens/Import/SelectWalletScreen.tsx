@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback, useMemo, useReducer, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
 import { useAppDispatch } from 'src/app/hooks'
@@ -16,6 +16,10 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { AccountType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { usePendingAccounts } from 'src/features/wallet/hooks'
+import {
+  PendingAccountActions,
+  pendingAccountActions,
+} from 'src/features/wallet/pendingAcccountsSaga'
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { SagaStatus } from 'src/utils/saga'
@@ -71,8 +75,26 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
       .map((a) => a!.ownerAddress) ?? []
   )
 
+  useEffect(() => {
+    const beforeRemoveListener = () => {
+      dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
+    }
+    navigation.addListener('beforeRemove', beforeRemoveListener)
+    return () => navigation.removeListener('beforeRemove', beforeRemoveListener)
+  }, [dispatch, navigation])
+
+  useEffect(() => {
+    // In the event that the initial state of `selectedAddresses` is empty due to delay in saga loading,
+    // we need to set this after the loading so that the fallback account is selected.
+    if (isLoadingAccounts || loading || selectedAddresses.length > 0) return
+
+    initialShownAccounts
+      ?.filter((a) => a != null && a?.ownerAddress != null)
+      .map((a) => setSelectedAddresses(a!.ownerAddress))
+  }, [initialShownAccounts, isLoadingAccounts, loading, selectedAddresses.length])
+
   const onPress = (address: string) => {
-    if (initialShownAccounts?.length === 1) return
+    if (initialShownAccounts?.length === 1 && selectedAddresses.length === 1) return
     setSelectedAddresses(address)
   }
 
