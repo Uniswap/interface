@@ -73,6 +73,7 @@ function uniswapThemeColors(darkMode: boolean): ThemeColors {
   return {
     userThemeColor: darkMode ? colorsDark.userThemeColor : colorsLight.userThemeColor,
 
+    background: darkMode ? colorsDark.background : colorsLight.background,
     backgroundBackdrop: darkMode ? colorsDark.backgroundBackdrop : colorsLight.backgroundBackdrop,
     backgroundSurface: darkMode ? colorsDark.backgroundSurface : colorsLight.backgroundSurface,
     backgroundModule: darkMode ? colorsDark.backgroundModule : colorsLight.backgroundModule,
@@ -145,7 +146,7 @@ function oldColors(darkMode: boolean): Colors {
     deprecated_text4: darkMode ? ColorsPalette.gray200 : ColorsPalette.gray300,
     deprecated_text5: darkMode ? ColorsPalette.gray500 : ColorsPalette.gray50,
 
-    // backgrounds / greys
+    // backgrounds / grays
     deprecated_bg0: darkMode ? ColorsPalette.gray900 : ColorsPalette.white,
     deprecated_bg1: darkMode ? ColorsPalette.gray800 : ColorsPalette.gray50,
     deprecated_bg2: darkMode ? ColorsPalette.gray700 : ColorsPalette.gray100,
@@ -320,7 +321,7 @@ export const ThemedText = {
 export const ThemedGlobalStyle = createGlobalStyle`
 html {
   color: ${({ theme }) => theme.deprecated_text1};
-  background-color: ${({ theme }) => theme.deprecated_bg1} !important;
+  background-color: ${({ theme }) => theme.background} !important;
 }
 
 a {

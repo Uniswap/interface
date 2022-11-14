@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
+import { sendAnalyticsEvent, user } from '@uniswap/analytics'
+import { CustomUserProperties, EventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
-import { sendAnalyticsEvent, user } from 'analytics'
-import { CUSTOM_USER_PROPERTIES, EventName, WALLET_CONNECTION_RESULT } from 'analytics/constants'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
@@ -126,17 +126,17 @@ const sendAnalyticsEventAndUserInfo = (
   isReconnect: boolean
 ) => {
   sendAnalyticsEvent(EventName.WALLET_CONNECT_TXN_COMPLETED, {
-    result: WALLET_CONNECTION_RESULT.SUCCEEDED,
+    result: WalletConnectionResult.SUCCEEDED,
     wallet_address: account,
     wallet_type: walletType,
     is_reconnect: isReconnect,
   })
-  user.set(CUSTOM_USER_PROPERTIES.WALLET_ADDRESS, account)
-  user.set(CUSTOM_USER_PROPERTIES.WALLET_TYPE, walletType)
+  user.set(CustomUserProperties.WALLET_ADDRESS, account)
+  user.set(CustomUserProperties.WALLET_TYPE, walletType)
   if (chainId) {
-    user.postInsert(CUSTOM_USER_PROPERTIES.ALL_WALLET_CHAIN_IDS, chainId)
+    user.postInsert(CustomUserProperties.ALL_WALLET_CHAIN_IDS, chainId)
   }
-  user.postInsert(CUSTOM_USER_PROPERTIES.ALL_WALLET_ADDRESSES_CONNECTED, account)
+  user.postInsert(CustomUserProperties.ALL_WALLET_ADDRESSES_CONNECTED, account)
 }
 
 export default function WalletModal({
@@ -232,7 +232,7 @@ export default function WalletModal({
         dispatch(updateConnectionError({ connectionType, error: error.message }))
 
         sendAnalyticsEvent(EventName.WALLET_CONNECT_TXN_COMPLETED, {
-          result: WALLET_CONNECTION_RESULT.FAILED,
+          result: WalletConnectionResult.FAILED,
           wallet_type: getConnectionName(connectionType, getIsMetaMask()),
         })
       }
@@ -315,32 +315,24 @@ export default function WalletModal({
 
     function getTermsOfService(nftFlagEnabled: boolean, walletView: string) {
       if (nftFlagEnabled && walletView === WALLET_VIEWS.PENDING) return null
+
+      const content = (
+        <Trans>
+          By connecting a wallet, you agree to Uniswap Labs’{' '}
+          <ExternalLink href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and consent to its{' '}
+          <ExternalLink href="https://uniswap.org/privacy-policy">Privacy Policy</ExternalLink>.
+        </Trans>
+      )
       return nftFlagEnabled ? (
         <AutoRow style={{ flexWrap: 'nowrap', padding: '4px 16px' }}>
           <ThemedText.BodySecondary fontSize={16} lineHeight={'24px'}>
-            <Trans>
-              By connecting a wallet, you agree to Uniswap Labs’{' '}
-              <ExternalLink href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and consent to
-              its <ExternalLink href="https://uniswap.org/privacy-policy">Privacy Policy</ExternalLink>.
-            </Trans>
+            {content}
           </ThemedText.BodySecondary>
         </AutoRow>
       ) : (
         <LightCard>
           <AutoRow style={{ flexWrap: 'nowrap' }}>
-            <ThemedText.DeprecatedBody fontSize={12}>
-              <Trans>
-                By connecting a wallet, you agree to Uniswap Labs’{' '}
-                <ExternalLink style={{ textDecoration: 'underline' }} href="https://uniswap.org/terms-of-service/">
-                  Terms of Service
-                </ExternalLink>{' '}
-                and acknowledge that you have read and understand the Uniswap{' '}
-                <ExternalLink style={{ textDecoration: 'underline' }} href="https://uniswap.org/disclaimer/">
-                  Protocol Disclaimer
-                </ExternalLink>
-                .
-              </Trans>
-            </ThemedText.DeprecatedBody>
+            <ThemedText.DeprecatedBody fontSize={12}>{content}</ThemedText.DeprecatedBody>
           </AutoRow>
         </LightCard>
       )

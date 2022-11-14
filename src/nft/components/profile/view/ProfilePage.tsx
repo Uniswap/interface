@@ -1,3 +1,6 @@
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, EventName } from '@uniswap/analytics-events'
+import { useNftBalanceQuery } from 'graphql/data/nft/NftBalance'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { assetList } from 'nft/components/collection/CollectionNfts.css'
 import { FilterButton } from 'nft/components/collection/FilterButton'
@@ -15,19 +18,21 @@ import {
   useWalletBalance,
   useWalletCollections,
 } from 'nft/hooks'
-import { fetchMultipleCollectionStats, fetchWalletAssets, OSCollectionsFetcher } from 'nft/queries'
-import { ProfilePageStateType, WalletCollection } from 'nft/types'
-import { Dispatch, SetStateAction, useEffect, useMemo, useReducer, useState } from 'react'
+import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
+import { OSCollectionsFetcher } from 'nft/queries'
+import { TokenType } from 'nft/types'
+import { UniformHeight, UniformHeights } from 'nft/types'
+import { ProfilePageStateType, WalletAsset, WalletCollection } from 'nft/types'
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { useInfiniteQuery, useQuery } from 'react-query'
+import { useQuery } from 'react-query'
 import { useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
+import shallow from 'zustand/shallow'
 
 import { EmptyWalletContent } from './EmptyWalletContent'
-import { ProfileAccountDetails } from './ProfileAccountDetails'
 import * as styles from './ProfilePage.css'
-import { ProfilePageLoadingSkeleton } from './ProfilePageLoadingSkeleton'
-import { WalletAssetDisplay } from './WalletAssetDisplay'
+import { ViewMyNftsAsset } from './ViewMyNftsAsset'
 
 const SellModeButton = styled.button<{ active: boolean }>`
   display: flex;
@@ -39,7 +44,7 @@ const SellModeButton = styled.button<{ active: boolean }>`
   gap: 8px;
   cursor: pointer;
   background-color: ${({ theme, active }) => (active ? theme.accentAction : theme.backgroundInteractive)};
-  color: #fff;
+  color: ${({ theme }) => theme.textPrimary};
   border: none;
   outline: none;
   &:hover {
@@ -47,40 +52,45 @@ const SellModeButton = styled.button<{ active: boolean }>`
   }
 `
 
+const ProfilePageColumn = styled(Column)`
+  ${ScreenBreakpointsPaddings}
+`
+
+export const DEFAULT_WALLET_ASSET_QUERY_AMOUNT = 25
 const FILTER_SIDEBAR_WIDTH = 300
 const PADDING = 16
-
-function roundFloorPrice(price?: number, n?: number) {
-  return price ? Math.round(price * Math.pow(10, n ?? 3) + Number.EPSILON) / Math.pow(10, n ?? 3) : 0
-}
 
 export const ProfilePage = () => {
   const { address } = useWalletBalance()
   const collectionFilters = useWalletCollections((state) => state.collectionFilters)
   const setCollectionFilters = useWalletCollections((state) => state.setCollectionFilters)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
-  const walletAssets = useWalletCollections((state) => state.walletAssets)
-  const setWalletAssets = useWalletCollections((state) => state.setWalletAssets)
-  const displayAssets = useWalletCollections((state) => state.displayAssets)
-  const setDisplayAssets = useWalletCollections((state) => state.setDisplayAssets)
   const walletCollections = useWalletCollections((state) => state.walletCollections)
   const setWalletCollections = useWalletCollections((state) => state.setWalletCollections)
-  const listFilter = useWalletCollections((state) => state.listFilter)
+  const { isSellMode, resetSellAssets, setIsSellMode } = useSellAsset(
+    ({ isSellMode, reset, setIsSellMode }) => ({
+      isSellMode,
+      resetSellAssets: reset,
+      setIsSellMode,
+    }),
+    shallow
+  )
   const sellAssets = useSellAsset((state) => state.sellAssets)
-  const reset = useSellAsset((state) => state.reset)
-  const resetSellAssets = useSellAsset((state) => state.reset)
+  const { setBagExpanded } = useBag(({ setBagExpanded }) => ({ setBagExpanded }), shallow)
+
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
-  const isBagExpanded = useBag((state) => state.bagExpanded)
   const isMobile = useIsMobile()
-  const [isSellMode, toggleSellMode] = useReducer((s) => !s, false)
+  const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
+  const [uniformHeight, setUniformHeight] = useState<UniformHeight>(UniformHeights.unset)
 
-  const handleSellModeClick = () => {
+  const handleSellModeClick = useCallback(() => {
     resetSellAssets()
-    toggleSellMode()
-  }
+    setIsSellMode(!isSellMode)
+    setBagExpanded({ bagExpanded: !isSellMode })
+  }, [isSellMode, resetSellAssets, setBagExpanded, setIsSellMode])
 
-  const { data: ownerCollections, isLoading: collectionsAreLoading } = useQuery(
+  const { data: ownerCollections } = useQuery(
     ['ownerCollections', address],
     () => OSCollectionsFetcher({ params: { asset_owner: address, offset: '0', limit: '300' } }),
     {
@@ -88,99 +98,30 @@ export const ProfilePage = () => {
     }
   )
 
-  const ownerCollectionsAddresses = useMemo(() => ownerCollections?.map(({ address }) => address), [ownerCollections])
-  const { data: collectionStats, isLoading: collectionStatsAreLoading } = useQuery(
-    ['ownerCollectionStats', ownerCollectionsAddresses],
-    () => fetchMultipleCollectionStats({ addresses: ownerCollectionsAddresses ?? [] }),
-    {
-      refetchOnWindowFocus: false,
-    }
-  )
-
   const {
-    data: ownerAssetsData,
-    fetchNextPage,
-    hasNextPage,
-    isSuccess,
-    isLoading: assetsAreLoading,
-  } = useInfiniteQuery(
-    ['ownerAssets', address, collectionFilters],
-    async ({ pageParam = 0 }) => {
-      return await fetchWalletAssets({
-        ownerAddress: address ?? '',
-        collectionAddresses: collectionFilters,
-        pageParam,
-      })
-    },
-    {
-      getNextPageParam: (lastPage, pages) => {
-        return lastPage?.flat().length === 25 ? pages.length : null
-      },
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-    }
-  )
-
-  const anyQueryIsLoading = collectionsAreLoading || collectionStatsAreLoading || assetsAreLoading
-
-  const ownerAssets = useMemo(() => (isSuccess ? ownerAssetsData?.pages.flat() : null), [isSuccess, ownerAssetsData])
-
-  useEffect(() => {
-    setDisplayAssets(walletAssets, listFilter)
-  }, [walletAssets, listFilter, setDisplayAssets])
-
-  useEffect(() => {
-    setWalletAssets(ownerAssets?.flat() ?? [])
-  }, [ownerAssets, setWalletAssets])
+    walletAssets: ownerAssets,
+    loadNext,
+    hasNext,
+  } = useNftBalanceQuery(address, collectionFilters, DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
 
   useEffect(() => {
     ownerCollections && setWalletCollections(ownerCollections)
   }, [ownerCollections, setWalletCollections])
-
-  useEffect(() => {
-    if (ownerCollections?.length && collectionStats?.length) {
-      const ownerCollectionsCopy = [...ownerCollections]
-      for (const collection of ownerCollectionsCopy) {
-        const floorPrice = collectionStats.find((stat) => stat.address === collection.address)?.floorPrice
-        collection.floorPrice = roundFloorPrice(floorPrice)
-      }
-      setWalletCollections(ownerCollectionsCopy)
-    }
-  }, [collectionStats, ownerCollections, setWalletCollections])
-
-  useEffect(() => {
-    if (ownerCollections?.length && collectionStats?.length) {
-      const ownerCollectionsCopy = [...ownerCollections]
-      for (const collection of ownerCollectionsCopy) {
-        const floorPrice = collectionStats.find((stat) => stat.address === collection.address)?.floorPrice
-        collection.floorPrice = floorPrice ? Math.round(floorPrice * 1000 + Number.EPSILON) / 1000 : 0 //round to at most 3 digits
-      }
-      setWalletCollections(ownerCollectionsCopy)
-    }
-  }, [collectionStats, ownerCollections, setWalletCollections])
 
   const { gridX } = useSpring({
     gridX: isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING,
   })
 
   return (
-    <Column
-      width="full"
-      paddingLeft={{ sm: `${PADDING}`, md: '52' }}
-      paddingRight={{ sm: `${PADDING}`, md: isBagExpanded ? '0' : '72' }}
-      paddingTop={{ sm: `${PADDING}`, md: '40' }}
-    >
-      {anyQueryIsLoading ? (
-        <ProfilePageLoadingSkeleton />
-      ) : walletAssets.length === 0 ? (
+    <ProfilePageColumn width="full" paddingTop={{ sm: `${PADDING}`, md: '40' }}>
+      {ownerAssets?.length === 0 ? (
         <EmptyWalletContent />
       ) : (
-        <Row alignItems="flex-start" position="relative">
+        <Row alignItems="flex-start" position="relative" paddingX="20">
           <FilterSidebar />
 
           {(!isMobile || !isFiltersExpanded) && (
             <Column width="full">
-              <ProfileAccountDetails />
               <AnimatedBox
                 flexShrink="0"
                 style={{
@@ -189,20 +130,27 @@ export const ProfilePage = () => {
                       `translate(${Number(x) - (!isMobile && isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING)}px)`
                   ),
                 }}
+                paddingY="20"
               >
                 <Row gap="8" flexWrap="nowrap" justifyContent="space-between">
                   <FilterButton
                     isMobile={isMobile}
                     isFiltersExpanded={isFiltersExpanded}
-                    results={displayAssets.length}
+                    collectionCount={ownerAssets?.length}
                     onClick={() => setFiltersExpanded(!isFiltersExpanded)}
                   />
                   <Row gap="8" flexWrap="nowrap">
-                    {isSellMode && <SelectAllButton />}
-                    <SellModeButton active={isSellMode} onClick={handleSellModeClick}>
-                      <TagIcon height={20} width={20} />
-                      Sell
-                    </SellModeButton>
+                    {isSellMode && <SelectAllButton ownerAssets={ownerAssets ?? []} />}
+                    <TraceEvent
+                      events={[BrowserEvent.onClick]}
+                      name={EventName.NFT_SELL_SELECTED}
+                      shouldLogImpression={!isSellMode}
+                    >
+                      <SellModeButton className={buttonTextMedium} active={isSellMode} onClick={handleSellModeClick}>
+                        <TagIcon height={20} width={20} />
+                        Sell
+                      </SellModeButton>
+                    </TraceEvent>
                   </Row>
                 </Row>
                 <Row>
@@ -214,22 +162,29 @@ export const ProfilePage = () => {
                   />
                 </Row>
                 <InfiniteScroll
-                  next={fetchNextPage}
-                  hasMore={hasNextPage ?? false}
+                  next={() => loadNext(DEFAULT_WALLET_ASSET_QUERY_AMOUNT)}
+                  hasMore={hasNext}
                   loader={
-                    hasNextPage ? (
-                      <Center>
-                        <LoadingSparkle />
-                      </Center>
-                    ) : null
+                    <Center>
+                      <LoadingSparkle />
+                    </Center>
                   }
-                  dataLength={displayAssets.length}
+                  dataLength={ownerAssets?.length ?? 0}
                   style={{ overflow: 'unset' }}
                 >
                   <div className={assetList}>
-                    {displayAssets && displayAssets.length
-                      ? displayAssets.map((asset, index) => (
-                          <WalletAssetDisplay asset={asset} isSellMode={isSellMode} key={index} />
+                    {ownerAssets?.length
+                      ? ownerAssets.map((asset, index) => (
+                          <div key={index}>
+                            <ViewMyNftsAsset
+                              asset={asset}
+                              isSellMode={isSellMode}
+                              mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
+                              setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+                              uniformHeight={uniformHeight}
+                              setUniformHeight={setUniformHeight}
+                            />
+                          </div>
                         ))
                       : null}
                   </div>
@@ -260,7 +215,7 @@ export const ProfilePage = () => {
             color="genieBlue"
             marginRight="20"
             marginLeft="auto"
-            onClick={reset}
+            onClick={resetSellAssets}
             lineHeight="16"
           >
             Clear
@@ -280,19 +235,20 @@ export const ProfilePage = () => {
           </Box>
         </Row>
       )}
-    </Column>
+    </ProfilePageColumn>
   )
 }
 
-const SelectAllButton = () => {
+const SelectAllButton = ({ ownerAssets }: { ownerAssets: WalletAsset[] }) => {
   const [isAllSelected, setIsAllSelected] = useState(false)
-  const displayAssets = useWalletCollections((state) => state.displayAssets)
   const selectSellAsset = useSellAsset((state) => state.selectSellAsset)
   const resetSellAssets = useSellAsset((state) => state.reset)
 
   useEffect(() => {
     if (isAllSelected) {
-      displayAssets.forEach((asset) => selectSellAsset(asset))
+      ownerAssets.forEach(
+        (asset) => asset.asset_contract.tokenType !== TokenType.ERC1155 && !asset.susFlag && selectSellAsset(asset)
+      )
     } else {
       resetSellAssets()
     }
@@ -332,7 +288,7 @@ const CollectionFiltersRow = ({
     return collections?.find((collection) => collection.address === collectionAddress)
   }
   return (
-    <Row paddingTop="18" gap="8" flexWrap="wrap">
+    <Row paddingY="18" gap="8" flexWrap="wrap">
       {collectionFilters &&
         collectionFilters.map((collectionAddress, index) => (
           <CollectionFilterItem
@@ -371,11 +327,11 @@ const CollectionFilterItem = ({
   return (
     <Row
       justifyContent="center"
-      paddingRight="4"
-      paddingTop="4"
-      paddingBottom="4"
-      paddingLeft="8"
-      borderRadius="12"
+      paddingTop="6"
+      paddingRight="6"
+      paddingBottom="6"
+      paddingLeft="12"
+      borderRadius="8"
       background="backgroundOutline"
       fontSize="14"
     >

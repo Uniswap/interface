@@ -1,3 +1,5 @@
+import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
+import { EventName, SectionName, SwapPriceUpdateUserResponse } from '@uniswap/analytics-events'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import {
@@ -8,9 +10,7 @@ import {
   SwapWidgetSkeleton,
 } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent } from 'analytics'
-import { EventName, SectionName, SWAP_PRICE_UPDATE_USER_RESPONSE } from 'analytics/constants'
-import { useTrace } from 'analytics/Trace'
+import { useActiveLocale } from 'hooks/useActiveLocale'
 import {
   formatPercentInBasisPointsNumber,
   formatSwapQuoteReceivedEventProperties,
@@ -18,8 +18,7 @@ import {
   getDurationFromDateMilliseconds,
   getPriceUpdateBasisPoints,
   getTokenAddress,
-} from 'analytics/utils'
-import { useActiveLocale } from 'hooks/useActiveLocale'
+} from 'lib/utils/analytics'
 import { useCallback, useState } from 'react'
 import { useIsDarkMode } from 'state/user/hooks'
 import { DARK_THEME, LIGHT_THEME } from 'theme/widget'
@@ -94,7 +93,7 @@ export default function Widget({ token, onTokenChange, onReviewSwapClick }: Widg
     (stale: Trade<Currency, Currency, TradeType>, update: Trade<Currency, Currency, TradeType>) => {
       const eventProperties = {
         chain_id: update.inputAmount.currency.chainId,
-        response: SWAP_PRICE_UPDATE_USER_RESPONSE.ACCEPTED,
+        response: SwapPriceUpdateUserResponse.ACCEPTED,
         token_in_symbol: update.inputAmount.currency.symbol,
         token_out_symbol: update.outputAmount.currency.symbol,
         price_update_basis_points: getPriceUpdateBasisPoints(stale.executionPrice, update.executionPrice),

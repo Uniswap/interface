@@ -1,3 +1,5 @@
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { EventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import { AssetLogo } from 'components/Logo'
@@ -31,8 +33,8 @@ interface CollectionRowProps {
   isHovered: boolean
   setHoveredIndex: (index: number | undefined) => void
   toggleOpen: () => void
-  traceEvent: () => void
   index: number
+  eventProperties: Record<string, unknown>
 }
 
 export const CollectionRow = ({
@@ -40,8 +42,8 @@ export const CollectionRow = ({
   isHovered,
   setHoveredIndex,
   toggleOpen,
-  traceEvent,
   index,
+  eventProperties,
 }: CollectionRowProps) => {
   const [brokenImage, setBrokenImage] = useState(false)
   const [loaded, setLoaded] = useState(false)
@@ -53,8 +55,8 @@ export const CollectionRow = ({
   const handleClick = useCallback(() => {
     addToSearchHistory(collection)
     toggleOpen()
-    traceEvent()
-  }, [addToSearchHistory, collection, toggleOpen, traceEvent])
+    sendAnalyticsEvent(EventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
+  }, [addToSearchHistory, collection, toggleOpen, eventProperties])
 
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
@@ -97,13 +99,13 @@ export const CollectionRow = ({
             <Box className={styles.primaryText}>{collection.name}</Box>
             {collection.isVerified && <VerifiedIcon className={styles.suggestionIcon} />}
           </Row>
-          <Box className={styles.secondaryText}>{putCommas(collection.stats.total_supply)} items</Box>
+          <Box className={styles.secondaryText}>{putCommas(collection?.stats?.total_supply ?? 0)} items</Box>
         </Column>
       </Row>
-      {collection.floorPrice ? (
+      {collection.stats?.floor_price ? (
         <Column className={styles.suggestionSecondaryContainer}>
           <Row gap="4">
-            <Box className={styles.primaryText}>{ethNumberStandardFormatter(collection.floorPrice)} ETH</Box>
+            <Box className={styles.primaryText}>{ethNumberStandardFormatter(collection.stats?.floor_price)} ETH</Box>
           </Row>
           <Box className={styles.secondaryText}>Floor</Box>
         </Column>
@@ -126,11 +128,11 @@ interface TokenRowProps {
   isHovered: boolean
   setHoveredIndex: (index: number | undefined) => void
   toggleOpen: () => void
-  traceEvent: () => void
   index: number
+  eventProperties: Record<string, unknown>
 }
 
-export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceEvent, index }: TokenRowProps) => {
+export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index, eventProperties }: TokenRowProps) => {
   const addToSearchHistory = useSearchHistory(
     (state: { addItem: (item: FungibleToken | GenieCollection) => void }) => state.addItem
   )
@@ -139,8 +141,8 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceE
   const handleClick = useCallback(() => {
     addToSearchHistory(token)
     toggleOpen()
-    traceEvent()
-  }, [addToSearchHistory, toggleOpen, token, traceEvent])
+    sendAnalyticsEvent(EventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
+  }, [addToSearchHistory, toggleOpen, token, eventProperties])
 
   const [bridgedAddress, bridgedChain, L2Icon] = useBridgedAddress(token)
   const tokenDetailsPath = getTokenDetailsURL(bridgedAddress ?? token.address, undefined, bridgedChain ?? token.chainId)

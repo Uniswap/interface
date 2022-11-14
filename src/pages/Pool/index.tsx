@@ -1,9 +1,7 @@
 import { Trans } from '@lingui/macro'
+import { Trace, TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName, PageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { PageName } from 'analytics/constants'
-import { ElementName, Event, EventName } from 'analytics/constants'
-import { Trace } from 'analytics/Trace'
-import { TraceEvent } from 'analytics/TraceEvent'
 import { ButtonGray, ButtonPrimary, ButtonText } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { FlyoutAlignment, NewMenu } from 'components/Menu'
@@ -134,10 +132,13 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
 
 const MainContentWrapper = styled.main`
   background-color: ${({ theme }) => theme.deprecated_bg0};
-  padding: 8px;
-  border-radius: 20px;
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  padding: 0;
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
+    0px 24px 32px rgba(0, 0, 0, 0.01);
 `
 
 function PositionsLoadingPlaceholder() {
@@ -161,6 +162,7 @@ function PositionsLoadingPlaceholder() {
 
 function WrongNetworkCard() {
   const theme = useTheme()
+
   return (
     <>
       <PageWrapper>
@@ -316,7 +318,7 @@ export default function Pool() {
                     )}
                     {showConnectAWallet && (
                       <TraceEvent
-                        events={[Event.onClick]}
+                        events={[BrowserEvent.onClick]}
                         name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
                         properties={{ received_swap_quote: false }}
                         element={ElementName.CONNECT_WALLET_BUTTON}

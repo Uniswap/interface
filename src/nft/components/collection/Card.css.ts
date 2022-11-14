@@ -1,28 +1,18 @@
 import { style } from '@vanilla-extract/css'
 import { calc } from '@vanilla-extract/css-utils'
-import { breakpoints, sprinkles, themeVars, vars } from 'nft/css/sprinkles.css'
+import { sprinkles, themeVars } from 'nft/css/sprinkles.css'
 
 export const card = style([
   sprinkles({
     overflow: 'hidden',
     borderStyle: 'solid',
     borderWidth: '1px',
+    paddingBottom: '12',
+    boxShadow: 'shallow',
   }),
   {
     boxSizing: 'border-box',
     WebkitBoxSizing: 'border-box',
-    '@media': {
-      [`(max-width: ${breakpoints.sm - 1}px)`]: {
-        ':hover': {
-          borderColor: themeVars.colors.backgroundOutline,
-          cursor: 'pointer',
-          background: vars.color.lightGrayOverlay,
-        },
-      },
-    },
-    ':hover': {
-      boxShadow: themeVars.shadows.deep,
-    },
   },
 ])
 
@@ -34,8 +24,14 @@ export const notSelectedCard = style([
   card,
   sprinkles({
     backgroundColor: 'backgroundSurface',
-    borderColor: 'transparent',
+    borderColor: 'backgroundOutline',
+    borderRadius: '14',
   }),
+  {
+    ':hover': {
+      backgroundColor: themeVars.colors.stateOverlayHover,
+    },
+  },
 ])
 
 export const cardImageHover = style({
@@ -45,9 +41,16 @@ export const cardImageHover = style({
 export const selectedCard = style([
   card,
   sprinkles({
-    background: 'lightGrayOverlay',
-    borderColor: 'backgroundOutline',
+    background: 'backgroundSurface',
+    borderColor: 'accentAction',
+    borderWidth: '3px',
   }),
+  {
+    borderRadius: '18px',
+    ':hover': {
+      backgroundColor: themeVars.colors.stateOverlayHover,
+    },
+  },
 ])
 
 export const button = style([

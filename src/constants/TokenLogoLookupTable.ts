@@ -27,9 +27,7 @@ class TokenLogoLookupTable {
     if (!address) return undefined
 
     if (!this.dict) {
-      const start = Date.now()
       this.dict = this.createMap()
-      console.log((Date.now() - start) / 1000)
     }
     return this.dict[address.toLowerCase()]
   }

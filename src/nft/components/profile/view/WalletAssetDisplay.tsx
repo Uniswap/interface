@@ -1,3 +1,5 @@
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { EventName } from '@uniswap/analytics-events'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
@@ -26,11 +28,18 @@ export const WalletAssetDisplay = ({ asset, isSellMode }: { asset: WalletAsset; 
   }, false)
 
   const isSelected = useMemo(() => {
-    return sellAssets.some((item) => asset.id === item.id)
+    return sellAssets.some(
+      (item) => item.tokenId === asset.tokenId && item.asset_contract.address === asset.asset_contract.address
+    )
   }, [asset, sellAssets])
 
   const handleSelect = () => {
     isSelected ? removeSellAsset(asset) : selectSellAsset(asset)
+    !isSelected &&
+      sendAnalyticsEvent(EventName.NFT_SELL_ITEM_ADDED, {
+        collection_address: asset.asset_contract.address,
+        token_id: asset.tokenId,
+      })
     if (
       !cartExpanded &&
       !sellAssets.find(
@@ -42,15 +51,14 @@ export const WalletAssetDisplay = ({ asset, isSellMode }: { asset: WalletAsset; 
   }
 
   const uniqueSellOrdersMarketplaces = useMemo(
-    () => [...new Set(asset.sellOrders.map((order) => order.marketplace))],
+    () => [...new Set(asset.sellOrders?.map((order) => order.marketplace))],
     [asset.sellOrders]
   )
 
   return (
     <Link to={getAssetHref(asset, DetailsOrigin.PROFILE)} style={{ textDecoration: 'none' }}>
       <Column
-        borderBottomLeftRadius="20"
-        borderBottomRightRadius="20"
+        borderRadius="20"
         paddingBottom="20"
         transition="250"
         backgroundColor={boxHovered ? 'backgroundOutline' : 'backgroundSurface'}
@@ -63,7 +71,7 @@ export const WalletAssetDisplay = ({ asset, isSellMode }: { asset: WalletAsset; 
           width="full"
           borderTopLeftRadius="20"
           borderTopRightRadius="20"
-          src={asset.image_url ?? '/nft/svgs/image-placeholder.svg'}
+          src={asset.imageUrl ?? '/nft/svgs/image-placeholder.svg'}
           style={{ aspectRatio: '1' }}
         />
         <Column paddingTop="12" paddingX="12">
@@ -77,7 +85,7 @@ export const WalletAssetDisplay = ({ asset, isSellMode }: { asset: WalletAsset; 
                 {asset.collectionIsVerified ? <VerifiedIcon className={styles.verifiedBadge} /> : null}
               </Box>
             </Column>
-            {asset.sellOrders.length > 0 && (
+            {asset.sellOrders && asset.sellOrders.length > 0 && (
               <Column gap="6" flex="1" justifyContent="flex-end" whiteSpace="nowrap" style={{ maxWidth: '33%' }}>
                 <>
                   <Row className={subhead} color="textPrimary">
@@ -89,17 +97,19 @@ export const WalletAssetDisplay = ({ asset, isSellMode }: { asset: WalletAsset; 
                   <Row justifyContent="flex-end">
                     {uniqueSellOrdersMarketplaces.map((market, index) => {
                       return (
-                        <Box
-                          as="img"
-                          key={index}
-                          alt={market}
-                          width="16"
-                          height="16"
-                          borderRadius="4"
-                          marginLeft="4"
-                          objectFit="cover"
-                          src={`/nft/svgs/marketplaces/${market}.svg`}
-                        />
+                        market && (
+                          <Box
+                            as="img"
+                            key={index}
+                            alt={market}
+                            width="16"
+                            height="16"
+                            borderRadius="4"
+                            marginLeft="4"
+                            objectFit="cover"
+                            src={`/nft/svgs/marketplaces/${market.toLowerCase()}.svg`}
+                          />
+                        )
                       )
                     })}
                   </Row>

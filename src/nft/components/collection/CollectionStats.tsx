@@ -6,7 +6,7 @@ import { Marquee } from 'nft/components/layout/Marquee'
 import { headlineMedium } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
-import { GenieCollection } from 'nft/types'
+import { GenieCollection, TokenType } from 'nft/types'
 import { floorFormatter, quantityFormatter, roundWholePercentage, volumeFormatter } from 'nft/utils/numbers'
 import { ReactNode, useEffect, useReducer, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
@@ -15,7 +15,8 @@ import styled from 'styled-components/macro'
 import { DiscordIcon, EllipsisIcon, ExternalIcon, InstagramIcon, TwitterIcon, VerifiedIcon, XMarkIcon } from '../icons'
 import * as styles from './CollectionStats.css'
 
-const PercentChange = styled.div`
+const PercentChange = styled.div<{ isNegative: boolean }>`
+  color: ${({ theme, isNegative }) => (isNegative ? theme.accentFailure : theme.accentSuccess)};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -75,8 +76,8 @@ const MobileSocialsPopover = ({
               </Box>
             </MobileSocialsIcon>
           ) : null}
-          {collectionStats.twitter ? (
-            <MobileSocialsIcon href={'https://twitter.com/' + collectionStats.twitter}>
+          {collectionStats.twitterUrl ? (
+            <MobileSocialsIcon href={'https://twitter.com/' + collectionStats.twitterUrl}>
               <Box margin="auto" paddingTop="6">
                 <TwitterIcon
                   fill={themeVars.colors.textSecondary}
@@ -160,8 +161,8 @@ const CollectionName = ({
               />
             </SocialsIcon>
           ) : null}
-          {collectionStats.twitter ? (
-            <SocialsIcon href={'https://twitter.com/' + collectionStats.twitter}>
+          {collectionStats.twitterUrl ? (
+            <SocialsIcon href={'https://twitter.com/' + collectionStats.twitterUrl}>
               <TwitterIcon
                 fill={themeVars.colors.textSecondary}
                 color={themeVars.colors.textSecondary}
@@ -185,7 +186,7 @@ const CollectionName = ({
       </Row>
       {isMobile &&
         (collectionStats.discordUrl ||
-          collectionStats.twitter ||
+          collectionStats.twitterUrl ||
           collectionStats.instagram ||
           collectionStats.externalUrl) && (
           <MobileSocialsPopover
@@ -197,6 +198,10 @@ const CollectionName = ({
     </Row>
   )
 }
+
+const CollectionDescriptionLoading = () => (
+  <Box marginTop={{ sm: '12', md: '16' }} className={styles.descriptionLoading} />
+)
 
 const CollectionDescription = ({ description }: { description: string }) => {
   const [showReadMore, setShowReadMore] = useState(false)
@@ -218,7 +223,7 @@ const CollectionDescription = ({ description }: { description: string }) => {
   }, [descriptionRef, baseRef, isCollectionStatsLoading])
 
   return isCollectionStatsLoading ? (
-    <Box marginTop={{ sm: '12', md: '16' }} className={styles.descriptionLoading}></Box>
+    <CollectionDescriptionLoading />
   ) : (
     <Box ref={baseRef} marginTop={{ sm: '12', md: '16' }} style={{ maxWidth: '680px' }}>
       <Box
@@ -238,9 +243,9 @@ const CollectionDescription = ({ description }: { description: string }) => {
   )
 }
 
-const StatsItem = ({ children, label, isMobile }: { children: ReactNode; label: string; isMobile: boolean }) => {
+const StatsItem = ({ children, label, shouldHide }: { children: ReactNode; label: string; shouldHide: boolean }) => {
   return (
-    <Box display="flex" flexDirection={'column'} alignItems="baseline" gap="2" height="min">
+    <Box display={shouldHide ? 'none' : 'flex'} flexDirection={'column'} alignItems="baseline" gap="2" height="min">
       <span className={styles.statsValue}>{children}</span>
       <Box as="span" className={styles.statsLabel}>
         {label}
@@ -249,69 +254,110 @@ const StatsItem = ({ children, label, isMobile }: { children: ReactNode; label: 
   )
 }
 
+const statsLoadingSkeleton = (isMobile: boolean) =>
+  new Array(5).fill(null).map((_, index) => (
+    <Box
+      display="flex"
+      flexDirection={isMobile ? 'row' : 'column'}
+      alignItems="baseline"
+      gap="2"
+      height="min"
+      key={`statsLoadingSkeleton-key-${index}`}
+    >
+      <div className={styles.statsLabelLoading} />
+      <span className={styles.statsValueLoading} />
+    </Box>
+  ))
+
 const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMobile?: boolean } & BoxProps) => {
-  const uniqueOwnersPercentage = stats.stats
-    ? roundWholePercentage((stats.stats.num_owners / stats.stats.total_supply) * 100)
+  const uniqueOwnersPercentage = stats?.stats?.total_supply
+    ? roundWholePercentage(((stats.stats.num_owners ?? 0) / stats.stats.total_supply) * 100)
     : 0
-  const totalSupplyStr = stats.stats ? quantityFormatter(stats.stats.total_supply) : 0
-  const listedPercentageStr =
-    stats.stats && stats.stats.total_listings > 0
-      ? roundWholePercentage((stats.stats.total_listings / stats.stats.total_supply) * 100)
-      : 0
+  const totalSupplyStr = stats.stats ? quantityFormatter(stats.stats.total_supply ?? 0) : 0
+  const listedPercentageStr = stats?.stats?.total_supply
+    ? roundWholePercentage(((stats.stats.total_listings ?? 0) / stats.stats.total_supply) * 100)
+    : 0
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
 
   // round daily volume & floorPrice to 3 decimals or less
-  const totalVolumeStr = volumeFormatter(stats.stats?.total_volume)
-  const floorPriceStr = floorFormatter(stats.floorPrice)
-  const floorChangeStr =
-    stats.stats && stats.stats.one_day_floor_change ? Math.round(Math.abs(stats.stats.one_day_floor_change) * 100) : 0
-  const arrow = stats.stats && stats.stats.one_day_change ? getDeltaArrow(stats.stats.one_day_floor_change) : null
-
-  const statsLoadingSkeleton = new Array(5).fill(
-    <>
-      <Box display="flex" flexDirection={isMobile ? 'row' : 'column'} alignItems="baseline" gap="2" height="min">
-        <div className={styles.statsLabelLoading} />
-        <span className={styles.statsValueLoading} />
-      </Box>
-    </>
-  )
+  const totalVolumeStr = volumeFormatter(Number(stats.stats?.total_volume) ?? 0)
+  const floorPriceStr = floorFormatter(stats.stats?.floor_price ?? 0)
+  // graphQL formatted %age values out of 100, whereas v3 endpoint did a decimal between 0 & 1
+  const floorChangeStr = Math.round(Math.abs(stats?.stats?.one_day_floor_change ?? 0))
+  const arrow = stats?.stats?.one_day_floor_change ? getDeltaArrow(stats.stats.one_day_floor_change) : undefined
 
   return (
     <Row gap={{ sm: '36', md: '60' }} {...props}>
-      {isCollectionStatsLoading && statsLoadingSkeleton}
-      {stats.floorPrice ? (
-        <StatsItem label="Global floor" isMobile={isMobile ?? false}>
-          {floorPriceStr} ETH
-        </StatsItem>
-      ) : null}
-      {stats.stats?.one_day_floor_change ? (
-        <StatsItem label="24-Hour floor" isMobile={isMobile ?? false}>
-          <PercentChange>
-            {floorChangeStr}% {arrow}
-          </PercentChange>
-        </StatsItem>
-      ) : null}
-      {stats.stats?.total_volume ? (
-        <StatsItem label="Total volume" isMobile={isMobile ?? false}>
-          {totalVolumeStr} ETH
-        </StatsItem>
-      ) : null}
-      {totalSupplyStr ? (
-        <StatsItem label="Items" isMobile={isMobile ?? false}>
-          {totalSupplyStr}
-        </StatsItem>
-      ) : null}
-      {uniqueOwnersPercentage ? (
-        <StatsItem label="Unique owners" isMobile={isMobile ?? false}>
-          {uniqueOwnersPercentage}%
-        </StatsItem>
-      ) : null}
-      {stats.stats?.total_listings && listedPercentageStr > 0 ? (
-        <StatsItem label="Listed" isMobile={isMobile ?? false}>
-          {listedPercentageStr}%
-        </StatsItem>
-      ) : null}
+      {isCollectionStatsLoading ? (
+        statsLoadingSkeleton(isMobile ?? false)
+      ) : (
+        <>
+          {stats.stats?.floor_price ? (
+            <StatsItem label="Global floor" shouldHide={false}>
+              {floorPriceStr} ETH
+            </StatsItem>
+          ) : null}
+          {stats.stats?.one_day_floor_change !== undefined ? (
+            <StatsItem label="Floor 24H" shouldHide={false}>
+              <PercentChange isNegative={stats.stats.one_day_floor_change < 0}>
+                {arrow}
+                {floorChangeStr}%
+              </PercentChange>
+            </StatsItem>
+          ) : null}
+          {stats.stats?.total_volume ? (
+            <StatsItem label="Total Volume" shouldHide={false}>
+              {totalVolumeStr} ETH
+            </StatsItem>
+          ) : null}
+          {totalSupplyStr ? (
+            <StatsItem label="Items" shouldHide={isMobile ?? false}>
+              {totalSupplyStr}
+            </StatsItem>
+          ) : null}
+          {uniqueOwnersPercentage ? (
+            <StatsItem label="Unique owners" shouldHide={isMobile ?? false}>
+              {uniqueOwnersPercentage}%
+            </StatsItem>
+          ) : null}
+
+          {stats.stats?.total_listings && stats.standard !== TokenType.ERC1155 && listedPercentageStr > 0 ? (
+            <StatsItem label="Listed" shouldHide={isMobile ?? false}>
+              {listedPercentageStr}%
+            </StatsItem>
+          ) : null}
+        </>
+      )}
     </Row>
+  )
+}
+
+export const CollectionStatsLoading = ({ isMobile }: { isMobile: boolean }) => {
+  return (
+    <Column marginTop={isMobile ? '20' : '0'} position="relative" width="full">
+      <Box className={styles.collectionImageIsLoadingBackground} />
+      <Box className={styles.collectionImageIsLoading} />
+      <Box className={styles.statsText}>
+        <Box className={styles.nameTextLoading} />
+        {!isMobile && (
+          <>
+            <CollectionDescriptionLoading />
+            <Row gap={{ sm: '20', md: '60' }} marginTop="20">
+              {statsLoadingSkeleton(isMobile)}
+            </Row>
+          </>
+        )}
+      </Box>
+      {isMobile && (
+        <>
+          <Marquee>
+            <Row gap={{ sm: '20', md: '60' }} marginX="6" marginY="28">
+              {statsLoadingSkeleton(isMobile)}
+            </Row>
+          </Marquee>
+        </>
+      )}
+    </Column>
   )
 }
 
@@ -342,29 +388,22 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
       <Box className={styles.statsText}>
         <CollectionName
           collectionStats={stats}
-          name={stats.name}
-          isVerified={stats.isVerified}
+          name={stats.name ?? ''}
+          isVerified={stats.isVerified ?? false}
           isMobile={isMobile}
           collectionSocialsIsOpen={collectionSocialsIsOpen}
           toggleCollectionSocials={toggleCollectionSocials}
         />
-        {!isMobile && (
-          <>
-            {(stats.description || isCollectionStatsLoading) && (
-              <CollectionDescription description={stats.description} />
-            )}
-            <StatsRow stats={stats} marginTop="20" />
-          </>
+        {(stats.description || isCollectionStatsLoading) && !isMobile && (
+          <CollectionDescription description={stats.description ?? ''} />
         )}
+        <StatsRow display={{ sm: 'none', md: 'flex' }} stats={stats} marginTop="20" />
       </Box>
-      {isMobile && (
-        <>
-          <Box marginBottom="12">{stats.description && <CollectionDescription description={stats.description} />}</Box>
-          <Marquee>
-            <StatsRow stats={stats} marginLeft="6" marginRight="6" marginBottom="28" isMobile />
-          </Marquee>
-        </>
+      {(stats.description || isCollectionStatsLoading) && isMobile && (
+        <CollectionDescription description={stats.description ?? ''} />
       )}
+      <div id="nft-anchor-mobile" />
+      <StatsRow isMobile display={{ sm: 'flex', md: 'none' }} stats={stats} marginTop="20" marginBottom="12" />
     </Box>
   )
 }

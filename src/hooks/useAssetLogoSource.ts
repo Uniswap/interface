@@ -36,7 +36,7 @@ function getInitialUrl(address?: string | null, chainId?: number | null, isNativ
   const networkName = chainId ? chainIdToNetworkName(chainId) : 'ethereum'
   const checksummedAddress = isAddress(address)
   if (checksummedAddress) {
-    return `https://raw.githubusercontent.com/cartcrom/assets/master/blockchains/${networkName}/assets/${checksummedAddress}/logo.png`
+    return `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/${networkName}/assets/${checksummedAddress}/logo.png`
   } else {
     return undefined
   }

@@ -100,9 +100,9 @@ const urlParamsUtils = {
       clonedQuery['traits'] = clonedQuery['traits'].map((queryTrait: string) => {
         const modifiedTrait = trimTraitStr(queryTrait.replace(/(")/g, ''))
         const [trait_type, trait_value] = modifiedTrait.split(',')
-        const traitInStats = collectionStats.traits.find(
-          (item) => item.trait_type === trait_type && item.trait_value === trait_value
-        )
+        const traitInStats =
+          collectionStats.traits &&
+          collectionStats.traits[trait_type].find((trait) => trait.trait_value === trait_value)
 
         /*
           For most cases, `traitInStats` is assigned. In case the trait
@@ -163,8 +163,8 @@ export const syncLocalFiltersWithURL = (state: CollectionFilters) => {
   const url = window.location.href.split('?')[0]
   const stringifiedQuery = qs.stringify(modifiedQuery, { arrayFormat: 'comma' })
 
-  // Using pushState on purpose here. router.push() will trigger re-renders & API calls.
-  window.history.pushState({}, ``, `${url}${stringifiedQuery && `?${stringifiedQuery}`}`)
+  // Using window.history directly on purpose here. router.push() will trigger re-renders & API calls.
+  window.history.replaceState({}, ``, `${url}${stringifiedQuery && `?${stringifiedQuery}`}`)
 }
 
 export const applyFiltersFromURL = (location: Location, collectionStats: GenieCollection) => {

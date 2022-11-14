@@ -29,12 +29,13 @@ export const SortByQueries = {
 export type Trait = {
   trait_type: string
   trait_value: string
-  trait_count: number
+  trait_count?: number
   floorPrice?: number
 }
 
 interface State {
   traits: Trait[]
+  hasRarity: boolean
   markets: string[]
   minPrice: string
   maxPrice: string
@@ -48,6 +49,7 @@ interface State {
 }
 
 type Actions = {
+  setHasRarity: (hasRarity: boolean) => void
   setMarketCount: (_: Record<string, number>) => void
   addMarket: (market: string) => void
   removeMarket: (market: string) => void
@@ -72,9 +74,10 @@ export const initialCollectionFilterState: State = {
   minRarity: '',
   maxRarity: '',
   traits: [],
+  hasRarity: false,
   markets: [],
   marketCount: {},
-  buyNow: true,
+  buyNow: false,
   search: '',
   sortBy: SortBy.LowToHigh,
   showFullTraitName: { shouldShow: false, trait_value: '', trait_type: '' },
@@ -84,6 +87,7 @@ export const useCollectionFilters = create<CollectionFilters>()(
   devtools(
     (set) => ({
       ...initialCollectionFilterState,
+      setHasRarity: (hasRarity) => set({ hasRarity }),
       setSortBy: (sortBy) => set({ sortBy }),
       setSearch: (search) => set({ search }),
       setBuyNow: (buyNow) => set({ buyNow }),

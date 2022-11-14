@@ -110,6 +110,7 @@ export const ListingSection = ({
                       color="textPrimary"
                       textOverflow="ellipsis"
                       overflow="hidden"
+                      whiteSpace="nowrap"
                       maxWidth={{
                         sm: 'max',
                         md:

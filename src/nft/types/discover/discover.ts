@@ -52,6 +52,11 @@ export interface TrendingCollection {
   sales: number
 }
 
+export enum Denomination {
+  ETH = 'ETH',
+  USD = 'USD',
+}
+
 export interface CollectionTableColumn {
   collection: {
     name: string
@@ -74,4 +79,6 @@ export interface CollectionTableColumn {
   }
   sales: number
   totalSupply: number
+  denomination: Denomination
+  usdPrice?: number
 }

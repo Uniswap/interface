@@ -9,7 +9,7 @@ export const createLooksRareOrder = async (payload: any): Promise<boolean> => {
   })
   try {
     const data = await res.json()
-    return data.code === 200
+    return data.success
   } catch (e) {
     return false
   }

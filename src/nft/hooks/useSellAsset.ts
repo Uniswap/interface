@@ -1,10 +1,10 @@
-import { v4 as uuidv4 } from 'uuid'
 import create from 'zustand'
 import { devtools } from 'zustand/middleware'
 
 import { ListingMarket, ListingWarning, WalletAsset } from '../types'
 
 interface SellAssetState {
+  isSellMode: boolean
   sellAssets: WalletAsset[]
   selectSellAsset: (asset: WalletAsset) => void
   removeSellAsset: (asset: WalletAsset) => void
@@ -12,6 +12,7 @@ interface SellAssetState {
   setGlobalExpiration: (expirationTime: number) => void
   setAssetListPrice: (asset: WalletAsset, price?: number, marketplace?: ListingMarket) => void
   setGlobalMarketplaces: (marketplaces: ListingMarket[]) => void
+  setIsSellMode: (b: boolean) => void
   removeAssetMarketplace: (asset: WalletAsset, marketplace: ListingMarket) => void
   addMarketplaceWarning: (asset: WalletAsset, warning: ListingWarning) => void
   removeMarketplaceWarning: (asset: WalletAsset, warning: ListingWarning, setGlobalOverride?: boolean) => void
@@ -21,20 +22,25 @@ interface SellAssetState {
 export const useSellAsset = create<SellAssetState>()(
   devtools(
     (set) => ({
+      isSellMode: false,
       sellAssets: [],
       selectSellAsset: (asset) =>
         set(({ sellAssets }) => {
-          const assetWithId = { id: uuidv4(), ...asset }
-          if (sellAssets.length === 0) return { sellAssets: [assetWithId] }
-          else return { sellAssets: [...sellAssets, assetWithId] }
+          if (sellAssets.length === 0) return { sellAssets: [asset] }
+          else return { sellAssets: [...sellAssets, asset] }
         }),
       removeSellAsset: (asset) => {
         set(({ sellAssets }) => {
           if (sellAssets.length === 0) return { sellAssets: [] }
-          else sellAssets.find((x) => x.id === asset.id)
+          else
+            sellAssets.find(
+              (x) => asset.tokenId === x.tokenId && x.asset_contract.address === asset.asset_contract.address
+            )
           const assetsCopy = [...sellAssets]
           assetsCopy.splice(
-            sellAssets.findIndex((n) => n.id === asset.id),
+            sellAssets.findIndex(
+              (n) => n.tokenId === asset.tokenId && n.asset_contract.address === asset.asset_contract.address
+            ),
             1
           )
           return { sellAssets: assetsCopy }
@@ -63,7 +69,9 @@ export const useSellAsset = create<SellAssetState>()(
               if (listingIndex === 0) asset.marketAgnosticPrice = price
             } else asset.newListings?.push({ price, marketplace, overrideFloorPrice: false })
           } else asset.marketAgnosticPrice = price
-          const index = sellAssets.findIndex((n) => n.id === asset.id)
+          const index = sellAssets.findIndex(
+            (n) => n.tokenId === asset.tokenId && n.asset_contract.address === asset.asset_contract.address
+          )
           assetsCopy[index] = asset
           return { sellAssets: assetsCopy }
         })
@@ -90,6 +98,7 @@ export const useSellAsset = create<SellAssetState>()(
           return { sellAssets: assetsCopy }
         })
       },
+      setIsSellMode: (isSellMode) => set(() => ({ isSellMode })),
       removeAssetMarketplace: (asset, marketplace) => {
         set(({ sellAssets }) => {
           const assetsCopy = [...sellAssets]
@@ -110,7 +119,9 @@ export const useSellAsset = create<SellAssetState>()(
         set(({ sellAssets }) => {
           const assetsCopy = [...sellAssets]
           asset.listingWarnings?.push(warning)
-          const index = sellAssets.findIndex((n) => n.id === asset.id)
+          const index = sellAssets.findIndex(
+            (n) => n.tokenId === asset.tokenId && n.asset_contract.address === asset.asset_contract.address
+          )
           assetsCopy[index] = asset
           return { sellAssets: assetsCopy }
         })
@@ -131,7 +142,9 @@ export const useSellAsset = create<SellAssetState>()(
               asset.newListings[listingIndex].overrideFloorPrice = true
             }
           }
-          const index = sellAssets.findIndex((n) => n.id === asset.id)
+          const index = sellAssets.findIndex(
+            (n) => n.tokenId === asset.tokenId && n.asset_contract.address === asset.asset_contract.address
+          )
           assetsCopy[index] = asset
           return { sellAssets: assetsCopy }
         })

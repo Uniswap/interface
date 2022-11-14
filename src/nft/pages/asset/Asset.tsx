@@ -1,33 +1,44 @@
-import { PageName } from 'analytics/constants'
-import { Trace } from 'analytics/Trace'
+import { Trace } from '@uniswap/analytics'
+import { PageName } from '@uniswap/analytics-events'
+import { useDetailsQuery } from 'graphql/data/nft/Details'
 import { AssetDetails } from 'nft/components/details/AssetDetails'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
-import { fetchSingleAsset } from 'nft/queries'
 import { useMemo } from 'react'
-import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 const AssetContainer = styled.div`
   display: flex;
-  padding-right: 116px;
-  padding-left: 116px;
+  width: 100%;
+  justify-content: center;
+  gap: 60px;
+  padding: 48px 48px 0 48px;
+
+  @media (max-width: 960px) {
+    padding: 40px 40px 0 40px;
+  }
+  @media (max-width: 540px) {
+    padding: 20px 20px 0 20px;
+  }
+  @media (max-width: 420px) {
+    padding: 16px 16px 0 16px;
+  }
+`
+
+const AssetPriceDetailsContainer = styled.div`
+  min-width: 360px;
+  position: relative;
+
+  @media (max-width: 960px) {
+    display: none;
+  }
 `
 
 const Asset = () => {
   const { tokenId = '', contractAddress = '' } = useParams()
-  const { data } = useQuery(
-    ['assetDetail', contractAddress, tokenId],
-    () => fetchSingleAsset({ contractAddress, tokenId }),
-    {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-    }
-  )
+  const data = useDetailsQuery(contractAddress, tokenId)
 
-  const asset = useMemo(() => (data ? data[0] : undefined), [data])
-  const collection = useMemo(() => (data ? data[1] : undefined), [data])
+  const [asset, collection] = useMemo(() => data ?? [], [data])
 
   return (
     <>
@@ -39,11 +50,11 @@ const Asset = () => {
         {asset && collection ? (
           <AssetContainer>
             <AssetDetails collection={collection} asset={asset} />
-            <AssetPriceDetails collection={collection} asset={asset} />
+            <AssetPriceDetailsContainer>
+              <AssetPriceDetails collection={collection} asset={asset} />
+            </AssetPriceDetailsContainer>
           </AssetContainer>
-        ) : (
-          <div>Holder for loading ...</div>
-        )}
+        ) : null}
       </Trace>
     </>
   )

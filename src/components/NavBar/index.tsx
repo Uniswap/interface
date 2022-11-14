@@ -3,10 +3,12 @@ import { useWeb3React } from '@web3-react/core'
 import Web3Status from 'components/Web3Status'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { chainIdToBackendName } from 'graphql/data/util'
+import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { UniIcon } from 'nft/components/icons'
-import { ReactNode } from 'react'
+import { useIsMobile } from 'nft/hooks'
+import { ReactNode, useMemo } from 'react'
 import { NavLink, NavLinkProps, useLocation } from 'react-router-dom'
 
 import { ChainSelector } from './ChainSelector'
@@ -48,6 +50,8 @@ const PageTabs = () => {
     pathname.startsWith('/increase') ||
     pathname.startsWith('/find')
 
+  const isNftPage = useIsNftPage()
+
   return (
     <>
       <MenuItem href="/swap" isActive={pathname.startsWith('/swap')}>
@@ -57,7 +61,7 @@ const PageTabs = () => {
         <Trans>Tokens</Trans>
       </MenuItem>
       {nftFlag === NftVariant.Enabled && (
-        <MenuItem href="/nfts" isActive={pathname.startsWith('/nfts')}>
+        <MenuItem href="/nfts" isActive={isNftPage}>
           <Trans>NFTs</Trans>
         </MenuItem>
       )}
@@ -68,9 +72,29 @@ const PageTabs = () => {
   )
 }
 
-const Navbar = () => {
+const useShouldHideNavbar = () => {
   const { pathname } = useLocation()
-  const isNftPage = pathname.startsWith('/nfts') || pathname.startsWith('/profile')
+  const isMobile = useIsMobile()
+
+  const shouldHideNavbar = useMemo(() => {
+    const paths = ['/nfts/profile']
+    if (!isMobile) return false
+
+    for (const path of paths) {
+      if (pathname.includes(path)) return true
+    }
+
+    return false
+  }, [isMobile, pathname])
+
+  return shouldHideNavbar
+}
+
+const Navbar = () => {
+  const shouldHideNavbar = useShouldHideNavbar()
+  const isNftPage = useIsNftPage()
+
+  if (shouldHideNavbar) return null
 
   return (
     <>

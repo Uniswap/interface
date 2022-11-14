@@ -76,13 +76,16 @@ export const detailsOpen = style([
   }),
 ])
 
+export const MAX_FILTER_DROPDOWN_HEIGHT = 302
+
 export const filterDropDowns = style([
   borderBottom,
   sprinkles({
-    overflowY: 'scroll',
+    paddingLeft: '0',
+    paddingBottom: '8',
   }),
   {
-    maxHeight: '302px',
+    maxHeight: `${MAX_FILTER_DROPDOWN_HEIGHT}px`,
     '::-webkit-scrollbar': { display: 'none' },
     scrollbarWidth: 'none',
   },

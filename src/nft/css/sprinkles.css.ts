@@ -37,6 +37,11 @@ const themeContractValues = {
     deep: '',
     shallow: '',
   },
+
+  opacity: {
+    hover: '0.6',
+    pressed: '0.4',
+  },
 }
 
 export type Theme = typeof themeContractValues
@@ -173,19 +178,29 @@ export const vars = createGlobalTheme(':root', {
     green400: '#1A9550',
     violet200: '#BDB8FA',
     violet400: '#7A7BEB',
-    grey900: '#0E111A',
-    grey800: '#141B2B',
-    grey700: '#293249',
-    grey500: '#5E6887',
-    grey400: '#7C85A2',
-    grey300: '#99A1BD',
-    grey200: '#B7BED4',
-    grey100: '#DDE3F7',
-    grey50: '#F5F6FC',
+    gray50: '#F5F6FC',
+    gray100: '#E8ECFB',
+    gray150: '#D2D9EE',
+    gray200: '#B8C0DC',
+    gray250: '#A6AFCA',
+    gray300: '#98A1C0',
+    gray350: '#888FAB',
+    gray400: '#7780A0',
+    gray450: '#6B7594',
+    gray500: '#5D6785',
+    gray550: '#505A78',
+    gray600: '#404A67',
+    gray650: '#333D59',
+    gray700: '#293249',
+    gray750: '#1B2236',
+    gray800: '#131A2A',
+    gray850: '#0E1524',
+    gray900: '#0D111C',
     accentTextLightTertiary: 'rgba(255, 255, 255, 0.12)',
     outline: 'rgba(153, 161, 189, 0.24)',
     lightGrayOverlay: '#99A1BD14',
     accentActiveSoft: '#4c82fb3d',
+    accentActive: '#4C82FB',
   },
   border: {
     transculent: '1.5px solid rgba(0, 0, 0, 0.1)',
@@ -265,19 +280,9 @@ const flexAlignment = [
 
 const overflow = ['hidden', 'inherit', 'scroll', 'visible', 'auto'] as const
 
-const borderWidth = ['0px', '0.5px', '1px', '1.5px', '2px', '4px']
+const borderWidth = ['0px', '0.5px', '1px', '1.5px', '2px', '3px', '4px']
 
 const borderStyle = ['none', 'solid'] as const
-
-// TODO: remove when code is done being ported over
-// I'm leaving this here as a reference of the old breakpoints while we port over the new code
-// tabletSm: 656,
-// tablet: 708,
-// tabletL: 784,
-// tabletXl: 830,
-// desktop: 948,
-// desktopL: 1030,
-// desktopXl: 1260,
 
 export const breakpoints = {
   sm: 640,
@@ -366,6 +371,7 @@ const colorStyles = defineProperties({
     color: vars.color,
     background: vars.color,
     borderColor: vars.color,
+    borderLeftColor: vars.color,
     borderBottomColor: vars.color,
     borderTopColor: vars.color,
     backgroundColor: vars.color,
@@ -385,6 +391,7 @@ const unresponsiveProperties = defineProperties({
   properties: {
     cursor: ['default', 'pointer', 'auto'],
     borderStyle,
+    borderLeftStyle: borderStyle,
     borderBottomStyle: borderStyle,
     borderTopStyle: borderStyle,
     borderRadius: vars.radii,

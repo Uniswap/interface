@@ -13,10 +13,10 @@ export const darkTheme: Theme = {
     violet: vars.color.violet200,
 
     backgroundFloating: '0000000C',
-    backgroundInteractive: vars.color.grey700,
-    backgroundModule: vars.color.grey800,
+    backgroundInteractive: vars.color.gray700,
+    backgroundModule: vars.color.gray800,
     backgroundOutline: `rgba(153,161,189,0.24)`,
-    backgroundSurface: vars.color.grey900,
+    backgroundSurface: vars.color.gray900,
     backgroundBackdrop: '#000',
 
     modalBackdrop: 'linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7))',
@@ -24,8 +24,8 @@ export const darkTheme: Theme = {
     stateOverlayHover: `rgba(153,161,189,0.08)`,
 
     textPrimary: '#FFFFFF',
-    textSecondary: vars.color.grey300,
-    textTertiary: vars.color.grey500,
+    textSecondary: vars.color.gray300,
+    textTertiary: vars.color.gray500,
   },
   shadows: {
     menu: '0px 10px 30px rgba(0, 0, 0, 0.1)',
@@ -34,5 +34,9 @@ export const darkTheme: Theme = {
     tooltip: '0px 4px 16px rgba(255, 255, 255, 0.2)',
     deep: '12px 16px 24px rgba(0, 0, 0, 0.24), 12px 8px 12px rgba(0, 0, 0, 0.24), 4px 4px 8px rgba(0, 0, 0, 0.32)',
     shallow: '4px 4px 10px rgba(0, 0, 0, 0.24), 2px 2px 4px rgba(0, 0, 0, 0.12), 1px 2px 2px rgba(0, 0, 0, 0.12)',
+  },
+  opacity: {
+    hover: '0.6',
+    pressed: '0.4',
   },
 }

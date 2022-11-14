@@ -1,7 +1,14 @@
 import { assetList } from 'nft/components/collection/CollectionNfts.css'
 import styled from 'styled-components/macro'
 
+import { DEFAULT_WALLET_ASSET_QUERY_AMOUNT } from './ProfilePage'
+
 const SkeletonPageWrapper = styled.div`
+  padding: 40px 72px 52px;
+  width: 100%;
+`
+
+const SkeletonBodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -64,9 +71,9 @@ export const ProfileAssetCardSkeleton = styled.div`
   border-radius: 20px;
 `
 
-export const ProfilePageLoadingSkeleton = () => {
+export const ProfileBodyLoadingSkeleton = () => {
   return (
-    <SkeletonPageWrapper>
+    <SkeletonBodyWrapper>
       <AccountDetailsSkeletonWrapper>
         <ProfilePictureSkeleton />
         <ProfileDetailsSkeleton />
@@ -76,10 +83,18 @@ export const ProfilePageLoadingSkeleton = () => {
         <SellButtonSkeleton />
       </FilterBarSkeletonWrapper>
       <div className={assetList}>
-        {new Array(25).map((_, index) => (
+        {Array.from(Array(DEFAULT_WALLET_ASSET_QUERY_AMOUNT), (_, index) => (
           <ProfileAssetCardSkeleton key={index} />
         ))}
       </div>
+    </SkeletonBodyWrapper>
+  )
+}
+
+export const ProfilePageLoadingSkeleton = () => {
+  return (
+    <SkeletonPageWrapper>
+      <ProfileBodyLoadingSkeleton />
     </SkeletonPageWrapper>
   )
 }

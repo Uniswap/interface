@@ -1,19 +1,17 @@
 import 'rc-slider/assets/index.css'
 
-import { sendAnalyticsEvent } from 'analytics'
-import { EventName, FilterTypes } from 'analytics/constants'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { EventName, FilterTypes } from '@uniswap/analytics-events'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
 import { body } from 'nft/css/common.css'
-import { useIsMobile } from 'nft/hooks'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { usePriceRange } from 'nft/hooks/usePriceRange'
 import { TraitPosition } from 'nft/hooks/useTraitsOpen'
 import { scrollToTop } from 'nft/utils/scrollToTop'
 import { default as Slider } from 'rc-slider'
-import { FormEvent, useEffect, useState } from 'react'
-import { FocusEventHandler } from 'react'
+import { FocusEventHandler, FormEvent, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 
@@ -38,7 +36,6 @@ export const PriceRange = () => {
   const setPrevMinMax = usePriceRange((state) => state.setPrevMinMax)
   const theme = useTheme()
 
-  const isMobile = useIsMobile()
   const location = useLocation()
 
   useEffect(() => {
@@ -83,7 +80,7 @@ export const PriceRange = () => {
     }
 
     // set min price for price range querying
-    setMinPrice(v.currentTarget.value)
+    setMinPrice(v.currentTarget.value.toString())
     scrollToTop()
   }
 
@@ -125,8 +122,8 @@ export const PriceRange = () => {
     const maxChange = (100 - newMax) / 100
     const newMaxPrice = priceRangeHighNumber - maxChange * diff
 
-    setMinPrice(newMinPrice.toFixed(2))
-    setMaxPrice(newMaxPrice.toFixed(2))
+    setMinPrice(newMinPrice.toFixed(2).toString())
+    setMaxPrice(newMaxPrice.toFixed(2).toString())
 
     // set back to placeholder when they move back to end of range
     if (newMin === 0) {
@@ -142,11 +139,11 @@ export const PriceRange = () => {
 
   return (
     <TraitsHeader title="Price range" index={TraitPosition.PRICE_RANGE_INDEX}>
-      <Row gap="12" marginTop="12" color="textPrimary">
+      <Row marginTop="12" color="textPrimary" justifyContent="space-between">
         <Row position="relative">
           <NumericInput
             style={{
-              width: isMobile ? '100%' : '126px',
+              width: '126px',
             }}
             className={styles.priceInput}
             placeholder={priceRangeLow}
@@ -157,10 +154,10 @@ export const PriceRange = () => {
           />
         </Row>
         <Box className={body}>to</Box>
-        <Row position="relative" flex="1">
+        <Row position="relative">
           <NumericInput
             style={{
-              width: isMobile ? '100%' : '126px',
+              width: '126px',
             }}
             className={styles.priceInput}
             placeholder={priceRangeHigh}

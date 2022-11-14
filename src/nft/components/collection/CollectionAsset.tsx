@@ -1,16 +1,13 @@
-import { BigNumber } from '@ethersproject/bignumber'
+import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
+import { EventName, PageName } from '@uniswap/analytics-events'
 import { useBag } from 'nft/hooks'
 import { GenieAsset, Markets, UniformHeight } from 'nft/types'
-import { formatWeiToDecimal, isAudio, isVideo, rarityProviderLogo } from 'nft/utils'
-import { MouseEvent, useMemo } from 'react'
+import { formatWeiToDecimal, rarityProviderLogo } from 'nft/utils'
+import { useCallback, useMemo } from 'react'
 
+import { useAssetMediaType, useNotForSale } from './Card'
+import { AssetMediaType } from './Card'
 import * as Card from './Card'
-
-enum AssetMediaType {
-  Image,
-  Video,
-  Audio,
-}
 
 interface CollectionAssetProps {
   asset: GenieAsset
@@ -31,11 +28,13 @@ export const CollectionAsset = ({
   setCurrentTokenPlayingMedia,
   rarityVerified,
 }: CollectionAssetProps) => {
+  const bagManuallyClosed = useBag((state) => state.bagManuallyClosed)
   const addAssetsToBag = useBag((state) => state.addAssetsToBag)
   const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
   const itemsInBag = useBag((state) => state.itemsInBag)
   const bagExpanded = useBag((state) => state.bagExpanded)
-  const toggleBag = useBag((state) => state.toggleBag)
+  const setBagExpanded = useBag((state) => state.setBagExpanded)
+  const trace = useTrace({ page: PageName.NFT_COLLECTION_PAGE })
 
   const { quantity, isSelected } = useMemo(() => {
     return {
@@ -48,49 +47,70 @@ export const CollectionAsset = ({
     }
   }, [asset, itemsInBag])
 
-  const { notForSale, assetMediaType } = useMemo(() => {
-    let notForSale = true
-    let assetMediaType = AssetMediaType.Image
-
-    notForSale = asset.notForSale || BigNumber.from(asset.priceInfo.ETHPrice ? asset.priceInfo.ETHPrice : 0).lt(0)
-    if (isAudio(asset.animationUrl)) {
-      assetMediaType = AssetMediaType.Audio
-    } else if (isVideo(asset.animationUrl)) {
-      assetMediaType = AssetMediaType.Video
-    }
-
-    return {
-      notForSale,
-      assetMediaType,
-    }
-  }, [asset])
+  const notForSale = useNotForSale(asset)
+  const assetMediaType = useAssetMediaType(asset)
 
   const { provider, rarityLogo } = useMemo(() => {
     return {
-      provider: asset.rarity?.providers.find(({ provider: _provider }) => _provider === asset.rarity?.primaryProvider),
+      provider: asset?.rarity?.providers?.find(
+        ({ provider: _provider }) => _provider === asset.rarity?.primaryProvider
+      ),
       rarityLogo: rarityProviderLogo[asset.rarity?.primaryProvider ?? 0] ?? '',
     }
   }, [asset])
 
+  const handleAddAssetToBag = useCallback(() => {
+    addAssetsToBag([asset])
+    if (!bagExpanded && !isMobile && !bagManuallyClosed) {
+      setBagExpanded({ bagExpanded: true })
+    }
+    sendAnalyticsEvent(EventName.NFT_BUY_ADDED, {
+      collection_address: asset.address,
+      token_id: asset.tokenId,
+      token_type: asset.tokenType,
+      ...trace,
+    })
+  }, [addAssetsToBag, asset, bagExpanded, bagManuallyClosed, isMobile, setBagExpanded, trace])
+
+  const handleRemoveAssetFromBag = useCallback(() => {
+    removeAssetsFromBag([asset])
+  }, [asset, removeAssetsFromBag])
+
   return (
-    <Card.Container asset={asset} selected={isSelected}>
-      {assetMediaType === AssetMediaType.Image ? (
-        <Card.Image uniformHeight={uniformHeight} setUniformHeight={setUniformHeight} />
-      ) : assetMediaType === AssetMediaType.Video ? (
-        <Card.Video
-          uniformHeight={uniformHeight}
-          setUniformHeight={setUniformHeight}
-          shouldPlay={mediaShouldBePlaying}
-          setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-        />
-      ) : (
-        <Card.Audio
-          uniformHeight={uniformHeight}
-          setUniformHeight={setUniformHeight}
-          shouldPlay={mediaShouldBePlaying}
-          setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-        />
-      )}
+    <Card.Container
+      asset={asset}
+      selected={isSelected}
+      addAssetToBag={handleAddAssetToBag}
+      removeAssetFromBag={handleRemoveAssetFromBag}
+    >
+      <Card.ImageContainer>
+        {asset.tokenType === 'ERC1155' && quantity > 0 && <Card.Erc1155Controls quantity={quantity.toString()} />}
+        {asset.rarity && provider && (
+          <Card.Ranking
+            rarity={asset.rarity}
+            provider={provider}
+            rarityVerified={!!rarityVerified}
+            rarityLogo={rarityLogo}
+          />
+        )}
+        {assetMediaType === AssetMediaType.Image ? (
+          <Card.Image uniformHeight={uniformHeight} setUniformHeight={setUniformHeight} />
+        ) : assetMediaType === AssetMediaType.Video ? (
+          <Card.Video
+            uniformHeight={uniformHeight}
+            setUniformHeight={setUniformHeight}
+            shouldPlay={mediaShouldBePlaying}
+            setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+          />
+        ) : (
+          <Card.Audio
+            uniformHeight={uniformHeight}
+            setUniformHeight={setUniformHeight}
+            shouldPlay={mediaShouldBePlaying}
+            setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+          />
+        )}
+      </Card.ImageContainer>
       <Card.DetailsContainer>
         <Card.InfoContainer>
           <Card.PrimaryRow>
@@ -98,14 +118,7 @@ export const CollectionAsset = ({
               <Card.PrimaryInfo>{asset.name ? asset.name : `#${asset.tokenId}`}</Card.PrimaryInfo>
               {asset.susFlag && <Card.Suspicious />}
             </Card.PrimaryDetails>
-            {asset.rarity && provider && provider.rank && (
-              <Card.Ranking
-                rarity={asset.rarity}
-                provider={provider}
-                rarityVerified={!!rarityVerified}
-                rarityLogo={rarityLogo}
-              />
-            )}
+            <Card.DetailsLink />
           </Card.PrimaryRow>
           <Card.SecondaryRow>
             <Card.SecondaryDetails>
@@ -119,21 +132,6 @@ export const CollectionAsset = ({
             )}
           </Card.SecondaryRow>
         </Card.InfoContainer>
-        <Card.Button
-          quantity={quantity}
-          selectedChildren={'Remove'}
-          onClick={(e: MouseEvent) => {
-            e.preventDefault()
-            addAssetsToBag([asset])
-            !bagExpanded && !isMobile && toggleBag()
-          }}
-          onSelectedClick={(e: MouseEvent) => {
-            e.preventDefault()
-            removeAssetsFromBag([asset])
-          }}
-        >
-          {'Buy now'}
-        </Card.Button>
       </Card.DetailsContainer>
     </Card.Container>
   )

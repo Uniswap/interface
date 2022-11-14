@@ -5,8 +5,7 @@ import { Row } from 'nft/components/Flex'
 import { ArrowsIcon, ChevronUpIcon, ReversedArrowsIcon } from 'nft/components/icons'
 import { buttonTextMedium } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
-import { useIsCollectionLoading } from 'nft/hooks'
-import { useCollectionFilters } from 'nft/hooks'
+import { useCollectionFilters, useIsCollectionLoading } from 'nft/hooks'
 import { DropDownOption } from 'nft/types'
 import { useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react'
 
@@ -66,7 +65,7 @@ export const SortDropdown = ({
         fontSize="14"
         borderRadius="12"
         borderStyle={isOpen && !mini ? 'solid' : 'none'}
-        background={mini ? 'none' : 'backgroundModule'}
+        background={mini ? 'none' : 'backgroundInteractive'}
         borderColor="backgroundOutline"
         borderWidth="1px"
         borderBottomLeftRadius={isOpen ? '0' : undefined}
@@ -84,7 +83,7 @@ export const SortDropdown = ({
       >
         {!isCollectionStatsLoading && (
           <>
-            <Box display="flex" alignItems="center">
+            <Box display="flex" alignItems="center" color="textPrimary">
               {!isOpen && reversable && (
                 <Row
                   onClick={(e) => {
@@ -138,7 +137,7 @@ export const SortDropdown = ({
         right={inFilters ? '16' : 'auto'}
         paddingBottom="8"
         fontSize="14"
-        background="backgroundModule"
+        background="backgroundInteractive"
         borderStyle="solid"
         borderColor="backgroundOutline"
         borderWidth="1px"
@@ -217,11 +216,6 @@ const DropDownItem = ({
       onClick={onClick}
       cursor="pointer"
     >
-      {option.icon && (
-        <Box width="28" height="28">
-          {option.icon}
-        </Box>
-      )}
       <Box marginLeft="8" className={buttonTextMedium}>
         {option.displayText}
       </Box>
