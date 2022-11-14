@@ -204,13 +204,13 @@ export function NotificationContentSmall({
         bg="background0"
         borderColor="background3"
         borderRadius="full"
-        borderWidth={1}
+        borderWidth={1.5}
         p="sm"
         onPress={onPress}
         onPressIn={onPressIn}>
         <Flex row alignItems="center" gap="xs" justifyContent="flex-start">
           {icon}
-          <Text adjustsFontSizeToFit numberOfLines={1} variant="bodySmall">
+          <Text adjustsFontSizeToFit numberOfLines={1} variant="subheadSmall">
             {title}
           </Text>
         </Flex>
