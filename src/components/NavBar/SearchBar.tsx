@@ -149,7 +149,10 @@ export const SearchBar = () => {
                   !isOpen && toggleOpen()
                   setSearchValue(event.target.value)
                 }}
-                onBlur={() => sendAnalyticsEvent(EventName.NAVBAR_SEARCH_EXITED, navbarSearchEventProperties)}
+                onBlur={() => {
+                  console.log('stuff', navbarSearchEventProperties)
+                  sendAnalyticsEvent(EventName.NAVBAR_SEARCH_EXITED, navbarSearchEventProperties)
+                }}
                 className={`${styles.searchBarInput} ${
                   showCenteredSearchContent ? styles.searchContentCentered : styles.searchContentLeftAlign
                 }`}

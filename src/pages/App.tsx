@@ -88,18 +88,19 @@ const Marginer = styled.div`
 `
 
 function getCurrentPageFromLocation(locationPathname: string): PageName | undefined {
-  switch (locationPathname) {
-    case '/swap':
+  switch (true) {
+    case locationPathname.includes('/swap'):
       return PageName.SWAP_PAGE
-    case '/vote':
+    case locationPathname.includes('/vote'):
       return PageName.VOTE_PAGE
-    case '/pool':
+    case locationPathname.includes('/pool'):
       return PageName.POOL_PAGE
-    case '/tokens':
+    case locationPathname.includes('/tokens'):
       return PageName.TOKENS_PAGE
-    default:
-      return undefined
+    case locationPathname.includes('/nfts'):
+      return PageName.NFT_COLLECTION_PAGE
   }
+  return
 }
 
 // this is the same svg defined in assets/images/blue-loader.svg
