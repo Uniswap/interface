@@ -7,14 +7,15 @@ import { opacify } from 'src/utils/colors'
 
 export const theme = createTheme({
   borderRadii,
+  // https://iosref.com/res#iphone
   breakpoints: {
-    phone: 0,
-    longPhone: {
+    // iPhone SE (3rd generation) or iPhone 8
+    xs: 0,
+    // everything else
+    sm: {
       width: 0,
-      height: 812,
+      height: 736,
     },
-    tablet: 768,
-    largeTablet: 1024,
   },
   colors: {
     // The following two colors are the same to accomodate incorrect colors in dark mode. See comment in the dark mode section

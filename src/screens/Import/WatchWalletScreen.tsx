@@ -12,7 +12,7 @@ import { useENS } from 'src/features/ens/useENS'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { importAccountActions } from 'src/features/import/importAccountSaga'
 import { ImportAccountType } from 'src/features/import/types'
-import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
+import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useIsSmartContractAddress } from 'src/features/transactions/transfer/hooks'
 import { useAccounts } from 'src/features/wallet/hooks'
@@ -107,7 +107,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props) {
   }, [value])
 
   return (
-    <OnboardingScreen
+    <SafeKeyboardOnboardingScreen
       subtitle={t(
         'Enter an Ethereum wallet address (starting with 0x) or ENS name (ending in .eth).'
       )}
@@ -133,6 +133,6 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props) {
         name={ElementName.Next}
         onPress={onSubmit}
       />
-    </OnboardingScreen>
+    </SafeKeyboardOnboardingScreen>
   )
 }

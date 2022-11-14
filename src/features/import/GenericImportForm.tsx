@@ -1,3 +1,4 @@
+import { useResponsiveProp } from '@shopify/restyle'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LayoutRectangle, StyleSheet, TextInput as NativeTextInput } from 'react-native'
@@ -11,9 +12,6 @@ import { Text } from 'src/components/Text'
 import { flex } from 'src/styles/flex'
 import { SectionName } from '../telemetry/constants'
 
-const INPUT_VALUES = {
-  height: 120,
-}
 interface Props {
   value: string | undefined
   errorMessage: string | undefined
@@ -88,9 +86,9 @@ export function GenericImportForm({
           borderWidth={1}
           flexShrink={1}
           gap="none"
-          minHeight={INPUT_VALUES.height}
-          px="xl"
-          py="md"
+          minHeight={useResponsiveProp({ xs: 90, sm: 120 })}
+          px={useResponsiveProp({ xs: 'lg', sm: 'xl' })}
+          py={useResponsiveProp({ xs: 'xs', sm: 'md' })}
           width="100%">
           <Flex row alignItems="flex-end" gap="none" pb="xxs">
             <TextInput

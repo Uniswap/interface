@@ -9,7 +9,7 @@ import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenConte
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { importAccountActions, IMPORT_WALLET_AMOUNT } from 'src/features/import/importAccountSaga'
 import { ImportAccountType } from 'src/features/import/types'
-import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
+import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import {
@@ -104,10 +104,10 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props) 
   }
 
   return (
-    <OnboardingScreen
+    <SafeKeyboardOnboardingScreen
       subtitle={t('Your recovery phrase will only be stored locally on your device.')}
       title={t('Enter your recovery phrase')}>
-      <Flex pt="lg">
+      <Flex>
         <GenericImportForm
           autoCorrect
           blurOnSubmit
@@ -128,6 +128,6 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props) 
         name={ElementName.Next}
         onPress={onSubmit}
       />
-    </OnboardingScreen>
+    </SafeKeyboardOnboardingScreen>
   )
 }
