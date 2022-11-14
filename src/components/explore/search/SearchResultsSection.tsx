@@ -5,7 +5,7 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { SearchEtherscanItem } from 'src/components/explore/search/items/SearchEtherscanItem'
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
 import { SearchWalletItem } from 'src/components/explore/search/items/SearchWalletItem'
-import { AnimatedFlex, Box, Flex } from 'src/components/layout'
+import { AnimatedFlex, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
@@ -14,6 +14,7 @@ import { EMPTY_ARRAY } from 'src/constants/misc'
 import { useSearchResultsQuery } from 'src/data/__generated__/types-and-hooks'
 import { useENS } from 'src/features/ens/useENS'
 import { SearchResultType, TokenSearchResult } from 'src/features/explore/searchHistorySlice'
+import { useIsSmartContractAddress } from 'src/features/transactions/transfer/hooks'
 import { getValidAddress } from 'src/utils/addresses'
 import { fromGraphQLChain } from 'src/utils/chainId'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
@@ -26,7 +27,7 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }) {
   // Search for matching tokens
   const {
     data: tokenResultsData,
-    loading,
+    loading: tokenResultsLoading,
     error,
     refetch,
   } = useSearchResultsQuery({
@@ -69,18 +70,23 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }) {
   } = useENS(ChainId.Mainnet, searchQuery, true)
 
   // TODO: Support searching token by address
-  const etherscanAddress: Address | null = getValidAddress(searchQuery, true, false)
+  const validAddress: Address | null = getValidAddress(searchQuery, true, false)
     ? searchQuery
     : null
 
+  // Search for matching EOA wallet address
+  const { isSmartContractAddress, loading: loadingIsSmartContractAddress } =
+    useIsSmartContractAddress(validAddress ?? undefined, ChainId.Mainnet)
+
+  const walletsLoading = ensLoading || loadingIsSmartContractAddress
   const noENSResults = !ensLoading && !ensName && !ensAddress
-  const noResults = tokenResults.length === 0 && noENSResults && !etherscanAddress
+  const noResults = tokenResults.length === 0 && noENSResults && !validAddress
 
   const onRetry = useCallback(() => {
     refetch()
   }, [refetch])
 
-  if (loading) return <SearchResultsLoader />
+  if (tokenResultsLoading || walletsLoading) return <SearchResultsLoader />
 
   if (error) {
     return (
@@ -106,6 +112,9 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }) {
     )
   }
 
+  const hasENSResult = ensName && ensAddress
+  const hasEOAResult = validAddress && !isSmartContractAddress
+
   return (
     <Flex grow gap="xs">
       {tokenResults.length > 0 && (
@@ -121,29 +130,27 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }) {
           renderItem={renderTokenItem}
         />
       )}
-      {(ensLoading || (ensName && ensAddress)) && (
+      {(hasENSResult || hasEOAResult) && (
         <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="none">
           <Text color="textSecondary" mx="xs" variant="subheadSmall">
             {t('Wallets')}
           </Text>
-          {ensName && ensAddress ? (
+          {hasENSResult ? (
             <SearchWalletItem
               wallet={{ type: SearchResultType.Wallet, address: ensAddress, ensName }}
             />
-          ) : (
-            <Box mx="xs">
-              <Loading repeat={1} type="token" />
-            </Box>
-          )}
+          ) : hasEOAResult ? (
+            <SearchWalletItem wallet={{ type: SearchResultType.Wallet, address: validAddress }} />
+          ) : null}
         </AnimatedFlex>
       )}
-      {etherscanAddress && (
+      {validAddress && (
         <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="none">
           <Text color="textSecondary" mx="xs" variant="subheadSmall">
             {t('View on Etherscan')}
           </Text>
           <SearchEtherscanItem
-            etherscanResult={{ type: SearchResultType.Etherscan, address: etherscanAddress }}
+            etherscanResult={{ type: SearchResultType.Etherscan, address: validAddress }}
           />
         </AnimatedFlex>
       )}
