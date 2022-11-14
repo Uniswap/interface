@@ -1,7 +1,9 @@
 import graphql from 'babel-plugin-relay/macro'
 import { parseEther } from 'ethers/lib/utils'
+import { DEFAULT_WALLET_ASSET_QUERY_AMOUNT } from 'nft/components/profile/view/ProfilePage'
 import { WalletAsset } from 'nft/types'
-import { useLazyLoadQuery, usePaginationFragment } from 'react-relay'
+import { useEffect } from 'react'
+import { useLazyLoadQuery, usePaginationFragment, useQueryLoader } from 'react-relay'
 
 import { NftBalancePaginationQuery } from './__generated__/NftBalancePaginationQuery.graphql'
 import { NftBalanceQuery } from './__generated__/NftBalanceQuery.graphql'
@@ -111,26 +113,54 @@ const nftBalanceQuery = graphql`
 type NftBalanceQueryAsset = NonNullable<
   NonNullable<NonNullable<NftBalanceQuery_nftBalances$data['nftBalances']>['edges']>[number]
 >
-//
-// export type TokenQueryData = NonNullable<TokenQuery$data['tokens']>[number]
+
+export function useLoadNftBalanceQuery(
+  ownerAddress?: string,
+  collectionAddress?: string | string[],
+  tokenId?: string
+): void {
+  const [, loadQuery] = useQueryLoader(nftBalanceQuery)
+  useEffect(() => {
+    if (ownerAddress) {
+      loadQuery({
+        ownerAddress,
+        filter: tokenId
+          ? { assets: [{ address: collectionAddress, tokenId }] }
+          : { addresses: Array.isArray(collectionAddress) ? collectionAddress : [collectionAddress] },
+        first: tokenId ? 1 : DEFAULT_WALLET_ASSET_QUERY_AMOUNT,
+      })
+    }
+  }, [ownerAddress, loadQuery, collectionAddress, tokenId])
+}
+
 export function useNftBalanceQuery(
   ownerAddress: string,
   collectionFilters?: string[],
+  assetsFilter?: { address: string; tokenId: string }[],
   first?: number,
   after?: string,
   last?: number,
   before?: string
 ) {
-  const queryData = useLazyLoadQuery<NftBalanceQuery>(nftBalanceQuery, {
-    ownerAddress,
-    filter: {
-      addresses: collectionFilters,
+  const queryData = useLazyLoadQuery<NftBalanceQuery>(
+    nftBalanceQuery,
+    {
+      ownerAddress,
+      filter:
+        assetsFilter && assetsFilter.length > 0
+          ? {
+              assets: assetsFilter,
+            }
+          : {
+              addresses: collectionFilters,
+            },
+      first,
+      after,
+      last,
+      before,
     },
-    first,
-    after,
-    last,
-    before,
-  })
+    { fetchPolicy: 'store-or-network' }
+  )
   const { data, hasNext, loadNext, isLoadingNext } = usePaginationFragment<NftBalancePaginationQuery, any>(
     nftBalancePaginationQuery,
     queryData

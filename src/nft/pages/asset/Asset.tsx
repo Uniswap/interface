@@ -1,9 +1,10 @@
 import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
-import { useDetailsQuery } from 'graphql/data/nft/Details'
+import { useDetailsQuery, useLoadDetailsQuery } from 'graphql/data/nft/Details'
 import { AssetDetails } from 'nft/components/details/AssetDetails'
+import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
-import { useMemo } from 'react'
+import { Suspense, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
@@ -60,4 +61,15 @@ const Asset = () => {
   )
 }
 
-export default Asset
+const AssetPage = () => {
+  const { tokenId, contractAddress } = useParams()
+  useLoadDetailsQuery(contractAddress, tokenId)
+
+  return (
+    <Suspense fallback={<AssetDetailsLoading />}>
+      <Asset />
+    </Suspense>
+  )
+}
+
+export default AssetPage

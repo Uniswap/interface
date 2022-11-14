@@ -20,9 +20,14 @@ import {
 } from 'nft/hooks'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import { OSCollectionsFetcher } from 'nft/queries'
-import { TokenType } from 'nft/types'
-import { UniformHeight, UniformHeights } from 'nft/types'
-import { ProfilePageStateType, WalletAsset, WalletCollection } from 'nft/types'
+import {
+  ProfilePageStateType,
+  TokenType,
+  UniformHeight,
+  UniformHeights,
+  WalletAsset,
+  WalletCollection,
+} from 'nft/types'
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useQuery } from 'react-query'
@@ -109,7 +114,7 @@ export const ProfilePage = () => {
     walletAssets: ownerAssets,
     loadNext,
     hasNext,
-  } = useNftBalanceQuery(address, collectionFilters, DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
+  } = useNftBalanceQuery(address, collectionFilters, [], DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
 
   useEffect(() => {
     ownerCollections && setWalletCollections(ownerCollections)
