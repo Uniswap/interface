@@ -45,7 +45,7 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { CollectionAssetLoading } from './CollectionAssetLoading'
-import { MARKETPLACE_ITEMS } from './MarketplaceSelect'
+import { MARKETPLACE_ITEMS, MarketplaceLogo } from './MarketplaceSelect'
 import { Sweep, useSweepFetcherParams } from './Sweep'
 import { TraitChip } from './TraitChip'
 
@@ -164,6 +164,10 @@ export const LoadingButton = styled.div`
   );
   will-change: background-position;
   background-size: 400%;
+`
+
+const MarketNameWrapper = styled(Row)`
+  gap: 8px;
 `
 
 const loadingAssets = (height?: number) => (
@@ -459,7 +463,12 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             {markets.map((market) => (
               <TraitChip
                 key={market}
-                value={MARKETPLACE_ITEMS[market as keyof typeof MARKETPLACE_ITEMS]}
+                value={
+                  <MarketNameWrapper>
+                    <MarketplaceLogo src={`/nft/svgs/marketplaces/${market.toLowerCase()}.svg`} />
+                    {MARKETPLACE_ITEMS[market as keyof typeof MARKETPLACE_ITEMS]}
+                  </MarketNameWrapper>
+                }
                 onClick={() => {
                   scrollToTop()
                   removeMarket(market)
