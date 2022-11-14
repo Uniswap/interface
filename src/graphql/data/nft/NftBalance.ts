@@ -127,7 +127,7 @@ export function useLoadNftBalanceQuery(
         filter: tokenId
           ? { assets: [{ address: collectionAddress, tokenId }] }
           : { addresses: Array.isArray(collectionAddress) ? collectionAddress : [collectionAddress] },
-        first: DEFAULT_WALLET_ASSET_QUERY_AMOUNT,
+        first: tokenId ? 1 : DEFAULT_WALLET_ASSET_QUERY_AMOUNT,
       })
     }
   }, [ownerAddress, loadQuery, collectionAddress, tokenId])
@@ -136,6 +136,7 @@ export function useLoadNftBalanceQuery(
 export function useNftBalanceQuery(
   ownerAddress: string,
   collectionFilters?: string[],
+  assetsFilter?: { address: string; tokenId: string }[],
   first?: number,
   after?: string,
   last?: number,
@@ -145,9 +146,14 @@ export function useNftBalanceQuery(
     nftBalanceQuery,
     {
       ownerAddress,
-      filter: {
-        addresses: collectionFilters,
-      },
+      filter:
+        assetsFilter && assetsFilter.length > 0
+          ? {
+              assets: assetsFilter,
+            }
+          : {
+              addresses: collectionFilters,
+            },
       first,
       after,
       last,
