@@ -17,9 +17,9 @@ export function StatusAnimation({
 
   useEffect(() => {
     if (status === TransactionStatus.Success) {
-      animationRef.current?.setInputState(stateMachineName, 'isLoaded', true)
+      animationRef.current?.setInputState(stateMachineName, 'isSuccess', true)
     } else if (status === TransactionStatus.Failed) {
-      animationRef.current?.setInputState(stateMachineName, 'isError', true)
+      animationRef.current?.setInputState(stateMachineName, 'isFailure', true)
     }
   }, [status])
 
@@ -27,10 +27,10 @@ export function StatusAnimation({
     <Rive
       ref={animationRef}
       autoplay
-      alignment={Alignment.Center}
-      artboardName={transactionType === 'swap' ? 'Pending swap graphic' : 'Pending send graphic'}
-      fit={Fit.FitWidth}
-      resourceName="Transactions"
+      alignment={Alignment.BottomCenter}
+      artboardName={transactionType === 'swap' ? 'Pending Swap Graphic' : 'Pending Send Graphic'}
+      fit={Fit.FitHeight}
+      resourceName={transactionType === 'swap' ? 'PendingSwap' : 'PendingSend'}
       stateMachineName={stateMachineName}
       style={{
         maxHeight: ANIMATION_HEIGHT,

@@ -36,12 +36,12 @@ export function TransactionPending({
   const { t } = useTranslation()
 
   return (
-    <AnimatedFlex flexGrow={1} px="sm">
-      <Flex centered flexGrow={1}>
-        <Flex centered>
+    <AnimatedFlex grow px="sm">
+      <Flex grow alignItems="center" justifyContent="flex-start" paddingTop="xxxl">
+        <Flex alignItems="center" justifyContent="flex-end" paddingTop="md">
           <StatusAnimation status={transaction?.status} transactionType={transactionType} />
         </Flex>
-        <Flex centered gap="sm">
+        <Flex alignItems="center" gap="sm" justifyContent="flex-start">
           <Text variant="headlineSmall">{title}</Text>
           <Text color="textTertiary" textAlign="center" variant="bodyLarge">
             {description}
