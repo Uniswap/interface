@@ -327,11 +327,11 @@ const CollectionFilterItem = ({
   return (
     <Row
       justifyContent="center"
-      paddingRight="4"
-      paddingTop="4"
-      paddingBottom="4"
-      paddingLeft="8"
-      borderRadius="12"
+      paddingTop="6"
+      paddingRight="6"
+      paddingBottom="6"
+      paddingLeft="12"
+      borderRadius="8"
       background="backgroundOutline"
       fontSize="14"
     >
