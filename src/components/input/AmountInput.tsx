@@ -56,6 +56,8 @@ export const AmountInput = forwardRef<NativeTextInput, Props>(
   }
 )
 
-const TextInputWithNativeKeyboard = (props: TextInputProps) => {
-  return <TextInput {...props} />
-}
+const TextInputWithNativeKeyboard = forwardRef<NativeTextInput, TextInputProps>(
+  (props: TextInputProps, ref) => {
+    return <TextInput ref={ref} {...props} />
+  }
+)

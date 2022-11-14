@@ -183,7 +183,7 @@ export function SwapForm({
                   exactCurrencyField === CurrencyField.INPUT ? exactValue : formattedDerivedValue
                 }
                 warnings={warnings}
-                onPressIn={showNativeKeyboard ? undefined : onFocusInput}
+                onPressIn={onFocusInput}
                 onSelectionChange={
                   showNativeKeyboard ? undefined : (start, end) => setInputSelection({ start, end })
                 }
@@ -236,7 +236,7 @@ export function SwapForm({
                     exactCurrencyField === CurrencyField.OUTPUT ? exactValue : formattedDerivedValue
                   }
                   warnings={warnings}
-                  onPressIn={showNativeKeyboard ? undefined : onFocusOutput}
+                  onPressIn={onFocusOutput}
                   onSelectionChange={
                     showNativeKeyboard
                       ? undefined
