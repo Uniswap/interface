@@ -118,8 +118,7 @@ export default function useSendSwapTransaction(
           .then((response) => {
             if (calldata !== response.data) {
               throw new SwapError(
-                t`You've modified your swap:
-we recommend canceling it immediately using your wallet, as it may no longer be what you wanted`
+                t`Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds.`
               )
             }
             return response
