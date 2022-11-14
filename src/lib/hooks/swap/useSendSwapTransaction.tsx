@@ -29,6 +29,8 @@ interface FailedCall extends SwapCallEstimate {
   error: Error
 }
 
+class InvalidSwapError extends Error {}
+
 // returns a function that will execute a swap, if the parameters are all valid
 export default function useSendSwapTransaction(
   account: string | null | undefined,
@@ -114,6 +116,11 @@ export default function useSendSwapTransaction(
             ...(value && !isZero(value) ? { value } : {}),
           })
           .then((response) => {
+            if (calldata !== response.data) {
+              throw new InvalidSwapError(
+                t`Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds.`
+              )
+            }
             return response
           })
           .catch((error) => {
@@ -124,7 +131,11 @@ export default function useSendSwapTransaction(
               // otherwise, the error was unexpected and we need to convey that
               console.error(`Swap failed`, error, address, calldata, value)
 
-              throw new Error(t`Swap failed: ${swapErrorToUserReadableMessage(error)}`)
+              if (error instanceof InvalidSwapError) {
+                throw error
+              } else {
+                throw new Error(t`Swap failed: ${swapErrorToUserReadableMessage(error)}`)
+              }
             }
           })
       },
