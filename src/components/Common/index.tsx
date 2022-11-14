@@ -1,5 +1,4 @@
-import type * as CSS from 'csstype'
-import styled, { css } from 'styled-components/macro'
+import { css } from 'styled-components/macro'
 
 export const ScrollBarStyles = css<{ $isHorizontalScroll?: boolean }>`
   // Firefox scrollbar styling
@@ -45,12 +44,4 @@ export const OpacityHoverState = css`
       transition: { duration, timing },
     },
   }) => `opacity ${duration.medium} ${timing.ease}`};
-`
-
-export const Box = styled.div<CSS.Properties>`
-  ${(props) =>
-    (Object.keys(props) as Array<keyof typeof props>).reduce((acc, key) => {
-      acc[key.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase())] = props[key]
-      return acc
-    }, {} as { [key: string]: string })}
 `
