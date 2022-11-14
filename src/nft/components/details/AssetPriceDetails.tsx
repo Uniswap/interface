@@ -7,7 +7,7 @@ import { ethNumberStandardFormatter, formatEthPrice, getMarketplaceIcon, timeLef
 import { shortenAddress } from 'nft/utils/address'
 import { useMemo } from 'react'
 import { Upload } from 'react-feather'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -257,7 +257,7 @@ export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
   )
 }
 
-export const NotForSale = ({ collection }: { collection: CollectionInfoForAsset }) => {
+export const NotForSale = ({ collectionName, collectionUrl }: { collectionName: string; collectionUrl: string }) => {
   const theme = useTheme()
 
   return (
@@ -271,7 +271,9 @@ export const NotForSale = ({ collection }: { collection: CollectionInfoForAsset 
           <ThemedText.BodySecondary fontSize="14px" lineHeight="20px">
             Discover similar NFTs for sale in
           </ThemedText.BodySecondary>
-          <ThemedText.Link lineHeight="20px">{collection.collectionName}</ThemedText.Link>
+          <Link to={`/nfts/collection/${collectionUrl}`}>
+            <ThemedText.Link lineHeight="20px">{collectionName}</ThemedText.Link>
+          </Link>
         </DiscoveryContainer>
       </NotForSaleContainer>
     </BestPriceContainer>
@@ -401,7 +403,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
           </div>
         </BestPriceContainer>
       ) : (
-        <NotForSale collection={collection} />
+        <NotForSale collectionName={collection.collectionName ?? 'this collection'} collectionUrl={asset.address} />
       )}
     </Container>
   )
