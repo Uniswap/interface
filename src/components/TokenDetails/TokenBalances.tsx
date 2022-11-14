@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { CurrencyLogo } from 'src/components/CurrencyLogo'
+import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
 import { Flex } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
 import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
@@ -95,7 +95,12 @@ function OtherChainBalance({ balance }: { balance: PortfolioBalance }) {
   return (
     <Flex row alignItems="center" justifyContent="space-between">
       <Flex row alignItems="center" gap="xxs">
-        <CurrencyLogo currency={balance.currencyInfo.currency} size={iconSizes.xxl} />
+        <TokenLogo
+          chainId={balance.currencyInfo.currency.chainId}
+          size={iconSizes.xxl}
+          symbol={balance.currencyInfo.currency.symbol}
+          url={balance.currencyInfo.logoUrl ?? undefined}
+        />
         <Flex alignItems="center" gap="none">
           <Text variant="bodyLarge">
             {formatNumber(balance.balanceUSD, NumberType.FiatTokenDetails)}
