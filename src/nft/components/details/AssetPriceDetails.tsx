@@ -206,6 +206,7 @@ export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
   const USDPrice = useUsdPrice(asset)
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const selectSellAsset = useSellAsset((state) => state.selectSellAsset)
+  const resetSellAssets = useSellAsset((state) => state.reset)
   const { account } = useWeb3React()
   const assetsFilter = [{ address: asset.address, tokenId: asset.tokenId }]
   const { walletAssets: ownerAssets } = useNftBalanceQuery(account ?? '', [], assetsFilter, 1)
@@ -216,6 +217,7 @@ export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
   const expirationDate = cheapestOrder ? new Date(cheapestOrder.endAt) : undefined
 
   const goToListPage = () => {
+    resetSellAssets()
     navigate('/nfts/profile')
     selectSellAsset(walletAsset)
     setSellPageState(ProfilePageStateType.LISTING)
@@ -261,12 +263,7 @@ export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
               <ThemedText.SubHeader lineHeight={'20px'}>Adjust listing</ThemedText.SubHeader>
             </BuyNowButton>
             {/* TODO add cancel listing logic */}
-            <BuyNowButton
-              assetInBag={true}
-              margin={false}
-              useAccentColor={false}
-              onClick={() => navigate('/nfts/profile')}
-            >
+            <BuyNowButton assetInBag={true} margin={false} useAccentColor={false} onClick={goToListPage}>
               <ThemedText.SubHeader lineHeight={'20px'}>Cancel listing</ThemedText.SubHeader>
             </BuyNowButton>
           </>
