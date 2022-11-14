@@ -74,6 +74,8 @@ export const ButtonText = styled.button`
   background: none;
   cursor: pointer;
   transition-duration: ${({ theme }) => theme.transition.duration.fast};
+  transition-timing-function: ease-in-out;
+  transition-property: opacity, color, background-color;
 
   :hover {
     opacity: ${({ theme }) => theme.opacity.hover};

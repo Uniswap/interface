@@ -159,7 +159,7 @@
     "@visx/react-spring": "^2.12.2",
     "@visx/responsive": "^2.10.0",
     "@visx/shape": "^2.11.1",
-    "@walletconnect/ethereum-provider": "1.7.1",
+    "@walletconnect/ethereum-provider": "^1.8.0",
     "@web3-react/coinbase-wallet": "^8.0.34-beta.0",
     "@web3-react/core": "^8.0.35-beta.0",
     "@web3-react/eip1193": "^8.0.26-beta.0",

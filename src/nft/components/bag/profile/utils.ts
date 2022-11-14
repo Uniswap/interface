@@ -127,7 +127,7 @@ export const getTotalEthValue = (sellAssets: WalletAsset[]) => {
       return (
         total +
         (maxListing.price ?? 0) -
-        (maxListing.price ?? 0) * (maxListing.marketplace.fee / 100 + asset.creatorPercentage)
+        (maxListing.price ?? 0) * (maxListing.marketplace.fee / 100 + asset.basisPoints)
       )
     }
     return total

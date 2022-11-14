@@ -24,6 +24,16 @@ const FilterItemWrapper = styled(Row)`
   }
 `
 
+export const MarketplaceLogo = styled.img`
+  height: 16px;
+  width: 16px;
+  border-radius: 4px;
+`
+
+const MarketNameWrapper = styled(Row)`
+  gap: 10px;
+`
+
 export const MARKETPLACE_ITEMS = {
   looksrare: 'LooksRare',
   nft20: 'NFT20',
@@ -34,12 +44,19 @@ export const MARKETPLACE_ITEMS = {
   sudoswap: 'SudoSwap',
 }
 
+function getMarketLogoSrc(market: string) {
+  const marketplaceItem = Object.keys(MARKETPLACE_ITEMS).find(
+    (key) => MARKETPLACE_ITEMS[key as keyof typeof MARKETPLACE_ITEMS] === market
+  )
+  return `/nft/svgs/marketplaces/${marketplaceItem}.svg`
+}
+
 export const FilterItem = ({
   title,
   element,
   onClick,
 }: {
-  title: string
+  title: string | JSX.Element
   element: JSX.Element
   onClick: React.MouseEventHandler<HTMLElement>
 }) => {
@@ -91,9 +108,16 @@ const MarketplaceItem = ({
     </Checkbox>
   )
 
+  const titleWithLogo = (
+    <MarketNameWrapper>
+      <MarketplaceLogo src={getMarketLogoSrc(title)} />
+      {title}
+    </MarketNameWrapper>
+  )
+
   return (
     <div key={value} onMouseEnter={toggleHover} onMouseLeave={toggleHover}>
-      <FilterItem title={title} element={checkbox} onClick={handleCheckbox} />
+      <FilterItem title={titleWithLogo} element={checkbox} onClick={handleCheckbox} />
     </div>
   )
 }
