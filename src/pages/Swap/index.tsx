@@ -677,15 +677,7 @@ export default function Swap() {
                         }
                       >
                         <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }} height="20px">
-                          <span
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              fontSize: '16px',
-                              width: '100%',
-                              justifyContent: 'center',
-                            }}
-                          >
+                          <Text display="flex" fontSize={'16px'} justifyContent={'center'} width={'100%'}>
                             {/* we need to shorten this string on mobile */}
                             {approvalState === ApprovalState.APPROVED ||
                             signatureState === UseERC20PermitState.SIGNED ? (
@@ -693,7 +685,7 @@ export default function Swap() {
                             ) : (
                               <Trans>Allow the Uniswap Protocol to use your {currencies[Field.INPUT]?.symbol}</Trans>
                             )}
-                          </span>
+                          </Text>
                           {approvalPending || approvalState === ApprovalState.PENDING ? (
                             <Loader stroke={theme.white} />
                           ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||
