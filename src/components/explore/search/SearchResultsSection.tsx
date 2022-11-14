@@ -11,7 +11,7 @@ import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
-import { useSearchResultsQuery } from 'src/data/__generated__/types-and-hooks'
+import { useSearchTokensQuery } from 'src/data/__generated__/types-and-hooks'
 import { useENS } from 'src/features/ens/useENS'
 import { SearchResultType, TokenSearchResult } from 'src/features/explore/searchHistorySlice'
 import { useIsSmartContractAddress } from 'src/features/transactions/transfer/hooks'
@@ -30,36 +30,45 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }) {
     loading: tokenResultsLoading,
     error,
     refetch,
-  } = useSearchResultsQuery({
+  } = useSearchTokensQuery({
     variables: { searchQuery },
   })
 
   const tokenResults = useMemo(() => {
-    if (!tokenResultsData || !tokenResultsData.searchTokenProjects) return EMPTY_ARRAY
+    if (!tokenResultsData || !tokenResultsData.searchTokens) return EMPTY_ARRAY
 
-    return tokenResultsData.searchTokenProjects
-      .map((tokenProject) => {
-        if (!tokenProject) return null
+    // Prevent showing "duplicate" token search results for tokens that are on multiple chains
+    // and share the same TokenProject id. Only show the token that has the highest 1Y Uniswap trading volume
+    // ex. UNI on Mainnet, Arbitrum, Optimism -> only show UNI on Mainnet b/c it has highest 1Y volume
+    const tokenResultsMap = tokenResultsData.searchTokens.reduce<
+      Record<string, TokenSearchResult & { volume1Y: number }>
+    >((tokensMap, token) => {
+      if (!token) return tokensMap
 
-        // Only use first chain the token is on
-        const token = tokenProject.tokens[0]
-        const { chain, address, symbol, name } = token
-        const chainId = fromGraphQLChain(chain)
+      const { chain, address, symbol, name, project, market } = token
+      const chainId = fromGraphQLChain(chain)
 
-        if (!chainId || !symbol || !name) return null
+      if (!chainId || !project) return tokensMap
 
-        return {
-          type: SearchResultType.Token,
-          chainId,
-          address,
-          name,
-          symbol,
-          safetyLevel: tokenProject.safetyLevel,
-          logoUrl: tokenProject.logoUrl,
-        } as TokenSearchResult
-      })
-      .slice(0, MAX_TOKEN_RESULTS_COUNT)
-      .filter(Boolean) as TokenSearchResult[]
+      const tokenResult = {
+        type: SearchResultType.Token,
+        chainId,
+        address,
+        name,
+        symbol,
+        safetyLevel: project.safetyLevel,
+        logoUrl: project.logoUrl,
+        volume1Y: market?.volume?.value ?? 0,
+      } as TokenSearchResult & { volume1Y: number }
+
+      // For token results that share the same TokenProject id, use the token with highest volume
+      if (!tokensMap[project.id] || tokenResult.volume1Y > tokensMap[project.id].volume1Y) {
+        tokensMap[project.id] = tokenResult
+      }
+      return tokensMap
+    }, {})
+
+    return Object.values(tokenResultsMap).slice(0, MAX_TOKEN_RESULTS_COUNT)
   }, [tokenResultsData])
 
   // Search for matching ENS
@@ -69,7 +78,6 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }) {
     loading: ensLoading,
   } = useENS(ChainId.Mainnet, searchQuery, true)
 
-  // TODO: Support searching token by address
   const validAddress: Address | null = getValidAddress(searchQuery, true, false)
     ? searchQuery
     : null

@@ -461,17 +461,25 @@ query SearchPopularTokens {
   }
 }
 
-query SearchResults($searchQuery: String!) {
-  searchTokenProjects(searchQuery: $searchQuery) {
+query SearchTokens($searchQuery: String!) {
+  searchTokens(searchQuery: $searchQuery) {
     id
-    logoUrl
-    safetyLevel
-    tokens {
+    chain
+    address
+    decimals
+    name
+    symbol
+    # Use 1Y volume to determine which token to show when results include the same token on multiple chains
+    market {
+      volume(duration: YEAR) {
+        id
+        value
+      }
+    }
+    project {
       id
-      chain
-      address
-      name
-      symbol
+      logoUrl
+      safetyLevel
     }
   }
 }
@@ -523,7 +531,12 @@ query ExploreTokensTab(
   $topTokensOrderBy: TokenSortableField!
   $favoriteTokenContracts: [ContractInput!]!
 ) {
-  topTokens(chain: ETHEREUM, page: 1, pageSize: 100, orderBy: $topTokensOrderBy) {
+  topTokens(
+    chain: ETHEREUM
+    page: 1
+    pageSize: 100
+    orderBy: $topTokensOrderBy
+  ) {
     ...TopTokenParts
   }
   # `topTokens` returns WETH rather than ETH

@@ -924,12 +924,12 @@ export type SearchPopularTokensQueryVariables = Exact<{ [key: string]: never; }>
 
 export type SearchPopularTokensQuery = { __typename?: 'Query', topTokenProjects?: Array<{ __typename?: 'TokenProject', id: string, logoUrl?: string | null, tokens: Array<{ __typename?: 'Token', id: string, chain: Chain, address?: string | null, name?: string | null, symbol?: string | null }> } | null> | null };
 
-export type SearchResultsQueryVariables = Exact<{
+export type SearchTokensQueryVariables = Exact<{
   searchQuery: Scalars['String'];
 }>;
 
 
-export type SearchResultsQuery = { __typename?: 'Query', searchTokenProjects?: Array<{ __typename?: 'TokenProject', id: string, logoUrl?: string | null, safetyLevel?: SafetyLevel | null, tokens: Array<{ __typename?: 'Token', id: string, chain: Chain, address?: string | null, name?: string | null, symbol?: string | null }> } | null> | null };
+export type SearchTokensQuery = { __typename?: 'Query', searchTokens?: Array<{ __typename?: 'Token', id: string, chain: Chain, address?: string | null, decimals?: number | null, name?: string | null, symbol?: string | null, market?: { __typename?: 'TokenMarket', volume?: { __typename?: 'Amount', id: string, value: number } | null } | null, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string | null, safetyLevel?: SafetyLevel | null } | null } | null> | null };
 
 export type SpotPricesQueryVariables = Exact<{
   contracts: Array<ContractInput> | ContractInput;
@@ -1810,50 +1810,57 @@ export function useSearchPopularTokensLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export type SearchPopularTokensQueryHookResult = ReturnType<typeof useSearchPopularTokensQuery>;
 export type SearchPopularTokensLazyQueryHookResult = ReturnType<typeof useSearchPopularTokensLazyQuery>;
 export type SearchPopularTokensQueryResult = Apollo.QueryResult<SearchPopularTokensQuery, SearchPopularTokensQueryVariables>;
-export const SearchResultsDocument = gql`
-    query SearchResults($searchQuery: String!) {
-  searchTokenProjects(searchQuery: $searchQuery) {
+export const SearchTokensDocument = gql`
+    query SearchTokens($searchQuery: String!) {
+  searchTokens(searchQuery: $searchQuery) {
     id
-    logoUrl
-    safetyLevel
-    tokens {
+    chain
+    address
+    decimals
+    name
+    symbol
+    market {
+      volume(duration: YEAR) {
+        id
+        value
+      }
+    }
+    project {
       id
-      chain
-      address
-      name
-      symbol
+      logoUrl
+      safetyLevel
     }
   }
 }
     `;
 
 /**
- * __useSearchResultsQuery__
+ * __useSearchTokensQuery__
  *
- * To run a query within a React component, call `useSearchResultsQuery` and pass it any options that fit your needs.
- * When your component renders, `useSearchResultsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useSearchTokensQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchTokensQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useSearchResultsQuery({
+ * const { data, loading, error } = useSearchTokensQuery({
  *   variables: {
  *      searchQuery: // value for 'searchQuery'
  *   },
  * });
  */
-export function useSearchResultsQuery(baseOptions: Apollo.QueryHookOptions<SearchResultsQuery, SearchResultsQueryVariables>) {
+export function useSearchTokensQuery(baseOptions: Apollo.QueryHookOptions<SearchTokensQuery, SearchTokensQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SearchResultsQuery, SearchResultsQueryVariables>(SearchResultsDocument, options);
+        return Apollo.useQuery<SearchTokensQuery, SearchTokensQueryVariables>(SearchTokensDocument, options);
       }
-export function useSearchResultsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchResultsQuery, SearchResultsQueryVariables>) {
+export function useSearchTokensLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchTokensQuery, SearchTokensQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SearchResultsQuery, SearchResultsQueryVariables>(SearchResultsDocument, options);
+          return Apollo.useLazyQuery<SearchTokensQuery, SearchTokensQueryVariables>(SearchTokensDocument, options);
         }
-export type SearchResultsQueryHookResult = ReturnType<typeof useSearchResultsQuery>;
-export type SearchResultsLazyQueryHookResult = ReturnType<typeof useSearchResultsLazyQuery>;
-export type SearchResultsQueryResult = Apollo.QueryResult<SearchResultsQuery, SearchResultsQueryVariables>;
+export type SearchTokensQueryHookResult = ReturnType<typeof useSearchTokensQuery>;
+export type SearchTokensLazyQueryHookResult = ReturnType<typeof useSearchTokensLazyQuery>;
+export type SearchTokensQueryResult = Apollo.QueryResult<SearchTokensQuery, SearchTokensQueryVariables>;
 export const SpotPricesDocument = gql`
     query SpotPrices($contracts: [ContractInput!]!) {
   tokenProjects(contracts: $contracts) {

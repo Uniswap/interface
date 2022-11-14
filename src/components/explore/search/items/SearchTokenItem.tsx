@@ -48,7 +48,7 @@ export function SearchTokenItem({ token }: SearchTokenItemProps) {
   return (
     <TouchableArea name={ElementName.SearchTokenItem} onPress={onPress}>
       <Flex row alignItems="center" gap="sm" px="xs" py="sm">
-        <TokenLogo symbol={symbol} url={logoUrl ?? undefined} />
+        <TokenLogo chainId={chainId} symbol={symbol} url={logoUrl ?? undefined} />
         <Flex gap="none">
           <Flex row alignItems="center" gap="xxs">
             <Text color="textPrimary" variant="bodyLarge">
