@@ -28,33 +28,28 @@ import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 import { formatUSDPrice } from 'src/utils/format'
 
 type FavoriteTokenCardProps = {
-  tokenData: NonNullable<ExploreTokensTabQuery['favoriteTokensData']>[0]
+  token: NonNullable<ExploreTokensTabQuery['favoriteTokens']>[0]
   isEditing?: boolean
   setIsEditing: (update: boolean) => void
 } & ViewProps
 
-function FavoriteTokenCard({
-  tokenData,
-  isEditing,
-  setIsEditing,
-  ...rest
-}: FavoriteTokenCardProps) {
+function FavoriteTokenCard({ token, isEditing, setIsEditing, ...rest }: FavoriteTokenCardProps) {
   const theme = useAppTheme()
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
 
-  const token = tokenData?.tokens[0]
   // Mirror behavior in top tokens list, use first chain the token is on for the symbol
   const chainId = fromGraphQLChain(token?.chain)
+
   const currencyId =
     chainId && token?.address
       ? buildCurrencyId(chainId, token?.address)
       : chainId
       ? buildNativeCurrencyId(chainId)
       : undefined
-  const usdPrice = tokenData?.markets?.[0]?.price?.value
-  const pricePercentChange = tokenData?.markets?.[0]?.pricePercentChange24h?.value
+  const usdPrice = token?.project?.markets?.[0]?.price?.value
+  const pricePercentChange = token?.project?.markets?.[0]?.pricePercentChange24h?.value
 
   const onRemove = useCallback(() => {
     if (currencyId) {
@@ -127,7 +122,7 @@ function FavoriteTokenCard({
             <TokenLogo
               chainId={chainId ?? undefined}
               symbol={token?.symbol ?? undefined}
-              url={tokenData?.logoUrl ?? undefined}
+              url={token?.project?.logoUrl ?? undefined}
             />
             <TokenMetadata align="center">
               <Box>

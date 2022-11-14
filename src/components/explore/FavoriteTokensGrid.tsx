@@ -21,14 +21,14 @@ export function FavoriteTokensGrid({
   isEditing,
   setIsEditing,
 }: {
-  favoriteTokensData: ExploreTokensTabQuery['favoriteTokensData']
+  favoriteTokensData: ExploreTokensTabQuery['favoriteTokens']
   isEditing: boolean
   setIsEditing: (update: boolean) => void
 }) {
   // local cache to avoid flicker
-  const [localData, setLocalData] = useState<
-    ExploreTokensTabQuery['favoriteTokensData'] | undefined
-  >(undefined)
+  const [localData, setLocalData] = useState<ExploreTokensTabQuery['favoriteTokens'] | undefined>(
+    undefined
+  )
 
   useEffect(() => {
     if (favoriteTokensData) {
@@ -40,7 +40,7 @@ export function FavoriteTokensGrid({
     ({
       item,
       index,
-    }: ListRenderItemInfo<NonNullable<ExploreTokensTabQuery['favoriteTokensData']>[0]>) => {
+    }: ListRenderItemInfo<NonNullable<ExploreTokensTabQuery['favoriteTokens']>[0]>) => {
       const lastColumn = (index + 1) % NUM_COLUMNS === 0
       return (
         <>
@@ -48,7 +48,7 @@ export function FavoriteTokensGrid({
             isEditing={isEditing}
             setIsEditing={setIsEditing}
             style={ITEM_FLEX}
-            tokenData={item}
+            token={item}
           />
           {lastColumn ? null : <Box width={GAP_SIZE} />}
         </>

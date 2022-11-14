@@ -126,7 +126,7 @@ function ExploreTokensTab({ listRef }: ExploreTokensTabProps) {
   )
 
   const nonPollRequestInFlight = isNonPollingRequestInFlight(networkStatus)
-  const hasAllData = !!data?.favoriteTokensData && !!data?.topTokens
+  const hasAllData = !!data?.favoriteTokens && !!data?.topTokens
   const error = usePersistedError(requestLoading, requestError)
 
   const onRetry = useCallback(() => {
@@ -157,7 +157,7 @@ function ExploreTokensTab({ listRef }: ExploreTokensTabProps) {
           {error ? <BaseCard.InlineErrorState retryButtonLabel="Retry" onRetry={onRetry} /> : null}
           {hasFavoritedTokens ? (
             <FavoriteTokensGrid
-              favoriteTokensData={data?.favoriteTokensData}
+              favoriteTokensData={data?.favoriteTokens}
               isEditing={isEditing}
               setIsEditing={setIsEditing}
             />

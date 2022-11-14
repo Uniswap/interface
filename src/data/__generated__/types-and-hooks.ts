@@ -933,7 +933,7 @@ export type SpotPricesQueryVariables = Exact<{
 
 export type SpotPricesQuery = { __typename?: 'Query', tokenProjects?: Array<{ __typename?: 'TokenProject', id: string, markets?: Array<{ __typename?: 'TokenProjectMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null } | null> | null };
 
-export type TopTokenPartsFragment = { __typename?: 'Token', id: string, name?: string | null, symbol?: string | null, chain: Chain, address?: string | null, project?: { __typename?: 'TokenProject', logoUrl?: string | null, markets?: Array<{ __typename?: 'TokenProjectMarket', price?: { __typename?: 'Amount', id: string, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, value: number } | null, marketCap?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null } | null };
+export type TopTokenPartsFragment = { __typename?: 'Token', id: string, name?: string | null, symbol?: string | null, chain: Chain, address?: string | null, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string | null, markets?: Array<{ __typename?: 'TokenProjectMarket', price?: { __typename?: 'Amount', id: string, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, value: number } | null, marketCap?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null } | null };
 
 export type ExploreTokensTabQueryVariables = Exact<{
   topTokensOrderBy: TokenSortableField;
@@ -941,7 +941,7 @@ export type ExploreTokensTabQueryVariables = Exact<{
 }>;
 
 
-export type ExploreTokensTabQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', id: string, name?: string | null, symbol?: string | null, chain: Chain, address?: string | null, project?: { __typename?: 'TokenProject', logoUrl?: string | null, markets?: Array<{ __typename?: 'TokenProjectMarket', price?: { __typename?: 'Amount', id: string, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, value: number } | null, marketCap?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null } | null } | null> | null, eth?: Array<{ __typename?: 'Token', id: string, name?: string | null, symbol?: string | null, chain: Chain, address?: string | null, project?: { __typename?: 'TokenProject', logoUrl?: string | null, markets?: Array<{ __typename?: 'TokenProjectMarket', price?: { __typename?: 'Amount', id: string, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, value: number } | null, marketCap?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null } | null } | null> | null, favoriteTokensData?: Array<{ __typename?: 'TokenProject', id: string, logoUrl?: string | null, tokens: Array<{ __typename?: 'Token', id: string, chain: Chain, address?: string | null, symbol?: string | null }>, markets?: Array<{ __typename?: 'TokenProjectMarket', id: string, price?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null } | null> | null } | null> | null };
+export type ExploreTokensTabQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', id: string, name?: string | null, symbol?: string | null, chain: Chain, address?: string | null, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string | null, markets?: Array<{ __typename?: 'TokenProjectMarket', price?: { __typename?: 'Amount', id: string, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, value: number } | null, marketCap?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null } | null } | null> | null, eth?: Array<{ __typename?: 'Token', id: string, name?: string | null, symbol?: string | null, chain: Chain, address?: string | null, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string | null, markets?: Array<{ __typename?: 'TokenProjectMarket', price?: { __typename?: 'Amount', id: string, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, value: number } | null, marketCap?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null } | null } | null> | null, favoriteTokens?: Array<{ __typename?: 'Token', id: string, name?: string | null, symbol?: string | null, chain: Chain, address?: string | null, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string | null, markets?: Array<{ __typename?: 'TokenProjectMarket', price?: { __typename?: 'Amount', id: string, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, value: number } | null, marketCap?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null } | null } | null> | null };
 
 export type PortfolioBalanceQueryVariables = Exact<{
   owner: Scalars['String'];
@@ -958,6 +958,7 @@ export const TopTokenPartsFragmentDoc = gql`
   chain
   address
   project {
+    id
     logoUrl
     markets(currencies: USD) {
       price {
@@ -1894,28 +1895,8 @@ export const ExploreTokensTabDocument = gql`
   eth: tokens(contracts: [{address: null, chain: ETHEREUM}]) {
     ...TopTokenParts
   }
-  favoriteTokensData: tokenProjects(contracts: $favoriteTokenContracts) {
-    id
-    tokens {
-      id
-      chain
-      address
-      symbol
-    }
-    logoUrl
-    markets(currencies: USD) {
-      id
-      price {
-        id
-        currency
-        value
-      }
-      pricePercentChange24h {
-        id
-        currency
-        value
-      }
-    }
+  favoriteTokens: tokens(contracts: $favoriteTokenContracts) {
+    ...TopTokenParts
   }
 }
     ${TopTokenPartsFragmentDoc}`;
