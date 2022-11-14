@@ -36,8 +36,7 @@ import UniBalanceContent from './UniBalanceContent'
 
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
   display: grid;
-  grid-template-columns: 120px 1fr 120px;
-  align-items: center;
+  grid-template-columns: 120px 1fr 240px;
   justify-content: space-between;
   align-items: center;
   flex-direction: row;
@@ -46,7 +45,6 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
   position: relative;
   padding: 0.5rem;
   z-index: 21;
-  position: relative;
   /* Background slide effect on scroll. */
   background-image: ${({ theme }) => `linear-gradient(to bottom, transparent 50%, ${theme.bg0} 50% )}}`};
   background-position: ${({ showBackground }) => (showBackground ? '0 -100%' : '0 0')};
