@@ -314,7 +314,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
                 useAccentColor={true}
                 onClick={() => {
                   assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset])
-                  if (!assetInBag && !isErc1555 && !bagExpanded) {
+                  if (!assetInBag && !bagExpanded) {
                     toggleBag()
                   }
                 }}
