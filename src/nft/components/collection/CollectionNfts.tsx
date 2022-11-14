@@ -2,6 +2,7 @@ import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
+import { OpacityHoverState } from 'components/Common'
 import { loadingAnimation } from 'components/Loader/styled'
 import { parseEther } from 'ethers/lib/utils'
 import { NftAssetTraitInput, NftMarketplace } from 'graphql/data/nft/__generated__/AssetQuery.graphql'
@@ -45,7 +46,7 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { CollectionAssetLoading } from './CollectionAssetLoading'
-import { MARKETPLACE_ITEMS } from './MarketplaceSelect'
+import { MARKETPLACE_ITEMS, MarketplaceLogo } from './MarketplaceSelect'
 import { Sweep, useSweepFetcherParams } from './Sweep'
 import { TraitChip } from './TraitChip'
 
@@ -90,19 +91,7 @@ const EmptyCollectionWrapper = styled.div`
 `
 
 const ViewFullCollection = styled.span`
-  &:hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-  }
-
-  &:active {
-    opacity: ${({ theme }) => theme.opacity.click};
-  }
-
-  transition: ${({
-    theme: {
-      transition: { duration, timing },
-    },
-  }) => `opacity ${duration.medium} ${timing.ease}`};
+  ${OpacityHoverState}
 `
 
 const ClearAllButton = styled.button`
@@ -164,6 +153,10 @@ export const LoadingButton = styled.div`
   );
   will-change: background-position;
   background-size: 400%;
+`
+
+const MarketNameWrapper = styled(Row)`
+  gap: 8px;
 `
 
 const loadingAssets = (height?: number) => (
@@ -459,7 +452,12 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             {markets.map((market) => (
               <TraitChip
                 key={market}
-                value={MARKETPLACE_ITEMS[market as keyof typeof MARKETPLACE_ITEMS]}
+                value={
+                  <MarketNameWrapper>
+                    <MarketplaceLogo src={`/nft/svgs/marketplaces/${market.toLowerCase()}.svg`} />
+                    {MARKETPLACE_ITEMS[market as keyof typeof MARKETPLACE_ITEMS]}
+                  </MarketNameWrapper>
+                }
                 onClick={() => {
                   scrollToTop()
                   removeMarket(market)
