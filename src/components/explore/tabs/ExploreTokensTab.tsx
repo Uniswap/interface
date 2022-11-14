@@ -9,15 +9,22 @@ import { Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { TAB_STYLES } from 'src/components/layout/TabHelpers'
 import { Text } from 'src/components/Text'
+import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY, PollingInterval } from 'src/constants/misc'
+import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import { isNonPollingRequestInFlight } from 'src/data/utils'
-import { useExploreTokensTabQuery } from 'src/data/__generated__/types-and-hooks'
+import {
+  Chain,
+  ExploreTokensTabQuery,
+  useExploreTokensTabQuery,
+} from 'src/data/__generated__/types-and-hooks'
 import { currencyIdToContractInput, usePersistedError } from 'src/features/dataApi/utils'
 import { useTokensMetadataDisplayType } from 'src/features/explore/hooks'
 import { getClientTokensOrderByCompareFn, getTokensOrderByValues } from 'src/features/explore/utils'
 import { selectFavoriteTokensSet, selectHasFavoriteTokens } from 'src/features/favorites/selectors'
 import { selectTokensOrderBy } from 'src/features/wallet/selectors'
 import { ExploreTokensTabLoader } from 'src/screens/ExploreScreen'
+import { areAddressesEqual } from 'src/utils/addresses'
 import { fromGraphQLChain } from 'src/utils/chainId'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 
@@ -63,26 +70,26 @@ function ExploreTokensTab({ listRef }: ExploreTokensTabProps) {
   const topTokenItems = useMemo(() => {
     if (!data || !data.topTokens) return EMPTY_ARRAY
 
+    // special case to replace weth with eth because the backend does not return eth data
+    // eth will be defined only if all the required data is available
+    // when eth data is not fully available, we do not replace weth with eth
+    const eth = data?.eth && data?.eth.length > 0 && data?.eth?.[0]?.project ? data.eth[0] : null
+    const weth = WRAPPED_NATIVE_CURRENCY[ChainId.Mainnet]
+
     const topTokens = data.topTokens
       .map((token) => {
-        if (!token || !token.project) return null
+        if (!token) return
 
-        const { name, symbol, chain, address, project } = token
-        const { logoUrl, markets } = project
-        const tokenProjectMarket = markets?.[0]
+        const isWeth =
+          areAddressesEqual(token.address, weth.address) && token?.chain === Chain.Ethereum
 
-        const chainId = fromGraphQLChain(chain)
+        // manually replace eth with eth given backend only returns eth data as a proxy for eth
+        // sorting should be maintained given we replace
+        if (isWeth && eth) {
+          return gqlTokenToTokenItemData(eth)
+        }
 
-        return {
-          chainId,
-          address,
-          name,
-          symbol,
-          logoUrl,
-          price: tokenProjectMarket?.price?.value,
-          marketCap: tokenProjectMarket?.marketCap?.value,
-          pricePercentChange24h: tokenProjectMarket?.pricePercentChange24h?.value,
-        } as TokenItemData
+        return gqlTokenToTokenItemData(token)
       })
       .filter(Boolean) as TokenItemData[]
 
@@ -181,3 +188,26 @@ const tokenKey = (token: TokenItemData) => {
 }
 
 export default React.memo(ExploreTokensTab)
+
+function gqlTokenToTokenItemData(
+  token: NullUndefined<NonNullable<NonNullable<ExploreTokensTabQuery['topTokens']>[0]>>
+) {
+  if (!token || !token.project) return null
+
+  const { name, symbol, address, chain, project } = token
+  const { logoUrl, markets } = project
+  const tokenProjectMarket = markets?.[0]
+
+  const chainId = fromGraphQLChain(chain)
+
+  return {
+    chainId,
+    address,
+    name,
+    symbol,
+    logoUrl,
+    price: tokenProjectMarket?.price?.value,
+    marketCap: tokenProjectMarket?.marketCap?.value,
+    pricePercentChange24h: tokenProjectMarket?.pricePercentChange24h?.value,
+  } as TokenItemData
+}

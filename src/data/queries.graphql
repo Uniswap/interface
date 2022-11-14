@@ -479,29 +479,47 @@ query SpotPrices($contracts: [ContractInput!]!) {
   }
 }
 
+fragment TopTokenParts on Token {
+  id
+  name
+  symbol
+  chain
+  address
+  project {
+    logoUrl
+    markets(currencies: USD) {
+      price {
+        id
+        value
+      }
+      pricePercentChange24h {
+        id
+        value
+      }
+      marketCap {
+        id
+        value
+      }
+    }
+  }
+}
+
 query ExploreTokensTab(
   $topTokensOrderBy: TokenSortableField!
   $favoriteTokenContracts: [ContractInput!]!
 ) {
-  topTokens(chain: ETHEREUM, page: 1, pageSize: 100, orderBy: $topTokensOrderBy) {
-    name
-    symbol
-    chain
-    address
-    project {
-      logoUrl
-      markets(currencies: USD) {
-        price {
-          value
-        }
-        pricePercentChange24h {
-          value
-        }
-        marketCap {
-          value
-        }
-      }
-    }
+  topTokens(
+    chain: ETHEREUM
+    page: 1
+    pageSize: 100
+    orderBy: $topTokensOrderBy
+  ) {
+    ...TopTokenParts
+  }
+  # `topTokens` returns WETH rather than ETH
+  # here we retrieve ETH information to swap out in the UI
+  eth: tokens(contracts: [{ address: null, chain: ETHEREUM }]) {
+    ...TopTokenParts
   }
   # Favorite tokens grid data
   favoriteTokensData: tokenProjects(contracts: $favoriteTokenContracts) {
