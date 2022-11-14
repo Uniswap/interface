@@ -1,4 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
+import { OpacityHoverState } from 'components/Common'
 import { useNftBalanceQuery } from 'graphql/data/nft/NftBalance'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { CancelListingIcon, MinusIcon, PlusIcon } from 'nft/components/icons'
@@ -140,19 +141,7 @@ const UploadLink = styled.a`
   color: ${({ theme }) => theme.textSecondary};
   cursor: pointer;
 
-  &:hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-  }
-
-  &:active {
-    opacity: ${({ theme }) => theme.opacity.click};
-  }
-
-  transition: ${({
-    theme: {
-      transition: { duration, timing },
-    },
-  }) => `opacity ${duration.medium} ${timing.ease}`};
+  ${OpacityHoverState}
 `
 
 const NotForSaleContainer = styled.div`
@@ -178,19 +167,7 @@ const OwnerText = styled.a`
   color: ${({ theme }) => theme.textSecondary};
   text-decoration: none;
 
-  &:hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-  }
-
-  &:active {
-    opacity: ${({ theme }) => theme.opacity.click};
-  }
-
-  transition: ${({
-    theme: {
-      transition: { duration, timing },
-    },
-  }) => `opacity ${duration.medium} ${timing.ease}`};
+  ${OpacityHoverState}
 `
 
 const OwnerInformationContainer = styled.div`
@@ -273,6 +250,11 @@ export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
   )
 }
 
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  ${OpacityHoverState}
+`
+
 export const NotForSale = ({ collectionName, collectionUrl }: { collectionName: string; collectionUrl: string }) => {
   const theme = useTheme()
 
@@ -287,9 +269,9 @@ export const NotForSale = ({ collectionName, collectionUrl }: { collectionName: 
           <ThemedText.BodySecondary fontSize="14px" lineHeight="20px">
             Discover similar NFTs for sale in
           </ThemedText.BodySecondary>
-          <Link to={`/nfts/collection/${collectionUrl}`}>
+          <StyledLink to={`/nfts/collection/${collectionUrl}`}>
             <ThemedText.Link lineHeight="20px">{collectionName}</ThemedText.Link>
-          </Link>
+          </StyledLink>
         </DiscoveryContainer>
       </NotForSaleContainer>
     </BestPriceContainer>

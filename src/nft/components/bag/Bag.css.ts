@@ -13,8 +13,6 @@ export const bagContainer = style([
     borderColor: 'backgroundOutline',
     borderWidth: '1px',
     color: 'textPrimary',
-    paddingTop: '20',
-    paddingBottom: '24',
   }),
   {
     '@media': {

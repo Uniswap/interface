@@ -27,6 +27,7 @@ const Footer = styled.div`
   color: ${({ theme }) => theme.textPrimary};
   display: flex;
   flex-direction: column;
+  margin-bottom: 8px;
   padding: 12px 16px;
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;

@@ -1,6 +1,7 @@
 import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { OpacityHoverState } from 'components/Common'
 import { useLoadAssetsQuery } from 'graphql/data/nft/Asset'
 import { useCollectionQuery, useLoadCollectionQuery } from 'graphql/data/nft/Collection'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
@@ -49,19 +50,8 @@ const IconWrapper = styled.button`
   display: flex;
   padding: 2px 0px;
   opacity: 1;
-  &:hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-  }
 
-  &:active {
-    opacity: ${({ theme }) => theme.opacity.click};
-  }
-
-  transition: ${({
-    theme: {
-      transition: { duration, timing },
-    },
-  }) => `opacity ${duration.medium} ${timing.ease}`};
+  ${OpacityHoverState}
 `
 
 const Collection = () => {

@@ -1,3 +1,4 @@
+import { OpacityHoverState } from 'components/Common'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { CollectionInfoForAsset, GenieAsset } from 'nft/types'
 import { putCommas } from 'nft/utils'
@@ -39,38 +40,14 @@ const Center = styled.span`
   display: flex;
   gap: 8px;
 
-  &:hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-  }
-
-  &:active {
-    opacity: ${({ theme }) => theme.opacity.click};
-  }
-
-  transition: ${({
-    theme: {
-      transition: { duration, timing },
-    },
-  }) => `opacity ${duration.medium} ${timing.ease}`};
+  ${OpacityHoverState}
 `
 
 const CreatorLink = styled.a`
   color: ${({ theme }) => theme.textPrimary};
   text-decoration: none;
 
-  &:hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-  }
-
-  &:active {
-    opacity: ${({ theme }) => theme.opacity.click};
-  }
-
-  transition: ${({
-    theme: {
-      transition: { duration, timing },
-    },
-  }) => `opacity ${duration.medium} ${timing.ease}`};
+  ${OpacityHoverState}
 `
 
 const CopyIcon = styled(Copy)`
