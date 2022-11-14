@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
 import { Currency, Token } from '@uniswap/sdk-core'
-import TokenLogo from 'components/Logo/TokenLogo'
+import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
 import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
 import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
@@ -73,12 +73,12 @@ export default function TokenDetails({
   const isNative = tokenAddress === NATIVE_CHAIN_ID
 
   const tokenQueryData = usePreloadedQuery(tokenQuery, tokenQueryReference).tokens?.[0]
+
   const token = useMemo(() => {
     if (isNative) return nativeCurrency
     if (tokenQueryData) return new QueryToken(tokenQueryData)
     return new Token(pageChainId, tokenAddress, DEFAULT_ERC20_DECIMALS)
   }, [isNative, nativeCurrency, pageChainId, tokenAddress, tokenQueryData])
-
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
   const isBlockedToken = tokenWarning?.canProceed === false
 
@@ -134,7 +134,7 @@ export default function TokenDetails({
             <TokenInfoContainer>
               <TokenNameCell>
                 <LogoContainer>
-                  <TokenLogo token={tokenQueryData} size={'32px'} />
+                  <CurrencyLogo currency={token} size={'32px'} />
                   <L2NetworkLogo networkUrl={L2Icon} size={'16px'} />
                 </LogoContainer>
                 {token?.name ?? <Trans>Name not found</Trans>}

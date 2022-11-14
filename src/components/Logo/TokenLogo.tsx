@@ -10,7 +10,9 @@ export default function TokenLogo(
     token?: TopToken | TokenQueryData
   }
 ) {
+  console.log(props.token?.address)
   const chainId = props.token?.chain ? CHAIN_NAME_TO_CHAIN_ID[props.token?.chain] : undefined
+
   return (
     <AssetLogo
       isNative={props.token?.address === NATIVE_CHAIN_ID}

@@ -1,7 +1,7 @@
 import TokenLogoLookupTable, { BAD_SRCS } from 'constants/TokenLogoLookupTable'
 import { chainIdToNetworkName, getNativeLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
 import uriToHttp from 'lib/utils/uriToHttp'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { isAddress } from 'utils'
 
 // Converts uri's into fetchable urls
@@ -36,7 +36,7 @@ function getInitialUrl(address?: string | null, chainId?: number | null, isNativ
   const networkName = chainId ? chainIdToNetworkName(chainId) : 'ethereum'
   const checksummedAddress = isAddress(address)
   if (checksummedAddress) {
-    return `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/${networkName}/assets/${checksummedAddress}/logo.png`
+    return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${checksummedAddress}/logo.png`
   } else {
     return undefined
   }
@@ -50,6 +50,11 @@ export default function useTokenLogoSource(
 ): [string | undefined, () => void] {
   const [current, setCurrent] = useState<string | undefined>(getInitialUrl(address, chainId, isNative))
   const [fallbackSrcs, setFallbackSrcs] = useState<string[] | undefined>(undefined)
+
+  useEffect(() => {
+    setCurrent(getInitialUrl(address, chainId, isNative))
+    setFallbackSrcs(undefined)
+  }, [address, chainId, isNative])
 
   const nextSrc = useCallback(() => {
     if (current) {
