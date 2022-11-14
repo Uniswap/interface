@@ -6,7 +6,7 @@ import { AssetMediaType } from 'nft/components/collection/Card'
 import { bodySmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile, useSellAsset } from 'nft/hooks'
-import { WalletAsset } from 'nft/types'
+import { TokenType, WalletAsset } from 'nft/types'
 import { UniformHeight } from 'nft/types'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -93,30 +93,30 @@ export const ViewMyNftsAsset = ({
 
   const assetMediaType = Card.useAssetMediaType(asset)
 
-  const isDisabled = asset.asset_contract.tokenType === 'ERC1155' || (isSellMode && asset.susFlag)
+  const isDisabled = isSellMode && (asset.asset_contract.tokenType === TokenType.ERC1155 || asset.susFlag)
   const disabledTooltipText =
-    asset.asset_contract.tokenType === 'ERC1155' ? 'ERC-1155 support coming soon' : 'Blocked from trading'
+    asset.asset_contract.tokenType === TokenType.ERC1155 ? 'ERC-1155 support coming soon' : 'Blocked from trading'
 
   return (
-    <Card.Container
-      asset={asset}
-      selected={isSelected}
-      addAssetToBag={() => handleSelect(false)}
-      removeAssetFromBag={() => handleSelect(true)}
-      onClick={onCardClick}
-      isDisabled={isDisabled}
+    <MouseoverTooltip
+      text={
+        <Box as="span" className={bodySmall} style={{ color: themeVars.colors.textPrimary }}>
+          <Trans>{disabledTooltipText}</Trans>{' '}
+        </Box>
+      }
+      placement="bottom"
+      offsetX={0}
+      offsetY={-180}
+      style={{ display: 'block' }}
+      disableHover={!isDisabled}
     >
-      <MouseoverTooltip
-        text={
-          <Box as="span" className={bodySmall} style={{ color: themeVars.colors.textPrimary }}>
-            <Trans>{disabledTooltipText}</Trans>{' '}
-          </Box>
-        }
-        placement="bottom"
-        offsetX={0}
-        offsetY={-100}
-        style={{ display: 'block' }}
-        disableHover={!isDisabled}
+      <Card.Container
+        asset={asset}
+        selected={isSelected}
+        addAssetToBag={() => handleSelect(false)}
+        removeAssetFromBag={() => handleSelect(true)}
+        onClick={onCardClick}
+        isDisabled={isDisabled}
       >
         <Card.ImageContainer>
           {getNftDisplayComponent(
@@ -127,10 +127,10 @@ export const ViewMyNftsAsset = ({
             setUniformHeight
           )}
         </Card.ImageContainer>
-      </MouseoverTooltip>
-      <Card.DetailsContainer>
-        <Card.ProfileNftDetails asset={asset} isSellMode={isSellMode} />
-      </Card.DetailsContainer>
-    </Card.Container>
+        <Card.DetailsContainer>
+          <Card.ProfileNftDetails asset={asset} isSellMode={isSellMode} />
+        </Card.DetailsContainer>
+      </Card.Container>
+    </MouseoverTooltip>
   )
 }

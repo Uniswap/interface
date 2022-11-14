@@ -1,6 +1,7 @@
 import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { OpacityHoverState } from 'components/Common'
 import { useLoadAssetsQuery } from 'graphql/data/nft/Asset'
 import { useCollectionQuery, useLoadCollectionQuery } from 'graphql/data/nft/Collection'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
@@ -21,6 +22,7 @@ import { ThemedText } from 'theme'
 
 const FILTER_WIDTH = 332
 const BAG_WIDTH = 324
+export const COLLECTION_BANNER_HEIGHT = 276
 
 export const CollectionBannerLoading = () => <Box height="full" width="full" className={styles.loadingBanner} />
 
@@ -48,19 +50,8 @@ const IconWrapper = styled.button`
   display: flex;
   padding: 2px 0px;
   opacity: 1;
-  &:hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-  }
 
-  &:active {
-    opacity: ${({ theme }) => theme.opacity.click};
-  }
-
-  transition: ${({
-    theme: {
-      transition: { duration, timing },
-    },
-  }) => `opacity ${duration.medium} ${timing.ease}`};
+  ${OpacityHoverState}
 `
 
 const Collection = () => {
@@ -113,21 +104,19 @@ const Collection = () => {
           {contractAddress ? (
             <>
               {' '}
-              <Box width="full" height="276">
-                <Box width="full" height="276">
-                  <Box
-                    as={collectionStats?.bannerImageUrl ? 'img' : 'div'}
-                    height="full"
-                    width="full"
-                    src={
-                      collectionStats?.bannerImageUrl
-                        ? `${collectionStats.bannerImageUrl}?w=${window.innerWidth}`
-                        : undefined
-                    }
-                    className={styles.bannerImage}
-                    background="none"
-                  />
-                </Box>
+              <Box width="full" height={`${COLLECTION_BANNER_HEIGHT}`}>
+                <Box
+                  as={collectionStats?.bannerImageUrl ? 'img' : 'div'}
+                  height="full"
+                  width="full"
+                  src={
+                    collectionStats?.bannerImageUrl
+                      ? `${collectionStats.bannerImageUrl}?w=${window.innerWidth}`
+                      : undefined
+                  }
+                  className={styles.bannerImage}
+                  background="none"
+                />
               </Box>
               <CollectionDescriptionSection>
                 {collectionStats && (

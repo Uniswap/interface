@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { OpacityHoverState } from 'components/Common'
 import { BagCloseIcon } from 'nft/components/icons'
 import styled from 'styled-components/macro'
 import { ButtonText, ThemedText } from 'theme'
@@ -24,19 +25,8 @@ const IconWrapper = styled.button`
   margin-left: auto;
   padding: 2px;
   opacity: 1;
-  &:hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-  }
 
-  &:active {
-    opacity: ${({ theme }) => theme.opacity.click};
-  }
-
-  transition: ${({
-    theme: {
-      transition: { duration, timing },
-    },
-  }) => `opacity ${duration.medium} ${timing.ease}`};
+  ${OpacityHoverState}
 `
 const CounterDot = styled.div`
   align-items: center;

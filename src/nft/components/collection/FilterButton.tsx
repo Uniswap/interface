@@ -3,7 +3,6 @@ import { Box } from 'nft/components/Box'
 import * as styles from 'nft/components/collection/FilterButton.css'
 import { FilterIcon } from 'nft/components/icons'
 import { buttonTextMedium } from 'nft/css/common.css'
-import { useIsCollectionLoading } from 'nft/hooks'
 import { pluralize, putCommas } from 'nft/utils'
 
 export const FilterButton = ({
@@ -17,15 +16,9 @@ export const FilterButton = ({
   onClick: () => void
   collectionCount?: number
 }) => {
-  const isCollectionNftsLoading = useIsCollectionLoading((state) => state.isCollectionNftsLoading)
-
   return (
     <Box
-      className={
-        isCollectionNftsLoading
-          ? styles.filterButtonLoading
-          : clsx(styles.filterButton, !isFiltersExpanded && styles.filterButtonExpanded)
-      }
+      className={clsx(styles.filterButton, !isFiltersExpanded && styles.filterButtonExpanded)}
       display="flex"
       gap="8"
       borderRadius="12"

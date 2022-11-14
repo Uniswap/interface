@@ -1,3 +1,4 @@
+import { OpacityHoverState } from 'components/Common'
 import { GenieAsset, Trait } from 'nft/types'
 import qs from 'query-string'
 import { useMemo } from 'react'
@@ -26,19 +27,7 @@ const GridItemContainer = styled(Link)`
   padding: 12px;
   text-decoration: none;
 
-  &:hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-  }
-
-  &:active {
-    opacity: ${({ theme }) => theme.opacity.click};
-  }
-
-  transition: ${({
-    theme: {
-      transition: { duration, timing },
-    },
-  }) => `opacity ${duration.medium} ${timing.ease}`};
+  ${OpacityHoverState}
   min-width: 0;
 `
 

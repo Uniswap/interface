@@ -1,4 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
+import { OpacityHoverState } from 'components/Common'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { CancelListingIcon, MinusIcon, PlusIcon } from 'nft/components/icons'
 import { useBag } from 'nft/hooks'
@@ -7,7 +8,7 @@ import { ethNumberStandardFormatter, formatEthPrice, getMarketplaceIcon, timeLef
 import { shortenAddress } from 'nft/utils/address'
 import { useMemo } from 'react'
 import { Upload } from 'react-feather'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -139,19 +140,7 @@ const UploadLink = styled.a`
   color: ${({ theme }) => theme.textSecondary};
   cursor: pointer;
 
-  &:hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-  }
-
-  &:active {
-    opacity: ${({ theme }) => theme.opacity.click};
-  }
-
-  transition: ${({
-    theme: {
-      transition: { duration, timing },
-    },
-  }) => `opacity ${duration.medium} ${timing.ease}`};
+  ${OpacityHoverState}
 `
 
 const NotForSaleContainer = styled.div`
@@ -177,19 +166,7 @@ const OwnerText = styled.a`
   color: ${({ theme }) => theme.textSecondary};
   text-decoration: none;
 
-  &:hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-  }
-
-  &:active {
-    opacity: ${({ theme }) => theme.opacity.click};
-  }
-
-  transition: ${({
-    theme: {
-      transition: { duration, timing },
-    },
-  }) => `opacity ${duration.medium} ${timing.ease}`};
+  ${OpacityHoverState}
 `
 
 const OwnerInformationContainer = styled.div`
@@ -257,7 +234,12 @@ export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
   )
 }
 
-export const NotForSale = ({ collection }: { collection: CollectionInfoForAsset }) => {
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  ${OpacityHoverState}
+`
+
+export const NotForSale = ({ collectionName, collectionUrl }: { collectionName: string; collectionUrl: string }) => {
   const theme = useTheme()
 
   return (
@@ -271,7 +253,9 @@ export const NotForSale = ({ collection }: { collection: CollectionInfoForAsset 
           <ThemedText.BodySecondary fontSize="14px" lineHeight="20px">
             Discover similar NFTs for sale in
           </ThemedText.BodySecondary>
-          <ThemedText.Link lineHeight="20px">{collection.collectionName}</ThemedText.Link>
+          <StyledLink to={`/nfts/collection/${collectionUrl}`}>
+            <ThemedText.Link lineHeight="20px">{collectionName}</ThemedText.Link>
+          </StyledLink>
         </DiscoveryContainer>
       </NotForSaleContainer>
     </BestPriceContainer>
@@ -401,7 +385,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
           </div>
         </BestPriceContainer>
       ) : (
-        <NotForSale collection={collection} />
+        <NotForSale collectionName={collection.collectionName ?? 'this collection'} collectionUrl={asset.address} />
       )}
     </Container>
   )

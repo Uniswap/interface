@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import clsx from 'clsx'
+import { OpacityHoverState } from 'components/Common'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
@@ -15,7 +16,7 @@ import {
 import { body, bodySmall, buttonTextSmall, subhead, subheadSmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
-import { GenieAsset, Rarity, UniformHeight, UniformHeights, WalletAsset } from 'nft/types'
+import { GenieAsset, Rarity, TokenType, UniformHeight, UniformHeights, WalletAsset } from 'nft/types'
 import { isAudio, isVideo } from 'nft/utils'
 import { fallbackProvider, putCommas } from 'nft/utils'
 import { floorFormatter } from 'nft/utils/numbers'
@@ -93,12 +94,7 @@ const DetailsLinkContainer = styled.a`
   text-decoration: none;
   color: ${({ theme }) => theme.textSecondary};
 
-  :hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-  }
-  :focus {
-    opacity: ${({ theme }) => theme.opacity.click};
-  }
+  ${OpacityHoverState}
 `
 
 const SuspiciousIcon = styled(AlertTriangle)`
@@ -267,7 +263,9 @@ const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
             if (uniformHeight === UniformHeights.unset) {
               setUniformHeight(e.currentTarget.clientHeight)
             } else if (uniformHeight !== UniformHeights.notUniform && e.currentTarget.clientHeight !== uniformHeight) {
-              setUniformHeight(UniformHeights.notUniform)
+              if (!uniformHeight || Math.abs(uniformHeight - e.currentTarget.clientHeight) > 1) {
+                setUniformHeight(UniformHeights.notUniform)
+              }
             }
           }
           setLoaded(true)
@@ -422,7 +420,9 @@ const Audio = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPla
                 uniformHeight !== UniformHeights.notUniform &&
                 e.currentTarget.clientHeight !== uniformHeight
               ) {
-                setUniformHeight(UniformHeights.notUniform)
+                if (!uniformHeight || Math.abs(uniformHeight - e.currentTarget.clientHeight) > 1) {
+                  setUniformHeight(UniformHeights.notUniform)
+                }
               }
             }
             setImageLoaded(true)
@@ -526,6 +526,12 @@ const ProfileNftDetails = ({ asset, isSellMode }: ProfileNftDetailsProps) => {
     return !!asset.name ? asset.name : `#${asset.tokenId}`
   }
 
+  const shouldShowUserListedPrice =
+    !!asset.floor_sell_order_price &&
+    !asset.notForSale &&
+    (asset.asset_contract.tokenType !== TokenType.ERC1155 || isSellMode)
+  const shouldShowFloorPrice = asset.notForSale && isSellMode && !!asset.floorPrice
+
   return (
     <Box overflow="hidden" width="full" flexWrap="nowrap">
       <Row justifyItems="flex-start">
@@ -545,15 +551,16 @@ const ProfileNftDetails = ({ asset, isSellMode }: ProfileNftDetailsProps) => {
         </TruncatedTextRow>
         {asset.susFlag && <Suspicious />}
       </Row>
-      <TruncatedTextRow
-        className={subhead}
-        style={{ color: !asset.notForSale ? themeVars.colors.textPrimary : themeVars.colors.textSecondary }}
-      >
-        {!asset.notForSale && <span>{`${floorFormatter(asset.floor_sell_order_price)} ETH`}</span>}
-        {asset.notForSale && isSellMode && !!asset.floorPrice && (
-          <span>{`${floorFormatter(asset.floorPrice)} ETH Floor`}</span>
-        )}
-      </TruncatedTextRow>
+      {shouldShowUserListedPrice && (
+        <TruncatedTextRow className={subhead} style={{ color: themeVars.colors.textPrimary }}>
+          {`${floorFormatter(asset.floor_sell_order_price)} ETH`}
+        </TruncatedTextRow>
+      )}
+      {shouldShowFloorPrice && (
+        <TruncatedTextRow className={subhead} style={{ color: themeVars.colors.textSecondary }}>
+          {`${floorFormatter(asset.floorPrice)} ETH Floor`}
+        </TruncatedTextRow>
+      )}
     </Box>
   )
 }

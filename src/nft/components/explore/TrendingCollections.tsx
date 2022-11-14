@@ -1,3 +1,4 @@
+import { OpacityHoverState } from 'components/Common'
 import ms from 'ms.macro'
 import { CollectionTableColumn, Denomination, TimePeriod, VolumeType } from 'nft/types'
 import { fetchPrice } from 'nft/utils'
@@ -60,13 +61,7 @@ const Selector = styled.div<{ active: boolean }>`
   background: ${({ active, theme }) => (active ? theme.backgroundInteractive : 'none')};
   cursor: pointer;
 
-  :hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-  }
-
-  :active {
-    opacity: ${({ theme }) => theme.opacity.click};
-  }
+  ${OpacityHoverState}
 `
 
 const StyledSelectorText = styled(ThemedText.SubHeader)<{ active: boolean }>`
