@@ -18,6 +18,11 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import {
+  MAX_WIDTH_MEDIA_BREAKPOINT,
+  MOBILE_MEDIA_BREAKPOINT,
+  SMALL_MEDIA_BREAKPOINT,
+} from 'components/Tokens/constants'
 
 const FILTER_WIDTH = 332
 const BAG_WIDTH = 324
@@ -34,8 +39,27 @@ const MobileFilterHeader = styled(Row)`
   justify-content: space-between;
 `
 
+// Sticky navbar on light mode looks incorrect because the box shadows from assets overlap the the edges of the navbar.
+// As a result it needs 14px padding on either side. These paddings are offset by 14px to account for this
 const CollectionDisplaySection = styled(Row)`
-  ${styles.ScreenBreakpointsPaddings}
+  @media screen and (min-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
+    padding-left: 34px;
+    padding-right: 34px;
+  }
+
+  @media screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
+    padding-left: 26px;
+    padding-right: 26px;
+  }
+
+  @media screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+
+  @media screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
+    padding-left: 16px;
+  }
   align-items: flex-start;
   position: relative;
 `
