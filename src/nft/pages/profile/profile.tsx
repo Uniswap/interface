@@ -14,7 +14,7 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useToggleWalletModal } from 'state/application/hooks'
 
-import * as styles from './sell.css'
+import * as styles from './profile.css'
 
 const SHOPPING_BAG_WIDTH = 360
 
