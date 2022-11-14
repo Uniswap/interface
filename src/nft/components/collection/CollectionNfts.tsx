@@ -48,6 +48,7 @@ import { CollectionAssetLoading } from './CollectionAssetLoading'
 import { MARKETPLACE_ITEMS } from './MarketplaceSelect'
 import { Sweep, useSweepFetcherParams } from './Sweep'
 import { TraitChip } from './TraitChip'
+import { OpacityHoverState } from 'components/Common'
 
 interface CollectionNftsProps {
   contractAddress: string
@@ -90,19 +91,7 @@ const EmptyCollectionWrapper = styled.div`
 `
 
 const ViewFullCollection = styled.span`
-  &:hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-  }
-
-  &:active {
-    opacity: ${({ theme }) => theme.opacity.click};
-  }
-
-  transition: ${({
-    theme: {
-      transition: { duration, timing },
-    },
-  }) => `opacity ${duration.medium} ${timing.ease}`};
+  ${OpacityHoverState}
 `
 
 const ClearAllButton = styled.button`

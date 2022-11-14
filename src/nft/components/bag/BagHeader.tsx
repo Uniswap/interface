@@ -1,3 +1,4 @@
+import { OpacityHoverState } from 'components/Common'
 import { Column, Row } from 'nft/components/Flex'
 import { BagCloseIcon } from 'nft/components/icons'
 import { roundAndPluralize } from 'nft/utils/roundAndPluralize'
@@ -33,19 +34,8 @@ const IconWrapper = styled.button`
   display: flex;
   padding: 2px;
   opacity: 1;
-  &:hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-  }
 
-  &:active {
-    opacity: ${({ theme }) => theme.opacity.click};
-  }
-
-  transition: ${({
-    theme: {
-      transition: { duration, timing },
-    },
-  }) => `opacity ${duration.medium} ${timing.ease}`};
+  ${OpacityHoverState}
 `
 interface BagHeaderProps {
   numberOfAssets: number
