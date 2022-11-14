@@ -62,7 +62,7 @@ export const PriceHeader = ({ price, percentChange, date }: HeaderProps) => {
   })
 
   const percentChangeFormatted = useDerivedValue(() =>
-    isNaN(percentChange.value) ? '-' : `${round(percentChange.value, 2)}%`
+    isNaN(percentChange.value) ? '-' : `${Math.abs(round(percentChange.value, 2))}%`
   )
 
   const percentChangeStyles = useAnimatedStyle(() => ({
@@ -76,14 +76,14 @@ export const PriceHeader = ({ price, percentChange, date }: HeaderProps) => {
       <ScaledReText color="textPrimary" text={priceFormatted} variant="headlineLarge" />
       <Flex row gap="xxs">
         <Flex row gap="xxxs">
-          <ScaledReText style={percentChangeStyles} text={percentChangeIcon} variant="bodySmall" />
+          <ScaledReText style={percentChangeStyles} text={percentChangeIcon} variant="bodyLarge" />
           <ScaledReText
             style={percentChangeStyles}
             text={percentChangeFormatted}
-            variant="bodySmall"
+            variant="bodyLarge"
           />
         </Flex>
-        <ScaledReText color="textSecondary" text={date} variant="bodySmall" />
+        <ScaledReText color="textSecondary" text={date} variant="bodyLarge" />
       </Flex>
     </Box>
   )

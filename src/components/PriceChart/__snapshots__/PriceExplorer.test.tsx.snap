@@ -37,7 +37,7 @@ exports[`renders correctly 1`] = `
           Array [
             Object {
               "color": "#0D111C",
-              "fontFamily": "Inter-Medium",
+              "fontFamily": "Inter-SemiBold",
               "fontSize": 40,
               "lineHeight": 48,
             },
@@ -88,9 +88,9 @@ exports[`renders correctly 1`] = `
               Array [
                 Object {
                   "color": "#0D111C",
-                  "fontFamily": "Inter-Regular",
-                  "fontSize": 14,
-                  "lineHeight": 20,
+                  "fontFamily": "Inter-Medium",
+                  "fontSize": 16,
+                  "lineHeight": 24,
                 },
                 Object {
                   "color": "#FA2B39",
@@ -118,7 +118,7 @@ exports[`renders correctly 1`] = `
           allowFontScaling={true}
           animatedProps={
             Object {
-              "text": "-50%",
+              "text": "50%",
             }
           }
           editable={false}
@@ -131,9 +131,9 @@ exports[`renders correctly 1`] = `
               Array [
                 Object {
                   "color": "#0D111C",
-                  "fontFamily": "Inter-Regular",
-                  "fontSize": 14,
-                  "lineHeight": 20,
+                  "fontFamily": "Inter-Medium",
+                  "fontSize": 16,
+                  "lineHeight": 24,
                 },
                 Object {
                   "color": "#FA2B39",
@@ -142,7 +142,7 @@ exports[`renders correctly 1`] = `
             ]
           }
           underlineColorAndroid="transparent"
-          value="-50%"
+          value="50%"
         />
       </View>
       <View
@@ -175,9 +175,9 @@ exports[`renders correctly 1`] = `
             Array [
               Object {
                 "color": "#505A78",
-                "fontFamily": "Inter-Regular",
-                "fontSize": 14,
-                "lineHeight": 20,
+                "fontFamily": "Inter-Medium",
+                "fontSize": 16,
+                "lineHeight": 24,
               },
             ],
           ]

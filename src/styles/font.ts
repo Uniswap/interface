@@ -22,7 +22,7 @@ export const fontFamily = {
 
 export const textVariants = {
   headlineLarge: {
-    fontFamily: fontFamily.sansSerif.medium,
+    fontFamily: fontFamily.sansSerif.semibold,
     fontSize: 40,
     lineHeight: 48,
     color: 'textPrimary',

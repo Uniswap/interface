@@ -22,7 +22,7 @@ export function TokenDetailsHeader({ data, onPressWarningIcon }: TokenDetailsHea
   const tokenProject = token?.project
 
   return (
-    <Flex mx="md">
+    <Flex gap="sm" mx="md">
       <TokenLogo
         chainId={fromGraphQLChain(token?.chain) ?? undefined}
         symbol={token?.symbol ?? undefined}
