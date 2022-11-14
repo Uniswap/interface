@@ -15,6 +15,7 @@ import { AccountDetails } from 'src/components/WalletConnect/RequestModal/Accoun
 import { ClientDetails, PermitInfo } from 'src/components/WalletConnect/RequestModal/ClientDetails'
 import { useHasSufficientFunds } from 'src/components/WalletConnect/RequestModal/hooks'
 import { RequestDetails } from 'src/components/WalletConnect/RequestModal/RequestDetails'
+import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { useTransactionGasFee } from 'src/features/gas/hooks'
 import { GasSpeed } from 'src/features/gas/types'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
@@ -147,10 +148,6 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
    */
   const rejectOnCloseRef = useRef(true)
 
-  if (!VALID_REQUEST_TYPES.includes(request.type)) {
-    return null
-  }
-
   const onReject = () => {
     rejectRequest(request.internalId)
     rejectOnCloseRef.current = false
@@ -188,6 +185,13 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
 
     rejectOnCloseRef.current = false
     onClose()
+  }
+
+  const { trigger: actionButtonTrigger } = useBiometricPrompt(onConfirm)
+  const { requiredForTransactions } = useBiometricAppSettings()
+
+  if (!VALID_REQUEST_TYPES.includes(request.type)) {
+    return null
   }
 
   const handleClose = () => {
@@ -272,7 +276,13 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
               label={isTransactionRequest(request) ? t('Accept') : t('Sign')}
               name={ElementName.Confirm}
               size={ButtonSize.Medium}
-              onPress={onConfirm}
+              onPress={() => {
+                if (requiredForTransactions) {
+                  actionButtonTrigger()
+                } else {
+                  onConfirm()
+                }
+              }}
             />
           </Flex>
         </Flex>
