@@ -2,6 +2,11 @@ import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { OpacityHoverState } from 'components/Common'
+import {
+  MAX_WIDTH_MEDIA_BREAKPOINT,
+  MOBILE_MEDIA_BREAKPOINT,
+  SMALL_MEDIA_BREAKPOINT,
+} from 'components/Tokens/constants'
 import { useLoadAssetsQuery } from 'graphql/data/nft/Asset'
 import { useCollectionQuery, useLoadCollectionQuery } from 'graphql/data/nft/Collection'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
@@ -35,8 +40,27 @@ const MobileFilterHeader = styled(Row)`
   justify-content: space-between;
 `
 
+// Sticky navbar on light mode looks incorrect because the box shadows from assets overlap the the edges of the navbar.
+// As a result it needs 14px padding on either side. These paddings are offset by 14px to account for this
 const CollectionDisplaySection = styled(Row)`
-  ${styles.ScreenBreakpointsPaddings}
+  @media screen and (min-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
+    padding-left: 34px;
+    padding-right: 34px;
+  }
+
+  @media screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
+    padding-left: 26px;
+    padding-right: 26px;
+  }
+
+  @media screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+
+  @media screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
+    padding-left: 16px;
+  }
   align-items: flex-start;
   position: relative;
 `

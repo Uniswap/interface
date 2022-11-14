@@ -31,7 +31,7 @@ export const FilterButton = ({
       width={isMobile ? '44' : 'auto'}
       height="44"
       whiteSpace="nowrap"
-      color="textPrimary"
+      color="white"
     >
       <FilterIcon />
       {!isMobile ? (

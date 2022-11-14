@@ -595,7 +595,7 @@ const MarketplaceRow = ({
 
   const marketplaceFee = selectedMarkets.length > 0 ? maxMarketFee(selectedMarkets) : 0
   const price = showGlobalPrice ? globalPrice : listPrice
-  const feeInEth = price && (price * (asset.creatorPercentage * 100 + marketplaceFee)) / 100
+  const feeInEth = price && (price * (asset.basisPoints * 0.01 + marketplaceFee)) / 100
   const userReceives = price && feeInEth && price - feeInEth
   const profit = userReceives && asset.lastPrice && userReceives - asset.lastPrice
   const profitPercent = profit && asset.lastPrice && Math.round(profit && (profit / asset.lastPrice) * 100)
@@ -714,7 +714,7 @@ const MarketplaceRow = ({
       </Row>
       <Row flex="1" display={{ sm: 'none', md: 'flex' }}>
         <Box className={body} color="textSecondary" width="full" textAlign="right">
-          {(asset.creatorPercentage * 100).toFixed(1)}%
+          {(asset.basisPoints * 0.01).toFixed(1)}%
         </Box>
       </Row>
       <Row style={{ flex: '1.5' }} display={{ sm: 'none', md: 'flex' }}>

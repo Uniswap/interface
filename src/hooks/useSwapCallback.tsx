@@ -1,8 +1,11 @@
 // eslint-disable-next-line no-restricted-imports
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { EventName } from '@uniswap/analytics-events'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { SwapCallbackState, useSwapCallback as useLibSwapCallBack } from 'lib/hooks/swap/useSwapCallback'
+import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { ReactNode, useMemo } from 'react'
 
 import { useTransactionAdder } from '../state/transactions/hooks'
@@ -47,6 +50,10 @@ export function useSwapCallback(
     }
     return () =>
       libCallback().then((response) => {
+        sendAnalyticsEvent(
+          EventName.SWAP_SIGNED,
+          formatSwapSignedAnalyticsEventProperties({ trade, txHash: response.hash })
+        )
         addTransaction(
           response,
           trade.tradeType === TradeType.EXACT_INPUT

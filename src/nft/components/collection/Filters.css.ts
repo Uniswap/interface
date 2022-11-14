@@ -8,7 +8,8 @@ export const container = style([
     paddingTop: '4',
   }),
   {
-    width: '300px',
+    width: '308px',
+    paddingRight: '8px',
     paddingBottom: '96px',
     '@media': {
       [`(max-width: ${breakpoints.sm - 1}px)`]: {
