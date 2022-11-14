@@ -170,7 +170,7 @@ export function useNftBalanceQuery(
       collectionIsVerified: asset?.collection?.isVerified,
       lastPrice: queryAsset.node.lastPrice?.value,
       floorPrice: asset?.collection?.markets?.[0]?.floorPrice?.value,
-      creatorPercentage: queryAsset?.node?.listingFees?.[0]?.basisPoints ?? 0 / 10000,
+      basisPoints: queryAsset?.node?.listingFees?.[0]?.basisPoints ?? 0 / 10000,
       listing_date: asset?.listings?.edges?.[0]?.node?.createdAt,
       date_acquired: queryAsset.node.lastPrice?.timestamp,
       sellOrders: asset?.listings?.edges.map((edge: any) => edge.node),

@@ -23,7 +23,7 @@ const EmptyWalletText = styled.div`
 const ExploreNFTsButton = styled.button`
   background-color: ${({ theme }) => theme.accentAction};
   padding: 10px 24px;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.white};
   width: min-content;
   border: none;
   outline: none;
@@ -31,6 +31,9 @@ const ExploreNFTsButton = styled.button`
   white-space: nowrap;
   cursor: pointer;
   margin-top: 20px;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
 `
 
 export const EmptyWalletContent = () => {

@@ -356,7 +356,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
                     }
                   }}
                 >
-                  <SubHeader lineHeight={'20px'}>
+                  <SubHeader color="white" lineHeight={'20px'}>
                     <span>{assetInBag ? 'Remove' : 'Buy Now'}</span>
                   </SubHeader>
                 </BuyNowButton>

@@ -44,12 +44,19 @@ const SellModeButton = styled.button<{ active: boolean }>`
   gap: 8px;
   cursor: pointer;
   background-color: ${({ theme, active }) => (active ? theme.accentAction : theme.backgroundInteractive)};
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ active, theme }) => (active ? 'white' : theme.textPrimary)};
   border: none;
   outline: none;
   &:hover {
     background-color: ${({ theme }) => theme.accentAction};
+    color: white;
   }
+
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => `${duration.fast} all ${timing.ease}`};
 `
 
 const ProfilePageColumn = styled(Column)`
