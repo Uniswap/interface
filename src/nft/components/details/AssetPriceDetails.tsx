@@ -1,6 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
 import useCopyClipboard from 'hooks/useCopyClipboard'
-import { CancelListingIcon, MinusIcon, PlusIcon } from 'nft/components/icons'
+import { CancelListingIcon } from 'nft/components/icons'
 import { useBag } from 'nft/hooks'
 import { CollectionInfoForAsset, GenieAsset, TokenType } from 'nft/types'
 import { ethNumberStandardFormatter, formatEthPrice, getMarketplaceIcon, timeLeft, useUsdPrice } from 'nft/utils'
@@ -98,41 +98,8 @@ const BuyNowButtonContainer = styled.div`
   position: relative;
 `
 
-const Erc1155BuyNowButton = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  width: 100%;
-  background-color: ${({ theme }) => theme.backgroundSurface};
-  border: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
-  border-radius: 12px;
-  margin-top: 12px;
-  text-align: center;
-  cursor: pointer;
-  justify-content: space-between;
-  overflow-x: hidden;
-`
 const Tertiary = styled(ThemedText.BodySecondary)`
   color: ${({ theme }) => theme.textTertiary};
-`
-
-const Erc1155BuyNowText = styled.div`
-  display: flex;
-  width: 100%;
-  padding: 10px 12px;
-  justify-content: center;
-  cursor: default;
-`
-
-const Erc1155ChangeButton = styled(Erc1155BuyNowText)<{ remove: boolean }>`
-  background-color: ${({ theme, remove }) => (remove ? theme.accentFailureSoft : theme.accentActionSoft)};
-  color: ${({ theme, remove }) => (remove ? theme.accentFailure : theme.accentAction)};
-  cursor: pointer;
-
-  ${hoverState}
-
-  &:hover::after {
-    border-radius: 0px;
-  }
 `
 
 const UploadLink = styled.a`
@@ -300,11 +267,8 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const isErc1555 = asset.tokenType === TokenType.ERC1155
   const [, setCopied] = useCopyClipboard()
 
-  const { quantity, assetInBag } = useMemo(() => {
+  const { assetInBag } = useMemo(() => {
     return {
-      quantity: itemsInBag.filter(
-        (x) => x.asset.tokenType === 'ERC1155' && x.asset.tokenId === asset.tokenId && x.asset.address === asset.address
-      ).length,
       assetInBag: itemsInBag.some(
         (item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address
       ),

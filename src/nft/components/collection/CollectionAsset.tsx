@@ -36,11 +36,8 @@ export const CollectionAsset = ({
   const setBagExpanded = useBag((state) => state.setBagExpanded)
   const trace = useTrace({ page: PageName.NFT_COLLECTION_PAGE })
 
-  const { quantity, isSelected } = useMemo(() => {
+  const { isSelected } = useMemo(() => {
     return {
-      quantity: itemsInBag.filter(
-        (x) => x.asset.tokenType === 'ERC1155' && x.asset.tokenId === asset.tokenId && x.asset.address === asset.address
-      ).length,
       isSelected: itemsInBag.some(
         (item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address
       ),
