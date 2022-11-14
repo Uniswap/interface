@@ -84,7 +84,6 @@ export const CollectionAsset = ({
       removeAssetFromBag={handleRemoveAssetFromBag}
     >
       <Card.ImageContainer>
-        {asset.tokenType === 'ERC1155' && quantity > 0 && <Card.Erc1155Controls quantity={quantity.toString()} />}
         {asset.rarity && provider && (
           <Card.Ranking
             rarity={asset.rarity}
