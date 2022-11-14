@@ -8,6 +8,8 @@ import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
+import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
+import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useMemo } from 'react'
 import { Copy, ExternalLink, Power } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
@@ -112,6 +114,10 @@ const AuthenticatedHeader = () => {
   const navigate = useNavigate()
   const closeModal = useCloseModal(ApplicationModal.WALLET_DROPDOWN)
 
+  const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
+  const resetSellAssets = useSellAsset((state) => state.reset)
+  const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
+
   const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
   const isUnclaimed = useUserHasAvailableClaim(account)
   const connectionType = getConnection(connector).type
@@ -133,6 +139,9 @@ const AuthenticatedHeader = () => {
   }, [balanceString, nativeCurrencyPrice])
 
   const navigateToProfile = () => {
+    resetSellAssets()
+    setSellPageState(ProfilePageStateType.VIEWING)
+    clearCollectionFilters()
     navigate('/nfts/profile')
     closeModal()
   }
