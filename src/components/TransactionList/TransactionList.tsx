@@ -57,18 +57,19 @@ export default function TransactionList(props: TransactionListProps) {
     })
   }, [props.ownerAddress, refetch])
 
-  const loading = isNonPollingRequestInFlight(networkStatus)
+  const nonPollingRequestInFlight = isNonPollingRequestInFlight(networkStatus)
   const hasData = !!data?.portfolios?.[0]?.assetActivities
 
-  if (loading) {
-    return (
-      <Box>
-        <Loading type="transactions" />
-      </Box>
-    )
-  }
-
   if (!hasData) {
+    if (nonPollingRequestInFlight) {
+      return (
+        <Box>
+          <Loading type="transactions" />
+        </Box>
+      )
+    }
+    // @TODO: we can not use 'error' from usequery right now because there are always multiple errors in this request.
+    // We should fix this issues on the backend and then migrate to usePersistedError.
     return (
       <Box height="100%" pb="xxxl">
         <BaseCard.ErrorState

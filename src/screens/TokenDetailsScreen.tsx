@@ -288,7 +288,7 @@ function TokenDetails({
 
       <TokenWarningModal
         currency={currency}
-        disableAccept={!activeTransactionType}
+        disableAccept={activeTransactionType === undefined}
         isVisible={showWarningModal}
         safetyLevel={safetyLevel}
         onAccept={onAcceptWarning}
