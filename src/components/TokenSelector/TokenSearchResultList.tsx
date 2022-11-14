@@ -72,7 +72,7 @@ export function useTokenSectionsByVariation(
     data: popularTokens,
     error: populateTokensError,
     refetch: refetchPopularTokens,
-  } = usePopularTokens()
+  } = usePopularTokens(chainFilter ?? ChainId.Mainnet, hideSpamTokens)
   const {
     data: portfolioBalancesById,
     error: portfolioBalancesByIdError,

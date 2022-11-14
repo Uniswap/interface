@@ -417,18 +417,29 @@ query TransactionList($address: String!) {
   }
 }
 
-query TopTokens {
-  topTokenProjects(orderBy: MARKET_CAP, page: 1, pageSize: 100) {
+query TopTokens(
+  $chain: Chain
+  $page: Int!
+  $pageSize: Int!
+  $orderBy: TokenSortableField
+) {
+  topTokens(
+    chain: $chain
+    page: $page
+    pageSize: $pageSize
+    orderBy: $orderBy
+  ) {
     id
-    logoUrl
+    address
+    chain
+    decimals
     name
-    safetyLevel
-    tokens {
+    symbol
+    project {
       id
-      chain
-      address
-      decimals
-      symbol
+      isSpam
+      logoUrl
+      safetyLevel
     }
   }
 }

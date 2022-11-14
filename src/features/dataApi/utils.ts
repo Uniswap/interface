@@ -2,7 +2,7 @@ import { ApolloError } from '@apollo/client'
 import { Token } from '@uniswap/sdk-core'
 import { useEffect, useState } from 'react'
 import { ChainId } from 'src/constants/chains'
-import { Chain, ContractInput, TopTokensQuery } from 'src/data/__generated__/types-and-hooks'
+import { Chain, ContractInput, TokenProjectsQuery } from 'src/data/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'src/features/dataApi/types'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { fromGraphQLChain, toGraphQLChain } from 'src/utils/chainId'
@@ -22,7 +22,7 @@ export function currencyIdToContractInput(id: CurrencyId): ContractInput {
 }
 
 export function tokenProjectToCurrencyInfos(
-  tokenProject: TopTokensQuery['topTokenProjects'],
+  tokenProject: TokenProjectsQuery['tokenProjects'],
   chainFilter?: ChainId | null
 ): CurrencyInfo[] {
   return tokenProject

@@ -909,10 +909,15 @@ export type TransactionListQueryVariables = Exact<{
 
 export type TransactionListQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', id: string, assetActivities?: Array<{ __typename?: 'AssetActivity', id: string, timestamp: number, type: ActivityType, transaction: { __typename?: 'Transaction', id: string, hash: string, status: TransactionStatus, to: string, from: string }, assetChanges: Array<{ __typename: 'NftApproval' } | { __typename: 'NftApproveForAll' } | { __typename: 'NftTransfer', id: string, nftStandard: NftStandard, sender: string, recipient: string, direction: TransactionDirection, asset: { __typename?: 'NftAsset', id: string, name?: string | null, tokenId: string, imageUrl?: string | null, nftContract?: { __typename?: 'NftContract', id: string, chain: Chain, address: string } | null, collection?: { __typename?: 'NftCollection', id: string, name?: string | null } | null } } | { __typename: 'TokenApproval', id: string, tokenStandard: TokenStandard, approvedAddress: string, quantity: string, asset: { __typename?: 'Token', id: string, name?: string | null, symbol?: string | null, decimals?: number | null, address?: string | null, chain: Chain } } | { __typename: 'TokenTransfer', id: string, tokenStandard: TokenStandard, quantity: string, sender: string, recipient: string, direction: TransactionDirection, asset: { __typename?: 'Token', id: string, name?: string | null, symbol?: string | null, address?: string | null, decimals?: number | null, chain: Chain }, transactedValue?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null } | null> } | null> | null } | null> | null };
 
-export type TopTokensQueryVariables = Exact<{ [key: string]: never; }>;
+export type TopTokensQueryVariables = Exact<{
+  chain?: InputMaybe<Chain>;
+  page: Scalars['Int'];
+  pageSize: Scalars['Int'];
+  orderBy?: InputMaybe<TokenSortableField>;
+}>;
 
 
-export type TopTokensQuery = { __typename?: 'Query', topTokenProjects?: Array<{ __typename?: 'TokenProject', id: string, logoUrl?: string | null, name?: string | null, safetyLevel?: SafetyLevel | null, tokens: Array<{ __typename?: 'Token', id: string, chain: Chain, address?: string | null, decimals?: number | null, symbol?: string | null }> } | null> | null };
+export type TopTokensQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', id: string, address?: string | null, chain: Chain, decimals?: number | null, name?: string | null, symbol?: string | null, project?: { __typename?: 'TokenProject', id: string, isSpam?: boolean | null, logoUrl?: string | null, safetyLevel?: SafetyLevel | null } | null } | null> | null };
 
 export type SearchPopularTokensQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1712,18 +1717,19 @@ export type TransactionListQueryHookResult = ReturnType<typeof useTransactionLis
 export type TransactionListLazyQueryHookResult = ReturnType<typeof useTransactionListLazyQuery>;
 export type TransactionListQueryResult = Apollo.QueryResult<TransactionListQuery, TransactionListQueryVariables>;
 export const TopTokensDocument = gql`
-    query TopTokens {
-  topTokenProjects(orderBy: MARKET_CAP, page: 1, pageSize: 100) {
+    query TopTokens($chain: Chain, $page: Int!, $pageSize: Int!, $orderBy: TokenSortableField) {
+  topTokens(chain: $chain, page: $page, pageSize: $pageSize, orderBy: $orderBy) {
     id
-    logoUrl
+    address
+    chain
+    decimals
     name
-    safetyLevel
-    tokens {
+    symbol
+    project {
       id
-      chain
-      address
-      decimals
-      symbol
+      isSpam
+      logoUrl
+      safetyLevel
     }
   }
 }
@@ -1741,10 +1747,14 @@ export const TopTokensDocument = gql`
  * @example
  * const { data, loading, error } = useTopTokensQuery({
  *   variables: {
+ *      chain: // value for 'chain'
+ *      page: // value for 'page'
+ *      pageSize: // value for 'pageSize'
+ *      orderBy: // value for 'orderBy'
  *   },
  * });
  */
-export function useTopTokensQuery(baseOptions?: Apollo.QueryHookOptions<TopTokensQuery, TopTokensQueryVariables>) {
+export function useTopTokensQuery(baseOptions: Apollo.QueryHookOptions<TopTokensQuery, TopTokensQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<TopTokensQuery, TopTokensQueryVariables>(TopTokensDocument, options);
       }
