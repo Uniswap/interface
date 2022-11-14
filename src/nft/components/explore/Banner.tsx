@@ -33,17 +33,13 @@ const HeaderContainer = styled.div`
   display: flex;
   max-width: 500px;
   font-weight: 500;
-  font-size: 60px;
-  line-height: 73px;
+  font-size: 72px;
+  line-height: 88px;
   justify-content: start;
   align-items: start;
   padding-top: 40px;
   flex-shrink: 0;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 100%), #fc72ff;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-fill-color: transparent;
+  color: ${({ theme }) => theme.textPrimary};
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     font-size: 48px;
@@ -88,8 +84,8 @@ const Banner = () => {
   return (
     <BannerContainer>
       <HeaderContainer>
-        Best price. {!isMobile && <br />}
-        Every listing.
+        Better prices. {!isMobile && <br />}
+        More listings.
       </HeaderContainer>
       {collections ? (
         <Carousel>
