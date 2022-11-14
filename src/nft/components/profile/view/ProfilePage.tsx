@@ -20,6 +20,7 @@ import {
 } from 'nft/hooks'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import { OSCollectionsFetcher } from 'nft/queries'
+import { TokenType } from 'nft/types'
 import { UniformHeight, UniformHeights } from 'nft/types'
 import { ProfilePageStateType, WalletAsset, WalletCollection } from 'nft/types'
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
@@ -245,7 +246,9 @@ const SelectAllButton = ({ ownerAssets }: { ownerAssets: WalletAsset[] }) => {
 
   useEffect(() => {
     if (isAllSelected) {
-      ownerAssets.forEach((asset) => selectSellAsset(asset))
+      ownerAssets.forEach(
+        (asset) => asset.asset_contract.tokenType !== TokenType.ERC1155 && !asset.susFlag && selectSellAsset(asset)
+      )
     } else {
       resetSellAssets()
     }
@@ -324,11 +327,11 @@ const CollectionFilterItem = ({
   return (
     <Row
       justifyContent="center"
-      paddingRight="4"
-      paddingTop="4"
-      paddingBottom="4"
-      paddingLeft="8"
-      borderRadius="12"
+      paddingTop="6"
+      paddingRight="6"
+      paddingBottom="6"
+      paddingLeft="12"
+      borderRadius="8"
       background="backgroundOutline"
       fontSize="14"
     >

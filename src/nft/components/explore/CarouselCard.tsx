@@ -164,15 +164,15 @@ const TableElement = styled.div`
 
 interface MarketplaceRowProps {
   marketplace: string
-  floor?: string
+  floorInEth?: string
   listings?: string
 }
 
-export const MarketplaceRow = ({ marketplace, floor, listings }: MarketplaceRowProps) => {
+export const MarketplaceRow = ({ marketplace, floorInEth, listings }: MarketplaceRowProps) => {
   return (
     <>
       <TableElement>{marketplace}</TableElement>
-      <TableElement>{floor ?? '-'}</TableElement>
+      <TableElement>{floorInEth ?? '-'} ETH</TableElement>
       <TableElement>{listings ?? '-'}</TableElement>
     </>
   )
@@ -235,7 +235,7 @@ export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
                   key={`CarouselCard-key-${collection.address}-${marketplace.marketplace}`}
                   marketplace={MARKETS_ENUM_TO_NAME[market]}
                   listings={marketplace.count.toString()}
-                  floor={marketplace.floorPrice.toString()}
+                  floorInEth={marketplace.floorPrice.toString()}
                 />
               )
             })}

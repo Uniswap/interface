@@ -6,6 +6,7 @@ import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
+import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
 import { ProfilePageLoadingSkeleton } from 'nft/components/profile/view/ProfilePageLoadingSkeleton'
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
@@ -239,7 +240,7 @@ export default function App() {
                       <Route
                         path="/nfts/asset/:contractAddress/:tokenId"
                         element={
-                          <Suspense fallback={<div>Holder for loading ...</div>}>
+                          <Suspense fallback={<AssetDetailsLoading />}>
                             <Asset />
                           </Suspense>
                         }
