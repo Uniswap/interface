@@ -33,7 +33,7 @@ type AssetLogoProps = AssetLogoBaseProps & { isNative?: boolean; address?: strin
 /**
  * Renders an image by prioritizing a list of sources, and then eventually a fallback triangle alert
  */
-export function AssetLogo({
+export default function AssetLogo({
   isNative,
   address,
   chainId = SupportedChainId.MAINNET,

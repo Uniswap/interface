@@ -22,7 +22,7 @@ import { GrayCard, LightCard } from '../Card'
 import { AutoColumn } from '../Column'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { CardNoise } from '../earn/styled'
-import { CurrencyLogo } from '../Logo'
+import CurrencyLogo from '../Logo/CurrencyLogo'
 import { AutoRow, RowBetween, RowFixed } from '../Row'
 import { Dots } from '../swap/styleds'
 

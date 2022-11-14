@@ -1,9 +1,9 @@
 import { Currency } from '@uniswap/sdk-core'
 import { TokenInfo } from '@uniswap/token-lists'
 
-import { AssetLogo, AssetLogoBaseProps } from './AssetLogo'
+import AssetLogo, { AssetLogoBaseProps } from './AssetLogo'
 
-export function CurrencyLogo(
+export default function CurrencyLogo(
   props: AssetLogoBaseProps & {
     currency?: Currency | null
   }
