@@ -483,12 +483,7 @@ query ExploreTokensTab(
   $topTokensOrderBy: TokenSortableField!
   $favoriteTokenContracts: [ContractInput!]!
 ) {
-  topTokens(
-    chain: ETHEREUM
-    page: 1
-    pageSize: 100
-    orderBy: $topTokensOrderBy
-  ) {
+  topTokens(chain: ETHEREUM, page: 1, pageSize: 100, orderBy: $topTokensOrderBy) {
     name
     symbol
     chain

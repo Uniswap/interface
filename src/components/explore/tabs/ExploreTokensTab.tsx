@@ -12,7 +12,7 @@ import { Text } from 'src/components/Text'
 import { EMPTY_ARRAY, PollingInterval } from 'src/constants/misc'
 import { isNonPollingRequestInFlight } from 'src/data/utils'
 import { useExploreTokensTabQuery } from 'src/data/__generated__/types-and-hooks'
-import { currencyIdToContractInput } from 'src/features/dataApi/utils'
+import { currencyIdToContractInput, usePersistedError } from 'src/features/dataApi/utils'
 import { useTokensMetadataDisplayType } from 'src/features/explore/hooks'
 import { getClientTokensOrderByCompareFn, getTokensOrderByValues } from 'src/features/explore/utils'
 import { selectFavoriteTokensSet, selectHasFavoriteTokens } from 'src/features/favorites/selectors'
@@ -48,6 +48,7 @@ function ExploreTokensTab({ listRef }: ExploreTokensTabProps) {
   const {
     data,
     networkStatus,
+    loading: requestLoading,
     error: requestError,
     refetch,
   } = useExploreTokensTabQuery({
@@ -117,18 +118,19 @@ function ExploreTokensTab({ listRef }: ExploreTokensTabProps) {
     [cycleTokensMetadataDisplayType, favoriteCurrencyIdsSet, isEditing, tokensMetadataDisplayType]
   )
 
-  const loading = isNonPollingRequestInFlight(networkStatus)
+  const nonPollRequestInFlight = isNonPollingRequestInFlight(networkStatus)
   const hasAllData = !!data?.favoriteTokensData && !!data?.topTokens
+  const error = usePersistedError(requestLoading, requestError)
 
   const onRetry = useCallback(() => {
     refetch()
   }, [refetch])
 
-  if (loading) {
+  if ((!hasAllData && nonPollRequestInFlight) || (error && nonPollRequestInFlight)) {
     return <ExploreTokensTabLoader />
   }
 
-  if (!hasAllData && requestError) {
+  if (!hasAllData && error) {
     return (
       <Box height="100%" pb="xxxl">
         <BaseCard.ErrorState
@@ -145,9 +147,7 @@ function ExploreTokensTab({ listRef }: ExploreTokensTabProps) {
       ref={listRef}
       ListHeaderComponent={
         <Flex mt="sm">
-          {requestError ? (
-            <BaseCard.InlineErrorState retryButtonLabel="Retry" onRetry={onRetry} />
-          ) : null}
+          {error ? <BaseCard.InlineErrorState retryButtonLabel="Retry" onRetry={onRetry} /> : null}
           {hasFavoritedTokens ? (
             <FavoriteTokensGrid
               favoriteTokensData={data?.favoriteTokensData}
