@@ -273,13 +273,14 @@ export default function ProAmmFee({
           <ButtonLight disabled={hasNoFeeToCollect} onClick={collect} style={{ padding: '10px', fontSize: '14px' }}>
             <Flex alignItems="center" sx={{ gap: '8px' }}>
               <QuestionHelper
+                placement="top"
                 size={16}
                 text={
                   hasNoFeeToCollect
                     ? t`You don't have any fees to collect`
                     : t`By collecting, you will receive 100% of your fee earnings`
                 }
-                color={hasNoFeeToCollect ? theme.disableText : theme.primary}
+                useCurrentColor
               />
               <Trans>Collect Fees</Trans>
             </Flex>
