@@ -1,16 +1,18 @@
-import { useResponsiveProp } from '@shopify/restyle'
+import { ResponsiveValue, useResponsiveProp } from '@shopify/restyle'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LayoutRectangle, StyleSheet, TextInput as NativeTextInput } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import PasteButton from 'src/components/buttons/PasteButton'
-import { TextInput, TextInputProps } from 'src/components/input/TextInput'
-import { Flex } from 'src/components/layout'
+import { TextInput } from 'src/components/input/TextInput'
+import { Box, Flex } from 'src/components/layout'
 import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
-import { flex } from 'src/styles/flex'
+import { Theme } from 'src/styles/theme'
 import { SectionName } from '../telemetry/constants'
+
+const FONT_INPUT_SIZE = 18
 
 interface Props {
   value: string | undefined
@@ -18,11 +20,11 @@ interface Props {
   onChange: (text: string | undefined) => void
   placeholderLabel: string | undefined
   onSubmit?: () => void
-  showSuccess?: boolean // show succes indicator
-  endAdornment?: string //text to auto to end of input string
+  showSuccess?: boolean // show success indicator
+  inputSuffix?: string //text to auto to end of input string
   liveCheck?: boolean
   autoCorrect?: boolean
-  textAlign?: TextInputProps['textAlign']
+  inputAlignment?: ResponsiveValue<'center' | 'flex-start', Theme>
   onBlur?: () => void
   onFocus?: () => void
   beforePasteButtonPress?: () => void
@@ -37,7 +39,7 @@ export function GenericImportForm({
   placeholderLabel,
   onSubmit,
   showSuccess,
-  endAdornment,
+  inputSuffix,
   liveCheck,
   autoCorrect,
   onBlur,
@@ -45,7 +47,7 @@ export function GenericImportForm({
   beforePasteButtonPress,
   afterPasteButtonPress,
   blurOnSubmit,
-  textAlign = 'center',
+  inputAlignment = 'center',
 }: Props) {
   const { t } = useTranslation()
   const theme = useAppTheme()
@@ -90,7 +92,12 @@ export function GenericImportForm({
           px={useResponsiveProp({ xs: 'lg', sm: 'xl' })}
           py={useResponsiveProp({ xs: 'xs', sm: 'md' })}
           width="100%">
-          <Flex row alignItems="flex-end" gap="none" pb="xxs">
+          {/* TODO: make Box press re-focus TextInput. Fine for now since TexInput has autoFocus */}
+          <Box
+            alignItems="flex-end"
+            flexDirection="row"
+            justifyContent={inputAlignment}
+            width="100%">
             <TextInput
               ref={textInputRef}
               autoFocus
@@ -98,8 +105,9 @@ export function GenericImportForm({
               autoCorrect={Boolean(autoCorrect)}
               backgroundColor="none"
               blurOnSubmit={blurOnSubmit ?? false}
-              fontSize={18}
+              fontSize={FONT_INPUT_SIZE}
               justifyContent="center"
+              lineHeight={FONT_INPUT_SIZE}
               multiline={true}
               numberOfLines={4}
               px="none"
@@ -108,9 +116,8 @@ export function GenericImportForm({
               scrollEnabled={false}
               selectionColor={theme.colors.textPrimary}
               spellCheck={false}
-              style={flex.fill}
               testID="import_account_form/input"
-              textAlign={textAlign}
+              textAlign={inputAlignment === 'center' || !value ? 'center' : 'left'}
               value={value}
               width={value ? 'auto' : (layout?.width || 0) + theme.spacing.xs}
               onBlur={handleBlur}
@@ -118,12 +125,16 @@ export function GenericImportForm({
               onFocus={handleFocus}
               onSubmitEditing={handleSubmit}
             />
-            {endAdornment && value && !value.includes(endAdornment) && (
-              <Text color="textSecondary" fontSize={18} lineHeight={18} variant="bodyLarge">
-                {endAdornment}
+            {inputSuffix && value && !value.includes(inputSuffix) ? (
+              <Text
+                color="textSecondary"
+                fontSize={FONT_INPUT_SIZE}
+                lineHeight={FONT_INPUT_SIZE}
+                variant="bodyLarge">
+                {inputSuffix}
               </Text>
-            )}
-          </Flex>
+            ) : null}
+          </Box>
           {!value && (
             <Flex
               centered
