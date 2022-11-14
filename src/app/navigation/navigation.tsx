@@ -159,8 +159,7 @@ function TabNavigator() {
 
 function SettingsStackGroup() {
   return (
-    <SettingsStack.Navigator
-      screenOptions={{ ...navOptions.noHeader, ...navOptions.fullScreenGesture }}>
+    <SettingsStack.Navigator screenOptions={navOptions.noHeader}>
       <SettingsStack.Screen component={SettingsScreen} name={Screens.Settings} />
       <SettingsStack.Screen component={SettingsWallet} name={Screens.SettingsWallet} />
       <SettingsStack.Screen component={SettingsWalletEdit} name={Screens.SettingsWalletEdit} />
@@ -235,7 +234,6 @@ export function HomeStackNavigator() {
       initialRouteName={Screens.Home}
       screenOptions={{
         ...navOptions.noHeader,
-        ...navOptions.fullScreenGesture,
       }}>
       <HomeStack.Screen component={HomeScreen} name={Screens.Home} />
     </HomeStack.Navigator>
@@ -248,7 +246,6 @@ export function ExploreStackNavigator() {
       initialRouteName={Screens.Explore}
       screenOptions={{
         ...navOptions.noHeader,
-        ...navOptions.fullScreenGesture,
       }}>
       <ExploreStack.Screen component={ExploreScreen} name={Screens.Explore} />
     </ExploreStack.Navigator>
@@ -344,7 +341,7 @@ export function AppStackNavigator() {
   usePreloadedHomeScreenQueries()
 
   return (
-    <AppStack.Navigator screenOptions={{ ...navOptions.noHeader, ...navOptions.fullScreenGesture }}>
+    <AppStack.Navigator screenOptions={{ headerShown: false }}>
       {finishedOnboarding && (
         <AppStack.Screen component={TabNavigator} name={Screens.TabNavigator} />
       )}
@@ -376,7 +373,6 @@ export function AppStackNavigator() {
 }
 
 const navOptions = {
-  fullScreenGesture: { fullScreenGestureEnabled: true },
   noHeader: { headerShown: false },
   presentationModal: { presentation: 'modal' },
 } as const
