@@ -9,11 +9,6 @@ const ClearButton = styled(ButtonText)`
   font-weight: 600;
   font-size: 14px;
   line-height: 16px;
-  transition: 150ms ease color;
-
-  :hover {
-    color: ${({ theme }) => theme.accentActive};
-  }
 `
 
 const IconWrapper = styled.button`
@@ -45,14 +40,13 @@ const IconWrapper = styled.button`
 `
 const NumberDot = styled.div`
   align-items: center;
-  background-color: ${({ theme }) => theme.accentActive};
-  border-radius: 50%;
+  background-color: ${({ theme }) => theme.accentAction};
+  border-radius: 100px;
+  color: ${({ theme }) => theme.accentTextLightPrimary};
   display: flex;
   font-size: 10px;
-  height: 20px;
   justify-content: center;
-  padding: 4px 8px;
-  width: 20px;
+  padding: 4px 6px;
 `
 const Wrapper = styled.div`
   align-items: center;
