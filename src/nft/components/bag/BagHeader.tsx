@@ -38,7 +38,7 @@ const IconWrapper = styled.button`
     },
   }) => `opacity ${duration.medium} ${timing.ease}`};
 `
-const NumberDot = styled.div`
+const CounterDot = styled.div`
   align-items: center;
   background-color: ${({ theme }) => theme.accentAction};
   border-radius: 100px;
@@ -70,7 +70,7 @@ export const BagHeader = ({ numberOfAssets, closeBag, resetFlow, isProfilePage }
       <ThemedText.HeadlineSmall>{isProfilePage ? <Trans>Sell</Trans> : <Trans>Bag</Trans>}</ThemedText.HeadlineSmall>
       {numberOfAssets > 0 && (
         <>
-          <NumberDot>{numberOfAssets}</NumberDot>
+          <CounterDot>{numberOfAssets}</CounterDot>
           <ClearButton onClick={resetFlow}>Clear all</ClearButton>
         </>
       )}
