@@ -92,7 +92,7 @@ const ProfileContent = () => {
 
 const Profile = () => {
   const { account } = useWeb3React()
-  useLoadNftBalanceQuery(account)
+  useLoadNftBalanceQuery(account, [])
 
   return (
     <Suspense fallback={<ProfilePageLoadingSkeleton />}>
