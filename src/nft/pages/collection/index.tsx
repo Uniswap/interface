@@ -34,7 +34,7 @@ const MobileFilterHeader = styled(Row)`
 
 const CollectionDisplaySection = styled(Row)<{ offset: number }>`
   ${styles.ScreenBreakpointsPaddings}
-  ${(props) => `width: calc(100% - ${props.offset}px);`}
+  width: ${(props) => `calc(100% - ${props.offset}px)`};
   align-items: flex-start;
   position: relative;
 `
@@ -155,7 +155,7 @@ const Collection = () => {
                 </Box>
 
                 {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
-                <Box flex="1" position={isMobile && isFiltersExpanded ? 'fixed' : 'static'}>
+                <Box width="full" position={isMobile && isFiltersExpanded ? 'fixed' : 'static'}>
                   {isActivityToggled
                     ? contractAddress && (
                         <Activity
