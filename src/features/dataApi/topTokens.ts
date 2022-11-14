@@ -12,10 +12,7 @@ import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { fromGraphQLChain, toGraphQLChain } from 'src/utils/chainId'
 import { currencyId } from 'src/utils/currencyId'
 
-export function usePopularTokens(
-  chainFilter: ChainId,
-  hideSpamTokens: boolean
-): GqlResult<CurrencyInfo[]> {
+export function usePopularTokens(chainFilter: ChainId): GqlResult<CurrencyInfo[]> {
   const gqlChainFilter = toGraphQLChain(chainFilter)
 
   const { data, loading, error, refetch } = useTopTokensQuery({
@@ -34,12 +31,11 @@ export function usePopularTokens(
     return data.topTokens
       .map((token) => {
         if (!token) return null
-        if (hideSpamTokens && token.project?.isSpam) return null
 
         return gqlTokenToCurrencyInfo(token)
       })
       .filter((c): c is CurrencyInfo => Boolean(c))
-  }, [data, hideSpamTokens])
+  }, [data])
 
   return useMemo(
     () => ({ data: formattedData, loading, error: persistedError, refetch }),
