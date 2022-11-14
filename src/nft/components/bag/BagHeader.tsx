@@ -24,9 +24,9 @@ const IconWrapper = styled.button`
   color: ${({ theme }) => theme.textPrimary};
   cursor: pointer;
   display: flex;
-  flex: 1 1 auto;
   flex-direction: row;
   justify-content: flex-end;
+  margin-left: auto;
   padding: 2px;
   opacity: 1;
   &:hover {
