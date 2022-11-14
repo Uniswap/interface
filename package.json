@@ -16,6 +16,7 @@
     "hardhat": "hardhat node",
     "i18n:extract": "i18next",
     "ios": "SKIP_BUNDLING=1 react-native run-ios",
+    "ios:smol": "SKIP_BUNDLING=1 react-native run-ios --simulator=\"iPhone SE (3rd generation)\"",
     "ios:prod": "react-native run-ios --configuration Release",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "postinstall": "patch-package",
