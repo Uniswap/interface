@@ -5,13 +5,17 @@ import { ChainId } from 'src/constants/chains'
 import { nativeOnChain } from 'src/constants/tokens'
 import {
   Amount,
+  Chain,
   Currency,
-  Token,
   TokenStandard,
   TransactionListQuery,
 } from 'src/data/__generated__/types-and-hooks'
 import extractTransactionDetails from 'src/features/transactions/history/conversion/extractTransactionDetails'
-import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
+import {
+  TransactionDetails,
+  TransactionStatus,
+  TransactionType,
+} from 'src/features/transactions/types'
 import { fromGraphQLChain } from 'src/utils/chainId'
 import { getNativeCurrencyAddressForChain } from 'src/utils/currencyId'
 
@@ -92,13 +96,21 @@ export function formatTransactionsByDate(
  * Transforms api txn data to formatted TransactionDetails array
  * @param data Transaction history data response
  */
-export function parseDataResponseToTransactionDetails(data: TransactionListQuery) {
+export function parseDataResponseToTransactionDetails(
+  data: TransactionListQuery,
+  hideSpamTokens?: boolean
+) {
   if (data.portfolios?.[0]?.assetActivities) {
     return data.portfolios[0].assetActivities.reduce((accum: TransactionDetails[], t) => {
       const parsed = extractTransactionDetails(t)
-      if (parsed) {
+
+      // Filter out spam if desired, currently only for receive transactions
+      const isSpam = parsed?.typeInfo.type === TransactionType.Receive && parsed.typeInfo.isSpam
+
+      if (parsed && !(hideSpamTokens && isSpam)) {
         accum.push(parsed)
       }
+
       return accum
     }, [])
   }
@@ -109,22 +121,22 @@ export function parseDataResponseToTransactionDetails(data: TransactionListQuery
  * Constructs a CurrencyAmount based on asset details and quantity. Checks if token is native
  * or ERC20 to determine decimal amount.
  * @param tokenStandard token standard type from api query
- * @param asset // asset to use decimals from
  * @param quantity // formatted amount of asset transfered
+ * @param decimals // decimals ((optional) if native token)
  * @returns
  */
 export function deriveCurrencyAmountFromAssetResponse(
   tokenStandard: TokenStandard,
-  asset: Partial<Token>,
-  quantity: string
+  quantity: string,
+  decimals: NullUndefined<number>
 ) {
   const nativeCurrency = nativeOnChain(ChainId.Mainnet)
   return parseUnits(
     quantity,
     tokenStandard === TokenStandard.Native
       ? BigNumber.from(nativeCurrency.decimals)
-      : asset?.decimals
-      ? BigNumber.from(asset.decimals)
+      : decimals
+      ? BigNumber.from(decimals)
       : undefined
   ).toString()
 }
@@ -135,20 +147,22 @@ export function deriveCurrencyAmountFromAssetResponse(
  * @returns Token address, custom native address or null
  */
 export function getAddressFromAsset({
-  asset,
   tokenStandard,
+  chain,
+  address,
 }: {
-  asset: Partial<Token>
   tokenStandard: TokenStandard
+  chain: Chain | undefined
+  address: NullUndefined<string>
 }) {
-  const supportedChainId = fromGraphQLChain(asset.chain)
+  const supportedChainId = fromGraphQLChain(chain)
   if (!supportedChainId) {
     return null
   }
   if (tokenStandard === TokenStandard.Native) {
     return getNativeCurrencyAddressForChain(supportedChainId)
   }
-  return asset?.address
+  return address
 }
 
 /**

@@ -364,6 +364,9 @@ query TransactionList($address: String!) {
             address
             decimals
             chain
+            project {
+              isSpam
+            }
           }
           tokenStandard
           quantity

@@ -2,6 +2,7 @@ import { TFunction } from 'i18next'
 import React, { ReactElement, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SectionList, SectionListData } from 'react-native'
+import { useAppSelector } from 'src/app/hooks'
 import { Box } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loading } from 'src/components/loading'
@@ -19,6 +20,8 @@ import {
 import { useMergeLocalAndRemoteTransactions } from 'src/features/transactions/hooks'
 import TransactionSummaryRouter from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
+import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
+import { makeSelectAccountHideSpamTokens } from 'src/features/wallet/selectors'
 
 const PENDING_TITLE = (t: TFunction) => t('Pending')
 const TODAY_TITLE = (t: TFunction) => t('Today')
@@ -46,6 +49,7 @@ interface TransactionListProps {
 
 export default function TransactionList(props: TransactionListProps) {
   const { t } = useTranslation()
+
   const { refetch, networkStatus, data } = useTransactionListQuery({
     variables: { address: props.ownerAddress },
     notifyOnNetworkStatusChange: true,
@@ -93,10 +97,14 @@ function TransactionListInner({
 }: TransactionListProps & { data: TransactionListQuery | undefined }) {
   const { t } = useTranslation()
 
+  // Hide all spam transactions if active wallet has enabled setting.
+  const activeAccount = useActiveAccountWithThrow()
+  const hideSpamTokens = useAppSelector(makeSelectAccountHideSpamTokens(activeAccount.address))
+
   // Parse remote txn data from query and merge with local txn data
   const formattedTransactions = useMemo(
-    () => (data ? parseDataResponseToTransactionDetails(data) : []),
-    [data]
+    () => (data ? parseDataResponseToTransactionDetails(data, hideSpamTokens) : []),
+    [data, hideSpamTokens]
   )
   const transactions = useMergeLocalAndRemoteTransactions(ownerAddress, formattedTransactions)
 

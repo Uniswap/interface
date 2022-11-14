@@ -43,15 +43,15 @@ export default function parseSendTransaction(
   // Found ERC20 transfer
   if (change.__typename === 'TokenTransfer') {
     const tokenAddress = getAddressFromAsset({
-      asset: change.asset,
+      chain: change.asset.chain,
+      address: change.asset.address,
       tokenStandard: change.tokenStandard,
     })
-
     const recipient = change.recipient
     const currencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
       change.tokenStandard,
-      change.asset,
-      change.quantity
+      change.quantity,
+      change.asset.decimals
     )
     const transactedUSDValue = parseUSDValueFromAssetChange(change.transactedValue)
 

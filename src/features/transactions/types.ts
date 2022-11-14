@@ -165,6 +165,7 @@ export interface ReceiveTokenTransactionInfo extends BaseTransactionInfo {
   tokenAddress: string
   tokenId?: string // optional. NFT token id
   nftSummaryInfo?: NFTSummaryInfo
+  isSpam?: boolean
 }
 
 export interface NFTMintTransactionInfo extends BaseTransactionInfo {

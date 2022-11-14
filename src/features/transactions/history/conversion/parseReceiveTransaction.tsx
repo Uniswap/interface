@@ -44,17 +44,20 @@ export default function parseReceiveTransaction(
   // Found ERC20 transfer
   if (change.__typename === 'TokenTransfer') {
     const tokenAddress = getAddressFromAsset({
-      asset: change.asset,
+      chain: change.asset.chain,
+      address: change.asset.address,
       tokenStandard: change.tokenStandard,
     })
 
     const sender = change.sender
     const currencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
       change.tokenStandard,
-      change.asset,
-      change.quantity
+      change.quantity,
+      change.asset.decimals
     )
     const transactedUSDValue = parseUSDValueFromAssetChange(change.transactedValue)
+
+    const isSpam = Boolean(change.asset.project?.isSpam) ?? false
 
     if (!(sender && tokenAddress)) return undefined
 
@@ -65,6 +68,7 @@ export default function parseReceiveTransaction(
       sender,
       currencyAmountRaw,
       transactedUSDValue,
+      isSpam,
     }
   }
 
