@@ -34,7 +34,7 @@ const HeaderContainer = styled.div`
   max-width: 500px;
   font-weight: 500;
   font-size: 72px;
-  line-height: 73px;
+  line-height: 88px;
   justify-content: start;
   align-items: start;
   padding-top: 40px;
