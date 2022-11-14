@@ -4,7 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import { useLoadAssetsQuery } from 'graphql/data/nft/Asset'
 import { useCollectionQuery, useLoadCollectionQuery } from 'graphql/data/nft/Collection'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
-import { AnimatedBox, Box } from 'nft/components/Box'
+import { Box } from 'nft/components/Box'
 import { Activity, ActivitySwitcher, CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
 import { CollectionNftsAndMenuLoading } from 'nft/components/collection/CollectionNfts'
 import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
@@ -15,11 +15,9 @@ import * as styles from 'nft/pages/collection/index.css'
 import { GenieCollection } from 'nft/types'
 import { Suspense, useEffect } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-const FILTER_WIDTH = 332
 const BAG_WIDTH = 324
 export const COLLECTION_BANNER_HEIGHT = 276
 
@@ -34,8 +32,9 @@ const MobileFilterHeader = styled(Row)`
   justify-content: space-between;
 `
 
-const CollectionDisplaySection = styled(Row)`
+const CollectionDisplaySection = styled(Row)<{ offset: number }>`
   ${styles.ScreenBreakpointsPaddings}
+  ${(props) => `width: calc(100% - ${props.offset}px);`}
   align-items: flex-start;
   position: relative;
 `
@@ -76,18 +75,6 @@ const Collection = () => {
   const { chainId } = useWeb3React()
 
   const collectionStats = useCollectionQuery(contractAddress as string)
-
-  const { gridX, gridWidthOffset } = useSpring({
-    gridX: isFiltersExpanded && !isMobile ? FILTER_WIDTH : 0,
-    gridWidthOffset:
-      isFiltersExpanded && !isMobile
-        ? isBagExpanded
-          ? BAG_WIDTH + FILTER_WIDTH
-          : FILTER_WIDTH
-        : isBagExpanded
-        ? BAG_WIDTH
-        : 0,
-  })
 
   useEffect(() => {
     const marketCount: Record<string, number> = {}
@@ -141,12 +128,12 @@ const Collection = () => {
                   }}
                 />
               </CollectionDescriptionSection>
-              <CollectionDisplaySection>
+              <CollectionDisplaySection offset={isBagExpanded && !isMobile ? BAG_WIDTH : 0}>
                 <Box
                   position={isMobile ? 'fixed' : 'sticky'}
                   top="0"
                   left="0"
-                  width={isMobile ? 'full' : '0'}
+                  width={isMobile ? 'full' : 'auto'}
                   height={isMobile && isFiltersExpanded ? 'full' : undefined}
                   background={isMobile ? 'backgroundBackdrop' : undefined}
                   zIndex={isMobile ? 'modalBackdrop' : undefined}
@@ -168,13 +155,7 @@ const Collection = () => {
                 </Box>
 
                 {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
-                <AnimatedBox
-                  position={isMobile && isFiltersExpanded ? 'fixed' : 'static'}
-                  style={{
-                    transform: gridX.to((x) => `translate(${x as number}px)`),
-                    width: gridWidthOffset.to((x) => `calc(100% - ${x as number}px)`),
-                  }}
-                >
+                <Box flex="1" position={isMobile && isFiltersExpanded ? 'fixed' : 'static'}>
                   {isActivityToggled
                     ? contractAddress && (
                         <Activity
@@ -194,7 +175,7 @@ const Collection = () => {
                           />
                         </Suspense>
                       )}
-                </AnimatedBox>
+                </Box>
               </CollectionDisplaySection>
             </>
           ) : (
