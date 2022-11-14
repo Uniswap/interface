@@ -49,7 +49,7 @@ export const TabBarButton = memo(
         alignItems="center"
         flex={1}
         justifyContent="center"
-        mb="xs"
+        mb="md"
         position="relative"
         {...rest}>
         {focused ? (
@@ -57,7 +57,6 @@ export const TabBarButton = memo(
         ) : (
           <Icon color={color} height={appTheme.iconSizes.lg} />
         )}
-        {/* bottom positioning is calculated based on the padding in the TabBar to minimize the icon shifting when selecting a tab. */}
         <Box
           backgroundColor="userThemeColor"
           borderRadius="full"
