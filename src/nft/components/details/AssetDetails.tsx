@@ -1,4 +1,4 @@
-import { ScrollBarStyles } from 'components/Common'
+import { OpacityHoverState, ScrollBarStyles } from 'components/Common'
 import Resource from 'components/Tokens/TokenDetails/Resource'
 import { MouseoverTooltip } from 'components/Tooltip/index'
 import { Box } from 'nft/components/Box'
@@ -27,22 +27,6 @@ import DetailsContainer from './DetailsContainer'
 import InfoContainer from './InfoContainer'
 import TraitsContainer from './TraitsContainer'
 
-const OpacityTransition = css`
-  &:hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-  }
-
-  &:active {
-    opacity: ${({ theme }) => theme.opacity.click};
-  }
-
-  transition: ${({
-    theme: {
-      transition: { duration, timing },
-    },
-  }) => `opacity ${duration.medium} ${timing.ease}`};
-`
-
 const CollectionHeader = styled.span`
   display: flex;
   align-items: center;
@@ -51,7 +35,7 @@ const CollectionHeader = styled.span`
   color: ${({ theme }) => theme.textPrimary};
   margin-top: 28px;
   text-decoration: none;
-  ${OpacityTransition};
+  ${OpacityHoverState};
 `
 
 const AssetPriceDetailsContainer = styled.div`
@@ -89,7 +73,7 @@ const AddressTextLink = styled.a`
   text-decoration: none;
   max-width: 100%;
   word-wrap: break-word;
-  ${OpacityTransition};
+  ${OpacityHoverState};
 `
 
 const SocialsContainer = styled.div`
@@ -131,7 +115,7 @@ const Link = styled(RouterLink)`
   line-height: 16px;
   margin-top: 12px;
   cursor: pointer;
-  ${OpacityTransition};
+  ${OpacityHoverState};
 `
 
 const DefaultLink = styled(RouterLink)`
@@ -172,7 +156,7 @@ const FilterBox = styled.div<{ isActive?: boolean }>`
   cursor: pointer;
   box-sizing: border-box;
   border: ${({ isActive, theme }) => (isActive ? `1px solid ${theme.accentActive}` : undefined)};
-  ${OpacityTransition};
+  ${OpacityHoverState};
 `
 
 const ByText = styled.span`
