@@ -92,7 +92,7 @@ export function WCNotification({ notification }: { notification: WalletConnectNo
       chainId={validChainId}
       dappImageUrl={imageUrl}
       event={event}
-      size={NOTIFICATION_ICON_SIZE}
+      size={useSmallDisplay ? iconSizes.lg : NOTIFICATION_ICON_SIZE}
     />
   )
 
