@@ -239,10 +239,6 @@ export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
             <BuyNowButton assetInBag={false} margin={true} useAccentColor={false} onClick={goToListPage}>
               <ThemedText.SubHeader lineHeight={'20px'}>Adjust listing</ThemedText.SubHeader>
             </BuyNowButton>
-            {/* TODO add cancel listing logic */}
-            <BuyNowButton assetInBag={true} margin={false} useAccentColor={false} onClick={goToListPage}>
-              <ThemedText.SubHeader lineHeight={'20px'}>Cancel listing</ThemedText.SubHeader>
-            </BuyNowButton>
           </>
         )}
       </BestPriceContainer>
