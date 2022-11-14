@@ -7,7 +7,6 @@ import { bodySmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile, useSellAsset } from 'nft/hooks'
 import { TokenType, WalletAsset } from 'nft/types'
-import { UniformHeight } from 'nft/types'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 const NFT_DETAILS_HREF = (asset: WalletAsset) =>
@@ -18,38 +17,20 @@ interface ViewMyNftsAssetProps {
   isSellMode: boolean
   mediaShouldBePlaying: boolean
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
-  uniformHeight: UniformHeight
-  setUniformHeight: (u: UniformHeight) => void
 }
 
 const getNftDisplayComponent = (
   assetMediaType: AssetMediaType,
   mediaShouldBePlaying: boolean,
-  setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void,
-  uniformHeight: UniformHeight,
-  setUniformHeight: (u: UniformHeight) => void
+  setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
 ) => {
   switch (assetMediaType) {
     case AssetMediaType.Image:
-      return <Card.Image uniformHeight={uniformHeight} setUniformHeight={setUniformHeight} />
+      return <Card.Image />
     case AssetMediaType.Video:
-      return (
-        <Card.Video
-          uniformHeight={uniformHeight}
-          setUniformHeight={setUniformHeight}
-          shouldPlay={mediaShouldBePlaying}
-          setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-        />
-      )
+      return <Card.Video shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
     case AssetMediaType.Audio:
-      return (
-        <Card.Audio
-          uniformHeight={uniformHeight}
-          setUniformHeight={setUniformHeight}
-          shouldPlay={mediaShouldBePlaying}
-          setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-        />
-      )
+      return <Card.Audio shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
   }
 }
 
@@ -58,8 +39,6 @@ export const ViewMyNftsAsset = ({
   isSellMode,
   mediaShouldBePlaying,
   setCurrentTokenPlayingMedia,
-  uniformHeight,
-  setUniformHeight,
 }: ViewMyNftsAssetProps) => {
   const sellAssets = useSellAsset((state) => state.sellAssets)
   const selectSellAsset = useSellAsset((state) => state.selectSellAsset)
@@ -119,13 +98,7 @@ export const ViewMyNftsAsset = ({
         isDisabled={isDisabled}
       >
         <Card.ImageContainer>
-          {getNftDisplayComponent(
-            assetMediaType,
-            mediaShouldBePlaying,
-            setCurrentTokenPlayingMedia,
-            uniformHeight,
-            setUniformHeight
-          )}
+          {getNftDisplayComponent(assetMediaType, mediaShouldBePlaying, setCurrentTokenPlayingMedia)}
         </Card.ImageContainer>
         <Card.DetailsContainer>
           <Card.ProfileNftDetails asset={asset} isSellMode={isSellMode} />

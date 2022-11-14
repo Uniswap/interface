@@ -1,7 +1,7 @@
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { EventName, PageName } from '@uniswap/analytics-events'
 import { useBag } from 'nft/hooks'
-import { GenieAsset, Markets, UniformHeight } from 'nft/types'
+import { GenieAsset, Markets } from 'nft/types'
 import { formatWeiToDecimal, rarityProviderLogo } from 'nft/utils'
 import { useCallback, useMemo } from 'react'
 
@@ -12,8 +12,6 @@ import * as Card from './Card'
 interface CollectionAssetProps {
   asset: GenieAsset
   isMobile: boolean
-  uniformHeight: UniformHeight
-  setUniformHeight: (u: UniformHeight) => void
   mediaShouldBePlaying: boolean
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
   rarityVerified?: boolean
@@ -22,8 +20,6 @@ interface CollectionAssetProps {
 export const CollectionAsset = ({
   asset,
   isMobile,
-  uniformHeight,
-  setUniformHeight,
   mediaShouldBePlaying,
   setCurrentTokenPlayingMedia,
   rarityVerified,
@@ -94,21 +90,11 @@ export const CollectionAsset = ({
           />
         )}
         {assetMediaType === AssetMediaType.Image ? (
-          <Card.Image uniformHeight={uniformHeight} setUniformHeight={setUniformHeight} />
+          <Card.Image />
         ) : assetMediaType === AssetMediaType.Video ? (
-          <Card.Video
-            uniformHeight={uniformHeight}
-            setUniformHeight={setUniformHeight}
-            shouldPlay={mediaShouldBePlaying}
-            setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-          />
+          <Card.Video shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
         ) : (
-          <Card.Audio
-            uniformHeight={uniformHeight}
-            setUniformHeight={setUniformHeight}
-            shouldPlay={mediaShouldBePlaying}
-            setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-          />
+          <Card.Audio shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
         )}
       </Card.ImageContainer>
       <Card.DetailsContainer>
