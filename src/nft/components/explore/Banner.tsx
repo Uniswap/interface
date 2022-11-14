@@ -39,11 +39,7 @@ const HeaderContainer = styled.div`
   align-items: start;
   padding-top: 40px;
   flex-shrink: 0;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 100%), #fc72ff;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: ${({ theme }) => theme.textPrimary};
-  background-clip: text;
-  text-fill-color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.textPrimary};
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     font-size: 48px;
