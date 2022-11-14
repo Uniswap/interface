@@ -168,7 +168,6 @@ const Collection = () => {
                   )}
                 </Box>
 
-                {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
                 <Box width="full" position={isMobile && isFiltersExpanded ? 'fixed' : 'static'}>
                   {isActivityToggled
                     ? contractAddress && (
