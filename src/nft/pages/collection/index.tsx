@@ -1,7 +1,7 @@
 import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { OpacityHoverState } from 'components/Common'
+import { Box as StyledBox, OpacityHoverState } from 'components/Common'
 import {
   MAX_WIDTH_MEDIA_BREAKPOINT,
   MOBILE_MEDIA_BREAKPOINT,
@@ -168,7 +168,7 @@ const Collection = () => {
                   )}
                 </Box>
 
-                <Box width="full" position={isMobile && isFiltersExpanded ? 'fixed' : 'static'}>
+                <StyledBox width="100%" position={isMobile && isFiltersExpanded ? 'fixed' : 'static'}>
                   {isActivityToggled
                     ? contractAddress && (
                         <Activity
@@ -188,7 +188,7 @@ const Collection = () => {
                           />
                         </Suspense>
                       )}
-                </Box>
+                </StyledBox>
               </CollectionDisplaySection>
             </>
           ) : (
