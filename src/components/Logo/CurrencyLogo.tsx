@@ -8,7 +8,6 @@ export function CurrencyLogo(
     currency?: Currency | null
   }
 ) {
-  console.log((props.currency as TokenInfo).logoURI)
   return (
     <AssetLogo
       isNative={props.currency?.isNative}

@@ -4,7 +4,14 @@ import uriToHttp from 'lib/utils/uriToHttp'
 import { useCallback, useState } from 'react'
 import { isAddress } from 'utils'
 
-// Parses uri's & improves coingecko logo quality
+// Converts uri's into fetchable urls
+function parseLogoSources(uris: string[]) {
+  const urls: string[] = []
+  uris.forEach((uri) => urls.push(...uriToHttp(uri)))
+  return urls
+}
+
+// Parses uri's, favors non-coingecko images, and improves coingecko logo quality
 function prioritizeLogoSources(uris: string[]) {
   const parsedUris = uris.map((uri) => uriToHttp(uri)).flat(1)
   const preferredUris: string[] = []
@@ -29,7 +36,7 @@ function getInitialUrl(address?: string | null, chainId?: number | null, isNativ
   const networkName = chainId ? chainIdToNetworkName(chainId) : 'ethereum'
   const checksummedAddress = isAddress(address)
   if (checksummedAddress) {
-    return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${checksummedAddress}/logo.png`
+    return `https://raw.githubusercontent.com/cartcrom/assets/master/blockchains/${networkName}/assets/${checksummedAddress}/logo.png`
   } else {
     return undefined
   }
@@ -46,12 +53,14 @@ export default function useTokenLogoSource(
 
   const nextSrc = useCallback(() => {
     if (current) {
-      console.log('bad:', current)
       BAD_SRCS[current] = true
     }
+    // Parses and stores logo sources from tokenlists if assets repo url fails
     if (!fallbackSrcs) {
-      const tokenListIcons = prioritizeLogoSources(TokenLogoLookupTable.getIcons(address) ?? [])
-      if (backupImg) tokenListIcons.push(backupImg)
+      const uris = TokenLogoLookupTable.getIcons(address) ?? []
+      if (backupImg) uris.push(backupImg)
+      const tokenListIcons = prioritizeLogoSources(parseLogoSources(uris))
+
       setCurrent(tokenListIcons.find((src) => !BAD_SRCS[src]))
       setFallbackSrcs(tokenListIcons)
     } else {
