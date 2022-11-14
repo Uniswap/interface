@@ -361,45 +361,23 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
           </PriceRow>
           {expirationDate && <Tertiary fontSize={'14px'}>Sale ends: {timeLeft(expirationDate)}</Tertiary>}
           <div>
-            {!isErc1555 || !assetInBag ? (
-              <BuyNowButtonContainer>
-                <BuyNowButton
-                  assetInBag={assetInBag}
-                  margin={true}
-                  useAccentColor={true}
-                  onClick={() => {
-                    assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset])
-                    if (!assetInBag && !isErc1555 && !bagExpanded) {
-                      toggleBag()
-                    }
-                  }}
-                >
-                  <SubHeader lineHeight={'20px'}>
-                    <span>{assetInBag ? 'Remove' : 'Buy Now'}</span>
-                  </SubHeader>
-                </BuyNowButton>
-              </BuyNowButtonContainer>
-            ) : (
-              <Erc1155BuyNowButton>
-                <BuyNowButtonContainer>
-                  <Erc1155ChangeButton remove={true} onClick={() => removeAssetsFromBag([asset])}>
-                    <MinusIcon width="20px" height="20px" />
-                  </Erc1155ChangeButton>
-                </BuyNowButtonContainer>
-
-                <BuyNowButtonContainer>
-                  <Erc1155BuyNowText>
-                    <ThemedText.SubHeader lineHeight={'20px'}>{quantity}</ThemedText.SubHeader>
-                  </Erc1155BuyNowText>
-                </BuyNowButtonContainer>
-
-                <BuyNowButtonContainer>
-                  <Erc1155ChangeButton remove={false} onClick={() => addAssetsToBag([asset])}>
-                    <PlusIcon width="20px" height="20px" />
-                  </Erc1155ChangeButton>
-                </BuyNowButtonContainer>
-              </Erc1155BuyNowButton>
-            )}
+            <BuyNowButtonContainer>
+              <BuyNowButton
+                assetInBag={assetInBag}
+                margin={true}
+                useAccentColor={true}
+                onClick={() => {
+                  assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset])
+                  if (!assetInBag && !isErc1555 && !bagExpanded) {
+                    toggleBag()
+                  }
+                }}
+              >
+                <SubHeader lineHeight={'20px'}>
+                  <span>{assetInBag ? 'Remove' : 'Buy Now'}</span>
+                </SubHeader>
+              </BuyNowButton>
+            </BuyNowButtonContainer>
           </div>
         </BestPriceContainer>
       ) : (
