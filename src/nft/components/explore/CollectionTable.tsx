@@ -3,7 +3,7 @@ import { CollectionTableColumn, TimePeriod } from 'nft/types'
 import { useMemo } from 'react'
 import { CellProps, Column, Row } from 'react-table'
 
-import { ChangeCell, CollectionTitleCell, DiscreteNumberCell, EthCell, VolumeCell } from './Cells/Cells'
+import { ChangeCell, CollectionTitleCell, DiscreteNumberCell, EthCell, TextCell, VolumeCell } from './Cells/Cells'
 import { Table } from './Table'
 
 export enum ColumnHeaders {
@@ -79,7 +79,11 @@ const CollectionTable = ({ data, timePeriod }: { data: CollectionTableColumn[]; 
         disableSortBy: timePeriod === TimePeriod.AllTime,
         sortType: floorChangeSort,
         Cell: function changeCell(cell: CellProps<CollectionTableColumn>) {
-          return timePeriod === TimePeriod.AllTime ? '-' : <ChangeCell change={cell.row.original.floor.change} />
+          return timePeriod === TimePeriod.AllTime ? (
+            <TextCell value="-" />
+          ) : (
+            <ChangeCell change={cell.row.original.floor.change} />
+          )
         },
       },
       {
@@ -106,7 +110,11 @@ const CollectionTable = ({ data, timePeriod }: { data: CollectionTableColumn[]; 
         disableSortBy: timePeriod === TimePeriod.AllTime,
         sortType: volumeChangeSort,
         Cell: function changeCell(cell: CellProps<CollectionTableColumn>) {
-          return timePeriod === TimePeriod.AllTime ? '-' : <ChangeCell change={cell.row.original.volume.change} />
+          return timePeriod === TimePeriod.AllTime ? (
+            <TextCell value="-" />
+          ) : (
+            <ChangeCell change={cell.row.original.volume.change} />
+          )
         },
       },
       {
