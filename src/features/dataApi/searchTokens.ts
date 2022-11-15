@@ -1,24 +1,30 @@
 import { useCallback, useMemo } from 'react'
 import { ChainId } from 'src/constants/chains'
-import { useSearchTokensProjectsQuery } from 'src/data/__generated__/types-and-hooks'
+import { useSearchTokensQuery } from 'src/data/__generated__/types-and-hooks'
 import { CurrencyInfo, GqlResult } from 'src/features/dataApi/types'
-import { tokenProjectToCurrencyInfos, usePersistedError } from 'src/features/dataApi/utils'
+import { gqlTokenToCurrencyInfo, usePersistedError } from 'src/features/dataApi/utils'
 
 export function useSearchTokens(
   searchQuery: string | null,
   chainFilter: ChainId | null,
   skip: boolean
 ): GqlResult<CurrencyInfo[]> {
-  const { data, loading, error, refetch } = useSearchTokensProjectsQuery({
+  const { data, loading, error, refetch } = useSearchTokensQuery({
     variables: { searchQuery: searchQuery ?? '' },
     skip,
   })
   const persistedError = usePersistedError(loading, error)
 
   const formattedData = useMemo(() => {
-    if (!data || !data.searchTokenProjects) return
+    if (!data || !data.searchTokens) return
 
-    return tokenProjectToCurrencyInfos(data.searchTokenProjects, chainFilter)
+    return data.searchTokens
+      .map((token) => {
+        if (!token) return null
+
+        return gqlTokenToCurrencyInfo(token, chainFilter)
+      })
+      .filter((c): c is CurrencyInfo => Boolean(c))
   }, [data, chainFilter])
 
   const retry = useCallback(

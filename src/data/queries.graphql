@@ -188,22 +188,6 @@ query PortfolioBalances($ownerAddress: String!) {
   }
 }
 
-query SearchTokensProjects($searchQuery: String!) {
-  searchTokenProjects(searchQuery: $searchQuery) {
-    id
-    logoUrl
-    name
-    safetyLevel
-    tokens {
-      id
-      chain
-      address
-      decimals
-      symbol
-    }
-  }
-}
-
 query SelectWalletScreen($ownerAddresses: [String!]!) {
   portfolios(ownerAddresses: $ownerAddresses) {
     id
@@ -462,6 +446,22 @@ query SearchPopularTokens {
 }
 
 query SearchTokens($searchQuery: String!) {
+  searchTokens(searchQuery: $searchQuery) {
+    id
+    chain
+    address
+    decimals
+    name
+    symbol
+    project {
+      id
+      logoUrl
+      safetyLevel
+    }
+  }
+}
+
+query ExploreSearchTokens($searchQuery: String!) {
   searchTokens(searchQuery: $searchQuery) {
     id
     chain

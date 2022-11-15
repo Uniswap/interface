@@ -1,16 +1,9 @@
-import { Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { ChainId } from 'src/constants/chains'
-import {
-  TokenSortableField,
-  TopTokensQuery,
-  useTopTokensQuery,
-} from 'src/data/__generated__/types-and-hooks'
+import { TokenSortableField, useTopTokensQuery } from 'src/data/__generated__/types-and-hooks'
 import { CurrencyInfo, GqlResult } from 'src/features/dataApi/types'
-import { usePersistedError } from 'src/features/dataApi/utils'
-import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
-import { fromGraphQLChain, toGraphQLChain } from 'src/utils/chainId'
-import { currencyId } from 'src/utils/currencyId'
+import { gqlTokenToCurrencyInfo, usePersistedError } from 'src/features/dataApi/utils'
+import { toGraphQLChain } from 'src/utils/chainId'
 
 export function usePopularTokens(chainFilter: ChainId): GqlResult<CurrencyInfo[]> {
   const gqlChainFilter = toGraphQLChain(chainFilter)
@@ -41,28 +34,4 @@ export function usePopularTokens(chainFilter: ChainId): GqlResult<CurrencyInfo[]
     () => ({ data: formattedData, loading, error: persistedError, refetch }),
     [formattedData, loading, persistedError, refetch]
   )
-}
-
-function gqlTokenToCurrencyInfo(
-  token: NonNullable<NonNullable<TopTokensQuery['topTokens']>[0]>
-): CurrencyInfo | null {
-  const { chain, address, decimals, name, symbol, project } = token
-  const chainId = fromGraphQLChain(chain)
-
-  if (!chainId || !decimals || !symbol || !name || !project) return null
-
-  const { logoUrl, safetyLevel, isSpam } = project
-
-  const currency = address
-    ? new Token(chainId, address, decimals, symbol, name)
-    : new NativeCurrency(chainId)
-
-  const currencyInfo: CurrencyInfo = {
-    currency,
-    currencyId: currencyId(currency),
-    logoUrl,
-    safetyLevel,
-    isSpam,
-  }
-  return currencyInfo
 }

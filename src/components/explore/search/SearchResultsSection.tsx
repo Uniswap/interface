@@ -11,7 +11,7 @@ import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
-import { useSearchTokensQuery } from 'src/data/__generated__/types-and-hooks'
+import { useExploreSearchTokensQuery } from 'src/data/__generated__/types-and-hooks'
 import { useENS } from 'src/features/ens/useENS'
 import { SearchResultType, TokenSearchResult } from 'src/features/explore/searchHistorySlice'
 import { useIsSmartContractAddress } from 'src/features/transactions/transfer/hooks'
@@ -30,7 +30,7 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }) {
     loading: tokenResultsLoading,
     error,
     refetch,
-  } = useSearchTokensQuery({
+  } = useExploreSearchTokensQuery({
     variables: { searchQuery },
   })
 
