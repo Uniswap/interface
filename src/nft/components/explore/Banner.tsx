@@ -62,7 +62,6 @@ const HeaderContainer = styled.div`
 const DEFAULT_TRENDING_COLLECTION_QUERY_AMOUNT = 5
 
 // Exclude collections that are not available in any of the following - OpenSea, X2Y2 and LooksRare:
-// CryptoPunkts
 const EXCLUDED_COLLECTIONS = ['0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb']
 
 const Banner = () => {
@@ -85,7 +84,7 @@ const Banner = () => {
     }
   )
 
-  const collections = data?.filter((collection) => !EXCLUDED_COLLECTIONS.includes(collection.address))
+  const collections = data?.filter((collection) => !EXCLUDED_COLLECTIONS.includes(collection.address)).slice(0, 5)
 
   // Trigger queries for the top trending collections, so that the data is immediately available if the user clicks through.
   const collectionAddresses = useMemo(() => collections?.map(({ address }) => address), [collections])
