@@ -131,7 +131,7 @@
     "@react-hook/window-scroll": "^1.3.0",
     "@reduxjs/toolkit": "^1.6.1",
     "@types/react-relay": "^13.0.2",
-    "@uniswap/analytics": "1.0.3",
+    "@uniswap/analytics": "1.1.1",
     "@uniswap/analytics-events": "1.1.0",
     "@uniswap/governance": "^1.0.2",
     "@uniswap/liquidity-staker": "^1.0.2",
