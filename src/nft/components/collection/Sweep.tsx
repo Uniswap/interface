@@ -177,13 +177,17 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
   const nft20Assets = useLazyLoadSweepAssetsQuery(nft20Params)
 
   const { sortedAssets, sortedAssetsTotalEth } = useMemo(() => {
-    if (!collectionAssets || !nftxAssets || !nft20Assets)
+    if (!collectionAssets && !nftxAssets && !nft20Assets) {
       return { sortedAssets: undefined, sortedAssetsTotalEth: BigNumber.from(0) }
+    }
 
     let counterNFTX = 0
     let counterNFT20 = 0
 
-    let jointCollections = [...nftxAssets, ...nft20Assets]
+    let jointCollections: GenieAsset[] = []
+
+    if (nftxAssets) jointCollections = [...jointCollections, ...nftxAssets]
+    if (nft20Assets) jointCollections = [...jointCollections, ...nft20Assets]
 
     jointCollections.forEach((asset) => {
       if (!asset.susFlag) {
@@ -196,7 +200,7 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
       }
     })
 
-    jointCollections = collectionAssets.concat(jointCollections)
+    jointCollections = collectionAssets ? collectionAssets.concat(jointCollections) : jointCollections
 
     jointCollections.sort((a, b) => {
       return BigNumber.from(a.priceInfo.ETHPrice).gt(BigNumber.from(b.priceInfo.ETHPrice)) ? 1 : -1
@@ -206,7 +210,10 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
       (asset) => BigNumber.from(asset.priceInfo.ETHPrice).gte(0) && !asset.susFlag
     )
 
-    validAssets = validAssets.slice(0, Math.max(collectionAssets.length, nftxAssets.length, nft20Assets.length))
+    validAssets = validAssets.slice(
+      0,
+      Math.max(collectionAssets?.length ?? 0, nftxAssets?.length ?? 0, nft20Assets?.length ?? 0)
+    )
 
     return {
       sortedAssets: validAssets,
@@ -413,7 +420,7 @@ export function useSweepFetcherParams(
       if (market === 'others') {
         return { contractAddress, traits, markets }
       }
-      if (!markets.includes(market)) return { contractAddress: '', traits: [], markets: [] }
+      return { contractAddress: '', traits: [], markets: [] }
     }
 
     switch (market) {

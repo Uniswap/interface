@@ -1,3 +1,4 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
@@ -34,12 +35,11 @@ import {
 } from 'nft/hooks'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { usePriceRange } from 'nft/hooks/usePriceRange'
-import { DropDownOption, GenieCollection, Markets, TokenType } from 'nft/types'
-import { getRarityStatus } from 'nft/utils/asset'
-import { pluralize } from 'nft/utils/roundAndPluralize'
+import { DropDownOption, GenieAsset, GenieCollection, Markets, TokenType } from 'nft/types'
+import { calcPoolPrice, getRarityStatus, pluralize } from 'nft/utils'
 import { scrollToTop } from 'nft/utils/scrollToTop'
 import { applyFiltersFromURL, syncLocalFiltersWithURL } from 'nft/utils/urlParams'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -251,6 +251,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   const toggleBag = useBag((state) => state.toggleBag)
   const bagExpanded = useBag((state) => state.bagExpanded)
+  const itemsInBag = useBag((state) => state.itemsInBag)
 
   const debouncedMinPrice = useDebounce(minPrice, 500)
   const debouncedMaxPrice = useDebounce(maxPrice, 500)
@@ -287,6 +288,68 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   const { assets: collectionNfts, loadNext, hasNext, isLoadingNext } = useLazyLoadAssetsQuery(assetQueryParams)
 
+  const getPoolPosition = useCallback(
+    (asset: GenieAsset) => {
+      return itemsInBag.some((item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address)
+        ? itemsInBag
+            .filter((item) => item.asset.address === asset.address && item.asset.marketplace === asset.marketplace)
+            .map((item) => item.asset.tokenId)
+            .indexOf(asset.tokenId)
+        : itemsInBag.filter(
+            (item) => item.asset.address === asset.address && item.asset.marketplace === asset.marketplace
+          ).length
+    },
+    [itemsInBag]
+  )
+
+  const calculatePrice = useCallback(
+    (asset: GenieAsset) => {
+      return calcPoolPrice(asset, getPoolPosition(asset))
+    },
+    [getPoolPosition]
+  )
+
+  const collectionAssets = useMemo(() => {
+    if (
+      !collectionNfts ||
+      !collectionNfts.some((asset) => asset.marketplace === Markets.NFTX || asset.marketplace === Markets.NFT20)
+    ) {
+      return collectionNfts
+    }
+
+    const assets = [...collectionNfts]
+
+    assets.forEach(
+      (asset) =>
+        (asset.marketplace === Markets.NFTX || asset.marketplace === Markets.NFT20) &&
+        (asset.priceInfo.ETHPrice = calculatePrice(asset))
+    )
+
+    if (sortBy === SortBy.HighToLow || sortBy === SortBy.LowToHigh) {
+      assets.sort((a, b) => {
+        const bigA = BigNumber.from(a.priceInfo?.ETHPrice ?? -1)
+        const bigB = BigNumber.from(b.priceInfo?.ETHPrice ?? -1)
+
+        if (bigA.gte(0) && bigB.lt(0)) {
+          return sortBy === SortBy.LowToHigh ? -1 : 1
+        } else if (bigB.gte(0) && bigA.lt(0)) {
+          return sortBy === SortBy.LowToHigh ? 1 : -1
+        }
+
+        const diff = bigA.sub(bigB)
+        if (diff.gt(0)) {
+          return sortBy === SortBy.LowToHigh ? 1 : -1
+        } else if (diff.lt(0)) {
+          return sortBy === SortBy.LowToHigh ? -1 : 1
+        }
+
+        return 0
+      })
+    }
+
+    return assets
+  }, [collectionNfts, sortBy, calculatePrice])
+
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const oldStateRef = useRef<CollectionFilters | null>(null)
@@ -297,10 +360,10 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   }, [isLoadingNext, setIsCollectionNftsLoading])
 
   const hasRarity = useMemo(() => {
-    const hasRarity = getRarityStatus(rarityStatusCache, collectionStats?.address, collectionNfts) ?? false
+    const hasRarity = getRarityStatus(rarityStatusCache, collectionStats?.address, collectionAssets) ?? false
     setHasRarity(hasRarity)
     return hasRarity
-  }, [collectionStats.address, collectionNfts, setHasRarity])
+  }, [collectionStats.address, collectionAssets, setHasRarity])
 
   const sortDropDownOptions: DropDownOption[] = useMemo(
     () => getSortDropdownOptions(setSortBy, hasRarity),
@@ -315,8 +378,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   }, [contractAddress])
 
   const assets = useMemo(() => {
-    if (!collectionNfts) return null
-    return collectionNfts.map((asset) => (
+    if (!collectionAssets) return null
+    return collectionAssets.map((asset) => (
       <CollectionAsset
         key={asset.address + asset.tokenId}
         asset={asset}
@@ -326,10 +389,10 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         rarityVerified={rarityVerified}
       />
     ))
-  }, [collectionNfts, currentTokenPlayingMedia, isMobile, rarityVerified])
+  }, [collectionAssets, currentTokenPlayingMedia, isMobile, rarityVerified])
 
-  const hasNfts = collectionNfts && collectionNfts.length > 0
-  const hasErc1155s = hasNfts && collectionNfts[0] && collectionNfts[0].tokenType === TokenType.ERC1155
+  const hasNfts = collectionAssets && collectionAssets.length > 0
+  const hasErc1155s = hasNfts && collectionAssets[0] && collectionAssets[0].tokenType === TokenType.ERC1155
 
   const minMaxPriceChipText: string | undefined = useMemo(() => {
     if (debouncedMinPrice && debouncedMaxPrice) {
@@ -407,7 +470,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
                 <FilterButton
                   isMobile={isMobile}
                   isFiltersExpanded={isFiltersExpanded}
-                  collectionCount={collectionNfts?.[0]?.totalCount ?? 0}
+                  collectionCount={collectionAssets?.[0]?.totalCount ?? 0}
                   onClick={() => setFiltersExpanded(!isFiltersExpanded)}
                 />
               </TraceEvent>
@@ -503,13 +566,13 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         next={() => loadNext(ASSET_PAGE_SIZE)}
         hasMore={hasNext}
         loader={hasNext && hasNfts ? loadingAssets() : null}
-        dataLength={collectionNfts?.length ?? 0}
+        dataLength={collectionAssets?.length ?? 0}
         style={{ overflow: 'unset' }}
         className={hasNfts || isLoadingNext ? styles.assetList : undefined}
       >
         {hasNfts ? (
           assets
-        ) : collectionNfts?.length === 0 ? (
+        ) : collectionAssets?.length === 0 ? (
           <Center width="full" color="textSecondary" textAlign="center" style={{ height: '60vh' }}>
             <EmptyCollectionWrapper>
               <p className={headlineMedium}>No NFTS found</p>
