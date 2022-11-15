@@ -10,11 +10,19 @@ import styled from 'styled-components/macro'
 import { Carousel } from './Carousel'
 import { CarouselCard, LoadingCarouselCard } from './CarouselCard'
 
+const BannerBackground = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+`
+
 const BannerContainer = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: 320px;
+  height: 402px;
+  flex: 1;
+  padding-bottom: 24px;
   margin-top: 24px;
   gap: 36px;
   max-width: 1200px;
@@ -94,31 +102,33 @@ const Banner = () => {
   useLoadCollectionQuery(collectionAddresses)
 
   return (
-    <BannerContainer>
-      <HeaderContainer>
-        Better prices. {!isMobile && <br />}
-        More listings.
-      </HeaderContainer>
-      {collections ? (
-        <Carousel>
-          {collections.map((collection) => (
-            <Suspense fallback={<LoadingCarouselCard collection={collection} />} key={collection.address}>
-              <CarouselCard
-                key={collection.address}
-                collection={collection}
-                onClick={() => navigate(`/nfts/collection/${collection.address}`)}
-              />
-            </Suspense>
-          ))}
-        </Carousel>
-      ) : (
-        <Carousel>
-          {[...Array(TRENDING_COLLECTION_SIZE)].map((index) => (
-            <LoadingCarouselCard key={'carouselCard' + index} />
-          ))}
-        </Carousel>
-      )}
-    </BannerContainer>
+    <BannerBackground>
+      <BannerContainer>
+        <HeaderContainer>
+          Better prices. {!isMobile && <br />}
+          More listings.
+        </HeaderContainer>
+        {collections ? (
+          <Carousel>
+            {collections.map((collection) => (
+              <Suspense fallback={<LoadingCarouselCard collection={collection} />} key={collection.address}>
+                <CarouselCard
+                  key={collection.address}
+                  collection={collection}
+                  onClick={() => navigate(`/nfts/collection/${collection.address}`)}
+                />
+              </Suspense>
+            ))}
+          </Carousel>
+        ) : (
+          <Carousel>
+            {[...Array(TRENDING_COLLECTION_SIZE)].map((index) => (
+              <LoadingCarouselCard key={'carouselCard' + index} />
+            ))}
+          </Carousel>
+        )}
+      </BannerContainer>
+    </BannerBackground>
   )
 }
 

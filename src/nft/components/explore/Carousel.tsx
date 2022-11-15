@@ -28,7 +28,6 @@ const CarouselCard = styled(a.div)`
   padding-right: 16px;
   display: flex;
   top: 3px;
-  height: 280px;
   will-change: transform;
   justify-content: center;
 
@@ -39,7 +38,6 @@ const CarouselCard = styled(a.div)`
 
 const IconContainer = styled.div<{ right?: boolean }>`
   display: flex;
-  height: 280px;
   justify-content: center;
   align-items: center;
   cursor: pointer;

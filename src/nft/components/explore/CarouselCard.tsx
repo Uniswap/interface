@@ -27,24 +27,21 @@ const CarouselCardContainer = styled.div`
 const CardHeaderContainer = styled.div<{ src: string }>`
   position: relative;
   width: 100%;
-  height: 108px;
-  padding-top: 32px;
-  padding-bottom: 16px;
-  padding-left: 28px;
-  padding-right: 28px;
+  height: 202px;
+  padding: 28px;
   background-image: ${({ src }) => `url(${src})`};
   background-size: cover;
   background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
 const LoadingCardHeaderContainer = styled.div`
   position: relative;
   width: 100%;
-  height: 108px;
-  padding-top: 32px;
-  padding-bottom: 16px;
-  padding-left: 28px;
-  padding-right: 28px;
+  height: 202px;
+  padding-top: 28px;
   animation: ${loadingAnimation} 1.5s infinite;
   animation-fill-mode: both;
   background: linear-gradient(
@@ -55,23 +52,20 @@ const LoadingCardHeaderContainer = styled.div`
   );
   will-change: background-position;
   background-size: 400%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
-const CardHeaderRow = styled.div`
+const CardHeaderColumn = styled.div`
   position: relative;
   z-index: 1;
   display: flex;
   gap: 12px;
+  flex-direction: column;
   align-items: center;
 `
 
-const CardNameRow = styled.div`
-  display: flex;
-  gap: 2px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-`
 const IconContainer = styled.div`
   display: flex;
   flex-shrink: 0;
@@ -83,6 +77,7 @@ const CollectionNameContainer = styled.div`
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  gap: 6px;
 `
 
 const LoadingCollectionNameContainer = styled(LoadingBubble)`
@@ -91,7 +86,7 @@ const LoadingCollectionNameContainer = styled(LoadingBubble)`
 
 const HeaderOverlay = styled.div`
   position: absolute;
-  height: 108px;
+  height: 202px;
   top: 0px;
   right: 0px;
   left: 0px;
@@ -239,21 +234,19 @@ const CarouselCardHeader = ({ collection }: { collection: TrendingCollection }) 
   const theme = useTheme()
   return (
     <CardHeaderContainer src={collection.bannerImageUrl}>
-      <CardHeaderRow>
+      <CardHeaderColumn>
         <CollectionImage src={collection.imageUrl} />
-        <CardNameRow>
-          <CollectionNameContainer>
-            <ThemedText.MediumHeader color={theme.accentTextLightPrimary} fontWeight="500" lineHeight="28px">
-              {collection.name}
-            </ThemedText.MediumHeader>
-          </CollectionNameContainer>
+        <CollectionNameContainer>
+          <ThemedText.MediumHeader color={theme.accentTextLightPrimary} fontWeight="500" lineHeight="28px">
+            {collection.name}
+          </ThemedText.MediumHeader>
           {collection.isVerified && (
             <IconContainer>
               <VerifiedIcon width="24px" height="24px" />
             </IconContainer>
           )}
-        </CardNameRow>
-      </CardHeaderRow>
+        </CollectionNameContainer>
+      </CardHeaderColumn>
       <HeaderOverlay />
     </CardHeaderContainer>
   )
@@ -266,10 +259,10 @@ export const LoadingCarouselCard = ({ collection }: { collection?: TrendingColle
         <CarouselCardHeader collection={collection} />
       ) : (
         <LoadingCardHeaderContainer>
-          <CardHeaderRow>
+          <CardHeaderColumn>
             <LoadingCollectionImage />
             <LoadingCollectionNameContainer />
-          </CardHeaderRow>
+          </CardHeaderColumn>
           <HeaderOverlay />
         </LoadingCardHeaderContainer>
       )}
