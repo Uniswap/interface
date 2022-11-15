@@ -1,10 +1,24 @@
 import { NavIcon } from 'components/NavBar/NavIcon'
-import * as styles from 'components/NavBar/ShoppingBag.css'
-import { Box } from 'nft/components/Box'
 import { BagIcon, HundredsOverflowIcon } from 'nft/components/icons'
 import { useBag, useSellAsset } from 'nft/hooks'
 import { useCallback, useEffect, useState } from 'react'
+import styled from 'styled-components/macro'
 import shallow from 'zustand/shallow'
+
+const CounterDot = styled.div`
+  background-color: ${({ theme }) => theme.accentAction};
+  border-radius: 100px;
+  color: ${({ theme }) => theme.accentTextLightPrimary};
+  font-size: 10px;
+  line-height: 12px;
+  min-height: 16px;
+  min-width: 16px;
+  padding: 2px 4px;
+  position: absolute;
+  right: 0px;
+  text-align: center;
+  top: 4px;
+`
 
 export const ShoppingBag = () => {
   const itemsInBag = useBag((state) => state.itemsInBag)
@@ -38,10 +52,8 @@ export const ShoppingBag = () => {
 
   return (
     <NavIcon isActive={bagExpanded} onClick={handleIconClick}>
-      <BagIcon viewBox="0 0 20 20" width={24} height={24} />
-      {bagHasItems && (
-        <Box className={styles.bagQuantity}>{bagQuantity > 99 ? <HundredsOverflowIcon /> : bagQuantity}</Box>
-      )}
+      <BagIcon viewBox="0 0 24 24" width={24} height={24} />
+      {bagHasItems && <CounterDot>{bagQuantity > 99 ? <HundredsOverflowIcon /> : bagQuantity}</CounterDot>}
     </NavIcon>
   )
 }
