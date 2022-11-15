@@ -1,4 +1,5 @@
 import { NavIcon } from 'components/NavBar/NavIcon'
+import { useIsNftProfilePage } from 'hooks/useIsNftPage'
 import { BagIcon, HundredsOverflowIcon } from 'nft/components/icons'
 import { useBag, useSellAsset } from 'nft/hooks'
 import { useCallback, useEffect, useState } from 'react'
@@ -24,25 +25,24 @@ export const Bag = () => {
   const itemsInBag = useBag((state) => state.itemsInBag)
   const [bagQuantity, setBagQuantity] = useState(0)
 
+  const isNftProfilePage = useIsNftProfilePage()
+
   const { bagExpanded, setBagExpanded } = useBag(
     ({ bagExpanded, setBagExpanded }) => ({ bagExpanded, setBagExpanded }),
     shallow
   )
-  const { isSellMode, resetSellAssets, setIsSellMode } = useSellAsset(
-    ({ isSellMode, reset, setIsSellMode }) => ({
-      isSellMode,
+  const { resetSellAssets } = useSellAsset(
+    ({ reset }) => ({
       resetSellAssets: reset,
-      setIsSellMode,
     }),
     shallow
   )
   const handleIconClick = useCallback(() => {
-    if (isSellMode && bagExpanded) {
+    if (isNftProfilePage && bagExpanded) {
       resetSellAssets()
-      setIsSellMode(false)
     }
     setBagExpanded({ bagExpanded: !bagExpanded })
-  }, [bagExpanded, isSellMode, resetSellAssets, setBagExpanded, setIsSellMode])
+  }, [bagExpanded, isNftProfilePage, resetSellAssets, setBagExpanded])
 
   useEffect(() => {
     setBagQuantity(itemsInBag.length)
