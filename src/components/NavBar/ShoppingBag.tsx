@@ -2,7 +2,7 @@ import { NavIcon } from 'components/NavBar/NavIcon'
 import * as styles from 'components/NavBar/ShoppingBag.css'
 import { Box } from 'nft/components/Box'
 import { BagIcon, HundredsOverflowIcon } from 'nft/components/icons'
-import { useBag, useSellAsset } from 'nft/hooks'
+import { useBag } from 'nft/hooks'
 import { useCallback, useEffect, useState } from 'react'
 import shallow from 'zustand/shallow'
 
@@ -14,14 +14,7 @@ export const ShoppingBag = () => {
     ({ bagExpanded, setBagExpanded }) => ({ bagExpanded, setBagExpanded }),
     shallow
   )
-  const { isSellMode, resetSellAssets, setIsSellMode } = useSellAsset(
-    ({ isSellMode, reset, setIsSellMode }) => ({
-      isSellMode,
-      resetSellAssets: reset,
-      setIsSellMode,
-    }),
-    shallow
-  )
+
   const handleIconClick = useCallback(() => {
     setBagExpanded({ bagExpanded: !bagExpanded })
   }, [bagExpanded, setBagExpanded])
