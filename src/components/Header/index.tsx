@@ -64,7 +64,7 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding:  1rem;
-    grid-template-columns: 36px 1fr;
+    grid-template-columns: 36px 240px;
   `};
 `
 
