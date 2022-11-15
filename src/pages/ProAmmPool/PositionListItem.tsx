@@ -286,10 +286,6 @@ function PositionListItem({
     )
   }, 0)
 
-  const totalFeeRewardUSD =
-    parseFloat(current[0]?.toExact() || '0') * prices[token0?.wrapped.address || ''] +
-    parseFloat(current[0]?.toExact() || '0') * prices[token1?.wrapped.address || '']
-
   const farmAPR = (farmRewardValue * 365 * 100) / usd
 
   const tickAtLimit = useIsTickAtLimit(feeAmount, tickLower, tickUpper)
@@ -384,7 +380,7 @@ function PositionListItem({
             )}
             {!stakedLayout && (
               <ProAmmFee
-                totalFeeRewardUSD={totalFeeRewardUSD}
+                totalFeeRewardUSD={currentFeeValue}
                 feeValue0={current[0]}
                 feeValue1={current[1]}
                 position={position}
