@@ -1,9 +1,10 @@
 import { useWeb3React } from '@web3-react/core'
 import { OpacityHoverState } from 'components/Common'
+import { useNftBalanceQuery } from 'graphql/data/nft/NftBalance'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { CancelListingIcon, MinusIcon, PlusIcon } from 'nft/components/icons'
-import { useBag } from 'nft/hooks'
-import { CollectionInfoForAsset, GenieAsset, TokenType } from 'nft/types'
+import { useBag, useProfilePageState, useSellAsset } from 'nft/hooks'
+import { CollectionInfoForAsset, GenieAsset, ProfilePageStateType, TokenType, WalletAsset } from 'nft/types'
 import { ethNumberStandardFormatter, formatEthPrice, getMarketplaceIcon, timeLeft, useUsdPrice } from 'nft/utils'
 import { shortenAddress } from 'nft/utils/address'
 import { useMemo } from 'react'
@@ -178,12 +179,26 @@ const OwnerInformationContainer = styled.div`
 `
 
 export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
+  const navigate = useNavigate()
+  const USDPrice = useUsdPrice(asset)
+  const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
+  const selectSellAsset = useSellAsset((state) => state.selectSellAsset)
+  const resetSellAssets = useSellAsset((state) => state.reset)
+  const { account } = useWeb3React()
+  const assetsFilter = [{ address: asset.address, tokenId: asset.tokenId }]
+  const { walletAssets: ownerAssets } = useNftBalanceQuery(account ?? '', [], assetsFilter, 1)
+  const walletAsset: WalletAsset = useMemo(() => ownerAssets[0], [ownerAssets])
+
   const listing = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
   const cheapestOrder = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
   const expirationDate = cheapestOrder ? new Date(cheapestOrder.endAt) : undefined
-  const USDPrice = useUsdPrice(asset)
 
-  const navigate = useNavigate()
+  const goToListPage = () => {
+    resetSellAssets()
+    navigate('/nfts/profile')
+    selectSellAsset(walletAsset)
+    setSellPageState(ProfilePageStateType.LISTING)
+  }
 
   return (
     <Container>
@@ -216,16 +231,13 @@ export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
           <ThemedText.BodySecondary fontSize={'14px'}>Sale ends: {timeLeft(expirationDate)}</ThemedText.BodySecondary>
         )}
         {!listing ? (
-          <BuyNowButton assetInBag={false} margin={true} useAccentColor={true} onClick={() => navigate('/profile')}>
+          <BuyNowButton assetInBag={false} margin={true} useAccentColor={true} onClick={goToListPage}>
             <ThemedText.SubHeader lineHeight={'20px'}>List</ThemedText.SubHeader>
           </BuyNowButton>
         ) : (
           <>
-            <BuyNowButton assetInBag={false} margin={true} useAccentColor={false} onClick={() => navigate('/profile')}>
+            <BuyNowButton assetInBag={false} margin={true} useAccentColor={false} onClick={goToListPage}>
               <ThemedText.SubHeader lineHeight={'20px'}>Adjust listing</ThemedText.SubHeader>
-            </BuyNowButton>
-            <BuyNowButton assetInBag={true} margin={false} useAccentColor={false} onClick={() => navigate('/profile')}>
-              <ThemedText.SubHeader lineHeight={'20px'}>Cancel listing</ThemedText.SubHeader>
             </BuyNowButton>
           </>
         )}
