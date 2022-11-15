@@ -315,7 +315,8 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
               {totalSupplyStr}
             </StatsItem>
           ) : null}
-          {uniqueOwnersPercentage ? (
+
+          {Boolean(uniqueOwnersPercentage && stats.standard !== TokenType.ERC1155) ? (
             <StatsItem label="Unique owners" shouldHide={isMobile ?? false}>
               {uniqueOwnersPercentage}%
             </StatsItem>
