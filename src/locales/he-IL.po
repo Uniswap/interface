@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-27 02:48\n"
+"PO-Revision-Date: 2022-11-15 00:17\n"
 "Last-Translator: \n"
 "Language: he_IL\n"
 "Language-Team: Hebrew\n"
@@ -145,7 +145,6 @@ msgstr "לְקַבֵּל"
 msgid "Account"
 msgstr "חֶשְׁבּוֹן"
 
-#: src/components/SearchModal/ImportRow.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Active"
 msgstr "פָּעִיל"
@@ -318,6 +317,10 @@ msgstr "זמין להפקדה: {0}"
 msgid "Back to wallet selection"
 msgstr "חזרה לבחירת הארנק"
 
+#: src/nft/components/bag/BagHeader.tsx
+msgid "Bag"
+msgstr "תיק"
+
 #: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0}"
@@ -350,10 +353,6 @@ msgstr "כתובת חסומה"
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 msgstr "על ידי הוספת נזילות תרוויח 0.3% מכלל העסקאות בזוג זה ביחס לחלק שלך במאגר. העמלות מתווספות לבריכה, נצברות בזמן אמת וניתן לתבוע אותן באמצעות משיכת הנזילות שלך."
-
-#: src/components/WalletModal/index.tsx
-msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
-msgstr "על ידי חיבור ארנק, אתה מסכים לתנאי השירות</0> <0>ומאשר שקראת והבנת את כתב ויתור פרוטוקול <1></1>."
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and consent to its <1>Privacy Policy</1>."
@@ -441,10 +440,6 @@ msgstr "תביעת {0} UNI"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Clear All"
-msgstr "נקה הכל"
-
-#: src/components/SearchModal/ManageTokens.tsx
-msgid "Clear all"
 msgstr "נקה הכל"
 
 #: src/components/TokenSafety/index.tsx
@@ -560,6 +555,10 @@ msgstr "התחבר לארנק כדי להציג את נזילות V2 שלך."
 #: src/pages/Pool/v2.tsx
 msgid "Connect to a wallet to view your liquidity."
 msgstr "התחבר לארנק כדי להציג את הנזילות שלך."
+
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Connect wallet"
+msgstr "חבר ארנק"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with"
@@ -785,10 +784,6 @@ msgstr "הזן כתובת להפעלת תביעה של UNI. אם לכתובת י
 msgid "Enter an amount"
 msgstr "הזן סכום"
 
-#: src/components/SearchModal/ManageTokens.tsx
-msgid "Enter valid token address"
-msgstr "הזן כתובת אסימון חוקית"
-
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 msgid "Enter {0} amount"
@@ -861,10 +856,6 @@ msgstr "לא בתוקף"
 msgid "Explore"
 msgstr "לַחקוֹר"
 
-#: src/components/Tokens/TokensBanner.tsx
-msgid "Explore Top Tokens on Uniswap"
-msgstr "חקור את האסימונים המובילים ב-Uniswap"
-
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "חקור את Uniswap Analytics."
@@ -934,6 +925,11 @@ msgstr "מרכז עזרה"
 msgid "Hide"
 msgstr "להתחבא"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
+msgid "Hide closed positions"
+msgstr "הסתר עמדות סגורות"
+
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "השפעה על מחיר גבוה"
@@ -946,12 +942,6 @@ msgstr "אני מבין"
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "If you believe this is an error, please send an email including your address to"
 msgstr "אם אתה סבור שזו שגיאה, אנא שלח דוא\"ל כולל כתובתך אל"
-
-#: src/components/SearchModal/BlockedToken.tsx
-#: src/components/SearchModal/ImportRow.tsx
-#: src/components/SearchModal/ImportToken.tsx
-msgid "Import"
-msgstr "יְיבוּא"
 
 #: src/pages/Pool/v2.tsx
 msgid "Import Pool"
@@ -1092,10 +1082,6 @@ msgstr "ספקי נזילות מרוויחים עמלה של 0.3% על כל הע
 msgid "Loading"
 msgstr "טוען"
 
-#: src/components/Tokens/TokenDetails/PriceChart.tsx
-msgid "Loading chart data"
-msgstr "טוען נתוני תרשים"
-
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "MAX"
 msgstr "MAX"
@@ -1209,7 +1195,7 @@ msgstr "אוספי NFT"
 msgid "NFTs"
 msgstr "NFTs"
 
-#: src/components/Tokens/TokenDetails/ChartSection.tsx
+#: src/components/Tokens/TokenDetails/index.tsx
 msgid "Name not found"
 msgstr "השם לא נמצא"
 
@@ -1327,6 +1313,11 @@ msgstr "בעלים"
 msgid "Participating pools"
 msgstr "בריכות המשתתפות"
 
+#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Pay"
+msgstr "לְשַׁלֵם"
+
 #: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
@@ -1426,6 +1417,14 @@ msgstr "מחיר:"
 msgid "Prices and pool share"
 msgstr "מחירים ונתח בריכה"
 
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Privacy Policy"
+msgstr "מדיניות פרטיות"
+
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Proceed in wallet"
+msgstr "המשך בארנק"
+
 #: src/pages/CreateProposal/ProposalEditor.tsx
 msgid "Proposal"
 msgstr "הצעה"
@@ -1453,10 +1452,6 @@ msgstr "הצעה לפעולה"
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
 msgstr "מציע"
-
-#: src/components/PrivacyPolicy/index.tsx
-msgid "Protocol Disclaimer"
-msgstr "כתב ויתור פרוטוקול"
 
 #: src/components/vote/QueueModal.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -1612,6 +1607,10 @@ msgstr "עצמי"
 msgid "Self Delegate"
 msgstr "נציג עצמי"
 
+#: src/nft/components/bag/BagHeader.tsx
+msgid "Sell"
+msgstr "מכירה"
+
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -1665,16 +1664,13 @@ msgid "Some assets are not available through this interface because they may not
 msgstr "חלק מהנכסים אינם זמינים דרך ממשק זה מכיוון שהם עשויים שלא לעבוד היטב עם החוזים החכמים או שאיננו יכולים לאפשר מסחר מסיבות משפטיות."
 
 #: src/components/ErrorBoundary/index.tsx
+#: src/nft/components/bag/BagFooter.tsx
 msgid "Something went wrong"
 msgstr "משהו השתבש"
 
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Something went wrong. Please try again."
 msgstr "משהו השתבש. בבקשה נסה שוב."
-
-#: src/components/Tokens/TokensBanner.tsx
-msgid "Sort and filter assets across networks on the new Tokens page."
-msgstr "מיין וסנן נכסים על פני רשתות בדף האסימונים החדש."
 
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "Stats"
@@ -1752,7 +1748,11 @@ msgstr "החלפה"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "החלפת {0} {1} ב- {2} {3}"
 
-#: src/components/Tokens/TokenDetails/ChartSection.tsx
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Switch networks"
+msgstr "החלף רשתות"
+
+#: src/components/Tokens/TokenDetails/index.tsx
 msgid "Symbol not found"
 msgstr "הסמל לא נמצא"
 
@@ -1893,17 +1893,9 @@ msgstr "הצעה זו עשויה להתבצע לאחר {0}."
 msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
 msgstr "מסלול זה מייעל את התפוקה הכוללת שלך על ידי התחשבות במסלולים מפוצלים, ריבוי דילוגים ועלות הגז של כל שלב."
 
-#: src/components/SearchModal/ImportToken.tsx
-msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
-msgstr "אסימון זה אינו מופיע ברשימות האסימונים הפעילות. ודא שזה האסימון שאתה רוצה לסחור בו."
-
 #: src/components/Tokens/TokenDetails/PriceChart.tsx
 msgid "This token doesn't have chart data because it hasn't been traded on Uniswap v3"
 msgstr "לטוקן זה אין נתוני תרשים מכיוון שהוא לא נסחר ב-Uniswap v3"
-
-#: src/components/SearchModal/BlockedToken.tsx
-msgid "This token is not supported in the Uniswap Labs app"
-msgstr "אסימון זה אינו נתמך באפליקציית Uniswap Labs"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
@@ -1916,10 +1908,6 @@ msgstr "עסקה זו לא תצליח בגלל תנועת מחירים. נסה �
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "עסקה זו לא תצליח גם בגלל תנועת מחירים או עמלה על העברה. נסה להגביר את סובלנות ההחלקה שלך."
-
-#: src/components/SearchModal/ManageTokens.tsx
-msgid "Tip: Custom tokens are stored locally in your browser"
-msgstr "טיפ: אסימונים מותאמים אישית נשמרים באופן מקומי בדפדפן שלך"
 
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
@@ -1934,10 +1922,6 @@ msgstr "עבור (לפחות)"
 #: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token name"
 msgstr "שם אסימון"
-
-#: src/components/SearchModal/BlockedToken.tsx
-msgid "Token not supported"
-msgstr "אסימון אינו נתמך"
 
 #: src/components/NavBar/SearchBarDropdown.tsx
 #: src/components/NavBar/index.tsx
@@ -1989,6 +1973,10 @@ msgstr "העסקה הושלמה בשנת"
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
 msgstr "מועד אחרון לעסקה"
+
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Transaction pending"
+msgstr "העסקה בהמתנה"
 
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
@@ -2080,10 +2068,6 @@ msgstr "כריית נזילות ללא החלפה"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "חוזה הגירה מביטול החלפה↗"
-
-#: src/components/SearchModal/TokenImportCard.tsx
-msgid "Unknown Source"
-msgstr "מקור לא ידוע"
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -2330,6 +2314,10 @@ msgstr "עָטוּף"
 msgid "Wrapping"
 msgstr "לְפָפָה"
 
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Wrong network"
+msgstr "רשת שגויה"
+
 #: src/pages/CreateProposal/index.tsx
 msgid "You already have an active or pending proposal"
 msgstr "כבר יש לך הצעה פעילה או ממתינה"
@@ -2457,6 +2445,11 @@ msgstr "העמדות שלך"
 msgid "Your rate"
 msgstr "השיעור שלך"
 
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+msgid "Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds."
+msgstr ""
+
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Your total pool tokens:"
@@ -2553,18 +2546,6 @@ msgstr "פרס"
 msgid "to"
 msgstr "ל"
 
-#: src/components/SearchModal/ImportRow.tsx
-msgid "via {0}"
-msgstr "דרך {0}"
-
-#: src/components/SearchModal/TokenImportCard.tsx
-msgid "via {0} token list"
-msgstr "דרך רשימת אסימונים {0}"
-
-#: src/components/SearchModal/ImportToken.tsx
-msgid "{0, plural, =1 {Import token} other {Import tokens}}"
-msgstr "{0, plural, =1 {ייבוא אסימון} other {ייבוא אסימונים}}"
-
 #: src/constants/tokenSafety.tsx
 msgid "{0, plural, =1 {This token isn't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap.} other {These tokens aren't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap.}}"
 msgstr "{0, plural, =1 {אסימון זה אינו נסחר בבורסות מובילות בארה\"ב או מוחלף לעתים קרובות ב-Uniswap.} other {האסימונים הללו אינם נסחרים בבורסות מובילות בארה\"ב או מוחלפים לעתים קרובות ב-Uniswap.}}"
@@ -2590,10 +2571,6 @@ msgstr "{0} %"
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0 /> לכל <1/>"
-
-#: src/components/SearchModal/ManageTokens.tsx
-msgid "{0} Custom Tokens"
-msgstr "{0} אסימונים בהתאמה אישית"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -2702,6 +2679,10 @@ msgstr "{SOCKS_AMOUNT} UNI"
 #: src/components/claim/ClaimModal.tsx
 msgid "{USER_AMOUNT} UNI"
 msgstr "{USER_AMOUNT} UNI"
+
+#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
+msgid "{disabledTooltipText}"
+msgstr "{disabledTooltipText}"
 
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "{label} might be down right now, or you may have lost your network connection."
