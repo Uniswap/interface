@@ -40,9 +40,8 @@ export function PriceChart({
   graphs?: GraphMetadatas
 } & Pick<ComponentProps<typeof PriceExplorer>, 'headerCustomPrice' | 'headerCustomPercentChange'>) {
   // require all graphs to be loaded before rendering the chart
-  // TODO(judo): improve loading state
-  const loading =
-    useMemo(() => graphs?.some((g) => g.data === undefined), [graphs]) || graphs === undefined
+  // TODO(judo): improve loading state by lazy loading time ranges
+  const loading = useMemo(() => graphs?.some((g) => !g.data), [graphs]) || graphs === undefined
 
   return (
     <Box overflow="hidden">

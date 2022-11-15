@@ -76,6 +76,11 @@ export function useTokenPriceGraphs(token: Token): GqlResult<GraphMetadatas> {
       },
     ] as const
 
+    // ensures every graph was successfully loaded
+    if (graphs.some((graph) => !graph.data)) {
+      return
+    }
+
     return graphs as GraphMetadatas
   }, [priceData])
 
