@@ -99,7 +99,7 @@ export function useLoadCollectionQuery(address?: string | string[]): void {
 // Lazy-loads an already loaded CollectionQuery.
 // This will *not* trigger a query - that must be done from a parent component to ensure proper query coalescing and to
 // prevent waterfalling. Use useLoadCollectionQuery to trigger the query.
-export function useCollectionQuery(address: string): GenieCollection | undefined {
+export function useCollectionQuery(address: string): GenieCollection {
   const queryData = useLazyLoadQuery<CollectionQuery>( // this will suspend if not yet loaded
     collectionQuery,
     { addresses: [address] },
