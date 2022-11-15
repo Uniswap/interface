@@ -240,7 +240,7 @@ function LoadingTable({ headerGroups, visibleColumns, ...props }: LoadingTablePr
                     textAlign: index === 0 ? 'left' : 'right',
                     paddingLeft: index === 0 ? '52px' : 0,
                   }}
-                  isFirstHeader={index === 0}
+                  disabled={index === 0}
                   key={index}
                 >
                   <Box as="span" color="accentAction" position="relative">
