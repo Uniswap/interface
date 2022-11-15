@@ -154,7 +154,7 @@ export const TokenItem = memo(
                   {metadataDisplayType === TokensMetadataDisplayType.MarketCap ? (
                     <Text color="textSecondary" variant="subheadSmall">
                       {t('MCap {{marketCap}}', {
-                        marketCap: formatNumber(marketCap, NumberType.FiatTokenDetails),
+                        marketCap: formatNumber(marketCap, NumberType.FiatTokenStats),
                       })}
                     </Text>
                   ) : (
