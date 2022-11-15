@@ -5,10 +5,12 @@ import { ReactNode, useCallback, useEffect, useReducer, useRef, useState } from 
 import { a, useSprings } from 'react-spring'
 import styled from 'styled-components/macro'
 
+const MAX_CARD_WIDTH = 530
+
 const CarouselContainer = styled.div`
   display: flex;
-  max-width: 592px;
   width: 100%;
+  justify-content: flex-end;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     height: 320px;
@@ -16,7 +18,7 @@ const CarouselContainer = styled.div`
 `
 
 const CarouselCardContainer = styled.div`
-  max-width: 512px;
+  max-width: ${MAX_CARD_WIDTH}px;
   position: relative;
   width: 100%;
   overflow-x: hidden;
@@ -41,9 +43,9 @@ const IconContainer = styled.div<{ right?: boolean }>`
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  padding: 8px;
+  padding: 26px;
   ${({ right }) => (right ? 'transform: rotate(180deg)' : undefined)};
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.accentAction};
 
   :hover {
     opacity: ${({ theme }) => theme.opacity.hover};
@@ -63,7 +65,6 @@ interface CarouselProps {
 }
 
 const FIRST_CARD_OFFSET = 0
-const MAX_CARD_WIDTH = 512
 
 export const Carousel = ({ children }: CarouselProps) => {
   const { width } = useWindowSize()

@@ -20,7 +20,7 @@ const BannerContainer = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: 402px;
+  height: 405px;
   flex: 1;
   padding-bottom: 24px;
   margin-top: 24px;

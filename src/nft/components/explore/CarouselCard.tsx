@@ -41,7 +41,7 @@ const LoadingCardHeaderContainer = styled.div`
   position: relative;
   width: 100%;
   height: 202px;
-  padding-top: 28px;
+  padding: 28px;
   animation: ${loadingAnimation} 1.5s infinite;
   animation-fill-mode: both;
   background: linear-gradient(
@@ -148,6 +148,7 @@ const HeaderRow = styled.div`
 
 const LoadingTableElement = styled(LoadingBubble)`
   width: 50px;
+  height: 21px;
 `
 
 const TableElement = styled.div`
