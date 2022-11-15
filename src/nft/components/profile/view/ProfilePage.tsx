@@ -131,7 +131,7 @@ export const ProfilePage = () => {
                       ? ownerAssets.map((asset, index) => (
                           <div key={index}>
                             <ViewMyNftsAsset
-                              isSellMode={false}
+                              isSellMode
                               asset={asset}
                               mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
                               setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
