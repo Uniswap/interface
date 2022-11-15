@@ -15,7 +15,13 @@ import {
 } from 'nft/queries/openSea'
 
 import ERC721 from '../../abis/erc721.json'
-import { createLooksRareOrder, LOOKSRARE_MARKETPLACE_CONTRACT, newX2Y2Order, PostOpenSeaSellOrder } from '../queries'
+import {
+  createLooksRareOrder,
+  getOrderId,
+  LOOKSRARE_MARKETPLACE_CONTRACT,
+  newX2Y2Order,
+  PostOpenSeaSellOrder,
+} from '../queries'
 import { INVERSE_BASIS_POINTS, OPENSEA_DEFAULT_FEE, OPENSEA_FEE_ADDRESS } from '../queries/openSea'
 import { ListingMarket, ListingStatus, WalletAsset } from '../types'
 import { createSellOrder, encodeOrder, OfferItem, OrderPayload, signOrderData } from './x2y2'
@@ -55,7 +61,7 @@ const getConsiderationItems = (
   creatorFee?: ConsiderationInputItem
 } => {
   const openSeaBasisPoints = OPENSEA_DEFAULT_FEE * INVERSE_BASIS_POINTS
-  const creatorFeeBasisPoints = asset.basisPoints * INVERSE_BASIS_POINTS
+  const creatorFeeBasisPoints = asset.basisPoints
   const sellerBasisPoints = INVERSE_BASIS_POINTS - openSeaBasisPoints - creatorFeeBasisPoints
 
   const openseaFee = price.mul(BigNumber.from(openSeaBasisPoints)).div(BigNumber.from(INVERSE_BASIS_POINTS)).toString()
@@ -176,7 +182,7 @@ export async function signListing(
         // amount of tokens to sell/purchase (must be 1 for ERC721, 1+ for ERC1155)
         amount: BigNumber.from(1),
         // strategy for trade execution (e.g., DutchAuction, StandardSaleForFixedPrice), see addresses in the SDK
-        strategy: addresses.STRATEGY_STANDARD_SALE,
+        strategy: '0x579af6FD30BF83a5Ac0D636bc619f98DBdeb930c',
         // currency address
         currency: addresses.WETH,
         // order nonce (must be unique unless new maker order is meant to override existing one e.g., lower ask price)
@@ -187,7 +193,7 @@ export async function signListing(
         endTime: BigNumber.from(asset.expirationTime),
         // minimum ratio to be received by the user (per 10000)
         minPercentageToAsk: BigNumber.from(10000)
-          .sub(BigNumber.from(200).add(BigNumber.from(asset.basisPoints * 10000)))
+          .sub(BigNumber.from(asset.basisPoints ? 200 : 150))
           .toNumber(),
         // params (e.g., price, target account for private sale)
         params: [],
@@ -205,7 +211,7 @@ export async function signListing(
           signature: signatureHash,
           tokenId: asset.tokenId,
           collection: asset.asset_contract.address,
-          strategy: addresses.STRATEGY_STANDARD_SALE,
+          strategy: '0x579af6FD30BF83a5Ac0D636bc619f98DBdeb930c',
           currency: addresses.WETH,
           signer: signerAddress,
           isOrderAsk: true,
@@ -214,13 +220,15 @@ export async function signListing(
           price: parseEther(listingPrice.toString()).toString(),
           startTime: currentTime,
           endTime: asset.expirationTime,
-          minPercentageToAsk: 10000 - (200 + asset.basisPoints * 10000),
+          minPercentageToAsk: 10000 - (asset.basisPoints ? 200 : 150),
           params: [],
         }
+        console.log(payload)
         const res = await createLooksRareOrder(payload)
         if (res) setStatus(ListingStatus.APPROVED)
         return res
       } catch (error) {
+        console.log(error)
         if (error.code === 4001) setStatus(ListingStatus.REJECTED)
         else setStatus(ListingStatus.FAILED)
         return false
@@ -238,22 +246,25 @@ export async function signListing(
       }
       const order = createSellOrder(signerAddress, asset.expirationTime, [orderItem])
       try {
+        const prevOrderId = await getOrderId(asset.asset_contract.address, asset.tokenId)
         await signOrderData(provider, order)
         const payload: OrderPayload = {
           order: encodeOrder(order),
           isBundle: false,
           bundleName: '',
           bundleDesc: '',
-          orderIds: [],
-          changePrice: false,
+          orderIds: prevOrderId ? [prevOrderId] : [],
+          changePrice: Boolean(prevOrderId),
           isCollection: false,
         }
+        console.log(payload)
         setStatus(ListingStatus.PENDING)
         // call server api
         const resp = await newX2Y2Order(payload)
         if (resp) setStatus(ListingStatus.APPROVED)
         return resp
       } catch (error) {
+        console.log(error)
         if (error.code === 4001) setStatus(ListingStatus.REJECTED)
         else setStatus(ListingStatus.FAILED)
         return false
