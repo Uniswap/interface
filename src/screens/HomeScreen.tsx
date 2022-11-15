@@ -1,19 +1,21 @@
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ViewStyle } from 'react-native'
+import { useColorScheme, ViewStyle } from 'react-native'
+import { SvgProps } from 'react-native-svg'
 import { Route } from 'react-native-tab-view'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import ArrowDown from 'src/assets/icons/arrow-down.svg'
 import SendIcon from 'src/assets/icons/send.svg'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
-import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { NftsTab } from 'src/components/home/NftsTab'
 import { TokensTab } from 'src/components/home/TokensTab'
-import { Arrow } from 'src/components/icons/Arrow'
 import { Flex } from 'src/components/layout'
 import TabbedScrollScreen, {
   TabViewScrollProps,
 } from 'src/components/layout/screens/TabbedScrollScreen'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
+import { Text } from 'src/components/Text'
 import { PortfolioBalance } from 'src/features/balances/PortfolioBalance'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
@@ -28,19 +30,27 @@ export function HomeScreen() {
   const activeAccount = useActiveAccountWithThrow()
   const { t } = useTranslation()
 
+  const isDarkMode = useColorScheme() === 'dark'
+  const headerBgColor = isDarkMode ? 'background1' : 'background2'
+
   const contentHeader = useMemo(
     () => (
-      <Flex bg="background0" gap="sm" pb="md">
+      <Flex
+        bg={headerBgColor}
+        borderBottomLeftRadius="md"
+        borderBottomRightRadius="md"
+        gap="sm"
+        pb="md">
         <AccountHeader />
-        <Flex gap="sm" px="lg">
-          <PortfolioBalance owner={activeAccount.address} />
-          <Flex pt="xxs">
-            <QuickActions />
+        <Flex gap="md" px="lg">
+          <Flex centered>
+            <PortfolioBalance owner={activeAccount.address} />
           </Flex>
+          <QuickActions />
         </Flex>
       </Flex>
     ),
-    [activeAccount.address]
+    [activeAccount.address, headerBgColor]
   )
 
   const renderTab = useMemo(() => {
@@ -77,6 +87,7 @@ export function HomeScreen() {
     <TabbedScrollScreen
       contentHeader={contentHeader}
       headerHeightEstimate={CONTENT_HEADER_HEIGHT_ESTIMATE}
+      osStatusBarBgColor={headerBgColor}
       renderTab={renderTab}
       tabs={[
         { key: SectionName.HomeTokensTab, title: t('Tokens') },
@@ -87,7 +98,6 @@ export function HomeScreen() {
 }
 
 function QuickActions() {
-  const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
@@ -103,30 +113,55 @@ function QuickActions() {
 
   return (
     <Flex centered row gap="xs">
-      <Button
-        fill
-        CustomIcon={
-          <SendIcon color={theme.colors.userThemeColor} height={20} strokeWidth={2} width={20} />
-        }
-        allowFontScaling={false}
-        emphasis={ButtonEmphasis.Tertiary}
+      <ActionButton
+        Icon={SendIcon}
         label={t('Send')}
         name={ElementName.Send}
-        size={ButtonSize.Medium}
         onPress={onPressSend}
       />
-      <Button
-        fill
-        CustomIcon={
-          <Arrow color={theme.colors.userThemeColor} direction="s" size={theme.iconSizes.md} />
-        }
-        allowFontScaling={false}
-        emphasis={ButtonEmphasis.Tertiary}
+      <ActionButton
+        Icon={ArrowDown}
         label={t('Receive')}
         name={ElementName.Receive}
-        size={ButtonSize.Medium}
         onPress={onPressReceive}
       />
     </Flex>
+  )
+}
+
+function ActionButton({
+  name,
+  label,
+  Icon,
+  onPress,
+}: {
+  name: ElementName
+  label: string
+  Icon: React.FC<SvgProps>
+  onPress: () => void
+}) {
+  const theme = useAppTheme()
+
+  return (
+    <TouchableArea
+      hapticFeedback
+      backgroundColor="background0"
+      borderColor="backgroundOutline"
+      borderRadius="md"
+      borderWidth={1}
+      flex={1}
+      name={name}
+      padding="sm"
+      onPress={onPress}>
+      <Flex centered row gap="xxs">
+        <Icon
+          color={theme.colors.userThemeColor}
+          height={theme.iconSizes.md}
+          strokeWidth={2}
+          width={theme.iconSizes.md}
+        />
+        <Text variant="buttonLabelMedium">{label}</Text>
+      </Flex>
+    </TouchableArea>
   )
 }

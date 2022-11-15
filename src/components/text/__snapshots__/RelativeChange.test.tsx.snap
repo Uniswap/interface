@@ -58,7 +58,6 @@ exports[`renders a relative change 1`] = `
     }
   >
     12.00%
-    
   </Text>
 </View>
 `;
@@ -120,8 +119,7 @@ exports[`renders placeholders with absolute change 1`] = `
       ]
     }
   >
-    12.00%
-    ($100.00)
+    $100.00 (12.00%)
   </Text>
 </View>
 `;
@@ -155,7 +153,6 @@ exports[`renders placeholders without a change 1`] = `
     }
   >
     -
-    
   </Text>
 </View>
 `;

@@ -778,6 +778,7 @@ export type Portfolio = {
   relativeChange24H?: Maybe<Scalars['Float']>;
   tokenBalances?: Maybe<Array<Maybe<TokenBalance>>>;
   tokensTotalDenominatedValue?: Maybe<Amount>;
+  tokensTotalDenominatedValueChange?: Maybe<AmountChange>;
   tokensTotalDenominatedValueHistory?: Maybe<Array<Maybe<TimestampedAmount>>>;
   totalValue?: Maybe<Scalars['Float']>;
   totalValueUSD?: Maybe<Scalars['Float']>;
@@ -787,6 +788,11 @@ export type Portfolio = {
 export type PortfolioAssetActivitiesArgs = {
   page?: InputMaybe<Scalars['Int']>;
   pageSize?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type PortfolioTokensTotalDenominatedValueChangeArgs = {
+  duration?: InputMaybe<HistoryDuration>;
 };
 
 
@@ -804,6 +810,13 @@ export type TokenBalance = {
   quantity?: Maybe<Scalars['Float']>;
   token?: Maybe<Token>;
   tokenProjectMarket?: Maybe<TokenProjectMarket>;
+};
+
+export type AmountChange = {
+  __typename?: 'AmountChange';
+  absolute?: Maybe<Amount>;
+  id: Scalars['ID'];
+  percentage?: Maybe<Amount>;
 };
 
 export type ContractInput = {
@@ -953,7 +966,7 @@ export type PortfolioBalanceQueryVariables = Exact<{
 }>;
 
 
-export type PortfolioBalanceQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', id: string, tokensTotalDenominatedValue?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null };
+export type PortfolioBalanceQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', id: string, tokensTotalDenominatedValue?: { __typename?: 'Amount', id: string, value: number } | null, tokensTotalDenominatedValueChange?: { __typename?: 'AmountChange', absolute?: { __typename?: 'Amount', value: number, currency?: Currency | null } | null, percentage?: { __typename?: 'Amount', value: number, currency?: Currency | null } | null } | null } | null> | null };
 
 export const TopTokenPartsFragmentDoc = gql`
     fragment TopTokenParts on Token {
@@ -1956,6 +1969,16 @@ export const PortfolioBalanceDocument = gql`
     tokensTotalDenominatedValue {
       id
       value
+    }
+    tokensTotalDenominatedValueChange(duration: DAY) {
+      absolute {
+        value
+        currency
+      }
+      percentage {
+        value
+        currency
+      }
     }
   }
 }

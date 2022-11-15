@@ -1,22 +1,20 @@
 import React, { useEffect, useState } from 'react'
-import { Flex } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
 import { WarmLoadingShimmer } from 'src/components/loading/WarmLoadingShimmer'
 import { DecimalNumber } from 'src/components/text/DecimalNumber'
-import { HiddenFromScreenReaders } from 'src/components/text/HiddenFromScreenReaders'
+import { RelativeChange } from 'src/components/text/RelativeChange'
 import { PollingInterval } from 'src/constants/misc'
 import { isWarmLoadingStatus } from 'src/data/utils'
 import { usePortfolioBalanceQuery } from 'src/data/__generated__/types-and-hooks'
-import { Theme } from 'src/styles/theme'
+import { theme } from 'src/styles/theme'
 import { formatUSDPrice, NumberType } from 'src/utils/format'
 
 interface PortfolioBalanceProps {
   owner: Address
-  variant?: keyof Theme['textVariants']
-  color?: keyof Theme['colors']
 }
 
-export function PortfolioBalance({ owner, variant, color }: PortfolioBalanceProps) {
+export function PortfolioBalance({ owner }: PortfolioBalanceProps) {
   const { data, loading, networkStatus } = usePortfolioBalanceQuery({
     variables: { owner },
     pollInterval: PollingInterval.Fast,
@@ -39,28 +37,42 @@ export function PortfolioBalance({ owner, variant, color }: PortfolioBalanceProp
 
   if (loading && !data) {
     return (
-      <Loading>
-        <Flex alignSelf="flex-start" backgroundColor="background0" borderRadius="md">
-          <HiddenFromScreenReaders>
-            <DecimalNumber number="0000.00" opacity={0} variant={variant ?? 'headlineLarge'} />
-          </HiddenFromScreenReaders>
-        </Flex>
-      </Loading>
+      <Flex centered gap="xxs" width="70%">
+        <Box width="100%">
+          <Loading height={theme.textVariants.headlineLarge.lineHeight} type="text" />
+        </Box>
+        <Box width="50%">
+          <Loading height={theme.textVariants.bodyLarge.lineHeight} type="text" />
+        </Box>
+      </Flex>
     )
   }
 
+  const portfolioBalance = data?.portfolios?.[0]
+  const portfolioChange = portfolioBalance?.tokensTotalDenominatedValueChange
+
   return (
     <WarmLoadingShimmer isWarmLoading={isWarmLoading}>
-      <DecimalNumber
-        // initially set color to textTertiary when isWarm because the shimmer mask takes a second to load, resulting in a flash of the underlying color
-        color={isWarmLoading ? 'textSecondary' : color}
-        fontWeight="500"
-        number={formatUSDPrice(
-          data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value ?? undefined,
-          NumberType.FiatTokenQuantity
-        )}
-        variant={variant ?? 'headlineLarge'}
-      />
+      <Flex alignItems="center" gap="xxs" justifyContent="flex-start">
+        <DecimalNumber
+          // initially set color to textSecondary when isWarm because the shimmer mask takes a second to load, resulting in a flash of the underlying color
+          color={isWarmLoading ? 'textSecondary' : undefined}
+          fontWeight="600"
+          number={formatUSDPrice(
+            portfolioBalance?.tokensTotalDenominatedValue?.value ?? undefined,
+            NumberType.FiatTokenQuantity
+          )}
+          variant="headlineLarge"
+        />
+        <RelativeChange
+          absoluteChange={portfolioChange?.absolute?.value}
+          arrowSize={theme.iconSizes.md}
+          change={portfolioChange?.percentage?.value}
+          negativeChangeColor={isWarmLoading ? 'textSecondary' : 'accentCritical'}
+          positiveChangeColor={isWarmLoading ? 'textSecondary' : 'accentSuccess'}
+          variant="bodyLarge"
+        />
+      </Flex>
     </WarmLoadingShimmer>
   )
 }

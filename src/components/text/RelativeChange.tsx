@@ -11,9 +11,9 @@ interface RelativeChangeProps {
   absoluteChange?: number
   variant?: keyof Theme['textVariants']
   semanticColor?: boolean // If true, entire % change text will render green or red
-  isWarmLoading?: boolean
   positiveChangeColor?: keyof Theme['colors']
   negativeChangeColor?: keyof Theme['colors']
+  arrowSize?: number
 }
 
 export function RelativeChange(props: RelativeChangeProps) {
@@ -25,6 +25,7 @@ export function RelativeChange(props: RelativeChangeProps) {
     semanticColor,
     positiveChangeColor = 'accentSuccess',
     negativeChangeColor = 'accentCritical',
+    arrowSize = theme.iconSizes.sm,
   } = props
 
   const isPositiveChange = change !== undefined ? change >= 0 : undefined
@@ -32,18 +33,22 @@ export function RelativeChange(props: RelativeChangeProps) {
     ? theme.colors[positiveChangeColor]
     : theme.colors[negativeChangeColor]
 
+  const formattedChange = change ? `${Math.abs(change).toFixed(2)}%` : '-'
+  const formattedAbsChange = absoluteChange
+    ? `${formatNumber(absoluteChange, NumberType.FiatTokenPrice)}`
+    : ''
+
   return (
     <Flex row alignItems="center" gap="xxs" justifyContent="flex-end">
       {change !== undefined && (
-        <Arrow color={arrowColor} direction={isPositiveChange ? 'ne' : 'se'} size={16} />
+        <Arrow color={arrowColor} direction={isPositiveChange ? 'ne' : 'se'} size={arrowSize} />
       )}
       <Text
         color={
           semanticColor ? (isPositiveChange ? 'accentSuccess' : 'accentCritical') : 'textSecondary'
         }
         variant={variant}>
-        {change ? `${Math.abs(change).toFixed(2)}%` : '-'}
-        {absoluteChange ? `(${formatNumber(absoluteChange, NumberType.FiatTokenPrice)})` : ''}
+        {absoluteChange ? `${formattedAbsChange} (${formattedChange})` : formattedChange}
       </Text>
     </Flex>
   )

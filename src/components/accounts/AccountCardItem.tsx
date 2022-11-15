@@ -5,15 +5,19 @@ import TripleDots from 'src/assets/icons/triple-dots.svg'
 import { AccountIcon } from 'src/components/AccountIcon'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
+import { Loading } from 'src/components/loading'
 import { NotificationBadge } from 'src/components/notifications/Badge'
 import { Text } from 'src/components/Text'
-import { PortfolioBalance } from 'src/features/balances/PortfolioBalance'
+import { DecimalNumber } from 'src/components/text/DecimalNumber'
+import { PollingInterval } from 'src/constants/misc'
+import { usePortfolioBalanceQuery } from 'src/data/__generated__/types-and-hooks'
 import { useENSAvatar } from 'src/features/ens/api'
 import { useSelectAddressHasNotifications } from 'src/features/notifications/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import { Account } from 'src/features/wallet/accounts/types'
 import { useDisplayName } from 'src/features/wallet/hooks'
 import { iconSizes } from 'src/styles/sizing'
+import { formatUSDPrice, NumberType } from 'src/utils/format'
 
 interface Props {
   account: Account
@@ -21,6 +25,31 @@ interface Props {
   isViewOnly: boolean
   onPress?: (address: Address) => void
   onPressEdit?: (address: Address) => void
+}
+
+function PortfolioBalance({ owner }: { owner: Address }) {
+  const theme = useAppTheme()
+
+  const { data, loading } = usePortfolioBalanceQuery({
+    variables: { owner },
+    pollInterval: PollingInterval.Fast,
+    notifyOnNetworkStatusChange: true,
+  })
+
+  if (loading && !data) {
+    return <Loading height={theme.textVariants.bodySmall.lineHeight} type="text" />
+  }
+
+  return (
+    <DecimalNumber
+      color="textSecondary"
+      number={formatUSDPrice(
+        data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value ?? undefined,
+        NumberType.FiatTokenQuantity
+      )}
+      variant="bodySmall"
+    />
+  )
 }
 
 export function AccountCardItem({ account, isViewOnly, isActive, onPress, onPressEdit }: Props) {
@@ -50,7 +79,7 @@ export function AccountCardItem({ account, isViewOnly, isActive, onPress, onPres
             <Text numberOfLines={1} variant="bodyLarge">
               {displayName?.name}
             </Text>
-            <PortfolioBalance color="textSecondary" owner={address} variant="bodySmall" />
+            <PortfolioBalance owner={address} />
           </Flex>
         </Flex>
         <Flex row alignItems="center" gap="xs">

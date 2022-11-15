@@ -25,12 +25,14 @@ import {
 import TraceTabView from 'src/components/telemetry/TraceTabView'
 import { SectionName } from 'src/features/telemetry/constants'
 import { dimensions } from 'src/styles/sizing'
+import { Theme } from 'src/styles/theme'
 
 const SIDEBAR_SWIPE_CONTAINER_WIDTH = 50
 
 type TabbedScrollScreenProps = {
   contentHeader?: ReactElement
   headerHeightEstimate?: number
+  osStatusBarBgColor?: keyof Theme['colors']
   renderTab: (
     route: Route,
     scrollProps: TabViewScrollProps,
@@ -55,6 +57,7 @@ export default function TabbedScrollScreen({
   renderTab,
   tabs,
   disableOpenSidebarGesture,
+  osStatusBarBgColor = 'background0',
 }: TabbedScrollScreenProps) {
   const insets = useSafeAreaInsets()
   const theme = useAppTheme()
@@ -253,7 +256,7 @@ export default function TabbedScrollScreen({
       </GestureDetector>
       {/* Background for OS status bar, needs higher zindex than contentHeader */}
       <Box
-        bg="background0"
+        bg={osStatusBarBgColor}
         height={insets.top}
         position="absolute"
         top={0}
