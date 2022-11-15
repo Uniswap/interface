@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import clsx from 'clsx'
+import { OpacityHoverState } from 'components/Common'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
@@ -93,12 +94,7 @@ const DetailsLinkContainer = styled.a`
   text-decoration: none;
   color: ${({ theme }) => theme.textSecondary};
 
-  :hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-  }
-  :focus {
-    opacity: ${({ theme }) => theme.opacity.click};
-  }
+  ${OpacityHoverState}
 `
 
 const SuspiciousIcon = styled(AlertTriangle)`

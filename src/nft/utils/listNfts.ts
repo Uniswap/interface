@@ -55,7 +55,7 @@ const getConsiderationItems = (
   creatorFee?: ConsiderationInputItem
 } => {
   const openSeaBasisPoints = OPENSEA_DEFAULT_FEE * INVERSE_BASIS_POINTS
-  const creatorFeeBasisPoints = asset.creatorPercentage * INVERSE_BASIS_POINTS
+  const creatorFeeBasisPoints = asset.basisPoints * INVERSE_BASIS_POINTS
   const sellerBasisPoints = INVERSE_BASIS_POINTS - openSeaBasisPoints - creatorFeeBasisPoints
 
   const openseaFee = price.mul(BigNumber.from(openSeaBasisPoints)).div(BigNumber.from(INVERSE_BASIS_POINTS)).toString()
@@ -187,7 +187,7 @@ export async function signListing(
         endTime: BigNumber.from(asset.expirationTime),
         // minimum ratio to be received by the user (per 10000)
         minPercentageToAsk: BigNumber.from(10000)
-          .sub(BigNumber.from(200).add(BigNumber.from(asset.creatorPercentage * 10000)))
+          .sub(BigNumber.from(200).add(BigNumber.from(asset.basisPoints * 10000)))
           .toNumber(),
         // params (e.g., price, target account for private sale)
         params: [],
@@ -214,7 +214,7 @@ export async function signListing(
           price: parseEther(listingPrice.toString()).toString(),
           startTime: currentTime,
           endTime: asset.expirationTime,
-          minPercentageToAsk: 10000 - (200 + asset.creatorPercentage * 10000),
+          minPercentageToAsk: 10000 - (200 + asset.basisPoints * 10000),
           params: [],
         }
         const res = await createLooksRareOrder(payload)
