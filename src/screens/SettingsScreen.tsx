@@ -23,6 +23,7 @@ import {
   SettingsSectionItemComponent,
 } from 'src/components/Settings/SettingsRow'
 import { Text } from 'src/components/Text'
+import { uniswapUrls } from 'src/constants/urls'
 import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/hooks'
 import { isEnabled } from 'src/features/remoteConfig'
 import { TestConfig } from 'src/features/remoteConfig/testConfigs'
@@ -77,7 +78,7 @@ export function SettingsScreen() {
           {
             screen: Screens.WebView,
             screenProps: {
-              uriLink: 'https://uniswap.org/terms-of-service',
+              uriLink: uniswapUrls.privacyPolicyUrl,
               headerTitle: t('Privacy Policy'),
             },
             text: t('Privacy Policy'),
@@ -86,7 +87,7 @@ export function SettingsScreen() {
           {
             screen: Screens.WebView,
             screenProps: {
-              uriLink: 'https://uniswap.org/terms-of-service',
+              uriLink: uniswapUrls.termsOfServiceUrl,
               headerTitle: t('Terms of Service'),
             },
             text: t('Terms of Service'),

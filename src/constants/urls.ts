@@ -8,8 +8,8 @@ export const uniswapUrls = {
   graphQLUrl: getUniswapGraphQLUrl(),
   trmUrl: getUniswapTrmUrl(),
   termsOfServiceUrl: 'https://uniswap.org/terms-of-service',
-  // TODO(MOB-3579): update privacy policy URL
-  privacyPolicyUrl: 'https://uniswap.org/terms-of-service',
+  privacyPolicyUrl: 'https://uniswap.org/privacy-policy',
+  nftUrl: 'https://app.uniswap.org/#/nfts',
 }
 
 function getUniswapApiBaseUrl() {

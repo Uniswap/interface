@@ -19,6 +19,7 @@ import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
 import { CHAIN_INFO } from 'src/constants/chains'
 import { PollingInterval } from 'src/constants/misc'
+import { uniswapUrls } from 'src/constants/urls'
 import { useNftItemScreenQuery } from 'src/data/__generated__/types-and-hooks'
 import { logMessage } from 'src/features/telemetry'
 import { LogContext } from 'src/features/telemetry/constants'
@@ -29,9 +30,6 @@ import { shortenAddress } from 'src/utils/addresses'
 import { fromGraphQLChain } from 'src/utils/chainId'
 import { formatNumber, NumberType } from 'src/utils/format'
 import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
-
-// TODO {MOB-2827}: replace with `uniswapAppUrl` const when NFT feature is moved off vercel
-export const UNISWAP_NFT_BASE_URL = 'https://interface-6y0ofdy69-uniswap.vercel.app/#'
 
 export function NFTItemScreen({
   route: {
@@ -60,7 +58,7 @@ export function NFTItemScreen({
     if (!asset?.nftContract || !asset.tokenId) return
     try {
       await Share.share({
-        message: `${UNISWAP_NFT_BASE_URL}/nfts/asset/${asset.nftContract.address}/${asset.tokenId}`,
+        message: `${uniswapUrls.nftUrl}/asset/${asset.nftContract.address}/${asset.tokenId}`,
       })
     } catch (e) {
       logMessage(LogContext.Share, (e as any as Error).message, { screen: 'NFTItemScreen' })
