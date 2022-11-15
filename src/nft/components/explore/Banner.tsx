@@ -2,22 +2,37 @@ import { useLoadCollectionQuery } from 'graphql/data/nft/Collection'
 import { useIsMobile } from 'nft/hooks'
 import { fetchTrendingCollections } from 'nft/queries'
 import { TimePeriod } from 'nft/types'
-import { Suspense, useMemo } from 'react'
+import { Suspense, useCallback, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
-import { Carousel } from './Carousel'
+import { Carousel, LoadingCarousel } from './Carousel'
 import { CarouselCard, LoadingCarouselCard } from './CarouselCard'
 
-const BannerBackground = styled.div`
+const BannerContainer = styled.div`
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+  display: flex;
+  justify-content: center;
   padding: 32px 16px;
+  position: relative;
+  overflow: hidden;
 `
 
-const BannerContainer = styled.div`
+const BannerBackground = styled.div<{ backgroundImage?: string }>`
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+
+  ${({ backgroundImage }) => (backgroundImage ? `background-image: url(${backgroundImage});` : undefined)}
+
+  filter: blur(62px);
+  -webkit-filter: blur(62px);
+`
+
+const BannerMainArea = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -25,6 +40,7 @@ const BannerContainer = styled.div`
   gap: 36px;
   max-width: 1200px;
   justify-content: space-between;
+  z-index: 2;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     flex-direction: column;
@@ -99,15 +115,30 @@ const Banner = () => {
   const collectionAddresses = useMemo(() => collections?.map(({ address }) => address), [collections])
   useLoadCollectionQuery(collectionAddresses)
 
+  const [activeCollection, setActiveCollection] = useState(0)
+  const onToggleNextSlide = useCallback(
+    (direction: number) => {
+      if (!collections) return
+      setActiveCollection((index) => {
+        const nextIndex = index + direction
+        if (nextIndex < 0) return collections.length - 1
+        if (nextIndex >= collections.length) return 0
+        return nextIndex
+      })
+    },
+    [collections]
+  )
+
   return (
-    <BannerBackground>
-      <BannerContainer>
+    <BannerContainer>
+      <BannerBackground backgroundImage={collections ? collections[activeCollection].bannerImageUrl : undefined} />
+      <BannerMainArea>
         <HeaderContainer>
           Better prices. {!isMobile && <br />}
           More listings.
         </HeaderContainer>
         {collections ? (
-          <Carousel>
+          <Carousel activeIndex={activeCollection} toggleNextSlide={onToggleNextSlide}>
             {collections.map((collection) => (
               <Suspense fallback={<LoadingCarouselCard collection={collection} />} key={collection.address}>
                 <CarouselCard
@@ -119,14 +150,12 @@ const Banner = () => {
             ))}
           </Carousel>
         ) : (
-          <Carousel>
-            {[...Array(TRENDING_COLLECTION_SIZE)].map((index) => (
-              <LoadingCarouselCard key={'carouselCard' + index} />
-            ))}
-          </Carousel>
+          <LoadingCarousel>
+            <LoadingCarouselCard />
+          </LoadingCarousel>
         )}
-      </BannerContainer>
-    </BannerBackground>
+      </BannerMainArea>
+    </BannerContainer>
   )
 }
 

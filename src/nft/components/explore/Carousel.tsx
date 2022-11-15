@@ -1,7 +1,7 @@
 import { useWindowSize } from 'hooks/useWindowSize'
 import { ChevronLeftIcon } from 'nft/components/icons'
 import { calculateCardIndex, calculateFirstCardIndex, calculateRank } from 'nft/utils'
-import { ReactNode, useCallback, useEffect, useReducer, useRef, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import { a, useSprings } from 'react-spring'
 import styled from 'styled-components/macro'
 
@@ -62,16 +62,17 @@ const IconContainer = styled.div<{ right?: boolean }>`
 
 interface CarouselProps {
   children: ReactNode[]
+  activeIndex: number
+  toggleNextSlide: (idx: number) => void
 }
 
 const FIRST_CARD_OFFSET = 0
 const MAX_CARD_WIDTH = 512
 
-export const Carousel = ({ children }: CarouselProps) => {
+export const Carousel = ({ children, activeIndex, toggleNextSlide }: CarouselProps) => {
   const { width } = useWindowSize()
   const carouselCardContainerRef = useRef<HTMLDivElement>(null)
   const [cardWidth, setCardWidth] = useState(MAX_CARD_WIDTH)
-  const [resetTimer, toggleResetTimer] = useReducer((state) => !state, false)
 
   useEffect(() => {
     if (carouselCardContainerRef.current) {
@@ -108,21 +109,18 @@ export const Carousel = ({ children }: CarouselProps) => {
     [idx, getPos, set, cardWidth, children.length]
   )
 
-  useEffect(() => {
-    runSprings(index.current, 0)
-  }, [runSprings])
+  const direction = useRef(0)
 
-  const index = useRef(0)
+  useEffect(() => {
+    runSprings(activeIndex * cardWidth, direction.current)
+  }, [activeIndex, cardWidth, runSprings])
 
   const toggleSlide = useCallback(
     (next: -1 | 1) => {
-      const offset = cardWidth * next
-      index.current += offset
-
-      runSprings(index.current, next)
-      toggleResetTimer()
+      direction.current = next
+      toggleNextSlide(next)
     },
-    [runSprings, cardWidth]
+    [toggleNextSlide]
   )
 
   useEffect(() => {
@@ -132,7 +130,7 @@ export const Carousel = ({ children }: CarouselProps) => {
     return () => {
       clearInterval(interval)
     }
-  }, [toggleSlide, resetTimer])
+  }, [toggleSlide, activeIndex])
 
   return (
     <CarouselContainer>
@@ -158,3 +156,9 @@ export const Carousel = ({ children }: CarouselProps) => {
     </CarouselContainer>
   )
 }
+
+export const LoadingCarousel = ({ children }: { children: ReactNode }) => (
+  <Carousel activeIndex={0} toggleNextSlide={() => undefined}>
+    {[children]}
+  </Carousel>
+)

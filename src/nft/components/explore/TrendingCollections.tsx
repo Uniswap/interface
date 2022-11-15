@@ -22,7 +22,10 @@ const ExploreContainer = styled.div`
   flex-direction: column;
   width: 100%;
   max-width: 1200px;
-  padding: 0 16px;
+
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 36px;
 `
 
 const StyledHeader = styled.div`
