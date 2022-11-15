@@ -37,7 +37,7 @@ export const ShoppingBag = () => {
   const bagHasItems = bagQuantity > 0
 
   return (
-    <NavIcon onClick={handleIconClick}>
+    <NavIcon isActive={bagExpanded} onClick={handleIconClick}>
       <BagIcon viewBox="0 0 20 20" width={24} height={24} />
       {bagHasItems && (
         <Box className={styles.bagQuantity}>{bagQuantity > 99 ? <HundredsOverflowIcon /> : bagQuantity}</Box>
