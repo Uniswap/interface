@@ -100,15 +100,14 @@ export function usePreloadedHomeScreenQueries() {
     }
 
     loadPortfolioBalance({ variables: { owner: activeAccountAddress } })
-
-    // queries for token selector
     loadPortfolioBalances({ variables: { ownerAddress: activeAccountAddress } })
   }, [activeAccountAddress, loadPortfolioBalance, loadPortfolioBalances])
 
   useEffect(() => {
-    loadTopTokens()
-
     const baseCurrencyContracts = baseCurrencyIds.map((id) => currencyIdToContractInput(id))
+
+    // queries for token selector
+    loadTopTokens()
     loadTokenProjects({ variables: { contracts: baseCurrencyContracts } })
   }, [loadTopTokens, loadTokenProjects])
 }

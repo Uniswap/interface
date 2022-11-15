@@ -1,7 +1,11 @@
 import { NetworkStatus } from '@apollo/client'
 
 export function isNonPollingRequestInFlight(networkStatus: NetworkStatus) {
-  return networkStatus === NetworkStatus.loading || networkStatus === NetworkStatus.refetch
+  return (
+    networkStatus === NetworkStatus.loading ||
+    networkStatus === NetworkStatus.setVariables ||
+    networkStatus === NetworkStatus.refetch
+  )
 }
 
 export function isWarmLoadingStatus(networkStatus: NetworkStatus) {
