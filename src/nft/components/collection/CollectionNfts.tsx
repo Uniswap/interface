@@ -63,6 +63,7 @@ const ActionsContainer = styled.div`
   gap: 10px;
   width: 100%;
   justify-content: space-between;
+  padding-left: 16px;
 `
 
 const ActionsSubContainer = styled.div`
@@ -398,6 +399,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
           width="full"
           paddingTop={{ sm: '12', md: '16' }}
           paddingBottom={{ sm: '12', md: '16' }}
+          className={styles.actionBarContainer}
         >
           <ActionsContainer>
             <ActionsSubContainer>
@@ -508,7 +510,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         hasMore={hasNext}
         loader={hasNext && hasNfts ? loadingAssets(uniformHeight) : null}
         dataLength={collectionNfts?.length ?? 0}
-        style={{ overflow: 'hidden' }}
+        style={{ overflow: 'unset' }}
         className={hasNfts || isLoadingNext ? styles.assetList : undefined}
       >
         {hasNfts ? (

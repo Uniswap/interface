@@ -95,8 +95,9 @@ const DetailsLinkContainer = styled.a`
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
+  border: 1px solid;
   color: ${({ theme }) => theme.accentAction};
-  background-color: ${({ theme }) => theme.backgroundModule};
+  border-color: ${({ theme }) => theme.accentActionSoft};
   padding: 2px 6px;
   border-radius: 6px;
   ${OpacityHoverState};
@@ -618,7 +619,7 @@ const SecondaryInfo = ({ children }: { children: ReactNode }) => {
       whiteSpace="nowrap"
       textOverflow="ellipsis"
       fontSize="16"
-      fontWeight="medium"
+      fontWeight="semibold"
       style={{ lineHeight: '20px' }}
     >
       {children}
@@ -687,7 +688,7 @@ const DetailsLink = () => {
         e.stopPropagation()
       }}
     >
-      <Box>Details</Box>
+      <Box>View Details</Box>
     </DetailsLinkContainer>
   )
 }

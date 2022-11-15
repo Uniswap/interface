@@ -13,7 +13,7 @@ export const card = style([
     borderWidth: '2px',
     borderRadius: '16px',
     WebkitBoxSizing: 'border-box',
-    boxShadow: '0 0 0 4px transparent, 0 2px 8px #00000010',
+    boxShadow: 'rgb(0 0 0 / 8%) 0px 4px 15px;',
   },
 ])
 
@@ -25,7 +25,7 @@ export const notSelectedCard = style([
   card,
   sprinkles({
     // backgroundColor: 'backgroundSurface',
-    borderColor: 'backgroundOutline',
+    borderColor: 'backgroundSurface',
     // borderRadius: '14',
   }),
   {

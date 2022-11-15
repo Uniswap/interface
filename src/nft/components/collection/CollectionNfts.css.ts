@@ -11,20 +11,22 @@ export const assetList = style([
     gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr) )',
     '@media': {
       'screen and (min-width: 640px)': {
-        gridTemplateColumns: 'repeat(auto-fill, calc(33% - 12px) )',
+        gridTemplateColumns: 'repeat(auto-fill, calc(33% - 12px - 2px) )',
       },
       'screen and (min-width: 960px)': {
-        gridTemplateColumns: 'repeat(auto-fill, calc(33% - 12px) )',
+        gridTemplateColumns: 'repeat(auto-fill, calc(33% - 12px - 2px) )',
       },
       'screen and (min-width: 1440px)': {
-        gridTemplateColumns: 'repeat(auto-fill, calc(25% - 16px) )',
+        gridTemplateColumns: 'repeat(auto-fill, calc(25% - 16px - 2px) )',
       },
       'screen and (min-width: 1680px)': {
-        gridTemplateColumns: 'repeat(auto-fill, calc(14.2857% - 20px) )',
+        gridTemplateColumns: 'repeat(auto-fill, calc(14.2857% - 20px - 2px) )',
       },
     },
   },
 ])
+
+export const actionBarContainer = style([{ marginLeft: '-16px' }])
 
 // gap: { sm: '8', md: '12', lg: '16', xxxl: '20' },
 // }),
