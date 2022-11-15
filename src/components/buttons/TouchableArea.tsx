@@ -48,7 +48,12 @@ export function TouchableArea({
     [onPress, hapticStyle, hapticFeedback]
   )
 
-  const baseProps = { onPress: onPressHandler, hitSlop: defaultHitslopInset, ...rest }
+  const baseProps = {
+    onPress: onPressHandler,
+    activeOpacity: 0.75,
+    hitSlop: defaultHitslopInset,
+    ...rest,
+  }
 
   if (!elementName || !eventName) {
     return <TouchableBox {...baseProps}>{children}</TouchableBox>
