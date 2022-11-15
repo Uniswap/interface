@@ -8,15 +8,8 @@ import { MissingImageLogo } from './BaseLogo'
 const LogoImage = styled.img<{ size: string }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
-  background: radial-gradient(white 50%, #ffffff00 calc(75% + 1px), #ffffff00 100%);
+  background: radial-gradient(white 60%, #ffffff00 calc(70% + 1px));
   border-radius: 50%;
-  -mox-box-shadow: 0 0 1px black;
-  -webkit-box-shadow: 0 0 1px black;
-  box-shadow: 0 0 1px black;
-  border: 0px solid rgba(255, 255, 255, 0);
-`
-
-const NativeLogoImage = styled(LogoImage)`
   -mox-box-shadow: 0 0 1px white;
   -webkit-box-shadow: 0 0 1px white;
   box-shadow: 0 0 1px white;
@@ -25,6 +18,7 @@ const NativeLogoImage = styled(LogoImage)`
 export type AssetLogoBaseProps = {
   symbol?: string | null
   backupImg?: string | null
+  print?: boolean
   size?: string
   style?: React.CSSProperties
 }
@@ -39,6 +33,7 @@ export default function AssetLogo({
   chainId = SupportedChainId.MAINNET,
   symbol,
   backupImg,
+  print,
   size = '24px',
   style,
   ...rest
@@ -53,11 +48,7 @@ export default function AssetLogo({
   const [src, nextSrc] = useTokenLogoSource(address, chainId, isNative, backupImg)
 
   if (src) {
-    return isNative ? (
-      <LogoImage {...imageProps} src={src} onError={nextSrc} />
-    ) : (
-      <NativeLogoImage {...imageProps} src={src} onError={nextSrc} />
-    )
+    return <LogoImage {...imageProps} src={src} onError={nextSrc} />
   } else {
     return (
       <MissingImageLogo size={size}>
