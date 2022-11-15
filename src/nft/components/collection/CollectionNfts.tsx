@@ -288,7 +288,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   const { assets: collectionNfts, loadNext, hasNext, isLoadingNext } = useLazyLoadAssetsQuery(assetQueryParams)
 
-  const isSelected = useCallback(
+  const assetIsSelected = useCallback(
     (asset: GenieAsset) => {
       return itemsInBag.some((item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address)
     },
@@ -297,22 +297,19 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   const calculatePrice = useCallback(
     (asset: GenieAsset) => {
-      return isSelected(asset)
-        ? calcPoolPrice(
-            asset,
-            itemsInBag
+      return calcPoolPrice(
+        asset,
+        assetIsSelected(asset)
+          ? itemsInBag
               .filter((item) => item.asset.address === asset.address && item.asset.marketplace === asset.marketplace)
               .map((item) => item.asset.tokenId)
               .indexOf(asset.tokenId)
-          )
-        : calcPoolPrice(
-            asset,
-            itemsInBag.filter(
+          : itemsInBag.filter(
               (item) => item.asset.address === asset.address && item.asset.marketplace === asset.marketplace
             ).length
-          )
+      )
     },
-    [isSelected, itemsInBag]
+    [assetIsSelected, itemsInBag]
   )
 
   const collectionAssets = useMemo(() => {
@@ -333,14 +330,16 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
     if (sortBy === SortBy.HighToLow || sortBy === SortBy.LowToHigh) {
       collectionAssets.sort((a, b) => {
-        const bigA = BigNumber.from(a.priceInfo.ETHPrice ?? -1)
-        const bigB = BigNumber.from(b.priceInfo.ETHPrice ?? -1)
-        const diff = bigA.sub(bigB)
+        const bigA = BigNumber.from(a.priceInfo?.ETHPrice ?? -1)
+        const bigB = BigNumber.from(b.priceInfo?.ETHPrice ?? -1)
 
-        if ((bigA.gte(0) || bigB.gte(0)) && (bigA.lt(0) || bigB.lt(0))) {
-          return bigA.gte(0) ? (sortBy === SortBy.LowToHigh ? -1 : 1) : sortBy === SortBy.LowToHigh ? 1 : -1
+        if (bigA.gte(0) && bigB.lt(0)) {
+          return sortBy === SortBy.LowToHigh ? -1 : 1
+        } else if (bigB.gte(0) && bigA.lt(0)) {
+          return sortBy === SortBy.LowToHigh ? 1 : -1
         }
 
+        const diff = bigA.sub(bigB)
         if (diff.gt(0)) {
           return sortBy === SortBy.LowToHigh ? 1 : -1
         } else if (diff.lt(0)) {
