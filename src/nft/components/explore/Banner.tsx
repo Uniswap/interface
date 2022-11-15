@@ -10,12 +10,18 @@ import styled from 'styled-components/macro'
 import { Carousel } from './Carousel'
 import { CarouselCard, LoadingCarouselCard } from './CarouselCard'
 
+const BannerBackground = styled.div`
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 16px;
+`
+
 const BannerContainer = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: 320px;
-  margin-top: 24px;
+  height: 285px;
   gap: 36px;
   max-width: 1200px;
   justify-content: space-between;
@@ -37,7 +43,7 @@ const HeaderContainer = styled.div`
   line-height: 88px;
   justify-content: start;
   align-items: start;
-  padding-top: 40px;
+  align-self: center;
   flex-shrink: 0;
   color: ${({ theme }) => theme.textPrimary};
 
@@ -94,31 +100,33 @@ const Banner = () => {
   useLoadCollectionQuery(collectionAddresses)
 
   return (
-    <BannerContainer>
-      <HeaderContainer>
-        Better prices. {!isMobile && <br />}
-        More listings.
-      </HeaderContainer>
-      {collections ? (
-        <Carousel>
-          {collections.map((collection) => (
-            <Suspense fallback={<LoadingCarouselCard collection={collection} />} key={collection.address}>
-              <CarouselCard
-                key={collection.address}
-                collection={collection}
-                onClick={() => navigate(`/nfts/collection/${collection.address}`)}
-              />
-            </Suspense>
-          ))}
-        </Carousel>
-      ) : (
-        <Carousel>
-          {[...Array(TRENDING_COLLECTION_SIZE)].map((index) => (
-            <LoadingCarouselCard key={'carouselCard' + index} />
-          ))}
-        </Carousel>
-      )}
-    </BannerContainer>
+    <BannerBackground>
+      <BannerContainer>
+        <HeaderContainer>
+          Better prices. {!isMobile && <br />}
+          More listings.
+        </HeaderContainer>
+        {collections ? (
+          <Carousel>
+            {collections.map((collection) => (
+              <Suspense fallback={<LoadingCarouselCard collection={collection} />} key={collection.address}>
+                <CarouselCard
+                  key={collection.address}
+                  collection={collection}
+                  onClick={() => navigate(`/nfts/collection/${collection.address}`)}
+                />
+              </Suspense>
+            ))}
+          </Carousel>
+        ) : (
+          <Carousel>
+            {[...Array(TRENDING_COLLECTION_SIZE)].map((index) => (
+              <LoadingCarouselCard key={'carouselCard' + index} />
+            ))}
+          </Carousel>
+        )}
+      </BannerContainer>
+    </BannerBackground>
   )
 }
 
