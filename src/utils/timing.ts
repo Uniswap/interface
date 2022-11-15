@@ -68,7 +68,7 @@ export function useInterval(callback: () => void, delay: number | null, immediat
 
 // https://medium.com/javascript-in-plain-english/usetimeout-react-hook-3cc58b94af1f
 export const useTimeout = (
-  callback?: () => void,
+  callback: () => void,
   delay = 0 // in ms (default: immediately put into JS Event Queue)
 ): (() => void) => {
   const timeoutIdRef = useRef<any>()
