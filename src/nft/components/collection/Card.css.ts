@@ -9,8 +9,6 @@ export const card = style([
   }),
   {
     boxSizing: 'border-box',
-    borderStyle: 'solid',
-    borderWidth: '2px',
     borderRadius: '16px',
     WebkitBoxSizing: 'border-box',
     boxShadow: 'rgba(0, 0, 0, 10%) 0px 4px 12px;',
@@ -22,7 +20,7 @@ export const loadingBackground = style({
   background: `linear-gradient(270deg, ${themeVars.colors.backgroundOutline} 0%, ${themeVars.colors.backgroundSurface} 100%)`,
 })
 
-export const notSelectedCard = style([card, { borderColor: 'transparent' }])
+export const notSelectedCard = style([card, { borderColor: 'rgba(255,255,255,0)' }])
 
 export const cardImageHover = style({
   transform: 'scale(1.15)',
@@ -32,11 +30,11 @@ export const selectedCard = style([
   card,
   sprinkles({
     background: 'backgroundSurface',
-    borderColor: 'accentAction',
-    borderWidth: '3px',
   }),
   {
     borderRadius: '16px',
+    outline: '3px solid',
+    outlineColor: themeVars.colors.accentAction,
     ':hover': {
       // backgroundColor: themeVars.colors.stateOverlayHover,
     },
