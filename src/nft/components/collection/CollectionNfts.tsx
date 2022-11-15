@@ -445,8 +445,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             paddingTop={!!markets.length || !!traits.length || minMaxPriceChipText ? '12' : '0'}
             gap="8"
             flexWrap="wrap"
-            paddingLeft={'16'}
-            paddingRight={'16'}
+            paddingLeft="16"
+            paddingRight="16"
           >
             {markets.map((market) => (
               <TraitChip
