@@ -212,11 +212,7 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
 
     validAssets = validAssets.slice(
       0,
-      Math.max(
-        collectionAssets ? collectionAssets.length : 0,
-        nftxAssets ? nftxAssets.length : 0,
-        nft20Assets ? nft20Assets.length : 0
-      )
+      Math.max(collectionAssets?.length ?? 0, nftxAssets?.length ?? 0, nft20Assets?.length ?? 0)
     )
 
     return {
