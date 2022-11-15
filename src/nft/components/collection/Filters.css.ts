@@ -72,8 +72,8 @@ export const detailsOpen = style([
   borderTop,
   sprinkles({
     overflow: 'hidden',
-    marginTop: '8',
-    marginBottom: '8',
+    marginTop: '2',
+    marginBottom: '2',
   }),
 ])
 

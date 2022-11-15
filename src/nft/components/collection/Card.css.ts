@@ -13,7 +13,7 @@ export const card = style([
     borderWidth: '2px',
     borderRadius: '16px',
     WebkitBoxSizing: 'border-box',
-    boxShadow: 'rgb(0 0 0 / 8%) 0px 4px 15px;',
+    boxShadow: 'rgba(0, 0, 0, 10%) 0px 4px 12px;',
   },
 ])
 
