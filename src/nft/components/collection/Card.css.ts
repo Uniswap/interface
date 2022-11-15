@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css'
 import { calc } from '@vanilla-extract/css-utils'
-import { sprinkles, themeVars } from 'nft/css/sprinkles.css'
+import { sprinkles, themeVars, vars } from 'nft/css/sprinkles.css'
 
 export const card = style([
   sprinkles({
@@ -32,11 +32,16 @@ export const selectedCard = style([
     background: 'backgroundSurface',
   }),
   {
-    borderRadius: '16px',
-    outline: '3px solid',
-    outlineColor: themeVars.colors.accentAction,
-    ':hover': {
-      // backgroundColor: themeVars.colors.stateOverlayHover,
+    ':after': {
+      content: '',
+      position: 'absolute',
+      top: '0px',
+      right: ' 0px',
+      bottom: ' 0px',
+      left: '0px',
+      border: ' 2px solid',
+      borderRadius: '16px',
+      borderColor: vars.color.accentAction,
     },
   },
 ])
