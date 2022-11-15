@@ -10,6 +10,7 @@ import { GenieAsset, Markets, TokenType } from 'nft/types'
 import { formatWeiToDecimal, rarityProviderLogo } from 'nft/utils'
 import { useCallback, useMemo } from 'react'
 import { useEffect, useState } from 'react'
+import styled from 'styled-components/macro'
 
 import { useAssetMediaType, useNotForSale } from './Card'
 import { AssetMediaType } from './Card'
@@ -26,6 +27,13 @@ interface CollectionAssetProps {
 const TOOLTIP_TIMEOUT = 2000
 const ADDED_TO_BAG_TOOLTIP_TEXT = 'Added to bag'
 const REMOVED_FROM_BAG_TOOLTIP_TEXT = 'Removed from bag'
+
+const StyledContainer = styled.div`
+  position: absolute;
+  bottom: 12px;
+  left: 80px;
+  z-index: 2;
+`
 
 export const CollectionAsset = ({
   asset,
@@ -110,40 +118,42 @@ export const CollectionAsset = ({
       addAssetToBag={handleAddAssetToBag}
       removeAssetFromBag={handleRemoveAssetFromBag}
     >
-      <Tooltip
-        text={
-          <Box as="span" className={bodySmall} style={{ color: themeVars.colors.textPrimary }}>
-            <Trans>{isSelected ? ADDED_TO_BAG_TOOLTIP_TEXT : REMOVED_FROM_BAG_TOOLTIP_TEXT}</Trans>{' '}
-          </Box>
-        }
-        show={showTooltip}
-        style={{ display: 'block' }}
-        offsetX={0}
-        offsetY={-52}
-        hideArrow={true}
-        placement="bottom"
-      >
-        <Card.ImageContainer>
-          {asset.tokenType === TokenType.ERC1155 && erc1155TokenQuantity > 0 && (
-            <Card.Erc1155Controls quantity={erc1155TokenQuantity.toString()} />
-          )}
-          {asset.rarity && provider && (
-            <Card.Ranking
-              rarity={asset.rarity}
-              provider={provider}
-              rarityVerified={!!rarityVerified}
-              rarityLogo={rarityLogo}
-            />
-          )}
-          {assetMediaType === AssetMediaType.Image ? (
-            <Card.Image />
-          ) : assetMediaType === AssetMediaType.Video ? (
-            <Card.Video shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
-          ) : (
-            <Card.Audio shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
-          )}
-        </Card.ImageContainer>
-      </Tooltip>
+      <Card.ImageContainer>
+        <StyledContainer>
+          <Tooltip
+            text={
+              <Box as="span" className={bodySmall} style={{ color: themeVars.colors.textPrimary }}>
+                <Trans>{isSelected ? ADDED_TO_BAG_TOOLTIP_TEXT : REMOVED_FROM_BAG_TOOLTIP_TEXT}</Trans>{' '}
+              </Box>
+            }
+            show={showTooltip}
+            style={{ display: 'block' }}
+            offsetX={0}
+            offsetY={0}
+            hideArrow={true}
+            placement="bottom"
+            showInline
+          />
+        </StyledContainer>
+        {asset.tokenType === TokenType.ERC1155 && erc1155TokenQuantity > 0 && (
+          <Card.Erc1155Controls quantity={erc1155TokenQuantity.toString()} />
+        )}
+        {asset.rarity && provider && (
+          <Card.Ranking
+            rarity={asset.rarity}
+            provider={provider}
+            rarityVerified={!!rarityVerified}
+            rarityLogo={rarityLogo}
+          />
+        )}
+        {assetMediaType === AssetMediaType.Image ? (
+          <Card.Image />
+        ) : assetMediaType === AssetMediaType.Video ? (
+          <Card.Video shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
+        ) : (
+          <Card.Audio shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
+        )}
+      </Card.ImageContainer>
       <Card.DetailsContainer>
         <Card.InfoContainer>
           <Card.PrimaryRow>
