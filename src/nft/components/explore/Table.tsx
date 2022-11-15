@@ -43,7 +43,7 @@ const StyledLoadingRow = styled.tr`
   height: 80px;
 `
 
-const StyledHeader = styled.th<{ disabled: boolean }>`
+const StyledHeader = styled.th<{ disabled?: boolean }>`
   ${({ disabled }) => !disabled && `cursor: pointer;`}
 
   :hover {
@@ -154,7 +154,7 @@ export function Table<D extends Record<string, unknown>>({
                     textAlign: index === 0 ? 'left' : 'right',
                     paddingLeft: index === 0 ? (isMobile ? '16px' : '52px') : 0,
                   }}
-                  disabled={column.disableSortBy ?? false}
+                  disabled={column.disableSortBy}
                   key={index}
                 >
                   <Box as="span" color="accentAction" position="relative">
