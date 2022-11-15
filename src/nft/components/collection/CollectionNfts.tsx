@@ -288,28 +288,25 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   const { assets: collectionNfts, loadNext, hasNext, isLoadingNext } = useLazyLoadAssetsQuery(assetQueryParams)
 
-  const assetIsSelected = useCallback(
+  const getPoolPosition = useCallback(
     (asset: GenieAsset) => {
       return itemsInBag.some((item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address)
+        ? itemsInBag
+            .filter((item) => item.asset.address === asset.address && item.asset.marketplace === asset.marketplace)
+            .map((item) => item.asset.tokenId)
+            .indexOf(asset.tokenId)
+        : itemsInBag.filter(
+            (item) => item.asset.address === asset.address && item.asset.marketplace === asset.marketplace
+          ).length
     },
     [itemsInBag]
   )
 
   const calculatePrice = useCallback(
     (asset: GenieAsset) => {
-      return calcPoolPrice(
-        asset,
-        assetIsSelected(asset)
-          ? itemsInBag
-              .filter((item) => item.asset.address === asset.address && item.asset.marketplace === asset.marketplace)
-              .map((item) => item.asset.tokenId)
-              .indexOf(asset.tokenId)
-          : itemsInBag.filter(
-              (item) => item.asset.address === asset.address && item.asset.marketplace === asset.marketplace
-            ).length
-      )
+      return calcPoolPrice(asset, getPoolPosition(asset))
     },
-    [assetIsSelected, itemsInBag]
+    [getPoolPosition]
   )
 
   const collectionAssets = useMemo(() => {
