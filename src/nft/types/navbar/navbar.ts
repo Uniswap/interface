@@ -3,13 +3,6 @@ export interface LooksRareRewardsData {
   cumulativeLooksAmount: string
   cumulativeLooksProof: string[]
 }
-interface BridgeInfoEntry {
-  tokenAddress?: string
-}
-
-interface FungibleTokenExtensions {
-  bridgeInfo?: { [chain: number]: BridgeInfoEntry }
-}
 
 export interface FungibleToken {
   name: string
@@ -18,11 +11,8 @@ export interface FungibleToken {
   decimals: number
   chainId: number
   logoURI: string
-  coinGeckoId: string
-  priceUsd: number
-  price24hChange: number
-  volume24h: number
+  priceUsd?: number | null
+  price24hChange?: number | null
+  volume24h?: number | null
   onDefaultList?: boolean
-  extensions?: FungibleTokenExtensions
-  marketCap: number
 }

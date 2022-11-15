@@ -1,6 +1,5 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { EventName } from '@uniswap/analytics-events'
-import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import { L2NetworkLogo, LogoContainer } from 'components/Tokens/TokenTable/TokenRow'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
@@ -108,15 +107,6 @@ export const CollectionRow = ({
   )
 }
 
-function useBridgedAddress(token: FungibleToken): [string | undefined, number | undefined, string | undefined] {
-  const { chainId: connectedChainId } = useWeb3React()
-  const bridgedAddress = connectedChainId ? token.extensions?.bridgeInfo?.[connectedChainId]?.tokenAddress : undefined
-  if (bridgedAddress && connectedChainId) {
-    return [bridgedAddress, connectedChainId, getChainInfo(connectedChainId)?.circleLogoUrl]
-  }
-  return [undefined, undefined, undefined]
-}
-
 interface TokenRowProps {
   token: FungibleToken
   isHovered: boolean
@@ -124,9 +114,18 @@ interface TokenRowProps {
   toggleOpen: () => void
   index: number
   eventProperties: Record<string, unknown>
+  hideStats?: boolean
 }
 
-export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index, eventProperties }: TokenRowProps) => {
+export const TokenRow = ({
+  token,
+  isHovered,
+  setHoveredIndex,
+  toggleOpen,
+  index,
+  eventProperties,
+  hideStats,
+}: TokenRowProps) => {
   const [brokenImage, setBrokenImage] = useState(false)
   const [loaded, setLoaded] = useState(false)
   const addToSearchHistory = useSearchHistory(
@@ -140,8 +139,8 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
     sendAnalyticsEvent(EventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
   }, [addToSearchHistory, toggleOpen, token, eventProperties])
 
-  const [bridgedAddress, bridgedChain, L2Icon] = useBridgedAddress(token)
-  const tokenDetailsPath = getTokenDetailsURL(bridgedAddress ?? token.address, undefined, bridgedChain ?? token.chainId)
+  const L2Icon = getChainInfo(token.chainId)?.circleLogoUrl
+  const tokenDetailsPath = getTokenDetailsURL(token.address, undefined, token.chainId)
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
@@ -190,19 +189,20 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
           <Box className={styles.secondaryText}>{token.symbol}</Box>
         </Column>
       </Row>
-
-      <Column className={styles.suggestionSecondaryContainer}>
-        {token.priceUsd && (
-          <Row gap="4">
-            <Box className={styles.primaryText}>{formatDollar({ num: token.priceUsd, isPrice: true })}</Box>
-          </Row>
-        )}
-        {token.price24hChange && (
-          <Box className={styles.secondaryText} color={token.price24hChange >= 0 ? 'green400' : 'red400'}>
-            {token.price24hChange.toFixed(2)}%
-          </Box>
-        )}
-      </Column>
+      {!hideStats && (
+        <Column className={styles.suggestionSecondaryContainer}>
+          {token.priceUsd && (
+            <Row gap="4">
+              <Box className={styles.primaryText}>{formatDollar({ num: token.priceUsd, isPrice: true })}</Box>
+            </Row>
+          )}
+          {token.price24hChange && (
+            <Box className={styles.secondaryText} color={token.price24hChange >= 0 ? 'green400' : 'red400'}>
+              {token.price24hChange.toFixed(2)}%
+            </Box>
+          )}
+        </Column>
+      )}
     </Link>
   )
 }

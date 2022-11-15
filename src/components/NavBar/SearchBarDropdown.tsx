@@ -33,6 +33,7 @@ interface SearchBarDropdownSectionProps {
   setHoveredIndex: (index: number | undefined) => void
   isLoading?: boolean
   eventProperties: Record<string, unknown>
+  hideStats?: boolean
 }
 
 export const SearchBarDropdownSection = ({
@@ -45,6 +46,7 @@ export const SearchBarDropdownSection = ({
   setHoveredIndex,
   isLoading,
   eventProperties,
+  hideStats,
 }: SearchBarDropdownSectionProps) => {
   return (
     <Column gap="12">
@@ -85,6 +87,7 @@ export const SearchBarDropdownSection = ({
                 selected_search_result_address: suggestion.address,
                 ...eventProperties,
               }}
+              hideStats={hideStats}
             />
           )
         )}
@@ -267,6 +270,7 @@ export const SearchBarDropdown = ({
           </Column>
         ) : (
           // Recent Searches, Trending Tokens, Trending Collections
+          // TODO(cartcrom): consider replacing "hideStats" logic w/ refetching updated price/delta values
           <Column gap="20">
             {shortenedHistory.length > 0 && (
               <SearchBarDropdownSection
@@ -281,6 +285,7 @@ export const SearchBarDropdown = ({
                 }}
                 header={<Trans>Recent searches</Trans>}
                 headerIcon={<ClockIcon />}
+                hideStats
               />
             )}
             {!isNFTPage && (
