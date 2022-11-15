@@ -536,7 +536,7 @@ export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: To
   },
 }
 
-// used for display in the default list when adding liquidity
+// used for display common base in currency search
 export const SUGGESTED_BASES: ChainTokenList = {
   ...WETH_ONLY,
   [ChainId.MAINNET]: [
@@ -544,6 +544,7 @@ export const SUGGESTED_BASES: ChainTokenList = {
     DAI[ChainId.MAINNET],
     USDC[ChainId.MAINNET],
     USDT[ChainId.MAINNET],
+    new Token(ChainId.MAINNET, '0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0', 18, 'wstETH', 'Wrapped stETH (Lido)'),
   ],
   [ChainId.ETHW]: [USDT[ChainId.ETHW], USDC[ChainId.ETHW]],
   [ChainId.GÖRLI]: [...WETH_ONLY[ChainId.GÖRLI], DAI[ChainId.GÖRLI], USDC[ChainId.GÖRLI], USDT[ChainId.GÖRLI]],
@@ -553,6 +554,7 @@ export const SUGGESTED_BASES: ChainTokenList = {
     USDC[ChainId.MATIC],
     USDT[ChainId.MATIC],
     new Token(ChainId.MATIC, '0xa3Fa99A148fA48D14Ed51d610c367C61876997F1', 18, 'MAI', 'MAI'),
+    new Token(ChainId.MATIC, '0x3A58a54C066FdC0f2D55FC9C89F0415C92eBf3C4', 18, 'stMATIC', 'Staked MATIC (PoS)'),
   ],
   [ChainId.BSCMAINNET]: [
     ...WETH_ONLY[ChainId.BSCMAINNET],
@@ -567,6 +569,7 @@ export const SUGGESTED_BASES: ChainTokenList = {
     USDT[ChainId.AVAXMAINNET],
     new Token(ChainId.AVAXMAINNET, '0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7', 6, 'USDt', 'TetherToken'),
     new Token(ChainId.AVAXMAINNET, '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E', 6, 'USDC', 'USD Coin'),
+    new Token(ChainId.AVAXMAINNET, '0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE', 18, 'sAVAX', 'Staked AVAX'),
   ],
 
   [ChainId.FANTOM]: [...WETH_ONLY[ChainId.FANTOM], DAI[ChainId.FANTOM], USDC[ChainId.FANTOM], USDT[ChainId.FANTOM]],
@@ -590,6 +593,7 @@ export const SUGGESTED_BASES: ChainTokenList = {
     USDC[ChainId.ARBITRUM],
     USDT[ChainId.ARBITRUM],
     WBTC_ARBITRUM,
+    new Token(ChainId.ARBITRUM, '0x5979D7b546E38E414F7E9822514be443A4800529', 18, 'wstETH', 'Lido Wrapped Staked ETH'),
   ],
   [ChainId.BTTC]: [...WETH_ONLY[ChainId.BTTC], DAI[ChainId.BTTC], USDC[ChainId.BTTC], USDT[ChainId.BTTC]],
   [ChainId.VELAS]: [...WETH_ONLY[ChainId.VELAS], USDC[ChainId.VELAS], USDT[ChainId.VELAS]],
@@ -600,6 +604,7 @@ export const SUGGESTED_BASES: ChainTokenList = {
     new Token(ChainId.OPTIMISM, '0x4200000000000000000000000000000000000042', 18, 'OP', 'Optimism'),
     USDT[ChainId.OPTIMISM],
     DAI[ChainId.OPTIMISM],
+    new Token(ChainId.OPTIMISM, '0x1F32b1c2345538c0c6f582fCB022739c4A194Ebb', 18, 'wstETH', 'Lido Wrapped Staked ETH"'),
   ],
 }
 
