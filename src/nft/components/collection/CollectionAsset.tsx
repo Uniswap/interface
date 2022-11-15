@@ -6,7 +6,7 @@ import { Box } from 'nft/components/Box'
 import { bodySmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag } from 'nft/hooks'
-import { GenieAsset, Markets } from 'nft/types'
+import { GenieAsset, Markets, TokenType } from 'nft/types'
 import { formatWeiToDecimal, rarityProviderLogo } from 'nft/utils'
 import { useCallback, useMemo } from 'react'
 import { useEffect, useState } from 'react'
@@ -41,18 +41,23 @@ export const CollectionAsset = ({
   const bagExpanded = useBag((state) => state.bagExpanded)
   const setBagExpanded = useBag((state) => state.setBagExpanded)
   const trace = useTrace({ page: PageName.NFT_COLLECTION_PAGE })
-  const [selectedForBag, setSelectedForBag] = useState(false)
 
-  const { quantity, isSelected } = useMemo(() => {
+  const { erc1155TokenQuantity, isSelected, inSweep } = useMemo(() => {
+    const matchingItems = itemsInBag.filter(
+      (item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address
+    )
+    const erc1155TokenQuantity = matchingItems.filter((x) => x.asset.tokenType === TokenType.ERC1155).length
+    const isSelected = matchingItems.length > 0
+    const inSweep = isSelected && matchingItems.some((x) => x.inSweep === true)
     return {
-      quantity: itemsInBag.filter(
-        (x) => x.asset.tokenType === 'ERC1155' && x.asset.tokenId === asset.tokenId && x.asset.address === asset.address
-      ).length,
-      isSelected: itemsInBag.some(
-        (item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address
-      ),
+      erc1155TokenQuantity,
+      isSelected,
+      inSweep,
     }
   }, [asset, itemsInBag])
+
+  const [showTooltip, setShowTooltip] = useState(false)
+  const [prevIsSelected, setPrevIsSelected] = useState(isSelected)
 
   const notForSale = useNotForSale(asset)
   const assetMediaType = useAssetMediaType(asset)
@@ -68,7 +73,6 @@ export const CollectionAsset = ({
 
   const handleAddAssetToBag = useCallback(() => {
     addAssetsToBag([asset])
-    setSelectedForBag(true)
     if (!bagExpanded && !isMobile && !bagManuallyClosed) {
       setBagExpanded({ bagExpanded: true })
     }
@@ -81,17 +85,19 @@ export const CollectionAsset = ({
   }, [addAssetsToBag, asset, bagExpanded, bagManuallyClosed, isMobile, setBagExpanded, trace])
 
   useEffect(() => {
-    if (selectedForBag) {
-      const showTooltip = setTimeout(() => {
-        setSelectedForBag(false)
+    if (isSelected !== prevIsSelected && !inSweep) {
+      setShowTooltip(true)
+      const tooltipTimer = setTimeout(() => {
+        setShowTooltip(false)
       }, TOOLTIP_TIMEOUT)
 
       return () => {
-        clearTimeout(showTooltip)
+        clearTimeout(tooltipTimer)
+        setPrevIsSelected(isSelected)
       }
     }
     return undefined
-  }, [selectedForBag, setSelectedForBag])
+  }, [isSelected, prevIsSelected, inSweep])
 
   const handleRemoveAssetFromBag = useCallback(() => {
     removeAssetsFromBag([asset])
@@ -110,7 +116,7 @@ export const CollectionAsset = ({
             <Trans>{isSelected ? ADDED_TO_BAG_TOOLTIP_TEXT : REMOVED_FROM_BAG_TOOLTIP_TEXT}</Trans>{' '}
           </Box>
         }
-        show={selectedForBag}
+        show={showTooltip}
         style={{ display: 'block' }}
         offsetX={0}
         offsetY={-52}
@@ -118,7 +124,9 @@ export const CollectionAsset = ({
         placement="bottom"
       >
         <Card.ImageContainer>
-          {asset.tokenType === 'ERC1155' && quantity > 0 && <Card.Erc1155Controls quantity={quantity.toString()} />}
+          {asset.tokenType === TokenType.ERC1155 && erc1155TokenQuantity > 0 && (
+            <Card.Erc1155Controls quantity={erc1155TokenQuantity.toString()} />
+          )}
           {asset.rarity && provider && (
             <Card.Ranking
               rarity={asset.rarity}
@@ -152,7 +160,7 @@ export const CollectionAsset = ({
               </Card.SecondaryInfo>
               {(asset.marketplace === Markets.NFTX || asset.marketplace === Markets.NFT20) && <Card.Pool />}
             </Card.SecondaryDetails>
-            {asset.tokenType !== 'ERC1155' && asset.marketplace && (
+            {asset.tokenType !== TokenType.ERC1155 && asset.marketplace && (
               <Card.MarketplaceIcon marketplace={asset.marketplace} />
             )}
           </Card.SecondaryRow>

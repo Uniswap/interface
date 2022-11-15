@@ -54,7 +54,6 @@ export const ViewMyNftsAsset = ({
   const toggleCart = useBag((state) => state.toggleBag)
   const isMobile = useIsMobile()
   const navigate = useNavigate()
-  const [selectedForBag, setSelectedForBag] = useState(false)
 
   const isSelected = useMemo(() => {
     return sellAssets.some(
@@ -62,13 +61,15 @@ export const ViewMyNftsAsset = ({
     )
   }, [asset, sellAssets])
 
+  const [showTooltip, setShowTooltip] = useState(false)
+  const [prevIsSelected, setPrevIsSelected] = useState(isSelected)
+
   const onCardClick = () => {
     isSellMode ? handleSelect(isSelected) : navigate(NFT_DETAILS_HREF(asset))
   }
 
   const handleSelect = (removeAsset: boolean) => {
     removeAsset ? removeSellAsset(asset) : selectSellAsset(asset)
-    setSelectedForBag(true)
     if (
       !cartExpanded &&
       !sellAssets.find(
@@ -80,17 +81,19 @@ export const ViewMyNftsAsset = ({
   }
 
   useEffect(() => {
-    if (selectedForBag) {
-      const showTooltip = setTimeout(() => {
-        setSelectedForBag(false)
+    if (isSelected !== prevIsSelected) {
+      setShowTooltip(true)
+      const tooltipTimer = setTimeout(() => {
+        setShowTooltip(false)
       }, TOOLTIP_TIMEOUT)
 
       return () => {
-        clearTimeout(showTooltip)
+        clearTimeout(tooltipTimer)
+        setPrevIsSelected(isSelected)
       }
     }
     return undefined
-  }, [selectedForBag, setSelectedForBag])
+  }, [isSelected, prevIsSelected])
 
   const assetMediaType = Card.useAssetMediaType(asset)
 
@@ -125,7 +128,7 @@ export const ViewMyNftsAsset = ({
               <Trans>{isSelected ? ADDED_TO_BAG_TOOLTIP_TEXT : REMOVED_FROM_BAG_TOOLTIP_TEXT}</Trans>{' '}
             </Box>
           }
-          show={selectedForBag}
+          show={showTooltip}
           style={{ display: 'block' }}
           offsetX={0}
           offsetY={-52}
