@@ -15,9 +15,6 @@ export const bannerContainerNoBanner = style({ height: '0', marginTop: '0px' })
 export const bannerImage = style({
   objectFit: 'cover',
   boxShadow: 'rgba(0, 0, 0, 6%) 0px 4px 12px;',
-  boxSizing: 'border-box',
-  borderBottom: '2px solid',
-  borderColor: vars.color.backgroundSurface,
 })
 
 export const baseActivitySwitcherToggle = style([

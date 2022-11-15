@@ -247,7 +247,6 @@ const StatsItem = ({ children, label, shouldHide }: { children: ReactNode; label
   return (
     <Box display={shouldHide ? 'none' : 'flex'} flexDirection={'column'} alignItems="baseline" gap="2" height="min">
       <span className={styles.statsValue}>{children}</span>
-
       <Box as="span" className={styles.statsLabel}>
         {label}
       </Box>
@@ -288,7 +287,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
   const arrow = stats?.stats?.one_day_floor_change ? getDeltaArrow(stats.stats.one_day_floor_change) : undefined
 
   return (
-    <Row gap={{ sm: '36', md: '60' }} {...props}>
+    <Row gap={{ sm: '24', md: '36', lg: '48', xl: '60' }} {...props}>
       {isCollectionStatsLoading ? (
         statsLoadingSkeleton(isMobile ?? false)
       ) : (
@@ -316,8 +315,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
               {totalSupplyStr}
             </StatsItem>
           ) : null}
-
-          {Boolean(uniqueOwnersPercentage && stats.standard !== TokenType.ERC1155) ? (
+          {uniqueOwnersPercentage ? (
             <StatsItem label="Unique owners" shouldHide={isMobile ?? false}>
               {uniqueOwnersPercentage}%
             </StatsItem>

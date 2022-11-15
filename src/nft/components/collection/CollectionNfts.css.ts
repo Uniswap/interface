@@ -20,7 +20,7 @@ export const assetList = style([
         gridTemplateColumns: 'repeat(auto-fill, calc(25% - 16px) )',
       },
       'screen and (min-width: 1680px)': {
-        gridTemplateColumns: 'repeat(auto-fill, calc(14.2857% - 16px) )',
+        gridTemplateColumns: 'repeat(auto-fill, calc(14.2857% - 20px) )',
       },
     },
   },
