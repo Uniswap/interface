@@ -1,5 +1,5 @@
 import { globalStyle, style } from '@vanilla-extract/css'
-import { bodySmall, buttonTextSmall, headlineSmall } from 'nft/css/common.css'
+import { bodySmall, headlineSmall } from 'nft/css/common.css'
 import { loadingAsset, loadingBlock } from 'nft/css/loading.css'
 
 import { breakpoints, sprinkles, themeVars } from '../../css/sprinkles.css'
@@ -40,6 +40,8 @@ export const collectionImage = style([
     height: '143px',
     verticalAlign: 'top',
     top: '-118px',
+    boxShadow: 'rgb(0 0 0 / 8%) 0px 4px 15px;',
+
     '@media': {
       [`(max-width: ${breakpoints.sm - 1}px)`]: {
         width: '60px',
@@ -103,8 +105,8 @@ export const readMore = style([
   {
     verticalAlign: 'top',
     lineHeight: '20px',
+    fontSize: '14px',
   },
-  buttonTextSmall,
   sprinkles({
     color: 'textSecondary',
     cursor: 'pointer',
@@ -115,7 +117,7 @@ export const readMore = style([
 export const statsLabel = style([
   bodySmall,
   sprinkles({
-    fontWeight: 'normal',
+    fontWeight: 'medium',
     color: 'textSecondary',
     whiteSpace: 'nowrap',
   }),

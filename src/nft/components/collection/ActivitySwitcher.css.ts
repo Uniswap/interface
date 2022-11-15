@@ -7,6 +7,7 @@ export const baseActivityContainer = style([
   {
     borderBottom: '1px solid',
     borderColor: vars.color.backgroundInteractive,
+    marginRight: '12px',
   },
 ])
 
@@ -40,7 +41,7 @@ export const selectedActivitySwitcherToggle = style([
     ':after': {
       content: '',
       position: 'absolute',
-      background: vars.color.genieBlue,
+      background: vars.color.textPrimary,
       width: '100%',
       height: '2px',
       left: '0px',

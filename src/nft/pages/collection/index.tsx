@@ -21,13 +21,13 @@ import * as styles from 'nft/pages/collection/index.css'
 import { GenieCollection } from 'nft/types'
 import { Suspense, useEffect } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { config, useSpring } from 'react-spring'
+import { easings, useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 const FILTER_WIDTH = 332
 const BAG_WIDTH = 324
-export const COLLECTION_BANNER_HEIGHT = 276
+export const COLLECTION_BANNER_HEIGHT = 288
 
 export const CollectionBannerLoading = () => <Box height="full" width="full" className={styles.loadingBanner} />
 
@@ -101,7 +101,10 @@ const Collection = () => {
         : isBagExpanded
         ? BAG_WIDTH
         : 0,
-    config: config.slow,
+    config: {
+      duration: 250,
+      easing: easings.easeOutSine,
+    },
   })
 
   useEffect(() => {
@@ -128,7 +131,6 @@ const Collection = () => {
         <Column width="full">
           {contractAddress ? (
             <>
-              {' '}
               <Box width="full" height={`${COLLECTION_BANNER_HEIGHT}`}>
                 <Box
                   as={collectionStats?.bannerImageUrl ? 'img' : 'div'}

@@ -12,7 +12,11 @@ import { sprinkles, vars } from '../../css/sprinkles.css'
 
 export const bannerContainerNoBanner = style({ height: '0', marginTop: '0px' })
 
-export const bannerImage = style({ objectFit: 'cover' })
+export const bannerImage = style({
+  objectFit: 'cover',
+  boxShadow: 'rgb(0 0 0 / 8%) 0px 4px 15px;',
+  boxSizing: 'border-box',
+})
 
 export const baseActivitySwitcherToggle = style([
   buttonTextMedium,

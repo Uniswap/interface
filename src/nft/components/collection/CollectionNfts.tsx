@@ -63,7 +63,7 @@ const ActionsContainer = styled.div`
   gap: 10px;
   width: 100%;
   justify-content: space-between;
-  padding-left: 16px;
+  padding: 0 16px;
 `
 
 const ActionsSubContainer = styled.div`
@@ -446,6 +446,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             paddingTop={!!markets.length || !!traits.length || minMaxPriceChipText ? '12' : '0'}
             gap="8"
             flexWrap="wrap"
+            paddingLeft={'12'}
+            paddingRight={'12'}
           >
             {markets.map((market) => (
               <TraitChip

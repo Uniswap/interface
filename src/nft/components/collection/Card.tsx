@@ -657,7 +657,7 @@ const DetailsLink = () => {
         e.stopPropagation()
       }}
     >
-      <Box>View Details</Box>
+      <Box>Details</Box>
     </DetailsLinkContainer>
   )
 }

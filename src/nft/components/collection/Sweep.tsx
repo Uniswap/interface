@@ -14,11 +14,15 @@ import { ThemedText } from 'theme'
 const SweepContainer = styled.div`
   display: flex;
   gap: 60px;
-  margin-top: 20px;
+  margin: 12px 12px 0 12px;
   padding: 16px;
   border-radius: 12px;
-  background-color: ${({ theme }) => theme.backgroundModule};
+  background-color: ${({ theme }) => theme.backgroundSurface};
   justify-content: space-between;
+  background: linear-gradient(${({ theme }) => theme.backgroundSurface}, ${({ theme }) => theme.backgroundSurface})
+      padding-box,
+    linear-gradient(to right, #4673fa, darkorchid) border-box;
+  border: 2px solid transparent;
 `
 
 const StyledSlider = styled(Slider)`
@@ -66,7 +70,7 @@ const InputContainer = styled.input`
   background: none;
   border-radius: 8px;
   padding: 6px 8px;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 400px;
   line-height: 20px;
 
@@ -329,9 +333,9 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
     <SweepContainer>
       <SweepLeftmostContainer>
         <SweepHeaderContainer>
-          <ThemedText.SubHeaderSmall color="textPrimary" lineHeight="20px" paddingTop="6px" paddingBottom="6px">
+          <ThemedText.SubHeader color="textPrimary" lineHeight="20px" paddingTop="6px" paddingBottom="6px">
             Sweep
-          </ThemedText.SubHeaderSmall>
+          </ThemedText.SubHeader>
         </SweepHeaderContainer>
         <SweepSubContainer>
           <StyledSlider
@@ -349,15 +353,16 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
               top: '3px',
               width: '12px',
               height: '20px',
-              backgroundColor: `${theme.textPrimary}`,
+              backgroundColor: `#4673FA`,
               borderRadius: '4px',
               border: 'none',
+              opacity: '1',
               boxShadow: `${theme.shallowShadow.slice(0, -1)}`,
             }}
             railStyle={{
               top: '3px',
               height: '8px',
-              backgroundColor: `${theme.accentActionSoft}`,
+              backgroundColor: `${theme.backgroundInteractive}`,
             }}
             onChange={handleSliderChange}
           />
