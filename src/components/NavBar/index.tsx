@@ -11,10 +11,10 @@ import { useIsMobile } from 'nft/hooks'
 import { ReactNode, useMemo } from 'react'
 import { NavLink, NavLinkProps, useLocation } from 'react-router-dom'
 
+import { Bag } from './Bag'
 import { ChainSelector } from './ChainSelector'
 import { MenuDropdown } from './MenuDropdown'
 import { SearchBar } from './SearchBar'
-import { ShoppingBag } from './ShoppingBag'
 import * as styles from './style.css'
 
 interface MenuItemProps {
@@ -124,7 +124,7 @@ const Navbar = () => {
               <Box display={{ sm: 'none', lg: 'flex' }}>
                 <MenuDropdown />
               </Box>
-              {isNftPage && <ShoppingBag />}
+              {isNftPage && <Bag />}
               {!isNftPage && (
                 <Box display={{ sm: 'none', lg: 'flex' }}>
                   <ChainSelector />
