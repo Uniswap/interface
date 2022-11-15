@@ -11,7 +11,7 @@ import { Text } from 'src/components/Text'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { useCancelationGasFeeInfo, useUSDValue } from 'src/features/gas/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
-import { TransactionDetails } from 'src/features/transactions/types'
+import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { shortenAddress } from 'src/utils/addresses'
 import { formatUSDPrice, NumberType } from 'src/utils/format'
@@ -88,6 +88,7 @@ export function CancelConfirmationView({
         <Button fill emphasis={ButtonEmphasis.Tertiary} label={t('Back')} onPress={onBack} />
         <Button
           fill
+          disabled={transactionDetails.status !== TransactionStatus.Pending}
           emphasis={ButtonEmphasis.Detrimental}
           label={t('Confirm')}
           name={ElementName.Cancel}

@@ -1,5 +1,5 @@
 import { providers } from 'ethers'
-import { default as React, ReactElement, useState } from 'react'
+import { default as React, ReactElement, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { BaseButtonProps, TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -74,6 +74,13 @@ function TransactionSummaryLayout({
     )
     setShowCancelModal(false)
   }
+
+  // Hide cancelation modal if transaction is no longer pending.
+  useEffect(() => {
+    if (status !== TransactionStatus.Pending) {
+      setShowCancelModal(false)
+    }
+  }, [status])
 
   const onPress = () => {
     if (readonly) {
