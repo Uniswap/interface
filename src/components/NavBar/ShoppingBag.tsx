@@ -23,10 +23,6 @@ export const ShoppingBag = () => {
     shallow
   )
   const handleIconClick = useCallback(() => {
-    if (isSellMode && bagExpanded) {
-      resetSellAssets()
-      setIsSellMode(false)
-    }
     setBagExpanded({ bagExpanded: !bagExpanded })
   }, [bagExpanded, isSellMode, resetSellAssets, setBagExpanded, setIsSellMode])
 

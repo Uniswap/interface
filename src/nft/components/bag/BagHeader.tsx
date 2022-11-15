@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { OpacityHoverState } from 'components/Common'
 import { BagCloseIcon } from 'nft/components/icons'
+import { useMemo } from 'react'
 import styled from 'styled-components/macro'
 import { ButtonText, ThemedText } from 'theme'
 
@@ -10,6 +11,10 @@ const ClearButton = styled(ButtonText)`
   font-weight: 600;
   font-size: 14px;
   line-height: 16px;
+
+  :active {
+    text-decoration: none;
+  }
 `
 
 const IconWrapper = styled.button`
@@ -28,15 +33,17 @@ const IconWrapper = styled.button`
 
   ${OpacityHoverState}
 `
-const CounterDot = styled.div`
+const CounterDot = styled.div<{ sizing: string }>`
   align-items: center;
   background-color: ${({ theme }) => theme.accentAction};
   border-radius: 100px;
+  font-weight: bold;
   color: ${({ theme }) => theme.accentTextLightPrimary};
   display: flex;
   font-size: 10px;
   justify-content: center;
-  min-width: 20px;
+  min-width: ${({ sizing }) => sizing};
+  min-height: ${({ sizing }) => sizing};
   padding: 4px 6px;
 `
 const Wrapper = styled.div`
@@ -56,12 +63,22 @@ interface BagHeaderProps {
 }
 
 export const BagHeader = ({ numberOfAssets, closeBag, resetFlow, isProfilePage }: BagHeaderProps) => {
+  const sizing = useMemo(() => {
+    let power = 0
+
+    while (10 ** power <= numberOfAssets) {
+      power++
+    }
+
+    return `${14 + 6 * power}px`
+  }, [numberOfAssets])
+
   return (
     <Wrapper>
       <ThemedText.HeadlineSmall>{isProfilePage ? <Trans>Sell</Trans> : <Trans>Bag</Trans>}</ThemedText.HeadlineSmall>
       {numberOfAssets > 0 && (
         <>
-          <CounterDot>{numberOfAssets}</CounterDot>
+          <CounterDot sizing={sizing}>{numberOfAssets}</CounterDot>
           <ClearButton onClick={resetFlow}>Clear all</ClearButton>
         </>
       )}
