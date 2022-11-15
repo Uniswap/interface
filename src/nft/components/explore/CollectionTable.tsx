@@ -16,6 +16,8 @@ export enum ColumnHeaders {
   Owners = 'Owners',
 }
 
+const VOLUME_CHANGE_MAX_VALUE = 9999
+
 const compareFloats = (a: number, b: number): 1 | -1 => {
   return Math.round(a * 100000) >= Math.round(b * 100000) ? 1 : -1
 }
@@ -113,7 +115,7 @@ const CollectionTable = ({ data, timePeriod }: { data: CollectionTableColumn[]; 
           return timePeriod === TimePeriod.AllTime ? (
             <TextCell value="-" />
           ) : (
-            <ChangeCell change={cell.row.original.volume.change} />
+            <ChangeCell change={Math.min(cell.row.original.volume.change, VOLUME_CHANGE_MAX_VALUE)} />
           )
         },
       },
