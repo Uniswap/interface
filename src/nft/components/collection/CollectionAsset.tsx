@@ -31,7 +31,10 @@ const REMOVED_FROM_BAG_TOOLTIP_TEXT = 'Removed from bag'
 const StyledContainer = styled.div`
   position: absolute;
   bottom: 12px;
-  left: 80px;
+  left: 0px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
   z-index: 2;
 `
 
