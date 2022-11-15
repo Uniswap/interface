@@ -1,3 +1,4 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { EventName, PageName } from '@uniswap/analytics-events'
 import { useBag } from 'nft/hooks'
@@ -56,16 +57,18 @@ export const CollectionAsset = ({
   }, [asset])
 
   const handleAddAssetToBag = useCallback(() => {
-    addAssetsToBag([asset])
-    if (!bagExpanded && !isMobile && !bagManuallyClosed) {
-      setBagExpanded({ bagExpanded: true })
+    if (BigNumber.from(asset.priceInfo?.ETHPrice ?? 0).gte(0)) {
+      addAssetsToBag([asset])
+      if (!bagExpanded && !isMobile && !bagManuallyClosed) {
+        setBagExpanded({ bagExpanded: true })
+      }
+      sendAnalyticsEvent(EventName.NFT_BUY_ADDED, {
+        collection_address: asset.address,
+        token_id: asset.tokenId,
+        token_type: asset.tokenType,
+        ...trace,
+      })
     }
-    sendAnalyticsEvent(EventName.NFT_BUY_ADDED, {
-      collection_address: asset.address,
-      token_id: asset.tokenId,
-      token_type: asset.tokenType,
-      ...trace,
-    })
   }, [addAssetsToBag, asset, bagExpanded, bagManuallyClosed, isMobile, setBagExpanded, trace])
 
   const handleRemoveAssetFromBag = useCallback(() => {
