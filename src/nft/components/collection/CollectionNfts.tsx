@@ -320,16 +320,16 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
       return collectionNfts
     }
 
-    const collectionAssets = [...collectionNfts]
+    const assets = [...collectionNfts]
 
-    collectionAssets.forEach(
+    assets.forEach(
       (asset) =>
         (asset.marketplace === Markets.NFTX || asset.marketplace === Markets.NFT20) &&
         (asset.priceInfo.ETHPrice = calculatePrice(asset))
     )
 
     if (sortBy === SortBy.HighToLow || sortBy === SortBy.LowToHigh) {
-      collectionAssets.sort((a, b) => {
+      assets.sort((a, b) => {
         const bigA = BigNumber.from(a.priceInfo?.ETHPrice ?? -1)
         const bigB = BigNumber.from(b.priceInfo?.ETHPrice ?? -1)
 
@@ -350,7 +350,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
       })
     }
 
-    return collectionAssets
+    return assets
   }, [collectionNfts, sortBy, calculatePrice])
 
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
