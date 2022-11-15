@@ -94,6 +94,7 @@ platform :ios do
   end
 
   private_lane :ship do | options |
+    ENV['ITMSTRANSPORTER_FORCE_ITMS_PACKAGE_UPLOAD'] = 'true' #https://github.com/fastlane/fastlane/issues/20741
     pilot(
       ipa: "#{OUTPUT_DIRECTORY}#{PROJECT_NAME}.ipa",
       skip_waiting_for_build_processing: true,
