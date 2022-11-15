@@ -54,6 +54,8 @@ export function getTokensOrderByLabel(orderBy: TokensOrderBy, t: TFunction) {
       return t('Market cap')
     case TokenSortableField.Volume:
       return t('Uniswap volume')
+    case TokenSortableField.TotalValueLocked:
+      return t('Uniswap TVL')
     case ClientTokensOrderBy.PriceChangePercentage24hDesc:
       return t('Price increase')
     case ClientTokensOrderBy.PriceChangePercentage24hAsc:

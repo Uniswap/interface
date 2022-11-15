@@ -28,6 +28,11 @@ function _SortButton({ orderBy }: FilterGroupProps) {
         orderBy: TokenSortableField.Volume,
       },
       {
+        title: getTokensOrderByLabel(TokenSortableField.TotalValueLocked, t),
+        systemIcon: orderBy === TokenSortableField.TotalValueLocked ? 'checkmark' : '',
+        orderBy: TokenSortableField.TotalValueLocked,
+      },
+      {
         title: getTokensOrderByLabel(TokenSortableField.MarketCap, t),
         systemIcon: orderBy === TokenSortableField.MarketCap ? 'checkmark' : '',
         orderBy: TokenSortableField.MarketCap,
@@ -60,7 +65,8 @@ function _SortButton({ orderBy }: FilterGroupProps) {
         dispatch(setTokensOrderBy({ newTokensOrderBy: selectedMenuAction.orderBy }))
       }}>
       <Flex row alignItems="center" bg="background2" borderRadius="full" gap="xxs" px="sm" py="xs">
-        {orderBy === TokenSortableField.Volume && (
+        {(orderBy === TokenSortableField.Volume ||
+          orderBy === TokenSortableField.TotalValueLocked) && (
           <UniswapLogo
             color={theme.colors.textSecondary}
             height={theme.iconSizes.md}
@@ -68,7 +74,11 @@ function _SortButton({ orderBy }: FilterGroupProps) {
           />
         )}
         <Text color="textSecondary" variant="buttonLabelSmall">
-          {orderBy === TokenSortableField.Volume ? t('Volume') : getTokensOrderByLabel(orderBy, t)}
+          {orderBy === TokenSortableField.Volume
+            ? t('Volume')
+            : orderBy === TokenSortableField.TotalValueLocked
+            ? t('TVL')
+            : getTokensOrderByLabel(orderBy, t)}
         </Text>
         <Chevron
           color={theme.colors.textSecondary}
