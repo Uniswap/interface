@@ -1,5 +1,5 @@
 import { SerializeQueryArgs } from '@reduxjs/toolkit/dist/query/defaultSerializeQueryArgs'
-import { createApi, FetchArgs, fetchBaseQuery, skipToken } from '@reduxjs/toolkit/query/react'
+import { createApi, FetchArgs, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { providers } from 'ethers'
 import { useProvider } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
@@ -7,8 +7,8 @@ import { areAddressesEqual } from 'src/utils/addresses'
 import { ONE_DAY_MS, ONE_SECOND_MS } from 'src/utils/time'
 
 export type EnslookupParams = {
-  nameOrAddress: string
-  provider: providers.JsonRpcProvider
+  nameOrAddress: NullUndefined<string>
+  provider: NullUndefined<providers.JsonRpcProvider>
   chainId: ChainId
 }
 
@@ -33,6 +33,7 @@ export const ensApi = createApi({
       queryFn: async (params: EnslookupParams) => {
         const { nameOrAddress: address, provider } = params
         try {
+          if (!provider || !address) return { data: null }
           const name = await provider.lookupAddress(address)
 
           /* ENS does not enforce that an address owns a .eth domain before setting it as a reverse proxy
@@ -55,6 +56,7 @@ export const ensApi = createApi({
       queryFn: async (params: EnslookupParams) => {
         const { nameOrAddress: name, provider } = params
         try {
+          if (!provider || !name) return { data: null }
           const address = await provider.resolveName(name)
           return { data: address }
         } catch (_) {
@@ -70,6 +72,7 @@ export const ensApi = createApi({
       queryFn: async (params: EnslookupParams) => {
         const { nameOrAddress: address, provider } = params
         try {
+          if (!provider || !address) return { data: null }
           const name = await provider.lookupAddress(address)
           const fwdAddr = name ? await provider.resolveName(name) : null
           const checkedName = areAddressesEqual(address, fwdAddr) ? name : null
@@ -88,21 +91,15 @@ const { useNameQuery, useAddressQuery, useAvatarQuery } = ensApi
 
 export function useENSName(address?: Address, chainId: ChainId = ChainId.Mainnet) {
   const provider = useProvider(chainId)
-  return useNameQuery(
-    provider && address ? { provider, nameOrAddress: address, chainId } : skipToken
-  )
+  return useNameQuery({ provider, nameOrAddress: address, chainId })
 }
 
 export function useAddressFromEns(maybeName: string | null, chainId: ChainId = ChainId.Mainnet) {
   const provider = useProvider(chainId)
-  return useAddressQuery(
-    provider && maybeName ? { provider, nameOrAddress: maybeName, chainId } : skipToken
-  )
+  return useAddressQuery({ provider, nameOrAddress: maybeName, chainId })
 }
 
 export function useENSAvatar(address?: string | null, chainId: ChainId = ChainId.Mainnet) {
   const provider = useProvider(chainId)
-  return useAvatarQuery(
-    provider && address ? { provider, nameOrAddress: address, chainId } : skipToken
-  )
+  return useAvatarQuery({ provider, nameOrAddress: address, chainId })
 }
