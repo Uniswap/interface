@@ -204,13 +204,7 @@ class WalletConnectServerWrapper {
   
   func rejectRequest(requestInternalId: String) {
     guard let request = self.pendingRequests[requestInternalId] else {
-      return self.eventEmitter.sendEvent(
-        withName: EventType.error.rawValue,
-        body: [
-          "type": ErrorType.invalidRequestId.rawValue,
-          "message": "Are you sure you are using request_internal_id and not request.id?"
-        ]
-      )
+      return
     }
     
     do {

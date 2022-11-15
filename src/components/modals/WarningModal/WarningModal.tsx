@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from 'react'
+import React, { PropsWithChildren, ReactNode } from 'react'
 import { TFunction } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import AlertTriangleIcon from 'src/assets/icons/alert-triangle.svg'
@@ -25,6 +25,7 @@ export type WarningModalProps = {
   severity?: WarningSeverity
   isDismissible?: boolean
   hideHandlebar?: boolean
+  icon?: ReactNode
 }
 
 export function captionForAccountRemovalWarning(
@@ -56,6 +57,7 @@ export default function WarningModal({
   useBiometric = false,
   isDismissible = true,
   hideHandlebar = false,
+  icon,
 }: PropsWithChildren<WarningModalProps>) {
   const { requiredForTransactions } = useBiometricAppSettings()
   const { trigger } = useBiometricPrompt(onConfirm)
@@ -81,9 +83,15 @@ export default function WarningModal({
       onClose={onClose}>
       <Flex centered gap="md" mb="lg" p="lg">
         <Flex centered borderColor={alertColor.text} borderRadius="md" borderWidth={1} p="sm">
-          <AlertTriangleIcon color={theme.colors[alertColor.text]} height={24} width={24} />
+          {icon ?? (
+            <AlertTriangleIcon
+              color={theme.colors[alertColor.text]}
+              height={theme.iconSizes.lg}
+              width={theme.iconSizes.lg}
+            />
+          )}
         </Flex>
-        <Text textAlign="center" variant="buttonLabelMedium">
+        <Text textAlign="center" variant="bodyLarge">
           {title}
         </Text>
         {caption && (
@@ -92,7 +100,7 @@ export default function WarningModal({
           </Text>
         )}
         {children}
-        <Flex centered row gap="sm" pt="lg">
+        <Flex centered row gap="sm" pt={children ? 'sm' : 'lg'}>
           {closeText && (
             <Button
               fill
@@ -118,6 +126,11 @@ export default function WarningModal({
 
 export const getAlertColor = (severity?: WarningSeverity): WarningColor => {
   switch (severity) {
+    case WarningSeverity.None:
+      return {
+        text: 'textSecondary',
+        background: 'textSecondary',
+      }
     case WarningSeverity.High:
       return {
         text: 'accentCritical',

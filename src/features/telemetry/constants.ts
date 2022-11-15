@@ -57,9 +57,10 @@ export const enum ModalName {
   TooltipContent = 'tooltip-content',
   TransactionActions = 'transaction-actions',
   ViewSeedPhraseWarning = 'view-seed-phrase-warning',
+  WalletConnectScan = 'wallet-connect-scan-modal',
   WCSignRequest = 'wc-sign-request-modal',
   WCSwitchChainRequest = 'wc-switch-chain-request-modal',
-  WalletConnectScan = 'wallet-connect-scan-modal',
+  WCViewOnlyWarning = 'wc-view-only-warning-modal',
   // alphabetize additional values.
 }
 
