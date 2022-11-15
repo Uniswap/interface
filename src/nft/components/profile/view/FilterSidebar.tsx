@@ -8,15 +8,19 @@ import { subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useFiltersExpanded, useIsMobile, useWalletCollections } from 'nft/hooks'
 import { WalletCollection } from 'nft/types'
-import { Dispatch, FormEvent, SetStateAction, useCallback, useEffect, useReducer, useState } from 'react'
+import { CSSProperties, Dispatch, FormEvent, SetStateAction, useCallback, useEffect, useReducer, useState } from 'react'
 import { useSpring } from 'react-spring'
+import AutoSizer from 'react-virtualized-auto-sizer'
+import { FixedSizeList } from 'react-window'
 import styled from 'styled-components/macro'
 
 import * as styles from './ProfilePage.css'
 
-const ItemsContainer = styled.div`
+const COLLECTION_ROW_HEIGHT = 44
+
+const ItemsContainer = styled(Column)`
   ${ScrollBarStyles}
-  overflow-y: auto;
+  height: 100vh;
 `
 
 export const FilterSidebar = () => {
@@ -95,6 +99,11 @@ const CollectionSelect = ({
     }
   }, [collectionSearchText, collections])
 
+  const itemKey = useCallback((index: number, data: WalletCollection[]) => {
+    const collection = data[index]
+    return `${collection.address}_${index}`
+  }, [])
+
   return (
     <>
       <Box className={subhead} marginTop="12" marginBottom="16" width="276">
@@ -107,16 +116,28 @@ const CollectionSelect = ({
             setCollectionSearchText={setCollectionSearchText}
           />
           <ItemsContainer>
-            <Box paddingBottom="8" style={{ scrollbarWidth: 'none' }}>
-              {displayCollections?.map((collection) => (
-                <CollectionItem
-                  key={collection.address}
-                  collection={collection}
-                  collectionFilters={collectionFilters}
-                  setCollectionFilters={setCollectionFilters}
-                />
-              ))}
-            </Box>
+            <AutoSizer disableWidth>
+              {({ height }) => (
+                <FixedSizeList
+                  height={height}
+                  width="100%"
+                  itemData={displayCollections}
+                  itemCount={displayCollections.length}
+                  itemSize={COLLECTION_ROW_HEIGHT}
+                  itemKey={itemKey}
+                >
+                  {({ index, style, data }) => (
+                    <CollectionItem
+                      style={style}
+                      key={data[index].address}
+                      collection={data[index]}
+                      collectionFilters={collectionFilters}
+                      setCollectionFilters={setCollectionFilters}
+                    />
+                  )}
+                </FixedSizeList>
+              )}
+            </AutoSizer>
           </ItemsContainer>
         </Column>
       </Box>
@@ -149,10 +170,12 @@ const CollectionItem = ({
   collection,
   collectionFilters,
   setCollectionFilters,
+  style,
 }: {
   collection: WalletCollection
   collectionFilters: Array<string>
   setCollectionFilters: (address: string) => void
+  style: CSSProperties
 }) => {
   const [isCheckboxSelected, setCheckboxSelected] = useState(false)
   const [hovered, toggleHovered] = useReducer((state) => {
@@ -183,8 +206,9 @@ const CollectionItem = ({
       style={{
         paddingBottom: '22px',
         paddingTop: '22px',
+        ...style,
       }}
-      maxHeight="44"
+      maxHeight={`${COLLECTION_ROW_HEIGHT}`}
       as="li"
       onMouseEnter={toggleHovered}
       onMouseLeave={toggleHovered}
