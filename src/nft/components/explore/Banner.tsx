@@ -2,6 +2,7 @@ import { useLoadCollectionQuery } from 'graphql/data/nft/Collection'
 import { useIsMobile } from 'nft/hooks'
 import { fetchTrendingCollections } from 'nft/queries'
 import { TimePeriod } from 'nft/types'
+import { calculateCardIndex } from 'nft/utils'
 import { Suspense, useCallback, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
@@ -119,12 +120,7 @@ const Banner = () => {
   const onToggleNextSlide = useCallback(
     (direction: number) => {
       if (!collections) return
-      setActiveCollection((index) => {
-        const nextIndex = index + direction
-        if (nextIndex < 0) return collections.length - 1
-        if (nextIndex >= collections.length) return 0
-        return nextIndex
-      })
+      setActiveCollection((index) => calculateCardIndex(index + direction, collections.length))
     },
     [collections]
   )
