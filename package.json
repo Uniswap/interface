@@ -132,7 +132,7 @@
     "@reduxjs/toolkit": "^1.6.1",
     "@types/react-relay": "^13.0.2",
     "@uniswap/analytics": "1.0.3",
-    "@uniswap/analytics-events": "1.0.4",
+    "@uniswap/analytics-events": "1.1.0",
     "@uniswap/governance": "^1.0.2",
     "@uniswap/liquidity-staker": "^1.0.2",
     "@uniswap/merkle-distributor": "1.0.1",

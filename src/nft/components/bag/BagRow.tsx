@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther } from '@ethersproject/units'
 import clsx from 'clsx'
-import { MediumButton } from 'components/Button'
+import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import { TimedLoader } from 'nft/components/bag/TimedLoader'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -24,12 +24,19 @@ import styled from 'styled-components/macro'
 
 import * as styles from './BagRow.css'
 
-const RemoveButton = styled(MediumButton)`
+const RemoveButton = styled(ThemeButton)`
   border-radius: 12px;
   font-size: 14px;
   line-height: 16px;
   margin-left: 16px;
   padding: 12px 14px;
+`
+const ReviewButton = styled(ThemeButton)`
+  border-radius: 12px;
+  flex: 1 1 auto;
+  font-size: 14px;
+  padding: 8px;
+  width: 50%;
 `
 
 const NoContentContainer = () => (
@@ -127,7 +134,11 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
             {asset.collectionIsVerified && <VerifiedIcon className={styles.icon} />}
           </Row>
         </Column>
-        {showRemoveButton && <RemoveButton onClick={handleRemoveClick}>Remove</RemoveButton>}
+        {showRemoveButton && (
+          <RemoveButton onClick={handleRemoveClick} emphasis={ButtonEmphasis.medium} size={ButtonSize.medium}>
+            Remove
+          </RemoveButton>
+        )}
         {(!showRemoveButton || isMobile) && (
           <Column flexShrink="0" alignItems="flex-end">
             <Box className={styles.bagRowPrice}>
@@ -152,6 +163,24 @@ interface PriceChangeBagRowProps {
 
 export const PriceChangeBagRow = ({ asset, usdPrice, markAssetAsReviewed, top, isMobile }: PriceChangeBagRowProps) => {
   const isPriceIncrease = BigNumber.from(asset.updatedPriceInfo?.ETHPrice).gt(BigNumber.from(asset.priceInfo.ETHPrice))
+  const handleRemove = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault()
+      e.stopPropagation()
+      const toKeep = false
+      markAssetAsReviewed(asset, toKeep)
+    },
+    [asset, markAssetAsReviewed]
+  )
+  const handleKeep = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault()
+      e.stopPropagation()
+      const toKeep = true
+      markAssetAsReviewed(asset, toKeep)
+    },
+    [asset, markAssetAsReviewed]
+  )
   return (
     <Column className={styles.priceChangeColumn} borderTopColor={top ? 'backgroundOutline' : 'transparent'}>
       <Row className={styles.priceChangeRow}>
@@ -163,27 +192,13 @@ export const PriceChangeBagRow = ({ asset, usdPrice, markAssetAsReviewed, top, i
       <Box style={{ marginLeft: '-8px', marginRight: '-8px' }}>
         <BagRow asset={asset} usdPrice={usdPrice} removeAsset={() => undefined} isMobile={isMobile} />
       </Box>
-      <Row gap="12" justifyContent="space-between">
-        <Box
-          className={styles.removeButton}
-          onClick={(e: MouseEvent) => {
-            e.preventDefault()
-            e.stopPropagation()
-            markAssetAsReviewed(asset, false)
-          }}
-        >
+      <Row gap="8" justifyContent="space-between">
+        <ReviewButton onClick={handleRemove} emphasis={ButtonEmphasis.medium} size={ButtonSize.small}>
           Remove
-        </Box>
-        <Box
-          className={styles.keepButton}
-          onClick={(e: MouseEvent) => {
-            e.preventDefault()
-            e.stopPropagation()
-            markAssetAsReviewed(asset, true)
-          }}
-        >
+        </ReviewButton>
+        <ReviewButton onClick={handleKeep} emphasis={ButtonEmphasis.high} size={ButtonSize.small}>
           Keep
-        </Box>
+        </ReviewButton>
       </Row>
     </Column>
   )

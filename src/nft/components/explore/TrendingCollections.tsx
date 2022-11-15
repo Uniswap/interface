@@ -155,7 +155,7 @@ const TrendingCollections = () => {
           </Selector>
         </Filter>
       </FiltersRow>
-      <CollectionTable data={trendingCollections} />
+      <CollectionTable data={trendingCollections} timePeriod={timePeriod} />
     </ExploreContainer>
   )
 }

@@ -1,24 +1,26 @@
 import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { useLoadNftBalanceQuery } from 'graphql/data/nft/NftBalance'
 import { Box } from 'nft/components/Box'
 import { Center, Column, Row } from 'nft/components/Flex'
 import { ChevronLeftIcon, XMarkIcon } from 'nft/components/icons'
 import { ListPage } from 'nft/components/profile/list/ListPage'
 import { ProfilePage } from 'nft/components/profile/view/ProfilePage'
+import { ProfilePageLoadingSkeleton } from 'nft/components/profile/view/ProfilePageLoadingSkeleton'
 import { buttonMedium, headlineMedium, headlineSmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useNFTList, useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { ListingStatus, ProfilePageStateType } from 'nft/types'
-import { useEffect } from 'react'
+import { Suspense, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useToggleWalletModal } from 'state/application/hooks'
 
-import * as styles from './sell.css'
+import * as styles from './profile.css'
 
 const SHOPPING_BAG_WIDTH = 360
 
-const Profile = () => {
+const ProfileContent = () => {
   const sellPageState = useProfilePageState((state) => state.state)
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const removeAllMarketplaceWarnings = useSellAsset((state) => state.removeAllMarketplaceWarnings)
@@ -33,12 +35,16 @@ const Profile = () => {
   }, [removeAllMarketplaceWarnings, sellPageState, setListingStatus])
 
   const { account } = useWeb3React()
+  const accountRef = useRef(account)
   const toggleWalletModal = useToggleWalletModal()
 
   useEffect(() => {
-    resetSellAssets()
-    setSellPageState(ProfilePageStateType.VIEWING)
-    clearCollectionFilters()
+    if (accountRef.current !== account) {
+      accountRef.current = account
+      resetSellAssets()
+      setSellPageState(ProfilePageStateType.VIEWING)
+      clearCollectionFilters()
+    }
   }, [account, resetSellAssets, setSellPageState, clearCollectionFilters])
   const cartExpanded = useBag((state) => state.bagExpanded)
 
@@ -85,6 +91,17 @@ const Profile = () => {
         )}
       </Box>
     </Trace>
+  )
+}
+
+const Profile = () => {
+  const { account } = useWeb3React()
+  useLoadNftBalanceQuery(account, [])
+
+  return (
+    <Suspense fallback={<ProfilePageLoadingSkeleton />}>
+      <ProfileContent />
+    </Suspense>
   )
 }
 
