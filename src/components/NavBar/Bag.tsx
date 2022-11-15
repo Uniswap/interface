@@ -20,7 +20,7 @@ const CounterDot = styled.div`
   top: 4px;
 `
 
-export const ShoppingBag = () => {
+export const Bag = () => {
   const itemsInBag = useBag((state) => state.itemsInBag)
   const [bagQuantity, setBagQuantity] = useState(0)
 
