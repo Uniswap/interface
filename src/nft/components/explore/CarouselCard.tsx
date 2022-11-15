@@ -193,22 +193,6 @@ const MARKETS_ENUM_TO_NAME = {
 export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
   const gqlCollection = useCollectionQuery(collection.address)
 
-  const marketplaces = []
-  for (const market of MARKETS_TO_CHECK) {
-    const marketplace = gqlCollection.marketplaceCount?.find((marketplace) => marketplace.marketplace === market)
-    if (!marketplace || marketplace.count === 0) {
-      return null
-    }
-    marketplaces.push(
-      <MarketplaceRow
-        key={`CarouselCard-key-${collection.address}-${marketplace.marketplace}`}
-        marketplace={MARKETS_ENUM_TO_NAME[market]}
-        listings={marketplace.count.toString()}
-        floorInEth={marketplace.floorPrice.toString()}
-      />
-    )
-  }
-
   return (
     <CarouselCardContainer onClick={onClick}>
       <CarouselCardHeader collection={collection} />
@@ -217,7 +201,22 @@ export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
           <HeaderRow>Uniswap</HeaderRow>
           <HeaderRow>{formatWeiToDecimal(collection.floor.toString())} ETH Floor</HeaderRow>
           <HeaderRow>{gqlCollection.marketplaceCount?.reduce((acc, cur) => acc + cur.count, 0)} Listings</HeaderRow>
-          {marketplaces}
+          {MARKETS_TO_CHECK.map((market) => {
+            const marketplace = gqlCollection.marketplaceCount?.find(
+              (marketplace) => marketplace.marketplace === market
+            )
+            if (!marketplace) {
+              return null
+            }
+            return (
+              <MarketplaceRow
+                key={`CarouselCard-key-${collection.address}-${marketplace.marketplace}`}
+                marketplace={MARKETS_ENUM_TO_NAME[market]}
+                listings={marketplace.count.toString()}
+                floorInEth={marketplace.floorPrice.toString()}
+              />
+            )
+          })}
         </>
       </CardBottomContainer>
     </CarouselCardContainer>

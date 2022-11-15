@@ -60,8 +60,9 @@ const HeaderContainer = styled.div`
   }
 `
 
+// Exclude collections that are not available in any of the following - OpenSea, X2Y2 and LooksRare:
+const EXCLUDED_COLLECTIONS = ['0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb']
 const TRENDING_COLLECTION_SIZE = 5
-const LOADING_BUFFER = 5
 
 const Banner = () => {
   const navigate = useNavigate()
@@ -73,7 +74,7 @@ const Banner = () => {
       return fetchTrendingCollections({
         volumeType: 'eth',
         timePeriod: TimePeriod.OneDay,
-        size: TRENDING_COLLECTION_SIZE + LOADING_BUFFER,
+        size: TRENDING_COLLECTION_SIZE + EXCLUDED_COLLECTIONS.length,
       })
     },
     {
@@ -84,7 +85,7 @@ const Banner = () => {
   )
 
   // Trigger queries for the top trending collections, so that the data is immediately available if the user clicks through.
-  const collectionAddresses = useMemo(() => collections?.map(({ address }) => address), [collections])
+  const collectionAddresses = useMemo(() => collections?.map(({ address }) => address), [collections])?.slice(0, 5)
   useLoadCollectionQuery(collectionAddresses)
 
   return (
