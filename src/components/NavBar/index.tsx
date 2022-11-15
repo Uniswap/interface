@@ -72,29 +72,8 @@ const PageTabs = () => {
   )
 }
 
-const useShouldHideNavbar = () => {
-  const { pathname } = useLocation()
-  const isMobile = useIsMobile()
-
-  const shouldHideNavbar = useMemo(() => {
-    const paths = ['/nfts/profile']
-    if (!isMobile) return false
-
-    for (const path of paths) {
-      if (pathname.includes(path)) return true
-    }
-
-    return false
-  }, [isMobile, pathname])
-
-  return shouldHideNavbar
-}
-
 const Navbar = () => {
-  const shouldHideNavbar = useShouldHideNavbar()
   const isNftPage = useIsNftPage()
-
-  if (shouldHideNavbar) return null
 
   return (
     <>
