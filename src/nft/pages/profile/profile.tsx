@@ -12,11 +12,11 @@ import { buttonMedium, headlineMedium, headlineSmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useNFTList, useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { ListingStatus, ProfilePageStateType } from 'nft/types'
-import { Suspense, useEffect } from 'react'
+import { Suspense, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useToggleWalletModal } from 'state/application/hooks'
 
-import * as styles from './sell.css'
+import * as styles from './profile.css'
 
 const SHOPPING_BAG_WIDTH = 360
 
@@ -35,12 +35,16 @@ const ProfileContent = () => {
   }, [removeAllMarketplaceWarnings, sellPageState, setListingStatus])
 
   const { account } = useWeb3React()
+  const accountRef = useRef(account)
   const toggleWalletModal = useToggleWalletModal()
 
   useEffect(() => {
-    resetSellAssets()
-    setSellPageState(ProfilePageStateType.VIEWING)
-    clearCollectionFilters()
+    if (accountRef.current !== account) {
+      accountRef.current = account
+      resetSellAssets()
+      setSellPageState(ProfilePageStateType.VIEWING)
+      clearCollectionFilters()
+    }
   }, [account, resetSellAssets, setSellPageState, clearCollectionFilters])
   const cartExpanded = useBag((state) => state.bagExpanded)
 
