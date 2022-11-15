@@ -2,14 +2,11 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import CurrencyLogo from 'components/CurrencyLogo'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { CHAIN_ID_TO_BACKEND_NAME } from 'graphql/data/util'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
 import { formatToDecimal } from 'lib/utils/analytics'
 import { useMemo } from 'react'
 import styled from 'styled-components/macro'
-import { StyledInternalLink } from 'theme'
 import { currencyAmountToPreciseFloat, formatDollar } from 'utils/formatNumbers'
 
 const BalancesCard = styled.div`
@@ -49,10 +46,6 @@ const BalanceItem = styled.div`
   display: flex;
 `
 
-const BalanceLink = styled(StyledInternalLink)`
-  color: unset;
-`
-
 export function useFormatBalance(balance: CurrencyAmount<Currency> | undefined) {
   return useMemo(
     () => (balance ? formatToDecimal(balance, Math.min(balance.currency.decimals, 2)) : undefined),
@@ -74,22 +67,19 @@ export default function BalanceSummary({ token }: { token: Currency }) {
   const formattedBalance = useFormatBalance(balance)
   const usdValue = useStablecoinValue(balance)
   const formattedUsdValue = useFormatUsdValue(usdValue)
-  const chain = CHAIN_ID_TO_BACKEND_NAME[token.chainId].toLowerCase()
 
   if (!account || !balance) return null
   return (
     <BalancesCard>
       <BalanceSection>
         <Trans>Your balance</Trans>
-        <BalanceLink to={`/tokens/${chain}/${token.isNative ? NATIVE_CHAIN_ID : token.address}`}>
-          <BalanceRow>
-            <BalanceItem>
-              <CurrencyLogo currency={token} />
-              &nbsp;{formattedBalance} {token.symbol}
-            </BalanceItem>
-            <BalanceItem>{formattedUsdValue}</BalanceItem>
-          </BalanceRow>
-        </BalanceLink>
+        <BalanceRow>
+          <BalanceItem>
+            <CurrencyLogo currency={token} />
+            &nbsp;{formattedBalance} {token.symbol}
+          </BalanceItem>
+          <BalanceItem>{formattedUsdValue}</BalanceItem>
+        </BalanceRow>
       </BalanceSection>
     </BalancesCard>
   )
