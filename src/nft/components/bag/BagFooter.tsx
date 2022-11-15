@@ -9,13 +9,13 @@ import { SupportedChainId } from 'constants/chains'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { bodySmall } from 'nft/css/common.css'
+import { useBag } from 'nft/hooks/useBag'
 import { useWalletBalance } from 'nft/hooks/useWalletBalance'
 import { BagStatus } from 'nft/types'
 import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils'
-import { PropsWithChildren, useCallback, useMemo } from 'react'
+import { PropsWithChildren, useMemo } from 'react'
 import { AlertTriangle } from 'react-feather'
-import { useModalIsOpen, useToggleWalletModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
+import { useToggleWalletModal } from 'state/application/hooks'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { switchChain } from 'utils/switchChain'
@@ -27,6 +27,7 @@ const Footer = styled.div`
   color: ${({ theme }) => theme.textPrimary};
   display: flex;
   flex-direction: column;
+  margin-bottom: 8px;
   padding: 12px 16px;
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
@@ -94,19 +95,10 @@ export const BagFooter = ({
   eventProperties,
 }: BagFooterProps) => {
   const toggleWalletModal = useToggleWalletModal()
-  const walletModalIsOpen = useModalIsOpen(ApplicationModal.WALLET)
   const { account, chainId, connector } = useWeb3React()
   const connected = Boolean(account && chainId)
 
-  const handleClick = useCallback(() => {
-    if (!connected) {
-      toggleWalletModal()
-    } else if (connected && chainId !== SupportedChainId.MAINNET) {
-      switchChain(connector, SupportedChainId.MAINNET)
-    } else {
-      fetchAssets()
-    }
-  }, [connected, chainId, toggleWalletModal, connector, fetchAssets])
+  const setBagExpanded = useBag((state) => state.setBagExpanded)
 
   const { balance: balanceInEth } = useWalletBalance()
   const sufficientBalance = useMemo(() => {
@@ -116,12 +108,14 @@ export const BagFooter = ({
     return parseEther(balanceInEth).gte(totalEthPrice)
   }, [connected, chainId, balanceInEth, totalEthPrice])
 
-  const { buttonText, disabled, warningText } = useMemo(() => {
+  const { buttonText, disabled, warningText, handleClick } = useMemo(() => {
+    let handleClick = fetchAssets
     let buttonText = <Trans>Something went wrong</Trans>
     let disabled = true
     let warningText = null
 
     if (connected && chainId !== SupportedChainId.MAINNET) {
+      handleClick = () => switchChain(connector, SupportedChainId.MAINNET)
       buttonText = <Trans>Switch networks</Trans>
       disabled = false
       warningText = <Trans>Wrong network</Trans>
@@ -131,7 +125,11 @@ export const BagFooter = ({
       warningText = <Trans>Insufficient funds</Trans>
     } else if (bagStatus === BagStatus.WARNING) {
       warningText = <Trans>Something went wrong. Please try again.</Trans>
-    } else if (!connected || walletModalIsOpen) {
+    } else if (!connected) {
+      handleClick = () => {
+        toggleWalletModal()
+        setBagExpanded({ bagExpanded: false })
+      }
       disabled = false
       buttonText = <Trans>Connect wallet</Trans>
     } else if (bagStatus === BagStatus.FETCHING_FINAL_ROUTE || bagStatus === BagStatus.CONFIRMING_IN_WALLET) {
@@ -145,10 +143,10 @@ export const BagFooter = ({
       buttonText = <Trans>Pay</Trans>
     }
 
-    return { buttonText, disabled, warningText }
-  }, [bagStatus, chainId, connected, sufficientBalance, walletModalIsOpen])
+    return { buttonText, disabled, warningText, handleClick }
+  }, [bagStatus, chainId, connected, connector, fetchAssets, setBagExpanded, sufficientBalance, toggleWalletModal])
 
-  const isPending = PENDING_BAG_STATUSES.includes(bagStatus) || walletModalIsOpen
+  const isPending = PENDING_BAG_STATUSES.includes(bagStatus)
 
   return (
     <Column className={styles.footerContainer}>

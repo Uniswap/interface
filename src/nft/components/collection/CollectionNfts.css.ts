@@ -8,6 +8,8 @@ export const assetList = style([
     gap: { sm: '8', md: '12', lg: '20' },
   }),
   {
+    paddingLeft: 14,
+    paddingRight: 14,
     gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr) )',
     '@media': {
       'screen and (min-width: 708px)': {

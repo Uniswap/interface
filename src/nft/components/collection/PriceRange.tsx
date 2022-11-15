@@ -6,16 +6,15 @@ import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
 import { body } from 'nft/css/common.css'
-import { useIsMobile } from 'nft/hooks'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { usePriceRange } from 'nft/hooks/usePriceRange'
 import { TraitPosition } from 'nft/hooks/useTraitsOpen'
 import { scrollToTop } from 'nft/utils/scrollToTop'
 import { default as Slider } from 'rc-slider'
-import { FormEvent, useEffect, useState } from 'react'
-import { FocusEventHandler } from 'react'
+import { FocusEventHandler, FormEvent, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
+import { colorsDark } from 'theme/colors'
 
 import * as styles from './PriceRange.css'
 import { TraitsHeader } from './TraitsHeader'
@@ -38,7 +37,6 @@ export const PriceRange = () => {
   const setPrevMinMax = usePriceRange((state) => state.setPrevMinMax)
   const theme = useTheme()
 
-  const isMobile = useIsMobile()
   const location = useLocation()
 
   useEffect(() => {
@@ -142,11 +140,11 @@ export const PriceRange = () => {
 
   return (
     <TraitsHeader title="Price range" index={TraitPosition.PRICE_RANGE_INDEX}>
-      <Row gap="12" marginTop="12" color="textPrimary">
+      <Row marginTop="12" color="textPrimary" justifyContent="space-between">
         <Row position="relative">
           <NumericInput
             style={{
-              width: isMobile ? '100%' : '126px',
+              width: '126px',
             }}
             className={styles.priceInput}
             placeholder={priceRangeLow}
@@ -157,10 +155,10 @@ export const PriceRange = () => {
           />
         </Row>
         <Box className={body}>to</Box>
-        <Row position="relative" flex="1">
+        <Row position="relative">
           <NumericInput
             style={{
-              width: isMobile ? '100%' : '126px',
+              width: '126px',
             }}
             className={styles.priceInput}
             placeholder={priceRangeHigh}
@@ -189,10 +187,11 @@ export const PriceRange = () => {
             top: '3px',
             width: '12px',
             height: '20px',
-            backgroundColor: `${theme.textPrimary}`,
+            opacity: '1',
+            backgroundColor: `white`,
             borderRadius: '4px',
             border: 'none',
-            boxShadow: `${theme.shallowShadow.slice(0, -1)}`,
+            boxShadow: colorsDark.shallowShadow.slice(0, -1),
           }}
           railStyle={{
             top: '3px',

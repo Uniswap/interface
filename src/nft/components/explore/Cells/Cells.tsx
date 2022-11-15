@@ -129,6 +129,8 @@ export const EthCell = ({
   )
 }
 
+export const TextCell = ({ value }: { value: string }) => <ThemedText.BodyPrimary>{value}</ThemedText.BodyPrimary>
+
 export const VolumeCell = ({
   value,
   denomination,

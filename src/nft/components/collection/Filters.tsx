@@ -8,8 +8,12 @@ import { subhead } from 'nft/css/common.css'
 import { useCollectionFilters } from 'nft/hooks'
 import { Trait } from 'nft/hooks/useCollectionFilters'
 import { TraitPosition } from 'nft/hooks/useTraitsOpen'
-import { useReducer } from 'react'
+import { DropDownOption } from 'nft/types'
+import { useMemo, useReducer } from 'react'
+import { isMobile } from 'utils/userAgent'
 
+import { FilterSortDropdown } from '../common/SortDropdown'
+import { getSortDropdownOptions } from './CollectionNfts'
 import { TraitSelect } from './TraitSelect'
 
 export const Filters = ({ traitsByGroup }: { traitsByGroup: Record<string, Trait[]> }) => {
@@ -17,11 +21,18 @@ export const Filters = ({ traitsByGroup }: { traitsByGroup: Record<string, Trait
     buyNow: state.buyNow,
     setBuyNow: state.setBuyNow,
   }))
+  const setSortBy = useCollectionFilters((state) => state.setSortBy)
+  const hasRarity = useCollectionFilters((state) => state.hasRarity)
   const [buyNowHovered, toggleBuyNowHover] = useReducer((state) => !state, false)
 
   const handleBuyNowToggle = () => {
     setBuyNow(!buyNow)
   }
+
+  const sortDropDownOptions: DropDownOption[] = useMemo(
+    () => getSortDropdownOptions(setSortBy, hasRarity ?? false),
+    [hasRarity, setSortBy]
+  )
 
   return (
     <Box className={styles.container}>
@@ -47,6 +58,7 @@ export const Filters = ({ traitsByGroup }: { traitsByGroup: Record<string, Trait
             <span />
           </Checkbox>
         </Row>
+        {isMobile && <FilterSortDropdown sortDropDownOptions={sortDropDownOptions} />}
         <MarketplaceSelect />
         <PriceRange />
         {Object.entries(traitsByGroup).length > 0 && (

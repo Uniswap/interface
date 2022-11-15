@@ -315,6 +315,7 @@ const Bag = () => {
                 paddingY="10"
                 className={`${buttonTextMedium} ${commonButtonStyles}`}
                 backgroundColor="accentAction"
+                color="white"
                 textAlign="center"
                 onClick={() => {
                   isMobile && toggleBag()

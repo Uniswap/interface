@@ -36,7 +36,7 @@ export const warningContainer = style([
 export const payButton = style([
   body,
   sprinkles({
-    background: 'blue400',
+    background: 'accentAction',
     border: 'none',
     borderRadius: '12',
     paddingY: '12',

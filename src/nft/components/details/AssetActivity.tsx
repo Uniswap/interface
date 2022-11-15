@@ -1,4 +1,4 @@
-import { ScrollBarStyles } from 'components/Common'
+import { OpacityHoverState, ScrollBarStyles } from 'components/Common'
 import { ActivityEventResponse } from 'nft/types'
 import { shortenAddress } from 'nft/utils/address'
 import { formatEthPrice } from 'nft/utils/currency'
@@ -74,19 +74,7 @@ const Link = styled.a`
   color: ${({ theme }) => theme.textPrimary};
   text-decoration: none;
 
-  &:hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-  }
-
-  &:active {
-    opacity: ${({ theme }) => theme.opacity.click};
-  }
-
-  transition: ${({
-    theme: {
-      transition: { duration, timing },
-    },
-  }) => `opacity ${duration.medium} ${timing.ease}`};
+  ${OpacityHoverState}
 `
 
 const ActivityContainer = styled.div`

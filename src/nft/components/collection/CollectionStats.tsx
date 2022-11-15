@@ -315,7 +315,8 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
               {totalSupplyStr}
             </StatsItem>
           ) : null}
-          {uniqueOwnersPercentage ? (
+
+          {Boolean(uniqueOwnersPercentage && stats.standard !== TokenType.ERC1155) ? (
             <StatsItem label="Unique owners" shouldHide={isMobile ?? false}>
               {uniqueOwnersPercentage}%
             </StatsItem>
@@ -402,6 +403,7 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
       {(stats.description || isCollectionStatsLoading) && isMobile && (
         <CollectionDescription description={stats.description ?? ''} />
       )}
+      <div id="nft-anchor-mobile" />
       <StatsRow isMobile display={{ sm: 'flex', md: 'none' }} stats={stats} marginTop="20" marginBottom="12" />
     </Box>
   )

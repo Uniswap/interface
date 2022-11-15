@@ -1,9 +1,15 @@
+import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { EventName, PageName } from '@uniswap/analytics-events'
+import Tooltip from 'components/Tooltip'
+import { Box } from 'nft/components/Box'
+import { bodySmall } from 'nft/css/common.css'
+import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag } from 'nft/hooks'
-import { GenieAsset, Markets, UniformHeight } from 'nft/types'
+import { GenieAsset, Markets } from 'nft/types'
 import { formatWeiToDecimal, rarityProviderLogo } from 'nft/utils'
 import { useCallback, useMemo } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useAssetMediaType, useNotForSale } from './Card'
 import { AssetMediaType } from './Card'
@@ -12,18 +18,18 @@ import * as Card from './Card'
 interface CollectionAssetProps {
   asset: GenieAsset
   isMobile: boolean
-  uniformHeight: UniformHeight
-  setUniformHeight: (u: UniformHeight) => void
   mediaShouldBePlaying: boolean
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
   rarityVerified?: boolean
 }
 
+const TOOLTIP_TIMEOUT = 2000
+const ADDED_TO_BAG_TOOLTIP_TEXT = 'Added to bag'
+const REMOVED_FROM_BAG_TOOLTIP_TEXT = 'Removed from bag'
+
 export const CollectionAsset = ({
   asset,
   isMobile,
-  uniformHeight,
-  setUniformHeight,
   mediaShouldBePlaying,
   setCurrentTokenPlayingMedia,
   rarityVerified,
@@ -35,6 +41,7 @@ export const CollectionAsset = ({
   const bagExpanded = useBag((state) => state.bagExpanded)
   const setBagExpanded = useBag((state) => state.setBagExpanded)
   const trace = useTrace({ page: PageName.NFT_COLLECTION_PAGE })
+  const [selectedForBag, setSelectedForBag] = useState(false)
 
   const { quantity, isSelected } = useMemo(() => {
     return {
@@ -61,6 +68,7 @@ export const CollectionAsset = ({
 
   const handleAddAssetToBag = useCallback(() => {
     addAssetsToBag([asset])
+    setSelectedForBag(true)
     if (!bagExpanded && !isMobile && !bagManuallyClosed) {
       setBagExpanded({ bagExpanded: true })
     }
@@ -71,6 +79,19 @@ export const CollectionAsset = ({
       ...trace,
     })
   }, [addAssetsToBag, asset, bagExpanded, bagManuallyClosed, isMobile, setBagExpanded, trace])
+
+  useEffect(() => {
+    if (selectedForBag) {
+      const showTooltip = setTimeout(() => {
+        setSelectedForBag(false)
+      }, TOOLTIP_TIMEOUT)
+
+      return () => {
+        clearTimeout(showTooltip)
+      }
+    }
+    return undefined
+  }, [selectedForBag, setSelectedForBag])
 
   const handleRemoveAssetFromBag = useCallback(() => {
     removeAssetsFromBag([asset])
@@ -83,34 +104,38 @@ export const CollectionAsset = ({
       addAssetToBag={handleAddAssetToBag}
       removeAssetFromBag={handleRemoveAssetFromBag}
     >
-      <Card.ImageContainer>
-        {asset.tokenType === 'ERC1155' && quantity > 0 && <Card.Erc1155Controls quantity={quantity.toString()} />}
-        {asset.rarity && provider && (
-          <Card.Ranking
-            rarity={asset.rarity}
-            provider={provider}
-            rarityVerified={!!rarityVerified}
-            rarityLogo={rarityLogo}
-          />
-        )}
-        {assetMediaType === AssetMediaType.Image ? (
-          <Card.Image uniformHeight={uniformHeight} setUniformHeight={setUniformHeight} />
-        ) : assetMediaType === AssetMediaType.Video ? (
-          <Card.Video
-            uniformHeight={uniformHeight}
-            setUniformHeight={setUniformHeight}
-            shouldPlay={mediaShouldBePlaying}
-            setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-          />
-        ) : (
-          <Card.Audio
-            uniformHeight={uniformHeight}
-            setUniformHeight={setUniformHeight}
-            shouldPlay={mediaShouldBePlaying}
-            setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-          />
-        )}
-      </Card.ImageContainer>
+      <Tooltip
+        text={
+          <Box as="span" className={bodySmall} style={{ color: themeVars.colors.textPrimary }}>
+            <Trans>{isSelected ? ADDED_TO_BAG_TOOLTIP_TEXT : REMOVED_FROM_BAG_TOOLTIP_TEXT}</Trans>{' '}
+          </Box>
+        }
+        show={selectedForBag}
+        style={{ display: 'block' }}
+        offsetX={0}
+        offsetY={-52}
+        hideArrow={true}
+        placement="bottom"
+      >
+        <Card.ImageContainer>
+          {asset.tokenType === 'ERC1155' && quantity > 0 && <Card.Erc1155Controls quantity={quantity.toString()} />}
+          {asset.rarity && provider && (
+            <Card.Ranking
+              rarity={asset.rarity}
+              provider={provider}
+              rarityVerified={!!rarityVerified}
+              rarityLogo={rarityLogo}
+            />
+          )}
+          {assetMediaType === AssetMediaType.Image ? (
+            <Card.Image />
+          ) : assetMediaType === AssetMediaType.Video ? (
+            <Card.Video shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
+          ) : (
+            <Card.Audio shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
+          )}
+        </Card.ImageContainer>
+      </Tooltip>
       <Card.DetailsContainer>
         <Card.InfoContainer>
           <Card.PrimaryRow>

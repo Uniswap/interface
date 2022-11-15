@@ -2,7 +2,7 @@ import 'rc-slider/assets/index.css'
 
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther, parseEther } from '@ethersproject/units'
-import { useSweepAssetsQuery } from 'graphql/data/nft/Asset'
+import { SweepFetcherParams, useLazyLoadSweepAssetsQuery } from 'graphql/data/nft/Asset'
 import { useBag, useCollectionFilters } from 'nft/hooks'
 import { GenieAsset, Markets } from 'nft/types'
 import { calcPoolPrice, formatWeiToDecimal } from 'nft/utils'
@@ -11,8 +11,8 @@ import { useEffect, useMemo, useReducer, useState } from 'react'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-const SweepContainer = styled.div<{ showSweep: boolean }>`
-  display: ${({ showSweep }) => (showSweep ? 'flex' : 'none')};
+const SweepContainer = styled.div`
+  display: flex;
   gap: 60px;
   margin-top: 20px;
   padding: 16px;
@@ -152,10 +152,9 @@ interface SweepProps {
   contractAddress: string
   minPrice: string
   maxPrice: string
-  showSweep: boolean
 }
 
-export const Sweep = ({ contractAddress, minPrice, maxPrice, showSweep }: SweepProps) => {
+export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
   const theme = useTheme()
 
   const [isItemsToggled, toggleSweep] = useReducer((state) => !state, true)
@@ -169,58 +168,22 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice, showSweep }: SweepP
   const traits = useCollectionFilters((state) => state.traits)
   const markets = useCollectionFilters((state) => state.markets)
 
-  const getSweepFetcherParams = (market: Markets.NFTX | Markets.NFT20 | 'others') => {
-    const isMarketFiltered = !!markets.length
-    const allOtherMarkets = [Markets.Opensea, Markets.X2Y2, Markets.LooksRare]
-
-    if (isMarketFiltered) {
-      if (market === 'others') {
-        return { contractAddress, traits, markets }
-      }
-      if (!markets.includes(market)) return { contractAddress: '', traits: [], markets: [] }
-    }
-
-    switch (market) {
-      case Markets.NFTX:
-      case Markets.NFT20:
-        return {
-          contractAddress,
-          traits,
-          markets: [market],
-
-          price: {
-            low: minPrice,
-            high: maxPrice,
-            symbol: 'ETH',
-          },
-        }
-      case 'others':
-        return {
-          contractAddress,
-          traits,
-          markets: allOtherMarkets,
-
-          price: {
-            low: minPrice,
-            high: maxPrice,
-            symbol: 'ETH',
-          },
-        }
-    }
-  }
-
-  const collectionAssets = useSweepAssetsQuery(getSweepFetcherParams('others'))
-  const nftxCollectionAssets = useSweepAssetsQuery(getSweepFetcherParams(Markets.NFTX))
-  const nft20CollectionAssets = useSweepAssetsQuery(getSweepFetcherParams(Markets.NFT20))
+  const collectionParams = useSweepFetcherParams(contractAddress, 'others', minPrice, maxPrice)
+  const nftxParams = useSweepFetcherParams(contractAddress, Markets.NFTX, minPrice, maxPrice)
+  const nft20Params = useSweepFetcherParams(contractAddress, Markets.NFT20, minPrice, maxPrice)
+  // These calls will suspend if the query is not yet loaded.
+  const collectionAssets = useLazyLoadSweepAssetsQuery(collectionParams)
+  const nftxAssets = useLazyLoadSweepAssetsQuery(nftxParams)
+  const nft20Assets = useLazyLoadSweepAssetsQuery(nft20Params)
 
   const { sortedAssets, sortedAssetsTotalEth } = useMemo(() => {
-    if (!collectionAssets || !nftxCollectionAssets || !nft20CollectionAssets)
+    if (!collectionAssets || !nftxAssets || !nft20Assets)
       return { sortedAssets: undefined, sortedAssetsTotalEth: BigNumber.from(0) }
 
     let counterNFTX = 0
     let counterNFT20 = 0
 
-    let jointCollections = [...nftxCollectionAssets, ...nft20CollectionAssets]
+    let jointCollections = [...nftxAssets, ...nft20Assets]
 
     jointCollections.forEach((asset) => {
       if (!asset.susFlag) {
@@ -243,10 +206,7 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice, showSweep }: SweepP
       (asset) => BigNumber.from(asset.priceInfo.ETHPrice).gte(0) && !asset.susFlag
     )
 
-    validAssets = validAssets.slice(
-      0,
-      Math.max(collectionAssets.length, nftxCollectionAssets.length, nft20CollectionAssets.length)
-    )
+    validAssets = validAssets.slice(0, Math.max(collectionAssets.length, nftxAssets.length, nft20Assets.length))
 
     return {
       sortedAssets: validAssets,
@@ -255,7 +215,7 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice, showSweep }: SweepP
         BigNumber.from(0)
       ),
     }
-  }, [collectionAssets, nftxCollectionAssets, nft20CollectionAssets])
+  }, [collectionAssets, nftxAssets, nft20Assets])
 
   const { sweepItemsInBag, sweepEthPrice } = useMemo(() => {
     const sweepItemsInBag = itemsInBag
@@ -366,7 +326,7 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice, showSweep }: SweepP
   }
 
   return (
-    <SweepContainer showSweep={showSweep}>
+    <SweepContainer>
       <SweepLeftmostContainer>
         <SweepHeaderContainer>
           <ThemedText.SubHeaderSmall color="textPrimary" lineHeight="20px" paddingTop="6px" paddingBottom="6px">
@@ -433,4 +393,55 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice, showSweep }: SweepP
       </SweepRightmostContainer>
     </SweepContainer>
   )
+}
+
+const ALL_OTHER_MARKETS = [Markets.Opensea, Markets.X2Y2, Markets.LooksRare]
+
+export function useSweepFetcherParams(
+  contractAddress: string,
+  market: Markets.NFTX | Markets.NFT20 | 'others',
+  minPrice: string,
+  maxPrice: string
+): SweepFetcherParams {
+  const traits = useCollectionFilters((state) => state.traits)
+  const markets = useCollectionFilters((state) => state.markets)
+
+  const isMarketFiltered = !!markets.length
+
+  return useMemo(() => {
+    if (isMarketFiltered) {
+      if (market === 'others') {
+        return { contractAddress, traits, markets }
+      }
+      if (!markets.includes(market)) return { contractAddress: '', traits: [], markets: [] }
+    }
+
+    switch (market) {
+      case Markets.NFTX:
+      case Markets.NFT20:
+        return {
+          contractAddress,
+          traits,
+          markets: [market],
+
+          price: {
+            low: minPrice,
+            high: maxPrice,
+            symbol: 'ETH',
+          },
+        }
+      case 'others':
+        return {
+          contractAddress,
+          traits,
+          markets: ALL_OTHER_MARKETS,
+
+          price: {
+            low: minPrice,
+            high: maxPrice,
+            symbol: 'ETH',
+          },
+        }
+    }
+  }, [contractAddress, isMarketFiltered, market, markets, maxPrice, minPrice, traits])
 }

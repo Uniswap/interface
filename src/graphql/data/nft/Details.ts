@@ -1,7 +1,8 @@
 import { parseEther } from '@ethersproject/units'
 import graphql from 'babel-plugin-relay/macro'
 import { CollectionInfoForAsset, GenieAsset, SellOrder, TokenType } from 'nft/types'
-import { useLazyLoadQuery } from 'react-relay'
+import { useEffect } from 'react'
+import { useLazyLoadQuery, useQueryLoader } from 'react-relay'
 
 import { DetailsQuery } from './__generated__/DetailsQuery.graphql'
 
@@ -91,11 +92,24 @@ const detailsQuery = graphql`
   }
 `
 
+export function useLoadDetailsQuery(address?: string, tokenId?: string): void {
+  const [, loadQuery] = useQueryLoader(detailsQuery)
+  useEffect(() => {
+    if (address && tokenId) {
+      loadQuery({ address, tokenId })
+    }
+  }, [address, tokenId, loadQuery])
+}
+
 export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, CollectionInfoForAsset] | undefined {
-  const queryData = useLazyLoadQuery<DetailsQuery>(detailsQuery, {
-    address,
-    tokenId,
-  })
+  const queryData = useLazyLoadQuery<DetailsQuery>(
+    detailsQuery,
+    {
+      address,
+      tokenId,
+    },
+    { fetchPolicy: 'store-or-network' }
+  )
 
   const asset = queryData.nftAssets?.edges[0]?.node
   const collection = asset?.collection

@@ -20,7 +20,7 @@ import {
 } from 'nft/hooks'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import { OSCollectionsFetcher } from 'nft/queries'
-import { ProfilePageStateType, WalletAsset, WalletCollection } from 'nft/types'
+import { ProfilePageStateType, TokenType, WalletAsset, WalletCollection } from 'nft/types'
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useQuery } from 'react-query'
@@ -42,12 +42,19 @@ const SellModeButton = styled.button<{ active: boolean }>`
   gap: 8px;
   cursor: pointer;
   background-color: ${({ theme, active }) => (active ? theme.accentAction : theme.backgroundInteractive)};
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ active, theme }) => (active ? 'white' : theme.textPrimary)};
   border: none;
   outline: none;
   &:hover {
     background-color: ${({ theme }) => theme.accentAction};
+    color: white;
   }
+
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => `${duration.fast} all ${timing.ease}`};
 `
 
 const ProfilePageColumn = styled(Column)`
@@ -99,7 +106,7 @@ export const ProfilePage = () => {
     walletAssets: ownerAssets,
     loadNext,
     hasNext,
-  } = useNftBalanceQuery(address, collectionFilters, DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
+  } = useNftBalanceQuery(address, collectionFilters, [], DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
 
   useEffect(() => {
     ownerCollections && setWalletCollections(ownerCollections)
@@ -241,7 +248,9 @@ const SelectAllButton = ({ ownerAssets }: { ownerAssets: WalletAsset[] }) => {
 
   useEffect(() => {
     if (isAllSelected) {
-      ownerAssets.forEach((asset) => selectSellAsset(asset))
+      ownerAssets.forEach(
+        (asset) => asset.asset_contract.tokenType !== TokenType.ERC1155 && !asset.susFlag && selectSellAsset(asset)
+      )
     } else {
       resetSellAssets()
     }
@@ -320,11 +329,11 @@ const CollectionFilterItem = ({
   return (
     <Row
       justifyContent="center"
-      paddingRight="4"
-      paddingTop="4"
-      paddingBottom="4"
-      paddingLeft="8"
-      borderRadius="12"
+      paddingTop="6"
+      paddingRight="6"
+      paddingBottom="6"
+      paddingLeft="12"
+      borderRadius="8"
       background="backgroundOutline"
       fontSize="14"
     >

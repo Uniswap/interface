@@ -7,14 +7,14 @@ import { AssetMediaType } from 'nft/components/collection/Card'
 import { bodySmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile, useSellAsset } from 'nft/hooks'
-import { WalletAsset } from 'nft/types'
+import { TokenType, WalletAsset } from 'nft/types'
 import { useEffect, useState } from 'react'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const TOOLTIP_TIMEOUT = 2000
-const ADDED_TO_BAG_TOOLTIP_TEXT = 'Added to bag'
-const REMOVED_FROM_BAG_TOOLTIP_TEXT = 'Removed from bag'
+const ADDED_TO_BAG_TOOLTIP_TEXT = 'Selected'
+const REMOVED_FROM_BAG_TOOLTIP_TEXT = 'Deselected'
 
 const NFT_DETAILS_HREF = (asset: WalletAsset) =>
   `/nfts/asset/${asset.asset_contract.address}/${asset.tokenId}?origin=profile`
@@ -94,9 +94,9 @@ export const ViewMyNftsAsset = ({
 
   const assetMediaType = Card.useAssetMediaType(asset)
 
-  const isDisabled = asset.asset_contract.tokenType === 'ERC1155' || (isSellMode && asset.susFlag)
+  const isDisabled = isSellMode && (asset.asset_contract.tokenType === TokenType.ERC1155 || asset.susFlag)
   const disabledTooltipText =
-    asset.asset_contract.tokenType === 'ERC1155' ? 'ERC-1155 support coming soon' : 'Blocked from trading'
+    asset.asset_contract.tokenType === TokenType.ERC1155 ? 'ERC-1155 support coming soon' : 'Blocked from trading'
 
   return (
     <Card.Container

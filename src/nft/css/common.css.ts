@@ -21,9 +21,9 @@ export const column = sprinkles({
 })
 
 // TYPOGRAPHY
-export const headlineLarge = sprinkles({ fontWeight: 'normal', fontSize: '36', lineHeight: '44' })
-export const headlineMedium = sprinkles({ fontWeight: 'normal', fontSize: '28', lineHeight: '36' })
-export const headlineSmall = sprinkles({ fontWeight: 'normal', fontSize: '20', lineHeight: '28' })
+export const headlineLarge = sprinkles({ fontWeight: 'medium', fontSize: '36', lineHeight: '44' })
+export const headlineMedium = sprinkles({ fontWeight: 'medium', fontSize: '28', lineHeight: '36' })
+export const headlineSmall = sprinkles({ fontWeight: 'medium', fontSize: '20', lineHeight: '28' })
 
 export const subhead = sprinkles({ fontWeight: 'medium', fontSize: '16', lineHeight: '24' })
 export const subheadSmall = sprinkles({ fontWeight: 'medium', fontSize: '14', lineHeight: '14' })
@@ -41,7 +41,6 @@ export const commonButtonStyles = style([
   sprinkles({
     borderRadius: '12',
     transition: '250',
-    boxShadow: { hover: 'elevation' },
   }),
   {
     border: 'none',
