@@ -66,12 +66,7 @@ const BASE_SIZING = 14
 const INCREMENTAL_SIZING = 6
 
 const getCircleSizing = (numberOfAssets: number): string => {
-  let power = 0
-
-  // here I am finding the total number of digits ie (1 => 1, 10 => 2, 100 => 3)
-  while (10 ** power <= numberOfAssets) {
-    power++
-  }
+  const power = numberOfAssets.toString().length
 
   // each digit adds 6px worth of width (approximately), so I set the height and width to be 6px larger for each digit added
   // 1 digit => 14 + 6, 2 digit 14 + 12, etc.
