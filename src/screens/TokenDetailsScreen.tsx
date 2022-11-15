@@ -281,8 +281,10 @@ function TokenDetails({
       <TokenDetailsActionButtons
         showSend={!!currentChainBalance}
         onPressSend={onPressSend}
-        onPressSwap={() =>
-          onPressSwap(currentChainBalance ? TransactionType.SELL : TransactionType.BUY)
+        onPressSwap={
+          safetyLevel === SafetyLevel.Blocked
+            ? undefined
+            : () => onPressSwap(currentChainBalance ? TransactionType.SELL : TransactionType.BUY)
         }
       />
 

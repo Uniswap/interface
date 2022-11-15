@@ -29,7 +29,7 @@ function getTokenSafetyBodyText(safetyLevel: NullUndefined<SafetyLevel>, t: TFun
         "This token isn't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap. Always conduct your own research before trading."
       )
     case SafetyLevel.Blocked:
-      return t("You can't trade this token using the Uniswap App.")
+      return t("You can't trade this token using the Uniswap Wallet.")
     default:
       return ''
   }
