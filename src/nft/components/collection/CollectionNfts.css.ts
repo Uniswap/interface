@@ -8,7 +8,8 @@ export const assetList = style([
     gap: { sm: '8', md: '8', lg: '12', xl: '16', xxl: '20', xxxl: '20' },
   }),
   {
-    gridTemplateColumns: 'repeat(auto-fill, minmax(calc(100%/2 - 8px), 1fr) )',
+    //This treatment of the grid still uses minmax, but enforces an amount of grid items per breakpoint. This means that when the bag and filter panels appear, we no londer get layout thrash and have a consistent animation as the width changes. It uses calc() and subtracts the grid gap to ensure the min size will always fit without wrapping.
+    gridTemplateColumns: 'repeat(auto-fill, minmax(calc(100%/2), 1fr) )',
     '@media': {
       'screen and (min-width: 768px)': {
         gridTemplateColumns: 'repeat(auto-fill, minmax(calc(100%/3 - 8px), 1fr) )',
@@ -29,4 +30,5 @@ export const assetList = style([
   },
 ])
 
+//Using negative margin and overflowing the width but 2*16px so that the edges of this area always properly clip the softer, wider shadow on the cards
 export const actionBarContainer = style([{ marginLeft: '-16px', width: 'calc(100% + 32px)' }])
