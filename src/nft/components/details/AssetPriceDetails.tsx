@@ -3,7 +3,7 @@ import { OpacityHoverState } from 'components/Common'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { CancelListingIcon } from 'nft/components/icons'
 import { useBag } from 'nft/hooks'
-import { CollectionInfoForAsset, GenieAsset, TokenType } from 'nft/types'
+import { CollectionInfoForAsset, GenieAsset } from 'nft/types'
 import { ethNumberStandardFormatter, formatEthPrice, getMarketplaceIcon, timeLeft, useUsdPrice } from 'nft/utils'
 import { shortenAddress } from 'nft/utils/address'
 import { useMemo } from 'react'
@@ -246,7 +246,6 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const bagExpanded = useBag((s) => s.bagExpanded)
 
   const USDPrice = useUsdPrice(asset)
-  const isErc1555 = asset.tokenType === TokenType.ERC1155
   const [, setCopied] = useCopyClipboard()
 
   const { assetInBag } = useMemo(() => {
@@ -305,7 +304,9 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
               </ThemedText.BodySecondary>
             )}
           </PriceRow>
-          {expirationDate && <Tertiary fontSize={'14px'}>Sale ends: {timeLeft(expirationDate)}</Tertiary>}
+          {expirationDate && expirationDate > new Date() && (
+            <Tertiary fontSize={'14px'}>Sale ends: {timeLeft(expirationDate)}</Tertiary>
+          )}
           <div>
             <BuyNowButtonContainer>
               <BuyNowButton
