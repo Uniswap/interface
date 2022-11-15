@@ -64,6 +64,11 @@ const CollectionDisplaySection = styled(Row)<{ offset: number }>`
   position: relative;
 `
 
+const CollectionDisplayList = styled.div<{ position: string }>`
+  width: 100%;
+  position: ${(props) => props.position};
+`
+
 const IconWrapper = styled.button`
   background-color: transparent;
   border-radius: 8px;
@@ -168,7 +173,7 @@ const Collection = () => {
                   )}
                 </Box>
 
-                <Box width="full" position={isMobile && isFiltersExpanded ? 'fixed' : 'static'}>
+                <CollectionDisplayList position={isMobile && isFiltersExpanded ? 'fixed' : 'static'}>
                   {isActivityToggled
                     ? contractAddress && (
                         <Activity
@@ -188,7 +193,7 @@ const Collection = () => {
                           />
                         </Suspense>
                       )}
-                </Box>
+                </CollectionDisplayList>
               </CollectionDisplaySection>
             </>
           ) : (
