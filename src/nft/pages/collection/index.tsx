@@ -41,7 +41,8 @@ const MobileFilterHeader = styled(Row)`
 `
 
 // Sticky navbar on light mode looks incorrect because the box shadows from assets overlap the the edges of the navbar.
-// As a result it needs 14px padding on either side. These paddings are offset by 14px to account for this
+// As a result it needs 16px padding on either side. These paddings are offset by 16px to account for this. Please see CollectionNFTs.css.ts for the additional sizing context.
+// See breakpoint values in ScreenBreakpointsPaddings above - they must match
 const CollectionDisplaySection = styled(Row)`
   @media screen and (min-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
     padding-left: 48px;
@@ -54,12 +55,13 @@ const CollectionDisplaySection = styled(Row)`
   }
 
   @media screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
-    padding-left: 4px;
-    padding-right: 4px;
+    padding-left: 20px;
+    padding-right: 20px;
   }
 
   @media screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     padding-left: 16px;
+    padding-right: 16px;
   }
   align-items: flex-start;
   position: relative;
