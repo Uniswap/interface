@@ -43,15 +43,15 @@ const StyledLoadingRow = styled.tr`
   height: 80px;
 `
 
-const StyledHeader = styled.th<{ isFirstHeader: boolean }>`
-  ${({ isFirstHeader }) => !isFirstHeader && `cursor: pointer;`}
+const StyledHeader = styled.th<{ disabled?: boolean }>`
+  ${({ disabled }) => !disabled && `cursor: pointer;`}
 
   :hover {
-    ${({ theme, isFirstHeader }) => !isFirstHeader && `opacity: ${theme.opacity.hover};`}
+    ${({ theme, disabled }) => !disabled && `opacity: ${theme.opacity.hover};`}
   }
 
   :active {
-    ${({ theme, isFirstHeader }) => !isFirstHeader && `opacity: ${theme.opacity.click};`}
+    ${({ theme, disabled }) => !disabled && `opacity: ${theme.opacity.click};`}
   }
 `
 
@@ -154,7 +154,7 @@ export function Table<D extends Record<string, unknown>>({
                     textAlign: index === 0 ? 'left' : 'right',
                     paddingLeft: index === 0 ? (isMobile ? '16px' : '52px') : 0,
                   }}
-                  isFirstHeader={index === 0}
+                  disabled={column.disableSortBy}
                   key={index}
                 >
                   <Box as="span" color="accentAction" position="relative">
@@ -240,7 +240,7 @@ function LoadingTable({ headerGroups, visibleColumns, ...props }: LoadingTablePr
                     textAlign: index === 0 ? 'left' : 'right',
                     paddingLeft: index === 0 ? '52px' : 0,
                   }}
-                  isFirstHeader={index === 0}
+                  disabled={index === 0}
                   key={index}
                 >
                   <Box as="span" color="accentAction" position="relative">
