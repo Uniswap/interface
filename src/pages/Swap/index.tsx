@@ -677,7 +677,7 @@ export default function Swap() {
                         }
                       >
                         <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }} height="20px">
-                          <ThemedText.SubHeader width={'100%'} textAlign="center">
+                          <ThemedText.SubHeader width="100%" textAlign="center">
                             {/* we need to shorten this string on mobile */}
                             {approvalState === ApprovalState.APPROVED ||
                             signatureState === UseERC20PermitState.SIGNED ? (
