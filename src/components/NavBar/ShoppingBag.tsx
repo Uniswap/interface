@@ -24,7 +24,7 @@ export const ShoppingBag = () => {
   )
   const handleIconClick = useCallback(() => {
     setBagExpanded({ bagExpanded: !bagExpanded })
-  }, [bagExpanded, isSellMode, resetSellAssets, setBagExpanded, setIsSellMode])
+  }, [bagExpanded, setBagExpanded])
 
   useEffect(() => {
     setBagQuantity(itemsInBag.length)
