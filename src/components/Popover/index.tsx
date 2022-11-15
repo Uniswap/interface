@@ -78,6 +78,7 @@ export interface PopoverProps {
   placement?: Placement
   offsetX?: number
   offsetY?: number
+  hideArrow?: boolean
   style?: CSSProperties
 }
 
@@ -88,6 +89,7 @@ export default function Popover({
   placement = 'auto',
   offsetX = 8,
   offsetY = 8,
+  hideArrow = false,
   style,
 }: PopoverProps) {
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null)
@@ -122,12 +124,14 @@ export default function Popover({
       <Portal>
         <PopoverContainer show={show} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
           {content}
-          <Arrow
-            className={`arrow-${attributes.popper?.['data-popper-placement'] ?? ''}`}
-            ref={setArrowElement as any}
-            style={styles.arrow}
-            {...attributes.arrow}
-          />
+          {!hideArrow && (
+            <Arrow
+              className={`arrow-${attributes.popper?.['data-popper-placement'] ?? ''}`}
+              ref={setArrowElement as any}
+              style={styles.arrow}
+              {...attributes.arrow}
+            />
+          )}
         </PopoverContainer>
       </Portal>
     </>

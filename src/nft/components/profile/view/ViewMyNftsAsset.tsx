@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { MouseoverTooltip } from 'components/Tooltip'
+import Tooltip from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
 import * as Card from 'nft/components/collection/Card'
 import { AssetMediaType } from 'nft/components/collection/Card'
@@ -7,8 +8,14 @@ import { bodySmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile, useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
+import { useEffect, useState } from 'react'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
+
+const TOOLTIP_TIMEOUT = 2000
+const ADDED_TO_BAG_TOOLTIP_TEXT = 'Added to bag'
+const REMOVED_FROM_BAG_TOOLTIP_TEXT = 'Removed from bag'
+
 const NFT_DETAILS_HREF = (asset: WalletAsset) =>
   `/nfts/asset/${asset.asset_contract.address}/${asset.tokenId}?origin=profile`
 
@@ -47,6 +54,7 @@ export const ViewMyNftsAsset = ({
   const toggleCart = useBag((state) => state.toggleBag)
   const isMobile = useIsMobile()
   const navigate = useNavigate()
+  const [selectedForBag, setSelectedForBag] = useState(false)
 
   const isSelected = useMemo(() => {
     return sellAssets.some(
@@ -60,6 +68,7 @@ export const ViewMyNftsAsset = ({
 
   const handleSelect = (removeAsset: boolean) => {
     removeAsset ? removeSellAsset(asset) : selectSellAsset(asset)
+    setSelectedForBag(true)
     if (
       !cartExpanded &&
       !sellAssets.find(
@@ -69,6 +78,19 @@ export const ViewMyNftsAsset = ({
     )
       toggleCart()
   }
+
+  useEffect(() => {
+    if (selectedForBag) {
+      const showTooltip = setTimeout(() => {
+        setSelectedForBag(false)
+      }, TOOLTIP_TIMEOUT)
+
+      return () => {
+        clearTimeout(showTooltip)
+      }
+    }
+    return undefined
+  }, [selectedForBag, setSelectedForBag])
 
   const assetMediaType = Card.useAssetMediaType(asset)
 
@@ -97,9 +119,23 @@ export const ViewMyNftsAsset = ({
         style={{ display: 'block' }}
         disableHover={!isDisabled}
       >
-        <Card.ImageContainer>
-          {getNftDisplayComponent(assetMediaType, mediaShouldBePlaying, setCurrentTokenPlayingMedia)}
-        </Card.ImageContainer>
+        <Tooltip
+          text={
+            <Box as="span" className={bodySmall} style={{ color: themeVars.colors.textPrimary }}>
+              <Trans>{isSelected ? ADDED_TO_BAG_TOOLTIP_TEXT : REMOVED_FROM_BAG_TOOLTIP_TEXT}</Trans>{' '}
+            </Box>
+          }
+          show={selectedForBag}
+          style={{ display: 'block' }}
+          offsetX={0}
+          offsetY={-52}
+          hideArrow={true}
+          placement="bottom"
+        >
+          <Card.ImageContainer>
+            {getNftDisplayComponent(assetMediaType, mediaShouldBePlaying, setCurrentTokenPlayingMedia)}
+          </Card.ImageContainer>
+        </Tooltip>
       </MouseoverTooltip>
       <Card.DetailsContainer>
         <Card.ProfileNftDetails asset={asset} isSellMode={isSellMode} />
