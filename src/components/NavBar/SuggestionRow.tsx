@@ -17,6 +17,7 @@ import { ethNumberStandardFormatter } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import styled from 'styled-components/macro'
 import { formatDollar } from 'utils/formatNumbers'
 
 import * as styles from './SearchBar.css'
@@ -106,6 +107,13 @@ export const CollectionRow = ({
     </Link>
   )
 }
+
+const StyledDelta = styled.div<{ negative: boolean }>`
+  color: ${({ theme, negative }) => (negative ? theme.accentCritical : theme.accentSuccess)};
+  line-height: 20px;
+  font-size: 14px;
+  font-weight: 600;
+`
 
 interface TokenRowProps {
   token: FungibleToken
@@ -197,9 +205,7 @@ export const TokenRow = ({
             </Row>
           )}
           {token.price24hChange && (
-            <Box className={styles.secondaryText} color={token.price24hChange >= 0 ? 'green400' : 'red400'}>
-              {token.price24hChange.toFixed(2)}%
-            </Box>
+            <StyledDelta negative={token.price24hChange < 0}>{token.price24hChange.toFixed(2)}%</StyledDelta>
           )}
         </Column>
       )}

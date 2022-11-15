@@ -3,6 +3,7 @@ import { fetchQuery } from 'react-relay'
 
 import { SearchTokenQuery } from './__generated__/SearchTokenQuery.graphql'
 import environment from './RelayEnvironment'
+import { chainIdToBackendName } from './util'
 
 export const searchTokenQuery = graphql`
   query SearchTokenQuery($searchQuery: String!) {
@@ -46,8 +47,8 @@ export const searchTokenQuery = graphql`
 export type SearchTokenProject = NonNullable<NonNullable<SearchTokenQuery['response']['searchTokenProjects']>[number]>
 export type SearchToken = NonNullable<NonNullable<SearchTokenProject['tokens']>[number]> & { logoURI: string }
 
-export async function searchTokens(searchQuery: string) {
-  const searchChain = 'ETHEREUM'
+export async function searchTokens(searchQuery: string, chainId: number) {
+  const searchChain = chainIdToBackendName(chainId)
   const response = await fetchQuery<SearchTokenQuery>(environment, searchTokenQuery, { searchQuery }).toPromise()
   const tokenProjects = response?.searchTokenProjects?.filter((p): p is SearchTokenProject => p !== null)
   const tokens = tokenProjects

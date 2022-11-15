@@ -2,6 +2,7 @@
 import { t } from '@lingui/macro'
 import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from '@uniswap/analytics'
 import { BrowserEvent, ElementName, EventName, SectionName } from '@uniswap/analytics-events'
+import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import useDebounce from 'hooks/useDebounce'
@@ -49,9 +50,10 @@ export const SearchBar = () => {
     }
   )
 
+  const { chainId } = useWeb3React()
   const { data: tokens, isLoading: tokensAreLoading } = useQuery(
     ['searchTokens', debouncedSearchValue],
-    () => fetchSearchTokens(debouncedSearchValue),
+    () => fetchSearchTokens(debouncedSearchValue, chainId),
     {
       refetchOnWindowFocus: false,
       refetchOnMount: false,
