@@ -68,7 +68,7 @@ const Banner = () => {
   const navigate = useNavigate()
   const isMobile = useIsMobile()
 
-  const { data: collections } = useQuery(
+  const { data } = useQuery(
     ['trendingCollections'],
     () => {
       return fetchTrendingCollections({
@@ -84,8 +84,10 @@ const Banner = () => {
     }
   )
 
+  const collections = data?.filter((collection) => !EXCLUDED_COLLECTIONS.includes(collection.address)).slice(0, 5)
+
   // Trigger queries for the top trending collections, so that the data is immediately available if the user clicks through.
-  const collectionAddresses = useMemo(() => collections?.map(({ address }) => address), [collections])?.slice(0, 5)
+  const collectionAddresses = useMemo(() => collections?.map(({ address }) => address), [collections])
   useLoadCollectionQuery(collectionAddresses)
 
   return (
