@@ -36,6 +36,7 @@ const CounterDot = styled.div`
   display: flex;
   font-size: 10px;
   justify-content: center;
+  min-width: 20px;
   padding: 4px 6px;
 `
 const Wrapper = styled.div`

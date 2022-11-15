@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-27 02:48\n"
+"PO-Revision-Date: 2022-11-15 00:17\n"
 "Last-Translator: \n"
 "Language: el_GR\n"
 "Language-Team: Greek\n"
@@ -145,7 +145,6 @@ msgstr "Αποδοχή"
 msgid "Account"
 msgstr "Λογαριασμός"
 
-#: src/components/SearchModal/ImportRow.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Active"
 msgstr "Ενεργός"
@@ -318,6 +317,10 @@ msgstr "Διαθέσιμο για κατάθεση: {0}"
 msgid "Back to wallet selection"
 msgstr "Επιστροφή στην επιλογή πορτοφολιού"
 
+#: src/nft/components/bag/BagHeader.tsx
+msgid "Bag"
+msgstr "Τσάντα"
+
 #: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0}"
@@ -350,10 +353,6 @@ msgstr "Αποκλεισμένη διεύθυνση"
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 msgstr "Προσθέτοντας ρευστότητα θα κερδίσετε το 0,3% όλων των συναλλαγών σε αυτό το ζεύγος αναλογικά με το μερίδιό σας στη δεξαμενή. Οι χρεώσεις προστίθενται στη ψηφοφορία, συσσωρεύονται σε πραγματικό χρόνο και μπορούν να ζητηθούν μέσω της ανάληψη σας ρευστότητας."
-
-#: src/components/WalletModal/index.tsx
-msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
-msgstr "Συνδέοντας ένα πορτοφόλι, συμφωνείτε με τους Όρους Παροχής Υπηρεσιών <0></0> και αναγνωρίζετε ότι έχετε διαβάσει και κατανοήσει τη Δήλωση Αποποίησης ευθυνών Πρωτοκόλλου <1></1>."
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and consent to its <1>Privacy Policy</1>."
@@ -442,10 +441,6 @@ msgstr "Γίνεται Διεκδίκηση {0} UNI"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Clear All"
 msgstr "Εκκαθάριση Όλων"
-
-#: src/components/SearchModal/ManageTokens.tsx
-msgid "Clear all"
-msgstr "Εκκαθάριση όλων"
 
 #: src/components/TokenSafety/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -560,6 +555,10 @@ msgstr "Συνδεθείτε σε ένα πορτοφόλι για να δείτ
 #: src/pages/Pool/v2.tsx
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Συνδεθείτε σε ένα πορτοφόλι για να δείτε την ρευστότητά σας."
+
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Connect wallet"
+msgstr "Σύνδεση πορτοφολιού"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with"
@@ -785,10 +784,6 @@ msgstr "Εισάγετε μια διεύθυνση για να εκκινήσε�
 msgid "Enter an amount"
 msgstr "Εισάγετε ένα ποσό"
 
-#: src/components/SearchModal/ManageTokens.tsx
-msgid "Enter valid token address"
-msgstr "Εισάγετε μια διεύθυνση έγκυρης μάρκας"
-
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 msgid "Enter {0} amount"
@@ -861,10 +856,6 @@ msgstr "έχει λήξει"
 msgid "Explore"
 msgstr "Εξερευνώ"
 
-#: src/components/Tokens/TokensBanner.tsx
-msgid "Explore Top Tokens on Uniswap"
-msgstr "Εξερευνήστε Κορυφαία Tokens στο Uniswap"
-
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Εξερευνήστε το Uniswap Analytics."
@@ -934,6 +925,11 @@ msgstr "Κέντρο βοηθείας"
 msgid "Hide"
 msgstr "Κρύβω"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
+msgid "Hide closed positions"
+msgstr "Απόκρυψη κλειστών θέσεων"
+
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Υψηλή Επίδραση Τιμών"
@@ -946,12 +942,6 @@ msgstr "Κατανοώ"
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "If you believe this is an error, please send an email including your address to"
 msgstr "Εάν πιστεύετε ότι πρόκειται για σφάλμα, στείλτε ένα email με τη διεύθυνσή σας στο"
-
-#: src/components/SearchModal/BlockedToken.tsx
-#: src/components/SearchModal/ImportRow.tsx
-#: src/components/SearchModal/ImportToken.tsx
-msgid "Import"
-msgstr "Εισαγωγή"
 
 #: src/pages/Pool/v2.tsx
 msgid "Import Pool"
@@ -1092,10 +1082,6 @@ msgstr "Οι πάροχοι ρευστότητας κερδίζουν μια χ�
 msgid "Loading"
 msgstr "Φόρτωση"
 
-#: src/components/Tokens/TokenDetails/PriceChart.tsx
-msgid "Loading chart data"
-msgstr "Φόρτωση δεδομένων γραφήματος"
-
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "MAX"
 msgstr "ΜΕΓΙΣΤΗ"
@@ -1209,7 +1195,7 @@ msgstr "Συλλογές NFT"
 msgid "NFTs"
 msgstr "NFTs"
 
-#: src/components/Tokens/TokenDetails/ChartSection.tsx
+#: src/components/Tokens/TokenDetails/index.tsx
 msgid "Name not found"
 msgstr "Το όνομα δεν βρέθηκε"
 
@@ -1327,6 +1313,11 @@ msgstr "Ιδιοκτήτης"
 msgid "Participating pools"
 msgstr "Συμμετέχουσες δεξαμενές"
 
+#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Pay"
+msgstr "Πληρωμή"
+
 #: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
@@ -1426,6 +1417,14 @@ msgstr "Τιμή:"
 msgid "Prices and pool share"
 msgstr "Τιμές και μερίδιο στη δεξαμενή"
 
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Privacy Policy"
+msgstr "Πολιτική Απορρήτου"
+
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Proceed in wallet"
+msgstr "Προχωρήστε στο πορτοφόλι"
+
 #: src/pages/CreateProposal/ProposalEditor.tsx
 msgid "Proposal"
 msgstr "Πρόταση"
@@ -1453,10 +1452,6 @@ msgstr "Προτεινόμενη δράση"
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
 msgstr "Άτομο που κάνει προτάσεις"
-
-#: src/components/PrivacyPolicy/index.tsx
-msgid "Protocol Disclaimer"
-msgstr "Αποποίηση ευθυνών πρωτοκόλλου"
 
 #: src/components/vote/QueueModal.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -1612,6 +1607,10 @@ msgstr "Αυτοπροσώπως"
 msgid "Self Delegate"
 msgstr "Ανάθεση στον εαυτό μου"
 
+#: src/nft/components/bag/BagHeader.tsx
+msgid "Sell"
+msgstr "Πουλώ"
+
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -1665,16 +1664,13 @@ msgid "Some assets are not available through this interface because they may not
 msgstr "Ορισμένα περιουσιακά στοιχεία δεν είναι διαθέσιμα μέσω αυτής της διεπαφής, επειδή μπορεί να μην λειτουργούν καλά με τις έξυπνες συμβάσεις ή δεν είμαστε σε θέση να επιτρέψουμε τη διαπραγμάτευση για νομικούς λόγους."
 
 #: src/components/ErrorBoundary/index.tsx
+#: src/nft/components/bag/BagFooter.tsx
 msgid "Something went wrong"
 msgstr "Κάτι πήγε στραβά"
 
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Something went wrong. Please try again."
 msgstr "Κάτι πήγε στραβά. ΠΑΡΑΚΑΛΩ προσπαθησε ξανα."
-
-#: src/components/Tokens/TokensBanner.tsx
-msgid "Sort and filter assets across networks on the new Tokens page."
-msgstr "Ταξινόμηση και φιλτράρισμα στοιχείων στα δίκτυα στη νέα σελίδα Tokens."
 
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "Stats"
@@ -1752,7 +1748,11 @@ msgstr "Ανταλλαγή"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Ανταλλαγή {0} {1} για {2} {3}"
 
-#: src/components/Tokens/TokenDetails/ChartSection.tsx
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Switch networks"
+msgstr "Εναλλαγή δικτύων"
+
+#: src/components/Tokens/TokenDetails/index.tsx
 msgid "Symbol not found"
 msgstr "Το σύμβολο δεν βρέθηκε"
 
@@ -1893,17 +1893,9 @@ msgstr "Αυτή η πρόταση μπορεί να εκτελεστεί μετ
 msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
 msgstr "Αυτή η διαδρομή βελτιστοποιεί τη συνολική σας απόδοση λαμβάνοντας υπόψη τις διαχωρισμένες διαδρομές, τα πολλαπλά άλματα και το κόστος φυσικού αερίου κάθε βήματος."
 
-#: src/components/SearchModal/ImportToken.tsx
-msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
-msgstr "Αυτή η μάρκα δεν εμφανίζεται στην(ις) ενεργή (ές) λίστα(ες). Βεβαιωθείτε ότι αυτή είναι η μάρκα που θέλετε να διαπραγματευτείτε."
-
 #: src/components/Tokens/TokenDetails/PriceChart.tsx
 msgid "This token doesn't have chart data because it hasn't been traded on Uniswap v3"
 msgstr "Αυτό το διακριτικό δεν έχει δεδομένα γραφήματος επειδή δεν έχει διαπραγματευτεί στο Uniswap v3"
-
-#: src/components/SearchModal/BlockedToken.tsx
-msgid "This token is not supported in the Uniswap Labs app"
-msgstr "Αυτό το διακριτικό δεν υποστηρίζεται στην εφαρμογή Uniswap Labs"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
@@ -1916,10 +1908,6 @@ msgstr "Αυτή η συναλλαγή δεν θα πετύχει λόγω τη�
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "Αυτή η συναλλαγή δεν θα πετύχει είτε λόγω της κίνησης των τιμών είτε της χρέωσης κατά τη μεταφορά. Δοκιμάστε να αυξήσετε την ανοχή ολίσθησης."
-
-#: src/components/SearchModal/ManageTokens.tsx
-msgid "Tip: Custom tokens are stored locally in your browser"
-msgstr "Συμβουλή: Οι προσαρμοσμένες μάρκες αποθηκεύονται τοπικά στο πρόγραμμα περιήγησης σας"
 
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
@@ -1934,10 +1922,6 @@ msgstr "Έως (από το ελάχιστο)"
 #: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token name"
 msgstr "Συμβολικό όνομα"
-
-#: src/components/SearchModal/BlockedToken.tsx
-msgid "Token not supported"
-msgstr "Το διακριτικό δεν υποστηρίζεται"
 
 #: src/components/NavBar/SearchBarDropdown.tsx
 #: src/components/NavBar/index.tsx
@@ -1989,6 +1973,10 @@ msgstr "Η συναλλαγή ολοκληρώθηκε στις"
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
 msgstr "Προθεσμία συναλλαγής"
+
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Transaction pending"
+msgstr "Συναλλαγή σε εκκρεμότητα"
 
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
@@ -2080,10 +2068,6 @@ msgstr "Εξόρυξη ρευστότητας Uniswap"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Σύμβαση μετεγκατάστασης Uniswap↗"
-
-#: src/components/SearchModal/TokenImportCard.tsx
-msgid "Unknown Source"
-msgstr "Άγνωστη πηγή"
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -2330,6 +2314,10 @@ msgstr "Τυλιγμένο"
 msgid "Wrapping"
 msgstr "Τύλιγμα"
 
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Wrong network"
+msgstr "Λάθος δίκτυο"
+
 #: src/pages/CreateProposal/index.tsx
 msgid "You already have an active or pending proposal"
 msgstr "Έχετε ήδη μια ενεργή ή σε εκκρεμότητα πρόταση"
@@ -2457,6 +2445,11 @@ msgstr "Οι θέσεις σας"
 msgid "Your rate"
 msgstr "Η τιμή σας"
 
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+msgid "Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds."
+msgstr ""
+
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Your total pool tokens:"
@@ -2553,18 +2546,6 @@ msgstr "ανταμοιβή"
 msgid "to"
 msgstr "προς την"
 
-#: src/components/SearchModal/ImportRow.tsx
-msgid "via {0}"
-msgstr "μέσω {0}"
-
-#: src/components/SearchModal/TokenImportCard.tsx
-msgid "via {0} token list"
-msgstr "μέσω {0} λίστας μάρκας"
-
-#: src/components/SearchModal/ImportToken.tsx
-msgid "{0, plural, =1 {Import token} other {Import tokens}}"
-msgstr "{0, plural, =1 {Εισαγωγή διακριτικού} other {Εισαγάγετε μάρκες}}"
-
 #: src/constants/tokenSafety.tsx
 msgid "{0, plural, =1 {This token isn't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap.} other {These tokens aren't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap.}}"
 msgstr "{0, plural, =1 {Αυτό το διακριτικό δεν διαπραγματεύεται σε κορυφαία κεντρικά χρηματιστήρια των ΗΠΑ ούτε ανταλλάσσεται συχνά στο Uniswap.} other {Αυτά τα διακριτικά δεν διαπραγματεύονται σε κορυφαία κεντρικά χρηματιστήρια των ΗΠΑ ούτε ανταλλάσσονται συχνά στο Uniswap.}}"
@@ -2590,10 +2571,6 @@ msgstr "{0} %"
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> ανά <1/>"
-
-#: src/components/SearchModal/ManageTokens.tsx
-msgid "{0} Custom Tokens"
-msgstr "{0} Προσαρμοσμένες Μάρκες"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -2702,6 +2679,10 @@ msgstr "{SOCKS_AMOUNT} UNI"
 #: src/components/claim/ClaimModal.tsx
 msgid "{USER_AMOUNT} UNI"
 msgstr "{USER_AMOUNT} UNI"
+
+#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
+msgid "{disabledTooltipText}"
+msgstr "{disabledTooltipText}"
 
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "{label} might be down right now, or you may have lost your network connection."

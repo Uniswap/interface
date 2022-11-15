@@ -16,7 +16,7 @@ import {
 import { body, bodySmall, buttonTextSmall, subhead, subheadSmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
-import { GenieAsset, Rarity, TokenType, UniformHeight, UniformHeights, WalletAsset } from 'nft/types'
+import { GenieAsset, Rarity, TokenType, WalletAsset } from 'nft/types'
 import { isAudio, isVideo } from 'nft/utils'
 import { fallbackProvider, putCommas } from 'nft/utils'
 import { floorFormatter } from 'nft/utils/numbers'
@@ -230,19 +230,15 @@ const ImageContainer = ({ children }: { children: ReactNode }) => (
 )
 
 /* -------- CARD IMAGE -------- */
-interface ImageProps {
-  uniformHeight?: UniformHeight
-  setUniformHeight?: (height: UniformHeight) => void
-}
 
-const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
+const Image = () => {
   const { hovered, asset } = useCardContext()
   const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
   const [loaded, setLoaded] = useState(false)
   const isMobile = useIsMobile()
 
   if (noContent) {
-    return <NoContentContainer uniformHeight={uniformHeight ?? UniformHeights.unset} />
+    return <NoContentContainer />
   }
 
   return (
@@ -251,7 +247,7 @@ const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
         as={'img'}
         width="full"
         style={{
-          aspectRatio: uniformHeight === UniformHeights.notUniform ? '1' : 'auto',
+          aspectRatio: '1',
           transition: 'transform 0.4s ease 0s',
         }}
         src={asset.imageUrl || asset.smallImageUrl}
@@ -259,15 +255,6 @@ const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
         draggable={false}
         onError={() => setNoContent(true)}
         onLoad={(e) => {
-          if (setUniformHeight) {
-            if (uniformHeight === UniformHeights.unset) {
-              setUniformHeight(e.currentTarget.clientHeight)
-            } else if (uniformHeight !== UniformHeights.notUniform && e.currentTarget.clientHeight !== uniformHeight) {
-              if (!uniformHeight || Math.abs(uniformHeight - e.currentTarget.clientHeight) > 1) {
-                setUniformHeight(UniformHeights.notUniform)
-              }
-            }
-          }
           setLoaded(true)
         }}
         className={clsx(hovered && !isMobile && styles.cardImageHover, !loaded && styles.loadingBackground)}
@@ -277,13 +264,11 @@ const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
 }
 
 interface MediaProps {
-  uniformHeight?: UniformHeight
-  setUniformHeight?: (u: UniformHeight) => void
   shouldPlay: boolean
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
 }
 
-const Video = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
+const Video = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
   const vidRef = useRef<HTMLVideoElement>(null)
   const { hovered, asset } = useCardContext()
   const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
@@ -297,7 +282,7 @@ const Video = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPla
   }
 
   if (noContent) {
-    return <NoContentContainer uniformHeight={UniformHeights.notUniform} />
+    return <NoContentContainer />
   }
 
   return (
@@ -317,10 +302,6 @@ const Video = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPla
           draggable={false}
           onError={() => setNoContent(true)}
           onLoad={() => {
-            if (setUniformHeight && uniformHeight !== UniformHeights.notUniform) {
-              setUniformHeight(UniformHeights.notUniform)
-            }
-
             setImageLoaded(true)
           }}
           visibility={shouldPlay ? 'hidden' : 'visible'}
@@ -380,7 +361,7 @@ const Video = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPla
   )
 }
 
-const Audio = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
+const Audio = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
   const audRef = useRef<HTMLAudioElement>(null)
   const { hovered, asset } = useCardContext()
   const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
@@ -394,7 +375,7 @@ const Audio = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPla
   }
 
   if (noContent) {
-    return <NoContentContainer uniformHeight={uniformHeight ?? UniformHeights.unset} />
+    return <NoContentContainer />
   }
 
   return (
@@ -405,7 +386,7 @@ const Audio = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPla
           alt={asset.name || asset.tokenId}
           width="full"
           style={{
-            aspectRatio: uniformHeight === UniformHeights.notUniform ? '1' : 'auto',
+            aspectRatio: '1',
             transition: 'transform 0.4s ease 0s',
           }}
           src={asset.imageUrl || asset.smallImageUrl}
@@ -413,18 +394,6 @@ const Audio = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPla
           draggable={false}
           onError={() => setNoContent(true)}
           onLoad={(e) => {
-            if (setUniformHeight) {
-              if (uniformHeight === UniformHeights.unset) {
-                setUniformHeight(e.currentTarget.clientHeight)
-              } else if (
-                uniformHeight !== UniformHeights.notUniform &&
-                e.currentTarget.clientHeight !== uniformHeight
-              ) {
-                if (!uniformHeight || Math.abs(uniformHeight - e.currentTarget.clientHeight) > 1) {
-                  setUniformHeight(UniformHeights.notUniform)
-                }
-              }
-            }
             setImageLoaded(true)
           }}
           className={clsx(hovered && !isMobile && styles.cardImageHover, !imageLoaded && styles.loadingBackground)}
@@ -764,56 +733,31 @@ const Pool = () => {
   )
 }
 
-interface NoContentContainerProps {
-  uniformHeight: UniformHeight
-}
-
-const NoContentContainer = ({ uniformHeight }: NoContentContainerProps) => (
+const NoContentContainer = () => (
   <>
-    {uniformHeight !== UniformHeights.unset && uniformHeight !== UniformHeights.notUniform ? (
+    <Box
+      position="relative"
+      width="full"
+      style={{
+        paddingTop: '100%',
+        background: `linear-gradient(90deg, ${themeVars.colors.backgroundSurface} 0%, ${themeVars.colors.backgroundInteractive} 95.83%)`,
+      }}
+    >
       <Box
-        display="flex"
-        width="full"
-        style={{
-          height: `${uniformHeight as number}px`,
-          background: `linear-gradient(270deg, ${themeVars.colors.backgroundOutline} 0%, ${themeVars.colors.backgroundSurface} 100%)`,
-        }}
+        position="absolute"
+        textAlign="center"
+        left="1/2"
+        top="1/2"
+        style={{ transform: 'translate3d(-50%, -50%, 0)' }}
         fontWeight="normal"
         color="gray500"
         className={body}
-        justifyContent="center"
-        alignItems="center"
-        textAlign="center"
       >
         Content not
         <br />
         available yet
       </Box>
-    ) : (
-      <Box
-        position="relative"
-        width="full"
-        style={{
-          paddingTop: '100%',
-          background: `linear-gradient(90deg, ${themeVars.colors.backgroundSurface} 0%, ${themeVars.colors.backgroundInteractive} 95.83%)`,
-        }}
-      >
-        <Box
-          position="absolute"
-          textAlign="center"
-          left="1/2"
-          top="1/2"
-          style={{ transform: 'translate3d(-50%, -50%, 0)' }}
-          fontWeight="normal"
-          color="gray500"
-          className={body}
-        >
-          Content not
-          <br />
-          available yet
-        </Box>
-      </Box>
-    )}
+    </Box>
   </>
 )
 

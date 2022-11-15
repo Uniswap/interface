@@ -34,7 +34,7 @@ import {
 } from 'nft/hooks'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { usePriceRange } from 'nft/hooks/usePriceRange'
-import { DropDownOption, GenieCollection, Markets, TokenType, UniformHeight, UniformHeights } from 'nft/types'
+import { DropDownOption, GenieCollection, Markets, TokenType } from 'nft/types'
 import { getRarityStatus } from 'nft/utils/asset'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { scrollToTop } from 'nft/utils/scrollToTop'
@@ -159,10 +159,10 @@ const MarketNameWrapper = styled(Row)`
   gap: 8px;
 `
 
-const loadingAssets = (height?: number) => (
+const loadingAssets = () => (
   <>
     {Array.from(Array(ASSET_PAGE_SIZE), (_, index) => (
-      <CollectionAssetLoading key={index} height={height} />
+      <CollectionAssetLoading key={index} />
     ))}
   </>
 )
@@ -287,7 +287,6 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   const { assets: collectionNfts, loadNext, hasNext, isLoadingNext } = useLazyLoadAssetsQuery(assetQueryParams)
 
-  const [uniformHeight, setUniformHeight] = useState<UniformHeight>(UniformHeights.unset)
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const oldStateRef = useRef<CollectionFilters | null>(null)
@@ -309,7 +308,6 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   )
 
   useEffect(() => {
-    setUniformHeight(UniformHeights.unset)
     setSweepOpen(false)
     return () => {
       useCollectionFilters.setState(initialCollectionFilterState)
@@ -323,14 +321,12 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         key={asset.address + asset.tokenId}
         asset={asset}
         isMobile={isMobile}
-        uniformHeight={uniformHeight}
-        setUniformHeight={setUniformHeight}
         mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
         setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
         rarityVerified={rarityVerified}
       />
     ))
-  }, [collectionNfts, currentTokenPlayingMedia, isMobile, rarityVerified, uniformHeight])
+  }, [collectionNfts, currentTokenPlayingMedia, isMobile, rarityVerified])
 
   const hasNfts = collectionNfts && collectionNfts.length > 0
   const hasErc1155s = hasNfts && collectionNfts[0] && collectionNfts[0].tokenType === TokenType.ERC1155
@@ -506,7 +502,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
       <InfiniteScroll
         next={() => loadNext(ASSET_PAGE_SIZE)}
         hasMore={hasNext}
-        loader={hasNext && hasNfts ? loadingAssets(uniformHeight) : null}
+        loader={hasNext && hasNfts ? loadingAssets() : null}
         dataLength={collectionNfts?.length ?? 0}
         style={{ overflow: 'unset' }}
         className={hasNfts || isLoadingNext ? styles.assetList : undefined}

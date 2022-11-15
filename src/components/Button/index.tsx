@@ -1,7 +1,7 @@
 import { darken } from 'polished'
 import { Check, ChevronDown } from 'react-feather'
 import { Button as RebassButton, ButtonProps as ButtonPropsOriginal } from 'rebass/styled-components'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { DefaultTheme, useTheme } from 'styled-components/macro'
 
 import { RowBetween } from '../Row'
 
@@ -366,12 +366,82 @@ export function ButtonRadioChecked({ active = false, children, ...rest }: { acti
   }
 }
 
-export const MediumButton = styled.button`
+const ButtonOverlay = styled.div`
+  background-color: transparent;
+  bottom: 0;
+  border-radius: 16px;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: 150ms ease background-color;
+  width: 100%;
+`
+export enum ButtonSize {
+  small,
+  medium,
+  large,
+}
+export enum ButtonEmphasis {
+  high,
+  promotional,
+  highSoft,
+  medium,
+  low,
+  warning,
+  destructive,
+}
+interface BaseButtonProps {
+  size: ButtonSize
+  emphasis: ButtonEmphasis
+}
+
+function pickThemeButtonBackgroundColor({ theme, emphasis }: { theme: DefaultTheme; emphasis: ButtonEmphasis }) {
+  switch (emphasis) {
+    case ButtonEmphasis.high:
+      return theme.accentAction
+    case ButtonEmphasis.promotional:
+      return theme.accentTextLightPrimary
+    case ButtonEmphasis.highSoft:
+      return theme.accentActionSoft
+    case ButtonEmphasis.low:
+      return 'transparent'
+    case ButtonEmphasis.warning:
+      return theme.accentWarningSoft
+    case ButtonEmphasis.destructive:
+      return theme.accentCritical
+    case ButtonEmphasis.medium:
+    default:
+      return theme.backgroundInteractive
+  }
+}
+
+function pickThemeButtonTextColor({ theme, emphasis }: { theme: DefaultTheme; emphasis: ButtonEmphasis }) {
+  switch (emphasis) {
+    case ButtonEmphasis.high:
+    case ButtonEmphasis.promotional:
+      return theme.accentTextLightPrimary
+    case ButtonEmphasis.highSoft:
+      return theme.accentAction
+    case ButtonEmphasis.low:
+      return theme.textSecondary
+    case ButtonEmphasis.warning:
+      return theme.accentWarning
+    case ButtonEmphasis.destructive:
+      return theme.accentTextDarkPrimary
+    case ButtonEmphasis.medium:
+    default:
+      return theme.textPrimary
+  }
+}
+
+const BaseThemeButton = styled.button<BaseButtonProps>`
   align-items: center;
-  background-color: ${({ theme }) => theme.backgroundInteractive};
+  background-color: ${pickThemeButtonBackgroundColor};
   border-radius: 16px;
   border: 0;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${pickThemeButtonTextColor};
   cursor: pointer;
   display: flex;
   flex-direction: row;
@@ -379,20 +449,37 @@ export const MediumButton = styled.button`
   gap: 12px;
   justify-content: center;
   padding: 16px;
-  transition: 150ms ease background-color opacity;
+  position: relative;
+  transition: 150ms ease opacity;
 
+  :active {
+    ${ButtonOverlay} {
+      background-color: ${({ theme }) => theme.stateOverlayPressed};
+    }
+  }
   :disabled {
-    background-color: ${({ theme }) => theme.backgroundInteractive};
     cursor: default;
     opacity: 0.6;
   }
-  :hover {
-    background-color: ${({ theme }) => theme.stateOverlayHover};
-  }
-  :active {
-    background-color: ${({ theme }) => theme.stateOverlayPressed};
-  }
   :focus {
-    background-color: ${({ theme }) => theme.stateOverlayPressed};
+    ${ButtonOverlay} {
+      background-color: ${({ theme }) => theme.stateOverlayPressed};
+    }
+  }
+  :hover {
+    ${ButtonOverlay} {
+      background-color: ${({ theme }) => theme.stateOverlayHover};
+    }
   }
 `
+
+interface ThemeButtonProps extends React.ComponentPropsWithoutRef<'button'>, BaseButtonProps {}
+
+export const ThemeButton = ({ children, ...rest }: ThemeButtonProps) => {
+  return (
+    <BaseThemeButton {...rest}>
+      <ButtonOverlay />
+      {children}
+    </BaseThemeButton>
+  )
+}
