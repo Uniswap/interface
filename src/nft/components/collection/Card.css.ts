@@ -5,14 +5,15 @@ import { sprinkles, themeVars } from 'nft/css/sprinkles.css'
 export const card = style([
   sprinkles({
     overflow: 'hidden',
-    borderStyle: 'solid',
-    borderWidth: '1px',
     paddingBottom: '12',
-    boxShadow: 'shallow',
   }),
   {
     boxSizing: 'border-box',
+    borderStyle: 'solid',
+    borderWidth: '2px',
+    borderRadius: '16px',
     WebkitBoxSizing: 'border-box',
+    boxShadow: '0 0 0 4px transparent, 0 2px 8px #00000010',
   },
 ])
 
@@ -23,13 +24,13 @@ export const loadingBackground = style({
 export const notSelectedCard = style([
   card,
   sprinkles({
-    backgroundColor: 'backgroundSurface',
+    // backgroundColor: 'backgroundSurface',
     borderColor: 'backgroundOutline',
-    borderRadius: '14',
+    // borderRadius: '14',
   }),
   {
     ':hover': {
-      backgroundColor: themeVars.colors.stateOverlayHover,
+      // backgroundColor: themeVars.colors.,
     },
   },
 ])
@@ -46,9 +47,9 @@ export const selectedCard = style([
     borderWidth: '3px',
   }),
   {
-    borderRadius: '18px',
+    borderRadius: '16px',
     ':hover': {
-      backgroundColor: themeVars.colors.stateOverlayHover,
+      // backgroundColor: themeVars.colors.stateOverlayHover,
     },
   },
 ])

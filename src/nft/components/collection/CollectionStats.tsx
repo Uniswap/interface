@@ -246,10 +246,10 @@ const CollectionDescription = ({ description }: { description: string }) => {
 const StatsItem = ({ children, label, shouldHide }: { children: ReactNode; label: string; shouldHide: boolean }) => {
   return (
     <Box display={shouldHide ? 'none' : 'flex'} flexDirection={'column'} alignItems="baseline" gap="2" height="min">
-      <span className={styles.statsValue}>{children}</span>
       <Box as="span" className={styles.statsLabel}>
         {label}
       </Box>
+      <span className={styles.statsValue}>{children}</span>
     </Box>
   )
 }

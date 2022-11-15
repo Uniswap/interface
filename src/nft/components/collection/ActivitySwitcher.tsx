@@ -20,7 +20,7 @@ export const ActivitySwitcher = ({
   const isLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
 
   return (
-    <Row gap="24" marginBottom={{ sm: '16', md: '28' }}>
+    <Row gap="24" marginBottom={{ sm: '16' }} className={styles.baseActivityContainer}>
       {isLoading ? (
         ActivitySwitcherLoading
       ) : (

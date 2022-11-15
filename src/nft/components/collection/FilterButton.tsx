@@ -27,7 +27,6 @@ export const FilterButton = ({
       position="relative"
       onClick={onClick}
       padding="12"
-      marginLeft="14"
       width={isMobile ? '44' : 'auto'}
       height="44"
       whiteSpace="nowrap"
@@ -36,12 +35,10 @@ export const FilterButton = ({
       <FilterIcon />
       {!isMobile ? (
         <>
-          {!isFiltersExpanded && (
-            <Box className={buttonTextMedium}>
-              {' '}
-              Filter • {putCommas(collectionCount)} result{pluralize(collectionCount)}
-            </Box>
-          )}
+          <Box className={buttonTextMedium}>
+            {' '}
+            Filter • {putCommas(collectionCount)} result{pluralize(collectionCount)}
+          </Box>
         </>
       ) : null}
     </Box>

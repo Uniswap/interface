@@ -118,7 +118,9 @@ export const CollectionAsset = ({
               <Card.PrimaryInfo>{asset.name ? asset.name : `#${asset.tokenId}`}</Card.PrimaryInfo>
               {asset.susFlag && <Card.Suspicious />}
             </Card.PrimaryDetails>
-            <Card.DetailsLink />
+            {asset.tokenType !== 'ERC1155' && asset.marketplace && (
+              <Card.MarketplaceIcon marketplace={asset.marketplace} />
+            )}
           </Card.PrimaryRow>
           <Card.SecondaryRow>
             <Card.SecondaryDetails>
@@ -127,9 +129,7 @@ export const CollectionAsset = ({
               </Card.SecondaryInfo>
               {(asset.marketplace === Markets.NFTX || asset.marketplace === Markets.NFT20) && <Card.Pool />}
             </Card.SecondaryDetails>
-            {asset.tokenType !== 'ERC1155' && asset.marketplace && (
-              <Card.MarketplaceIcon marketplace={asset.marketplace} />
-            )}
+            <Card.DetailsLink />
           </Card.SecondaryRow>
         </Card.InfoContainer>
       </Card.DetailsContainer>

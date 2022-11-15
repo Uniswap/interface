@@ -21,7 +21,7 @@ import * as styles from 'nft/pages/collection/index.css'
 import { GenieCollection } from 'nft/types'
 import { Suspense, useEffect } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { useSpring } from 'react-spring'
+import { config, useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -44,8 +44,8 @@ const MobileFilterHeader = styled(Row)`
 // As a result it needs 14px padding on either side. These paddings are offset by 14px to account for this
 const CollectionDisplaySection = styled(Row)`
   @media screen and (min-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
-    padding-left: 34px;
-    padding-right: 34px;
+    padding-left: 48px;
+    padding-right: 48px;
   }
 
   @media screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
@@ -101,6 +101,7 @@ const Collection = () => {
         : isBagExpanded
         ? BAG_WIDTH
         : 0,
+    config: config.slow,
   })
 
   useEffect(() => {

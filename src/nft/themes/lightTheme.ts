@@ -10,9 +10,9 @@ export const lightTheme: Theme = {
     explicitWhite: '#FFFFFF',
 
     backgroundFloating: '#00000000',
-    backgroundInteractive: vars.color.gray100,
+    backgroundInteractive: vars.color.gray50,
     backgroundModule: vars.color.gray50,
-    backgroundOutline: `rgba(94,104,135,0.24)`,
+    backgroundOutline: vars.color.gray100,
     backgroundSurface: '#FFFFFF',
     backgroundBackdrop: '#FFF',
 

@@ -13,7 +13,7 @@ import {
   RarityVerifiedIcon,
   VerifiedIcon,
 } from 'nft/components/icons'
-import { body, bodySmall, buttonTextSmall, subhead, subheadSmall } from 'nft/css/common.css'
+import { body, bodySmall, subhead, subheadSmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
 import { GenieAsset, Rarity, TokenType, UniformHeight, UniformHeights, WalletAsset } from 'nft/types'
@@ -90,11 +90,16 @@ const baseHref = (asset: GenieAsset | WalletAsset) =>
 
 const DetailsLinkContainer = styled.a`
   display: flex;
+  align-items: center;
   flex-shrink: 0;
   text-decoration: none;
-  color: ${({ theme }) => theme.textSecondary};
-
-  ${OpacityHoverState}
+  font-size: 14px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.accentAction};
+  background-color: ${({ theme }) => theme.backgroundModule};
+  padding: 2px 6px;
+  border-radius: 6px;
+  ${OpacityHoverState};
 `
 
 const SuspiciousIcon = styled(AlertTriangle)`
@@ -252,7 +257,7 @@ const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
         width="full"
         style={{
           aspectRatio: uniformHeight === UniformHeights.notUniform ? '1' : 'auto',
-          transition: 'transform 0.4s ease 0s',
+          transition: 'transform 0.25s ease 0s',
         }}
         src={asset.imageUrl || asset.smallImageUrl}
         objectFit={'contain'}
@@ -309,7 +314,7 @@ const Video = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPla
           width="full"
           style={{
             aspectRatio: '1',
-            transition: 'transform 0.4s ease 0s',
+            transition: 'transform 0.25s ease 0s',
             willChange: 'transform',
           }}
           src={asset.imageUrl || asset.smallImageUrl}
@@ -682,7 +687,7 @@ const DetailsLink = () => {
         e.stopPropagation()
       }}
     >
-      <Box className={buttonTextSmall}>Details</Box>
+      <Box>Details</Box>
     </DetailsLinkContainer>
   )
 }

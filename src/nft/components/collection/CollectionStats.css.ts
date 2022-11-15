@@ -127,7 +127,7 @@ export const statsLabel = style([
 export const statsValue = style([
   headlineSmall,
   sprinkles({
-    fontWeight: 'medium',
+    fontWeight: 'semibold',
   }),
   {
     lineHeight: '24px',
