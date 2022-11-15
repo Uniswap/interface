@@ -59,22 +59,34 @@ const HeaderContainer = styled.div`
     padding-top: 0px;
   }
 `
-const DEFAULT_TRENDING_COLLECTION_QUERY_AMOUNT = 5
+
+// Exclude collections that are not available in any of the following - OpenSea, X2Y2 and LooksRare:
+const EXCLUDED_COLLECTIONS = ['0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb']
+const TRENDING_COLLECTION_SIZE = 5
 
 const Banner = () => {
   const navigate = useNavigate()
   const isMobile = useIsMobile()
 
-  const { data: collections } = useQuery(
+  const { data } = useQuery(
     ['trendingCollections'],
     () => {
-      return fetchTrendingCollections({ volumeType: 'eth', timePeriod: TimePeriod.OneDay, size: 5 })
+      return fetchTrendingCollections({
+        volumeType: 'eth',
+        timePeriod: TimePeriod.OneDay,
+        size: TRENDING_COLLECTION_SIZE + EXCLUDED_COLLECTIONS.length,
+      })
     },
     {
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
     }
+  )
+
+  const collections = useMemo(
+    () => data?.filter((collection) => !EXCLUDED_COLLECTIONS.includes(collection.address)).slice(0, 5),
+    [data]
   )
 
   // Trigger queries for the top trending collections, so that the data is immediately available if the user clicks through.
@@ -90,7 +102,7 @@ const Banner = () => {
       {collections ? (
         <Carousel>
           {collections.map((collection) => (
-            <Suspense fallback={<LoadingCarouselCard />} key={collection.address}>
+            <Suspense fallback={<LoadingCarouselCard collection={collection} />} key={collection.address}>
               <CarouselCard
                 key={collection.address}
                 collection={collection}
@@ -101,7 +113,7 @@ const Banner = () => {
         </Carousel>
       ) : (
         <Carousel>
-          {[...Array(DEFAULT_TRENDING_COLLECTION_QUERY_AMOUNT)].map((index) => (
+          {[...Array(TRENDING_COLLECTION_SIZE)].map((index) => (
             <LoadingCarouselCard key={'carouselCard' + index} />
           ))}
         </Carousel>
