@@ -109,7 +109,7 @@ export function LongText({
         <Text
           color="accentAction"
           testID="read-more-button"
-          variant={variant}
+          variant="buttonLabelSmall"
           onPress={toggleMaximized}>
           {maximized ? 'Read less' : 'Read more'}
         </Text>

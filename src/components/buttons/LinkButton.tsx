@@ -24,7 +24,7 @@ export function LinkButton({
   color,
   iconColor,
   isSafeUri = false,
-  size = iconSizes.sm,
+  size = iconSizes.md,
   justifyContent = 'center',
   ...rest
 }: LinkButtonProps) {

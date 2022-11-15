@@ -271,7 +271,7 @@ function TokenDetails({
               currentChainBalance={currentChainBalance}
               otherChainBalances={otherChainBalances}
             />
-            <Box mx="md">
+            <Box mb="xs" mx="md">
               <TokenDetailsStats currency={currency} data={data} />
             </Box>
           </Flex>

@@ -112,7 +112,7 @@ export function TokenDetailsStats({
             {t('About {{ token }}', { token: tokenProjectData.name })}
           </Text>
         ) : null}
-        <Flex gap="sm">
+        <Flex gap="md">
           {tokenProjectData?.description && (
             <LongText
               gap="xxxs"
@@ -125,7 +125,7 @@ export function TokenDetailsStats({
               <LinkButton
                 color="accentAction"
                 label={t('Website')}
-                textVariant="buttonLabelMicro"
+                textVariant="buttonLabelSmall"
                 url={tokenProjectData.homepageUrl}
               />
             )}
@@ -133,14 +133,14 @@ export function TokenDetailsStats({
               <LinkButton
                 color="accentAction"
                 label={t('Twitter')}
-                textVariant="buttonLabelMicro"
+                textVariant="buttonLabelSmall"
                 url={getTwitterLink(tokenProjectData.twitterName)}
               />
             )}
             <LinkButton
               color="accentAction"
               label={t('Etherscan')}
-              textVariant="buttonLabelMicro"
+              textVariant="buttonLabelSmall"
               url={explorerLink}
             />
           </Flex>
