@@ -35,12 +35,10 @@ export const FilterButton = ({
     >
       <FilterIcon />
       {!isMobile ? (
-        <>
-          <Box className={buttonTextMedium}>
-            {' '}
-            Filter • {putCommas(collectionCount)} result{pluralize(collectionCount)}
-          </Box>
-        </>
+        <Box className={buttonTextMedium}>
+          {' '}
+          Filter • {putCommas(collectionCount)} result{pluralize(collectionCount)}
+        </Box>
       ) : null}
     </Box>
   )
