@@ -72,8 +72,8 @@ export const ScreenBreakpointsPaddings = css`
   }
 
   @media screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
-    padding-left: 40px;
-    padding-right: 40px;
+    padding-left: 26px;
+    padding-right: 26px;
   }
 
   @media screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {

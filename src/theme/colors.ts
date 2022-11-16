@@ -247,7 +247,7 @@ export interface Palette {
 }
 
 export const colorsLight: Palette = {
-  userThemeColor: colors.magentaVibrant,
+  userThemeColor: colors.pink400,
 
   background: '#faf9fa', //INTENTIONALLY OFF THEME TO GIVE WHITE BG A SOFTER VISUAL
   backgroundBackdrop: colors.white,
@@ -255,7 +255,7 @@ export const colorsLight: Palette = {
   backgroundModule: colors.gray50,
   backgroundInteractive: colors.gray100,
   backgroundFloating: opacify(8, colors.gray700),
-  backgroundOutline: colors.gray150,
+  backgroundOutline: colors.gray100,
   backgroundScrim: opacify(60, colors.gray900),
   backgroundScrolledSurface: opacify(72, colors.white),
 

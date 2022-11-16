@@ -5,14 +5,14 @@ export const lightTheme: Theme = {
     accentFailure: vars.color.red400,
     accentFailureSoft: 'rgba(250, 43, 57, 0.12)',
     accentAction: vars.color.pink400,
-    accentActionSoft: 'rgba(251, 17, 142, 0.12)',
+    accentActionSoft: vars.color.accentActionSoft,
 
     explicitWhite: '#FFFFFF',
 
     backgroundFloating: '#00000000',
-    backgroundInteractive: vars.color.gray100,
+    backgroundInteractive: vars.color.gray50,
     backgroundModule: vars.color.gray50,
-    backgroundOutline: `rgba(94,104,135,0.24)`,
+    backgroundOutline: vars.color.gray100,
     backgroundSurface: '#FFFFFF',
     backgroundBackdrop: '#FFF',
 
