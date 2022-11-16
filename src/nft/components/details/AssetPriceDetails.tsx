@@ -317,7 +317,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
             )}
           </PriceRow>
           {expirationDate && expirationDate > new Date() && (
-            <Tertiary fontSize={'14px'}>Sale ends: {timeLeft(expirationDate)}</Tertiary>
+            <Tertiary fontSize="14px">Sale ends: {timeLeft(expirationDate)}</Tertiary>
           )}
           <div>
             <BuyNowButtonContainer>
@@ -332,7 +332,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
                   }
                 }}
               >
-                <SubHeader color="white" lineHeight={'20px'}>
+                <SubHeader color="white" lineHeight="20px">
                   <span>{assetInBag ? 'Remove' : 'Buy Now'}</span>
                 </SubHeader>
               </BuyNowButton>
