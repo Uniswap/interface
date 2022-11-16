@@ -19,6 +19,15 @@ const CELL_WIDTH = '160px'
 const MOBILE_CELL_WIDTH = '240px'
 const DESKTOP_CELL_WIDTH = '360px'
 
+const StyledTable = styled.table`
+  border: 1px solid rgba(152, 161, 192, 0.24);
+  border-spacing: 0px;
+  background: ${({ theme }) => theme.backgroundSurface};
+  box-shadow: ${({ theme }) => theme.networkDefaultShadow};
+  width: 100%;
+  border-radius: 12px;
+`
+
 const RankCellContainer = styled.div`
   display: flex;
   align-items: center;
@@ -90,6 +99,7 @@ interface TableProps<D extends Record<string, unknown>> {
   mediumHiddenColumns: IdType<D>[]
   largeHiddenColumns: IdType<D>[]
 }
+
 export function Table<D extends Record<string, unknown>>({
   columns,
   data,
@@ -141,7 +151,7 @@ export function Table<D extends Record<string, unknown>>({
   }
 
   return (
-    <table {...getTableProps()} className={styles.table}>
+    <StyledTable {...getTableProps()}>
       <thead className={styles.thead}>
         {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
@@ -216,7 +226,7 @@ export function Table<D extends Record<string, unknown>>({
           )
         })}
       </tbody>
-    </table>
+    </StyledTable>
   )
 }
 
@@ -227,7 +237,7 @@ interface LoadingTableProps {
 
 function LoadingTable({ headerGroups, visibleColumns, ...props }: LoadingTableProps) {
   return (
-    <table {...props} className={styles.table}>
+    <StyledTable {...props}>
       <thead className={styles.thead}>
         {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
@@ -286,6 +296,6 @@ function LoadingTable({ headerGroups, visibleColumns, ...props }: LoadingTablePr
           </StyledLoadingRow>
         ))}
       </tbody>
-    </table>
+    </StyledTable>
   )
 }
