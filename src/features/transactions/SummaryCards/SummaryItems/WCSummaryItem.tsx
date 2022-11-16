@@ -31,7 +31,6 @@ export default function WCSummaryItem({
         />
       }
       readonly={readonly}
-      showInlineWarning={showInlineWarning}
       title={title}
       transaction={transaction}
       {...rest}

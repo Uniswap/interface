@@ -56,7 +56,6 @@ export default function NFTTradeSummaryItem({
         />
       }
       readonly={readonly}
-      showInlineWarning={showInlineWarning}
       title={title}
       transaction={transaction}
       {...rest}

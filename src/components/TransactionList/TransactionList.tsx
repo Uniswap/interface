@@ -19,7 +19,7 @@ import {
 } from 'src/features/transactions/history/utils'
 import { useMergeLocalAndRemoteTransactions } from 'src/features/transactions/hooks'
 import TransactionSummaryRouter from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
-import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
+import { TransactionDetails } from 'src/features/transactions/types'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { makeSelectAccountHideSpamTokens } from 'src/features/wallet/selectors'
 
@@ -166,13 +166,11 @@ function TransactionListInner({
       index: number
       section: SectionListData<TransactionDetails>
     }) => {
-      const currentIsIsolated = item?.status === TransactionStatus.Cancelling
-
       return (
         <TransactionSummaryRouter
-          mb={currentIsIsolated ? 'md' : 'none'}
           readonly={readonly}
-          showInlineWarning={!currentIsIsolated}
+          // We will most likely need this when design updates.
+          showInlineWarning={false}
           transaction={item}
         />
       )

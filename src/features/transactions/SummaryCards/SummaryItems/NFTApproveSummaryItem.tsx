@@ -37,7 +37,6 @@ export default function NFTApproveSummaryItem({
         />
       }
       readonly={readonly}
-      showInlineWarning={showInlineWarning}
       title={title}
       transaction={transaction}
       {...rest}

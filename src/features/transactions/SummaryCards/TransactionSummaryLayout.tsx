@@ -12,7 +12,7 @@ import { ChainId } from 'src/constants/chains'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useLowestPendingNonce } from 'src/features/transactions/hooks'
 import { cancelTransaction } from 'src/features/transactions/slice'
-import AlertBanner, { FailedCancelBadge } from 'src/features/transactions/SummaryCards/AlertBanner'
+import AlertBanner from 'src/features/transactions/SummaryCards/AlertBanner'
 import { CancelConfirmationView } from 'src/features/transactions/SummaryCards/CancelConfirmationView'
 import TransactionActionsModal from 'src/features/transactions/SummaryCards/TransactionActionsModal'
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
@@ -29,7 +29,6 @@ function TransactionSummaryLayout({
   endAdornment,
   icon,
   readonly,
-  showInlineWarning,
   bg,
   ...rest
 }: {
@@ -39,7 +38,6 @@ function TransactionSummaryLayout({
   readonly: boolean
   endAdornment?: ReactElement
   icon?: ReactElement
-  showInlineWarning?: boolean // Show warning inline and not as header banner.
 } & BaseButtonProps) {
   const { t } = useTranslation()
 
@@ -49,10 +47,12 @@ function TransactionSummaryLayout({
 
   const { status, addedTime, hash, chainId } = transaction
 
-  const canceled = status === TransactionStatus.Cancelled
-  const cancelling = status === TransactionStatus.Cancelling
-  const failedCancel = status === TransactionStatus.FailedCancel
+  const showAlertBanner =
+    status === TransactionStatus.Cancelled ||
+    status === TransactionStatus.Cancelling ||
+    status === TransactionStatus.FailedCancel
   const inProgress = status === TransactionStatus.Cancelling || status === TransactionStatus.Pending
+  const showBackground = showAlertBanner || inProgress
 
   // Monitor latest nonce to identify queued transactions.
   const lowestPendingNonce = useLowestPendingNonce()
@@ -93,18 +93,19 @@ function TransactionSummaryLayout({
   return (
     <>
       <TouchableArea overflow="hidden" onPress={onPress} {...rest}>
-        {(canceled || cancelling || failedCancel) && !showInlineWarning && (
-          <AlertBanner status={status} />
-        )}
+        {showAlertBanner && <AlertBanner status={status} />}
         <Flex
           grow
           row
           alignItems="flex-start"
-          bg={bg ?? 'background0'}
+          bg={showBackground ? 'background2' : bg ?? 'background0'}
+          borderRadius="lg"
+          borderTopLeftRadius={showAlertBanner ? 'none' : 'lg'}
+          borderTopRightRadius={showAlertBanner ? 'none' : 'lg'}
           gap="md"
           justifyContent="space-between"
-          px="xxs"
-          py="sm">
+          mb={showBackground ? 'sm' : 'none'}
+          p="sm">
           <Flex row alignItems="center" gap="sm" height="100%" justifyContent="flex-start">
             {icon && (
               <Flex centered height={TXN_HISTORY_ICON_SIZE} width={TXN_HISTORY_ICON_SIZE}>
@@ -117,12 +118,9 @@ function TransactionSummaryLayout({
                   {title}
                 </Text>
                 {chainId !== ChainId.Mainnet && <InlineNetworkPill chainId={chainId} />}
-                {status === TransactionStatus.FailedCancel && showInlineWarning && (
-                  <FailedCancelBadge />
-                )}
               </Flex>
               {caption && (
-                <Text color="textSecondary" variant="bodySmall">
+                <Text color="textSecondary" variant="subheadSmall">
                   {caption}
                 </Text>
               )}
@@ -131,11 +129,15 @@ function TransactionSummaryLayout({
           {inProgress ? (
             <Flex alignItems="flex-end" gap="xxxs">
               <SpinningLoader disabled={queued} size={LOADING_SPINNER_SIZE} />
-              {queued && (
-                <Text color="textSecondary" variant="bodySmall">
+              {queued ? (
+                <Text color="textSecondary" variant="subheadSmall">
                   {t('Queued')}
                 </Text>
-              )}
+              ) : inProgress ? (
+                <Text color="textSecondary" variant="subheadSmall">
+                  {t('Pending')}
+                </Text>
+              ) : null}
             </Flex>
           ) : (
             endAdornment

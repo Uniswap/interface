@@ -50,7 +50,7 @@ export function TooltipInfoButton({ size, content, ...rest }: InfoButtonProps) {
     <>
       <TouchableArea onPress={() => setShowModal(true)} {...rest}>
         <InfoCircle
-          color={theme.colors.textOnBrightSecondary}
+          color={theme.colors.textSecondary}
           height={size ?? DEFAULT_ICON_SIZE}
           width={size ?? DEFAULT_ICON_SIZE}
         />

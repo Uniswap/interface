@@ -60,7 +60,7 @@ export default function SwapSummaryItem({
     if (status !== TransactionStatus.Success) {
       const currencyAmount = getFormattedCurrencyAmount(inputCurrency, inputAmountRaw)
       const otherCurrencyAmount = getFormattedCurrencyAmount(outputCurrency, outputAmountRaw)
-      return `${currencyAmount} ${inputCurrency.symbol} → ${otherCurrencyAmount} ${outputCurrency.symbol}`
+      return `${currencyAmount}${inputCurrency.symbol} → ${otherCurrencyAmount}${outputCurrency.symbol}`
     }
     return inputCurrency.symbol + '→' + outputCurrency.symbol
   }, [inputAmountRaw, inputCurrency, outputAmountRaw, outputCurrency, status])
@@ -120,7 +120,6 @@ export default function SwapSummaryItem({
         />
       }
       readonly={readonly}
-      showInlineWarning={showInlineWarning}
       title={title}
       transaction={transaction}
       {...rest}

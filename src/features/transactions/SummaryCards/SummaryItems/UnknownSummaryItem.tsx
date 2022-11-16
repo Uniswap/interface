@@ -44,7 +44,6 @@ export default function UnknownSummaryItem({
         />
       }
       readonly={readonly}
-      showInlineWarning={showInlineWarning}
       title={title}
       transaction={transaction}
       {...rest}

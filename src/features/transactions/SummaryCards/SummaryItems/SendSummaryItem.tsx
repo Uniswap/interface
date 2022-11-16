@@ -109,7 +109,6 @@ export default function SendSummaryItem({
       endAdornment={endAdornement}
       icon={icon}
       readonly={readonly}
-      showInlineWarning={showInlineWarning}
       title={title}
       transaction={transaction}
       {...rest}

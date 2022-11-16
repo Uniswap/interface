@@ -111,7 +111,6 @@ export default function ReceiveSummaryItem({
       endAdornment={endAdornment}
       icon={icon}
       readonly={readonly}
-      showInlineWarning={showInlineWarning}
       title={title}
       transaction={transaction}
       {...rest}

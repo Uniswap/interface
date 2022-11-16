@@ -9,7 +9,6 @@ import { TooltipInfoButton } from 'src/components/tooltip/TooltipButton'
 import { TransactionStatus } from 'src/features/transactions/types'
 
 const ICON_SIZE = 20
-const INLINE_ICON_SIZE = 10
 
 export default function AlertBanner({
   status,
@@ -37,49 +36,26 @@ export default function AlertBanner({
     <Flex
       row
       alignItems="center"
-      backgroundColor="backgroundOutline"
+      backgroundColor="background2"
+      borderBottomColor="backgroundOutline"
+      borderBottomWidth={1}
+      borderTopLeftRadius="lg"
+      borderTopRightRadius="lg"
       justifyContent="space-between"
       p="md">
       <Flex centered row gap="xs">
         {status === TransactionStatus.FailedCancel ? (
-          <AlertTriangle color={theme.colors.accentWarning} height={ICON_SIZE} width={ICON_SIZE} />
+          <AlertTriangle color={theme.colors.textSecondary} height={ICON_SIZE} width={ICON_SIZE} />
         ) : (
-          <SlashCircleIcon fill="none" height={ICON_SIZE} />
+          <SlashCircleIcon color={theme.colors.textSecondary} fill="none" height={ICON_SIZE} />
         )}
-        <Text
-          color={status === TransactionStatus.FailedCancel ? 'accentWarning' : 'textSecondary'}
-          variant="buttonLabelSmall">
+        <Text color="textSecondary" variant="buttonLabelSmall">
           {copy}
         </Text>
       </Flex>
       {status === TransactionStatus.FailedCancel && (
-        <TooltipInfoButton content={failedCancelTooltipContent} />
+        <TooltipInfoButton content={failedCancelTooltipContent} size={theme.iconSizes.lg} />
       )}
-    </Flex>
-  )
-}
-
-export function FailedCancelBadge() {
-  const theme = useAppTheme()
-  const { t } = useTranslation()
-  return (
-    <Flex
-      grow
-      row
-      alignItems="center"
-      borderRadius="sm"
-      gap="xxs"
-      px="xs"
-      py="xxxs"
-      style={{ backgroundColor: theme.colors.accentWarningSoft }}>
-      <AlertTriangle
-        color={theme.colors.accentWarning}
-        height={INLINE_ICON_SIZE}
-        width={INLINE_ICON_SIZE}
-      />
-      <Text color="accentWarning" variant="buttonLabelMicro">
-        {t('Cancel failed')}
-      </Text>
     </Flex>
   )
 }

@@ -236,7 +236,6 @@
   "Canceling": "Canceling",
   "Failed to Cancel": "Failed to Cancel",
   "The network processed your transaction before you canceled it.": "The network processed your transaction before you canceled it.",
-  "Cancel failed": "Cancel failed",
   "Cancel this transaction?": "Cancel this transaction?",
   "If you cancel this transaction before it’s processed by the network, you’ll pay a new network fee instead of the original one.": "If you cancel this transaction before it’s processed by the network, you’ll pay a new network fee instead of the original one.",
   "Confirm": "Confirm",
