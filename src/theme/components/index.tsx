@@ -363,7 +363,7 @@ interface CopyHelperProps {
   iconSize?: number
   gap?: number
   iconPosition?: 'left' | 'right'
-  iconstring?: string
+  iconColor?: string
   children: ReactNode
 }
 
@@ -378,7 +378,7 @@ export const CopyHelper = forwardRef<CopyHelperRefType, CopyHelperProps>(
       iconSize = 20,
       gap = 12,
       iconPosition = 'left',
-      iconstring,
+      iconColor,
       children,
     }: CopyHelperProps,
     ref
@@ -399,9 +399,9 @@ export const CopyHelper = forwardRef<CopyHelperRefType, CopyHelperProps>(
     return (
       <CopyHelperContainer onClick={copy} color={color} clicked={isCopied}>
         <div style={{ display: 'flex', flexDirection: 'row', gap }}>
-          {iconPosition === 'left' && <BaseIcon size={iconSize} strokeWidth={1.5} color={iconstring} />}
+          {iconPosition === 'left' && <BaseIcon size={iconSize} strokeWidth={1.5} color={iconColor} />}
           <CopyHelperText fontSize={fontSize}>{isCopied ? <Trans>Copied!</Trans> : children}</CopyHelperText>
-          {iconPosition === 'right' && <BaseIcon size={iconSize} strokeWidth={1.5} color={iconstring} />}
+          {iconPosition === 'right' && <BaseIcon size={iconSize} strokeWidth={1.5} color={iconColor} />}
         </div>
       </CopyHelperContainer>
     )
