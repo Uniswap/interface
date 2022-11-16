@@ -7,6 +7,7 @@ import { Suspense, useCallback, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
+import { opacify } from 'theme/utils'
 
 import { Carousel, LoadingCarousel } from './Carousel'
 import { CarouselCard, LoadingCarouselCard } from './CarouselCard'
@@ -20,7 +21,15 @@ const BannerContainer = styled.div`
   overflow: hidden;
 `
 
-const BannerBackground = styled.div<{ backgroundImage: string }>`
+const AbsoluteFill = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+`
+
+const BannerBackground = styled(AbsoluteFill)<{ backgroundImage: string }>`
   position: absolute;
   left: 0;
   right: 0;
@@ -28,6 +37,10 @@ const BannerBackground = styled.div<{ backgroundImage: string }>`
   bottom: 0;
   background-image: ${(props) => `url(${props.backgroundImage})`};
   filter: blur(62px);
+`
+
+const PlainBackground = styled(AbsoluteFill)`
+  background: ${({ theme }) => `linear-gradient(${opacify(10, theme.userThemeColor)}, transparent)`};
 `
 
 const BannerMainArea = styled.div`
@@ -130,7 +143,7 @@ const Banner = () => {
         activeCollection.bannerImageUrl ? (
           <BannerBackground backgroundImage={activeCollection.bannerImageUrl} />
         ) : (
-          <div />
+          <PlainBackground />
         )
       ) : null}
       <BannerMainArea>
