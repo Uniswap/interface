@@ -1,4 +1,4 @@
-import { darkTheme, lightTheme } from './colors'
+import { darkTheme, lightTheme } from 'theme/colors'
 
 const fonts = {
   fontFamily: 'Inter custom',
