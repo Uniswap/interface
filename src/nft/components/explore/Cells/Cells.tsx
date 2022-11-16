@@ -165,23 +165,3 @@ export const ChangeCell = ({ change }: { change?: number }) => (
     <ThemedText.BodyPrimary color="currentColor">{change ? Math.abs(Math.round(change)) : 0}%</ThemedText.BodyPrimary>
   </ChangeCellContainer>
 )
-
-export const WeiWithDayChange = ({ value }: CellProps) => (
-  <Column gap="4">
-    <Row justifyContent="flex-end" color="textPrimary">
-      {value && value.value ? <>{formatWeiToDecimal(value.value.toString(), true)} ETH</> : '-'}
-    </Row>
-    {value.change ? (
-      <Box
-        as="span"
-        color={value.change > 0 ? 'green' : 'accentFailure'}
-        fontWeight="normal"
-        fontSize="12"
-        position="relative"
-      >
-        {value.change > 0 && '+'}
-        {formatChange(value.change)}%
-      </Box>
-    ) : null}
-  </Column>
-)

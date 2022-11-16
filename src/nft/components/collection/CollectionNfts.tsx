@@ -4,7 +4,6 @@ import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import { OpacityHoverState } from 'components/Common'
-import { loadingAnimation } from 'components/Loader/styled'
 import { parseEther } from 'ethers/lib/utils'
 import { NftAssetTraitInput, NftMarketplace } from 'graphql/data/nft/__generated__/AssetQuery.graphql'
 import {
@@ -137,22 +136,6 @@ const SweepText = styled(ThemedText.BodyPrimary)`
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     display: none;
   }
-`
-
-export const LoadingButton = styled.div`
-  border-radius: 12px;
-  height: 44px;
-  width: 114px;
-  animation: ${loadingAnimation} 1.5s infinite;
-  animation-fill-mode: both;
-  background: linear-gradient(
-    to left,
-    ${({ theme }) => theme.backgroundInteractive} 25%,
-    ${({ theme }) => theme.backgroundOutline} 50%,
-    ${({ theme }) => theme.backgroundInteractive} 75%
-  );
-  will-change: background-position;
-  background-size: 400%;
 `
 
 const MarketNameWrapper = styled(Row)`
