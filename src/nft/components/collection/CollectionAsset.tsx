@@ -75,6 +75,8 @@ export const CollectionAsset = ({
     removeAssetsFromBag([asset])
   }, [asset, removeAssetsFromBag])
 
+  console.log(asset.sellorders)
+
   return (
     <Card.Container
       asset={asset}

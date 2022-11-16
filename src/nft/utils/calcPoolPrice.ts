@@ -1,6 +1,49 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { BagItem, BagItemStatus, GenieAsset, Markets, UpdatedGenieAsset } from 'nft/types'
 
+const PRECISION = '1000000000000000000'
+const PROTOCOL_FEE_MULTIPLIER = BigNumber.from('5000000000000000')
+
+enum BondingCurve {
+  Linear = 'LINEAR',
+  Exponential = 'EXPONENTIAL',
+}
+
+interface Pool {
+  delta: string
+  spotPrice: string
+  fee: string
+  bondingCurve: BondingCurve
+}
+
+export const calcSudoSwapPoolPrice = (
+  pool: Pool,
+  numItems: number,
+  protocolFeeMultiplier = PROTOCOL_FEE_MULTIPLIER
+) => {
+  let currentPrice = BigNumber.from(pool.spotPrice)
+  const delta = BigNumber.from(pool.delta)
+  const poolFee = BigNumber.from(pool.fee)
+
+  const prices = []
+  for (let i = 0; i < numItems; i++) {
+    if (pool.bondingCurve === BondingCurve.Linear) {
+      currentPrice = currentPrice.add(delta)
+      const protocolFee = currentPrice.mul(protocolFeeMultiplier).div(BigNumber.from(PRECISION))
+      const tradeFee = currentPrice.mul(poolFee).div(BigNumber.from(PRECISION))
+      const scaledPrice = currentPrice.add(protocolFee).add(tradeFee)
+      prices.push(scaledPrice)
+    } else if (pool.bondingCurve === BondingCurve.Exponential) {
+      currentPrice = currentPrice.mul(delta).div(BigNumber.from(PRECISION))
+      const protocolFee = currentPrice.mul(protocolFeeMultiplier).div(BigNumber.from(PRECISION))
+      const tradeFee = currentPrice.mul(poolFee).div(BigNumber.from(PRECISION))
+      const scaledPrice = currentPrice.add(protocolFee).add(tradeFee)
+      prices.push(scaledPrice)
+    }
+  }
+  return prices[prices.length - 1]
+}
+
 // TODO: a lot of the below typecasting logic can be simplified when GraphQL migration is complete
 export const calcPoolPrice = (asset: GenieAsset, position = 0) => {
   let amountToBuy: BigNumber = BigNumber.from(0)
