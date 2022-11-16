@@ -25,6 +25,7 @@ export const enum SectionName {
   CurrencyOutputPanel = 'currency-output-panel',
   ExploreTokensTab = 'explore-tokens-tab',
   ExploreWalletsTab = 'explore-wallets-tab',
+  ExploreSearch = 'explore-search',
   HomeNFTsTab = 'home-nfts-tab',
   HomeTokensTab = 'home-tokens-tab',
   ImportAccountForm = 'import-account-form',
