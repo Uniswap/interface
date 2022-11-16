@@ -38,7 +38,5 @@ export const darkTheme: Theme = {
   opacity: {
     hover: '0.6',
     pressed: '0.4',
-    disabled: '0.5',
-    enabled: '1',
   },
 }
