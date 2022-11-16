@@ -13,7 +13,7 @@ import {
   RarityVerifiedIcon,
   VerifiedIcon,
 } from 'nft/components/icons'
-import { body, bodySmall, subhead } from 'nft/css/common.css'
+import { body, bodySmall, buttonTextMedium, subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
 import { GenieAsset, Rarity, TokenType, WalletAsset } from 'nft/types'
@@ -525,12 +525,12 @@ const ProfileNftDetails = ({ asset, isSellMode }: ProfileNftDetailsProps) => {
         {asset.susFlag && <Suspicious />}
       </Row>
       {shouldShowUserListedPrice && (
-        <TruncatedTextRow className={subhead} style={{ color: themeVars.colors.textPrimary }}>
+        <TruncatedTextRow className={buttonTextMedium} style={{ color: themeVars.colors.textPrimary }}>
           {`${floorFormatter(asset.floor_sell_order_price)} ETH`}
         </TruncatedTextRow>
       )}
       {shouldShowFloorPrice && (
-        <TruncatedTextRow className={subhead} style={{ color: themeVars.colors.textSecondary }}>
+        <TruncatedTextRow className={buttonTextMedium} style={{ color: themeVars.colors.textSecondary }}>
           {`${floorFormatter(asset.floorPrice)} ETH Floor`}
         </TruncatedTextRow>
       )}
