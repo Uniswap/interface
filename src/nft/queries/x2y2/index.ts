@@ -27,14 +27,13 @@ export const newX2Y2Order = async (payload: OrderPayload): Promise<boolean> => {
 }
 
 export const getOrderId = async (collectionAddress: string, tokenId: string): Promise<number | undefined> => {
-  const url = `https://try.readme.io/https://api.x2y2.org/v1/orders?contract=${collectionAddress}&token_id=${tokenId}`
+  const url = `http://localhost:5001/getX2Y2OrderId?collectionAddress=${collectionAddress}&tokenId=${tokenId}` // TODO update endpoint
   const r = await fetch(url, {
     method: 'GET',
     headers: {
-      'X-API-Key': 'ed9122b9-f76b-4e54-9d9e-bdb195e2fea6',
-      accept: 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
     },
   })
   const data = await r.json()
-  return data?.data?.[0]?.id
+  return data?.data?.data?.[0]?.id
 }

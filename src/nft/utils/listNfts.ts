@@ -11,7 +11,6 @@ import {
   OPENSEA_DEFAULT_CROSS_CHAIN_CONDUIT_KEY,
   OPENSEA_DEFAULT_ZONE,
   OPENSEA_KEY_TO_CONDUIT,
-  OPENSEA_LISTINGS_API_PATH,
 } from 'nft/queries/openSea'
 
 import ERC721 from '../../abis/erc721.json'
@@ -157,9 +156,9 @@ export async function signListing(
         )
 
         const order = await executeAllActions()
-        const res = await PostOpenSeaSellOrder(OPENSEA_LISTINGS_API_PATH, order)
+        const res = await PostOpenSeaSellOrder(order)
         if (res) setStatus(ListingStatus.APPROVED)
-        return true
+        return res
       } catch (error) {
         if (error.code === 4001) setStatus(ListingStatus.REJECTED)
         else setStatus(ListingStatus.FAILED)
