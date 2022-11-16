@@ -204,10 +204,10 @@ export const SearchBarDropdown = ({
     (isNFTPage && (hasVerifiedCollection || !hasVerifiedToken)) ||
     (!isNFTPage && !hasVerifiedToken && hasVerifiedCollection)
 
-  const trace = useTrace({ section: SectionName.NAVBAR_SEARCH })
+  const trace = JSON.stringify(useTrace({ section: SectionName.NAVBAR_SEARCH }))
 
   useEffect(() => {
-    const eventProperties = { total_suggestions: totalSuggestions, query_text: queryText, ...trace }
+    const eventProperties = { total_suggestions: totalSuggestions, query_text: queryText, ...JSON.parse(trace) }
     if (!isLoading) {
       const tokenSearchResults =
         tokens.length > 0 ? (
