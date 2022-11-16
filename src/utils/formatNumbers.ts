@@ -1,6 +1,7 @@
 /* Copied from Uniswap/v-3: https://github.com/Uniswap/v3-info/blob/master/src/utils/numbers.ts */
-import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
 import { DEFAULT_LOCALE } from 'constants/locales'
+import JSBI from 'jsbi'
 import numbro from 'numbro'
 
 // Convert [CurrencyAmount] to number with necessary precision for price formatting.
@@ -148,4 +149,37 @@ export const formatAmount = (num: number | undefined, digits = 2) => {
       billion: 'B',
     },
   })
+}
+
+// token denominated
+// https://www.notion.so/uniswaplabs/Number-standards-fbb9f533f10e4e22820722c2f66d23c0#38013d0392c944f7a719b668e3dfcd66
+export function formatNFTCollectionFloorPrice(amount?: number): string
+export function formatNFTCollectionFloorPrice(amount?: CurrencyAmount<Token>): string
+export function formatNFTCollectionFloorPrice(amount?: CurrencyAmount<Token> | number): string {
+  if (amount === undefined) {
+    return ''
+  } else if (typeof amount === 'number') {
+    return ''
+  }
+  if (amount.greaterThan(1_000_000_000_000_000 - 1)) {
+    return JSBI.toNumber(amount.numerator).toExponential(3)
+  }
+  const exact = parseFloat(amount.toExact())
+  if (amount.greaterThan(1) || amount.equalTo(1)) {
+    return numbro(exact).format({
+      mantissa: 2,
+      abbreviations: {
+        trillion: 'T',
+        billion: 'B',
+        million: 'M',
+        thousand: 'K',
+      },
+    })
+  }
+  if (amount.lessThan(1) && (amount.greaterThan(0.001) || amount.equalTo(0.001))) {
+    return numbro(exact).format({
+      mantissa: 3,
+    })
+  }
+  return '<0.001'
 }

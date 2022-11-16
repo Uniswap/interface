@@ -1,9 +1,10 @@
 import { CurrencyAmount, Price } from '@uniswap/sdk-core'
-import { renBTC, USDC_MAINNET } from 'constants/tokens'
+import { DAI, renBTC, USDC_MAINNET } from 'constants/tokens'
 
 import {
   currencyAmountToPreciseFloat,
   formatDollar,
+  formatNFTCollectionFloorPrice,
   formatTransactionAmount,
   priceToPreciseFloat,
 } from './formatNumbers'
@@ -149,5 +150,76 @@ describe('formatDollar for a non-price amount', () => {
   })
   it('number is greater than 1.05', () => {
     expect(formatDollar({ num: 102312.408 })).toEqual('$102.31K')
+  })
+})
+
+describe('formatNFTCollectionFloorPrice', () => {
+  it('should return an empty string for undefined values', () => {
+    expect(formatNFTCollectionFloorPrice(10)).toEqual('')
+    const currencyAmount = CurrencyAmount.fromRawAmount(DAI, 10e18)
+    expect(formatNFTCollectionFloorPrice(currencyAmount)).toEqual('')
+  })
+  it('should return <0.001 for numbers less than 0.001', () => {
+    expect(formatNFTCollectionFloorPrice(10)).toEqual('')
+    const currencyAmount = CurrencyAmount.fromRawAmount(DAI, 10e18)
+    expect(formatNFTCollectionFloorPrice(currencyAmount)).toEqual('')
+  })
+  describe('1 > x >= 0.001', () => {
+    it('should round to 3 decimals', () => {
+      expect(formatNFTCollectionFloorPrice(10)).toEqual('')
+      const currencyAmount = CurrencyAmount.fromRawAmount(DAI, 10e18)
+      expect(formatNFTCollectionFloorPrice(currencyAmount)).toEqual('')
+    })
+    it('should not show trailing zeros', () => {
+      expect(formatNFTCollectionFloorPrice(10)).toEqual('')
+      const currencyAmount = CurrencyAmount.fromRawAmount(DAI, 10e18)
+      expect(formatNFTCollectionFloorPrice(currencyAmount)).toEqual('')
+    })
+  })
+  describe('1,000 > x >= 1', () => {
+    it('should round to 2 decimals', () => {
+      expect(formatNFTCollectionFloorPrice(10)).toEqual('')
+      const currencyAmount = CurrencyAmount.fromRawAmount(DAI, 10e18)
+      expect(formatNFTCollectionFloorPrice(currencyAmount)).toEqual('')
+    })
+    it('should not show trailing zeros', () => {
+      expect(formatNFTCollectionFloorPrice(10)).toEqual('')
+      const currencyAmount = CurrencyAmount.fromRawAmount(DAI, 10e18)
+      expect(formatNFTCollectionFloorPrice(currencyAmount)).toEqual('')
+    })
+  })
+  describe('1,000,000,000,000,000 > x ≥ 1,000', () => {
+    it('should not show trailing zeros', () => {
+      expect(formatNFTCollectionFloorPrice(10)).toEqual('')
+      const currencyAmount = CurrencyAmount.fromRawAmount(DAI, 10e18)
+      expect(formatNFTCollectionFloorPrice(currencyAmount)).toEqual('')
+    })
+    it('should round to 2 decimals', () => {
+      expect(formatNFTCollectionFloorPrice(10)).toEqual('')
+      const currencyAmount = CurrencyAmount.fromRawAmount(DAI, 10e18)
+      expect(formatNFTCollectionFloorPrice(currencyAmount)).toEqual('')
+    })
+    it('should use T/B/M/K suffixes', () => {
+      expect(formatNFTCollectionFloorPrice(10)).toEqual('')
+      const currencyAmount = CurrencyAmount.fromRawAmount(DAI, 10e18)
+      expect(formatNFTCollectionFloorPrice(currencyAmount)).toEqual('')
+    })
+  })
+  describe('x ≥ 1,000,000,000,000,000', () => {
+    it('should use scientific notation', () => {
+      expect(formatNFTCollectionFloorPrice(1_000_000_000_000_000)).toEqual('')
+      const currencyAmount = CurrencyAmount.fromRawAmount(DAI, 1_000_567_000_000_000)
+      expect(formatNFTCollectionFloorPrice(currencyAmount).includes('e')).toBe(true)
+    })
+    it('should round to 3 digits', () => {
+      expect(formatNFTCollectionFloorPrice(1_000_000_000_000_000)).toEqual('')
+      const currencyAmount = CurrencyAmount.fromRawAmount(DAI, 1_000_567_000_000_000)
+      expect(formatNFTCollectionFloorPrice(currencyAmount).substring(0, 5)).toEqual('1.001')
+    })
+    it('should not show trailing zero', () => {
+      expect(formatNFTCollectionFloorPrice(1_000_000_000_000_000)).toEqual('')
+      const currencyAmount = CurrencyAmount.fromRawAmount(DAI, 1_000_000_000_000_000)
+      expect(formatNFTCollectionFloorPrice(currencyAmount)).toEqual('1e+15')
+    })
   })
 })
