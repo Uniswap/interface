@@ -74,11 +74,12 @@ const Arrow = styled.div`
 export interface PopoverProps {
   content: React.ReactNode
   show: boolean
-  children: React.ReactNode
+  children?: React.ReactNode
   placement?: Placement
   offsetX?: number
   offsetY?: number
   hideArrow?: boolean
+  showInline?: boolean
   style?: CSSProperties
 }
 
@@ -90,6 +91,7 @@ export default function Popover({
   offsetX = 8,
   offsetY = 8,
   hideArrow = false,
+  showInline = false,
   style,
 }: PopoverProps) {
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null)
@@ -116,7 +118,9 @@ export default function Popover({
   }, [update])
   useInterval(updateCallback, show ? 100 : null)
 
-  return (
+  return showInline ? (
+    <PopoverContainer show={show}>{content}</PopoverContainer>
+  ) : (
     <>
       <ReferenceElement style={style} ref={setReferenceElement as any}>
         {children}

@@ -17,22 +17,6 @@ export const footer = style([
   }),
 ])
 
-export const warningContainer = style([
-  sprinkles({
-    paddingY: '12',
-    borderTopLeftRadius: '12',
-    borderTopRightRadius: '12',
-    justifyContent: 'center',
-    fontSize: '12',
-    fontWeight: 'semibold',
-  }),
-  {
-    color: '#EEB317',
-    background: '#EEB3173D',
-    lineHeight: '12px',
-  },
-])
-
 export const payButton = style([
   body,
   sprinkles({

@@ -55,7 +55,7 @@ export default function ProgressCircles({ steps, disabled = false, ...rest }: Pr
   const theme = useTheme()
 
   return (
-    <Wrapper justify={'center'} {...rest}>
+    <Wrapper justify="center" {...rest}>
       <Grouping>
         {steps.map((step, i) => {
           return (

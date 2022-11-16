@@ -362,7 +362,7 @@ export const ItemCell = ({ event, rarityVerified, collectionName, eventTimestamp
     <Row gap="16" overflow="hidden" whiteSpace="nowrap">
       {!noContent ? (
         <Box
-          as={'img'}
+          as="img"
           alt={event.tokenMetadata?.name || event.tokenId}
           src={getItemImage(event.tokenMetadata)}
           draggable={false}

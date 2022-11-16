@@ -169,11 +169,11 @@ export default function MigrateV2() {
             <EmptyState message={<Trans>No V2 Liquidity found.</Trans>} />
           )}
 
-          <AutoColumn justify={'center'} gap="md">
+          <AutoColumn justify="center" gap="md">
             <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
               <Trans>
                 Don’t see one of your v2 positions?{' '}
-                <StyledInternalLink id="import-pool-link" to={'/find?origin=/migrate/v2'}>
+                <StyledInternalLink id="import-pool-link" to="/find?origin=/migrate/v2">
                   Import it.
                 </StyledInternalLink>
               </Trans>

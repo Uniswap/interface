@@ -121,7 +121,7 @@ export default function ClaimPopup() {
             </ThemedText.DeprecatedSubHeader>
           </AutoColumn>
           <AutoColumn style={{ zIndex: 10 }} justify="center">
-            <ButtonPrimary padding="8px" $borderRadius="8px" width={'fit-content'} onClick={handleToggleSelfClaimModal}>
+            <ButtonPrimary padding="8px" $borderRadius="8px" width="fit-content" onClick={handleToggleSelfClaimModal}>
               <Trans>Claim your UNI tokens</Trans>
             </ButtonPrimary>
           </AutoColumn>
