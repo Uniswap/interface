@@ -74,13 +74,7 @@ const getChildFromType = (type: SkeletonType, repeat: number, height?: number) =
         </Flex>
       )
     case 'favorite':
-      return (
-        <Flex row gap="xs">
-          {new Array(repeat).fill(null).map((_, i, { length }) => (
-            <FavoriteLoader key={i} flex={1 / repeat} opacity={(length - i) / length} />
-          ))}
-        </Flex>
-      )
+      return <FavoriteLoader height={height} />
     case 'transactions':
       return <TransactionLoader />
     case 'image':
@@ -138,7 +132,7 @@ const getChildFromType = (type: SkeletonType, repeat: number, height?: number) =
         <Box>
           {new Array(repeat).fill(null).map((_, i) => (
             <React.Fragment key={i}>
-              <BoxLoader height={50} mb="sm" />
+              <BoxLoader height={height ?? 50} mb="sm" />
             </React.Fragment>
           ))}
         </Box>

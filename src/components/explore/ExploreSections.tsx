@@ -1,18 +1,20 @@
+import { NetworkStatus } from '@apollo/client'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FlatList, ListRenderItemInfo } from 'react-native'
-import { useAppSelector } from 'src/app/hooks'
+import { FlatList, ListRenderItemInfo, useColorScheme } from 'react-native'
+import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import { FavoriteTokensGrid } from 'src/components/explore/FavoriteTokensGrid'
+import { FavoriteWalletsGrid } from 'src/components/explore/FavoriteWalletsGrid'
 import { SortButton } from 'src/components/explore/SortButton'
 import { TokenItem, TokenItemData } from 'src/components/explore/TokenItem'
 import { Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { TAB_STYLES } from 'src/components/layout/TabHelpers'
+import { VirtualizedList } from 'src/components/layout/VirtualizedList'
+import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY, PollingInterval } from 'src/constants/misc'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
-import { isNonPollingRequestInFlight } from 'src/data/utils'
 import {
   Chain,
   ExploreTokensTabQuery,
@@ -21,19 +23,24 @@ import {
 import { currencyIdToContractInput, usePersistedError } from 'src/features/dataApi/utils'
 import { useTokensMetadataDisplayType } from 'src/features/explore/hooks'
 import { getClientTokensOrderByCompareFn, getTokensOrderByValues } from 'src/features/explore/utils'
-import { selectFavoriteTokensSet, selectHasFavoriteTokens } from 'src/features/favorites/selectors'
+import {
+  selectFavoriteTokensSet,
+  selectHasFavoriteTokens,
+  selectHasWatchedWallets,
+} from 'src/features/favorites/selectors'
 import { selectTokensOrderBy } from 'src/features/wallet/selectors'
-import { ExploreTokensTabLoader } from 'src/screens/ExploreScreen'
 import { areAddressesEqual } from 'src/utils/addresses'
 import { fromGraphQLChain } from 'src/utils/chainId'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 
-type ExploreTokensTabProps = {
+type ExploreSectionsProps = {
   listRef?: React.MutableRefObject<null>
 }
 
-function ExploreTokensTab({ listRef }: ExploreTokensTabProps) {
+export function ExploreSections({ listRef }: ExploreSectionsProps) {
   const { t } = useTranslation()
+  const theme = useAppTheme()
+  const isDarkMode = useColorScheme() === 'dark'
 
   // Top tokens sorting
   const orderBy = useAppSelector(selectTokensOrderBy)
@@ -41,9 +48,13 @@ function ExploreTokensTab({ listRef }: ExploreTokensTabProps) {
   const { clientOrderBy, serverOrderBy } = getTokensOrderByValues(orderBy)
 
   // Favorite tokens
-  const [isEditing, setIsEditing] = useState(false)
+  const [isEditingTokens, setIsEditingTokens] = useState(false)
   const favoriteCurrencyIdsSet = useAppSelector(selectFavoriteTokensSet)
   const hasFavoritedTokens = useAppSelector(selectHasFavoriteTokens)
+
+  // Favorite wallets
+  const [isEditingWallets, setIsEditingWallets] = useState(false)
+  const hasFavoritedWallets = useAppSelector(selectHasWatchedWallets)
 
   // Format favorite tokens for data lookup
   const favoriteCurrencyContractInputs = useMemo(
@@ -114,7 +125,7 @@ function ExploreTokensTab({ listRef }: ExploreTokensTabProps) {
       return (
         <TokenItem
           index={index}
-          isEditing={isEditing}
+          isEditing={isEditingTokens}
           isFavorited={isFavorited}
           metadataDisplayType={tokensMetadataDisplayType}
           tokenItemData={item}
@@ -122,10 +133,17 @@ function ExploreTokensTab({ listRef }: ExploreTokensTabProps) {
         />
       )
     },
-    [cycleTokensMetadataDisplayType, favoriteCurrencyIdsSet, isEditing, tokensMetadataDisplayType]
+    [
+      cycleTokensMetadataDisplayType,
+      favoriteCurrencyIdsSet,
+      isEditingTokens,
+      tokensMetadataDisplayType,
+    ]
   )
 
-  const nonPollRequestInFlight = isNonPollingRequestInFlight(networkStatus)
+  // Don't want to show full screen loading state when changing tokens sort, which triggers NetworkStatus.setVariable request
+  const isLoading =
+    networkStatus === NetworkStatus.loading || networkStatus === NetworkStatus.refetch
   const hasAllData = !!data?.favoriteTokens && !!data?.topTokens
   const error = usePersistedError(requestLoading, requestError)
 
@@ -133,9 +151,9 @@ function ExploreTokensTab({ listRef }: ExploreTokensTabProps) {
     refetch()
   }, [refetch])
 
-  if ((!hasAllData && nonPollRequestInFlight) || (error && nonPollRequestInFlight)) {
-    return <ExploreTokensTabLoader />
-  }
+  // Use showLoading for showing full screen loading state
+  // Used in each section to ensure loading state layout matches loaded state
+  const showLoading = (!hasAllData && isLoading) || (!!error && isLoading)
 
   if (!hasAllData && error) {
     return (
@@ -150,34 +168,68 @@ function ExploreTokensTab({ listRef }: ExploreTokensTabProps) {
   }
 
   return (
-    <FlatList
-      ref={listRef}
-      ListHeaderComponent={
-        <Flex mt="sm">
-          {error ? <BaseCard.InlineErrorState retryButtonLabel="Retry" onRetry={onRetry} /> : null}
-          {hasFavoritedTokens ? (
-            <FavoriteTokensGrid
-              favoriteTokensData={data?.favoriteTokens}
-              isEditing={isEditing}
-              setIsEditing={setIsEditing}
-            />
-          ) : null}
-          <Flex row alignItems="center" justifyContent="space-between">
-            <Text color="textSecondary" variant="subheadSmall">
-              {t('Top tokens')}
-            </Text>
-            <SortButton orderBy={orderBy} />
-          </Flex>
-        </Flex>
-      }
-      data={topTokenItems}
-      keyExtractor={tokenKey}
-      renderItem={renderItem}
-      showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}
-      style={TAB_STYLES.tabContentContainerStandard}
-      windowSize={5}
-    />
+    <VirtualizedList>
+      {error ? (
+        <Box m="sm">
+          <BaseCard.InlineErrorState retryButtonLabel="Retry" onRetry={onRetry} />
+        </Box>
+      ) : null}
+      <Flex gap="md" mt="sm" mx="sm">
+        {hasFavoritedTokens ? (
+          <FavoriteTokensGrid
+            favoriteTokensData={data?.favoriteTokens}
+            isEditing={isEditingTokens}
+            setIsEditing={setIsEditingTokens}
+            showLoading={showLoading}
+          />
+        ) : null}
+        {hasFavoritedWallets ? (
+          <FavoriteWalletsGrid
+            isEditing={isEditingWallets}
+            setIsEditing={setIsEditingWallets}
+            showLoading={showLoading}
+          />
+        ) : null}
+      </Flex>
+      <Box bg="background0">
+        {/* Fake border radius for bottom of Favorites section because the ExploreScreen background needs to be the contrast background */}
+        <Box
+          bg={isDarkMode ? 'background1' : 'background2'}
+          borderBottomLeftRadius="xl"
+          borderBottomRightRadius="xl"
+          height={theme.borderRadii.xl}
+        />
+        <FlatList
+          ref={listRef}
+          ListEmptyComponent={
+            <Box mx="lg" my="sm">
+              <Loading repeat={5} type="token" />
+            </Box>
+          }
+          ListHeaderComponent={
+            <Flex
+              row
+              alignItems="center"
+              justifyContent="space-between"
+              mb="xs"
+              ml="xmd"
+              mr="sm"
+              mt="md">
+              <Text color="textSecondary" variant="subheadSmall">
+                {t('Top tokens')}
+              </Text>
+              <SortButton orderBy={orderBy} />
+            </Flex>
+          }
+          data={showLoading ? EMPTY_ARRAY : topTokenItems}
+          keyExtractor={tokenKey}
+          renderItem={renderItem}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          windowSize={5}
+        />
+      </Box>
+    </VirtualizedList>
   )
 }
 
@@ -186,8 +238,6 @@ const tokenKey = (token: TokenItemData) => {
     ? buildCurrencyId(token.chainId, token.address)
     : buildNativeCurrencyId(token.chainId)
 }
-
-export default React.memo(ExploreTokensTab)
 
 function gqlTokenToTokenItemData(
   token: NullUndefined<NonNullable<NonNullable<ExploreTokensTabQuery['topTokens']>[0]>>

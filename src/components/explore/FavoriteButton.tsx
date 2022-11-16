@@ -10,6 +10,7 @@ export function FavoriteButton({ disabled, ...rest }: { disabled: boolean } & Ba
   return (
     <Box opacity={disabled ? 0 : 1}>
       <AnimatedTouchableArea
+        hapticFeedback
         borderRadius="full"
         borderWidth={1}
         disabled={disabled}

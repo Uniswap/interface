@@ -1,30 +1,33 @@
 import { default as React, useCallback, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { FadeIn } from 'react-native-reanimated'
-import { useAppSelector } from 'src/app/hooks'
 import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
 import FavoriteTokenCard from 'src/components/explore/FavoriteTokenCard'
-import { AnimatedBox, Box } from 'src/components/layout'
+import { AnimatedBox, Box, Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
 import { ExploreTokensTabQuery } from 'src/data/__generated__/types-and-hooks'
-import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { flex } from 'src/styles/flex'
 import { theme as FixedTheme } from 'src/styles/theme'
 
-const NUM_COLUMNS = 3
+const NUM_COLUMNS = 2
 const GAP_SIZE = FixedTheme.spacing.xs
 const ITEM_FLEX = { flex: 1 / NUM_COLUMNS }
 
-/** Renders the favorite tokens card on the Explore page */
+/** Renders the favorite tokens section on the Explore tab */
 export function FavoriteTokensGrid({
   favoriteTokensData,
   isEditing,
   setIsEditing,
+  showLoading,
 }: {
   favoriteTokensData: ExploreTokensTabQuery['favoriteTokens']
   isEditing: boolean
   setIsEditing: (update: boolean) => void
+  showLoading: boolean
 }) {
+  const { t } = useTranslation()
+
   // local cache to avoid flicker
   const [localData, setLocalData] = useState<ExploreTokensTabQuery['favoriteTokens'] | undefined>(
     undefined
@@ -59,8 +62,13 @@ export function FavoriteTokensGrid({
 
   return (
     <AnimatedBox entering={FadeIn}>
-      <FavoriteHeaderRow isEditing={isEditing} onPress={() => setIsEditing(!isEditing)} />
-      {!localData ? (
+      <FavoriteHeaderRow
+        editingTitle={t('Edit favorite tokens')}
+        isEditing={isEditing}
+        title={t('Favorite tokens')}
+        onPress={() => setIsEditing(!isEditing)}
+      />
+      {!localData || showLoading ? (
         <FavoriteTokensGridLoader />
       ) : (
         <FlatList
@@ -78,32 +86,15 @@ export function FavoriteTokensGrid({
   )
 }
 
-// Mimic the layout to avoid thrashing.
 export function FavoriteTokensGridLoader() {
-  const favoriteCurrencyIdsSet = useAppSelector(selectFavoriteTokensSet)
-  const loadingData = Array.from(favoriteCurrencyIdsSet)
-  const renderItem = useCallback(({ index }: ListRenderItemInfo<string>) => {
-    const lastColumn = (index + 1) % NUM_COLUMNS === 0
-    return (
-      <>
-        <Box aspectRatio={1} style={ITEM_FLEX}>
-          <Loading type="favorite" />
-        </Box>
-        {lastColumn ? null : <Box width={GAP_SIZE} />}
-      </>
-    )
-  }, [])
-
   return (
-    <FlatList
-      ItemSeparatorComponent={() => <Box height={GAP_SIZE} />}
-      contentContainerStyle={flex.grow}
-      data={loadingData}
-      listKey="explore-favorite-tokens"
-      numColumns={NUM_COLUMNS}
-      renderItem={renderItem}
-      showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}
-    />
+    <Flex row gap="xs">
+      <Box style={ITEM_FLEX}>
+        <Loading height={100} type="favorite" />
+      </Box>
+      <Box style={ITEM_FLEX}>
+        <Loading height={100} type="favorite" />
+      </Box>
+    </Flex>
   )
 }

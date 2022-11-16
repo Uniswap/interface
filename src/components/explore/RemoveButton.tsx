@@ -9,18 +9,17 @@ export default function RemoveButton(props: BaseButtonProps) {
   return (
     <AnimatedTouchableArea
       {...props}
+      hapticFeedback
       alignItems="center"
-      backgroundColor="background0"
-      borderColor="backgroundOutline"
+      backgroundColor="textTertiary"
       borderRadius="full"
-      borderWidth={1}
       entering={FadeIn}
       exiting={FadeOut}
-      height={theme.imageSizes.lg}
+      height={theme.imageSizes.md}
       justifyContent="center"
-      width={theme.imageSizes.lg}
+      width={theme.imageSizes.md}
       zIndex="tooltip">
-      <Box backgroundColor="textSecondary" borderRadius="md" height={2} width={12} />
+      <Box backgroundColor="background0" borderRadius="md" height={2} width={10} />
     </AnimatedTouchableArea>
   )
 }

@@ -4,11 +4,16 @@ import { ViewProps } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch } from 'src/app/hooks'
 import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
-import { AddressDisplay } from 'src/components/AddressDisplay'
+import { AccountIcon } from 'src/components/AccountIcon'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import RemoveButton from 'src/components/explore/RemoveButton'
+import { Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
+import { Text } from 'src/components/Text'
+import { useENSAvatar } from 'src/features/ens/api'
 import { removeWatchedAddress } from 'src/features/favorites/slice'
+import { useDisplayName } from 'src/features/wallet/hooks'
+import { flex } from 'src/styles/flex'
 import { theme } from 'src/styles/theme'
 
 type FavoriteWalletCardProps = {
@@ -26,6 +31,20 @@ export default function FavoriteWalletCard({
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const { preload, navigate } = useEagerExternalProfileNavigation()
+
+  const displayName = useDisplayName(address)
+  const { data: avatar } = useENSAvatar(address)
+
+  const icon = useMemo(() => {
+    return (
+      <AccountIcon
+        address={address}
+        avatarUri={avatar}
+        showViewOnlyBadge={false}
+        size={theme.iconSizes.sm}
+      />
+    )
+  }, [address, avatar])
 
   const onRemove = useCallback(
     () => dispatch(removeWatchedAddress({ address })),
@@ -64,16 +83,19 @@ export default function FavoriteWalletCard({
           navigate(address)
         }}>
         <BaseCard.Shadow>
-          {isEditing ? (
-            <RemoveButton position="absolute" right={-8} top={-8} onPress={onRemove} />
-          ) : null}
-          <AddressDisplay
-            hideAddressInSubtitle
-            address={address}
-            direction="column"
-            size={theme.iconSizes.xxxl}
-            variant="buttonLabelSmall"
-          />
+          <Flex row alignItems="center" gap="xxs" justifyContent="space-between">
+            <Flex row shrink alignItems="center" gap="xxs">
+              {icon}
+              <Text
+                color="textPrimary"
+                numberOfLines={1}
+                style={flex.shrink}
+                variant="subheadSmall">
+                {displayName?.name}
+              </Text>
+            </Flex>
+            {isEditing ? <RemoveButton onPress={onRemove} /> : <Box height={theme.imageSizes.md} />}
+          </Flex>
         </BaseCard.Shadow>
       </TouchableArea>
     </ContextMenu>

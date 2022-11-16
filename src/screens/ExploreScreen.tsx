@@ -2,33 +2,24 @@ import { DrawerActions, useScrollToTop } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { KeyboardAvoidingView, TextInput } from 'react-native'
+import { KeyboardAvoidingView, TextInput, useColorScheme } from 'react-native'
 import { GestureDetector } from 'react-native-gesture-handler'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { SceneRendererProps, TabBar } from 'react-native-tab-view'
-import { useAppTheme } from 'src/app/hooks'
 import { ExploreStackParamList, TabNavigationProp } from 'src/app/navigation/types'
-import { FavoriteTokensGridLoader } from 'src/components/explore/FavoriteTokensGrid'
+import { ExploreSections } from 'src/components/explore/ExploreSections'
 import { SearchEmptySection } from 'src/components/explore/search/SearchEmptySection'
 import { SearchResultsSection } from 'src/components/explore/search/SearchResultsSection'
-import ExploreTokensTab from 'src/components/explore/tabs/ExploreTokensTab'
-import ExploreWalletsTab from 'src/components/explore/tabs/ExploreWalletsTab'
 import { SearchTextInput } from 'src/components/input/SearchTextInput'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import {
   panHeaderGestureAction,
   panSidebarContainerGestureAction,
-  renderTabLabel,
-  TAB_STYLES,
 } from 'src/components/layout/TabHelpers'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
-import { Loading } from 'src/components/loading'
-import TraceTabView from 'src/components/telemetry/TraceTabView'
-import { Text } from 'src/components/Text'
-import { SectionName } from 'src/features/telemetry/constants'
 import { Screens, Tabs } from 'src/screens/Screens'
 import { flex } from 'src/styles/flex'
+import { Theme } from 'src/styles/theme'
 import { useDebounce } from 'src/utils/timing'
 
 const SIDEBAR_SWIPE_CONTAINER_WIDTH = 45
@@ -37,7 +28,7 @@ type Props = NativeStackScreenProps<ExploreStackParamList, Screens.Explore>
 
 export function ExploreScreen({ navigation }: Props) {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const isDarkMode = useColorScheme() === 'dark'
 
   const listRef = useRef(null)
   useScrollToTop(listRef)
@@ -71,49 +62,6 @@ export function ExploreScreen({ navigation }: Props) {
     return unsubscribe
   }, [navigation])
 
-  const tabs = useMemo(
-    () => [
-      { key: SectionName.ExploreTokensTab, title: t('Tokens') },
-      { key: SectionName.ExploreWalletsTab, title: t('Wallets') },
-    ],
-    [t]
-  )
-  const [tabIndex, setIndex] = useState(0)
-
-  const renderTab = useCallback(
-    ({ route }) => {
-      switch (route?.key) {
-        case SectionName.ExploreTokensTab:
-          return <ExploreTokensTab listRef={listRef} />
-        case SectionName.ExploreWalletsTab:
-          return <ExploreWalletsTab />
-      }
-      return null
-    },
-    [listRef]
-  )
-
-  const renderTabBar = useCallback(
-    (sceneProps: SceneRendererProps) => {
-      return (
-        <TabBar
-          {...sceneProps}
-          indicatorStyle={TAB_STYLES.activeTabIndicator}
-          navigationState={{ index: tabIndex, routes: tabs }}
-          renderLabel={renderTabLabel}
-          style={[
-            TAB_STYLES.tabBar,
-            {
-              backgroundColor: theme.colors.background0,
-              borderBottomColor: theme.colors.backgroundOutline,
-            },
-          ]}
-        />
-      )
-    },
-    [tabIndex, tabs, theme]
-  )
-
   const openSidebar = useCallback(() => {
     navigation.dispatch(DrawerActions.openDrawer())
   }, [navigation])
@@ -124,21 +72,27 @@ export function ExploreScreen({ navigation }: Props) {
   )
   const panHeaderGesture = useMemo(() => panHeaderGestureAction(openSidebar), [openSidebar])
 
+  // Handle special case with design system light colors because background1 is the same as background0
+  const contrastBackgroundColor: keyof Theme['colors'] = isDarkMode ? 'background1' : 'background2'
+  const searchBarBackgroundColor: keyof Theme['colors'] = isDarkMode ? 'background2' : 'background1'
+
   return (
-    <Screen edges={['top', 'left', 'right']}>
+    <Screen
+      bg={isSearchMode ? 'background0' : contrastBackgroundColor}
+      edges={['top', 'left', 'right']}>
       <GestureDetector gesture={panHeaderGesture}>
-        <Flex bg="background0" m="sm">
+        <Box p="sm">
           <SearchTextInput
             ref={textInputRef}
             showCancelButton
-            backgroundColor="background2"
+            backgroundColor={isSearchMode ? contrastBackgroundColor : searchBarBackgroundColor}
             placeholder={t('Search tokens and wallets')}
             value={searchQuery}
             onCancel={onSearchCancel}
             onChangeText={onChangeSearchFilter}
             onFocus={onSearchFocus}
           />
-        </Flex>
+        </Box>
       </GestureDetector>
       <Flex grow>
         {isSearchMode ? (
@@ -155,12 +109,7 @@ export function ExploreScreen({ navigation }: Props) {
             </AnimatedFlex>
           </KeyboardAvoidingView>
         ) : (
-          <TraceTabView
-            navigationState={{ index: tabIndex, routes: tabs }}
-            renderScene={renderTab}
-            renderTabBar={renderTabBar}
-            onIndexChange={setIndex}
-          />
+          <ExploreSections listRef={listRef} />
         )}
       </Flex>
 
@@ -175,27 +124,5 @@ export function ExploreScreen({ navigation }: Props) {
         />
       </GestureDetector>
     </Screen>
-  )
-}
-
-export function ExploreTokensTabLoader() {
-  const { t } = useTranslation()
-  return (
-    <Flex gap="lg" my="sm" style={TAB_STYLES.tabContentContainerStandard}>
-      <Flex gap="sm">
-        <Text color="textSecondary" variant="subheadSmall">
-          {t('Favorites')}
-        </Text>
-        <FavoriteTokensGridLoader />
-      </Flex>
-      <Flex gap="md">
-        <Flex row alignItems="center" justifyContent="space-between" py="sm">
-          <Text color="textSecondary" variant="subheadSmall">
-            {t('Top tokens')}
-          </Text>
-        </Flex>
-        <Loading repeat={5} type="token" />
-      </Flex>
-    </Flex>
   )
 }

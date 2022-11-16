@@ -126,6 +126,7 @@ export const TokenItem = memo(
             alignItems="flex-start"
             justifyContent="space-between"
             opacity={opacity}
+            px="lg"
             py="xs">
             <Flex centered row flexShrink={1} gap="xs" overflow="hidden">
               <Flex centered row gap="xxs" overflow="hidden">

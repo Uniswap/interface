@@ -8,31 +8,35 @@ import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
 
 export function FavoriteHeaderRow({
+  title,
+  editingTitle,
   isEditing,
   onPress,
 }: {
+  title: string
+  editingTitle: string
   isEditing: boolean
   onPress: () => void
 }) {
   const { t } = useTranslation()
   const theme = useAppTheme()
   return (
-    <Flex row alignItems="center" justifyContent="space-between" mb="xs">
+    <Flex row alignItems="center" justifyContent="space-between" mb="xs" mx="xs">
       <Text color="textSecondary" variant="subheadSmall">
-        {isEditing ? t('Edit favorites') : t('Favorites')}
+        {isEditing ? editingTitle : title}
       </Text>
       {!isEditing ? (
-        <TouchableArea name={ElementName.Edit} onPress={onPress}>
+        <TouchableArea hapticFeedback name={ElementName.Edit} onPress={onPress}>
           <TripleDots
             color={theme.colors.textSecondary}
-            height={12}
+            height={theme.iconSizes.lg}
             strokeLinecap="round"
             strokeWidth="1"
-            width={14}
+            width={theme.iconSizes.lg}
           />
         </TouchableArea>
       ) : (
-        <TouchableArea onPress={onPress}>
+        <TouchableArea height={theme.iconSizes.lg} onPress={onPress}>
           <Text color="accentActive" variant="buttonLabelSmall">
             {t('Done')}
           </Text>
