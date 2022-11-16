@@ -68,12 +68,10 @@ const ScrollingIndicator = ({ top, show }: SeparatorProps) => (
 const Bag = () => {
   const { account, provider } = useWeb3React()
 
-  const { resetSellAssets, sellAssets, setIsSellMode } = useSellAsset(
-    ({ isSellMode, reset, sellAssets, setIsSellMode }) => ({
-      isSellMode,
+  const { resetSellAssets, sellAssets } = useSellAsset(
+    ({ reset, sellAssets }) => ({
       resetSellAssets: reset,
       sellAssets,
-      setIsSellMode,
     }),
     shallow
   )
@@ -164,9 +162,8 @@ const Bag = () => {
   }
 
   const handleCloseBag = useCallback(() => {
-    setIsSellMode(false)
     setBagExpanded({ bagExpanded: false, manualClose: true })
-  }, [setBagExpanded, setIsSellMode])
+  }, [setBagExpanded])
 
   const fetchAssets = async () => {
     const itemsToBuy = itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset)

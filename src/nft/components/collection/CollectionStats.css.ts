@@ -18,12 +18,6 @@ export const statsText = style([
   },
 ])
 
-export const smallStatsText = style({
-  marginLeft: '84px',
-})
-
-export const statsRowItem = sprinkles({ paddingRight: '12' })
-
 export const baseCollectionImage = sprinkles({
   left: '0',
   borderStyle: 'solid',
