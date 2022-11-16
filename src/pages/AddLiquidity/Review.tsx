@@ -31,7 +31,7 @@ export function Review({
             position={position}
             inRange={!outOfRange}
             ticksAtLimit={ticksAtLimit}
-            title={'Selected Range'}
+            title="Selected Range"
           />
         ) : null}
       </AutoColumn>

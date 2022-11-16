@@ -84,7 +84,7 @@ export default function UnsupportedCurrencyFooter({
                   <OutlineCard key={token.address?.concat('not-supported')}>
                     <AutoColumn gap="10px">
                       <AutoRow gap="5px" align="center">
-                        <CurrencyLogo currency={token} size={'24px'} />
+                        <CurrencyLogo currency={token} size="24px" />
                         <ThemedText.DeprecatedBody fontWeight={500}>{token.symbol}</ThemedText.DeprecatedBody>
                       </AutoRow>
                       {chainId && (
@@ -108,7 +108,7 @@ export default function UnsupportedCurrencyFooter({
           </AutoColumn>
         </Card>
       </Modal>
-      <StyledButtonEmpty padding={'0'} onClick={() => setShowDetails(true)}>
+      <StyledButtonEmpty padding="0" onClick={() => setShowDetails(true)}>
         <ThemedText.DeprecatedBlue>
           <Trans>Read more about unsupported assets</Trans>
         </ThemedText.DeprecatedBlue>

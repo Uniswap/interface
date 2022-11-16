@@ -99,11 +99,11 @@ export default function SwapModalHeader({
   }, [shouldLogModalCloseEvent, showAcceptChanges, setShouldLogModalCloseEvent, trade, priceUpdate])
 
   return (
-    <AutoColumn gap={'4px'} style={{ marginTop: '1rem' }}>
+    <AutoColumn gap="4px" style={{ marginTop: '1rem' }}>
       <LightCard padding="0.75rem 1rem">
-        <AutoColumn gap={'8px'}>
+        <AutoColumn gap="8px">
           <RowBetween align="center">
-            <RowFixed gap={'0px'}>
+            <RowFixed gap="0px">
               <TruncatedText
                 fontSize={24}
                 fontWeight={500}
@@ -112,8 +112,8 @@ export default function SwapModalHeader({
                 {trade.inputAmount.toSignificant(6)}
               </TruncatedText>
             </RowFixed>
-            <RowFixed gap={'0px'}>
-              <CurrencyLogo currency={trade.inputAmount.currency} size={'20px'} style={{ marginRight: '12px' }} />
+            <RowFixed gap="0px">
+              <CurrencyLogo currency={trade.inputAmount.currency} size="20px" style={{ marginRight: '12px' }} />
               <Text fontSize={20} fontWeight={500}>
                 {trade.inputAmount.currency.symbol}
               </Text>
@@ -128,15 +128,15 @@ export default function SwapModalHeader({
         <ArrowDown size="16" color={theme.textPrimary} />
       </ArrowWrapper>
       <LightCard padding="0.75rem 1rem" style={{ marginBottom: '0.25rem' }}>
-        <AutoColumn gap={'8px'}>
+        <AutoColumn gap="8px">
           <RowBetween align="flex-end">
-            <RowFixed gap={'0px'}>
+            <RowFixed gap="0px">
               <TruncatedText fontSize={24} fontWeight={500}>
                 {trade.outputAmount.toSignificant(6)}
               </TruncatedText>
             </RowFixed>
-            <RowFixed gap={'0px'}>
-              <CurrencyLogo currency={trade.outputAmount.currency} size={'20px'} style={{ marginRight: '12px' }} />
+            <RowFixed gap="0px">
+              <CurrencyLogo currency={trade.outputAmount.currency} size="20px" style={{ marginRight: '12px' }} />
               <Text fontSize={20} fontWeight={500}>
                 {trade.outputAmount.currency.symbol}
               </Text>
@@ -159,7 +159,7 @@ export default function SwapModalHeader({
         <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} />
       </LightCard>
       {showAcceptChanges ? (
-        <SwapShowAcceptChanges justify="flex-start" gap={'0px'}>
+        <SwapShowAcceptChanges justify="flex-start" gap="0px">
           <RowBetween>
             <RowFixed>
               <AlertTriangle size={20} style={{ marginRight: '8px', minWidth: 24 }} />

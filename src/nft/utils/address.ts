@@ -13,7 +13,3 @@ export function shortenAddress(address: string, charsStart = 4, charsEnd?: numbe
 
   return `${address.substring(0, charsStart + 2)}...${address.substring(42 - (charsEnd || charsStart))}`
 }
-
-export function shortenEnsName(name?: string): string | undefined {
-  return !name || name.length <= 12 ? name : `${name.substring(0, 6)}...eth`
-}
