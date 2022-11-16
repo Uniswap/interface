@@ -97,6 +97,20 @@ export const marketplaceIcon = style([
 
 /* Base Table Styles  */
 
+export const table = style([
+  {
+    borderCollapse: 'collapse',
+    boxShadow: '0 0 0 1px rgba(153, 161, 189, 0.24)',
+    borderSpacing: '0px 40px',
+  },
+  sprinkles({
+    background: 'backgroundSurface',
+    width: 'full',
+    borderRadius: '12',
+    borderStyle: 'none',
+  }),
+])
+
 export const thead = sprinkles({
   marginRight: '12',
   borderColor: 'outline',

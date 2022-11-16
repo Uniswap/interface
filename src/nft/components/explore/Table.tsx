@@ -19,13 +19,9 @@ const CELL_WIDTH = '160px'
 const MOBILE_CELL_WIDTH = '240px'
 const DESKTOP_CELL_WIDTH = '360px'
 
-const StyledTable = styled.table`
-  border: 1px solid rgba(152, 161, 192, 0.24);
-  border-spacing: 0px;
-  background: ${({ theme }) => theme.backgroundSurface};
+const GlowEffect = styled.div`
+  border-radius: 32px;
   box-shadow: ${({ theme }) => theme.networkDefaultShadow};
-  width: 100%;
-  border-radius: 12px;
 `
 
 const RankCellContainer = styled.div`
@@ -99,7 +95,6 @@ interface TableProps<D extends Record<string, unknown>> {
   mediumHiddenColumns: IdType<D>[]
   largeHiddenColumns: IdType<D>[]
 }
-
 export function Table<D extends Record<string, unknown>>({
   columns,
   data,
@@ -151,82 +146,84 @@ export function Table<D extends Record<string, unknown>>({
   }
 
   return (
-    <StyledTable {...getTableProps()}>
-      <thead className={styles.thead}>
-        {headerGroups.map((headerGroup) => (
-          <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
-            {headerGroup.headers.map((column, index) => {
-              return (
-                <StyledHeader
-                  className={styles.th}
-                  {...column.getHeaderProps(column.getSortByToggleProps())}
-                  style={{
-                    textAlign: index === 0 ? 'left' : 'right',
-                    paddingLeft: index === 0 ? (isMobile ? '16px' : '52px') : 0,
-                  }}
-                  disabled={column.disableSortBy}
-                  key={index}
-                >
-                  <Box as="span" color="accentAction" position="relative">
-                    {column.isSorted ? (
-                      column.isSortedDesc ? (
-                        <ArrowRightIcon style={{ transform: 'rotate(90deg)', position: 'absolute' }} />
-                      ) : (
-                        <ArrowRightIcon style={{ transform: 'rotate(-90deg)', position: 'absolute' }} />
-                      )
-                    ) : (
-                      ''
-                    )}
-                  </Box>
-                  <Box as="span" paddingLeft={column.isSorted ? '18' : '0'}>
-                    {column.render('Header')}
-                  </Box>
-                </StyledHeader>
-              )
-            })}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map((row, i) => {
-          prepareRow(row)
-
-          return (
-            <StyledRow
-              {...row.getRowProps()}
-              key={row.id}
-              onClick={() => navigate(`/nfts/collection/${row.original.collection.address}`)}
-            >
-              {row.cells.map((cell, cellIndex) => {
+    <GlowEffect>
+      <table {...getTableProps()} className={styles.table}>
+        <thead className={styles.thead}>
+          {headerGroups.map((headerGroup) => (
+            <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
+              {headerGroup.headers.map((column, index) => {
                 return (
-                  <td
-                    className={styles.td}
-                    {...cell.getCellProps()}
-                    key={cellIndex}
+                  <StyledHeader
+                    className={styles.th}
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
                     style={{
-                      maxWidth: cellIndex === 0 ? (isMobile ? MOBILE_CELL_WIDTH : DESKTOP_CELL_WIDTH) : CELL_WIDTH,
+                      textAlign: index === 0 ? 'left' : 'right',
+                      paddingLeft: index === 0 ? (isMobile ? '16px' : '52px') : 0,
                     }}
+                    disabled={column.disableSortBy}
+                    key={index}
                   >
-                    {cellIndex === 0 ? (
-                      <RankCellContainer>
-                        {!isMobile && (
-                          <ThemedText.BodySecondary fontSize="14px" lineHeight="20px">
-                            {i + 1}
-                          </ThemedText.BodySecondary>
-                        )}
-                        {cell.render('Cell')}
-                      </RankCellContainer>
-                    ) : (
-                      cell.render('Cell')
-                    )}
-                  </td>
+                    <Box as="span" color="accentAction" position="relative">
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <ArrowRightIcon style={{ transform: 'rotate(90deg)', position: 'absolute' }} />
+                        ) : (
+                          <ArrowRightIcon style={{ transform: 'rotate(-90deg)', position: 'absolute' }} />
+                        )
+                      ) : (
+                        ''
+                      )}
+                    </Box>
+                    <Box as="span" paddingLeft={column.isSorted ? '18' : '0'}>
+                      {column.render('Header')}
+                    </Box>
+                  </StyledHeader>
                 )
               })}
-            </StyledRow>
-          )
-        })}
-      </tbody>
-    </StyledTable>
+            </tr>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map((row, i) => {
+            prepareRow(row)
+
+            return (
+              <StyledRow
+                {...row.getRowProps()}
+                key={row.id}
+                onClick={() => navigate(`/nfts/collection/${row.original.collection.address}`)}
+              >
+                {row.cells.map((cell, cellIndex) => {
+                  return (
+                    <td
+                      className={styles.td}
+                      {...cell.getCellProps()}
+                      key={cellIndex}
+                      style={{
+                        maxWidth: cellIndex === 0 ? (isMobile ? MOBILE_CELL_WIDTH : DESKTOP_CELL_WIDTH) : CELL_WIDTH,
+                      }}
+                    >
+                      {cellIndex === 0 ? (
+                        <RankCellContainer>
+                          {!isMobile && (
+                            <ThemedText.BodySecondary fontSize="14px" lineHeight="20px">
+                              {i + 1}
+                            </ThemedText.BodySecondary>
+                          )}
+                          {cell.render('Cell')}
+                        </RankCellContainer>
+                      ) : (
+                        cell.render('Cell')
+                      )}
+                    </td>
+                  )
+                })}
+              </StyledRow>
+            )
+          })}
+        </tbody>
+      </table>
+    </GlowEffect>
   )
 }
 
@@ -237,65 +234,67 @@ interface LoadingTableProps {
 
 function LoadingTable({ headerGroups, visibleColumns, ...props }: LoadingTableProps) {
   return (
-    <StyledTable {...props}>
-      <thead className={styles.thead}>
-        {headerGroups.map((headerGroup) => (
-          <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
-            {headerGroup.headers.map((column, index) => {
-              return (
-                <StyledHeader
-                  className={styles.th}
-                  {...column.getHeaderProps(column.getSortByToggleProps())}
-                  style={{
-                    textAlign: index === 0 ? 'left' : 'right',
-                    paddingLeft: index === 0 ? '52px' : 0,
-                  }}
-                  disabled={index === 0}
-                  key={index}
-                >
-                  <Box as="span" color="accentAction" position="relative">
-                    {column.isSorted ? (
-                      column.isSortedDesc ? (
-                        <ArrowRightIcon style={{ transform: 'rotate(90deg)', position: 'absolute' }} />
+    <GlowEffect>
+      <table {...props} className={styles.table}>
+        <thead className={styles.thead}>
+          {headerGroups.map((headerGroup) => (
+            <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
+              {headerGroup.headers.map((column, index) => {
+                return (
+                  <StyledHeader
+                    className={styles.th}
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
+                    style={{
+                      textAlign: index === 0 ? 'left' : 'right',
+                      paddingLeft: index === 0 ? '52px' : 0,
+                    }}
+                    disabled={index === 0}
+                    key={index}
+                  >
+                    <Box as="span" color="accentAction" position="relative">
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <ArrowRightIcon style={{ transform: 'rotate(90deg)', position: 'absolute' }} />
+                        ) : (
+                          <ArrowRightIcon style={{ transform: 'rotate(-90deg)', position: 'absolute' }} />
+                        )
                       ) : (
-                        <ArrowRightIcon style={{ transform: 'rotate(-90deg)', position: 'absolute' }} />
-                      )
+                        ''
+                      )}
+                    </Box>
+                    <Box as="span" paddingLeft={column.isSorted ? '18' : '0'}>
+                      {column.render('Header')}
+                    </Box>
+                  </StyledHeader>
+                )
+              })}
+            </tr>
+          ))}
+        </thead>
+        <tbody {...props}>
+          {[...Array(DEFAULT_TRENDING_TABLE_QUERY_AMOUNT)].map((_, index) => (
+            <StyledLoadingRow key={index}>
+              {[...Array(visibleColumns.length)].map((_, cellIndex) => {
+                return (
+                  <td className={styles.loadingTd} key={cellIndex}>
+                    {cellIndex === 0 ? (
+                      <StyledCollectionNameHolder>
+                        <StyledRankHolder />
+                        <StyledImageHolder />
+                        <LoadingBubble />
+                      </StyledCollectionNameHolder>
                     ) : (
-                      ''
+                      <StyledLoadingHolder>
+                        <LoadingBubble />
+                      </StyledLoadingHolder>
                     )}
-                  </Box>
-                  <Box as="span" paddingLeft={column.isSorted ? '18' : '0'}>
-                    {column.render('Header')}
-                  </Box>
-                </StyledHeader>
-              )
-            })}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...props}>
-        {[...Array(DEFAULT_TRENDING_TABLE_QUERY_AMOUNT)].map((_, index) => (
-          <StyledLoadingRow key={index}>
-            {[...Array(visibleColumns.length)].map((_, cellIndex) => {
-              return (
-                <td className={styles.loadingTd} key={cellIndex}>
-                  {cellIndex === 0 ? (
-                    <StyledCollectionNameHolder>
-                      <StyledRankHolder />
-                      <StyledImageHolder />
-                      <LoadingBubble />
-                    </StyledCollectionNameHolder>
-                  ) : (
-                    <StyledLoadingHolder>
-                      <LoadingBubble />
-                    </StyledLoadingHolder>
-                  )}
-                </td>
-              )
-            })}
-          </StyledLoadingRow>
-        ))}
-      </tbody>
-    </StyledTable>
+                  </td>
+                )
+              })}
+            </StyledLoadingRow>
+          ))}
+        </tbody>
+      </table>
+    </GlowEffect>
   )
 }
