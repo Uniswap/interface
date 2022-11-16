@@ -2638,10 +2638,10 @@
     "@babel/runtime" "^7.11.2"
     "@lingui/core" "^3.14.0"
 
-"@looksrare/sdk@^0.7.1":
-  version "0.7.4"
-  resolved "https://registry.yarnpkg.com/@looksrare/sdk/-/sdk-0.7.4.tgz#f7b3d5d5a0d94bc5b12e8a29d380cb923f72ce9c"
-  integrity sha512-zmn0dM0Twe01CGriCNeAY2DV6K8xGZ2VcfSbDYjxbRvL74M0Ec0wgtqTt/6F6m7OwetcYzljhovF4TuZcvvhwA==
+"@looksrare/sdk@^0.10.2":
+  version "0.10.2"
+  resolved "https://registry.yarnpkg.com/@looksrare/sdk/-/sdk-0.10.2.tgz#08b14cb6d3a5499ad0417c817dbb2da924477f4f"
+  integrity sha512-K3VVq7rpS0hD5IwfhAcAPJZO5IjL0VbL89Zl04x8WnLsFOwXHzsUkxUpRrL8ko2/bgZdgTqWgUWCvbSoVr8hzw==
 
 "@metamask/detect-provider@^1.2.0":
   version "1.2.0"

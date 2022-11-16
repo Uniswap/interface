@@ -28,7 +28,7 @@ import { createSellOrder, encodeOrder, OfferItem, OrderPayload, signOrderData } 
 export const ListingMarkets: ListingMarket[] = [
   {
     name: 'LooksRare',
-    fee: 2.0,
+    fee: 1.5,
     icon: '/nft/svgs/marketplaces/looksrare.svg',
   },
   {
@@ -181,7 +181,7 @@ export async function signListing(
         // amount of tokens to sell/purchase (must be 1 for ERC721, 1+ for ERC1155)
         amount: BigNumber.from(1),
         // strategy for trade execution (e.g., DutchAuction, StandardSaleForFixedPrice), see addresses in the SDK
-        strategy: '0x579af6FD30BF83a5Ac0D636bc619f98DBdeb930c',
+        strategy: addresses.STRATEGY_STANDARD_SALE,
         // currency address
         currency: addresses.WETH,
         // order nonce (must be unique unless new maker order is meant to override existing one e.g., lower ask price)
@@ -210,7 +210,7 @@ export async function signListing(
           signature: signatureHash,
           tokenId: asset.tokenId,
           collection: asset.asset_contract.address,
-          strategy: '0x579af6FD30BF83a5Ac0D636bc619f98DBdeb930c',
+          strategy: addresses.STRATEGY_STANDARD_SALE,
           currency: addresses.WETH,
           signer: signerAddress,
           isOrderAsk: true,
@@ -222,12 +222,10 @@ export async function signListing(
           minPercentageToAsk: 10000 - (asset.basisPoints ? 200 : 150),
           params: [],
         }
-        console.log(payload)
         const res = await createLooksRareOrder(payload)
         if (res) setStatus(ListingStatus.APPROVED)
         return res
       } catch (error) {
-        console.log(error)
         if (error.code === 4001) setStatus(ListingStatus.REJECTED)
         else setStatus(ListingStatus.FAILED)
         return false
@@ -256,14 +254,12 @@ export async function signListing(
           changePrice: Boolean(prevOrderId),
           isCollection: false,
         }
-        console.log(payload)
         setStatus(ListingStatus.PENDING)
         // call server api
         const resp = await newX2Y2Order(payload)
         if (resp) setStatus(ListingStatus.APPROVED)
         return resp
       } catch (error) {
-        console.log(error)
         if (error.code === 4001) setStatus(ListingStatus.REJECTED)
         else setStatus(ListingStatus.FAILED)
         return false

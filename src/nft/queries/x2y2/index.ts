@@ -27,7 +27,7 @@ export const newX2Y2Order = async (payload: OrderPayload): Promise<boolean> => {
 }
 
 export const getOrderId = async (collectionAddress: string, tokenId: string): Promise<number | undefined> => {
-  const url = `http://localhost:5001/getX2Y2OrderId?collectionAddress=${collectionAddress}&tokenId=${tokenId}` // TODO update endpoint
+  const url = `${process.env.REACT_APP_GENIE_V3_API_URL}/getX2Y2OrderId?collectionAddress=${collectionAddress}&tokenId=${tokenId}`
   const r = await fetch(url, {
     method: 'GET',
     headers: {
