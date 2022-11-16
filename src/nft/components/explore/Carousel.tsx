@@ -5,7 +5,7 @@ import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import { a, useSprings } from 'react-spring'
 import styled from 'styled-components/macro'
 
-const MAX_CARD_WIDTH = 595
+const MAX_CARD_WIDTH = 530
 
 const BaseCarouselItem = styled(a.div)`
   height: 315px;
@@ -20,20 +20,22 @@ const BaseCarouselItem = styled(a.div)`
 const CarouselContainer = styled.div`
   display: flex;
   box-sizing: border-box;
-  max-width: ${MAX_CARD_WIDTH}px;
   width: 100%;
+  justify-content: flex-end;
 `
 
 const CarouselCardContainer = styled.div`
   position: relative;
   width: 100%;
+  max-width: ${MAX_CARD_WIDTH}px;
   overflow-x: hidden;
 `
 
 const CarouselCard = styled(BaseCarouselItem)`
   display: flex;
   justify-content: center;
-  padding: 3px 32px 32px 32px;
+  padding-left: 32px;
+  padding-right: 32px;
 
   position: absolute;
   will-change: transform;
@@ -41,8 +43,9 @@ const CarouselCard = styled(BaseCarouselItem)`
 
 const CarouselIcon = styled(BaseCarouselItem)`
   display: flex;
-  justify-content: center;
   align-items: center;
+  padding-left: 8px;
+  padding-right: 8px;
   cursor: pointer;
 
   color: ${({ theme }) => theme.textPrimary};
