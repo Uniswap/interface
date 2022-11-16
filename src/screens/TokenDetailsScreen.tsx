@@ -246,7 +246,7 @@ function TokenDetails({
   ])
 
   return (
-    <AnimatedBox flex={1} mb="md">
+    <AnimatedBox flexGrow={1} mb="md">
       <HeaderScrollScreen
         contentHeader={<TokenDetailsBackButtonRow currency={currency} />}
         fixedHeader={

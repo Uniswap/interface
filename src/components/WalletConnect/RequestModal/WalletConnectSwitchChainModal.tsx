@@ -110,7 +110,6 @@ export function WalletConnectSwitchChainModal({ isVisible, onClose, request }: P
             />
             <Button
               fill
-              emphasis={ButtonEmphasis.Primary}
               label={t('Connect')}
               name={ElementName.Confirm}
               size={ButtonSize.Medium}

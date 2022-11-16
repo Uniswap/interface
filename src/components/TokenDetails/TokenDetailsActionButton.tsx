@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import SendIcon from 'src/assets/icons/send.svg'
-import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
+import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
 import { ElementName } from 'src/features/telemetry/constants'
 
@@ -26,13 +26,7 @@ export function TokenDetailsActionButtons({
       pb="md"
       pt="sm"
       px="lg">
-      <Button
-        fill
-        disabled={!onPressSwap}
-        label={t('Swap')}
-        size={ButtonSize.Large}
-        onPress={onPressSwap}
-      />
+      <Button fill disabled={!onPressSwap} label={t('Swap')} onPress={onPressSwap} />
 
       {showSend && (
         <Button
@@ -40,7 +34,6 @@ export function TokenDetailsActionButtons({
           disabled={!onPressSend}
           emphasis={ButtonEmphasis.Secondary}
           name={ElementName.Send}
-          size={ButtonSize.Large}
           onPress={onPressSend}
         />
       )}

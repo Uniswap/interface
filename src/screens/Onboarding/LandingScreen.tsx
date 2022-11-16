@@ -4,7 +4,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useColorScheme } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { Button } from 'src/components/buttons/Button'
+import { Button, ButtonSize } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { LandingBackground } from 'src/components/gradients/LandingBackground'
 import { Box, Flex } from 'src/components/layout'
@@ -56,6 +56,7 @@ export function LandingScreen({ navigation }: Props) {
             <Button
               label={t('Create a wallet')}
               name={ElementName.OnboardingCreateWallet}
+              size={ButtonSize.Large}
               onPress={onPressCreateWallet}
             />
             <TouchableArea

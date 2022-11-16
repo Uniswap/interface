@@ -124,8 +124,8 @@ export function getButtonProperties(
   const textVariant = getButtonTextSizeVariant(size)
   const paddingX = getButtonPaddingX(size)
   const paddingY = getButtonPaddingY(size)
-  const borderRadius = getButtonBorderRadius(size)
   const borderColor = getButtonBorderColor(emphasis)
+  const borderRadius = getButtonBorderRadius(size)
   const iconPadding = getButtonIconPadding(size)
   const iconSize = getButtonIconSize(size)
 

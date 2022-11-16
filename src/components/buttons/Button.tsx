@@ -1,6 +1,6 @@
 import { impactAsync, ImpactFeedbackStyle } from 'expo-haptics'
 import React, { memo, ReactElement } from 'react'
-import Svg, { Defs, RadialGradient, Rect, Stop, SvgProps } from 'react-native-svg'
+import Svg, { Defs, LinearGradient, Rect, Stop, SvgProps } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
 import { withAnimated } from 'src/components/animated'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -106,6 +106,26 @@ const _Button = ({
       onLongPress={onLongPress}
       onPress={onPressHandler}
       onPressIn={onPressIn}>
+      {/* TODO: fix gradient definition so it fills space properly (right now needs 200% height on rect) */}
+      {/* Absolutely positioned at -1 so because the button has 1 px border that needs to be covered by the gradient. */}
+      {emphasis === ButtonEmphasis.Primary && label ? (
+        <Flex
+          borderRadius={borderRadius}
+          height="100%"
+          overflow="hidden"
+          position="absolute"
+          width="100%">
+          <Svg height="100%" width="100%">
+            <Defs>
+              <LinearGradient id="background" x1="0%" x2="0%" y1="0%" y2="100%">
+                <Stop offset="0" stopColor="#F160F9" stopOpacity="1" />
+                <Stop offset="1" stopColor="#FB36D0" stopOpacity="1" />
+              </LinearGradient>
+            </Defs>
+            <Rect fill="url(#background)" height="150%" opacity={1} width="100%" x="0" y="0" />
+          </Svg>
+        </Flex>
+      ) : null}
       <Flex centered row gap={iconPadding} px={paddingX} py={paddingY}>
         {icon}
         {label && (
@@ -118,27 +138,6 @@ const _Button = ({
           </Text>
         )}
       </Flex>
-      {/* TODO: fix gradient definition so it fills space properly (right now needs 200% height on rect) */}
-      {/* Absolutely positioned at -1 so because the button has 1 px border that needs to be covered by the gradient. */}
-      {emphasis === ButtonEmphasis.Primary && label ? (
-        <Flex
-          borderRadius={borderRadius}
-          height="100%"
-          overflow="hidden"
-          position="absolute"
-          top={-1}
-          width="100%">
-          <Svg height="100%" width="100%">
-            <Defs>
-              <RadialGradient cy="0" id="background" rx="0.5" ry="0.5">
-                <Stop offset="0" stopColor={theme.colors.white} stopOpacity="0.2" />
-                <Stop offset="1" stopColor={theme.colors.white} stopOpacity="0" />
-              </RadialGradient>
-            </Defs>
-            <Rect fill="url(#background)" height="200%" opacity={1} width="100%" x="0" y="0" />
-          </Svg>
-        </Flex>
-      ) : null}
     </TouchableArea>
   )
 }

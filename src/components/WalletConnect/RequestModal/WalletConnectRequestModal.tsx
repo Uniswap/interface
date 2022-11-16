@@ -272,7 +272,6 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
             <Button
               fill
               disabled={!confirmEnabled}
-              emphasis={ButtonEmphasis.Primary}
               label={isTransactionRequest(request) ? t('Accept') : t('Sign')}
               name={ElementName.Confirm}
               size={ButtonSize.Medium}
