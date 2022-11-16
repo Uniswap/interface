@@ -3,7 +3,15 @@ import { CollectionTableColumn, TimePeriod } from 'nft/types'
 import { useMemo } from 'react'
 import { CellProps, Column, Row } from 'react-table'
 
-import { ChangeCell, CollectionTitleCell, DiscreteNumberCell, EthCell, TextCell, VolumeCell } from './Cells/Cells'
+import {
+  ChangeCell,
+  ChangeTextCell,
+  CollectionTitleCell,
+  DiscreteNumberCell,
+  EthCell,
+  TextCell,
+  VolumeCell,
+} from './Cells/Cells'
 import { Table } from './Table'
 
 export enum ColumnHeaders {
@@ -16,7 +24,7 @@ export enum ColumnHeaders {
   Owners = 'Owners',
 }
 
-const VOLUME_CHANGE_MAX_VALUE = 9999
+const VOLUME_CHANGE_MAX_VALUE = 100
 
 const compareFloats = (a: number, b: number): 1 | -1 => {
   return Math.round(a * 100000) >= Math.round(b * 100000) ? 1 : -1
@@ -112,10 +120,13 @@ const CollectionTable = ({ data, timePeriod }: { data: CollectionTableColumn[]; 
         disableSortBy: timePeriod === TimePeriod.AllTime,
         sortType: volumeChangeSort,
         Cell: function changeCell(cell: CellProps<CollectionTableColumn>) {
+          const { change } = cell.row.original.volume
           return timePeriod === TimePeriod.AllTime ? (
             <TextCell value="-" />
+          ) : change >= VOLUME_CHANGE_MAX_VALUE ? (
+            <ChangeTextCell change={change}>{`>${VOLUME_CHANGE_MAX_VALUE}`}%</ChangeTextCell>
           ) : (
-            <ChangeCell change={Math.min(cell.row.original.volume.change, VOLUME_CHANGE_MAX_VALUE)} />
+            <ChangeCell change={change} />
           )
         },
       },
