@@ -122,7 +122,7 @@
     "@lingui/core": "^3.14.0",
     "@lingui/macro": "^3.14.0",
     "@lingui/react": "^3.14.0",
-    "@looksrare/sdk": "^0.7.1",
+    "@looksrare/sdk": "^0.10.2",
     "@metamask/jazzicon": "^2.0.0",
     "@opensea/seaport-js": "^1.0.2",
     "@popperjs/core": "^2.4.4",
