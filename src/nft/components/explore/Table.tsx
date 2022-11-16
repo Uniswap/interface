@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Column, ColumnInstance, HeaderGroup, IdType, useSortBy, useTable } from 'react-table'
 import styled, { useTheme } from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { GlowEffect, ThemedText } from 'theme'
 
 import { Box } from '../../components/Box'
 import { CollectionTableColumn } from '../../types'
@@ -18,11 +18,6 @@ const CELL_WIDTH = '160px'
 // Collection Name cell max widths
 const MOBILE_CELL_WIDTH = '240px'
 const DESKTOP_CELL_WIDTH = '360px'
-
-const GlowEffect = styled.div`
-  border-radius: 32px;
-  box-shadow: ${({ theme }) => theme.networkDefaultShadow};
-`
 
 const RankCellContainer = styled.div`
   display: flex;
