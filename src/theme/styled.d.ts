@@ -57,6 +57,7 @@ export interface ThemeColors {
 
   shallowShadow: Color
   deepShadow: Color
+  networkDefaultShadow: Color
   hoverState: Color
   hoverDefault: Color
   stateOverlayHover: Color

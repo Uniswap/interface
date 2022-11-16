@@ -242,12 +242,14 @@ export interface Palette {
 
   shallowShadow: Color
   deepShadow: Color
+  networkDefaultShadow: Color
+
   stateOverlayHover: Color
   stateOverlayPressed: Color
 }
 
 export const colorsLight: Palette = {
-  userThemeColor: colors.magentaVibrant,
+  userThemeColor: colors.pink400,
 
   background: '#faf9fa', //INTENTIONALLY OFF THEME TO GIVE WHITE BG A SOFTER VISUAL
   backgroundBackdrop: colors.white,
@@ -255,7 +257,7 @@ export const colorsLight: Palette = {
   backgroundModule: colors.gray50,
   backgroundInteractive: colors.gray100,
   backgroundFloating: opacify(8, colors.gray700),
-  backgroundOutline: colors.gray150,
+  backgroundOutline: colors.gray100,
   backgroundScrim: opacify(60, colors.gray900),
   backgroundScrolledSurface: opacify(72, colors.white),
 
@@ -306,6 +308,9 @@ export const colorsLight: Palette = {
     '8px 12px 20px rgba(51, 53, 72, 0.04), 4px 6px 12px rgba(51, 53, 72, 0.02), 4px 4px 8px rgba(51, 53, 72, 0.04);',
   shallowShadow:
     '6px 6px 10px rgba(51, 53, 72, 0.01), 2px 2px 6px rgba(51, 53, 72, 0.02), 1px 2px 2px rgba(51, 53, 72, 0.02);',
+
+  networkDefaultShadow: `0px 40px 120px ${opacify(12, colors.pink400)}`,
+
   stateOverlayHover: opacify(8, colors.gray300),
   stateOverlayPressed: opacify(24, colors.gray200),
 }
@@ -368,6 +373,9 @@ export const colorsDark: Palette = {
 
   deepShadow: '12px 16px 24px rgba(0, 0, 0, 0.24), 12px 8px 12px rgba(0, 0, 0, 0.24), 4px 4px 8px rgba(0, 0, 0, 0.32);',
   shallowShadow: '4px 4px 10px rgba(0, 0, 0, 0.24), 2px 2px 4px rgba(0, 0, 0, 0.12), 1px 2px 2px rgba(0, 0, 0, 0.12);',
+
+  networkDefaultShadow: `0px 40px 120px ${opacify(16, colors.blue400)}`,
+
   stateOverlayHover: opacify(8, colors.gray300),
   stateOverlayPressed: opacify(24, colors.gray200),
 }

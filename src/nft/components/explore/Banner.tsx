@@ -18,27 +18,20 @@ const BannerContainer = styled.div`
   width: 100%;
   padding: 32px 16px 0 16px;
   position: relative;
-  overflow: hidden;
 `
 
 const AbsoluteFill = styled.div`
   position: absolute;
+  top: -72px;
   left: 0;
   right: 0;
-  top: 0;
   bottom: 0;
-
-  opacity: ${({ theme }) => (theme.darkMode ? 0.4 : 0.2)};
 `
 
 const BannerBackground = styled(AbsoluteFill)<{ backgroundImage: string }>`
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
   background-image: ${(props) => `url(${props.backgroundImage})`};
   filter: blur(62px);
+  opacity: ${({ theme }) => (theme.darkMode ? 0.4 : 0.2)};
 `
 
 const PlainBackground = styled(AbsoluteFill)`

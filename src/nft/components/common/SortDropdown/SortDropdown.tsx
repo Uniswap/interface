@@ -53,7 +53,6 @@ export const SortDropdown = ({
   return (
     <Box
       ref={ref}
-      transition="250"
       borderRadius="12"
       borderBottomLeftRadius={isOpen ? '0' : undefined}
       borderBottomRightRadius={isOpen ? '0' : undefined}
