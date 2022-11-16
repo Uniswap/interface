@@ -1,29 +1,29 @@
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { FavoriteButton } from 'src/components/explore/FavoriteButton'
 import { Flex } from 'src/components/layout/Flex'
 import { addToSearchHistory, WalletSearchResult } from 'src/features/explore/searchHistorySlice'
 import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
+import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { ElementName } from 'src/features/telemetry/constants'
 
 type SearchWalletItemProps = {
   wallet: WalletSearchResult
-  isEditing?: boolean
-  isFavorited?: boolean
 }
 
-export function SearchWalletItem({ wallet, isEditing, isFavorited }: SearchWalletItemProps) {
+export function SearchWalletItem({ wallet }: SearchWalletItemProps) {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const { preload, navigate } = useEagerExternalProfileNavigation()
 
   const { address } = wallet
+
+  const isFavorited = useAppSelector(selectWatchedAddressSet).has(address)
 
   const onPress = () => {
     preload(address)
@@ -52,9 +52,6 @@ export function SearchWalletItem({ wallet, isEditing, isFavorited }: SearchWalle
             subtitleOverrideText={wallet.category}
             variant="bodyLarge"
           />
-          {isEditing ? (
-            <FavoriteButton disabled={Boolean(isFavorited)} onPress={toggleFavoriteWallet} />
-          ) : null}
         </Flex>
       </TouchableArea>
     </ContextMenu>

@@ -24,13 +24,13 @@ export function useToggleFavoriteCallback(id: CurrencyId) {
 
 export function useToggleWatchedWalletCallback(address: Address) {
   const dispatch = useAppDispatch()
-  const isFavoriteToken = useAppSelector(selectWatchedAddressSet).has(address)
+  const isFavoriteWallet = useAppSelector(selectWatchedAddressSet).has(address)
 
   return useCallback(() => {
-    if (isFavoriteToken) {
+    if (isFavoriteWallet) {
       dispatch(removeWatchedAddress({ address }))
     } else {
       dispatch(addWatchedAddress({ address }))
     }
-  }, [address, dispatch, isFavoriteToken])
+  }, [address, dispatch, isFavoriteWallet])
 }
