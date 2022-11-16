@@ -106,7 +106,7 @@ export const td = style([
   },
   sprinkles({
     maxWidth: '160',
-    paddingY: '8',
+    paddingY: '4',
     textAlign: 'right',
     position: 'relative',
   }),
