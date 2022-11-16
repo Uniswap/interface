@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css'
 
-import { sprinkles, vars } from '../../css/sprinkles.css'
+import { sprinkles } from '../../css/sprinkles.css'
 
 export const buy = style([
   {
