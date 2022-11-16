@@ -1,3 +1,4 @@
+import { rootCssString } from 'nft/css/cssStringFromTheme'
 import React, { useMemo } from 'react'
 import { createGlobalStyle, css, ThemeProvider as StyledComponentsThemeProvider } from 'styled-components/macro'
 
@@ -104,7 +105,6 @@ export const ThemedGlobalStyle = createGlobalStyle`
   }
 
   :root {
-    
+    ${({ theme }) => rootCssString(theme.darkMode)}
   }
 `
-// add this back to :root *({ theme }) => (theme.darkMode ? cssStringFromTheme(darkTheme) : cssStringFromTheme(lightTheme))*

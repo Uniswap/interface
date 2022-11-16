@@ -1,3 +1,6 @@
+import { darkTheme } from 'nft/themes/darkTheme'
+import { lightTheme } from 'nft/themes/lightTheme'
+
 import { cssObjectFromTheme } from './cssObjectFromTheme'
 import { Theme } from './sprinkles.css'
 
@@ -5,4 +8,8 @@ export function cssStringFromTheme(theme: Theme | (() => Theme), options: { exte
   return Object.entries(cssObjectFromTheme(theme, options))
     .map(([key, value]) => `${key}:${value};`)
     .join('')
+}
+
+export function rootCssString(isDarkMode: boolean) {
+  return isDarkMode ? cssStringFromTheme(darkTheme) : cssStringFromTheme(lightTheme)
 }
