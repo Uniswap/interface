@@ -1,9 +1,16 @@
 const rewireStyledComponents = require('react-app-rewire-styled-components')
 const CompressionPlugin = require('compression-webpack-plugin')
+const WorkBoxPlugin = require('workbox-webpack-plugin')
 
 /* config-overrides.js */
 module.exports = function override(config, env) {
   config = rewireStyledComponents(config, env)
+
+  config.plugins.forEach(plugin => {
+    if (plugin instanceof WorkBoxPlugin.InjectManifest) {
+      plugin.config.maximumFileSizeToCacheInBytes = 50 * 1024 * 1024
+    }
+  })
 
   config.optimization = {
     ...config.optimization,

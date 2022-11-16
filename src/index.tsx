@@ -16,6 +16,7 @@ import { BrowserRouter } from 'react-router-dom'
 import 'swiper/swiper-bundle.min.css'
 import 'swiper/swiper.min.css'
 
+import { updateServiceWorker } from 'state/application/actions'
 import CampaignsUpdater from 'state/campaigns/updater'
 
 import SEO from './components/SEO'
@@ -149,9 +150,11 @@ const container = document.getElementById('app') as HTMLElement
 const root = createRoot(container)
 root.render(<ReactApp />)
 
-// if (process.env.REACT_APP_SERVICE_WORKER === 'true') {
-//   serviceWorkerRegistration.register()
-// } else {
-//   serviceWorkerRegistration.unregister()
-// }
-serviceWorkerRegistration.unregister()
+serviceWorkerRegistration.register({
+  onSuccess: () => {
+    //
+  },
+  onUpdate: serviceWorkerRegistration => {
+    store.dispatch(updateServiceWorker(serviceWorkerRegistration))
+  },
+})

@@ -10,6 +10,13 @@
   ],
   "orientation": "portrait",
   "display": "standalone",
+  "background_color": "#fff",
+  "homepage_url": "https://kyberswap.com",
+  "providedBy": {
+    "name": "KyberSwap",
+    "url": "https://kyberswap.com"
+  },
+  "start_url": ".",
   "theme_color": "#31cb9e",
-  "background_color": "#fff"
+  "description": "Swap and earn tokens at the best rates"
 }

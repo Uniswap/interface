@@ -13,6 +13,8 @@ module.exports = {
     'src/locales/**/en-US.po',
     'node_modules',
     'src/**/charting_library.*',
+    'src/service-worker.ts',
+    'src/serviceWorker/document.ts',
     'src/**/charting_library/**',
     'build',
     'dist',

@@ -88,3 +88,5 @@ export const updateETHPrice = createAction<{
 export const updateKNCPrice = createAction<string | undefined>('application/updateKNCPrice')
 
 export const updateChainIdWhenNotConnected = createAction<ChainId>('application/updateChainIdWhenNotConnected')
+
+export const updateServiceWorker = createAction<ServiceWorkerRegistration>('application/updateServiceWorker')

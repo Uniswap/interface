@@ -8,6 +8,7 @@ import { useDeepCompareEffect } from 'react-use'
 import { ETH_PRICE, PROMM_ETH_PRICE, TOKEN_DERIVED_ETH } from 'apollo/queries'
 import { NETWORKS_INFO } from 'constants/networks'
 import { VERSION } from 'constants/v2'
+import { useAppSelector } from 'state/hooks'
 import { getBlockFromTimestamp, getPercentChange } from 'utils'
 
 import { KNC, OUTSITE_FARM_REWARDS_QUERY, ZERO_ADDRESS } from '../../constants'
@@ -424,4 +425,8 @@ export function useTokensPrice(tokens: (Token | NativeCurrency | null | undefine
   }, [ethPrice.currentPrice, chainId, tokens, version])
 
   return prices
+}
+
+export const useServiceWorkerRegistration = () => {
+  return useAppSelector(state => state.application.serviceWorkerRegistration)
 }

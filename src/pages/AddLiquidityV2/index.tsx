@@ -632,13 +632,11 @@ export default function AddLiquidity({
                   feeAmount={feeAmount}
                   ticksAtLimit={ticksAtLimit}
                 />
-                {!noLiquidity && (
-                  <PresetsButtons
-                    setFullRange={() => {
-                      setShowCapitalEfficiencyWarning(true)
-                    }}
-                  />
-                )}
+                <PresetsButtons
+                  setFullRange={() => {
+                    setShowCapitalEfficiencyWarning(true)
+                  }}
+                />
               </AutoColumn>
             </StackedItem>
 
