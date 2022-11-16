@@ -33,6 +33,7 @@ export const notSelectedCard = style([
       border: ' 1px solid',
       borderRadius: '16px',
       borderColor: '#5D678524',
+      pointerEvents: 'none',
     },
   },
 ])
@@ -57,6 +58,7 @@ export const selectedCard = style([
       border: '2px solid',
       borderRadius: '16px',
       borderColor: vars.color.accentAction,
+      pointerEvents: 'none',
     },
   },
 ])
