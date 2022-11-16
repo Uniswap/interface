@@ -1,6 +1,6 @@
 import { NavIcon } from 'components/NavBar/NavIcon'
 import { BagIcon, HundredsOverflowIcon } from 'nft/components/icons'
-import { useBag, useSellAsset } from 'nft/hooks'
+import { useBag } from 'nft/hooks'
 import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
 import shallow from 'zustand/shallow'
@@ -20,7 +20,7 @@ const CounterDot = styled.div`
   top: 4px;
 `
 
-export const ShoppingBag = () => {
+export const Bag = () => {
   const itemsInBag = useBag((state) => state.itemsInBag)
   const [bagQuantity, setBagQuantity] = useState(0)
 
@@ -28,21 +28,10 @@ export const ShoppingBag = () => {
     ({ bagExpanded, setBagExpanded }) => ({ bagExpanded, setBagExpanded }),
     shallow
   )
-  const { isSellMode, resetSellAssets, setIsSellMode } = useSellAsset(
-    ({ isSellMode, reset, setIsSellMode }) => ({
-      isSellMode,
-      resetSellAssets: reset,
-      setIsSellMode,
-    }),
-    shallow
-  )
+
   const handleIconClick = useCallback(() => {
-    if (isSellMode && bagExpanded) {
-      resetSellAssets()
-      setIsSellMode(false)
-    }
     setBagExpanded({ bagExpanded: !bagExpanded })
-  }, [bagExpanded, isSellMode, resetSellAssets, setBagExpanded, setIsSellMode])
+  }, [bagExpanded, setBagExpanded])
 
   useEffect(() => {
     setBagQuantity(itemsInBag.length)
