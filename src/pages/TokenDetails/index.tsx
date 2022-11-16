@@ -1,3 +1,4 @@
+import ErrorBoundary from 'components/ErrorBoundary'
 import { filterTimeAtom } from 'components/Tokens/state'
 import TokenDetails from 'components/Tokens/TokenDetails'
 import { TokenDetailsPageSkeleton } from 'components/Tokens/TokenDetails/Skeleton'
@@ -45,13 +46,15 @@ export default function TokenDetailsPage() {
 
   return (
     <Suspense fallback={<TokenDetailsPageSkeleton />}>
-      <TokenDetails
-        tokenAddress={tokenAddress}
-        chain={chain}
-        tokenQueryReference={tokenQueryReference}
-        priceQueryReference={priceQueryReference}
-        refetchTokenPrices={refetchTokenPrices}
-      />
+      <ErrorBoundary>
+        <TokenDetails
+          tokenAddress={tokenAddress}
+          chain={chain}
+          tokenQueryReference={tokenQueryReference}
+          priceQueryReference={priceQueryReference}
+          refetchTokenPrices={refetchTokenPrices}
+        />
+      </ErrorBoundary>
     </Suspense>
   )
 }

@@ -34,14 +34,17 @@ import { TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
 import { useIsUserAddedTokenOnChain } from 'hooks/Tokens'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
+import { useTokenFromActiveNetwork } from 'lib/hooks/useCurrency'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import { useCallback, useMemo, useState, useTransition } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
+import { isAddress } from 'utils'
 
 import { RefetchPricesFunction } from './ChartSection'
+import InvalidTokenDetails from './InvalidTokenDetails'
 
 const TokenSymbol = styled.span`
   text-transform: uppercase;
@@ -77,7 +80,7 @@ export default function TokenDetails({
   refetchTokenPrices,
 }: TokenDetailsProps) {
   if (!tokenAddress) {
-    throw new Error(`Invalid token details route: tokenAddress param is undefined`)
+    throw new Error('Invalid token details route: tokenAddress param is undefined')
   }
 
   const pageChainId = CHAIN_NAME_TO_CHAIN_ID[chain]
@@ -88,7 +91,9 @@ export default function TokenDetails({
   const token = useMemo(() => {
     if (isNative) return nativeCurrency
     if (tokenQueryData) return new QueryToken(tokenQueryData)
-    return new Token(pageChainId, tokenAddress, DEFAULT_ERC20_DECIMALS)
+
+    const checksummedAddress = isAddress(tokenAddress)
+    return checksummedAddress ? new Token(pageChainId, checksummedAddress, DEFAULT_ERC20_DECIMALS) : undefined
   }, [isNative, nativeCurrency, pageChainId, tokenAddress, tokenQueryData])
 
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
@@ -136,10 +141,16 @@ export default function TokenDetails({
   const logoSrc = useTokenLogoURI(tokenQueryData, isNative ? nativeCurrency : undefined)
   const L2Icon = getChainInfo(pageChainId)?.circleLogoUrl
 
+  const onChainToken = useTokenFromActiveNetwork(tokenAddress)
+
+  if (!token && !tokenQueryData && onChainToken === undefined) {
+    return <InvalidTokenDetails />
+  }
+
   return (
     <Trace page={PageName.TOKEN_DETAILS_PAGE} properties={{ tokenAddress, tokenName: token?.name }} shouldLogImpression>
       <TokenDetailsLayout>
-        {tokenQueryData && !isPending ? (
+        {!isPending ? (
           <LeftPanel>
             <BreadcrumbNavLink to={`/tokens/${chain.toLowerCase()}`}>
               <ArrowLeft size={14} /> Tokens
@@ -151,12 +162,12 @@ export default function TokenDetails({
                     src={logoSrc}
                     size="32px"
                     symbol={isNative ? nativeCurrency?.symbol : token?.symbol}
-                    currency={isNative ? nativeCurrency : token}
+                    currency={isNative ? nativeCurrency : token ?? onChainToken}
                   />
                   <L2NetworkLogo networkUrl={L2Icon} size="16px" />
                 </LogoContainer>
-                {token?.name ?? <Trans>Name not found</Trans>}
-                <TokenSymbol>{token?.symbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
+                {token?.name ?? onChainToken?.name ?? <Trans>Name not found</Trans>}
+                <TokenSymbol>{token?.symbol ?? onChainToken?.symbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
               </TokenNameCell>
               <TokenActions>
                 {tokenQueryData?.name && tokenQueryData.symbol && tokenQueryData.address && (
@@ -166,21 +177,21 @@ export default function TokenDetails({
             </TokenInfoContainer>
             <ChartSection priceQueryReference={priceQueryReference} refetchTokenPrices={refetchTokenPrices} />
             <StatsSection
-              TVL={tokenQueryData.market?.totalValueLocked?.value}
-              volume24H={tokenQueryData.market?.volume24H?.value}
-              priceHigh52W={tokenQueryData.market?.priceHigh52W?.value}
-              priceLow52W={tokenQueryData.market?.priceLow52W?.value}
+              TVL={tokenQueryData?.market?.totalValueLocked?.value}
+              volume24H={tokenQueryData?.market?.volume24H?.value}
+              priceHigh52W={tokenQueryData?.market?.priceHigh52W?.value}
+              priceLow52W={tokenQueryData?.market?.priceLow52W?.value}
             />
             {!isNative && (
               <>
                 <Hr />
                 <AboutSection
-                  address={tokenQueryData.address ?? ''}
-                  description={tokenQueryData.project?.description}
-                  homepageUrl={tokenQueryData.project?.homepageUrl}
-                  twitterName={tokenQueryData.project?.twitterName}
+                  address={tokenQueryData?.address ?? ''}
+                  description={tokenQueryData?.project?.description}
+                  homepageUrl={tokenQueryData?.project?.homepageUrl}
+                  twitterName={tokenQueryData?.project?.twitterName}
                 />
-                <AddressSection address={tokenQueryData.address ?? ''} />
+                <AddressSection address={tokenQueryData?.address ?? ''} />
               </>
             )}
           </LeftPanel>
