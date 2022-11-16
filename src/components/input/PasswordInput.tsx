@@ -22,7 +22,7 @@ export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>((props,
       centered
       row
       backgroundColor="background1"
-      borderColor="background2"
+      borderColor="backgroundOutline"
       borderRadius="md"
       borderWidth={1}
       gap="none">

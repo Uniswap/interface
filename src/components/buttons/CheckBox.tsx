@@ -18,10 +18,10 @@ export function CheckBox({ checked, onCheckPressed }: CheckBoxProps) {
   return (
     <TouchableArea
       alignItems="center"
-      backgroundColor={checked ? 'accentAction' : 'background0'}
+      backgroundColor={checked ? 'accentAction' : 'background1'}
       borderColor={checked ? 'accentAction' : 'backgroundOutline'}
       borderRadius="xs"
-      borderWidth={1}
+      borderWidth={1.5}
       height={theme.iconSizes.md}
       justifyContent="center"
       p="xxxs"
