@@ -89,6 +89,7 @@ export function LongText({
               link: { color: theme.colors[linkColor] },
               paragraph: {
                 marginBottom: 0,
+                marginTop: 0,
                 fontSize: theme.textVariants.bodySmall.fontSize,
                 lineHeight: theme.textVariants.bodySmall.lineHeight,
               },

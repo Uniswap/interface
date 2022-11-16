@@ -88,6 +88,10 @@ query NFTItemScreen($contractAddress: String!, $filter: NftAssetsFilterInput) {
               value
             }
           }
+          nftContracts {
+            id
+            address
+          }
         }
         description
         image {

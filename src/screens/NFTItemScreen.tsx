@@ -218,7 +218,7 @@ export function NFTItemScreen({
           {/* TODO(MOB-2841): add back SendButton when we fix Send NFT flow */}
 
           {/* Metadata */}
-          <Box>
+          <Flex gap="xxs">
             <Text color="textTertiary" variant="subheadSmall">
               {t('Description')}
             </Text>
@@ -236,7 +236,7 @@ export function NFTItemScreen({
             ) : (
               <Text>-</Text>
             )}
-          </Box>
+          </Flex>
 
           <Flex row flexWrap="wrap">
             <AssetMetadata
