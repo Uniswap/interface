@@ -12,24 +12,17 @@ import { opacify } from 'theme/utils'
 import { Carousel, LoadingCarousel } from './Carousel'
 import { CarouselCard, LoadingCarouselCard } from './CarouselCard'
 
-const RenderBelowNavBar = styled.div`
-  margin-top: -72px;
-  padding-top: 72px;
-`
-
 const BannerContainer = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
-  margin-top: -72px;
-  padding: 104px 16px 0 16px;
+  padding: 32px 16px 0 16px;
   position: relative;
-  overflow: hidden;
 `
 
 const AbsoluteFill = styled.div`
   position: absolute;
-  top: 0;
+  top: -72px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -145,15 +138,13 @@ const Banner = () => {
 
   return (
     <BannerContainer>
-      <RenderBelowNavBar>
-        {activeCollection ? (
-          activeCollection.bannerImageUrl ? (
-            <BannerBackground backgroundImage={activeCollection.bannerImageUrl} />
-          ) : (
-            <PlainBackground />
-          )
-        ) : null}
-      </RenderBelowNavBar>
+      {activeCollection ? (
+        activeCollection.bannerImageUrl ? (
+          <BannerBackground backgroundImage={activeCollection.bannerImageUrl} />
+        ) : (
+          <PlainBackground />
+        )
+      ) : null}
       <BannerMainArea>
         <HeaderContainer>
           Better prices. {!isMobile && <br />}
