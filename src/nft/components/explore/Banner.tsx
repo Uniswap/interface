@@ -29,7 +29,6 @@ const AbsoluteFill = styled.div`
 `
 
 const BannerBackground = styled(AbsoluteFill)<{ backgroundImage: string }>`
-  width: 100%;
   background-image: ${(props) => `url(${props.backgroundImage})`};
   filter: blur(62px);
   opacity: ${({ theme }) => (theme.darkMode ? 0.4 : 0.2)};
