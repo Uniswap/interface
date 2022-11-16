@@ -1,5 +1,4 @@
 import { style } from '@vanilla-extract/css'
-import { center } from 'nft/css/common.css'
 import { sprinkles, themeVars, vars } from 'nft/css/sprinkles.css'
 
 export const modalContainer = style([

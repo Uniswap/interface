@@ -7,9 +7,6 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { ethNumberStandardFormatter, formatWeiToDecimal } from '../../../utils/currency'
-import { formatChange } from '../../../utils/toSignificant'
-import { Box } from '../../Box'
-import { Column, Row } from '../../Flex'
 import * as styles from './Cells.css'
 
 const TruncatedText = styled.div`
