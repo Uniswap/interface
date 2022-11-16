@@ -62,7 +62,6 @@ const ActionsContainer = styled.div`
   gap: 10px;
   width: 100%;
   justify-content: space-between;
-  padding: 0 16px;
 `
 
 const ActionsSubContainer = styled.div`
@@ -434,14 +433,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   return (
     <>
-      <AnimatedBox position="sticky" top="72" width="full" zIndex="3" marginBottom={{ sm: '8', md: '20' }}>
-        <Box
-          backgroundColor="backgroundBackdrop"
-          width="full"
-          paddingTop={{ sm: '12', md: '16' }}
-          paddingBottom={{ sm: '12', md: '16' }}
-          className={styles.actionBarContainer}
-        >
+      <AnimatedBox position="sticky" top="72" width="full" zIndex="3" marginBottom={{ sm: '8', md: '20' }} padding="16">
+        <Box backgroundColor="backgroundBackdrop" width="full" className={styles.actionBarContainer}>
           <ActionsContainer>
             <ActionsSubContainer>
               <TraceEvent
@@ -491,8 +484,6 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             paddingTop={!!markets.length || !!traits.length || minMaxPriceChipText ? '12' : '0'}
             gap="8"
             flexWrap="wrap"
-            paddingLeft="16"
-            paddingRight="16"
           >
             {markets.map((market) => (
               <TraitChip

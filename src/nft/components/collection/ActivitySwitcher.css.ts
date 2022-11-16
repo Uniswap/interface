@@ -18,10 +18,10 @@ export const baseActivitySwitcherToggle = style([
     background: 'none',
     border: 'none',
     cursor: 'pointer',
+    marginBottom: '8',
   }),
   {
     lineHeight: '24px',
-    marginBottom: '8px',
   },
 ])
 

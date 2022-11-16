@@ -1,5 +1,5 @@
 import { globalStyle, style } from '@vanilla-extract/css'
-import { bodySmall, headlineSmall } from 'nft/css/common.css'
+import { bodySmall, headlineSmall, subheadSmall } from 'nft/css/common.css'
 import { loadingAsset, loadingBlock } from 'nft/css/loading.css'
 
 import { breakpoints, sprinkles, themeVars } from '../../css/sprinkles.css'
@@ -95,10 +95,9 @@ export const descriptionOpen = style([
 ])
 
 export const readMore = style([
+  bodySmall,
   {
     verticalAlign: 'top',
-    lineHeight: '20px',
-    fontSize: '14px',
   },
   sprinkles({
     color: 'textSecondary',
@@ -108,9 +107,8 @@ export const readMore = style([
 ])
 
 export const statsLabel = style([
-  bodySmall,
+  subheadSmall,
   sprinkles({
-    fontWeight: 'medium',
     color: 'textSecondary',
     whiteSpace: 'nowrap',
   }),
@@ -121,9 +119,6 @@ export const statsLabel = style([
 
 export const statsValue = style([
   headlineSmall,
-  sprinkles({
-    fontWeight: 'semibold',
-  }),
   {
     lineHeight: '24px',
     whiteSpace: 'nowrap',

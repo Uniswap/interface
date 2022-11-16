@@ -13,7 +13,7 @@ import {
   RarityVerifiedIcon,
   VerifiedIcon,
 } from 'nft/components/icons'
-import { body, bodySmall, subhead, subheadSmall } from 'nft/css/common.css'
+import { body, bodySmall, subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
 import { GenieAsset, Rarity, TokenType, WalletAsset } from 'nft/types'
@@ -214,8 +214,6 @@ const Container = ({
         position="relative"
         ref={assetRef}
         borderRadius={BORDER_RADIUS}
-        borderBottomLeftRadius={BORDER_RADIUS}
-        borderBottomRightRadius={BORDER_RADIUS}
         className={selected ? styles.selectedCard : styles.notSelectedCard}
         draggable={false}
         onMouseEnter={() => toggleHovered()}
@@ -517,7 +515,7 @@ const ProfileNftDetails = ({ asset, isSellMode }: ProfileNftDetailsProps) => {
       </Row>
       <Row justifyItems="flex-start">
         <TruncatedTextRow
-          className={subheadSmall}
+          className={body}
           style={{
             color: themeVars.colors.textPrimary,
           }}
@@ -554,15 +552,7 @@ const PrimaryDetails = ({ children }: { children: ReactNode }) => (
 
 const PrimaryInfo = ({ children }: { children: ReactNode }) => {
   return (
-    <Box
-      overflow="hidden"
-      whiteSpace="nowrap"
-      textOverflow="ellipsis"
-      color="textPrimary"
-      fontWeight="medium"
-      fontSize="14"
-      style={{ lineHeight: '20px' }}
-    >
+    <Box overflow="hidden" whiteSpace="nowrap" textOverflow="ellipsis" className={`${body}`}>
       {children}
     </Box>
   )
@@ -587,9 +577,8 @@ const SecondaryInfo = ({ children }: { children: ReactNode }) => {
       overflow="hidden"
       whiteSpace="nowrap"
       textOverflow="ellipsis"
-      fontSize="16"
-      fontWeight="semibold"
       style={{ lineHeight: '20px' }}
+      className={subhead}
     >
       {children}
     </Box>
@@ -755,7 +744,6 @@ const NoContentContainer = () => (
         left="1/2"
         top="1/2"
         style={{ transform: 'translate3d(-50%, -50%, 0)' }}
-        fontWeight="normal"
         color="gray500"
         className={body}
       >

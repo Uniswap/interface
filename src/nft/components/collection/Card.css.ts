@@ -6,12 +6,12 @@ export const card = style([
   sprinkles({
     overflow: 'hidden',
     paddingBottom: '12',
+    borderRadius: '16',
   }),
   {
     boxSizing: 'border-box',
-    borderRadius: '16px',
     WebkitBoxSizing: 'border-box',
-    boxShadow: 'rgba(0, 0, 0, 10%) 0px 4px 12px;',
+    boxShadow: 'rgba(0, 0, 0, 10%) 0px 4px 12px',
     backgroundColor: themeVars.colors.backgroundSurface,
   },
 ])
