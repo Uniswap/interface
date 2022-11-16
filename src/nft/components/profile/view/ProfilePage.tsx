@@ -51,7 +51,6 @@ export const ProfilePage = () => {
     shallow
   )
   const sellAssets = useSellAsset((state) => state.sellAssets)
-
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const isMobile = useIsMobile()
@@ -131,10 +130,10 @@ export const ProfilePage = () => {
                       ? ownerAssets.map((asset, index) => (
                           <div key={index}>
                             <ViewMyNftsAsset
-                              isSellMode
                               asset={asset}
                               mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
                               setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+                              hideDetails={sellAssets.length > 0}
                             />
                           </div>
                         ))

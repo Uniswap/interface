@@ -85,8 +85,11 @@ const useAssetMediaType = (asset: GenieAsset | WalletAsset) =>
     return assetMediaType
   }, [asset])
 
-const baseHref = (asset: GenieAsset | WalletAsset) =>
-  'address' in asset ? `/#/nfts/asset/${asset.address}/${asset.tokenId}?origin=collection` : '/nfts/profile'
+const baseHref = (asset: GenieAsset | WalletAsset) => {
+  if ('address' in asset) return `/#/nfts/asset/${asset.address}/${asset.tokenId}?origin=collection`
+  if ('asset_contract' in asset) return `/#/nfts/asset/${asset.asset_contract.address}/${asset.tokenId}?origin=profile`
+  return '/#/nfts/profile'
+}
 
 const DetailsLinkContainer = styled.a`
   display: flex;
@@ -486,29 +489,29 @@ const TruncatedTextRow = styled(Row)`
 
 interface ProfileNftDetailsProps {
   asset: WalletAsset
-  isSellMode: boolean
+  hideDetails: boolean
 }
 
-const ProfileNftDetails = ({ asset, isSellMode }: ProfileNftDetailsProps) => {
+const ProfileNftDetails = ({ asset, hideDetails }: ProfileNftDetailsProps) => {
   const assetName = () => {
     if (!asset.name && !asset.tokenId) return
     return !!asset.name ? asset.name : `#${asset.tokenId}`
   }
 
   const shouldShowUserListedPrice =
-    !!asset.floor_sell_order_price &&
-    !asset.notForSale &&
-    (asset.asset_contract.tokenType !== TokenType.ERC1155 || isSellMode)
-  const shouldShowFloorPrice = asset.notForSale && isSellMode && !!asset.floorPrice
+    !!asset.floor_sell_order_price && !asset.notForSale && asset.asset_contract.tokenType !== TokenType.ERC1155
 
   return (
     <Box overflow="hidden" width="full" flexWrap="nowrap">
-      <Row justifyItems="flex-start">
-        <TruncatedTextRow className={bodySmall} style={{ color: themeVars.colors.textSecondary }}>
-          {!!asset.asset_contract.name && <span>{asset.asset_contract.name}</span>}
-        </TruncatedTextRow>
-        {asset.collectionIsVerified && <VerifiedIcon height="16px" width="16px" fill={colors.magentaVibrant} />}
-      </Row>
+      <PrimaryRow>
+        <PrimaryDetails>
+          <TruncatedTextRow className={bodySmall} style={{ color: themeVars.colors.textSecondary }}>
+            {!!asset.asset_contract.name && <span>{asset.asset_contract.name}</span>}
+          </TruncatedTextRow>
+          {asset.collectionIsVerified && <VerifiedIcon height="16px" width="16px" fill={colors.magentaVibrant} />}
+        </PrimaryDetails>
+        {!hideDetails && <DetailsLink />}
+      </PrimaryRow>
       <Row justifyItems="flex-start">
         <TruncatedTextRow
           className={subheadSmall}
@@ -523,11 +526,6 @@ const ProfileNftDetails = ({ asset, isSellMode }: ProfileNftDetailsProps) => {
       {shouldShowUserListedPrice && (
         <TruncatedTextRow className={subhead} style={{ color: themeVars.colors.textPrimary }}>
           {`${floorFormatter(asset.floor_sell_order_price)} ETH`}
-        </TruncatedTextRow>
-      )}
-      {shouldShowFloorPrice && (
-        <TruncatedTextRow className={subhead} style={{ color: themeVars.colors.textSecondary }}>
-          {`${floorFormatter(asset.floorPrice)} ETH Floor`}
         </TruncatedTextRow>
       )}
     </Box>
