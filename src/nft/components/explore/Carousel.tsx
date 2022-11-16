@@ -46,6 +46,7 @@ const CarouselIcon = styled(BaseCarouselItem)`
   padding-left: 8px;
   padding-right: 8px;
   cursor: pointer;
+  user-select: none;
 
   color: ${({ theme }) => theme.textPrimary};
 
