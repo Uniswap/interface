@@ -32,9 +32,13 @@ export function TokenDetailsMarketData({
       if (isLoading) {
         return (
           <Shimmer>
-            <Text loaderOnly height="100%" variant="bodyLarge" width="50%">
-              $0.00
-            </Text>
+            <Text
+              loading
+              height="100%"
+              loadingPlaceholderText="$0.00"
+              variant="bodyLarge"
+              width="50%"
+            />
           </Shimmer>
         )
       }

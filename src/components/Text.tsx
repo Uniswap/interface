@@ -13,7 +13,8 @@ export type TextProps = ComponentProps<typeof ThemedText> & {
   maxFontSizeMultiplier?: number
   animated?: boolean
   allowFontScaling?: boolean
-  loaderOnly?: boolean
+  loading?: boolean
+  loadingPlaceholderText?: string
 } & Pick<ComponentProps<typeof Box>, 'height' | 'width'>
 
 // Use this text component throughout the app instead of
@@ -41,13 +42,20 @@ const TextLoaderWrapper = ({
 }
 
 // Wrap themed restyle text component with RN Text component to add support for maxFontSizeMultiplier prop so app is still usable with large text
+
+/**
+ * Use this component instead of the default React Native <Text> component anywhere text shows up throughout the app, so we can use the design system values for colors and sizes, and make sure all text looks and behaves the same way
+ * @param loading Whether the text inside the component is still loading or not. Set this to true if whatever content goes inside the <Text> component is coming from a variable that might still be loading. This prop is optional and defaults to false.
+ * @param loadingPlaceholderText - The text that the loader's size will be derived from. Pick something that's close to the same length as the final text is expected to be, e.g. if it's a ticker symbol, "XXX" might be a good placeholder text. This prop is optional and defaults to "$00.00".
+ */
 export const Text = ({
   animated,
-  loaderOnly,
+  loading = false,
   maxFontSizeMultiplier,
   allowFontScaling,
   height,
   width,
+  loadingPlaceholderText = '$00.00',
   ...rest
 }: TextProps) => {
   const { fontScale } = useWindowDimensions()
@@ -65,7 +73,7 @@ export const Text = ({
     )
   }
 
-  if (loaderOnly) {
+  if (loading) {
     return (
       <TextLoaderWrapper height={height} width={width}>
         <ThemedText
@@ -73,8 +81,10 @@ export const Text = ({
           color="none"
           maxFontSizeMultiplier={multiplier}
           opacity={0}
-          {...rest}
-        />
+          {...rest}>
+          {/* Important that `children` isn't used or rendered by <Text> when `loading` is true, because if the child of a <Text> component is a dynamic variable that might not be finished fetching yet, it'll result in an error until it's finished loading. We use `placeholderText` to set the size of the loading element instead. */}
+          {loadingPlaceholderText}
+        </ThemedText>
       </TextLoaderWrapper>
     )
   }
