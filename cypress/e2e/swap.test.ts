@@ -31,13 +31,15 @@ describe('Swap', () => {
   it('zero output amount', () => {
     cy.get('#swap-currency-output .token-amount-input').clear().type('0.0').should('have.value', '0.0')
   })
-  const DAI = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
 
-  it.only('can swap ETH for DAI', () => {
-    cy.get(getTestSelector('wallet-connect-wallet')).click()
+  const UNI = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
+  it.only('can swap ETH for UNI', () => {
+    cy.get(getTestSelector('navbar-connect-wallet')).click()
+    cy.get('#injected').click()
     cy.get('#swap-currency-output .open-currency-select-button').click()
-    cy.get(getTestSelector(`common-base-${DAI}`)).click()
-    cy.get('#swap-currency-input .token-amount-input').clear().type('0.0000001',  { force: true, delay: 200 })
+    cy.get(`.token-item-${UNI}`).click({timeout: 30000})
+    cy.get(getTestSelector('token-safety-confirm')).click()
+    cy.get('#swap-currency-input .token-amount-input').clear().type('0.001',  { force: true, delay: 200 })
     cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
     cy.get('#swap-button').click()
     cy.get('#confirm-swap-or-send').should('contain', 'Confirm Swap')
