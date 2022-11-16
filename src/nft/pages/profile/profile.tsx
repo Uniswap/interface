@@ -12,7 +12,6 @@ import { buttonMedium, headlineMedium } from 'nft/css/common.css'
 import { useBag, useNFTList, useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { ListingStatus, ProfilePageStateType } from 'nft/types'
 import { Suspense, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useToggleWalletModal } from 'state/application/hooks'
 
 import * as styles from './profile.css'
@@ -26,7 +25,6 @@ const ProfileContent = () => {
   const resetSellAssets = useSellAsset((state) => state.reset)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
   const setListingStatus = useNFTList((state) => state.setListingStatus)
-  const navigate = useNavigate()
 
   useEffect(() => {
     removeAllMarketplaceWarnings()
