@@ -3,11 +3,11 @@ import { ChevronLeftIcon, ChevronRightIcon } from 'nft/components/icons'
 import { calculateCardIndex, calculateFirstCardIndex, calculateRank } from 'nft/utils'
 import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import { a, useSprings } from 'react-spring'
-import styled, { css } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 
 const MAX_CARD_WIDTH = 595
 
-const baseCarouselItemStyle = css`
+const BaseCarouselItem = styled(a.div)`
   height: 315px;
   padding-top: 3px;
   padding-bottom: 32px;
@@ -30,9 +30,7 @@ const CarouselCardContainer = styled.div`
   overflow-x: hidden;
 `
 
-const CarouselCard = styled(a.div)`
-  ${baseCarouselItemStyle};
-
+const CarouselCard = styled(BaseCarouselItem)`
   display: flex;
   justify-content: center;
   padding: 3px 32px 32px 32px;
@@ -41,9 +39,7 @@ const CarouselCard = styled(a.div)`
   will-change: transform;
 `
 
-const IconContainer = styled.div`
-  ${baseCarouselItemStyle}
-
+const CarouselIcon = styled(BaseCarouselItem)`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -133,9 +129,9 @@ export const Carousel = ({ children, activeIndex, toggleNextSlide }: CarouselPro
 
   return (
     <CarouselContainer>
-      <IconContainer onClick={() => toggleSlide(-1)}>
+      <CarouselIcon onClick={() => toggleSlide(-1)}>
         <ChevronLeftIcon width="16px" height="16px" />
-      </IconContainer>
+      </CarouselIcon>
       <CarouselCardContainer ref={carouselCardContainerRef}>
         {springs.map(({ x }, i) => (
           <CarouselCard
@@ -149,9 +145,9 @@ export const Carousel = ({ children, activeIndex, toggleNextSlide }: CarouselPro
           </CarouselCard>
         ))}
       </CarouselCardContainer>
-      <IconContainer onClick={() => toggleSlide(1)}>
+      <CarouselIcon onClick={() => toggleSlide(1)}>
         <ChevronRightIcon width="16px" height="16px" />
-      </IconContainer>
+      </CarouselIcon>
     </CarouselContainer>
   )
 }
