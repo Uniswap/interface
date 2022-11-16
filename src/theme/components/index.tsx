@@ -20,8 +20,6 @@ import { Z_INDEX } from 'theme/zIndex'
 import { ReactComponent as TooltipTriangle } from '../../assets/svg/tooltip_triangle.svg'
 import { anonymizeLink } from '../../utils/anonymizeLink'
 
-type Color = string
-
 // TODO: Break this file into a components folder
 
 export const CloseIcon = styled(X)<{ onClick: () => void }>`
@@ -360,12 +358,12 @@ const CopiedIcon = styled(CheckCircle)`
 interface CopyHelperProps {
   link?: boolean
   toCopy: string
-  color?: Color
+  color?: string
   fontSize?: number
   iconSize?: number
   gap?: number
   iconPosition?: 'left' | 'right'
-  iconColor?: Color
+  iconstring?: string
   children: ReactNode
 }
 
@@ -380,7 +378,7 @@ export const CopyHelper = forwardRef<CopyHelperRefType, CopyHelperProps>(
       iconSize = 20,
       gap = 12,
       iconPosition = 'left',
-      iconColor,
+      iconstring,
       children,
     }: CopyHelperProps,
     ref
@@ -401,9 +399,9 @@ export const CopyHelper = forwardRef<CopyHelperRefType, CopyHelperProps>(
     return (
       <CopyHelperContainer onClick={copy} color={color} clicked={isCopied}>
         <div style={{ display: 'flex', flexDirection: 'row', gap }}>
-          {iconPosition === 'left' && <BaseIcon size={iconSize} strokeWidth={1.5} color={iconColor} />}
+          {iconPosition === 'left' && <BaseIcon size={iconSize} strokeWidth={1.5} color={iconstring} />}
           <CopyHelperText fontSize={fontSize}>{isCopied ? <Trans>Copied!</Trans> : children}</CopyHelperText>
-          {iconPosition === 'right' && <BaseIcon size={iconSize} strokeWidth={1.5} color={iconColor} />}
+          {iconPosition === 'right' && <BaseIcon size={iconSize} strokeWidth={1.5} color={iconstring} />}
         </div>
       </CopyHelperContainer>
     )
