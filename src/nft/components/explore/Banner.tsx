@@ -12,10 +12,10 @@ import { Carousel, LoadingCarousel } from './Carousel'
 import { CarouselCard, LoadingCarouselCard } from './CarouselCard'
 
 const BannerContainer = styled.div`
-  width: 100%;
   display: flex;
   justify-content: center;
-  padding: 32px 16px;
+  width: 100%;
+  padding: 32px 16px 0 16px;
   position: relative;
   overflow: hidden;
 `
@@ -30,14 +30,13 @@ const BannerBackground = styled.div<{ backgroundImage?: string }>`
   ${({ backgroundImage }) => (backgroundImage ? `background-image: url(${backgroundImage});` : undefined)}
 
   filter: blur(62px);
-  -webkit-filter: blur(62px);
 `
 
 const BannerMainArea = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: 285px;
+  height: 100%;
   gap: 36px;
   max-width: 1200px;
   justify-content: space-between;

@@ -1,58 +1,58 @@
 import { useWindowSize } from 'hooks/useWindowSize'
-import { ChevronLeftIcon } from 'nft/components/icons'
+import { ChevronLeftIcon, ChevronRightIcon } from 'nft/components/icons'
 import { calculateCardIndex, calculateFirstCardIndex, calculateRank } from 'nft/utils'
 import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import { a, useSprings } from 'react-spring'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 
-const CarouselContainer = styled.div`
-  display: flex;
-  max-width: 592px;
-  width: 100%;
+const MAX_CARD_WIDTH = 595
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    height: 320px;
+const baseCarouselItemStyle = css`
+  height: 315px;
+  padding-top: 3px;
+  padding-bottom: 32px;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    height: 296px;
   }
 `
 
+const CarouselContainer = styled.div`
+  display: flex;
+  box-sizing: border-box;
+  max-width: ${MAX_CARD_WIDTH}px;
+  width: 100%;
+`
+
 const CarouselCardContainer = styled.div`
-  max-width: 512px;
   position: relative;
   width: 100%;
   overflow-x: hidden;
 `
 
 const CarouselCard = styled(a.div)`
-  position: absolute;
-  padding-left: 16px;
-  padding-right: 16px;
-  display: flex;
-  top: 3px;
-  height: 280px;
-  will-change: transform;
-  justify-content: center;
+  ${baseCarouselItemStyle};
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    height: 296px;
-  }
+  display: flex;
+  justify-content: center;
+  padding: 3px 32px 32px 32px;
+
+  position: absolute;
+  will-change: transform;
 `
 
-const IconContainer = styled.div<{ right?: boolean }>`
+const IconContainer = styled.div`
+  ${baseCarouselItemStyle}
+
   display: flex;
-  height: 280px;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  padding: 8px;
-  ${({ right }) => (right ? 'transform: rotate(180deg)' : undefined)};
+
   color: ${({ theme }) => theme.textPrimary};
 
   :hover {
     opacity: ${({ theme }) => theme.opacity.hover};
-  }
-
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    height: 296px;
   }
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
@@ -67,7 +67,6 @@ interface CarouselProps {
 }
 
 const FIRST_CARD_OFFSET = 0
-const MAX_CARD_WIDTH = 512
 
 export const Carousel = ({ children, activeIndex, toggleNextSlide }: CarouselProps) => {
   const { width } = useWindowSize()
@@ -150,8 +149,8 @@ export const Carousel = ({ children, activeIndex, toggleNextSlide }: CarouselPro
           </CarouselCard>
         ))}
       </CarouselCardContainer>
-      <IconContainer right onClick={() => toggleSlide(1)}>
-        <ChevronLeftIcon width="16px" height="16px" />
+      <IconContainer onClick={() => toggleSlide(1)}>
+        <ChevronRightIcon width="16px" height="16px" />
       </IconContainer>
     </CarouselContainer>
   )
