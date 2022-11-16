@@ -124,11 +124,11 @@ export function PrivacyPolicy() {
       <AutoColumn gap="16px">
         <AutoColumn gap="8px" style={{ width: '100%' }}>
           <StyledExternalCard>
-            <ExternalLink href={'https://uniswap.org/terms-of-service'}>
+            <ExternalLink href="https://uniswap.org/terms-of-service">
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />
-                  <ThemedText.DeprecatedMain fontSize={14} color={'deprecated_primaryText1'}>
+                  <ThemedText.DeprecatedMain fontSize={14} color="deprecated_primaryText1">
                     <Trans>Uniswap Labs&apos; Terms of Service</Trans>
                   </ThemedText.DeprecatedMain>
                 </AutoRow>
@@ -137,11 +137,11 @@ export function PrivacyPolicy() {
             </ExternalLink>
           </StyledExternalCard>
           <StyledExternalCard>
-            <ExternalLink href={'https://uniswap.org/privacy-policy/'}>
+            <ExternalLink href="https://uniswap.org/privacy-policy/">
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />
-                  <ThemedText.DeprecatedMain fontSize={14} color={'deprecated_primaryText1'}>
+                  <ThemedText.DeprecatedMain fontSize={14} color="deprecated_primaryText1">
                     <Trans>Privacy Policy</Trans>
                   </ThemedText.DeprecatedMain>
                 </AutoRow>
@@ -159,7 +159,7 @@ export function PrivacyPolicy() {
               <AutoColumn gap="8px">
                 <AutoRow gap="4px">
                   <Info size={18} />
-                  <ThemedText.DeprecatedMain fontSize={14} color={'deprecated_text1'}>
+                  <ThemedText.DeprecatedMain fontSize={14} color="deprecated_text1">
                     {name}
                   </ThemedText.DeprecatedMain>
                 </AutoRow>

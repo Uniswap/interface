@@ -670,7 +670,7 @@ const MarketplaceRow = ({
           }}
         >
           <Box className={styles.removeMarketplace} visibility={hovered ? 'visible' : 'hidden'} position="absolute">
-            <Box as="img" width="32" src={'/nft/svgs/minusCircle.svg'} alt="Remove item" />
+            <Box as="img" width="32" src="/nft/svgs/minusCircle.svg" alt="Remove item" />
           </Box>
           <Box
             as="img"
@@ -781,7 +781,7 @@ const NFTListRow = ({ asset, globalPriceMethod, globalPrice, setGlobalPrice, sel
           }}
         >
           <Box className={styles.removeAsset} visibility={hovered ? 'visible' : 'hidden'} position="absolute">
-            <Box as="img" width="32" src={'/nft/svgs/minusCircle.svg'} alt="Remove item" />
+            <Box as="img" width="32" src="/nft/svgs/minusCircle.svg" alt="Remove item" />
           </Box>
           <Box
             as="img"
@@ -898,7 +898,7 @@ export const ListPage = () => {
         <NFTListingsGrid selectedMarkets={selectedMarkets} />
       </MarketWrap>
       <Box display={{ sm: 'flex', md: 'none' }} marginTop="14" marginX="16" marginBottom="32">
-        <ListingButton onClick={toggleBag} buttonText={'Continue listing'} />
+        <ListingButton onClick={toggleBag} buttonText="Continue listing" />
       </Box>
     </Column>
   )
