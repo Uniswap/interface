@@ -4,16 +4,14 @@ import { useWeb3React } from '@web3-react/core'
 import { useLoadNftBalanceQuery } from 'graphql/data/nft/NftBalance'
 import { Box } from 'nft/components/Box'
 import { Center, Column, Row } from 'nft/components/Flex'
-import { ChevronLeftIcon, XMarkIcon } from 'nft/components/icons'
+import { ChevronLeftIcon } from 'nft/components/icons'
 import { ListPage } from 'nft/components/profile/list/ListPage'
 import { ProfilePage } from 'nft/components/profile/view/ProfilePage'
 import { ProfilePageLoadingSkeleton } from 'nft/components/profile/view/ProfilePageLoadingSkeleton'
-import { buttonMedium, headlineMedium, headlineSmall } from 'nft/css/common.css'
-import { themeVars } from 'nft/css/sprinkles.css'
+import { buttonMedium, headlineMedium } from 'nft/css/common.css'
 import { useBag, useNFTList, useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { ListingStatus, ProfilePageStateType } from 'nft/types'
 import { Suspense, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useToggleWalletModal } from 'state/application/hooks'
 
 import * as styles from './profile.css'
@@ -27,7 +25,6 @@ const ProfileContent = () => {
   const resetSellAssets = useSellAsset((state) => state.reset)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
   const setListingStatus = useNFTList((state) => state.setListingStatus)
-  const navigate = useNavigate()
 
   useEffect(() => {
     removeAllMarketplaceWarnings()
@@ -48,10 +45,6 @@ const ProfileContent = () => {
   }, [account, resetSellAssets, setSellPageState, clearCollectionFilters])
   const cartExpanded = useBag((state) => state.bagExpanded)
 
-  const exitSellFlow = () => {
-    navigate(-1)
-  }
-
   return (
     <Trace page={PageName.NFT_PROFILE_PAGE} shouldLogImpression>
       <Box className={styles.mobileSellWrapper}>
@@ -64,12 +57,6 @@ const ProfileContent = () => {
               <ChevronLeftIcon height={28} width={28} />
             </Box>
           )}
-          <Box className={headlineSmall} paddingBottom="4" style={{ lineHeight: '28px' }}>
-            {sellPageState === ProfilePageStateType.VIEWING ? 'Select NFTs' : 'Create Listing'}
-          </Box>
-          <Box cursor="pointer" marginLeft="auto" marginRight="0" onClick={exitSellFlow}>
-            <XMarkIcon height={28} width={28} fill={themeVars.colors.textPrimary} />
-          </Box>
         </Row>
         {account != null ? (
           <Box style={{ width: `calc(100% - ${cartExpanded ? SHOPPING_BAG_WIDTH : 0}px)` }}>
