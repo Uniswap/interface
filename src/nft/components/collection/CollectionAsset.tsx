@@ -51,14 +51,13 @@ export const CollectionAsset = ({
   const setBagExpanded = useBag((state) => state.setBagExpanded)
   const trace = useTrace({ page: PageName.NFT_COLLECTION_PAGE })
 
-  const { erc1155TokenQuantity, isSelected } = useMemo(() => {
+  const { isSelected } = useMemo(() => {
     const matchingItems = itemsInBag.filter(
       (item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address
     )
-    const erc1155TokenQuantity = matchingItems.filter((x) => x.asset.tokenType === TokenType.ERC1155).length
+
     const isSelected = matchingItems.length > 0
     return {
-      erc1155TokenQuantity,
       isSelected,
     }
   }, [asset, itemsInBag])
@@ -137,9 +136,6 @@ export const CollectionAsset = ({
             showInline
           />
         </StyledContainer>
-        {asset.tokenType === TokenType.ERC1155 && erc1155TokenQuantity > 0 && (
-          <Card.Erc1155Controls quantity={erc1155TokenQuantity.toString()} />
-        )}
         {asset.rarity && provider && (
           <Card.Ranking
             rarity={asset.rarity}
