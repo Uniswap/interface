@@ -83,6 +83,3 @@ export function useUnsupportedTokenList(): TokenAddressMap {
   // format into one token address map
   return useMemo(() => combineMaps(brokenListMap, loadedUnsupportedListMap), [brokenListMap, loadedUnsupportedListMap])
 }
-export function useIsListActive(url: string): boolean {
-  return Boolean(DEFAULT_ACTIVE_LIST_URLS?.includes(url))
-}

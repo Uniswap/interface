@@ -59,7 +59,6 @@ export function swapErrorToUserReadableMessage(error: any): ReactNode {
       )
     default:
       if (reason?.indexOf('undefined is not an object') !== -1) {
-        console.error(error, reason)
         return (
           <Trans>
             An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If

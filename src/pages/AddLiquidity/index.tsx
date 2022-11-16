@@ -434,7 +434,7 @@ export default function AddLiquidity() {
 
   const Buttons = () =>
     addIsUnsupported ? (
-      <ButtonPrimary disabled={true} $borderRadius="12px" padding={'12px'}>
+      <ButtonPrimary disabled={true} $borderRadius="12px" padding="12px">
         <ThemedText.DeprecatedMain mb="4px">
           <Trans>Unsupported Asset</Trans>
         </ThemedText.DeprecatedMain>
@@ -446,12 +446,12 @@ export default function AddLiquidity() {
         properties={{ received_swap_quote: false }}
         element={ElementName.CONNECT_WALLET_BUTTON}
       >
-        <ButtonLight onClick={toggleWalletModal} $borderRadius="12px" padding={'12px'}>
+        <ButtonLight onClick={toggleWalletModal} $borderRadius="12px" padding="12px">
           <Trans>Connect Wallet</Trans>
         </ButtonLight>
       </TraceEvent>
     ) : (
-      <AutoColumn gap={'md'}>
+      <AutoColumn gap="md">
         {(approvalA === ApprovalState.NOT_APPROVED ||
           approvalA === ApprovalState.PENDING ||
           approvalB === ApprovalState.NOT_APPROVED ||
@@ -862,9 +862,7 @@ export default function AddLiquidity() {
                                       Full range positions may earn less fees than concentrated positions. Learn more{' '}
                                       <ExternalLink
                                         style={{ color: theme.deprecated_yellow3, textDecoration: 'underline' }}
-                                        href={
-                                          'https://help.uniswap.org/en/articles/5434296-can-i-provide-liquidity-over-the-full-range-in-v3'
-                                        }
+                                        href="https://help.uniswap.org/en/articles/5434296-can-i-provide-liquidity-over-the-full-range-in-v3"
                                       >
                                         here
                                       </ExternalLink>

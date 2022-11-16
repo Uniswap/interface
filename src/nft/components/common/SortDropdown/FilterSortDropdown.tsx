@@ -13,7 +13,7 @@ export const FilterSortDropdown = ({ sortDropDownOptions }: { sortDropDownOption
   const sortItems = sortDropDownOptions.map((option) => (
     <SortByItem dropDownOption={option} parentOnClick={onClick} key={option.displayText} />
   ))
-  return <FilterDropdown title={'Sort by'} items={sortItems} onClick={onClick} isOpen={isOpen} />
+  return <FilterDropdown title="Sort by" items={sortItems} onClick={onClick} isOpen={isOpen} />
 }
 
 const SortByItem = ({

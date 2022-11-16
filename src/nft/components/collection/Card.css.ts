@@ -86,62 +86,6 @@ export const marketplaceIcon = style([
   },
 ])
 
-export const erc1155ButtonRow = sprinkles({
-  flexShrink: '0',
-  gap: '12',
-  marginTop: { sm: '8', md: '10' },
-  marginBottom: '12',
-})
-
-export const erc1155QuantityText = style([
-  sprinkles({
-    color: 'textPrimary',
-  }),
-  {
-    lineHeight: '20px',
-    userSelect: 'none',
-  },
-])
-
-export const erc1155Button = sprinkles({
-  display: 'flex',
-  justifyContent: 'center',
-  backgroundColor: 'accentActionSoft',
-  textAlign: 'center',
-  background: 'none',
-  border: 'none',
-  borderRadius: 'round',
-  cursor: 'pointer',
-  padding: '0',
-  transition: '250',
-})
-
-export const erc1155PlusButton = style([
-  erc1155Button,
-  sprinkles({
-    color: 'backgroundSurface',
-  }),
-  {
-    ':hover': {
-      backgroundColor: themeVars.colors.accentAction,
-      color: themeVars.colors.textPrimary,
-    },
-  },
-])
-
-export const erc1155MinusButton = style([
-  erc1155Button,
-  sprinkles({
-    color: 'accentFailure',
-  }),
-  {
-    ':hover': {
-      backgroundColor: themeVars.colors.accentFailure,
-      color: themeVars.colors.textPrimary,
-    },
-  },
-])
-
 export const rarityInfo = style([
   sprinkles({
     display: 'flex',

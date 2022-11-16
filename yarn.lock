@@ -4122,15 +4122,15 @@
     "@typescript-eslint/types" "4.33.0"
     eslint-visitor-keys "^2.0.0"
 
-"@uniswap/analytics-events@1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@uniswap/analytics-events/-/analytics-events-1.0.4.tgz#9f1133ceaa295cd6c72f716e7218d82616a5f463"
-  integrity sha512-HvDwT5q0uSBF9CutMyyK+tvSCoASLNhax44AB9RkU7MJB5g/YGTSg9J5w1BXpA8R611fdsHNfUHnqMft1s/pfA==
+"@uniswap/analytics-events@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/analytics-events/-/analytics-events-1.1.0.tgz#459236d86f864039c3931d21ba80f41575d2ce4e"
+  integrity sha512-ZJ99dLhJ4q2c0g0PoMxDPbeC010DrdIBLf7jnUsTf/hYm2LfHryr31Sv204xNO7rWVWHi1dk6jdab8DdBnHgPA==
 
-"@uniswap/analytics@1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@uniswap/analytics/-/analytics-1.0.3.tgz#bb22cec8f722acd6b0937045f75c6e108e61016f"
-  integrity sha512-1DmKkGh5VlOQM8JXrCvvxkDn7KaDn/9aMrgVb9qOAXgBQ1QhsCkUeadsM2agDeJXQcY2JrOPbS04w/60vqHcXw==
+"@uniswap/analytics@1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/analytics/-/analytics-1.1.1.tgz#af9741054f2df61fb595cb3761762bb0a24f8a86"
+  integrity sha512-pRoagKfji+Xwh4YuS1ns0mfBfXwUWJlf7H+D3vzIMspTNdJVPG44G8hGM0JN4f9H9+JerFyC+4dXrmLL6rnh+w==
   dependencies:
     "@amplitude/analytics-browser" "^1.5.8"
     react "^18.2.0"
@@ -4168,10 +4168,10 @@
   resolved "https://registry.npmjs.org/@uniswap/merkle-distributor/-/merkle-distributor-1.0.1.tgz"
   integrity sha512-5gDiTI5hrXIh5UWTrxKYjw30QQDnpl8ckDSpefldNenDlYO1RKkdUYMYpvrqGi2r7YzLYTlO6+TDlNs6O7hDRw==
 
-"@uniswap/redux-multicall@^1.1.1", "@uniswap/redux-multicall@^1.1.6":
-  version "1.1.6"
-  resolved "https://registry.yarnpkg.com/@uniswap/redux-multicall/-/redux-multicall-1.1.6.tgz#27e52d97e359b6de06410fbc6d0699b9e6422707"
-  integrity sha512-B7kR63dtIJzr9iGITsNYAh8ktDfKEi9Ilsfq0oKxSzAChZmkq9Ss/EZ6/VKSvq1m4rPe+b9CPxZIBdRzpmf2/w==
+"@uniswap/redux-multicall@^1.1.1", "@uniswap/redux-multicall@^1.1.8":
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/@uniswap/redux-multicall/-/redux-multicall-1.1.8.tgz#9cc5090305b10df68fb6162eb1ba7c2c762f5e7f"
+  integrity sha512-LttOBVJuoRNC6N4MHsb5dF2GszLsj1ddPKKccEw1XOX17bGrFdm2A6GwKgES+v+Hj3lluDbQL6atcQtymP21iw==
 
 "@uniswap/router-sdk@^1.3.0":
   version "1.3.0"

@@ -1,9 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { CollectionTableColumn, TimePeriod } from 'nft/types'
 import { useMemo } from 'react'
 import { CellProps, Column, Row } from 'react-table'
 
-import { CollectionTableColumn } from '../../types'
-import { ChangeCell, CollectionTitleCell, DiscreteNumberCell, EthCell, VolumeCell } from './Cells/Cells'
+import { ChangeCell, CollectionTitleCell, DiscreteNumberCell, EthCell, TextCell, VolumeCell } from './Cells/Cells'
 import { Table } from './Table'
 
 export enum ColumnHeaders {
@@ -16,11 +16,13 @@ export enum ColumnHeaders {
   Owners = 'Owners',
 }
 
+const VOLUME_CHANGE_MAX_VALUE = 9999
+
 const compareFloats = (a: number, b: number): 1 | -1 => {
   return Math.round(a * 100000) >= Math.round(b * 100000) ? 1 : -1
 }
 
-const CollectionTable = ({ data }: { data: CollectionTableColumn[] }) => {
+const CollectionTable = ({ data, timePeriod }: { data: CollectionTableColumn[]; timePeriod: TimePeriod }) => {
   const floorSort = useMemo(() => {
     return (rowA: Row<CollectionTableColumn>, rowB: Row<CollectionTableColumn>) => {
       const aFloor = BigNumber.from(rowA.original.floor.value ?? 0)
@@ -76,9 +78,14 @@ const CollectionTable = ({ data }: { data: CollectionTableColumn[] }) => {
         Header: ColumnHeaders.FloorChange,
         accessor: ({ floor }) => floor.value,
         sortDescFirst: true,
+        disableSortBy: timePeriod === TimePeriod.AllTime,
         sortType: floorChangeSort,
         Cell: function changeCell(cell: CellProps<CollectionTableColumn>) {
-          return <ChangeCell change={cell.row.original.floor.change} />
+          return timePeriod === TimePeriod.AllTime ? (
+            <TextCell value="-" />
+          ) : (
+            <ChangeCell change={cell.row.original.floor.change} />
+          )
         },
       },
       {
@@ -102,9 +109,17 @@ const CollectionTable = ({ data }: { data: CollectionTableColumn[] }) => {
         Header: ColumnHeaders.VolumeChange,
         accessor: ({ volume }) => volume.value,
         sortDescFirst: true,
+        disableSortBy: timePeriod === TimePeriod.AllTime,
         sortType: volumeChangeSort,
         Cell: function changeCell(cell: CellProps<CollectionTableColumn>) {
-          return <ChangeCell change={cell.row.original.volume.change} />
+          const { change } = cell.row.original.volume
+          return timePeriod === TimePeriod.AllTime ? (
+            <TextCell value="-" />
+          ) : change >= VOLUME_CHANGE_MAX_VALUE ? (
+            <ChangeCell change={change}>{`>${VOLUME_CHANGE_MAX_VALUE}`}%</ChangeCell>
+          ) : (
+            <ChangeCell change={change} />
+          )
         },
       },
       {
@@ -125,7 +140,7 @@ const CollectionTable = ({ data }: { data: CollectionTableColumn[] }) => {
         },
       },
     ],
-    [floorChangeSort, floorSort, volumeChangeSort, volumeSort]
+    [floorChangeSort, floorSort, volumeChangeSort, volumeSort, timePeriod]
   )
   return (
     <>

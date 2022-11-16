@@ -22,6 +22,10 @@ const ExploreContainer = styled.div`
   flex-direction: column;
   width: 100%;
   max-width: 1200px;
+
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 36px;
 `
 
 const StyledHeader = styled.div`
@@ -155,7 +159,7 @@ const TrendingCollections = () => {
           </Selector>
         </Filter>
       </FiltersRow>
-      <CollectionTable data={trendingCollections} />
+      <CollectionTable data={trendingCollections} timePeriod={timePeriod} />
     </ExploreContainer>
   )
 }
