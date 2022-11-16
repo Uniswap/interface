@@ -1,10 +1,15 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { EventName, PageName } from '@uniswap/analytics-events'
+import Tooltip from 'components/Tooltip'
+import { Box } from 'nft/components/Box'
+import { bodySmall } from 'nft/css/common.css'
 import { useBag } from 'nft/hooks'
-import { GenieAsset, Markets } from 'nft/types'
+import { GenieAsset, Markets, TokenType } from 'nft/types'
 import { formatWeiToDecimal, rarityProviderLogo } from 'nft/utils'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import styled from 'styled-components/macro'
 
 import { useAssetMediaType, useNotForSale } from './Card'
 import { AssetMediaType } from './Card'
@@ -18,6 +23,18 @@ interface CollectionAssetProps {
   rarityVerified?: boolean
 }
 
+const TOOLTIP_TIMEOUT = 2000
+
+const StyledContainer = styled.div`
+  position: absolute;
+  bottom: 12px;
+  left: 0px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  z-index: 2;
+`
+
 export const CollectionAsset = ({
   asset,
   isMobile,
@@ -28,21 +45,26 @@ export const CollectionAsset = ({
   const bagManuallyClosed = useBag((state) => state.bagManuallyClosed)
   const addAssetsToBag = useBag((state) => state.addAssetsToBag)
   const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
+  const usedSweep = useBag((state) => state.usedSweep)
   const itemsInBag = useBag((state) => state.itemsInBag)
   const bagExpanded = useBag((state) => state.bagExpanded)
   const setBagExpanded = useBag((state) => state.setBagExpanded)
   const trace = useTrace({ page: PageName.NFT_COLLECTION_PAGE })
 
-  const { quantity, isSelected } = useMemo(() => {
+  const { erc1155TokenQuantity, isSelected } = useMemo(() => {
+    const matchingItems = itemsInBag.filter(
+      (item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address
+    )
+    const erc1155TokenQuantity = matchingItems.filter((x) => x.asset.tokenType === TokenType.ERC1155).length
+    const isSelected = matchingItems.length > 0
     return {
-      quantity: itemsInBag.filter(
-        (x) => x.asset.tokenType === 'ERC1155' && x.asset.tokenId === asset.tokenId && x.asset.address === asset.address
-      ).length,
-      isSelected: itemsInBag.some(
-        (item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address
-      ),
+      erc1155TokenQuantity,
+      isSelected,
     }
   }, [asset, itemsInBag])
+
+  const [showTooltip, setShowTooltip] = useState(false)
+  const isSelectedRef = useRef(isSelected)
 
   const notForSale = useNotForSale(asset)
   const assetMediaType = useAssetMediaType(asset)
@@ -71,6 +93,22 @@ export const CollectionAsset = ({
     }
   }, [addAssetsToBag, asset, bagExpanded, bagManuallyClosed, isMobile, setBagExpanded, trace])
 
+  useEffect(() => {
+    if (isSelected !== isSelectedRef.current && !usedSweep) {
+      setShowTooltip(true)
+      isSelectedRef.current = isSelected
+      const tooltipTimer = setTimeout(() => {
+        setShowTooltip(false)
+      }, TOOLTIP_TIMEOUT)
+
+      return () => {
+        clearTimeout(tooltipTimer)
+      }
+    }
+    isSelectedRef.current = isSelected
+    return undefined
+  }, [isSelected, isSelectedRef, usedSweep])
+
   const handleRemoveAssetFromBag = useCallback(() => {
     removeAssetsFromBag([asset])
   }, [asset, removeAssetsFromBag])
@@ -83,7 +121,25 @@ export const CollectionAsset = ({
       removeAssetFromBag={handleRemoveAssetFromBag}
     >
       <Card.ImageContainer>
-        {asset.tokenType === 'ERC1155' && quantity > 0 && <Card.Erc1155Controls quantity={quantity.toString()} />}
+        <StyledContainer>
+          <Tooltip
+            text={
+              <Box as="span" className={bodySmall} color="textPrimary">
+                {isSelected ? <Trans>Added to bag</Trans> : <Trans>Removed from bag</Trans>}
+              </Box>
+            }
+            show={showTooltip}
+            style={{ display: 'block' }}
+            offsetX={0}
+            offsetY={0}
+            hideArrow={true}
+            placement="bottom"
+            showInline
+          />
+        </StyledContainer>
+        {asset.tokenType === TokenType.ERC1155 && erc1155TokenQuantity > 0 && (
+          <Card.Erc1155Controls quantity={erc1155TokenQuantity.toString()} />
+        )}
         {asset.rarity && provider && (
           <Card.Ranking
             rarity={asset.rarity}
@@ -116,7 +172,7 @@ export const CollectionAsset = ({
               </Card.SecondaryInfo>
               {(asset.marketplace === Markets.NFTX || asset.marketplace === Markets.NFT20) && <Card.Pool />}
             </Card.SecondaryDetails>
-            {asset.tokenType !== 'ERC1155' && asset.marketplace && (
+            {asset.tokenType !== TokenType.ERC1155 && asset.marketplace && (
               <Card.MarketplaceIcon marketplace={asset.marketplace} />
             )}
           </Card.SecondaryRow>

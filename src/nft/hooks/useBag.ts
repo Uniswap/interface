@@ -16,13 +16,14 @@ interface BagState {
   totalUsdPrice: number | undefined
   setTotalUsdPrice: (totalUsdPrice: number | undefined) => void
   addAssetsToBag: (asset: UpdatedGenieAsset[], fromSweep?: boolean) => void
-  removeAssetsFromBag: (assets: UpdatedGenieAsset[]) => void
+  removeAssetsFromBag: (assets: UpdatedGenieAsset[], fromSweep?: boolean) => void
   markAssetAsReviewed: (asset: UpdatedGenieAsset, toKeep: boolean) => void
   lockSweepItems: (contractAddress: string) => void
   didOpenUnavailableAssets: boolean
   setDidOpenUnavailableAssets: (didOpen: boolean) => void
   bagExpanded: boolean
   toggleBag: () => void
+  usedSweep: boolean
   isLocked: boolean
   setLocked: (isLocked: boolean) => void
   reset: () => void
@@ -59,6 +60,7 @@ export const useBag = create<BagState>()(
       setBagExpanded: ({ bagExpanded, manualClose }) =>
         set(({ bagManuallyClosed }) => ({ bagExpanded, bagManuallyClosed: manualClose || bagManuallyClosed })),
       toggleBag: () => set(({ bagExpanded }) => ({ bagExpanded: !bagExpanded })),
+      usedSweep: false,
       isLocked: false,
       setLocked: (_isLocked) =>
         set(() => ({
@@ -107,14 +109,16 @@ export const useBag = create<BagState>()(
             return {
               itemsInBag: items,
               bagStatus: BagStatus.ADDING_TO_BAG,
+              usedSweep: fromSweep,
             }
           else
             return {
               itemsInBag: [...itemsInBagCopy, ...items],
               bagStatus: BagStatus.ADDING_TO_BAG,
+              usedSweep: fromSweep,
             }
         }),
-      removeAssetsFromBag: (assets) => {
+      removeAssetsFromBag: (assets, fromSweep = false) => {
         set(({ bagManuallyClosed, itemsInBag }) => {
           if (get().isLocked) return { itemsInBag: get().itemsInBag }
           if (itemsInBag.length === 0) return { itemsInBag: [] }
@@ -126,7 +130,11 @@ export const useBag = create<BagState>()(
                   : asset.tokenId === item.asset.tokenId && asset.address === item.asset.address
               )
           )
-          return { bagManuallyClosed: itemsCopy.length === 0 ? false : bagManuallyClosed, itemsInBag: itemsCopy }
+          return {
+            bagManuallyClosed: itemsCopy.length === 0 ? false : bagManuallyClosed,
+            itemsInBag: itemsCopy,
+            usedSweep: fromSweep,
+          }
         })
       },
       lockSweepItems: (contractAddress) =>

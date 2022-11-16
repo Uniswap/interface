@@ -260,7 +260,7 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
         if (sweepItemsInBag.length < value) {
           addAssetsToBag(sortedAssets.slice(sweepItemsInBag.length, value), true)
         } else {
-          removeAssetsFromBag(sweepItemsInBag.slice(value, sweepItemsInBag.length))
+          removeAssetsFromBag(sweepItemsInBag.slice(value, sweepItemsInBag.length), true)
         }
         setSweepAmount(value < 1 ? '' : value.toString())
       } else {
@@ -294,7 +294,7 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
           }
 
           if (wishAssets.length > 0) {
-            removeAssetsFromBag(wishAssets)
+            removeAssetsFromBag(wishAssets, true)
           }
         }
 
