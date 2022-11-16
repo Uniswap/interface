@@ -21,6 +21,16 @@ module.exports = {
         (plugin) => plugin instanceof MiniCssExtractPlugin
       )
       if (instanceOfMiniCssExtractPlugin !== undefined) instanceOfMiniCssExtractPlugin.options.ignoreOrder = true
+
+      // We're currently on Webpack 4.x that doesn't support the `exports` field in package.json
+      // https://github.com/webpack/webpack/issues/9509
+      //
+      // This is a workaround for uniswap/conedison module in particular that uses wildcard to redirect
+      // all imports into a dist folder.
+      //
+      // In case you need to add more modules, make sure to remap them to the correct path.
+      webpackConfig.resolve.alias['@uniswap/conedison'] = '@uniswap/conedison/dist'
+
       return webpackConfig
     },
   },
