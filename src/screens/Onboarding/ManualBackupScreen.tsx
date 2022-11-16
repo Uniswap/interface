@@ -5,12 +5,13 @@ import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
-import { Flex } from 'src/components/layout'
+import { CheckBox } from 'src/components/buttons/CheckBox'
+import { Box, Flex } from 'src/components/layout'
 import { ManualBackupEducationSection } from 'src/components/mnemonic/ManualBackupEducationSection'
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
 import { MnemonicTest } from 'src/components/mnemonic/MnemonicTest'
-import { WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
+import { Text } from 'src/components/Text'
 import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
@@ -36,7 +37,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
   const activeAccount = useActiveAccount()
   const mnemonicId = (activeAccount as SignerMnemonicAccount)?.mnemonicId
 
-  const [showTermsModal, setShowTermsModal] = useState(false)
+  const [hasConsent, setHasConsent] = useState(false)
   const [showScreenShotWarningModal, setShowScreenShotWarningModal] = useState(false)
   const [view, nextView] = useReducer((curView: View) => curView + 1, View.Education)
 
@@ -75,29 +76,26 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
         <OnboardingScreen
           paddingTop="xs"
           title={t('Instructions for backing up your recovery phrase')}>
-          <WarningModal
-            caption={t(
-              'Uniswap Labs can’t restore lost recovery phrases. This is why it’s important to back up your recovery phrase.'
-            )}
-            closeText={t('Cancel')}
-            confirmText={t('I understand')}
-            isVisible={showTermsModal}
-            modalName={ModalName.RecoveryWarning}
-            severity={WarningSeverity.High}
-            title={t('If you lose your recovery phrase, you’ll lose access to your assets')}
-            onClose={() => setShowTermsModal(false)}
-            onConfirm={nextView}
-          />
-
-          <Flex grow justifyContent="space-between" px="xs">
-            <ManualBackupEducationSection />
-            <Flex justifyContent="flex-end" width="100%">
-              <Button
-                label={t('Continue')}
-                name={ElementName.Next}
-                onPress={() => setShowTermsModal(true)}
-              />
+          <ManualBackupEducationSection />
+          <Flex justifyContent="flex-end">
+            <Flex row gap="xs">
+              <Box mt="xxxs">
+                <CheckBox checked={hasConsent} onCheckPressed={() => setHasConsent(!hasConsent)} />
+              </Box>
+              <Box flexShrink={1}>
+                <Text variant="buttonLabelMicro">
+                  {t(
+                    'I understand that if I lose my recovery phrase, Uniswap Labs cannot restore it.'
+                  )}
+                </Text>
+              </Box>
             </Flex>
+            <Button
+              disabled={!hasConsent}
+              label={t('Continue')}
+              name={ElementName.Next}
+              onPress={nextView}
+            />
           </Flex>
         </OnboardingScreen>
       )

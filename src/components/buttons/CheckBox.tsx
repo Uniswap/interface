@@ -5,11 +5,10 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 
 export type CheckBoxProps = {
   checked: boolean
-  size: number
   onCheckPressed?: (currentState: boolean) => void
 }
 
-export function CheckBox({ checked, onCheckPressed, size }: CheckBoxProps) {
+export function CheckBox({ checked, onCheckPressed }: CheckBoxProps) {
   const theme = useAppTheme()
 
   const onPress = () => {
@@ -18,18 +17,19 @@ export function CheckBox({ checked, onCheckPressed, size }: CheckBoxProps) {
 
   return (
     <TouchableArea
-      alignSelf="flex-start"
+      alignItems="center"
       backgroundColor={checked ? 'accentAction' : 'background0'}
       borderColor={checked ? 'accentAction' : 'backgroundOutline'}
       borderRadius="xs"
-      borderWidth={BORDER_WIDTH}
-      height={size + theme.spacing.xxxs + BORDER_WIDTH * 4}
+      borderWidth={1}
+      height={theme.iconSizes.md}
+      justifyContent="center"
       p="xxxs"
-      width={size + theme.spacing.xxxs + BORDER_WIDTH * 4}
+      width={theme.iconSizes.md}
       onPress={onPress}>
-      {checked ? <Check color={theme.colors.white} height={size} width={size} /> : null}
+      {checked ? (
+        <Check color={theme.colors.white} height={theme.iconSizes.sm} width={theme.iconSizes.sm} />
+      ) : null}
     </TouchableArea>
   )
 }
-
-const BORDER_WIDTH = 1

@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, TextInput } from 'react-native'
-import { useAppTheme } from 'src/app/hooks'
 import { Button } from 'src/components/buttons/Button'
 import { CheckBox } from 'src/components/buttons/CheckBox'
 import { PasswordInput } from 'src/components/input/PasswordInput'
@@ -26,7 +25,6 @@ export function CloudBackupSetPassword({
   doneButtonText,
 }: Props) {
   const { t } = useTranslation()
-  const theme = useAppTheme()
   const confirmPasswordRef = useRef<TextInput>(null)
 
   const [password, setPassword] = useState('')
@@ -120,11 +118,7 @@ export function CloudBackupSetPassword({
           ) : null}
         </Flex>
         <Flex row gap="xs">
-          <CheckBox
-            checked={consentChecked}
-            size={theme.iconSizes.sm}
-            onCheckPressed={onPressConsent}
-          />
+          <CheckBox checked={consentChecked} onCheckPressed={onPressConsent} />
           <Flex fill>
             <Text color="textPrimary" variant="buttonLabelMicro">
               {t(
