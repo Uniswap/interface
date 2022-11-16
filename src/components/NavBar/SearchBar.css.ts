@@ -3,7 +3,7 @@ import { buttonTextSmall, subhead, subheadSmall } from 'nft/css/common.css'
 
 import { breakpoints, sprinkles, vars } from '../../nft/css/sprinkles.css'
 
-const DESKTOP_NAVBAR_WIDTH = 360
+const DESKTOP_NAVBAR_WIDTH = 600
 const MAGNIFYING_GLASS_ICON_WIDTH = 28
 
 const baseSearchStyle = style([
@@ -31,12 +31,12 @@ export const searchBarContainer = style([
     display: 'inline-block',
   }),
   {
-    '@media': {
-      [`screen and (min-width: ${breakpoints.lg}px)`]: {
-        right: `-${DESKTOP_NAVBAR_WIDTH / 2 - MAGNIFYING_GLASS_ICON_WIDTH}px`,
-        top: '-3px',
-      },
-    },
+    // '@media': {
+    //   [`screen and (min-width: ${breakpoints.lg}px)`]: {
+    //     right: `-${DESKTOP_NAVBAR_WIDTH / 2 - MAGNIFYING_GLASS_ICON_WIDTH}px`,
+    //     top: '-3px',
+    //   },
+    // },
   },
 ])
 

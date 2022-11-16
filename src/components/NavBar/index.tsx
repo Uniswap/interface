@@ -4,6 +4,7 @@ import Web3Status from 'components/Web3Status'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useIsNftPage } from 'hooks/useIsNftPage'
+import { useWindowSize } from 'hooks/useWindowSize'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { UniIcon } from 'nft/components/icons'
@@ -73,6 +74,7 @@ const PageTabs = () => {
 
 const Navbar = () => {
   const isNftPage = useIsNftPage()
+  const { width = 0 } = useWindowSize()
 
   return (
     <>
@@ -90,10 +92,14 @@ const Navbar = () => {
             <Row gap="8" display={{ sm: 'none', lg: 'flex' }}>
               <PageTabs />
             </Row>
+            {width > 1024 && <SearchBar />}
           </Box>
-          <Box className={styles.middleContainer}>
-            <SearchBar />
-          </Box>
+          {width <= 1024 && (
+            <Box className={styles.middleContainer}>
+              <SearchBar />
+            </Box>
+          )}
+
           <Box className={styles.rightSideContainer}>
             <Row gap="12">
               <Box display={{ sm: 'flex', xl: 'none' }}>

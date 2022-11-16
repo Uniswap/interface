@@ -342,7 +342,7 @@ export const SearchBarDropdown = ({
   ])
 
   return (
-    <Box className={styles.searchBarDropdown}>
+    <Box className={styles.searchBarDropdown} position={{ xl: 'absolute' }}>
       <Box opacity={isLoading ? '0.3' : '1'} transition="125">
         {resultsState}
       </Box>

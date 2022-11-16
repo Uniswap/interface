@@ -7,6 +7,7 @@ import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import useDebounce from 'hooks/useDebounce'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { useWindowSize } from 'hooks/useWindowSize'
 import { organizeSearchResults } from 'lib/utils/searchBar'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
@@ -33,6 +34,7 @@ export const SearchBar = () => {
   const phase1Flag = useNftFlag()
   const isMobile = useIsMobile()
   const isTablet = useIsTablet()
+  const { width = 0 } = useWindowSize()
 
   useOnClickOutside(searchRef, () => {
     isOpen && toggleOpen()
@@ -109,7 +111,7 @@ export const SearchBar = () => {
     <Box position="relative">
       <Trace section={SectionName.NAVBAR_SEARCH}>
         <Box
-          position={{ sm: 'fixed', md: 'absolute' }}
+          position={{ sm: 'fixed', md: 'absolute', lg: 'absolute', xl: 'relative' }}
           width={{ sm: isOpen ? 'viewWidth' : 'auto', md: 'auto' }}
           ref={searchRef}
           className={styles.searchBarContainer}
@@ -172,9 +174,11 @@ export const SearchBar = () => {
             )}
           </Box>
         </Box>
-        <NavIcon onClick={toggleOpen}>
-          <NavMagnifyingGlassIcon />
-        </NavIcon>
+        {width < 1024 && (
+          <NavIcon onClick={toggleOpen}>
+            <NavMagnifyingGlassIcon />
+          </NavIcon>
+        )}
       </Trace>
     </Box>
   )
