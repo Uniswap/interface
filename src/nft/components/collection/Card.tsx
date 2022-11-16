@@ -205,7 +205,7 @@ const Container = ({
   return (
     <CardContext.Provider value={providerValue}>
       <Box
-        position={'relative'}
+        position="relative"
         ref={assetRef}
         borderRadius={BORDER_RADIUS}
         borderBottomLeftRadius={BORDER_RADIUS}
@@ -244,14 +244,14 @@ const Image = () => {
   return (
     <Box display="flex" overflow="hidden" borderTopLeftRadius={BORDER_RADIUS} borderTopRightRadius={BORDER_RADIUS}>
       <Box
-        as={'img'}
+        as="img"
         width="full"
         style={{
           aspectRatio: '1',
           transition: 'transform 0.4s ease 0s',
         }}
         src={asset.imageUrl || asset.smallImageUrl}
-        objectFit={'contain'}
+        objectFit="contain"
         draggable={false}
         onError={() => setNoContent(true)}
         onLoad={(e) => {
@@ -289,7 +289,7 @@ const Video = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
     <>
       <Box display="flex" overflow="hidden">
         <Box
-          as={'img'}
+          as="img"
           alt={asset.name || asset.tokenId}
           width="full"
           style={{
@@ -298,7 +298,7 @@ const Video = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
             willChange: 'transform',
           }}
           src={asset.imageUrl || asset.smallImageUrl}
-          objectFit={'contain'}
+          objectFit="contain"
           draggable={false}
           onError={() => setNoContent(true)}
           onLoad={() => {
@@ -382,7 +382,7 @@ const Audio = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
     <>
       <Box display="flex" overflow="hidden">
         <Box
-          as={'img'}
+          as="img"
           alt={asset.name || asset.tokenId}
           width="full"
           style={{
@@ -390,7 +390,7 @@ const Audio = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
             transition: 'transform 0.4s ease 0s',
           }}
           src={asset.imageUrl || asset.smallImageUrl}
-          objectFit={'contain'}
+          objectFit="contain"
           draggable={false}
           onError={() => setNoContent(true)}
           onLoad={(e) => {
@@ -592,7 +592,7 @@ const SecondaryInfo = ({ children }: { children: ReactNode }) => {
 
 const TertiaryInfo = ({ children }: { children: ReactNode }) => {
   return (
-    <Box marginTop={'8'} color="textSecondary">
+    <Box marginTop="8" color="textSecondary">
       {children}
     </Box>
   )

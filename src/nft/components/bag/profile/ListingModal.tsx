@@ -253,7 +253,7 @@ const ListingModal = () => {
             </Box>
           </Box>
         ) : (
-          <ListingButton onClick={clickStartListingFlow} buttonText={'Start listing'} showWarningOverride={isMobile} />
+          <ListingButton onClick={clickStartListingFlow} buttonText="Start listing" showWarningOverride={isMobile} />
         )}
         {(listingStatus === ListingStatus.PENDING || listingStatus === ListingStatus.SIGNING) && (
           <Box

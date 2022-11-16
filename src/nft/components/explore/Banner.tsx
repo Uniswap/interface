@@ -2,23 +2,58 @@ import { useLoadCollectionQuery } from 'graphql/data/nft/Collection'
 import { useIsMobile } from 'nft/hooks'
 import { fetchTrendingCollections } from 'nft/queries'
 import { TimePeriod } from 'nft/types'
-import { Suspense, useMemo } from 'react'
+import { calculateCardIndex } from 'nft/utils'
+import { Suspense, useCallback, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
+import { opacify } from 'theme/utils'
 
-import { Carousel } from './Carousel'
+import { Carousel, LoadingCarousel } from './Carousel'
 import { CarouselCard, LoadingCarouselCard } from './CarouselCard'
 
 const BannerContainer = styled.div`
   display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 32px 16px 0 16px;
+  position: relative;
+  overflow: hidden;
+`
+
+const AbsoluteFill = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+
+  opacity: ${({ theme }) => (theme.darkMode ? 0.4 : 0.2)};
+`
+
+const BannerBackground = styled(AbsoluteFill)<{ backgroundImage: string }>`
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-image: ${(props) => `url(${props.backgroundImage})`};
+  filter: blur(62px);
+`
+
+const PlainBackground = styled(AbsoluteFill)`
+  background: ${({ theme }) => `linear-gradient(${opacify(10, theme.userThemeColor)}, transparent)`};
+`
+
+const BannerMainArea = styled.div`
+  display: flex;
   flex-direction: row;
   width: 100%;
-  height: 320px;
-  margin-top: 24px;
+  height: 100%;
   gap: 36px;
   max-width: 1200px;
   justify-content: space-between;
+  z-index: 2;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     flex-direction: column;
@@ -37,8 +72,10 @@ const HeaderContainer = styled.div`
   line-height: 88px;
   justify-content: start;
   align-items: start;
-  padding-top: 40px;
+  align-self: center;
   flex-shrink: 0;
+  padding-bottom: 32px;
+
   color: ${({ theme }) => theme.textPrimary};
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
@@ -57,6 +94,7 @@ const HeaderContainer = styled.div`
     justify-content: center;
     align-items: center;
     padding-top: 0px;
+    padding-bottom: 0px;
   }
 `
 
@@ -93,31 +131,49 @@ const Banner = () => {
   const collectionAddresses = useMemo(() => collections?.map(({ address }) => address), [collections])
   useLoadCollectionQuery(collectionAddresses)
 
+  const [activeCollectionIdx, setActiveCollectionIdx] = useState(0)
+  const onToggleNextSlide = useCallback(
+    (direction: number) => {
+      if (!collections) return
+      setActiveCollectionIdx((idx) => calculateCardIndex(idx + direction, collections.length))
+    },
+    [collections]
+  )
+
+  const activeCollection = collections?.[activeCollectionIdx]
+
   return (
     <BannerContainer>
-      <HeaderContainer>
-        Better prices. {!isMobile && <br />}
-        More listings.
-      </HeaderContainer>
-      {collections ? (
-        <Carousel>
-          {collections.map((collection) => (
-            <Suspense fallback={<LoadingCarouselCard collection={collection} />} key={collection.address}>
-              <CarouselCard
-                key={collection.address}
-                collection={collection}
-                onClick={() => navigate(`/nfts/collection/${collection.address}`)}
-              />
-            </Suspense>
-          ))}
-        </Carousel>
-      ) : (
-        <Carousel>
-          {[...Array(TRENDING_COLLECTION_SIZE)].map((index) => (
-            <LoadingCarouselCard key={'carouselCard' + index} />
-          ))}
-        </Carousel>
-      )}
+      {activeCollection ? (
+        activeCollection.bannerImageUrl ? (
+          <BannerBackground backgroundImage={activeCollection.bannerImageUrl} />
+        ) : (
+          <PlainBackground />
+        )
+      ) : null}
+      <BannerMainArea>
+        <HeaderContainer>
+          Better prices. {!isMobile && <br />}
+          More listings.
+        </HeaderContainer>
+        {collections ? (
+          <Carousel activeIndex={activeCollectionIdx} toggleNextSlide={onToggleNextSlide}>
+            {collections.map((collection) => (
+              <Suspense fallback={<LoadingCarouselCard collection={collection} />} key={collection.address}>
+                <CarouselCard
+                  key={collection.address}
+                  collection={collection}
+                  onClick={() => navigate(`/nfts/collection/${collection.address}`)}
+                />
+              </Suspense>
+            ))}
+          </Carousel>
+        ) : (
+          <LoadingCarousel>
+            <LoadingCarouselCard />
+          </LoadingCarousel>
+        )}
+      </BannerMainArea>
     </BannerContainer>
   )
 }

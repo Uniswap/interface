@@ -104,7 +104,7 @@ export default function PoolFinder() {
           <AutoColumn style={{ padding: '1rem' }} gap="md">
             <BlueCard>
               <AutoColumn gap="10px">
-                <ThemedText.DeprecatedLink fontWeight={400} color={'deprecated_primaryText1'}>
+                <ThemedText.DeprecatedLink fontWeight={400} color="deprecated_primaryText1">
                   <Trans>
                     <b>Tip:</b> Use this tool to find v2 pools that don&apos;t automatically appear in the interface.
                   </Trans>
@@ -120,12 +120,12 @@ export default function PoolFinder() {
               {currency0 ? (
                 <Row>
                   <CurrencyLogo currency={currency0} />
-                  <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
+                  <Text fontWeight={500} fontSize={20} marginLeft="12px">
                     {currency0.symbol}
                   </Text>
                 </Row>
               ) : (
-                <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
+                <Text fontWeight={500} fontSize={20} marginLeft="12px">
                   <Trans>Select a token</Trans>
                 </Text>
               )}
@@ -144,12 +144,12 @@ export default function PoolFinder() {
               {currency1 ? (
                 <Row>
                   <CurrencyLogo currency={currency1} />
-                  <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
+                  <Text fontWeight={500} fontSize={20} marginLeft="12px">
                     {currency1.symbol}
                   </Text>
                 </Row>
               ) : (
-                <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
+                <Text fontWeight={500} fontSize={20} marginLeft="12px">
                   <Trans>Select a token</Trans>
                 </Text>
               )}
@@ -162,7 +162,7 @@ export default function PoolFinder() {
                 <Text textAlign="center" fontWeight={500}>
                   <Trans>Pool Found!</Trans>
                 </Text>
-                <StyledInternalLink to={`/pool/v2`}>
+                <StyledInternalLink to="/pool/v2">
                   <Text textAlign="center">
                     <Trans>Manage this pool.</Trans>
                   </Text>

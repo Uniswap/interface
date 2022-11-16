@@ -213,5 +213,5 @@ export const MarketplaceSelect = () => {
     setTraitsOpen(TraitPosition.MARKPLACE_INDEX, !isOpen)
   }
 
-  return <FilterDropdown title={'Marketplaces'} items={MarketplaceItems} onClick={onClick} isOpen={isOpen} />
+  return <FilterDropdown title="Marketplaces" items={MarketplaceItems} onClick={onClick} isOpen={isOpen} />
 }

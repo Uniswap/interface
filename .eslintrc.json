@@ -52,6 +52,7 @@
     "@typescript-eslint/ban-ts-ignore": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "react/react-in-jsx-scope": "off",
+    "react/jsx-curly-brace-presence": ["error", {"props": "never", "children": "never" }],
     "object-shorthand": ["error", "always"],
     "no-restricted-imports": [
       "error",

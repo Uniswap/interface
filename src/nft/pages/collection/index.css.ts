@@ -10,8 +10,6 @@ import { css } from 'styled-components/macro'
 
 import { sprinkles, vars } from '../../css/sprinkles.css'
 
-export const bannerContainerNoBanner = style({ height: '0', marginTop: '0px' })
-
 export const bannerImage = style({ objectFit: 'cover' })
 
 export const baseActivitySwitcherToggle = style([

@@ -419,7 +419,7 @@ export default function VotePage() {
                   </AutoColumn>
                   <ProgressWrapper>
                     <Progress
-                      status={'for'}
+                      status="for"
                       percentageString={
                         proposalData?.forCount.greaterThan(0) ? `${forPercentage?.toFixed(0) ?? 0}%` : '0%'
                       }
@@ -443,7 +443,7 @@ export default function VotePage() {
                   </AutoColumn>
                   <ProgressWrapper>
                     <Progress
-                      status={'against'}
+                      status="against"
                       percentageString={
                         proposalData?.againstCount?.greaterThan(0) ? `${againstPercentage?.toFixed(0) ?? 0}%` : '0%'
                       }
