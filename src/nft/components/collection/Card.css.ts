@@ -20,7 +20,22 @@ export const loadingBackground = style({
   background: `linear-gradient(270deg, ${themeVars.colors.backgroundOutline} 0%, ${themeVars.colors.backgroundSurface} 100%)`,
 })
 
-export const notSelectedCard = style([card])
+export const notSelectedCard = style([
+  card,
+  {
+    ':after': {
+      content: '',
+      position: 'absolute',
+      top: '0px',
+      right: ' 0px',
+      bottom: ' 0px',
+      left: '0px',
+      border: ' 1px solid',
+      borderRadius: '16px',
+      borderColor: '#5D678524',
+    },
+  },
+])
 
 export const cardImageHover = style({
   transform: 'scale(1.15)',
@@ -39,7 +54,7 @@ export const selectedCard = style([
       right: ' 0px',
       bottom: ' 0px',
       left: '0px',
-      border: ' 2px solid',
+      border: '2px solid',
       borderRadius: '16px',
       borderColor: vars.color.accentAction,
     },
