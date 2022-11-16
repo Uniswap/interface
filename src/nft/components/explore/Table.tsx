@@ -200,7 +200,7 @@ export function Table<D extends Record<string, unknown>>({
                     {cellIndex === 0 ? (
                       <RankCellContainer>
                         {!isMobile && (
-                          <ThemedText.BodySecondary fontSize="14px" lineHeight="20px">
+                          <ThemedText.BodySecondary fontSize="16px" lineHeight="20px">
                             {i + 1}
                           </ThemedText.BodySecondary>
                         )}
