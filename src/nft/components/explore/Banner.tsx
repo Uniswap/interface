@@ -20,15 +20,13 @@ const BannerContainer = styled.div`
   overflow: hidden;
 `
 
-const BannerBackground = styled.div<{ backgroundImage?: string }>`
+const BannerBackground = styled.div<{ backgroundImage: string }>`
   position: absolute;
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
-
-  ${({ backgroundImage }) => (backgroundImage ? `background-image: url(${backgroundImage});` : undefined)}
-
+  background-image: ${(props) => `url(${props.backgroundImage})`};
   filter: blur(62px);
 `
 
@@ -115,25 +113,33 @@ const Banner = () => {
   const collectionAddresses = useMemo(() => collections?.map(({ address }) => address), [collections])
   useLoadCollectionQuery(collectionAddresses)
 
-  const [activeCollection, setActiveCollection] = useState(0)
+  const [activeCollectionIdx, setActiveCollectionIdx] = useState(0)
   const onToggleNextSlide = useCallback(
     (direction: number) => {
       if (!collections) return
-      setActiveCollection((index) => calculateCardIndex(index + direction, collections.length))
+      setActiveCollectionIdx((idx) => calculateCardIndex(idx + direction, collections.length))
     },
     [collections]
   )
 
+  const activeCollection = collections?.[activeCollectionIdx]
+
   return (
     <BannerContainer>
-      <BannerBackground backgroundImage={collections ? collections[activeCollection].bannerImageUrl : undefined} />
+      {activeCollection ? (
+        activeCollection.bannerImageUrl ? (
+          <BannerBackground backgroundImage={activeCollection.bannerImageUrl} />
+        ) : (
+          <div />
+        )
+      ) : null}
       <BannerMainArea>
         <HeaderContainer>
           Better prices. {!isMobile && <br />}
           More listings.
         </HeaderContainer>
         {collections ? (
-          <Carousel activeIndex={activeCollection} toggleNextSlide={onToggleNextSlide}>
+          <Carousel activeIndex={activeCollectionIdx} toggleNextSlide={onToggleNextSlide}>
             {collections.map((collection) => (
               <Suspense fallback={<LoadingCarouselCard collection={collection} />} key={collection.address}>
                 <CarouselCard
