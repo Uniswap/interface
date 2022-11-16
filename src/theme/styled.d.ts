@@ -161,6 +161,8 @@ declare module 'styled-components/macro' {
     opacity: {
       hover: number
       click: number
+      disabled: number
+      enabled: number
     }
     // css snippets
     flexColumnNoWrap: FlattenSimpleInterpolation

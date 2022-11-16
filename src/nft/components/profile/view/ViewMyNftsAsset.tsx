@@ -91,7 +91,7 @@ export const ViewMyNftsAsset = ({
         onClick={onCardClick}
         isDisabled={isDisabled}
       >
-        <Card.ImageContainer>
+        <Card.ImageContainer isDisabled={isDisabled}>
           {getNftDisplayComponent(assetMediaType, mediaShouldBePlaying, setCurrentTokenPlayingMedia)}
         </Card.ImageContainer>
         <Card.DetailsContainer>
