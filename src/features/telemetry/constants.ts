@@ -37,6 +37,12 @@ export const enum SectionName {
   ProfileNftsTab = 'profile-nfts-tab',
   ProfileTokensTab = 'profile-tokens-tab',
   Sidebar = 'sidebar',
+  SwapForm = 'swap-form',
+  SwapPending = 'swap-pending',
+  SwapReview = 'swap-review',
+  TransferForm = 'transfer-form',
+  TransferPending = 'transfer-pending',
+  TransferReview = 'transfer-review',
   // alphabetize additional values.
 }
 

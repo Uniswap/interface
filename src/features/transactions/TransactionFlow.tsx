@@ -8,7 +8,9 @@ import SortIcon from 'src/assets/icons/sort.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Warning } from 'src/components/modals/WarningModal/types'
+import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
+import { SectionName } from 'src/features/telemetry/constants'
 import { DerivedSwapInfo, useSwapActionHandlers } from 'src/features/transactions/swap/hooks'
 import { SwapForm } from 'src/features/transactions/swap/SwapForm'
 import { SwapReview } from 'src/features/transactions/swap/SwapReview'
@@ -212,32 +214,42 @@ function SwapInnerContent({
   switch (step) {
     case TransactionStep.SUBMITTED:
       return (
-        <SwapStatus derivedSwapInfo={derivedSwapInfo} onNext={onClose} onTryAgain={onRetrySubmit} />
+        <Trace logImpression section={SectionName.SwapPending}>
+          <SwapStatus
+            derivedSwapInfo={derivedSwapInfo}
+            onNext={onClose}
+            onTryAgain={onRetrySubmit}
+          />
+        </Trace>
       )
 
     case TransactionStep.FORM:
       return (
-        <SwapForm
-          derivedSwapInfo={derivedSwapInfo}
-          dispatch={dispatch}
-          exactValue={exactValue}
-          showingSelectorScreen={showingSelectorScreen}
-          warnings={warnings}
-          onNext={onFormNext}
-        />
+        <Trace logImpression section={SectionName.SwapForm}>
+          <SwapForm
+            derivedSwapInfo={derivedSwapInfo}
+            dispatch={dispatch}
+            exactValue={exactValue}
+            showingSelectorScreen={showingSelectorScreen}
+            warnings={warnings}
+            onNext={onFormNext}
+          />
+        </Trace>
       )
     case TransactionStep.REVIEW:
       return (
-        <SwapReview
-          approveTxRequest={approveTxRequest}
-          derivedSwapInfo={derivedSwapInfo}
-          exactValue={exactValue}
-          totalGasFee={totalGasFee}
-          txRequest={txRequest}
-          warnings={warnings}
-          onNext={onReviewNext}
-          onPrev={onReviewPrev}
-        />
+        <Trace logImpression section={SectionName.SwapReview}>
+          <SwapReview
+            approveTxRequest={approveTxRequest}
+            derivedSwapInfo={derivedSwapInfo}
+            exactValue={exactValue}
+            totalGasFee={totalGasFee}
+            txRequest={txRequest}
+            warnings={warnings}
+            onNext={onReviewNext}
+            onPrev={onReviewPrev}
+          />
+        </Trace>
       )
     default:
       return null
@@ -269,32 +281,38 @@ function TransferInnerContent({
   switch (step) {
     case TransactionStep.SUBMITTED:
       return (
-        <TransferStatus
-          derivedTransferInfo={derivedTransferInfo}
-          onNext={onClose}
-          onTryAgain={onRetrySubmit}
-        />
+        <Trace logImpression section={SectionName.TransferPending}>
+          <TransferStatus
+            derivedTransferInfo={derivedTransferInfo}
+            onNext={onClose}
+            onTryAgain={onRetrySubmit}
+          />
+        </Trace>
       )
     case TransactionStep.FORM:
       return (
-        <TransferTokenForm
-          derivedTransferInfo={derivedTransferInfo}
-          dispatch={dispatch}
-          showingSelectorScreen={showingSelectorScreen}
-          warnings={warnings}
-          onNext={onFormNext}
-        />
+        <Trace logImpression section={SectionName.TransferForm}>
+          <TransferTokenForm
+            derivedTransferInfo={derivedTransferInfo}
+            dispatch={dispatch}
+            showingSelectorScreen={showingSelectorScreen}
+            warnings={warnings}
+            onNext={onFormNext}
+          />
+        </Trace>
       )
     case TransactionStep.REVIEW:
       return (
-        <TransferReview
-          derivedTransferInfo={derivedTransferInfo}
-          totalGasFee={totalGasFee}
-          txRequest={txRequest}
-          warnings={warnings}
-          onNext={onReviewNext}
-          onPrev={onReviewPrev}
-        />
+        <Trace logImpression section={SectionName.TransferReview}>
+          <TransferReview
+            derivedTransferInfo={derivedTransferInfo}
+            totalGasFee={totalGasFee}
+            txRequest={txRequest}
+            warnings={warnings}
+            onNext={onReviewNext}
+            onPrev={onReviewPrev}
+          />
+        </Trace>
       )
     default:
       return null
