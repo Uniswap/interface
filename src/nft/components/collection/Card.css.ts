@@ -11,7 +11,7 @@ export const card = style([
   {
     boxSizing: 'border-box',
     WebkitBoxSizing: 'border-box',
-    boxShadow: 'rgba(0, 0, 0, 10%) 0px 4px 12px',
+    boxShadow: vars.color.cardDropShadow,
     backgroundColor: themeVars.colors.backgroundSurface,
   },
 ])

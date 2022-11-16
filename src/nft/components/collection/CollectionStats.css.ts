@@ -2,7 +2,7 @@ import { globalStyle, style } from '@vanilla-extract/css'
 import { bodySmall, headlineSmall, subheadSmall } from 'nft/css/common.css'
 import { loadingAsset, loadingBlock } from 'nft/css/loading.css'
 
-import { breakpoints, sprinkles, themeVars } from '../../css/sprinkles.css'
+import { breakpoints, sprinkles, themeVars, vars } from '../../css/sprinkles.css'
 
 export const statsText = style([
   sprinkles({
@@ -34,7 +34,7 @@ export const collectionImage = style([
     height: '143px',
     verticalAlign: 'top',
     top: '-118px',
-    boxShadow: 'rgba(0, 0, 0, 10%) 0px 4px 12px;',
+    boxShadow: vars.color.cardDropShadow,
     '@media': {
       [`(max-width: ${breakpoints.sm - 1}px)`]: {
         width: '60px',
