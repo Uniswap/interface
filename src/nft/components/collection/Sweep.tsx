@@ -14,7 +14,7 @@ import { ThemedText } from 'theme'
 const SweepContainer = styled.div`
   display: flex;
   gap: 60px;
-  margin: 12px 16px 0 16px;
+  margin-top: 12px;
   padding: 16px;
   border-radius: 12px;
   background-color: ${({ theme }) => theme.backgroundSurface};
