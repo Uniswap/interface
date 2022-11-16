@@ -1,13 +1,16 @@
 import { flush, Identify, identify, init, track } from '@amplitude/analytics-react-native'
 import { firebase } from '@react-native-firebase/analytics'
 import * as Sentry from '@sentry/react-native'
-import { AMPLITUDE_API_TEST_KEY } from 'react-native-dotenv'
+import { uniswapUrls } from 'src/constants/urls'
+import { ApplicationTransport } from 'src/features/telemetry/ApplicationTransport'
 import { LogContext, UserPropertyName } from 'src/features/telemetry/constants'
 import { EventProperties } from 'src/features/telemetry/types'
 import { logger } from 'src/utils/logger'
 type LogTags = {
   [key: string]: Primitive
 }
+
+const DUMMY_KEY = '00000000000000000000000000000000'
 
 export async function initAnalytics() {
   if (__DEV__) {
@@ -19,9 +22,10 @@ export async function initAnalytics() {
   try {
     init(
       // reporting to test project until we add the proxy in a comming PR
-      AMPLITUDE_API_TEST_KEY,
+      DUMMY_KEY,
       undefined, // User ID should be undefined to let Amplitude default to Device ID
       {
+        transportProvider: new ApplicationTransport(uniswapUrls.amplitudeProxyUrl), // Used to support custom reverse proxy header
         // Disable tracking of private user information by Amplitude
         trackingOptions: {
           adid: false,

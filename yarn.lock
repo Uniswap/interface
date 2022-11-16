@@ -20,11 +20,11 @@
     "@amplitude/ua-parser-js" "0.7.31"
 
 "@amplitude/analytics-core@^0.10.0":
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/@amplitude/analytics-core/-/analytics-core-0.10.0.tgz#0d68cede53fecaadfef9c36455eb271454b6ccee"
-  integrity sha512-D/6U9SzyDmcNWnT/lFnBKfYl4ASicLlwD1tqu4RZoYS3SwHd/PNST+LbnL3yBTEIJIY//qjth9lLBh/RRzePfg==
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/@amplitude/analytics-core/-/analytics-core-0.10.1.tgz#1cac30bddd9964de4a485d55d64bad2330288e97"
+  integrity sha512-XYJavGCnf0Y28chswEGNjSM2MqCMafsQvHpSgRD1JYTNrv+j/CTkj7P3TwyxriaXCTSfFcWTDPKRHd3SruU3Aw==
   dependencies:
-    "@amplitude/analytics-types" "^0.12.0"
+    "@amplitude/analytics-types" "^0.13.0"
     tslib "^2.3.1"
 
 "@amplitude/analytics-react-native@0.5.0":
@@ -38,6 +38,11 @@
     "@amplitude/ua-parser-js" "^0.7.31"
     "@react-native-async-storage/async-storage" "^1.17.7"
     tslib "^2.3.1"
+
+"@amplitude/analytics-types@0.13.0", "@amplitude/analytics-types@^0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@amplitude/analytics-types/-/analytics-types-0.13.0.tgz#5847b3d919a09381699605b6e9f30110c65c2a2b"
+  integrity sha512-yti2SytTIh0R5QknuKO1RMgB+r8CGjauhPfFaaYiTm4keAvqYxDdG9ULarPDoOx2VPSfB5Za779Kt1Muc+34PA==
 
 "@amplitude/analytics-types@^0.12.0":
   version "0.12.0"
@@ -68,6 +73,27 @@
   dependencies:
     "@jridgewell/gen-mapping" "^0.1.0"
     "@jridgewell/trace-mapping" "^0.3.9"
+
+"@analytics/core@0.11.1":
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/@analytics/core/-/core-0.11.1.tgz#3d26858aeaf77b80810e269a4ecfd70173032501"
+  integrity sha512-vHuiMpeGV6jGRRoOuScUJ4CHpVd1Zu9M+fjEWgN+boMAxIwFCtRTkSbhhIP337JuEBLpMT8w37OxA4Yh3NZFZw==
+  dependencies:
+    "@analytics/global-storage-utils" "^0.1.5"
+    "@analytics/type-utils" "^0.6.0"
+    analytics-utils "^1.0.10"
+
+"@analytics/global-storage-utils@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@analytics/global-storage-utils/-/global-storage-utils-0.1.5.tgz#54cc14f8d678610b5fca1e98215fe29fff662f31"
+  integrity sha512-DzOCd0qK7PGnz/dgBYNzLmaFBkxcEHM6/CpWMY7hel1IBUldMsyet4sdRgI2Nk+Wc6B/YvqVqos68p5ntB59zA==
+  dependencies:
+    "@analytics/type-utils" "^0.6.0"
+
+"@analytics/type-utils@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@analytics/type-utils/-/type-utils-0.6.0.tgz#1b8745516da5a654d292ed3f2db893c61cd3d9c5"
+  integrity sha512-1Yw7u/COtxx06BfwlI+kVhsa/upKYzmCNrT4c8QDeCY2KMYlnijkUjtHiPU08HxyTIVB5j6d75O0YWVIHwQS8g==
 
 "@apidevtools/json-schema-ref-parser@9.0.6":
   version "9.0.6"
@@ -7381,6 +7407,14 @@ ajv@^8.0.1:
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
 
+analytics-utils@^1.0.10:
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/analytics-utils/-/analytics-utils-1.0.10.tgz#e44078176c67005e5b11aae1dc538202744a5ca5"
+  integrity sha512-ZKYKhip7Sf09qE85l4vZMBPR3fz6ISUTlwzkWSwJHbzLLzP5qrWQtcQlBcP9Pah7BMNSq8pqho+PX4ZKB014Yg==
+  dependencies:
+    "@analytics/type-utils" "^0.6.0"
+    dlv "^1.1.3"
+
 anser@^1.4.9:
   version "1.4.10"
   resolved "https://registry.yarnpkg.com/anser/-/anser-1.4.10.tgz#befa3eddf282684bd03b63dcda3927aef8c2e35b"
@@ -10633,6 +10667,11 @@ dir-glob@^3.0.1:
   integrity sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==
   dependencies:
     path-type "^4.0.0"
+
+dlv@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/dlv/-/dlv-1.1.3.tgz#5c198a8a11453596e751494d49874bc7732f2e79"
+  integrity sha512-+HlytyjlPKnIG8XuRG8WvmBP8xs8P71y+SKKS6ZXWoEgLuePxtDoUEiH7WkdePWrQ5JBpE6aoVqfZfJUQkjXwA==
 
 doctrine@^2.1.0:
   version "2.1.0"

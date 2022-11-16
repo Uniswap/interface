@@ -7,6 +7,7 @@ export const uniswapUrls = {
   routingApiUrl: getUniswapRoutingApiUrl(),
   graphQLUrl: getUniswapGraphQLUrl(),
   trmUrl: getUniswapTrmUrl(),
+  amplitudeProxyUrl: getUniswapAmplitudeProxyUrl(),
   termsOfServiceUrl: 'https://uniswap.org/terms-of-service',
   privacyPolicyUrl: 'https://uniswap.org/privacy-policy',
   nftUrl: 'https://app.uniswap.org/#/nfts',
@@ -30,6 +31,10 @@ function getUniswapGraphQLUrl() {
 
 function getUniswapTrmUrl() {
   return `${config.uniswapApiBaseUrl}/v1/screen`
+}
+
+function getUniswapAmplitudeProxyUrl() {
+  return `${config.uniswapApiBaseUrl}/v1/amplitude-proxy`
 }
 
 export const TOKEN_WARNING_HELP_PAGE_URL =
