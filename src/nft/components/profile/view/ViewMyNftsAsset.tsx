@@ -8,13 +8,10 @@ import { bodySmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile, useSellAsset } from 'nft/hooks'
 import { TokenType, WalletAsset } from 'nft/types'
-import { useEffect, useState } from 'react'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const TOOLTIP_TIMEOUT = 2000
-const ADDED_TO_BAG_TOOLTIP_TEXT = 'Selected'
-const REMOVED_FROM_BAG_TOOLTIP_TEXT = 'Deselected'
 
 const NFT_DETAILS_HREF = (asset: WalletAsset) =>
   `/nfts/asset/${asset.asset_contract.address}/${asset.tokenId}?origin=profile`
@@ -62,7 +59,7 @@ export const ViewMyNftsAsset = ({
   }, [asset, sellAssets])
 
   const [showTooltip, setShowTooltip] = useState(false)
-  const [prevIsSelected, setPrevIsSelected] = useState(isSelected)
+  const isSelectedRef = useRef(isSelected)
 
   const onCardClick = () => {
     isSellMode ? handleSelect(isSelected) : navigate(NFT_DETAILS_HREF(asset))
@@ -81,25 +78,24 @@ export const ViewMyNftsAsset = ({
   }
 
   useEffect(() => {
-    if (isSelected !== prevIsSelected) {
+    if (isSelected !== isSelectedRef.current) {
       setShowTooltip(true)
+      isSelectedRef.current = isSelected
       const tooltipTimer = setTimeout(() => {
         setShowTooltip(false)
       }, TOOLTIP_TIMEOUT)
 
       return () => {
         clearTimeout(tooltipTimer)
-        setPrevIsSelected(isSelected)
       }
     }
+    isSelectedRef.current = isSelected
     return undefined
-  }, [isSelected, prevIsSelected])
+  }, [isSelected, isSelectedRef])
 
   const assetMediaType = Card.useAssetMediaType(asset)
 
   const isDisabled = isSellMode && (asset.asset_contract.tokenType === TokenType.ERC1155 || asset.susFlag)
-  const disabledTooltipText =
-    asset.asset_contract.tokenType === TokenType.ERC1155 ? 'ERC-1155 support coming soon' : 'Blocked from trading'
 
   return (
     <Card.Container
@@ -113,7 +109,11 @@ export const ViewMyNftsAsset = ({
       <MouseoverTooltip
         text={
           <Box as="span" className={bodySmall} style={{ color: themeVars.colors.textPrimary }}>
-            <Trans>{disabledTooltipText}</Trans>{' '}
+            {asset.asset_contract.tokenType === TokenType.ERC1155 ? (
+              <Trans>ERC-1155 support coming soon</Trans>
+            ) : (
+              <Trans>Blocked from trading</Trans>
+            )}
           </Box>
         }
         placement="bottom"
@@ -124,8 +124,8 @@ export const ViewMyNftsAsset = ({
       >
         <Tooltip
           text={
-            <Box as="span" className={bodySmall} style={{ color: themeVars.colors.textPrimary }}>
-              <Trans>{isSelected ? ADDED_TO_BAG_TOOLTIP_TEXT : REMOVED_FROM_BAG_TOOLTIP_TEXT}</Trans>{' '}
+            <Box as="span" className={bodySmall} color="textPrimary">
+              {isSelected ? <Trans>Selected</Trans> : <Trans>Deselected</Trans>}
             </Box>
           }
           show={showTooltip}
