@@ -9,18 +9,14 @@ import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile, useSellAsset } from 'nft/hooks'
 import { TokenType, WalletAsset } from 'nft/types'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 const TOOLTIP_TIMEOUT = 2000
 
-const NFT_DETAILS_HREF = (asset: WalletAsset) =>
-  `/nfts/asset/${asset.asset_contract.address}/${asset.tokenId}?origin=profile`
-
 interface ViewMyNftsAssetProps {
   asset: WalletAsset
-  isSellMode: boolean
   mediaShouldBePlaying: boolean
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
+  hideDetails: boolean
 }
 
 const getNftDisplayComponent = (
@@ -40,9 +36,9 @@ const getNftDisplayComponent = (
 
 export const ViewMyNftsAsset = ({
   asset,
-  isSellMode,
   mediaShouldBePlaying,
   setCurrentTokenPlayingMedia,
+  hideDetails,
 }: ViewMyNftsAssetProps) => {
   const sellAssets = useSellAsset((state) => state.sellAssets)
   const selectSellAsset = useSellAsset((state) => state.selectSellAsset)
@@ -50,7 +46,6 @@ export const ViewMyNftsAsset = ({
   const cartExpanded = useBag((state) => state.bagExpanded)
   const toggleCart = useBag((state) => state.toggleBag)
   const isMobile = useIsMobile()
-  const navigate = useNavigate()
 
   const isSelected = useMemo(() => {
     return sellAssets.some(
@@ -61,9 +56,7 @@ export const ViewMyNftsAsset = ({
   const [showTooltip, setShowTooltip] = useState(false)
   const isSelectedRef = useRef(isSelected)
 
-  const onCardClick = () => {
-    isSellMode ? handleSelect(isSelected) : navigate(NFT_DETAILS_HREF(asset))
-  }
+  const onCardClick = () => handleSelect(isSelected)
 
   const handleSelect = (removeAsset: boolean) => {
     removeAsset ? removeSellAsset(asset) : selectSellAsset(asset)
@@ -94,8 +87,7 @@ export const ViewMyNftsAsset = ({
   }, [isSelected, isSelectedRef])
 
   const assetMediaType = Card.useAssetMediaType(asset)
-
-  const isDisabled = isSellMode && (asset.asset_contract.tokenType === TokenType.ERC1155 || asset.susFlag)
+  const isDisabled = asset.asset_contract.tokenType === TokenType.ERC1155 || asset.susFlag
 
   return (
     <Card.Container
@@ -141,7 +133,7 @@ export const ViewMyNftsAsset = ({
         </Tooltip>
       </MouseoverTooltip>
       <Card.DetailsContainer>
-        <Card.ProfileNftDetails asset={asset} isSellMode={isSellMode} />
+        <Card.ProfileNftDetails asset={asset} hideDetails={hideDetails} />
       </Card.DetailsContainer>
     </Card.Container>
   )
