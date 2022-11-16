@@ -174,6 +174,8 @@ export const EllipsisIcon = (props: SVGProps) => (
   </svg>
 )
 
+export const ChevronRightIcon = (props: SVGProps) => <ChevronLeftIcon {...props} transform="rotate(180)" />
+
 export const LightningBoltIcon = (props: SVGProps) => (
   <svg {...props} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
