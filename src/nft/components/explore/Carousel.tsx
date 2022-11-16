@@ -3,18 +3,21 @@ import { ChevronLeftIcon, ChevronRightIcon } from 'nft/components/icons'
 import { calculateCardIndex, calculateFirstCardIndex, calculateRank } from 'nft/utils'
 import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import { a, useSprings } from 'react-spring'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 
 const MAX_CARD_WIDTH = 530
 
-const BaseCarouselItem = styled(a.div)`
+const carouselHeightStyle = css`
   height: 315px;
-  padding-top: 3px;
-  padding-bottom: 32px;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     height: 296px;
   }
+`
+
+const carouselItemStyle = css`
+  padding-top: 3px;
+  padding-bottom: 32px;
 `
 
 const CarouselContainer = styled.div`
@@ -23,24 +26,31 @@ const CarouselContainer = styled.div`
   justify-content: flex-end;
 `
 
-const CarouselCardContainer = styled(BaseCarouselItem)`
+const CarouselCardContainer = styled.div`
+  ${carouselHeightStyle}
+
   position: relative;
   width: 100%;
   max-width: ${MAX_CARD_WIDTH}px;
   overflow-x: hidden;
 `
 
-const CarouselCard = styled(a.div)`
+const CarouselItemCard = styled(a.div)`
+  ${carouselHeightStyle}
+  ${carouselItemStyle}
+
   display: flex;
   justify-content: center;
-  padding-left: 32px;
-  padding-right: 32px;
+  padding: 3px 32px 32px 32px;
 
   position: absolute;
   will-change: transform;
 `
 
-const CarouselIcon = styled(BaseCarouselItem)`
+const CarouselItemIcon = styled.div`
+  ${carouselHeightStyle}
+  ${carouselItemStyle}
+
   display: flex;
   align-items: center;
   padding-left: 8px;
@@ -132,12 +142,12 @@ export const Carousel = ({ children, activeIndex, toggleNextSlide }: CarouselPro
 
   return (
     <CarouselContainer>
-      <CarouselIcon onClick={() => toggleSlide(-1)}>
+      <CarouselItemIcon onClick={() => toggleSlide(-1)}>
         <ChevronLeftIcon width="16px" height="16px" />
-      </CarouselIcon>
+      </CarouselItemIcon>
       <CarouselCardContainer ref={carouselCardContainerRef}>
         {springs.map(({ x }, i) => (
-          <CarouselCard
+          <CarouselItemCard
             key={i}
             style={{
               width: cardWidth,
@@ -145,12 +155,12 @@ export const Carousel = ({ children, activeIndex, toggleNextSlide }: CarouselPro
             }}
           >
             {children[i]}
-          </CarouselCard>
+          </CarouselItemCard>
         ))}
       </CarouselCardContainer>
-      <CarouselIcon onClick={() => toggleSlide(1)}>
+      <CarouselItemIcon onClick={() => toggleSlide(1)}>
         <ChevronRightIcon width="16px" height="16px" />
-      </CarouselIcon>
+      </CarouselItemIcon>
     </CarouselContainer>
   )
 }

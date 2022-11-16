@@ -74,6 +74,8 @@ const HeaderContainer = styled.div`
   align-items: start;
   align-self: center;
   flex-shrink: 0;
+  padding-bottom: 32px;
+
   color: ${({ theme }) => theme.textPrimary};
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
@@ -92,6 +94,7 @@ const HeaderContainer = styled.div`
     justify-content: center;
     align-items: center;
     padding-top: 0px;
+    padding-bottom: 0px;
   }
 `
 
