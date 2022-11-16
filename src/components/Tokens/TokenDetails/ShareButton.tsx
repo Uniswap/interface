@@ -91,7 +91,7 @@ export default function ShareButton(tokenInfo: TokenInfo) {
 
   return (
     <ShareButtonDisplay ref={node}>
-      <Share onClick={toggleShare} aria-label={`ShareOptions`} open={open} />
+      <Share onClick={toggleShare} aria-label="ShareOptions" open={open} />
       {open && (
         <ShareActions>
           <ShareAction onClick={() => copyHelperRef.current?.forceCopy()}>

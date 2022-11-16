@@ -213,7 +213,7 @@ export const Brush = ({
                   visible={showLabels || hovering}
                 >
                   <TooltipBackground y="0" x="-30" height="30" width="60" rx="8" />
-                  <Tooltip transform={`scale(-1, 1)`} y="15" dominantBaseline="middle">
+                  <Tooltip transform="scale(-1, 1)" y="15" dominantBaseline="middle">
                     {brushLabelValue('w', localBrushExtent[0])}
                   </Tooltip>
                 </LabelGroup>

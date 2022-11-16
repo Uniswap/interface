@@ -149,11 +149,11 @@ export default function TokenDetails({
                 <LogoContainer>
                   <CurrencyLogo
                     src={logoSrc}
-                    size={'32px'}
+                    size="32px"
                     symbol={isNative ? nativeCurrency?.symbol : token?.symbol}
                     currency={isNative ? nativeCurrency : token}
                   />
-                  <L2NetworkLogo networkUrl={L2Icon} size={'16px'} />
+                  <L2NetworkLogo networkUrl={L2Icon} size="16px" />
                 </LogoContainer>
                 {token?.name ?? <Trans>Name not found</Trans>}
                 <TokenSymbol>{token?.symbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>

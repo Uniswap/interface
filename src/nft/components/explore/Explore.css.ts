@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css'
 import { body, caption } from 'nft/css/common.css'
-import { breakpoints, sprinkles } from 'nft/css/sprinkles.css'
+import { sprinkles } from 'nft/css/sprinkles.css'
 
 export const section = style([
   sprinkles({
@@ -14,45 +14,6 @@ export const section = style([
     flexDirection: 'row',
     flexWrap: 'nowrap',
     position: 'relative',
-  },
-])
-
-export const bannerWrap = style([
-  sprinkles({
-    position: 'relative',
-    overflow: 'hidden',
-    height: '386',
-  }),
-  {
-    backgroundPosition: 'center',
-    backgroundSize: 'cover',
-  },
-])
-
-export const bannerOverlay = style([
-  {
-    height: '386px',
-  },
-  sprinkles({
-    position: 'absolute',
-    opacity: '0.7',
-    width: 'full',
-    backgroundColor: 'gray900',
-    left: '0',
-    top: '0',
-  }),
-])
-
-export const collectionDetails = style([
-  sprinkles({
-    width: 'full',
-  }),
-  {
-    '@media': {
-      [`(min-width: ${breakpoints.lg}px)`]: {
-        width: '40%',
-      },
-    },
   },
 ])
 
@@ -167,31 +128,3 @@ export const loadingTd = style([
     position: 'relative',
   }),
 ])
-
-export const trendingOptions = sprinkles({
-  marginTop: '36',
-  marginBottom: '20',
-  height: '44',
-  borderRadius: '12',
-  borderWidth: '2px',
-  borderStyle: 'solid',
-  borderColor: 'outline',
-})
-
-/* Trending Colletion styles */
-export const trendingOption = style([
-  {
-    marginTop: '-1px',
-    marginLeft: '-1px',
-  },
-  sprinkles({
-    paddingY: '14',
-    paddingX: '16',
-    borderRadius: '12',
-    fontSize: '12',
-    display: 'inline-block',
-    cursor: 'pointer',
-  }),
-])
-
-export const trendingOptionActive = sprinkles({ backgroundColor: 'accentActiveSoft' })

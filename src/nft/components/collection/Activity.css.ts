@@ -191,10 +191,6 @@ export const marketplaceIcon = style([
   }),
 ])
 
-export const ensNameContainer = sprinkles({
-  width: 'max',
-})
-
 export const rarityInfo = style([
   sprinkles({
     display: 'flex',

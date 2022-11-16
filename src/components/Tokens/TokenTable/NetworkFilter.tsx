@@ -103,7 +103,7 @@ export default function NetworkFilter() {
 
   return (
     <StyledMenu ref={node}>
-      <NetworkFilterOption onClick={toggleMenu} aria-label={`networkFilter`} active={open}>
+      <NetworkFilterOption onClick={toggleMenu} aria-label="networkFilter" active={open}>
         <StyledMenuContent>
           <NetworkLabel>
             <Logo src={chainInfo?.logoUrl} /> {chainInfo?.label}

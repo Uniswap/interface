@@ -171,7 +171,7 @@ export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
     <Container>
       <BestPriceContainer>
         <HeaderRow>
-          <ThemedText.SubHeader fontWeight={500} lineHeight={'24px'}>
+          <ThemedText.SubHeader fontWeight={500} lineHeight="24px">
             {listing ? 'Your Price' : 'List for Sale'}
           </ThemedText.SubHeader>
           {listing && <MarketplaceIcon alt={listing.marketplace} src={getMarketplaceIcon(listing.marketplace)} />}
@@ -179,32 +179,32 @@ export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
         <PriceRow>
           {listing ? (
             <>
-              <ThemedText.MediumHeader fontSize={'28px'} lineHeight={'36px'}>
+              <ThemedText.MediumHeader fontSize="28px" lineHeight="36px">
                 {formatEthPrice(asset.priceInfo.ETHPrice)}
               </ThemedText.MediumHeader>
               {USDPrice && (
-                <ThemedText.BodySecondary lineHeight={'24px'}>
+                <ThemedText.BodySecondary lineHeight="24px">
                   {ethNumberStandardFormatter(USDPrice, true, true)}
                 </ThemedText.BodySecondary>
               )}
             </>
           ) : (
-            <ThemedText.BodySecondary fontSize="14px" lineHeight={'20px'}>
+            <ThemedText.BodySecondary fontSize="14px" lineHeight="20px">
               Get the best price for your NFT by selling with Uniswap.
             </ThemedText.BodySecondary>
           )}
         </PriceRow>
         {expirationDate && (
-          <ThemedText.BodySecondary fontSize={'14px'}>Sale ends: {timeLeft(expirationDate)}</ThemedText.BodySecondary>
+          <ThemedText.BodySecondary fontSize="14px">Sale ends: {timeLeft(expirationDate)}</ThemedText.BodySecondary>
         )}
         {!listing ? (
           <BuyNowButton assetInBag={false} margin={true} useAccentColor={true} onClick={goToListPage}>
-            <ThemedText.SubHeader lineHeight={'20px'}>List</ThemedText.SubHeader>
+            <ThemedText.SubHeader lineHeight="20px">List</ThemedText.SubHeader>
           </BuyNowButton>
         ) : (
           <>
             <BuyNowButton assetInBag={false} margin={true} useAccentColor={false} onClick={goToListPage}>
-              <ThemedText.SubHeader lineHeight={'20px'}>Adjust listing</ThemedText.SubHeader>
+              <ThemedText.SubHeader lineHeight="20px">Adjust listing</ThemedText.SubHeader>
             </BuyNowButton>
           </>
         )}
@@ -301,17 +301,17 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
       {cheapestOrder && asset.priceInfo ? (
         <BestPriceContainer>
           <HeaderRow>
-            <ThemedText.SubHeader fontWeight={500} lineHeight={'24px'}>
+            <ThemedText.SubHeader fontWeight={500} lineHeight="24px">
               Best Price
             </ThemedText.SubHeader>
             <MarketplaceIcon alt={cheapestOrder.marketplace} src={getMarketplaceIcon(cheapestOrder.marketplace)} />
           </HeaderRow>
           <PriceRow>
-            <ThemedText.MediumHeader fontSize={'28px'} lineHeight={'36px'}>
+            <ThemedText.MediumHeader fontSize="28px" lineHeight="36px">
               {formatEthPrice(asset.priceInfo.ETHPrice)} ETH
             </ThemedText.MediumHeader>
             {USDPrice && (
-              <ThemedText.BodySecondary lineHeight={'24px'}>
+              <ThemedText.BodySecondary lineHeight="24px">
                 {ethNumberStandardFormatter(USDPrice, true, true)}
               </ThemedText.BodySecondary>
             )}

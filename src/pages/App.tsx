@@ -14,6 +14,7 @@ import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { SpinnerSVG } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
+import { isProductionEnv } from 'utils/env'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import { useAnalyticsReporter } from '../components/analytics'
@@ -50,7 +51,13 @@ const Asset = lazy(() => import('nft/pages/asset/Asset'))
 // Placeholder API key. Actual API key used in the proxy server
 const ANALYTICS_DUMMY_KEY = '00000000000000000000000000000000'
 const ANALYTICS_PROXY_URL = process.env.REACT_APP_AMPLITUDE_PROXY_URL
-initializeAnalytics(ANALYTICS_DUMMY_KEY, OriginApplication.INTERFACE, ANALYTICS_PROXY_URL)
+const COMMIT_HASH = process.env.REACT_APP_GIT_COMMIT_HASH
+initializeAnalytics(ANALYTICS_DUMMY_KEY, OriginApplication.INTERFACE, {
+  proxyUrl: ANALYTICS_PROXY_URL,
+  defaultEventName: EventName.PAGE_VIEWED,
+  commitHash: COMMIT_HASH,
+  isProductionEnv: isProductionEnv(),
+})
 
 const AppWrapper = styled.div`
   display: flex;

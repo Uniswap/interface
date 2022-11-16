@@ -245,7 +245,7 @@ const CollectionDescription = ({ description }: { description: string }) => {
 
 const StatsItem = ({ children, label, shouldHide }: { children: ReactNode; label: string; shouldHide: boolean }) => {
   return (
-    <Box display={shouldHide ? 'none' : 'flex'} flexDirection={'column'} alignItems="baseline" gap="2" height="min">
+    <Box display={shouldHide ? 'none' : 'flex'} flexDirection="column" alignItems="baseline" gap="2" height="min">
       <span className={styles.statsValue}>{children}</span>
       <Box as="span" className={styles.statsLabel}>
         {label}
@@ -315,7 +315,8 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
               {totalSupplyStr}
             </StatsItem>
           ) : null}
-          {uniqueOwnersPercentage ? (
+
+          {Boolean(uniqueOwnersPercentage && stats.standard !== TokenType.ERC1155) ? (
             <StatsItem label="Unique owners" shouldHide={isMobile ?? false}>
               {uniqueOwnersPercentage}%
             </StatsItem>

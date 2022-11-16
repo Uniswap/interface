@@ -189,7 +189,7 @@ export default function Pool() {
           ) : (
             <AutoColumn gap="lg" justify="center">
               <AutoColumn gap="md" style={{ width: '100%' }}>
-                <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
+                <TitleRow style={{ marginTop: '1rem' }} padding="0">
                   <HideSmall>
                     <ThemedText.DeprecatedMediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
                       <Trans>Your V2 liquidity</Trans>

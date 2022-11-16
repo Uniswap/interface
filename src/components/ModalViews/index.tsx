@@ -27,9 +27,9 @@ export function LoadingView({ children, onDismiss }: { children: any; onDismiss:
         <CloseIcon onClick={onDismiss} />
       </RowBetween>
       <ConfirmedIcon>
-        <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
+        <CustomLightSpinner src={Circle} alt="loader" size="90px" />
       </ConfirmedIcon>
-      <AutoColumn gap="100px" justify={'center'}>
+      <AutoColumn gap="100px" justify="center">
         {children}
         <ThemedText.DeprecatedSubHeader>
           <Trans>Confirm this transaction in your wallet</Trans>
@@ -60,7 +60,7 @@ export function SubmittedView({
       <ConfirmedIcon>
         <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.deprecated_primary1} />
       </ConfirmedIcon>
-      <AutoColumn gap="100px" justify={'center'}>
+      <AutoColumn gap="100px" justify="center">
         {children}
         {chainId && hash && (
           <ExternalLink
