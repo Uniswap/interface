@@ -147,7 +147,7 @@ function ActionButton({
       hapticFeedback
       backgroundColor="background0"
       borderColor="backgroundOutline"
-      borderRadius="md"
+      borderRadius="lg"
       borderWidth={1}
       flex={1}
       name={name}
