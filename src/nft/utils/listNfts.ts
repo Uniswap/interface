@@ -191,8 +191,9 @@ export async function signListing(
         // endTime timestamp in seconds
         endTime: BigNumber.from(asset.expirationTime),
         // minimum ratio to be received by the user (per 10000)
+        // As of 11.10.22 LooksRare charges 1.5% + 0.5% if there's creator royalties set https://docs.looksrare.org/blog/looksrare-offers-zero-royalty-trading-shares-protocol-fees-with-creators-instead
         minPercentageToAsk: BigNumber.from(10000)
-          .sub(BigNumber.from(asset.basisPoints ? 200 : 150))
+          .sub(BigNumber.from(150 + (asset.basisPoints ? 50 : 0)))
           .toNumber(),
         // params (e.g., price, target account for private sale)
         params: [],
@@ -219,7 +220,7 @@ export async function signListing(
           price: parseEther(listingPrice.toString()).toString(),
           startTime: currentTime,
           endTime: asset.expirationTime,
-          minPercentageToAsk: 10000 - (asset.basisPoints ? 200 : 150),
+          minPercentageToAsk: 10000 - (150 + (asset.basisPoints ? 50 : 0)),
           params: [],
         }
         const res = await createLooksRareOrder(payload)
