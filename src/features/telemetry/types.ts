@@ -20,6 +20,18 @@ export type EventProperties = {
     accounts_imported_count: number
   } & BaseEventProperty
   [EventName.Transaction]: BaseEventProperty
+  [EventName.SwapQuoteReceived]: {
+    token_in_symbol?: string
+    token_out_symbol?: string
+    token_in_address: string
+    token_out_address: string
+    price_impact_basis_points?: string
+    estimated_network_fee_usd?: number
+    chain_id: number
+    token_in_amount: string
+    token_out_amount: string
+    quote_latency_milliseconds?: number
+  } & BaseEventProperty
 }
 
 export type TelemetryEventProps = {

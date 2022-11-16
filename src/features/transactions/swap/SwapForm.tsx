@@ -20,6 +20,7 @@ import { Text } from 'src/components/Text'
 import { useUSDCPrice, useUSDCValue } from 'src/features/routing/useUSDCPrice'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
 import { useShouldShowNativeKeyboard } from 'src/features/transactions/hooks'
+import { useSwapAnalytics } from 'src/features/transactions/swap/analytics'
 import {
   DerivedSwapInfo,
   useShowSwapNetworkNotification,
@@ -150,6 +151,8 @@ export function SwapForm({
   const SWAP_DIRECTION_BUTTON_SIZE = theme.iconSizes.md
   const SWAP_DIRECTION_BUTTON_INNER_PADDING = theme.spacing.sm
   const SWAP_DIRECTION_BUTTON_BORDER_WIDTH = theme.spacing.xxs
+
+  useSwapAnalytics(derivedSwapInfo)
 
   return (
     <>

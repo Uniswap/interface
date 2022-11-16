@@ -4,14 +4,18 @@
  * Subject to change as new features are added and new events are defined and logged.
  */
 export enum EventName {
+  // keep these alphabetized or else you will go to JAIL!
+
+  // some of these values are Title Cased to match shared repo event format:
+  // https://github.com/Uniswap/analytics-events/blob/main/src/primitives.ts
   AppLoaded = 'app-loaded',
   Impression = 'impression',
   MarkMeasure = 'mark-measure',
   OnboardingCompleted = 'onboarding-completed',
+  SwapQuoteReceived = 'Swap Quote Received',
   Transaction = 'transaction',
   UserEvent = 'user-event',
   WalletAdded = 'wallet-added',
-  // alphabetize additional values.
 }
 
 /**

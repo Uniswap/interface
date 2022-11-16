@@ -40,8 +40,8 @@ export function currencyAddress(currency: Currency): string {
   if (currency.isNative) {
     return getNativeCurrencyAddressForChain(currency.chainId)
   }
-  if (currency.isToken) return currency.address
-  throw new Error('invalid currency')
+
+  return currency.address
 }
 
 export function getNativeCurrencyAddressForChain(chainId: ChainId) {
