@@ -550,7 +550,7 @@ const PrimaryDetails = ({ children }: { children: ReactNode }) => (
 
 const PrimaryInfo = ({ children }: { children: ReactNode }) => {
   return (
-    <Box overflow="hidden" whiteSpace="nowrap" textOverflow="ellipsis" className={`${body}`}>
+    <Box overflow="hidden" whiteSpace="nowrap" textOverflow="ellipsis" className={body}>
       {children}
     </Box>
   )

@@ -13,16 +13,6 @@ export const card = style([
     WebkitBoxSizing: 'border-box',
     boxShadow: vars.color.cardDropShadow,
     backgroundColor: themeVars.colors.backgroundSurface,
-  },
-])
-
-export const loadingBackground = style({
-  background: `linear-gradient(270deg, ${themeVars.colors.backgroundOutline} 0%, ${themeVars.colors.backgroundSurface} 100%)`,
-})
-
-export const notSelectedCard = style([
-  card,
-  {
     ':after': {
       content: '',
       position: 'absolute',
@@ -38,6 +28,12 @@ export const notSelectedCard = style([
   },
 ])
 
+export const loadingBackground = style({
+  background: `linear-gradient(270deg, ${themeVars.colors.backgroundOutline} 0%, ${themeVars.colors.backgroundSurface} 100%)`,
+})
+
+export const notSelectedCard = style([card])
+
 export const cardImageHover = style({
   transform: 'scale(1.15)',
 })
@@ -49,16 +45,8 @@ export const selectedCard = style([
   }),
   {
     ':after': {
-      content: '',
-      position: 'absolute',
-      top: '0px',
-      right: ' 0px',
-      bottom: ' 0px',
-      left: '0px',
       border: '2px solid',
-      borderRadius: '16px',
       borderColor: vars.color.accentAction,
-      pointerEvents: 'none',
     },
   },
 ])
