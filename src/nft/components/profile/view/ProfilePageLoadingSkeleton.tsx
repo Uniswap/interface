@@ -58,12 +58,6 @@ const SellButtonSkeleton = styled.div`
   border-radius: 12px;
 `
 
-export const ProfileAssetsWrapperSkeleton = styled(SkeletonRowWrapper)`
-  flex-wrap: wrap;
-  gap: 26px;
-  margin-bottom: 20px;
-`
-
 export const ProfileAssetCardSkeleton = styled.div`
   width: 100%;
   height: 330px;

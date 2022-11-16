@@ -1,16 +1,13 @@
-import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, EventName } from '@uniswap/analytics-events'
 import { useNftBalanceQuery } from 'graphql/data/nft/NftBalance'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { assetList } from 'nft/components/collection/CollectionNfts.css'
 import { FilterButton } from 'nft/components/collection/FilterButton'
 import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
 import { Center, Column, Row } from 'nft/components/Flex'
-import { CrossIcon, TagIcon } from 'nft/components/icons'
+import { CrossIcon } from 'nft/components/icons'
 import { FilterSidebar } from 'nft/components/profile/view/FilterSidebar'
-import { buttonTextMedium, subhead } from 'nft/css/common.css'
+import { subhead } from 'nft/css/common.css'
 import {
-  useBag,
   useFiltersExpanded,
   useIsMobile,
   useProfilePageState,
@@ -20,8 +17,8 @@ import {
 } from 'nft/hooks'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import { OSCollectionsFetcher } from 'nft/queries'
-import { ProfilePageStateType, TokenType, WalletAsset, WalletCollection } from 'nft/types'
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
+import { ProfilePageStateType, WalletCollection } from 'nft/types'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useQuery } from 'react-query'
 import { useSpring } from 'react-spring'
@@ -31,31 +28,6 @@ import shallow from 'zustand/shallow'
 import { EmptyWalletContent } from './EmptyWalletContent'
 import * as styles from './ProfilePage.css'
 import { ViewMyNftsAsset } from './ViewMyNftsAsset'
-
-const SellModeButton = styled.button<{ active: boolean }>`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 10px 12px;
-  border-radius: 12px;
-  gap: 8px;
-  cursor: pointer;
-  background-color: ${({ theme, active }) => (active ? theme.accentAction : theme.backgroundInteractive)};
-  color: ${({ active, theme }) => (active ? 'white' : theme.textPrimary)};
-  border: none;
-  outline: none;
-  &:hover {
-    background-color: ${({ theme }) => theme.accentAction};
-    color: white;
-  }
-
-  transition: ${({
-    theme: {
-      transition: { duration, timing },
-    },
-  }) => `${duration.fast} all ${timing.ease}`};
-`
 
 const ProfilePageColumn = styled(Column)`
   ${ScreenBreakpointsPaddings}
@@ -72,27 +44,18 @@ export const ProfilePage = () => {
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
   const walletCollections = useWalletCollections((state) => state.walletCollections)
   const setWalletCollections = useWalletCollections((state) => state.setWalletCollections)
-  const { isSellMode, resetSellAssets, setIsSellMode } = useSellAsset(
-    ({ isSellMode, reset, setIsSellMode }) => ({
-      isSellMode,
+  const { resetSellAssets } = useSellAsset(
+    ({ reset }) => ({
       resetSellAssets: reset,
-      setIsSellMode,
     }),
     shallow
   )
   const sellAssets = useSellAsset((state) => state.sellAssets)
-  const { setBagExpanded } = useBag(({ setBagExpanded }) => ({ setBagExpanded }), shallow)
 
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const isMobile = useIsMobile()
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
-
-  const handleSellModeClick = useCallback(() => {
-    resetSellAssets()
-    setIsSellMode(!isSellMode)
-    setBagExpanded({ bagExpanded: !isSellMode })
-  }, [isSellMode, resetSellAssets, setBagExpanded, setIsSellMode])
 
   const { data: ownerCollections } = useQuery(
     ['ownerCollections', address],
@@ -143,19 +106,6 @@ export const ProfilePage = () => {
                     collectionCount={ownerAssets?.length}
                     onClick={() => setFiltersExpanded(!isFiltersExpanded)}
                   />
-                  <Row gap="8" flexWrap="nowrap">
-                    {isSellMode && <SelectAllButton ownerAssets={ownerAssets ?? []} />}
-                    <TraceEvent
-                      events={[BrowserEvent.onClick]}
-                      name={EventName.NFT_SELL_SELECTED}
-                      shouldLogImpression={!isSellMode}
-                    >
-                      <SellModeButton className={buttonTextMedium} active={isSellMode} onClick={handleSellModeClick}>
-                        <TagIcon height={20} width={20} />
-                        Sell
-                      </SellModeButton>
-                    </TraceEvent>
-                  </Row>
                 </Row>
                 <Row>
                   <CollectionFiltersRow
@@ -181,8 +131,8 @@ export const ProfilePage = () => {
                       ? ownerAssets.map((asset, index) => (
                           <div key={index}>
                             <ViewMyNftsAsset
+                              isSellMode
                               asset={asset}
-                              isSellMode={isSellMode}
                               mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
                               setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
                             />
@@ -238,40 +188,6 @@ export const ProfilePage = () => {
         </Row>
       )}
     </ProfilePageColumn>
-  )
-}
-
-const SelectAllButton = ({ ownerAssets }: { ownerAssets: WalletAsset[] }) => {
-  const [isAllSelected, setIsAllSelected] = useState(false)
-  const selectSellAsset = useSellAsset((state) => state.selectSellAsset)
-  const resetSellAssets = useSellAsset((state) => state.reset)
-
-  useEffect(() => {
-    if (isAllSelected) {
-      ownerAssets.forEach(
-        (asset) => asset.asset_contract.tokenType !== TokenType.ERC1155 && !asset.susFlag && selectSellAsset(asset)
-      )
-    } else {
-      resetSellAssets()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAllSelected, resetSellAssets, selectSellAsset])
-
-  const toggleAllSelected = () => {
-    setIsAllSelected(!isAllSelected)
-  }
-  return (
-    <Box
-      marginRight="12"
-      paddingX="12"
-      paddingY="10"
-      cursor="pointer"
-      color="textSecondary"
-      onClick={toggleAllSelected}
-      className={buttonTextMedium}
-    >
-      {isAllSelected ? 'Deselect all' : 'Select all'}
-    </Box>
   )
 }
 

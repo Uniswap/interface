@@ -9,7 +9,6 @@ const ExploreContainer = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  padding: 16px;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     gap: 16px;

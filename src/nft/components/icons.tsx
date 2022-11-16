@@ -71,13 +71,6 @@ export const VerifiedIcon = (props: SVGProps) => (
   </svg>
 )
 
-export const EthIcon = (props: SVGProps) => (
-  <svg {...props} role="img" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 16 16" fill="none">
-    <path fill="currentColor" d="M4.85742 7.95904L8.00028 2.57129L11.1431 7.95904L8.00028 9.75496L4.85742 7.95904Z" />
-    <path fill="currentColor" d="M4.85742 8.85742L8.00028 10.6533L11.1431 8.85742L8.00028 13.3472L4.85742 8.85742Z" />
-  </svg>
-)
-
 export const PoolIcon = (props: SVGProps) => (
   <svg {...props} fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
@@ -180,6 +173,8 @@ export const EllipsisIcon = (props: SVGProps) => (
     />
   </svg>
 )
+
+export const ChevronRightIcon = (props: SVGProps) => <ChevronLeftIcon {...props} transform="rotate(180)" />
 
 export const LightningBoltIcon = (props: SVGProps) => (
   <svg {...props} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
