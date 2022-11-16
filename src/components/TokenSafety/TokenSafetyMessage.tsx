@@ -52,7 +52,7 @@ export default function TokenWarningMessage({ warning, tokenAddress }: TokenWarn
   return (
     <Label color={color}>
       <TitleRow>
-        {warning.canProceed ? <AlertTriangle size={'16px'} /> : <AlertOctagon size={'16px'} />}
+        {warning.canProceed ? <AlertTriangle size="16px" /> : <AlertOctagon size="16px" />}
         <Title marginLeft="7px">{warning.message}</Title>
       </TitleRow>
 

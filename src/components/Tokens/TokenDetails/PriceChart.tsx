@@ -263,7 +263,7 @@ export function PriceChart({ width, height, prices, timePeriod }: PriceChartProp
                 tickStroke={theme.backgroundOutline}
                 tickLength={4}
                 hideTicks={true}
-                tickTransform={'translate(0 -5)'}
+                tickTransform="translate(0 -5)"
                 tickValues={ticks}
                 top={graphHeight - 1}
                 tickLabelProps={() => ({
@@ -320,7 +320,7 @@ export function PriceChart({ width, height, prices, timePeriod }: PriceChartProp
             y={0}
             width={width}
             height={graphHeight}
-            fill={'transparent'}
+            fill="transparent"
             onTouchStart={handleHover}
             onTouchMove={handleHover}
             onMouseMove={handleHover}
