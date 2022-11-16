@@ -13,13 +13,10 @@ export const searchTokenQuery = graphql`
         decimals @required(action: LOG)
         name @required(action: LOG)
         chain @required(action: LOG)
+        standard @required(action: LOG)
         address
         symbol @required(action: LOG)
         market(currency: USD) {
-          totalValueLocked {
-            value
-            currency
-          }
           price {
             value
             currency
@@ -30,12 +27,6 @@ export const searchTokenQuery = graphql`
           volume24H: volume(duration: DAY) {
             value
             currency
-          }
-          priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {
-            value
-          }
-          priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {
-            value
           }
         }
       }
@@ -49,7 +40,12 @@ export type SearchToken = NonNullable<NonNullable<SearchTokenProject['tokens']>[
 
 export async function searchTokens(searchQuery: string, chainId: number) {
   const searchChain = chainIdToBackendName(chainId)
-  const response = await fetchQuery<SearchTokenQuery>(environment, searchTokenQuery, { searchQuery }).toPromise()
+  const response = await fetchQuery<SearchTokenQuery>(
+    environment,
+    searchTokenQuery,
+    { searchQuery },
+    { fetchPolicy: 'store-or-network', networkCacheConfig: { force: false } }
+  ).toPromise()
   const tokenProjects = response?.searchTokenProjects?.filter((p): p is SearchTokenProject => p !== null)
   const tokens = tokenProjects
     ?.map((p) => {

@@ -52,7 +52,7 @@ export const SearchBar = () => {
 
   const { chainId } = useWeb3React()
   const { data: tokens, isLoading: tokensAreLoading } = useQuery(
-    ['searchTokens', debouncedSearchValue],
+    ['searchTokens', debouncedSearchValue, chainId],
     () => fetchSearchTokens(debouncedSearchValue, chainId),
     {
       refetchOnWindowFocus: false,

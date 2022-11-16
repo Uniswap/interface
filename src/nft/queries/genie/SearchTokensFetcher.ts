@@ -1,5 +1,5 @@
 import { SupportedChainId } from 'constants/chains'
-import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
+import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { searchTokens } from 'graphql/data/Search'
 import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
@@ -10,25 +10,34 @@ export const fetchSearchTokens = async (
   tokenQuery: string,
   chainId: number = SupportedChainId.MAINNET
 ): Promise<FungibleToken[]> => {
-  //const url = `${process.env.REACT_APP_TEMP_API_URL}/tokens/search?tokenQuery=${tokenQuery}`
-
-  // const r = await fetch(url, {
-  //   method: 'GET',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  // })
   const tokens = await searchTokens(tokenQuery, chainId)
-  const nativeToken = tokens.find((t) => !t.address)
 
-  if (nativeToken) {
-    const wrapped = nativeOnChain(chainId).wrapped
-    tokens.push({ ...nativeToken, ...wrapped })
+  const nativeResults = []
+  const otherResults = []
+
+  let nativeToken
+  let hasWrapped = false
+  for (let i = 0; i < tokens.length; i++) {
+    const currentChainId = CHAIN_NAME_TO_CHAIN_ID[tokens[i].chain]
+    if (tokens[i].standard === 'NATIVE') {
+      const parsedNative = { ...tokens[i], ...nativeOnChain(currentChainId), address: NATIVE_CHAIN_ID }
+      nativeResults.push(parsedNative)
+      nativeToken = parsedNative
+    } else if (WRAPPED_NATIVE_CURRENCY[currentChainId]?.address === tokens[i].address) {
+      if (!nativeToken) nativeToken = { ...tokens[i], ...nativeOnChain(currentChainId), address: NATIVE_CHAIN_ID }
+      hasWrapped = true
+    } else {
+      otherResults.push(tokens[i])
+    }
+  }
+
+  if (nativeToken && !hasWrapped) {
+    nativeResults.push({ ...nativeToken, ...WRAPPED_NATIVE_CURRENCY[nativeToken.chainId] })
   }
 
   // TODO Undo favoritism
   return (
-    tokens
+    [...nativeResults, ...otherResults]
       .map(
         (t): FungibleToken => ({
           ...t,
@@ -41,7 +50,7 @@ export const fetchSearchTokens = async (
         })
       )
       .sort((a: FungibleToken, b: FungibleToken) =>
-        b.name === 'Uniswap' ? 1 : (b.volume24h ?? 0) - (a.volume24h ?? 0)
+        b.name === 'Uniswap' || b.address === NATIVE_CHAIN_ID ? 1 : (b.volume24h ?? 0) - (a.volume24h ?? 0)
       ) ?? []
   )
 }

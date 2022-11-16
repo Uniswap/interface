@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useTrace } from '@uniswap/analytics'
 import { NavBarSearchTypes, SectionName } from '@uniswap/analytics-events'
+import { useWeb3React } from '@web3-react/core'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
@@ -114,7 +115,7 @@ export const SearchBarDropdown = ({
   isLoading,
 }: SearchBarDropdownProps) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(0)
-  const { history: searchHistory, updateItem: updateSearchHistory } = useSearchHistory()
+  const { history: searchHistory } = useSearchHistory()
   const shortenedHistory = useMemo(() => searchHistory.slice(0, 2), [searchHistory])
   const { pathname } = useLocation()
   const isNFTPage = useIsNftPage()
@@ -146,18 +147,19 @@ export const SearchBarDropdown = ({
     [isNFTPage, trendingCollectionResults]
   )
 
-  const { data: trendingTokenResults, isLoading: trendingTokensAreLoading } = useQuery(
-    ['trendingTokens'],
-    () => fetchTrendingTokens(4),
-    {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-    }
-  )
+  const { chainId } = useWeb3React()
+  const {
+    data: trendingTokenResults,
+    isLoading: trendingTokensAreLoading,
+    remove,
+  } = useQuery(['trendingTokens', chainId], () => fetchTrendingTokens(4, chainId), {
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  })
   useEffect(() => {
-    trendingTokenResults?.forEach(updateSearchHistory)
-  }, [trendingTokenResults, updateSearchHistory])
+    remove()
+  }, [chainId, remove])
 
   const trendingTokensLength = phase1Flag === NftVariant.Enabled ? (isTokenPage ? 3 : 2) : 4
   const trendingTokens = useMemo(
@@ -210,7 +212,7 @@ export const SearchBarDropdown = ({
   const trace = useTrace({ section: SectionName.NAVBAR_SEARCH })
 
   useEffect(() => {
-    const eventProperties = { total_suggestions: totalSuggestions, query_text: queryText, ...trace }
+    const eventProperties = { total_suggestions: totalSuggestions, query_text: queryText, section: trace.section }
     if (!isLoading) {
       const tokenSearchResults =
         tokens.length > 0 ? (
@@ -343,7 +345,7 @@ export const SearchBarDropdown = ({
     showCollectionsFirst,
     queryText,
     totalSuggestions,
-    trace,
+    trace.section,
   ])
 
   return (

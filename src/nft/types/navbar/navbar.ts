@@ -10,7 +10,7 @@ export interface FungibleToken {
   symbol: string
   decimals: number
   chainId: number
-  logoURI: string
+  logoURI?: string | null
   priceUsd?: number | null
   price24hChange?: number | null
   volume24h?: number | null

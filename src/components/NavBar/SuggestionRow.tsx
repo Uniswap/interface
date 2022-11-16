@@ -199,12 +199,12 @@ export const TokenRow = ({
       </Row>
       {!hideStats && (
         <Column className={styles.suggestionSecondaryContainer}>
-          {token.priceUsd && (
+          {token.volume24h ? (
             <Row gap="4">
-              <Box className={styles.primaryText}>{formatDollar({ num: token.priceUsd, isPrice: true })}</Box>
+              <Box className={styles.primaryText}>{formatDollar({ num: token.volume24h, isPrice: true })}</Box>
             </Row>
-          )}
-          {token.price24hChange && (
+          ) : null}
+          {token.price24hChange !== null && token.price24hChange !== undefined && (
             <StyledDelta negative={token.price24hChange < 0}>{token.price24hChange.toFixed(2)}%</StyledDelta>
           )}
         </Column>
