@@ -27,6 +27,8 @@ const AbsoluteFill = styled.div`
   right: 0;
   top: 0;
   bottom: 0;
+
+  opacity: ${({ theme }) => (theme.darkMode ? 0.4 : 0.2)};
 `
 
 const BannerBackground = styled(AbsoluteFill)<{ backgroundImage: string }>`
