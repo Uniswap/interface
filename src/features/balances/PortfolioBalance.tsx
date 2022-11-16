@@ -37,7 +37,7 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps) {
 
   if (loading && !data) {
     return (
-      <Flex centered gap="xxs" width="70%">
+      <Flex gap="xxs" width="70%">
         <Box width="100%">
           <Loading height={theme.textVariants.headlineLarge.lineHeight} type="text" />
         </Box>
@@ -53,7 +53,7 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps) {
 
   return (
     <WarmLoadingShimmer isWarmLoading={isWarmLoading}>
-      <Flex alignItems="center" gap="xxs" justifyContent="flex-start">
+      <Flex gap="xxs">
         <DecimalNumber
           // initially set color to textSecondary when isWarm because the shimmer mask takes a second to load, resulting in a flash of the underlying color
           color={isWarmLoading ? 'textSecondary' : undefined}

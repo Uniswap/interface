@@ -73,9 +73,7 @@ export function AccountHeader() {
       alignItems="center"
       flexDirection="row"
       justifyContent="space-between"
-      mb="sm"
       mt="md"
-      mx="lg"
       testID="account-header">
       <TouchableArea
         alignItems="center"

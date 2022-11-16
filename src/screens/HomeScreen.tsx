@@ -39,15 +39,12 @@ export function HomeScreen() {
         bg={headerBgColor}
         borderBottomLeftRadius="md"
         borderBottomRightRadius="md"
-        gap="sm"
-        pb="md">
+        gap="xmd"
+        pb="md"
+        px="lg">
         <AccountHeader />
-        <Flex gap="md" px="lg">
-          <Flex centered>
-            <PortfolioBalance owner={activeAccount.address} />
-          </Flex>
-          <QuickActions />
-        </Flex>
+        <PortfolioBalance owner={activeAccount.address} />
+        <QuickActions />
       </Flex>
     ),
     [activeAccount.address, headerBgColor]
