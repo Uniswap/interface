@@ -10,17 +10,19 @@ enum BondingCurve {
 }
 
 interface Pool {
-  delta: string
-  spotPrice: string
-  fee: string
-  bondingCurve: BondingCurve
+  delta?: string
+  spotPrice?: string
+  fee?: string
+  bondingCurve?: BondingCurve
 }
 
-export const calcSudoSwapPoolPrice = (
+const calcSudoSwapPoolPrice = (
   pool: Pool,
   numItems: number,
   protocolFeeMultiplier = PROTOCOL_FEE_MULTIPLIER
-) => {
+): string => {
+  if (!pool.fee || !pool.delta || !pool.spotPrice || !pool.bondingCurve) return ''
+
   let currentPrice = BigNumber.from(pool.spotPrice)
   const delta = BigNumber.from(pool.delta)
   const poolFee = BigNumber.from(pool.fee)
@@ -41,14 +43,30 @@ export const calcSudoSwapPoolPrice = (
       prices.push(scaledPrice)
     }
   }
-  return prices[prices.length - 1]
+
+  return prices[prices.length - 1].toString()
+}
+
+export const calcSudoSwapPrice = (asset: GenieAsset, position = 0): string => {
+  if (!asset.sellorders) return ''
+
+  const sudoSwapParameters = asset.sellorders[0].protocolParameters
+  const sudoSwapPool: Pool = {
+    delta: sudoSwapParameters?.delta ? (sudoSwapParameters.delta as string) : undefined,
+    fee: sudoSwapParameters?.ammFeeFixed ? (sudoSwapParameters.ammFeeFixed as string) : undefined,
+    spotPrice: (sudoSwapParameters as Record<string, { spotPrice?: string }>)?.poolMetadata?.spotPrice,
+    bondingCurve: (sudoSwapParameters as Record<string, { bondingCurve?: BondingCurve }>)?.poolMetadata?.bondingCurve,
+  }
+
+  return calcSudoSwapPoolPrice(sudoSwapPool, position + 1)
 }
 
 // TODO: a lot of the below typecasting logic can be simplified when GraphQL migration is complete
 export const calcPoolPrice = (asset: GenieAsset, position = 0) => {
+  if (!asset.sellorders) return ''
+
   let amountToBuy: BigNumber = BigNumber.from(0)
   let marginalBuy: BigNumber = BigNumber.from(0)
-  if (!asset.sellorders) return ''
 
   const nft = asset.sellorders[0].protocolParameters
   const decimals = BigNumber.from(1).mul(10).pow(18)

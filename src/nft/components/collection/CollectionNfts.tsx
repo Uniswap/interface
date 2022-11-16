@@ -35,7 +35,7 @@ import {
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { usePriceRange } from 'nft/hooks/usePriceRange'
 import { DropDownOption, GenieAsset, GenieCollection, Markets, TokenType } from 'nft/types'
-import { calcPoolPrice, getRarityStatus, pluralize } from 'nft/utils'
+import { calcPoolPrice, calcSudoSwapPrice, getRarityStatus, pluralize } from 'nft/utils'
 import { scrollToTop } from 'nft/utils/scrollToTop'
 import { applyFiltersFromURL, syncLocalFiltersWithURL } from 'nft/utils/urlParams'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -273,7 +273,53 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   const getPoolPosition = useCallback(
     (asset: GenieAsset) => {
-      return itemsInBag.some((item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address)
+      const assetInBag = itemsInBag.some(
+        (item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address
+      )
+
+      if (asset.marketplace === Markets.Sudoswap) {
+        if (!asset.sellorders) return 0
+        const sudoSwapParameters = asset.sellorders[0].protocolParameters
+        const poolAddress = sudoSwapParameters?.poolAddress ? (sudoSwapParameters.poolAddress as string) : undefined
+        if (!poolAddress) return 0
+
+        let index = 0
+
+        if (assetInBag) {
+          index = itemsInBag
+            .filter((item) => {
+              if (!item.asset.sellorders) return false
+
+              const itemSudoSwapParameters = item.asset.sellorders[0].protocolParameters
+              const itemPoolAddress = itemSudoSwapParameters?.poolAddress
+                ? (itemSudoSwapParameters.poolAddress as string)
+                : undefined
+
+              if (!itemPoolAddress || itemPoolAddress !== poolAddress) return false
+
+              return true
+            })
+            .map((item) => item.asset.tokenId)
+            .indexOf(asset.tokenId)
+        } else {
+          index = itemsInBag.filter((item) => {
+            if (!item.asset.sellorders) return false
+
+            const itemSudoSwapParameters = item.asset.sellorders[0].protocolParameters
+            const itemPoolAddress = itemSudoSwapParameters?.poolAddress
+              ? (itemSudoSwapParameters.poolAddress as string)
+              : undefined
+
+            if (!itemPoolAddress || itemPoolAddress !== poolAddress) return false
+
+            return true
+          }).length
+        }
+
+        return index
+      }
+
+      return assetInBag
         ? itemsInBag
             .filter((item) => item.asset.address === asset.address && item.asset.marketplace === asset.marketplace)
             .map((item) => item.asset.tokenId)
@@ -287,6 +333,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   const calculatePrice = useCallback(
     (asset: GenieAsset) => {
+      if (asset.marketplace === Markets.Sudoswap) return calcSudoSwapPrice(asset, getPoolPosition(asset))
       return calcPoolPrice(asset, getPoolPosition(asset))
     },
     [getPoolPosition]
@@ -295,7 +342,12 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const collectionAssets = useMemo(() => {
     if (
       !collectionNfts ||
-      !collectionNfts.some((asset) => asset.marketplace === Markets.NFTX || asset.marketplace === Markets.NFT20)
+      !collectionNfts.some(
+        (asset) =>
+          asset.marketplace === Markets.NFTX ||
+          asset.marketplace === Markets.NFT20 ||
+          asset.marketplace === Markets.Sudoswap
+      )
     ) {
       return collectionNfts
     }
@@ -304,7 +356,9 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
     assets.forEach(
       (asset) =>
-        (asset.marketplace === Markets.NFTX || asset.marketplace === Markets.NFT20) &&
+        (asset.marketplace === Markets.NFTX ||
+          asset.marketplace === Markets.NFT20 ||
+          asset.marketplace === Markets.Sudoswap) &&
         (asset.priceInfo.ETHPrice = calculatePrice(asset))
     )
 

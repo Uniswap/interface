@@ -148,6 +148,7 @@ export enum Markets {
   Uniswap_V2 = 'Uniswap_V2',
   SushiSwap = 'SushiSwap',
   SuperRare = 'superrare',
+  Sudoswap = 'sudoswap',
   KnownOrigin = 'knownorigin',
   WETH = 'weth',
   Cryptopunks = 'cryptopunks',
