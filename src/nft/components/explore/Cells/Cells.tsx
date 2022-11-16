@@ -156,18 +156,16 @@ export const VolumeCell = ({
   )
 }
 
-export const ChangeCell = ({ change }: { change?: number }) => (
-  <ChangeTextCell change={change}>{change ? Math.abs(Math.round(change)) : 0}%</ChangeTextCell>
-)
-
-export const ChangeTextCell = ({ children, change }: { children: ReactNode; change?: number }) => (
+export const ChangeCell = ({ change, children }: { children?: ReactNode; change?: number }) => (
   <ChangeCellContainer change={change ?? 0}>
     {!change || change > 0 ? (
       <SquareArrowUpIcon width="20px" height="20px" />
     ) : (
       <SquareArrowDownIcon width="20px" height="20px" />
     )}
-    <ThemedText.BodyPrimary color="currentColor">{children}</ThemedText.BodyPrimary>
+    <ThemedText.BodyPrimary color="currentColor">
+      {children || `${change ? Math.abs(Math.round(change)) : 0}%`}
+    </ThemedText.BodyPrimary>
   </ChangeCellContainer>
 )
 
