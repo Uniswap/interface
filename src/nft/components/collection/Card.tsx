@@ -87,8 +87,8 @@ const useAssetMediaType = (asset: GenieAsset | WalletAsset) =>
 
 const baseHref = (asset: GenieAsset | WalletAsset) => {
   if ('address' in asset) return `/#/nfts/asset/${asset.address}/${asset.tokenId}?origin=collection`
-  if ('asset_contract' in asset) return `#/nfts/asset/${asset.asset_contract.address}/${asset.tokenId}?origin=profile`
-  return '#/nfts/profile'
+  if ('asset_contract' in asset) return `/#/nfts/asset/${asset.asset_contract.address}/${asset.tokenId}?origin=profile`
+  return '/#/nfts/profile'
 }
 
 const DetailsLinkContainer = styled.a`
