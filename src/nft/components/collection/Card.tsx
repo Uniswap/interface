@@ -217,7 +217,7 @@ const Container = ({
         position="relative"
         ref={assetRef}
         borderRadius={BORDER_RADIUS}
-        className={selected ? styles.selectedCard : styles.notSelectedCard}
+        className={selected ? styles.selectedCard : styles.card}
         draggable={false}
         onMouseEnter={() => toggleHovered()}
         onMouseLeave={() => toggleHovered()}

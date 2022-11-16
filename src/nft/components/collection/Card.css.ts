@@ -32,8 +32,6 @@ export const loadingBackground = style({
   background: `linear-gradient(270deg, ${themeVars.colors.backgroundOutline} 0%, ${themeVars.colors.backgroundSurface} 100%)`,
 })
 
-export const notSelectedCard = style([card])
-
 export const cardImageHover = style({
   transform: 'scale(1.15)',
 })
