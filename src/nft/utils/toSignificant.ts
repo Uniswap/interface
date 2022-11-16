@@ -39,14 +39,3 @@ export const toSignificant = (n: string, precision = 4): string => {
 
   return floatBal.toPrecision(precision)
 }
-
-/**
- * Formats percent change values
- * @param v number
- * @returns formatted number
- */
-export const formatChange = (v: number) => {
-  if (v >= 98) return nFormat(v, 2)
-  else if (v <= 0.1) return v.toFixed(2)
-  else return v.toPrecision(2)
-}
