@@ -578,7 +578,7 @@ export default function Swap() {
                 </TraceEvent>
               </ArrowWrapper>
             </div>
-            <AutoColumn gap={'12px'}>
+            <AutoColumn gap="12px">
               <div>
                 <OutputSwapSection showDetailsDropdown={showDetailsDropdown}>
                   <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>

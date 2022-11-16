@@ -65,7 +65,7 @@ const PageTabs = () => {
           <Trans>NFTs</Trans>
         </MenuItem>
       )}
-      <MenuItem href="/pool" id={'pool-nav-link'} isActive={isPoolActive}>
+      <MenuItem href="/pool" id="pool-nav-link" isActive={isPoolActive}>
         <Trans>Pool</Trans>
       </MenuItem>
     </>

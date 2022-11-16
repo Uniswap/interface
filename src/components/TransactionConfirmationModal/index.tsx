@@ -73,7 +73,7 @@ function ConfirmationPendingContent({
         <ConfirmedIcon inline={inline}>
           <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
         </ConfirmedIcon>
-        <AutoColumn gap="12px" justify={'center'}>
+        <AutoColumn gap="12px" justify="center">
           <Text fontWeight={500} fontSize={20} color={theme.textPrimary} textAlign="center">
             <Trans>Waiting for confirmation</Trans>
           </Text>
@@ -135,7 +135,7 @@ function TransactionSubmittedContent({
         <ConfirmedIcon inline={inline}>
           <ArrowUpCircle strokeWidth={1} size={inline ? '40px' : '75px'} color={theme.accentActive} />
         </ConfirmedIcon>
-        <AutoColumn gap="12px" justify={'center'} style={{ paddingBottom: '12px' }}>
+        <AutoColumn gap="12px" justify="center" style={{ paddingBottom: '12px' }}>
           <ThemedText.MediumHeader textAlign="center">
             <Trans>Transaction submitted</Trans>
           </ThemedText.MediumHeader>
@@ -148,7 +148,7 @@ function TransactionSubmittedContent({
               ) : (
                 <RowFixed>
                   <Trans>Added {currencyToAdd.symbol} </Trans>
-                  <CheckCircle size={'16px'} stroke={theme.deprecated_green1} style={{ marginLeft: '6px' }} />
+                  <CheckCircle size="16px" stroke={theme.deprecated_green1} style={{ marginLeft: '6px' }} />
                 </RowFixed>
               )}
             </ButtonLight>
@@ -276,7 +276,7 @@ function L2Content({
             <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
           )}
         </ConfirmedIcon>
-        <AutoColumn gap="12px" justify={'center'}>
+        <AutoColumn gap="12px" justify="center">
           <Text fontWeight={500} fontSize={20} textAlign="center">
             {!hash ? (
               <Trans>Confirm transaction in wallet</Trans>
@@ -300,7 +300,7 @@ function L2Content({
           ) : (
             <div style={{ height: '17px' }} />
           )}
-          <Text color={theme.deprecated_text3} style={{ margin: '20px 0 0 0' }} fontSize={'14px'}>
+          <Text color={theme.deprecated_text3} style={{ margin: '20px 0 0 0' }} fontSize="14px">
             {!secondsToConfirm ? (
               <div style={{ height: '24px' }} />
             ) : (
