@@ -3,7 +3,6 @@ import React, { ComponentProps } from 'react'
 import { Box, Flex } from 'src/components/layout'
 import { BoxLoader } from 'src/components/loading/BoxLoader'
 import { FavoriteLoader } from 'src/components/loading/FavoriteLoader'
-import { HeaderLoader } from 'src/components/loading/HeaderLoader'
 import { NftCardLoader } from 'src/components/loading/NftCardLoader'
 import { PriceHeaderLoader } from 'src/components/loading/PriceHeaderLoader'
 import { Shimmer } from 'src/components/loading/Shimmer'
@@ -17,8 +16,6 @@ type SkeletonType =
   | 'box'
   | 'favorite'
   | 'graph'
-  | 'grid'
-  | 'header'
   | 'image'
   | 'nft'
   | 'text'
@@ -41,16 +38,6 @@ type LoadingProps = {
 
 const getChildFromType = (type: SkeletonType, repeat: number, height?: number) => {
   switch (type) {
-    case 'header':
-      return (
-        <Box>
-          {new Array(repeat).fill(null).map((_, i: number) => (
-            <React.Fragment key={i}>
-              <HeaderLoader />
-            </React.Fragment>
-          ))}
-        </Box>
-      )
     case 'graph':
       return <WaveLoader />
     case 'token':
@@ -80,19 +67,6 @@ const getChildFromType = (type: SkeletonType, repeat: number, height?: number) =
     case 'image':
       if (repeat > 1) throw new Error('Loading placeholder for images does not support repeat')
       return <BoxLoader aspectRatio={1} borderRadius="none" />
-    case 'grid':
-      return (
-        <Box>
-          {new Array(repeat / 2).fill(null).map((_, i) => (
-            <React.Fragment key={i}>
-              <Flex row gap="none">
-                <BoxLoader aspectRatio={1} borderRadius="none" m="xxs" width="50%" />
-                <BoxLoader aspectRatio={1} borderRadius="none" m="xxs" width="50%" />
-              </Flex>
-            </React.Fragment>
-          ))}
-        </Box>
-      )
     case 'text':
       return (
         <Flex gap="xs">

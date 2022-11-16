@@ -14,7 +14,6 @@ import { DecimalPad } from 'src/components/input/DecimalPad'
 import { RecipientInputPanel } from 'src/components/input/RecipientInputPanel'
 import { TextInputProps } from 'src/components/input/TextInput'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
-import { Loading } from 'src/components/loading'
 import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal, { getAlertColor } from 'src/components/modals/WarningModal/WarningModal'
 import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
@@ -266,12 +265,10 @@ export function TransferTokenForm({
               px="md"
               py="lg">
               {recipient && (
-                <Suspense fallback={<Loading type="image" />}>
-                  <RecipientInputPanel
-                    recipientAddress={recipient}
-                    onToggleShowRecipientSelector={onToggleShowRecipientSelector}
-                  />
-                </Suspense>
+                <RecipientInputPanel
+                  recipientAddress={recipient}
+                  onToggleShowRecipientSelector={onToggleShowRecipientSelector}
+                />
               )}
             </Flex>
             {transferWarning && !isBlocked ? (
