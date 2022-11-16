@@ -166,6 +166,7 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
       },
       metadataUrl: asset?.metadataUrl ?? '',
       traits: asset?.traits?.map((trait) => {
+        console.log(trait)
         return { trait_type: trait.name ?? '', trait_value: trait.value ?? '' }
       }),
     },

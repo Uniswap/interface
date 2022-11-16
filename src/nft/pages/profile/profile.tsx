@@ -4,12 +4,11 @@ import { useWeb3React } from '@web3-react/core'
 import { useLoadNftBalanceQuery } from 'graphql/data/nft/NftBalance'
 import { Box } from 'nft/components/Box'
 import { Center, Column, Row } from 'nft/components/Flex'
-import { ChevronLeftIcon, XMarkIcon } from 'nft/components/icons'
+import { ChevronLeftIcon } from 'nft/components/icons'
 import { ListPage } from 'nft/components/profile/list/ListPage'
 import { ProfilePage } from 'nft/components/profile/view/ProfilePage'
 import { ProfilePageLoadingSkeleton } from 'nft/components/profile/view/ProfilePageLoadingSkeleton'
-import { buttonMedium, headlineMedium, headlineSmall } from 'nft/css/common.css'
-import { themeVars } from 'nft/css/sprinkles.css'
+import { buttonMedium, headlineMedium } from 'nft/css/common.css'
 import { useBag, useNFTList, useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { ListingStatus, ProfilePageStateType } from 'nft/types'
 import { Suspense, useEffect, useRef } from 'react'
@@ -64,12 +63,6 @@ const ProfileContent = () => {
               <ChevronLeftIcon height={28} width={28} />
             </Box>
           )}
-          <Box className={headlineSmall} paddingBottom="4" style={{ lineHeight: '28px' }}>
-            {sellPageState === ProfilePageStateType.VIEWING ? 'Select NFTs' : 'Create Listing'}
-          </Box>
-          <Box cursor="pointer" marginLeft="auto" marginRight="0" onClick={exitSellFlow}>
-            <XMarkIcon height={28} width={28} fill={themeVars.colors.textPrimary} />
-          </Box>
         </Row>
         {account != null ? (
           <Box style={{ width: `calc(100% - ${cartExpanded ? SHOPPING_BAG_WIDTH : 0}px)` }}>
