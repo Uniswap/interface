@@ -12,33 +12,34 @@ import { opacify } from 'theme/utils'
 import { Carousel, LoadingCarousel } from './Carousel'
 import { CarouselCard, LoadingCarouselCard } from './CarouselCard'
 
+const RenderBelowNavBar = styled.div`
+  margin-top: -72px;
+  padding-top: 72px;
+`
+
 const BannerContainer = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
-  padding: 32px 16px 0 16px;
+  margin-top: -72px;
+  padding: 104px 16px 0 16px;
   position: relative;
   overflow: hidden;
 `
 
 const AbsoluteFill = styled.div`
   position: absolute;
+  top: 0;
   left: 0;
   right: 0;
-  top: 0;
   bottom: 0;
-
-  opacity: ${({ theme }) => (theme.darkMode ? 0.4 : 0.2)};
 `
 
 const BannerBackground = styled(AbsoluteFill)<{ backgroundImage: string }>`
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
+  width: 100%;
   background-image: ${(props) => `url(${props.backgroundImage})`};
   filter: blur(62px);
+  opacity: ${({ theme }) => (theme.darkMode ? 0.4 : 0.2)};
 `
 
 const PlainBackground = styled(AbsoluteFill)`
@@ -144,13 +145,15 @@ const Banner = () => {
 
   return (
     <BannerContainer>
-      {activeCollection ? (
-        activeCollection.bannerImageUrl ? (
-          <BannerBackground backgroundImage={activeCollection.bannerImageUrl} />
-        ) : (
-          <PlainBackground />
-        )
-      ) : null}
+      <RenderBelowNavBar>
+        {activeCollection ? (
+          activeCollection.bannerImageUrl ? (
+            <BannerBackground backgroundImage={activeCollection.bannerImageUrl} />
+          ) : (
+            <PlainBackground />
+          )
+        ) : null}
+      </RenderBelowNavBar>
       <BannerMainArea>
         <HeaderContainer>
           Better prices. {!isMobile && <br />}
