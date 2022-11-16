@@ -47,10 +47,6 @@ const ProfileContent = () => {
   }, [account, resetSellAssets, setSellPageState, clearCollectionFilters])
   const cartExpanded = useBag((state) => state.bagExpanded)
 
-  const exitSellFlow = () => {
-    navigate(-1)
-  }
-
   return (
     <Trace page={PageName.NFT_PROFILE_PAGE} shouldLogImpression>
       <Box className={styles.mobileSellWrapper}>
