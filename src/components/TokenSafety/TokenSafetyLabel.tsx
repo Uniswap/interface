@@ -4,7 +4,7 @@ import { ReactNode } from 'react'
 import { AlertOctagon, AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
-import { Color } from 'theme/styled'
+import { Color } from 'theme/types'
 
 const Label = styled.div<{ color: Color }>`
   padding: 4px 4px;

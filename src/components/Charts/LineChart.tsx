@@ -4,7 +4,7 @@ import { CurveFactory } from 'd3'
 import React from 'react'
 import { ReactNode } from 'react'
 import { useTheme } from 'styled-components/macro'
-import { Color } from 'theme/styled'
+import { Color } from 'theme/types'
 
 export interface LineChartProps<T> {
   data: T[]

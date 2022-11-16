@@ -1,7 +1,7 @@
 import { readableColor } from 'polished'
 import { PropsWithChildren } from 'react'
 import styled, { DefaultTheme } from 'styled-components/macro'
-import { Color } from 'theme/styled'
+import { Color } from 'theme/types'
 
 export enum BadgeVariant {
   DEFAULT = 'DEFAULT',

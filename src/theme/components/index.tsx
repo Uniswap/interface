@@ -14,11 +14,13 @@ import {
 } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css, keyframes } from 'styled-components/macro'
+import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 
-import { ReactComponent as TooltipTriangle } from '../assets/svg/tooltip_triangle.svg'
-import { anonymizeLink } from '../utils/anonymizeLink'
-import { Color } from './styled'
+import { ReactComponent as TooltipTriangle } from '../../assets/svg/tooltip_triangle.svg'
+import { anonymizeLink } from '../../utils/anonymizeLink'
+
+type Color = string
 
 // TODO: Break this file into a components folder
 
@@ -343,12 +345,14 @@ const CopyHelperContainer = styled(LinkStyledButton)<{ clicked: boolean }>`
     color: ${({ color, theme }) => color || theme.accentAction};
   }
 `
+
 const CopyHelperText = styled.span<{ fontSize: number }>`
-  ${({ theme }) => theme.flexRowNoWrap};
+  ${flexRowNoWrap};
   font-size: ${({ fontSize }) => fontSize + 'px'};
   font-weight: 400;
   align-items: center;
 `
+
 const CopiedIcon = styled(CheckCircle)`
   color: ${({ theme }) => theme.accentSuccess};
   stroke-width: 1.5px;

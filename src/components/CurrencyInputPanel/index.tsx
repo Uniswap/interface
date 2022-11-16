@@ -11,6 +11,7 @@ import { darken } from 'polished'
 import { ReactNode, useCallback, useState } from 'react'
 import { Lock } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
+import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
@@ -25,7 +26,7 @@ import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import { FiatValue } from './FiatValue'
 
 const InputPanel = styled.div<{ hideInput?: boolean }>`
-  ${({ theme }) => theme.flexColumnNoWrap}
+  ${flexColumnNoWrap};
   position: relative;
   border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
   background-color: ${({ theme, hideInput }) => (hideInput ? 'transparent' : theme.deprecated_bg2)};
@@ -95,14 +96,14 @@ const CurrencySelect = styled(ButtonGray)<{
 `
 
 const InputRow = styled.div<{ selected: boolean }>`
-  ${({ theme }) => theme.flexRowNoWrap}
+  ${flexRowNoWrap};
   align-items: center;
   justify-content: space-between;
   padding: ${({ selected }) => (selected ? ' 1rem 1rem 0.75rem 1rem' : '1rem 1rem 1rem 1rem')};
 `
 
 const LabelRow = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
+  ${flexRowNoWrap};
   align-items: center;
   color: ${({ theme }) => theme.deprecated_text1};
   font-size: 0.75rem;

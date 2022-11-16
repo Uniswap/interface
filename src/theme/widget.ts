@@ -1,4 +1,4 @@
-import { colorsDark, colorsLight } from './colors'
+import { darkTheme, lightTheme } from './colors'
 
 const fonts = {
   fontFamily: 'Inter custom',
@@ -6,40 +6,40 @@ const fonts = {
 
 export const LIGHT_THEME = {
   // surface
-  container: colorsLight.backgroundSurface,
-  interactive: colorsLight.backgroundInteractive,
-  module: colorsLight.backgroundModule,
-  accent: colorsLight.accentAction,
-  dialog: colorsLight.backgroundBackdrop,
-  outline: colorsLight.backgroundOutline,
+  container: lightTheme.backgroundSurface,
+  interactive: lightTheme.backgroundInteractive,
+  module: lightTheme.backgroundModule,
+  accent: lightTheme.accentAction,
+  dialog: lightTheme.backgroundBackdrop,
+  outline: lightTheme.backgroundOutline,
   // text
-  primary: colorsLight.textPrimary,
-  secondary: colorsLight.textSecondary,
-  onInteractive: colorsLight.accentTextDarkPrimary,
+  primary: lightTheme.textPrimary,
+  secondary: lightTheme.textSecondary,
+  onInteractive: lightTheme.accentTextDarkPrimary,
   // state
-  success: colorsLight.accentSuccess,
-  warning: colorsLight.accentWarning,
-  error: colorsLight.accentCritical,
+  success: lightTheme.accentSuccess,
+  warning: lightTheme.accentWarning,
+  error: lightTheme.accentCritical,
 
   ...fonts,
 }
 
 export const DARK_THEME = {
   // surface
-  container: colorsDark.backgroundSurface,
-  interactive: colorsDark.backgroundInteractive,
-  module: colorsDark.backgroundModule,
-  accent: colorsDark.accentAction,
-  dialog: colorsDark.backgroundBackdrop,
-  outline: colorsDark.backgroundOutline,
+  container: darkTheme.backgroundSurface,
+  interactive: darkTheme.backgroundInteractive,
+  module: darkTheme.backgroundModule,
+  accent: darkTheme.accentAction,
+  dialog: darkTheme.backgroundBackdrop,
+  outline: darkTheme.backgroundOutline,
   // text
-  primary: colorsDark.textPrimary,
-  secondary: colorsDark.textSecondary,
-  onInteractive: colorsDark.accentTextLightPrimary,
+  primary: darkTheme.textPrimary,
+  secondary: darkTheme.textSecondary,
+  onInteractive: darkTheme.accentTextLightPrimary,
   // state
-  success: colorsDark.accentSuccess,
-  warning: colorsDark.accentWarning,
-  error: colorsDark.accentCritical,
+  success: darkTheme.accentSuccess,
+  warning: darkTheme.accentWarning,
+  error: darkTheme.accentCritical,
 
   ...fonts,
 }
