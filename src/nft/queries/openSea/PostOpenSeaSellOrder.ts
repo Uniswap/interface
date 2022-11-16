@@ -1,3 +1,5 @@
+import ms from 'ms.macro'
+
 export async function PostOpenSeaSellOrder(payload?: Record<string, unknown>): Promise<boolean> {
   const body = payload ? JSON.stringify(payload) : undefined
   const url = `${process.env.REACT_APP_GENIE_V3_API_URL}/postOpenSeaSellOrderWithApiKey`
@@ -10,7 +12,7 @@ export async function PostOpenSeaSellOrder(payload?: Record<string, unknown>): P
     body,
     signal: ac.signal,
   })
-  const timeout = setTimeout(() => ac.abort(), 60 * 1000)
+  const timeout = setTimeout(() => ac.abort(), ms`60s`)
   try {
     const res = await fetch(req)
     const data = await res.json()
