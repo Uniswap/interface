@@ -302,7 +302,7 @@ export default function AccountDetails({
       </UpperSection>
       {!!pendingTransactions.length || !!confirmedTransactions.length ? (
         <LowerSection>
-          <AutoRow mb={'1rem'} style={{ justifyContent: 'space-between' }}>
+          <AutoRow mb="1rem" style={{ justifyContent: 'space-between' }}>
             <ThemedText.DeprecatedBody>
               <Trans>Recent Transactions</Trans>
             </ThemedText.DeprecatedBody>

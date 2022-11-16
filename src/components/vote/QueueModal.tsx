@@ -106,10 +106,10 @@ export default function QueueModal({ isOpen, onDismiss, proposalId }: QueueModal
             <StyledClosed onClick={wrappedOnDismiss} />
           </RowBetween>
           <ConfirmedIcon>
-            <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
+            <CustomLightSpinner src={Circle} alt="loader" size="90px" />
           </ConfirmedIcon>
-          <AutoColumn gap="100px" justify={'center'}>
-            <AutoColumn gap="12px" justify={'center'}>
+          <AutoColumn gap="100px" justify="center">
+            <AutoColumn gap="12px" justify="center">
               <ThemedText.DeprecatedLargeHeader>
                 <Trans>Queueing</Trans>
               </ThemedText.DeprecatedLargeHeader>
@@ -129,8 +129,8 @@ export default function QueueModal({ isOpen, onDismiss, proposalId }: QueueModal
           <ConfirmedIcon>
             <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.deprecated_primary1} />
           </ConfirmedIcon>
-          <AutoColumn gap="100px" justify={'center'}>
-            <AutoColumn gap="12px" justify={'center'}>
+          <AutoColumn gap="100px" justify="center">
+            <AutoColumn gap="12px" justify="center">
               <ThemedText.DeprecatedLargeHeader>
                 <Trans>Transaction Submitted</Trans>
               </ThemedText.DeprecatedLargeHeader>

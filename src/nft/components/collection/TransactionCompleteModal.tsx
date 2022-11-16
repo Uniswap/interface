@@ -126,8 +126,8 @@ const TxCompleteModal = () => {
                     marginTop={{ sm: '20', md: '20' }}
                     flexWrap={{ sm: 'wrap', md: 'nowrap' }}
                     alignItems="center"
-                    paddingRight={'40'}
-                    paddingLeft={'40'}
+                    paddingRight="40"
+                    paddingLeft="40"
                     className={styles.bottomBar}
                     justifyContent="space-between"
                   >

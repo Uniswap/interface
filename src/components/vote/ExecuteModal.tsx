@@ -106,10 +106,10 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
             <StyledClosed onClick={wrappedOnDismiss} />
           </RowBetween>
           <ConfirmedIcon>
-            <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
+            <CustomLightSpinner src={Circle} alt="loader" size="90px" />
           </ConfirmedIcon>
-          <AutoColumn gap="100px" justify={'center'}>
-            <AutoColumn gap="12px" justify={'center'}>
+          <AutoColumn gap="100px" justify="center">
+            <AutoColumn gap="12px" justify="center">
               <ThemedText.DeprecatedLargeHeader>
                 <Trans>Executing</Trans>
               </ThemedText.DeprecatedLargeHeader>
@@ -129,8 +129,8 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
           <ConfirmedIcon>
             <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.deprecated_primary1} />
           </ConfirmedIcon>
-          <AutoColumn gap="100px" justify={'center'}>
-            <AutoColumn gap="12px" justify={'center'}>
+          <AutoColumn gap="100px" justify="center">
+            <AutoColumn gap="12px" justify="center">
               <ThemedText.DeprecatedLargeHeader>
                 <Trans>Execution Submitted</Trans>
               </ThemedText.DeprecatedLargeHeader>

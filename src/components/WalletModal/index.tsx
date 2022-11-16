@@ -325,7 +325,7 @@ export default function WalletModal({
       )
       return nftFlagEnabled ? (
         <AutoRow style={{ flexWrap: 'nowrap', padding: '4px 16px' }}>
-          <ThemedText.BodySecondary fontSize={16} lineHeight={'24px'}>
+          <ThemedText.BodySecondary fontSize={16} lineHeight="24px">
             {content}
           </ThemedText.BodySecondary>
         </AutoRow>

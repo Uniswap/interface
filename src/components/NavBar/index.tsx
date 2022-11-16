@@ -7,14 +7,13 @@ import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { UniIcon } from 'nft/components/icons'
-import { useIsMobile } from 'nft/hooks'
-import { ReactNode, useMemo } from 'react'
+import { ReactNode } from 'react'
 import { NavLink, NavLinkProps, useLocation } from 'react-router-dom'
 
+import { Bag } from './Bag'
 import { ChainSelector } from './ChainSelector'
 import { MenuDropdown } from './MenuDropdown'
 import { SearchBar } from './SearchBar'
-import { ShoppingBag } from './ShoppingBag'
 import * as styles from './style.css'
 
 interface MenuItemProps {
@@ -65,36 +64,15 @@ const PageTabs = () => {
           <Trans>NFTs</Trans>
         </MenuItem>
       )}
-      <MenuItem href="/pool" id={'pool-nav-link'} isActive={isPoolActive}>
+      <MenuItem href="/pool" id="pool-nav-link" isActive={isPoolActive}>
         <Trans>Pool</Trans>
       </MenuItem>
     </>
   )
 }
 
-const useShouldHideNavbar = () => {
-  const { pathname } = useLocation()
-  const isMobile = useIsMobile()
-
-  const shouldHideNavbar = useMemo(() => {
-    const paths = ['/nfts/profile']
-    if (!isMobile) return false
-
-    for (const path of paths) {
-      if (pathname.includes(path)) return true
-    }
-
-    return false
-  }, [isMobile, pathname])
-
-  return shouldHideNavbar
-}
-
 const Navbar = () => {
-  const shouldHideNavbar = useShouldHideNavbar()
   const isNftPage = useIsNftPage()
-
-  if (shouldHideNavbar) return null
 
   return (
     <>
@@ -124,7 +102,7 @@ const Navbar = () => {
               <Box display={{ sm: 'none', lg: 'flex' }}>
                 <MenuDropdown />
               </Box>
-              {isNftPage && <ShoppingBag />}
+              {isNftPage && <Bag />}
               {!isNftPage && (
                 <Box display={{ sm: 'none', lg: 'flex' }}>
                   <ChainSelector />

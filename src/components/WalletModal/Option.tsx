@@ -130,7 +130,7 @@ export default function Option({
         <OptionCardLeft>
           <HeaderText color={color}>
             <IconWrapper size={size}>
-              <img src={icon} alt={'Icon'} />
+              <img src={icon} alt="Icon" />
             </IconWrapper>
             {header}
           </HeaderText>

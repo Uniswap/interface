@@ -1,15 +1,14 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { EventName, PageName } from '@uniswap/analytics-events'
 import Tooltip from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
 import { bodySmall } from 'nft/css/common.css'
-import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag } from 'nft/hooks'
 import { GenieAsset, Markets, TokenType } from 'nft/types'
 import { formatWeiToDecimal, rarityProviderLogo } from 'nft/utils'
-import { useCallback, useMemo } from 'react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
 
 import { useAssetMediaType, useNotForSale } from './Card'
@@ -25,8 +24,6 @@ interface CollectionAssetProps {
 }
 
 const TOOLTIP_TIMEOUT = 2000
-const ADDED_TO_BAG_TOOLTIP_TEXT = 'Added to bag'
-const REMOVED_FROM_BAG_TOOLTIP_TEXT = 'Removed from bag'
 
 const StyledContainer = styled.div`
   position: absolute;
@@ -48,27 +45,26 @@ export const CollectionAsset = ({
   const bagManuallyClosed = useBag((state) => state.bagManuallyClosed)
   const addAssetsToBag = useBag((state) => state.addAssetsToBag)
   const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
+  const usedSweep = useBag((state) => state.usedSweep)
   const itemsInBag = useBag((state) => state.itemsInBag)
   const bagExpanded = useBag((state) => state.bagExpanded)
   const setBagExpanded = useBag((state) => state.setBagExpanded)
   const trace = useTrace({ page: PageName.NFT_COLLECTION_PAGE })
 
-  const { erc1155TokenQuantity, isSelected, inSweep } = useMemo(() => {
+  const { erc1155TokenQuantity, isSelected } = useMemo(() => {
     const matchingItems = itemsInBag.filter(
       (item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address
     )
     const erc1155TokenQuantity = matchingItems.filter((x) => x.asset.tokenType === TokenType.ERC1155).length
     const isSelected = matchingItems.length > 0
-    const inSweep = isSelected && matchingItems.some((x) => x.inSweep === true)
     return {
       erc1155TokenQuantity,
       isSelected,
-      inSweep,
     }
   }, [asset, itemsInBag])
 
   const [showTooltip, setShowTooltip] = useState(false)
-  const [prevIsSelected, setPrevIsSelected] = useState(isSelected)
+  const isSelectedRef = useRef(isSelected)
 
   const notForSale = useNotForSale(asset)
   const assetMediaType = useAssetMediaType(asset)
@@ -83,32 +79,35 @@ export const CollectionAsset = ({
   }, [asset])
 
   const handleAddAssetToBag = useCallback(() => {
-    addAssetsToBag([asset])
-    if (!bagExpanded && !isMobile && !bagManuallyClosed) {
-      setBagExpanded({ bagExpanded: true })
+    if (BigNumber.from(asset.priceInfo?.ETHPrice ?? 0).gte(0)) {
+      addAssetsToBag([asset])
+      if (!bagExpanded && !isMobile && !bagManuallyClosed) {
+        setBagExpanded({ bagExpanded: true })
+      }
+      sendAnalyticsEvent(EventName.NFT_BUY_ADDED, {
+        collection_address: asset.address,
+        token_id: asset.tokenId,
+        token_type: asset.tokenType,
+        ...trace,
+      })
     }
-    sendAnalyticsEvent(EventName.NFT_BUY_ADDED, {
-      collection_address: asset.address,
-      token_id: asset.tokenId,
-      token_type: asset.tokenType,
-      ...trace,
-    })
   }, [addAssetsToBag, asset, bagExpanded, bagManuallyClosed, isMobile, setBagExpanded, trace])
 
   useEffect(() => {
-    if (isSelected !== prevIsSelected && !inSweep) {
+    if (isSelected !== isSelectedRef.current && !usedSweep) {
       setShowTooltip(true)
+      isSelectedRef.current = isSelected
       const tooltipTimer = setTimeout(() => {
         setShowTooltip(false)
       }, TOOLTIP_TIMEOUT)
 
       return () => {
         clearTimeout(tooltipTimer)
-        setPrevIsSelected(isSelected)
       }
     }
+    isSelectedRef.current = isSelected
     return undefined
-  }, [isSelected, prevIsSelected, inSweep])
+  }, [isSelected, isSelectedRef, usedSweep])
 
   const handleRemoveAssetFromBag = useCallback(() => {
     removeAssetsFromBag([asset])
@@ -125,8 +124,8 @@ export const CollectionAsset = ({
         <StyledContainer>
           <Tooltip
             text={
-              <Box as="span" className={bodySmall} style={{ color: themeVars.colors.textPrimary }}>
-                <Trans>{isSelected ? ADDED_TO_BAG_TOOLTIP_TEXT : REMOVED_FROM_BAG_TOOLTIP_TEXT}</Trans>{' '}
+              <Box as="span" className={bodySmall} color="textPrimary">
+                {isSelected ? <Trans>Added to bag</Trans> : <Trans>Removed from bag</Trans>}
               </Box>
             }
             show={showTooltip}
