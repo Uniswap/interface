@@ -19,19 +19,18 @@ const BaseCarouselItem = styled(a.div)`
 
 const CarouselContainer = styled.div`
   display: flex;
-  box-sizing: border-box;
   width: 100%;
   justify-content: flex-end;
 `
 
-const CarouselCardContainer = styled.div`
+const CarouselCardContainer = styled(BaseCarouselItem)`
   position: relative;
   width: 100%;
   max-width: ${MAX_CARD_WIDTH}px;
   overflow-x: hidden;
 `
 
-const CarouselCard = styled(BaseCarouselItem)`
+const CarouselCard = styled(a.div)`
   display: flex;
   justify-content: center;
   padding-left: 32px;
