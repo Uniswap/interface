@@ -30,6 +30,7 @@ const CarouselCardBorder = styled.div`
     bottom: -1px;
     left: -1px;
     border-radius: 21px;
+    background-color: ${({ theme }) => theme.backgroundSurface};
     border: 1px solid ${({ theme }) => theme.backgroundOutline};
   }
 
