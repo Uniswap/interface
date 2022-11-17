@@ -11,7 +11,8 @@ const CarouselCardContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  background: ${({ theme }) => theme.backgroundSurface};
   border-radius: 20px;
   overflow: hidden;
   height: 100%;
@@ -19,28 +20,12 @@ const CarouselCardContainer = styled.div`
 const CarouselCardBorder = styled.div`
   width: 100%;
   position: relative;
-  border-radius: 20px;
+  border-radius: 22px;
   cursor: pointer;
+  border: 2px solid transparent;
 
-  ::before {
-    content: ' ';
-    position: absolute;
-    top: -1px;
-    right: -1px;
-    bottom: -1px;
-    left: -1px;
-    border-radius: 21px;
-    background-color: ${({ theme }) => theme.backgroundSurface};
-    border: 1px solid ${({ theme }) => theme.backgroundOutline};
-  }
-
-  :hover::before {
-    top: -3px;
-    right: -3px;
-    bottom: -3px;
-    left: -3px;
-    border-radius: 23px;
-    border: 3px solid ${({ theme }) => theme.backgroundOutline};
+  :hover {
+    border: 2px solid ${({ theme }) => theme.backgroundOutline};
     box-shadow: ${({ theme }) => theme.deepShadow};
   }
 `
