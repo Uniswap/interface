@@ -139,9 +139,10 @@ function FavoriteTokenCard({ token, isEditing, setIsEditing, ...rest }: Favorite
               {formatUSDPrice(usdPrice)}
             </Text>
             <RelativeChange
+              arrowSize={theme.iconSizes.md}
               change={pricePercentChange ?? undefined}
               semanticColor={true}
-              variant="bodyMicro"
+              variant="subheadSmall"
             />
           </Flex>
         </BaseCard.Shadow>

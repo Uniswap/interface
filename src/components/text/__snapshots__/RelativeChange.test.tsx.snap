@@ -36,8 +36,8 @@ exports[`renders a relative change 1`] = `
           "display": "flex",
           "flexGrow": 0,
           "flexShrink": 0,
-          "height": 4,
-          "width": 4,
+          "height": 2,
+          "width": 2,
         },
       ]
     }
@@ -98,8 +98,8 @@ exports[`renders placeholders with absolute change 1`] = `
           "display": "flex",
           "flexGrow": 0,
           "flexShrink": 0,
-          "height": 4,
-          "width": 4,
+          "height": 2,
+          "width": 2,
         },
       ]
     }

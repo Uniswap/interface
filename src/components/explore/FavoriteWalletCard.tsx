@@ -41,7 +41,7 @@ export default function FavoriteWalletCard({
         address={address}
         avatarUri={avatar}
         showViewOnlyBadge={false}
-        size={theme.iconSizes.sm}
+        size={theme.iconSizes.md}
       />
     )
   }, [address, avatar])
@@ -84,13 +84,9 @@ export default function FavoriteWalletCard({
         }}>
         <BaseCard.Shadow>
           <Flex row alignItems="center" gap="xxs" justifyContent="space-between">
-            <Flex row shrink alignItems="center" gap="xxs">
+            <Flex row shrink alignItems="center" gap="xs">
               {icon}
-              <Text
-                color="textPrimary"
-                numberOfLines={1}
-                style={flex.shrink}
-                variant="subheadSmall">
+              <Text color="textPrimary" numberOfLines={1} style={flex.shrink} variant="bodyLarge">
                 {displayName?.name}
               </Text>
             </Flex>

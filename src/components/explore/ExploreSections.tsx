@@ -1,8 +1,8 @@
 import { NetworkStatus } from '@apollo/client'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FlatList, ListRenderItemInfo, useColorScheme } from 'react-native'
-import { useAppSelector, useAppTheme } from 'src/app/hooks'
+import { FlatList, ListRenderItemInfo } from 'react-native'
+import { useAppSelector } from 'src/app/hooks'
 import { FavoriteTokensGrid } from 'src/components/explore/FavoriteTokensGrid'
 import { FavoriteWalletsGrid } from 'src/components/explore/FavoriteWalletsGrid'
 import { SortButton } from 'src/components/explore/SortButton'
@@ -40,8 +40,6 @@ type ExploreSectionsProps = {
 
 export function ExploreSections({ listRef }: ExploreSectionsProps) {
   const { t } = useTranslation()
-  const theme = useAppTheme()
-  const isDarkMode = useColorScheme() === 'dark'
 
   // Top tokens sorting
   const orderBy = useAppSelector(selectTokensOrderBy)
@@ -170,31 +168,26 @@ export function ExploreSections({ listRef }: ExploreSectionsProps) {
 
   return (
     <VirtualizedList style={flex.fill}>
-      <Flex gap="md" mt="sm" mx="sm">
-        {hasFavoritedTokens ? (
-          <FavoriteTokensGrid
-            favoriteTokensData={data?.favoriteTokens}
-            isEditing={isEditingTokens}
-            setIsEditing={setIsEditingTokens}
-            showLoading={showLoading}
-          />
-        ) : null}
-        {hasFavoritedWallets ? (
-          <FavoriteWalletsGrid
-            isEditing={isEditingWallets}
-            setIsEditing={setIsEditingWallets}
-            showLoading={showLoading}
-          />
-        ) : null}
-      </Flex>
-      <Box bg="background0">
-        {/* Fake border radius for bottom of Favorites section because the ExploreScreen background needs to be the contrast background */}
-        <Box
-          bg={isDarkMode ? 'background1' : 'background2'}
-          borderBottomLeftRadius="xl"
-          borderBottomRightRadius="xl"
-          height={theme.borderRadii.xl}
-        />
+      {hasFavoritedTokens || hasFavoritedWallets ? (
+        <Flex gap="md" mb="md" mt="xs" mx="sm">
+          {hasFavoritedTokens ? (
+            <FavoriteTokensGrid
+              favoriteTokensData={data?.favoriteTokens}
+              isEditing={isEditingTokens}
+              setIsEditing={setIsEditingTokens}
+              showLoading={showLoading}
+            />
+          ) : null}
+          {hasFavoritedWallets ? (
+            <FavoriteWalletsGrid
+              isEditing={isEditingWallets}
+              setIsEditing={setIsEditingWallets}
+              showLoading={showLoading}
+            />
+          ) : null}
+        </Flex>
+      ) : null}
+      <Box bg="background0" borderTopLeftRadius="xl" borderTopRightRadius="xl">
         <FlatList
           ref={listRef}
           ListEmptyComponent={

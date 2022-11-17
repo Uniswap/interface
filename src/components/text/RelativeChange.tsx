@@ -39,7 +39,7 @@ export function RelativeChange(props: RelativeChangeProps) {
     : ''
 
   return (
-    <Flex row alignItems="center" gap="xxs">
+    <Flex row alignItems="center" gap="xxxs">
       {change !== undefined && (
         <Arrow color={arrowColor} direction={isPositiveChange ? 'ne' : 'se'} size={arrowSize} />
       )}

@@ -86,7 +86,7 @@ export function ExploreScreen({ navigation }: Props) {
 
   return (
     <Screen
-      bg={isSearchMode ? 'background0' : contrastBackgroundColor}
+      bg={isSearchMode ? 'background0' : 'backgroundBranded'}
       edges={['top', 'left', 'right']}>
       <GestureDetector gesture={panHeaderGesture}>
         <Box p="sm">
