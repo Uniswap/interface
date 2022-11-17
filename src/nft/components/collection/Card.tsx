@@ -17,13 +17,13 @@ import { body, bodySmall, buttonTextMedium, subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
 import { GenieAsset, Rarity, TokenType, WalletAsset } from 'nft/types'
-import { isAudio, isVideo } from 'nft/utils'
-import { fallbackProvider, putCommas } from 'nft/utils'
+import { fallbackProvider, isAudio, isVideo, putCommas } from 'nft/utils'
 import { floorFormatter } from 'nft/utils/numbers'
 import {
   createContext,
   MouseEvent,
   ReactNode,
+  useCallback,
   useContext,
   useLayoutEffect,
   useMemo,
@@ -216,6 +216,8 @@ const Container = ({
     }
   }
 
+  const toggleHover = useCallback(() => toggleHovered(), [])
+
   return (
     <CardContext.Provider value={providerValue}>
       <Box
@@ -224,8 +226,8 @@ const Container = ({
         borderRadius={BORDER_RADIUS}
         className={selected ? styles.selectedCard : styles.card}
         draggable={false}
-        onMouseEnter={() => toggleHovered()}
-        onMouseLeave={() => toggleHovered()}
+        onMouseEnter={toggleHover}
+        onMouseLeave={toggleHover}
         transition="250"
         onClick={isDisabled ? () => null : onClick ?? handleAssetInBag}
       >
