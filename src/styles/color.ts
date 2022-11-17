@@ -343,6 +343,7 @@ export interface Palette {
   background3: string
   backgroundOutline: string
   backgroundScrim: string
+  backgroundBranded: string
 
   textPrimary: string
   textSecondary: string
@@ -407,6 +408,7 @@ export const colorsLight: Palette = {
   background3: colors.gray100,
   backgroundOutline: colors.gray150,
   backgroundScrim: opacify(50, colors.gray150),
+  backgroundBranded: '#FFF7FE',
 
   textPrimary: colors.gray900,
   textSecondary: colors.gray550,
@@ -468,6 +470,7 @@ export const colorsDark: Palette = {
   background3: colors.gray700,
   backgroundOutline: colors.gray750,
   backgroundScrim: opacify(50, colors.gray750),
+  backgroundBranded: '#100D1C',
 
   textPrimary: colors.white,
   textSecondary: colors.gray200,

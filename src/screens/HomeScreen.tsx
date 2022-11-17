@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useColorScheme, ViewStyle } from 'react-native'
+import { ViewStyle } from 'react-native'
 import { SvgProps } from 'react-native-svg'
 import { Route } from 'react-native-tab-view'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -30,13 +30,10 @@ export function HomeScreen() {
   const activeAccount = useActiveAccountWithThrow()
   const { t } = useTranslation()
 
-  const isDarkMode = useColorScheme() === 'dark'
-  const headerBgColor = isDarkMode ? 'background1' : 'background2'
-
   const contentHeader = useMemo(
     () => (
       <Flex
-        bg={headerBgColor}
+        bg="backgroundBranded"
         borderBottomLeftRadius="md"
         borderBottomRightRadius="md"
         gap="xmd"
@@ -47,7 +44,7 @@ export function HomeScreen() {
         <QuickActions />
       </Flex>
     ),
-    [activeAccount.address, headerBgColor]
+    [activeAccount.address]
   )
 
   const renderTab = useMemo(() => {
@@ -84,7 +81,7 @@ export function HomeScreen() {
     <TabbedScrollScreen
       contentHeader={contentHeader}
       headerHeightEstimate={CONTENT_HEADER_HEIGHT_ESTIMATE}
-      osStatusBarBgColor={headerBgColor}
+      osStatusBarBgColor="backgroundBranded"
       renderTab={renderTab}
       tabs={[
         { key: SectionName.HomeTokensTab, title: t('Tokens') },
