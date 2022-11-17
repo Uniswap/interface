@@ -7,7 +7,7 @@ import { FavoriteTokensGrid } from 'src/components/explore/FavoriteTokensGrid'
 import { FavoriteWalletsGrid } from 'src/components/explore/FavoriteWalletsGrid'
 import { SortButton } from 'src/components/explore/SortButton'
 import { TokenItem, TokenItemData } from 'src/components/explore/TokenItem'
-import { Box, Flex } from 'src/components/layout'
+import { Box, Flex, Inset } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { Loading } from 'src/components/loading'
@@ -29,6 +29,7 @@ import {
   selectHasWatchedWallets,
 } from 'src/features/favorites/selectors'
 import { selectTokensOrderBy } from 'src/features/wallet/selectors'
+import { flex } from 'src/styles/flex'
 import { areAddressesEqual } from 'src/utils/addresses'
 import { fromGraphQLChain } from 'src/utils/chainId'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
@@ -168,7 +169,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps) {
   }
 
   return (
-    <VirtualizedList>
+    <VirtualizedList style={flex.fill}>
       {error ? (
         <Box m="sm">
           <BaseCard.InlineErrorState retryButtonLabel="Retry" onRetry={onRetry} />
@@ -206,6 +207,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps) {
               <Loading repeat={5} type="token" />
             </Box>
           }
+          ListFooterComponent={<Inset all="sm" />}
           ListHeaderComponent={
             <Flex
               row
