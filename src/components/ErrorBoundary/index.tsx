@@ -30,11 +30,11 @@ const CodeBlockWrapper = styled.div`
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 24px;
   padding: 18px 24px;
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${({ theme }) => theme.textPrimary};
 `
 
 const LinkWrapper = styled.div`
-  color: ${({ theme }) => theme.deprecated_blue1};
+  color: ${({ theme }) => theme.accentAction};
   padding: 6px 24px;
 `
 

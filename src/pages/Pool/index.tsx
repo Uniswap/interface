@@ -44,7 +44,7 @@ const PageWrapper = styled(AutoColumn)`
   }
 `
 const TitleRow = styled(RowBetween)`
-  color: ${({ theme }) => theme.deprecated_text2};
+  color: ${({ theme }) => theme.textSecondary};
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     flex-wrap: wrap;
     gap: 12px;
@@ -176,7 +176,7 @@ function WrongNetworkCard() {
 
             <MainContentWrapper>
               <ErrorContainer>
-                <ThemedText.DeprecatedBody color={theme.deprecated_text3} textAlign="center">
+                <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
                   <NetworkIcon strokeWidth={1.2} />
                   <div data-testid="pools-unsupported-err">
                     <Trans>Your connected network is unsupported.</Trans>
@@ -302,7 +302,7 @@ export default function Pool() {
                   />
                 ) : (
                   <ErrorContainer>
-                    <ThemedText.DeprecatedBody color={theme.deprecated_text3} textAlign="center">
+                    <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
                       <InboxIcon strokeWidth={1} />
                       <div>
                         <Trans>Your active V3 liquidity positions will appear here.</Trans>

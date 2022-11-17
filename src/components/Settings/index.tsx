@@ -209,7 +209,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
             {isSupportedChainId(chainId) && (
               <RowBetween>
                 <RowFixed>
-                  <ThemedText.DeprecatedBlack fontWeight={400} fontSize={14} color={theme.deprecated_text2}>
+                  <ThemedText.DeprecatedBlack fontWeight={400} fontSize={14} color={theme.textSecondary}>
                     <Trans>Auto Router API</Trans>
                   </ThemedText.DeprecatedBlack>
                   <QuestionHelper text={<Trans>Use the Uniswap Labs API to get faster quotes.</Trans>} />
@@ -229,7 +229,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
             )}
             <RowBetween>
               <RowFixed>
-                <ThemedText.DeprecatedBlack fontWeight={400} fontSize={14} color={theme.deprecated_text2}>
+                <ThemedText.DeprecatedBlack fontWeight={400} fontSize={14} color={theme.textSecondary}>
                   <Trans>Expert Mode</Trans>
                 </ThemedText.DeprecatedBlack>
                 <QuestionHelper

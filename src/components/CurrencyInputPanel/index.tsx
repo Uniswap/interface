@@ -70,11 +70,11 @@ const CurrencySelect = styled(ButtonGray)<{
   disabled?: boolean
 }>`
   align-items: center;
-  background-color: ${({ selected, theme }) => (selected ? theme.deprecated_bg2 : theme.deprecated_primary1)};
+  background-color: ${({ selected, theme }) => (selected ? theme.deprecated_bg2 : theme.accentAction)};
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
-  color: ${({ selected, theme }) => (selected ? theme.deprecated_text1 : theme.deprecated_white)};
+  color: ${({ selected, theme }) => (selected ? theme.textPrimary : theme.white)};
   cursor: pointer;
   border-radius: 16px;
   outline: none;
@@ -89,8 +89,7 @@ const CurrencySelect = styled(ButtonGray)<{
   margin-left: ${({ hideInput }) => (hideInput ? '0' : '12px')};
   :focus,
   :hover {
-    background-color: ${({ selected, theme }) =>
-      selected ? theme.deprecated_bg3 : darken(0.05, theme.deprecated_primary1)};
+    background-color: ${({ selected, theme }) => (selected ? theme.deprecated_bg3 : darken(0.05, theme.accentAction))};
   }
   visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
 `
@@ -105,13 +104,13 @@ const InputRow = styled.div<{ selected: boolean }>`
 const LabelRow = styled.div`
   ${flexRowNoWrap};
   align-items: center;
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${({ theme }) => theme.textPrimary};
   font-size: 0.75rem;
   line-height: 1rem;
   padding: 0 1rem 1rem;
   span:hover {
     cursor: pointer;
-    color: ${({ theme }) => darken(0.2, theme.deprecated_text2)};
+    color: ${({ theme }) => darken(0.2, theme.textSecondary)};
   }
 `
 
@@ -133,7 +132,7 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   height: 35%;
 
   path {
-    stroke: ${({ selected, theme }) => (selected ? theme.deprecated_text1 : theme.deprecated_white)};
+    stroke: ${({ selected, theme }) => (selected ? theme.textPrimary : theme.white)};
     stroke-width: 1.5px;
   }
 `
@@ -148,7 +147,7 @@ const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
   background-color: ${({ theme }) => theme.deprecated_primary5};
   border: none;
   border-radius: 12px;
-  color: ${({ theme }) => theme.deprecated_primary1};
+  color: ${({ theme }) => theme.accentAction};
   cursor: pointer;
   font-size: 11px;
   font-weight: 500;
@@ -300,7 +299,7 @@ export default function CurrencyInputPanel({
                 <RowFixed style={{ height: '17px' }}>
                   <ThemedText.DeprecatedBody
                     onClick={onMax}
-                    color={theme.deprecated_text3}
+                    color={theme.textTertiary}
                     fontWeight={500}
                     fontSize={14}
                     style={{ display: 'inline', cursor: 'pointer' }}

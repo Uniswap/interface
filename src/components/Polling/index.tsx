@@ -24,7 +24,7 @@ const StyledPolling = styled.div<{ warning: boolean }>`
   right: 0;
   bottom: 0;
   padding: 1rem;
-  color: ${({ theme, warning }) => (warning ? theme.deprecated_yellow3 : theme.deprecated_green1)};
+  color: ${({ theme, warning }) => (warning ? theme.deprecated_yellow3 : theme.accentSuccess)};
   transition: 250ms ease color;
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
@@ -53,12 +53,12 @@ const StyledPollingDot = styled.div<{ warning: boolean }>`
   min-width: 8px;
   border-radius: 50%;
   position: relative;
-  background-color: ${({ theme, warning }) => (warning ? theme.deprecated_yellow3 : theme.deprecated_green1)};
+  background-color: ${({ theme, warning }) => (warning ? theme.deprecated_yellow3 : theme.accentSuccess)};
   transition: 250ms ease background-color;
 `
 
 const StyledGasDot = styled.div`
-  background-color: ${({ theme }) => theme.deprecated_text3};
+  background-color: ${({ theme }) => theme.textTertiary};
   border-radius: 50%;
   height: 4px;
   min-height: 4px;
@@ -84,7 +84,7 @@ const Spinner = styled.div<{ warning: boolean }>`
   border-top: 1px solid transparent;
   border-right: 1px solid transparent;
   border-bottom: 1px solid transparent;
-  border-left: 2px solid ${({ theme, warning }) => (warning ? theme.deprecated_yellow3 : theme.deprecated_green1)};
+  border-left: 2px solid ${({ theme, warning }) => (warning ? theme.deprecated_yellow3 : theme.accentSuccess)};
   background: transparent;
   width: 14px;
   height: 14px;
@@ -144,7 +144,7 @@ export default function Polling() {
           <ExternalLink href="https://etherscan.io/gastracker">
             {priceGwei ? (
               <RowFixed style={{ marginRight: '8px' }}>
-                <ThemedText.DeprecatedMain fontSize="11px" mr="8px" color={theme.deprecated_text3}>
+                <ThemedText.DeprecatedMain fontSize="11px" mr="8px" color={theme.textTertiary}>
                   <MouseoverTooltip
                     text={
                       <Trans>

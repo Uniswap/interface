@@ -8,12 +8,12 @@ import { RowBetween } from '../Row'
 export const TextDot = styled.div`
   height: 3px;
   width: 3px;
-  background-color: ${({ theme }) => theme.deprecated_text2};
+  background-color: ${({ theme }) => theme.textSecondary};
   border-radius: 50%;
 `
 
 export const Checkbox = styled.input`
-  border: 1px solid ${({ theme }) => theme.deprecated_red3};
+  border: 1px solid ${({ theme }) => theme.accentFailure};
   height: 20px;
   margin: 0;
 `
@@ -53,7 +53,7 @@ export const SearchInput = styled.input`
   border: none;
   outline: none;
   border-radius: 12px;
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${({ theme }) => theme.textPrimary};
   border-style: solid;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   -webkit-appearance: none;

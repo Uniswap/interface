@@ -69,13 +69,13 @@ const Web3StatusGeneric = styled(ButtonSecondary)`
   }
 `
 const Web3StatusError = styled(Web3StatusGeneric)`
-  background-color: ${({ theme }) => theme.deprecated_red1};
-  border: 1px solid ${({ theme }) => theme.deprecated_red1};
-  color: ${({ theme }) => theme.deprecated_white};
+  background-color: ${({ theme }) => theme.accentFailure};
+  border: 1px solid ${({ theme }) => theme.accentFailure};
+  color: ${({ theme }) => theme.white};
   font-weight: 500;
   :hover,
   :focus {
-    background-color: ${({ theme }) => darken(0.1, theme.deprecated_red1)};
+    background-color: ${({ theme }) => darken(0.1, theme.accentFailure)};
   }
 `
 
@@ -96,9 +96,9 @@ const Web3StatusConnectWrapper = styled.div<{ faded?: boolean }>`
 `
 
 const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean; isNftActive?: boolean }>`
-  background-color: ${({ pending, theme }) => (pending ? theme.deprecated_primary1 : theme.deprecated_bg1)};
-  border: 1px solid ${({ pending, theme }) => (pending ? theme.deprecated_primary1 : theme.deprecated_bg1)};
-  color: ${({ pending, theme }) => (pending ? theme.deprecated_white : theme.deprecated_text1)};
+  background-color: ${({ pending, theme }) => (pending ? theme.accentAction : theme.deprecated_bg1)};
+  border: 1px solid ${({ pending, theme }) => (pending ? theme.accentAction : theme.deprecated_bg1)};
+  color: ${({ pending, theme }) => (pending ? theme.white : theme.textPrimary)};
   font-weight: 500;
   :hover,
   :focus {
@@ -106,8 +106,7 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean; isNft
 
     :focus {
       border: 1px solid
-        ${({ pending, theme }) =>
-          pending ? darken(0.1, theme.deprecated_primary1) : darken(0.1, theme.deprecated_bg2)};
+        ${({ pending, theme }) => (pending ? darken(0.1, theme.accentAction) : darken(0.1, theme.deprecated_bg2))};
     }
   }
 

@@ -16,7 +16,7 @@ const ContentWrapper = styled(Column)`
 const WarningIcon = styled(AlertOctagon)`
   min-height: 22px;
   min-width: 22px;
-  color: ${({ theme }) => theme.deprecated_warning};
+  color: ${({ theme }) => theme.accentWarning};
 `
 const Copy = styled(CopyHelper)`
   font-size: 12px;
@@ -54,7 +54,7 @@ export default function ConnectedAccountBlocked(props: ConnectedAccountBlockedPr
           fontSize={14}
           iconSize={16}
           gap={6}
-          color={theme.deprecated_primary1}
+          color={theme.accentAction}
           iconPosition="right"
         >
           compliance@uniswap.org

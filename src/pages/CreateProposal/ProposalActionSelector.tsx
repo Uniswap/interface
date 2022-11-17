@@ -28,13 +28,13 @@ const ContentWrapper = styled(Column)`
 const ActionSelectorHeader = styled.div`
   font-size: 14px;
   font-weight: 500;
-  color: ${({ theme }) => theme.deprecated_text2};
+  color: ${({ theme }) => theme.textSecondary};
 `
 
 const ActionDropdown = styled(ButtonDropdown)`
   padding: 0px;
   background-color: transparent;
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${({ theme }) => theme.textPrimary};
   font-size: 1.25rem;
 
   :hover,
