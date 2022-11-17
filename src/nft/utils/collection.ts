@@ -1,6 +1,6 @@
 import { GenieAsset } from 'nft/types'
 
-export const inSameSudoSwapPool = (assetA: GenieAsset, assetB: GenieAsset): boolean => {
+export const isInSameSudoSwapPool = (assetA: GenieAsset, assetB: GenieAsset): boolean => {
   if (!assetA.sellorders || !assetB.sellorders) return false
 
   const assetASudoSwapPoolParameters = assetA.sellorders[0].protocolParameters
@@ -19,6 +19,6 @@ export const inSameSudoSwapPool = (assetA: GenieAsset, assetB: GenieAsset): bool
   return true
 }
 
-export const inSameMarketplaceCollection = (assetA: GenieAsset, assetB: GenieAsset): boolean => {
+export const isInSameMarketplaceCollection = (assetA: GenieAsset, assetB: GenieAsset): boolean => {
   return assetA.address === assetB.address && assetA.marketplace === assetB.marketplace
 }

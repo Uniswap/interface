@@ -39,8 +39,8 @@ import {
   calcPoolPrice,
   calcSudoSwapPrice,
   getRarityStatus,
-  inSameMarketplaceCollection,
-  inSameSudoSwapPool,
+  isInSameMarketplaceCollection,
+  isInSameSudoSwapPool,
   pluralize,
 } from 'nft/utils'
 import { scrollToTop } from 'nft/utils/scrollToTop'
@@ -284,9 +284,9 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
       )
 
       if (asset.marketplace === Markets.Sudoswap) {
-        const bagItemsInSudoSwapPool = itemsInBag.filter((item) => inSameSudoSwapPool(asset, item.asset))
+        const bagItemsInSudoSwapPool = itemsInBag.filter((item) => isInSameSudoSwapPool(asset, item.asset))
         if (assetInBag) {
-          return bagItemsInSudoSwapPool.map((item) => item.asset.tokenId).indexOf(asset.tokenId)
+          return bagItemsInSudoSwapPool.findIndex((item) => item.asset.tokenId === asset.tokenId)
         } else {
           return bagItemsInSudoSwapPool.length
         }
@@ -294,10 +294,9 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
       return assetInBag
         ? itemsInBag
-            .filter((item) => inSameMarketplaceCollection(asset, item.asset))
-            .map((item) => item.asset.tokenId)
-            .indexOf(asset.tokenId)
-        : itemsInBag.filter((item) => inSameMarketplaceCollection(asset, item.asset)).length
+            .filter((item) => isInSameMarketplaceCollection(asset, item.asset))
+            .findIndex((item) => item.asset.tokenId === asset.tokenId)
+        : itemsInBag.filter((item) => isInSameMarketplaceCollection(asset, item.asset)).length
     },
     [itemsInBag]
   )

@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { BagItem, BagItemStatus, GenieAsset, isPooledMarket, Markets } from 'nft/types'
-import { inSameMarketplaceCollection, inSameSudoSwapPool } from 'nft/utils'
+import { isInSameMarketplaceCollection, isInSameSudoSwapPool } from 'nft/utils'
 
 const PRECISION = '1000000000000000000'
 const PROTOCOL_FEE_MULTIPLIER = BigNumber.from('5000000000000000')
@@ -158,13 +158,13 @@ export const recalculateBagUsingPooledAssets = (uncheckedItemsInBag: BagItem[]) 
 
         const itemsInPool =
           asset.marketplace === Markets.Sudoswap
-            ? itemsInBag.filter((bagItem) => inSameSudoSwapPool(item.asset, bagItem.asset))
-            : itemsInBag.filter((bagItem) => inSameMarketplaceCollection(item.asset, bagItem.asset))
+            ? itemsInBag.filter((bagItem) => isInSameSudoSwapPool(item.asset, bagItem.asset))
+            : itemsInBag.filter((bagItem) => isInSameMarketplaceCollection(item.asset, bagItem.asset))
         const calculatedPrice = isPriceChangedAsset
           ? calcAvgGroupPoolPrice(asset, itemsInPool.length)
           : recalculatePooledAssetPrice(
               asset,
-              itemsInPool.map((itemInPool) => itemInPool.asset.tokenId).indexOf(asset.tokenId)
+              itemsInPool.findIndex((itemInPool) => itemInPool.asset.tokenId === asset.tokenId)
             )
 
         if (isPriceChangedAsset && item.asset.updatedPriceInfo)
