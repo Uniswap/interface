@@ -2,6 +2,7 @@ import { useWeb3React } from '@web3-react/core'
 import { ConnectionType } from 'connection'
 import useENSAvatar from 'hooks/useENSAvatar'
 import styled from 'styled-components/macro'
+import { flexColumnNoWrap } from 'theme/styles'
 
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
@@ -11,7 +12,7 @@ import Identicon from '../Identicon'
 
 export const IconWrapper = styled.div<{ size?: number }>`
   position: relative;
-  ${({ theme }) => theme.flexColumnNoWrap};
+  ${flexColumnNoWrap};
   align-items: center;
   justify-content: center;
   margin-right: 8px;

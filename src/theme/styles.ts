@@ -1,5 +1,15 @@
 import { css, keyframes } from 'styled-components/macro'
 
+export const flexColumnNoWrap = css`
+  display: flex;
+  flex-flow: column nowrap;
+`
+
+export const flexRowNoWrap = css`
+  display: flex;
+  flex-flow: row nowrap;
+`
+
 const transitions = {
   duration: {
     slow: '500ms',
@@ -15,12 +25,12 @@ const transitions = {
 }
 
 export const fadeIn = keyframes`
-from {
-  opacity: 0;
-}
-to {
-  opacity: 1;
-}
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 `
 
 export const textFadeIn = css`
