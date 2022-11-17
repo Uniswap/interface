@@ -2,6 +2,7 @@ import { TraceProps } from 'src/components/telemetry/Trace'
 import { TraceEventProps } from 'src/components/telemetry/TraceEvent'
 import { ImportType } from 'src/features/onboarding/utils'
 import { EventName } from 'src/features/telemetry/constants'
+import { EthMethod, WCEventType, WCRequestOutcome } from 'src/features/walletConnect/types'
 
 type BaseEventProperty = Partial<TraceEventProps & TraceProps> | undefined
 
@@ -32,6 +33,14 @@ export type EventProperties = {
     token_out_amount: string
     quote_latency_milliseconds?: number
   } & BaseEventProperty
+  [EventName.WalletConnectSheetCompleted]: {
+    request_type: WCEventType
+    eth_method?: EthMethod
+    dapp_url: string
+    dapp_name: string
+    chain_id: number
+    outcome: WCRequestOutcome
+  }
 }
 
 export type TelemetryEventProps = {

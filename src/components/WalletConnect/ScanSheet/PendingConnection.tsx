@@ -16,13 +16,15 @@ import { HeaderIcon } from 'src/components/WalletConnect/RequestModal/HeaderIcon
 import { PendingConnectionSwitchAccountModal } from 'src/components/WalletConnect/ScanSheet/PendingConnectionSwitchAccountModal'
 import { PendingConnectionSwitchNetworkModal } from 'src/components/WalletConnect/ScanSheet/PendingConnectionSwitchNetworkModal'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
-import { ElementName } from 'src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { ElementName, EventName } from 'src/features/telemetry/constants'
 import {
   useActiveAccountAddressWithThrow,
   useActiveAccountWithThrow,
   useSignerAccounts,
 } from 'src/features/wallet/hooks'
 import { activateAccount } from 'src/features/wallet/walletSlice'
+import { WCEventType, WCRequestOutcome } from 'src/features/walletConnect/types'
 import { settlePendingSession } from 'src/features/walletConnect/WalletConnect'
 import {
   removePendingSession,
@@ -174,13 +176,22 @@ export const PendingConnection = ({ pendingSession, onClose }: Props) => {
   const onPressSettleConnection = useCallback(
     (approved: boolean) => {
       settlePendingSession(selectedChainId, activeAddress, approved)
+
+      sendAnalyticsEvent(EventName.WalletConnectSheetCompleted, {
+        request_type: WCEventType.SessionPending,
+        dapp_url: pendingSession.dapp.url,
+        dapp_name: pendingSession.dapp.name,
+        chain_id: pendingSession.dapp.chain_id,
+        outcome: approved ? WCRequestOutcome.Confirm : WCRequestOutcome.Reject,
+      })
+
       if (approved) {
         onClose()
       } else {
         dispatch(removePendingSession())
       }
     },
-    [activeAddress, dispatch, onClose, selectedChainId]
+    [activeAddress, dispatch, onClose, selectedChainId, pendingSession]
   )
 
   return (

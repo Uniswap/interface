@@ -18,13 +18,20 @@ import { RequestDetails } from 'src/components/WalletConnect/RequestModal/Reques
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { useTransactionGasFee } from 'src/features/gas/hooks'
 import { GasSpeed } from 'src/features/gas/types'
-import { ElementName, ModalName } from 'src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { ElementName, EventName, ModalName } from 'src/features/telemetry/constants'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useIsBlocked } from 'src/features/trm/hooks'
 import { useSignerAccounts } from 'src/features/wallet/hooks'
 import { signWcRequestActions } from 'src/features/walletConnect/saga'
-import { EthMethod, isPrimaryTypePermit, PermitMessage } from 'src/features/walletConnect/types'
+import {
+  EthMethod,
+  isPrimaryTypePermit,
+  PermitMessage,
+  WCEventType,
+  WCRequestOutcome,
+} from 'src/features/walletConnect/types'
 import { rejectRequest } from 'src/features/walletConnect/WalletConnect'
 import {
   isTransactionRequest,
@@ -151,6 +158,18 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
   const onReject = () => {
     rejectRequest(request.internalId)
     rejectOnCloseRef.current = false
+
+    sendAnalyticsEvent(EventName.WalletConnectSheetCompleted, {
+      request_type: isTransactionRequest(request)
+        ? WCEventType.TransactionRequest
+        : WCEventType.SignRequest,
+      eth_method: request.type,
+      dapp_url: request.dapp.url,
+      dapp_name: request.dapp.name,
+      chain_id: request.dapp.chain_id,
+      outcome: WCRequestOutcome.Reject,
+    })
+
     onClose()
   }
 
@@ -184,6 +203,18 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
     }
 
     rejectOnCloseRef.current = false
+
+    sendAnalyticsEvent(EventName.WalletConnectSheetCompleted, {
+      request_type: isTransactionRequest(request)
+        ? WCEventType.TransactionRequest
+        : WCEventType.SignRequest,
+      eth_method: request.type,
+      dapp_url: request.dapp.url,
+      dapp_name: request.dapp.name,
+      chain_id: request.dapp.chain_id,
+      outcome: WCRequestOutcome.Confirm,
+    })
+
     onClose()
   }
 

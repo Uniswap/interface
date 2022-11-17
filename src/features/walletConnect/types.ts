@@ -34,6 +34,11 @@ export enum WCEventType {
   SwitchChainRequest = 'switch_chain_request',
 }
 
+export enum WCRequestOutcome {
+  Confirm = 'confirm',
+  Reject = 'reject',
+}
+
 export type EthSignMethod =
   | EthMethod.PersonalSign
   | EthMethod.SignTypedData

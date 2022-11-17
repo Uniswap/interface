@@ -16,6 +16,7 @@ export enum EventName {
   Transaction = 'transaction',
   UserEvent = 'user-event',
   WalletAdded = 'wallet-added',
+  WalletConnectSheetCompleted = 'Wallet Connect Sheet Completed',
 }
 
 /**
