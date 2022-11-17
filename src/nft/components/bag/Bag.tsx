@@ -319,7 +319,7 @@ const Bag = () => {
                   setProfilePageState(ProfilePageStateType.LISTING)
                 }}
               >
-                Continue
+                Continue to List
               </Box>
             )}
           </>
