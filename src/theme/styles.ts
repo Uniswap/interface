@@ -32,15 +32,6 @@ export const fadeIn = keyframes`
     opacity: 1;
   }
 `
-/*
-today:
- theme/style stuff
- icon updates
- 
-current: 
- a bunch of mobile styles
-
-*/
 
 export const textFadeIn = css`
   animation: ${fadeIn} ${transitions.duration.fast} ${transitions.timing.in};

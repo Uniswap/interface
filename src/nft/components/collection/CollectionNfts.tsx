@@ -66,9 +66,19 @@ const rarityStatusCache = new Map<string, boolean>()
 
 const ActionsContainer = styled.div`
   display: flex;
+  flex: 1 1 auto;
   gap: 10px;
-  width: 100%;
   justify-content: space-between;
+  margin: 0 16px;
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    margin: 0 20px;
+  }
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
+    margin: 0 26px;
+  }
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
+    margin: 0 48px;
+  }
 `
 
 const ActionsSubContainer = styled.div`
@@ -93,7 +103,7 @@ export const SortDropdownContainer = styled.div<{ isFiltersExpanded: boolean }>`
 
 const EmptyCollectionWrapper = styled.div`
   display: block;
-  textalign: center;
+  text-align: center;
 `
 
 const ViewFullCollection = styled.span`
@@ -109,6 +119,19 @@ const ClearAllButton = styled.button`
   border: none;
   cursor: pointer;
   background: none;
+`
+
+const InfiniteScrollWrapper = styled.div`
+  padding: 0 16px;
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    padding: 0 20px;
+  }
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
+    padding: 0 26px;
+  }
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
+    padding: 0 48px;
+  }
 `
 
 const SweepButton = styled.div<{ toggled: boolean; disabled?: boolean }>`
@@ -278,6 +301,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   }
 
   const { assets: collectionNfts, loadNext, hasNext, isLoadingNext } = useLazyLoadAssetsQuery(assetQueryParams)
+  const handleNextPageLoad = useCallback(() => loadNext(ASSET_PAGE_SIZE), [loadNext])
 
   const getPoolPosition = useCallback(
     (asset: GenieAsset) => {
@@ -458,8 +482,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         width="full"
         zIndex="3"
         marginBottom={{ sm: '8', md: '20' }}
-        padding="16"
-        className={styles.actionBarContainer}
+        paddingTop="16"
+        paddingBottom="16"
       >
         <ActionsContainer>
           <ActionsSubContainer>
@@ -564,35 +588,37 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
           ) : null}
         </Row>
       </AnimatedBox>
-      <InfiniteScroll
-        next={() => loadNext(ASSET_PAGE_SIZE)}
-        hasMore={hasNext}
-        loader={hasNext && hasNfts ? loadingAssets() : null}
-        dataLength={collectionAssets?.length ?? 0}
-        style={{ overflow: 'unset' }}
-        className={hasNfts || isLoadingNext ? styles.assetList : undefined}
-      >
-        {hasNfts ? (
-          assets
-        ) : collectionAssets?.length === 0 ? (
-          <Center width="full" color="textSecondary" textAlign="center" style={{ height: '60vh' }}>
-            <EmptyCollectionWrapper>
-              <p className={headlineMedium}>No NFTS found</p>
-              <Box
-                onClick={reset}
-                type="button"
-                className={clsx(bodySmall, buttonTextMedium)}
-                color="blue"
-                cursor="pointer"
-              >
-                <ViewFullCollection>View full collection</ViewFullCollection>
-              </Box>
-            </EmptyCollectionWrapper>
-          </Center>
-        ) : (
-          <CollectionNftsLoading />
-        )}
-      </InfiniteScroll>
+      <InfiniteScrollWrapper>
+        <InfiniteScroll
+          next={handleNextPageLoad}
+          hasMore={hasNext}
+          loader={hasNext && hasNfts ? loadingAssets() : null}
+          dataLength={collectionAssets?.length ?? 0}
+          style={{ overflow: 'unset' }}
+          className={hasNfts || isLoadingNext ? styles.assetList : undefined}
+        >
+          {hasNfts ? (
+            assets
+          ) : collectionAssets?.length === 0 ? (
+            <Center width="full" color="textSecondary" textAlign="center" style={{ height: '60vh' }}>
+              <EmptyCollectionWrapper>
+                <p className={headlineMedium}>No NFTS found</p>
+                <Box
+                  onClick={reset}
+                  type="button"
+                  className={clsx(bodySmall, buttonTextMedium)}
+                  color="blue"
+                  cursor="pointer"
+                >
+                  <ViewFullCollection>View full collection</ViewFullCollection>
+                </Box>
+              </EmptyCollectionWrapper>
+            </Center>
+          ) : (
+            <CollectionNftsLoading />
+          )}
+        </InfiniteScroll>
+      </InfiniteScrollWrapper>
     </>
   )
 }
