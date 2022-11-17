@@ -5,6 +5,7 @@ import { useAppSelector } from 'src/app/hooks'
 import { SearchableRecipient } from 'src/components/RecipientSelect/types'
 import { uniqueAddressesOnly } from 'src/components/RecipientSelect/utils'
 import { ChainId } from 'src/constants/chains'
+import { EMPTY_ARRAY } from 'src/constants/misc'
 import { useENS } from 'src/features/ens/useENS'
 import { selectRecipientsByRecency } from 'src/features/transactions/selectors'
 import { selectInactiveAccounts } from 'src/features/wallet/selectors'
@@ -18,7 +19,7 @@ export function useFullAddressRecipient(searchTerm: string | null) {
     const address =
       getValidAddress(searchTerm, true, false) || getValidAddress(ensAddress, true, false)
     const validatedRecipient = address ? { address, name } : null
-    const recipient = validatedRecipient ? [validatedRecipient] : []
+    const recipient = validatedRecipient ? [validatedRecipient] : EMPTY_ARRAY
     return { recipient, loading }
   }, [name, loading, searchTerm, ensAddress])
 }
@@ -43,7 +44,7 @@ export function useRecipients() {
                 data: validatedAddressRecipient,
               },
             ]
-          : []),
+          : EMPTY_ARRAY),
         ...(recentRecipients.length > 0
           ? [
               {
@@ -51,7 +52,7 @@ export function useRecipients() {
                 data: recentRecipients,
               },
             ]
-          : []),
+          : EMPTY_ARRAY),
         ...(inactiveLocalAccounts.length > 0
           ? [
               {
@@ -59,7 +60,7 @@ export function useRecipients() {
                 data: inactiveLocalAccounts,
               },
             ]
-          : []),
+          : EMPTY_ARRAY),
       ] as SectionListData<SearchableRecipient>[],
     [validatedAddressRecipient, recentRecipients, t, inactiveLocalAccounts]
   )

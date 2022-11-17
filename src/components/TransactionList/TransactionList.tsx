@@ -103,7 +103,7 @@ function TransactionListInner({
 
   // Parse remote txn data from query and merge with local txn data
   const formattedTransactions = useMemo(
-    () => (data ? parseDataResponseToTransactionDetails(data, hideSpamTokens) : []),
+    () => (data ? parseDataResponseToTransactionDetails(data, hideSpamTokens) : EMPTY_ARRAY),
     [data, hideSpamTokens]
   )
   const transactions = useMergeLocalAndRemoteTransactions(ownerAddress, formattedTransactions)
@@ -127,10 +127,10 @@ function TransactionListInner({
       ...(pending.length > 0 ? [{ title: PENDING_TITLE(t), data: pending }] : []),
       ...(todayTransactionList.length > 0
         ? [{ title: TODAY_TITLE(t), data: todayTransactionList }]
-        : []),
+        : EMPTY_ARRAY),
       ...(monthTransactionList.length > 0
         ? [{ title: MONTH_TITLE(t), data: monthTransactionList }]
-        : []),
+        : EMPTY_ARRAY),
       // for each month prior, detect length and render if includes transactions
       ...Object.keys(priorByMonthTransactionList).reduce(
         (
