@@ -22,7 +22,6 @@ import { ChevronLeftIcon, MagnifyingGlassIcon, NavMagnifyingGlassIcon } from '..
 import { NavIcon } from './NavIcon'
 import * as styles from './SearchBar.css'
 import { SearchBarDropdown } from './SearchBarDropdown'
-import * as nftStyles from './SearchBarNft.css'
 
 export const SearchBar = () => {
   const [isOpen, toggleOpen] = useReducer((state: boolean) => !state, false)
@@ -35,8 +34,6 @@ export const SearchBar = () => {
   const isMobile = useIsMobile()
   const isTablet = useIsTablet()
   const isPhase1 = phase1Flag === NftVariant.Enabled
-  // when removing this flag, copy content of SearchBarNft.css into SearchBar.css and use the styles import only
-  const finalStyles = isPhase1 ? nftStyles : styles
 
   useOnClickOutside(searchRef, () => {
     isOpen && toggleOpen()
@@ -116,14 +113,14 @@ export const SearchBar = () => {
           position={{ sm: 'fixed', md: 'absolute' }}
           width={{ sm: isOpen ? 'viewWidth' : 'auto', md: 'auto' }}
           ref={searchRef}
-          className={finalStyles.searchBarContainer}
+          className={isPhase1 ? styles.searchBarContainerNft : styles.searchBarContainer}
           display={{ sm: isOpen ? 'inline-block' : 'none', xl: 'inline-block' }}
         >
           <Row
             className={clsx(
-              ` ${finalStyles.searchBar} ${!isOpen && !isMobile && magicalGradientOnHover} ${
-                isMobileOrTablet && (isOpen ? finalStyles.visible : finalStyles.hidden)
-              }`
+              ` ${isPhase1 ? styles.nftSearchBar : styles.searchBar} ${
+                !isOpen && !isMobile && magicalGradientOnHover
+              } ${isMobileOrTablet && (isOpen ? styles.visible : styles.hidden)}`
             )}
             borderRadius={isOpen || isMobileOrTablet ? undefined : '12'}
             borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
@@ -132,11 +129,7 @@ export const SearchBar = () => {
             onClick={() => !isOpen && toggleOpen()}
             gap="12"
           >
-            <Box
-              className={
-                showCenteredSearchContent ? finalStyles.searchContentCentered : finalStyles.searchContentLeftAlign
-              }
-            >
+            <Box className={showCenteredSearchContent ? styles.searchContentCentered : styles.searchContentLeftAlign}>
               <Box display={{ sm: 'none', md: 'flex' }}>
                 <MagnifyingGlassIcon />
               </Box>
@@ -158,8 +151,8 @@ export const SearchBar = () => {
                   setSearchValue(event.target.value)
                 }}
                 onBlur={() => sendAnalyticsEvent(EventName.NAVBAR_SEARCH_EXITED, navbarSearchEventProperties)}
-                className={`${finalStyles.searchBarInput} ${
-                  showCenteredSearchContent ? finalStyles.searchContentCentered : finalStyles.searchContentLeftAlign
+                className={`${styles.searchBarInput} ${
+                  showCenteredSearchContent ? styles.searchContentCentered : styles.searchContentLeftAlign
                 }`}
                 value={searchValue}
                 ref={inputRef}
@@ -167,7 +160,7 @@ export const SearchBar = () => {
               />
             </TraceEvent>
           </Row>
-          <Box className={clsx(isOpen ? finalStyles.visible : finalStyles.hidden)}>
+          <Box className={clsx(isOpen ? styles.visible : styles.hidden)}>
             {isOpen && (
               <SearchBarDropdown
                 toggleOpen={toggleOpen}
