@@ -3,8 +3,8 @@ import store from 'state'
 import { DEFAULT_LIST_OF_LISTS } from './lists'
 
 class TokenLogoLookupTable {
-  dict: { [key: string]: string[] | undefined } = {}
-  initialized = false
+  private dict: { [key: string]: string[] | undefined } = {}
+  private initialized = false
 
   initialize() {
     const dict: { [key: string]: string[] | undefined } = {}

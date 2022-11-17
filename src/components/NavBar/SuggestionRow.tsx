@@ -178,6 +178,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
             chainId={token.chainId}
             symbol={token.symbol}
             size="36px"
+            backupImg={token.logoURI}
           />
           <L2NetworkLogo networkUrl={L2Icon} size="16px" />
         </StyledLogoContainer>

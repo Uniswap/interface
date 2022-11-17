@@ -18,7 +18,7 @@ function prioritizeLogoSources(uris: string[]) {
   const parsedUris = uris.map((uri) => uriToHttp(uri)).flat(1)
   const preferredUris: string[] = []
 
-  // Consolidate duplicate coingecko urls into one last-place source
+  // Consolidate duplicate coingecko urls into one fallback source
   let coingeckoUrl: string | undefined = undefined
 
   parsedUris.forEach((uri) => {
@@ -46,7 +46,7 @@ function getInitialUrl(address?: string | null, chainId?: number | null, isNativ
   }
 }
 
-export default function useTokenLogoSource(
+export default function useAssetLogoSource(
   address?: string | null,
   chainId?: number | null,
   isNative?: boolean,
