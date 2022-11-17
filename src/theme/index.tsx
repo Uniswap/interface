@@ -44,6 +44,8 @@ const transitions = {
 const opacities = {
   hover: 0.6,
   click: 0.4,
+  disabled: 0.5,
+  enabled: 1,
 }
 
 const deprecated_mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(
