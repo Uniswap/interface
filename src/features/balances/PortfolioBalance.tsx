@@ -55,13 +55,15 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps) {
     <WarmLoadingShimmer isWarmLoading={isWarmLoading}>
       <Flex gap="xxs">
         <DecimalNumber
-          // initially set color to textSecondary when isWarm because the shimmer mask takes a second to load, resulting in a flash of the underlying color
+          adjustsFontSizeToFit
           color={isWarmLoading ? 'textSecondary' : undefined}
+          // initially set color to textSecondary when isWarm because the shimmer mask takes a second to load, resulting in a flash of the underlying color
           fontWeight="600"
           number={formatUSDPrice(
             portfolioBalance?.tokensTotalDenominatedValue?.value ?? undefined,
-            NumberType.FiatTokenQuantity
+            NumberType.PortfolioBalance
           )}
+          numberOfLines={1}
           variant="headlineLarge"
         />
         <RelativeChange

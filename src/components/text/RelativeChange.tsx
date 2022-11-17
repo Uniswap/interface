@@ -35,7 +35,7 @@ export function RelativeChange(props: RelativeChangeProps) {
 
   const formattedChange = change ? `${Math.abs(change).toFixed(2)}%` : '-'
   const formattedAbsChange = absoluteChange
-    ? `${formatNumber(Math.abs(absoluteChange), NumberType.FiatTokenPrice)}`
+    ? `${formatNumber(Math.abs(absoluteChange), NumberType.PortfolioBalance)}`
     : ''
 
   return (
