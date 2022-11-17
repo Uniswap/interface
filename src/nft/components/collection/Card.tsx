@@ -13,7 +13,7 @@ import {
   RarityVerifiedIcon,
   VerifiedIcon,
 } from 'nft/components/icons'
-import { body, bodySmall, buttonTextSmall, subhead, subheadSmall } from 'nft/css/common.css'
+import { body, bodySmall, buttonTextMedium, subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
 import { GenieAsset, Rarity, TokenType, WalletAsset } from 'nft/types'
@@ -85,16 +85,25 @@ const useAssetMediaType = (asset: GenieAsset | WalletAsset) =>
     return assetMediaType
   }, [asset])
 
-const baseHref = (asset: GenieAsset | WalletAsset) =>
-  'address' in asset ? `/#/nfts/asset/${asset.address}/${asset.tokenId}?origin=collection` : '/nfts/profile'
+const baseHref = (asset: GenieAsset | WalletAsset) => {
+  if ('address' in asset) return `/#/nfts/asset/${asset.address}/${asset.tokenId}?origin=collection`
+  if ('asset_contract' in asset) return `/#/nfts/asset/${asset.asset_contract.address}/${asset.tokenId}?origin=profile`
+  return '/#/nfts/profile'
+}
 
 const DetailsLinkContainer = styled.a`
   display: flex;
+  align-items: center;
   flex-shrink: 0;
   text-decoration: none;
-  color: ${({ theme }) => theme.textSecondary};
-
-  ${OpacityHoverState}
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid;
+  color: ${({ theme }) => theme.accentAction};
+  border-color: ${({ theme }) => theme.accentActionSoft};
+  padding: 2px 6px;
+  border-radius: 6px;
+  ${OpacityHoverState};
 `
 
 const SuspiciousIcon = styled(AlertTriangle)`
@@ -208,9 +217,7 @@ const Container = ({
         position="relative"
         ref={assetRef}
         borderRadius={BORDER_RADIUS}
-        borderBottomLeftRadius={BORDER_RADIUS}
-        borderBottomRightRadius={BORDER_RADIUS}
-        className={selected ? styles.selectedCard : styles.notSelectedCard}
+        className={selected ? styles.selectedCard : styles.card}
         draggable={false}
         onMouseEnter={() => toggleHovered()}
         onMouseLeave={() => toggleHovered()}
@@ -248,7 +255,7 @@ const Image = () => {
         width="full"
         style={{
           aspectRatio: '1',
-          transition: 'transform 0.4s ease 0s',
+          transition: 'transform 0.25s ease 0s',
         }}
         src={asset.imageUrl || asset.smallImageUrl}
         objectFit="contain"
@@ -294,7 +301,7 @@ const Video = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
           width="full"
           style={{
             aspectRatio: '1',
-            transition: 'transform 0.4s ease 0s',
+            transition: 'transform 0.25s ease 0s',
             willChange: 'transform',
           }}
           src={asset.imageUrl || asset.smallImageUrl}
@@ -486,32 +493,32 @@ const TruncatedTextRow = styled(Row)`
 
 interface ProfileNftDetailsProps {
   asset: WalletAsset
-  isSellMode: boolean
+  hideDetails: boolean
 }
 
-const ProfileNftDetails = ({ asset, isSellMode }: ProfileNftDetailsProps) => {
+const ProfileNftDetails = ({ asset, hideDetails }: ProfileNftDetailsProps) => {
   const assetName = () => {
     if (!asset.name && !asset.tokenId) return
     return !!asset.name ? asset.name : `#${asset.tokenId}`
   }
 
   const shouldShowUserListedPrice =
-    !!asset.floor_sell_order_price &&
-    !asset.notForSale &&
-    (asset.asset_contract.tokenType !== TokenType.ERC1155 || isSellMode)
-  const shouldShowFloorPrice = asset.notForSale && isSellMode && !!asset.floorPrice
+    !!asset.floor_sell_order_price && !asset.notForSale && asset.asset_contract.tokenType !== TokenType.ERC1155
 
   return (
     <Box overflow="hidden" width="full" flexWrap="nowrap">
-      <Row justifyItems="flex-start">
-        <TruncatedTextRow className={bodySmall} style={{ color: themeVars.colors.textSecondary }}>
-          {!!asset.asset_contract.name && <span>{asset.asset_contract.name}</span>}
-        </TruncatedTextRow>
-        {asset.collectionIsVerified && <VerifiedIcon height="16px" width="16px" fill={colors.magentaVibrant} />}
-      </Row>
+      <PrimaryRow>
+        <PrimaryDetails>
+          <TruncatedTextRow className={bodySmall} style={{ color: themeVars.colors.textSecondary }}>
+            {!!asset.asset_contract.name && <span>{asset.asset_contract.name}</span>}
+          </TruncatedTextRow>
+          {asset.collectionIsVerified && <VerifiedIcon height="16px" width="16px" fill={colors.magentaVibrant} />}
+        </PrimaryDetails>
+        {!hideDetails && <DetailsLink />}
+      </PrimaryRow>
       <Row justifyItems="flex-start">
         <TruncatedTextRow
-          className={subheadSmall}
+          className={body}
           style={{
             color: themeVars.colors.textPrimary,
           }}
@@ -521,13 +528,8 @@ const ProfileNftDetails = ({ asset, isSellMode }: ProfileNftDetailsProps) => {
         {asset.susFlag && <Suspicious />}
       </Row>
       {shouldShowUserListedPrice && (
-        <TruncatedTextRow className={subhead} style={{ color: themeVars.colors.textPrimary }}>
+        <TruncatedTextRow className={buttonTextMedium} style={{ color: themeVars.colors.textPrimary }}>
           {`${floorFormatter(asset.floor_sell_order_price)} ETH`}
-        </TruncatedTextRow>
-      )}
-      {shouldShowFloorPrice && (
-        <TruncatedTextRow className={subhead} style={{ color: themeVars.colors.textSecondary }}>
-          {`${floorFormatter(asset.floorPrice)} ETH Floor`}
         </TruncatedTextRow>
       )}
     </Box>
@@ -548,15 +550,7 @@ const PrimaryDetails = ({ children }: { children: ReactNode }) => (
 
 const PrimaryInfo = ({ children }: { children: ReactNode }) => {
   return (
-    <Box
-      overflow="hidden"
-      whiteSpace="nowrap"
-      textOverflow="ellipsis"
-      color="textPrimary"
-      fontWeight="medium"
-      fontSize="14"
-      style={{ lineHeight: '20px' }}
-    >
+    <Box overflow="hidden" whiteSpace="nowrap" textOverflow="ellipsis" className={body}>
       {children}
     </Box>
   )
@@ -581,9 +575,8 @@ const SecondaryInfo = ({ children }: { children: ReactNode }) => {
       overflow="hidden"
       whiteSpace="nowrap"
       textOverflow="ellipsis"
-      fontSize="16"
-      fontWeight="medium"
       style={{ lineHeight: '20px' }}
+      className={subhead}
     >
       {children}
     </Box>
@@ -651,7 +644,7 @@ const DetailsLink = () => {
         e.stopPropagation()
       }}
     >
-      <Box className={buttonTextSmall}>Details</Box>
+      <Box>Details</Box>
     </DetailsLinkContainer>
   )
 }
@@ -749,7 +742,6 @@ const NoContentContainer = () => (
         left="1/2"
         top="1/2"
         style={{ transform: 'translate3d(-50%, -50%, 0)' }}
-        fontWeight="normal"
         color="gray500"
         className={body}
       >

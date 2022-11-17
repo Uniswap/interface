@@ -15,7 +15,7 @@ export const darkTheme: Theme = {
     backgroundFloating: '0000000C',
     backgroundInteractive: vars.color.gray700,
     backgroundModule: vars.color.gray800,
-    backgroundOutline: `rgba(153,161,189,0.24)`,
+    backgroundOutline: vars.color.backgroundInteractive,
     backgroundSurface: vars.color.gray900,
     backgroundBackdrop: '#000',
 
