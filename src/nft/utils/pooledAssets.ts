@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { BagItem, BagItemStatus, GenieAsset, Markets, UpdatedGenieAsset } from 'nft/types'
+import { BagItem, BagItemStatus, GenieAsset, isPooledMarket, Markets } from 'nft/types'
+import { inSameMarketplaceCollection, inSameSudoSwapPool } from 'nft/utils'
 
 const PRECISION = '1000000000000000000'
 const PROTOCOL_FEE_MULTIPLIER = BigNumber.from('5000000000000000')
@@ -123,69 +124,48 @@ export const calcAvgGroupPoolPrice = (asset: GenieAsset, numberOfAssets: number)
   let total = BigNumber.from(0)
 
   for (let i = 0; i < numberOfAssets; i++) {
-    const price = BigNumber.from(calcPoolPrice(asset, i))
-    total = total.add(price)
+    if (asset.marketplace === Markets.Sudoswap) {
+      total = total.add(BigNumber.from(calcSudoSwapPrice(asset, i) ?? '0'))
+    } else {
+      total = total.add(BigNumber.from(calcPoolPrice(asset, i)))
+    }
   }
 
   return total.div(numberOfAssets).toString()
 }
 
+const recalculatePooledAssetPrice = (asset: GenieAsset, position: number): string => {
+  return asset.marketplace === Markets.Sudoswap
+    ? calcSudoSwapPrice(asset, position) ?? ''
+    : calcPoolPrice(asset, position)
+}
+
 export const recalculateBagUsingPooledAssets = (uncheckedItemsInBag: BagItem[]) => {
   if (
-    !uncheckedItemsInBag.some(
-      (item) => item.asset.marketplace === Markets.NFTX || item.asset.marketplace === Markets.NFT20
-    ) ||
+    !uncheckedItemsInBag.some((item) => item.asset.marketplace && isPooledMarket(item.asset.marketplace)) ||
     uncheckedItemsInBag.every(
       (item) => item.status === BagItemStatus.REVIEWED || item.status === BagItemStatus.REVIEWING_PRICE_CHANGE
     )
   )
     return uncheckedItemsInBag
 
-  const isPooledMarket = (market: Markets) => market === Markets.NFTX || market === Markets.NFT20
-
   const itemsInBag = [...uncheckedItemsInBag]
-  const possibleMarkets = itemsInBag.reduce((markets, item) => {
-    const asset = item.asset
-    const market = asset.marketplace
-    if (!market || !isPooledMarket(market)) return markets
-
-    const key = asset.address + asset.marketplace
-    if (Object.keys(markets).includes(key)) {
-      markets[key].push(asset.tokenId)
-    } else {
-      markets[key] = [asset.tokenId]
-    }
-    return markets
-  }, {} as { [key: string]: [string] })
-
-  const updatedPriceMarkets = itemsInBag.reduce((markets, item) => {
-    const asset = item.asset
-    const market = asset.marketplace
-    if (!market || !asset.updatedPriceInfo || !isPooledMarket(market)) return markets
-
-    const key = asset.address + asset.marketplace
-    if (Object.keys(markets).includes(key)) {
-      markets[key] = [markets[key][0] + 1, asset]
-    } else {
-      markets[key] = [1, asset]
-    }
-    return markets
-  }, {} as { [key: string]: [number, UpdatedGenieAsset] })
-
-  const calculatedAvgPoolPrices = Object.keys(updatedPriceMarkets).reduce((prices, key) => {
-    prices[key] = calcAvgGroupPoolPrice(updatedPriceMarkets[key][1], updatedPriceMarkets[key][0])
-    return prices
-  }, {} as { [key: string]: string })
-
   itemsInBag.forEach((item) => {
     if (item.asset.marketplace)
       if (isPooledMarket(item.asset.marketplace)) {
         const asset = item.asset
         const isPriceChangedAsset = !!asset.updatedPriceInfo
 
+        const itemsInPool =
+          asset.marketplace === Markets.Sudoswap
+            ? itemsInBag.filter((bagItem) => inSameSudoSwapPool(item.asset, bagItem.asset))
+            : itemsInBag.filter((bagItem) => inSameMarketplaceCollection(item.asset, bagItem.asset))
         const calculatedPrice = isPriceChangedAsset
-          ? calculatedAvgPoolPrices[asset.address + asset.marketplace]
-          : calcPoolPrice(asset, possibleMarkets[asset.address + asset.marketplace].indexOf(item.asset.tokenId))
+          ? calcAvgGroupPoolPrice(asset, itemsInPool.length)
+          : recalculatePooledAssetPrice(
+              asset,
+              itemsInPool.map((itemInPool) => itemInPool.asset.tokenId).indexOf(asset.tokenId)
+            )
 
         if (isPriceChangedAsset && item.asset.updatedPriceInfo)
           item.asset.updatedPriceInfo.ETHPrice = item.asset.updatedPriceInfo.basePrice = calculatedPrice

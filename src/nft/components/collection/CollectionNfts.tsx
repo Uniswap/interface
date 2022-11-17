@@ -285,7 +285,6 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
       if (asset.marketplace === Markets.Sudoswap) {
         const bagItemsInSudoSwapPool = itemsInBag.filter((item) => inSameSudoSwapPool(asset, item.asset))
-        console.log(bagItemsInSudoSwapPool)
         if (assetInBag) {
           return bagItemsInSudoSwapPool.map((item) => item.asset.tokenId).indexOf(asset.tokenId)
         } else {
