@@ -21,7 +21,7 @@ import { useLocation } from 'react-router-dom'
 import { ChevronLeftIcon, MagnifyingGlassIcon, NavMagnifyingGlassIcon } from '../../nft/components/icons'
 import { NavIcon } from './NavIcon'
 import * as styles from './SearchBar.css'
-import * as nftSTyles from './SearchBarNft.css'
+import * as nftStyles from './SearchBarNft.css'
 import { SearchBarDropdown } from './SearchBarDropdown'
 
 export const SearchBar = () => {
@@ -35,7 +35,9 @@ export const SearchBar = () => {
   const isMobile = useIsMobile()
   const isTablet = useIsTablet()
   const isPhase1 = phase1Flag === NftVariant.Enabled
-  const finalStyles = isPhase1 ? nftSTyles : styles
+  // when removing this flag, copy nftStyles file into styles
+  // and replace all finalStyles with styles
+  const finalStyles = isPhase1 ? nftStyles : styles
 
   useOnClickOutside(searchRef, () => {
     isOpen && toggleOpen()
