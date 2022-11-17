@@ -47,24 +47,21 @@ export const searchBarContainer = style([
   }),
   {
     '@media': {
-      [`screen and (min-width: ${breakpoints.sm}px)`]: {
-        right: `-${DESKTOP_NAVBAR_WIDTH / 2 - 28}px`,
+      [`screen and (min-width: ${breakpoints.lg}px)`]: {
+        right: `-${DESKTOP_NAVBAR_WIDTH / 2}px`,
         top: '-3px',
       },
       [`screen and (min-width: 1024px) and (max-width: 1080px)`]: {
         right: `-${300 / 2}px`,
       },
       [`screen and (min-width: 1190px) and (max-width: 1380px)`]: {
-        right: `-${DESKTOP_NAVBAR_WIDTH_L / 2 - MAGNIFYING_GLASS_ICON_WIDTH}px`,
-        top: '-3px',
+        right: `-${DESKTOP_NAVBAR_WIDTH_L / 2}px`,
       },
       [`screen and (min-width: 1380px) and (max-width: 1479px)`]: {
-        right: `-${DESKTOP_NAVBAR_WIDTH_XL / 2 - MAGNIFYING_GLASS_ICON_WIDTH}px`,
-        top: '-3px',
+        right: `-${DESKTOP_NAVBAR_WIDTH_XL / 2}px`,
       },
       [`screen and (min-width: ${1480}px)`]: {
-        right: `-${DESKTOP_NAVBAR_WIDTH_XXL / 2 - MAGNIFYING_GLASS_ICON_WIDTH}px`,
-        top: '-3px',
+        right: `-${DESKTOP_NAVBAR_WIDTH_XXL / 2}px`,
       },
     },
   },

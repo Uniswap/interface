@@ -124,7 +124,7 @@ export const SearchBar = () => {
             borderRadius={isOpen || isMobileOrTablet ? undefined : '12'}
             borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
             borderTopLeftRadius={isOpen && !isMobile ? '12' : undefined}
-            borderBottomWidth={isOpen || isMobileOrTablet ? '0px' : '1px'}
+            borderBottomWidth={isOpen || isMobileOrTablet ? '0px' : '2px'}
             onClick={() => !isOpen && toggleOpen()}
             gap="12"
           >
