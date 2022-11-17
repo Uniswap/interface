@@ -159,6 +159,7 @@ const RankingContainer = styled.div`
 
 const StyledImageContainer = styled.div<{ isDisabled?: boolean }>`
   position: relative;
+  pointer-events: auto;
   &:hover {
     opacity: ${({ isDisabled, theme }) => (isDisabled ? theme.opacity.disabled : theme.opacity.enabled)};
   }
