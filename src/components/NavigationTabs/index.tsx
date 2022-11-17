@@ -9,12 +9,13 @@ import { resetMintState } from 'state/mint/actions'
 import { resetMintState as resetMintV3State } from 'state/mint/v3/actions'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import { flexRowNoWrap } from 'theme/styles'
 
 import Row, { RowBetween } from '../Row'
 import SettingsTab from '../Settings'
 
 const Tabs = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
+  ${flexRowNoWrap};
   align-items: center;
   border-radius: 3rem;
   justify-content: space-evenly;

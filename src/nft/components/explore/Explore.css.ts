@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css'
-import { body, caption } from 'nft/css/common.css'
+import { body, bodySmall } from 'nft/css/common.css'
 import { sprinkles } from 'nft/css/sprinkles.css'
 
 export const section = style([
@@ -74,13 +74,13 @@ export const table = style([
 
 export const thead = sprinkles({
   marginRight: '12',
-  borderColor: 'outline',
+  borderColor: 'backgroundInteractive',
   borderWidth: '1px',
   borderBottomStyle: 'solid',
 })
 
 export const th = style([
-  caption,
+  bodySmall,
   {
     selectors: {
       '&:nth-last-child(1)': {
@@ -106,7 +106,7 @@ export const td = style([
   },
   sprinkles({
     maxWidth: '160',
-    paddingY: '8',
+    paddingY: '4',
     textAlign: 'right',
     position: 'relative',
   }),

@@ -157,8 +157,13 @@ const RankingContainer = styled.div`
   z-index: 2;
 `
 
-const StyledImageContainer = styled.div`
+const StyledImageContainer = styled.div<{ isDisabled?: boolean }>`
   position: relative;
+  pointer-events: auto;
+  &:hover {
+    opacity: ${({ isDisabled, theme }) => (isDisabled ? theme.opacity.disabled : theme.opacity.enabled)};
+  }
+  cursor: ${({ isDisabled }) => (isDisabled ? 'default' : 'pointer')};
 `
 
 /* -------- ASSET CARD -------- */
@@ -222,8 +227,6 @@ const Container = ({
         onMouseEnter={() => toggleHovered()}
         onMouseLeave={() => toggleHovered()}
         transition="250"
-        opacity={isDisabled ? '0.5' : '1'}
-        cursor={isDisabled ? 'default' : 'pointer'}
         onClick={isDisabled ? () => null : onClick ?? handleAssetInBag}
       >
         {children}
@@ -232,8 +235,8 @@ const Container = ({
   )
 }
 
-const ImageContainer = ({ children }: { children: ReactNode }) => (
-  <StyledImageContainer>{children}</StyledImageContainer>
+const ImageContainer = ({ children, isDisabled = false }: { children: ReactNode; isDisabled?: boolean }) => (
+  <StyledImageContainer isDisabled={isDisabled}>{children}</StyledImageContainer>
 )
 
 /* -------- CARD IMAGE -------- */

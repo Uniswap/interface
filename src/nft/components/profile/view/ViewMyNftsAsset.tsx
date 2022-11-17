@@ -98,22 +98,7 @@ export const ViewMyNftsAsset = ({
       onClick={onCardClick}
       isDisabled={isDisabled}
     >
-      <MouseoverTooltip
-        text={
-          <Box as="span" className={bodySmall} style={{ color: themeVars.colors.textPrimary }}>
-            {asset.asset_contract.tokenType === TokenType.ERC1155 ? (
-              <Trans>ERC-1155 support coming soon</Trans>
-            ) : (
-              <Trans>Blocked from trading</Trans>
-            )}
-          </Box>
-        }
-        placement="bottom"
-        offsetX={0}
-        offsetY={-100}
-        style={{ display: 'block' }}
-        disableHover={!isDisabled}
-      >
+      <Card.ImageContainer isDisabled={isDisabled}>
         <Tooltip
           text={
             <Box as="span" className={bodySmall} color="textPrimary">
@@ -123,15 +108,30 @@ export const ViewMyNftsAsset = ({
           show={showTooltip}
           style={{ display: 'block' }}
           offsetX={0}
-          offsetY={-52}
+          offsetY={-68}
           hideArrow={true}
           placement="bottom"
         >
-          <Card.ImageContainer>
+          <MouseoverTooltip
+            text={
+              <Box as="span" className={bodySmall} style={{ color: themeVars.colors.textPrimary }}>
+                {asset.asset_contract.tokenType === TokenType.ERC1155 ? (
+                  <Trans>ERC-1155 support coming soon</Trans>
+                ) : (
+                  <Trans>Blocked from trading</Trans>
+                )}
+              </Box>
+            }
+            placement="bottom"
+            offsetX={0}
+            offsetY={-100}
+            style={{ display: 'block' }}
+            disableHover={!isDisabled}
+          >
             {getNftDisplayComponent(assetMediaType, mediaShouldBePlaying, setCurrentTokenPlayingMedia)}
-          </Card.ImageContainer>
+          </MouseoverTooltip>
         </Tooltip>
-      </MouseoverTooltip>
+      </Card.ImageContainer>
       <Card.DetailsContainer>
         <Card.ProfileNftDetails asset={asset} hideDetails={hideDetails} />
       </Card.DetailsContainer>

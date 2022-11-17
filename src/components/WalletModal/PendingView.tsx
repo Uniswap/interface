@@ -4,11 +4,12 @@ import { ButtonEmpty, ButtonPrimary } from 'components/Button'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 
 import Loader from '../Loader'
 
 const PendingSection = styled.div`
-  ${({ theme }) => theme.flexColumnNoWrap};
+  ${flexColumnNoWrap};
   align-items: center;
   justify-content: center;
   width: 100%;
@@ -33,14 +34,14 @@ const AlertTriangleIcon = styled(AlertTriangle)`
 `
 
 const LoaderContainer = styled.div`
+  ${flexRowNoWrap};
   margin: 16px 0;
-  ${({ theme }) => theme.flexRowNoWrap};
   align-items: center;
   justify-content: center;
 `
 
 const LoadingMessage = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap};
+  ${flexRowNoWrap};
   align-items: center;
   justify-content: center;
   border-radius: 12px;
@@ -51,13 +52,13 @@ const LoadingMessage = styled.div`
 `
 
 const ErrorGroup = styled.div`
-  ${({ theme }) => theme.flexColumnNoWrap};
+  ${flexColumnNoWrap};
   align-items: center;
   justify-content: flex-start;
 `
 
 const LoadingWrapper = styled.div`
-  ${({ theme }) => theme.flexColumnNoWrap};
+  ${flexColumnNoWrap};
   align-items: center;
   justify-content: center;
 `
