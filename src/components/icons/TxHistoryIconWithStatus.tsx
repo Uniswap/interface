@@ -16,7 +16,7 @@ function _TxHistoryIconWithStatus({ size = iconSizes.lg }: Props) {
   const hasNotifications = useSelectAddressHasNotifications(address)
 
   return (
-    <NotificationBadge showIndicator={hasNotifications}>
+    <NotificationBadge borderColor="backgroundBranded" showIndicator={hasNotifications}>
       <BellIcon color={theme.colors.textSecondary} height={size} width={size} />
     </NotificationBadge>
   )

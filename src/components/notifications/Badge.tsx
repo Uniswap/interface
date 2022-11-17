@@ -1,14 +1,16 @@
 import React, { memo, PropsWithChildren } from 'react'
 import { Box } from 'src/components/layout/Box'
+import { Theme } from 'src/styles/theme'
 
 const NOTIFICATION_DOT_SIZE = 10
 
 type Props = {
   children: PropsWithChildren<any>
   showIndicator?: boolean
+  borderColor?: keyof Theme['colors']
 }
 
-function _NotificationBadge({ children, showIndicator }: Props) {
+function _NotificationBadge({ borderColor = 'background0', children, showIndicator }: Props) {
   return (
     <Box position="relative">
       {showIndicator && (
@@ -25,7 +27,7 @@ function _NotificationBadge({ children, showIndicator }: Props) {
           />
           <Box
             backgroundColor="none"
-            borderColor="background0"
+            borderColor={borderColor}
             borderRadius="full"
             borderWidth={2}
             height={NOTIFICATION_DOT_SIZE}
