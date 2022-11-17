@@ -5,7 +5,7 @@ import { formatEther, parseEther } from '@ethersproject/units'
 import { SweepFetcherParams, useLazyLoadSweepAssetsQuery } from 'graphql/data/nft/Asset'
 import { useBag, useCollectionFilters } from 'nft/hooks'
 import { GenieAsset, isPooledMarket, Markets } from 'nft/types'
-import { calcPoolPrice, calcSudoSwapPrice, formatWeiToDecimal, inSameSudoSwapPool } from 'nft/utils'
+import { calcPoolPrice, calcSudoSwapPrice, formatWeiToDecimal, isInSameSudoSwapPool } from 'nft/utils'
 import { default as Slider } from 'rc-slider'
 import { useEffect, useMemo, useReducer, useState } from 'react'
 import styled, { useTheme } from 'styled-components/macro'
@@ -206,9 +206,8 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
           const poolPrice = calcSudoSwapPrice(
             asset,
             sudoSwapAssetsInJointCollections
-              .filter((sweepAsset) => inSameSudoSwapPool(asset, sweepAsset))
-              .map((sweepAsset) => sweepAsset.tokenId)
-              .indexOf(asset.tokenId)
+              .filter((sweepAsset) => isInSameSudoSwapPool(asset, sweepAsset))
+              .findIndex((sweepAsset) => sweepAsset.tokenId === asset.tokenId)
           )
           asset.priceInfo.ETHPrice = poolPrice ?? ''
         } else {
