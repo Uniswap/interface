@@ -1,27 +1,66 @@
 import React from 'react'
+import { StyleSheet } from 'react-native'
+import Svg, { Defs, RadialGradient as RadialGradientSVG, Rect, Stop } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
 import Eye from 'src/assets/icons/eye.svg'
 import { RemoteImage } from 'src/components/images/RemoteImage'
 import { Box } from 'src/components/layout'
 import { Unicon } from 'src/components/unicons/Unicon'
+import { useUniconColors } from 'src/components/unicons/utils'
+import { theme as FixedTheme } from 'src/styles/theme'
 
 interface Props {
   size: number
   showViewOnlyBadge: boolean
   address: string
   avatarUri?: string | null
+  showBackground?: boolean // Display images with solid background.
 }
 
-export function AccountIcon({ size, showViewOnlyBadge, address, avatarUri }: Props) {
+const INSET_PADDING = FixedTheme.spacing.md
+
+export function AccountIcon({
+  size,
+  showViewOnlyBadge,
+  address,
+  avatarUri,
+  showBackground,
+}: Props) {
   const theme = useAppTheme()
+
+  // If background, add padding and center Unicons. Leave ENS avatars as is.
+  const shouldShowUniconInsetPadding = !avatarUri && showBackground
+
+  // If Unicon and background, reduce size to account for added padding.
+  const adjustedIconSize = shouldShowUniconInsetPadding ? size - INSET_PADDING * 2 : size
+
+  // Color for gradient background.
+  const { gradientStart: uniconColor } = useUniconColors(address)
+
   const iconEyeSize = size * (2 / 5)
 
   return (
-    <Box position="relative">
+    <Box
+      backgroundColor={showBackground ? 'background0' : 'none'}
+      borderColor={showBackground ? 'background0' : 'none'}
+      borderRadius="full"
+      borderWidth={showBackground ? 2 : 0}
+      position="relative"
+      style={{
+        padding: shouldShowUniconInsetPadding ? INSET_PADDING : FixedTheme.spacing.none,
+      }}>
       {avatarUri ? (
-        <RemoteImage borderRadius={size} height={size} uri={avatarUri} width={size} />
+        <RemoteImage
+          borderRadius={adjustedIconSize}
+          height={adjustedIconSize}
+          uri={avatarUri}
+          width={adjustedIconSize}
+        />
       ) : (
-        <Unicon address={address} size={size} />
+        <>
+          <Unicon address={address} size={adjustedIconSize} />
+          {showBackground ? <UniconGradient color={uniconColor} size={size} /> : null}
+        </>
       )}
       {showViewOnlyBadge && (
         <Box
@@ -38,3 +77,32 @@ export function AccountIcon({ size, showViewOnlyBadge, address, avatarUri }: Pro
     </Box>
   )
 }
+
+// Circle shaped gradient that follows Unicon colors.
+const UniconGradient = ({ color, size }: { color: string; size: number }) => {
+  return (
+    <Svg height={size} style={UniconGradientStyles.svg} width={size}>
+      <Defs>
+        <RadialGradientSVG cy="-0.1" id="background" rx="0.8" ry="1.1">
+          <Stop offset="0" stopColor={color} stopOpacity="0.6" />
+          <Stop offset="1" stopColor={color} stopOpacity="0" />
+        </RadialGradientSVG>
+      </Defs>
+      <Rect
+        fill="url(#background)"
+        height="100%"
+        opacity={0.6}
+        rx={size}
+        width="100%"
+        x="0"
+        y="0"
+      />
+    </Svg>
+  )
+}
+
+const UniconGradientStyles = StyleSheet.create({
+  svg: {
+    position: 'absolute',
+  },
+})

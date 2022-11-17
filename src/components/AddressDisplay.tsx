@@ -26,7 +26,10 @@ type AddressDisplayProps = {
   subtitleOverrideText?: string
   showCopy?: boolean
   showAccountIcon?: boolean
+  contentAlign?: FlexAlignType
+  showIconBackground?: boolean
   textAlign?: FlexAlignType
+  disableViewOnlyIcon?: boolean
 }
 
 type CopyButtonWrapperProps = {
@@ -56,6 +59,9 @@ export function AddressDisplay({
   showCopy = false,
   showAccountIcon = true,
   textAlign,
+  contentAlign = 'center', // vertical aligment of all items
+  showIconBackground,
+  disableViewOnlyIcon,
 }: AddressDisplayProps) {
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
@@ -65,7 +71,7 @@ export function AddressDisplay({
 
   const showAddressAsSubtitle = !hideAddressInSubtitle && displayName?.type !== 'address'
   const account: Account | undefined = accounts[address]
-  const isViewOnly = account?.type === AccountType.Readonly
+  const isViewOnly = account?.type === AccountType.Readonly && !disableViewOnlyIcon
 
   const onPressCopyAddress = () => {
     if (!address) return
@@ -84,14 +90,15 @@ export function AddressDisplay({
       <AccountIcon
         address={address}
         avatarUri={avatar}
+        showBackground={showIconBackground}
         showViewOnlyBadge={isViewOnly}
         size={size}
       />
     )
-  }, [address, avatar, isViewOnly, size])
+  }, [address, avatar, isViewOnly, showIconBackground, size])
 
   return (
-    <Flex alignItems="center" flexDirection={direction} gap="sm">
+    <Flex alignItems={contentAlign} flexDirection={direction} gap="sm">
       {showAccountIcon && icon}
       <Box alignItems={itemAlignment} flexShrink={1}>
         <CopyButtonWrapper

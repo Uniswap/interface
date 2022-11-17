@@ -96,6 +96,7 @@ export const enum ElementName {
   Edit = 'edit',
   Enable = 'enable',
   EtherscanView = 'etherscan-view',
+  Favorite = 'favorite',
   GetHelp = 'get-help',
   ImportAccount = 'import',
   Manage = 'manage',
