@@ -92,7 +92,7 @@ export const ProfilePage = () => {
   } = useNftBalanceQuery(address, collectionFilters, [], DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
 
   const ownerCollections = useMemo(
-    () => (isSuccess ? ownerCollectionsData?.pages.map((page) => page.data).flat() : null),
+    () => (isSuccess ? ownerCollectionsData?.pages.map((page) => page.data).flat() : []),
     [isSuccess, ownerCollectionsData]
   )
 
