@@ -1,7 +1,7 @@
 import { WARNING_LEVEL } from 'constants/tokenSafety'
 import { useTokenWarningColor } from 'hooks/useTokenWarningColor'
 import { ReactNode } from 'react'
-import { AlertOctagon, AlertTriangle } from 'react-feather'
+import { AlertTriangle, Slash } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 
@@ -30,7 +30,7 @@ export default function TokenSafetyLabel({ level, canProceed, children }: TokenW
   return (
     <Label color={useTokenWarningColor(level)}>
       <Title marginRight="5px">{children}</Title>
-      {canProceed ? <AlertTriangle strokeWidth={2.5} size="14px" /> : <AlertOctagon strokeWidth={2.5} size="14px" />}
+      {canProceed ? <AlertTriangle strokeWidth={2.5} size="14px" /> : <Slash strokeWidth={2.5} size="14px" />}
     </Label>
   )
 }
