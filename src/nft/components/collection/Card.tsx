@@ -17,13 +17,13 @@ import { body, bodySmall, buttonTextMedium, subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
 import { GenieAsset, Rarity, TokenType, WalletAsset } from 'nft/types'
-import { isAudio, isVideo } from 'nft/utils'
-import { fallbackProvider, putCommas } from 'nft/utils'
+import { fallbackProvider, isAudio, isVideo, putCommas } from 'nft/utils'
 import { floorFormatter } from 'nft/utils/numbers'
 import {
   createContext,
   MouseEvent,
   ReactNode,
+  useCallback,
   useContext,
   useLayoutEffect,
   useMemo,
@@ -157,8 +157,13 @@ const RankingContainer = styled.div`
   z-index: 2;
 `
 
-const StyledImageContainer = styled.div`
+const StyledImageContainer = styled.div<{ isDisabled?: boolean }>`
   position: relative;
+  pointer-events: auto;
+  &:hover {
+    opacity: ${({ isDisabled, theme }) => (isDisabled ? theme.opacity.disabled : theme.opacity.enabled)};
+  }
+  cursor: ${({ isDisabled }) => (isDisabled ? 'default' : 'pointer')};
 `
 
 /* -------- ASSET CARD -------- */
@@ -211,6 +216,8 @@ const Container = ({
     }
   }
 
+  const toggleHover = useCallback(() => toggleHovered(), [])
+
   return (
     <CardContext.Provider value={providerValue}>
       <Box
@@ -219,11 +226,9 @@ const Container = ({
         borderRadius={BORDER_RADIUS}
         className={selected ? styles.selectedCard : styles.card}
         draggable={false}
-        onMouseEnter={() => toggleHovered()}
-        onMouseLeave={() => toggleHovered()}
+        onMouseEnter={toggleHover}
+        onMouseLeave={toggleHover}
         transition="250"
-        opacity={isDisabled ? '0.5' : '1'}
-        cursor={isDisabled ? 'default' : 'pointer'}
         onClick={isDisabled ? () => null : onClick ?? handleAssetInBag}
       >
         {children}
@@ -232,8 +237,8 @@ const Container = ({
   )
 }
 
-const ImageContainer = ({ children }: { children: ReactNode }) => (
-  <StyledImageContainer>{children}</StyledImageContainer>
+const ImageContainer = ({ children, isDisabled = false }: { children: ReactNode; isDisabled?: boolean }) => (
+  <StyledImageContainer isDisabled={isDisabled}>{children}</StyledImageContainer>
 )
 
 /* -------- CARD IMAGE -------- */

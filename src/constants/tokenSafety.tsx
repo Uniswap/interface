@@ -54,7 +54,7 @@ export function getWarningCopy(warning: Warning | null, plural = false) {
 export type Warning = {
   level: WARNING_LEVEL
   message: JSX.Element
-  /* canProceed determines whether triangle/octagon alert icon is used, and
+  /* canProceed determines whether triangle/slash alert icon is used, and
     whether this token is supported/able to be traded */
   canProceed: boolean
 }

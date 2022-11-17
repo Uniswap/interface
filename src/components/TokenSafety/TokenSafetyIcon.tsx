@@ -1,24 +1,43 @@
 import { Warning, WARNING_LEVEL } from 'constants/tokenSafety'
-import { AlertTriangle } from 'react-feather'
-import styled from 'styled-components/macro'
+import { AlertTriangle, Slash } from 'react-feather'
+import styled, { css } from 'styled-components/macro'
 
-const VerifiedContainer = styled.div`
+const WarningContainer = styled.div`
   margin-left: 4px;
   display: flex;
   justify-content: center;
 `
 
-export const WarningIcon = styled(AlertTriangle)<{ size?: string }>`
+const WarningIconStyle = css<{ size?: string }>`
   width: ${({ size }) => size ?? '1em'};
   height: ${({ size }) => size ?? '1em'};
+`
+
+const WarningIcon = styled(AlertTriangle)`
+  ${WarningIconStyle};
   color: ${({ theme }) => theme.textTertiary};
 `
 
+export const BlockedIcon = styled(Slash)`
+  ${WarningIconStyle}
+  color: ${({ theme }) => theme.textSecondary};
+`
+
 export default function TokenSafetyIcon({ warning }: { warning: Warning | null }) {
-  if (warning?.level !== WARNING_LEVEL.UNKNOWN) return null
-  return (
-    <VerifiedContainer>
-      <WarningIcon />
-    </VerifiedContainer>
-  )
+  switch (warning?.level) {
+    case WARNING_LEVEL.BLOCKED:
+      return (
+        <WarningContainer>
+          <BlockedIcon strokeWidth={2.5} />
+        </WarningContainer>
+      )
+    case WARNING_LEVEL.UNKNOWN:
+      return (
+        <WarningContainer>
+          <WarningIcon />
+        </WarningContainer>
+      )
+    default:
+      return null
+  }
 }

@@ -1,3 +1,4 @@
+import { formatNumberOrString, NumberType } from '@uniswap/conedison/format'
 import { loadingAnimation } from 'components/Loader/styled'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useCollectionQuery } from 'graphql/data/nft/Collection'
@@ -164,15 +165,18 @@ const TableElement = styled.div`
 
 interface MarketplaceRowProps {
   marketplace: string
-  floorInEth?: string
-  listings?: string
+  floorInEth?: number
+  listings?: number
 }
 
 export const MarketplaceRow = ({ marketplace, floorInEth, listings }: MarketplaceRowProps) => {
   return (
     <>
       <TableElement>{marketplace}</TableElement>
-      <TableElement>{floorInEth ?? '-'} ETH</TableElement>
+      <TableElement>
+        {floorInEth !== undefined ? formatNumberOrString(floorInEth, NumberType.NFTTokenFloorPriceTrailingZeros) : '-'}{' '}
+        ETH
+      </TableElement>
       <TableElement>{listings ?? '-'}</TableElement>
     </>
   )
@@ -212,8 +216,8 @@ export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
               <MarketplaceRow
                 key={`CarouselCard-key-${collection.address}-${marketplace.marketplace}`}
                 marketplace={MARKETS_ENUM_TO_NAME[market]}
-                listings={marketplace.count.toString()}
-                floorInEth={marketplace.floorPrice.toString()}
+                listings={marketplace.count}
+                floorInEth={marketplace.floorPrice}
               />
             )
           })}

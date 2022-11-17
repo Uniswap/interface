@@ -33,6 +33,7 @@ const StyledContainer = styled.div`
   justify-content: center;
   width: 100%;
   z-index: 2;
+  pointer-events: none;
 `
 
 export const CollectionAsset = ({
