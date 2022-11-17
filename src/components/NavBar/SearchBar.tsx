@@ -35,8 +35,7 @@ export const SearchBar = () => {
   const isMobile = useIsMobile()
   const isTablet = useIsTablet()
   const isPhase1 = phase1Flag === NftVariant.Enabled
-  // when removing this flag, copy nftStyles file into styles
-  // and replace all finalStyles with styles
+  // when removing this flag, copy content of SearchBarNft.css into SearchBar.css and use the styles import only
   const finalStyles = isPhase1 ? nftStyles : styles
 
   useOnClickOutside(searchRef, () => {
