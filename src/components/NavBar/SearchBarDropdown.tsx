@@ -119,8 +119,6 @@ export const SearchBarDropdown = ({
   const phase1Flag = useNftFlag()
   const [resultsState, setResultsState] = useState<ReactNode>()
   const isPhase1 = phase1Flag === NftVariant.Enabled
-  // when removing this flag, copy content of SearchBarNft.css into SearchBar.css and use the styles import only
-  // const finalStyles = phase1Flag === NftVariant.Enabled ? nftStyles : styles
 
   const { data: trendingCollectionResults, isLoading: trendingCollectionsAreLoading } = useQuery(
     ['trendingCollections', 'eth', 'twenty_four_hours'],
