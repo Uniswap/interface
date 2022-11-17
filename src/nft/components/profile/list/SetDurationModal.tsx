@@ -135,7 +135,17 @@ export const SetDurationModal = () => {
 }
 
 const convertDurationToExpiration = (amount: number, duration: Duration) => {
-  const durationFactor =
-    duration === Duration.hour ? 1 : duration === Duration.day ? 24 : duration === Duration.week ? 24 * 7 : 24 * 30
-  return Math.round((Date.now() + ms`1 hour` * durationFactor * amount) / 1000)
+  const durationFactor = () => {
+    switch (duration) {
+      case Duration.hour:
+        return 1
+      case Duration.day:
+        return 24
+      case Duration.week:
+        return 24 * 7
+      default: // month
+        return 24 * 30
+    }
+  }
+  return Math.round((Date.now() + ms`1 hour` * durationFactor() * amount) / 1000)
 }
