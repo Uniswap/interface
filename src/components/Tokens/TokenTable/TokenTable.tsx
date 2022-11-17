@@ -5,6 +5,7 @@ import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
+import { NetworkGlowEffect } from 'theme/components/GlowEffect'
 
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
 import { HeaderRow, LoadedRow, LoadingRow } from './TokenRow'
@@ -48,8 +49,10 @@ const NoTokenDisplay = styled.div`
 function NoTokensState({ message }: { message: ReactNode }) {
   return (
     <GridContainer>
-      <HeaderRow />
-      <NoTokenDisplay>{message}</NoTokenDisplay>
+      <NetworkGlowEffect>
+        <HeaderRow />
+        <NoTokenDisplay>{message}</NoTokenDisplay>
+      </NetworkGlowEffect>
     </GridContainer>
   )
 }
@@ -67,10 +70,12 @@ const LoadingRows = ({ rowCount }: { rowCount: number }) => (
 export function LoadingTokenTable({ rowCount = PAGE_SIZE }: { rowCount?: number }) {
   return (
     <GridContainer>
-      <HeaderRow />
-      <TokenDataContainer>
-        <LoadingRows rowCount={rowCount} />
-      </TokenDataContainer>
+      <NetworkGlowEffect>
+        <HeaderRow />
+        <TokenDataContainer>
+          <LoadingRows rowCount={rowCount} />
+        </TokenDataContainer>
+      </NetworkGlowEffect>
     </GridContainer>
   )
 }
@@ -98,21 +103,23 @@ export default function TokenTable({ setRowCount }: { setRowCount: (c: number) =
   } else {
     return (
       <GridContainer>
-        <HeaderRow />
-        <TokenDataContainer>
-          {tokens.map(
-            (token, index) =>
-              token && (
-                <LoadedRow
-                  key={token?.address}
-                  tokenListIndex={index}
-                  tokenListLength={tokens.length}
-                  token={token}
-                  sparklineMap={sparklines}
-                />
-              )
-          )}
-        </TokenDataContainer>
+        <NetworkGlowEffect>
+          <HeaderRow />
+          <TokenDataContainer>
+            {tokens.map(
+              (token, index) =>
+                token && (
+                  <LoadedRow
+                    key={token?.address}
+                    tokenListIndex={index}
+                    tokenListLength={tokens.length}
+                    token={token}
+                    sparklineMap={sparklines}
+                  />
+                )
+            )}
+          </TokenDataContainer>
+        </NetworkGlowEffect>
       </GridContainer>
     )
   }

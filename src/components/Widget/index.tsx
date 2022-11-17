@@ -21,6 +21,7 @@ import {
 } from 'lib/utils/analytics'
 import { useCallback, useState } from 'react'
 import { useIsDarkMode } from 'state/user/hooks'
+import { NetworkGlowEffect } from 'theme/components/GlowEffect'
 import { computeRealizedPriceImpact } from 'utils/prices'
 import { switchChain } from 'utils/switchChain'
 
@@ -136,7 +137,7 @@ export default function Widget({ token, onTokenChange, onReviewSwapClick }: Widg
   }
 
   return (
-    <>
+    <NetworkGlowEffect>
       <SwapWidget
         disableBranding
         hideConnectionUI
@@ -159,11 +160,15 @@ export default function Widget({ token, onTokenChange, onReviewSwapClick }: Widg
         onSwapPriceUpdateAck={onSwapPriceUpdateAck}
       />
       {tokenSelector}
-    </>
+    </NetworkGlowEffect>
   )
 }
 
 export function WidgetSkeleton() {
   const theme = useWidgetTheme()
-  return <SwapWidgetSkeleton theme={theme} width={WIDGET_WIDTH} />
+  return (
+    <NetworkGlowEffect>
+      <SwapWidgetSkeleton theme={theme} width={WIDGET_WIDTH} />
+    </NetworkGlowEffect>
+  )
 }

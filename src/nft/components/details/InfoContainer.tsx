@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import styled, { css } from 'styled-components/macro'
-import { GlowEffect } from 'theme/components'
+import { GlowEffect } from 'theme/components/GlowEffect'
 
 const HeaderContainer = styled(GlowEffect)`
   margin-top: 28px;
