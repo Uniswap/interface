@@ -22,15 +22,19 @@ const getShadowForChainId = (theme: DefaultTheme, chainId?: SupportedChainId) =>
   }
 }
 
+type GlowProps = {
+  chainId?: SupportedChainId
+}
+
 // Base style to use in places where we cannot wrap `GlowEffect` and `NetworkGlowEffect`
 // with a `styled` function
-export const glowEffect = css<{ chainId?: SupportedChainId }>`
+export const glowEffect = css<GlowProps>`
+  border-radius: 16px;
   box-shadow: ${({ theme, chainId }) => getShadowForChainId(theme, chainId)};
 `
 
 // Base GlowEffect component that renders a glow effect for a given chainId
-export const GlowEffect = styled.div<{ chainId?: SupportedChainId }>`
-  border-radius: 16px;
+export const GlowEffect = styled.div<GlowProps>`
   ${glowEffect}
 `
 
