@@ -158,9 +158,6 @@ export const darkTheme = {
   accentTextLightSecondary: opacify(72, colors.gray50),
   accentTextLightTertiary: opacify(12, colors.gray50),
 
-  hoverState: opacify(24, colors.blue200),
-  hoverDefault: opacify(8, colors.gray200),
-
   deepShadow: '12px 16px 24px rgba(0, 0, 0, 0.24), 12px 8px 12px rgba(0, 0, 0, 0.24), 4px 4px 8px rgba(0, 0, 0, 0.32);',
   shallowShadow: '4px 4px 10px rgba(0, 0, 0, 0.24), 2px 2px 4px rgba(0, 0, 0, 0.12), 1px 2px 2px rgba(0, 0, 0, 0.12);',
 
@@ -209,9 +206,6 @@ export const lightTheme: Theme = {
   accentTextLightPrimary: colors.gray50,
   accentTextLightSecondary: opacify(60, colors.gray50),
   accentTextLightTertiary: opacify(12, colors.gray50),
-
-  hoverState: opacify(24, colors.blue200),
-  hoverDefault: opacify(8, colors.gray200),
 
   deepShadow:
     '8px 12px 20px rgba(51, 53, 72, 0.04), 4px 6px 12px rgba(51, 53, 72, 0.02), 4px 4px 8px rgba(51, 53, 72, 0.04);',
