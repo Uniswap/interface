@@ -126,7 +126,7 @@ export function useMergeLocalAndRemoteTransactions(
 
   // Merge local and remote txns into array of single type.
   const combinedTransactionList = useMemo(() => {
-    if (!address) return []
+    if (!address) return EMPTY_ARRAY
     const localHashes: Set<string> = new Set()
     localTransactions?.map((t) => {
       localHashes.add(t.hash)

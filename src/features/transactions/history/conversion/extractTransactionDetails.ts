@@ -15,7 +15,7 @@ import {
 
 /**
  * Parses txn API response item and identifies known txn type. Helps strictly
- * type txn summary dat to be used within UI.
+ * type txn summary data to be used within UI.
  *
  * @param transaction Transaction api response item to parse.
  * @returns Formatted TransactionDetails object.

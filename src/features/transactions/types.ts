@@ -103,6 +103,9 @@ export enum TransactionType {
   Send = 'send',
   Receive = 'receive',
 
+  // Fiat onramp
+  FiatPurchase = 'fiat-purchase',
+
   // General
   WCConfirm = 'wc-confirm',
   Unknown = 'unknown',
@@ -189,6 +192,13 @@ export interface NFTApproveTransactionInfo extends BaseTransactionInfo {
   spender: string
 }
 
+export interface FiatPurchaseTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.FiatPurchase
+  outputCurrencyId: string
+  outputCurrencyAmountFormatted: number
+  outputCurrencyAmountPrice: number
+}
+
 export interface WCConfirmInfo extends BaseTransactionInfo {
   type: TransactionType.WCConfirm
   dapp: DappInfo
@@ -201,6 +211,7 @@ export interface UnknownTransactionInfo extends BaseTransactionInfo {
 
 export type TransactionTypeInfo =
   | ApproveTransactionInfo
+  | FiatPurchaseTransactionInfo
   | ExactOutputSwapTransactionInfo
   | ExactInputSwapTransactionInfo
   | WrapTransactionInfo

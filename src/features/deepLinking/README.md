@@ -8,14 +8,14 @@ Currently, there are two screens that have deep link support: `transaction` and 
 
 Failing to include a valid `screen` or `userAddress` will result in the app opening up to the Home screen.
 
-### Transaction Screen
+### Activity Screen
 
-When routing to the transaction screen, including the `txHash` query parameter will open up a specific transaction's information in the app. Failing to include a `txHash` parameter will result in the transaction history screen opening.
+When routing to the activity screen, including the `fiatOnRamp` query parameter the app will open up to the activity screen and if an in-app browser is open it will close it.
 
 Example:
 
 ```
-https://uniswap.org/app?screen=transaction&userAddress=0x123...789$txHash=0xabc...123
+https://uniswap.org/app?screen=transaction&userAddress=0x123...789&fiatOnRamp=true
 ```
 
 ### Swap Screen

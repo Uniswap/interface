@@ -22,6 +22,8 @@ import WarningModal, {
 } from 'src/components/modals/WarningModal/WarningModal'
 import { Text } from 'src/components/Text'
 import { uniswapUrls } from 'src/constants/urls'
+import { useFiatOnRampEnabled } from 'src/features/experiments/hooks'
+import { FiatOnRampBanner } from 'src/features/fiatOnRamp/FiatOnRampBanner'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
@@ -30,11 +32,7 @@ import { useDrawerStatusLogging } from 'src/features/telemetry/hooks'
 import { Account, AccountType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
 import { createAccountActions } from 'src/features/wallet/createAccountSaga'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
-import {
-  useAccounts,
-  useActiveAccountAddress,
-  useNativeAccountExists,
-} from 'src/features/wallet/hooks'
+import { useAccounts, useActiveAccount, useNativeAccountExists } from 'src/features/wallet/hooks'
 import {
   PendingAccountActions,
   pendingAccountActions,
@@ -55,7 +53,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
-  const activeAccountAddress = useActiveAccountAddress()
+  const activeAccount = useActiveAccount()
   const addressToAccount = useAccounts()
   const dispatch = useAppDispatch()
   const hasImportedSeedPhrase = useNativeAccountExists()
@@ -87,6 +85,10 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
       mnemonicWallets: _mnemonicWallets,
     }
   }, [addressToAccount])
+
+  // hide fiat onramp banner when active account isn't a signer account.
+  const fiatOnRampShown =
+    useFiatOnRampEnabled() && activeAccount?.type === AccountType.SignerMnemonic
 
   const onPressEdit = useCallback((address: Address) => {
     setShowEditAccountModal(true)
@@ -136,8 +138,8 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
   }
 
   const onPressManageConnections = useCallback(() => {
-    navigation.navigate(Screens.SettingsWalletManageConnection, { address: activeAccountAddress })
-  }, [navigation, activeAccountAddress])
+    navigation.navigate(Screens.SettingsWalletManageConnection, { address: activeAccount?.address })
+  }, [navigation, activeAccount])
 
   const editAccountOptions = useMemo<MenuItemProp[]>(() => {
     const onPressWalletSettings = () => {
@@ -306,23 +308,23 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     [accountsData.length]
   )
 
-  if (!activeAccountAddress) {
+  if (!activeAccount?.address) {
     return null
   }
 
   return (
     <Screen bg="background0" edges={screenEdges}>
-      <Flex pb="md" pt="lg" px="lg">
+      <Flex pt="lg" px="lg">
         <AddressDisplay
           showCopy
-          address={activeAccountAddress}
+          address={activeAccount.address}
           captionVariant="subheadSmall"
           size={UNICON_SIZE}
           variant="subheadLarge"
         />
       </Flex>
 
-      <Separator mb="md" />
+      {fiatOnRampShown ? <FiatOnRampBanner mx="md" my="md" /> : <Separator my="md" />}
 
       <Flex gap="lg" pb="lg" px="md">
         <SettingsButton

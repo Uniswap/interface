@@ -9,6 +9,8 @@ export interface AppModalState<T> {
   initialState?: T
 }
 
+type FiatOnRampModalParams = { name: ModalName.FiatOnRamp; initialState?: undefined }
+
 type WalletConnectModalParams = {
   name: ModalName.WalletConnectScan
   initialState: ScannerModalState
@@ -20,19 +22,25 @@ type SendModalParams = { name: ModalName.Send; initialState?: TransactionState }
 type ExperimentsModalParams = { name: ModalName.Experiments; initialState?: undefined }
 
 type OpenModalParams =
+  | FiatOnRampModalParams
   | WalletConnectModalParams
   | SwapModalParams
   | SendModalParams
   | ExperimentsModalParams
 
 export interface ModalsState {
+  [ModalName.FiatOnRamp]: AppModalState<undefined>
   [ModalName.WalletConnectScan]: AppModalState<ScannerModalState>
   [ModalName.Swap]: AppModalState<TransactionState>
   [ModalName.Send]: AppModalState<TransactionState>
-  [ModalName.Experiments]: AppModalState<TransactionState>
+  [ModalName.Experiments]: AppModalState<undefined>
 }
 
 export const initialModalState: ModalsState = {
+  [ModalName.FiatOnRamp]: {
+    isOpen: false,
+    initialState: undefined,
+  },
   [ModalName.WalletConnectScan]: {
     isOpen: false,
     initialState: ScannerModalState.ScanQr,
@@ -69,7 +77,10 @@ const slice = createSlice({
   },
 })
 
-// TODO: combine both of these using a selector factory while preserving return types
+// TODO: combine all of these using a selector factory while preserving return types
+export const selectFiatOnRampModalState = (state: RootState): AppModalState<undefined> => {
+  return state.modals[ModalName.FiatOnRamp]
+}
 export const selectSwapModalState = (state: RootState): AppModalState<TransactionState> => {
   return state.modals[ModalName.Swap]
 }
@@ -79,7 +90,7 @@ export const selectSendModalState = (state: RootState): AppModalState<Transactio
 export const selectWCModalState = (state: RootState): AppModalState<ScannerModalState> => {
   return state.modals[ModalName.WalletConnectScan]
 }
-export const selectExperimentsState = (state: RootState): AppModalState<any> => {
+export const selectExperimentsState = (state: RootState): AppModalState<undefined> => {
   return state.modals[ModalName.Experiments]
 }
 export const selectModalsState = (state: RootState): ModalsState => {

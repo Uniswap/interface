@@ -96,6 +96,7 @@
     "expo-local-authentication": "12.1.0",
     "expo-screen-capture": "4.2.0",
     "expo-splash-screen": "0.13.5",
+    "expo-web-browser": "10.0.3",
     "formik": "2.2.9",
     "fuse.js": "6.5.3",
     "i18next": "21.1.1",

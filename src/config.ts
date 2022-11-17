@@ -8,6 +8,9 @@ import {
   DEBUG,
   INFURA_PROJECT_ID,
   LOG_BUFFER_SIZE,
+  MOONPAY_API_KEY,
+  MOONPAY_API_URL,
+  MOONPAY_WIDGET_API_URL,
   ONESIGNAL_APP_ID,
   SENTRY_DSN,
   UNISWAP_API_BASE_URL,
@@ -28,6 +31,9 @@ export interface Config {
   amplitudeApiUrl: string
   coingeckoApiUrl: string
   debug: boolean
+  moonpayApiKey: string
+  moonpayApiUrl: string
+  moonpayWidgetApiUrl: string
   uniswapApiBaseUrl: string
   uniswapApiKey: string
   uniswapAppUrl: string
@@ -47,6 +53,9 @@ const _config: Config = {
     process.env.AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY || AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY,
   coingeckoApiUrl: COINGECKO_API_URL,
   debug: parseBoolean(DEBUG),
+  moonpayApiKey: process.env.MOONPAY_API_KEY || MOONPAY_API_KEY,
+  moonpayApiUrl: process.env.MOONPAY_API_URL || MOONPAY_API_URL,
+  moonpayWidgetApiUrl: process.env.MOONPAY_WIDGET_API_URL || MOONPAY_WIDGET_API_URL,
   uniswapApiBaseUrl: process.env.UNISWAP_API_BASE_URL || UNISWAP_API_BASE_URL,
   uniswapApiKey: process.env.UNISWAP_API_KEY || UNISWAP_API_KEY,
   uniswapAppUrl: UNISWAP_APP_URL,

@@ -9,6 +9,7 @@ import { rootSaga } from 'src/app/rootSaga'
 import { walletContextValue } from 'src/app/walletContext'
 import { config } from 'src/config'
 import { ensApi } from 'src/features/ens/api'
+import { fiatOnRampApi } from 'src/features/fiatOnRamp/api'
 import { forceUpgradeApi } from 'src/features/forceUpgrade/forceUpgradeApi'
 import { gasApi } from 'src/features/gas/api'
 import { routingApi } from 'src/features/routing/routingApi'
@@ -86,6 +87,7 @@ export const store = configureStore({
       immutableCheck: false,
     }).concat(
       ensApi.middleware,
+      fiatOnRampApi.middleware,
       forceUpgradeApi.middleware,
       gasApi.middleware,
       routingApi.middleware,

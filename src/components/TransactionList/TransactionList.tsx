@@ -1,4 +1,5 @@
 import { NetworkStatus } from '@apollo/client'
+import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { TFunction } from 'i18next'
 import React, { ReactElement, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -8,13 +9,15 @@ import { Box } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
-import { EMPTY_ARRAY } from 'src/constants/misc'
+import { EMPTY_ARRAY, PollingInterval } from 'src/constants/misc'
 import { isNonPollingRequestInFlight } from 'src/data/utils'
 import {
   TransactionListQuery,
   useTransactionListQuery,
 } from 'src/data/__generated__/types-and-hooks'
 import { usePersistedError } from 'src/features/dataApi/utils'
+import { useFiatOnRampEnabled } from 'src/features/experiments/hooks'
+import { useFiatOnRampTransactionsQuery } from 'src/features/fiatOnRamp/api'
 import {
   formatTransactionsByDate,
   parseDataResponseToTransactionDetails,
@@ -22,7 +25,10 @@ import {
 import { useMergeLocalAndRemoteTransactions } from 'src/features/transactions/hooks'
 import TransactionSummaryRouter from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
 import { TransactionDetails } from 'src/features/transactions/types'
-import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
+import {
+  useActiveAccountAddressWithThrow,
+  useActiveAccountWithThrow,
+} from 'src/features/wallet/hooks'
 import { makeSelectAccountHideSpamTokens } from 'src/features/wallet/selectors'
 
 const PENDING_TITLE = (t: TFunction) => t('Pending')
@@ -52,6 +58,24 @@ interface TransactionListProps {
 export default function TransactionList(props: TransactionListProps) {
   const { t } = useTranslation()
 
+  const activeAccountAddress = useActiveAccountAddressWithThrow()
+
+  // given we maintain a list of externalTrsnactionIds locally, we cannot retrieve fiat onramp txs for
+  // non-signer accounts
+  const skipFiatOnRampTransactionQuery = !(
+    useFiatOnRampEnabled() && activeAccountAddress === props.ownerAddress
+  )
+
+  const { data: fiatOnRampTransactions, isLoading: fiatOnRampTransactionsLoading } =
+    useFiatOnRampTransactionsQuery(
+      skipFiatOnRampTransactionQuery ? skipToken : props.ownerAddress,
+      {
+        // conservative polling interval since fiat onramp tx history should not often update
+        // polling here is mostly in case users have a pending moonpay tx and keep the activity screen open
+        pollingInterval: PollingInterval.Slow,
+      }
+    )
+
   const {
     refetch,
     networkStatus,
@@ -62,7 +86,6 @@ export default function TransactionList(props: TransactionListProps) {
     variables: { address: props.ownerAddress },
     notifyOnNetworkStatusChange: true,
   })
-
   const onRetry = useCallback(() => {
     refetch({
       address: props.ownerAddress,
@@ -70,12 +93,13 @@ export default function TransactionList(props: TransactionListProps) {
   }, [props.ownerAddress, refetch])
 
   const hasData = !!data?.portfolios?.[0]?.assetActivities
-  const error = usePersistedError(requestLoading, requestError)
-  const isLoading = isNonPollingRequestInFlight(networkStatus)
+  const isLoading = isNonPollingRequestInFlight(networkStatus) || fiatOnRampTransactionsLoading
+  // this ignores fiat onramp errors
+  const isError = usePersistedError(requestLoading, requestError)
 
   // show loading if no data and fetching, or refetching when there is error (for UX when "retry" is clicked).
   const showLoading =
-    (!hasData && isLoading) || (Boolean(error) && networkStatus === NetworkStatus.refetch)
+    (!hasData && isLoading) || (Boolean(isError) && networkStatus === NetworkStatus.refetch)
 
   if (showLoading) {
     return (
@@ -85,7 +109,7 @@ export default function TransactionList(props: TransactionListProps) {
     )
   }
 
-  if (!hasData && error) {
+  if (!hasData && isError) {
     return (
       <Box height="100%" pb="xxxl">
         <BaseCard.ErrorState
@@ -97,16 +121,20 @@ export default function TransactionList(props: TransactionListProps) {
     )
   }
 
-  return <TransactionListInner {...props} data={data} />
+  return <TransactionListInner {...props} data={data} fiatOnRampData={fiatOnRampTransactions} />
 }
 
 /** Displays historical and pending transactions for a given address. */
 function TransactionListInner({
   data,
+  fiatOnRampData,
   ownerAddress,
   readonly,
   emptyStateContent,
-}: TransactionListProps & { data: TransactionListQuery | undefined }) {
+}: TransactionListProps & {
+  data?: TransactionListQuery
+  fiatOnRampData?: TransactionDetails[]
+}) {
   const { t } = useTranslation()
 
   // Hide all spam transactions if active wallet has enabled setting.
@@ -114,10 +142,17 @@ function TransactionListInner({
   const hideSpamTokens = useAppSelector(makeSelectAccountHideSpamTokens(activeAccount.address))
 
   // Parse remote txn data from query and merge with local txn data
-  const formattedTransactions = useMemo(
-    () => (data ? parseDataResponseToTransactionDetails(data, hideSpamTokens) : EMPTY_ARRAY),
-    [data, hideSpamTokens]
-  )
+  const formattedTransactions = useMemo(() => {
+    if (!data) return EMPTY_ARRAY
+
+    const parsedTxHistory = parseDataResponseToTransactionDetails(data, hideSpamTokens)
+
+    if (!fiatOnRampData) return parsedTxHistory
+
+    // treat fiat onramp txs the same as remote txs
+    return parsedTxHistory.concat(fiatOnRampData)
+  }, [data, fiatOnRampData, hideSpamTokens])
+
   const transactions = useMergeLocalAndRemoteTransactions(ownerAddress, formattedTransactions)
 
   // Format transactions for section list

@@ -5,16 +5,18 @@ import { TransferTokenModal } from 'src/app/modals/TransferTokenModal'
 import { ForceUpgradeModal } from 'src/components/forceUpgrade/ForceUpgradeModal'
 import { WalletConnectModals } from 'src/components/WalletConnect/WalletConnectModals'
 import { LockScreenModal } from 'src/features/authentication/LockScreenModal'
+import { FiatOnRampModal } from 'src/features/fiatOnRamp/FiatOnRampModal'
 
 export function AppModals() {
   return (
     <>
-      <ForceUpgradeModal />
-      <WalletConnectModals />
-      <SwapModal />
-      <LockScreenModal />
-      <TransferTokenModal />
       <ExperimentsModal />
+      <FiatOnRampModal />
+      <ForceUpgradeModal />
+      <LockScreenModal />
+      <SwapModal />
+      <TransferTokenModal />
+      <WalletConnectModals />
     </>
   )
 }

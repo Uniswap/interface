@@ -1,6 +1,7 @@
 import React from 'react'
 import { BaseButtonProps } from 'src/components/buttons/TouchableArea'
 import ApproveSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/ApproveSummaryItem'
+import FiatPurchaseSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/FiatPurchaseSummaryItem'
 import NFTApproveSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/NFTApproveSummaryItem'
 import NFTMintSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/NFTMintSummaryItem'
 import NFTTradeSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/NFTTradeSummaryItem'
@@ -14,6 +15,7 @@ import {
   ApproveTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
+  FiatPurchaseTransactionInfo,
   NFTApproveTransactionInfo,
   NFTMintTransactionInfo,
   NFTTradeTransactionInfo,
@@ -136,6 +138,16 @@ export default function TransactionSummaryRouter({
           }
           {...rest}
           showInlineWarning={showInlineWarning}
+        />
+      )
+    case TransactionType.FiatPurchase:
+      return (
+        <FiatPurchaseSummaryItem
+          showInlineWarning={showInlineWarning}
+          transaction={
+            transaction as TransactionDetails & { typeInfo: FiatPurchaseTransactionInfo }
+          }
+          {...rest}
         />
       )
     case TransactionType.Unknown:

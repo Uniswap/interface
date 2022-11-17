@@ -9,6 +9,7 @@ import { ensApi } from 'src/features/ens/api'
 import { experimentsReducer } from 'src/features/experiments/slice'
 import { searchHistoryReducer } from 'src/features/explore/searchHistorySlice'
 import { favoritesReducer } from 'src/features/favorites/slice'
+import { fiatOnRampApi } from 'src/features/fiatOnRamp/api'
 import { forceUpgradeApi } from 'src/features/forceUpgrade/forceUpgradeApi'
 import { gasApi } from 'src/features/gas/api'
 import { modalsReducer } from 'src/features/modals/modalSlice'
@@ -24,6 +25,7 @@ import { walletReducer } from 'src/features/wallet/walletSlice'
 import { walletConnectReducer } from 'src/features/walletConnect/walletConnectSlice'
 export const rootReducer = combineReducers({
   [ensApi.reducerPath]: ensApi.reducer,
+  [fiatOnRampApi.reducerPath]: fiatOnRampApi.reducer,
   [forceUpgradeApi.reducerPath]: forceUpgradeApi.reducer,
   [gasApi.reducerPath]: gasApi.reducer,
   [multicall.reducerPath]: multicall.reducer,
