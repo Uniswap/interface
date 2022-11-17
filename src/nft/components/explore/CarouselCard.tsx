@@ -14,6 +14,7 @@ const CarouselCardContainer = styled.div`
   background-color: ${({ theme }) => theme.backgroundSurface};
   border-radius: 20px;
   overflow: hidden;
+  height: 100%;
 `
 const CarouselCardBorder = styled.div`
   width: 100%;
