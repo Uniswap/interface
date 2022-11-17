@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import styled, { css } from 'styled-components/macro'
-import { GlowEffect } from 'theme/components/GlowEffect'
+import { glowEffect } from 'theme/components/GlowEffect'
 
-const HeaderContainer = styled(GlowEffect)`
+const HeaderContainer = styled.div`
+  ${glowEffect}
   margin-top: 28px;
-  border-radius: 16px;
 `
 
 const Header = styled.div<{ isOpen: boolean }>`
