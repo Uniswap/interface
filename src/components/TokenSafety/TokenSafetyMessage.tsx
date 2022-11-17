@@ -5,9 +5,8 @@ import { AlertOctagon, AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 import { ExternalLink } from 'theme'
-import { Color } from 'theme/styled'
 
-const Label = styled.div<{ color: Color }>`
+const Label = styled.div<{ color: string }>`
   width: 100%;
   padding: 12px 20px 16px;
   background-color: ${({ color }) => color + '1F'};

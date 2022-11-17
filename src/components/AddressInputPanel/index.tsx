@@ -4,6 +4,7 @@ import { t } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { ChangeEvent, ReactNode, useCallback } from 'react'
 import styled, { useTheme } from 'styled-components/macro'
+import { flexColumnNoWrap } from 'theme/styles'
 
 import useENS from '../../hooks/useENS'
 import { ExternalLink, ThemedText } from '../../theme'
@@ -12,7 +13,7 @@ import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
 
 const InputPanel = styled.div`
-  ${({ theme }) => theme.flexColumnNoWrap}
+  ${flexColumnNoWrap};
   position: relative;
   border-radius: 1.25rem;
   background-color: ${({ theme }) => theme.deprecated_bg1};

@@ -17,6 +17,7 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
 import { useConnectedWallets } from 'state/wallets/hooks'
 import styled from 'styled-components/macro'
+import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import { isMobile } from 'utils/userAgent'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
@@ -48,7 +49,7 @@ const CloseColor = styled(Close)`
 `
 
 const Wrapper = styled.div`
-  ${({ theme }) => theme.flexColumnNoWrap}
+  ${flexColumnNoWrap};
   background-color: ${({ theme }) => theme.backgroundSurface};
   outline: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
   box-shadow: ${({ theme }) => theme.deepShadow};
@@ -58,7 +59,7 @@ const Wrapper = styled.div`
 `
 
 const HeaderRow = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap};
+  ${flexRowNoWrap};
   padding: 1rem 1rem;
   font-weight: 600;
   size: 16px;

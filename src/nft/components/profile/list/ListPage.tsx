@@ -1,5 +1,4 @@
 import clsx from 'clsx'
-import ms from 'ms.macro'
 import { ListingButton } from 'nft/components/bag/profile/ListingButton'
 import { getListingState } from 'nft/components/bag/profile/utils'
 import { Box } from 'nft/components/Box'
@@ -28,11 +27,11 @@ import {
 import { formatEth, formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { ListingMarkets } from 'nft/utils/listNfts'
-import { pluralize } from 'nft/utils/roundAndPluralize'
 import { Dispatch, FormEvent, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
 
 import * as styles from './ListPage.css'
+import { SetDurationModal } from './SetDurationModal'
 
 const MarkplaceWrap = styled.div`
   align-self: flex-start;
@@ -103,196 +102,6 @@ const GlobalMarketplaceButton = ({ market, setSelectedMarkets, selectedMarkets }
       <Box className={buttonTextMedium}>{market.name}</Box>
       <Box color="textSecondary" className={caption} marginRight="12">
         {market.fee}% fee
-      </Box>
-    </Row>
-  )
-}
-
-enum Duration {
-  hour = 'hour',
-  day = 'day',
-  week = 'week',
-  month = 'month',
-}
-
-const SetDurationModal = () => {
-  const [duration, setDuration] = useState(Duration.day)
-  const [displayDuration, setDisplayDuration] = useState(Duration.day)
-  const [amount, setAmount] = useState(7)
-  const setGlobalExpiration = useSellAsset((state) => state.setGlobalExpiration)
-  const setCustomExpiration = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAmount(parseFloat(event.target.value))
-    setDuration(displayDuration)
-  }
-  const selectDuration = (duration: Duration) => {
-    setDuration(duration)
-    setDisplayDuration(duration)
-  }
-  const durationOptions: DropDownOption[] = useMemo(
-    () => [
-      {
-        displayText: 'Hours',
-        onClick: () => selectDuration(Duration.hour),
-      },
-      {
-        displayText: 'Days',
-        onClick: () => selectDuration(Duration.day),
-      },
-      {
-        displayText: 'Weeks',
-        onClick: () => selectDuration(Duration.week),
-      },
-      {
-        displayText: 'Months',
-        onClick: () => selectDuration(Duration.month),
-      },
-    ],
-    []
-  )
-
-  useEffect(() => {
-    setGlobalExpiration(convertDurationToExpiration(amount, duration))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [duration, amount])
-  return (
-    <Column marginLeft={{ sm: '0', lg: 'auto' }} marginRight="auto" alignSelf="flex-start">
-      <Row className={headlineSmall}>Set duration</Row>
-      <Row className={caption} color="textSecondary" marginTop="4">
-        Select the amount of time your listings are available for purchase. Max 6 months.
-      </Row>
-      <Row marginTop="14" gap="6" flexWrap="wrap">
-        <GlobalDurationButton
-          amount={1}
-          duration={Duration.hour}
-          globalAmount={amount}
-          globalDuration={duration}
-          setGlobalAmount={setAmount}
-          setGlobalDuration={setDuration}
-        />
-        <GlobalDurationButton
-          amount={7}
-          duration={Duration.day}
-          globalAmount={amount}
-          globalDuration={duration}
-          setGlobalAmount={setAmount}
-          setGlobalDuration={setDuration}
-        />
-        <GlobalDurationButton
-          amount={6}
-          duration={Duration.month}
-          globalAmount={amount}
-          globalDuration={duration}
-          setGlobalAmount={setAmount}
-          setGlobalDuration={setDuration}
-        />
-        <Row
-          color="backgroundOutline"
-          paddingRight="8"
-          paddingLeft="12"
-          paddingTop="12"
-          paddingBottom="12"
-          borderRadius="8"
-          borderWidth="1px"
-          borderStyle="solid"
-          borderColor="backgroundOutline"
-          position="relative"
-          height="44"
-        >
-          <Box
-            as="input"
-            borderStyle="none"
-            className={bodySmall}
-            color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
-            placeholder="Set"
-            width="32"
-            marginRight="4"
-            backgroundColor="none"
-            onChange={setCustomExpiration}
-            flexShrink="0"
-          />
-          <Box
-            cursor="pointer"
-            display="flex"
-            justifyContent="flex-end"
-            className={buttonTextMedium}
-            color="textPrimary"
-            marginTop="24"
-            style={{ width: '80px' }}
-          >
-            <SortDropdown
-              dropDownOptions={durationOptions}
-              mini
-              miniPrompt={displayDuration + (displayDuration === duration ? pluralize(amount) : 's')}
-              left={38}
-            />
-          </Box>
-        </Row>
-      </Row>
-    </Column>
-  )
-}
-
-const convertDurationToExpiration = (amount: number, duration: Duration) => {
-  const durationFactor =
-    duration === Duration.hour ? 1 : duration === Duration.day ? 24 : duration === Duration.week ? 24 * 7 : 24 * 30
-  return Math.round((Date.now() + ms`1 hour` * durationFactor * amount) / 1000)
-}
-
-interface GlobalDurationButtonProps {
-  amount: number
-  duration: Duration
-  globalAmount: number
-  globalDuration: Duration
-  setGlobalAmount: Dispatch<number>
-  setGlobalDuration: Dispatch<Duration>
-}
-
-const GlobalDurationButton = ({
-  amount,
-  duration,
-  globalAmount,
-  globalDuration,
-  setGlobalAmount,
-  setGlobalDuration,
-}: GlobalDurationButtonProps) => {
-  const [isSelected, setIsSelected] = useState(false)
-  const setGlobalExpiration = useSellAsset((state) => state.setGlobalExpiration)
-  const toggleSelected = () => {
-    if (isSelected) {
-      setGlobalExpiration(0)
-    }
-    setIsSelected(!isSelected)
-  }
-  useEffect(() => {
-    if (globalAmount === amount && globalDuration === duration) {
-      setIsSelected(true)
-    } else {
-      setIsSelected(false)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [globalAmount, globalDuration])
-  useEffect(() => {
-    if (isSelected) {
-      setGlobalAmount(amount)
-      setGlobalDuration(duration)
-      setGlobalExpiration(convertDurationToExpiration(amount, duration))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSelected])
-  return (
-    <Row
-      borderRadius="12"
-      backgroundColor="backgroundOutline"
-      height="44"
-      className={clsx(isSelected && styles.buttonSelected)}
-      onClick={toggleSelected}
-      width="max"
-      padding="14"
-      cursor="pointer"
-    >
-      <Box className={buttonTextMedium}>
-        {amount} {duration}
-        {pluralize(amount)}
       </Box>
     </Row>
   )
