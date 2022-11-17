@@ -53,7 +53,6 @@ export const SortDropdown = ({
   return (
     <Box
       ref={ref}
-      transition="250"
       borderRadius="12"
       borderBottomLeftRadius={isOpen ? '0' : undefined}
       borderBottomRightRadius={isOpen ? '0' : undefined}
@@ -137,7 +136,7 @@ export const SortDropdown = ({
         right={inFilters ? '16' : 'auto'}
         paddingBottom="8"
         fontSize="14"
-        background="backgroundInteractive"
+        background="backgroundModule"
         borderStyle="solid"
         borderColor="backgroundOutline"
         borderWidth="1px"

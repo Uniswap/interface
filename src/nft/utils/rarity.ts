@@ -1,6 +1,5 @@
 // change this if we change the fallback provider
 export const fallbackProvider = 'PopRank'
-export const shouldLinkToFallbackProvider = false
 export const fallbackProviderLogo = '/nft/logos/poprank.png'
 
 /**

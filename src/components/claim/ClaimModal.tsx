@@ -180,18 +180,18 @@ export default function ClaimModal() {
           </RowBetween>
           <ConfirmedIcon>
             {!claimConfirmed ? (
-              <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
+              <CustomLightSpinner src={Circle} alt="loader" size="90px" />
             ) : (
               <UniTokenAnimated width="72px" src={tokenLogo} alt="UNI" />
             )}
           </ConfirmedIcon>
-          <AutoColumn gap="100px" justify={'center'}>
-            <AutoColumn gap="12px" justify={'center'}>
+          <AutoColumn gap="100px" justify="center">
+            <AutoColumn gap="12px" justify="center">
               <ThemedText.DeprecatedLargeHeader fontWeight={600} color="black">
                 {claimConfirmed ? <Trans>Claimed!</Trans> : <Trans>Claiming</Trans>}
               </ThemedText.DeprecatedLargeHeader>
               {!claimConfirmed && (
-                <Text fontSize={36} color={'#ff007a'} fontWeight={800}>
+                <Text fontSize={36} color="#ff007a" fontWeight={800}>
                   <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
                 </Text>
               )}

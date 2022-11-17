@@ -178,7 +178,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
             showMaxButton={!atMaxAmount}
             currency={stakingInfo.stakedAmount.currency}
             pair={dummyPair}
-            label={''}
+            label=""
             renderBalance={(amount) => <Trans>Available to deposit: {formatCurrencyAmount(amount, 4)}</Trans>}
             id="stake-liquidity-token"
           />
@@ -222,7 +222,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
       )}
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOnDismiss}>
-          <AutoColumn gap="12px" justify={'center'}>
+          <AutoColumn gap="12px" justify="center">
             <ThemedText.DeprecatedLargeHeader>
               <Trans>Depositing Liquidity</Trans>
             </ThemedText.DeprecatedLargeHeader>
@@ -234,7 +234,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
       )}
       {attempting && hash && (
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
-          <AutoColumn gap="12px" justify={'center'}>
+          <AutoColumn gap="12px" justify="center">
             <ThemedText.DeprecatedLargeHeader>
               <Trans>Transaction Submitted</Trans>
             </ThemedText.DeprecatedLargeHeader>

@@ -2638,10 +2638,10 @@
     "@babel/runtime" "^7.11.2"
     "@lingui/core" "^3.14.0"
 
-"@looksrare/sdk@^0.7.1":
-  version "0.7.4"
-  resolved "https://registry.yarnpkg.com/@looksrare/sdk/-/sdk-0.7.4.tgz#f7b3d5d5a0d94bc5b12e8a29d380cb923f72ce9c"
-  integrity sha512-zmn0dM0Twe01CGriCNeAY2DV6K8xGZ2VcfSbDYjxbRvL74M0Ec0wgtqTt/6F6m7OwetcYzljhovF4TuZcvvhwA==
+"@looksrare/sdk@^0.10.2":
+  version "0.10.2"
+  resolved "https://registry.yarnpkg.com/@looksrare/sdk/-/sdk-0.10.2.tgz#08b14cb6d3a5499ad0417c817dbb2da924477f4f"
+  integrity sha512-K3VVq7rpS0hD5IwfhAcAPJZO5IjL0VbL89Zl04x8WnLsFOwXHzsUkxUpRrL8ko2/bgZdgTqWgUWCvbSoVr8hzw==
 
 "@metamask/detect-provider@^1.2.0":
   version "1.2.0"
@@ -4127,14 +4127,19 @@
   resolved "https://registry.yarnpkg.com/@uniswap/analytics-events/-/analytics-events-1.1.0.tgz#459236d86f864039c3931d21ba80f41575d2ce4e"
   integrity sha512-ZJ99dLhJ4q2c0g0PoMxDPbeC010DrdIBLf7jnUsTf/hYm2LfHryr31Sv204xNO7rWVWHi1dk6jdab8DdBnHgPA==
 
-"@uniswap/analytics@1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@uniswap/analytics/-/analytics-1.0.3.tgz#bb22cec8f722acd6b0937045f75c6e108e61016f"
-  integrity sha512-1DmKkGh5VlOQM8JXrCvvxkDn7KaDn/9aMrgVb9qOAXgBQ1QhsCkUeadsM2agDeJXQcY2JrOPbS04w/60vqHcXw==
+"@uniswap/analytics@1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/analytics/-/analytics-1.1.1.tgz#af9741054f2df61fb595cb3761762bb0a24f8a86"
+  integrity sha512-pRoagKfji+Xwh4YuS1ns0mfBfXwUWJlf7H+D3vzIMspTNdJVPG44G8hGM0JN4f9H9+JerFyC+4dXrmLL6rnh+w==
   dependencies:
     "@amplitude/analytics-browser" "^1.5.8"
     react "^18.2.0"
     react-dom "^18.2.0"
+
+"@uniswap/conedison@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/conedison/-/conedison-1.1.0.tgz#462a1e7dcfc70a653e765c145655faa207fd53f7"
+  integrity sha512-mHnYkvy+xKfWDzWsqzgWKFl/V8C/KmSrj/2PCgT1R2ASxPzMCU/wzTW29HtIxf1cJ+A6sPwH2HqDZsbnNhKqNQ==
 
 "@uniswap/default-token-list@^2.0.0":
   version "2.2.0"
@@ -4168,10 +4173,10 @@
   resolved "https://registry.npmjs.org/@uniswap/merkle-distributor/-/merkle-distributor-1.0.1.tgz"
   integrity sha512-5gDiTI5hrXIh5UWTrxKYjw30QQDnpl8ckDSpefldNenDlYO1RKkdUYMYpvrqGi2r7YzLYTlO6+TDlNs6O7hDRw==
 
-"@uniswap/redux-multicall@^1.1.1", "@uniswap/redux-multicall@^1.1.6":
-  version "1.1.6"
-  resolved "https://registry.yarnpkg.com/@uniswap/redux-multicall/-/redux-multicall-1.1.6.tgz#27e52d97e359b6de06410fbc6d0699b9e6422707"
-  integrity sha512-B7kR63dtIJzr9iGITsNYAh8ktDfKEi9Ilsfq0oKxSzAChZmkq9Ss/EZ6/VKSvq1m4rPe+b9CPxZIBdRzpmf2/w==
+"@uniswap/redux-multicall@^1.1.1", "@uniswap/redux-multicall@^1.1.8":
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/@uniswap/redux-multicall/-/redux-multicall-1.1.8.tgz#9cc5090305b10df68fb6162eb1ba7c2c762f5e7f"
+  integrity sha512-LttOBVJuoRNC6N4MHsb5dF2GszLsj1ddPKKccEw1XOX17bGrFdm2A6GwKgES+v+Hj3lluDbQL6atcQtymP21iw==
 
 "@uniswap/router-sdk@^1.3.0":
   version "1.3.0"

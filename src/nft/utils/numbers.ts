@@ -6,13 +6,6 @@ export const isNumber = (s: string): boolean => {
   return reg.test(s) && !isNaN(parseFloat(s)) && isFinite(parseFloat(s))
 }
 
-export const formatPercentage = (percentage: string): string => {
-  if (!percentage) return '-'
-  return `${parseFloat(percentage)
-    .toFixed(2)
-    .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}%`
-}
-
 export const floorFormatter = (n: number): string => {
   if (n === 0) return '0.00'
   if (!n) return ''

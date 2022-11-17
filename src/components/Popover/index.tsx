@@ -8,6 +8,7 @@ import { Z_INDEX } from 'theme/zIndex'
 
 const PopoverContainer = styled.div<{ show: boolean }>`
   z-index: ${Z_INDEX.popover};
+  pointer-events: none;
   visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
   opacity: ${(props) => (props.show ? 1 : 0)};
   transition: visibility 150ms linear, opacity 150ms linear;
@@ -74,10 +75,12 @@ const Arrow = styled.div`
 export interface PopoverProps {
   content: React.ReactNode
   show: boolean
-  children: React.ReactNode
+  children?: React.ReactNode
   placement?: Placement
   offsetX?: number
   offsetY?: number
+  hideArrow?: boolean
+  showInline?: boolean
   style?: CSSProperties
 }
 
@@ -88,6 +91,8 @@ export default function Popover({
   placement = 'auto',
   offsetX = 8,
   offsetY = 8,
+  hideArrow = false,
+  showInline = false,
   style,
 }: PopoverProps) {
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null)
@@ -114,7 +119,9 @@ export default function Popover({
   }, [update])
   useInterval(updateCallback, show ? 100 : null)
 
-  return (
+  return showInline ? (
+    <PopoverContainer show={show}>{content}</PopoverContainer>
+  ) : (
     <>
       <ReferenceElement style={style} ref={setReferenceElement as any}>
         {children}
@@ -122,12 +129,14 @@ export default function Popover({
       <Portal>
         <PopoverContainer show={show} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
           {content}
-          <Arrow
-            className={`arrow-${attributes.popper?.['data-popper-placement'] ?? ''}`}
-            ref={setArrowElement as any}
-            style={styles.arrow}
-            {...attributes.arrow}
-          />
+          {!hideArrow && (
+            <Arrow
+              className={`arrow-${attributes.popper?.['data-popper-placement'] ?? ''}`}
+              ref={setArrowElement as any}
+              style={styles.arrow}
+              {...attributes.arrow}
+            />
+          )}
         </PopoverContainer>
       </Portal>
     </>

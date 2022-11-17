@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css'
 
-import { sprinkles, themeVars, vars } from './sprinkles.css'
+import { sprinkles, vars } from './sprinkles.css'
 
 export const center = sprinkles({
   display: 'flex',
@@ -21,9 +21,9 @@ export const column = sprinkles({
 })
 
 // TYPOGRAPHY
-export const headlineLarge = sprinkles({ fontWeight: 'medium', fontSize: '36', lineHeight: '44' })
-export const headlineMedium = sprinkles({ fontWeight: 'medium', fontSize: '28', lineHeight: '36' })
-export const headlineSmall = sprinkles({ fontWeight: 'medium', fontSize: '20', lineHeight: '28' })
+export const headlineLarge = sprinkles({ fontWeight: 'semibold', fontSize: '36', lineHeight: '44' })
+export const headlineMedium = sprinkles({ fontWeight: 'semibold', fontSize: '28', lineHeight: '36' })
+export const headlineSmall = sprinkles({ fontWeight: 'semibold', fontSize: '20', lineHeight: '28' })
 
 export const subhead = sprinkles({ fontWeight: 'medium', fontSize: '16', lineHeight: '24' })
 export const subheadSmall = sprinkles({ fontWeight: 'medium', fontSize: '14', lineHeight: '14' })
@@ -33,7 +33,6 @@ export const bodySmall = sprinkles({ fontWeight: 'normal', fontSize: '14', lineH
 export const caption = sprinkles({ fontWeight: 'normal', fontSize: '12', lineHeight: '16' })
 export const badge = sprinkles({ fontWeight: 'semibold', fontSize: '10', lineHeight: '12' })
 
-export const buttonTextLarge = sprinkles({ fontWeight: 'semibold', fontSize: '20', lineHeight: '24' })
 export const buttonTextMedium = sprinkles({ fontWeight: 'semibold', fontSize: '16', lineHeight: '20' })
 export const buttonTextSmall = sprinkles({ fontWeight: 'semibold', fontSize: '14', lineHeight: '16' })
 
@@ -68,28 +67,6 @@ export const buttonMedium = style([
   },
 ])
 
-export const buttonSmall = style([
-  buttonTextSmall,
-  commonButtonStyles,
-  sprinkles({
-    background: 'backgroundSurface',
-    color: 'genieBlue',
-  }),
-  {
-    padding: '2px 8px',
-    ':disabled': {
-      color: themeVars.colors.backgroundSurface,
-      backgroundColor: themeVars.colors.backgroundOutline,
-    },
-  },
-])
-
-export const buttonReset = sprinkles({
-  border: 'none',
-  background: 'none',
-  cursor: 'pointer',
-})
-
 export const disabled = style([
   {
     padding: '19px 17px',
@@ -106,10 +83,6 @@ export const disabled = style([
     fontSize: '16',
   }),
 ])
-
-export const imageHover = style({
-  transform: 'scale(1.25)',
-})
 
 export const magicalGradient = style({
   selectors: {

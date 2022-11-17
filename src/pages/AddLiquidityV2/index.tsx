@@ -249,7 +249,7 @@ export default function AddLiquidity() {
             {currencies[Field.CURRENCY_A]?.symbol + '/' + currencies[Field.CURRENCY_B]?.symbol + ' Pool Tokens'}
           </Text>
         </Row>
-        <ThemedText.DeprecatedItalic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
+        <ThemedText.DeprecatedItalic fontSize={12} textAlign="left" padding="8px 0 0 0 ">
           <Trans>
             Output is estimated. If the price changes by more than {allowedSlippage.toSignificant(4)}% your transaction
             will revert.
@@ -347,13 +347,13 @@ export default function AddLiquidity() {
                 <ColumnCenter>
                   <BlueCard>
                     <AutoColumn gap="10px">
-                      <ThemedText.DeprecatedLink fontWeight={600} color={'deprecated_primaryText1'}>
+                      <ThemedText.DeprecatedLink fontWeight={600} color="deprecated_primaryText1">
                         <Trans>You are the first liquidity provider.</Trans>
                       </ThemedText.DeprecatedLink>
-                      <ThemedText.DeprecatedLink fontWeight={400} color={'deprecated_primaryText1'}>
+                      <ThemedText.DeprecatedLink fontWeight={400} color="deprecated_primaryText1">
                         <Trans>The ratio of tokens you add will set the price of this pool.</Trans>
                       </ThemedText.DeprecatedLink>
-                      <ThemedText.DeprecatedLink fontWeight={400} color={'deprecated_primaryText1'}>
+                      <ThemedText.DeprecatedLink fontWeight={400} color="deprecated_primaryText1">
                         <Trans>Once you are happy with the rate click supply to review.</Trans>
                       </ThemedText.DeprecatedLink>
                     </AutoColumn>
@@ -363,7 +363,7 @@ export default function AddLiquidity() {
                 <ColumnCenter>
                   <BlueCard>
                     <AutoColumn gap="10px">
-                      <ThemedText.DeprecatedLink fontWeight={400} color={'deprecated_primaryText1'}>
+                      <ThemedText.DeprecatedLink fontWeight={400} color="deprecated_primaryText1">
                         <Trans>
                           <b>
                             <Trans>Tip:</Trans>
@@ -406,7 +406,7 @@ export default function AddLiquidity() {
             />
             {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
               <>
-                <LightCard padding="0px" $borderRadius={'20px'}>
+                <LightCard padding="0px" $borderRadius="20px">
                   <RowBetween padding="1rem">
                     <ThemedText.DeprecatedSubHeader fontWeight={500} fontSize={14}>
                       {noLiquidity ? (
@@ -416,7 +416,7 @@ export default function AddLiquidity() {
                       )}
                     </ThemedText.DeprecatedSubHeader>
                   </RowBetween>{' '}
-                  <LightCard padding="1rem" $borderRadius={'20px'}>
+                  <LightCard padding="1rem" $borderRadius="20px">
                     <PoolPriceBar
                       currencies={currencies}
                       poolTokenPercentage={poolTokenPercentage}
@@ -446,7 +446,7 @@ export default function AddLiquidity() {
                 </ButtonLight>
               </TraceEvent>
             ) : (
-              <AutoColumn gap={'md'}>
+              <AutoColumn gap="md">
                 {(approvalA === ApprovalState.NOT_APPROVED ||
                   approvalA === ApprovalState.PENDING ||
                   approvalB === ApprovalState.NOT_APPROVED ||
