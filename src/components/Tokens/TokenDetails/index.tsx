@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
-import { Currency, NativeCurrency, Token } from '@uniswap/sdk-core'
-import CurrencyLogo from 'components/CurrencyLogo'
+import { Currency, Token } from '@uniswap/sdk-core'
+import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
 import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
 import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
@@ -24,17 +24,14 @@ import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import Widget from 'components/Widget'
 import { getChainInfo } from 'constants/chainInfo'
-import { SupportedChainId } from 'constants/chains'
 import { DEFAULT_ERC20_DECIMALS, NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { TokenPriceQuery } from 'graphql/data/__generated__/TokenPriceQuery.graphql'
 import { Chain, TokenQuery } from 'graphql/data/Token'
-import { QueryToken, tokenQuery, TokenQueryData } from 'graphql/data/Token'
-import { TopToken } from 'graphql/data/TopTokens'
+import { QueryToken, tokenQuery } from 'graphql/data/Token'
 import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
 import { useIsUserAddedTokenOnChain } from 'hooks/Tokens'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
-import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import { useCallback, useMemo, useState, useTransition } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
@@ -52,15 +49,6 @@ const TokenActions = styled.div`
   gap: 16px;
   color: ${({ theme }) => theme.textSecondary};
 `
-
-export function useTokenLogoURI(token?: TokenQueryData | TopToken, nativeCurrency?: Token | NativeCurrency) {
-  const chainId = token ? CHAIN_NAME_TO_CHAIN_ID[token.chain] : SupportedChainId.MAINNET
-  return [
-    ...useCurrencyLogoURIs(nativeCurrency),
-    ...useCurrencyLogoURIs({ ...token, chainId }),
-    token?.project?.logoUrl,
-  ][0]
-}
 
 type TokenDetailsProps = {
   tokenAddress: string | undefined
@@ -85,12 +73,12 @@ export default function TokenDetails({
   const isNative = tokenAddress === NATIVE_CHAIN_ID
 
   const tokenQueryData = usePreloadedQuery(tokenQuery, tokenQueryReference).tokens?.[0]
+
   const token = useMemo(() => {
     if (isNative) return nativeCurrency
     if (tokenQueryData) return new QueryToken(tokenQueryData)
     return new Token(pageChainId, tokenAddress, DEFAULT_ERC20_DECIMALS)
   }, [isNative, nativeCurrency, pageChainId, tokenAddress, tokenQueryData])
-
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
   const isBlockedToken = tokenWarning?.canProceed === false
 
@@ -133,7 +121,6 @@ export default function TokenDetails({
     [continueSwap, setContinueSwap]
   )
 
-  const logoSrc = useTokenLogoURI(tokenQueryData, isNative ? nativeCurrency : undefined)
   const L2Icon = getChainInfo(pageChainId)?.circleLogoUrl
 
   return (
@@ -147,12 +134,7 @@ export default function TokenDetails({
             <TokenInfoContainer>
               <TokenNameCell>
                 <LogoContainer>
-                  <CurrencyLogo
-                    src={logoSrc}
-                    size="32px"
-                    symbol={isNative ? nativeCurrency?.symbol : token?.symbol}
-                    currency={isNative ? nativeCurrency : token}
-                  />
+                  <CurrencyLogo currency={token} size="32px" />
                   <L2NetworkLogo networkUrl={L2Icon} size="16px" />
                 </LogoContainer>
                 {token?.name ?? <Trans>Name not found</Trans>}
@@ -160,7 +142,7 @@ export default function TokenDetails({
               </TokenNameCell>
               <TokenActions>
                 {tokenQueryData?.name && tokenQueryData.symbol && tokenQueryData.address && (
-                  <ShareButton token={tokenQueryData} isNative={!!nativeCurrency} />
+                  <ShareButton currency={token} />
                 )}
               </TokenActions>
             </TokenInfoContainer>

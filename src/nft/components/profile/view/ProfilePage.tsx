@@ -34,8 +34,6 @@ const ProfilePageColumn = styled(Column)`
 `
 
 const ProfileHeader = styled.div`
-  margin-right: 20px;
-  margin-left: 20px;
   font-size: 28px;
   font-weight: 500;
   line-height: 38px;
@@ -102,7 +100,7 @@ export const ProfilePage = () => {
       ) : (
         <>
           <ProfileHeader>My NFTs</ProfileHeader>
-          <Row alignItems="flex-start" position="relative" paddingX="20">
+          <Row alignItems="flex-start" position="relative">
             <FilterSidebar />
 
             {(!isMobile || !isFiltersExpanded) && (
@@ -121,7 +119,6 @@ export const ProfilePage = () => {
                     <FilterButton
                       isMobile={isMobile}
                       isFiltersExpanded={isFiltersExpanded}
-                      collectionCount={ownerAssets?.length}
                       onClick={() => setFiltersExpanded(!isFiltersExpanded)}
                     />
                   </Row>

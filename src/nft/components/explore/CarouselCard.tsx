@@ -13,15 +13,43 @@ const CarouselCardContainer = styled.div`
   flex-direction: column;
   gap: 20px;
   background-color: ${({ theme }) => theme.backgroundSurface};
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 20px;
-  outline: 1px solid ${({ theme }) => theme.backgroundOutline};
-  width: 100%;
-  cursor: pointer;
   overflow: hidden;
+  height: 100%;
+`
+const CarouselCardBorder = styled.div`
+  width: 100%;
+  position: relative;
+  border-radius: 22px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition-property: border-color;
+  transition-duration: ${({ theme }) => theme.transition.duration.fast};
+  transition-timing: ${({ theme }) => theme.transition.timing.inOut};
 
   :hover {
-    outline: 3px solid ${({ theme }) => theme.backgroundOutline};
+    border: 2px solid ${({ theme }) => theme.backgroundOutline};
+  }
+
+  ::after {
+    content: '';
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 22px;
+    z-index: -1;
     box-shadow: ${({ theme }) => theme.deepShadow};
+    transition-property: opacity;
+    transition-duration: ${({ theme }) => theme.transition.duration.fast};
+    transition-timing: ${({ theme }) => theme.transition.timing.inOut};
+  }
+
+  :hover::after {
+    opacity: 1;
   }
 `
 
@@ -198,32 +226,34 @@ export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
   const gqlCollection = useCollectionQuery(collection.address)
 
   return (
-    <CarouselCardContainer onClick={onClick}>
-      <CarouselCardHeader collection={collection} />
-      <CardBottomContainer>
-        <>
-          <HeaderRow>Uniswap</HeaderRow>
-          <HeaderRow>{formatWeiToDecimal(collection.floor.toString())} ETH Floor</HeaderRow>
-          <HeaderRow>{gqlCollection.marketplaceCount?.reduce((acc, cur) => acc + cur.count, 0)} Listings</HeaderRow>
-          {MARKETS_TO_CHECK.map((market) => {
-            const marketplace = gqlCollection.marketplaceCount?.find(
-              (marketplace) => marketplace.marketplace === market
-            )
-            if (!marketplace) {
-              return null
-            }
-            return (
-              <MarketplaceRow
-                key={`CarouselCard-key-${collection.address}-${marketplace.marketplace}`}
-                marketplace={MARKETS_ENUM_TO_NAME[market]}
-                listings={marketplace.count}
-                floorInEth={marketplace.floorPrice}
-              />
-            )
-          })}
-        </>
-      </CardBottomContainer>
-    </CarouselCardContainer>
+    <CarouselCardBorder>
+      <CarouselCardContainer onClick={onClick}>
+        <CarouselCardHeader collection={collection} />
+        <CardBottomContainer>
+          <>
+            <HeaderRow>Uniswap</HeaderRow>
+            <HeaderRow>{formatWeiToDecimal(collection.floor.toString())} ETH Floor</HeaderRow>
+            <HeaderRow>{gqlCollection.marketplaceCount?.reduce((acc, cur) => acc + cur.count, 0)} Listings</HeaderRow>
+            {MARKETS_TO_CHECK.map((market) => {
+              const marketplace = gqlCollection.marketplaceCount?.find(
+                (marketplace) => marketplace.marketplace === market
+              )
+              if (!marketplace) {
+                return null
+              }
+              return (
+                <MarketplaceRow
+                  key={`CarouselCard-key-${collection.address}-${marketplace.marketplace}`}
+                  marketplace={MARKETS_ENUM_TO_NAME[market]}
+                  listings={marketplace.count}
+                  floorInEth={marketplace.floorPrice}
+                />
+              )
+            })}
+          </>
+        </CardBottomContainer>
+      </CarouselCardContainer>
+    </CarouselCardBorder>
   )
 }
 
@@ -265,21 +295,23 @@ const CarouselCardHeader = ({ collection }: { collection: TrendingCollection }) 
 
 export const LoadingCarouselCard = ({ collection }: { collection?: TrendingCollection }) => {
   return (
-    <CarouselCardContainer>
-      {collection ? (
-        <CarouselCardHeader collection={collection} />
-      ) : (
-        <LoadingCardHeaderContainer>
-          <CardHeaderRow>
-            <LoadingCollectionImage />
-            <LoadingCollectionNameContainer />
-          </CardHeaderRow>
-          <HeaderOverlay />
-        </LoadingCardHeaderContainer>
-      )}
-      <CardBottomContainer>
-        <LoadingTable />
-      </CardBottomContainer>
-    </CarouselCardContainer>
+    <CarouselCardBorder>
+      <CarouselCardContainer>
+        {collection ? (
+          <CarouselCardHeader collection={collection} />
+        ) : (
+          <LoadingCardHeaderContainer>
+            <CardHeaderRow>
+              <LoadingCollectionImage />
+              <LoadingCollectionNameContainer />
+            </CardHeaderRow>
+            <HeaderOverlay />
+          </LoadingCardHeaderContainer>
+        )}
+        <CardBottomContainer>
+          <LoadingTable />
+        </CardBottomContainer>
+      </CarouselCardContainer>
+    </CarouselCardBorder>
   )
 }
