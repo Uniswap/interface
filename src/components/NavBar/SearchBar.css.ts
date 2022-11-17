@@ -7,23 +7,25 @@ const DESKTOP_NAVBAR_WIDTH = 360
 const DESKTOP_NAVBAR_WIDTH_L = 440
 const DESKTOP_NAVBAR_WIDTH_XL = 540
 const DESKTOP_NAVBAR_WIDTH_XXL = 640
-const MAGNIFYING_GLASS_ICON_WIDTH = 28
+const MAGNIFYING_GLASS_ICON_WIDTH = 0
 
 const baseSearchStyle = style([
   sprinkles({
     paddingY: '12',
     width: { sm: 'viewWidth' },
     borderStyle: 'solid',
-    borderWidth: '1px',
+    borderWidth: '2px',
     borderColor: 'backgroundOutline',
   }),
   {
     '@media': {
-      [`screen and (min-width: ${breakpoints.lg}px)`]: {
+      [`screen and (min-width: ${breakpoints.sm}px)`]: {
         width: `${DESKTOP_NAVBAR_WIDTH}px`,
       },
-
-      [`screen and (min-width: 1260px) and (max-width: 1380px)`]: {
+      [`screen and (min-width: 1024px) and (max-width: 1080px)`]: {
+        width: `${330}px`,
+      },
+      [`screen and (min-width: 1190px) and (max-width: 1380px)`]: {
         width: `${DESKTOP_NAVBAR_WIDTH_L}px`,
       },
       [`screen and (min-width: 1380px) and (max-width: 1479px)`]: {
@@ -45,11 +47,14 @@ export const searchBarContainer = style([
   }),
   {
     '@media': {
-      [`screen and (min-width: ${breakpoints.lg}px)`]: {
-        right: `-${DESKTOP_NAVBAR_WIDTH / 2 - MAGNIFYING_GLASS_ICON_WIDTH}px`,
+      [`screen and (min-width: ${breakpoints.sm}px)`]: {
+        right: `-${DESKTOP_NAVBAR_WIDTH / 2 - 28}px`,
         top: '-3px',
       },
-      [`screen and (min-width: 1260px) and (max-width: 1380px)`]: {
+      [`screen and (min-width: 1024px) and (max-width: 1080px)`]: {
+        right: `-${300 / 2}px`,
+      },
+      [`screen and (min-width: 1190px) and (max-width: 1380px)`]: {
         right: `-${DESKTOP_NAVBAR_WIDTH_L / 2 - MAGNIFYING_GLASS_ICON_WIDTH}px`,
         top: '-3px',
       },
