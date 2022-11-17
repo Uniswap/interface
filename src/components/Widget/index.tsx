@@ -21,12 +21,12 @@ import {
 } from 'lib/utils/analytics'
 import { useCallback, useState } from 'react'
 import { useIsDarkMode } from 'state/user/hooks'
-import { DARK_THEME, LIGHT_THEME } from 'theme/widget'
 import { computeRealizedPriceImpact } from 'utils/prices'
 import { switchChain } from 'utils/switchChain'
 
 import { useSyncWidgetInputs } from './inputs'
 import { useSyncWidgetSettings } from './settings'
+import { DARK_THEME, LIGHT_THEME } from './theme'
 import { useSyncWidgetTransactions } from './transactions'
 
 export const WIDGET_WIDTH = 360

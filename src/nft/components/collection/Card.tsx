@@ -13,7 +13,7 @@ import {
   RarityVerifiedIcon,
   VerifiedIcon,
 } from 'nft/components/icons'
-import { body, bodySmall, buttonTextSmall, subhead, subheadSmall } from 'nft/css/common.css'
+import { body, bodySmall, buttonTextMedium, subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
 import { GenieAsset, Rarity, TokenType, WalletAsset } from 'nft/types'
@@ -93,11 +93,17 @@ const baseHref = (asset: GenieAsset | WalletAsset) => {
 
 const DetailsLinkContainer = styled.a`
   display: flex;
+  align-items: center;
   flex-shrink: 0;
   text-decoration: none;
-  color: ${({ theme }) => theme.textSecondary};
-
-  ${OpacityHoverState}
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid;
+  color: ${({ theme }) => theme.accentAction};
+  border-color: ${({ theme }) => theme.accentActionSoft};
+  padding: 2px 6px;
+  border-radius: 6px;
+  ${OpacityHoverState};
 `
 
 const SuspiciousIcon = styled(AlertTriangle)`
@@ -211,9 +217,7 @@ const Container = ({
         position="relative"
         ref={assetRef}
         borderRadius={BORDER_RADIUS}
-        borderBottomLeftRadius={BORDER_RADIUS}
-        borderBottomRightRadius={BORDER_RADIUS}
-        className={selected ? styles.selectedCard : styles.notSelectedCard}
+        className={selected ? styles.selectedCard : styles.card}
         draggable={false}
         onMouseEnter={() => toggleHovered()}
         onMouseLeave={() => toggleHovered()}
@@ -251,7 +255,7 @@ const Image = () => {
         width="full"
         style={{
           aspectRatio: '1',
-          transition: 'transform 0.4s ease 0s',
+          transition: 'transform 0.25s ease 0s',
         }}
         src={asset.imageUrl || asset.smallImageUrl}
         objectFit="contain"
@@ -297,7 +301,7 @@ const Video = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
           width="full"
           style={{
             aspectRatio: '1',
-            transition: 'transform 0.4s ease 0s',
+            transition: 'transform 0.25s ease 0s',
             willChange: 'transform',
           }}
           src={asset.imageUrl || asset.smallImageUrl}
@@ -514,7 +518,7 @@ const ProfileNftDetails = ({ asset, hideDetails }: ProfileNftDetailsProps) => {
       </PrimaryRow>
       <Row justifyItems="flex-start">
         <TruncatedTextRow
-          className={subheadSmall}
+          className={body}
           style={{
             color: themeVars.colors.textPrimary,
           }}
@@ -524,7 +528,7 @@ const ProfileNftDetails = ({ asset, hideDetails }: ProfileNftDetailsProps) => {
         {asset.susFlag && <Suspicious />}
       </Row>
       {shouldShowUserListedPrice && (
-        <TruncatedTextRow className={subhead} style={{ color: themeVars.colors.textPrimary }}>
+        <TruncatedTextRow className={buttonTextMedium} style={{ color: themeVars.colors.textPrimary }}>
           {`${floorFormatter(asset.floor_sell_order_price)} ETH`}
         </TruncatedTextRow>
       )}
@@ -546,15 +550,7 @@ const PrimaryDetails = ({ children }: { children: ReactNode }) => (
 
 const PrimaryInfo = ({ children }: { children: ReactNode }) => {
   return (
-    <Box
-      overflow="hidden"
-      whiteSpace="nowrap"
-      textOverflow="ellipsis"
-      color="textPrimary"
-      fontWeight="medium"
-      fontSize="14"
-      style={{ lineHeight: '20px' }}
-    >
+    <Box overflow="hidden" whiteSpace="nowrap" textOverflow="ellipsis" className={body}>
       {children}
     </Box>
   )
@@ -579,9 +575,8 @@ const SecondaryInfo = ({ children }: { children: ReactNode }) => {
       overflow="hidden"
       whiteSpace="nowrap"
       textOverflow="ellipsis"
-      fontSize="16"
-      fontWeight="medium"
       style={{ lineHeight: '20px' }}
+      className={subhead}
     >
       {children}
     </Box>
@@ -649,7 +644,7 @@ const DetailsLink = () => {
         e.stopPropagation()
       }}
     >
-      <Box className={buttonTextSmall}>Details</Box>
+      <Box>Details</Box>
     </DetailsLinkContainer>
   )
 }
@@ -747,7 +742,6 @@ const NoContentContainer = () => (
         left="1/2"
         top="1/2"
         style={{ transform: 'translate3d(-50%, -50%, 0)' }}
-        fontWeight="normal"
         color="gray500"
         className={body}
       >

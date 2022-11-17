@@ -7,6 +7,7 @@ import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
 import { removeConnectedWallet } from 'state/wallets/reducer'
 import styled, { useTheme } from 'styled-components/macro'
+import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import { isMobile } from 'utils/userAgent'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
@@ -20,7 +21,7 @@ import { AutoRow } from '../Row'
 import Transaction from './Transaction'
 
 const HeaderRow = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap};
+  ${flexRowNoWrap};
   padding: 1rem 1rem;
   font-weight: 500;
   color: ${(props) => (props.color === 'blue' ? ({ theme }) => theme.deprecated_primary1 : 'inherit')};
@@ -60,14 +61,14 @@ const InfoCard = styled.div`
 `
 
 const AccountGroupingRow = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap};
+  ${flexColumnNoWrap};
   justify-content: space-between;
   align-items: center;
   font-weight: 400;
   color: ${({ theme }) => theme.deprecated_text1};
 
   div {
-    ${({ theme }) => theme.flexRowNoWrap}
+    ${flexColumnNoWrap};
     align-items: center;
   }
 `
@@ -90,7 +91,7 @@ const YourAccount = styled.div`
 `
 
 const LowerSection = styled.div`
-  ${({ theme }) => theme.flexColumnNoWrap}
+  ${flexColumnNoWrap};
   padding: 1.5rem;
   flex-grow: 1;
   overflow: auto;
@@ -163,7 +164,7 @@ const WalletName = styled.div`
 `
 
 const TransactionListWrapper = styled.div`
-  ${({ theme }) => theme.flexColumnNoWrap};
+  ${flexColumnNoWrap};
 `
 
 const WalletAction = styled(ButtonSecondary)`

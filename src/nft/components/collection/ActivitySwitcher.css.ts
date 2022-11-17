@@ -10,6 +10,7 @@ export const baseActivitySwitcherToggle = style([
     background: 'none',
     border: 'none',
     cursor: 'pointer',
+    marginBottom: '8',
   }),
   {
     lineHeight: '24px',
@@ -32,12 +33,12 @@ export const selectedActivitySwitcherToggle = style([
     ':after': {
       content: '',
       position: 'absolute',
-      background: vars.color.genieBlue,
+      background: vars.color.textPrimary,
       width: '100%',
       height: '2px',
       left: '0px',
       right: '0px',
-      bottom: '-8px',
+      bottom: '-9px',
     },
   },
 ])

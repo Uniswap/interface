@@ -4,9 +4,8 @@ import { ReactNode } from 'react'
 import { AlertOctagon, AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
-import { Color } from 'theme/styled'
 
-const Label = styled.div<{ color: Color }>`
+const Label = styled.div<{ color: string }>`
   padding: 4px 4px;
   font-size: 12px;
   background-color: ${({ color }) => color + '1F'};

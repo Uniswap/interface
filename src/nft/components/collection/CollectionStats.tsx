@@ -287,7 +287,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
   const arrow = stats?.stats?.one_day_floor_change ? getDeltaArrow(stats.stats.one_day_floor_change) : undefined
 
   return (
-    <Row gap={{ sm: '36', md: '60' }} {...props}>
+    <Row gap={{ sm: '24', md: '36', lg: '48', xl: '60' }} {...props}>
       {isCollectionStatsLoading ? (
         statsLoadingSkeleton(isMobile ?? false)
       ) : (
@@ -315,7 +315,6 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
               {totalSupplyStr}
             </StatsItem>
           ) : null}
-
           {Boolean(uniqueOwnersPercentage && stats.standard !== TokenType.ERC1155) ? (
             <StatsItem label="Unique owners" shouldHide={isMobile ?? false}>
               {uniqueOwnersPercentage}%
