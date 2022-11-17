@@ -4,7 +4,7 @@ export const inSameSudoSwapPool = (assetA: GenieAsset, assetB: GenieAsset): bool
   if (!assetA.sellorders || !assetB.sellorders) return false
 
   const assetASudoSwapPoolParameters = assetA.sellorders[0].protocolParameters
-  const assetBSudoSwapPoolParameters = assetA.sellorders[0].protocolParameters
+  const assetBSudoSwapPoolParameters = assetB.sellorders[0].protocolParameters
 
   const assetAPoolAddress = assetASudoSwapPoolParameters?.poolAddress
     ? (assetASudoSwapPoolParameters.poolAddress as string)
