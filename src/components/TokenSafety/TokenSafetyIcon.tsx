@@ -1,5 +1,5 @@
 import { Warning, WARNING_LEVEL } from 'constants/tokenSafety'
-import { AlertOctagon, AlertTriangle } from 'react-feather'
+import { AlertTriangle, Slash } from 'react-feather'
 import styled, { css } from 'styled-components/macro'
 
 const WarningContainer = styled.div`
@@ -11,24 +11,24 @@ const WarningContainer = styled.div`
 const WarningIconStyle = css<{ size?: string }>`
   width: ${({ size }) => size ?? '1em'};
   height: ${({ size }) => size ?? '1em'};
-  color: ${({ theme }) => theme.textTertiary};
 `
 
 const WarningIcon = styled(AlertTriangle)`
   ${WarningIconStyle};
+  color: ${({ theme }) => theme.textTertiary};
 `
 
-const BlockedIcon = styled(AlertOctagon)`
+export const BlockedIcon = styled(Slash)`
   ${WarningIconStyle}
+  color: ${({ theme }) => theme.textSecondary};
 `
 
 export default function TokenSafetyIcon({ warning }: { warning: Warning | null }) {
-  //if (warning?.level !== WARNING_LEVEL.UNKNOWN) return null
   switch (warning?.level) {
     case WARNING_LEVEL.BLOCKED:
       return (
         <WarningContainer>
-          <BlockedIcon />
+          <BlockedIcon strokeWidth={2.5} />
         </WarningContainer>
       )
     case WARNING_LEVEL.UNKNOWN:
