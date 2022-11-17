@@ -8,6 +8,7 @@ import { Z_INDEX } from 'theme/zIndex'
 
 const PopoverContainer = styled.div<{ show: boolean }>`
   z-index: ${Z_INDEX.popover};
+  pointer-events: none;
   visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
   opacity: ${(props) => (props.show ? 1 : 0)};
   transition: visibility 150ms linear, opacity 150ms linear;
