@@ -4,8 +4,8 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther, parseEther } from '@ethersproject/units'
 import { SweepFetcherParams, useLazyLoadSweepAssetsQuery } from 'graphql/data/nft/Asset'
 import { useBag, useCollectionFilters } from 'nft/hooks'
-import { GenieAsset, Markets } from 'nft/types'
-import { calcPoolPrice, calcSudoSwapPrice, formatWeiToDecimal } from 'nft/utils'
+import { GenieAsset, isPooledMarket, Markets } from 'nft/types'
+import { calcPoolPrice, calcSudoSwapPrice, formatWeiToDecimal, inSameSudoSwapPool } from 'nft/utils'
 import { default as Slider } from 'rc-slider'
 import { useEffect, useMemo, useReducer, useState } from 'react'
 import styled, { useTheme } from 'styled-components/macro'
@@ -199,31 +199,14 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
     jointCollections.forEach((asset) => {
       if (!asset.susFlag) {
         if (asset.marketplace === Markets.Sudoswap) {
-          if (asset.sellorders) {
-            const sudoSwapParameters = asset.sellorders[0].protocolParameters
-            const poolAddress = sudoSwapParameters?.poolAddress ? (sudoSwapParameters.poolAddress as string) : undefined
-            if (poolAddress) {
-              const poolPrice = calcSudoSwapPrice(
-                asset,
-                sudoSwapAssetsInJointCollections
-                  .filter((sweepAsset) => {
-                    if (!sweepAsset.sellorders) return false
-
-                    const sweepAssetSudoSwapParameters = sweepAsset.sellorders[0].protocolParameters
-                    const sweepAssetPoolAddress = sweepAssetSudoSwapParameters?.poolAddress
-                      ? (sweepAssetSudoSwapParameters.poolAddress as string)
-                      : undefined
-
-                    if (!sweepAssetPoolAddress || sweepAssetPoolAddress !== poolAddress) return false
-
-                    return true
-                  })
-                  .map((sweepAsset) => sweepAsset.tokenId)
-                  .indexOf(asset.tokenId)
-              )
-              asset.priceInfo.ETHPrice = poolPrice
-            }
-          }
+          const poolPrice = calcSudoSwapPrice(
+            asset,
+            sudoSwapAssetsInJointCollections
+              .filter((sweepAsset) => inSameSudoSwapPool(asset, sweepAsset))
+              .map((sweepAsset) => sweepAsset.tokenId)
+              .indexOf(asset.tokenId)
+          )
+          asset.priceInfo.ETHPrice = poolPrice ?? ''
         } else {
           const isNFTX = asset.marketplace === Markets.NFTX
           const poolPrice = calcPoolPrice(asset, isNFTX ? counterNFTX : counterNFT20)
@@ -458,9 +441,7 @@ export function useSweepFetcherParams(
   return useMemo(() => {
     if (isMarketFiltered) {
       if (market === 'others') {
-        const marketsToQuery = markets.filter(
-          (market) => market !== Markets.Sudoswap && market !== Markets.NFTX && market !== Markets.NFT20
-        )
+        const marketsToQuery = markets.filter((market) => !isPooledMarket(market as Markets))
 
         if (marketsToQuery.length > 0) {
           return {
