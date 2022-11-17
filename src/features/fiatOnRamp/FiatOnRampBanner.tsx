@@ -1,4 +1,3 @@
-import { impactAsync } from 'expo-haptics'
 import React, { ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -15,12 +14,17 @@ export function FiatOnRampBanner(props: ComponentProps<typeof Box>) {
   const dispatch = useAppDispatch()
 
   const onPress = () => {
-    impactAsync()
     dispatch(openModal({ name: ModalName.FiatOnRamp }))
   }
 
   return (
-    <TouchableArea bg="magentaVibrant" borderRadius="md" p="sm" onPress={onPress} {...props}>
+    <TouchableArea
+      bg="magentaVibrant"
+      borderRadius="md"
+      p="sm"
+      onPress={onPress}
+      {...props}
+      hapticFeedback>
       <Flex gap="xxs">
         <Flex row justifyContent="space-between">
           <Text color="textOnBrightPrimary" variant="buttonLabelMedium">

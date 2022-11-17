@@ -5,6 +5,7 @@ import { SvgProps } from 'react-native-svg'
 import { Route } from 'react-native-tab-view'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import ArrowDown from 'src/assets/icons/arrow-down.svg'
+import DollarIcon from 'src/assets/icons/dollar-sign.svg'
 import SendIcon from 'src/assets/icons/send.svg'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -89,6 +90,10 @@ function QuickActions() {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
+  const onPressBuy = () => {
+    dispatch(openModal({ name: ModalName.FiatOnRamp }))
+  }
+
   const onPressReceive = () => {
     dispatch(
       openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
@@ -106,6 +111,12 @@ function QuickActions() {
         label={t('Send')}
         name={ElementName.Send}
         onPress={onPressSend}
+      />
+      <ActionButton
+        Icon={DollarIcon}
+        label={t('Buy')}
+        name={ElementName.Buy}
+        onPress={onPressBuy}
       />
       <ActionButton
         Icon={ArrowDown}

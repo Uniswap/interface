@@ -88,6 +88,7 @@ export const enum ElementName {
   AddViewOnlyWallet = 'add-view-only-wallet',
   AddiCloudBackup = 'add-icloud-backup',
   Back = 'back',
+  Buy = 'buy',
   Cancel = 'cancel',
   Confirm = 'confirm',
   Continue = 'continue',
