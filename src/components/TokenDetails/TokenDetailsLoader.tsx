@@ -1,4 +1,3 @@
-import { useResponsiveProp } from '@shopify/restyle'
 import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -9,7 +8,6 @@ import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
 import { PriceChartLoading } from 'src/components/PriceChart/PriceChartLoading'
 import { Text } from 'src/components/Text'
-import { TokenDetailsActionButtons } from 'src/components/TokenDetails/TokenDetailsActionButton'
 import { TokenDetailsBackButtonRow } from 'src/components/TokenDetails/TokenDetailsBackButtonRow'
 import { TokenDetailsHeader } from 'src/components/TokenDetails/TokenDetailsHeader'
 import { TokenDetailsMarketData } from 'src/components/TokenDetails/TokenDetailsStats'
@@ -67,9 +65,6 @@ export function TokenDetailsLoader({
           </Flex>
         </Flex>
       </Screen>
-      <Box bg="background0" pb={useResponsiveProp({ xs: 'none', sm: 'md' })}>
-        <TokenDetailsActionButtons showSend />
-      </Box>
     </AnimatedBox>
   )
 }

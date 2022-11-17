@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useColorScheme, ViewProps } from 'react-native'
+import { ViewProps } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -22,7 +22,6 @@ import {
   CurrencyField,
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
-import { Theme } from 'src/styles/theme'
 import { fromGraphQLChain } from 'src/utils/chainId'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 import { formatUSDPrice } from 'src/utils/format'
@@ -35,7 +34,6 @@ type FavoriteTokenCardProps = {
 
 function FavoriteTokenCard({ token, isEditing, setIsEditing, ...rest }: FavoriteTokenCardProps) {
   const theme = useAppTheme()
-  const isDarkMode = useColorScheme() === 'dark'
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
@@ -88,8 +86,6 @@ function FavoriteTokenCard({ token, isEditing, setIsEditing, ...rest }: Favorite
     tokenDetailsNavigation.navigate(currencyId)
   }
 
-  // Handle special case with design system light theme colors where background1 is the same as background0
-  const backgroundColor: keyof Theme['colors'] = isDarkMode ? 'background2' : 'background1'
   return (
     <ContextMenu
       actions={menuActions}
@@ -117,7 +113,10 @@ function FavoriteTokenCard({ token, isEditing, setIsEditing, ...rest }: Favorite
         exiting={FadeOut}
         testID={`token-box-${token?.symbol}`}
         onPress={onPress}>
-        <BaseCard.Shadow bg={backgroundColor}>
+        <BaseCard.Shadow
+          shadowOffset={{ width: 0, height: 2 }}
+          shadowOpacity={0.0125}
+          shadowRadius={10}>
           <Flex alignItems="flex-start" gap="xxs">
             <Flex row gap="xxs" justifyContent="space-between">
               <Flex grow row alignItems="center" gap="xxs">

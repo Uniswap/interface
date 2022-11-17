@@ -29,6 +29,7 @@ interface GraphProps {
   graphs: GraphMetadatas
   headerCustomPrice?: number
   headerCustomPercentChange?: number
+  chartColor?: string
 }
 
 /**
@@ -40,6 +41,7 @@ interface GraphProps {
 export const PriceExplorer = ({
   graphs,
   headerCustomPrice,
+  chartColor,
   headerCustomPercentChange,
 }: GraphProps) => {
   const theme = useAppTheme()
@@ -121,7 +123,7 @@ export const PriceExplorer = ({
           <AnimatedPath
             animatedProps={graphTransitionAnimatedProps}
             fill="transparent"
-            stroke={theme.colors.accentAction}
+            stroke={chartColor ?? theme.colors.accentAction}
             strokeWidth={3}
           />
 
@@ -133,6 +135,7 @@ export const PriceExplorer = ({
           </Defs>
         </Svg>
         <Cursor
+          cursorColor={chartColor}
           graphs={graphs}
           index={currentGraphIndex}
           isActive={isPanning}

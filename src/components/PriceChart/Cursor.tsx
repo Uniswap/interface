@@ -11,6 +11,7 @@ import {
   withTiming,
 } from 'react-native-reanimated'
 import { getYForX, round } from 'react-native-redash'
+import { useAppTheme } from 'src/app/hooks'
 import { AnimatedBox, Box } from 'src/components/layout/Box'
 import {
   AnimatedNumber,
@@ -18,6 +19,7 @@ import {
   GraphMetadatas,
 } from 'src/components/PriceChart/types'
 import { CHART_HEIGHT } from 'src/components/PriceChart/utils'
+import { opacify } from 'src/utils/colors'
 
 const CURSOR_INNER_SIZE = 12
 const CURSOR_SIZE = CURSOR_INNER_SIZE + 6
@@ -32,10 +34,12 @@ interface CursorProps {
   index: AnimatedNumber
   isActive: SharedValue<boolean>
   translation: AnimatedTranslation
+  cursorColor?: NullUndefined<string>
 }
 
-export const Cursor = ({ graphs, index, isActive, translation }: CursorProps) => {
+export const Cursor = ({ graphs, index, isActive, translation, cursorColor }: CursorProps) => {
   const isLongPressActive = useSharedValue(false)
+  const theme = useAppTheme()
 
   const longPressGesture = Gesture.LongPress()
     .onStart(() => {
@@ -99,12 +103,19 @@ export const Cursor = ({ graphs, index, isActive, translation }: CursorProps) =>
         <AnimatedBox style={[StyleSheet.absoluteFill, containerStyles]}>
           {/* Vertical line */}
           <AnimatedBox
-            borderColor="backgroundOutline"
             borderRadius="xs"
             borderStyle="dashed"
             borderWidth={1}
             height={CHART_HEIGHT}
-            style={[verticalLineAnimatedStyles, StyleSheet.absoluteFill]}
+            style={[
+              verticalLineAnimatedStyles,
+              StyleSheet.absoluteFill,
+              {
+                borderColor: cursorColor
+                  ? opacify(50, cursorColor)
+                  : theme.colors.backgroundOutline,
+              },
+            ]}
             width={LINE_WIDTH}
           />
 
@@ -116,18 +127,10 @@ export const Cursor = ({ graphs, index, isActive, translation }: CursorProps) =>
             position="relative"
             style={cursorAnimatedStyles}
             width={CURSOR_SIZE}>
-            {/* Translucent cursor background */}
             <Box
-              bg="backgroundOutline"
-              borderRadius="full"
-              height={CURSOR_SIZE}
-              style={StyleSheet.absoluteFillObject}
-              width={CURSOR_SIZE}
-            />
-            <Box
-              bg="textSecondary"
               borderRadius="full"
               height={CURSOR_INNER_SIZE}
+              style={{ backgroundColor: cursorColor ?? theme.colors.textSecondary }}
               width={CURSOR_INNER_SIZE}
             />
           </AnimatedBox>

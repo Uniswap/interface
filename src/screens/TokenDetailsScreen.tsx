@@ -3,11 +3,11 @@ import { Currency } from '@uniswap/sdk-core'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
-import { useAppDispatch } from 'src/app/hooks'
+import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
-import { AnimatedBox, Box, Flex } from 'src/components/layout'
+import { AnimatedBox, AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { CurrencyPriceChart } from 'src/components/PriceChart'
@@ -41,6 +41,7 @@ import {
 import { Screens } from 'src/screens/Screens'
 import { iconSizes } from 'src/styles/sizing'
 import { fromGraphQLChain } from 'src/utils/chainId'
+import { useExtractedTokenColor } from 'src/utils/colors'
 import { currencyAddress, currencyId } from 'src/utils/currencyId'
 import { formatUSDPrice } from 'src/utils/format'
 
@@ -141,6 +142,16 @@ function TokenDetails({
 }) {
   const dispatch = useAppDispatch()
   const { currentChainBalance, otherChainBalances } = useCrossChainBalances(currency)
+  const theme = useAppTheme()
+
+  const token = data?.tokens?.[0]
+  const tokenLogoUrl = token?.project?.logoUrl
+
+  const { tokenColor, tokenColorLoading } = useExtractedTokenColor(
+    tokenLogoUrl,
+    theme.colors.background0,
+    theme.colors.textTertiary
+  )
 
   // set if attempting buy or sell, use for warning modal
   const [activeTransactionType, setActiveTransactionType] = useState<TransactionType | undefined>(
@@ -260,7 +271,11 @@ function TokenDetails({
         <Flex gap="xl" my="md">
           <Flex gap="xxs">
             <TokenDetailsHeader data={data} onPressWarningIcon={() => setShowWarningModal(true)} />
-            <CurrencyPriceChart currency={currency} />
+            <CurrencyPriceChart
+              currency={currency}
+              tokenColor={tokenColor}
+              tokenColorLoading={tokenColorLoading}
+            />
           </Flex>
           {error ? (
             <AnimatedBox entering={FadeInDown} exiting={FadeOutDown} paddingHorizontal="lg">
@@ -279,15 +294,21 @@ function TokenDetails({
         </Flex>
       </HeaderScrollScreen>
 
-      <TokenDetailsActionButtons
-        showSend={!!currentChainBalance}
-        onPressSend={onPressSend}
-        onPressSwap={
-          safetyLevel === SafetyLevel.Blocked
-            ? undefined
-            : () => onPressSwap(currentChainBalance ? TransactionType.SELL : TransactionType.BUY)
-        }
-      />
+      {!tokenColorLoading ? (
+        <AnimatedFlex entering={FadeInDown}>
+          <TokenDetailsActionButtons
+            showSend={!!currentChainBalance}
+            tokenColor={tokenColor}
+            onPressSend={onPressSend}
+            onPressSwap={
+              safetyLevel === SafetyLevel.Blocked
+                ? undefined
+                : () =>
+                    onPressSwap(currentChainBalance ? TransactionType.SELL : TransactionType.BUY)
+            }
+          />
+        </AnimatedFlex>
+      ) : null}
 
       <TokenWarningModal
         currency={currency}

@@ -294,7 +294,6 @@ exports[`renders correctly 1`] = `
           style={
             Array [
               Object {
-                "borderColor": "#D2D9EE",
                 "borderRadius": 4,
                 "borderStyle": "dashed",
                 "borderWidth": 1,
@@ -319,6 +318,9 @@ exports[`renders correctly 1`] = `
                   "position": "absolute",
                   "right": 0,
                   "top": 0,
+                },
+                Object {
+                  "borderColor": "#D2D9EE",
                 },
               ],
             ]
@@ -355,31 +357,13 @@ exports[`renders correctly 1`] = `
             style={
               Array [
                 Object {
-                  "backgroundColor": "#D2D9EE",
-                  "borderRadius": 999999,
-                  "display": "flex",
-                  "height": 18,
-                  "width": 18,
-                },
-                Object {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                },
-              ]
-            }
-          />
-          <View
-            style={
-              Array [
-                Object {
-                  "backgroundColor": "#505A78",
                   "borderRadius": 999999,
                   "display": "flex",
                   "height": 12,
                   "width": 12,
+                },
+                Object {
+                  "backgroundColor": "#505A78",
                 },
               ]
             }

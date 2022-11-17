@@ -39,7 +39,8 @@ export function Shadow({ children, ...rest }: PropsWithChildren<BoxProps<Theme, 
   const isDarkMode = useColorScheme() === 'dark'
   return (
     <Box
-      bg={isDarkMode ? 'background2' : 'background1'}
+      alignItems="center"
+      bg={rest?.bg ?? isDarkMode ? 'background2' : 'background1'}
       borderRadius="lg"
       p="sm"
       shadowColor="black"

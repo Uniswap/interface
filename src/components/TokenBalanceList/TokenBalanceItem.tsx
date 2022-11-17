@@ -61,7 +61,10 @@ export const TokenBalanceItem = memo(
         <AnimatedFlex entering={FadeIn} exiting={FadeOut} justifyContent="space-between">
           <WarmLoadingShimmer isWarmLoading={isWarmLoading}>
             <Flex alignItems="flex-end" gap="xxs" pl="xs">
-              <Text color={isWarmLoading ? 'textSecondary' : 'textPrimary'} variant="bodyLarge">
+              <Text
+                color={isWarmLoading ? 'textSecondary' : 'textPrimary'}
+                numberOfLines={1}
+                variant="bodyLarge">
                 {formatUSDPrice(portfolioBalance.balanceUSD, NumberType.FiatTokenQuantity)}
               </Text>
               <Text color="textSecondary">
