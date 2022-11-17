@@ -164,7 +164,7 @@ export const ProfilePage = () => {
             fontWeight="semibold"
             fontSize="14"
             cursor="pointer"
-            color="genieBlue"
+            color="textSecondary"
             marginRight="20"
             marginLeft="auto"
             onClick={resetSellAssets}
