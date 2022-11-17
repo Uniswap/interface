@@ -5,12 +5,11 @@ import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
 
 import AssetLogo, { AssetLogoBaseProps } from './AssetLogo'
 
-export default function TokenLogo(
+export default function QueryTokenLogo(
   props: AssetLogoBaseProps & {
     token?: TopToken | TokenQueryData
   }
 ) {
-  console.log(props.token?.address)
   const chainId = props.token?.chain ? CHAIN_NAME_TO_CHAIN_ID[props.token?.chain] : undefined
 
   return (

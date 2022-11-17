@@ -3,9 +3,10 @@ import store from 'state'
 import { DEFAULT_LIST_OF_LISTS } from './lists'
 
 class TokenLogoLookupTable {
-  dict: { [key: string]: string[] | undefined } | null = null
+  dict: { [key: string]: string[] | undefined } = {}
+  initialized = false
 
-  createMap() {
+  initialize() {
     const dict: { [key: string]: string[] | undefined } = {}
 
     DEFAULT_LIST_OF_LISTS.forEach((list) =>
@@ -21,17 +22,17 @@ class TokenLogoLookupTable {
         }
       })
     )
-    return dict
+    this.dict = dict
+    this.initialized = true
   }
   getIcons(address?: string | null) {
     if (!address) return undefined
 
-    if (!this.dict) {
-      this.dict = this.createMap()
+    if (!this.initialized) {
+      this.initialize()
     }
     return this.dict[address.toLowerCase()]
   }
 }
 
 export default new TokenLogoLookupTable()
-export const BAD_SRCS: { [tokenAddress: string]: true } = {}

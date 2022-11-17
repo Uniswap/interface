@@ -1,8 +1,10 @@
-import TokenLogoLookupTable, { BAD_SRCS } from 'constants/TokenLogoLookupTable'
+import TokenLogoLookupTable from 'constants/TokenLogoLookupTable'
 import { chainIdToNetworkName, getNativeLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { useCallback, useEffect, useState } from 'react'
 import { isAddress } from 'utils'
+
+export const BAD_SRCS: { [tokenAddress: string]: true } = {}
 
 // Converts uri's into fetchable urls
 function parseLogoSources(uris: string[]) {
@@ -15,6 +17,8 @@ function parseLogoSources(uris: string[]) {
 function prioritizeLogoSources(uris: string[]) {
   const parsedUris = uris.map((uri) => uriToHttp(uri)).flat(1)
   const preferredUris: string[] = []
+
+  // Consolidate duplicate coingecko urls into one last-place source
   let coingeckoUrl: string | undefined = undefined
 
   parsedUris.forEach((uri) => {

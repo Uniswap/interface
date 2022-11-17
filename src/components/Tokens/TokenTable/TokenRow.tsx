@@ -3,7 +3,7 @@ import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { EventName } from '@uniswap/analytics-events'
 import { ParentSize } from '@visx/responsive'
 import SparklineChart from 'components/Charts/SparklineChart'
-import TokenLogo from 'components/Logo/TokenLogo'
+import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
@@ -469,7 +469,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           tokenInfo={
             <ClickableName>
               <LogoContainer>
-                <TokenLogo token={token} />
+                <QueryTokenLogo token={token} />
                 <L2NetworkLogo networkUrl={L2Icon} />
               </LogoContainer>
               <TokenInfoCell>
