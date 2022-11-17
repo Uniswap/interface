@@ -84,7 +84,7 @@ export const routingApi = createApi({
         // TODO: we shouldn't rely on any of the request arguments and transform the data with only response data
         // Must figure out how to determine whether requested assets are native given the router always returns
         // wrapped token addresses
-        const { tokenInAddress, tokenOutAddress, type } = arg
+        const { tokenInAddress, tokenOutAddress, type, deadline, slippageTolerance } = arg
         const tradeType = type === 'exactIn' ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT
         const tokenInIsNative = Object.values(SwapRouterNativeAssets).includes(
           tokenInAddress as SwapRouterNativeAssets
@@ -92,7 +92,14 @@ export const routingApi = createApi({
         const tokenOutIsNative = Object.values(SwapRouterNativeAssets).includes(
           tokenOutAddress as SwapRouterNativeAssets
         )
-        const trade = transformQuoteToTrade(tokenInIsNative, tokenOutIsNative, tradeType, result)
+        const trade = transformQuoteToTrade(
+          tokenInIsNative,
+          tokenOutIsNative,
+          tradeType,
+          deadline,
+          slippageTolerance,
+          result
+        )
         return {
           trade,
           simulationError: result.simulationError,

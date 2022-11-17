@@ -1,7 +1,11 @@
+import { Currency, TradeType } from '@uniswap/sdk-core'
+import { BigNumber } from 'ethers'
 import { useEffect, useRef } from 'react'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { EventName } from 'src/features/telemetry/constants'
+import { SwapTradeBaseProperties } from 'src/features/telemetry/types'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
+import { Trade } from 'src/features/transactions/swap/useTrade'
 import { currencyAddress } from 'src/utils/currencyId'
 import { formatCurrencyAmount, NumberType } from 'src/utils/format'
 
@@ -33,19 +37,29 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
     const currTrade = tradeRef.current
     if (!currTrade || !inputAmount) return
 
-    sendAnalyticsEvent(EventName.SwapQuoteReceived, {
-      token_in_symbol: currTrade.inputAmount.currency.symbol,
-      token_out_symbol: currTrade.outputAmount.currency.symbol,
-      token_in_address: currencyAddress(currTrade.inputAmount.currency),
-      token_out_address: currencyAddress(currTrade.outputAmount.currency),
-      price_impact_basis_points: currTrade.priceImpact.multiply(100).toSignificant(),
-      // TODO: add gas fee in USD here once we calculate USD value of `totalGasFee` on swap form instead of just on review
-      estimated_network_fee_usd: undefined,
-      chain_id: currTrade.inputAmount.currency.chainId,
-      token_in_amount: inputAmount,
-      token_out_amount: formatCurrencyAmount(currTrade.outputAmount, NumberType.SwapTradeAmount),
-    })
+    sendAnalyticsEvent(EventName.SwapQuoteReceived, getBaseTradeAnalyticsProperties(currTrade))
   }, [inputAmount, inputCurrencyId, outputCurrencyId, tradeType])
 
   return
+}
+
+export function getBaseTradeAnalyticsProperties(
+  trade: Trade<Currency, Currency, TradeType>
+): SwapTradeBaseProperties {
+  return {
+    token_in_symbol: trade.inputAmount.currency.symbol,
+    token_out_symbol: trade.outputAmount.currency.symbol,
+    token_in_address: currencyAddress(trade.inputAmount.currency),
+    token_out_address: currencyAddress(trade.outputAmount.currency),
+    price_impact_basis_points: trade.priceImpact.multiply(100).toSignificant(),
+    // TODO: add gas fee in USD here once we calculate USD value of `totalGasFee` on swap form instead of just on review
+    estimated_network_fee_usd: undefined,
+    chain_id: trade.inputAmount.currency.chainId,
+    token_in_amount: trade.inputAmount.toExact(),
+    token_out_amount: formatCurrencyAmount(trade.outputAmount, NumberType.SwapTradeAmount),
+    allowed_slippage_basis_points:
+      trade.slippageTolerance !== undefined
+        ? BigNumber.from(trade.slippageTolerance).mul(100).toNumber()
+        : undefined,
+  }
 }

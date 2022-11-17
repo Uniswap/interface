@@ -20,9 +20,12 @@ import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { useSimulatedGasLimit } from 'src/features/routing/hooks'
 import { STABLECOIN_AMOUNT_OUT, useUSDCPrice } from 'src/features/routing/useUSDCPrice'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { EventName } from 'src/features/telemetry/constants'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import { PERMITTABLE_TOKENS } from 'src/features/transactions/permit/permittableTokens'
 import { usePermitSignature } from 'src/features/transactions/permit/usePermitSignature'
+import { getBaseTradeAnalyticsProperties } from 'src/features/transactions/swap/analytics'
 import { swapActions } from 'src/features/transactions/swap/swapSaga'
 import { Trade, useTrade } from 'src/features/transactions/swap/useTrade'
 import { getWrapType, isWrapAction, sumGasFees } from 'src/features/transactions/swap/utils'
@@ -44,6 +47,7 @@ import { buildCurrencyId, currencyAddress } from 'src/utils/currencyId'
 import { formatCurrencyAmount, NumberType } from 'src/utils/format'
 import { useAsyncData, usePrevious } from 'src/utils/hooks'
 import { logger } from 'src/utils/logger'
+import { toStringish } from 'src/utils/number'
 import { tryParseExactAmount } from 'src/utils/tryParseAmount'
 
 export const DEFAULT_SLIPPAGE_TOLERANCE_PERCENT = new Percent(DEFAULT_SLIPPAGE_TOLERANCE, 100)
@@ -642,6 +646,7 @@ export function useSwapTxAndGasInfo(derivedSwapInfo: DerivedSwapInfo, skipGasFee
 export function useSwapCallback(
   approveTxRequest: providers.TransactionRequest | undefined,
   swapTxRequest: providers.TransactionRequest | undefined,
+  totalGasFee: string | undefined,
   trade: Trade | null | undefined,
   onSubmit: () => void,
   txId?: string
@@ -650,7 +655,7 @@ export function useSwapCallback(
   const account = useActiveAccount()
 
   return useMemo(() => {
-    if (!account || !swapTxRequest || !trade) {
+    if (!account || !swapTxRequest || !trade || !totalGasFee) {
       return () => {
         logger.error('hooks', 'useSwapCallback', 'Missing swapTx')
       }
@@ -667,8 +672,16 @@ export function useSwapCallback(
         })
       )
       onSubmit()
+
+      sendAnalyticsEvent(EventName.SwapSubmitButtonPressed, {
+        ...getBaseTradeAnalyticsProperties(trade),
+        estimated_network_fee_wei: totalGasFee,
+        gas_limit: toStringish(swapTxRequest.gasLimit),
+        transaction_deadline_seconds: trade.deadline,
+        swap_quote_block_number: trade.quote?.blockNumber,
+      })
     }
-  }, [account, swapTxRequest, appDispatch, txId, trade, approveTxRequest, onSubmit])
+  }, [account, swapTxRequest, trade, totalGasFee, appDispatch, txId, approveTxRequest, onSubmit])
 }
 
 export function useWrapCallback(

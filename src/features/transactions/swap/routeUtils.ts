@@ -10,12 +10,16 @@ export function transformQuoteToTrade(
   tokenInIsNative: boolean,
   tokenOutIsNative: boolean,
   tradeType: TradeType,
+  deadline: number | undefined,
+  slippageTolerance: number | undefined,
   quoteResult: QuoteResult | undefined
 ): Trade {
   const routes = computeRoutes(tokenInIsNative, tokenOutIsNative, quoteResult)
 
   return new Trade({
     quote: quoteResult,
+    deadline,
+    slippageTolerance,
     v2Routes:
       routes
         ?.filter((r) => r.routev2 !== null)

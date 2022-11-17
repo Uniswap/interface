@@ -18,12 +18,18 @@ export class Trade<
   TTradeType extends TradeType = TradeType
 > extends RouterSDKTrade<TInput, TOutput, TTradeType> {
   quote?: QuoteResult
+  deadline?: number
+  slippageTolerance?: number
 
   constructor({
     quote,
+    deadline,
+    slippageTolerance,
     ...routes
   }: {
     quote?: QuoteResult
+    deadline?: number
+    slippageTolerance?: number
     v2Routes: {
       routev2: V2RouteSDK<TInput, TOutput>
       inputAmount: CurrencyAmount<TInput>
@@ -38,6 +44,8 @@ export class Trade<
   }) {
     super(routes)
     this.quote = quote
+    this.deadline = deadline
+    this.slippageTolerance = slippageTolerance
   }
 }
 

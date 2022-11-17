@@ -82,7 +82,7 @@ export function SwapReview({
   const inputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.INPUT])
   const outputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.OUTPUT])
 
-  const onSwap = useSwapCallback(approveTxRequest, txRequest, trade, onNext, txId)
+  const onSwap = useSwapCallback(approveTxRequest, txRequest, totalGasFee, trade, onNext, txId)
 
   const onPress = useCallback(() => {
     if (swapWarning && !showWarningModal && !warningAcknowledged) {

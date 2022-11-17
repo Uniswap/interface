@@ -13,6 +13,7 @@ export enum EventName {
   MarkMeasure = 'mark-measure',
   OnboardingCompleted = 'onboarding-completed',
   SwapQuoteReceived = 'Swap Quote Received',
+  SwapSubmitButtonPressed = 'Swap Submit Button Pressed',
   Transaction = 'transaction',
   UserEvent = 'user-event',
   WalletAdded = 'wallet-added',
