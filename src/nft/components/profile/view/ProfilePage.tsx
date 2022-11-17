@@ -8,6 +8,7 @@ import { CrossIcon } from 'nft/components/icons'
 import { FilterSidebar } from 'nft/components/profile/view/FilterSidebar'
 import { subhead } from 'nft/css/common.css'
 import {
+  useBag,
   useFiltersExpanded,
   useIsMobile,
   useProfilePageState,
@@ -52,6 +53,7 @@ export const ProfilePage = () => {
   )
   const sellAssets = useSellAsset((state) => state.sellAssets)
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
+  const toggleBag = useBag((state) => state.toggleBag)
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const isMobile = useIsMobile()
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
@@ -178,7 +180,7 @@ export const ProfilePage = () => {
             fontSize="14"
             cursor="pointer"
             backgroundColor="genieBlue"
-            onClick={() => setSellPageState(ProfilePageStateType.LISTING)}
+            onClick={toggleBag}
             lineHeight="16"
             borderRadius="12"
             paddingY="8"
