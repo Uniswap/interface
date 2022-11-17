@@ -148,16 +148,18 @@ export const ProfilePage = () => {
         <Row
           display={{ sm: 'flex', md: 'none' }}
           position="fixed"
-          bottom="24"
           left="16"
           height="56"
           borderRadius="12"
           paddingX="16"
           paddingY="12"
-          style={{ background: '#0d0e0ef2', width: 'calc(100% - 32px)', lineHeight: '24px' }}
+          borderStyle="solid"
+          borderColor="backgroundOutline"
+          borderWidth="1px"
+          style={{ background: '#0d0e0ef2', bottom: '68px', width: 'calc(100% - 32px)', lineHeight: '24px' }}
           className={subhead}
         >
-          {sellAssets.length}&nbsp; selected item{sellAssets.length === 1 ? '' : 's'}
+          {sellAssets.length} NFT{sellAssets.length === 1 ? '' : 's'}
           <Box
             fontWeight="semibold"
             fontSize="14"
@@ -179,9 +181,10 @@ export const ProfilePage = () => {
             onClick={() => setSellPageState(ProfilePageStateType.LISTING)}
             lineHeight="16"
             borderRadius="12"
-            padding="8"
+            paddingY="8"
+            paddingX="28"
           >
-            Continue
+            Sell
           </Box>
         </Row>
       )}
