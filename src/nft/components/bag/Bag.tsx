@@ -111,9 +111,9 @@ const Bag = () => {
   const transactionStateRef = useRef(transactionState)
   const [setTransactionResponse] = useTransactionResponse((state) => [state.setTransactionResponse])
 
-  const itemsInBag = useMemo(() => recalculateBagUsingPooledAssets(uncheckedItemsInBag), [uncheckedItemsInBag])
-
   const queryClient = useQueryClient()
+
+  const itemsInBag = useMemo(() => recalculateBagUsingPooledAssets(uncheckedItemsInBag), [uncheckedItemsInBag])
 
   const [isOpen, setModalIsOpen] = useState(false)
   const [userCanScroll, setUserCanScroll] = useState(false)
