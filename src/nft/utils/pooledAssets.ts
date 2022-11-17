@@ -16,49 +16,62 @@ interface Pool {
   bondingCurve?: BondingCurve
 }
 
-const calcSudoSwapPoolPrice = (
-  pool: Pool,
-  numItems: number,
-  protocolFeeMultiplier = PROTOCOL_FEE_MULTIPLIER
-): string => {
-  if (!pool.fee || !pool.delta || !pool.spotPrice || !pool.bondingCurve) return ''
+export const inSameSudoSwapPool = (assetA: GenieAsset, assetB: GenieAsset): boolean => {
+  if (!assetA.sellorders || !assetB.sellorders) return false
 
-  let currentPrice = BigNumber.from(pool.spotPrice)
-  const delta = BigNumber.from(pool.delta)
-  const poolFee = BigNumber.from(pool.fee)
+  const assetASudoSwapPoolParameters = assetA.sellorders[0].protocolParameters
+  const assetBSudoSwapPoolParameters = assetA.sellorders[0].protocolParameters
 
-  const prices = []
-  for (let i = 0; i < numItems; i++) {
-    if (pool.bondingCurve === BondingCurve.Linear) {
+  const assetAPoolAddress = assetASudoSwapPoolParameters?.poolAddress
+    ? (assetASudoSwapPoolParameters.poolAddress as string)
+    : undefined
+  const assetBPoolAddress = assetBSudoSwapPoolParameters?.poolAddress
+    ? (assetBSudoSwapPoolParameters.poolAddress as string)
+    : undefined
+
+  if (!assetAPoolAddress || !assetBPoolAddress) return false
+  if (assetAPoolAddress !== assetBPoolAddress) return false
+
+  return true
+}
+
+const getPoolParameters = (protocolParameters: Record<string, unknown>): Pool => {
+  return {
+    delta: protocolParameters?.delta ? (protocolParameters.delta as string) : undefined,
+    fee: protocolParameters?.ammFeeFixed ? (protocolParameters.ammFeeFixed as string) : undefined,
+    spotPrice: (protocolParameters as Record<string, { spotPrice?: string }>)?.poolMetadata?.spotPrice,
+    bondingCurve: (protocolParameters as Record<string, { bondingCurve?: BondingCurve }>)?.poolMetadata?.bondingCurve,
+  }
+}
+
+const calculateScaledPrice = (currentPrice: BigNumber, poolFee: BigNumber): BigNumber => {
+  const protocolFee = currentPrice.mul(PROTOCOL_FEE_MULTIPLIER).div(BigNumber.from(PRECISION))
+  const tradeFee = currentPrice.mul(poolFee).div(BigNumber.from(PRECISION))
+  return currentPrice.add(protocolFee).add(tradeFee)
+}
+
+export const calcSudoSwapPrice = (asset: GenieAsset, position = 0): string | undefined => {
+  if (!asset.sellorders) return undefined
+
+  const sudoSwapParameters = asset.sellorders[0].protocolParameters
+  const sudoSwapPool = getPoolParameters(sudoSwapParameters)
+
+  if (!sudoSwapPool.fee || !sudoSwapPool.delta || !sudoSwapPool.spotPrice || !sudoSwapPool.bondingCurve)
+    return undefined
+
+  let currentPrice = BigNumber.from(sudoSwapPool.spotPrice)
+  const delta = BigNumber.from(sudoSwapPool.delta)
+  const poolFee = BigNumber.from(sudoSwapPool.fee)
+
+  for (let i = 0; i <= position; i++) {
+    if (sudoSwapPool.bondingCurve === BondingCurve.Linear) {
       currentPrice = currentPrice.add(delta)
-      const protocolFee = currentPrice.mul(protocolFeeMultiplier).div(BigNumber.from(PRECISION))
-      const tradeFee = currentPrice.mul(poolFee).div(BigNumber.from(PRECISION))
-      const scaledPrice = currentPrice.add(protocolFee).add(tradeFee)
-      prices.push(scaledPrice)
-    } else if (pool.bondingCurve === BondingCurve.Exponential) {
+    } else if (sudoSwapPool.bondingCurve === BondingCurve.Exponential) {
       currentPrice = currentPrice.mul(delta).div(BigNumber.from(PRECISION))
-      const protocolFee = currentPrice.mul(protocolFeeMultiplier).div(BigNumber.from(PRECISION))
-      const tradeFee = currentPrice.mul(poolFee).div(BigNumber.from(PRECISION))
-      const scaledPrice = currentPrice.add(protocolFee).add(tradeFee)
-      prices.push(scaledPrice)
     }
   }
 
-  return prices[prices.length - 1].toString()
-}
-
-export const calcSudoSwapPrice = (asset: GenieAsset, position = 0): string => {
-  if (!asset.sellorders) return ''
-
-  const sudoSwapParameters = asset.sellorders[0].protocolParameters
-  const sudoSwapPool: Pool = {
-    delta: sudoSwapParameters?.delta ? (sudoSwapParameters.delta as string) : undefined,
-    fee: sudoSwapParameters?.ammFeeFixed ? (sudoSwapParameters.ammFeeFixed as string) : undefined,
-    spotPrice: (sudoSwapParameters as Record<string, { spotPrice?: string }>)?.poolMetadata?.spotPrice,
-    bondingCurve: (sudoSwapParameters as Record<string, { bondingCurve?: BondingCurve }>)?.poolMetadata?.bondingCurve,
-  }
-
-  return calcSudoSwapPoolPrice(sudoSwapPool, position + 1)
+  return calculateScaledPrice(currentPrice, poolFee).toString()
 }
 
 // TODO: a lot of the below typecasting logic can be simplified when GraphQL migration is complete

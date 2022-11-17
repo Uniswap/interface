@@ -34,8 +34,15 @@ import {
 } from 'nft/hooks'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { usePriceRange } from 'nft/hooks/usePriceRange'
-import { DropDownOption, GenieAsset, GenieCollection, Markets, TokenType } from 'nft/types'
-import { calcPoolPrice, calcSudoSwapPrice, getRarityStatus, pluralize } from 'nft/utils'
+import { DropDownOption, GenieAsset, GenieCollection, isPooledMarket, Markets, TokenType } from 'nft/types'
+import {
+  calcPoolPrice,
+  calcSudoSwapPrice,
+  getRarityStatus,
+  inSameMarketplaceCollection,
+  inSameSudoSwapPool,
+  pluralize,
+} from 'nft/utils'
 import { scrollToTop } from 'nft/utils/scrollToTop'
 import { applyFiltersFromURL, syncLocalFiltersWithURL } from 'nft/utils/urlParams'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -278,55 +285,20 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
       )
 
       if (asset.marketplace === Markets.Sudoswap) {
-        if (!asset.sellorders) return 0
-        const sudoSwapParameters = asset.sellorders[0].protocolParameters
-        const poolAddress = sudoSwapParameters?.poolAddress ? (sudoSwapParameters.poolAddress as string) : undefined
-        if (!poolAddress) return 0
-
-        let index = 0
-
+        const bagItemsInSudoSwapPool = itemsInBag.filter((item) => inSameSudoSwapPool(asset, item.asset))
         if (assetInBag) {
-          index = itemsInBag
-            .filter((item) => {
-              if (!item.asset.sellorders) return false
-
-              const itemSudoSwapParameters = item.asset.sellorders[0].protocolParameters
-              const itemPoolAddress = itemSudoSwapParameters?.poolAddress
-                ? (itemSudoSwapParameters.poolAddress as string)
-                : undefined
-
-              if (!itemPoolAddress || itemPoolAddress !== poolAddress) return false
-
-              return true
-            })
-            .map((item) => item.asset.tokenId)
-            .indexOf(asset.tokenId)
+          return bagItemsInSudoSwapPool.map((item) => item.asset.tokenId).indexOf(asset.tokenId)
         } else {
-          index = itemsInBag.filter((item) => {
-            if (!item.asset.sellorders) return false
-
-            const itemSudoSwapParameters = item.asset.sellorders[0].protocolParameters
-            const itemPoolAddress = itemSudoSwapParameters?.poolAddress
-              ? (itemSudoSwapParameters.poolAddress as string)
-              : undefined
-
-            if (!itemPoolAddress || itemPoolAddress !== poolAddress) return false
-
-            return true
-          }).length
+          return bagItemsInSudoSwapPool.length
         }
-
-        return index
       }
 
       return assetInBag
         ? itemsInBag
-            .filter((item) => item.asset.address === asset.address && item.asset.marketplace === asset.marketplace)
+            .filter((item) => inSameMarketplaceCollection(asset, item.asset))
             .map((item) => item.asset.tokenId)
             .indexOf(asset.tokenId)
-        : itemsInBag.filter(
-            (item) => item.asset.address === asset.address && item.asset.marketplace === asset.marketplace
-          ).length
+        : itemsInBag.filter((item) => inSameMarketplaceCollection(asset, item.asset)).length
     },
     [itemsInBag]
   )
@@ -340,15 +312,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   )
 
   const collectionAssets = useMemo(() => {
-    if (
-      !collectionNfts ||
-      !collectionNfts.some(
-        (asset) =>
-          asset.marketplace === Markets.NFTX ||
-          asset.marketplace === Markets.NFT20 ||
-          asset.marketplace === Markets.Sudoswap
-      )
-    ) {
+    if (!collectionNfts || !collectionNfts.some((asset) => asset.marketplace && isPooledMarket(asset.marketplace))) {
       return collectionNfts
     }
 
@@ -356,10 +320,9 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
     assets.forEach(
       (asset) =>
-        (asset.marketplace === Markets.NFTX ||
-          asset.marketplace === Markets.NFT20 ||
-          asset.marketplace === Markets.Sudoswap) &&
-        (asset.priceInfo.ETHPrice = calculatePrice(asset))
+        asset.marketplace &&
+        isPooledMarket(asset.marketplace) &&
+        (asset.priceInfo.ETHPrice = calculatePrice(asset) ?? '')
     )
 
     if (sortBy === SortBy.HighToLow || sortBy === SortBy.LowToHigh) {
