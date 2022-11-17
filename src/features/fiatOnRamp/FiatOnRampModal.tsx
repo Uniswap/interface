@@ -72,20 +72,17 @@ function FiatOnRampModalInner() {
 
   return (
     <BottomSheetModal disableSwipe isVisible name={ModalName.ForceUpgradeModal} onClose={onClose}>
-      <Screen bg="background1" edges={['bottom']} mb="lg" pt="md" px="lg">
-        <Flex gap="md">
+      <Screen bg="background1" edges={['bottom']} mb="none" pt="md" px="lg">
+        <Flex gap="lg">
           <FiatOnRampModalBackground color={theme.colors.background0} width="100%" />
           <Flex alignItems="center" gap="lg">
             <Flex alignItems="center" gap="sm">
               <Text color="textPrimary" variant="headlineSmall">
-                {t('Buy Crypto with USD')}
+                {t('Buy crypto with low fees')}
               </Text>
               <Box alignItems="center">
-                <Text color="textSecondary" variant="bodySmall">
-                  {t('Buy Crypto at at lowest rates on the market.')}
-                </Text>
-                <Text color="textSecondary" variant="bodySmall">
-                  {t('Compare 1.3% vs 3.5% market rate.')}
+                <Text color="textSecondary" textAlign="center" variant="bodySmall">
+                  {t('Buy crypto at the lowest rates on Uniswap Wallet, powered by Moonpay.')}
                 </Text>
               </Box>
             </Flex>
