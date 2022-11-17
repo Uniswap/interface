@@ -25,7 +25,7 @@ import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import Widget from 'components/Widget'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
-import { DEFAULT_ERC20_DECIMALS, NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
+import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { TokenPriceQuery } from 'graphql/data/__generated__/TokenPriceQuery.graphql'
 import { Chain, TokenQuery } from 'graphql/data/Token'
@@ -65,7 +65,7 @@ export function useTokenLogoURI(token?: TokenQueryData | TopToken, nativeCurrenc
   ][0]
 }
 
-function useOnChainToken(address: string | false, skip: boolean) {
+function useOnChainToken(address: string | undefined, skip: boolean) {
   const token = useTokenFromActiveNetwork(skip || !address ? undefined : address)
 
   if (skip || !address || (token && token?.symbol === UNKNOWN_TOKEN_SYMBOL)) {
@@ -92,7 +92,10 @@ export default function TokenDetails({
   if (!urlAddress) {
     throw new Error('Invalid token details route: tokenAddress param is undefined')
   }
-  const address = useMemo(() => (urlAddress === NATIVE_CHAIN_ID ? urlAddress : isAddress(urlAddress)), [urlAddress])
+  const address = useMemo(
+    () => (urlAddress === NATIVE_CHAIN_ID ? urlAddress : isAddress(urlAddress) || undefined),
+    [urlAddress]
+  )
 
   const pageChainId = CHAIN_NAME_TO_CHAIN_ID[chain]
   const nativeCurrency = nativeOnChain(pageChainId)
@@ -104,9 +107,8 @@ export default function TokenDetails({
     if (!address) return undefined
     if (isNative) return nativeCurrency
     if (tokenQueryData) return new QueryToken(tokenQueryData)
-    const listToken = new Token(pageChainId, address, DEFAULT_ERC20_DECIMALS)
-    return listToken.name && listToken.symbol ? listToken : null
-  }, [isNative, nativeCurrency, pageChainId, address, tokenQueryData])
+    return null
+  }, [isNative, nativeCurrency, address, tokenQueryData])
   // fetch on-chain token if token data is missing
   const onChainToken = useOnChainToken(address, Boolean(localToken))
   const token = localToken ?? onChainToken
@@ -139,7 +141,7 @@ export default function TokenDetails({
   const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
 
   // Show token safety modal if Swap-reviewing a warning token, at all times if the current token is blocked
-  const shouldShowSpeedbump = !useIsUserAddedTokenOnChain(address || undefined, pageChainId) && tokenWarning !== null
+  const shouldShowSpeedbump = !useIsUserAddedTokenOnChain(address, pageChainId) && tokenWarning !== null
   const onReviewSwapClick = useCallback(
     () => new Promise<boolean>((resolve) => (shouldShowSpeedbump ? setContinueSwap({ resolve }) : resolve(true))),
     [shouldShowSpeedbump]
@@ -217,7 +219,7 @@ export default function TokenDetails({
             onTokenChange={navigateToWidgetSelectedToken}
             onReviewSwapClick={onReviewSwapClick}
           />
-          {tokenWarning && <TokenSafetyMessage tokenAddress={address || ''} warning={tokenWarning} />}
+          {tokenWarning && <TokenSafetyMessage tokenAddress={address ?? ''} warning={tokenWarning} />}
           {token && <BalanceSummary token={token} />}
         </RightPanel>
         {token && <MobileBalanceSummaryFooter token={token} />}
