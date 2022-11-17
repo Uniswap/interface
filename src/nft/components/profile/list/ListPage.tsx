@@ -685,7 +685,7 @@ export const ListPage = () => {
 
   return (
     <Column display="flex" flexWrap="nowrap">
-      <Column marginLeft="14" display={{ sm: 'none', lg: 'flex' }}>
+      <Column marginLeft="14" display="flex">
         <Box
           aria-label="Back"
           as="button"
