@@ -119,7 +119,6 @@ export default function TokenDetails({
 
   const tokenQueryData = usePreloadedQuery(tokenQuery, tokenQueryReference).tokens?.[0]
 
-<<<<<<< HEAD
   const localToken = useMemo(() => {
     if (!address) return undefined
     if (isNative) return nativeCurrency
@@ -131,14 +130,6 @@ export default function TokenDetails({
   const token = useMemo(() => localToken ?? onChainToken, [localToken, onChainToken])
 
   const tokenWarning = address ? checkWarning(address) : null
-=======
-  const token = useMemo(() => {
-    if (isNative) return nativeCurrency
-    if (tokenQueryData) return new QueryToken(tokenQueryData)
-    return new Token(pageChainId, tokenAddress, DEFAULT_ERC20_DECIMALS)
-  }, [isNative, nativeCurrency, pageChainId, tokenAddress, tokenQueryData])
-  const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
->>>>>>> origin/main
   const isBlockedToken = tokenWarning?.canProceed === false
   const navigate = useNavigate()
 
@@ -202,16 +193,7 @@ export default function TokenDetails({
             <TokenInfoContainer>
               <TokenNameCell>
                 <LogoContainer>
-<<<<<<< HEAD
-                  <CurrencyLogo
-                    src={logoSrc}
-                    size="32px"
-                    symbol={isNative ? nativeCurrency?.symbol : token?.symbol}
-                    currency={isNative ? nativeCurrency : token ?? onChainToken}
-                  />
-=======
                   <CurrencyLogo currency={token} size="32px" />
->>>>>>> origin/main
                   <L2NetworkLogo networkUrl={L2Icon} size="16px" />
                 </LogoContainer>
                 {token?.name ?? onChainToken?.name ?? <Trans>Name not found</Trans>}
