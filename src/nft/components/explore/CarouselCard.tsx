@@ -174,9 +174,7 @@ export const MarketplaceRow = ({ marketplace, floorInEth, listings }: Marketplac
     <>
       <TableElement>{marketplace}</TableElement>
       <TableElement>
-        {typeof floorInEth === 'number'
-          ? formatNumberOrString(floorInEth, NumberType.NFTTokenFloorPriceTrailingZeros)
-          : '-'}{' '}
+        {floorInEth !== undefined ? formatNumberOrString(floorInEth, NumberType.NFTTokenFloorPriceTrailingZeros) : '-'}{' '}
         ETH
       </TableElement>
       <TableElement>{listings ?? '-'}</TableElement>
