@@ -1,6 +1,6 @@
 import { useIsNftProfilePage } from 'hooks/useIsNftPage'
 import { Center, Column } from 'nft/components/Flex'
-import { LargeBagIcon, LargeTagIcon } from 'nft/components/icons'
+import { BagIcon, LargeTagIcon } from 'nft/components/icons'
 import { subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import styled from 'styled-components/macro'
@@ -22,7 +22,7 @@ const EmptyState = () => {
         {isProfilePage ? (
           <LargeTagIcon color={themeVars.colors.textTertiary} />
         ) : (
-          <LargeBagIcon color={themeVars.colors.textTertiary} />
+          <BagIcon color={themeVars.colors.textTertiary} height="96px" width="96px" strokeWidth="1px" />
         )}
       </Center>
       {isProfilePage ? (
