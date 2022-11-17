@@ -7,7 +7,6 @@ const DESKTOP_NAVBAR_WIDTH = 360
 const DESKTOP_NAVBAR_WIDTH_L = 440
 const DESKTOP_NAVBAR_WIDTH_XL = 540
 const DESKTOP_NAVBAR_WIDTH_XXL = 640
-const MAGNIFYING_GLASS_ICON_WIDTH = 0
 
 const baseSearchStyle = style([
   sprinkles({

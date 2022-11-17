@@ -21,8 +21,8 @@ import { useLocation } from 'react-router-dom'
 import { ChevronLeftIcon, MagnifyingGlassIcon, NavMagnifyingGlassIcon } from '../../nft/components/icons'
 import { NavIcon } from './NavIcon'
 import * as styles from './SearchBar.css'
-import * as nftStyles from './SearchBarNft.css'
 import { SearchBarDropdown } from './SearchBarDropdown'
+import * as nftStyles from './SearchBarNft.css'
 
 export const SearchBar = () => {
   const [isOpen, toggleOpen] = useReducer((state: boolean) => !state, false)
