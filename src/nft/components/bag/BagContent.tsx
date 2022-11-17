@@ -4,9 +4,7 @@ import { BagRow, PriceChangeBagRow, UnavailableAssetsHeaderRow } from 'nft/compo
 import { Column } from 'nft/components/Flex'
 import { useBag, useIsMobile } from 'nft/hooks'
 import { BagItemStatus, BagStatus } from 'nft/types'
-import { recalculateBagUsingPooledAssets } from 'nft/utils/calcPoolPrice'
-import { fetchPrice } from 'nft/utils/fetchPrice'
-import { formatAssetEventProperties } from 'nft/utils/formatEventProperties'
+import { fetchPrice, formatAssetEventProperties, recalculateBagUsingPooledAssets } from 'nft/utils'
 import { useEffect, useMemo } from 'react'
 import { useQuery } from 'react-query'
 

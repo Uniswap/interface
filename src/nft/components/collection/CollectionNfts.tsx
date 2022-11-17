@@ -34,8 +34,15 @@ import {
 } from 'nft/hooks'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { usePriceRange } from 'nft/hooks/usePriceRange'
-import { DropDownOption, GenieAsset, GenieCollection, Markets, TokenType } from 'nft/types'
-import { calcPoolPrice, getRarityStatus, pluralize } from 'nft/utils'
+import { DropDownOption, GenieAsset, GenieCollection, isPooledMarket, Markets, TokenType } from 'nft/types'
+import {
+  calcPoolPrice,
+  calcSudoSwapPrice,
+  getRarityStatus,
+  isInSameMarketplaceCollection,
+  isInSameSudoSwapPool,
+  pluralize,
+} from 'nft/utils'
 import { scrollToTop } from 'nft/utils/scrollToTop'
 import { applyFiltersFromURL, syncLocalFiltersWithURL } from 'nft/utils/urlParams'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -272,30 +279,38 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   const getPoolPosition = useCallback(
     (asset: GenieAsset) => {
-      return itemsInBag.some((item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address)
+      const assetInBag = itemsInBag.some(
+        (item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address
+      )
+
+      if (asset.marketplace === Markets.Sudoswap) {
+        const bagItemsInSudoSwapPool = itemsInBag.filter((item) => isInSameSudoSwapPool(asset, item.asset))
+        if (assetInBag) {
+          return bagItemsInSudoSwapPool.findIndex((item) => item.asset.tokenId === asset.tokenId)
+        } else {
+          return bagItemsInSudoSwapPool.length
+        }
+      }
+
+      return assetInBag
         ? itemsInBag
-            .filter((item) => item.asset.address === asset.address && item.asset.marketplace === asset.marketplace)
-            .map((item) => item.asset.tokenId)
-            .indexOf(asset.tokenId)
-        : itemsInBag.filter(
-            (item) => item.asset.address === asset.address && item.asset.marketplace === asset.marketplace
-          ).length
+            .filter((item) => isInSameMarketplaceCollection(asset, item.asset))
+            .findIndex((item) => item.asset.tokenId === asset.tokenId)
+        : itemsInBag.filter((item) => isInSameMarketplaceCollection(asset, item.asset)).length
     },
     [itemsInBag]
   )
 
   const calculatePrice = useCallback(
     (asset: GenieAsset) => {
+      if (asset.marketplace === Markets.Sudoswap) return calcSudoSwapPrice(asset, getPoolPosition(asset))
       return calcPoolPrice(asset, getPoolPosition(asset))
     },
     [getPoolPosition]
   )
 
   const collectionAssets = useMemo(() => {
-    if (
-      !collectionNfts ||
-      !collectionNfts.some((asset) => asset.marketplace === Markets.NFTX || asset.marketplace === Markets.NFT20)
-    ) {
+    if (!collectionNfts || !collectionNfts.some((asset) => asset.marketplace && isPooledMarket(asset.marketplace))) {
       return collectionNfts
     }
 
@@ -303,8 +318,9 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
     assets.forEach(
       (asset) =>
-        (asset.marketplace === Markets.NFTX || asset.marketplace === Markets.NFT20) &&
-        (asset.priceInfo.ETHPrice = calculatePrice(asset))
+        asset.marketplace &&
+        isPooledMarket(asset.marketplace) &&
+        (asset.priceInfo.ETHPrice = calculatePrice(asset) ?? '')
     )
 
     if (sortBy === SortBy.HighToLow || sortBy === SortBy.LowToHigh) {
