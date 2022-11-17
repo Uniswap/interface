@@ -18,12 +18,6 @@ export const title = style([
   }),
 ])
 
-export const openAddress = sprinkles({
-  minWidth: '20',
-  height: '20',
-  width: '20',
-})
-
 export const address = style([
   title,
   sprinkles({

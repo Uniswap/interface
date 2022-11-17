@@ -151,7 +151,7 @@ export function CurrencyRow({
         <Column>
           <CurrencyLogo
             currency={currency}
-            size={'36px'}
+            size="36px"
             style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }}
           />
         </Column>
@@ -161,7 +161,7 @@ export function CurrencyRow({
             <TokenSafetyIcon warning={warning} />
             {isBlockedToken && <BlockedTokenIcon />}
           </Row>
-          <ThemedText.DeprecatedDarkGray ml="0px" fontSize={'12px'} fontWeight={300}>
+          <ThemedText.DeprecatedDarkGray ml="0px" fontSize="12px" fontWeight={300}>
             {currency.symbol}
           </ThemedText.DeprecatedDarkGray>
         </AutoColumn>

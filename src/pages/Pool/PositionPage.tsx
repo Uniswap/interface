@@ -196,7 +196,7 @@ function LinkedCurrency({ chainId, currency }: { chainId?: number; currency?: Cu
     return (
       <ExternalLink href={getExplorerLink(chainId, address, ExplorerDataType.TOKEN)}>
         <RowFixed>
-          <CurrencyLogo currency={currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
+          <CurrencyLogo currency={currency} size="20px" style={{ marginRight: '0.5rem' }} />
           <ThemedText.DeprecatedMain>{currency?.symbol} ↗</ThemedText.DeprecatedMain>
         </RowFixed>
       </ExternalLink>
@@ -205,7 +205,7 @@ function LinkedCurrency({ chainId, currency }: { chainId?: number; currency?: Cu
 
   return (
     <RowFixed>
-      <CurrencyLogo currency={currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
+      <CurrencyLogo currency={currency} size="20px" style={{ marginRight: '0.5rem' }} />
       <ThemedText.DeprecatedMain>{currency?.symbol}</ThemedText.DeprecatedMain>
     </RowFixed>
   )
@@ -523,12 +523,12 @@ export function PositionPage() {
 
   function modalHeader() {
     return (
-      <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
+      <AutoColumn gap="md" style={{ marginTop: '20px' }}>
         <LightCard padding="12px 16px">
           <AutoColumn gap="md">
             <RowBetween>
               <RowFixed>
-                <CurrencyLogo currency={feeValueUpper?.currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
+                <CurrencyLogo currency={feeValueUpper?.currency} size="20px" style={{ marginRight: '0.5rem' }} />
                 <ThemedText.DeprecatedMain>
                   {feeValueUpper ? formatCurrencyAmount(feeValueUpper, 4) : '-'}
                 </ThemedText.DeprecatedMain>
@@ -537,7 +537,7 @@ export function PositionPage() {
             </RowBetween>
             <RowBetween>
               <RowFixed>
-                <CurrencyLogo currency={feeValueLower?.currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
+                <CurrencyLogo currency={feeValueLower?.currency} size="20px" style={{ marginRight: '0.5rem' }} />
                 <ThemedText.DeprecatedMain>
                   {feeValueLower ? formatCurrencyAmount(feeValueLower, 4) : '-'}
                 </ThemedText.DeprecatedMain>
@@ -612,7 +612,7 @@ export function PositionPage() {
               <ResponsiveRow>
                 <RowFixed>
                   <DoubleCurrencyLogo currency0={currencyBase} currency1={currencyQuote} size={24} margin={true} />
-                  <ThemedText.DeprecatedLabel fontSize={'24px'} mr="10px">
+                  <ThemedText.DeprecatedLabel fontSize="24px" mr="10px">
                     &nbsp;{currencyQuote?.symbol}&nbsp;/&nbsp;{currencyBase?.symbol}
                   </ThemedText.DeprecatedLabel>
                   <Badge style={{ marginRight: '8px' }}>
@@ -807,7 +807,7 @@ export function PositionPage() {
                           <RowFixed>
                             <CurrencyLogo
                               currency={feeValueUpper?.currency}
-                              size={'20px'}
+                              size="20px"
                               style={{ marginRight: '0.5rem' }}
                             />
                             <ThemedText.DeprecatedMain>{feeValueUpper?.currency?.symbol}</ThemedText.DeprecatedMain>
@@ -822,7 +822,7 @@ export function PositionPage() {
                           <RowFixed>
                             <CurrencyLogo
                               currency={feeValueLower?.currency}
-                              size={'20px'}
+                              size="20px"
                               style={{ marginRight: '0.5rem' }}
                             />
                             <ThemedText.DeprecatedMain>{feeValueLower?.currency?.symbol}</ThemedText.DeprecatedMain>

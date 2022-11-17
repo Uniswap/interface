@@ -99,9 +99,9 @@ export default function RoutingDiagram({
     <Wrapper>
       {routes.map((entry, index) => (
         <RouteContainerRow key={index}>
-          <CurrencyLogo currency={tokenIn} size={'20px'} />
+          <CurrencyLogo currency={tokenIn} size="20px" />
           <Route entry={entry} />
-          <CurrencyLogo currency={tokenOut} size={'20px'} />
+          <CurrencyLogo currency={tokenOut} size="20px" />
         </RouteContainerRow>
       ))}
     </Wrapper>
@@ -117,7 +117,7 @@ function Route({ entry: { percent, path, protocol } }: { entry: RoutingDiagramEn
       <OpaqueBadge>
         {protocol === Protocol.MIXED ? (
           <MixedProtocolBadge>
-            <BadgeText fontSize={12}>{'V3 + V2'}</BadgeText>
+            <BadgeText fontSize={12}>V3 + V2</BadgeText>
           </MixedProtocolBadge>
         ) : (
           <ProtocolBadge>

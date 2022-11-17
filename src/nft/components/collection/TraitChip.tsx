@@ -20,7 +20,7 @@ const CrossIconWrap = styled.div`
   padding-top: 1px;
 `
 
-export const TraitChip = ({ onClick, value }: { value: string; onClick: () => void }) => {
+export const TraitChip = ({ onClick, value }: { value: string | JSX.Element; onClick: () => void }) => {
   return (
     <TraitChipWrap>
       <span>{value}</span>

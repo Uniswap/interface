@@ -42,7 +42,7 @@ const PrimaryMenuRow = ({
           <Row onClick={close}>{children}</Row>
         </NavLink>
       ) : (
-        <Row as="a" href={href} target={'_blank'} rel={'noopener noreferrer'} className={styles.MenuRow}>
+        <Row as="a" href={href} target="_blank" rel="noopener noreferrer" className={styles.MenuRow}>
           {children}
         </Row>
       )}

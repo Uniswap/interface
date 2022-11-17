@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { MouseoverTooltip } from 'components/Tooltip'
+import Tooltip from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
 import * as Card from 'nft/components/collection/Card'
 import { AssetMediaType } from 'nft/components/collection/Card'
@@ -7,59 +8,37 @@ import { bodySmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile, useSellAsset } from 'nft/hooks'
 import { TokenType, WalletAsset } from 'nft/types'
-import { UniformHeight } from 'nft/types'
-import { useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
-const NFT_DETAILS_HREF = (asset: WalletAsset) =>
-  `/nfts/asset/${asset.asset_contract.address}/${asset.tokenId}?origin=profile`
+import { useEffect, useMemo, useRef, useState } from 'react'
+
+const TOOLTIP_TIMEOUT = 2000
 
 interface ViewMyNftsAssetProps {
   asset: WalletAsset
-  isSellMode: boolean
   mediaShouldBePlaying: boolean
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
-  uniformHeight: UniformHeight
-  setUniformHeight: (u: UniformHeight) => void
+  hideDetails: boolean
 }
 
 const getNftDisplayComponent = (
   assetMediaType: AssetMediaType,
   mediaShouldBePlaying: boolean,
-  setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void,
-  uniformHeight: UniformHeight,
-  setUniformHeight: (u: UniformHeight) => void
+  setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
 ) => {
   switch (assetMediaType) {
     case AssetMediaType.Image:
-      return <Card.Image uniformHeight={uniformHeight} setUniformHeight={setUniformHeight} />
+      return <Card.Image />
     case AssetMediaType.Video:
-      return (
-        <Card.Video
-          uniformHeight={uniformHeight}
-          setUniformHeight={setUniformHeight}
-          shouldPlay={mediaShouldBePlaying}
-          setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-        />
-      )
+      return <Card.Video shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
     case AssetMediaType.Audio:
-      return (
-        <Card.Audio
-          uniformHeight={uniformHeight}
-          setUniformHeight={setUniformHeight}
-          shouldPlay={mediaShouldBePlaying}
-          setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-        />
-      )
+      return <Card.Audio shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
   }
 }
 
 export const ViewMyNftsAsset = ({
   asset,
-  isSellMode,
   mediaShouldBePlaying,
   setCurrentTokenPlayingMedia,
-  uniformHeight,
-  setUniformHeight,
+  hideDetails,
 }: ViewMyNftsAssetProps) => {
   const sellAssets = useSellAsset((state) => state.sellAssets)
   const selectSellAsset = useSellAsset((state) => state.selectSellAsset)
@@ -67,7 +46,6 @@ export const ViewMyNftsAsset = ({
   const cartExpanded = useBag((state) => state.bagExpanded)
   const toggleCart = useBag((state) => state.toggleBag)
   const isMobile = useIsMobile()
-  const navigate = useNavigate()
 
   const isSelected = useMemo(() => {
     return sellAssets.some(
@@ -75,9 +53,10 @@ export const ViewMyNftsAsset = ({
     )
   }, [asset, sellAssets])
 
-  const onCardClick = () => {
-    isSellMode ? handleSelect(isSelected) : navigate(NFT_DETAILS_HREF(asset))
-  }
+  const [showTooltip, setShowTooltip] = useState(false)
+  const isSelectedRef = useRef(isSelected)
+
+  const onCardClick = () => handleSelect(isSelected)
 
   const handleSelect = (removeAsset: boolean) => {
     removeAsset ? removeSellAsset(asset) : selectSellAsset(asset)
@@ -91,46 +70,71 @@ export const ViewMyNftsAsset = ({
       toggleCart()
   }
 
-  const assetMediaType = Card.useAssetMediaType(asset)
+  useEffect(() => {
+    if (isSelected !== isSelectedRef.current) {
+      setShowTooltip(true)
+      isSelectedRef.current = isSelected
+      const tooltipTimer = setTimeout(() => {
+        setShowTooltip(false)
+      }, TOOLTIP_TIMEOUT)
 
-  const isDisabled = isSellMode && (asset.asset_contract.tokenType === TokenType.ERC1155 || asset.susFlag)
-  const disabledTooltipText =
-    asset.asset_contract.tokenType === TokenType.ERC1155 ? 'ERC-1155 support coming soon' : 'Blocked from trading'
+      return () => {
+        clearTimeout(tooltipTimer)
+      }
+    }
+    isSelectedRef.current = isSelected
+    return undefined
+  }, [isSelected, isSelectedRef])
+
+  const assetMediaType = Card.useAssetMediaType(asset)
+  const isDisabled = asset.asset_contract.tokenType === TokenType.ERC1155 || asset.susFlag
 
   return (
-    <MouseoverTooltip
-      text={
-        <Box as="span" className={bodySmall} style={{ color: themeVars.colors.textPrimary }}>
-          <Trans>{disabledTooltipText}</Trans>{' '}
-        </Box>
-      }
-      placement="bottom"
-      offsetX={0}
-      offsetY={-180}
-      style={{ display: 'block' }}
-      disableHover={!isDisabled}
+    <Card.Container
+      asset={asset}
+      selected={isSelected}
+      addAssetToBag={() => handleSelect(false)}
+      removeAssetFromBag={() => handleSelect(true)}
+      onClick={onCardClick}
+      isDisabled={isDisabled}
     >
-      <Card.Container
-        asset={asset}
-        selected={isSelected}
-        addAssetToBag={() => handleSelect(false)}
-        removeAssetFromBag={() => handleSelect(true)}
-        onClick={onCardClick}
-        isDisabled={isDisabled}
-      >
-        <Card.ImageContainer>
-          {getNftDisplayComponent(
-            assetMediaType,
-            mediaShouldBePlaying,
-            setCurrentTokenPlayingMedia,
-            uniformHeight,
-            setUniformHeight
-          )}
-        </Card.ImageContainer>
-        <Card.DetailsContainer>
-          <Card.ProfileNftDetails asset={asset} isSellMode={isSellMode} />
-        </Card.DetailsContainer>
-      </Card.Container>
-    </MouseoverTooltip>
+      <Card.ImageContainer isDisabled={isDisabled}>
+        <Tooltip
+          text={
+            <Box as="span" className={bodySmall} color="textPrimary">
+              {isSelected ? <Trans>Selected</Trans> : <Trans>Deselected</Trans>}
+            </Box>
+          }
+          show={showTooltip}
+          style={{ display: 'block' }}
+          offsetX={0}
+          offsetY={-68}
+          hideArrow={true}
+          placement="bottom"
+        >
+          <MouseoverTooltip
+            text={
+              <Box as="span" className={bodySmall} style={{ color: themeVars.colors.textPrimary }}>
+                {asset.asset_contract.tokenType === TokenType.ERC1155 ? (
+                  <Trans>ERC-1155 support coming soon</Trans>
+                ) : (
+                  <Trans>Blocked from trading</Trans>
+                )}
+              </Box>
+            }
+            placement="bottom"
+            offsetX={0}
+            offsetY={-100}
+            style={{ display: 'block' }}
+            disableHover={!isDisabled}
+          >
+            {getNftDisplayComponent(assetMediaType, mediaShouldBePlaying, setCurrentTokenPlayingMedia)}
+          </MouseoverTooltip>
+        </Tooltip>
+      </Card.ImageContainer>
+      <Card.DetailsContainer>
+        <Card.ProfileNftDetails asset={asset} hideDetails={hideDetails} />
+      </Card.DetailsContainer>
+    </Card.Container>
   )
 }

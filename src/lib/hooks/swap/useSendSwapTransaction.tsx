@@ -2,8 +2,11 @@ import { BigNumber } from '@ethersproject/bignumber'
 import type { JsonRpcProvider, TransactionResponse } from '@ethersproject/providers'
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { EventName } from '@uniswap/analytics-events'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
+import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import isZero from 'utils/isZero'
@@ -28,6 +31,8 @@ interface FailedCall extends SwapCallEstimate {
   call: SwapCall
   error: Error
 }
+
+class InvalidSwapError extends Error {}
 
 // returns a function that will execute a swap, if the parameters are all valid
 export default function useSendSwapTransaction(
@@ -114,6 +119,16 @@ export default function useSendSwapTransaction(
             ...(value && !isZero(value) ? { value } : {}),
           })
           .then((response) => {
+            sendAnalyticsEvent(
+              EventName.SWAP_SIGNED,
+              formatSwapSignedAnalyticsEventProperties({ trade, txHash: response.hash })
+            )
+            if (calldata !== response.data) {
+              sendAnalyticsEvent(EventName.SWAP_MODIFIED_IN_WALLET, { txHash: response.hash })
+              throw new InvalidSwapError(
+                t`Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds.`
+              )
+            }
             return response
           })
           .catch((error) => {
@@ -124,7 +139,11 @@ export default function useSendSwapTransaction(
               // otherwise, the error was unexpected and we need to convey that
               console.error(`Swap failed`, error, address, calldata, value)
 
-              throw new Error(t`Swap failed: ${swapErrorToUserReadableMessage(error)}`)
+              if (error instanceof InvalidSwapError) {
+                throw error
+              } else {
+                throw new Error(t`Swap failed: ${swapErrorToUserReadableMessage(error)}`)
+              }
             }
           })
       },

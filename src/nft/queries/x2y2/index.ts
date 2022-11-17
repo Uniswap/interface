@@ -25,3 +25,15 @@ export const newX2Y2Order = async (payload: OrderPayload): Promise<boolean> => {
     clearTimeout(timeout)
   }
 }
+
+export const getOrderId = async (collectionAddress: string, tokenId: string): Promise<number | undefined> => {
+  const url = `${process.env.REACT_APP_GENIE_V3_API_URL}/getX2Y2OrderId?collectionAddress=${collectionAddress}&tokenId=${tokenId}`
+  const r = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+    },
+  })
+  const data = await r.json()
+  return data?.data?.data?.[0]?.id
+}
