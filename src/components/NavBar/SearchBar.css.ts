@@ -83,7 +83,7 @@ export const searchBarContainerNft = style([
     '@media': {
       [`screen and (min-width: ${breakpoints.lg}px)`]: {
         right: `-${DESKTOP_NAVBAR_WIDTH / 2}px`,
-        top: '-2px',
+        top: '-6px',
       },
       [`screen and (min-width: 1024px) and (max-width: 1080px)`]: {
         right: `-${300 / 2}px`,
