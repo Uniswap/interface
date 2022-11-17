@@ -41,7 +41,7 @@ export const Bag = () => {
 
   return (
     <NavIcon isActive={bagExpanded} onClick={handleIconClick}>
-      <BagIcon viewBox="0 0 24 24" width={24} height={24} strokeWidth="2px" />
+      <BagIcon viewBox="0 0 24 24" width={24} height={24} />
       {bagHasItems && <CounterDot>{bagQuantity > 99 ? <HundredsOverflowIcon /> : bagQuantity}</CounterDot>}
     </NavIcon>
   )
