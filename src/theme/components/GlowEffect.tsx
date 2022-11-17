@@ -27,11 +27,15 @@ const getShadowForChainId = (theme: DefaultTheme, chainId?: SupportedChainId) =>
   }
 }
 
-export function NetworkGlowEffect({ children }: PropsWithChildren) {
+export function NetworkGlowEffect({ className, children }: PropsWithChildren<{ className?: string }>) {
   const { chainId } = useWeb3React()
   const theme = useTheme()
 
   const shadow = getShadowForChainId(theme, chainId)
 
-  return <GlowEffect shadow={shadow}>{children}</GlowEffect>
+  return (
+    <GlowEffect shadow={shadow} className={className}>
+      {children}
+    </GlowEffect>
+  )
 }

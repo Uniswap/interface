@@ -175,16 +175,18 @@ function WrongNetworkCard() {
               </ThemedText.LargeHeader>
             </TitleRow>
 
-            <MainContentWrapper>
-              <ErrorContainer>
-                <ThemedText.DeprecatedBody color={theme.deprecated_text3} textAlign="center">
-                  <NetworkIcon strokeWidth={1.2} />
-                  <div data-testid="pools-unsupported-err">
-                    <Trans>Your connected network is unsupported.</Trans>
-                  </div>
-                </ThemedText.DeprecatedBody>
-              </ErrorContainer>
-            </MainContentWrapper>
+            <NetworkGlowEffect>
+              <MainContentWrapper>
+                <ErrorContainer>
+                  <ThemedText.DeprecatedBody color={theme.deprecated_text3} textAlign="center">
+                    <NetworkIcon strokeWidth={1.2} />
+                    <div data-testid="pools-unsupported-err">
+                      <Trans>Your connected network is unsupported.</Trans>
+                    </div>
+                  </ThemedText.DeprecatedBody>
+                </ErrorContainer>
+              </MainContentWrapper>
+            </NetworkGlowEffect>
           </AutoColumn>
         </AutoColumn>
       </PageWrapper>
