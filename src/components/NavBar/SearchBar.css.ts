@@ -27,18 +27,9 @@ const baseSearchStyle = style([
 ])
 
 const baseSearchNftStyle = style([
-  sprinkles({
-    paddingY: '12',
-    width: { sm: 'viewWidth' },
-    borderStyle: 'solid',
-    borderWidth: '2px',
-    borderColor: 'backgroundOutline',
-  }),
+  baseSearchStyle,
   {
     '@media': {
-      [`screen and (min-width: ${breakpoints.sm}px)`]: {
-        width: `${DESKTOP_NAVBAR_WIDTH}px`,
-      },
       [`screen and (min-width: 1024px) and (max-width: 1080px)`]: {
         width: `${330}px`,
       },
