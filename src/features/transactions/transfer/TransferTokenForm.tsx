@@ -186,7 +186,6 @@ export function TransferTokenForm({
     <>
       {showWarningModal && transferWarning?.title && (
         <WarningModal
-          isVisible
           caption={transferWarning.message}
           confirmText={t('OK')}
           modalName={ModalName.SendWarning}

@@ -113,7 +113,6 @@ export function TransferReview({
     <>
       {showWarningModal && transferWarning?.title && (
         <WarningModal
-          isVisible
           caption={transferWarning.message}
           closeText={blockingWarning ? undefined : t('Cancel')}
           confirmText={blockingWarning ? t('OK') : t('Confirm')}

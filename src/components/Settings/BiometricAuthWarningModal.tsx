@@ -15,7 +15,6 @@ export function BiometricAuthWarningModal({ isTouchIdDevice, onConfirm, onClose 
   const authenticationTypeName = isTouchIdDevice ? 'Touch' : 'Face'
   return (
     <WarningModal
-      isVisible
       caption={t(
         'If you don’t turn on {{authenticationTypeName}} ID, anyone who gains access to your device can open Uniswap Wallet and make transactions.',
         { authenticationTypeName }

@@ -19,7 +19,6 @@ import { formatNumber, NumberType } from 'src/utils/format'
 
 export function NFTCollectionModal({
   collection,
-  isVisible,
   onClose,
 }: {
   collection: NonNullable<
@@ -27,7 +26,6 @@ export function NFTCollectionModal({
       NonNullable<NonNullable<NonNullable<NftItemScreenQuery['nftAssets']>['edges']>[0]>['node']
     >['collection']
   >
-  isVisible: boolean
   onClose: () => void
 }) {
   const { t } = useTranslation()
@@ -53,11 +51,7 @@ export function NFTCollectionModal({
   }, [collection.nftContracts])
 
   return (
-    <BottomSheetModal
-      isVisible={isVisible}
-      name={ModalName.NftCollection}
-      properties={traceProps}
-      onClose={onClose}>
+    <BottomSheetModal name={ModalName.NftCollection} properties={traceProps} onClose={onClose}>
       <Screen bg="background1" edges={['bottom']} pt="xs" px="lg">
         <Flex>
           <Flex gap="sm">

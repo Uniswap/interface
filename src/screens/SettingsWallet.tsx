@@ -276,13 +276,12 @@ export function SettingsWallet({
           />
         )}
 
-        {!!showRemoveWalletModal && !!currentAccount && (
+        {showRemoveWalletModal && !!currentAccount && (
           <WarningModal
             useBiometric
             caption={captionForAccountRemovalWarning(currentAccount.type, t)}
             closeText={t('Cancel')}
             confirmText={t('Remove')}
-            isVisible={showRemoveWalletModal}
             modalName={ModalName.RemoveWallet}
             severity={WarningSeverity.High}
             title={t('Are you sure?')}

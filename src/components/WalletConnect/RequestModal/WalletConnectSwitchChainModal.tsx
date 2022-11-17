@@ -15,7 +15,6 @@ import { SwitchChainRequest } from 'src/features/walletConnect/walletConnectSlic
 import { toSupportedChainId } from 'src/utils/chainId'
 
 interface Props {
-  isVisible: boolean
   onClose: () => void
   request: SwitchChainRequest
 }
@@ -25,7 +24,7 @@ const spacerProps: ComponentProps<typeof Box> = {
   borderBottomWidth: 1,
 }
 
-export function WalletConnectSwitchChainModal({ isVisible, onClose, request }: Props) {
+export function WalletConnectSwitchChainModal({ onClose, request }: Props) {
   const { t } = useTranslation()
 
   /**
@@ -62,10 +61,7 @@ export function WalletConnectSwitchChainModal({ isVisible, onClose, request }: P
   }
 
   return (
-    <BottomSheetModal
-      isVisible={isVisible}
-      name={ModalName.WCSwitchChainRequest}
-      onClose={handleClose}>
+    <BottomSheetModal name={ModalName.WCSwitchChainRequest} onClose={handleClose}>
       <Flex gap="lg" paddingBottom="xxl" paddingHorizontal="md" paddingTop="xl">
         <Flex alignItems="center" gap="md">
           <HeaderIcon showChain dapp={{ ...dapp, chain_id: newChainId }} />

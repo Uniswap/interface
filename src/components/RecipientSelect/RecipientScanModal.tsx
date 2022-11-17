@@ -20,12 +20,11 @@ import { useDisplayName } from 'src/features/wallet/hooks'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 
 type Props = {
-  isVisible: boolean
   onClose: () => void
   onSelectRecipient: (address: string) => void
 }
 
-export function RecipientScanModal({ isVisible, onSelectRecipient, onClose }: Props) {
+export function RecipientScanModal({ onSelectRecipient, onClose }: Props) {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const activeAddress = useAppSelector(selectActiveAccountAddress)
@@ -74,7 +73,6 @@ export function RecipientScanModal({ isVisible, onSelectRecipient, onClose }: Pr
       fullScreen
       hideHandlebar
       backgroundColor={theme.colors.background0}
-      isVisible={isVisible}
       name={ModalName.WalletConnectScan}
       onClose={onClose}>
       {currentScreenState === ScannerModalState.ScanQr && (

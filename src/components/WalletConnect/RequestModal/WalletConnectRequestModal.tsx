@@ -47,7 +47,6 @@ import { logger } from 'src/utils/logger'
 const MAX_MODAL_MESSAGE_HEIGHT = 200
 
 interface Props {
-  isVisible: boolean
   onClose: () => void
   request: SignRequest | TransactionRequest
 }
@@ -106,7 +105,7 @@ const spacerProps: ComponentProps<typeof Box> = {
   borderBottomWidth: 1,
 }
 
-export function WalletConnectRequestModal({ isVisible, onClose, request }: Props) {
+export function WalletConnectRequestModal({ onClose, request }: Props) {
   const theme = useAppTheme()
   const netInfo = useNetInfo()
   const chainId = toSupportedChainId(request.dapp.chain_id) ?? undefined
@@ -237,7 +236,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
   let permitInfo = getPermitInfo(request)
 
   return (
-    <BottomSheetModal isVisible={isVisible} name={ModalName.WCSignRequest} onClose={handleClose}>
+    <BottomSheetModal name={ModalName.WCSignRequest} onClose={handleClose}>
       <Flex gap="lg" paddingBottom="xxl" paddingHorizontal="md" paddingTop="xl">
         <ClientDetails permitInfo={permitInfo} request={request} />
         <Flex gap="sm">

@@ -94,11 +94,7 @@ export function RecipientSelect({
         )}
       </AnimatedFlex>
       {showQRScanner && (
-        <RecipientScanModal
-          isVisible
-          onClose={onCloseQRScanner}
-          onSelectRecipient={onSelectRecipient}
-        />
+        <RecipientScanModal onClose={onCloseQRScanner} onSelectRecipient={onSelectRecipient} />
       )}
     </>
   )

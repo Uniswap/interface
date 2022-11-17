@@ -184,7 +184,6 @@ export function SwapReview({
     <>
       {showWarningModal && swapWarning?.title && (
         <WarningModal
-          isVisible
           caption={swapWarning.message}
           closeText={blockingWarning ? undefined : t('Cancel')}
           confirmText={blockingWarning ? t('OK') : t('Confirm')}

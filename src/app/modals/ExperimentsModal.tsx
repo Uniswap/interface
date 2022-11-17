@@ -32,12 +32,13 @@ export function ExperimentsModal() {
   const experiments = useAppSelector(selectExperimentOverrides)
   const remoteConfig = useAsyncData(retrieveRemoteExperiments).data
 
+  if (!modalState.isOpen) return null
+
   return (
     <BottomSheetModal
       backgroundColor={
         featureFlags['modal-color-test'] ? theme.colors.accentBranded : theme.colors.background1
       }
-      isVisible={modalState.isOpen}
       name={ModalName.Experiments}
       onClose={() => dispatch(closeModal({ name: ModalName.Experiments }))}>
       <Flex gap="lg" justifyContent="flex-start" pb="xl">

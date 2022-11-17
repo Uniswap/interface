@@ -73,32 +73,34 @@ export function SeedPhraseDisplay({ mnemonicId, onDismiss }: Props) {
         <HiddenMnemonicWordView />
       )}
 
-      <WarningModal
-        caption={t(
-          'Please only view your recovery phrase in a private place. Anyone who knows your recovery phrase can access your wallet and funds.'
-        )}
-        closeText={t('Go back')}
-        confirmText={t('View phrase')}
-        hideHandlebar={true}
-        isDismissible={false}
-        isVisible={showSeedPhraseViewWarningModal}
-        modalName={ModalName.ViewSeedPhraseWarning}
-        title={t('Be careful')}
-        onClose={() => {
-          setShowSeedPhraseViewWarningModal(false)
-        }}
-        onConfirm={onConfirmWarning}
-      />
-      <WarningModal
-        caption={t(
-          'Anyone who gains access to your photos can access your wallet. We recommend that you write down your words instead.'
-        )}
-        confirmText={t('OK')}
-        isVisible={showScreenShotWarningModal}
-        modalName={ModalName.ScreenshotWarning}
-        title={t('Screenshots aren’t secure')}
-        onConfirm={() => setShowScreenShotWarningModal(false)}
-      />
+      {showSeedPhraseViewWarningModal && (
+        <WarningModal
+          caption={t(
+            'Please only view your recovery phrase in a private place. Anyone who knows your recovery phrase can access your wallet and funds.'
+          )}
+          closeText={t('Go back')}
+          confirmText={t('View phrase')}
+          hideHandlebar={true}
+          isDismissible={false}
+          modalName={ModalName.ViewSeedPhraseWarning}
+          title={t('Be careful')}
+          onClose={() => {
+            setShowSeedPhraseViewWarningModal(false)
+          }}
+          onConfirm={onConfirmWarning}
+        />
+      )}
+      {showScreenShotWarningModal && (
+        <WarningModal
+          caption={t(
+            'Anyone who gains access to your photos can access your wallet. We recommend that you write down your words instead.'
+          )}
+          confirmText={t('OK')}
+          modalName={ModalName.ScreenshotWarning}
+          title={t('Screenshots aren’t secure')}
+          onConfirm={() => setShowScreenShotWarningModal(false)}
+        />
+      )}
     </>
   )
 }

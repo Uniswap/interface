@@ -80,7 +80,6 @@ export function TransferFormSpeedbumps({
     <>
       {showSpeedbumpModal && !isSignerRecipient && isSmartContractAddress && (
         <WarningModal
-          isVisible
           caption={t(
             'This address is a smart contract. In many cases, sending tokens directly to a contract will result in the loss of your assets. Please select a different address.'
           )}
@@ -94,7 +93,6 @@ export function TransferFormSpeedbumps({
       )}
       {showSpeedbumpModal && !isSmartContractAddress && !isSignerRecipient && isNewRecipient && (
         <WarningModal
-          isVisible
           caption={t(
             "You haven't transacted with this address before. Please confirm that the address is correct before continuing."
           )}

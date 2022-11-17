@@ -28,7 +28,6 @@ import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSl
 const WC_TIMEOUT_DURATION_MS = 10000 // timeout after 10 seconds
 
 type Props = {
-  isVisible: boolean
   initialScreenState?: ScannerModalState
   pendingSession: WalletConnectSession | null
   onClose: () => void
@@ -36,7 +35,6 @@ type Props = {
 
 export function WalletConnectModal({
   initialScreenState = ScannerModalState.ScanQr,
-  isVisible,
   pendingSession,
   onClose,
 }: Props) {
@@ -125,7 +123,6 @@ export function WalletConnectModal({
       fullScreen
       hideHandlebar
       backgroundColor={theme.colors.background0}
-      isVisible={isVisible}
       name={ModalName.WalletConnectScan}
       onClose={onClose}>
       {pendingSession ? (

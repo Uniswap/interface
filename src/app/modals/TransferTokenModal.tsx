@@ -14,11 +14,12 @@ export function TransferTokenModal() {
     appDispatch(closeModal({ name: ModalName.Send }))
   }
 
+  if (!modalState.isOpen) return null
+
   return (
     <BottomSheetModal
       fullScreen
       backgroundColor={theme.colors.background1}
-      isVisible={modalState.isOpen}
       name={ModalName.Send}
       onClose={onClose}>
       <TransferFlow prefilledState={modalState.initialState} onClose={onClose} />

@@ -111,34 +111,35 @@ export function SettingsCloudBackupStatus({
         />
       </Flex>
 
-      <WarningModal
-        caption={t(
-          'If you delete your iCloud backup, you’ll only be able to recover your wallet with a manual backup of your recovery phrase. Uniswap Labs can’t recover your assets if you lose your recovery phrase.'
-        )}
-        closeText={t('Cancel')}
-        confirmText={t('Delete')}
-        isVisible={showBackupDeleteWarning}
-        modalName={ModalName.ViewSeedPhraseWarning}
-        title={t('Are you sure?')}
-        onClose={() => {
-          setShowBackupDeleteWarning(false)
-        }}
-        onConfirm={onConfirmDeleteBackup}>
-        {associatedAccounts.length > 1 && (
-          <Flex>
-            <Text textAlign="left" variant="subheadSmall">
-              {t(
-                'Because these wallets share a recovery phrase, it will also delete the backups for:'
-              )}
-            </Text>
+      {showBackupDeleteWarning && (
+        <WarningModal
+          caption={t(
+            'If you delete your iCloud backup, you’ll only be able to recover your wallet with a manual backup of your recovery phrase. Uniswap Labs can’t recover your assets if you lose your recovery phrase.'
+          )}
+          closeText={t('Cancel')}
+          confirmText={t('Delete')}
+          modalName={ModalName.ViewSeedPhraseWarning}
+          title={t('Are you sure?')}
+          onClose={() => {
+            setShowBackupDeleteWarning(false)
+          }}
+          onConfirm={onConfirmDeleteBackup}>
+          {associatedAccounts.length > 1 && (
             <Flex>
-              {associatedAccounts.map((account) => (
-                <AddressDisplay address={account.address} size={36} variant="subheadLarge" />
-              ))}
+              <Text textAlign="left" variant="subheadSmall">
+                {t(
+                  'Because these wallets share a recovery phrase, it will also delete the backups for:'
+                )}
+              </Text>
+              <Flex>
+                {associatedAccounts.map((account) => (
+                  <AddressDisplay address={account.address} size={36} variant="subheadLarge" />
+                ))}
+              </Flex>
             </Flex>
-          </Flex>
-        )}
-      </WarningModal>
+          )}
+        </WarningModal>
+      )}
     </Screen>
   )
 }

@@ -33,7 +33,6 @@ function renderOptionItem(label: string, textColorOverride?: keyof Theme['colors
 
 interface TransactionActionModalProps {
   hash: string
-  isVisible: boolean
   onExplore: () => void
   onClose: () => void
   onCancel: () => void
@@ -45,7 +44,6 @@ interface TransactionActionModalProps {
 /** Display options for transactions. */
 export default function TransactionActionsModal({
   hash,
-  isVisible,
   onExplore,
   onClose,
   onCancel,
@@ -100,7 +98,6 @@ export default function TransactionActionsModal({
     <BottomSheetModal
       backgroundColor="accentCritical"
       hideHandlebar={true}
-      isVisible={isVisible}
       name={ModalName.TransactionActions}
       onClose={handleClose}>
       <Flex pb="lg" px="sm">

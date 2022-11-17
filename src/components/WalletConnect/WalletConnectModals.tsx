@@ -43,7 +43,6 @@ export function WalletConnectModals() {
     <>
       {(modalState.isOpen || Boolean(pendingSession)) && (
         <WalletConnectModal
-          isVisible
           initialScreenState={modalState.initialState}
           pendingSession={pendingSession}
           onClose={onClose}
@@ -73,7 +72,7 @@ function RequestModal({ currRequest }: RequestModalProps) {
   }
 
   if (isSwitchNetworkRequest(currRequest)) {
-    return <WalletConnectSwitchChainModal isVisible request={currRequest} onClose={onClose} />
+    return <WalletConnectSwitchChainModal request={currRequest} onClose={onClose} />
   }
 
   const isRequestFromSignerAccount = signerAccounts.some(
@@ -83,7 +82,6 @@ function RequestModal({ currRequest }: RequestModalProps) {
   if (!isRequestFromSignerAccount) {
     return (
       <WarningModal
-        isVisible
         caption={t(
           'In order to sign messages or transactions, you’ll need to import the wallet’s recovery phrase.'
         )}
@@ -108,7 +106,7 @@ function RequestModal({ currRequest }: RequestModalProps) {
     )
   }
 
-  return <WalletConnectRequestModal isVisible request={currRequest} onClose={onClose} />
+  return <WalletConnectRequestModal request={currRequest} onClose={onClose} />
 }
 
 function isSwitchNetworkRequest(request: WalletConnectRequest): request is SwitchChainRequest {

@@ -14,11 +14,12 @@ export function SwapModal() {
     appDispatch(closeModal({ name: ModalName.Swap }))
   }
 
+  if (!modalState.isOpen) return null
+
   return (
     <BottomSheetModal
       fullScreen
       backgroundColor={theme.colors.background1}
-      isVisible={modalState.isOpen}
       name={ModalName.Swap}
       onClose={onClose}>
       <SwapFlow prefilledState={modalState.initialState} onClose={onClose} />

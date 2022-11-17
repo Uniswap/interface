@@ -262,11 +262,7 @@ export function NFTItemScreen({
         </Flex>
       </HeaderScrollScreen>
       {showCollectionModal && asset?.collection ? (
-        <NFTCollectionModal
-          isVisible
-          collection={asset.collection}
-          onClose={onCloseCollectionModal}
-        />
+        <NFTCollectionModal collection={asset.collection} onClose={onCloseCollectionModal} />
       ) : null}
     </>
   )

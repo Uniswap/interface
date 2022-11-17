@@ -11,8 +11,12 @@ import { dimensions } from 'src/styles/sizing'
 export function LockScreenModal() {
   const { isLockScreenVisible, animationType, setIsLockScreenVisible } = useLockScreenContext()
   const { trigger } = useBiometricPrompt(() => setIsLockScreenVisible(false))
+
+  if (!isLockScreenVisible) return null
+
   return (
     <Modal
+      visible
       animationType={animationType}
       dimBackground={true}
       dismissable={false}
@@ -20,8 +24,7 @@ export function LockScreenModal() {
       position="center"
       presentationStyle="fullScreen"
       showCloseButton={false}
-      transparent={false}
-      visible={isLockScreenVisible}>
+      transparent={false}>
       <TouchableArea onPress={trigger}>
         <Flex
           centered

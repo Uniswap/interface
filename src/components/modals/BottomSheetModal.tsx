@@ -19,7 +19,6 @@ type Props = {
   children: PropsWithChildren<any>
   disableSwipe?: boolean
   hideHandlebar?: boolean
-  isVisible: boolean
   name: ModalName
   onClose?: () => void
   snapPoints?: Array<string | number>
@@ -52,7 +51,6 @@ const FULL_HEIGHT = 0.91
 const FULL_HEIGHT_SNAP_POINTS = ['91%']
 
 export function BottomSheetModal({
-  isVisible,
   children,
   name,
   properties,
@@ -83,14 +81,8 @@ export function BottomSheetModal({
   )
 
   useEffect(() => {
-    if (isVisible) {
-      modalRef.current?.present()
-    } else {
-      modalRef.current?.close()
-    }
-  }, [isVisible])
-
-  if (!isVisible) return null
+    modalRef.current?.present()
+  }, [modalRef])
 
   const fullScreenContentHeight = FULL_HEIGHT * dimensions.fullHeight
   return (
@@ -121,7 +113,6 @@ export function BottomSheetModal({
 }
 
 export function BottomSheetScrollModal({
-  isVisible,
   children,
   name,
   onClose,
@@ -133,12 +124,8 @@ export function BottomSheetScrollModal({
   const theme = useAppTheme()
 
   useEffect(() => {
-    if (isVisible) {
-      modalRef.current?.present()
-    } else {
-      modalRef.current?.close()
-    }
-  }, [isVisible])
+    modalRef.current?.present()
+  }, [modalRef])
 
   return (
     <BaseModal
@@ -157,7 +144,6 @@ export function BottomSheetScrollModal({
 }
 
 export function BottomSheetDetachedModal({
-  isVisible,
   children,
   name,
   onClose,
@@ -172,17 +158,11 @@ export function BottomSheetDetachedModal({
     useBottomSheetDynamicSnapPoints(snapPoints)
   const theme = useAppTheme()
 
-  useEffect(() => {
-    if (isVisible) {
-      modalRef.current?.present()
-    } else {
-      modalRef.current?.close()
-    }
-  }, [isVisible])
-
-  if (!isVisible) return null
-
   const fullScreenContentHeight = FULL_HEIGHT * dimensions.fullHeight
+
+  useEffect(() => {
+    modalRef.current?.present()
+  }, [modalRef])
 
   return (
     <BaseModal

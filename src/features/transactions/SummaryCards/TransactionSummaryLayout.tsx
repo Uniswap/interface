@@ -144,35 +144,38 @@ function TransactionSummaryLayout({
           )}
         </Flex>
       </TouchableArea>
-      <TransactionActionsModal
-        hash={hash}
-        isVisible={showActionsModal}
-        msTimestampAdded={addedTime}
-        showCancelButton={isCancelable}
-        transactionDetails={transaction}
-        onCancel={() => {
-          setShowActionsModal(false)
-          setShowCancelModal(true)
-        }}
-        onClose={() => setShowActionsModal(false)}
-        onExplore={() => openTransactionLink(hash, chainId)}
-      />
-      <BottomSheetModal
-        hideHandlebar={false}
-        isVisible={showCancelModal}
-        name={ModalName.TransactionActions}
-        onClose={() => setShowCancelModal(false)}>
-        {transaction && (
-          <CancelConfirmationView
-            transactionDetails={transaction}
-            onBack={() => {
-              setShowActionsModal(true)
-              setShowCancelModal(false)
-            }}
-            onCancel={handleCancel}
-          />
-        )}
-      </BottomSheetModal>
+      {showActionsModal && (
+        <TransactionActionsModal
+          hash={hash}
+          msTimestampAdded={addedTime}
+          showCancelButton={isCancelable}
+          transactionDetails={transaction}
+          onCancel={() => {
+            setShowActionsModal(false)
+            setShowCancelModal(true)
+          }}
+          onClose={() => setShowActionsModal(false)}
+          onExplore={() => openTransactionLink(hash, chainId)}
+        />
+      )}
+
+      {showCancelModal && (
+        <BottomSheetModal
+          hideHandlebar={false}
+          name={ModalName.TransactionActions}
+          onClose={() => setShowCancelModal(false)}>
+          {transaction && (
+            <CancelConfirmationView
+              transactionDetails={transaction}
+              onBack={() => {
+                setShowActionsModal(true)
+                setShowCancelModal(false)
+              }}
+              onCancel={handleCancel}
+            />
+          )}
+        </BottomSheetModal>
+      )}
     </>
   )
 }

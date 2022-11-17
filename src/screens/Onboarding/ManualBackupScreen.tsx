@@ -104,16 +104,17 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
         <OnboardingScreen
           subtitle={t('Remember to record your words in the same order as they appear below.')}
           title={t('Write down your recovery phrase in order')}>
-          <WarningModal
-            caption={t(
-              'Anyone who gains access to your photos can access your wallet. We recommend that you write down your words instead.'
-            )}
-            confirmText={t('OK')}
-            isVisible={showScreenShotWarningModal}
-            modalName={ModalName.ScreenshotWarning}
-            title={t('Screenshots aren’t secure')}
-            onConfirm={() => setShowScreenShotWarningModal(false)}
-          />
+          {showScreenShotWarningModal && (
+            <WarningModal
+              caption={t(
+                'Anyone who gains access to your photos can access your wallet. We recommend that you write down your words instead.'
+              )}
+              confirmText={t('OK')}
+              modalName={ModalName.ScreenshotWarning}
+              title={t('Screenshots aren’t secure')}
+              onConfirm={() => setShowScreenShotWarningModal(false)}
+            />
+          )}
           <Flex grow justifyContent="space-between">
             <Flex mx="md">
               <MnemonicDisplay mnemonicId={mnemonicId} />

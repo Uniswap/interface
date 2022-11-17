@@ -88,40 +88,41 @@ export function SettingsCloudBackupScreen({
         </Text>
       </Flex>
       <CloudBackupSetPassword doneButtonText={t('Back up to iCloud')} onPressDone={onPressNext} />
-      <BottomSheetModal
-        backgroundColor={theme.colors.background1}
-        isVisible={showCloudBackupInfoModal}
-        name={ModalName.ICloudBackupInfo}>
-        <Flex gap="none" mb="xl" px="md" py="sm">
-          <Flex centered gap="md">
-            <Box borderColor="accentAction" borderRadius="md" borderWidth={1} padding="sm">
-              <CloudIcon color={theme.colors.accentAction} />
-            </Box>
-            <Text textAlign="center" variant="buttonLabelMedium">
-              {t('Back up recovery phrase to iCloud?')}
-            </Text>
-            <Text color="textSecondary" textAlign="center" variant="bodySmall">
-              {t(
-                'It looks like you haven’t backed up your recovery phrase to iCloud yet. By doing so, you can recover your wallet just by being logged into iCloud on any device.'
-              )}
-            </Text>
+      {showCloudBackupInfoModal && (
+        <BottomSheetModal
+          backgroundColor={theme.colors.background1}
+          name={ModalName.ICloudBackupInfo}>
+          <Flex gap="none" mb="xl" px="md" py="sm">
+            <Flex centered gap="md">
+              <Box borderColor="accentAction" borderRadius="md" borderWidth={1} padding="sm">
+                <CloudIcon color={theme.colors.accentAction} />
+              </Box>
+              <Text textAlign="center" variant="buttonLabelMedium">
+                {t('Back up recovery phrase to iCloud?')}
+              </Text>
+              <Text color="textSecondary" textAlign="center" variant="bodySmall">
+                {t(
+                  'It looks like you haven’t backed up your recovery phrase to iCloud yet. By doing so, you can recover your wallet just by being logged into iCloud on any device.'
+                )}
+              </Text>
+            </Flex>
+            <Flex centered row gap="sm" pt="lg">
+              <Button
+                fill
+                emphasis={ButtonEmphasis.Tertiary}
+                label={t('Cancel')}
+                onPress={() => navigation.goBack()}
+              />
+              <Button
+                fill
+                label={t('Back up')}
+                name={ElementName.Confirm}
+                onPress={() => setShowCloudBackupInfoModal(false)}
+              />
+            </Flex>
           </Flex>
-          <Flex centered row gap="sm" pt="lg">
-            <Button
-              fill
-              emphasis={ButtonEmphasis.Tertiary}
-              label={t('Cancel')}
-              onPress={() => navigation.goBack()}
-            />
-            <Button
-              fill
-              label={t('Back up')}
-              name={ElementName.Confirm}
-              onPress={() => setShowCloudBackupInfoModal(false)}
-            />
-          </Flex>
-        </Flex>
-      </BottomSheetModal>
+        </BottomSheetModal>
+      )}
     </Screen>
   )
 }

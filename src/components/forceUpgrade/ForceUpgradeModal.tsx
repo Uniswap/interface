@@ -61,33 +61,33 @@ export function ForceUpgradeModal() {
 
   return (
     <>
-      <WarningModal
-        confirmText={t('Update app')}
-        hideHandlebar={upgradeStatus === UpgradeStatus.Required}
-        isDismissible={upgradeStatus !== UpgradeStatus.Required}
-        isVisible={isVisible}
-        modalName={ModalName.ForceUpgradeModal}
-        severity={WarningSeverity.High}
-        title={t('Update the app to continue')}
-        onClose={onClose}
-        onConfirm={onPressConfirm}>
-        <Text color="textSecondary" textAlign="center" variant="bodySmall">
-          {t(
-            'The version of Uniswap Wallet you’re using is out of date and is missing critical upgrades. If you don’t update the app or you don’t have your recovery phrase written down, you won’t be able to access your assets. '
-          )}
-          {mnemonicId && (
-            <Text color="white" onPress={onPressViewRecovery}>
-              {t('View recovery phrase')}
-            </Text>
-          )}
-        </Text>
-      </WarningModal>
+      {isVisible && (
+        <WarningModal
+          confirmText={t('Update app')}
+          hideHandlebar={upgradeStatus === UpgradeStatus.Required}
+          isDismissible={upgradeStatus !== UpgradeStatus.Required}
+          modalName={ModalName.ForceUpgradeModal}
+          severity={WarningSeverity.High}
+          title={t('Update the app to continue')}
+          onClose={onClose}
+          onConfirm={onPressConfirm}>
+          <Text color="textSecondary" textAlign="center" variant="bodySmall">
+            {t(
+              'The version of Uniswap Wallet you’re using is out of date and is missing critical upgrades. If you don’t update the app or you don’t have your recovery phrase written down, you won’t be able to access your assets. '
+            )}
+            {mnemonicId && (
+              <Text color="white" onPress={onPressViewRecovery}>
+                {t('View recovery phrase')}
+              </Text>
+            )}
+          </Text>
+        </WarningModal>
+      )}
       {mnemonicId && showSeedPhrase && (
         <BottomSheetModal
           fullScreen
           backgroundColor={theme.colors.background0}
           hideHandlebar={true}
-          isVisible={true}
           name={ModalName.ForceUpgradeModal}>
           <Box flex={1} px="lg" py="lg">
             <Flex row alignItems="center" justifyContent="flex-start">

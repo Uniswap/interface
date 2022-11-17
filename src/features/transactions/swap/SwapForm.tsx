@@ -158,7 +158,6 @@ export function SwapForm({
     <>
       {showWarningModal && swapWarning?.title && (
         <WarningModal
-          isVisible
           caption={swapWarning.message}
           confirmText={t('OK')}
           modalName={ModalName.SwapWarning}

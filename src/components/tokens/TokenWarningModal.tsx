@@ -74,8 +74,10 @@ export default function TokenWarningModal({
     openUri(TOKEN_WARNING_HELP_PAGE_URL)
   }
 
+  if (!isVisible) return null
+
   return (
-    <BottomSheetModal isVisible={isVisible} name={ModalName.TokenWarningModal} onClose={onClose}>
+    <BottomSheetModal name={ModalName.TokenWarningModal} onClose={onClose}>
       <Flex centered gap="md" mb="md" p="lg">
         <Flex
           centered

@@ -9,7 +9,6 @@ export function BlockedAddressModal({ onClose }: { onClose: () => void }) {
 
   return (
     <WarningModal
-      isVisible
       caption={t(`This address is blocked on Uniswap Wallet because it is associated with one or more blocked activities. 
 
 If you believe this is an error, please email compliance@uniswap.org.`)}

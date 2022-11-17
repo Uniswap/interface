@@ -397,7 +397,6 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
           caption={captionForAccountRemovalWarning(pendingRemoveAccount.type, t)}
           closeText={t('Cancel')}
           confirmText={t('Remove')}
-          isVisible={!!pendingRemoveAccount}
           modalName={ModalName.RemoveWallet}
           severity={WarningSeverity.High}
           title={t('Are you sure?')}

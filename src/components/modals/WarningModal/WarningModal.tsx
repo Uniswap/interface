@@ -12,7 +12,6 @@ import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
 
 export type WarningModalProps = {
-  isVisible: boolean
   onClose?: () => void
   onCancel?: () => void
   onConfirm?: () => void
@@ -43,7 +42,6 @@ export function captionForAccountRemovalWarning(
 }
 
 export default function WarningModal({
-  isVisible,
   onClose,
   onCancel,
   onConfirm,
@@ -78,7 +76,6 @@ export default function WarningModal({
       backgroundColor={theme.colors.background1}
       hideHandlebar={hideHandlebar}
       isDismissible={isDismissible}
-      isVisible={isVisible}
       name={modalName}
       onClose={onClose}>
       <Flex centered gap="md" mb="lg" p="lg">
