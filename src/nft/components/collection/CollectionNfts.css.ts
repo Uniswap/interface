@@ -20,6 +20,12 @@ export const assetList = style([
       [`screen and (min-width: ${breakpoints.xl}px)`]: {
         gridTemplateColumns: 'repeat(auto-fill, minmax(calc(100%/4 - 16px), 1fr) )',
       },
+      [`screen and (min-width: ${breakpoints.xxl}px)`]: {
+        gridTemplateColumns: 'repeat(auto-fill, minmax(calc(100%/5 - 16px), 1fr) )',
+      },
+      [`screen and (min-width: ${breakpoints.xxxl}px)`]: {
+        gridTemplateColumns: 'repeat(auto-fill, minmax(calc(100%/7 - 16px), 1fr) )',
+      },
     },
   },
 ])
