@@ -1,5 +1,4 @@
 import { flush, Identify, identify, init, track } from '@amplitude/analytics-react-native'
-import { firebase } from '@react-native-firebase/analytics'
 import * as Sentry from '@sentry/react-native'
 import { uniswapUrls } from 'src/constants/urls'
 import { ApplicationTransport } from 'src/features/telemetry/ApplicationTransport'
@@ -38,7 +37,6 @@ export async function initAnalytics() {
         },
       }
     )
-    await firebase.analytics().setAnalyticsCollectionEnabled(true)
   } catch (err) {
     logException(LogContext.Analytics, err)
     logger.error('telemetry', 'enableAnalytics', 'error initializing analytics', err)
@@ -50,12 +48,6 @@ export async function logEvent(name: string, params: {}) {
   if (__DEV__) {
     logger.info('telemetry', 'logEvent', `${name}: ${JSON.stringify(params)}`)
     return
-  }
-
-  try {
-    await firebase.analytics().logEvent(name, params)
-  } catch (err) {
-    logger.error('telemetry', 'logEvent', 'error from Firebase', err)
   }
 }
 
