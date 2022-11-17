@@ -8,16 +8,16 @@ import { CrossIcon } from 'nft/components/icons'
 import { FilterSidebar } from 'nft/components/profile/view/FilterSidebar'
 import { subhead } from 'nft/css/common.css'
 import {
+  useBag,
   useFiltersExpanded,
   useIsMobile,
-  useProfilePageState,
   useSellAsset,
   useWalletBalance,
   useWalletCollections,
 } from 'nft/hooks'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import { OSCollectionsFetcher } from 'nft/queries'
-import { ProfilePageStateType, WalletCollection } from 'nft/types'
+import { WalletCollection } from 'nft/types'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useQuery } from 'react-query'
@@ -51,7 +51,7 @@ export const ProfilePage = () => {
     shallow
   )
   const sellAssets = useSellAsset((state) => state.sellAssets)
-  const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
+  const toggleBag = useBag((state) => state.toggleBag)
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const isMobile = useIsMobile()
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
@@ -148,21 +148,23 @@ export const ProfilePage = () => {
         <Row
           display={{ sm: 'flex', md: 'none' }}
           position="fixed"
-          bottom="24"
           left="16"
           height="56"
           borderRadius="12"
           paddingX="16"
           paddingY="12"
-          style={{ background: '#0d0e0ef2', width: 'calc(100% - 32px)', lineHeight: '24px' }}
+          borderStyle="solid"
+          borderColor="backgroundOutline"
+          borderWidth="1px"
+          style={{ background: '#0d0e0ef2', bottom: '68px', width: 'calc(100% - 32px)', lineHeight: '24px' }}
           className={subhead}
         >
-          {sellAssets.length}&nbsp; selected item{sellAssets.length === 1 ? '' : 's'}
+          {sellAssets.length} NFT{sellAssets.length === 1 ? '' : 's'}
           <Box
             fontWeight="semibold"
             fontSize="14"
             cursor="pointer"
-            color="genieBlue"
+            color="textSecondary"
             marginRight="20"
             marginLeft="auto"
             onClick={resetSellAssets}
@@ -176,12 +178,13 @@ export const ProfilePage = () => {
             fontSize="14"
             cursor="pointer"
             backgroundColor="genieBlue"
-            onClick={() => setSellPageState(ProfilePageStateType.LISTING)}
+            onClick={toggleBag}
             lineHeight="16"
             borderRadius="12"
-            padding="8"
+            paddingY="8"
+            paddingX="28"
           >
-            Continue
+            Sell
           </Box>
         </Row>
       )}
