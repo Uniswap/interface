@@ -5,7 +5,7 @@ import { ChevronUpIcon } from 'nft/components/icons'
 import { buttonTextMedium, caption } from 'nft/css/common.css'
 import { ListingMarket } from 'nft/types'
 import { ListingMarkets } from 'nft/utils/listNfts'
-import { Dispatch, useReducer } from 'react'
+import { Dispatch, useMemo, useReducer } from 'react'
 import styled from 'styled-components/macro'
 
 import * as styles from './ListPage.css'
@@ -62,7 +62,10 @@ export const SelectMarketplacesDropdown = ({
   selectedMarkets: ListingMarket[]
 }) => {
   const [isOpen, toggleIsOpen] = useReducer((s) => !s, false)
-  const dropdownDisplayText = selectedMarkets.length === 1 ? selectedMarkets[0].name : 'Multiple'
+  const dropdownDisplayText = useMemo(
+    () => (selectedMarkets.length === 1 ? selectedMarkets[0].name : 'Multiple'),
+    [selectedMarkets]
+  )
   return (
     <DropdownWrapper>
       <HeaderButtonWrap className={buttonTextMedium} onClick={toggleIsOpen}>
