@@ -414,7 +414,42 @@ function pickThemeButtonBackgroundColor({ theme, emphasis }: { theme: DefaultThe
       return theme.backgroundInteractive
   }
 }
-
+function pickThemeButtonFontSize({ size }: { size: ButtonSize }) {
+  switch (size) {
+    case ButtonSize.large:
+      return '20px'
+    case ButtonSize.medium:
+      return '16px'
+    case ButtonSize.small:
+      return '14px'
+    default:
+      return '16px'
+  }
+}
+function pickThemeButtonLineHeight({ size }: { size: ButtonSize }) {
+  switch (size) {
+    case ButtonSize.large:
+      return '24px'
+    case ButtonSize.medium:
+      return '20px'
+    case ButtonSize.small:
+      return '16px'
+    default:
+      return '20px'
+  }
+}
+function pickThemeButtonPadding({ size }: { size: ButtonSize }) {
+  switch (size) {
+    case ButtonSize.large:
+      return '16px'
+    case ButtonSize.medium:
+      return '10px 12px'
+    case ButtonSize.small:
+      return '8px'
+    default:
+      return '10px 12px'
+  }
+}
 function pickThemeButtonTextColor({ theme, emphasis }: { theme: DefaultTheme; emphasis: ButtonEmphasis }) {
   switch (emphasis) {
     case ButtonEmphasis.high:
@@ -443,10 +478,12 @@ const BaseThemeButton = styled.button<BaseButtonProps>`
   cursor: pointer;
   display: flex;
   flex-direction: row;
+  font-size: ${pickThemeButtonFontSize};
   font-weight: 600;
   gap: 12px;
   justify-content: center;
-  padding: 16px;
+  line-height: ${pickThemeButtonLineHeight};
+  padding: ${pickThemeButtonPadding};
   position: relative;
   transition: 150ms ease opacity;
 
