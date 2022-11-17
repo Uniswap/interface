@@ -11,8 +11,6 @@ export const section = style([
   { maxWidth: '1000px', margin: '0 auto' },
 ])
 
-export const filterRowIcon = sprinkles({ color: { default: 'textSecondary', hover: 'blue' } })
-
 export const buttonSelected = style({
   border: `2px solid ${vars.color.genieBlue}`,
 })

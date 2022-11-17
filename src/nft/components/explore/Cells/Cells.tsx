@@ -8,9 +8,6 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { ethNumberStandardFormatter, formatWeiToDecimal } from '../../../utils/currency'
-import { formatChange } from '../../../utils/toSignificant'
-import { Box } from '../../Box'
-import { Column, Row } from '../../Flex'
 import * as styles from './Cells.css'
 
 const TruncatedText = styled.div`
@@ -167,24 +164,4 @@ export const ChangeCell = ({ change, children }: { children?: ReactNode; change?
       {children || `${change ? Math.abs(Math.round(change)) : 0}%`}
     </ThemedText.BodyPrimary>
   </ChangeCellContainer>
-)
-
-export const WeiWithDayChange = ({ value }: CellProps) => (
-  <Column gap="4">
-    <Row justifyContent="flex-end" color="textPrimary">
-      {value && value.value ? <>{formatWeiToDecimal(value.value.toString(), true)} ETH</> : '-'}
-    </Row>
-    {value.change ? (
-      <Box
-        as="span"
-        color={value.change > 0 ? 'green' : 'accentFailure'}
-        fontWeight="normal"
-        fontSize="12"
-        position="relative"
-      >
-        {value.change > 0 && '+'}
-        {formatChange(value.change)}%
-      </Box>
-    ) : null}
-  </Column>
 )
