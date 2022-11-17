@@ -19,7 +19,13 @@ import {
 } from 'nft/hooks'
 import { fetchRoute } from 'nft/queries'
 import { BagItemStatus, BagStatus, ProfilePageStateType, RouteResponse, TxStateType } from 'nft/types'
-import { buildSellObject, fetchPrice, formatAssetEventProperties, sortUpdatedAssets } from 'nft/utils'
+import {
+  buildSellObject,
+  fetchPrice,
+  formatAssetEventProperties,
+  recalculateBagUsingPooledAssets,
+  sortUpdatedAssets,
+} from 'nft/utils'
 import { combineBuyItemsWithTxRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from 'react-query'
@@ -92,7 +98,7 @@ const Bag = () => {
     setTotalUsdPrice,
     setBagExpanded,
   } = useBag((state) => ({ ...state, bagIsLocked: state.isLocked, uncheckedItemsInBag: state.itemsInBag }), shallow)
-  const itemsInBag = useBag((state) => state.itemsInBag)
+  const { uncheckedItemsInBag } = useBag(({ itemsInBag }) => ({ uncheckedItemsInBag: itemsInBag }))
 
   const isProfilePage = useIsNftProfilePage()
   const isDetailsPage = useIsNftDetailsPage()
@@ -106,6 +112,8 @@ const Bag = () => {
   const [setTransactionResponse] = useTransactionResponse((state) => [state.setTransactionResponse])
 
   const queryClient = useQueryClient()
+
+  const itemsInBag = useMemo(() => recalculateBagUsingPooledAssets(uncheckedItemsInBag), [uncheckedItemsInBag])
 
   const [isOpen, setModalIsOpen] = useState(false)
   const [userCanScroll, setUserCanScroll] = useState(false)

@@ -155,6 +155,10 @@ export enum Markets {
   CryptoPhunks = 'cryptophunks',
 }
 
+export const isPooledMarket = (market: Markets): boolean => {
+  return market === Markets.NFTX || market === Markets.NFT20 || market === Markets.Sudoswap
+}
+
 export enum ToolTipType {
   pool,
   sus,
