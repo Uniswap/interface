@@ -1,3 +1,4 @@
+import { NetworkStatus } from '@apollo/client'
 import { TFunction } from 'i18next'
 import React, { ReactElement, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -13,6 +14,7 @@ import {
   TransactionListQuery,
   useTransactionListQuery,
 } from 'src/data/__generated__/types-and-hooks'
+import { usePersistedError } from 'src/features/dataApi/utils'
 import {
   formatTransactionsByDate,
   parseDataResponseToTransactionDetails,
@@ -50,7 +52,13 @@ interface TransactionListProps {
 export default function TransactionList(props: TransactionListProps) {
   const { t } = useTranslation()
 
-  const { refetch, networkStatus, data } = useTransactionListQuery({
+  const {
+    refetch,
+    networkStatus,
+    loading: requestLoading,
+    data,
+    error: requestError,
+  } = useTransactionListQuery({
     variables: { address: props.ownerAddress },
     notifyOnNetworkStatusChange: true,
   })
@@ -61,19 +69,23 @@ export default function TransactionList(props: TransactionListProps) {
     })
   }, [props.ownerAddress, refetch])
 
-  const nonPollingRequestInFlight = isNonPollingRequestInFlight(networkStatus)
   const hasData = !!data?.portfolios?.[0]?.assetActivities
+  const error = usePersistedError(requestLoading, requestError)
+  const isLoading = isNonPollingRequestInFlight(networkStatus)
 
-  if (!hasData) {
-    if (nonPollingRequestInFlight) {
-      return (
-        <Box>
-          <Loading type="transactions" />
-        </Box>
-      )
-    }
-    // @TODO: we can not use 'error' from usequery right now because there are always multiple errors in this request.
-    // We should fix this issues on the backend and then migrate to usePersistedError.
+  // show loading if no data and fetching, or refetching when there is error (for UX when "retry" is clicked).
+  const showLoading =
+    (!hasData && isLoading) || (Boolean(error) && networkStatus === NetworkStatus.refetch)
+
+  if (showLoading) {
+    return (
+      <Box>
+        <Loading type="transactions" />
+      </Box>
+    )
+  }
+
+  if (!hasData && error) {
     return (
       <Box height="100%" pb="xxxl">
         <BaseCard.ErrorState

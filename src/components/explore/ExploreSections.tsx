@@ -170,11 +170,6 @@ export function ExploreSections({ listRef }: ExploreSectionsProps) {
 
   return (
     <VirtualizedList style={flex.fill}>
-      {error ? (
-        <Box m="sm">
-          <BaseCard.InlineErrorState retryButtonLabel="Retry" onRetry={onRetry} />
-        </Box>
-      ) : null}
       <Flex gap="md" mt="sm" mx="sm">
         {hasFavoritedTokens ? (
           <FavoriteTokensGrid
