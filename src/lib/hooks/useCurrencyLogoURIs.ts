@@ -10,7 +10,7 @@ import { isCelo, NATIVE_CHAIN_ID, nativeOnChain } from '../../constants/tokens'
 
 type Network = 'ethereum' | 'arbitrum' | 'optimism' | 'polygon'
 
-function chainIdToNetworkName(networkId: SupportedChainId): Network {
+export function chainIdToNetworkName(networkId: SupportedChainId): Network {
   switch (networkId) {
     case SupportedChainId.MAINNET:
       return 'ethereum'
@@ -60,7 +60,7 @@ export default function useCurrencyLogoURIs(
         isToken?: boolean
         address?: string
         chainId: number
-        logoURI?: string
+        logoURI?: string | null
       }
     | null
     | undefined

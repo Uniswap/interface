@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
+import { Currency } from '@uniswap/sdk-core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { TokenQueryData } from 'graphql/data/Token'
+import { chainIdToBackendName } from 'graphql/data/util'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useRef } from 'react'
 import { Twitter } from 'react-feather'
@@ -63,12 +64,7 @@ const ShareAction = styled.div`
   }
 `
 
-interface TokenInfo {
-  token: NonNullable<TokenQueryData>
-  isNative: boolean
-}
-
-export default function ShareButton(tokenInfo: TokenInfo) {
+export default function ShareButton({ currency }: { currency: Currency }) {
   const theme = useTheme()
   const node = useRef<HTMLDivElement | null>(null)
   const open = useModalIsOpen(ApplicationModal.SHARE)
@@ -76,12 +72,16 @@ export default function ShareButton(tokenInfo: TokenInfo) {
   useOnClickOutside(node, open ? toggleShare : undefined)
   const positionX = (window.screen.width - TWITTER_WIDTH) / 2
   const positionY = (window.screen.height - TWITTER_HEIGHT) / 2
-  const tokenAddress = tokenInfo.isNative ? NATIVE_CHAIN_ID : tokenInfo.token.address
+  const address = currency.isNative ? NATIVE_CHAIN_ID : currency.wrapped.address
 
   const shareTweet = () => {
     toggleShare()
     window.open(
-      `https://twitter.com/intent/tweet?text=Check%20out%20${tokenInfo.token.name}%20(${tokenInfo.token.symbol})%20https://app.uniswap.org/%23/tokens/${tokenInfo.token.chain}/${tokenAddress}%20via%20@uniswap`,
+      `https://twitter.com/intent/tweet?text=Check%20out%20${currency.name}%20(${
+        currency.symbol
+      })%20https://app.uniswap.org/%23/tokens/${chainIdToBackendName(
+        currency.chainId
+      ).toLowerCase()}/${address}%20via%20@uniswap`,
       'newwindow',
       `left=${positionX}, top=${positionY}, width=${TWITTER_WIDTH}, height=${TWITTER_HEIGHT}`
     )
