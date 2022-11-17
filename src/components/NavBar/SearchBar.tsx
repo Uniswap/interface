@@ -21,6 +21,7 @@ import { useLocation } from 'react-router-dom'
 import { ChevronLeftIcon, MagnifyingGlassIcon, NavMagnifyingGlassIcon } from '../../nft/components/icons'
 import { NavIcon } from './NavIcon'
 import * as styles from './SearchBar.css'
+import * as nftSTyles from './SearchBarNft.css'
 import { SearchBarDropdown } from './SearchBarDropdown'
 
 export const SearchBar = () => {
@@ -33,6 +34,8 @@ export const SearchBar = () => {
   const phase1Flag = useNftFlag()
   const isMobile = useIsMobile()
   const isTablet = useIsTablet()
+  const isPhase1 = phase1Flag === NftVariant.Enabled
+  const finalStyles = isPhase1 ? nftSTyles : styles
 
   useOnClickOutside(searchRef, () => {
     isOpen && toggleOpen()
@@ -45,7 +48,7 @@ export const SearchBar = () => {
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,
-      enabled: !!debouncedSearchValue.length && phase1Flag === NftVariant.Enabled,
+      enabled: !!debouncedSearchValue.length && isPhase1,
     }
   )
 
@@ -112,23 +115,27 @@ export const SearchBar = () => {
           position={{ sm: 'fixed', md: 'absolute' }}
           width={{ sm: isOpen ? 'viewWidth' : 'auto', md: 'auto' }}
           ref={searchRef}
-          className={styles.searchBarContainer}
+          className={finalStyles.searchBarContainer}
           display={{ sm: isOpen ? 'inline-block' : 'none', xl: 'inline-block' }}
         >
           <Row
             className={clsx(
-              ` ${styles.searchBar} ${!isOpen && !isMobile && magicalGradientOnHover} ${
-                isMobileOrTablet && (isOpen ? styles.visible : styles.hidden)
+              ` ${finalStyles.searchBar} ${!isOpen && !isMobile && magicalGradientOnHover} ${
+                isMobileOrTablet && (isOpen ? finalStyles.visible : finalStyles.hidden)
               }`
             )}
             borderRadius={isOpen || isMobileOrTablet ? undefined : '12'}
             borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
             borderTopLeftRadius={isOpen && !isMobile ? '12' : undefined}
-            borderBottomWidth={isOpen || isMobileOrTablet ? '0px' : '2px'}
+            borderBottomWidth={isOpen || isMobileOrTablet ? '0px' : isPhase1 ? '2px' : '1px'}
             onClick={() => !isOpen && toggleOpen()}
             gap="12"
           >
-            <Box className={showCenteredSearchContent ? styles.searchContentCentered : styles.searchContentLeftAlign}>
+            <Box
+              className={
+                showCenteredSearchContent ? finalStyles.searchContentCentered : finalStyles.searchContentLeftAlign
+              }
+            >
               <Box display={{ sm: 'none', md: 'flex' }}>
                 <MagnifyingGlassIcon />
               </Box>
@@ -150,8 +157,8 @@ export const SearchBar = () => {
                   setSearchValue(event.target.value)
                 }}
                 onBlur={() => sendAnalyticsEvent(EventName.NAVBAR_SEARCH_EXITED, navbarSearchEventProperties)}
-                className={`${styles.searchBarInput} ${
-                  showCenteredSearchContent ? styles.searchContentCentered : styles.searchContentLeftAlign
+                className={`${finalStyles.searchBarInput} ${
+                  showCenteredSearchContent ? finalStyles.searchContentCentered : finalStyles.searchContentLeftAlign
                 }`}
                 value={searchValue}
                 ref={inputRef}
@@ -159,7 +166,7 @@ export const SearchBar = () => {
               />
             </TraceEvent>
           </Row>
-          <Box className={clsx(isOpen ? styles.visible : styles.hidden)}>
+          <Box className={clsx(isOpen ? finalStyles.visible : finalStyles.hidden)}>
             {isOpen && (
               <SearchBarDropdown
                 toggleOpen={toggleOpen}
