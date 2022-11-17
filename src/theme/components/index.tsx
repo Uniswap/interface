@@ -472,6 +472,6 @@ export const Separator = styled.div`
 `
 
 export const GlowEffect = styled.div`
-  border-radius: 32px;
+  border-radius: 16px;
   box-shadow: ${({ theme }) => theme.networkDefaultShadow};
 `
