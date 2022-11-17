@@ -1,12 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
 import { PropsWithChildren } from 'react'
-import styled, { DefaultTheme, useTheme } from 'styled-components/macro'
-
-export const GlowEffect = styled.div<{ shadow?: string }>`
-  border-radius: 16px;
-  box-shadow: ${({ theme, shadow }) => shadow ?? theme.networkDefaultShadow};
-`
+import styled, { css, DefaultTheme } from 'styled-components/macro'
 
 const getShadowForChainId = (theme: DefaultTheme, chainId?: SupportedChainId) => {
   switch (chainId) {
@@ -27,14 +22,19 @@ const getShadowForChainId = (theme: DefaultTheme, chainId?: SupportedChainId) =>
   }
 }
 
+export const glowEffect = css<{ chainId?: SupportedChainId }>`
+  box-shadow: ${({ theme, chainId }) => getShadowForChainId(theme, chainId)};
+`
+
+export const GlowEffect = styled.div<{ chainId?: SupportedChainId }>`
+  border-radius: 16px;
+  ${glowEffect}
+`
+
 export function NetworkGlowEffect({ className, children }: PropsWithChildren<{ className?: string }>) {
   const { chainId } = useWeb3React()
-  const theme = useTheme()
-
-  const shadow = getShadowForChainId(theme, chainId)
-
   return (
-    <GlowEffect shadow={shadow} className={className}>
+    <GlowEffect chainId={chainId} className={className}>
       {children}
     </GlowEffect>
   )

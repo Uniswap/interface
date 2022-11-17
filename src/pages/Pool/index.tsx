@@ -16,7 +16,7 @@ import { useToggleWalletModal } from 'state/application/hooks'
 import { useUserHideClosedPositions } from 'state/user/hooks'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { HideSmall, ThemedText } from 'theme'
-import { NetworkGlowEffect } from 'theme/components/GlowEffect'
+import { glowEffect } from 'theme/components/GlowEffect'
 import { PositionDetails } from 'types/position'
 
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
@@ -132,6 +132,8 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
 `
 
 const MainContentWrapper = styled.main`
+  ${glowEffect}
+
   background-color: ${({ theme }) => theme.deprecated_bg0};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   padding: 0;
@@ -175,18 +177,16 @@ function WrongNetworkCard() {
               </ThemedText.LargeHeader>
             </TitleRow>
 
-            <NetworkGlowEffect>
-              <MainContentWrapper>
-                <ErrorContainer>
-                  <ThemedText.DeprecatedBody color={theme.deprecated_text3} textAlign="center">
-                    <NetworkIcon strokeWidth={1.2} />
-                    <div data-testid="pools-unsupported-err">
-                      <Trans>Your connected network is unsupported.</Trans>
-                    </div>
-                  </ThemedText.DeprecatedBody>
-                </ErrorContainer>
-              </MainContentWrapper>
-            </NetworkGlowEffect>
+            <MainContentWrapper>
+              <ErrorContainer>
+                <ThemedText.DeprecatedBody color={theme.deprecated_text3} textAlign="center">
+                  <NetworkIcon strokeWidth={1.2} />
+                  <div data-testid="pools-unsupported-err">
+                    <Trans>Your connected network is unsupported.</Trans>
+                  </div>
+                </ThemedText.DeprecatedBody>
+              </ErrorContainer>
+            </MainContentWrapper>
           </AutoColumn>
         </AutoColumn>
       </PageWrapper>
@@ -294,48 +294,46 @@ export default function Pool() {
                 </ButtonRow>
               </TitleRow>
 
-              <NetworkGlowEffect>
-                <MainContentWrapper>
-                  {positionsLoading ? (
-                    <PositionsLoadingPlaceholder />
-                  ) : filteredPositions && closedPositions && filteredPositions.length > 0 ? (
-                    <PositionList
-                      positions={filteredPositions}
-                      setUserHideClosedPositions={setUserHideClosedPositions}
-                      userHideClosedPositions={userHideClosedPositions}
-                    />
-                  ) : (
-                    <ErrorContainer>
-                      <ThemedText.DeprecatedBody color={theme.deprecated_text3} textAlign="center">
-                        <InboxIcon strokeWidth={1} />
-                        <div>
-                          <Trans>Your active V3 liquidity positions will appear here.</Trans>
-                        </div>
-                      </ThemedText.DeprecatedBody>
-                      {!showConnectAWallet && closedPositions.length > 0 && (
-                        <ButtonText
-                          style={{ marginTop: '.5rem' }}
-                          onClick={() => setUserHideClosedPositions(!userHideClosedPositions)}
-                        >
-                          <Trans>Show closed positions</Trans>
-                        </ButtonText>
-                      )}
-                      {showConnectAWallet && (
-                        <TraceEvent
-                          events={[BrowserEvent.onClick]}
-                          name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
-                          properties={{ received_swap_quote: false }}
-                          element={ElementName.CONNECT_WALLET_BUTTON}
-                        >
-                          <ButtonPrimary style={{ marginTop: '2em', padding: '8px 16px' }} onClick={toggleWalletModal}>
-                            <Trans>Connect a wallet</Trans>
-                          </ButtonPrimary>
-                        </TraceEvent>
-                      )}
-                    </ErrorContainer>
-                  )}
-                </MainContentWrapper>
-              </NetworkGlowEffect>
+              <MainContentWrapper>
+                {positionsLoading ? (
+                  <PositionsLoadingPlaceholder />
+                ) : filteredPositions && closedPositions && filteredPositions.length > 0 ? (
+                  <PositionList
+                    positions={filteredPositions}
+                    setUserHideClosedPositions={setUserHideClosedPositions}
+                    userHideClosedPositions={userHideClosedPositions}
+                  />
+                ) : (
+                  <ErrorContainer>
+                    <ThemedText.DeprecatedBody color={theme.deprecated_text3} textAlign="center">
+                      <InboxIcon strokeWidth={1} />
+                      <div>
+                        <Trans>Your active V3 liquidity positions will appear here.</Trans>
+                      </div>
+                    </ThemedText.DeprecatedBody>
+                    {!showConnectAWallet && closedPositions.length > 0 && (
+                      <ButtonText
+                        style={{ marginTop: '.5rem' }}
+                        onClick={() => setUserHideClosedPositions(!userHideClosedPositions)}
+                      >
+                        <Trans>Show closed positions</Trans>
+                      </ButtonText>
+                    )}
+                    {showConnectAWallet && (
+                      <TraceEvent
+                        events={[BrowserEvent.onClick]}
+                        name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
+                        properties={{ received_swap_quote: false }}
+                        element={ElementName.CONNECT_WALLET_BUTTON}
+                      >
+                        <ButtonPrimary style={{ marginTop: '2em', padding: '8px 16px' }} onClick={toggleWalletModal}>
+                          <Trans>Connect a wallet</Trans>
+                        </ButtonPrimary>
+                      </TraceEvent>
+                    )}
+                  </ErrorContainer>
+                )}
+              </MainContentWrapper>
               <HideSmall>
                 <CTACards />
               </HideSmall>
