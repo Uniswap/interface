@@ -72,7 +72,7 @@ jobs:
         with:
           EVER_TOKEN: ${{ secrets.EVER_TOKEN }}
           EVER_PROJECT_NAME: 'uniswap-interface'
-          EVER_PROJECT_PLAT: 'AR'
+          EVER_PROJECT_PLAT: 'IPFS'
           BUILD_LOCATION: './build'
 
       - name: Convert CIDv0 to CIDv1
