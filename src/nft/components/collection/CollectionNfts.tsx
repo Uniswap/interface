@@ -249,9 +249,11 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const [sweepIsOpen, setSweepOpen] = useState(false)
   // Load all sweep queries. Loading them on the parent allows lazy-loading, but avoids waterfalling requests.
   const collectionParams = useSweepFetcherParams(contractAddress, 'others', debouncedMinPrice, debouncedMaxPrice)
+  const sudoSwapParams = useSweepFetcherParams(contractAddress, Markets.Sudoswap, debouncedMinPrice, debouncedMaxPrice)
   const nftxParams = useSweepFetcherParams(contractAddress, Markets.NFTX, debouncedMinPrice, debouncedMaxPrice)
   const nft20Params = useSweepFetcherParams(contractAddress, Markets.NFT20, debouncedMinPrice, debouncedMaxPrice)
   useLoadSweepAssetsQuery(collectionParams, sweepIsOpen)
+  useLoadSweepAssetsQuery(sudoSwapParams, sweepIsOpen)
   useLoadSweepAssetsQuery(nftxParams, sweepIsOpen)
   useLoadSweepAssetsQuery(nft20Params, sweepIsOpen)
 
