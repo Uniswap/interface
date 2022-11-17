@@ -22,15 +22,19 @@ const getShadowForChainId = (theme: DefaultTheme, chainId?: SupportedChainId) =>
   }
 }
 
+// Base style to use in places where we cannot wrap `GlowEffect` and `NetworkGlowEffect`
+// with a `styled` function
 export const glowEffect = css<{ chainId?: SupportedChainId }>`
   box-shadow: ${({ theme, chainId }) => getShadowForChainId(theme, chainId)};
 `
 
+// Base GlowEffect component that renders a glow effect for a given chainId
 export const GlowEffect = styled.div<{ chainId?: SupportedChainId }>`
   border-radius: 16px;
   ${glowEffect}
 `
 
+// GlowEffect component that automatically adjusts its appearance based on `chainId`
 export function NetworkGlowEffect({ className, children }: PropsWithChildren<{ className?: string }>) {
   const { chainId } = useWeb3React()
   return (
