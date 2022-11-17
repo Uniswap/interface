@@ -21,7 +21,7 @@ import {
 } from 'lib/utils/analytics'
 import { useCallback, useState } from 'react'
 import { useIsDarkMode } from 'state/user/hooks'
-import { NetworkGlowEffect } from 'theme/components/GlowEffect'
+import { GlowEffect } from 'theme/components/GlowEffect'
 import { computeRealizedPriceImpact } from 'utils/prices'
 import { switchChain } from 'utils/switchChain'
 
@@ -45,7 +45,7 @@ export interface WidgetProps {
 }
 
 export default function Widget({ token, onTokenChange, onReviewSwapClick }: WidgetProps) {
-  const { connector, provider } = useWeb3React()
+  const { connector, provider, chainId } = useWeb3React()
   const locale = useActiveLocale()
   const theme = useWidgetTheme()
   const { inputs, tokenSelector } = useSyncWidgetInputs({ token, onTokenChange })
@@ -137,7 +137,7 @@ export default function Widget({ token, onTokenChange, onReviewSwapClick }: Widg
   }
 
   return (
-    <NetworkGlowEffect>
+    <GlowEffect chainId={chainId}>
       <SwapWidget
         disableBranding
         hideConnectionUI
@@ -160,15 +160,17 @@ export default function Widget({ token, onTokenChange, onReviewSwapClick }: Widg
         onSwapPriceUpdateAck={onSwapPriceUpdateAck}
       />
       {tokenSelector}
-    </NetworkGlowEffect>
+    </GlowEffect>
   )
 }
 
 export function WidgetSkeleton() {
   const theme = useWidgetTheme()
+  const { chainId } = useWeb3React()
+
   return (
-    <NetworkGlowEffect>
+    <GlowEffect chainId={chainId}>
       <SwapWidgetSkeleton theme={theme} width={WIDGET_WIDTH} />
-    </NetworkGlowEffect>
+    </GlowEffect>
   )
 }

@@ -1,16 +1,18 @@
 import { Trans } from '@lingui/macro'
 import { PAGE_SIZE, useTopTokens } from 'graphql/data/TopTokens'
-import { validateUrlChainParam } from 'graphql/data/util'
+import { chainBackendNameToId, validateUrlChainParam } from 'graphql/data/util'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
-import { NetworkGlowEffect } from 'theme/components/GlowEffect'
+import { glowEffect } from 'theme/components/GlowEffect'
 
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
 import { HeaderRow, LoadedRow, LoadingRow } from './TokenRow'
 
-const GridContainer = styled(NetworkGlowEffect)`
+const GridContainer = styled.div`
+  ${glowEffect}
+
   display: flex;
   flex-direction: column;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
@@ -44,9 +46,9 @@ const NoTokenDisplay = styled.div`
   gap: 8px;
 `
 
-function NoTokensState({ message }: { message: ReactNode }) {
+function NoTokensState({ chainId, message }: { chainId: number; message: ReactNode }) {
   return (
-    <GridContainer>
+    <GridContainer chainId={chainId}>
       <HeaderRow />
       <NoTokenDisplay>{message}</NoTokenDisplay>
     </GridContainer>
@@ -63,9 +65,9 @@ const LoadingRows = ({ rowCount }: { rowCount: number }) => (
   </>
 )
 
-export function LoadingTokenTable({ rowCount = PAGE_SIZE }: { rowCount?: number }) {
+export function LoadingTokenTable({ chainId, rowCount = PAGE_SIZE }: { chainId: number; rowCount?: number }) {
   return (
-    <GridContainer>
+    <GridContainer chainId={chainId}>
       <HeaderRow />
       <TokenDataContainer>
         <LoadingRows rowCount={rowCount} />
@@ -76,14 +78,18 @@ export function LoadingTokenTable({ rowCount = PAGE_SIZE }: { rowCount?: number 
 
 export default function TokenTable({ setRowCount }: { setRowCount: (c: number) => void }) {
   // TODO: consider moving prefetched call into app.tsx and passing it here, use a preloaded call & updated on interval every 60s
+  // TODO: consider passing `chainId` and `chainName` from parent, where we already have it resolved
   const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
   const { tokens, sparklines } = useTopTokens(chainName)
   setRowCount(tokens?.length ?? PAGE_SIZE)
+
+  const chainId = chainBackendNameToId(chainName)
 
   /* loading and error state */
   if (!tokens) {
     return (
       <NoTokensState
+        chainId={chainId}
         message={
           <>
             <AlertTriangle size={16} />
@@ -93,10 +99,10 @@ export default function TokenTable({ setRowCount }: { setRowCount: (c: number) =
       />
     )
   } else if (tokens?.length === 0) {
-    return <NoTokensState message={<Trans>No tokens found</Trans>} />
+    return <NoTokensState chainId={chainId} message={<Trans>No tokens found</Trans>} />
   } else {
     return (
-      <GridContainer>
+      <GridContainer chainId={chainId}>
         <HeaderRow />
         <TokenDataContainer>
           {tokens.map(

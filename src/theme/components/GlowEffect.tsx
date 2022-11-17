@@ -22,7 +22,7 @@ const getShadowForChainId = (theme: DefaultTheme, chainId?: SupportedChainId) =>
   }
 }
 
-type GlowProps = {
+export type GlowProps = {
   chainId?: SupportedChainId
 }
 

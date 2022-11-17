@@ -722,7 +722,7 @@ export default function MigrateV2Pair() {
   }
 
   return (
-    <BodyWrapper style={{ padding: 24 }}>
+    <BodyWrapper chainId={chainId} style={{ padding: 24 }}>
       <AutoColumn gap="16px">
         <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
           <BackArrow to="/migrate/v2" />
