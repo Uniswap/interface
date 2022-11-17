@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { textFadeIn } from 'theme/animations'
+import { textFadeIn } from 'theme/styles'
 import { formatDollar } from 'utils/formatNumbers'
 
 import { TokenSortMethod } from '../state'

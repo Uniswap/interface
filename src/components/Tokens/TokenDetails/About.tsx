@@ -3,7 +3,7 @@ import { darken } from 'polished'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { textFadeIn } from 'theme/animations'
+import { textFadeIn } from 'theme/styles'
 
 import Resource from './Resource'
 

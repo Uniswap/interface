@@ -3,6 +3,7 @@ import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
 import React from 'react'
 import { Check } from 'react-feather'
 import styled from 'styled-components/macro'
+import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 
 import { ExternalLink } from '../../theme'
 
@@ -20,7 +21,7 @@ const InfoCard = styled.button<{ isActive?: boolean }>`
 `
 
 const CheckIcon = styled(Check)`
-  ${({ theme }) => theme.flexColumnNoWrap};
+  ${flexColumnNoWrap};
   height: 20px;
   width: 20px;
   align-items: center;
@@ -41,7 +42,7 @@ const OptionCard = styled(InfoCard as any)`
 `
 
 const OptionCardLeft = styled.div`
-  ${({ theme }) => theme.flexColumnNoWrap};
+  ${flexColumnNoWrap};
   justify-content: center;
   height: 100%;
 `
@@ -60,7 +61,7 @@ const OptionCardClickable = styled(OptionCard as any)<{
 `
 
 const HeaderText = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap};
+  ${flexRowNoWrap};
   align-items: center;
   justify-content: center;
   color: ${(props) =>
@@ -76,7 +77,7 @@ const SubHeader = styled.div`
 `
 
 const IconWrapper = styled.div<{ size?: number | null }>`
-  ${({ theme }) => theme.flexColumnNoWrap};
+  ${flexColumnNoWrap};
   align-items: center;
   justify-content: center;
   padding-right: 12px;
