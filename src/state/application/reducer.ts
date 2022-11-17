@@ -18,6 +18,7 @@ export enum ApplicationModal {
   VOTE,
   POOL_OVERVIEW_OPTIONS,
   NETWORK_SELECTOR,
+  PERP_POPUP,
 }
 
 type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>

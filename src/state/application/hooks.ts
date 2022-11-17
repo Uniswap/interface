@@ -51,6 +51,14 @@ export function useToggleVoteModal(): () => void {
   return useToggleModal(ApplicationModal.VOTE)
 }
 
+export function useTogglePerpModal(): () => void {
+  return useToggleModal(ApplicationModal.PERP_POPUP)
+}
+
+export function useToggleSelfPerpModal(): () => void {
+  return useToggleModal(ApplicationModal.PERP_POPUP)
+}
+
 // returns a function that allows adding a popup
 export function useAddPopup(): (content: PopupContent, key?: string, removeAfterMs?: number) => void {
   const dispatch = useAppDispatch()
