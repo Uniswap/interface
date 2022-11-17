@@ -5,8 +5,13 @@ import { GraphData, PriceList } from 'src/components/PriceChart/types'
 import { logException } from 'src/features/telemetry'
 import { LogContext } from 'src/features/telemetry/constants'
 import { dimensions } from 'src/styles/sizing'
+import { theme as FixedTheme } from 'src/styles/theme'
 
-export const CHART_HEIGHT = 300
+// sets the height of the chart short enough on small devices that the
+// "Your balance" section will always show above the fold
+// we can't use useResponsiveProps for this because CHART_HEIGHT gets
+// used in non-component code related to chart functionality
+export const CHART_HEIGHT = dimensions.fullHeight < FixedTheme.breakpoints.sm.height ? 180 : 310
 export const CHART_WIDTH = dimensions.fullWidth
 
 export const NUM_GRAPHS = 5

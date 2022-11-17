@@ -12,7 +12,7 @@ export function PriceHeaderLoader() {
         variant="headlineLarge"
         width="40%"
       />
-      <Text loading loadingPlaceholderText="0.01" variant="bodySmall" width="20%" />
+      <Text loading loadingPlaceholderText="0.01" variant="bodyLarge" width="20%" />
     </Box>
   )
 }

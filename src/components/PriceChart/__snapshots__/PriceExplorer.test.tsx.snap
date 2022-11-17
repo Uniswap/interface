@@ -198,10 +198,10 @@ exports[`renders correctly 1`] = `
     }
   >
     <RNSVGSvgView
-      bbHeight={300}
+      bbHeight={310}
       bbWidth={750}
       focusable={false}
-      height={300}
+      height={310}
       style={
         Array [
           Object {
@@ -210,7 +210,7 @@ exports[`renders correctly 1`] = `
           },
           Object {
             "flex": 0,
-            "height": 300,
+            "height": 310,
             "width": 750,
           },
         ]
@@ -299,7 +299,7 @@ exports[`renders correctly 1`] = `
                 "borderStyle": "dashed",
                 "borderWidth": 1,
                 "display": "flex",
-                "height": 300,
+                "height": 310,
                 "width": 1,
               },
               Array [

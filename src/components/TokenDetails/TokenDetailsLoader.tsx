@@ -1,3 +1,4 @@
+import { useResponsiveProp } from '@shopify/restyle'
 import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -31,7 +32,7 @@ export function TokenDetailsLoader({
   const isReadonly = accountType === AccountType.Readonly
 
   return (
-    <AnimatedBox exiting={FadeOut} flex={1}>
+    <AnimatedBox exiting={FadeOut} flexGrow={1}>
       <Screen>
         <Flex flex={1}>
           <TokenDetailsBackButtonRow currency={currency} />
@@ -66,7 +67,7 @@ export function TokenDetailsLoader({
           </Flex>
         </Flex>
       </Screen>
-      <Box bg="background0" mb="md">
+      <Box bg="background0" pb={useResponsiveProp({ xs: 'none', sm: 'md' })}>
         <TokenDetailsActionButtons showSend />
       </Box>
     </AnimatedBox>

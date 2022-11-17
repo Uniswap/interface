@@ -1,3 +1,4 @@
+import { useResponsiveProp } from '@shopify/restyle'
 import { Currency } from '@uniswap/sdk-core'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -246,7 +247,7 @@ function TokenDetails({
   ])
 
   return (
-    <AnimatedBox flexGrow={1} mb="md">
+    <AnimatedBox flexGrow={1} pb={useResponsiveProp({ xs: 'none', sm: 'md' })}>
       <HeaderScrollScreen
         contentHeader={<TokenDetailsBackButtonRow currency={currency} />}
         fixedHeader={
