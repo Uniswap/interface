@@ -5,10 +5,18 @@ const dataConfig = require('./relay.config')
 const thegraphConfig = require('./relay_thegraph.config')
 /* eslint-enable */
 
-const THEGRAPH_API_URL = 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3'
-exec(`get-graphql-schema ${THEGRAPH_API_URL} > ${thegraphConfig.schema}`)
+function fetchSchema(url, outputFile) {
+  exec(
+    `get-graphql-schema --h Origin=https://app.uniswap.org ${url} | tee ${outputFile}.temp`,
+    (error, stdout, stderr) => {
+      if (error || stderr) {
+        console.log(`Failed to fetch schema from ${url}`)
+      } else if (stdout) {
+        exec(`mv ${outputFile}.temp ${outputFile}`)
+      }
+    }
+  )
+}
 
-console.log(process.env.REACT_APP_AWS_API_ENDPOINT)
-exec(
-  `get-graphql-schema --h Origin=https://app.uniswap.org ${process.env.REACT_APP_AWS_API_ENDPOINT} > ${dataConfig.schema}`
-)
+fetchSchema(process.env.THE_GRAPH_SCHEMA_ENDPOINT, thegraphConfig.schema)
+fetchSchema(process.env.REACT_APP_AWS_API_ENDPOINT, dataConfig.schema)

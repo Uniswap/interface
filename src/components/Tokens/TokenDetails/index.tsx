@@ -1,9 +1,14 @@
 import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
+<<<<<<< HEAD
 import { Currency, NativeCurrency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import CurrencyLogo from 'components/CurrencyLogo'
+=======
+import { Currency, Token } from '@uniswap/sdk-core'
+import CurrencyLogo from 'components/Logo/CurrencyLogo'
+>>>>>>> origin/main
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
 import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
 import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
@@ -25,18 +30,24 @@ import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import Widget from 'components/Widget'
 import { getChainInfo } from 'constants/chainInfo'
+<<<<<<< HEAD
 import { SupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
+=======
+import { DEFAULT_ERC20_DECIMALS, NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
+>>>>>>> origin/main
 import { checkWarning } from 'constants/tokenSafety'
 import { TokenPriceQuery } from 'graphql/data/__generated__/TokenPriceQuery.graphql'
 import { Chain, TokenQuery } from 'graphql/data/Token'
-import { QueryToken, tokenQuery, TokenQueryData } from 'graphql/data/Token'
-import { TopToken } from 'graphql/data/TopTokens'
+import { QueryToken, tokenQuery } from 'graphql/data/Token'
 import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
 import { useIsUserAddedTokenOnChain } from 'hooks/Tokens'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
+<<<<<<< HEAD
 import { UNKNOWN_TOKEN_SYMBOL, useTokenFromActiveNetwork } from 'lib/hooks/useCurrency'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
+=======
+>>>>>>> origin/main
 import { useCallback, useMemo, useState, useTransition } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
@@ -57,6 +68,7 @@ const TokenActions = styled.div`
   color: ${({ theme }) => theme.textSecondary};
 `
 
+<<<<<<< HEAD
 export function useTokenLogoURI(token?: TokenQueryData | TopToken, nativeCurrency?: Token | NativeCurrency) {
   const chainId = token ? CHAIN_NAME_TO_CHAIN_ID[token.chain] : SupportedChainId.MAINNET
   return [
@@ -76,6 +88,8 @@ function useOnChainToken(address: string | undefined, skip: boolean) {
   }
 }
 
+=======
+>>>>>>> origin/main
 type TokenDetailsProps = {
   urlAddress: string | undefined
   chain: Chain
@@ -105,6 +119,7 @@ export default function TokenDetails({
 
   const tokenQueryData = usePreloadedQuery(tokenQuery, tokenQueryReference).tokens?.[0]
 
+<<<<<<< HEAD
   const localToken = useMemo(() => {
     if (!address) return undefined
     if (isNative) return nativeCurrency
@@ -116,6 +131,14 @@ export default function TokenDetails({
   const token = useMemo(() => localToken ?? onChainToken, [localToken, onChainToken])
 
   const tokenWarning = address ? checkWarning(address) : null
+=======
+  const token = useMemo(() => {
+    if (isNative) return nativeCurrency
+    if (tokenQueryData) return new QueryToken(tokenQueryData)
+    return new Token(pageChainId, tokenAddress, DEFAULT_ERC20_DECIMALS)
+  }, [isNative, nativeCurrency, pageChainId, tokenAddress, tokenQueryData])
+  const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
+>>>>>>> origin/main
   const isBlockedToken = tokenWarning?.canProceed === false
   const navigate = useNavigate()
 
@@ -163,7 +186,6 @@ export default function TokenDetails({
     [continueSwap, setContinueSwap]
   )
 
-  const logoSrc = useTokenLogoURI(tokenQueryData, isNative ? nativeCurrency : undefined)
   const L2Icon = getChainInfo(pageChainId)?.circleLogoUrl
 
   if (token === undefined) {
@@ -180,12 +202,16 @@ export default function TokenDetails({
             <TokenInfoContainer>
               <TokenNameCell>
                 <LogoContainer>
+<<<<<<< HEAD
                   <CurrencyLogo
                     src={logoSrc}
                     size="32px"
                     symbol={isNative ? nativeCurrency?.symbol : token?.symbol}
                     currency={isNative ? nativeCurrency : token ?? onChainToken}
                   />
+=======
+                  <CurrencyLogo currency={token} size="32px" />
+>>>>>>> origin/main
                   <L2NetworkLogo networkUrl={L2Icon} size="16px" />
                 </LogoContainer>
                 {token?.name ?? onChainToken?.name ?? <Trans>Name not found</Trans>}
@@ -193,7 +219,7 @@ export default function TokenDetails({
               </TokenNameCell>
               <TokenActions>
                 {tokenQueryData?.name && tokenQueryData.symbol && tokenQueryData.address && (
-                  <ShareButton token={tokenQueryData} isNative={!!nativeCurrency} />
+                  <ShareButton currency={token} />
                 )}
               </TokenActions>
             </TokenInfoContainer>

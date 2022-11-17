@@ -3,8 +3,7 @@ import { PageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { useLoadNftBalanceQuery } from 'graphql/data/nft/NftBalance'
 import { Box } from 'nft/components/Box'
-import { Center, Column, Row } from 'nft/components/Flex'
-import { ChevronLeftIcon } from 'nft/components/icons'
+import { Center, Column } from 'nft/components/Flex'
 import { ListPage } from 'nft/components/profile/list/ListPage'
 import { ProfilePage } from 'nft/components/profile/view/ProfilePage'
 import { ProfilePageLoadingSkeleton } from 'nft/components/profile/view/ProfilePageLoadingSkeleton'
@@ -47,17 +46,10 @@ const ProfileContent = () => {
 
   return (
     <Trace page={PageName.NFT_PROFILE_PAGE} shouldLogImpression>
-      <Box className={styles.mobileSellWrapper}>
+      <Box className={styles.profileWrapper}>
         {/* <Head> TODO: figure out metadata tagging
           <title>Genie | Sell</title>
         </Head> */}
-        <Row className={styles.mobileSellHeader}>
-          {sellPageState === ProfilePageStateType.LISTING && (
-            <Box marginRight="4" onClick={() => setSellPageState(ProfilePageStateType.VIEWING)}>
-              <ChevronLeftIcon height={28} width={28} />
-            </Box>
-          )}
-        </Row>
         {account != null ? (
           <Box style={{ width: `calc(100% - ${cartExpanded ? SHOPPING_BAG_WIDTH : 0}px)` }}>
             {sellPageState === ProfilePageStateType.VIEWING ? <ProfilePage /> : <ListPage />}
