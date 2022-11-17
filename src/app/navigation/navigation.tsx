@@ -24,8 +24,8 @@ import {
   SettingsStackParamList,
   TabParamList,
 } from 'src/app/navigation/types'
-import DiscoverIconFilled from 'src/assets/icons/discover-filled.svg'
-import DiscoverIcon from 'src/assets/icons/discover.svg'
+import SearchIconFocused from 'src/assets/icons/search-focused.svg'
+import SearchIcon from 'src/assets/icons/search.svg'
 import WalletIconFilled from 'src/assets/icons/wallet-filled.svg'
 import WalletIcon from 'src/assets/icons/wallet.svg'
 import { Chevron } from 'src/components/icons/Chevron'
@@ -127,11 +127,10 @@ function TabNavigator() {
         name={Tabs.Home}
         options={{
           tabBarLabel: t('Home'),
-          tabBarIcon: ({ focused, color }) => (
+          tabBarIcon: ({ focused }) => (
             <TabBarButton
               Icon={WalletIcon}
               IconFilled={WalletIconFilled}
-              color={color}
               focused={focused}
               // swap takes `xxs` more space than other buttons
               pl="lg"
@@ -152,11 +151,10 @@ function TabNavigator() {
         options={{
           tabBarLabel: t('Explore'),
           tabBarShowLabel: false,
-          tabBarIcon: ({ focused, color }) => (
+          tabBarIcon: ({ focused }) => (
             <TabBarButton
-              Icon={DiscoverIcon}
-              IconFilled={DiscoverIconFilled}
-              color={color}
+              Icon={SearchIcon}
+              IconFilled={SearchIconFocused}
               focused={focused}
               // swap takes `xxs` more space than other buttons
               pr="lg"

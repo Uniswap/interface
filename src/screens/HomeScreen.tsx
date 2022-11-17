@@ -145,7 +145,7 @@ function ActionButton({
     <TouchableArea
       hapticFeedback
       backgroundColor="background0"
-      borderColor="magentaSoft"
+      borderColor="brandedAccentSoft"
       borderRadius="lg"
       borderWidth={1}
       flex={1}

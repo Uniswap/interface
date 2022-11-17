@@ -33,13 +33,11 @@ const SWAP_BUTTON_SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 0
 export const TabBarButton = memo(
   ({
     focused,
-    color,
     IconFilled,
     Icon,
     ...rest
   }: {
     focused: boolean
-    color: string
     IconFilled: React.FC<SvgProps>
     Icon: React.FC<SvgProps>
   } & ComponentProps<typeof Box>) => {
@@ -54,9 +52,9 @@ export const TabBarButton = memo(
         position="relative"
         {...rest}>
         {focused ? (
-          <IconFilled color={appTheme.colors.userThemeColor} height={appTheme.iconSizes.lg} />
+          <IconFilled color={appTheme.colors.magentaVibrant} height={appTheme.iconSizes.lg} />
         ) : (
-          <Icon color={color} height={appTheme.iconSizes.lg} />
+          <Icon color={appTheme.colors.textTertiary} height={appTheme.iconSizes.lg} />
         )}
         <Box
           backgroundColor="userThemeColor"
