@@ -133,7 +133,6 @@ export const ProfilePage = () => {
                   <FilterButton
                     isMobile={isMobile}
                     isFiltersExpanded={isFiltersExpanded}
-                    collectionCount={ownerAssets?.length}
                     onClick={() => setFiltersExpanded(!isFiltersExpanded)}
                   />
                 </Row>

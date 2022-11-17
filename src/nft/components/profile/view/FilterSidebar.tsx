@@ -21,6 +21,11 @@ import * as styles from './ProfilePage.css'
 
 const COLLECTION_ROW_HEIGHT = 44
 
+const FilterPanelContainer = styled.div`
+  position: sticky;
+  top: 0;
+`
+
 const ItemsContainer = styled(Column)`
   ${ScrollBarStyles}
   height: 100vh;
@@ -39,7 +44,7 @@ const SmallLoadingBubble = styled(LoadingBubble)`
 
 const LoadingCollectionItem = ({ style }: { style?: CSSProperties }) => {
   return (
-    <Row display="flex" justifyContent="space-between" style={style}>
+    <Row display="flex" justifyContent="space-between" style={style} paddingLeft="12" paddingRight="16">
       <Row display="flex" flex="1">
         <SmallLoadingBubble />
         <LongLoadingBubble />
@@ -155,6 +160,19 @@ const CollectionSelect = ({
     return `${collection.address}_${index}`
   }, [])
 
+  // If there are more items to be loaded then add an extra row to hold a loading indicator.
+  const itemCount = hasNextPage ? displayCollections.length + 1 : displayCollections.length
+
+  // Only load 1 page of items at a time.
+  // Pass an empty callback to InfiniteLoader in case it asks us to load more than once.
+  const loadMoreItems = isFetchingNextPage ? () => null : fetchNextPage
+
+  // Every row is loaded except for our loading indicator row.
+  const isItemLoaded = useCallback(
+    (index: number) => !hasNextPage || index < displayCollections.length,
+    [displayCollections.length, hasNextPage]
+  )
+
   const CollectionFilterRow = useCallback(
     ({ index, style }: CollectionFilterRowProps) => {
       const collection = !!displayCollections && displayCollections[index]
@@ -174,18 +192,8 @@ const CollectionSelect = ({
     [displayCollections, isFetchingNextPage, itemKey, collectionFilters, setCollectionFilters]
   )
 
-  // If there are more items to be loaded then add an extra row to hold a loading indicator.
-  const itemCount = hasNextPage ? displayCollections.length + 1 : displayCollections.length
-
-  // Only load 1 page of items at a time.
-  // Pass an empty callback to InfiniteLoader in case it asks us to load more than once.
-  const loadMoreItems = isFetchingNextPage ? () => null : fetchNextPage
-
-  // Every row is loaded except for our loading indicator row.
-  const isItemLoaded = (index: number) => !hasNextPage || index < displayCollections.length
-
   return (
-    <>
+    <FilterPanelContainer>
       <Box className={subhead} marginTop="12" marginBottom="16" width="276">
         Collections
       </Box>
@@ -224,7 +232,7 @@ const CollectionSelect = ({
           </ItemsContainer>
         </Column>
       </Box>
-    </>
+    </FilterPanelContainer>
   )
 }
 

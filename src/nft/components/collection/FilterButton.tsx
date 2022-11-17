@@ -37,7 +37,9 @@ export const FilterButton = ({
         <>
           <Box className={buttonTextMedium}>
             {' '}
-            Filter • {putCommas(collectionCount)} result{pluralize(collectionCount)}
+            {!!collectionCount
+              ? `Filter • ${putCommas(collectionCount)} result${pluralize(collectionCount)}`
+              : 'Filter'}
           </Box>
         </>
       ) : null}
