@@ -32,13 +32,7 @@ export function HomeScreen() {
 
   const contentHeader = useMemo(
     () => (
-      <Flex
-        bg="backgroundBranded"
-        borderBottomLeftRadius="md"
-        borderBottomRightRadius="md"
-        gap="xmd"
-        pb="md"
-        px="lg">
+      <Flex bg="backgroundBranded" gap="xmd" pb="md" px="lg">
         <AccountHeader />
         <PortfolioBalance owner={activeAccount.address} />
         <QuickActions />
@@ -140,7 +134,7 @@ function ActionButton({
     <TouchableArea
       hapticFeedback
       backgroundColor="background0"
-      borderColor="backgroundOutline"
+      borderColor="magentaSoft"
       borderRadius="lg"
       borderWidth={1}
       flex={1}

@@ -106,42 +106,46 @@ export default function TabbedScrollScreen({
         style={[
           TAB_STYLES.header,
           tabBarAnimatedStyle,
-          { backgroundColor: theme.colors.background0 },
+          {
+            backgroundColor: theme.colors.backgroundBranded,
+          },
         ]}>
-        <TabBar
-          {...sceneProps}
-          indicatorStyle={TAB_STYLES.activeTabIndicator}
-          navigationState={{ index: tabIndex, routes }}
-          renderLabel={renderTabLabel}
-          style={[
-            TAB_STYLES.tabBar,
-            {
-              backgroundColor: theme.colors.background0,
-              borderBottomColor: theme.colors.backgroundOutline,
-            },
-          ]}
-          onTabPress={({ preventDefault, route }) => {
-            if (isListGliding.current) {
-              preventDefault()
-            }
-            animatedScrollY.value = 0
+        <Box bg="background0" borderTopLeftRadius="xl" borderTopRightRadius="xl">
+          <TabBar
+            {...sceneProps}
+            indicatorStyle={TAB_STYLES.activeTabIndicator}
+            navigationState={{ index: tabIndex, routes }}
+            renderLabel={renderTabLabel}
+            style={[
+              TAB_STYLES.tabBar,
+              {
+                backgroundColor: theme.colors.background0,
+                borderBottomColor: theme.colors.backgroundOutline,
+              },
+            ]}
+            onTabPress={({ preventDefault, route }) => {
+              if (isListGliding.current) {
+                preventDefault()
+              }
+              animatedScrollY.value = 0
 
-            const found = tabRefs.current.find((e) => e.key === route.key)
-            if (found && found.value && found.value.scrollToOffset) {
-              // TODO (Thomas): Figure out smooth scrolling for RecyclerListView
-              found.value.scrollToOffset(0)
-            }
+              const found = tabRefs.current.find((e) => e.key === route.key)
+              if (found && found.value && found.value.scrollToOffset) {
+                // TODO (Thomas): Figure out smooth scrolling for RecyclerListView
+                found.value.scrollToOffset(0)
+              }
 
-            // We only want to trigger a reload if the tapped tab is already the current active tab, not when switching tabs
-            if (
-              route.key === SectionName.HomeNFTsTab &&
-              tabIndex ===
-                routes.findIndex((currentRoute) => currentRoute.key === SectionName.HomeNFTsTab)
-            ) {
-              nftsTabReloadFn?.()
-            }
-          }}
-        />
+              // We only want to trigger a reload if the tapped tab is already the current active tab, not when switching tabs
+              if (
+                route.key === SectionName.HomeNFTsTab &&
+                tabIndex ===
+                  routes.findIndex((currentRoute) => currentRoute.key === SectionName.HomeNFTsTab)
+              ) {
+                nftsTabReloadFn?.()
+              }
+            }}
+          />
+        </Box>
       </Animated.View>
     )
   }
