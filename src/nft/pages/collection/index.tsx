@@ -27,7 +27,8 @@ import { ThemedText } from 'theme'
 
 const FILTER_WIDTH = 332
 const BAG_WIDTH = 324
-export const COLLECTION_BANNER_HEIGHT = 288
+const BannerWrapper = styled(Box)``
+export const COLLECTION_BANNER_HEIGHT = 100
 
 export const CollectionBannerLoading = () => <Box height="full" width="full" className={styles.loadingBanner} />
 
@@ -133,7 +134,7 @@ const Collection = () => {
         <Column width="full">
           {contractAddress ? (
             <>
-              <Box width="full" height={`${COLLECTION_BANNER_HEIGHT}`}>
+              <BannerWrapper width="full">
                 <Box
                   as={collectionStats?.bannerImageUrl ? 'img' : 'div'}
                   height="full"
@@ -146,7 +147,7 @@ const Collection = () => {
                   className={styles.bannerImage}
                   background="none"
                 />
-              </Box>
+              </BannerWrapper>
               <CollectionDescriptionSection>
                 {collectionStats && (
                   <CollectionStats stats={collectionStats || ({} as GenieCollection)} isMobile={isMobile} />
