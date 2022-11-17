@@ -141,7 +141,7 @@ export function Table<D extends Record<string, unknown>>({
   }
 
   return (
-    <GlowEffect>
+    <GlowEffect bright>
       <table {...getTableProps()} className={styles.table}>
         <thead className={styles.thead}>
           {headerGroups.map((headerGroup) => (
@@ -229,7 +229,7 @@ interface LoadingTableProps {
 
 function LoadingTable({ headerGroups, visibleColumns, ...props }: LoadingTableProps) {
   return (
-    <GlowEffect>
+    <GlowEffect bright>
       <table {...props} className={styles.table}>
         <thead className={styles.thead}>
           {headerGroups.map((headerGroup) => (

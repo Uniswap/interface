@@ -11,7 +11,7 @@ import { useMemo } from 'react'
 import { Upload } from 'react-feather'
 import { Link, useNavigate } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { GlowEffect, ThemedText } from 'theme'
 
 interface AssetPriceDetailsProps {
   asset: GenieAsset
@@ -54,7 +54,7 @@ const Container = styled.div`
   }
 `
 
-const BestPriceContainer = styled.div`
+const BestPriceContainer = styled(GlowEffect)`
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -169,7 +169,7 @@ export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
 
   return (
     <Container>
-      <BestPriceContainer>
+      <BestPriceContainer bright>
         <HeaderRow>
           <ThemedText.SubHeader fontWeight={500} lineHeight="24px">
             {listing ? 'Your Price' : 'List for Sale'}
@@ -222,7 +222,7 @@ export const NotForSale = ({ collectionName, collectionUrl }: { collectionName: 
   const theme = useTheme()
 
   return (
-    <BestPriceContainer>
+    <BestPriceContainer bright>
       <NotForSaleContainer>
         <CancelListingIcon width="79px" height="79px" color={theme.textTertiary} />
         <ThemedText.SubHeader fontWeight={500} lineHeight="24px">
@@ -299,7 +299,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
       </OwnerInformationContainer>
 
       {cheapestOrder && asset.priceInfo ? (
-        <BestPriceContainer>
+        <BestPriceContainer bright>
           <HeaderRow>
             <ThemedText.SubHeader fontWeight={500} lineHeight="24px">
               Best Price

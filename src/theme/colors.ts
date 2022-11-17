@@ -162,6 +162,9 @@ export const darkTheme = {
   shallowShadow: '4px 4px 10px rgba(0, 0, 0, 0.24), 2px 2px 4px rgba(0, 0, 0, 0.12), 1px 2px 2px rgba(0, 0, 0, 0.12);',
 
   networkDefaultShadow: `0px 40px 120px ${opacify(16, colors.blue400)}`,
+  // Special variation of `networkDefaultShadow` since NFT has a different background in dark mode
+  // than rest of the app. Once that is unified, remove this and use `networkDefaultShadow` instead.
+  networkDefaultBrightShadow: `0px 40px 120px ${opacify(28, colors.blue400)}`,
 
   stateOverlayHover: opacify(8, colors.gray300),
   stateOverlayPressed: opacify(24, colors.gray200),
@@ -213,6 +216,7 @@ export const lightTheme: Theme = {
     '6px 6px 10px rgba(51, 53, 72, 0.01), 2px 2px 6px rgba(51, 53, 72, 0.02), 1px 2px 2px rgba(51, 53, 72, 0.02);',
 
   networkDefaultShadow: `0px 40px 120px ${opacify(12, colors.pink400)}`,
+  networkDefaultBrightShadow: `0px 40px 120px ${opacify(12, colors.pink400)}`,
 
   stateOverlayHover: opacify(8, colors.gray300),
   stateOverlayPressed: opacify(24, colors.gray200),

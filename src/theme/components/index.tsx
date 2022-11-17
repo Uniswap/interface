@@ -471,7 +471,7 @@ export const Separator = styled.div`
   background-color: ${({ theme }) => theme.backgroundOutline};
 `
 
-export const GlowEffect = styled.div`
+export const GlowEffect = styled.div<{ bright?: boolean }>`
   border-radius: 32px;
-  box-shadow: ${({ theme }) => theme.networkDefaultShadow};
+  box-shadow: ${({ bright, theme }) => (bright ? theme.networkDefaultBrightShadow : theme.networkDefaultShadow)};
 `
