@@ -23,10 +23,32 @@ const CarouselCardBorder = styled.div`
   border-radius: 22px;
   cursor: pointer;
   border: 2px solid transparent;
+  transition-property: border-color;
+  transition-duration: ${({ theme }) => theme.transition.duration.fast};
+  transition-timing: ${({ theme }) => theme.transition.timing.inOut};
 
   :hover {
     border: 2px solid ${({ theme }) => theme.backgroundOutline};
+  }
+
+  ::after {
+    content: '';
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 22px;
+    z-index: -1;
     box-shadow: ${({ theme }) => theme.deepShadow};
+    transition-property: opacity;
+    transition-duration: ${({ theme }) => theme.transition.duration.fast};
+    transition-timing: ${({ theme }) => theme.transition.timing.inOut};
+  }
+
+  :hover::after {
+    opacity: 1;
   }
 `
 
