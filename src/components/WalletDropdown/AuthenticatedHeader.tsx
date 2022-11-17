@@ -45,6 +45,9 @@ const ProfileButton = styled(WalletButton)`
 const UNIButton = styled(WalletButton)`
   background: linear-gradient(to right, #9139b0 0%, #4261d6 100%);
 `
+const AirdropButton = styled(UNIButton)`
+  font-size: 16px;
+`
 
 const Column = styled.div`
   display: flex;
@@ -186,6 +189,9 @@ const AuthenticatedHeader = () => {
             <Trans>Claim</Trans> {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} <Trans>reward</Trans>
           </UNIButton>
         )}
+        <AirdropButton onClick={openClaimModal}>
+          <Trans>Claim Uniswap NFT Airdrop</Trans>
+        </AirdropButton>
       </Column>
     </AuthenticatedHeaderWrapper>
   )
