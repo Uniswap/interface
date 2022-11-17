@@ -32,6 +32,7 @@ const BannerBackground = styled(AbsoluteFill)<{ backgroundImage: string }>`
   background-image: ${(props) => `url(${props.backgroundImage})`};
   filter: blur(62px);
   opacity: ${({ theme }) => (theme.darkMode ? 0.4 : 0.2)};
+  transform: scale(1.1);
 `
 
 const PlainBackground = styled(AbsoluteFill)`
