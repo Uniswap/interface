@@ -3,8 +3,15 @@ import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { useIsCollectionLoading } from 'nft/hooks'
+import styled from 'styled-components/macro'
 
 import * as styles from './ActivitySwitcher.css'
+
+const BaseActivityContainer = styled(Row)`
+  border-bottom: 1px solid;
+  border-color: ${({ theme }) => theme.backgroundInteractive};
+  margin-right: 12px;
+`
 
 export const ActivitySwitcherLoading = new Array(2)
   .fill(null)
@@ -20,7 +27,7 @@ export const ActivitySwitcher = ({
   const isLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
 
   return (
-    <Row gap="24" marginBottom={{ sm: '16', md: '28' }}>
+    <BaseActivityContainer gap="24" marginBottom="16">
       {isLoading ? (
         ActivitySwitcherLoading
       ) : (
@@ -47,6 +54,6 @@ export const ActivitySwitcher = ({
           </TraceEvent>
         </>
       )}
-    </Row>
+    </BaseActivityContainer>
   )
 }

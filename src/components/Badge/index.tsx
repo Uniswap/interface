@@ -1,7 +1,6 @@
 import { readableColor } from 'polished'
 import { PropsWithChildren } from 'react'
 import styled, { DefaultTheme } from 'styled-components/macro'
-import { Color } from 'theme/styled'
 
 export enum BadgeVariant {
   DEFAULT = 'DEFAULT',
@@ -17,7 +16,7 @@ interface BadgeProps {
   variant?: BadgeVariant
 }
 
-function pickBackgroundColor(variant: BadgeVariant | undefined, theme: DefaultTheme): Color {
+function pickBackgroundColor(variant: BadgeVariant | undefined, theme: DefaultTheme): string {
   switch (variant) {
     case BadgeVariant.NEGATIVE:
       return theme.deprecated_error

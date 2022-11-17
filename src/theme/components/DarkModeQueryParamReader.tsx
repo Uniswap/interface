@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
 
-import { updateUserDarkMode } from '../state/user/reducer'
+import { updateUserDarkMode } from '../../state/user/reducer'
 
 export default function DarkModeQueryParamReader(): null {
   const { search } = useLocation()

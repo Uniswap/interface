@@ -1,8 +1,8 @@
 import { globalStyle, style } from '@vanilla-extract/css'
-import { bodySmall, buttonTextSmall, headlineSmall } from 'nft/css/common.css'
+import { bodySmall, headlineSmall, subheadSmall } from 'nft/css/common.css'
 import { loadingAsset, loadingBlock } from 'nft/css/loading.css'
 
-import { breakpoints, sprinkles, themeVars } from '../../css/sprinkles.css'
+import { breakpoints, sprinkles, themeVars, vars } from '../../css/sprinkles.css'
 
 export const statsText = style([
   sprinkles({
@@ -34,6 +34,7 @@ export const collectionImage = style([
     height: '143px',
     verticalAlign: 'top',
     top: '-118px',
+    boxShadow: vars.color.cardDropShadow,
     '@media': {
       [`(max-width: ${breakpoints.sm - 1}px)`]: {
         width: '60px',
@@ -94,11 +95,10 @@ export const descriptionOpen = style([
 ])
 
 export const readMore = style([
+  bodySmall,
   {
     verticalAlign: 'top',
-    lineHeight: '20px',
   },
-  buttonTextSmall,
   sprinkles({
     color: 'textSecondary',
     cursor: 'pointer',
@@ -107,9 +107,8 @@ export const readMore = style([
 ])
 
 export const statsLabel = style([
-  bodySmall,
+  subheadSmall,
   sprinkles({
-    fontWeight: 'normal',
     color: 'textSecondary',
     whiteSpace: 'nowrap',
   }),
@@ -120,9 +119,6 @@ export const statsLabel = style([
 
 export const statsValue = style([
   headlineSmall,
-  sprinkles({
-    fontWeight: 'medium',
-  }),
   {
     lineHeight: '24px',
     whiteSpace: 'nowrap',
