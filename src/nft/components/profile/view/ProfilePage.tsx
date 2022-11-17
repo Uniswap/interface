@@ -33,6 +33,21 @@ const ProfilePageColumn = styled(Column)`
   ${ScreenBreakpointsPaddings}
 `
 
+const ProfileHeader = styled.div`
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 38px;
+  padding-bottom: 16px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    font-size: 20px;
+    line-height: 28px;
+    margin-bottom: 0px;
+  }
+`
+
 export const DEFAULT_WALLET_ASSET_QUERY_AMOUNT = 25
 const FILTER_SIDEBAR_WIDTH = 300
 const PADDING = 16
@@ -83,66 +98,69 @@ export const ProfilePage = () => {
       {ownerAssets?.length === 0 ? (
         <EmptyWalletContent />
       ) : (
-        <Row alignItems="flex-start" position="relative">
-          <FilterSidebar />
+        <>
+          <ProfileHeader>My NFTs</ProfileHeader>
+          <Row alignItems="flex-start" position="relative">
+            <FilterSidebar />
 
-          {(!isMobile || !isFiltersExpanded) && (
-            <Column width="full">
-              <AnimatedBox
-                flexShrink="0"
-                style={{
-                  transform: gridX.to(
-                    (x) =>
-                      `translate(${Number(x) - (!isMobile && isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING)}px)`
-                  ),
-                }}
-                paddingY="20"
-              >
-                <Row gap="8" flexWrap="nowrap" justifyContent="space-between">
-                  <FilterButton
-                    isMobile={isMobile}
-                    isFiltersExpanded={isFiltersExpanded}
-                    onClick={() => setFiltersExpanded(!isFiltersExpanded)}
-                  />
-                </Row>
-                <Row>
-                  <CollectionFiltersRow
-                    collections={walletCollections}
-                    collectionFilters={collectionFilters}
-                    setCollectionFilters={setCollectionFilters}
-                    clearCollectionFilters={clearCollectionFilters}
-                  />
-                </Row>
-                <InfiniteScroll
-                  next={() => loadNext(DEFAULT_WALLET_ASSET_QUERY_AMOUNT)}
-                  hasMore={hasNext}
-                  loader={
-                    <Center>
-                      <LoadingSparkle />
-                    </Center>
-                  }
-                  dataLength={ownerAssets?.length ?? 0}
-                  style={{ overflow: 'unset' }}
+            {(!isMobile || !isFiltersExpanded) && (
+              <Column width="full">
+                <AnimatedBox
+                  flexShrink="0"
+                  style={{
+                    transform: gridX.to(
+                      (x) =>
+                        `translate(${Number(x) - (!isMobile && isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING)}px)`
+                    ),
+                  }}
+                  paddingY="20"
                 >
-                  <div className={assetList}>
-                    {ownerAssets?.length
-                      ? ownerAssets.map((asset, index) => (
-                          <div key={index}>
-                            <ViewMyNftsAsset
-                              asset={asset}
-                              mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
-                              setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-                              hideDetails={sellAssets.length > 0}
-                            />
-                          </div>
-                        ))
-                      : null}
-                  </div>
-                </InfiniteScroll>
-              </AnimatedBox>
-            </Column>
-          )}
-        </Row>
+                  <Row gap="8" flexWrap="nowrap" justifyContent="space-between">
+                    <FilterButton
+                      isMobile={isMobile}
+                      isFiltersExpanded={isFiltersExpanded}
+                      onClick={() => setFiltersExpanded(!isFiltersExpanded)}
+                    />
+                  </Row>
+                  <Row>
+                    <CollectionFiltersRow
+                      collections={walletCollections}
+                      collectionFilters={collectionFilters}
+                      setCollectionFilters={setCollectionFilters}
+                      clearCollectionFilters={clearCollectionFilters}
+                    />
+                  </Row>
+                  <InfiniteScroll
+                    next={() => loadNext(DEFAULT_WALLET_ASSET_QUERY_AMOUNT)}
+                    hasMore={hasNext}
+                    loader={
+                      <Center>
+                        <LoadingSparkle />
+                      </Center>
+                    }
+                    dataLength={ownerAssets?.length ?? 0}
+                    style={{ overflow: 'unset' }}
+                  >
+                    <div className={assetList}>
+                      {ownerAssets?.length
+                        ? ownerAssets.map((asset, index) => (
+                            <div key={index}>
+                              <ViewMyNftsAsset
+                                asset={asset}
+                                mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
+                                setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+                                hideDetails={sellAssets.length > 0}
+                              />
+                            </div>
+                          ))
+                        : null}
+                    </div>
+                  </InfiniteScroll>
+                </AnimatedBox>
+              </Column>
+            )}
+          </Row>
+        </>
       )}
       {sellAssets.length > 0 && (
         <Row
