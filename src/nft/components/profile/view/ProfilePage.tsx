@@ -11,14 +11,13 @@ import {
   useBag,
   useFiltersExpanded,
   useIsMobile,
-  useProfilePageState,
   useSellAsset,
   useWalletBalance,
   useWalletCollections,
 } from 'nft/hooks'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import { OSCollectionsFetcher } from 'nft/queries'
-import { ProfilePageStateType, WalletCollection } from 'nft/types'
+import { WalletCollection } from 'nft/types'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useQuery } from 'react-query'
@@ -52,7 +51,6 @@ export const ProfilePage = () => {
     shallow
   )
   const sellAssets = useSellAsset((state) => state.sellAssets)
-  const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const toggleBag = useBag((state) => state.toggleBag)
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const isMobile = useIsMobile()
