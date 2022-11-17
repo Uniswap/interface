@@ -123,7 +123,7 @@ const ModalContentWrapper = styled.div`
 export default function SettingsTab({ placeholderSlippage }: { placeholderSlippage: Percent }) {
   const { chainId } = useWeb3React()
 
-  const node = useRef<HTMLDivElement>()
+  const node = useRef<HTMLDivElement | null>(null)
   const open = useModalIsOpen(ApplicationModal.SETTINGS)
   const toggle = useToggleSettingsMenu()
 
@@ -139,8 +139,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
   useOnClickOutside(node, open ? toggle : undefined)
 
   return (
-    // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
-    <StyledMenu ref={node as any}>
+    <StyledMenu ref={node}>
       <Modal isOpen={showConfirmation} onDismiss={() => setShowConfirmation(false)} maxHeight={100}>
         <ModalContentWrapper>
           <AutoColumn gap="lg">
