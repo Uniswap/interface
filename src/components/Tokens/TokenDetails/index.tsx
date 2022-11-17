@@ -34,7 +34,7 @@ import { TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
 import { useIsUserAddedTokenOnChain } from 'hooks/Tokens'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
-import { useTokenFromActiveNetwork } from 'lib/hooks/useCurrency'
+import { UNKNOWN_TOKEN_SYMBOL, useTokenFromActiveNetwork } from 'lib/hooks/useCurrency'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import { useCallback, useMemo, useState, useTransition } from 'react'
 import { ArrowLeft } from 'react-feather'
@@ -65,38 +65,53 @@ export function useTokenLogoURI(token?: TokenQueryData | TopToken, nativeCurrenc
   ][0]
 }
 
+function useOnChainToken(address: string | false, skip: boolean) {
+  const token = useTokenFromActiveNetwork(skip || !address ? undefined : address)
+
+  if (skip || !address || (token && token?.symbol === UNKNOWN_TOKEN_SYMBOL)) {
+    return undefined
+  } else {
+    return token
+  }
+}
+
 type TokenDetailsProps = {
-  tokenAddress: string | undefined
+  urlAddress: string | undefined
   chain: Chain
   tokenQueryReference: PreloadedQuery<TokenQuery>
   priceQueryReference: PreloadedQuery<TokenPriceQuery> | null | undefined
   refetchTokenPrices: RefetchPricesFunction
 }
 export default function TokenDetails({
-  tokenAddress,
+  urlAddress,
   chain,
   tokenQueryReference,
   priceQueryReference,
   refetchTokenPrices,
 }: TokenDetailsProps) {
-  if (!tokenAddress) {
+  if (!urlAddress) {
     throw new Error('Invalid token details route: tokenAddress param is undefined')
   }
+  const address = useMemo(() => (urlAddress === NATIVE_CHAIN_ID ? urlAddress : isAddress(urlAddress)), [urlAddress])
 
   const pageChainId = CHAIN_NAME_TO_CHAIN_ID[chain]
   const nativeCurrency = nativeOnChain(pageChainId)
-  const isNative = tokenAddress === NATIVE_CHAIN_ID
+  const isNative = address === NATIVE_CHAIN_ID
 
   const tokenQueryData = usePreloadedQuery(tokenQuery, tokenQueryReference).tokens?.[0]
-  const token = useMemo(() => {
+
+  const localToken = useMemo(() => {
+    if (!address) return undefined
     if (isNative) return nativeCurrency
     if (tokenQueryData) return new QueryToken(tokenQueryData)
+    const listToken = new Token(pageChainId, address, DEFAULT_ERC20_DECIMALS)
+    return listToken.name && listToken.symbol ? listToken : null
+  }, [isNative, nativeCurrency, pageChainId, address, tokenQueryData])
+  // fetch on-chain token if token data is missing
+  const onChainToken = useOnChainToken(address, Boolean(localToken))
+  const token = localToken ?? onChainToken
 
-    const checksummedAddress = isAddress(tokenAddress)
-    return checksummedAddress ? new Token(pageChainId, checksummedAddress, DEFAULT_ERC20_DECIMALS) : undefined
-  }, [isNative, nativeCurrency, pageChainId, tokenAddress, tokenQueryData])
-
-  const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
+  const tokenWarning = address ? checkWarning(address) : null
   const isBlockedToken = tokenWarning?.canProceed === false
 
   const navigate = useNavigate()
@@ -124,7 +139,7 @@ export default function TokenDetails({
   const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
 
   // Show token safety modal if Swap-reviewing a warning token, at all times if the current token is blocked
-  const shouldShowSpeedbump = !useIsUserAddedTokenOnChain(tokenAddress, pageChainId) && tokenWarning !== null
+  const shouldShowSpeedbump = !useIsUserAddedTokenOnChain(address || undefined, pageChainId) && tokenWarning !== null
   const onReviewSwapClick = useCallback(
     () => new Promise<boolean>((resolve) => (shouldShowSpeedbump ? setContinueSwap({ resolve }) : resolve(true))),
     [shouldShowSpeedbump]
@@ -141,16 +156,13 @@ export default function TokenDetails({
   const logoSrc = useTokenLogoURI(tokenQueryData, isNative ? nativeCurrency : undefined)
   const L2Icon = getChainInfo(pageChainId)?.circleLogoUrl
 
-  const onChainToken = useTokenFromActiveNetwork(tokenAddress)
-
-  if (!token && !tokenQueryData && onChainToken === undefined) {
+  if (token === undefined) {
     return <InvalidTokenDetails />
   }
-
   return (
-    <Trace page={PageName.TOKEN_DETAILS_PAGE} properties={{ tokenAddress, tokenName: token?.name }} shouldLogImpression>
+    <Trace page={PageName.TOKEN_DETAILS_PAGE} properties={{ address, tokenName: token?.name }} shouldLogImpression>
       <TokenDetailsLayout>
-        {!isPending ? (
+        {token && !isPending ? (
           <LeftPanel>
             <BreadcrumbNavLink to={`/tokens/${chain.toLowerCase()}`}>
               <ArrowLeft size={14} /> Tokens
@@ -182,16 +194,16 @@ export default function TokenDetails({
               priceHigh52W={tokenQueryData?.market?.priceHigh52W?.value}
               priceLow52W={tokenQueryData?.market?.priceLow52W?.value}
             />
-            {!isNative && (
+            {!isNative && address && (
               <>
                 <Hr />
                 <AboutSection
-                  address={tokenQueryData?.address ?? ''}
+                  address={address}
                   description={tokenQueryData?.project?.description}
                   homepageUrl={tokenQueryData?.project?.homepageUrl}
                   twitterName={tokenQueryData?.project?.twitterName}
                 />
-                <AddressSection address={tokenQueryData?.address ?? ''} />
+                <AddressSection address={address} />
               </>
             )}
           </LeftPanel>
@@ -205,15 +217,15 @@ export default function TokenDetails({
             onTokenChange={navigateToWidgetSelectedToken}
             onReviewSwapClick={onReviewSwapClick}
           />
-          {tokenWarning && <TokenSafetyMessage tokenAddress={tokenAddress ?? ''} warning={tokenWarning} />}
+          {tokenWarning && <TokenSafetyMessage tokenAddress={address || ''} warning={tokenWarning} />}
           {token && <BalanceSummary token={token} />}
         </RightPanel>
         {token && <MobileBalanceSummaryFooter token={token} />}
 
-        {tokenAddress && (
+        {address && (
           <TokenSafetyModal
             isOpen={isBlockedToken || !!continueSwap}
-            tokenAddress={tokenAddress}
+            tokenAddress={address}
             onContinue={() => onResolveSwap(true)}
             onBlocked={() => navigate(-1)}
             onCancel={() => onResolveSwap(false)}
