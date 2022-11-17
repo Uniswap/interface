@@ -17,6 +17,7 @@ import { useLocation } from 'react-router-dom'
 
 import { ClockIcon, TrendingArrow } from '../../nft/components/icons'
 import * as styles from './SearchBar.css'
+import * as nftStyles from './SearchBarNft.css'
 import { CollectionRow, SkeletonRow, TokenRow } from './SuggestionRow'
 
 function isCollection(suggestion: GenieCollection | FungibleToken | TrendingCollection) {
@@ -118,6 +119,8 @@ export const SearchBarDropdown = ({
   const isTokenPage = pathname.includes('/tokens')
   const phase1Flag = useNftFlag()
   const [resultsState, setResultsState] = useState<ReactNode>()
+  // when removing this flag, copy content of SearchBarNft.css into SearchBar.css and use the styles import only
+  const finalStyles = phase1Flag === NftVariant.Enabled ? nftStyles : styles
 
   const { data: trendingCollectionResults, isLoading: trendingCollectionsAreLoading } = useQuery(
     ['trendingCollections', 'eth', 'twenty_four_hours'],
@@ -224,7 +227,7 @@ export const SearchBarDropdown = ({
             header={<Trans>Tokens</Trans>}
           />
         ) : (
-          <Box className={styles.notFoundContainer}>
+          <Box className={finalStyles.notFoundContainer}>
             <Trans>No tokens found.</Trans>
           </Box>
         )
@@ -245,7 +248,7 @@ export const SearchBarDropdown = ({
               header={<Trans>NFT Collections</Trans>}
             />
           ) : (
-            <Box className={styles.notFoundContainer}>No NFT collections found.</Box>
+            <Box className={finalStyles.notFoundContainer}>No NFT collections found.</Box>
           )
         ) : null
 
@@ -339,10 +342,11 @@ export const SearchBarDropdown = ({
     queryText,
     totalSuggestions,
     trace,
+    finalStyles.notFoundContainer,
   ])
 
   return (
-    <Box className={styles.searchBarDropdown}>
+    <Box className={finalStyles.searchBarDropdown}>
       <Box opacity={isLoading ? '0.3' : '1'} transition="125">
         {resultsState}
       </Box>
