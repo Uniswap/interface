@@ -11,8 +11,8 @@ const CarouselCardContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  background-color: ${({ theme }) => theme.backgroundSurface};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
-  background: ${({ theme }) => theme.backgroundSurface};
   border-radius: 20px;
   overflow: hidden;
   height: 100%;
