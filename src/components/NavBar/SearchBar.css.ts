@@ -4,6 +4,9 @@ import { buttonTextSmall, subhead, subheadSmall } from 'nft/css/common.css'
 import { breakpoints, sprinkles, vars } from '../../nft/css/sprinkles.css'
 
 const DESKTOP_NAVBAR_WIDTH = 360
+const DESKTOP_NAVBAR_WIDTH_L = 440
+const DESKTOP_NAVBAR_WIDTH_XL = 540
+const DESKTOP_NAVBAR_WIDTH_XXL = 640
 const MAGNIFYING_GLASS_ICON_WIDTH = 28
 
 const baseSearchStyle = style([
@@ -16,8 +19,18 @@ const baseSearchStyle = style([
   }),
   {
     '@media': {
-      [`screen and (min-width: ${breakpoints.sm}px)`]: {
+      [`screen and (min-width: ${breakpoints.lg}px)`]: {
         width: `${DESKTOP_NAVBAR_WIDTH}px`,
+      },
+
+      [`screen and (min-width: 1260px) and (max-width: 1380px)`]: {
+        width: `${DESKTOP_NAVBAR_WIDTH_L}px`,
+      },
+      [`screen and (min-width: 1380px) and (max-width: 1479px)`]: {
+        width: `${DESKTOP_NAVBAR_WIDTH_XL}px`,
+      },
+      [`screen and (min-width: ${1480}px)`]: {
+        width: `${DESKTOP_NAVBAR_WIDTH_XXL}px`,
       },
     },
   },
@@ -34,6 +47,18 @@ export const searchBarContainer = style([
     '@media': {
       [`screen and (min-width: ${breakpoints.lg}px)`]: {
         right: `-${DESKTOP_NAVBAR_WIDTH / 2 - MAGNIFYING_GLASS_ICON_WIDTH}px`,
+        top: '-3px',
+      },
+      [`screen and (min-width: 1260px) and (max-width: 1380px)`]: {
+        right: `-${DESKTOP_NAVBAR_WIDTH_L / 2 - MAGNIFYING_GLASS_ICON_WIDTH}px`,
+        top: '-3px',
+      },
+      [`screen and (min-width: 1380px) and (max-width: 1479px)`]: {
+        right: `-${DESKTOP_NAVBAR_WIDTH_XL / 2 - MAGNIFYING_GLASS_ICON_WIDTH}px`,
+        top: '-3px',
+      },
+      [`screen and (min-width: ${1480}px)`]: {
+        right: `-${DESKTOP_NAVBAR_WIDTH_XXL / 2 - MAGNIFYING_GLASS_ICON_WIDTH}px`,
         top: '-3px',
       },
     },
