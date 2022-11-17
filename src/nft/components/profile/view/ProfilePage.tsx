@@ -18,9 +18,9 @@ import {
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import { OSCollectionsFetcher } from 'nft/queries'
 import { ProfilePageStateType, WalletCollection } from 'nft/types'
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { useQuery } from 'react-query'
+import { useInfiniteQuery } from 'react-query'
 import { useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
 import shallow from 'zustand/shallow'
@@ -34,6 +34,7 @@ const ProfilePageColumn = styled(Column)`
 `
 
 export const DEFAULT_WALLET_ASSET_QUERY_AMOUNT = 25
+const WALLET_COLLECTIONS_PAGINATION_LIMIT = 300
 const FILTER_SIDEBAR_WIDTH = 300
 const PADDING = 16
 
@@ -56,19 +57,44 @@ export const ProfilePage = () => {
   const isMobile = useIsMobile()
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
 
-  const { data: ownerCollections } = useQuery(
-    ['ownerCollections', address],
-    () => OSCollectionsFetcher({ params: { asset_owner: address, offset: '0', limit: '300' } }),
-    {
-      refetchOnWindowFocus: false,
+  const getOwnerCollections = async ({ pageParam = 0 }) => {
+    const res = await OSCollectionsFetcher({
+      params: {
+        asset_owner: address,
+        offset: `${pageParam * WALLET_COLLECTIONS_PAGINATION_LIMIT}`,
+        limit: `${WALLET_COLLECTIONS_PAGINATION_LIMIT}`,
+      },
+    })
+    return {
+      data: res,
+      nextPage: pageParam + 1,
     }
-  )
+  }
+
+  const {
+    data: ownerCollectionsData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isSuccess,
+  } = useInfiniteQuery('ownerCollections', getOwnerCollections, {
+    getNextPageParam: (lastGroup, _allGroups) => (lastGroup.data.length === 0 ? undefined : lastGroup.nextPage),
+    refetchInterval: 15000,
+    refetchIntervalInBackground: false,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  })
 
   const {
     walletAssets: ownerAssets,
     loadNext,
     hasNext,
   } = useNftBalanceQuery(address, collectionFilters, [], DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
+
+  const ownerCollections = useMemo(
+    () => (isSuccess ? ownerCollectionsData?.pages.map((page) => page.data).flat() : null),
+    [isSuccess, ownerCollectionsData]
+  )
 
   useEffect(() => {
     ownerCollections && setWalletCollections(ownerCollections)
@@ -84,7 +110,12 @@ export const ProfilePage = () => {
         <EmptyWalletContent />
       ) : (
         <Row alignItems="flex-start" position="relative" paddingX="20">
-          <FilterSidebar />
+          <FilterSidebar
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+            walletCollections={walletCollections}
+          />
 
           {(!isMobile || !isFiltersExpanded) && (
             <Column width="full">

@@ -1,8 +1,10 @@
 import { ScrollBarStyles } from 'components/Common'
+import { LoadingBubble } from 'components/Tokens/loading'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { XMarkIcon } from 'nft/components/icons'
 import { Checkbox } from 'nft/components/layout/Checkbox'
+import { checkbox } from 'nft/components/layout/Checkbox.css'
 import { Input } from 'nft/components/layout/Input'
 import { subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
@@ -11,7 +13,8 @@ import { WalletCollection } from 'nft/types'
 import { CSSProperties, Dispatch, FormEvent, SetStateAction, useCallback, useEffect, useReducer, useState } from 'react'
 import { useSpring } from 'react-spring'
 import AutoSizer from 'react-virtualized-auto-sizer'
-import { FixedSizeList } from 'react-window'
+import { FixedSizeList, ListOnItemsRenderedProps } from 'react-window'
+import InfiniteLoader from 'react-window-infinite-loader'
 import styled from 'styled-components/macro'
 
 import * as styles from './ProfilePage.css'
@@ -23,11 +26,49 @@ const ItemsContainer = styled(Column)`
   height: 100vh;
 `
 
-export const FilterSidebar = () => {
+const LongLoadingBubble = styled(LoadingBubble)`
+  min-height: 15px;
+  width: 75%;
+`
+
+const SmallLoadingBubble = styled(LoadingBubble)`
+  height: 20px;
+  width: 20px;
+  margin-right: 8px;
+`
+
+const LoadingCollectionItem = ({ style }: { style?: CSSProperties }) => {
+  return (
+    <Row display="flex" justifyContent="space-between" style={style}>
+      <Row display="flex" flex="1">
+        <SmallLoadingBubble />
+        <LongLoadingBubble />
+      </Row>
+      <Box as="span" borderColor="backgroundOutline" className={checkbox} aria-hidden="true" />
+    </Row>
+  )
+}
+
+interface CollectionFilterRowProps {
+  index: number
+  style: CSSProperties
+}
+
+interface FilterSidebarProps {
+  fetchNextPage: () => void
+  hasNextPage?: boolean
+  isFetchingNextPage: boolean
+  walletCollections: WalletCollection[]
+}
+
+export const FilterSidebar = ({
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
+  walletCollections,
+}: FilterSidebarProps) => {
   const collectionFilters = useWalletCollections((state) => state.collectionFilters)
   const setCollectionFilters = useWalletCollections((state) => state.setCollectionFilters)
-
-  const walletCollections = useWalletCollections((state) => state.walletCollections)
 
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const isMobile = useIsMobile()
@@ -70,6 +111,9 @@ export const FilterSidebar = () => {
           collections={walletCollections}
           collectionFilters={collectionFilters}
           setCollectionFilters={setCollectionFilters}
+          fetchNextPage={fetchNextPage}
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
         />
       </Box>
     </AnimatedBox>
@@ -80,10 +124,16 @@ const CollectionSelect = ({
   collections,
   collectionFilters,
   setCollectionFilters,
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
 }: {
   collections: WalletCollection[]
   collectionFilters: Array<string>
   setCollectionFilters: (address: string) => void
+  fetchNextPage: () => void
+  hasNextPage?: boolean
+  isFetchingNextPage: boolean
 }) => {
   const [collectionSearchText, setCollectionSearchText] = useState('')
   const [displayCollections, setDisplayCollections] = useState(collections)
@@ -100,9 +150,39 @@ const CollectionSelect = ({
   }, [collectionSearchText, collections])
 
   const itemKey = useCallback((index: number, data: WalletCollection[]) => {
+    if (!data) return index
     const collection = data[index]
     return `${collection.address}_${index}`
   }, [])
+
+  const CollectionFilterRow = useCallback(
+    ({ index, style }: CollectionFilterRowProps) => {
+      const collection = !!displayCollections && displayCollections[index]
+      if (!collection || isFetchingNextPage) {
+        return <LoadingCollectionItem style={style} key={index} />
+      }
+      return (
+        <CollectionItem
+          style={style}
+          key={itemKey(index, displayCollections)}
+          collection={displayCollections[index]}
+          collectionFilters={collectionFilters}
+          setCollectionFilters={setCollectionFilters}
+        />
+      )
+    },
+    [displayCollections, isFetchingNextPage, itemKey, collectionFilters, setCollectionFilters]
+  )
+
+  // If there are more items to be loaded then add an extra row to hold a loading indicator.
+  const itemCount = hasNextPage ? displayCollections.length + 1 : displayCollections.length
+
+  // Only load 1 page of items at a time.
+  // Pass an empty callback to InfiniteLoader in case it asks us to load more than once.
+  const loadMoreItems = isFetchingNextPage ? () => null : fetchNextPage
+
+  // Every row is loaded except for our loading indicator row.
+  const isItemLoaded = (index: number) => !hasNextPage || index < displayCollections.length
 
   return (
     <>
@@ -118,24 +198,27 @@ const CollectionSelect = ({
           <ItemsContainer>
             <AutoSizer disableWidth>
               {({ height }) => (
-                <FixedSizeList
-                  height={height}
-                  width="100%"
-                  itemData={displayCollections}
-                  itemCount={displayCollections.length}
-                  itemSize={COLLECTION_ROW_HEIGHT}
-                  itemKey={itemKey}
-                >
-                  {({ index, style, data }) => (
-                    <CollectionItem
-                      style={style}
-                      key={data[index].address}
-                      collection={data[index]}
-                      collectionFilters={collectionFilters}
-                      setCollectionFilters={setCollectionFilters}
-                    />
+                <InfiniteLoader isItemLoaded={isItemLoaded} itemCount={itemCount} loadMoreItems={loadMoreItems}>
+                  {({
+                    onItemsRendered,
+                    ref,
+                  }: {
+                    onItemsRendered: (props: ListOnItemsRenderedProps) => any
+                    ref: any
+                  }) => (
+                    <FixedSizeList
+                      height={height}
+                      width="100%"
+                      itemCount={itemCount}
+                      itemSize={COLLECTION_ROW_HEIGHT}
+                      onItemsRendered={onItemsRendered}
+                      itemKey={itemKey}
+                      ref={ref}
+                    >
+                      {CollectionFilterRow}
+                    </FixedSizeList>
                   )}
-                </FixedSizeList>
+                </InfiniteLoader>
               )}
             </AutoSizer>
           </ItemsContainer>
@@ -175,7 +258,7 @@ const CollectionItem = ({
   collection: WalletCollection
   collectionFilters: Array<string>
   setCollectionFilters: (address: string) => void
-  style: CSSProperties
+  style?: CSSProperties
 }) => {
   const [isCheckboxSelected, setCheckboxSelected] = useState(false)
   const [hovered, toggleHovered] = useReducer((state) => {
