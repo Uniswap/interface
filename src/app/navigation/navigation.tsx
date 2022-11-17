@@ -2,6 +2,7 @@ import { BottomTabBar, createBottomTabNavigator } from '@react-navigation/bottom
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createStackNavigator } from '@react-navigation/stack'
+import { useResponsiveProp } from '@shopify/restyle'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -9,7 +10,12 @@ import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AccountDrawer } from 'src/app/navigation/AccountDrawer'
 import { usePreloadedHomeScreenQueries } from 'src/app/navigation/hooks'
 import { navigationRef } from 'src/app/navigation/NavigationContainer'
-import { SwapTabBarButton, TabBarButton, TAB_NAVIGATOR_HEIGHT } from 'src/app/navigation/TabBar'
+import {
+  SwapTabBarButton,
+  TabBarButton,
+  TAB_NAVIGATOR_HEIGHT_SM,
+  TAB_NAVIGATOR_HEIGHT_XS,
+} from 'src/app/navigation/TabBar'
 import {
   AppStackParamList,
   ExploreStackParamList,
@@ -86,6 +92,11 @@ function TabNavigator() {
   const { t } = useTranslation()
   const theme = useAppTheme()
   useBiometricCheck()
+  const TAB_NAVIGATOR_HEIGHT =
+    useResponsiveProp({
+      xs: TAB_NAVIGATOR_HEIGHT_XS,
+      sm: TAB_NAVIGATOR_HEIGHT_SM,
+    }) ?? TAB_NAVIGATOR_HEIGHT_SM
 
   return (
     <Tab.Navigator

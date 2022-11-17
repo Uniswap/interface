@@ -1,4 +1,4 @@
-import { ShadowProps } from '@shopify/restyle'
+import { ShadowProps, useResponsiveProp } from '@shopify/restyle'
 import { selectionAsync } from 'expo-haptics'
 import React, { ComponentProps, memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -19,11 +19,12 @@ import { Text } from 'src/components/Text'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { dimensions } from 'src/styles/sizing'
-import { Theme, theme } from 'src/styles/theme'
+import { theme as FixedTheme, Theme } from 'src/styles/theme'
 
-export const TAB_NAVIGATOR_HEIGHT = 72
+export const TAB_NAVIGATOR_HEIGHT_XS = 52
+export const TAB_NAVIGATOR_HEIGHT_SM = 72
 
-const SWAP_BUTTON_CONTAINER_WIDTH = dimensions.fullWidth / 3 + theme.spacing.lg
+const SWAP_BUTTON_CONTAINER_WIDTH = dimensions.fullWidth / 3 + FixedTheme.spacing.lg
 
 export const SWAP_BUTTON_HEIGHT = 56
 const SWAP_BUTTON_WIDTH = 108
@@ -49,7 +50,7 @@ export const TabBarButton = memo(
         alignItems="center"
         flex={1}
         justifyContent="center"
-        mb="md"
+        mb={useResponsiveProp({ xs: 'xxs', sm: 'md' })}
         position="relative"
         {...rest}>
         {focused ? (
@@ -81,6 +82,8 @@ type PressableScale = {
 export const SwapTabBarButton = memo(({ activeScale = 0.95 }: PressableScale) => {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
+
+  const appTheme = useAppTheme()
 
   const onPress = useCallback(() => {
     selectionAsync()
@@ -121,7 +124,15 @@ export const SwapTabBarButton = memo(({ activeScale = 0.95 }: PressableScale) =>
           shadowOpacity={0.5}
           shadowRadius={20}
           style={[animatedStyle]}
-          top={-1 * (TAB_NAVIGATOR_HEIGHT - SWAP_BUTTON_HEIGHT + theme.spacing.xxxs)}
+          top={useResponsiveProp({
+            xs:
+              -1 *
+              (TAB_NAVIGATOR_HEIGHT_XS -
+                SWAP_BUTTON_HEIGHT +
+                appTheme.spacing.lg +
+                appTheme.spacing.xxs),
+            sm: -1 * (TAB_NAVIGATOR_HEIGHT_SM - SWAP_BUTTON_HEIGHT + appTheme.spacing.xxxs),
+          })}
           width={SWAP_BUTTON_WIDTH}>
           <Box
             borderRadius="xxxl"

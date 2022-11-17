@@ -1,7 +1,12 @@
 import { useNavigationState } from '@react-navigation/core'
+import { useResponsiveProp } from '@shopify/restyle'
 import React, { useEffect } from 'react'
 import { useAppSelector } from 'src/app/hooks'
-import { SWAP_BUTTON_HEIGHT, TAB_NAVIGATOR_HEIGHT } from 'src/app/navigation/TabBar'
+import {
+  SWAP_BUTTON_HEIGHT,
+  TAB_NAVIGATOR_HEIGHT_SM,
+  TAB_NAVIGATOR_HEIGHT_XS,
+} from 'src/app/navigation/TabBar'
 import { BANNER_HEIGHT, BottomBanner, BottomBannerProps } from 'src/components/banners/BottomBanner'
 import { selectModalsState } from 'src/features/modals/modalSlice'
 import { Screens, Stacks } from 'src/screens/Screens'
@@ -22,6 +27,10 @@ export function TabsAwareBottomBanner({ icon, text, ...rest }: BottomBannerProps
   const modalStates = useAppSelector(selectModalsState)
   const [bannerTranslateY, setBannerTranslateY] = React.useState(0)
 
+  const TAB_NAVIGATOR_HEIGHT =
+    useResponsiveProp({ xs: TAB_NAVIGATOR_HEIGHT_XS, sm: TAB_NAVIGATOR_HEIGHT_SM }) ??
+    TAB_NAVIGATOR_HEIGHT_SM
+
   useEffect(() => {
     const appStack = routes?.find((route) => route.name === Stacks.AppStack)
     const currentPage = appStack?.state?.routes.at(-1)?.name
@@ -32,7 +41,7 @@ export function TabsAwareBottomBanner({ icon, text, ...rest }: BottomBannerProps
         ? TAB_NAVIGATOR_HEIGHT + SWAP_BUTTON_HEIGHT / 2 + EXTRA_MARGIN
         : BANNER_HEIGHT - EXTRA_MARGIN
     )
-  }, [modalStates, routes])
+  }, [TAB_NAVIGATOR_HEIGHT, modalStates, routes])
 
   return (
     <BottomBanner
