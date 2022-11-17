@@ -34,13 +34,17 @@ const TokenExploreButton = styled.button`
   font-weight: 600;
 `
 
-export default function InvalidTokenDetails() {
+export default function InvalidTokenDetails({ chainName }: { chainName?: string }) {
   const navigate = useNavigate()
   return (
     <InvalidDetailsContainer>
       <EyeIcon />
       <InvalidDetailsText>
-        <Trans>This token doesn&apos;t exist</Trans>
+        {chainName ? (
+          <Trans>{`This token doesn't exist on ${chainName}`}</Trans>
+        ) : (
+          <Trans>This token doesn&apos;t exist</Trans>
+        )}
       </InvalidDetailsText>
       <TokenExploreButton onClick={() => navigate('/tokens')}>
         <Trans>Explore tokens</Trans>

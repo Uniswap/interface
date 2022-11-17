@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
 import { Currency, NativeCurrency, Token } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
 import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
@@ -98,6 +99,7 @@ export default function TokenDetails({
   )
 
   const pageChainId = CHAIN_NAME_TO_CHAIN_ID[chain]
+  const { chainId: globalChainId } = useWeb3React()
   const nativeCurrency = nativeOnChain(pageChainId)
   const isNative = address === NATIVE_CHAIN_ID
 
@@ -109,29 +111,35 @@ export default function TokenDetails({
     if (tokenQueryData) return new QueryToken(tokenQueryData)
     return null
   }, [isNative, nativeCurrency, address, tokenQueryData])
-  // fetch on-chain token if token data is missing
-  const onChainToken = useOnChainToken(address, Boolean(localToken))
-  const token = localToken ?? onChainToken
+  // fetches on-chain token if query data is missing and page chain matches global chain (else fetch won't work)
+  const onChainToken = useOnChainToken(address, Boolean(localToken) || pageChainId !== globalChainId)
+  const token = useMemo(() => localToken ?? onChainToken, [localToken, onChainToken])
 
   const tokenWarning = address ? checkWarning(address) : null
   const isBlockedToken = tokenWarning?.canProceed === false
-
   const navigate = useNavigate()
+
   // Wrapping navigate in a transition prevents Suspense from unnecessarily showing fallbacks again.
   const [isPending, startTokenTransition] = useTransition()
   const navigateToTokenForChain = useCallback(
-    (chain: Chain) => {
-      const chainName = chain.toLowerCase()
-      const token = tokenQueryData?.project?.tokens.find((token) => token.chain === chain && token.address)
-      const address = isNative ? NATIVE_CHAIN_ID : token?.address
-      if (!address) return
-      startTokenTransition(() => navigate(`/tokens/${chainName}/${address}`))
+    (newChain: Chain) => {
+      if (chain === newChain) return
+      const chainName = newChain.toLowerCase()
+      // Switches to chain w/ same address if viewing an on-chain token w/ no backend data or a native
+      if (!localToken || isNative) {
+        startTokenTransition(() => navigate(`/tokens/${chainName}/${address}`))
+        return
+      }
+      const newToken = tokenQueryData?.project?.tokens.find((token) => token.chain === newChain && token.address)
+      if (!newToken) return
+      startTokenTransition(() => navigate(`/tokens/${chainName}/${newToken.address}`))
     },
-    [isNative, navigate, startTokenTransition, tokenQueryData?.project?.tokens]
+    [chain, localToken, isNative, tokenQueryData?.project?.tokens, navigate, address]
   )
   useOnGlobalChainSwitch(navigateToTokenForChain)
   const navigateToWidgetSelectedToken = useCallback(
     (token: Currency) => {
+      console.log(token)
       const address = token.isNative ? NATIVE_CHAIN_ID : token.address
       startTokenTransition(() => navigate(`/tokens/${chain.toLowerCase()}/${address}`))
     },
@@ -159,7 +167,7 @@ export default function TokenDetails({
   const L2Icon = getChainInfo(pageChainId)?.circleLogoUrl
 
   if (token === undefined) {
-    return <InvalidTokenDetails />
+    return <InvalidTokenDetails chainName={address && getChainInfo(pageChainId)?.label} />
   }
   return (
     <Trace page={PageName.TOKEN_DETAILS_PAGE} properties={{ address, tokenName: token?.name }} shouldLogImpression>
