@@ -108,12 +108,10 @@ export const EthCell = ({
   value,
   denomination,
   usdPrice,
-  className,
 }: {
   value?: number
   denomination: Denomination
   usdPrice?: number
-  className?: string
 }) => {
   const denominatedValue = getDenominatedValue(denomination, true, value, usdPrice)
   const formattedValue = denominatedValue
@@ -127,7 +125,7 @@ export const EthCell = ({
 
   return (
     <EthContainer>
-      <TextComponent className={className}>{value ? formattedValue : '-'}</TextComponent>
+      <TextComponent>{value ? formattedValue : '-'}</TextComponent>
     </EthContainer>
   )
 }
@@ -158,15 +156,7 @@ export const VolumeCell = ({
   )
 }
 
-export const ChangeCell = ({
-  change,
-  children,
-  className,
-}: {
-  children?: ReactNode
-  change?: number
-  className?: string
-}) => {
+export const ChangeCell = ({ change, children }: { children?: ReactNode; change?: number }) => {
   const isMobile = useIsMobile()
   const TextComponent = isMobile ? ThemedText.Caption : ThemedText.BodyPrimary
   return (
@@ -176,9 +166,7 @@ export const ChangeCell = ({
       ) : (
         <SquareArrowDownIcon width="20px" height="20px" />
       )}
-      <TextComponent className={className} color="currentColor">
-        {children || `${change ? Math.abs(Math.round(change)) : 0}%`}
-      </TextComponent>
+      <TextComponent color="currentColor">{children || `${change ? Math.abs(Math.round(change)) : 0}%`}</TextComponent>
     </ChangeCellContainer>
   )
 }
