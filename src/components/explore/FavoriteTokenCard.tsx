@@ -113,10 +113,7 @@ function FavoriteTokenCard({ token, isEditing, setIsEditing, ...rest }: Favorite
         exiting={FadeOut}
         testID={`token-box-${token?.symbol}`}
         onPress={onPress}>
-        <BaseCard.Shadow
-          shadowOffset={{ width: 0, height: 2 }}
-          shadowOpacity={0.0125}
-          shadowRadius={10}>
+        <BaseCard.Shadow>
           <Flex alignItems="flex-start" gap="xxs">
             <Flex row gap="xxs" justifyContent="space-between">
               <Flex grow row alignItems="center" gap="xxs">

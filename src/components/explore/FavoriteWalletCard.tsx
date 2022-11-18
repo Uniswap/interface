@@ -82,11 +82,8 @@ export default function FavoriteWalletCard({
           preload(address)
           navigate(address)
         }}>
-        <BaseCard.Shadow
-          shadowOffset={{ width: 0, height: 2 }}
-          shadowOpacity={0.0125}
-          shadowRadius={10}>
-          <Flex row alignItems="center" gap="xxs" justifyContent="space-between">
+        <BaseCard.Shadow>
+          <Flex row gap="xxs" justifyContent="space-between">
             <Flex row shrink alignItems="center" gap="xs">
               {icon}
               <Text color="textPrimary" numberOfLines={1} style={flex.shrink} variant="bodyLarge">
