@@ -8,6 +8,7 @@ import { CrossIcon } from 'nft/components/icons'
 import { FilterSidebar } from 'nft/components/profile/view/FilterSidebar'
 import { subhead } from 'nft/css/common.css'
 import { useBag, useFiltersExpanded, useIsMobile, useSellAsset, useWalletCollections } from 'nft/hooks'
+import { useWalletBalance } from 'nft/hooks'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import { OSCollectionsFetcher } from 'nft/queries'
 import { WalletCollection } from 'nft/types'
@@ -46,7 +47,8 @@ const WALLET_COLLECTIONS_PAGINATION_LIMIT = 300
 const FILTER_SIDEBAR_WIDTH = 300
 const PADDING = 16
 
-export const ProfilePage = ({ address }: { address: string }) => {
+export const ProfilePage = () => {
+  const { address } = useWalletBalance()
   const collectionFilters = useWalletCollections((state) => state.collectionFilters)
   const setCollectionFilters = useWalletCollections((state) => state.setCollectionFilters)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)

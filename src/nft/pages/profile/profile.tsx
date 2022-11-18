@@ -8,7 +8,6 @@ import { ListPage } from 'nft/components/profile/list/ListPage'
 import { ProfilePage } from 'nft/components/profile/view/ProfilePage'
 import { ProfilePageLoadingSkeleton } from 'nft/components/profile/view/ProfilePageLoadingSkeleton'
 import { buttonMedium, headlineMedium } from 'nft/css/common.css'
-import { useWalletBalance } from 'nft/hooks'
 import { useBag, useNFTList, useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { ListingStatus, ProfilePageStateType } from 'nft/types'
 import { Suspense, useEffect, useRef } from 'react'
@@ -19,7 +18,6 @@ import * as styles from './profile.css'
 const SHOPPING_BAG_WIDTH = 360
 
 const ProfileContent = () => {
-  const { address } = useWalletBalance()
   const sellPageState = useProfilePageState((state) => state.state)
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const removeAllMarketplaceWarnings = useSellAsset((state) => state.removeAllMarketplaceWarnings)
@@ -54,7 +52,7 @@ const ProfileContent = () => {
         </Head> */}
         {account != null ? (
           <Box style={{ width: `calc(100% - ${cartExpanded ? SHOPPING_BAG_WIDTH : 0}px)` }}>
-            {sellPageState === ProfilePageStateType.VIEWING ? <ProfilePage address={address} /> : <ListPage />}
+            {sellPageState === ProfilePageStateType.VIEWING ? <ProfilePage /> : <ListPage />}
           </Box>
         ) : (
           <Column as="section" gap="60" className={styles.section}>

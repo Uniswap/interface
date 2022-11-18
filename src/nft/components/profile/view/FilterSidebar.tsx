@@ -80,7 +80,7 @@ export const FilterSidebar = ({
     // @ts-ignore
     <AnimatedBox
       position="sticky"
-      top="0"
+      top="72"
       left={{ sm: '0', md: 'unset' }}
       width={{ sm: 'full', md: '332', lg: '332' }}
       height={{ sm: 'full', md: 'auto' }}
