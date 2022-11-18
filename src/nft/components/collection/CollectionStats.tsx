@@ -3,7 +3,6 @@ import { getDeltaArrow } from 'components/Tokens/TokenDetails/PriceChart'
 import { Box, BoxProps } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { Marquee } from 'nft/components/layout/Marquee'
-import { headlineMedium } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { GenieCollection, TokenType } from 'nft/types'
@@ -11,6 +10,7 @@ import { floorFormatter, quantityFormatter, roundWholePercentage, volumeFormatte
 import { ReactNode, useEffect, useReducer, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
 import { DiscordIcon, EllipsisIcon, ExternalIcon, InstagramIcon, TwitterIcon, VerifiedIcon, XMarkIcon } from '../icons'
 import * as styles from './CollectionStats.css'
@@ -134,14 +134,14 @@ const CollectionName = ({
   toggleCollectionSocials: () => void
 }) => {
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
-  const nameClass = isCollectionStatsLoading ? styles.nameTextLoading : clsx(headlineMedium, styles.nameText)
+  const nameClass = isCollectionStatsLoading ? styles.nameTextLoading : styles.nameText
 
   return (
     <Row justifyContent="space-between">
       <Row minWidth="0">
-        <Box marginRight={!isVerified ? '12' : '0'} className={nameClass}>
+        <ThemedText.HeadlineSmall marginRight={!isVerified ? '12' : '0'} className={nameClass}>
           {name}
-        </Box>
+        </ThemedText.HeadlineSmall>
         {isVerified && <VerifiedIcon style={{ width: '32px', height: '32px' }} />}
         <Row
           display={{ sm: 'none', md: 'flex' }}
@@ -246,7 +246,7 @@ const CollectionDescription = ({ description }: { description: string }) => {
 const StatsItem = ({ children, label, shouldHide }: { children: ReactNode; label: string; shouldHide: boolean }) => {
   return (
     <Box display={shouldHide ? 'none' : 'flex'} flexDirection="column" alignItems="baseline" gap="2" height="min">
-      <span className={styles.statsValue}>{children}</span>
+      <ThemedText.SubHeader className={styles.statsValue}>{children}</ThemedText.SubHeader>
       <Box as="span" className={styles.statsLabel}>
         {label}
       </Box>

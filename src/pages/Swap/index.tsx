@@ -509,7 +509,7 @@ export default function Swap() {
           showCancel={true}
         />
         <PageWrapper>
-          <SwapWrapper id="swap-page" chainId={chainId}>
+          <SwapWrapper id="swap-page">
             <SwapHeader allowedSlippage={allowedSlippage} />
             <ConfirmSwapModal
               isOpen={showConfirm}

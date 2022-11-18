@@ -99,7 +99,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
 export const ThemedGlobalStyle = createGlobalStyle`
   html {
     color: ${({ theme }) => theme.deprecated_text1};
-    background-color: ${({ theme }) => theme.background};
+    background-color: ${({ theme }) => theme.background} !important;
   }
 
   a {
