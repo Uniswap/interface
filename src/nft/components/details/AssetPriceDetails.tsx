@@ -11,8 +11,7 @@ import { useMemo } from 'react'
 import { Upload } from 'react-feather'
 import { Link, useNavigate } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
-import { ThemedText } from 'theme/components/text'
-import { glowEffect } from 'theme/styles/glow'
+import { ThemedText } from 'theme'
 
 interface AssetPriceDetailsProps {
   asset: GenieAsset
@@ -56,8 +55,6 @@ const Container = styled.div`
 `
 
 const BestPriceContainer = styled.div`
-  ${glowEffect}
-
   display: flex;
   flex-direction: column;
   gap: 8px;

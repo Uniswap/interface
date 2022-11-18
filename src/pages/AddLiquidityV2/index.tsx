@@ -42,7 +42,7 @@ import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { calculateSlippageAmount } from '../../utils/calculateSlippageAmount'
 import { currencyId } from '../../utils/currencyId'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { BodyWrapper } from '../AppBody'
+import AppBody from '../AppBody'
 import { Dots, Wrapper } from '../Pool/styleds'
 import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
 import { PoolPriceBar } from './PoolPriceBar'
@@ -322,7 +322,7 @@ export default function AddLiquidity() {
 
   return (
     <>
-      <BodyWrapper chainId={chainId}>
+      <AppBody>
         <AddRemoveTabs creating={isCreate} adding={true} defaultSlippage={DEFAULT_ADD_V2_SLIPPAGE_TOLERANCE} />
         <Wrapper>
           <TransactionConfirmationModal
@@ -500,7 +500,7 @@ export default function AddLiquidity() {
             )}
           </AutoColumn>
         </Wrapper>
-      </BodyWrapper>
+      </AppBody>
       <SwitchLocaleLink />
 
       {!addIsUnsupported ? (

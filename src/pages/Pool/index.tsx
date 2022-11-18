@@ -16,7 +16,6 @@ import { useToggleWalletModal } from 'state/application/hooks'
 import { useUserHideClosedPositions } from 'state/user/hooks'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { HideSmall, ThemedText } from 'theme'
-import { glowEffect } from 'theme/styles/glow'
 import { PositionDetails } from 'types/position'
 
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
@@ -133,14 +132,14 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
 `
 
 const MainContentWrapper = styled.main`
-  ${glowEffect}
-
   background-color: ${({ theme }) => theme.deprecated_bg0};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   padding: 0;
   border-radius: 16px;
   display: flex;
   flex-direction: column;
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
+    0px 24px 32px rgba(0, 0, 0, 0.01);
 `
 
 function PositionsLoadingPlaceholder() {
@@ -162,7 +161,7 @@ function PositionsLoadingPlaceholder() {
   )
 }
 
-function WrongNetworkCard({ chainId }: { chainId?: number }) {
+function WrongNetworkCard() {
   const theme = useTheme()
 
   return (
@@ -176,7 +175,7 @@ function WrongNetworkCard({ chainId }: { chainId?: number }) {
               </ThemedText.LargeHeader>
             </TitleRow>
 
-            <MainContentWrapper chainId={chainId}>
+            <MainContentWrapper>
               <ErrorContainer>
                 <ThemedText.DeprecatedBody color={theme.deprecated_text3} textAlign="center">
                   <NetworkIcon strokeWidth={1.2} />
@@ -204,7 +203,7 @@ export default function Pool() {
   const { positions, loading: positionsLoading } = useV3Positions(account)
 
   if (!isSupportedChain(chainId)) {
-    return <WrongNetworkCard chainId={chainId} />
+    return <WrongNetworkCard />
   }
 
   const [openPositions, closedPositions] = positions?.reduce<[PositionDetails[], PositionDetails[]]>(
@@ -293,7 +292,7 @@ export default function Pool() {
                 </ButtonRow>
               </TitleRow>
 
-              <MainContentWrapper chainId={chainId}>
+              <MainContentWrapper>
                 {positionsLoading ? (
                   <PositionsLoadingPlaceholder />
                 ) : filteredPositions && closedPositions && filteredPositions.length > 0 ? (

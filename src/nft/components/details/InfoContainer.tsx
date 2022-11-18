@@ -1,12 +1,6 @@
 import { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import styled, { css } from 'styled-components/macro'
-import { glowEffect } from 'theme/styles/glow'
-
-const HeaderContainer = styled.div`
-  ${glowEffect}
-  margin-top: 28px;
-`
 
 const Header = styled.div<{ isOpen: boolean }>`
   display: flex;
@@ -16,6 +10,7 @@ const Header = styled.div<{ isOpen: boolean }>`
   padding: 14px 20px;
   cursor: pointer;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  margin-top: 28px;
   width: 100%;
   align-items: center;
 
@@ -79,7 +74,7 @@ const InfoContainer = ({
   const [isOpen, setIsOpen] = useState(!!defaultOpen)
 
   return (
-    <HeaderContainer>
+    <div>
       <Header isOpen={isOpen} onClick={() => setIsOpen(!isOpen)}>
         <PrimaryHeader>
           {primaryHeader} <SecondaryHeader>{secondaryHeader}</SecondaryHeader>
@@ -87,7 +82,7 @@ const InfoContainer = ({
         <SecondaryHeaderContainer>{isOpen ? <ChevronUp /> : <ChevronDown />}</SecondaryHeaderContainer>
       </Header>
       {isOpen && <ContentContainer>{children}</ContentContainer>}
-    </HeaderContainer>
+    </div>
   )
 }
 
