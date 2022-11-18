@@ -41,7 +41,7 @@ export class ErrorBoundary extends React.Component<unknown, ErrorBoundaryState> 
       return (
         <Flex alignItems="center" flex={1} justifyContent="center">
           <Text variant="headlineLarge">An Error Occurred</Text>
-          {error.message && <Text variant="headlineSmall">{error.message}</Text>}
+          {error.message && __DEV__ && <Text variant="headlineSmall">{error.message}</Text>}
           <Box>
             <Button
               label="Restart"
