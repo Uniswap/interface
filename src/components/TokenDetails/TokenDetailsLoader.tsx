@@ -11,17 +11,10 @@ import { Text } from 'src/components/Text'
 import { TokenDetailsBackButtonRow } from 'src/components/TokenDetails/TokenDetailsBackButtonRow'
 import { TokenDetailsHeader } from 'src/components/TokenDetails/TokenDetailsHeader'
 import { TokenDetailsMarketData } from 'src/components/TokenDetails/TokenDetailsStats'
-import { TokenDetailsScreenQuery } from 'src/data/__generated__/types-and-hooks'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow, useDisplayName } from 'src/features/wallet/hooks'
 
-export function TokenDetailsLoader({
-  data,
-  currency,
-}: {
-  data?: TokenDetailsScreenQuery
-  currency: Currency
-}) {
+export function TokenDetailsLoader({ currency }: { currency: Currency }) {
   const { t } = useTranslation()
 
   const activeAccount = useActiveAccountWithThrow()
@@ -36,7 +29,7 @@ export function TokenDetailsLoader({
           <TokenDetailsBackButtonRow currency={currency} />
           <Flex gap="xl">
             <Flex gap="xxs">
-              <TokenDetailsHeader data={data} onPressWarningIcon={() => {}} />
+              <TokenDetailsHeader currency={currency} onPressWarningIcon={() => {}} />
               <PriceChartLoading />
             </Flex>
             <Flex gap="lg">

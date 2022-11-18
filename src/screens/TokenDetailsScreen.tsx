@@ -116,7 +116,7 @@ export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDe
   }
 
   if (!data && isNonPollingRequestInFlight(networkStatus)) {
-    return <TokenDetailsLoader currency={currency} data={data} />
+    return <TokenDetailsLoader currency={currency} />
   }
 
   return (
@@ -270,7 +270,11 @@ function TokenDetails({
         }>
         <Flex gap="xl" my="md">
           <Flex gap="xxs">
-            <TokenDetailsHeader data={data} onPressWarningIcon={() => setShowWarningModal(true)} />
+            <TokenDetailsHeader
+              currency={currency}
+              data={data}
+              onPressWarningIcon={() => setShowWarningModal(true)}
+            />
             <CurrencyPriceChart
               currency={currency}
               tokenColor={tokenColor}
