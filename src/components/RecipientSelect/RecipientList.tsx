@@ -35,7 +35,7 @@ export function RecipientList({ onPress, sections }: RecipientListProps) {
 function SectionHeader(info: { section: SectionListData<SearchableRecipient> }) {
   return (
     <AnimatedFlex backgroundColor="background1" entering={FadeIn} exiting={FadeOut} py="xs">
-      <Text color="textTertiary" variant="bodySmall">
+      <Text color="textSecondary" variant="subheadSmall">
         {info.section.title}
       </Text>
     </AnimatedFlex>
