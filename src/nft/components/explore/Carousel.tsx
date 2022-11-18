@@ -50,7 +50,6 @@ const CarouselItemIcon = styled.div`
   color: ${({ theme }) => theme.textPrimary};
   cursor: pointer;
   display: none;
-  padding-left: 4px 8px 32px;
   user-select: none;
   @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     display: flex;
