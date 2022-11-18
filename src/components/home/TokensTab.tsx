@@ -38,7 +38,7 @@ export function TokensTab({
     // in case we received a pending session from a previous scan after closing modal
     dispatch(removePendingSession())
     dispatch(
-      openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.ScanQr })
+      openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
     )
   }
 
