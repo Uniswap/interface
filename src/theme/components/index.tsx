@@ -465,6 +465,13 @@ export const SmallOnly = styled.span`
   `};
 `
 
+export const MediumOnly = styled.span`
+  display: none;
+  @media (max-width: ${({ theme }) => theme.breakpoint.md}px) {
+    display: block;
+  }
+`
+
 export const Separator = styled.div`
   width: 100%;
   height: 1px;
