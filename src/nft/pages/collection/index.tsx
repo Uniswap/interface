@@ -24,6 +24,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { easings, useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import { TRANSITION_DURATIONS } from 'theme/styles'
 
 const FILTER_WIDTH = 332
 const BAG_WIDTH = 324
@@ -100,11 +101,11 @@ const Collection = () => {
         ? isBagExpanded
           ? BAG_WIDTH + FILTER_WIDTH
           : FILTER_WIDTH
-        : isBagExpanded
+        : isBagExpanded && !isMobile
         ? BAG_WIDTH
         : 0,
     config: {
-      duration: 250,
+      duration: TRANSITION_DURATIONS.medium,
       easing: easings.easeOutSine,
     },
   })
@@ -188,7 +189,7 @@ const Collection = () => {
 
                 {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
                 <AnimatedBox
-                  position={isMobile && isFiltersExpanded ? 'fixed' : 'static'}
+                  position={isMobile && (isFiltersExpanded || isBagExpanded) ? 'fixed' : 'static'}
                   style={{
                     transform: gridX.to((x) => `translate(${x as number}px)`),
                     width: gridWidthOffset.to((x) => `calc(100% - ${x as number}px)`),
