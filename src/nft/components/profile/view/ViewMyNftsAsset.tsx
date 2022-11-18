@@ -102,7 +102,7 @@ export const ViewMyNftsAsset = ({
         <Tooltip
           text={
             <Box as="span" className={bodySmall} color="textPrimary">
-              {isSelected ? <Trans>Selected</Trans> : <Trans>Deselected</Trans>}
+              {isSelected ? <Trans>Added to bag</Trans> : <Trans>Removed from bag</Trans>}
             </Box>
           }
           show={showTooltip}
