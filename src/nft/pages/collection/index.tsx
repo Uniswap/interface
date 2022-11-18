@@ -2,11 +2,6 @@ import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { OpacityHoverState } from 'components/Common'
-import {
-  MAX_WIDTH_MEDIA_BREAKPOINT,
-  MOBILE_MEDIA_BREAKPOINT,
-  SMALL_MEDIA_BREAKPOINT,
-} from 'components/Tokens/constants'
 import { useLoadAssetsQuery } from 'graphql/data/nft/Asset'
 import { useCollectionQuery, useLoadCollectionQuery } from 'graphql/data/nft/Collection'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
@@ -28,7 +23,13 @@ import { TRANSITION_DURATIONS } from 'theme/styles'
 
 const FILTER_WIDTH = 332
 const BAG_WIDTH = 324
-export const COLLECTION_BANNER_HEIGHT = 288
+
+export const BannerWrapper = styled(Box)`
+  height: 100px;
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    height: 288px;
+  }
+`
 
 export const CollectionBannerLoading = () => <Box height="full" width="full" className={styles.loadingBanner} />
 
@@ -45,25 +46,6 @@ const MobileFilterHeader = styled(Row)`
 // As a result it needs 16px padding on either side. These paddings are offset by 16px to account for this. Please see CollectionNFTs.css.ts for the additional sizing context.
 // See breakpoint values in ScreenBreakpointsPaddings above - they must match
 const CollectionDisplaySection = styled(Row)`
-  @media screen and (min-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
-    padding-left: 48px;
-    padding-right: 48px;
-  }
-
-  @media screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
-    padding-left: 26px;
-    padding-right: 26px;
-  }
-
-  @media screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-
-  @media screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    padding-left: 16px;
-    padding-right: 16px;
-  }
   align-items: flex-start;
   position: relative;
 `
@@ -134,7 +116,7 @@ const Collection = () => {
         <Column width="full">
           {contractAddress ? (
             <>
-              <Box width="full" height={`${COLLECTION_BANNER_HEIGHT}`}>
+              <BannerWrapper width="full">
                 <Box
                   as={collectionStats?.bannerImageUrl ? 'img' : 'div'}
                   height="full"
@@ -147,7 +129,7 @@ const Collection = () => {
                   className={styles.bannerImage}
                   background="none"
                 />
-              </Box>
+              </BannerWrapper>
               <CollectionDescriptionSection>
                 {collectionStats && (
                   <CollectionStats stats={collectionStats || ({} as GenieCollection)} isMobile={isMobile} />
