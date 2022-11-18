@@ -16,6 +16,10 @@ const CarouselCardContainer = styled.div`
   overflow-x: hidden;
   max-width: 600px;
   height: 390px;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    max-width: 100vw;
+  }
 `
 
 const CarouselItemCard = styled(a.div)`
@@ -27,7 +31,7 @@ const CarouselItemCard = styled(a.div)`
   width: calc(100%);
   height: calc(100%);
 
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
     padding: 4px 32px 32px;
   }
 `
