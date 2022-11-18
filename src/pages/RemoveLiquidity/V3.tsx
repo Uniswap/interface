@@ -9,11 +9,11 @@ import RangeBadge from 'components/Badge/RangeBadge'
 import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
 import { LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import CurrencyLogo from 'components/CurrencyLogo'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { Break } from 'components/earn/styled'
 import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
 import Loader from 'components/Loader'
+import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AddRemoveTabs } from 'components/NavigationTabs'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import Slider from 'components/Slider'
@@ -37,7 +37,7 @@ import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import { TransactionType } from '../../state/transactions/types'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { currencyId } from '../../utils/currencyId'
-import AppBody from '../AppBody'
+import { BodyWrapper } from '../AppBody'
 import { ResponsiveHeaderText, SmallMaxButton, Wrapper } from './styled'
 
 const DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
@@ -290,7 +290,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         )}
         pendingText={pendingText}
       />
-      <AppBody>
+      <BodyWrapper chainId={chainId}>
         <AddRemoveTabs
           creating={false}
           adding={false}
@@ -425,7 +425,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
             <Loader />
           )}
         </Wrapper>
-      </AppBody>
+      </BodyWrapper>
     </AutoColumn>
   )
 }

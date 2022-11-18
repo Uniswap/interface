@@ -118,6 +118,7 @@ export const SearchBarDropdown = ({
   const isTokenPage = pathname.includes('/tokens')
   const phase1Flag = useNftFlag()
   const [resultsState, setResultsState] = useState<ReactNode>()
+  const isPhase1 = phase1Flag === NftVariant.Enabled
 
   const { data: trendingCollectionResults, isLoading: trendingCollectionsAreLoading } = useQuery(
     ['trendingCollections', 'eth', 'twenty_four_hours'],
@@ -342,7 +343,7 @@ export const SearchBarDropdown = ({
   ])
 
   return (
-    <Box className={styles.searchBarDropdown}>
+    <Box className={isPhase1 ? styles.searchBarDropdownNft : styles.searchBarDropdown}>
       <Box opacity={isLoading ? '0.3' : '1'} transition="125">
         {resultsState}
       </Box>

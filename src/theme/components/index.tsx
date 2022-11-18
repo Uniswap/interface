@@ -470,8 +470,3 @@ export const Separator = styled.div`
   height: 1px;
   background-color: ${({ theme }) => theme.backgroundOutline};
 `
-
-export const GlowEffect = styled.div`
-  border-radius: 32px;
-  box-shadow: ${({ theme }) => theme.networkDefaultShadow};
-`

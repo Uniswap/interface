@@ -3,7 +3,7 @@ import { Currency, CurrencyAmount, Fraction, Percent } from '@uniswap/sdk-core'
 import { Text } from 'rebass'
 
 import { ButtonPrimary } from '../../components/Button'
-import CurrencyLogo from '../../components/CurrencyLogo'
+import CurrencyLogo from '../../components/Logo/CurrencyLogo'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { Field } from '../../state/mint/actions'
 import { ThemedText } from '../../theme'

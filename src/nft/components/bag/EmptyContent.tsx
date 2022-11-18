@@ -1,28 +1,25 @@
 import { useIsNftProfilePage } from 'hooks/useIsNftPage'
 import { Center, Column } from 'nft/components/Flex'
-import { LargeBagIcon, LargeTagIcon } from 'nft/components/icons'
+import { BagIcon, LargeTagIcon } from 'nft/components/icons'
 import { subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import styled from 'styled-components/macro'
 
-const StyledColumn = styled(Column)<{ isProfilePage?: boolean }>`
-  gap: ${({ isProfilePage }) => !isProfilePage && '12'}px;
+const StyledColumn = styled(Column)`
+  gap: 12px;
   margin-top: 68px;
-  display: ${({ isProfilePage }) => isProfilePage && 'flex'};
-  justify-content: ${({ isProfilePage }) => isProfilePage && 'center'};
-  height: ${({ isProfilePage }) => isProfilePage && 'inherit'};
 `
 
 const EmptyState = () => {
   const isProfilePage = useIsNftProfilePage()
 
   return (
-    <StyledColumn isProfilePage={isProfilePage}>
+    <StyledColumn>
       <Center>
         {isProfilePage ? (
           <LargeTagIcon color={themeVars.colors.textTertiary} />
         ) : (
-          <LargeBagIcon color={themeVars.colors.textTertiary} />
+          <BagIcon color={themeVars.colors.textTertiary} height="96px" width="96px" strokeWidth="1px" />
         )}
       </Center>
       {isProfilePage ? (
