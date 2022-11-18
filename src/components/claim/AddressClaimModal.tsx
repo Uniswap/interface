@@ -101,8 +101,8 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
       {!attempting && (
         <ContentWrapper gap="lg">
           <ModalUpper>
-            <CardBGImage />
-            <CardNoise />
+            {/* <CardBGImage />
+            <CardNoise /> */}
             <CardSection gap="md">
               <RowBetween>
                 <ThemedText.DeprecatedWhite fontWeight={500}>

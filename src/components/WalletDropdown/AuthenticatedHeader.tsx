@@ -17,7 +17,7 @@ import { Text } from 'rebass'
 import { useCurrencyBalanceString } from 'state/connection/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 
 import { shortenAddress } from '../../nft/utils/address'
 import { useCloseModal, useToggleModal } from '../../state/application/hooks'
@@ -34,19 +34,68 @@ const WalletButton = styled(ButtonPrimary)`
   margin-top: 12px;
   color: white;
   border: none;
+  font-size: 16px;
 `
 
-const ProfileButton = styled(WalletButton)`
-  background: ${({ theme }) => theme.accentAction};
-  transition: ${({ theme }) => theme.transition.duration.fast} ${({ theme }) => theme.transition.timing.ease}
-    background-color;
+const hoverState = css`
+  :hover::after {
+    border-radius: 12px;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: ${({ theme }) => theme.stateOverlayHover};
+
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => `background ${duration.medium} ${timing.ease}`};
+
+    z-index: 0;
+  }
+
+  :active::after {
+    border-radius: 12px;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: ${({ theme }) => theme.stateOverlayPressed};
+    z-index: 0;
+
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => `background ${duration.medium} ${timing.ease}`};
+  }
+`
+
+const ProfileButton = styled.div`
+  font-weight: 600;
+  width: 100%;
+  background-color: ${({ theme }) => theme.accentAction};
+  border-radius: 12px;
+  padding: 10px 12px;
+  text-align: center;
+  cursor: pointer;
+
+  ${hoverState}
 `
 
 const UNIButton = styled(WalletButton)`
   background: linear-gradient(to right, #9139b0 0%, #4261d6 100%);
-`
-const AirdropButton = styled(UNIButton)`
   font-size: 16px;
+  ${hoverState}
+`
+
+const HoverContainer = styled.div`
+  position: relative;
 `
 
 const Column = styled.div`
@@ -181,18 +230,22 @@ const AuthenticatedHeader = () => {
           <USDText>${amountUSD.toFixed(2)} USD</USDText>
         </BalanceWrapper>
         {nftFlag === NftVariant.Enabled && (
-          <ProfileButton onClick={navigateToProfile}>
-            <Trans>View and sell NFTs</Trans>
-          </ProfileButton>
+          <HoverContainer>
+            <ProfileButton onClick={navigateToProfile}>
+              <Trans>View and sell NFTs</Trans>
+            </ProfileButton>
+          </HoverContainer>
         )}
         {isUnclaimed && (
           <UNIButton onClick={openClaimModal}>
             <Trans>Claim</Trans> {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} <Trans>reward</Trans>
           </UNIButton>
         )}
-        <AirdropButton onClick={openNftModal}>
-          <Trans>Claim Uniswap NFT Airdrop</Trans>
-        </AirdropButton>
+        <HoverContainer>
+          <UNIButton onClick={openNftModal}>
+            <Trans>Claim Uniswap NFT Airdrop</Trans>
+          </UNIButton>
+        </HoverContainer>
       </Column>
     </AuthenticatedHeaderWrapper>
   )
