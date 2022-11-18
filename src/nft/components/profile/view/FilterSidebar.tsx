@@ -11,7 +11,7 @@ import { themeVars } from 'nft/css/sprinkles.css'
 import { useFiltersExpanded, useIsMobile, useWalletCollections } from 'nft/hooks'
 import { WalletCollection } from 'nft/types'
 import { CSSProperties, Dispatch, FormEvent, SetStateAction, useCallback, useEffect, useReducer, useState } from 'react'
-import { useSpring } from 'react-spring'
+import { easings, useSpring } from 'react-spring'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList, ListOnItemsRenderedProps } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
@@ -85,7 +85,7 @@ export const FilterSidebar = ({
     // @ts-ignore
     <AnimatedBox
       position="sticky"
-      top="0"
+      top="72"
       left={{ sm: '0', md: 'unset' }}
       width={{ sm: 'full', md: '332', lg: '332' }}
       height={{ sm: 'full', md: 'auto' }}
