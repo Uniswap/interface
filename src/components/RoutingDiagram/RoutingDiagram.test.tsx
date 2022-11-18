@@ -28,7 +28,7 @@ const multiRoute: RoutingDiagramEntry[] = [
 ]
 
 jest.mock(
-  'components/CurrencyLogo',
+  'components/Logo/CurrencyLogo',
   () =>
     ({ currency }: { currency: Currency }) =>
       `CurrencyLogo currency=${currency.symbol}`

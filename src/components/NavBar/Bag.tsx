@@ -1,7 +1,8 @@
 import { NavIcon } from 'components/NavBar/NavIcon'
-import { BagIcon, HundredsOverflowIcon } from 'nft/components/icons'
-import { useBag } from 'nft/hooks'
-import { useCallback, useEffect, useState } from 'react'
+import { useIsNftProfilePage } from 'hooks/useIsNftPage'
+import { BagIcon, HundredsOverflowIcon, TagIcon } from 'nft/components/icons'
+import { useBag, useSellAsset } from 'nft/hooks'
+import { useCallback } from 'react'
 import styled from 'styled-components/macro'
 import shallow from 'zustand/shallow'
 
@@ -22,7 +23,8 @@ const CounterDot = styled.div`
 
 export const Bag = () => {
   const itemsInBag = useBag((state) => state.itemsInBag)
-  const [bagQuantity, setBagQuantity] = useState(0)
+  const sellAssets = useSellAsset((state) => state.sellAssets)
+  const isProfilePage = useIsNftProfilePage()
 
   const { bagExpanded, setBagExpanded } = useBag(
     ({ bagExpanded, setBagExpanded }) => ({ bagExpanded, setBagExpanded }),
@@ -33,15 +35,16 @@ export const Bag = () => {
     setBagExpanded({ bagExpanded: !bagExpanded })
   }, [bagExpanded, setBagExpanded])
 
-  useEffect(() => {
-    setBagQuantity(itemsInBag.length)
-  }, [itemsInBag])
-
+  const bagQuantity = isProfilePage ? sellAssets.length : itemsInBag.length
   const bagHasItems = bagQuantity > 0
 
   return (
     <NavIcon isActive={bagExpanded} onClick={handleIconClick}>
-      <BagIcon viewBox="0 0 24 24" width={24} height={24} strokeWidth="2px" />
+      {isProfilePage ? (
+        <TagIcon viewBox="0 0 24 24" width={24} height={24} />
+      ) : (
+        <BagIcon viewBox="0 0 24 24" width={24} height={24} strokeWidth="2px" />
+      )}
       {bagHasItems && <CounterDot>{bagQuantity > 99 ? <HundredsOverflowIcon /> : bagQuantity}</CounterDot>}
     </NavIcon>
   )
