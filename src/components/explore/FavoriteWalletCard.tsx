@@ -2,7 +2,7 @@ import { default as React, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ViewProps } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
-import { useAppDispatch } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
 import { AccountIcon } from 'src/components/AccountIcon'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -11,6 +11,7 @@ import { Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Text } from 'src/components/Text'
 import { useENSAvatar } from 'src/features/ens/api'
+import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { removeWatchedAddress } from 'src/features/favorites/slice'
 import { useDisplayName } from 'src/features/wallet/hooks'
 import { flex } from 'src/styles/flex'
@@ -35,6 +36,8 @@ export default function FavoriteWalletCard({
   const displayName = useDisplayName(address)
   const { data: avatar } = useENSAvatar(address)
 
+  const watchedWalletsSet = useAppSelector(selectWatchedAddressSet)
+
   const icon = useMemo(() => {
     return (
       <AccountIcon
@@ -46,10 +49,13 @@ export default function FavoriteWalletCard({
     )
   }, [address, avatar])
 
-  const onRemove = useCallback(
-    () => dispatch(removeWatchedAddress({ address })),
-    [address, dispatch]
-  )
+  const onRemove = useCallback(() => {
+    // undo edit mode if remmoving last wallet
+    if (watchedWalletsSet.size === 1) {
+      setIsEditing(false)
+    }
+    dispatch(removeWatchedAddress({ address }))
+  }, [address, dispatch, setIsEditing, watchedWalletsSet.size])
 
   /// Options for long press context menu
   const menuActions = useMemo(() => {

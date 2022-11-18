@@ -68,7 +68,7 @@ export function FavoriteTokensGrid({
         title={t('Favorite tokens')}
         onPress={() => setIsEditing(!isEditing)}
       />
-      {!localData || showLoading ? (
+      {showLoading ? (
         <FavoriteTokensGridLoader />
       ) : (
         <FlatList
