@@ -4,6 +4,7 @@ import clsx from 'clsx'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import { TimedLoader } from 'nft/components/bag/TimedLoader'
 import { Box } from 'nft/components/Box'
+import { Suspicious } from 'nft/components/collection/Card'
 import { Column, Row } from 'nft/components/Flex'
 import {
   ChevronDownBagIcon,
@@ -126,8 +127,9 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
           {noImageAvailable && <NoContentContainer />}
         </Box>
         <Column overflow="hidden" width="full" color={grayscale ? 'textSecondary' : 'textPrimary'}>
-          <Row overflow="hidden" width="full" justifyContent="space-between" whiteSpace="nowrap" gap="16">
-            <Box className={styles.assetName}>{asset.name || asset.tokenId}</Box>
+          <Row overflow="hidden" width="full" whiteSpace="nowrap">
+            <Box className={styles.assetName}>{asset.name ?? `#${asset.tokenId}`}</Box>
+            {asset.susFlag && <Suspicious />}
           </Row>
           <Row overflow="hidden" whiteSpace="nowrap" gap="2">
             <Box className={styles.collectionName}>{asset.collectionName}</Box>
