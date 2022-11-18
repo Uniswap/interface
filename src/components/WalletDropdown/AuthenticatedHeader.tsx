@@ -34,7 +34,6 @@ const WalletButton = styled(ThemeButton)`
   margin-top: 12px;
   color: white;
   border: none;
-  font-size: 16px;
 `
 
 const ProfileButton = styled(WalletButton)`
@@ -45,7 +44,6 @@ const ProfileButton = styled(WalletButton)`
 
 const UNIButton = styled(WalletButton)`
   background: linear-gradient(to right, #9139b0 0%, #4261d6 100%);
-  font-size: 16px;
 `
 
 const Column = styled.div`
