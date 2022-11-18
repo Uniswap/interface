@@ -37,14 +37,10 @@ const WalletButton = styled(ThemeButton)`
   font-size: 16px;
 `
 
-const ProfileButton = styled.div`
-  font-weight: 600;
-  width: 100%;
-  background-color: ${({ theme }) => theme.accentAction};
-  border-radius: 12px;
-  padding: 10px 12px;
-  text-align: center;
-  cursor: pointer;
+const ProfileButton = styled(WalletButton)`
+  background: ${({ theme }) => theme.accentAction};
+  transition: ${({ theme }) => theme.transition.duration.fast} ${({ theme }) => theme.transition.timing.ease}
+    background-color;
 `
 
 const UNIButton = styled(WalletButton)`
@@ -184,7 +180,7 @@ const AuthenticatedHeader = () => {
           <USDText>${amountUSD.toFixed(2)} USD</USDText>
         </BalanceWrapper>
         {nftFlag === NftVariant.Enabled && (
-          <ProfileButton onClick={navigateToProfile}>
+          <ProfileButton onClick={navigateToProfile} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
             <Trans>View and sell NFTs</Trans>
           </ProfileButton>
         )}
@@ -193,7 +189,6 @@ const AuthenticatedHeader = () => {
             <Trans>Claim</Trans> {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} <Trans>reward</Trans>
           </UNIButton>
         )}
-
         <UNIButton size={ButtonSize.medium} emphasis={ButtonEmphasis.medium} onClick={openNftModal}>
           <Trans>Claim Uniswap NFT Airdrop</Trans>
         </UNIButton>
