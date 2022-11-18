@@ -2,7 +2,7 @@ import airdropBackgroundv2 from 'assets/images/airdopBackground.png'
 import { OpacityHoverState } from 'components/Common'
 import { ChevronRightIcon } from 'nft/components/icons'
 import { useState } from 'react'
-import styled, { css } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { CloseIcon, ThemedText } from 'theme'
 import Loader from 'components/Loader'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
@@ -119,6 +119,7 @@ const SyledCloseIcon = styled(CloseIcon)`
 const AirdropModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => {
   const [isClaimed, setClaimed] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [totalAmount] = useState(300)
   const dismiss = () => {
     onDismiss()
 
@@ -142,7 +143,9 @@ const AirdropModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () =>
         {isClaimed ? (
           <ClaimContainer>
             <ThemedText.HeadlineSmall>Congratulations!</ThemedText.HeadlineSmall>
-            <SuccessText>You have successfully claimed 300 USDC. Thank you for supporting Genie.xyz.</SuccessText>
+            <SuccessText>
+              You have successfully claimed {totalAmount} USDC. Thank you for supporting Genie.xyz.
+            </SuccessText>
             <EtherscanLink href="https://etherscan.io/" target="_blank">
               <ThemedText.Link>
                 <div style={{ display: 'flex', alignItems: 'center', textAlign: 'center', justifyContent: 'center' }}>
@@ -162,7 +165,7 @@ const AirdropModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () =>
               <TextContainer>
                 <SyledCloseIcon onClick={dismiss} stroke="white" />
                 <ThemedText.ButtonLabelMedium>Uniswap NFT Airdrop</ThemedText.ButtonLabelMedium>
-                <USDCLabel>300 USDC</USDCLabel>
+                <USDCLabel>{totalAmount} USDC</USDCLabel>
                 <Line />
                 <RewardsDetailsContainer>
                   <ThemedText.BodyCaption marginBottom="8px">Trading rewards</ThemedText.BodyCaption>{' '}
@@ -177,7 +180,8 @@ const AirdropModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () =>
             </ImageContainer>
             <Body>
               <ThemedText.BodyBodySmall marginBottom="28px">
-                As a long time supporter of Genie you’ve been awarded 300 USDC tokens. Read more about Uniswap NFT.
+                As a long time supporter of Genie you’ve been awarded {totalAmount} USDC tokens. Read more about Uniswap
+                NFT.
               </ThemedText.BodyBodySmall>
               <LinkWrap href="https://uniswap.org/blog/uniswap-nft-aggregator-announcement" target="_blank">
                 <ThemedText.Link>Read more about Uniswap NFT</ThemedText.Link>
