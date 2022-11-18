@@ -28,9 +28,9 @@ export function ExternalProfileScreen({
 
   const tabs = useMemo(
     () => [
-      { key: SectionName.ProfileActivityTab, title: t('Activity') },
-      { key: SectionName.ProfileNftsTab, title: t('NFTs') },
       { key: SectionName.ProfileTokensTab, title: t('Tokens') },
+      { key: SectionName.ProfileNftsTab, title: t('NFTs') },
+      { key: SectionName.ProfileActivityTab, title: t('Activity') },
     ],
     [t]
   )

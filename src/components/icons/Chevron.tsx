@@ -40,7 +40,7 @@ function _Chevron({ width = 24, height = 24, direction = 'w', color, ...rest }: 
 
   return (
     <CenterBox borderRadius="full" style={{ transform: [{ rotate: degree }] }} {...rest}>
-      <Svg fill="none" height={height} viewBox="0 0 24 24" width={width}>
+      <Svg fill="none" height={height} viewBox="0 0 26 24" width={width}>
         <Path
           d="M15 6L9 12L15 18"
           stroke={color || '#000000'}

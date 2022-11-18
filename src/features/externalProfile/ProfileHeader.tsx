@@ -115,7 +115,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps) {
           opacity={0.8}
           padding="xs">
           <Flex centered grow height={theme.iconSizes.sm} width={theme.iconSizes.sm}>
-            <BackButton color="white" size={theme.iconSizes.md} />
+            <BackButton color="white" size={theme.iconSizes.lg} />
           </Flex>
         </TouchableArea>
         <ProfileContextMenu address={address} />
