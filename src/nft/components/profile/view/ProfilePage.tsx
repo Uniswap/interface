@@ -21,7 +21,7 @@ import { WalletCollection } from 'nft/types'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useQuery } from 'react-query'
-import { useSpring } from 'react-spring'
+import { easings, useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
 import shallow from 'zustand/shallow'
 
@@ -66,6 +66,7 @@ export const ProfilePage = () => {
     shallow
   )
   const sellAssets = useSellAsset((state) => state.sellAssets)
+  const isBagExpanded = useBag((state) => state.bagExpanded)
   const toggleBag = useBag((state) => state.toggleBag)
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const isMobile = useIsMobile()
@@ -91,6 +92,10 @@ export const ProfilePage = () => {
 
   const { gridX } = useSpring({
     gridX: isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING,
+    config: {
+      duration: 250,
+      easing: easings.easeOutSine,
+    },
   })
 
   return (
@@ -107,6 +112,7 @@ export const ProfilePage = () => {
               <Column width="full">
                 <AnimatedBox
                   flexShrink="0"
+                  position={isMobile && isBagExpanded ? 'fixed' : 'static'}
                   style={{
                     transform: gridX.to(
                       (x) =>
