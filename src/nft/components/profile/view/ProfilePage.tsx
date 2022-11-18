@@ -112,7 +112,7 @@ export const ProfilePage = () => {
               <Column width="full">
                 <AnimatedBox
                   flexShrink="0"
-                  position={isMobile && (isFiltersExpanded || isBagExpanded) ? 'fixed' : 'static'}
+                  position={isMobile && isBagExpanded ? 'fixed' : 'static'}
                   style={{
                     transform: gridX.to(
                       (x) =>
