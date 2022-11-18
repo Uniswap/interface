@@ -64,7 +64,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
             display={{ sm: 'none', md: 'flex' }}
             textAlign="right"
           >
-            Marketplace Fee
+            Marketplace fee
           </Column>
           <Column
             className={bodySmall}
@@ -82,7 +82,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
             display={{ sm: 'none', md: 'flex' }}
             textAlign="right"
           >
-            You Receive
+            You receive
           </Column>
         </Row>
       </Row>
