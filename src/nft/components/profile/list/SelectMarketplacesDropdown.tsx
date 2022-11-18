@@ -1,10 +1,11 @@
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Column, Row } from 'nft/components/Flex'
 import { ChevronUpIcon } from 'nft/components/icons'
 import { Checkbox } from 'nft/components/layout/Checkbox'
 import { buttonTextMedium, caption } from 'nft/css/common.css'
 import { ListingMarket } from 'nft/types'
 import { ListingMarkets } from 'nft/utils/listNfts'
-import { Dispatch, FormEvent, useMemo, useReducer } from 'react'
+import { Dispatch, FormEvent, useMemo, useReducer, useRef } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
@@ -78,8 +79,10 @@ export const SelectMarketplacesDropdown = ({
     () => (selectedMarkets.length === 1 ? selectedMarkets[0].name : 'Multiple'),
     [selectedMarkets]
   )
+  const ref = useRef<HTMLDivElement>(null)
+  useOnClickOutside(ref, () => isOpen && toggleIsOpen())
   return (
-    <ModalWrapper>
+    <ModalWrapper ref={ref}>
       <HeaderButtonWrap className={buttonTextMedium} onClick={toggleIsOpen}>
         <HeaderButtonContentWrapper>
           {selectedMarkets.map((market, index) => {
