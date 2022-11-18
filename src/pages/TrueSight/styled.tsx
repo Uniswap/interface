@@ -1,8 +1,6 @@
-import { rgba } from 'polished'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 
-import { ButtonEmpty, ButtonPrimary } from 'components/Button'
 import { Spinner } from 'components/Header/Polling'
 
 export const TrueSightPageWrapper = styled.div`
@@ -124,34 +122,6 @@ export const TextTooltip = styled(Text)<{ color: string }>`
     height: 0;
     border-bottom: ${({ color }) => `1px dashed ${color}`};
   }
-`
-
-export const SubscribeButton = styled(ButtonPrimary)<{ isDisabled: boolean }>`
-  overflow: hidden;
-  width: fit-content;
-  height: 36px;
-  padding: 8px 12px;
-  background: ${({ theme, isDisabled }) => (isDisabled ? theme.buttonGray : theme.primary)};
-  color: ${({ theme, isDisabled }) => (isDisabled ? theme.border : theme.textReverse)};
-
-  ${({ theme, isDisabled }) => theme.mediaWidth.upToExtraSmall`
-    width: 36px;
-    min-width: 36px;
-    padding: 6px;
-    background: ${isDisabled ? theme.buttonGray : rgba(theme.primary, 0.2)};
-    color: ${isDisabled ? theme.border : theme.primary};
-  `}
-`
-
-export const UnSubscribeButton = styled(ButtonEmpty)`
-  width: fit-content;
-  height: 36px;
-  padding: 8px 12px;
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    width: 36px;
-    min-width: 36px;
-    padding: 6px;
-  `}
 `
 
 export const ButtonText = styled(Text)`

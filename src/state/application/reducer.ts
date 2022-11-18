@@ -7,7 +7,10 @@ import {
   PopupType,
   addPopup,
   removePopup,
+  setLoadingNotification,
+  setNeedShowModalSubscribeNotificationAfterLogin,
   setOpenModal,
+  setSubscribedNotificationTopic,
   updateBlockNumber,
   updateChainIdWhenNotConnected,
   updateETHPrice,
@@ -39,8 +42,15 @@ export interface ApplicationState {
   readonly kncPrice?: string
   readonly chainIdWhenNotConnected: ChainId
   readonly serviceWorkerRegistration: ServiceWorkerRegistration | null
+  readonly notification: {
+    isLoading: boolean
+    needShowModalSubscribe: boolean
+    mapTopic: {
+      [topicId: number]: { isSubscribed: boolean; isVerified: boolean; verifiedEmail?: string }
+    }
+  }
 }
-
+const initialStateNotification = { isLoading: false, needShowModalSubscribe: false, mapTopic: {} }
 const initialState: ApplicationState = {
   blockNumber: {},
   popupList: [],
@@ -50,6 +60,7 @@ const initialState: ApplicationState = {
   kncPrice: '',
   chainIdWhenNotConnected: ChainId.MAINNET,
   serviceWorkerRegistration: null,
+  notification: initialStateNotification,
 }
 
 export default createReducer(initialState, builder =>
@@ -102,5 +113,25 @@ export default createReducer(initialState, builder =>
     })
     .addCase(updateServiceWorker, (state, { payload }) => {
       state.serviceWorkerRegistration = payload
-    }),
+    })
+
+    // ------ notification subscription ------
+    .addCase(setLoadingNotification, (state, { payload: isLoading }) => {
+      const notification = state.notification ?? initialStateNotification
+      state.notification = { ...notification, isLoading }
+    })
+    .addCase(setNeedShowModalSubscribeNotificationAfterLogin, (state, { payload: needShowModalSubscribe }) => {
+      const notification = state.notification ?? initialStateNotification
+      state.notification = { ...notification, needShowModalSubscribe }
+    })
+    .addCase(
+      setSubscribedNotificationTopic,
+      (state, { payload: { isSubscribed, isVerified, topicId, verifiedEmail } }) => {
+        const notification = state.notification ?? initialStateNotification
+        state.notification = {
+          ...notification,
+          mapTopic: { ...notification.mapTopic, [topicId]: { isSubscribed, isVerified, verifiedEmail } },
+        }
+      },
+    ),
 )

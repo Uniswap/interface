@@ -123,8 +123,8 @@ export function useTrendingSoonTokenDetailModalToggle(): () => void {
   return useToggleModal(ApplicationModal.TRENDING_SOON_TOKEN_DETAIL)
 }
 
-export function useTrueSightUnsubscribeModalToggle(): () => void {
-  return useToggleModal(ApplicationModal.UNSUBSCRIBE_TRUESIGHT)
+export function useNotificationModalToggle(): () => void {
+  return useToggleModal(ApplicationModal.NOTIFICATION_SUBSCRIPTION)
 }
 
 export function useToggleEthPowAckModal(): () => void {

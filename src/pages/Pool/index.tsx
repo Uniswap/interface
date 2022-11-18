@@ -47,6 +47,9 @@ export const Tab = styled.div<{ active: boolean }>`
   :hover {
     color: ${props => props.theme.primary};
   }
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    font-size: 15px;
+  `};
 `
 
 export const PageWrapper = styled(AutoColumn)`
