@@ -158,7 +158,7 @@ export default function ProAmmFee({
           <Divider />
           <RowBetween>
             <Text fontSize={12} fontWeight={500} color={theme.subText}>
-              <Trans>Total fee rewards</Trans>
+              <Trans>Total Fees Earned</Trans>
             </Text>
             <RowFixed>
               <Text fontSize={14} fontWeight={500} marginLeft={'6px'}>
@@ -169,24 +169,24 @@ export default function ProAmmFee({
 
           <RowBetween>
             <Text fontSize={12} fontWeight={500} color={theme.subText}>
-              <Trans>{token0Shown.symbol} FEES EARNED</Trans>
+              <Trans>{token0Shown.symbol} Fees Earned</Trans>
             </Text>
             <RowFixed>
               <CurrencyLogo size="16px" style={{ marginLeft: '8px' }} currency={token0Shown} />
               <Text fontSize={14} fontWeight={500} marginLeft={'6px'}>
-                {feeValue0 && <FormattedCurrencyAmount currencyAmount={feeValue0} />} {token0Shown.symbol}
+                {feeValue0 && <FormattedCurrencyAmount currencyAmount={feeValue0} />}
               </Text>
             </RowFixed>
           </RowBetween>
 
           <RowBetween>
             <Text fontSize={12} fontWeight={500} color={theme.subText}>
-              <Trans>{token1Shown.symbol} FEES EARNED</Trans>
+              <Trans>{token1Shown.symbol} Fees Earned</Trans>
             </Text>
             <RowFixed>
               <CurrencyLogo size="16px" style={{ marginLeft: '8px' }} currency={token1Shown} />
               <Text fontSize={14} fontWeight={500} marginLeft={'6px'}>
-                {feeValue1 && <FormattedCurrencyAmount currencyAmount={feeValue1} />} {token1Shown.symbol}
+                {feeValue1 && <FormattedCurrencyAmount currencyAmount={feeValue1} />}
               </Text>
             </RowFixed>
           </RowBetween>
@@ -201,7 +201,7 @@ export default function ProAmmFee({
         <RowBetween>
           <Flex>
             <Text fontSize={12} fontWeight={500} color={theme.subText}>
-              <Trans>My rewards</Trans>
+              <Trans>Total Fees Earned</Trans>
             </Text>
           </Flex>
           <RowFixed>

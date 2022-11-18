@@ -338,13 +338,13 @@ export default function ProAmmPool() {
                 <Trans>Connect to a wallet to view your liquidity.</Trans>
               </TYPE.body>
             </Card>
-          ) : positionsLoading || loading ? (
+          ) : (positionsLoading && !positions) || (loading && !farms && !userFarmInfo) ? (
             <PositionCardGrid>
               <ContentLoader />
               <ContentLoader />
               <ContentLoader />
             </PositionCardGrid>
-          ) : (filteredPositions && filteredPositions.length > 0) || filteredFarmPositions.length > 0 ? (
+          ) : filteredPositions.length > 0 || filteredFarmPositions.length > 0 ? (
             <>
               {/* Use display attribute here instead of condition rendering to prevent re-render full list when toggle showStaked => increase performance */}
               <PositionCardGrid style={{ display: showStaked ? 'none' : 'grid' }}>
