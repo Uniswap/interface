@@ -130,14 +130,16 @@ export function WalletConnectModal({
       ) : (
         <>
           {currentScreenState === ScannerModalState.ConnectedDapps && (
-            <ConnectedDappsList
-              backButton={
-                <TouchableArea hapticFeedback onPress={onPressShowScanQr}>
-                  <Chevron color={theme.colors.textSecondary} height={24} width={24} />
-                </TouchableArea>
-              }
-              sessions={sessions}
-            />
+            <Box flex={1} pt="lg">
+              <ConnectedDappsList
+                backButton={
+                  <TouchableArea hapticFeedback onPress={onPressShowScanQr}>
+                    <Chevron color={theme.colors.textSecondary} height={24} width={24} />
+                  </TouchableArea>
+                }
+                sessions={sessions}
+              />
+            </Box>
           )}
           {currentScreenState === ScannerModalState.ScanQr && (
             <QRCodeScanner

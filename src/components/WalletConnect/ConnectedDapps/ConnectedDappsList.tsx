@@ -37,7 +37,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
 
   return (
     <>
-      <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} px="lg" py="lg">
+      <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} pt="lg" px="lg">
         {header}
 
         {sessions.length > 0 ? (
