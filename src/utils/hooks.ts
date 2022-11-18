@@ -18,7 +18,13 @@ export function usePrevious<T>(value: T) {
 // adapted from https://usehooks.com/useAsync/ but simplified
 // above link contains example on how to add delayed execution if ever needed
 export function useAsyncData<T>(asyncCallback: () => Promise<T> | undefined) {
-  const [data, setData] = useState<T | undefined>(undefined)
+  const [data, setData] = useState<{
+    res: T | undefined
+    input: () => Promise<T> | undefined
+  }>({
+    res: undefined,
+    input: asyncCallback,
+  })
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -27,11 +33,18 @@ export function useAsyncData<T>(asyncCallback: () => Promise<T> | undefined) {
     async function runCallback() {
       const res = await asyncCallback()
       setIsLoading(false)
-      setData(res)
+      setData({
+        res,
+        input: asyncCallback,
+      })
     }
 
     runCallback()
   }, [asyncCallback])
 
-  return useMemo(() => ({ isLoading, data }), [isLoading, data])
+  return useMemo(() => {
+    if (asyncCallback !== data.input) return { isLoading: true, data: undefined }
+
+    return { isLoading, data: data.res }
+  }, [asyncCallback, isLoading, data])
 }
