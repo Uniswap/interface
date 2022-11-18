@@ -8,6 +8,7 @@ import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual } from 'react-redux'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { UserAddedToken } from 'types/tokens'
 
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants/routing'
@@ -38,8 +39,8 @@ function serializeToken(token: Token): SerializedToken {
   }
 }
 
-function deserializeToken(serializedToken: SerializedToken): Token {
-  return new Token(
+function deserializeToken(serializedToken: SerializedToken, Class: typeof Token = Token): Token {
+  return new Class(
     serializedToken.chainId,
     serializedToken.address,
     serializedToken.decimals,
@@ -238,7 +239,7 @@ export function useUserAddedTokensOnChain(chainId: number | undefined | null): T
   return useMemo(() => {
     if (!chainId) return []
     const tokenMap: Token[] = serializedTokensMap?.[chainId]
-      ? Object.values(serializedTokensMap[chainId]).map(deserializeToken)
+      ? Object.values(serializedTokensMap[chainId]).map((value) => deserializeToken(value, UserAddedToken))
       : []
     return tokenMap
   }, [serializedTokensMap, chainId])
