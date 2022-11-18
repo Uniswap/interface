@@ -86,11 +86,9 @@ export const colors = {
   // TODO: add all other vibrant variations
   networkEthereum: '#627EEA',
   networkOptimism: '#FF0420',
-  networkOptimismSoft: 'rgba(255, 4, 32, 0.16)',
   networkPolygon: '#A457FF',
   networkArbitrum: '#28A0F0',
-  networkPolygonSoft: 'rgba(164, 87, 255, 0.16)',
-  networkEthereumSoft: 'rgba(98, 126, 234, 0.16)',
+  networkCelo: '#35D07F',
 }
 
 export type Theme = typeof darkTheme
@@ -98,21 +96,6 @@ export type Theme = typeof darkTheme
 const commonTheme = {
   white: colors.white,
   black: colors.black,
-
-  chain_1: colors.networkEthereum,
-  chain_3: colors.yellow400,
-  chain_4: colors.pink400,
-  chain_5: colors.green400,
-  chain_10: colors.networkOptimism,
-  chain_137: colors.networkPolygon,
-  chain_42: colors.networkArbitrum,
-  chain_420: colors.networkOptimism,
-  chain_42161: colors.networkEthereum,
-  chain_421611: colors.networkEthereum,
-  chain_80001: colors.networkPolygon,
-  chain_137_background: colors.purple900,
-  chain_10_background: colors.red900,
-  chain_42161_background: colors.blue900,
 
   hoverState: opacify(24, colors.blue200),
   hoverDefault: opacify(8, colors.gray200),
@@ -161,7 +144,11 @@ export const darkTheme = {
   deepShadow: '12px 16px 24px rgba(0, 0, 0, 0.24), 12px 8px 12px rgba(0, 0, 0, 0.24), 4px 4px 8px rgba(0, 0, 0, 0.32);',
   shallowShadow: '4px 4px 10px rgba(0, 0, 0, 0.24), 2px 2px 4px rgba(0, 0, 0, 0.12), 1px 2px 2px rgba(0, 0, 0, 0.12);',
 
-  networkDefaultShadow: `0px 40px 120px ${opacify(16, colors.blue400)}`,
+  networkDefaultShadow: `0px 40px 120px ${opacify(24, colors.blue400)}`,
+  networkPolygonShadow: `0px 40px 120px ${opacify(20, colors.networkPolygon)}`,
+  networkArbitrumShadow: `0px 40px 120px ${opacify(12, colors.networkArbitrum)}`,
+  networkOptimismShadow: `0px 40px 120px ${opacify(20, colors.networkOptimism)}`,
+  networkCeloShadow: `0px 20px 120px ${opacify(24, colors.networkCelo)}`,
 
   stateOverlayHover: opacify(8, colors.gray300),
   stateOverlayPressed: opacify(24, colors.gray200),
@@ -172,7 +159,7 @@ export const lightTheme: Theme = {
 
   userThemeColor: colors.magentaVibrant,
 
-  background: '#faf9fa', //INTENTIONALLY OFF THEME TO GIVE WHITE BG A SOFTER VISUAL
+  background: '#FCFCFC', // INTENTIONALLY OFF THEME TO GIVE WHITE BG A SOFTER VISUAL
   backgroundBackdrop: colors.white,
   backgroundSurface: colors.white,
   backgroundModule: colors.gray50,
@@ -213,6 +200,10 @@ export const lightTheme: Theme = {
     '6px 6px 10px rgba(51, 53, 72, 0.01), 2px 2px 6px rgba(51, 53, 72, 0.02), 1px 2px 2px rgba(51, 53, 72, 0.02);',
 
   networkDefaultShadow: `0px 40px 120px ${opacify(12, colors.pink400)}`,
+  networkPolygonShadow: `0px 40px 120px ${opacify(16, colors.networkPolygon)}`,
+  networkArbitrumShadow: `0px 40px 120px ${opacify(12, colors.networkArbitrum)}`,
+  networkOptimismShadow: `0px 40px 120px ${opacify(12, colors.networkOptimism)}`,
+  networkCeloShadow: `0px 20px 120px ${opacify(12, colors.networkCelo)}`,
 
   stateOverlayHover: opacify(8, colors.gray300),
   stateOverlayPressed: opacify(24, colors.gray200),

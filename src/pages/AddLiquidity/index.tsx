@@ -540,7 +540,7 @@ export default function AddLiquidity() {
           )}
           pendingText={pendingText}
         />
-        <PageWrapper wide={!hasExistingPosition}>
+        <PageWrapper chainId={chainId} wide={!hasExistingPosition}>
           <AddRemoveTabs
             creating={false}
             adding={true}
