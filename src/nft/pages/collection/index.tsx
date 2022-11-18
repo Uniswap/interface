@@ -24,6 +24,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { easings, useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import { TRANSITION_DURATIONS } from 'theme/styles'
 
 const FILTER_WIDTH = 332
 const BAG_WIDTH = 324
@@ -94,7 +95,7 @@ const Collection = () => {
   const collectionStats = useCollectionQuery(contractAddress as string)
 
   const { gridX, gridWidthOffset } = useSpring({
-    gridX: (isFiltersExpanded || isBagExpanded) && !isMobile ? FILTER_WIDTH : 0,
+    gridX: isFiltersExpanded && !isMobile ? FILTER_WIDTH : 0,
     gridWidthOffset:
       isFiltersExpanded && !isMobile
         ? isBagExpanded
@@ -104,7 +105,7 @@ const Collection = () => {
         ? BAG_WIDTH
         : 0,
     config: {
-      duration: 250,
+      duration: TRANSITION_DURATIONS.medium,
       easing: easings.easeOutSine,
     },
   })

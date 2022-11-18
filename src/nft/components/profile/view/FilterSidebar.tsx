@@ -11,6 +11,7 @@ import { WalletCollection } from 'nft/types'
 import { Dispatch, FormEvent, SetStateAction, useCallback, useEffect, useReducer, useState } from 'react'
 import { easings, useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
+import { TRANSITION_DURATIONS } from 'theme/styles'
 
 import * as styles from './ProfilePage.css'
 
@@ -31,7 +32,7 @@ export const FilterSidebar = () => {
   const { sidebarX } = useSpring({
     sidebarX: isFiltersExpanded ? 0 : -360,
     config: {
-      duration: 250,
+      duration: TRANSITION_DURATIONS.medium,
       easing: easings.easeOutSine,
     },
   })
