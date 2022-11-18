@@ -167,11 +167,11 @@ const CardBottomContainer = styled.div`
   grid-template-columns: auto auto auto;
   padding: 16px 16px 20px;
 
-  ${TableElement}:nth-child(3n-1) {
+  ${TableElement}:nth-child(3n-1), ${LoadingTableElement}:nth-child(3n-1) {
     justify-self: center;
   }
 
-  ${TableElement}:nth-child(3n) {
+  ${TableElement}:nth-child(3n), ${LoadingTableElement}:nth-child(3n) {
     justify-self: right;
   }
 `
