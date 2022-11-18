@@ -202,10 +202,11 @@ export const ProfilePage = () => {
           borderRadius="12"
           paddingX="16"
           paddingY="12"
+          background="backgroundModule"
           borderStyle="solid"
           borderColor="backgroundOutline"
           borderWidth="1px"
-          style={{ background: '#0d0e0ef2', bottom: '68px', width: 'calc(100% - 32px)', lineHeight: '24px' }}
+          style={{ bottom: '68px', width: 'calc(100% - 32px)', lineHeight: '24px' }}
           className={subhead}
         >
           {sellAssets.length} NFT{sellAssets.length === 1 ? '' : 's'}
@@ -222,11 +223,12 @@ export const ProfilePage = () => {
             Clear
           </Box>
           <Box
+            color="white"
             marginRight="0"
             fontWeight="medium"
             fontSize="14"
             cursor="pointer"
-            backgroundColor="genieBlue"
+            backgroundColor="accentAction"
             onClick={toggleBag}
             lineHeight="16"
             borderRadius="12"
