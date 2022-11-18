@@ -25,11 +25,7 @@ function QRScannerIconButton({ onPress }: { onPress: () => void }) {
 
   return (
     <TouchableArea hapticFeedback name={ElementName.WalletConnectScan} onPress={onPress}>
-      <ScanQRWCIcon
-        color={theme.colors.textSecondary}
-        height={theme.iconSizes.lg}
-        width={theme.iconSizes.lg}
-      />
+      <ScanQRWCIcon color={theme.colors.textSecondary} height={theme.iconSizes.lg} />
     </TouchableArea>
   )
 }
