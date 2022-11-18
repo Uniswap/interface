@@ -12,6 +12,68 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 
+const MarketplaceRowWrapper = styled(Row)`
+  gap: 6px;
+  height: 44px;
+  width: 100%;
+  cursor: pointer;
+  justify-content: space-between;
+  padding: 0px 16px;
+  &:hover {
+    background-color: ${({ theme }) => theme.backgroundInteractive};
+  }
+  border-radius: 12px;
+`
+
+const MarketplaceDropdownIcon = styled.img`
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  object-fit: cover;
+`
+
+const FeeText = styled.div`
+  color: ${({ theme }) => theme.textSecondary};
+`
+
+interface MarketplaceRowProps {
+  market: ListingMarket
+  setSelectedMarkets: Dispatch<ListingMarket[]>
+  selectedMarkets: ListingMarket[]
+}
+
+const MarketplaceRow = ({ market, setSelectedMarkets, selectedMarkets }: MarketplaceRowProps) => {
+  const isSelected = selectedMarkets.includes(market)
+  const [hovered, toggleHovered] = useReducer((s) => !s, false)
+
+  const toggleSelected = () => {
+    if (selectedMarkets.length === 1 && isSelected) return
+    isSelected
+      ? setSelectedMarkets(selectedMarkets.filter((selected: ListingMarket) => selected !== market))
+      : setSelectedMarkets([...selectedMarkets, market])
+  }
+
+  const handleCheckbox = (e: FormEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+  }
+  return (
+    <MarketplaceRowWrapper onMouseEnter={toggleHovered} onMouseLeave={toggleHovered} onClick={toggleSelected}>
+      <Row gap="12" onClick={toggleSelected}>
+        <MarketplaceDropdownIcon alt={market.name} src={market.icon} />
+        <Column>
+          <ThemedText.BodyPrimary>{market.name}</ThemedText.BodyPrimary>
+          <FeeText className={caption}>{market.fee}% fee</FeeText>
+        </Column>
+      </Row>
+
+      <Checkbox hovered={hovered} checked={isSelected} onClick={handleCheckbox}>
+        <span />
+      </Checkbox>
+    </MarketplaceRowWrapper>
+  )
+}
+
 const HeaderButtonWrap = styled(Row)`
   padding: 12px;
   border-radius: 12px;
@@ -29,7 +91,6 @@ const HeaderButtonWrap = styled(Row)`
 
 const HeaderButtonContentWrapper = styled.div`
   display: flex;
-  flex-direction: row;
 `
 
 const MarketIcon = styled.img<{ index: number; totalSelected: number }>`
@@ -113,67 +174,5 @@ export const SelectMarketplacesDropdown = ({
         })}
       </DropdownWrapper>
     </ModalWrapper>
-  )
-}
-
-const MarketplaceRowWrapper = styled(Row)`
-  gap: 6px;
-  height: 44px;
-  width: 100%;
-  cursor: pointer;
-  justify-content: space-between;
-  padding: 0px 16px;
-  &:hover {
-    background-color: ${({ theme }) => theme.backgroundInteractive};
-  }
-  border-radius: 12px;
-`
-
-const MarketplaceDropdownIcon = styled.img`
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
-  object-fit: cover;
-`
-
-const FeeText = styled.div`
-  color: ${({ theme }) => theme.textSecondary};
-`
-
-interface MarketplaceRowProps {
-  market: ListingMarket
-  setSelectedMarkets: Dispatch<ListingMarket[]>
-  selectedMarkets: ListingMarket[]
-}
-
-const MarketplaceRow = ({ market, setSelectedMarkets, selectedMarkets }: MarketplaceRowProps) => {
-  const isSelected = selectedMarkets.includes(market)
-  const [hovered, toggleHovered] = useReducer((s) => !s, false)
-
-  const toggleSelected = () => {
-    if (selectedMarkets.length === 1 && isSelected) return
-    isSelected
-      ? setSelectedMarkets(selectedMarkets.filter((selected: ListingMarket) => selected !== market))
-      : setSelectedMarkets([...selectedMarkets, market])
-  }
-
-  const handleCheckbox = (e: FormEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-  }
-  return (
-    <MarketplaceRowWrapper onMouseEnter={toggleHovered} onMouseLeave={toggleHovered} onClick={toggleSelected}>
-      <Row gap="12" onClick={toggleSelected}>
-        <MarketplaceDropdownIcon alt={market.name} src={market.icon} />
-        <Column>
-          <ThemedText.BodyPrimary>{market.name}</ThemedText.BodyPrimary>
-          <FeeText className={caption}>{market.fee}% fee</FeeText>
-        </Column>
-      </Row>
-
-      <Checkbox hovered={hovered} checked={isSelected} onClick={handleCheckbox}>
-        <span />
-      </Checkbox>
-    </MarketplaceRowWrapper>
   )
 }
