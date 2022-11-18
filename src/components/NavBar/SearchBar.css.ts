@@ -4,6 +4,9 @@ import { buttonTextSmall, subhead, subheadSmall } from 'nft/css/common.css'
 import { breakpoints, sprinkles, vars } from '../../nft/css/sprinkles.css'
 
 const DESKTOP_NAVBAR_WIDTH = 360
+const DESKTOP_NAVBAR_WIDTH_L = 440
+const DESKTOP_NAVBAR_WIDTH_XL = 540
+const DESKTOP_NAVBAR_WIDTH_XXL = 640
 const MAGNIFYING_GLASS_ICON_WIDTH = 28
 
 const baseSearchStyle = style([
@@ -18,6 +21,26 @@ const baseSearchStyle = style([
     '@media': {
       [`screen and (min-width: ${breakpoints.sm}px)`]: {
         width: `${DESKTOP_NAVBAR_WIDTH}px`,
+      },
+    },
+  },
+])
+
+const baseSearchNftStyle = style([
+  baseSearchStyle,
+  {
+    '@media': {
+      [`screen and (min-width: 1024px) and (max-width: 1080px)`]: {
+        width: `${330}px`,
+      },
+      [`screen and (min-width: 1190px) and (max-width: 1380px)`]: {
+        width: `${DESKTOP_NAVBAR_WIDTH_L}px`,
+      },
+      [`screen and (min-width: 1380px) and (max-width: 1479px)`]: {
+        width: `${DESKTOP_NAVBAR_WIDTH_XL}px`,
+      },
+      [`screen and (min-width: ${1480}px)`]: {
+        width: `${DESKTOP_NAVBAR_WIDTH_XXL}px`,
       },
     },
   },
@@ -40,8 +63,46 @@ export const searchBarContainer = style([
   },
 ])
 
+export const searchBarContainerNft = style([
+  sprinkles({
+    right: '0',
+    top: '0',
+    zIndex: '3',
+    display: 'inline-block',
+  }),
+  {
+    '@media': {
+      [`screen and (min-width: ${breakpoints.lg}px)`]: {
+        right: `-${DESKTOP_NAVBAR_WIDTH / 2}px`,
+        top: '-6px',
+      },
+      [`screen and (min-width: 1024px) and (max-width: 1080px)`]: {
+        right: `-${300 / 2}px`,
+      },
+      [`screen and (min-width: 1190px) and (max-width: 1380px)`]: {
+        right: `-${DESKTOP_NAVBAR_WIDTH_L / 2}px`,
+      },
+      [`screen and (min-width: 1380px) and (max-width: 1479px)`]: {
+        right: `-${DESKTOP_NAVBAR_WIDTH_XL / 2}px`,
+      },
+      [`screen and (min-width: ${1480}px)`]: {
+        right: `-${DESKTOP_NAVBAR_WIDTH_XXL / 2}px`,
+      },
+    },
+  },
+])
+
 export const searchBar = style([
   baseSearchStyle,
+  sprinkles({
+    color: 'textTertiary',
+    paddingX: '16',
+    background: 'backgroundSurface',
+  }),
+])
+
+export const nftSearchBar = style([
+  baseSearchNftStyle,
   sprinkles({
     color: 'textTertiary',
     paddingX: '16',
@@ -64,6 +125,19 @@ export const searchBarInput = style([
 
 export const searchBarDropdown = style([
   baseSearchStyle,
+  sprinkles({
+    borderBottomLeftRadius: '12',
+    borderBottomRightRadius: '12',
+    background: 'backgroundSurface',
+    height: { sm: 'viewHeight', md: 'auto' },
+  }),
+  {
+    borderTop: 'none',
+  },
+])
+
+export const searchBarDropdownNft = style([
+  baseSearchNftStyle,
   sprinkles({
     borderBottomLeftRadius: '12',
     borderBottomRightRadius: '12',
