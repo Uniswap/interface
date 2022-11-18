@@ -452,7 +452,6 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   return (
     <>
       <AnimatedBox
-        backgroundColor="backgroundBackdrop"
         position="sticky"
         top="72"
         width="full"
