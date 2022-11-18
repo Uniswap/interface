@@ -86,6 +86,18 @@ export function WalletConnectModal({
         setShouldFreezeCamera(true)
         connectToApp(uri)
       }
+
+      if (supportedURI.type === URIType.EasterEgg) {
+        setShouldFreezeCamera(true)
+        Alert.alert('Have you tried full-sending lately?', 'Highly recommend it', [
+          {
+            text: 'Bye',
+            onPress: () => {
+              onClose()
+            },
+          },
+        ])
+      }
     },
     [
       activeAddress,

@@ -4,12 +4,15 @@ import { getValidAddress } from 'src/utils/addresses'
 export enum URIType {
   WalletConnectURL = 'walletconnect',
   Address = 'address',
+  EasterEgg = 'easter-egg',
 }
 
 export type URIFormat = {
   type: URIType
   value: string
 }
+
+const EASTER_EGG_QR_CODE = 'DO_NOT_SCAN_OR_ELSE_YOU_WILL_GO_TO_MOBILE_TEAM_JAIL'
 
 export async function getSupportedURI(uri: string): Promise<URIFormat | undefined> {
   if (!uri) {
@@ -28,6 +31,10 @@ export async function getSupportedURI(uri: string): Promise<URIFormat | undefine
 
   if (await isValidWCUrl(uri)) {
     return { type: URIType.WalletConnectURL, value: uri }
+  }
+
+  if (uri === EASTER_EGG_QR_CODE) {
+    return { type: URIType.EasterEgg, value: uri }
   }
 }
 
