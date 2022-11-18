@@ -16,7 +16,7 @@ import CloudIcon from 'src/assets/icons/cloud.svg'
 import InfoCircle from 'src/assets/icons/info-circle.svg'
 import PencilIcon from 'src/assets/icons/pencil.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { Button } from 'src/components/buttons/Button'
+import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { EducationContentType } from 'src/components/education'
 import { Chevron } from 'src/components/icons/Chevron'
@@ -66,6 +66,9 @@ export function BackupScreen({ navigation, route: { params } }: Props) {
   }
 
   const disabled = !activeAccountBackups || activeAccountBackups.length < 1
+  const showSkipOption =
+    !activeAccountBackups?.length &&
+    (params?.importType === ImportType.SeedPhrase || params?.importType === ImportType.Restore)
 
   return (
     <OnboardingScreen
@@ -82,12 +85,21 @@ export function BackupScreen({ navigation, route: { params } }: Props) {
           </Flex>
         </TouchableArea>
         <Flex grow justifyContent="flex-end">
-          <Button
-            disabled={disabled}
-            label={disabled ? t('Add backup to continue') : t('Continue')}
-            name={ElementName.Next}
-            onPress={onPressNext}
-          />
+          {showSkipOption ? (
+            <Button
+              emphasis={ButtonEmphasis.Tertiary}
+              label={t('I already backed up')}
+              name={ElementName.Next}
+              onPress={onPressNext}
+            />
+          ) : (
+            <Button
+              disabled={disabled}
+              label={disabled ? t('Add backup to continue') : t('Continue')}
+              name={ElementName.Next}
+              onPress={onPressNext}
+            />
+          )}
         </Flex>
       </Flex>
     </OnboardingScreen>
