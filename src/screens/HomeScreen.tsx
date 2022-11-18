@@ -19,8 +19,10 @@ import TabbedScrollScreen, {
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { Text } from 'src/components/Text'
 import { PortfolioBalance } from 'src/features/balances/PortfolioBalance'
+import { useFiatOnRampEnabled } from 'src/features/experiments/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
+import { AccountType } from 'src/features/wallet/accounts/types'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 
@@ -89,6 +91,8 @@ export function HomeScreen() {
 
 function QuickActions() {
   const dispatch = useAppDispatch()
+  const activeAccount = useActiveAccountWithThrow()
+
   const { t } = useTranslation()
 
   const onPressBuy = () => {
@@ -105,6 +109,10 @@ function QuickActions() {
     dispatch(openModal({ name: ModalName.Send }))
   }, [dispatch])
 
+  // hide fiat onramp banner when active account isn't a signer account.
+  const fiatOnRampShown =
+    useFiatOnRampEnabled() && activeAccount.type === AccountType.SignerMnemonic
+
   return (
     <Flex centered row gap="xs">
       <ActionButton
@@ -113,12 +121,14 @@ function QuickActions() {
         name={ElementName.Send}
         onPress={onPressSend}
       />
-      <ActionButton
-        Icon={DollarIcon}
-        label={t('Buy')}
-        name={ElementName.Buy}
-        onPress={onPressBuy}
-      />
+      {fiatOnRampShown && (
+        <ActionButton
+          Icon={DollarIcon}
+          label={t('Buy')}
+          name={ElementName.Buy}
+          onPress={onPressBuy}
+        />
+      )}
       <ActionButton
         Icon={ReceiveArrow}
         label={t('Receive')}

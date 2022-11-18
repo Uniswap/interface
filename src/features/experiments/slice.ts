@@ -1,9 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Experiment, FeatureFlag } from 'src/features/experiments/types'
 
+export type ExperimentsMap = { [name: string]: string }
+export type FeatureFlagsMap = { [name: string]: boolean }
 export interface ExperimentsState {
-  experiments: { [name: string]: string }
-  featureFlags: { [name: string]: boolean }
+  experiments: ExperimentsMap
+  featureFlags: FeatureFlagsMap
 }
 
 export const initialExperimentsState: ExperimentsState = {
@@ -29,32 +31,16 @@ export const slice = createSlice({
       state,
       {
         payload: { featureFlags, experiments },
-      }: PayloadAction<{ featureFlags: FeatureFlag[]; experiments: Experiment[] }>
+      }: PayloadAction<{ featureFlags: FeatureFlagsMap; experiments: ExperimentsMap }>
     ) => {
-      // Update values not overidden locally
-      const newFeatureFlags = { ...state.featureFlags }
-      featureFlags.map((item) => {
-        if (newFeatureFlags[item.name]) return
-        newFeatureFlags[item.name] = item.enabled
-      })
-      state.featureFlags = newFeatureFlags
-
-      const newExperiments = { ...state.experiments }
-      experiments.map((item) => {
-        if (newExperiments[item.name]) return
-        newExperiments[item.name] = item.variant
-      })
-      state.experiments = newExperiments
+      state.featureFlags = featureFlags
+      state.experiments = experiments
     },
-    resetFeatureFlagOverrides: (state, { payload }: PayloadAction<FeatureFlag[]>) => {
-      const newFeatureFlags: { [name: string]: boolean } = {}
-      payload.map((item) => (newFeatureFlags[item.name] = item.enabled))
-      state.featureFlags = newFeatureFlags
+    resetFeatureFlagOverrides: (state, { payload }: PayloadAction<FeatureFlagsMap>) => {
+      state.featureFlags = payload
     },
-    resetExperimentOverrides: (state, { payload }: PayloadAction<Experiment[]>) => {
-      const newExperiments: { [name: string]: string } = {}
-      payload.map((item) => (newExperiments[item.name] = item.variant))
-      state.experiments = newExperiments
+    resetExperimentOverrides: (state, { payload }: PayloadAction<ExperimentsMap>) => {
+      state.experiments = payload
     },
   },
 })

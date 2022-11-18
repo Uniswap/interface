@@ -1,8 +1,7 @@
 import { Experiment } from '@amplitude/experiment-react-native-client'
 import { getUniqueId } from 'react-native-device-info'
 import { config } from 'src/config'
-import { mergeRemoteConfig } from 'src/features/experiments/slice'
-import { Experiment as ExperimentType, FeatureFlag } from 'src/features/experiments/types'
+import { ExperimentsMap, FeatureFlagsMap, mergeRemoteConfig } from 'src/features/experiments/slice'
 import { initAnalytics, logException } from 'src/features/telemetry'
 import { LogContext } from 'src/features/telemetry/constants'
 import { call, put } from 'typed-redux-saga'
@@ -31,14 +30,14 @@ async function initializeExperiments() {
 export async function retrieveRemoteExperiments() {
   const fetchedAmplitudeExperiments = await Experiment.all()
 
-  const fetchedFeatureFlags: FeatureFlag[] = []
-  const fetchedExperiments: ExperimentType[] = []
+  const fetchedFeatureFlags: FeatureFlagsMap = {}
+  const fetchedExperiments: ExperimentsMap = {}
   Object.keys(fetchedAmplitudeExperiments).map((experimentKey) => {
     const variant = fetchedAmplitudeExperiments[experimentKey].value
     if (['on'].includes(variant)) {
-      fetchedFeatureFlags.push({ name: experimentKey, enabled: variant === 'on' })
+      fetchedFeatureFlags[experimentKey] = variant === 'on'
     } else {
-      fetchedExperiments.push({ name: experimentKey, variant: variant })
+      fetchedExperiments[experimentKey] = variant
     }
   })
 

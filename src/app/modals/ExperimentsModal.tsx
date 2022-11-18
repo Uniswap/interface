@@ -6,7 +6,6 @@ import { TextInput } from 'src/components/input/TextInput'
 import { Flex } from 'src/components/layout/Flex'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
-import { EMPTY_ARRAY } from 'src/constants/misc'
 import { retrieveRemoteExperiments } from 'src/features/experiments/saga'
 import {
   selectExperimentOverrides,
@@ -15,10 +14,11 @@ import {
 import {
   addExperimentOverride,
   addFeatureFlagOverride,
+  ExperimentsMap,
+  FeatureFlagsMap,
   resetExperimentOverrides,
   resetFeatureFlagOverrides,
 } from 'src/features/experiments/slice'
-import { Experiment as ExperimentType, FeatureFlag } from 'src/features/experiments/types'
 import { closeModal, selectExperimentsState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useAsyncData } from 'src/utils/hooks'
@@ -44,9 +44,9 @@ export function ExperimentsModal() {
       <Flex gap="lg" justifyContent="flex-start" pb="xl">
         <Flex>
           <Text color="textPrimary" px="lg">
-            Overidden feature flags and experiment variants will remain in the overriden state until
-            you reset them. Remote config is refreshed every time you cold-start the app, and
-            differences show in color.
+            Overidden feature flags and experiment variants will remain until you restart the app.
+            Remote config is refreshed every time you cold-start the app, and differences show in
+            color.
           </Text>
         </Flex>
 
@@ -76,7 +76,7 @@ export function ExperimentsModal() {
             emoji="🧪"
             title="Experiments"
             onResetPress={() => {
-              dispatch(resetExperimentOverrides(remoteConfig?.experiments || EMPTY_ARRAY))
+              dispatch(resetExperimentOverrides(remoteConfig?.experiments || {}))
             }}
           />
           {Object.keys(experiments).map((name) => {
@@ -135,19 +135,14 @@ function ExperimentRow({
   remoteExperiments,
 }: {
   name: string
-  localExperiments: {
-    [name: string]: string
-  }
-  remoteExperiments?: ExperimentType[]
+  localExperiments: ExperimentsMap
+  remoteExperiments?: ExperimentsMap
 }) {
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
-
   const [textInput, setTextInput] = useState<string | undefined>()
+  const isExperimentOverridden = localExperiments[name] !== remoteExperiments?.[name]
 
-  const isExperimentOverridden =
-    localExperiments[name] !==
-    remoteExperiments?.find((experiment) => experiment.name === name)?.variant
   return (
     <Flex gap="xs">
       <Flex row alignItems="center" flexWrap="wrap" gap="none" justifyContent="space-between">
@@ -186,15 +181,13 @@ function FeatureFlagRow({
   remoteFeatureFlags,
 }: {
   name: string
-  localFeatureFlags: {
-    [name: string]: boolean
-  }
-  remoteFeatureFlags?: FeatureFlag[]
+  localFeatureFlags: FeatureFlagsMap
+  remoteFeatureFlags?: FeatureFlagsMap
 }) {
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
-  const isExperimentOverridden =
-    localFeatureFlags[name] !== remoteFeatureFlags?.find((flag) => name === flag.name)?.enabled
+  const isExperimentOverridden = localFeatureFlags[name] !== remoteFeatureFlags?.[name]
+
   return (
     <Flex row alignItems="center" justifyContent="space-between">
       <Text variant="bodyLarge">{name}</Text>
