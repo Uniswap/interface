@@ -465,8 +465,20 @@ export const SmallOnly = styled.span`
   `};
 `
 
+export const MediumOnly = styled.span`
+  display: none;
+  @media (max-width: ${({ theme }) => theme.breakpoint.md}px) {
+    display: block;
+  }
+`
+
 export const Separator = styled.div`
   width: 100%;
   height: 1px;
   background-color: ${({ theme }) => theme.backgroundOutline};
+`
+
+export const GlowEffect = styled.div`
+  border-radius: 32px;
+  box-shadow: ${({ theme }) => theme.networkDefaultShadow};
 `

@@ -29,6 +29,3 @@ export const assetList = style([
     },
   },
 ])
-
-//Using negative margin and overflowing the width but 2*16px so that the edges of this area always properly clip the softer, wider shadow on the cards
-export const actionBarContainer = style([{ marginLeft: '-16px', width: 'calc(100% + 32px)' }])
