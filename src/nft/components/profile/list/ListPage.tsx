@@ -1,10 +1,11 @@
+import { SMALL_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { ListingButton } from 'nft/components/bag/profile/ListingButton'
 import { getListingState } from 'nft/components/bag/profile/utils'
-import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { BackArrowIcon } from 'nft/components/icons'
+import { headlineLarge, headlineSmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
-import { useBag, useNFTList, useProfilePageState, useSellAsset } from 'nft/hooks'
+import { useBag, useIsMobile, useNFTList, useProfilePageState, useSellAsset } from 'nft/hooks'
 import { ListingStatus, ProfilePageStateType } from 'nft/types'
 import { ListingMarkets } from 'nft/utils/listNfts'
 import { useEffect, useState } from 'react'
@@ -16,11 +17,42 @@ import { SetDurationModal } from './SetDurationModal'
 
 const MarketWrap = styled.section`
   gap: 48px;
-  padding-left: 18px;
-  padding-right: 48x;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0px auto;
+  padding: 0px 16px;
   max-width: 1200px;
+  width: 100%;
+
+  @media screen and (min-width: ${SMALL_MEDIA_BREAKPOINT}) {
+    padding: 0px 44px;
+  }
+`
+
+const ListingHeader = styled(Row)`
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 18px;
+
+  @media screen and (min-width: ${SMALL_MEDIA_BREAKPOINT}) {
+    margin-top: 40px;
+  }
+`
+
+const GridWrapper = styled.div`
+  margin-top: 24px;
+
+  @media screen and (min-width: ${SMALL_MEDIA_BREAKPOINT}) {
+    margin-left: 40px;
+  }
+`
+
+const MobileListButtonWrapper = styled.div`
+  display: flex;
+  margin: 14px 16px 32px 16px;
+
+  @media screen and (min-width: ${SMALL_MEDIA_BREAKPOINT}) {
+    display: none;
+  }
 `
 
 export const ListPage = () => {
@@ -32,6 +64,7 @@ export const ListPage = () => {
   const collectionsRequiringApproval = useNFTList((state) => state.collectionsRequiringApproval)
   const listingStatus = useNFTList((state) => state.listingStatus)
   const setListingStatus = useNFTList((state) => state.setListingStatus)
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     const state = getListingState(collectionsRequiringApproval, listings)
@@ -53,31 +86,31 @@ export const ListPage = () => {
   }, [selectedMarkets])
 
   return (
-    <Column display="flex" flexWrap="nowrap">
-      <Column marginLeft="14" display="flex">
-        <Box
-          aria-label="Back"
-          as="button"
-          border="none"
-          onClick={() => setSellPageState(ProfilePageStateType.VIEWING)}
-          type="button"
-          backgroundColor="transparent"
-          cursor="pointer"
-          width="min"
-        >
-          <BackArrowIcon fill={themeVars.colors.textSecondary} />
-        </Box>
-      </Column>
+    <Column>
       <MarketWrap>
-        <Row flexWrap={{ sm: 'wrap', lg: 'nowrap' }}>
-          <SelectMarketplacesDropdown setSelectedMarkets={setSelectedMarkets} selectedMarkets={selectedMarkets} />
-          <SetDurationModal />
-        </Row>
-        <NFTListingsGrid selectedMarkets={selectedMarkets} />
+        <ListingHeader>
+          <Row gap="4" marginBottom={{ sm: '18', md: '0' }}>
+            <BackArrowIcon
+              height={isMobile ? 20 : 32}
+              width={isMobile ? 20 : 32}
+              fill={themeVars.colors.textSecondary}
+              onClick={() => setSellPageState(ProfilePageStateType.VIEWING)}
+              cursor="pointer"
+            />
+            <div className={isMobile ? headlineSmall : headlineLarge}>Sell NFTs</div>
+          </Row>
+          <Row gap="12">
+            <SelectMarketplacesDropdown setSelectedMarkets={setSelectedMarkets} selectedMarkets={selectedMarkets} />
+            <SetDurationModal />
+          </Row>
+        </ListingHeader>
+        <GridWrapper>
+          <NFTListingsGrid selectedMarkets={selectedMarkets} />
+        </GridWrapper>
       </MarketWrap>
-      <Box display={{ sm: 'flex', md: 'none' }} marginTop="14" marginX="16" marginBottom="32">
+      <MobileListButtonWrapper>
         <ListingButton onClick={toggleBag} buttonText="Continue listing" />
-      </Box>
+      </MobileListButtonWrapper>
     </Column>
   )
 }

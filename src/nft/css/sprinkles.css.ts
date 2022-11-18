@@ -338,7 +338,7 @@ const layoutStyles = defineProperties({
     zIndex: zIndices,
     gap: spacing,
     flexShrink: spacing,
-    flex: ['1', '2', '3'],
+    flex: ['1', '1.5', '2', '3'],
     flexWrap: ['nowrap', 'wrap', 'wrap-reverse'],
     display: ['none', 'block', 'flex', 'inline-flex', 'inline-block', 'grid', 'inline'],
     whiteSpace: ['nowrap'],

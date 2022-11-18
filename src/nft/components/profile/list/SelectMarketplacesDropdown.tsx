@@ -1,8 +1,10 @@
+import { SMALL_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Column, Row } from 'nft/components/Flex'
 import { ChevronUpIcon } from 'nft/components/icons'
 import { Checkbox } from 'nft/components/layout/Checkbox'
 import { buttonTextMedium, caption } from 'nft/css/common.css'
+import { themeVars } from 'nft/css/sprinkles.css'
 import { ListingMarket } from 'nft/types'
 import { ListingMarkets } from 'nft/utils/listNfts'
 import { Dispatch, FormEvent, useMemo, useReducer, useRef } from 'react'
@@ -43,6 +45,7 @@ interface MarketplaceRowProps {
 const MarketplaceRow = ({ market, setSelectedMarkets, selectedMarkets }: MarketplaceRowProps) => {
   const isSelected = selectedMarkets.includes(market)
   const [hovered, toggleHovered] = useReducer((s) => !s, false)
+
   const toggleSelected = () => {
     if (selectedMarkets.length === 1 && isSelected) return
     isSelected
@@ -74,12 +77,15 @@ const MarketplaceRow = ({ market, setSelectedMarkets, selectedMarkets }: Marketp
 const HeaderButtonWrap = styled(Row)`
   padding: 12px;
   border-radius: 12px;
-  width: 220px;
+  width: 180px;
   justify-content: space-between;
   background: ${({ theme }) => theme.backgroundModule};
   cursor: pointer;
   &:hover {
     background-color: ${({ theme }) => theme.backgroundInteractive};
+  }
+  @media screen and (min-width: ${SMALL_MEDIA_BREAKPOINT}) {
+    width: 220px;
   }
 `
 
@@ -101,6 +107,7 @@ const MarketIcon = styled.img<{ index: number; totalSelected: number }>`
 const Chevron = styled(ChevronUpIcon)<{ isOpen: boolean }>`
   height: 20px;
   width: 20px;
+  fill: ${({ theme }) => theme.textPrimary};
   transition: ${({
     theme: {
       transition: { duration },
@@ -121,7 +128,7 @@ const DropdownWrapper = styled(Column)<{ isOpen: boolean }>`
   display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
   position: absolute;
   top: 52px;
-  width: 220px;
+  width: 100%;
   border-radius: 12px;
   gap: 12px;
   z-index: ${Z_INDEX.modalBackdrop};
@@ -159,7 +166,7 @@ export const SelectMarketplacesDropdown = ({
           {dropdownDisplayText}
         </HeaderButtonContentWrapper>
 
-        <Chevron isOpen={isOpen} />
+        <Chevron isOpen={isOpen} secondaryColor={themeVars.colors.textPrimary} />
       </HeaderButtonWrap>
       <DropdownWrapper isOpen={isOpen}>
         {ListingMarkets.map((market) => {

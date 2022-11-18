@@ -3,7 +3,7 @@ import { SortDropdown } from 'nft/components/common/SortDropdown'
 import { Column, Row } from 'nft/components/Flex'
 import { AttachPriceIcon, EditPriceIcon, RowsCollpsedIcon, RowsExpandedIcon, VerifiedIcon } from 'nft/components/icons'
 import { NumericInput } from 'nft/components/layout/Input'
-import { badge, body, bodySmall, headlineSmall, subheadSmall } from 'nft/css/common.css'
+import { badge, body, bodySmall, subheadSmall } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { DropDownOption, ListingMarket, ListingWarning, WalletAsset } from 'nft/types'
 import { formatEth, formatUsdPrice } from 'nft/utils/currency'
@@ -43,47 +43,46 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
 
   return (
     <Column>
-      <Row className={headlineSmall}>Create your listings</Row>
       <Row marginTop="20">
         <Column
           marginLeft={selectedMarkets.length > 1 ? '36' : '0'}
           transition="500"
-          className={badge}
+          className={bodySmall}
           color="textSecondary"
           flex="2"
         >
-          YOUR NFTS
+          NFT
         </Column>
-        <Row flex={{ sm: '1', md: '3' }}>
-          <Column className={subheadSmall} style={{ flex: '1.5' }}>
+        <Row flex={{ sm: '1.5', md: '3' }}>
+          <Column className={subheadSmall} flex="1.5">
             <SortDropdown dropDownOptions={priceDropdownOptions} mini miniPrompt="Set price by" />
           </Column>
           <Column
-            className={badge}
+            className={bodySmall}
             color="textSecondary"
             flex="1"
             display={{ sm: 'none', md: 'flex' }}
             textAlign="right"
           >
-            MARKETPLACE FEE
+            Marketplace fee
           </Column>
           <Column
-            className={badge}
+            className={bodySmall}
             color="textSecondary"
             flex="1"
             display={{ sm: 'none', md: 'flex' }}
             textAlign="right"
           >
-            ROYALTIES
+            Royalties
           </Column>
           <Column
-            className={badge}
+            className={bodySmall}
             color="textSecondary"
             style={{ flex: '1.5' }}
             display={{ sm: 'none', md: 'flex' }}
             textAlign="right"
           >
-            YOU RECEIVE
+            You receive
           </Column>
         </Row>
       </Row>
@@ -263,7 +262,7 @@ const EthPriceDisplay = ({ ethPrice = 0 }: { ethPrice?: number }) => {
             {formatUsdPrice(ethPrice * ethConversion)}
           </Box>
         ) : (
-          '- Eth'
+          '- ETH'
         )}
       </Row>
     </Column>
