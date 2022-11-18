@@ -17,8 +17,14 @@ export const ThemedText = {
   BodyPrimary(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={16} color="textPrimary" {...props} />
   },
+  BodyCaption(props: TextProps) {
+    return <TextWrapper fontWeight={400} fontSize={12} color="color" lineHeight="16px" {...props} />
+  },
   BodyBodySmall(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={14} lineHeight="28px" color="textPrimary" {...props} />
+  },
+  ButtonLabelMedium(props: TextProps) {
+    return <TextWrapper fontWeight={600} fontSize={16} lineHeight="28px" color="white" {...props} />
   },
   BodySecondary(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={16} color="textSecondary" {...props} />
