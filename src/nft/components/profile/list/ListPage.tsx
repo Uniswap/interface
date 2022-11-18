@@ -9,8 +9,8 @@ import { ListingStatus, ProfilePageStateType } from 'nft/types'
 import { ListingMarkets } from 'nft/utils/listNfts'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
-import { NFTListingsGrid } from './NFTListingsGrid'
 
+import { NFTListingsGrid } from './NFTListingsGrid'
 import { SelectMarketplacesDropdown } from './SelectMarketplacesDropdown'
 import { SetDurationModal } from './SetDurationModal'
 
