@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css'
 import { bodySmall } from 'nft/css/common.css'
-import { sprinkles, themeVars, vars } from 'nft/css/sprinkles.css'
+import { sprinkles, themeVars } from 'nft/css/sprinkles.css'
 
 export const bagRow = style([
   sprinkles({
@@ -57,61 +57,6 @@ export const priceChangeRow = style([
   }),
 ])
 
-export const unavailableAssetRow = style([
-  sprinkles({
-    gap: '12',
-    color: 'textPrimary',
-    paddingX: '12',
-    paddingY: '4',
-  }),
-  {
-    ':hover': {
-      background: themeVars.colors.backgroundInteractive,
-    },
-  },
-])
-
-export const priceChangeButton = style([
-  bodySmall,
-  sprinkles({
-    width: 'full',
-    paddingY: '8',
-    color: 'explicitWhite',
-    fontWeight: 'semibold',
-    textAlign: 'center',
-    borderRadius: '12',
-  }),
-  {
-    ':hover': {
-      color: themeVars.colors.textTertiary,
-    },
-  },
-])
-
-export const keepButton = style([
-  priceChangeButton,
-  sprinkles({
-    backgroundColor: 'blue400',
-  }),
-  {
-    ':hover': {
-      background: `linear-gradient(rgba(76, 130, 251, 0.24), rgba(76, 130, 251, .24)), linear-gradient(${vars.color.blue400}, ${vars.color.blue400})`,
-    },
-  },
-])
-
-export const removeButton = style([
-  priceChangeButton,
-  sprinkles({
-    backgroundColor: 'backgroundInteractive',
-  }),
-  {
-    ':hover': {
-      background: `linear-gradient(rgba(76, 130, 251, 0.24), rgba(76, 130, 251, .24)), linear-gradient(${vars.color.backgroundInteractive}, ${vars.color.backgroundInteractive})`,
-    },
-  },
-])
-
 export const bagRowImage = sprinkles({
   width: '56',
   height: '56',
@@ -122,15 +67,6 @@ export const bagRowImage = sprinkles({
 export const grayscaleImage = style({
   filter: 'grayscale(100%)',
 })
-
-export const unavailableImage = style([
-  grayscaleImage,
-  sprinkles({
-    width: '44',
-    height: '44',
-    borderRadius: '8',
-  }),
-])
 
 export const bagRowPrice = style([
   sprinkles({
@@ -168,21 +104,6 @@ export const collectionName = style([
 ])
 
 export const icon = sprinkles({
-  flexShrink: '0',
-})
-
-export const previewImageGrid = style([
-  sprinkles({
-    display: 'grid',
-  }),
-  {
-    gridTemplateColumns: 'repeat(5, 13px)',
-  },
-])
-
-export const toolTip = sprinkles({
-  color: 'textSecondary',
-  display: 'flex',
   flexShrink: '0',
 })
 

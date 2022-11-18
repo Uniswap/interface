@@ -4,7 +4,6 @@ import { CurveFactory } from 'd3'
 import React from 'react'
 import { ReactNode } from 'react'
 import { useTheme } from 'styled-components/macro'
-import { Color } from 'theme/styled'
 
 export interface LineChartProps<T> {
   data: T[]
@@ -12,7 +11,7 @@ export interface LineChartProps<T> {
   getY: (t: T) => number
   marginTop?: number
   curve: CurveFactory
-  color?: Color
+  color?: string
   strokeWidth: number
   children?: ReactNode
   width: number

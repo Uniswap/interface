@@ -9,8 +9,9 @@ import { themeVars } from 'nft/css/sprinkles.css'
 import { useFiltersExpanded, useIsMobile, useWalletCollections } from 'nft/hooks'
 import { WalletCollection } from 'nft/types'
 import { Dispatch, FormEvent, SetStateAction, useCallback, useEffect, useReducer, useState } from 'react'
-import { useSpring } from 'react-spring'
+import { easings, useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
+import { TRANSITION_DURATIONS } from 'theme/styles'
 
 import * as styles from './ProfilePage.css'
 
@@ -22,7 +23,6 @@ const ItemsContainer = styled.div`
 export const FilterSidebar = () => {
   const collectionFilters = useWalletCollections((state) => state.collectionFilters)
   const setCollectionFilters = useWalletCollections((state) => state.setCollectionFilters)
-
   const walletCollections = useWalletCollections((state) => state.walletCollections)
 
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
@@ -30,6 +30,10 @@ export const FilterSidebar = () => {
 
   const { sidebarX } = useSpring({
     sidebarX: isFiltersExpanded ? 0 : -360,
+    config: {
+      duration: TRANSITION_DURATIONS.medium,
+      easing: easings.easeOutSine,
+    },
   })
   return (
     // @ts-ignore

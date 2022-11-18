@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-11-15 00:17\n"
+"PO-Revision-Date: 2022-11-17 01:33\n"
 "Last-Translator: \n"
 "Language: af_ZA\n"
 "Language-Team: Afrikaans\n"
@@ -196,6 +196,10 @@ msgstr "Voeg {0}/{1} V3 likiditeit by"
 msgid "Added"
 msgstr "Bygevoeg"
 
+#: src/nft/components/collection/CollectionAsset.tsx
+msgid "Added to bag"
+msgstr ""
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "{0}bygevoeg"
@@ -349,6 +353,10 @@ msgstr "Beste prys roete kos ~{formattedGasPriceString} in gas."
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "Blocked Address"
 msgstr "Geblokkeerde adres"
+
+#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
+msgid "Blocked from trading"
+msgstr ""
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
@@ -570,7 +578,7 @@ msgstr "Kontrak adres"
 
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/nft/components/profile/view/ProfileAccountDetails.tsx
-#: src/theme/components.tsx
+#: src/theme/components/index.tsx
 msgid "Copied!"
 msgstr "Gekopieer!"
 
@@ -713,6 +721,10 @@ msgstr "Deposito van likiditeit"
 msgid "Description"
 msgstr "Beskrywing"
 
+#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
+msgid "Deselected"
+msgstr ""
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Detailed"
 msgstr "Gedetailleerd"
@@ -745,6 +757,10 @@ msgstr "Dokumentasie"
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
 msgstr "Sien u nie een van u v2-posisies nie? <0> Voer dit in.</0>"
+
+#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
+msgid "ERC-1155 support coming soon"
+msgstr ""
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
@@ -1537,6 +1553,10 @@ msgstr "Verwyder vloeibaarheid"
 msgid "Removed"
 msgstr "Verwyder"
 
+#: src/nft/components/collection/CollectionAsset.tsx
+msgid "Removed from bag"
+msgstr ""
+
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Removing"
 msgstr "Verwydering"
@@ -1594,6 +1614,10 @@ msgstr "Kies 'n aksie"
 #: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 msgid "Select token"
 msgstr "Kies teken"
+
+#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
+msgid "Selected"
+msgstr ""
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
@@ -2679,10 +2703,6 @@ msgstr "{SOCKS_AMOUNT} UNI"
 #: src/components/claim/ClaimModal.tsx
 msgid "{USER_AMOUNT} UNI"
 msgstr "{USER_AMOUNT} UNI"
-
-#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
-msgid "{disabledTooltipText}"
-msgstr "{disabledTooltipText}"
 
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "{label} might be down right now, or you may have lost your network connection."

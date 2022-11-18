@@ -25,7 +25,7 @@ import LogsUpdater from './state/logs/updater'
 import TransactionUpdater from './state/transactions/updater'
 import UserUpdater from './state/user/updater'
 import ThemeProvider, { ThemedGlobalStyle } from './theme'
-import RadialGradientByChainUpdater from './theme/RadialGradientByChainUpdater'
+import RadialGradientByChainUpdater from './theme/components/RadialGradientByChainUpdater'
 
 const queryClient = new QueryClient()
 

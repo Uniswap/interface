@@ -1,58 +1,67 @@
 import { useWindowSize } from 'hooks/useWindowSize'
-import { ChevronLeftIcon } from 'nft/components/icons'
+import { ChevronLeftIcon, ChevronRightIcon } from 'nft/components/icons'
 import { calculateCardIndex, calculateFirstCardIndex, calculateRank } from 'nft/utils'
-import { ReactNode, useCallback, useEffect, useReducer, useRef, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import { a, useSprings } from 'react-spring'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 
-const CarouselContainer = styled.div`
-  display: flex;
-  max-width: 592px;
-  width: 100%;
+const MAX_CARD_WIDTH = 530
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    height: 320px;
-  }
-`
-
-const CarouselCardContainer = styled.div`
-  max-width: 512px;
-  position: relative;
-  width: 100%;
-  overflow-x: hidden;
-`
-
-const CarouselCard = styled(a.div)`
-  position: absolute;
-  padding-left: 16px;
-  padding-right: 16px;
-  display: flex;
-  top: 3px;
-  height: 280px;
-  will-change: transform;
-  justify-content: center;
+const carouselHeightStyle = css`
+  height: 315px;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     height: 296px;
   }
 `
 
-const IconContainer = styled.div<{ right?: boolean }>`
+const carouselItemStyle = css`
+  padding-top: 3px;
+  padding-bottom: 32px;
+`
+
+const CarouselContainer = styled.div`
   display: flex;
-  height: 280px;
+  width: 100%;
+  justify-content: flex-end;
+`
+
+const CarouselCardContainer = styled.div`
+  ${carouselHeightStyle}
+
+  position: relative;
+  width: 100%;
+  max-width: ${MAX_CARD_WIDTH}px;
+  overflow-x: hidden;
+`
+
+const CarouselItemCard = styled(a.div)`
+  ${carouselHeightStyle}
+  ${carouselItemStyle}
+
+  display: flex;
   justify-content: center;
+  padding: 3px 32px 32px 32px;
+
+  position: absolute;
+  will-change: transform;
+`
+
+const CarouselItemIcon = styled.div`
+  ${carouselHeightStyle}
+  ${carouselItemStyle}
+
+  display: flex;
   align-items: center;
+  padding-left: 8px;
+  padding-right: 8px;
   cursor: pointer;
-  padding: 8px;
-  ${({ right }) => (right ? 'transform: rotate(180deg)' : undefined)};
+  user-select: none;
+
   color: ${({ theme }) => theme.textPrimary};
 
   :hover {
     opacity: ${({ theme }) => theme.opacity.hover};
-  }
-
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    height: 296px;
   }
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
@@ -62,16 +71,16 @@ const IconContainer = styled.div<{ right?: boolean }>`
 
 interface CarouselProps {
   children: ReactNode[]
+  activeIndex: number
+  toggleNextSlide: (idx: number) => void
 }
 
 const FIRST_CARD_OFFSET = 0
-const MAX_CARD_WIDTH = 512
 
-export const Carousel = ({ children }: CarouselProps) => {
+export const Carousel = ({ children, activeIndex, toggleNextSlide }: CarouselProps) => {
   const { width } = useWindowSize()
   const carouselCardContainerRef = useRef<HTMLDivElement>(null)
   const [cardWidth, setCardWidth] = useState(MAX_CARD_WIDTH)
-  const [resetTimer, toggleResetTimer] = useReducer((state) => !state, false)
 
   useEffect(() => {
     if (carouselCardContainerRef.current) {
@@ -108,21 +117,18 @@ export const Carousel = ({ children }: CarouselProps) => {
     [idx, getPos, set, cardWidth, children.length]
   )
 
-  useEffect(() => {
-    runSprings(index.current, 0)
-  }, [runSprings])
+  const direction = useRef(0)
 
-  const index = useRef(0)
+  useEffect(() => {
+    runSprings(activeIndex * cardWidth, direction.current)
+  }, [activeIndex, cardWidth, runSprings])
 
   const toggleSlide = useCallback(
     (next: -1 | 1) => {
-      const offset = cardWidth * next
-      index.current += offset
-
-      runSprings(index.current, next)
-      toggleResetTimer()
+      direction.current = next
+      toggleNextSlide(next)
     },
-    [runSprings, cardWidth]
+    [toggleNextSlide]
   )
 
   useEffect(() => {
@@ -132,16 +138,16 @@ export const Carousel = ({ children }: CarouselProps) => {
     return () => {
       clearInterval(interval)
     }
-  }, [toggleSlide, resetTimer])
+  }, [toggleSlide, activeIndex])
 
   return (
     <CarouselContainer>
-      <IconContainer onClick={() => toggleSlide(-1)}>
+      <CarouselItemIcon onClick={() => toggleSlide(-1)}>
         <ChevronLeftIcon width="16px" height="16px" />
-      </IconContainer>
+      </CarouselItemIcon>
       <CarouselCardContainer ref={carouselCardContainerRef}>
         {springs.map(({ x }, i) => (
-          <CarouselCard
+          <CarouselItemCard
             key={i}
             style={{
               width: cardWidth,
@@ -149,12 +155,18 @@ export const Carousel = ({ children }: CarouselProps) => {
             }}
           >
             {children[i]}
-          </CarouselCard>
+          </CarouselItemCard>
         ))}
       </CarouselCardContainer>
-      <IconContainer right onClick={() => toggleSlide(1)}>
-        <ChevronLeftIcon width="16px" height="16px" />
-      </IconContainer>
+      <CarouselItemIcon onClick={() => toggleSlide(1)}>
+        <ChevronRightIcon width="16px" height="16px" />
+      </CarouselItemIcon>
     </CarouselContainer>
   )
 }
+
+export const LoadingCarousel = ({ children }: { children: ReactNode }) => (
+  <Carousel activeIndex={0} toggleNextSlide={() => undefined}>
+    {[children]}
+  </Carousel>
+)

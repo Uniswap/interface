@@ -1,3 +1,4 @@
+import { formatNumberOrString, NumberType } from '@uniswap/conedison/format'
 import { loadingAnimation } from 'components/Loader/styled'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useCollectionQuery } from 'graphql/data/nft/Collection'
@@ -12,15 +13,43 @@ const CarouselCardContainer = styled.div`
   flex-direction: column;
   gap: 20px;
   background-color: ${({ theme }) => theme.backgroundSurface};
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 20px;
-  outline: 1px solid ${({ theme }) => theme.backgroundOutline};
-  width: 100%;
-  cursor: pointer;
   overflow: hidden;
+  height: 100%;
+`
+const CarouselCardBorder = styled.div`
+  width: 100%;
+  position: relative;
+  border-radius: 22px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition-property: border-color;
+  transition-duration: ${({ theme }) => theme.transition.duration.fast};
+  transition-timing: ${({ theme }) => theme.transition.timing.inOut};
 
   :hover {
-    outline: 3px solid ${({ theme }) => theme.backgroundOutline};
+    border: 2px solid ${({ theme }) => theme.backgroundOutline};
+  }
+
+  ::after {
+    content: '';
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 22px;
+    z-index: -1;
     box-shadow: ${({ theme }) => theme.deepShadow};
+    transition-property: opacity;
+    transition-duration: ${({ theme }) => theme.transition.duration.fast};
+    transition-timing: ${({ theme }) => theme.transition.timing.inOut};
+  }
+
+  :hover::after {
+    opacity: 1;
   }
 `
 
@@ -164,15 +193,18 @@ const TableElement = styled.div`
 
 interface MarketplaceRowProps {
   marketplace: string
-  floorInEth?: string
-  listings?: string
+  floorInEth?: number
+  listings?: number
 }
 
 export const MarketplaceRow = ({ marketplace, floorInEth, listings }: MarketplaceRowProps) => {
   return (
     <>
       <TableElement>{marketplace}</TableElement>
-      <TableElement>{floorInEth ?? '-'} ETH</TableElement>
+      <TableElement>
+        {floorInEth !== undefined ? formatNumberOrString(floorInEth, NumberType.NFTTokenFloorPriceTrailingZeros) : '-'}{' '}
+        ETH
+      </TableElement>
       <TableElement>{listings ?? '-'}</TableElement>
     </>
   )
@@ -193,32 +225,11 @@ const MARKETS_ENUM_TO_NAME = {
 export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
   const gqlCollection = useCollectionQuery(collection.address)
 
-  const theme = useTheme()
-
   return (
-    <CarouselCardContainer onClick={onClick}>
-      <CardHeaderContainer src={collection.bannerImageUrl}>
-        <CardHeaderRow>
-          <CollectionImage src={collection.imageUrl} />
-          <CardNameRow>
-            <CollectionNameContainer>
-              <ThemedText.MediumHeader color={theme.accentTextLightPrimary} fontWeight="500" lineHeight="28px">
-                {collection.name}
-              </ThemedText.MediumHeader>
-            </CollectionNameContainer>
-            {collection.isVerified && (
-              <IconContainer>
-                <VerifiedIcon width="24px" height="24px" />
-              </IconContainer>
-            )}
-          </CardNameRow>
-        </CardHeaderRow>
-        <HeaderOverlay />
-      </CardHeaderContainer>
-      <CardBottomContainer>
-        {!gqlCollection ? (
-          <LoadingTable />
-        ) : (
+    <CarouselCardBorder>
+      <CarouselCardContainer onClick={onClick}>
+        <CarouselCardHeader collection={collection} />
+        <CardBottomContainer>
           <>
             <HeaderRow>Uniswap</HeaderRow>
             <HeaderRow>{formatWeiToDecimal(collection.floor.toString())} ETH Floor</HeaderRow>
@@ -234,15 +245,15 @@ export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
                 <MarketplaceRow
                   key={`CarouselCard-key-${collection.address}-${marketplace.marketplace}`}
                   marketplace={MARKETS_ENUM_TO_NAME[market]}
-                  listings={marketplace.count.toString()}
-                  floorInEth={marketplace.floorPrice.toString()}
+                  listings={marketplace.count}
+                  floorInEth={marketplace.floorPrice}
                 />
               )
             })}
           </>
-        )}
-      </CardBottomContainer>
-    </CarouselCardContainer>
+        </CardBottomContainer>
+      </CarouselCardContainer>
+    </CarouselCardBorder>
   )
 }
 
@@ -258,19 +269,49 @@ export const LoadingTable = () => {
   )
 }
 
-export const LoadingCarouselCard = () => {
+const CarouselCardHeader = ({ collection }: { collection: TrendingCollection }) => {
+  const theme = useTheme()
   return (
-    <CarouselCardContainer>
-      <LoadingCardHeaderContainer>
-        <CardHeaderRow>
-          <LoadingCollectionImage />
-          <LoadingCollectionNameContainer />
-        </CardHeaderRow>
-        <HeaderOverlay />
-      </LoadingCardHeaderContainer>
-      <CardBottomContainer>
-        <LoadingTable />
-      </CardBottomContainer>
-    </CarouselCardContainer>
+    <CardHeaderContainer src={collection.bannerImageUrl}>
+      <CardHeaderRow>
+        <CollectionImage src={collection.imageUrl} />
+        <CardNameRow>
+          <CollectionNameContainer>
+            <ThemedText.MediumHeader color={theme.accentTextLightPrimary} fontWeight="500" lineHeight="28px">
+              {collection.name}
+            </ThemedText.MediumHeader>
+          </CollectionNameContainer>
+          {collection.isVerified && (
+            <IconContainer>
+              <VerifiedIcon width="24px" height="24px" />
+            </IconContainer>
+          )}
+        </CardNameRow>
+      </CardHeaderRow>
+      <HeaderOverlay />
+    </CardHeaderContainer>
+  )
+}
+
+export const LoadingCarouselCard = ({ collection }: { collection?: TrendingCollection }) => {
+  return (
+    <CarouselCardBorder>
+      <CarouselCardContainer>
+        {collection ? (
+          <CarouselCardHeader collection={collection} />
+        ) : (
+          <LoadingCardHeaderContainer>
+            <CardHeaderRow>
+              <LoadingCollectionImage />
+              <LoadingCollectionNameContainer />
+            </CardHeaderRow>
+            <HeaderOverlay />
+          </LoadingCardHeaderContainer>
+        )}
+        <CardBottomContainer>
+          <LoadingTable />
+        </CardBottomContainer>
+      </CarouselCardContainer>
+    </CarouselCardBorder>
   )
 }

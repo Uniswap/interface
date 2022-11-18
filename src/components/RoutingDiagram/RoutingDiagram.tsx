@@ -3,8 +3,8 @@ import { Protocol } from '@uniswap/router-sdk'
 import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge'
-import CurrencyLogo from 'components/CurrencyLogo'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
+import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row, { AutoRow } from 'components/Row'
 import { RoutingDiagramEntry } from 'components/swap/SwapRoute'
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
@@ -99,9 +99,9 @@ export default function RoutingDiagram({
     <Wrapper>
       {routes.map((entry, index) => (
         <RouteContainerRow key={index}>
-          <CurrencyLogo currency={tokenIn} size={'20px'} />
+          <CurrencyLogo currency={tokenIn} size="20px" />
           <Route entry={entry} />
-          <CurrencyLogo currency={tokenOut} size={'20px'} />
+          <CurrencyLogo currency={tokenOut} size="20px" />
         </RouteContainerRow>
       ))}
     </Wrapper>
@@ -117,7 +117,7 @@ function Route({ entry: { percent, path, protocol } }: { entry: RoutingDiagramEn
       <OpaqueBadge>
         {protocol === Protocol.MIXED ? (
           <MixedProtocolBadge>
-            <BadgeText fontSize={12}>{'V3 + V2'}</BadgeText>
+            <BadgeText fontSize={12}>V3 + V2</BadgeText>
           </MixedProtocolBadge>
         ) : (
           <ProtocolBadge>

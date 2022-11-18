@@ -1,9 +1,15 @@
+import { BigNumber } from '@ethersproject/bignumber'
+import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { EventName, PageName } from '@uniswap/analytics-events'
+import Tooltip from 'components/Tooltip'
+import { Box } from 'nft/components/Box'
+import { bodySmall } from 'nft/css/common.css'
 import { useBag } from 'nft/hooks'
-import { GenieAsset, Markets, UniformHeight } from 'nft/types'
+import { GenieAsset, Markets, TokenType } from 'nft/types'
 import { formatWeiToDecimal, rarityProviderLogo } from 'nft/utils'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import styled from 'styled-components/macro'
 
 import { useAssetMediaType, useNotForSale } from './Card'
 import { AssetMediaType } from './Card'
@@ -12,18 +18,27 @@ import * as Card from './Card'
 interface CollectionAssetProps {
   asset: GenieAsset
   isMobile: boolean
-  uniformHeight: UniformHeight
-  setUniformHeight: (u: UniformHeight) => void
   mediaShouldBePlaying: boolean
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
   rarityVerified?: boolean
 }
 
+const TOOLTIP_TIMEOUT = 2000
+
+const StyledContainer = styled.div`
+  position: absolute;
+  bottom: 12px;
+  left: 0px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  z-index: 2;
+  pointer-events: none;
+`
+
 export const CollectionAsset = ({
   asset,
   isMobile,
-  uniformHeight,
-  setUniformHeight,
   mediaShouldBePlaying,
   setCurrentTokenPlayingMedia,
   rarityVerified,
@@ -31,21 +46,25 @@ export const CollectionAsset = ({
   const bagManuallyClosed = useBag((state) => state.bagManuallyClosed)
   const addAssetsToBag = useBag((state) => state.addAssetsToBag)
   const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
+  const usedSweep = useBag((state) => state.usedSweep)
   const itemsInBag = useBag((state) => state.itemsInBag)
   const bagExpanded = useBag((state) => state.bagExpanded)
   const setBagExpanded = useBag((state) => state.setBagExpanded)
   const trace = useTrace({ page: PageName.NFT_COLLECTION_PAGE })
 
-  const { quantity, isSelected } = useMemo(() => {
+  const { isSelected } = useMemo(() => {
+    const matchingItems = itemsInBag.filter(
+      (item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address
+    )
+
+    const isSelected = matchingItems.length > 0
     return {
-      quantity: itemsInBag.filter(
-        (x) => x.asset.tokenType === 'ERC1155' && x.asset.tokenId === asset.tokenId && x.asset.address === asset.address
-      ).length,
-      isSelected: itemsInBag.some(
-        (item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address
-      ),
+      isSelected,
     }
   }, [asset, itemsInBag])
+
+  const [showTooltip, setShowTooltip] = useState(false)
+  const isSelectedRef = useRef(isSelected)
 
   const notForSale = useNotForSale(asset)
   const assetMediaType = useAssetMediaType(asset)
@@ -60,17 +79,35 @@ export const CollectionAsset = ({
   }, [asset])
 
   const handleAddAssetToBag = useCallback(() => {
-    addAssetsToBag([asset])
-    if (!bagExpanded && !isMobile && !bagManuallyClosed) {
-      setBagExpanded({ bagExpanded: true })
+    if (BigNumber.from(asset.priceInfo?.ETHPrice ?? 0).gte(0)) {
+      addAssetsToBag([asset])
+      if (!bagExpanded && !isMobile && !bagManuallyClosed) {
+        setBagExpanded({ bagExpanded: true })
+      }
+      sendAnalyticsEvent(EventName.NFT_BUY_ADDED, {
+        collection_address: asset.address,
+        token_id: asset.tokenId,
+        token_type: asset.tokenType,
+        ...trace,
+      })
     }
-    sendAnalyticsEvent(EventName.NFT_BUY_ADDED, {
-      collection_address: asset.address,
-      token_id: asset.tokenId,
-      token_type: asset.tokenType,
-      ...trace,
-    })
   }, [addAssetsToBag, asset, bagExpanded, bagManuallyClosed, isMobile, setBagExpanded, trace])
+
+  useEffect(() => {
+    if (isSelected !== isSelectedRef.current && !usedSweep) {
+      setShowTooltip(true)
+      isSelectedRef.current = isSelected
+      const tooltipTimer = setTimeout(() => {
+        setShowTooltip(false)
+      }, TOOLTIP_TIMEOUT)
+
+      return () => {
+        clearTimeout(tooltipTimer)
+      }
+    }
+    isSelectedRef.current = isSelected
+    return undefined
+  }, [isSelected, isSelectedRef, usedSweep])
 
   const handleRemoveAssetFromBag = useCallback(() => {
     removeAssetsFromBag([asset])
@@ -84,7 +121,22 @@ export const CollectionAsset = ({
       removeAssetFromBag={handleRemoveAssetFromBag}
     >
       <Card.ImageContainer>
-        {asset.tokenType === 'ERC1155' && quantity > 0 && <Card.Erc1155Controls quantity={quantity.toString()} />}
+        <StyledContainer>
+          <Tooltip
+            text={
+              <Box as="span" className={bodySmall} color="textPrimary">
+                {isSelected ? <Trans>Added to bag</Trans> : <Trans>Removed from bag</Trans>}
+              </Box>
+            }
+            show={showTooltip}
+            style={{ display: 'block' }}
+            offsetX={0}
+            offsetY={0}
+            hideArrow={true}
+            placement="bottom"
+            showInline
+          />
+        </StyledContainer>
         {asset.rarity && provider && (
           <Card.Ranking
             rarity={asset.rarity}
@@ -94,21 +146,11 @@ export const CollectionAsset = ({
           />
         )}
         {assetMediaType === AssetMediaType.Image ? (
-          <Card.Image uniformHeight={uniformHeight} setUniformHeight={setUniformHeight} />
+          <Card.Image />
         ) : assetMediaType === AssetMediaType.Video ? (
-          <Card.Video
-            uniformHeight={uniformHeight}
-            setUniformHeight={setUniformHeight}
-            shouldPlay={mediaShouldBePlaying}
-            setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-          />
+          <Card.Video shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
         ) : (
-          <Card.Audio
-            uniformHeight={uniformHeight}
-            setUniformHeight={setUniformHeight}
-            shouldPlay={mediaShouldBePlaying}
-            setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-          />
+          <Card.Audio shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
         )}
       </Card.ImageContainer>
       <Card.DetailsContainer>
@@ -127,7 +169,7 @@ export const CollectionAsset = ({
               </Card.SecondaryInfo>
               {(asset.marketplace === Markets.NFTX || asset.marketplace === Markets.NFT20) && <Card.Pool />}
             </Card.SecondaryDetails>
-            {asset.tokenType !== 'ERC1155' && asset.marketplace && (
+            {asset.tokenType !== TokenType.ERC1155 && asset.marketplace && (
               <Card.MarketplaceIcon marketplace={asset.marketplace} />
             )}
           </Card.SecondaryRow>

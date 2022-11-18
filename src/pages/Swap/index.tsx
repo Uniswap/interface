@@ -578,7 +578,7 @@ export default function Swap() {
                 </TraceEvent>
               </ArrowWrapper>
             </div>
-            <AutoColumn gap={'12px'}>
+            <AutoColumn gap="12px">
               <div>
                 <OutputSwapSection showDetailsDropdown={showDetailsDropdown}>
                   <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
@@ -677,7 +677,7 @@ export default function Swap() {
                         }
                       >
                         <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }} height="20px">
-                          <span style={{ display: 'flex', alignItems: 'center' }}>
+                          <ThemedText.SubHeader width="100%" textAlign="center" color="white">
                             {/* we need to shorten this string on mobile */}
                             {approvalState === ApprovalState.APPROVED ||
                             signatureState === UseERC20PermitState.SIGNED ? (
@@ -685,7 +685,7 @@ export default function Swap() {
                             ) : (
                               <Trans>Allow the Uniswap Protocol to use your {currencies[Field.INPUT]?.symbol}</Trans>
                             )}
-                          </span>
+                          </ThemedText.SubHeader>
                           {approvalPending || approvalState === ApprovalState.PENDING ? (
                             <Loader stroke={theme.white} />
                           ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||

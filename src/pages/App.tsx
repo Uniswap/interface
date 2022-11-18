@@ -13,7 +13,9 @@ import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { SpinnerSVG } from 'theme/components'
+import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
+import { isProductionEnv } from 'utils/env'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import { useAnalyticsReporter } from '../components/analytics'
@@ -22,7 +24,7 @@ import NavBar from '../components/NavBar'
 import Polling from '../components/Polling'
 import Popups from '../components/Popups'
 import { useIsExpertMode } from '../state/user/hooks'
-import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
+import DarkModeQueryParamReader from '../theme/components/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
@@ -50,7 +52,13 @@ const Asset = lazy(() => import('nft/pages/asset/Asset'))
 // Placeholder API key. Actual API key used in the proxy server
 const ANALYTICS_DUMMY_KEY = '00000000000000000000000000000000'
 const ANALYTICS_PROXY_URL = process.env.REACT_APP_AMPLITUDE_PROXY_URL
-initializeAnalytics(ANALYTICS_DUMMY_KEY, OriginApplication.INTERFACE, ANALYTICS_PROXY_URL)
+const COMMIT_HASH = process.env.REACT_APP_GIT_COMMIT_HASH
+initializeAnalytics(ANALYTICS_DUMMY_KEY, OriginApplication.INTERFACE, {
+  proxyUrl: ANALYTICS_PROXY_URL,
+  defaultEventName: EventName.PAGE_VIEWED,
+  commitHash: COMMIT_HASH,
+  isProductionEnv: isProductionEnv(),
+})
 
 const AppWrapper = styled.div`
   display: flex;
@@ -71,7 +79,7 @@ const BodyWrapper = styled.div`
 `
 
 const HeaderWrapper = styled.div<{ scrolledState?: boolean }>`
-  ${({ theme }) => theme.flexRowNoWrap}
+  ${flexRowNoWrap};
   background-color: ${({ theme, scrolledState }) => scrolledState && theme.backgroundSurface};
   border-bottom: ${({ theme, scrolledState }) => scrolledState && `1px solid ${theme.backgroundOutline}`};
   width: 100%;

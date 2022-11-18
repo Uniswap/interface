@@ -1,9 +1,9 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import { OpacityHoverState } from 'components/Common'
-import { loadingAnimation } from 'components/Loader/styled'
 import { parseEther } from 'ethers/lib/utils'
 import { NftAssetTraitInput, NftMarketplace } from 'graphql/data/nft/__generated__/AssetQuery.graphql'
 import {
@@ -34,12 +34,18 @@ import {
 } from 'nft/hooks'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { usePriceRange } from 'nft/hooks/usePriceRange'
-import { DropDownOption, GenieCollection, Markets, TokenType, UniformHeight, UniformHeights } from 'nft/types'
-import { getRarityStatus } from 'nft/utils/asset'
-import { pluralize } from 'nft/utils/roundAndPluralize'
+import { DropDownOption, GenieAsset, GenieCollection, isPooledMarket, Markets, TokenType } from 'nft/types'
+import {
+  calcPoolPrice,
+  calcSudoSwapPrice,
+  getRarityStatus,
+  isInSameMarketplaceCollection,
+  isInSameSudoSwapPool,
+  pluralize,
+} from 'nft/utils'
 import { scrollToTop } from 'nft/utils/scrollToTop'
 import { applyFiltersFromURL, syncLocalFiltersWithURL } from 'nft/utils/urlParams'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -111,7 +117,6 @@ const SweepButton = styled.div<{ toggled: boolean; disabled?: boolean }>`
   border: none;
   border-radius: 12px;
   padding: 12px 18px 12px 12px;
-  margin-right: 14px;
   cursor: ${({ disabled }) => (disabled ? 'auto' : 'pointer')};
   color: ${({ toggled, disabled, theme }) => (toggled && !disabled ? theme.accentTextLightPrimary : theme.textPrimary)};
   background: ${({ theme, toggled, disabled }) =>
@@ -139,30 +144,14 @@ const SweepText = styled(ThemedText.BodyPrimary)`
   }
 `
 
-export const LoadingButton = styled.div`
-  border-radius: 12px;
-  height: 44px;
-  width: 114px;
-  animation: ${loadingAnimation} 1.5s infinite;
-  animation-fill-mode: both;
-  background: linear-gradient(
-    to left,
-    ${({ theme }) => theme.backgroundInteractive} 25%,
-    ${({ theme }) => theme.backgroundOutline} 50%,
-    ${({ theme }) => theme.backgroundInteractive} 75%
-  );
-  will-change: background-position;
-  background-size: 400%;
-`
-
 const MarketNameWrapper = styled(Row)`
   gap: 8px;
 `
 
-const loadingAssets = (height?: number) => (
+const loadingAssets = () => (
   <>
     {Array.from(Array(ASSET_PAGE_SIZE), (_, index) => (
-      <CollectionAssetLoading key={index} height={height} />
+      <CollectionAssetLoading key={index} />
     ))}
   </>
 )
@@ -251,6 +240,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   const toggleBag = useBag((state) => state.toggleBag)
   const bagExpanded = useBag((state) => state.bagExpanded)
+  const itemsInBag = useBag((state) => state.itemsInBag)
 
   const debouncedMinPrice = useDebounce(minPrice, 500)
   const debouncedMaxPrice = useDebounce(maxPrice, 500)
@@ -259,9 +249,11 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const [sweepIsOpen, setSweepOpen] = useState(false)
   // Load all sweep queries. Loading them on the parent allows lazy-loading, but avoids waterfalling requests.
   const collectionParams = useSweepFetcherParams(contractAddress, 'others', debouncedMinPrice, debouncedMaxPrice)
+  const sudoSwapParams = useSweepFetcherParams(contractAddress, Markets.Sudoswap, debouncedMinPrice, debouncedMaxPrice)
   const nftxParams = useSweepFetcherParams(contractAddress, Markets.NFTX, debouncedMinPrice, debouncedMaxPrice)
   const nft20Params = useSweepFetcherParams(contractAddress, Markets.NFT20, debouncedMinPrice, debouncedMaxPrice)
   useLoadSweepAssetsQuery(collectionParams, sweepIsOpen)
+  useLoadSweepAssetsQuery(sudoSwapParams, sweepIsOpen)
   useLoadSweepAssetsQuery(nftxParams, sweepIsOpen)
   useLoadSweepAssetsQuery(nft20Params, sweepIsOpen)
 
@@ -287,7 +279,77 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   const { assets: collectionNfts, loadNext, hasNext, isLoadingNext } = useLazyLoadAssetsQuery(assetQueryParams)
 
-  const [uniformHeight, setUniformHeight] = useState<UniformHeight>(UniformHeights.unset)
+  const getPoolPosition = useCallback(
+    (asset: GenieAsset) => {
+      const assetInBag = itemsInBag.some(
+        (item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address
+      )
+
+      if (asset.marketplace === Markets.Sudoswap) {
+        const bagItemsInSudoSwapPool = itemsInBag.filter((item) => isInSameSudoSwapPool(asset, item.asset))
+        if (assetInBag) {
+          return bagItemsInSudoSwapPool.findIndex((item) => item.asset.tokenId === asset.tokenId)
+        } else {
+          return bagItemsInSudoSwapPool.length
+        }
+      }
+
+      return assetInBag
+        ? itemsInBag
+            .filter((item) => isInSameMarketplaceCollection(asset, item.asset))
+            .findIndex((item) => item.asset.tokenId === asset.tokenId)
+        : itemsInBag.filter((item) => isInSameMarketplaceCollection(asset, item.asset)).length
+    },
+    [itemsInBag]
+  )
+
+  const calculatePrice = useCallback(
+    (asset: GenieAsset) => {
+      if (asset.marketplace === Markets.Sudoswap) return calcSudoSwapPrice(asset, getPoolPosition(asset))
+      return calcPoolPrice(asset, getPoolPosition(asset))
+    },
+    [getPoolPosition]
+  )
+
+  const collectionAssets = useMemo(() => {
+    if (!collectionNfts || !collectionNfts.some((asset) => asset.marketplace && isPooledMarket(asset.marketplace))) {
+      return collectionNfts
+    }
+
+    const assets = [...collectionNfts]
+
+    assets.forEach(
+      (asset) =>
+        asset.marketplace &&
+        isPooledMarket(asset.marketplace) &&
+        (asset.priceInfo.ETHPrice = calculatePrice(asset) ?? '')
+    )
+
+    if (sortBy === SortBy.HighToLow || sortBy === SortBy.LowToHigh) {
+      assets.sort((a, b) => {
+        const bigA = BigNumber.from(a.priceInfo?.ETHPrice ?? -1)
+        const bigB = BigNumber.from(b.priceInfo?.ETHPrice ?? -1)
+
+        if (bigA.gte(0) && bigB.lt(0)) {
+          return sortBy === SortBy.LowToHigh ? -1 : 1
+        } else if (bigB.gte(0) && bigA.lt(0)) {
+          return sortBy === SortBy.LowToHigh ? 1 : -1
+        }
+
+        const diff = bigA.sub(bigB)
+        if (diff.gt(0)) {
+          return sortBy === SortBy.LowToHigh ? 1 : -1
+        } else if (diff.lt(0)) {
+          return sortBy === SortBy.LowToHigh ? -1 : 1
+        }
+
+        return 0
+      })
+    }
+
+    return assets
+  }, [collectionNfts, sortBy, calculatePrice])
+
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const oldStateRef = useRef<CollectionFilters | null>(null)
@@ -298,10 +360,10 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   }, [isLoadingNext, setIsCollectionNftsLoading])
 
   const hasRarity = useMemo(() => {
-    const hasRarity = getRarityStatus(rarityStatusCache, collectionStats?.address, collectionNfts) ?? false
+    const hasRarity = getRarityStatus(rarityStatusCache, collectionStats?.address, collectionAssets) ?? false
     setHasRarity(hasRarity)
     return hasRarity
-  }, [collectionStats.address, collectionNfts, setHasRarity])
+  }, [collectionStats.address, collectionAssets, setHasRarity])
 
   const sortDropDownOptions: DropDownOption[] = useMemo(
     () => getSortDropdownOptions(setSortBy, hasRarity),
@@ -309,7 +371,6 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   )
 
   useEffect(() => {
-    setUniformHeight(UniformHeights.unset)
     setSweepOpen(false)
     return () => {
       useCollectionFilters.setState(initialCollectionFilterState)
@@ -317,23 +378,21 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   }, [contractAddress])
 
   const assets = useMemo(() => {
-    if (!collectionNfts) return null
-    return collectionNfts.map((asset) => (
+    if (!collectionAssets) return null
+    return collectionAssets.map((asset) => (
       <CollectionAsset
         key={asset.address + asset.tokenId}
         asset={asset}
         isMobile={isMobile}
-        uniformHeight={uniformHeight}
-        setUniformHeight={setUniformHeight}
         mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
         setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
         rarityVerified={rarityVerified}
       />
     ))
-  }, [collectionNfts, currentTokenPlayingMedia, isMobile, rarityVerified, uniformHeight])
+  }, [collectionAssets, currentTokenPlayingMedia, isMobile, rarityVerified])
 
-  const hasNfts = collectionNfts && collectionNfts.length > 0
-  const hasErc1155s = hasNfts && collectionNfts[0] && collectionNfts[0].tokenType === TokenType.ERC1155
+  const hasNfts = collectionAssets && collectionAssets.length > 0
+  const hasErc1155s = hasNfts && collectionAssets[0] && collectionAssets[0].tokenType === TokenType.ERC1155
 
   const minMaxPriceChipText: string | undefined = useMemo(() => {
     if (debouncedMinPrice && debouncedMaxPrice) {
@@ -392,128 +451,130 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   return (
     <>
-      <AnimatedBox position="sticky" top="72" width="full" zIndex="3" marginBottom={{ sm: '8', md: '20' }}>
-        <Box
-          backgroundColor="backgroundBackdrop"
-          width="full"
-          paddingTop={{ sm: '12', md: '16' }}
-          paddingBottom={{ sm: '12', md: '16' }}
+      <AnimatedBox
+        backgroundColor="backgroundBackdrop"
+        position="sticky"
+        top="72"
+        width="full"
+        zIndex="3"
+        marginBottom={{ sm: '8', md: '20' }}
+        padding="16"
+        className={styles.actionBarContainer}
+      >
+        <ActionsContainer>
+          <ActionsSubContainer>
+            <TraceEvent
+              events={[BrowserEvent.onClick]}
+              element={ElementName.NFT_FILTER_BUTTON}
+              name={EventName.NFT_FILTER_OPENED}
+              shouldLogImpression={!isFiltersExpanded}
+              properties={{ collection_address: contractAddress, chain_id: chainId }}
+            >
+              <FilterButton
+                isMobile={isMobile}
+                isFiltersExpanded={isFiltersExpanded}
+                collectionCount={collectionAssets?.[0]?.totalCount ?? 0}
+                onClick={() => setFiltersExpanded(!isFiltersExpanded)}
+              />
+            </TraceEvent>
+            <SortDropdownContainer isFiltersExpanded={isFiltersExpanded}>
+              <SortDropdown dropDownOptions={sortDropDownOptions} />
+            </SortDropdownContainer>
+            <CollectionSearch />
+          </ActionsSubContainer>
+          {!hasErc1155s ? (
+            <SweepButton
+              toggled={sweepIsOpen}
+              disabled={hasErc1155s}
+              className={buttonTextMedium}
+              onClick={() => {
+                if (hasErc1155s) return
+                if (!sweepIsOpen) {
+                  scrollToTop()
+                  if (!bagExpanded && !isMobile) toggleBag()
+                }
+                setSweepOpen(!sweepIsOpen)
+              }}
+            >
+              <SweepIcon viewBox="0 0 24 24" width="20px" height="20px" />
+              <SweepText fontWeight={600} color="currentColor" lineHeight="20px">
+                Sweep
+              </SweepText>
+            </SweepButton>
+          ) : null}
+        </ActionsContainer>
+        {sweepIsOpen && (
+          <Sweep contractAddress={contractAddress} minPrice={debouncedMinPrice} maxPrice={debouncedMaxPrice} />
+        )}
+        <Row
+          paddingTop={!!markets.length || !!traits.length || minMaxPriceChipText ? '12' : '0'}
+          gap="8"
+          flexWrap="wrap"
         >
-          <ActionsContainer>
-            <ActionsSubContainer>
-              <TraceEvent
-                events={[BrowserEvent.onClick]}
-                element={ElementName.NFT_FILTER_BUTTON}
-                name={EventName.NFT_FILTER_OPENED}
-                shouldLogImpression={!isFiltersExpanded}
-                properties={{ collection_address: contractAddress, chain_id: chainId }}
-              >
-                <FilterButton
-                  isMobile={isMobile}
-                  isFiltersExpanded={isFiltersExpanded}
-                  collectionCount={collectionNfts?.[0]?.totalCount ?? 0}
-                  onClick={() => setFiltersExpanded(!isFiltersExpanded)}
-                />
-              </TraceEvent>
-              <SortDropdownContainer isFiltersExpanded={isFiltersExpanded}>
-                <SortDropdown dropDownOptions={sortDropDownOptions} />
-              </SortDropdownContainer>
-              <CollectionSearch />
-            </ActionsSubContainer>
-            {!hasErc1155s ? (
-              <SweepButton
-                toggled={sweepIsOpen}
-                disabled={hasErc1155s}
-                className={buttonTextMedium}
-                onClick={() => {
-                  if (hasErc1155s) return
-                  if (!sweepIsOpen) {
-                    scrollToTop()
-                    if (!bagExpanded && !isMobile) toggleBag()
-                  }
-                  setSweepOpen(!sweepIsOpen)
-                }}
-              >
-                <SweepIcon viewBox="0 0 24 24" width="20px" height="20px" />
-                <SweepText fontWeight={600} color="currentColor" lineHeight="20px">
-                  Sweep
-                </SweepText>
-              </SweepButton>
-            ) : null}
-          </ActionsContainer>
-          {sweepIsOpen && (
-            <Sweep contractAddress={contractAddress} minPrice={debouncedMinPrice} maxPrice={debouncedMaxPrice} />
+          {markets.map((market) => (
+            <TraitChip
+              key={market}
+              value={
+                <MarketNameWrapper>
+                  <MarketplaceLogo src={`/nft/svgs/marketplaces/${market.toLowerCase()}.svg`} />
+                  {MARKETPLACE_ITEMS[market as keyof typeof MARKETPLACE_ITEMS]}
+                </MarketNameWrapper>
+              }
+              onClick={() => {
+                scrollToTop()
+                removeMarket(market)
+              }}
+            />
+          ))}
+          {traits.map((trait) => (
+            <TraitChip
+              key={trait.trait_value}
+              value={
+                trait.trait_type === 'Number of traits'
+                  ? `${trait.trait_value} trait${pluralize(Number(trait.trait_value))}`
+                  : `${trait.trait_type}: ${trait.trait_value}`
+              }
+              onClick={() => {
+                scrollToTop()
+                removeTrait(trait)
+              }}
+            />
+          ))}
+          {minMaxPriceChipText && (
+            <TraitChip
+              value={minMaxPriceChipText}
+              onClick={() => {
+                scrollToTop()
+                setMin('')
+                setMax('')
+                setPrevMinMax([0, 100])
+              }}
+            />
           )}
-          <Row
-            paddingTop={!!markets.length || !!traits.length || minMaxPriceChipText ? '12' : '0'}
-            gap="8"
-            flexWrap="wrap"
-          >
-            {markets.map((market) => (
-              <TraitChip
-                key={market}
-                value={
-                  <MarketNameWrapper>
-                    <MarketplaceLogo src={`/nft/svgs/marketplaces/${market.toLowerCase()}.svg`} />
-                    {MARKETPLACE_ITEMS[market as keyof typeof MARKETPLACE_ITEMS]}
-                  </MarketNameWrapper>
-                }
-                onClick={() => {
-                  scrollToTop()
-                  removeMarket(market)
-                }}
-              />
-            ))}
-            {traits.map((trait) => (
-              <TraitChip
-                key={trait.trait_value}
-                value={
-                  trait.trait_type === 'Number of traits'
-                    ? `${trait.trait_value} trait${pluralize(Number(trait.trait_value))}`
-                    : `${trait.trait_type}: ${trait.trait_value}`
-                }
-                onClick={() => {
-                  scrollToTop()
-                  removeTrait(trait)
-                }}
-              />
-            ))}
-            {minMaxPriceChipText && (
-              <TraitChip
-                value={minMaxPriceChipText}
-                onClick={() => {
-                  scrollToTop()
-                  setMin('')
-                  setMax('')
-                  setPrevMinMax([0, 100])
-                }}
-              />
-            )}
-            {!!traits.length || !!markets.length || minMaxPriceChipText ? (
-              <ClearAllButton
-                onClick={() => {
-                  reset()
-                  setPrevMinMax([0, 100])
-                  scrollToTop()
-                }}
-              >
-                Clear All
-              </ClearAllButton>
-            ) : null}
-          </Row>
-        </Box>
+          {!!traits.length || !!markets.length || minMaxPriceChipText ? (
+            <ClearAllButton
+              onClick={() => {
+                reset()
+                setPrevMinMax([0, 100])
+                scrollToTop()
+              }}
+            >
+              Clear All
+            </ClearAllButton>
+          ) : null}
+        </Row>
       </AnimatedBox>
       <InfiniteScroll
         next={() => loadNext(ASSET_PAGE_SIZE)}
         hasMore={hasNext}
-        loader={hasNext && hasNfts ? loadingAssets(uniformHeight) : null}
-        dataLength={collectionNfts?.length ?? 0}
+        loader={hasNext && hasNfts ? loadingAssets() : null}
+        dataLength={collectionAssets?.length ?? 0}
         style={{ overflow: 'unset' }}
         className={hasNfts || isLoadingNext ? styles.assetList : undefined}
       >
         {hasNfts ? (
           assets
-        ) : collectionNfts?.length === 0 ? (
+        ) : collectionAssets?.length === 0 ? (
           <Center width="full" color="textSecondary" textAlign="center" style={{ height: '60vh' }}>
             <EmptyCollectionWrapper>
               <p className={headlineMedium}>No NFTS found</p>

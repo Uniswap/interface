@@ -1,11 +1,17 @@
 import { assetList } from 'nft/components/collection/CollectionNfts.css'
+import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import styled from 'styled-components/macro'
 
 import { DEFAULT_WALLET_ASSET_QUERY_AMOUNT } from './ProfilePage'
 
 const SkeletonPageWrapper = styled.div`
-  padding: 40px 72px 52px;
+  ${ScreenBreakpointsPaddings};
+  padding-top: 40px;
   width: 100%;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    padding-top: 16px;
+  }
 `
 
 const SkeletonBodyWrapper = styled.div`
@@ -24,13 +30,6 @@ const SkeletonRowWrapper = styled.div`
 const AccountDetailsSkeletonWrapper = styled(SkeletonRowWrapper)`
   gap: 12px;
   margin-bottom: 30px;
-`
-
-const ProfilePictureSkeleton = styled.div`
-  height: 44px;
-  width: 44px;
-  background: ${({ theme }) => theme.backgroundModule};
-  border-radius: 100px;
 `
 
 const ProfileDetailsSkeleton = styled.div`
@@ -58,12 +57,6 @@ const SellButtonSkeleton = styled.div`
   border-radius: 12px;
 `
 
-export const ProfileAssetsWrapperSkeleton = styled(SkeletonRowWrapper)`
-  flex-wrap: wrap;
-  gap: 26px;
-  margin-bottom: 20px;
-`
-
 export const ProfileAssetCardSkeleton = styled.div`
   width: 100%;
   height: 330px;
@@ -75,7 +68,6 @@ export const ProfileBodyLoadingSkeleton = () => {
   return (
     <SkeletonBodyWrapper>
       <AccountDetailsSkeletonWrapper>
-        <ProfilePictureSkeleton />
         <ProfileDetailsSkeleton />
       </AccountDetailsSkeletonWrapper>
       <FilterBarSkeletonWrapper>

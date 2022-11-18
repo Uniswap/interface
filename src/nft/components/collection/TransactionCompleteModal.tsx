@@ -126,8 +126,8 @@ const TxCompleteModal = () => {
                     marginTop={{ sm: '20', md: '20' }}
                     flexWrap={{ sm: 'wrap', md: 'nowrap' }}
                     alignItems="center"
-                    paddingRight={'40'}
-                    paddingLeft={'40'}
+                    paddingRight="40"
+                    paddingLeft="40"
                     className={styles.bottomBar}
                     justifyContent="space-between"
                   >
@@ -137,7 +137,7 @@ const TxCompleteModal = () => {
                       </Box>
                       <Box>{formatEthPrice(totalPurchaseValue.toString())} ETH</Box>
                     </Row>
-                    <a href={txHashUrl} target="_blank" rel="noreferrer">
+                    <a href={txHashUrl} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
                       <Box color="textPrimary" fontWeight="normal">
                         {shortenTxHash(txHash, 2, 2)}
                       </Box>
@@ -202,7 +202,7 @@ const TxCompleteModal = () => {
                           marginRight={{ sm: '40', md: '24' }}
                           width={{ sm: 'half', md: 'auto' }}
                         >
-                          <a href={txHashUrl} target="_blank" rel="noreferrer">
+                          <a href={txHashUrl} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
                             <Box fontWeight="normal" marginTop="16" className={styles.totalEthCost}>
                               {shortenTxHash(txHash, 2, 2)}
                             </Box>

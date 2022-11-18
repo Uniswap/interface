@@ -19,9 +19,9 @@ import { unwrappedToken } from '../../utils/unwrappedToken'
 import { ButtonEmpty, ButtonPrimary, ButtonSecondary } from '../Button'
 import { LightCard } from '../Card'
 import { AutoColumn } from '../Column'
-import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { CardNoise } from '../earn/styled'
+import CurrencyLogo from '../Logo/CurrencyLogo'
 import { AutoRow, RowBetween, RowFixed } from '../Row'
 import { Dots } from '../swap/styleds'
 import { FixedHeightRow } from '.'
@@ -143,7 +143,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
               </RowFixed>
               {token0Deposited ? (
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                  <Text fontSize={16} fontWeight={500} marginLeft="6px">
                     {token0Deposited?.toSignificant(6)}
                   </Text>
                   <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency0} />
@@ -161,7 +161,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
               </RowFixed>
               {token1Deposited ? (
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                  <Text fontSize={16} fontWeight={500} marginLeft="6px">
                     {token1Deposited?.toSignificant(6)}
                   </Text>
                   <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency1} />

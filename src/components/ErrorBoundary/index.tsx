@@ -98,7 +98,7 @@ export default class ErrorBoundary extends React.Component<PropsWithChildren<unk
       return (
         <FallbackWrapper>
           <BodyWrapper>
-            <AutoColumn gap={'md'}>
+            <AutoColumn gap="md">
               <SomethingWentWrongWrapper>
                 <ThemedText.DeprecatedLabel fontSize={24} fontWeight={600}>
                   <Trans>Something went wrong</Trans>

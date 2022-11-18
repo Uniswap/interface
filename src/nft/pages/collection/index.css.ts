@@ -10,8 +10,6 @@ import { css } from 'styled-components/macro'
 
 import { sprinkles, vars } from '../../css/sprinkles.css'
 
-export const bannerContainerNoBanner = style({ height: '0', marginTop: '0px' })
-
 export const bannerImage = style({ objectFit: 'cover' })
 
 export const baseActivitySwitcherToggle = style([
@@ -74,8 +72,8 @@ export const ScreenBreakpointsPaddings = css`
   }
 
   @media screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
-    padding-left: 40px;
-    padding-right: 40px;
+    padding-left: 26px;
+    padding-right: 26px;
   }
 
   @media screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {

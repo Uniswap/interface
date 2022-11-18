@@ -23,11 +23,11 @@ import { shortenAddress } from '../../nft/utils/address'
 import { useCloseModal, useToggleModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
-import { ButtonPrimary } from '../Button'
+import { ButtonEmphasis, ButtonSize, ThemeButton } from '../Button'
 import StatusIcon from '../Identicon/StatusIcon'
 import IconButton, { IconHoverText } from './IconButton'
 
-const WalletButton = styled(ButtonPrimary)`
+const WalletButton = styled(ThemeButton)`
   border-radius: 12px;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -177,12 +177,12 @@ const AuthenticatedHeader = () => {
           <USDText>${amountUSD.toFixed(2)} USD</USDText>
         </BalanceWrapper>
         {nftFlag === NftVariant.Enabled && (
-          <ProfileButton onClick={navigateToProfile}>
+          <ProfileButton onClick={navigateToProfile} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
             <Trans>View and sell NFTs</Trans>
           </ProfileButton>
         )}
         {isUnclaimed && (
-          <UNIButton onClick={openClaimModal}>
+          <UNIButton onClick={openClaimModal} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
             <Trans>Claim</Trans> {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} <Trans>reward</Trans>
           </UNIButton>
         )}

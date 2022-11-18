@@ -70,8 +70,8 @@ const TraitItem = ({
     <Row
       key={trait.trait_value}
       maxWidth="full"
-      overflowX={'hidden'}
-      overflowY={'hidden'}
+      overflowX="hidden"
+      overflowY="hidden"
       fontWeight="normal"
       className={`${subheadSmall} ${styles.subRowHover}`}
       justifyContent="space-between"

@@ -6,18 +6,19 @@ import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
+import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { isSupportedChain } from 'constants/chains'
 import { darken } from 'polished'
 import { ReactNode, useCallback, useState } from 'react'
 import { Lock } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
+import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useCurrencyBalance } from '../../state/connection/hooks'
 import { ThemedText } from '../../theme'
 import { ButtonGray } from '../Button'
-import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { Input as NumericalInput } from '../NumericalInput'
 import { RowBetween, RowFixed } from '../Row'
@@ -25,7 +26,7 @@ import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import { FiatValue } from './FiatValue'
 
 const InputPanel = styled.div<{ hideInput?: boolean }>`
-  ${({ theme }) => theme.flexColumnNoWrap}
+  ${flexColumnNoWrap};
   position: relative;
   border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
   z-index: 1;
@@ -106,13 +107,13 @@ const CurrencySelect = styled(ButtonGray)<{
 `
 
 const InputRow = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
+  ${flexRowNoWrap};
   align-items: center;
   justify-content: space-between;
 `
 
 const LabelRow = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
+  ${flexRowNoWrap};
   align-items: center;
   color: ${({ theme }) => theme.textSecondary};
   font-size: 0.75rem;
@@ -281,7 +282,7 @@ export default function SwapCurrencyInputPanel({
                     <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
                   </span>
                 ) : currency ? (
-                  <CurrencyLogo style={{ marginRight: '2px' }} currency={currency} size={'24px'} />
+                  <CurrencyLogo style={{ marginRight: '2px' }} currency={currency} size="24px" />
                 ) : null}
                 {pair ? (
                   <StyledTokenName className="pair-name-container">

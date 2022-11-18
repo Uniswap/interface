@@ -1,12 +1,13 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { EventName } from '@uniswap/analytics-events'
 import clsx from 'clsx'
+import AssetLogo from 'components/Logo/AssetLogo'
 import { L2NetworkLogo, LogoContainer } from 'components/Tokens/TokenTable/TokenRow'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { getChainInfo } from 'constants/chainInfo'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { getTokenDetailsURL } from 'graphql/data/util'
-import uriToHttp from 'lib/utils/uriToHttp'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
@@ -21,6 +22,10 @@ import styled from 'styled-components/macro'
 import { formatDollar } from 'utils/formatNumbers'
 
 import * as styles from './SearchBar.css'
+
+const StyledLogoContainer = styled(LogoContainer)`
+  margin-right: 8px;
+`
 
 interface CollectionRowProps {
   collection: GenieCollection
@@ -134,8 +139,6 @@ export const TokenRow = ({
   eventProperties,
   hideStats,
 }: TokenRowProps) => {
-  const [brokenImage, setBrokenImage] = useState(false)
-  const [loaded, setLoaded] = useState(false)
   const addToSearchHistory = useSearchHistory(
     (state: { addItem: (item: FungibleToken | GenieCollection) => void }) => state.addItem
   )
@@ -174,21 +177,17 @@ export const TokenRow = ({
       style={{ background: isHovered ? vars.color.lightGrayOverlay : 'none' }}
     >
       <Row style={{ width: '65%' }}>
-        {!brokenImage && token.logoURI ? (
-          <LogoContainer>
-            <Box
-              as="img"
-              src={token.logoURI.includes('ipfs://') ? uriToHttp(token.logoURI)[0] : token.logoURI}
-              alt={token.name}
-              className={clsx(loaded ? styles.suggestionImage : styles.imageHolder)}
-              onError={() => setBrokenImage(true)}
-              onLoad={() => setLoaded(true)}
-            />
-            <L2NetworkLogo networkUrl={L2Icon} size="16px" />
-          </LogoContainer>
-        ) : (
-          <Box className={styles.imageHolder} />
-        )}
+        <StyledLogoContainer>
+          <AssetLogo
+            isNative={token.address === NATIVE_CHAIN_ID}
+            address={token.address}
+            chainId={token.chainId}
+            symbol={token.symbol}
+            size="36px"
+            backupImg={token.logoURI}
+          />
+          <L2NetworkLogo networkUrl={L2Icon} size="16px" />
+        </StyledLogoContainer>
         <Column className={styles.suggestionPrimaryContainer}>
           <Row gap="4" width="full">
             <Box className={styles.primaryText}>{token.name}</Box>

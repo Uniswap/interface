@@ -224,7 +224,7 @@ export default function Manage() {
               <ButtonPrimary
                 padding="8px"
                 $borderRadius="8px"
-                width={'fit-content'}
+                width="fit-content"
                 as={Link}
                 to={`/add/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`}
               >
@@ -314,7 +314,7 @@ export default function Manage() {
                     decimalPlaces={4}
                     start={parseFloat(countUpAmountPrevious)}
                     end={parseFloat(countUpAmount)}
-                    thousandsSeparator={','}
+                    thousandsSeparator=","
                     duration={1}
                   />
                 </ThemedText.DeprecatedLargeHeader>

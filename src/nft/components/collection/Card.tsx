@@ -13,17 +13,17 @@ import {
   RarityVerifiedIcon,
   VerifiedIcon,
 } from 'nft/components/icons'
-import { body, bodySmall, buttonTextSmall, subhead, subheadSmall } from 'nft/css/common.css'
+import { body, bodySmall, buttonTextMedium, subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
-import { GenieAsset, Rarity, TokenType, UniformHeight, UniformHeights, WalletAsset } from 'nft/types'
-import { isAudio, isVideo } from 'nft/utils'
-import { fallbackProvider, putCommas } from 'nft/utils'
+import { GenieAsset, Rarity, TokenType, WalletAsset } from 'nft/types'
+import { fallbackProvider, isAudio, isVideo, putCommas } from 'nft/utils'
 import { floorFormatter } from 'nft/utils/numbers'
 import {
   createContext,
   MouseEvent,
   ReactNode,
+  useCallback,
   useContext,
   useLayoutEffect,
   useMemo,
@@ -85,16 +85,25 @@ const useAssetMediaType = (asset: GenieAsset | WalletAsset) =>
     return assetMediaType
   }, [asset])
 
-const baseHref = (asset: GenieAsset | WalletAsset) =>
-  'address' in asset ? `/#/nfts/asset/${asset.address}/${asset.tokenId}?origin=collection` : '/nfts/profile'
+const baseHref = (asset: GenieAsset | WalletAsset) => {
+  if ('address' in asset) return `/#/nfts/asset/${asset.address}/${asset.tokenId}?origin=collection`
+  if ('asset_contract' in asset) return `/#/nfts/asset/${asset.asset_contract.address}/${asset.tokenId}?origin=profile`
+  return '/#/nfts/profile'
+}
 
 const DetailsLinkContainer = styled.a`
   display: flex;
+  align-items: center;
   flex-shrink: 0;
   text-decoration: none;
-  color: ${({ theme }) => theme.textSecondary};
-
-  ${OpacityHoverState}
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid;
+  color: ${({ theme }) => theme.accentAction};
+  border-color: ${({ theme }) => theme.accentActionSoft};
+  padding: 2px 6px;
+  border-radius: 6px;
+  ${OpacityHoverState};
 `
 
 const SuspiciousIcon = styled(AlertTriangle)`
@@ -148,8 +157,13 @@ const RankingContainer = styled.div`
   z-index: 2;
 `
 
-const StyledImageContainer = styled.div`
+const StyledImageContainer = styled.div<{ isDisabled?: boolean }>`
   position: relative;
+  pointer-events: auto;
+  &:hover {
+    opacity: ${({ isDisabled, theme }) => (isDisabled ? theme.opacity.disabled : theme.opacity.enabled)};
+  }
+  cursor: ${({ isDisabled }) => (isDisabled ? 'default' : 'pointer')};
 `
 
 /* -------- ASSET CARD -------- */
@@ -202,21 +216,19 @@ const Container = ({
     }
   }
 
+  const toggleHover = useCallback(() => toggleHovered(), [])
+
   return (
     <CardContext.Provider value={providerValue}>
       <Box
-        position={'relative'}
+        position="relative"
         ref={assetRef}
         borderRadius={BORDER_RADIUS}
-        borderBottomLeftRadius={BORDER_RADIUS}
-        borderBottomRightRadius={BORDER_RADIUS}
-        className={selected ? styles.selectedCard : styles.notSelectedCard}
+        className={selected ? styles.selectedCard : styles.card}
         draggable={false}
-        onMouseEnter={() => toggleHovered()}
-        onMouseLeave={() => toggleHovered()}
+        onMouseEnter={toggleHover}
+        onMouseLeave={toggleHover}
         transition="250"
-        opacity={isDisabled ? '0.5' : '1'}
-        cursor={isDisabled ? 'default' : 'pointer'}
         onClick={isDisabled ? () => null : onClick ?? handleAssetInBag}
       >
         {children}
@@ -225,49 +237,36 @@ const Container = ({
   )
 }
 
-const ImageContainer = ({ children }: { children: ReactNode }) => (
-  <StyledImageContainer>{children}</StyledImageContainer>
+const ImageContainer = ({ children, isDisabled = false }: { children: ReactNode; isDisabled?: boolean }) => (
+  <StyledImageContainer isDisabled={isDisabled}>{children}</StyledImageContainer>
 )
 
 /* -------- CARD IMAGE -------- */
-interface ImageProps {
-  uniformHeight?: UniformHeight
-  setUniformHeight?: (height: UniformHeight) => void
-}
 
-const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
+const Image = () => {
   const { hovered, asset } = useCardContext()
   const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
   const [loaded, setLoaded] = useState(false)
   const isMobile = useIsMobile()
 
   if (noContent) {
-    return <NoContentContainer uniformHeight={uniformHeight ?? UniformHeights.unset} />
+    return <NoContentContainer />
   }
 
   return (
     <Box display="flex" overflow="hidden" borderTopLeftRadius={BORDER_RADIUS} borderTopRightRadius={BORDER_RADIUS}>
       <Box
-        as={'img'}
+        as="img"
         width="full"
         style={{
-          aspectRatio: uniformHeight === UniformHeights.notUniform ? '1' : 'auto',
-          transition: 'transform 0.4s ease 0s',
+          aspectRatio: '1',
+          transition: 'transform 0.25s ease 0s',
         }}
         src={asset.imageUrl || asset.smallImageUrl}
-        objectFit={'contain'}
+        objectFit="contain"
         draggable={false}
         onError={() => setNoContent(true)}
         onLoad={(e) => {
-          if (setUniformHeight) {
-            if (uniformHeight === UniformHeights.unset) {
-              setUniformHeight(e.currentTarget.clientHeight)
-            } else if (uniformHeight !== UniformHeights.notUniform && e.currentTarget.clientHeight !== uniformHeight) {
-              if (!uniformHeight || Math.abs(uniformHeight - e.currentTarget.clientHeight) > 1) {
-                setUniformHeight(UniformHeights.notUniform)
-              }
-            }
-          }
           setLoaded(true)
         }}
         className={clsx(hovered && !isMobile && styles.cardImageHover, !loaded && styles.loadingBackground)}
@@ -277,13 +276,11 @@ const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
 }
 
 interface MediaProps {
-  uniformHeight?: UniformHeight
-  setUniformHeight?: (u: UniformHeight) => void
   shouldPlay: boolean
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
 }
 
-const Video = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
+const Video = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
   const vidRef = useRef<HTMLVideoElement>(null)
   const { hovered, asset } = useCardContext()
   const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
@@ -297,30 +294,26 @@ const Video = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPla
   }
 
   if (noContent) {
-    return <NoContentContainer uniformHeight={UniformHeights.notUniform} />
+    return <NoContentContainer />
   }
 
   return (
     <>
       <Box display="flex" overflow="hidden">
         <Box
-          as={'img'}
+          as="img"
           alt={asset.name || asset.tokenId}
           width="full"
           style={{
             aspectRatio: '1',
-            transition: 'transform 0.4s ease 0s',
+            transition: 'transform 0.25s ease 0s',
             willChange: 'transform',
           }}
           src={asset.imageUrl || asset.smallImageUrl}
-          objectFit={'contain'}
+          objectFit="contain"
           draggable={false}
           onError={() => setNoContent(true)}
           onLoad={() => {
-            if (setUniformHeight && uniformHeight !== UniformHeights.notUniform) {
-              setUniformHeight(UniformHeights.notUniform)
-            }
-
             setImageLoaded(true)
           }}
           visibility={shouldPlay ? 'hidden' : 'visible'}
@@ -380,7 +373,7 @@ const Video = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPla
   )
 }
 
-const Audio = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
+const Audio = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
   const audRef = useRef<HTMLAudioElement>(null)
   const { hovered, asset } = useCardContext()
   const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
@@ -394,37 +387,25 @@ const Audio = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPla
   }
 
   if (noContent) {
-    return <NoContentContainer uniformHeight={uniformHeight ?? UniformHeights.unset} />
+    return <NoContentContainer />
   }
 
   return (
     <>
       <Box display="flex" overflow="hidden">
         <Box
-          as={'img'}
+          as="img"
           alt={asset.name || asset.tokenId}
           width="full"
           style={{
-            aspectRatio: uniformHeight === UniformHeights.notUniform ? '1' : 'auto',
+            aspectRatio: '1',
             transition: 'transform 0.4s ease 0s',
           }}
           src={asset.imageUrl || asset.smallImageUrl}
-          objectFit={'contain'}
+          objectFit="contain"
           draggable={false}
           onError={() => setNoContent(true)}
           onLoad={(e) => {
-            if (setUniformHeight) {
-              if (uniformHeight === UniformHeights.unset) {
-                setUniformHeight(e.currentTarget.clientHeight)
-              } else if (
-                uniformHeight !== UniformHeights.notUniform &&
-                e.currentTarget.clientHeight !== uniformHeight
-              ) {
-                if (!uniformHeight || Math.abs(uniformHeight - e.currentTarget.clientHeight) > 1) {
-                  setUniformHeight(UniformHeights.notUniform)
-                }
-              }
-            }
             setImageLoaded(true)
           }}
           className={clsx(hovered && !isMobile && styles.cardImageHover, !imageLoaded && styles.loadingBackground)}
@@ -517,32 +498,32 @@ const TruncatedTextRow = styled(Row)`
 
 interface ProfileNftDetailsProps {
   asset: WalletAsset
-  isSellMode: boolean
+  hideDetails: boolean
 }
 
-const ProfileNftDetails = ({ asset, isSellMode }: ProfileNftDetailsProps) => {
+const ProfileNftDetails = ({ asset, hideDetails }: ProfileNftDetailsProps) => {
   const assetName = () => {
     if (!asset.name && !asset.tokenId) return
     return !!asset.name ? asset.name : `#${asset.tokenId}`
   }
 
   const shouldShowUserListedPrice =
-    !!asset.floor_sell_order_price &&
-    !asset.notForSale &&
-    (asset.asset_contract.tokenType !== TokenType.ERC1155 || isSellMode)
-  const shouldShowFloorPrice = asset.notForSale && isSellMode && !!asset.floorPrice
+    !!asset.floor_sell_order_price && !asset.notForSale && asset.asset_contract.tokenType !== TokenType.ERC1155
 
   return (
     <Box overflow="hidden" width="full" flexWrap="nowrap">
-      <Row justifyItems="flex-start">
-        <TruncatedTextRow className={bodySmall} style={{ color: themeVars.colors.textSecondary }}>
-          {!!asset.asset_contract.name && <span>{asset.asset_contract.name}</span>}
-        </TruncatedTextRow>
-        {asset.collectionIsVerified && <VerifiedIcon height="16px" width="16px" fill={colors.magentaVibrant} />}
-      </Row>
+      <PrimaryRow>
+        <PrimaryDetails>
+          <TruncatedTextRow className={bodySmall} style={{ color: themeVars.colors.textSecondary }}>
+            {!!asset.asset_contract.name && <span>{asset.asset_contract.name}</span>}
+          </TruncatedTextRow>
+          {asset.collectionIsVerified && <VerifiedIcon height="16px" width="16px" fill={colors.magentaVibrant} />}
+        </PrimaryDetails>
+        {!hideDetails && <DetailsLink />}
+      </PrimaryRow>
       <Row justifyItems="flex-start">
         <TruncatedTextRow
-          className={subheadSmall}
+          className={body}
           style={{
             color: themeVars.colors.textPrimary,
           }}
@@ -552,13 +533,8 @@ const ProfileNftDetails = ({ asset, isSellMode }: ProfileNftDetailsProps) => {
         {asset.susFlag && <Suspicious />}
       </Row>
       {shouldShowUserListedPrice && (
-        <TruncatedTextRow className={subhead} style={{ color: themeVars.colors.textPrimary }}>
+        <TruncatedTextRow className={buttonTextMedium} style={{ color: themeVars.colors.textPrimary }}>
           {`${floorFormatter(asset.floor_sell_order_price)} ETH`}
-        </TruncatedTextRow>
-      )}
-      {shouldShowFloorPrice && (
-        <TruncatedTextRow className={subhead} style={{ color: themeVars.colors.textSecondary }}>
-          {`${floorFormatter(asset.floorPrice)} ETH Floor`}
         </TruncatedTextRow>
       )}
     </Box>
@@ -579,15 +555,7 @@ const PrimaryDetails = ({ children }: { children: ReactNode }) => (
 
 const PrimaryInfo = ({ children }: { children: ReactNode }) => {
   return (
-    <Box
-      overflow="hidden"
-      whiteSpace="nowrap"
-      textOverflow="ellipsis"
-      color="textPrimary"
-      fontWeight="medium"
-      fontSize="14"
-      style={{ lineHeight: '20px' }}
-    >
+    <Box overflow="hidden" whiteSpace="nowrap" textOverflow="ellipsis" className={body}>
       {children}
     </Box>
   )
@@ -612,9 +580,8 @@ const SecondaryInfo = ({ children }: { children: ReactNode }) => {
       overflow="hidden"
       whiteSpace="nowrap"
       textOverflow="ellipsis"
-      fontSize="16"
-      fontWeight="medium"
       style={{ lineHeight: '20px' }}
+      className={subhead}
     >
       {children}
     </Box>
@@ -623,7 +590,7 @@ const SecondaryInfo = ({ children }: { children: ReactNode }) => {
 
 const TertiaryInfo = ({ children }: { children: ReactNode }) => {
   return (
-    <Box marginTop={'8'} color="textSecondary">
+    <Box marginTop="8" color="textSecondary">
       {children}
     </Box>
   )
@@ -682,7 +649,7 @@ const DetailsLink = () => {
         e.stopPropagation()
       }}
     >
-      <Box className={buttonTextSmall}>Details</Box>
+      <Box>Details</Box>
     </DetailsLinkContainer>
   )
 }
@@ -764,56 +731,30 @@ const Pool = () => {
   )
 }
 
-interface NoContentContainerProps {
-  uniformHeight: UniformHeight
-}
-
-const NoContentContainer = ({ uniformHeight }: NoContentContainerProps) => (
+const NoContentContainer = () => (
   <>
-    {uniformHeight !== UniformHeights.unset && uniformHeight !== UniformHeights.notUniform ? (
+    <Box
+      position="relative"
+      width="full"
+      style={{
+        paddingTop: '100%',
+        background: `linear-gradient(90deg, ${themeVars.colors.backgroundSurface} 0%, ${themeVars.colors.backgroundInteractive} 95.83%)`,
+      }}
+    >
       <Box
-        display="flex"
-        width="full"
-        style={{
-          height: `${uniformHeight as number}px`,
-          background: `linear-gradient(270deg, ${themeVars.colors.backgroundOutline} 0%, ${themeVars.colors.backgroundSurface} 100%)`,
-        }}
-        fontWeight="normal"
+        position="absolute"
+        textAlign="center"
+        left="1/2"
+        top="1/2"
+        style={{ transform: 'translate3d(-50%, -50%, 0)' }}
         color="gray500"
         className={body}
-        justifyContent="center"
-        alignItems="center"
-        textAlign="center"
       >
         Content not
         <br />
         available yet
       </Box>
-    ) : (
-      <Box
-        position="relative"
-        width="full"
-        style={{
-          paddingTop: '100%',
-          background: `linear-gradient(90deg, ${themeVars.colors.backgroundSurface} 0%, ${themeVars.colors.backgroundInteractive} 95.83%)`,
-        }}
-      >
-        <Box
-          position="absolute"
-          textAlign="center"
-          left="1/2"
-          top="1/2"
-          style={{ transform: 'translate3d(-50%, -50%, 0)' }}
-          fontWeight="normal"
-          color="gray500"
-          className={body}
-        >
-          Content not
-          <br />
-          available yet
-        </Box>
-      </Box>
-    )}
+    </Box>
   </>
 )
 
