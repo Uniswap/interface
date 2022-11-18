@@ -1,7 +1,11 @@
 import { TFunction } from 'i18next'
 import { TokenItemData } from 'src/components/explore/TokenItem'
 import { TokenSortableField } from 'src/data/__generated__/types-and-hooks'
-import { ClientTokensOrderBy, TokensOrderBy } from 'src/features/explore/types'
+import {
+  ClientTokensOrderBy,
+  TokenMetadataDisplayType,
+  TokensOrderBy,
+} from 'src/features/explore/types'
 
 /**
  * Returns server and client orderBy values to use for topTokens query and client side sorting
@@ -46,6 +50,23 @@ export function getClientTokensOrderByCompareFn(orderBy: ClientTokensOrderBy) {
 
   return (a: TokenItemData, b: TokenItemData) =>
     Number(a[compareField]) - Number(b[compareField]) > 0 ? direction : -1 * direction
+}
+
+export function getTokenMetadataDisplayType(orderBy: TokensOrderBy): TokenMetadataDisplayType {
+  switch (orderBy) {
+    case TokenSortableField.MarketCap:
+      return TokenMetadataDisplayType.MarketCap
+    case TokenSortableField.Volume:
+      return TokenMetadataDisplayType.Volume
+    case TokenSortableField.TotalValueLocked:
+      return TokenMetadataDisplayType.TVL
+    case ClientTokensOrderBy.PriceChangePercentage24hDesc:
+      return TokenMetadataDisplayType.Symbol
+    case ClientTokensOrderBy.PriceChangePercentage24hAsc:
+      return TokenMetadataDisplayType.Symbol
+    default:
+      throw new Error('Unexpected order by value ' + orderBy)
+  }
 }
 
 export function getTokensOrderByLabel(orderBy: TokensOrderBy, t: TFunction) {

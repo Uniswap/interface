@@ -2,11 +2,10 @@ import { createSelector } from '@reduxjs/toolkit'
 import type { RootState } from 'src/app/rootReducer'
 import { TokenSortableField } from 'src/data/__generated__/types-and-hooks'
 import { DEMO_ACCOUNT_ADDRESS } from 'src/features/wallet/accounts/useTestAccount'
-import { NFTViewType, TokensMetadataDisplayType } from 'src/features/wallet/types'
+import { NFTViewType } from 'src/features/wallet/types'
 import { AccountType, SignerMnemonicAccount } from './accounts/types'
 
 const DEFAULT_TOKENS_ORDER_BY = TokenSortableField.Volume
-const DEFAULT_TOKENS_METADATA_DISPLAY_TYPE = TokensMetadataDisplayType.PriceChangePercentage24h
 
 export const selectAccounts = (state: RootState) => state.wallet.accounts
 
@@ -76,8 +75,6 @@ export const selectNFTViewType = (state: RootState) =>
 
 export const selectTokensOrderBy = (state: RootState) =>
   state.wallet.settings.tokensOrderBy ?? DEFAULT_TOKENS_ORDER_BY
-export const selectTokensMetadataDisplayType = (state: RootState) =>
-  state.wallet.settings.tokensMetadataDisplayType ?? DEFAULT_TOKENS_METADATA_DISPLAY_TYPE
 
 export const selectInactiveAccountAddresses = createSelector(
   selectActiveAccountAddress,

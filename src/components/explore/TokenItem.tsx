@@ -13,6 +13,7 @@ import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { TokenMetadata } from 'src/components/tokens/TokenMetadata'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
+import { TokenMetadataDisplayType } from 'src/features/explore/types'
 import { addFavoriteToken, removeFavoriteToken } from 'src/features/favorites/slice'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
@@ -20,7 +21,6 @@ import {
   CurrencyField,
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
-import { TokensMetadataDisplayType } from 'src/features/wallet/types'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 import { formatNumber, formatUSDPrice, NumberType } from 'src/utils/format'
 
@@ -33,32 +33,36 @@ export type TokenItemData = {
   price?: number
   marketCap?: number
   pricePercentChange24h?: number
+  volume24h?: number
+  totalValueLocked?: number
 }
 
 interface TokenItemProps {
   tokenItemData: TokenItemData
   index?: number
-  metadataDisplayType?: TokensMetadataDisplayType
-  onCycleMetadata?: () => void
+  metadataDisplayType?: TokenMetadataDisplayType
   isFavorited?: boolean
   isEditing?: boolean
 }
 
 export const TokenItem = memo(
-  ({
-    tokenItemData,
-    index,
-    metadataDisplayType,
-    onCycleMetadata,
-    isFavorited,
-    isEditing,
-  }: TokenItemProps) => {
+  ({ tokenItemData, index, metadataDisplayType, isFavorited, isEditing }: TokenItemProps) => {
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
     const tokenDetailsNavigation = useTokenDetailsNavigation()
 
-    const { name, logoUrl, chainId, address, symbol, price, marketCap, pricePercentChange24h } =
-      tokenItemData
+    const {
+      name,
+      logoUrl,
+      chainId,
+      address,
+      symbol,
+      price,
+      marketCap,
+      pricePercentChange24h,
+      volume24h,
+      totalValueLocked,
+    } = tokenItemData
     const _currencyId = address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId)
 
     const toggleFavoriteToken = useCallback(() => {
@@ -96,6 +100,19 @@ export const TokenItem = memo(
             { title: 'Swap', systemIcon: 'arrow.2.squarepath' },
           ]
     }, [isFavorited, t])
+
+    const getMetadataSubtitle = () => {
+      switch (metadataDisplayType) {
+        case TokenMetadataDisplayType.MarketCap:
+          return formatNumber(marketCap, NumberType.FiatTokenStats)
+        case TokenMetadataDisplayType.Volume:
+          return formatNumber(volume24h, NumberType.FiatTokenStats)
+        case TokenMetadataDisplayType.TVL:
+          return formatNumber(totalValueLocked, NumberType.FiatTokenStats)
+        case TokenMetadataDisplayType.Symbol:
+          return symbol
+      }
+    }
 
     const opacity = isFavorited && isEditing ? 0.3 : 1
 
@@ -140,29 +157,19 @@ export const TokenItem = memo(
                 <TokenLogo symbol={symbol} url={logoUrl} />
               </Flex>
               <Flex alignItems="flex-start" flexShrink={1} gap="xxxs" marginLeft="xxs">
-                <Text adjustsFontSizeToFit numberOfLines={1} variant="bodyLarge">
+                <Text numberOfLines={1} variant="bodyLarge">
                   {name}
                 </Text>
                 <Text color="textSecondary" variant="subheadSmall">
-                  {symbol.toUpperCase()}
+                  {getMetadataSubtitle()}
                 </Text>
               </Flex>
             </Flex>
             <Flex row alignItems="center" justifyContent="flex-end">
-              <TouchableArea disabled={!onCycleMetadata} onPress={onCycleMetadata}>
-                <TokenMetadata>
-                  <Text variant="bodyLarge">{formatUSDPrice(price)}</Text>
-                  {metadataDisplayType === TokensMetadataDisplayType.MarketCap ? (
-                    <Text color="textSecondary" variant="subheadSmall">
-                      {t('MCap {{marketCap}}', {
-                        marketCap: formatNumber(marketCap, NumberType.FiatTokenStats),
-                      })}
-                    </Text>
-                  ) : (
-                    <RelativeChange change={pricePercentChange24h} variant="subheadSmall" />
-                  )}
-                </TokenMetadata>
-              </TouchableArea>
+              <TokenMetadata>
+                <Text variant="bodyLarge">{formatUSDPrice(price)}</Text>
+                <RelativeChange change={pricePercentChange24h} variant="subheadSmall" />
+              </TokenMetadata>
               {isEditing ? (
                 <FavoriteButton disabled={Boolean(isFavorited)} onPress={toggleFavoriteToken} />
               ) : null}

@@ -23,6 +23,7 @@ import {
   v24Schema,
   v25Schema,
   v26Schema,
+  v27Schema,
   v2Schema,
   v3Schema,
   v4Schema,
@@ -823,5 +824,13 @@ describe('Redux state migrations', () => {
     }
     const v27 = migrations[27](v26Stub)
     expect(v27.wallet.settings.tokensOrderBy).toBeUndefined()
+  })
+
+  it('migrates from v27 to v28', () => {
+    const v27Stub = {
+      ...v27Schema,
+    }
+    const v28 = migrations[28](v27Stub)
+    expect(v28.wallet.settings.tokensMetadataDisplayType).toBeUndefined()
   })
 })

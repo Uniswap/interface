@@ -6,3 +6,10 @@ export enum ClientTokensOrderBy {
 }
 
 export type TokensOrderBy = TokenSortableField | ClientTokensOrderBy
+
+export enum TokenMetadataDisplayType {
+  MarketCap,
+  Volume,
+  TVL,
+  Symbol,
+}

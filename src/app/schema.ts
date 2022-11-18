@@ -197,6 +197,8 @@ export const v26Schema = { ...v25Schema }
 
 export const v27Schema = { ...v26Schema }
 
+export const v28Schema = { ...v27Schema }
+
 // TODO: use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = () => v26Schema
+export const getSchema = () => v28Schema

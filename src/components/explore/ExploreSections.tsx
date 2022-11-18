@@ -21,8 +21,11 @@ import {
   useExploreTokensTabQuery,
 } from 'src/data/__generated__/types-and-hooks'
 import { currencyIdToContractInput, usePersistedError } from 'src/features/dataApi/utils'
-import { useTokensMetadataDisplayType } from 'src/features/explore/hooks'
-import { getClientTokensOrderByCompareFn, getTokensOrderByValues } from 'src/features/explore/utils'
+import {
+  getClientTokensOrderByCompareFn,
+  getTokenMetadataDisplayType,
+  getTokensOrderByValues,
+} from 'src/features/explore/utils'
 import {
   selectFavoriteTokensSet,
   selectHasFavoriteTokens,
@@ -43,7 +46,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps) {
 
   // Top tokens sorting
   const orderBy = useAppSelector(selectTokensOrderBy)
-  const [tokensMetadataDisplayType, cycleTokensMetadataDisplayType] = useTokensMetadataDisplayType()
+  const tokenMetadataDisplayType = getTokenMetadataDisplayType(orderBy)
   const { clientOrderBy, serverOrderBy } = getTokensOrderByValues(orderBy)
 
   // Favorite tokens
@@ -126,18 +129,12 @@ export function ExploreSections({ listRef }: ExploreSectionsProps) {
           index={index}
           isEditing={isEditingTokens}
           isFavorited={isFavorited}
-          metadataDisplayType={tokensMetadataDisplayType}
+          metadataDisplayType={tokenMetadataDisplayType}
           tokenItemData={item}
-          onCycleMetadata={cycleTokensMetadataDisplayType}
         />
       )
     },
-    [
-      cycleTokensMetadataDisplayType,
-      favoriteCurrencyIdsSet,
-      isEditingTokens,
-      tokensMetadataDisplayType,
-    ]
+    [favoriteCurrencyIdsSet, isEditingTokens, tokenMetadataDisplayType]
   )
 
   // Don't want to show full screen loading state when changing tokens sort, which triggers NetworkStatus.setVariable request
@@ -234,7 +231,7 @@ function gqlTokenToTokenItemData(
 ) {
   if (!token || !token.project) return null
 
-  const { name, symbol, address, chain, project } = token
+  const { name, symbol, address, chain, project, market } = token
   const { logoUrl, markets } = project
   const tokenProjectMarket = markets?.[0]
 
@@ -249,5 +246,7 @@ function gqlTokenToTokenItemData(
     price: tokenProjectMarket?.price?.value,
     marketCap: tokenProjectMarket?.marketCap?.value,
     pricePercentChange24h: tokenProjectMarket?.pricePercentChange24h?.value,
+    volume24h: market?.volume?.value,
+    totalValueLocked: market?.totalValueLocked?.value,
   } as TokenItemData
 }

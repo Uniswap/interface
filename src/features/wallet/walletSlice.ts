@@ -1,17 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { TokensOrderBy } from 'src/features/explore/types'
 import { Account } from 'src/features/wallet/accounts/types'
-import { NFTViewType, TokensMetadataDisplayType } from 'src/features/wallet/types'
+import { NFTViewType } from 'src/features/wallet/types'
 import { areAddressesEqual, getChecksumAddress } from 'src/utils/addresses'
-import { next } from 'src/utils/array'
 
 export const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
-
-// Used to cycle through metadata to display on Explore token list
-const TOKENS_METADATA_DISPLAY_TYPES = [
-  TokensMetadataDisplayType.MarketCap,
-  TokensMetadataDisplayType.PriceChangePercentage24h,
-]
 
 interface Wallet {
   accounts: Record<Address, Account>
@@ -25,7 +18,6 @@ interface Wallet {
 
     // Settings used in the top tokens list
     tokensOrderBy?: TokensOrderBy
-    tokensMetadataDisplayType?: TokensMetadataDisplayType
   }
 }
 
@@ -95,15 +87,8 @@ const slice = createSlice({
       { payload: { newTokensOrderBy } }: PayloadAction<{ newTokensOrderBy: TokensOrderBy }>
     ) => {
       state.settings.tokensOrderBy = newTokensOrderBy
+    },
 
-      // Unset metadata display type to fallback to order by value
-      state.settings.tokensMetadataDisplayType = undefined
-    },
-    cycleTokensMetadataDisplayType: (state) => {
-      state.settings.tokensMetadataDisplayType =
-        next(TOKENS_METADATA_DISPLAY_TYPES, state.settings.tokensMetadataDisplayType) ??
-        TOKENS_METADATA_DISPLAY_TYPES[0]
-    },
     resetWallet: () => initialWalletState,
   },
 })
@@ -120,7 +105,6 @@ export const {
   toggleFlashbots,
   setNFTViewType,
   setTokensOrderBy,
-  cycleTokensMetadataDisplayType,
 } = slice.actions
 
 export const walletReducer = slice.reducer

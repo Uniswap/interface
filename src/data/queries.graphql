@@ -408,8 +408,18 @@ query TransactionList($address: String!) {
   }
 }
 
-query TopTokens($chain: Chain, $page: Int!, $pageSize: Int!, $orderBy: TokenSortableField) {
-  topTokens(chain: $chain, page: $page, pageSize: $pageSize, orderBy: $orderBy) {
+query TopTokens(
+  $chain: Chain
+  $page: Int!
+  $pageSize: Int!
+  $orderBy: TokenSortableField
+) {
+  topTokens(
+    chain: $chain
+    page: $page
+    pageSize: $pageSize
+    orderBy: $orderBy
+  ) {
     id
     address
     chain
@@ -501,6 +511,16 @@ fragment TopTokenParts on Token {
   symbol
   chain
   address
+  market {
+    totalValueLocked {
+      id
+      value
+    }
+    volume(duration: DAY) {
+      id
+      value
+    }
+  }
   project {
     id
     logoUrl
@@ -525,7 +545,12 @@ query ExploreTokensTab(
   $topTokensOrderBy: TokenSortableField!
   $favoriteTokenContracts: [ContractInput!]!
 ) {
-  topTokens(chain: ETHEREUM, page: 1, pageSize: 100, orderBy: $topTokensOrderBy) {
+  topTokens(
+    chain: ETHEREUM
+    page: 1
+    pageSize: 100
+    orderBy: $topTokensOrderBy
+  ) {
     ...TopTokenParts
   }
   # `topTokens` returns WETH rather than ETH

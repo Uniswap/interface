@@ -358,4 +358,11 @@ export const migrations = {
     delete newState.wallet.settings.tokensOrderBy
     return newState
   },
+
+  28: (state: any) => {
+    const newState = { ...state }
+    // Removed storing tokensMetadataDisplayType
+    delete newState.wallet.settings.tokensMetadataDisplayType
+    return newState
+  },
 }
