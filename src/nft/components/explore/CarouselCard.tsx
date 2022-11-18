@@ -6,7 +6,7 @@ import { VerifiedIcon } from 'nft/components/icons'
 import { Markets, TrendingCollection } from 'nft/types'
 import { formatWeiToDecimal } from 'nft/utils'
 import styled, { useTheme } from 'styled-components/macro'
-import { TextWrapper, ThemedText } from 'theme/components/text'
+import { ThemedText } from 'theme/components/text'
 
 const CarouselCardContainer = styled.div`
   display: flex;
@@ -153,6 +153,13 @@ const TableElement = styled.div`
   gap: 6px;
 `
 
+const FirstColumnTextWrapper = styled.div`
+  @media (min-width: ${({ theme }) => theme.breakpoint.sm}px) and (max-width: ${({ theme }) => theme.breakpoint.lg}px) {
+    display: none;
+  }
+}
+`
+
 const CardBottomContainer = styled.div`
   display: grid;
   flex: 1;
@@ -166,12 +173,6 @@ const CardBottomContainer = styled.div`
 
   ${TableElement}:nth-child(3n) {
     justify-self: right;
-  }
-
-  @media (min-width: ${({ theme }) => theme.breakpoint.sm}px) and (max-width: ${({ theme }) => theme.breakpoint.lg}px) {
-    ${TableElement}:nth-child(3n-2) ${TextWrapper} {
-      display: none;
-    }
   }
 `
 
@@ -191,7 +192,9 @@ export const MarketplaceRow = ({ marketplace, floorInEth, listings }: Marketplac
     <>
       <TableElement>
         <MarketplaceIcon src={`/nft/svgs/marketplaces/${marketplace}-grey.svg`} alt={`${marketplace} icon`} />
-        <ThemedText.BodySmall color="textSecondary">{marketplace}</ThemedText.BodySmall>
+        <FirstColumnTextWrapper>
+          <ThemedText.BodySmall color="textSecondary">{marketplace}</ThemedText.BodySmall>
+        </FirstColumnTextWrapper>
       </TableElement>
       <TableElement>
         <ThemedText.BodySmall color="textSecondary">
@@ -231,7 +234,9 @@ export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
           <>
             <TableElement>
               <MarketplaceIcon src="/nft/svgs/marketplaces/uniswap-magenta.svg" alt="Uniswap icon" />
-              <ThemedText.SubHeaderSmall color="userThemeColor">Uniswap</ThemedText.SubHeaderSmall>
+              <FirstColumnTextWrapper>
+                <ThemedText.SubHeaderSmall color="userThemeColor">Uniswap</ThemedText.SubHeaderSmall>
+              </FirstColumnTextWrapper>
             </TableElement>
             <TableElement>
               <ThemedText.SubHeaderSmall color="userThemeColor">
