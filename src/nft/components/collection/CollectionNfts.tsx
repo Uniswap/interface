@@ -142,7 +142,7 @@ const FilterContainer = styled(AnimatedBox)`
   @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     margin-bottom: 20px;
   }  
-}
+}`
 
 const InfiniteScrollWrapper = styled.div`
   ${InfiniteScrollWrapperCss}
