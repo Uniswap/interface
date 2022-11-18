@@ -123,7 +123,7 @@ export default function TokenDetails({
     if (!address) return undefined
     if (isNative) return nativeCurrency
     if (tokenQueryData) return new QueryToken(tokenQueryData)
-    return null
+    return undefined
   }, [isNative, nativeCurrency, address, tokenQueryData])
   // fetches on-chain token if query data is missing and page chain matches global chain (else fetch won't work)
   const onChainToken = useOnChainToken(address, Boolean(localToken) || pageChainId !== globalChainId)
