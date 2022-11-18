@@ -108,10 +108,12 @@ export const EthCell = ({
   value,
   denomination,
   usdPrice,
+  className,
 }: {
   value?: number
   denomination: Denomination
   usdPrice?: number
+  className?: string
 }) => {
   const denominatedValue = getDenominatedValue(denomination, true, value, usdPrice)
   const formattedValue = denominatedValue
@@ -120,9 +122,12 @@ export const EthCell = ({
       : ethNumberStandardFormatter(denominatedValue, true, false, true)
     : '-'
 
+  const isMobile = useIsMobile()
+  const TextComponent = isMobile ? ThemedText.BodySmall : ThemedText.BodyPrimary
+
   return (
     <EthContainer>
-      <ThemedText.BodyPrimary>{value ? formattedValue : '-'}</ThemedText.BodyPrimary>
+      <TextComponent className={className}>{value ? formattedValue : '-'}</TextComponent>
     </EthContainer>
   )
 }
@@ -153,15 +158,27 @@ export const VolumeCell = ({
   )
 }
 
-export const ChangeCell = ({ change, children }: { children?: ReactNode; change?: number }) => (
-  <ChangeCellContainer change={change ?? 0}>
-    {!change || change > 0 ? (
-      <SquareArrowUpIcon width="20px" height="20px" />
-    ) : (
-      <SquareArrowDownIcon width="20px" height="20px" />
-    )}
-    <ThemedText.BodyPrimary color="currentColor">
-      {children || `${change ? Math.abs(Math.round(change)) : 0}%`}
-    </ThemedText.BodyPrimary>
-  </ChangeCellContainer>
-)
+export const ChangeCell = ({
+  change,
+  children,
+  className,
+}: {
+  children?: ReactNode
+  change?: number
+  className?: string
+}) => {
+  const isMobile = useIsMobile()
+  const TextComponent = isMobile ? ThemedText.Caption : ThemedText.BodyPrimary
+  return (
+    <ChangeCellContainer change={change ?? 0}>
+      {!change || change > 0 ? (
+        <SquareArrowUpIcon width="20px" height="20px" />
+      ) : (
+        <SquareArrowDownIcon width="20px" height="20px" />
+      )}
+      <TextComponent className={className} color="currentColor">
+        {children || `${change ? Math.abs(Math.round(change)) : 0}%`}
+      </TextComponent>
+    </ChangeCellContainer>
+  )
+}
