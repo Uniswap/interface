@@ -19,7 +19,7 @@ import { ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
 import Confetti from '../Confetti'
 import { Break, CardSection, DataCard } from '../earn/styled'
-import { CardBGImage, CardBGImageSmaller, CardNoise } from '../earn/styled'
+import { CardBGImageSmaller, CardNoise } from '../earn/styled'
 import Modal from '../Modal'
 import { RowBetween } from '../Row'
 

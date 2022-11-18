@@ -1,9 +1,10 @@
 import airdropBackgroundv2 from 'assets/images/airdopBackground.png'
 import { OpacityHoverState } from 'components/Common'
-import { useState } from 'react'
 import { ChevronRightIcon } from 'nft/components/icons'
+import { useState } from 'react'
 import styled, { css } from 'styled-components/macro'
 import { CloseIcon, ThemedText } from 'theme'
+import { ThemeButton } from 'components/Button'
 
 import Modal from '../Modal'
 

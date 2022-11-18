@@ -91,7 +91,6 @@ const ProfileButton = styled.div`
 const UNIButton = styled(WalletButton)`
   background: linear-gradient(to right, #9139b0 0%, #4261d6 100%);
   font-size: 16px;
-  ${hoverState}
 `
 
 const HoverContainer = styled.div`
@@ -241,11 +240,10 @@ const AuthenticatedHeader = () => {
             <Trans>Claim</Trans> {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} <Trans>reward</Trans>
           </UNIButton>
         )}
-        <HoverContainer>
-          <UNIButton onClick={openNftModal}>
-            <Trans>Claim Uniswap NFT Airdrop</Trans>
-          </UNIButton>
-        </HoverContainer>
+
+        <UNIButton size={ButtonSize.medium} emphasis={ButtonEmphasis.medium} onClick={openNftModal}>
+          <Trans>Claim Uniswap NFT Airdrop</Trans>
+        </UNIButton>
       </Column>
     </AuthenticatedHeaderWrapper>
   )
