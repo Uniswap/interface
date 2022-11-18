@@ -124,6 +124,7 @@ const AuthenticatedHeader = () => {
   const nativeCurrency = useNativeCurrency()
   const nativeCurrencyPrice = useStablecoinPrice(nativeCurrency ?? undefined) || 0
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
+  const openNftModal = useToggleModal(ApplicationModal.UNISWAP_NFT_AIRDROP_CLAIM)
   const disconnect = useCallback(() => {
     if (connector && connector.deactivate) {
       connector.deactivate()
@@ -184,6 +185,11 @@ const AuthenticatedHeader = () => {
         {isUnclaimed && (
           <UNIButton onClick={openClaimModal} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
             <Trans>Claim</Trans> {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} <Trans>reward</Trans>
+          </UNIButton>
+        )}
+        {nftFlag === NftVariant.Enabled && (
+          <UNIButton size={ButtonSize.medium} emphasis={ButtonEmphasis.medium} onClick={openNftModal}>
+            <Trans>Claim Uniswap NFT Airdrop</Trans>
           </UNIButton>
         )}
       </Column>
