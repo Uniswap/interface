@@ -2,7 +2,7 @@ import { BaseTransport } from '@amplitude/analytics-core'
 import { Payload, Response, Transport } from '@amplitude/analytics-types'
 import { uniswapUrls } from 'src/constants/urls'
 
-const MOBILE_ORIGIN_APPLICATION = 'mobile'
+const MOBILE_ORIGIN_APPLICATION = 'mobile-analytics-uniswap'
 
 /**
  * Custom Application Transport used to pass in custom `origin` header,
@@ -27,6 +27,7 @@ export class ApplicationTransport extends BaseTransport implements Transport {
         'Content-Type': 'application/json',
         Accept: '*/*',
         Origin: uniswapUrls.apiBaseUrl,
+        'x-application-build': !__DEV__ ? 'PROD' : 'DEV',
       },
       keepalive: true, // allow the request to outlive the page
       body: JSON.stringify(payload),
