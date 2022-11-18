@@ -190,7 +190,7 @@ const AirdropModal = () => {
                 NFT.
               </ThemedText.BodyBodySmall>
               <LinkWrap href="https://uniswap.org/blog/uniswap-nft-aggregator-announcement" target="_blank">
-                <ThemedText.Link>Read more about Uniswap NFT</ThemedText.Link>
+                <ThemedText.Link>Read more about Uniswap NFT.</ThemedText.Link>
               </LinkWrap>
 
               <ClaimButton
