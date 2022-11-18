@@ -6,7 +6,7 @@ import { Checkbox } from 'nft/components/layout/Checkbox'
 import { Input } from 'nft/components/layout/Input'
 import { subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
-import { useFiltersExpanded, useIsMobile, useWalletCollections } from 'nft/hooks'
+import { useBag, useFiltersExpanded, useIsMobile, useWalletCollections } from 'nft/hooks'
 import { WalletCollection } from 'nft/types'
 import { Dispatch, FormEvent, SetStateAction, useCallback, useEffect, useReducer, useState } from 'react'
 import { easings, useSpring } from 'react-spring'
@@ -22,7 +22,7 @@ const ItemsContainer = styled.div`
 export const FilterSidebar = () => {
   const collectionFilters = useWalletCollections((state) => state.collectionFilters)
   const setCollectionFilters = useWalletCollections((state) => state.setCollectionFilters)
-
+  const isBagExpanded = useBag((state) => state.bagExpanded)
   const walletCollections = useWalletCollections((state) => state.walletCollections)
 
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
@@ -44,7 +44,7 @@ export const FilterSidebar = () => {
       width={{ sm: 'full', md: '332', lg: '332' }}
       height={{ sm: 'full', md: 'auto' }}
       zIndex={{ sm: '3', md: 'auto' }}
-      display={isFiltersExpanded ? 'flex' : 'none'}
+      display={isFiltersExpanded || isBagExpanded ? 'flex' : 'none'}
       style={{ transform: sidebarX.to((x) => `translateX(${x}px)`) }}
     >
       <Box
