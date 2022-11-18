@@ -509,7 +509,7 @@ export default function Swap() {
           showCancel={true}
         />
         <PageWrapper>
-          <SwapWrapper id="swap-page">
+          <SwapWrapper id="swap-page" chainId={chainId}>
             <SwapHeader allowedSlippage={allowedSlippage} />
             <ConfirmSwapModal
               isOpen={showConfirm}
@@ -677,7 +677,7 @@ export default function Swap() {
                         }
                       >
                         <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }} height="20px">
-                          <ThemedText.SubHeader width="100%" textAlign="center">
+                          <ThemedText.SubHeader width="100%" textAlign="center" color="white">
                             {/* we need to shorten this string on mobile */}
                             {approvalState === ApprovalState.APPROVED ||
                             signatureState === UseERC20PermitState.SIGNED ? (

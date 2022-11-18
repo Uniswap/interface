@@ -3,6 +3,7 @@ import { Box } from 'nft/components/Box'
 import * as styles from 'nft/components/collection/FilterButton.css'
 import { FilterIcon } from 'nft/components/icons'
 import { buttonTextMedium } from 'nft/css/common.css'
+import { breakpoints } from 'nft/css/sprinkles.css'
 import { pluralize, putCommas } from 'nft/utils'
 
 export const FilterButton = ({
@@ -16,6 +17,8 @@ export const FilterButton = ({
   onClick: () => void
   collectionCount?: number
 }) => {
+  const hideResultsCount = window.innerWidth >= breakpoints.sm && window.innerWidth < breakpoints.md
+
   return (
     <Box
       className={clsx(styles.filterButton, !isFiltersExpanded && styles.filterButtonExpanded)}
@@ -34,12 +37,12 @@ export const FilterButton = ({
     >
       <FilterIcon />
       {!isMobile ? (
-        <>
-          <Box className={buttonTextMedium}>
-            {' '}
-            Filter • {putCommas(collectionCount)} result{pluralize(collectionCount)}
-          </Box>
-        </>
+        <Box className={buttonTextMedium}>
+          {' '}
+          {!collectionCount || hideResultsCount
+            ? 'Filter'
+            : `Filter • ${putCommas(collectionCount)} result${pluralize(collectionCount)}`}
+        </Box>
       ) : null}
     </Box>
   )

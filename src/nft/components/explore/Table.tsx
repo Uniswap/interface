@@ -5,7 +5,8 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Column, ColumnInstance, HeaderGroup, IdType, useSortBy, useTable } from 'react-table'
 import styled, { useTheme } from 'styled-components/macro'
-import { GlowEffect, ThemedText } from 'theme'
+import { ThemedText } from 'theme/components/text'
+import { glowEffect } from 'theme/styles/glow'
 
 import { Box } from '../../components/Box'
 import { CollectionTableColumn } from '../../types'
@@ -18,6 +19,10 @@ const CELL_WIDTH = '160px'
 // Collection Name cell max widths
 const MOBILE_CELL_WIDTH = '240px'
 const DESKTOP_CELL_WIDTH = '360px'
+
+const TableContainer = styled.div`
+  ${glowEffect}
+`
 
 const RankCellContainer = styled.div`
   display: flex;
@@ -141,7 +146,7 @@ export function Table<D extends Record<string, unknown>>({
   }
 
   return (
-    <GlowEffect>
+    <TableContainer>
       <table {...getTableProps()} className={styles.table}>
         <thead className={styles.thead}>
           {headerGroups.map((headerGroup) => (
@@ -218,7 +223,7 @@ export function Table<D extends Record<string, unknown>>({
           })}
         </tbody>
       </table>
-    </GlowEffect>
+    </TableContainer>
   )
 }
 
@@ -229,7 +234,7 @@ interface LoadingTableProps {
 
 function LoadingTable({ headerGroups, visibleColumns, ...props }: LoadingTableProps) {
   return (
-    <GlowEffect>
+    <TableContainer>
       <table {...props} className={styles.table}>
         <thead className={styles.thead}>
           {headerGroups.map((headerGroup) => (
@@ -290,6 +295,6 @@ function LoadingTable({ headerGroups, visibleColumns, ...props }: LoadingTablePr
           ))}
         </tbody>
       </table>
-    </GlowEffect>
+    </TableContainer>
   )
 }

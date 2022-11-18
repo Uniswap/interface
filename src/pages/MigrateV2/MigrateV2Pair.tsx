@@ -35,8 +35,8 @@ import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
 import { AutoColumn } from '../../components/Column'
-import CurrencyLogo from '../../components/CurrencyLogo'
 import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
+import CurrencyLogo from '../../components/Logo/CurrencyLogo'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
@@ -722,7 +722,7 @@ export default function MigrateV2Pair() {
   }
 
   return (
-    <BodyWrapper style={{ padding: 24 }}>
+    <BodyWrapper chainId={chainId} style={{ padding: 24 }}>
       <AutoColumn gap="16px">
         <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
           <BackArrow to="/migrate/v2" />

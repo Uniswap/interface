@@ -26,5 +26,5 @@
   "iconPath": "./images/256x256_App_Icon_Pink.svg",
   "short_name": "Uniswap",
   "start_url": ".",
-  "theme_color": "#FC72FFs"
+  "theme_color": "#FC72FF"
 }

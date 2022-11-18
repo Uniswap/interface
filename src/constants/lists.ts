@@ -34,13 +34,7 @@ export const DEFAULT_INACTIVE_LIST_URLS: string[] = [
   ARBITRUM_LIST,
   OPTIMISM_LIST,
   CELO_LIST,
+  ...UNSUPPORTED_LIST_URLS,
 ]
 
-// this is the default list of lists that are exposed to users
-// lower index == higher priority for token import
-const DEFAULT_LIST_OF_LISTS_TO_DISPLAY: string[] = [...DEFAULT_ACTIVE_LIST_URLS, ...DEFAULT_INACTIVE_LIST_URLS]
-
-export const DEFAULT_LIST_OF_LISTS: string[] = [
-  ...DEFAULT_LIST_OF_LISTS_TO_DISPLAY,
-  ...UNSUPPORTED_LIST_URLS, // need to load dynamic unsupported tokens as well
-]
+export const DEFAULT_LIST_OF_LISTS: string[] = [...DEFAULT_ACTIVE_LIST_URLS, ...DEFAULT_INACTIVE_LIST_URLS]

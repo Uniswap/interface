@@ -1,8 +1,10 @@
-import React from 'react'
 import styled from 'styled-components/macro'
+import { glowEffect } from 'theme/styles/glow'
 import { Z_INDEX } from 'theme/zIndex'
 
-export const BodyWrapper = styled.main<{ margin?: string; maxWidth?: string }>`
+export const BodyWrapper = styled.main<{ chainId?: number; margin?: string; maxWidth?: string }>`
+  ${glowEffect}
+
   position: relative;
   margin-top: ${({ margin }) => margin ?? '0px'};
   max-width: ${({ maxWidth }) => maxWidth ?? '420px'};
@@ -16,10 +18,3 @@ export const BodyWrapper = styled.main<{ margin?: string; maxWidth?: string }>`
   z-index: ${Z_INDEX.deprecated_content};
   font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
 `
-
-/**
- * The styled container element that wraps the content of most pages and the tabs.
- */
-export default function AppBody({ children, ...rest }: { children: React.ReactNode }) {
-  return <BodyWrapper {...rest}>{children}</BodyWrapper>
-}

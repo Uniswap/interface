@@ -8,6 +8,7 @@ import { Currency, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
+import { BodyWrapper } from 'pages/AppBody'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -18,8 +19,8 @@ import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../
 import { BlueCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import CurrencyLogo from '../../components/CurrencyLogo'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
+import CurrencyLogo from '../../components/Logo/CurrencyLogo'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
 import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { RowBetween, RowFixed } from '../../components/Row'
@@ -42,7 +43,6 @@ import { StyledInternalLink, ThemedText } from '../../theme'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { calculateSlippageAmount } from '../../utils/calculateSlippageAmount'
 import { currencyId } from '../../utils/currencyId'
-import AppBody from '../AppBody'
 import { ClickableText, MaxButton, Wrapper } from '../Pool/styleds'
 
 const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
@@ -430,7 +430,7 @@ export default function RemoveLiquidity() {
 
   return (
     <>
-      <AppBody>
+      <BodyWrapper chainId={chainId}>
         <AddRemoveTabs creating={false} adding={false} defaultSlippage={DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE} />
         <Wrapper>
           <TransactionConfirmationModal
@@ -670,7 +670,7 @@ export default function RemoveLiquidity() {
             </div>
           </AutoColumn>
         </Wrapper>
-      </AppBody>
+      </BodyWrapper>
 
       {pair ? (
         <AutoColumn style={{ minWidth: '20rem', width: '100%', maxWidth: '400px', marginTop: '1rem' }}>
