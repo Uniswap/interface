@@ -24,7 +24,7 @@ import styled from 'styled-components/macro'
 
 import * as styles from './BagRow.css'
 
-const RemoveButton = styled(ThemeButton)`
+export const RemoveButton = styled(ThemeButton)`
   border-radius: 12px;
   font-size: 14px;
   line-height: 16px;

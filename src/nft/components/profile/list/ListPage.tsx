@@ -605,10 +605,10 @@ const NFTListRow = ({ asset, globalPriceMethod, globalPrice, setGlobalPrice, sel
           />
         </Box>
         <Column gap="4" minWidth="0">
-          <Box paddingRight="8" overflow="hidden" textOverflow="ellipsis" className={subheadSmall}>
+          <Box paddingRight="8" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap" className={subheadSmall}>
             {asset.name ? asset.name : `#${asset.tokenId}`}
           </Box>
-          <Box paddingRight="8" overflow="hidden" textOverflow="ellipsis" className={bodySmall}>
+          <Box paddingRight="8" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap" className={bodySmall}>
             {asset.collection?.name}
             {asset.collectionIsVerified && <VerifiedIcon style={{ marginBottom: '-5px' }} />}
           </Box>
