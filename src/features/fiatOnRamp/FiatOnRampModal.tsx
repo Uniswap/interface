@@ -72,9 +72,9 @@ function FiatOnRampModalInner() {
 
   return (
     <BottomSheetModal disableSwipe name={ModalName.ForceUpgradeModal} onClose={onClose}>
-      <Screen bg="background1" edges={['bottom']} mb="none" pt="md" px="lg">
+      <Screen bg="background1" edges={['bottom']} pt="md" px="lg">
         <Flex gap="lg">
-          <FiatOnRampModalBackground color={theme.colors.background0} width="100%" />
+          <FiatOnRampModalBackground color={theme.colors.background1} width="100%" />
           <Flex alignItems="center" gap="lg">
             <Flex alignItems="center" gap="sm">
               <Text color="textPrimary" variant="headlineSmall">
