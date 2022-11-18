@@ -1,4 +1,3 @@
-import clsx from 'clsx'
 import { ListingButton } from 'nft/components/bag/profile/ListingButton'
 import { getListingState } from 'nft/components/bag/profile/utils'
 import { Box } from 'nft/components/Box'
@@ -13,7 +12,7 @@ import {
   VerifiedIcon,
 } from 'nft/components/icons'
 import { NumericInput } from 'nft/components/layout/Input'
-import { badge, body, bodySmall, buttonTextMedium, caption, headlineSmall, subheadSmall } from 'nft/css/common.css'
+import { badge, body, bodySmall, headlineSmall, subheadSmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useNFTList, useProfilePageState, useSellAsset } from 'nft/hooks'
 import {
@@ -31,81 +30,8 @@ import { Dispatch, FormEvent, useEffect, useMemo, useRef, useState } from 'react
 import styled from 'styled-components/macro'
 
 import * as styles from './ListPage.css'
+import { SelectMarketplacesDropdown } from './SelectMarketplacesDropdown'
 import { SetDurationModal } from './SetDurationModal'
-
-const MarkplaceWrap = styled.div`
-  align-self: flex-start;
-  padding-right: 40px;
-  max-width: 1200px;
-
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
-    padding-bottom: 20px;
-  }
-`
-
-const SelectMarketplacesModal = ({
-  setSelectedMarkets,
-  selectedMarkets,
-}: {
-  setSelectedMarkets: Dispatch<ListingMarket[]>
-  selectedMarkets: ListingMarket[]
-}) => {
-  return (
-    <MarkplaceWrap>
-      <Row className={headlineSmall}>Select marketplaces</Row>
-      <Row className={caption} color="textSecondary" marginTop="4">
-        Increase the visibility of your listings by selecting multiple marketplaces.
-      </Row>
-      <Row marginTop="14" gap="8" flexWrap="wrap">
-        {ListingMarkets.map((market) => {
-          return GlobalMarketplaceButton({ market, setSelectedMarkets, selectedMarkets })
-        })}
-      </Row>
-    </MarkplaceWrap>
-  )
-}
-
-interface GlobalMarketplaceButtonProps {
-  market: ListingMarket
-  setSelectedMarkets: Dispatch<ListingMarket[]>
-  selectedMarkets: ListingMarket[]
-}
-
-const GlobalMarketplaceButton = ({ market, setSelectedMarkets, selectedMarkets }: GlobalMarketplaceButtonProps) => {
-  const isSelected = selectedMarkets.includes(market)
-  const toggleSelected = () => {
-    isSelected
-      ? setSelectedMarkets(selectedMarkets.filter((selected: ListingMarket) => selected !== market))
-      : setSelectedMarkets([...selectedMarkets, market])
-  }
-  return (
-    <Row
-      gap="6"
-      borderRadius="12"
-      backgroundColor="backgroundOutline"
-      height="44"
-      className={clsx(isSelected && styles.buttonSelected)}
-      onClick={toggleSelected}
-      width="max"
-      cursor="pointer"
-    >
-      <Box
-        as="img"
-        alt={market.name}
-        width={isSelected ? '24' : '20'}
-        height={isSelected ? '24' : '20'}
-        borderRadius="4"
-        objectFit="cover"
-        marginLeft={isSelected ? '8' : '12'}
-        src={isSelected ? '/nft/svgs/checkmark.svg' : market.icon}
-      />
-      <Box className={buttonTextMedium}>{market.name}</Box>
-      <Box color="textSecondary" className={caption} marginRight="12">
-        {market.fee}% fee
-      </Box>
-    </Row>
-  )
-}
 
 enum SetPriceMethod {
   SAME_PRICE,
@@ -657,7 +583,7 @@ const MarketWrap = styled.section`
 export const ListPage = () => {
   const { setProfilePageState: setSellPageState } = useProfilePageState()
   const setGlobalMarketplaces = useSellAsset((state) => state.setGlobalMarketplaces)
-  const [selectedMarkets, setSelectedMarkets] = useState([ListingMarkets[2]]) // default marketplace: x2y2
+  const [selectedMarkets, setSelectedMarkets] = useState([ListingMarkets[0]]) // default marketplace: x2y2
   const toggleBag = useBag((s) => s.toggleBag)
   const listings = useNFTList((state) => state.listings)
   const collectionsRequiringApproval = useNFTList((state) => state.collectionsRequiringApproval)
@@ -701,7 +627,7 @@ export const ListPage = () => {
       </Column>
       <MarketWrap>
         <Row flexWrap={{ sm: 'wrap', lg: 'nowrap' }}>
-          <SelectMarketplacesModal setSelectedMarkets={setSelectedMarkets} selectedMarkets={selectedMarkets} />
+          <SelectMarketplacesDropdown setSelectedMarkets={setSelectedMarkets} selectedMarkets={selectedMarkets} />
           <SetDurationModal />
         </Row>
         <NFTListingsGrid selectedMarkets={selectedMarkets} />
