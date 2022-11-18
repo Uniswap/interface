@@ -190,11 +190,15 @@ const ProfilePageNfts = ({
   const isMobile = useIsMobile()
   const sellAssets = useSellAsset((state) => state.sellAssets)
 
+  console.log('collection filters applied', collectionFilters)
+
   const {
     walletAssets: ownerAssets,
     loadNext,
     hasNext,
   } = useNftBalanceQuery(address, collectionFilters, [], DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
+
+  console.log('wallet asset count', ownerAssets.length)
 
   const { gridX } = useSpring({
     gridX: isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING,
@@ -280,6 +284,11 @@ const CollectionFiltersRow = ({
   const getCollection = (collectionAddress: string) => {
     return collections?.find((collection) => collection.address === collectionAddress)
   }
+  // const removeCollectionFilter = (addressToRemove: string) => {
+  //   setCollectionFilters(
+  //     collectionFilters.filter((collectionFilterAddress) => collectionFilterAddress !== addressToRemove)
+  //   )
+  // }
   return (
     <Row paddingY="18" gap="8" flexWrap="wrap">
       {collectionFilters &&

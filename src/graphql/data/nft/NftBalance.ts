@@ -159,14 +159,16 @@ export function useNftBalanceQuery(
       last,
       before,
     },
-    { fetchPolicy: 'store-or-network' }
+    { fetchPolicy: 'network-only' }
   )
+  console.log('collection filters applied in query', collectionFilters)
   const { data, hasNext, loadNext, isLoadingNext } = usePaginationFragment<NftBalancePaginationQuery, any>(
     nftBalancePaginationQuery,
     queryData
   )
   const walletAssets: WalletAsset[] = data.nftBalances?.edges?.map((queryAsset: NftBalanceQueryAsset) => {
     const asset = queryAsset.node.ownedAsset
+    console.log('asset name', asset?.name)
     const ethPrice = parseEther(
       asset?.listings?.edges[0]?.node.price.value?.toLocaleString('fullwide', { useGrouping: false }) ?? '0'
     ).toString()
