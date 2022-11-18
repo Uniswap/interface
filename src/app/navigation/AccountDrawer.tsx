@@ -7,6 +7,7 @@ import { SvgProps } from 'react-native-svg'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import GlobalIcon from 'src/assets/icons/global.svg'
 import HelpIcon from 'src/assets/icons/help.svg'
+import InformationIcon from 'src/assets/icons/i-icon.svg'
 import PlusIcon from 'src/assets/icons/plus.svg'
 import SettingsIcon from 'src/assets/icons/settings.svg'
 import { AccountList } from 'src/components/accounts/AccountList'
@@ -60,6 +61,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
 
   const [showAddWalletModal, setShowAddWalletModal] = useState(false)
   const [showEditAccountModal, setShowEditAccountModal] = useState(false)
+  const [showUninstallToImportModal, setShowUninstallToImportModal] = useState(false)
   const [pendingEditAddress, setPendingEditAddress] = useState<Address | null>(null)
   const [pendingRemoveAccount, setPendingRemoveAccount] = useState<Account | null>(null)
 
@@ -255,6 +257,12 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     }
 
     const onPressImportWallet = () => {
+      if (hasImportedSeedPhrase) {
+        // Show warning modal that the only way to reimport seed phrase is to uninstall and reinstall app
+        setShowUninstallToImportModal(true)
+        return
+      }
+
       navigation.navigate(Screens.OnboardingStack, {
         screen: OnboardingScreens.ImportMethod,
         params: { entryPoint: OnboardingEntryPoint.Sidebar },
@@ -264,7 +272,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
       setShowAddWalletModal(false)
     }
 
-    const menuItems = [
+    return [
       {
         key: ElementName.CreateAccount,
         onPress: onPressCreateNewWallet,
@@ -287,10 +295,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
           </Box>
         ),
       },
-    ]
-
-    if (!hasImportedSeedPhrase) {
-      menuItems.push({
+      {
         key: ElementName.ImportAccount,
         onPress: onPressImportWallet,
         render: () => (
@@ -298,9 +303,8 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
             <Text variant="bodyLarge">{t('Import a wallet')}</Text>
           </Box>
         ),
-      })
-    }
-    return menuItems
+      },
+    ]
   }, [hasImportedSeedPhrase, dispatch, navigation, t])
 
   const screenEdges: Edge[] = useMemo(
@@ -402,6 +406,19 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
           title={t('Are you sure?')}
           onClose={onPressRemoveCancel}
           onConfirm={onPressRemoveConfirm}
+        />
+      )}
+      {showUninstallToImportModal && (
+        <WarningModal
+          caption={t(
+            'Uniswap Wallet can only store one recovery phrase at a time. In order to import a new recovery phrase, you have to re-install the app. Your current recovery phrase will be permanently deleted, so make sure you’ve backed it up first.'
+          )}
+          closeText={t('Close')}
+          icon={<InformationIcon color={theme.colors.textSecondary} />}
+          modalName={ModalName.ReimportUninstall}
+          severity={WarningSeverity.None}
+          title={t('Import a Wallet')}
+          onClose={() => setShowUninstallToImportModal(false)}
         />
       )}
     </Screen>
