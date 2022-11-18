@@ -90,6 +90,7 @@ const Collection = () => {
   const isActivityToggled = pathname.includes('/activity')
   const setMarketCount = useCollectionFilters((state) => state.setMarketCount)
   const isBagExpanded = useBag((state) => state.bagExpanded)
+  const setBagExpanded = useBag((state) => state.setBagExpanded)
   const { chainId } = useWeb3React()
 
   const collectionStats = useCollectionQuery(contractAddress as string)
@@ -117,6 +118,10 @@ const Collection = () => {
     })
     setMarketCount(marketCount)
   }, [collectionStats?.marketplaceCount, setMarketCount])
+
+  useEffect(() => {
+    setBagExpanded({ bagExpanded: false, manualClose: false })
+  }, []) // eslint-disable-next-line react-hooks/exhaustive-deps
 
   const toggleActivity = () => {
     isActivityToggled
