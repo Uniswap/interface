@@ -121,8 +121,8 @@ export const Carousel = ({ children, activeIndex, toggleNextSlide }: CarouselPro
       </CarouselItemIcon>
       <CarouselCardContainer>
         {springs.map(({ x }, i) => (
-          <CarouselItemCard key={0} style={{ x: 0 }}>
-            {children[0]}
+          <CarouselItemCard key={i} style={{ x }}>
+            {children[i]}
           </CarouselItemCard>
         ))}
       </CarouselCardContainer>
