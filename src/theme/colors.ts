@@ -22,6 +22,7 @@ export const colors = {
   gray800: '#131A2A',
   gray850: '#0E1524',
   gray900: '#0D111C',
+  gray950: '#080B11',
   pink50: '#F9ECF1',
   pink100: '#FFD9E4',
   pink200: '#FBA4C0',
@@ -124,7 +125,7 @@ export const darkTheme = {
   userThemeColor: colors.magentaVibrant,
 
   background: colors.gray800,
-  backgroundBackdrop: colors.black,
+  backgroundBackdrop: colors.gray950,
   backgroundSurface: colors.gray900,
   backgroundModule: colors.gray800,
   backgroundInteractive: colors.gray700,

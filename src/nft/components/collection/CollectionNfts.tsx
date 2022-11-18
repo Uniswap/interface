@@ -98,6 +98,7 @@ const ActionsSubContainer = styled.div`
 
 export const SortDropdownContainer = styled.div<{ isFiltersExpanded: boolean }>`
   width: max-content;
+  height: 44px;
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     ${({ isFiltersExpanded }) => isFiltersExpanded && `display: none;`}
   }

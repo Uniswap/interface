@@ -27,6 +27,11 @@ import { createSellOrder, encodeOrder, OfferItem, OrderPayload, signOrderData } 
 
 export const ListingMarkets: ListingMarket[] = [
   {
+    name: 'X2Y2',
+    fee: 0.5,
+    icon: '/nft/svgs/marketplaces/x2y2.svg',
+  },
+  {
     name: 'LooksRare',
     fee: 1.5,
     icon: '/nft/svgs/marketplaces/looksrare.svg',
@@ -35,11 +40,6 @@ export const ListingMarkets: ListingMarket[] = [
     name: 'OpenSea',
     fee: 2.5,
     icon: '/nft/svgs/marketplaces/opensea.svg',
-  },
-  {
-    name: 'X2Y2',
-    fee: 0.5,
-    icon: '/nft/svgs/marketplaces/x2y2.svg',
   },
 ]
 

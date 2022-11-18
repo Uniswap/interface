@@ -1,5 +1,5 @@
 import { transparentize } from 'polished'
-import { ReactNode, useCallback, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
 
 import Popover, { PopoverProps } from '../Popover'
@@ -23,6 +23,7 @@ interface TooltipProps extends Omit<PopoverProps, 'content'> {
   close?: () => void
   noOp?: () => void
   disableHover?: boolean // disable the hover and content display
+  timeout?: number
 }
 
 interface TooltipContentProps extends Omit<PopoverProps, 'content'> {
@@ -53,10 +54,24 @@ function TooltipContent({ content, wrap = false, ...rest }: TooltipContentProps)
 }
 
 /** Standard text tooltip. */
-export function MouseoverTooltip({ text, disableHover, children, ...rest }: Omit<TooltipProps, 'show'>) {
+export function MouseoverTooltip({ text, disableHover, children, timeout, ...rest }: Omit<TooltipProps, 'show'>) {
   const [show, setShow] = useState(false)
   const open = useCallback(() => setShow(true), [setShow])
   const close = useCallback(() => setShow(false), [setShow])
+
+  useEffect(() => {
+    if (show && timeout) {
+      const tooltipTimer = setTimeout(() => {
+        setShow(false)
+      }, timeout)
+
+      return () => {
+        clearTimeout(tooltipTimer)
+      }
+    }
+    return
+  }, [timeout, show])
+
   const noOp = () => null
   return (
     <Tooltip
@@ -68,7 +83,7 @@ export function MouseoverTooltip({ text, disableHover, children, ...rest }: Omit
       show={show}
       text={disableHover ? null : text}
     >
-      <div onMouseEnter={disableHover ? noOp : open} onMouseLeave={disableHover ? noOp : close}>
+      <div onMouseEnter={disableHover ? noOp : open} onMouseLeave={disableHover || timeout ? noOp : close}>
         {children}
       </div>
     </Tooltip>

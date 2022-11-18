@@ -17,8 +17,9 @@ import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import { useAllTokenBalances } from 'state/connection/hooks'
 import styled, { useTheme } from 'styled-components/macro'
+import { UserAddedToken } from 'types/tokens'
 
-import { useActiveTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
+import { useAllTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
 import { CloseIcon, ThemedText } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
@@ -66,15 +67,8 @@ export function CurrencySearch({
 
   const [searchQuery, setSearchQuery] = useState<string>('')
   const debouncedQuery = useDebounce(searchQuery, 200)
-
-  // Only display 'imported' tokens when the search filter has input
-  const defaultTokens = useActiveTokens(debouncedQuery.length > 0)
-
-  // if they input an address, use it
   const isAddressSearch = isAddress(debouncedQuery)
-
   const searchToken = useToken(debouncedQuery)
-
   const searchTokenIsAdded = useIsUserAddedToken(searchToken)
 
   useEffect(() => {
@@ -87,13 +81,26 @@ export function CurrencySearch({
     }
   }, [isAddressSearch])
 
+  const defaultTokens = useAllTokens()
   const filteredTokens: Token[] = useMemo(() => {
     return Object.values(defaultTokens).filter(getTokenFilter(debouncedQuery))
   }, [defaultTokens, debouncedQuery])
 
   const [balances, balancesAreLoading] = useAllTokenBalances()
   const sortedTokens: Token[] = useMemo(
-    () => (!balancesAreLoading ? [...filteredTokens].sort(tokenComparator.bind(null, balances)) : []),
+    () =>
+      !balancesAreLoading
+        ? [...filteredTokens]
+            .filter((token) => {
+              // Filter out user-added tokens with no balance
+              if (token instanceof UserAddedToken) {
+                const balance = balances[token.address]
+                return balance?.greaterThan(0)
+              }
+              return true
+            })
+            .sort(tokenComparator.bind(null, balances))
+        : [],
     [balances, filteredTokens, balancesAreLoading]
   )
   const isLoading = Boolean(balancesAreLoading && !tokenLoaderTimerElapsed)

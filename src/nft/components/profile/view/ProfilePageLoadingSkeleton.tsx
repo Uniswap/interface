@@ -1,4 +1,6 @@
+import { Box } from 'nft/components/Box'
 import { assetList } from 'nft/components/collection/CollectionNfts.css'
+import { loadingAsset } from 'nft/css/loading.css'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import styled from 'styled-components/macro'
 
@@ -35,7 +37,6 @@ const AccountDetailsSkeletonWrapper = styled(SkeletonRowWrapper)`
 const ProfileDetailsSkeleton = styled.div`
   width: 180px;
   height: 36px;
-  background: ${({ theme }) => theme.backgroundModule};
   border-radius: 12px;
 `
 
@@ -46,39 +47,42 @@ const FilterBarSkeletonWrapper = styled(SkeletonRowWrapper)`
 const FilterButtonSkeleton = styled.div`
   width: 92px;
   height: 44px;
-  background: ${({ theme }) => theme.backgroundModule};
   border-radius: 12px;
 `
 
 const SellButtonSkeleton = styled.div`
   width: 80px;
   height: 44px;
-  background: ${({ theme }) => theme.backgroundModule};
   border-radius: 12px;
 `
 
 export const ProfileAssetCardSkeleton = styled.div`
   width: 100%;
   height: 330px;
-  background: ${({ theme }) => theme.backgroundModule};
   border-radius: 20px;
 `
+
+export const ProfileAssetCardDisplaySectionSkeleton = () => {
+  return (
+    <Box width="full" className={assetList}>
+      {Array.from(Array(DEFAULT_WALLET_ASSET_QUERY_AMOUNT), (_, index) => (
+        <ProfileAssetCardSkeleton key={index} className={loadingAsset} />
+      ))}
+    </Box>
+  )
+}
 
 export const ProfileBodyLoadingSkeleton = () => {
   return (
     <SkeletonBodyWrapper>
       <AccountDetailsSkeletonWrapper>
-        <ProfileDetailsSkeleton />
+        <ProfileDetailsSkeleton className={loadingAsset} />
       </AccountDetailsSkeletonWrapper>
       <FilterBarSkeletonWrapper>
-        <FilterButtonSkeleton />
-        <SellButtonSkeleton />
+        <FilterButtonSkeleton className={loadingAsset} />
+        <SellButtonSkeleton className={loadingAsset} />
       </FilterBarSkeletonWrapper>
-      <div className={assetList}>
-        {Array.from(Array(DEFAULT_WALLET_ASSET_QUERY_AMOUNT), (_, index) => (
-          <ProfileAssetCardSkeleton key={index} />
-        ))}
-      </div>
+      <ProfileAssetCardDisplaySectionSkeleton />
     </SkeletonBodyWrapper>
   )
 }
