@@ -61,14 +61,14 @@ export type TokenQueryData = NonNullable<TokenQuery$data['tokens']>[number]
 
 // TODO: Return a QueryToken from useTokenQuery instead of TokenQueryData to make it more usable in Currency-centric interfaces.
 export class QueryToken extends WrappedTokenInfo {
-  constructor(data: NonNullable<TokenQueryData>) {
+  constructor(data: NonNullable<TokenQueryData>, logoSrc?: string) {
     super({
       chainId: CHAIN_NAME_TO_CHAIN_ID[data.chain],
       address: data.address,
       decimals: data.decimals ?? DEFAULT_ERC20_DECIMALS,
       symbol: data.symbol ?? '',
       name: data.name ?? '',
-      logoURI: data.project?.logoUrl ?? undefined,
+      logoURI: logoSrc ?? data.project?.logoUrl ?? undefined,
     })
   }
 }

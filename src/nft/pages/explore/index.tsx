@@ -2,6 +2,8 @@ import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
 import Banner from 'nft/components/explore/Banner'
 import TrendingCollections from 'nft/components/explore/TrendingCollections'
+import { useBag } from 'nft/hooks'
+import { useEffect } from 'react'
 import styled from 'styled-components/macro'
 
 const ExploreContainer = styled.div`
@@ -20,6 +22,12 @@ const ExploreContainer = styled.div`
 `
 
 const NftExplore = () => {
+  const setBagExpanded = useBag((state) => state.setBagExpanded)
+
+  useEffect(() => {
+    setBagExpanded({ bagExpanded: false, manualClose: false })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <>
       <Trace page={PageName.NFT_EXPLORE_PAGE} shouldLogImpression>

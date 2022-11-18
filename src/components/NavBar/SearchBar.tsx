@@ -33,6 +33,7 @@ export const SearchBar = () => {
   const phase1Flag = useNftFlag()
   const isMobile = useIsMobile()
   const isTablet = useIsTablet()
+  const isPhase1 = phase1Flag === NftVariant.Enabled
 
   useOnClickOutside(searchRef, () => {
     isOpen && toggleOpen()
@@ -45,7 +46,7 @@ export const SearchBar = () => {
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,
-      enabled: !!debouncedSearchValue.length && phase1Flag === NftVariant.Enabled,
+      enabled: !!debouncedSearchValue.length && isPhase1,
     }
   )
 
@@ -112,19 +113,19 @@ export const SearchBar = () => {
           position={{ sm: 'fixed', md: 'absolute' }}
           width={{ sm: isOpen ? 'viewWidth' : 'auto', md: 'auto' }}
           ref={searchRef}
-          className={styles.searchBarContainer}
+          className={isPhase1 ? styles.searchBarContainerNft : styles.searchBarContainer}
           display={{ sm: isOpen ? 'inline-block' : 'none', xl: 'inline-block' }}
         >
           <Row
             className={clsx(
-              ` ${styles.searchBar} ${!isOpen && !isMobile && magicalGradientOnHover} ${
-                isMobileOrTablet && (isOpen ? styles.visible : styles.hidden)
-              }`
+              ` ${isPhase1 ? styles.nftSearchBar : styles.searchBar} ${
+                !isOpen && !isMobile && magicalGradientOnHover
+              } ${isMobileOrTablet && (isOpen ? styles.visible : styles.hidden)}`
             )}
             borderRadius={isOpen || isMobileOrTablet ? undefined : '12'}
             borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
             borderTopLeftRadius={isOpen && !isMobile ? '12' : undefined}
-            borderBottomWidth={isOpen || isMobileOrTablet ? '0px' : '1px'}
+            borderBottomWidth={isOpen || isMobileOrTablet ? '0px' : isPhase1 ? '2px' : '1px'}
             onClick={() => !isOpen && toggleOpen()}
             gap="12"
           >

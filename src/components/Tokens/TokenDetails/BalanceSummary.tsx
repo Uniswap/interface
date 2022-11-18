@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import CurrencyLogo from 'components/CurrencyLogo'
+import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
 import { formatToDecimal } from 'lib/utils/analytics'

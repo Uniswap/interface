@@ -148,10 +148,15 @@ export enum Markets {
   Uniswap_V2 = 'Uniswap_V2',
   SushiSwap = 'SushiSwap',
   SuperRare = 'superrare',
+  Sudoswap = 'sudoswap',
   KnownOrigin = 'knownorigin',
   WETH = 'weth',
   Cryptopunks = 'cryptopunks',
   CryptoPhunks = 'cryptophunks',
+}
+
+export const isPooledMarket = (market: Markets): boolean => {
+  return market === Markets.NFTX || market === Markets.NFT20 || market === Markets.Sudoswap
 }
 
 export enum ToolTipType {

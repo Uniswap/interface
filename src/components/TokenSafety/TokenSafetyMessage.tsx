@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { getWarningCopy, TOKEN_SAFETY_ARTICLE, Warning } from 'constants/tokenSafety'
 import { useTokenWarningColor } from 'hooks/useTokenWarningColor'
-import { AlertOctagon, AlertTriangle } from 'react-feather'
+import { AlertTriangle, Slash } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 import { ExternalLink } from 'theme'
@@ -51,7 +51,7 @@ export default function TokenWarningMessage({ warning, tokenAddress }: TokenWarn
   return (
     <Label color={color}>
       <TitleRow>
-        {warning.canProceed ? <AlertTriangle size="16px" /> : <AlertOctagon size="16px" />}
+        {warning.canProceed ? <AlertTriangle size="16px" /> : <Slash size="16px" />}
         <Title marginLeft="7px">{warning.message}</Title>
       </TitleRow>
 
