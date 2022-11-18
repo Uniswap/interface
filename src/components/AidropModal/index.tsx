@@ -1,13 +1,13 @@
 import airdropBackgroundv2 from 'assets/images/airdopBackground.png'
+import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import { OpacityHoverState } from 'components/Common'
+import Loader from 'components/Loader'
 import { ChevronRightIcon } from 'nft/components/icons'
 import { useState } from 'react'
-import styled from 'styled-components/macro'
-import { CloseIcon, ThemedText } from 'theme'
-import Loader from 'components/Loader'
-import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
+import styled from 'styled-components/macro'
+import { CloseIcon, ThemedText } from 'theme'
 
 import Modal from '../Modal'
 
