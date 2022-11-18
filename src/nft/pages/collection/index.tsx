@@ -121,7 +121,8 @@ const Collection = () => {
 
   useEffect(() => {
     setBagExpanded({ bagExpanded: false, manualClose: false })
-  }, []) // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const toggleActivity = () => {
     isActivityToggled
