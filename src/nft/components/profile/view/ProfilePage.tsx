@@ -66,6 +66,7 @@ export const ProfilePage = () => {
     shallow
   )
   const sellAssets = useSellAsset((state) => state.sellAssets)
+  const isBagExpanded = useBag((state) => state.bagExpanded)
   const toggleBag = useBag((state) => state.toggleBag)
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const isMobile = useIsMobile()
@@ -111,6 +112,7 @@ export const ProfilePage = () => {
               <Column width="full">
                 <AnimatedBox
                   flexShrink="0"
+                  position={isMobile && (isFiltersExpanded || isBagExpanded) ? 'fixed' : 'static'}
                   style={{
                     transform: gridX.to(
                       (x) =>
