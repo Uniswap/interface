@@ -39,7 +39,7 @@ const ListingHeader = styled(Row)`
 `
 
 const GridWrapper = styled.div`
-  margin-top: 24px
+  margin-top: 24px;
   margin-left: 0px;
 
   @media screen and (min-width: ${SMALL_MEDIA_BREAKPOINT}) {
