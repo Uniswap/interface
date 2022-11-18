@@ -6,6 +6,8 @@ import styled from 'styled-components/macro'
 import { CloseIcon, ThemedText } from 'theme'
 import Loader from 'components/Loader'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
+import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
+import { ApplicationModal } from 'state/application/reducer'
 
 import Modal from '../Modal'
 
@@ -117,12 +119,14 @@ const SyledCloseIcon = styled(CloseIcon)`
   ${OpacityHoverState}
 `
 
-const AirdropModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => {
+const AirdropModal = () => {
   const [isClaimed, setClaimed] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [totalAmount] = useState(300)
+  const isOpen = useModalIsOpen(ApplicationModal.USDC_AIRDROP_CLAIM)
+  const usdcAirdropToggle = useToggleModal(ApplicationModal.USDC_AIRDROP_CLAIM)
   const dismiss = () => {
-    onDismiss()
+    usdcAirdropToggle()
 
     setTimeout(() => {
       setClaimed(false)

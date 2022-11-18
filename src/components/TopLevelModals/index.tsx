@@ -14,8 +14,6 @@ const AirdropModal = lazy(() => import('components/AidropModal'))
 export default function TopLevelModals() {
   const addressClaimOpen = useModalIsOpen(ApplicationModal.ADDRESS_CLAIM)
   const addressClaimToggle = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
-  const usdcAirdropClaim = useModalIsOpen(ApplicationModal.USDC_AIRDROP_CLAIM)
-  const usdcAirdropToggle = useToggleModal(ApplicationModal.USDC_AIRDROP_CLAIM)
 
   const blockedAccountModalOpen = useModalIsOpen(ApplicationModal.BLOCKED_ACCOUNT)
   const { account } = useWeb3React()
@@ -28,7 +26,7 @@ export default function TopLevelModals() {
       <ConnectedAccountBlocked account={account} isOpen={open} />
       <Bag />
       {useNftFlag() === NftVariant.Enabled && <TransactionCompleteModal />}
-      {useNftFlag() === NftVariant.Enabled && <AirdropModal isOpen={usdcAirdropClaim} onDismiss={usdcAirdropToggle} />}
+      {useNftFlag() === NftVariant.Enabled && <AirdropModal />}
     </>
   )
 }
