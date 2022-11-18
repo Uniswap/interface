@@ -21,7 +21,7 @@ import { WalletCollection } from 'nft/types'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useQuery } from 'react-query'
-import { useSpring } from 'react-spring'
+import { easings, useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
 import shallow from 'zustand/shallow'
 
@@ -91,6 +91,10 @@ export const ProfilePage = () => {
 
   const { gridX } = useSpring({
     gridX: isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING,
+    config: {
+      duration: 250,
+      easing: easings.easeOutSine,
+    },
   })
 
   return (
