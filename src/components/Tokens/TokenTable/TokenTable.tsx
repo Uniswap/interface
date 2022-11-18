@@ -5,7 +5,7 @@ import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
-import { glowEffect } from 'theme/components/GlowEffect'
+import { glowEffect } from 'theme/styles/glow'
 
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
 import { HeaderRow, LoadedRow, LoadingRow } from './TokenRow'

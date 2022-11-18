@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import styled, { css } from 'styled-components/macro'
-import { glowEffect } from 'theme/components/GlowEffect'
+import { glowEffect } from 'theme/styles/glow'
 
 const HeaderContainer = styled.div`
   ${glowEffect}

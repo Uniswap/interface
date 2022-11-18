@@ -11,8 +11,8 @@ import { useMemo } from 'react'
 import { Upload } from 'react-feather'
 import { Link, useNavigate } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
-import { glowEffect } from 'theme/components/GlowEffect'
 import { ThemedText } from 'theme/components/text'
+import { glowEffect } from 'theme/styles/glow'
 
 interface AssetPriceDetailsProps {
   asset: GenieAsset

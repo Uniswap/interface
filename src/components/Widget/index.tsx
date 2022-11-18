@@ -21,7 +21,8 @@ import {
 } from 'lib/utils/analytics'
 import { useCallback, useState } from 'react'
 import { useIsDarkMode } from 'state/user/hooks'
-import { GlowEffect } from 'theme/components/GlowEffect'
+import styled from 'styled-components/macro'
+import { glowEffect } from 'theme/styles/glow'
 import { computeRealizedPriceImpact } from 'utils/prices'
 import { switchChain } from 'utils/switchChain'
 
@@ -37,6 +38,10 @@ const WIDGET_ROUTER_URL = 'https://api.uniswap.org/v1/'
 function useWidgetTheme() {
   return useIsDarkMode() ? DARK_THEME : LIGHT_THEME
 }
+
+const WidgetWrapper = styled.div`
+  ${glowEffect}
+`
 
 export interface WidgetProps {
   token?: Currency
@@ -137,7 +142,7 @@ export default function Widget({ token, onTokenChange, onReviewSwapClick }: Widg
   }
 
   return (
-    <GlowEffect chainId={chainId}>
+    <WidgetWrapper chainId={chainId}>
       <SwapWidget
         disableBranding
         hideConnectionUI
@@ -160,7 +165,7 @@ export default function Widget({ token, onTokenChange, onReviewSwapClick }: Widg
         onSwapPriceUpdateAck={onSwapPriceUpdateAck}
       />
       {tokenSelector}
-    </GlowEffect>
+    </WidgetWrapper>
   )
 }
 
@@ -169,8 +174,8 @@ export function WidgetSkeleton() {
   const { chainId } = useWeb3React()
 
   return (
-    <GlowEffect chainId={chainId}>
+    <WidgetWrapper chainId={chainId}>
       <SwapWidgetSkeleton theme={theme} width={WIDGET_WIDTH} />
-    </GlowEffect>
+    </WidgetWrapper>
   )
 }
