@@ -199,9 +199,9 @@ export const TokenRow = ({
       </Row>
       {!hideStats && (
         <Column className={styles.suggestionSecondaryContainer}>
-          {token.volume24h ? (
+          {token.priceUsd ? (
             <Row gap="4">
-              <Box className={styles.primaryText}>{formatDollar({ num: token.volume24h, isPrice: true })}</Box>
+              <Box className={styles.primaryText}>{formatDollar({ num: token.priceUsd, isPrice: true })}</Box>
             </Row>
           ) : null}
           {token.price24hChange !== null && token.price24hChange !== undefined && (
