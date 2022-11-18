@@ -21,11 +21,6 @@ import * as styles from './ProfilePage.css'
 
 const COLLECTION_ROW_HEIGHT = 44
 
-const FilterPanelContainer = styled.div`
-  position: sticky;
-  top: 0;
-`
-
 const ItemsContainer = styled(Column)`
   ${ScrollBarStyles}
   height: 100vh;
@@ -84,8 +79,8 @@ export const FilterSidebar = ({
   return (
     // @ts-ignore
     <AnimatedBox
-      position={{ sm: 'fixed', md: 'sticky' }}
-      top={{ sm: '40', md: 'unset' }}
+      position="sticky"
+      top="0"
       left={{ sm: '0', md: 'unset' }}
       width={{ sm: 'full', md: '332', lg: '332' }}
       height={{ sm: 'full', md: 'auto' }}
@@ -193,7 +188,7 @@ const CollectionSelect = ({
   )
 
   return (
-    <FilterPanelContainer>
+    <>
       <Box className={subhead} marginTop="12" marginBottom="16" width="276">
         Collections
       </Box>
@@ -232,7 +227,7 @@ const CollectionSelect = ({
           </ItemsContainer>
         </Column>
       </Box>
-    </FilterPanelContainer>
+    </>
   )
 }
 
