@@ -70,7 +70,7 @@ export function SettingsWallet({
   // Should not show remove option if we have only one account remaining, or only one seed phrase wallet remaining
   const shouldHideRemoveOption =
     Object.values(addressToAccount).length === 1 ||
-    (mnemonicWallets.length === 1 && currentAccount.type === AccountType.SignerMnemonic)
+    (mnemonicWallets.length === 1 && currentAccount?.type === AccountType.SignerMnemonic)
 
   const hideSmallBalances = useAppSelector(makeSelectAccountHideSmallBalances(address))
   const hideSpamTokens = useAppSelector(makeSelectAccountHideSpamTokens(address))
@@ -127,7 +127,7 @@ export function SettingsWallet({
       editAccountActions.trigger({
         type: EditAccountAction.Remove,
         address,
-        notificationsEnabled: !!addressToAccount[address].pushNotificationsEnabled,
+        notificationsEnabled: !!addressToAccount[address]?.pushNotificationsEnabled,
       })
     )
     navigation.goBack()
