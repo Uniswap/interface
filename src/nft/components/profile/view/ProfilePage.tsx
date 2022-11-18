@@ -139,10 +139,14 @@ export const ProfilePage = () => {
                   flexShrink="0"
                   position={isMobile && isBagExpanded ? 'fixed' : 'static'}
                   style={{
-                    transform: gridX.to(
-                      (x) =>
-                        `translate(${Number(x) - (!isMobile && isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING)}px)`
-                    ),
+                    transform: isMobile
+                      ? undefined
+                      : gridX.to(
+                          (x) =>
+                            `translate(${
+                              Number(x) - (!isMobile && isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING)
+                            }px)`
+                        ),
                   }}
                   paddingY="20"
                 >
