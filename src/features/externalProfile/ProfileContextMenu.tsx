@@ -31,10 +31,12 @@ export function ProfileContextMenu({ address }: { address: Address }) {
       {
         title: t('View on Etherscan'),
         action: openExplorerLink,
+        systemIcon: 'link',
       },
       {
         title: t('Copy address'),
         action: onPressCopyAddress,
+        systemIcon: 'square.on.square',
       },
     ],
     [onPressCopyAddress, openExplorerLink, t]

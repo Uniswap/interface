@@ -156,9 +156,9 @@ export default function ProfileHeader({ address }: ProfileHeaderProps) {
             onPress={onPressSend}>
             <SendIcon
               color={theme.colors.textSecondary}
-              height={theme.iconSizes.md}
+              height={theme.iconSizes.lg}
               strokeWidth={2}
-              width={theme.iconSizes.md}
+              width={theme.iconSizes.lg}
             />
           </TouchableArea>
         </Flex>
@@ -172,9 +172,9 @@ const StarIconEmpty = () => {
   return (
     <StarIconImage
       color={theme.colors.textSecondary}
-      height={theme.iconSizes.md}
-      strokeWidth={3}
-      width={theme.iconSizes.md}
+      height={theme.iconSizes.lg}
+      strokeWidth={2}
+      width={theme.iconSizes.lg}
     />
   )
 }
@@ -183,11 +183,11 @@ const StarIconFilled = () => {
   const theme = useAppTheme()
   return (
     <StarIconImage
-      color={theme.colors.none}
+      color={theme.colors.accentWarning}
       fill={theme.colors.accentWarning}
-      height={theme.iconSizes.md}
+      height={theme.iconSizes.lg}
       strokeWidth={2}
-      width={theme.iconSizes.md}
+      width={theme.iconSizes.lg}
     />
   )
 }
