@@ -26,7 +26,7 @@ import { usePairAdder } from '../../state/user/hooks'
 import { StyledInternalLink } from '../../theme'
 import { ThemedText } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
-import { BodyWrapper } from '../AppBody'
+import AppBody from '../AppBody'
 import { Dots } from '../Pool/styleds'
 
 enum Fields {
@@ -99,7 +99,7 @@ export default function PoolFinder() {
   return (
     <Trace page={PageName.POOL_PAGE} shouldLogImpression>
       <>
-        <BodyWrapper chainId={chainId}>
+        <AppBody>
           <FindPoolTabs origin={query.get('origin') ?? '/pool/v2'} />
           <AutoColumn style={{ padding: '1rem' }} gap="md">
             <BlueCard>
@@ -229,7 +229,7 @@ export default function PoolFinder() {
             showCommonBases
             selectedCurrency={(activeField === Fields.TOKEN0 ? currency1 : currency0) ?? undefined}
           />
-        </BodyWrapper>
+        </AppBody>
         <SwitchLocaleLink />
       </>
     </Trace>

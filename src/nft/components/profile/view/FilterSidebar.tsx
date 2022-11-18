@@ -1,29 +1,75 @@
 import { ScrollBarStyles } from 'components/Common'
+import { LoadingBubble } from 'components/Tokens/loading'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { XMarkIcon } from 'nft/components/icons'
 import { Checkbox } from 'nft/components/layout/Checkbox'
+import { checkbox } from 'nft/components/layout/Checkbox.css'
 import { Input } from 'nft/components/layout/Input'
 import { subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useFiltersExpanded, useIsMobile, useWalletCollections } from 'nft/hooks'
 import { WalletCollection } from 'nft/types'
-import { Dispatch, FormEvent, SetStateAction, useCallback, useEffect, useReducer, useState } from 'react'
+import { CSSProperties, Dispatch, FormEvent, SetStateAction, useCallback, useEffect, useReducer, useState } from 'react'
 import { easings, useSpring } from 'react-spring'
+import AutoSizer from 'react-virtualized-auto-sizer'
+import { FixedSizeList, ListOnItemsRenderedProps } from 'react-window'
+import InfiniteLoader from 'react-window-infinite-loader'
 import styled from 'styled-components/macro'
 import { TRANSITION_DURATIONS } from 'theme/styles'
 
 import * as styles from './ProfilePage.css'
 
-const ItemsContainer = styled.div`
+const COLLECTION_ROW_HEIGHT = 44
+
+const ItemsContainer = styled(Column)`
   ${ScrollBarStyles}
-  overflow-y: auto;
+  height: 100vh;
 `
 
-export const FilterSidebar = () => {
+const LongLoadingBubble = styled(LoadingBubble)`
+  min-height: 15px;
+  width: 75%;
+`
+
+const SmallLoadingBubble = styled(LoadingBubble)`
+  height: 20px;
+  width: 20px;
+  margin-right: 8px;
+`
+
+const LoadingCollectionItem = ({ style }: { style?: CSSProperties }) => {
+  return (
+    <Row display="flex" justifyContent="space-between" style={style} paddingLeft="12" paddingRight="16">
+      <Row display="flex" flex="1">
+        <SmallLoadingBubble />
+        <LongLoadingBubble />
+      </Row>
+      <Box as="span" borderColor="backgroundOutline" className={checkbox} aria-hidden="true" />
+    </Row>
+  )
+}
+
+interface CollectionFilterRowProps {
+  index: number
+  style: CSSProperties
+}
+
+interface FilterSidebarProps {
+  fetchNextPage: () => void
+  hasNextPage?: boolean
+  isFetchingNextPage: boolean
+  walletCollections: WalletCollection[]
+}
+
+export const FilterSidebar = ({
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
+  walletCollections,
+}: FilterSidebarProps) => {
   const collectionFilters = useWalletCollections((state) => state.collectionFilters)
   const setCollectionFilters = useWalletCollections((state) => state.setCollectionFilters)
-  const walletCollections = useWalletCollections((state) => state.walletCollections)
 
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const isMobile = useIsMobile()
@@ -38,8 +84,8 @@ export const FilterSidebar = () => {
   return (
     // @ts-ignore
     <AnimatedBox
-      position={{ sm: 'fixed', md: 'sticky' }}
-      top={{ sm: '40', md: 'unset' }}
+      position="sticky"
+      top="72"
       left={{ sm: '0', md: 'unset' }}
       width={{ sm: 'full', md: '332', lg: '332' }}
       height={{ sm: 'full', md: 'auto' }}
@@ -70,6 +116,9 @@ export const FilterSidebar = () => {
           collections={walletCollections}
           collectionFilters={collectionFilters}
           setCollectionFilters={setCollectionFilters}
+          fetchNextPage={fetchNextPage}
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
         />
       </Box>
     </AnimatedBox>
@@ -80,10 +129,16 @@ const CollectionSelect = ({
   collections,
   collectionFilters,
   setCollectionFilters,
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
 }: {
   collections: WalletCollection[]
   collectionFilters: Array<string>
   setCollectionFilters: (address: string) => void
+  fetchNextPage: () => void
+  hasNextPage?: boolean
+  isFetchingNextPage: boolean
 }) => {
   const [collectionSearchText, setCollectionSearchText] = useState('')
   const [displayCollections, setDisplayCollections] = useState(collections)
@@ -99,6 +154,44 @@ const CollectionSelect = ({
     }
   }, [collectionSearchText, collections])
 
+  const itemKey = useCallback((index: number, data: WalletCollection[]) => {
+    if (!data) return index
+    const collection = data[index]
+    return `${collection.address}_${index}`
+  }, [])
+
+  // If there are more items to be loaded then add an extra row to hold a loading indicator.
+  const itemCount = hasNextPage ? displayCollections.length + 1 : displayCollections.length
+
+  // Only load 1 page of items at a time.
+  // Pass an empty callback to InfiniteLoader in case it asks us to load more than once.
+  const loadMoreItems = isFetchingNextPage ? () => null : fetchNextPage
+
+  // Every row is loaded except for our loading indicator row.
+  const isItemLoaded = useCallback(
+    (index: number) => !hasNextPage || index < displayCollections.length,
+    [displayCollections.length, hasNextPage]
+  )
+
+  const CollectionFilterRow = useCallback(
+    ({ index, style }: CollectionFilterRowProps) => {
+      const collection = !!displayCollections && displayCollections[index]
+      if (!collection || isFetchingNextPage) {
+        return <LoadingCollectionItem style={style} key={index} />
+      }
+      return (
+        <CollectionItem
+          style={style}
+          key={itemKey(index, displayCollections)}
+          collection={displayCollections[index]}
+          collectionFilters={collectionFilters}
+          setCollectionFilters={setCollectionFilters}
+        />
+      )
+    },
+    [displayCollections, isFetchingNextPage, itemKey, collectionFilters, setCollectionFilters]
+  )
+
   return (
     <>
       <Box className={subhead} marginTop="12" marginBottom="16" width="276">
@@ -111,16 +204,31 @@ const CollectionSelect = ({
             setCollectionSearchText={setCollectionSearchText}
           />
           <ItemsContainer>
-            <Box paddingBottom="8" style={{ scrollbarWidth: 'none' }}>
-              {displayCollections?.map((collection) => (
-                <CollectionItem
-                  key={collection.address}
-                  collection={collection}
-                  collectionFilters={collectionFilters}
-                  setCollectionFilters={setCollectionFilters}
-                />
-              ))}
-            </Box>
+            <AutoSizer disableWidth>
+              {({ height }) => (
+                <InfiniteLoader isItemLoaded={isItemLoaded} itemCount={itemCount} loadMoreItems={loadMoreItems}>
+                  {({
+                    onItemsRendered,
+                    ref,
+                  }: {
+                    onItemsRendered: (props: ListOnItemsRenderedProps) => any
+                    ref: any
+                  }) => (
+                    <FixedSizeList
+                      height={height}
+                      width="100%"
+                      itemCount={itemCount}
+                      itemSize={COLLECTION_ROW_HEIGHT}
+                      onItemsRendered={onItemsRendered}
+                      itemKey={itemKey}
+                      ref={ref}
+                    >
+                      {CollectionFilterRow}
+                    </FixedSizeList>
+                  )}
+                </InfiniteLoader>
+              )}
+            </AutoSizer>
           </ItemsContainer>
         </Column>
       </Box>
@@ -153,10 +261,12 @@ const CollectionItem = ({
   collection,
   collectionFilters,
   setCollectionFilters,
+  style,
 }: {
   collection: WalletCollection
   collectionFilters: Array<string>
   setCollectionFilters: (address: string) => void
+  style?: CSSProperties
 }) => {
   const [isCheckboxSelected, setCheckboxSelected] = useState(false)
   const [hovered, toggleHovered] = useReducer((state) => {
@@ -187,8 +297,9 @@ const CollectionItem = ({
       style={{
         paddingBottom: '22px',
         paddingTop: '22px',
+        ...style,
       }}
-      maxHeight="44"
+      maxHeight={`${COLLECTION_ROW_HEIGHT}`}
       as="li"
       onMouseEnter={toggleHovered}
       onMouseLeave={toggleHovered}

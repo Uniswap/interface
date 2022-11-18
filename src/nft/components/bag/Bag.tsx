@@ -282,7 +282,7 @@ const Bag = () => {
 
   return (
     <Portal>
-      <Column zIndex={isMobile || isOpen ? 'modal' : '3'} className={styles.bagContainer}>
+      <Column zIndex={isMobile || isOpen ? 'modalOverTooltip' : '3'} className={styles.bagContainer}>
         {!(isProfilePage && profilePageState === ProfilePageStateType.LISTING) ? (
           <>
             <BagHeader

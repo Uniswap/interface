@@ -145,6 +145,7 @@ const zIndices = {
   modal: '1060',
   popover: '1070',
   tooltip: '1080',
+  modalOverTooltip: '1090',
 }
 
 export const vars = createGlobalTheme(':root', {
