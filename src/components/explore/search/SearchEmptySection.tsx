@@ -33,21 +33,9 @@ export const SUGGESTED_WALLETS: WalletSearchResult[] = [
   },
   {
     type: SearchResultType.Wallet,
-    address: '0xD387A6E4e84a6C86bd90C158C6028A58CC8Ac459',
-    ensName: 'pranksy.eth',
-    category: WalletCategory.NFTCollector,
-  },
-  {
-    type: SearchResultType.Wallet,
     address: '0x11E4857Bb9993a50c685A79AFad4E6F65D518DDa',
     ensName: 'hayden.eth',
     category: WalletCategory.Builder,
-  },
-  {
-    type: SearchResultType.Wallet,
-    address: '0xF296178d553C8Ec21A2fBD2c5dDa8CA9ac905A00',
-    ensName: 'dom.eth',
-    category: WalletCategory.NFTCollector,
   },
 ]
 
