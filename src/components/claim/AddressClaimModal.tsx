@@ -19,7 +19,7 @@ import { ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
 import Confetti from '../Confetti'
 import { Break, CardSection, DataCard } from '../earn/styled'
-import { CardBGImageSmaller, CardNoise } from '../earn/styled'
+import { CardBGImage, CardBGImageSmaller, CardNoise } from '../earn/styled'
 import Modal from '../Modal'
 import { RowBetween } from '../Row'
 
@@ -101,8 +101,8 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
       {!attempting && (
         <ContentWrapper gap="lg">
           <ModalUpper>
-            {/* <CardBGImage />
-            <CardNoise /> */}
+            <CardBGImage />
+            <CardNoise />
             <CardSection gap="md">
               <RowBetween>
                 <ThemedText.DeprecatedWhite fontWeight={500}>

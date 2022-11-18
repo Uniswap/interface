@@ -195,7 +195,7 @@ const AirdropModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () =>
                 disabled={isSubmitting}
               >
                 {isSubmitting && <Loader stroke="white" />}
-                <span>Claim USDC</span>
+                <span>Claim{isSubmitting && 'ing'} USDC</span>
               </ClaimButton>
             </Body>
           </>

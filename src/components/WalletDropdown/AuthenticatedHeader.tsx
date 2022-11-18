@@ -17,7 +17,7 @@ import { Text } from 'rebass'
 import { useCurrencyBalanceString } from 'state/connection/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
-import styled, { css } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 
 import { shortenAddress } from '../../nft/utils/address'
 import { useCloseModal, useToggleModal } from '../../state/application/hooks'
@@ -50,10 +50,6 @@ const ProfileButton = styled.div`
 const UNIButton = styled(WalletButton)`
   background: linear-gradient(to right, #9139b0 0%, #4261d6 100%);
   font-size: 16px;
-`
-
-const HoverContainer = styled.div`
-  position: relative;
 `
 
 const Column = styled.div`
@@ -188,11 +184,9 @@ const AuthenticatedHeader = () => {
           <USDText>${amountUSD.toFixed(2)} USD</USDText>
         </BalanceWrapper>
         {nftFlag === NftVariant.Enabled && (
-          <HoverContainer>
-            <ProfileButton onClick={navigateToProfile}>
-              <Trans>View and sell NFTs</Trans>
-            </ProfileButton>
-          </HoverContainer>
+          <ProfileButton onClick={navigateToProfile}>
+            <Trans>View and sell NFTs</Trans>
+          </ProfileButton>
         )}
         {isUnclaimed && (
           <UNIButton onClick={openClaimModal} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
