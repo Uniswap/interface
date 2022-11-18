@@ -4,8 +4,8 @@ import { useColorScheme, ViewStyle } from 'react-native'
 import { SvgProps } from 'react-native-svg'
 import { Route } from 'react-native-tab-view'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import ArrowDown from 'src/assets/icons/arrow-down.svg'
 import DollarIcon from 'src/assets/icons/dollar-sign.svg'
+import ReceiveArrow from 'src/assets/icons/receive-arrow.svg'
 import SendIcon from 'src/assets/icons/send.svg'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -120,7 +120,7 @@ function QuickActions() {
         onPress={onPressBuy}
       />
       <ActionButton
-        Icon={ArrowDown}
+        Icon={ReceiveArrow}
         label={t('Receive')}
         name={ElementName.Receive}
         onPress={onPressReceive}
@@ -160,7 +160,7 @@ function ActionButton({
       onPress={onPress}>
       <Flex centered row gap="xxs">
         <Icon
-          color={theme.colors.userThemeColor}
+          color={theme.colors.magentaVibrant}
           height={theme.iconSizes.md}
           strokeWidth={2}
           width={theme.iconSizes.md}
