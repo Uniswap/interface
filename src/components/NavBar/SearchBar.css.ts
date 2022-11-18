@@ -29,6 +29,7 @@ const baseSearchStyle = style([
 const baseSearchNftStyle = style([
   baseSearchStyle,
   {
+    borderWidth: '2px',
     '@media': {
       [`screen and (min-width: 1024px) and (max-width: 1080px)`]: {
         width: `${330}px`,
