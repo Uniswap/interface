@@ -4,48 +4,11 @@ import { ChevronRightIcon } from 'nft/components/icons'
 import { useState } from 'react'
 import styled, { css } from 'styled-components/macro'
 import { CloseIcon, ThemedText } from 'theme'
-import { ThemeButton } from 'components/Button'
+import Loader from 'components/Loader'
+import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 
 import Modal from '../Modal'
 
-const hoverState = css`
-  :hover::after {
-    border-radius: 12px;
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: ${({ theme }) => theme.stateOverlayHover};
-
-    transition: ${({
-      theme: {
-        transition: { duration, timing },
-      },
-    }) => `background ${duration.medium} ${timing.ease}`};
-
-    z-index: 0;
-  }
-
-  :active::after {
-    border-radius: 12px;
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: ${({ theme }) => theme.stateOverlayPressed};
-    z-index: 0;
-
-    transition: ${({
-      theme: {
-        transition: { duration, timing },
-      },
-    }) => `background ${duration.medium} ${timing.ease}`};
-  }
-`
 const ModalWrap = styled.div`
   display: flex;
   flex-direction: column;
@@ -58,31 +21,10 @@ const Body = styled.div`
   padding-bottom: 20px;
 `
 
-const BuyNowButtonContainer = styled.div`
-  position: relative;
-  margin-top: 40px;
-  outline: none;
-`
-
-// maxWidth: 68, marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto', cursor: 'pointer'
-const CloseButtonContainer = styled.div`
-  position: relative;
-  max-width: 68px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: auto;
-  cursor: pointer;
-`
-
-const BuyNowButton = styled.div`
+const ClaimButton = styled(ThemeButton)`
   width: 100%;
   background-color: ${({ theme }) => theme.accentAction};
-  border-radius: 12px;
-  padding: 10px 12px;
-  text-align: center;
-  cursor: pointer;
-
-  ${hoverState}
+  margin-top: 40px;
 `
 
 const Line = styled.div`
@@ -107,10 +49,6 @@ const ImageContainer = styled.div`
 const StyledImage = styled.img`
   width: 100%;
   height: 170px;
-`
-
-const SubHeader = styled(ThemedText.SubHeader)`
-  color: ${({ theme }) => theme.textPrimary};
 `
 
 const USDCLabel = styled.div`
@@ -163,17 +101,11 @@ const EtherscanLink = styled.a`
   ${OpacityHoverState}
 `
 
-const CloseButton = styled.div`
-  background-color: ${({ theme }) => theme.backgroundInteractive};
-  border-radius: 12px;
-  color: white;
-  margin-top: auto;
-  padding: 10px 12px;
+const CloseButton = styled(ThemeButton)`
   max-width: 68px;
+  margin-top: auto;
   margin-left: auto;
   margin-right: auto;
-
-  ${hoverState}
 `
 
 const SyledCloseIcon = styled(CloseIcon)`
@@ -186,12 +118,22 @@ const SyledCloseIcon = styled(CloseIcon)`
 
 const AirdropModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => {
   const [isClaimed, setClaimed] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const dismiss = () => {
     onDismiss()
 
     setTimeout(() => {
       setClaimed(false)
     }, 500)
+  }
+
+  const submit = () => {
+    setIsSubmitting(true)
+
+    setTimeout(() => {
+      setIsSubmitting(false)
+      setClaimed(true)
+    }, 1000)
   }
 
   return (
@@ -209,9 +151,10 @@ const AirdropModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () =>
                 </div>
               </ThemedText.Link>
             </EtherscanLink>
-            <CloseButtonContainer>
-              <CloseButton onClick={dismiss}>Close</CloseButton>
-            </CloseButtonContainer>
+
+            <CloseButton size={ButtonSize.medium} emphasis={ButtonEmphasis.medium} onClick={dismiss}>
+              Close
+            </CloseButton>
           </ClaimContainer>
         ) : (
           <>
@@ -239,19 +182,16 @@ const AirdropModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () =>
               <LinkWrap href="https://uniswap.org/blog/uniswap-nft-aggregator-announcement" target="_blank">
                 <ThemedText.Link>Read more about Uniswap NFT</ThemedText.Link>
               </LinkWrap>
-              <div>
-                <BuyNowButtonContainer>
-                  <BuyNowButton
-                    onClick={() => {
-                      setClaimed(true)
-                    }}
-                  >
-                    <SubHeader color="white" lineHeight="20px">
-                      <span>Claim USDC</span>
-                    </SubHeader>
-                  </BuyNowButton>
-                </BuyNowButtonContainer>
-              </div>
+
+              <ClaimButton
+                onClick={submit}
+                size={ButtonSize.medium}
+                emphasis={ButtonEmphasis.medium}
+                disabled={isSubmitting}
+              >
+                {isSubmitting && <Loader stroke="white" />}
+                <span>Claim USDC</span>
+              </ClaimButton>
             </Body>
           </>
         )}
