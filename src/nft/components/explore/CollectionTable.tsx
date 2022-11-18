@@ -2,6 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { CollectionTableColumn, TimePeriod } from 'nft/types'
 import { useMemo } from 'react'
 import { CellProps, Column, Row } from 'react-table'
+import { MediumOnly } from 'theme/components'
 
 import { ChangeCell, CollectionTitleCell, DiscreteNumberCell, EthCell, TextCell, VolumeCell } from './Cells/Cells'
 import { Table } from './Table'
@@ -65,11 +66,18 @@ const CollectionTable = ({ data, timePeriod }: { data: CollectionTableColumn[]; 
         sortType: floorSort,
         Cell: function ethCell(cell: CellProps<CollectionTableColumn>) {
           return (
-            <EthCell
-              value={cell.row.original.floor.value}
-              denomination={cell.row.original.denomination}
-              usdPrice={cell.row.original.usdPrice}
-            />
+            <>
+              <EthCell
+                value={cell.row.original.floor.value}
+                denomination={cell.row.original.denomination}
+                usdPrice={cell.row.original.usdPrice}
+              />
+              {timePeriod !== TimePeriod.AllTime && (
+                <MediumOnly>
+                  <ChangeCell change={cell.row.original.floor.change} />
+                </MediumOnly>
+              )}
+            </>
           )
         },
       },

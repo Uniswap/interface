@@ -11,12 +11,15 @@ import { ThemedText } from 'theme'
 const CarouselCardContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
   background-color: ${({ theme }) => theme.backgroundSurface};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 20px;
+  gap: 8px;
   overflow: hidden;
   height: 100%;
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
+    gap: 20px;
+  }
 `
 const CarouselCardBorder = styled.div`
   width: 100%;
@@ -26,7 +29,7 @@ const CarouselCardBorder = styled.div`
   border: 2px solid transparent;
   transition-property: border-color;
   transition-duration: ${({ theme }) => theme.transition.duration.fast};
-  transition-timing: ${({ theme }) => theme.transition.timing.inOut};
+  transition-timing-function: ${({ theme }) => theme.transition.timing.inOut};
 
   :hover {
     border: 2px solid ${({ theme }) => theme.backgroundOutline};
@@ -45,7 +48,7 @@ const CarouselCardBorder = styled.div`
     box-shadow: ${({ theme }) => theme.deepShadow};
     transition-property: opacity;
     transition-duration: ${({ theme }) => theme.transition.duration.fast};
-    transition-timing: ${({ theme }) => theme.transition.timing.inOut};
+    transition-timing-function: ${({ theme }) => theme.transition.timing.inOut};
   }
 
   :hover::after {
@@ -90,8 +93,11 @@ const CardHeaderRow = styled.div`
   position: relative;
   z-index: 1;
   display: flex;
-  gap: 12px;
+  gap: 8px;
   align-items: center;
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
+    gap: 12px;
+  }
 `
 
 const CardNameRow = styled.div`
@@ -155,28 +161,29 @@ const LoadingCollectionImage = styled.div`
 const CardBottomContainer = styled.div`
   display: grid;
   grid-template-columns: auto auto auto;
-  row-gap: 16px;
+  row-gap: 8px;
   column-gap: 20px;
   padding-right: 28px;
   padding-left: 28px;
   padding-bottom: 20px;
   justify-content: space-between;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
-    row-gap: 12px;
+  @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
+    row-gap: 16px;
   }
 `
 
 const HeaderRow = styled.div`
   color: ${({ theme }) => theme.userThemeColor};
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 14px;
   font-weight: 500;
+  line-height: 20px;
+  row-gap: 8px;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
+  @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
+    font-size: 16px;
+    line-height: 24px;
     row-gap: 12px;
-    font-size: 14px;
-    line-height: 20px;
   }
 `
 
