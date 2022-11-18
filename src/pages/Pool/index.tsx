@@ -123,6 +123,7 @@ const InboxIcon = styled(Inbox)`
 
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   border-radius: 12px;
+  font-size: 16px;
   padding: 6px 8px;
   width: fit-content;
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
