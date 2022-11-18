@@ -48,7 +48,7 @@ import { applyFiltersFromURL, syncLocalFiltersWithURL } from 'nft/utils/urlParam
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useLocation } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { CollectionAssetLoading } from './CollectionAssetLoading'
@@ -64,11 +64,26 @@ interface CollectionNftsProps {
 
 const rarityStatusCache = new Map<string, boolean>()
 
+const InfiniteScrollWrapperCss = css`
+  margin: 0 16px;
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    margin: 0 20px;
+  }
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
+    margin: 0 26px;
+  }
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
+    margin: 0 48px;
+  }
+`
+
 const ActionsContainer = styled.div`
   display: flex;
+  flex: 1 1 auto;
   gap: 10px;
-  width: 100%;
   justify-content: space-between;
+
+  ${InfiniteScrollWrapperCss}
 `
 
 const ActionsSubContainer = styled.div`
@@ -93,7 +108,7 @@ export const SortDropdownContainer = styled.div<{ isFiltersExpanded: boolean }>`
 
 const EmptyCollectionWrapper = styled.div`
   display: block;
-  textalign: center;
+  text-align: center;
 `
 
 const ViewFullCollection = styled.span`
@@ -126,7 +141,11 @@ const FilterContainer = styled(AnimatedBox)`
   margin-bottom: 8px;
   @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     margin-bottom: 20px;
-  }
+  }  
+}
+
+const InfiniteScrollWrapper = styled.div`
+  ${InfiniteScrollWrapperCss}
 `
 
 const SweepButton = styled.div<{ toggled: boolean; disabled?: boolean }>`
@@ -166,7 +185,7 @@ const MarketNameWrapper = styled(Row)`
   gap: 8px;
 `
 
-const loadingAssets = () => (
+const LoadingAssets = () => (
   <>
     {Array.from(Array(ASSET_PAGE_SIZE), (_, index) => (
       <CollectionAssetLoading key={index} />
@@ -176,7 +195,7 @@ const loadingAssets = () => (
 
 export const CollectionNftsLoading = () => (
   <Box width="full" className={styles.assetList}>
-    {loadingAssets()}
+    <LoadingAssets />
   </Box>
 )
 
@@ -296,6 +315,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   }
 
   const { assets: collectionNfts, loadNext, hasNext, isLoadingNext } = useLazyLoadAssetsQuery(assetQueryParams)
+  const handleNextPageLoad = useCallback(() => loadNext(ASSET_PAGE_SIZE), [loadNext])
 
   const getPoolPosition = useCallback(
     (asset: GenieAsset) => {
@@ -467,6 +487,15 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
     }
   }, [collectionStats, priceRangeLow, priceRangeHigh, setPriceRangeHigh, setPriceRangeLow])
 
+  const handleSweepClick = useCallback(() => {
+    if (hasErc1155s) return
+    if (!sweepIsOpen) {
+      scrollToTop()
+      if (!bagExpanded && !isMobile) toggleBag()
+    }
+    setSweepOpen(!sweepIsOpen)
+  }, [bagExpanded, hasErc1155s, isMobile, sweepIsOpen, toggleBag])
+
   return (
     <>
       <FilterContainer>
@@ -491,26 +520,19 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             </SortDropdownContainer>
             <CollectionSearch />
           </ActionsSubContainer>
-          {!hasErc1155s ? (
+          {!hasErc1155s && (
             <SweepButton
               toggled={sweepIsOpen}
               disabled={hasErc1155s}
               className={buttonTextMedium}
-              onClick={() => {
-                if (hasErc1155s) return
-                if (!sweepIsOpen) {
-                  scrollToTop()
-                  if (!bagExpanded && !isMobile) toggleBag()
-                }
-                setSweepOpen(!sweepIsOpen)
-              }}
+              onClick={handleSweepClick}
             >
               <SweepIcon viewBox="0 0 24 24" width="20px" height="20px" />
               <SweepText fontWeight={600} color="currentColor" lineHeight="20px">
                 Sweep
               </SweepText>
             </SweepButton>
-          ) : null}
+          )}
         </ActionsContainer>
         {sweepIsOpen && (
           <Sweep contractAddress={contractAddress} minPrice={debouncedMinPrice} maxPrice={debouncedMaxPrice} />
@@ -573,35 +595,37 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
           ) : null}
         </Row>
       </FilterContainer>
-      <InfiniteScroll
-        next={() => loadNext(ASSET_PAGE_SIZE)}
-        hasMore={hasNext}
-        loader={hasNext && hasNfts ? loadingAssets() : null}
-        dataLength={collectionAssets?.length ?? 0}
-        style={{ overflow: 'unset' }}
-        className={hasNfts || isLoadingNext ? styles.assetList : undefined}
-      >
-        {hasNfts ? (
-          assets
-        ) : collectionAssets?.length === 0 ? (
-          <Center width="full" color="textSecondary" textAlign="center" style={{ height: '60vh' }}>
-            <EmptyCollectionWrapper>
-              <p className={headlineMedium}>No NFTS found</p>
-              <Box
-                onClick={reset}
-                type="button"
-                className={clsx(bodySmall, buttonTextMedium)}
-                color="blue"
-                cursor="pointer"
-              >
-                <ViewFullCollection>View full collection</ViewFullCollection>
-              </Box>
-            </EmptyCollectionWrapper>
-          </Center>
-        ) : (
-          <CollectionNftsLoading />
-        )}
-      </InfiniteScroll>
+      <InfiniteScrollWrapper>
+        <InfiniteScroll
+          next={handleNextPageLoad}
+          hasMore={hasNext}
+          loader={Boolean(hasNext && hasNfts) && <LoadingAssets />}
+          dataLength={collectionAssets?.length ?? 0}
+          style={{ overflow: 'unset' }}
+          className={hasNfts || isLoadingNext ? styles.assetList : undefined}
+        >
+          {hasNfts ? (
+            assets
+          ) : collectionAssets?.length === 0 ? (
+            <Center width="full" color="textSecondary" textAlign="center" style={{ height: '60vh' }}>
+              <EmptyCollectionWrapper>
+                <p className={headlineMedium}>No NFTS found</p>
+                <Box
+                  onClick={reset}
+                  type="button"
+                  className={clsx(bodySmall, buttonTextMedium)}
+                  color="blue"
+                  cursor="pointer"
+                >
+                  <ViewFullCollection>View full collection</ViewFullCollection>
+                </Box>
+              </EmptyCollectionWrapper>
+            </Center>
+          ) : (
+            <CollectionNftsLoading />
+          )}
+        </InfiniteScroll>
+      </InfiniteScrollWrapper>
     </>
   )
 }

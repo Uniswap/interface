@@ -130,11 +130,11 @@ export function Table<D extends Record<string, unknown>>({
   useEffect(() => {
     if (!width) return
 
-    if (width < theme.breakpoint.sm) {
+    if (width <= theme.breakpoint.sm) {
       setHiddenColumns(smallHiddenColumns)
-    } else if (width < theme.breakpoint.md) {
+    } else if (width <= theme.breakpoint.md) {
       setHiddenColumns(mediumHiddenColumns)
-    } else if (width < theme.breakpoint.lg) {
+    } else if (width <= theme.breakpoint.lg) {
       setHiddenColumns(largeHiddenColumns)
     } else {
       setHiddenColumns([])

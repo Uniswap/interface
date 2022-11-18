@@ -2,8 +2,7 @@ import Column from 'components/Column'
 import Row from 'components/Row'
 import { Box } from 'nft/components/Box'
 import { useIsMobile } from 'nft/hooks'
-import { CollectionBannerLoading } from 'nft/pages/collection'
-import { COLLECTION_BANNER_HEIGHT } from 'nft/pages/collection'
+import { BannerWrapper, CollectionBannerLoading } from 'nft/pages/collection'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import styled from 'styled-components/macro'
 
@@ -32,9 +31,9 @@ export const CollectionPageSkeleton = () => {
   const isMobile = useIsMobile()
   return (
     <StyledColumn>
-      <Box width="full" height={`${COLLECTION_BANNER_HEIGHT}`}>
+      <BannerWrapper width="full">
         <CollectionBannerLoading />
-      </Box>
+      </BannerWrapper>
       <CollectionDescriptionSection>
         <CollectionStatsLoading isMobile={isMobile} />
         <StyledRow>{ActivitySwitcherLoading}</StyledRow>
