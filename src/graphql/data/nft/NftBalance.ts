@@ -159,7 +159,7 @@ export function useNftBalanceQuery(
       last,
       before,
     },
-    { fetchPolicy: 'store-or-network' }
+    { fetchPolicy: 'network-only' }
   )
   const { data, hasNext, loadNext, isLoadingNext } = usePaginationFragment<NftBalancePaginationQuery, any>(
     nftBalancePaginationQuery,
