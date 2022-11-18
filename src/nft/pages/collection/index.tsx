@@ -94,13 +94,13 @@ const Collection = () => {
   const collectionStats = useCollectionQuery(contractAddress as string)
 
   const { gridX, gridWidthOffset } = useSpring({
-    gridX: isFiltersExpanded && !isMobile ? FILTER_WIDTH : 0,
+    gridX: (isFiltersExpanded || isBagExpanded) && !isMobile ? FILTER_WIDTH : 0,
     gridWidthOffset:
       isFiltersExpanded && !isMobile
         ? isBagExpanded
           ? BAG_WIDTH + FILTER_WIDTH
           : FILTER_WIDTH
-        : isBagExpanded
+        : isBagExpanded && !isMobile
         ? BAG_WIDTH
         : 0,
     config: {
@@ -188,7 +188,7 @@ const Collection = () => {
 
                 {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
                 <AnimatedBox
-                  position={isMobile && isFiltersExpanded ? 'fixed' : 'static'}
+                  position={isMobile && (isFiltersExpanded || isBagExpanded) ? 'fixed' : 'static'}
                   style={{
                     transform: gridX.to((x) => `translate(${x as number}px)`),
                     width: gridWidthOffset.to((x) => `calc(100% - ${x as number}px)`),
