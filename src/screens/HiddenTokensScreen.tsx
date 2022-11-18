@@ -57,7 +57,7 @@ export function HiddenTokensScreen({
         ? [{ title: t('Small balances'), data: data.smallBalances }]
         : EMPTY_ARRAY),
       ...(data.spamBalances.length > 0
-        ? [{ title: t('Spam tokens'), data: data.spamBalances }]
+        ? [{ title: t('Unknown tokens'), data: data.spamBalances }]
         : EMPTY_ARRAY),
     ]
   }, [t, data])

@@ -194,7 +194,7 @@ export function SettingsWallet({
         },
         {
           action: <Switch value={hideSpamTokens} onValueChange={toggleHideSpamTokens} />,
-          text: t('Hide spam tokens'),
+          text: t('Hide unknown tokens'),
           icon: <ShieldIcon {...iconProps} />,
         },
         {

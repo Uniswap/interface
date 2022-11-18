@@ -62,7 +62,7 @@
   "Receive NFTs": "Receive NFTs",
   "Transfer NFTs from another wallet to get started.": "Transfer NFTs from another wallet to get started.",
   "No NFTs yet": "No NFTs yet",
-  "Receive tokens": "Receive tokens",
+  "Buy crypto": "Buy crypto",
   "Transfer tokens from a centralized exchange or another wallet to get started.": "Transfer tokens from a centralized exchange or another wallet to get started.",
   "No tokens yet": "No tokens yet",
   "Content not available": "Content not available",
@@ -201,7 +201,6 @@
   "Price increase": "Price increase",
   "Price decrease": "Price decrease",
   "Copy address": "Copy address",
-  "Buy crypto": "Buy crypto",
   "Get the lowest fees in DeFi when you buy crypto on Uniswap Wallet.": "Get the lowest fees in DeFi when you buy crypto on Uniswap Wallet.",
   "Buy crypto with low fees": "Buy crypto with low fees",
   "Buy crypto at the lowest rates on Uniswap Wallet, powered by Moonpay.": "Buy crypto at the lowest rates on Uniswap Wallet, powered by Moonpay.",
@@ -332,7 +331,7 @@
   "Search tokens and wallets": "Search tokens and wallets",
   "NFTs": "NFTs",
   "Small balances": "Small balances",
-  "Spam tokens": "Spam tokens",
+  "Unknown tokens": "Unknown tokens",
   "Hidden tokens": "Hidden tokens",
   "Import a recovery phrase": "Import a recovery phrase",
   "Enter or paste your words": "Enter or paste your words",
@@ -458,6 +457,6 @@
   "Nickname": "Nickname",
   "Notifications": "Notifications",
   "Hide small balances": "Hide small balances",
-  "Hide spam tokens": "Hide spam tokens",
+  "Hide unknown tokens": "Hide unknown tokens",
   "Security": "Security"
 }
