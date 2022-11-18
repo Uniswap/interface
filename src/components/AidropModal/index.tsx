@@ -28,6 +28,7 @@ const ClaimButton = styled(ThemeButton)`
   background-color: ${({ theme }) => theme.accentAction};
   margin-top: 40px;
   border-radius: 12px;
+  color: white;
 `
 
 const Line = styled.div`
@@ -58,14 +59,15 @@ const USDCLabel = styled.div`
   font-weight: 700;
   font-size: 36px;
   line-height: 44px;
+  margin-top: 8px;
+  color: white;
 `
 
 const TextContainer = styled.div`
   position: absolute;
-  left: 18px;
+  left: 16px;
   top: 18px;
-  right: 18px;
-  width: calc(100% - 36px);
+  right: 16px;
 `
 
 const RewardsDetailsContainer = styled.div`
@@ -114,7 +116,6 @@ const CloseButton = styled(ThemeButton)`
 const SyledCloseIcon = styled(CloseIcon)`
   float: right;
   height: 24px;
-  margin-top: 2px;
 
   ${OpacityHoverState}
 `
@@ -143,7 +144,7 @@ const AirdropModal = () => {
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={dismiss} maxHeight={90}>
+    <Modal hideBorder isOpen={isOpen} onDismiss={dismiss} maxHeight={90}>
       <ModalWrap>
         {isClaimed ? (
           <ClaimContainer>

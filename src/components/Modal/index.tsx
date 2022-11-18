@@ -27,7 +27,7 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ scrollOverlay?: bool
 const AnimatedDialogContent = animated(DialogContent)
 // destructure to not pass custom props to Dialog DOM element
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, scrollOverlay, ...rest }) => (
+const StyledDialogContent = styled(({ hideBorder, minHeight, maxHeight, mobile, isOpen, scrollOverlay, ...rest }) => (
   <AnimatedDialogContent {...rest} />
 )).attrs({
   'aria-label': 'dialog',
@@ -37,7 +37,7 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, scro
   &[data-reach-dialog-content] {
     margin: auto;
     background-color: ${({ theme }) => theme.deprecated_bg0};
-    border: 1px solid ${({ theme }) => theme.deprecated_bg1};
+    border: ${({ theme, hideBorder }) => !hideBorder && `1px solid ${theme.deprecated_bg1}`};
     box-shadow: ${({ theme }) => theme.deepShadow};
     padding: 0px;
     width: 50vw;
@@ -86,6 +86,7 @@ interface ModalProps {
   initialFocusRef?: React.RefObject<any>
   children?: React.ReactNode
   scrollOverlay?: boolean
+  hideBorder?: boolean
 }
 
 export default function Modal({
@@ -96,6 +97,7 @@ export default function Modal({
   initialFocusRef,
   children,
   scrollOverlay,
+  hideBorder = false,
 }: ModalProps) {
   const fadeTransition = useTransition(isOpen, {
     config: { duration: 200 },
@@ -141,6 +143,7 @@ export default function Modal({
                 maxHeight={maxHeight}
                 mobile={isMobile}
                 scrollOverlay={scrollOverlay}
+                hideBorder={hideBorder}
               >
                 {/* prevents the automatic focusing of inputs on mobile by the reach dialog */}
                 {!initialFocusRef && isMobile ? <div tabIndex={1} /> : null}
