@@ -187,7 +187,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps) {
           ) : null}
         </Flex>
       ) : null}
-      <Box bg="background0" borderTopLeftRadius="xl" borderTopRightRadius="xl">
+      <Box bg="background0">
         <FlatList
           ref={listRef}
           ListEmptyComponent={

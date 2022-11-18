@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ViewStyle } from 'react-native'
+import { useColorScheme, ViewStyle } from 'react-native'
 import { SvgProps } from 'react-native-svg'
 import { Route } from 'react-native-tab-view'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -12,6 +12,7 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { NftsTab } from 'src/components/home/NftsTab'
 import { TokensTab } from 'src/components/home/TokensTab'
 import { Flex } from 'src/components/layout'
+import { SHADOW_OFFSET_SMALL } from 'src/components/layout/BaseCard'
 import TabbedScrollScreen, {
   TabViewScrollProps,
 } from 'src/components/layout/screens/TabbedScrollScreen'
@@ -140,17 +141,22 @@ function ActionButton({
   onPress: () => void
 }) {
   const theme = useAppTheme()
+  const isDarkMode = useColorScheme() === 'dark'
 
   return (
     <TouchableArea
       hapticFeedback
-      backgroundColor="background0"
+      backgroundColor={isDarkMode ? 'backgroundBranded' : 'background0'}
       borderColor="brandedAccentSoft"
       borderRadius="lg"
       borderWidth={1}
       flex={1}
       name={name}
       padding="sm"
+      shadowColor={isDarkMode ? 'black' : 'brandedAccentSoft'}
+      shadowOffset={SHADOW_OFFSET_SMALL}
+      shadowOpacity={0.4}
+      shadowRadius={6}
       onPress={onPress}>
       <Flex centered row gap="xxs">
         <Icon
@@ -159,7 +165,9 @@ function ActionButton({
           strokeWidth={2}
           width={theme.iconSizes.md}
         />
-        <Text variant="buttonLabelMedium">{label}</Text>
+        <Text color="accentAction" variant="buttonLabelMedium">
+          {label}
+        </Text>
       </Flex>
     </TouchableArea>
   )

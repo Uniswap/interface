@@ -409,7 +409,7 @@ export const colorsLight: Palette = {
   background3: colors.gray100,
   backgroundOutline: colors.gray150,
   backgroundScrim: opacify(50, colors.gray150),
-  backgroundBranded: '#FFF7FE',
+  backgroundBranded: '#FCF7FF',
 
   textPrimary: colors.gray900,
   textSecondary: colors.gray550,
@@ -422,7 +422,7 @@ export const colorsLight: Palette = {
   accentCritical: colors.red400,
 
   accentBranded: colors.magentaVibrant,
-  shadowBranded: '#EFA2FA',
+  shadowBranded: colors.magentaVibrant,
 
   accentActionSoft: opacify(12, colors.magentaVibrant),
   accentActiveSoft: opacify(24, colors.blue400),
@@ -486,7 +486,7 @@ export const colorsDark: Palette = {
 
   accentBranded: colors.magentaVibrant,
   // TODO(MOB-3591): accommodate one-off color in cleaner way
-  shadowBranded: '#EFA2FA',
+  shadowBranded: '#570C62',
 
   accentActionSoft: opacify(24, colors.blue400),
   accentActiveSoft: opacify(24, colors.blue400),

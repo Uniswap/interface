@@ -110,7 +110,7 @@ export default function TabbedScrollScreen({
             backgroundColor: theme.colors.backgroundBranded,
           },
         ]}>
-        <Box bg="background0" borderTopLeftRadius="xl" borderTopRightRadius="xl">
+        <Box bg="background0">
           <TabBar
             {...sceneProps}
             indicatorStyle={TAB_STYLES.activeTabIndicator}

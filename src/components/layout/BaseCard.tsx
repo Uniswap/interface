@@ -13,7 +13,7 @@ import { Text } from 'src/components/Text'
 import { Theme } from 'src/styles/theme'
 
 const SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 4, height: 8 }
-const SHADOW_OFFSET_SMALL: ShadowProps<Theme>['shadowOffset'] = { width: 0, height: 2 }
+export const SHADOW_OFFSET_SMALL: ShadowProps<Theme>['shadowOffset'] = { width: 0, height: 2 }
 
 // Container
 export function Container({ children, ...trace }: PropsWithChildren<ComponentProps<typeof Trace>>) {
@@ -43,9 +43,9 @@ export function Shadow({ children, ...rest }: PropsWithChildren<BoxProps<Theme, 
       bg={rest?.bg ?? isDarkMode ? 'background2' : 'background1'}
       borderRadius="lg"
       p="sm"
-      shadowColor="black"
+      shadowColor={isDarkMode ? 'black' : 'brandedAccentSoft'}
       shadowOffset={SHADOW_OFFSET_SMALL}
-      shadowOpacity={0.05}
+      shadowOpacity={0.4}
       shadowRadius={6}
       {...rest}>
       {children}
