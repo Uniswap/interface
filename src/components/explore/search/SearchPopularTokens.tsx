@@ -1,41 +1,58 @@
 import React, { useMemo } from 'react'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
+import { Inset } from 'src/components/layout'
+import { Loading } from 'src/components/loading'
+import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
-import { useSearchPopularTokensQuery } from 'src/data/__generated__/types-and-hooks'
+import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
+import {
+  Chain,
+  SearchPopularTokensQuery,
+  useSearchPopularTokensQuery,
+} from 'src/data/__generated__/types-and-hooks'
 import { SearchResultType, TokenSearchResult } from 'src/features/explore/searchHistorySlice'
+import { areAddressesEqual } from 'src/utils/addresses'
 import { fromGraphQLChain } from 'src/utils/chainId'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 
 export function SearchPopularTokens() {
-  // Load popular tokens by top trading volume
-  const { data } = useSearchPopularTokensQuery()
+  // Load popular tokens by top Uniswap trading volume
+  const { data, loading } = useSearchPopularTokensQuery()
 
   const popularTokens = useMemo(() => {
-    if (!data || !data.topTokenProjects) return EMPTY_ARRAY
+    if (!data || !data.topTokens) return EMPTY_ARRAY
 
-    return data.topTokenProjects
-      .map((tokenProject) => {
-        if (!tokenProject) return null
+    // special case to replace weth with eth because the backend does not return eth data
+    // eth will be defined only if all the required data is available
+    // when eth data is not fully available, we do not replace weth with eth
+    const eth = data?.eth && data?.eth.length > 0 && data?.eth?.[0]?.project ? data.eth[0] : null
+    const weth = WRAPPED_NATIVE_CURRENCY[ChainId.Mainnet]
 
-        // Only use first chain the token is on
-        const token = tokenProject.tokens[0]
-        const { chain, address, symbol, name } = token
-        const chainId = fromGraphQLChain(chain)
+    return data.topTokens
+      .map((token) => {
+        if (!token) return
 
-        if (!chainId || !symbol || !name) return null
+        const isWeth =
+          areAddressesEqual(token.address, weth.address) && token?.chain === Chain.Ethereum
 
-        return {
-          type: SearchResultType.Token,
-          chainId,
-          address,
-          name,
-          symbol,
-          logoUrl: tokenProject.logoUrl,
-        } as TokenSearchResult
+        // manually replace eth with eth given backend only returns eth data as a proxy for eth
+        if (isWeth && eth) {
+          return gqlTokenToTokenSearchResult(eth)
+        }
+
+        return gqlTokenToTokenSearchResult(token)
       })
-      .filter(Boolean)
+      .filter((t): t is TokenSearchResult => Boolean(t))
   }, [data])
+
+  if (loading) {
+    return (
+      <Inset all="xs">
+        <Loading repeat={3} type="token" />
+      </Inset>
+    )
+  }
 
   return (
     <FlatList
@@ -45,6 +62,25 @@ export function SearchPopularTokens() {
       renderItem={renderTokenItem}
     />
   )
+}
+
+function gqlTokenToTokenSearchResult(
+  token: NullUndefined<NonNullable<NonNullable<SearchPopularTokensQuery['topTokens']>[0]>>
+) {
+  if (!token || !token.project) return null
+
+  const { chain, address, symbol, name, project } = token
+  const chainId = fromGraphQLChain(chain)
+  if (!chainId || !symbol || !name) return null
+
+  return {
+    type: SearchResultType.Token,
+    chainId,
+    address,
+    name,
+    symbol,
+    logoUrl: project?.logoUrl,
+  } as TokenSearchResult
 }
 
 const renderTokenItem = ({ item }: ListRenderItemInfo<TokenSearchResult>) => (

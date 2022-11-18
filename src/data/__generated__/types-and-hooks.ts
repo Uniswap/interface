@@ -928,7 +928,7 @@ export type TopTokensQuery = { __typename?: 'Query', topTokens?: Array<{ __typen
 export type SearchPopularTokensQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SearchPopularTokensQuery = { __typename?: 'Query', topTokenProjects?: Array<{ __typename?: 'TokenProject', id: string, logoUrl?: string | null, tokens: Array<{ __typename?: 'Token', id: string, chain: Chain, address?: string | null, name?: string | null, symbol?: string | null }> } | null> | null };
+export type SearchPopularTokensQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', id: string, address?: string | null, chain: Chain, name?: string | null, symbol?: string | null, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string | null } | null } | null> | null, eth?: Array<{ __typename?: 'Token', id: string, address?: string | null, chain: Chain, name?: string | null, symbol?: string | null, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string | null } | null } | null> | null };
 
 export type SearchTokensQueryVariables = Exact<{
   searchQuery: Scalars['String'];
@@ -1752,15 +1752,26 @@ export type TopTokensLazyQueryHookResult = ReturnType<typeof useTopTokensLazyQue
 export type TopTokensQueryResult = Apollo.QueryResult<TopTokensQuery, TopTokensQueryVariables>;
 export const SearchPopularTokensDocument = gql`
     query SearchPopularTokens {
-  topTokenProjects(orderBy: VOLUME, page: 1, pageSize: 3) {
+  topTokens(chain: ETHEREUM, orderBy: VOLUME, page: 1, pageSize: 3) {
     id
-    logoUrl
-    tokens {
+    address
+    chain
+    name
+    symbol
+    project {
       id
-      chain
-      address
-      name
-      symbol
+      logoUrl
+    }
+  }
+  eth: tokens(contracts: [{address: null, chain: ETHEREUM}]) {
+    id
+    address
+    chain
+    name
+    symbol
+    project {
+      id
+      logoUrl
     }
   }
 }

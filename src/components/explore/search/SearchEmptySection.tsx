@@ -4,14 +4,12 @@ import { FlatList, ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Suspense } from 'src/components/data/Suspense'
 import { SearchEtherscanItem } from 'src/components/explore/search/items/SearchEtherscanItem'
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
 import { SearchWalletItem } from 'src/components/explore/search/items/SearchWalletItem'
 import { SearchPopularTokens } from 'src/components/explore/search/SearchPopularTokens'
 import { CloseIcon } from 'src/components/icons/CloseIcon'
-import { AnimatedFlex, Flex, Inset } from 'src/components/layout'
-import { Loading } from 'src/components/loading'
+import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import {
   clearSearchHistory,
@@ -78,19 +76,12 @@ export function SearchEmptySection() {
         <Text color="textSecondary" mx="xs" variant="subheadSmall">
           {t('Popular tokens')}
         </Text>
-        <Suspense
-          fallback={
-            <Inset all="xs">
-              <Loading repeat={3} type="token" />
-            </Inset>
-          }>
-          <SearchPopularTokens />
-        </Suspense>
+        <SearchPopularTokens />
       </Flex>
       <FlatList
         ListHeaderComponent={
           <Text color="textSecondary" mb="xxs" mx="xs" variant="subheadSmall">
-            {t('Wallets')}
+            {t('Suggested wallets')}
           </Text>
         }
         data={SUGGESTED_WALLETS}
