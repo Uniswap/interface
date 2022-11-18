@@ -10,7 +10,7 @@ import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { Text } from 'src/components/Text'
-import { config } from 'src/config'
+import { APP_STORE_LINK } from 'src/constants/urls'
 import { useCheckForceUpgradeQuery } from 'src/features/forceUpgrade/forceUpgradeApi'
 import { UpgradeStatus } from 'src/features/forceUpgrade/types'
 import { ModalName } from 'src/features/telemetry/constants'
@@ -39,12 +39,7 @@ export function ForceUpgradeModal() {
   }, [isSuccess, upgradeStatus])
 
   const onPressConfirm = () => {
-    /**
-     * TODO(MOB-2764): Replace with actual app link once available
-     * App store link format example: 'itms-apps://apps.apple.com/tr/app/uniswap/id1055437768?l=tr'
-     */
-    const link = config.uniswapAppUrl
-    openUri(link, true)
+    openUri(APP_STORE_LINK, true)
   }
 
   const onClose = () => {
