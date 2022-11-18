@@ -1,24 +1,23 @@
-import clsx from 'clsx'
-import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { ChevronUpIcon } from 'nft/components/icons'
+import { Checkbox } from 'nft/components/layout/Checkbox'
 import { buttonTextMedium, caption } from 'nft/css/common.css'
 import { ListingMarket } from 'nft/types'
 import { ListingMarkets } from 'nft/utils/listNfts'
-import { Dispatch, useMemo, useReducer } from 'react'
+import { Dispatch, FormEvent, useMemo, useReducer } from 'react'
 import styled from 'styled-components/macro'
-
-import * as styles from './ListPage.css'
+import { ThemedText } from 'theme'
+import { Z_INDEX } from 'theme/zIndex'
 
 const HeaderButtonWrap = styled(Row)`
   padding: 12px;
   border-radius: 12px;
   width: 220px;
   justify-content: space-between;
-  background: ${({ theme }) => theme.backgroundInteractive};
+  background: ${({ theme }) => theme.backgroundModule};
   cursor: pointer;
   &:hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
+    background-color: ${({ theme }) => theme.backgroundInteractive};
   }
 `
 
@@ -35,7 +34,7 @@ const MarketIcon = styled.img<{ index: number; totalSelected: number }>`
   border-color: ${({ theme }) => theme.backgroundInteractive};
   border-radius: 4px;
   z-index: ${({ index, totalSelected }) => totalSelected - index};
-  margin-left: ${({ index }) => `${index * -18}px`};
+  margin-left: ${({ index }) => `${index === 0 ? 0 : -18}px`};
 `
 
 const Chevron = styled(ChevronUpIcon)<{ isOpen: boolean }>`
@@ -49,9 +48,22 @@ const Chevron = styled(ChevronUpIcon)<{ isOpen: boolean }>`
   transform: ${({ isOpen }) => `rotate(${isOpen ? 0 : 180}deg)`};
 `
 
-const DropdownWrapper = styled.div`
+const ModalWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  position: relative;
+`
+
+const DropdownWrapper = styled(Column)<{ isOpen: boolean }>`
+  padding: 16px 0px;
+  background-color: ${({ theme }) => theme.backgroundModule};
+  display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
+  position: absolute;
+  top: 52px;
+  width: 220px;
+  border-radius: 12px;
+  gap: 12px;
+  z-index: ${Z_INDEX.modalBackdrop};
 `
 
 export const SelectMarketplacesDropdown = ({
@@ -67,7 +79,7 @@ export const SelectMarketplacesDropdown = ({
     [selectedMarkets]
   )
   return (
-    <DropdownWrapper>
+    <ModalWrapper>
       <HeaderButtonWrap className={buttonTextMedium} onClick={toggleIsOpen}>
         <HeaderButtonContentWrapper>
           {selectedMarkets.map((market, index) => {
@@ -86,55 +98,72 @@ export const SelectMarketplacesDropdown = ({
 
         <Chevron isOpen={isOpen} />
       </HeaderButtonWrap>
-      {isOpen && (
-        <Column padding="8">
-          {ListingMarkets.map((market) => {
-            return GlobalMarketplaceButton({ market, setSelectedMarkets, selectedMarkets })
-          })}
-        </Column>
-      )}
-    </DropdownWrapper>
+      <DropdownWrapper isOpen={isOpen}>
+        {ListingMarkets.map((market) => {
+          return MarketplaceRow({ market, setSelectedMarkets, selectedMarkets })
+        })}
+      </DropdownWrapper>
+    </ModalWrapper>
   )
 }
 
-interface GlobalMarketplaceButtonProps {
+const MarketplaceRowWrapper = styled(Row)`
+  gap: 6px;
+  height: 44px;
+  width: 100%;
+  cursor: pointer;
+  justify-content: space-between;
+  padding: 0px 16px;
+  &:hover {
+    background-color: ${({ theme }) => theme.backgroundInteractive};
+  }
+  border-radius: 12px;
+`
+
+const MarketplaceDropdownIcon = styled.img`
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  object-fit: cover;
+`
+
+const FeeText = styled.div`
+  color: ${({ theme }) => theme.textSecondary};
+`
+
+interface MarketplaceRowProps {
   market: ListingMarket
   setSelectedMarkets: Dispatch<ListingMarket[]>
   selectedMarkets: ListingMarket[]
 }
 
-const GlobalMarketplaceButton = ({ market, setSelectedMarkets, selectedMarkets }: GlobalMarketplaceButtonProps) => {
+const MarketplaceRow = ({ market, setSelectedMarkets, selectedMarkets }: MarketplaceRowProps) => {
   const isSelected = selectedMarkets.includes(market)
+  const [hovered, toggleHovered] = useReducer((s) => !s, false)
   const toggleSelected = () => {
+    if (selectedMarkets.length === 1 && isSelected) return
     isSelected
       ? setSelectedMarkets(selectedMarkets.filter((selected: ListingMarket) => selected !== market))
       : setSelectedMarkets([...selectedMarkets, market])
   }
+
+  const handleCheckbox = (e: FormEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+  }
   return (
-    <Row
-      gap="6"
-      borderRadius="12"
-      backgroundColor="backgroundOutline"
-      height="44"
-      className={clsx(isSelected && styles.buttonSelected)}
-      onClick={toggleSelected}
-      width="max"
-      cursor="pointer"
-    >
-      <Box
-        as="img"
-        alt={market.name}
-        width={isSelected ? '24' : '20'}
-        height={isSelected ? '24' : '20'}
-        borderRadius="4"
-        objectFit="cover"
-        marginLeft={isSelected ? '8' : '12'}
-        src={isSelected ? '/nft/svgs/checkmark.svg' : market.icon}
-      />
-      <Box className={buttonTextMedium}>{market.name}</Box>
-      <Box color="textSecondary" className={caption} marginRight="12">
-        {market.fee}% fee
-      </Box>
-    </Row>
+    <MarketplaceRowWrapper onMouseEnter={toggleHovered} onMouseLeave={toggleHovered} onClick={toggleSelected}>
+      <Row gap="12" onClick={toggleSelected}>
+        <MarketplaceDropdownIcon alt={market.name} src={market.icon} />
+        <Column>
+          <ThemedText.BodyPrimary>{market.name}</ThemedText.BodyPrimary>
+          <FeeText className={caption}>{market.fee}% fee</FeeText>
+        </Column>
+      </Row>
+
+      <Checkbox hovered={hovered} checked={isSelected} onClick={handleCheckbox}>
+        <span />
+      </Checkbox>
+    </MarketplaceRowWrapper>
   )
 }

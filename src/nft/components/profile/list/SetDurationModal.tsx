@@ -28,8 +28,13 @@ const DropdownWrapper = styled(ThemedText.BodyPrimary)`
   cursor: pointer;
   display: flex;
   justify-content: flex-end;
-  padding-top: 24px;
+  height: min-content;
   width: 80px;
+  &:hover {
+    background-color: ${({ theme }) => theme.backgroundInteractive};
+  }
+  border-radius: 12px;
+  padding: 8px;
 `
 
 const ErrorMessage = styled(Row)`

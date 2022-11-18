@@ -583,7 +583,7 @@ const MarketWrap = styled.section`
 export const ListPage = () => {
   const { setProfilePageState: setSellPageState } = useProfilePageState()
   const setGlobalMarketplaces = useSellAsset((state) => state.setGlobalMarketplaces)
-  const [selectedMarkets, setSelectedMarkets] = useState([ListingMarkets[2]]) // default marketplace: x2y2
+  const [selectedMarkets, setSelectedMarkets] = useState([ListingMarkets[0]]) // default marketplace: x2y2
   const toggleBag = useBag((s) => s.toggleBag)
   const listings = useNFTList((state) => state.listings)
   const collectionsRequiringApproval = useNFTList((state) => state.collectionsRequiringApproval)
