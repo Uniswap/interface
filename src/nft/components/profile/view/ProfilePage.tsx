@@ -1,5 +1,6 @@
 import { useNftBalanceQuery } from 'graphql/data/nft/NftBalance'
 import { AnimatedBox, Box } from 'nft/components/Box'
+import { ClearAllButton } from 'nft/components/collection/CollectionNfts'
 import { assetList } from 'nft/components/collection/CollectionNfts.css'
 import { FilterButton } from 'nft/components/collection/FilterButton'
 import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
@@ -12,7 +13,7 @@ import { useWalletBalance } from 'nft/hooks'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import { OSCollectionsFetcher } from 'nft/queries'
 import { WalletCollection } from 'nft/types'
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
 import { easings, useSpring } from 'react-spring'
@@ -257,31 +258,18 @@ const CollectionFiltersRow = ({
   const getCollection = (collectionAddress: string) => {
     return collections?.find((collection) => collection.address === collectionAddress)
   }
+  const handleClearAllClick = useCallback(() => clearCollectionFilters(), [clearCollectionFilters])
   return (
     <Row paddingY="18" gap="8" flexWrap="wrap">
-      {collectionFilters &&
+      {Boolean(collectionFilters?.length) &&
         collectionFilters.map((collectionAddress, index) => (
           <CollectionFilterItem
             collection={getCollection(collectionAddress)}
-            key={index}
+            key={`CollectionFilterItem-${collectionAddress}-${index}`}
             setCollectionFilters={setCollectionFilters}
           />
         ))}
-      {collectionFilters?.length ? (
-        <Box
-          as="button"
-          paddingLeft="8"
-          paddingRight="8"
-          color="genieBlue"
-          background="none"
-          fontSize="16"
-          border="none"
-          cursor="pointer"
-          onClick={() => clearCollectionFilters()}
-        >
-          Clear all
-        </Box>
-      ) : null}
+      {Boolean(collectionFilters?.length) && <ClearAllButton onClick={handleClearAllClick}>Clear all</ClearAllButton>}
     </Row>
   )
 }
