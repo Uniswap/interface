@@ -157,7 +157,7 @@ const Collection = () => {
                   width={isMobile ? 'full' : '0'}
                   height={isMobile && isFiltersExpanded ? 'full' : undefined}
                   background={isMobile ? 'backgroundBackdrop' : undefined}
-                  zIndex={isMobile ? 'modalBackdrop' : undefined}
+                  zIndex="modalBackdrop"
                   overflowY={isMobile ? 'scroll' : undefined}
                 >
                   {isFiltersExpanded && (
