@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-11-15 00:17\n"
+"PO-Revision-Date: 2022-11-17 01:33\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -196,6 +196,10 @@ msgstr "{0}/{1} V3 유동성 추가"
 msgid "Added"
 msgstr "추가됨"
 
+#: src/nft/components/collection/CollectionAsset.tsx
+msgid "Added to bag"
+msgstr ""
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "{0} 추가됨"
@@ -349,6 +353,10 @@ msgstr "최고의 가격 경로 비용은 ~{formattedGasPriceString} 가스입�
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "Blocked Address"
 msgstr "차단된 주소"
+
+#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
+msgid "Blocked from trading"
+msgstr ""
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
@@ -570,7 +578,7 @@ msgstr "계약 주소"
 
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/nft/components/profile/view/ProfileAccountDetails.tsx
-#: src/theme/components.tsx
+#: src/theme/components/index.tsx
 msgid "Copied!"
 msgstr "복사되었습니다!"
 
@@ -713,6 +721,10 @@ msgstr "유동성 입금"
 msgid "Description"
 msgstr "설명"
 
+#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
+msgid "Deselected"
+msgstr ""
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Detailed"
 msgstr "자세히"
@@ -745,6 +757,10 @@ msgstr "선적 서류 비치"
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
 msgstr "v2 포지션 중 하나가 보이지 않습니까? <0>가져 오십시오.</0>"
+
+#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
+msgid "ERC-1155 support coming soon"
+msgstr ""
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
@@ -1537,6 +1553,10 @@ msgstr "유동성 제거"
 msgid "Removed"
 msgstr "제거됨"
 
+#: src/nft/components/collection/CollectionAsset.tsx
+msgid "Removed from bag"
+msgstr ""
+
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Removing"
 msgstr "풀이"
@@ -1594,6 +1614,10 @@ msgstr "작업 선택"
 #: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 msgid "Select token"
 msgstr "토큰 선택"
+
+#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
+msgid "Selected"
+msgstr ""
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
@@ -2679,10 +2703,6 @@ msgstr "{SOCKS_AMOUNT} UNI"
 #: src/components/claim/ClaimModal.tsx
 msgid "{USER_AMOUNT} UNI"
 msgstr "{USER_AMOUNT} UNI"
-
-#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
-msgid "{disabledTooltipText}"
-msgstr "{disabledTooltipText}"
 
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "{label} might be down right now, or you may have lost your network connection."
