@@ -12,7 +12,7 @@ import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hoo
 import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useMemo } from 'react'
 import { Copy, ExternalLink, Power } from 'react-feather'
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useCurrencyBalanceString } from 'state/connection/hooks'
 import { useAppDispatch } from 'state/hooks'
@@ -27,23 +27,30 @@ import { ButtonEmphasis, ButtonSize, ThemeButton } from '../Button'
 import StatusIcon from '../Identicon/StatusIcon'
 import IconButton, { IconHoverText } from './IconButton'
 
-const WalletButton = styled(ThemeButton)`
+const ProfileLink = styled(Link)`
+  display: flex;
+  margin-top: 12px;
+  text-decoration: none;
+`
+const ProfileButton = styled(ThemeButton)`
+  background: ${({ theme }) => theme.accentAction};
+  border: none;
   border-radius: 12px;
+  color: ${({ theme }) => theme.accentTextLightPrimary};
+  flex: 1 1 auto;
+  margin: 0;
   padding-top: 10px;
   padding-bottom: 10px;
-  margin-top: 12px;
-  color: white;
-  border: none;
 `
 
-const ProfileButton = styled(WalletButton)`
-  background: ${({ theme }) => theme.accentAction};
-  transition: ${({ theme }) => theme.transition.duration.fast} ${({ theme }) => theme.transition.timing.ease}
-    background-color;
-`
-
-const UNIButton = styled(WalletButton)`
+const UNIButton = styled(ThemeButton)`
   background: linear-gradient(to right, #9139b0 0%, #4261d6 100%);
+  border: none;
+  border-radius: 12px;
+  color: ${({ theme }) => theme.accentTextLightPrimary};
+  margin-top: 12px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 `
 
 const Column = styled.div`
@@ -111,7 +118,6 @@ const AuthenticatedHeader = () => {
     explorer,
   } = getChainInfoOrDefault(chainId ? chainId : SupportedChainId.MAINNET)
   const nftFlag = useNftFlag()
-  const navigate = useNavigate()
   const closeModal = useCloseModal(ApplicationModal.WALLET_DROPDOWN)
 
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
@@ -138,13 +144,12 @@ const AuthenticatedHeader = () => {
     return price * balance
   }, [balanceString, nativeCurrencyPrice])
 
-  const navigateToProfile = () => {
+  const handleProfileButtonClick = useCallback(() => {
     resetSellAssets()
     setSellPageState(ProfilePageStateType.VIEWING)
     clearCollectionFilters()
-    navigate('/nfts/profile')
     closeModal()
-  }
+  }, [clearCollectionFilters, closeModal, resetSellAssets, setSellPageState])
 
   return (
     <AuthenticatedHeaderWrapper>
@@ -177,9 +182,11 @@ const AuthenticatedHeader = () => {
           <USDText>${amountUSD.toFixed(2)} USD</USDText>
         </BalanceWrapper>
         {nftFlag === NftVariant.Enabled && (
-          <ProfileButton onClick={navigateToProfile} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
-            <Trans>View and sell NFTs</Trans>
-          </ProfileButton>
+          <ProfileLink to="/nfts/profile">
+            <ProfileButton onClick={handleProfileButtonClick} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
+              <Trans>View and sell NFTs</Trans>
+            </ProfileButton>
+          </ProfileLink>
         )}
         {isUnclaimed && (
           <UNIButton onClick={openClaimModal} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
