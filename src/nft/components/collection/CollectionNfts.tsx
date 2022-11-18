@@ -111,6 +111,24 @@ const ClearAllButton = styled.button`
   background: none;
 `
 
+// Using negative margin and overflowing the width but 2*16px so that the edges of this area
+// always properly clip the softer, wider shadow on the cards
+const FilterContainer = styled(AnimatedBox)`
+  background: ${({ theme }) => theme.background};
+  marginleft: -16px;
+  width: calc(100% + 32px);
+  padding: 16px;
+  position: sticky;
+  top: 72px;
+  width: 100%;
+  z-index: 3;
+
+  margin-bottom: 8px;
+  @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    margin-bottom: 20px;
+  }
+`
+
 const SweepButton = styled.div<{ toggled: boolean; disabled?: boolean }>`
   display: flex;
   gap: 8px;
@@ -451,15 +469,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   return (
     <>
-      <AnimatedBox
-        position="sticky"
-        top="72"
-        width="full"
-        zIndex="3"
-        marginBottom={{ sm: '8', md: '20' }}
-        padding="16"
-        className={styles.actionBarContainer}
-      >
+      <FilterContainer>
         <ActionsContainer>
           <ActionsSubContainer>
             <TraceEvent
@@ -562,7 +572,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             </ClearAllButton>
           ) : null}
         </Row>
-      </AnimatedBox>
+      </FilterContainer>
       <InfiniteScroll
         next={() => loadNext(ASSET_PAGE_SIZE)}
         hasMore={hasNext}
