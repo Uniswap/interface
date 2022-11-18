@@ -161,7 +161,7 @@ function PositionsLoadingPlaceholder() {
   )
 }
 
-function WrongNetworkCard({ chainId }: { chainId: number | undefined }) {
+function WrongNetworkCard({ chainId }: { chainId?: number }) {
   const theme = useTheme()
 
   return (
