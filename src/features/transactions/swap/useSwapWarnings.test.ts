@@ -83,57 +83,19 @@ const tradeErrorState: DerivedSwapInfo = {
   nativeCurrencyBalance: CurrencyAmount.fromRawAmount(ETH, '0'),
 }
 
-const insufficientGasBalanceState: DerivedSwapInfo = {
-  ...emptySwapInfo,
-  currencyAmounts: {
-    [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(DAI, '1000'),
-    [CurrencyField.OUTPUT]: CurrencyAmount.fromRawAmount(ETH, '2'),
-  },
-  currencyBalances: {
-    [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(DAI, '10000'),
-    [CurrencyField.OUTPUT]: CurrencyAmount.fromRawAmount(ETH, '0'),
-  },
-  currencies: {
-    [CurrencyField.INPUT]: DAI,
-    [CurrencyField.OUTPUT]: ETH,
-  },
-  exactCurrencyField: CurrencyField.INPUT,
-  trade: { loading: false, error: undefined, trade: null },
-  nativeCurrencyBalance: CurrencyAmount.fromRawAmount(ETH, '0'),
-}
-
 const mockTranslate = jest.fn()
 
 describe(getSwapWarnings, () => {
   it('catches incomplete form errors', async () => {
-    const warnings = getSwapWarnings(mockTranslate, account, swapState, networkUp, undefined)
+    const warnings = getSwapWarnings(mockTranslate, account, swapState, networkUp)
     expect(warnings.length).toBe(1)
     expect(warnings[0].type).toEqual(WarningLabel.FormIncomplete)
   })
 
   it('catches insufficient balance errors', () => {
-    const warnings = getSwapWarnings(
-      mockTranslate,
-      account,
-      insufficientBalanceState,
-      networkUp,
-      undefined
-    )
+    const warnings = getSwapWarnings(mockTranslate, account, insufficientBalanceState, networkUp)
     expect(warnings.length).toBe(1)
     expect(warnings[0].type).toEqual(WarningLabel.InsufficientFunds)
-  })
-
-  it('catches insufficient gas errors', () => {
-    const warnings = getSwapWarnings(
-      mockTranslate,
-      account,
-      insufficientGasBalanceState,
-      networkUp,
-      '100'
-    )
-    expect(
-      warnings.find((warning) => warning.type === WarningLabel.InsufficientGasFunds)
-    ).toBeTruthy()
   })
 
   it('catches multiple errors', () => {

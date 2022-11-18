@@ -1,13 +1,14 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { useCallback, useEffect, useReducer, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { WarningAction } from 'src/components/modals/WarningModal/types'
 import { TokenSelector, TokenSelectorVariation } from 'src/components/TokenSelector/TokenSelector'
 import {
   useDerivedSwapInfo,
   useSwapActionHandlers,
   useSwapTxAndGasInfo,
 } from 'src/features/transactions/swap/hooks'
-import { useSwapWarnings } from 'src/features/transactions/swap/useSwapWarnings'
+import { useSwapGasWarning, useSwapWarnings } from 'src/features/transactions/swap/useSwapWarnings'
 import { TransactionFlow, TransactionStep } from 'src/features/transactions/TransactionFlow'
 import {
   CurrencyField,
@@ -34,11 +35,18 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
   const { onSelectCurrency, onHideTokenSelector } = useSwapActionHandlers(dispatch)
   const { selectingCurrencyField, currencies } = derivedSwapInfo
   const [step, setStep] = useState<TransactionStep>(TransactionStep.FORM)
+
+  const warnings = useSwapWarnings(t, account, derivedSwapInfo)
   const { txRequest, approveTxRequest, totalGasFee } = useSwapTxAndGasInfo(
     derivedSwapInfo,
-    step === TransactionStep.SUBMITTED
+    step === TransactionStep.SUBMITTED ||
+      warnings.some((warning) => warning.action === WarningAction.DisableReview)
   )
-  const warnings = useSwapWarnings(t, account, derivedSwapInfo, totalGasFee)
+  const gasWarning = useSwapGasWarning(derivedSwapInfo, totalGasFee)
+
+  const allWarnings = useMemo(() => {
+    return !gasWarning ? warnings : [...warnings, gasWarning]
+  }, [warnings, gasWarning])
 
   // keep currencies list option as state so that rendered list remains stable through the slide animation
   const [listVariation, setListVariation] = useState<TokenSelectorVariation>(
@@ -88,7 +96,7 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
       }
       totalGasFee={totalGasFee}
       txRequest={txRequest}
-      warnings={warnings}
+      warnings={allWarnings}
       onClose={onClose}
     />
   )

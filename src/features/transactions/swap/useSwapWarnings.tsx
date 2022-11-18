@@ -1,7 +1,7 @@
 import { NetInfoState, useNetInfo } from '@react-native-community/netinfo'
 import { CurrencyAmount, NativeCurrency, Percent } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { TFunction } from 'react-i18next'
+import { TFunction, useTranslation } from 'react-i18next'
 import { getNetworkWarning } from 'src/components/modals/WarningModal/constants'
 import {
   Warning,
@@ -23,16 +23,14 @@ export function getSwapWarnings(
   t: TFunction,
   account: Account,
   derivedSwapInfo: DerivedSwapInfo,
-  networkStatus: NetInfoState,
-  gasFee?: string
+  networkStatus: NetInfoState
 ) {
   const warnings: Warning[] = []
   if (!networkStatus.isConnected) {
     warnings.push(getNetworkWarning(t))
   }
 
-  const { currencyBalances, currencyAmounts, currencies, trade, nativeCurrencyBalance } =
-    derivedSwapInfo
+  const { currencyBalances, currencyAmounts, currencies, trade } = derivedSwapInfo
 
   const priceImpact = trade.trade?.priceImpact
 
@@ -89,34 +87,6 @@ export function getSwapWarnings(
     }
   }
 
-  // insufficient funds for gas
-  const nativeAmountIn = currencyAmountIn?.currency.isNative
-    ? (currencyAmountIn as CurrencyAmount<NativeCurrency>)
-    : undefined
-  const hasGasFunds = hasSufficientFundsIncludingGas({
-    transactionAmount: nativeAmountIn,
-    gasFee,
-    nativeCurrencyBalance,
-  })
-  if (
-    // if input balance is already insufficient for swap, don't show balance warning for gas
-    !swapBalanceInsufficient &&
-    nativeCurrencyBalance &&
-    !hasGasFunds
-  ) {
-    warnings.push({
-      type: WarningLabel.InsufficientGasFunds,
-      severity: WarningSeverity.Medium,
-      action: WarningAction.DisableSubmit,
-      title: t('Not enough {{ nativeCurrency }} to pay network fee', {
-        nativeCurrency: nativeCurrencyBalance.currency.symbol,
-      }),
-      message: t('Network fees are paid in the native token. Buy more {{ nativeCurrency }}.', {
-        nativeCurrency: nativeCurrencyBalance.currency.symbol,
-      }),
-    })
-  }
-
   // swap form is missing input, output fields
   if (formIncomplete(derivedSwapInfo)) {
     warnings.push({
@@ -159,16 +129,11 @@ export function getSwapWarnings(
   return warnings
 }
 
-export function useSwapWarnings(
-  t: TFunction,
-  account: Account,
-  derivedSwapInfo: DerivedSwapInfo,
-  gasFee?: string
-) {
+export function useSwapWarnings(t: TFunction, account: Account, derivedSwapInfo: DerivedSwapInfo) {
   const networkStatus = useNetInfo()
   return useMemo(() => {
-    return getSwapWarnings(t, account, derivedSwapInfo, networkStatus, gasFee)
-  }, [account, derivedSwapInfo, t, gasFee, networkStatus])
+    return getSwapWarnings(t, account, derivedSwapInfo, networkStatus)
+  }, [account, derivedSwapInfo, t, networkStatus])
 }
 
 const formIncomplete = (derivedSwapInfo: DerivedSwapInfo) => {
@@ -184,6 +149,43 @@ const formIncomplete = (derivedSwapInfo: DerivedSwapInfo) => {
   }
 
   return false
+}
+
+export function useSwapGasWarning(
+  { currencyAmounts, nativeCurrencyBalance, currencyBalances }: DerivedSwapInfo,
+  gasFee?: string
+) {
+  const { t } = useTranslation()
+  const currencyAmountIn = currencyAmounts[CurrencyField.INPUT]
+  const currencyBalanceIn = currencyBalances[CurrencyField.INPUT]
+
+  // insufficient funds for gas
+  const nativeAmountIn = currencyAmountIn?.currency.isNative
+    ? (currencyAmountIn as CurrencyAmount<NativeCurrency>)
+    : undefined
+  const hasGasFunds = hasSufficientFundsIncludingGas({
+    transactionAmount: nativeAmountIn,
+    gasFee,
+    nativeCurrencyBalance,
+  })
+  const swapBalanceInsufficient = currencyAmountIn && currencyBalanceIn?.lessThan(currencyAmountIn)
+
+  return useMemo(() => {
+    if (gasFee === undefined || swapBalanceInsufficient || !nativeCurrencyBalance || hasGasFunds)
+      return
+
+    return {
+      type: WarningLabel.InsufficientGasFunds,
+      severity: WarningSeverity.Medium,
+      action: WarningAction.DisableSubmit,
+      title: t('Not enough {{ nativeCurrency }} to pay network fee', {
+        nativeCurrency: nativeCurrencyBalance.currency.symbol,
+      }),
+      message: t('Network fees are paid in the native token. Buy more {{ nativeCurrency }}.', {
+        nativeCurrency: nativeCurrencyBalance.currency.symbol,
+      }),
+    }
+  }, [gasFee, hasGasFunds, nativeCurrencyBalance, swapBalanceInsufficient, t])
 }
 
 export function isPriceImpactWarning(warning: Warning) {

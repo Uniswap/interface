@@ -1,6 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import React, { useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { WarningAction } from 'src/components/modals/WarningModal/types'
 import { RecipientSelect } from 'src/components/RecipientSelect/RecipientSelect'
 import { TokenSelector, TokenSelectorVariation } from 'src/components/TokenSelector/TokenSelector'
 import { useTransactionGasFee } from 'src/features/gas/hooks'
@@ -38,16 +39,17 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
   const { isUSDInput, exactAmountToken, exactAmountUSD } = derivedTransferInfo
   const [step, setStep] = useState<TransactionStep>(TransactionStep.FORM)
   const txRequest = useTransferTransactionRequest(derivedTransferInfo)
+  const warnings = useTransferWarnings(t, account, derivedTransferInfo)
   const gasFeeInfo = useTransactionGasFee(
     txRequest,
     GasSpeed.Urgent,
     // stop polling for gas once transaction is submitted
-    step === TransactionStep.SUBMITTED
+    step === TransactionStep.SUBMITTED ||
+      warnings.some((warning) => warning.action === WarningAction.DisableReview)
   )
   const transferTxWithGasSettings = useMemo(() => {
     return gasFeeInfo ? { ...txRequest, ...gasFeeInfo.params } : txRequest
   }, [gasFeeInfo, txRequest])
-  const warnings = useTransferWarnings(t, account, derivedTransferInfo)
 
   return (
     <TransactionFlow
