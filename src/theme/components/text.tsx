@@ -5,14 +5,13 @@
 import { Text, TextProps as TextPropsOriginal } from 'rebass'
 import styled from 'styled-components/macro'
 
-const TextWrapper = styled(Text)<{ color: keyof string }>`
+export const TextWrapper = styled(Text)<{ color: keyof string }>`
   color: ${({ color, theme }) => (theme as any)[color]};
 `
 
 type TextProps = Omit<TextPropsOriginal, 'css'>
 
 // todo: export each component individually
-
 export const ThemedText = {
   // todo: there should be just one `Body` with default color, no need to make all variations
   BodyPrimary(props: TextProps) {

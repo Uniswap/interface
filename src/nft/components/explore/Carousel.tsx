@@ -2,15 +2,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from 'nft/components/icons'
 import { calculateCardIndex, calculateFirstCardIndex, calculateRank } from 'nft/utils'
 import { ReactNode, useCallback, useEffect, useRef } from 'react'
 import { a, useSprings } from 'react-spring'
-import styled, { css } from 'styled-components/macro'
-
-const carouselHeightStyle = css`
-  height: 296px;
-
-  @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    height: 316px;
-  }
-`
+import styled from 'styled-components/macro'
 
 const CarouselContainer = styled.div`
   display: flex;
@@ -19,12 +11,11 @@ const CarouselContainer = styled.div`
 `
 
 const CarouselCardContainer = styled.div`
-  ${carouselHeightStyle}
-
   position: relative;
   width: 100%;
   overflow-x: hidden;
   max-width: 600px;
+  height: 390px;
 `
 
 const CarouselItemCard = styled(a.div)`
@@ -42,15 +33,18 @@ const CarouselItemCard = styled(a.div)`
 `
 
 const CarouselItemIcon = styled.div`
-  ${carouselHeightStyle}
   align-items: center;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.accentAction};
   cursor: pointer;
   display: none;
   user-select: none;
+  height: calc(100%);
+  padding: 4px 0 32px;
+
   @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     display: flex;
   }
+
   :hover {
     opacity: ${({ theme }) => theme.opacity.hover};
   }
@@ -126,11 +120,11 @@ export const Carousel = ({ children, activeIndex, toggleNextSlide }: CarouselPro
         <ChevronLeftIcon width="16px" height="16px" />
       </CarouselItemIcon>
       <CarouselCardContainer>
-        {/* {springs.map(({ x }, i) => ( */}
-        <CarouselItemCard key={0} style={{ x: 0 }}>
-          {children[0]}
-        </CarouselItemCard>
-        {/* ))} */}
+        {springs.map(({ x }, i) => (
+          <CarouselItemCard key={0} style={{ x: 0 }}>
+            {children[0]}
+          </CarouselItemCard>
+        ))}
       </CarouselCardContainer>
       <CarouselItemIcon onClick={() => toggleSlide(1)}>
         <ChevronRightIcon width="16px" height="16px" />
