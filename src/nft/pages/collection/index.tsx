@@ -22,13 +22,13 @@ import { ThemedText } from 'theme'
 
 const FILTER_WIDTH = 332
 const BAG_WIDTH = 324
-const BannerWrapper = styled(Box)`
+
+export const BannerWrapper = styled(Box)`
   height: 100px;
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
     height: 288px;
   }
 `
-export const COLLECTION_BANNER_HEIGHT = 100
 
 export const CollectionBannerLoading = () => <Box height="full" width="full" className={styles.loadingBanner} />
 
