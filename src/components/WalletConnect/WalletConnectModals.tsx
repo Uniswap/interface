@@ -18,7 +18,6 @@ import {
 } from 'src/features/wallet/hooks'
 import { EthMethod } from 'src/features/walletConnect/types'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
-import { rejectRequest } from 'src/features/walletConnect/WalletConnect'
 import {
   removePendingSession,
   removeRequest,
@@ -65,7 +64,6 @@ function RequestModal({ currRequest }: RequestModalProps) {
   const theme = useAppTheme()
 
   const onClose = () => {
-    rejectRequest(currRequest.internalId)
     dispatch(
       removeRequest({ requestInternalId: currRequest.internalId, account: activeAccountAddress })
     )
