@@ -144,13 +144,13 @@ export function SettingsScreen() {
   return (
     <HeaderScrollScreen
       contentHeader={
-        <BackHeader alignment="left" mx="md" pt="md">
-          <Text variant="subheadLarge">{t('Settings')}</Text>
+        <BackHeader alignment="center" mx="md" pt="md">
+          <Text variant="bodyLarge">{t('Settings')}</Text>
         </BackHeader>
       }
       fixedHeader={
         <BackHeader mb="xxs">
-          <Text variant="subheadLarge">{t('Settings')}</Text>
+          <Text variant="bodyLarge">{t('Settings')}</Text>
         </BackHeader>
       }>
       <Flex px="lg" py="lg">

@@ -22,7 +22,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
   const [selectedSession, setSelectedSession] = useState<WalletConnectSession>()
 
   const headerText = (
-    <Text color="textPrimary" variant="subheadLarge">
+    <Text color="textPrimary" variant="bodyLarge">
       {t('Manage connections')}
     </Text>
   )
@@ -32,7 +32,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
       {headerText}
     </Flex>
   ) : (
-    <BackHeader alignment="left">{headerText}</BackHeader>
+    <BackHeader alignment="center">{headerText}</BackHeader>
   )
 
   return (

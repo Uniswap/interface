@@ -78,8 +78,8 @@ export function SettingsCloudBackupStatus({
 
   return (
     <Screen mx="lg" my="md">
-      <BackHeader alignment="left" mb="md">
-        <Text variant="subheadLarge">{t('iCloud backup')}</Text>
+      <BackHeader alignment="center" mb="md">
+        <Text variant="bodyLarge">{t('iCloud backup')}</Text>
       </BackHeader>
 
       <Flex grow alignItems="stretch" justifyContent="space-evenly" mt="md">

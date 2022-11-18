@@ -13,8 +13,8 @@ export function WebViewScreen({
   const { headerTitle, uriLink } = route.params
   return (
     <Screen edges={['top', 'left', 'right']}>
-      <BackHeader alignment="left" mb="md">
-        <Text variant="subheadLarge">{headerTitle}</Text>
+      <BackHeader alignment="center" mb="md" pt="xxs" px="sm">
+        <Text variant="bodyLarge">{headerTitle}</Text>
       </BackHeader>
       <Separator />
       <WebView

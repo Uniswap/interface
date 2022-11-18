@@ -53,8 +53,8 @@ export function SettingsWalletEdit({
 
   return (
     <Screen>
-      <BackHeader alignment="left" mx="md" pt="md">
-        <Text variant="subheadLarge">{t('Nickname')}</Text>
+      <BackHeader alignment="center" mx="md" pt="md">
+        <Text variant="bodyLarge">{t('Nickname')}</Text>
       </BackHeader>
       <Flex gap="xl" px="lg" py="lg">
         <Flex gap="none">

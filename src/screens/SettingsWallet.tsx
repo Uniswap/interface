@@ -199,7 +199,7 @@ export function SettingsWallet({
         },
         {
           screen: Screens.SettingsWalletManageConnection,
-          text: t('Manage connections'),
+          text: t('Manage apps'),
           icon: <GlobalIcon {...iconProps} />,
           screenProps: { address },
           isHidden: readonly,
@@ -242,9 +242,14 @@ export function SettingsWallet({
 
   return (
     <Screen>
-      <BackHeader alignment="left" mx="md" pt="md">
+      <BackHeader alignment="center" mx="md" pt="md">
         <Flex shrink>
-          <AddressDisplay hideAddressInSubtitle address={address} variant="subheadLarge" />
+          <AddressDisplay
+            hideAddressInSubtitle
+            address={address}
+            showAccountIcon={false}
+            variant="bodyLarge"
+          />
         </Flex>
       </BackHeader>
 

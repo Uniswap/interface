@@ -165,8 +165,8 @@ export function SettingsBiometricAuthScreen() {
         />
       )}
       <Screen>
-        <BackHeader alignment="left" mx="md" pt="md">
-          <Text variant="buttonLabelLarge">
+        <BackHeader alignment="center" mx="md" pt="md">
+          <Text variant="bodyLarge">
             {t('{{authenticationTypeName}} ID', { authenticationTypeName })}
           </Text>
         </BackHeader>

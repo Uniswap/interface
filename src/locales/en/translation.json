@@ -51,7 +51,6 @@
   "View on Etherscan": "View on Etherscan",
   "Volume": "Volume",
   "TVL": "TVL",
-  "MCap {{marketCap}}": "MCap {{marketCap}}",
   "Update app": "Update app",
   "Update the app to continue": "Update the app to continue",
   "The version of Uniswap Wallet you’re using is out of date and is missing critical upgrades. If you don’t update the app or you don’t have your recovery phrase written down, you won’t be able to access your assets. ": "The version of Uniswap Wallet you’re using is out of date and is missing critical upgrades. If you don’t update the app or you don’t have your recovery phrase written down, you won’t be able to access your assets. ",
@@ -458,5 +457,6 @@
   "Notifications": "Notifications",
   "Hide small balances": "Hide small balances",
   "Hide unknown tokens": "Hide unknown tokens",
+  "Manage apps": "Manage apps",
   "Security": "Security"
 }

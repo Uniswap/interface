@@ -30,8 +30,8 @@ export function SettingsViewSeedPhraseScreen({
 
   return (
     <Screen mx="lg" my="lg">
-      <BackHeader alignment="left">
-        <Text variant="subheadLarge">{t('Recovery phrase')}</Text>
+      <BackHeader alignment="center">
+        <Text variant="bodyLarge">{t('Recovery phrase')}</Text>
       </BackHeader>
       <SeedPhraseDisplay mnemonicId={mnemonicId} onDismiss={navigateBack} />
     </Screen>

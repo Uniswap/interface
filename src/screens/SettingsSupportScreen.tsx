@@ -16,8 +16,8 @@ export function SettingsSupportScreen() {
   return (
     <SheetScreen px="lg">
       <ScrollView contentContainerStyle={{ ...flex.fill, paddingTop: theme.spacing.xxl }}>
-        <BackHeader alignment="left" mb="lg">
-          <Text variant="subheadLarge">{t('Wallet Support')}</Text>
+        <BackHeader alignment="center" mb="lg">
+          <Text variant="bodyLarge">{t('Wallet Support')}</Text>
         </BackHeader>
         <Text mb="sm" variant="subheadLarge">
           {t('Recent logs')}
