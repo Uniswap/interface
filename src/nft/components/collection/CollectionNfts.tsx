@@ -130,7 +130,7 @@ const ClearAllButton = styled.button`
 // always properly clip the softer, wider shadow on the cards
 const FilterContainer = styled(AnimatedBox)`
   background: ${({ theme }) => theme.background};
-  marginleft: -16px;
+  margin-left: -16px;
   width: calc(100% + 32px);
   padding: 16px;
   position: sticky;
