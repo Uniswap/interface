@@ -6,12 +6,11 @@ import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
 import { CheckBox } from 'src/components/buttons/CheckBox'
-import { Box, Flex } from 'src/components/layout'
+import { Flex } from 'src/components/layout'
 import { ManualBackupEducationSection } from 'src/components/mnemonic/ManualBackupEducationSection'
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
 import { MnemonicTest } from 'src/components/mnemonic/MnemonicTest'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
-import { Text } from 'src/components/Text'
 import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
@@ -78,18 +77,13 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
           title={t('Instructions for backing up your recovery phrase')}>
           <ManualBackupEducationSection />
           <Flex justifyContent="flex-end">
-            <Flex row gap="xs">
-              <Box mt="xxxs">
-                <CheckBox checked={hasConsent} onCheckPressed={() => setHasConsent(!hasConsent)} />
-              </Box>
-              <Box flexShrink={1}>
-                <Text variant="buttonLabelMicro">
-                  {t(
-                    'I understand that if I lose my recovery phrase, Uniswap Labs cannot restore it.'
-                  )}
-                </Text>
-              </Box>
-            </Flex>
+            <CheckBox
+              checked={hasConsent}
+              text={t(
+                'I understand that if I lose my recovery phrase, Uniswap Labs cannot restore it.'
+              )}
+              onCheckPressed={() => setHasConsent(!hasConsent)}
+            />
             <Button
               disabled={!hasConsent}
               label={t('Continue')}

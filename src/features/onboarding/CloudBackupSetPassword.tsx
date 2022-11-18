@@ -5,7 +5,6 @@ import { Button } from 'src/components/buttons/Button'
 import { CheckBox } from 'src/components/buttons/CheckBox'
 import { PasswordInput } from 'src/components/input/PasswordInput'
 import { Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
 import { PasswordError } from 'src/features/onboarding/PasswordError'
 import { ElementName } from 'src/features/telemetry/constants'
 import { isValidPassword } from 'src/utils/password'
@@ -117,16 +116,13 @@ export function CloudBackupSetPassword({
             />
           ) : null}
         </Flex>
-        <Flex row gap="xs">
-          <CheckBox checked={consentChecked} onCheckPressed={onPressConsent} />
-          <Flex fill>
-            <Text color="textPrimary" variant="buttonLabelMicro">
-              {t(
-                'I understand that if I forget my password, Uniswap Labs cannot retrieve my recovery phrase.'
-              )}
-            </Text>
-          </Flex>
-        </Flex>
+        <CheckBox
+          checked={consentChecked}
+          text={t(
+            'I understand that if I forget my password, Uniswap Labs cannot retrieve my recovery phrase.'
+          )}
+          onCheckPressed={onPressConsent}
+        />
       </Flex>
       <Button
         disabled={isButtonDisabled}
