@@ -1,6 +1,8 @@
 import React, { ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'
+import { StyleSheet } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import FiatOnRampBackground from 'src/assets/backgrounds/fiat-onramp-banner.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
@@ -19,12 +21,16 @@ export function FiatOnRampBanner(props: ComponentProps<typeof Box>) {
 
   return (
     <TouchableArea
-      bg="magentaVibrant"
       borderRadius="md"
+      overflow="hidden"
       p="sm"
+      style={styles.container}
       onPress={onPress}
       {...props}
       hapticFeedback>
+      <Box flex={1} position="absolute" right={0} top={0}>
+        <FiatOnRampBackground color={theme.colors.white} />
+      </Box>
       <Flex gap="xxs">
         <Flex row justifyContent="space-between">
           <Text color="textOnBrightPrimary" variant="buttonLabelMedium">
@@ -37,10 +43,14 @@ export function FiatOnRampBanner(props: ComponentProps<typeof Box>) {
           />
         </Flex>
 
-        <Text color="textOnBrightPrimary" opacity={0.72} variant="bodySmall">
+        <Text color="textOnBrightPrimary" opacity={0.72} variant="subheadSmall">
           {t('Get the lowest fees in DeFi when you buy crypto on Uniswap Wallet.')}
         </Text>
       </Flex>
     </TouchableArea>
   )
 }
+
+const styles = StyleSheet.create({
+  container: { backgroundColor: '#FB36D0' },
+})

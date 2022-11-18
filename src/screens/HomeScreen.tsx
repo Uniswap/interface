@@ -115,20 +115,20 @@ function QuickActions() {
 
   return (
     <Flex centered row gap="xs">
-      <ActionButton
-        Icon={SendIcon}
-        label={t('Send')}
-        name={ElementName.Send}
-        onPress={onPressSend}
-      />
-      {fiatOnRampShown && (
+      {fiatOnRampShown ? (
         <ActionButton
           Icon={DollarIcon}
           label={t('Buy')}
           name={ElementName.Buy}
           onPress={onPressBuy}
         />
-      )}
+      ) : null}
+      <ActionButton
+        Icon={SendIcon}
+        label={t('Send')}
+        name={ElementName.Send}
+        onPress={onPressSend}
+      />
       <ActionButton
         Icon={ReceiveArrow}
         label={t('Receive')}

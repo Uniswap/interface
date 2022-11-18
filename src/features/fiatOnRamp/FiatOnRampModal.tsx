@@ -2,7 +2,7 @@ import * as WebBrowser from 'expo-web-browser'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
-import FiatOnRampModalBackground from 'src/assets/backgrounds/fiat-onramp.svg'
+import FiatOnRampModalBackground from 'src/assets/backgrounds/fiat-onramp-modal.svg'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { Box } from 'src/components/layout'
 import { Flex } from 'src/components/layout/Flex'
@@ -72,7 +72,7 @@ function FiatOnRampModalInner() {
 
   return (
     <BottomSheetModal disableSwipe name={ModalName.ForceUpgradeModal} onClose={onClose}>
-      <Screen bg="background1" edges={['bottom']} pt="md" px="lg">
+      <Screen bg="background1" edges={['bottom']} mb="lg" pt="md" px="lg">
         <Flex gap="lg">
           <FiatOnRampModalBackground color={theme.colors.background1} width="100%" />
           <Flex alignItems="center" gap="lg">
