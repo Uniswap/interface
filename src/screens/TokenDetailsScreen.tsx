@@ -182,7 +182,7 @@ function TokenDetails({
     setActiveTransactionType(undefined)
     const swapFormState: TransactionState = {
       exactCurrencyField: CurrencyField.OUTPUT,
-      exactAmountToken: '0',
+      exactAmountToken: '',
       [CurrencyField.INPUT]: null,
       [CurrencyField.OUTPUT]: {
         address: currencyAddress(currency),
@@ -197,7 +197,7 @@ function TokenDetails({
     setActiveTransactionType(undefined)
     const swapFormState: TransactionState = {
       exactCurrencyField: CurrencyField.INPUT,
-      exactAmountToken: '0',
+      exactAmountToken: '',
       [CurrencyField.INPUT]: {
         address: currencyAddress(currency),
         chainId: currency.wrapped.chainId,
