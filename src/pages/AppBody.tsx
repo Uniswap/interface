@@ -1,8 +1,8 @@
 import styled from 'styled-components/macro'
-import { glowEffect, GlowProps } from 'theme/styles/glow'
+import { glowEffect } from 'theme/styles/glow'
 import { Z_INDEX } from 'theme/zIndex'
 
-export const BodyWrapper = styled.main<GlowProps & { margin?: string; maxWidth?: string }>`
+export const BodyWrapper = styled.main<{ chainId?: number; margin?: string; maxWidth?: string }>`
   ${glowEffect}
 
   position: relative;

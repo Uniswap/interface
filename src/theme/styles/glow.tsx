@@ -19,6 +19,7 @@ const getShadowForChainId = (theme: DefaultTheme, chainId?: SupportedChainId) =>
       return theme.networkDefaultShadow
   }
 }
+
 export const glowEffect = css<{ chainId?: SupportedChainId }>`
   border-radius: 16px;
   box-shadow: ${({ theme, chainId }) => getShadowForChainId(theme, chainId)};
