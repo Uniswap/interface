@@ -7,14 +7,7 @@ import { Center, Column, Row } from 'nft/components/Flex'
 import { CrossIcon } from 'nft/components/icons'
 import { FilterSidebar } from 'nft/components/profile/view/FilterSidebar'
 import { subhead } from 'nft/css/common.css'
-import {
-  useFiltersExpanded,
-  useIsMobile,
-  useProfilePageState,
-  useSellAsset,
-  useWalletBalance,
-  useWalletCollections,
-} from 'nft/hooks'
+import { useFiltersExpanded, useIsMobile, useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import { OSCollectionsFetcher } from 'nft/queries'
 import { ProfilePageStateType, WalletCollection } from 'nft/types'
@@ -38,8 +31,7 @@ const WALLET_COLLECTIONS_PAGINATION_LIMIT = 300
 const FILTER_SIDEBAR_WIDTH = 300
 const PADDING = 16
 
-export const ProfilePage = () => {
-  const { address } = useWalletBalance()
+export const ProfilePage = ({ address }: { address: string }) => {
   const collectionFilters = useWalletCollections((state) => state.collectionFilters)
   const setCollectionFilters = useWalletCollections((state) => state.setCollectionFilters)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
@@ -77,7 +69,7 @@ export const ProfilePage = () => {
     hasNextPage,
     isFetchingNextPage,
     isSuccess,
-  } = useInfiniteQuery('ownerCollections', getOwnerCollections, {
+  } = useInfiniteQuery(['ownerCollections', { address }], getOwnerCollections, {
     getNextPageParam: (lastGroup, _allGroups) => (lastGroup.data.length === 0 ? undefined : lastGroup.nextPage),
     refetchInterval: 15000,
     refetchIntervalInBackground: false,
@@ -92,7 +84,7 @@ export const ProfilePage = () => {
   } = useNftBalanceQuery(address, collectionFilters, [], DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
 
   const ownerCollections = useMemo(
-    () => (isSuccess ? ownerCollectionsData?.pages.map((page) => page.data).flat() : []),
+    () => (isSuccess ? ownerCollectionsData?.pages.map((page) => page.data).flat() : null),
     [isSuccess, ownerCollectionsData]
   )
 
