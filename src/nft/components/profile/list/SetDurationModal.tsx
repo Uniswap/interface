@@ -13,6 +13,7 @@ import { ThemedText } from 'theme'
 
 const ModalWrapper = styled(Column)`
   gap: 4px;
+  position: relative;
 `
 
 const InputWrapper = styled(Row)<{ isInvalid: boolean }>`
@@ -40,6 +41,8 @@ const DropdownWrapper = styled(ThemedText.BodyPrimary)`
 const ErrorMessage = styled(Row)`
   color: ${({ theme }) => theme.accentCritical};
   gap: 4px;
+  position: absolute;
+  top: 44px;
 `
 
 const WarningIcon = styled(AlertTriangle)`
@@ -108,6 +111,7 @@ export const SetDurationModal = () => {
       <InputWrapper isInvalid={errorState !== ErrorState.valid}>
         <NumericInput
           as="input"
+          type="number"
           pattern="[0-9]"
           borderStyle="none"
           className={bodySmall}
