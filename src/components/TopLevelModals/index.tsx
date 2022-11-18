@@ -9,6 +9,7 @@ import { ApplicationModal } from 'state/application/reducer'
 
 const Bag = lazy(() => import('nft/components/bag/Bag'))
 const TransactionCompleteModal = lazy(() => import('nft/components/collection/TransactionCompleteModal'))
+const AirdropModal = lazy(() => import('components/AidropModal'))
 
 export default function TopLevelModals() {
   const addressClaimOpen = useModalIsOpen(ApplicationModal.ADDRESS_CLAIM)
@@ -25,6 +26,7 @@ export default function TopLevelModals() {
       <ConnectedAccountBlocked account={account} isOpen={open} />
       <Bag />
       {useNftFlag() === NftVariant.Enabled && <TransactionCompleteModal />}
+      {useNftFlag() === NftVariant.Enabled && <AirdropModal />}
     </>
   )
 }

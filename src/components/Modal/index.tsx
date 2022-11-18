@@ -27,9 +27,11 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ scrollOverlay?: bool
 const AnimatedDialogContent = animated(DialogContent)
 // destructure to not pass custom props to Dialog DOM element
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, scrollOverlay, ...rest }) => (
-  <AnimatedDialogContent {...rest} />
-)).attrs({
+const StyledDialogContent = styled(
+  ({ hideBorder, maxWidth, minHeight, maxHeight, mobile, isOpen, scrollOverlay, ...rest }) => (
+    <AnimatedDialogContent {...rest} />
+  )
+).attrs({
   'aria-label': 'dialog',
 })`
   overflow-y: auto;
@@ -37,7 +39,7 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, scro
   &[data-reach-dialog-content] {
     margin: auto;
     background-color: ${({ theme }) => theme.deprecated_bg0};
-    border: 1px solid ${({ theme }) => theme.deprecated_bg1};
+    border: ${({ theme, hideBorder }) => !hideBorder && `1px solid ${theme.deprecated_bg1}`};
     box-shadow: ${({ theme }) => theme.deepShadow};
     padding: 0px;
     width: 50vw;
@@ -45,8 +47,7 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, scro
     overflow-x: hidden;
 
     align-self: ${({ mobile }) => mobile && 'flex-end'};
-
-    max-width: 420px;
+    max-width: ${({ maxWidth }) => maxWidth}px;
     ${({ maxHeight }) =>
       maxHeight &&
       css`
@@ -83,9 +84,11 @@ interface ModalProps {
   onDismiss: () => void
   minHeight?: number | false
   maxHeight?: number
+  maxWidth?: number
   initialFocusRef?: React.RefObject<any>
   children?: React.ReactNode
   scrollOverlay?: boolean
+  hideBorder?: boolean
 }
 
 export default function Modal({
@@ -93,9 +96,11 @@ export default function Modal({
   onDismiss,
   minHeight = false,
   maxHeight = 90,
+  maxWidth = 420,
   initialFocusRef,
   children,
   scrollOverlay,
+  hideBorder = false,
 }: ModalProps) {
   const fadeTransition = useTransition(isOpen, {
     config: { duration: 200 },
@@ -141,6 +146,8 @@ export default function Modal({
                 maxHeight={maxHeight}
                 mobile={isMobile}
                 scrollOverlay={scrollOverlay}
+                hideBorder={hideBorder}
+                maxWidth={maxWidth}
               >
                 {/* prevents the automatic focusing of inputs on mobile by the reach dialog */}
                 {!initialFocusRef && isMobile ? <div tabIndex={1} /> : null}

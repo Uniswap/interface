@@ -15,6 +15,7 @@ export type PopupContent =
 
 export enum ApplicationModal {
   ADDRESS_CLAIM,
+  UNISWAP_NFT_AIRDROP_CLAIM,
   BLOCKED_ACCOUNT,
   DELEGATE,
   CLAIM_POPUP,
