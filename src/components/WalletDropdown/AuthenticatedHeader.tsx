@@ -37,45 +37,6 @@ const WalletButton = styled(ThemeButton)`
   font-size: 16px;
 `
 
-const hoverState = css`
-  :hover::after {
-    border-radius: 12px;
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: ${({ theme }) => theme.stateOverlayHover};
-
-    transition: ${({
-      theme: {
-        transition: { duration, timing },
-      },
-    }) => `background ${duration.medium} ${timing.ease}`};
-
-    z-index: 0;
-  }
-
-  :active::after {
-    border-radius: 12px;
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: ${({ theme }) => theme.stateOverlayPressed};
-    z-index: 0;
-
-    transition: ${({
-      theme: {
-        transition: { duration, timing },
-      },
-    }) => `background ${duration.medium} ${timing.ease}`};
-  }
-`
-
 const ProfileButton = styled.div`
   font-weight: 600;
   width: 100%;
@@ -84,8 +45,6 @@ const ProfileButton = styled.div`
   padding: 10px 12px;
   text-align: center;
   cursor: pointer;
-
-  ${hoverState}
 `
 
 const UNIButton = styled(WalletButton)`

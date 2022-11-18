@@ -25,6 +25,7 @@ const ClaimButton = styled(ThemeButton)`
   width: 100%;
   background-color: ${({ theme }) => theme.accentAction};
   margin-top: 40px;
+  border-radius: 12px;
 `
 
 const Line = styled.div`
