@@ -18,7 +18,6 @@ export const ThemedText = {
   BodyPrimary(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={16} color="textPrimary" {...props} />
   },
-
   BodySecondary(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={16} color="textSecondary" {...props} />
   },
