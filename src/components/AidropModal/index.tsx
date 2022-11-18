@@ -144,7 +144,7 @@ const AirdropModal = () => {
   }
 
   return (
-    <Modal hideBorder isOpen={isOpen} onDismiss={dismiss} maxHeight={90}>
+    <Modal hideBorder isOpen={isOpen} onDismiss={dismiss} maxHeight={90} maxWidth={400}>
       <ModalWrap>
         {isClaimed ? (
           <ClaimContainer>
