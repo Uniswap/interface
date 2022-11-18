@@ -62,7 +62,9 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
       ? filtered
       : allAddressBalances?.length
       ? [allAddressBalances?.[0]]
-      : [{ id: FALLBACK_ID, ownerAddress: addresses[0], tokensTotalDenominatedValue: null }] // if query returned null, fallback to the first address
+      : addresses.length
+      ? [{ id: FALLBACK_ID, ownerAddress: addresses[0], tokensTotalDenominatedValue: null }] // if query returned null, fallback to the first address
+      : []
   }, [allAddressBalances, addresses])
 
   const [selectedAddresses, setSelectedAddresses] = useReducer(
