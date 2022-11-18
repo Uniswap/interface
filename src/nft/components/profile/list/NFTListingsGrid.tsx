@@ -47,42 +47,42 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
         <Column
           marginLeft={selectedMarkets.length > 1 ? '36' : '0'}
           transition="500"
-          className={badge}
+          className={bodySmall}
           color="textSecondary"
           flex="2"
         >
-          YOUR NFTS
+          NFT
         </Column>
         <Row flex={{ sm: '1.5', md: '3' }}>
           <Column className={subheadSmall} flex="1.5">
             <SortDropdown dropDownOptions={priceDropdownOptions} mini miniPrompt="Set price by" />
           </Column>
           <Column
-            className={badge}
+            className={bodySmall}
             color="textSecondary"
             flex="1"
             display={{ sm: 'none', md: 'flex' }}
             textAlign="right"
           >
-            MARKETPLACE FEE
+            Marketplace Fee
           </Column>
           <Column
-            className={badge}
+            className={bodySmall}
             color="textSecondary"
             flex="1"
             display={{ sm: 'none', md: 'flex' }}
             textAlign="right"
           >
-            ROYALTIES
+            Royalties
           </Column>
           <Column
-            className={badge}
+            className={bodySmall}
             color="textSecondary"
             style={{ flex: '1.5' }}
             display={{ sm: 'none', md: 'flex' }}
             textAlign="right"
           >
-            YOU RECEIVE
+            You Receive
           </Column>
         </Row>
       </Row>
