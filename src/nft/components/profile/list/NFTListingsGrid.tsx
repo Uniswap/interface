@@ -262,7 +262,7 @@ const EthPriceDisplay = ({ ethPrice = 0 }: { ethPrice?: number }) => {
             {formatUsdPrice(ethPrice * ethConversion)}
           </Box>
         ) : (
-          '- Eth'
+          '- ETH'
         )}
       </Row>
     </Column>
