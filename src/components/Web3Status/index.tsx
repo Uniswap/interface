@@ -15,7 +15,6 @@ import { useAppSelector } from 'state/hooks'
 import { useDerivedSwapInfo } from 'state/swap/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { flexRowNoWrap } from 'theme/styles'
-
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import {
   useCloseModal,

@@ -17,10 +17,7 @@ const ModalWrap = styled.div`
 `
 
 const Body = styled.div`
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-top: 28px;
-  padding-bottom: 20px;
+  padding: 28px 20px 20px 20px;
 `
 
 const ClaimButton = styled(ThemeButton)`
@@ -28,13 +25,13 @@ const ClaimButton = styled(ThemeButton)`
   background-color: ${({ theme }) => theme.accentAction};
   margin-top: 40px;
   border-radius: 12px;
-  color: white;
+  color: ${({ theme }) => theme.white};
 `
 
 const Line = styled.div`
   height: 1px;
   width: 100%;
-  background-color: white;
+  background-color: ${({ theme }) => theme.white};
   opacity: 0.24;
   margin-top: 12px;
   margin-bottom: 12px;
@@ -120,12 +117,37 @@ const SyledCloseIcon = styled(CloseIcon)`
   ${OpacityHoverState}
 `
 
+const RewardsText = styled.span`
+  font-size: 12px;
+  line-height: 16px;
+  color: ${({ theme }) => theme.white};
+
+  &:first-child {
+    margin-bottom: 8px;
+  }
+`
+
+const RewardsInformationText = styled.span`
+  display: inline-block;
+  font-size: 14px;
+  line-height: 20px;
+  color: ${({ theme }) => theme.textPrimary};
+  margin-bottom: 28px;
+`
+
+const MainHeader = styled.span`
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+  color: ${({ theme }) => theme.white};
+`
+
 const AirdropModal = () => {
   const [isClaimed, setClaimed] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [totalAmount] = useState(300)
-  const isOpen = useModalIsOpen(ApplicationModal.USDC_AIRDROP_CLAIM)
-  const usdcAirdropToggle = useToggleModal(ApplicationModal.USDC_AIRDROP_CLAIM)
+  const isOpen = useModalIsOpen(ApplicationModal.UNISWAP_NFT_AIRDROP_CLAIM)
+  const usdcAirdropToggle = useToggleModal(ApplicationModal.UNISWAP_NFT_AIRDROP_CLAIM)
   const dismiss = () => {
     usdcAirdropToggle()
 
@@ -170,25 +192,23 @@ const AirdropModal = () => {
             <ImageContainer>
               <TextContainer>
                 <SyledCloseIcon onClick={dismiss} stroke="white" />
-                <ThemedText.ButtonLabelMedium>Uniswap NFT Airdrop</ThemedText.ButtonLabelMedium>
+                <MainHeader>Uniswap NFT Airdrop</MainHeader>
                 <USDCLabel>{totalAmount} USDC</USDCLabel>
                 <Line />
                 <RewardsDetailsContainer>
-                  <ThemedText.BodyCaption marginBottom="8px">Trading rewards</ThemedText.BodyCaption>{' '}
-                  <CurrencyText>300 USDC</CurrencyText>
+                  <RewardsText>Trading rewards</RewardsText> <CurrencyText>300 USDC</CurrencyText>
                 </RewardsDetailsContainer>
                 <RewardsDetailsContainer>
-                  <ThemedText.BodyCaption>Genie NFT holder rewards</ThemedText.BodyCaption>{' '}
-                  <CurrencyText>0</CurrencyText>
+                  <RewardsText>Genie NFT holder rewards</RewardsText> <CurrencyText>0</CurrencyText>
                 </RewardsDetailsContainer>
               </TextContainer>
               <StyledImage src={airdropBackgroundv2} />
             </ImageContainer>
             <Body>
-              <ThemedText.BodyBodySmall marginBottom="28px">
+              <RewardsInformationText>
                 As a long time supporter of Genie you’ve been awarded {totalAmount} USDC tokens. Read more about Uniswap
                 NFT.
-              </ThemedText.BodyBodySmall>
+              </RewardsInformationText>
               <LinkWrap href="https://uniswap.org/blog/uniswap-nft-aggregator-announcement" target="_blank">
                 <ThemedText.Link>Read more about Uniswap NFT.</ThemedText.Link>
               </LinkWrap>
