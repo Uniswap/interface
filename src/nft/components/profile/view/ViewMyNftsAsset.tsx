@@ -34,6 +34,16 @@ const getNftDisplayComponent = (
   }
 }
 
+const getUnsupportedNftTextComponent = (asset: WalletAsset) => (
+  <Box as="span" className={bodySmall} style={{ color: themeVars.colors.textPrimary }}>
+    {asset.asset_contract.tokenType === TokenType.ERC1155 ? (
+      <Trans>ERC-1155 support coming soon</Trans>
+    ) : (
+      <Trans>Blocked from trading</Trans>
+    )}
+  </Box>
+)
+
 export const ViewMyNftsAsset = ({
   asset,
   mediaShouldBePlaying,
@@ -113,20 +123,13 @@ export const ViewMyNftsAsset = ({
           placement="bottom"
         >
           <MouseoverTooltip
-            text={
-              <Box as="span" className={bodySmall} style={{ color: themeVars.colors.textPrimary }}>
-                {asset.asset_contract.tokenType === TokenType.ERC1155 ? (
-                  <Trans>ERC-1155 support coming soon</Trans>
-                ) : (
-                  <Trans>Blocked from trading</Trans>
-                )}
-              </Box>
-            }
+            text={getUnsupportedNftTextComponent(asset)}
             placement="bottom"
             offsetX={0}
             offsetY={-100}
             style={{ display: 'block' }}
             disableHover={!isDisabled}
+            timeout={isMobile ? TOOLTIP_TIMEOUT : undefined}
           >
             {getNftDisplayComponent(assetMediaType, mediaShouldBePlaying, setCurrentTokenPlayingMedia)}
           </MouseoverTooltip>
