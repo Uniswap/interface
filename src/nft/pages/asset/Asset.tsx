@@ -6,7 +6,8 @@ import { useLoadNftBalanceQuery } from 'graphql/data/nft/NftBalance'
 import { AssetDetails } from 'nft/components/details/AssetDetails'
 import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
-import { Suspense, useMemo } from 'react'
+import { useBag } from 'nft/hooks'
+import { Suspense, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
@@ -66,8 +67,13 @@ const Asset = () => {
 const AssetPage = () => {
   const { tokenId, contractAddress } = useParams()
   const { account } = useWeb3React()
+  const setBagExpanded = useBag((state) => state.setBagExpanded)
   useLoadDetailsQuery(contractAddress, tokenId)
   useLoadNftBalanceQuery(account, contractAddress, tokenId)
+
+  useEffect(() => {
+    setBagExpanded({ bagExpanded: false, manualClose: false })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Suspense fallback={<AssetDetailsLoading />}>

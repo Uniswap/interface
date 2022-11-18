@@ -8,16 +8,16 @@ import { CrossIcon } from 'nft/components/icons'
 import { FilterSidebar } from 'nft/components/profile/view/FilterSidebar'
 import { subhead } from 'nft/css/common.css'
 import {
+  useBag,
   useFiltersExpanded,
   useIsMobile,
-  useProfilePageState,
   useSellAsset,
   useWalletBalance,
   useWalletCollections,
 } from 'nft/hooks'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import { OSCollectionsFetcher } from 'nft/queries'
-import { ProfilePageStateType, WalletCollection } from 'nft/types'
+import { WalletCollection } from 'nft/types'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useQuery } from 'react-query'
@@ -31,6 +31,21 @@ import { ViewMyNftsAsset } from './ViewMyNftsAsset'
 
 const ProfilePageColumn = styled(Column)`
   ${ScreenBreakpointsPaddings}
+`
+
+const ProfileHeader = styled.div`
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 38px;
+  padding-bottom: 16px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    font-size: 20px;
+    line-height: 28px;
+    margin-bottom: 0px;
+  }
 `
 
 export const DEFAULT_WALLET_ASSET_QUERY_AMOUNT = 25
@@ -51,7 +66,7 @@ export const ProfilePage = () => {
     shallow
   )
   const sellAssets = useSellAsset((state) => state.sellAssets)
-  const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
+  const toggleBag = useBag((state) => state.toggleBag)
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const isMobile = useIsMobile()
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
@@ -83,86 +98,91 @@ export const ProfilePage = () => {
       {ownerAssets?.length === 0 ? (
         <EmptyWalletContent />
       ) : (
-        <Row alignItems="flex-start" position="relative" paddingX="20">
-          <FilterSidebar />
+        <>
+          <ProfileHeader>My NFTs</ProfileHeader>
+          <Row alignItems="flex-start" position="relative">
+            <FilterSidebar />
 
-          {(!isMobile || !isFiltersExpanded) && (
-            <Column width="full">
-              <AnimatedBox
-                flexShrink="0"
-                style={{
-                  transform: gridX.to(
-                    (x) =>
-                      `translate(${Number(x) - (!isMobile && isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING)}px)`
-                  ),
-                }}
-                paddingY="20"
-              >
-                <Row gap="8" flexWrap="nowrap" justifyContent="space-between">
-                  <FilterButton
-                    isMobile={isMobile}
-                    isFiltersExpanded={isFiltersExpanded}
-                    onClick={() => setFiltersExpanded(!isFiltersExpanded)}
-                  />
-                </Row>
-                <Row>
-                  <CollectionFiltersRow
-                    collections={walletCollections}
-                    collectionFilters={collectionFilters}
-                    setCollectionFilters={setCollectionFilters}
-                    clearCollectionFilters={clearCollectionFilters}
-                  />
-                </Row>
-                <InfiniteScroll
-                  next={() => loadNext(DEFAULT_WALLET_ASSET_QUERY_AMOUNT)}
-                  hasMore={hasNext}
-                  loader={
-                    <Center>
-                      <LoadingSparkle />
-                    </Center>
-                  }
-                  dataLength={ownerAssets?.length ?? 0}
-                  style={{ overflow: 'unset' }}
+            {(!isMobile || !isFiltersExpanded) && (
+              <Column width="full">
+                <AnimatedBox
+                  flexShrink="0"
+                  style={{
+                    transform: gridX.to(
+                      (x) =>
+                        `translate(${Number(x) - (!isMobile && isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING)}px)`
+                    ),
+                  }}
+                  paddingY="20"
                 >
-                  <div className={assetList}>
-                    {ownerAssets?.length
-                      ? ownerAssets.map((asset, index) => (
-                          <div key={index}>
-                            <ViewMyNftsAsset
-                              asset={asset}
-                              mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
-                              setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-                              hideDetails={sellAssets.length > 0}
-                            />
-                          </div>
-                        ))
-                      : null}
-                  </div>
-                </InfiniteScroll>
-              </AnimatedBox>
-            </Column>
-          )}
-        </Row>
+                  <Row gap="8" flexWrap="nowrap" justifyContent="space-between">
+                    <FilterButton
+                      isMobile={isMobile}
+                      isFiltersExpanded={isFiltersExpanded}
+                      onClick={() => setFiltersExpanded(!isFiltersExpanded)}
+                    />
+                  </Row>
+                  <Row>
+                    <CollectionFiltersRow
+                      collections={walletCollections}
+                      collectionFilters={collectionFilters}
+                      setCollectionFilters={setCollectionFilters}
+                      clearCollectionFilters={clearCollectionFilters}
+                    />
+                  </Row>
+                  <InfiniteScroll
+                    next={() => loadNext(DEFAULT_WALLET_ASSET_QUERY_AMOUNT)}
+                    hasMore={hasNext}
+                    loader={
+                      <Center>
+                        <LoadingSparkle />
+                      </Center>
+                    }
+                    dataLength={ownerAssets?.length ?? 0}
+                    style={{ overflow: 'unset' }}
+                  >
+                    <div className={assetList}>
+                      {ownerAssets?.length
+                        ? ownerAssets.map((asset, index) => (
+                            <div key={index}>
+                              <ViewMyNftsAsset
+                                asset={asset}
+                                mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
+                                setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+                                hideDetails={sellAssets.length > 0}
+                              />
+                            </div>
+                          ))
+                        : null}
+                    </div>
+                  </InfiniteScroll>
+                </AnimatedBox>
+              </Column>
+            )}
+          </Row>
+        </>
       )}
       {sellAssets.length > 0 && (
         <Row
           display={{ sm: 'flex', md: 'none' }}
           position="fixed"
-          bottom="24"
           left="16"
           height="56"
           borderRadius="12"
           paddingX="16"
           paddingY="12"
-          style={{ background: '#0d0e0ef2', width: 'calc(100% - 32px)', lineHeight: '24px' }}
+          borderStyle="solid"
+          borderColor="backgroundOutline"
+          borderWidth="1px"
+          style={{ background: '#0d0e0ef2', bottom: '68px', width: 'calc(100% - 32px)', lineHeight: '24px' }}
           className={subhead}
         >
-          {sellAssets.length}&nbsp; selected item{sellAssets.length === 1 ? '' : 's'}
+          {sellAssets.length} NFT{sellAssets.length === 1 ? '' : 's'}
           <Box
             fontWeight="semibold"
             fontSize="14"
             cursor="pointer"
-            color="genieBlue"
+            color="textSecondary"
             marginRight="20"
             marginLeft="auto"
             onClick={resetSellAssets}
@@ -176,12 +196,13 @@ export const ProfilePage = () => {
             fontSize="14"
             cursor="pointer"
             backgroundColor="genieBlue"
-            onClick={() => setSellPageState(ProfilePageStateType.LISTING)}
+            onClick={toggleBag}
             lineHeight="16"
             borderRadius="12"
-            padding="8"
+            paddingY="8"
+            paddingX="28"
           >
-            Continue
+            Sell
           </Box>
         </Row>
       )}
