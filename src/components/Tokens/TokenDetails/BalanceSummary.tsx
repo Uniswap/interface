@@ -44,6 +44,7 @@ const BalanceRow = styled.div`
 `
 const BalanceItem = styled.div`
   display: flex;
+  align-items: center;
 `
 
 export function useFormatBalance(balance: CurrencyAmount<Currency> | undefined) {
