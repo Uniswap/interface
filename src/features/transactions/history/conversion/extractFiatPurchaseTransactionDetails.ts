@@ -31,6 +31,8 @@ function parseFiatPurchaseTransaction(
 
   return {
     type: TransactionType.FiatPurchase,
+    // NOTE: from docs it should be `returnUrl` but in test mode this is the right one
+    explorerUrl: transaction.redirectUrl,
     // TODO(judo): support non-native currencies by checking contract address
     outputCurrencyId: buildNativeCurrencyId(chainId),
     outputCurrencyAmountFormatted:

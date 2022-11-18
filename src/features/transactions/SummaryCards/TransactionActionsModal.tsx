@@ -7,14 +7,13 @@ import { Separator } from 'src/components/layout/Separator'
 import { ActionSheetModalContent, MenuItemProp } from 'src/components/modals/ActionSheetModal'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
-import { uniswapUrls } from 'src/constants/urls'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { TransactionDetails } from 'src/features/transactions/types'
+import { TransactionDetails, TransactionType } from 'src/features/transactions/types'
 import { Theme } from 'src/styles/theme'
 import { setClipboard } from 'src/utils/clipboard'
-import { openUri } from 'src/utils/linking'
+import { openMoonpayHelpLink, openUniswapHelpLink } from 'src/utils/linking'
 
 function renderOptionItem(label: string, textColorOverride?: keyof Theme['colors']) {
   return () => (
@@ -32,23 +31,22 @@ function renderOptionItem(label: string, textColorOverride?: keyof Theme['colors
 }
 
 interface TransactionActionModalProps {
-  hash: string
   onExplore: () => void
   onClose: () => void
   onCancel: () => void
   msTimestampAdded: number
   showCancelButton?: boolean
-  transactionDetails?: TransactionDetails
+  transactionDetails: TransactionDetails
 }
 
 /** Display options for transactions. */
 export default function TransactionActionsModal({
-  hash,
-  onExplore,
-  onClose,
-  onCancel,
   msTimestampAdded,
+  onCancel,
+  onClose,
+  onExplore,
   showCancelButton,
+  transactionDetails,
 }: TransactionActionModalProps) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
@@ -60,16 +58,21 @@ export default function TransactionActionsModal({
   }, [onClose])
 
   const options = useMemo(() => {
+    const isFiatOnRampTransaction =
+      transactionDetails.typeInfo.type === TransactionType.FiatPurchase
+
     const transactionActionOptions: MenuItemProp[] = [
       {
-        key: ElementName.EtherscanView,
+        key: isFiatOnRampTransaction ? ElementName.MoonpayExplorerView : ElementName.EtherscanView,
         onPress: onExplore,
-        render: renderOptionItem(t('View on Etherscan')),
+        render: isFiatOnRampTransaction
+          ? renderOptionItem(t('View on Moonpay'))
+          : renderOptionItem(t('View on Etherscan')),
       },
       {
         key: ElementName.Copy,
         onPress: () => {
-          setClipboard(hash)
+          setClipboard(transactionDetails.hash)
           dispatch(pushNotification({ type: AppNotificationType.Copied }))
           handleClose()
         },
@@ -78,7 +81,7 @@ export default function TransactionActionsModal({
       {
         key: ElementName.GetHelp,
         onPress: () => {
-          openUri(`${uniswapUrls.helpUrl}/hc/en-us/requests/new`, true)
+          isFiatOnRampTransaction ? openMoonpayHelpLink() : openUniswapHelpLink()
           handleClose()
         },
         render: renderOptionItem(t('Get help')),
@@ -92,7 +95,16 @@ export default function TransactionActionsModal({
       })
     }
     return transactionActionOptions
-  }, [onExplore, t, showCancelButton, hash, dispatch, handleClose, onCancel])
+  }, [
+    transactionDetails.typeInfo.type,
+    transactionDetails.hash,
+    onExplore,
+    t,
+    showCancelButton,
+    handleClose,
+    dispatch,
+    onCancel,
+  ])
 
   return (
     <BottomSheetModal

@@ -1,7 +1,9 @@
 import { Linking } from 'react-native'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
+import { uniswapUrls } from 'src/constants/urls'
 import { logException, logMessage } from 'src/features/telemetry'
 import { LogContext } from 'src/features/telemetry/constants'
+import { FiatPurchaseTransactionInfo } from 'src/features/transactions/types'
 import { logger } from 'src/utils/logger'
 
 const ALLOWED_EXTERNAL_URI_SCHEMES = ['http://', 'https://']
@@ -36,6 +38,18 @@ export async function openUri(uri: string, isSafeUri = false) {
 export async function openTransactionLink(hash: string, chainId: ChainId) {
   const explorerUrl = getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)
   return openUri(explorerUrl)
+}
+
+export async function openUniswapHelpLink() {
+  return openUri(`${uniswapUrls.helpUrl}/hc/en-us/requests/new`, true)
+}
+
+export async function openMoonpayTransactionLink(info: FiatPurchaseTransactionInfo) {
+  return openUri(info.explorerUrl ?? 'https://support.moonpay.com/hc/en-gb')
+}
+
+export async function openMoonpayHelpLink() {
+  return openUri('https://support.moonpay.com/')
 }
 
 export function openSettings() {

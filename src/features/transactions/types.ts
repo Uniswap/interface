@@ -194,6 +194,7 @@ export interface NFTApproveTransactionInfo extends BaseTransactionInfo {
 
 export interface FiatPurchaseTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.FiatPurchase
+  explorerUrl?: string
   outputCurrencyId: string
   outputCurrencyAmountFormatted: number
   outputCurrencyAmountPrice: number

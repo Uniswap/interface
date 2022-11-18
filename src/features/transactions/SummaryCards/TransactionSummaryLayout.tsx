@@ -15,9 +15,13 @@ import { cancelTransaction } from 'src/features/transactions/slice'
 import AlertBanner from 'src/features/transactions/SummaryCards/AlertBanner'
 import { CancelConfirmationView } from 'src/features/transactions/SummaryCards/CancelConfirmationView'
 import TransactionActionsModal from 'src/features/transactions/SummaryCards/TransactionActionsModal'
-import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
+import {
+  TransactionDetails,
+  TransactionStatus,
+  TransactionType,
+} from 'src/features/transactions/types'
 import { iconSizes } from 'src/styles/sizing'
-import { openTransactionLink } from 'src/utils/linking'
+import { openMoonpayTransactionLink, openTransactionLink } from 'src/utils/linking'
 
 export const TXN_HISTORY_ICON_SIZE = iconSizes.xxl
 const LOADING_SPINNER_SIZE = 20
@@ -60,7 +64,9 @@ function TransactionSummaryLayout({
   const queued = nonce && lowestPendingNonce ? nonce > lowestPendingNonce : false
 
   const isCancelable =
-    status === TransactionStatus.Pending && !readonly && Boolean(transaction.options?.request)
+    status === TransactionStatus.Pending &&
+    !readonly &&
+    Object.keys(transaction.options?.request).length > 0
 
   function handleCancel(txRequest: providers.TransactionRequest) {
     if (!transaction) return
@@ -146,7 +152,6 @@ function TransactionSummaryLayout({
       </TouchableArea>
       {showActionsModal && (
         <TransactionActionsModal
-          hash={hash}
           msTimestampAdded={addedTime}
           showCancelButton={isCancelable}
           transactionDetails={transaction}
@@ -155,7 +160,11 @@ function TransactionSummaryLayout({
             setShowCancelModal(true)
           }}
           onClose={() => setShowActionsModal(false)}
-          onExplore={() => openTransactionLink(hash, chainId)}
+          onExplore={() =>
+            transaction.typeInfo.type === TransactionType.FiatPurchase
+              ? openMoonpayTransactionLink(transaction.typeInfo)
+              : openTransactionLink(hash, chainId)
+          }
         />
       )}
 

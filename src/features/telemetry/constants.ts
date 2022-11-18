@@ -105,6 +105,7 @@ export const enum ElementName {
   ImportAccount = 'import',
   Manage = 'manage',
   ManageConnections = 'manage-connections',
+  MoonpayExplorerView = 'moonpay-explorer-view',
   NetworkButton = 'network-button',
   Next = 'next',
   Notifications = 'notifications',
