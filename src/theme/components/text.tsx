@@ -21,7 +21,7 @@ export const ThemedText = {
     return <TextWrapper fontWeight={400} fontSize={12} color="white" lineHeight="16px" {...props} />
   },
   BodyBodySmall(props: TextProps) {
-    return <TextWrapper fontWeight={400} fontSize={14} lineHeight="28px" color="textPrimary" {...props} />
+    return <TextWrapper fontWeight={400} fontSize={14} lineHeight="20px" color="textPrimary" {...props} />
   },
   ButtonLabelMedium(props: TextProps) {
     return <TextWrapper fontWeight={600} fontSize={16} lineHeight="20px" color="white" {...props} />

@@ -66,7 +66,7 @@ const USDCLabel = styled.div`
 const TextContainer = styled.div`
   position: absolute;
   left: 16px;
-  top: 18px;
+  top: 16px;
   right: 16px;
 `
 
