@@ -17,7 +17,7 @@ import { Text } from 'rebass'
 import { useCurrencyBalanceString } from 'state/connection/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 
 import { shortenAddress } from '../../nft/utils/address'
 import { useCloseModal, useToggleModal } from '../../state/application/hooks'
@@ -32,25 +32,24 @@ const ProfileLink = styled(Link)`
   margin-top: 12px;
   text-decoration: none;
 `
-const ProfileButton = styled(ThemeButton)`
-  background: ${({ theme }) => theme.accentAction};
+const SharedMainButtonCss = css`
   border: none;
   border-radius: 12px;
   color: ${({ theme }) => theme.accentTextLightPrimary};
-  flex: 1 1 auto;
-  margin: 0;
   padding-top: 10px;
   padding-bottom: 10px;
 `
+const ProfileButton = styled(ThemeButton)`
+  ${SharedMainButtonCss}
+  background: ${({ theme }) => theme.accentAction};
+  flex: 1 1 auto;
+  margin: 0;
+`
 
 const UNIButton = styled(ThemeButton)`
+  ${SharedMainButtonCss}
   background: linear-gradient(to right, #9139b0 0%, #4261d6 100%);
-  border: none;
-  border-radius: 12px;
-  color: ${({ theme }) => theme.accentTextLightPrimary};
   margin-top: 12px;
-  padding-top: 10px;
-  padding-bottom: 10px;
 `
 
 const Column = styled.div`
