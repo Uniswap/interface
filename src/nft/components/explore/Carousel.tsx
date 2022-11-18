@@ -24,17 +24,17 @@ const CarouselCardContainer = styled.div`
   position: relative;
   width: 100%;
   overflow-x: hidden;
+  max-width: 600px;
 `
 
 const CarouselItemCard = styled(a.div)`
-  ${carouselHeightStyle}
-
   display: flex;
   justify-content: center;
   padding: 4px 12px 32px;
   position: absolute;
   will-change: transform;
   width: calc(100%);
+  height: calc(100%);
 
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
     padding: 4px 32px 32px;
@@ -126,11 +126,11 @@ export const Carousel = ({ children, activeIndex, toggleNextSlide }: CarouselPro
         <ChevronLeftIcon width="16px" height="16px" />
       </CarouselItemIcon>
       <CarouselCardContainer>
-        {springs.map(({ x }, i) => (
-          <CarouselItemCard key={i} style={{ x }}>
-            {children[i]}
-          </CarouselItemCard>
-        ))}
+        {/* {springs.map(({ x }, i) => ( */}
+        <CarouselItemCard key={0} style={{ x: 0 }}>
+          {children[0]}
+        </CarouselItemCard>
+        {/* ))} */}
       </CarouselCardContainer>
       <CarouselItemIcon onClick={() => toggleSlide(1)}>
         <ChevronRightIcon width="16px" height="16px" />

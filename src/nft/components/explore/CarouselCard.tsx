@@ -14,12 +14,8 @@ const CarouselCardContainer = styled.div`
   background-color: ${({ theme }) => theme.backgroundSurface};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 20px;
-  gap: 8px;
   overflow: hidden;
   height: 100%;
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
-    gap: 20px;
-  }
 `
 const CarouselCardBorder = styled.div`
   width: 100%;
@@ -93,11 +89,8 @@ const CardHeaderRow = styled.div`
   position: relative;
   z-index: 1;
   display: flex;
-  gap: 8px;
+  gap: 12px;
   align-items: center;
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
-    gap: 12px;
-  }
 `
 
 const CardNameRow = styled.div`
@@ -161,16 +154,10 @@ const LoadingCollectionImage = styled.div`
 const CardBottomContainer = styled.div`
   display: grid;
   grid-template-columns: auto auto auto;
-  row-gap: 8px;
-  column-gap: 20px;
-  padding-right: 28px;
-  padding-left: 28px;
-  padding-bottom: 20px;
   justify-content: space-between;
-
-  @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
-    row-gap: 16px;
-  }
+  align-items: space-between;
+  flex: 1;
+  padding: 16px 28px;
 `
 
 const HeaderRow = styled.div`
@@ -178,12 +165,10 @@ const HeaderRow = styled.div`
   font-size: 14px;
   font-weight: 500;
   line-height: 20px;
-  row-gap: 8px;
 
   @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     font-size: 16px;
     line-height: 24px;
-    row-gap: 12px;
   }
 `
 
