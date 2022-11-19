@@ -60,6 +60,9 @@ export const middleContainer = style([
     justifyContent: 'center',
     display: { sm: 'none', xl: 'flex' },
   }),
+  {
+    alignItems: 'flex-start',
+  },
 ])
 
 export const rightSideContainer = style([

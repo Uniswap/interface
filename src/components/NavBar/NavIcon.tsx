@@ -13,7 +13,7 @@ export const NavIcon = ({ children, isActive, onClick }: NavIconProps) => {
   return (
     <Box
       as="button"
-      className={styles.navIcon}
+      className={styles.navIconHidden}
       color={isActive ? 'textPrimary' : 'textSecondary'}
       onClick={onClick}
       height="40"
