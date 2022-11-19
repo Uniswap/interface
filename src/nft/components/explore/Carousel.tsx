@@ -14,11 +14,11 @@ const CarouselCardContainer = styled.div`
   position: relative;
   width: 100%;
   overflow-x: hidden;
-  max-width: 600px;
+  max-width: 100%;
   height: 390px;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    max-width: 100vw;
+  @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    max-width: 600px;
   }
 `
 
