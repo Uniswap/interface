@@ -580,7 +580,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
               }}
             />
           )}
-          {Boolean(!!traits.length || !!markets.length || minMaxPriceChipText) && (
+          {Boolean(traits.length || markets.length || minMaxPriceChipText) && (
             <ClearAllButton onClick={handleClearAllClick}>Clear All</ClearAllButton>
           )}
         </Row>
