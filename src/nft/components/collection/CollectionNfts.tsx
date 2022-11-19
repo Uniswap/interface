@@ -116,7 +116,7 @@ const ViewFullCollection = styled.span`
   ${OpacityHoverState}
 `
 
-const ClearAllButton = styled.button`
+export const ClearAllButton = styled.button`
   color: ${({ theme }) => theme.textTertiary};
   padding-left: 8px;
   padding-right: 8px;
@@ -479,6 +479,12 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
     setSweepOpen(!sweepIsOpen)
   }, [bagExpanded, hasErc1155s, isMobile, sweepIsOpen, toggleBag])
 
+  const handleClearAllClick = useCallback(() => {
+    reset()
+    setPrevMinMax([0, 100])
+    scrollToTop()
+  }, [reset, setPrevMinMax])
+
   return (
     <>
       <AnimatedBox
@@ -574,17 +580,9 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
               }}
             />
           )}
-          {!!traits.length || !!markets.length || minMaxPriceChipText ? (
-            <ClearAllButton
-              onClick={() => {
-                reset()
-                setPrevMinMax([0, 100])
-                scrollToTop()
-              }}
-            >
-              Clear All
-            </ClearAllButton>
-          ) : null}
+          {Boolean(traits.length || markets.length || minMaxPriceChipText) && (
+            <ClearAllButton onClick={handleClearAllClick}>Clear All</ClearAllButton>
+          )}
         </Row>
       </AnimatedBox>
       <InfiniteScrollWrapper>
