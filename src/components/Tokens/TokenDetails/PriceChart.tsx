@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { formatUSDPrice } from '@uniswap/conedison/format'
 import { AxisBottom, TickFormatter } from '@visx/axis'
 import { localPoint } from '@visx/event'
 import { EventType } from '@visx/event/lib/types'
@@ -93,9 +94,11 @@ interface PriceChartProps {
 
 function formatDisplayPrice(value: number) {
   const str = value.toFixed(9)
-  const [digits, decimals] = str.split('.')
-  if (digits.length > 1 || (digits !== '0' && digits !== '1')) return `$${digits}.${decimals.substring(0, 2)}`
-  return `$${str.substring(0, 4) + str.substring(4).replace(/0+$/, '')}`
+  const [digits] = str.split('.')
+  // Displays longer string for smaller numbers
+  if (digits === '0' || digits === '1') return `$${str.substring(0, 4) + str.substring(4).replace(/0+$/, '')}`
+
+  return formatUSDPrice(value)
 }
 
 export function PriceChart({ width, height, prices, timePeriod }: PriceChartProps) {
