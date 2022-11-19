@@ -5,6 +5,9 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import {
+  BagCloseIcon,
+  BagIcon,
+  ChevronRightIcon,
   MinusIconLarge,
   PauseButtonIcon,
   PlayButtonIcon,
@@ -98,11 +101,7 @@ const DetailsLinkContainer = styled.a`
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
-  border: 1px solid;
-  color: ${({ theme }) => theme.accentAction};
-  border-color: ${({ theme }) => theme.accentActionSoft};
-  padding: 2px 6px;
-  border-radius: 6px;
+  color: ${({ theme }) => theme.textTertiary};
   ${OpacityHoverState};
 `
 
@@ -157,13 +156,54 @@ const RankingContainer = styled.div`
   z-index: 2;
 `
 
-const StyledImageContainer = styled.div<{ isDisabled?: boolean }>`
+const StyledImageContainer = styled.a<{ isDisabled?: boolean }>`
   position: relative;
   pointer-events: auto;
   &:hover {
     opacity: ${({ isDisabled, theme }) => (isDisabled ? theme.opacity.disabled : theme.opacity.enabled)};
   }
   cursor: ${({ isDisabled }) => (isDisabled ? 'default' : 'pointer')};
+`
+
+const StyledHoverContainer = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding-bottom: 1rem;
+  color: ${({ theme }) => theme.accentTextLightPrimary};
+  z-index: 1;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 40%);
+  font-size: 14px;
+  font-weight: 600px;
+`
+const StyledToolTipContainer = styled(StyledHoverContainer)`
+  background: none;
+`
+
+const StyledAddAffordance = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600px;
+  width: fit-content;
+  gap: 8px;
+`
+
+const StyledToopTipAffordance = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600px;
+  position: absolute;
+  bottom: 0.5rem;
+  background-color: ${({ theme }) => theme.backgroundSurface};
+  padding: 8px 12px;
+  border-radius: 8px;
 `
 
 /* -------- ASSET CARD -------- */
@@ -237,9 +277,62 @@ const Container = ({
   )
 }
 
-const ImageContainer = ({ children, isDisabled = false }: { children: ReactNode; isDisabled?: boolean }) => (
-  <StyledImageContainer isDisabled={isDisabled}>{children}</StyledImageContainer>
-)
+const ImageContainer = ({
+  children,
+  showTooltip = false,
+  selected = false,
+  isDisabled = false,
+}: {
+  children: ReactNode
+  selected?: boolean
+  showTooltip?: boolean
+  isDisabled?: boolean
+}) => {
+  // const { asset } = useCardContext()
+  const imageRef = useRef<HTMLAnchorElement>(null)
+
+  const [hovered, toggleHovered] = useReducer((s) => !s, false)
+
+  useLayoutEffect(() => {
+    if (hovered && imageRef.current?.matches(':hover') === false) {
+      toggleHovered()
+    }
+  }, [hovered])
+
+  const toggleHover = useCallback(() => toggleHovered(), [])
+
+  return (
+    <StyledImageContainer ref={imageRef} isDisabled={isDisabled} onMouseEnter={toggleHover} onMouseLeave={toggleHover}>
+      {hovered && (
+        <StyledHoverContainer>
+          {showTooltip && (
+            <StyledToopTipAffordance>{!selected ? <>Removed from bag</> : <>Added to bag</>}</StyledToopTipAffordance>
+          )}
+          {!showTooltip && (
+            <StyledAddAffordance>
+              {!selected ? (
+                <>
+                  <BagIcon width={16} height={16} /> Add to bag
+                </>
+              ) : (
+                <>
+                  <BagCloseIcon width={16} height={16} /> Remove
+                </>
+              )}
+            </StyledAddAffordance>
+          )}
+        </StyledHoverContainer>
+      )}
+
+      {!hovered && showTooltip && (
+        <StyledToolTipContainer>
+          <StyledToopTipAffordance>{!selected ? <>Removed from bag</> : <>Added to bag</>}</StyledToopTipAffordance>
+        </StyledToolTipContainer>
+      )}
+      {children}
+    </StyledImageContainer>
+  )
+}
 
 /* -------- CARD IMAGE -------- */
 
@@ -465,18 +558,38 @@ interface CardDetailsContainerProps {
   children: ReactNode
 }
 
+const StyledDetailsLink = styled.a`
+  text-decoration: none;
+  color: ${({ theme }) => theme.textPrimary};
+`
+
+const StyledDetailsContainer = styled(Row)`
+  &:hover {
+    background-color: ${({ theme }) => theme.backgroundInteractive};
+    cursor: pointer;
+  }
+`
+
 const DetailsContainer = ({ children }: CardDetailsContainerProps) => {
+  const { asset } = useCardContext()
+
   return (
-    <Row
-      position="relative"
-      paddingX="12"
-      paddingTop="12"
-      justifyContent="space-between"
-      flexDirection="column"
-      transition="250"
+    <StyledDetailsLink
+      href={baseHref(asset)}
+      onClick={(e: MouseEvent) => {
+        e.stopPropagation()
+      }}
     >
-      {children}
-    </Row>
+      <StyledDetailsContainer
+        position="relative"
+        padding="12"
+        justifyContent="space-between"
+        flexDirection="column"
+        transition="250"
+      >
+        {children}
+      </StyledDetailsContainer>
+    </StyledDetailsLink>
   )
 }
 
@@ -649,7 +762,9 @@ const DetailsLink = () => {
         e.stopPropagation()
       }}
     >
-      <Box>Details</Box>
+      <Box>
+        Details <ChevronRightIcon width={10} height={10} />
+      </Box>
     </DetailsLinkContainer>
   )
 }

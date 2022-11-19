@@ -1,15 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { EventName, PageName } from '@uniswap/analytics-events'
-import Tooltip from 'components/Tooltip'
-import { Box } from 'nft/components/Box'
-import { bodySmall } from 'nft/css/common.css'
 import { useBag } from 'nft/hooks'
 import { GenieAsset, Markets, TokenType } from 'nft/types'
 import { formatWeiToDecimal, rarityProviderLogo } from 'nft/utils'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import styled from 'styled-components/macro'
 
 import { useAssetMediaType, useNotForSale } from './Card'
 import { AssetMediaType } from './Card'
@@ -23,18 +18,7 @@ interface CollectionAssetProps {
   rarityVerified?: boolean
 }
 
-const TOOLTIP_TIMEOUT = 2000
-
-const StyledContainer = styled.div`
-  position: absolute;
-  bottom: 12px;
-  left: 0px;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  z-index: 2;
-  pointer-events: none;
-`
+const TOOLTIP_TIMEOUT = 1500
 
 export const CollectionAsset = ({
   asset,
@@ -120,23 +104,7 @@ export const CollectionAsset = ({
       addAssetToBag={handleAddAssetToBag}
       removeAssetFromBag={handleRemoveAssetFromBag}
     >
-      <Card.ImageContainer>
-        <StyledContainer>
-          <Tooltip
-            text={
-              <Box as="span" className={bodySmall} color="textPrimary">
-                {isSelected ? <Trans>Added to bag</Trans> : <Trans>Removed from bag</Trans>}
-              </Box>
-            }
-            show={showTooltip}
-            style={{ display: 'block' }}
-            offsetX={0}
-            offsetY={0}
-            hideArrow={true}
-            placement="bottom"
-            showInline
-          />
-        </StyledContainer>
+      <Card.ImageContainer selected={isSelected} showTooltip={showTooltip}>
         {asset.rarity && provider && (
           <Card.Ranking
             rarity={asset.rarity}

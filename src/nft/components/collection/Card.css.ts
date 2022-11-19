@@ -5,7 +5,7 @@ import { sprinkles, themeVars, vars } from 'nft/css/sprinkles.css'
 export const card = style([
   sprinkles({
     overflow: 'hidden',
-    paddingBottom: '12',
+
     borderRadius: '16',
   }),
   {
@@ -24,6 +24,10 @@ export const card = style([
       borderRadius: '16px',
       borderColor: '#5D678524',
       pointerEvents: 'none',
+      zIndex: '2',
+    },
+    ':hover': {
+      borderColor: '#5D678540',
     },
   },
 ])
