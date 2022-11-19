@@ -110,7 +110,6 @@ export const SearchBar = () => {
     }
   }, [isOpen])
 
-  const placeholderText = phase1Flag === NftVariant.Enabled ? t`Search tokens and NFT collections` : t`Search tokens`
   const isMobileOrTablet = isMobile || isTablet
   const showCenteredSearchContent =
     !isOpen && phase1Flag !== NftVariant.Enabled && !isMobileOrTablet && searchValue.length === 0
@@ -122,6 +121,12 @@ export const SearchBar = () => {
     hasInput: debouncedSearchValue && debouncedSearchValue.length > 0,
     ...trace,
   }
+  const placeholderText =
+    phase1Flag === NftVariant.Enabled
+      ? isMobileOrTablet
+        ? t`Search`
+        : t`Search tokens and NFT collections`
+      : t`Search tokens`
 
   const handleKeyPress = useCallback(
     (event: any) => {
@@ -151,7 +156,7 @@ export const SearchBar = () => {
   return (
     <Trace section={SectionName.NAVBAR_SEARCH}>
       <Box
-        position={{ sm: 'fixed', md: 'relative' }}
+        position={{ sm: 'fixed', md: 'absolute', xl: 'relative' }}
         width={{ sm: isOpen ? 'viewWidth' : 'auto', md: 'auto' }}
         ref={searchRef}
         className={
@@ -206,7 +211,7 @@ export const SearchBar = () => {
               width={phase1Flag === NftVariant.Enabled || isOpen ? 'full' : '160'}
             />
           </TraceEvent>
-          {!isOpen && <KeyShortCut>/</KeyShortCut>}
+          {!isOpen && isPhase1 && <KeyShortCut>/</KeyShortCut>}
         </Row>
         <Box className={clsx(isOpen ? styles.visible : styles.hidden)}>
           {isOpen && (
@@ -221,9 +226,11 @@ export const SearchBar = () => {
           )}
         </Box>
       </Box>
-      <NavIcon isMobile={isMobileOrTablet} onClick={toggleOpen}>
-        <NavMagnifyingGlassIcon />
-      </NavIcon>
+      {isMobileOrTablet && (
+        <NavIcon onClick={toggleOpen}>
+          <NavMagnifyingGlassIcon />
+        </NavIcon>
+      )}
     </Trace>
   )
 }

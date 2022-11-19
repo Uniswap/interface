@@ -96,7 +96,7 @@ const Navbar = () => {
           </Box>
           <Box className={styles.rightSideContainer}>
             <Row gap="12">
-              <Box display={{ sm: 'flex', xl: 'none' }}>
+              <Box style={{ position: 'relative' }} display={{ sm: 'flex', xl: 'none' }}>
                 <SearchBar />
               </Box>
               <Box display={{ sm: 'none', lg: 'flex' }}>

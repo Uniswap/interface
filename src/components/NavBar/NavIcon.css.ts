@@ -23,11 +23,3 @@ export const navIcon = style([
     zIndex: 1,
   },
 ])
-
-export const navIconHidden = style([
-  navIcon,
-  sprinkles({
-    display: 'none',
-  }),
-  { visibility: 'hidden', display: 'none' },
-])
