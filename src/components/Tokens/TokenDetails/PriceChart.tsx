@@ -20,7 +20,6 @@ import {
   monthYearDayFormatter,
   weekFormatter,
 } from 'utils/formatChartTimes'
-import { formatDollar } from 'utils/formatNumbers'
 
 export const DATA_EMPTY = { value: 0, timestamp: 0 }
 
@@ -90,6 +89,13 @@ interface PriceChartProps {
   height: number
   prices: PricePoint[] | undefined | null
   timePeriod: TimePeriod
+}
+
+function formatDisplayPrice(value: number) {
+  const str = value.toFixed(9)
+  const [digits, decimals] = str.split('.')
+  if (digits.length > 1 || (digits !== '0' && digits !== '1')) return `$${digits}.${decimals.substring(0, 2)}`
+  return `$${str.substring(0, 4) + str.substring(4).replace(/0+$/, '')}`
 }
 
 export function PriceChart({ width, height, prices, timePeriod }: PriceChartProps) {
@@ -226,7 +232,7 @@ export function PriceChart({ width, height, prices, timePeriod }: PriceChartProp
   return (
     <>
       <ChartHeader>
-        <TokenPrice>{formatDollar({ num: displayPrice.value, isPrice: true })}</TokenPrice>
+        <TokenPrice>{formatDisplayPrice(displayPrice.value)}</TokenPrice>
         <DeltaContainer>
           {formattedDelta}
           <ArrowCell>{arrow}</ArrowCell>
