@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { getChainInfo } from 'constants/chainInfo'
 import { Chain } from 'graphql/data/Token'
 import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
 import { darken } from 'polished'
@@ -67,12 +68,10 @@ export const ResourcesContainer = styled.div`
   text-transform: capitalize;
 `
 
-function getInfoLink(address: string, chain: string) {
-  if (chain === 'ETHEREUM') {
-    return `https://info.uniswap.org/#/tokens/${address.toLowerCase()}`
-  } else {
-    return `https://info.uniswap.org/#/${chain.toLowerCase()}/tokens/${address.toLowerCase()}`
-  }
+function getInfoLink(address: string, chainId: number) {
+  const baseUrl = getChainInfo(chainId)?.infoLink
+
+  return `${baseUrl}tokens/${address.toLowerCase()}`
 }
 
 type AboutSectionProps = {
@@ -89,7 +88,8 @@ export function AboutSection({ address, chain, description, homepageUrl, twitter
 
   const tokenDescription = shouldTruncate && isDescriptionTruncated ? truncateDescription(description) : description
 
-  const [explorerLink, explorerName] = getExplorer(CHAIN_NAME_TO_CHAIN_ID[chain], address, ExplorerDataType.TOKEN)
+  const chainId = CHAIN_NAME_TO_CHAIN_ID[chain]
+  const [explorerLink, explorerName] = getExplorer(chainId, address, ExplorerDataType.TOKEN)
 
   return (
     <AboutContainer>
@@ -115,7 +115,7 @@ export function AboutSection({ address, chain, description, homepageUrl, twitter
       </ThemedText.SubHeaderSmall>
       <ResourcesContainer>
         <Resource name={explorerName} link={explorerLink} />
-        <Resource name="More analytics" link={getInfoLink(address, chain)} />
+        <Resource name="More analytics" link={getInfoLink(address, chainId)} />
         {homepageUrl && <Resource name="Website" link={homepageUrl} />}
         {twitterName && <Resource name="Twitter" link={`https://twitter.com/${twitterName}`} />}
       </ResourcesContainer>
