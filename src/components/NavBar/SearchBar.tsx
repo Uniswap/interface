@@ -25,8 +25,8 @@ import * as styles from './SearchBar.css'
 import { SearchBarDropdown } from './SearchBarDropdown'
 
 const KeyShortCut = styled(Box)`
-  background-color: ${({ theme }) => theme.searchBackground};
-  color: ${({ theme }) => theme.textTertiary};
+  background-color: ${({ theme }) => theme.searchOutline};
+  color: ${({ theme }) => theme.textSecondary};
   padding: 0px 8px;
   width: 20px;
   height: 20px;
@@ -36,8 +36,8 @@ const KeyShortCut = styled(Box)`
   line-height: 16px;
   display: flex;
   align-items: center;
-  opacity: 1;
-  // backdrop-filter: blur(60px);
+  opacity: 0.6;
+  backdrop-filter: blur(60px);
 `
 
 export const SearchBar = () => {
@@ -172,7 +172,7 @@ export const SearchBar = () => {
           borderRadius={isOpen || isMobileOrTablet ? undefined : '12'}
           borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
           borderTopLeftRadius={isOpen && !isMobile ? '12' : undefined}
-          borderBottomWidth={isOpen || isMobileOrTablet ? '0px' : isPhase1 ? '2px' : '1px'}
+          borderBottomWidth={isOpen || isMobileOrTablet ? '0px' : '1px'}
           onClick={() => !isOpen && toggleOpen()}
           gap="12"
         >
@@ -206,7 +206,7 @@ export const SearchBar = () => {
               width={phase1Flag === NftVariant.Enabled || isOpen ? 'full' : '160'}
             />
           </TraceEvent>
-          <KeyShortCut>/</KeyShortCut>
+          {!isOpen && <KeyShortCut>/</KeyShortCut>}
         </Row>
         <Box className={clsx(isOpen ? styles.visible : styles.hidden)}>
           {isOpen && (
@@ -221,7 +221,7 @@ export const SearchBar = () => {
           )}
         </Box>
       </Box>
-      <NavIcon onClick={toggleOpen}>
+      <NavIcon isMobile={isMobileOrTablet} onClick={toggleOpen}>
         <NavMagnifyingGlassIcon />
       </NavIcon>
     </Trace>

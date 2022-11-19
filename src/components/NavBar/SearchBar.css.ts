@@ -75,6 +75,7 @@ export const searchBarContainerNft = style([
   }),
   {
     backdropFilter: 'blur(60px)',
+    borderRadius: '12px',
   },
 ])
 
