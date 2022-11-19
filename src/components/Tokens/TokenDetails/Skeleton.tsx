@@ -7,7 +7,7 @@ import { textFadeIn } from 'theme/styles'
 
 import { LoadingBubble } from '../loading'
 import { LogoContainer } from '../TokenTable/TokenRow'
-import { AboutContainer, AboutHeader } from './About'
+import { AboutContainer, AboutHeader } from './AboutSection'
 import { BreadcrumbNavLink } from './BreadcrumbNavLink'
 import { DeltaContainer, TokenPrice } from './PriceChart'
 import { StatPair, StatsWrapper, StatWrapper } from './StatsSection'

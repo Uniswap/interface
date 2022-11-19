@@ -14,6 +14,14 @@ const BLOCK_EXPLORER_PREFIXES: { [chainId: number]: string } = {
   [SupportedChainId.CELO_ALFAJORES]: 'https://alfajores-blockscout.celo-testnet.org',
 }
 
+const BLOCK_EXPLORER_NAME: { [chainId: number]: string } = {
+  [SupportedChainId.MAINNET]: 'Etherscan',
+  [SupportedChainId.POLYGON]: 'Polygonscan',
+  [SupportedChainId.POLYGON_MUMBAI]: 'Polygonscan',
+  [SupportedChainId.CELO]: 'Celoscan',
+  [SupportedChainId.ARBITRUM_ONE]: 'Arbiscan',
+}
+
 export enum ExplorerDataType {
   TRANSACTION = 'transaction',
   TOKEN = 'token',
@@ -76,4 +84,11 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
     default:
       return `${prefix}`
   }
+}
+
+export function getExplorer(chainId: number, data: string, type: ExplorerDataType): [string, string] {
+  const link = getExplorerLink(chainId, data, type)
+  const name = BLOCK_EXPLORER_NAME[chainId] ?? (link.includes('etherscan') ? 'Etherscan' : 'Block Explorer')
+
+  return [link, name]
 }

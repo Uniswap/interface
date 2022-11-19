@@ -3,7 +3,7 @@ import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
 import { Currency, Token } from '@uniswap/sdk-core'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { AboutSection } from 'components/Tokens/TokenDetails/About'
+import { AboutSection } from 'components/Tokens/TokenDetails/AboutSection'
 import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
 import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
 import { BreadcrumbNavLink } from 'components/Tokens/TokenDetails/BreadcrumbNavLink'
@@ -156,12 +156,7 @@ export default function TokenDetails({
             {!isNative && (
               <>
                 <Hr />
-                <AboutSection
-                  address={tokenQueryData.address ?? ''}
-                  description={tokenQueryData.project?.description}
-                  homepageUrl={tokenQueryData.project?.homepageUrl}
-                  twitterName={tokenQueryData.project?.twitterName}
-                />
+                <AboutSection address={tokenQueryData.address ?? ''} {...tokenQueryData.project} chain={chain} />
                 <AddressSection address={tokenQueryData.address ?? ''} />
               </>
             )}

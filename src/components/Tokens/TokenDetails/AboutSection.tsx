@@ -1,9 +1,12 @@
 import { Trans } from '@lingui/macro'
+import { Chain } from 'graphql/data/Token'
+import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
 import { darken } from 'polished'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { textFadeIn } from 'theme/styles'
+import { ExplorerDataType, getExplorer } from 'utils/getExplorerLink'
 
 import Resource from './Resource'
 
@@ -61,20 +64,32 @@ export const ResourcesContainer = styled.div`
   display: flex;
   padding-top: 12px;
   gap: 14px;
+  text-transform: capitalize;
 `
+
+function getInfoLink(address: string, chain: string) {
+  if (chain === 'ETHEREUM') {
+    return `https://info.uniswap.org/#/tokens/${address.toLowerCase()}`
+  } else {
+    return `https://info.uniswap.org/#/${chain.toLowerCase()}/tokens/${address.toLowerCase()}`
+  }
+}
 
 type AboutSectionProps = {
   address: string
+  chain: Chain
   description?: string | null | undefined
   homepageUrl?: string | null | undefined
   twitterName?: string | null | undefined
 }
 
-export function AboutSection({ address, description, homepageUrl, twitterName }: AboutSectionProps) {
+export function AboutSection({ address, chain, description, homepageUrl, twitterName }: AboutSectionProps) {
   const [isDescriptionTruncated, setIsDescriptionTruncated] = useState(true)
   const shouldTruncate = !!description && description.length > TRUNCATE_CHARACTER_COUNT
 
   const tokenDescription = shouldTruncate && isDescriptionTruncated ? truncateDescription(description) : description
+
+  const [explorerLink, explorerName] = getExplorer(CHAIN_NAME_TO_CHAIN_ID[chain], address, ExplorerDataType.TOKEN)
 
   return (
     <AboutContainer>
@@ -99,8 +114,8 @@ export function AboutSection({ address, description, homepageUrl, twitterName }:
         <Trans>Links</Trans>
       </ThemedText.SubHeaderSmall>
       <ResourcesContainer>
-        <Resource name="Etherscan" link={`https://etherscan.io/address/${address}`} />
-        <Resource name="More analytics" link={`https://info.uniswap.org/#/tokens/${address}`} />
+        <Resource name={explorerName} link={explorerLink} />
+        <Resource name="More analytics" link={getInfoLink(address, chain)} />
         {homepageUrl && <Resource name="Website" link={homepageUrl} />}
         {twitterName && <Resource name="Twitter" link={`https://twitter.com/${twitterName}`} />}
       </ResourcesContainer>
