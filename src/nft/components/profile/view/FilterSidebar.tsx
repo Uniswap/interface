@@ -91,7 +91,7 @@ export const FilterSidebar = ({
       height={{ sm: 'full', md: 'auto' }}
       zIndex={{ sm: '3', md: 'auto' }}
       display={isFiltersExpanded ? 'flex' : 'none'}
-      style={{ transform: sidebarX.to((x) => `translateX(${x}px)`) }}
+      style={{ transform: isMobile ? undefined : sidebarX.to((x) => `translateX(${x}px)`) }}
     >
       <Box
         paddingTop={{ sm: '24', md: '0' }}
