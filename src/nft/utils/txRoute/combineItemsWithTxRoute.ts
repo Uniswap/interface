@@ -31,6 +31,25 @@ const isAveragePriceOfPooledAssets = (
   return !isPriceDiff(calcAvgGroupPoolPrice(asset, numberOfAssetsInPool), expectedPrice)
 }
 
+const isAveragedPrice = (
+  item: UpdatedGenieAsset,
+  items: UpdatedGenieAsset[],
+  route: RoutingItem,
+  txRoute?: RoutingItem[]
+): boolean => {
+  if (!(route && 'priceInfo' in route.assetOut)) return false
+
+  return (
+    !!item.marketplace &&
+    isPooledMarket(item.marketplace) &&
+    isAveragePriceOfPooledAssets(
+      item,
+      items.filter((routeItem) => itemInRouteAndSamePool(item, routeItem, txRoute)).length,
+      route.assetOut.priceInfo.basePrice
+    )
+  )
+}
+
 const getRouteForItem = (item: UpdatedGenieAsset, txRoute?: RoutingItem[]): RoutingItem | undefined => {
   return txRoute && txRoute.find((r) => r.action === 'Buy' && isTheSame(item, r.assetOut))
 }
@@ -72,17 +91,7 @@ export const combineBuyItemsWithTxRoute = (
     // if the price changed
     if (route && 'priceInfo' in route.assetOut) {
       if (isPriceDiff(newPriceInfo.basePrice, route.assetOut.priceInfo.basePrice)) {
-        if (
-          !(
-            item.marketplace &&
-            isPooledMarket(item.marketplace) &&
-            isAveragePriceOfPooledAssets(
-              item,
-              items.filter((routeItem) => itemInRouteAndSamePool(item, routeItem, txRoute)).length,
-              route.assetOut.priceInfo.basePrice
-            )
-          )
-        ) {
+        if (!isAveragedPrice(item, items, route, txRoute)) {
           return {
             ...item,
             updatedPriceInfo: route.assetOut.priceInfo,
