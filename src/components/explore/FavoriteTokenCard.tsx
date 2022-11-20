@@ -120,7 +120,7 @@ function FavoriteTokenCard({ token, isEditing, setIsEditing, ...rest }: Favorite
         testID={`token-box-${token?.symbol}`}
         onPress={onPress}>
         <BaseCard.Shadow>
-          <Flex alignItems="flex-start" gap="xxs">
+          <Flex alignItems="flex-start" gap="xs">
             <Flex row gap="xxs" justifyContent="space-between">
               <Flex grow row alignItems="center" gap="xxs">
                 <TokenLogo
@@ -137,15 +137,17 @@ function FavoriteTokenCard({ token, isEditing, setIsEditing, ...rest }: Favorite
                 <Box height={theme.imageSizes.md} />
               )}
             </Flex>
-            <Text adjustsFontSizeToFit numberOfLines={1} variant="subheadLarge">
-              {formatUSDPrice(usdPrice)}
-            </Text>
-            <RelativeChange
-              arrowSize={theme.iconSizes.md}
-              change={pricePercentChange ?? undefined}
-              semanticColor={true}
-              variant="subheadSmall"
-            />
+            <Flex gap="xxxs">
+              <Text adjustsFontSizeToFit numberOfLines={1} variant="subheadLarge">
+                {formatUSDPrice(usdPrice)}
+              </Text>
+              <RelativeChange
+                arrowSize={theme.iconSizes.md}
+                change={pricePercentChange ?? undefined}
+                semanticColor={true}
+                variant="subheadSmall"
+              />
+            </Flex>
           </Flex>
         </BaseCard.Shadow>
       </AnimatedTouchableArea>

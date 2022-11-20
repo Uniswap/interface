@@ -29,10 +29,10 @@ export function FavoriteHeaderRow({
         <TouchableArea hapticFeedback name={ElementName.Edit} onPress={onPress}>
           <TripleDots
             color={theme.colors.textSecondary}
-            height={theme.iconSizes.lg}
+            height={theme.iconSizes.md}
             strokeLinecap="round"
             strokeWidth="1"
-            width={theme.iconSizes.lg}
+            width={theme.iconSizes.md}
           />
         </TouchableArea>
       ) : (
