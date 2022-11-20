@@ -5,7 +5,6 @@ import { sprinkles, themeVars, vars } from 'nft/css/sprinkles.css'
 export const card = style([
   sprinkles({
     overflow: 'hidden',
-
     borderRadius: '16',
   }),
   {
@@ -13,6 +12,7 @@ export const card = style([
     WebkitBoxSizing: 'border-box',
     boxShadow: vars.color.cardDropShadow,
     backgroundColor: themeVars.colors.backgroundSurface,
+    height: 'fit-content',
     ':after': {
       content: '',
       position: 'absolute',

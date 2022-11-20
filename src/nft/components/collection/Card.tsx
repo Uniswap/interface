@@ -352,11 +352,11 @@ const Image = () => {
         as="img"
         width="full"
         style={{
-          aspectRatio: '1',
+          // aspectRatio: '1',
           transition: 'transform 0.25s ease 0s',
         }}
         src={asset.imageUrl || asset.smallImageUrl}
-        objectFit="contain"
+        objectFit="cover"
         draggable={false}
         onError={() => setNoContent(true)}
         onLoad={(e) => {
