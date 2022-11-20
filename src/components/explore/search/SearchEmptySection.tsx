@@ -8,7 +8,6 @@ import { SearchEtherscanItem } from 'src/components/explore/search/items/SearchE
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
 import { SearchWalletItem } from 'src/components/explore/search/items/SearchWalletItem'
 import { SearchPopularTokens } from 'src/components/explore/search/SearchPopularTokens'
-import { CloseIcon } from 'src/components/icons/CloseIcon'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import {
@@ -53,17 +52,14 @@ export function SearchEmptySection() {
         <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
           <FlatList
             ListHeaderComponent={
-              <Flex row justifyContent="space-between" mb="xxs" mx="xs">
+              <Flex row alignItems="center" justifyContent="space-between" mb="xxs" ml="xs">
                 <Text color="textSecondary" variant="subheadSmall">
                   {t('Recent searches')}
                 </Text>
                 <TouchableArea onPress={onPressClearSearchHistory}>
-                  <Flex centered row gap="xxs">
-                    <Text color="textSecondary" variant="subheadSmall">
-                      {t('Clear all')}
-                    </Text>
-                    <CloseIcon color="textSecondary" size={18} />
-                  </Flex>
+                  <Text color="accentAction" variant="buttonLabelSmall">
+                    {t('Clear all')}
+                  </Text>
                 </TouchableArea>
               </Flex>
             }
