@@ -1,6 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import clsx from 'clsx'
-import { OpacityHoverState } from 'components/Common'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
@@ -14,6 +13,7 @@ import {
   PlusIconLarge,
   PoolIcon,
   RarityVerifiedIcon,
+  TagIcon,
   VerifiedIcon,
 } from 'nft/components/icons'
 import { body, bodySmall, buttonTextMedium, subhead } from 'nft/css/common.css'
@@ -102,7 +102,6 @@ const DetailsLinkContainer = styled.a`
   font-size: 14px;
   font-weight: 500;
   color: ${({ theme }) => theme.textTertiary};
-  ${OpacityHoverState};
 `
 
 const SuspiciousIcon = styled(AlertTriangle)`
@@ -175,13 +174,11 @@ const StyledHoverContainer = styled.div`
   padding-bottom: 1rem;
   color: ${({ theme }) => theme.accentTextLightPrimary};
   z-index: 1;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 40%);
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 60%);
   font-size: 14px;
   font-weight: 600px;
 `
-const StyledToolTipContainer = styled(StyledHoverContainer)`
-  background: none;
-`
+const StyledToolTipContainer = styled(StyledHoverContainer)``
 
 const StyledAddAffordance = styled.div`
   display: flex;
@@ -193,7 +190,8 @@ const StyledAddAffordance = styled.div`
   gap: 8px;
 `
 
-const StyledToopTipAffordance = styled.div`
+const StyledToopTipAffordance = styled.div<{ showTooltip: boolean }>`
+  opacity: ${({ showTooltip }) => (showTooltip ? '1' : '0')};
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -204,6 +202,8 @@ const StyledToopTipAffordance = styled.div`
   background-color: ${({ theme }) => theme.backgroundSurface};
   padding: 8px 12px;
   border-radius: 8px;
+  transform: ${({ showTooltip }) => (showTooltip ? ' translateY(0px)' : 'translateY(5px)')};
+  transition: transform 100ms ease;
 `
 
 /* -------- ASSET CARD -------- */
@@ -264,7 +264,7 @@ const Container = ({
         position="relative"
         ref={assetRef}
         borderRadius={BORDER_RADIUS}
-        className={selected ? styles.selectedCard : styles.card}
+        className={clsx(selected ? styles.selectedCard : styles.card, hovered && styles.cardHovered)}
         draggable={false}
         onMouseEnter={toggleHover}
         onMouseLeave={toggleHover}
@@ -282,11 +282,13 @@ const ImageContainer = ({
   showTooltip = false,
   selected = false,
   isDisabled = false,
+  isListing = false,
 }: {
   children: ReactNode
   selected?: boolean
   showTooltip?: boolean
   isDisabled?: boolean
+  isListing?: boolean
 }) => {
   // const { asset } = useCardContext()
   const imageRef = useRef<HTMLAnchorElement>(null)
@@ -305,28 +307,60 @@ const ImageContainer = ({
     <StyledImageContainer ref={imageRef} isDisabled={isDisabled} onMouseEnter={toggleHover} onMouseLeave={toggleHover}>
       {hovered && (
         <StyledHoverContainer>
-          {showTooltip && (
-            <StyledToopTipAffordance>{!selected ? <>Removed from bag</> : <>Added to bag</>}</StyledToopTipAffordance>
-          )}
-          {!showTooltip && (
+          <StyledToopTipAffordance showTooltip={showTooltip}>
+            {!selected && !isDisabled ? (
+              isListing ? (
+                <>Removed</>
+              ) : (
+                <>Removed from bag</>
+              )
+            ) : isListing ? (
+              <>Added</>
+            ) : (
+              <>Added to bag</>
+            )}
+            {isDisabled && <>Not Available</>}
+          </StyledToopTipAffordance>
+
+          {!isDisabled && !showTooltip ? (
             <StyledAddAffordance>
               {!selected ? (
-                <>
-                  <BagIcon width={16} height={16} /> Add to bag
-                </>
+                isListing ? (
+                  <>
+                    <TagIcon width={16} height={16} /> List item
+                  </>
+                ) : (
+                  <>
+                    <BagIcon width={16} height={16} /> Add to bag
+                  </>
+                )
               ) : (
                 <>
                   <BagCloseIcon width={16} height={16} /> Remove
                 </>
               )}
             </StyledAddAffordance>
+          ) : (
+            <StyledAddAffordance>Not Available</StyledAddAffordance>
           )}
         </StyledHoverContainer>
       )}
 
       {!hovered && showTooltip && (
         <StyledToolTipContainer>
-          <StyledToopTipAffordance>{!selected ? <>Removed from bag</> : <>Added to bag</>}</StyledToopTipAffordance>
+          <StyledToopTipAffordance showTooltip={showTooltip}>
+            {!selected && !isDisabled ? (
+              isListing ? (
+                <>Removed</>
+              ) : (
+                <>Removed from bag</>
+              )
+            ) : isListing ? (
+              <>Added</>
+            ) : (
+              <>Added to bag</>
+            )}
+          </StyledToopTipAffordance>
         </StyledToolTipContainer>
       )}
       {children}
@@ -352,7 +386,7 @@ const Image = () => {
         as="img"
         width="full"
         style={{
-          // aspectRatio: '1',
+          aspectRatio: '1',
           transition: 'transform 0.25s ease 0s',
         }}
         src={asset.imageUrl || asset.smallImageUrl}
@@ -756,12 +790,7 @@ const DetailsLink = () => {
   const { asset } = useCardContext()
 
   return (
-    <DetailsLinkContainer
-      href={baseHref(asset)}
-      onClick={(e: MouseEvent) => {
-        e.stopPropagation()
-      }}
-    >
+    <DetailsLinkContainer>
       <Box>
         Details <ChevronRightIcon width={10} height={10} />
       </Box>

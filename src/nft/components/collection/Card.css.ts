@@ -12,7 +12,7 @@ export const card = style([
     WebkitBoxSizing: 'border-box',
     boxShadow: vars.color.cardDropShadow,
     backgroundColor: themeVars.colors.backgroundSurface,
-    height: 'fit-content',
+    // height: 'fit-content',
     ':after': {
       content: '',
       position: 'absolute',
@@ -26,8 +26,14 @@ export const card = style([
       pointerEvents: 'none',
       zIndex: '2',
     },
-    ':hover': {
-      borderColor: '#5D678540',
+  },
+])
+
+export const cardHovered = style([
+  card,
+  {
+    ':after': {
+      borderColor: '#5D678550',
     },
   },
 ])
