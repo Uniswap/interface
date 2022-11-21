@@ -191,7 +191,10 @@ export const MarketplaceRow = ({ marketplace, floorInEth, listings }: Marketplac
   return (
     <>
       <TableElement>
-        <MarketplaceIcon src={`/nft/svgs/marketplaces/${marketplace}-grey.svg`} alt={`${marketplace} icon`} />
+        <MarketplaceIcon
+          src={`/nft/svgs/marketplaces/${marketplace.toLowerCase()}-grey.svg`}
+          alt={`${marketplace} icon`}
+        />
         <FirstColumnTextWrapper>
           <ThemedText.BodySmall color="textSecondary">{marketplace}</ThemedText.BodySmall>
         </FirstColumnTextWrapper>
