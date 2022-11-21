@@ -152,7 +152,7 @@ const Collection = () => {
               <CollectionDisplaySection>
                 <Box
                   position={isMobile ? 'fixed' : 'sticky'}
-                  top="0"
+                  top={{ sm: '0', md: '72' }}
                   left="0"
                   width={isMobile ? 'full' : '0'}
                   height={isMobile && isFiltersExpanded ? 'full' : undefined}
