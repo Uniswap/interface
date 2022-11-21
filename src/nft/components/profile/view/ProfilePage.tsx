@@ -171,7 +171,7 @@ export const ProfilePage = () => {
             paddingY="8"
             paddingX="28"
           >
-            Sell
+            List for sale
           </Box>
         </Row>
       )}
