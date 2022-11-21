@@ -103,7 +103,7 @@ const Tokens = () => {
           <ThemedText.LargeHeader>
             <PopoverText
               text={<Trans>This table contains the top tokens by Uniswap volume, sorted based on your input.</Trans>}
-              placement="right"
+              placement="bottom"
             >
               <Trans>Top tokens on Uniswap</Trans>
             </PopoverText>
