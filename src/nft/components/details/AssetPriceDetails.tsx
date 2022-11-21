@@ -214,48 +214,46 @@ export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
   }
 
   return (
-    <Container>
-      <BestPriceContainer>
-        <HeaderRow>
-          <ThemedText.SubHeader fontWeight={500} lineHeight="24px">
-            {listing ? 'Your Price' : 'List for Sale'}
-          </ThemedText.SubHeader>
-          {listing && <MarketplaceIcon alt={listing.marketplace} src={getMarketplaceIcon(listing.marketplace)} />}
-        </HeaderRow>
-        <PriceRow>
-          {listing ? (
-            <>
-              <ThemedText.MediumHeader fontSize="28px" lineHeight="36px">
-                {formatEthPrice(asset.priceInfo.ETHPrice)}
-              </ThemedText.MediumHeader>
-              {USDPrice && (
-                <ThemedText.BodySecondary lineHeight="24px">
-                  {ethNumberStandardFormatter(USDPrice, true, true)}
-                </ThemedText.BodySecondary>
-              )}
-            </>
-          ) : (
-            <ThemedText.BodySecondary fontSize="14px" lineHeight="20px">
-              Get the best price for your NFT by selling with Uniswap.
-            </ThemedText.BodySecondary>
-          )}
-        </PriceRow>
-        {expirationDate && (
-          <ThemedText.BodySecondary fontSize="14px">Sale ends: {timeLeft(expirationDate)}</ThemedText.BodySecondary>
-        )}
-        {!listing ? (
-          <BuyNowButton assetInBag={false} margin={true} useAccentColor={true} onClick={goToListPage}>
-            <ThemedText.SubHeader lineHeight="20px">List</ThemedText.SubHeader>
-          </BuyNowButton>
-        ) : (
+    <BestPriceContainer>
+      <HeaderRow>
+        <ThemedText.SubHeader fontWeight={500} lineHeight="24px">
+          {listing ? 'Your Price' : 'List for Sale'}
+        </ThemedText.SubHeader>
+        {listing && <MarketplaceIcon alt={listing.marketplace} src={getMarketplaceIcon(listing.marketplace)} />}
+      </HeaderRow>
+      <PriceRow>
+        {listing ? (
           <>
-            <BuyNowButton assetInBag={false} margin={true} useAccentColor={false} onClick={goToListPage}>
-              <ThemedText.SubHeader lineHeight="20px">Adjust listing</ThemedText.SubHeader>
-            </BuyNowButton>
+            <ThemedText.MediumHeader fontSize="28px" lineHeight="36px">
+              {formatEthPrice(asset.priceInfo.ETHPrice)}
+            </ThemedText.MediumHeader>
+            {USDPrice && (
+              <ThemedText.BodySecondary lineHeight="24px">
+                {ethNumberStandardFormatter(USDPrice, true, true)}
+              </ThemedText.BodySecondary>
+            )}
           </>
+        ) : (
+          <ThemedText.BodySecondary fontSize="14px" lineHeight="20px">
+            Get the best price for your NFT by selling with Uniswap.
+          </ThemedText.BodySecondary>
         )}
-      </BestPriceContainer>
-    </Container>
+      </PriceRow>
+      {expirationDate && (
+        <ThemedText.BodySecondary fontSize="14px">Sale ends: {timeLeft(expirationDate)}</ThemedText.BodySecondary>
+      )}
+      {!listing ? (
+        <BuyNowButton assetInBag={false} margin={true} useAccentColor={true} onClick={goToListPage}>
+          <ThemedText.SubHeader lineHeight="20px">List</ThemedText.SubHeader>
+        </BuyNowButton>
+      ) : (
+        <>
+          <BuyNowButton assetInBag={false} margin={true} useAccentColor={false} onClick={goToListPage}>
+            <ThemedText.SubHeader lineHeight="20px">Adjust listing</ThemedText.SubHeader>
+          </BuyNowButton>
+        </>
+      )}
+    </BestPriceContainer>
   )
 }
 
@@ -328,9 +326,6 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   }
 
   const isOwner = asset.owner ? account?.toLowerCase() === asset.owner?.address?.toLowerCase() : false
-  if (isOwner) {
-    return <OwnerContainer asset={asset} />
-  }
 
   return (
     <Container>
@@ -347,7 +342,9 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
         </CollectionNameContainer>
         <AssetHeader>{asset.name ?? `${asset.collectionName} #${asset.tokenId}`}</AssetHeader>
       </AssetInfoContainer>
-      {cheapestOrder && asset.priceInfo ? (
+      {isOwner ? (
+        <OwnerContainer asset={asset} />
+      ) : cheapestOrder && asset.priceInfo ? (
         <BestPriceContainer>
           <HeaderRow>
             <ThemedText.SubHeader fontWeight={500} lineHeight="24px">
@@ -403,7 +400,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
           {asset.tokenType === 'ERC1155' ? (
             ''
           ) : (
-            <span> {isOwner ? 'you' : asset.owner.address && shortenAddress(asset.owner.address, 2, 4)}</span>
+            <span> {isOwner ? 'You' : asset.owner.address && shortenAddress(asset.owner.address, 2, 4)}</span>
           )}
         </OwnerText>
       </OwnerInformationContainer>
