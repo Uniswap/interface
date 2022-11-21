@@ -486,7 +486,7 @@ export const colorsDark: Palette = {
 
   accentBranded: colors.magentaVibrant,
   // TODO(MOB-3591): accommodate one-off color in cleaner way
-  shadowBranded: '#E542FD',
+  shadowBranded: '#B60ACF',
 
   accentActionSoft: opacify(24, colors.blue400),
   accentActiveSoft: opacify(24, colors.blue400),

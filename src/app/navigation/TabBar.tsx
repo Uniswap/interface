@@ -2,6 +2,7 @@ import { ShadowProps, useResponsiveProp } from '@shopify/restyle'
 import { selectionAsync } from 'expo-haptics'
 import React, { ComponentProps, memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useColorScheme } from 'react-native'
 import { TapGestureHandler, TapGestureHandlerGestureEvent } from 'react-native-gesture-handler'
 import {
   cancelAnimation,
@@ -82,6 +83,7 @@ export const SwapTabBarButton = memo(({ activeScale = 0.95 }: PressableScale) =>
   const dispatch = useAppDispatch()
 
   const appTheme = useAppTheme()
+  const isDarkMode = useColorScheme() === 'dark'
 
   const onPress = useCallback(() => {
     selectionAsync()
@@ -119,7 +121,7 @@ export const SwapTabBarButton = memo(({ activeScale = 0.95 }: PressableScale) =>
           position="absolute"
           shadowColor="shadowBranded"
           shadowOffset={SWAP_BUTTON_SHADOW_OFFSET}
-          shadowOpacity={0.5}
+          shadowOpacity={isDarkMode ? 0.6 : 0.5}
           shadowRadius={20}
           style={[animatedStyle]}
           top={useResponsiveProp({
