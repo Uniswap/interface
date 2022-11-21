@@ -30,6 +30,7 @@ type AddressDisplayProps = {
   showIconBackground?: boolean
   textAlign?: FlexAlignType
   disableViewOnlyIcon?: boolean
+  horizontalGap?: keyof Theme['spacing']
 }
 
 type CopyButtonWrapperProps = {
@@ -66,6 +67,7 @@ export function AddressDisplay({
   contentAlign = 'center', // vertical aligment of all items
   showIconBackground,
   disableViewOnlyIcon,
+  horizontalGap = 'sm',
 }: AddressDisplayProps) {
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
@@ -102,7 +104,7 @@ export function AddressDisplay({
   }, [address, avatar, isViewOnly, showIconBackground, size])
 
   return (
-    <Flex alignItems={contentAlign} flexDirection={direction} gap="sm">
+    <Flex alignItems={contentAlign} flexDirection={direction} gap={horizontalGap}>
       {showAccountIcon && icon}
       <Box alignItems={itemAlignment} flexShrink={1}>
         <CopyButtonWrapper

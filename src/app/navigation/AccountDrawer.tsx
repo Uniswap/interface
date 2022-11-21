@@ -331,7 +331,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
         />
       </Flex>
 
-      {fiatOnRampShown ? <FiatOnRampBanner mx="md" my="md" /> : <Separator my="md" />}
+      {fiatOnRampShown ? <FiatOnRampBanner mx="md" my="lg" /> : <Separator my="md" />}
 
       <Flex gap="lg" pb="lg" px="md">
         <SettingsButton

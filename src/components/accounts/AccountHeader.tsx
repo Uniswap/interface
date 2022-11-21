@@ -89,11 +89,13 @@ export function AccountHeader() {
         }}
         onPress={onPressAccountHeader}>
         {activeAddress && (
-          <Flex row gap="xs">
+          <Flex row gap="xxs">
             <Flex shrink>
               <AddressDisplay
                 hideAddressInSubtitle
                 address={activeAddress}
+                horizontalGap="xs"
+                size={iconSizes.xl}
                 variant="subheadLarge"
               />
             </Flex>
