@@ -23,7 +23,7 @@ export default function Updater(): null {
     Object.keys(lists).forEach((url) => {
       // Skip validation on unsupported lists
       const isUnsupportedList = UNSUPPORTED_LIST_URLS.includes(url)
-      fetchList(url, false, isUnsupportedList).catch((error) => console.debug('interval list fetching error', error))
+      fetchList(url, isUnsupportedList).catch((error) => console.debug('interval list fetching error', error))
     })
   }, [fetchList, isWindowVisible, lists])
 
@@ -34,6 +34,7 @@ export default function Updater(): null {
   useEffect(() => {
     Object.keys(lists).forEach((listUrl) => {
       const list = lists[listUrl]
+      console.log(listUrl)
       if (!list.current && !list.loadingRequestId && !list.error) {
         fetchList(listUrl).catch((error) => console.debug('list added fetching error', error))
       }
@@ -45,7 +46,7 @@ export default function Updater(): null {
     UNSUPPORTED_LIST_URLS.forEach((listUrl) => {
       const list = lists[listUrl]
       if (!list || (!list.current && !list.loadingRequestId && !list.error)) {
-        fetchList(listUrl, undefined, true).catch((error) => console.debug('list added fetching error', error))
+        fetchList(listUrl, true).catch((error) => console.debug('list added fetching error', error))
       }
     })
   }, [dispatch, fetchList, lists])
