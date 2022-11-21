@@ -1,5 +1,7 @@
 import React, { ErrorInfo } from 'react'
+import { useTranslation } from 'react-i18next'
 import RNRestart from 'react-native-restart'
+import DeadLuni from 'src/assets/graphics/dead-luni.svg'
 import { Button } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
@@ -38,21 +40,33 @@ export class ErrorBoundary extends React.Component<unknown, ErrorBoundaryState> 
   render() {
     const { error } = this.state
     if (error !== null) {
-      return (
-        <Flex alignItems="center" flex={1} justifyContent="center">
-          <Text variant="headlineLarge">An Error Occurred</Text>
-          {error.message && __DEV__ && <Text variant="headlineSmall">{error.message}</Text>}
-          <Box>
-            <Button
-              label="Restart"
-              onPress={() => {
-                RNRestart.Restart()
-              }}
-            />
-          </Box>
-        </Flex>
-      )
+      return <ErrorScreen error={error} />
     }
+
     return this.props.children
   }
+}
+
+function ErrorScreen({ error }: { error: Error }) {
+  const { t } = useTranslation()
+  return (
+    <Flex alignItems="center" flex={1} justifyContent="center" px="md" py="xxl">
+      <Flex centered grow gap="xl">
+        <DeadLuni />
+        <Flex centered gap="sm">
+          <Text variant="subheadLarge">{t('Uh oh!')}</Text>
+          <Text variant="bodySmall">{t('Something crashed.')}</Text>
+        </Flex>
+        {error.message && __DEV__ && <Text variant="bodySmall">{error.message}</Text>}
+      </Flex>
+      <Box alignSelf="stretch">
+        <Button
+          label={t('Restart app')}
+          onPress={() => {
+            RNRestart.Restart()
+          }}
+        />
+      </Box>
+    </Flex>
+  )
 }
