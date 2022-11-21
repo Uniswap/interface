@@ -76,15 +76,40 @@ const ListingModal = () => {
       )
     if (
       allCollectionsApproved &&
-      (listingStatus === ListingStatus.PENDING || listingStatus === ListingStatus.CONTINUE)
+      (listingStatus === ListingStatus.PENDING ||
+        listingStatus === ListingStatus.CONTINUE ||
+        listingStatus === ListingStatus.SIGNING)
     ) {
       signListings()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collectionsRequiringApproval, allCollectionsApproved])
 
-  // handles the modal wide listing state based on conglomeration of the wallet, collection, and listing states
+  const allCollectionsApprovedOrPaused = useMemo(
+    () =>
+      collectionsRequiringApproval.every(
+        (collection: CollectionRow) =>
+          collection.status === ListingStatus.APPROVED || collection.status === ListingStatus.PAUSED
+      ),
+    [collectionsRequiringApproval]
+  )
+  const allListingsApprovedOrPaused = useMemo(
+    () =>
+      listings.every(
+        (listing: ListingRow) => listing.status === ListingStatus.APPROVED || listing.status === ListingStatus.PAUSED
+      ),
+    [listings]
+  )
 
+  // go back to a ready state after a successful retry
+  useEffect(() => {
+    if (listingStatus === ListingStatus.SIGNING && allCollectionsApprovedOrPaused && allListingsApprovedOrPaused) {
+      resetAllRows()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allCollectionsApprovedOrPaused, allListingsApprovedOrPaused])
+
+  // handles the modal wide listing state based on conglomeration of the wallet, collection, and listing states
   const startListingFlow = async () => {
     if (!signer) return
     sendAnalyticsEvent(EventName.NFT_SELL_START_LISTING, { ...startListingEventProperties })
