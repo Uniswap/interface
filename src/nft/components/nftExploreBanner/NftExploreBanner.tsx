@@ -31,7 +31,7 @@ const PopupContainer = styled.div<{ show: boolean }>`
   position: fixed;
   right: clamp(0px, 1vw, 16px);
   text-decoration: none;
-  width: 391px;
+  width: ${Math.min(391, window.innerWidth - 5)}px;
   z-index: ${Z_INDEX.sticky};
   transition: ${({
     theme: {
