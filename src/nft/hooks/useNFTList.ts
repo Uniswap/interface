@@ -12,7 +12,6 @@ interface NFTListState {
   getLooksRareNonce: () => number
   setListingStatus: (status: ListingStatus) => void
   setListings: (listings: ListingRow[]) => void
-  addSignedListing: (signedListing: ListingRow) => void
   setCollectionsRequiringApproval: (collections: CollectionRow[]) => void
 }
 
@@ -37,27 +36,31 @@ export const useNFTList = create<NFTListState>()(
     setListings: (listings) =>
       set(() => {
         const updatedListings = listings.map((listing) => {
-          const isApproved = !!get().signedListings.find(
-            (signedListing) =>
-              signedListing.asset.asset_contract.address === listing.asset.asset_contract.address &&
-              signedListing.asset.tokenId === listing.asset.tokenId &&
-              signedListing.marketplace.name === listing.marketplace.name &&
-              signedListing.price === listing.price
-          )
+          const oldStatus = get().listings.find(
+            (oldListing) =>
+              oldListing.asset.asset_contract.address === listing.asset.asset_contract.address &&
+              oldListing.asset.tokenId === listing.asset.tokenId &&
+              oldListing.marketplace.name === listing.marketplace.name &&
+              oldListing.price === listing.price
+          )?.status
+          const status = () => {
+            switch (oldStatus) {
+              case ListingStatus.APPROVED:
+                return ListingStatus.APPROVED
+              case ListingStatus.FAILED:
+                return listing.status === ListingStatus.PENDING ? ListingStatus.PENDING : ListingStatus.FAILED
+              default:
+                return listing.status
+            }
+          }
           return {
             ...listing,
-            status: isApproved ? ListingStatus.APPROVED : listing.status,
+            status: status(),
           }
         })
         return {
           listings: updatedListings,
         }
-      }),
-    addSignedListing: (signedListing) =>
-      set(() => {
-        const signedListings = get().signedListings
-        signedListings.push(signedListing)
-        return { signedListings }
       }),
     setCollectionsRequiringApproval: (collections) =>
       set(() => {

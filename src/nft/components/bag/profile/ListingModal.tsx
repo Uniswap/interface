@@ -25,7 +25,6 @@ const ListingModal = () => {
   const signer = provider?.getSigner()
   const listings = useNFTList((state) => state.listings)
   const setListings = useNFTList((state) => state.setListings)
-  const addSignedListing = useNFTList((state) => state.addSignedListing)
   const collectionsRequiringApproval = useNFTList((state) => state.collectionsRequiringApproval)
   const setCollectionsRequiringApproval = useNFTList((state) => state.setCollectionsRequiringApproval)
   const [openIndex, setOpenIndex] = useState(0)
@@ -131,7 +130,6 @@ const ListingModal = () => {
           setLooksRareNonce,
           pauseAllRows
         ))
-      if (listing.status === ListingStatus.APPROVED) addSignedListing(listing)
     }
     const allListingsSigned = listings.every((listing: ListingRow) => listing.status === ListingStatus.APPROVED)
     const paused = listings.some((listing: ListingRow) => listing.status === ListingStatus.PAUSED)
