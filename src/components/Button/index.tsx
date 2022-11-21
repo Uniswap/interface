@@ -1,7 +1,8 @@
 import { darken } from 'polished'
 import { Check, ChevronDown } from 'react-feather'
+import { Link } from 'react-router-dom'
 import { Button as RebassButton, ButtonProps as ButtonPropsOriginal } from 'rebass/styled-components'
-import styled, { DefaultTheme, useTheme } from 'styled-components/macro'
+import styled, { css, DefaultTheme, useTheme } from 'styled-components/macro'
 
 import { RowBetween } from '../Row'
 
@@ -468,8 +469,7 @@ function pickThemeButtonTextColor({ theme, emphasis }: { theme: DefaultTheme; em
       return theme.textPrimary
   }
 }
-
-const BaseThemeButton = styled.button<BaseButtonProps>`
+const BaseThemeButtonCss = css<BaseButtonProps>`
   align-items: center;
   background-color: ${pickThemeButtonBackgroundColor};
   border-radius: 16px;
@@ -507,6 +507,13 @@ const BaseThemeButton = styled.button<BaseButtonProps>`
     }
   }
 `
+const BaseThemeButton = styled.button<BaseButtonProps>`
+  ${BaseThemeButtonCss}
+`
+const BaseThemeLink = styled(Link)`
+  ${BaseThemeButtonCss}
+  text-decoration: none;
+`
 
 interface ThemeButtonProps extends React.ComponentPropsWithoutRef<'button'>, BaseButtonProps {}
 
@@ -516,5 +523,17 @@ export const ThemeButton = ({ children, ...rest }: ThemeButtonProps) => {
       <ButtonOverlay />
       {children}
     </BaseThemeButton>
+  )
+}
+
+interface ThemeLinkProps extends React.ComponentPropsWithoutRef<typeof Link>, BaseButtonProps {}
+// This is kind of a design anti-pattern.
+// If you find youself reaching for this, consider finding an alternative design.
+export const ThemeLinkButton = ({ children, ...rest }: ThemeLinkProps) => {
+  return (
+    <BaseThemeLink {...rest}>
+      <ButtonOverlay />
+      {children}
+    </BaseThemeLink>
   )
 }

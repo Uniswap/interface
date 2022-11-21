@@ -23,7 +23,7 @@ import { shortenAddress } from '../../nft/utils/address'
 import { useCloseModal, useToggleModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
-import { ButtonEmphasis, ButtonSize, ThemeButton } from '../Button'
+import { ButtonEmphasis, ButtonSize, ThemeButton, ThemeLinkButton } from '../Button'
 import StatusIcon from '../Identicon/StatusIcon'
 import IconButton, { IconHoverText } from './IconButton'
 
@@ -182,11 +182,14 @@ const AuthenticatedHeader = () => {
           <USDText>${amountUSD.toFixed(2)} USD</USDText>
         </BalanceWrapper>
         {nftFlag === NftVariant.Enabled && (
-          <ProfileLink to="/nfts/profile">
-            <ProfileButton onClick={handleProfileButtonClick} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
-              <Trans>View and sell NFTs</Trans>
-            </ProfileButton>
-          </ProfileLink>
+          <ThemeLinkButton
+            to="/nfts/profile"
+            onClick={handleProfileButtonClick}
+            size={ButtonSize.medium}
+            emphasis={ButtonEmphasis.high}
+          >
+            <Trans>View and sell NFTs</Trans>
+          </ThemeLinkButton>
         )}
         {isUnclaimed && (
           <UNIButton onClick={openClaimModal} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
