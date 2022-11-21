@@ -29,14 +29,7 @@ export const logo = style([
   }),
 ])
 
-export const baseContainer = style([
-  sprinkles({
-    alignItems: 'center',
-  }),
-])
-
 export const baseSideContainer = style([
-  baseContainer,
   sprinkles({
     display: 'flex',
     width: 'full',
@@ -53,16 +46,13 @@ export const leftSideContainer = style([
 ])
 
 export const middleContainer = style([
-  baseContainer,
   sprinkles({
     flex: '1',
     flexShrink: '1',
-    justifyContent: 'center',
+    justifyContent: { lg: 'flex-end', xl: 'center' },
     display: { sm: 'none', xl: 'flex' },
-  }),
-  {
     alignItems: 'flex-start',
-  },
+  }),
 ])
 
 export const rightSideContainer = style([

@@ -24,7 +24,7 @@ import { NavIcon } from './NavIcon'
 import * as styles from './SearchBar.css'
 import { SearchBarDropdown } from './SearchBarDropdown'
 
-const KeyShortCut = styled(Box)`
+const KeyShortCut = styled.div`
   background-color: ${({ theme }) => theme.searchOutline};
   color: ${({ theme }) => theme.textSecondary};
   padding: 0px 8px;
@@ -156,28 +156,23 @@ export const SearchBar = () => {
   return (
     <Trace section={SectionName.NAVBAR_SEARCH}>
       <Box
-        position={{ sm: 'fixed', md: 'absolute', xl: 'relative' }}
+        position={{ sm: 'absolute', xl: 'relative' }}
         width={{ sm: isOpen ? 'viewWidth' : 'auto', md: 'auto' }}
         ref={searchRef}
-        className={
-          isPhase1
-            ? isOpen
-              ? styles.searchBarContainerNftOpen
-              : styles.searchBarContainerNft
-            : styles.searchBarContainer
-        }
+        className={isPhase1 ? styles.searchBarContainerNft : styles.searchBarContainer}
         display={{ sm: isOpen ? 'inline-block' : 'none', xl: 'inline-block' }}
       >
         <Row
           className={clsx(
-            ` ${isPhase1 ? (isOpen ? styles.nftSearchBarOpen : styles.nftSearchBar) : styles.searchBar} ${
-              !isOpen && !isMobile && magicalGradientOnHover
-            } ${isMobileOrTablet && (isOpen ? styles.visible : styles.hidden)}`
+            ` ${isPhase1 ? styles.nftSearchBar : styles.searchBar} ${!isOpen && !isMobile && magicalGradientOnHover} ${
+              isMobileOrTablet && (isOpen ? styles.visible : styles.hidden)
+            } `
           )}
           borderRadius={isOpen || isMobileOrTablet ? undefined : '12'}
           borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
           borderTopLeftRadius={isOpen && !isMobile ? '12' : undefined}
           borderBottomWidth={isOpen || isMobileOrTablet ? '0px' : '1px'}
+          backgroundColor={isOpen ? 'backgroundSurface' : 'searchBackground'}
           onClick={() => !isOpen && toggleOpen()}
           gap="12"
         >

@@ -3,7 +3,8 @@ import { buttonTextSmall, subhead, subheadSmall } from 'nft/css/common.css'
 
 import { breakpoints, sprinkles, vars } from '../../nft/css/sprinkles.css'
 
-const DESKTOP_NAVBAR_WIDTH = 360
+const DESKTOP_NAVBAR_WIDTH = 330
+const DESKTOP_NAVBAR_WIDTH_MD = 360
 const DESKTOP_NAVBAR_WIDTH_L = 480
 const DESKTOP_NAVBAR_WIDTH_XL = 520
 const DESKTOP_NAVBAR_WIDTH_XXL = 640
@@ -15,13 +16,12 @@ const baseSearchStyle = style([
     borderStyle: 'solid',
     borderWidth: '1px',
     borderColor: 'searchOutline',
-    backgroundColor: 'searchBackground',
   }),
   {
     backdropFilter: 'blur(60px)',
     '@media': {
       [`screen and (min-width: ${breakpoints.sm}px)`]: {
-        width: `${DESKTOP_NAVBAR_WIDTH}px`,
+        width: `${DESKTOP_NAVBAR_WIDTH_MD}px`,
       },
     },
   },
@@ -30,13 +30,12 @@ const baseSearchStyle = style([
 const baseSearchNftStyle = style([
   baseSearchStyle,
   {
-    borderWidth: '1px',
     '@media': {
       [`screen and (min-width: ${breakpoints.md}px)`]: {
-        width: `${300}px`,
+        width: `${DESKTOP_NAVBAR_WIDTH}px`,
       },
       [`screen and (min-width: ${breakpoints.lg}px)`]: {
-        width: `${DESKTOP_NAVBAR_WIDTH}px`,
+        width: `${DESKTOP_NAVBAR_WIDTH_MD}px`,
       },
       [`screen and (min-width: ${breakpoints.xl}px)`]: {
         width: `${DESKTOP_NAVBAR_WIDTH_L}px`,
@@ -76,7 +75,6 @@ export const searchBarContainerNft = style([
 export const searchBarContainerNftOpen = style([
   searchBarContainerNft,
   {
-    opacity: '1',
     boxShadow: vars.color.cardDropShadow,
   },
 ])
@@ -87,9 +85,6 @@ export const searchBar = style([
     color: 'textSecondary',
     paddingX: '16',
   }),
-  {
-    backgroundColor: vars.color.backgroundSurface,
-  },
 ])
 
 export const nftSearchBar = style([
@@ -100,13 +95,6 @@ export const nftSearchBar = style([
   }),
   {
     backdropFilter: 'blur(60px)',
-  },
-])
-
-export const nftSearchBarOpen = style([
-  nftSearchBar,
-  {
-    backgroundColor: vars.color.backgroundSurface,
   },
 ])
 
@@ -129,11 +117,8 @@ export const searchBarDropdown = style([
     borderBottomLeftRadius: '12',
     borderBottomRightRadius: '12',
     height: { sm: 'viewHeight', md: 'auto' },
-  }),
-  {
     borderTop: 'none',
-    backgroundColor: vars.color.backgroundSurface,
-  },
+  }),
 ])
 
 export const searchBarDropdownNft = style([
@@ -142,11 +127,11 @@ export const searchBarDropdownNft = style([
     borderBottomLeftRadius: '12',
     borderBottomRightRadius: '12',
     height: { sm: 'viewHeight', md: 'auto' },
+    backgroundColor: 'backgroundSurface',
   }),
   {
     backdropFilter: 'blur(60px)',
     borderTop: 'none',
-    backgroundColor: vars.color.backgroundSurface,
   },
 ])
 
