@@ -5,13 +5,25 @@ import { EventType } from '@visx/event/lib/types'
 import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
 import AnimatedInLineChart from 'components/Charts/AnimatedInLineChart'
-import { bisect, curveCardinal, NumberValue, scaleLinear, timeDay, timeHour, timeMinute, timeMonth } from 'd3'
-import { PricePoint } from 'graphql/data/util'
+import FadedInLineChart from 'components/Charts/FadeInLineChart'
+import {
+  bisect,
+  curveCardinal,
+  NumberValue,
+  ScaleLinear,
+  scaleLinear,
+  timeDay,
+  timeHour,
+  timeMinute,
+  timeMonth,
+} from 'd3'
+import { PricePoint, toTranslatedTimePeriod } from 'graphql/data/util'
 import { TimePeriod } from 'graphql/data/util'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight, TrendingUp } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
+import { textFadeIn } from 'theme/styles'
 import {
   dayHourFormatter,
   hourFormatter,
@@ -22,7 +34,7 @@ import {
 } from 'utils/formatChartTimes'
 import { formatDollar } from 'utils/formatNumbers'
 
-export const DATA_EMPTY = { value: 0, timestamp: 0 }
+const DATA_EMPTY = { value: 0, timestamp: 0 }
 
 export function getPriceBounds(pricePoints: PricePoint[]): [number, number] {
   const prices = pricePoints.map((x) => x.value)
@@ -66,10 +78,17 @@ export function formatDelta(delta: number | null | undefined) {
 
 export const ChartHeader = styled.div`
   position: absolute;
+  ${textFadeIn};
+  animation-duration: ${({ theme }) => theme.transition.duration.medium};
 `
 export const TokenPrice = styled.span`
   font-size: 36px;
   line-height: 44px;
+`
+export const MissingPrice = styled(TokenPrice)`
+  font-size: 24px;
+  line-height: 44px;
+  color: ${({ theme }) => theme.textTertiary};
 `
 export const DeltaContainer = styled.div`
   height: 16px;
@@ -82,6 +101,29 @@ const ArrowCell = styled.div`
   display: flex;
 `
 
+function fixChart(prices: PricePoint[] | undefined | null) {
+  if (!prices) return { prices: null, blanks: [] }
+
+  const fixedChart: PricePoint[] = []
+  const blanks: PricePoint[][] = []
+  let lastValue: PricePoint | undefined = undefined
+  for (let i = 0; i < prices.length; i++) {
+    if (prices[i].value !== 0) {
+      if (fixedChart.length === 0 && i !== 0) {
+        blanks.push([{ ...prices[0], value: prices[i].value }, prices[i]])
+      }
+      lastValue = prices[i]
+      fixedChart.push(prices[i])
+    }
+  }
+
+  if (lastValue && lastValue !== prices[prices.length - 1]) {
+    blanks.push([lastValue, { ...prices[prices.length - 1], value: lastValue.value }])
+  }
+
+  return { prices: fixedChart, blanks }
+}
+
 const margin = { top: 100, bottom: 48, crosshair: 72 }
 const timeOptionsHeight = 44
 
@@ -92,14 +134,19 @@ interface PriceChartProps {
   timePeriod: TimePeriod
 }
 
-export function PriceChart({ width, height, prices, timePeriod }: PriceChartProps) {
+export function PriceChart({ width, height, prices: originalPrices, timePeriod }: PriceChartProps) {
   const locale = useActiveLocale()
   const theme = useTheme()
+  const { prices, blanks } = useMemo(
+    () => (originalPrices ? fixChart(originalPrices) : { prices: null, blanks: [] }),
+    [originalPrices]
+  )
 
+  console.log(width)
   // first price point on the x-axis of the current time period's chart
-  const startingPrice = prices?.[0] ?? DATA_EMPTY
+  const startingPrice = originalPrices?.[0] ?? DATA_EMPTY
   // last price point on the x-axis of the current time period's chart
-  const endingPrice = prices?.[prices.length - 1] ?? DATA_EMPTY
+  const endingPrice = originalPrices?.[originalPrices.length - 1] ?? DATA_EMPTY
   const [displayPrice, setDisplayPrice] = useState(startingPrice)
 
   // set display price to ending price when prices have changed.
@@ -123,9 +170,9 @@ export function PriceChart({ width, height, prices, timePeriod }: PriceChartProp
   const rdScale = useMemo(
     () =>
       scaleLinear()
-        .domain(getPriceBounds(prices ?? []))
+        .domain(getPriceBounds(originalPrices ?? []))
         .range([graphInnerHeight, 0]),
-    [prices, graphInnerHeight]
+    [originalPrices, graphInnerHeight]
   )
 
   function tickFormat(
@@ -211,7 +258,8 @@ export function PriceChart({ width, height, prices, timePeriod }: PriceChartProp
   const arrow = getDeltaArrow(delta)
   const crosshairEdgeMax = width * 0.85
   const crosshairAtEdge = !!crosshair && crosshair > crosshairEdgeMax
-  const hasData = prices && prices.length > 0
+
+  const canDisplay = !!prices && prices.length > 0
 
   /*
    * Default curve doesn't look good for the HOUR chart.
@@ -223,22 +271,32 @@ export function PriceChart({ width, height, prices, timePeriod }: PriceChartProp
   const getX = useMemo(() => (p: PricePoint) => timeScale(p.timestamp), [timeScale])
   const getY = useMemo(() => (p: PricePoint) => rdScale(p.value), [rdScale])
   const curve = useMemo(() => curveCardinal.tension(curveTension), [curveTension])
+
   return (
     <>
       <ChartHeader>
-        <TokenPrice>{formatDollar({ num: displayPrice.value, isPrice: true })}</TokenPrice>
-        <DeltaContainer>
-          {formattedDelta}
-          <ArrowCell>{arrow}</ArrowCell>
-        </DeltaContainer>
+        {displayPrice.value ? (
+          <>
+            <TokenPrice>{formatDollar({ num: displayPrice.value, isPrice: true })}</TokenPrice>
+            <DeltaContainer>
+              {formattedDelta}
+              <ArrowCell>{arrow}</ArrowCell>
+            </DeltaContainer>
+          </>
+        ) : (
+          <MissingPrice>Price Unavailable</MissingPrice>
+        )}
       </ChartHeader>
-      {!hasData ? (
+      {!canDisplay ? (
         <MissingPriceChart
           width={width}
           height={graphHeight}
           message={
             prices?.length === 0 ? (
-              <Trans>This token doesn&apos;t have chart data because it hasn&apos;t been traded on Uniswap v3</Trans>
+              <>
+                <Trans>This token doesn&apos;t have chart data because it has low trading volume in the past </Trans>{' '}
+                {toTranslatedTimePeriod(timePeriod)} <Trans> on Uniswap v3</Trans>
+              </>
             ) : (
               <Trans>Missing chart data</Trans>
             )
@@ -254,6 +312,19 @@ export function PriceChart({ width, height, prices, timePeriod }: PriceChartProp
             curve={curve}
             strokeWidth={2}
           />
+          {blanks.map((blank, index) => (
+            <FadedInLineChart
+              key={index}
+              data={blank}
+              getX={getX}
+              getY={getY}
+              marginTop={margin.top}
+              curve={curve}
+              strokeWidth={2}
+              color={theme.textTertiary}
+              dashed
+            />
+          ))}
           {crosshair !== null ? (
             <g>
               <AxisBottom
@@ -332,15 +403,48 @@ export function PriceChart({ width, height, prices, timePeriod }: PriceChartProp
   )
 }
 
+function BottomAxis({
+  timeScale,
+  tickFormatter,
+  ticks,
+  graphHeight,
+  showTicks,
+}: {
+  timeScale: ScaleLinear<number, number>
+  tickFormatter: TickFormatter<NumberValue>
+  ticks: NumberValue[]
+  graphHeight: number
+  showTicks: boolean
+}) {
+  const theme = useTheme()
+  return (
+    <AxisBottom
+      scale={timeScale}
+      stroke={theme.backgroundOutline}
+      tickFormat={tickFormatter}
+      tickStroke={theme.backgroundOutline}
+      tickLength={4}
+      hideTicks={true}
+      tickTransform="translate(0 -5)"
+      tickValues={ticks}
+      top={graphHeight - 1}
+      tickLabelProps={() => ({
+        fill: theme.textSecondary,
+        fontSize: 12,
+        textAnchor: 'middle',
+        transform: 'translate(0 -24)',
+      })}
+    />
+  )
+}
+
 const StyledMissingChart = styled.svg`
   text {
     font-size: 12px;
     font-weight: 400;
   }
 `
-
 const chartBottomPadding = 15
-
 function MissingPriceChart({ width, height, message }: { width: number; height: number; message: ReactNode }) {
   const theme = useTheme()
   const midPoint = height / 2 + 45

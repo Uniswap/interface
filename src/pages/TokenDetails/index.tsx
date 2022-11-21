@@ -1,21 +1,23 @@
-import { filterTimeAtom } from 'components/Tokens/state'
 import TokenDetails from 'components/Tokens/TokenDetails'
 import { TokenDetailsPageSkeleton } from 'components/Tokens/TokenDetails/Skeleton'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { TokenQuery, tokenQuery } from 'graphql/data/Token'
 import { TokenPriceQuery, tokenPriceQuery } from 'graphql/data/TokenPrice'
 import { CHAIN_NAME_TO_CHAIN_ID, TimePeriod, toHistoryDuration, validateUrlChainParam } from 'graphql/data/util'
-import { useAtomValue } from 'jotai/utils'
+import { useAtom } from 'jotai'
+import { atomWithStorage } from 'jotai/utils'
 import { Suspense, useCallback, useEffect, useMemo } from 'react'
 import { useQueryLoader } from 'react-relay'
 import { useParams } from 'react-router-dom'
+
+export const pageTimePeriodAtom = atomWithStorage<TimePeriod>('tokenDetailsTimePeriod', TimePeriod.DAY)
 
 export default function TokenDetailsPage() {
   const { tokenAddress, chainName } = useParams<{ tokenAddress?: string; chainName?: string }>()
   const chain = validateUrlChainParam(chainName)
   const pageChainId = CHAIN_NAME_TO_CHAIN_ID[chain]
   const isNative = tokenAddress === NATIVE_CHAIN_ID
-  const timePeriod = useAtomValue(filterTimeAtom)
+  const [timePeriod, setTimePeriod] = useAtom(pageTimePeriodAtom)
   const [contract, duration] = useMemo(
     () => [
       { address: isNative ? nativeOnChain(pageChainId).wrapped.address : tokenAddress ?? '', chain },
@@ -35,8 +37,9 @@ export default function TokenDetailsPage() {
   const refetchTokenPrices = useCallback(
     (t: TimePeriod) => {
       loadPriceQuery({ contract, duration: toHistoryDuration(t) })
+      setTimePeriod(t)
     },
-    [contract, loadPriceQuery]
+    [contract, loadPriceQuery, setTimePeriod]
   )
 
   if (!tokenQueryReference) {

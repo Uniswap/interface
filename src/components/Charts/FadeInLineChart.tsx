@@ -1,7 +1,6 @@
 import { Group } from '@visx/group'
 import { LinePath } from '@visx/shape'
-import { easeSinOut } from 'd3'
-import ms from 'ms.macro'
+import { easeCubicInOut } from 'd3'
 import React from 'react'
 import { useEffect, useRef, useState } from 'react'
 import { animated, useSpring } from 'react-spring'
@@ -9,16 +8,16 @@ import { useTheme } from 'styled-components/macro'
 
 import { LineChartProps } from './LineChart'
 
-type AnimatedInLineChartProps<T> = Omit<LineChartProps<T>, 'height' | 'width' | 'children'>
+type FadedInLineChartProps<T> = Omit<LineChartProps<T>, 'height' | 'width' | 'children'> & { dashed?: boolean }
 
 const config = {
-  duration: ms`0.8s`,
-  easing: easeSinOut,
+  duration: 3000,
+  easing: easeCubicInOut,
 }
 
 // code reference: https://airbnb.io/visx/lineradial
 
-function AnimatedInLineChart<T>({
+function FadedInLineChart<T>({
   data,
   getX,
   getY,
@@ -26,7 +25,8 @@ function AnimatedInLineChart<T>({
   curve,
   color,
   strokeWidth,
-}: AnimatedInLineChartProps<T>) {
+  dashed,
+}: FadedInLineChartProps<T>) {
   const lineRef = useRef<SVGPathElement>(null)
   const [lineLength, setLineLength] = useState(0)
   const [shouldAnimate, setShouldAnimate] = useState(false)
@@ -70,20 +70,11 @@ function AnimatedInLineChart<T>({
                 d={d}
                 ref={lineRef}
                 strokeWidth={strokeWidth}
-                strokeOpacity={hasAnimatedIn ? 1 : 0}
+                strokeOpacity={hasAnimatedIn ? 1 : spring.frame.to((v) => 1 - v)}
                 fill="none"
                 stroke={lineColor}
+                strokeDasharray={dashed ? '4,4' : undefined}
               />
-              {shouldAnimate && lineLength !== 0 && (
-                <animated.path
-                  d={d}
-                  strokeWidth={strokeWidth}
-                  fill="none"
-                  stroke={lineColor}
-                  strokeDashoffset={spring.frame.to((v) => v * lineLength)}
-                  strokeDasharray={lineLength}
-                />
-              )}
             </>
           )
         }}
@@ -92,4 +83,4 @@ function AnimatedInLineChart<T>({
   )
 }
 
-export default React.memo(AnimatedInLineChart) as typeof AnimatedInLineChart
+export default React.memo(FadedInLineChart) as typeof FadedInLineChart
