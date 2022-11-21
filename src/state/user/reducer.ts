@@ -16,6 +16,8 @@ export interface UserState {
 
   matchesDarkMode: boolean // whether the dark mode media query matches
 
+  showNftPromoBanner: boolean // whether or not we should show the nft explore promo banner
+
   userDarkMode: boolean | null // the user's choice for dark mode or light mode
   userLocale: SupportedLocale | null
 
@@ -62,6 +64,7 @@ function pairKey(token0Address: string, token1Address: string) {
 export const initialState: UserState = {
   selectedWallet: undefined,
   matchesDarkMode: false,
+  showNftPromoBanner: true,
   userDarkMode: null,
   userExpertMode: false,
   userLocale: null,
@@ -100,6 +103,9 @@ const userSlice = createSlice({
     updateUserLocale(state, action) {
       state.userLocale = action.payload.userLocale
       state.timestamp = currentTimestamp()
+    },
+    updateShowNftPromoBanner(state, action) {
+      state.showNftPromoBanner = action.payload.showNftPromoBanner
     },
     updateUserSlippageTolerance(state, action) {
       state.userSlippageTolerance = action.payload.userSlippageTolerance
@@ -202,6 +208,7 @@ export const {
   removeSerializedToken,
   updateHideClosedPositions,
   updateMatchesDarkMode,
+  updateShowNftPromoBanner,
   updateShowDonationLink,
   updateShowSurveyPopup,
   updateUserClientSideRouter,

@@ -19,6 +19,7 @@ import {
   addSerializedToken,
   removeSerializedToken,
   updateHideClosedPositions,
+  updateShowNftPromoBanner,
   updateShowSurveyPopup,
   updateUserClientSideRouter,
   updateUserDarkMode,
@@ -59,17 +60,6 @@ export function useIsDarkMode(): boolean {
   )
 
   return userDarkMode === null ? matchesDarkMode : userDarkMode
-}
-
-export function useDarkModeManager(): [boolean, () => void] {
-  const dispatch = useAppDispatch()
-  const darkMode = useIsDarkMode()
-
-  const toggleSetDarkMode = useCallback(() => {
-    dispatch(updateUserDarkMode({ userDarkMode: !darkMode }))
-  }, [darkMode, dispatch])
-
-  return [darkMode, toggleSetDarkMode]
 }
 
 export function useUserLocale(): SupportedLocale | null {
@@ -269,6 +259,31 @@ export function usePairAdder(): (pair: Pair) => void {
 
 export function useURLWarningVisible(): boolean {
   return useAppSelector((state: AppState) => state.user.URLWarningVisible)
+}
+
+export function useDarkModeManager(): [boolean, () => void] {
+  const dispatch = useAppDispatch()
+  const darkMode = useIsDarkMode()
+
+  const toggleSetDarkMode = useCallback(() => {
+    dispatch(updateUserDarkMode({ userDarkMode: !darkMode }))
+  }, [darkMode, dispatch])
+
+  return [darkMode, toggleSetDarkMode]
+}
+
+export function useShowNftPromoBanner(): [boolean, () => void] {
+  const dispatch = useAppDispatch()
+  const showNftPromoBanner = useAppSelector((state) => state.user.showNftPromoBanner)
+  const darkMode = useIsDarkMode()
+
+  console.log('show nft promo banner', showNftPromoBanner)
+  console.log('dark mode', darkMode)
+  const toggleShowNftPromoBanner = useCallback(() => {
+    dispatch(updateShowNftPromoBanner({ showNftPromoBanner: !showNftPromoBanner }))
+  }, [dispatch, showNftPromoBanner])
+
+  return [showNftPromoBanner, toggleShowNftPromoBanner]
 }
 
 /**
