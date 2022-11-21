@@ -206,8 +206,8 @@ const AirdropModal = () => {
             </ImageContainer>
             <Body>
               <RewardsInformationText>
-                As a long time supporter of Genie you’ve been awarded {totalAmount} USDC tokens. Read more about Uniswap
-                NFT.
+                As a long time supporter of Genie, you’ve been awarded {totalAmount} USDC tokens. Read more about
+                Uniswap NFT.
               </RewardsInformationText>
               <LinkWrap href="https://uniswap.org/blog/uniswap-nft-aggregator-announcement" target="_blank">
                 <ThemedText.Link>Read more about Uniswap NFT.</ThemedText.Link>

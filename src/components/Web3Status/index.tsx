@@ -14,6 +14,7 @@ import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
 import { useAppSelector } from 'state/hooks'
 import { useDerivedSwapInfo } from 'state/swap/hooks'
 import styled, { useTheme } from 'styled-components/macro'
+import { colors } from 'theme/colors'
 import { flexRowNoWrap } from 'theme/styles'
 
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -95,11 +96,16 @@ const Web3StatusConnectWrapper = styled.div<{ faded?: boolean }>`
   }
 `
 
-const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean; isNftActive?: boolean }>`
+const Web3StatusConnected = styled(Web3StatusGeneric)<{
+  pending?: boolean
+  isNftActive?: boolean
+  hasAirdrop?: boolean
+}>`
   background-color: ${({ pending, theme }) => (pending ? theme.deprecated_primary1 : theme.deprecated_bg1)};
   border: 1px solid ${({ pending, theme }) => (pending ? theme.deprecated_primary1 : theme.deprecated_bg1)};
   color: ${({ pending, theme }) => (pending ? theme.deprecated_white : theme.deprecated_text1)};
   font-weight: 500;
+  border: ${({ hasAirdrop }) => hasAirdrop && `1px solid ${colors.purple300}`};
   :hover,
   :focus {
     border: 1px solid ${({ theme }) => darken(0.05, theme.deprecated_bg3)};
