@@ -94,9 +94,10 @@ interface PriceChartProps {
 
 function formatDisplayPrice(value: number) {
   const str = value.toFixed(9)
-  const [digits] = str.split('.')
-  // Displays longer string for smaller numbers
-  if (digits === '0' || digits === '1') return `$${str.substring(0, 4) + str.substring(4).replace(/0+$/, '')}`
+  const [digits, decimals] = str.split('.')
+  // Displays longer string for numbers < $2 to show changes in both stablecoins & small values
+  if (digits === '0' || digits === '1')
+    return `$${digits + '.' + decimals.substring(0, 2) + decimals.substring(2).replace(/0+$/, '')}`
 
   return formatUSDPrice(value)
 }
