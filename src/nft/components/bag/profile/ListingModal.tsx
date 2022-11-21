@@ -80,6 +80,7 @@ const ListingModal = () => {
         listingStatus === ListingStatus.CONTINUE ||
         listingStatus === ListingStatus.SIGNING)
     ) {
+      resetAllRows()
       signListings()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
