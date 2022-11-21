@@ -1,8 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import { OpacityHoverState } from 'components/Common'
 import { useNftBalanceQuery } from 'graphql/data/nft/NftBalance'
-import useCopyClipboard from 'hooks/useCopyClipboard'
-import { CancelListingIcon } from 'nft/components/icons'
+import { CancelListingIcon, VerifiedIcon } from 'nft/components/icons'
 import { useBag, useProfilePageState, useSellAsset } from 'nft/hooks'
 import { CollectionInfoForAsset, GenieAsset, ProfilePageStateType, WalletAsset } from 'nft/types'
 import { ethNumberStandardFormatter, formatEthPrice, getMarketplaceIcon, timeLeft, useUsdPrice } from 'nft/utils'
@@ -12,6 +11,9 @@ import { Upload } from 'react-feather'
 import { Link, useNavigate } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
+
+const TWITTER_WIDTH = 560
+const TWITTER_HEIGHT = 480
 
 interface AssetPriceDetailsProps {
   asset: GenieAsset
@@ -45,9 +47,12 @@ const hoverState = css`
 `
 
 const Container = styled.div`
+  display: flex;
+  flex-direction: column;
   width: 100%;
+  gap: 24px;
 
-  @media (min-width: 960px) {
+  @media (min-width: 961px) {
     position: fixed;
     width: 360px;
     margin-top: -6px;
@@ -129,7 +134,8 @@ const DiscoveryContainer = styled.div`
 `
 
 const OwnerText = styled.a`
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 600;
   line-height: 20px;
   color: ${({ theme }) => theme.textSecondary};
   text-decoration: none;
@@ -140,9 +146,49 @@ const OwnerText = styled.a`
 const OwnerInformationContainer = styled.div`
   color: ${({ theme }) => theme.textSecondary};
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   padding: 0 8px;
   margin-bottom: 20px;
+`
+
+const AssetInfoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`
+
+const AssetHeader = styled.div`
+  display: -webkit-box;
+  align-items: center;
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 36px;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: ${({ theme }) => theme.textPrimary};
+`
+
+const CollectionNameContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
+
+const CollectionHeader = styled.span`
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  color: ${({ theme }) => theme.textPrimary};
+  text-decoration: none;
+  ${OpacityHoverState};
+`
+
+const DefaultLink = styled(Link)`
+  text-decoration: none;
 `
 
 export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
@@ -258,7 +304,6 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const bagExpanded = useBag((s) => s.bagExpanded)
 
   const USDPrice = useUsdPrice(asset)
-  const [, setCopied] = useCopyClipboard()
 
   const { assetInBag } = useMemo(() => {
     return {
@@ -268,36 +313,40 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
     }
   }, [asset, itemsInBag])
 
-  const isOwner = asset.owner ? account?.toLowerCase() === asset.owner?.address?.toLowerCase() : false
+  const shareTweet = () => {
+    window.open(
+      `https://twitter.com/intent/tweet?text=Check%20out%20${
+        asset.name ?? `${asset.collectionName} #${asset.tokenId}`
+      }%20(${asset.collectionName})%20https://app.uniswap.org/%23/nfts/asset/${asset.address}/${
+        asset.tokenId
+      }%20via%20@uniswap`,
+      'newwindow',
+      `left=${(window.screen.width - TWITTER_WIDTH) / 2}, top=${
+        (window.screen.height - TWITTER_HEIGHT) / 2
+      }, width=${TWITTER_WIDTH}, height=${TWITTER_HEIGHT}`
+    )
+  }
 
+  const isOwner = asset.owner ? account?.toLowerCase() === asset.owner?.address?.toLowerCase() : false
   if (isOwner) {
     return <OwnerContainer asset={asset} />
   }
 
   return (
     <Container>
-      <OwnerInformationContainer>
-        <OwnerText
-          target="_blank"
-          href={`https://etherscan.io/address/${asset.owner.address}`}
-          rel="noopener noreferrer"
-        >
-          {asset.tokenType === 'ERC1155' ? (
-            ''
-          ) : (
-            <span> Seller: {isOwner ? 'you' : asset.owner.address && shortenAddress(asset.owner.address, 2, 4)}</span>
-          )}
-        </OwnerText>
-        <UploadLink
-          onClick={() => {
-            setCopied(window.location.href)
-          }}
-          target="_blank"
-        >
-          <Upload size={20} strokeWidth={2} />
-        </UploadLink>
-      </OwnerInformationContainer>
-
+      <AssetInfoContainer>
+        <CollectionNameContainer>
+          <DefaultLink to={`/nfts/collection/${asset.address}`}>
+            <CollectionHeader>
+              {collection.collectionName} {collection.isVerified && <VerifiedIcon />}
+            </CollectionHeader>
+          </DefaultLink>
+          <UploadLink onClick={shareTweet} target="_blank">
+            <Upload size={20} strokeWidth={2} />
+          </UploadLink>
+        </CollectionNameContainer>
+        <AssetHeader>{asset.name ?? `${asset.collectionName} #${asset.tokenId}`}</AssetHeader>
+      </AssetInfoContainer>
       {cheapestOrder && asset.priceInfo ? (
         <BestPriceContainer>
           <HeaderRow>
@@ -342,6 +391,22 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
       ) : (
         <NotForSale collectionName={collection.collectionName ?? 'this collection'} collectionUrl={asset.address} />
       )}
+      <OwnerInformationContainer>
+        <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
+          Seller:
+        </ThemedText.BodySmall>
+        <OwnerText
+          target="_blank"
+          href={`https://etherscan.io/address/${asset.owner.address}`}
+          rel="noopener noreferrer"
+        >
+          {asset.tokenType === 'ERC1155' ? (
+            ''
+          ) : (
+            <span> {isOwner ? 'you' : asset.owner.address && shortenAddress(asset.owner.address, 2, 4)}</span>
+          )}
+        </OwnerText>
+      </OwnerInformationContainer>
     </Container>
   )
 }

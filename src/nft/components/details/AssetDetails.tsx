@@ -6,7 +6,6 @@ import { reduceFilters } from 'nft/components/collection/Activity'
 import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import { Center } from 'nft/components/Flex'
-import { VerifiedIcon } from 'nft/components/icons'
 import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
 import { ActivityEventResponse, ActivityEventType, CollectionInfoForAsset, GenieAsset } from 'nft/types'
 import { shortenAddress } from 'nft/utils/address'
@@ -27,32 +26,12 @@ import DetailsContainer from './DetailsContainer'
 import InfoContainer from './InfoContainer'
 import TraitsContainer from './TraitsContainer'
 
-const CollectionHeader = styled.span`
-  display: flex;
-  align-items: center;
-  font-size: 16px;
-  line-height: 24px;
-  color: ${({ theme }) => theme.textPrimary};
-  margin-top: 28px;
-  text-decoration: none;
-  ${OpacityHoverState};
-`
-
 const AssetPriceDetailsContainer = styled.div`
   margin-top: 20px;
   display: none;
   @media (max-width: 960px) {
     display: block;
   }
-`
-
-const AssetHeader = styled.div`
-  display: flex;
-  align-items: center;
-  font-size: 36px;
-  line-height: 36px;
-  color: ${({ theme }) => theme.textPrimary};
-  margin-top: 8px;
 `
 
 const MediaContainer = styled.div`
@@ -116,10 +95,6 @@ const Link = styled(RouterLink)`
   margin-top: 12px;
   cursor: pointer;
   ${OpacityHoverState};
-`
-
-const DefaultLink = styled(RouterLink)`
-  text-decoration: none;
 `
 
 const ActivitySelectContainer = styled.div`
@@ -383,13 +358,6 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
           <AssetView asset={asset} mediaType={assetMediaType} dominantColor={dominantColor} />
         )}
       </MediaContainer>
-      <DefaultLink to={`/nfts/collection/${asset.address}`}>
-        <CollectionHeader>
-          {collection.collectionName} {collection.isVerified && <VerifiedIcon />}
-        </CollectionHeader>
-      </DefaultLink>
-
-      <AssetHeader>{asset.name ?? `${asset.collectionName} #${asset.tokenId}`}</AssetHeader>
       <AssetPriceDetailsContainer>
         <AssetPriceDetails asset={asset} collection={collection} />
       </AssetPriceDetailsContainer>
@@ -420,6 +388,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       </InfoContainer>
       <InfoContainer
         primaryHeader="Activity"
+        defaultOpen
         secondaryHeader={formattedPrice ? `Last Sale: ${formattedPrice} ETH` : undefined}
       >
         <>
