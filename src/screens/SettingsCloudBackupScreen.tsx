@@ -77,9 +77,9 @@ export function SettingsCloudBackupScreen({
   }, [accountBackups, address, navigation])
 
   return (
-    <Screen mx="lg" my="md">
-      <BackHeader alignment="left" mb="md" />
-      <Flex alignItems="center" justifyContent="space-between" mb="lg">
+    <Screen mx="md" my="md">
+      <BackHeader mb="md" />
+      <Flex alignItems="center" justifyContent="space-between" mb="lg" mx="sm">
         <Text variant="headlineSmall">{t('Back up to iCloud')}</Text>
         <Text color="textSecondary" textAlign="center" variant="bodySmall">
           {t(

@@ -77,7 +77,7 @@ export function SettingsCloudBackupStatus({
   const { trigger: biometricTrigger } = useBiometricPrompt(deleteBackup)
 
   return (
-    <Screen mx="lg" my="md">
+    <Screen mx="md" my="md">
       <BackHeader alignment="center" mb="md">
         <Text variant="bodyLarge">{t('iCloud backup')}</Text>
       </BackHeader>
