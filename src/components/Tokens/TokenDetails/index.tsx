@@ -81,9 +81,11 @@ function useRelevantToken(
   // fetches on-chain token if query data is missing and page chain matches global chain (else fetch won't work)
   const skipOnChainFetch = Boolean(queryToken) || pageChainId !== activeChainId
   const onChainToken = useOnChainToken(address, skipOnChainFetch)
-  const token = useMemo(() => queryToken ?? onChainToken, [queryToken, onChainToken])
 
-  return { token, didFetchFromChain: !queryToken }
+  return useMemo(
+    () => ({ token: queryToken ?? onChainToken, didFetchFromChain: !queryToken }),
+    [onChainToken, queryToken]
+  )
 }
 
 type TokenDetailsProps = {
@@ -111,13 +113,14 @@ export default function TokenDetails({
   const pageChainId = CHAIN_NAME_TO_CHAIN_ID[chain]
 
   const tokenQueryData = usePreloadedQuery(tokenQuery, tokenQueryReference).tokens?.[0]
-  const crossChainMap = useMemo(() => {
-    const chainMap: { [key: string]: string | undefined } = {}
-    tokenQueryData?.project?.tokens.forEach((t) => {
-      if (t) chainMap[t.chain] = t.address
-    })
-    return chainMap
-  }, [tokenQueryData])
+  const crossChainMap = useMemo(
+    () =>
+      tokenQueryData?.project?.tokens.reduce((map, current) => {
+        if (current) map[current.chain] = current.address
+        return map
+      }, {} as { [key: string]: string | undefined }) ?? {},
+    [tokenQueryData]
+  )
 
   const { token, didFetchFromChain } = useRelevantToken(address, pageChainId, tokenQueryData)
 
@@ -168,10 +171,10 @@ export default function TokenDetails({
 
   const L2Icon = getChainInfo(pageChainId)?.circleLogoUrl
 
+  // address will never be undefined if token is defined; address is checked here to appease typechecker
   if (token === undefined || !address) {
     return <InvalidTokenDetails chainName={address && getChainInfo(pageChainId)?.label} />
   }
-  const canDisplay = token && !isPending
   return (
     <Trace
       page={PageName.TOKEN_DETAILS_PAGE}
@@ -179,7 +182,7 @@ export default function TokenDetails({
       shouldLogImpression
     >
       <TokenDetailsLayout>
-        {canDisplay ? (
+        {token && !isPending ? (
           <LeftPanel>
             <BreadcrumbNavLink to={`/tokens/${chain.toLowerCase()}`}>
               <ArrowLeft size={14} /> Tokens
