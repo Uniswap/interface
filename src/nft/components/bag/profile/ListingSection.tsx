@@ -43,7 +43,11 @@ export const ListingSection = ({
         }
     }
     // listings
-    else removeSellAsset(row.asset)
+    else {
+      if (row.asset.marketplaces.length === 1) {
+        removeSellAsset(row.asset)
+      } else removeAssetMarketplace(row.asset, row.marketplace)
+    }
   }
 
   useEffect(() => {
