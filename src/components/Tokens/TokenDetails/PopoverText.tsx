@@ -17,12 +17,6 @@ const PopoverTextBody = styled.div`
   line-height: 16px;
 `
 
-const PopoverTextWrapper = styled.div`
-  margin-left: 4px;
-  display: flex;
-  align-items: center;
-`
-
 type PopoverTextProps = PropsWithChildren<{ text?: ReactNode; placement?: Placement }>
 export default function PopoverText({ text, placement, children }: PopoverTextProps) {
   const [show, setShow] = useState<boolean>(false)
@@ -31,12 +25,12 @@ export default function PopoverText({ text, placement, children }: PopoverTextPr
   const close = useCallback(() => setShow(false), [setShow])
   if (!text) return <>{children}</>
   return (
-    <PopoverTextWrapper>
+    <div>
       <Tooltip text={<PopoverTextBody>{text}</PopoverTextBody>} show={show} placement={placement}>
         <PopoverTextContainer onClick={open} onMouseEnter={open} onMouseLeave={close}>
           {children}
         </PopoverTextContainer>
       </Tooltip>
-    </PopoverTextWrapper>
+    </div>
   )
 }

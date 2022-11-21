@@ -201,6 +201,7 @@ const HeaderCellWrapper = styled.span<{ onClick?: () => void }>`
   align-items: center;
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'unset')};
   display: flex;
+  gap: 4px;
   height: 100%;
   justify-content: flex-end;
   width: 100%;
