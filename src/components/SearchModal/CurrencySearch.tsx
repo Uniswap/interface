@@ -60,8 +60,6 @@ export function CurrencySearch({
   const { chainId } = useWeb3React()
   const theme = useTheme()
 
-  const [tokenLoaderTimerElapsed, setTokenLoaderTimerElapsed] = useState(false)
-
   // refs for fixed size lists
   const fixedList = useRef<FixedSizeList>()
 
@@ -81,31 +79,25 @@ export function CurrencySearch({
     }
   }, [isAddressSearch])
 
-  const defaultTokens = useAllTokens()
-  const filteredTokens: Token[] = useMemo(() => {
-    return Object.values(defaultTokens).filter(getTokenFilter(debouncedQuery))
-  }, [defaultTokens, debouncedQuery])
-
+  const allTokens = useAllTokens()
   const [balances, balancesAreLoading] = useAllTokenBalances()
+  const tokenSorter = useMemo(() => tokenComparator.bind(null, balances), [balances])
+  const tokenFilter = useMemo(() => {
+    if (debouncedQuery) return getTokenFilter(debouncedQuery)
+    return (token: Currency) => {
+      // If there is no query, filter out unselected user-added tokens with no balance.
+      if (!debouncedQuery && token instanceof UserAddedToken) {
+        if (selectedCurrency?.equals(token) || otherSelectedCurrency?.equals(token)) return true
+        return balances[token.address]?.greaterThan(0)
+      }
+      return true
+    }
+  }, [balances, debouncedQuery, otherSelectedCurrency, selectedCurrency])
   const sortedTokens: Token[] = useMemo(
-    () =>
-      !balancesAreLoading
-        ? filteredTokens
-            .filter((token) => {
-              // If there is no query, filter out unselected user-added tokens with no balance.
-              if (!debouncedQuery && token instanceof UserAddedToken) {
-                if (selectedCurrency?.equals(token) || otherSelectedCurrency?.equals(token)) return true
-                return balances[token.address]?.greaterThan(0)
-              }
-              return true
-            })
-            .sort(tokenComparator.bind(null, balances))
-        : [],
-    [balances, balancesAreLoading, debouncedQuery, filteredTokens, otherSelectedCurrency, selectedCurrency]
+    () => Object.values(allTokens).filter(tokenFilter).sort(tokenSorter),
+    [allTokens, tokenFilter, tokenSorter]
   )
-  const isLoading = Boolean(balancesAreLoading && !tokenLoaderTimerElapsed)
-
-  const filteredSortedTokens = useSortTokensByQuery(debouncedQuery, sortedTokens)
+  const queriedTokens = useSortTokensByQuery(debouncedQuery, sortedTokens)
 
   const native = useNativeCurrency()
   const wrapped = native.wrapped
@@ -113,12 +105,12 @@ export function CurrencySearch({
   const searchCurrencies: Currency[] = useMemo(() => {
     const s = debouncedQuery.toLowerCase().trim()
 
-    const tokens = filteredSortedTokens.filter((t) => !(t.equals(wrapped) || (disableNonToken && t.isNative)))
+    const tokens = queriedTokens.filter((t) => !(t.equals(wrapped) || (disableNonToken && t.isNative)))
     const natives = (disableNonToken || native.equals(wrapped) ? [wrapped] : [native, wrapped]).filter(
       (n) => n.symbol?.toLowerCase()?.indexOf(s) !== -1 || n.name?.toLowerCase()?.indexOf(s) !== -1
     )
     return [...natives, ...tokens]
-  }, [debouncedQuery, filteredSortedTokens, wrapped, disableNonToken, native])
+  }, [debouncedQuery, queriedTokens, wrapped, disableNonToken, native])
 
   const handleCurrencySelect = useCallback(
     (currency: Currency, hasWarning?: boolean) => {
@@ -168,10 +160,12 @@ export function CurrencySearch({
 
   // if no results on main list, show option to expand into inactive
   const filteredInactiveTokens = useSearchInactiveTokenLists(
-    filteredTokens.length === 0 || (debouncedQuery.length > 2 && !isAddressSearch) ? debouncedQuery : undefined
+    sortedTokens.length === 0 || (debouncedQuery.length > 2 && !isAddressSearch) ? debouncedQuery : undefined
   )
 
   // Timeout token loader after 3 seconds to avoid hanging in a loading state.
+  const [tokenLoaderTimerElapsed, setTokenLoaderTimerElapsed] = useState(false)
+  const isLoading = Boolean(balancesAreLoading && !tokenLoaderTimerElapsed)
   useEffect(() => {
     const tokenLoaderTimer = setTimeout(() => {
       setTokenLoaderTimerElapsed(true)
