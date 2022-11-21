@@ -6,7 +6,7 @@ import { calculateCardIndex } from 'nft/utils'
 import { Suspense, useCallback, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
-import styled, { css } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { opacify } from 'theme/utils'
 
 import { Carousel, LoadingCarousel } from './Carousel'
@@ -16,14 +16,12 @@ const BannerContainer = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
-  padding: 32px 16px 0 16px;
+  padding-top: 32px;
   position: relative;
-`
 
-// Safari has issues with blur / overflow
-// https://stackoverflow.com/a/71353198
-const fixBlurOnSafari = css`
-  transform: translate3d(0, 0, 0);
+  @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    padding: 32px 16px 0 16px;
+  }
 `
 
 const AbsoluteFill = styled.div`
@@ -34,13 +32,15 @@ const AbsoluteFill = styled.div`
   bottom: 0;
 `
 
+// Safari has issues with blur / overflow, forcing GPU rendering with `translate3d` fixes it
+// https://stackoverflow.com/a/71353198
 const BannerBackground = styled(AbsoluteFill)<{ backgroundImage: string }>`
-  ${fixBlurOnSafari}
+  transform: translate3d(0, 0, 0) scaleY(1.1);
 
   background-image: ${(props) => `url(${props.backgroundImage})`};
   filter: blur(62px);
+
   opacity: ${({ theme }) => (theme.darkMode ? 0.3 : 0.2)};
-  transform: scaleY(1.1);
 `
 
 const PlainBackground = styled(AbsoluteFill)`

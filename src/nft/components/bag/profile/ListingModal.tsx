@@ -102,14 +102,14 @@ const ListingModal = () => {
     // for all unqiue collection, marketplace combos -> approve collections
     for (const collectionRow of collectionsRequiringApproval) {
       verifyStatus(collectionRow.status) &&
-        approveCollectionRow(
+        (await approveCollectionRow(
           collectionRow,
           collectionsRequiringApproval,
           setCollectionsRequiringApproval,
           signer,
           looksRareAddress,
           pauseAllRows
-        )
+        ))
     }
   }
 
