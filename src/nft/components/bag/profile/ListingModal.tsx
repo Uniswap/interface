@@ -248,7 +248,7 @@ const ListingModal = () => {
         {showSuccessScreen ? (
           <Box as="span" className={caption} color="textSecondary">
             Status:{' '}
-            <Box as="span" color="green200">
+            <Box as="span" color="accentSuccess">
               Confirmed
             </Box>
           </Box>
