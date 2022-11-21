@@ -24,7 +24,7 @@ export function Switch({ value, onValueChange, disabled, ...rest }: PropsWithChi
     <Box>
       <BaseSwitch
         ios_backgroundColor={theme.colors.background3}
-        thumbColor={value ? theme.colors.accentActive : theme.colors.textSecondary}
+        thumbColor={value ? theme.colors.accentAction : theme.colors.textSecondary}
         trackColor={{
           false: theme.colors.background3,
           true: theme.colors.background3,
