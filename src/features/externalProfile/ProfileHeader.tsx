@@ -137,6 +137,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps) {
         />
         <Flex centered row gap="xxs" mt="sm">
           <TouchableArea
+            hapticFeedback
             backgroundColor="background0"
             borderColor="backgroundOutline"
             borderRadius="lg"
@@ -147,6 +148,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps) {
             {isFavorited ? <StarIconFilled /> : <StarIconEmpty />}
           </TouchableArea>
           <TouchableArea
+            hapticFeedback
             backgroundColor="background0"
             borderColor="backgroundOutline"
             borderRadius="lg"

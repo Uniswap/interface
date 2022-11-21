@@ -40,6 +40,7 @@ export function TokenDetailsActionButtons({
       pt="sm"
       px="md">
       <TouchableArea
+        hapticFeedback
         alignItems="center"
         borderColor={borderColor}
         borderRadius={borderRadius}

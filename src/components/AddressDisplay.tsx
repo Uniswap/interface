@@ -39,7 +39,11 @@ type CopyButtonWrapperProps = {
 function CopyButtonWrapper({ children, onPress }: PropsWithChildren<CopyButtonWrapperProps>) {
   if (onPress)
     return (
-      <TouchableArea name={ElementName.Copy} testID={ElementName.Copy} onPress={onPress}>
+      <TouchableArea
+        hapticFeedback
+        name={ElementName.Copy}
+        testID={ElementName.Copy}
+        onPress={onPress}>
         {children}
       </TouchableArea>
     )
@@ -125,7 +129,7 @@ export function AddressDisplay({
         ) : (
           showAddressAsSubtitle && (
             <CopyButtonWrapper onPress={showCopy ? onPressCopyAddress : undefined}>
-              <Flex centered row gap="sm">
+              <Flex centered row gap="xxs">
                 <Text color="textSecondary" variant={captionVariant}>
                   {sanitizeAddressText(shortenAddress(address))}
                 </Text>
