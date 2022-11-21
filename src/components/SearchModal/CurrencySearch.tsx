@@ -90,18 +90,17 @@ export function CurrencySearch({
   const sortedTokens: Token[] = useMemo(
     () =>
       !balancesAreLoading
-        ? [...filteredTokens]
+        ? filteredTokens
             .filter((token) => {
-              // Filter out user-added tokens with no balance
-              if (token instanceof UserAddedToken) {
-                const balance = balances[token.address]
-                return balance?.greaterThan(0)
+              // If there is no query, filter out user-added tokens with no balance.
+              if (!debouncedQuery && token instanceof UserAddedToken) {
+                return balances[token.address]?.greaterThan(0)
               }
               return true
             })
             .sort(tokenComparator.bind(null, balances))
         : [],
-    [balances, filteredTokens, balancesAreLoading]
+    [balances, balancesAreLoading, debouncedQuery, filteredTokens]
   )
   const isLoading = Boolean(balancesAreLoading && !tokenLoaderTimerElapsed)
 
