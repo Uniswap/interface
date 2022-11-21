@@ -12,7 +12,6 @@ export const card = style([
     WebkitBoxSizing: 'border-box',
     boxShadow: vars.color.cardDropShadow,
     backgroundColor: themeVars.colors.backgroundSurface,
-    // height: 'fit-content',
     ':after': {
       content: '',
       position: 'absolute',
@@ -119,6 +118,8 @@ export const playbackSwitch = style([
   }),
   {
     marginLeft: calc.subtract('100%', '50px'),
-    transform: 'translateY(-56px)',
+    top: '12px',
+    right: '12px',
+    // transform: 'translateY(-56px)',
   },
 ])

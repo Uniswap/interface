@@ -200,10 +200,12 @@ const StyledToopTipAffordance = styled.div<{ showTooltip: boolean }>`
   position: absolute;
   bottom: 0.5rem;
   background-color: ${({ theme }) => theme.backgroundSurface};
+  border: 1px solid #5d678524;
   padding: 8px 12px;
   border-radius: 8px;
+  box-shadow: ${({ theme }) => theme.shallowShadow};
   transform: ${({ showTooltip }) => (showTooltip ? ' translateY(0px)' : 'translateY(5px)')};
-  transition: transform 100ms ease;
+  transition: transform 250ms ease;
 `
 
 /* -------- ASSET CARD -------- */
@@ -317,7 +319,7 @@ const ImageContainer = ({
             ) : isListing ? (
               <>Added</>
             ) : (
-              <>Added to bag</>
+              <> Added to bag</>
             )}
             {isDisabled && <>Not Available</>}
           </StyledToopTipAffordance>
@@ -599,8 +601,11 @@ const StyledDetailsLink = styled.a`
 
 const StyledDetailsContainer = styled(Row)`
   &:hover {
-    background-color: ${({ theme }) => theme.backgroundInteractive};
+    background-color: ${({ theme }) => theme.backgroundModule};
     cursor: pointer;
+    a {
+      color: ${({ theme }) => theme.accentAction} !important;
+    }
   }
 `
 
@@ -787,8 +792,6 @@ const MarketplaceIcon = ({ marketplace }: { marketplace: string }) => {
 }
 
 const DetailsLink = () => {
-  const { asset } = useCardContext()
-
   return (
     <DetailsLinkContainer>
       <Box>
@@ -833,7 +836,7 @@ const Ranking = ({ rarity, provider, rarityVerified, rarityLogo }: RankingProps)
           >
             <Box className={styles.rarityInfo}>
               <Box paddingTop="2" paddingBottom="2" display="flex">
-                {putCommas(provider.rank)}
+                # {putCommas(provider.rank)}
               </Box>
 
               <Box display="flex" height="16">
