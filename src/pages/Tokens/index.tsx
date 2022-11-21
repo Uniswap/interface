@@ -69,8 +69,14 @@ const FiltersWrapper = styled.div`
     gap: 8px;
   }
 `
+const Container = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+`
 const InfoTipContainer = styled.div`
-  align-self: flex-end;
+  margin-bottom: 8px;
+  margin-left: 2px;
 `
 
 const Tokens = () => {
@@ -104,7 +110,19 @@ const Tokens = () => {
       <ExploreContainer>
         <TitleContainer>
           <ThemedText.LargeHeader>
-            <Trans>Top tokens on Uniswap</Trans>
+            <Container>
+              <Trans>Top tokens on Uniswap </Trans>
+              <InfoTipContainer>
+                <InfoTip
+                  size={20}
+                  text={
+                    <Trans>This table contains the top tokens by Uniswap volume, sorted based on your input.</Trans>
+                  }
+                  question
+                  strokeWidth={1.5}
+                />
+              </InfoTipContainer>
+            </Container>
           </ThemedText.LargeHeader>
         </TitleContainer>
         <FiltersWrapper>
@@ -115,12 +133,6 @@ const Tokens = () => {
           <SearchContainer>
             <SearchBar />
           </SearchContainer>
-          <InfoTip
-            size={28}
-            text={<Trans>This table contains the top tokens by Uniswap volume, sorted based on your input.</Trans>}
-            question
-            strokeWidth={1.5}
-          />
         </FiltersWrapper>
         <Suspense fallback={<LoadingTokenTable rowCount={rowCount} />}>
           <TokenTable setRowCount={setRowCount} />
