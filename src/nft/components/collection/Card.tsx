@@ -199,13 +199,15 @@ const StyledToopTipAffordance = styled.div<{ showTooltip: boolean }>`
   font-weight: 600px;
   position: absolute;
   bottom: 0.5rem;
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme }) => theme.accentTextDarkPrimary};
+  color: ${({ theme }) => theme.accentTextLightPrimary};
+  backdrop-filter: 'blur(6px)';
   border: 1px solid #5d678524;
   padding: 8px 12px;
   border-radius: 8px;
   box-shadow: ${({ theme }) => theme.shallowShadow};
   transform: ${({ showTooltip }) => (showTooltip ? ' translateY(0px)' : 'translateY(5px)')};
-  transition: transform 250ms ease;
+  transition: transform 150ms ease;
 `
 
 /* -------- ASSET CARD -------- */
@@ -343,7 +345,7 @@ const ImageContainer = ({
               )}
             </StyledAddAffordance>
           ) : (
-            <StyledAddAffordance>Not Available</StyledAddAffordance>
+            !showTooltip && <StyledAddAffordance>Not Available</StyledAddAffordance>
           )}
         </StyledHoverContainer>
       )}
