@@ -132,20 +132,3 @@ export const formatTransactionAmount = (num: number | undefined | null, maxDigit
   }
   return `${Number(num.toFixed(2)).toLocaleString(DEFAULT_LOCALE, { minimumFractionDigits: 2 })}`
 }
-
-// using a currency library here in case we want to add more in future
-export const formatAmount = (num: number | undefined, digits = 2) => {
-  if (num === 0) return '0'
-  if (!num) return '-'
-  if (num < 0.001) {
-    return '$<0.001'
-  }
-  return numbro(num).format({
-    average: true,
-    mantissa: num > 1000 ? 2 : digits,
-    abbreviations: {
-      million: 'M',
-      billion: 'B',
-    },
-  })
-}

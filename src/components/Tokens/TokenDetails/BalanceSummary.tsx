@@ -1,13 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
+import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
-import { formatToDecimal } from 'lib/utils/analytics'
-import { useMemo } from 'react'
 import styled from 'styled-components/macro'
-import { currencyAmountToPreciseFloat, formatDollar } from 'utils/formatNumbers'
 
 const BalancesCard = styled.div`
   box-shadow: ${({ theme }) => theme.shallowShadow};
@@ -44,29 +42,14 @@ const BalanceRow = styled.div`
 `
 const BalanceItem = styled.div`
   display: flex;
+  align-items: center;
 `
-
-export function useFormatBalance(balance: CurrencyAmount<Currency> | undefined) {
-  return useMemo(
-    () => (balance ? formatToDecimal(balance, Math.min(balance.currency.decimals, 2)) : undefined),
-    [balance]
-  )
-}
-
-export function useFormatUsdValue(usdValue: CurrencyAmount<Token> | null) {
-  return useMemo(() => {
-    const float = usdValue ? currencyAmountToPreciseFloat(usdValue) : undefined
-    if (!float) return undefined
-    return formatDollar({ num: float, isPrice: true })
-  }, [usdValue])
-}
 
 export default function BalanceSummary({ token }: { token: Currency }) {
   const { account } = useWeb3React()
   const balance = useCurrencyBalance(account, token)
-  const formattedBalance = useFormatBalance(balance)
-  const usdValue = useStablecoinValue(balance)
-  const formattedUsdValue = useFormatUsdValue(usdValue)
+  const formattedBalance = formatCurrencyAmount(balance, NumberType.TokenNonTx)
+  const formattedUsdValue = formatCurrencyAmount(useStablecoinValue(balance), NumberType.FiatTokenStats)
 
   if (!account || !balance) return null
   return (
