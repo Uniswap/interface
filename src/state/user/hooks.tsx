@@ -66,6 +66,17 @@ export function useUserLocale(): SupportedLocale | null {
   return useAppSelector((state) => state.user.userLocale)
 }
 
+export function useDarkModeManager(): [boolean, () => void] {
+  const dispatch = useAppDispatch()
+  const darkMode = useIsDarkMode()
+
+  const toggleSetDarkMode = useCallback(() => {
+    dispatch(updateUserDarkMode({ userDarkMode: !darkMode }))
+  }, [darkMode, dispatch])
+
+  return [darkMode, toggleSetDarkMode]
+}
+
 export function useUserLocaleManager(): [SupportedLocale | null, (newLocale: SupportedLocale) => void] {
   const dispatch = useAppDispatch()
   const locale = useUserLocale()
@@ -259,17 +270,6 @@ export function usePairAdder(): (pair: Pair) => void {
 
 export function useURLWarningVisible(): boolean {
   return useAppSelector((state: AppState) => state.user.URLWarningVisible)
-}
-
-export function useDarkModeManager(): [boolean, () => void] {
-  const dispatch = useAppDispatch()
-  const darkMode = useIsDarkMode()
-
-  const toggleSetDarkMode = useCallback(() => {
-    dispatch(updateUserDarkMode({ userDarkMode: !darkMode }))
-  }, [darkMode, dispatch])
-
-  return [darkMode, toggleSetDarkMode]
 }
 
 export function useShowNftPromoBanner(): [boolean, () => void] {
