@@ -48,7 +48,7 @@ class MnemonicDisplayView: UIView {
       seedPhraseView.font = UIFont.init(name: "Inter-Regular", size: 16)
       seedPhraseView.textContainerInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
       seedPhraseView.textAlignment = .center
-      seedPhraseView.layer.cornerRadius = 20
+      seedPhraseView.layer.cornerRadius = 100
       seedPhraseView.layer.masksToBounds = true
       seedPhraseView.translatesAutoresizingMaskIntoConstraints = false
       seedPhraseView.isScrollEnabled = false

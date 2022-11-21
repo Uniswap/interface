@@ -29,9 +29,8 @@ class MnemonicWordView: UIView {
   }
   
   private func setupView() {
-    self.layer.cornerRadius = 20
+    self.layer.cornerRadius = 24
     self.layer.masksToBounds = true
-    
     let indexLabel = UILabel()
     indexLabel.text = String(describing: self.index!)
     indexLabel.adjustsFontSizeToFitWidth = true

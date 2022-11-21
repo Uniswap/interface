@@ -44,29 +44,29 @@ struct MnemonicTextField: View {
   func getLabelBackground(focusState: InputFocusState) -> some View {
     switch (focusState) {
     case .focusedNoInput:
-      return AnyView(RoundedRectangle(cornerRadius: 20)
-        .strokeBorder(Colors.accentActive, lineWidth: 1)
+      return AnyView(RoundedRectangle(cornerRadius: 100)
+        .strokeBorder(Colors.accentActive, lineWidth: 2)
         .background(Colors.background3)
-        .cornerRadius(20)
+        .cornerRadius(100)
       )
       
     case .focusedWrongInput:
-      return AnyView(RoundedRectangle(cornerRadius: 20)
+      return AnyView(RoundedRectangle(cornerRadius: 100)
         .strokeBorder(Colors.accentCritical, lineWidth: 2)
         .background(Colors.background3)
-        .cornerRadius(20)
+        .cornerRadius(100)
       )
       
     case .notFocusedWrongInput:
-      return AnyView(RoundedRectangle(cornerRadius: 20)
+      return AnyView(RoundedRectangle(cornerRadius: 100)
         .strokeBorder(Colors.accentCritical, lineWidth: 2)
         .background(Colors.background1)
-        .cornerRadius(20)
+        .cornerRadius(100)
       )
       
     case .notFocused:
       return AnyView(
-        RoundedRectangle(cornerRadius: 20, style: .continuous)
+        RoundedRectangle(cornerRadius: 100, style: .continuous)
           .fill(Colors.background1)
       )
     }
