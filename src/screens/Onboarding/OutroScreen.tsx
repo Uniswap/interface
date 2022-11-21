@@ -49,7 +49,7 @@ export function OutroScreen({ navigation, route: { params } }: Props) {
     <Screen>
       <OnboardingCompleteAnimation
         activeAddress={activeAddress ?? ''}
-        isNewWallet={params?.importType === ImportType.Create}
+        isNewWallet={params?.importType === ImportType.CreateNew}
         onPressNext={onPressNext}
       />
     </Screen>

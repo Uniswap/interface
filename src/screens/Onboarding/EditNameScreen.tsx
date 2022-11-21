@@ -15,6 +15,7 @@ import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { NICKNAME_MAX_LENGTH } from 'src/constants/accounts'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
+import { ImportType } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
@@ -77,7 +78,10 @@ export function EditNameScreen({ navigation, route: { params } }: Props) {
 
   const onPressNext = () => {
     navigation.navigate({
-      name: OnboardingScreens.Backup,
+      name:
+        params?.importType === ImportType.CreateNew
+          ? OnboardingScreens.Backup
+          : OnboardingScreens.Notifications,
       merge: true,
       params,
     })

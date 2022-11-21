@@ -169,7 +169,7 @@ function BackupOptions({
 
           navigate({
             name: OnboardingScreens.BackupCloudPassword,
-            params: { importType: params?.importType },
+            params,
             merge: true,
           })
         }}

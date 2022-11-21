@@ -239,7 +239,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
       navigation.navigate(Screens.OnboardingStack, {
         screen: OnboardingScreens.EditName,
         params: {
-          importType: ImportType.Create,
+          importType: hasImportedSeedPhrase ? ImportType.CreateAdditional : ImportType.CreateNew,
           entryPoint: OnboardingEntryPoint.Sidebar,
         },
         merge: false,

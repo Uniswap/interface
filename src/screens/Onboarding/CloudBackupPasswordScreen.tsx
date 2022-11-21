@@ -11,13 +11,14 @@ export type Props = NativeStackScreenProps<
   OnboardingScreens.BackupCloudPassword
 >
 
-export function CloudBackupPasswordScreen({ navigation }: Props) {
+export function CloudBackupPasswordScreen({ navigation, route: { params } }: Props) {
   const { t } = useTranslation()
 
   const onPressNext = (password: string) => {
     navigation.navigate({
       name: OnboardingScreens.BackupCloudProcessing,
       params: {
+        ...params,
         password: password,
       },
       merge: true,

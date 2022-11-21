@@ -36,7 +36,7 @@ export function LandingScreen({ navigation }: Props) {
     dispatch(createAccountActions.trigger())
     navigation.navigate({
       name: OnboardingScreens.EditName,
-      params: { importType: ImportType.Create },
+      params: { importType: ImportType.CreateNew },
       merge: true,
     })
   }

@@ -1,7 +1,8 @@
 import { OnboardingScreens } from 'src/screens/Screens'
 
 export enum ImportType {
-  Create = 'Create',
+  CreateNew = 'CreateNew', // creating initial wallet
+  CreateAdditional = 'CreateAdditional', // creating additional derivation indexes
   SeedPhrase = 'SeedPhrase',
   Watch = 'Watch',
   Restore = 'Restore',
@@ -14,9 +15,14 @@ export enum OnboardingEntryPoint {
 
 // Screens in order based on the import method being used. Currently only used for onboarding header indicator
 const FLOWS: Record<ImportType, OnboardingScreens[]> = {
-  [ImportType.Create]: [
+  [ImportType.CreateNew]: [
     OnboardingScreens.EditName,
     OnboardingScreens.Backup,
+    OnboardingScreens.Notifications,
+    OnboardingScreens.Security,
+  ],
+  [ImportType.CreateAdditional]: [
+    OnboardingScreens.EditName,
     OnboardingScreens.Notifications,
     OnboardingScreens.Security,
   ],

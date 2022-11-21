@@ -49,15 +49,15 @@ describe(getWrapType, () => {
 
 describe(getFlow, () => {
   it('correctly returns length of onboarding create flow without seed phrase with add security screen', () => {
-    expect(getFlow(ImportType.Create, true, false, true)).toHaveLength(4)
+    expect(getFlow(ImportType.CreateNew, true, false, true)).toHaveLength(4)
   })
 
   it('correctly returns length of onboarding create flow with seed phrase existing without add security screen', () => {
-    expect(getFlow(ImportType.Create, true, true, true)).toHaveLength(4)
+    expect(getFlow(ImportType.CreateNew, true, true, true)).toHaveLength(4)
   })
 
   it('correctly returns length of add account create flow showing add security screen and seed phrase does not exist', () => {
-    expect(getFlow(ImportType.Create, false, false, false)).toHaveLength(4)
+    expect(getFlow(ImportType.CreateNew, false, false, false)).toHaveLength(4)
   })
 
   it('correctly returns length of add account with view-only wallet not showing add security screen, but face ID was already added', () => {
