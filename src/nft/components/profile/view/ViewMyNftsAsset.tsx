@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
 import * as Card from 'nft/components/collection/Card'
 import { AssetMediaType } from 'nft/components/collection/Card'
@@ -107,7 +108,17 @@ export const ViewMyNftsAsset = ({
       isDisabled={isDisabled}
     >
       <Card.ImageContainer isListing={true} selected={isSelected} showTooltip={showTooltip} isDisabled={isDisabled}>
-        {getNftDisplayComponent(assetMediaType, mediaShouldBePlaying, setCurrentTokenPlayingMedia)}
+        <MouseoverTooltip
+          text={getUnsupportedNftTextComponent(asset)}
+          placement="bottom"
+          offsetX={0}
+          offsetY={-100}
+          style={{ display: 'block' }}
+          disableHover={!isDisabled}
+          timeout={isMobile ? TOOLTIP_TIMEOUT : undefined}
+        >
+          {getNftDisplayComponent(assetMediaType, mediaShouldBePlaying, setCurrentTokenPlayingMedia)}
+        </MouseoverTooltip>
       </Card.ImageContainer>
       <Card.DetailsContainer>
         <Card.ProfileNftDetails asset={asset} hideDetails={hideDetails} />
