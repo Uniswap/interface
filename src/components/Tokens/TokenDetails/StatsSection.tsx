@@ -7,7 +7,7 @@ import { formatDollar } from 'utils/formatNumbers'
 
 import { TokenSortMethod } from '../state'
 import { HEADER_DESCRIPTIONS } from '../TokenTable/TokenRow'
-import InfoTip from './InfoTip'
+import PopoverText from './PopoverText'
 
 export const StatWrapper = styled.div`
   display: flex;
@@ -64,11 +64,9 @@ function Stat({
 }) {
   return (
     <StatWrapper>
-      <StatTitle>
-        {title}
-        {description && <InfoTip text={description}></InfoTip>}
-      </StatTitle>
-
+      <PopoverText text={description}>
+        <StatTitle>{title}</StatTitle>
+      </PopoverText>
       <StatPrice>{formatDollar({ num: value, isPrice })}</StatPrice>
     </StatWrapper>
   )

@@ -4,7 +4,7 @@ import { PageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { filterStringAtom } from 'components/Tokens/state'
-import InfoTip from 'components/Tokens/TokenDetails/InfoTip'
+import PopoverText from 'components/Tokens/TokenDetails/PopoverText'
 import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
 import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
@@ -69,15 +69,6 @@ const FiltersWrapper = styled.div`
     gap: 8px;
   }
 `
-const Container = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: flex-end;
-`
-const InfoTipContainer = styled.div`
-  margin-bottom: 8px;
-  margin-left: 2px;
-`
 
 const Tokens = () => {
   const resetFilterString = useResetAtom(filterStringAtom)
@@ -110,19 +101,12 @@ const Tokens = () => {
       <ExploreContainer>
         <TitleContainer>
           <ThemedText.LargeHeader>
-            <Container>
-              <Trans>Top tokens on Uniswap </Trans>
-              <InfoTipContainer>
-                <InfoTip
-                  size={20}
-                  text={
-                    <Trans>This table contains the top tokens by Uniswap volume, sorted based on your input.</Trans>
-                  }
-                  question
-                  strokeWidth={1.5}
-                />
-              </InfoTipContainer>
-            </Container>
+            <PopoverText
+              text={<Trans>This table contains the top tokens by Uniswap volume, sorted based on your input.</Trans>}
+              placement="bottom"
+            >
+              <Trans>Top tokens on Uniswap</Trans>
+            </PopoverText>
           </ThemedText.LargeHeader>
         </TitleContainer>
         <FiltersWrapper>

@@ -31,7 +31,7 @@ import {
   TokenSortMethod,
   useSetSortMethod,
 } from '../state'
-import InfoTip from '../TokenDetails/InfoTip'
+import InfoTip from '../TokenDetails/PopoverText'
 import { formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
 
 const Cell = styled.div`
@@ -201,7 +201,6 @@ const HeaderCellWrapper = styled.span<{ onClick?: () => void }>`
   align-items: center;
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'unset')};
   display: flex;
-  gap: 4px;
   height: 100%;
   justify-content: flex-end;
   width: 100%;
@@ -334,8 +333,9 @@ function HeaderCell({
           )}
         </>
       )}
-      {category}
-      {description && <InfoTip text={description} placement="right"></InfoTip>}
+      <InfoTip text={description} placement="right">
+        {category}
+      </InfoTip>
     </HeaderCellWrapper>
   )
 }
