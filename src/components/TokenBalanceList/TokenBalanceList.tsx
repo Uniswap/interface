@@ -58,6 +58,7 @@ export function TokenBalanceList({
 
   const { data, networkStatus, refetch } = useSortedPortfolioBalances(
     owner,
+    /*shouldPoll=*/ true,
     hideSmallBalances,
     hideSpamTokens,
     onCompleted

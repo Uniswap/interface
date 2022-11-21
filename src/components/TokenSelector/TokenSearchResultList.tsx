@@ -77,7 +77,12 @@ export function useTokenSectionsByVariation(
     data: portfolioBalancesById,
     error: portfolioBalancesByIdError,
     refetch: refetchPortfolioBalances,
-  } = usePortfolioBalances(activeAccount.address, hideSmallBalances, hideSpamTokens)
+  } = usePortfolioBalances(
+    activeAccount.address,
+    /*shouldPoll=*/ false, // Home tab's TokenBalanceList will poll portfolio balances for activeAccount
+    hideSmallBalances,
+    hideSpamTokens
+  )
   const {
     data: commonBaseCurrencies,
     error: commonBaseCurrenciesError,

@@ -37,6 +37,7 @@ export function HiddenTokensScreen({
 
   const { data, networkStatus, refetch } = useSortedPortfolioBalances(
     address,
+    /*shouldPoll=*/ true,
     hideSmallBalances,
     hideSpamTokens
   )

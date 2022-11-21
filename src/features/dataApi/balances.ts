@@ -20,6 +20,7 @@ type SortedPortfolioBalances = {
 /** Returns all balances indexed by currencyId for a given address */
 export function usePortfolioBalances(
   address: Address,
+  shouldPoll?: boolean,
   hideSmallBalances?: boolean,
   hideSpamTokens?: boolean,
   onCompleted?: () => void
@@ -32,7 +33,7 @@ export function usePortfolioBalances(
     error,
   } = usePortfolioBalancesQuery({
     variables: { ownerAddress: address },
-    pollInterval: PollingInterval.Fast,
+    pollInterval: shouldPoll ? PollingInterval.Fast : undefined,
     notifyOnNetworkStatusChange: true,
     onCompleted: onCompleted,
   })
@@ -115,6 +116,7 @@ export function usePortfolioBalances(
  */
 export function useSortedPortfolioBalances(
   address: Address,
+  shouldPoll: boolean,
   hideSmallBalances?: boolean,
   hideSpamTokens?: boolean,
   onCompleted?: () => void
@@ -127,6 +129,7 @@ export function useSortedPortfolioBalances(
     refetch,
   } = usePortfolioBalances(
     address,
+    shouldPoll,
     /*hideSmallBalances=*/ false,
     /*hideSpamBalances=*/ false,
     onCompleted
@@ -165,7 +168,7 @@ export function useSortedPortfolioBalances(
 /** Helper hook to retrieve balance for a single currency for the active account. */
 export function useSingleBalance(currency: NullUndefined<Currency>): PortfolioBalance | null {
   const address = useActiveAccountAddressWithThrow()
-  const { data: portfolioBalances } = usePortfolioBalances(address)
+  const { data: portfolioBalances } = usePortfolioBalances(address, /*shouldPoll=*/ false)
 
   return useMemo(() => {
     if (!currency || !portfolioBalances) return null
@@ -178,7 +181,7 @@ export function useSingleBalance(currency: NullUndefined<Currency>): PortfolioBa
 /** Helper hook to retrieve balances for a set of currencies for the active account. */
 export function useMultipleBalances(currencies: CurrencyId[]): PortfolioBalance[] | null {
   const address = useActiveAccountAddressWithThrow()
-  const { data: balances } = usePortfolioBalances(address)
+  const { data: balances } = usePortfolioBalances(address, /*shouldPoll=*/ false)
 
   return useMemo(() => {
     if (!currencies || !currencies.length || !balances) return null
