@@ -149,7 +149,7 @@ const Erc1155ControlsInput = styled.div`
 `
 
 const RankingContainer = styled.div`
-  position: absolute;
+  position: fixed;
   top: 12px;
   left: 12px;
   z-index: 2;
@@ -838,7 +838,7 @@ const Ranking = ({ rarity, provider, rarityVerified, rarityLogo }: RankingProps)
           >
             <Box className={styles.rarityInfo}>
               <Box paddingTop="2" paddingBottom="2" display="flex">
-                # {putCommas(provider.rank)}
+                {putCommas(provider.rank)}
               </Box>
 
               <Box display="flex" height="16">

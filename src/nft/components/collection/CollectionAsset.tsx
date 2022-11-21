@@ -105,6 +105,13 @@ export const CollectionAsset = ({
       removeAssetFromBag={handleRemoveAssetFromBag}
     >
       <Card.ImageContainer selected={isSelected} showTooltip={showTooltip}>
+        {assetMediaType === AssetMediaType.Image ? (
+          <Card.Image />
+        ) : assetMediaType === AssetMediaType.Video ? (
+          <Card.Video shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
+        ) : (
+          <Card.Audio shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
+        )}
         {asset.rarity && provider && (
           <Card.Ranking
             rarity={asset.rarity}
@@ -112,13 +119,6 @@ export const CollectionAsset = ({
             rarityVerified={!!rarityVerified}
             rarityLogo={rarityLogo}
           />
-        )}
-        {assetMediaType === AssetMediaType.Image ? (
-          <Card.Image />
-        ) : assetMediaType === AssetMediaType.Video ? (
-          <Card.Video shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
-        ) : (
-          <Card.Audio shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
         )}
       </Card.ImageContainer>
       <Card.DetailsContainer>

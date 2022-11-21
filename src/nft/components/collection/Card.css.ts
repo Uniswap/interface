@@ -12,6 +12,8 @@ export const card = style([
     WebkitBoxSizing: 'border-box',
     boxShadow: vars.color.cardDropShadow,
     backgroundColor: themeVars.colors.backgroundSurface,
+    isolation: 'isolate',
+    transform: 'translateZ(0)',
     ':after': {
       content: '',
       position: 'absolute',
