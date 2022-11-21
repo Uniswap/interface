@@ -15,6 +15,7 @@ import nftPromoImage3 from '../nftExploreBanner/nftArt3.png'
 function getRandom(list: any[]) {
   return list[Math.floor(Math.random() * list.length)]
 }
+const randomizedNftImage = getRandom([nftPromoImage1, nftPromoImage2, nftPromoImage3])
 
 const PopupContainer = styled.div<{ show: boolean }>`
   background-color: ${({ theme }) => theme.backgroundSurface};
@@ -82,8 +83,6 @@ export default function NftExploreBanner() {
   const navigateToNfts = () => {
     navigate('/nfts')
   }
-
-  const randomizedNftImage = getRandom([nftPromoImage1, nftPromoImage2, nftPromoImage3])
 
   return (
     <PopupContainer show={showNftPromoBanner} onClick={navigateToNfts}>
