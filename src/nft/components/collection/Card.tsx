@@ -101,7 +101,7 @@ const DetailsLinkContainer = styled.a`
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.textSecondary};
 `
 
 const SuspiciousIcon = styled(AlertTriangle)`
@@ -165,9 +165,9 @@ const StyledImageContainer = styled.a<{ isDisabled?: boolean }>`
 `
 
 const StyledHoverContainer = styled.div`
-  position: absolute;
+  position: fixed;
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -177,6 +177,7 @@ const StyledHoverContainer = styled.div`
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 60%);
   font-size: 14px;
   font-weight: 600px;
+  aspect-ratio: 1;
 `
 const StyledToolTipContainer = styled(StyledHoverContainer)``
 
