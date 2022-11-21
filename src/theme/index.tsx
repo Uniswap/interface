@@ -102,6 +102,10 @@ export const ThemedGlobalStyle = createGlobalStyle`
     background-color: ${({ theme }) => theme.background} !important;
   }
 
+  summary::-webkit-details-marker {
+    display:none;
+  }
+
   a {
     color: ${({ theme }) => theme.deprecated_blue1}; 
   }
