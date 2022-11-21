@@ -361,31 +361,33 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       <AssetPriceDetailsContainer>
         <AssetPriceDetails asset={asset} collection={collection} />
       </AssetPriceDetailsContainer>
-      <InfoContainer
-        primaryHeader="Traits"
-        defaultOpen
-        secondaryHeader={
-          rarityProvider && rarity && rarity.score ? (
-            <MouseoverTooltip
-              text={
-                <HoverContainer>
-                  <HoverImageContainer>
-                    <img src={rarityProviderLogo} alt="cardLogo" width={16} />
-                  </HoverImageContainer>
-                  <ContainerText>
-                    {`Ranking by ${rarity.provider === 'Genie' ? fallbackProvider : rarity.provider}`}
-                  </ContainerText>
-                </HoverContainer>
-              }
-              placement="top"
-            >
-              <RarityWrap>Rarity: {putCommas(rarity.score)}</RarityWrap>
-            </MouseoverTooltip>
-          ) : null
-        }
-      >
-        <TraitsContainer asset={asset} />
-      </InfoContainer>
+      {asset.traits && (
+        <InfoContainer
+          primaryHeader="Traits"
+          defaultOpen
+          secondaryHeader={
+            rarityProvider && rarity && rarity.score ? (
+              <MouseoverTooltip
+                text={
+                  <HoverContainer>
+                    <HoverImageContainer>
+                      <img src={rarityProviderLogo} alt="cardLogo" width={16} />
+                    </HoverImageContainer>
+                    <ContainerText>
+                      {`Ranking by ${rarity.provider === 'Genie' ? fallbackProvider : rarity.provider}`}
+                    </ContainerText>
+                  </HoverContainer>
+                }
+                placement="top"
+              >
+                <RarityWrap>Rarity: {putCommas(rarity.score)}</RarityWrap>
+              </MouseoverTooltip>
+            ) : null
+          }
+        >
+          <TraitsContainer asset={asset} />
+        </InfoContainer>
+      )}
       <InfoContainer
         primaryHeader="Activity"
         defaultOpen
