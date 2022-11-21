@@ -48,7 +48,11 @@ function FiatOnRampModalInner() {
     isError: isFiatBuyAllowedQueryError,
   } = useIsFiatOnRampBuyAllowedQuery()
 
-  const { data: fiatOnRampHostUrl, isError: isWidgetUrlQueryError } = useFiatOnRampWidgetUrlQuery(
+  const {
+    data: fiatOnRampHostUrl,
+    isError: isWidgetUrlQueryError,
+    isLoading: isWidgetUrlLoading,
+  } = useFiatOnRampWidgetUrlQuery(
     {
       colorCode: theme.colors.accentAction,
       walletAddresses: { eth: activeAccountAddress },
@@ -67,6 +71,7 @@ function FiatOnRampModalInner() {
     WebBrowser.openBrowserAsync(fiatOnRampHostUrl, webBrowserOptions)
   }
 
+  const isLoading = isEligibleLoading || isWidgetUrlLoading
   const buttonEnabled =
     eligible && fiatOnRampHostUrl && !isFiatBuyAllowedQueryError && !isWidgetUrlQueryError
 
@@ -89,17 +94,11 @@ function FiatOnRampModalInner() {
             <Flex width="100%">
               <Button
                 fill
-                CustomIcon={
-                  isEligibleLoading ? <SpinningLoader color="textOnBrightPrimary" /> : undefined
-                }
+                CustomIcon={isLoading ? <SpinningLoader color="textOnBrightPrimary" /> : undefined}
                 disabled={!buttonEnabled}
                 emphasis={ButtonEmphasis.Primary}
                 label={
-                  isEligibleLoading
-                    ? undefined
-                    : eligible
-                    ? t('Buy Crypto')
-                    : t('Not supported in region')
+                  isLoading ? undefined : eligible ? t('Buy Crypto') : t('Not supported in region')
                 }
                 size={ButtonSize.Medium}
                 onPress={onPress}
