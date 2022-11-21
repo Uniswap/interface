@@ -17,6 +17,7 @@ import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import { useAllTokenBalances } from 'state/connection/hooks'
 import styled, { useTheme } from 'styled-components/macro'
+import { UserAddedToken } from 'types/tokens'
 
 import { useAllTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
 import { CloseIcon, ThemedText } from '../../theme'
@@ -87,8 +88,19 @@ export function CurrencySearch({
 
   const [balances, balancesAreLoading] = useAllTokenBalances()
   const sortedTokens: Token[] = useMemo(
-    () => (!balancesAreLoading ? [...filteredTokens].sort(tokenComparator.bind(null, balances)) : []),
-    [balances, filteredTokens, balancesAreLoading]
+    () =>
+      !balancesAreLoading
+        ? filteredTokens
+            .filter((token) => {
+              // If there is no query, filter out user-added tokens with no balance.
+              if (!debouncedQuery && token instanceof UserAddedToken) {
+                return balances[token.address]?.greaterThan(0)
+              }
+              return true
+            })
+            .sort(tokenComparator.bind(null, balances))
+        : [],
+    [balances, balancesAreLoading, debouncedQuery, filteredTokens]
   )
   const isLoading = Boolean(balancesAreLoading && !tokenLoaderTimerElapsed)
 
