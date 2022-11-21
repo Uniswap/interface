@@ -100,7 +100,6 @@ export const ThemedGlobalStyle = createGlobalStyle`
   html {
     color: ${({ theme }) => theme.deprecated_text1};
     background-color: ${({ theme }) => theme.background} !important;
-
   }
 
   summary::-webkit-details-marker {
