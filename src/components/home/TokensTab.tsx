@@ -7,10 +7,14 @@ import { Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { TabViewScrollProps } from 'src/components/layout/screens/TabbedScrollScreen'
 import { TAB_STYLES } from 'src/components/layout/TabHelpers'
+import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { TokenBalanceList } from 'src/components/TokenBalanceList/TokenBalanceList'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
+import { useFiatOnRampEnabled } from 'src/features/experiments/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
+import { AccountType } from 'src/features/wallet/accounts/types'
+import { useSignerAccounts } from 'src/features/wallet/hooks'
 import { CurrencyId } from 'src/utils/currencyId'
 
 export function TokensTab({
@@ -25,14 +29,26 @@ export function TokensTab({
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
+  const ownerAccount = useSignerAccounts().find((a) => a.address === owner)
+
+  const isFiatOnRampEnabled =
+    useFiatOnRampEnabled() && ownerAccount?.type === AccountType.SignerMnemonic
 
   const onPressToken = (currencyId: CurrencyId) => {
     tokenDetailsNavigation.preload(currencyId)
     tokenDetailsNavigation.navigate(currencyId)
   }
 
-  const onPressBuy = () => {
-    dispatch(openModal({ name: ModalName.FiatOnRamp }))
+  // when fiat on ramp is enabled for owner account, trigger buy flow
+  // otherwise, trigger scan flow
+  const onPressAction = () => {
+    if (isFiatOnRampEnabled) {
+      dispatch(openModal({ name: ModalName.FiatOnRamp }))
+    } else {
+      dispatch(
+        openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
+      )
+    }
   }
 
   return (
@@ -41,13 +57,13 @@ export function TokensTab({
         empty={
           <Flex centered flex={1}>
             <BaseCard.EmptyState
-              buttonLabel={t('Buy crypto')}
+              buttonLabel={isFiatOnRampEnabled ? t('Buy crypto') : t('Receive tokens')}
               description={t(
                 'Transfer tokens from a centralized exchange or another wallet to get started.'
               )}
               icon={<NoTokens />}
               title={t('No tokens yet')}
-              onPress={onPressBuy}
+              onPress={onPressAction}
             />
           </Flex>
         }
