@@ -43,7 +43,7 @@ const CloseIcon = styled(X)`
   cursor: pointer;
 `
 const StyledText = styled.p`
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
   line-height: 22px;
   color: ${({ theme }) => theme.subText};
@@ -184,7 +184,7 @@ export default function NotificationModal({
         )
       case VIEW.UNSUBSCRIBE:
         return (
-          <>
+          <div>
             <StyledText>{unsubscribeContent}</StyledText>
             <ActionWrapper>
               <ButtonPrimary borderRadius="46px" height="44px" onClick={toggleModal}>
@@ -198,11 +198,11 @@ export default function NotificationModal({
                 </ButtonTextt>
               </ButtonOutlined>
             </ActionWrapper>
-          </>
+          </div>
         )
       case VIEW.SUBSCRIBE_SUCCESS:
         return (
-          <>
+          <div>
             <StyledText>
               <Trans>Please check your inbox to verify your email account</Trans>
             </StyledText>
@@ -213,7 +213,7 @@ export default function NotificationModal({
                 </ButtonTextt>
               </ButtonPrimary>
             </ActionWrapper>
-          </>
+          </div>
         )
     }
   })()
