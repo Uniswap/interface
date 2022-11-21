@@ -9,13 +9,13 @@ import { Text } from 'src/components/Text'
 
 export function ManualBackupEducationSection() {
   const { t } = useTranslation()
-  const spacer = <Box borderTopColor="backgroundOutline" borderTopWidth={1} />
+  const spacer = <Box borderTopColor="backgroundOutline" borderTopWidth={0.5} />
   const theme = useAppTheme()
 
   const ICON_SIZE = theme.iconSizes.md
 
   return (
-    <Flex gap="md">
+    <Flex gap="md" mt="md" mx="md">
       <EducationRow
         icon={
           <EyeIcon
@@ -59,7 +59,7 @@ interface EducationRowProps {
 
 function EducationRow({ icon, label, sublabel }: EducationRowProps) {
   return (
-    <Flex row alignItems="center" gap="sm">
+    <Flex row alignItems="center" gap="md">
       <Box>{icon}</Box>
       <Flex flex={1} gap="none">
         <Text color="textPrimary" variant="bodyLarge">

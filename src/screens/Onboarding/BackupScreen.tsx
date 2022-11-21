@@ -79,9 +79,15 @@ export function BackupScreen({ navigation, route: { params } }: Props) {
       <Flex grow>
         <BackupOptions backupMethods={activeAccountBackups} params={params} />
         <TouchableArea alignSelf="flex-start" py="none" onPress={onPressEducationButton}>
-          <Flex centered row gap="sm">
-            <InfoCircle color={theme.colors.textSecondary} height={32} width={32} />
-            <Text variant="subheadSmall">{t('What’s a recovery phrase?')}</Text>
+          <Flex centered row gap="xxs">
+            <InfoCircle
+              color={theme.colors.textSecondary}
+              height={theme.iconSizes.lg}
+              width={theme.iconSizes.lg}
+            />
+            <Text color="textPrimary" variant="subheadSmall">
+              {t('What’s a recovery phrase?')}
+            </Text>
           </Flex>
         </TouchableArea>
         <Flex grow justifyContent="flex-end">
@@ -137,7 +143,7 @@ function BackupOptions({
             centered
             borderColor="accentBranded"
             borderRadius="md"
-            borderWidth={1}
+            borderWidth={1.25}
             height={32}
             padding="md"
             width={32}>
@@ -176,7 +182,7 @@ function BackupOptions({
             centered
             borderColor="accentBranded"
             borderRadius="md"
-            borderWidth={1}
+            borderWidth={1.25}
             height={32}
             padding="md"
             width={32}>
@@ -212,10 +218,10 @@ function BackupOptionButton({
 }: BackupOptionButtonProps) {
   const theme = useAppTheme()
   return (
-    <Box opacity={completed ? 0.4 : 1}>
+    <Box>
       <TouchableArea
         backgroundColor="background1"
-        borderColor="backgroundOutline"
+        borderColor={completed ? 'background3' : 'backgroundOutline'}
         borderRadius="md"
         borderWidth={1}
         disabled={completed}
@@ -225,7 +231,7 @@ function BackupOptionButton({
         testID={name}
         onPress={onPress}>
         <Flex row alignItems="center" gap="xs" justifyContent="space-between">
-          <Flex row alignItems="center" flexShrink={1} gap="sm">
+          <Flex row alignItems="center" flexShrink={1} gap="sm" opacity={completed ? 0.4 : 1}>
             <Box>{icon}</Box>
             <Flex flexShrink={1} gap="xxxs">
               <Text variant="subheadSmall">{label}</Text>
