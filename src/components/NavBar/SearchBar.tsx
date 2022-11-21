@@ -156,7 +156,7 @@ export const SearchBar = () => {
   return (
     <Trace section={SectionName.NAVBAR_SEARCH}>
       <Box
-        position={{ sm: 'absolute', xl: 'relative' }}
+        position={{ sm: 'fixed', md: 'absolute', xl: 'relative' }}
         width={{ sm: isOpen ? 'viewWidth' : 'auto', md: 'auto' }}
         ref={searchRef}
         className={isPhase1 ? styles.searchBarContainerNft : styles.searchBarContainer}
