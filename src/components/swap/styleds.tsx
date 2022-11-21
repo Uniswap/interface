@@ -4,7 +4,6 @@ import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
 import styled, { css } from 'styled-components/macro'
-import { glowEffect } from 'theme/styles/glow'
 import { Z_INDEX } from 'theme/zIndex'
 
 import { AutoColumn } from '../Column'
@@ -24,9 +23,7 @@ export const PageWrapper = styled.div`
 `
 
 // Mostly copied from `AppBody` but it was getting too hard to maintain backwards compatibility.
-export const SwapWrapper = styled.main`
-  ${glowEffect}
-
+export const SwapWrapper = styled.main<{ margin?: string; maxWidth?: string }>`
   position: relative;
   background: ${({ theme }) => theme.backgroundSurface};
   border-radius: 16px;

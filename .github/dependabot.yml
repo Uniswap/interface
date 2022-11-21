@@ -6,5 +6,6 @@ updates:
     schedule:
       interval: 'daily'
     allow:
-      - dependency-name: '@uniswap/token-lists'
       - dependency-name: '@uniswap/default-token-list'
+      - dependency-name: '@uniswap/token-lists'
+      - dependency-name: '@uniswap/widgets'

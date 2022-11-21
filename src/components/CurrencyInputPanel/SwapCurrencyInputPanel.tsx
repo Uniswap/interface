@@ -302,7 +302,7 @@ export default function SwapCurrencyInputPanel({
             </Aligner>
           </CurrencySelect>
         </InputRow>
-        {!hideInput && !hideBalance && currency && (
+        {Boolean(!hideInput && !hideBalance) && (
           <FiatRow>
             <RowBetween>
               <LoadingOpacityContainer $loading={loading}>

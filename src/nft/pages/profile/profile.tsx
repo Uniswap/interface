@@ -1,7 +1,6 @@
 import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { useLoadNftBalanceQuery } from 'graphql/data/nft/NftBalance'
 import { Box } from 'nft/components/Box'
 import { Center, Column } from 'nft/components/Flex'
 import { ListPage } from 'nft/components/profile/list/ListPage'
@@ -50,7 +49,7 @@ const ProfileContent = () => {
         {/* <Head> TODO: figure out metadata tagging
           <title>Genie | Sell</title>
         </Head> */}
-        {account != null ? (
+        {!!account ? (
           <Box style={{ width: `calc(100% - ${cartExpanded ? SHOPPING_BAG_WIDTH : 0}px)` }}>
             {sellPageState === ProfilePageStateType.VIEWING ? <ProfilePage /> : <ListPage />}
           </Box>
@@ -74,9 +73,6 @@ const ProfileContent = () => {
 }
 
 const Profile = () => {
-  const { account } = useWeb3React()
-  useLoadNftBalanceQuery(account, [])
-
   return (
     <Suspense fallback={<ProfilePageLoadingSkeleton />}>
       <ProfileContent />

@@ -8,16 +8,11 @@ import styled, { css } from 'styled-components/macro'
 const MAX_CARD_WIDTH = 530
 
 const carouselHeightStyle = css`
-  height: 315px;
+  height: 296px;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    height: 296px;
+  @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    height: 316px;
   }
-`
-
-const carouselItemStyle = css`
-  padding-top: 3px;
-  padding-bottom: 32px;
 `
 
 const CarouselContainer = styled.div`
@@ -37,35 +32,30 @@ const CarouselCardContainer = styled.div`
 
 const CarouselItemCard = styled(a.div)`
   ${carouselHeightStyle}
-  ${carouselItemStyle}
 
   display: flex;
   justify-content: center;
-  padding: 3px 32px 32px 32px;
-
+  padding: 4px 12px 32px;
   position: absolute;
   will-change: transform;
+
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
+    padding: 4px 32px 32px;
+  }
 `
 
 const CarouselItemIcon = styled.div`
   ${carouselHeightStyle}
-  ${carouselItemStyle}
-
-  display: flex;
   align-items: center;
-  padding-left: 8px;
-  padding-right: 8px;
-  cursor: pointer;
-  user-select: none;
-
   color: ${({ theme }) => theme.textPrimary};
-
+  cursor: pointer;
+  display: none;
+  user-select: none;
+  @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    display: flex;
+  }
   :hover {
     opacity: ${({ theme }) => theme.opacity.hover};
-  }
-
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    display: none;
   }
 `
 

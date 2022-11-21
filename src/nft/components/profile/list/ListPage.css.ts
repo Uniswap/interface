@@ -31,7 +31,7 @@ export const dropdown = style({
 
 export const removeAsset = style({
   top: '31px',
-  left: '15px',
+  left: '8px',
 })
 
 export const removeMarketplace = style({
