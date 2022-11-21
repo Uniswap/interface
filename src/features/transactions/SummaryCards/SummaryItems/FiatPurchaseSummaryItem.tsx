@@ -1,6 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import MoonpayLogo from 'src/assets/logos/moonpay.svg'
+import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
+import { AssetType } from 'src/entities/assets'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import TransactionSummaryLayout, {
   AssetUpdateLayout,
@@ -9,6 +10,7 @@ import TransactionSummaryLayout, {
 import { BaseTransactionSummaryProps } from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
 import { formatTitleWithStatus } from 'src/features/transactions/SummaryCards/utils'
 import { FiatPurchaseTransactionInfo } from 'src/features/transactions/types'
+import { buildCurrencyId } from 'src/utils/currencyId'
 import { formatUSDPrice } from 'src/utils/format'
 
 export default function FiatPurchaseSummaryItem({
@@ -18,7 +20,9 @@ export default function FiatPurchaseSummaryItem({
 }: BaseTransactionSummaryProps & { transaction: { typeInfo: FiatPurchaseTransactionInfo } }) {
   const { t } = useTranslation()
 
-  const outputCurrency = useCurrency(transaction.typeInfo.outputCurrencyId)
+  const outputCurrency = useCurrency(
+    buildCurrencyId(transaction.chainId, transaction.typeInfo.outputTokenAddress)
+  )
 
   const { outputCurrencyAmountFormatted, outputCurrencyAmountPrice } = transaction.typeInfo
 
@@ -51,7 +55,15 @@ export default function FiatPurchaseSummaryItem({
     <TransactionSummaryLayout
       caption={caption}
       endAdornment={endAdornment}
-      icon={<MoonpayLogo width={TXN_HISTORY_ICON_SIZE} />}
+      icon={
+        <LogoWithTxStatus
+          assetType={AssetType.Currency}
+          currency={outputCurrency}
+          size={TXN_HISTORY_ICON_SIZE}
+          txStatus={transaction.status}
+          txType={transaction.typeInfo.type}
+        />
+      }
       readonly={readonly}
       title={title}
       transaction={transaction}

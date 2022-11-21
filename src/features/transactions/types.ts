@@ -171,6 +171,14 @@ export interface ReceiveTokenTransactionInfo extends BaseTransactionInfo {
   isSpam?: boolean
 }
 
+export interface FiatPurchaseTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.FiatPurchase
+  explorerUrl?: string
+  outputTokenAddress: string
+  outputCurrencyAmountFormatted: number
+  outputCurrencyAmountPrice: number
+}
+
 export interface NFTMintTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.NFTMint
   nftSummaryInfo: NFTSummaryInfo
@@ -190,14 +198,6 @@ export interface NFTApproveTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.NFTApprove
   nftSummaryInfo: NFTSummaryInfo
   spender: string
-}
-
-export interface FiatPurchaseTransactionInfo extends BaseTransactionInfo {
-  type: TransactionType.FiatPurchase
-  explorerUrl?: string
-  outputCurrencyId: string
-  outputCurrencyAmountFormatted: number
-  outputCurrencyAmountPrice: number
 }
 
 export interface WCConfirmInfo extends BaseTransactionInfo {

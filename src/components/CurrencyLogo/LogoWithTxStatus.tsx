@@ -8,6 +8,7 @@ import OutgoingArrow from 'src/assets/icons/arrow-up-in-circle.svg'
 import UnknownStatus from 'src/assets/icons/question-in-circle.svg'
 import SlashCircleIcon from 'src/assets/icons/slash-circle.svg'
 import WalletConnectLogo from 'src/assets/icons/walletconnect.svg'
+import MoonpayLogo from 'src/assets/logos/moonpay.svg'
 import { CurrencyLogoOnly } from 'src/components/CurrencyLogo'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { NFTViewer } from 'src/components/images/NFTViewer'
@@ -59,7 +60,9 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps) {
   const statusSize = size * (1 / 2)
 
   const logo =
-    assetType === AssetType.Currency ? (
+    txType === TransactionType.FiatPurchase ? (
+      <MoonpayLogo width={size} />
+    ) : assetType === AssetType.Currency ? (
       <CurrencyLogoOnly currency={props.currency} size={size} />
     ) : (
       <Box
@@ -101,6 +104,8 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps) {
         return <Approve color={green} fill={fill} height={statusSize} width={statusSize} />
       case TransactionType.Send:
         return <OutgoingArrow color={green} fill={fill} height={statusSize} width={statusSize} />
+      // Fiat purchases use the same icon as receive
+      case TransactionType.FiatPurchase:
       case TransactionType.Receive:
         return <IncomingArrow color={green} fill={fill} height={statusSize} width={statusSize} />
       case TransactionType.NFTMint:

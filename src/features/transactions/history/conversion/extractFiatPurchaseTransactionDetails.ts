@@ -9,11 +9,13 @@ import {
   TransactionType,
 } from 'src/features/transactions/types'
 import { toSupportedChainId } from 'src/utils/chainId'
-import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
+import { getNativeCurrencyAddressForChain } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 
 // TODO: determine what it should actually be across chains
 const MOONPAY_FIAT_ON_RAMP_ADDRESS = '0xc216ed2d6c295579718dbd4a797845cda70b3c36'
+
+const MOONPAY_ETH_CONTRACT_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 function parseFiatPurchaseTransaction(
   transaction: Partial<MoonpayTransactionsResponse[0]>
@@ -33,15 +35,16 @@ function parseFiatPurchaseTransaction(
     throw new Error('Unable to parse chain id' + outputCurrency.metadata.chainId)
   }
 
-  const outputCurrencyId = outputCurrency.metadata.contractAddress
-    ? buildCurrencyId(chainId, outputCurrency.metadata.contractAddress)
-    : buildNativeCurrencyId(chainId)
+  const outputTokenAddress =
+    outputCurrency.metadata.contractAddress === MOONPAY_ETH_CONTRACT_ADDRESS
+      ? getNativeCurrencyAddressForChain(chainId)
+      : outputCurrency.metadata.contractAddress
 
   return {
     type: TransactionType.FiatPurchase,
     // NOTE: from docs it should be `returnUrl` but in test mode this is the right one
     explorerUrl: transaction.redirectUrl,
-    outputCurrencyId,
+    outputTokenAddress: outputTokenAddress,
     outputCurrencyAmountFormatted:
       getValidQuote?.quoteCurrencyAmount ?? transaction.quoteCurrencyAmount ?? 0,
     outputCurrencyAmountPrice:

@@ -5,11 +5,23 @@ import {
   getAddressFromAsset,
   parseUSDValueFromAssetChange,
 } from 'src/features/transactions/history/utils'
-import { ReceiveTokenTransactionInfo, TransactionType } from 'src/features/transactions/types'
+import {
+  FiatPurchaseTransactionInfo,
+  ReceiveTokenTransactionInfo,
+  TransactionType,
+} from 'src/features/transactions/types'
+
+// Non-exhaustive list of addresses Moonpay uses when sending purchased tokens
+const MOONPAY_SENDER_ADDRESSES = [
+  '0x8216874887415e2650d12d53ff53516f04a74fd7',
+  '0x151b381058f91cf871e7ea1ee83c45326f61e96d',
+  '0xb287eac48ab21c5fb1d3723830d60b4c797555b0',
+  '0xd108fd0e8c8e71552a167e7a44ff1d345d233ba6',
+]
 
 export default function parseReceiveTransaction(
   transaction: TransactionListQueryResponse
-): ReceiveTokenTransactionInfo | undefined {
+): ReceiveTokenTransactionInfo | FiatPurchaseTransactionInfo | undefined {
   const change = transaction?.assetChanges[0]
 
   if (!change) return undefined
@@ -43,13 +55,15 @@ export default function parseReceiveTransaction(
 
   // Found ERC20 transfer
   if (change.__typename === 'TokenTransfer') {
+    const sender = change.sender
+    const isMoonpayPurchase = MOONPAY_SENDER_ADDRESSES.includes(sender)
+
     const tokenAddress = getAddressFromAsset({
       chain: change.asset.chain,
       address: change.asset.address,
       tokenStandard: change.tokenStandard,
     })
 
-    const sender = change.sender
     const currencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
       change.tokenStandard,
       change.quantity,
@@ -61,6 +75,16 @@ export default function parseReceiveTransaction(
 
     if (!(sender && tokenAddress)) return undefined
 
+    // special case Moonpay transactions as fiat purchases
+    if (isMoonpayPurchase) {
+      return {
+        type: TransactionType.FiatPurchase,
+        outputTokenAddress: tokenAddress,
+        outputCurrencyAmountFormatted: Number(change.quantity),
+        outputCurrencyAmountPrice: Number(change.transactedValue?.value) / Number(change.quantity),
+      } as FiatPurchaseTransactionInfo
+    }
+
     return {
       type: TransactionType.Receive,
       assetType: AssetType.Currency,
@@ -69,7 +93,7 @@ export default function parseReceiveTransaction(
       currencyAmountRaw,
       transactedUSDValue,
       isSpam,
-    }
+    } as ReceiveTokenTransactionInfo
   }
 
   return undefined
