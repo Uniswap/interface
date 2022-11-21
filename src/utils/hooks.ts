@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useFocusEffect } from '@react-navigation/core'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { PollingInterval } from 'src/constants/misc'
 
 // modified from https://usehooks.com/usePrevious/
 export function usePrevious<T>(value: T) {
@@ -47,4 +49,19 @@ export function useAsyncData<T>(asyncCallback: () => Promise<T> | undefined) {
 
     return { isLoading, data: data.res }
   }, [asyncCallback, isLoading, data])
+}
+
+export function usePollOnFocusOnly(
+  startPolling: (interval: PollingInterval) => void,
+  stopPolling: () => void,
+  pollingInterval: PollingInterval
+) {
+  useFocusEffect(
+    useCallback(() => {
+      startPolling(pollingInterval)
+      return () => {
+        stopPolling()
+      }
+    }, [startPolling, stopPolling, pollingInterval])
+  )
 }

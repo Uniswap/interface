@@ -36,6 +36,7 @@ import { flex } from 'src/styles/flex'
 import { areAddressesEqual } from 'src/utils/addresses'
 import { fromGraphQLChain } from 'src/utils/chainId'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
+import { usePollOnFocusOnly } from 'src/utils/hooks'
 
 type ExploreSectionsProps = {
   listRef?: React.MutableRefObject<null>
@@ -71,14 +72,17 @@ export function ExploreSections({ listRef }: ExploreSectionsProps) {
     loading: requestLoading,
     error: requestError,
     refetch,
+    startPolling,
+    stopPolling,
   } = useExploreTokensTabQuery({
     variables: {
       topTokensOrderBy: serverOrderBy,
       favoriteTokenContracts: favoriteCurrencyContractInputs,
     },
-    pollInterval: PollingInterval.Fast,
     returnPartialData: true,
   })
+
+  usePollOnFocusOnly(startPolling, stopPolling, PollingInterval.Fast)
 
   const topTokenItems = useMemo(() => {
     if (!data || !data.topTokens) return EMPTY_ARRAY
