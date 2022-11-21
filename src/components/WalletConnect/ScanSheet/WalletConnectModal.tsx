@@ -84,7 +84,7 @@ export function WalletConnectModal({
 
       if (supportedURI.type === URIType.WalletConnectURL) {
         setShouldFreezeCamera(true)
-        connectToApp(uri)
+        connectToApp(supportedURI.value)
       }
 
       if (supportedURI.type === URIType.EasterEgg) {
