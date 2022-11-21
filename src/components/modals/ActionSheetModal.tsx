@@ -53,7 +53,7 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps) {
       <Flex bg="background1" borderRadius="md">
         <TouchableArea hapticFeedback onPress={onClose}>
           <Flex centered bg="background3" borderRadius="md" py="md">
-            <Text color="textPrimary" variant="subheadLarge">
+            <Text color="textPrimary" variant="buttonLabelMedium">
               {closeButtonLabel}
             </Text>
           </Flex>
