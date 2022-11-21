@@ -1,12 +1,19 @@
 import React, { forwardRef, ReactElement, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard, LayoutChangeEvent, TextInput as NativeTextInput, ViewStyle } from 'react-native'
+import {
+  Keyboard,
+  LayoutChangeEvent,
+  TextInput as NativeTextInput,
+  useColorScheme,
+  ViewStyle,
+} from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import X from 'src/assets/icons/x.svg'
 import { AnimatedTouchableArea, TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TextInput, TextInputProps } from 'src/components/input/TextInput'
 import { AnimatedFlex, Box } from 'src/components/layout'
+import { SHADOW_OFFSET_SMALL } from 'src/components/layout/BaseCard'
 import { Text } from 'src/components/Text'
 import { dimensions } from 'src/styles/sizing'
 import SearchIcon from '../../assets/icons/search.svg'
@@ -32,6 +39,7 @@ export type SearchTextInputProps = TextInputProps & {
 
 export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>((props, ref) => {
   const theme = useAppTheme()
+  const isDarkMode = useColorScheme() === 'dark'
   const { t } = useTranslation()
   const {
     autoFocus,
@@ -141,6 +149,10 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
         gap="none"
         minHeight={48}
         px="sm"
+        shadowColor={isDarkMode ? 'black' : 'brandedAccentSoft'}
+        shadowOffset={SHADOW_OFFSET_SMALL}
+        shadowOpacity={0.25}
+        shadowRadius={6}
         style={textInputStyle}>
         <SearchIcon color={theme.colors.textTertiary} height={20} width={20} />
         <TextInput
