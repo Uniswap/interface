@@ -6,7 +6,6 @@ interface NFTListState {
   looksRareNonce: number
   listingStatus: ListingStatus
   listings: ListingRow[]
-  signedListings: ListingRow[]
   collectionsRequiringApproval: CollectionRow[]
   setLooksRareNonce: (nonce: number) => void
   getLooksRareNonce: () => number
@@ -20,7 +19,6 @@ export const useNFTList = create<NFTListState>()(
     looksRareNonce: 0,
     listingStatus: ListingStatus.DEFINED,
     listings: [],
-    signedListings: [],
     collectionsRequiringApproval: [],
     setLooksRareNonce: (nonce) =>
       set(() => {
