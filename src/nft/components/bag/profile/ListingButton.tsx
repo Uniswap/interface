@@ -51,9 +51,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
     listingsAboveSellOrderFloor,
     invalidPrices,
   ] = useMemo(() => {
-    const noMarketplacesSelected = sellAssets.some(
-      (asset: WalletAsset) => asset.marketplaces === undefined || asset.marketplaces.length === 0
-    )
+    const noMarketplacesSelected = sellAssets.some((asset: WalletAsset) => asset.marketplaces === undefined)
     const missingExpiration = sellAssets.some((asset) => {
       return asset.expirationTime != null && asset.expirationTime * 1000 - Date.now() < ms`60 seconds`
     })
