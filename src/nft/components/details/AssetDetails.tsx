@@ -125,8 +125,11 @@ const ContentNotAvailable = styled.div`
 const FilterBox = styled.div<{ isActive?: boolean }>`
   box-sizing: border-box;
   background-color: ${({ theme }) => theme.backgroundInteractive};
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 14px;
   color: ${({ theme }) => theme.textPrimary};
-  padding: 12px 16px;
+  padding: 8px 16px;
   border-radius: 12px;
   cursor: pointer;
   box-sizing: border-box;

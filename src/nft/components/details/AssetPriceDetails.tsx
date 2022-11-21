@@ -55,7 +55,7 @@ const Container = styled.div`
   @media (min-width: 961px) {
     position: fixed;
     width: 360px;
-    margin-top: -6px;
+    margin-top: 20px;
   }
 `
 
@@ -216,7 +216,7 @@ export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
   return (
     <BestPriceContainer>
       <HeaderRow>
-        <ThemedText.SubHeader fontWeight={500} lineHeight="24px">
+        <ThemedText.SubHeader color="accentAction" fontWeight={500} lineHeight="24px">
           {listing ? 'Your Price' : 'List for Sale'}
         </ThemedText.SubHeader>
         {listing && <MarketplaceIcon alt={listing.marketplace} src={getMarketplaceIcon(listing.marketplace)} />}
@@ -347,7 +347,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
       ) : cheapestOrder && asset.priceInfo ? (
         <BestPriceContainer>
           <HeaderRow>
-            <ThemedText.SubHeader fontWeight={500} lineHeight="24px">
+            <ThemedText.SubHeader color="accentAction" fontWeight={500} lineHeight="24px">
               Best Price
             </ThemedText.SubHeader>
             <MarketplaceIcon alt={cheapestOrder.marketplace} src={getMarketplaceIcon(cheapestOrder.marketplace)} />
