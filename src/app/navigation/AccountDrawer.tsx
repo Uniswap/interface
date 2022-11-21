@@ -1,4 +1,5 @@
 import { DrawerContentComponentProps } from '@react-navigation/drawer'
+import { useResponsiveProp } from '@shopify/restyle'
 import { default as React, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import 'react-native-gesture-handler'
@@ -66,6 +67,8 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
   const [pendingRemoveAccount, setPendingRemoveAccount] = useState<Account | null>(null)
 
   useDrawerStatusLogging()
+
+  const addAccountBottomMargin = useResponsiveProp({ xs: 'md', sm: 'none' })
 
   const { accountsData, mnemonicWallets } = useMemo(() => {
     const accounts = Object.values(addressToAccount)
@@ -356,7 +359,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
       <Separator mb="md" />
 
       {accountsData.length <= 1 ? (
-        <TouchableArea ml="lg" mt="sm" onPress={onPressAddWallet}>
+        <TouchableArea mb={addAccountBottomMargin} ml="lg" onPress={onPressAddWallet}>
           <Flex row alignItems="center">
             <Box
               alignItems="center"
