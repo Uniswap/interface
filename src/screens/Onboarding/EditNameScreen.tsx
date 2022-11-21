@@ -186,12 +186,16 @@ function CustomizationSection({
             {items.map((item) => (
               <TouchableArea
                 key={item}
-                backgroundColor={accountName === item ? 'background3' : 'background1'}
-                borderRadius="xl"
+                backgroundColor={accountName === item ? 'background3' : 'background2'}
+                borderColor={accountName === item ? 'accentAction' : 'none'}
+                borderRadius="xxl"
+                borderWidth={1.5}
                 px="md"
-                py="sm"
+                py="xs"
                 onPress={() => setAccountName(item)}>
-                <Text color="textPrimary" variant="buttonLabelSmall">
+                <Text
+                  color={accountName === item ? 'textPrimary' : 'textSecondary'}
+                  variant="buttonLabelMedium">
                   {item}
                 </Text>
               </TouchableArea>
