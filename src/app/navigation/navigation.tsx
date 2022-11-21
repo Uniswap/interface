@@ -299,7 +299,12 @@ export function OnboardingStackNavigator() {
         <OnboardingStack.Screen
           component={OutroScreen}
           name={OnboardingScreens.Outro}
-          options={{ headerShown: false, gestureEnabled: false }}
+          // There should be no header shown on this screen but if headerShown: false and the user is adding a wallet from the
+          // sidebar then when this screen is navigated away from the header will reappear on the home screen on top of the account
+          // header.
+          // To fix this the header is shown but the backImage is hidden so it appears as if there is no header. This is v hacky but
+          // I think it's a react navigation bug and I couldn't find a better solution. Feel free to debug if you're bored.
+          options={{ headerShown: true, gestureEnabled: false, headerBackImage: () => <></> }}
         />
         <OnboardingStack.Screen
           component={CloudBackupProcessingScreen}
