@@ -16,7 +16,13 @@ export const selectTransactions = (state: RootState) => state.transactions
 export const makeSelectAddressTransactions = (address: Address | null) =>
   createSelector(selectTransactions, (transactions) => {
     if (!address || !transactions[address]) return undefined
-    return flattenObjectOfObjects(transactions[address])
+    return (
+      flattenObjectOfObjects(transactions[address])
+        // remove dummy fiat on-ramp transactions
+        .filter(
+          (tx) => tx.typeInfo.type !== TransactionType.FiatPurchase || tx.typeInfo.syncedWithBackend
+        )
+    )
   })
 
 export const makeSelectTransaction = (

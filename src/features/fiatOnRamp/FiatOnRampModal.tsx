@@ -14,6 +14,7 @@ import {
   useFiatOnRampWidgetUrlQuery,
   useIsFiatOnRampBuyAllowedQuery,
 } from 'src/features/fiatOnRamp/api'
+import { useFiatOnRampTransactionCreator } from 'src/features/fiatOnRamp/hooks'
 import { closeModal, selectFiatOnRampModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
@@ -41,6 +42,8 @@ function FiatOnRampModalInner() {
   // we can consider adding `ownerAddress` as a prop to this modal in the future
   // for now, always assume the user wants to fund the current account
   const activeAccountAddress = useActiveAccountAddressWithThrow()
+  const { externalTransactionId, dispatchAddTransaction } =
+    useFiatOnRampTransactionCreator(activeAccountAddress)
 
   const {
     data: eligible,
@@ -53,11 +56,13 @@ function FiatOnRampModalInner() {
     isError: isWidgetUrlQueryError,
     isLoading: isWidgetUrlLoading,
   } = useFiatOnRampWidgetUrlQuery(
+    // PERF: could consider skipping this call until eligibility in determined (ux tradeoffs)
+    // as-is, avoids waterfalling requests => better ux
     {
+      ownerAddress: activeAccountAddress,
       colorCode: theme.colors.accentAction,
-      walletAddresses: { eth: activeAccountAddress },
+      externalTransactionId,
     }
-    // PERF: could consider skipping this call until eligibility in determined
   )
 
   const onPress = () => {
@@ -66,9 +71,10 @@ function FiatOnRampModalInner() {
     const webBrowserOptions: WebBrowser.WebBrowserOpenOptions = {
       controlsColor: theme.colors.accentAction,
     }
-
-    onClose()
     WebBrowser.openBrowserAsync(fiatOnRampHostUrl, webBrowserOptions)
+
+    dispatchAddTransaction()
+    onClose()
   }
 
   const isLoading = isEligibleLoading || isWidgetUrlLoading
@@ -104,7 +110,7 @@ function FiatOnRampModalInner() {
                 onPress={onPress}
               />
               {isFiatBuyAllowedQueryError || isWidgetUrlQueryError ? (
-                <Text color="textOnBrightPrimary" textAlign="center" variant="bodyMicro">
+                <Text color="textSecondary" textAlign="center" variant="bodyMicro">
                   {t('Something went wrong on our side.')}
                 </Text>
               ) : null}

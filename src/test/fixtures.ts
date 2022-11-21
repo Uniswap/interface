@@ -154,6 +154,19 @@ export const txDetailsConfirmed: TransactionDetails = {
   },
 }
 
+export const fiatOnRampTxDetailsPending: TransactionDetails = {
+  chainId: ChainId.Mainnet,
+  id: '0',
+  from: account.address,
+  options: {
+    request: txRequest,
+  },
+  typeInfo: txTypeInfo,
+  status: TransactionStatus.Pending,
+  addedTime: 1487076708000,
+  hash: '0x123',
+}
+
 export const finalizedTxAction: ReturnType<typeof finalizeTransaction> = {
   payload: { ...txDetailsConfirmed, status: TransactionStatus.Success },
   type: '',

@@ -174,9 +174,10 @@ export interface ReceiveTokenTransactionInfo extends BaseTransactionInfo {
 export interface FiatPurchaseTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.FiatPurchase
   explorerUrl?: string
-  outputTokenAddress: string
-  outputCurrencyAmountFormatted: number
-  outputCurrencyAmountPrice: number
+  outputTokenAddress?: string
+  outputCurrencyAmountFormatted?: number
+  outputCurrencyAmountPrice?: number
+  syncedWithBackend: boolean
 }
 
 export interface NFTMintTransactionInfo extends BaseTransactionInfo {

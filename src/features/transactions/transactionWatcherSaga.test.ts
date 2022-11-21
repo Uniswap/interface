@@ -2,23 +2,28 @@ import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
 import { getProvider, getProviderManager } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
+import { PollingInterval } from 'src/constants/misc'
+import { fetchFiatOnRampTransaction } from 'src/features/fiatOnRamp/api'
 import { waitForProvidersInitialized } from 'src/features/providers/providerSaga'
 import { attemptCancelTransaction } from 'src/features/transactions/cancelTransaction'
 import {
   addTransaction,
   cancelTransaction,
   finalizeTransaction,
+  transactionActions,
   updateTransaction,
 } from 'src/features/transactions/slice'
 import {
   getFlashbotsTxConfirmation,
   transactionWatcher,
   waitForReceipt,
+  watchFiatOnRampTransaction,
   watchFlashbotsTransaction,
   watchTransaction,
 } from 'src/features/transactions/transactionWatcherSaga'
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
 import {
+  fiatOnRampTxDetailsPending,
   finalizedTxAction,
   mockProvider,
   mockProviderManager,
@@ -144,5 +149,52 @@ describe(watchTransaction, () => {
       .provide([[call(getProvider, chainId), mockProvider]])
       .put(finalizeTransaction({ ...finalizedTxAction.payload, addedTime: oldTx.addedTime }))
       .silentRun()
+  })
+})
+
+describe(watchFiatOnRampTransaction, () => {
+  it('removes transactions on 404 when stale', () => {
+    const staleTx = { ...fiatOnRampTxDetailsPending, status: TransactionStatus.Unknown }
+    return (
+      expectSaga(watchFiatOnRampTransaction, fiatOnRampTxDetailsPending)
+        .provide([[call(fetchFiatOnRampTransaction, fiatOnRampTxDetailsPending), staleTx]])
+        .put(transactionActions.upsertFiatOnRampTransaction(staleTx))
+        // watcher should stop tracking
+        .not.call.fn(sleep)
+        .silentRun()
+    )
+  })
+
+  it('keeps a transactions on 404 when not yet stale', () => {
+    const tx = { ...fiatOnRampTxDetailsPending, addedTime: Date.now() }
+    const confirmedTx = { ...tx, status: TransactionStatus.Success }
+
+    let fetchCalled = false
+
+    return expectSaga(watchFiatOnRampTransaction, tx)
+      .provide([
+        {
+          call(effect) {
+            if (effect.fn === fetchFiatOnRampTransaction) {
+              const newTx = fetchCalled ? confirmedTx : tx
+              fetchCalled = true
+              return newTx
+            }
+          },
+        },
+        [call(sleep, PollingInterval.Normal), Promise.resolve(() => {})],
+      ])
+      .call(sleep, PollingInterval.Normal)
+      .put(transactionActions.upsertFiatOnRampTransaction(confirmedTx))
+      .silentRun()
+  })
+
+  it('updates a transactions on success network request', () => {
+    const confirmedTx = { ...fiatOnRampTxDetailsPending, status: TransactionStatus.Success }
+    return expectSaga(watchFiatOnRampTransaction, fiatOnRampTxDetailsPending)
+      .provide([[call(fetchFiatOnRampTransaction, fiatOnRampTxDetailsPending), confirmedTx]])
+      .put(transactionActions.upsertFiatOnRampTransaction(confirmedTx))
+      .not.call.fn(sleep)
+      .run()
   })
 })

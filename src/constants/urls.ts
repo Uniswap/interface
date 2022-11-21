@@ -3,6 +3,7 @@ import { config } from 'src/config'
 export const uniswapUrls = {
   helpUrl: 'https://support.uniswap.org',
   apiBaseUrl: getUniswapApiBaseUrl(),
+  appBaseUrl: 'https://uniswap.org/app',
   gasServiceUrl: getUniswapGasServiceUrl(),
   routingApiUrl: getUniswapRoutingApiUrl(),
   graphQLUrl: getUniswapGraphQLUrl(),

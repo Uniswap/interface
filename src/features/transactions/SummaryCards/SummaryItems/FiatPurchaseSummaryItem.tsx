@@ -20,16 +20,20 @@ export default function FiatPurchaseSummaryItem({
 }: BaseTransactionSummaryProps & { transaction: { typeInfo: FiatPurchaseTransactionInfo } }) {
   const { t } = useTranslation()
 
+  const { chainId, status, typeInfo } = transaction
+  const { outputCurrencyAmountFormatted, outputCurrencyAmountPrice, outputTokenAddress } = typeInfo
+
   const outputCurrency = useCurrency(
-    buildCurrencyId(transaction.chainId, transaction.typeInfo.outputTokenAddress)
+    outputTokenAddress ? buildCurrencyId(chainId, outputTokenAddress) : undefined
   )
 
-  const { outputCurrencyAmountFormatted, outputCurrencyAmountPrice } = transaction.typeInfo
-
-  const transactedUSDValue = outputCurrencyAmountPrice * outputCurrencyAmountFormatted
+  const transactedUSDValue =
+    outputCurrencyAmountFormatted && outputCurrencyAmountPrice
+      ? outputCurrencyAmountPrice * outputCurrencyAmountFormatted
+      : undefined
 
   const title = formatTitleWithStatus({
-    status: transaction.status,
+    status,
     text: t('Purchase'),
     t,
   })
@@ -38,18 +42,17 @@ export default function FiatPurchaseSummaryItem({
     ? `${formatUSDPrice(transactedUSDValue)} of ${outputCurrency.symbol ?? t('Unknown token')}`
     : ''
 
-  const endAdornment = outputCurrency ? (
-    // bypassing BalanceUpdate since we do not have an actual raw amount here
-    <AssetUpdateLayout
-      caption={formatUSDPrice(transactedUSDValue)}
-      title={
-        '+' +
-          transaction.typeInfo.outputCurrencyAmountFormatted.toString() +
-          ' ' +
-          outputCurrency.symbol ?? t('Unknown token')
-      }
-    />
-  ) : undefined
+  const endAdornment =
+    outputCurrency && outputCurrencyAmountFormatted ? (
+      // bypassing BalanceUpdate since we do not have an actual raw amount here
+      <AssetUpdateLayout
+        caption={formatUSDPrice(transactedUSDValue)}
+        title={
+          '+' + outputCurrencyAmountFormatted.toString() + ' ' + outputCurrency.symbol ??
+          t('unknown token')
+        }
+      />
+    ) : undefined
 
   return (
     <TransactionSummaryLayout

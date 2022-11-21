@@ -10,10 +10,6 @@ import {
 } from 'src/features/transactions/types'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { getNativeCurrencyAddressForChain } from 'src/utils/currencyId'
-import { logger } from 'src/utils/logger'
-
-// TODO: determine what it should actually be across chains
-const MOONPAY_FIAT_ON_RAMP_ADDRESS = '0xc216ed2d6c295579718dbd4a797845cda70b3c36'
 
 const MOONPAY_ETH_CONTRACT_ADDRESS = '0x0000000000000000000000000000000000000000'
 
@@ -42,13 +38,15 @@ function parseFiatPurchaseTransaction(
 
   return {
     type: TransactionType.FiatPurchase,
-    // NOTE: from docs it should be `returnUrl` but in test mode this is the right one
     explorerUrl: transaction.redirectUrl,
     outputTokenAddress: outputTokenAddress,
     outputCurrencyAmountFormatted:
       getValidQuote?.quoteCurrencyAmount ?? transaction.quoteCurrencyAmount ?? 0,
     outputCurrencyAmountPrice:
       getValidQuote?.quoteCurrencyPrice ?? transaction.quoteCurrencyPrice ?? 0,
+    // mark this local tx as synced given we updated it with server information
+    // this marks the tx as 'valid' / ready to display in the ui
+    syncedWithBackend: true,
     chainId,
   }
 }
@@ -65,11 +63,6 @@ function moonpayStatusToTransactionInfoStatus(
       return TransactionStatus.Pending
     case 'completed':
       // completed fiat onramp transactions show up in on-chain history
-      logger.warn(
-        'extractFiatPurchaseTransactinDetails',
-        'moonypayStatusToTransactionInfoStatus',
-        'Expected every `completed` fiat onramp transactions to be filtered out.'
-      )
       return TransactionStatus.Success
   }
 }
@@ -89,10 +82,10 @@ export function extractFiatOnRampTransactionDetails(
     return {
       id: transaction.externalTransactionId,
       chainId,
-      hash: transaction.id,
+      hash: transaction.depositHash,
       addedTime: new Date(transaction.createdAt).getTime(),
       status: moonpayStatusToTransactionInfoStatus(transaction.status),
-      from: MOONPAY_FIAT_ON_RAMP_ADDRESS,
+      from: transaction.walletAddress,
       typeInfo,
       options: { request: {} },
     }

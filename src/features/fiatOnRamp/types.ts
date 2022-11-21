@@ -1,11 +1,6 @@
 export type FiatOnRampWidgetUrlQueryParameters = {
-  colorCode?: string
-  defaultCurrencyCode?: string
-  externalTransactionId?: string
-  language?: string
-  redirectURL?: string
-  // Record of currencyCode to wallet address
-  walletAddresses: Record<string, Address>
+  colorCode: string
+  externalTransactionId: string
 }
 
 export type FiatOnRampWidgetUrlQueryResponse = { url: string }
@@ -75,6 +70,8 @@ export type MoonpayTransactionsResponse = Array<
     redirectUrl: string
     // The URL the customer is returned to after they authenticate or cancel their payment on the payment method’s app or site. If you are using our widget implementation, this is always our transaction tracker page, which provides the customer with real-time information about their transaction.
     returnUrl: string
+    // The cryptocurrency transaction identifier representing the transfer from the customer's wallet to MoonPay's wallet. Set when the deposit has been executed and received.
+    depositHash: string
     // An optional URL used in a widget implementation. It is passed to us by you in the query parameters, and we include it as a link on the transaction tracker page.
     widgetRedirectUrl: string
     // The exchange rate between the transaction's base currency and Euro at the time of the transaction.

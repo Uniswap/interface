@@ -3,6 +3,8 @@ import { appSelect } from 'src/app/hooks'
 import { i18n } from 'src/app/i18n'
 import { getProvider } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
+import { PollingInterval } from 'src/constants/misc'
+import { fetchFiatOnRampTransaction } from 'src/features/fiatOnRamp/api'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { fetchTransactionStatus } from 'src/features/providers/flashbotsProvider'
@@ -16,17 +18,20 @@ import {
   replaceTransaction,
   transactionActions,
   updateTransaction,
+  upsertFiatOnRampTransaction,
 } from 'src/features/transactions/slice'
 import {
   TransactionDetails,
   TransactionReceipt,
   TransactionStatus,
+  TransactionType,
 } from 'src/features/transactions/types'
 import { logger } from 'src/utils/logger'
+import { ONE_SECOND_MS } from 'src/utils/time'
 import { sleep } from 'src/utils/timing'
 import { call, fork, put, race, take } from 'typed-redux-saga'
 
-const FLASHBOTS_POLLING_INTERVAL = 5000 // 5 seconds
+const FLASHBOTS_POLLING_INTERVAL = ONE_SECOND_MS * 5
 
 export function* transactionWatcher() {
   // Delay execution until providers are ready
@@ -37,7 +42,11 @@ export function* transactionWatcher() {
   // This allows us to detect completions if a user closed the app before a tx finished
   const incompleteTransactions = yield* appSelect(selectIncompleteTransactions)
   for (const transaction of incompleteTransactions) {
-    yield* fork(watchTransaction, transaction)
+    if (transaction.typeInfo.type === TransactionType.FiatPurchase) {
+      yield* fork(watchFiatOnRampTransaction, transaction)
+    } else {
+      yield* fork(watchTransaction, transaction)
+    }
   }
 
   // Next, start watching for new or updated transactions dispatches
@@ -47,7 +56,9 @@ export function* transactionWatcher() {
       updateTransaction.type,
     ])
     try {
-      if (transaction.isFlashbots) {
+      if (transaction.typeInfo.type === TransactionType.FiatPurchase) {
+        yield* fork(watchFiatOnRampTransaction, transaction)
+      } else if (transaction.isFlashbots) {
         yield* fork(watchFlashbotsTransaction, transaction)
       } else {
         yield* fork(watchTransaction, transaction)
@@ -102,6 +113,60 @@ export function* watchFlashbotsTransaction(transaction: TransactionDetails) {
   const provider = yield* call(getProvider, chainId)
   const receipt = yield* call(waitForReceipt, hash, provider)
   yield* call(finalizeTransaction, transaction, receipt, txStatus)
+}
+
+export function* watchFiatOnRampTransaction(transaction: TransactionDetails) {
+  // id represents `externalTransactionId` sent to Moonpay
+  const { id } = transaction
+
+  logger.debug(
+    'transactionWatcherSaga',
+    'watchFiatOnRampTransaction',
+    'Watching for updates for fiat onramp tx:',
+    id
+  )
+
+  try {
+    while (true) {
+      const updatedTransaction = yield* call(
+        fetchFiatOnRampTransaction,
+        /** previousTransactionDetails= */ transaction
+      )
+
+      if (!updatedTransaction) return
+
+      // not strictly necessary but avoid dispatching an action if tx status hasn't changed
+      if (updatedTransaction.status !== transaction.status) {
+        logger.debug(
+          'transactionWatcherSaga',
+          'watchFiatOnRampTransaction',
+          `Updating transaction with id ${id} from status ${transaction.status} to ${updatedTransaction.status}`
+        )
+        yield* put(upsertFiatOnRampTransaction(updatedTransaction))
+      }
+
+      if (
+        updatedTransaction.status === TransactionStatus.Failed ||
+        updatedTransaction.status === TransactionStatus.Success ||
+        updatedTransaction.status === TransactionStatus.Unknown
+      ) {
+        // can stop polling once transaction is final
+        break
+      }
+
+      // at this point, we received a response from Moonpay's API
+      // however, we didn't have enough information to act
+      // try again after a waiting period
+      yield* call(sleep, PollingInterval.Normal)
+    }
+  } catch (e) {
+    logger.error(
+      'transactionWatcherSaga',
+      'watchFiatOnRampTranasction',
+      'Failed to fetch details',
+      e
+    )
+  }
 }
 
 export function* watchTransaction(transaction: TransactionDetails) {
