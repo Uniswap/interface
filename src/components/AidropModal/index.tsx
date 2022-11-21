@@ -1,7 +1,9 @@
+import uniswapNftAirdropClaim from 'abis/uniswap-nft-airdrop-claim.json'
 import airdropBackgroundv2 from 'assets/images/airdopBackground.png'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import { OpacityHoverState } from 'components/Common'
 import Loader from 'components/Loader'
+import { useContract } from 'hooks/useContract'
 import { ChevronRightIcon } from 'nft/components/icons'
 import { useState } from 'react'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
@@ -148,6 +150,17 @@ const AirdropModal = () => {
   const [totalAmount] = useState(300)
   const isOpen = useModalIsOpen(ApplicationModal.UNISWAP_NFT_AIRDROP_CLAIM)
   const usdcAirdropToggle = useToggleModal(ApplicationModal.UNISWAP_NFT_AIRDROP_CLAIM)
+  const contract = useContract('0xb5Cf43a08dDF40F9d4EB1d86347778E70C211157', uniswapNftAirdropClaim)
+  // provider
+  //   ? getContract('0xb5Cf43a08dDF40F9d4EB1d86347778E70C211157', uniswapNftAirdropClaim, provider)
+  //   : undefined
+
+  // useContract
+  if (contract) {
+    console.log(contract)
+    // contract.interface.
+  }
+
   const dismiss = () => {
     usdcAirdropToggle()
 
