@@ -62,10 +62,6 @@ export function useIsDarkMode(): boolean {
   return userDarkMode === null ? matchesDarkMode : userDarkMode
 }
 
-export function useUserLocale(): SupportedLocale | null {
-  return useAppSelector((state) => state.user.userLocale)
-}
-
 export function useDarkModeManager(): [boolean, () => void] {
   const dispatch = useAppDispatch()
   const darkMode = useIsDarkMode()
@@ -75,6 +71,10 @@ export function useDarkModeManager(): [boolean, () => void] {
   }, [darkMode, dispatch])
 
   return [darkMode, toggleSetDarkMode]
+}
+
+export function useUserLocale(): SupportedLocale | null {
+  return useAppSelector((state) => state.user.userLocale)
 }
 
 export function useUserLocaleManager(): [SupportedLocale | null, (newLocale: SupportedLocale) => void] {
