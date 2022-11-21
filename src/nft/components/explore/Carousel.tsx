@@ -60,9 +60,6 @@ interface CarouselProps {
   toggleNextSlide: (idx: number) => void
 }
 
-// todo: do we really need this offset?
-const FIRST_CARD_OFFSET = 0
-
 const MAX_CARD_WIDTH = 800
 
 export const Carousel = ({ children, activeIndex, toggleNextSlide }: CarouselProps) => {
@@ -72,7 +69,7 @@ export const Carousel = ({ children, activeIndex, toggleNextSlide }: CarouselPro
     [idx]
   )
   const [springs, set] = useSprings(children.length, (i) => ({
-    x: (i < children.length - 1 ? i : -1) * MAX_CARD_WIDTH + FIRST_CARD_OFFSET,
+    x: (i < children.length - 1 ? i : -1) * MAX_CARD_WIDTH,
   }))
   const prev = useRef([0, 1])
 
@@ -85,7 +82,7 @@ export const Carousel = ({ children, activeIndex, toggleNextSlide }: CarouselPro
         const prevPosition = getPos(i, prev.current[0], prev.current[1])
         const rank = calculateRank(firstVis, firstVisIdx, position, children.length, y)
         return {
-          x: (-y % (MAX_CARD_WIDTH * children.length)) + MAX_CARD_WIDTH * rank + FIRST_CARD_OFFSET,
+          x: (-y % (MAX_CARD_WIDTH * children.length)) + MAX_CARD_WIDTH * rank,
           immediate: vy < 0 ? prevPosition > position : prevPosition < position,
           config: { tension: 250, friction: 35 },
         }
