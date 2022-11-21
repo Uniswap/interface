@@ -173,7 +173,11 @@ export default function TokenDetails({
   }
   const canDisplay = token && !isPending
   return (
-    <Trace page={PageName.TOKEN_DETAILS_PAGE} properties={{ address, tokenName: token?.name }} shouldLogImpression>
+    <Trace
+      page={PageName.TOKEN_DETAILS_PAGE}
+      properties={{ tokenAddress: address, tokenName: token?.name }}
+      shouldLogImpression
+    >
       <TokenDetailsLayout>
         {canDisplay ? (
           <LeftPanel>
