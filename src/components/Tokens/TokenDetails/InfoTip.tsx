@@ -1,6 +1,7 @@
+import { Placement } from '@popperjs/core'
 import Tooltip from 'components/Tooltip'
 import { ReactNode, useCallback, useState } from 'react'
-import { Info } from 'react-feather'
+import { HelpCircle, IconProps, Info } from 'react-feather'
 import styled from 'styled-components/macro'
 
 const InfoTipContainer = styled.div`
@@ -23,16 +24,17 @@ const InfoTipWrapper = styled.div`
   align-items: center;
 `
 
-export default function InfoTip({ text }: { text: ReactNode; size?: number }) {
+type InfoTipProps = IconProps & { placement?: Placement; text: ReactNode; question?: boolean }
+export default function InfoTip({ text, size = 14, question, placement, ...rest }: InfoTipProps) {
   const [show, setShow] = useState<boolean>(false)
 
   const open = useCallback(() => setShow(true), [setShow])
   const close = useCallback(() => setShow(false), [setShow])
   return (
     <InfoTipWrapper>
-      <Tooltip text={<InfoTipBody>{text}</InfoTipBody>} show={show} placement="right">
+      <Tooltip text={<InfoTipBody>{text}</InfoTipBody>} show={show} placement={placement}>
         <InfoTipContainer onClick={open} onMouseEnter={open} onMouseLeave={close}>
-          <Info size={14} />
+          {question ? <HelpCircle width={size} height={size} {...rest} /> : <Info size={size} {...rest} />}
         </InfoTipContainer>
       </Tooltip>
     </InfoTipWrapper>

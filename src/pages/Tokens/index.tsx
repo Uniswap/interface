@@ -4,6 +4,7 @@ import { PageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { filterStringAtom } from 'components/Tokens/state'
+import InfoTip from 'components/Tokens/TokenDetails/InfoTip'
 import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
 import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
@@ -47,8 +48,8 @@ const FiltersContainer = styled.div`
   }
 `
 const SearchContainer = styled(FiltersContainer)`
-  width: 100%;
   margin-left: 8px;
+  width: 100%;
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
     margin: 0px;
@@ -60,11 +61,16 @@ const FiltersWrapper = styled.div`
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   margin: 0 auto;
   margin-bottom: 20px;
+  color: ${({ theme }) => theme.textTertiary};
+  flex-direction: row;
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
     flex-direction: column;
     gap: 8px;
   }
+`
+const InfoTipContainer = styled.div`
+  align-self: flex-end;
 `
 
 const Tokens = () => {
@@ -109,6 +115,12 @@ const Tokens = () => {
           <SearchContainer>
             <SearchBar />
           </SearchContainer>
+          <InfoTip
+            size={28}
+            text={<Trans>This table contains the top tokens by Uniswap volume, sorted based on your input.</Trans>}
+            question
+            strokeWidth={1.5}
+          />
         </FiltersWrapper>
         <Suspense fallback={<LoadingTokenTable rowCount={rowCount} />}>
           <TokenTable setRowCount={setRowCount} />

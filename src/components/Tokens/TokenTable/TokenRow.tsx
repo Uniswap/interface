@@ -335,7 +335,7 @@ function HeaderCell({
         </>
       )}
       {category}
-      {description && <InfoTip text={description}></InfoTip>}
+      {description && <InfoTip text={description} placement="right"></InfoTip>}
     </HeaderCellWrapper>
   )
 }

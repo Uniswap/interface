@@ -17,7 +17,7 @@ import { CHAIN_NAME_TO_CHAIN_ID, toHistoryDuration, unwrapToken } from './util'
 
 const topTokens100Query = graphql`
   query TopTokens100Query($duration: HistoryDuration!, $chain: Chain!) {
-    topTokens(pageSize: 100, page: 1, chain: $chain) {
+    topTokens(pageSize: 100, page: 1, chain: $chain, orderBy: VOLUME) {
       id @required(action: LOG)
       name
       chain @required(action: LOG)
