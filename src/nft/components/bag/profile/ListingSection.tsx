@@ -37,7 +37,10 @@ export const ListingSection = ({
     // collections
     if (index === 1) {
       for (const asset of sellAssets)
-        if (asset.asset_contract.address === row.collectionAddress) removeAssetMarketplace(asset, row.marketplace)
+        if (asset.asset_contract.address === row.collectionAddress) {
+          removeAssetMarketplace(asset, row.marketplace)
+          removeSellAsset(asset)
+        }
     }
     // listings
     else removeSellAsset(row.asset)
