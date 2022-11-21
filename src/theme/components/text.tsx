@@ -12,7 +12,6 @@ const TextWrapper = styled(Text)<{ color: keyof string }>`
 type TextProps = Omit<TextPropsOriginal, 'css'>
 
 // todo: export each component individually
-
 export const ThemedText = {
   // todo: there should be just one `Body` with default color, no need to make all variations
   BodyPrimary(props: TextProps) {
