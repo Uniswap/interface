@@ -31,23 +31,15 @@ export const ListingSection = ({
   const notAllApproved = rows.some((row: AssetRow) => row.status !== ListingStatus.APPROVED)
   const sellAssets = useSellAsset((state) => state.sellAssets)
   const removeAssetMarketplace = useSellAsset((state) => state.removeAssetMarketplace)
-  const removeSellAsset = useSellAsset((state) => state.removeSellAsset)
 
   const removeRow = (row: any) => {
     // collections
     if (index === 1) {
       for (const asset of sellAssets)
-        if (asset.asset_contract.address === row.collectionAddress) {
-          removeAssetMarketplace(asset, row.marketplace)
-          removeSellAsset(asset)
-        }
+        if (asset.asset_contract.address === row.collectionAddress) removeAssetMarketplace(asset, row.marketplace)
     }
     // listings
-    else {
-      if (row.asset.marketplaces.length === 1) {
-        removeSellAsset(row.asset)
-      } else removeAssetMarketplace(row.asset, row.marketplace)
-    }
+    else removeAssetMarketplace(row.asset, row.marketplace)
   }
 
   useEffect(() => {
