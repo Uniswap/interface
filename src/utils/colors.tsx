@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import ImageColors from 'react-native-image-colors'
 import { IOSImageColors } from 'react-native-image-colors/lib/typescript/types'
 import { useAppTheme } from 'src/app/hooks'
@@ -51,6 +51,24 @@ export type ExtractedColors = Pick<
   'background' | 'detail' | 'secondary' | 'primary'
 >
 
+const specialCaseTokenColors: { [key: string]: string } = {
+  // WBTC
+  'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png':
+    '#F09241',
+
+  // DAI
+  'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png':
+    '#FAB01B',
+
+  // UNI
+  'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png':
+    '#E6358C',
+
+  // BUSD
+  'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x4Fabb145d64652a948d72533023f6E7A623C7C53/logo.png':
+    '#EFBA09',
+}
+
 export function useExtractedColors(
   imageUrl: NullUndefined<string>,
   fallback: keyof Theme['colors'] = 'magentaVibrant',
@@ -83,6 +101,12 @@ export function useExtractedColors(
   return { colors, colorsLoading }
 }
 
+function getSpecialCaseTokenColor(imageUrl: NullUndefined<string>) {
+  if (!imageUrl || !specialCaseTokenColors[imageUrl]) {
+    return null
+  }
+  return specialCaseTokenColors[imageUrl]
+}
 /**
  * Picks a contrast-passing color from a given token image URL and background color.
  * The color extracting library will return a few options, and this function will
@@ -118,6 +142,14 @@ export function useExtractedTokenColor(
       setTokenColorLoading(false)
     }
   }, [backgroundColor, colors, colorsLoading])
+
+  const specialCaseTokenColor = useMemo(() => {
+    return getSpecialCaseTokenColor(imageUrl)
+  }, [imageUrl])
+
+  if (specialCaseTokenColor) {
+    return { tokenColor: specialCaseTokenColor, tokenColorLoading: false }
+  }
 
   if (!imageUrl) {
     return { tokenColor: null, tokenColorLoading: false }
