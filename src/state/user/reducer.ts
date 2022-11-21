@@ -16,8 +16,6 @@ export interface UserState {
 
   matchesDarkMode: boolean // whether the dark mode media query matches
 
-  showNftPromoBanner: boolean // whether or not we should show the nft explore promo banner
-
   userDarkMode: boolean | null // the user's choice for dark mode or light mode
   userLocale: SupportedLocale | null
 
@@ -50,6 +48,7 @@ export interface UserState {
 
   timestamp: number
   URLWarningVisible: boolean
+  NFTPromoBannerVisible: boolean // whether or not we should show the nft explore promo banner
 
   // undefined means has not gone through A/B split yet
   showSurveyPopup: boolean | undefined
@@ -64,7 +63,6 @@ function pairKey(token0Address: string, token1Address: string) {
 export const initialState: UserState = {
   selectedWallet: undefined,
   matchesDarkMode: false,
-  showNftPromoBanner: true,
   userDarkMode: null,
   userExpertMode: false,
   userLocale: null,
@@ -77,6 +75,7 @@ export const initialState: UserState = {
   pairs: {},
   timestamp: currentTimestamp(),
   URLWarningVisible: true,
+  NFTPromoBannerVisible: true,
   showSurveyPopup: undefined,
   showDonationLink: true,
 }
@@ -104,9 +103,6 @@ const userSlice = createSlice({
       state.userLocale = action.payload.userLocale
       state.timestamp = currentTimestamp()
     },
-    updateShowNftPromoBanner(state, action) {
-      state.showNftPromoBanner = action.payload.showNftPromoBanner
-    },
     updateUserSlippageTolerance(state, action) {
       state.userSlippageTolerance = action.payload.userSlippageTolerance
       state.timestamp = currentTimestamp()
@@ -126,6 +122,9 @@ const userSlice = createSlice({
     },
     updateShowDonationLink(state, action) {
       state.showDonationLink = action.payload.showDonationLink
+    },
+    updateShowNftPromoBanner(state, action) {
+      state.NFTPromoBannerVisible = action.payload.NFTPromoBannerVisible
     },
     addSerializedToken(state, { payload: { serializedToken } }) {
       if (!state.tokens) {
@@ -208,7 +207,6 @@ export const {
   removeSerializedToken,
   updateHideClosedPositions,
   updateMatchesDarkMode,
-  updateShowNftPromoBanner,
   updateShowDonationLink,
   updateShowSurveyPopup,
   updateUserClientSideRouter,
@@ -217,5 +215,6 @@ export const {
   updateUserExpertMode,
   updateUserLocale,
   updateUserSlippageTolerance,
+  updateShowNftPromoBanner,
 } = userSlice.actions
 export default userSlice.reducer

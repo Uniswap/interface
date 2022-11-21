@@ -274,11 +274,8 @@ export function useDarkModeManager(): [boolean, () => void] {
 
 export function useShowNftPromoBanner(): [boolean, () => void] {
   const dispatch = useAppDispatch()
-  const showNftPromoBanner = useAppSelector((state) => state.user.showNftPromoBanner)
-  const darkMode = useIsDarkMode()
+  const showNftPromoBanner = useAppSelector((state) => state.user.NFTPromoBannerVisible)
 
-  console.log('show nft promo banner', showNftPromoBanner)
-  console.log('dark mode', darkMode)
   const toggleShowNftPromoBanner = useCallback(() => {
     dispatch(updateShowNftPromoBanner({ showNftPromoBanner: !showNftPromoBanner }))
   }, [dispatch, showNftPromoBanner])
