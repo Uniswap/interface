@@ -31,6 +31,7 @@ export const ListingSection = ({
   const notAllApproved = rows.some((row: AssetRow) => row.status !== ListingStatus.APPROVED)
   const sellAssets = useSellAsset((state) => state.sellAssets)
   const removeAssetMarketplace = useSellAsset((state) => state.removeAssetMarketplace)
+  const removeSellAsset = useSellAsset((state) => state.removeSellAsset)
 
   const removeRow = (row: any) => {
     // collections
@@ -39,7 +40,7 @@ export const ListingSection = ({
         if (asset.asset_contract.address === row.collectionAddress) removeAssetMarketplace(asset, row.marketplace)
     }
     // listings
-    else removeAssetMarketplace(row.asset, row.marketplace)
+    else removeSellAsset(row.asset)
   }
 
   useEffect(() => {
