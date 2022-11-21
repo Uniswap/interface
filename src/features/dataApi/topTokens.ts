@@ -1,18 +1,11 @@
 import { useMemo } from 'react'
 import { ChainId } from 'src/constants/chains'
-import {
-  SafetyLevel,
-  TokenSortableField,
-  useTopTokensQuery,
-} from 'src/data/__generated__/types-and-hooks'
+import { TokenSortableField, useTopTokensQuery } from 'src/data/__generated__/types-and-hooks'
 import { CurrencyInfo, GqlResult } from 'src/features/dataApi/types'
 import { gqlTokenToCurrencyInfo, usePersistedError } from 'src/features/dataApi/utils'
 import { toGraphQLChain } from 'src/utils/chainId'
 
-export function usePopularTokens(
-  chainFilter: ChainId,
-  filterUnverified: Boolean
-): GqlResult<CurrencyInfo[]> {
+export function usePopularTokens(chainFilter: ChainId): GqlResult<CurrencyInfo[]> {
   const gqlChainFilter = toGraphQLChain(chainFilter)
 
   const { data, loading, error, refetch } = useTopTokensQuery({
@@ -20,7 +13,7 @@ export function usePopularTokens(
       chain: gqlChainFilter,
       page: 1,
       pageSize: 100,
-      orderBy: TokenSortableField.Volume,
+      orderBy: TokenSortableField.Popularity,
     },
   })
   const persistedError = usePersistedError(loading, error)
@@ -32,12 +25,10 @@ export function usePopularTokens(
       .map((token) => {
         if (!token) return null
 
-        if (filterUnverified && token.project?.safetyLevel !== SafetyLevel.Verified) return null
-
         return gqlTokenToCurrencyInfo(token)
       })
       .filter((c): c is CurrencyInfo => Boolean(c))
-  }, [data, filterUnverified])
+  }, [data])
 
   return useMemo(
     () => ({ data: formattedData, loading, error: persistedError, refetch }),

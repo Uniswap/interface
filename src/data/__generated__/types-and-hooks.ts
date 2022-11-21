@@ -33,7 +33,6 @@ export type Query = {
   nftBalances?: Maybe<NftBalanceConnection>;
   nftCollections?: Maybe<NftCollectionConnection>;
   nftCollectionsById?: Maybe<Array<Maybe<NftCollection>>>;
-  portfolio?: Maybe<Portfolio>;
   portfolios?: Maybe<Array<Maybe<Portfolio>>>;
   searchTokenProjects?: Maybe<Array<Maybe<TokenProject>>>;
   searchTokens?: Maybe<Array<Maybe<Token>>>;
@@ -86,11 +85,6 @@ export type QueryNftCollectionsArgs = {
 
 export type QueryNftCollectionsByIdArgs = {
   collectionIds?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-};
-
-
-export type QueryPortfolioArgs = {
-  ownerAddress: Scalars['String'];
 };
 
 
@@ -767,21 +761,15 @@ export type NftCollectionEdge = {
 
 export type Portfolio = {
   __typename?: 'Portfolio';
-  absoluteChange24H?: Maybe<Scalars['Float']>;
   assetActivities?: Maybe<Array<Maybe<AssetActivity>>>;
-  assetsValue?: Maybe<Scalars['Float']>;
-  assetsValueUSD?: Maybe<Scalars['Float']>;
   id: Scalars['ID'];
   /**   TODO: (michael.zhang) replace with paginated query */
   nftBalances?: Maybe<Array<Maybe<NftBalance>>>;
   ownerAddress: Scalars['String'];
-  relativeChange24H?: Maybe<Scalars['Float']>;
   tokenBalances?: Maybe<Array<Maybe<TokenBalance>>>;
   tokensTotalDenominatedValue?: Maybe<Amount>;
   tokensTotalDenominatedValueChange?: Maybe<AmountChange>;
   tokensTotalDenominatedValueHistory?: Maybe<Array<Maybe<TimestampedAmount>>>;
-  totalValue?: Maybe<Scalars['Float']>;
-  totalValueUSD?: Maybe<Scalars['Float']>;
 };
 
 
@@ -830,9 +818,9 @@ export enum MarketSortableField {
   Volume = 'VOLUME'
 }
 
-/**   TODO: implement MARKET_CAP and VOLUME, they return mock data */
 export enum TokenSortableField {
   MarketCap = 'MARKET_CAP',
+  Popularity = 'POPULARITY',
   TotalValueLocked = 'TOTAL_VALUE_LOCKED',
   Volume = 'VOLUME'
 }
