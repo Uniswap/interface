@@ -24,6 +24,8 @@ import Animated, {
 import { useAppTheme } from 'src/app/hooks'
 import { ONBOARDING_QR_ETCHING_VIDEO_DARK, ONBOARDING_QR_ETCHING_VIDEO_LIGHT } from 'src/assets'
 import { Button } from 'src/components/buttons/Button'
+import { GradientBackground } from 'src/components/gradients/GradientBackground'
+import { UniconThemedRadial } from 'src/components/gradients/UniconThemedRadial'
 import { Box, Flex } from 'src/components/layout'
 import { QRCodeDisplay } from 'src/components/QRCodeScanner/QRCode'
 import { Text } from 'src/components/Text'
@@ -146,7 +148,6 @@ export function OnboardingCompleteAnimation({
   // setting as a constant so that it doesn't get defined by padding and screen size and give us less design control
   const QR_CONTAINER_SIZE = 242
   const QR_CODE_SIZE = 190
-  const QR_GLOW_HEIGHT = 120
 
   const UNICON_SIZE = 48
 
@@ -154,117 +155,114 @@ export function OnboardingCompleteAnimation({
   const screenWidth = dimensions.fullWidth
 
   return (
-    <Flex grow justifyContent="space-between" px="md" py="lg">
-      <Flex centered grow gap="xl" mb="sm">
-        <Flex centered gap="sm" pt="xxl">
-          <Animated.View entering={bgGlowTranslateX} style={styles.bgGlowTranslateXStyles}>
-            <Canvas style={flex.fill}>
-              <Group transform={[{ translateX: 150 }, { translateY: 100 }]}>
-                <Oval
-                  color={theme.colors.background3}
-                  height={screenWidth * 1.1}
-                  opacity={1}
-                  width={screenWidth * 0.75}
-                />
-                <Blur blur={100} />
-              </Group>
-            </Canvas>
-          </Animated.View>
-          <Animated.View entering={qrSlideUpAndFadeIn}>
-            <Animated.View entering={qrSlideUpAtEnd}>
-              <Animated.View entering={flashWipeAnimation} style={styles.behindQrBlur}>
-                <Canvas style={flex.fill}>
-                  <Group transform={[{ translateX: 50 }, { translateY: 50 }]}>
-                    <RoundedRect
-                      color={uniconColors.glow}
-                      height={QR_CONTAINER_SIZE}
-                      opacity={1}
-                      r={10}
-                      width={QR_CONTAINER_SIZE}
-                      x={0}
-                      y={0}
-                    />
-                    <Blur blur={25 as unknown as SkiaValue} />
-                  </Group>
-                </Canvas>
-              </Animated.View>
-              <Animated.View entering={qrScaleIn}>
-                <Box
-                  bg="background0"
-                  borderColor="backgroundOutline"
-                  borderRadius="xl"
-                  borderWidth={2}
-                  height={QR_CONTAINER_SIZE}
-                  overflow="hidden"
-                  width={QR_CONTAINER_SIZE}>
-                  <Animated.View entering={realQrFadeIn} style={[styles.qrCodeContainer]}>
-                    <QRCodeDisplay
-                      address={activeAddress}
-                      backgroundColor="none"
-                      containerBackgroundColor="none"
-                      logoSize={UNICON_SIZE}
-                      overlayOpacityPercent={10}
-                      safeAreaColor="background0"
-                      safeAreaSize={UNICON_SIZE + UNICON_SIZE / 2}
-                      size={QR_CODE_SIZE}
-                    />
-                  </Animated.View>
-                  <Animated.View entering={realQrTopGlowFadeIn} style={[styles.qrGlow]}>
-                    <Flex style={styles.qrGlow}>
-                      <Canvas style={flex.fill}>
-                        <Group transform={[{ translateX: 0 }, { translateY: -100 }]}>
-                          <Oval
-                            color={uniconColors.glow}
-                            height={QR_GLOW_HEIGHT}
-                            opacity={isDarkMode ? 0.6 : 0.4}
-                            width={QR_CONTAINER_SIZE}
-                          />
-                          <Blur blur={25 as unknown as SkiaValue} />
-                        </Group>
-                      </Canvas>
-                    </Flex>
-                  </Animated.View>
-                </Box>
-                <Animated.View entering={videoFadeOut} style={[styles.video]}>
-                  <View style={styles.video}>
-                    <Video
-                      ref={video}
-                      resizeMode={ResizeMode.CONTAIN}
-                      shouldPlay={false}
-                      source={etchingVideoSource}
-                      style={styles.video}
-                      useNativeControls={false}
-                    />
-                  </View>
-                </Animated.View>
-                <Animated.View entering={videoFadeOut} style={[styles.glow]}>
+    <>
+      <Animated.View entering={realQrTopGlowFadeIn} style={[styles.qrGlow]}>
+        <GradientBackground>
+          <UniconThemedRadial
+            borderRadius="lg"
+            gradientEndColor={uniconColors.gradientEnd}
+            gradientStartColor={uniconColors.glow}
+            // we use the glow color here, since otherwise that color doesn't show up at all on the screen, which can look weird if it's a dominant color in the Unicon (the QR code gradient uses the start / end colors but not glow)
+          />
+        </GradientBackground>
+      </Animated.View>
+      <Flex grow justifyContent="space-between" px="md" py="lg">
+        <Flex centered grow gap="xl" mb="sm">
+          <Flex centered gap="sm" pt="xxl">
+            <Animated.View entering={bgGlowTranslateX} style={styles.bgGlowTranslateXStyles}>
+              <Canvas style={flex.fill}>
+                <Group transform={[{ translateX: 150 }, { translateY: 100 }]}>
+                  <Oval
+                    color={theme.colors.background3}
+                    height={screenWidth * 1.1}
+                    opacity={1}
+                    width={screenWidth * 0.75}
+                  />
+                  <Blur blur={100} />
+                </Group>
+              </Canvas>
+            </Animated.View>
+            <Animated.View entering={qrSlideUpAndFadeIn}>
+              <Animated.View entering={qrSlideUpAtEnd}>
+                <Animated.View entering={flashWipeAnimation} style={styles.behindQrBlur}>
                   <Canvas style={flex.fill}>
-                    <Group
-                      transform={[
-                        { translateX: QR_CONTAINER_SIZE / 2 - 40 },
-                        { translateY: QR_CONTAINER_SIZE / 2 - 40 },
-                      ]}>
-                      <Oval
-                        color={uniconColors.gradientStart}
-                        height={80}
-                        opacity={preglowBlurOpacity}
-                        width={80}
+                    <Group transform={[{ translateX: 50 }, { translateY: 50 }]}>
+                      <RoundedRect
+                        color={uniconColors.glow}
+                        height={QR_CONTAINER_SIZE}
+                        opacity={1}
+                        r={10}
+                        width={QR_CONTAINER_SIZE}
+                        x={0}
+                        y={0}
                       />
-                      <Blur blur={preglowBlurSize as unknown as SkiaValue} />
+                      <Blur blur={25 as unknown as SkiaValue} />
                     </Group>
                   </Canvas>
                 </Animated.View>
-                <Animated.View entering={flashWipeAnimation} style={styles.glow}>
-                  <Flex
+                <Animated.View entering={qrScaleIn}>
+                  <Box
+                    bg="background0"
+                    borderColor="backgroundOutline"
                     borderRadius="xl"
-                    height="100%"
-                    style={{ backgroundColor: uniconColors.glow }}
-                    width="100%"
-                  />
+                    borderWidth={2}
+                    height={QR_CONTAINER_SIZE}
+                    overflow="hidden"
+                    width={QR_CONTAINER_SIZE}>
+                    <Animated.View entering={realQrFadeIn} style={[styles.qrCodeContainer]}>
+                      <QRCodeDisplay
+                        address={activeAddress}
+                        backgroundColor="none"
+                        containerBackgroundColor="none"
+                        logoSize={UNICON_SIZE}
+                        overlayOpacityPercent={10}
+                        safeAreaColor="background0"
+                        safeAreaSize={UNICON_SIZE + UNICON_SIZE / 2}
+                        size={QR_CODE_SIZE}
+                      />
+                    </Animated.View>
+                  </Box>
+                  <Animated.View entering={videoFadeOut} style={[styles.video]}>
+                    <View style={styles.video}>
+                      <Video
+                        ref={video}
+                        resizeMode={ResizeMode.CONTAIN}
+                        shouldPlay={false}
+                        source={etchingVideoSource}
+                        style={styles.video}
+                        useNativeControls={false}
+                      />
+                    </View>
+                  </Animated.View>
+                  <Animated.View entering={videoFadeOut} style={[styles.glow]}>
+                    <Canvas style={flex.fill}>
+                      <Group
+                        transform={[
+                          { translateX: QR_CONTAINER_SIZE / 2 - 40 },
+                          { translateY: QR_CONTAINER_SIZE / 2 - 40 },
+                        ]}>
+                        <Oval
+                          color={uniconColors.gradientStart}
+                          height={80}
+                          opacity={preglowBlurOpacity}
+                          width={80}
+                        />
+                        <Blur blur={preglowBlurSize as unknown as SkiaValue} />
+                      </Group>
+                    </Canvas>
+                  </Animated.View>
+                  <Animated.View entering={flashWipeAnimation} style={styles.glow}>
+                    <Flex
+                      borderRadius="xl"
+                      height="100%"
+                      style={{ backgroundColor: uniconColors.glow }}
+                      width="100%"
+                    />
+                  </Animated.View>
                 </Animated.View>
               </Animated.View>
             </Animated.View>
-          </Animated.View>
+          </Flex>
           <Animated.View entering={textSlideUpAtEnd} style={[styles.textContainer]}>
             <Text pb="sm" variant="headlineSmall">
               {t("You're ready to go!")}
@@ -280,11 +278,11 @@ export function OnboardingCompleteAnimation({
             </Text>
           </Animated.View>
         </Flex>
+        <Animated.View entering={letsGoButtonFadeIn}>
+          <Button label={t('Let’s go')} name={ElementName.Next} onPress={onPressNext} />
+        </Animated.View>
       </Flex>
-      <Animated.View entering={letsGoButtonFadeIn}>
-        <Button label={t('Let’s go')} name={ElementName.Next} onPress={onPressNext} />
-      </Animated.View>
-    </Flex>
+    </>
   )
 }
 
