@@ -299,7 +299,7 @@ const CarouselCardHeader = ({ collection }: { collection: TrendingCollection }) 
               lineHeight="28px"
               display="inline"
             >
-              {collection.name.repeat(2)}
+              {collection.name}
             </ThemedText.MediumHeader>
           </CollectionNameContainer>
           {collection.isVerified && (
