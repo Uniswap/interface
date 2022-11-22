@@ -9,9 +9,10 @@ import { ThemedText } from 'theme'
 const Container = styled.div`
   position: relative;
   display: flex;
-  padding: 209px 24px 49px;
+  padding: 30% 24px 24px;
   overflow: hidden;
   height: fit-content;
+  user-select: none;
 `
 
 const CloseButton = styled(X)`
@@ -43,6 +44,21 @@ const Content = styled.div`
   flex-direction: column;
   z-index: 1;
   gap: 16px;
+`
+
+const Title = styled(ThemedText.LargeHeader)`
+  @media (max-width: ${({ theme }) => theme.breakpoint.xl}px) {
+    font-size: 20px !important;
+  }
+`
+
+const Paragraph = styled(ThemedText.BodySecondary)`
+  line-height: 24px;
+
+  @media (max-width: ${({ theme }) => theme.breakpoint.xl}px) {
+    font-size: 14px !important;
+    line-height: 20px;
+  }
 `
 
 const BACKGROUND_IMAGE = {
@@ -78,10 +94,11 @@ export function WelcomeModal({ onDismiss }: { onDismiss: () => void }) {
         <Background
           {...(theme.darkMode ? BACKGROUND_IMAGE.dark : BACKGROUND_IMAGE.light)}
           alt="Welcome modal background"
+          draggable={false}
         />
         <Content>
-          <ThemedText.LargeHeader>Introducing Uniswap NFT</ThemedText.LargeHeader>
-          <ThemedText.BodySecondary>
+          <Title>Introducing Uniswap NFT</Title>
+          <Paragraph>
             We’re excited to announce that Uniswap Labs has acquired Genie to build the marketplace for all digital
             assets! With Uniswap NFT, you can buy and sell NFTs across all marketplaces with the full functionality of
             Genie. Additonally, if you’ve used Genie in the past, then you may be eligible for a USDC airdrop. You can
@@ -93,7 +110,7 @@ export function WelcomeModal({ onDismiss }: { onDismiss: () => void }) {
             >
               Learn more.
             </Link>
-          </ThemedText.BodySecondary>
+          </Paragraph>
           <CloseButton size={24} onClick={dismiss} />
         </Content>
       </Container>
