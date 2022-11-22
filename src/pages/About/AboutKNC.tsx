@@ -7,6 +7,8 @@ import { Flex, Text } from 'rebass'
 import { Pagination } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react/swiper-react'
 
+import GeckoterminalIcon from 'assets/images/geckoterminal_dark.png'
+import GeckoterminalIconLight from 'assets/images/geckoterminal_light.png'
 import KNCGraphic from 'assets/images/knc-graphic.png'
 import CoinGecko from 'assets/svg/coingecko_color.svg'
 import CoinGeckoLight from 'assets/svg/coingecko_color_light.svg'
@@ -432,12 +434,23 @@ function AboutKNC() {
               <Text as="h2" fontWeight="500" fontSize={['28px', '36px']}>
                 <Trans>More information about KNC is available on:</Trans>
               </Text>
-              <Flex flexDirection={above768 ? 'row' : 'column'} marginTop="48px" style={{ gap: '48px' }}>
+              <Flex
+                flexDirection={above768 ? 'row' : 'column'}
+                marginTop="48px"
+                style={{ gap: '48px', alignItems: 'center' }}
+              >
                 <ExternalLink href={`https://www.coingecko.com/en/coins/kyber-network-crystal`}>
                   <img src={isDarkMode ? CoinGecko : CoinGeckoLight} alt="CoinGecko" width="165px" />
                 </ExternalLink>
                 <ExternalLink href={`https://coinmarketcap.com/currencies/kyber-network-crystal-v2/`}>
                   <img src={isDarkMode ? CoinMarketCap : CoinMarketCapLight} alt="CoinMarketCap" width="227px" />
+                </ExternalLink>
+                <ExternalLink href="https://www.geckoterminal.com/eth/pools/0xa38a0165e82b7a5e8650109e9e54087a34c93020">
+                  <img
+                    src={isDarkMode ? GeckoterminalIcon : GeckoterminalIconLight}
+                    alt="Geckoterminal"
+                    width="235px"
+                  />
                 </ExternalLink>
               </Flex>
             </Flex>
