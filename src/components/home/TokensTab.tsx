@@ -1,12 +1,11 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ViewStyle } from 'react-native'
+import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { NoTokens } from 'src/components/icons/NoTokens'
 import { Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { TabViewScrollProps } from 'src/components/layout/screens/TabbedScrollScreen'
-import { TAB_STYLES } from 'src/components/layout/TabHelpers'
+import { TabContentProps, TAB_STYLES } from 'src/components/layout/TabHelpers'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { TokenBalanceList } from 'src/components/TokenBalanceList/TokenBalanceList'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
@@ -17,61 +16,63 @@ import { AccountType } from 'src/features/wallet/accounts/types'
 import { useSignerAccounts } from 'src/features/wallet/hooks'
 import { CurrencyId } from 'src/utils/currencyId'
 
-export function TokensTab({
-  owner,
-  tabViewScrollProps,
-  loadingContainerStyle,
-}: {
+type TokensTabProps = {
   owner: string
-  tabViewScrollProps?: TabViewScrollProps
-  loadingContainerStyle?: ViewStyle
-}) {
-  const { t } = useTranslation()
-  const dispatch = useAppDispatch()
-  const tokenDetailsNavigation = useTokenDetailsNavigation()
-  const ownerAccount = useSignerAccounts().find((a) => a.address === owner)
-
-  const isFiatOnRampEnabled =
-    useFiatOnRampEnabled() && ownerAccount?.type === AccountType.SignerMnemonic
-
-  const onPressToken = (currencyId: CurrencyId) => {
-    tokenDetailsNavigation.preload(currencyId)
-    tokenDetailsNavigation.navigate(currencyId)
-  }
-
-  // when fiat on ramp is enabled for owner account, trigger buy flow
-  // otherwise, trigger scan flow
-  const onPressAction = () => {
-    if (isFiatOnRampEnabled) {
-      dispatch(openModal({ name: ModalName.FiatOnRamp }))
-    } else {
-      dispatch(
-        openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
-      )
-    }
-  }
-
-  return (
-    <Flex grow style={TAB_STYLES.tabContentContainerStandard}>
-      <TokenBalanceList
-        empty={
-          <Flex centered flex={1}>
-            <BaseCard.EmptyState
-              buttonLabel={isFiatOnRampEnabled ? t('Buy crypto') : t('Receive tokens')}
-              description={t(
-                'Transfer tokens from a centralized exchange or another wallet to get started.'
-              )}
-              icon={<NoTokens />}
-              title={t('No tokens yet')}
-              onPress={onPressAction}
-            />
-          </Flex>
-        }
-        loadingContainerStyle={loadingContainerStyle}
-        owner={owner}
-        tabViewScrollProps={tabViewScrollProps}
-        onPressToken={onPressToken}
-      />
-    </Flex>
-  )
+  containerProps?: TabContentProps
+  scrollHandler?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
 }
+
+export const TokensTab = forwardRef<any, TokensTabProps>(
+  ({ owner, containerProps, scrollHandler }, ref) => {
+    const { t } = useTranslation()
+    const dispatch = useAppDispatch()
+    const tokenDetailsNavigation = useTokenDetailsNavigation()
+
+    const ownerAccount = useSignerAccounts().find((a) => a.address === owner)
+
+    const isFiatOnRampEnabled =
+      useFiatOnRampEnabled() && ownerAccount?.type === AccountType.SignerMnemonic
+
+    const onPressToken = (currencyId: CurrencyId) => {
+      tokenDetailsNavigation.preload(currencyId)
+      tokenDetailsNavigation.navigate(currencyId)
+    }
+
+    // when fiat on ramp is enabled for owner account, trigger buy flow
+    // otherwise, trigger scan flow
+    const onPressAction = () => {
+      if (isFiatOnRampEnabled) {
+        dispatch(openModal({ name: ModalName.FiatOnRamp }))
+      } else {
+        dispatch(
+          openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
+        )
+      }
+    }
+
+    return (
+      <Flex grow bg="background0" style={TAB_STYLES.tabContentContainerStandard}>
+        <TokenBalanceList
+          ref={ref}
+          containerProps={containerProps}
+          empty={
+            <Flex centered flex={1}>
+              <BaseCard.EmptyState
+                buttonLabel={isFiatOnRampEnabled ? t('Buy crypto') : t('Receive tokens')}
+                description={t(
+                  'Transfer tokens from a centralized exchange or another wallet to get started.'
+                )}
+                icon={<NoTokens />}
+                title={t('No tokens yet')}
+                onPress={onPressAction}
+              />
+            </Flex>
+          }
+          owner={owner}
+          scrollHandler={scrollHandler}
+          onPressToken={onPressToken}
+        />
+      </Flex>
+    )
+  }
+)

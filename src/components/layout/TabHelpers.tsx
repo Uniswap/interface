@@ -1,8 +1,9 @@
 /* eslint-disable react-native/no-unused-styles */
-import React from 'react'
-import { StyleSheet } from 'react-native'
+import { FlashList, FlashListProps } from '@shopify/flash-list'
+import React, { RefObject } from 'react'
+import { FlatList, FlatListProps, StyleProp, StyleSheet, ViewStyle } from 'react-native'
 import { Gesture } from 'react-native-gesture-handler'
-import { runOnJS } from 'react-native-reanimated'
+import Animated, { runOnJS } from 'react-native-reanimated'
 import { Route } from 'react-native-tab-view/lib/typescript/types'
 import { Text } from 'src/components/Text'
 import { theme as FixedTheme } from 'src/styles/theme'
@@ -30,7 +31,9 @@ export const TAB_STYLES = StyleSheet.create({
     zIndex: 1,
   },
   headerContainer: {
+    left: 0,
     position: 'absolute',
+    right: 0,
     top: 0,
     width: '100%',
     zIndex: 1,
@@ -62,6 +65,21 @@ export const TAB_STYLES = StyleSheet.create({
   },
 })
 
+export type HeaderConfig = {
+  heightExpanded: number
+  heightCollapsed: number
+}
+
+export type ScrollPair = {
+  list: RefObject<FlatList> | RefObject<FlashList<any>>
+  position: Animated.SharedValue<number>
+}
+
+export type TabContentProps = Partial<FlatListProps<any>> & {
+  loadingContainerStyle: StyleProp<ViewStyle>
+  estimatedItemSize?: number
+}
+
 export const renderTabLabel = ({ route, focused }: { route: Route; focused: boolean }) => {
   return (
     <Text color={focused ? 'textPrimary' : 'textTertiary'} variant="buttonLabelMedium">
@@ -91,3 +109,33 @@ export const panHeaderGestureAction = (openSidebar: () => void) =>
 
     runOnJS(openSidebar)()
   })
+
+/**
+ * Keeps tab content in sync, by scrolling content in case collapsing header height has changed between tabs
+ */
+export const useScrollSync = (scrollPairs: ScrollPair[], headerConfig: HeaderConfig) => {
+  const sync:
+    | FlatListProps<any>['onMomentumScrollEnd']
+    | FlashListProps<any>['onMomentumScrollEnd'] = (event) => {
+    const { y } = event.nativeEvent.contentOffset
+
+    const { heightCollapsed, heightExpanded } = headerConfig
+
+    const headerDiff = heightExpanded - heightCollapsed
+
+    for (const { list, position } of scrollPairs) {
+      const scrollPosition = position.value ?? 0
+
+      if (scrollPosition > headerDiff && y > headerDiff) {
+        continue
+      }
+
+      list.current?.scrollToOffset({
+        offset: Math.min(y, headerDiff),
+        animated: false,
+      })
+    }
+  }
+
+  return { sync }
+}
