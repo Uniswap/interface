@@ -1,14 +1,17 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
-import { Flex } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
 import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
 import { Text } from 'src/components/Text'
+import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { PortfolioBalance } from 'src/features/dataApi/types'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount, useDisplayName } from 'src/features/wallet/hooks'
 import { iconSizes } from 'src/styles/sizing'
+import { CurrencyId } from 'src/utils/currencyId'
 import { formatNumber, NumberType } from 'src/utils/format'
 
 /**
@@ -32,6 +35,15 @@ export function TokenBalances({
   const hasCurrentChainBalances = Boolean(currentChainBalance)
   const hasOtherChainBalances = Boolean(otherChainBalances && otherChainBalances.length > 0)
 
+  const { preload, navigate } = useTokenDetailsNavigation()
+  const navigateToCurrency = useCallback(
+    (currencyId: CurrencyId) => {
+      preload(currencyId)
+      navigate(currencyId)
+    },
+    [navigate, preload]
+  )
+
   if (!hasCurrentChainBalances && !hasOtherChainBalances) return null
 
   return (
@@ -51,7 +63,11 @@ export function TokenBalances({
           <Flex gap="sm">
             {otherChainBalances!.map((balance) => {
               return (
-                <OtherChainBalance key={balance.currencyInfo.currency.chainId} balance={balance} />
+                <OtherChainBalance
+                  key={balance.currencyInfo.currency.chainId}
+                  balance={balance}
+                  navigate={navigateToCurrency}
+                />
               )
             })}
           </Flex>
@@ -91,32 +107,40 @@ export function CurrentChainBalance({
   )
 }
 
-function OtherChainBalance({ balance }: { balance: PortfolioBalance }) {
+function OtherChainBalance({
+  balance,
+  navigate,
+}: {
+  balance: PortfolioBalance
+  navigate: (currencyId: CurrencyId) => void
+}) {
   return (
-    <Flex row alignItems="center" justifyContent="space-between">
-      <Flex row alignItems="center" gap="xxs">
-        <TokenLogo
-          chainId={balance.currencyInfo.currency.chainId}
-          size={iconSizes.xxl}
-          symbol={balance.currencyInfo.currency.symbol}
-          url={balance.currencyInfo.logoUrl ?? undefined}
-        />
-        <Flex alignItems="center" gap="none">
-          <Text variant="bodyLarge">
-            {formatNumber(balance.balanceUSD, NumberType.FiatTokenDetails)}
-          </Text>
-          <InlineNetworkPill
+    <TouchableArea hapticFeedback onPress={() => navigate(balance.currencyInfo.currencyId)}>
+      <Flex row alignItems="center" justifyContent="space-between">
+        <Flex row alignItems="center" gap="xxs">
+          <TokenLogo
             chainId={balance.currencyInfo.currency.chainId}
-            py="none"
-            showBackgroundColor={false}
-            textVariant="buttonLabelMicro"
+            size={iconSizes.xxl}
+            symbol={balance.currencyInfo.currency.symbol}
+            url={balance.currencyInfo.logoUrl ?? undefined}
           />
+          <Box>
+            <Text px="xxs" variant="bodyLarge">
+              {formatNumber(balance.balanceUSD, NumberType.FiatTokenDetails)}
+            </Text>
+            <InlineNetworkPill
+              chainId={balance.currencyInfo.currency.chainId}
+              py="none"
+              showBackgroundColor={false}
+              textVariant="buttonLabelMicro"
+            />
+          </Box>
         </Flex>
+        <Text color="textSecondary" variant="bodyLarge">
+          {formatNumber(balance.quantity, NumberType.TokenNonTx)}{' '}
+          {balance.currencyInfo.currency.symbol}
+        </Text>
       </Flex>
-      <Text color="textSecondary" variant="bodyLarge">
-        {formatNumber(balance.quantity, NumberType.TokenNonTx)}{' '}
-        {balance.currencyInfo.currency.symbol}
-      </Text>
-    </Flex>
+    </TouchableArea>
   )
 }

@@ -85,7 +85,13 @@ export function useTokenDetailsNavigation() {
   }
 
   const navigate = (currencyId: CurrencyId) => {
-    navigation.navigate(Screens.TokenDetails, { currencyId })
+    // the desired behavior is to push the new token details screen onto the stack instead of replacing it
+    // however, `push` could create an infinitely deep navigation stack that is hard to get out of
+    // for that reason, we first `pop` token details from the stack, and then push it.
+    if (navigation.canGoBack()) {
+      navigation.pop()
+    }
+    navigation.push(Screens.TokenDetails, { currencyId })
   }
 
   return { preload, navigate }

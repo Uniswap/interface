@@ -38,7 +38,9 @@ export function HeaderScrollScreen({
   maxScrollHeightOverride,
   children,
 }: PropsWithChildren<HeaderScrollScreenProps>) {
-  const listRef = useRef(null)
+  const listRef = useRef<any>(null)
+
+  // scrolls to top when tapping on the active tab
   useScrollToTop(listRef)
 
   const isDarkMode = useColorScheme() === 'dark'
