@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 import Modal from 'components/Modal'
 import { useState } from 'react'
 import { X } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 const Container = styled.div`
@@ -28,6 +30,33 @@ const Link = styled.a`
   }
 `
 
+const Background = styled.img`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+`
+
+const BACKGROUND_IMAGE = {
+  dark: {
+    src: require('../../../assets/images/welcomeModal-dark.jpg').default,
+    srcSet: `
+      ${require('../../../assets/images/welcomeModal-dark@2x.jpg').default} 2x,
+      ${require('../../../assets/images/welcomeModal-dark@3x.jpg').default} 3x,
+    `,
+  },
+  light: {
+    src: require('../../../assets/images/welcomeModal-light.jpg').default,
+    srcSet: `
+      ${require('../../../assets/images/welcomeModal-light@2x.jpg').default} 2x,
+      ${require('../../../assets/images/welcomeModal-light@3x.jpg').default} 3x,
+    `,
+  },
+}
+
 export function WelcomeModal({ onDismiss }: { onDismiss: () => void }) {
   const [isOpen, setIsOpen] = useState(true)
 
@@ -36,9 +65,15 @@ export function WelcomeModal({ onDismiss }: { onDismiss: () => void }) {
     onDismiss()
   }
 
+  const theme = useTheme()
+
   return (
     <Modal isOpen={isOpen} onDismiss={dismiss} maxWidth={720}>
       <Container>
+        <Background
+          {...(theme.darkMode ? BACKGROUND_IMAGE.dark : BACKGROUND_IMAGE.light)}
+          alt="Welcome modal background"
+        />
         <ThemedText.LargeHeader>Introducing Uniswap NFT</ThemedText.LargeHeader>
         <ThemedText.BodySecondary>
           We’re excited to announce that Uniswap Labs has acquired Genie to build the marketplace for all digital
