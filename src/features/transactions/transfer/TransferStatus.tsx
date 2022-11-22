@@ -37,9 +37,7 @@ const getTextFromTransferStatus = (
     // error display here as well as log to sentry or amplitude
     return {
       title: t('Sending'),
-      description: t(
-        'We’ll notify you once your transaction is complete. You can now safely leave this page.'
-      ),
+      description: t('We’ll notify you once your transaction is complete.'),
     }
   }
   const status = transactionDetails.status
@@ -70,9 +68,7 @@ const getTextFromTransferStatus = (
   // TODO: handle TransactionStatus.Unknown state
   return {
     title: t('Sending'),
-    description: t(
-      'We’ll notify you once your transaction is complete. You can now safely leave this page.'
-    ),
+    description: t('We’ll notify you once your transaction is complete.'),
   }
 }
 

@@ -48,17 +48,13 @@ const getTextFromWrapStatus = (
     if (wrapType === WrapType.Unwrap) {
       return {
         title: t('Unwrap pending'),
-        description: t(
-          'We’ll notify you once your unwrap is complete. You can now safely leave this page.'
-        ),
+        description: t('We’ll notify you once your unwrap is complete.'),
       }
     }
 
     return {
       title: t('Wrap pending'),
-      description: t(
-        'We’ll notify you once your wrap is complete. You can now safely leave this page.'
-      ),
+      description: t('We’ll notify you once your wrap is complete.'),
     }
   }
 
@@ -130,9 +126,7 @@ const getTextFromSwapStatus = (
   if (!transactionDetails || transactionDetails.status === TransactionStatus.Pending) {
     return {
       title: t('Swap pending'),
-      description: t(
-        'We’ll notify you once your swap is complete. You can now safely leave this page.'
-      ),
+      description: t('We’ll notify you once your swap is complete.'),
     }
   }
 

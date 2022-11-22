@@ -62,7 +62,7 @@ export function TransactionPending({
           onPress={() => openTransactionLink(transaction.hash, chainId)}
         />
       ) : null}
-      <Button label={t('OK')} name={ElementName.OK} onPress={onNext} />
+      <Button label={t('Close')} name={ElementName.OK} onPress={onNext} />
     </AnimatedFlex>
   )
 }
