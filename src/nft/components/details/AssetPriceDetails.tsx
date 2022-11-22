@@ -4,7 +4,14 @@ import { useNftBalanceQuery } from 'graphql/data/nft/NftBalance'
 import { CancelListingIcon, VerifiedIcon } from 'nft/components/icons'
 import { useBag, useProfilePageState, useSellAsset } from 'nft/hooks'
 import { CollectionInfoForAsset, GenieAsset, ProfilePageStateType, WalletAsset } from 'nft/types'
-import { ethNumberStandardFormatter, formatEthPrice, getMarketplaceIcon, timeLeft, useUsdPrice } from 'nft/utils'
+import {
+  ethNumberStandardFormatter,
+  formatEthPrice,
+  generateTweetForAsset,
+  getMarketplaceIcon,
+  timeLeft,
+  useUsdPrice,
+} from 'nft/utils'
 import { shortenAddress } from 'nft/utils/address'
 import { useMemo } from 'react'
 import { Upload } from 'react-feather'
@@ -52,7 +59,7 @@ const Container = styled.div`
   width: 100%;
   gap: 24px;
 
-  @media (min-width: (960 + 1)px) {
+  @media (min-width: calc(960px + 1px)) {
     position: fixed;
     width: 360px;
     margin-top: 20px;
@@ -149,7 +156,6 @@ const OwnerInformationContainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
   padding: 0 8px;
-  margin-bottom: 20px;
 `
 
 const AssetInfoContainer = styled.div`
@@ -313,11 +319,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
 
   const shareTweet = () => {
     window.open(
-      `https://twitter.com/intent/tweet?text=Check%20out%20${
-        asset.name ?? `${asset.collectionName}%20%23${asset.tokenId}`
-      }%20(${asset.collectionName})%20https://app.uniswap.org/%23/nfts/asset/${asset.address}/${
-        asset.tokenId
-      }%20via%20@uniswap`,
+      generateTweetForAsset(asset),
       'newwindow',
       `left=${(window.screen.width - TWITTER_WIDTH) / 2}, top=${
         (window.screen.height - TWITTER_HEIGHT) / 2
@@ -326,6 +328,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   }
 
   const isOwner = asset.owner ? account?.toLowerCase() === asset.owner?.address?.toLowerCase() : false
+  const isForSale = cheapestOrder && asset.priceInfo
 
   return (
     <Container>
@@ -344,7 +347,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
       </AssetInfoContainer>
       {isOwner ? (
         <OwnerContainer asset={asset} />
-      ) : cheapestOrder && asset.priceInfo ? (
+      ) : isForSale ? (
         <BestPriceContainer>
           <HeaderRow>
             <ThemedText.SubHeader color="accentAction" fontWeight={500} lineHeight="24px">
@@ -388,22 +391,24 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
       ) : (
         <NotForSale collectionName={collection.collectionName ?? 'this collection'} collectionUrl={asset.address} />
       )}
-      <OwnerInformationContainer>
-        <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
-          Seller:
-        </ThemedText.BodySmall>
-        <OwnerText
-          target="_blank"
-          href={`https://etherscan.io/address/${asset.owner.address}`}
-          rel="noopener noreferrer"
-        >
-          {asset.tokenType === 'ERC1155' ? (
-            ''
-          ) : (
-            <span> {isOwner ? 'You' : asset.owner.address && shortenAddress(asset.owner.address, 2, 4)}</span>
-          )}
-        </OwnerText>
-      </OwnerInformationContainer>
+      {isForSale && (
+        <OwnerInformationContainer>
+          <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
+            Seller:
+          </ThemedText.BodySmall>
+          <OwnerText
+            target="_blank"
+            href={`https://etherscan.io/address/${asset.owner.address}`}
+            rel="noopener noreferrer"
+          >
+            {asset.tokenType === 'ERC1155' ? (
+              ''
+            ) : (
+              <span> {isOwner ? 'You' : asset.owner.address && shortenAddress(asset.owner.address, 2, 4)}</span>
+            )}
+          </OwnerText>
+        </OwnerInformationContainer>
+      )}
     </Container>
   )
 }
