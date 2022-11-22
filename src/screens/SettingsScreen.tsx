@@ -1,10 +1,12 @@
 import { useTheme } from '@shopify/restyle'
 import { default as React, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ListRenderItemInfo, SectionList } from 'react-native'
+import { Image, ListRenderItemInfo, SectionList, StyleSheet, useColorScheme } from 'react-native'
+import { FadeInDown, FadeOutUp } from 'react-native-reanimated'
 import { SvgProps } from 'react-native-svg'
 import { useDispatch } from 'react-redux'
 import { useSettingsStackNavigation } from 'src/app/navigation/types'
+import { AVATARS_DARK, AVATARS_LIGHT } from 'src/assets'
 import BookOpenIcon from 'src/assets/icons/book-open.svg'
 import FaceIdIcon from 'src/assets/icons/faceid.svg'
 import FingerprintIcon from 'src/assets/icons/fingerprint.svg'
@@ -13,7 +15,7 @@ import LockIcon from 'src/assets/icons/lock.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
-import { Box, Flex } from 'src/components/layout'
+import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import {
@@ -31,6 +33,8 @@ import { AccountType, SignerMnemonicAccount } from 'src/features/wallet/accounts
 import { useAccounts } from 'src/features/wallet/hooks'
 import { resetWallet, setFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
+import { ONE_SECOND_MS } from 'src/utils/time'
+import { useTimeout } from 'src/utils/timing'
 import { getFullAppVersion } from 'src/utils/version'
 
 export function SettingsScreen() {
@@ -276,9 +280,63 @@ function WalletSettings() {
 }
 
 function FooterSettings() {
+  const { t } = useTranslation()
+  const [showSignature, setShowSignature] = useState(false)
+  const isDarkMode = useColorScheme() === 'dark'
+
+  // Fade out signature after duration
+  useTimeout(
+    showSignature
+      ? () => {
+          setShowSignature(false)
+        }
+      : () => {},
+    SIGNATURE_VISIBLE_DURATION
+  )
+
   return (
-    <Text color="textTertiary" marginTop="xs" variant="bodySmall">
-      {`Version ${getFullAppVersion()}`}
-    </Text>
+    <Flex gap="sm">
+      {showSignature ? (
+        <AnimatedFlex
+          alignItems="center"
+          entering={FadeInDown}
+          exiting={FadeOutUp}
+          gap="none"
+          mt="md">
+          <Flex gap="xxs">
+            <Text color="textTertiary" textAlign="center" variant="bodySmall">
+              {t('Made with love, ')}
+            </Text>
+            <Text color="textTertiary" textAlign="center" variant="bodySmall">
+              {t('Uniswap Team 🦄')}
+            </Text>
+          </Flex>
+          {isDarkMode ? (
+            <Image source={AVATARS_DARK} style={ImageStyles.responsiveImage} />
+          ) : (
+            <Image source={AVATARS_LIGHT} style={ImageStyles.responsiveImage} />
+          )}
+        </AnimatedFlex>
+      ) : null}
+      <Text
+        color="textTertiary"
+        marginTop="xs"
+        variant="bodySmall"
+        onLongPress={() => {
+          setShowSignature(true)
+        }}>
+        {`Version ${getFullAppVersion()}`}
+      </Text>
+    </Flex>
   )
 }
+
+const ImageStyles = StyleSheet.create({
+  responsiveImage: {
+    aspectRatio: 135 / 76,
+    height: undefined,
+    width: '100%',
+  },
+})
+
+const SIGNATURE_VISIBLE_DURATION = ONE_SECOND_MS * 10

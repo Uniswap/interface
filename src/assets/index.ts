@@ -15,3 +15,5 @@ export const LANDING_BLUR_BACKGROUND_DARK = require('./backgrounds/landingBlurBa
 export const UNISWAP_LOGO = require('./logos/uniswap-logo.png')
 export const ONBOARDING_QR_ETCHING_VIDEO_LIGHT = require('./videos/light-etching.mp4')
 export const ONBOARDING_QR_ETCHING_VIDEO_DARK = require('./videos/dark-etching.mp4')
+export const AVATARS_LIGHT = require('./misc/avatars-light.png')
+export const AVATARS_DARK = require('./misc/avatars-dark.png')
