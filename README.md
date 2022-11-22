@@ -49,3 +49,9 @@ The Uniswap Interface supports swapping, adding liquidity, removing liquidity an
 
 The Uniswap V1 interface for mainnet and testnets is accessible via IPFS gateways
 linked from the [v1.0.0 release](https://github.com/Uniswap/uniswap-interface/releases/tag/v1.0.0).
+
+## Deploy your own Uniswap front end.
+
+Single click rapid deployment of Uniswap front end to IPFS/ Arweave/ Dfinity with 4EVERLAND.
+
+[![Deploy with 4EVERLAND](https://4ever-web.4everland.store/img/deploy.svg)](https://dashboard.4everland.org/hosting/new?type=clone-flow&s=https%3A%2F%2Fgithub.com%2FUniswap%2Finterface)
