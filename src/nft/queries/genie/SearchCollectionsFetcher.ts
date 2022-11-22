@@ -4,8 +4,10 @@ import { GenieCollection } from '../../types'
 
 const MAX_SEARCH_RESULTS = 6
 
+const NFT_API_URL = process.env.REACT_APP_GENIE_V3_API_URL
 export const fetchSearchCollections = async (addressOrName: string, recursive = false): Promise<GenieCollection[]> => {
-  const url = `${process.env.REACT_APP_GENIE_V3_API_URL}/searchCollections`
+  if (!NFT_API_URL) return Promise.resolve([])
+  const url = `${NFT_API_URL}/searchCollections`
   const isName = !isAddress(addressOrName.toLowerCase())
 
   if (!isName && !recursive) {
