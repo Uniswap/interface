@@ -104,7 +104,11 @@ function FiatOnRampModalInner() {
                 disabled={!buttonEnabled}
                 emphasis={ButtonEmphasis.Primary}
                 label={
-                  isLoading ? undefined : eligible ? t('Buy Crypto') : t('Not supported in region')
+                  isLoading
+                    ? undefined
+                    : eligible
+                    ? t('Buy Crypto')
+                    : t('Not supported in your region')
                 }
                 size={ButtonSize.Medium}
                 onPress={onPress}
