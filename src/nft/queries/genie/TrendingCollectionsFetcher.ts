@@ -7,7 +7,6 @@ export const fetchTrendingCollections = async (payload: {
   size: number
 }): Promise<TrendingCollection[]> => {
   if (!NFT_API_URL) return Promise.resolve([])
-
   const url = `${NFT_API_URL}/collections/trending`
   const r = await fetch(url, {
     method: 'POST',
