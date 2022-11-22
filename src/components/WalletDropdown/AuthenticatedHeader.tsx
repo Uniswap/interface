@@ -184,7 +184,7 @@ const AuthenticatedHeader = () => {
             <Trans>View and sell NFTs</Trans>
           </ProfileButton>
         )}
-        {isUnclaimed && (
+        {!isUnclaimed && (
           <UNIButton onClick={openClaimModal} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
             <Trans>Claim</Trans> {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} <Trans>reward</Trans>
           </UNIButton>
