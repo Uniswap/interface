@@ -1,4 +1,5 @@
 import { ActivityEventResponse, ActivityFilter } from '../../types'
+import { getNftUrl } from '../url'
 
 export const ActivityFetcher = async (
   contractAddress: string,
@@ -13,9 +14,9 @@ export const ActivityFetcher = async (
 
   const tokenId = filters?.token_id ? `&token_id=${filters?.token_id}` : ''
 
-  const url = `${process.env.REACT_APP_GENIE_V3_API_URL}/collections/${contractAddress}/activity?limit=${
-    limit ? limit : '25'
-  }${filterParam}${cursor ? `&cursor=${cursor}` : ''}${tokenId}`
+  const url = `${getNftUrl()}}/collections/${contractAddress}/activity?limit=${limit ? limit : '25'}${filterParam}${
+    cursor ? `&cursor=${cursor}` : ''
+  }${tokenId}`
 
   const r = await fetch(url, {
     method: 'GET',

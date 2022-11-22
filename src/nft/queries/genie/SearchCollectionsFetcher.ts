@@ -1,11 +1,12 @@
 import { isAddress } from '@ethersproject/address'
 
 import { GenieCollection } from '../../types'
+import { getNftUrl } from '../url'
 
 const MAX_SEARCH_RESULTS = 6
 
 export const fetchSearchCollections = async (addressOrName: string, recursive = false): Promise<GenieCollection[]> => {
-  const url = `${process.env.REACT_APP_GENIE_V3_API_URL}/searchCollections`
+  const url = `${getNftUrl()}/searchCollections`
   const isName = !isAddress(addressOrName.toLowerCase())
 
   if (!isName && !recursive) {

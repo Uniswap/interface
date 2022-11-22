@@ -1,5 +1,7 @@
+import { getNftUrl } from '../url'
+
 export const createLooksRareOrder = async (payload: any): Promise<boolean> => {
-  const url = `${process.env.REACT_APP_GENIE_V3_API_URL}/createLooksRareOrder`
+  const url = `${getNftUrl()}/createLooksRareOrder`
   const res = await fetch(url, {
     method: 'POST',
     headers: {

@@ -1,11 +1,13 @@
 import { ListingMarket, ListingRow } from 'nft/types'
 
+import { getNftUrl } from '../url'
+
 interface Listing extends ListingRow {
   marketplaces: ListingMarket[]
 }
 
 export const logListing = async (listings: ListingRow[], userAddress: string): Promise<boolean> => {
-  const url = `${process.env.REACT_APP_GENIE_V3_API_URL}/logGenieList`
+  const url = `${getNftUrl()}/logGenieList`
   const listingsConsolidated: Listing[] = listings.map((el) => ({ ...el, marketplaces: [] }))
   const marketplacesById: Record<string, ListingMarket[]> = {}
   const listingsWithMarketsConsolidated = listingsConsolidated.reduce((uniqueListings, curr) => {

@@ -1,3 +1,5 @@
+import { getNftUrl } from '../url'
+
 export const CollectionPreviewFetcher = async (
   address: string
 ): Promise<
@@ -8,7 +10,7 @@ export const CollectionPreviewFetcher = async (
     }
   ]
 > => {
-  const url = `${process.env.REACT_APP_GENIE_V3_API_URL}/collectionPreview?address=${address}`
+  const url = `${getNftUrl()}/collectionPreview?address=${address}`
 
   const controller = new AbortController()
 

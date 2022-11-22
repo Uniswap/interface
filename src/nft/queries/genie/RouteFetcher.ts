@@ -1,4 +1,5 @@
 import { GenieAsset, RouteResponse, TokenType } from '../../types'
+import { getNftUrl } from '../url'
 
 export const fetchRoute = async ({
   toSell,
@@ -9,7 +10,7 @@ export const fetchRoute = async ({
   toBuy: any
   senderAddress: string
 }): Promise<RouteResponse> => {
-  const url = `${process.env.REACT_APP_GENIE_V3_API_URL}/route`
+  const url = `${getNftUrl()}/route`
   const payload = {
     sell: [...toSell].map((x) => buildRouteItem(x)),
     buy: [...toBuy].filter((x) => x.tokenType !== 'Dust').map((x) => buildRouteItem(x)),

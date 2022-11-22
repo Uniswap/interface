@@ -1,10 +1,11 @@
 import { OrderPayload } from '../../utils/x2y2'
+import { getNftUrl } from '../url'
 
 export const X2Y2_TRANSFER_CONTRACT = '0xf849de01b080adc3a814fabe1e2087475cf2e354'
 
 export const newX2Y2Order = async (payload: OrderPayload): Promise<boolean> => {
   const body = JSON.stringify(payload)
-  const url = `${process.env.REACT_APP_GENIE_V3_API_URL}/postX2Y2SellOrderWithApiKey`
+  const url = `${getNftUrl()}/postX2Y2SellOrderWithApiKey`
   const ac = new AbortController()
   const req = new Request(url, {
     method: 'POST',
@@ -27,7 +28,7 @@ export const newX2Y2Order = async (payload: OrderPayload): Promise<boolean> => {
 }
 
 export const getOrderId = async (collectionAddress: string, tokenId: string): Promise<number | undefined> => {
-  const url = `${process.env.REACT_APP_GENIE_V3_API_URL}/getX2Y2OrderId?collectionAddress=${collectionAddress}&tokenId=${tokenId}`
+  const url = `${getNftUrl()}/getX2Y2OrderId?collectionAddress=${collectionAddress}&tokenId=${tokenId}`
   const r = await fetch(url, {
     method: 'GET',
     headers: {
