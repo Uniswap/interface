@@ -272,15 +272,15 @@ export function useURLWarningVisible(): boolean {
   return useAppSelector((state: AppState) => state.user.URLWarningVisible)
 }
 
-export function useShowNftPromoBanner(): [boolean, () => void] {
+export function useHideNftPromoBanner(): [boolean, () => void] {
   const dispatch = useAppDispatch()
-  const showNftPromoBanner = useAppSelector((state) => state.user.NFTPromoBannerVisible)
+  const hideNftPromoBanner = useAppSelector((state) => state.user.hideNFTPromoBanner)
 
-  const stopShowingNftPromoBanner = useCallback(() => {
-    dispatch(updateShowNftPromoBanner({ showNftPromoBanner: false }))
+  const toggleHideNftPromoBanner = useCallback(() => {
+    dispatch(updateShowNftPromoBanner({ hideNFTPromoBanner: true }))
   }, [dispatch])
 
-  return [showNftPromoBanner, stopShowingNftPromoBanner]
+  return [hideNftPromoBanner, toggleHideNftPromoBanner]
 }
 
 /**
