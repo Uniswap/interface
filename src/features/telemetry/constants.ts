@@ -166,6 +166,7 @@ export const enum LogContext {
   Marks = 'Marks',
   OpenUri = 'OpenUri',
   ProviderManager = 'ProviderManager',
+  RTKQuery = 'RTK-Query',
   SecurityConcern = 'SecurityConcern',
   Share = 'Share',
   TokenModel = 'TokenModel',

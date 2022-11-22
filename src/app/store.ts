@@ -1,4 +1,5 @@
-import { configureStore, Middleware } from '@reduxjs/toolkit'
+import type { Middleware } from '@reduxjs/toolkit'
+import { configureStore, isRejectedWithValue } from '@reduxjs/toolkit'
 import { MMKV } from 'react-native-mmkv'
 import { persistReducer, persistStore, Storage } from 'redux-persist'
 import createSagaMiddleware from 'redux-saga'
@@ -13,6 +14,8 @@ import { fiatOnRampApi } from 'src/features/fiatOnRamp/api'
 import { forceUpgradeApi } from 'src/features/forceUpgrade/forceUpgradeApi'
 import { gasApi } from 'src/features/gas/api'
 import { routingApi } from 'src/features/routing/routingApi'
+import { logException } from 'src/features/telemetry'
+import { LogContext } from 'src/features/telemetry/constants'
 import { trmApi } from 'src/features/trm/api'
 
 const storage = new MMKV()
@@ -39,6 +42,14 @@ const sagaMiddleware = createSagaMiddleware({
     contracts: walletContextValue.contracts,
   },
 })
+
+const rtkQueryErrorLogger: Middleware = () => (next) => (action) => {
+  if (isRejectedWithValue(action)) {
+    logException(LogContext.RTKQuery, action.payload ?? action.error)
+  }
+
+  return next(action)
+}
 
 export const persistConfig = {
   key: 'root',
@@ -93,6 +104,7 @@ export const store = configureStore({
       routingApi.middleware,
       trmApi.middleware,
       sagaMiddleware,
+      rtkQueryErrorLogger,
       ...middlewares
     ),
   devTools: config.debug,
