@@ -147,6 +147,7 @@ export const getListings = (sellAssets: WalletAsset[]): [CollectionRow[], Listin
         status: ListingStatus.DEFINED,
         asset,
         marketplace,
+        price: asset.newListings?.find((listing) => listing.marketplace.name === marketplace.name)?.price,
       }
       newListings.push(newListing)
       if (
