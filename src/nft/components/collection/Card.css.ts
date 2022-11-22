@@ -113,7 +113,7 @@ export const rarityInfo = style([
 
 export const playbackSwitch = style([
   sprinkles({
-    position: 'absolute',
+    position: 'fixed',
     width: '40',
     height: '40',
     zIndex: '1',
