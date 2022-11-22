@@ -1,3 +1,4 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { useWeb3React } from '@web3-react/core'
 import uniswapNftAirdropClaim from 'abis/uniswap-nft-airdrop-claim.json'
 import airdropBackgroundv2 from 'assets/images/airdopBackground.png'
@@ -7,16 +8,15 @@ import Loader from 'components/Loader'
 import { UNISWAP_NFT_AIRDROP_CLAIM_ADDRESS } from 'constants/addresses'
 import { useContract } from 'hooks/useContract'
 import { ChevronRightIcon } from 'nft/components/icons'
+import { useIsClaimAvailable } from 'nft/hooks/useClaimsAvailable'
 import { CollectionRewardsFetcher, Rewards, RewardType } from 'nft/queries/genie/GetAirdorpMerkle'
 import { useEffect, useState } from 'react'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components/macro'
 import { CloseIcon, ThemedText } from 'theme'
-import { BigNumber, utils } from 'ethers'
 
 import Modal from '../Modal'
-import { useIsClaimAvailable } from 'nft/hooks/useClaimsAvailable'
 
 const ModalWrap = styled.div`
   display: flex;
@@ -158,7 +158,6 @@ const AirdropModal = () => {
   const [totalAmount, setTotalAmount] = useState(300)
   const isOpen = useModalIsOpen(ApplicationModal.UNISWAP_NFT_AIRDROP_CLAIM)
   const usdcAirdropToggle = useToggleModal(ApplicationModal.UNISWAP_NFT_AIRDROP_CLAIM)
-  //
   const contract = useContract(UNISWAP_NFT_AIRDROP_CLAIM_ADDRESS, uniswapNftAirdropClaim)
 
   useEffect(() => {
@@ -180,12 +179,11 @@ const AirdropModal = () => {
         }
       })()
     }
-  }, [account, contract, provider])
+  }, [account, contract, provider, setIsClaimAvailable])
 
   const makeClaim = async () => {
     try {
       if (contract && claim && claim.amount && claim.merkleProof && provider) {
-        console.log('claiming..')
         setIsSubmitting(true)
         await contract.connect(provider?.getSigner()).functions.claim(claim?.amount, claim?.merkleProof)
         setIsSubmitting(false)
