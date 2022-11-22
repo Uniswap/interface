@@ -99,17 +99,26 @@ const ListingModal = () => {
       setOpenIndex(1)
     }
     const looksRareAddress = addresses.TRANSFER_MANAGER_ERC721
-    // for all unqiue collection, marketplace combos -> approve collections
+    // for all unique collection, marketplace combos -> approve collections
     for (const collectionRow of collectionsRequiringApproval) {
       verifyStatus(collectionRow.status) &&
-        (await approveCollectionRow(
-          collectionRow,
-          collectionsRequiringApproval,
-          setCollectionsRequiringApproval,
-          signer,
-          looksRareAddress,
-          pauseAllRows
-        ))
+        (isMobile
+          ? await approveCollectionRow(
+              collectionRow,
+              collectionsRequiringApproval,
+              setCollectionsRequiringApproval,
+              signer,
+              looksRareAddress,
+              pauseAllRows
+            )
+          : approveCollectionRow(
+              collectionRow,
+              collectionsRequiringApproval,
+              setCollectionsRequiringApproval,
+              signer,
+              looksRareAddress,
+              pauseAllRows
+            ))
     }
   }
 
