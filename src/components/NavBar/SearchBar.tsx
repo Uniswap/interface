@@ -14,7 +14,7 @@ import { magicalGradientOnHover } from 'nft/css/common.css'
 import { useIsMobile, useIsTablet } from 'nft/hooks'
 import { fetchSearchCollections } from 'nft/queries'
 import { fetchSearchTokens } from 'nft/queries/genie/SearchTokensFetcher'
-import { ChangeEvent, useCallback, useEffect, useReducer, useRef, useState } from 'react'
+import { ChangeEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -121,12 +121,13 @@ export const SearchBar = () => {
     hasInput: debouncedSearchValue && debouncedSearchValue.length > 0,
     ...trace,
   }
-  const placeholderText =
-    phase1Flag === NftVariant.Enabled
+  const placeholderText = useMemo(() => {
+    return phase1Flag === NftVariant.Enabled
       ? isMobileOrTablet
         ? t`Search`
         : t`Search tokens and NFT collections`
       : t`Search tokens`
+  }, [phase1Flag, isMobileOrTablet])
 
   const handleKeyPress = useCallback(
     (event: any) => {
