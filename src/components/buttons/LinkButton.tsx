@@ -11,8 +11,8 @@ interface LinkButtonProps extends Omit<BaseButtonProps, 'onPress'> {
   label: string
   url: string
   isSafeUri?: boolean
-  color?: keyof Theme['colors']
-  iconColor?: keyof Theme['colors']
+  color?: string
+  iconColor?: string
   size?: number
   textVariant?: keyof Theme['textVariants']
 }
@@ -32,15 +32,11 @@ export function LinkButton({
   return (
     <TouchableArea onPress={() => openUri(url, isSafeUri)} {...rest}>
       <Flex row alignItems="center" gap="xxxs" justifyContent={justifyContent}>
-        <Text color={color} variant={textVariant}>
+        <Text style={{ color: color }} variant={textVariant}>
           {label}
         </Text>
         <Arrow
-          color={
-            (iconColor && theme.colors[iconColor]) ??
-            (color && theme.colors[color]) ??
-            theme.colors.textSecondary
-          }
+          color={iconColor ?? color ?? theme.colors.textSecondary}
           direction="ne"
           size={size}
         />

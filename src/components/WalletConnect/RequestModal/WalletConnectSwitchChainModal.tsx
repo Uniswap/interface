@@ -1,5 +1,6 @@
 import React, { ComponentProps, useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { useAppTheme } from 'src/app/hooks'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { LinkButton } from 'src/components/buttons/LinkButton'
 import { Box, Flex } from 'src/components/layout'
@@ -26,6 +27,7 @@ const spacerProps: ComponentProps<typeof Box> = {
 
 export function WalletConnectSwitchChainModal({ onClose, request }: Props) {
   const { t } = useTranslation()
+  const theme = useAppTheme()
 
   /**
    * TODO: implement this behavior in a less janky way. Ideally if we can distinguish between `onClose` being called programmatically and `onClose` as a results of a user dismissing the modal then we can determine what this value should be without this class variable.
@@ -74,7 +76,7 @@ export function WalletConnectSwitchChainModal({ onClose, request }: Props) {
           <LinkButton
             backgroundColor="accentActiveSoft"
             borderRadius="sm"
-            color="accentActive"
+            color={theme.colors.accentActive}
             label={dapp.url}
             p="xs"
             textVariant="buttonLabelMicro"

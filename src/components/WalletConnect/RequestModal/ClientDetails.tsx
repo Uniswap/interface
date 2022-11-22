@@ -1,4 +1,5 @@
 import React from 'react'
+import { useAppTheme } from 'src/app/hooks'
 import { LinkButton } from 'src/components/buttons/LinkButton'
 import { Flex } from 'src/components/layout'
 import { HeaderIcon } from 'src/components/WalletConnect/RequestModal/HeaderIcon'
@@ -19,6 +20,7 @@ export function ClientDetails({
   permitInfo?: PermitInfo
 }) {
   const { dapp } = request
+  const theme = useAppTheme()
 
   const permitCurrency = useCurrency(permitInfo?.currencyId)
 
@@ -34,8 +36,8 @@ export function ClientDetails({
         <LinkButton
           backgroundColor="accentActiveSoft"
           borderRadius="sm"
-          color="accentActive"
-          iconColor="textSecondary"
+          color={theme.colors.accentActive}
+          iconColor={theme.colors.textSecondary}
           label={dapp.url}
           mt="xs"
           px="xs"

@@ -229,7 +229,6 @@ export function NFTItemScreen({
             ) : asset?.description ? (
               <LongText
                 renderAsMarkdown
-                color="textPrimary"
                 initialDisplayedLines={12}
                 text={asset?.description || '-'}
               />

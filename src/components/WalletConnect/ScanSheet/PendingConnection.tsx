@@ -157,6 +157,7 @@ const SwitchAccountRow = ({ activeAddress, setModalState }: SwitchAccountProps) 
 
 export const PendingConnection = ({ pendingSession, onClose }: Props) => {
   const { t } = useTranslation()
+  const theme = useAppTheme()
   const activeAddress = useActiveAccountAddressWithThrow()
   const dispatch = useAppDispatch()
   const activeAccount = useActiveAccountWithThrow()
@@ -215,7 +216,7 @@ export const PendingConnection = ({ pendingSession, onClose }: Props) => {
           <LinkButton
             backgroundColor="accentActiveSoft"
             borderRadius="sm"
-            color="accentActive"
+            color={theme.colors.accentActive}
             label={pendingSession.dapp.url}
             mb="sm"
             p="xs"

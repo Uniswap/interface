@@ -1,6 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useAppTheme } from 'src/app/hooks'
 import { LinkButton } from 'src/components/buttons/LinkButton'
 import { Flex } from 'src/components/layout'
 import { Shimmer } from 'src/components/loading/Shimmer'
@@ -84,11 +85,14 @@ export function TokenDetailsMarketData({
 export function TokenDetailsStats({
   currency,
   data,
+  tokenColor,
 }: {
   currency: Currency
   data: TokenDetailsScreenQuery | undefined
+  tokenColor?: NullUndefined<string>
 }) {
   const { t } = useTranslation()
+  const theme = useAppTheme()
 
   const tokenData = data?.tokens?.[0]
   const tokenProjectData = tokenData?.project
@@ -121,13 +125,15 @@ export function TokenDetailsStats({
             <LongText
               gap="xxxs"
               initialDisplayedLines={5}
+              linkColor={tokenColor ?? theme.colors.textPrimary}
+              readMoreOrLessColor={tokenColor ?? theme.colors.accentAction}
               text={tokenProjectData.description.trim()}
             />
           )}
           <Flex row>
             {tokenProjectData?.homepageUrl && (
               <LinkButton
-                color="accentAction"
+                color={tokenColor ?? theme.colors.textSecondary}
                 label={t('Website')}
                 textVariant="buttonLabelSmall"
                 url={tokenProjectData.homepageUrl}
@@ -135,14 +141,14 @@ export function TokenDetailsStats({
             )}
             {tokenProjectData?.twitterName && (
               <LinkButton
-                color="accentAction"
+                color={tokenColor ?? theme.colors.textSecondary}
                 label={t('Twitter')}
                 textVariant="buttonLabelSmall"
                 url={getTwitterLink(tokenProjectData.twitterName)}
               />
             )}
             <LinkButton
-              color="accentAction"
+              color={tokenColor ?? theme.colors.textSecondary}
               label={t('Etherscan')}
               textVariant="buttonLabelSmall"
               url={explorerLink}

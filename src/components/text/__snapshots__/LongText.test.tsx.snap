@@ -28,6 +28,9 @@ exports[`renders a LongText 1`] = `
           "fontSize": 14,
           "lineHeight": 20,
         },
+        Object {
+          "color": "#0D111C",
+        },
       ]
     }
   >

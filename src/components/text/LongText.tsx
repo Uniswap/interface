@@ -12,8 +12,9 @@ type LongTextProps = {
   initialDisplayedLines?: number
   text: string
   gap?: keyof Theme['spacing']
-  color?: keyof Theme['colors']
-  linkColor?: keyof Theme['colors']
+  color?: string
+  linkColor?: string
+  readMoreOrLessColor?: string
   renderAsMarkdown?: boolean
   variant?: keyof Theme['textVariants']
 } & Omit<
@@ -21,17 +22,19 @@ type LongTextProps = {
   'children' | 'numberOfLines' | 'onTextLayout' | 'color' | 'variant'
 >
 
-export function LongText({
-  initialDisplayedLines = 3,
-  text,
-  gap = 'xs',
-  color = 'textPrimary',
-  linkColor = 'accentAction',
-  renderAsMarkdown = false,
-  variant = 'bodySmall',
-  ...rest
-}: LongTextProps) {
+export function LongText(props: LongTextProps) {
   const theme = useAppTheme()
+  const {
+    initialDisplayedLines = 3,
+    text,
+    gap = 'xs',
+    color = theme.colors.textPrimary,
+    linkColor = theme.colors.accentAction,
+    readMoreOrLessColor = theme.colors.accentAction,
+    renderAsMarkdown = false,
+    variant = 'bodySmall',
+    ...rest
+  } = props
   const [maximized, toggleMaximized] = useReducer(
     (isMaximized) => !isMaximized,
     renderAsMarkdown ? true : false
@@ -65,18 +68,18 @@ export function LongText({
   return (
     <Flex gap={gap}>
       <Text
-        color={color}
         numberOfLines={maximized ? undefined : initialDisplayedLines}
         style={
           renderAsMarkdown
             ? {
+                color: color,
                 height:
                   !textLengthExceedsLimit || maximized
                     ? 'auto'
                     : maxVisibleHeight - theme.spacing.xxxs,
                 overflow: 'hidden',
               }
-            : null
+            : { color: color }
         }
         variant={variant}
         onLayout={onLayout}
@@ -85,8 +88,8 @@ export function LongText({
         {renderAsMarkdown ? (
           <Markdown
             style={{
-              body: { color: theme.colors[color] },
-              link: { color: theme.colors[linkColor] },
+              body: { color: color },
+              link: { color: linkColor },
               paragraph: {
                 marginBottom: 0,
                 marginTop: 0,
@@ -108,7 +111,7 @@ export function LongText({
 
       {textLengthExceedsLimit ? (
         <Text
-          color="accentAction"
+          style={{ color: readMoreOrLessColor }}
           testID="read-more-button"
           variant="buttonLabelSmall"
           onPress={toggleMaximized}>
