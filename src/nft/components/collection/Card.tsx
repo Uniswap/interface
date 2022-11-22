@@ -190,7 +190,7 @@ const StyledAddAffordance = styled.div`
   gap: 8px;
 `
 
-const StyledToopTipAffordance = styled.div<{ showTooltip: boolean }>`
+const StyledToolTipAffordance = styled.div<{ showTooltip: boolean }>`
   opacity: ${({ showTooltip }) => (showTooltip ? '1' : '0')};
   display: flex;
   flex-direction: row;
@@ -305,6 +305,14 @@ const ImageContainer = ({
   }, [hovered])
 
   const toggleHover = useCallback(() => toggleHovered(), [])
+  const ToolTipAffordance = () => {
+    return (
+      <StyledToolTipAffordance showTooltip={showTooltip}>
+        {selected ? (isListing ? 'Removed' : 'Removed from bag') : null}
+        {!selected ? (isListing ? 'Added' : 'Added to bag') : null}
+      </StyledToolTipAffordance>
+    )
+  }
 
   if (hovered) {
     return (
@@ -315,11 +323,7 @@ const ImageContainer = ({
         onMouseLeave={toggleHover}
       >
         <StyledHoverContainer>
-          <StyledToopTipAffordance showTooltip={showTooltip}>
-            {selected ? (isListing ? 'Removed' : 'Removed from bag') : null}
-            {!selected ? (isListing ? 'Added' : 'Added to bag') : null}
-          </StyledToopTipAffordance>
-
+          <ToolTipAffordance />
           {!isDisabled && !showTooltip ? (
             <StyledAddAffordance>
               {!selected ? (
@@ -351,10 +355,7 @@ const ImageContainer = ({
     <StyledImageContainer ref={imageRef} isDisabled={isDisabled} onMouseEnter={toggleHover} onMouseLeave={toggleHover}>
       {showTooltip && (
         <StyledToolTipContainer>
-          <StyledToopTipAffordance showTooltip={showTooltip}>
-            {selected ? isListing ? <>Removed</> : <>Removed from bag</> : null}
-            {!selected ? isListing ? <>Added</> : <>Added to bag</> : null}
-          </StyledToopTipAffordance>
+          <ToolTipAffordance />
         </StyledToolTipContainer>
       )}
       {children}
