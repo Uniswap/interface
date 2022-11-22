@@ -106,8 +106,14 @@ function getCurrentPageFromLocation(locationPathname: string): PageName | undefi
       return PageName.POOL_PAGE
     case locationPathname.startsWith('/tokens'):
       return PageName.TOKENS_PAGE
-    case locationPathname.startsWith('/nft'):
-      return PageName.NFT_PAGE
+    case locationPathname.startsWith('/nfts/profile'):
+      return PageName.NFT_PROFILE_PAGE
+    case locationPathname.startsWith('/nfts/asset'):
+      return PageName.NFT_DETAILS_PAGE
+    case locationPathname.startsWith('/nfts/collection'):
+      return PageName.NFT_COLLECTION_PAGE
+    case locationPathname.startsWith('/nfts'):
+      return PageName.NFT_EXPLORE_PAGE
     default:
       return undefined
   }
