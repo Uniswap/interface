@@ -854,6 +854,13 @@ export type NftsTabQueryVariables = Exact<{
 
 export type NftsTabQuery = { __typename?: 'Query', nftBalances?: { __typename?: 'NftBalanceConnection', edges: Array<{ __typename?: 'NftBalanceEdge', node: { __typename?: 'NftBalance', ownedAsset?: { __typename?: 'NftAsset', id: string, name?: string | null, tokenId: string, description?: string | null, collection?: { __typename?: 'NftCollection', id: string, name?: string | null, isVerified?: boolean | null, markets?: Array<{ __typename?: 'NftCollectionMarket', id: string, floorPrice?: { __typename?: 'TimestampedAmount', value: number } | null }> | null } | null, image?: { __typename?: 'Image', id: string, url: string } | null, nftContract?: { __typename?: 'NftContract', id: string, address: string } | null } | null } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null, hasPreviousPage?: boolean | null, startCursor?: string | null } } | null };
 
+export type PortfolioTotalValuesQueryVariables = Exact<{
+  addresses: Array<Scalars['String']> | Scalars['String'];
+}>;
+
+
+export type PortfolioTotalValuesQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', id: string, tokensTotalDenominatedValue?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null };
+
 export type PortfolioBalancesQueryVariables = Exact<{
   ownerAddress: Scalars['String'];
 }>;
@@ -1247,6 +1254,45 @@ export function useNftsTabLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Nf
 export type NftsTabQueryHookResult = ReturnType<typeof useNftsTabQuery>;
 export type NftsTabLazyQueryHookResult = ReturnType<typeof useNftsTabLazyQuery>;
 export type NftsTabQueryResult = Apollo.QueryResult<NftsTabQuery, NftsTabQueryVariables>;
+export const PortfolioTotalValuesDocument = gql`
+    query PortfolioTotalValues($addresses: [String!]!) {
+  portfolios(ownerAddresses: $addresses) {
+    id
+    tokensTotalDenominatedValue {
+      id
+      value
+    }
+  }
+}
+    `;
+
+/**
+ * __usePortfolioTotalValuesQuery__
+ *
+ * To run a query within a React component, call `usePortfolioTotalValuesQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePortfolioTotalValuesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePortfolioTotalValuesQuery({
+ *   variables: {
+ *      addresses: // value for 'addresses'
+ *   },
+ * });
+ */
+export function usePortfolioTotalValuesQuery(baseOptions: Apollo.QueryHookOptions<PortfolioTotalValuesQuery, PortfolioTotalValuesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PortfolioTotalValuesQuery, PortfolioTotalValuesQueryVariables>(PortfolioTotalValuesDocument, options);
+      }
+export function usePortfolioTotalValuesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PortfolioTotalValuesQuery, PortfolioTotalValuesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PortfolioTotalValuesQuery, PortfolioTotalValuesQueryVariables>(PortfolioTotalValuesDocument, options);
+        }
+export type PortfolioTotalValuesQueryHookResult = ReturnType<typeof usePortfolioTotalValuesQuery>;
+export type PortfolioTotalValuesLazyQueryHookResult = ReturnType<typeof usePortfolioTotalValuesLazyQuery>;
+export type PortfolioTotalValuesQueryResult = Apollo.QueryResult<PortfolioTotalValuesQuery, PortfolioTotalValuesQueryVariables>;
 export const PortfolioBalancesDocument = gql`
     query PortfolioBalances($ownerAddress: String!) {
   portfolios(ownerAddresses: [$ownerAddress]) {

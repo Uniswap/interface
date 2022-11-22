@@ -1,3 +1,4 @@
+import { useDrawerStatus } from '@react-navigation/drawer'
 import { LinearGradient } from 'expo-linear-gradient'
 import { ComponentProps, default as React, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -8,6 +9,9 @@ import { AccountCardItem } from 'src/components/accounts/AccountCardItem'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { PollingInterval } from 'src/constants/misc'
+import { isNonPollingRequestInFlight } from 'src/data/utils'
+import { usePortfolioTotalValuesQuery } from 'src/data/__generated__/types-and-hooks'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { spacing } from 'src/styles/sizing'
@@ -17,13 +21,39 @@ type AccountListProps = Pick<ComponentProps<typeof AccountCardItem>, 'onPress' |
   onAddWallet: () => void
 }
 
+type AccountWithPortfolioValue = {
+  account: Account
+  isPortfolioValueLoading: boolean
+  portfolioValue: NullUndefined<number>
+}
+
 const STICKY_HEADER_INDICES = [0]
 
 export function AccountList({ accounts, onAddWallet, onPressEdit, onPress }: AccountListProps) {
   const { t } = useTranslation()
   const theme = useAppTheme()
-
+  const isDrawerOpen = useDrawerStatus() === 'open'
   const activeAccount = useActiveAccount()
+  const addresses = accounts.map((a) => a.address)
+
+  const { data, networkStatus } = usePortfolioTotalValuesQuery({
+    variables: { addresses },
+    notifyOnNetworkStatusChange: true,
+    pollInterval: PollingInterval.Fast,
+    skip: !isDrawerOpen, // Only poll account total value when the AccountDrawer is open
+  })
+
+  const isPortfolioValueLoading = isNonPollingRequestInFlight(networkStatus)
+
+  const accountsWithPortfolioValue = useMemo(() => {
+    return accounts.map((account, i) => {
+      return {
+        account,
+        isPortfolioValueLoading,
+        portfolioValue: data?.portfolios?.[i]?.tokensTotalDenominatedValue?.value,
+      } as AccountWithPortfolioValue
+    })
+  }, [accounts, data, isPortfolioValueLoading])
 
   const ListHeader = useMemo(
     () => (
@@ -53,12 +83,14 @@ export function AccountList({ accounts, onAddWallet, onPressEdit, onPress }: Acc
 
   const renderItem = useMemo(
     () =>
-      ({ item }: ListRenderItemInfo<Account>) => {
+      ({ item }: ListRenderItemInfo<AccountWithPortfolioValue>) => {
         return (
           <AccountCardItem
-            account={item}
-            isActive={!!activeAccount && activeAccount.address === item.address}
-            isViewOnly={item.type === AccountType.Readonly}
+            address={item.account.address}
+            isActive={!!activeAccount && activeAccount.address === item.account.address}
+            isPortfolioValueLoading={item.isPortfolioValueLoading}
+            isViewOnly={item.account.type === AccountType.Readonly}
+            portfolioValue={item.portfolioValue}
             onPress={onPress}
             onPressEdit={onPressEdit}
           />
@@ -73,7 +105,7 @@ export function AccountList({ accounts, onAddWallet, onPressEdit, onPress }: Acc
         ListFooterComponent={<Box height={theme.spacing.lg} />}
         ListHeaderComponent={ListHeader}
         bounces={false}
-        data={accounts}
+        data={accountsWithPortfolioValue}
         keyExtractor={key}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
@@ -89,7 +121,7 @@ export function AccountList({ accounts, onAddWallet, onPressEdit, onPress }: Acc
   )
 }
 
-const key = (account: Account) => account.address
+const key = (a: AccountWithPortfolioValue) => a.account.address
 
 const ListSheet = StyleSheet.create({
   gradient: {
