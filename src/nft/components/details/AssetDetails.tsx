@@ -6,7 +6,6 @@ import { reduceFilters } from 'nft/components/collection/Activity'
 import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import { Center } from 'nft/components/Flex'
-import { VerifiedIcon } from 'nft/components/icons'
 import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
 import { ActivityEventResponse, ActivityEventType, CollectionInfoForAsset, GenieAsset } from 'nft/types'
 import { shortenAddress } from 'nft/utils/address'
@@ -27,32 +26,12 @@ import DetailsContainer from './DetailsContainer'
 import InfoContainer from './InfoContainer'
 import TraitsContainer from './TraitsContainer'
 
-const CollectionHeader = styled.span`
-  display: flex;
-  align-items: center;
-  font-size: 16px;
-  line-height: 24px;
-  color: ${({ theme }) => theme.textPrimary};
-  margin-top: 28px;
-  text-decoration: none;
-  ${OpacityHoverState};
-`
-
 const AssetPriceDetailsContainer = styled.div`
   margin-top: 20px;
   display: none;
   @media (max-width: 960px) {
     display: block;
   }
-`
-
-const AssetHeader = styled.div`
-  display: flex;
-  align-items: center;
-  font-size: 36px;
-  line-height: 36px;
-  color: ${({ theme }) => theme.textPrimary};
-  margin-top: 8px;
 `
 
 const MediaContainer = styled.div`
@@ -118,10 +97,6 @@ const Link = styled(RouterLink)`
   ${OpacityHoverState};
 `
 
-const DefaultLink = styled(RouterLink)`
-  text-decoration: none;
-`
-
 const ActivitySelectContainer = styled.div`
   display: flex;
   gap: 8px;
@@ -150,8 +125,11 @@ const ContentNotAvailable = styled.div`
 const FilterBox = styled.div<{ isActive?: boolean }>`
   box-sizing: border-box;
   background-color: ${({ theme }) => theme.backgroundInteractive};
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 14px;
   color: ${({ theme }) => theme.textPrimary};
-  padding: 12px 16px;
+  padding: 8px 16px;
   border-radius: 12px;
   cursor: pointer;
   box-sizing: border-box;
@@ -383,43 +361,39 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
           <AssetView asset={asset} mediaType={assetMediaType} dominantColor={dominantColor} />
         )}
       </MediaContainer>
-      <DefaultLink to={`/nfts/collection/${asset.address}`}>
-        <CollectionHeader>
-          {collection.collectionName} {collection.isVerified && <VerifiedIcon />}
-        </CollectionHeader>
-      </DefaultLink>
-
-      <AssetHeader>{asset.name ?? `${asset.collectionName} #${asset.tokenId}`}</AssetHeader>
       <AssetPriceDetailsContainer>
         <AssetPriceDetails asset={asset} collection={collection} />
       </AssetPriceDetailsContainer>
-      <InfoContainer
-        primaryHeader="Traits"
-        defaultOpen
-        secondaryHeader={
-          rarityProvider && rarity && rarity.score ? (
-            <MouseoverTooltip
-              text={
-                <HoverContainer>
-                  <HoverImageContainer>
-                    <img src={rarityProviderLogo} alt="cardLogo" width={16} />
-                  </HoverImageContainer>
-                  <ContainerText>
-                    {`Ranking by ${rarity.provider === 'Genie' ? fallbackProvider : rarity.provider}`}
-                  </ContainerText>
-                </HoverContainer>
-              }
-              placement="top"
-            >
-              <RarityWrap>Rarity: {putCommas(rarity.score)}</RarityWrap>
-            </MouseoverTooltip>
-          ) : null
-        }
-      >
-        <TraitsContainer asset={asset} />
-      </InfoContainer>
+      {asset.traits && (
+        <InfoContainer
+          primaryHeader="Traits"
+          defaultOpen
+          secondaryHeader={
+            rarityProvider && rarity && rarity.score ? (
+              <MouseoverTooltip
+                text={
+                  <HoverContainer>
+                    <HoverImageContainer>
+                      <img src={rarityProviderLogo} alt="cardLogo" width={16} />
+                    </HoverImageContainer>
+                    <ContainerText>
+                      {`Ranking by ${rarity.provider === 'Genie' ? fallbackProvider : rarity.provider}`}
+                    </ContainerText>
+                  </HoverContainer>
+                }
+                placement="top"
+              >
+                <RarityWrap>Rarity: {putCommas(rarity.score)}</RarityWrap>
+              </MouseoverTooltip>
+            ) : null
+          }
+        >
+          <TraitsContainer asset={asset} />
+        </InfoContainer>
+      )}
       <InfoContainer
         primaryHeader="Activity"
+        defaultOpen
         secondaryHeader={formattedPrice ? `Last Sale: ${formattedPrice} ETH` : undefined}
       >
         <>

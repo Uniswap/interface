@@ -28,3 +28,11 @@ export const getAssetHref = (asset: GenieAsset | WalletAsset, origin?: DetailsOr
 export const getMarketplaceIcon = (marketplace: string) => {
   return `/nft/svgs/marketplaces/${marketplace.toLowerCase()}.svg`
 }
+
+export const generateTweetForAsset = (asset: GenieAsset): string => {
+  return `https://twitter.com/intent/tweet?text=Check%20out%20${
+    asset.name ?? `${asset.collectionName}%20%23${asset.tokenId}`
+  }%20(${asset.collectionName})%20https://app.uniswap.org/%23/nfts/asset/${asset.address}/${
+    asset.tokenId
+  }%20via%20@uniswap`
+}

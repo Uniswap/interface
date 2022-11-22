@@ -48,8 +48,8 @@ export const tokenQuery = graphql`
         twitterName
         logoUrl
         tokens {
-          chain
-          address
+          chain @required(action: LOG)
+          address @required(action: LOG)
         }
       }
     }

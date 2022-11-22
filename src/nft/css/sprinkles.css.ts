@@ -7,6 +7,7 @@ const themeContractValues = {
     accentFailureSoft: '',
     accentAction: '',
     accentActionSoft: '',
+    accentSuccess: '',
 
     explicitWhite: '',
     gold: '',
@@ -177,6 +178,7 @@ export const vars = createGlobalTheme(':root', {
     gold200: '#EEB317',
     gold400: '#B17900',
     green200: '#5CFE9D',
+    green300: '#40B66B',
     green400: '#1A9550',
     violet200: '#BDB8FA',
     violet400: '#7A7BEB',
