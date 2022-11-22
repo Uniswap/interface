@@ -126,7 +126,7 @@ const SyledCloseIcon = styled(CloseIcon)`
 
 const Error = styled.div`
   display: flex;
-  color: #fd766b;
+  color: ${({ theme }) => theme.accentCritical};
   font-weight: 500;
   line-height: 24px;
   border-radius: 16px;
@@ -169,7 +169,7 @@ const AirdropModal = () => {
   const { account, provider } = useWeb3React()
   const [claim, setClaim] = useState<Rewards>()
   const [isClaimed, setIsClaimed] = useState(false)
-  const [error, setError] = useState(false)
+  const [error, setError] = useState(true)
   const setIsClaimAvailable = useIsClaimAvailable((state) => state.setIsClaimAvailable)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [totalAmount, setTotalAmount] = useState(300)
