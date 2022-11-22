@@ -36,7 +36,11 @@ const NftExplore = () => {
           <Banner />
           <TrendingCollections />
         </ExploreContainer>
-        <WelcomeModal />
+        <WelcomeModal
+          onDismiss={() => {
+            console.log('a')
+          }}
+        />
       </Trace>
     </>
   )
