@@ -1,17 +1,26 @@
 import { useWeb3React } from '@web3-react/core'
 import { OpacityHoverState } from 'components/Common'
 import { useNftBalanceQuery } from 'graphql/data/nft/NftBalance'
-import useCopyClipboard from 'hooks/useCopyClipboard'
-import { CancelListingIcon } from 'nft/components/icons'
+import { CancelListingIcon, VerifiedIcon } from 'nft/components/icons'
 import { useBag, useProfilePageState, useSellAsset } from 'nft/hooks'
 import { CollectionInfoForAsset, GenieAsset, ProfilePageStateType, WalletAsset } from 'nft/types'
-import { ethNumberStandardFormatter, formatEthPrice, getMarketplaceIcon, timeLeft, useUsdPrice } from 'nft/utils'
+import {
+  ethNumberStandardFormatter,
+  formatEthPrice,
+  generateTweetForAsset,
+  getMarketplaceIcon,
+  timeLeft,
+  useUsdPrice,
+} from 'nft/utils'
 import { shortenAddress } from 'nft/utils/address'
 import { useMemo } from 'react'
 import { Upload } from 'react-feather'
 import { Link, useNavigate } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
+
+const TWITTER_WIDTH = 560
+const TWITTER_HEIGHT = 480
 
 interface AssetPriceDetailsProps {
   asset: GenieAsset
@@ -45,12 +54,15 @@ const hoverState = css`
 `
 
 const Container = styled.div`
+  display: flex;
+  flex-direction: column;
   width: 100%;
+  gap: 24px;
 
-  @media (min-width: 960px) {
+  @media (min-width: calc(960px + 1px)) {
     position: fixed;
     width: 360px;
-    margin-top: -6px;
+    margin-top: 20px;
   }
 `
 
@@ -129,7 +141,8 @@ const DiscoveryContainer = styled.div`
 `
 
 const OwnerText = styled.a`
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 600;
   line-height: 20px;
   color: ${({ theme }) => theme.textSecondary};
   text-decoration: none;
@@ -140,9 +153,48 @@ const OwnerText = styled.a`
 const OwnerInformationContainer = styled.div`
   color: ${({ theme }) => theme.textSecondary};
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   padding: 0 8px;
-  margin-bottom: 20px;
+`
+
+const AssetInfoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`
+
+const AssetHeader = styled.div`
+  display: -webkit-box;
+  align-items: center;
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 36px;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: ${({ theme }) => theme.textPrimary};
+`
+
+const CollectionNameContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
+
+const CollectionHeader = styled.span`
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  color: ${({ theme }) => theme.textPrimary};
+  text-decoration: none;
+  ${OpacityHoverState};
+`
+
+const DefaultLink = styled(Link)`
+  text-decoration: none;
 `
 
 export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
@@ -168,48 +220,46 @@ export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
   }
 
   return (
-    <Container>
-      <BestPriceContainer>
-        <HeaderRow>
-          <ThemedText.SubHeader fontWeight={500} lineHeight="24px">
-            {listing ? 'Your Price' : 'List for Sale'}
-          </ThemedText.SubHeader>
-          {listing && <MarketplaceIcon alt={listing.marketplace} src={getMarketplaceIcon(listing.marketplace)} />}
-        </HeaderRow>
-        <PriceRow>
-          {listing ? (
-            <>
-              <ThemedText.MediumHeader fontSize="28px" lineHeight="36px">
-                {formatEthPrice(asset.priceInfo.ETHPrice)}
-              </ThemedText.MediumHeader>
-              {USDPrice && (
-                <ThemedText.BodySecondary lineHeight="24px">
-                  {ethNumberStandardFormatter(USDPrice, true, true)}
-                </ThemedText.BodySecondary>
-              )}
-            </>
-          ) : (
-            <ThemedText.BodySecondary fontSize="14px" lineHeight="20px">
-              Get the best price for your NFT by selling with Uniswap.
-            </ThemedText.BodySecondary>
-          )}
-        </PriceRow>
-        {expirationDate && (
-          <ThemedText.BodySecondary fontSize="14px">Sale ends: {timeLeft(expirationDate)}</ThemedText.BodySecondary>
-        )}
-        {!listing ? (
-          <BuyNowButton assetInBag={false} margin={true} useAccentColor={true} onClick={goToListPage}>
-            <ThemedText.SubHeader lineHeight="20px">List</ThemedText.SubHeader>
-          </BuyNowButton>
-        ) : (
+    <BestPriceContainer>
+      <HeaderRow>
+        <ThemedText.SubHeader color="accentAction" fontWeight={500} lineHeight="24px">
+          {listing ? 'Your Price' : 'List for Sale'}
+        </ThemedText.SubHeader>
+        {listing && <MarketplaceIcon alt={listing.marketplace} src={getMarketplaceIcon(listing.marketplace)} />}
+      </HeaderRow>
+      <PriceRow>
+        {listing ? (
           <>
-            <BuyNowButton assetInBag={false} margin={true} useAccentColor={false} onClick={goToListPage}>
-              <ThemedText.SubHeader lineHeight="20px">Adjust listing</ThemedText.SubHeader>
-            </BuyNowButton>
+            <ThemedText.MediumHeader fontSize="28px" lineHeight="36px">
+              {formatEthPrice(asset.priceInfo.ETHPrice)}
+            </ThemedText.MediumHeader>
+            {USDPrice && (
+              <ThemedText.BodySecondary lineHeight="24px">
+                {ethNumberStandardFormatter(USDPrice, true, true)}
+              </ThemedText.BodySecondary>
+            )}
           </>
+        ) : (
+          <ThemedText.BodySecondary fontSize="14px" lineHeight="20px">
+            Get the best price for your NFT by selling with Uniswap.
+          </ThemedText.BodySecondary>
         )}
-      </BestPriceContainer>
-    </Container>
+      </PriceRow>
+      {expirationDate && (
+        <ThemedText.BodySecondary fontSize="14px">Sale ends: {timeLeft(expirationDate)}</ThemedText.BodySecondary>
+      )}
+      {!listing ? (
+        <BuyNowButton assetInBag={false} margin={true} useAccentColor={true} onClick={goToListPage}>
+          <ThemedText.SubHeader lineHeight="20px">List</ThemedText.SubHeader>
+        </BuyNowButton>
+      ) : (
+        <>
+          <BuyNowButton assetInBag={false} margin={true} useAccentColor={false} onClick={goToListPage}>
+            <ThemedText.SubHeader lineHeight="20px">Adjust listing</ThemedText.SubHeader>
+          </BuyNowButton>
+        </>
+      )}
+    </BestPriceContainer>
   )
 }
 
@@ -258,7 +308,6 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const bagExpanded = useBag((s) => s.bagExpanded)
 
   const USDPrice = useUsdPrice(asset)
-  const [, setCopied] = useCopyClipboard()
 
   const { assetInBag } = useMemo(() => {
     return {
@@ -268,40 +317,40 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
     }
   }, [asset, itemsInBag])
 
-  const isOwner = asset.owner ? account?.toLowerCase() === asset.owner?.address?.toLowerCase() : false
-
-  if (isOwner) {
-    return <OwnerContainer asset={asset} />
+  const shareTweet = () => {
+    window.open(
+      generateTweetForAsset(asset),
+      'newwindow',
+      `left=${(window.screen.width - TWITTER_WIDTH) / 2}, top=${
+        (window.screen.height - TWITTER_HEIGHT) / 2
+      }, width=${TWITTER_WIDTH}, height=${TWITTER_HEIGHT}`
+    )
   }
+
+  const isOwner = asset.owner ? account?.toLowerCase() === asset.owner?.address?.toLowerCase() : false
+  const isForSale = cheapestOrder && asset.priceInfo
 
   return (
     <Container>
-      <OwnerInformationContainer>
-        <OwnerText
-          target="_blank"
-          href={`https://etherscan.io/address/${asset.owner.address}`}
-          rel="noopener noreferrer"
-        >
-          {asset.tokenType === 'ERC1155' ? (
-            ''
-          ) : (
-            <span> Seller: {isOwner ? 'you' : asset.owner.address && shortenAddress(asset.owner.address, 2, 4)}</span>
-          )}
-        </OwnerText>
-        <UploadLink
-          onClick={() => {
-            setCopied(window.location.href)
-          }}
-          target="_blank"
-        >
-          <Upload size={20} strokeWidth={2} />
-        </UploadLink>
-      </OwnerInformationContainer>
-
-      {cheapestOrder && asset.priceInfo ? (
+      <AssetInfoContainer>
+        <CollectionNameContainer>
+          <DefaultLink to={`/nfts/collection/${asset.address}`}>
+            <CollectionHeader>
+              {collection.collectionName} {collection.isVerified && <VerifiedIcon />}
+            </CollectionHeader>
+          </DefaultLink>
+          <UploadLink onClick={shareTweet} target="_blank">
+            <Upload size={20} strokeWidth={2} />
+          </UploadLink>
+        </CollectionNameContainer>
+        <AssetHeader>{asset.name ?? `${asset.collectionName} #${asset.tokenId}`}</AssetHeader>
+      </AssetInfoContainer>
+      {isOwner ? (
+        <OwnerContainer asset={asset} />
+      ) : isForSale ? (
         <BestPriceContainer>
           <HeaderRow>
-            <ThemedText.SubHeader fontWeight={500} lineHeight="24px">
+            <ThemedText.SubHeader color="accentAction" fontWeight={500} lineHeight="24px">
               Best Price
             </ThemedText.SubHeader>
             <MarketplaceIcon alt={cheapestOrder.marketplace} src={getMarketplaceIcon(cheapestOrder.marketplace)} />
@@ -341,6 +390,24 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
         </BestPriceContainer>
       ) : (
         <NotForSale collectionName={collection.collectionName ?? 'this collection'} collectionUrl={asset.address} />
+      )}
+      {isForSale && (
+        <OwnerInformationContainer>
+          <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
+            Seller:
+          </ThemedText.BodySmall>
+          <OwnerText
+            target="_blank"
+            href={`https://etherscan.io/address/${asset.owner.address}`}
+            rel="noopener noreferrer"
+          >
+            {asset.tokenType === 'ERC1155' ? (
+              ''
+            ) : (
+              <span> {isOwner ? 'You' : asset.owner.address && shortenAddress(asset.owner.address, 2, 4)}</span>
+            )}
+          </OwnerText>
+        </OwnerInformationContainer>
       )}
     </Container>
   )
