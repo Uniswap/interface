@@ -2,7 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Flex } from 'src/components/layout'
-import { TokenDetailsContextMenu } from 'src/components/TokenDetails/TokenDetailsContextMenu'
+import { TokenDetailsFavoriteButton } from 'src/components/TokenDetails/TokenDetailsFavoriteButton'
 
 interface TokenDetailsHeaderProps {
   currency: Currency
@@ -11,9 +11,9 @@ interface TokenDetailsHeaderProps {
 export function TokenDetailsBackButtonRow({ currency }: TokenDetailsHeaderProps) {
   return (
     <>
-      <Flex row alignItems="center" justifyContent="space-between" pt="sm" px="sm">
+      <Flex row alignItems="center" justifyContent="space-between" pt="sm" px="md">
         <BackButton />
-        <TokenDetailsContextMenu currency={currency} />
+        <TokenDetailsFavoriteButton currency={currency} />
       </Flex>
     </>
   )

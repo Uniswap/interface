@@ -16,7 +16,7 @@ import { useCrossChainBalances } from 'src/components/TokenDetails/hooks'
 import { TokenBalances } from 'src/components/TokenDetails/TokenBalances'
 import { TokenDetailsActionButtons } from 'src/components/TokenDetails/TokenDetailsActionButton'
 import { TokenDetailsBackButtonRow } from 'src/components/TokenDetails/TokenDetailsBackButtonRow'
-import { TokenDetailsContextMenu } from 'src/components/TokenDetails/TokenDetailsContextMenu'
+import { TokenDetailsFavoriteButton } from 'src/components/TokenDetails/TokenDetailsFavoriteButton'
 import { TokenDetailsHeader } from 'src/components/TokenDetails/TokenDetailsHeader'
 import { TokenDetailsLoader } from 'src/components/TokenDetails/TokenDetailsLoader'
 import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
@@ -70,7 +70,7 @@ function HeaderTitleElement({ data }: { data: TokenDetailsScreenQuery | undefine
   const tokenProject = token?.project
 
   return (
-    <Flex gap="none" justifyContent="space-between" mb="xxs">
+    <Flex alignItems="center" gap="none" justifyContent="space-between" mb="xxs">
       <HeaderPriceLabel price={tokenProject?.markets?.[0]?.price} />
       <Flex centered row gap="xxs">
         <TokenLogo
@@ -265,7 +265,7 @@ function TokenDetails({
           <Flex row alignItems="center" justifyContent="space-between" pt="xxs" px="none">
             <BackButton />
             <HeaderTitleElement data={data} />
-            <TokenDetailsContextMenu currency={currency} />
+            <TokenDetailsFavoriteButton currency={currency} />
           </Flex>
         }>
         <Flex gap="xl" my="md">
