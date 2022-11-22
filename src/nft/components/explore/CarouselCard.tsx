@@ -76,17 +76,11 @@ const CardHeaderColumn = styled.div`
   padding: 0 40px;
   z-index: 1;
 `
-
-const CardNameRow = styled.div`
-  display: flex;
-  gap: 2px;
-`
 const IconContainer = styled.div`
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
+  display: inline;
+  vertical-align: text-bottom;
+  margin-left: 2px;
 `
-
 const CollectionNameContainer = styled.div`
   display: -webkit-box;
   overflow: hidden;
@@ -183,6 +177,9 @@ const CarouselCardContainer = styled.div`
     }
     ${TableElement} {
       justify-self: left !important;
+    }
+    ${CardHeaderColumn} {
+      padding: 0 20px;
     }
   }
 `
@@ -292,29 +289,28 @@ export const LoadingTable = () => {
   )
 }
 
+const CollectionName = styled(ThemedText.MediumHeader)`
+  display: inline;
+  vertical-align: text-bottom;
+  line-height: 28px;
+`
+
 const CarouselCardHeader = ({ collection }: { collection: TrendingCollection }) => {
   const theme = useTheme()
   return (
     <CardHeaderContainer src={collection.bannerImageUrl}>
       <CardHeaderColumn>
         <CollectionImage src={collection.imageUrl} />
-        <CardNameRow>
-          <CollectionNameContainer>
-            <ThemedText.MediumHeader
-              color={theme.accentTextLightPrimary}
-              fontWeight="500"
-              lineHeight="28px"
-              display="inline"
-            >
-              {collection.name}
-            </ThemedText.MediumHeader>
-          </CollectionNameContainer>
+        <CollectionNameContainer>
+          <CollectionName color={theme.accentTextLightPrimary} fontWeight="500">
+            {collection.name}
+          </CollectionName>
           {collection.isVerified && (
             <IconContainer>
               <VerifiedIcon width="24px" height="24px" />
             </IconContainer>
           )}
-        </CardNameRow>
+        </CollectionNameContainer>
       </CardHeaderColumn>
       <HeaderOverlay />
     </CardHeaderContainer>
