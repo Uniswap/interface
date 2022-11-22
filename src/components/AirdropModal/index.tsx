@@ -169,7 +169,7 @@ const AirdropModal = () => {
   const { account, provider } = useWeb3React()
   const [claim, setClaim] = useState<Rewards>()
   const [isClaimed, setIsClaimed] = useState(false)
-  const [error, setError] = useState(true)
+  const [error, setError] = useState(false)
   const setIsClaimAvailable = useIsClaimAvailable((state) => state.setIsClaimAvailable)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [totalAmount, setTotalAmount] = useState(300)
@@ -213,7 +213,7 @@ const AirdropModal = () => {
     try {
       if (contract && claim && claim.amount && claim.merkleProof && provider) {
         setIsSubmitting(true)
-        // final claim logic
+
         await contract
           .connect(provider?.getSigner())
           .functions.claim(claim.index, account, claim?.amount, claim?.merkleProof)
@@ -227,13 +227,9 @@ const AirdropModal = () => {
     }
   }
 
-  const dismiss = () => {
-    usdcAirdropToggle()
-  }
-
   return (
     <>
-      <Modal hideBorder isOpen={isOpen} onDismiss={dismiss} maxHeight={90} maxWidth={400}>
+      <Modal hideBorder isOpen={isOpen} onDismiss={usdcAirdropToggle} maxHeight={90} maxWidth={400}>
         <ModalWrap>
           {isClaimed ? (
             <ClaimContainer>
@@ -250,7 +246,7 @@ const AirdropModal = () => {
                 </ThemedText.Link>
               </EtherscanLink>
 
-              <CloseButton size={ButtonSize.medium} emphasis={ButtonEmphasis.medium} onClick={dismiss}>
+              <CloseButton size={ButtonSize.medium} emphasis={ButtonEmphasis.medium} onClick={usdcAirdropToggle}>
                 Close
               </CloseButton>
             </ClaimContainer>
@@ -258,7 +254,7 @@ const AirdropModal = () => {
             <>
               <ImageContainer>
                 <TextContainer>
-                  <SyledCloseIcon onClick={dismiss} stroke="white" />
+                  <SyledCloseIcon onClick={usdcAirdropToggle} stroke="white" />
                   <MainHeader>Uniswap NFT Airdrop</MainHeader>
                   <USDCLabel>{totalAmount} USDC</USDCLabel>
                   <Line />
