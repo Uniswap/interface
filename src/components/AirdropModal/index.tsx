@@ -197,7 +197,10 @@ const AirdropModal = () => {
     try {
       if (contract && claim && claim.amount && claim.merkleProof && provider) {
         setIsSubmitting(true)
-        await contract.connect(provider?.getSigner()).functions.claim(claim?.amount, claim?.merkleProof)
+        // final claim logic
+        await contract
+          .connect(provider?.getSigner())
+          .functions.claim(claim.index, account, claim?.amount, claim?.merkleProof)
         setIsSubmitting(false)
       } else if (contract && provider) {
         // await contract.connect(provider?.getSigner()).functions.claim('1000', [])
@@ -222,6 +225,7 @@ const AirdropModal = () => {
         //   "name": "merkleProof",
         //   "type": "bytes32[]"}
 
+        // test logic
         const gas = await contract.estimateGas.claim(4754, '0x45051e140AC52bD18666b46960FC8361dC41308a', '1000', [
           '0xf75f77b58c2dd92b1694c9ff355ec93f9e7bcb3faec1d82ed6e1c832b497dbe4',
           '0x2293a4aee0c06cd6b754eb1ea284f5150c9bcac722b911ddcc6fec88bf5b2f36',
