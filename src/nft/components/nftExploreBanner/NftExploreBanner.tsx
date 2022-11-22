@@ -4,7 +4,7 @@ import { Box } from 'nft/components/Box'
 import { bodySmall, subhead } from 'nft/css/common.css'
 import { X } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
-import { useShowNftPromoBanner } from 'state/user/hooks'
+import { useHideNftPromoBanner } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { StyledInternalLink } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
@@ -88,16 +88,16 @@ const StyledImageContainer = styled(Box)`
 `
 
 export default function NftExploreBanner() {
-  const [showNftPromoBanner, stopShowingNftPromoBanner] = useShowNftPromoBanner()
+  const [hideNftPromoBanner, toggleHideNftPromoBanner] = useHideNftPromoBanner()
   const navigate = useNavigate()
 
   const navigateToNfts = () => {
     navigate('/nfts')
-    stopShowingNftPromoBanner()
+    toggleHideNftPromoBanner()
   }
 
   return (
-    <PopupContainer show={showNftPromoBanner} onClick={navigateToNfts}>
+    <PopupContainer show={!hideNftPromoBanner} onClick={navigateToNfts}>
       <InnerContainer>
         <StyledImageContainer as="img" src={randomizedNftImage} draggable={false} />
         <TextContainer>
@@ -121,7 +121,7 @@ export default function NftExploreBanner() {
           onClick={(e) => {
             e.preventDefault()
             e.stopPropagation()
-            stopShowingNftPromoBanner()
+            toggleHideNftPromoBanner()
           }}
         />
       </InnerContainer>
