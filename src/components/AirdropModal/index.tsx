@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { useWeb3React } from '@web3-react/core'
+import { AlertTriangle } from 'react-feather'
 import uniswapNftAirdropClaim from 'abis/uniswap-nft-airdrop-claim.json'
 import airdropBackgroundv2 from 'assets/images/airdopBackground.png'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
@@ -30,7 +31,6 @@ const Body = styled.div`
 const ClaimButton = styled(ThemeButton)`
   width: 100%;
   background-color: ${({ theme }) => theme.accentAction};
-  margin-top: 40px;
   border-radius: 12px;
   color: ${({ theme }) => theme.white};
 `
@@ -124,6 +124,22 @@ const SyledCloseIcon = styled(CloseIcon)`
   ${OpacityHoverState}
 `
 
+const Error = styled.div`
+  display: flex;
+  color: #fd766b;
+  font-weight: 500;
+  line-height: 24px;
+  border-radius: 16px;
+  padding: 12px 20px;
+  font-size: 14px;
+  align-items: center;
+  gap: 12px;
+`
+
+const ReactLinkWrap = styled.div`
+  margin-bottom: 40px;
+`
+
 const RewardsText = styled.span`
   font-size: 12px;
   line-height: 16px;
@@ -153,6 +169,7 @@ const AirdropModal = () => {
   const { account, provider } = useWeb3React()
   const [claim, setClaim] = useState<Rewards>()
   const [isClaimed, setIsClaimed] = useState(false)
+  const [error, setError] = useState(false)
   const setIsClaimAvailable = useIsClaimAvailable((state) => state.setIsClaimAvailable)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [totalAmount, setTotalAmount] = useState(300)
@@ -160,21 +177,33 @@ const AirdropModal = () => {
   const usdcAirdropToggle = useToggleModal(ApplicationModal.UNISWAP_NFT_AIRDROP_CLAIM)
   const contract = useContract(UNISWAP_NFT_AIRDROP_CLAIM_ADDRESS, uniswapNftAirdropClaim)
 
+  const displayError = () => {
+    setIsSubmitting(false)
+    setError(true)
+    setTimeout(() => {
+      setError(false)
+    }, 5000)
+  }
+
   useEffect(() => {
     if (account && provider && contract) {
       ;(async () => {
-        const { data } = await CollectionRewardsFetcher(account)
-        const claim = data.find((claim) => claim?.rewardType === RewardType.GENIE_UNISWAP_USDC_AIRDROP)
+        try {
+          const { data } = await CollectionRewardsFetcher(account)
+          const claim = data.find((claim) => claim?.rewardType === RewardType.GENIE_UNISWAP_USDC_AIRDROP)
 
-        if (!claim) return
+          if (!claim) return
 
-        const [isClaimed] = await contract.connect(provider).functions.isClaimed(claim?.index)
+          const [isClaimed] = await contract.connect(provider).functions.isClaimed(claim?.index)
 
-        if (claim && isClaimed === false) {
-          const usdAmount = BigNumber.from(claim.amount).div(10 ** 6)
-          setClaim(claim)
-          setTotalAmount(usdAmount.toNumber())
-          setIsClaimAvailable(true)
+          if (claim && isClaimed === false) {
+            const usdAmount = BigNumber.from(claim.amount).div(10 ** 6)
+            setClaim(claim)
+            setTotalAmount(usdAmount.toNumber())
+            setIsClaimAvailable(true)
+          }
+        } catch (err) {
+          displayError()
         }
       })()
     }
@@ -190,9 +219,11 @@ const AirdropModal = () => {
           .functions.claim(claim.index, account, claim?.amount, claim?.merkleProof)
         setIsSubmitting(false)
         setIsClaimed(true)
+        setIsClaimAvailable(false)
       }
     } catch (err) {
       setIsSubmitting(false)
+      displayError()
     }
   }
 
@@ -247,9 +278,18 @@ const AirdropModal = () => {
                   As a long time supporter of Genie, you’ve been awarded {totalAmount} USDC tokens. Read more about
                   Uniswap NFT.
                 </RewardsInformationText>
-                <LinkWrap href="https://uniswap.org/blog/uniswap-nft-aggregator-announcement" target="_blank">
-                  <ThemedText.Link>Read more about Uniswap NFT.</ThemedText.Link>
-                </LinkWrap>
+                <ReactLinkWrap>
+                  <LinkWrap href="https://uniswap.org/blog/uniswap-nft-aggregator-announcement" target="_blank">
+                    <ThemedText.Link>Read more about Uniswap NFT.</ThemedText.Link>
+                  </LinkWrap>
+                </ReactLinkWrap>
+
+                {error && (
+                  <Error>
+                    <AlertTriangle />
+                    Claim USDC failed. Please try again later
+                  </Error>
+                )}
 
                 <ClaimButton
                   onClick={makeClaim}
