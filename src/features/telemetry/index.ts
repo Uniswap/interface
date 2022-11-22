@@ -12,12 +12,6 @@ type LogTags = {
 const DUMMY_KEY = '00000000000000000000000000000000'
 
 export async function initAnalytics() {
-  if (__DEV__) {
-    // avoid polluting analytics dashboards with dev data
-    // consider re-enabling if validating data prior to launches is useful
-    return
-  }
-
   try {
     init(
       // reporting to test project until we add the proxy in a comming PR
@@ -106,7 +100,6 @@ export function sendAnalyticsEvent<EventName extends keyof EventProperties>(
       'sendAnalyticsEvent',
       `[analytics(${eventName})]: ${JSON.stringify(eventProperties)}`
     )
-    return
   }
 
   track(eventName, eventProperties)
@@ -115,7 +108,6 @@ export function sendAnalyticsEvent<EventName extends keyof EventProperties>(
 export function flushAnalyticsEvents() {
   if (__DEV__) {
     logger.info('telemetry', 'flushAnalyticsEvents', 'flushing analytics events')
-    return
   }
   flush()
 }
@@ -126,7 +118,6 @@ type ValidPropertyValue = number | string | boolean | Array<string | number>
 export function setUserProperty(property: UserPropertyName, value: ValidPropertyValue) {
   if (__DEV__) {
     logger.info('telemetry', 'setUserProperty', `property: ${property}, value: ${value}`)
-    return
   }
   identify(new Identify().set(property, value))
 }
