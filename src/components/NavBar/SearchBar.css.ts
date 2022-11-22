@@ -228,9 +228,6 @@ export const notFoundContainer = style([
   }),
 ])
 
-const visibilityTransition = `visibility ${vars.time[125]}, opacity ${vars.time[125]}`
-const delayedTransitionProperties = `padding 0s ${vars.time[125]}, height 0s ${vars.time[125]}`
-
 export const hidden = style([
   sprinkles({
     visibility: 'hidden',
@@ -238,10 +235,6 @@ export const hidden = style([
     padding: '0',
     height: '0',
   }),
-  {
-    transition: `${visibilityTransition}, ${delayedTransitionProperties}`,
-    transitionTimingFunction: 'ease-in',
-  },
 ])
 export const visible = style([
   sprinkles({
@@ -249,10 +242,6 @@ export const visible = style([
     opacity: '1',
     height: 'full',
   }),
-  {
-    transition: `${visibilityTransition}`,
-    transitionTimingFunction: 'ease-out',
-  },
 ])
 
 export const searchContentCentered = style({
