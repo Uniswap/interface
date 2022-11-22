@@ -38,7 +38,7 @@ const CarouselItemCard = styled(a.div)`
 
 const CarouselItemIcon = styled.div`
   align-items: center;
-  color: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.textPrimary};
   cursor: pointer;
   display: none;
   user-select: none;
@@ -84,7 +84,7 @@ export const Carousel = ({ children, activeIndex, toggleNextSlide }: CarouselPro
         return {
           x: (-y % (MAX_CARD_WIDTH * children.length)) + MAX_CARD_WIDTH * rank,
           immediate: vy < 0 ? prevPosition > position : prevPosition < position,
-          config: { tension: 250, friction: 35 },
+          config: { tension: 250, friction: 30 },
         }
       })
       prev.current = [firstVis, firstVisIdx]

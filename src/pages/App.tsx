@@ -97,15 +97,23 @@ const Marginer = styled.div`
 `
 
 function getCurrentPageFromLocation(locationPathname: string): PageName | undefined {
-  switch (locationPathname) {
-    case '/swap':
+  switch (true) {
+    case locationPathname.startsWith('/swap'):
       return PageName.SWAP_PAGE
-    case '/vote':
+    case locationPathname.startsWith('/vote'):
       return PageName.VOTE_PAGE
-    case '/pool':
+    case locationPathname.startsWith('/pool'):
       return PageName.POOL_PAGE
-    case '/tokens':
+    case locationPathname.startsWith('/tokens'):
       return PageName.TOKENS_PAGE
+    case locationPathname.startsWith('/nfts/profile'):
+      return PageName.NFT_PROFILE_PAGE
+    case locationPathname.startsWith('/nfts/asset'):
+      return PageName.NFT_DETAILS_PAGE
+    case locationPathname.startsWith('/nfts/collection'):
+      return PageName.NFT_COLLECTION_PAGE
+    case locationPathname.startsWith('/nfts'):
+      return PageName.NFT_EXPLORE_PAGE
     default:
       return undefined
   }

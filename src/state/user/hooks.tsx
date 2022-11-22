@@ -19,6 +19,8 @@ import {
   addSerializedToken,
   removeSerializedToken,
   updateHideClosedPositions,
+  updateHideNFTWelcomeModal,
+  updateShowNftPromoBanner,
   updateShowSurveyPopup,
   updateUserClientSideRouter,
   updateUserDarkMode,
@@ -115,6 +117,15 @@ export function useShowSurveyPopup(): [boolean | undefined, (showPopup: boolean)
     [dispatch]
   )
   return [showSurveyPopup, toggleShowSurveyPopup]
+}
+
+export function useHideNFTWelcomeModal(): [boolean | undefined, () => void] {
+  const dispatch = useAppDispatch()
+  const hideNFTWelcomeModal = useAppSelector((state) => state.user.hideNFTWelcomeModal)
+  const hideModal = useCallback(() => {
+    dispatch(updateHideNFTWelcomeModal({ hideNFTWelcomeModal: true }))
+  }, [dispatch])
+  return [hideNFTWelcomeModal, hideModal]
 }
 
 export function useClientSideRouter(): [boolean, (userClientSideRouter: boolean) => void] {
@@ -269,6 +280,17 @@ export function usePairAdder(): (pair: Pair) => void {
 
 export function useURLWarningVisible(): boolean {
   return useAppSelector((state: AppState) => state.user.URLWarningVisible)
+}
+
+export function useHideNftPromoBanner(): [boolean, () => void] {
+  const dispatch = useAppDispatch()
+  const hideNftPromoBanner = useAppSelector((state) => state.user.hideNFTPromoBanner)
+
+  const toggleHideNftPromoBanner = useCallback(() => {
+    dispatch(updateShowNftPromoBanner({ hideNFTPromoBanner: true }))
+  }, [dispatch])
+
+  return [hideNftPromoBanner, toggleHideNftPromoBanner]
 }
 
 /**

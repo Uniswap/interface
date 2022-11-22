@@ -48,11 +48,14 @@ export interface UserState {
 
   timestamp: number
   URLWarningVisible: boolean
+  hideNFTPromoBanner: boolean // whether or not we should hide the nft explore promo banner
 
   // undefined means has not gone through A/B split yet
   showSurveyPopup: boolean | undefined
 
   showDonationLink: boolean
+
+  hideNFTWelcomeModal: boolean
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -74,8 +77,10 @@ export const initialState: UserState = {
   pairs: {},
   timestamp: currentTimestamp(),
   URLWarningVisible: true,
+  hideNFTPromoBanner: false,
   showSurveyPopup: undefined,
   showDonationLink: true,
+  hideNFTWelcomeModal: true,
 }
 
 const userSlice = createSlice({
@@ -120,6 +125,12 @@ const userSlice = createSlice({
     },
     updateShowDonationLink(state, action) {
       state.showDonationLink = action.payload.showDonationLink
+    },
+    updateHideNFTWelcomeModal(state, action) {
+      state.hideNFTWelcomeModal = action.payload.hideNFTWelcomeModal
+    },
+    updateShowNftPromoBanner(state, action) {
+      state.hideNFTPromoBanner = action.payload.hideNFTPromoBanner
     },
     addSerializedToken(state, { payload: { serializedToken } }) {
       if (!state.tokens) {
@@ -205,10 +216,12 @@ export const {
   updateShowDonationLink,
   updateShowSurveyPopup,
   updateUserClientSideRouter,
+  updateHideNFTWelcomeModal,
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
   updateUserLocale,
   updateUserSlippageTolerance,
+  updateShowNftPromoBanner,
 } = userSlice.actions
 export default userSlice.reducer
