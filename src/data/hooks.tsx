@@ -1,16 +1,20 @@
 import {
   ApolloClient,
   createHttpLink,
+  from,
   InMemoryCache,
   NormalizedCacheObject,
   useApolloClient,
 } from '@apollo/client'
+import { onError } from '@apollo/client/link/error'
 import { relayStylePagination } from '@apollo/client/utilities'
 import { MMKVWrapper, persistCache } from 'apollo3-cache-persist'
 import { useCallback, useEffect, useState } from 'react'
 import { MMKV } from 'react-native-mmkv'
 import { config } from 'src/config'
 import { uniswapUrls } from 'src/constants/urls'
+import { logException } from 'src/features/telemetry'
+import { LogContext } from 'src/features/telemetry/constants'
 import { logger } from 'src/utils/logger'
 
 const mmkv = new MMKV()
@@ -57,9 +61,24 @@ export const usePersistedApolloClient = () => {
         },
       })
 
+      // Log any GraphQL errors or network error that occurred
+      const errorLink = onError(({ graphQLErrors, networkError }) => {
+        if (graphQLErrors) {
+          graphQLErrors.forEach(({ message, locations, path }) =>
+            logException(
+              LogContext.ApolloClient,
+              `[GraphQL Error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+            )
+          )
+        }
+        if (networkError) {
+          logException(LogContext.ApolloClient, `[Network error]: ${networkError}`)
+        }
+      })
+
       setClient(
         new ApolloClient({
-          link: httpLink,
+          link: from([errorLink, httpLink]),
           cache,
           defaultOptions: {
             watchQuery: {

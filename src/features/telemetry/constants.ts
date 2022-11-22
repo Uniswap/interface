@@ -157,6 +157,7 @@ export const enum MarkNames {
  */
 export const enum LogContext {
   Analytics = 'Analytics',
+  ApolloClient = 'ApolloClient',
   CloudBackup = 'CloudBackup',
   ErrorBoundary = 'ErrorBoundary',
   Experiments = 'Experiments',
