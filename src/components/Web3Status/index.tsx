@@ -7,6 +7,7 @@ import WalletDropdown from 'components/WalletDropdown'
 import { getConnection } from 'connection/utils'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { Portal } from 'nft/components/common/Portal'
+import { useIsClaimAvailable } from 'nft/hooks/useClaimsAvailable'
 import { getIsValidSwapQuote } from 'pages/Swap'
 import { darken } from 'polished'
 import { useMemo, useRef } from 'react'
@@ -99,13 +100,13 @@ const Web3StatusConnectWrapper = styled.div<{ faded?: boolean }>`
 const Web3StatusConnected = styled(Web3StatusGeneric)<{
   pending?: boolean
   isNftActive?: boolean
-  hasAirdrop?: boolean
+  isClaimAvailable?: boolean
 }>`
   background-color: ${({ pending, theme }) => (pending ? theme.deprecated_primary1 : theme.deprecated_bg1)};
   border: 1px solid ${({ pending, theme }) => (pending ? theme.deprecated_primary1 : theme.deprecated_bg1)};
   color: ${({ pending, theme }) => (pending ? theme.deprecated_white : theme.deprecated_text1)};
   font-weight: 500;
-  border: ${({ hasAirdrop }) => hasAirdrop && `1px solid ${colors.purple300}`};
+  border: ${({ isClaimAvailable }) => isClaimAvailable && `1px solid ${colors.purple300}`};
   :hover,
   :focus {
     border: 1px solid ${({ theme }) => darken(0.05, theme.deprecated_bg3)};
@@ -208,6 +209,7 @@ function Web3StatusInner() {
   const toggleWalletDropdown = useToggleWalletDropdown()
   const toggleWalletModal = useToggleWalletModal()
   const walletIsOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
+  const isClaimAvailable = useIsClaimAvailable((state) => state.isClaimAvailable)
 
   const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
   const isNftActive = useNftFlag() === NftVariant.Enabled
@@ -247,6 +249,7 @@ function Web3StatusInner() {
         isNftActive={isNftActive}
         onClick={toggleWallet}
         pending={hasPendingTransactions}
+        isClaimAvailable={isClaimAvailable}
       >
         {!hasPendingTransactions && <StatusIcon size={24} connectionType={connectionType} />}
         {hasPendingTransactions ? (

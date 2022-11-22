@@ -4,6 +4,7 @@ import airdropBackgroundv2 from 'assets/images/airdopBackground.png'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import { OpacityHoverState } from 'components/Common'
 import Loader from 'components/Loader'
+import { UNISWAP_NFT_AIRDROP_CLAIM_ADDRESS } from 'constants/addresses'
 import { useContract } from 'hooks/useContract'
 import { ChevronRightIcon } from 'nft/components/icons'
 import { CollectionRewardsFetcher, Rewards, RewardType } from 'nft/queries/genie/GetAirdorpMerkle'
@@ -15,6 +16,7 @@ import { CloseIcon, ThemedText } from 'theme'
 import { BigNumber, utils } from 'ethers'
 
 import Modal from '../Modal'
+import { useIsClaimAvailable } from 'nft/hooks/useClaimsAvailable'
 
 const ModalWrap = styled.div`
   display: flex;
@@ -148,46 +150,53 @@ const MainHeader = styled.span`
 `
 
 const AirdropModal = () => {
-  const { account } = useWeb3React()
+  const { account, provider } = useWeb3React()
+  const [claim, setClaim] = useState<Rewards>()
   const [isClaimed, setIsClaimed] = useState(true)
+  const setIsClaimAvailable = useIsClaimAvailable((state) => state.setIsClaimAvailable)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [totalAmount, setTotalAmount] = useState(300)
   const isOpen = useModalIsOpen(ApplicationModal.UNISWAP_NFT_AIRDROP_CLAIM)
   const usdcAirdropToggle = useToggleModal(ApplicationModal.UNISWAP_NFT_AIRDROP_CLAIM)
-  const contract = useContract('0x8B799381ac40b838BBA4131ffB26197C432AFe78', uniswapNftAirdropClaim)
-  const { provider } = useWeb3React()
+  //
+  const contract = useContract(UNISWAP_NFT_AIRDROP_CLAIM_ADDRESS, uniswapNftAirdropClaim)
 
   useEffect(() => {
     if (account && provider && contract) {
       ;(async () => {
         const { data } = await CollectionRewardsFetcher(account)
         const claim = data.find((claim) => claim?.rewardType === RewardType.GENIE_UNISWAP_USDC_AIRDROP)
+
+        if (!claim) return
+
         const [isClaimed] = await contract.connect(provider).functions.isClaimed(claim?.index)
 
         if (claim && isClaimed === false) {
           const usdAmount = BigNumber.from(claim.amount).div(10 ** 6)
+          setClaim(claim)
           setTotalAmount(usdAmount.toNumber())
+          setIsClaimAvailable(true)
           setIsClaimed(isClaimed)
         }
       })()
     }
   }, [account, contract, provider])
 
-  const dismiss = () => {
-    usdcAirdropToggle()
-
-    setTimeout(() => {
-      setIsClaimed(false)
-    }, 500)
+  const makeClaim = async () => {
+    try {
+      if (contract && claim && claim.amount && claim.merkleProof && provider) {
+        console.log('claiming..')
+        setIsSubmitting(true)
+        await contract.connect(provider?.getSigner()).functions.claim(claim?.amount, claim?.merkleProof)
+        setIsSubmitting(false)
+      }
+    } catch (err) {
+      setIsSubmitting(false)
+    }
   }
 
-  const submit = () => {
-    setIsSubmitting(true)
-
-    setTimeout(() => {
-      setIsSubmitting(false)
-      setIsClaimed(true)
-    }, 1000)
+  const dismiss = () => {
+    usdcAirdropToggle()
   }
 
   return (
@@ -239,7 +248,7 @@ const AirdropModal = () => {
               </LinkWrap>
 
               <ClaimButton
-                onClick={submit}
+                onClick={makeClaim}
                 size={ButtonSize.medium}
                 emphasis={ButtonEmphasis.medium}
                 disabled={isSubmitting}
