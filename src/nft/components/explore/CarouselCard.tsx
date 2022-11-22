@@ -81,16 +81,15 @@ const CardHeaderColumn = styled.div`
   align-items: center;
   flex-direction: column;
   gap: 8px;
-  padding: 40px;
+  height: 202px;
+  justify-content: center;
+  padding: 0 40px;
   z-index: 1;
 `
 
 const CardNameRow = styled.div`
   display: flex;
   gap: 2px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 `
 const IconContainer = styled.div`
   display: flex;
@@ -99,10 +98,13 @@ const IconContainer = styled.div`
 `
 
 const CollectionNameContainer = styled.div`
-  display: flex;
+  display: -webkit-box;
   overflow: hidden;
-  white-space: nowrap;
   text-overflow: ellipsis;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-align: center;
+  max-height: 56px;
 `
 
 const LoadingCollectionNameContainer = styled(LoadingBubble)`
@@ -294,7 +296,12 @@ const CarouselCardHeader = ({ collection }: { collection: TrendingCollection }) 
         <CollectionImage src={collection.imageUrl} />
         <CardNameRow>
           <CollectionNameContainer>
-            <ThemedText.MediumHeader color={theme.accentTextLightPrimary} fontWeight="500" lineHeight="28px">
+            <ThemedText.MediumHeader
+              color={theme.accentTextLightPrimary}
+              fontWeight="500"
+              lineHeight="28px"
+              display="inline"
+            >
               {collection.name}
             </ThemedText.MediumHeader>
           </CollectionNameContainer>
