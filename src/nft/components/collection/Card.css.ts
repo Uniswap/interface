@@ -122,6 +122,5 @@ export const playbackSwitch = style([
     marginLeft: calc.subtract('100%', '50px'),
     top: '12px',
     right: '12px',
-    // transform: 'translateY(-56px)',
   },
 ])

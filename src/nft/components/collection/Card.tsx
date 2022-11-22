@@ -167,7 +167,6 @@ const StyledImageContainer = styled.a<{ isDisabled?: boolean }>`
 const StyledHoverContainer = styled.div`
   position: fixed;
   width: 100%;
-  /* height: 100%; */
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -176,7 +175,7 @@ const StyledHoverContainer = styled.div`
   z-index: 1;
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 60%);
   font-size: 14px;
-  font-weight: 600px;
+  font-weight: 600;
   aspect-ratio: 1;
 `
 const StyledToolTipContainer = styled(StyledHoverContainer)``
@@ -186,7 +185,7 @@ const StyledAddAffordance = styled.div`
   flex-direction: row;
   align-items: center;
   font-size: 14px;
-  font-weight: 600px;
+  font-weight: 600;
   width: fit-content;
   gap: 8px;
 `
@@ -295,7 +294,6 @@ const ImageContainer = ({
   isDisabled?: boolean
   isListing?: boolean
 }) => {
-  // const { asset } = useCardContext()
   const imageRef = useRef<HTMLAnchorElement>(null)
 
   const [hovered, toggleHovered] = useReducer((s) => !s, false)
@@ -308,23 +306,18 @@ const ImageContainer = ({
 
   const toggleHover = useCallback(() => toggleHovered(), [])
 
-  return (
-    <StyledImageContainer ref={imageRef} isDisabled={isDisabled} onMouseEnter={toggleHover} onMouseLeave={toggleHover}>
-      {hovered && (
+  if (hovered) {
+    return (
+      <StyledImageContainer
+        ref={imageRef}
+        isDisabled={isDisabled}
+        onMouseEnter={toggleHover}
+        onMouseLeave={toggleHover}
+      >
         <StyledHoverContainer>
           <StyledToopTipAffordance showTooltip={showTooltip}>
-            {!selected && !isDisabled ? (
-              isListing ? (
-                <>Removed</>
-              ) : (
-                <>Removed from bag</>
-              )
-            ) : isListing ? (
-              <>Added</>
-            ) : (
-              <> Added to bag</>
-            )}
-            {isDisabled && <>Not Available</>}
+            {selected ? (isListing ? 'Removed' : 'Removed from bag') : null}
+            {!selected ? (isListing ? 'Added' : 'Added to bag') : null}
           </StyledToopTipAffordance>
 
           {!isDisabled && !showTooltip ? (
@@ -349,22 +342,18 @@ const ImageContainer = ({
             !showTooltip && <StyledAddAffordance>Not Available</StyledAddAffordance>
           )}
         </StyledHoverContainer>
-      )}
+        {children}
+      </StyledImageContainer>
+    )
+  }
 
-      {!hovered && showTooltip && (
+  return (
+    <StyledImageContainer ref={imageRef} isDisabled={isDisabled} onMouseEnter={toggleHover} onMouseLeave={toggleHover}>
+      {showTooltip && (
         <StyledToolTipContainer>
           <StyledToopTipAffordance showTooltip={showTooltip}>
-            {!selected && !isDisabled ? (
-              isListing ? (
-                <>Removed</>
-              ) : (
-                <>Removed from bag</>
-              )
-            ) : isListing ? (
-              <>Added</>
-            ) : (
-              <>Added to bag</>
-            )}
+            {selected ? isListing ? <>Removed</> : <>Removed from bag</> : null}
+            {!selected ? isListing ? <>Added</> : <>Added to bag</> : null}
           </StyledToopTipAffordance>
         </StyledToolTipContainer>
       )}
