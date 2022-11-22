@@ -9,9 +9,9 @@ import { ThemedText } from 'theme'
 const Container = styled.div`
   position: relative;
   display: flex;
-  flex-direction: column;
   padding: 209px 24px 49px;
-  gap: 16px;
+  overflow: hidden;
+  height: fit-content;
 `
 
 const CloseButton = styled(X)`
@@ -35,9 +35,14 @@ const Background = styled.img`
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -1;
+  object-fit: contain;
+`
+
+const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+  gap: 16px;
 `
 
 const BACKGROUND_IMAGE = {
@@ -74,21 +79,23 @@ export function WelcomeModal({ onDismiss }: { onDismiss: () => void }) {
           {...(theme.darkMode ? BACKGROUND_IMAGE.dark : BACKGROUND_IMAGE.light)}
           alt="Welcome modal background"
         />
-        <ThemedText.LargeHeader>Introducing Uniswap NFT</ThemedText.LargeHeader>
-        <ThemedText.BodySecondary>
-          We’re excited to announce that Uniswap Labs has acquired Genie to build the marketplace for all digital
-          assets! With Uniswap NFT, you can buy and sell NFTs across all marketplaces with the full functionality of
-          Genie. Additonally, if you’ve used Genie in the past, then you may be eligible for a USDC airdrop. You can
-          connect your wallet to claim any rewards. For more details on the airdrop please read the official
-          announcement on the Uniswap Labs blog.{' '}
-          <Link
-            href="https://uniswap.org/blog/uniswap-nft-aggregator-announcement"
-            title="Uniswap NFT aggregator announcement"
-          >
-            Learn more.
-          </Link>
-        </ThemedText.BodySecondary>
-        <CloseButton size={24} onClick={dismiss} />
+        <Content>
+          <ThemedText.LargeHeader>Introducing Uniswap NFT</ThemedText.LargeHeader>
+          <ThemedText.BodySecondary>
+            We’re excited to announce that Uniswap Labs has acquired Genie to build the marketplace for all digital
+            assets! With Uniswap NFT, you can buy and sell NFTs across all marketplaces with the full functionality of
+            Genie. Additonally, if you’ve used Genie in the past, then you may be eligible for a USDC airdrop. You can
+            connect your wallet to claim any rewards. For more details on the airdrop please read the official
+            announcement on the Uniswap Labs blog.{' '}
+            <Link
+              href="https://uniswap.org/blog/uniswap-nft-aggregator-announcement"
+              title="Uniswap NFT aggregator announcement"
+            >
+              Learn more.
+            </Link>
+          </ThemedText.BodySecondary>
+          <CloseButton size={24} onClick={dismiss} />
+        </Content>
       </Container>
     </Modal>
   )
