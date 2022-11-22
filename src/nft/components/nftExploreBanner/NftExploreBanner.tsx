@@ -1,10 +1,11 @@
 import { Trans } from '@lingui/macro'
+import { LARGE_MEDIA_BREAKPOINT, SMALL_MOBILE_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { Box } from 'nft/components/Box'
 import { bodySmall, subhead } from 'nft/css/common.css'
 import { X } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { useShowNftPromoBanner } from 'state/user/hooks'
-import styled, { useTheme } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { StyledInternalLink } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 
@@ -26,16 +27,22 @@ const PopupContainer = styled.div<{ show: boolean }>`
   color: ${({ theme }) => theme.textPrimary};
   display: ${({ show }) => (show ? 'flex' : 'none')};
   flex-direction: column;
-  bottom: 48px;
   position: fixed;
   right: clamp(0px, 1vw, 16px);
-  width: ${Math.min(391, window.innerWidth - 5)}px;
   z-index: ${Z_INDEX.sticky};
   transition: ${({
     theme: {
       transition: { duration, timing },
     },
   }) => `${duration.slow} opacity ${timing.in}`};
+  width: 98vw;
+  bottom: 55px;
+  @media screen and (min-width: ${LARGE_MEDIA_BREAKPOINT}) {
+    bottom: 48px;
+  }
+  @media screen and (min-width: ${SMALL_MOBILE_MEDIA_BREAKPOINT}) {
+    width: 391px;
+  }
   :hover {
     border: double 1px transparent;
     border-radius: 12px;
@@ -57,17 +64,31 @@ const InnerContainer = styled.div`
 
 const TextContainer = styled.div`
   display: flex;
-  cursor: pointer;
   flex-direction: column;
   flex: 1;
-  align-items: flex-start;
   justify-content: center;
-  z-index: 4;
-  position: relative;
+`
+
+const StyledXButton = styled(X)`
+  color: ${({ theme }) => theme.textSecondary};
+  z-index: 5;
+  &:hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+  }
+  &:active {
+    opacity: ${({ theme }) => theme.opacity.click};
+  }
+`
+
+const StyledImageContainer = styled(Box)`
+  width: 23%;
+  cursor: pointer;
+  aspectratio: 1;
+  transition: transform 0.25s ease 0s;
+  object-fit: contain;
 `
 
 export default function NftExploreBanner() {
-  const theme = useTheme()
   const [showNftPromoBanner, stopShowingNftPromoBanner] = useShowNftPromoBanner()
   const navigate = useNavigate()
 
@@ -79,18 +100,7 @@ export default function NftExploreBanner() {
   return (
     <PopupContainer show={showNftPromoBanner} onClick={navigateToNfts}>
       <InnerContainer>
-        <Box
-          as="img"
-          style={{
-            width: '23%',
-            cursor: 'pointer',
-            aspectRatio: '1',
-            transition: 'transform 0.25s ease 0s',
-          }}
-          src={randomizedNftImage}
-          objectFit="contain"
-          draggable={false}
-        />
+        <StyledImageContainer as="img" src={randomizedNftImage} draggable={false} />
         <TextContainer>
           {/* <HeaderText> */}
           <div className={subhead}>
@@ -107,15 +117,13 @@ export default function NftExploreBanner() {
           </div>
         </TextContainer>
         {/* </Description> */}
-        <X
+        <StyledXButton
           size={20}
-          color={theme.textSecondary}
           onClick={(e) => {
             e.preventDefault()
             e.stopPropagation()
             stopShowingNftPromoBanner()
           }}
-          style={{ cursor: 'pointer', zIndex: 5 }}
         />
       </InnerContainer>
     </PopupContainer>
