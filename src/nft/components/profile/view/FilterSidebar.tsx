@@ -94,8 +94,8 @@ export const FilterSidebar = ({
   })
 
   const hideSearch = useMemo(
-    () => walletCollections && walletCollections?.length >= WALLET_COLLECTIONS_PAGINATION_LIMIT,
-    [walletCollections]
+    () => (walletCollections && walletCollections?.length >= WALLET_COLLECTIONS_PAGINATION_LIMIT) || isFetchingNextPage,
+    [walletCollections, isFetchingNextPage]
   )
 
   return (
