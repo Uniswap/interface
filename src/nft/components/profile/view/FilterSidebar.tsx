@@ -10,7 +10,17 @@ import { subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useFiltersExpanded, useIsMobile, useWalletCollections } from 'nft/hooks'
 import { WalletCollection } from 'nft/types'
-import { CSSProperties, Dispatch, FormEvent, SetStateAction, useCallback, useEffect, useReducer, useState } from 'react'
+import {
+  CSSProperties,
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+} from 'react'
 import { easings, useSpring } from 'react-spring'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList, ListOnItemsRenderedProps } from 'react-window'
@@ -18,6 +28,7 @@ import InfiniteLoader from 'react-window-infinite-loader'
 import styled from 'styled-components/macro'
 import { TRANSITION_DURATIONS } from 'theme/styles'
 
+import { WALLET_COLLECTIONS_PAGINATION_LIMIT } from './ProfilePage'
 import * as styles from './ProfilePage.css'
 
 const COLLECTION_ROW_HEIGHT = 44
@@ -174,6 +185,11 @@ const CollectionSelect = ({
     [displayCollections.length, hasNextPage]
   )
 
+  const hideFilterSearchBar = useMemo(
+    () => collections && collections?.length >= WALLET_COLLECTIONS_PAGINATION_LIMIT,
+    [collections]
+  )
+
   const CollectionFilterRow = useCallback(
     ({ index, style }: CollectionFilterRowProps) => {
       const collection = !!displayCollections && displayCollections[index]
@@ -200,10 +216,12 @@ const CollectionSelect = ({
       </Box>
       <Box paddingBottom="12" borderRadius="8">
         <Column as="ul" paddingLeft="0" gap="10" style={{ maxHeight: '80vh' }}>
-          <CollectionFilterSearch
-            collectionSearchText={collectionSearchText}
-            setCollectionSearchText={setCollectionSearchText}
-          />
+          {hideFilterSearchBar && (
+            <CollectionFilterSearch
+              collectionSearchText={collectionSearchText}
+              setCollectionSearchText={setCollectionSearchText}
+            />
+          )}
           <ItemsContainer>
             <AutoSizer disableWidth>
               {({ height }) => (
