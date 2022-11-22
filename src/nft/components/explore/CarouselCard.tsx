@@ -204,14 +204,13 @@ export const MarketplaceRow = ({ marketplace, floorInEth, listings }: Marketplac
       </TableElement>
       <TableElement>
         <ThemedText.BodySmall color="textSecondary">
-          {floorInEth !== undefined
-            ? formatNumberOrString(floorInEth, NumberType.NFTTokenFloorPriceTrailingZeros)
-            : '-'}{' '}
-          ETH
+          {Number(floorInEth) > 0
+            ? `${formatNumberOrString(floorInEth, NumberType.NFTTokenFloorPriceTrailingZeros)} ETH`
+            : '-'}
         </ThemedText.BodySmall>
       </TableElement>
       <TableElement>
-        <ThemedText.BodySmall color="textSecondary">{listings ?? '-'}</ThemedText.BodySmall>
+        <ThemedText.BodySmall color="textSecondary">{Number(listings) > 0 ? listings : 'None'}</ThemedText.BodySmall>
       </TableElement>
     </>
   )
