@@ -2,6 +2,7 @@ import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
 import Banner from 'nft/components/explore/Banner'
 import TrendingCollections from 'nft/components/explore/TrendingCollections'
+import { WelcomeModal } from 'nft/components/explore/WelcomeModal'
 import { useBag } from 'nft/hooks'
 import { useEffect } from 'react'
 import styled from 'styled-components/macro'
@@ -35,6 +36,7 @@ const NftExplore = () => {
           <Banner />
           <TrendingCollections />
         </ExploreContainer>
+        <WelcomeModal />
       </Trace>
     </>
   )
