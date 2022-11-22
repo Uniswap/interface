@@ -1,6 +1,7 @@
 import { DrawerActions } from '@react-navigation/core'
+import { useScrollToTop } from '@react-navigation/native'
 import { FlashList } from '@shopify/flash-list'
-import { default as React, useCallback, useMemo, useState } from 'react'
+import { default as React, useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, StyleProp, useColorScheme, View, ViewProps, ViewStyle } from 'react-native'
 import { GestureDetector } from 'react-native-gesture-handler'
@@ -108,6 +109,24 @@ export function HomeScreen() {
   const сurrentScrollValue = useDerivedValue(
     () => (tabIndex === 0 ? tokensTabScrollValue.value : nftsTabScrollValue.value),
     [tabIndex]
+  )
+
+  // Need to create a derived value for tab index so it can be referenced from a static ref
+  const currentTabIndex = useDerivedValue(() => tabIndex, [tabIndex])
+  const isNftTabsAtTop = useDerivedValue(() => nftsTabScrollValue.value === 0)
+
+  useScrollToTop(
+    useRef({
+      scrollToTop: () => {
+        if (currentTabIndex.value === 1 && isNftTabsAtTop.value) {
+          setTabIndex(0)
+        } else if (tabIndex === 1) {
+          nftsTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
+        } else {
+          tokensTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
+        }
+      },
+    })
   )
   const translateY = useDerivedValue(() => {
     const offset = -Math.min(сurrentScrollValue.value, headerHeightDiff)

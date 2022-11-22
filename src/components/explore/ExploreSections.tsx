@@ -167,7 +167,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps) {
   }
 
   return (
-    <VirtualizedList style={flex.fill}>
+    <VirtualizedList ref={listRef} style={flex.fill}>
       {hasFavoritedTokens || hasFavoritedWallets ? (
         <Flex gap="md" mb="md" mt="xs" mx="sm">
           {hasFavoritedTokens ? (
@@ -189,7 +189,6 @@ export function ExploreSections({ listRef }: ExploreSectionsProps) {
       ) : null}
       <Box bg="background0">
         <FlatList
-          ref={listRef}
           ListEmptyComponent={
             <Box mx="lg" my="sm">
               <Loading repeat={5} type="token" />
