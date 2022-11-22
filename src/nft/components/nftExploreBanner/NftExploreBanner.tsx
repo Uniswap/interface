@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Box } from 'nft/components/Box'
-import { subhead } from 'nft/css/common.css'
+import { bodySmall, subhead } from 'nft/css/common.css'
 import { X } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { useShowNftPromoBanner } from 'state/user/hooks'
@@ -55,17 +55,11 @@ const InnerContainer = styled.div`
   padding: 8px;
 `
 
-const BannerBodyText = styled.p`
-  font-size: 14px;
-  line-height: 20px;
-  margin: 0;
-`
-
 const TextContainer = styled.div`
   display: flex;
   cursor: pointer;
   flex-direction: column;
-  flex: 0.93;
+  flex: 1;
   align-items: flex-start;
   justify-content: center;
   z-index: 4;
@@ -105,10 +99,12 @@ export default function NftExploreBanner() {
           {/* </HeaderText> */}
 
           {/* <Description> */}
-          <BannerBodyText>
+          <div className={bodySmall}>
             <Trans>Buy and sell NFTs across more listings at better prices.</Trans>{' '}
-            <StyledInternalLink to="/nfts">Explore NFTs</StyledInternalLink>{' '}
-          </BannerBodyText>
+            <StyledInternalLink to="/nfts">
+              <Trans>Explore NFTs</Trans>
+            </StyledInternalLink>{' '}
+          </div>
         </TextContainer>
         {/* </Description> */}
         <X
@@ -119,7 +115,7 @@ export default function NftExploreBanner() {
             e.stopPropagation()
             stopShowingNftPromoBanner()
           }}
-          style={{ cursor: 'pointer', position: 'absolute', right: 10, zIndex: 5 }}
+          style={{ cursor: 'pointer', zIndex: 5 }}
         />
       </InnerContainer>
     </PopupContainer>
