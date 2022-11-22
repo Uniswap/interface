@@ -29,6 +29,7 @@ export default function Updater(): null {
 
   // fetch all lists every 10 minutes, but only after we initialize provider
   useInterval(fetchAllListsCallback, provider ? 1000 * 60 * 10 : null)
+  console.log(provider ? 1000 * 60 * 10 : null)
 
   // whenever a list is not loaded and not loading, try again to load it
   useEffect(() => {

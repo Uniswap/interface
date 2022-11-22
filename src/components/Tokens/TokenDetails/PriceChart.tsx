@@ -114,9 +114,7 @@ export function PriceChart({ width, height, prices, timePeriod }: PriceChartProp
 
   // set display price to ending price when prices have changed.
   useEffect(() => {
-    if (prices) {
-      setDisplayPrice(endingPrice)
-    }
+    setDisplayPrice(endingPrice)
   }, [prices, endingPrice])
   const [crosshair, setCrosshair] = useState<number | null>(null)
 

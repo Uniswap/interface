@@ -183,6 +183,9 @@ const PriceTextInput = ({
           }}
           ref={inputRef}
           onChange={(v: FormEvent<HTMLInputElement>) => {
+            if (!listPrice && v.currentTarget.value === '0.') {
+              return
+            }
             const val = parseFloat(v.currentTarget.value)
             setListPrice(isNaN(val) ? undefined : val)
           }}
