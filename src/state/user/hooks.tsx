@@ -19,6 +19,7 @@ import {
   addSerializedToken,
   removeSerializedToken,
   updateHideClosedPositions,
+  updateShowNftPromoBanner,
   updateShowSurveyPopup,
   updateUserClientSideRouter,
   updateUserDarkMode,
@@ -269,6 +270,17 @@ export function usePairAdder(): (pair: Pair) => void {
 
 export function useURLWarningVisible(): boolean {
   return useAppSelector((state: AppState) => state.user.URLWarningVisible)
+}
+
+export function useShowNftPromoBanner(): [boolean, () => void] {
+  const dispatch = useAppDispatch()
+  const showNftPromoBanner = useAppSelector((state) => state.user.NFTPromoBannerVisible)
+
+  const stopShowingNftPromoBanner = useCallback(() => {
+    dispatch(updateShowNftPromoBanner({ showNftPromoBanner: false }))
+  }, [dispatch])
+
+  return [showNftPromoBanner, stopShowingNftPromoBanner]
 }
 
 /**

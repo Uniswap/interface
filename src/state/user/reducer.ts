@@ -48,6 +48,7 @@ export interface UserState {
 
   timestamp: number
   URLWarningVisible: boolean
+  NFTPromoBannerVisible: boolean // whether or not we should show the nft explore promo banner
 
   // undefined means has not gone through A/B split yet
   showSurveyPopup: boolean | undefined
@@ -74,6 +75,7 @@ export const initialState: UserState = {
   pairs: {},
   timestamp: currentTimestamp(),
   URLWarningVisible: true,
+  NFTPromoBannerVisible: true,
   showSurveyPopup: undefined,
   showDonationLink: true,
 }
@@ -120,6 +122,9 @@ const userSlice = createSlice({
     },
     updateShowDonationLink(state, action) {
       state.showDonationLink = action.payload.showDonationLink
+    },
+    updateShowNftPromoBanner(state, action) {
+      state.NFTPromoBannerVisible = action.payload.NFTPromoBannerVisible
     },
     addSerializedToken(state, { payload: { serializedToken } }) {
       if (!state.tokens) {
@@ -210,5 +215,6 @@ export const {
   updateUserExpertMode,
   updateUserLocale,
   updateUserSlippageTolerance,
+  updateShowNftPromoBanner,
 } = userSlice.actions
 export default userSlice.reducer
