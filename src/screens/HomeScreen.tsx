@@ -384,7 +384,7 @@ function ActionButton({
   return (
     <TouchableArea
       hapticFeedback
-      backgroundColor={isDarkMode ? 'backgroundBranded' : 'background0'}
+      backgroundColor="backgroundOverlay"
       borderColor="brandedAccentSoft"
       borderRadius="lg"
       borderWidth={1}
