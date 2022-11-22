@@ -15,5 +15,5 @@ export const fetchTrendingTokens = async (numTokens?: number): Promise<FungibleT
   })
 
   const { data } = (await r.json()) as { data: FungibleToken[] }
-  return data.map((token) => unwrapToken(token.chainId, token))
+  return data ? data.map((token) => unwrapToken(token.chainId, token)) : []
 }

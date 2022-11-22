@@ -18,5 +18,5 @@ export const fetchTrendingCollections = async (payload: {
 
   const data = await r.json()
 
-  return data
+  return data ?? []
 }
