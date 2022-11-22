@@ -5,6 +5,7 @@ import TrendingCollections from 'nft/components/explore/TrendingCollections'
 import { WelcomeModal } from 'nft/components/explore/WelcomeModal'
 import { useBag } from 'nft/hooks'
 import { useEffect } from 'react'
+import { useHideNFTWelcomeModal } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 
 const ExploreContainer = styled.div`
@@ -24,6 +25,7 @@ const ExploreContainer = styled.div`
 
 const NftExplore = () => {
   const setBagExpanded = useBag((state) => state.setBagExpanded)
+  const [isModalHidden, hideModal] = useHideNFTWelcomeModal()
 
   useEffect(() => {
     setBagExpanded({ bagExpanded: false, manualClose: false })
@@ -36,11 +38,7 @@ const NftExplore = () => {
           <Banner />
           <TrendingCollections />
         </ExploreContainer>
-        <WelcomeModal
-          onDismiss={() => {
-            console.log('a')
-          }}
-        />
+        {!isModalHidden && <WelcomeModal onDismissed={hideModal} />}
       </Trace>
     </>
   )

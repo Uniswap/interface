@@ -53,6 +53,8 @@ export interface UserState {
   showSurveyPopup: boolean | undefined
 
   showDonationLink: boolean
+
+  hideNFTWelcomeModal: boolean
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -76,6 +78,7 @@ export const initialState: UserState = {
   URLWarningVisible: true,
   showSurveyPopup: undefined,
   showDonationLink: true,
+  hideNFTWelcomeModal: true,
 }
 
 const userSlice = createSlice({
@@ -120,6 +123,9 @@ const userSlice = createSlice({
     },
     updateShowDonationLink(state, action) {
       state.showDonationLink = action.payload.showDonationLink
+    },
+    updateHideNFTWelcomeModal(state, action) {
+      state.hideNFTWelcomeModal = action.payload.hideNFTWelcomeModal
     },
     addSerializedToken(state, { payload: { serializedToken } }) {
       if (!state.tokens) {
@@ -205,6 +211,7 @@ export const {
   updateShowDonationLink,
   updateShowSurveyPopup,
   updateUserClientSideRouter,
+  updateHideNFTWelcomeModal,
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,

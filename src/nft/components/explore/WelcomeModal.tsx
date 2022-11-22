@@ -78,12 +78,12 @@ const BACKGROUND_IMAGE = {
   },
 }
 
-export function WelcomeModal({ onDismiss }: { onDismiss: () => void }) {
+export function WelcomeModal({ onDismissed }: { onDismissed: () => void }) {
   const [isOpen, setIsOpen] = useState(true)
 
   const dismiss = () => {
     setIsOpen(false)
-    onDismiss()
+    setTimeout(() => onDismissed())
   }
 
   const theme = useTheme()
