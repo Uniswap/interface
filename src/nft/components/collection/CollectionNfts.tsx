@@ -116,7 +116,7 @@ const ViewFullCollection = styled.span`
   ${OpacityHoverState}
 `
 
-const ClearAllButton = styled.button`
+export const ClearAllButton = styled.button`
   color: ${({ theme }) => theme.textTertiary};
   padding-left: 8px;
   padding-right: 8px;
@@ -183,20 +183,22 @@ export const CollectionNftsLoading = () => (
 )
 
 export const CollectionNftsAndMenuLoading = () => (
-  <Column alignItems="flex-start" position="relative" width="full">
-    <Row marginY="12" gap="12">
-      <Box className={loadingAsset} borderRadius="12" width={{ sm: '44', md: '100' }} height="44" />
-      <Box
-        className={loadingAsset}
-        borderRadius="12"
-        height="44"
-        display={{ sm: 'none', md: 'flex' }}
-        style={{ width: '220px' }}
-      />
-      <Box className={loadingAsset} borderRadius="12" height="44" width={{ sm: '276', md: '332' }} />
-    </Row>
-    <CollectionNftsLoading />
-  </Column>
+  <InfiniteScrollWrapper>
+    <Column alignItems="flex-start" position="relative" width="full">
+      <Row marginY="12" gap="12">
+        <Box className={loadingAsset} borderRadius="12" width={{ sm: '44', md: '100' }} height="44" />
+        <Box
+          className={loadingAsset}
+          borderRadius="12"
+          height="44"
+          display={{ sm: 'none', md: 'flex' }}
+          style={{ width: '220px' }}
+        />
+        <Box className={loadingAsset} borderRadius="12" height="44" width={{ sm: '276', md: '332' }} />
+      </Row>
+      <CollectionNftsLoading />
+    </Column>
+  </InfiniteScrollWrapper>
 )
 
 export const getSortDropdownOptions = (setSortBy: (sortBy: SortBy) => void, hasRarity: boolean): DropDownOption[] => {
@@ -479,6 +481,12 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
     setSweepOpen(!sweepIsOpen)
   }, [bagExpanded, hasErc1155s, isMobile, sweepIsOpen, toggleBag])
 
+  const handleClearAllClick = useCallback(() => {
+    reset()
+    setPrevMinMax([0, 100])
+    scrollToTop()
+  }, [reset, setPrevMinMax])
+
   return (
     <>
       <AnimatedBox
@@ -526,66 +534,60 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             </SweepButton>
           )}
         </ActionsContainer>
-        {sweepIsOpen && (
-          <Sweep contractAddress={contractAddress} minPrice={debouncedMinPrice} maxPrice={debouncedMaxPrice} />
-        )}
-        <Row
-          paddingTop={!!markets.length || !!traits.length || minMaxPriceChipText ? '12' : '0'}
-          gap="8"
-          flexWrap="wrap"
-        >
-          {markets.map((market) => (
-            <TraitChip
-              key={market}
-              value={
-                <MarketNameWrapper>
-                  <MarketplaceLogo src={`/nft/svgs/marketplaces/${market.toLowerCase()}.svg`} />
-                  {MARKETPLACE_ITEMS[market as keyof typeof MARKETPLACE_ITEMS]}
-                </MarketNameWrapper>
-              }
-              onClick={() => {
-                scrollToTop()
-                removeMarket(market)
-              }}
-            />
-          ))}
-          {traits.map((trait) => (
-            <TraitChip
-              key={trait.trait_value}
-              value={
-                trait.trait_type === 'Number of traits'
-                  ? `${trait.trait_value} trait${pluralize(Number(trait.trait_value))}`
-                  : `${trait.trait_type}: ${trait.trait_value}`
-              }
-              onClick={() => {
-                scrollToTop()
-                removeTrait(trait)
-              }}
-            />
-          ))}
-          {minMaxPriceChipText && (
-            <TraitChip
-              value={minMaxPriceChipText}
-              onClick={() => {
-                scrollToTop()
-                setMin('')
-                setMax('')
-                setPrevMinMax([0, 100])
-              }}
-            />
+        <InfiniteScrollWrapper>
+          {sweepIsOpen && (
+            <Sweep contractAddress={contractAddress} minPrice={debouncedMinPrice} maxPrice={debouncedMaxPrice} />
           )}
-          {!!traits.length || !!markets.length || minMaxPriceChipText ? (
-            <ClearAllButton
-              onClick={() => {
-                reset()
-                setPrevMinMax([0, 100])
-                scrollToTop()
-              }}
-            >
-              Clear All
-            </ClearAllButton>
-          ) : null}
-        </Row>
+          <Row
+            paddingTop={!!markets.length || !!traits.length || minMaxPriceChipText ? '12' : '0'}
+            gap="8"
+            flexWrap="wrap"
+          >
+            {markets.map((market) => (
+              <TraitChip
+                key={market}
+                value={
+                  <MarketNameWrapper>
+                    <MarketplaceLogo src={`/nft/svgs/marketplaces/${market.toLowerCase()}.svg`} />
+                    {MARKETPLACE_ITEMS[market as keyof typeof MARKETPLACE_ITEMS]}
+                  </MarketNameWrapper>
+                }
+                onClick={() => {
+                  scrollToTop()
+                  removeMarket(market)
+                }}
+              />
+            ))}
+            {traits.map((trait) => (
+              <TraitChip
+                key={trait.trait_value}
+                value={
+                  trait.trait_type === 'Number of traits'
+                    ? `${trait.trait_value} trait${pluralize(Number(trait.trait_value))}`
+                    : `${trait.trait_type}: ${trait.trait_value}`
+                }
+                onClick={() => {
+                  scrollToTop()
+                  removeTrait(trait)
+                }}
+              />
+            ))}
+            {minMaxPriceChipText && (
+              <TraitChip
+                value={minMaxPriceChipText}
+                onClick={() => {
+                  scrollToTop()
+                  setMin('')
+                  setMax('')
+                  setPrevMinMax([0, 100])
+                }}
+              />
+            )}
+            {Boolean(traits.length || markets.length || minMaxPriceChipText) && (
+              <ClearAllButton onClick={handleClearAllClick}>Clear All</ClearAllButton>
+            )}
+          </Row>
+        </InfiniteScrollWrapper>
       </AnimatedBox>
       <InfiniteScrollWrapper>
         <InfiniteScroll

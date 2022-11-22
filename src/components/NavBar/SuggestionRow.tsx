@@ -1,5 +1,6 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { EventName } from '@uniswap/analytics-events'
+import { formatUSDPrice } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import AssetLogo from 'components/Logo/AssetLogo'
@@ -20,7 +21,6 @@ import { putCommas } from 'nft/utils/putCommas'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
-import { formatDollar } from 'utils/formatNumbers'
 
 import * as styles from './SearchBar.css'
 
@@ -194,7 +194,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
       <Column className={styles.suggestionSecondaryContainer}>
         {token.priceUsd && (
           <Row gap="4">
-            <Box className={styles.primaryText}>{formatDollar({ num: token.priceUsd, isPrice: true })}</Box>
+            <Box className={styles.primaryText}>{formatUSDPrice(token.priceUsd)}</Box>
           </Row>
         )}
         {token.price24hChange && (
