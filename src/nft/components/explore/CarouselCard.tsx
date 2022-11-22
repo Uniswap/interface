@@ -8,16 +8,6 @@ import { formatWeiToDecimal } from 'nft/utils'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme/components/text'
 
-const CarouselCardContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  background-color: ${({ theme }) => theme.backgroundSurface};
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
-  border-radius: 20px;
-  overflow: hidden;
-  height: 100%;
-`
-
 const CarouselCardBorder = styled.div`
   width: 100%;
   position: relative;
@@ -155,12 +145,7 @@ const TableElement = styled.div`
   gap: 6px;
 `
 
-const FirstColumnTextWrapper = styled.div`
-  @media (min-width: ${({ theme }) => theme.breakpoint.sm}px) and (max-width: ${({ theme }) => theme.breakpoint.lg}px) {
-    display: none;
-  }
-}
-`
+const FirstColumnTextWrapper = styled.div``
 
 const CardBottomContainer = styled.div`
   display: grid;
@@ -168,6 +153,21 @@ const CardBottomContainer = styled.div`
   gap: 8px;
   grid-template-columns: auto auto auto;
   padding: 16px 16px 20px;
+`
+
+const MarketplaceIcon = styled.img`
+  width: 20px;
+  height: 20px;
+`
+
+const CarouselCardContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  background-color: ${({ theme }) => theme.backgroundSurface};
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-radius: 20px;
+  overflow: hidden;
+  height: 100%;
 
   ${TableElement}:nth-child(3n-1), ${LoadingTableElement}:nth-child(3n-1) {
     justify-self: center;
@@ -176,11 +176,15 @@ const CardBottomContainer = styled.div`
   ${TableElement}:nth-child(3n), ${LoadingTableElement}:nth-child(3n) {
     justify-self: right;
   }
-`
 
-const MarketplaceIcon = styled.img`
-  width: 20px;
-  height: 20px;
+  @media (max-width: 396px) or ((min-width: ${({ theme }) => theme.breakpoint.sm}px) and (max-width: 880px)) {
+    ${FirstColumnTextWrapper} {
+      display: none;
+    }
+    ${TableElement} {
+      justify-self: left !important;
+    }
+  }
 `
 
 interface MarketplaceRowProps {
