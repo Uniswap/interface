@@ -51,7 +51,7 @@ export const TokensTab = forwardRef<any, TokensTabProps>(
     }
 
     return (
-      <Flex grow bg="background0" style={TAB_STYLES.tabContentContainerStandard}>
+      <Flex grow bg="background0" style={TAB_STYLES.tabListContainer}>
         <TokenBalanceList
           ref={ref}
           containerProps={containerProps}

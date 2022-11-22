@@ -13,7 +13,7 @@ import { AnimatedFlashList } from 'src/components/layout/AnimatedFlashList'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
-import { TabContentProps, TAB_STYLES } from 'src/components/layout/TabHelpers'
+import { TabContentProps } from 'src/components/layout/TabHelpers'
 import { Loading } from 'src/components/loading'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { Text } from 'src/components/Text'
@@ -188,7 +188,7 @@ export const NftsTab = forwardRef<FlashList<any>, NftsTabProps>(
     if (isNonPollingRequestInFlight(networkStatus)) {
       return (
         <View style={containerProps?.loadingContainerStyle}>
-          <Flex pt="sm" px="xs">
+          <Flex px="xs">
             <Loading repeat={6} type="nft" />
           </Flex>
         </View>
@@ -206,7 +206,7 @@ export const NftsTab = forwardRef<FlashList<any>, NftsTabProps>(
         />
       </Flex>
     ) : (
-      <Flex flexGrow={1} style={TAB_STYLES.tabContentContainerWide}>
+      <Flex flexGrow={1}>
         <AnimatedFlashList
           ref={ref}
           ListFooterComponent={

@@ -2,10 +2,11 @@ import { NetworkStatus } from '@apollo/client'
 import { TFunction } from 'i18next'
 import React, { ReactElement, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { SectionList, SectionListData } from 'react-native'
+import { SectionList } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
 import { Box } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
+import { TAB_STYLES } from 'src/components/layout/TabHelpers'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { EMPTY_ARRAY } from 'src/constants/misc'
@@ -32,7 +33,7 @@ const MONTH_TITLE = (t: TFunction) => t('This Month')
 const key = (info: TransactionDetails) => info.id
 
 const SectionTitle: SectionList['props']['renderSectionHeader'] = ({ section: { title } }) => (
-  <Box pb="xxxs" pt="sm" px="xs">
+  <Box pb="xxxs" pt="sm" px="sm">
     <Text color="textSecondary" variant="subheadSmall">
       {title}
     </Text>
@@ -77,7 +78,7 @@ export default function TransactionList(props: TransactionListProps) {
 
   if (showLoading) {
     return (
-      <Box>
+      <Box style={TAB_STYLES.tabListInner}>
         <Loading type="transactions" />
       </Box>
     )
@@ -175,13 +176,7 @@ function TransactionListInner({
   ])
 
   const renderItem = useMemo(() => {
-    return ({
-      item,
-    }: {
-      item: TransactionDetails
-      index: number
-      section: SectionListData<TransactionDetails>
-    }) => {
+    return ({ item }: { item: TransactionDetails }) => {
       return (
         <TransactionSummaryRouter
           readonly={readonly}

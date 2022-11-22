@@ -50,18 +50,13 @@ export const TAB_STYLES = StyleSheet.create({
     shadowRadius: 0,
     top: 0,
   },
-  // Use on tab components as the parent wrapper, see TokensTab
-  tabContentContainerStandard: {
+  // For container components that wrap lists within tabs.
+  tabListContainer: {
     paddingHorizontal: FixedTheme.spacing.lg,
-    paddingTop: FixedTheme.spacing.sm,
   },
-  // Use on tab components where the content should bleed over boundary, see NftTab
-  tabContentContainerWide: {
-    paddingTop: FixedTheme.spacing.sm,
-  },
-  // Used on screens that have a custom <TabView />, see ExploreScreen for example
-  tabView: {
-    marginHorizontal: FixedTheme.spacing.lg,
+  // For padding on the list components themselves within tabs.
+  tabListInner: {
+    paddingTop: FixedTheme.spacing.xs,
   },
 })
 

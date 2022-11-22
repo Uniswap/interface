@@ -165,7 +165,7 @@ export function HomeScreen() {
 
   const contentContainerStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({
-      paddingTop: headerHeight + TAB_BAR_HEIGHT,
+      paddingTop: headerHeight + TAB_BAR_HEIGHT + TAB_STYLES.tabListInner.paddingTop,
       paddingBottom: insets.bottom,
       minHeight: dimensions.fullHeight + headerHeightDiff,
     }),
@@ -174,7 +174,7 @@ export function HomeScreen() {
 
   const loadingContainerStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({
-      paddingTop: headerHeight + TAB_BAR_HEIGHT,
+      paddingTop: headerHeight + TAB_BAR_HEIGHT + TAB_STYLES.tabListInner.paddingTop,
       paddingBottom: insets.bottom,
     }),
     [headerHeight, insets.bottom]

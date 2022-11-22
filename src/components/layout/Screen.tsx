@@ -26,7 +26,8 @@ function SafeAreaWithInsets({ children, edges, ...rest }: PropsWithChildren<Scre
 
   const safeAreaStyles = useMemo(() => {
     const style: { [key: string]: number } = {}
-    if (!edges || edges?.length === 0) {
+    // Default to all edges, use empty array for no edges.
+    if (!edges) {
       return {
         paddingTop: insets.top,
         paddingBottom: insets.bottom,

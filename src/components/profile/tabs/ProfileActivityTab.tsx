@@ -3,13 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { NoTransactions } from 'src/components/icons/NoTransactions'
 import { Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { TAB_STYLES } from 'src/components/layout/TabHelpers'
 import TransactionList from 'src/components/TransactionList/TransactionList'
+import { theme } from 'src/styles/theme'
 
 export default function ProfileActivityTab({ ownerAddress }: { ownerAddress: Address }) {
   const { t } = useTranslation()
   return (
-    <Flex grow style={TAB_STYLES.tabContentContainerStandard}>
+    <Flex grow style={{ paddingHorizontal: theme.spacing.sm }}>
       <TransactionList
         emptyStateContent={
           <Flex centered grow height="100%">

@@ -8,7 +8,7 @@ import { NftsTab } from 'src/components/home/NftsTab'
 import { TokensTab } from 'src/components/home/TokensTab'
 import { Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
-import { renderTabLabel, TAB_STYLES } from 'src/components/layout/TabHelpers'
+import { renderTabLabel, TabContentProps, TAB_STYLES } from 'src/components/layout/TabHelpers'
 import ProfileActivityTab from 'src/components/profile/tabs/ProfileActivityTab'
 import TraceTabView from 'src/components/telemetry/TraceTabView'
 import ProfileHeader from 'src/features/externalProfile/ProfileHeader'
@@ -35,19 +35,27 @@ export function ExternalProfileScreen({
     [t]
   )
 
+  const sharedProps = useMemo<TabContentProps>(
+    () => ({
+      contentContainerStyle: TAB_STYLES.tabListInner,
+      loadingContainerStyle: TAB_STYLES.tabListInner,
+    }),
+    []
+  )
+
   const renderTab = useCallback(
     ({ route }) => {
       switch (route?.key) {
         case SectionName.ProfileActivityTab:
           return <ProfileActivityTab ownerAddress={address} />
         case SectionName.ProfileNftsTab:
-          return <NftsTab owner={address} />
+          return <NftsTab containerProps={sharedProps} owner={address} />
         case SectionName.ProfileTokensTab:
-          return <TokensTab owner={address} />
+          return <TokensTab containerProps={sharedProps} owner={address} />
       }
       return null
     },
-    [address]
+    [address, sharedProps]
   )
 
   const renderTabBar = useCallback(
@@ -72,7 +80,7 @@ export function ExternalProfileScreen({
   )
 
   return (
-    <Screen edges={['bottom']}>
+    <Screen edges={[]}>
       <Flex grow>
         <ProfileHeader address={address} />
         <TraceTabView
