@@ -10,11 +10,15 @@ import RemoveButton from 'src/components/explore/RemoveButton'
 import { Box } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Flex } from 'src/components/layout/Flex'
+import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
-import { ExploreTokensTabQuery } from 'src/data/__generated__/types-and-hooks'
+import { PollingInterval } from 'src/constants/misc'
+import { isNonPollingRequestInFlight } from 'src/data/utils'
+import { useFavoriteTokenCardQuery } from 'src/data/__generated__/types-and-hooks'
 import { AssetType } from 'src/entities/assets'
+import { currencyIdToContractInput } from 'src/features/dataApi/utils'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { removeFavoriteToken } from 'src/features/favorites/slice'
 import { openModal } from 'src/features/modals/modalSlice'
@@ -24,16 +28,23 @@ import {
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
 import { fromGraphQLChain } from 'src/utils/chainId'
-import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 import { formatUSDPrice } from 'src/utils/format'
+import { usePollOnFocusOnly } from 'src/utils/hooks'
+
+export const FAVORITE_TOKEN_CARD_LOADER_HEIGHT = 100
 
 type FavoriteTokenCardProps = {
-  token: NonNullable<ExploreTokensTabQuery['favoriteTokens']>[0]
+  currencyId: string
   isEditing?: boolean
   setIsEditing: (update: boolean) => void
 } & ViewProps
 
-function FavoriteTokenCard({ token, isEditing, setIsEditing, ...rest }: FavoriteTokenCardProps) {
+function FavoriteTokenCard({
+  currencyId,
+  isEditing,
+  setIsEditing,
+  ...rest
+}: FavoriteTokenCardProps) {
   const theme = useAppTheme()
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
@@ -41,15 +52,25 @@ function FavoriteTokenCard({ token, isEditing, setIsEditing, ...rest }: Favorite
 
   const favoriteCurrencyIdsSet = useAppSelector(selectFavoriteTokensSet)
 
+  const favoriteCurrencyContractInputs = useMemo(
+    () => currencyIdToContractInput(currencyId),
+    [currencyId]
+  )
+  const { data, networkStatus, startPolling, stopPolling } = useFavoriteTokenCardQuery({
+    variables: {
+      favoriteTokenContract: favoriteCurrencyContractInputs,
+    },
+    // Rely on cache for fast favoriting UX, and poll for updates.
+    fetchPolicy: 'cache-first',
+  })
+
+  usePollOnFocusOnly(startPolling, stopPolling, PollingInterval.Fast)
+
+  const token = data?.tokens?.[0]
+
   // Mirror behavior in top tokens list, use first chain the token is on for the symbol
   const chainId = fromGraphQLChain(token?.chain)
 
-  const currencyId =
-    chainId && token?.address
-      ? buildCurrencyId(chainId, token?.address)
-      : chainId
-      ? buildNativeCurrencyId(chainId)
-      : undefined
   const usdPrice = token?.project?.markets?.[0]?.price?.value
   const pricePercentChange = token?.project?.markets?.[0]?.pricePercentChange24h?.value
 
@@ -90,6 +111,10 @@ function FavoriteTokenCard({ token, isEditing, setIsEditing, ...rest }: Favorite
     if (isEditing || !currencyId) return
     tokenDetailsNavigation.preload(currencyId)
     tokenDetailsNavigation.navigate(currencyId)
+  }
+
+  if (isNonPollingRequestInFlight(networkStatus)) {
+    return <Loading height={FAVORITE_TOKEN_CARD_LOADER_HEIGHT} type="favorite" />
   }
 
   return (

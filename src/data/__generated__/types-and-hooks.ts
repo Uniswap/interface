@@ -943,11 +943,17 @@ export type TopTokenPartsFragment = { __typename?: 'Token', id: string, name?: s
 
 export type ExploreTokensTabQueryVariables = Exact<{
   topTokensOrderBy: TokenSortableField;
-  favoriteTokenContracts: Array<ContractInput> | ContractInput;
 }>;
 
 
-export type ExploreTokensTabQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', id: string, name?: string | null, symbol?: string | null, chain: Chain, address?: string | null, market?: { __typename?: 'TokenMarket', totalValueLocked?: { __typename?: 'Amount', id: string, value: number } | null, volume?: { __typename?: 'Amount', id: string, value: number } | null } | null, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string | null, markets?: Array<{ __typename?: 'TokenProjectMarket', price?: { __typename?: 'Amount', id: string, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, value: number } | null, marketCap?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null } | null } | null> | null, eth?: Array<{ __typename?: 'Token', id: string, name?: string | null, symbol?: string | null, chain: Chain, address?: string | null, market?: { __typename?: 'TokenMarket', totalValueLocked?: { __typename?: 'Amount', id: string, value: number } | null, volume?: { __typename?: 'Amount', id: string, value: number } | null } | null, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string | null, markets?: Array<{ __typename?: 'TokenProjectMarket', price?: { __typename?: 'Amount', id: string, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, value: number } | null, marketCap?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null } | null } | null> | null, favoriteTokens?: Array<{ __typename?: 'Token', id: string, name?: string | null, symbol?: string | null, chain: Chain, address?: string | null, market?: { __typename?: 'TokenMarket', totalValueLocked?: { __typename?: 'Amount', id: string, value: number } | null, volume?: { __typename?: 'Amount', id: string, value: number } | null } | null, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string | null, markets?: Array<{ __typename?: 'TokenProjectMarket', price?: { __typename?: 'Amount', id: string, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, value: number } | null, marketCap?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null } | null } | null> | null };
+export type ExploreTokensTabQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', id: string, name?: string | null, symbol?: string | null, chain: Chain, address?: string | null, market?: { __typename?: 'TokenMarket', totalValueLocked?: { __typename?: 'Amount', id: string, value: number } | null, volume?: { __typename?: 'Amount', id: string, value: number } | null } | null, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string | null, markets?: Array<{ __typename?: 'TokenProjectMarket', price?: { __typename?: 'Amount', id: string, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, value: number } | null, marketCap?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null } | null } | null> | null, eth?: Array<{ __typename?: 'Token', id: string, name?: string | null, symbol?: string | null, chain: Chain, address?: string | null, market?: { __typename?: 'TokenMarket', totalValueLocked?: { __typename?: 'Amount', id: string, value: number } | null, volume?: { __typename?: 'Amount', id: string, value: number } | null } | null, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string | null, markets?: Array<{ __typename?: 'TokenProjectMarket', price?: { __typename?: 'Amount', id: string, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, value: number } | null, marketCap?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null } | null } | null> | null };
+
+export type FavoriteTokenCardQueryVariables = Exact<{
+  favoriteTokenContract: ContractInput;
+}>;
+
+
+export type FavoriteTokenCardQuery = { __typename?: 'Query', tokens?: Array<{ __typename?: 'Token', id: string, name?: string | null, symbol?: string | null, chain: Chain, address?: string | null, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string | null, markets?: Array<{ __typename?: 'TokenProjectMarket', price?: { __typename?: 'Amount', id: string, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null } | null } | null> | null };
 
 export type PortfolioBalanceQueryVariables = Exact<{
   owner: Scalars['String'];
@@ -1934,14 +1940,11 @@ export type SpotPricesQueryHookResult = ReturnType<typeof useSpotPricesQuery>;
 export type SpotPricesLazyQueryHookResult = ReturnType<typeof useSpotPricesLazyQuery>;
 export type SpotPricesQueryResult = Apollo.QueryResult<SpotPricesQuery, SpotPricesQueryVariables>;
 export const ExploreTokensTabDocument = gql`
-    query ExploreTokensTab($topTokensOrderBy: TokenSortableField!, $favoriteTokenContracts: [ContractInput!]!) {
+    query ExploreTokensTab($topTokensOrderBy: TokenSortableField!) {
   topTokens(chain: ETHEREUM, page: 1, pageSize: 100, orderBy: $topTokensOrderBy) {
     ...TopTokenParts
   }
   eth: tokens(contracts: [{address: null, chain: ETHEREUM}]) {
-    ...TopTokenParts
-  }
-  favoriteTokens: tokens(contracts: $favoriteTokenContracts) {
     ...TopTokenParts
   }
 }
@@ -1960,7 +1963,6 @@ export const ExploreTokensTabDocument = gql`
  * const { data, loading, error } = useExploreTokensTabQuery({
  *   variables: {
  *      topTokensOrderBy: // value for 'topTokensOrderBy'
- *      favoriteTokenContracts: // value for 'favoriteTokenContracts'
  *   },
  * });
  */
@@ -1975,6 +1977,59 @@ export function useExploreTokensTabLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type ExploreTokensTabQueryHookResult = ReturnType<typeof useExploreTokensTabQuery>;
 export type ExploreTokensTabLazyQueryHookResult = ReturnType<typeof useExploreTokensTabLazyQuery>;
 export type ExploreTokensTabQueryResult = Apollo.QueryResult<ExploreTokensTabQuery, ExploreTokensTabQueryVariables>;
+export const FavoriteTokenCardDocument = gql`
+    query FavoriteTokenCard($favoriteTokenContract: ContractInput!) {
+  tokens(contracts: [$favoriteTokenContract]) {
+    id
+    name
+    symbol
+    chain
+    address
+    project {
+      id
+      logoUrl
+      markets(currencies: USD) {
+        price {
+          id
+          value
+        }
+        pricePercentChange24h {
+          id
+          value
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useFavoriteTokenCardQuery__
+ *
+ * To run a query within a React component, call `useFavoriteTokenCardQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFavoriteTokenCardQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFavoriteTokenCardQuery({
+ *   variables: {
+ *      favoriteTokenContract: // value for 'favoriteTokenContract'
+ *   },
+ * });
+ */
+export function useFavoriteTokenCardQuery(baseOptions: Apollo.QueryHookOptions<FavoriteTokenCardQuery, FavoriteTokenCardQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FavoriteTokenCardQuery, FavoriteTokenCardQueryVariables>(FavoriteTokenCardDocument, options);
+      }
+export function useFavoriteTokenCardLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FavoriteTokenCardQuery, FavoriteTokenCardQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FavoriteTokenCardQuery, FavoriteTokenCardQueryVariables>(FavoriteTokenCardDocument, options);
+        }
+export type FavoriteTokenCardQueryHookResult = ReturnType<typeof useFavoriteTokenCardQuery>;
+export type FavoriteTokenCardLazyQueryHookResult = ReturnType<typeof useFavoriteTokenCardLazyQuery>;
+export type FavoriteTokenCardQueryResult = Apollo.QueryResult<FavoriteTokenCardQuery, FavoriteTokenCardQueryVariables>;
 export const PortfolioBalanceDocument = gql`
     query PortfolioBalance($owner: String!) {
   portfolios(ownerAddresses: [$owner]) {

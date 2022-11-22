@@ -408,18 +408,8 @@ query TransactionList($address: String!) {
   }
 }
 
-query TopTokens(
-  $chain: Chain
-  $page: Int!
-  $pageSize: Int!
-  $orderBy: TokenSortableField
-) {
-  topTokens(
-    chain: $chain
-    page: $page
-    pageSize: $pageSize
-    orderBy: $orderBy
-  ) {
+query TopTokens($chain: Chain, $page: Int!, $pageSize: Int!, $orderBy: TokenSortableField) {
+  topTokens(chain: $chain, page: $page, pageSize: $pageSize, orderBy: $orderBy) {
     id
     address
     chain
@@ -554,16 +544,8 @@ fragment TopTokenParts on Token {
   }
 }
 
-query ExploreTokensTab(
-  $topTokensOrderBy: TokenSortableField!
-  $favoriteTokenContracts: [ContractInput!]!
-) {
-  topTokens(
-    chain: ETHEREUM
-    page: 1
-    pageSize: 100
-    orderBy: $topTokensOrderBy
-  ) {
+query ExploreTokensTab($topTokensOrderBy: TokenSortableField!) {
+  topTokens(chain: ETHEREUM, page: 1, pageSize: 100, orderBy: $topTokensOrderBy) {
     ...TopTokenParts
   }
   # `topTokens` returns WETH rather than ETH
@@ -571,8 +553,28 @@ query ExploreTokensTab(
   eth: tokens(contracts: [{ address: null, chain: ETHEREUM }]) {
     ...TopTokenParts
   }
-  # Favorite tokens grid data
-  favoriteTokens: tokens(contracts: $favoriteTokenContracts) {
-    ...TopTokenParts
+}
+
+query FavoriteTokenCard($favoriteTokenContract: ContractInput!) {
+  tokens(contracts: [$favoriteTokenContract]) {
+    id
+    name
+    symbol
+    chain
+    address
+    project {
+      id
+      logoUrl
+      markets(currencies: USD) {
+        price {
+          id
+          value
+        }
+        pricePercentChange24h {
+          id
+          value
+        }
+      }
+    }
   }
 }

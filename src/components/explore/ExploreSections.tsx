@@ -20,7 +20,7 @@ import {
   ExploreTokensTabQuery,
   useExploreTokensTabQuery,
 } from 'src/data/__generated__/types-and-hooks'
-import { currencyIdToContractInput, usePersistedError } from 'src/features/dataApi/utils'
+import { usePersistedError } from 'src/features/dataApi/utils'
 import {
   getClientTokensOrderByCompareFn,
   getTokenMetadataDisplayType,
@@ -59,13 +59,6 @@ export function ExploreSections({ listRef }: ExploreSectionsProps) {
   const [isEditingWallets, setIsEditingWallets] = useState(false)
   const hasFavoritedWallets = useAppSelector(selectHasWatchedWallets)
 
-  // Format favorite tokens for data lookup
-  const favoriteCurrencyContractInputs = useMemo(
-    () =>
-      Array.from(favoriteCurrencyIdsSet).map((currencyId) => currencyIdToContractInput(currencyId)),
-    [favoriteCurrencyIdsSet]
-  )
-
   const {
     data,
     networkStatus,
@@ -77,7 +70,6 @@ export function ExploreSections({ listRef }: ExploreSectionsProps) {
   } = useExploreTokensTabQuery({
     variables: {
       topTokensOrderBy: serverOrderBy,
-      favoriteTokenContracts: favoriteCurrencyContractInputs,
     },
     returnPartialData: true,
   })
@@ -143,7 +135,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps) {
   // Don't want to show full screen loading state when changing tokens sort, which triggers NetworkStatus.setVariable request
   const isLoading =
     networkStatus === NetworkStatus.loading || networkStatus === NetworkStatus.refetch
-  const hasAllData = !!data?.favoriteTokens && !!data?.topTokens
+  const hasAllData = !!data?.topTokens
   const error = usePersistedError(requestLoading, requestError)
 
   const onRetry = useCallback(() => {
@@ -172,7 +164,6 @@ export function ExploreSections({ listRef }: ExploreSectionsProps) {
         <Flex gap="md" mb="md" mt="xs" mx="sm">
           {hasFavoritedTokens ? (
             <FavoriteTokensGrid
-              favoriteTokensData={data?.favoriteTokens}
               isEditing={isEditingTokens}
               setIsEditing={setIsEditingTokens}
               showLoading={showLoading}
