@@ -9,4 +9,6 @@ LogBox.ignoreLogs([
   'Warning: findNodeHandle',
   // https://github.com/d3/d3-interpolate/issues/99
   'Require cycle',
+  'logException:ApolloClient [GraphQL Error]:',
+  'logException:ApolloClient [Network Error]:',
 ])
