@@ -24,13 +24,11 @@ const PopupContainer = styled.div<{ show: boolean }>`
   border-radius: 12px;
   cursor: pointer;
   color: ${({ theme }) => theme.textPrimary};
-  height: 100px;
   display: ${({ show }) => (show ? 'flex' : 'none')};
   flex-direction: column;
   bottom: 48px;
   position: fixed;
   right: clamp(0px, 1vw, 16px);
-  text-decoration: none;
   width: ${Math.min(391, window.innerWidth - 5)}px;
   z-index: ${Z_INDEX.sticky};
   transition: ${({
@@ -43,7 +41,7 @@ const PopupContainer = styled.div<{ show: boolean }>`
     border-radius: 12px;
     background-image: ${({ theme }) =>
       `linear-gradient(${theme.backgroundSurface}, ${theme.backgroundSurface}), 
-      radial-gradient(circle at top left, hsla(299, 100%, 61%, 1), hsla(299, 100%, 87%, 1))`};
+      radial-gradient(circle at top left, hsla(299, 100%, 87%, 1), hsla(299, 100%, 61%, 1))`};
     background-origin: border-box;
     background-clip: padding-box, border-box;
   }
@@ -54,7 +52,6 @@ const InnerContainer = styled.div`
   display: flex;
   position: relative;
   gap: 8px;
-  height: 100%;
   padding: 8px;
 `
 
@@ -77,11 +74,12 @@ const TextContainer = styled.div`
 
 export default function NftExploreBanner() {
   const theme = useTheme()
-  const [showNftPromoBanner, toggleShowNftPromoBanner] = useShowNftPromoBanner()
+  const [showNftPromoBanner, stopShowingNftPromoBanner] = useShowNftPromoBanner()
   const navigate = useNavigate()
 
   const navigateToNfts = () => {
     navigate('/nfts')
+    stopShowingNftPromoBanner()
   }
 
   return (
@@ -90,7 +88,7 @@ export default function NftExploreBanner() {
         <Box
           as="img"
           style={{
-            width: '25%',
+            width: '23%',
             cursor: 'pointer',
             aspectRatio: '1',
             transition: 'transform 0.25s ease 0s',
@@ -119,7 +117,7 @@ export default function NftExploreBanner() {
           onClick={(e) => {
             e.preventDefault()
             e.stopPropagation()
-            toggleShowNftPromoBanner()
+            stopShowingNftPromoBanner()
           }}
           style={{ cursor: 'pointer', position: 'absolute', right: 10, zIndex: 5 }}
         />

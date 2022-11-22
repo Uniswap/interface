@@ -97,15 +97,17 @@ const Marginer = styled.div`
 `
 
 function getCurrentPageFromLocation(locationPathname: string): PageName | undefined {
-  switch (locationPathname) {
-    case '/swap':
+  switch (true) {
+    case locationPathname.startsWith('/swap'):
       return PageName.SWAP_PAGE
-    case '/vote':
+    case locationPathname.startsWith('/vote'):
       return PageName.VOTE_PAGE
-    case '/pool':
+    case locationPathname.startsWith('/pool'):
       return PageName.POOL_PAGE
-    case '/tokens':
+    case locationPathname.startsWith('/tokens'):
       return PageName.TOKENS_PAGE
+    case locationPathname.startsWith('/nft'):
+      return PageName.NFT_PAGE
     default:
       return undefined
   }

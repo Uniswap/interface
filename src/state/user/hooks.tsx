@@ -276,11 +276,11 @@ export function useShowNftPromoBanner(): [boolean, () => void] {
   const dispatch = useAppDispatch()
   const showNftPromoBanner = useAppSelector((state) => state.user.NFTPromoBannerVisible)
 
-  const toggleShowNftPromoBanner = useCallback(() => {
-    dispatch(updateShowNftPromoBanner({ showNftPromoBanner: !showNftPromoBanner }))
-  }, [dispatch, showNftPromoBanner])
+  const stopShowingNftPromoBanner = useCallback(() => {
+    dispatch(updateShowNftPromoBanner({ showNftPromoBanner: false }))
+  }, [dispatch])
 
-  return [showNftPromoBanner, toggleShowNftPromoBanner]
+  return [showNftPromoBanner, stopShowingNftPromoBanner]
 }
 
 /**

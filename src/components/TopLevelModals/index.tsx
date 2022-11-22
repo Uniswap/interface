@@ -20,6 +20,11 @@ export default function TopLevelModals() {
   const blockedAccountModalOpen = useModalIsOpen(ApplicationModal.BLOCKED_ACCOUNT)
   const { account } = useWeb3React()
   const location = useLocation()
+  const isNftEnabled = useNftFlag() === NftVariant.Enabled
+  const pageShowsNftPromoBanner =
+    location.pathname.startsWith('/swap') ||
+    location.pathname.startsWith('/tokens') ||
+    location.pathname.startsWith('/pool')
 
   useAccountRiskCheck(account)
   const open = Boolean(blockedAccountModalOpen && account)
@@ -27,12 +32,14 @@ export default function TopLevelModals() {
     <>
       <AddressClaimModal isOpen={addressClaimOpen} onDismiss={addressClaimToggle} />
       <ConnectedAccountBlocked account={account} isOpen={open} />
-      {location.pathname.includes('/swap') && <NftExploreBanner />}
-      {location.pathname.includes('/tokens') && <NftExploreBanner />}
-      {location.pathname.includes('/pool') && <NftExploreBanner />}
       <Bag />
-      {useNftFlag() === NftVariant.Enabled && <TransactionCompleteModal />}
-      {useNftFlag() === NftVariant.Enabled && <AirdropModal />}
+      {isNftEnabled && (
+        <>
+          <TransactionCompleteModal />
+          <AirdropModal />
+          {pageShowsNftPromoBanner && <NftExploreBanner />}
+        </>
+      )}
     </>
   )
 }
