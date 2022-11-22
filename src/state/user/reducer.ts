@@ -54,6 +54,8 @@ export interface UserState {
   showSurveyPopup: boolean | undefined
 
   showDonationLink: boolean
+
+  hideNFTWelcomeModal: boolean
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -78,6 +80,7 @@ export const initialState: UserState = {
   hideNFTPromoBanner: false,
   showSurveyPopup: undefined,
   showDonationLink: true,
+  hideNFTWelcomeModal: true,
 }
 
 const userSlice = createSlice({
@@ -122,6 +125,9 @@ const userSlice = createSlice({
     },
     updateShowDonationLink(state, action) {
       state.showDonationLink = action.payload.showDonationLink
+    },
+    updateHideNFTWelcomeModal(state, action) {
+      state.hideNFTWelcomeModal = action.payload.hideNFTWelcomeModal
     },
     updateShowNftPromoBanner(state, action) {
       state.hideNFTPromoBanner = action.payload.hideNFTPromoBanner
@@ -210,6 +216,7 @@ export const {
   updateShowDonationLink,
   updateShowSurveyPopup,
   updateUserClientSideRouter,
+  updateHideNFTWelcomeModal,
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,

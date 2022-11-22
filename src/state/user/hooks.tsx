@@ -19,6 +19,7 @@ import {
   addSerializedToken,
   removeSerializedToken,
   updateHideClosedPositions,
+  updateHideNFTWelcomeModal,
   updateShowNftPromoBanner,
   updateShowSurveyPopup,
   updateUserClientSideRouter,
@@ -116,6 +117,15 @@ export function useShowSurveyPopup(): [boolean | undefined, (showPopup: boolean)
     [dispatch]
   )
   return [showSurveyPopup, toggleShowSurveyPopup]
+}
+
+export function useHideNFTWelcomeModal(): [boolean | undefined, () => void] {
+  const dispatch = useAppDispatch()
+  const hideNFTWelcomeModal = useAppSelector((state) => state.user.hideNFTWelcomeModal)
+  const hideModal = useCallback(() => {
+    dispatch(updateHideNFTWelcomeModal({ hideNFTWelcomeModal: true }))
+  }, [dispatch])
+  return [hideNFTWelcomeModal, hideModal]
 }
 
 export function useClientSideRouter(): [boolean, (userClientSideRouter: boolean) => void] {
