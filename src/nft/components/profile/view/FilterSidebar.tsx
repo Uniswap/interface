@@ -92,6 +92,12 @@ export const FilterSidebar = ({
       easing: easings.easeOutSine,
     },
   })
+
+  const hideSearch = useMemo(
+    () => walletCollections && walletCollections?.length >= WALLET_COLLECTIONS_PAGINATION_LIMIT,
+    [walletCollections]
+  )
+
   return (
     // @ts-ignore
     <AnimatedBox
@@ -131,6 +137,7 @@ export const FilterSidebar = ({
           fetchNextPage={fetchNextPage}
           hasNextPage={hasNextPage}
           isFetchingNextPage={isFetchingNextPage}
+          hideSearch={hideSearch}
         />
       </Box>
     </AnimatedBox>
@@ -144,6 +151,7 @@ const CollectionSelect = ({
   fetchNextPage,
   hasNextPage,
   isFetchingNextPage,
+  hideSearch,
 }: {
   collections: WalletCollection[]
   collectionFilters: Array<string>
@@ -151,6 +159,7 @@ const CollectionSelect = ({
   fetchNextPage: () => void
   hasNextPage?: boolean
   isFetchingNextPage: boolean
+  hideSearch: boolean
 }) => {
   const [collectionSearchText, setCollectionSearchText] = useState('')
   const [displayCollections, setDisplayCollections] = useState(collections)
@@ -185,11 +194,6 @@ const CollectionSelect = ({
     [displayCollections.length, hasNextPage]
   )
 
-  const hideFilterSearchBar = useMemo(
-    () => collections && collections?.length >= WALLET_COLLECTIONS_PAGINATION_LIMIT,
-    [collections]
-  )
-
   const CollectionFilterRow = useCallback(
     ({ index, style }: CollectionFilterRowProps) => {
       const collection = !!displayCollections && displayCollections[index]
@@ -216,7 +220,7 @@ const CollectionSelect = ({
       </Box>
       <Box paddingBottom="12" borderRadius="8">
         <Column as="ul" paddingLeft="0" gap="10" style={{ maxHeight: '80vh' }}>
-          {hideFilterSearchBar && (
+          {!hideSearch && (
             <CollectionFilterSearch
               collectionSearchText={collectionSearchText}
               setCollectionSearchText={setCollectionSearchText}
