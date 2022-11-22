@@ -61,7 +61,7 @@ export const ListingSection = ({
       marginTop="10"
       marginBottom="10"
       onClick={() => rows.length > 0 && setIsOpen(!isOpen)}
-      color={allApproved ? 'green' : 'textPrimary'}
+      color={allApproved ? 'accentSuccess' : 'textPrimary'}
     >
       {allApproved && <ApprovedCheckmarkIcon style={{ marginRight: '8px' }} />}
       {sectionTitle}
