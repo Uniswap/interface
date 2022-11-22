@@ -84,14 +84,15 @@ export const FilterSidebar = ({
   return (
     // @ts-ignore
     <AnimatedBox
-      position="sticky"
-      top="72"
+      position={{ sm: 'fixed', md: 'sticky' }}
+      top={{ sm: '0', md: '72' }}
       left={{ sm: '0', md: 'unset' }}
       width={{ sm: 'full', md: '332', lg: '332' }}
       height={{ sm: 'full', md: 'auto' }}
-      zIndex={{ sm: '3', md: 'auto' }}
+      zIndex={{ sm: 'modal', md: 'auto' }}
       display={isFiltersExpanded ? 'flex' : 'none'}
       style={{ transform: isMobile ? undefined : sidebarX.to((x) => `translateX(${x}px)`) }}
+      background="backgroundBackdrop"
     >
       <Box
         paddingTop={{ sm: '24', md: '0' }}

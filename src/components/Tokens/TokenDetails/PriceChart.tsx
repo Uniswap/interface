@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { formatUSDPrice } from '@uniswap/conedison/format'
 import { AxisBottom, TickFormatter } from '@visx/axis'
 import { localPoint } from '@visx/event'
 import { EventType } from '@visx/event/lib/types'
@@ -20,7 +21,6 @@ import {
   monthYearDayFormatter,
   weekFormatter,
 } from 'utils/formatChartTimes'
-import { formatDollar } from 'utils/formatNumbers'
 
 export const DATA_EMPTY = { value: 0, timestamp: 0 }
 
@@ -92,6 +92,16 @@ interface PriceChartProps {
   timePeriod: TimePeriod
 }
 
+function formatDisplayPrice(value: number) {
+  const str = value.toFixed(9)
+  const [digits, decimals] = str.split('.')
+  // Displays longer string for numbers < $2 to show changes in both stablecoins & small values
+  if (digits === '0' || digits === '1')
+    return `$${digits + '.' + decimals.substring(0, 2) + decimals.substring(2).replace(/0+$/, '')}`
+
+  return formatUSDPrice(value)
+}
+
 export function PriceChart({ width, height, prices, timePeriod }: PriceChartProps) {
   const locale = useActiveLocale()
   const theme = useTheme()
@@ -104,9 +114,7 @@ export function PriceChart({ width, height, prices, timePeriod }: PriceChartProp
 
   // set display price to ending price when prices have changed.
   useEffect(() => {
-    if (prices) {
-      setDisplayPrice(endingPrice)
-    }
+    setDisplayPrice(endingPrice)
   }, [prices, endingPrice])
   const [crosshair, setCrosshair] = useState<number | null>(null)
 
@@ -226,7 +234,7 @@ export function PriceChart({ width, height, prices, timePeriod }: PriceChartProp
   return (
     <>
       <ChartHeader>
-        <TokenPrice>{formatDollar({ num: displayPrice.value, isPrice: true })}</TokenPrice>
+        <TokenPrice>{formatDisplayPrice(displayPrice.value)}</TokenPrice>
         <DeltaContainer>
           {formattedDelta}
           <ArrowCell>{arrow}</ArrowCell>

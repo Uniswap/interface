@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { EventName } from '@uniswap/analytics-events'
+import { formatNumber, formatUSDPrice, NumberType } from '@uniswap/conedison/format'
 import { ParentSize } from '@visx/responsive'
 import SparklineChart from 'components/Charts/SparklineChart'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
@@ -14,7 +15,6 @@ import { ArrowDown, ArrowUp } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
-import { formatDollar } from 'utils/formatNumbers'
 
 import {
   LARGE_MEDIA_BREAKPOINT,
@@ -481,7 +481,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           price={
             <ClickableContent>
               <PriceInfoCell>
-                {formatDollar({ num: token.market?.price?.value, isPrice: true, lessPreciseStablecoinValues: true })}
+                {formatUSDPrice(token.market?.price?.value)}
                 <PercentChangeInfoCell>
                   {formattedDelta}
                   {arrow}
@@ -495,8 +495,14 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               {arrow}
             </ClickableContent>
           }
-          tvl={<ClickableContent>{formatDollar({ num: token.market?.totalValueLocked?.value })}</ClickableContent>}
-          volume={<ClickableContent>{formatDollar({ num: token.market?.volume?.value })}</ClickableContent>}
+          tvl={
+            <ClickableContent>
+              {formatNumber(token.market?.totalValueLocked?.value, NumberType.FiatTokenStats)}
+            </ClickableContent>
+          }
+          volume={
+            <ClickableContent>{formatNumber(token.market?.volume?.value, NumberType.FiatTokenStats)}</ClickableContent>
+          }
           sparkLine={
             <SparkLine>
               <ParentSize>
