@@ -237,7 +237,7 @@ const AirdropModal = () => {
                   </RewardsDetailsContainer>
                   <RewardsDetailsContainer>
                     <RewardsText>Genie NFT holder rewards</RewardsText>{' '}
-                    <CurrencyText>{totalAmount > 3000 ? `${totalAmount} USDC` : '0'}</CurrencyText>
+                    <CurrencyText>{totalAmount > 300 ? `${totalAmount} USDC` : '0'}</CurrencyText>
                   </RewardsDetailsContainer>
                 </TextContainer>
                 <StyledImage src={airdropBackgroundv2} />
