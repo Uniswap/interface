@@ -4,7 +4,8 @@ import Modal from 'components/Modal'
 import { useState } from 'react'
 import { X } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { ExternalLink } from 'theme/components'
+import { ThemedText } from 'theme/components/text'
 
 const Container = styled.div`
   position: relative;
@@ -20,15 +21,6 @@ const CloseButton = styled(X)`
   top: 20px;
   right: 24px;
   cursor: pointer;
-`
-
-const Link = styled.a`
-  outline: none;
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-  }
 `
 
 const Background = styled.img`
@@ -104,12 +96,12 @@ export function WelcomeModal({ onDismissed }: { onDismissed: () => void }) {
             Genie. Additonally, if you’ve used Genie in the past, then you may be eligible for a USDC airdrop. You can
             connect your wallet to claim any rewards. For more details on the airdrop please read the official
             announcement on the Uniswap Labs blog.{' '}
-            <Link
+            <ExternalLink
               href="https://uniswap.org/blog/uniswap-nft-aggregator-announcement"
               title="Uniswap NFT aggregator announcement"
             >
               Learn more.
-            </Link>
+            </ExternalLink>
           </Paragraph>
           <CloseButton size={24} onClick={dismiss} />
         </Content>

@@ -38,7 +38,7 @@ const NftExplore = () => {
           <Banner />
           <TrendingCollections />
         </ExploreContainer>
-        {!isModalHidden && <WelcomeModal onDismissed={hideModal} />}
+        <WelcomeModal onDismissed={hideModal} />
       </Trace>
     </>
   )
