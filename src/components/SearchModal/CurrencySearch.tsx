@@ -92,15 +92,16 @@ export function CurrencySearch({
       !balancesAreLoading
         ? filteredTokens
             .filter((token) => {
-              // If there is no query, filter out user-added tokens with no balance.
+              // If there is no query, filter out unselected user-added tokens with no balance.
               if (!debouncedQuery && token instanceof UserAddedToken) {
+                if (selectedCurrency?.equals(token) || otherSelectedCurrency?.equals(token)) return true
                 return balances[token.address]?.greaterThan(0)
               }
               return true
             })
             .sort(tokenComparator.bind(null, balances))
         : [],
-    [balances, balancesAreLoading, debouncedQuery, filteredTokens]
+    [balances, balancesAreLoading, debouncedQuery, filteredTokens, otherSelectedCurrency, selectedCurrency]
   )
   const isLoading = Boolean(balancesAreLoading && !tokenLoaderTimerElapsed)
 
