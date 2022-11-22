@@ -6,12 +6,13 @@ import { OpacityHoverState } from 'components/Common'
 import Loader from 'components/Loader'
 import { useContract } from 'hooks/useContract'
 import { ChevronRightIcon } from 'nft/components/icons'
-import { CollectionRewardsFetcher, RewardType } from 'nft/queries/genie/GetAirdorpMerkle'
+import { CollectionRewardsFetcher, Rewards, RewardType } from 'nft/queries/genie/GetAirdorpMerkle'
 import { useEffect, useState } from 'react'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components/macro'
 import { CloseIcon, ThemedText } from 'theme'
+import { BigNumber, utils } from 'ethers'
 
 import Modal from '../Modal'
 
@@ -147,50 +148,36 @@ const MainHeader = styled.span`
 `
 
 const AirdropModal = () => {
-  const [isClaimed, setClaimed] = useState(false)
+  const { account } = useWeb3React()
+  const [isClaimed, setIsClaimed] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [totalAmount] = useState(300)
+  const [totalAmount, setTotalAmount] = useState(300)
   const isOpen = useModalIsOpen(ApplicationModal.UNISWAP_NFT_AIRDROP_CLAIM)
   const usdcAirdropToggle = useToggleModal(ApplicationModal.UNISWAP_NFT_AIRDROP_CLAIM)
   const contract = useContract('0x8B799381ac40b838BBA4131ffB26197C432AFe78', uniswapNftAirdropClaim)
   const { provider } = useWeb3React()
-  // provider
-  //   ? getContract('0xb5Cf43a08dDF40F9d4EB1d86347778E70C211157', uniswapNftAirdropClaim, provider)
-  //   : undefined
 
   useEffect(() => {
-    async function getInfo() {
-      if (contract && provider) {
-        // const result = await contract.isClaimed('0xb5Cf43a08dDF40F9d4EB1d86347778E70C211157')
-        try {
-          const result = await contract.connect(provider).functions.isClaimed(4754)
-          // console.log(Object.keys(contract.connect(provider).functions))
-          console.log(result)
-        } catch (err) {
-          console.log('errored out')
+    if (account && provider && contract) {
+      ;(async () => {
+        const { data } = await CollectionRewardsFetcher(account)
+        const claim = data.find((claim) => claim?.rewardType === RewardType.GENIE_UNISWAP_USDC_AIRDROP)
+        const [isClaimed] = await contract.connect(provider).functions.isClaimed(claim?.index)
+
+        if (claim && isClaimed === false) {
+          const usdAmount = BigNumber.from(claim.amount).div(10 ** 6)
+          setTotalAmount(usdAmount.toNumber())
+          setIsClaimed(isClaimed)
         }
-      } else {
-        console.log('no contract')
-      }
+      })()
     }
-
-    getInfo()
-  }, [contract])
-
-  // CollectionRewardsFetcher('0x54be3a794282c030b15e43ae2bb182e14c409c5e').then((res) => {
-  //   const { data } = res
-
-  //   for (const claim of data) {
-  //     if (claim.rewardType === RewardType.LOOKS_RARE_NFT_COMMERCE_REWARDS) {
-  //     }
-  //   }
-  // })
+  }, [account, contract, provider])
 
   const dismiss = () => {
     usdcAirdropToggle()
 
     setTimeout(() => {
-      setClaimed(false)
+      setIsClaimed(false)
     }, 500)
   }
 
@@ -199,7 +186,7 @@ const AirdropModal = () => {
 
     setTimeout(() => {
       setIsSubmitting(false)
-      setClaimed(true)
+      setIsClaimed(true)
     }, 1000)
   }
 
