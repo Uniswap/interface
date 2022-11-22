@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
@@ -7,8 +8,6 @@ import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
 import styled from 'styled-components/macro'
 import { StyledInternalLink } from 'theme'
-
-import { useFormatBalance, useFormatUsdValue } from './BalanceSummary'
 
 const Wrapper = styled.div`
   align-content: center;
@@ -84,9 +83,8 @@ const SwapButton = styled(StyledInternalLink)`
 export default function MobileBalanceSummaryFooter({ token }: { token: Currency }) {
   const { account } = useWeb3React()
   const balance = useCurrencyBalance(account, token)
-  const formattedBalance = useFormatBalance(balance)
-  const usdValue = useStablecoinValue(balance)
-  const formattedUsdValue = useFormatUsdValue(usdValue)
+  const formattedBalance = formatCurrencyAmount(balance, NumberType.TokenNonTx)
+  const formattedUsdValue = formatCurrencyAmount(useStablecoinValue(balance), NumberType.FiatTokenStats)
   const chain = CHAIN_ID_TO_BACKEND_NAME[token.chainId].toLowerCase()
 
   return (

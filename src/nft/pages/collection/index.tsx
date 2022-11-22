@@ -2,11 +2,6 @@ import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { OpacityHoverState } from 'components/Common'
-import {
-  MAX_WIDTH_MEDIA_BREAKPOINT,
-  MOBILE_MEDIA_BREAKPOINT,
-  SMALL_MEDIA_BREAKPOINT,
-} from 'components/Tokens/constants'
 import { useLoadAssetsQuery } from 'graphql/data/nft/Asset'
 import { useCollectionQuery, useLoadCollectionQuery } from 'graphql/data/nft/Collection'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
@@ -24,10 +19,17 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { easings, useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import { TRANSITION_DURATIONS } from 'theme/styles'
 
 const FILTER_WIDTH = 332
 const BAG_WIDTH = 324
-export const COLLECTION_BANNER_HEIGHT = 288
+
+export const BannerWrapper = styled(Box)`
+  height: 100px;
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    height: 288px;
+  }
+`
 
 export const CollectionBannerLoading = () => <Box height="full" width="full" className={styles.loadingBanner} />
 
@@ -44,25 +46,6 @@ const MobileFilterHeader = styled(Row)`
 // As a result it needs 16px padding on either side. These paddings are offset by 16px to account for this. Please see CollectionNFTs.css.ts for the additional sizing context.
 // See breakpoint values in ScreenBreakpointsPaddings above - they must match
 const CollectionDisplaySection = styled(Row)`
-  @media screen and (min-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
-    padding-left: 48px;
-    padding-right: 48px;
-  }
-
-  @media screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
-    padding-left: 26px;
-    padding-right: 26px;
-  }
-
-  @media screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-
-  @media screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    padding-left: 16px;
-    padding-right: 16px;
-  }
   align-items: flex-start;
   position: relative;
 `
@@ -89,6 +72,7 @@ const Collection = () => {
   const isActivityToggled = pathname.includes('/activity')
   const setMarketCount = useCollectionFilters((state) => state.setMarketCount)
   const isBagExpanded = useBag((state) => state.bagExpanded)
+  const setBagExpanded = useBag((state) => state.setBagExpanded)
   const { chainId } = useWeb3React()
 
   const collectionStats = useCollectionQuery(contractAddress as string)
@@ -100,11 +84,11 @@ const Collection = () => {
         ? isBagExpanded
           ? BAG_WIDTH + FILTER_WIDTH
           : FILTER_WIDTH
-        : isBagExpanded
+        : isBagExpanded && !isMobile
         ? BAG_WIDTH
         : 0,
     config: {
-      duration: 250,
+      duration: TRANSITION_DURATIONS.medium,
       easing: easings.easeOutSine,
     },
   })
@@ -116,6 +100,11 @@ const Collection = () => {
     })
     setMarketCount(marketCount)
   }, [collectionStats?.marketplaceCount, setMarketCount])
+
+  useEffect(() => {
+    setBagExpanded({ bagExpanded: false, manualClose: false })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const toggleActivity = () => {
     isActivityToggled
@@ -133,7 +122,7 @@ const Collection = () => {
         <Column width="full">
           {contractAddress ? (
             <>
-              <Box width="full" height={`${COLLECTION_BANNER_HEIGHT}`}>
+              <BannerWrapper width="full">
                 <Box
                   as={collectionStats?.bannerImageUrl ? 'img' : 'div'}
                   height="full"
@@ -146,7 +135,7 @@ const Collection = () => {
                   className={styles.bannerImage}
                   background="none"
                 />
-              </Box>
+              </BannerWrapper>
               <CollectionDescriptionSection>
                 {collectionStats && (
                   <CollectionStats stats={collectionStats || ({} as GenieCollection)} isMobile={isMobile} />
@@ -163,12 +152,12 @@ const Collection = () => {
               <CollectionDisplaySection>
                 <Box
                   position={isMobile ? 'fixed' : 'sticky'}
-                  top="0"
+                  top={{ sm: '0', md: '72' }}
                   left="0"
                   width={isMobile ? 'full' : '0'}
                   height={isMobile && isFiltersExpanded ? 'full' : undefined}
                   background={isMobile ? 'backgroundBackdrop' : undefined}
-                  zIndex={isMobile ? 'modalBackdrop' : undefined}
+                  zIndex="modalBackdrop"
                   overflowY={isMobile ? 'scroll' : undefined}
                 >
                   {isFiltersExpanded && (
@@ -188,7 +177,7 @@ const Collection = () => {
 
                 {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
                 <AnimatedBox
-                  position={isMobile && isFiltersExpanded ? 'fixed' : 'static'}
+                  position={isMobile && (isFiltersExpanded || isBagExpanded) ? 'fixed' : 'static'}
                   style={{
                     transform: gridX.to((x) => `translate(${x as number}px)`),
                     width: gridWidthOffset.to((x) => `calc(100% - ${x as number}px)`),

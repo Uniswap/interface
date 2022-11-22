@@ -34,14 +34,21 @@ import {
 } from 'nft/hooks'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { usePriceRange } from 'nft/hooks/usePriceRange'
-import { DropDownOption, GenieAsset, GenieCollection, Markets, TokenType } from 'nft/types'
-import { calcPoolPrice, getRarityStatus, pluralize } from 'nft/utils'
+import { DropDownOption, GenieAsset, GenieCollection, isPooledMarket, Markets, TokenType } from 'nft/types'
+import {
+  calcPoolPrice,
+  calcSudoSwapPrice,
+  getRarityStatus,
+  isInSameMarketplaceCollection,
+  isInSameSudoSwapPool,
+  pluralize,
+} from 'nft/utils'
 import { scrollToTop } from 'nft/utils/scrollToTop'
 import { applyFiltersFromURL, syncLocalFiltersWithURL } from 'nft/utils/urlParams'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useLocation } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { CollectionAssetLoading } from './CollectionAssetLoading'
@@ -57,11 +64,26 @@ interface CollectionNftsProps {
 
 const rarityStatusCache = new Map<string, boolean>()
 
+const InfiniteScrollWrapperCss = css`
+  margin: 0 16px;
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    margin: 0 20px;
+  }
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
+    margin: 0 26px;
+  }
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
+    margin: 0 48px;
+  }
+`
+
 const ActionsContainer = styled.div`
   display: flex;
+  flex: 1 1 auto;
   gap: 10px;
-  width: 100%;
   justify-content: space-between;
+
+  ${InfiniteScrollWrapperCss}
 `
 
 const ActionsSubContainer = styled.div`
@@ -76,6 +98,7 @@ const ActionsSubContainer = styled.div`
 
 export const SortDropdownContainer = styled.div<{ isFiltersExpanded: boolean }>`
   width: max-content;
+  height: 44px;
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     ${({ isFiltersExpanded }) => isFiltersExpanded && `display: none;`}
   }
@@ -86,14 +109,14 @@ export const SortDropdownContainer = styled.div<{ isFiltersExpanded: boolean }>`
 
 const EmptyCollectionWrapper = styled.div`
   display: block;
-  textalign: center;
+  text-align: center;
 `
 
 const ViewFullCollection = styled.span`
   ${OpacityHoverState}
 `
 
-const ClearAllButton = styled.button`
+export const ClearAllButton = styled.button`
   color: ${({ theme }) => theme.textTertiary};
   padding-left: 8px;
   padding-right: 8px;
@@ -102,6 +125,10 @@ const ClearAllButton = styled.button`
   border: none;
   cursor: pointer;
   background: none;
+`
+
+const InfiniteScrollWrapper = styled.div`
+  ${InfiniteScrollWrapperCss}
 `
 
 const SweepButton = styled.div<{ toggled: boolean; disabled?: boolean }>`
@@ -141,7 +168,7 @@ const MarketNameWrapper = styled(Row)`
   gap: 8px;
 `
 
-const loadingAssets = () => (
+const LoadingAssets = () => (
   <>
     {Array.from(Array(ASSET_PAGE_SIZE), (_, index) => (
       <CollectionAssetLoading key={index} />
@@ -151,25 +178,27 @@ const loadingAssets = () => (
 
 export const CollectionNftsLoading = () => (
   <Box width="full" className={styles.assetList}>
-    {loadingAssets()}
+    <LoadingAssets />
   </Box>
 )
 
 export const CollectionNftsAndMenuLoading = () => (
-  <Column alignItems="flex-start" position="relative" width="full">
-    <Row marginY="12" gap="12">
-      <Box className={loadingAsset} borderRadius="12" width={{ sm: '44', md: '100' }} height="44" />
-      <Box
-        className={loadingAsset}
-        borderRadius="12"
-        height="44"
-        display={{ sm: 'none', md: 'flex' }}
-        style={{ width: '220px' }}
-      />
-      <Box className={loadingAsset} borderRadius="12" height="44" width={{ sm: '276', md: '332' }} />
-    </Row>
-    <CollectionNftsLoading />
-  </Column>
+  <InfiniteScrollWrapper>
+    <Column alignItems="flex-start" position="relative" width="full">
+      <Row marginY="12" gap="12">
+        <Box className={loadingAsset} borderRadius="12" width={{ sm: '44', md: '100' }} height="44" />
+        <Box
+          className={loadingAsset}
+          borderRadius="12"
+          height="44"
+          display={{ sm: 'none', md: 'flex' }}
+          style={{ width: '220px' }}
+        />
+        <Box className={loadingAsset} borderRadius="12" height="44" width={{ sm: '276', md: '332' }} />
+      </Row>
+      <CollectionNftsLoading />
+    </Column>
+  </InfiniteScrollWrapper>
 )
 
 export const getSortDropdownOptions = (setSortBy: (sortBy: SortBy) => void, hasRarity: boolean): DropDownOption[] => {
@@ -242,9 +271,11 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const [sweepIsOpen, setSweepOpen] = useState(false)
   // Load all sweep queries. Loading them on the parent allows lazy-loading, but avoids waterfalling requests.
   const collectionParams = useSweepFetcherParams(contractAddress, 'others', debouncedMinPrice, debouncedMaxPrice)
+  const sudoSwapParams = useSweepFetcherParams(contractAddress, Markets.Sudoswap, debouncedMinPrice, debouncedMaxPrice)
   const nftxParams = useSweepFetcherParams(contractAddress, Markets.NFTX, debouncedMinPrice, debouncedMaxPrice)
   const nft20Params = useSweepFetcherParams(contractAddress, Markets.NFT20, debouncedMinPrice, debouncedMaxPrice)
   useLoadSweepAssetsQuery(collectionParams, sweepIsOpen)
+  useLoadSweepAssetsQuery(sudoSwapParams, sweepIsOpen)
   useLoadSweepAssetsQuery(nftxParams, sweepIsOpen)
   useLoadSweepAssetsQuery(nft20Params, sweepIsOpen)
 
@@ -269,33 +300,42 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   }
 
   const { assets: collectionNfts, loadNext, hasNext, isLoadingNext } = useLazyLoadAssetsQuery(assetQueryParams)
+  const handleNextPageLoad = useCallback(() => loadNext(ASSET_PAGE_SIZE), [loadNext])
 
   const getPoolPosition = useCallback(
     (asset: GenieAsset) => {
-      return itemsInBag.some((item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address)
+      const assetInBag = itemsInBag.some(
+        (item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address
+      )
+
+      if (asset.marketplace === Markets.Sudoswap) {
+        const bagItemsInSudoSwapPool = itemsInBag.filter((item) => isInSameSudoSwapPool(asset, item.asset))
+        if (assetInBag) {
+          return bagItemsInSudoSwapPool.findIndex((item) => item.asset.tokenId === asset.tokenId)
+        } else {
+          return bagItemsInSudoSwapPool.length
+        }
+      }
+
+      return assetInBag
         ? itemsInBag
-            .filter((item) => item.asset.address === asset.address && item.asset.marketplace === asset.marketplace)
-            .map((item) => item.asset.tokenId)
-            .indexOf(asset.tokenId)
-        : itemsInBag.filter(
-            (item) => item.asset.address === asset.address && item.asset.marketplace === asset.marketplace
-          ).length
+            .filter((item) => isInSameMarketplaceCollection(asset, item.asset))
+            .findIndex((item) => item.asset.tokenId === asset.tokenId)
+        : itemsInBag.filter((item) => isInSameMarketplaceCollection(asset, item.asset)).length
     },
     [itemsInBag]
   )
 
   const calculatePrice = useCallback(
     (asset: GenieAsset) => {
+      if (asset.marketplace === Markets.Sudoswap) return calcSudoSwapPrice(asset, getPoolPosition(asset))
       return calcPoolPrice(asset, getPoolPosition(asset))
     },
     [getPoolPosition]
   )
 
   const collectionAssets = useMemo(() => {
-    if (
-      !collectionNfts ||
-      !collectionNfts.some((asset) => asset.marketplace === Markets.NFTX || asset.marketplace === Markets.NFT20)
-    ) {
+    if (!collectionNfts || !collectionNfts.some((asset) => asset.marketplace && isPooledMarket(asset.marketplace))) {
       return collectionNfts
     }
 
@@ -303,8 +343,9 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
     assets.forEach(
       (asset) =>
-        (asset.marketplace === Markets.NFTX || asset.marketplace === Markets.NFT20) &&
-        (asset.priceInfo.ETHPrice = calculatePrice(asset))
+        asset.marketplace &&
+        isPooledMarket(asset.marketplace) &&
+        (asset.priceInfo.ETHPrice = calculatePrice(asset) ?? '')
     )
 
     if (sortBy === SortBy.HighToLow || sortBy === SortBy.LowToHigh) {
@@ -431,6 +472,21 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
     }
   }, [collectionStats, priceRangeLow, priceRangeHigh, setPriceRangeHigh, setPriceRangeLow])
 
+  const handleSweepClick = useCallback(() => {
+    if (hasErc1155s) return
+    if (!sweepIsOpen) {
+      scrollToTop()
+      if (!bagExpanded && !isMobile) toggleBag()
+    }
+    setSweepOpen(!sweepIsOpen)
+  }, [bagExpanded, hasErc1155s, isMobile, sweepIsOpen, toggleBag])
+
+  const handleClearAllClick = useCallback(() => {
+    reset()
+    setPrevMinMax([0, 100])
+    scrollToTop()
+  }, [reset, setPrevMinMax])
+
   return (
     <>
       <AnimatedBox
@@ -440,8 +496,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         width="full"
         zIndex="3"
         marginBottom={{ sm: '8', md: '20' }}
-        padding="16"
-        className={styles.actionBarContainer}
+        paddingTop="16"
+        paddingBottom="16"
       >
         <ActionsContainer>
           <ActionsSubContainer>
@@ -464,117 +520,106 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             </SortDropdownContainer>
             <CollectionSearch />
           </ActionsSubContainer>
-          {!hasErc1155s ? (
+          {!hasErc1155s && (
             <SweepButton
               toggled={sweepIsOpen}
               disabled={hasErc1155s}
               className={buttonTextMedium}
-              onClick={() => {
-                if (hasErc1155s) return
-                if (!sweepIsOpen) {
-                  scrollToTop()
-                  if (!bagExpanded && !isMobile) toggleBag()
-                }
-                setSweepOpen(!sweepIsOpen)
-              }}
+              onClick={handleSweepClick}
             >
               <SweepIcon viewBox="0 0 24 24" width="20px" height="20px" />
               <SweepText fontWeight={600} color="currentColor" lineHeight="20px">
                 Sweep
               </SweepText>
             </SweepButton>
-          ) : null}
-        </ActionsContainer>
-        {sweepIsOpen && (
-          <Sweep contractAddress={contractAddress} minPrice={debouncedMinPrice} maxPrice={debouncedMaxPrice} />
-        )}
-        <Row
-          paddingTop={!!markets.length || !!traits.length || minMaxPriceChipText ? '12' : '0'}
-          gap="8"
-          flexWrap="wrap"
-        >
-          {markets.map((market) => (
-            <TraitChip
-              key={market}
-              value={
-                <MarketNameWrapper>
-                  <MarketplaceLogo src={`/nft/svgs/marketplaces/${market.toLowerCase()}.svg`} />
-                  {MARKETPLACE_ITEMS[market as keyof typeof MARKETPLACE_ITEMS]}
-                </MarketNameWrapper>
-              }
-              onClick={() => {
-                scrollToTop()
-                removeMarket(market)
-              }}
-            />
-          ))}
-          {traits.map((trait) => (
-            <TraitChip
-              key={trait.trait_value}
-              value={
-                trait.trait_type === 'Number of traits'
-                  ? `${trait.trait_value} trait${pluralize(Number(trait.trait_value))}`
-                  : `${trait.trait_type}: ${trait.trait_value}`
-              }
-              onClick={() => {
-                scrollToTop()
-                removeTrait(trait)
-              }}
-            />
-          ))}
-          {minMaxPriceChipText && (
-            <TraitChip
-              value={minMaxPriceChipText}
-              onClick={() => {
-                scrollToTop()
-                setMin('')
-                setMax('')
-                setPrevMinMax([0, 100])
-              }}
-            />
           )}
-          {!!traits.length || !!markets.length || minMaxPriceChipText ? (
-            <ClearAllButton
-              onClick={() => {
-                reset()
-                setPrevMinMax([0, 100])
-                scrollToTop()
-              }}
-            >
-              Clear All
-            </ClearAllButton>
-          ) : null}
-        </Row>
+        </ActionsContainer>
+        <InfiniteScrollWrapper>
+          {sweepIsOpen && (
+            <Sweep contractAddress={contractAddress} minPrice={debouncedMinPrice} maxPrice={debouncedMaxPrice} />
+          )}
+          <Row
+            paddingTop={!!markets.length || !!traits.length || minMaxPriceChipText ? '12' : '0'}
+            gap="8"
+            flexWrap="wrap"
+          >
+            {markets.map((market) => (
+              <TraitChip
+                key={market}
+                value={
+                  <MarketNameWrapper>
+                    <MarketplaceLogo src={`/nft/svgs/marketplaces/${market.toLowerCase()}.svg`} />
+                    {MARKETPLACE_ITEMS[market as keyof typeof MARKETPLACE_ITEMS]}
+                  </MarketNameWrapper>
+                }
+                onClick={() => {
+                  scrollToTop()
+                  removeMarket(market)
+                }}
+              />
+            ))}
+            {traits.map((trait) => (
+              <TraitChip
+                key={trait.trait_value}
+                value={
+                  trait.trait_type === 'Number of traits'
+                    ? `${trait.trait_value} trait${pluralize(Number(trait.trait_value))}`
+                    : `${trait.trait_type}: ${trait.trait_value}`
+                }
+                onClick={() => {
+                  scrollToTop()
+                  removeTrait(trait)
+                }}
+              />
+            ))}
+            {minMaxPriceChipText && (
+              <TraitChip
+                value={minMaxPriceChipText}
+                onClick={() => {
+                  scrollToTop()
+                  setMin('')
+                  setMax('')
+                  setPrevMinMax([0, 100])
+                }}
+              />
+            )}
+            {Boolean(traits.length || markets.length || minMaxPriceChipText) && (
+              <ClearAllButton onClick={handleClearAllClick}>Clear All</ClearAllButton>
+            )}
+          </Row>
+        </InfiniteScrollWrapper>
       </AnimatedBox>
-      <InfiniteScroll
-        next={() => loadNext(ASSET_PAGE_SIZE)}
-        hasMore={hasNext}
-        loader={hasNext && hasNfts ? loadingAssets() : null}
-        dataLength={collectionAssets?.length ?? 0}
-        style={{ overflow: 'unset' }}
-        className={hasNfts || isLoadingNext ? styles.assetList : undefined}
-      >
-        {hasNfts ? (
-          assets
-        ) : collectionAssets?.length === 0 ? (
-          <Center width="full" color="textSecondary" textAlign="center" style={{ height: '60vh' }}>
-            <EmptyCollectionWrapper>
-              <p className={headlineMedium}>No NFTS found</p>
-              <Box
-                onClick={reset}
-                type="button"
-                className={clsx(bodySmall, buttonTextMedium)}
-                color="blue"
-                cursor="pointer"
-              >
-                <ViewFullCollection>View full collection</ViewFullCollection>
-              </Box>
-            </EmptyCollectionWrapper>
-          </Center>
-        ) : (
-          <CollectionNftsLoading />
-        )}
-      </InfiniteScroll>
+      <InfiniteScrollWrapper>
+        <InfiniteScroll
+          next={handleNextPageLoad}
+          hasMore={hasNext}
+          loader={Boolean(hasNext && hasNfts) && <LoadingAssets />}
+          dataLength={collectionAssets?.length ?? 0}
+          style={{ overflow: 'unset' }}
+          className={hasNfts || isLoadingNext ? styles.assetList : undefined}
+        >
+          {hasNfts ? (
+            assets
+          ) : collectionAssets?.length === 0 ? (
+            <Center width="full" color="textSecondary" textAlign="center" style={{ height: '60vh' }}>
+              <EmptyCollectionWrapper>
+                <p className={headlineMedium}>No NFTS found</p>
+                <Box
+                  onClick={reset}
+                  type="button"
+                  className={clsx(bodySmall, buttonTextMedium)}
+                  color="blue"
+                  cursor="pointer"
+                >
+                  <ViewFullCollection>View full collection</ViewFullCollection>
+                </Box>
+              </EmptyCollectionWrapper>
+            </Center>
+          ) : (
+            <CollectionNftsLoading />
+          )}
+        </InfiniteScroll>
+      </InfiniteScrollWrapper>
     </>
   )
 }

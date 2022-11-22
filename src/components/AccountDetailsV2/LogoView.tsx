@@ -5,7 +5,7 @@ import styled, { css } from 'styled-components/macro'
 
 import { nativeOnChain } from '../../constants/tokens'
 import { useCurrency } from '../../hooks/Tokens'
-import CurrencyLogo from '../CurrencyLogo'
+import CurrencyLogo from '../Logo/CurrencyLogo'
 
 const CurrencyWrap = styled.div`
   position: relative;

@@ -6,6 +6,7 @@ export const darkTheme: Theme = {
     accentFailureSoft: 'rgba(253, 118, 107, 0.12)',
     accentAction: vars.color.blue400,
     accentActionSoft: 'rgba(76, 130, 251, 0.24)',
+    accentSuccess: vars.color.green200,
 
     explicitWhite: '#FFFFFF',
     green: vars.color.green200,
@@ -17,7 +18,7 @@ export const darkTheme: Theme = {
     backgroundModule: vars.color.gray800,
     backgroundOutline: vars.color.backgroundInteractive,
     backgroundSurface: vars.color.gray900,
-    backgroundBackdrop: '#000',
+    backgroundBackdrop: vars.color.gray950,
 
     modalBackdrop: 'linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7))',
 

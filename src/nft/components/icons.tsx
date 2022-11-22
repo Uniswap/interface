@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'styled-components/macro'
 
 import { themeVars, vars } from '../css/sprinkles.css'
 
@@ -44,7 +45,7 @@ export const ChevronUpIcon = ({
 )
 
 export const BackArrowIcon = (props: SVGProps) => (
-  <svg {...props} xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
+  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" {...props}>
     <path d="M5.676 13.645c0 .263.114.527.316.72l5.801 5.792c.21.202.44.3.694.3.554 0 .958-.396.958-.933a.934.934 0 00-.29-.694l-1.977-2.004-2.55-2.329 2.049.123h10.652c.58 0 .985-.404.985-.975 0-.58-.405-.985-.985-.985H10.677l-2.04.123 2.54-2.329 1.978-2.004a.934.934 0 00.29-.694c0-.536-.404-.932-.958-.932-.255 0-.492.097-.72.317l-5.775 5.774a1.012 1.012 0 00-.316.73z" />
   </svg>
 )
@@ -173,8 +174,6 @@ export const EllipsisIcon = (props: SVGProps) => (
     />
   </svg>
 )
-
-export const ChevronRightIcon = (props: SVGProps) => <ChevronLeftIcon {...props} transform="rotate(180)" />
 
 export const LightningBoltIcon = (props: SVGProps) => (
   <svg {...props} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -442,14 +441,12 @@ export const BagIcon = (props: SVGProps) => (
     <path
       d="M19.2893 5H4.5115C3.34557 5 2.40039 5.89543 2.40039 7V21C2.40039 22.1046 3.34557 23 4.5115 23H19.2893C20.4552 23 21.4004 22.1046 21.4004 21V7C21.4004 5.89543 20.4552 5 19.2893 5Z"
       stroke="currentColor"
-      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
     <path
       d="M9 5L9 4.25C9 3.45435 9.31607 2.69129 9.87868 2.12868C10.4413 1.56607 11.2044 1.25 12 1.25C12.7957 1.25 13.5587 1.56607 14.1213 2.12868C14.6839 2.69129 15 3.45435 15 4.25L15 5"
       stroke="currentColor"
-      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
@@ -474,9 +471,9 @@ export const HundredsOverflowIcon = () => (
 )
 
 export const TagIcon = (props: SVGProps) => (
-  <svg fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" {...props}>
     <path
-      d="M6.66667 6.66667H6.67361M17.9917 12.0083L12.0167 17.9833C11.8619 18.1383 11.6781 18.2612 11.4757 18.3451C11.2734 18.429 11.0565 18.4721 10.8375 18.4721C10.6185 18.4721 10.4016 18.429 10.1993 18.3451C9.99694 18.2612 9.81312 18.1383 9.65833 17.9833L2.5 10.8333V2.5H10.8333L17.9917 9.65833C18.3021 9.9706 18.4763 10.393 18.4763 10.8333C18.4763 11.2736 18.3021 11.6961 17.9917 12.0083Z"
+      d="M8.33333 8.33333H8.34097M20.7908 14.2092L14.2183 20.7817C14.0481 20.9521 13.8459 21.0873 13.6233 21.1796C13.4007 21.2719 13.1622 21.3194 12.9213 21.3194C12.6803 21.3194 12.4418 21.2719 12.2192 21.1796C11.9966 21.0873 11.7944 20.9521 11.6242 20.7817L3.75 12.9167V3.75H12.9167L20.7908 11.6242C21.1323 11.9677 21.324 12.4323 21.324 12.9167C21.324 13.401 21.1323 13.8657 20.7908 14.2092Z"
       stroke="currentColor"
       strokeWidth="1.5"
       strokeLinecap="round"
@@ -602,6 +599,10 @@ export const ChevronLeftIcon = (props: SVGProps) => (
     <path d="M7 1L1 7L7 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )
+
+export const ChevronRightIcon = styled(ChevronLeftIcon)`
+  transform: rotate(180deg);
+`
 
 export const TrendingArrow = (props: SVGProps) => (
   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>

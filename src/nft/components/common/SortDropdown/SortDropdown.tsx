@@ -56,7 +56,6 @@ export const SortDropdown = ({
       borderRadius="12"
       borderBottomLeftRadius={isOpen ? '0' : undefined}
       borderBottomRightRadius={isOpen ? '0' : undefined}
-      height="44"
       style={{ width }}
     >
       <Box
@@ -136,7 +135,7 @@ export const SortDropdown = ({
         right={inFilters ? '16' : 'auto'}
         paddingBottom="8"
         fontSize="14"
-        background="backgroundInteractive"
+        background="backgroundModule"
         borderStyle="solid"
         borderColor="backgroundOutline"
         borderWidth="1px"

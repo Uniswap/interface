@@ -11,14 +11,20 @@ export const modalContainer = style([
     left: { sm: '0', md: '1/2' },
     top: '0',
     zIndex: 'modal',
+    overflow: 'scroll',
+    paddingY: '72',
+    paddingX: '12',
   }),
   {
-    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
     '@media': {
       'screen and (min-width: 656px)': {
         marginLeft: '-320px',
       },
     },
+    '::-webkit-scrollbar': { display: 'none' },
+    scrollbarWidth: 'none',
   },
 ])
 

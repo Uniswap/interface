@@ -6,6 +6,7 @@ export const container = style([
     overflow: 'auto',
     height: 'viewHeight',
     paddingTop: '4',
+    marginLeft: { sm: '8', md: '48' },
   }),
   {
     width: '308px',

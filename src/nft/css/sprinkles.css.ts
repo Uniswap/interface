@@ -7,6 +7,7 @@ const themeContractValues = {
     accentFailureSoft: '',
     accentAction: '',
     accentActionSoft: '',
+    accentSuccess: '',
 
     explicitWhite: '',
     gold: '',
@@ -145,6 +146,7 @@ const zIndices = {
   modal: '1060',
   popover: '1070',
   tooltip: '1080',
+  modalOverTooltip: '1090',
 }
 
 export const vars = createGlobalTheme(':root', {
@@ -176,6 +178,7 @@ export const vars = createGlobalTheme(':root', {
     gold200: '#EEB317',
     gold400: '#B17900',
     green200: '#5CFE9D',
+    green300: '#40B66B',
     green400: '#1A9550',
     violet200: '#BDB8FA',
     violet400: '#7A7BEB',
@@ -197,6 +200,7 @@ export const vars = createGlobalTheme(':root', {
     gray800: '#131A2A',
     gray850: '#0E1524',
     gray900: '#0D111C',
+    gray950: '#080B11',
     accentTextLightTertiary: 'rgba(255, 255, 255, 0.12)',
     outline: 'rgba(153, 161, 189, 0.24)',
     lightGrayOverlay: '#99A1BD14',
@@ -336,7 +340,7 @@ const layoutStyles = defineProperties({
     zIndex: zIndices,
     gap: spacing,
     flexShrink: spacing,
-    flex: ['1', '2', '3'],
+    flex: ['1', '1.5', '2', '3'],
     flexWrap: ['nowrap', 'wrap', 'wrap-reverse'],
     display: ['none', 'block', 'flex', 'inline-flex', 'inline-block', 'grid', 'inline'],
     whiteSpace: ['nowrap'],

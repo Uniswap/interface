@@ -1,9 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { EventName } from '@uniswap/analytics-events'
+import { formatNumber, formatUSDPrice, NumberType } from '@uniswap/conedison/format'
 import { ParentSize } from '@visx/responsive'
 import SparklineChart from 'components/Charts/SparklineChart'
-import CurrencyLogo from 'components/CurrencyLogo'
+import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
@@ -14,7 +15,6 @@ import { ArrowDown, ArrowUp } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
-import { formatDollar } from 'utils/formatNumbers'
 
 import {
   LARGE_MEDIA_BREAKPOINT,
@@ -31,7 +31,6 @@ import {
   TokenSortMethod,
   useSetSortMethod,
 } from '../state'
-import { useTokenLogoURI } from '../TokenDetails'
 import InfoTip from '../TokenDetails/InfoTip'
 import { formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
 
@@ -438,7 +437,8 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
 
   const lowercaseChainName = useParams<{ chainName?: string }>().chainName?.toUpperCase() ?? 'ethereum'
   const filterNetwork = lowercaseChainName.toUpperCase()
-  const L2Icon = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[filterNetwork])?.circleLogoUrl
+  const chainId = CHAIN_NAME_TO_CHAIN_ID[filterNetwork]
+  const L2Icon = getChainInfo(chainId)?.circleLogoUrl
   const timePeriod = useAtomValue(filterTimeAtom)
   const delta = token.market?.pricePercentChange?.value
   const arrow = getDeltaArrow(delta)
@@ -446,7 +446,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const rank = sortAscending ? tokenListLength - tokenListIndex : tokenListIndex + 1
 
   const exploreTokenSelectedEventProperties = {
-    chain_id: filterNetwork,
+    chain_id: chainId,
     token_address: tokenAddress,
     token_symbol: tokenSymbol,
     token_list_index: tokenListIndex,
@@ -469,7 +469,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           tokenInfo={
             <ClickableName>
               <LogoContainer>
-                <CurrencyLogo src={useTokenLogoURI(token)} symbol={tokenSymbol} />
+                <QueryTokenLogo token={token} />
                 <L2NetworkLogo networkUrl={L2Icon} />
               </LogoContainer>
               <TokenInfoCell>
@@ -481,7 +481,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           price={
             <ClickableContent>
               <PriceInfoCell>
-                {formatDollar({ num: token.market?.price?.value, isPrice: true, lessPreciseStablecoinValues: true })}
+                {formatUSDPrice(token.market?.price?.value)}
                 <PercentChangeInfoCell>
                   {formattedDelta}
                   {arrow}
@@ -495,8 +495,14 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               {arrow}
             </ClickableContent>
           }
-          tvl={<ClickableContent>{formatDollar({ num: token.market?.totalValueLocked?.value })}</ClickableContent>}
-          volume={<ClickableContent>{formatDollar({ num: token.market?.volume?.value })}</ClickableContent>}
+          tvl={
+            <ClickableContent>
+              {formatNumber(token.market?.totalValueLocked?.value, NumberType.FiatTokenStats)}
+            </ClickableContent>
+          }
+          volume={
+            <ClickableContent>{formatNumber(token.market?.volume?.value, NumberType.FiatTokenStats)}</ClickableContent>
+          }
           sparkLine={
             <SparkLine>
               <ParentSize>
