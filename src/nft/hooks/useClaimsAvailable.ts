@@ -9,7 +9,7 @@ interface Claim {
 export const useIsClaimAvailable = create<Claim>()(
   devtools(
     (set) => ({
-      isClaimAvailable: true,
+      isClaimAvailable: false,
       setIsClaimAvailable: (isClaimAvailable: boolean) => {
         set(() => ({ isClaimAvailable }))
       },
