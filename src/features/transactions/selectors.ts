@@ -18,7 +18,7 @@ export const makeSelectAddressTransactions = (address: Address | null) =>
     if (!address || !transactions[address]) return undefined
     return (
       flattenObjectOfObjects(transactions[address])
-        // remove dummy fiat on-ramp transactions
+        // remove dummy fiat onramp transactions from TransactionList, notification badge, etc.
         .filter(
           (tx) => tx.typeInfo.type !== TransactionType.FiatPurchase || tx.typeInfo.syncedWithBackend
         )

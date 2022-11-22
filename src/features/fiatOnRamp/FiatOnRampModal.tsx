@@ -82,7 +82,7 @@ function FiatOnRampModalInner() {
     eligible && fiatOnRampHostUrl && !isFiatBuyAllowedQueryError && !isWidgetUrlQueryError
 
   return (
-    <BottomSheetModal disableSwipe name={ModalName.ForceUpgradeModal} onClose={onClose}>
+    <BottomSheetModal disableSwipe name={ModalName.FiatOnRamp} onClose={onClose}>
       <Screen bg="background1" edges={['bottom']} mb="lg" pt="md" px="lg">
         <Flex gap="lg">
           <FiatOnRampModalBackground color={theme.colors.background1} width="100%" />

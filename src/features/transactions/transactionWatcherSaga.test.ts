@@ -169,24 +169,32 @@ describe(watchFiatOnRampTransaction, () => {
     const tx = { ...fiatOnRampTxDetailsPending, addedTime: Date.now() }
     const confirmedTx = { ...tx, status: TransactionStatus.Success }
 
-    let fetchCalled = false
+    let fetchCalledCount = 0
 
-    return expectSaga(watchFiatOnRampTransaction, tx)
-      .provide([
-        {
-          call(effect) {
-            if (effect.fn === fetchFiatOnRampTransaction) {
-              const newTx = fetchCalled ? confirmedTx : tx
-              fetchCalled = true
-              return newTx
-            }
+    return (
+      expectSaga(watchFiatOnRampTransaction, tx)
+        .provide([
+          {
+            call(effect) {
+              if (effect.fn === fetchFiatOnRampTransaction) {
+                switch (fetchCalledCount++) {
+                  case 0:
+                  case 1:
+                    // return same tx twice, but upsert should only be called once
+                    return tx
+                  case 2:
+                    return confirmedTx
+                }
+              }
+            },
           },
-        },
-        [call(sleep, PollingInterval.Normal), Promise.resolve(() => {})],
-      ])
-      .call(sleep, PollingInterval.Normal)
-      .put(transactionActions.upsertFiatOnRampTransaction(confirmedTx))
-      .silentRun()
+          [call(sleep, PollingInterval.Normal), Promise.resolve(() => {})],
+        ])
+        .call(sleep, PollingInterval.Normal)
+        // only called once
+        .put(transactionActions.upsertFiatOnRampTransaction(confirmedTx))
+        .silentRun()
+    )
   })
 
   it('updates a transactions on success network request', () => {

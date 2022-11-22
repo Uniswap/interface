@@ -135,8 +135,8 @@ export function* watchFiatOnRampTransaction(transaction: TransactionDetails) {
 
       if (!updatedTransaction) return
 
-      // not strictly necessary but avoid dispatching an action if tx status hasn't changed
-      if (updatedTransaction.status !== transaction.status) {
+      // not strictly necessary but avoid dispatching an action if tx hasn't changed
+      if (JSON.stringify(updatedTransaction) !== JSON.stringify(transaction)) {
         logger.debug(
           'transactionWatcherSaga',
           'watchFiatOnRampTransaction',
