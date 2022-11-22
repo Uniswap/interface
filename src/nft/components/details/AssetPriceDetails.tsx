@@ -52,7 +52,7 @@ const Container = styled.div`
   width: 100%;
   gap: 24px;
 
-  @media (min-width: 961px) {
+  @media (min-width: (960 + 1)px) {
     position: fixed;
     width: 360px;
     margin-top: 20px;
@@ -314,7 +314,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const shareTweet = () => {
     window.open(
       `https://twitter.com/intent/tweet?text=Check%20out%20${
-        asset.name ?? `${asset.collectionName} #${asset.tokenId}`
+        asset.name ?? `${asset.collectionName}%20%23${asset.tokenId}`
       }%20(${asset.collectionName})%20https://app.uniswap.org/%23/nfts/asset/${asset.address}/${
         asset.tokenId
       }%20via%20@uniswap`,
