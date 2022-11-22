@@ -208,6 +208,7 @@ const StyledToolTipAffordance = styled.div<{ showTooltip: boolean }>`
   box-shadow: ${({ theme }) => theme.shallowShadow};
   transform: ${({ showTooltip }) => (showTooltip ? ' translateY(0px)' : 'translateY(5px)')};
   transition: transform 150ms ease;
+  pointer-events: none;
 `
 
 /* -------- ASSET CARD -------- */
@@ -308,8 +309,8 @@ const ImageContainer = ({
   const ToolTipAffordance = () => {
     return (
       <StyledToolTipAffordance showTooltip={showTooltip}>
-        {selected ? (isListing ? 'Removed' : 'Removed from bag') : null}
-        {!selected ? (isListing ? 'Added' : 'Added to bag') : null}
+        {selected ? (isListing ? 'Added' : 'Added to bag') : null}
+        {!selected ? (isListing ? 'Removed' : 'Removed from bag') : null}
       </StyledToolTipAffordance>
     )
   }
