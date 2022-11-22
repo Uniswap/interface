@@ -71,7 +71,6 @@ const TextContainer = styled.div`
 
 const StyledXButton = styled(X)`
   color: ${({ theme }) => theme.textSecondary};
-  z-index: 5;
   &:hover {
     opacity: ${({ theme }) => theme.opacity.hover};
   }
