@@ -452,10 +452,9 @@ const Video = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
                 e.stopPropagation()
                 setCurrentTokenPlayingMedia(undefined)
               }}
-              className="playback-icon"
             />
           </Box>
-          <Box position="absolute" left="0" top="0" display="flex">
+          <Box position="fixed" left="0" top="0" display="flex">
             <Box
               as="video"
               ref={vidRef}
@@ -485,7 +484,6 @@ const Video = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
                 e.stopPropagation()
                 setCurrentTokenPlayingMedia(asset.tokenId)
               }}
-              className="playback-icon"
             />
           )}
         </Box>
