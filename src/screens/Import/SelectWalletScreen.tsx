@@ -45,6 +45,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
 
   const { data, loading, refetch, error } = useSelectWalletScreenQuery({
     variables: { ownerAddresses: addresses },
+    skip: isLoadingAccounts,
   })
 
   const onRetry = useCallback(() => refetch(), [refetch])
