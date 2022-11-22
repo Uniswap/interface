@@ -121,7 +121,7 @@ export const SwapTabBarButton = memo(({ activeScale = 0.95 }: PressableScale) =>
           position="absolute"
           shadowColor="shadowBranded"
           shadowOffset={SWAP_BUTTON_SHADOW_OFFSET}
-          shadowOpacity={isDarkMode ? 0.6 : 0.5}
+          shadowOpacity={isDarkMode ? 0.6 : 0.4}
           shadowRadius={20}
           style={[animatedStyle]}
           top={useResponsiveProp({
