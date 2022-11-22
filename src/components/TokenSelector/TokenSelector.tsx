@@ -1,7 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { KeyboardAvoidingView } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { AnimatedFlex } from 'src/components/layout'
 import { useFilterCallbacks } from 'src/components/TokenSelector/hooks'
@@ -55,15 +54,13 @@ function _TokenSelector({
         onBack={onBack}
         onChangeText={onChangeText}
       />
-      <KeyboardAvoidingView behavior="height">
-        <TokenSearchResultList
-          chainFilter={chainFilter}
-          searchFilter={searchFilter}
-          variation={variation}
-          onChangeChainFilter={onChangeChainFilter}
-          onSelectCurrency={onSelectCurrency}
-        />
-      </KeyboardAvoidingView>
+      <TokenSearchResultList
+        chainFilter={chainFilter}
+        searchFilter={searchFilter}
+        variation={variation}
+        onChangeChainFilter={onChangeChainFilter}
+        onSelectCurrency={onSelectCurrency}
+      />
     </AnimatedFlex>
   )
 }
