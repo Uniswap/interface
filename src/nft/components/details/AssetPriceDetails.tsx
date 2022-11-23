@@ -394,7 +394,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
       )}
       {isForSale && (
         <OwnerInformationContainer>
-          {asset.owner.address && (
+          {asset.tokenType !== 'ERC1155' && asset.owner.address && (
             <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
               Seller:
             </ThemedText.BodySmall>
