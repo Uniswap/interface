@@ -80,7 +80,7 @@ export const initialState: UserState = {
   hideNFTPromoBanner: false,
   showSurveyPopup: undefined,
   showDonationLink: true,
-  hideNFTWelcomeModal: true,
+  hideNFTWelcomeModal: false,
 }
 
 const userSlice = createSlice({

@@ -82,7 +82,8 @@ const StyledDialogContent = styled(AnimatedDialogContent)<StyledDialogProps>`
 
 interface ModalProps {
   isOpen: boolean
-  onDismiss: () => void
+  onDismiss?: () => void
+  onSwipe?: () => void
   minHeight?: number | false
   maxHeight?: number
   maxWidth?: number
@@ -101,6 +102,7 @@ export default function Modal({
   maxWidth = 420,
   initialFocusRef,
   children,
+  onSwipe = onDismiss,
   scrollOverlay,
   isBottomSheet = isMobile,
   hideBorder = false,
@@ -119,7 +121,7 @@ export default function Modal({
         y: state.down ? state.movement[1] : 0,
       })
       if (state.movement[1] > 300 || (state.velocity > 3 && state.direction[1] > 0)) {
-        onDismiss()
+        onSwipe?.()
       }
     },
   })
