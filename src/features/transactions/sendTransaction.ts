@@ -1,15 +1,18 @@
+import { Currency, TradeType } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { getProvider, getSignerManager } from 'src/app/walletContext'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { isFlashbotsSupportedChainId } from 'src/features/providers/flashbotsProvider'
-import { logEvent } from 'src/features/telemetry'
+import { logEvent, sendAnalyticsEvent } from 'src/features/telemetry'
 import { EventName } from 'src/features/telemetry/constants'
 import { transactionActions } from 'src/features/transactions/slice'
+import { Trade } from 'src/features/transactions/swap/useTrade'
 import { formatAsHexString } from 'src/features/transactions/swap/utils'
 import {
   TransactionDetails,
   TransactionOptions,
   TransactionStatus,
+  TransactionType,
   TransactionTypeInfo,
 } from 'src/features/transactions/types'
 import {
@@ -19,8 +22,10 @@ import {
 import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { selectFlashbotsEnabled } from 'src/features/wallet/selectors'
+import { formatCurrencyAmount, NumberType } from 'src/utils/format'
 import { logger } from 'src/utils/logger'
 import { call, put, select } from 'typed-redux-saga'
+
 export interface SendTransactionParams {
   // internal id used for tracking transactions before theyre submitted
   // this is optional as an override in txDetail.id calculation
@@ -29,6 +34,7 @@ export interface SendTransactionParams {
   account: Account
   options: TransactionOptions
   typeInfo: TransactionTypeInfo
+  trade?: Trade<Currency, Currency, TradeType>
 }
 
 // A utility for sagas to send transactions
@@ -100,13 +106,14 @@ function hexlifyTransaction(transferTxRequest: providers.TransactionRequest) {
 }
 
 function* addTransaction(
-  { chainId, typeInfo, account, options, txId }: SendTransactionParams,
+  { chainId, typeInfo, account, options, txId, trade }: SendTransactionParams,
   hash: string,
   populatedRequest: providers.TransactionRequest,
   isFlashbots?: boolean
 ) {
   const id = txId ?? createTransactionId()
   const request = getSerializableTransactionRequest(populatedRequest, chainId)
+
   const transaction: TransactionDetails = {
     id,
     chainId,
@@ -120,6 +127,20 @@ function* addTransaction(
       ...options,
       request,
     },
+  }
+
+  if (transaction.typeInfo.type === TransactionType.Swap && trade) {
+    yield* call(sendAnalyticsEvent, EventName.SwapSubmitted, {
+      transaction_hash: hash,
+      chain_id: chainId,
+      price_impact_basis_points: trade.priceImpact.multiply(100).toSignificant(),
+      token_in_amount: trade.inputAmount.toExact(),
+      token_out_amount: formatCurrencyAmount(trade.outputAmount, NumberType.SwapTradeAmount),
+      token_in_symbol: trade.inputAmount.currency.symbol,
+      token_in_address: account.address,
+      token_out_symbol: trade.outputAmount.currency.symbol,
+      token_out_address: account.address,
+    })
   }
   yield* put(transactionActions.addTransaction(transaction))
   yield* call(logEvent, EventName.Transaction, { chainId, ...typeInfo })

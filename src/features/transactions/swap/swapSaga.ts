@@ -40,6 +40,7 @@ export function* approveAndSwap(params: SwapParams) {
         account,
         options: { request: approveTxRequest },
         typeInfo,
+        trade,
       })
     }
 
@@ -55,6 +56,7 @@ export function* approveAndSwap(params: SwapParams) {
       account,
       options: { request },
       typeInfo: swapTypeInfo,
+      trade,
     })
   } catch (e) {
     logger.error('swapSaga', 'approveAndSwap', 'Failed:', e)

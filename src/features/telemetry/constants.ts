@@ -14,6 +14,7 @@ export enum EventName {
   OnboardingCompleted = 'onboarding-completed',
   SwapQuoteReceived = 'Swap Quote Received',
   SwapSubmitButtonPressed = 'Swap Submit Button Pressed',
+  SwapSubmitted = 'Swap Submitted to Provider',
   Transaction = 'transaction',
   UserEvent = 'user-event',
   WalletAdded = 'wallet-added',

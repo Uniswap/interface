@@ -43,6 +43,9 @@ export type EventProperties = {
     is_auto_slippage?: boolean
     swap_quote_block_number?: string
   } & SwapTradeBaseProperties
+  [EventName.SwapSubmitted]: {
+    transaction_hash: string
+  } & SwapTradeBaseProperties
   [EventName.SwapQuoteReceived]: {
     quote_latency_milliseconds?: number
   } & SwapTradeBaseProperties
