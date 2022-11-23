@@ -1,4 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import type { TransactionResponse } from '@ethersproject/providers'
 import { useWeb3React } from '@web3-react/core'
 import uniswapNftAirdropClaim from 'abis/uniswap-nft-airdrop-claim.json'
 import airdropBackgroundv2 from 'assets/images/airdopBackground.png'
@@ -183,6 +184,7 @@ const AirdropModal = () => {
   const { account, provider } = useWeb3React()
   const [claim, setClaim] = useState<Rewards>()
   const [isClaimed, setIsClaimed] = useState(false)
+  const [hash, setHash] = useState('')
   const [error, setError] = useState(false)
   const setIsClaimAvailable = useIsNftClaimAvailable((state) => state.setIsClaimAvailable)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -228,9 +230,11 @@ const AirdropModal = () => {
       if (contract && claim && claim.amount && claim.merkleProof && provider) {
         setIsSubmitting(true)
 
-        await contract
+        const response: TransactionResponse = await contract
           .connect(provider?.getSigner())
           .functions.claim(claim.index, account, claim?.amount, claim?.merkleProof)
+
+        setHash(response.hash)
         setIsSubmitting(false)
         setIsClaimed(true)
         setIsClaimAvailable(false)
@@ -251,7 +255,7 @@ const AirdropModal = () => {
               <SuccessText>
                 You have successfully claimed {totalAmount} USDC. Thank you for supporting Genie.xyz.
               </SuccessText>
-              <EtherscanLink href="https://etherscan.io/" target="_blank">
+              <EtherscanLink href={`https://etherscan.io/tx/${hash}`} target="_blank">
                 <ThemedText.Link>
                   <EtherscanLinkWrap>
                     <span>Etherscan</span>
