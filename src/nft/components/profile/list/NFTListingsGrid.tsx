@@ -370,6 +370,12 @@ const MarketplaceRow = ({
     }
   }
 
+  // LooksRare is a unique case where royalties for creators are a flat 0.5%
+  const royalties = useMemo(
+    () => (selectedMarkets.length === 1 && selectedMarkets[0].name === 'LooksRare' ? 0.5 : asset.basisPoints * 0.01),
+    [asset.basisPoints, selectedMarkets]
+  )
+
   return (
     <Row transition="500" marginLeft={selectedMarkets.length > 1 ? '20' : '0'}>
       {showMarketplaceLogo && (
@@ -430,7 +436,7 @@ const MarketplaceRow = ({
       </Row>
       <Row flex="1" display={{ sm: 'none', md: 'flex' }}>
         <Box className={body} color="textSecondary" width="full" textAlign="right">
-          {(asset.basisPoints * 0.01).toFixed(1)}%
+          {royalties.toFixed(1)}%
         </Box>
       </Row>
       <Row style={{ flex: '1.5' }} display={{ sm: 'none', md: 'flex' }}>
