@@ -279,21 +279,24 @@ export const UnavailableAssetsHeaderRow = ({
   if (!assets || assets.length === 0) return null
 
   const moreThanOneUnavailable = assets.length > 1
+  const isShowingAssets = isOpen || !moreThanOneUnavailable
 
   return (
     <Column className={styles.unavailableAssetsContainer}>
       <Column>
         <Row
           justifyContent="space-between"
-          marginBottom={isOpen || !moreThanOneUnavailable ? '12' : '0'}
-          cursor="pointer"
+          marginBottom={isShowingAssets ? '12' : '0'}
+          cursor={moreThanOneUnavailable ? 'pointer' : 'default'}
           onClick={() => {
-            !didOpenUnavailableAssets && setDidOpenUnavailableAssets(true)
-            toggleOpen()
+            if (moreThanOneUnavailable) {
+              !didOpenUnavailableAssets && setDidOpenUnavailableAssets(true)
+              toggleOpen()
+            }
           }}
         >
           <Row gap="12" color="textSecondary" className={bodySmall}>
-            {!isOpen && moreThanOneUnavailable && <UnavailableAssetsPreview assets={assets.slice(0, 5)} />}
+            {!isShowingAssets && <UnavailableAssetsPreview assets={assets.slice(0, 5)} />}
             No longer available
           </Row>
           {moreThanOneUnavailable && (
@@ -315,7 +318,7 @@ export const UnavailableAssetsHeaderRow = ({
           )}
         </Row>
         <Column gap="8" style={{ marginLeft: '-8px', marginRight: '-8px' }}>
-          {(isOpen || !moreThanOneUnavailable) &&
+          {isShowingAssets &&
             assets.map((asset) => (
               <BagRow
                 key={asset.id}
