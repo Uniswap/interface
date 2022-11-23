@@ -8,6 +8,9 @@ import {
   MoonpayIPAddressesResponse,
   MoonpayTransactionsResponse,
 } from 'src/features/fiatOnRamp/types'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { EventName } from 'src/features/telemetry/constants'
+import { MoonpayTransactionEventProperties } from 'src/features/telemetry/types'
 import { extractFiatOnRampTransactionDetails } from 'src/features/transactions/history/conversion/extractFiatPurchaseTransactionDetails'
 import { serializeQueryParams } from 'src/features/transactions/swap/utils'
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
@@ -38,7 +41,17 @@ export const fiatOnRampApi = createApi({
     isFiatOnRampBuyAllowed: builder.query<boolean | null, void>({
       // TODO: consider a reverse proxy for privacy reasons
       query: () => `/v4/ip_address?${COMMON_PARAMS}`,
-      transformResponse: (response: MoonpayIPAddressesResponse) => response.isBuyAllowed ?? null,
+      transformResponse: (response: MoonpayIPAddressesResponse) => {
+        sendAnalyticsEvent(EventName.FiatOnRampRegionCheck, {
+          status:
+            response.isBuyAllowed === undefined
+              ? 'unknown'
+              : response.isBuyAllowed
+              ? 'success'
+              : 'failed',
+        })
+        return response.isBuyAllowed ?? null
+      },
     }),
     fiatOnRampWidgetUrl: builder.query<
       string,
@@ -109,12 +122,57 @@ export function fetchFiatOnRampTransaction(
     }
 
     return res.json().then((transactions: MoonpayTransactionsResponse) =>
-      transactions
-        .map(extractFiatOnRampTransactionDetails)
-        .filter((tx): tx is TransactionDetails => Boolean(tx))
-        // take the most recent transaction
-        .sort((a, b) => a.addedTime - b.addedTime)
-        .at(0)
+      extractFiatOnRampTransactionDetails(
+        // log while we have the full moonpay tx response
+        logMoonpayEvent(
+          // take the most recent transaction
+          transactions.sort((a, b) => (dayjs(a.createdAt).isAfter(dayjs(b.createdAt)) ? 1 : -1))[0]
+        )
+      )
     )
   })
+}
+
+// Logs an Amplitude event whenever we process a tx update from Moonpay
+// NOTE: this will not attempt to dedupe by externalTxId
+function logMoonpayEvent(moonpayTransactionResponse: MoonpayTransactionsResponse[0]) {
+  const extractProperties: (
+    response: MoonpayTransactionsResponse[0]
+  ) => MoonpayTransactionEventProperties = ({
+    id,
+    externalCustomerId,
+    status,
+    createdAt,
+    updatedAt,
+    baseCurrencyAmount,
+    quoteCurrencyAmount,
+    baseCurrency,
+    currency,
+    feeAmount,
+    extraFeeAmount,
+    networkFeeAmount,
+    paymentMethod,
+    failureReason,
+    stages,
+  }: MoonpayTransactionsResponse[0]) => ({
+    id,
+    externalCustomerId,
+    status,
+    createdAt,
+    updatedAt,
+    baseCurrencyAmount,
+    quoteCurrencyAmount,
+    baseCurrency,
+    currency,
+    feeAmount,
+    extraFeeAmount,
+    networkFeeAmount,
+    paymentMethod,
+    failureReason,
+    stages,
+  })
+
+  sendAnalyticsEvent(EventName.Moonpay, extractProperties(moonpayTransactionResponse))
+
+  return moonpayTransactionResponse
 }

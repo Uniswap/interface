@@ -9,8 +9,12 @@ export enum EventName {
   // some of these values are Title Cased to match shared repo event format:
   // https://github.com/Uniswap/analytics-events/blob/main/src/primitives.ts
   AppLoaded = 'app-loaded',
+  // General fiat onramp events like in-app buttons and modals
+  FiatOnRampWidgetOpened = 'Fiat Onramp Widget Opened',
+  FiatOnRampRegionCheck = 'Fiat Onramp Widget Check',
   Impression = 'impression',
   MarkMeasure = 'mark-measure',
+  Moonpay = 'Moonpay', // Moonpay-specific events
   OnboardingCompleted = 'onboarding-completed',
   SwapQuoteReceived = 'Swap Quote Received',
   SwapSubmitButtonPressed = 'Swap Submit Button Pressed',

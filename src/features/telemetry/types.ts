@@ -1,5 +1,6 @@
 import { TraceProps } from 'src/components/telemetry/Trace'
 import { TraceEventProps } from 'src/components/telemetry/TraceEvent'
+import { MoonpayTransactionsResponse } from 'src/features/fiatOnRamp/types'
 import { ImportType } from 'src/features/onboarding/utils'
 import { EventName } from 'src/features/telemetry/constants'
 import { EthMethod, WCEventType, WCRequestOutcome } from 'src/features/walletConnect/types'
@@ -19,11 +20,38 @@ export type SwapTradeBaseProperties = {
   token_out_amount: string
 } & BaseEventProperty
 
+// Events related to Moonpay internal transactions
+// NOTE: we do not currently have access to the full life cycle of these txs
+// because we do not yet use Moonpay's webhook
+export type MoonpayTransactionEventProperties = BaseEventProperty &
+  Pick<
+    MoonpayTransactionsResponse[0],
+    | 'id'
+    | 'externalCustomerId'
+    | 'status'
+    | 'createdAt'
+    | 'updatedAt'
+    | 'baseCurrencyAmount'
+    | 'quoteCurrencyAmount'
+    | 'baseCurrency'
+    | 'currency'
+    | 'feeAmount'
+    | 'extraFeeAmount'
+    | 'networkFeeAmount'
+    | 'paymentMethod'
+    | 'failureReason'
+    | 'stages'
+  >
+
 export type EventProperties = {
   [EventName.AppLoaded]: BaseEventProperty
-  [EventName.UserEvent]: BaseEventProperty
+  [EventName.FiatOnRampRegionCheck]: {
+    status: 'failed' | 'success' | 'unknown'
+  } & BaseEventProperty
+  [EventName.FiatOnRampWidgetOpened]: BaseEventProperty & { externalTransactionId: string }
   [EventName.Impression]: BaseEventProperty
   [EventName.MarkMeasure]: BaseEventProperty
+  [EventName.Moonpay]: MoonpayTransactionEventProperties
   [EventName.OnboardingCompleted]: {
     // TODO(MOB-3547) Enforce ImportType in all OnboardingScreens
     wallet_type?: ImportType
@@ -49,6 +77,7 @@ export type EventProperties = {
   [EventName.SwapQuoteReceived]: {
     quote_latency_milliseconds?: number
   } & SwapTradeBaseProperties
+  [EventName.UserEvent]: BaseEventProperty
   [EventName.WalletConnectSheetCompleted]: {
     request_type: WCEventType
     eth_method?: EthMethod

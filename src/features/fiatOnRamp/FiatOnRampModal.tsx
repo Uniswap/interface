@@ -16,7 +16,8 @@ import {
 } from 'src/features/fiatOnRamp/api'
 import { useFiatOnRampTransactionCreator } from 'src/features/fiatOnRamp/hooks'
 import { closeModal, selectFiatOnRampModalState } from 'src/features/modals/modalSlice'
-import { ModalName } from 'src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { EventName, ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 
 export function FiatOnRampModal() {
@@ -72,6 +73,8 @@ function FiatOnRampModalInner() {
       controlsColor: theme.colors.accentAction,
     }
     WebBrowser.openBrowserAsync(fiatOnRampHostUrl, webBrowserOptions)
+
+    sendAnalyticsEvent(EventName.FiatOnRampWidgetOpened, { externalTransactionId })
 
     dispatchAddTransaction()
     onClose()

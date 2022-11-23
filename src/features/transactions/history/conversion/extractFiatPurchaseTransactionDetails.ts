@@ -69,8 +69,8 @@ function moonpayStatusToTransactionInfoStatus(
 
 export function extractFiatOnRampTransactionDetails(
   transaction: MoonpayTransactionsResponse[0]
-): TransactionDetails | null {
-  if (!transaction) return null
+): TransactionDetails | undefined {
+  if (!transaction) return
 
   // given that the `transaction` object is the raw Moonpay response,
   // we wrap the extract block in a try-catch and log to Sentry
@@ -91,6 +91,6 @@ export function extractFiatOnRampTransactionDetails(
     }
   } catch (e) {
     logException(LogContext.FiatOnRamp, `Failed to parse transaction: ${e}`)
-    return null
+    return
   }
 }
