@@ -10,6 +10,7 @@ import { openUri } from 'src/utils/linking'
 interface LinkButtonProps extends Omit<BaseButtonProps, 'onPress'> {
   label: string
   url: string
+  openExternalBrowser?: boolean
   isSafeUri?: boolean
   color?: string
   iconColor?: string
@@ -23,6 +24,7 @@ export function LinkButton({
   textVariant,
   color,
   iconColor,
+  openExternalBrowser = false,
   isSafeUri = false,
   size = iconSizes.md,
   justifyContent = 'center',
@@ -30,7 +32,7 @@ export function LinkButton({
 }: LinkButtonProps) {
   const theme = useAppTheme()
   return (
-    <TouchableArea onPress={() => openUri(url, isSafeUri)} {...rest}>
+    <TouchableArea onPress={() => openUri(url, openExternalBrowser, isSafeUri)} {...rest}>
       <Flex row alignItems="center" gap="xxxs" justifyContent={justifyContent}>
         <Text style={{ color: color }} variant={textVariant}>
           {label}

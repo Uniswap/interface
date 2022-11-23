@@ -39,7 +39,7 @@ export function ForceUpgradeModal() {
   }, [isSuccess, upgradeStatus])
 
   const onPressConfirm = () => {
-    openUri(APP_STORE_LINK, true)
+    openUri(APP_STORE_LINK, /*openExternalBrowser=*/ true, /*isSafeUri=*/ true)
   }
 
   const onClose = () => {

@@ -80,14 +80,14 @@ export function LandingScreen({ navigation }: Props) {
                 <Text
                   color={isDarkMode ? 'accentActive' : 'accentAction'}
                   variant="buttonLabelMicro"
-                  onPress={() => openUri(uniswapUrls.termsOfServiceUrl, true)}>
+                  onPress={() => openUri(uniswapUrls.termsOfServiceUrl)}>
                   Terms of Service
                 </Text>{' '}
                 and consent to the{' '}
                 <Text
                   color={isDarkMode ? 'accentActive' : 'accentAction'}
                   variant="buttonLabelMicro"
-                  onPress={() => openUri(uniswapUrls.privacyPolicyUrl, true)}>
+                  onPress={() => openUri(uniswapUrls.privacyPolicyUrl)}>
                   Privacy Policy
                 </Text>
                 .

@@ -40,7 +40,6 @@ const AddressButton = ({ address, chainId, ...rest }: AddressButtonProps) => {
   const { name } = useENS(chainId, address, false)
   return (
     <LinkButton
-      isSafeUri
       backgroundColor="backgroundOutline"
       borderRadius="xs"
       label={name || shortenAddress(address)}

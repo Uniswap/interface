@@ -1,3 +1,4 @@
+import * as WebBrowser from 'expo-web-browser'
 import { Linking } from 'react-native'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { uniswapUrls } from 'src/constants/urls'
@@ -12,8 +13,11 @@ const ALLOWED_EXTERNAL_URI_SCHEMES = ['http://', 'https://']
  * Opens allowed URIs. if isSafeUri is set to true then this will open http:// and https:// as well as some deeplinks.
  * Only set this flag to true if you have formed the URL yourself in our own app code. For any URLs from an external source
  * isSafeUri must be false and it will only open http:// and https:// URI schemes.
+ *
+ * @param openExternalBrowser whether to leave the app and open in system browser. default is false, opens in-app browser window
+ * @param isSafeUri whether to bypass ALLOWED_EXTERNAL_URI_SCHEMES check
  **/
-export async function openUri(uri: string, isSafeUri = false) {
+export async function openUri(uri: string, openExternalBrowser = false, isSafeUri = false) {
   const trimmedURI = uri.trim()
   if (!isSafeUri && !ALLOWED_EXTERNAL_URI_SCHEMES.some((scheme) => trimmedURI.startsWith(scheme))) {
     // TODO: show a visual warning that the link cannot be opened.
@@ -29,7 +33,11 @@ export async function openUri(uri: string, isSafeUri = false) {
   }
 
   try {
-    await Linking.openURL(uri)
+    if (openExternalBrowser) {
+      await Linking.openURL(uri)
+    } else {
+      await WebBrowser.openBrowserAsync(uri)
+    }
   } catch (error) {
     logException(LogContext.OpenUri, error)
   }
@@ -41,7 +49,7 @@ export async function openTransactionLink(hash: string, chainId: ChainId) {
 }
 
 export async function openUniswapHelpLink() {
-  return openUri(`${uniswapUrls.helpUrl}/hc/en-us/requests/new`, true)
+  return openUri(`${uniswapUrls.helpUrl}/hc/en-us/requests/new`)
 }
 
 export async function openMoonpayTransactionLink(info: FiatPurchaseTransactionInfo) {
