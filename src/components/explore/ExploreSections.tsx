@@ -2,7 +2,7 @@ import { NetworkStatus } from '@apollo/client'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
-import { useAppSelector } from 'src/app/hooks'
+import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import { FavoriteTokensGrid } from 'src/components/explore/FavoriteTokensGrid'
 import { FavoriteWalletsGrid } from 'src/components/explore/FavoriteWalletsGrid'
 import { SortButton } from 'src/components/explore/SortButton'
@@ -44,6 +44,7 @@ type ExploreSectionsProps = {
 
 export function ExploreSections({ listRef }: ExploreSectionsProps) {
   const { t } = useTranslation()
+  const theme = useAppTheme()
 
   // Top tokens sorting
   const orderBy = useAppSelector(selectTokensOrderBy)
@@ -159,9 +160,11 @@ export function ExploreSections({ listRef }: ExploreSectionsProps) {
   }
 
   return (
-    <VirtualizedList ref={listRef} style={flex.fill}>
+    <VirtualizedList
+      ref={listRef}
+      contentContainerStyle={{ ...flex.fill, backgroundColor: theme.colors.background0 }}>
       {hasFavoritedTokens || hasFavoritedWallets ? (
-        <Flex gap="md" mb="md" mt="xs" mx="sm">
+        <Flex bg="backgroundBranded" gap="md" pb="md" pt="xs" px="sm">
           {hasFavoritedTokens ? (
             <FavoriteTokensGrid
               isEditing={isEditingTokens}
@@ -178,37 +181,35 @@ export function ExploreSections({ listRef }: ExploreSectionsProps) {
           ) : null}
         </Flex>
       ) : null}
-      <Box bg="background0">
-        <FlatList
-          ListEmptyComponent={
-            <Box mx="lg" my="sm">
-              <Loading repeat={5} type="token" />
-            </Box>
-          }
-          ListFooterComponent={<Inset all="sm" />}
-          ListHeaderComponent={
-            <Flex
-              row
-              alignItems="center"
-              justifyContent="space-between"
-              mb="xs"
-              ml="xmd"
-              mr="sm"
-              mt="md">
-              <Text color="textSecondary" variant="subheadSmall">
-                {t('Top tokens')}
-              </Text>
-              <SortButton orderBy={orderBy} />
-            </Flex>
-          }
-          data={showLoading ? EMPTY_ARRAY : topTokenItems}
-          keyExtractor={tokenKey}
-          renderItem={renderItem}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          windowSize={5}
-        />
-      </Box>
+      <FlatList
+        ListEmptyComponent={
+          <Box mx="lg" my="sm">
+            <Loading repeat={5} type="token" />
+          </Box>
+        }
+        ListFooterComponent={<Inset all="sm" />}
+        ListHeaderComponent={
+          <Flex
+            row
+            alignItems="center"
+            justifyContent="space-between"
+            mb="xs"
+            ml="xmd"
+            mr="sm"
+            mt="md">
+            <Text color="textSecondary" variant="subheadSmall">
+              {t('Top tokens')}
+            </Text>
+            <SortButton orderBy={orderBy} />
+          </Flex>
+        }
+        data={showLoading ? EMPTY_ARRAY : topTokenItems}
+        keyExtractor={tokenKey}
+        renderItem={renderItem}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        windowSize={5}
+      />
     </VirtualizedList>
   )
 }
