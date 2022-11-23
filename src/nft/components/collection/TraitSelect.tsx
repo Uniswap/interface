@@ -5,10 +5,11 @@ import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { Checkbox } from 'nft/components/layout/Checkbox'
 import { subheadSmall } from 'nft/css/common.css'
-import { Trait, useCollectionFilters } from 'nft/hooks/useCollectionFilters'
+import { CollectionFilters, Trait, useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { scrollToTop } from 'nft/utils/scrollToTop'
-import { CSSProperties, FormEvent, MouseEvent, useCallback, useEffect, useMemo, useState } from 'react'
+import { syncLocalFiltersWithURL } from 'nft/utils/urlParams'
+import { CSSProperties, FormEvent, MouseEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 
@@ -125,6 +126,30 @@ export const TraitSelect = ({ traits, type, index }: { traits: Trait[]; type: st
   const [search, setSearch] = useState('')
   const debouncedSearch = useDebounce(search, 300)
 
+  const oldStateRef = useRef<CollectionFilters | null>(null)
+  const updateUrlFilters = () => {
+    useCollectionFilters.subscribe((state) => {
+      if (JSON.stringify(oldStateRef.current) !== JSON.stringify(state)) {
+        syncLocalFiltersWithURL(state)
+        oldStateRef.current = state
+      }
+    })
+  }
+  const addTraitAndUpdate = useCallback(
+    (trait: Trait) => {
+      addTrait(trait)
+      updateUrlFilters()
+    },
+    [addTrait]
+  )
+  const removeTraitAndUpdate = useCallback(
+    (trait: Trait) => {
+      removeTrait(trait)
+      updateUrlFilters()
+    },
+    [removeTrait]
+  )
+
   const searchedTraits = useMemo(
     () => traits.filter((t) => t.trait_value?.toString().toLowerCase().includes(debouncedSearch.toLowerCase())),
     [debouncedSearch, traits]
@@ -138,9 +163,15 @@ export const TraitSelect = ({ traits, type, index }: { traits: Trait[]; type: st
         ({ trait_type, trait_value }) =>
           trait_type === trait.trait_type && String(trait_value) === String(trait.trait_value)
       )
-      return <TraitItem style={style} isTraitSelected={!!isTraitSelected} {...{ trait, addTrait, removeTrait }} />
+      return (
+        <TraitItem
+          style={style}
+          isTraitSelected={!!isTraitSelected}
+          {...{ trait, addTrait: addTraitAndUpdate, removeTrait: removeTraitAndUpdate }}
+        />
+      )
     },
-    [selectedTraits, addTrait, removeTrait]
+    [selectedTraits, addTraitAndUpdate, removeTraitAndUpdate]
   )
 
   const itemKey = useCallback((index: number, data: Trait[]) => {
