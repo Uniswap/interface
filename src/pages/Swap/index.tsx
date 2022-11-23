@@ -56,7 +56,7 @@ import {
   useSwapState,
 } from '../../state/swap/hooks'
 import { useExpertModeManager } from '../../state/user/hooks'
-import { LinkStyledButton, ThemedText } from '../../theme'
+import { ThemedText } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeRealizedPriceImpact, warningSeverity } from '../../utils/prices'
@@ -527,8 +527,17 @@ export default function Swap() {
               fiatValueInput={fiatValueInput}
               fiatValueOutput={fiatValueOutput}
             />
-
             <div style={{ display: 'relative' }}>
+              <>
+                <AddressInputPanel id="recipient" value={recipient ?? ''} onChange={onChangeRecipient} />
+                <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
+                  <ArrowWrapper clickable={false}>
+                    <ArrowContainer color={theme.textPrimary}>
+                      <ArrowDown size="16" color={theme.deprecated_text2} />
+                    </ArrowContainer>
+                  </ArrowWrapper>
+                </AutoRow>
+              </>
               <SwapSection>
                 <Trace section={SectionName.CURRENCY_INPUT_PANEL}>
                   <SwapCurrencyInputPanel
@@ -600,20 +609,6 @@ export default function Swap() {
                       loading={independentField === Field.INPUT && routeIsSyncing}
                     />
                   </Trace>
-
-                  {recipient !== null && !showWrap ? (
-                    <>
-                      <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                        <ArrowWrapper clickable={false}>
-                          <ArrowDown size="16" color={theme.deprecated_text2} />
-                        </ArrowWrapper>
-                        <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
-                          <Trans>- Remove recipient</Trans>
-                        </LinkStyledButton>
-                      </AutoRow>
-                      <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
-                    </>
-                  ) : null}
                 </OutputSwapSection>
                 {showDetailsDropdown && (
                   <DetailsSwapSection>
