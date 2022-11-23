@@ -81,7 +81,7 @@ export function WelcomeModal({ onDismissed }: { onDismissed: () => void }) {
   const theme = useTheme()
 
   return (
-    <Modal isOpen={isOpen} onDismiss={dismiss} maxWidth={720}>
+    <Modal isOpen={isOpen} onSwipe={dismiss} maxWidth={720} isBottomSheet={false}>
       <Container>
         <Background
           {...(theme.darkMode ? BACKGROUND_IMAGE.dark : BACKGROUND_IMAGE.light)}
