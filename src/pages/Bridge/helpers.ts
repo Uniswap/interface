@@ -82,7 +82,7 @@ export async function getTokenlist(chainId: ChainId, isStaleData: boolean) {
   let local: any
   try {
     local = getTokenListCache()
-    if (local[chainId] && !isStaleData) {
+    if (local[chainId] && Object.keys(local[chainId]).length && !isStaleData) {
       return local[chainId]
     }
     tokens = await fetchListTokenByChain(chainId)
