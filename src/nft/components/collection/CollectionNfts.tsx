@@ -350,13 +350,14 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
     if (sortBy === SortBy.HighToLow || sortBy === SortBy.LowToHigh) {
       assets.sort((a, b) => {
-        const bigA = BigNumber.from(a.priceInfo?.ETHPrice ?? -1)
-        const bigB = BigNumber.from(b.priceInfo?.ETHPrice ?? -1)
+        const bigA = BigNumber.from(a.priceInfo?.ETHPrice ?? 0)
+        const bigB = BigNumber.from(b.priceInfo?.ETHPrice ?? 0)
 
-        if (bigA.gte(0) && bigB.lt(0)) {
-          return sortBy === SortBy.LowToHigh ? -1 : 1
-        } else if (bigB.gte(0) && bigA.lt(0)) {
-          return sortBy === SortBy.LowToHigh ? 1 : -1
+        // Always sort not for sale (price = 0) assets to the end
+        if (bigA.gt(0) && bigB.lte(0)) {
+          return -1
+        } else if (bigB.gt(0) && bigA.lte(0)) {
+          return 1
         }
 
         const diff = bigA.sub(bigB)
