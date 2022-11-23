@@ -17,7 +17,7 @@ import { useMemo } from 'react'
 import { Upload } from 'react-feather'
 import { Link, useNavigate } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { ExternalLink, ThemedText } from 'theme'
 
 const TWITTER_WIDTH = 560
 const TWITTER_HEIGHT = 480
@@ -226,7 +226,11 @@ export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
         <ThemedText.SubHeader color="accentAction" fontWeight={500} lineHeight="24px">
           {listing ? 'Your Price' : 'List for Sale'}
         </ThemedText.SubHeader>
-        {listing && <MarketplaceIcon alt={listing.marketplace} src={getMarketplaceIcon(listing.marketplace)} />}
+        {listing && (
+          <ExternalLink href={listing.marketplaceUrl}>
+            <MarketplaceIcon alt={listing.marketplace} src={getMarketplaceIcon(listing.marketplace)} />
+          </ExternalLink>
+        )}
       </HeaderRow>
       <PriceRow>
         {listing ? (
@@ -354,7 +358,9 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
             <ThemedText.SubHeader color="accentAction" fontWeight={500} lineHeight="24px">
               Best Price
             </ThemedText.SubHeader>
-            <MarketplaceIcon alt={cheapestOrder.marketplace} src={getMarketplaceIcon(cheapestOrder.marketplace)} />
+            <ExternalLink href={cheapestOrder.marketplaceUrl}>
+              <MarketplaceIcon alt={cheapestOrder.marketplace} src={getMarketplaceIcon(cheapestOrder.marketplace)} />
+            </ExternalLink>
           </HeaderRow>
           <PriceRow>
             <ThemedText.MediumHeader fontSize="28px" lineHeight="36px">
