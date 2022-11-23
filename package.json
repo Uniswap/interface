@@ -20,6 +20,7 @@
     "start": "craco start",
     "build": "craco build",
     "serve": "serve build -l 3000",
+    "deduplicate": "yarn-deduplicate --strategy=highest",
     "lint": "yarn eslint .",
     "test": "craco test --coverage",
     "cypress:open": "cypress open --browser chrome --e2e",
