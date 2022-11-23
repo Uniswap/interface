@@ -6,6 +6,7 @@ import { NumericInput } from 'nft/components/layout/Input'
 import { badge, body, bodySmall, subheadSmall } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { DropDownOption, ListingMarket, ListingWarning, WalletAsset } from 'nft/types'
+import { LOOKS_RARE_CREATOR_BASIS_POINTS } from 'nft/utils'
 import { formatEth, formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { Dispatch, FormEvent, useEffect, useMemo, useRef, useState } from 'react'
@@ -311,7 +312,12 @@ const MarketplaceRow = ({
 
   const marketplaceFee = selectedMarkets.length > 0 ? maxMarketFee(selectedMarkets) : 0
   const price = showGlobalPrice ? globalPrice : listPrice
-  const feeInEth = price && (price * (asset.basisPoints * 0.01 + marketplaceFee)) / 100
+  // LooksRare is a unique case where royalties for creators are a flat 0.5% or 50 basis points
+  const royalties =
+    (selectedMarkets.length === 1 && selectedMarkets[0].name === 'LooksRare'
+      ? LOOKS_RARE_CREATOR_BASIS_POINTS
+      : asset.basisPoints) * 0.01
+  const feeInEth = price && (price * (royalties + marketplaceFee)) / 100
   const userReceives = price && feeInEth && price - feeInEth
   const profit = userReceives && asset.lastPrice && userReceives - asset.lastPrice
   const profitPercent = profit && asset.lastPrice && Math.round(profit && (profit / asset.lastPrice) * 100)
@@ -430,7 +436,7 @@ const MarketplaceRow = ({
       </Row>
       <Row flex="1" display={{ sm: 'none', md: 'flex' }}>
         <Box className={body} color="textSecondary" width="full" textAlign="right">
-          {(asset.basisPoints * 0.01).toFixed(1)}%
+          {royalties.toFixed(1)}%
         </Box>
       </Row>
       <Row style={{ flex: '1.5' }} display={{ sm: 'none', md: 'flex' }}>
