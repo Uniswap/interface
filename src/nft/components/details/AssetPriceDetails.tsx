@@ -394,9 +394,11 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
       )}
       {isForSale && (
         <OwnerInformationContainer>
-          <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
-            Seller:
-          </ThemedText.BodySmall>
+          {asset.owner.address && (
+            <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
+              Seller:
+            </ThemedText.BodySmall>
+          )}
           <OwnerText
             target="_blank"
             href={`https://etherscan.io/address/${asset.owner.address}`}
