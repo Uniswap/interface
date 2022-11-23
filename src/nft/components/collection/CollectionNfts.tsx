@@ -456,7 +456,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         }
       })
     }
-  }, [collectionStats, location])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location])
 
   useEffect(() => {
     if (collectionStats && collectionStats.stats?.floor_price) {
