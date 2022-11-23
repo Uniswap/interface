@@ -13,7 +13,9 @@ import styled from 'styled-components/macro'
 import { useIsUserAddedToken } from '../../../hooks/Tokens'
 import { useCurrencyBalance } from '../../../state/connection/hooks'
 import { WrappedTokenInfo } from '../../../state/lists/wrappedTokenInfo'
+import { useSwapState } from '../../../state/swap/hooks'
 import { ThemedText } from '../../../theme'
+import { isAddress } from '../../../utils'
 import Column, { AutoColumn } from '../../Column'
 import Loader from '../../Loader'
 import CurrencyLogo from '../../Logo/CurrencyLogo'
@@ -122,7 +124,9 @@ export function CurrencyRow({
   const { account } = useWeb3React()
   const key = currencyKey(currency)
   const customAdded = useIsUserAddedToken(currency)
-  const balance = useCurrencyBalance(account ?? undefined, currency)
+  const { recipient } = useSwapState()
+  const poolAddress = isAddress(recipient) ? recipient : undefined
+  const balance = useCurrencyBalance(poolAddress ?? undefined, currency)
   const warning = currency.isNative ? null : checkWarning(currency.address)
   const isBlockedToken = !!warning && !warning.canProceed
   const blockedTokenOpacity = '0.6'
