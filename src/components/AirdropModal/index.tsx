@@ -8,8 +8,9 @@ import Loader from 'components/Loader'
 import { UNISWAP_NFT_AIRDROP_CLAIM_ADDRESS } from 'constants/addresses'
 import { useContract } from 'hooks/useContract'
 import { ChevronRightIcon } from 'nft/components/icons'
-import { useIsClaimAvailable } from 'nft/hooks/useClaimsAvailable'
-import { CollectionRewardsFetcher, Rewards, RewardType } from 'nft/queries/genie/GetAirdorpMerkle'
+import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
+import { CollectionRewardsFetcher } from 'nft/queries/genie/GetAirdorpMerkle'
+import { Airdrop, Rewards } from 'nft/types/airdrop'
 import { useEffect, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
@@ -165,14 +166,27 @@ const MainHeader = styled.span`
   color: ${({ theme }) => theme.white};
 `
 
+const EtherscanLinkWrap = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+`
+
+enum RewardAmounts {
+  tradingRewardAmount = 300,
+  holderRewardAmount = 1000,
+  combinedAmount = 1300,
+}
+
 const AirdropModal = () => {
   const { account, provider } = useWeb3React()
   const [claim, setClaim] = useState<Rewards>()
   const [isClaimed, setIsClaimed] = useState(false)
   const [error, setError] = useState(false)
-  const setIsClaimAvailable = useIsClaimAvailable((state) => state.setIsClaimAvailable)
+  const setIsClaimAvailable = useIsNftClaimAvailable((state) => state.setIsClaimAvailable)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [totalAmount, setTotalAmount] = useState(300)
+  const [totalAmount, setTotalAmount] = useState(0)
   const isOpen = useModalIsOpen(ApplicationModal.UNISWAP_NFT_AIRDROP_CLAIM)
   const usdcAirdropToggle = useToggleModal(ApplicationModal.UNISWAP_NFT_AIRDROP_CLAIM)
   const contract = useContract(UNISWAP_NFT_AIRDROP_CLAIM_ADDRESS, uniswapNftAirdropClaim)
@@ -190,7 +204,7 @@ const AirdropModal = () => {
       ;(async () => {
         try {
           const { data } = await CollectionRewardsFetcher(account)
-          const claim = data.find((claim) => claim?.rewardType === RewardType.GENIE_UNISWAP_USDC_AIRDROP)
+          const claim = data.find((claim) => claim?.rewardType === Airdrop.GENIE_UNISWAP_USDC_AIRDROP)
 
           if (!claim) return
 
@@ -239,10 +253,10 @@ const AirdropModal = () => {
               </SuccessText>
               <EtherscanLink href="https://etherscan.io/" target="_blank">
                 <ThemedText.Link>
-                  <div style={{ display: 'flex', alignItems: 'center', textAlign: 'center', justifyContent: 'center' }}>
-                    <span style={{ marginRight: 8 }}>Etherscan</span>
+                  <EtherscanLinkWrap>
+                    <span>Etherscan</span>
                     <ChevronRightIcon />
-                  </div>
+                  </EtherscanLinkWrap>
                 </ThemedText.Link>
               </EtherscanLink>
 
@@ -260,19 +274,26 @@ const AirdropModal = () => {
                   <Line />
                   <RewardsDetailsContainer>
                     <RewardsText>Trading rewards</RewardsText>{' '}
-                    <CurrencyText>{totalAmount === 300 || totalAmount === 1300 ? '300 USDC' : '0'}</CurrencyText>
+                    <CurrencyText>
+                      {totalAmount === RewardAmounts.tradingRewardAmount || totalAmount === RewardAmounts.combinedAmount
+                        ? `${RewardAmounts.tradingRewardAmount} USDC`
+                        : '0'}
+                    </CurrencyText>
                   </RewardsDetailsContainer>
                   <RewardsDetailsContainer>
                     <RewardsText>Genie NFT holder rewards</RewardsText>{' '}
-                    <CurrencyText>{totalAmount > 300 ? `1000 USDC` : '0'}</CurrencyText>
+                    <CurrencyText>
+                      {totalAmount !== RewardAmounts.tradingRewardAmount
+                        ? `${RewardAmounts.holderRewardAmount} USDC`
+                        : '0'}
+                    </CurrencyText>
                   </RewardsDetailsContainer>
                 </TextContainer>
                 <StyledImage src={airdropBackgroundv2} />
               </ImageContainer>
               <Body>
                 <RewardsInformationText>
-                  As a long time supporter of Genie, you’ve been awarded {totalAmount} USDC tokens. Read more about
-                  Uniswap NFT.
+                  As a long time supporter of Genie, you’ve been awarded {totalAmount} USDC tokens.
                 </RewardsInformationText>
                 <ReactLinkWrap>
                   <LinkWrap href="https://uniswap.org/blog/uniswap-nft-aggregator-announcement" target="_blank">

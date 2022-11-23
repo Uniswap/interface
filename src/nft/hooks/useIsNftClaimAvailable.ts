@@ -1,12 +1,12 @@
 import create from 'zustand'
 import { devtools } from 'zustand/middleware'
 
-interface Claim {
+interface NFTClaim {
   isClaimAvailable: boolean
   setIsClaimAvailable: (isClaimAvailable: boolean) => void
 }
 
-export const useIsClaimAvailable = create<Claim>()(
+export const useIsNftClaimAvailable = create<NFTClaim>()(
   devtools(
     (set) => ({
       isClaimAvailable: false,
@@ -14,6 +14,6 @@ export const useIsClaimAvailable = create<Claim>()(
         set(() => ({ isClaimAvailable }))
       },
     }),
-    { name: 'useIsClaimAvailable' }
+    { name: 'useIsNftClaimAvailable' }
   )
 )

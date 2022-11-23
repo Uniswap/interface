@@ -7,7 +7,7 @@ import WalletDropdown from 'components/WalletDropdown'
 import { getConnection } from 'connection/utils'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { Portal } from 'nft/components/common/Portal'
-import { useIsClaimAvailable } from 'nft/hooks/useClaimsAvailable'
+import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { getIsValidSwapQuote } from 'pages/Swap'
 import { darken } from 'polished'
 import { useMemo, useRef } from 'react'
@@ -209,7 +209,7 @@ function Web3StatusInner() {
   const toggleWalletDropdown = useToggleWalletDropdown()
   const toggleWalletModal = useToggleWalletModal()
   const walletIsOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
-  const isClaimAvailable = useIsClaimAvailable((state) => state.isClaimAvailable)
+  const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
 
   const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
   const isNftActive = useNftFlag() === NftVariant.Enabled

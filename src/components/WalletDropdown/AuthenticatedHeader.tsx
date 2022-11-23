@@ -9,7 +9,7 @@ import useCopyClipboard from 'hooks/useCopyClipboard'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
-import { useIsClaimAvailable } from 'nft/hooks/useClaimsAvailable'
+import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useMemo } from 'react'
 import { Copy, ExternalLink, Power } from 'react-feather'
@@ -118,7 +118,7 @@ const AuthenticatedHeader = () => {
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const resetSellAssets = useSellAsset((state) => state.reset)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
-  const isClaimAvailable = useIsClaimAvailable((state) => state.isClaimAvailable)
+  const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
 
   const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
   const isUnclaimed = useUserHasAvailableClaim(account)
