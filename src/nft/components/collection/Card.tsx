@@ -490,7 +490,7 @@ const InfoContainer = ({ children }: { children: ReactNode }) => {
 
 const TruncatedTextRow = styled(Row)`
   padding: 2px;
-  white-space: nowrap;
+  white-space: pre;
   text-overflow: ellipsis;
   display: block;
   overflow: hidden;
@@ -532,11 +532,9 @@ const ProfileNftDetails = ({ asset, hideDetails }: ProfileNftDetailsProps) => {
         </TruncatedTextRow>
         {asset.susFlag && <Suspicious />}
       </Row>
-      {shouldShowUserListedPrice && (
-        <TruncatedTextRow className={buttonTextMedium} style={{ color: themeVars.colors.textPrimary }}>
-          {`${floorFormatter(asset.floor_sell_order_price)} ETH`}
-        </TruncatedTextRow>
-      )}
+      <TruncatedTextRow className={buttonTextMedium} style={{ color: themeVars.colors.textPrimary }}>
+        {shouldShowUserListedPrice ? `${floorFormatter(asset.floor_sell_order_price)} ETH` : ' '}
+      </TruncatedTextRow>
     </Box>
   )
 }
