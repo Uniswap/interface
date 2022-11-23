@@ -278,86 +278,56 @@ export const UnavailableAssetsHeaderRow = ({
 
   if (!assets || assets.length === 0) return null
 
+  const moreThanOneUnavailable = assets.length > 1
+
   return (
     <Column className={styles.unavailableAssetsContainer}>
-      {assets.length === 1 && (
-        <Column>
-          <Row
-            justifyContent="space-between"
-            marginBottom={isOpen ? '12' : '0'}
-            cursor="pointer"
-            onClick={() => {
-              !didOpenUnavailableAssets && setDidOpenUnavailableAssets(true)
-              toggleOpen()
-            }}
-          >
-            <Row gap="12" color="textSecondary" className={bodySmall}>
-              No longer available
-            </Row>
-            {!didOpenUnavailableAssets && (
-              <Row
-                position="relative"
-                width="20"
-                height="20"
-                color="textPrimary"
-                justifyContent="center"
-                cursor="pointer"
-                onClick={clearUnavailableAssets}
-              >
-                <TimedLoader />
-                <CloseTimerIcon />
-              </Row>
-            )}
+      <Column>
+        <Row
+          justifyContent="space-between"
+          marginBottom={isOpen || !moreThanOneUnavailable ? '12' : '0'}
+          cursor="pointer"
+          onClick={() => {
+            !didOpenUnavailableAssets && setDidOpenUnavailableAssets(true)
+            toggleOpen()
+          }}
+        >
+          <Row gap="12" color="textSecondary" className={bodySmall}>
+            {!isOpen && moreThanOneUnavailable && <UnavailableAssetsPreview assets={assets.slice(0, 5)} />}
+            No longer available
           </Row>
-          <BagRow asset={assets[0]} usdPrice={usdPrice} removeAsset={() => undefined} grayscale isMobile={isMobile} />
-        </Column>
-      )}
-      {assets.length > 1 && (
-        <Column>
-          <Row
-            justifyContent="space-between"
-            marginBottom={isOpen ? '12' : '0'}
-            cursor="pointer"
-            onClick={() => {
-              !didOpenUnavailableAssets && setDidOpenUnavailableAssets(true)
-              toggleOpen()
-            }}
-          >
-            <Row gap="12" color="textSecondary" className={bodySmall}>
-              {!isOpen && <UnavailableAssetsPreview assets={assets.slice(0, 5)} />}
-              No longer available
-            </Row>
+          {moreThanOneUnavailable && (
             <Row color="textSecondary">{isOpen ? <ChevronUpBagIcon /> : <ChevronDownBagIcon />}</Row>
-            {!didOpenUnavailableAssets && (
-              <Row
-                position="relative"
-                width="20"
-                height="20"
-                color="textPrimary"
-                justifyContent="center"
-                cursor="pointer"
-                onClick={clearUnavailableAssets}
-              >
-                <TimedLoader />
-                <CloseTimerIcon />
-              </Row>
-            )}
-          </Row>
-          <Column gap="8" style={{ marginLeft: '-8px', marginRight: '-8px' }}>
-            {isOpen &&
-              assets.map((asset) => (
-                <BagRow
-                  key={asset.id}
-                  asset={asset}
-                  usdPrice={usdPrice}
-                  removeAsset={() => undefined}
-                  grayscale
-                  isMobile={isMobile}
-                />
-              ))}
-          </Column>
+          )}
+          {!didOpenUnavailableAssets && (
+            <Row
+              position="relative"
+              width="20"
+              height="20"
+              color="textPrimary"
+              justifyContent="center"
+              cursor="pointer"
+              onClick={clearUnavailableAssets}
+            >
+              <TimedLoader />
+              <CloseTimerIcon />
+            </Row>
+          )}
+        </Row>
+        <Column gap="8" style={{ marginLeft: '-8px', marginRight: '-8px' }}>
+          {(isOpen || !moreThanOneUnavailable) &&
+            assets.map((asset) => (
+              <BagRow
+                key={asset.id}
+                asset={asset}
+                usdPrice={usdPrice}
+                removeAsset={() => undefined}
+                grayscale
+                isMobile={isMobile}
+              />
+            ))}
         </Column>
-      )}
+      </Column>
     </Column>
   )
 }
