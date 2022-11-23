@@ -1,67 +1,32 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useHomeStackNavigation } from 'src/app/navigation/types'
-import { ChainId } from 'src/constants/chains'
-import { nativeOnChain } from 'src/constants/tokens'
-import { useTokenDetailsScreenLazyQuery } from 'src/data/__generated__/types-and-hooks'
-import { useActiveChainIds } from 'src/features/chains/utils'
+import { Chain, useTokenDetailsScreenLazyQuery } from 'src/data/__generated__/types-and-hooks'
 import { useMultipleBalances, useSingleBalance } from 'src/features/dataApi/balances'
 import { currencyIdToContractInput } from 'src/features/dataApi/utils'
-import { BridgeInfo, WrappedTokenInfo } from 'src/features/tokenLists/wrappedTokenInfo'
-import { useTokenInfoFromAddress } from 'src/features/tokens/useTokenInfoFromAddress'
 import { Screens } from 'src/screens/Screens'
-import { buildCurrencyId, currencyAddress, CurrencyId } from 'src/utils/currencyId'
-import { getKeys } from 'src/utils/objects'
-
-function useBridgeInfo(currency: Currency) {
-  const activeChainIds = useActiveChainIds()
-
-  const nativeWrappedCurrency = useTokenInfoFromAddress(
-    currency.chainId,
-    currency.isToken ? buildCurrencyId(currency.chainId, currency.address) : undefined
-  )
-
-  return useMemo(() => {
-    if (currency.isNative) {
-      return activeChainIds.reduce<BridgeInfo>((acc, chain) => {
-        if (chain === currency.chainId) {
-          return acc
-        }
-
-        const etherOnChain = nativeOnChain(chain)
-
-        if (etherOnChain.symbol !== currency.symbol) {
-          return acc
-        }
-
-        acc[chain] = {
-          tokenAddress: currencyAddress(etherOnChain),
-        }
-        return acc
-      }, {})
-    }
-
-    if (currency instanceof WrappedTokenInfo) {
-      return currency.bridgeInfo
-    }
-
-    if (nativeWrappedCurrency instanceof WrappedTokenInfo) {
-      return nativeWrappedCurrency.bridgeInfo
-    }
-  }, [activeChainIds, currency, nativeWrappedCurrency])
-}
+import { fromGraphQLChain } from 'src/utils/chainId'
+import { buildCurrencyId, buildNativeCurrencyId, CurrencyId } from 'src/utils/currencyId'
 
 /** Helper hook to retrieve balances across chains for a given currency, for the active account. */
-export function useCrossChainBalances(currency: Currency) {
+export function useCrossChainBalances(
+  currency: Currency,
+  bridgeInfo: NullUndefined<{ chain: Chain; address?: NullUndefined<string> }[]>
+) {
   const currentChainBalance = useSingleBalance(currency)
 
-  const bridgeInfo = useBridgeInfo(currency)
   const bridgedCurrencyIds = useMemo(
     () =>
-      getKeys(bridgeInfo ?? {}).map((chain: ChainId) =>
-        buildCurrencyId(chain, bridgeInfo?.[chain]?.tokenAddress ?? '')
-      ),
-    [bridgeInfo]
+      bridgeInfo
+        ?.map(({ chain, address }) => {
+          const chainId = fromGraphQLChain(chain)
+          if (!chainId || chainId === currency.chainId) return null
+          if (!address) return buildNativeCurrencyId(chainId)
+          return buildCurrencyId(chainId, address)
+        })
+        .filter((b): b is string => !!b),
+
+    [bridgeInfo, currency.chainId]
   )
   const otherChainBalances = useMultipleBalances(bridgedCurrencyIds)
 

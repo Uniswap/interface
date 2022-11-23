@@ -141,7 +141,12 @@ function TokenDetails({
   retry: () => void
 }) {
   const dispatch = useAppDispatch()
-  const { currentChainBalance, otherChainBalances } = useCrossChainBalances(currency)
+
+  const crossChainTokens = data?.tokens?.[0]?.project?.tokens
+  const { currentChainBalance, otherChainBalances } = useCrossChainBalances(
+    currency,
+    crossChainTokens
+  )
   const theme = useAppTheme()
 
   const token = data?.tokens?.[0]

@@ -35,7 +35,7 @@ export function usePortfolioBalances(
     variables: { ownerAddress: address },
     pollInterval: shouldPoll ? PollingInterval.Fast : undefined,
     notifyOnNetworkStatusChange: true,
-    onCompleted: onCompleted,
+    onCompleted,
   })
 
   const persistedError = usePersistedError(loading, error)
@@ -179,7 +179,9 @@ export function useSingleBalance(currency: NullUndefined<Currency>): PortfolioBa
 }
 
 /** Helper hook to retrieve balances for a set of currencies for the active account. */
-export function useMultipleBalances(currencies: CurrencyId[]): PortfolioBalance[] | null {
+export function useMultipleBalances(
+  currencies: CurrencyId[] | undefined
+): PortfolioBalance[] | null {
   const address = useActiveAccountAddressWithThrow()
   const { data: balances } = usePortfolioBalances(address, /*shouldPoll=*/ false)
 

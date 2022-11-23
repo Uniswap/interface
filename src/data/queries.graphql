@@ -273,6 +273,14 @@ query TokenDetailsScreen($contract: ContractInput!) {
           currency
         }
       }
+      tokens {
+        # intentionally exclude id so tokens data gets attached to the query itself
+        # this prevents caching issues where tokens get overriden
+        # we could also consider using type policies
+        # id
+        chain
+        address
+      }
     }
   }
 }
