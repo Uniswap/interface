@@ -162,7 +162,8 @@ export function ExploreSections({ listRef }: ExploreSectionsProps) {
   return (
     <VirtualizedList
       ref={listRef}
-      contentContainerStyle={{ ...flex.fill, backgroundColor: theme.colors.background0 }}>
+      contentContainerStyle={{ backgroundColor: theme.colors.background0 }}
+      style={flex.fill}>
       {hasFavoritedTokens || hasFavoritedWallets ? (
         <Flex bg="backgroundBranded" gap="md" pb="md" pt="xs" px="sm">
           {hasFavoritedTokens ? (
