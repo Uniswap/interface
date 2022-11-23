@@ -2,7 +2,7 @@ import type { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { LOOKSRARE_MARKETPLACE_CONTRACT, X2Y2_TRANSFER_CONTRACT } from 'nft/queries'
 import { OPENSEA_CROSS_CHAIN_CONDUIT } from 'nft/queries/openSea'
 import { AssetRow, CollectionRow, ListingMarket, ListingRow, ListingStatus, WalletAsset } from 'nft/types'
-import { approveCollection, signListing } from 'nft/utils/listNfts'
+import { approveCollection, LOOKS_RARE_CREATOR_BASIS_POINTS, signListing } from 'nft/utils/listNfts'
 import { Dispatch } from 'react'
 
 export const updateStatus = ({
@@ -124,11 +124,11 @@ export const getTotalEthValue = (sellAssets: WalletAsset[]) => {
   const total = sellAssets.reduce((total, asset: WalletAsset) => {
     if (asset.newListings?.length) {
       const maxListing = asset.newListings.reduce((a, b) => ((a.price ?? 0) > (b.price ?? 0) ? a : b))
-      return (
-        total +
-        (maxListing.price ?? 0) -
-        (maxListing.price ?? 0) * ((maxListing.marketplace.fee + asset.basisPoints / 100) / 100)
-      )
+      // LooksRare is a unique case where creator royalties are a flat 0.5% or 50 basis points
+      const maxFee =
+        maxListing.marketplace.fee +
+        (maxListing.marketplace.name === 'LooksRare' ? LOOKS_RARE_CREATOR_BASIS_POINTS : asset.basisPoints) / 100
+      return total + (maxListing.price ?? 0) - (maxListing.price ?? 0) * (maxFee / 100)
     }
     return total
   }, 0)
