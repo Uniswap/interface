@@ -96,6 +96,7 @@ const MarketplaceIcon = styled.img`
 `
 
 const BuyNowButton = styled.div<{ assetInBag: boolean; margin: boolean; useAccentColor: boolean }>`
+  position: relative;
   width: 100%;
   background-color: ${({ theme, assetInBag, useAccentColor }) =>
     assetInBag ? theme.accentFailure : useAccentColor ? theme.accentAction : theme.backgroundInteractive};
@@ -393,9 +394,11 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
       )}
       {isForSale && (
         <OwnerInformationContainer>
-          <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
-            Seller:
-          </ThemedText.BodySmall>
+          {asset.tokenType !== 'ERC1155' && asset.owner.address && (
+            <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
+              Seller:
+            </ThemedText.BodySmall>
+          )}
           <OwnerText
             target="_blank"
             href={`https://etherscan.io/address/${asset.owner.address}`}

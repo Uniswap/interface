@@ -31,7 +31,7 @@ export const getMarketplaceIcon = (marketplace: string) => {
 
 export const generateTweetForAsset = (asset: GenieAsset): string => {
   return `https://twitter.com/intent/tweet?text=Check%20out%20${
-    asset.name ?? `${asset.collectionName}%20%23${asset.tokenId}`
+    asset.name ? encodeURIComponent(asset.name) : `${asset.collectionName}%20%23${asset.tokenId}`
   }%20(${asset.collectionName})%20https://app.uniswap.org/%23/nfts/asset/${asset.address}/${
     asset.tokenId
   }%20via%20@uniswap`

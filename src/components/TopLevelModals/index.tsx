@@ -11,7 +11,7 @@ import { ApplicationModal } from 'state/application/reducer'
 
 const Bag = lazy(() => import('nft/components/bag/Bag'))
 const TransactionCompleteModal = lazy(() => import('nft/components/collection/TransactionCompleteModal'))
-const AirdropModal = lazy(() => import('components/AidropModal'))
+const AirdropModal = lazy(() => import('components/AirdropModal'))
 
 export default function TopLevelModals() {
   const addressClaimOpen = useModalIsOpen(ApplicationModal.ADDRESS_CLAIM)
