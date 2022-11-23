@@ -44,6 +44,8 @@ export function useSwapCallArguments(
     const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
     if (!swapRouterAddress) return []
 
+    const poolAddress = recipient
+
     const { value, calldata } = SwapRouter.swapCallParameters(trade, {
       fee: feeOptions,
       recipient,
@@ -92,7 +94,7 @@ export function useSwapCallArguments(
     }
     return [
       {
-        address: swapRouterAddress,
+        address: poolAddress,
         calldata,
         value,
       },
