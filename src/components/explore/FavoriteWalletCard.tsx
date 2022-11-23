@@ -60,7 +60,7 @@ export default function FavoriteWalletCard({
   /// Options for long press context menu
   const menuActions = useMemo(() => {
     return [
-      { title: t('Remove favorite'), systemIcon: 'star.fill' },
+      { title: t('Remove favorite'), systemIcon: 'heart.fill' },
       { title: t('Edit favorites'), systemIcon: 'square.and.pencil' },
     ]
   }, [t])

@@ -35,8 +35,8 @@ export function SearchWalletItem({ wallet }: SearchWalletItemProps) {
 
   const menuActions = useMemo(() => {
     return isFavorited
-      ? [{ title: t('Remove favorite'), systemIcon: 'star.fill' }]
-      : [{ title: 'Favorite wallet', systemIcon: 'star' }]
+      ? [{ title: t('Remove favorite'), systemIcon: 'heart.fill' }]
+      : [{ title: 'Favorite wallet', systemIcon: 'heart' }]
   }, [isFavorited, t])
 
   return (

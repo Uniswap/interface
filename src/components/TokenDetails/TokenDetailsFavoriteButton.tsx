@@ -1,7 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
-import StarIcon from 'src/assets/icons/star.svg'
+import HeartIcon from 'src/assets/icons/heart.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { useToggleFavoriteCallback } from 'src/features/favorites/hooks'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
@@ -20,11 +20,11 @@ export function TokenDetailsFavoriteButton({ currency }: TokenDetailsFavoriteBut
 
   return (
     <TouchableArea hapticFeedback px="xxxs" py="sm" onPress={onFavoritePress}>
-      <StarIcon
-        color={isFavoriteToken ? theme.colors.accentWarning : theme.colors.textSecondary}
-        fill={isFavoriteToken ? theme.colors.accentWarning : theme.colors.none}
+      <HeartIcon
+        fill={isFavoriteToken ? theme.colors.accentAction : theme.colors.none}
         height={theme.iconSizes.lg}
-        strokeWidth="1.5"
+        stroke={isFavoriteToken ? theme.colors.accentAction : theme.colors.textSecondary}
+        strokeWidth={2}
         width={theme.iconSizes.lg}
       />
     </TouchableArea>

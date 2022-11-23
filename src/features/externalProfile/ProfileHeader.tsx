@@ -4,8 +4,8 @@ import { StyleSheet } from 'react-native'
 import { FadeIn } from 'react-native-reanimated'
 import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
+import HeartIcon from 'src/assets/icons/heart.svg'
 import SendIcon from 'src/assets/icons/send.svg'
-import StarIconImage from 'src/assets/icons/star.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -135,19 +135,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps) {
           textAlign="flex-start"
           variant="headlineSmall"
         />
-        <Flex centered row gap="xxs" mt="sm">
-          <TouchableArea
-            hapticFeedback
-            activeOpacity={1}
-            backgroundColor="background0"
-            borderColor="backgroundOutline"
-            borderRadius="lg"
-            borderWidth={1}
-            name={ElementName.Favorite}
-            padding="sm"
-            onPress={onPressFavorite}>
-            {isFavorited ? <StarIconFilled /> : <StarIconEmpty />}
-          </TouchableArea>
+        <Flex centered row gap="xs" mt="sm">
           <TouchableArea
             hapticFeedback
             activeOpacity={1}
@@ -165,31 +153,43 @@ export default function ProfileHeader({ address }: ProfileHeaderProps) {
               width={theme.iconSizes.lg}
             />
           </TouchableArea>
+          <TouchableArea
+            hapticFeedback
+            activeOpacity={1}
+            backgroundColor="background0"
+            borderColor="backgroundOutline"
+            borderRadius="lg"
+            borderWidth={1}
+            name={ElementName.Favorite}
+            padding="sm"
+            onPress={onPressFavorite}>
+            {isFavorited ? <HeartIconFilled /> : <HeartIconEmpty />}
+          </TouchableArea>
         </Flex>
       </Flex>
     </Flex>
   )
 }
 
-const StarIconEmpty = () => {
+const HeartIconEmpty = () => {
   const theme = useAppTheme()
   return (
-    <StarIconImage
-      color={theme.colors.textSecondary}
+    <HeartIcon
       height={theme.iconSizes.lg}
-      strokeWidth={2}
+      stroke={theme.colors.textSecondary}
+      strokeWidth={2.5}
       width={theme.iconSizes.lg}
     />
   )
 }
 
-const StarIconFilled = () => {
+const HeartIconFilled = () => {
   const theme = useAppTheme()
   return (
-    <StarIconImage
-      color={theme.colors.accentWarning}
-      fill={theme.colors.accentWarning}
+    <HeartIcon
+      fill={theme.colors.accentAction}
       height={theme.iconSizes.lg}
+      stroke={theme.colors.accentAction}
       strokeWidth={2}
       width={theme.iconSizes.lg}
     />

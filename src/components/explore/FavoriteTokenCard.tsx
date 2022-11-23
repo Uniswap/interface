@@ -101,7 +101,7 @@ function FavoriteTokenCard({
 
   const menuActions = useMemo(() => {
     return [
-      { title: t('Remove favorite'), systemIcon: 'star.fill' },
+      { title: t('Remove favorite'), systemIcon: 'heart.fill' },
       { title: t('Edit favorites'), systemIcon: 'square.and.pencil' },
       { title: t('Swap'), systemIcon: 'arrow.2.squarepath' },
     ]
