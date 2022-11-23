@@ -5,7 +5,9 @@
 import { Text, TextProps as TextPropsOriginal } from 'rebass'
 import styled from 'styled-components/macro'
 
-const TextWrapper = styled(Text)<{ color: keyof string }>`
+const TextWrapper = styled(Text).withConfig({
+  shouldForwardProp: (prop) => prop !== 'color',
+})<{ color: keyof string }>`
   color: ${({ color, theme }) => (theme as any)[color]};
 `
 
