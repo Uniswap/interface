@@ -34,6 +34,7 @@ export function TouchableArea({
   eventName,
   events,
   properties,
+  activeOpacity = 0.75,
   ...rest
 }: BaseButtonProps) {
   const onPressHandler = useCallback(
@@ -50,7 +51,7 @@ export function TouchableArea({
 
   const baseProps = {
     onPress: onPressHandler,
-    activeOpacity: 0.75,
+    activeOpacity,
     hitSlop: defaultHitslopInset,
     ...rest,
   }

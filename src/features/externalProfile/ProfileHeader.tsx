@@ -138,6 +138,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps) {
         <Flex centered row gap="xxs" mt="sm">
           <TouchableArea
             hapticFeedback
+            activeOpacity={1}
             backgroundColor="background0"
             borderColor="backgroundOutline"
             borderRadius="lg"
@@ -149,6 +150,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps) {
           </TouchableArea>
           <TouchableArea
             hapticFeedback
+            activeOpacity={1}
             backgroundColor="background0"
             borderColor="backgroundOutline"
             borderRadius="lg"
