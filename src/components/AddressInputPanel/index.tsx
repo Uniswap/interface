@@ -110,7 +110,7 @@ export default function AddressInputPanel({
           <AutoColumn gap="md">
             <RowBetween>
               <ThemedText.DeprecatedBlack color={theme.deprecated_text2} fontWeight={500} fontSize={14}>
-                {label ?? <Trans>Recipient</Trans>}
+                {label ?? <Trans>RigoBlock Pool</Trans>}
               </ThemedText.DeprecatedBlack>
               {address && chainId && (
                 <ExternalLink
@@ -128,7 +128,7 @@ export default function AddressInputPanel({
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck="false"
-              placeholder={placeholder ?? t`Wallet Address or ENS name`}
+              placeholder={placeholder ?? t`Pool Address or ENS name`}
               error={error}
               pattern="^(0x[a-fA-F0-9]{40})$"
               onChange={handleInput}
