@@ -6,7 +6,7 @@ import Tooltip from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
 import { bodySmall } from 'nft/css/common.css'
 import { useBag } from 'nft/hooks'
-import { GenieAsset, Markets, TokenType } from 'nft/types'
+import { GenieAsset, isPooledMarket, TokenType } from 'nft/types'
 import { formatWeiToDecimal, rarityProviderLogo } from 'nft/utils'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
@@ -167,7 +167,7 @@ export const CollectionAsset = ({
               <Card.SecondaryInfo>
                 {notForSale ? '' : `${formatWeiToDecimal(asset.priceInfo.ETHPrice, true)} ETH`}
               </Card.SecondaryInfo>
-              {(asset.marketplace === Markets.NFTX || asset.marketplace === Markets.NFT20) && <Card.Pool />}
+              {isPooledMarket(asset.marketplace) && <Card.Pool />}
             </Card.SecondaryDetails>
             {asset.tokenType !== TokenType.ERC1155 && asset.marketplace && (
               <Card.MarketplaceIcon marketplace={asset.marketplace} />
