@@ -427,7 +427,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
           )}
         </>
       </InfoContainer>
-      <InfoContainer primaryHeader="Description" secondaryHeader={null}>
+      <InfoContainer primaryHeader="Description" defaultOpen secondaryHeader={null}>
         <>
           <ByText>By </ByText>
           {asset?.creator && asset.creator?.address && (
@@ -448,7 +448,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
           </SocialsContainer>
         </>
       </InfoContainer>
-      <InfoContainer primaryHeader="Details" secondaryHeader={null}>
+      <InfoContainer primaryHeader="Details" defaultOpen secondaryHeader={null}>
         <DetailsContainer asset={asset} collection={collection} />
       </InfoContainer>
     </Column>
