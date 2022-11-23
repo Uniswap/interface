@@ -363,6 +363,7 @@ query TransactionList($address: String!) {
             decimals
             chain
             project {
+              id
               isSpam
             }
           }
@@ -418,8 +419,18 @@ query TransactionList($address: String!) {
   }
 }
 
-query TopTokens($chain: Chain, $page: Int!, $pageSize: Int!, $orderBy: TokenSortableField) {
-  topTokens(chain: $chain, page: $page, pageSize: $pageSize, orderBy: $orderBy) {
+query TopTokens(
+  $chain: Chain
+  $page: Int!
+  $pageSize: Int!
+  $orderBy: TokenSortableField
+) {
+  topTokens(
+    chain: $chain
+    page: $page
+    pageSize: $pageSize
+    orderBy: $orderBy
+  ) {
     id
     address
     chain
@@ -538,6 +549,7 @@ fragment TopTokenParts on Token {
     id
     logoUrl
     markets(currencies: USD) {
+      id
       price {
         id
         value
@@ -555,7 +567,12 @@ fragment TopTokenParts on Token {
 }
 
 query ExploreTokensTab($topTokensOrderBy: TokenSortableField!) {
-  topTokens(chain: ETHEREUM, page: 1, pageSize: 100, orderBy: $topTokensOrderBy) {
+  topTokens(
+    chain: ETHEREUM
+    page: 1
+    pageSize: 100
+    orderBy: $topTokensOrderBy
+  ) {
     ...TopTokenParts
   }
   # `topTokens` returns WETH rather than ETH
@@ -576,6 +593,7 @@ query FavoriteTokenCard($favoriteTokenContract: ContractInput!) {
       id
       logoUrl
       markets(currencies: USD) {
+        id
         price {
           id
           value
