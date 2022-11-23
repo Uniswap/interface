@@ -124,11 +124,10 @@ export const getTotalEthValue = (sellAssets: WalletAsset[]) => {
   const total = sellAssets.reduce((total, asset: WalletAsset) => {
     if (asset.newListings?.length) {
       const maxListing = asset.newListings.reduce((a, b) => ((a.price ?? 0) > (b.price ?? 0) ? a : b))
-      return (
-        total +
-        (maxListing.price ?? 0) -
-        (maxListing.price ?? 0) * ((maxListing.marketplace.fee + asset.basisPoints / 100) / 100)
-      )
+      // LooksRare is a unique case where creator royalties are a flat 0.5% or 50 basis points
+      const maxFee =
+        maxListing.marketplace.fee + (maxListing.marketplace.name === 'LooksRare' ? 50 : asset.basisPoints) / 100
+      return total + (maxListing.price ?? 0) - (maxListing.price ?? 0) * (maxFee / 100)
     }
     return total
   }, 0)
