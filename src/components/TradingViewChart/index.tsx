@@ -103,16 +103,17 @@ function ProLiveChart({
   currencies,
   stateProChart,
   className,
+  setLoading,
 }: {
   currencies: Array<Currency | undefined>
   stateProChart?: any
   className?: string
+  setLoading: (loading: boolean) => void
 }) {
   const theme = useTheme()
   const userLocale = useUserLocale()
-  const { hasProChart, apiVersion, pairAddress, loading: loadingProp } = stateProChart
+  const { hasProChart, apiVersion, pairAddress, loading } = stateProChart
   const [ref, setRef] = useState<HTMLDivElement | null>(null)
-  const [loading, setLoading] = useState(true)
   const [fullscreen, setFullscreen] = useState(false)
 
   const datafeed = useDatafeed(currencies, pairAddress, apiVersion)
@@ -217,7 +218,7 @@ function ProLiveChart({
 
   return (
     <ProLiveChartWrapper fullscreen={fullscreen} onClick={() => setFullscreen(false)} className={className}>
-      {(loading || loadingProp) && (
+      {loading && (
         <Loader>
           <AnimatedLoader />
         </Loader>
@@ -231,12 +232,12 @@ function ProLiveChart({
             e.stopPropagation()
           }}
           fullscreen={fullscreen}
-          $loading={loading || loadingProp}
+          $loading={loading}
         />
       ) : (
         <div
           ref={newRef => setRef(newRef)}
-          style={{ height: '100%', width: '100%', display: loading || loadingProp ? 'none' : 'block' }}
+          style={{ height: '100%', width: '100%', display: loading ? 'none' : 'block' }}
           onClick={(e: any) => {
             e.stopPropagation()
           }}

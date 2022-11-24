@@ -181,10 +181,10 @@ msgstr ""
 #~ msgid "AMP factor x Liquidity in the pool. Amplified pools have higher capital efficiency and liquidity."
 #~ msgstr "AMP 系数 x 池中的流动性。 放大池具有更高的资本效率和流动性。"
 
-#: src/components/PoolList/ItemCard/TabInfoItems.tsx
 #: src/components/PoolList/index.tsx
-#: src/components/YieldPools/ListItem.tsx
+#: src/components/PoolList/ItemCard/TabInfoItems.tsx
 #: src/components/YieldPools/index.tsx
+#: src/components/YieldPools/ListItem.tsx
 #: src/pages/ProAmmPools/index.tsx
 msgid "APR"
 msgstr "APR"
@@ -200,8 +200,8 @@ msgstr "APR"
 #~ msgid "AVAILABLE BALANCE:"
 #~ msgstr ""
 
-#: src/components/YieldPools/ElasticFarmGroup/Row.tsx
 #: src/components/YieldPools/ElasticFarmGroup/index.tsx
+#: src/components/YieldPools/ElasticFarmGroup/Row.tsx
 msgid "AVG APR"
 msgstr ""
 
@@ -212,6 +212,7 @@ msgstr "关于"
 #: src/components/Header/web3/WalletModal/index.tsx
 #: src/components/swap/SwapModalHeader.tsx
 #: src/components/swapv2/SwapModalHeader.tsx
+#: src/components/WalletModal/index.tsx
 msgid "Accept"
 msgstr "接受"
 
@@ -307,12 +308,13 @@ msgstr ""
 msgid "Adjust the advanced settings for your trades like the max slippage."
 msgstr ""
 
-#: src/components/TransactionSettings/index.tsx
 #: src/components/swapv2/SwapSettingsPanel/AdvancedModeSetting.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Advanced Mode"
 msgstr "进阶模式"
 
 #: src/components/swapv2/SwapSettingsPanel/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Advanced Settings"
 msgstr "高级设置"
 
@@ -329,7 +331,6 @@ msgid "After harvesting, your rewards will begin vesting linearly (only if the f
 msgstr ""
 
 #: src/components/YieldPools/ElasticFarmGroup/Row.tsx
-#: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/index.tsx
 #~ msgid "After harvesting, your rewards will unlock linearly over the indicated time period"
 #~ msgstr ""
@@ -484,9 +485,15 @@ msgstr "批准"
 msgid "Approving {0}"
 msgstr ""
 
-#: src/pages/TrueSight/components/UnsubscribeModal.tsx
-msgid "Are you sure you want to unsubscribe? You will stop receiving notifications on latest tokens that could be trending soon!"
+#: src/pages/TrueSight/index.tsx
+msgid ""
+"Are you sure you want to unsubscribe? You will stop receiving notifications on latest tokens that could\n"
+"be trending soon!"
 msgstr ""
+
+#: src/pages/TrueSight/components/UnsubscribeModal.tsx
+#~ msgid "Are you sure you want to unsubscribe? You will stop receiving notifications on latest tokens that could be trending soon!"
+#~ msgstr ""
 
 #: src/components/TransactionSettings/AdvanceModeModal.tsx
 msgid "Are you sure?"
@@ -1141,8 +1148,8 @@ msgstr ""
 msgid "Dismiss"
 msgstr "驳回"
 
-#: src/components/TransactionSettings/index.tsx
 #: src/components/swapv2/SwapSettingsPanel/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Display Settings"
 msgstr ""
 
@@ -1274,8 +1281,8 @@ msgstr "已结束"
 msgid "Ended On"
 msgstr ""
 
-#: src/components/YieldPools/ElasticFarmGroup/Row.tsx
 #: src/components/YieldPools/ElasticFarmGroup/index.tsx
+#: src/components/YieldPools/ElasticFarmGroup/Row.tsx
 #: src/pages/Campaign/index.tsx
 msgid "Ending In"
 msgstr "截止"
@@ -1293,7 +1300,6 @@ msgstr ""
 #~ msgid "Enter a smaller slippage percentage"
 #~ msgstr ""
 
-#: src/components/TransactionSettings/index.tsx
 #: src/components/swapv2/SwapSettingsPanel/SlippageSetting.tsx
 #: src/components/swapv2/SwapSettingsPanel/SlippageSetting.tsx
 #: src/components/swapv2/SwapSettingsPanel/SlippageSetting.tsx
@@ -1355,8 +1361,8 @@ msgstr ""
 #~ msgid "Estimated network fee for your transaction"
 #~ msgstr "您的交易的估计网络费用"
 
-#: src/components/PoolList/ItemCard/TabInfoItems.tsx
 #: src/components/PoolList/index.tsx
+#: src/components/PoolList/ItemCard/TabInfoItems.tsx
 #: src/components/YieldPools/index.tsx
 #~ msgid "Estimated return based on yearly fees of the pool"
 #~ msgstr "根据池的年费的估计回报"
@@ -1670,8 +1676,8 @@ msgstr ""
 msgid "History"
 msgstr "历史"
 
-#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingLayout/index.tsx
+#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenDetail.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItemDetailsOnMobile.tsx
 msgid "Holders"
@@ -1828,8 +1834,8 @@ msgstr ""
 msgid "Info"
 msgstr ""
 
-#: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
 msgid "Information"
 msgstr "信息"
 
@@ -2004,6 +2010,10 @@ msgstr ""
 
 #: src/pages/Bridge/Disclaimer.tsx
 msgid "KyberSwap strives to offer its users the best DeFi experience on a single platform. In order to do that, KyberSwap partners with 3rd party platforms like Multichain."
+msgstr ""
+
+#: src/pages/Verify/index.tsx
+msgid "KyberSwap team."
 msgstr ""
 
 #: src/components/Menu/AboutPageDropDown.tsx
@@ -2181,8 +2191,8 @@ msgstr "管理"
 msgid "Manage your pools."
 msgstr "管理您的池。"
 
-#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingLayout/index.tsx
+#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenDetail.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItemDetailsOnMobile.tsx
 msgid "Market Cap"
@@ -2218,8 +2228,8 @@ msgstr ""
 msgid "Max Price"
 msgstr ""
 
-#: src/components/TransactionSettings/index.tsx
 #: src/components/swapv2/SwapSettingsPanel/SlippageSetting.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Max Slippage"
 msgstr "最大的滑点"
 
@@ -2304,8 +2314,8 @@ msgid "Multichain doesn’t support this token yet. <0/>If you want to apply thi
 msgstr ""
 
 #: src/components/YieldPools/ElasticFarmGroup/Row.tsx
-#: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/index.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "My Deposit"
 msgstr "我的存款"
 
@@ -2344,13 +2354,13 @@ msgstr "我的池"
 msgid "My Positions"
 msgstr ""
 
-#: src/components/YieldPools/ElasticFarmGroup/Row.tsx
 #: src/components/YieldPools/ElasticFarmGroup/index.tsx
+#: src/components/YieldPools/ElasticFarmGroup/Row.tsx
 #: src/components/YieldPools/ElasticFarmModals/HarvestModal.tsx
 #: src/components/YieldPools/HarvestAll.tsx
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/index.tsx
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "My Rewards"
 msgstr "我的奖励"
 
@@ -2377,14 +2387,14 @@ msgid "My liquidity"
 msgstr "我的流动性"
 
 #: src/components/ProAmm/ProAmmFee.tsx
-msgid "My rewards"
-msgstr ""
+#~ msgid "My rewards"
+#~ msgstr ""
 
+#: src/pages/TrueSight/components/TrendingLayout/index.tsx
+#: src/pages/TrueSight/components/TrendingLayout/index.tsx
 #: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
-#: src/pages/TrueSight/components/TrendingLayout/index.tsx
-#: src/pages/TrueSight/components/TrendingLayout/index.tsx
-#: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItemDetailsOnMobile.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/index.tsx
+#: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItemDetailsOnMobile.tsx
 msgid "Name"
 msgstr ""
 
@@ -2398,8 +2408,8 @@ msgstr ""
 msgid "Navigating Pools Tutorial"
 msgstr ""
 
-#: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
 msgid "Network"
 msgstr "网络"
 
@@ -2458,8 +2468,8 @@ msgstr ""
 msgid "No token found. Try turn off truesight."
 msgstr ""
 
-#: src/components/Vesting/ProMMVesting.tsx
 #: src/components/Vesting/index.tsx
+#: src/components/Vesting/ProMMVesting.tsx
 msgid "No vesting schedule!"
 msgstr "没有奖励归属时间表"
 
@@ -2467,8 +2477,8 @@ msgstr "没有奖励归属时间表"
 #~ msgid "No {type} pool found."
 #~ msgstr "未找到 {type} 池。"
 
+#: src/components/SubscribeButton/NotificationModal.tsx
 #: src/components/TransactionSettings/AdvanceModeModal.tsx
-#: src/pages/TrueSight/components/UnsubscribeModal.tsx
 msgid "No, go back"
 msgstr ""
 
@@ -2516,6 +2526,10 @@ msgstr "开"
 msgid "Off"
 msgstr "关"
 
+#: src/components/SubscribeButton/NotificationModal.tsx
+msgid "Okay"
+msgstr ""
+
 #: src/components/Toggle/LegacyToggle.tsx
 msgid "On"
 msgstr "开"
@@ -2524,8 +2538,8 @@ msgstr "开"
 msgid "On-chain & Open Source"
 msgstr ""
 
-#: src/components/YieldPools/ElasticFarmGroup/Row.tsx
 #: src/components/YieldPools/ElasticFarmGroup/index.tsx
+#: src/components/YieldPools/ElasticFarmGroup/Row.tsx
 msgid "Once a farm has ended, you will continue to receive returns through LP Fees"
 msgstr "当流动性挖矿活动结束时，您还是能继续通过LP费用收到回报"
 
@@ -2692,8 +2706,8 @@ msgid "Pooled {0}"
 msgstr "Pooled {0}"
 
 #: src/components/Header/index.tsx
-#: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
 msgid "Pools"
 msgstr "池"
 
@@ -2730,8 +2744,8 @@ msgstr ""
 
 #: src/components/swapv2/TokenInfoV2/SingleTokenInfo.tsx
 #: src/pages/TrueSight/components/Chart.tsx
-#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingLayout/index.tsx
+#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenDetail.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItemDetailsOnMobile.tsx
 msgid "Price"
@@ -2942,11 +2956,11 @@ msgstr ""
 msgid "Review your transfer"
 msgstr ""
 
-#: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
+#: src/pages/Campaign/index.tsx
+#: src/pages/Campaign/index.tsx
 #: src/pages/Campaign/LeaderboardLayout.tsx
-#: src/pages/Campaign/index.tsx
-#: src/pages/Campaign/index.tsx
 msgid "Rewards"
 msgstr "奖励"
 
@@ -3014,8 +3028,8 @@ msgstr ""
 msgid "Search by token name or tag"
 msgstr ""
 
-#: src/components/SearchModal/CurrencySearch.tsx
 #: src/components/SearchModal/bridge/CurrencySearchBridge.tsx
+#: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search by token name, token symbol or address"
 msgstr ""
 
@@ -3074,8 +3088,8 @@ msgstr ""
 
 #: src/components/CurrencyInputPanel/CurrencyInputPanelBridge.tsx
 #: src/components/CurrencyInputPanel/index.tsx
-#: src/components/SearchModal/CurrencySearch.tsx
 #: src/components/SearchModal/bridge/CurrencySearchBridge.tsx
+#: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/CreateReferral/TokensSelect.tsx
 msgid "Select a token"
 msgstr "选择一个代币"
@@ -3262,10 +3276,10 @@ msgstr "仅质押"
 #~ msgid "Staked Positions"
 #~ msgstr ""
 
-#: src/components/YieldPools/ElasticFarmGroup/Row.tsx
 #: src/components/YieldPools/ElasticFarmGroup/index.tsx
-#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ElasticFarmGroup/Row.tsx
 #: src/components/YieldPools/index.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "Staked TVL"
 msgstr "质押的总锁定价值"
 
@@ -3287,7 +3301,6 @@ msgstr ""
 msgid "Start Earning"
 msgstr ""
 
-#: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
 msgid "Starting In"
 msgstr "开始"
@@ -3322,6 +3335,14 @@ msgstr ""
 
 #: src/pages/Campaign/ModalRegisterCampaignSuccess.tsx
 msgid "Success!"
+msgstr ""
+
+#: src/pages/ProAmmPool/index.tsx
+msgid "Subscribe to receive email notifications on <0>all</0> your liquidity positions. When your liquidity position goes <1>out-of-range</1>, back <2>in-range</2> or is <3>closed</3> you will receive a notification"
+msgstr ""
+
+#: src/components/SubscribeButton/NotificationModal.tsx
+msgid "Subscribing ..."
 msgstr ""
 
 #: src/pages/Bridge/utils.ts
@@ -3639,6 +3660,7 @@ msgstr ""
 
 #: src/components/TransactionSettings/index.tsx
 #: src/components/swapv2/SwapSettingsPanel/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Token Info"
 msgstr ""
 
@@ -3687,6 +3709,11 @@ msgstr ""
 
 #: src/pages/About/AboutKyberSwap.tsx
 msgid "Total Earnings"
+msgstr ""
+
+#: src/components/ProAmm/ProAmmFee.tsx
+#: src/components/ProAmm/ProAmmFee.tsx
+msgid "Total Fees Earned"
 msgstr ""
 
 #: src/components/Vesting/VestingCard.tsx
@@ -3742,8 +3769,8 @@ msgstr "总价值锁定："
 #~ msgstr ""
 
 #: src/components/ProAmm/ProAmmFee.tsx
-msgid "Total fee rewards"
-msgstr ""
+#~ msgid "Total fee rewards"
+#~ msgstr ""
 
 #: src/components/YieldPools/ElasticFarmGroup/index.tsx
 msgid "Total value of liquidity positions (i.e. NFT tokens) you've deposited into the farming contract"
@@ -3758,8 +3785,8 @@ msgstr ""
 #~ msgid "Tradable token pair price range for this pool based on AMP. If the price goes below or above this range, the pool may become inactive."
 #~ msgstr "基于AMP的池的可交易代币对价格范围。如果价格低于或高于这个范围，这个池子可能会变得不活跃。"
 
-#: src/components/TransactionSettings/index.tsx
 #: src/components/swapv2/SwapSettingsPanel/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Trade Route"
 msgstr ""
 
@@ -3768,8 +3795,8 @@ msgstr ""
 msgid "Trading Volume"
 msgstr ""
 
-#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingLayout/index.tsx
+#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenDetail.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItemDetailsOnMobile.tsx
 msgid "Trading Volume (24H)"
@@ -3784,17 +3811,15 @@ msgstr ""
 msgid "Transaction Submitted"
 msgstr "交易提交"
 
-#: src/components/TransactionSettings/index.tsx
 #: src/components/swapv2/SwapSettingsPanel/TransactionTimeLimitSetting.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Transaction time limit"
 msgstr "交易时限"
 
-#: src/components/TransactionSettings/index.tsx
 #: src/components/swapv2/SwapSettingsPanel/TransactionTimeLimitSetting.tsx
 #~ msgid "Transaction will revert if it is pending for longer than the indicated time"
 #~ msgstr "如果交易待处理的时间超过指定的时间，交易将恢复"
 
-#: src/components/TransactionSettings/index.tsx
 #: src/components/swapv2/SwapSettingsPanel/SlippageSetting.tsx
 #~ msgid "Transaction will revert if there is an adverse rate change that is higher than this %"
 #~ msgstr "如果出现高于此 % 的不利利率变化，交易将恢复"
@@ -3842,8 +3867,8 @@ msgstr ""
 msgid "Turn on Advanced Mode to trade"
 msgstr ""
 
-#: src/components/TransactionSettings/index.tsx
 #: src/components/swapv2/SwapSettingsPanel/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Turn on to display live chart"
 msgstr ""
 
@@ -3860,17 +3885,14 @@ msgstr ""
 #~ msgid "Turn on Advanced Mode to trade"
 #~ msgstr ""
 
-#: src/components/TransactionSettings/index.tsx
 #: src/components/swapv2/SwapSettingsPanel/index.tsx
 #~ msgid "Turn on to display live chart"
 #~ msgstr ""
 
-#: src/components/TransactionSettings/index.tsx
 #: src/components/swapv2/SwapSettingsPanel/index.tsx
 #~ msgid "Turn on to display token info"
 #~ msgstr ""
 
-#: src/components/TransactionSettings/index.tsx
 #: src/components/swapv2/SwapSettingsPanel/index.tsx
 #~ msgid "Turn on to display tokens that could be trending soon"
 #~ msgstr ""
@@ -4016,14 +4038,14 @@ msgid "VOLUME (24H)"
 msgstr ""
 
 #: src/components/YieldPools/ElasticFarmGroup/Row.tsx
-#: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/index.tsx
+#: src/components/YieldPools/ListItem.tsx
 #: src/pages/Farm/index.tsx
 msgid "Vesting"
 msgstr ""
 
-#: src/components/Vesting/ProMMVesting.tsx
 #: src/components/Vesting/index.tsx
+#: src/components/Vesting/ProMMVesting.tsx
 msgid "Vesting Schedules"
 msgstr ""
 
@@ -4182,8 +4204,8 @@ msgstr ""
 msgid "Website"
 msgstr ""
 
-#: src/components/Tutorial/TutorialSwap/TutorialMobile.tsx
 #: src/components/Tutorial/TutorialSwap/index.tsx
+#: src/components/Tutorial/TutorialSwap/TutorialMobile.tsx
 msgid "Welcome to KyberSwap!"
 msgstr ""
 
@@ -4241,7 +4263,7 @@ msgstr "错误的网络"
 msgid "YOUR LIQUIDITY"
 msgstr ""
 
-#: src/pages/TrueSight/components/UnsubscribeModal.tsx
+#: src/components/SubscribeButton/NotificationModal.tsx
 msgid "Yes"
 msgstr ""
 
@@ -4287,6 +4309,10 @@ msgstr ""
 
 #: src/components/Tutorial/TutorialSwap/index.tsx
 msgid "You can customize advanced settings like slippage and other display settings here."
+msgstr ""
+
+#: src/pages/ProAmmPool/index.tsx
+msgid "You can enable or disable notifications for individual positions by clicking on the toggle on top of the liquidity positions card"
 msgstr ""
 
 #: src/components/FarmIssueAnnouncement.tsx
@@ -4455,6 +4481,10 @@ msgstr ""
 msgid "You will need to unstake your liquidity positions (NFT tokens) first before withdrawing it back to your wallet"
 msgstr ""
 
+#: src/components/SubscribeButton/index.tsx
+msgid "You will need to verify your email account first to start receiving notifications"
+msgstr ""
+
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
 #~ msgid "You will receive"
@@ -4475,6 +4505,10 @@ msgstr ""
 #: src/components/PositionCard/index.tsx
 msgid "Your Current Position"
 msgstr "您目前的头寸"
+
+#: src/components/SubscribeButton/NotificationModal.tsx
+msgid "Your Email Address"
+msgstr ""
 
 #: src/components/PoolList/ItemCard/index.tsx
 #: src/components/PositionCard/index.tsx
@@ -4610,12 +4644,10 @@ msgstr ""
 msgid "Your trade route"
 msgstr "您的交易路由"
 
-#: src/components/TransactionSettings/index.tsx
 #: src/components/swapv2/SwapSettingsPanel/SlippageSetting.tsx
 #~ msgid "Your transaction may be frontrun"
 #~ msgstr "您的交易可能front run"
 
-#: src/components/TransactionSettings/index.tsx
 #: src/components/swapv2/SwapSettingsPanel/SlippageSetting.tsx
 #~ msgid "Your transaction may fail"
 #~ msgstr "您的交易可能会失败"
@@ -4732,9 +4764,11 @@ msgstr ""
 
 #: src/components/ProAmm/ProAmmFee.tsx
 #: src/components/ProAmm/ProAmmFee.tsx
-msgid "{0} FEES EARNED"
-msgstr ""
+#~ msgid "{0} FEES EARNED"
+#~ msgstr ""
 
+#: src/components/ProAmm/ProAmmFee.tsx
+#: src/components/ProAmm/ProAmmFee.tsx
 #: src/components/ProAmm/ProAmmFee.tsx
 #: src/components/ProAmm/ProAmmFee.tsx
 msgid "{0} Fees Earned"
@@ -4817,6 +4851,10 @@ msgstr ""
 #: src/components/Menu/NavDropDown.tsx
 #: src/components/ProAmm/ProAmmPooledTokens.tsx
 msgid "{title}"
+msgstr ""
+
+#: src/pages/Verify/index.tsx
+msgid "{status}"
 msgstr ""
 
 #: src/components/Menu/NavDropDown.tsx
