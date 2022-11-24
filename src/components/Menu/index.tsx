@@ -283,12 +283,12 @@ export default function Menu() {
           <Trans>Docs</Trans>
         </ExternalNavMenuItem>
 
-        <ExternalNavMenuItem href="https://request.kyberswap.com" onClick={toggle}>
+        <ExternalNavMenuItem href="https://kyberswap.canny.io/feature-request" onClick={toggle}>
           <StyledLightIcon />
           <Trans>Feature Request</Trans>
         </ExternalNavMenuItem>
 
-        <ExternalNavMenuItem href="https://request.kyberswap.com/roadmap" onClick={toggle}>
+        <ExternalNavMenuItem href="https://kyberswap.canny.io/" onClick={toggle}>
           <StyledRoadMapIcon />
           <Trans>Roadmap</Trans>
         </ExternalNavMenuItem>
