@@ -8,7 +8,7 @@
   "Create a new wallet": "Create a new wallet",
   "Add a view-only wallet": "Add a view-only wallet",
   "Import a wallet": "Import a wallet",
-  "Manage connections": "Manage connections",
+  "Manage apps": "Manage apps",
   "Settings": "Settings",
   "Get help": "Get help",
   "Add another wallet": "Add another wallet",
@@ -134,7 +134,6 @@
   "Balances on other networks": "Balances on other networks",
   "{{owner}}'s balance": "{{owner}}'s balance",
   "Your balance": "Your balance",
-  "Favorite token": "Favorite token",
   "Unknown token": "Unknown token",
   "Stats": "Stats",
   "Market cap": "Market cap",
@@ -465,6 +464,5 @@
   "Notifications": "Notifications",
   "Hide small balances": "Hide small balances",
   "Hide unknown tokens": "Hide unknown tokens",
-  "Manage apps": "Manage apps",
   "Security": "Security"
 }
