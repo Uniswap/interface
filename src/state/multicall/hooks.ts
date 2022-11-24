@@ -209,10 +209,11 @@ export function useSingleContractWithCallData(
   callDatas: string[],
   options?: ListenerOptions,
 ): CallState[] {
+  const { isEVM } = useActiveWeb3React()
   const { gasRequired } = options ?? {}
   const calls = useMemo(
     () =>
-      contract && callDatas && callDatas.length > 0
+      isEVM && contract && callDatas && callDatas.length > 0
         ? callDatas.map<Call>(callData => {
             return {
               address: contract.address,

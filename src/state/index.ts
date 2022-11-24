@@ -25,7 +25,7 @@ import tutorial from './tutorial/reducer'
 import user from './user/reducer'
 import vesting from './vesting/reducer'
 
-const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
+const PERSISTED_KEYS: string[] = ['user', 'transactions']
 TAG && PERSISTED_KEYS.push('customizeDexes')
 
 const store = configureStore({
