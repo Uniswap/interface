@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import { BaseButtonProps, TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Arrow } from 'src/components/icons/Arrow'
@@ -31,10 +31,17 @@ export function LinkButton({
   ...rest
 }: LinkButtonProps) {
   const theme = useAppTheme()
+  const colorStyles = useMemo(() => {
+    return color
+      ? { style: { color: color } }
+      : // if a hex color is not defined, don't give the Text component a style prop, because that will override its default behavior of using textPrimary when no color prop is defined
+        {}
+  }, [color])
+
   return (
     <TouchableArea onPress={() => openUri(url, openExternalBrowser, isSafeUri)} {...rest}>
       <Flex row alignItems="center" gap="xxxs" justifyContent={justifyContent}>
-        <Text style={{ color: color }} variant={textVariant}>
+        <Text {...colorStyles} variant={textVariant}>
           {label}
         </Text>
         <Arrow
