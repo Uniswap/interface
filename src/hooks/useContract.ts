@@ -9,6 +9,7 @@ import NonfungiblePositionManagerJson from '@uniswap/v3-periphery/artifacts/cont
 import V3MigratorJson from '@uniswap/v3-periphery/artifacts/contracts/V3Migrator.sol/V3Migrator.json'
 import { useWeb3React } from '@web3-react/core'
 import ARGENT_WALLET_DETECTOR_ABI from 'abis/argent-wallet-detector.json'
+import AUNISWAP_ABI from 'abis/aUniswap.json'
 import EIP_2612 from 'abis/eip_2612.json'
 import ENS_PUBLIC_RESOLVER_ABI from 'abis/ens-public-resolver.json'
 import ENS_ABI from 'abis/ens-registrar.json'
@@ -16,7 +17,16 @@ import ERC20_ABI from 'abis/erc20.json'
 import ERC20_BYTES32_ABI from 'abis/erc20_bytes32.json'
 import ERC721_ABI from 'abis/erc721.json'
 import ERC1155_ABI from 'abis/erc1155.json'
-import { ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Erc20, Erc721, Erc1155, Weth } from 'abis/types'
+import {
+  ArgentWalletDetector,
+  AUniswap,
+  EnsPublicResolver,
+  EnsRegistrar,
+  Erc20,
+  Erc721,
+  Erc1155,
+  Weth,
+} from 'abis/types'
 import WETH_ABI from 'abis/weth.json'
 import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
@@ -73,6 +83,10 @@ export function useV2MigratorContract() {
 
 export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean) {
   return useContract<Erc20>(tokenAddress, ERC20_ABI, withSignerIfPossible)
+}
+
+export function usePoolContract(poolAddress?: string) {
+  return useContract<AUniswap>(poolAddress, AUNISWAP_ABI, true)
 }
 
 export function useWETHContract(withSignerIfPossible?: boolean) {
