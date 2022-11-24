@@ -24,7 +24,6 @@ export function PriceChartError({
       </Flex>
       <Box
         alignItems="center"
-        bg="background2"
         borderRadius="lg"
         height={CHART_HEIGHT}
         justifyContent="center"
