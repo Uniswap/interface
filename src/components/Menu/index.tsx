@@ -72,7 +72,7 @@ const StyledMenuButton = styled.button`
 
 const UNIbutton = styled(ButtonPrimary)`
   background-color: ${({ theme }) => theme.deprecated_bg3};
-  background: radial-gradient(174.47% 188.91% at 1.84% 0%, #ff007a 0%, #2172e5 100%), #edeef2;
+  background: radial-gradient(174.47% 188.91% at 1.84% 0%, #ffaw00 0%, #2172e5 100%), #edeef2;
   border: none;
 `
 
