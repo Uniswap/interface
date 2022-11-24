@@ -54,8 +54,8 @@ export const successModal = style([
 export const uniLogo = style([
   sprinkles({
     position: 'absolute',
-    left: '32',
-    right: '40',
+    left: { sm: '12', md: '32' },
+    top: { sm: '16', md: '20' },
   }),
 ])
 
