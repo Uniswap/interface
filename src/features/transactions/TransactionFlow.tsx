@@ -109,7 +109,7 @@ export function TransactionFlow({
         <Flex gap="sm" px="md" width="100%">
           {step !== TransactionStep.SUBMITTED && (
             <Flex row alignItems="center" justifyContent="space-between" px="sm">
-              <Text pt="xs" textAlign="left" variant="subheadLarge">
+              <Text pt="xs" textAlign="left" variant={{ xs: 'subheadSmall', sm: 'subheadLarge' }}>
                 {flowName}
               </Text>
               {step === TransactionStep.FORM && showUSDToggle && (

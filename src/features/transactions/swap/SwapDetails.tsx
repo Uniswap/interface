@@ -102,14 +102,16 @@ export function SwapDetails({
         justifyContent="space-between"
         p="md">
         <Text variant="subheadSmall">{t('Rate')}</Text>
-        <TouchableOpacity onPress={() => setShowInverseRate(!showInverseRate)}>
-          <Flex row gap="none">
-            <Text variant="subheadSmall">{acceptedRate}</Text>
-            <Text color="textSecondary" variant="subheadSmall">
-              {usdcPrice && ` (${formatPrice(usdcPrice, NumberType.FiatTokenPrice)})`}
+        <Flex row flex={1} flexBasis="100%" flexShrink={1} gap="none" justifyContent="flex-end">
+          <TouchableOpacity onPress={() => setShowInverseRate(!showInverseRate)}>
+            <Text adjustsFontSizeToFit numberOfLines={1} variant="subheadSmall">
+              {acceptedRate}
+              <Text color="textSecondary" variant="subheadSmall">
+                {usdcPrice && ` (${formatPrice(usdcPrice, NumberType.FiatTokenPrice)})`}
+              </Text>
             </Text>
-          </Flex>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </Flex>
       </Flex>
     </TransactionDetails>
   )

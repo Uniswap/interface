@@ -7,7 +7,7 @@ const ICON_SIZE = 20
 
 type ArrowDownButtonProps = Pick<
   ComponentProps<typeof TouchableArea>,
-  'disabled' | 'name' | 'onPress' | 'borderColor' | 'bg'
+  'disabled' | 'name' | 'onPress' | 'borderColor' | 'bg' | 'padding'
 >
 
 export function TransferArrowButton({
@@ -15,6 +15,7 @@ export function TransferArrowButton({
   onPress,
   disabled,
   bg = 'background1',
+  padding = 'sm',
   ...rest
 }: ArrowDownButtonProps) {
   const theme = useAppTheme()
@@ -30,7 +31,7 @@ export function TransferArrowButton({
       justifyContent="center"
       name={name}
       // border width applies inside the element so add more padding to account for it
-      p="sm"
+      p={padding}
       onPress={onPress}
       {...rest}>
       <Arrow color={theme.colors.textSecondary} direction="s" size={ICON_SIZE} />

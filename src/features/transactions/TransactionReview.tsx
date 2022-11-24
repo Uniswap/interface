@@ -1,3 +1,4 @@
+import { useResponsiveProp } from '@shopify/restyle'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { notificationAsync } from 'expo-haptics'
 import React, { ReactNode } from 'react'
@@ -70,6 +71,38 @@ export function TransactionReview({
   const { trigger: actionButtonTrigger } = useBiometricPrompt(actionButtonProps.onPress)
   const { requiredForTransactions } = useBiometricAppSettings()
 
+  const spacingGap = { xs: 'none', sm: 'sm' }
+  const innerGap = useResponsiveProp({ xs: 'none', sm: 'md' })
+
+  const fontFamily = useResponsiveProp({
+    xs: theme.textVariants.headlineSmall.fontFamily,
+    sm: theme.textVariants.headlineLarge.fontFamily,
+  })
+
+  const fontSize = useResponsiveProp({
+    xs: theme.textVariants.headlineSmall.fontSize,
+    sm: theme.textVariants.headlineLarge.fontSize,
+  })
+
+  const lineHeight = useResponsiveProp({
+    xs: theme.textVariants.headlineSmall.lineHeight,
+    sm: theme.textVariants.headlineLarge.lineHeight,
+  })
+
+  const maxFontSizeMultiplier = useResponsiveProp({
+    xs: theme.textVariants.headlineSmall.maxFontSizeMultiplier,
+    sm: theme.textVariants.headlineLarge.maxFontSizeMultiplier,
+  })
+
+  const equivalentValueTextVariant = useResponsiveProp({
+    xs: 'bodySmall',
+    sm: 'subheadLarge',
+  })
+
+  const arrowPadding = useResponsiveProp({ xs: 'xxs', sm: 'sm' })
+
+  const amountAndEquivalentValueGap = useResponsiveProp({ xs: 'xxs', sm: 'none' })
+
   const formattedInputUsdValue = inputCurrencyUSDValue
     ? formatNumberOrString(inputCurrencyUSDValue?.toExact(), NumberType.FiatTokenQuantity)
     : ''
@@ -79,19 +112,19 @@ export function TransactionReview({
 
   return (
     <>
-      <AnimatedFlex centered grow entering={FadeInUp} exiting={FadeOut} gap="sm">
+      <AnimatedFlex centered grow entering={FadeInUp} exiting={FadeOut} gap={spacingGap}>
         {currencyIn ? (
-          <Flex centered gap="md">
-            <Flex centered gap="none">
+          <Flex centered gap={innerGap}>
+            <Flex centered gap={amountAndEquivalentValueGap}>
               <AmountInput
                 alignSelf="stretch"
                 backgroundColor="none"
                 borderWidth={0}
                 editable={false}
-                fontFamily={theme.textVariants.headlineLarge.fontFamily}
-                fontSize={theme.textVariants.headlineLarge.fontSize}
-                height={theme.textVariants.headlineLarge.lineHeight}
-                maxFontSizeMultiplier={theme.textVariants.headlineLarge.maxFontSizeMultiplier}
+                fontFamily={fontFamily}
+                fontSize={fontSize}
+                height={lineHeight}
+                maxFontSizeMultiplier={maxFontSizeMultiplier}
                 my="none"
                 px="md"
                 py="none"
@@ -103,12 +136,12 @@ export function TransactionReview({
                 value={formattedAmountIn}
               />
               {inputCurrencyUSDValue && !isUSDInput ? (
-                <Text color="textSecondary" variant="subheadLarge">
+                <Text color="textSecondary" variant={equivalentValueTextVariant}>
                   {formattedInputUsdValue}
                 </Text>
               ) : null}
               {isUSDInput ? (
-                <Text color="textSecondary" variant="subheadLarge">
+                <Text color="textSecondary" variant={equivalentValueTextVariant}>
                   {/* when sending a token with USD input, show the amount of the token being sent */}
                   {usdTokenEquivalentAmount}
                 </Text>
@@ -121,19 +154,19 @@ export function TransactionReview({
             <NFTTransfer asset={nftIn} nftSize={dimensions.fullHeight / 5} />
           </Flex>
         ) : null}
-        <TransferArrowButton disabled bg="none" borderColor="none" />
+        <TransferArrowButton disabled bg="none" borderColor="none" padding={arrowPadding} />
         {currencyOut && formattedAmountOut ? (
-          <Flex centered gap="md">
-            <Flex centered gap="none">
+          <Flex centered gap={innerGap} pb={{ xs: 'xxs', sm: 'none' }}>
+            <Flex centered gap={amountAndEquivalentValueGap}>
               <AmountInput
                 alignSelf="stretch"
                 backgroundColor="none"
                 borderWidth={0}
                 editable={false}
-                fontFamily={theme.textVariants.headlineLarge.fontFamily}
-                fontSize={theme.textVariants.headlineLarge.fontSize}
-                height={theme.textVariants.headlineLarge.lineHeight}
-                maxFontSizeMultiplier={theme.textVariants.headlineLarge.maxFontSizeMultiplier}
+                fontFamily={fontFamily}
+                fontSize={fontSize}
+                height={lineHeight}
+                maxFontSizeMultiplier={maxFontSizeMultiplier}
                 showCurrencySign={isUSDInput}
                 showSoftInputOnFocus={false}
                 testID="amount-input-out"
@@ -141,7 +174,7 @@ export function TransactionReview({
                 value={formattedAmountOut}
               />
               {outputCurrencyUSDValue ? (
-                <Text color="textSecondary" variant="subheadLarge">
+                <Text color="textSecondary" variant={equivalentValueTextVariant}>
                   {formattedOutputUsdValue}
                 </Text>
               ) : null}
@@ -204,8 +237,11 @@ export function TransactionReview({
 
 function CurrencyLogoWithLabel({ currency }: { currency: Currency }) {
   return (
-    <Flex centered row gap="xs">
-      <CurrencyLogo currency={currency} size={iconSizes.xl} />
+    <Flex centered row gap={useResponsiveProp({ xs: 'xxs', sm: 'xs' })}>
+      <CurrencyLogo
+        currency={currency}
+        size={useResponsiveProp({ xs: iconSizes.md, sm: iconSizes.xl })}
+      />
       <Text color="textPrimary" variant="buttonLabelLarge">
         {currency.symbol}
       </Text>
