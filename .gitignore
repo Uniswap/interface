@@ -87,3 +87,5 @@ storybook-static/*
 
 # Snyk
 .dccache
+
+lib/
