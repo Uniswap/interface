@@ -69,7 +69,7 @@ export const TokenBalanceItem = memo(
               </Text>
               <Text color="textSecondary">
                 <RelativeChange
-                  change={relativeChange24}
+                  change={relativeChange24 ?? undefined}
                   negativeChangeColor={isWarmLoading ? 'textSecondary' : 'accentCritical'}
                   positiveChangeColor={isWarmLoading ? 'textSecondary' : 'accentSuccess'}
                   variant="subheadSmall"

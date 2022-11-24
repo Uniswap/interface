@@ -16,7 +16,7 @@ import { TokenSelectorVariation } from 'src/components/TokenSelector/TokenSelect
 import { TokenOption } from 'src/components/TokenSelector/types'
 import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
-import { usePortfolioBalances } from 'src/features/dataApi/balances'
+import { sortPortfolioBalances, usePortfolioBalances } from 'src/features/dataApi/balances'
 import { useSearchTokens } from 'src/features/dataApi/searchTokens'
 import { usePopularTokens } from 'src/features/dataApi/topTokens'
 import { CurrencyInfo, GqlResult, PortfolioBalance } from 'src/features/dataApi/types'
@@ -92,8 +92,8 @@ export function useTokenSectionsByVariation(
   const portfolioBalances = useMemo(() => {
     if (!portfolioBalancesById) return
 
-    const allPortfolioBalances: PortfolioBalance[] = Object.values(portfolioBalancesById).sort(
-      (a, b) => b.balanceUSD - a.balanceUSD
+    const allPortfolioBalances: PortfolioBalance[] = sortPortfolioBalances(
+      Object.values(portfolioBalancesById)
     )
     return allPortfolioBalances
   }, [portfolioBalancesById])

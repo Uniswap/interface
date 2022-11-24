@@ -14,9 +14,9 @@ export type CurrencyInfo = {
 // Portfolio balance as exposed to the app
 export type PortfolioBalance = {
   quantity: number // float representation of balance
-  balanceUSD: number
+  balanceUSD: NullUndefined<number>
   currencyInfo: CurrencyInfo
-  relativeChange24: number
+  relativeChange24: NullUndefined<number>
 }
 
 // Query result does not have a refetch property so add it here in case it needs to get returned

@@ -33,7 +33,7 @@ export function RelativeChange(props: RelativeChangeProps) {
     ? theme.colors[positiveChangeColor]
     : theme.colors[negativeChangeColor]
 
-  const formattedChange = change ? `${Math.abs(change).toFixed(2)}%` : '-'
+  const formattedChange = change !== undefined ? `${Math.abs(change).toFixed(2)}%` : '-'
   const formattedAbsChange = absoluteChange
     ? `${formatNumber(Math.abs(absoluteChange), NumberType.PortfolioBalance)}`
     : ''

@@ -53,8 +53,6 @@ export function usePortfolioBalances(
         !chainId ||
         !balance ||
         !balance.quantity ||
-        !balance.denominatedValue ||
-        !balance.denominatedValue.value ||
         !balance.token ||
         !balance.token.decimals ||
         !balance.token.symbol ||
@@ -62,7 +60,11 @@ export function usePortfolioBalances(
       )
         return
 
-      if (hideSmallBalances && balance.denominatedValue.value < HIDE_SMALL_USD_BALANCES_THRESHOLD)
+      if (
+        hideSmallBalances &&
+        (!balance.denominatedValue ||
+          balance.denominatedValue?.value < HIDE_SMALL_USD_BALANCES_THRESHOLD)
+      )
         return null
       if (hideSpamTokens && balance.tokenProjectMarket?.tokenProject?.isSpam) return null
 
@@ -88,9 +90,9 @@ export function usePortfolioBalances(
 
       const portfolioBalance: PortfolioBalance = {
         quantity: balance.quantity,
-        balanceUSD: balance.denominatedValue.value,
+        balanceUSD: balance.denominatedValue?.value,
         currencyInfo: currencyInfo,
-        relativeChange24: balance.tokenProjectMarket?.relativeChange24?.value ?? 0,
+        relativeChange24: balance.tokenProjectMarket?.relativeChange24?.value,
       }
 
       byId[id] = portfolioBalance
@@ -145,7 +147,11 @@ export function useSortedPortfolioBalances(
         // Prioritize isSpam over small balance
         if (hideSpamTokens && balance.currencyInfo.isSpam) {
           acc.spamBalances.push(balance)
-        } else if (hideSmallBalances && balance.balanceUSD < HIDE_SMALL_USD_BALANCES_THRESHOLD) {
+        } else if (
+          // Small balances includes tokens that don't have a balanceUSD value
+          hideSmallBalances &&
+          (!balance.balanceUSD || balance.balanceUSD < HIDE_SMALL_USD_BALANCES_THRESHOLD)
+        ) {
           acc.smallBalances.push(balance)
         } else {
           acc.balances.push(balance)
@@ -156,13 +162,35 @@ export function useSortedPortfolioBalances(
     )
 
     return {
-      balances: balances.sort((a, b) => b.balanceUSD - a.balanceUSD),
-      smallBalances: smallBalances.sort((a, b) => b.balanceUSD - a.balanceUSD),
-      spamBalances: spamBalances.sort((a, b) => b.balanceUSD - a.balanceUSD),
+      balances: sortPortfolioBalances(balances),
+      smallBalances: sortPortfolioBalances(smallBalances),
+      spamBalances: sortPortfolioBalances(spamBalances),
     }
   }, [balancesById, hideSmallBalances, hideSpamTokens])
 
   return { data: formattedData, loading, networkStatus, refetch }
+}
+
+/**
+ * Helper function to stable sort balances by descending balanceUSD,
+ * followed by balances with null balanceUSD values sorted alphabetically
+ * */
+export function sortPortfolioBalances(balances: PortfolioBalance[]) {
+  const balancesWithUSDValue = balances.filter((b) => b.balanceUSD)
+  const balancesWithoutUSDValue = balances.filter((b) => !b.balanceUSD)
+
+  return [
+    ...balancesWithUSDValue.sort((a, b) => {
+      if (!a.balanceUSD) return 1
+      if (!b.balanceUSD) return -1
+      return b.balanceUSD - a.balanceUSD
+    }),
+    ...balancesWithoutUSDValue.sort((a, b) => {
+      if (!a.currencyInfo.currency.name) return 1
+      if (!b.currencyInfo.currency.name) return -1
+      return a.currencyInfo.currency.name?.localeCompare(b.currencyInfo.currency.name)
+    }),
+  ]
 }
 
 /** Helper hook to retrieve balance for a single currency for the active account. */
