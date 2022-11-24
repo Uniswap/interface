@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - run: npx yarn-deduplicate --strategy=highest --list --fail
+      - run: yarn yarn-deduplicate --strategy=highest --list --fail
 
   unit-tests:
     runs-on: ubuntu-latest
