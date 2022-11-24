@@ -59,7 +59,8 @@ const filterTokenList = (tokens: { [key: string]: MultiChainTokenInfo }) => {
       Object.keys(destChains).forEach((chain: string) => {
         Object.keys(destChains[chain]).forEach(address => {
           const info = destChains[chain][address]
-          if (!isAddress(info.address)) {
+          info.chainId = Number(info.chainId)
+          if (!isAddress(info.chainId, info.address)) {
             delete destChains[chain][address]
           }
         })

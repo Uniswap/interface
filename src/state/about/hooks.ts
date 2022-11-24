@@ -2,7 +2,7 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 import { useEffect, useState } from 'react'
 
 import { GLOBAL_DATA, GLOBAL_DATA_ELASTIC } from 'apollo/queries'
-import { MAINNET_NETWORKS, NETWORKS_INFO } from 'constants/networks'
+import { EVM_MAINNET_NETWORKS, NETWORKS_INFO, isEVM } from 'constants/networks'
 import { ELASTIC_NOT_SUPPORTED, VERSION } from 'constants/v2'
 import useAggregatorAPR from 'hooks/useAggregatorAPR'
 import useAggregatorVolume from 'hooks/useAggregatorVolume'
@@ -50,7 +50,8 @@ export function useGlobalData() {
         .toString()
     }
     const getResultByChainIds = async (chainIds: readonly ChainId[]) => {
-      const elasticChains = chainIds.filter(id => !ELASTIC_NOT_SUPPORTED[id])
+      // todo namgold: add aggregator API for solana
+      const elasticChains = chainIds.filter(isEVM).filter(id => !ELASTIC_NOT_SUPPORTED[id])
 
       const elasticPromises = elasticChains.map(chain =>
         NETWORKS_INFO[chain].elasticClient.query({
@@ -67,7 +68,7 @@ export function useGlobalData() {
         return total + parseFloat(item?.data?.factories?.[0]?.totalValueLockedUSD || '0')
       }, 0)
 
-      const allChainPromises = chainIds.map(chain =>
+      const allChainPromises = chainIds.filter(isEVM).map(chain =>
         NETWORKS_INFO[chain].classicClient.query({
           query: GLOBAL_DATA(),
           fetchPolicy: 'cache-first',
@@ -98,7 +99,7 @@ export function useGlobalData() {
     }
 
     async function getGlobalData() {
-      const result = await getResultByChainIds(MAINNET_NETWORKS.filter(chain => chain !== ChainId.ETHW))
+      const result = await getResultByChainIds(EVM_MAINNET_NETWORKS.filter(chain => chain !== ChainId.ETHW))
 
       setGlobalData({
         ...result.data,

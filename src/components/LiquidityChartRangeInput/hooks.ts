@@ -7,7 +7,7 @@ import { usePoolActiveLiquidity } from 'hooks/usePoolTickData'
 
 import { ChartEntry } from './types'
 
-export interface TickProcessed {
+interface TickProcessed {
   liquidityActive: JSBI
   price0: string
 }

@@ -1,20 +1,26 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
 
 import Mainnet from 'assets/networks/ethw.png'
-import { KS_SETTING_API } from 'constants/env'
+import { AGGREGATOR_API, KS_SETTING_API } from 'constants/env'
 import { createClient } from 'utils/client'
 
-import { NetworkInfo } from '../type'
+import { EVMNetworkInfo } from './type'
 
 const EMPTY = ''
 const EMPTY_ARRAY: any[] = []
 const NOT_SUPPORT = null
 
-const ethereumInfo: NetworkInfo = {
+const ethereumInfo: EVMNetworkInfo = {
   chainId: ChainId.ETHW,
   route: 'ethw',
+  ksSettingRoute: 'ethw',
+  priceRoute: 'ethw',
+  poolFarmRoute: EMPTY,
   name: 'EthereumPoW',
   icon: Mainnet,
+  iconDark: NOT_SUPPORT,
+  iconSelected: NOT_SUPPORT,
+  iconDarkSelected: NOT_SUPPORT,
   classicClient: createClient(
     'https://ethereum-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-ethereum',
   ),
@@ -28,13 +34,14 @@ const ethereumInfo: NetworkInfo = {
   bridgeURL: EMPTY,
   nativeToken: {
     symbol: 'ETHW',
-    name: 'ETHW (Wrapped)',
-    address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+    name: 'Ether POW',
     logo: Mainnet,
     decimal: 18,
+    minForGas: 10 ** 16,
   },
   rpcUrl: 'https://ethereumpow.kyberengineering.io',
-  routerUri: `${process.env.REACT_APP_AGGREGATOR_API}/ethw/route/encode`,
+  routerUri: `${AGGREGATOR_API}/ethw/route/encode`,
+  multicall: '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',
   classic: {
     static: {
       zap: '0x2abE8750e4a65584d7452316356128C936273e0D',
@@ -47,7 +54,7 @@ const ethereumInfo: NetworkInfo = {
       router: '0x1c87257F5e8609940Bc751a07BB085Bb7f8cDBE6',
       factory: '0x833e4083B7ae46CeA85695c4f7ed25CDAd8886dE',
     },
-    claimReward: EMPTY,
+    claimReward: NOT_SUPPORT,
     fairlaunch: EMPTY_ARRAY,
     fairlaunchV2: EMPTY_ARRAY,
   },
@@ -58,12 +65,14 @@ const ethereumInfo: NetworkInfo = {
     initCodeHash: '0xc597aba1bb02db42ba24a8878837965718c032f8b46be94a6e46452a9f89ca01',
     quoter: '0x0D125c15D54cA1F8a813C74A81aEe34ebB508C1f',
     routers: '0xC1e7dFE73E1598E3910EF4C7845B68A9Ab6F4c83',
+    farms: [],
   },
   averageBlockTimeInSeconds: 13.13,
   coingeckoNetworkId: '',
   coingeckoNativeTokenId: '',
   deBankSlug: '',
-  internalRoute: EMPTY,
+  trueSightId: NOT_SUPPORT,
+  dexToCompare: NOT_SUPPORT,
 }
 
 export default ethereumInfo

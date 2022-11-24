@@ -1,3 +1,4 @@
+import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import { useState } from 'react'
 import { Edit, FileText, Plus, Repeat } from 'react-feather'
@@ -43,13 +44,16 @@ import {
   OptimismLogoFull,
   Polygon,
   PolygonLogoFull,
+  Solana,
+  SolanaLogoFull,
   Velas,
   VelasLogoFull,
 } from 'components/Icons'
 import AntiSnippingAttack from 'components/Icons/AntiSnippingAttack'
 import Loader from 'components/Loader'
-import { MAINNET_NETWORKS } from 'constants/networks'
+import { MAINNET_NETWORKS, NETWORKS_INFO } from 'constants/networks'
 import { VERSION } from 'constants/v2'
+import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { useGlobalData } from 'state/about/hooks'
@@ -171,6 +175,7 @@ export const KSStatistic = () => {
 }
 
 function AboutKyberSwap() {
+  const { isSolana } = useActiveWeb3React()
   const theme = useTheme()
   const [isDarkMode] = useDarkModeManager()
   const above992 = useMedia('(min-width: 992px)')
@@ -426,7 +431,14 @@ function AboutKyberSwap() {
   )
 
   const renderCreateNewPoolButton = () => {
-    return (
+    return isSolana ? (
+      <BtnPrimary disabled style={{ flex: '0 0 216px', padding: '12px' }}>
+        <Plus size={20} />
+        <Text marginLeft="8px" fontSize={['14px', '16px']}>
+          <Trans>Create New Pool</Trans>
+        </Text>
+      </BtnPrimary>
+    ) : (
       <BtnPrimary
         as={Link}
         to={'/pools?tab=elastic&highlightCreateButton=true'}
@@ -496,9 +508,10 @@ function AboutKyberSwap() {
             <Oasis />
             <Bttc />
             <OptimismLogo />
+            <Solana />
           </SupportedChain>
 
-          <KyberSwapGeneralIntro />
+          <KyberSwapGeneralIntro isSolana={isSolana} />
 
           <OverflowStatisticWrapper>
             <StatisticWrapper>
@@ -576,9 +589,11 @@ function AboutKyberSwap() {
                       </Text>
                       <Text color={theme.subText} marginTop="8px">
                         <Link
-                          to={`/${dataToShow.maxAPRAvailable.is_farm ? 'farms' : 'pools'}?tab=${
-                            dataToShow.maxAPRAvailable.type || VERSION.CLASSIC
-                          }&networkId=${dataToShow.maxAPRAvailable.chain_id}&search=${dataToShow.maxAPRAvailable.id}`}
+                          to={`/${dataToShow.maxAPRAvailable.is_farm ? 'farms' : 'pools'}/${
+                            NETWORKS_INFO[dataToShow.maxAPRAvailable.chain_id as ChainId].route
+                          }?tab=${dataToShow.maxAPRAvailable.type || VERSION.CLASSIC}&search=${
+                            dataToShow.maxAPRAvailable.id
+                          }`}
                           style={{ textDecorationLine: 'none' }}
                         >
                           <Trans>Max APR Available</Trans>↗
@@ -756,31 +771,62 @@ function AboutKyberSwap() {
             marginTop={['40px', '48px']}
             sx={{ gap: above768 ? '24px' : '16px' }}
           >
-            <BtnPrimary
-              as={Link}
-              to={
-                activeTab === VERSION.ELASTIC ? '/pools?tab=elastic' : '/pools?tab=classic&highlightCreateButton=true'
-              }
-              onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_START_EARNING_CLICKED)}
-            >
-              <MoneyBagOutline size={20} color={theme.textReverse} />
-              <Text fontSize="16px" marginLeft="8px">
-                <Trans>Start Earning</Trans>
-              </Text>
-            </BtnPrimary>
-            <ButtonLight
-              as={Link}
-              to={activeTab === VERSION.ELASTIC ? '/farms?tab=elastic' : '/farms?tab=classic'}
-              onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_VIEW_FARMS_CLICKED)}
-              style={{
-                flex: 1,
-              }}
-            >
-              <FarmIcon size={20} />
-              <Text fontSize="16px" marginLeft="8px">
-                <Trans>View Farms</Trans>
-              </Text>
-            </ButtonLight>
+            {!isSolana ? (
+              <>
+                <BtnPrimary
+                  as={Link}
+                  to={
+                    activeTab === VERSION.ELASTIC
+                      ? '/pools?tab=elastic'
+                      : '/pools?tab=classic&highlightCreateButton=true'
+                  }
+                  onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_START_EARNING_CLICKED)}
+                >
+                  <MoneyBagOutline size={20} color={theme.textReverse} />
+                  <Text fontSize="16px" marginLeft="8px">
+                    <Trans>Start Earning</Trans>
+                  </Text>
+                </BtnPrimary>
+                <ButtonLight
+                  as={Link}
+                  to={activeTab === VERSION.ELASTIC ? '/farms?tab=elastic' : '/farms?tab=classic'}
+                  onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_VIEW_FARMS_CLICKED)}
+                  style={{
+                    flex: 1,
+                  }}
+                >
+                  <FarmIcon size={20} />
+                  <Text fontSize="16px" marginLeft="8px">
+                    <Trans>View Farms</Trans>
+                  </Text>
+                </ButtonLight>
+              </>
+            ) : (
+              <>
+                <BtnPrimary
+                  disabled
+                  style={{
+                    flex: 1,
+                  }}
+                >
+                  <MoneyBagOutline size={20} />
+                  <Text fontSize="16px" marginLeft="8px">
+                    <Trans>Start Earning</Trans>
+                  </Text>
+                </BtnPrimary>
+                <BtnPrimary
+                  disabled
+                  style={{
+                    flex: 1,
+                  }}
+                >
+                  <FarmIcon size={20} />
+                  <Text fontSize="16px" marginLeft="8px">
+                    <Trans>View Farms</Trans>
+                  </Text>
+                </BtnPrimary>
+              </>
+            )}
           </Flex>
 
           <Flex
@@ -881,7 +927,7 @@ function AboutKyberSwap() {
                       src={
                         !isDarkMode
                           ? 'https://chainsecurity.com/wp-content/themes/chainsecurity-wp/resources/images/temp/logo.svg'
-                          : require('../../assets/svg/chainsecurity.svg').default
+                          : require('assets/svg/chainsecurity.svg').default
                       }
                       alt="security"
                       width={above992 ? '197px' : '140px'}
@@ -918,7 +964,7 @@ function AboutKyberSwap() {
                   <Trans>Bug Bounty</Trans>
                 </Text>
                 <img
-                  src={require('../../assets/svg/about_icon_bug_bounty.svg').default}
+                  src={require('assets/svg/about_icon_bug_bounty.svg').default}
                   alt="bugbounty"
                   width={above992 ? '186px' : '140px'}
                 />
@@ -969,8 +1015,8 @@ function AboutKyberSwap() {
               <img
                 src={
                   isDarkMode
-                    ? require('../../assets/svg/about_icon_kyber.svg').default
-                    : require('../../assets/svg/about_icon_kyber_light.svg').default
+                    ? require('assets/svg/about_icon_kyber.svg').default
+                    : require('assets/svg/about_icon_kyber_light.svg').default
                 }
                 alt="kyber_icon"
                 width="100%"
@@ -978,23 +1024,19 @@ function AboutKyberSwap() {
               <img
                 src={
                   isDarkMode
-                    ? require('../../assets/svg/about_icon_ethereum.png').default
-                    : require('../../assets/svg/about_icon_ethereum_light.png').default
+                    ? require('assets/svg/about_icon_ethereum.png').default
+                    : require('assets/svg/about_icon_ethereum_light.png').default
                 }
                 alt="ethereum_icon"
                 width="100%"
               />
-              <img src={require('../../assets/svg/about_icon_bsc.svg').default} alt="bsc_icon" width="100%" />
+              <img src={require('assets/svg/about_icon_bsc.svg').default} alt="bsc_icon" width="100%" />
               <PolygonLogoFull />
-              <img
-                src={require('../../assets/svg/about_icon_avalanche.svg').default}
-                alt="avalanche_icon"
-                width="100%"
-              />
+              <img src={require('assets/svg/about_icon_avalanche.svg').default} alt="avalanche_icon" width="100%" />
               <FantomLogoFull color={isDarkMode ? '#fff' : '#1969FF'} width="100%" height="unset" />
               <CronosLogoFull color={isDarkMode ? undefined : '#142564'} />
               <img
-                src={require(`../../assets/images/Arbitrum_HorizontalLogo${isDarkMode ? '-dark' : ''}.svg`).default}
+                src={require(`assets/images/Arbitrum_HorizontalLogo${isDarkMode ? '-dark' : ''}.svg`).default}
                 alt=""
                 width="100%"
               />
@@ -1002,11 +1044,12 @@ function AboutKyberSwap() {
               <AuroraFull />
               <OasisLogoFull />
               <img
-                src={require(`../../assets/images/btt-logo${isDarkMode ? '-dark' : ''}.svg`).default}
+                src={require(`assets/images/btt-logo${isDarkMode ? '-dark' : ''}.svg`).default}
                 alt="btt"
                 width="100%"
               />
               <OptimismLogoFull />
+              <SolanaLogoFull />
             </Powered>
           </Text>
         </Wrapper>

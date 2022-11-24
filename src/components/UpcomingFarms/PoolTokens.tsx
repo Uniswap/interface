@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { UpcomingPool } from 'constants/upcoming-pools'
 
 import { CoveredLogo, HigherLogo, PoolTokensText, PoolTokensWrapper } from './styled'

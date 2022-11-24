@@ -1,5 +1,4 @@
-import { ChainId } from '@kyberswap/ks-sdk-core'
-import { Trans } from '@lingui/macro'
+import { Trans, t } from '@lingui/macro'
 import { darken } from 'polished'
 import { useState } from 'react'
 import { Repeat } from 'react-feather'
@@ -14,22 +13,21 @@ import MultichainLogoLight from 'assets/images/multichain_white.png'
 import { ReactComponent as BridgeIcon } from 'assets/svg/bridge_icon.svg'
 import { ReactComponent as Dollar } from 'assets/svg/dollar.svg'
 import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
+import SelectNetwork from 'components/Header/web3/SelectNetwork'
+import SelectWallet from 'components/Header/web3/SelectWallet'
 import DiscoverIcon from 'components/Icons/DiscoverIcon'
 import Menu, { NewLabel } from 'components/Menu'
+import Row, { RowFixed } from 'components/Row'
 import Settings from 'components/Settings'
-import { TutorialIds, TutorialNumbers } from 'components/Tutorial/TutorialSwap/constant'
-import Web3Network from 'components/Web3Network'
-import { AGGREGATOR_ANALYTICS_URL, PROMM_ANALYTICS_URL } from 'constants/index'
+import { MouseoverTooltip } from 'components/Tooltip'
+import { TutorialIds } from 'components/Tutorial/TutorialSwap/constant'
+import { AGGREGATOR_ANALYTICS_URL, APP_PATHS, PROMM_ANALYTICS_URL } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { useWindowSize } from 'hooks/useWindowSize'
-import { AppPaths } from 'pages/App'
 import { useTutorialSwapGuide } from 'state/tutorial/hooks'
 import { useIsDarkMode } from 'state/user/hooks'
 import { ExternalLink } from 'theme/components'
-
-import Row, { RowFixed } from '../Row'
-import Web3Status from '../Web3Status'
 
 const VisaSVG = styled(Visa)`
   path {
@@ -125,17 +123,6 @@ const IconImage = styled.img`
   @media only screen and (max-width: 400px) {
     width: 100px;
   }
-`
-
-const AccountElement = styled.div<{ active: boolean }>`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  background-color: ${({ theme, active }) => (!active ? theme.background : theme.buttonGray)};
-  border-radius: 999px;
-  white-space: nowrap;
-  width: 100%;
-  cursor: pointer;
 `
 
 const AnalyticsWrapper = styled.span`
@@ -345,14 +332,14 @@ const StyledBridgeIcon = styled(BridgeIcon)`
   }
 `
 export default function Header() {
-  const { account, chainId } = useActiveWeb3React()
+  const { chainId, isEVM, isSolana, walletKey } = useActiveWeb3React()
 
   const isDark = useIsDarkMode()
   const { pathname } = useLocation()
   const [isHoverSlide, setIsHoverSlide] = useState(false)
 
   const { width } = useWindowSize()
-  const [{ show: isShowTutorial = false, step }] = useTutorialSwapGuide()
+  const [{ show: isShowTutorial = false, stepInfo }] = useTutorialSwapGuide()
   const under369 = width && width < 369
   const { mixpanelHandler } = useMixpanel()
   return (
@@ -365,7 +352,7 @@ export default function Header() {
         </Title>
         <HeaderLinks>
           <HoverDropdown
-            forceShowDropdown={isShowTutorial && step === TutorialNumbers.STEP_BRIDGE}
+            forceShowDropdown={isShowTutorial && stepInfo?.selector === `#${TutorialIds.BRIDGE_LINKS}`}
             active={pathname.includes('/swap') || pathname === '/buy-crypto'}
           >
             <Flex alignItems="center">
@@ -405,77 +392,81 @@ export default function Header() {
                     </Flex>
                   </Flex>
                 </StyledNavLink>
-                <StyledNavLink
-                  to={AppPaths.BRIDGE}
-                  isActive={match => Boolean(match)}
-                  style={{ flexDirection: 'column', width: '100%' }}
-                >
-                  <Flex alignItems="center" sx={{ gap: '10px' }} justifyContent="space-between">
-                    <StyledBridgeIcon height={15} />
-                    <Flex alignItems={'center'} style={{ flex: 1 }} justifyContent={'space-between'}>
-                      <Text>
-                        <Trans>Bridge</Trans>
-                      </Text>
-                      <img
-                        src={isDark ? MultichainLogoLight : MultichainLogoDark}
-                        alt="kyberswap with multichain"
-                        height={10}
-                      />
+                {isSolana || (
+                  <StyledNavLink
+                    to={APP_PATHS.BRIDGE}
+                    isActive={match => Boolean(match)}
+                    style={{ flexDirection: 'column', width: '100%' }}
+                  >
+                    <Flex alignItems="center" sx={{ gap: '10px' }} justifyContent="space-between">
+                      <StyledBridgeIcon height={15} />
+                      <Flex alignItems={'center'} style={{ flex: 1 }} justifyContent={'space-between'}>
+                        <Text>
+                          <Trans>Bridge</Trans>
+                        </Text>
+                        <img
+                          src={isDark ? MultichainLogoLight : MultichainLogoDark}
+                          alt="kyberswap with multichain"
+                          height={10}
+                        />
+                      </Flex>
                     </Flex>
-                  </Flex>
-                </StyledNavLink>
+                  </StyledNavLink>
+                )}
               </div>
             </Dropdown>
           </HoverDropdown>
 
-          <Flex id={TutorialIds.EARNING_LINKS} alignItems="center">
-            <HoverDropdown
-              active={pathname.toLowerCase().includes('pools') || pathname.toLowerCase().startsWith('/farms')}
-            >
-              <Flex alignItems="center">
-                <Trans>Earn</Trans>
-                <DropdownIcon />
-              </Flex>
-              <Dropdown>
-                <StyledNavLink
-                  id="pools-nav-link"
-                  to="/pools"
-                  isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/pools')}
-                  style={{ width: '100%' }}
-                >
-                  <Trans>Pools</Trans>
-                </StyledNavLink>
+          {isEVM && (
+            <Flex id={TutorialIds.EARNING_LINKS} alignItems="center">
+              <HoverDropdown
+                active={pathname.toLowerCase().includes('pools') || pathname.toLowerCase().startsWith('/farms')}
+              >
+                <Flex alignItems="center">
+                  <Trans>Earn</Trans>
+                  <DropdownIcon />
+                </Flex>
+                <Dropdown>
+                  <StyledNavLink
+                    id="pools-nav-link"
+                    to="/pools"
+                    isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/pools')}
+                    style={{ width: '100%' }}
+                  >
+                    <Trans>Pools</Trans>
+                  </StyledNavLink>
 
-                <StyledNavLink
-                  id="my-pools-nav-link"
-                  to={'/myPools'}
-                  isActive={(match, { pathname }) =>
-                    Boolean(match) ||
-                    pathname.startsWith('/add') ||
-                    pathname.startsWith('/remove') ||
-                    pathname.startsWith('/create') ||
-                    (pathname.startsWith('/find') && pathname.endsWith('find'))
-                  }
-                >
-                  <Trans>My Pools</Trans>
-                </StyledNavLink>
+                  <StyledNavLink
+                    id="my-pools-nav-link"
+                    to="/myPools"
+                    isActive={(match, { pathname }) =>
+                      Boolean(match) ||
+                      pathname.startsWith(APP_PATHS.CLASSIC_ADD_LIQ) ||
+                      pathname.startsWith(APP_PATHS.CLASSIC_REMOVE_POOL) ||
+                      pathname.startsWith(APP_PATHS.CLASSIC_CREATE_POOL) ||
+                      (pathname.startsWith(APP_PATHS.FIND_POOL) && pathname.endsWith(APP_PATHS.FIND_POOL))
+                    }
+                  >
+                    <Trans>My Pools</Trans>
+                  </StyledNavLink>
 
-                <StyledNavLink
-                  onClick={() => {
-                    mixpanelHandler(MIXPANEL_TYPE.FARM_UNDER_EARN_TAB_CLICK)
-                  }}
-                  id="farms-nav-link"
-                  to="/farms"
-                  isActive={match => Boolean(match)}
-                >
-                  <Trans>Farms</Trans>
-                  <NewLabel>
-                    <Trans>New</Trans>
-                  </NewLabel>
-                </StyledNavLink>
-              </Dropdown>
-            </HoverDropdown>
-          </Flex>
+                  <StyledNavLink
+                    onClick={() => {
+                      mixpanelHandler(MIXPANEL_TYPE.FARM_UNDER_EARN_TAB_CLICK)
+                    }}
+                    id="farms-nav-link"
+                    to="/farms"
+                    isActive={match => Boolean(match)}
+                  >
+                    <Trans>Farms</Trans>
+                    <NewLabel>
+                      <Trans>New</Trans>
+                    </NewLabel>
+                  </StyledNavLink>
+                </Dropdown>
+              </HoverDropdown>
+            </Flex>
+          )}
 
           {!under369 && (
             <CampaignWrapper id={TutorialIds.CAMPAIGN_LINK}>
@@ -514,7 +505,7 @@ export default function Header() {
                     mixpanelHandler(MIXPANEL_TYPE.ANALYTICS_MENU_CLICKED)
                   }}
                   target="_blank"
-                  href={PROMM_ANALYTICS_URL[chainId as ChainId] + '/home'}
+                  href={PROMM_ANALYTICS_URL[chainId] + '/home'}
                 >
                   <Trans>Liquidity</Trans>
                 </StyledNavExternalLink>
@@ -559,11 +550,13 @@ export default function Header() {
       </HeaderRow>
       <HeaderControls>
         <HeaderElement>
-          <Web3Network />
-
-          <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
-            <Web3Status />
-          </AccountElement>
+          <MouseoverTooltip
+            text={t`You are currently connected through WalletConnect. If you want to change the connected network, please disconnect your wallet before changing the network.`}
+            disableTooltip={walletKey !== 'WALLET_CONNECT'}
+          >
+            <SelectNetwork disabled={walletKey === 'WALLET_CONNECT'} />
+          </MouseoverTooltip>
+          <SelectWallet />
         </HeaderElement>
         <HeaderElementWrap>
           <Settings />

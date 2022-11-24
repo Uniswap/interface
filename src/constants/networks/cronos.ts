@@ -3,21 +3,24 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 import CRONOS_DARK from 'assets/networks/cronos-network-dark.svg'
 import CRONOS from 'assets/networks/cronos-network.svg'
 import CronosLogo from 'assets/svg/cronos-token-logo.svg'
-import { KS_SETTING_API } from 'constants/env'
+import { AGGREGATOR_API, KS_SETTING_API } from 'constants/env'
+import { EVMNetworkInfo } from 'constants/networks/type'
 import { createClient } from 'utils/client'
 
-import { NetworkInfo } from '../type'
-
-const EMPTY = ''
 const EMPTY_ARRAY: any[] = []
 const NOT_SUPPORT = null
 
-const cronosInfo: NetworkInfo = {
+const cronosInfo: EVMNetworkInfo = {
   chainId: ChainId.CRONOS,
   route: 'cronos',
+  ksSettingRoute: 'cronos',
+  priceRoute: 'cronos',
+  poolFarmRoute: 'cronos',
   name: 'Cronos',
   icon: CRONOS,
   iconDark: CRONOS_DARK,
+  iconDarkSelected: CRONOS,
+  iconSelected: NOT_SUPPORT,
   classicClient: createClient(
     'https://cronos-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-cronos',
   ),
@@ -31,13 +34,14 @@ const cronosInfo: NetworkInfo = {
   bridgeURL: 'https://cronos.crypto.org/docs/bridge/cdcapp.html',
   nativeToken: {
     symbol: 'CRO',
-    name: 'CRO (Wrapped)',
-    address: '0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23',
+    name: 'CRO',
     logo: CronosLogo,
     decimal: 18,
+    minForGas: 10 ** 16,
   },
   rpcUrl: 'https://evm-cronos.crypto.org',
-  routerUri: `${process.env.REACT_APP_AGGREGATOR_API}/cronos/route/encode`,
+  routerUri: `${AGGREGATOR_API}/cronos/route/encode`,
+  multicall: '0x63Abb9973506189dC3741f61d25d4ed508151E6d',
   classic: {
     static: {
       zap: '0x2abE8750e4a65584d7452316356128C936273e0D',
@@ -50,7 +54,7 @@ const cronosInfo: NetworkInfo = {
       router: '0xEaE47c5D99f7B31165a7f0c5f7E0D6afA25CFd55',
       factory: '0xD9bfE9979e9CA4b2fe84bA5d4Cf963bBcB376974',
     },
-    claimReward: EMPTY,
+    claimReward: NOT_SUPPORT,
     fairlaunch: EMPTY_ARRAY,
     fairlaunchV2: EMPTY_ARRAY,
   },
@@ -61,12 +65,14 @@ const cronosInfo: NetworkInfo = {
     initCodeHash: '0xc597aba1bb02db42ba24a8878837965718c032f8b46be94a6e46452a9f89ca01',
     quoter: '0x0D125c15D54cA1F8a813C74A81aEe34ebB508C1f',
     routers: '0xC1e7dFE73E1598E3910EF4C7845B68A9Ab6F4c83',
+    farms: [],
   },
   averageBlockTimeInSeconds: 6,
   coingeckoNetworkId: 'cronos',
   coingeckoNativeTokenId: 'crypto-com-chain',
   deBankSlug: 'cro',
-  internalRoute: 'cronos',
+  trueSightId: 'cronos',
+  dexToCompare: 'vvs',
 }
 
 export default cronosInfo

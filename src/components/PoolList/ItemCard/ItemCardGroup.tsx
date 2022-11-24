@@ -1,6 +1,5 @@
-import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { ChevronDown } from 'react-feather'
 import { Flex, Text } from 'rebass'
 
@@ -40,7 +39,7 @@ const ItemCardGroup = ({
 
   const { chainId } = useActiveWeb3React()
 
-  const { currency0, currency1 } = parseSubgraphPoolData(poolData, chainId as ChainId)
+  const { currency0, currency1 } = parseSubgraphPoolData(poolData, chainId)
 
   const theme = useTheme()
 

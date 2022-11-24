@@ -1,23 +1,7 @@
 import { Search } from 'react-feather'
 import styled from 'styled-components'
 
-import { AutoColumn } from '../Column'
-import { RowFixed } from '../Row'
-
-export const ModalInfo = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
-  align-items: center;
-  padding: 1rem 1rem;
-  margin: 0.25rem 0.5rem;
-  justify-content: center;
-  flex: 1;
-  user-select: none;
-`
-
-export const FadedSpan = styled(RowFixed)`
-  color: ${({ theme }) => theme.primary};
-  font-size: 14px;
-`
+import { AutoColumn } from 'components/Column'
 
 export const TextDot = styled.div`
   height: 3px;

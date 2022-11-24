@@ -1,5 +1,3 @@
-import React from 'react'
-
 const TransactionSettingsIcon = ({ width, height, fill }: { width?: number; height?: number; fill?: string }) => {
   return (
     <svg width={width || 20} height={height || 20} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">

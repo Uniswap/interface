@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components'
 
 import DarkModeIconActive from 'components/Icons/DarkModeIconActive'
@@ -37,7 +36,7 @@ const StyledToggle = styled.button`
   }
 `
 
-export interface ThemeToggleProps {
+interface ThemeToggleProps {
   id?: string
   isDarkMode: boolean
   toggle: () => void

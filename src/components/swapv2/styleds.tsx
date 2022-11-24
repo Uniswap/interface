@@ -3,14 +3,13 @@ import { useState } from 'react'
 import { Text } from 'rebass'
 import styled, { css } from 'styled-components'
 
+import { ReactComponent as Alert } from 'assets/images/alert.svg'
 import { ButtonEmpty } from 'components/Button'
+import { AutoColumn } from 'components/Column'
 import Modal, { ModalProps } from 'components/Modal'
 import { Z_INDEXS } from 'constants/styles'
 import useTheme from 'hooks/useTheme'
 import { errorFriendly } from 'utils/dmm'
-
-import { ReactComponent as Alert } from '../../assets/images/alert.svg'
-import { AutoColumn } from '../Column'
 
 export const PageWrapper = styled.div`
   display: flex;
@@ -120,25 +119,8 @@ export const ArrowWrapper = styled.div<{ rotated?: boolean }>`
   }
 `
 
-export const SectionBreak = styled.div`
-  height: 1px;
-  width: 100%;
-  background-color: ${({ theme }) => theme.bg3};
-`
-
 export const BottomGrouping = styled.div`
   margin-top: 24px;
-`
-
-export const ErrorText = styled(Text)<{ severity?: 0 | 1 | 2 | 3 | 4 }>`
-  color: ${({ theme, severity }) =>
-    severity === 3 || severity === 4
-      ? theme.red1
-      : severity === 2
-      ? theme.yellow2
-      : severity === 1
-      ? theme.text
-      : theme.green1};
 `
 
 export const StyledBalanceMaxMini = styled.button`

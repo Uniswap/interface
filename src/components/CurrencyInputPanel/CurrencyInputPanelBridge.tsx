@@ -49,7 +49,7 @@ export default function CurrencyInputPanelBridge({
   const { chainId, account } = useActiveWeb3React()
   const [{ currencyIn, currencyOut, listTokenOut, chainIdOut, loadingToken }] = useBridgeState()
   const currency = isOutput ? currencyOut : currencyIn
-  const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, isOutput ? undefined : currency ?? undefined)
+  const selectedCurrencyBalance = useCurrencyBalance(isOutput ? undefined : currency ?? undefined)
   const balanceRef = useRef(selectedCurrencyBalance?.toSignificant(10))
   const destBalance = useTokenBalanceOfAnotherChain(chainIdOut, isOutput ? currency : undefined)
 

@@ -1,5 +1,3 @@
-import React from 'react'
-
 import useTheme from 'hooks/useTheme'
 
 function Cronos({ size }: { size?: number }) {

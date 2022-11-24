@@ -1,20 +1,25 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
 
 import VELAS from 'assets/networks/velas-network.png'
-import { KS_SETTING_API } from 'constants/env'
+import { AGGREGATOR_API, KS_SETTING_API } from 'constants/env'
+import { EVMNetworkInfo } from 'constants/networks/type'
 import { createClient } from 'utils/client'
-
-import { NetworkInfo } from '../type'
 
 const EMPTY = ''
 const EMPTY_ARRAY: any[] = []
 const NOT_SUPPORT = null
 
-const velasInfo: NetworkInfo = {
+const velasInfo: EVMNetworkInfo = {
   chainId: ChainId.VELAS,
   route: 'velas',
+  ksSettingRoute: 'velas',
+  priceRoute: 'velas',
+  poolFarmRoute: 'velas',
   name: 'Velas',
   icon: VELAS,
+  iconDark: NOT_SUPPORT,
+  iconSelected: NOT_SUPPORT,
+  iconDarkSelected: NOT_SUPPORT,
   classicClient: createClient(
     'https://velas-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-velas',
   ),
@@ -28,13 +33,14 @@ const velasInfo: NetworkInfo = {
   bridgeURL: EMPTY,
   nativeToken: {
     symbol: 'VLX',
-    name: 'VLX (Wrapped)',
-    address: '0xc579D1f3CF86749E05CD06f7ADe17856c2CE3126',
+    name: 'VLX',
     logo: VELAS,
     decimal: 18,
+    minForGas: 10 ** 16,
   },
   rpcUrl: 'https://evmexplorer.velas.com/rpc',
-  routerUri: `${process.env.REACT_APP_AGGREGATOR_API}/velas/route/encode`,
+  routerUri: `${AGGREGATOR_API}/velas/route/encode`,
+  multicall: '0x1877Ec0770901cc6886FDA7E7525a78c2Ed4e975',
   classic: {
     static: {
       zap: '0x2abE8750e4a65584d7452316356128C936273e0D',
@@ -47,7 +53,7 @@ const velasInfo: NetworkInfo = {
       factory: '0xD9bfE9979e9CA4b2fe84bA5d4Cf963bBcB376974',
     },
     dynamic: NOT_SUPPORT,
-    claimReward: EMPTY,
+    claimReward: NOT_SUPPORT,
     fairlaunch: EMPTY_ARRAY,
     fairlaunchV2: EMPTY_ARRAY,
   },
@@ -58,12 +64,14 @@ const velasInfo: NetworkInfo = {
     initCodeHash: '0xc597aba1bb02db42ba24a8878837965718c032f8b46be94a6e46452a9f89ca01',
     quoter: '0x0D125c15D54cA1F8a813C74A81aEe34ebB508C1f',
     routers: '0xC1e7dFE73E1598E3910EF4C7845B68A9Ab6F4c83',
+    farms: [],
   },
   averageBlockTimeInSeconds: 0.4,
   coingeckoNetworkId: 'velas',
   coingeckoNativeTokenId: 'velas',
   deBankSlug: EMPTY,
-  internalRoute: 'velas',
+  trueSightId: NOT_SUPPORT,
+  dexToCompare: 'wagyuswap',
 }
 
 export default velasInfo

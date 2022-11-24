@@ -1,6 +1,7 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import { useCallback, useEffect, useRef } from 'react'
+import { Redirect } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 
@@ -56,7 +57,7 @@ function timeout() {
 }
 export default function Bridge() {
   const theme = useTheme()
-  const { chainId } = useActiveWeb3React()
+  const { chainId, isSolana } = useActiveWeb3React()
   const [{ tokenInfoIn, chainIdOut }, setBridgeState] = useBridgeState()
   const curChainId = useRef(chainId)
   curChainId.current = chainId
@@ -69,7 +70,7 @@ export default function Bridge() {
       Object.keys(tokens).forEach(key => {
         const token = { ...tokens[key] } as MultiChainTokenInfo
         const { address, logoUrl, name, decimals, symbol } = token
-        if (!isAddress(address)) {
+        if (!isAddress(chainId, address)) {
           return
         }
         token.key = key
@@ -90,7 +91,7 @@ export default function Bridge() {
       })
       setBridgeState({ listTokenIn: result, tokenIn: native || result[0], loadingToken: false })
     },
-    [setBridgeState],
+    [chainId, setBridgeState],
   )
 
   useEffect(() => {
@@ -142,7 +143,7 @@ export default function Bridge() {
       const token = { ...map[hash] }
       token.key = hash
       const { decimals, name, address, symbol } = token as MultiChainTokenInfo
-      if (!isAddress(address)) return
+      if (!isAddress(chainId, address)) return
       listTokenOut.push(
         new WrappedTokenInfo({
           chainId: chainIdOut,
@@ -158,6 +159,7 @@ export default function Bridge() {
     setBridgeState({ listTokenOut })
   }, [chainIdOut, tokenInfoIn, chainId, setBridgeState])
 
+  if (isSolana) return <Redirect to="/" />
   return (
     <PageWrapper>
       <Disclaimer />

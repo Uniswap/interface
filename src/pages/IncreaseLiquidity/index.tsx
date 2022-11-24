@@ -4,8 +4,8 @@ import { FeeAmount, NonfungiblePositionManager } from '@kyberswap/ks-sdk-elastic
 import { Trans, t } from '@lingui/macro'
 import { BigNumber } from 'ethers'
 import JSBI from 'jsbi'
-import React, { useCallback, useEffect, useState } from 'react'
-import { RouteComponentProps } from 'react-router-dom'
+import { useCallback, useEffect, useState } from 'react'
+import { Redirect, RouteComponentProps } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
 
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
@@ -22,10 +22,10 @@ import { RowBetween } from 'components/Row'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { TutorialType } from 'components/Tutorial'
 import { Dots } from 'components/swap/styleds'
-import { NETWORKS_INFO } from 'constants/networks'
-import { nativeOnChain } from 'constants/tokens'
-import { FARM_CONTRACTS, VERSION } from 'constants/v2'
-import { useActiveWeb3React } from 'hooks'
+import { EVMNetworkInfo } from 'constants/networks/type'
+import { NativeCurrencies } from 'constants/tokens'
+import { VERSION } from 'constants/v2'
+import { useActiveWeb3React, useWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { useProAmmNFTPositionManagerContract } from 'hooks/useContract'
@@ -40,12 +40,12 @@ import { Field } from 'state/mint/proamm/actions'
 import { useProAmmDerivedMintInfo, useProAmmMintActionHandlers, useProAmmMintState } from 'state/mint/proamm/hooks'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
-import { useIsExpertMode } from 'state/user/hooks'
+import { TRANSACTION_TYPE } from 'state/transactions/type'
+import { useExpertModeManager, useUserSlippageTolerance } from 'state/user/hooks'
 import { calculateGasMargin, formattedNum, isAddressString, shortenAddress } from 'utils'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 
-import { useUserSlippageTolerance } from '../../state/user/hooks'
 import { Container, FirstColumn, GridColumn, SecondColumn } from './styled'
 
 export default function AddLiquidity({
@@ -54,10 +54,11 @@ export default function AddLiquidity({
   },
   history,
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string; feeAmount?: string; tokenId?: string }>) {
-  const { account, chainId, library } = useActiveWeb3React()
+  const { account, chainId, isEVM, networkInfo } = useActiveWeb3React()
+  const { library } = useWeb3React()
   const theme = useTheme()
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
-  const expertMode = useIsExpertMode()
+  const [expertMode] = useExpertModeManager()
   const addTransactionWithType = useTransactionAdder()
 
   const prevChainId = usePrevious(chainId)
@@ -77,7 +78,9 @@ export default function AddLiquidity({
 
   const owner = useSingleCallResult(!!tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
   const ownsNFT = owner === account || existingPositionDetails?.operator === account
-  const ownByFarm = Object.values(FARM_CONTRACTS).flat().includes(isAddressString(owner))
+  const ownByFarm = isEVM
+    ? (networkInfo as EVMNetworkInfo).elastic.farms.flat().includes(isAddressString(chainId, owner))
+    : false
 
   const { position: existingPosition } = useProAmmDerivedPositionInfo(existingPositionDetails)
 
@@ -168,18 +171,18 @@ export default function AddLiquidity({
   // check whether the user has approved the router on the tokens
   const [approvalA, approveACallback] = useApproveCallback(
     parsedAmounts[Field.CURRENCY_A],
-    chainId ? NETWORKS_INFO[chainId].elastic.nonfungiblePositionManager : undefined,
+    (networkInfo as EVMNetworkInfo).elastic.nonfungiblePositionManager,
   )
   const [approvalB, approveBCallback] = useApproveCallback(
     parsedAmounts[Field.CURRENCY_B],
-    chainId ? NETWORKS_INFO[chainId].elastic.nonfungiblePositionManager : undefined,
+    (networkInfo as EVMNetworkInfo).elastic.nonfungiblePositionManager,
   )
 
   const allowedSlippage = useUserSlippageTolerance()
 
   //TODO: on add
   async function onAdd() {
-    if (!chainId || !library || !account || !tokenId) {
+    if (!isEVM || !library || !account || !tokenId) {
       return
     }
 
@@ -203,7 +206,7 @@ export default function AddLiquidity({
 
       //0.00283161
       const txn: { to: string; data: string; value: string } = {
-        to: NETWORKS_INFO[chainId].elastic.nonfungiblePositionManager,
+        to: (networkInfo as EVMNetworkInfo).elastic.nonfungiblePositionManager,
         data: calldata,
         value,
       }
@@ -212,7 +215,7 @@ export default function AddLiquidity({
       library
         .getSigner()
         .estimateGas(txn)
-        .then(estimate => {
+        .then((estimate: BigNumber) => {
           const newTxn = {
             ...txn,
             gasLimit: calculateGasMargin(estimate),
@@ -223,8 +226,9 @@ export default function AddLiquidity({
             .sendTransaction(newTxn)
             .then((response: TransactionResponse) => {
               setAttemptingTxn(false)
-              addTransactionWithType(response, {
-                type: 'Increase liquidity',
+              addTransactionWithType({
+                hash: response.hash,
+                type: TRANSACTION_TYPE.INCREASE_LIQUIDITY,
                 summary:
                   (parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) || 0) +
                   ' ' +
@@ -243,39 +247,13 @@ export default function AddLiquidity({
               setTxHash(response.hash)
             })
         })
-        .catch(error => {
+        .catch((error: any) => {
           console.error('Failed to send transaction', error)
           setAttemptingTxn(false)
           // we only care if the error is something _other_ than the user rejected the tx
           if (error?.code !== 4001) {
             console.error(error)
           }
-
-          // const newTxn = {
-          //   ...txn,
-          //   gasLimit: '0x0827f6'
-          // }
-          // return library
-          //   .getSigner()
-          //   .sendTransaction(newTxn)
-          //   .then((response: TransactionResponse) => {
-          //     console.log(response)
-          //     setAttemptingTxn(false)
-          //     addTransactionWithType(response, {
-          //       type: 'Add liquidity',
-          //       summary:
-          //         (parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) || 0) +
-          //         ' ' +
-          //         baseCurrency?.symbol +
-          //         ' and ' +
-          //         (parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) || 0) +
-          //         ' ' +
-          //         quoteCurrency?.symbol +
-          //         //  ' with fee ' +  position.pool.fee / 100 + '%' +
-          //         ' (ProMM)'
-          //     })
-          //     setTxHash(response.hash)
-          //   })
         })
     } else {
       return
@@ -372,13 +350,7 @@ export default function AddLiquidity({
       </Flex>
     )
 
-  //disable = !feeAmount || invalidPool || (noLiquidity && !startPriceTypedValue)
-  // useProAmmClientSideTrade(
-  //   0,
-  //   position && CurrencyAmount.fromRawAmount(position?.pool.token0, JSBI.BigInt('10000000000000')),
-  //   position?.pool.token1,
-  // )
-
+  if (!isEVM) return <Redirect to="/" />
   return (
     <>
       <TransactionConfirmationModal
@@ -437,7 +409,7 @@ export default function AddLiquidity({
             color={theme.subText}
             style={{ borderRadius: '4px', marginBottom: '1.25rem' }}
           >
-            The owner of this liquidity position is {shortenAddress(owner)}
+            The owner of this liquidity position is {shortenAddress(chainId, owner)}
             <span style={{ display: 'inline-block' }}>
               <Copy toCopy={owner}></Copy>
             </span>
@@ -473,7 +445,6 @@ export default function AddLiquidity({
                     onHalf={() => {
                       onFieldAInput(currencyBalances[Field.CURRENCY_A]?.divide(2)?.toExact() ?? '')
                     }}
-                    showMaxButton
                     currency={currencies[Field.CURRENCY_A] ?? null}
                     id="add-liquidity-input-tokena"
                     showCommonBases
@@ -486,7 +457,7 @@ export default function AddLiquidity({
                       chainId &&
                         history.replace(
                           `/elastic/increase/${
-                            baseCurrencyIsETHER ? WETH[chainId].address : nativeOnChain(chainId).symbol
+                            baseCurrencyIsETHER ? WETH[chainId].address : NativeCurrencies[chainId].symbol
                           }/${currencyIdB}/${feeAmount}/${tokenId}`,
                         )
                     }}
@@ -500,7 +471,6 @@ export default function AddLiquidity({
                     onHalf={() => {
                       onFieldBInput(currencyBalances[Field.CURRENCY_B]?.divide(2).toExact() ?? '')
                     }}
-                    showMaxButton
                     currency={currencies[Field.CURRENCY_B] ?? null}
                     id="add-liquidity-input-tokenb"
                     showCommonBases
@@ -513,7 +483,7 @@ export default function AddLiquidity({
                       chainId &&
                         history.replace(
                           `/elastic/increase/${currencyIdA}/${
-                            quoteCurrencyIsETHER ? WETH[chainId].address : nativeOnChain(chainId).symbol
+                            quoteCurrencyIsETHER ? WETH[chainId].address : NativeCurrencies[chainId].symbol
                           }/${feeAmount}/${tokenId}`,
                         )
                     }}

@@ -1,4 +1,3 @@
-import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Position, computePoolAddress } from '@kyberswap/ks-sdk-elastic'
 import { Trans } from '@lingui/macro'
 import { BigNumber } from 'ethers'
@@ -15,7 +14,7 @@ import DoubleCurrencyLogo from 'components/DoubleLogo'
 import HoverDropdown from 'components/HoverDropdown'
 import Modal from 'components/Modal'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { NETWORKS_INFO } from 'constants/networks'
+import { NETWORKS_INFO, isEVM } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import { useToken } from 'hooks/Tokens'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
@@ -180,8 +179,7 @@ function WithdrawModal({
   const { chainId } = useActiveWeb3React()
   const above768 = useMedia('(min-width: 768px)')
 
-  const qs = useParsedQueryString()
-  const tab = qs.type || 'active'
+  const { type: tab = 'active' } = useParsedQueryString<{ type: string }>()
 
   const checkboxGroupRef = useRef<any>()
   const { farms, userFarmInfo } = useElasticFarms()
@@ -197,38 +195,44 @@ function WithdrawModal({
 
   const { depositedPositions = [], joinedPositions = {} } = userFarmInfo?.[selectedFarm?.id || ''] || {}
 
-  const userDepositedNFTs: PositionDetails[] = depositedPositions.map(pos => {
-    const stakedLiquidity = Object.values(joinedPositions)
-      .flat()
-      .filter(
-        p => pos.nftId.toString() === p.nftId.toString() && BigNumber.from(p.liquidity.toString()).gt('0'),
-      )?.[0]?.liquidity
+  const userDepositedNFTs: PositionDetails[] = useMemo(
+    () =>
+      isEVM(chainId)
+        ? depositedPositions.map(pos => {
+            const stakedLiquidity = Object.values(joinedPositions)
+              .flat()
+              .filter(
+                p => pos.nftId.toString() === p.nftId.toString() && BigNumber.from(p.liquidity.toString()).gt('0'),
+              )?.[0]?.liquidity
 
-    return {
-      nonce: BigNumber.from(0),
-      poolId: computePoolAddress({
-        factoryAddress: NETWORKS_INFO[chainId as ChainId].elastic.coreFactory,
-        tokenA: pos.pool.token0,
-        tokenB: pos.pool.token1,
-        fee: pos.pool.fee,
-        initCodeHashManualOverride: NETWORKS_INFO[chainId as ChainId].elastic.initCodeHash,
-      }),
-      feeGrowthInsideLast: BigNumber.from(0),
-      operator: '',
-      rTokenOwed: BigNumber.from(0),
-      fee: pos.pool.fee,
-      tokenId: pos.nftId,
-      tickLower: pos.tickLower,
-      tickUpper: pos.tickUpper,
-      liquidity: BigNumber.from(pos.liquidity.toString()),
-      token0: pos.amount0.currency.address,
-      token1: pos.amount1.currency.address,
-      stakedLiquidity: stakedLiquidity ? BigNumber.from(stakedLiquidity.toString()) : BigNumber.from(0),
-    }
-  })
+            return {
+              nonce: BigNumber.from(0),
+              poolId: computePoolAddress({
+                factoryAddress: NETWORKS_INFO[chainId].elastic.coreFactory,
+                tokenA: pos.pool.token0,
+                tokenB: pos.pool.token1,
+                fee: pos.pool.fee,
+                initCodeHashManualOverride: NETWORKS_INFO[chainId].elastic.initCodeHash,
+              }),
+              feeGrowthInsideLast: BigNumber.from(0),
+              operator: '',
+              rTokenOwed: BigNumber.from(0),
+              fee: pos.pool.fee,
+              tokenId: pos.nftId,
+              tickLower: pos.tickLower,
+              tickUpper: pos.tickUpper,
+              liquidity: BigNumber.from(pos.liquidity.toString()),
+              token0: pos.amount0.currency.address,
+              token1: pos.amount1.currency.address,
+              stakedLiquidity: stakedLiquidity ? BigNumber.from(stakedLiquidity.toString()) : BigNumber.from(0),
+            }
+          })
+        : [],
+    [chainId, depositedPositions, joinedPositions],
+  )
 
   const { filterOptions, activeFilter, setActiveFilter, eligiblePositions } = usePositionFilter(
-    userDepositedNFTs || [],
+    userDepositedNFTs,
     poolAddresses,
   )
 

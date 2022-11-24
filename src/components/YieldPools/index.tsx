@@ -53,8 +53,7 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
   const ref = useRef<HTMLDivElement>()
   const [open, setOpen] = useState(false)
   useOnClickOutside(ref, open ? () => setOpen(prev => !prev) : undefined)
-  const qs = useParsedQueryString()
-  const search = (qs.search as string) || ''
+  const { search = '', ...qs } = useParsedQueryString<{ search: string }>()
   const history = useHistory()
   const location = useLocation()
   const debouncedSearchText = useDebounce(search.trim().toLowerCase(), 200)
@@ -81,7 +80,7 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
 
       // Keep to be extended farm in active tab
       const now = +new Date() / 1000
-      const toBeExtendTime = TOBE_EXTENDED_FARMING_POOLS[isAddressString(farm.id)]
+      const toBeExtendTime = TOBE_EXTENDED_FARMING_POOLS[isAddressString(chainId, farm.id)]
       // only show if it will be ended less than 2 day
       const tobeExtended = toBeExtendTime && farm.endTime - now < 172800 && farm.endTime < toBeExtendTime
 

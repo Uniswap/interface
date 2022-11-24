@@ -276,9 +276,7 @@ const SingleTokenInfo = ({
       <InfoRowWrapper>
         {listField.map((item, i) => (
           <InfoRow key={i}>
-            <InfoRowLabel>
-              <Trans>{item.label}</Trans>
-            </InfoRowLabel>
+            <InfoRowLabel>{item.label}</InfoRowLabel>
             <InfoRowValue>{loading ? <Loader /> : item.value}</InfoRowValue>
           </InfoRow>
         ))}

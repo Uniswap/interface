@@ -1,6 +1,6 @@
 import { Currency } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Flex } from 'rebass'
 import styled from 'styled-components'
@@ -130,33 +130,33 @@ const TokenInfo = ({ currencies, onBack }: { currencies: { [field in Field]?: Cu
   }, [chainId, inputToken])
 
   const listData = [
-    { label: 'Price', value: tokenInfo.price ? formattedNum(tokenInfo.price.toString(), true) : NOT_AVAIALBLE },
+    { label: t`Price`, value: tokenInfo.price ? formattedNum(tokenInfo.price.toString(), true) : NOT_AVAIALBLE },
     {
-      label: 'Trading Volume (24H)',
+      label: t`Trading Volume (24H)`,
       value: tokenInfo.tradingVolume ? formatLongNumber(tokenInfo.tradingVolume.toString(), true) : NOT_AVAIALBLE,
     },
     {
-      label: 'Market Cap Rank',
+      label: t`Market Cap Rank`,
       value: tokenInfo.marketCapRank ? `#${formattedNum(tokenInfo.marketCapRank.toString())}` : NOT_AVAIALBLE,
     },
     {
-      label: 'Market Cap',
+      label: t`Market Cap`,
       value: tokenInfo.marketCap ? formatLongNumber(tokenInfo.marketCap.toString(), true) : NOT_AVAIALBLE,
     },
     {
-      label: 'All-Time High',
+      label: t`All-Time High`,
       value: tokenInfo.allTimeHigh ? formattedNum(tokenInfo.allTimeHigh.toString(), true) : NOT_AVAIALBLE,
     },
     {
-      label: 'All-Time Low',
+      label: t`All-Time Low`,
       value: tokenInfo.allTimeLow ? formattedNum(tokenInfo.allTimeLow.toString(), true) : NOT_AVAIALBLE,
     },
     {
-      label: 'Circulating Supply',
+      label: t`Circulating Supply`,
       value: tokenInfo.circulatingSupply ? formatLongNumber(tokenInfo.circulatingSupply.toString()) : NOT_AVAIALBLE,
     },
     {
-      label: 'Total Supply',
+      label: t`Total Supply`,
       value: tokenInfo.totalSupply ? formatLongNumber(tokenInfo.totalSupply.toString()) : NOT_AVAIALBLE,
     },
   ]
@@ -188,9 +188,7 @@ const TokenInfo = ({ currencies, onBack }: { currencies: { [field in Field]?: Cu
 
         {listData.map(item => (
           <InfoRow key={item.label}>
-            <InfoRowLabel>
-              <Trans>{item.label}</Trans>
-            </InfoRowLabel>
+            <InfoRowLabel>{item.label}</InfoRowLabel>
             <InfoRowValue>{loading ? <Loader size="10px" /> : item.value}</InfoRowValue>
           </InfoRow>
         ))}
@@ -201,12 +199,12 @@ const TokenInfo = ({ currencies, onBack }: { currencies: { [field in Field]?: Cu
           </InfoRowLabel>
 
           <AutoRow width="fit-content" gap="4px">
-            {chainId && selectedToken ? (
+            {selectedToken ? (
               <>
                 <CurrencyLogo currency={selectedToken} size="16px" />
-                <InfoRowValue>{shortenAddress(selectedToken.address, 3)}</InfoRowValue>
+                <InfoRowValue>{shortenAddress(chainId, selectedToken.address, 3)}</InfoRowValue>
                 <Copy toCopy={selectedToken.address} />
-                <AddTokenToMetaMask token={selectedToken} chainId={chainId} />
+                <AddTokenToMetaMask token={selectedToken} />
               </>
             ) : (
               <Loader />

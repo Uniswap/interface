@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
-import { AGGREGATOR_WAITING_TIME, TIME_TO_REFRESH_SWAP_RATE } from '../../constants'
-import { Aggregator } from '../../utils/aggregator'
+import { AGGREGATOR_WAITING_TIME, TIME_TO_REFRESH_SWAP_RATE } from 'constants/index'
+import { Aggregator } from 'utils/aggregator'
+
 import { IconButton } from './styleds'
 
 const ArrowLocatorLoading = React.forwardRef<any, any>((props, ref) => {

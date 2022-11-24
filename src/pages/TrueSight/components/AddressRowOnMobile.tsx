@@ -1,3 +1,4 @@
+import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import React from 'react'
 import { CheckCircle, ChevronDown, Copy } from 'react-feather'
@@ -9,7 +10,6 @@ import useCopyClipboard from 'hooks/useCopyClipboard'
 import { FieldName, FieldValue } from 'pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItem'
 import { ApplicationModal } from 'state/application/actions'
 import { useToggleModal } from 'state/application/hooks'
-import { isAddress } from 'utils'
 import getShortenAddress from 'utils/getShortenAddress'
 
 type Props = {
@@ -17,7 +17,7 @@ type Props = {
 }
 
 const AddressRowOnMobile: React.FC<Props> = ({ platforms }) => {
-  const defaultNetwork = platforms.size ? platforms.keys().next().value : ''
+  const defaultNetwork: string = platforms.size ? platforms.keys().next().value : ''
   const defaultAddress = defaultNetwork ? platforms.get(defaultNetwork) ?? '' : ''
 
   const [isCopied, setCopied] = useCopyClipboard()
@@ -25,7 +25,7 @@ const AddressRowOnMobile: React.FC<Props> = ({ platforms }) => {
 
   const onCopy = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation()
-    setCopied(isAddress(defaultAddress) || defaultAddress)
+    setCopied(defaultAddress)
   }
 
   return (
@@ -37,7 +37,7 @@ const AddressRowOnMobile: React.FC<Props> = ({ platforms }) => {
         </FieldName>
         <FieldValue>
           <img
-            src={NETWORKS_INFO[TRUESIGHT_NETWORK_TO_CHAINID[defaultNetwork]].icon}
+            src={NETWORKS_INFO[TRUESIGHT_NETWORK_TO_CHAINID[defaultNetwork] || ChainId.MAINNET].icon}
             alt="Network"
             style={{ minWidth: '16px', width: '16px', marginRight: '6px' }}
           />

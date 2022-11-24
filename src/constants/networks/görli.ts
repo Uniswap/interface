@@ -3,19 +3,24 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 import EthereumLogo from 'assets/images/ethereum-logo.png'
 import Mainnet from 'assets/networks/mainnet-network.svg'
 import { KS_SETTING_API } from 'constants/env'
+import { EVMNetworkInfo } from 'constants/networks/type'
 import { createClient } from 'utils/client'
-
-import { NetworkInfo } from '../type'
 
 const EMPTY = ''
 const EMPTY_ARRAY: any[] = []
 const NOT_SUPPORT = null
 
-const görliInfo: NetworkInfo = {
+const görliInfo: EVMNetworkInfo = {
   chainId: ChainId.GÖRLI,
   route: 'goerli',
+  ksSettingRoute: 'ethereum',
+  priceRoute: 'ethereum',
+  poolFarmRoute: EMPTY,
   name: 'Görli',
   icon: Mainnet,
+  iconDark: NOT_SUPPORT,
+  iconSelected: NOT_SUPPORT,
+  iconDarkSelected: NOT_SUPPORT,
   classicClient: createClient(
     'https://ethereum-graph.dev.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-classic-goerli',
   ),
@@ -28,14 +33,15 @@ const görliInfo: NetworkInfo = {
   tokenListUrl: `${KS_SETTING_API}/v1/tokens?chainIds=${ChainId.ROPSTEN}&isWhitelisted=${true}`,
   bridgeURL: EMPTY,
   nativeToken: {
-    symbol: 'ETH',
-    name: 'ETH (Wrapped)',
-    address: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
+    symbol: 'gETH',
+    name: 'GörliETH',
     logo: EthereumLogo,
     decimal: 18,
+    minForGas: 10 ** 16,
   },
   rpcUrl: 'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
   routerUri: EMPTY,
+  multicall: '0xD9bfE9979e9CA4b2fe84bA5d4Cf963bBcB376974',
   classic: {
     static: {
       zap: EMPTY,
@@ -44,7 +50,7 @@ const görliInfo: NetworkInfo = {
     },
     oldStatic: NOT_SUPPORT,
     dynamic: NOT_SUPPORT,
-    claimReward: EMPTY,
+    claimReward: NOT_SUPPORT,
     fairlaunch: EMPTY_ARRAY,
     fairlaunchV2: EMPTY_ARRAY,
   },
@@ -55,12 +61,14 @@ const görliInfo: NetworkInfo = {
     initCodeHash: '0xc597aba1bb02db42ba24a8878837965718c032f8b46be94a6e46452a9f89ca01',
     quoter: '0x032c677619f72c670e4DA64126B48d906dfa952F',
     routers: '0x45a5B8Cf524EC574b40e80274F0F3856A679C5c4',
+    farms: [],
   },
   averageBlockTimeInSeconds: 13.13,
-  coingeckoNetworkId: EMPTY,
-  coingeckoNativeTokenId: EMPTY,
+  coingeckoNetworkId: 'ethereum',
+  coingeckoNativeTokenId: 'ethereum',
   deBankSlug: EMPTY,
-  internalRoute: EMPTY,
+  trueSightId: NOT_SUPPORT,
+  dexToCompare: NOT_SUPPORT,
 }
 
 export default görliInfo

@@ -2,7 +2,7 @@ import React, { CSSProperties } from 'react'
 import { CheckCircle, Copy } from 'react-feather'
 import styled from 'styled-components'
 
-import useCopyClipboard from '../../hooks/useCopyClipboard'
+import useCopyClipboard from 'hooks/useCopyClipboard'
 
 const CopyIcon = styled.div<{ margin?: string }>`
   flex-shrink: 0;

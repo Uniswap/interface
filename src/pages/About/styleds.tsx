@@ -220,29 +220,35 @@ export const FooterContainer = styled.div`
 `
 
 export const Powered = styled.div`
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   margin-top: 48px;
-  gap: 52px;
   align-items: center;
-
+  justify-content: center;
+  gap: 52px;
+  & > * {
+    width: calc(100% / 6 - 52px);
+  }
   svg {
     max-width: 100%;
   }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    & > * {
+      width: calc(25% - 52px);
+    }
   `}
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 48px;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    & > * {
+      width: calc(100% / 3 - 52px);
+    }
   `}
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    padding: 12px;
-    row-gap: 24px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    & > * {
+      width: calc(50% - 52px);
+    }
   `}
 `
 

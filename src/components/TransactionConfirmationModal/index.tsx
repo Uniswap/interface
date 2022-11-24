@@ -1,26 +1,26 @@
 import { ChainId, Currency, Token } from '@kyberswap/ks-sdk-core'
-import { Trans, t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import React, { useState } from 'react'
 import { ArrowUpCircle } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 
 import { ReactComponent as Alert } from 'assets/images/alert.svg'
-import Circle from 'assets/images/blue-loader.svg'
 import Banner from 'components/Banner'
-import { SUPPORTED_WALLETS } from 'constants/index'
+import { ButtonLight, ButtonPrimary } from 'components/Button'
+import { AutoColumn, ColumnCenter } from 'components/Column'
+import Loader from 'components/Loader'
+import Modal from 'components/Modal'
+import { RowBetween, RowFixed } from 'components/Row'
+import HurryUpBanner from 'components/swapv2/HurryUpBanner'
+import { SUPPORTED_WALLETS } from 'constants/wallets'
 import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
 import { useIsDarkMode } from 'state/user/hooks'
 import { ExternalLink } from 'theme'
-import { CloseIcon, CustomLightSpinner } from 'theme/components'
+import { CloseIcon } from 'theme/components'
 import { getEtherscanLink, getTokenLogoURL } from 'utils'
 import { errorFriendly } from 'utils/dmm'
-
-import { ButtonLight, ButtonPrimary } from '../Button'
-import { AutoColumn, ColumnCenter } from '../Column'
-import Modal from '../Modal'
-import { RowBetween, RowFixed } from '../Row'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -46,44 +46,17 @@ const StyledLogo = styled.img`
   margin-left: 6px;
 `
 
-const getBrowserWalletConfig = () => {
-  const { ethereum } = window
-  const hasInjectedWallet = !!ethereum
-  const { isCoin98, isBraveWallet, isMetaMask } = ethereum || {}
-
-  if (hasInjectedWallet) {
-    if (isCoin98) {
-      const { name, iconName } = SUPPORTED_WALLETS.COIN98
-      return { name, iconName }
-    }
-
-    if (isBraveWallet) {
-      const { name, iconName } = SUPPORTED_WALLETS.BRAVE
-      return { name, iconName }
-    }
-
-    if (isMetaMask) {
-      const { name, iconName } = SUPPORTED_WALLETS.METAMASK
-      return { name, iconName }
-    }
-
-    const config = SUPPORTED_WALLETS.INJECTED
-    return {
-      name: t`your wallet`,
-      iconName: config.iconName,
-    }
-  }
-
-  return undefined
-}
-
 function ConfirmationPendingContent({
   onDismiss,
   pendingText,
+  startedTime,
 }: {
   onDismiss: () => void
   pendingText: string | React.ReactNode
+  startedTime: number | undefined
 }) {
+  const theme = useTheme()
+
   return (
     <Wrapper>
       <Section>
@@ -92,7 +65,7 @@ function ConfirmationPendingContent({
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
         <ConfirmedIcon>
-          <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
+          <Loader size="90px" stroke={theme.primary} strokeWidth="1" />
         </ConfirmedIcon>
         <AutoColumn gap="12px" justify={'center'}>
           <Text fontWeight={500} fontSize={20}>
@@ -107,6 +80,7 @@ function ConfirmationPendingContent({
             <Trans>Confirm this transaction in your wallet</Trans>
           </Text>
         </AutoColumn>
+        <HurryUpBanner startedTime={startedTime} />
       </Section>
     </Wrapper>
   )
@@ -114,7 +88,7 @@ function ConfirmationPendingContent({
 
 function AddTokenToInjectedWallet({ token, chainId }: { token: Token; chainId: ChainId }) {
   const isDarkMode = useIsDarkMode()
-
+  const { walletKey, isEVM } = useActiveWeb3React()
   const handleClick = async () => {
     const tokenAddress = token.address
     const tokenSymbol = token.symbol
@@ -142,10 +116,9 @@ function AddTokenToInjectedWallet({ token, chainId }: { token: Token; chainId: C
     }
   }
 
-  const walletConfig = getBrowserWalletConfig()
-  if (!walletConfig) {
-    return null
-  }
+  if (!walletKey) return null
+  if (!isEVM) return null
+  const walletConfig = SUPPORTED_WALLETS[walletKey]
 
   return (
     <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={handleClick}>
@@ -153,9 +126,7 @@ function AddTokenToInjectedWallet({ token, chainId }: { token: Token; chainId: C
         <Trans>
           Add {token.symbol} to {walletConfig.name}
         </Trans>{' '}
-        <StyledLogo
-          src={require(`../../assets/images/${isDarkMode ? '' : 'light-'}${walletConfig.iconName}`).default}
-        />
+        <StyledLogo src={isDarkMode ? walletConfig.icon : walletConfig.iconLight} />
       </RowFixed>
     </ButtonLight>
   )
@@ -186,11 +157,7 @@ function TransactionSubmittedContent({
             <CloseIcon onClick={onDismiss} />
           </RowBetween>
         )}
-        {showTxBanner && (
-          <>
-            <Banner isInModal />
-          </>
-        )}
+        {showTxBanner && <Banner isInModal />}
 
         <ConfirmedIcon>
           <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.primary} />
@@ -199,10 +166,10 @@ function TransactionSubmittedContent({
           <Text fontWeight={500} fontSize={20}>
             <Trans>Transaction Submitted</Trans>
           </Text>
-          {chainId && hash && (
+          {hash && (
             <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')}>
               <Text fontWeight={500} fontSize={14} color={theme.primary}>
-                {t`View transaction`}
+                <Trans>View transaction</Trans>
               </Text>
             </ExternalLink>
           )}
@@ -325,6 +292,7 @@ interface ConfirmationModalProps {
   pendingText: string | React.ReactNode
   tokenAddToMetaMask?: Currency
   showTxBanner?: boolean
+  startedTime?: number
 }
 
 export default function TransactionConfirmationModal({
@@ -336,6 +304,7 @@ export default function TransactionConfirmationModal({
   content,
   tokenAddToMetaMask,
   showTxBanner,
+  startedTime,
 }: ConfirmationModalProps) {
   const { chainId } = useActiveWeb3React()
 
@@ -344,7 +313,7 @@ export default function TransactionConfirmationModal({
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
       {attemptingTxn ? (
-        <ConfirmationPendingContent onDismiss={onDismiss} pendingText={pendingText} />
+        <ConfirmationPendingContent onDismiss={onDismiss} pendingText={pendingText} startedTime={startedTime} />
       ) : hash ? (
         <TransactionSubmittedContent
           showTxBanner={showTxBanner}

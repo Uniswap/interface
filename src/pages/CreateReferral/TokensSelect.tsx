@@ -1,4 +1,4 @@
-import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
+import { Currency } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import React, { useState } from 'react'
 import { ChevronDown, X } from 'react-feather'
@@ -8,7 +8,7 @@ import styled from 'styled-components'
 import CurrencyLogo from 'components/CurrencyLogo'
 import Modal from 'components/Modal'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
-import { nativeOnChain } from 'constants/tokens'
+import { NativeCurrencies } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
 
 const TokensSelectWrapper = styled.div`
@@ -48,7 +48,7 @@ export default function TokensSelect({
       {currency ? (
         <>
           <CurrencyLogo currency={currency || undefined} size={'20px'} style={{ marginRight: '8px' }} />
-          {currency.isNative ? nativeOnChain(chainId as ChainId).symbol : currency.symbol}
+          {currency.isNative ? NativeCurrencies[chainId].symbol : currency.symbol}
         </>
       ) : (
         <Text fontSize={15}>

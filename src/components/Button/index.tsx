@@ -1,12 +1,10 @@
 import { darken, rgba } from 'polished'
 import React from 'react'
-import { ChevronDown, ChevronUp } from 'react-feather'
+import { ChevronDown } from 'react-feather'
 import { ButtonProps, Button as RebassButton } from 'rebass/styled-components'
 import styled from 'styled-components'
 
-import useTheme from 'hooks/useTheme'
-
-import { RowBetween } from '../Row'
+import { RowBetween } from 'components/Row'
 
 const Base = styled(RebassButton)<{
   padding?: string
@@ -155,28 +153,6 @@ export const ButtonSecondary = styled(Base)`
   }
 `
 
-export const ButtonPink = styled(Base)`
-  background-color: ${({ theme }) => theme.primary};
-  color: white;
-
-  &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.primary)};
-    background-color: ${({ theme }) => darken(0.05, theme.primary)};
-  }
-  &:hover {
-    background-color: ${({ theme }) => darken(0.05, theme.primary)};
-  }
-  &:active {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.primary)};
-    background-color: ${({ theme }) => darken(0.1, theme.primary)};
-  }
-  &:disabled {
-    background-color: ${({ theme }) => theme.primary};
-    opacity: 50%;
-    cursor: auto;
-  }
-`
-
 export const ButtonOutlined = styled(Base)`
   border: 1px solid ${({ theme }) => theme.subText};
   background-color: transparent;
@@ -211,26 +187,6 @@ export const ButtonEmpty = styled(Base)`
   &:disabled {
     opacity: 50%;
     cursor: not-allowed;
-  }
-`
-
-export const ButtonWhite = styled(Base)`
-  border: 1px solid #edeef2;
-  background-color: ${({ theme }) => theme.bg1};
-  color: black;
-
-  &:focus {
-    box-shadow: 0 0 0 1pt ${darken(0.05, '#edeef2')};
-  }
-  &:hover {
-    box-shadow: 0 0 0 1pt ${darken(0.1, '#edeef2')};
-  }
-  &:active {
-    box-shadow: 0 0 0 1pt ${darken(0.1, '#edeef2')};
-  }
-  &:disabled {
-    opacity: 50%;
-    cursor: auto;
   }
 `
 
@@ -287,46 +243,6 @@ export function ButtonError({ error, ...rest }: { error?: boolean } & ButtonProp
   }
 }
 
-export const StyledButtonDropdown = styled(Base)`
-  background-color: ${({ theme }) => theme.bg3};
-  color: ${({ theme }) => theme.primary};
-  border-radius: 4px;
-  border: none;
-  font-size: 12px;
-
-  &:focus {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
-  }
-  &:hover {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
-  }
-  &:active {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
-  }
-  &:disabled {
-    opacity: 50%;
-    cursor: auto;
-  }
-`
-
-export function ButtonDropdown({
-  expanded = true,
-  disabled = false,
-  children,
-  ...rest
-}: { expanded: boolean; disabled?: boolean; children?: React.ReactNode } & ButtonProps) {
-  const theme = useTheme()
-
-  return (
-    <StyledButtonDropdown {...rest} disabled={disabled}>
-      <RowBetween>
-        <div style={{ display: 'flex', alignItems: 'center' }}>{children}</div>
-        {expanded ? <ChevronUp size="18" color={theme.text} /> : <ChevronDown size="18" color="white" />}
-      </RowBetween>
-    </StyledButtonDropdown>
-  )
-}
-
 export function ButtonDropdownLight({
   disabled = false,
   children,
@@ -340,12 +256,4 @@ export function ButtonDropdownLight({
       </RowBetween>
     </ButtonOutlined>
   )
-}
-
-export function ButtonRadio({ active, ...rest }: { active?: boolean } & ButtonProps) {
-  if (!active) {
-    return <ButtonWhite {...rest} />
-  } else {
-    return <ButtonPrimary {...rest} />
-  }
 }

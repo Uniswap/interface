@@ -1,7 +1,8 @@
 import { createReducer } from '@reduxjs/toolkit'
 
+import { findTx } from 'utils'
+
 import {
-  SerializableTransactionReceipt,
   addTransaction,
   checkedSubgraph,
   checkedTransaction,
@@ -10,35 +11,15 @@ import {
   removeTx,
   replaceTx,
 } from './actions'
+import { GroupedTxsByHash } from './type'
 
 const now = () => new Date().getTime()
 
-export interface TransactionDetails {
-  hash: string
-  approval?: { tokenAddress: string; spender: string }
-  type?: string
-  summary?: string
-  claim?: { recipient: string }
-  receipt?: SerializableTransactionReceipt
-  lastCheckedBlockNumber?: number
-  addedTime: number
-  confirmedTime?: number
-  from: string
-  to?: string
-  data?: string
-  nonce?: number
-  sentAtBlock?: number
-  arbitrary: any // To store anything arbitrary, so it has any type
-  needCheckSubgraph?: boolean
+interface TransactionState {
+  [chainId: number]: GroupedTxsByHash | undefined
 }
 
-export interface TransactionState {
-  [chainId: number]: {
-    [txHash: string]: TransactionDetails
-  }
-}
-
-export const initialState: TransactionState = {}
+const initialState: TransactionState = {}
 
 export default createReducer(initialState, builder =>
   builder
@@ -46,27 +27,28 @@ export default createReducer(initialState, builder =>
       addTransaction,
       (
         transactions,
-        { payload: { sentAtBlock, to, nonce, data, chainId, from, hash, approval, type, summary, claim, arbitrary } },
+        {
+          payload: {
+            sentAtBlock,
+            to,
+            nonce,
+            data,
+            chainId,
+            from,
+            hash,
+            approval,
+            type,
+            summary,
+            arbitrary,
+            firstTxHash,
+          },
+        },
       ) => {
-        if (transactions[chainId]?.[hash]) {
-          throw Error('Attempted to add existing transaction.')
-        }
-        const txs = transactions[chainId] ?? {}
-        txs[hash] = {
-          sentAtBlock,
-          to,
-          nonce,
-          data,
-          hash,
-          approval,
-          type,
-          summary,
-          claim,
-          arbitrary,
-          from,
-          addedTime: now(),
-        }
-        transactions[chainId] = txs
+        const chainTxs = transactions[chainId] ?? {}
+        const txs = (firstTxHash && chainTxs[firstTxHash]) || []
+        txs.push({ sentAtBlock, to, nonce, data, hash, approval, type, summary, arbitrary, from, addedTime: now() })
+        chainTxs[txs[0].hash] = txs
+        transactions[chainId] = chainTxs
       },
     )
     .addCase(clearAllTransactions, (transactions, { payload: { chainId } }) => {
@@ -74,42 +56,51 @@ export default createReducer(initialState, builder =>
       transactions[chainId] = {}
     })
     .addCase(checkedTransaction, (transactions, { payload: { chainId, hash, blockNumber } }) => {
-      const tx = transactions[chainId]?.[hash]
-      if (!tx) {
-        return
-      }
-      if (!tx.lastCheckedBlockNumber) {
-        tx.lastCheckedBlockNumber = blockNumber
-      } else {
-        tx.lastCheckedBlockNumber = Math.max(blockNumber, tx.lastCheckedBlockNumber)
-      }
+      const tx = findTx(transactions[chainId], hash)
+      if (!tx) return
+      if (!tx.lastCheckedBlockNumber) tx.lastCheckedBlockNumber = blockNumber
+      else tx.lastCheckedBlockNumber = Math.max(blockNumber, tx.lastCheckedBlockNumber)
     })
     .addCase(finalizeTransaction, (transactions, { payload: { hash, chainId, receipt, needCheckSubgraph } }) => {
-      const tx = transactions[chainId]?.[hash]
-      if (!tx) {
-        return
-      }
+      const tx = findTx(transactions[chainId], hash)
+      if (!tx) return
       tx.receipt = receipt
       tx.confirmedTime = now()
       tx.needCheckSubgraph = needCheckSubgraph
     })
     .addCase(checkedSubgraph, (transactions, { payload: { chainId, hash } }) => {
-      const tx = transactions[chainId]?.[hash]
-      if (!tx) {
-        return
-      }
+      const tx = findTx(transactions[chainId], hash)
+      if (!tx) return
       tx.needCheckSubgraph = false
     })
     .addCase(replaceTx, (transactions, { payload: { chainId, oldHash, newHash } }) => {
-      const txs = transactions[chainId] ?? {}
-      txs[newHash] = {
-        ...txs[oldHash],
-        hash: newHash,
+      const chainTxs = transactions[chainId] ?? {}
+      const txGroup = chainTxs[oldHash] || Object.values(chainTxs).find(txs => txs?.some(tx => tx?.hash === oldHash))
+      if (!txGroup) return
+      const txIndex = txGroup.findIndex(tx => tx?.hash === oldHash)
+      if (txIndex < 0) return
+      txGroup[txIndex].hash = newHash
+      if (chainTxs[oldHash]) {
+        chainTxs[newHash] = txGroup
+        delete chainTxs[oldHash]
       }
-      delete txs[oldHash]
-      transactions[chainId] = txs
+      transactions[chainId] = chainTxs
     })
     .addCase(removeTx, (transactions, { payload: { chainId, hash } }) => {
-      delete transactions[chainId]?.[hash]
+      const chainTxs = transactions[chainId] ?? {}
+      if (chainTxs[hash]) {
+        delete chainTxs[hash]
+      } else {
+        const txGroup = Object.values(chainTxs).find(txs => txs?.some(tx => tx?.hash === hash))
+        if (!txGroup) return
+        if (txGroup.length === 1) {
+          delete transactions[chainId]?.[hash]
+        } else {
+          const txIndex = txGroup.findIndex(tx => tx?.hash === hash)
+          if (txIndex < 0) return
+          txGroup.splice(txIndex, 1)
+        }
+      }
+      transactions[chainId] = chainTxs
     }),
 )

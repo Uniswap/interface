@@ -1,7 +1,7 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import Axios from 'axios'
 
-const SUGGEST_PAIR_API = process.env.REACT_APP_TYPE_AND_SWAP_URL
+import { TYPE_AND_SWAP_URL } from 'constants/env'
 
 const formatData = (obj: any) => {
   Object.keys(obj).forEach(key => {
@@ -28,7 +28,7 @@ export function reqGetSuggestionPair(
   wallet: string | null | undefined,
   query: string,
 ): Promise<{ favoritePairs: SuggestionPairData[]; recommendedPairs: SuggestionPairData[]; amount: string }> {
-  return Axios.get(`${SUGGEST_PAIR_API}/v1/suggested-pairs`, { params: formatData({ chainId, query, wallet }) }).then(
+  return Axios.get(`${TYPE_AND_SWAP_URL}/v1/suggested-pairs`, { params: formatData({ chainId, query, wallet }) }).then(
     ({ data }) => data.data,
   )
 }
@@ -38,7 +38,7 @@ export function reqRemoveFavoritePair(
   wallet: string | null | undefined,
   chainId: ChainId | undefined,
 ): Promise<any> {
-  return Axios.delete(`${SUGGEST_PAIR_API}/v1/favorite-pairs`, {
+  return Axios.delete(`${TYPE_AND_SWAP_URL}/v1/favorite-pairs`, {
     data: { wallet, chainId: chainId + '', tokenIn: item.tokenIn, tokenOut: item.tokenOut },
   })
 }
@@ -48,7 +48,7 @@ export function reqAddFavoritePair(
   wallet: string | null | undefined,
   chainId: ChainId | undefined,
 ): Promise<any> {
-  return Axios.post(`${SUGGEST_PAIR_API}/v1/favorite-pairs`, {
+  return Axios.post(`${TYPE_AND_SWAP_URL}/v1/favorite-pairs`, {
     wallet,
     chainId: chainId + '',
     tokenIn: item.tokenIn,

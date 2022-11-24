@@ -1,5 +1,4 @@
 import { rgba } from 'polished'
-import { MoreHorizontal } from 'react-feather'
 import { Flex } from 'rebass'
 import styled from 'styled-components'
 
@@ -43,37 +42,6 @@ export const TableRow = styled.div<{ isShowExpandedPools?: boolean; isShowBorder
   }
 `
 
-export const GridItem = styled.div<{ noBorder?: boolean }>`
-  margin-top: 8px;
-  margin-bottom: 8px;
-  border-bottom: ${({ theme, noBorder }) => (noBorder ? 'none' : `1px dashed ${theme.border}`)};
-  padding-bottom: 12px;
-`
-
-export const TradeButtonWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  grid-column: 1 / span 3;
-`
-
-export const TradeButtonText = styled.span`
-  font-size: 14px;
-`
-
-export const DataTitle = styled.div`
-  display: flex;
-  align-items: flex-start;
-  color: ${({ theme }) => theme.text6};
-
-  &:hover {
-    opacity: 0.6;
-  }
-
-  user-select: none;
-  text-transform: uppercase;
-  margin-bottom: 4px;
-`
-
 export const DataText = styled(Flex)`
   color: ${({ theme }) => theme.text7};
   flex-direction: column;
@@ -85,16 +53,8 @@ export const ButtonWrapper = styled(Flex)`
   align-items: center;
 `
 
-export const StyledMoreHorizontal = styled(MoreHorizontal)`
-  color: ${({ theme }) => theme.text9};
-`
-
 export const PoolAddressContainer = styled(Flex)`
   align-items: center;
-`
-
-export const APR = styled(DataText)`
-  color: ${({ theme }) => theme.apr};
 `
 
 export const AddressAndAMPContainer = styled.div`
@@ -207,14 +167,6 @@ export const HeaderAMPAndAddress = styled.div`
   grid-column: 1 / 1;
   grid-row: 2 / 2;
   line-height: 16px;
-`
-
-export const HeaderLogo = styled.div`
-  grid-column: 2 / 2;
-  grid-row: 1 / -1;
-  margin-right: -8px; // Pull over the margin-right of DoubleCurrencyLogo
-  display: flex;
-  align-items: center;
 `
 
 export const TokenRatioContainer = styled.div`

@@ -1,5 +1,3 @@
-import React from 'react'
-
 function Upbit({ width, height }: { width?: number; height?: number }) {
   return (
     <svg width={width || 160} height={height || 38} viewBox="0 0 160 38" fill="none" xmlns="http://www.w3.org/2000/svg">

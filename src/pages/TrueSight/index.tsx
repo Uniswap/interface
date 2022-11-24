@@ -1,6 +1,6 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
@@ -47,7 +47,7 @@ export interface TrueSightSortSettings {
 }
 
 export default function TrueSight({ history }: RouteComponentProps) {
-  const { tab } = useParsedQueryString()
+  const { tab } = useParsedQueryString<{ tab: string }>()
   const [activeTab, setActiveTab] = useState<TrueSightTabs>()
 
   const [filter, setFilter] = useState<TrueSightFilter>({

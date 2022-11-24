@@ -3,18 +3,23 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 import EthereumLogo from 'assets/images/ethereum-logo.png'
 import Mainnet from 'assets/networks/mainnet-network.svg'
 import { KS_SETTING_API } from 'constants/env'
+import { EVMNetworkInfo } from 'constants/networks/type'
 import { createClient } from 'utils/client'
-
-import { NetworkInfo } from '../type'
 
 const EMPTY = ''
 const NOT_SUPPORT = null
 
-const ropstenInfo: NetworkInfo = {
+const ropstenInfo: EVMNetworkInfo = {
   chainId: ChainId.ROPSTEN,
   route: 'ropsten',
+  ksSettingRoute: 'ropsten',
+  priceRoute: 'ropsten',
+  poolFarmRoute: EMPTY,
   name: 'Ropsten',
   icon: Mainnet,
+  iconDark: NOT_SUPPORT,
+  iconSelected: NOT_SUPPORT,
+  iconDarkSelected: NOT_SUPPORT,
   classicClient: createClient('https://api.thegraph.com/subgraphs/name/viet-nv/kyberswap-classic-ropsten'),
   elasticClient: createClient('https://api.thegraph.com/subgraphs/name/viet-nv/promm-ropsten'),
   blockClient: createClient('https://api.thegraph.com/subgraphs/name/edwardevans094/ropsten-blocks'),
@@ -23,14 +28,15 @@ const ropstenInfo: NetworkInfo = {
   tokenListUrl: `${KS_SETTING_API}/v1/tokens?chainIds=${ChainId.ROPSTEN}&isWhitelisted=${true}`,
   bridgeURL: EMPTY,
   nativeToken: {
-    symbol: 'ETH',
-    name: 'ETH (Wrapped)',
-    address: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
+    symbol: 'rETH',
+    name: 'RopstenETH',
     logo: EthereumLogo,
     decimal: 18,
+    minForGas: 10 ** 16,
   },
   rpcUrl: 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
   routerUri: EMPTY,
+  multicall: '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',
   classic: {
     static: {
       zap: '0x548E585B17908D0387d16F9BFf46c4EDe7ca7746',
@@ -58,12 +64,14 @@ const ropstenInfo: NetworkInfo = {
     initCodeHash: '0xc597aba1bb02db42ba24a8878837965718c032f8b46be94a6e46452a9f89ca01',
     quoter: '0x7BA7cC55D3Ef5226b421bb3fD689251855B4cd21',
     routers: '0x1A46dCaC1d91F1731574BEfAEDaC4E0392726e35',
+    farms: [],
   },
   averageBlockTimeInSeconds: 13.13,
-  coingeckoNetworkId: EMPTY,
-  coingeckoNativeTokenId: EMPTY,
+  coingeckoNetworkId: 'ethereum',
+  coingeckoNativeTokenId: 'ethereum',
   deBankSlug: EMPTY,
-  internalRoute: EMPTY,
+  trueSightId: NOT_SUPPORT,
+  dexToCompare: NOT_SUPPORT,
 }
 
 export default ropstenInfo

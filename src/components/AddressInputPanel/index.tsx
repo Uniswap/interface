@@ -1,16 +1,15 @@
 import { Trans, t } from '@lingui/macro'
-import React, { ChangeEvent, useCallback } from 'react'
+import { ChangeEvent, useCallback } from 'react'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
 import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
+import { AutoColumn } from 'components/Column'
 import { useActiveWeb3React } from 'hooks'
+import useENS from 'hooks/useENS'
 import useTheme from 'hooks/useTheme'
 import { ExternalLink } from 'theme'
-import { getEtherscanLink, getEtherscanLinkText } from 'utils'
-
-import useENS from '../../hooks/useENS'
-import { AutoColumn } from '../Column'
+import { getEtherscanLink } from 'utils'
 
 const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -83,7 +82,7 @@ export default function AddressInputPanel({
   // triggers whenever the typed value changes
   onChange: (value: string | null) => void
 }) {
-  const { chainId } = useActiveWeb3React()
+  const { chainId, networkInfo, isEVM } = useActiveWeb3React()
   const { address, loading, name } = useENS(value)
 
   const handleInput = useCallback(
@@ -97,19 +96,19 @@ export default function AddressInputPanel({
   const theme = useTheme()
 
   const error = Boolean((value || '').length > 0 && !loading && !address)
-
+  if (!isEVM) return null
   return (
     <AutoColumn gap="4px">
       <Flex justifyContent="space-between" alignItems="center" marginTop="4px" color={theme.subText}>
         <Text fontSize="12px" fontWeight="500">
           <Trans>Recipient (Optional)</Trans>
 
-          {address && chainId && (
+          {address && (
             <ExternalLink
               href={getEtherscanLink(chainId, name ?? address, 'address')}
               style={{ fontSize: '12px', marginLeft: '4px' }}
             >
-              ({getEtherscanLinkText(chainId)})
+              ({networkInfo.etherscanName})
             </ExternalLink>
           )}
         </Text>

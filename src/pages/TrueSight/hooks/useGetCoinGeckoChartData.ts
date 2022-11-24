@@ -1,3 +1,4 @@
+import { ChainId } from '@kyberswap/ks-sdk-core'
 import { useMemo, useRef } from 'react'
 import useSWRImmutable from 'swr/immutable'
 
@@ -51,7 +52,7 @@ export default function useGetCoinGeckoChartData(
           controller.current = new AbortController()
           const to = Math.floor(Date.now() / 1000)
           const from = to - (timeframe === TrueSightTimeframe.ONE_DAY ? 24 * 3600 : 24 * 3600 * 7)
-          const chainId = TRUESIGHT_NETWORK_TO_CHAINID[tokenNetwork]
+          const chainId = TRUESIGHT_NETWORK_TO_CHAINID[tokenNetwork] || ChainId.MAINNET
           const coinGeckoNetworkId = NETWORKS_INFO[chainId].coingeckoNetworkId
           let url = `${COINGECKO_API_URL}/coins/${coinGeckoNetworkId}/contract/${tokenAddress.toLowerCase()}/market_chart/range?vs_currency=usd&from=${from}&to=${to}`
           if (tokenAddress === 'bnb') {

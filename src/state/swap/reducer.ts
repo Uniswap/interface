@@ -7,6 +7,7 @@ import { Aggregator } from 'utils/aggregator'
 import {
   Field,
   chooseToSaveGas,
+  encodedSolana,
   replaceSwapState,
   resetSelectCurrency,
   selectCurrency,
@@ -18,9 +19,10 @@ import {
   switchCurrenciesV2,
   typeInput,
 } from './actions'
+import { SolanaEncode } from './types'
 
 export interface SwapState {
-  readonly independentField: Field
+  readonly independentField: Field // TODO: remove since unused anymore
   readonly typedValue: string
   readonly [Field.INPUT]: {
     readonly currencyId: string | undefined
@@ -34,6 +36,13 @@ export interface SwapState {
   readonly feeConfig: FeeConfig | undefined
   readonly trendingSoonShowed?: boolean
   readonly trade?: Aggregator
+  readonly encodeSolana?: SolanaEncode
+
+  readonly showConfirm: boolean
+  readonly tradeToConfirm: Aggregator | undefined
+  readonly attemptingTxn: boolean
+  readonly swapErrorMessage: string | undefined
+  readonly txHash: string | undefined
 }
 
 const { search } = window.location
@@ -54,6 +63,13 @@ const initialState: SwapState = {
   // Flag to only show animation of trending soon banner 1 time
   trendingSoonShowed: false,
   trade: undefined,
+  encodeSolana: undefined,
+
+  showConfirm: false,
+  tradeToConfirm: undefined,
+  attemptingTxn: false,
+  swapErrorMessage: undefined,
+  txHash: undefined,
 }
 
 export default createReducer<SwapState>(initialState, builder =>
@@ -62,6 +78,7 @@ export default createReducer<SwapState>(initialState, builder =>
       replaceSwapState,
       (state, { payload: { typedValue, recipient, field, inputCurrencyId, outputCurrencyId, feeConfig } }) => {
         return {
+          ...state,
           [Field.INPUT]: {
             currencyId: inputCurrencyId,
           },
@@ -71,13 +88,16 @@ export default createReducer<SwapState>(initialState, builder =>
           independentField: field,
           typedValue: typedValue || state.typedValue || '1',
           recipient,
-          saveGas: state.saveGas,
           feeConfig,
-          trendingSoonShowed: state.trendingSoonShowed,
-          trade: state.trade,
         }
       },
     )
+    .addCase(encodedSolana, (state, { payload: { encodeSolana } }) => {
+      return {
+        ...state,
+        encodeSolana,
+      }
+    })
     .addCase(selectCurrency, (state, { payload: { currencyId, field } }) => {
       const otherField = field === Field.INPUT ? Field.OUTPUT : Field.INPUT
       if (currencyId === state[otherField].currencyId) {
@@ -142,5 +162,6 @@ export default createReducer<SwapState>(initialState, builder =>
     })
     .addCase(setTrade, (state, { payload: { trade } }) => {
       state.trade = trade
+      state.encodeSolana = undefined
     }),
 )

@@ -1,4 +1,4 @@
-import { ChainId, Currency, Token } from '@kyberswap/ks-sdk-core'
+import { Currency, Token, WETH } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import { rgba } from 'polished'
 import { CSSProperties, memo, useMemo } from 'react'
@@ -7,14 +7,12 @@ import styled, { keyframes } from 'styled-components'
 
 import CurrencyLogo from 'components/CurrencyLogo'
 import DiscoverIcon from 'components/Icons/DiscoverIcon'
-import { NETWORKS_INFO } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import useGetTrendingSoonTokenId from 'pages/TrueSight/hooks/useGetTrendingSoonTokenId'
+import { Field } from 'state/swap/actions'
 import { ExternalLink } from 'theme'
-
-import { Field } from '../../state/swap/actions'
 
 const TrendingSoonTokenBanner = ({
   currencies,
@@ -38,10 +36,7 @@ const TrendingSoonTokenBanner = ({
 
   if (trendingSoonCurrency === undefined) return null
 
-  const currencySymbol =
-    trendingSoonCurrency instanceof Token
-      ? trendingSoonCurrency.symbol
-      : NETWORKS_INFO[chainId || ChainId.MAINNET].nativeToken.name
+  const currencySymbol = trendingSoonCurrency instanceof Token ? trendingSoonCurrency.symbol : WETH[chainId].name
 
   return (
     <Container style={style}>

@@ -1,9 +1,9 @@
-import React, { ReactNode, useCallback, useState } from 'react'
+import { ReactNode, useCallback, useRef, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
-import Popover, { PopoverProps } from '../Popover'
+import Popover, { PopoverProps } from 'components/Popover'
 
 const TooltipContainer = styled.div<{ width?: string; size?: number }>`
   width: ${({ width }) => width || '228px'};
@@ -22,14 +22,17 @@ interface TooltipProps extends Omit<PopoverProps, 'content'> {
   text: string | ReactNode
   width?: string
   size?: number
+  disableTooltip?: boolean
+  onMouseEnter?: React.MouseEventHandler<HTMLDivElement>
+  onMouseLeave?: React.MouseEventHandler<HTMLDivElement>
 }
 
-export default function Tooltip({ text, width, size, ...rest }: TooltipProps) {
+export default function Tooltip({ text, width, size, onMouseEnter, onMouseLeave, ...rest }: TooltipProps) {
   return (
     <Popover
       content={
         text ? (
-          <TooltipContainer width={width} size={size}>
+          <TooltipContainer width={width} size={size} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
             {text}
           </TooltipContainer>
         ) : null
@@ -39,13 +42,24 @@ export default function Tooltip({ text, width, size, ...rest }: TooltipProps) {
   )
 }
 
-export function MouseoverTooltip({ children, ...rest }: Omit<TooltipProps, 'show'>) {
+export function MouseoverTooltip({ children, disableTooltip, ...rest }: Omit<TooltipProps, 'show'>) {
   const [show, setShow] = useState(false)
-  const open = useCallback(() => !!rest.text && setShow(true), [setShow, rest.text])
-  const close = useCallback(() => setShow(false), [setShow])
+  const [closeTimeout, setCloseTimeout] = useState<NodeJS.Timeout | null>(null)
+  const ref = useRef(null)
+  const open = useCallback(() => {
+    if (!!rest.text) {
+      setShow(true)
+      if (closeTimeout) {
+        clearTimeout(closeTimeout)
+        setCloseTimeout(null)
+      }
+    }
+  }, [rest.text, closeTimeout])
+  const close = useCallback(() => setCloseTimeout(setTimeout(() => setShow(false), 50)), [])
+  if (disableTooltip) return <>{children}</>
   return (
-    <Tooltip {...rest} show={show}>
-      <Flex onMouseEnter={open} onMouseLeave={close} alignItems="center">
+    <Tooltip {...rest} show={show} onMouseEnter={open} onMouseLeave={close}>
+      <Flex ref={ref} onMouseOver={open} onMouseLeave={close} alignItems="center">
         {children}
       </Flex>
     </Tooltip>

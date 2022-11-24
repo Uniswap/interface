@@ -1,9 +1,10 @@
 import { JSBI, Pair } from '@kyberswap/ks-sdk-classic'
-import { ChainId, Token, TokenAmount } from '@kyberswap/ks-sdk-core'
+import { Token, TokenAmount } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import { rgba } from 'polished'
 import { useMemo, useState } from 'react'
 import { Info } from 'react-feather'
+import { Redirect } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 import styled, { keyframes } from 'styled-components'
@@ -20,7 +21,7 @@ import { AutoRow } from 'components/Row'
 import Search from 'components/Search'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import Tutorial, { TutorialType } from 'components/Tutorial'
-import { DMM_ANALYTICS_URL, OUTSIDE_FAIRLAUNCH_ADDRESSES } from 'constants/index'
+import { APP_PATHS, DMM_ANALYTICS_URL, OUTSIDE_FAIRLAUNCH_ADDRESSES } from 'constants/index'
 import { VERSION } from 'constants/v2'
 import { usePairByAddress, usePairsByAddress } from 'data/Reserves'
 import { useActiveWeb3React } from 'hooks'
@@ -28,16 +29,16 @@ import { useToken } from 'hooks/Tokens'
 import useDebounce from 'hooks/useDebounce'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useParsedQueryString from 'hooks/useParsedQueryString'
+import { useSyncNetworkParamWithStore } from 'hooks/useSyncNetworkParamWithStore'
 import useTheme from 'hooks/useTheme'
 import { useWindowSize } from 'hooks/useWindowSize'
+import ProAmmPool from 'pages/ProAmmPool'
 import { useFarmsData, useTotalApr } from 'state/farms/hooks'
 import { Farm } from 'state/farms/types'
 import { UserLiquidityPosition, useUserLiquidityPositions } from 'state/pools/hooks'
 import { useLiquidityPositionTokenPairs, useToV2LiquidityTokens } from 'state/user/hooks'
 import { useTokenBalancesWithLoadingIndicator } from 'state/wallet/hooks'
-
-import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
-import ProAmmPool from '../ProAmmPool'
+import { ExternalLink, StyledInternalLink, TYPE } from 'theme'
 
 export const Tab = styled.div<{ active: boolean }>`
   padding: 4px 0;
@@ -163,8 +164,9 @@ export const PreloadCard = styled.div<{ width?: string; height?: string }>`
   }
 `
 export default function PoolCombination() {
-  const qs = useParsedQueryString()
-  const tab = (qs.tab as string) || VERSION.ELASTIC
+  const { tab = VERSION.ELASTIC } = useParsedQueryString<{
+    tab: string
+  }>()
 
   return (
     <>
@@ -181,18 +183,20 @@ export default function PoolCombination() {
 
 function Pool() {
   const theme = useTheme()
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId, isEVM } = useActiveWeb3React()
   const { width } = useWindowSize()
 
   const under768 = width && width <= 768
 
   const liquidityPositionTokenPairs = useLiquidityPositionTokenPairs()
-  const { loading: loadingUserLiquidityPositions, data: userLiquidityPositions } = useUserLiquidityPositions(account)
+  const { loading: loadingUserLiquidityPositions, data: userLiquidityPositions } = useUserLiquidityPositions()
 
   const { data: farms, loading: farmLoading } = useFarmsData()
 
   const [searchText, setSearchText] = useState('')
   const debouncedSearchText = useDebounce(searchText.trim().toLowerCase(), 300)
+
+  useSyncNetworkParamWithStore()
 
   const userFarms = useMemo(
     () =>
@@ -214,7 +218,7 @@ function Pool() {
   )
 
   const tokens = useMemo(() => liquidityTokens.flat(), [liquidityTokens])
-  const [v2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(account ?? undefined, tokens)
+  const [v2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(tokens)
 
   const liquidityTokensWithBalances = useMemo(
     () =>
@@ -277,6 +281,7 @@ function Pool() {
 
   const upToSmall = useMedia('(max-width: 768px)')
 
+  if (!isEVM) return <Redirect to="/" />
   return (
     <>
       <PageWrapper style={{ padding: 0, marginTop: '24px' }}>
@@ -286,7 +291,7 @@ function Pool() {
               <InstructionText>
                 <Trans>Here you can view all your liquidity and staked balances in the Classic Pools</Trans>
                 {!upToSmall && (
-                  <ExternalLink href={`${DMM_ANALYTICS_URL[chainId as ChainId]}/account/${account}`}>
+                  <ExternalLink href={`${DMM_ANALYTICS_URL[chainId]}/account/${account}`}>
                     <Flex alignItems="center">
                       <Wallet size={16} />
                       <Text fontSize="14px" marginLeft="4px">
@@ -328,7 +333,7 @@ function Pool() {
 
                 {upToSmall && (
                   <Flex sx={{ gap: '12px' }}>
-                    <ExternalLink href={`${DMM_ANALYTICS_URL[chainId as ChainId]}/account/${account}`}>
+                    <ExternalLink href={`${DMM_ANALYTICS_URL[chainId]}/account/${account}`}>
                       <Flex
                         sx={{ borderRadius: '50%' }}
                         width="36px"
@@ -363,7 +368,7 @@ function Pool() {
 
                 <ButtonPrimary
                   as={StyledInternalLink}
-                  to="/find"
+                  to={APP_PATHS.FIND_POOL}
                   style={{
                     color: theme.textReverse,
                     padding: '10px 12px',
@@ -433,7 +438,7 @@ function Pool() {
                   </PositionCardGrid>
                   <Text fontSize={16} color={theme.subText} textAlign="center" marginTop="1rem">
                     {t`Don't see a pool you joined?`}{' '}
-                    <StyledInternalLink id="import-pool-link" to={'/find'}>
+                    <StyledInternalLink id="import-pool-link" to={APP_PATHS.FIND_POOL}>
                       <Trans>Import it.</Trans>
                     </StyledInternalLink>
                   </Text>
@@ -448,7 +453,7 @@ function Pool() {
                     </Trans>
                     <br />
                     {t`Don't see a pool you joined?`}{' '}
-                    <StyledInternalLink id="import-pool-link" to={'/find'}>
+                    <StyledInternalLink id="import-pool-link" to={APP_PATHS.FIND_POOL}>
                       <Trans>Import it.</Trans>
                     </StyledInternalLink>
                   </Text>
@@ -477,7 +482,7 @@ function Pool() {
                 </PositionCardGrid>
                 <Text fontSize={16} color={theme.subText} textAlign="center" marginTop="1rem">
                   {t`Don't see a pool you joined?`}{' '}
-                  <StyledInternalLink id="import-pool-link" to={'/find'}>
+                  <StyledInternalLink id="import-pool-link" to={APP_PATHS.FIND_POOL}>
                     <Trans>Import it.</Trans>
                   </StyledInternalLink>
                 </Text>

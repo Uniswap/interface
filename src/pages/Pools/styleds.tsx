@@ -1,5 +1,4 @@
 import { lighten, rgba } from 'polished'
-import { Flex } from 'rebass'
 import styled from 'styled-components'
 
 import { ButtonEmpty } from 'components/Button'
@@ -27,11 +26,6 @@ export const ToolbarWrapper = styled.div`
 export const CurrencyWrapper = styled.div`
   display: flex;
   align-items: center;
-`
-
-export const SearchWrapper = styled(Flex)`
-  align-items: center;
-  gap: 12px;
 `
 
 export const SelectPairInstructionWrapper = styled.div`

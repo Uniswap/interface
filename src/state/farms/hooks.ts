@@ -1,7 +1,7 @@
 import { Interface } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
-import { ChainId, CurrencyAmount, Fraction, Token } from '@kyberswap/ks-sdk-core'
+import { CurrencyAmount, Fraction, Token } from '@kyberswap/ks-sdk-core'
 import { ethers } from 'ethers'
 import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
@@ -19,8 +19,8 @@ import {
   RESERVE_USD_DECIMALS,
   ZERO_ADDRESS,
 } from 'constants/index'
-import { NETWORKS_INFO } from 'constants/networks'
-import { nativeOnChain } from 'constants/tokens'
+import { EVMNetworkInfo } from 'constants/networks/type'
+import { NativeCurrencies } from 'constants/tokens'
 import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
 import { useAllTokens } from 'hooks/Tokens'
@@ -40,21 +40,21 @@ import { getTradingFeeAPR, parseSubgraphPoolData, useFarmApr } from 'utils/dmm'
 import { setFarmsData, setLoading, setYieldPoolsError } from './actions'
 
 export const useRewardTokens = () => {
-  const { chainId } = useActiveWeb3React()
+  const { chainId, isEVM, networkInfo } = useActiveWeb3React()
   const rewardTokensMulticallResult = useMultipleContractSingleData(
-    NETWORKS_INFO[chainId || ChainId.MAINNET].classic.fairlaunch,
+    isEVM ? (networkInfo as EVMNetworkInfo).classic.fairlaunch : [],
     new Interface(FAIRLAUNCH_ABI),
     'getRewardTokens',
   )
 
   const rewardTokensV2MulticallResult = useMultipleContractSingleData(
-    NETWORKS_INFO[chainId || ChainId.MAINNET].classic.fairlaunchV2,
+    isEVM ? (networkInfo as EVMNetworkInfo).classic.fairlaunchV2 : [],
     new Interface(FAIRLAUNCH_V2_ABI),
     'getRewardTokens',
   )
 
   const defaultRewards = useMemo(() => {
-    return DEFAULT_REWARDS[chainId as ChainId] || []
+    return DEFAULT_REWARDS[chainId] || []
   }, [chainId])
 
   return useMemo(() => {
@@ -88,13 +88,12 @@ export const useRewardTokenPrices = (tokens: (Token | undefined | null)[], versi
 
 export const useFarmsData = (isIncludeOutsideFarms = true) => {
   const dispatch = useAppDispatch()
-  const { chainId, account } = useActiveWeb3React()
+  const { chainId, account, isEVM, networkInfo } = useActiveWeb3React()
   const fairLaunchContracts = useFairLaunchContracts()
   const ethPrice = useETHPrice()
   const allTokens = useAllTokens()
   const blockNumber = useBlockNumber()
 
-  const apolloClient = NETWORKS_INFO[chainId || ChainId.MAINNET].classicClient
   const farmsData = useSelector((state: AppState) => state.farms.data)
   const loading = useSelector((state: AppState) => state.farms.loading)
   const error = useSelector((state: AppState) => state.farms.error)
@@ -111,16 +110,19 @@ export const useFarmsData = (isIncludeOutsideFarms = true) => {
   }, [chainId])
 
   useEffect(() => {
+    if (!isEVM) return
+    const apolloClient = (networkInfo as EVMNetworkInfo).classicClient
     let cancelled = false
     const currentTimestamp = Math.round(Date.now() / 1000)
 
     async function getListFarmsForContract(contract: Contract): Promise<Farm[]> {
+      if (!isEVM) return []
       const rewardTokenAddresses: string[] = await contract?.getRewardTokens()
       const poolLength = await contract?.poolLength()
 
       const pids = [...Array(BigNumber.from(poolLength).toNumber()).keys()]
 
-      const isV2 = NETWORKS_INFO[chainId || ChainId.MAINNET].classic.fairlaunchV2.includes(contract.address)
+      const isV2 = (networkInfo as EVMNetworkInfo).classic.fairlaunchV2.includes(contract.address)
       const poolInfos = await Promise.all(
         pids.map(async (pid: number) => {
           const poolInfo = await contract?.getPoolInfo(pid)
@@ -164,11 +166,11 @@ export const useFarmsData = (isIncludeOutsideFarms = true) => {
 
       const poolAddresses = poolInfos.map(poolInfo => poolInfo.stakeToken.toLowerCase())
 
-      const farmsData = await getBulkPoolDataFromPoolList(poolAddresses, apolloClient, ethPrice.currentPrice, chainId)
+      const farmsData = await getBulkPoolDataFromPoolList(poolAddresses, apolloClient, chainId, ethPrice.currentPrice)
 
       const rewardTokens = rewardTokenAddresses
         .map(address =>
-          address.toLowerCase() === ZERO_ADDRESS.toLowerCase() ? nativeOnChain(chainId as ChainId) : allTokens[address],
+          address.toLowerCase() === ZERO_ADDRESS.toLowerCase() ? NativeCurrencies[chainId] : allTokens[address],
         )
         .filter(Boolean)
 
@@ -285,7 +287,6 @@ export const useFarmsData = (isIncludeOutsideFarms = true) => {
       cancelled = true
     }
   }, [
-    apolloClient,
     dispatch,
     ethPrice.currentPrice,
     chainId,
@@ -294,6 +295,8 @@ export const useFarmsData = (isIncludeOutsideFarms = true) => {
     blockNumber,
     allTokens,
     isIncludeOutsideFarms,
+    isEVM,
+    networkInfo,
   ])
 
   return useMemo(() => ({ loading, error, data: farmsData }), [error, farmsData, loading])
@@ -325,12 +328,13 @@ export const useActiveAndUniqueFarmsData = (): { loading: boolean; error: string
 }
 
 export const useYieldHistories = (isModalOpen: boolean) => {
-  const { chainId, account } = useActiveWeb3React()
+  const { chainId, account, isEVM, networkInfo } = useActiveWeb3React()
   const [histories, setHistories] = useState<FarmHistory[]>([])
   const [loading, setLoading] = useState(false)
-  const apolloClient = NETWORKS_INFO[chainId || ChainId.MAINNET].classicClient
 
   useEffect(() => {
+    if (!isEVM) return
+    const apolloClient = (networkInfo as EVMNetworkInfo).classicClient
     async function fetchFarmHistories() {
       if (!account || !isModalOpen) {
         return
@@ -433,13 +437,14 @@ export const useYieldHistories = (isModalOpen: boolean) => {
     }
 
     fetchFarmHistories()
-  }, [chainId, account, isModalOpen, apolloClient])
+  }, [chainId, account, isModalOpen, isEVM, networkInfo])
 
   return { loading, data: histories }
 }
 
 export const useTotalApr = (farm: Farm) => {
-  const poolAddressChecksum = isAddressString(farm.id)
+  const { chainId } = useActiveWeb3React()
+  const poolAddressChecksum = isAddressString(chainId, farm.id)
   const { decimals: lpTokenDecimals } = useTokenBalance(poolAddressChecksum)
   // Ratio in % of LP tokens that are staked in the MC, vs the total number in circulation
   const lpTokenRatio = new Fraction(
@@ -465,7 +470,7 @@ export const useTotalApr = (farm: Farm) => {
 export const useUserStakedBalance = (poolData: SubgraphPoolData) => {
   const { chainId } = useActiveWeb3React()
 
-  const { currency0, currency1 } = parseSubgraphPoolData(poolData, chainId as ChainId)
+  const { currency0, currency1 } = parseSubgraphPoolData(poolData, chainId)
 
   const farmData = useFarmsData(false)
 

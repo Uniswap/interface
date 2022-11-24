@@ -20,7 +20,7 @@ const slice = createSlice({
       if (!state.allDexes) state.allDexes = {}
       state.allDexes[chainId] = dexes
     },
-    updateExcludeDex(state, { payload: { chainId, dexes } }: { payload: { chainId: ChainId; dexes: string[] } }) {
+    updateExcludeDex(state, { payload: { chainId, dexes } }: { payload: { chainId: ChainId; dexes: Dex['name'][] } }) {
       if (!state.excludeDexes) state.excludeDexes = {}
       state.excludeDexes[chainId] = dexes
     },

@@ -2,7 +2,7 @@ import CID from 'cids'
 import { getCodec, rmPrefix } from 'multicodec'
 import { decode, toB58String } from 'multihashes'
 
-export function hexToUint8Array(hex: string): Uint8Array {
+function hexToUint8Array(hex: string): Uint8Array {
   hex = hex.startsWith('0x') ? hex.substr(2) : hex
   if (hex.length % 2 !== 0) throw new Error('hex must have length that is multiple of 2')
   const arr = new Uint8Array(hex.length / 2)

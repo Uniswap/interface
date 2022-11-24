@@ -21,7 +21,7 @@ const useUpToSmall = () => {
   return useMedia(`(max-width: ${MEDIA_WIDTHS.upToSmall}px)`)
 }
 
-export const BtnLight = styled(ButtonLight)`
+const BtnLight = styled(ButtonLight)`
   padding: 8px 12px;
   width: fit-content;
 
@@ -64,7 +64,7 @@ const generateButtonOutlinedCSS = (theme: DefaultTheme, colorScheme?: ButtonColo
   `
 }
 
-export const ButtonOutlined = styled(ButtonLight)<{ colorScheme?: ButtonColorScheme }>`
+const ButtonOutlined = styled(ButtonLight)<{ colorScheme?: ButtonColorScheme }>`
   padding: 8px 12px;
   width: fit-content;
   white-space: nowrap;

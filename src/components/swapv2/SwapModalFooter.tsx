@@ -1,25 +1,29 @@
 import { Currency, TradeType } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import { rgba } from 'polished'
-import React, { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { AlertTriangle, Repeat } from 'react-feather'
 import { Text } from 'rebass'
 
+import { ButtonError } from 'components/Button'
+import { GreyCard } from 'components/Card'
+import { AutoColumn } from 'components/Column'
 import InfoHelper from 'components/InfoHelper'
+import { AutoRow, RowBetween, RowFixed } from 'components/Row'
+import { Dots } from 'components/swapv2/styleds'
 import { useActiveWeb3React } from 'hooks'
 import { FeeConfig } from 'hooks/useSwapV2Callback'
 import useTheme from 'hooks/useTheme'
+import { Field } from 'state/swap/actions'
+import { useEncodeSolana } from 'state/swap/hooks'
+import { TYPE } from 'theme'
 import { formattedNum } from 'utils'
 import { Aggregator } from 'utils/aggregator'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 import { getFormattedFeeAmountUsd } from 'utils/fee'
+import { computeSlippageAdjustedAmounts, formatExecutionPrice } from 'utils/prices'
 
-import { Field } from '../../state/swap/actions'
-import { TYPE } from '../../theme'
-import { computeSlippageAdjustedAmounts, formatExecutionPrice } from '../../utils/prices'
-import { ButtonError } from '../Button'
-import { AutoColumn } from '../Column'
-import { AutoRow, RowBetween, RowFixed } from '../Row'
+import HurryUpBanner from './HurryUpBanner'
 import { StyledBalanceMaxMini, SwapCallbackError } from './styleds'
 
 export default function SwapModalFooter({
@@ -29,6 +33,7 @@ export default function SwapModalFooter({
   swapErrorMessage,
   disabledConfirm,
   feeConfig,
+  startedTime,
 }: {
   trade: Aggregator
   allowedSlippage: number
@@ -36,14 +41,16 @@ export default function SwapModalFooter({
   swapErrorMessage: string | undefined
   disabledConfirm: boolean
   feeConfig: FeeConfig | undefined
+  startedTime: number | undefined
 }) {
-  const { chainId } = useActiveWeb3React()
+  const { chainId, isSolana, isEVM } = useActiveWeb3React()
   const [showInverted, setShowInverted] = useState<boolean>(false)
   const theme = useTheme()
   const slippageAdjustedAmounts = useMemo(
     () => computeSlippageAdjustedAmounts(trade, allowedSlippage),
     [allowedSlippage, trade],
   )
+  const [encodeSolana] = useEncodeSolana()
 
   const nativeInput = useCurrencyConvertedToNative(trade.inputAmount.currency as Currency)
 
@@ -98,18 +105,20 @@ export default function SwapModalFooter({
             </TYPE.black>
           </RowFixed>
         </RowBetween>
-        <RowBetween>
-          <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.subText}>
-              <Trans>Gas Fee</Trans>
-            </TYPE.black>
-            <InfoHelper size={14} text={t`Estimated network fee for your transaction`} />
-          </RowFixed>
+        {isEVM && (
+          <RowBetween>
+            <RowFixed>
+              <TYPE.black fontSize={14} fontWeight={400} color={theme.subText}>
+                <Trans>Gas Fee</Trans>
+              </TYPE.black>
+              <InfoHelper size={14} text={t`Estimated network fee for your transaction`} />
+            </RowFixed>
 
-          <TYPE.black color={theme.text} fontSize={14}>
-            {trade.gasUsd ? formattedNum(trade.gasUsd?.toString(), true) : '--'}
-          </TYPE.black>
-        </RowBetween>
+            <TYPE.black color={theme.text} fontSize={14}>
+              {trade.gasUsd ? formattedNum(trade.gasUsd?.toString(), true) : '--'}
+            </TYPE.black>
+          </RowBetween>
+        )}
 
         <RowBetween>
           <RowFixed>
@@ -170,24 +179,36 @@ export default function SwapModalFooter({
           {veryHighPriceImpact ? <Trans>Price impact is Very High!</Trans> : <Trans>Price impact is High!</Trans>}
         </AutoRow>
       )}
+      <HurryUpBanner startedTime={startedTime} />
       <AutoRow>
-        <ButtonError
-          onClick={onConfirm}
-          disabled={disabledConfirm}
-          style={{
-            marginTop: '24px',
-            ...((highPriceImpact || veryHighPriceImpact) && {
-              border: 'none',
-              background: veryHighPriceImpact ? theme.red : theme.warning,
-              color: theme.text,
-            }),
-          }}
-          id="confirm-swap-or-send"
-        >
-          <Text fontSize={16} fontWeight={500}>
-            {t`Confirm Swap`}
-          </Text>
-        </ButtonError>
+        {isSolana && !encodeSolana ? (
+          <GreyCard
+            style={{ textAlign: 'center', borderRadius: '999px', padding: '12px', marginTop: '24px' }}
+            id="confirm-swap-or-send"
+          >
+            <Dots>
+              <Trans>Checking accounts</Trans>
+            </Dots>
+          </GreyCard>
+        ) : (
+          <ButtonError
+            onClick={onConfirm}
+            disabled={disabledConfirm}
+            style={{
+              marginTop: '24px',
+              ...((highPriceImpact || veryHighPriceImpact) && {
+                border: 'none',
+                background: veryHighPriceImpact ? theme.red : theme.warning,
+                color: theme.text,
+              }),
+            }}
+            id="confirm-swap-or-send"
+          >
+            <Text fontSize={16} fontWeight={500}>
+              <Trans>Confirm Swap</Trans>
+            </Text>
+          </ButtonError>
+        )}
 
         {swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
       </AutoRow>

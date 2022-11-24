@@ -1,7 +1,7 @@
 import { getAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
 import { rgba } from 'polished'
-import React, { CSSProperties, useRef, useState } from 'react'
+import { CSSProperties, useRef, useState } from 'react'
 import { useHistory } from 'react-router'
 import { useLocation } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
@@ -36,7 +36,7 @@ const ButtonWithOptions = ({
   const containerRef = useRef<HTMLDivElement>(null)
   useOnClickOutside(containerRef, () => setIsShowNetworks(false))
 
-  const { tab } = useParsedQueryString()
+  const { tab } = useParsedQueryString<{ tab: string }>()
   const { mixpanelHandler } = useMixpanel()
 
   const triggerDiscoverSwapInitiated = (platform: string) => {
@@ -90,9 +90,9 @@ const ButtonWithOptions = ({
                     onClick={() => {
                       toggleTrendingSoonTokenDetailModal()
                       history.push(
-                        `/swap?inputCurrency=ETH&outputCurrency=${getAddress(
+                        `/swap/${NETWORKS_INFO[mappedChainId].route}?inputCurrency=ETH&outputCurrency=${getAddress(
                           platforms.get(platform) ?? '',
-                        )}&networkId=${mappedChainId}`,
+                        )}`,
                       )
                       mixpanelHandler(MIXPANEL_TYPE.DISCOVER_SWAP_BUY_NOW_POPUP_CLICKED, {
                         trending_token: tokenData.symbol,
@@ -120,9 +120,9 @@ const ButtonWithOptions = ({
                   key={platform}
                   alignItems="center"
                   as={ExternalLink}
-                  href={`/swap?inputCurrency=ETH&outputCurrency=${getAddress(
+                  href={`/swap/${NETWORKS_INFO[mappedChainId].route}?inputCurrency=ETH&outputCurrency=${getAddress(
                     platforms.get(platform) ?? '',
-                  )}&networkId=${mappedChainId}`}
+                  )}`}
                   onClick={() => {
                     triggerDiscoverSwapInitiated(platform)
                   }}

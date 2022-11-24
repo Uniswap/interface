@@ -4,8 +4,8 @@ import { FeeAmount, Pool, Position } from '@kyberswap/ks-sdk-elastic'
 import { useEffect } from 'react'
 
 import { ZERO_ADDRESS } from 'constants/index'
-import { NETWORKS_INFO } from 'constants/networks'
-import { nativeOnChain } from 'constants/tokens'
+import { NETWORKS_INFO, isEVM } from 'constants/networks'
+import { NativeCurrencies } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { isAddressString } from 'utils'
@@ -145,7 +145,7 @@ const FarmUpdaterV1: React.FC<CommonProps> = ({ interval }) => {
   const elasticFarm = useAppSelector(state => state.elasticFarm)[chainId || 1] || defaultChainData
 
   const [getElasticFarms, { data, error }] = useLazyQuery(ELASTIC_FARM_QUERY, {
-    client: NETWORKS_INFO[chainId || ChainId.MAINNET].elasticClient,
+    client: isEVM(chainId) ? NETWORKS_INFO[chainId].elasticClient : NETWORKS_INFO[ChainId.MAINNET].elasticClient,
     fetchPolicy: 'network-only',
   })
 
@@ -184,14 +184,14 @@ const FarmUpdaterV1: React.FC<CommonProps> = ({ interval }) => {
       const formattedData: ElasticFarm[] = data.farms.map((farm: SubgraphFarm) => {
         return {
           id: farm.id,
-          rewardLocker: isAddressString(farm.rewardLocker),
+          rewardLocker: isAddressString(chainId, farm.rewardLocker),
           pools: farm.farmingPools.map(pool => {
-            const token0Address = isAddressString(pool.pool.token0.id)
-            const token1Address = isAddressString(pool.pool.token1.id)
+            const token0Address = isAddressString(chainId, pool.pool.token0.id)
+            const token1Address = isAddressString(chainId, pool.pool.token1.id)
 
             const token0 =
               token0Address === WETH[chainId].address
-                ? nativeOnChain(chainId)
+                ? NativeCurrencies[chainId]
                 : new Token(
                     chainId,
                     token0Address,
@@ -202,7 +202,7 @@ const FarmUpdaterV1: React.FC<CommonProps> = ({ interval }) => {
 
             const token1 =
               token1Address === WETH[chainId].address
-                ? nativeOnChain(chainId)
+                ? NativeCurrencies[chainId]
                 : new Token(
                     chainId,
                     token1Address,
@@ -251,13 +251,13 @@ const FarmUpdaterV1: React.FC<CommonProps> = ({ interval }) => {
               poolTvl: Number(pool.pool.totalValueLockedUSD),
               rewardTokens: pool.rewardTokens.map(({ token }) => {
                 return token.id === ZERO_ADDRESS
-                  ? nativeOnChain(chainId)
+                  ? NativeCurrencies[chainId]
                   : new Token(chainId, token.id, Number(token.decimals), token.symbol, token.name)
               }),
               totalRewards: pool.rewardTokens.map(({ token, amount }) => {
                 const t =
                   token.id === ZERO_ADDRESS
-                    ? nativeOnChain(chainId)
+                    ? NativeCurrencies[chainId]
                     : new Token(chainId, token.id, Number(token.decimals), token.symbol, token.name)
                 return CurrencyAmount.fromRawAmount(t, amount)
               }),

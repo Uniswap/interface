@@ -1,5 +1,4 @@
-import { t } from '@lingui/macro'
-import React from 'react'
+import { Trans } from '@lingui/macro'
 import { Box, Text } from 'rebass'
 import styled from 'styled-components'
 
@@ -10,6 +9,7 @@ import { AutoRow } from 'components/Row'
 import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
 import { NotificationType } from 'state/application/hooks'
+import { TRANSACTION_TYPE } from 'state/transactions/type'
 import { ExternalLink, HideSmall } from 'theme'
 import { getEtherscanLink } from 'utils'
 
@@ -18,123 +18,137 @@ const RowNoFlex = styled(AutoRow)`
 `
 
 export const SUMMARY: {
-  [type: string]: {
-    success: (summary?: string) => string
-    pending: (summary?: string) => string
-    failure: (summary?: string) => string
+  [type in TRANSACTION_TYPE]: {
+    success: (summary?: string, isShort?: boolean) => string
+    pending: (summary?: string, isShort?: boolean) => string
+    failure: (summary?: string, isShort?: boolean) => string
   }
 } = {
-  Wrap: {
+  [TRANSACTION_TYPE.WRAP]: {
     success: summary => 'Wrapped ' + summary,
     pending: summary => 'Wrapping ' + summary,
     failure: summary => 'Error wrapping ' + summary,
   },
-  Unwrap: {
+  [TRANSACTION_TYPE.UNWRAP]: {
     success: summary => 'Unwrapped ' + summary,
     pending: summary => 'Unwrapping ' + summary,
     failure: summary => 'Error unwrapping ' + summary,
   },
-  Approve: {
+  [TRANSACTION_TYPE.APPROVE]: {
     success: summary => summary + ' was approved',
     pending: summary => 'Approving ' + summary,
     failure: summary => 'Error approving ' + summary,
   },
-  Bridge: {
-    success: summary => 'Transferred ' + summary,
+  [TRANSACTION_TYPE.BRIDGE]: {
+    success: summary => `Your bridge transaction from ${summary} is being processed.`,
     pending: summary => 'Transferring ' + summary,
     failure: summary => 'Error Transferring ' + summary,
   },
-  Swap: {
+  [TRANSACTION_TYPE.SWAP]: {
     success: summary => 'Swapped ' + summary,
     pending: summary => 'Swapping ' + summary,
     failure: summary => 'Error swapping ' + summary,
   },
-  'Create pool': {
+  [TRANSACTION_TYPE.CREATE_POOL]: {
     success: summary => 'Created pool ' + summary,
     pending: summary => 'Creating pool ' + summary,
     failure: summary => 'Error creating pool ' + summary,
   },
-  'Elastic Create pool': {
+  [TRANSACTION_TYPE.ELASTIC_CREATE_POOL]: {
     success: summary => 'Created pool and added ' + summary,
     pending: summary => 'Creating pool and adding ' + summary,
     failure: summary => 'Error Creating ' + summary,
   },
-  'Add liquidity': {
+  [TRANSACTION_TYPE.ADD_LIQUIDITY]: {
     success: summary => 'Added ' + summary,
     pending: summary => 'Adding ' + summary,
     failure: summary => 'Error adding ' + summary,
   },
-  'Elastic Add liquidity': {
+  [TRANSACTION_TYPE.ELASTIC_ADD_LIQUIDITY]: {
     success: summary => 'Added ' + summary,
     pending: summary => 'Adding ' + summary,
     failure: summary => 'Error adding ' + summary,
   },
-  'Remove liquidity': {
+  [TRANSACTION_TYPE.REMOVE_LIQUIDITY]: {
     success: summary => 'Removed ' + summary,
     pending: summary => 'Removing ' + summary,
     failure: summary => 'Error removing ' + summary,
   },
-  'Elastic Remove liquidity': {
+  [TRANSACTION_TYPE.ELASTIC_REMOVE_LIQUIDITY]: {
     success: summary => 'Removed ' + summary,
     pending: summary => 'Removing ' + summary,
     failure: summary => 'Error removing ' + summary,
   },
-  'Increase liquidity': {
+  [TRANSACTION_TYPE.INCREASE_LIQUIDITY]: {
     success: summary => 'Increased ' + summary,
     pending: summary => 'Increasing ' + summary,
     failure: summary => 'Error increasing ' + summary,
   },
-  'Collect fee': {
+  [TRANSACTION_TYPE.COLLECT_FEE]: {
     success: summary => 'Collected ' + summary,
     pending: summary => 'Collecting ' + summary,
     failure: summary => 'Error collecting ' + summary,
   },
-  Stake: {
+  [TRANSACTION_TYPE.STAKE]: {
     success: summary => 'Staked ' + summary,
     pending: summary => 'Staking ' + summary,
     failure: summary => 'Error staking ' + summary,
   },
-  Unstake: {
+  [TRANSACTION_TYPE.UNSTAKE]: {
     success: summary => 'Unstaked ' + summary,
     pending: summary => 'Unstaking ' + summary,
     failure: summary => 'Error unstaking ' + summary,
   },
-  Harvest: {
+  [TRANSACTION_TYPE.HARVEST]: {
     success: () => 'Harvested your rewards',
     pending: () => 'Harvesting your rewards',
     failure: () => 'Error harvesting your rewards',
   },
-  Claim: {
+  [TRANSACTION_TYPE.CLAIM]: {
     success: summary => 'Claimed ' + summary,
     pending: summary => 'Claiming ' + summary,
     failure: summary => 'Error claiming ' + summary,
   },
-  Migrate: {
+  [TRANSACTION_TYPE.MIGRATE]: {
     success: () => 'Migrated your liquidity',
     pending: () => 'Migrating your liquidity',
     failure: () => 'Error migrating your liquidity',
   },
-  'Claim reward': {
+  [TRANSACTION_TYPE.CLAIM_REWARD]: {
     success: summary => 'Claimed ' + summary,
     pending: summary => 'Claiming ' + summary,
     failure: summary => 'Error claiming ' + summary,
   },
-  Deposit: {
+  [TRANSACTION_TYPE.DEPOSIT]: {
     success: summary => 'Deposited ' + summary,
     pending: summary => 'Depositing ' + summary,
     failure: summary => 'Error depositing ' + summary,
   },
-  Withdraw: {
+  [TRANSACTION_TYPE.WITHDRAW]: {
     success: summary => 'Withdrawn ' + summary,
     pending: summary => 'Withdrawing ' + summary,
     failure: summary => 'Error withdrawing ' + summary,
   },
 
-  ForceWithdraw: {
+  [TRANSACTION_TYPE.FORCE_WITHDRAW]: {
     success: () => 'Force Withdrawn ',
     pending: () => 'Force Withdrawing ',
     failure: () => 'Error Force withdrawing ',
   },
+  [TRANSACTION_TYPE.SETUP]: {
+    success: (summary, isShort) => 'Set up ' + (isShort ? '' : summary),
+    pending: (summary, isShort) => 'Setting up ' + (isShort ? '' : summary),
+    failure: (summary, isShort) => 'Error Set up  ' + (isShort ? '' : summary),
+  },
+}
+
+const getTitle = (type: string, success: boolean) => {
+  let statusText = success ? 'Success' : 'Error'
+  // custom
+  if (type === TRANSACTION_TYPE.BRIDGE && success) {
+    statusText = 'Processing'
+  }
+  return `${type} - ${statusText}!`
 }
 
 export default function TransactionPopup({
@@ -145,7 +159,7 @@ export default function TransactionPopup({
 }: {
   hash: string
   notiType: NotificationType
-  type?: string
+  type?: TRANSACTION_TYPE
   summary?: string
 }) {
   const { chainId } = useActiveWeb3React()
@@ -166,26 +180,24 @@ export default function TransactionPopup({
         <AutoColumn gap="8px">
           {type && (
             <Text fontSize="16px" fontWeight={500} color={success ? theme.primary : theme.red}>
-              {type + ' - ' + (success ? 'Success' : 'Error') + '!'}
+              {getTitle(type, success)}
             </Text>
           )}
-          <Text fontSize="14px" fontWeight={400} color={theme.text}>
+          <Text fontSize="14px" fontWeight={400} color={theme.text} lineHeight={1.6}>
             {type
-              ? SUMMARY[type][success ? 'success' : 'failure'](summary)
+              ? SUMMARY[type]?.[success ? 'success' : 'failure']?.(summary) || summary
               : summary ?? 'Hash: ' + hash.slice(0, 8) + '...' + hash.slice(58, 65)}
           </Text>
         </AutoColumn>
       </RowNoFlex>
-      {chainId && (
-        <HideSmall style={{ margin: '8px 0 0 40px', display: 'block' }}>
-          <ExternalLink
-            href={getEtherscanLink(chainId, hash, 'transaction')}
-            style={{ color: success ? theme.primary : theme.red, fontSize: 14 }}
-          >
-            {t`View transaction`}
-          </ExternalLink>
-        </HideSmall>
-      )}
+      <HideSmall style={{ margin: '8px 0 0 40px', display: 'block' }}>
+        <ExternalLink
+          href={getEtherscanLink(chainId, hash, 'transaction')}
+          style={{ color: success ? theme.primary : theme.red, fontSize: 14 }}
+        >
+          <Trans>View transaction</Trans>
+        </ExternalLink>
+      </HideSmall>
     </Box>
   )
 }

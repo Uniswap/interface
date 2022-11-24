@@ -1,56 +1,31 @@
-import { getAddress } from '@ethersproject/address'
 import { BigNumber } from '@ethersproject/bignumber'
-import { AddressZero } from '@ethersproject/constants'
-import { Contract } from '@ethersproject/contracts'
-import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { ChainId, Currency, CurrencyAmount, Percent, Token, WETH } from '@kyberswap/ks-sdk-core'
 import dayjs from 'dayjs'
-import { ethers } from 'ethers'
 import JSBI from 'jsbi'
 import Numeral from 'numeral'
 
 import { GET_BLOCK, GET_BLOCKS } from 'apollo/queries'
-import ZAP_STATIC_FEE_ABI from 'constants/abis/zap-static-fee.json'
-import {
-  DEFAULT_GAS_LIMIT_MARGIN,
-  KNC,
-  KNCL_ADDRESS,
-  KNCL_ADDRESS_ROPSTEN,
-  ROPSTEN_TOKEN_LOGOS_MAPPING,
-  ZERO_ADDRESS,
-} from 'constants/index'
-import { NETWORKS_INFO } from 'constants/networks'
+import { DEFAULT_GAS_LIMIT_MARGIN, ZERO_ADDRESS } from 'constants/index'
+import { NETWORKS_INFO, isEVM } from 'constants/networks'
+import { KNC, KNCL_ADDRESS, KNCL_ADDRESS_ROPSTEN } from 'constants/tokens'
+import { EVMWalletInfo, SUPPORTED_WALLET, SolanaWalletInfo, WalletInfo } from 'constants/wallets'
 import store from 'state'
+import { GroupedTxsByHash, TransactionDetails } from 'state/transactions/type'
 
-import CLAIM_REWARD_ABI from '../constants/abis/claim-reward.json'
-import ROUTER_DYNAMIC_FEE_ABI from '../constants/abis/dmm-router-dynamic-fee.json'
-import ROUTER_STATIC_FEE_ABI from '../constants/abis/dmm-router-static-fee.json'
-import KS_ROUTER_STATIC_FEE_ABI from '../constants/abis/ks-router-static-fee.json'
-import ROUTER_PRO_AMM from '../constants/abis/v2/ProAmmRouter.json'
-import ZAP_ABI from '../constants/abis/zap.json'
-import { getAuroraTokenLogoURL } from './auroraTokenMapping'
-import { getAvaxMainnetTokenLogoURL } from './avaxMainnetTokenMapping'
-import { getAvaxTestnetTokenLogoURL } from './avaxTestnetTokenMapping'
-import { getBscMainnetTokenLogoURL } from './bscMainnetTokenMapping'
-import { getBscTestnetTokenLogoURL } from './bscTestnetTokenMapping'
-import { getCronosTokenLogoURL } from './cronosTokenMapping'
-import { getEthereumMainnetTokenLogoURL } from './ethereumMainnetTokenMapping'
-import { getFantomTokenLogoURL } from './fantomTokenMapping'
-import { getMaticTokenLogoURL } from './maticTokenMapping'
-import { getMumbaiTokenLogoURL } from './mumbaiTokenMapping'
+import checkForBraveBrowser from './checkForBraveBrowser'
 
 // returns the checksummed address if the address is valid, otherwise returns false
-export function isAddress(value: any): string | false {
+export function isAddress(chainId: ChainId, value: any): string | false {
   try {
-    return getAddress(value)
+    return new Token(chainId, value, 0).address
   } catch {
     return false
   }
 }
 
-export function isAddressString(value: any): string {
+export function isAddressString(chainId: ChainId, value: any): string {
   try {
-    return getAddress(value)
+    return new Token(chainId, value, 0).address
   } catch {
     return ''
   }
@@ -80,15 +55,11 @@ export function getEtherscanLink(
   }
 }
 
-export function getEtherscanLinkText(chainId: ChainId): string {
-  return NETWORKS_INFO[chainId].etherscanName
-}
-
 // shorten the checksummed version of the input address to have 0x + 4 characters at start and end
-export function shortenAddress(address: string, chars = 4): string {
-  const parsed = isAddress(address)
+export function shortenAddress(chainId: ChainId, address: string, chars = 4): string {
+  const parsed = isAddress(chainId, address)
   if (!parsed) {
-    throw Error(`Invalid 'address' parameter '${address}'.`)
+    throw Error(`Invalid 'address' parameter '${address}' on chain ${chainId}.`)
   }
   return `${parsed.substring(0, chars + 2)}...${parsed.substring(42 - chars)}`
 }
@@ -122,85 +93,11 @@ export function calculateSlippageAmount(value: CurrencyAmount<Currency>, slippag
   ]
 }
 
-// account is not optional
-export function getSigner(library: Web3Provider, account: string): JsonRpcSigner {
-  return library.getSigner(account).connectUnchecked()
-}
-
-// account is optional
-export function getProviderOrSigner(library: Web3Provider, account?: string): Web3Provider | JsonRpcSigner {
-  return account ? getSigner(library, account) : library
-}
-
-// account is optional
-export function getContract(address: string, ABI: any, library: Web3Provider, account?: string): Contract {
-  if (!isAddress(address) || address === AddressZero) {
-    throw Error(`Invalid 'address' parameter '${address}'.`)
-  }
-
-  return new Contract(address, ABI, getProviderOrSigner(library, account) as any)
-}
-// account is optional
-export function getContractForReading(address: string, ABI: any, library: ethers.providers.JsonRpcProvider): Contract {
-  if (!isAddress(address) || address === AddressZero) {
-    throw Error(`Invalid 'address' parameter '${address}'.`)
-  }
-
-  return new Contract(address, ABI, library)
-}
-
-// account is optional
-export function getOldStaticFeeRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
-  return getContract(NETWORKS_INFO[chainId].classic.oldStatic?.router ?? '', ROUTER_STATIC_FEE_ABI, library, account)
-}
-// account is optional
-export function getStaticFeeRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
-  return getContract(NETWORKS_INFO[chainId].classic.static.router, KS_ROUTER_STATIC_FEE_ABI, library, account)
-}
-// account is optional
-export function getDynamicFeeRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
-  return getContract(NETWORKS_INFO[chainId].classic.dynamic?.router ?? '', ROUTER_DYNAMIC_FEE_ABI, library, account)
-}
-
-// account is optional
-export function getProAmmRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
-  return getContract(NETWORKS_INFO[chainId].elastic.routers, ROUTER_PRO_AMM.abi, library, account)
-}
-
-// account is optional
-export function getZapContract(
-  chainId: ChainId,
-  library: Web3Provider,
-  account?: string,
-  isStaticFeeContract?: boolean,
-  isOldStaticFeeContract?: boolean,
-): Contract {
-  return getContract(
-    isStaticFeeContract
-      ? isOldStaticFeeContract
-        ? NETWORKS_INFO[chainId].classic.oldStatic?.zap || ''
-        : NETWORKS_INFO[chainId].classic.static.zap
-      : NETWORKS_INFO[chainId].classic.dynamic?.zap || '',
-    isStaticFeeContract && !isOldStaticFeeContract ? ZAP_STATIC_FEE_ABI : ZAP_ABI,
-    library,
-    account,
-  )
-}
-
-export function getClaimRewardContract(
-  chainId: ChainId,
-  library: Web3Provider,
-  account?: string,
-): Contract | undefined {
-  if (!NETWORKS_INFO[chainId].classic.claimReward) return
-  return getContract(NETWORKS_INFO[chainId].classic.claimReward, CLAIM_REWARD_ABI, library, account)
-}
-
 export function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
 }
 
-export const toK = (num: string) => {
+const toK = (num: string) => {
   return Numeral(num).format('0.[00]a')
 }
 
@@ -261,7 +158,7 @@ export function formattedNum(number: string, usd = false, fractionDigits = 5) {
     return usd ? '< $0.0001' : '< 0.0001'
   }
 
-  if (num > 1000) {
+  if (num >= 1000) {
     return usd ? formatDollarFractionAmount(num, 0) : Number(num.toFixed(0)).toLocaleString()
   }
 
@@ -351,8 +248,9 @@ export async function splitQuery(query: any, localClient: any, vars: any, list: 
  * @dev Query speed is optimized by limiting to a 600-second period
  * @param {Int} timestamp in seconds
  */
-export async function getBlockFromTimestamp(timestamp: number, chainId?: ChainId) {
-  const result = await NETWORKS_INFO[chainId || ChainId.MAINNET].blockClient.query({
+export async function getBlockFromTimestamp(timestamp: number, chainId: ChainId) {
+  if (!isEVM(chainId)) return
+  const result = await NETWORKS_INFO[chainId].blockClient.query({
     query: GET_BLOCK,
     variables: {
       timestampFrom: timestamp,
@@ -373,20 +271,15 @@ export async function getBlockFromTimestamp(timestamp: number, chainId?: ChainId
  */
 export async function getBlocksFromTimestamps(
   timestamps: number[],
-  chainId?: ChainId,
+  chainId: ChainId,
   skipCount = 500,
 ): Promise<{ timestamp: string; number: number }[]> {
+  if (!isEVM(chainId)) return []
   if (timestamps?.length === 0) {
     return []
   }
 
-  const fetchedData = await splitQuery(
-    GET_BLOCKS,
-    NETWORKS_INFO[chainId || ChainId.MAINNET].blockClient,
-    [],
-    timestamps,
-    skipCount,
-  )
+  const fetchedData = await splitQuery(GET_BLOCKS, NETWORKS_INFO[chainId].blockClient, [], timestamps, skipCount)
   const blocks: { timestamp: string; number: number }[] = []
   if (fetchedData) {
     for (const t in fetchedData) {
@@ -416,32 +309,21 @@ export const get24hValue = (valueNow: string, value24HoursAgo: string | undefine
   return currentChange
 }
 
-export const getRopstenTokenLogoURL = (address: string) => {
-  if (address.toLowerCase() === KNCL_ADDRESS_ROPSTEN.toLowerCase()) {
-    return 'https://raw.githubusercontent.com/KyberNetwork/kyberswap-interface/develop/src/assets/images/KNCL.png'
-  }
-
-  if (ROPSTEN_TOKEN_LOGOS_MAPPING[address.toLowerCase()]) {
-    address = ROPSTEN_TOKEN_LOGOS_MAPPING[address.toLowerCase()]
-  }
-
-  return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${isAddress(
-    address,
-  )}/logo.png`
-}
-
-export const getTokenLogoURL = (inputAddress: string, chainId?: ChainId): string => {
+export const getTokenLogoURL = (inputAddress: string, chainId: ChainId): string => {
   let address = inputAddress
-  if (address === ZERO_ADDRESS && chainId) {
+  if (address === ZERO_ADDRESS) {
     address = WETH[chainId].address
   }
 
   if (chainId !== ChainId.ETHW) {
-    if (address.toLowerCase() === KNC[chainId as ChainId].address.toLowerCase()) {
+    if (address.toLowerCase() === KNC[chainId].address.toLowerCase()) {
       return 'https://raw.githubusercontent.com/KyberNetwork/kyberswap-interface/develop/src/assets/images/KNC.svg'
     }
 
-    if (address.toLowerCase() === KNCL_ADDRESS.toLowerCase()) {
+    if (
+      address.toLowerCase() === KNCL_ADDRESS.toLowerCase() ||
+      address.toLowerCase() === KNCL_ADDRESS_ROPSTEN.toLowerCase()
+    ) {
       return 'https://raw.githubusercontent.com/KyberNetwork/kyberswap-interface/develop/src/assets/images/KNCL.png'
     }
 
@@ -451,79 +333,12 @@ export const getTokenLogoURL = (inputAddress: string, chainId?: ChainId): string
     }
   }
 
-  let imageURL
-
-  imageURL = store
+  const imageURL = store
     .getState()
-    .lists.byUrl[NETWORKS_INFO[chainId || ChainId.MAINNET].tokenListUrl].current?.tokens.find(
+    .lists.byUrl[NETWORKS_INFO[chainId].tokenListUrl]?.current?.tokens.find(
       item => item.address.toLowerCase() === address.toLowerCase(),
     )?.logoURI
-
-  if (imageURL) return imageURL
-
-  switch (chainId) {
-    //todo namgold: merge these adhoc func to tokenllist
-    case ChainId.MAINNET:
-      imageURL = getEthereumMainnetTokenLogoURL(address)
-      break
-    case ChainId.ROPSTEN:
-      imageURL = getRopstenTokenLogoURL(address)
-      break
-    case ChainId.MATIC:
-      imageURL = getMaticTokenLogoURL(address)
-      break
-    case ChainId.MUMBAI:
-      imageURL = getMumbaiTokenLogoURL(address)
-      break
-    case ChainId.BSCTESTNET:
-      imageURL = getBscTestnetTokenLogoURL(address)
-      break
-    case ChainId.BSCMAINNET:
-      imageURL = getBscMainnetTokenLogoURL(address)
-      break
-    case ChainId.AVAXTESTNET:
-      imageURL = getAvaxTestnetTokenLogoURL(address)
-      break
-    case ChainId.AVAXMAINNET:
-      imageURL = getAvaxMainnetTokenLogoURL(address)
-      break
-    case ChainId.FANTOM:
-      imageURL = getFantomTokenLogoURL(address)
-      break
-    case ChainId.CRONOS:
-      imageURL = getCronosTokenLogoURL(address)
-      break
-    case ChainId.AURORA:
-      imageURL = getAuroraTokenLogoURL(address)
-      break
-    case ChainId.ARBITRUM:
-      imageURL = `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/${address}/logo.png`
-      break
-    case ChainId.ETHW: {
-      imageURL = ''
-      break
-    }
-    default:
-      imageURL = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${isAddress(
-        address,
-      )}/logo.png`
-      break
-  }
-
-  return imageURL
-}
-
-export const getTokenSymbol = (token: Token, chainId?: ChainId): string => {
-  if (chainId && token.address.toLowerCase() === WETH[chainId as ChainId].address.toLowerCase()) {
-    return NETWORKS_INFO[chainId].nativeToken.symbol
-  }
-
-  return token.symbol || 'ETH'
-}
-
-export const nativeNameFromETH = (chainId: ChainId | undefined) => {
-  if (!chainId) return 'ETH'
-  return NETWORKS_INFO[chainId].nativeToken.symbol
+  return imageURL || ''
 }
 
 // push unique
@@ -551,6 +366,58 @@ export const deleteUnique = <T>(array: T[] | undefined, element: T): T[] => {
   return array
 }
 
+export const isEVMWallet = (wallet: WalletInfo): wallet is EVMWalletInfo =>
+  !!(wallet as EVMWalletInfo).connector || !!(wallet as EVMWalletInfo).href
+export const isSolanaWallet = (wallet: WalletInfo): wallet is SolanaWalletInfo => !!(wallet as SolanaWalletInfo).adapter
+
+// https://docs.metamask.io/guide/ethereum-provider.html#basic-usage
+// https://docs.cloud.coinbase.com/wallet-sdk/docs/injected-provider#properties
+// Coin98 and Brave wallet is overriding Metamask. So at a time, there is only 1 exists
+export const detectInjectedType = (): 'COIN98' | 'BRAVE' | 'METAMASK' | 'COINBASE' | 'TRUST_WALLET' | null => {
+  const { ethereum } = window
+  // When Coinbase wallet connected will inject selectedProvider property and some others props
+  if (ethereum?.selectedProvider) {
+    if (ethereum?.selectedProvider?.isMetaMask) return 'METAMASK'
+    if (ethereum?.selectedProvider?.isCoinbaseWallet) return 'COINBASE'
+  }
+
+  if (ethereum?.isCoinbaseWallet) return 'COINBASE'
+
+  if (ethereum?.isTrustWallet) return 'TRUST_WALLET'
+
+  if (checkForBraveBrowser() && ethereum?.isBraveWallet) return 'BRAVE'
+
+  if (ethereum?.isMetaMask) {
+    if (ethereum?.isCoin98) {
+      return 'COIN98'
+    }
+    return 'METAMASK'
+  }
+  return null
+}
+
+export const isOverriddenWallet = (wallet: SUPPORTED_WALLET) => {
+  const injectedType = detectInjectedType()
+  return (
+    (wallet === 'COIN98' && injectedType === 'METAMASK') ||
+    (wallet === 'METAMASK' && injectedType === 'COIN98') ||
+    (wallet === 'BRAVE' && injectedType === 'COIN98') ||
+    (wallet === 'COIN98' && injectedType === 'BRAVE') ||
+    (wallet === 'COINBASE' && injectedType === 'COIN98') ||
+    // Coin98 turned off override MetaMask in setting
+    (wallet === 'COIN98' && window.coin98 && !window.ethereum?.isCoin98)
+  )
+}
+
 export const filterTruthy = <T>(array: (T | undefined | null | false)[]): T[] => {
   return array.filter(Boolean) as T[]
+}
+
+export const findTx = (txs: GroupedTxsByHash | undefined, hash: string): TransactionDetails | undefined => {
+  return txs
+    ? txs?.[hash]?.[0] ||
+        Object.values(txs)
+          .flat()
+          .find(tx => tx?.hash === hash)
+    : undefined
 }

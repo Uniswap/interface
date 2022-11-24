@@ -2,8 +2,7 @@ import { Token } from '@kyberswap/ks-sdk-core'
 import { TokenInfo, TokenList } from '@uniswap/token-lists'
 
 import { MultiChainTokenInfo } from 'pages/Bridge/type'
-
-import { isAddress } from '../../utils'
+import { isAddress } from 'utils'
 
 /**
  * Token instances created from token info on a token list.
@@ -21,7 +20,7 @@ export class WrappedTokenInfo extends Token {
 
   constructor(tokenInfo: TokenInfo & { isWhitelisted?: boolean; multichainInfo?: MultiChainTokenInfo }) {
     const { isWhitelisted, multichainInfo, chainId, decimals, symbol, name, address } = tokenInfo
-    super(chainId, isAddress(address) || address, decimals, symbol, name)
+    super(chainId, isAddress(chainId, address) || address, decimals, symbol, name)
     this.tokenInfo = tokenInfo
 
     if (isWhitelisted) this.isWhitelisted = isWhitelisted

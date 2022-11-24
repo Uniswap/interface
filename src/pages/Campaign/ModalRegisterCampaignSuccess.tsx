@@ -56,7 +56,7 @@ export default function ModalRegisterCampaignSuccess() {
   )
 }
 
-export const RegisterCampaignBackground = styled.div`
+const RegisterCampaignBackground = styled.div`
   background-image: url(${RegisterCampaignBg});
   background-size: contain;
   background-repeat: no-repeat;
@@ -88,7 +88,7 @@ const Title = styled(Text)`
   `}
 `
 
-export const Content = styled(Text)`
+const Content = styled(Text)`
   color: ${({ theme }) => theme.white};
   font-size: 16px;
   max-width: 69%;

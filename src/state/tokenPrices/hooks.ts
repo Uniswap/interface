@@ -1,6 +1,6 @@
-import { ChainId } from '@kyberswap/ks-sdk-core'
 import { useEffect, useMemo } from 'react'
 
+import { PRICE_API } from 'constants/env'
 import { NETWORKS_INFO } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
@@ -28,8 +28,7 @@ export const useTokenPrices = (addresses: Array<string>) => {
 
   useEffect(() => {
     const fetchPrices = async () => {
-      const chainString = chainId ? NETWORKS_INFO[chainId].internalRoute : ''
-      const res = await fetch(`${process.env.REACT_APP_PRICE_API}/${chainString}/api/v1/prices`, {
+      const res = await fetch(`${PRICE_API}/${NETWORKS_INFO[chainId].priceRoute}/api/v1/prices`, {
         method: 'POST',
         body: JSON.stringify({
           ids: unknownPriceList.join(','),
@@ -44,7 +43,7 @@ export const useTokenPrices = (addresses: Array<string>) => {
 
           return {
             address,
-            chainId: chainId || ChainId.MAINNET,
+            chainId: chainId,
             price: price?.marketPrice || price?.price || 0,
           }
         })
@@ -62,7 +61,7 @@ export const useTokenPrices = (addresses: Array<string>) => {
       return {
         ...acc,
         [address]: tokenPrices[key] || 0,
-        [isAddressString(address)]: tokenPrices[key] || 0,
+        [isAddressString(chainId, address)]: tokenPrices[key] || 0,
       }
     }, {} as { [address: string]: number })
   }, [tokenList, chainId, tokenPrices])

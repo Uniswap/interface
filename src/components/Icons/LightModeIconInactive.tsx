@@ -1,5 +1,3 @@
-import React from 'react'
-
 const LightModeIconInactive = ({ width, height }: { width?: number; height?: number }) => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width={width || 14} height={height || 14} viewBox="0 0 14 14">

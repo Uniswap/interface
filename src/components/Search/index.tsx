@@ -61,7 +61,7 @@ interface SearchProps {
   style?: React.CSSProperties
 }
 
-export const Search = ({ searchValue, onSearch, placeholder, minWidth, style }: SearchProps) => {
+const Search = ({ searchValue, onSearch, placeholder, minWidth, style }: SearchProps) => {
   const theme = useTheme()
   return (
     <Container style={style}>

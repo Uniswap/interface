@@ -141,10 +141,10 @@ const ListItemGroup = ({
   const isFarmingPool = !!farm
 
   // Shorten address with 0x + 3 characters at start and end
-  const shortenPoolAddress = shortenAddress(poolData.id, 3)
+  const shortenPoolAddress = shortenAddress(chainId, poolData.id, 3)
   const { currency0, currency1, reserve0, virtualReserve0, reserve1, virtualReserve1 } = parseSubgraphPoolData(
     poolData,
-    chainId as ChainId,
+    chainId,
   )
   const realPercentToken0 =
     reserve0 && virtualReserve0 && reserve1 && virtualReserve1

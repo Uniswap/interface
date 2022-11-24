@@ -6,10 +6,12 @@ import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import useSWR from 'swr'
 
-import { CLAIM_REWARDS_DATA_URL, KNC } from 'constants/index'
-import { useActiveWeb3React } from 'hooks'
+import { CLAIM_REWARDS_DATA_URL } from 'constants/index'
+import { KNC } from 'constants/tokens'
+import { useActiveWeb3React, useWeb3React } from 'hooks'
 import { useAllTransactions, useTransactionAdder } from 'state/transactions/hooks'
-import { getClaimRewardContract } from 'utils'
+import { TRANSACTION_TYPE } from 'state/transactions/type'
+import { getClaimRewardContract } from 'utils/getContract'
 
 export interface IReward {
   index: number
@@ -30,7 +32,9 @@ export interface IUserReward {
 
 // eslint-disable react-hooks/exhaustive-deps
 export default function useClaimReward() {
-  const { chainId, account, library } = useActiveWeb3React()
+  const { chainId, account } = useActiveWeb3React()
+  const { library } = useWeb3React()
+
   const rewardContract = useMemo(() => {
     return !!chainId && !!account && !!library ? getClaimRewardContract(chainId, library, account) : undefined
   }, [chainId, library, account])
@@ -89,9 +93,11 @@ export default function useClaimReward() {
   const allTransactions = useAllTransactions()
   const tx = useMemo(
     () =>
-      Object.keys(allTransactions)
-        .map(key => allTransactions[key])
-        .filter(item => item.type === 'Claim reward' && !item.receipt)[0],
+      allTransactions
+        ? Object.values(allTransactions)
+            .flat()
+            .find(item => item && item.type === 'Claim reward' && !item.receipt)
+        : undefined,
     [allTransactions],
   )
   const resetTxn = useCallback(() => {
@@ -155,8 +161,9 @@ export default function useClaimReward() {
         .then((tx: TransactionResponse) => {
           setAttemptingTxn(false)
           setTxHash(tx.hash)
-          addTransactionWithType(tx, {
-            type: 'Claim reward',
+          addTransactionWithType({
+            hash: tx.hash,
+            type: TRANSACTION_TYPE.CLAIM_REWARD,
             summary: rewardAmounts + ' KNC',
           })
         })

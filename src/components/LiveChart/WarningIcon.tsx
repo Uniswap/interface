@@ -1,5 +1,3 @@
-import React from 'react'
-
 export default function WarningIcon() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="57" height="52" viewBox="0 0 57 52" fill="none">

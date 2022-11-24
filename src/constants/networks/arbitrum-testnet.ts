@@ -3,19 +3,24 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 import EthereumLogo from 'assets/images/ethereum-logo.png'
 import ARBITRUM from 'assets/networks/arbitrum-network.svg'
 import { KS_SETTING_API } from 'constants/env'
+import { EVMNetworkInfo } from 'constants/networks/type'
 import { createClient } from 'utils/client'
-
-import { NetworkInfo } from '../type'
 
 const EMPTY = ''
 const EMPTY_ARRAY: any[] = []
 const NOT_SUPPORT = null
 
-const arbitrumTestnetInfo: NetworkInfo = {
+const arbitrumTestnetInfo: EVMNetworkInfo = {
   chainId: ChainId.ARBITRUM_TESTNET,
   route: 'arbitrum-testnet',
+  ksSettingRoute: 'arbitrum',
+  priceRoute: 'arbitrum',
+  poolFarmRoute: EMPTY,
   name: 'Arbitrum Testnet',
   icon: ARBITRUM,
+  iconDark: NOT_SUPPORT,
+  iconSelected: NOT_SUPPORT,
+  iconDarkSelected: NOT_SUPPORT,
   classicClient: createClient('https://api.thegraph.com/subgraphs/name/viet-nv/kyberswap-arbitrum-rinkeby'),
   elasticClient: createClient('https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-elastic-arbitrum-one'),
   blockClient: createClient('https://api.thegraph.com/subgraphs/name/viet-nv/arbitrum-rinkeby-blocks'),
@@ -25,13 +30,14 @@ const arbitrumTestnetInfo: NetworkInfo = {
   bridgeURL: 'https://bridge.arbitrum.io',
   nativeToken: {
     symbol: 'ETH',
-    name: 'ETH (Wrapped)',
-    address: '0xB47e6A5f8b33b3F17603C83a0535A9dcD7E32681',
+    name: 'ETH',
     logo: EthereumLogo,
     decimal: 18,
+    minForGas: 10 ** 16,
   },
   rpcUrl: 'https://rinkeby.arbitrum.io/rpc',
   routerUri: EMPTY,
+  multicall: '0xefEb0223C51600d8059A4fD44094a1E2A2C54Bf7',
   classic: {
     static: {
       zap: '0xfa33723F6fA00a35F69F8aCd72A5BE9AF3c8Bd25',
@@ -40,7 +46,7 @@ const arbitrumTestnetInfo: NetworkInfo = {
     },
     oldStatic: NOT_SUPPORT,
     dynamic: NOT_SUPPORT,
-    claimReward: EMPTY,
+    claimReward: NOT_SUPPORT,
     fairlaunch: EMPTY_ARRAY,
     fairlaunchV2: EMPTY_ARRAY,
   },
@@ -51,12 +57,14 @@ const arbitrumTestnetInfo: NetworkInfo = {
     initCodeHash: '0xc597aba1bb02db42ba24a8878837965718c032f8b46be94a6e46452a9f89ca01',
     quoter: '0x0D125c15D54cA1F8a813C74A81aEe34ebB508C1f',
     routers: '0xC1e7dFE73E1598E3910EF4C7845B68A9Ab6F4c83',
+    farms: [],
   },
   averageBlockTimeInSeconds: 1, // TODO: check these info
-  coingeckoNetworkId: EMPTY,
+  coingeckoNetworkId: NOT_SUPPORT,
   coingeckoNativeTokenId: 'ethereum',
   deBankSlug: EMPTY,
-  internalRoute: EMPTY,
+  trueSightId: NOT_SUPPORT,
+  dexToCompare: NOT_SUPPORT,
 }
 
 export default arbitrumTestnetInfo

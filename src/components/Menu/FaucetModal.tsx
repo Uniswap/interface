@@ -1,4 +1,4 @@
-import { ChainId, Fraction } from '@kyberswap/ks-sdk-core'
+import { Fraction, WETH } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import { BigNumber } from 'ethers'
 import JSBI from 'jsbi'
@@ -10,8 +10,8 @@ import { ButtonPrimary } from 'components/Button'
 import Logo from 'components/Logo'
 import Modal from 'components/Modal'
 import { RowBetween } from 'components/Row'
-import { NETWORKS_INFO } from 'constants/networks'
-import { nativeOnChain } from 'constants/tokens'
+import { REWARD_SERVICE_API } from 'constants/env'
+import { NativeCurrencies } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
 import { useAllTokens } from 'hooks/Tokens'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
@@ -52,7 +52,7 @@ const getFullDisplayBalance = (balance: BigNumber, decimals = 18, significant = 
 }
 
 function FaucetModal() {
-  const { chainId, account } = useActiveWeb3React()
+  const { chainId, account, networkInfo } = useActiveWeb3React()
   const open = useModalOpen(ApplicationModal.FAUCET_POPUP)
   const toggle = useToggleModal(ApplicationModal.FAUCET_POPUP)
   const theme = useTheme()
@@ -63,26 +63,27 @@ function FaucetModal() {
   const allTokens = useAllTokens()
   const token = useMemo(() => {
     if (!chainId || !account) return
-    const nativeToken = nativeOnChain(chainId as ChainId)
+    const nativeToken = NativeCurrencies[chainId]
     if (rewardData) {
       if (rewardData.tokenAddress === '0') return nativeToken
-      if (isAddress(rewardData.tokenAddress)) return filterTokens(Object.values(allTokens), rewardData.tokenAddress)[0]
+      if (isAddress(chainId, rewardData.tokenAddress))
+        return filterTokens(chainId, Object.values(allTokens), rewardData.tokenAddress)[0]
     }
     return nativeToken
   }, [rewardData, chainId, account, allTokens])
   const tokenLogo = useMemo(() => {
     if (!chainId || !token) return
-    if (token.isNative) return NETWORKS_INFO[chainId].nativeToken.logo
+    if (token.isNative) return networkInfo.nativeToken.logo
     return getTokenLogoURL(token.address, chainId)
-  }, [chainId, token])
+  }, [chainId, token, networkInfo])
   const tokenSymbol = useMemo(() => {
-    if (token?.isNative && chainId) return NETWORKS_INFO[chainId].nativeToken.name
+    if (token?.isNative && chainId) return WETH[chainId].name
     return token?.symbol
   }, [token, chainId])
   const claimRewardCallBack = useCallback(async () => {
     if (!rewardData) return
     try {
-      const rawResponse = await fetch(process.env.REACT_APP_REWARD_SERVICE_API + '/rewards/claim', {
+      const rawResponse = await fetch(REWARD_SERVICE_API + '/rewards/claim', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -114,9 +115,9 @@ function FaucetModal() {
     if (!chainId || !account) return
     const getRewardAmount = async () => {
       try {
-        const { data } = await fetch(
-          `${process.env.REACT_APP_REWARD_SERVICE_API}/faucets?wallet=${account}&chainId=${chainId}`,
-        ).then(res => res.json())
+        const { data } = await fetch(`${REWARD_SERVICE_API}/faucets?wallet=${account}&chainId=${chainId}`).then(res =>
+          res.json(),
+        )
         if (data[0])
           setRewardData({
             amount: BigNumber.from(data[0].amount),
@@ -143,7 +144,7 @@ function FaucetModal() {
           <Text color={theme.subText} fontSize={12}>
             <Trans>Your wallet address</Trans>
           </Text>
-          <p>{account && shortenAddress(account, 9)}</p>
+          <p>{account && shortenAddress(chainId, account, 9)}</p>
         </AddressWrapper>
         <Text fontSize={16} lineHeight="24px" color={theme.text}>
           <Trans>
@@ -190,6 +191,7 @@ function FaucetModal() {
       </Flex>
     )
   }, [
+    chainId,
     account,
     claimRewardCallBack,
     mixpanelHandler,

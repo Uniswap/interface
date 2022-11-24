@@ -1,9 +1,7 @@
 import { ChainId, Currency, Token, WETH } from '@kyberswap/ks-sdk-core'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
-import { DAI, USDC, USDT } from 'constants/index'
-import { NETWORKS_INFO } from 'constants/networks'
-import { STABLE_COINS_ADDRESS } from 'constants/tokens'
+import { DAI, STABLE_COINS_ADDRESS, USDC, USDT } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
 import { Field } from 'state/swap/actions'
 
@@ -23,35 +21,31 @@ const configurationData = {
   supported_resolutions: ['1', '3', '5', '15', '30', '1H', '2H', '4H', '1D', '1W', '1M'],
 }
 
-const getNetworkString = (chainId: ChainId | undefined) => {
-  switch (chainId) {
-    case ChainId.MAINNET:
-      return 'chain-ethereum'
-    case ChainId.BSCMAINNET:
-      return 'chain-bsc'
-    case ChainId.MATIC:
-      return 'chain-polygon'
-    case ChainId.CRONOS:
-      return 'chain-cronos'
-    case ChainId.AVAXMAINNET:
-      return 'chain-avalanche'
-    case ChainId.FANTOM:
-      return 'chain-fantom'
-    case ChainId.ARBITRUM:
-      return 'chain-arbitrum'
-    case ChainId.VELAS:
-      return 'chain-velas'
-    case ChainId.AURORA:
-      return 'chain-aurora'
-    case ChainId.OASIS:
-      return 'chain-oasis'
-    case ChainId.OPTIMISM:
-      return 'chain-optimism'
-    case ChainId.ETHW:
-      return 'chain-ethw'
-    default:
-      return ''
-  }
+const NetworkString: { [chain in ChainId]: string } = {
+  [ChainId.MAINNET]: 'chain-ethereum',
+  [ChainId.BSCMAINNET]: 'chain-bsc',
+  [ChainId.MATIC]: 'chain-polygon',
+  [ChainId.CRONOS]: 'chain-cronos',
+  [ChainId.AVAXMAINNET]: 'chain-avalanche',
+  [ChainId.FANTOM]: 'chain-fantom',
+  [ChainId.ARBITRUM]: 'chain-arbitrum',
+  [ChainId.VELAS]: 'chain-velas',
+  [ChainId.AURORA]: 'chain-aurora',
+  [ChainId.OASIS]: 'chain-oasis',
+  [ChainId.OPTIMISM]: 'chain-optimism',
+  [ChainId.ETHW]: 'chain-ethw',
+  [ChainId.SOLANA]: 'chain-solana',
+
+  [ChainId.BTTC]: '',
+  [ChainId.ROPSTEN]: '',
+  [ChainId.RINKEBY]: '',
+  [ChainId.GÖRLI]: '',
+  [ChainId.KOVAN]: '',
+  [ChainId.BSCTESTNET]: '',
+  [ChainId.MUMBAI]: '',
+  [ChainId.AVAXTESTNET]: '',
+  [ChainId.CRONOSTESTNET]: '',
+  [ChainId.ARBITRUM_TESTNET]: '',
 }
 
 const DextoolSearchV2ChainId: { [chain in ChainId]: string } = {
@@ -67,6 +61,7 @@ const DextoolSearchV2ChainId: { [chain in ChainId]: string } = {
   [ChainId.OASIS]: 'oasis',
   [ChainId.OPTIMISM]: 'optimism',
   [ChainId.ETHW]: 'ethw',
+  [ChainId.SOLANA]: 'solana',
 
   [ChainId.BTTC]: '',
   [ChainId.ROPSTEN]: '',
@@ -116,17 +111,17 @@ const TOKEN_PAIRS_ADDRESS_MAPPING: {
   '0x853ea32391aaa14c112c645fd20ba389ab25c5e0': '0x5d79a43e6b9d8e3ecca26f91afe34634248773c8', // USX on AVAX
   '0x261c94f2d3cccae76f86f6c8f2c93785dd6ce022': 'nodata', // ATH on BSC
   '0x94b008aA00579c1307B0EF2c499aD98a8ce58e58': '0xc858a329bf053be78d6239c4a4343b8fbd21472b', // USDT on Optimism
+  epjfwdd5aufqssqem2qn1xzybapc8g4weggkzwytdt1v: 'EGZ7tiLeH62TPV1gL8WwbXGzEPa9zmcpVnnkPKKnrE2U', // USDC on SOLANA
 }
 const LOCALSTORAGE_CHECKED_PAIRS = 'proChartCheckedPairs'
 
 const fetcherDextools = (url: string) => {
   return fetch(`${DEXTOOLS_API}/${url}`)
     .then(res => res.json())
-    .catch(error => console.log(error))
+    .catch(error => console.warn(`fetch ${`${DEXTOOLS_API}/${url}`} failed:\n`, error))
 }
 
-export const searchTokenPair = (address: string, chainId: ChainId | undefined) => {
-  if (!chainId) return
+const searchTokenPair = (address: string, chainId: ChainId): any => {
   if (TOKEN_PAIRS_ADDRESS_MAPPING[address.toLowerCase()]) {
     return new Promise((resolve, reject) => {
       resolve([{ id: { pair: TOKEN_PAIRS_ADDRESS_MAPPING[address.toLowerCase()] } }])
@@ -138,11 +133,11 @@ export const searchTokenPair = (address: string, chainId: ChainId | undefined) =
       .sort((tokenA: any, tokenB: any) => tokenB.volume - tokenA.volume),
   )
 }
-export const getHistoryCandleStatus = (pairAddress: string, chainId: ChainId | undefined) => {
-  return fetcherDextools(`${getNetworkString(chainId)}/api/Uniswap/1/history-candle-status?pair=${pairAddress}`)
-}
-export const getCandlesApi = (
-  chainId: ChainId | undefined,
+const getHistoryCandleStatus = (pairAddress: string, chainId: ChainId) =>
+  fetcherDextools(`${NetworkString[chainId]}/api/Uniswap/1/history-candle-status?pair=${pairAddress}`)
+
+const getCandlesApi = (
+  chainId: ChainId,
   pairAddress: string,
   apiVersion: string,
   ts: number,
@@ -151,9 +146,9 @@ export const getCandlesApi = (
   sym = 'eth',
 ) => {
   return fetcherDextools(
-    `${getNetworkString(
-      chainId,
-    )}/api/Pancakeswap/history/candles?sym=${sym}&span=${span}&pair=${pairAddress}&ts=${ts}&v=${apiVersion}${
+    `${
+      NetworkString[chainId]
+    }/api/Pancakeswap/history/candles?sym=${sym}&span=${span}&pair=${pairAddress}&ts=${ts}&v=${apiVersion}${
       res && '&res=' + res
     }`,
   )
@@ -200,7 +195,7 @@ const updateLocalstorageCheckedPair = (key: string, res: { ver: number; pairAddr
 
 export const checkPairHasDextoolsData = async (
   currencies: { [field in Field]?: Currency },
-  chainId: ChainId | undefined,
+  chainId: ChainId,
 ): Promise<{ ver: number; pairAddress: string }> => {
   const [currencyA, currencyB] = Object.values(currencies)
   const res = { ver: 0, pairAddress: '' }
@@ -215,8 +210,8 @@ export const checkPairHasDextoolsData = async (
   const checkedPairs: { [key: string]: { ver: number; pairAddress: string; time: number } } = cPstr
     ? JSON.parse(cPstr)
     : {}
-  const symbolA = currencyA.isNative ? NETWORKS_INFO[chainId || ChainId.MAINNET].nativeToken.name : currencyA.symbol
-  const symbolB = currencyB.isNative ? NETWORKS_INFO[chainId || ChainId.MAINNET].nativeToken.name : currencyB.symbol
+  const symbolA = currencyA.isNative ? WETH[chainId].name : currencyA.symbol
+  const symbolB = currencyB.isNative ? WETH[chainId].name : currencyB.symbol
   const key: string = [symbolA, symbolB, chainId].sort().join('')
   const checkedPair = checkedPairs[key]
   if (
@@ -328,12 +323,8 @@ export const useDatafeed = (currencies: Array<Currency | undefined>, pairAddress
         onResolveErrorCallback: ErrorCallback,
       ) => {
         try {
-          const label1 = currencies[0]?.isNative
-            ? NETWORKS_INFO[chainId || ChainId.MAINNET].nativeToken.name
-            : currencies[0]?.symbol
-          const label2 = currencies[1]?.isNative
-            ? NETWORKS_INFO[chainId || ChainId.MAINNET].nativeToken.name
-            : currencies[1]?.symbol
+          const label1 = currencies[0]?.isNative ? WETH[chainId].name : currencies[0]?.symbol
+          const label2 = currencies[1]?.isNative ? WETH[chainId].name : currencies[1]?.symbol
 
           const label = `${label1}/${label2}`
 
@@ -419,6 +410,12 @@ export const useDatafeed = (currencies: Array<Currency | undefined>, pairAddress
                 if (c.close < c.low) {
                   c.low = c.close
                 }
+              }
+              if (c.high > 1.1 * Math.max(c.open, c.close)) {
+                c.high = Math.max(c.open, c.close)
+              }
+              if (c.low < Math.min(c.open, c.close) / 1.1) {
+                c.low = Math.min(c.open, c.close)
               }
               return c
             })

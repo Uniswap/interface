@@ -7,6 +7,7 @@ import 'aos/dist/aos.css'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import 'inter-ui'
+import mixpanel from 'mixpanel-browser'
 import { StrictMode, useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
 import TagManager from 'react-gtm-module'
@@ -16,6 +17,8 @@ import { BrowserRouter } from 'react-router-dom'
 import 'swiper/swiper-bundle.min.css'
 import 'swiper/swiper.min.css'
 
+import SolanaWalletContext from 'components/SolanaWalletContext'
+import { GTM_ID, MAINNET_ENV, MIXPANEL_PROJECT_TOKEN, SENTRY_DNS, TAG } from 'constants/env'
 import { updateServiceWorker } from 'state/application/actions'
 import CampaignsUpdater from 'state/campaigns/updater'
 
@@ -36,15 +39,18 @@ import getLibrary from './utils/getLibrary'
 
 dayjs.extend(utc)
 
-if (process.env.REACT_APP_TAG) {
+mixpanel.init(MIXPANEL_PROJECT_TOKEN, {
+  debug: MAINNET_ENV === 'staging',
+})
+if (TAG) {
   datadogRum.init({
     applicationId: '5bd0c243-6141-4bab-be21-5dac9b9efa9f',
     clientToken: 'pub9163f29b2cdb31314b89ae232af37d5a',
     site: 'datadoghq.eu',
     service: 'kyberswap-interface',
 
-    version: process.env.REACT_APP_TAG,
-    sampleRate: 10,
+    version: TAG,
+    sampleRate: TAG.startsWith('v') ? 10 : 100,
     sessionReplaySampleRate: 100,
     trackInteractions: true,
     trackResources: true,
@@ -53,13 +59,32 @@ if (process.env.REACT_APP_TAG) {
   })
 
   datadogRum.startSessionReplayRecording()
+
+  Sentry.init({
+    dsn: SENTRY_DNS,
+    environment: 'production',
+    ignoreErrors: ['AbortError'],
+    integrations: [new BrowserTracing()],
+    tracesSampleRate: 0.1,
+  })
+
+  Sentry.configureScope(scope => {
+    scope.setTag('request_id', sentryRequestId)
+    scope.setTag('version', TAG)
+  })
+
+  if (GTM_ID) {
+    const tagManagerArgs = {
+      gtmId: GTM_ID,
+    }
+
+    TagManager.initialize(tagManagerArgs)
+  }
 }
 
 AOS.init()
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
-
-window.tag = process.env.REACT_APP_TAG
 
 if ('ethereum' in window) {
   ;(window.ethereum as any).autoRefreshOnNetworkChange = false
@@ -77,29 +102,6 @@ function Updaters() {
       <CustomizeDexesUpdater />
     </>
   )
-}
-
-if (process.env.REACT_APP_GTM_ID) {
-  const tagManagerArgs = {
-    gtmId: process.env.REACT_APP_GTM_ID,
-  }
-
-  TagManager.initialize(tagManagerArgs)
-}
-
-if (window.location.href.includes('kyberswap.com')) {
-  Sentry.init({
-    dsn: process.env.REACT_APP_SENTRY_DNS,
-    environment: 'production',
-    ignoreErrors: ['AbortError'],
-    integrations: [new BrowserTracing()],
-    tracesSampleRate: 0.1,
-  })
-
-  Sentry.configureScope(scope => {
-    scope.setTag('request_id', sentryRequestId)
-    scope.setTag('version', process.env.REACT_APP_TAG)
-  })
 }
 
 const preloadhtml = document.querySelector('.preloadhtml')
@@ -128,19 +130,21 @@ const ReactApp = () => {
       />
       <FixedGlobalStyle />
       <Provider store={store}>
-        <BrowserRouter>
-          <LanguageProvider>
-            <Web3ReactProvider getLibrary={getLibrary}>
-              <Web3ProviderNetwork getLibrary={getLibrary}>
-                <Updaters />
-                <ThemeProvider>
-                  <ThemedGlobalStyle />
-                  <App />
-                </ThemeProvider>
-              </Web3ProviderNetwork>
-            </Web3ReactProvider>
-          </LanguageProvider>
-        </BrowserRouter>
+        <SolanaWalletContext>
+          <BrowserRouter>
+            <LanguageProvider>
+              <Web3ReactProvider getLibrary={getLibrary}>
+                <Web3ProviderNetwork getLibrary={getLibrary}>
+                  <Updaters />
+                  <ThemeProvider>
+                    <ThemedGlobalStyle />
+                    <App />
+                  </ThemeProvider>
+                </Web3ProviderNetwork>
+              </Web3ReactProvider>
+            </LanguageProvider>
+          </BrowserRouter>
+        </SolanaWalletContext>
       </Provider>
     </StrictMode>
   )

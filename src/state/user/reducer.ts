@@ -2,10 +2,11 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 import { createReducer } from '@reduxjs/toolkit'
 import { isMobile } from 'react-device-detect'
 
-import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, SUGGESTED_BASES } from 'constants/index'
+import { SUGGESTED_BASES } from 'constants/bases'
+import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from 'constants/index'
 import { SupportedLocale } from 'constants/locales'
+import { updateVersion } from 'state/global/actions'
 
-import { updateVersion } from '../global/actions'
 import {
   SerializedPair,
   SerializedToken,
@@ -19,6 +20,9 @@ import {
   toggleTokenInfo,
   toggleTopTrendingTokens,
   toggleTradeRoutes,
+  updateChainId,
+  updateIsAcceptedTerm,
+  updateIsUserManuallyDisconnect,
   updateMatchesDarkMode,
   updateUserDarkMode,
   updateUserDeadline,
@@ -77,6 +81,9 @@ export interface UserState {
       }
     >
   >
+  readonly chainId: ChainId
+  isUserManuallyDisconnect: boolean
+  isAcceptedTerm: boolean
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -101,6 +108,7 @@ export const defaultShowLiveCharts: { [chainId in ChainId]: boolean } = {
   [ChainId.VELAS]: true,
   [ChainId.OASIS]: true,
   [ChainId.OPTIMISM]: true,
+  [ChainId.SOLANA]: true,
 
   [ChainId.ROPSTEN]: false,
   [ChainId.RINKEBY]: false,
@@ -114,7 +122,7 @@ export const defaultShowLiveCharts: { [chainId in ChainId]: boolean } = {
   [ChainId.ETHW]: true,
 }
 
-export const initialState: UserState = {
+const initialState: UserState = {
   userDarkMode: null, // default to system preference
   matchesDarkMode: true,
   userExpertMode: false,
@@ -130,6 +138,9 @@ export const initialState: UserState = {
   showTokenInfo: true,
   showTopTrendingSoonTokens: true,
   favoriteTokensByChainId: {},
+  chainId: ChainId.MAINNET,
+  isUserManuallyDisconnect: false,
+  isAcceptedTerm: false,
 }
 
 export default createReducer(initialState, builder =>
@@ -246,5 +257,14 @@ export default createReducer(initialState, builder =>
         }
         favoriteTokens.addresses.splice(index, 1)
       }
+    })
+    .addCase(updateChainId, (state, { payload: chainId }) => {
+      state.chainId = chainId
+    })
+    .addCase(updateIsUserManuallyDisconnect, (state, { payload: isUserManuallyDisconnect }) => {
+      state.isUserManuallyDisconnect = isUserManuallyDisconnect
+    })
+    .addCase(updateIsAcceptedTerm, (state, { payload: isAcceptedTerm }) => {
+      state.isAcceptedTerm = isAcceptedTerm
     }),
 )

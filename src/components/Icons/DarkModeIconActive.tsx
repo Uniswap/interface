@@ -1,5 +1,3 @@
-import React from 'react'
-
 const DarkModeIconActive = ({ width, height }: { width?: number; height?: number }) => {
   return (
     <svg width={width || 10} height={height || 12} viewBox="0 0 10 12" fill="none" xmlns="http://www.w3.org/2000/svg">

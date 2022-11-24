@@ -64,10 +64,10 @@ const ItemCard = ({ poolData, style = {}, myLiquidity }: ListItemProps) => {
   const isFarmingPool = useCheckIsFarmingPool(poolData.id)
 
   // Shorten address with 0x + 3 characters at start and end
-  const shortenPoolAddress = shortenAddress(poolData.id, 3)
+  const shortenPoolAddress = shortenAddress(chainId, poolData.id, 3)
   const { currency0, currency1, reserve0, virtualReserve0, reserve1, virtualReserve1 } = parseSubgraphPoolData(
     poolData,
-    chainId as ChainId,
+    chainId,
   )
   const realPercentToken0 =
     reserve0 && virtualReserve0 && reserve1 && virtualReserve1
@@ -237,10 +237,7 @@ const ItemCard = ({ poolData, style = {}, myLiquidity }: ListItemProps) => {
       </ButtonGroupContainer>
       <Divider />
       <FooterContainer>
-        <ExternalLink
-          href={DMM_ANALYTICS_URL[chainId as ChainId] + '/pool/' + poolData.id}
-          style={{ fontSize: '14px' }}
-        >
+        <ExternalLink href={DMM_ANALYTICS_URL[chainId] + '/pool/' + poolData.id} style={{ fontSize: '14px' }}>
           <Trans>Analytics ↗</Trans>
         </ExternalLink>
         <ButtonEmpty width="fit-content" fontSize="14px" padding="0" onClick={() => setSharedPoolId(poolData.id)}>

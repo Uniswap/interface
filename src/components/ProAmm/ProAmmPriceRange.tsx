@@ -59,7 +59,7 @@ export default function ProAmmPriceRange({
 
         <Flex>
           <Text fontSize={12} fontWeight={500} color={theme.subText}>
-            <Trans>{layout === 0 ? 'SELECTED PRICE RANGE' : 'Selected Price Range'}</Trans>
+            {layout === 0 ? <Trans>SELECTED PRICE RANGE</Trans> : <Trans>Selected Price Range</Trans>}
           </Text>
           <InfoHelper
             text={t`Represents the range where all your liquidity is concentrated. When market price of your token pair is no longer between your selected price range, your liquidity becomes inactive and you stop earning fees`}

@@ -4,7 +4,6 @@ import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { Flex, Text } from 'rebass'
 
-import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
 import { formatPoolValue } from 'pages/Bridge/helpers'
 import { MultiChainTokenInfo } from 'pages/Bridge/type'
@@ -31,9 +30,8 @@ const CurrencyListBridge = memo(function CurrencyListV2({
   isOutput: boolean | undefined
   listTokenRef: React.Ref<HTMLDivElement>
 }) {
-  const { account } = useActiveWeb3React()
   const [{ tokenInfoIn, tokenInfoOut, poolValueOutMap }] = useBridgeState()
-  const currencyBalances = useCurrencyBalances(account || undefined, !isOutput ? currencies : [])
+  const currencyBalances = useCurrencyBalances(!isOutput ? currencies : [])
   const theme = useTheme()
 
   const Row: any = useCallback(
@@ -84,7 +82,7 @@ const CurrencyListBridge = memo(function CurrencyListV2({
         <AutoSizer>
           {({ height, width }) => (
             <FixedSizeList
-              height={height + 100}
+              height={height}
               width={width}
               itemSize={56}
               itemCount={currencies.length}

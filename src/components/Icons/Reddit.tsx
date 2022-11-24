@@ -1,5 +1,3 @@
-import React from 'react'
-
 export default function Reddit({ size, color }: { size?: number | string; color?: string }) {
   return (
     <svg width={size || '17'} height={size || '36'} viewBox="0 0 17 17">

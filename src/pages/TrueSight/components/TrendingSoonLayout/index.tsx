@@ -39,7 +39,7 @@ const TrendingSoonLayout = ({
   const [selectedToken, setSelectedToken] = useState<TrueSightTokenData>()
   const [isOpenChartModal, setIsOpenChartModal] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
-  const { tab, token_id: selectedTokenIdFromQs } = useParsedQueryString()
+  const { tab, token_id: selectedTokenIdFromQs } = useParsedQueryString<{ tab: string; token_id: string }>()
   const history = useHistory()
   const location = useLocation()
 

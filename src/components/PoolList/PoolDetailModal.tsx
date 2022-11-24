@@ -1,5 +1,3 @@
-import React from 'react'
-
 import Modal from 'components/Modal'
 import ItemCard from 'components/PoolList/ItemCard'
 import useTheme from 'hooks/useTheme'

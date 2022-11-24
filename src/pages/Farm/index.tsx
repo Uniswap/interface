@@ -3,7 +3,7 @@ import { Trans } from '@lingui/macro'
 import { stringify } from 'qs'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { Redirect, useHistory } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 
@@ -32,8 +32,10 @@ import {
 import { ZERO_ADDRESS } from 'constants/index'
 import { UPCOMING_POOLS } from 'constants/upcoming-pools'
 import { VERSION } from 'constants/v2'
+import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useParsedQueryString from 'hooks/useParsedQueryString'
+import { useSyncNetworkParamWithStore } from 'hooks/useSyncNetworkParamWithStore'
 import { AppState } from 'state'
 import { useBlockNumber } from 'state/application/hooks'
 import { FarmUpdater, useElasticFarms } from 'state/farms/elastic/hooks'
@@ -41,10 +43,11 @@ import { useFarmsData } from 'state/farms/hooks'
 import { isInEnum } from 'utils/string'
 
 const Farm = () => {
+  const { isEVM } = useActiveWeb3React()
   const { loading } = useFarmsData()
-  const qs = useParsedQueryString()
-  const type = qs.type || 'active'
-  const farmType = qs.tab && typeof qs.tab === 'string' && isInEnum(qs.tab, VERSION) ? qs.tab : VERSION.ELASTIC
+  const qs = useParsedQueryString<{ type: string; tab: string }>()
+  const { type = 'active', tab = VERSION.ELASTIC } = qs
+  const farmType = isInEnum(tab, VERSION) ? tab : VERSION.ELASTIC
   const history = useHistory()
 
   const vestingLoading = useSelector<AppState, boolean>(state => state.vesting.loading)
@@ -68,6 +71,7 @@ const Farm = () => {
     }
   }
   const { mixpanelHandler } = useMixpanel()
+  useSyncNetworkParamWithStore()
 
   // Total rewards for Classic pool
   const { data: farmsByFairLaunch } = useFarmsData()
@@ -122,6 +126,7 @@ const Farm = () => {
     </Flex>
   )
 
+  if (!isEVM) return <Redirect to="/" />
   return (
     <>
       <FarmUpdater />

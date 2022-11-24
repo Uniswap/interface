@@ -1,5 +1,4 @@
 import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { formatUnits, isAddress } from 'ethers/lib/utils'
 import mixpanel from 'mixpanel-browser'
 import { useCallback, useEffect, useMemo } from 'react'
@@ -20,12 +19,14 @@ import {
 } from 'apollo/queries/promm'
 import { ELASTIC_BASE_FEE_UNIT } from 'constants/index'
 import { NETWORKS_INFO } from 'constants/networks'
+import { EVMNetworkInfo } from 'constants/networks/type'
+import { useActiveWeb3React } from 'hooks'
 import { AppDispatch, AppState } from 'state'
 import { useETHPrice } from 'state/application/hooks'
 import { Field } from 'state/swap/actions'
 import { useSwapState } from 'state/swap/hooks'
 import { checkedSubgraph } from 'state/transactions/actions'
-import { TransactionDetails } from 'state/transactions/reducer'
+import { TransactionDetails } from 'state/transactions/type'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { Aggregator } from 'utils/aggregator'
 
@@ -156,22 +157,15 @@ export const NEED_CHECK_SUBGRAPH_TRANSACTION_TYPES = [
 ]
 
 export default function useMixpanel(trade?: Aggregator | undefined, currencies?: { [field in Field]?: Currency }) {
-  const { chainId, account } = useWeb3React()
+  const { chainId, account, isEVM, networkInfo } = useActiveWeb3React()
   const { saveGas } = useSwapState()
-  const network = chainId && NETWORKS_INFO[chainId as ChainId].name
+  const network = networkInfo.name
   const inputCurrency = currencies && currencies[Field.INPUT]
   const outputCurrency = currencies && currencies[Field.OUTPUT]
-  const inputSymbol =
-    inputCurrency && inputCurrency.isNative
-      ? NETWORKS_INFO[(chainId as ChainId) || ChainId.MAINNET].nativeToken.name
-      : inputCurrency?.symbol
-  const outputSymbol =
-    outputCurrency && outputCurrency.isNative
-      ? NETWORKS_INFO[(chainId as ChainId) || ChainId.MAINNET].nativeToken.name
-      : outputCurrency?.symbol
+  const inputSymbol = inputCurrency && inputCurrency.isNative ? networkInfo.nativeToken.name : inputCurrency?.symbol
+  const outputSymbol = outputCurrency && outputCurrency.isNative ? networkInfo.nativeToken.name : outputCurrency?.symbol
   const ethPrice = useETHPrice()
   const dispatch = useDispatch<AppDispatch>()
-  const apolloClient = NETWORKS_INFO[(chainId as ChainId) || (ChainId.MAINNET as ChainId)].classicClient
   const selectedCampaign = useSelector((state: AppState) => state.campaigns.selectedCampaign)
   const [allowedSlippage] = useUserSlippageTolerance()
 
@@ -194,7 +188,7 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
           mixpanel.track('Swap Initiated', {
             input_token: inputSymbol,
             output_token: outputSymbol,
-            estimated_gas: trade?.gasUsd.toFixed(4),
+            estimated_gas: trade?.gasUsd?.toFixed(4),
             max_return_or_low_gas: saveGas ? 'Lowest Gas' : 'Maximum Return',
             trade_qty: trade?.inputAmount.toExact(),
             slippage_setting: allowedSlippage ? allowedSlippage / 100 : 0,
@@ -205,23 +199,20 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
         }
         case MIXPANEL_TYPE.SWAP_COMPLETED: {
           const { arbitrary, actual_gas, gas_price, tx_hash } = payload
+          const formattedGas = gas_price ? formatUnits(gas_price, networkInfo.nativeToken.decimal) : '0'
           mixpanel.track('Swap Completed', {
             input_token: arbitrary.inputSymbol,
             output_token: arbitrary.outputSymbol,
             actual_gas:
               ethPrice &&
               ethPrice.currentPrice &&
-              (
-                actual_gas.toNumber() *
-                parseFloat(formatUnits(gas_price, 18)) *
-                parseFloat(ethPrice.currentPrice)
-              ).toFixed(4),
+              (actual_gas.toNumber() * parseFloat(formattedGas) * parseFloat(ethPrice.currentPrice)).toFixed(4),
             tx_hash: tx_hash,
             max_return_or_low_gas: arbitrary.saveGas ? 'Lowest Gas' : 'Maximum Return',
             trade_qty: arbitrary.inputAmount,
             slippage_setting: arbitrary.slippageSetting,
             price_impact: arbitrary.priceImpact,
-            gas_price: formatUnits(gas_price, 18),
+            gas_price: formattedGas,
             eth_price: ethPrice?.currentPrice,
             actual_gas_native: actual_gas?.toNumber(),
           })
@@ -745,10 +736,11 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
   )
   const subgraphMixpanelHandler = useCallback(
     async (transaction: TransactionDetails) => {
-      const apolloProMMClient = NETWORKS_INFO[(chainId as ChainId) || (ChainId.MAINNET as ChainId)].elasticClient
+      if (!isEVM || !chainId) return
+      const apolloClient = (networkInfo as EVMNetworkInfo).classicClient
+      const apolloProMMClient = (networkInfo as EVMNetworkInfo).elasticClient
 
       const hash = transaction.hash
-      if (!chainId) return
       switch (transaction.type) {
         case 'Add liquidity': {
           const res = await apolloClient.query({
@@ -930,13 +922,13 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
           break
       }
     },
-    [chainId, dispatch, apolloClient, mixpanelHandler],
+    [chainId, dispatch, mixpanelHandler, isEVM, networkInfo],
   )
   return { mixpanelHandler, subgraphMixpanelHandler }
 }
 
 export const useGlobalMixpanelEvents = () => {
-  const { account, chainId } = useWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const { mixpanelHandler } = useMixpanel()
   const oldNetwork = usePrevious(chainId)
   const location = useLocation()
@@ -947,9 +939,6 @@ export const useGlobalMixpanelEvents = () => {
 
   useEffect(() => {
     if (account && isAddress(account)) {
-      mixpanel.init(process.env.REACT_APP_MIXPANEL_PROJECT_TOKEN || '', {
-        debug: process.env.REACT_APP_MAINNET_ENV === 'staging',
-      })
       mixpanel.identify(account)
 
       const getQueryParam = (url: string, param: string) => {
@@ -998,10 +987,10 @@ export const useGlobalMixpanelEvents = () => {
   useEffect(() => {
     if (oldNetwork) {
       mixpanelHandler(MIXPANEL_TYPE.CHAIN_SWITCHED, {
-        new_network: chainId && NETWORKS_INFO[chainId as ChainId].name,
+        new_network: chainId && NETWORKS_INFO[chainId].name,
         old_network: oldNetwork && NETWORKS_INFO[oldNetwork as ChainId].name,
       })
-      mixpanel.register({ network: chainId && NETWORKS_INFO[chainId as ChainId].name })
+      mixpanel.register({ network: chainId && NETWORKS_INFO[chainId].name })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chainId])

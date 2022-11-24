@@ -5,7 +5,7 @@ import { Trans, t } from '@lingui/macro'
 import { captureException } from '@sentry/react'
 import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
-import React, { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { Flex, Text } from 'rebass'
 
@@ -26,30 +26,32 @@ import TransactionConfirmationModal, {
 import ZapError from 'components/ZapError'
 import FormattedPriceImpact from 'components/swap/FormattedPriceImpact'
 import { AMP_HINT } from 'constants/index'
-import { NETWORKS_INFO } from 'constants/networks'
-import { nativeOnChain } from 'constants/tokens'
-import { useActiveWeb3React } from 'hooks'
+import { EVMNetworkInfo } from 'constants/networks/type'
+import { NativeCurrencies } from 'constants/tokens'
+import { PairState } from 'data/Reserves'
+import { useActiveWeb3React, useWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import useTheme from 'hooks/useTheme'
 import useTokensMarketPrice from 'hooks/useTokensMarketPrice'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
+import { Dots, Wrapper } from 'pages/Pool/styleds'
 import { useTokensPrice, useWalletModalToggle } from 'state/application/hooks'
 import { Field } from 'state/mint/actions'
 import { useDerivedZapInInfo, useMintState, useZapInActionHandlers } from 'state/mint/hooks'
 import { tryParseAmount } from 'state/swap/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
-import { useIsExpertMode, useUserSlippageTolerance } from 'state/user/hooks'
+import { TRANSACTION_TYPE } from 'state/transactions/type'
+import { useExpertModeManager, useUserSlippageTolerance } from 'state/user/hooks'
 import { StyledInternalLink, TYPE, UppercaseText } from 'theme'
-import { calculateGasMargin, formattedNum, getZapContract } from 'utils'
+import { calculateGasMargin, formattedNum } from 'utils'
 import { currencyId } from 'utils/currencyId'
 import { feeRangeCalc, useCurrencyConvertedToNative } from 'utils/dmm'
+import { getZapContract } from 'utils/getContract'
 import isZero from 'utils/isZero'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { computePriceImpactWithoutFee, warningSeverity } from 'utils/prices'
 
-import { PairState } from '../../data/Reserves'
-import { Dots, Wrapper } from '../Pool/styleds'
 import {
   ActiveText,
   CurrentPriceWrapper,
@@ -74,7 +76,8 @@ const ZapIn = ({
   currencyIdB: string
   pairAddress: string
 }) => {
-  const { account, library, chainId } = useActiveWeb3React()
+  const { account, chainId, isEVM, networkInfo } = useActiveWeb3React()
+  const { library } = useWeb3React()
   const theme = useTheme()
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
@@ -82,7 +85,7 @@ const ZapIn = ({
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
   const [zapInError, setZapInError] = useState<string>('')
 
-  const expertMode = useIsExpertMode()
+  const [expertMode] = useExpertModeManager()
 
   // mint state
   const { independentField, typedValue, otherTypedValue } = useMintState()
@@ -163,12 +166,12 @@ const ZapIn = ({
 
   const [approval, approveCallback] = useApproveCallback(
     amountToApprove,
-    !!chainId
+    isEVM
       ? isStaticFeePair
         ? isOldStaticFeeContract
-          ? NETWORKS_INFO[chainId].classic.oldStatic?.zap
-          : NETWORKS_INFO[chainId].classic.static.zap
-        : NETWORKS_INFO[chainId].classic.dynamic?.zap
+          ? (networkInfo as EVMNetworkInfo).classic.oldStatic?.zap
+          : (networkInfo as EVMNetworkInfo).classic.static.zap
+        : (networkInfo as EVMNetworkInfo).classic.dynamic?.zap
       : undefined,
   )
 
@@ -186,7 +189,7 @@ const ZapIn = ({
 
   const addTransactionWithType = useTransactionAdder()
   async function onZapIn() {
-    if (!chainId || !library || !account) return
+    if (!isEVM || !library || !account) return
     const zapContract = getZapContract(chainId, library, account, isStaticFeePair, isOldStaticFeeContract)
 
     if (!chainId || !account) {
@@ -233,7 +236,7 @@ const ZapIn = ({
     }
     // All methods of new zap static fee contract include factory address as first arg
     if (isStaticFeePair && !isOldStaticFeeContract) {
-      args.unshift(NETWORKS_INFO[chainId].classic.static.factory)
+      args.unshift((networkInfo as EVMNetworkInfo).classic.static.factory)
     }
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
@@ -246,8 +249,9 @@ const ZapIn = ({
           const cB = currencies[Field.CURRENCY_B]
           if (!!cA && !!cB) {
             setAttemptingTxn(false)
-            addTransactionWithType(tx, {
-              type: 'Add liquidity',
+            addTransactionWithType({
+              hash: tx.hash,
+              type: TRANSACTION_TYPE.ADD_LIQUIDITY,
               summary: userInCurrencyAmount?.toSignificant(6) + ' ' + independentToken?.symbol,
               arbitrary: {
                 poolAddress: pairAddress,
@@ -460,7 +464,6 @@ const ZapIn = ({
                   onFieldInput(currencyBalances[independentField]?.divide(2)?.toExact() ?? '')
                 }}
                 onSwitchCurrency={handleSwitchCurrency}
-                showMaxButton={true}
                 currency={currencies[independentField]}
                 id="zap-in-input"
                 disableCurrencySelect={false}
@@ -489,12 +492,12 @@ const ZapIn = ({
                           ? `/add/${
                               selectedCurrencyIsETHER
                                 ? currencyId(WETH[chainId], chainId)
-                                : currencyId(nativeOnChain(chainId), chainId)
+                                : currencyId(NativeCurrencies[chainId], chainId)
                             }/${currencyId(currencies[dependentField] as Currency, chainId)}/${pairAddress}`
                           : `/add/${currencyId(currencies[dependentField] as Currency, chainId)}/${
                               selectedCurrencyIsETHER
                                 ? currencyId(WETH[chainId], chainId)
-                                : nativeOnChain(chainId).symbol
+                                : NativeCurrencies[chainId].symbol
                             }/${pairAddress}`
                       }
                     >

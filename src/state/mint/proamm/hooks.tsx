@@ -15,17 +15,17 @@ import {
 } from '@kyberswap/ks-sdk-elastic'
 import { Trans } from '@lingui/macro'
 import JSBI from 'jsbi'
-import React, { ReactNode, useCallback, useMemo } from 'react'
+import { ReactNode, useCallback, useMemo } from 'react'
 
+import { BIG_INT_ZERO } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import { PoolState, usePool } from 'hooks/usePools'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { AppState } from 'state/index'
 import { tryParseAmount } from 'state/swap/hooks'
 import { useCurrencyBalances } from 'state/wallet/hooks'
 import { getTickToPrice } from 'utils/getTickToPrice'
 
-import { BIG_INT_ZERO } from '../../../constants'
-import { AppState } from '../../index'
 import {
   Bound,
   Field,
@@ -150,7 +150,6 @@ export function useProAmmDerivedMintInfo(
   )
   // balances
   const balances = useCurrencyBalances(
-    account ?? undefined,
     useMemo(() => [currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B]], [currencies]),
   )
   const currencyBalances: { [field in Field]?: CurrencyAmount<Currency> } = {

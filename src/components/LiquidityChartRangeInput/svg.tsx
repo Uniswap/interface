@@ -1,5 +1,3 @@
-import React from 'react'
-
 /*
  * Generates an SVG path for the east brush handle.
  * Apply `scale(-1, 1)` to generate west brush handle.

@@ -6,7 +6,7 @@ import { useBlockNumber } from 'state/application/hooks'
 
 import { useFairLaunchContract } from './useContract'
 
-export interface BalanceProps {
+interface BalanceProps {
   value: BigNumber
   decimals: number
 }

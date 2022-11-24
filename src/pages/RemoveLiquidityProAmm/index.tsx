@@ -26,7 +26,7 @@ import Slider from 'components/Slider'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { TutorialType } from 'components/Tutorial'
 import { VERSION } from 'constants/v2'
-import { useActiveWeb3React } from 'hooks'
+import { useActiveWeb3React, useWeb3React } from 'hooks'
 import { useProAmmNFTPositionManagerContract } from 'hooks/useContract'
 import usePrevious from 'hooks/usePrevious'
 import useProAmmPoolInfo from 'hooks/useProAmmPoolInfo'
@@ -39,6 +39,7 @@ import { Field } from 'state/burn/proamm/actions'
 import { useBurnProAmmActionHandlers, useBurnProAmmState, useDerivedProAmmBurnInfo } from 'state/burn/proamm/hooks'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
+import { TRANSACTION_TYPE } from 'state/transactions/type'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { basisPointsToPercent, calculateGasMargin, formattedNum, shortenAddress } from 'utils'
 import useDebouncedChangeHandler from 'utils/useDebouncedChangeHandler'
@@ -108,7 +109,8 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
   const { position } = useProAmmPositionsFromTokenId(tokenId)
   const positionManager = useProAmmNFTPositionManagerContract()
   const theme = useTheme()
-  const { account, chainId, library } = useActiveWeb3React()
+  const { account, chainId, isEVM } = useActiveWeb3React()
+  const { library } = useWeb3React()
   const toggleWalletModal = useWalletModalToggle()
 
   const owner = useSingleCallResult(!!tokenId ? positionManager : null, 'ownerOf', [tokenId.toNumber()]).result?.[0]
@@ -246,7 +248,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     library
       .getSigner()
       .estimateGas(txn)
-      .then(estimate => {
+      .then((estimate: BigNumber) => {
         const newTxn = {
           ...txn,
           gasLimit: calculateGasMargin(estimate),
@@ -257,8 +259,9 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
           .then((response: TransactionResponse) => {
             setAttemptingTxn(false)
 
-            addTransactionWithType(response, {
-              type: 'Elastic Remove liquidity',
+            addTransactionWithType({
+              hash: response.hash,
+              type: TRANSACTION_TYPE.ELASTIC_REMOVE_LIQUIDITY,
               summary:
                 liquidityValue0?.toSignificant(6) +
                 ' ' +
@@ -276,7 +279,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
             setTxnHash(response.hash)
           })
       })
-      .catch(error => {
+      .catch((error: any) => {
         setAttemptingTxn(false)
         console.error(error)
         // const newTxn = {
@@ -289,8 +292,8 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         //   .then((response: TransactionResponse) => {
         //     setAttemptingTxn(false)
 
-        //     addTransactionWithType(response, {
-        //       type: 'Remove liquidity',
+        //     addTransactionWithType({hash: response.hash,
+        //       type: TRANSACTION_TYPE.REMOVE_LIQUIDITY,
         //       summary:
         //         liquidityValue0?.toSignificant(6) +
         //         ' ' +
@@ -361,6 +364,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     [onUserInput],
   )
 
+  if (!isEVM) return <Redirect to="/" />
   return (
     <>
       <TransactionConfirmationModal
@@ -414,7 +418,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
             color={theme.subText}
             style={{ borderRadius: '4px', marginBottom: '1.25rem' }}
           >
-            The owner of this liquidity position is {shortenAddress(owner)}
+            The owner of this liquidity position is {shortenAddress(chainId, owner)}
             <span style={{ display: 'inline-block' }}>
               <Copy toCopy={owner}></Copy>
             </span>
@@ -480,7 +484,8 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                     <CurrencyInputPanel
                       value={formattedAmounts[Field.CURRENCY_A]}
                       onUserInput={onCurrencyAInput}
-                      showMaxButton={false}
+                      onMax={null}
+                      onHalf={null}
                       currency={liquidityValue0?.currency}
                       onCurrencySelect={() => null}
                       id="remove-liquidity-tokena"
@@ -495,7 +500,8 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                     <CurrencyInputPanel
                       value={formattedAmounts[Field.CURRENCY_B]}
                       onUserInput={onCurrencyBInput}
-                      showMaxButton={false}
+                      onMax={null}
+                      onHalf={null}
                       currency={liquidityValue1?.currency}
                       onCurrencySelect={() => null}
                       id="remove-liquidity-tokenb"

@@ -55,24 +55,6 @@ const MobileChart = styled.div<{ fullscreen: boolean; $loading: boolean }>`
   ${({ $loading }) => `display:${$loading ? 'none' : 'block'};`}
 `
 
-export interface ChartContainerProps {
-  symbol: ChartingLibraryWidgetOptions['symbol']
-  interval: ChartingLibraryWidgetOptions['interval']
-
-  // BEWARE: no trailing slash is expected in feed URL
-  datafeedUrl: string
-  libraryPath: ChartingLibraryWidgetOptions['library_path']
-  chartsStorageUrl: ChartingLibraryWidgetOptions['charts_storage_url']
-  chartsStorageApiVersion: ChartingLibraryWidgetOptions['charts_storage_api_version']
-  clientId: ChartingLibraryWidgetOptions['client_id']
-  userId: ChartingLibraryWidgetOptions['user_id']
-  fullscreen: ChartingLibraryWidgetOptions['fullscreen']
-  autosize: ChartingLibraryWidgetOptions['autosize']
-  studiesOverrides: ChartingLibraryWidgetOptions['studies_overrides']
-  container: ChartingLibraryWidgetOptions['container']
-  onReady: () => void
-}
-
 const LOCALSTORAGE_STATE_NAME = 'proChartSavedState'
 
 function openFullscreen(elem: any) {

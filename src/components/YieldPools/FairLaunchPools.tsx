@@ -2,11 +2,12 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import { useEffect, useState } from 'react'
+import { Redirect } from 'react-router-dom'
 import { Text } from 'rebass'
 
 import ShareModal from 'components/ShareModal'
 import { OUTSIDE_FAIRLAUNCH_ADDRESSES } from 'constants/index'
-import { NETWORKS_INFO } from 'constants/networks'
+import { EVMNetworkInfo } from 'constants/networks/type'
 import { useActiveWeb3React } from 'hooks'
 import { useFairLaunchVersion } from 'hooks/useContract'
 import useFairLaunch from 'hooks/useFairLaunch'
@@ -33,8 +34,8 @@ interface FarmsListProps {
 
 const FairLaunchPools = ({ fairLaunchAddress, farms }: FarmsListProps) => {
   const dispatch = useAppDispatch()
-  const { chainId, account } = useActiveWeb3React()
-  const networkRoute = chainId ? NETWORKS_INFO[chainId].route : undefined
+  const { chainId, account, isEVM, networkInfo } = useActiveWeb3React()
+  const networkRoute = networkInfo.route || undefined
   const theme = useTheme()
   const blockNumber = useBlockNumber()
   const totalRewards = useFarmRewards(farms)
@@ -46,8 +47,25 @@ const FairLaunchPools = ({ fairLaunchAddress, farms }: FarmsListProps) => {
   const openShareModal = useOpenModal(ApplicationModal.SHARE)
   const isShareModalOpen = useModalOpen(ApplicationModal.SHARE)
 
+  useEffect(() => {
+    if (sharedPoolAddress) {
+      openShareModal()
+    }
+  }, [openShareModal, sharedPoolAddress])
+
+  useEffect(() => {
+    setSharedPoolAddress(addr => {
+      if (!isShareModalOpen) {
+        return ''
+      }
+
+      return addr
+    })
+  }, [isShareModalOpen, setSharedPoolAddress])
+
+  if (!isEVM) return <Redirect to="/" />
   const shareUrl = sharedPoolAddress
-    ? window.location.origin + '/farms?search=' + sharedPoolAddress + '&tab=classic&networkId=' + networkRoute
+    ? window.location.origin + `/farms/${networkRoute}?search=` + sharedPoolAddress + '&tab=classic'
     : undefined
 
   const handleHarvestAll = async () => {
@@ -114,13 +132,13 @@ const FairLaunchPools = ({ fairLaunchAddress, farms }: FarmsListProps) => {
           if (!isFarmStarted) {
             remainingBlocks = farm && blockNumber && farm.startBlock - blockNumber
             estimatedRemainingSeconds =
-              remainingBlocks && remainingBlocks * NETWORKS_INFO[chainId || ChainId.MAINNET].averageBlockTimeInSeconds
+              remainingBlocks && remainingBlocks * (networkInfo as EVMNetworkInfo).averageBlockTimeInSeconds
             formattedEstimatedRemainingTime =
               estimatedRemainingSeconds && getFormattedTimeFromSecond(estimatedRemainingSeconds)
           } else {
             remainingBlocks = farm && blockNumber && farm.endBlock - blockNumber
             estimatedRemainingSeconds =
-              remainingBlocks && remainingBlocks * NETWORKS_INFO[chainId || ChainId.MAINNET].averageBlockTimeInSeconds
+              remainingBlocks && remainingBlocks * (networkInfo as EVMNetworkInfo).averageBlockTimeInSeconds
             formattedEstimatedRemainingTime =
               estimatedRemainingSeconds && getFormattedTimeFromSecond(estimatedRemainingSeconds)
           }
@@ -157,22 +175,6 @@ const FairLaunchPools = ({ fairLaunchAddress, farms }: FarmsListProps) => {
   const displayFarms = farmsList.sort((a, b) => b.endBlock - a.endBlock)
 
   const outsideFarm = OUTSIDE_FAIRLAUNCH_ADDRESSES[fairLaunchAddress]
-
-  useEffect(() => {
-    if (sharedPoolAddress) {
-      openShareModal()
-    }
-  }, [openShareModal, sharedPoolAddress])
-
-  useEffect(() => {
-    setSharedPoolAddress(addr => {
-      if (!isShareModalOpen) {
-        return ''
-      }
-
-      return addr
-    })
-  }, [isShareModalOpen, setSharedPoolAddress])
 
   return (
     <FairLaunchPoolsWrapper>

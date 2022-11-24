@@ -4,13 +4,13 @@ import { BellOff } from 'react-feather'
 import { Text } from 'rebass'
 import styled, { css } from 'styled-components'
 
-import { Spinner } from 'components/Header/Polling'
 import NotificationIcon from 'components/Icons/NotificationIcon'
 import NotificationModal from 'components/SubscribeButton/NotificationModal'
 import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useNotification, { NOTIFICATION_TOPICS } from 'hooks/useNotification'
 import useTheme from 'hooks/useTheme'
+import { StyledSpinner } from 'pages/TrueSight/styled'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useNotificationModalToggle, useWalletModalToggle } from 'state/application/hooks'
 
@@ -62,13 +62,6 @@ const UnSubscribeButton = styled(ButtonOutlined)<{ iconOnly?: boolean }>`
   `}
 `
 
-const StyledSpinner = styled(Spinner)<{ color: string }>`
-  border-left: ${({ color }) => `1px solid  ${color}`};
-  width: 16px;
-  height: 16px;
-  top: 0px;
-  left: 0px;
-`
 const ButtonText = styled(Text)<{ iconOnly?: boolean }>`
   font-size: 14px;
   font-weight: 500;

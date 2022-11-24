@@ -1,6 +1,4 @@
-import { ChainId, Currency, Token } from '@kyberswap/ks-sdk-core'
-
-import { NETWORKS_INFO } from 'constants/networks'
+import { Currency, Token } from '@kyberswap/ks-sdk-core'
 
 /**
  * ex:  nguyen hoai danh => nguyen-hoai-danh
@@ -17,10 +15,6 @@ export function convertToSlug(text: string) {
 
 export const getSymbolSlug = (token: Currency | Token | undefined) =>
   token ? convertToSlug(token?.symbol || token?.wrapped?.symbol || '') : ''
-
-export const getNetworkSlug = (chainId: ChainId | undefined) => {
-  return chainId ? NETWORKS_INFO[chainId].route : ''
-}
 
 export const isInEnum = <T extends Record<string, string>>(str: string, enumParam: T): str is T[keyof T] => {
   return Object.values(enumParam).includes(str)

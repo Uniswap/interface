@@ -1,18 +1,23 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
 
 import AVAX from 'assets/networks/avax-network.png'
-import { KS_SETTING_API } from 'constants/env'
+import { AGGREGATOR_API, KS_SETTING_API } from 'constants/env'
+import { EVMNetworkInfo } from 'constants/networks/type'
 import { createClient } from 'utils/client'
-
-import { NetworkInfo } from '../type'
 
 const NOT_SUPPORT = null
 
-const avaxInfo: NetworkInfo = {
+const avaxInfo: EVMNetworkInfo = {
   chainId: ChainId.AVAXMAINNET,
   route: 'avalanche',
+  ksSettingRoute: 'avalanche',
+  priceRoute: 'avalanche',
+  poolFarmRoute: 'avalanche',
   name: 'Avalanche',
   icon: AVAX,
+  iconDark: NOT_SUPPORT,
+  iconSelected: NOT_SUPPORT,
+  iconDarkSelected: NOT_SUPPORT,
   classicClient: createClient('https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-exchange-avalanche'),
   elasticClient: createClient('https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-elastic-avalanche'),
   blockClient: createClient('https://api.thegraph.com/subgraphs/name/ducquangkstn/avalache-blocks'),
@@ -22,13 +27,14 @@ const avaxInfo: NetworkInfo = {
   bridgeURL: 'https://bridge.avax.network',
   nativeToken: {
     symbol: 'AVAX',
-    name: 'AVAX (Wrapped)',
-    address: '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7',
+    name: 'AVAX',
     logo: AVAX,
     decimal: 18,
+    minForGas: 10 ** 16,
   },
   rpcUrl: 'https://avalanche.kyberengineering.io',
-  routerUri: `${process.env.REACT_APP_AGGREGATOR_API}/avalanche/route/encode`,
+  routerUri: `${AGGREGATOR_API}/avalanche/route/encode`,
+  multicall: '0xF2FD8219609E28C61A998cc534681f95D2740f61',
   classic: {
     static: {
       zap: '0x2abE8750e4a65584d7452316356128C936273e0D',
@@ -62,12 +68,14 @@ const avaxInfo: NetworkInfo = {
     initCodeHash: '0xc597aba1bb02db42ba24a8878837965718c032f8b46be94a6e46452a9f89ca01',
     quoter: '0x0D125c15D54cA1F8a813C74A81aEe34ebB508C1f',
     routers: '0xC1e7dFE73E1598E3910EF4C7845B68A9Ab6F4c83',
+    farms: ['0xBdEc4a045446F583dc564C0A227FFd475b329bf0', '0x5C503D4b7DE0633f031229bbAA6A5e4A31cc35d8'],
   },
   averageBlockTimeInSeconds: 1.85,
   coingeckoNetworkId: 'avalanche',
   coingeckoNativeTokenId: 'avalanche-2',
   deBankSlug: 'avax',
-  internalRoute: 'avalanche',
+  trueSightId: 'avax',
+  dexToCompare: 'traderjoe',
 }
 
 export default avaxInfo

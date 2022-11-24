@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import React from 'react'
 import { Archive, Repeat } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { useMedia } from 'react-use'
@@ -393,7 +392,7 @@ function AboutKNC() {
               {LIST_WALLETS.map(wallet => (
                 <img
                   key={wallet.logo}
-                  src={require(`../../assets/wallets/${isDarkMode ? wallet.logo : wallet.lightLogo}.svg`).default}
+                  src={require(`assets/wallets/${isDarkMode ? wallet.logo : wallet.lightLogo}.svg`).default}
                   alt={wallet.logo}
                   style={{ margin: 'auto' }}
                 />
@@ -414,7 +413,7 @@ function AboutKNC() {
                 <SwiperSlide key={wallet.logo}>
                   <ExchangeWrapper>
                     <img
-                      src={require(`../../assets/wallets/${isDarkMode ? wallet.logo : wallet.lightLogo}.svg`).default}
+                      src={require(`assets/wallets/${isDarkMode ? wallet.logo : wallet.lightLogo}.svg`).default}
                       alt={wallet.logo}
                       width="160px"
                       style={{ margin: 'auto' }}

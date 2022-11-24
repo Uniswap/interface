@@ -115,7 +115,7 @@ function LiveChart({
   currencies: { [field in Field]?: Currency }
   onRotateClick?: () => void
 }) {
-  const { chainId } = useActiveWeb3React()
+  const { chainId, isSolana } = useActiveWeb3React()
   const theme = useTheme()
   const nativeInputCurrency = useCurrencyConvertedToNative(currencies[Field.INPUT] || undefined)
   const nativeOutputCurrency = useCurrencyConvertedToNative(currencies[Field.OUTPUT] || undefined)
@@ -124,6 +124,7 @@ function LiveChart({
   }, [nativeInputCurrency, nativeOutputCurrency])
 
   const isWrappedToken = !!tokens[0]?.address && tokens[0]?.address === tokens[1]?.address
+  const isUnwrapingWSOL = isSolana && isWrappedToken && currencies[Field.INPUT]?.isToken
   const [hoverValue, setHoverValue] = useState<number | null>(null)
   const [timeFrame, setTimeFrame] = useState<LiveDataTimeframeEnum>(LiveDataTimeframeEnum.DAY)
   const [stateProChart, setStateProChart] = useState({
@@ -245,11 +246,15 @@ function LiveChart({
         >
           <CircleInfoIcon />
           <Text fontSize={16} textAlign={'center'}>
-            <Trans>
-              You can swap {nativeInputCurrency?.symbol} for {nativeOutputCurrency?.symbol} (and vice versa)
-              <br />
-              Exchange rate is always 1 to 1.
-            </Trans>
+            {isUnwrapingWSOL ? (
+              <Trans>You can only swap all WSOL to SOL</Trans>
+            ) : (
+              <Trans>
+                You can swap {nativeInputCurrency?.symbol} for {nativeOutputCurrency?.symbol} (and vice versa)
+              </Trans>
+            )}
+            <br />
+            <Trans>Exchange rate is always 1 to 1.</Trans>
           </Text>
         </Flex>
       ) : (

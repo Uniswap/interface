@@ -1,8 +1,8 @@
 import { Fraction, WETH } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import JSBI from 'jsbi'
-import React, { useEffect, useState } from 'react'
-import { RouteComponentProps } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Redirect, RouteComponentProps } from 'react-router-dom'
 
 import LiquidityProviderMode from 'components/LiquidityProviderMode'
 import { AddRemoveTabs, LiquidityAction } from 'components/NavigationTabs'
@@ -24,7 +24,7 @@ export default function AddLiquidity({
     params: { currencyIdA, currencyIdB, pairAddress },
   },
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string; pairAddress: string }>) {
-  const { chainId } = useActiveWeb3React()
+  const { chainId, isEVM } = useActiveWeb3React()
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
 
@@ -53,6 +53,8 @@ export default function AddLiquidity({
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  if (!isEVM) return <Redirect to="/" />
   return (
     <>
       <PageWrapper>

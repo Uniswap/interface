@@ -39,7 +39,7 @@ jobs:
       - name: Set up Node.js 16.x
         uses: actions/setup-node@v1
         with:
-          node-version: 16.x
+          node-version: 16.18.1
 
       - name: Restore node_modules
         uses: actions/cache@v2

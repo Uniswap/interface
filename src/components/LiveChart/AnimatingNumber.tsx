@@ -5,16 +5,6 @@ import styled from 'styled-components'
 
 import useTheme from 'hooks/useTheme'
 
-export function usePrevious(value: number) {
-  const ref = useRef<number>(value)
-
-  useEffect(() => {
-    ref.current = value
-  })
-
-  return ref.current
-}
-
 function formatForDisplay(number = 0) {
   if (number > 1000000) return Math.max(number, 0).toString().split('').reverse()
   else {

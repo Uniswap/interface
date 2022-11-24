@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import React from 'react'
 import { Repeat } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { useMedia } from 'react-use'
@@ -10,7 +9,7 @@ import { MoneyBagOutline } from 'components/Icons'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 
-const KyberSwapGeneralIntro = () => {
+const KyberSwapGeneralIntro = ({ isSolana }: { isSolana: boolean }) => {
   const above768 = useMedia('(min-width: 768px)')
   const theme = useTheme()
   const { mixpanelHandler } = useMixpanel()
@@ -91,6 +90,41 @@ const KyberSwapGeneralIntro = () => {
     )
   }
 
+  if (above768 && isSolana) {
+    return (
+      <Box
+        style={{
+          marginTop: '36px',
+          display: 'flex',
+          flexFlow: 'column',
+          alignItems: 'center',
+          gap: '36px',
+          padding: '0px 80px',
+        }}
+      >
+        <Text
+          as="span"
+          sx={{
+            fontWeight: 400,
+            fontSize: '18px',
+            lineHeight: '28px',
+            textAlign: 'center',
+          }}
+        >
+          <Trans>
+            KyberSwap is a decentralized exchange (DEX) aggregator. We provide our traders with the{' '}
+            <b>best token prices</b> by analyzing rates across thousands of exchanges instantly!
+          </Trans>{' '}
+          <Trans>
+            KyberSwap is also an automated market maker (AMM) with industry-leading liquidity protocols and{' '}
+            <b>concentrated liquidity</b>. Liquidity providers can add liquidity to our pools & <b>earn fees</b>!
+          </Trans>
+        </Text>
+        {renderSwapNowButton()}
+      </Box>
+    )
+  }
+
   if (above768) {
     return (
       <Box
@@ -126,27 +160,43 @@ const KyberSwapGeneralIntro = () => {
         rowGap: '48px',
       }}
     >
-      <Flex
-        flexDirection={'column'}
-        sx={{
-          alignItems: 'center',
-          rowGap: '16px',
-        }}
-      >
-        {renderKyberSwapIntroDEX()}
-        {renderSwapNowButton()}
-      </Flex>
+      {isSolana ? (
+        <Flex
+          flexDirection={'column'}
+          sx={{
+            alignItems: 'center',
+            rowGap: '16px',
+          }}
+        >
+          {renderKyberSwapIntroDEX()}
+          {renderKyberSwapIntroAMM()}
+          {renderSwapNowButton()}
+        </Flex>
+      ) : (
+        <>
+          <Flex
+            flexDirection={'column'}
+            sx={{
+              alignItems: 'center',
+              rowGap: '16px',
+            }}
+          >
+            {renderKyberSwapIntroDEX()}
+            {renderSwapNowButton()}
+          </Flex>
 
-      <Flex
-        flexDirection={'column'}
-        sx={{
-          alignItems: 'center',
-          rowGap: '16px',
-        }}
-      >
-        {renderKyberSwapIntroAMM()}
-        {renderStartEarningButton()}
-      </Flex>
+          <Flex
+            flexDirection={'column'}
+            sx={{
+              alignItems: 'center',
+              rowGap: '16px',
+            }}
+          >
+            {renderKyberSwapIntroAMM()}
+            {renderStartEarningButton()}
+          </Flex>
+        </>
+      )}
     </Flex>
   )
 }

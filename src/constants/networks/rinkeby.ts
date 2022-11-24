@@ -3,19 +3,24 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 import EthereumLogo from 'assets/images/ethereum-logo.png'
 import Mainnet from 'assets/networks/mainnet-network.svg'
 import { KS_SETTING_API } from 'constants/env'
+import { EVMNetworkInfo } from 'constants/networks/type'
 import { createClient } from 'utils/client'
-
-import { NetworkInfo } from '../type'
 
 const EMPTY = ''
 const EMPTY_ARRAY: any[] = []
 const NOT_SUPPORT = null
 
-const rinkebyInfo: NetworkInfo = {
+const rinkebyInfo: EVMNetworkInfo = {
   chainId: ChainId.RINKEBY,
   route: 'rinkeby',
+  ksSettingRoute: 'ethereum',
+  priceRoute: 'ethereum',
+  poolFarmRoute: EMPTY,
   name: 'Rinkeby',
   icon: Mainnet,
+  iconDark: NOT_SUPPORT,
+  iconSelected: NOT_SUPPORT,
+  iconDarkSelected: NOT_SUPPORT,
   classicClient: createClient('https://api.thegraph.com/subgraphs/name/nguyenhuudungz/dmm-exchange-ropsten'), //todo: not exits yet
   elasticClient: createClient('https://api.thegraph.com/subgraphs/name/viet-nv/promm-rinkeby'),
   blockClient: createClient('https://api.thegraph.com/subgraphs/name/billjhlee/rinkeby-blocks'),
@@ -24,14 +29,15 @@ const rinkebyInfo: NetworkInfo = {
   tokenListUrl: `${KS_SETTING_API}/v1/tokens?chainIds=${ChainId.RINKEBY}&isWhitelisted=${true}`,
   bridgeURL: EMPTY,
   nativeToken: {
-    symbol: 'ETH',
-    name: 'ETH (Wrapped)',
-    address: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
+    symbol: 'rETH',
+    name: 'RinkebyETH',
     logo: EthereumLogo,
     decimal: 18,
+    minForGas: 10 ** 16,
   },
   rpcUrl: 'https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
   routerUri: 'https://aggregator-api.dev.kyberengineering.io/rinkeby/route/encode',
+  multicall: '0x5ba1e12693dc8f9c48aad8770482f4739beed696',
   classic: {
     static: {
       zap: EMPTY,
@@ -44,7 +50,7 @@ const rinkebyInfo: NetworkInfo = {
       router: EMPTY,
       factory: EMPTY,
     },
-    claimReward: EMPTY,
+    claimReward: NOT_SUPPORT,
     fairlaunch: EMPTY_ARRAY,
     fairlaunchV2: EMPTY_ARRAY,
   },
@@ -55,12 +61,14 @@ const rinkebyInfo: NetworkInfo = {
     initCodeHash: '0x9af381b43515b80cfc9d1c3abe15a1ebd48392d5df2bcce1eb4940eea548c789',
     quoter: '0x5BcbB0bb7236d9fb3DB4C996B05f0e6162Ba5B64',
     routers: '0x335cB9b399e3c33c4a0d1bE7407675C888f66e86',
+    farms: ['0x13c8F670d3bbd4456870a2C49Bb927F166A977Bd'],
   },
   averageBlockTimeInSeconds: 13.13,
-  coingeckoNetworkId: EMPTY,
-  coingeckoNativeTokenId: EMPTY,
+  coingeckoNetworkId: 'ethereum',
+  coingeckoNativeTokenId: 'ethereum',
   deBankSlug: EMPTY,
-  internalRoute: EMPTY,
+  trueSightId: NOT_SUPPORT,
+  dexToCompare: NOT_SUPPORT,
 }
 
 export default rinkebyInfo

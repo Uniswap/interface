@@ -2,31 +2,24 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { Router, Trade } from '@kyberswap/ks-sdk-classic'
 import { Currency, Percent, TradeType } from '@kyberswap/ks-sdk-core'
-import { SwapRouter as ProAmmRouter, Trade as ProAmmTrade } from '@kyberswap/ks-sdk-elastic'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 
+import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from 'constants/index'
+import { useActiveWeb3React, useWeb3React } from 'hooks'
+import { useTradeExactIn } from 'hooks/Trades'
+import useENS from 'hooks/useENS'
+import useTransactionDeadline from 'hooks/useTransactionDeadline'
+import { useTransactionAdder } from 'state/transactions/hooks'
+import { TRANSACTION_TYPE } from 'state/transactions/type'
+import { calculateGasMargin, isAddress, shortenAddress } from 'utils'
 import { formatCurrencyAmount } from 'utils/formatBalance'
+import { getDynamicFeeRouterContract } from 'utils/getContract'
+import isZero from 'utils/isZero'
 
-import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
-import { useTransactionAdder } from '../state/transactions/hooks'
-import {
-  basisPointsToPercent,
-  calculateGasMargin,
-  getDynamicFeeRouterContract,
-  getProAmmRouterContract,
-  isAddress,
-  shortenAddress,
-} from '../utils'
-import isZero from '../utils/isZero'
-import { useTradeExactIn } from './Trades'
-import { useActiveWeb3React } from './index'
-import useENS from './useENS'
-import useTransactionDeadline from './useTransactionDeadline'
+export type AnyTrade = Trade<Currency, Currency, TradeType>
 
-export type AnyTrade = Trade<Currency, Currency, TradeType> | ProAmmTrade<Currency, Currency, TradeType>
-
-export enum SwapCallbackState {
+enum SwapCallbackState {
   INVALID,
   LOADING,
   VALID,
@@ -61,76 +54,55 @@ function useSwapCallArguments(
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): SwapCall[] {
-  const { account, chainId, library } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
+  const { library } = useWeb3React()
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
   const deadline = useTransactionDeadline()
-  const tradeBestExacInAnyway = useTradeExactIn(
-    trade instanceof ProAmmTrade ? undefined : trade?.inputAmount,
-    trade instanceof ProAmmTrade ? undefined : trade?.outputAmount.currency || undefined,
-  )
+  const tradeBestExactInAnyway = useTradeExactIn(trade?.inputAmount, trade?.outputAmount.currency || undefined)
   return useMemo(() => {
     if (!trade || !recipient || !library || !account || !chainId || !deadline) return []
 
-    if (trade instanceof Trade) {
-      const routerContract: Contract | null = getDynamicFeeRouterContract(chainId, library, account)
-      if (!routerContract) {
-        return []
-      }
-      const swapMethods = [
+    const routerContract: Contract | null = getDynamicFeeRouterContract(chainId, library, account)
+    if (!routerContract) {
+      return []
+    }
+    const swapMethods = [
+      Router.swapCallParameters(trade, {
+        feeOnTransfer: false,
+        allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+        recipient,
+        deadline: deadline.toNumber(),
+      }),
+    ]
+
+    if (trade.tradeType === TradeType.EXACT_INPUT) {
+      swapMethods.push(
         Router.swapCallParameters(trade, {
-          feeOnTransfer: false,
+          feeOnTransfer: true,
           allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
           recipient,
           deadline: deadline.toNumber(),
         }),
-      ]
-
-      if (trade.tradeType === TradeType.EXACT_INPUT) {
-        swapMethods.push(
-          Router.swapCallParameters(trade, {
-            feeOnTransfer: true,
-            allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-            recipient,
-            deadline: deadline.toNumber(),
-          }),
-        )
-      } else if (!!tradeBestExacInAnyway) {
-        swapMethods.push(
-          Router.swapCallParameters(tradeBestExacInAnyway, {
-            feeOnTransfer: true,
-            allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-            recipient,
-            deadline: deadline.toNumber(),
-          }),
-        )
-      }
-
-      return swapMethods.map(({ methodName, args, value }) => ({
-        address: routerContract.address,
-        calldata: routerContract.interface.encodeFunctionData(methodName, args),
-        value,
-      }))
-    } else {
-      const routerProAmmContract: Contract | null = getProAmmRouterContract(chainId, library, account)
-      if (!routerProAmmContract) return []
-      const options = {
-        recipient,
-        slippageTolerance: basisPointsToPercent(allowedSlippage),
-        deadline: deadline.toString(),
-      }
-
-      const { value, calldata } = ProAmmRouter.swapCallParameters([trade], options)
-      return [
-        {
-          address: routerProAmmContract.address,
-          calldata,
-          value,
-        },
-      ]
+      )
+    } else if (!!tradeBestExactInAnyway) {
+      swapMethods.push(
+        Router.swapCallParameters(tradeBestExactInAnyway, {
+          feeOnTransfer: true,
+          allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+          recipient,
+          deadline: deadline.toNumber(),
+        }),
+      )
     }
-  }, [account, allowedSlippage, chainId, deadline, library, recipient, trade, tradeBestExacInAnyway])
+
+    return swapMethods.map(({ methodName, args, value }) => ({
+      address: routerContract.address,
+      calldata: routerContract.interface.encodeFunctionData(methodName, args),
+      value,
+    }))
+  }, [account, allowedSlippage, chainId, deadline, library, recipient, trade, tradeBestExactInAnyway])
 }
 
 // returns a function that will execute a swap, if the parameters are all valid
@@ -140,7 +112,8 @@ export function useSwapCallback(
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
-  const { account, chainId, library } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
+  const { library } = useWeb3React()
 
   const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName)
 
@@ -179,23 +152,23 @@ export function useSwapCallback(
 
             return library
               .estimateGas(tx)
-              .then(gasEstimate => {
+              .then((gasEstimate: BigNumber) => {
                 return {
                   call,
                   gasEstimate,
                 }
               })
-              .catch(gasError => {
+              .catch((gasError: any) => {
                 // This callback only for swap legacy, dont need to track error on sentry
                 console.debug('Gas estimate failed, trying eth_call to extract error', call)
 
                 return library
                   .call(tx)
-                  .then(result => {
+                  .then((result: any) => {
                     console.debug('Unexpected successful call after failed estimate gas', call, gasError, result)
                     return { call, error: new Error('Unexpected issue with estimating the gas. Please try again.') }
                   })
-                  .catch(callError => {
+                  .catch((callError: any) => {
                     console.debug('Call threw error', call, callError)
                     let errorMessage: string
                     switch (callError.message) {
@@ -252,21 +225,18 @@ export function useSwapCallback(
               recipient === account
                 ? base
                 : `${base} to ${
-                    recipientAddressOrName && isAddress(recipientAddressOrName)
-                      ? shortenAddress(recipientAddressOrName)
+                    recipientAddressOrName && isAddress(chainId, recipientAddressOrName)
+                      ? shortenAddress(chainId, recipientAddressOrName)
                       : recipientAddressOrName
                   }`
 
-            addTransactionWithType(response, {
-              type: 'Swap',
-              summary: withRecipient,
-            })
+            addTransactionWithType({ hash: response.hash, type: TRANSACTION_TYPE.SWAP, summary: withRecipient })
 
             return response.hash
           })
           .catch((error: any) => {
             // if the user rejected the tx, pass this along
-            if (error?.code === 4001) {
+            if (error?.code === 4001 || error?.code === 'ACTION_REJECTED') {
               throw new Error('Transaction rejected.')
             } else {
               // otherwise, the error was unexpected and we need to convey that

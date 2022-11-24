@@ -3,7 +3,7 @@ import { MaskOptions } from 'walktour'
 
 import { ReactComponent as TouchIcon } from 'assets/svg/touch_icon.svg'
 
-import { StepCustom } from './constant'
+import { StepTutorial } from './constant'
 
 const pointerToSetting = keyframes`
   from {
@@ -55,10 +55,10 @@ const SpotLight = styled.div<{ blurWidth: number; hasSpotlight: boolean }>`
   border-radius: 30px;
   transition: 0.3s;
 `
-type Props = { options: MaskOptions; stepInfo: StepCustom }
+type Props = { options: MaskOptions; stepInfo: StepTutorial }
 
 function CustomMask({ options, stepInfo }: Props) {
-  const { hasPointer, spotlightInteraction, selector, stopPropagationMouseDown } = stepInfo || ({} as StepCustom)
+  const { hasPointer, spotlightInteraction, selector, stopPropagationMouseDown } = stepInfo || ({} as StepTutorial)
   const { targetInfo, padding = 0, tourRoot, disableMaskInteraction } = options
   const containerHeight = document.body.scrollHeight
   const containerWidth = tourRoot.scrollWidth

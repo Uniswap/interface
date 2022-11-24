@@ -1,28 +1,27 @@
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { Settings } from 'react-feather'
 import { useLocation } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 
+import { ButtonEmpty, ButtonLight } from 'components/Button'
+import { AutoColumn } from 'components/Column'
 import ArrowRight from 'components/Icons/ArrowRight'
 import LanguageSelector from 'components/LanguageSelector'
 import MenuFlyout from 'components/MenuFlyout'
+import { RowBetween, RowFixed } from 'components/Row'
 import ThemeToggle from 'components/Toggle/ThemeToggle'
 import { TutorialIds } from 'components/Tutorial/TutorialSwap/constant'
+import { APP_PATHS } from 'constants/index'
 import { LOCALE_LABEL, SupportedLocale } from 'constants/locales'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
-import { AppPaths } from 'pages/App'
+import { ApplicationModal } from 'state/application/actions'
+import { useModalOpen, useToggleSettingsMenu } from 'state/application/hooks'
 import { useTutorialSwapGuide } from 'state/tutorial/hooks'
 import { useDarkModeManager, useUserLocale } from 'state/user/hooks'
-
-import { ApplicationModal } from '../../state/application/actions'
-import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
-import { ButtonEmpty, ButtonLight } from '../Button'
-import { AutoColumn } from '../Column'
-import { RowBetween, RowFixed } from '../Row'
 
 const StyledMenuIcon = styled(Settings)`
   height: 20px;
@@ -118,7 +117,7 @@ export default function SettingsTab() {
     toggle()
   }
   const location = useLocation()
-  const isShowTutorialBtn = location.pathname.startsWith(AppPaths.SWAP)
+  const isShowTutorialBtn = location.pathname.startsWith(APP_PATHS.SWAP)
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>

@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { ChevronDown } from 'react-feather'
 import { Flex, Text } from 'rebass'
@@ -106,8 +106,7 @@ export const GlobalData = () => {
 }
 
 export const Instruction = () => {
-  const qs = useParsedQueryString()
-  const tab = (qs.tab as string) || VERSION.ELASTIC
+  const { tab = VERSION.ELASTIC } = useParsedQueryString<{ tab: string }>()
 
   const theme = useTheme()
 

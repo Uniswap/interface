@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { MaxUint256 } from '@ethersproject/constants'
-import { ChainId, Fraction, Token, TokenAmount } from '@kyberswap/ks-sdk-core'
+import { Fraction, Token, TokenAmount } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import { ethers } from 'ethers'
 import JSBI from 'jsbi'
@@ -22,6 +22,12 @@ import InfoHelper from 'components/InfoHelper'
 import Modal from 'components/Modal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Dots } from 'components/swap/styleds'
+import {
+  DMM_ANALYTICS_URL,
+  MAX_ALLOW_APY,
+  OUTSIDE_FAIRLAUNCH_ADDRESSES,
+  TOBE_EXTENDED_FARMING_POOLS,
+} from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import { useToken } from 'hooks/Tokens'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
@@ -42,12 +48,6 @@ import { getTradingFeeAPR, useFarmApr, useFarmRewards, useFarmRewardsUSD } from 
 import { formatTokenBalance, getFullDisplayBalance } from 'utils/formatBalance'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
 
-import {
-  DMM_ANALYTICS_URL,
-  MAX_ALLOW_APY, // FARMING_POOLS_CHAIN_STAKING_LINK,
-  OUTSIDE_FAIRLAUNCH_ADDRESSES,
-  TOBE_EXTENDED_FARMING_POOLS,
-} from '../../constants'
 import { ModalContentWrapper } from './ElasticFarmModals/styled'
 import { APRTooltipContent } from './FarmingPoolAPRCell'
 import { ActionButton, DataText, GetLP, RewardBalanceWrapper, StyledItemCard, TableRow } from './styleds'
@@ -69,20 +69,18 @@ interface ListItemProps {
 }
 
 const ListItem = ({ farm, setSharedPoolAddress }: ListItemProps) => {
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId, isEVM } = useActiveWeb3React()
   const toggleWalletModal = useWalletModalToggle()
   const currentTimestamp = Math.floor(Date.now() / 1000)
 
-  const qs = useParsedQueryString()
-  const type = qs.type || 'active'
-
+  const { type = 'active' } = useParsedQueryString<{ type: string }>()
   const breakpoint = useMedia('(min-width: 992px)')
   const dispatch = useAppDispatch()
 
   const currency0 = useToken(farm.token0?.id) as Token
   const currency1 = useToken(farm.token1?.id) as Token
 
-  const poolAddressChecksum = isAddressString(farm.id)
+  const poolAddressChecksum = isAddressString(chainId, farm.id)
   const { value: userTokenBalance, decimals: lpTokenDecimals } = useTokenBalance(poolAddressChecksum)
 
   const outsideFarm = OUTSIDE_FAIRLAUNCH_ADDRESSES[farm.fairLaunchAddress]
@@ -151,7 +149,7 @@ const ListItem = ({ farm, setSharedPoolAddress }: ListItemProps) => {
   const pairSymbol = `${farm.token0.symbol}-${farm.token1.symbol} LP`
   const [depositValue, setDepositValue] = useState('')
   const [withdrawValue, setWithdrawValue] = useState('')
-  const pairAddressChecksum = isAddressString(farm.id)
+  const pairAddressChecksum = isAddressString(chainId, farm.id)
   const balance = useTokenBalance(pairAddressChecksum)
   const staked = useStakedBalance(farm.fairLaunchAddress, farm.pid)
   const rewardUSD = useFarmRewardsUSD(farmRewards)
@@ -160,12 +158,12 @@ const ListItem = ({ farm, setSharedPoolAddress }: ListItemProps) => {
   const amountToApprove = useMemo(
     () =>
       TokenAmount.fromRawAmount(
-        new Token(chainId || 1, pairAddressChecksum, balance.decimals, pairSymbol, ''),
+        new Token(chainId, pairAddressChecksum, balance.decimals, pairSymbol, ''),
         MaxUint256.toString(),
       ),
     [balance.decimals, chainId, pairAddressChecksum, pairSymbol],
   )
-  const [approvalState, approve] = useApproveCallback(amountToApprove, !!chainId ? farm.fairLaunchAddress : undefined)
+  const [approvalState, approve] = useApproveCallback(amountToApprove, isEVM ? farm.fairLaunchAddress : undefined)
 
   let isStakeInvalidAmount
 
@@ -280,7 +278,7 @@ const ListItem = ({ farm, setSharedPoolAddress }: ListItemProps) => {
   const theme = useTheme()
 
   const now = +new Date() / 1000
-  const toBeExtendTime = TOBE_EXTENDED_FARMING_POOLS[isAddressString(farm.id)]
+  const toBeExtendTime = TOBE_EXTENDED_FARMING_POOLS[isAddressString(chainId, farm.id)]
   // only show if it will be ended less than 2 day
   const tobeExtended = toBeExtendTime && farm.endTime - now < 172800 && farm.endTime < toBeExtendTime
 
@@ -421,7 +419,6 @@ const ListItem = ({ farm, setSharedPoolAddress }: ListItemProps) => {
                         onHalf={() => {
                           setDepositValue(fixedFormatting(balance.value.div(2), balance.decimals))
                         }}
-                        showMaxButton={true}
                         currency={new Token(chainId, farm.id, balance.decimals, `${pairSymbol}`, `${pairSymbol}`)}
                         id="stake-lp-input"
                         disableCurrencySelect
@@ -452,7 +449,6 @@ const ListItem = ({ farm, setSharedPoolAddress }: ListItemProps) => {
                         onHalf={() => {
                           setWithdrawValue(fixedFormatting(staked.value.div(2), staked.decimals))
                         }}
-                        showMaxButton={true}
                         currency={new Token(chainId, farm.id, balance.decimals, `${pairSymbol}`, `${pairSymbol}`)}
                         id="unstake-lp-input"
                         disableCurrencySelect
@@ -478,9 +474,7 @@ const ListItem = ({ farm, setSharedPoolAddress }: ListItemProps) => {
               </Flex>
               <Flex justifyContent="space-between" sx={{ gap: '8px' }} alignItems="center" marginTop="20px">
                 <ExternalLink
-                  href={
-                    outsideFarm ? outsideFarm.poolInfoLink : `${DMM_ANALYTICS_URL[chainId as ChainId]}/pool/${farm.id}`
-                  }
+                  href={outsideFarm ? outsideFarm.poolInfoLink : `${DMM_ANALYTICS_URL[chainId]}/pool/${farm.id}`}
                 >
                   <GetLP>
                     <Trans>Get pool {outsideFarm ? `(${outsideFarm.name})` : ''} info</Trans> ↗
@@ -691,7 +685,7 @@ const ListItem = ({ farm, setSharedPoolAddress }: ListItemProps) => {
             </Flex>
 
             <Flex marginTop="8px" marginBottom="16px" fontSize={12} color={theme.subText}>
-              AMP = {amp} | {shortenAddress(farm.id)} <CopyHelper toCopy={farm.id} />
+              AMP = {amp} | {shortenAddress(chainId, farm.id)} <CopyHelper toCopy={farm.id} />
             </Flex>
 
             <Divider />

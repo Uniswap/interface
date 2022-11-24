@@ -1,6 +1,6 @@
 import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
-import React from 'react'
 
+import { TokenInfoWrapper } from 'components/swapv2/styleds'
 import { TOKEN_INFO_DESCRIPTION } from 'constants/tokenLists/token-info'
 import { useActiveWeb3React } from 'hooks'
 import useTokenInfo, { TokenInfo } from 'hooks/useTokenInfo'
@@ -8,7 +8,6 @@ import { useCurrencyConvertedToNative } from 'utils/dmm'
 import { getSymbolSlug } from 'utils/string'
 import { checkPairInWhiteList } from 'utils/tokenInfo'
 
-import { TokenInfoWrapper } from '../styleds'
 import SingleTokenInfo, { HowToSwap } from './SingleTokenInfo'
 
 const isEmptyData = (tokenInfo: TokenInfo) => {

@@ -104,7 +104,7 @@ export default memo(function Disclaimer({
         label: t`at this address`,
         content: account && (
           <Value>
-            <Text>{shortenAddress(account, 5)}</Text>
+            <Text>{shortenAddress(chainId, account, 5)}</Text>
             <CopyHelper toCopy={account} style={{ color: theme.subText }} />
           </Value>
         ),

@@ -1,5 +1,3 @@
-import React from 'react'
-
 function Gate({ width, height }: { width?: number; height?: number }) {
   return (
     <svg width={width || 160} height={height || 50} viewBox="0 0 160 50" fill="none" xmlns="http://www.w3.org/2000/svg">

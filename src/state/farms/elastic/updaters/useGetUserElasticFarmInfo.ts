@@ -10,7 +10,7 @@ import { useDispatch } from 'react-redux'
 
 import NFTPositionManagerABI from 'constants/abis/v2/ProAmmNFTPositionManager.json'
 import ELASTIC_FARM_ABI from 'constants/abis/v2/farm.json'
-import { NETWORKS_INFO } from 'constants/networks'
+import { NETWORKS_INFO, isEVM } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import { useMulticallContract } from 'hooks/useContract'
 import { useAppSelector } from 'state/hooks'
@@ -46,7 +46,7 @@ const useGetUserFarmingInfo = (interval?: boolean) => {
   const getUserFarmInfo = useCallback(async () => {
     const farmAddresses = elasticFarm.farms?.map(farm => farm.id)
 
-    if (chainId && account && farmAddresses?.length && multicallContract) {
+    if (isEVM(chainId) && account && farmAddresses?.length && multicallContract) {
       console.time('getUserFarmInfo')
       // get userDepositedNFTs
       const userDepositedNFTsFragment = farmInterface.getFunction('getDepositedNFTs')
@@ -245,7 +245,7 @@ const useGetUserFarmingInfo = (interval?: boolean) => {
 
   const { blockLast24h } = usePoolBlocks()
   const [getPoolInfo, { data: poolFeeData }] = useLazyQuery(POOL_FEE_HISTORY, {
-    client: NETWORKS_INFO[chainId || ChainId.MAINNET].elasticClient,
+    client: isEVM(chainId) ? NETWORKS_INFO[chainId].elasticClient : NETWORKS_INFO[ChainId.MAINNET].elasticClient,
     fetchPolicy: 'network-only',
   })
 

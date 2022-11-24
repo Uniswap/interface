@@ -1,5 +1,3 @@
-import React from 'react'
-
 import useTheme from 'hooks/useTheme'
 
 function Bttc({ size = 36, color }: { size?: number; color?: string }) {

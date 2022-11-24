@@ -16,10 +16,6 @@ export const ButtonText = styled.button`
   :hover {
     opacity: 0.7;
   }
-
-  :focus {
-    text-decoration: underline;
-  }
 `
 
 export const Button = styled.button.attrs<{ warning: boolean }, { backgroundColor: string }>(({ warning, theme }) => ({

@@ -1,4 +1,3 @@
-import { ChainId } from '@kyberswap/ks-sdk-core'
 import { t } from '@lingui/macro'
 import { rgba } from 'polished'
 import React from 'react'
@@ -10,7 +9,6 @@ import styled from 'styled-components'
 import { ButtonEmpty } from 'components/Button'
 import Cart from 'components/Icons/Cart'
 import { MouseoverTooltipDesktopOnly } from 'components/Tooltip'
-import { TRUESIGHT_NETWORK_TO_CHAINID } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
@@ -28,9 +26,8 @@ const TopTrendingSoonTokenItem = ({
 }) => {
   const theme = useTheme()
   const { mixpanelHandler } = useMixpanel()
-  const { chainId = ChainId.MAINNET } = useActiveWeb3React()
-  const currentNetworkIndex = Object.values(TRUESIGHT_NETWORK_TO_CHAINID).indexOf(chainId)
-  const currentNetwork = Object.keys(TRUESIGHT_NETWORK_TO_CHAINID)[currentNetworkIndex]
+  const { networkInfo } = useActiveWeb3React()
+  const currentNetwork = networkInfo.trueSightId || ''
   const toggleTrendingSoonTokenDetailModal = useToggleModal(ApplicationModal.TRENDING_SOON_TOKEN_DETAIL)
 
   const onSelectToken = () => {

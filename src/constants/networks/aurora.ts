@@ -2,20 +2,24 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 
 import EthereumLogo from 'assets/images/ethereum-logo.png'
 import AURORA from 'assets/networks/aurora-network.svg'
-import { KS_SETTING_API } from 'constants/env'
+import { AGGREGATOR_API, KS_SETTING_API } from 'constants/env'
+import { EVMNetworkInfo } from 'constants/networks/type'
 import { createClient } from 'utils/client'
 
-import { NetworkInfo } from '../type'
-
-const EMPTY = ''
 const EMPTY_ARRAY: any[] = []
 const NOT_SUPPORT = null
 
-const auroraInfo: NetworkInfo = {
+const auroraInfo: EVMNetworkInfo = {
   chainId: ChainId.AURORA,
   route: 'aurora',
+  ksSettingRoute: 'aurora',
+  priceRoute: 'aurora',
+  poolFarmRoute: 'aurora',
   name: 'Aurora',
   icon: AURORA,
+  iconDark: NOT_SUPPORT,
+  iconSelected: NOT_SUPPORT,
+  iconDarkSelected: NOT_SUPPORT,
   classicClient: createClient('https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-exchange-aurora'),
   elasticClient: createClient('https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-elastic-aurora'),
   blockClient: createClient('https://aurora-graph.kyberengineering.io/subgraphs/name/kybernetwork/aurora-blocks'),
@@ -25,13 +29,14 @@ const auroraInfo: NetworkInfo = {
   bridgeURL: 'https://rainbowbridge.app',
   nativeToken: {
     symbol: 'ETH',
-    name: 'ETH (Wrapped)',
-    address: '0xC9BdeEd33CD01541e1eeD10f90519d2C06Fe3feB',
+    name: 'ETH',
     logo: EthereumLogo,
     decimal: 18,
+    minForGas: 10 ** 16,
   },
   rpcUrl: 'https://aurora.kyberengineering.io',
-  routerUri: `${process.env.REACT_APP_AGGREGATOR_API}/aurora/route/encode`,
+  routerUri: `${AGGREGATOR_API}/aurora/route/encode`,
+  multicall: '0xBF69a56D35B8d6f5A8e0e96B245a72F735751e54',
   classic: {
     static: {
       zap: '0x2abE8750e4a65584d7452316356128C936273e0D',
@@ -44,7 +49,7 @@ const auroraInfo: NetworkInfo = {
       factory: '0x39a8809fBbF22cCaeAc450EaF559C076843eB910',
     },
     dynamic: NOT_SUPPORT,
-    claimReward: EMPTY,
+    claimReward: NOT_SUPPORT,
     fairlaunch: EMPTY_ARRAY,
     fairlaunchV2: EMPTY_ARRAY,
   },
@@ -55,12 +60,14 @@ const auroraInfo: NetworkInfo = {
     initCodeHash: '0xc597aba1bb02db42ba24a8878837965718c032f8b46be94a6e46452a9f89ca01',
     quoter: '0x0D125c15D54cA1F8a813C74A81aEe34ebB508C1f',
     routers: '0xC1e7dFE73E1598E3910EF4C7845B68A9Ab6F4c83',
+    farms: [],
   },
   averageBlockTimeInSeconds: 1,
   coingeckoNetworkId: 'aurora',
   coingeckoNativeTokenId: 'ethereum',
   deBankSlug: 'aurora',
-  internalRoute: 'aurora',
+  trueSightId: NOT_SUPPORT,
+  dexToCompare: 'trisolaris',
 }
 
 export default auroraInfo

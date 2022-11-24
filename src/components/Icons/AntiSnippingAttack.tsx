@@ -1,5 +1,3 @@
-import React from 'react'
-
 function AntiSnippingAttack({ size = 24 }: { size?: number }) {
   return (
     <svg width={size || 24} height={size || 24} viewBox={`0 0 64 64`} fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -5,11 +5,11 @@ import { isMobile } from 'react-device-detect'
 import { Edit2, XCircle } from 'react-feather'
 import styled from 'styled-components'
 
+import { AutoColumn } from 'components/Column'
+import CurrencyLogo from 'components/CurrencyLogo'
+import { AutoRow } from 'components/Row'
 import useTheme from 'hooks/useTheme'
 
-import { AutoColumn } from '../Column'
-import CurrencyLogo from '../CurrencyLogo'
-import { AutoRow } from '../Row'
 import { getDisplayTokenInfo } from './CurrencyList'
 
 const HEIGHT_THRESHOLD = 400
@@ -63,7 +63,7 @@ export default function CommonBases({
   tokens = [],
   handleToggleFavorite,
 }: {
-  chainId?: ChainId
+  chainId: ChainId
   selectedCurrency?: Currency | null
   tokens: Currency[]
   onSelect: (currency: Currency) => void

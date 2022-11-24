@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 
 import { PROMM_POOLS_BULK, ProMMPoolFields } from 'apollo/queries/promm'
 import { ELASTIC_BASE_FEE_UNIT } from 'constants/index'
-import { NETWORKS_INFO } from 'constants/networks'
+import { NETWORKS_INFO, isEVM } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import { ElasticPoolDetail } from 'types/pool'
 import { getBlocksFromTimestamps } from 'utils'
@@ -125,7 +125,9 @@ const parsedPoolData = (
 
 const useGetElasticPoolsV1 = (poolAddresses: string[], skip?: boolean): CommonReturn => {
   const { chainId } = useActiveWeb3React()
-  const dataClient = NETWORKS_INFO[chainId || ChainId.MAINNET].elasticClient
+  const dataClient = isEVM(chainId)
+    ? NETWORKS_INFO[chainId].elasticClient
+    : NETWORKS_INFO[ChainId.MAINNET].elasticClient
 
   const { blockLast24h } = usePoolBlocks()
 

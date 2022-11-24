@@ -12,6 +12,7 @@ import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { FarmingIcon } from 'components/Icons'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { ELASTIC_BASE_FEE_UNIT } from 'constants/index'
+import { useActiveWeb3React } from 'hooks'
 import useProAmmPoolInfo from 'hooks/useProAmmPoolInfo'
 import useTheme from 'hooks/useTheme'
 import { MEDIA_WIDTHS } from 'theme'
@@ -27,6 +28,7 @@ export default function ProAmmPoolInfo({
   position: Position
   tokenId?: string
 }) {
+  const { chainId } = useActiveWeb3React()
   const upToSmall = useMedia(`(max-width: ${MEDIA_WIDTHS.upToSmall}px)`)
   const theme = useTheme()
   const poolAddress = useProAmmPoolInfo(position.pool.token0, position.pool.token1, position.pool.fee as FeeAmount)
@@ -91,7 +93,7 @@ export default function ProAmmPoolInfo({
           <Flex justifyContent="space-between" alignItems="center" marginTop="8px">
             <Flex alignItems="center" color={theme.subText} fontSize={12}>
               <Text fontSize="12px" fontWeight="500" color={theme.subText}>
-                FEE = {(position?.pool.fee * 100) / ELASTIC_BASE_FEE_UNIT}% | {shortenAddress(poolAddress)}{' '}
+                FEE = {(position?.pool.fee * 100) / ELASTIC_BASE_FEE_UNIT}% | {shortenAddress(chainId, poolAddress)}{' '}
               </Text>
               <Copy toCopy={poolAddress}></Copy>
             </Flex>

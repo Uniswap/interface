@@ -1,16 +1,6 @@
 import { gql } from '@apollo/client'
 
-import { BUNDLE_ID } from '../../constants'
-
-export const SUBGRAPH_BLOCK_NUMBER = () => gql`
-  query block_number {
-    _meta {
-      block {
-        number
-      }
-    }
-  }
-`
+import { BUNDLE_ID } from 'constants/index'
 
 export const ETH_PRICE = (block?: number) => {
   const queryString = block
@@ -214,20 +204,6 @@ export const USER_POSITIONS = gql`
   }
 `
 
-export const USER_LIQUIDITY_POSITION_SNAPSHOTS = gql`
-  query liquidityPositionSnapshots($account: String!) {
-    liquidityPositionSnapshots(where: { user: $account }) {
-      pool {
-        id
-      }
-      liquidityTokenBalance
-      liquidityTokenTotalSupply
-      reserveUSD
-      timestamp
-    }
-  }
-`
-
 export const POOL_DATA = (poolAddress: string, block: number, withFee?: boolean) => {
   const queryString = `
     query pools {
@@ -332,29 +308,6 @@ export const POOLS_HISTORICAL_BULK_WITH_PAGINATION = (
 
   return gql(queryString)
 }
-
-export const FARM_DATA = gql`
-  query farmData($poolsList: [Bytes]!) {
-    pools(where: { id_in: $poolsList }) {
-      id
-      token0 {
-        id
-        symbol
-        name
-        decimals
-      }
-      token1 {
-        id
-        symbol
-        name
-        decimals
-      }
-      amp
-      reserveUSD
-      totalSupply
-    }
-  }
-`
 
 export const FARM_HISTORIES = gql`
   query farmHistories($user: String!) {

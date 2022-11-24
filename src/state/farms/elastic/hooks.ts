@@ -12,6 +12,7 @@ import { useProAmmNFTPositionManagerContract, useProMMFarmContract } from 'hooks
 import { usePools } from 'hooks/usePools'
 import { useAppSelector } from 'state/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
+import { TRANSACTION_TYPE } from 'state/transactions/type'
 import { PositionDetails } from 'types/position'
 import { calculateGasMargin } from 'utils'
 
@@ -20,9 +21,12 @@ import { defaultChainData } from '.'
 export { default as FarmUpdater } from './updaters'
 
 export const useElasticFarms = () => {
-  const { chainId } = useActiveWeb3React()
+  const { chainId, isEVM } = useActiveWeb3React()
   const elasticFarm = useAppSelector(state => state.elasticFarm)
-  return useMemo(() => (chainId ? elasticFarm[chainId] || defaultChainData : defaultChainData), [chainId, elasticFarm])
+  return useMemo(
+    () => (isEVM ? elasticFarm[chainId] || defaultChainData : defaultChainData),
+    [isEVM, elasticFarm, chainId],
+  )
 }
 
 export const useFarmAction = (address: string) => {
@@ -38,7 +42,7 @@ export const useFarmAction = (address: string) => {
     const tx = await posManager.setApprovalForAll(address, true, {
       gasLimit: calculateGasMargin(estimateGas),
     })
-    addTransactionWithType(tx, { type: 'Approve', summary: `Elastic Farm` })
+    addTransactionWithType({ hash: tx.hash, type: TRANSACTION_TYPE.APPROVE, summary: `Elastic Farm` })
 
     return tx.hash
   }, [addTransactionWithType, address, posManager])
@@ -54,7 +58,7 @@ export const useFarmAction = (address: string) => {
       const tx = await contract.deposit(nftIds, {
         gasLimit: calculateGasMargin(estimateGas),
       })
-      addTransactionWithType(tx, { type: 'Deposit', summary: `liquidity` })
+      addTransactionWithType({ hash: tx.hash, type: TRANSACTION_TYPE.DEPOSIT, summary: `liquidity` })
 
       return tx.hash
     },
@@ -71,7 +75,7 @@ export const useFarmAction = (address: string) => {
       const tx = await contract.withdraw(nftIds, {
         gasLimit: calculateGasMargin(estimateGas),
       })
-      addTransactionWithType(tx, { type: 'Withdraw', summary: `liquidity` })
+      addTransactionWithType({ hash: tx.hash, type: TRANSACTION_TYPE.WITHDRAW, summary: `liquidity` })
 
       return tx.hash
     },
@@ -87,7 +91,7 @@ export const useFarmAction = (address: string) => {
       const tx = await contract.emergencyWithdraw(nftIds, {
         gasLimit: calculateGasMargin(estimateGas),
       })
-      addTransactionWithType(tx, { type: 'ForceWithdraw' })
+      addTransactionWithType({ hash: tx.hash, type: TRANSACTION_TYPE.FORCE_WITHDRAW })
 
       return tx.hash
     },
@@ -104,7 +108,7 @@ export const useFarmAction = (address: string) => {
       const tx = await contract.join(pid, nftIds, liqs, {
         gasLimit: calculateGasMargin(estimateGas),
       })
-      addTransactionWithType(tx, { type: 'Stake', summary: `liquidity into farm` })
+      addTransactionWithType({ hash: tx.hash, type: TRANSACTION_TYPE.STAKE, summary: `liquidity into farm` })
 
       return tx.hash
     },
@@ -121,7 +125,7 @@ export const useFarmAction = (address: string) => {
         const tx = await contract.exit(pid, nftIds, liqs, {
           gasLimit: calculateGasMargin(estimateGas),
         })
-        addTransactionWithType(tx, { type: 'Unstake', summary: `liquidity from farm` })
+        addTransactionWithType({ hash: tx.hash, type: TRANSACTION_TYPE.UNSTAKE, summary: `liquidity from farm` })
 
         return tx.hash
       } catch (e) {
@@ -142,7 +146,7 @@ export const useFarmAction = (address: string) => {
         const tx = await contract.harvestMultiplePools(nftIds, encodeData, {
           gasLimit: calculateGasMargin(estimateGas),
         })
-        addTransactionWithType(tx, { type: 'Harvest' })
+        addTransactionWithType({ hash: tx.hash, type: TRANSACTION_TYPE.HARVEST })
         return tx
       } catch (e) {
         console.log(e)

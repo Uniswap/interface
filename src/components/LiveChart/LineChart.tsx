@@ -84,7 +84,7 @@ const CustomizedCursor = (props: any) => {
       </>
     )
   } else {
-    return <></>
+    return null
   }
 }
 

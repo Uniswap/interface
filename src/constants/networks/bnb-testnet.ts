@@ -3,19 +3,24 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 import BnbLogo from 'assets/images/bnb-logo.png'
 import BSC from 'assets/networks/bsc-network.png'
 import { KS_SETTING_API } from 'constants/env'
+import { EVMNetworkInfo } from 'constants/networks/type'
 import { createClient } from 'utils/client'
-
-import { NetworkInfo } from '../type'
 
 const EMPTY = ''
 const EMPTY_ARRAY: any[] = []
 const NOT_SUPPORT = null
 
-const bnbTestnetInfo: NetworkInfo = {
+const bnbTestnetInfo: EVMNetworkInfo = {
   chainId: ChainId.BSCTESTNET,
   route: 'bnb-testnet',
+  ksSettingRoute: 'bsc',
+  priceRoute: 'bsc',
+  poolFarmRoute: EMPTY,
   name: 'BNB Testnet',
   icon: BSC,
+  iconDark: NOT_SUPPORT,
+  iconSelected: NOT_SUPPORT,
+  iconDarkSelected: NOT_SUPPORT,
   classicClient: createClient('https://api.thegraph.com/subgraphs/name/ducquangkstn/dynamic-amm-bsc-staging'),
   elasticClient: createClient('https://api.thegraph.com/subgraphs/name/viet-nv/promm-bsc-testnet'),
   blockClient: createClient('https://api.thegraph.com/subgraphs/name/ducquangkstn/ethereum-blocks-bsctestnet'),
@@ -25,13 +30,14 @@ const bnbTestnetInfo: NetworkInfo = {
   bridgeURL: 'https://www.binance.org/en/bridge',
   nativeToken: {
     symbol: 'BNB',
-    name: 'BNB (Wrapped)',
-    address: '0xae13d989dac2f0debff460ac112a837c89baa7cd',
+    name: 'BNB',
     logo: BnbLogo,
     decimal: 18,
+    minForGas: 10 ** 16,
   },
   rpcUrl: 'https://data-seed-prebsc-1-s1.binance.org:8545',
   routerUri: EMPTY,
+  multicall: '0x8F3273Fb89B075b1645095ABaC6ed17B2d4Bc576',
   classic: {
     static: {
       zap: EMPTY,
@@ -44,7 +50,7 @@ const bnbTestnetInfo: NetworkInfo = {
       router: '0x19395624C030A11f58e820C3AeFb1f5960d9742a',
       factory: '0x7900309d0b1c8D3d665Ae40e712E8ba4FC4F5453',
     },
-    claimReward: EMPTY,
+    claimReward: NOT_SUPPORT,
     fairlaunch: [
       '0xf0fb5bD9EB287A902Bd45b57AE4CF5F9DcEBe550',
       '0xC4ad1e43c755F3437b890eeCE2E55cA7b14D1F15',
@@ -60,12 +66,14 @@ const bnbTestnetInfo: NetworkInfo = {
     initCodeHash: '0xc597aba1bb02db42ba24a8878837965718c032f8b46be94a6e46452a9f89ca01',
     quoter: '0xF4117D3c57BFe20fB2600eaE4028FB12bF99Ac10',
     routers: '0x785b8893342dfEf9B5D565f67be971b859d34a15',
+    farms: [],
   },
   averageBlockTimeInSeconds: 3,
-  coingeckoNetworkId: EMPTY,
-  coingeckoNativeTokenId: EMPTY,
+  coingeckoNetworkId: 'binance-smart-chain',
+  coingeckoNativeTokenId: 'binancecoin',
   deBankSlug: EMPTY,
-  internalRoute: EMPTY,
+  trueSightId: NOT_SUPPORT,
+  dexToCompare: NOT_SUPPORT,
 }
 
 export default bnbTestnetInfo

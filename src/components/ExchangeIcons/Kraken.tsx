@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { useIsDarkMode } from 'state/user/hooks'
 
 function Kraken({ width, height }: { width?: number; height?: number }) {

@@ -154,7 +154,7 @@ function Banner({
           : w > 500
           ? KyberSwapArbitrumLidoFarmTablet
           : KyberSwapArbitrumLidoFarmMobile,
-        link: 'https://kyberswap.com/farms?tab=elastic&networkId=42161&utm_source=kyberswap&utm_medium=banner&utm_campaign=lidofinancelm&utm_content=lidofarm_onsite',
+        link: 'https://kyberswap.com/farms/arbitrum?tab=elastic&utm_source=kyberswap&utm_medium=banner&utm_campaign=lidofinancelm&utm_content=lidofarm_onsite',
       },
       {
         // KyberSwap Optimism Lido Farm
@@ -169,7 +169,7 @@ function Banner({
           : w > 500
           ? KyberSwapOptimismLidoFarmTablet
           : KyberSwapOptimismLidoFarmMobile,
-        link: 'https://kyberswap.com/farms?tab=elastic&networkId=10&utm_source=kyberswap&utm_medium=banner&utm_campaign=lidofinancelm&utm_content=lidofarm_onsite',
+        link: 'https://kyberswap.com/farms/optimism?tab=elastic&utm_source=kyberswap&utm_medium=banner&utm_campaign=lidofinancelm&utm_content=lidofarm_onsite',
       },
     ],
     [isInModal, w],

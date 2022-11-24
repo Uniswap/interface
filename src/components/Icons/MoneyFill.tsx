@@ -1,5 +1,3 @@
-import React from 'react'
-
 function MoneyFill({ size, color }: { size?: number; color?: string }) {
   return (
     <svg width={size || 16} height={size || 16} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">

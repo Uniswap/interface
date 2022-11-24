@@ -2,19 +2,19 @@ import { Pair, Trade } from '@kyberswap/ks-sdk-classic'
 import { ChainId, Currency, CurrencyAmount, Fraction, Percent, TokenAmount, TradeType } from '@kyberswap/ks-sdk-core'
 import JSBI from 'jsbi'
 
-import { AnyTrade } from 'hooks/useSwapCallback'
-
 import {
   ALLOWED_PRICE_IMPACT_HIGH,
   ALLOWED_PRICE_IMPACT_LOW,
   ALLOWED_PRICE_IMPACT_MEDIUM,
   BLOCKED_PRICE_IMPACT_NON_EXPERT,
-} from '../constants'
-import { Field } from '../state/swap/actions'
+} from 'constants/index'
+import { AnyTrade } from 'hooks/useSwapCallback'
+import { Field } from 'state/swap/actions'
+
 import { Aggregator } from './aggregator'
 import { basisPointsToPercent } from './index'
 
-export function computeFee(pairs?: Array<Pair>): Fraction {
+function computeFee(pairs?: Array<Pair>): Fraction {
   let realizedLPFee: Fraction = new Fraction(JSBI.BigInt(0))
 
   // for each hop in our trade, take away the x*y=k price impact from 0.3% fees

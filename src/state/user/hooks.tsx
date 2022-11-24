@@ -1,11 +1,9 @@
-import { Pair } from '@kyberswap/ks-sdk-classic'
 import { ChainId, Token } from '@kyberswap/ks-sdk-core'
-import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from 'constants/index'
 import { SupportedLocale } from 'constants/locales'
+import { PINNED_PAIRS } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
 import { useAllTokens } from 'hooks/Tokens'
 import {
@@ -19,7 +17,6 @@ import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { useSingleContractMultipleData } from 'state/multicall/hooks'
 import { useUserLiquidityPositions } from 'state/pools/hooks'
 import {
-  SerializedPair,
   SerializedToken,
   ToggleFavoriteTokenPayload,
   addSerializedPair,
@@ -31,6 +28,8 @@ import {
   toggleTokenInfo,
   toggleTopTrendingTokens,
   toggleTradeRoutes,
+  updateIsAcceptedTerm,
+  updateIsUserManuallyDisconnect,
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
@@ -106,13 +105,39 @@ export function useUserLocaleManager(): [SupportedLocale | null, (newLocale: Sup
   return [locale, setLocale]
 }
 
-export function useIsExpertMode(): boolean {
-  return useSelector<AppState, AppState['user']['userExpertMode']>(state => state.user.userExpertMode)
+export function useIsUserManuallyDisconnect(): [boolean, (isUserManuallyDisconnect: boolean) => void] {
+  const dispatch = useAppDispatch()
+  const isUserManuallyDisconnect = useSelector<AppState, AppState['user']['isUserManuallyDisconnect']>(
+    state => state.user.isUserManuallyDisconnect,
+  )
+
+  const setIsUserManuallyDisconnect = useCallback(
+    (isUserManuallyDisconnect: boolean) => {
+      dispatch(updateIsUserManuallyDisconnect(isUserManuallyDisconnect))
+    },
+    [dispatch],
+  )
+
+  return [isUserManuallyDisconnect, setIsUserManuallyDisconnect]
+}
+
+export function useIsAcceptedTerm(): [boolean, (isAcceptedTerm: boolean) => void] {
+  const dispatch = useAppDispatch()
+  const isAcceptedTerm = useSelector<AppState, AppState['user']['isAcceptedTerm']>(state => state.user.isAcceptedTerm)
+
+  const setIsAcceptedTerm = useCallback(
+    (isAcceptedTerm: boolean) => {
+      dispatch(updateIsAcceptedTerm(isAcceptedTerm))
+    },
+    [dispatch],
+  )
+
+  return [isAcceptedTerm, setIsAcceptedTerm]
 }
 
 export function useExpertModeManager(): [boolean, () => void] {
   const dispatch = useDispatch<AppDispatch>()
-  const expertMode = useIsExpertMode()
+  const expertMode = useSelector<AppState, AppState['user']['userExpertMode']>(state => state.user.userExpertMode)
 
   const toggleSetExpertMode = useCallback(() => {
     dispatch(updateUserExpertMode({ userExpertMode: !expertMode }))
@@ -179,26 +204,8 @@ export function useUserAddedTokens(): Token[] {
 
   return useMemo(() => {
     if (!chainId) return []
-    return Object.values(serializedTokensMap[chainId as ChainId] ?? {}).map(deserializeToken)
+    return Object.values(serializedTokensMap[chainId] ?? {}).map(deserializeToken)
   }, [serializedTokensMap, chainId])
-}
-
-function serializePair(pair: Pair): SerializedPair {
-  return {
-    token0: serializeToken(pair.token0),
-    token1: serializeToken(pair.token1),
-  }
-}
-
-export function usePairAdder(): (pair: Pair) => void {
-  const dispatch = useDispatch<AppDispatch>()
-
-  return useCallback(
-    (pair: Pair) => {
-      dispatch(addSerializedPair({ serializedPair: serializePair(pair) }))
-    },
-    [dispatch],
-  )
 }
 
 export function usePairAdderByTokens(): (token0: Token, token1: Token) => void {
@@ -268,80 +275,14 @@ export function useToV2LiquidityTokens(
   )
 }
 
-/**
- * Returns all the pairs of tokens that are tracked by the user for the current chain ID.
- */
-export function useTrackedTokenPairs(): [Token, Token][] {
-  const { chainId } = useActiveWeb3React()
-
-  // pinned pairs
-  const pinnedPairs = useMemo(() => (chainId ? PINNED_PAIRS[chainId] ?? [] : []), [chainId])
-
-  // get tracked pairs
-  const generatedPairs: [Token, Token][] = useMemo(() => {
-    if (chainId) {
-      const baseTrackedTokens = BASES_TO_TRACK_LIQUIDITY_FOR[chainId]
-
-      return flatMap(baseTrackedTokens, trackedToken => {
-        return (
-          // loop though all bases on the current chain
-          (BASES_TO_TRACK_LIQUIDITY_FOR[chainId] ?? [])
-            // to construct pairs of the given token with each base
-            .map(base => {
-              if (base.address === trackedToken.address) {
-                return null
-              } else {
-                return [base, trackedToken]
-              }
-            })
-            .filter((p): p is [Token, Token] => p !== null)
-        )
-      })
-    }
-
-    return []
-  }, [chainId])
-
-  // pairs saved by users
-  const savedSerializedPairs = useSelector<AppState, AppState['user']['pairs']>(({ user: { pairs } }) => pairs)
-
-  const userPairs: [Token, Token][] = useMemo(() => {
-    if (!chainId || !savedSerializedPairs) return []
-    const forChain = savedSerializedPairs[chainId]
-    if (!forChain) return []
-
-    return Object.keys(forChain).map(pairId => {
-      return [deserializeToken(forChain[pairId].token0), deserializeToken(forChain[pairId].token1)]
-    })
-  }, [savedSerializedPairs, chainId])
-
-  const combinedList = useMemo(
-    () => userPairs.concat(generatedPairs).concat(pinnedPairs),
-    [generatedPairs, pinnedPairs, userPairs],
-  )
-
-  return useMemo(() => {
-    // dedupes pairs of tokens in the combined list
-    const keyed = combinedList.reduce<{ [key: string]: [Token, Token] }>((memo, [tokenA, tokenB]) => {
-      const sorted = tokenA.sortsBefore(tokenB)
-      const key = sorted ? `${tokenA.address}:${tokenB.address}` : `${tokenB.address}:${tokenA.address}`
-      if (memo[key]) return memo
-      memo[key] = sorted ? [tokenA, tokenB] : [tokenB, tokenA]
-      return memo
-    }, {})
-
-    return Object.keys(keyed).map(key => keyed[key])
-  }, [combinedList])
-}
-
 export function useLiquidityPositionTokenPairs(): [Token, Token][] {
-  const { chainId, account } = useActiveWeb3React()
+  const { chainId } = useActiveWeb3React()
   const allTokens = useAllTokens()
 
   // pinned pairs
   const pinnedPairs = useMemo(() => (chainId ? PINNED_PAIRS[chainId] ?? [] : []), [chainId])
 
-  const { data: userLiquidityPositions } = useUserLiquidityPositions(account)
+  const { data: userLiquidityPositions } = useUserLiquidityPositions()
 
   // get pairs that has liquidity
   const generatedPairs: [Token, Token][] = useMemo(() => {
@@ -349,8 +290,8 @@ export function useLiquidityPositionTokenPairs(): [Token, Token][] {
       const result: [Token, Token][] = []
 
       userLiquidityPositions?.liquidityPositions.forEach(position => {
-        const token0Address = isAddress(position.pool.token0.id)
-        const token1Address = isAddress(position.pool.token1.id)
+        const token0Address = isAddress(chainId, position.pool.token0.id)
+        const token1Address = isAddress(chainId, position.pool.token1.id)
 
         if (token0Address && token1Address && allTokens[token0Address] && allTokens[token1Address]) {
           result.push([allTokens[token0Address], allTokens[token1Address]])
@@ -361,7 +302,7 @@ export function useLiquidityPositionTokenPairs(): [Token, Token][] {
     }
 
     return []
-  }, [allTokens, userLiquidityPositions])
+  }, [chainId, allTokens, userLiquidityPositions])
 
   // pairs saved by users
   const savedSerializedPairs = useSelector<AppState, AppState['user']['pairs']>(({ user: { pairs } }) => pairs)
@@ -398,11 +339,11 @@ export function useLiquidityPositionTokenPairs(): [Token, Token][] {
 export function useShowLiveChart(): boolean {
   const { chainId } = useActiveWeb3React()
   let showLiveChart = useSelector((state: AppState) => state.user.showLiveCharts)
-  if (typeof showLiveChart?.[chainId || 1] !== 'boolean') {
+  if (typeof showLiveChart?.[chainId] !== 'boolean') {
     showLiveChart = defaultShowLiveCharts
   }
 
-  const show = showLiveChart[chainId || 1]
+  const show = showLiveChart[chainId]
 
   return !!show
 }
@@ -429,7 +370,7 @@ export function useShowTopTrendingSoonTokens(): boolean {
 export function useToggleLiveChart(): () => void {
   const dispatch = useDispatch<AppDispatch>()
   const { chainId } = useActiveWeb3React()
-  return useCallback(() => dispatch(toggleLiveChart({ chainId: chainId || 1 })), [dispatch, chainId])
+  return useCallback(() => dispatch(toggleLiveChart({ chainId: chainId })), [dispatch, chainId])
 }
 export function useToggleProLiveChart(): () => void {
   const dispatch = useDispatch<AppDispatch>()
@@ -450,7 +391,7 @@ export function useToggleTopTrendingTokens(): () => void {
   return useCallback(() => dispatch(toggleTopTrendingTokens()), [dispatch])
 }
 
-export const useUserFavoriteTokens = (chainId: ChainId | undefined) => {
+export const useUserFavoriteTokens = (chainId: ChainId) => {
   const dispatch = useDispatch<AppDispatch>()
   const { favoriteTokensByChainId } = useSelector((state: AppState) => state.user)
 

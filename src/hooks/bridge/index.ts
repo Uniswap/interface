@@ -3,6 +3,7 @@ import { BigNumber, ethers } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 
 import ERC20_INTERFACE, { ERC20_ABI } from 'constants/abis/erc20'
+import { isEVM } from 'constants/networks'
 import { providers, useActiveWeb3React } from 'hooks'
 import { useMulticallContract } from 'hooks/useContract'
 import useInterval from 'hooks/useInterval'
@@ -29,7 +30,7 @@ function getTokenBalanceOfAnotherChain(account: string, token: WrappedTokenInfo,
   const isNativeToken = token.multichainInfo?.tokenType === 'NATIVE'
   return new Promise(async (resolve, reject) => {
     try {
-      if (!account || !token || !chainId) return reject('wrong input')
+      if (!account || !token || !chainId || !isEVM(chainId)) return reject('wrong input')
       let balance: BigNumber | undefined
       try {
         const provider = providers[chainId]

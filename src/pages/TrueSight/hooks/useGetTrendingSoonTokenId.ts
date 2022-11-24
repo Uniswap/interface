@@ -1,13 +1,14 @@
 import { Token } from '@kyberswap/ks-sdk-core'
 import useSWR from 'swr'
 
+import { TRUESIGHT_API } from 'constants/env'
 import { TRENDING_SOON_MAX_ITEMS } from 'constants/index'
 import { TrueSightTokenResponse } from 'pages/TrueSight/hooks/useGetTrendingSoonData'
 
 export default function useGetTrendingSoonTokenId(token?: Token): number | undefined {
   const { data: tokenId } = useSWR(
     token &&
-      `${process.env.REACT_APP_TRUESIGHT_API}/api/v1/trending-soon?timeframe=24h&page_number=0&page_size=${TRENDING_SOON_MAX_ITEMS}&search_token_address=${token.address}`,
+      `${TRUESIGHT_API}/api/v1/trending-soon?timeframe=24h&page_number=0&page_size=${TRENDING_SOON_MAX_ITEMS}&search_token_address=${token.address}`,
     async (url: string) => {
       try {
         const responses = await Promise.all([fetch(url)])

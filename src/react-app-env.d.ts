@@ -1,11 +1,5 @@
 /// <reference types="react-scripts" />
 
-declare module 'jazzicon' {
-  export default function (diameter: number, seed: number): HTMLElement
-}
-
-declare module 'fortmatic'
-
 interface Navigator {
   brave?: {
     isBrave: () => Promise<boolean | undefined>
@@ -16,16 +10,31 @@ interface Window {
     isMetaMask?: boolean
     isCoin98?: boolean
     isBraveWallet?: any
+    isCoinbaseWallet?: boolean
+    isTrustWallet?: boolean
     on?: (...args: any[]) => void
     removeListener?: (...args: any[]) => void
     request: (params: { method: string; params?: any }) => Promise<any>
+    selectedProvider?: {
+      isCoinbaseBrowser: boolean
+      isCoinbaseWallet: boolean
+      isMetaMask: boolean
+    }
+    providers?: any[]
   }
-  web3?: any
+  web3?: {
+    currentProvider?: {
+      isCoinbaseBrowser: boolean
+      isCoinbaseWallet: boolean
+    }
+  }
   tag?: string
   coin98?: any
+  coinbaseWalletExtension?: any
   dataLayer?: any[]
   chrome?: any
   opr?: any
+  solana?: any
   recaptchaOptions?: any
 
   mozIndexedDB?: any

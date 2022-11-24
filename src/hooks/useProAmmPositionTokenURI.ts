@@ -2,7 +2,8 @@ import { BigNumber } from '@ethersproject/bignumber'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 
-import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
+import { NEVER_RELOAD, useSingleCallResult } from 'state/multicall/hooks'
+
 import { useProAmmNFTPositionManagerContract } from './useContract'
 
 type TokenId = number | JSBI | BigNumber

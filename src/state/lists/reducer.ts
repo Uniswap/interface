@@ -1,27 +1,20 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { VersionUpgrade, getVersionUpgrade } from '@uniswap/token-lists'
 import { TokenList } from '@uniswap/token-lists/dist/types'
 
-import { deleteUnique, pushUnique } from 'utils'
+import { NETWORKS_INFO, SUPPORTED_NETWORKS } from 'constants/networks'
 
-import { DEFAULT_ACTIVE_LIST_URLS, DEFAULT_LIST_OF_LISTS, UNSUPPORTED_LIST_URLS } from '../../constants/lists'
-import { updateVersion } from '../global/actions'
-import { acceptListUpdate, addList, disableList, enableList, fetchTokenList, removeList } from './actions'
+import { fetchTokenList } from './actions'
+
+const KyberTokensList = SUPPORTED_NETWORKS.map(chainId => NETWORKS_INFO[chainId].tokenListUrl)
 
 export interface ListsState {
   readonly byUrl: {
     readonly [url: string]: {
       readonly current: TokenList | null
-      readonly pendingUpdate: TokenList | null
       readonly loadingRequestId: string | null
       readonly error: string | null
     }
   }
-  // this contains the default list of lists from the last time the updateVersion was called, i.e. the app was reloaded
-  readonly lastInitializedDefaultListOfLists?: string[]
-
-  // currently active lists
-  readonly activeListUrls: string[]
 }
 
 type ListState = ListsState['byUrl'][string]
@@ -30,63 +23,34 @@ const NEW_LIST_STATE: ListState = {
   error: null,
   current: null,
   loadingRequestId: null,
-  pendingUpdate: null,
 }
 
 type Mutable<T> = { -readonly [P in keyof T]: T[P] extends ReadonlyArray<infer U> ? U[] : T[P] }
 
 const initialState: ListsState = {
-  lastInitializedDefaultListOfLists: DEFAULT_LIST_OF_LISTS,
   byUrl: {
-    ...DEFAULT_LIST_OF_LISTS.concat(UNSUPPORTED_LIST_URLS).reduce<Mutable<ListsState['byUrl']>>((memo, listUrl) => {
-      memo[listUrl] = NEW_LIST_STATE
+    ...KyberTokensList.reduce<Mutable<ListsState['byUrl']>>((memo, listUrl) => {
+      memo[listUrl] = { ...NEW_LIST_STATE }
       return memo
     }, {}),
   },
-  activeListUrls: DEFAULT_ACTIVE_LIST_URLS,
 }
 
 export default createReducer(initialState, builder =>
   builder
     .addCase(fetchTokenList.pending, (state, { payload: { requestId, url } }) => {
       state.byUrl[url] = {
-        current: null,
-        pendingUpdate: null,
+        ...state.byUrl[url],
         loadingRequestId: requestId,
         error: null,
       }
     })
     .addCase(fetchTokenList.fulfilled, (state, { payload: { requestId, tokenList, url } }) => {
-      const current = state.byUrl[url]?.current
-      const loadingRequestId = state.byUrl[url]?.loadingRequestId
-
-      // no-op if update does nothing
-      if (current) {
-        const upgradeType = getVersionUpgrade(current.version, tokenList.version)
-
-        if (upgradeType === VersionUpgrade.NONE) return
-        if (loadingRequestId === null || loadingRequestId === requestId) {
-          state.byUrl[url] = {
-            ...state.byUrl[url],
-            loadingRequestId: null,
-            error: null,
-            current: current,
-            pendingUpdate: tokenList,
-          }
-        }
-      } else {
-        // activate if on default active
-        if (DEFAULT_ACTIVE_LIST_URLS.includes(url)) {
-          state.activeListUrls = pushUnique(state.activeListUrls, url)
-        }
-
-        state.byUrl[url] = {
-          ...state.byUrl[url],
-          loadingRequestId: null,
-          error: null,
-          current: tokenList,
-          pendingUpdate: null,
-        }
+      state.byUrl[url] = {
+        ...state.byUrl[url],
+        loadingRequestId: null,
+        error: null,
+        current: tokenList,
       }
     })
     .addCase(fetchTokenList.rejected, (state, { payload: { url, requestId, errorMessage } }) => {
@@ -100,78 +64,6 @@ export default createReducer(initialState, builder =>
         loadingRequestId: null,
         error: errorMessage,
         current: null,
-        pendingUpdate: null,
-      }
-    })
-    .addCase(addList, (state, { payload: url }) => {
-      if (!state.byUrl[url]) {
-        state.byUrl[url] = NEW_LIST_STATE
-      }
-    })
-    .addCase(removeList, (state, { payload: url }) => {
-      if (state.byUrl[url]) {
-        delete state.byUrl[url]
-      }
-      // remove list from active urls if needed
-      state.activeListUrls = deleteUnique(state.activeListUrls, url)
-    })
-    .addCase(enableList, (state, { payload: url }) => {
-      if (!state.byUrl[url]) {
-        state.byUrl[url] = NEW_LIST_STATE
-      }
-      state.activeListUrls = pushUnique(state.activeListUrls, url)
-    })
-    .addCase(disableList, (state, { payload: url }) => {
-      state.activeListUrls = deleteUnique(state.activeListUrls, url)
-    })
-    .addCase(acceptListUpdate, (state, { payload: url }) => {
-      if (!state.byUrl[url]?.pendingUpdate) {
-        throw new Error('accept list update called without pending update')
-      }
-      state.byUrl[url] = {
-        ...state.byUrl[url],
-        pendingUpdate: null,
-        current: state.byUrl[url].pendingUpdate,
-      }
-    })
-    .addCase(updateVersion, state => {
-      // state loaded from localStorage, but new lists have never been initialized
-      if (!state.lastInitializedDefaultListOfLists) {
-        state.byUrl = initialState.byUrl
-        state.activeListUrls = initialState.activeListUrls
-      } else if (state.lastInitializedDefaultListOfLists) {
-        const lastInitializedSet = state.lastInitializedDefaultListOfLists.reduce<Set<string>>(
-          (s, l) => s.add(l),
-          new Set(),
-        )
-        const newListOfListsSet = DEFAULT_LIST_OF_LISTS.reduce<Set<string>>((s, l) => s.add(l), new Set())
-
-        DEFAULT_LIST_OF_LISTS.forEach(listUrl => {
-          if (!lastInitializedSet.has(listUrl)) {
-            state.byUrl[listUrl] = NEW_LIST_STATE
-          }
-        })
-
-        state.lastInitializedDefaultListOfLists.forEach(listUrl => {
-          if (!newListOfListsSet.has(listUrl)) {
-            delete state.byUrl[listUrl]
-          }
-        })
-      }
-
-      state.lastInitializedDefaultListOfLists = DEFAULT_LIST_OF_LISTS
-
-      // if no active lists, activate defaults
-      if (!state.activeListUrls) {
-        state.activeListUrls = DEFAULT_ACTIVE_LIST_URLS
-
-        // for each list on default list, initialize if needed
-        DEFAULT_ACTIVE_LIST_URLS.map((listUrl: string) => {
-          if (!state.byUrl[listUrl]) {
-            state.byUrl[listUrl] = NEW_LIST_STATE
-          }
-          return true
-        })
       }
     }),
 )

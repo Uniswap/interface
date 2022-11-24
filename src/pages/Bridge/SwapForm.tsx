@@ -23,8 +23,8 @@ import { Z_INDEXS } from 'constants/styles'
 import { useActiveWeb3React } from 'hooks'
 import { useMultichainPool } from 'hooks/bridge'
 import useBridgeCallback from 'hooks/bridge/useBridgeCallback'
-import { useActiveNetwork } from 'hooks/useActiveNetwork'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
+import { useChangeNetwork } from 'hooks/useChangeNetwork'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import usePrevious from 'hooks/usePrevious'
 import useTheme from 'hooks/useTheme'
@@ -80,7 +80,7 @@ type PoolValueType = {
 
 export default function SwapForm() {
   const { account, chainId } = useActiveWeb3React()
-  const { changeNetwork } = useActiveNetwork()
+  const changeNetwork = useChangeNetwork()
   const [
     {
       tokenInfoIn,
@@ -322,7 +322,7 @@ export default function SwapForm() {
     tokenInfoOut?.symbol,
   ])
 
-  const maxAmountInput = useCurrencyBalance(account || undefined, currencyIn)?.toExact()
+  const maxAmountInput = useCurrencyBalance(currencyIn)?.toExact()
   const handleMaxInput = useCallback(() => {
     maxAmountInput && setInputAmount(maxAmountInput)
   }, [maxAmountInput])

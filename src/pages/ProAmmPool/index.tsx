@@ -1,4 +1,3 @@
-import { ChainId } from '@kyberswap/ks-sdk-core'
 import { computePoolAddress } from '@kyberswap/ks-sdk-elastic'
 import { Trans, t } from '@lingui/macro'
 import { BigNumber } from 'ethers'
@@ -6,7 +5,7 @@ import { rgba } from 'polished'
 import { useMemo, useRef, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { Info } from 'react-feather'
-import { useHistory, useLocation } from 'react-router-dom'
+import { Redirect, useHistory, useLocation } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
@@ -19,7 +18,7 @@ import SubscribeNotificationButton from 'components/SubscribeButton'
 import Toggle from 'components/Toggle'
 import Tutorial, { TutorialType } from 'components/Tutorial'
 import { PROMM_ANALYTICS_URL } from 'constants/index'
-import { NETWORKS_INFO } from 'constants/networks'
+import { EVMNetworkInfo } from 'constants/networks/type'
 import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
 import useDebounce from 'hooks/useDebounce'
@@ -110,7 +109,7 @@ const renderNotificationButton = (iconOnly: boolean) => {
 }
 
 export default function ProAmmPool() {
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId, isEVM, networkInfo } = useActiveWeb3React()
   const tokenAddressSymbolMap = useRef<AddressSymbolMapInterface>({})
   const { positions, loading: positionsLoading } = useProAmmPositions(account)
 
@@ -119,17 +118,17 @@ export default function ProAmmPool() {
   const farmingPools = useMemo(() => farms?.map(farm => farm.pools).flat() || [], [farms])
 
   const farmPositions = useMemo(() => {
-    if (!chainId) return []
+    if (!isEVM) return []
     return Object.values(userFarmInfo || {})
       .map(info => {
         return info.depositedPositions
           .map(pos => {
             const poolAddress = computePoolAddress({
-              factoryAddress: NETWORKS_INFO[chainId].elastic.coreFactory,
+              factoryAddress: (networkInfo as EVMNetworkInfo).elastic.coreFactory,
               tokenA: pos.pool.token0,
               tokenB: pos.pool.token1,
               fee: pos.pool.fee,
-              initCodeHashManualOverride: NETWORKS_INFO[chainId].elastic.initCodeHash,
+              initCodeHashManualOverride: (networkInfo as EVMNetworkInfo).elastic.initCodeHash,
             })
             const pool = farmingPools.filter(pool => pool.poolAddress.toLowerCase() === poolAddress.toLowerCase())
 
@@ -168,7 +167,7 @@ export default function ProAmmPool() {
           .flat()
       })
       .flat()
-  }, [chainId, farmingPools, userFarmInfo])
+  }, [farmingPools, userFarmInfo, isEVM, networkInfo])
 
   const [openPositions, closedPositions] = useMemo(
     () =>
@@ -184,13 +183,13 @@ export default function ProAmmPool() {
 
   const theme = useTheme()
 
-  const qs = useParsedQueryString()
-  const searchValueInQs: string = (qs.search as string) ?? ''
+  const { search: searchValueInQs = '', tab = VERSION.ELASTIC } = useParsedQueryString<{
+    search: string
+    tab: string
+  }>()
 
   const history = useHistory()
   const location = useLocation()
-
-  const tab = (qs.tab as string) || VERSION.ELASTIC
 
   const onSearch = (search: string) => {
     history.replace(location.pathname + '?search=' + search + '&tab=' + tab)
@@ -250,6 +249,7 @@ export default function ProAmmPool() {
     )
   }, [farms])
 
+  if (!isEVM) return <Redirect to="/" />
   return (
     <>
       <PageWrapper style={{ padding: 0, marginTop: '24px' }}>
@@ -257,7 +257,7 @@ export default function ProAmmPool() {
           <InstructionText>
             <Trans>Here you can view all your liquidity and staked balances in the Elastic Pools</Trans>
             {!upToSmall && (
-              <ExternalLink href={`${PROMM_ANALYTICS_URL[chainId as ChainId]}/account/${account}`}>
+              <ExternalLink href={`${PROMM_ANALYTICS_URL[chainId]}/account/${account}`}>
                 <Flex alignItems="center">
                   <Wallet size={16} />
                   <Text fontSize="14px" marginLeft="4px">
@@ -293,7 +293,7 @@ export default function ProAmmPool() {
 
               {upToSmall && (
                 <Flex sx={{ gap: '8px' }}>
-                  <ExternalLink href={`${PROMM_ANALYTICS_URL[chainId as ChainId]}/account/${account}`}>
+                  <ExternalLink href={`${PROMM_ANALYTICS_URL[chainId]}/account/${account}`}>
                     <Flex
                       sx={{ borderRadius: '50%' }}
                       width="36px"

@@ -1,5 +1,3 @@
-import React from 'react'
-
 import useTheme from 'hooks/useTheme'
 
 function Discord({ width, height, color }: { width?: number | string; height?: number | string; color?: string }) {

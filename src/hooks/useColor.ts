@@ -1,4 +1,4 @@
-import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
+import { ChainId, Currency, Token } from '@kyberswap/ks-sdk-core'
 import Vibrant from 'node-vibrant'
 import { shade } from 'polished'
 import { useLayoutEffect, useState } from 'react'
@@ -10,13 +10,11 @@ import { getTokenLogoURL } from 'utils'
 import uriToHttp from 'utils/uriToHttp'
 
 async function getColorFromToken(token: Currency): Promise<string | null> {
-  if (token.chainId === ChainId.RINKEBY && token.wrapped.address === '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735') {
+  if (token.equals(new Token(ChainId.RINKEBY, '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735', 18))) {
     return Promise.resolve('#FAAB14')
   }
 
-  const path = token.isNative
-    ? NETWORKS_INFO[token.chainId as ChainId].icon
-    : getTokenLogoURL(token.address, token.chainId)
+  const path = token.isNative ? NETWORKS_INFO[token.chainId].icon : getTokenLogoURL(token.address, token.chainId)
 
   return Vibrant.from(path)
     .getPalette()

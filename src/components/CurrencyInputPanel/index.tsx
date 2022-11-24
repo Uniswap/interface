@@ -2,26 +2,25 @@ import { Pair } from '@kyberswap/ks-sdk-classic'
 import { Currency } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import { darken, lighten, rgba } from 'polished'
-import React, { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
 import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
+import { ReactComponent as Lock } from 'assets/svg/ic_lock.svg'
+import { ReactComponent as SwitchIcon } from 'assets/svg/switch.svg'
+import Card from 'components/Card'
+import CurrencyLogo from 'components/CurrencyLogo'
+import DoubleCurrencyLogo from 'components/DoubleLogo'
 import Wallet from 'components/Icons/Wallet'
+import { Input as NumericalInput } from 'components/NumericalInput'
 import { RowFixed } from 'components/Row'
+import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
+import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
+import { useCurrencyBalance } from 'state/wallet/hooks'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 import { shortString } from 'utils/string'
-
-import { ReactComponent as Lock } from '../../assets/svg/ic_lock.svg'
-import { ReactComponent as SwitchIcon } from '../../assets/svg/switch.svg'
-import { useActiveWeb3React } from '../../hooks'
-import { useCurrencyBalance } from '../../state/wallet/hooks'
-import Card from '../Card'
-import CurrencyLogo from '../CurrencyLogo'
-import DoubleCurrencyLogo from '../DoubleLogo'
-import { Input as NumericalInput } from '../NumericalInput'
-import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 
 export const InputRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -135,9 +134,8 @@ const Card2 = styled(Card)<{ balancePosition: string }>`
 interface CurrencyInputPanelProps {
   value: string
   onUserInput: (value: string) => void
-  onMax?: () => void
-  onHalf?: () => void
-  showMaxButton: boolean
+  onMax: (() => void) | null
+  onHalf: (() => void) | null
   positionMax?: 'inline' | 'top'
   label?: string
   onCurrencySelect?: (currency: Currency) => void
@@ -167,7 +165,6 @@ export default function CurrencyInputPanel({
   onUserInput,
   onMax,
   onHalf,
-  showMaxButton,
   positionMax = 'inline',
   label = '',
   onCurrencySelect,
@@ -194,7 +191,7 @@ export default function CurrencyInputPanel({
   const [modalOpen, setModalOpen] = useState(false)
   const { chainId, account } = useActiveWeb3React()
 
-  const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
+  const selectedCurrencyBalance = useCurrencyBalance(currency ?? undefined)
   const balanceRef = useRef(selectedCurrencyBalance?.toSignificant(10))
 
   useEffect(() => {
@@ -247,23 +244,23 @@ export default function CurrencyInputPanel({
         <Container hideInput={hideInput} selected={disableCurrencySelect}>
           {!hideBalance && (
             <Flex justifyContent="space-between" fontSize="12px" marginBottom="12px" alignItems="center">
-              {showMaxButton && positionMax === 'top' && currency && account ? (
+              {(onMax || onHalf) && positionMax === 'top' && currency && account ? (
                 <Flex alignItems="center" sx={{ gap: '4px' }}>
-                  <StyledBalanceMax onClick={onMax}>
-                    <Trans>Max</Trans>
-                  </StyledBalanceMax>
-                  <StyledBalanceMax onClick={onHalf}>
-                    <Trans>Half</Trans>
-                  </StyledBalanceMax>
+                  {onMax && (
+                    <StyledBalanceMax onClick={onMax}>
+                      <Trans>Max</Trans>
+                    </StyledBalanceMax>
+                  )}
+                  {onHalf && (
+                    <StyledBalanceMax onClick={onHalf}>
+                      <Trans>Half</Trans>
+                    </StyledBalanceMax>
+                  )}
                 </Flex>
               ) : (
                 <div />
               )}
-              <Flex
-                onClick={() => onMax && onMax()}
-                style={{ cursor: onMax ? 'pointer' : undefined }}
-                alignItems="center"
-              >
+              <Flex onClick={onMax ?? undefined} style={{ cursor: onMax ? 'pointer' : undefined }} alignItems="center">
                 <Wallet color={theme.subText} />
                 <Text fontWeight={500} color={theme.subText} marginLeft="4px">
                   {customBalanceText || selectedCurrencyBalance?.toSignificant(10) || balanceRef.current || 0}
@@ -289,9 +286,9 @@ export default function CurrencyInputPanel({
                 ) : (
                   account &&
                   currency &&
-                  showMaxButton &&
+                  onMax &&
                   positionMax === 'inline' && (
-                    <StyledBalanceMax onClick={onMax}>
+                    <StyledBalanceMax onClick={onMax ?? undefined}>
                       <Trans>MAX</Trans>
                     </StyledBalanceMax>
                   )

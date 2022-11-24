@@ -1,20 +1,20 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trade } from '@kyberswap/ks-sdk-classic'
-import { ChainId, Currency, CurrencyAmount, Percent, TradeType } from '@kyberswap/ks-sdk-core'
-import { Trade as ProAmmTrade } from '@kyberswap/ks-sdk-elastic'
+import { Currency, CurrencyAmount, TradeType } from '@kyberswap/ks-sdk-core'
 import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
 
-import { NETWORKS_INFO } from 'constants/networks'
-import { nativeOnChain } from 'constants/tokens'
+import { EVMNetworkInfo } from 'constants/networks/type'
+import { NativeCurrencies } from 'constants/tokens'
 import { useTokenAllowance } from 'data/Allowances'
 import { Field } from 'state/swap/actions'
 import { useHasPendingApproval, useTransactionAdder } from 'state/transactions/hooks'
+import { TRANSACTION_TYPE } from 'state/transactions/type'
 import { calculateGasMargin } from 'utils'
+import { Aggregator } from 'utils/aggregator'
 import { computeSlippageAdjustedAmounts } from 'utils/prices'
 
-import { Aggregator } from '../utils/aggregator'
 import { useActiveWeb3React } from './index'
 import { useTokenContract } from './useContract'
 
@@ -30,12 +30,13 @@ export function useApproveCallback(
   amountToApprove?: CurrencyAmount<Currency>,
   spender?: string,
 ): [ApprovalState, () => Promise<void>] {
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId, isSolana } = useActiveWeb3React()
   const token = amountToApprove?.currency.wrapped
   const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
   const pendingApproval = useHasPendingApproval(token?.address, spender)
   // check the current approval status
   const approvalState: ApprovalState = useMemo(() => {
+    if (isSolana) return ApprovalState.APPROVED // Solana do approve when actual swap
     if (!amountToApprove || !spender) return ApprovalState.UNKNOWN
     if (amountToApprove.currency.isNative) return ApprovalState.APPROVED
     // we might not have enough data to know whether or not we need to approve
@@ -55,7 +56,7 @@ export function useApproveCallback(
         ? ApprovalState.PENDING
         : ApprovalState.NOT_APPROVED
       : ApprovalState.APPROVED
-  }, [amountToApprove, currentAllowance, pendingApproval, spender])
+  }, [amountToApprove, currentAllowance, isSolana, pendingApproval, spender])
 
   const tokenContract = useTokenContract(token?.address)
   const addTransactionWithType = useTransactionAdder()
@@ -108,10 +109,11 @@ export function useApproveCallback(
         gasLimit: calculateGasMargin(estimatedGas),
       })
       .then((response: TransactionResponse) => {
-        addTransactionWithType(response, {
-          type: 'Approve',
+        addTransactionWithType({
+          hash: response.hash,
+          type: TRANSACTION_TYPE.APPROVE,
           summary: amountToApprove?.currency?.isNative
-            ? nativeOnChain(chainId as ChainId).symbol
+            ? NativeCurrencies[chainId].symbol
             : amountToApprove?.currency?.symbol,
           approval: { tokenAddress: token.address, spender: spender },
         })
@@ -126,33 +128,27 @@ export function useApproveCallback(
 }
 
 // wraps useApproveCallback in the context of a swap
-export function useApproveCallbackFromTrade(trade?: Trade<Currency, Currency, TradeType>, allowedSlippage = 0) {
-  const { chainId } = useActiveWeb3React()
+export function useApproveCallbackFromTrade(
+  trade?: Trade<Currency, Currency, TradeType>,
+  allowedSlippage = 0,
+): [ApprovalState, () => Promise<void>] {
+  const { isEVM, networkInfo } = useActiveWeb3React()
   const amountToApprove = useMemo(
     () => (trade ? computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT] : undefined),
     [trade, allowedSlippage],
   )
-  return useApproveCallback(amountToApprove, !!chainId ? NETWORKS_INFO[chainId].classic.dynamic?.router : undefined)
+  const spender = isEVM ? (networkInfo as EVMNetworkInfo).classic.dynamic?.router : undefined
+  return useApproveCallback(amountToApprove, spender)
 }
 
 // wraps useApproveCallback in the context of a swap
-export function useApproveCallbackFromTradeV2(trade?: Aggregator, allowedSlippage = 0) {
-  const { chainId } = useActiveWeb3React()
+export function useApproveCallbackFromTradeV2(
+  trade?: Aggregator,
+  allowedSlippage = 0,
+): [ApprovalState, () => Promise<void>] {
   const amountToApprove = useMemo(
     () => (trade ? computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT] : undefined),
     [trade, allowedSlippage],
   )
-  return useApproveCallback(amountToApprove, !!chainId && trade?.routerAddress ? trade.routerAddress : undefined)
-}
-
-export function useProAmmApproveCallback(
-  trade: ProAmmTrade<Currency, Currency, TradeType> | undefined,
-  allowedSlippage: Percent,
-) {
-  const { chainId } = useActiveWeb3React()
-  const amountToApprove = useMemo(
-    () => (trade && trade.inputAmount.currency.isToken ? trade.maximumAmountIn(allowedSlippage) : undefined),
-    [trade, allowedSlippage],
-  )
-  return useApproveCallback(amountToApprove, !!chainId ? NETWORKS_INFO[chainId].elastic.routers : undefined)
+  return useApproveCallback(amountToApprove, trade?.routerAddress || undefined)
 }

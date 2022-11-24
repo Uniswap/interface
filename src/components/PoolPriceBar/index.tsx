@@ -10,15 +10,14 @@ import styled from 'styled-components'
 
 import { ButtonEmpty } from 'components/Button'
 import Card from 'components/Card'
+import { AutoColumn } from 'components/Column'
 import QuestionHelper from 'components/QuestionHelper'
+import { AutoRow, RowBetween, RowFixed } from 'components/Row'
+import { ONE_BIPS } from 'constants/index'
 import useTheme from 'hooks/useTheme'
+import { Field } from 'state/mint/actions'
+import { TYPE } from 'theme'
 import { priceRangeCalc, priceRangeCalcByPair, useCurrencyConvertedToNative } from 'utils/dmm'
-
-import { AutoColumn } from '../../components/Column'
-import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
-import { ONE_BIPS } from '../../constants'
-import { Field } from '../../state/mint/actions'
-import { TYPE } from '../../theme'
 
 const DEFAULT_MIN_PRICE = '0.00'
 const DEFAULT_MAX_PRICE = '♾️'
@@ -38,12 +37,6 @@ const ChevronUp2 = styled(ChevronUp)`
 `
 const ChevronDown2 = styled(ChevronDown)`
   color: ${({ theme }) => theme.text};
-`
-
-export const Separator = styled.div`
-  width: 100%;
-  height: 1px;
-  background-color: ${({ theme }) => theme.border};
 `
 
 const PoolPriceBarWrapper = styled.div<{ isAdd?: boolean }>`
@@ -69,7 +62,7 @@ const PoolPriceBarItem = styled.div<{ isAdd?: boolean }>`
   }
 `
 
-export const DefaultPriceRange = () => {
+const DefaultPriceRange = () => {
   return (
     <>
       <TYPE.black fontWeight={400}>Max: {DEFAULT_MAX_PRICE}</TYPE.black>
@@ -78,7 +71,7 @@ export const DefaultPriceRange = () => {
   )
 }
 
-export const InvalidAMPPriceRange = () => {
+const InvalidAMPPriceRange = () => {
   return (
     <>
       <TYPE.black>-</TYPE.black>

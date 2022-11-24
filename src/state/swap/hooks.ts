@@ -7,8 +7,8 @@ import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { BAD_RECIPIENT_ADDRESSES, DEFAULT_OUTPUT_TOKEN_BY_CHAIN } from 'constants/index'
-import { nativeOnChain } from 'constants/tokens'
+import { BAD_RECIPIENT_ADDRESSES } from 'constants/index'
+import { DEFAULT_OUTPUT_TOKEN_BY_CHAIN, NativeCurrencies } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
 import { useTradeExactIn } from 'hooks/Trades'
@@ -19,6 +19,7 @@ import { AppDispatch, AppState } from 'state/index'
 import {
   Field,
   chooseToSaveGas,
+  encodedSolana,
   replaceSwapState,
   resetSelectCurrency,
   selectCurrency,
@@ -35,8 +36,24 @@ import { isAddress } from 'utils'
 import { Aggregator } from 'utils/aggregator'
 import { computeSlippageAdjustedAmounts } from 'utils/prices'
 
+import { SolanaEncode } from './types'
+
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>(state => state.swap)
+}
+
+export function useEncodeSolana(): [SolanaEncode | undefined, (encodeSolana: SolanaEncode) => void] {
+  const encodeSolana = useSelector<AppState, AppState['swap']['encodeSolana']>(state => state.swap.encodeSolana)
+
+  const dispatch = useDispatch<AppDispatch>()
+  const setEncodeSolana = useCallback(
+    (encodeSolana: SolanaEncode) => {
+      dispatch(encodedSolana({ encodeSolana }))
+    },
+    [dispatch],
+  )
+
+  return [encodeSolana, setEncodeSolana]
 }
 
 export function useSwapActionHandlers(): {
@@ -57,7 +74,7 @@ export function useSwapActionHandlers(): {
       dispatch(
         selectCurrency({
           field,
-          currencyId: currency.isNative ? (nativeOnChain(chainId as number).symbol as string) : currency.address,
+          currencyId: currency.isNative ? (NativeCurrencies[chainId].symbol as string) : currency.address,
         }),
       )
     },
@@ -143,6 +160,7 @@ export function tryParseAmount<T extends Currency>(
       return CurrencyAmount.fromRawAmount(currency, JSBI.BigInt(typedValueParsed))
     }
   } catch (error) {
+    if (error.message.includes('fractional component exceeds decimals')) return undefined
     // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
     console.debug(`Failed to parse input amount: "${value}"`, error)
   }
@@ -170,7 +188,7 @@ export function useDerivedSwapInfo(): {
   v2Trade: Trade<Currency, Currency, TradeType> | undefined
   inputError?: string
 } {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   const {
     independentField,
@@ -186,7 +204,6 @@ export function useDerivedSwapInfo(): {
   const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
 
   const relevantTokenBalances = useCurrencyBalances(
-    account ?? undefined,
     useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency]),
   )
 
@@ -228,7 +245,7 @@ export function useDerivedSwapInfo(): {
     inputError = inputError ?? t`Select a token`
   }
 
-  const formattedTo = isAddress(to)
+  const formattedTo = isAddress(chainId, to)
   if (!to || !formattedTo) {
     inputError = inputError ?? t`Enter a recipient`
   } else {
@@ -265,11 +282,11 @@ export function useDerivedSwapInfo(): {
 
 function parseCurrencyFromURLParameter(urlParam: any, chainId: ChainId): string {
   if (typeof urlParam === 'string') {
-    const valid = isAddress(urlParam)
+    const valid = isAddress(chainId, urlParam)
     if (valid) return valid
-    return nativeOnChain(chainId).symbol as string
+    return NativeCurrencies[chainId].symbol as string
   }
-  return nativeOnChain(chainId).symbol ?? ''
+  return NativeCurrencies[chainId].symbol ?? ''
 }
 
 function parseTokenAmountURLParameter(urlParam: any): string {
@@ -282,16 +299,16 @@ function parseIndependentFieldURLParameter(urlParam: any): Field {
 
 const ENS_NAME_REGEX = /^[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)?$/
 const ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/
-function validatedRecipient(recipient: any): string | null {
+function validatedRecipient(recipient: any, chainId: ChainId): string | null {
   if (typeof recipient !== 'string') return null
-  const address = isAddress(recipient)
+  const address = isAddress(chainId, recipient)
   if (address) return address
   if (ENS_NAME_REGEX.test(recipient)) return recipient
   if (ADDRESS_REGEX.test(recipient)) return recipient
   return null
 }
 
-export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId): Omit<SwapState, 'saveGas'> {
+function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId): Omit<SwapState, 'saveGas'> {
   let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency, chainId)
   let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency, chainId)
   if (inputCurrency === outputCurrency) {
@@ -302,10 +319,10 @@ export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId)
     }
   }
 
-  const recipient = validatedRecipient(parsedQs.recipient)
+  const recipient = validatedRecipient(parsedQs.recipient, chainId)
   const feePercent = parseInt(parsedQs?.['fee_bip']?.toString() || '0')
   const feeConfig: FeeConfig | undefined =
-    parsedQs.referral && isAddress(parsedQs.referral) && parsedQs['fee_bip'] && !isNaN(feePercent)
+    parsedQs.referral && isAddress(chainId, parsedQs.referral) && parsedQs['fee_bip'] && !isNaN(feePercent)
       ? {
           chargeFeeBy: 'currency_in',
           feeReceiver: parsedQs.referral.toString(),
@@ -324,6 +341,12 @@ export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId)
     independentField: parseIndependentFieldURLParameter(parsedQs.exactField),
     recipient,
     feeConfig,
+
+    showConfirm: false,
+    tradeToConfirm: undefined,
+    attemptingTxn: false,
+    swapErrorMessage: undefined,
+    txHash: undefined,
   }
 }
 

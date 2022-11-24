@@ -1,6 +1,6 @@
-import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
+import { Currency } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { useMedia } from 'react-use'
 import { Flex } from 'rebass'
@@ -15,7 +15,6 @@ import ListItem from 'components/PoolList/ListItem'
 import ShareModal from 'components/ShareModal'
 import { ClickableText } from 'components/YieldPools/styleds'
 import { AMP_HINT, AMP_LIQUIDITY_HINT, MAX_ALLOW_APY } from 'constants/index'
-import { NETWORKS_INFO } from 'constants/networks'
 import { STABLE_COINS_ADDRESS } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
 import { SelectPairInstructionWrapper } from 'pages/Pools/styleds'
@@ -94,11 +93,11 @@ const PoolList = ({
   const [sortedColumn, setSortedColumn] = useState(SORT_FIELD.LIQ)
   const { loading: loadingPoolsData, data: subgraphPoolsData } = useAllPoolsData()
 
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId, networkInfo, isEVM } = useActiveWeb3React()
 
   useResetPools(chainId)
 
-  const userLiquidityPositionsQueryResult = useUserLiquidityPositions(account)
+  const userLiquidityPositionsQueryResult = useUserLiquidityPositions()
   const loadingUserLiquidityPositions = !account ? false : userLiquidityPositionsQueryResult.loading
   const userLiquidityPositions = !account ? { liquidityPositions: [] } : userLiquidityPositionsQueryResult.data
   const transformedUserLiquidityPositions: {
@@ -307,7 +306,7 @@ const PoolList = ({
     })
 
     if (onlyShowStable) {
-      const stableList = chainId ? STABLE_COINS_ADDRESS[chainId]?.map(item => item.toLowerCase()) || [] : []
+      const stableList = isEVM ? STABLE_COINS_ADDRESS[chainId]?.map(item => item.toLowerCase()) || [] : []
       res = res.filter(poolData => {
         return (
           stableList.includes(poolData.token0.id.toLowerCase()) && stableList.includes(poolData.token1.id.toLowerCase())
@@ -326,6 +325,7 @@ const PoolList = ({
     farms,
     searchValue,
     chainId,
+    isEVM,
   ])
 
   const [currentPage, setCurrentPage] = useState(1)
@@ -375,9 +375,9 @@ const PoolList = ({
   const openShareModal = useOpenModal(ApplicationModal.SHARE)
   const isShareModalOpen = useModalOpen(ApplicationModal.SHARE)
 
-  const chainRoute = NETWORKS_INFO[chainId as ChainId].route
+  const chainRoute = networkInfo.route
   const shareUrl = sharedPoolId
-    ? window.location.origin + '/pools?tab=classic&search=' + sharedPoolId + '&networkId=' + chainRoute
+    ? window.location.origin + `/pools/${chainRoute}?tab=classic&search=` + sharedPoolId
     : undefined
 
   useEffect(() => {

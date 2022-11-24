@@ -1,7 +1,6 @@
-import { ChainId, Currency, CurrencyAmount, Price, Token } from '@kyberswap/ks-sdk-core'
+import { Currency, CurrencyAmount, Price, Token } from '@kyberswap/ks-sdk-core'
 import { Position } from '@kyberswap/ks-sdk-elastic'
 import { Trans, t } from '@lingui/macro'
-import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { stringify } from 'qs'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -19,6 +18,7 @@ import ProAmmPriceRange from 'components/ProAmm/ProAmmPriceRange'
 import { RowBetween } from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { PROMM_ANALYTICS_URL } from 'constants/index'
+import { useActiveWeb3React } from 'hooks'
 import { useToken } from 'hooks/Tokens'
 import { useProMMFarmContract } from 'hooks/useContract'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
@@ -122,7 +122,7 @@ interface PositionListItemProps {
   hasActiveFarm: boolean
 }
 
-export function getPriceOrderingFromPositionForUI(position?: Position): {
+function getPriceOrderingFromPositionForUI(position?: Position): {
   priceLower?: Price<Token, Token>
   priceUpper?: Price<Token, Token>
   quote?: Token
@@ -149,7 +149,7 @@ function PositionListItem({
   refe,
   hasActiveFarm,
 }: PositionListItemProps) {
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
   const {
     token0: token0Address,
     token1: token1Address,
@@ -493,7 +493,7 @@ function PositionListItem({
             <ButtonEmpty width="max-content" style={{ fontSize: '14px' }} padding="0">
               <ExternalLink
                 style={{ width: '100%', textAlign: 'center' }}
-                href={`${PROMM_ANALYTICS_URL[chainId as ChainId]}/pool/${positionDetails.poolId.toLowerCase()}`}
+                href={`${PROMM_ANALYTICS_URL[chainId]}/pool/${positionDetails.poolId.toLowerCase()}`}
               >
                 <Trans>Pool Analytics ↗</Trans>
               </ExternalLink>

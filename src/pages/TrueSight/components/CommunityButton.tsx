@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import React, { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { ChevronDown } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components'

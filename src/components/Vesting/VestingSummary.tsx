@@ -1,6 +1,5 @@
 import { CurrencyAmount, Token } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
-import React from 'react'
 import { ChevronDown, DollarSign, Lock, Unlock } from 'react-feather'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'

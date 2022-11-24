@@ -16,7 +16,7 @@ import { MoneyBag } from 'components/Icons'
 import { MouseoverTooltip } from 'components/Tooltip'
 import FarmingPoolAPRCell, { APRTooltipContent } from 'components/YieldPools/FarmingPoolAPRCell'
 import { ELASTIC_BASE_FEE_UNIT, PROMM_ANALYTICS_URL } from 'constants/index'
-import { nativeOnChain } from 'constants/tokens'
+import { NativeCurrencies } from 'constants/tokens'
 import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
 import { useAllTokens } from 'hooks/Tokens'
@@ -44,7 +44,7 @@ const getPrommAnalyticLink = (chainId: ChainId | undefined, poolAddress: string)
   return `${PROMM_ANALYTICS_URL[chainId]}/pool/${poolAddress.toLowerCase()}`
 }
 
-export const TableRow = styled.div<{ isOpen?: boolean; isShowBorderBottom: boolean; hoverable: boolean }>`
+const TableRow = styled.div<{ isOpen?: boolean; isShowBorderBottom: boolean; hoverable: boolean }>`
   display: grid;
   grid-gap: 1rem;
   grid-template-columns: 1.5fr 1.5fr 1.5fr 0.75fr 1fr 1fr 1.2fr 1.5fr;
@@ -102,16 +102,16 @@ export default function ProAmmPoolListItem({ pair, idx, onShared, userPositions,
   const allTokens = useAllTokens()
 
   const token0 =
-    allTokens[isAddressString(pair[0].token0.address)] ||
-    new Token(chainId as ChainId, pair[0].token0.address, pair[0].token0.decimals, pair[0].token0.symbol)
+    allTokens[isAddressString(chainId, pair[0].token0.address)] ||
+    new Token(chainId, pair[0].token0.address, pair[0].token0.decimals, pair[0].token0.symbol)
   const token1 =
-    allTokens[isAddressString(pair[0].token1.address)] ||
-    new Token(chainId as ChainId, pair[0].token1.address, pair[0].token1.decimals, pair[0].token1.symbol)
+    allTokens[isAddressString(chainId, pair[0].token1.address)] ||
+    new Token(chainId, pair[0].token1.address, pair[0].token1.decimals, pair[0].token1.symbol)
 
-  const isToken0WETH = pair[0].token0.address === WETH[chainId as ChainId].address.toLowerCase()
-  const isToken1WETH = pair[0].token1.address === WETH[chainId as ChainId].address.toLowerCase()
+  const isToken0WETH = pair[0].token0.address === WETH[chainId].address.toLowerCase()
+  const isToken1WETH = pair[0].token1.address === WETH[chainId].address.toLowerCase()
 
-  const nativeToken = nativeOnChain(chainId as ChainId)
+  const nativeToken = NativeCurrencies[chainId]
 
   const token0Slug = isToken0WETH ? nativeToken.symbol : pair[0].token0.address
   const token0Symbol = isToken0WETH ? nativeToken.symbol : token0.symbol
@@ -226,7 +226,7 @@ export default function ProAmmPoolListItem({ pair, idx, onShared, userPositions,
               )}
 
               <PoolAddressContainer>
-                <Text color={theme.text}>{shortenAddress(pool.address, 3)}</Text>
+                <Text color={theme.text}>{shortenAddress(chainId, pool.address, 3)}</Text>
                 <CopyHelper toCopy={pool.address} />
               </PoolAddressContainer>
               <Text color={theme.text3} fontSize={12} marginTop={'8px'}>

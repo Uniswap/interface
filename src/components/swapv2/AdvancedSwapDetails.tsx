@@ -5,8 +5,11 @@ import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
 import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
+import { AutoColumn } from 'components/Column'
 import Divider from 'components/Divider'
 import InfoHelper from 'components/InfoHelper'
+import { RowBetween, RowFixed } from 'components/Row'
+import { useActiveWeb3React } from 'hooks'
 import { FeeConfig } from 'hooks/useSwapV2Callback'
 import useTheme from 'hooks/useTheme'
 import { OutputBridgeInfo, useBridgeState } from 'state/bridge/hooks'
@@ -18,9 +21,6 @@ import { Aggregator } from 'utils/aggregator'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 import { getFormattedFeeAmountUsd } from 'utils/fee'
 import { computeSlippageAdjustedAmounts } from 'utils/prices'
-
-import { AutoColumn } from '../Column'
-import { RowBetween, RowFixed } from '../Row'
 
 const IconWrapper = styled.div<{ show: boolean }>`
   color: ${({ theme }) => theme.text};
@@ -41,6 +41,7 @@ interface TradeSummaryProps {
 }
 
 function TradeSummary({ trade, feeConfig, allowedSlippage }: TradeSummaryProps) {
+  const { isEVM } = useActiveWeb3React()
   const theme = useTheme()
   const [show, setShow] = useState(feeConfig ? true : false)
 
@@ -88,18 +89,20 @@ function TradeSummary({ trade, feeConfig, allowedSlippage }: TradeSummaryProps) 
               </TYPE.black>
             </RowFixed>
           </RowBetween>
-          <RowBetween>
-            <RowFixed>
-              <TYPE.black fontSize={12} fontWeight={400} color={theme.subText}>
-                <Trans>Gas Fee</Trans>
-              </TYPE.black>
+          {isEVM && (
+            <RowBetween>
+              <RowFixed>
+                <TYPE.black fontSize={12} fontWeight={400} color={theme.subText}>
+                  <Trans>Gas Fee</Trans>
+                </TYPE.black>
 
-              <InfoHelper size={14} text={t`Estimated network fee for your transaction`} />
-            </RowFixed>
-            <TYPE.black color={theme.text} fontSize={12}>
-              {trade.gasUsd ? formattedNum(trade.gasUsd?.toString(), true) : '--'}
-            </TYPE.black>
-          </RowBetween>
+                <InfoHelper size={14} text={t`Estimated network fee for your transaction`} />
+              </RowFixed>
+              <TYPE.black color={theme.text} fontSize={12}>
+                {trade.gasUsd ? formattedNum(trade.gasUsd?.toString(), true) : '--'}
+              </TYPE.black>
+            </RowBetween>
+          )}
 
           <RowBetween>
             <RowFixed>

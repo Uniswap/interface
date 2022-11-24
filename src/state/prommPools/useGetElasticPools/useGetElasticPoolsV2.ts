@@ -1,6 +1,6 @@
 import useSWRImmutable from 'swr/immutable'
 
-import { CHAINS_SUPPORT_NEW_POOL_FARM_API, NETWORKS_INFO } from 'constants/networks'
+import { CHAINS_SUPPORT_NEW_POOL_FARM_API, NETWORKS_INFO, isEVM } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import { ElasticPoolDetail } from 'types/pool'
 
@@ -50,8 +50,8 @@ type PoolAccumulator = { [address: string]: ElasticPoolDetail }
 const useGetElasticPoolsV2 = (): CommonReturn => {
   const { chainId } = useActiveWeb3React()
 
-  const shouldSkip = !chainId || !CHAINS_SUPPORT_NEW_POOL_FARM_API.includes(chainId)
-  const chainRoute = chainId ? NETWORKS_INFO[chainId].internalRoute : ''
+  const shouldSkip = !isEVM(chainId) || !CHAINS_SUPPORT_NEW_POOL_FARM_API.includes(chainId)
+  const chainRoute = !isEVM(chainId) || NETWORKS_INFO[chainId].poolFarmRoute
 
   const { isValidating, error, data } = useSWRImmutable<Response>(
     `${process.env.REACT_APP_POOL_FARM_BASE_URL}/${chainRoute}/api/v1/elastic/pools?includeLowTvl=true&page=1&perPage=10000`,

@@ -1,22 +1,7 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { createAction } from '@reduxjs/toolkit'
-import { BigNumber } from 'ethers'
 
-export interface SerializableTransactionReceipt {
-  to: string
-  from: string
-  nonce?: number
-  data?: string
-  sentAtBlock?: number
-  contractAddress: string
-  transactionIndex: number
-  blockHash: string
-  transactionHash: string
-  blockNumber: number
-  status?: number
-  gasUsed?: BigNumber
-  effectiveGasPrice?: BigNumber
-}
+import { SerializableTransactionReceipt, TRANSACTION_TYPE } from './type'
 
 export const addTransaction = createAction<{
   chainId: ChainId
@@ -27,10 +12,10 @@ export const addTransaction = createAction<{
   data?: string
   sentAtBlock?: number
   approval?: { tokenAddress: string; spender: string }
-  claim?: { recipient: string }
-  type?: string
+  type?: TRANSACTION_TYPE
   summary?: string
   arbitrary?: any
+  firstTxHash?: string
 }>('transactions/addTransaction')
 export const clearAllTransactions = createAction<{ chainId: ChainId }>('transactions/clearAllTransactions')
 export const finalizeTransaction = createAction<{

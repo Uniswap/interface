@@ -1,7 +1,8 @@
 import { ZERO } from '@kyberswap/ks-sdk-classic'
-import { ChainId, Percent, Rounding, Token } from '@kyberswap/ks-sdk-core'
-import { getAddress } from 'ethers/lib/utils'
+import { ChainId, Percent, Rounding, Token, WETH } from '@kyberswap/ks-sdk-core'
 import JSBI from 'jsbi'
+
+import { isAddressString } from 'utils'
 
 import { Aggregator } from './aggregator'
 
@@ -129,6 +130,7 @@ export function getTradeComposition(
   }
 
   const tokens = trade.tokens || ({} as any)
+  const defaultToken = new Token(chainId, WETH[chainId].address, 0, '--', '--')
   const routes: SwapRoute[] = []
 
   // Convert all Swaps to ChartSwaps
@@ -136,42 +138,42 @@ export function getTradeComposition(
     if (sorMultiSwap.length === 1) {
       const hop = sorMultiSwap[0]
       const path = [
-        allTokens?.[getAddress(hop.tokenIn)] || tokens[hop.tokenIn],
-        allTokens?.[getAddress(hop.tokenOut)] || tokens[hop.tokenOut],
+        allTokens?.[isAddressString(chainId, hop.tokenIn)] || tokens[hop.tokenIn] || defaultToken,
+        allTokens?.[isAddressString(chainId, hop.tokenOut)] || tokens[hop.tokenOut] || defaultToken,
       ]
       routes.push({
         slug: hop.tokenOut?.toLowerCase(),
         pools: [
           {
-            id: hop.pool?.toLowerCase(),
+            id: hop.pool,
             exchange: hop.exchange,
             swapAmount: JSBI.BigInt(hop.swapAmount),
             swapPercentage: calcSwapPercentage(hop.tokenIn, hop.swapAmount),
           },
         ],
         path,
-        id: hop.pool?.toLowerCase(),
+        id: hop.pool,
       })
     } else if (sorMultiSwap.length > 1) {
       const path: PathItem[] = []
       const pools: SwapPool[] = []
       sorMultiSwap.forEach((hop: any, index: number) => {
         pools.push({
-          id: hop.pool?.toLowerCase(),
+          id: hop.pool,
           exchange: hop.exchange,
           swapAmount: JSBI.BigInt(hop.swapAmount),
           swapPercentage: index === 0 ? calcSwapPercentage(hop.tokenIn, hop.swapAmount) : 100,
         })
         if (index === 0) {
-          const token = tokens[hop.tokenIn] || ({} as any)
+          const token = tokens[hop.tokenIn] || defaultToken
           path.push(
-            allTokens?.[getAddress(token.address)] ||
+            allTokens?.[isAddressString(chainId, token.address)] ||
               new Token(chainId, token.address, token.decimals, token.symbol, token.name),
           )
         }
-        const token = tokens[hop.tokenOut] || ({} as any)
+        const token = tokens[hop.tokenOut] || defaultToken
         path.push(
-          allTokens?.[getAddress(token.address)] ||
+          allTokens?.[isAddressString(chainId, token.address)] ||
             new Token(chainId, token.address, token.decimals, token.symbol, token.name),
         )
       })

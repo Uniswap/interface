@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-export default function useInterval(callback: () => void, delay: null | number, leading = true) {
+export default function useInterval(callback: () => any, delay: null | number, leading = true) {
   const savedCallback = useRef<() => void>()
 
   // Remember the latest callback.
@@ -12,7 +12,7 @@ export default function useInterval(callback: () => void, delay: null | number, 
   useEffect(() => {
     function tick() {
       const current = savedCallback.current
-      current && current()
+      current?.()
     }
 
     if (delay !== null) {

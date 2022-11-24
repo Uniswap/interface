@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 
+import { TRUESIGHT_API } from 'constants/env'
+
 export default function useGetTagsForSearchBox(searchText: string) {
   const [data, setData] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -9,7 +11,7 @@ export default function useGetTagsForSearchBox(searchText: string) {
     const fetchData = async () => {
       if (searchText) {
         try {
-          const url = process.env.REACT_APP_TRUESIGHT_API + '/api/v1/tags?search=' + searchText
+          const url = TRUESIGHT_API + '/api/v1/tags?search=' + searchText
           setError(undefined)
           setIsLoading(true)
           const response = await fetch(url)

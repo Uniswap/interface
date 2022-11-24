@@ -2,19 +2,24 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 
 import Polygon from 'assets/networks/polygon-network.png'
 import { KS_SETTING_API } from 'constants/env'
+import { EVMNetworkInfo } from 'constants/networks/type'
 import { createClient } from 'utils/client'
-
-import { NetworkInfo } from '../type'
 
 const EMPTY = ''
 const EMPTY_ARRAY: any[] = []
 const NOT_SUPPORT = null
 
-const mumbaiInfo: NetworkInfo = {
+const mumbaiInfo: EVMNetworkInfo = {
   chainId: ChainId.MUMBAI,
   route: 'mumbai',
+  ksSettingRoute: 'mumbai',
+  priceRoute: 'mumbai',
+  poolFarmRoute: EMPTY,
   name: 'Mumbai',
   icon: Polygon,
+  iconDark: NOT_SUPPORT,
+  iconSelected: NOT_SUPPORT,
+  iconDarkSelected: NOT_SUPPORT,
   classicClient: createClient('https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-mumbai'),
   elasticClient: createClient('https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-elastic-matic'), //todo: not exits yet
   blockClient: createClient('https://api.thegraph.com/subgraphs/name/piavgh/mumbai-blocks'),
@@ -24,13 +29,14 @@ const mumbaiInfo: NetworkInfo = {
   bridgeURL: 'https://wallet.matic.network/bridge',
   nativeToken: {
     symbol: 'MATIC',
-    name: 'MATIC (Wrapped)',
-    address: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
+    name: 'Polygon',
     logo: Polygon,
     decimal: 18,
+    minForGas: 10 ** 16,
   },
   rpcUrl: 'https://rpc-mumbai.maticvigil.com',
   routerUri: EMPTY,
+  multicall: '0xc535D6463D5Bf9843aFa73bBF49bF4644a3988bA',
   classic: {
     static: {
       zap: EMPTY,
@@ -43,7 +49,7 @@ const mumbaiInfo: NetworkInfo = {
       router: '0xD536e64EAe5FBc62E277167e758AfEA570279956',
       factory: '0x7900309d0b1c8D3d665Ae40e712E8ba4FC4F5453',
     },
-    claimReward: EMPTY,
+    claimReward: NOT_SUPPORT,
     fairlaunch: ['0x882233B197F9e50b1d41F510fD803a510470d7a6'],
     fairlaunchV2: EMPTY_ARRAY,
   },
@@ -54,12 +60,14 @@ const mumbaiInfo: NetworkInfo = {
     initCodeHash: '0xc597aba1bb02db42ba24a8878837965718c032f8b46be94a6e46452a9f89ca01',
     quoter: '0x0D125c15D54cA1F8a813C74A81aEe34ebB508C1f',
     routers: '0xC1e7dFE73E1598E3910EF4C7845B68A9Ab6F4c83',
+    farms: [],
   },
   averageBlockTimeInSeconds: 2.6,
-  coingeckoNetworkId: EMPTY,
-  coingeckoNativeTokenId: EMPTY,
+  coingeckoNetworkId: 'polygon-pos',
+  coingeckoNativeTokenId: 'matic-network',
   deBankSlug: EMPTY,
-  internalRoute: EMPTY,
+  trueSightId: NOT_SUPPORT,
+  dexToCompare: NOT_SUPPORT,
 }
 
 export default mumbaiInfo

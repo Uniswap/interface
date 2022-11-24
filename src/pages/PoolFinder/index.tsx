@@ -1,31 +1,31 @@
 import { Pair } from '@kyberswap/ks-sdk-classic'
-import { ChainId, Currency, TokenAmount } from '@kyberswap/ks-sdk-core'
+import { Currency, TokenAmount } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import JSBI from 'jsbi'
-import React, { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
+import { Redirect } from 'react-router-dom'
 import { Text } from 'rebass'
 
-import { nativeOnChain } from 'constants/tokens'
+import { ButtonDropdownLight } from 'components/Button'
+import { LightCard } from 'components/Card'
+import { AutoColumn, ColumnCenter } from 'components/Column'
+import CurrencyLogo from 'components/CurrencyLogo'
+import { FindPoolTabs } from 'components/NavigationTabs'
+import { NarrowPositionCard } from 'components/PositionCard'
+import Row from 'components/Row'
+import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
+import { NativeCurrencies } from 'constants/tokens'
+import { PairState, usePair } from 'data/Reserves'
+import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import AppBody from 'pages/AppBody'
+import { Dots } from 'pages/Pool/styleds'
+import { usePairAdderByTokens } from 'state/user/hooks'
+import { useTokenBalances } from 'state/wallet/hooks'
+import { StyledInternalLink } from 'theme'
+import { currencyId } from 'utils/currencyId'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
-
-import { ButtonDropdownLight } from '../../components/Button'
-import { LightCard } from '../../components/Card'
-import { AutoColumn, ColumnCenter } from '../../components/Column'
-import CurrencyLogo from '../../components/CurrencyLogo'
-import { FindPoolTabs } from '../../components/NavigationTabs'
-import { NarrowPositionCard } from '../../components/PositionCard'
-import Row from '../../components/Row'
-import CurrencySearchModal from '../../components/SearchModal/CurrencySearchModal'
-import { PairState, usePair } from '../../data/Reserves'
-import { useActiveWeb3React } from '../../hooks'
-import { usePairAdderByTokens } from '../../state/user/hooks'
-import { useTokenBalances } from '../../state/wallet/hooks'
-import { StyledInternalLink } from '../../theme'
-import { currencyId } from '../../utils/currencyId'
-import AppBody from '../AppBody'
-import { Dots } from '../Pool/styleds'
 
 enum Fields {
   TOKEN0 = 0,
@@ -33,12 +33,12 @@ enum Fields {
 }
 
 export default function PoolFinder() {
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId, isEVM } = useActiveWeb3React()
 
   const [showSearch, setShowSearch] = useState<boolean>(false)
   const [activeField, setActiveField] = useState<number>(Fields.TOKEN1)
 
-  const [currency0, setCurrency0] = useState<Currency | null>(nativeOnChain(chainId as ChainId))
+  const [currency0, setCurrency0] = useState<Currency | null>(NativeCurrencies[chainId])
   const [currency1, setCurrency1] = useState<Currency | null>(null)
 
   // pairs: {PairState, Pair, isStaticFeePair}[]
@@ -56,8 +56,8 @@ export default function PoolFinder() {
   }, [pairs, addPair, currency0, currency1, chainId])
 
   const positions: { [tokenAddress: string]: TokenAmount | undefined } = useTokenBalances(
-    account ?? undefined,
-    pairs.map(([, pair]) => pair?.liquidityToken),
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    pairs.every(([, pair]) => pair) ? pairs.map(([, pair]) => pair!.liquidityToken) : undefined,
   )
 
   const handleCurrencySelect = useCallback(
@@ -112,6 +112,8 @@ export default function PoolFinder() {
     mixpanelHandler(MIXPANEL_TYPE.IMPORT_POOL_INITIATED)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  if (!isEVM) return <Redirect to="/" />
   return (
     <AppBody>
       <FindPoolTabs />

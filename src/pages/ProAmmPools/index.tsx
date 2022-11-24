@@ -1,7 +1,8 @@
-import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
+import { Currency } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
+import { Redirect } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
@@ -12,7 +13,6 @@ import LocalLoader from 'components/LocalLoader'
 import Pagination from 'components/Pagination'
 import { Input as PaginationInput } from 'components/Pagination/PaginationInputOnMobile'
 import ShareModal from 'components/ShareModal'
-import { NETWORKS_INFO } from 'constants/networks'
 import { STABLE_COINS_ADDRESS } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
 import { SelectPairInstructionWrapper } from 'pages/Pools/styleds'
@@ -142,7 +142,7 @@ export default function ProAmmPoolList({
   const { loading, addresses } = useTopPoolAddresses()
   const { isLoading: poolDataLoading, data: poolDatas } = useGetElasticPools(addresses || [])
 
-  const { chainId, account } = useActiveWeb3React()
+  const { chainId, account, isEVM, networkInfo } = useActiveWeb3React()
   const userLiquidityPositionsQueryResult = useUserProMMPositions()
   const loadingUserPositions = !account ? false : userLiquidityPositionsQueryResult.loading
   const userPositions = !account ? {} : userLiquidityPositionsQueryResult.userLiquidityUsdByPool
@@ -367,9 +367,9 @@ export default function ProAmmPoolList({
   const openShareModal = useOpenModal(ApplicationModal.SHARE)
   const isShareModalOpen = useModalOpen(ApplicationModal.SHARE)
 
-  const chainRoute = NETWORKS_INFO[chainId as ChainId].route
+  const chainRoute = networkInfo.route
   const shareUrl = sharedPoolId
-    ? window.location.origin + '/pools?search=' + sharedPoolId + '&tab=elastic&networkId=' + chainRoute
+    ? window.location.origin + `/pools/${chainRoute}?search=` + sharedPoolId + '&tab=elastic'
     : undefined
 
   useEffect(() => {
@@ -383,6 +383,9 @@ export default function ProAmmPoolList({
       setSharedPoolId('')
     }
   }, [isShareModalOpen, setSharedPoolId])
+
+  if (!isEVM) return <Redirect to="/" />
+
   const pageData = pairDatas.slice((page - 1) * ITEM_PER_PAGE, page * ITEM_PER_PAGE)
 
   if (!anyLoading && !Object.keys(pairDatas).length) {

@@ -8,12 +8,12 @@ import { useActiveWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
 import { useTradeExactInV2 } from 'hooks/Trades'
 import useENS from 'hooks/useENS'
+import { useUserSlippageTolerance } from 'state/user/hooks'
 import { useCurrencyBalances } from 'state/wallet/hooks'
 import { isAddress } from 'utils'
 import { Aggregator } from 'utils/aggregator'
 import { computeSlippageAdjustedAmounts } from 'utils/prices'
 
-import { useUserSlippageTolerance } from '../user/hooks'
 import { Field } from './actions'
 import { tryParseAmount, useSwapState } from './hooks'
 import { AggregationComparer } from './types'
@@ -30,7 +30,7 @@ export function useDerivedSwapInfoV2(): {
   loading: boolean
   isPairNotfound: boolean
 } {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   const {
     independentField,
@@ -38,7 +38,6 @@ export function useDerivedSwapInfoV2(): {
     [Field.INPUT]: { currencyId: inputCurrencyId },
     [Field.OUTPUT]: { currencyId: outputCurrencyId },
     recipient,
-    saveGas,
   } = useSwapState()
 
   const inputCurrency = useCurrency(inputCurrencyId)
@@ -47,7 +46,6 @@ export function useDerivedSwapInfoV2(): {
   const to: string | null = (recipient === null || recipient === '' ? account : recipientLookup.address) ?? null
 
   const relevantTokenBalances = useCurrencyBalances(
-    account ?? undefined,
     useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency]),
   )
 
@@ -65,7 +63,7 @@ export function useDerivedSwapInfoV2(): {
     comparer: baseTradeComparer,
     onUpdateCallback,
     loading,
-  } = useTradeExactInV2(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined, saveGas, to, allowedSlippage)
+  } = useTradeExactInV2(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined, to)
 
   const tradeComparer = useMemo((): AggregationComparer | undefined => {
     if (
@@ -100,12 +98,14 @@ export function useDerivedSwapInfoV2(): {
 
   const v2Trade = isExactIn ? bestTradeExactIn : undefined
 
+  const balanceInput = relevantTokenBalances[0]
+  const balanceOutput = relevantTokenBalances[1]
   const currencyBalances = useMemo(() => {
     return {
-      [Field.INPUT]: relevantTokenBalances[0],
-      [Field.OUTPUT]: relevantTokenBalances[1],
+      [Field.INPUT]: balanceInput,
+      [Field.OUTPUT]: balanceOutput,
     }
-  }, [relevantTokenBalances])
+  }, [balanceInput, balanceOutput])
 
   const currencies: { [field in Field]?: Currency } = useMemo(() => {
     return {
@@ -128,7 +128,7 @@ export function useDerivedSwapInfoV2(): {
     inputError = inputError ?? t`Select a token`
   }
 
-  const formattedTo = isAddress(to)
+  const formattedTo = isAddress(chainId, to)
   if (!to || !formattedTo) {
     inputError = inputError ?? t`Enter a recipient`
   } else {
@@ -137,13 +137,13 @@ export function useDerivedSwapInfoV2(): {
     }
   }
 
-  const slippageAdjustedAmounts = v2Trade && allowedSlippage && computeSlippageAdjustedAmounts(v2Trade, allowedSlippage)
+  const slippageAdjustedAmounts = useMemo(
+    () => (v2Trade && allowedSlippage ? computeSlippageAdjustedAmounts(v2Trade, allowedSlippage) : null),
+    [allowedSlippage, v2Trade],
+  )
 
   // compare input balance to max input based on version
-  const [balanceIn, amountIn] = [
-    currencyBalances[Field.INPUT],
-    slippageAdjustedAmounts ? slippageAdjustedAmounts[Field.INPUT] : null,
-  ]
+  const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], slippageAdjustedAmounts?.[Field.INPUT]]
 
   if (amountIn && ((balanceIn && balanceIn.lessThan(amountIn)) || !balanceIn)) {
     inputError = t`Insufficient ${amountIn.currency.symbol} balance`

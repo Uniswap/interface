@@ -2,7 +2,7 @@ import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import { useCallback, useMemo, useState } from 'react'
 import { Plus } from 'react-feather'
-import { RouteComponentProps } from 'react-router-dom'
+import { Redirect, RouteComponentProps } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 import styled, { DefaultTheme, keyframes } from 'styled-components'
@@ -23,6 +23,7 @@ import { useCurrency } from 'hooks/Tokens'
 import useDebounce from 'hooks/useDebounce'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useParsedQueryString from 'hooks/useParsedQueryString'
+import { useSyncNetworkParamWithStore } from 'hooks/useSyncNetworkParamWithStore'
 import useTheme from 'hooks/useTheme'
 import FarmingPoolsMarquee from 'pages/Pools/FarmingPoolsMarquee'
 import { GlobalData, Instruction } from 'pages/Pools/InstructionAndGlobalData'
@@ -79,26 +80,37 @@ const Pools = ({
   history,
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) => {
   const theme = useTheme()
-  const { chainId } = useActiveWeb3React()
+  const { chainId, isEVM } = useActiveWeb3React()
   const above1000 = useMedia('(min-width: 1000px)')
   const above1260 = useMedia('(min-width: 1260px)')
   const below1124 = useMedia('(max-width: 1124px)')
   const [isShowOnlyActiveFarmPools, setIsShowOnlyActiveFarmPools] = useState(false)
   const [shouldShowLowTVLPools, setShowLowTVLPools] = useState(false)
-  const qs = useParsedQueryString()
-  const searchValueInQs: string = (qs.search as string) ?? ''
+  const {
+    search: searchValueInQs = '',
+    tab = VERSION.ELASTIC,
+    highlightCreateButton,
+  } = useParsedQueryString<{
+    search: string
+    tab: string
+    highlightCreateButton: string
+  }>()
   const debouncedSearchValue = useDebounce(searchValueInQs.trim().toLowerCase(), 200)
 
   const [onlyShowStable, setOnlyShowStable] = useState(false)
-  const tab = (qs.tab as string) || VERSION.ELASTIC
-  const shouldHighlightCreatePoolButton = qs.highlightCreateButton === 'true'
+  const shouldHighlightCreatePoolButton = highlightCreateButton === 'true'
 
   const [, setUrlOnEthPowAck] = useUrlOnEthPowAck()
   const toggleEthPowAckModal = useToggleEthPowAckModal()
 
-  const onSearch = (search: string) => {
-    history.replace(location.pathname + '?search=' + search + '&tab=' + tab)
-  }
+  const onSearch = useCallback(
+    (search: string) => {
+      history.replace(location.pathname + '?search=' + search + '&tab=' + tab)
+    },
+    [tab, history, location.pathname],
+  )
+
+  useSyncNetworkParamWithStore()
 
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
@@ -168,6 +180,7 @@ const Pools = ({
     }
   }
 
+  if (!isEVM) return <Redirect to="/" />
   return (
     <>
       <PoolsPageWrapper>

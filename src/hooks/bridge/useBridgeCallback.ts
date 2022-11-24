@@ -6,13 +6,14 @@ import { mutate } from 'swr'
 
 import { KS_SETTING_API } from 'constants/env'
 import { NETWORKS_INFO } from 'constants/networks'
-import { useActiveWeb3React } from 'hooks'
+import { useActiveWeb3React, useWeb3React } from 'hooks'
 import { useBridgeContract, useSwapBTCContract, useSwapETHContract } from 'hooks/useContract'
 import { useBridgeOutputValue, useBridgeState } from 'state/bridge/hooks'
 import { useAppSelector } from 'state/hooks'
 import { tryParseAmount } from 'state/swap/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
-import { useCurrencyBalance, useETHBalances } from 'state/wallet/hooks'
+import { TRANSACTION_TYPE } from 'state/transactions/type'
+import { useCurrencyBalance, useETHBalance } from 'state/wallet/hooks'
 import { formatNumberWithPrecisionRange, isAddress } from 'utils'
 
 const NOT_APPLICABLE = {
@@ -116,10 +117,10 @@ function useRouterSwap(
   const [{ tokenInfoIn, chainIdOut, currencyIn, currencyOut }] = useBridgeState()
   const outputInfo = useBridgeOutputValue(typedValue ?? '0')
   const { account, chainId } = useActiveWeb3React()
-  const bridgeContract = useBridgeContract(isAddress(routerToken), chainIdOut && isNaN(chainIdOut) ? 'V2' : '')
+  const bridgeContract = useBridgeContract(isAddress(chainId, routerToken), chainIdOut && isNaN(chainIdOut) ? 'V2' : '')
 
-  const ethBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
-  const anyBalance = useCurrencyBalance(account ?? undefined, currencyIn)
+  const ethBalance = useETHBalance()
+  const anyBalance = useCurrencyBalance(currencyIn)
   const balance = isNative ? ethBalance : anyBalance
 
   const inputAmount = useMemo(() => tryParseAmount(typedValue, currencyIn ?? undefined), [currencyIn, typedValue])
@@ -163,8 +164,9 @@ function useRouterSwap(
             const outputAmountStr = formatNumberWithPrecisionRange(parseFloat(outputInfo.outputAmount.toString()), 0, 6)
             const from_token = currencyIn?.symbol ?? ''
             const to_token = currencyOut?.symbol ?? ''
-            addTransactionWithType(txReceipt, {
-              type: 'Bridge',
+            addTransactionWithType({
+              hash: txReceipt,
+              type: TRANSACTION_TYPE.BRIDGE,
               summary: `${inputAmountStr} ${from_token} (${from_network}) to ${outputAmountStr} ${to_token} (${to_network})`,
               arbitrary: {
                 from_token,
@@ -222,15 +224,16 @@ function useBridgeSwap(
   const [{ tokenInfoOut, chainIdOut, tokenInfoIn, currencyIn, currencyOut }] = useBridgeState()
   const addTransactionWithType = useTransactionAdder()
   const outputInfo = useBridgeOutputValue(typedValue ?? '0')
-  const { chainId, account, library } = useActiveWeb3React()
+  const { chainId, account } = useActiveWeb3React()
+  const { library } = useWeb3React()
 
-  const tokenBalance = useCurrencyBalance(account ?? undefined, currencyIn)
-  const ethBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
+  const tokenBalance = useCurrencyBalance(currencyIn)
+  const ethBalance = useETHBalance()
   const balance = tokenInfoIn && tokenInfoIn?.tokenType !== 'NATIVE' ? tokenBalance : ethBalance
 
   const inputAmount = useMemo(() => tryParseAmount(typedValue, currencyIn), [currencyIn, typedValue])
-  const contractBTC = useSwapBTCContract(isAddress(inputToken) ? inputToken : undefined)
-  const contractETH = useSwapETHContract(isAddress(inputToken) ? inputToken : undefined)
+  const contractBTC = useSwapBTCContract(isAddress(chainId, inputToken) ? inputToken : undefined)
+  const contractETH = useSwapETHContract(isAddress(chainId, inputToken) ? inputToken : undefined)
   const sendTxToKsSetting = useSendTxToKsSettingCallback()
 
   return useMemo(() => {
@@ -244,7 +247,7 @@ function useBridgeSwap(
           if (!sufficientBalance || !inputAmount) return Promise.reject('insufficient balance')
           let txReceipt
           if (tokenInfoOut?.type === 'swapin') {
-            if (isAddress(inputToken) && tokenInfoIn?.tokenType !== 'NATIVE') {
+            if (isAddress(chainId, inputToken) && tokenInfoIn?.tokenType !== 'NATIVE') {
               if (contractETH) {
                 txReceipt = await contractETH.transfer(toAddress, `0x${inputAmount.quotient.toString(16)}`)
               } else {
@@ -282,8 +285,9 @@ function useBridgeSwap(
             const outputAmountStr = formatNumberWithPrecisionRange(parseFloat(outputInfo.outputAmount.toString()), 0, 6)
             const from_token = currencyIn?.symbol ?? ''
             const to_token = currencyOut?.symbol ?? ''
-            addTransactionWithType(txReceipt, {
-              type: 'Bridge',
+            addTransactionWithType({
+              hash: txReceipt,
+              type: TRANSACTION_TYPE.BRIDGE,
               summary: `${inputAmountStr} ${from_token} (${from_network}) to ${outputAmountStr} ${to_token} (${to_network})`,
               arbitrary: {
                 from_token,

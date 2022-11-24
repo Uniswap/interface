@@ -1,5 +1,4 @@
 import { Trans, t } from '@lingui/macro'
-import React from 'react'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
@@ -129,7 +128,7 @@ function Footer() {
                 src={
                   !isDarkMode
                     ? 'https://chainsecurity.com/wp-content/themes/chainsecurity-wp/resources/images/temp/logo.svg'
-                    : require('../../assets/svg/chainsecurity.svg').default
+                    : require('assets/svg/chainsecurity.svg').default
                 }
                 alt=""
                 width="98px"

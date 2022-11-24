@@ -172,13 +172,6 @@ export const Warning = styled.div`
   margin-bottom: 24px;
 `
 
-export const DetailWrapper = styled(AutoColumn)`
-  padding: 1rem 1rem 12px;
-  border: 1px solid ${({ theme }) => theme.border};
-  margin: 24px 0 28px;
-  border-radius: 4px;
-`
-
 export const DetailBox = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;

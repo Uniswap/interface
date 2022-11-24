@@ -1,15 +1,17 @@
 import { Trans } from '@lingui/macro'
-import React from 'react'
 import { Text } from 'rebass/styled-components'
 
 import { GasStation, MoneyFill } from 'components/Icons'
+import { useActiveWeb3React } from 'hooks'
 import { useSwapActionHandlers, useSwapState } from 'state/swap/hooks'
 
 import { ButtonReturnType, GroupButtonReturnTypes } from './styleds'
 
 export default function TradeTypeSelection() {
+  const { isSolana } = useActiveWeb3React()
   const { saveGas } = useSwapState()
   const { onChooseToSaveGas } = useSwapActionHandlers()
+  if (isSolana) return null
   return (
     <GroupButtonReturnTypes>
       <ButtonReturnType onClick={() => onChooseToSaveGas(false)} active={!saveGas} role="button">

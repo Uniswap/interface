@@ -3,6 +3,7 @@ import { useCallback } from 'react'
 import { CONTRACT_NOT_FOUND_MSG } from 'constants/messages'
 import { useRewardLockerContract } from 'hooks/useContract'
 import { useTransactionAdder } from 'state/transactions/hooks'
+import { TRANSACTION_TYPE } from 'state/transactions/type'
 import { calculateGasMargin } from 'utils'
 
 const useVesting = (rewardLockerAddress: string) => {
@@ -19,7 +20,7 @@ const useVesting = (rewardLockerAddress: string) => {
       const tx = await lockerContract.vestScheduleAtIndices(token, index, {
         gasLimit: calculateGasMargin(estimateGas),
       })
-      addTransactionWithType(tx, { type: 'Claim', summary: 'reward' })
+      addTransactionWithType({ hash: tx.hash, type: TRANSACTION_TYPE.CLAIM, summary: 'reward' })
 
       return tx.hash
     },
@@ -36,7 +37,7 @@ const useVesting = (rewardLockerAddress: string) => {
       const tx = await lockerContract.vestScheduleForMultipleTokensAtIndices(tokens, indices, {
         gasLimit: calculateGasMargin(estimateGas),
       })
-      addTransactionWithType(tx, { type: 'Claim', summary: 'all rewards' })
+      addTransactionWithType({ hash: tx.hash, type: TRANSACTION_TYPE.CLAIM, summary: 'all rewards' })
 
       return tx.hash
     },

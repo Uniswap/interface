@@ -24,34 +24,33 @@ import TransactionConfirmationModal, {
   TransactionErrorContent,
 } from 'components/TransactionConfirmationModal'
 import { Dots } from 'components/swap/styleds'
-import { NETWORKS_INFO } from 'constants/networks'
-import { nativeOnChain } from 'constants/tokens'
-import { useActiveWeb3React } from 'hooks'
+import { EVMNetworkInfo } from 'constants/networks/type'
+import { NativeCurrencies } from 'constants/tokens'
+import { useActiveWeb3React, useWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { usePairContract } from 'hooks/useContract'
 import useIsArgentWallet from 'hooks/useIsArgentWallet'
 import useTheme from 'hooks/useTheme'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
+import { Wrapper } from 'pages/Pool/styleds'
 import { useTokensPrice, useWalletModalToggle } from 'state/application/hooks'
 import { Field } from 'state/burn/actions'
 import { useBurnActionHandlers, useBurnState, useDerivedBurnInfo } from 'state/burn/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
+import { TRANSACTION_TYPE } from 'state/transactions/type'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { StyledInternalLink, TYPE, UppercaseText } from 'theme'
+import { calculateGasMargin, calculateSlippageAmount, formattedNum } from 'utils'
+import { currencyId } from 'utils/currencyId'
+import { formatJSBIValue } from 'utils/formatBalance'
 import {
-  calculateGasMargin,
-  calculateSlippageAmount,
-  formattedNum,
   getDynamicFeeRouterContract,
   getOldStaticFeeRouterContract,
   getStaticFeeRouterContract,
-} from 'utils'
-import { currencyId } from 'utils/currencyId'
-import { formatJSBIValue } from 'utils/formatBalance'
+} from 'utils/getContract'
 import useDebouncedChangeHandler from 'utils/useDebouncedChangeHandler'
 
-import { Wrapper } from '../Pool/styleds'
 import {
   CurrentPriceWrapper,
   DetailBox,
@@ -74,16 +73,17 @@ export default function TokenPair({
   pairAddress: string
 }) {
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
-  const { account, chainId, library } = useActiveWeb3React()
+  const { account, chainId, isEVM, networkInfo } = useActiveWeb3React()
+  const { library } = useWeb3React()
 
   const nativeA = currencyA as Currency
   const nativeB = currencyB as Currency
   const [tokenA, tokenB] = useMemo(() => [currencyA?.wrapped, currencyB?.wrapped], [currencyA, currencyB])
 
-  const currencyAIsETHER = !!(chainId && currencyA && currencyA.isNative)
-  const currencyAIsWETH = !!(chainId && currencyA && currencyA.equals(WETH[chainId]))
-  const currencyBIsETHER = !!(chainId && currencyB && currencyB.isNative)
-  const currencyBIsWETH = !!(chainId && currencyB && currencyB.equals(WETH[chainId]))
+  const currencyAIsETHER = !!currencyA?.isNative
+  const currencyAIsWETH = !!currencyA?.equals(WETH[chainId])
+  const currencyBIsETHER = !!currencyB?.isNative
+  const currencyBIsWETH = !!currencyB?.equals(WETH[chainId])
 
   const theme = useTheme()
 
@@ -94,12 +94,12 @@ export default function TokenPair({
   const { independentField, typedValue } = useBurnState()
   const { pair, userLiquidity, parsedAmounts, amountsMin, price, error, isStaticFeePair, isOldStaticFeeContract } =
     useDerivedBurnInfo(currencyA ?? undefined, currencyB ?? undefined, pairAddress)
-  const contractAddress = chainId
+  const contractAddress = isEVM
     ? isStaticFeePair
       ? isOldStaticFeeContract
-        ? NETWORKS_INFO[chainId].classic.oldStatic?.router
-        : NETWORKS_INFO[chainId].classic.static.router
-      : NETWORKS_INFO[chainId].classic.dynamic?.router
+        ? (networkInfo as EVMNetworkInfo).classic.oldStatic?.router
+        : (networkInfo as EVMNetworkInfo).classic.static.router
+      : (networkInfo as EVMNetworkInfo).classic.dynamic?.router
     : undefined
   const amp = pair?.amp || JSBI.BigInt(0)
   const { onUserInput: _onUserInput } = useBurnActionHandlers()
@@ -205,7 +205,7 @@ export default function TokenPair({
           deadline: deadline.toNumber(),
         })
       })
-      .catch(error => {
+      .catch((error: any) => {
         // for all errors other than 4001 (EIP-1193 user rejected request), fall back to manual approve
         if (error?.code !== 4001) {
           approveCallback()
@@ -366,16 +366,17 @@ export default function TokenPair({
           if (!!currencyA && !!currencyB) {
             setAttemptingTxn(false)
 
-            addTransactionWithType(response, {
-              type: 'Remove liquidity',
+            addTransactionWithType({
+              hash: response.hash,
+              type: TRANSACTION_TYPE.REMOVE_LIQUIDITY,
               summary:
                 parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) +
                 ' ' +
-                (currencyAIsWETH ? nativeOnChain(chainId).symbol : currencyA.symbol) +
+                (currencyAIsWETH ? NativeCurrencies[chainId].symbol : currencyA.symbol) +
                 ' and ' +
                 parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) +
                 ' ' +
-                (currencyBIsWETH ? nativeOnChain(chainId).symbol : currencyB.symbol),
+                (currencyBIsWETH ? NativeCurrencies[chainId].symbol : currencyB.symbol),
               arbitrary: {
                 poolAddress: pairAddress,
                 token_1: currencyA.symbol,
@@ -618,7 +619,8 @@ export default function TokenPair({
                   hideLogo
                   value={formattedAmounts[Field.LIQUIDITY]}
                   onUserInput={onLiquidityInput}
-                  showMaxButton={false}
+                  onMax={null}
+                  onHalf={null}
                   disableCurrencySelect
                   currency={
                     new Token(
@@ -640,7 +642,8 @@ export default function TokenPair({
                   <CurrencyInputPanel
                     value={formattedAmounts[Field.CURRENCY_A]}
                     onUserInput={onCurrencyAInput}
-                    showMaxButton={false}
+                    onMax={null}
+                    onHalf={null}
                     currency={currencyA}
                     label={t`Output`}
                     onCurrencySelect={() => null}
@@ -653,7 +656,7 @@ export default function TokenPair({
                       <StyledInternalLink
                         replace
                         to={`/remove/${
-                          currencyAIsETHER ? currencyId(WETH[chainId], chainId) : nativeOnChain(chainId).symbol
+                          currencyAIsETHER ? currencyId(WETH[chainId], chainId) : NativeCurrencies[chainId].symbol
                         }/${currencyIdB}/${pairAddress}`}
                       >
                         {currencyAIsETHER ? <Trans>Use Wrapped Token</Trans> : <Trans>Use Native Token</Trans>}
@@ -666,7 +669,8 @@ export default function TokenPair({
                   <CurrencyInputPanel
                     value={formattedAmounts[Field.CURRENCY_B]}
                     onUserInput={onCurrencyBInput}
-                    showMaxButton={false}
+                    onMax={null}
+                    onHalf={null}
                     currency={currencyB}
                     onCurrencySelect={() => null}
                     disableCurrencySelect={true}
@@ -678,7 +682,7 @@ export default function TokenPair({
                       <StyledInternalLink
                         replace
                         to={`/remove/${currencyIdA}/${
-                          currencyBIsETHER ? currencyId(WETH[chainId], chainId) : nativeOnChain(chainId).symbol
+                          currencyBIsETHER ? currencyId(WETH[chainId], chainId) : NativeCurrencies[chainId].symbol
                         }/${pairAddress}`}
                       >
                         {currencyBIsETHER ? <Trans>Use Wrapped Token</Trans> : <Trans>Use Native Token</Trans>}

@@ -1,5 +1,4 @@
-import { ChainId, Currency, WETH } from '@kyberswap/ks-sdk-core'
-import { getAddress } from 'ethers/lib/utils'
+import { ChainId, Currency, NativeCurrency, Token, WETH } from '@kyberswap/ks-sdk-core'
 
 import { NETWORKS_INFO } from 'constants/networks'
 import { MAP_TOKEN_HAS_MULTI_BY_NETWORK, WHITE_LIST_TOKEN_INFO_PAIR } from 'constants/tokenLists/token-info'
@@ -44,15 +43,19 @@ export const checkPairInWhiteList = (chainId: ChainId | undefined, symbol1: stri
   return { isInWhiteList, data: data || {}, canonicalUrl }
 }
 
-export const getFormattedAddress = (address?: string, fallback?: string): string => {
+export const getFormattedAddress = (chainId: ChainId, address?: string, fallback?: string): string => {
   try {
-    return getAddress(address || '')
+    if (!address) return fallback || ''
+    return new Token(chainId, address, 0).address || ''
   } catch (e) {
     return fallback || address || ''
   }
 }
 
-export const isTokenNative = (currency: Currency | WrappedTokenInfo | undefined, chainId: ChainId | undefined) => {
+export const isTokenNative = (
+  currency: Currency | WrappedTokenInfo | undefined,
+  chainId: ChainId | undefined,
+): currency is NativeCurrency => {
   if (currency?.isNative) return true
   // case multichain token
   return chainId

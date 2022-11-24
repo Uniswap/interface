@@ -1,9 +1,8 @@
-import React from 'react'
 import styled from 'styled-components'
 
+import { useLastTruthy } from 'hooks/useLast'
 import { OutputBridgeInfo } from 'state/bridge/hooks'
 
-import { useLastTruthy } from '../../hooks/useLast'
 import { AdvancedSwapDetails, AdvancedSwapDetailsProps, TradeSummaryBridge } from './AdvancedSwapDetails'
 
 const AdvancedDetailsFooter = styled.div<{ show: boolean }>`

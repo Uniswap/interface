@@ -2,10 +2,6 @@ import styled from 'styled-components'
 
 import { AutoColumn } from 'components/Column'
 
-export const PageWrapper = styled.div`
-  margin: 24px 12px;
-`
-
 export const Container = styled.div`
   text-align: center;
   width: calc(100% - 24px);
@@ -55,10 +51,4 @@ export const SecondColumn = styled(AutoColumn)`
     padding-left: 24px;
     padding-top: 0;
   }
-`
-
-export const DynamicSection = styled(AutoColumn)<{ disabled?: boolean }>`
-  opacity: ${({ disabled }) => (disabled ? '0.2' : '1')};
-  pointer-events: ${({ disabled }) => (disabled ? 'none' : 'initial')};
-  margin: 1rem 0;
 `

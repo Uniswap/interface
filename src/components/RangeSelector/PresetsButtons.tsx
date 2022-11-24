@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import React from 'react'
 import { Flex } from 'rebass'
 
 import { Swap as SwapIcon } from 'components/Icons'

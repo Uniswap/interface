@@ -1,10 +1,9 @@
-import { ChainId, Percent } from '@kyberswap/ks-sdk-core'
+import { Percent } from '@kyberswap/ks-sdk-core'
 import { t } from '@lingui/macro'
-import React from 'react'
 
 import ItemCardInfoRow from 'components/PoolList/ItemCard/ItemCardInfoRow'
 import { ONE_BIPS } from 'constants/index'
-import { nativeOnChain } from 'constants/tokens'
+import { NativeCurrencies } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
 import { SubgraphPoolData, UserLiquidityPosition } from 'state/pools/hooks'
 import { tryParseAmount } from 'state/swap/hooks'
@@ -19,11 +18,11 @@ export default function TabYourLiquidityItems({
 }) {
   const { chainId } = useActiveWeb3React()
 
-  const { currency0, currency1, reserve0, reserve1, totalSupply } = parseSubgraphPoolData(poolData, chainId as ChainId)
+  const { currency0, currency1, reserve0, reserve1, totalSupply } = parseSubgraphPoolData(poolData, chainId)
 
   const liquidityTokenBalance =
     myLiquidity?.liquidityTokenBalance && chainId
-      ? tryParseAmount(myLiquidity?.liquidityTokenBalance, nativeOnChain(chainId))
+      ? tryParseAmount(myLiquidity?.liquidityTokenBalance, NativeCurrencies[chainId])
       : undefined
 
   const pooledToken0 =

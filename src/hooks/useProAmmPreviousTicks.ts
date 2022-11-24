@@ -2,7 +2,7 @@ import { Pool, Position, TickMath } from '@kyberswap/ks-sdk-elastic'
 import { BigNumber } from 'ethers'
 import { useEffect, useMemo, useState } from 'react'
 
-import { NETWORKS_INFO } from 'constants/networks'
+import { NETWORKS_INFO, isEVM } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import { Result, useSingleContractMultipleData } from 'state/multicall/hooks'
 import { usePoolBlocks } from 'state/prommPools/hooks'
@@ -53,7 +53,7 @@ export function useProAmmTotalFeeOwedByPosition(pool: Pool | null | undefined, t
   const [last24hRes, setLast24hRes] = useState(['0', '0'])
 
   useEffect(() => {
-    if (chainId) {
+    if (isEVM(chainId)) {
       if (blockLast24h)
         tickReader
           ?.getTotalFeesOwedToPosition(
@@ -73,7 +73,7 @@ export function useProAmmTotalFeeOwedByPosition(pool: Pool | null | undefined, t
     }
   }, [blockLast24h, chainId, poolAddress, tokenID, tickReader])
   useEffect(() => {
-    if (chainId) {
+    if (isEVM(chainId)) {
       tickReader
         ?.getTotalFeesOwedToPosition(
           NETWORKS_INFO[chainId].elastic.nonfungiblePositionManager,

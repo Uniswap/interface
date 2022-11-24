@@ -4,8 +4,8 @@ import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
 import { PairState, usePair } from 'data/Reserves'
+import { AppState } from 'state/index'
 
-import { AppState } from '../index'
 import { Field } from './actions'
 
 export function usePairState(): AppState['pair'] {

@@ -8,7 +8,7 @@ import { FadeInAnimation } from 'components/Animation'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { MoneyBag } from 'components/Icons'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { nativeOnChain } from 'constants/tokens'
+import { NativeCurrencies } from 'constants/tokens'
 import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
 import { useToken } from 'hooks/Tokens'
@@ -39,19 +39,19 @@ const MarqueeItem = ({ token0: address0, token1: address1 }: { token0: string; t
 
   const token0 = useToken(address0) as Token
   const currency0 =
-    chainId && address0.toLowerCase() === WETH[chainId].address.toLowerCase() ? nativeOnChain(chainId) : token0
+    chainId && address0.toLowerCase() === WETH[chainId].address.toLowerCase() ? NativeCurrencies[chainId] : token0
 
   const token1 = useToken(address1) as Token
   const currency1 =
-    chainId && address1.toLowerCase() === WETH[chainId].address.toLowerCase() ? nativeOnChain(chainId) : token1
+    chainId && address1.toLowerCase() === WETH[chainId].address.toLowerCase() ? NativeCurrencies[chainId] : token1
 
-  const qs = useParsedQueryString()
+  const { tab = VERSION.ELASTIC } = useParsedQueryString<{
+    tab: string
+  }>()
   if (!token0 || !token1) return null
 
   const token0Address = currency0.isNative ? currency0.symbol : token0.address
   const token1Address = currency1.isNative ? currency1.symbol : token1.address
-
-  const tab = (qs.tab as string) || VERSION.ELASTIC
 
   return (
     <StyledLink to={`/pools/${token0Address}/${token1Address}?tab=${tab}`}>

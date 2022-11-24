@@ -17,9 +17,9 @@ import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
 import { useAddUserToken } from 'state/user/hooks'
 import { CloseIcon, TYPE } from 'theme'
+import { ExternalLinkIcon } from 'theme/components'
 import { getEtherscanLink, shortenAddress } from 'utils'
 
-import { ExternalLinkIcon } from '../../theme/components'
 import { PaddedColumn } from './styleds'
 
 const Wrapper = styled.div`
@@ -111,19 +111,17 @@ export function ImportToken({ enterToImport = false, tokens, onBack, onDismiss, 
                   <Text color={theme.subText} fontWeight={400} fontSize={14}>
                     {token.name}
                   </Text>
-                  {chainId && (
-                    <Flex alignItems={'center'} color={theme.text} style={{ gap: 5 }}>
-                      <AddressText>
-                        <Trans>Address</Trans>: {shortenAddress(token.address, 7)}
-                      </AddressText>
-                      <CopyHelper toCopy={token.address} style={{ color: theme.subText }} />
-                      <ExternalLinkIcon
-                        color={theme.subText}
-                        size={16}
-                        href={getEtherscanLink(chainId, token.address, 'address')}
-                      />
-                    </Flex>
-                  )}
+                  <Flex alignItems={'center'} color={theme.text} style={{ gap: 5 }}>
+                    <AddressText>
+                      <Trans>Address</Trans>: {shortenAddress(chainId, token.address, 7)}
+                    </AddressText>
+                    <CopyHelper toCopy={token.address} style={{ color: theme.subText }} />
+                    <ExternalLinkIcon
+                      color={theme.subText}
+                      size={16}
+                      href={getEtherscanLink(chainId, token.address, 'address')}
+                    />
+                  </Flex>
                 </AutoColumn>
               </Flex>
             </Card>

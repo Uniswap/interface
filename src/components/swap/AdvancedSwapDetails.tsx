@@ -1,21 +1,20 @@
 import { Trade } from '@kyberswap/ks-sdk-classic'
-import { ChainId, Currency, TradeType } from '@kyberswap/ks-sdk-core'
+import { Currency, TradeType } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
-import React from 'react'
 import styled from 'styled-components'
 
+import { AutoColumn } from 'components/Column'
+import QuestionHelper from 'components/QuestionHelper'
+import { RowBetween, RowFixed } from 'components/Row'
+import { DMM_ANALYTICS_URL } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
+import { Field } from 'state/swap/actions'
+import { useUserSlippageTolerance } from 'state/user/hooks'
+import { ExternalLink, TYPE } from 'theme'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
+import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from 'utils/prices'
 
-import { DMM_ANALYTICS_URL } from '../../constants'
-import { Field } from '../../state/swap/actions'
-import { useUserSlippageTolerance } from '../../state/user/hooks'
-import { ExternalLink, TYPE } from '../../theme'
-import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from '../../utils/prices'
-import { AutoColumn } from '../Column'
-import QuestionHelper from '../QuestionHelper'
-import { RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
 import SwapRoute from './SwapRoute'
 import { SectionBreak } from './styleds'
@@ -128,7 +127,7 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
           )}
           <AutoColumn style={{ padding: '0 24px' }}>
             <InfoLink
-              href={`${DMM_ANALYTICS_URL[chainId as ChainId]}/pool/${trade?.route.pairs[0].liquidityToken.address}`}
+              href={`${DMM_ANALYTICS_URL[chainId]}/pool/${trade?.route.pairs[0].liquidityToken.address}`}
               target="_blank"
             >
               <Trans>Token pool analytics →</Trans>

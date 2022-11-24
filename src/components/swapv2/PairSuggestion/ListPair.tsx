@@ -1,5 +1,4 @@
 import { Trans, t } from '@lingui/macro'
-import React from 'react'
 import { AlertTriangle, Star } from 'react-feather'
 import { Flex, Text } from 'rebass'
 import styled, { css } from 'styled-components'

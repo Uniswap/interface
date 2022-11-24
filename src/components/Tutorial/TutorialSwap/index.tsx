@@ -10,22 +10,22 @@ import WelcomeImage from 'assets/images/tutorial_swap/welcome.png'
 import { ButtonOutlined, ButtonPrimary } from 'components/Button'
 import { ToggleItemType } from 'components/Collapse'
 import { TutorialType, getTutorialVideoId } from 'components/Tutorial'
-import { SUPPORTED_WALLETS } from 'constants/index'
+import { SUPPORTED_WALLETS } from 'constants/wallets'
 import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
-import useTheme from 'hooks/useTheme'
 import { useTutorialSwapGuide } from 'state/tutorial/hooks'
 import { useIsDarkMode } from 'state/user/hooks'
 import { ExternalLink } from 'theme'
+import { filterTruthy } from 'utils'
 
 import CustomMask from './CustomMask'
 import CustomPopup from './CustomPopup'
 import TutorialMobile from './TutorialMobile'
-import { LIST_TITLE, StepCustom, TutorialIds, TutorialNumbers } from './constant'
+import { LIST_TITLE, StepTutorial, TutorialIds } from './constant'
 
 const isMobile = window.innerWidth < 1200 // best resolution for this tutorial
 
-const Heading = styled.h5`
+export const Heading = styled.h5`
   color: ${({ theme }) => theme.text};
   user-select: none;
   margin: 5px 0px 10px 0px;
@@ -39,17 +39,6 @@ const LayoutWrapper = styled.div`
   text-align: left;
   font-size: 14px;
 `
-const Title = ({ stepNumber }: { stepNumber: number }) => {
-  const theme = useTheme()
-  return (
-    <Heading style={{ display: 'flex', alignItems: 'flex-end' }}>
-      <Trans>
-        <span>Step: {stepNumber}/</span>
-        <span style={{ color: theme.subText, fontSize: '0.85em' }}>{TutorialNumbers.TOTAL_STEP}</span>
-      </Trans>
-    </Heading>
-  )
-}
 
 const Layout = ({ children, title }: { title?: string; children: React.ReactNode }) => {
   return (
@@ -143,7 +132,7 @@ function Welcome() {
   )
 }
 
-function Step1() {
+function ConnectWallet() {
   const [isExpanded, setIsExpanded] = useState(false)
   const toggleExpand = () => setIsExpanded(!isExpanded)
   const isDarkMode = useIsDarkMode()
@@ -166,12 +155,7 @@ function Step1() {
               .filter(e => e.installLink)
               .map(item => (
                 <NetworkItemWrapper key={item.name} onClick={() => window.open(item.installLink)}>
-                  <img
-                    src={require(`../../../assets/images/${isDarkMode ? '' : 'light-'}${item.iconName}`).default}
-                    alt={item.name}
-                    width="20"
-                    height="20"
-                  />
+                  <img src={isDarkMode ? item.icon : item.iconLight} alt={item.name} width="20" height="20" />
                   <span>{item.name}</span>
                 </NetworkItemWrapper>
               ))}
@@ -191,7 +175,7 @@ const TouchAbleVideo = styled.div`
   height: 100%;
 `
 
-function Step3({ videoStyle = {} }: { videoStyle: CSSProperties }) {
+function VideoSwap({ videoStyle = {} }: { videoStyle: CSSProperties }) {
   const { mixpanelHandler } = useMixpanel()
   const [playedVideo, setPlayedVideo] = useState(false)
   const ref = useRef<HTMLIFrameElement | null>(null)
@@ -239,13 +223,14 @@ const CustomCss = createGlobalStyle`
     outline: none;
   };
 `
-const getListSteps = (isLogin: boolean) => {
+const getListSteps = (isLogin: boolean, isSolana: boolean) => {
+  let stepNumber = 0
   const isHighlightBtnConnectWallet = !isLogin || isMobile
-  return [
+  return filterTruthy([
     {
-      title: (
+      customTitleRenderer: () => (
         <Heading style={{ fontSize: 20 }}>
-          <Trans>Welcome to KyberSwap!</Trans>
+          <Trans>{LIST_TITLE.WELCOME}</Trans>
         </Heading>
       ),
       customFooterRenderer: (logic: WalktourLogic) => (
@@ -258,7 +243,7 @@ const getListSteps = (isLogin: boolean) => {
           </ButtonPrimary>
         </Flex>
       ),
-      stepNumber: 0,
+      stepNumber: stepNumber++,
       description: <Welcome />,
       pcOnly: true,
       center: true,
@@ -266,23 +251,15 @@ const getListSteps = (isLogin: boolean) => {
     },
     {
       selector: isHighlightBtnConnectWallet ? TutorialIds.BUTTON_CONNECT_WALLET : TutorialIds.BUTTON_ADDRESS_WALLET,
-      title: isMobile ? (
-        isHighlightBtnConnectWallet ? (
-          LIST_TITLE.CONNECT_WALLET
-        ) : (
-          LIST_TITLE.YOUR_WALLET
-        )
-      ) : (
-        <Title stepNumber={1} />
-      ),
-      stepNumber: 1,
-      description: <Step1 />,
+      title: isHighlightBtnConnectWallet ? LIST_TITLE.CONNECT_WALLET : LIST_TITLE.YOUR_WALLET,
+      stepNumber: stepNumber++,
+      description: <ConnectWallet />,
       orientationPreferences: [CardinalOrientation.SOUTHEAST, CardinalOrientation.NORTHWEST],
     },
     {
       selector: TutorialIds.SELECT_NETWORK,
-      title: isMobile ? LIST_TITLE.SELECT_NETWORK : <Title stepNumber={2} />,
-      stepNumber: 2,
+      title: LIST_TITLE.SELECT_NETWORK,
+      stepNumber: stepNumber++,
       description: (
         <Layout title={LIST_TITLE.SELECT_NETWORK}>
           <Desc>
@@ -297,17 +274,17 @@ const getListSteps = (isLogin: boolean) => {
     },
     {
       selector: TutorialIds.SWAP_FORM,
-      title: isMobile ? LIST_TITLE.START_TRADING : <Title stepNumber={3} />,
-      stepNumber: 3,
-      description: <Step3 videoStyle={{ minHeight: Math.min(window.innerHeight / 2, 500) }} />,
+      title: LIST_TITLE.START_TRADING,
+      stepNumber: stepNumber++,
+      description: <VideoSwap videoStyle={{ minHeight: Math.min(window.innerHeight / 2, 500) }} />,
       popupStyle: { width: Math.min(0.8 * window.innerWidth, 700) },
       requiredClickSelector: '#' + TutorialIds.BUTTON_SETTING_SWAP_FORM,
       selectorHint: '#' + TutorialIds.SWAP_FORM_CONTENT,
     },
     {
       selector: TutorialIds.BUTTON_SETTING_SWAP_FORM,
-      title: isMobile ? LIST_TITLE.SETTING : <Title stepNumber={4} />,
-      stepNumber: 4,
+      title: LIST_TITLE.SETTING,
+      stepNumber: stepNumber,
       maskPadding: 10,
       description: (
         <Layout title={LIST_TITLE.SETTING}>
@@ -324,8 +301,8 @@ const getListSteps = (isLogin: boolean) => {
     },
     {
       selector: TutorialIds.SWAP_FORM,
-      title: isMobile ? LIST_TITLE.SETTING : <Title stepNumber={4} />,
-      stepNumber: 4,
+      title: LIST_TITLE.SETTING,
+      stepNumber: stepNumber++,
       requiredClickSelector: '#' + TutorialIds.BUTTON_SETTING_SWAP_FORM,
       selectorHint: '#' + TutorialIds.TRADING_SETTING_CONTENT,
       description: (
@@ -345,8 +322,8 @@ const getListSteps = (isLogin: boolean) => {
     },
     {
       selector: TutorialIds.BRIDGE_LINKS,
-      title: isMobile ? LIST_TITLE.BRIDGE : <Title stepNumber={5} />,
-      stepNumber: 5,
+      title: LIST_TITLE.BRIDGE,
+      stepNumber: stepNumber++,
       description: (
         <Layout title={LIST_TITLE.BRIDGE}>
           <Desc>
@@ -359,26 +336,29 @@ const getListSteps = (isLogin: boolean) => {
       ),
       orientationPreferences: [CardinalOrientation.SOUTH],
     },
-    {
-      selector: TutorialIds.EARNING_LINKS,
-      title: isMobile ? LIST_TITLE.EARN : <Title stepNumber={6} />,
-      stepNumber: 6,
-      description: (
-        <Layout title={LIST_TITLE.EARN}>
-          <Desc>
-            <Trans>
-              Add liquidity into our Pools to earn trading fees & participate in our Farms to earn additional rewards!
-            </Trans>
-          </Desc>
-          <ImageMobile imageName="step5.png" />
-        </Layout>
-      ),
-      orientationPreferences: [CardinalOrientation.SOUTH],
-    },
+    isSolana
+      ? null
+      : {
+          selector: TutorialIds.EARNING_LINKS,
+          title: LIST_TITLE.EARN,
+          stepNumber: stepNumber++,
+          description: (
+            <Layout title={LIST_TITLE.EARN}>
+              <Desc>
+                <Trans>
+                  Add liquidity into our Pools to earn trading fees & participate in our Farms to earn additional
+                  rewards!
+                </Trans>
+              </Desc>
+              <ImageMobile imageName="step5.png" />
+            </Layout>
+          ),
+          orientationPreferences: [CardinalOrientation.SOUTH],
+        },
     {
       selector: TutorialIds.CAMPAIGN_LINK,
-      title: isMobile ? LIST_TITLE.CAMPAIGN : <Title stepNumber={7} />,
-      stepNumber: 7,
+      title: LIST_TITLE.CAMPAIGN,
+      stepNumber: stepNumber++,
       description: (
         <Layout title={LIST_TITLE.CAMPAIGN}>
           <Desc>
@@ -392,8 +372,8 @@ const getListSteps = (isLogin: boolean) => {
     },
     {
       selector: TutorialIds.DISCOVER_LINK,
-      title: isMobile ? LIST_TITLE.DISCOVER : <Title stepNumber={8} />,
-      stepNumber: 8,
+      title: LIST_TITLE.DISCOVER,
+      stepNumber: stepNumber++,
       description: (
         <Layout title={LIST_TITLE.DISCOVER}>
           <Desc>
@@ -410,11 +390,12 @@ const getListSteps = (isLogin: boolean) => {
     },
     {
       selector: TutorialIds.BUTTON_VIEW_GUIDE_SWAP,
-      title: isMobile ? LIST_TITLE.VIEW_GUIDE : <Title stepNumber={9} />,
-      stepNumber: 9,
+      title: LIST_TITLE.VIEW_GUIDE,
+      stepNumber: stepNumber++,
       maskPadding: 10,
       requiredClickSelector: '#' + TutorialIds.BUTTON_SETTING,
       stopPropagationMouseDown: true,
+      lastStep: true,
       description: (
         <Layout title={LIST_TITLE.VIEW_GUIDE}>
           <Desc>
@@ -433,7 +414,7 @@ const getListSteps = (isLogin: boolean) => {
         </Layout>
       ),
     },
-  ]
+  ])
 }
 
 const TutorialKeys = {
@@ -443,7 +424,7 @@ const TutorialKeys = {
 export default memo(function TutorialSwap() {
   const [{ show = false, step = 0 }, setShowTutorial] = useTutorialSwapGuide()
   const stopTutorial = () => setShowTutorial({ show: false })
-  const { account } = useActiveWeb3React()
+  const { account, isSolana } = useActiveWeb3React()
   const { mixpanelHandler } = useMixpanel()
 
   useEffect(() => {
@@ -455,7 +436,7 @@ export default memo(function TutorialSwap() {
   }, [setShowTutorial])
 
   const steps = useMemo(() => {
-    const list = getListSteps(!!account)
+    const list = getListSteps(!!account, isSolana)
     if (isMobile) {
       return list
         .filter(e => !e.pcOnly)
@@ -469,9 +450,9 @@ export default memo(function TutorialSwap() {
       description: e.description as unknown as string, // because this lib type check description is string but actually it accept any
       selector: '#' + e.selector,
     }))
-  }, [account])
+  }, [account, isSolana])
 
-  const stepInfo = (steps[step] || {}) as StepCustom
+  const stepInfo = (steps[step] || {}) as StepTutorial
 
   const onDismiss = (logic: WalktourLogic) => {
     const { stepNumber } = stepInfo
@@ -485,7 +466,7 @@ export default memo(function TutorialSwap() {
     stopTutorial()
   }
 
-  const checkRequiredClick = (nextStep: StepCustom) => {
+  const checkRequiredClick = (nextStep: StepTutorial) => {
     const { requiredClickSelector, selectorHint } = nextStep
     const needClick = requiredClickSelector && !document.querySelector(selectorHint || nextStep?.selector)
     // target next step has not render yet, => click other button to render it
@@ -504,7 +485,7 @@ export default memo(function TutorialSwap() {
     callbackEndStep && callbackEndStep()
     setTimeout(
       () => {
-        setShowTutorial({ step: nextIndex })
+        setShowTutorial({ step: nextIndex, stepInfo: allSteps[nextIndex] })
         isNext ? next() : prev()
       },
       needClickAnyElement ? 400 : 0,
@@ -512,8 +493,9 @@ export default memo(function TutorialSwap() {
   }
 
   const onNext = (logic: WalktourLogic) => {
-    const { stepIndex, close } = logic
-    if (stepIndex - 1 === TutorialNumbers.TOTAL_STEP) {
+    const { stepIndex, close, allSteps } = logic
+    const { lastStep } = allSteps[stepIndex] as StepTutorial
+    if (lastStep) {
       onFinished()
       close()
       return
@@ -527,7 +509,7 @@ export default memo(function TutorialSwap() {
   }
 
   if (!show) return null
-  if (isMobile) return <TutorialMobile isOpen={show} stopTutorial={stopTutorial} steps={steps as ToggleItemType[]} />
+  if (isMobile) return <TutorialMobile stopTutorial={stopTutorial} steps={steps as ToggleItemType[]} />
   return (
     <>
       <Walktour

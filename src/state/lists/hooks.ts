@@ -4,15 +4,11 @@ import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
 import { SUPPORTED_NETWORKS } from 'constants/networks'
-import { useActiveWeb3React } from 'hooks'
 import useDebounce from 'hooks/useDebounce'
+import { AppState } from 'state/index'
 import { isAddress } from 'utils'
-import sortByListPriority from 'utils/listSort'
 import { getFormattedAddress } from 'utils/tokenInfo'
 
-import { UNSUPPORTED_LIST_URLS } from '../../constants/lists'
-import UNSUPPORTED_TOKEN_LIST from '../../constants/tokenLists/uniswap-v2-unsupported.tokenlist.json'
-import { AppState } from '../index'
 import { WrappedTokenInfo } from './wrappedTokenInfo'
 
 type TagDetails = Tags[keyof Tags]
@@ -56,9 +52,12 @@ function listToTokenMap(list: TokenList): TokenAddressMap {
   if (result) return result
 
   const map = list.tokens.reduce<TokenAddressMapWriteable>((tokenMap, tokenInfo) => {
-    const formattedAddress = getFormattedAddress(tokenInfo.address)
+    const formattedAddress = getFormattedAddress(tokenInfo.chainId, tokenInfo.address)
 
-    if (tokenMap[tokenInfo.chainId][formattedAddress] !== undefined || !isAddress(tokenInfo.address)) {
+    if (
+      tokenMap[tokenInfo.chainId]?.[formattedAddress] !== undefined ||
+      !isAddress(tokenInfo.chainId, tokenInfo.address)
+    ) {
       return tokenMap
     }
     const token = new WrappedTokenInfo(tokenInfo)
@@ -74,7 +73,7 @@ function listToTokenMap(list: TokenList): TokenAddressMap {
 export type ListType = {
   readonly [url: string]: {
     readonly current: TokenList | null
-    readonly pendingUpdate: TokenList | null
+    // readonly pendingUpdate: TokenList | null
     readonly loadingRequestId: string | null
     readonly error: string | null
   }
@@ -84,50 +83,6 @@ export function useAllLists(): ListType {
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
   const debouncedLists = useDebounce(lists, 1000)
   return debouncedLists
-}
-
-export function useAllListsByChainId(): {
-  readonly [url: string]: {
-    readonly current: TokenList | null
-    readonly pendingUpdate: TokenList | null
-    readonly loadingRequestId: string | null
-    readonly error: string | null
-  }
-} {
-  const { chainId } = useActiveWeb3React()
-
-  const allLists = useAllLists()
-
-  const INITIAL_LISTS: {
-    [url: string]: {
-      readonly current: TokenList | null
-      readonly pendingUpdate: TokenList | null
-      readonly loadingRequestId: string | null
-      readonly error: string | null
-    }
-  } = {}
-
-  const lists = Object.keys(allLists)
-    .filter(list => allLists[list].current?.tokens.some?.(i => i.chainId === chainId))
-    .reduce((obj, key) => {
-      obj[key] = allLists[key]
-      return obj
-    }, INITIAL_LISTS)
-
-  return lists
-}
-
-function combine2Maps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
-  const chainIds = [...new Set([...Object.keys(map1), ...Object.keys(map2)])].map(id => parseInt(id) as ChainId)
-
-  return chainIds.reduce<Mutable<TokenAddressMap>>((memo, chainId) => {
-    memo[chainId] = {
-      ...map2[chainId],
-      // map1 takes precedence
-      ...map1[chainId],
-    }
-    return memo
-  }, {}) as TokenAddressMap
 }
 
 function combineMultipleMaps(maps: TokenAddressMap[]): TokenAddressMap | null {
@@ -144,68 +99,16 @@ function combineMultipleMaps(maps: TokenAddressMap[]): TokenAddressMap | null {
   }, {}) as TokenAddressMap
 }
 
-// merge tokens contained within lists from urls
-function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMap {
+export function useCombinedActiveList(): TokenAddressMap {
   const lists = useAllLists()
-  const filteredUrls = useMemo(
-    () =>
-      urls
-        ?.filter(url => lists[url]?.current)
-        // sort by priority so top priority goes last
-        .sort(sortByListPriority),
-    [lists, urls],
-  )
+  const urls = Object.keys(lists)
+  const filteredUrls = useMemo(() => urls.filter(url => lists[url]?.current).sort(), [lists, urls])
 
   return useMemo(() => {
     if (!filteredUrls) return EMPTY_LIST()
     // we have already filtered out nullish values above => lists[url]?.current is truthy value
     // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain, @typescript-eslint/no-non-null-assertion
     return combineMultipleMaps([EMPTY_LIST(), ...filteredUrls.map(url => listToTokenMap(lists[url]?.current!))])!
-  }, [filteredUrls, lists])
-}
-
-// filter out unsupported lists
-export function useActiveListUrls(): string[] | undefined {
-  const activeListUrls = useSelector<AppState, AppState['lists']['activeListUrls']>(state => state.lists.activeListUrls)
-
-  return useMemo(() => {
-    return activeListUrls?.filter((url: string) => !UNSUPPORTED_LIST_URLS.includes(url))
-  }, [activeListUrls])
-}
-
-export function useInactiveListUrls(): string[] {
-  const lists = useAllLists()
-  const allActiveListUrls = useActiveListUrls()
-
-  return useMemo(
-    () => Object.keys(lists).filter(url => !allActiveListUrls?.includes(url) && !UNSUPPORTED_LIST_URLS.includes(url)),
-    [lists, allActiveListUrls],
-  )
-}
-
-export function useCombinedActiveList(): TokenAddressMap {
-  const activeListUrls = useActiveListUrls()
-  const activeTokens = useCombinedTokenMapFromUrls(activeListUrls)
-
-  return activeTokens
-}
-
-// list of tokens not supported on interface, used to show warnings and prevent swaps and adds
-export function useUnsupportedTokenList(): TokenAddressMap {
-  // get hard coded unsupported tokens
-  const localUnsupportedListMap = listToTokenMap(UNSUPPORTED_TOKEN_LIST)
-
-  // get any loaded unsupported tokens
-  const loadedUnsupportedListMap = useCombinedTokenMapFromUrls(UNSUPPORTED_LIST_URLS)
-
-  // format into one token address map
-  return useMemo(() => {
-    return combine2Maps(localUnsupportedListMap, loadedUnsupportedListMap)
-  }, [localUnsupportedListMap, loadedUnsupportedListMap])
-}
-
-export function useIsListActive(url: string): boolean {
-  const activeListUrls = useActiveListUrls()
-
-  return Boolean(activeListUrls?.includes(url))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(filteredUrls), lists])
 }

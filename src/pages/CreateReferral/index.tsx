@@ -1,7 +1,7 @@
 import { Currency, Fraction } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import JSBI from 'jsbi'
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { ArrowRight, ChevronDown } from 'react-feather'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
@@ -12,7 +12,6 @@ import Divider from 'components/Divider'
 import InfoHelper from 'components/InfoHelper'
 import Slider from 'components/Slider'
 import Toggle from 'components/Toggle'
-import { NETWORKS_INFO } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
@@ -38,6 +37,10 @@ const BodyWrapper = styled.div`
   border-radius: 8px;
   padding: 20px;
   margin: auto;
+
+  ${Toggle} {
+    background: ${({ theme }) => theme.buttonBlack};
+  }
 `
 
 const AboutDropdown = styled.div`
@@ -140,7 +143,7 @@ const ErrorMessage = styled.div`
   margin-top: 8px;
 `
 export default function CreateReferral() {
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId, networkInfo } = useActiveWeb3React()
   const theme = useTheme()
   const [isShowChain, setIsShowChain] = useState(true)
   const [isShowTokens, setIsShowTokens] = useState(false)
@@ -151,7 +154,7 @@ export default function CreateReferral() {
   const [isShowShareLinkModal, setIsShowShareLinkModal] = useState(false)
   const [address, setAddress] = useState('')
   const [touched, setTouched] = useState(false)
-  const isValidAddress = isAddress(address)
+  const isValidAddress = isAddress(chainId, address)
   const above1000 = useMedia('(min-width: 1000px)')
 
   useEffect(() => {
@@ -166,7 +169,7 @@ export default function CreateReferral() {
     if ((address && isShowTokens && currencyA && currencyB) || (address && !isShowTokens)) {
       return (
         window.location.origin +
-        '/swap?' +
+        `/swap${isShowChain ? `/${networkInfo.route}` : ''}?` +
         `referral=${address}&fee_bip=${commission}${
           isShowTokens
             ? `&inputCurrency=${currencyId(currencyA as Currency, chainId)}&outputCurrency=${currencyId(
@@ -174,11 +177,11 @@ export default function CreateReferral() {
                 chainId,
               )}`
             : ''
-        }${isShowChain ? `&networkId=${chainId}` : ''}`
+        }`
       )
     }
     return ''
-  }, [address, commission, currencyA, currencyB, chainId, isShowTokens, isShowChain])
+  }, [address, commission, currencyA, currencyB, chainId, isShowTokens, isShowChain, networkInfo.route])
 
   const swapCurrencies = () => {
     const tempA = currencyA
@@ -350,10 +353,10 @@ export default function CreateReferral() {
                       <Flex alignItems="center">
                         <img
                           alt=""
-                          src={NETWORKS_INFO[chainId].icon}
+                          src={networkInfo.icon}
                           style={{ height: '20px', width: '20px', marginRight: '8px' }}
                         />
-                        {NETWORKS_INFO[chainId].name}
+                        {networkInfo.name}
                       </Flex>
                       <ChevronDown size={20} style={{ top: '10px', right: '10px', position: 'absolute' }} />
                     </>

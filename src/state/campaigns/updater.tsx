@@ -9,10 +9,9 @@ import { useHistory, useLocation } from 'react-router-dom'
 import useSWR from 'swr'
 import useSWRImmutable from 'swr/immutable'
 
-import { CAMPAIGN_LEADERBOARD_ITEM_PER_PAGE, RESERVE_USD_DECIMALS, SWR_KEYS } from 'constants/index'
+import { APP_PATHS, CAMPAIGN_LEADERBOARD_ITEM_PER_PAGE, RESERVE_USD_DECIMALS, SWR_KEYS } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useParsedQueryString from 'hooks/useParsedQueryString'
-import { AppPaths } from 'pages/App'
 import {
   CampaignData,
   CampaignLeaderboard,
@@ -118,7 +117,7 @@ export default function CampaignsUpdater(): null {
   const dispatch = useDispatch()
   const { account } = useActiveWeb3React()
   const { pathname } = useLocation()
-  const isCampaignPage = pathname.startsWith(AppPaths.CAMPAIGN)
+  const isCampaignPage = pathname.startsWith(APP_PATHS.CAMPAIGN)
 
   /**********************CAMPAIGN DATA**********************/
   const refLeaderboardData = useRef<{ [key: string]: CampaignLeaderboard }>({})
@@ -282,9 +281,8 @@ export default function CampaignsUpdater(): null {
     return formattedCampaigns
   })
 
-  const slug = pathname.replace(AppPaths.CAMPAIGN, '')
-  const qs = useParsedQueryString()
-  const selectedCampaignId = qs.selectedCampaignId || getCampaignIdFromSlug(slug)
+  const slug = pathname.replace(APP_PATHS.CAMPAIGN, '')
+  const { selectedCampaignId = getCampaignIdFromSlug(slug) } = useParsedQueryString<{ selectedCampaignId: string }>()
 
   const history = useHistory()
   useEffect(() => {

@@ -1,5 +1,5 @@
 import { ApolloClient, NormalizedCacheObject, useQuery } from '@apollo/client'
-import { ChainId } from '@kyberswap/ks-sdk-core'
+import { ChainId, WETH } from '@kyberswap/ks-sdk-core'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -12,13 +12,14 @@ import {
   POOL_DATA,
   USER_POSITIONS,
 } from 'apollo/queries'
+import { ONLY_DYNAMIC_FEE_CHAINS } from 'constants/index'
 import { NETWORKS_INFO } from 'constants/networks'
+import { EVMNetworkInfo } from 'constants/networks/type'
 import { useActiveWeb3React } from 'hooks'
 import { useETHPrice } from 'state/application/hooks'
+import { AppState } from 'state/index'
 import { get24hValue, getBlocksFromTimestamps, getPercentChange, getTimestampsForChanges } from 'utils'
 
-import { AppState } from '../index'
-import { ONLY_DYNAMIC_FEE_CHAINS } from './../../constants/index'
 import { setError, setLoading, setSharedPoolId, setUrlOnEthPowAck, updatePools } from './actions'
 
 export interface SubgraphPoolData {
@@ -84,12 +85,15 @@ export interface UserLiquidityPositionResult {
  *
  * @param user string
  */
-export function useUserLiquidityPositions(user: string | null | undefined): UserLiquidityPositionResult {
+export function useUserLiquidityPositions(): UserLiquidityPositionResult {
+  const { isEVM, account, networkInfo } = useActiveWeb3React()
   const { loading, error, data } = useQuery(USER_POSITIONS, {
+    client: isEVM ? (networkInfo as EVMNetworkInfo).classicClient : NETWORKS_INFO[ChainId.MAINNET].classicClient,
     variables: {
-      user: user?.toLowerCase(),
+      user: account?.toLowerCase(),
     },
     fetchPolicy: 'no-cache',
+    skip: !isEVM,
   })
 
   return useMemo(() => ({ loading, error, data }), [data, error, loading])
@@ -118,72 +122,11 @@ function parseData(data: any, oneDayData: any, ethPrice: any, oneDayBlock: any, 
     else data.oneDayVolumeUSD = 0
   }
 
-  if (chainId === ChainId.MAINNET) {
-    if (data?.token0?.id === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') {
-      data.token0 = { ...data.token0, name: 'Ether (Wrapped)', symbol: 'ETH' }
-    }
-
-    if (data?.token1?.id === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') {
-      data.token1 = { ...data.token1, name: 'Ether (Wrapped)', symbol: 'ETH' }
-    }
+  if (chainId && WETH[chainId].address.toLowerCase() === data?.token0?.id) {
+    data.token0 = { ...data.token0, name: WETH[chainId].name, symbol: WETH[chainId].symbol }
   }
-
-  if (chainId === ChainId.MATIC) {
-    if (data?.token0?.id === '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270') {
-      data.token0 = { ...data.token0, name: 'Matic (Wrapped)', symbol: 'MATIC' }
-    }
-
-    if (data?.token1?.id === '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270') {
-      data.token1 = { ...data.token1, name: 'Matic (Wrapped)', symbol: 'MATIC' }
-    }
-
-    if (data?.token0?.id === '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619') {
-      data.token0 = { ...data.token0, name: 'Ether (Wrapped)', symbol: 'ETH' }
-    }
-
-    if (data?.token1?.id === '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619') {
-      data.token1 = { ...data.token1, name: 'Ether (Wrapped)', symbol: 'ETH' }
-    }
-  }
-
-  if (chainId === ChainId.BSCMAINNET) {
-    if (data?.token0?.id === '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c') {
-      data.token0 = { ...data.token0, name: 'BNB (Wrapped)', symbol: 'BNB' }
-    }
-
-    if (data?.token1?.id === '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c') {
-      data.token1 = { ...data.token1, name: 'BNB (Wrapped)', symbol: 'BNB' }
-    }
-  }
-
-  if (chainId === ChainId.AVAXMAINNET) {
-    if (data?.token0?.id === '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7') {
-      data.token0 = { ...data.token0, name: 'AVAX (Wrapped)', symbol: 'AVAX' }
-    }
-
-    if (data?.token1?.id === '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7') {
-      data.token1 = { ...data.token1, name: 'AVAX (Wrapped)', symbol: 'AVAX' }
-    }
-  }
-
-  if (chainId === ChainId.CRONOS) {
-    if (data?.token0?.id === '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23') {
-      data.token0 = { ...data.token0, name: 'CRO (Wrapped)', symbol: 'CRO' }
-    }
-
-    if (data?.token1?.id === '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23') {
-      data.token1 = { ...data.token1, name: 'CRO (Wrapped)', symbol: 'CRO' }
-    }
-  }
-
-  if (chainId === ChainId.AURORA) {
-    if (data?.token0?.id === '0xc9bdeed33cd01541e1eed10f90519d2c06fe3feb') {
-      data.token0 = { ...data.token0, name: 'ETH (Wrapped)', symbol: 'ETH' }
-    }
-
-    if (data?.token1?.id === '0xc9bdeed33cd01541e1eed10f90519d2c06fe3feb') {
-      data.token1 = { ...data.token1, name: 'ETH (Wrapped)', symbol: 'ETH' }
-    }
+  if (chainId && WETH[chainId].address.toLowerCase() === data?.token1?.id) {
+    data.token1 = { ...data.token1, name: WETH[chainId].name, symbol: WETH[chainId].symbol }
   }
 
   return data
@@ -192,8 +135,8 @@ function parseData(data: any, oneDayData: any, ethPrice: any, oneDayBlock: any, 
 export async function getBulkPoolDataFromPoolList(
   poolList: string[],
   apolloClient: ApolloClient<NormalizedCacheObject>,
+  chainId: ChainId,
   ethPrice?: string,
-  chainId?: ChainId,
 ): Promise<any> {
   try {
     const current = await apolloClient.query({
@@ -257,8 +200,8 @@ export async function getBulkPoolDataWithPagination(
   first: number,
   skip: number,
   apolloClient: ApolloClient<NormalizedCacheObject>,
-  ethPrice?: string,
-  chainId?: ChainId,
+  ethPrice: string,
+  chainId: ChainId,
 ): Promise<any> {
   try {
     const [t1] = getTimestampsForChanges()
@@ -335,10 +278,11 @@ export function useResetPools(chainId: ChainId | undefined) {
 
 export function usePoolCountInSubgraph(): number {
   const [poolCount, setPoolCount] = useState(0)
-  const { chainId } = useActiveWeb3React()
-  const apolloClient = NETWORKS_INFO[chainId || ChainId.MAINNET].classicClient
+  const { isEVM, networkInfo } = useActiveWeb3React()
 
   useEffect(() => {
+    if (!isEVM) return
+    const apolloClient = (networkInfo as EVMNetworkInfo).classicClient
     const getPoolCount = async () => {
       const result = await apolloClient.query({
         query: POOL_COUNT,
@@ -352,7 +296,7 @@ export function usePoolCountInSubgraph(): number {
     }
 
     getPoolCount()
-  }, [apolloClient])
+  }, [networkInfo, isEVM])
 
   return poolCount
 }
@@ -363,8 +307,7 @@ export function useAllPoolsData(): {
   data: AppState['pools']['pools']
 } {
   const dispatch = useDispatch()
-  const { chainId } = useActiveWeb3React()
-  const apolloClient = NETWORKS_INFO[chainId || ChainId.MAINNET].classicClient
+  const { chainId, isEVM, networkInfo } = useActiveWeb3React()
 
   const poolsData = useSelector((state: AppState) => state.pools.pools)
   const loading = useSelector((state: AppState) => state.pools.loading)
@@ -374,6 +317,8 @@ export function useAllPoolsData(): {
 
   const poolCountSubgraph = usePoolCountInSubgraph()
   useEffect(() => {
+    if (!isEVM) return
+    const apolloClient = (networkInfo as EVMNetworkInfo).classicClient
     let cancelled = false
 
     const getPoolsData = async () => {
@@ -400,7 +345,7 @@ export function useAllPoolsData(): {
     return () => {
       cancelled = true
     }
-  }, [apolloClient, chainId, dispatch, error, ethPrice, poolCountSubgraph, poolsData.length])
+  }, [chainId, dispatch, error, ethPrice, poolCountSubgraph, poolsData.length, isEVM, networkInfo])
 
   return useMemo(() => ({ loading, error, data: poolsData }), [error, loading, poolsData])
 }
@@ -417,8 +362,7 @@ export function useSinglePoolData(
   error?: Error
   data?: SubgraphPoolData
 } {
-  const { chainId } = useActiveWeb3React()
-  const apolloClient = NETWORKS_INFO[chainId || ChainId.MAINNET].classicClient
+  const { chainId, isEVM, networkInfo } = useActiveWeb3React()
 
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<Error | undefined>(undefined)
@@ -426,12 +370,14 @@ export function useSinglePoolData(
 
   const latestRenderTime = useRef(0)
   useEffect(() => {
+    if (!isEVM) return
+    const apolloClient = (networkInfo as EVMNetworkInfo).classicClient
     async function checkForPools(currentRenderTime: number) {
       setLoading(true)
 
       try {
         if (poolAddress && !error) {
-          const pools = await getBulkPoolDataFromPoolList([poolAddress], apolloClient, ethPrice, chainId)
+          const pools = await getBulkPoolDataFromPoolList([poolAddress], apolloClient, chainId, ethPrice)
 
           if (pools.length > 0) {
             currentRenderTime === latestRenderTime.current && setPoolData(pools[0])
@@ -450,7 +396,7 @@ export function useSinglePoolData(
       // eslint-disable-next-line react-hooks/exhaustive-deps
       latestRenderTime.current++
     }
-  }, [ethPrice, error, poolAddress, apolloClient, chainId])
+  }, [ethPrice, error, poolAddress, chainId, isEVM, networkInfo])
 
   return { loading, error, data: poolData }
 }

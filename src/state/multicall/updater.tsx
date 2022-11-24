@@ -2,13 +2,14 @@ import { Contract } from '@ethersproject/contracts'
 import { useEffect, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useActiveWeb3React } from '../../hooks'
-import { useMulticallContract } from '../../hooks/useContract'
-import useDebounce from '../../hooks/useDebounce'
-import chunkArray from '../../utils/chunkArray'
-import { CancelledError, RetryableError, retry } from '../../utils/retry'
-import { useBlockNumber } from '../application/hooks'
-import { AppDispatch, AppState } from '../index'
+import { useActiveWeb3React } from 'hooks'
+import { useMulticallContract } from 'hooks/useContract'
+import useDebounce from 'hooks/useDebounce'
+import { useBlockNumber } from 'state/application/hooks'
+import { AppDispatch, AppState } from 'state/index'
+import chunkArray from 'utils/chunkArray'
+import { CancelledError, RetryableError, retry } from 'utils/retry'
+
 import {
   Call,
   errorFetchingMulticallResults,

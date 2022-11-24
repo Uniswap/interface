@@ -1,6 +1,4 @@
-import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
-import React from 'react'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
@@ -8,6 +6,7 @@ import { ButtonPrimary } from 'components/Button'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { RowBetween } from 'components/Row'
 import TransactionConfirmationModal, { TransactionErrorContent } from 'components/TransactionConfirmationModal'
+import { KNC } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
 import useClaimReward from 'hooks/useClaimReward'
 import useTheme from 'hooks/useTheme'
@@ -15,8 +14,6 @@ import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { CloseIcon } from 'theme'
 import { shortenAddress } from 'utils'
-
-import { KNC } from '../../constants'
 
 const AddressWrapper = styled.div`
   background: ${({ theme }) => theme.buttonBlack};
@@ -46,7 +43,6 @@ function ClaimRewardModal() {
     error: claimRewardError,
     resetTxn,
   } = useClaimReward()
-  const KNCToken = KNC[(chainId as ChainId) || ChainId.MAINNET]
   const isCanClaim = isUserHasReward && rewardAmounts !== '0' && !pendingTx
 
   const modalContent = () =>
@@ -71,13 +67,13 @@ function ClaimRewardModal() {
           <Text color={theme.subText} fontSize={12}>
             <Trans>Your wallet address</Trans>
           </Text>
-          <p>{account && shortenAddress(account, 9)}</p>
+          <p>{account && shortenAddress(chainId, account, 9)}</p>
         </AddressWrapper>
         <Text fontSize={16} lineHeight="24px" color={theme.text}>
           <Trans>If your wallet is eligible, you will be able to claim your reward below. You can claim:</Trans>
         </Text>
         <Text fontSize={32} lineHeight="38px" fontWeight={500}>
-          <CurrencyLogo currency={KNCToken} /> {rewardAmounts} KNC
+          <CurrencyLogo currency={KNC[chainId]} /> {rewardAmounts} KNC
         </Text>
         <ButtonPrimary disabled={!isCanClaim} onClick={claimRewardsCallback}>
           <Trans>Claim</Trans>

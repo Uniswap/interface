@@ -4,6 +4,7 @@ import { useCallback } from 'react'
 import { CONTRACT_NOT_FOUND_MSG } from 'constants/messages'
 import { useFairLaunchContract } from 'hooks/useContract'
 import { useTransactionAdder } from 'state/transactions/hooks'
+import { TRANSACTION_TYPE } from 'state/transactions/type'
 import { calculateGasMargin } from 'utils'
 import { getFullDisplayBalance } from 'utils/formatBalance'
 
@@ -58,7 +59,11 @@ const useFairLaunch = (address: string) => {
       const tx = await fairLaunchContract.deposit(pid, amount, shouldHaverst, {
         gasLimit: calculateGasMargin(estimateGas),
       })
-      addTransactionWithType(tx, { type: 'Stake', summary: `${getFullDisplayBalance(amount)} ${name} Tokens` })
+      addTransactionWithType({
+        hash: tx.hash,
+        type: TRANSACTION_TYPE.STAKE,
+        summary: `${getFullDisplayBalance(amount)} ${name} Tokens`,
+      })
 
       return tx.hash
     },
@@ -76,7 +81,11 @@ const useFairLaunch = (address: string) => {
       const tx = await fairLaunchContract.withdraw(pid, amount, {
         gasLimit: calculateGasMargin(estimateGas),
       })
-      addTransactionWithType(tx, { type: 'Unstake', summary: `${getFullDisplayBalance(amount)} ${name} Tokens` })
+      addTransactionWithType({
+        hash: tx.hash,
+        type: TRANSACTION_TYPE.UNSTAKE,
+        summary: `${getFullDisplayBalance(amount)} ${name} Tokens`,
+      })
 
       return tx.hash
     },
@@ -93,7 +102,7 @@ const useFairLaunch = (address: string) => {
       const tx = await fairLaunchContract.harvest(pid, {
         gasLimit: calculateGasMargin(estimateGas),
       })
-      addTransactionWithType(tx, { type: 'Harvest' })
+      addTransactionWithType({ hash: tx.hash, type: TRANSACTION_TYPE.HARVEST })
 
       return tx.hash
     },
@@ -110,7 +119,7 @@ const useFairLaunch = (address: string) => {
       const tx = await fairLaunchContract.harvestMultiplePools(pids, {
         gasLimit: calculateGasMargin(estimateGas),
       })
-      addTransactionWithType(tx, { type: 'Harvest' })
+      addTransactionWithType({ hash: tx.hash, type: TRANSACTION_TYPE.HARVEST })
 
       return tx.hash
     },

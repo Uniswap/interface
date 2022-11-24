@@ -1,4 +1,3 @@
-import { ChainId } from '@kyberswap/ks-sdk-core'
 import { computePoolAddress } from '@kyberswap/ks-sdk-elastic'
 import { Trans } from '@lingui/macro'
 import { BigNumber } from 'ethers'
@@ -16,7 +15,7 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import Modal from 'components/Modal'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { NETWORKS_INFO } from 'constants/networks'
+import { NETWORKS_INFO, isEVM } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
@@ -234,17 +233,18 @@ function StakeModal({
   const { token0, token1 } = selectedPool || {}
 
   const eligibleNfts: ExplicitNFT[] = useMemo(() => {
+    if (!isEVM(chainId)) return []
     const joinedPositions = userFarmInfo?.[selectedFarmAddress].joinedPositions[poolId] || []
     const depositedPositions =
       userFarmInfo?.[selectedFarmAddress].depositedPositions.filter(pos => {
         return (
           selectedPool?.poolAddress.toLowerCase() ===
           computePoolAddress({
-            factoryAddress: NETWORKS_INFO[chainId || ChainId.MAINNET].elastic.coreFactory,
+            factoryAddress: NETWORKS_INFO[chainId].elastic.coreFactory,
             tokenA: pos.pool.token0,
             tokenB: pos.pool.token1,
             fee: pos.pool.fee,
-            initCodeHashManualOverride: NETWORKS_INFO[chainId || ChainId.MAINNET].elastic.initCodeHash,
+            initCodeHashManualOverride: NETWORKS_INFO[chainId].elastic.initCodeHash,
           }).toLowerCase()
         )
       }) || []

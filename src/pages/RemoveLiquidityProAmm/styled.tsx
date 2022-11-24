@@ -2,10 +2,6 @@ import styled from 'styled-components'
 
 import { AutoColumn } from 'components/Column'
 
-export const Wrapper = styled.div`
-  position: relative;
-`
-
 export const Container = styled.div`
   text-align: center;
   width: calc(100% - 24px);

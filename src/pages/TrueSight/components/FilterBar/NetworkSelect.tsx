@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import React, { CSSProperties, Dispatch, SetStateAction, useRef, useState } from 'react'
+import { CSSProperties, Dispatch, SetStateAction, useRef, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { X } from 'react-feather'
 import { Flex, Image, Text } from 'rebass'
@@ -108,7 +108,7 @@ const NetworkSelect = ({
             >
               <Image minHeight={16} minWidth={16} height={16} width={16} src={NETWORKS_INFO[network].icon} />
               <Text key={index} color={theme.subText} fontSize="12px">
-                <Trans>{NETWORKS_INFO[network].name}</Trans>
+                {NETWORKS_INFO[network].name}
               </Text>
             </Flex>
           ))}

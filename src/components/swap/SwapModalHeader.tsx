@@ -1,22 +1,22 @@
-import { Trade } from '@kyberswap/ks-sdk-classic'
 import { Currency, TradeType } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import React, { useMemo } from 'react'
 import { AlertTriangle, ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
 
+import { ButtonPrimary } from 'components/Button'
+import { AutoColumn } from 'components/Column'
+import CurrencyLogo from 'components/CurrencyLogo'
+import { RowBetween, RowFixed } from 'components/Row'
+import { useActiveWeb3React } from 'hooks'
 import { AnyTrade } from 'hooks/useSwapCallback'
 import useTheme from 'hooks/useTheme'
+import { Field } from 'state/swap/actions'
+import { TYPE } from 'theme'
+import { isAddress, shortenAddress } from 'utils'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
+import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeverity } from 'utils/prices'
 
-import { Field } from '../../state/swap/actions'
-import { TYPE } from '../../theme'
-import { isAddress, shortenAddress } from '../../utils'
-import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
-import { ButtonPrimary } from '../Button'
-import { AutoColumn } from '../Column'
-import CurrencyLogo from '../CurrencyLogo'
-import { RowBetween, RowFixed } from '../Row'
 import { SwapShowAcceptChanges, TruncatedText } from './styleds'
 
 export default function SwapModalHeader({
@@ -32,13 +32,12 @@ export default function SwapModalHeader({
   showAcceptChanges: boolean
   onAcceptChanges: () => void
 }) {
+  const { chainId } = useActiveWeb3React()
   const slippageAdjustedAmounts = useMemo(
     () => computeSlippageAdjustedAmounts(trade, allowedSlippage),
     [trade, allowedSlippage],
   )
-  const priceImpact = useMemo(() => {
-    return trade instanceof Trade ? computeTradePriceBreakdown(trade).priceImpactWithoutFee : trade.priceImpact
-  }, [trade])
+  const priceImpact = useMemo(() => computeTradePriceBreakdown(trade).priceImpactWithoutFee, [trade])
   const priceImpactSeverity = warningSeverity(priceImpact)
 
   const theme = useTheme()
@@ -131,7 +130,7 @@ export default function SwapModalHeader({
         <AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px' }}>
           <TYPE.main>
             Output will be sent to{' '}
-            <b title={recipient}>{isAddress(recipient) ? shortenAddress(recipient) : recipient}</b>
+            <b title={recipient}>{isAddress(chainId, recipient) ? shortenAddress(chainId, recipient) : recipient}</b>
           </TYPE.main>
         </AutoColumn>
       ) : null}
