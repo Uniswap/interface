@@ -1,4 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { useResponsiveProp } from '@shopify/restyle'
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useColorScheme } from 'react-native'
@@ -51,12 +52,12 @@ export function LandingScreen({ navigation }: Props) {
         <LandingBackground />
       </Flex>
       <Flex grow height="auto">
-        <Flex gap="lg" justifyContent="flex-end">
-          <Flex gap="sm" mx="md">
+        <Flex gap={useResponsiveProp({ xs: 'xxxs', sm: 'lg' })} justifyContent="flex-end">
+          <Flex gap={useResponsiveProp({ xs: 'xxxs', sm: 'sm' })} mx="md">
             <Button
               label={t('Create a wallet')}
               name={ElementName.OnboardingCreateWallet}
-              size={ButtonSize.Large}
+              size={useResponsiveProp({ xs: ButtonSize.Medium, sm: ButtonSize.Large })}
               onPress={onPressCreateWallet}
             />
             <TouchableArea
@@ -73,7 +74,7 @@ export function LandingScreen({ navigation }: Props) {
               </Text>
             </TouchableArea>
           </Flex>
-          <Box mx="lg">
+          <Box mx="lg" pb={useResponsiveProp({ xs: 'sm', sm: 'none' })}>
             <Text color="textTertiary" mx="xxs" textAlign="center" variant="buttonLabelMicro">
               <Trans t={t}>
                 By continuing, I agree to the{' '}

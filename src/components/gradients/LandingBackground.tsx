@@ -1,4 +1,5 @@
 import { useFocusEffect } from '@react-navigation/core'
+import { useResponsiveProp } from '@shopify/restyle'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useColorScheme, ViewStyle } from 'react-native'
 import Rive, { Alignment, Fit, RiveRef } from 'rive-react-native'
@@ -24,7 +25,7 @@ const OnboardingAnimation = () => {
       alignment={Alignment.TopCenter}
       animationName="Intro"
       artboardName="Unified"
-      fit={Fit.FitHeight}
+      fit={useResponsiveProp({ xs: Fit.FitWidth, sm: Fit.FitHeight })}
       resourceName={isDarkMode ? 'OnboardingDark' : 'OnboardingLight'}
       stateMachineName={stateMachineName}
       style={animationStyles}
