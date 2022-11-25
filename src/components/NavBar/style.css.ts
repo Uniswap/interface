@@ -12,6 +12,9 @@ export const nav = style([
     zIndex: '2',
     background: 'backgroundFloating',
   }),
+  {
+    backdropFilter: 'blur(24px)',
+  },
 ])
 
 export const logoContainer = style([
@@ -19,6 +22,7 @@ export const logoContainer = style([
     display: 'flex',
     marginRight: { sm: '12', xxl: '20' },
     alignItems: 'center',
+    cursor: 'pointer',
   }),
 ])
 

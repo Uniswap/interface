@@ -25,11 +25,13 @@ import Polling from '../components/Polling'
 import Popups from '../components/Popups'
 import { useIsExpertMode } from '../state/user/hooks'
 import DarkModeQueryParamReader from '../theme/components/DarkModeQueryParamReader'
+import About from './About'
 import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import Earn from './Earn'
 import Manage from './Earn/Manage'
+import Landing from './Landing'
 import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
 import Pool from './Pool'
@@ -195,9 +197,11 @@ export default function App() {
             <Popups />
             <Polling />
             <TopLevelModals />
+            <Landing />
             <Suspense fallback={<Loader />}>
               {isLoaded ? (
                 <Routes>
+                  <Route path="/" element={<Swap />} />
                   <Route path="tokens" element={<Tokens />}>
                     <Route path=":chainName" />
                   </Route>
@@ -247,6 +251,8 @@ export default function App() {
 
                   <Route path="migrate/v2" element={<MigrateV2 />} />
                   <Route path="migrate/v2/:address" element={<MigrateV2Pair />} />
+
+                  <Route path="about" element={<About />} />
 
                   <Route path="*" element={<RedirectPathToSwapOnly />} />
 

@@ -19,9 +19,9 @@ import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ReactNode } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
-import { useToggleWalletModal } from 'state/application/hooks'
+import { useLandingIsOpen, useToggleLanding, useToggleWalletModal } from 'state/application/hooks'
 import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
@@ -458,6 +458,9 @@ export default function Swap() {
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
   const showPriceImpactWarning = largerPriceImpact && priceImpactSeverity > 3
 
+  const open = useLandingIsOpen()
+  const toggleLanding = useToggleLanding(false)
+
   // Handle time based logging events and event properties.
   useEffect(() => {
     const now = new Date()
@@ -497,6 +500,8 @@ export default function Swap() {
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
   )
 
+  const location = useLocation()
+
   return (
     <Trace page={PageName.SWAP_PAGE} shouldLogImpression>
       <>
@@ -509,7 +514,14 @@ export default function Swap() {
           showCancel={true}
         />
         <PageWrapper>
-          <SwapWrapper id="swap-page">
+          <SwapWrapper
+            onClick={() => {
+              navigate('/swap')
+              toggleLanding()
+            }}
+            open={location.pathname === '/swap' ? false : open}
+            id="swap-page"
+          >
             <SwapHeader allowedSlippage={allowedSlippage} />
             <ConfirmSwapModal
               isOpen={showConfirm}

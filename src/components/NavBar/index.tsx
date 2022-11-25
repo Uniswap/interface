@@ -8,7 +8,8 @@ import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { UniIcon } from 'nft/components/icons'
 import { ReactNode } from 'react'
-import { NavLink, NavLinkProps, useLocation } from 'react-router-dom'
+import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
+import { useToggleLanding } from 'state/application/hooks'
 
 import { Bag } from './Bag'
 import { ChainSelector } from './ChainSelector'
@@ -24,11 +25,14 @@ interface MenuItemProps {
 }
 
 const MenuItem = ({ href, id, isActive, children }: MenuItemProps) => {
+  const toggleLanding = useToggleLanding(false)
+
   return (
     <NavLink
       to={href}
       className={isActive ? styles.activeMenuItem : styles.menuItem}
       id={id}
+      onClick={() => toggleLanding()}
       style={{ textDecoration: 'none' }}
     >
       {children}
@@ -73,14 +77,24 @@ const PageTabs = () => {
 
 const Navbar = () => {
   const isNftPage = useIsNftPage()
+  const toggleLanding = useToggleLanding(true)
+  const navigate = useNavigate()
 
   return (
     <>
       <nav className={styles.nav}>
         <Box display="flex" height="full" flexWrap="nowrap" alignItems="stretch">
           <Box className={styles.leftSideContainer}>
-            <Box as="a" href="#/swap" className={styles.logoContainer}>
-              <UniIcon width="48" height="48" className={styles.logo} />
+            <Box className={styles.logoContainer}>
+              <UniIcon
+                width="48"
+                height="48"
+                className={styles.logo}
+                onClick={() => {
+                  toggleLanding()
+                  navigate('/')
+                }}
+              />
             </Box>
             {!isNftPage && (
               <Box display={{ sm: 'flex', lg: 'none' }}>

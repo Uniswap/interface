@@ -211,6 +211,30 @@ export const ButtonEmpty = styled(BaseButton)`
   }
 `
 
+export const ButtonCTA = styled(BaseButton)<{ redesignFlag?: boolean }>`
+  background: linear-gradient(10deg, rgba(255, 0, 199, 1) 0%, rgba(255, 159, 251, 1) 100%);
+  width: fit-content;
+  border-radius: 24px;
+  border: none;
+  padding: 16px 77.5px;
+  margin-left: 12px;
+  margin-bottom: 12px;
+  color: ${({ theme }) => theme.white};
+  &:hover {
+    opacity: 75%;
+  }
+`
+export const ButtonCTASecondary = styled(BaseButton)<{ redesignFlag?: boolean }>`
+  background: none;
+  width: fit-content;
+  border-radius: 12px;
+  border: ${({ theme }) => `1px solid ${theme.textPrimary}`};
+  padding: 16px 28px;
+  &:hover {
+    opacity: 50%;
+  }
+`
+
 export const ButtonText = styled(BaseButton)`
   padding: 0;
   width: fit-content;
