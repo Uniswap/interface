@@ -22,7 +22,9 @@ import { getTickToPrice } from 'utils/getTickToPrice'
 import { replaceURLParam } from 'utils/routes'
 
 import { BIG_INT_ZERO } from '../../../constants/misc'
+import useENS from '../../../hooks/useENS'
 import { PoolState } from '../../../hooks/usePools'
+import { useSwapState } from '../../../state/swap/hooks'
 import { useCurrencyBalances } from '../../connection/hooks'
 import { AppState } from '../../index'
 import {
@@ -156,9 +158,14 @@ export function useV3DerivedMintInfo(
     [tokenA, tokenB]
   )
 
+  // we query pool address from swap state
+  const { recipient } = useSwapState()
+  const recipientLookup = useENS(recipient ?? undefined)
+  const poolAddress = recipientLookup.address
+
   // balances
   const balances = useCurrencyBalances(
-    account ?? undefined,
+    poolAddress ?? undefined,
     useMemo(() => [currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B]], [currencies])
   )
   const currencyBalances: { [field in Field]?: CurrencyAmount<Currency> } = {
