@@ -13,6 +13,8 @@ import { Z_INDEXS } from 'constants/styles'
 import { useChangeNetwork } from 'hooks/useChangeNetwork'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import useTheme from 'hooks/useTheme'
+import { useAppDispatch } from 'state/hooks'
+import { updateChainId } from 'state/user/actions'
 import { useIsDarkMode } from 'state/user/hooks'
 
 const NewLabel = styled.span`
@@ -141,6 +143,7 @@ const Networks = ({
   const history = useHistory()
   const isDarkMode = useIsDarkMode()
   const theme = useTheme()
+  const dispatch = useAppDispatch()
 
   const onSelect = (chainId: ChainId) => {
     customToggleModal?.()
@@ -153,6 +156,8 @@ const Networks = ({
           search: stringify(rest),
         })
         onChangedNetwork?.()
+
+        dispatch(updateChainId(chainId))
       })
     }
   }

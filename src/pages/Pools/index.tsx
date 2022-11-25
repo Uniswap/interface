@@ -80,7 +80,7 @@ const Pools = ({
   history,
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) => {
   const theme = useTheme()
-  const { chainId, isEVM } = useActiveWeb3React()
+  const { chainId, isEVM, networkInfo } = useActiveWeb3React()
   const above1000 = useMedia('(min-width: 1000px)')
   const above1260 = useMedia('(min-width: 1260px)')
   const below1124 = useMedia('(max-width: 1124px)')
@@ -122,35 +122,36 @@ const Pools = ({
     [currencyA, currencyB],
   )
 
+  const chainRoute = networkInfo.route
   const handleCurrencyASelect = useCallback(
     (currencyA: Currency) => {
       const newCurrencyIdA = currencyId(currencyA, chainId)
       if (newCurrencyIdA === currencyIdB) {
-        history.push(`/pools/${currencyIdB}/${currencyIdA}?tab=${tab}`)
+        history.push(`/pools/${chainRoute}/${currencyIdB}/${currencyIdA}?tab=${tab}`)
       } else {
-        history.push(`/pools/${newCurrencyIdA}/${currencyIdB}?tab=${tab}`)
+        history.push(`/pools/${chainRoute}/${newCurrencyIdA}/${currencyIdB}?tab=${tab}`)
       }
     },
-    [currencyIdB, history, currencyIdA, chainId, tab],
+    [chainRoute, currencyIdB, history, currencyIdA, chainId, tab],
   )
 
   const handleCurrencyBSelect = useCallback(
     (currencyB: Currency) => {
       const newCurrencyIdB = currencyId(currencyB, chainId)
       if (currencyIdA === newCurrencyIdB) {
-        history.push(`/pools/${currencyIdB}/${currencyIdA}?tab=${tab}`)
+        history.push(`/pools/${chainRoute}/${currencyIdB}/${currencyIdA}?tab=${tab}`)
       } else {
-        history.push(`/pools/${currencyIdA}/${newCurrencyIdB}?tab=${tab}`)
+        history.push(`/pools/${chainRoute}/${currencyIdA}/${newCurrencyIdB}?tab=${tab}`)
       }
     },
-    [currencyIdA, history, currencyIdB, chainId, tab],
+    [chainRoute, currencyIdA, history, currencyIdB, chainId, tab],
   )
   const handleClearCurrencyA = useCallback(() => {
-    history.push(`/pools/undefined/${currencyIdB}?tab=${tab}`)
-  }, [currencyIdB, history, tab])
+    history.push(`/pools/${chainRoute}/undefined/${currencyIdB}?tab=${tab}`)
+  }, [currencyIdB, history, tab, chainRoute])
   const handleClearCurrencyB = useCallback(() => {
-    history.push(`/pools/${currencyIdA}/undefined?tab=${tab}`)
-  }, [currencyIdA, history, tab])
+    history.push(`/pools/${chainRoute}/${currencyIdA}/undefined?tab=${tab}`)
+  }, [currencyIdA, history, tab, chainRoute])
 
   const { mixpanelHandler } = useMixpanel()
 

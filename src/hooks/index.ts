@@ -10,7 +10,7 @@ import { isMobile } from 'react-device-detect'
 import { useSelector } from 'react-redux'
 
 import { injected, walletconnect, walletlink } from 'connectors'
-import { EVM_NETWORK, EVM_NETWORKS, NETWORKS_INFO } from 'constants/networks'
+import { EVM_NETWORK, EVM_NETWORKS, NETWORKS_INFO, isEVM } from 'constants/networks'
 import { NetworkInfo } from 'constants/networks/type'
 import { SUPPORTED_WALLET, SUPPORTED_WALLETS, WALLETLINK_LOCALSTORAGE_NAME } from 'constants/wallets'
 import { AppState } from 'state'
@@ -112,6 +112,8 @@ export function useActiveWeb3React(): {
 
 export function useWeb3React(key?: string): Web3ReactContextInterface<Web3Provider> & { chainId?: ChainId } {
   const { connector, library, chainId, account, active, error, activate, setError, deactivate } = useWeb3ReactCore(key)
+  const chainIdState = useSelector<AppState, ChainId>(state => state.user.chainId)
+
   const activateWrapped = useCallback(
     (connector: AbstractConnector, onError?: (error: Error) => void, throwErrors?: boolean) => {
       return activate(connector, onError, throwErrors)
@@ -123,7 +125,7 @@ export function useWeb3React(key?: string): Web3ReactContextInterface<Web3Provid
   }, [deactivate])
   return {
     connector,
-    library: library || providers[ChainId.MAINNET],
+    library: library || providers[isEVM(chainIdState) ? chainIdState : ChainId.MAINNET],
     chainId: chainId || ChainId.MAINNET,
     account,
     active,

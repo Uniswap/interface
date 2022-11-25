@@ -35,7 +35,7 @@ const StyledLink = styled(Link)`
 `
 
 const MarqueeItem = ({ token0: address0, token1: address1 }: { token0: string; token1: string }) => {
-  const { chainId } = useActiveWeb3React()
+  const { chainId, networkInfo } = useActiveWeb3React()
 
   const token0 = useToken(address0) as Token
   const currency0 =
@@ -54,7 +54,7 @@ const MarqueeItem = ({ token0: address0, token1: address1 }: { token0: string; t
   const token1Address = currency1.isNative ? currency1.symbol : token1.address
 
   return (
-    <StyledLink to={`/pools/${token0Address}/${token1Address}?tab=${tab}`}>
+    <StyledLink to={`/pools/${networkInfo.route}/${token0Address}/${token1Address}?tab=${tab}`}>
       <CurrencyLogo currency={currency0} size="16px" />
       <Text fontSize="12px">
         {currency0.symbol} - {currency1.symbol}
