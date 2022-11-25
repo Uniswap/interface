@@ -222,7 +222,7 @@ export function useSingleContractWithCallData(
             }
           })
         : EMPTY_ARRAY,
-    [callDatas, contract, gasRequired],
+    [callDatas, contract, gasRequired, isEVM],
   )
 
   const results = useCallsData(calls, options)
