@@ -44,12 +44,14 @@ import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallbac
 import { useArgentWalletContract } from '../../hooks/useArgentWalletContract'
 import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
 import { useDerivedPositionInfo } from '../../hooks/useDerivedPositionInfo'
+import useENS from '../../hooks/useENS'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useStablecoinValue } from '../../hooks/useStablecoinPrice'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useV3PositionFromTokenId } from '../../hooks/useV3Positions'
 import { useToggleWalletModal } from '../../state/application/hooks'
 import { Bound, Field } from '../../state/mint/v3/actions'
+import { useSwapState } from '../../state/swap/hooks'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { TransactionType } from '../../state/transactions/types'
 import { useIsExpertMode, useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
@@ -88,6 +90,12 @@ export default function AddLiquidity() {
   const { account, chainId, provider } = useWeb3React()
   const theme = useTheme()
 
+  // we query pool address from swap state
+  const { recipient } = useSwapState()
+  const recipientLookup = useENS(recipient ?? undefined)
+  const poolAddress = recipientLookup.address
+
+  // TODO: fix token balances
   const toggleWalletModal = useToggleWalletModal() // toggle wallet when disconnected
   const expertMode = useIsExpertMode()
   const addTransaction = useTransactionAdder()
@@ -232,7 +240,7 @@ export default function AddLiquidity() {
   )
 
   async function onAdd() {
-    if (!chainId || !provider || !account) return
+    if (!chainId || !provider || !account || !poolAddress) return
 
     if (!positionManager || !baseCurrency || !quoteCurrency) {
       return
@@ -257,7 +265,7 @@ export default function AddLiquidity() {
             })
 
       let txn: { to: string; data: string; value: string } = {
-        to: NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId],
+        to: poolAddress, //NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId],
         data: calldata,
         value,
       }
