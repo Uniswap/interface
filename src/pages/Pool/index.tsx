@@ -15,13 +15,13 @@ import { Link } from 'react-router-dom'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { useUserHideClosedPositions } from 'state/user/hooks'
 import styled, { css, useTheme } from 'styled-components/macro'
-import { HideSmall, ThemedText } from 'theme'
+import { /*HideSmall,*/ ThemedText } from 'theme'
 import { PositionDetails } from 'types/position'
 
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import useENS from '../../hooks/useENS'
 import { useSwapState } from '../../state/swap/hooks'
-import CTACards from './CTACards'
+//import CTACards from './CTACards'
 import { LoadingRows } from './styleds'
 
 const PageWrapper = styled(AutoColumn)`
@@ -319,9 +319,11 @@ export default function Pool() {
                   </ErrorContainer>
                 )}
               </MainContentWrapper>
+              {/*}
               <HideSmall>
                 <CTACards />
               </HideSmall>
+              */}
             </AutoColumn>
           </AutoColumn>
         </PageWrapper>
