@@ -23,7 +23,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
 
   const headerText = (
     <Text color="textPrimary" variant="bodyLarge">
-      {t('Manage apps')}
+      {t('Manage connections')}
     </Text>
   )
   const header = backButton ? (

@@ -336,7 +336,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
       <Flex gap="lg" pb="lg" px="md">
         <SettingsButton
           Icon={GlobalIcon}
-          label={t('Manage apps')}
+          label={t('Manage connections')}
           name={ElementName.ManageConnections}
           onPress={onPressManageConnections}
         />

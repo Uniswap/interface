@@ -8,7 +8,7 @@
   "Create a new wallet": "Create a new wallet",
   "Add a view-only wallet": "Add a view-only wallet",
   "Import a wallet": "Import a wallet",
-  "Manage apps": "Manage apps",
+  "Manage connections": "Manage connections",
   "Settings": "Settings",
   "Get help": "Get help",
   "Add another wallet": "Add another wallet",
@@ -464,5 +464,6 @@
   "Notifications": "Notifications",
   "Hide small balances": "Hide small balances",
   "Hide unknown tokens": "Hide unknown tokens",
+  "Manage apps": "Manage apps",
   "Security": "Security"
 }
