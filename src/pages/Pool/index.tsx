@@ -10,7 +10,7 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { isSupportedChain } from 'constants/chains'
 import { useV3Positions } from 'hooks/useV3Positions'
-import { AlertTriangle, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCircle } from 'react-feather'
+import { AlertTriangle, BookOpen, ChevronDown, Inbox, PlusCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { useUserHideClosedPositions } from 'state/user/hooks'
@@ -232,31 +232,11 @@ export default function Pool() {
     {
       content: (
         <MenuItem>
-          <Trans>Migrate</Trans>
-          <ChevronsRight size={16} />
-        </MenuItem>
-      ),
-      link: '/migrate/v2',
-      external: false,
-    },
-    {
-      content: (
-        <MenuItem>
-          <Trans>V2 liquidity</Trans>
-          <Layers size={16} />
-        </MenuItem>
-      ),
-      link: '/pool/v2',
-      external: false,
-    },
-    {
-      content: (
-        <MenuItem>
           <Trans>Learn</Trans>
           <BookOpen size={16} />
         </MenuItem>
       ),
-      link: 'https://docs.uniswap.org/',
+      link: 'https://docs.rigoblock.com/',
       external: true,
     },
   ]
