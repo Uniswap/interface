@@ -19,6 +19,8 @@ import { HideSmall, ThemedText } from 'theme'
 import { PositionDetails } from 'types/position'
 
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
+import useENS from '../../hooks/useENS'
+import { useSwapState } from '../../state/swap/hooks'
 import CTACards from './CTACards'
 import { LoadingRows } from './styleds'
 
@@ -200,7 +202,12 @@ export default function Pool() {
   const theme = useTheme()
   const [userHideClosedPositions, setUserHideClosedPositions] = useUserHideClosedPositions()
 
-  const { positions, loading: positionsLoading } = useV3Positions(account)
+  // we query pool address from swap state
+  const { recipient } = useSwapState()
+  const recipientLookup = useENS(recipient ?? undefined)
+  const poolAddress = recipientLookup.address
+
+  const { positions, loading: positionsLoading } = useV3Positions(poolAddress)
 
   if (!isSupportedChain(chainId)) {
     return <WrongNetworkCard />
@@ -286,7 +293,7 @@ export default function Pool() {
                     <ThemedText.DeprecatedBody color={theme.deprecated_text3} textAlign="center">
                       <InboxIcon strokeWidth={1} />
                       <div>
-                        <Trans>Your active V3 liquidity positions will appear here.</Trans>
+                        <Trans>Your Pool active V3 liquidity positions will appear here.</Trans>
                       </div>
                     </ThemedText.DeprecatedBody>
                     {!showConnectAWallet && closedPositions.length > 0 && (
