@@ -1,6 +1,5 @@
 import Column from 'components/Column'
 import Row from 'components/Row'
-import { Box } from 'nft/components/Box'
 import { useIsMobile } from 'nft/hooks'
 import { BannerWrapper, CollectionBannerLoading } from 'nft/pages/collection'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
@@ -34,7 +33,6 @@ export const CollectionPageSkeleton = () => {
         <CollectionStatsLoading isMobile={isMobile} />
         <StyledRow>{ActivitySwitcherLoading}</StyledRow>
       </CollectionDescriptionSection>
-
       <CollectionNftsAndMenuLoading />
     </StyledColumn>
   )
