@@ -105,7 +105,7 @@ export const CHAIN_INFO: ChainInfo = {
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Ethereum',
     logo: ETHEREUM_LOGO,
-    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+    nativeCurrency: { name: 'Ethereum', symbol: 'ETH', decimals: 18 },
   },
   [ChainId.Goerli]: {
     blockWaitMsBeforeWarning: 180000, // 3 minutes
