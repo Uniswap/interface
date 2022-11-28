@@ -8,7 +8,10 @@ import { useTranslation } from 'react-i18next'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AccountDrawer } from 'src/app/navigation/AccountDrawer'
-import { usePreloadedHomeScreenQueries } from 'src/app/navigation/hooks'
+import {
+  useLowPriorityPreloadedQueries,
+  usePreloadedHomeScreenQueries,
+} from 'src/app/navigation/hooks'
 import { navigationRef } from 'src/app/navigation/NavigationContainer'
 import {
   SwapTabBarButton,
@@ -97,6 +100,8 @@ function TabNavigator() {
       xs: TAB_NAVIGATOR_HEIGHT_XS,
       sm: TAB_NAVIGATOR_HEIGHT_SM,
     }) ?? TAB_NAVIGATOR_HEIGHT_SM
+
+  useLowPriorityPreloadedQueries()
 
   return (
     <Tab.Navigator
