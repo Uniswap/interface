@@ -42,13 +42,12 @@ const ReviewButton = styled(ThemeButton)`
 const RemoveAssetOverlay = styled.div`
   position: absolute;
   display: block;
-  right: 0px;
-  top: 0px;
-  transform: translate(30%, -30%);
+  right: -11px;
+  top: -11px;
   z-index: 1;
   transition: 250ms;
-  width: calc(100%);
-  height: calc(100%);
+  width: 45px;
+  height: 45px;
   display: flex;
   align-items: center;
   justify-content: center;
