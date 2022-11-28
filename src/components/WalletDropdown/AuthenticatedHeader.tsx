@@ -4,6 +4,8 @@ import { useWeb3React } from '@web3-react/core'
 import { getConnection } from 'connection/utils'
 import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
+import { BaseVariant } from 'featureFlags'
+import { useFiatOnrampFlag } from 'featureFlags/flags/fiatOnramp'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
@@ -12,7 +14,7 @@ import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hoo
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useMemo } from 'react'
-import { Copy, ExternalLink, Power } from 'react-feather'
+import { Copy, CreditCard, ExternalLink, Power } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useCurrencyBalanceString } from 'state/connection/hooks'
@@ -28,6 +30,9 @@ import { ButtonEmphasis, ButtonSize, ThemeButton } from '../Button'
 import StatusIcon from '../Identicon/StatusIcon'
 import IconButton, { IconHoverText } from './IconButton'
 
+const BuyCryptoButton = styled(ThemeButton)`
+  margin-top: 12px;
+`
 const WalletButton = styled(ThemeButton)`
   border-radius: 12px;
   padding-top: 10px;
@@ -46,6 +51,7 @@ const ProfileButton = styled(WalletButton)`
 const UNIButton = styled(WalletButton)`
   background: linear-gradient(to right, #9139b0 0%, #4261d6 100%);
 `
+const CardIcon = styled(CreditCard)``
 
 const Column = styled.div`
   display: flex;
@@ -112,6 +118,7 @@ const AuthenticatedHeader = () => {
     explorer,
   } = getChainInfoOrDefault(chainId ? chainId : SupportedChainId.MAINNET)
   const nftFlag = useNftFlag()
+  const fiatOnrampFlag = useFiatOnrampFlag()
   const navigate = useNavigate()
   const closeModal = useCloseModal(ApplicationModal.WALLET_DROPDOWN)
 
@@ -183,6 +190,11 @@ const AuthenticatedHeader = () => {
           <ProfileButton onClick={navigateToProfile} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
             <Trans>View and sell NFTs</Trans>
           </ProfileButton>
+        )}
+        {fiatOnrampFlag === BaseVariant.Enabled && (
+          <BuyCryptoButton size={ButtonSize.medium} emphasis={ButtonEmphasis.medium} onClick={openNftModal}>
+            <CardIcon /> <Trans>Buy crypto</Trans>
+          </BuyCryptoButton>
         )}
         {isUnclaimed && (
           <UNIButton onClick={openClaimModal} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
