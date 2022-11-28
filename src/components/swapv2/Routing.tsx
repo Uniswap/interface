@@ -18,15 +18,15 @@ import { useCurrencyConvertedToNative } from 'utils/dmm'
 
 const getDexInfoByPool = (pool: SwapPool, allDexes?: Dex[]) => {
   if (pool.exchange === '1inch') {
-    return { name: '1inch', logoURL: 'https://s2.coinmarketcap.com/static/img/coins/64x64/8104.png' } // Hard code for 1inch
+    return { name: '1inch', logoURL: 'https://s2.coinmarketcap.com/static/img/coins/64x64/8104.png' }
   }
 
   if (pool.exchange === 'paraswap') {
-    // Hard code for Paraswap
-    return {
-      name: 'Paraswap',
-      logoURL: 'https://s2.coinmarketcap.com/static/img/coins/64x64/14534.png',
-    }
+    return { name: 'Paraswap', logoURL: 'https://s2.coinmarketcap.com/static/img/coins/64x64/14534.png' }
+  }
+
+  if (pool.exchange === '0x') {
+    return { name: '0x', logoURL: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1896.png' }
   }
 
   return allDexes?.find(
@@ -40,6 +40,7 @@ const Shadow = styled.div<{ backgroundColor?: string }>`
   position: relative;
   min-height: 0;
   overflow: hidden;
+
   &:before,
   &:after {
     content: '';
@@ -64,6 +65,7 @@ const Shadow = styled.div<{ backgroundColor?: string }>`
     background: linear-gradient(to top, ${({ backgroundColor }) => backgroundColor}, transparent);
     bottom: 0;
   }
+
   &.top:before,
   &.bottom:after {
     opacity: 1;
@@ -76,18 +78,22 @@ const StyledContainer = styled.div`
   margin-left: 0;
   overflow-y: scroll;
   overflow-x: hidden;
+
   &::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
+
   &::-webkit-scrollbar-thumb {
     background: transparent;
     border-radius: 999px;
   }
+
   &:hover::-webkit-scrollbar-thumb {
     background: ${({ theme }) => theme.border};
     border-radius: 999px;
   }
+
   &::-webkit-scrollbar-track-piece {
     background: transparent;
   }
@@ -136,8 +142,9 @@ const StyledToken = styled.a<{ reverse?: boolean }>`
       flex-direction: row-reverse;
       justify-content: flex-start;
     `}
-  padding-bottom:7px;
+  padding-bottom: 7px;
   border-bottom: 1px solid ${({ theme }) => theme.border};
+
   & > span {
     margin-left: 4px;
     margin-right: 4px;
@@ -211,6 +218,7 @@ const StyledHop = styled.div`
   margin: auto;
   transition: filter 0.15s ease;
   cursor: pointer;
+
   :hover {
     filter: ${({ theme }) => (theme.darkMode ? 'brightness(130%)' : 'brightness(97%)')};
   }
@@ -295,6 +303,7 @@ const StyledDot = styled.i<{ out?: boolean }>`
 const StyledWrap = styled.div<{ backgroundColor?: string }>`
   width: calc(100% - 68px);
   margin: 10px 0 10px 6px;
+
   &:after,
   &:before {
     transition: all 0.1s ease;
@@ -310,14 +319,17 @@ const StyledWrap = styled.div<{ backgroundColor?: string }>`
     transform: translateY(-50%);
     opacity: 0;
   }
+
   &:after {
     background: linear-gradient(to right, ${({ backgroundColor }) => backgroundColor}, transparent);
     left: 42px;
   }
+
   &:before {
     background: linear-gradient(to left, ${({ backgroundColor }) => backgroundColor}, transparent);
     right: 24px;
   }
+
   &.left-visible:after,
   &.right-visible:before {
     opacity: 1;
