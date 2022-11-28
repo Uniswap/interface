@@ -102,13 +102,13 @@ export const ClickableStyle = css`
 export const LinkStyle = css`
   color: ${({ theme }) => theme.accentAction};
   stroke: ${({ theme }) => theme.accentAction};
+  font-weight: 500;
 `
 
 // An internal link from the react-router-dom library that is correctly styled
 export const StyledInternalLink = styled(Link)`
   ${ClickableStyle}
   ${LinkStyle}
-  font-weight: 500;
 `
 
 const LinkIconWrapper = styled.a`
