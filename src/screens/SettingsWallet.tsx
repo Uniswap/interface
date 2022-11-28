@@ -199,7 +199,7 @@ export function SettingsWallet({
         },
         {
           screen: Screens.SettingsWalletManageConnection,
-          text: t('Manage apps'),
+          text: t('Manage connections'),
           icon: <GlobalIcon {...iconProps} />,
           screenProps: { address },
           isHidden: readonly,
