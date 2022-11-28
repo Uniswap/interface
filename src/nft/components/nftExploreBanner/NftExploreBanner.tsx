@@ -4,9 +4,10 @@ import { Box } from 'nft/components/Box'
 import { bodySmall, subhead } from 'nft/css/common.css'
 import { X } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useHideNftPromoBanner } from 'state/user/hooks'
-import styled from 'styled-components/macro'
-import { StyledInternalLink } from 'theme'
+import styled, { css } from 'styled-components/macro'
+import { ClickableStyle } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 
 import nftPromoImage1 from '../nftExploreBanner/nftArt1.png'
@@ -59,14 +60,14 @@ const InnerContainer = styled.div`
   display: flex;
   position: relative;
   gap: 8px;
-  padding: 8px;
+  padding: 12px;
 `
 
 const TextContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
-  justify-content: center;
+  justify-content: flex-start;
 `
 
 const StyledXButton = styled(X)`
@@ -80,11 +81,21 @@ const StyledXButton = styled(X)`
 `
 
 const StyledImageContainer = styled(Box)`
-  width: 23%;
+  width: 20%;
   cursor: pointer;
   aspectratio: 1;
   transition: transform 0.25s ease 0s;
   object-fit: contain;
+`
+
+const LinkStyle = css`
+  color: ${({ theme }) => theme.accentActive};
+  stroke: ${({ theme }) => theme.accentActive};
+`
+
+const StyledLink = styled(Link)`
+  ${ClickableStyle}
+  ${LinkStyle}
 `
 
 export default function NftExploreBanner() {
@@ -110,9 +121,9 @@ export default function NftExploreBanner() {
           {/* <Description> */}
           <div className={bodySmall}>
             <Trans>Buy and sell NFTs across more listings at better prices.</Trans>{' '}
-            <StyledInternalLink to="/nfts">
+            <StyledLink to="/nfts">
               <Trans>Explore NFTs</Trans>
-            </StyledInternalLink>{' '}
+            </StyledLink>{' '}
           </div>
         </TextContainer>
         {/* </Description> */}
