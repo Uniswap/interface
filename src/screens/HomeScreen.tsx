@@ -1,7 +1,7 @@
 import { DrawerActions } from '@react-navigation/core'
 import { useScrollToTop } from '@react-navigation/native'
 import { FlashList } from '@shopify/flash-list'
-import { default as React, useCallback, useMemo, useRef, useState } from 'react'
+import { default as React, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, StyleProp, useColorScheme, View, ViewProps, ViewStyle } from 'react-native'
 import { GestureDetector } from 'react-native-gesture-handler'
@@ -52,7 +52,7 @@ import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { dimensions } from 'src/styles/sizing'
 
-const CONTENT_HEADER_HEIGHT_ESTIMATE = 264
+const CONTENT_HEADER_HEIGHT_ESTIMATE = 270
 const SIDEBAR_SWIPE_CONTAINER_WIDTH = 50
 
 /**
@@ -110,6 +110,20 @@ export function HomeScreen() {
     () => (tabIndex === 0 ? tokensTabScrollValue.value : nftsTabScrollValue.value),
     [tabIndex]
   )
+
+  // If accounts are switched, we want to scroll to top and show full header
+  useEffect(() => {
+    nftsTabScrollValue.value = 0
+    tokensTabScrollValue.value = 0
+    nftsTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
+    tokensTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
+  }, [
+    activeAccount,
+    nftsTabScrollRef,
+    nftsTabScrollValue,
+    tokensTabScrollRef,
+    tokensTabScrollValue,
+  ])
 
   // Need to create a derived value for tab index so it can be referenced from a static ref
   const currentTabIndex = useDerivedValue(() => tabIndex, [tabIndex])

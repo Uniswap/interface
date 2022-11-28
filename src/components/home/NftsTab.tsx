@@ -169,6 +169,16 @@ export const NftsTab = forwardRef<FlashList<any>, NftsTabProps>(
       [onPressItem, theme.colors.userThemeMagenta]
     )
 
+    /**
+     * If tab container is smaller than the approximate screen height, we need to manually add
+     * padding so scroll works as intended since minHeight is not supported by FlashList in
+     * `contentContainerStyle`. Padding is proportional to the number of rows the data items take up.
+     */
+    const footerPadding =
+      nftDataItems.length < 6
+        ? (ESTIMATED_ITEM_SIZE * (6 - nftDataItems.length)) / 2
+        : FOOTER_HEIGHT
+
     const onRetry = useCallback(() => refetch(), [refetch])
 
     if (isError(networkStatus, !!data)) {
@@ -214,7 +224,7 @@ export const NftsTab = forwardRef<FlashList<any>, NftsTabProps>(
             networkStatus === NetworkStatus.fetchMore ? (
               <Loading repeat={4} type="nft" />
             ) : (
-              <Box height={FOOTER_HEIGHT} />
+              <Box height={footerPadding} />
             )
           }
           data={shouldAddInLoadingItem ? [...nftDataItems, LOADING_ITEM] : nftDataItems}
