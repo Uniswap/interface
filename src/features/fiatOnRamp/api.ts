@@ -28,6 +28,7 @@ const supportedCurrencyCodes = [
   'eth_arbitrum',
   'eth_optimism',
   'eth_polygon',
+  'matic_polygon',
   'polygon',
   'usdc_arbitrum',
   'usdc_optimism',
