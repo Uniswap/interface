@@ -99,12 +99,9 @@ export const ClickableStyle = css`
   }
 `
 
-export const LinkStyle = css<{ $uniformColorInLightAndDarkMode?: boolean }>`
-  color: ${({ theme, $uniformColorInLightAndDarkMode }) =>
-    $uniformColorInLightAndDarkMode ? theme.accentActive : theme.accentAction};
-  stroke: ${({ theme, $uniformColorInLightAndDarkMode }) =>
-    $uniformColorInLightAndDarkMode ? theme.accentActive : theme.accentAction};
-  font-weight: 500;
+export const LinkStyle = css`
+  color: ${({ theme }) => theme.accentAction};
+  stroke: ${({ theme }) => theme.accentAction};
 `
 
 // An internal link from the react-router-dom library that is correctly styled
