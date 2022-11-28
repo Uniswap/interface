@@ -5,6 +5,7 @@ import { uniswapUrls } from 'src/constants/urls'
 import { logException, logMessage } from 'src/features/telemetry'
 import { LogContext } from 'src/features/telemetry/constants'
 import { FiatPurchaseTransactionInfo } from 'src/features/transactions/types'
+import { theme } from 'src/styles/theme'
 import { logger } from 'src/utils/logger'
 
 const ALLOWED_EXTERNAL_URI_SCHEMES = ['http://', 'https://']
@@ -16,8 +17,15 @@ const ALLOWED_EXTERNAL_URI_SCHEMES = ['http://', 'https://']
  *
  * @param openExternalBrowser whether to leave the app and open in system browser. default is false, opens in-app browser window
  * @param isSafeUri whether to bypass ALLOWED_EXTERNAL_URI_SCHEMES check
+ * @param controlscolor When opening in an in-app browser, determines the controls color
  **/
-export async function openUri(uri: string, openExternalBrowser = false, isSafeUri = false) {
+export async function openUri(
+  uri: string,
+  openExternalBrowser = false,
+  isSafeUri = false,
+  // NOTE: okay to use theme object directly as we want the same color for light/dark modes
+  controlsColor = theme.colors.magentaVibrant
+) {
   const trimmedURI = uri.trim()
   if (!isSafeUri && !ALLOWED_EXTERNAL_URI_SCHEMES.some((scheme) => trimmedURI.startsWith(scheme))) {
     // TODO: show a visual warning that the link cannot be opened.
@@ -36,7 +44,7 @@ export async function openUri(uri: string, openExternalBrowser = false, isSafeUr
     if (openExternalBrowser) {
       await Linking.openURL(uri)
     } else {
-      await WebBrowser.openBrowserAsync(uri)
+      await WebBrowser.openBrowserAsync(uri, { controlsColor })
     }
   } catch (error) {
     logException(LogContext.OpenUri, error)
