@@ -63,7 +63,7 @@ export async function getColorFromUriPath(uri: string): Promise<string | null> {
     detectedHex = shade(0.005, detectedHex)
     AAscore = hex(detectedHex, '#FFF')
   }
-  console.log('detectedHex', detectedHex)
+
   return detectedHex
 }
 

@@ -5,7 +5,6 @@ import { TimePeriod } from 'nft/types'
 import { calculateCardIndex } from 'nft/utils'
 import { Suspense, useCallback, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
-import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { opacify } from 'theme/utils'
 
@@ -105,7 +104,6 @@ const EXCLUDED_COLLECTIONS = ['0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb']
 const TRENDING_COLLECTION_SIZE = 5
 
 const Banner = () => {
-  const navigate = useNavigate()
   const isMobile = useIsMobile()
 
   const { data } = useQuery(
