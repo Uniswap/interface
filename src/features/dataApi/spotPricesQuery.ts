@@ -9,20 +9,18 @@ export type SpotPrice = NonNullable<
   NonNullable<NonNullable<SpotPricesQuery['tokenProjects']>[0]>['markets']
 >[0]
 
-/**
- * Fetches spot price of a single currency. When used, wrap component
- * with Suspense.
- */
+/** Fetches spot price of a single currency. */
 export function useSpotPrice(
   currency: NullUndefined<Currency>,
   skip?: boolean
 ): GqlResult<SpotPrice> {
   const { data, loading } = useSpotPricesQuery({
-    variables: {
-      contracts: [currencyIdToContractInput(currencyId(currency!))],
-    },
+    // query is re-used by multiple components
+    // attempt to load from cache instead of always sending a reqquest (default)
+    fetchPolicy: 'cache-first',
     pollInterval: PollingInterval.Fast,
     skip: skip || !currency,
+    variables: { contracts: [currencyIdToContractInput(currencyId(currency!))] },
   })
 
   return { data: data?.tokenProjects?.[0]?.markets?.[0], loading }

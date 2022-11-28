@@ -32,10 +32,13 @@ export function usePortfolioBalances(
     refetch,
     error,
   } = usePortfolioBalancesQuery({
-    variables: { ownerAddress: address },
-    pollInterval: shouldPoll ? PollingInterval.Fast : undefined,
+    // query is re-used by multiple components
+    // attempt to load from cache instead of always sending a reqquest (default)
+    fetchPolicy: 'cache-first',
     notifyOnNetworkStatusChange: true,
     onCompleted,
+    pollInterval: shouldPoll ? PollingInterval.Fast : undefined,
+    variables: { ownerAddress: address },
   })
 
   const persistedError = usePersistedError(loading, error)
