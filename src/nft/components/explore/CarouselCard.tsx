@@ -11,15 +11,15 @@ import { ThemedText } from 'theme/components/text'
 const CarouselCardBorder = styled.div`
   width: 100%;
   position: relative;
-  border-radius: 22px;
+  border-radius: 21px;
   cursor: pointer;
-  border: 2px solid transparent;
+  border: 1px solid transparent;
   transition-property: border-color;
   transition-duration: ${({ theme }) => theme.transition.duration.fast};
   transition-timing-function: ${({ theme }) => theme.transition.timing.inOut};
 
   :hover {
-    border: 2px solid ${({ theme }) => theme.backgroundOutline};
+    border: 1px solid ${({ theme }) => theme.backgroundOutline};
   }
 
   ::after {
@@ -30,7 +30,7 @@ const CarouselCardBorder = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    border-radius: 22px;
+    border-radius: 21px;
     z-index: -1;
     box-shadow: ${({ theme }) => theme.deepShadow};
     transition-property: opacity;
