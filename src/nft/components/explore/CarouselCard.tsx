@@ -2,18 +2,24 @@ import { formatNumberOrString, NumberType } from '@uniswap/conedison/format'
 import { loadingAnimation } from 'components/Loader/styled'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useCollectionQuery } from 'graphql/data/nft/Collection'
+import { getColorFromUriPath } from 'hooks/useColor'
 import { VerifiedIcon } from 'nft/components/icons'
 import { Markets, TrendingCollection } from 'nft/types'
 import { formatWeiToDecimal } from 'nft/utils'
-import styled, { useTheme } from 'styled-components/macro'
+import { readableColor } from 'polished'
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import styled, { css } from 'styled-components/macro'
 import { ThemedText } from 'theme/components/text'
 
-const CarouselCardBorder = styled.div`
+const CarouselCardBorderCss = css`
   width: 100%;
   position: relative;
   border-radius: 22px;
+  color: ${({ theme }) => theme.textPrimary};
   cursor: pointer;
   border: 2px solid transparent;
+  text-decoration: none;
   transition-property: border-color;
   transition-duration: ${({ theme }) => theme.transition.duration.fast};
   transition-timing-function: ${({ theme }) => theme.transition.timing.inOut};
@@ -42,26 +48,15 @@ const CarouselCardBorder = styled.div`
     opacity: 1;
   }
 `
+const CarouselCardBorder = styled(Link)`
+  ${CarouselCardBorderCss}
+`
 
 const CardHeaderContainer = styled.div<{ src: string }>`
   position: relative;
   background-image: ${({ src }) => `url(${src})`};
   background-size: cover;
   background-position: center;
-`
-
-const LoadingCardHeaderContainer = styled.div`
-  position: relative;
-  animation: ${loadingAnimation} 1.5s infinite;
-  animation-fill-mode: both;
-  background: linear-gradient(
-    to left,
-    ${({ theme }) => theme.backgroundInteractive} 25%,
-    ${({ theme }) => theme.backgroundOutline} 50%,
-    ${({ theme }) => theme.backgroundInteractive} 75%
-  );
-  will-change: background-position;
-  background-size: 400%;
 `
 
 const CardHeaderColumn = styled.div`
@@ -113,6 +108,22 @@ const CollectionImage = styled.img`
   border-radius: 100px;
 `
 
+const LoadingCardHeaderContainer = styled.div`
+  position: relative;
+  animation: ${loadingAnimation} 1.5s infinite;
+  animation-fill-mode: both;
+  background: linear-gradient(
+    to left,
+    ${({ theme }) => theme.backgroundInteractive} 25%,
+    ${({ theme }) => theme.backgroundOutline} 50%,
+    ${({ theme }) => theme.backgroundInteractive} 75%
+  );
+  will-change: background-position;
+  background-size: 400%;
+`
+const LoadingCarouselCardBorder = styled.div`
+  ${CarouselCardBorderCss}
+`
 const LoadingCollectionImage = styled.div`
   width: 86px;
   height: 86px;
@@ -218,7 +229,7 @@ export const MarketplaceRow = ({ marketplace, floorInEth, listings }: Marketplac
 
 interface CarouselCardProps {
   collection: TrendingCollection
-  onClick: () => void
+  href: string
 }
 
 const MARKETS_TO_CHECK = [Markets.Opensea, Markets.X2Y2, Markets.LooksRare] as const
@@ -228,12 +239,12 @@ const MARKETS_ENUM_TO_NAME = {
   [Markets.LooksRare]: 'LooksRare',
 }
 
-export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
+export const CarouselCard = ({ collection, href }: CarouselCardProps) => {
   const gqlCollection = useCollectionQuery(collection.address)
 
   return (
-    <CarouselCardBorder>
-      <CarouselCardContainer onClick={onClick}>
+    <CarouselCardBorder to={href}>
+      <CarouselCardContainer>
         <CarouselCardHeader collection={collection} />
         <CardBottomContainer>
           <>
@@ -295,13 +306,16 @@ const CollectionName = styled(ThemedText.MediumHeader)`
 `
 
 const CarouselCardHeader = ({ collection }: { collection: TrendingCollection }) => {
-  const theme = useTheme()
+  const [averageBanerImageColor, setAverageBanerImageColor] = useState('#fff')
+  useEffect(() => {
+    getColorFromUriPath(collection.bannerImageUrl).then((c) => c && setAverageBanerImageColor(c))
+  }, [collection.bannerImageUrl])
   return (
     <CardHeaderContainer src={collection.bannerImageUrl}>
       <CardHeaderColumn>
         <CollectionImage src={collection.imageUrl} />
         <CollectionNameContainer>
-          <CollectionName color={theme.accentTextLightPrimary} fontWeight="500">
+          <CollectionName style={{ color: readableColor(averageBanerImageColor) }} fontWeight="500">
             {collection.name}
           </CollectionName>
           {collection.isVerified && (
@@ -318,7 +332,7 @@ const CarouselCardHeader = ({ collection }: { collection: TrendingCollection }) 
 
 export const LoadingCarouselCard = ({ collection }: { collection?: TrendingCollection }) => {
   return (
-    <CarouselCardBorder>
+    <LoadingCarouselCardBorder>
       <CarouselCardContainer>
         {collection ? (
           <CarouselCardHeader collection={collection} />
@@ -335,6 +349,6 @@ export const LoadingCarouselCard = ({ collection }: { collection?: TrendingColle
           <LoadingTable />
         </CardBottomContainer>
       </CarouselCardContainer>
-    </CarouselCardBorder>
+    </LoadingCarouselCardBorder>
   )
 }

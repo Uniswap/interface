@@ -165,7 +165,7 @@ const Banner = () => {
                 <CarouselCard
                   key={collection.address}
                   collection={collection}
-                  onClick={() => navigate(`/nfts/collection/${collection.address}`)}
+                  href={`/nfts/collection/${collection.address}`}
                 />
               </Suspense>
             ))}
