@@ -73,7 +73,7 @@ jobs:
           timeout_minutes: 10
           retry_wait_seconds: 60
           max_attempts: 3
-          command: yarn --no-audit --prefer-offline
+          command: yarn --frozen-lockfile --no-audit --prefer-offline
 
       - name: Typechain
         uses: nick-fields/retry@7d4a37704547a311dbb66ebdf5b23ec19374a767
