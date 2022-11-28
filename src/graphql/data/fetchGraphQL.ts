@@ -33,11 +33,10 @@ const fetchQuery = (params: RequestParameters, variables: Variables): Promise<Gr
     query: params.text, // GraphQL text from input
     variables,
   })
-  const url = GRAPHQL_URL
   // TODO: When gating is removed from gql endpoint, we can remove the isNFT check and just use base headers
   const headers = isNFT ? nftHeaders : baseHeaders
 
-  return fetch(url, { method: 'POST', body, headers })
+  return fetch(GRAPHQL_URL, { method: 'POST', body, headers })
     .then((res) => res.json())
     .catch((e) => {
       console.error(e)
