@@ -48,10 +48,6 @@ const PlainBackground = styled(AbsoluteFill)`
   background: ${({ theme }) => `linear-gradient(${opacify(10, theme.userThemeColor)}, transparent)`};
 `
 
-const Line = styled.span`
-  word-wrap: keep-all;
-`
-
 const BannerMainArea = styled.div`
   display: flex;
   flex-direction: row;
