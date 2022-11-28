@@ -104,6 +104,7 @@ const HeaderOverlay = styled.div`
   top: 0px;
   z-index: 0;
 
+  // overlay workaround for firefox only
   @supports (-moz-appearance: none) {
     bottom: -1px;
   }
