@@ -38,6 +38,11 @@ const Content = styled.div`
   gap: 16px;
 `
 
+const Link = styled(ExternalLink)`
+  color: ${({ theme }) => theme.accentActive};
+  stroke: ${({ theme }) => theme.accentActive};
+`
+
 const Title = styled(ThemedText.LargeHeader)`
   @media (max-width: ${({ theme }) => theme.breakpoint.xl}px) {
     font-size: 20px !important;
@@ -92,21 +97,21 @@ export function WelcomeModal({ onDismissed }: { onDismissed: () => void }) {
           <Title>Introducing NFTs on Uniswap</Title>
           <Paragraph>
             We’re excited to announce that{' '}
-            <ExternalLink href="https://uniswap.org/blog/genie" title="Uniswap Labs has acquired Genie">
+            <Link href="https://uniswap.org/blog/genie" title="Uniswap Labs has acquired Genie">
               Uniswap Labs has acquired Genie
-            </ExternalLink>{' '}
+            </Link>{' '}
             to build the unified platform for all digital assets! Starting today, you can trade NFTs on Uniswap across
             major marketplaces to find more listings and better prices.
             <br />
             <br />
             Past Genie users may be eligible for a USDC airdrop. Read our announcement post for details on the airdrop
             and a new gas rebate promotion.{' '}
-            <ExternalLink
+            <Link
               href="https://uniswap.org/blog/uniswap-nft-aggregator-announcement"
               title="Uniswap NFT aggregator announcement"
             >
               Learn more.
-            </ExternalLink>
+            </Link>
           </Paragraph>
           <CloseButton size={24} onClick={dismiss} />
         </Content>
