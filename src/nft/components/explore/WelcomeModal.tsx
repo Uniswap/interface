@@ -89,13 +89,18 @@ export function WelcomeModal({ onDismissed }: { onDismissed: () => void }) {
           draggable={false}
         />
         <Content>
-          <Title>Introducing Uniswap NFT</Title>
+          <Title>Introducing NFTs on Uniswap</Title>
           <Paragraph>
-            We’re excited to announce that Uniswap Labs has acquired Genie to build the marketplace for all digital
-            assets! With Uniswap NFT, you can buy and sell NFTs across all marketplaces with the full functionality of
-            Genie. Additonally, if you’ve used Genie in the past, then you may be eligible for a USDC airdrop. You can
-            connect your wallet to claim any rewards. For more details on the airdrop please read the official
-            announcement on the Uniswap Labs blog.{' '}
+            We’re excited to announce that{' '}
+            <ExternalLink href="https://uniswap.org/blog/genie" title="Uniswap Labs has acquired Genie">
+              Uniswap Labs has acquired Genie
+            </ExternalLink>{' '}
+            to build the unified platform for all digital assets! Starting today, you can trade NFTs on Uniswap across
+            major marketplaces to find more listings and better prices.
+            <br />
+            <br />
+            Past Genie users may be eligible for a USDC airdrop. Read our announcement post for details on the airdrop
+            and a new gas rebate promotion.{' '}
             <ExternalLink
               href="https://uniswap.org/blog/uniswap-nft-aggregator-announcement"
               title="Uniswap NFT aggregator announcement"
