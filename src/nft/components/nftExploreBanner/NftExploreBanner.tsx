@@ -103,7 +103,7 @@ export default function NftExploreBanner() {
         <TextContainer>
           {/* <HeaderText> */}
           <div className={subhead}>
-            <Trans>Introducing Uniswap NFT</Trans>
+            <Trans>Introducing NFTs on Uniswap</Trans>
           </div>
           {/* </HeaderText> */}
 
