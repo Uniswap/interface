@@ -18,9 +18,10 @@ const BannerContainer = styled.div`
   width: 100%;
   padding-top: 32px;
   position: relative;
+  max-width: 1200px;
 
   @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    padding: 32px 16px 0 16px;
+    padding: 32px 16px;
   }
 `
 
