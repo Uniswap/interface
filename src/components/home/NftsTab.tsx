@@ -87,7 +87,7 @@ export const NftsTab = forwardRef<FlashList<any>, NftsTabProps>(
 
       fetchMore({
         variables: {
-          first: 50,
+          first: 30,
           after: data?.nftBalances?.pageInfo?.endCursor,
         },
       })
