@@ -197,7 +197,7 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
     if (nft20Assets) jointCollections = [...jointCollections, ...nft20Assets]
 
     const sudoSwapAssetsInJointCollections = jointCollections.filter(
-      (sweepAsset) => sweepAsset.marketplace === Markets.Sudoswap
+      (sweepAsset) => sweepAsset.marketplace === Markets.Sudoswap && !sweepAsset.susFlag
     )
 
     jointCollections.forEach((asset) => {
@@ -215,8 +215,8 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
           const poolPrice = calcPoolPrice(asset, isNFTX ? counterNFTX : counterNFT20)
           if (BigNumber.from(poolPrice).gt(0)) {
             isNFTX ? counterNFTX++ : counterNFT20++
-            asset.priceInfo.ETHPrice = poolPrice
           }
+          asset.priceInfo.ETHPrice = poolPrice
         }
       }
     })
