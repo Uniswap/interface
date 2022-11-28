@@ -34,7 +34,6 @@ import {
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { colors } from 'theme/colors'
 
 import * as styles from './Card.css'
 
@@ -518,7 +517,7 @@ const ProfileNftDetails = ({ asset, hideDetails }: ProfileNftDetailsProps) => {
           <TruncatedTextRow className={bodySmall} style={{ color: themeVars.colors.textSecondary }}>
             {!!asset.asset_contract.name && <span>{asset.asset_contract.name}</span>}
           </TruncatedTextRow>
-          {asset.collectionIsVerified && <VerifiedIcon height="18px" width="18px" fill={colors.magentaVibrant} />}
+          {asset.collectionIsVerified && <VerifiedIcon height="18px" width="18px" />}
         </PrimaryDetails>
         {!hideDetails && <DetailsLink />}
       </PrimaryRow>
