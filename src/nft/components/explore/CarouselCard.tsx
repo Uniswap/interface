@@ -5,7 +5,7 @@ import { useCollectionQuery } from 'graphql/data/nft/Collection'
 import { VerifiedIcon } from 'nft/components/icons'
 import { Markets, TrendingCollection } from 'nft/types'
 import { formatWeiToDecimal } from 'nft/utils'
-import styled, { useTheme } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { ThemedText } from 'theme/components/text'
 
 const CarouselCardBorder = styled.div`
@@ -296,7 +296,6 @@ const CollectionName = styled(ThemedText.MediumHeader)`
 `
 
 const CarouselCardHeader = ({ collection }: { collection: TrendingCollection }) => {
-  const theme = useTheme()
   return (
     <CardHeaderContainer src={collection.bannerImageUrl}>
       <CardHeaderColumn>
