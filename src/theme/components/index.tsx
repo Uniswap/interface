@@ -108,6 +108,7 @@ export const LinkStyle = css`
 export const StyledInternalLink = styled(Link)`
   ${ClickableStyle}
   ${LinkStyle}
+  font-weight: 500;
 `
 
 const LinkIconWrapper = styled.a`
