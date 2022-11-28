@@ -97,7 +97,7 @@ const LoadingCollectionNameContainer = styled(LoadingBubble)`
 
 const HeaderOverlay = styled.div`
   position: absolute;
-  bottom: 0px;
+  bottom: -1px;
   top: 0px;
   right: 0px;
   left: 0px;
