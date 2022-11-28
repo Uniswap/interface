@@ -96,13 +96,18 @@ const LoadingCollectionNameContainer = styled(LoadingBubble)`
 `
 
 const HeaderOverlay = styled.div`
-  position: absolute;
-  bottom: 0px;
-  top: 0px;
-  right: 0px;
-  left: 0px;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 100%, rgba(0, 0, 0, 0.08));
+  bottom: 0px;
+  left: 0px;
+  position: absolute;
+  right: 0px;
+  top: 0px;
   z-index: 0;
+
+  // overlay workaround for firefox only
+  @supports (-moz-appearance: none) {
+    bottom: -1px;
+  }
 `
 
 const CollectionImage = styled.img`
