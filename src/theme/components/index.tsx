@@ -99,9 +99,11 @@ export const ClickableStyle = css`
   }
 `
 
-export const LinkStyle = css`
-  color: ${({ theme }) => theme.accentAction};
-  stroke: ${({ theme }) => theme.accentAction};
+export const LinkStyle = css<{ $uniformColorInLightAndDarkMode?: boolean }>`
+  color: ${({ theme, $uniformColorInLightAndDarkMode }) =>
+    $uniformColorInLightAndDarkMode ? theme.accentActive : theme.accentAction};
+  stroke: ${({ theme, $uniformColorInLightAndDarkMode }) =>
+    $uniformColorInLightAndDarkMode ? theme.accentActive : theme.accentAction};
   font-weight: 500;
 `
 

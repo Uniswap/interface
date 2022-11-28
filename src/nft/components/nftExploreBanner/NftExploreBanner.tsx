@@ -59,14 +59,14 @@ const InnerContainer = styled.div`
   display: flex;
   position: relative;
   gap: 8px;
-  padding: 8px;
+  padding: 12px;
 `
 
 const TextContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
-  justify-content: center;
+  justify-content: flex-start;
 `
 
 const StyledXButton = styled(X)`
@@ -80,7 +80,7 @@ const StyledXButton = styled(X)`
 `
 
 const StyledImageContainer = styled(Box)`
-  width: 23%;
+  width: 20%;
   cursor: pointer;
   aspectratio: 1;
   transition: transform 0.25s ease 0s;
@@ -110,7 +110,7 @@ export default function NftExploreBanner() {
           {/* <Description> */}
           <div className={bodySmall}>
             <Trans>Buy and sell NFTs across more listings at better prices.</Trans>{' '}
-            <StyledInternalLink to="/nfts">
+            <StyledInternalLink $uniformColorInLightAndDarkMode to="/nfts">
               <Trans>Explore NFTs</Trans>
             </StyledInternalLink>{' '}
           </div>
