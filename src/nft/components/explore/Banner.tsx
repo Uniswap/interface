@@ -1,4 +1,5 @@
 import { useLoadCollectionQuery } from 'graphql/data/nft/Collection'
+import { useIsMobile } from 'nft/hooks'
 import { fetchTrendingCollections } from 'nft/queries'
 import { TimePeriod } from 'nft/types'
 import { calculateCardIndex } from 'nft/utils'
@@ -47,6 +48,10 @@ const PlainBackground = styled(AbsoluteFill)`
   background: ${({ theme }) => `linear-gradient(${opacify(10, theme.userThemeColor)}, transparent)`};
 `
 
+const Line = styled.span`
+  word-wrap: keep-all;
+`
+
 const BannerMainArea = styled.div`
   display: flex;
   flex-direction: row;
@@ -72,8 +77,6 @@ const HeaderContainer = styled.div`
   font-weight: 500;
   font-size: 72px;
   line-height: 88px;
-  justify-content: start;
-  align-items: start;
   align-self: center;
   flex-shrink: 0;
   padding-bottom: 32px;
@@ -91,11 +94,24 @@ const HeaderContainer = styled.div`
   }
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    line-height: 43px;
+    text-align: center;
+    padding-bottom: 16px;
+
+    br {
+      display: none;
+    }
+  }
+
+  /* Custom breakpoint to split into two lines on smaller screens */
+  @media only screen and (max-width: 550px) {
     font-size: 28px;
     line-height: 34px;
-    justify-content: center;
-    align-items: center;
-    padding: 0;
+    padding-bottom: 0;
+
+    br {
+      display: unset;
+    }
   }
 `
 
@@ -105,6 +121,7 @@ const TRENDING_COLLECTION_SIZE = 5
 
 const Banner = () => {
   const navigate = useNavigate()
+  const isMobile = useIsMobile()
 
   const { data } = useQuery(
     ['trendingCollections'],
@@ -153,8 +170,17 @@ const Banner = () => {
       ) : null}
       <BannerMainArea>
         <HeaderContainer>
-          Better prices. <br />
-          More listings.
+          {isMobile ? (
+            <>
+              Better prices. <br />
+              Every listing.
+            </>
+          ) : (
+            <>
+              Better prices. <br />
+              More listings.
+            </>
+          )}
         </HeaderContainer>
         {collections ? (
           <Carousel activeIndex={activeCollectionIdx} toggleNextSlide={onToggleNextSlide}>
