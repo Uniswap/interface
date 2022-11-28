@@ -1,5 +1,4 @@
 import { useLoadCollectionQuery } from 'graphql/data/nft/Collection'
-import { useIsMobile } from 'nft/hooks'
 import { fetchTrendingCollections } from 'nft/queries'
 import { TimePeriod } from 'nft/types'
 import { calculateCardIndex } from 'nft/utils'
@@ -16,7 +15,7 @@ const BannerContainer = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
-  padding-top: 32px;
+  padding-top: 22px;
   position: relative;
   max-width: 1200px;
 
@@ -92,12 +91,11 @@ const HeaderContainer = styled.div`
   }
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    font-size: 20px;
-    line-height: 28px;
+    font-size: 28px;
+    line-height: 34px;
     justify-content: center;
     align-items: center;
-    padding-top: 0px;
-    padding-bottom: 0px;
+    padding: 0;
   }
 `
 
@@ -107,7 +105,6 @@ const TRENDING_COLLECTION_SIZE = 5
 
 const Banner = () => {
   const navigate = useNavigate()
-  const isMobile = useIsMobile()
 
   const { data } = useQuery(
     ['trendingCollections'],
@@ -156,7 +153,7 @@ const Banner = () => {
       ) : null}
       <BannerMainArea>
         <HeaderContainer>
-          Better prices. {!isMobile && <br />}
+          Better prices. <br />
           More listings.
         </HeaderContainer>
         {collections ? (

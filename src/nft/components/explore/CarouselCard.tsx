@@ -171,7 +171,8 @@ const CarouselCardContainer = styled.div`
     justify-self: right;
   }
 
-  @media (max-width: 396px) or ((min-width: ${({ theme }) => theme.breakpoint.sm}px) and (max-width: 880px)) {
+  @media (max-width: ${({ theme }) => theme.breakpoint.xs}px) or ((min-width: ${({ theme }) =>
+      theme.breakpoint.sm}px) and (max-width: 880px)) {
     ${FirstColumnTextWrapper} {
       display: none;
     }
