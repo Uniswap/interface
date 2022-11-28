@@ -32,6 +32,11 @@ ignore:
           reason: 'Initial commit, ignoring all packages without known fixes'
           expires: 2022-12-10T00:00:00.000Z
           created: 2022-10-27T00:13:29.506Z
+  'SNYK-JS-DECODEURICOMPONENT-3149970':
+      - '*':
+          reason: 'No known fix, only issue for very specific case'
+          expires: 2023-01-10T00:00:00.000Z
+          created: 2022-11-28T00:13:29.506Z
   'SNYK-JS-D3COLOR-1076592':
       - '*':
           reason: 'Initial commit, ignoring all packages without known fixes'
