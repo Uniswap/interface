@@ -185,7 +185,7 @@ export const CollectionNftsLoading = () => (
 export const CollectionNftsAndMenuLoading = () => (
   <InfiniteScrollWrapper>
     <Column alignItems="flex-start" position="relative" width="full">
-      <Row marginY="12" gap="12">
+      <Row marginY="12" gap="12" marginBottom="40">
         <Box className={loadingAsset} borderRadius="12" width={{ sm: '44', md: '100' }} height="44" />
         <Box
           className={loadingAsset}
