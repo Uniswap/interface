@@ -1,6 +1,6 @@
 import { TimePeriod, TrendingCollection } from '../../types'
 
-const NFT_API_URL = process.env.REACT_APP_GENIE_V3_API_URL
+const NFT_API_URL = process.env.REACT_APP_TEMP_API_URL
 export const fetchTrendingCollections = async (payload: {
   volumeType: 'eth' | 'nft'
   timePeriod: TimePeriod
