@@ -34,12 +34,13 @@
     "unicons": "cd scripts && python3 populate_svgs.py && cd .. && yarn lint --fix",
     "pod": "./scripts/podinstall.sh",
     "upload-env-local": "bash ./scripts/uploadEnvLocal.sh",
-    "download-env-local": "bash ./scripts/downloadEnvLocal.sh"
+    "download-env-local": "bash ./scripts/downloadEnvLocal.sh",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@amplitude/analytics-react-native": "0.5.0",
-    "@amplitude/experiment-react-native-client": "0.7.3",
     "@amplitude/analytics-types": "0.13.0",
+    "@amplitude/experiment-react-native-client": "0.7.3",
     "@analytics/core": "0.11.1",
     "@apollo/client": "3.7.1",
     "@ethersproject/hash": "5.6.1",
@@ -180,6 +181,7 @@
     "eslint-plugin-security": "1.5.0",
     "get-graphql-schema": "2.1.2",
     "hardhat": "2.6.8",
+    "husky": "8.0.2",
     "i18next-parser": "4.7.0",
     "jest": "27.5.1",
     "jest-svg-transformer": "1.0.0",

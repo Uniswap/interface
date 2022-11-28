@@ -37,6 +37,21 @@ Follow the general [React Native setup instructions](https://reactnative.dev/doc
 2. Install yarn: `npm install --global yarn`
 3. Before installing cocoapods: install RBEnv and use it to install Ruby v3 globally. When installing cocoapods, follow the non-sudo instructions.
 
+### Pre-Commit Hooks
+
+The repository has a pre-commit hook that will run the following command before it lets you git commit:
+`yarn lint --fix && yarn i18n:extract && yarn tsc:compile && yarn test -u`
+
+(NOTE: if this ends up being more annoying than helpful we can always revert it, or move it instead to a script like yarn tidy)
+
+This pre-commit hook will make each commit take a little bit longer as these commands run, but should result in fewer tests failing on PRs and should help make sure we never accidentally commit things we didn’t mean to, or commit things that break linting or compiling, or forget to update snapshots or translation files.
+
+If you ever need to skip this command (committing something WIP or expecting tests to fail), you can append `--no-verify` to your commit command
+
+Or if you use VS Code to commit, you can skip it by enabling the setting called: `Git: Allow No Verify Commit` and then it should show up as one of the options in the commit overflow menu.
+
+And if you use GitHub Desktop to commit, you can configure it to skip hooks by running [this command](https://github.com/desktop/desktop/issues/11626#issuecomment-1275683426): `git config --global core.hooksPath /dev/null` (But keep in mind that this would be a global setting, so it would always skip.)
+
 #### Contract ABI types
 
 Before the code will compile you need to generate types for the smart contracts the wallet interacts with. Run `yarn contracts:compile`. Re-run this if the ABIs or uniswap sdk libs are ever changed.
