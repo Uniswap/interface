@@ -106,11 +106,3 @@ export const collectionName = style([
 export const icon = sprinkles({
   flexShrink: '0',
 })
-
-export const removeAssetOverlay = style([
-  sprinkles({
-    position: 'absolute',
-    right: '4',
-    top: '4',
-  }),
-])
