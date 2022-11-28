@@ -9,29 +9,42 @@ import useMachineTimeMs from 'hooks/useMachineTime'
 import JSBI from 'jsbi'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import ms from 'ms.macro'
-import { useEffect, useState } from 'react'
-import styled, { keyframes, useTheme } from 'styled-components/macro'
+import { useEffect, useMemo, useState } from 'react'
+import styled, { keyframes } from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { MouseoverTooltip } from '../Tooltip'
 import { ChainConnectivityWarning } from './ChainConnectivityWarning'
 
-const StyledPolling = styled.div<{ warning: boolean }>`
-  position: fixed;
-  display: flex;
+const StyledPolling = styled.div`
   align-items: center;
-  right: 0;
   bottom: 0;
+  color: ${({ theme }) => theme.textTertiary};
+  display: none;
   padding: 1rem;
-  color: ${({ theme, warning }) => (warning ? theme.deprecated_yellow3 : theme.deprecated_green1)};
+  position: fixed;
+  right: 0;
   transition: 250ms ease color;
 
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
-    display: none;
-  `}
+  a {
+    color: unset;
+  }
+  a:hover {
+    color: unset;
+    text-decoration: none;
+  }
+
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
+    display: flex;
+  }
 `
-const StyledPollingNumber = styled(ThemedText.DeprecatedSmall)<{ breathe: boolean; hovering: boolean }>`
+const StyledPollingBlockNumber = styled(ThemedText.DeprecatedSmall)<{
+  breathe: boolean
+  hovering: boolean
+  warning: boolean
+}>`
+  color: ${({ theme, warning }) => (warning ? theme.deprecated_yellow3 : theme.deprecated_green1)};
   transition: opacity 0.25s ease;
   opacity: ${({ breathe, hovering }) => (hovering ? 0.7 : breathe ? 1 : 0.5)};
   :hover {
@@ -106,7 +119,6 @@ export default function Polling() {
   const [isHover, setIsHover] = useState(false)
   const machineTime = useMachineTimeMs(NETWORK_HEALTH_CHECK_MS)
   const blockTime = useCurrentBlockTimestamp()
-  const theme = useTheme()
   const isNftPage = useIsNftPage()
 
   const ethGasPrice = useGasPrice()
@@ -137,46 +149,49 @@ export default function Polling() {
 
   //TODO - chainlink gas oracle is really slow. Can we get a better data source?
 
-  return isNftPage ? null : (
-    <>
-      <RowFixed>
-        <StyledPolling onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)} warning={warning}>
-          <ExternalLink href="https://etherscan.io/gastracker">
-            {priceGwei ? (
-              <RowFixed style={{ marginRight: '8px' }}>
-                <ThemedText.DeprecatedMain fontSize="11px" mr="8px" color={theme.deprecated_text3}>
-                  <MouseoverTooltip
-                    text={
-                      <Trans>
-                        The current fast gas amount for sending a transaction on L1. Gas fees are paid in
-                        Ethereum&apos;s native currency Ether (ETH) and denominated in GWEI.
-                      </Trans>
-                    }
-                  >
-                    {priceGwei.toString()} <Trans>gwei</Trans>
-                  </MouseoverTooltip>
-                </ThemedText.DeprecatedMain>
-                <StyledGasDot />
-              </RowFixed>
-            ) : null}
-          </ExternalLink>
-          <StyledPollingNumber breathe={isMounting} hovering={isHover}>
-            <ExternalLink
-              href={
-                chainId && blockNumber ? getExplorerLink(chainId, blockNumber.toString(), ExplorerDataType.BLOCK) : ''
-              }
+  const blockExternalLinkHref = useMemo(() => {
+    if (!chainId || !blockNumber) return ''
+    return getExplorerLink(chainId, blockNumber.toString(), ExplorerDataType.BLOCK)
+  }, [blockNumber, chainId])
+
+  if (isNftPage) {
+    return null
+  }
+
+  return (
+    <RowFixed>
+      <StyledPolling onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)}>
+        <ExternalLink href="https://etherscan.io/gastracker">
+          {!!priceGwei && (
+            <RowFixed style={{ marginRight: '8px' }}>
+              <ThemedText.DeprecatedMain fontSize="11px" mr="8px">
+                <MouseoverTooltip
+                  text={
+                    <Trans>
+                      The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum&apos;s
+                      native currency Ether (ETH) and denominated in GWEI.
+                    </Trans>
+                  }
+                >
+                  {priceGwei.toString()} <Trans>gwei</Trans>
+                </MouseoverTooltip>
+              </ThemedText.DeprecatedMain>
+              <StyledGasDot />
+            </RowFixed>
+          )}
+        </ExternalLink>
+        <StyledPollingBlockNumber breathe={isMounting} hovering={isHover} warning={warning}>
+          <ExternalLink href={blockExternalLinkHref}>
+            <MouseoverTooltip
+              text={<Trans>The most recent block number on this network. Prices update on every block.</Trans>}
             >
-              <MouseoverTooltip
-                text={<Trans>The most recent block number on this network. Prices update on every block.</Trans>}
-              >
-                {blockNumber}&ensp;
-              </MouseoverTooltip>
-            </ExternalLink>
-          </StyledPollingNumber>
-          <StyledPollingDot warning={warning}>{isMounting && <Spinner warning={warning} />}</StyledPollingDot>{' '}
-        </StyledPolling>
-        {warning && <ChainConnectivityWarning />}
-      </RowFixed>
-    </>
+              {blockNumber}&ensp;
+            </MouseoverTooltip>
+          </ExternalLink>
+        </StyledPollingBlockNumber>
+        <StyledPollingDot warning={warning}>{isMounting && <Spinner warning={warning} />}</StyledPollingDot>{' '}
+      </StyledPolling>
+      {warning && <ChainConnectivityWarning />}
+    </RowFixed>
   )
 }

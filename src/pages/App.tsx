@@ -252,7 +252,15 @@ export default function App() {
 
                   {nftFlag === NftVariant.Enabled && (
                     <>
-                      <Route path="/nfts" element={<NftExplore />} />
+                      <Route
+                        path="/nfts"
+                        element={
+                          // TODO: replace loading state during Apollo migration
+                          <Suspense fallback={null}>
+                            <NftExplore />
+                          </Suspense>
+                        }
+                      />
                       <Route
                         path="/nfts/asset/:contractAddress/:tokenId"
                         element={
