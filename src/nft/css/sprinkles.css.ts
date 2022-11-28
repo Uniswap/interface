@@ -23,6 +23,9 @@ const themeContractValues = {
 
     modalBackdrop: '',
 
+    searchBackground: '',
+    searchOutline: '',
+
     stateOverlayHover: '',
 
     textPrimary: '',

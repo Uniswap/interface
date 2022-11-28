@@ -87,16 +87,16 @@ const Navbar = () => {
                 <ChainSelector leftAlign={true} />
               </Box>
             )}
-            <Row gap="8" display={{ sm: 'none', lg: 'flex' }}>
+            <Row gap={{ xl: '0', xxl: '8' }} display={{ sm: 'none', lg: 'flex' }}>
               <PageTabs />
             </Row>
           </Box>
-          <Box className={styles.middleContainer}>
+          <Box className={styles.middleContainer} alignItems="flex-start">
             <SearchBar />
           </Box>
           <Box className={styles.rightSideContainer}>
             <Row gap="12">
-              <Box display={{ sm: 'flex', xl: 'none' }}>
+              <Box position="relative" display={{ sm: 'flex', xl: 'none' }}>
                 <SearchBar />
               </Box>
               <Box display={{ sm: 'none', lg: 'flex' }}>

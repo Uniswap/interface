@@ -22,6 +22,8 @@ export const darkTheme: Theme = {
 
     modalBackdrop: 'linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7))',
 
+    searchBackground: `rgba(255,255,255,0.07)`,
+    searchOutline: `rgba(255,255,255,0.07)`,
     stateOverlayHover: `rgba(153,161,189,0.08)`,
 
     textPrimary: '#FFFFFF',
