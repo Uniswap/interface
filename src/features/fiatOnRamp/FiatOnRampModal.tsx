@@ -3,7 +3,9 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import FiatOnRampModalBackground from 'src/assets/backgrounds/fiat-onramp-modal.svg'
+import InformationIcon from 'src/assets/icons/i-icon.svg'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box } from 'src/components/layout'
 import { Flex } from 'src/components/layout/Flex'
 import { Screen } from 'src/components/layout/Screen'
@@ -19,6 +21,10 @@ import { closeModal, selectFiatOnRampModalState } from 'src/features/modals/moda
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { EventName, ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
+import { openUri } from 'src/utils/linking'
+
+const MOONPAY_UNSUPPORTED_REGION_HELP_URL =
+  'https://support.uniswap.org/hc/en-us/articles/10966551707533-Why-is-MoonPay-not-supported-in-my-region'
 
 export function FiatOnRampModal() {
   const modalState = useAppSelector(selectFiatOnRampModalState)
@@ -103,7 +109,15 @@ function FiatOnRampModalInner() {
             <Flex width="100%">
               <Button
                 fill
-                CustomIcon={isLoading ? <SpinningLoader color="textOnBrightPrimary" /> : undefined}
+                CustomIcon={
+                  isLoading ? (
+                    <SpinningLoader color="textOnBrightPrimary" />
+                  ) : !eligible ? (
+                    <TouchableArea onPress={() => openUri(MOONPAY_UNSUPPORTED_REGION_HELP_URL)}>
+                      <InformationIcon color={theme.colors.white} width={theme.iconSizes.md} />
+                    </TouchableArea>
+                  ) : undefined
+                }
                 disabled={!buttonEnabled}
                 emphasis={ButtonEmphasis.Primary}
                 label={
