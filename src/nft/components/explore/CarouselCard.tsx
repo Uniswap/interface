@@ -301,7 +301,7 @@ const CarouselCardHeader = ({ collection }: { collection: TrendingCollection }) 
       <CardHeaderColumn>
         <CollectionImage src={collection.imageUrl} />
         <CollectionNameContainer>
-          <CollectionName color={theme.accentTextLightPrimary} fontWeight="500">
+          <CollectionName color="accentTextLightPrimary" fontWeight="500">
             {collection.name}
           </CollectionName>
           {collection.isVerified && (
