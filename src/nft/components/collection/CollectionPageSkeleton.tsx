@@ -14,9 +14,7 @@ const CollectionDescriptionSection = styled(Column)`
   ${ScreenBreakpointsPaddings}
 `
 
-const CollectionAssets = styled(Box)`
-  ${ScreenBreakpointsPaddings}
-`
+const CollectionAssets = styled(Box)``
 
 const StyledColumn = styled(Column)`
   width: 100%;
