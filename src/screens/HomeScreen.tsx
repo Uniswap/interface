@@ -134,7 +134,7 @@ export function HomeScreen() {
       scrollToTop: () => {
         if (currentTabIndex.value === 1 && isNftTabsAtTop.value) {
           setTabIndex(0)
-        } else if (tabIndex === 1) {
+        } else if (currentTabIndex.value === 1) {
           nftsTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
         } else {
           tokensTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
