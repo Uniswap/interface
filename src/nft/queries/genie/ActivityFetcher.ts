@@ -13,7 +13,7 @@ export const ActivityFetcher = async (
 
   const tokenId = filters?.token_id ? `&token_id=${filters?.token_id}` : ''
 
-  const url = `${process.env.REACT_APP_TEMP_API_URL}/collections/${contractAddress}/activity?limit=${
+  const url = `${process.env.REACT_APP_TEMP_API_URL}/nft/collections/${contractAddress}/activity?limit=${
     limit ? limit : '25'
   }${filterParam}${cursor ? `&cursor=${cursor}` : ''}${tokenId}`
 
