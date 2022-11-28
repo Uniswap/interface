@@ -49,23 +49,38 @@ const MIN_INPUT_FONT_SIZE = 18
 // changes from 36 then width value must be adjusted
 const MAX_CHAR_PIXEL_WIDTH = 23
 
+interface DynamicSwapPanelPaddingValues {
+  paddingBottom: keyof Theme['spacing']
+  paddingTop: keyof Theme['spacing']
+  paddingHorizontal?: keyof Theme['spacing']
+}
+
 const getSwapPanelPaddingValues = (isOutputBox: boolean, hasCurrencyValue: boolean) => {
-  if (hasCurrencyValue) {
-    return {
-      // when there is a currency value, and the box is on the top, add a bit more
-      // padding (lg) to account for the swap direction button
-      paddingBottom: isOutputBox ? 'xmd' : 'lg',
-      paddingTop: 'xmd',
-      paddingHorizontal: 'md',
-    }
+  const outerPadding: DynamicSwapPanelPaddingValues = hasCurrencyValue
+    ? {
+        // when there is a currency value, and the box is on the top, add a bit more
+        // padding (lg) to account for the swap direction button
+        paddingBottom: isOutputBox ? 'md' : 'lg',
+        paddingTop: isOutputBox ? 'lg' : 'md',
+        paddingHorizontal: 'md',
+      }
+    : {
+        // xxl to account for the direction button (on the top or the bottom, depending
+        // on whether this component is the top or bottom swap box)
+        paddingBottom: isOutputBox ? 'xl' : 'xxl',
+        paddingTop: isOutputBox ? 'xxl' : 'xl',
+        paddingHorizontal: 'md',
+      }
+
+  const innerPadding: DynamicSwapPanelPaddingValues = {
+    // when there is a currency value, and the box is on the top, add a bit more
+    // 20px is the desired amount, so we're adding outer padding and inner padding md(16px) + xxs(4px)
+    paddingBottom: isOutputBox ? 'xxs' : 'none',
+    // 20px is the desired amount, so we're adding outer padding and inner padding md(16px) + xxs(4px)
+    paddingTop: isOutputBox ? 'none' : 'xxs',
   }
-  return {
-    // xxl to account for the direction button (on the top or the bottom, depending
-    // on whether this component is the top or bottom swap box)
-    paddingBottom: isOutputBox ? 'xl' : 'xxl',
-    paddingTop: isOutputBox ? 'xxl' : 'xl',
-    paddingHorizontal: 'md',
-  }
+
+  return { outerPadding, innerPadding }
 }
 
 /** Input panel for a single side of a transfer action. */
@@ -152,21 +167,19 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
     [isOutput, currency]
   )
 
-  const { paddingBottom, paddingTop, paddingHorizontal } = paddingStyles
+  const { outerPadding, innerPadding } = paddingStyles
+  const { paddingBottom, paddingTop, paddingHorizontal } = outerPadding
+  const { paddingBottom: innerPaddingBottom, paddingTop: innerPaddingTop } = innerPadding
 
   return (
-    <Flex
-      gap="sm"
-      {...transformedProps}
-      pb={paddingBottom as keyof Theme['spacing']}
-      pt={paddingTop as keyof Theme['spacing']}
-      px={paddingHorizontal as keyof Theme['spacing']}>
+    <Flex gap="sm" {...transformedProps} pb={paddingBottom} pt={paddingTop} px={paddingHorizontal}>
       <Flex
         row
         alignItems="center"
         gap="xxxs"
         justifyContent={!currency ? 'center' : 'space-between'}
-        py="none">
+        paddingBottom={innerPaddingBottom}
+        paddingTop={innerPaddingTop}>
         {!!currency && (
           <Flex fill grow row onLayout={onLayout}>
             <AmountInput

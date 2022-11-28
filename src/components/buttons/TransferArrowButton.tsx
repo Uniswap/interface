@@ -2,6 +2,7 @@ import React, { ComponentProps } from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Arrow } from 'src/components/icons/Arrow'
+import { Box } from 'src/components/layout'
 
 const ICON_SIZE = 20
 
@@ -34,7 +35,9 @@ export function TransferArrowButton({
       p={padding}
       onPress={onPress}
       {...rest}>
-      <Arrow color={theme.colors.textSecondary} direction="s" size={ICON_SIZE} />
+      <Box alignItems="center" justifyContent="center" p="xxxs">
+        <Arrow color={theme.colors.textSecondary} direction="s" size={ICON_SIZE} />
+      </Box>
     </TouchableArea>
   )
 }

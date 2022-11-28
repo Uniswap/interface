@@ -99,7 +99,7 @@ export function TransactionReview({
     sm: 'subheadLarge',
   })
 
-  const arrowPadding = useResponsiveProp({ xs: 'xxs', sm: 'sm' })
+  const arrowPadding = useResponsiveProp({ xs: 'xxs', sm: 'xs' })
 
   const amountAndEquivalentValueGap = useResponsiveProp({ xs: 'xxs', sm: 'none' })
 

@@ -247,7 +247,11 @@ export function TransferTokenForm({
                 alignItems="center"
                 bottom={TRANSFER_DIRECTION_BUTTON_SIZE / 2}
                 position="absolute">
-                <TransferArrowButton disabled bg={recipient ? 'background2' : 'background1'} />
+                <TransferArrowButton
+                  disabled
+                  bg={recipient ? 'background2' : 'background1'}
+                  padding="xs"
+                />
               </Box>
             </Box>
           </Box>

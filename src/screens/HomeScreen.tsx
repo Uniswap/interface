@@ -168,9 +168,13 @@ export function HomeScreen() {
   const contentHeader = useMemo(() => {
     return (
       <GestureDetector gesture={panHeaderGestureAction(openSidebar)}>
-        <Flex bg="backgroundBranded" gap="xmd" pb="md" px="lg">
-          <AccountHeader />
-          <PortfolioBalance owner={activeAccount.address} />
+        <Flex bg="backgroundBranded" gap="md" pb="md" px="lg">
+          <Box pb="xxs">
+            <AccountHeader />
+          </Box>
+          <Box pb="xxs">
+            <PortfolioBalance owner={activeAccount.address} />
+          </Box>
           <QuickActions />
         </Flex>
       </GestureDetector>

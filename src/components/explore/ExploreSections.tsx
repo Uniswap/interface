@@ -195,9 +195,10 @@ export function ExploreSections({ listRef }: ExploreSectionsProps) {
             alignItems="center"
             justifyContent="space-between"
             mb="xs"
-            ml="xmd"
+            ml="md"
             mr="sm"
-            mt="md">
+            mt="md"
+            pl="xxs">
             <Text color="textSecondary" variant="subheadSmall">
               {t('Top tokens')}
             </Text>

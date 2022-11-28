@@ -149,7 +149,7 @@ export function SwapForm({
     useShouldShowNativeKeyboard()
 
   const SWAP_DIRECTION_BUTTON_SIZE = theme.iconSizes.md
-  const SWAP_DIRECTION_BUTTON_INNER_PADDING = theme.spacing.sm
+  const SWAP_DIRECTION_BUTTON_INNER_PADDING = theme.spacing.xs + theme.spacing.xxxs
   const SWAP_DIRECTION_BUTTON_BORDER_WIDTH = theme.spacing.xxs
 
   useSwapAnalytics(derivedSwapInfo)
@@ -197,16 +197,26 @@ export function SwapForm({
           </Trace>
 
           <Box zIndex="popover">
-            <Box
-              alignItems="center"
-              height={
-                SWAP_DIRECTION_BUTTON_SIZE +
-                SWAP_DIRECTION_BUTTON_INNER_PADDING +
-                SWAP_DIRECTION_BUTTON_BORDER_WIDTH
-              }
-              style={StyleSheet.absoluteFill}>
-              <Box alignItems="center" bottom={SWAP_DIRECTION_BUTTON_SIZE / 2} position="absolute">
-                <SwapArrowButton bg="background2" onPress={onSwitchCurrencies} />
+            <Box alignItems="center" height={0} style={StyleSheet.absoluteFill}>
+              <Box
+                alignItems="center"
+                bottom={
+                  -(
+                    // (icon size + (top + bottom padding) + (top + bottom border)) / 2
+                    // to center the swap direction button vertically
+                    (
+                      SWAP_DIRECTION_BUTTON_SIZE +
+                      SWAP_DIRECTION_BUTTON_INNER_PADDING * 2 +
+                      SWAP_DIRECTION_BUTTON_BORDER_WIDTH * 2
+                    )
+                  ) / 2
+                }
+                position="absolute">
+                <SwapArrowButton
+                  bg="background2"
+                  size={SWAP_DIRECTION_BUTTON_SIZE}
+                  onPress={onSwitchCurrencies}
+                />
               </Box>
             </Box>
           </Box>

@@ -12,8 +12,6 @@ export const spacing = {
   xs: 8,
   sm: 12,
   md: 16,
-  // design has been made aware of this change and we can fix it at some point in the future, but for now the design calls for 20px of y padding in the swap boxes and having those be pixel perfect feels like a higher priority than our design system values
-  xmd: 20,
   lg: 24,
   xl: 36,
   xxl: 48,
