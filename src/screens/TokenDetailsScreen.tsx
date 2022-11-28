@@ -262,8 +262,10 @@ function TokenDetails({
     navigateToSwapSell,
   ])
 
+  const pb = useResponsiveProp({ xs: 'none', sm: 'md' })
+
   return (
-    <AnimatedBox flexGrow={1} pb={useResponsiveProp({ xs: 'none', sm: 'md' })}>
+    <AnimatedBox flexGrow={1} pb={pb}>
       <HeaderScrollScreen
         contentHeader={<TokenDetailsBackButtonRow currency={currency} />}
         fixedHeader={

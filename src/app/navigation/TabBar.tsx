@@ -49,7 +49,7 @@ export const TabBarButton = memo(
         alignItems="center"
         flex={1}
         justifyContent="center"
-        mb={useResponsiveProp({ xs: 'xxs', sm: 'md' })}
+        mb={{ xs: 'xxs', sm: 'md' }}
         position="relative"
         {...rest}>
         {focused ? (
@@ -84,6 +84,13 @@ export const SwapTabBarButton = memo(({ activeScale = 0.95 }: PressableScale) =>
 
   const appTheme = useAppTheme()
   const isDarkMode = useColorScheme() === 'dark'
+
+  const buttonOffset = useResponsiveProp({
+    xs:
+      -1 *
+      (TAB_NAVIGATOR_HEIGHT_XS - SWAP_BUTTON_HEIGHT + appTheme.spacing.lg + appTheme.spacing.xxs),
+    sm: -1 * (TAB_NAVIGATOR_HEIGHT_SM - SWAP_BUTTON_HEIGHT + appTheme.spacing.xxxs),
+  })
 
   const onPress = useCallback(() => {
     selectionAsync()
@@ -124,15 +131,7 @@ export const SwapTabBarButton = memo(({ activeScale = 0.95 }: PressableScale) =>
           shadowOpacity={isDarkMode ? 0.6 : 0.4}
           shadowRadius={20}
           style={[animatedStyle]}
-          top={useResponsiveProp({
-            xs:
-              -1 *
-              (TAB_NAVIGATOR_HEIGHT_XS -
-                SWAP_BUTTON_HEIGHT +
-                appTheme.spacing.lg +
-                appTheme.spacing.xxs),
-            sm: -1 * (TAB_NAVIGATOR_HEIGHT_SM - SWAP_BUTTON_HEIGHT + appTheme.spacing.xxxs),
-          })}
+          top={buttonOffset}
           width={SWAP_BUTTON_WIDTH}>
           <Box
             borderRadius="xxxl"

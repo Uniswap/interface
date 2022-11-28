@@ -18,6 +18,7 @@ const animationStyles: ViewStyle = {
 const OnboardingAnimation = () => {
   const isDarkMode = useColorScheme() === 'dark'
   const animationRef = useRef<RiveRef>(null)
+  const fitValue = useResponsiveProp({ xs: Fit.FitWidth, sm: Fit.FitHeight })
 
   return (
     <Rive
@@ -25,7 +26,7 @@ const OnboardingAnimation = () => {
       alignment={Alignment.TopCenter}
       animationName="Intro"
       artboardName="Unified"
-      fit={useResponsiveProp({ xs: Fit.FitWidth, sm: Fit.FitHeight })}
+      fit={fitValue}
       resourceName={isDarkMode ? 'OnboardingDark' : 'OnboardingLight'}
       stateMachineName={stateMachineName}
       style={animationStyles}

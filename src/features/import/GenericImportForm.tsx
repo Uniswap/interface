@@ -12,8 +12,6 @@ import { Text } from 'src/components/Text'
 import { Theme } from 'src/styles/theme'
 import { SectionName } from '../telemetry/constants'
 
-const FONT_INPUT_SIZE = 18
-
 interface Props {
   value: string | undefined
   errorMessage: string | undefined
@@ -55,6 +53,13 @@ export function GenericImportForm({
   const [layout, setLayout] = useState<LayoutRectangle | null>()
   const textInputRef = useRef<NativeTextInput>(null)
 
+  const INPUT_FONT_SIZE = theme.textVariants.bodyLarge.fontSize
+  const INPUT_MAX_FONT_SIZE_MULTIPLIER = theme.textVariants.bodyLarge.maxFontSizeMultiplier
+
+  const minHeight = useResponsiveProp({ xs: 90, sm: 120 })
+  const px = useResponsiveProp({ xs: 'lg', sm: 'xl' })
+  const py = useResponsiveProp({ xs: 'xs', sm: 'md' })
+
   const handleBlur = () => {
     setFocused(false)
     onBlur?.()
@@ -88,9 +93,9 @@ export function GenericImportForm({
           borderWidth={1}
           flexShrink={1}
           gap="none"
-          minHeight={useResponsiveProp({ xs: 90, sm: 120 })}
-          px={useResponsiveProp({ xs: 'lg', sm: 'xl' })}
-          py={useResponsiveProp({ xs: 'xs', sm: 'md' })}
+          minHeight={minHeight}
+          px={px}
+          py={py}
           width="100%">
           {/* TODO: make Box press re-focus TextInput. Fine for now since TexInput has autoFocus */}
           <Box
@@ -105,9 +110,10 @@ export function GenericImportForm({
               autoCorrect={Boolean(autoCorrect)}
               backgroundColor="none"
               blurOnSubmit={blurOnSubmit ?? false}
-              fontSize={FONT_INPUT_SIZE}
+              fontSize={INPUT_FONT_SIZE}
               justifyContent="center"
-              lineHeight={FONT_INPUT_SIZE}
+              lineHeight={INPUT_FONT_SIZE}
+              maxFontSizeMultiplier={INPUT_MAX_FONT_SIZE_MULTIPLIER}
               multiline={true}
               numberOfLines={4}
               px="none"
@@ -130,9 +136,10 @@ export function GenericImportForm({
                 <TextInput
                   color="textSecondary"
                   editable={false}
-                  fontSize={FONT_INPUT_SIZE}
+                  fontSize={INPUT_FONT_SIZE}
                   justifyContent="center"
-                  lineHeight={FONT_INPUT_SIZE}
+                  lineHeight={INPUT_FONT_SIZE}
+                  maxFontSizeMultiplier={INPUT_MAX_FONT_SIZE_MULTIPLIER}
                   multiline={true}
                   px="none"
                   py="none"
@@ -153,6 +160,7 @@ export function GenericImportForm({
               <Text
                 adjustsFontSizeToFit
                 color="textSecondary"
+                maxFontSizeMultiplier={INPUT_MAX_FONT_SIZE_MULTIPLIER}
                 numberOfLines={1}
                 style={styles.placeholderLabelStyle}
                 variant="bodyLarge">

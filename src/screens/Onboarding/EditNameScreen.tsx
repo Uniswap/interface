@@ -158,7 +158,8 @@ function CustomizationSection({
           <TextInput
             ref={textInputRef}
             backgroundColor="none"
-            fontSize={28}
+            fontSize={theme.textVariants.headlineMedium.fontSize}
+            maxFontSizeMultiplier={theme.textVariants.headlineMedium.maxFontSizeMultiplier}
             maxLength={NICKNAME_MAX_LENGTH}
             placeholder="Nickname"
             placeholderTextColor={theme.colors.textTertiary}

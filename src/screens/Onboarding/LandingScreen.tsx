@@ -46,18 +46,23 @@ export function LandingScreen({ navigation }: Props) {
     navigation.navigate(OnboardingScreens.ImportMethod)
   }
 
+  const outerGap = useResponsiveProp({ xs: 'xxxs', sm: 'lg' })
+  const innerGap = useResponsiveProp({ xs: 'xxxs', sm: 'sm' })
+  const buttonSize = useResponsiveProp({ xs: ButtonSize.Medium, sm: ButtonSize.Large })
+  const pb = useResponsiveProp({ xs: 'sm', sm: 'none' })
+
   return (
     <Screen edges={['bottom']}>
       <Flex shrink height="100%" width="100%">
         <LandingBackground />
       </Flex>
       <Flex grow height="auto">
-        <Flex gap={useResponsiveProp({ xs: 'xxxs', sm: 'lg' })} justifyContent="flex-end">
-          <Flex gap={useResponsiveProp({ xs: 'xxxs', sm: 'sm' })} mx="md">
+        <Flex gap={outerGap} justifyContent="flex-end">
+          <Flex gap={innerGap} mx="md">
             <Button
               label={t('Create a wallet')}
               name={ElementName.OnboardingCreateWallet}
-              size={useResponsiveProp({ xs: ButtonSize.Medium, sm: ButtonSize.Large })}
+              size={buttonSize}
               onPress={onPressCreateWallet}
             />
             <TouchableArea
@@ -74,7 +79,7 @@ export function LandingScreen({ navigation }: Props) {
               </Text>
             </TouchableArea>
           </Flex>
-          <Box mx="lg" pb={useResponsiveProp({ xs: 'sm', sm: 'none' })}>
+          <Box mx="lg" pb={pb}>
             <Text color="textTertiary" mx="xxs" textAlign="center" variant="buttonLabelMicro">
               <Trans t={t}>
                 By continuing, I agree to the{' '}

@@ -1,3 +1,4 @@
+import { useResponsiveProp } from '@shopify/restyle'
 import React, { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
@@ -58,15 +59,30 @@ interface EducationRowProps {
 }
 
 function EducationRow({ icon, label, sublabel }: EducationRowProps) {
+  const theme = useAppTheme()
+  const labelMaxFontSizeMultiplier = useResponsiveProp({
+    xs: 1.2,
+    sm: theme.textVariants.bodyLarge.maxFontSizeMultiplier,
+  })
+  const sublabelMaxFontSizeMultiplier = useResponsiveProp({
+    xs: 1.3,
+    sm: theme.textVariants.bodyMicro.maxFontSizeMultiplier,
+  })
   return (
     <Flex row alignItems="center" gap="md">
       <Box>{icon}</Box>
       <Flex flex={1} gap="none">
-        <Text color="textPrimary" variant="bodyLarge">
+        <Text
+          color="textPrimary"
+          maxFontSizeMultiplier={labelMaxFontSizeMultiplier}
+          variant="bodyLarge">
           {label}
         </Text>
         <Flex pr="xl">
-          <Text color="textSecondary" variant="bodyMicro">
+          <Text
+            color="textSecondary"
+            maxFontSizeMultiplier={sublabelMaxFontSizeMultiplier}
+            variant="bodyMicro">
             {sublabel}
           </Text>
         </Flex>

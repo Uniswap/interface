@@ -8,6 +8,7 @@ import {
   useSharedValueEffect,
   useValue,
 } from '@shopify/react-native-skia'
+import { useResponsiveProp } from '@shopify/restyle'
 import { ResizeMode, Video } from 'expo-av'
 import React, { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -154,6 +155,17 @@ export function OnboardingCompleteAnimation({
   // for background glow
   const screenWidth = dimensions.fullWidth
 
+  const mt = useResponsiveProp({ xs: 'xl', sm: 'none' })
+  const finalTitleMaxFontSizeMultiplier = useResponsiveProp({
+    xs: 1.1,
+    sm: theme.textVariants.headlineSmall.maxFontSizeMultiplier,
+  })
+
+  const finalBodyMaxFontSizeMultiplier = useResponsiveProp({
+    xs: 1.1,
+    sm: theme.textVariants.bodyLarge.maxFontSizeMultiplier,
+  })
+
   return (
     <>
       <Animated.View entering={realQrTopGlowFadeIn} style={[styles.qrGlow]}>
@@ -167,7 +179,7 @@ export function OnboardingCompleteAnimation({
         </GradientBackground>
       </Animated.View>
       <Flex grow justifyContent="space-between" px="md" py="lg">
-        <Flex centered grow gap="xl" mb="sm">
+        <Flex centered grow gap="xl" mb="sm" mt={mt}>
           <Flex centered gap="sm" pt="xxl">
             <Animated.View entering={bgGlowTranslateX} style={styles.bgGlowTranslateXStyles}>
               <Canvas style={flex.fill}>
@@ -264,10 +276,17 @@ export function OnboardingCompleteAnimation({
             </Animated.View>
           </Flex>
           <Animated.View entering={textSlideUpAtEnd} style={[styles.textContainer]}>
-            <Text pb="sm" variant="headlineSmall">
+            <Text
+              maxFontSizeMultiplier={finalTitleMaxFontSizeMultiplier}
+              pb="sm"
+              variant="headlineSmall">
               {t("You're ready to go!")}
             </Text>
-            <Text color="textSecondary" textAlign="center" variant="bodyLarge">
+            <Text
+              color="textSecondary"
+              maxFontSizeMultiplier={finalBodyMaxFontSizeMultiplier}
+              textAlign="center"
+              variant="bodyLarge">
               {isNewWallet
                 ? t(
                     "You've created, nicknamed, and backed up your wallet. Now, you can explore the world of crypto."

@@ -1,8 +1,10 @@
 import { useHeaderHeight } from '@react-navigation/elements'
+import { useResponsiveProp } from '@shopify/restyle'
 import React, { PropsWithChildren } from 'react'
 import { KeyboardAvoidingView, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useAppTheme } from 'src/app/hooks'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
@@ -25,6 +27,12 @@ export function OnboardingScreen({
 }: PropsWithChildren<OnboardingScreenProps>) {
   const headerHeight = useHeaderHeight()
   const insets = useSafeAreaInsets()
+  const theme = useAppTheme()
+
+  const subtitleMaxFontScaleMultiplier = useResponsiveProp({
+    xs: 1.1,
+    sm: theme.textVariants.bodySmall.maxFontSizeMultiplier,
+  })
 
   return (
     <Screen edges={['right', 'left']} style={{ paddingTop: headerHeight }}>
@@ -35,11 +43,19 @@ export function OnboardingScreen({
         <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} pb="md" px="md">
           {/* Text content */}
           <Flex centered gap="sm" m="sm">
-            <Text paddingTop={paddingTop} textAlign="center" variant="headlineSmall">
+            <Text
+              allowFontScaling={false}
+              paddingTop={paddingTop}
+              textAlign="center"
+              variant="headlineSmall">
               {title}
             </Text>
             {subtitle ? (
-              <Text color="textSecondary" textAlign="center" variant="bodySmall">
+              <Text
+                color="textSecondary"
+                maxFontSizeMultiplier={subtitleMaxFontScaleMultiplier}
+                textAlign="center"
+                variant="bodySmall">
                 {subtitle}
               </Text>
             ) : null}

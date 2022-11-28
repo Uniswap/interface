@@ -1,6 +1,7 @@
 import { CompositeScreenProps } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { StackScreenProps } from '@react-navigation/stack'
+import { useResponsiveProp } from '@shopify/restyle'
 import React, { ReactNode, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
@@ -217,6 +218,17 @@ function BackupOptionButton({
   completed,
 }: BackupOptionButtonProps) {
   const theme = useAppTheme()
+
+  const labelMaxFontSizeMultiplier = useResponsiveProp({
+    xs: 1.2,
+    sm: theme.textVariants.subheadSmall.maxFontSizeMultiplier,
+  })
+
+  const captionMaxFontSizeMultiplier = useResponsiveProp({
+    xs: 1.2,
+    sm: theme.textVariants.bodySmall.maxFontSizeMultiplier,
+  })
+
   return (
     <Box>
       <TouchableArea
@@ -234,8 +246,13 @@ function BackupOptionButton({
           <Flex row alignItems="center" flexShrink={1} gap="sm" opacity={completed ? 0.4 : 1}>
             <Box>{icon}</Box>
             <Flex flexShrink={1} gap="xxxs">
-              <Text variant="subheadSmall">{label}</Text>
-              <Text color="textSecondary" variant="bodySmall">
+              <Text maxFontSizeMultiplier={labelMaxFontSizeMultiplier} variant="subheadSmall">
+                {label}
+              </Text>
+              <Text
+                color="textSecondary"
+                maxFontSizeMultiplier={captionMaxFontSizeMultiplier}
+                variant="bodySmall">
                 {caption}
               </Text>
             </Flex>

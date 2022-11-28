@@ -236,12 +236,11 @@ export function TransactionReview({
 }
 
 function CurrencyLogoWithLabel({ currency }: { currency: Currency }) {
+  const gap = useResponsiveProp({ xs: 'xxs', sm: 'xs' })
+  const size = useResponsiveProp({ xs: iconSizes.md, sm: iconSizes.xl })
   return (
-    <Flex centered row gap={useResponsiveProp({ xs: 'xxs', sm: 'xs' })}>
-      <CurrencyLogo
-        currency={currency}
-        size={useResponsiveProp({ xs: iconSizes.md, sm: iconSizes.xl })}
-      />
+    <Flex centered row gap={gap}>
+      <CurrencyLogo currency={currency} size={size} />
       <Text color="textPrimary" variant="buttonLabelLarge">
         {currency.symbol}
       </Text>
