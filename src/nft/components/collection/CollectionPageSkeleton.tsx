@@ -14,8 +14,6 @@ const CollectionDescriptionSection = styled(Column)`
   ${ScreenBreakpointsPaddings}
 `
 
-const CollectionAssets = styled(Box)``
-
 const StyledColumn = styled(Column)`
   width: 100%;
 `
@@ -36,9 +34,8 @@ export const CollectionPageSkeleton = () => {
         <CollectionStatsLoading isMobile={isMobile} />
         <StyledRow>{ActivitySwitcherLoading}</StyledRow>
       </CollectionDescriptionSection>
-      <CollectionAssets>
-        <CollectionNftsAndMenuLoading />
-      </CollectionAssets>
+
+      <CollectionNftsAndMenuLoading />
     </StyledColumn>
   )
 }
