@@ -16,6 +16,7 @@ import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { signTypedData } from 'src/features/walletConnect/saga'
 import { useAsyncData } from 'src/utils/hooks'
 import { logger } from 'src/utils/logger'
+import { inXMinutesUnix } from 'src/utils/time'
 
 const PERMIT_VALIDITY_TIME = 20 * 60 // 20 mins
 
@@ -44,19 +45,6 @@ export interface PermitTokenParams {
   spender: Address
   txAmount: string
 }
-
-const EIP712_DOMAIN_TYPE_NO_VERSION = [
-  { name: 'name', type: 'string' },
-  { name: 'chainId', type: 'uint256' },
-  { name: 'verifyingContract', type: 'address' },
-]
-
-const EIP712_DOMAIN_TYPE = [
-  { name: 'name', type: 'string' },
-  { name: 'version', type: 'string' },
-  { name: 'chainId', type: 'uint256' },
-  { name: 'verifyingContract', type: 'address' },
-]
 
 const EIP2612_TYPE = [
   { name: 'owner', type: 'address' },
@@ -137,7 +125,7 @@ async function getPermitSignature(
   const nonce = ((await contract.nonces(address)) as BigNumber).toNumber()
   const allowed = permitInfo.type === PermitType.ALLOWED
   const value = MaxUint256.toString()
-  const deadline = Math.round(Date.now() / 1000) + PERMIT_VALIDITY_TIME
+  const deadline = inXMinutesUnix(PERMIT_VALIDITY_TIME)
 
   const message = allowed
     ? {
@@ -168,17 +156,11 @@ async function getPermitSignature(
         chainId,
       }
 
-  const data = JSON.stringify({
-    types: {
-      EIP712Domain: permitInfo.version ? EIP712_DOMAIN_TYPE : EIP712_DOMAIN_TYPE_NO_VERSION,
-      Permit: allowed ? PERMIT_ALLOWED_TYPE : EIP2612_TYPE,
-    },
-    domain,
-    primaryType: 'Permit',
-    message,
-  })
+  const permitTypes = {
+    Permit: allowed ? PERMIT_ALLOWED_TYPE : EIP2612_TYPE,
+  }
 
-  const signature = await signTypedData(data, account, signerManager)
+  const signature = await signTypedData(domain, permitTypes, message, account, signerManager)
   const signatureData = await splitSignature(signature)
   const v = signatureData.v as 0 | 1 | 27 | 28
   const permitOptions: PermitOptions = allowed

@@ -3,7 +3,10 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { ChainId } from 'src/constants/chains'
 import { PollingInterval } from 'src/constants/misc'
+import { FEATURE_FLAGS } from 'src/features/experiments/constants'
+import { useFeatureFlag } from 'src/features/experiments/hooks'
 import { useQuoteQuery } from 'src/features/routing/routingApi'
+import { PermitSignatureInfo } from 'src/features/transactions/swap/usePermit2Signature'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { currencyAddressForSwapQuote } from 'src/utils/currencyId'
 import { useDebounceWithStatus } from 'src/utils/timing'
@@ -15,6 +18,7 @@ export interface UseQuoteProps {
   pollingInterval?: PollingInterval
   skip?: boolean
   fetchSimulatedGasLimit?: boolean
+  permitSignatureInfo?: PermitSignatureInfo | null
 }
 
 /**
@@ -22,6 +26,7 @@ export interface UseQuoteProps {
  */
 export function useRouterQuote(params: UseQuoteProps) {
   const recipient = useActiveAccount()
+  const enableUniversalRouter = useFeatureFlag(FEATURE_FLAGS.SwapPermit2, false)
 
   const {
     amountSpecified,
@@ -30,6 +35,7 @@ export function useRouterQuote(params: UseQuoteProps) {
     pollingInterval = PollingInterval.Fast,
     skip,
     fetchSimulatedGasLimit,
+    permitSignatureInfo,
   } = params
 
   const currencyIn = tradeType === TradeType.EXACT_INPUT ? amountSpecified?.currency : otherCurrency
@@ -53,6 +59,7 @@ export function useRouterQuote(params: UseQuoteProps) {
     skipQuery
       ? skipToken
       : {
+          enableUniversalRouter,
           tokenInAddress,
           tokenInChainId,
           tokenOutAddress,
@@ -61,6 +68,7 @@ export function useRouterQuote(params: UseQuoteProps) {
           type: tradeType === TradeType.EXACT_INPUT ? 'exactIn' : 'exactOut',
           recipient: recipient?.address,
           fetchSimulatedGasLimit,
+          permitSignatureInfo,
         },
     {
       pollingInterval,
@@ -84,7 +92,8 @@ export function useSimulatedGasLimit(
   amountSpecified: CurrencyAmount<Currency> | null | undefined,
   otherCurrency: Currency | null | undefined,
   tradeType: TradeType,
-  skip: boolean
+  skip: boolean,
+  permitSignatureInfo?: PermitSignatureInfo | null
 ) {
   const [debouncedAmountSpecified, isDebouncing] = useDebounceWithStatus(amountSpecified)
 
@@ -94,6 +103,7 @@ export function useSimulatedGasLimit(
     tradeType,
     skip,
     fetchSimulatedGasLimit: true,
+    permitSignatureInfo,
   })
 
   return useMemo(

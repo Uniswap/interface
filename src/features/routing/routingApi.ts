@@ -1,11 +1,13 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { TradeType } from '@uniswap/sdk-core'
+import { BigNumber } from 'ethers'
 import { config } from 'src/config'
 import { ChainId } from 'src/constants/chains'
 import { DEFAULT_DEADLINE_S, DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/misc'
 import { uniswapUrls } from 'src/constants/urls'
 import { QuoteResult, TradeQuoteResult } from 'src/features/routing/types'
 import { transformQuoteToTrade } from 'src/features/transactions/swap/routeUtils'
+import { PermitSignatureInfo } from 'src/features/transactions/swap/usePermit2Signature'
 import { serializeQueryParams } from 'src/features/transactions/swap/utils'
 import { SwapRouterNativeAssets } from 'src/utils/currencyId'
 
@@ -41,6 +43,7 @@ export const routingApi = createApi({
       {
         amount: string
         deadline?: number
+        enableUniversalRouter: boolean
         fetchSimulatedGasLimit?: boolean
         recipient?: string
         slippageTolerance?: number
@@ -49,13 +52,16 @@ export const routingApi = createApi({
         tokenOutAddress: string
         tokenOutChainId: ChainId
         type: 'exactIn' | 'exactOut'
+        permitSignatureInfo?: PermitSignatureInfo | null
       }
     >({
       query: ({
         amount,
         deadline = DEFAULT_DEADLINE_S,
+        enableUniversalRouter,
         fetchSimulatedGasLimit,
         recipient,
+        permitSignatureInfo,
         slippageTolerance = DEFAULT_SLIPPAGE_TOLERANCE,
         tokenInAddress,
         tokenInChainId,
@@ -66,6 +72,7 @@ export const routingApi = createApi({
         `quote?${serializeQueryParams({
           ...DEFAULT_QUERY_PARAMS,
           amount,
+          enableUniversalRouter,
           tokenInAddress,
           tokenInChainId,
           tokenOutAddress,
@@ -79,6 +86,24 @@ export const routingApi = createApi({
               }
             : {}),
           ...(recipient && fetchSimulatedGasLimit ? { simulateFromAddress: recipient } : {}),
+          // permit2 signature data if applicable
+          ...(permitSignatureInfo
+            ? {
+                permitSignature: permitSignatureInfo.signature,
+                permitAmount: BigNumber.from(
+                  permitSignatureInfo.permitMessage.details.amount
+                ).toString(),
+                permitExpiration: BigNumber.from(
+                  permitSignatureInfo.permitMessage.details.expiration
+                ).toString(),
+                permitSigDeadline: BigNumber.from(
+                  permitSignatureInfo.permitMessage.sigDeadline
+                ).toString(),
+                permitNonce: BigNumber.from(
+                  permitSignatureInfo.permitMessage.details.nonce
+                ).toString(),
+              }
+            : {}),
         })}`,
       transformResponse: (result: QuoteResult, _, arg): TradeQuoteResult => {
         // TODO: we shouldn't rely on any of the request arguments and transform the data with only response data

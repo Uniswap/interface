@@ -1,4 +1,4 @@
-import { CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { EMPTY_ARRAY } from 'src/constants/misc'
@@ -47,9 +47,16 @@ export function transformQuoteToTrade(
 export function computeRoutes(
   tokenInIsNative: boolean,
   tokenOutIsNative: boolean,
-  quoteResult: Pick<QuoteResult, 'route'> | undefined
-) {
-  if (!quoteResult || !quoteResult.route) return undefined
+  quoteResult?: Pick<QuoteResult, 'route'>
+):
+  | {
+      routev3: V3Route<Currency, Currency> | null
+      routev2: V2Route<Currency, Currency> | null
+      inputAmount: CurrencyAmount<Currency>
+      outputAmount: CurrencyAmount<Currency>
+    }[]
+  | undefined {
+  if (!quoteResult || !quoteResult.route) return
 
   if (quoteResult.route.length === 0) return EMPTY_ARRAY
 
@@ -88,7 +95,7 @@ export function computeRoutes(
       }
     })
   } catch (e) {
-    return undefined
+    return
   }
 }
 

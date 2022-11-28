@@ -283,7 +283,7 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
     if (method === EthMethod.PersonalSign || method === EthMethod.EthSign) {
       signature = yield* call(signMessage, params.message, account, signerManager)
     } else if (method === EthMethod.SignTypedData || method === EthMethod.SignTypedDataV4) {
-      signature = yield* call(signTypedData, params.message, account, signerManager)
+      signature = yield* call(signTypedDataMessage, params.message, account, signerManager)
     } else if (method === EthMethod.EthSignTransaction) {
       signature = yield* call(signTransaction, params.transaction, account, signerManager)
     } else if (method === EthMethod.EthSendTransaction) {
@@ -345,32 +345,44 @@ async function signTransaction(
 }
 
 export async function signTypedData(
+  domain: TypedDataDomain,
+  types: Record<string, TypedDataField[]>,
+  value: Record<string, any>,
+  account: Account,
+  signerManager: SignerManager
+) {
+  const signer = await signerManager.getSignerForAccount(account)
+
+  // https://github.com/LedgerHQ/ledgerjs/issues/86
+  // Ledger does not support signTypedData yet
+  if (signer instanceof NativeSigner || signer instanceof Wallet) {
+    const signature = await signer._signTypedData(domain, types, value)
+
+    return ensureLeading0x(signature)
+  } else {
+    logger.error('signers', 'signTypedData', 'cannot sign typed data')
+    return ''
+  }
+}
+
+export async function signTypedDataMessage(
   message: string,
   account: Account,
   signerManager: SignerManager
 ) {
   const parsedData: EthTypedMessage = JSON.parse(message)
-  const signer = await signerManager.getSignerForAccount(account)
-
   // ethers computes EIP712Domain type for you, so we should not pass it in directly
   // or else ethers will get confused about which type is the primary type
   // https://github.com/ethers-io/ethers.js/issues/687#issuecomment-714069471
   delete parsedData.types.EIP712Domain
 
-  // https://github.com/LedgerHQ/ledgerjs/issues/86
-  // Ledger does not support signTypedData yet
-  if (signer instanceof NativeSigner || signer instanceof Wallet) {
-    const signature = await signer._signTypedData(
-      parsedData.domain,
-      parsedData.types,
-      parsedData.message
-    )
-
-    return ensureLeading0x(signature)
-  } else {
-    logger.error('wcSaga', 'signTypedData', 'cannot sign typed data')
-    return ''
-  }
+  return signTypedData(
+    parsedData.domain,
+    parsedData.types,
+    parsedData.message,
+    account,
+    signerManager
+  )
 }
 
 export const { wrappedSaga: signWcRequestSaga, actions: signWcRequestActions } = createSaga(

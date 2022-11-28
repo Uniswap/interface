@@ -2,6 +2,11 @@
 version: v1.25.0
 # ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
+  'snyk:lic:npm:uniswap:universal-router:GPL-2.0':
+    - '*':
+        reason: 'Internal library, GPL library is ok'
+        expires: 2099-01-01T00:00:00.000Z
+        created: 2022-11-28T00:12:13.453Z
   'snyk:lic:npm:uniswap:v3-staker:GPL-3.0':
     - '*':
         reason: 'Internal library, GPL library is ok'
