@@ -5,7 +5,6 @@ import { CircularCloseIcon, VerifiedIcon } from 'nft/components/icons'
 import { useIsMobile, useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
 import { useState } from 'react'
-import { colors } from 'theme/colors'
 
 import { RemoveButton } from '../BagRow'
 import * as styles from '../BagRow.css'
