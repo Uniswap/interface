@@ -42,7 +42,7 @@ const ProfileAssetRow = ({ asset }: { asset: WalletAsset }) => {
         </Row>
         <Row overflow="hidden" whiteSpace="nowrap" gap="2">
           <Box className={styles.collectionName}>{asset.asset_contract.name}</Box>
-          {asset.collectionIsVerified && <VerifiedIcon className={styles.icon} fill={colors.magentaVibrant} />}
+          {asset.collectionIsVerified && <VerifiedIcon className={styles.icon} />}
         </Row>
       </Column>
       {hovered && !isMobile && (
