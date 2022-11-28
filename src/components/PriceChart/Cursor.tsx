@@ -6,7 +6,6 @@ import {
   runOnJS,
   SharedValue,
   useAnimatedStyle,
-  useSharedValue,
   withSpring,
   withTiming,
 } from 'react-native-reanimated'
@@ -38,24 +37,10 @@ interface CursorProps {
 }
 
 export const Cursor = ({ graphs, index, isActive, translation, cursorColor }: CursorProps) => {
-  const isLongPressActive = useSharedValue(false)
   const theme = useAppTheme()
 
-  const longPressGesture = Gesture.LongPress()
-    .onStart(() => {
-      isLongPressActive.value = true
-    })
-    .minDuration(100)
-
   const panGesture = Gesture.Pan()
-    .manualActivation(true)
-    .onTouchesMove((_e, state) => {
-      if (isLongPressActive.value) {
-        state.activate()
-      } else {
-        state.fail()
-      }
-    })
+    .activeOffsetX([-10, 10])
     .onStart(() => {
       isActive.value = true
       runOnJS(impactAsync)(ImpactFeedbackStyle.Light)
@@ -74,7 +59,6 @@ export const Cursor = ({ graphs, index, isActive, translation, cursorColor }: Cu
       translation.y.value = getYForX(graphs[index.value].data.path, translation.x.value) || 0
     })
     .onFinalize(() => (isActive.value = false))
-    .simultaneousWithExternalGesture(longPressGesture)
 
   const containerStyles = useAnimatedStyle(() => ({
     opacity: withTiming(isActive.value ? 1 : 0),
@@ -95,11 +79,9 @@ export const Cursor = ({ graphs, index, isActive, translation, cursorColor }: Cu
     }
   })
 
-  const composedGesture = Gesture.Race(panGesture, longPressGesture)
-
   return (
     <Box flex={1} style={StyleSheet.absoluteFill}>
-      <GestureDetector gesture={composedGesture}>
+      <GestureDetector gesture={panGesture}>
         <AnimatedBox style={[StyleSheet.absoluteFill, containerStyles]}>
           {/* Vertical line */}
           <AnimatedBox
