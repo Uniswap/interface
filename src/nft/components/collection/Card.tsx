@@ -494,6 +494,7 @@ const TruncatedTextRow = styled(Row)`
   text-overflow: ellipsis;
   display: block;
   overflow: hidden;
+  flex: 0.98;
 `
 
 interface ProfileNftDetailsProps {
@@ -517,7 +518,7 @@ const ProfileNftDetails = ({ asset, hideDetails }: ProfileNftDetailsProps) => {
           <TruncatedTextRow className={bodySmall} style={{ color: themeVars.colors.textSecondary }}>
             {!!asset.asset_contract.name && <span>{asset.asset_contract.name}</span>}
           </TruncatedTextRow>
-          {asset.collectionIsVerified && <VerifiedIcon height="16px" width="16px" fill={colors.magentaVibrant} />}
+          {asset.collectionIsVerified && <VerifiedIcon height="18px" width="18px" fill={colors.magentaVibrant} />}
         </PrimaryDetails>
         {!hideDetails && <DetailsLink />}
       </PrimaryRow>
