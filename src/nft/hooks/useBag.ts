@@ -134,6 +134,7 @@ export const useBag = create<BagState>()(
             bagManuallyClosed: itemsCopy.length === 0 ? false : bagManuallyClosed,
             itemsInBag: itemsCopy,
             usedSweep: fromSweep,
+            bagExpanded: itemsCopy.length !== 0,
           }
         })
       },
@@ -161,6 +162,7 @@ export const useBag = create<BagState>()(
               didOpenUnavailableAssets: false,
               isLocked: false,
               bagManuallyClosed: false,
+              bagExpanded: false,
             }
           else return {}
         }),
