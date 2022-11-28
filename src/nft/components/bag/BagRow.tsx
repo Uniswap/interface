@@ -119,7 +119,7 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
     <Link to={getAssetHref(asset)} style={{ textDecoration: 'none' }}>
       <Row className={styles.bagRow} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
         <Box position="relative" display="flex">
-          <RemoveAssetButton onClick={handleRemoveClick} />
+          {showRemove && isMobile && <RemoveAssetButton onClick={handleRemoveClick} />}
           {!noImageAvailable && (
             <Box
               as="img"
