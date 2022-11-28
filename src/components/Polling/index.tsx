@@ -154,42 +154,44 @@ export default function Polling() {
     return getExplorerLink(chainId, blockNumber.toString(), ExplorerDataType.BLOCK)
   }, [blockNumber, chainId])
 
-  return isNftPage ? null : (
-    <>
-      <RowFixed>
-        <StyledPolling onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)}>
-          <ExternalLink href="https://etherscan.io/gastracker">
-            {priceGwei && (
-              <RowFixed style={{ marginRight: '8px' }}>
-                <ThemedText.DeprecatedMain fontSize="11px" mr="8px">
-                  <MouseoverTooltip
-                    text={
-                      <Trans>
-                        The current fast gas amount for sending a transaction on L1. Gas fees are paid in
-                        Ethereum&apos;s native currency Ether (ETH) and denominated in GWEI.
-                      </Trans>
-                    }
-                  >
-                    {priceGwei.toString()} <Trans>gwei</Trans>
-                  </MouseoverTooltip>
-                </ThemedText.DeprecatedMain>
-                <StyledGasDot />
-              </RowFixed>
-            )}
+  if (isNftPage) {
+    return null
+  }
+
+  return (
+    <RowFixed>
+      <StyledPolling onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)}>
+        <ExternalLink href="https://etherscan.io/gastracker">
+          {!!priceGwei && (
+            <RowFixed style={{ marginRight: '8px' }}>
+              <ThemedText.DeprecatedMain fontSize="11px" mr="8px">
+                <MouseoverTooltip
+                  text={
+                    <Trans>
+                      The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum&apos;s
+                      native currency Ether (ETH) and denominated in GWEI.
+                    </Trans>
+                  }
+                >
+                  {priceGwei.toString()} <Trans>gwei</Trans>
+                </MouseoverTooltip>
+              </ThemedText.DeprecatedMain>
+              <StyledGasDot />
+            </RowFixed>
+          )}
+        </ExternalLink>
+        <StyledPollingBlockNumber breathe={isMounting} hovering={isHover} warning={warning}>
+          <ExternalLink href={blockExternalLinkHref}>
+            <MouseoverTooltip
+              text={<Trans>The most recent block number on this network. Prices update on every block.</Trans>}
+            >
+              {blockNumber}&ensp;
+            </MouseoverTooltip>
           </ExternalLink>
-          <StyledPollingBlockNumber breathe={isMounting} hovering={isHover} warning={warning}>
-            <ExternalLink href={blockExternalLinkHref}>
-              <MouseoverTooltip
-                text={<Trans>The most recent block number on this network. Prices update on every block.</Trans>}
-              >
-                {blockNumber}&ensp;
-              </MouseoverTooltip>
-            </ExternalLink>
-          </StyledPollingBlockNumber>
-          <StyledPollingDot warning={warning}>{isMounting && <Spinner warning={warning} />}</StyledPollingDot>{' '}
-        </StyledPolling>
-        {warning && <ChainConnectivityWarning />}
-      </RowFixed>
-    </>
+        </StyledPollingBlockNumber>
+        <StyledPollingDot warning={warning}>{isMounting && <Spinner warning={warning} />}</StyledPollingDot>{' '}
+      </StyledPolling>
+      {warning && <ChainConnectivityWarning />}
+    </RowFixed>
   )
 }
