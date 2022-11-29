@@ -392,7 +392,6 @@ export const bodySmall = style([
 
 export const allUnavailableAssets = style([
   sprinkles({
-    height: 'full',
     width: 'full',
   }),
   {
