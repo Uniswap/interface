@@ -296,8 +296,8 @@ export const NotForSale = ({ collectionName, collectionUrl }: { collectionName: 
   )
 }
 
-const SubHeader = styled(ThemedText.SubHeader)`
-  color: ${({ theme }) => theme.textPrimary};
+const SubHeader = styled(ThemedText.SubHeader)<{ color: string }>`
+  color: ${({ theme, color }) => color ?? theme.textPrimary};
 `
 
 export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps) => {
