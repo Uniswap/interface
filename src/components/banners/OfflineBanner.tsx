@@ -17,7 +17,8 @@ export function OfflineBanner() {
   const modalStates = useAppSelector(selectModalsState)
   const isModalOpen = Object.values(modalStates).some((state) => state.isOpen)
 
-  const showBanner = !netInfo.isConnected && finishedOnboarding && !isModalOpen
+  // Needs to explicity check for false since `netInfo.isConnected` may be null
+  const showBanner = netInfo.isConnected === false && finishedOnboarding && !isModalOpen
 
   if (__DEV__) {
     // do not check in Dev mode since the simulator
