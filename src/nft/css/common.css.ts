@@ -89,7 +89,7 @@ export const magicalGradient = style({
     '&::before': {
       content: '',
       position: 'absolute',
-      inset: 0,
+      inset: '-1px',
       background: 'linear-gradient(91.46deg, #4673FA 0%, #9646FA 100.13%) border-box',
       borderColor: 'transparent',
       WebkitMask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);',
