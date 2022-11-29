@@ -17,6 +17,7 @@ import { AppState } from '../index'
 import {
   addSerializedPair,
   addSerializedToken,
+  updateFiatOnrampAcknowledged,
   updateHideClosedPositions,
   updateHideNFTWelcomeModal,
   updateShowNftPromoBanner,
@@ -25,7 +26,7 @@ import {
   updateUserDeadline,
   updateUserExpertMode,
   updateUserLocale,
-  updateUserSlippageTolerance,
+  updateUserSlippageTolerance
 } from './reducer'
 import { SerializedPair, SerializedToken } from './types'
 
@@ -105,6 +106,19 @@ export function useExpertModeManager(): [boolean, () => void] {
   return [expertMode, toggleSetExpertMode]
 }
 
+export function useFiatOnrampAck(): [boolean, (b?: boolean) => void] {
+  const dispatch = useAppDispatch()
+  const fiatOnrampAcknowledged = useAppSelector((state) => state.user.fiatOnrampAcknowledged)
+
+  const toggleSetExpertMode = useCallback(
+    (b = true) => {
+      dispatch(updateFiatOnrampAcknowledged(b))
+    },
+    [dispatch]
+  )
+
+  return [fiatOnrampAcknowledged, toggleSetExpertMode]
+}
 export function useHideNFTWelcomeModal(): [boolean | undefined, () => void] {
   const dispatch = useAppDispatch()
   const hideNFTWelcomeModal = useAppSelector((state) => state.user.hideNFTWelcomeModal)
