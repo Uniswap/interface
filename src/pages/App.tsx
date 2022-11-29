@@ -79,7 +79,7 @@ const BodyWrapper = styled.div`
   `};
 `
 
-const HeaderWrapper = styled.div<{ transparent?: boolean; }>`
+const HeaderWrapper = styled.div<{ transparent?: boolean }>`
   ${flexRowNoWrap};
   background-color: ${({ theme, transparent }) => !transparent && theme.backgroundSurface};
   border-bottom: ${({ theme, transparent }) => !transparent && `1px solid ${theme.backgroundOutline}`};
