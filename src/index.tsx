@@ -39,11 +39,11 @@ import getLibrary from './utils/getLibrary'
 
 dayjs.extend(utc)
 
-if (ENV_LEVEL > ENV_TYPE.LOCAL) {
-  mixpanel.init(MIXPANEL_PROJECT_TOKEN, {
-    debug: ENV_LEVEL < ENV_TYPE.PROD,
-  })
+mixpanel.init(MIXPANEL_PROJECT_TOKEN, {
+  debug: ENV_LEVEL < ENV_TYPE.PROD,
+})
 
+if (ENV_LEVEL > ENV_TYPE.LOCAL) {
   datadogRum.init({
     applicationId: '5bd0c243-6141-4bab-be21-5dac9b9efa9f',
     clientToken: 'pub9163f29b2cdb31314b89ae232af37d5a',

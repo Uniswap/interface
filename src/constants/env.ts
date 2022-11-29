@@ -15,12 +15,14 @@ const required = (envKey: string): string => {
   return envValue
 }
 
-const validate = <T extends string>(envKey: string, validateValues: T[]): T => {
-  const key = 'REACT_APP_' + envKey
-  const envValue = required(envKey)
-  invariant(validateValues.includes(envValue as any), `env ${key} is incorrect`)
-  return envValue as T
-}
+// uncomment when needed
+// example of use: https://github.com/KyberNetwork/kyberswap-interface/blob/f7a8c56fc06fa75514b8ac59ff53e838e27cf4c5/src/constants/env.ts#L18
+// const validate = <T extends string>(envKey: string, validateValues: T[]): T => {
+//   const key = 'REACT_APP_' + envKey
+//   const envValue = required(envKey)
+//   invariant(validateValues.includes(envValue as any), `env ${key} is incorrect`)
+//   return envValue as T
+// }
 
 const ENV = {
   GOOGLE_RECAPTCHA_KEY: required('GOOGLE_RECAPTCHA_KEY'),

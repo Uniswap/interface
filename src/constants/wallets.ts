@@ -2,12 +2,10 @@ import { BaseMessageSignerWalletAdapter, WalletReadyState } from '@solana/wallet
 import {
   BraveWalletAdapter,
   Coin98WalletAdapter,
-  CoinbaseWalletAdapter, // LedgerWalletAdapter,
+  CoinbaseWalletAdapter,
   PhantomWalletAdapter,
   SlopeWalletAdapter,
   SolflareWalletAdapter,
-  SolletExtensionWalletAdapter,
-  TrustWalletAdapter,
 } from '@solana/wallet-adapter-wallets'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { isMobile } from 'react-device-detect'
@@ -19,7 +17,6 @@ import METAMASK from 'assets/wallets-connect/metamask.svg'
 import PHANTOM from 'assets/wallets-connect/phantom.svg'
 import SLOPE from 'assets/wallets-connect/slope.svg'
 import SOLFLARE from 'assets/wallets-connect/solflare.svg'
-import SOLLET from 'assets/wallets-connect/sollet.png'
 import TRUSTWALLET from 'assets/wallets-connect/trust-wallet.svg'
 import WALLETCONNECT from 'assets/wallets-connect/wallet-connect.svg'
 import {
@@ -39,10 +36,7 @@ const coinbaseAdapter = new CoinbaseWalletAdapter()
 const coin98Adapter = new Coin98WalletAdapter()
 const solflareAdapter = new SolflareWalletAdapter({ network: SelectedNetwork })
 const phantomAdapter = new PhantomWalletAdapter({ network: SelectedNetwork })
-const solletAdapter = new SolletExtensionWalletAdapter()
 const slopeAdapter = new SlopeWalletAdapter({ network: SelectedNetwork })
-const trustWalletAdapter = new TrustWalletAdapter()
-// const ledgerAdapter = new LedgerWalletAdapter()
 
 const detectMetamask = (): WalletReadyState => {
   if (!window.ethereum) return WalletReadyState.Unsupported
@@ -162,13 +156,6 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     installLink: 'https://walletconnect.com/',
     readyState: () => WalletReadyState.Installed,
   } as EVMWalletInfo,
-  // LEDGER: {
-  //   adapter: ledgerAdapter,
-  //   name: 'Ledger',
-  //   iconName: 'ledger.svg',
-  //   installLink: ledgerAdapter.url,
-  //   readyStateSolana: ledgerAdapter.readyState,
-  // } as SolanaWalletInfo,
   SOLFLARE: {
     adapter: solflareAdapter,
     name: 'Solflare',
@@ -185,14 +172,6 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     installLink: phantomAdapter.url,
     readyStateSolana: detectPhantomWallet,
   } as SolanaWalletInfo,
-  SOLLET: {
-    adapter: solletAdapter,
-    name: 'Sollet',
-    icon: SOLLET,
-    iconLight: SOLLET,
-    installLink: solletAdapter.url,
-    readyStateSolana: () => (isMobile ? WalletReadyState.Unsupported : solletAdapter.readyState),
-  } as SolanaWalletInfo,
   SLOPE: {
     adapter: slopeAdapter,
     name: 'Slope Wallet',
@@ -203,14 +182,12 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   } as SolanaWalletInfo,
   TRUST_WALLET: {
     connector: trustWalletConnector,
-    adapter: trustWalletAdapter,
     name: 'Trust Wallet',
     icon: TRUSTWALLET,
     iconLight: TRUSTWALLET,
     installLink: 'https://trustwallet.com/vi/deeplink/',
     readyState: detectTrustWallet,
-    readyStateSolana: () => trustWalletAdapter.readyState,
-  } as EVMWalletInfo & SolanaWalletInfo,
+  } as EVMWalletInfo,
 } as const
 
 export type SUPPORTED_WALLET = keyof typeof SUPPORTED_WALLETS
