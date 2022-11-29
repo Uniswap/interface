@@ -166,17 +166,8 @@ const Banner = () => {
       ) : null}
       <BannerMainArea>
         <HeaderContainer>
-          {isMobile ? (
-            <>
-              Better prices. <br />
-              Every listing.
-            </>
-          ) : (
-            <>
-              Better prices. <br />
-              More listings.
-            </>
-          )}
+          Better prices. <br />
+          More listings.
         </HeaderContainer>
         {collections ? (
           <Carousel activeIndex={activeCollectionIdx} toggleNextSlide={onToggleNextSlide}>
