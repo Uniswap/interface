@@ -304,7 +304,7 @@ export default function Pool() {
                 ) : (
                   <ErrorContainer>
                     <ThemedText.DeprecatedBody color={theme.deprecated_text3} textAlign="center">
-                      <InboxIcon strokeWidth={1} />
+                      <InboxIcon strokeWidth={1} style={{ marginTop: '2em' }} />
                       <div>
                         <Trans>Your active V3 liquidity positions will appear here.</Trans>
                       </div>
@@ -324,7 +324,10 @@ export default function Pool() {
                         properties={{ received_swap_quote: false }}
                         element={ElementName.CONNECT_WALLET_BUTTON}
                       >
-                        <ButtonPrimary style={{ marginTop: '2em', padding: '8px 16px' }} onClick={toggleWalletModal}>
+                        <ButtonPrimary
+                          style={{ marginTop: '2em', marginBottom: '2em', padding: '8px 16px' }}
+                          onClick={toggleWalletModal}
+                        >
                           <Trans>Connect a wallet</Trans>
                         </ButtonPrimary>
                       </TraceEvent>

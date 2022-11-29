@@ -97,18 +97,3 @@ export const activeMenuItem = style([
     background: 'backgroundFloating',
   }),
 ])
-
-export const mobileBottomBar = style([
-  sprinkles({
-    position: 'fixed',
-    display: { sm: 'flex', lg: 'none' },
-    bottom: '0',
-    right: '0',
-    left: '0',
-    justifyContent: 'space-between',
-    paddingY: '4',
-    paddingX: '8',
-    height: '56',
-    background: 'backgroundSurface',
-  }),
-])
