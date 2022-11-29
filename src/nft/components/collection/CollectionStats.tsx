@@ -2,7 +2,6 @@ import clsx from 'clsx'
 import { getDeltaArrow } from 'components/Tokens/TokenDetails/PriceChart'
 import { Box, BoxProps } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
-import { Marquee } from 'nft/components/layout/Marquee'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { GenieCollection, TokenType } from 'nft/types'
@@ -255,14 +254,15 @@ const StatsItem = ({ children, label, shouldHide }: { children: ReactNode; label
 }
 
 const statsLoadingSkeleton = (isMobile: boolean) =>
-  new Array(5).fill(null).map((_, index) => (
+  new Array(isMobile ? 3 : 5).fill(null).map((_, index) => (
     <Box
       display="flex"
-      flexDirection={isMobile ? 'row' : 'column'}
+      flexDirection="column"
       alignItems="baseline"
       gap="2"
       height="min"
       key={`statsLoadingSkeleton-key-${index}`}
+      marginBottom={isMobile ? '12' : '0'}
     >
       <div className={styles.statsLabelLoading} />
       <span className={styles.statsValueLoading} />
@@ -334,7 +334,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
 
 export const CollectionStatsLoading = ({ isMobile }: { isMobile: boolean }) => {
   return (
-    <Column marginTop={isMobile ? '20' : '0'} position="relative" width="full">
+    <Column position="relative" width="full">
       <Box className={styles.collectionImageIsLoadingBackground} />
       <Box className={styles.collectionImageIsLoading} />
       <Box className={styles.statsText}>
@@ -342,19 +342,18 @@ export const CollectionStatsLoading = ({ isMobile }: { isMobile: boolean }) => {
         {!isMobile && (
           <>
             <CollectionDescriptionLoading />
-            <Row gap={{ sm: '20', md: '60' }} marginTop="20">
-              {statsLoadingSkeleton(isMobile)}
+            <Row gap="60" marginTop="20">
+              {statsLoadingSkeleton(false)}
             </Row>
           </>
         )}
       </Box>
       {isMobile && (
         <>
-          <Marquee>
-            <Row gap={{ sm: '20', md: '60' }} marginX="6" marginY="28">
-              {statsLoadingSkeleton(isMobile)}
-            </Row>
-          </Marquee>
+          <CollectionDescriptionLoading />
+          <Row gap="20" marginTop="20">
+            {statsLoadingSkeleton(true)}
+          </Row>
         </>
       )}
     </Column>
