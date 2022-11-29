@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, useColorScheme } from 'react-native'
 import Svg, { Defs, RadialGradient as RadialGradientSVG, Rect, Stop } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
 import Eye from 'src/assets/icons/eye.svg'
@@ -37,7 +37,11 @@ export function AccountIcon({
   // Color for gradient background.
   const { gradientStart: uniconColor } = useUniconColors(address)
 
-  const iconEyeSize = size * (2 / 5)
+  const iconPadding = FixedTheme.spacing.xxs
+  const iconEyeContainerSize = size * 0.45
+  const iconEyeSize = iconEyeContainerSize - iconPadding
+
+  const isDarkMode = useColorScheme() === 'dark'
 
   return (
     <Box
@@ -65,13 +69,21 @@ export function AccountIcon({
       {showViewOnlyBadge && (
         <Box
           alignContent="center"
-          backgroundColor="background0"
+          alignItems="center"
+          backgroundColor={isDarkMode ? 'background3' : 'background1'}
           borderRadius="full"
           bottom={0}
+          height={iconEyeContainerSize}
           justifyContent="center"
+          p="xxs"
           position="absolute"
-          right={0}>
-          <Eye color={theme.colors.textPrimary} height={iconEyeSize} width={iconEyeSize} />
+          right={0}
+          shadowColor="black"
+          shadowOffset={{ width: 0, height: 0 }}
+          shadowOpacity={0.2}
+          shadowRadius={10}
+          width={iconEyeContainerSize}>
+          <Eye color={theme.colors.textPrimary} width={iconEyeSize} />
         </Box>
       )}
     </Box>
