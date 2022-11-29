@@ -32,7 +32,7 @@ const ExploreContainer = styled.div`
 `
 export const TitleContainer = styled.div`
   margin-bottom: 32px;
-  max-width: 960px;
+  max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   margin-left: auto;
   margin-right: auto;
   display: flex;

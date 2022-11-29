@@ -127,7 +127,7 @@ export const ClearAllButton = styled.button`
   background: none;
 `
 
-const InfiniteScrollWrapper = styled.div`
+export const InfiniteScrollWrapper = styled.div`
   ${InfiniteScrollWrapperCss}
 `
 
@@ -168,9 +168,9 @@ const MarketNameWrapper = styled(Row)`
   gap: 8px;
 `
 
-const LoadingAssets = () => (
+export const LoadingAssets = ({ count }: { count?: number }) => (
   <>
-    {Array.from(Array(ASSET_PAGE_SIZE), (_, index) => (
+    {Array.from(Array(count ?? ASSET_PAGE_SIZE), (_, index) => (
       <CollectionAssetLoading key={index} />
     ))}
   </>

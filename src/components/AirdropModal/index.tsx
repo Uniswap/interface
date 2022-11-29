@@ -234,6 +234,8 @@ const AirdropModal = () => {
           .connect(provider?.getSigner())
           .functions.claim(claim.index, account, claim?.amount, claim?.merkleProof)
 
+        await response.wait()
+
         setHash(response.hash)
         setIsSubmitting(false)
         setIsClaimed(true)

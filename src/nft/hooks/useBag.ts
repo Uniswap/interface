@@ -69,7 +69,6 @@ export const useBag = create<BagState>()(
       itemsInBag: [],
       setItemsInBag: (items) =>
         set(({ bagManuallyClosed }) => ({
-          bagManuallyClosed: items.length === 0 ? false : bagManuallyClosed,
           itemsInBag: items,
         })),
       totalEthPrice: BigNumber.from(0),
@@ -131,7 +130,6 @@ export const useBag = create<BagState>()(
               )
           )
           return {
-            bagManuallyClosed: itemsCopy.length === 0 ? false : bagManuallyClosed,
             itemsInBag: itemsCopy,
             usedSweep: fromSweep,
             bagExpanded: itemsCopy.length !== 0,

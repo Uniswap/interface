@@ -168,6 +168,7 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
   const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
   const itemsInBag = useBag((state) => state.itemsInBag)
   const lockSweepItems = useBag((state) => state.lockSweepItems)
+  const setBagExpanded = useBag((state) => state.setBagExpanded)
 
   const traits = useCollectionFilters((state) => state.traits)
   const markets = useCollectionFilters((state) => state.markets)
@@ -279,6 +280,8 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
   const handleSweep = (value: number) => {
     if (sortedAssets) {
       if (isItemsToggled) {
+        if (sweepItemsInBag.length === 0 && value > 0) setBagExpanded({ bagExpanded: true })
+
         if (sweepItemsInBag.length < value) {
           addAssetsToBag(sortedAssets.slice(sweepItemsInBag.length, value), true)
         } else {
@@ -302,6 +305,7 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
           }
 
           if (wishAssets.length > 0) {
+            if (sweepItemsInBag.length === 0) setBagExpanded({ bagExpanded: true })
             addAssetsToBag(wishAssets, true)
           }
         } else {

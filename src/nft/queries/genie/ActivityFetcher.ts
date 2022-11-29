@@ -8,7 +8,7 @@ export const ActivityFetcher = async (
 ): Promise<ActivityEventResponse> => {
   const filterParam =
     filters && filters.eventTypes
-      ? `&${filters.eventTypes?.map((eventType) => `event_types[]=${eventType}`).join('&')}`
+      ? `&event_types=${filters.eventTypes?.map((eventType) => `${eventType}`).join(',')}`
       : ''
 
   const tokenId = filters?.token_id ? `&token_id=${filters?.token_id}` : ''
