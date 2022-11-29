@@ -33,10 +33,10 @@ const PriceChangeContainer = styled.div`
   align-items: center;
 `
 
-const PriceChangeText = styled.span<{ delta: number }>`
+const PriceChangeText = styled.span<{ isNegative: boolean }>`
   font-size: 14px;
   line-height: 20px;
-  color: ${({ theme, delta }) => (delta >= 0 ? theme.accentSuccess : theme.accentFailure)};
+  color: ${({ theme, isNegative }) => (isNegative ? theme.accentFailure : theme.accentSuccess)};
 `
 
 const ArrowCell = styled.span`
@@ -218,7 +218,9 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
         {token.price24hChange && (
           <PriceChangeContainer>
             <ArrowCell>{arrow}</ArrowCell>
-            <PriceChangeText delta={token.price24hChange}>{Math.abs(token.price24hChange).toFixed(2)}%</PriceChangeText>
+            <PriceChangeText isNegative={token.price24hChange < 0}>
+              {Math.abs(token.price24hChange).toFixed(2)}%
+            </PriceChangeText>
           </PriceChangeContainer>
         )}
       </Column>
