@@ -119,7 +119,7 @@ const ContentNotAvailable = styled.div`
   line-height: 20px;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;<
+  border-radius: 12px;
   width: 450px;
   height: 450px;
 `

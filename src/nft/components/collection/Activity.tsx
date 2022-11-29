@@ -25,7 +25,9 @@ enum ColumnHeaders {
   To = 'To',
 }
 
-const FilterBox = styled(Box)`
+const FilterBox = styled.div<{ backgroundColor: string }>`
+  display: flex;
+  background: ${({ backgroundColor }) => backgroundColor};
   ${OpacityHoverState};
 `
 
@@ -129,9 +131,7 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
       return (
         <FilterBox
           className={styles.filter}
-          style={{
-            background: isActive ? activeBackgroundColor : themeVars.colors.backgroundInteractive,
-          }}
+          backgroundColor={isActive ? activeBackgroundColor : themeVars.colors.backgroundInteractive}
           onClick={() => filtersDispatch({ eventType })}
         >
           {eventType.charAt(0) + eventType.slice(1).toLowerCase() + 's'}
