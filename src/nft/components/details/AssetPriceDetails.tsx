@@ -236,7 +236,7 @@ export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
         {listing ? (
           <>
             <ThemedText.MediumHeader fontSize="28px" lineHeight="36px">
-              {formatEthPrice(asset.priceInfo.ETHPrice)}
+              {formatEthPrice(asset.priceInfo.ETHPrice)} ETH
             </ThemedText.MediumHeader>
             {USDPrice && (
               <ThemedText.BodySecondary lineHeight="24px">
@@ -295,10 +295,6 @@ export const NotForSale = ({ collectionName, collectionUrl }: { collectionName: 
     </BestPriceContainer>
   )
 }
-
-const SubHeader = styled(ThemedText.SubHeader)`
-  color: ${({ theme }) => theme.textPrimary};
-`
 
 export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps) => {
   const { account } = useWeb3React()
@@ -388,9 +384,9 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
                   }
                 }}
               >
-                <SubHeader color="white" lineHeight="20px">
+                <ThemedText.SubHeader color="white" lineHeight="20px">
                   <span>{assetInBag ? 'Remove' : 'Add to Bag'}</span>
-                </SubHeader>
+                </ThemedText.SubHeader>
               </BuyNowButton>
             </BuyNowButtonContainer>
           </div>

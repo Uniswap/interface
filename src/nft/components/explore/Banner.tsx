@@ -1,5 +1,4 @@
 import { useLoadCollectionQuery } from 'graphql/data/nft/Collection'
-import { useIsMobile } from 'nft/hooks'
 import { fetchTrendingCollections } from 'nft/queries'
 import { TimePeriod } from 'nft/types'
 import { calculateCardIndex } from 'nft/utils'
@@ -16,11 +15,12 @@ const BannerContainer = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
-  padding-top: 32px;
+  padding-top: 22px;
   position: relative;
+  max-width: 1200px;
 
   @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    padding: 32px 16px 0 16px;
+    padding: 32px 16px;
   }
 `
 
@@ -72,8 +72,6 @@ const HeaderContainer = styled.div`
   font-weight: 500;
   font-size: 72px;
   line-height: 88px;
-  justify-content: start;
-  align-items: start;
   align-self: center;
   flex-shrink: 0;
   padding-bottom: 32px;
@@ -91,12 +89,24 @@ const HeaderContainer = styled.div`
   }
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    font-size: 20px;
-    line-height: 28px;
-    justify-content: center;
-    align-items: center;
-    padding-top: 0px;
-    padding-bottom: 0px;
+    line-height: 43px;
+    text-align: center;
+    padding-bottom: 16px;
+
+    br {
+      display: none;
+    }
+  }
+
+  /* Custom breakpoint to split into two lines on smaller screens */
+  @media only screen and (max-width: 550px) {
+    font-size: 28px;
+    line-height: 34px;
+    padding-bottom: 0;
+
+    br {
+      display: unset;
+    }
   }
 `
 
@@ -106,7 +116,6 @@ const TRENDING_COLLECTION_SIZE = 5
 
 const Banner = () => {
   const navigate = useNavigate()
-  const isMobile = useIsMobile()
 
   const { data } = useQuery(
     ['trendingCollections'],
@@ -155,7 +164,7 @@ const Banner = () => {
       ) : null}
       <BannerMainArea>
         <HeaderContainer>
-          Better prices. {!isMobile && <br />}
+          Better prices. <br />
           More listings.
         </HeaderContainer>
         {collections ? (

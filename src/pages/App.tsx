@@ -8,6 +8,7 @@ import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
 import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
 import { ProfilePageLoadingSkeleton } from 'nft/components/profile/view/ProfilePageLoadingSkeleton'
+import { useBag } from 'nft/hooks'
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -78,16 +79,13 @@ const BodyWrapper = styled.div`
   `};
 `
 
-const HeaderWrapper = styled.div<{ scrolledState?: boolean }>`
+const HeaderWrapper = styled.div<{ transparent?: boolean }>`
   ${flexRowNoWrap};
-  background-color: ${({ theme, scrolledState }) => scrolledState && theme.backgroundSurface};
-  border-bottom: ${({ theme, scrolledState }) => scrolledState && `1px solid ${theme.backgroundOutline}`};
+  background-color: ${({ theme, transparent }) => !transparent && theme.backgroundSurface};
+  border-bottom: ${({ theme, transparent }) => !transparent && `1px solid ${theme.backgroundOutline}`};
   width: 100%;
   justify-content: space-between;
   position: fixed;
-  transition: ${({ theme }) =>
-    `background-color ${theme.transition.duration.fast} ease-in-out,
-    border-width ${theme.transition.duration.fast} ease-in-out`};
   top: 0;
   z-index: ${Z_INDEX.sticky};
 `
@@ -145,14 +143,6 @@ export default function App() {
 
   useAnalyticsReporter()
 
-  const scrollListener = (e: Event) => {
-    if (window.scrollY > 0) {
-      setScrolledState(true)
-    } else {
-      setScrolledState(false)
-    }
-  }
-
   useEffect(() => {
     window.scrollTo(0, 0)
     setScrolledState(false)
@@ -179,8 +169,16 @@ export default function App() {
   }, [isExpertMode])
 
   useEffect(() => {
+    const scrollListener = (e: Event) => {
+      setScrolledState(window.scrollY > 0)
+    }
     window.addEventListener('scroll', scrollListener)
+    return () => window.removeEventListener('scroll', scrollListener)
   }, [])
+
+  const isBagExpanded = useBag((state) => state.bagExpanded)
+
+  const isHeaderTransparent = !scrolledState && !isBagExpanded
 
   return (
     <ErrorBoundary>
@@ -188,7 +186,7 @@ export default function App() {
       <ApeModeQueryParamReader />
       <AppWrapper>
         <Trace page={currentPage}>
-          <HeaderWrapper scrolledState={scrolledState}>
+          <HeaderWrapper transparent={isHeaderTransparent}>
             <NavBar />
           </HeaderWrapper>
           <BodyWrapper>

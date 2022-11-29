@@ -1,12 +1,12 @@
 import { ButtonEmphasis, ButtonSize } from 'components/Button'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
-import { CircularCloseIcon, VerifiedIcon } from 'nft/components/icons'
+import { VerifiedIcon } from 'nft/components/icons'
 import { useIsMobile, useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
 import { useState } from 'react'
 
-import { RemoveButton } from '../BagRow'
+import { RemoveAssetButton, RemoveButton } from '../BagRow'
 import * as styles from '../BagRow.css'
 
 const ProfileAssetRow = ({ asset }: { asset: WalletAsset }) => {
@@ -24,15 +24,7 @@ const ProfileAssetRow = ({ asset }: { asset: WalletAsset }) => {
   return (
     <Row className={styles.bagRow} onMouseEnter={handleHover} onMouseLeave={handleHover}>
       <Box position="relative" display="flex">
-        <Box
-          display={isMobile ? 'block' : 'none'}
-          className={styles.removeAssetOverlay}
-          onClick={handleRemoveAsset}
-          transition="250"
-          zIndex="1"
-        >
-          <CircularCloseIcon />
-        </Box>
+        {isMobile && <RemoveAssetButton onClick={handleRemoveAsset} />}
         <img src={asset.smallImageUrl} alt={asset.name} className={styles.bagRowImage} />
       </Box>
       <Column overflow="hidden" width="full" color="textPrimary">
