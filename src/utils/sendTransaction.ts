@@ -169,7 +169,7 @@ export async function sendSolanaTransactions(
           type: TRANSACTION_TYPE.SETUP,
           hash: setupHash,
           firstTxHash: txHashs[0],
-          summary: 'for swapping ' + swapData.summary,
+          summary: 'swap ' + swapData.summary,
           arbitrary: {
             index: 1,
             total: signedTxs.length,

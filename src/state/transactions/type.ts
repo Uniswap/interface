@@ -48,5 +48,5 @@ export enum TRANSACTION_TYPE {
   DEPOSIT = 'Deposit',
   WITHDRAW = 'Withdraw',
   FORCE_WITHDRAW = 'ForceWithdraw',
-  SETUP = 'Set Up',
+  SETUP = 'Setting up your swap',
 }

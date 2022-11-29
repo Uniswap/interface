@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { load, save } from 'redux-localstorage-simple'
 
-import { TAG } from 'constants/env'
+import { ENV_LEVEL, ENV_TYPE } from 'constants/env'
 
 import application from './application/reducer'
 import bridge from './bridge/reducer'
@@ -26,7 +26,7 @@ import user from './user/reducer'
 import vesting from './vesting/reducer'
 
 const PERSISTED_KEYS: string[] = ['user', 'transactions']
-TAG && PERSISTED_KEYS.push('customizeDexes')
+ENV_LEVEL < ENV_TYPE.PROD && PERSISTED_KEYS.push('customizeDexes')
 
 const store = configureStore({
   devTools: process.env.NODE_ENV !== 'production',

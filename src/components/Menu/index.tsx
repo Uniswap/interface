@@ -28,7 +28,7 @@ import DiscoverIcon from 'components/Icons/DiscoverIcon'
 import Faucet from 'components/Icons/Faucet'
 import Loader from 'components/Loader'
 import MenuFlyout from 'components/MenuFlyout'
-import { MAINNET_ENV, TAG } from 'constants/env'
+import { ENV_LEVEL, ENV_TYPE, TAG } from 'constants/env'
 import { AGGREGATOR_ANALYTICS_URL, DMM_ANALYTICS_URL } from 'constants/index'
 import { FAUCET_NETWORKS } from 'constants/networks'
 import { EVMNetworkInfo } from 'constants/networks/type'
@@ -309,7 +309,7 @@ export default function Menu() {
           <FileText size={14} />
           <Trans>Terms</Trans>
         </ExternalNavMenuItem>
-        {MAINNET_ENV !== 'production' && (
+        {ENV_LEVEL < ENV_TYPE.PROD && (
           <NavMenuItem to="/swap-legacy" onClick={toggle}>
             <Triangle size={14} />
             <Trans>Swap Legacy</Trans>

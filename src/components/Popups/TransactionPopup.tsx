@@ -136,9 +136,10 @@ export const SUMMARY: {
     failure: () => 'Error Force withdrawing ',
   },
   [TRANSACTION_TYPE.SETUP]: {
-    success: (summary, isShort) => 'Set up ' + (isShort ? '' : summary),
-    pending: (summary, isShort) => 'Setting up ' + (isShort ? '' : summary),
-    failure: (summary, isShort) => 'Error Set up  ' + (isShort ? '' : summary),
+    success: (summary, isShort) => (isShort ? 'Setting up transaction' : 'Setting up some stuff to ' + summary),
+    pending: (summary, isShort) => (isShort ? 'Setting up transaction' : 'Setting up some stuff to ' + summary),
+    failure: (summary, isShort) =>
+      isShort ? 'Setting up transaction' : 'There was an issue while setting up your swap. Please try again.',
   },
 }
 

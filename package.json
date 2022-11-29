@@ -44,9 +44,9 @@
     "@kyberswap/ks-sdk-core": "^1.0.0-rc.1",
     "@kyberswap/ks-sdk-elastic": "^1.0.0-rc.1",
     "@kyberswap/ks-sdk-solana": "^1.0.0-rc.1",
-    "@lingui/loader": "^3.14.0",
-    "@lingui/macro": "^3.14.0",
-    "@lingui/react": "^3.14.0",
+    "@lingui/loader": "~3.14.0",
+    "@lingui/macro": "~3.14.0",
+    "@lingui/react": "~3.14.0",
     "@popperjs/core": "^2.11.6",
     "@project-serum/anchor": "^0.25.0",
     "@project-serum/serum": "^0.13.65",
@@ -119,7 +119,7 @@
     "workbox-routing": "^6.5.4"
   },
   "devDependencies": {
-    "@lingui/cli": "^3.14.0",
+    "@lingui/cli": "~3.14.0",
     "@trivago/prettier-plugin-sort-imports": "^3.3.1",
     "@types/aos": "^3.0.4",
     "@types/big.js": "^6.0.0",

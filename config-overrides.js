@@ -28,7 +28,7 @@ module.exports = function override(config, env) {
           name: 'ethers',
           chunks: 'all',
         },
-        vendor: {
+        solana: {
           test: /[\\/]node_modules[\\/](@solana)[\\/]/,
           name: 'solana',
           chunks: 'all',
