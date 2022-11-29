@@ -117,7 +117,6 @@ const TRENDING_COLLECTION_SIZE = 5
 
 const Banner = () => {
   const navigate = useNavigate()
-  const isMobile = useIsMobile()
 
   const { data } = useQuery(
     ['trendingCollections'],
