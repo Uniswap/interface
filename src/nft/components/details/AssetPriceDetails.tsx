@@ -236,7 +236,7 @@ export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
         {listing ? (
           <>
             <ThemedText.MediumHeader fontSize="28px" lineHeight="36px">
-              {formatEthPrice(asset.priceInfo.ETHPrice)}
+              {formatEthPrice(asset.priceInfo.ETHPrice)} ETH
             </ThemedText.MediumHeader>
             {USDPrice && (
               <ThemedText.BodySecondary lineHeight="24px">
