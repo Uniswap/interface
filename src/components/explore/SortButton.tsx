@@ -75,7 +75,7 @@ function _SortButton({ orderBy }: FilterGroupProps) {
         )}
         <Text color="textSecondary" variant="buttonLabelSmall">
           {orderBy === TokenSortableField.Volume
-            ? t('Volume')
+            ? t('Volume (24H)')
             : orderBy === TokenSortableField.TotalValueLocked
             ? t('TVL')
             : getTokensOrderByLabel(orderBy, t)}

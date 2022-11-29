@@ -104,11 +104,13 @@ export const TokenItem = memo(
     const getMetadataSubtitle = () => {
       switch (metadataDisplayType) {
         case TokenMetadataDisplayType.MarketCap:
-          return formatNumber(marketCap, NumberType.FiatTokenStats)
+          return t('{{num}} MCap', { num: formatNumber(marketCap, NumberType.FiatTokenStats) })
         case TokenMetadataDisplayType.Volume:
-          return formatNumber(volume24h, NumberType.FiatTokenStats)
+          return t('{{num}} Vol', { num: formatNumber(volume24h, NumberType.FiatTokenStats) })
         case TokenMetadataDisplayType.TVL:
-          return formatNumber(totalValueLocked, NumberType.FiatTokenStats)
+          return t('{{num}} TVL', {
+            num: formatNumber(totalValueLocked, NumberType.FiatTokenStats),
+          })
         case TokenMetadataDisplayType.Symbol:
           return symbol
       }

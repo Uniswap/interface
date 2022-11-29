@@ -74,13 +74,13 @@ export function getTokensOrderByLabel(orderBy: TokensOrderBy, t: TFunction) {
     case TokenSortableField.MarketCap:
       return t('Market cap')
     case TokenSortableField.Volume:
-      return t('Uniswap volume')
+      return t('Uniswap volume (24H)')
     case TokenSortableField.TotalValueLocked:
       return t('Uniswap TVL')
     case ClientTokensOrderBy.PriceChangePercentage24hDesc:
-      return t('Price increase')
+      return t('Price increase (24H)')
     case ClientTokensOrderBy.PriceChangePercentage24hAsc:
-      return t('Price decrease')
+      return t('Price decrease (24H)')
     default:
       throw new Error('Unexpected order by value ' + orderBy)
   }
