@@ -81,7 +81,7 @@ const BodyWrapper = styled.div`
 
 const HeaderWrapper = styled.div<{ transparent?: boolean; disableTransition?: boolean }>`
   ${flexRowNoWrap};
-  background-color: ${({ theme, transparent }) => (transparent ? 'transparent' : theme.backgroundSurface)};
+  background-color: ${({ theme, transparent }) => !transparent && theme.backgroundSurface};
   border-bottom: ${({ theme, transparent }) => !transparent && `1px solid ${theme.backgroundOutline}`};
   width: 100%;
   justify-content: space-between;
