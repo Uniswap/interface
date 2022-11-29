@@ -1,15 +1,16 @@
+import { ButtonEmphasis } from 'src/components/buttons/Button'
 import { Theme } from 'src/styles/theme'
 
 export enum WarningSeverity {
   None = 0,
   Medium = 5,
   High = 10,
-  Critical = 15,
 }
 
 export type WarningColor = {
   text: keyof Theme['colors']
   background: keyof Theme['colors']
+  buttonEmphasis: ButtonEmphasis
 }
 
 export enum WarningAction {

@@ -109,7 +109,7 @@ export default function WarningModal({
           {confirmText && (
             <Button
               fill
-              emphasis={ButtonEmphasis.Detrimental}
+              emphasis={alertColor.buttonEmphasis}
               label={confirmText}
               name={ElementName.Confirm}
               onPress={onPressConfirm}
@@ -127,20 +127,21 @@ export const getAlertColor = (severity?: WarningSeverity): WarningColor => {
       return {
         text: 'textSecondary',
         background: 'textSecondary',
+        buttonEmphasis: ButtonEmphasis.Secondary,
       }
     case WarningSeverity.High:
       return {
         text: 'accentCritical',
         background: 'accentCriticalSoft',
+        buttonEmphasis: ButtonEmphasis.Detrimental,
       }
     case WarningSeverity.Medium:
-      return { text: 'accentWarning', background: 'accentWarningSoft' }
-    case WarningSeverity.Critical:
       return {
         text: 'accentWarning',
         background: 'accentWarningSoft',
+        buttonEmphasis: ButtonEmphasis.Warning,
       }
     default:
-      return { text: 'textSecondary', background: 'none' }
+      return { text: 'textSecondary', background: 'none', buttonEmphasis: ButtonEmphasis.Tertiary }
   }
 }

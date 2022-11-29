@@ -37,7 +37,6 @@ export function useTokenSafetyLevelColors(safetyLevel: NullUndefined<SafetyLevel
     case SafetyLevel.StrongWarning:
       return 'accentCritical'
     case SafetyLevel.Blocked:
-      return 'textSecondary'
     default:
       return 'textSecondary'
   }
