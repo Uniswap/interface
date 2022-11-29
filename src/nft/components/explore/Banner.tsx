@@ -1,5 +1,4 @@
 import { useLoadCollectionQuery } from 'graphql/data/nft/Collection'
-import { useIsMobile } from 'nft/hooks'
 import { fetchTrendingCollections } from 'nft/queries'
 import { TimePeriod } from 'nft/types'
 import { calculateCardIndex } from 'nft/utils'
