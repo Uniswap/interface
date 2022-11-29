@@ -29,6 +29,8 @@ export const darkTheme: Theme = {
     textPrimary: '#FFFFFF',
     textSecondary: vars.color.gray300,
     textTertiary: vars.color.gray500,
+
+    dropShadow: `0px 4px 16px rgba(76, 130, 251, 0.4)`,
   },
   shadows: {
     menu: '0px 10px 30px rgba(0, 0, 0, 0.1)',
