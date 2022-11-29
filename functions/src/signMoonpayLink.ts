@@ -22,8 +22,10 @@ export const signMoonpayLink = functions
     const { MOONPAY_URL, MOONPAY_API_KEY, MOONPAY_SECRET_KEY } = process.env
 
     const {
+      baseCurrencyAmount,
       colorCode,
       currencyCode,
+      defaultCurrencyCode,
       externalTransactionId,
       externalCustomerId,
       redirectURL,
@@ -34,8 +36,10 @@ export const signMoonpayLink = functions
     const url = `${MOONPAY_URL}?`.concat(
       serializeQueryParams({
         apiKey: MOONPAY_API_KEY ?? '',
+        baseCurrencyAmount,
         colorCode,
         currencyCode,
+        defaultCurrencyCode,
         externalTransactionId,
         externalCustomerId,
         redirectURL,

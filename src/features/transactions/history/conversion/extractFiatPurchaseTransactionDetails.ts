@@ -38,7 +38,7 @@ function parseFiatPurchaseTransaction(
 
   return {
     type: TransactionType.FiatPurchase,
-    explorerUrl: transaction.redirectUrl,
+    explorerUrl: transaction.returnUrl, // Moonpay's transaction tracker page
     outputTokenAddress: outputTokenAddress,
     outputCurrencyAmountFormatted:
       getValidQuote?.quoteCurrencyAmount ?? transaction.quoteCurrencyAmount ?? 0,

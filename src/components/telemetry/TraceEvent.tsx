@@ -74,6 +74,7 @@ function getEventHandlers(
       child.props[event]?.apply(child, eventHandlerArgs)
 
       // augment handler with analytics logging
+      // NOTE: on type error, ensure `EventProperties` contains a record for new `EventName`
       sendAnalyticsEvent(eventName, {
         ...consumedProps,
         ...properties,

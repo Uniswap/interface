@@ -31,12 +31,18 @@ export function useSortedTransactions(address: Address | null) {
   }, [transactions])
 }
 
-export function usePendingTransactions(address: Address | null) {
+export function usePendingTransactions(
+  address: Address | null,
+  ignoreTransactionTypes = [TransactionType.FiatPurchase]
+) {
   const transactions = useSelectAddressTransactions(address)
   return useMemo(() => {
     if (!transactions) return
-    return transactions.filter((tx) => tx.status === TransactionStatus.Pending)
-  }, [transactions])
+    return transactions.filter(
+      (tx) =>
+        tx.status === TransactionStatus.Pending && ignoreTransactionTypes.includes(tx.typeInfo.type)
+    )
+  }, [ignoreTransactionTypes, transactions])
 }
 
 // sorted oldest to newest

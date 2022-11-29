@@ -8,7 +8,7 @@ import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { openModal } from 'src/features/modals/modalSlice'
-import { ModalName } from 'src/features/telemetry/constants'
+import { EventName, ModalName } from 'src/features/telemetry/constants'
 
 export function FiatOnRampBanner(props: ComponentProps<typeof Box>) {
   const { t } = useTranslation()
@@ -22,6 +22,7 @@ export function FiatOnRampBanner(props: ComponentProps<typeof Box>) {
   return (
     <TouchableArea
       borderRadius="md"
+      eventName={EventName.FiatOnRampBannerPressed}
       overflow="hidden"
       p="sm"
       style={styles.container}

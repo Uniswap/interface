@@ -32,6 +32,7 @@ function renderOptionItem(label: string, textColorOverride?: keyof Theme['colors
 
 interface TransactionActionModalProps {
   onExplore: () => void
+  onViewMoonpay?: () => void
   onClose: () => void
   onCancel: () => void
   msTimestampAdded: number
@@ -45,6 +46,7 @@ export default function TransactionActionsModal({
   onCancel,
   onClose,
   onExplore,
+  onViewMoonpay,
   showCancelButton,
   transactionDetails,
 }: TransactionActionModalProps) {
@@ -58,30 +60,53 @@ export default function TransactionActionsModal({
   }, [onClose])
 
   const options = useMemo(() => {
-    const isFiatOnRampTransaction =
-      transactionDetails.typeInfo.type === TransactionType.FiatPurchase
+    const isFiatOnRampTransction = transactionDetails.typeInfo.type === TransactionType.FiatPurchase
+
+    const maybeViewOnMoonpayOption = onViewMoonpay
+      ? [
+          {
+            key: ElementName.MoonpayExplorerView,
+            onPress: onViewMoonpay,
+            render: renderOptionItem(t('View on Moonpay')),
+          },
+        ]
+      : []
+
+    const maybeViewOnEtherscanOption = transactionDetails.hash
+      ? [
+          {
+            key: ElementName.EtherscanView,
+            onPress: onExplore,
+            render: renderOptionItem(t('View on Etherscan')),
+          },
+        ]
+      : []
 
     const transactionActionOptions: MenuItemProp[] = [
-      {
-        key: isFiatOnRampTransaction ? ElementName.MoonpayExplorerView : ElementName.EtherscanView,
-        onPress: onExplore,
-        render: isFiatOnRampTransaction
-          ? renderOptionItem(t('View on Moonpay'))
-          : renderOptionItem(t('View on Etherscan')),
-      },
+      ...maybeViewOnMoonpayOption,
+      ...maybeViewOnEtherscanOption,
       {
         key: ElementName.Copy,
         onPress: () => {
-          setClipboard(transactionDetails.hash)
+          // for fiat onramp, pending: id==externalTxId, complete: id==hash
+          // else, id==hash
+          setClipboard(transactionDetails.id)
           dispatch(pushNotification({ type: AppNotificationType.Copied }))
           handleClose()
         },
-        render: renderOptionItem(t('Copy transaction ID')),
+        render: isFiatOnRampTransction
+          ? renderOptionItem(t('Copy Moonpay transaction ID'))
+          : renderOptionItem(t('Copy transaction ID')),
       },
       {
         key: ElementName.GetHelp,
         onPress: () => {
-          isFiatOnRampTransaction ? openMoonpayHelpLink() : openUniswapHelpLink()
+          if (isFiatOnRampTransction) {
+            openMoonpayHelpLink()
+          } else {
+            openUniswapHelpLink()
+          }
+
           handleClose()
         },
         render: renderOptionItem(t('Get help')),
@@ -96,13 +121,15 @@ export default function TransactionActionsModal({
     }
     return transactionActionOptions
   }, [
-    transactionDetails.typeInfo.type,
+    transactionDetails.typeInfo,
     transactionDetails.hash,
-    onExplore,
+    transactionDetails.id,
+    onViewMoonpay,
     t,
+    onExplore,
     showCancelButton,
-    handleClose,
     dispatch,
+    handleClose,
     onCancel,
   ])
 

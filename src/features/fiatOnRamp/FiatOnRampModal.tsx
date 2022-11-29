@@ -18,8 +18,7 @@ import {
 } from 'src/features/fiatOnRamp/api'
 import { useFiatOnRampTransactionCreator } from 'src/features/fiatOnRamp/hooks'
 import { closeModal, selectFiatOnRampModalState } from 'src/features/modals/modalSlice'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { EventName, ModalName } from 'src/features/telemetry/constants'
+import { ElementName, EventName, ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { openUri } from 'src/utils/linking'
 
@@ -80,8 +79,6 @@ function FiatOnRampModalInner() {
     }
     WebBrowser.openBrowserAsync(fiatOnRampHostUrl, webBrowserOptions)
 
-    sendAnalyticsEvent(EventName.FiatOnRampWidgetOpened, { externalTransactionId })
-
     dispatchAddTransaction()
     onClose()
   }
@@ -120,6 +117,7 @@ function FiatOnRampModalInner() {
                 }
                 disabled={!buttonEnabled}
                 emphasis={ButtonEmphasis.Primary}
+                eventName={EventName.FiatOnRampWidgetOpened}
                 label={
                   isLoading
                     ? undefined
@@ -127,6 +125,8 @@ function FiatOnRampModalInner() {
                     ? t('Buy Crypto')
                     : t('Not supported in your region')
                 }
+                name={ElementName.FiatOnRampWidgetButton}
+                properties={{ externalTransactionId }}
                 size={ButtonSize.Medium}
                 onPress={onPress}
               />

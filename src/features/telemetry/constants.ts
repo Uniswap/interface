@@ -10,8 +10,9 @@ export enum EventName {
   // https://github.com/Uniswap/analytics-events/blob/main/src/primitives.ts
   AppLoaded = 'app-loaded',
   // General fiat onramp events like in-app buttons and modals
-  FiatOnRampWidgetOpened = 'Fiat Onramp Widget Opened',
-  FiatOnRampRegionCheck = 'Fiat Onramp Widget Check',
+  FiatOnRampBannerPressed = 'Fiat OnRamp Banner Pressed',
+  FiatOnRampWidgetOpened = 'Fiat OnRamp Widget Opened',
+  FiatOnRampRegionCheck = 'Fiat OnRamp Widget Check',
   Impression = 'impression',
   MarkMeasure = 'mark-measure',
   Moonpay = 'Moonpay', // Moonpay-specific events
@@ -106,6 +107,7 @@ export const enum ElementName {
   Enable = 'enable',
   EtherscanView = 'etherscan-view',
   Favorite = 'favorite',
+  FiatOnRampWidgetButton = 'fiat-on-ramp-widget-button',
   GetHelp = 'get-help',
   ImportAccount = 'import',
   Manage = 'manage',

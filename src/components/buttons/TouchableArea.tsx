@@ -56,7 +56,7 @@ export function TouchableArea({
     ...rest,
   }
 
-  if (!elementName || !eventName) {
+  if (!eventName) {
     return <TouchableBox {...baseProps}>{children}</TouchableBox>
   }
 

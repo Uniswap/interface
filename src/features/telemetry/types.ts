@@ -48,6 +48,7 @@ export type EventProperties = {
   [EventName.FiatOnRampRegionCheck]: {
     status: 'failed' | 'success' | 'unknown'
   } & BaseEventProperty
+  [EventName.FiatOnRampBannerPressed]: BaseEventProperty
   [EventName.FiatOnRampWidgetOpened]: BaseEventProperty & { externalTransactionId: string }
   [EventName.Impression]: BaseEventProperty
   [EventName.MarkMeasure]: BaseEventProperty

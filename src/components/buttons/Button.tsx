@@ -42,20 +42,23 @@ type ButtonProps = {
 } & TelemetryEventProps
 
 const _Button = ({
-  name,
-  allowFontScaling,
-  label,
-  IconName,
   CustomIcon,
-  size = ButtonSize.Medium,
-  emphasis = ButtonEmphasis.Primary,
+  IconName,
+  allowFontScaling,
   disabled = false,
+  emphasis = ButtonEmphasis.Primary,
+  eventName,
+  events,
   fill,
   hapticFeedback = true,
+  properties,
   hapticStyle,
+  label,
+  name,
+  onLongPress,
   onPress,
   onPressIn,
-  onLongPress,
+  size = ButtonSize.Medium,
 }: ButtonProps) => {
   const theme = useAppTheme()
 
@@ -99,9 +102,12 @@ const _Button = ({
       borderRadius={borderRadius}
       borderWidth={1}
       disabled={disabled}
+      eventName={eventName}
+      events={events}
       flex={fill ? 1 : undefined}
       name={name}
       opacity={!disabled ? 1 : 0.4}
+      properties={properties}
       testID={name}
       onLongPress={onLongPress}
       onPress={onPressHandler}

@@ -62,6 +62,7 @@ export const fiatOnRampApi = createApi({
         url: config.moonpayWidgetApiUrl,
         body: {
           ...rest,
+          defaultCurrencyCode: 'eth',
           redirectURL: `${uniswapUrls.appBaseUrl}/?screen=transaction&fiatOnRamp=true&userAddress=${ownerAddress}`,
           walletAddresses: JSON.stringify(
             supportedCurrencyCodes.reduce<Record<string, Address>>((acc, currencyCode: string) => {
