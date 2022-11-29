@@ -16,8 +16,9 @@ export const modalContainer = style([
     paddingX: '12',
   }),
   {
-    alignItems: 'center',
+    flexDirection: 'column',
     justifyContent: 'center',
+    gap: '24px',
     '@media': {
       'screen and (min-width: 656px)': {
         marginLeft: '-320px',
@@ -142,7 +143,7 @@ export const successAssetsContainer = style([
 
 export const successAssetImage = style([
   sprinkles({
-    borderRadius: '20',
+    borderRadius: '12',
     flexShrink: '0',
   }),
   {
@@ -171,7 +172,7 @@ export const overflowFade = style({
 export const totalEthCost = style([
   sprinkles({
     fontSize: '14',
-    color: 'textPrimary',
+    color: 'textSecondary',
     marginTop: '1',
     marginBottom: '0',
   }),

@@ -17,7 +17,6 @@ import {
   formatUSDPriceWithCommas,
   getSuccessfulImageSize,
   parseTransactionResponse,
-  shortenTxHash,
 } from 'nft/utils'
 import { formatAssetEventProperties } from 'nft/utils/formatEventProperties'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -138,8 +137,8 @@ const TxCompleteModal = () => {
                       <Box>{formatEthPrice(totalPurchaseValue.toString())} ETH</Box>
                     </Row>
                     <a href={txHashUrl} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
-                      <Box color="textPrimary" fontWeight="normal">
-                        {shortenTxHash(txHash, 2, 2)}
+                      <Box color="textSecondary" fontWeight="normal">
+                        View on Etherscan
                       </Box>
                     </a>
                   </Box>
@@ -203,8 +202,13 @@ const TxCompleteModal = () => {
                           width={{ sm: 'half', md: 'auto' }}
                         >
                           <a href={txHashUrl} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
-                            <Box fontWeight="normal" marginTop="16" className={styles.totalEthCost}>
-                              {shortenTxHash(txHash, 2, 2)}
+                            <Box
+                              fontWeight="normal"
+                              marginTop="16"
+                              color="textSecondary"
+                              className={styles.totalEthCost}
+                            >
+                              View on Etherscan
                             </Box>
                           </a>
                         </Box>
@@ -315,7 +319,7 @@ const TxCompleteModal = () => {
                     <p className={styles.totalUsdRefund}>{formatUSDPriceWithCommas(totalUSDRefund)}</p>
                     <Box className={styles.walletAddress} marginLeft="auto" marginRight="0">
                       <a href={txHashUrl} target="_blank" rel="noreferrer">
-                        <Box className={styles.addressHash}>{shortenTxHash(txHash, 2, 2)}</Box>
+                        <Box className={styles.addressHash}>View on Etherscan</Box>
                       </a>
                     </Box>
                     <p className={styles.totalEthCost}>
