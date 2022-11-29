@@ -556,7 +556,7 @@ fragment TopTokenParts on Token {
   project {
     id
     logoUrl
-    markets(currencies: USD) {
+    markets(currencies: [USD]) {
       id
       price {
         id
@@ -600,7 +600,7 @@ query FavoriteTokenCard($favoriteTokenContract: ContractInput!) {
     project {
       id
       logoUrl
-      markets(currencies: USD) {
+      markets(currencies: [USD]) {
         id
         price {
           id

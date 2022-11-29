@@ -990,7 +990,7 @@ export const TopTokenPartsFragmentDoc = gql`
   project {
     id
     logoUrl
-    markets(currencies: USD) {
+    markets(currencies: [USD]) {
       id
       price {
         id
@@ -2041,7 +2041,7 @@ export const FavoriteTokenCardDocument = gql`
     project {
       id
       logoUrl
-      markets(currencies: USD) {
+      markets(currencies: [USD]) {
         id
         price {
           id
