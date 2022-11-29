@@ -173,15 +173,6 @@ export const filter = style([
   },
 ])
 
-export const activeFilter = style([
-  filter,
-  sprinkles({
-    borderWidth: '1px',
-    borderStyle: 'solid',
-    borderColor: 'genieBlue',
-  }),
-])
-
 export const marketplaceIcon = style([
   sprinkles({
     width: '16',
