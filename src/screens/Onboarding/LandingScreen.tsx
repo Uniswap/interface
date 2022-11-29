@@ -6,21 +6,17 @@ import { useColorScheme } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Button, ButtonSize } from 'src/components/buttons/Button'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { LandingBackground } from 'src/components/gradients/LandingBackground'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { uniswapUrls } from 'src/constants/urls'
-import { ImportType } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
-import { createAccountActions } from 'src/features/wallet/createAccountSaga'
 import {
   PendingAccountActions,
   pendingAccountActions,
 } from 'src/features/wallet/pendingAcccountsSaga'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { colors } from 'src/styles/color'
 import { openUri } from 'src/utils/linking'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Landing>
@@ -31,23 +27,12 @@ export function LandingScreen({ navigation }: Props) {
   const { t } = useTranslation()
   const isDarkMode = useColorScheme() === 'dark'
 
-  const onPressCreateWallet = () => {
-    // Clear any existing pending accounts first.
-    dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
-    dispatch(createAccountActions.trigger())
-    navigation.navigate({
-      name: OnboardingScreens.EditName,
-      params: { importType: ImportType.CreateNew },
-      merge: true,
-    })
-  }
-  const onPressImportWallet = () => {
+  const onPressGetStarted = () => {
     dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
     navigation.navigate(OnboardingScreens.ImportMethod)
   }
 
-  const outerGap = useResponsiveProp({ xs: 'xxxs', sm: 'lg' })
-  const innerGap = useResponsiveProp({ xs: 'xxxs', sm: 'sm' })
+  const outerGap = useResponsiveProp({ xs: 'sm', sm: 'lg' })
   const buttonSize = useResponsiveProp({ xs: ButtonSize.Medium, sm: ButtonSize.Large })
   const pb = useResponsiveProp({ xs: 'sm', sm: 'none' })
 
@@ -58,26 +43,13 @@ export function LandingScreen({ navigation }: Props) {
       </Flex>
       <Flex grow height="auto">
         <Flex gap={outerGap} justifyContent="flex-end">
-          <Flex gap={innerGap} mx="md">
+          <Flex mx="md">
             <Button
-              label={t('Create a wallet')}
-              name={ElementName.OnboardingCreateWallet}
+              label={t('Get started')}
+              name={ElementName.GetStarted}
               size={buttonSize}
-              onPress={onPressCreateWallet}
+              onPress={onPressGetStarted}
             />
-            <TouchableArea
-              mx="lg"
-              my="sm"
-              name={ElementName.OnboardingImportWallet}
-              testID={ElementName.OnboardingImportWallet}
-              onPress={onPressImportWallet}>
-              <Text
-                style={{ color: isDarkMode ? colors.white : colors.magenta300 }}
-                textAlign="center"
-                variant="buttonLabelMedium">
-                {t('I already have a wallet')}
-              </Text>
-            </TouchableArea>
           </Flex>
           <Box mx="lg" pb={pb}>
             <Text color="textTertiary" mx="xxs" textAlign="center" variant="buttonLabelMicro">

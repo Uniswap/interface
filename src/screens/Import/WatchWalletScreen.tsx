@@ -96,6 +96,11 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props) {
     setValue(text?.trim())
   }
 
+  // TODO(MOB-3789): add back when demo wallet has been created
+  // const onPressDemoWallet = () => {
+  //   setValue('uniswapdemo')
+  // }
+
   useEffect(() => {
     const delayFn = setTimeout(() => {
       setShowLiveCheck(true)
@@ -112,7 +117,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props) {
         'Enter an Ethereum wallet address (starting with 0x) or ENS name (ending in .eth).'
       )}
       title={t('Enter a wallet address')}>
-      <Flex pt="lg">
+      <Flex gap="xs" pt="lg">
         <GenericImportForm
           blurOnSubmit
           errorMessage={errorText}
@@ -126,6 +131,15 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props) {
             isValid && Keyboard.dismiss()
           }}
         />
+        {/* TODO(MOB-3789): add back after demo wallet ENS has been created and populated */}
+        {/* <Flex>
+          <Text color="textTertiary" mx="xxs" textAlign="center" variant="subheadSmall">
+            Not sure? Try adding{' '}
+            <Text color="accentAction" variant="buttonLabelSmall" onPress={onPressDemoWallet}>
+              uniswapdemo.eth
+            </Text>
+          </Text>
+        </Flex> */}
       </Flex>
       <Button
         disabled={!isValid}

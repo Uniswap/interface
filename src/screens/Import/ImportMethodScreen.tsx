@@ -6,12 +6,11 @@ import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import CloudIcon from 'src/assets/icons/cloud.svg'
+import ImportIcon from 'src/assets/icons/arrow-rightwards-down.svg'
 import EyeIcon from 'src/assets/icons/eye.svg'
 import SeedPhraseIcon from 'src/assets/icons/pencil.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { isICloudAvailable } from 'src/features/CloudBackup/RNICloudBackupsManager'
@@ -21,6 +20,7 @@ import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
+import { createAccountActions } from 'src/features/wallet/createAccountSaga'
 import { useAccounts, usePendingAccounts } from 'src/features/wallet/hooks'
 import {
   PendingAccountActions,
@@ -41,30 +41,30 @@ interface ImportMethodOption {
 
 const options: ImportMethodOption[] = [
   {
-    title: (t: TFunction) => t('Import a recovery phrase'),
-    blurb: (t: TFunction) => t('Enter or paste your words'),
+    title: (t: TFunction) => t('Create a new wallet'),
+    blurb: (t: TFunction) => t('Start fresh with a new recovery phrase'),
     icon: (theme: Theme) => (
       <SeedPhraseIcon color={theme.colors.textPrimary} height={16} width={16} />
     ),
+    nav: OnboardingScreens.EditName,
+    importType: ImportType.CreateNew,
+    name: ElementName.OnboardingCreateWallet,
+  },
+  {
+    title: (t: TFunction) => t('Import an existing wallet'),
+    blurb: (t: TFunction) => t('Enter your recovery phrase'),
+    icon: (theme: Theme) => <ImportIcon color={theme.colors.textPrimary} height={14} width={14} />,
     nav: OnboardingScreens.SeedPhraseInput,
     importType: ImportType.SeedPhrase,
     name: ElementName.OnboardingImportSeedPhrase,
   },
   {
-    title: (t: TFunction) => t('View-only'),
-    blurb: (t: TFunction) => t('Enter an address or ENS name'),
+    title: (t: TFunction) => t('Add a view-only wallet'),
+    blurb: (t: TFunction) => t('Try it out without importing your wallet'),
     icon: (theme: Theme) => <EyeIcon color={theme.colors.textPrimary} height={16} width={16} />,
     nav: OnboardingScreens.WatchWallet,
     importType: ImportType.Watch,
     name: ElementName.OnboardingImportWatchedAccount,
-  },
-  {
-    title: (t: TFunction) => t('Restore from iCloud'),
-    blurb: (t: TFunction) => t('Recover your backed up wallets'),
-    icon: (theme: Theme) => <CloudIcon color={theme.colors.textPrimary} height={16} width={16} />,
-    nav: OnboardingScreens.RestoreCloudBackup,
-    importType: ImportType.Restore,
-    name: ElementName.OnboardingImportBackup,
   },
 ]
 
@@ -147,6 +147,9 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props) {
   const handleOnPress = (nav: OnboardingScreens, importType: ImportType) => {
     // Delete any pending accounts before entering flow.
     dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
+    if (importType === ImportType.CreateNew) {
+      dispatch(createAccountActions.trigger())
+    }
 
     if (importType === ImportType.Restore) {
       handleOnPressRestoreBackup()
@@ -166,8 +169,8 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props) {
       : options
 
   return (
-    <OnboardingScreen title={t('Choose how to add your wallet')}>
-      <Flex grow gap="xs">
+    <OnboardingScreen title={t('How do you want to get started?')}>
+      <Flex grow gap="sm">
         {importOptions.map(({ title, blurb, icon, nav, importType, name }) => (
           <OptionCard
             key={'connection-option-' + title}
@@ -178,6 +181,14 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props) {
             onPress={() => handleOnPress(nav, importType)}
           />
         ))}
+      </Flex>
+      <Flex alignItems="center" mb="sm">
+        <Text
+          color="accentAction"
+          variant="buttonLabelMedium"
+          onPress={() => handleOnPress(OnboardingScreens.RestoreCloudBackup, ImportType.Restore)}>
+          Restore from iCloud
+        </Text>
       </Flex>
     </OnboardingScreen>
   )
@@ -200,7 +211,6 @@ function OptionCard({
   disabled?: boolean
   opacity?: number
 }) {
-  const theme = useAppTheme()
   return (
     <TouchableArea
       backgroundColor="background2"
@@ -211,10 +221,10 @@ function OptionCard({
       name={name}
       opacity={opacity}
       px="md"
-      py="sm"
+      py="md"
       testID={name}
       onPress={onPress}>
-      <Flex row alignItems="center" gap="md">
+      <Flex alignItems="flex-start" gap="sm">
         <Box
           alignItems="center"
           borderColor="accentBranded"
@@ -226,13 +236,16 @@ function OptionCard({
           width={32}>
           {icon}
         </Box>
-        <Flex fill alignItems="flex-start" gap="xxxs" justifyContent="space-around">
-          <Text variant="bodyLarge">{title}</Text>
-          <Text color="textSecondary" variant="bodySmall">
-            {blurb}
-          </Text>
+        <Flex row alignItems="center" gap="xxs">
+          <Flex fill alignItems="flex-start" gap="xxs" justifyContent="space-around">
+            <Text allowFontScaling={false} variant="subheadLarge">
+              {title}
+            </Text>
+            <Text allowFontScaling={false} color="textSecondary" variant="bodySmall">
+              {blurb}
+            </Text>
+          </Flex>
         </Flex>
-        <Chevron color={theme.colors.textSecondary} direction="e" height={24} width={24} />
       </Flex>
     </TouchableArea>
   )

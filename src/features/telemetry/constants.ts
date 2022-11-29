@@ -109,6 +109,7 @@ export const enum ElementName {
   Favorite = 'favorite',
   FiatOnRampWidgetButton = 'fiat-on-ramp-widget-button',
   GetHelp = 'get-help',
+  GetStarted = 'get-started',
   ImportAccount = 'import',
   Manage = 'manage',
   ManageConnections = 'manage-connections',
