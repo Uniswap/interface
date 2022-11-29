@@ -1,10 +1,9 @@
 import { useNftBalanceQuery } from 'graphql/data/nft/NftBalance'
 import { AnimatedBox, Box } from 'nft/components/Box'
-import { ClearAllButton } from 'nft/components/collection/CollectionNfts'
+import { ClearAllButton, CollectionNftsLoading } from 'nft/components/collection/CollectionNfts'
 import { assetList } from 'nft/components/collection/CollectionNfts.css'
 import { FilterButton } from 'nft/components/collection/FilterButton'
-import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
-import { Center, Column, Row } from 'nft/components/Flex'
+import { Column, Row } from 'nft/components/Flex'
 import { CrossIcon } from 'nft/components/icons'
 import { FilterSidebar } from 'nft/components/profile/view/FilterSidebar'
 import { subhead } from 'nft/css/common.css'
@@ -245,9 +244,9 @@ const ProfilePageNfts = ({
             next={() => loadNext(DEFAULT_WALLET_ASSET_QUERY_AMOUNT)}
             hasMore={hasNext}
             loader={
-              <Center>
-                <LoadingSparkle />
-              </Center>
+              Boolean(hasNext && ownerAssets?.length) && (
+                <CollectionNftsLoading count={DEFAULT_WALLET_ASSET_QUERY_AMOUNT} />
+              )
             }
             dataLength={ownerAssets?.length ?? 0}
             style={{ overflow: 'unset' }}

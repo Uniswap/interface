@@ -168,17 +168,17 @@ const MarketNameWrapper = styled(Row)`
   gap: 8px;
 `
 
-const LoadingAssets = () => (
+const LoadingAssets = ({ count }: { count?: number }) => (
   <>
-    {Array.from(Array(ASSET_PAGE_SIZE), (_, index) => (
+    {Array.from(Array(count ?? ASSET_PAGE_SIZE), (_, index) => (
       <CollectionAssetLoading key={index} />
     ))}
   </>
 )
 
-export const CollectionNftsLoading = () => (
+export const CollectionNftsLoading = ({ count }: { count?: number }) => (
   <Box width="full" className={styles.assetList}>
-    <LoadingAssets />
+    <LoadingAssets count={count} />
   </Box>
 )
 
