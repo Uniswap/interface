@@ -477,7 +477,7 @@ export class Aggregator {
         ) {
           // do Solana magic things
           const actualOpenOrdersByMarket: { [key: string]: PublicKey } = {}
-          Promise.all(
+          await Promise.all(
             Object.entries(agg.solana.serumOpenOrdersAccountByMarket).map(async ([market]) => {
               const marketPK = new PublicKey(market)
               const openOrdersList = await OpenOrders.findForMarketAndOwner(
