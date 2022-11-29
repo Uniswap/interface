@@ -14,6 +14,7 @@ import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedBox, Box } from 'src/components/layout/Box'
 import { Cursor } from 'src/components/PriceChart/Cursor'
+import { PriceChartLabel } from 'src/components/PriceChart/PriceChartLabels'
 import { PriceHeader } from 'src/components/PriceChart/PriceHeader'
 import { TimeRangeLabel } from 'src/components/PriceChart/TimeRangeLabel'
 import { GraphMetadatas } from 'src/components/PriceChart/types'
@@ -91,7 +92,14 @@ export const PriceExplorer = ({
 
   // retrieves percent change and formats it
   const percentChange = useDerivedValue(() => {
-    if (isPanning.value || headerCustomPercentChange === undefined) {
+    if (
+      isPanning.value ||
+      headerCustomPercentChange === undefined ||
+      // historical chart data is not always live to the latest block
+      // for this reason, we usually pass down the latest 24h change to the component and render it when not panning
+      // however, we only want to do this for the daily time range to keep 24h consistent across the app
+      graphs[currentGraphIndex.value].label !== PriceChartLabel.Day
+    ) {
       return (
         ((price.value - currentIndexData.value.openPrice) / currentIndexData.value.openPrice) * 100
       )
