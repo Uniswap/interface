@@ -68,7 +68,7 @@ export const useBag = create<BagState>()(
         })),
       itemsInBag: [],
       setItemsInBag: (items) =>
-        set(({ bagManuallyClosed }) => ({
+        set(() => ({
           itemsInBag: items,
         })),
       totalEthPrice: BigNumber.from(0),
@@ -118,7 +118,7 @@ export const useBag = create<BagState>()(
             }
         }),
       removeAssetsFromBag: (assets, fromSweep = false) => {
-        set(({ bagManuallyClosed, itemsInBag }) => {
+        set(({ itemsInBag }) => {
           if (get().isLocked) return { itemsInBag: get().itemsInBag }
           if (itemsInBag.length === 0) return { itemsInBag: [] }
           const itemsCopy = itemsInBag.filter(
@@ -132,7 +132,6 @@ export const useBag = create<BagState>()(
           return {
             itemsInBag: itemsCopy,
             usedSweep: fromSweep,
-            bagExpanded: itemsCopy.length !== 0,
           }
         })
       },
