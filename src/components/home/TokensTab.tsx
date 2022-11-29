@@ -59,9 +59,13 @@ export const TokensTab = forwardRef<any, TokensTabProps>(
             <Flex centered flex={1}>
               <BaseCard.EmptyState
                 buttonLabel={isFiatOnRampEnabled ? t('Buy crypto') : t('Receive tokens')}
-                description={t(
-                  'Transfer tokens from a centralized exchange or another wallet to get started.'
-                )}
+                description={
+                  isFiatOnRampEnabled
+                    ? t('Buy crypto at the lowest rates on Uniswap Wallet, powered by MoonPay.')
+                    : t(
+                        'Transfer tokens from a centralized exchange or another wallet to get started.'
+                      )
+                }
                 icon={<NoTokens />}
                 title={t('No tokens yet')}
                 onPress={onPressAction}

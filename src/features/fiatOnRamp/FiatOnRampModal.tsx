@@ -99,7 +99,7 @@ function FiatOnRampModalInner() {
               </Text>
               <Box alignItems="center">
                 <Text color="textSecondary" textAlign="center" variant="bodySmall">
-                  {t('Buy crypto at the lowest rates on Uniswap Wallet, powered by Moonpay.')}
+                  {t('Buy crypto at the lowest rates on Uniswap Wallet, powered by MoonPay.')}
                 </Text>
               </Box>
             </Flex>

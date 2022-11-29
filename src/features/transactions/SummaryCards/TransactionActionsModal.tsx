@@ -67,7 +67,7 @@ export default function TransactionActionsModal({
           {
             key: ElementName.MoonpayExplorerView,
             onPress: onViewMoonpay,
-            render: renderOptionItem(t('View on Moonpay')),
+            render: renderOptionItem(t('View on MoonPay')),
           },
         ]
       : []
@@ -95,7 +95,7 @@ export default function TransactionActionsModal({
           handleClose()
         },
         render: isFiatOnRampTransction
-          ? renderOptionItem(t('Copy Moonpay transaction ID'))
+          ? renderOptionItem(t('Copy MoonPay transaction ID'))
           : renderOptionItem(t('Copy transaction ID')),
       },
       {
