@@ -1,4 +1,0 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
-yarn lint --fix && yarn i18n:extract && yarn tsc:compile && yarn test -u
