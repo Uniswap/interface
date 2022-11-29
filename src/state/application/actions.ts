@@ -1,5 +1,4 @@
 import { createAction } from '@reduxjs/toolkit'
-import { TokenList } from '@uniswap/token-lists'
 
 import { TRANSACTION_TYPE } from 'state/transactions/type'
 
@@ -11,12 +10,7 @@ export type PopupContentTxn = {
   type?: TRANSACTION_TYPE
   summary?: string
 }
-export type PopupContentListUpdate = {
-  listUrl: string
-  oldList: TokenList
-  newList: TokenList
-  auto: boolean
-}
+
 export type PopupContentSimple = {
   title: string
   summary?: string
@@ -28,7 +22,7 @@ export enum PopupType {
   SIMPLE,
 }
 
-export type PopupContent = PopupContentTxn | PopupContentListUpdate | PopupContentSimple
+export type PopupContent = PopupContentTxn | PopupContentSimple
 
 export enum ApplicationModal {
   NETWORK,

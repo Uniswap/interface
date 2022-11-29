@@ -1,6 +1,6 @@
 import { ChainId, Token } from '@kyberswap/ks-sdk-core'
-import { TokenInfo } from '@uniswap/token-lists'
 
+import { TokenInfo } from 'state/lists/wrappedTokenInfo'
 import { isAddress } from 'utils'
 
 const alwaysTrue = () => true

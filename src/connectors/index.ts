@@ -1,4 +1,3 @@
-import { Web3Provider } from '@ethersproject/providers'
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
@@ -28,11 +27,6 @@ export const NETWORK_CHAIN_ID = 1
 export const network = new NetworkConnector({
   urls: { [NETWORK_CHAIN_ID]: NETWORK_URL },
 })
-
-let networkLibrary: Web3Provider | undefined
-export function getNetworkLibrary(): Web3Provider {
-  return (networkLibrary = networkLibrary ?? new Web3Provider(network.provider as any))
-}
 
 const injectedConnectorParam = {
   supportedChainIds: EVM_NETWORKS,

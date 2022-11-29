@@ -1,6 +1,6 @@
 import { Currency } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
-import { stringify } from 'qs'
+import { stringify } from 'querystring'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { Redirect, useHistory } from 'react-router-dom'

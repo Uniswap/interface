@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { stringify } from 'qs'
+import { stringify } from 'querystring'
 import { useHistory } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
 

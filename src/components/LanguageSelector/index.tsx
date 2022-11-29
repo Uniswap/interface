@@ -1,4 +1,4 @@
-import { stringify } from 'qs'
+import { stringify } from 'querystring'
 import { isMobile } from 'react-device-detect'
 import { ArrowLeft, Check } from 'react-feather'
 import { useHistory, useLocation } from 'react-router'

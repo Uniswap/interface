@@ -1,10 +1,10 @@
-import { parse } from 'qs'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { RouteComponentProps } from 'react-router-dom'
 
 import { AppDispatch } from 'state'
 import { updateUserDarkMode } from 'state/user/actions'
+import { queryStringToObject } from 'utils/string'
 
 export default function DarkModeQueryParamReader({ location: { search } }: RouteComponentProps): null {
   const dispatch = useDispatch<AppDispatch>()
@@ -13,10 +13,7 @@ export default function DarkModeQueryParamReader({ location: { search } }: Route
     if (!search) return
     if (search.length < 2) return
 
-    const parsed = parse(search, {
-      parseArrays: false,
-      ignoreQueryPrefix: true,
-    })
+    const parsed = queryStringToObject(search)
 
     const theme = parsed.theme
 

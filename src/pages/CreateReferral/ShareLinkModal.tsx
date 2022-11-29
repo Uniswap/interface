@@ -1,12 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { useState } from 'react'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { CheckCircle } from 'react-feather'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
 import { ButtonPrimary } from 'components/Button'
 import Modal from 'components/Modal'
+import useCopyClipboard from 'hooks/useCopyClipboard'
 import useTheme from 'hooks/useTheme'
 import { CloseIcon } from 'theme'
 
@@ -61,10 +60,9 @@ export default function ShareLinkModal({
 }) {
   const theme = useTheme()
 
-  const [showAlert, setShowAlert] = useState(false)
+  const [isCopied, setCopied] = useCopyClipboard()
   const handleCopyClick = () => {
-    setShowAlert(true)
-    setTimeout(() => setShowAlert(false), 2000)
+    setCopied(shareUrl)
   }
 
   return (
@@ -79,12 +77,10 @@ export default function ShareLinkModal({
         </Text>
         <InputWrapper>
           <input type="text" value={shareUrl} readOnly />
-          <CopyToClipboard text={shareUrl || ''} onCopy={handleCopyClick}>
-            <ButtonPrimary fontSize={14} padding="8px 12px" width="auto">
-              Copy Link
-              <AlertMessage className={showAlert ? 'show' : ''}>Copied!</AlertMessage>
-            </ButtonPrimary>
-          </CopyToClipboard>
+          <ButtonPrimary fontSize={14} padding="8px 12px" width="auto" onClick={handleCopyClick}>
+            Copy Link
+            <AlertMessage className={isCopied ? 'show' : ''}>Copied!</AlertMessage>
+          </ButtonPrimary>
         </InputWrapper>
         <Text fontSize={16} color={theme.text} lineHeight="20px" textAlign="center">
           <Trans>Share your referral link and start earning commission instantly!</Trans>

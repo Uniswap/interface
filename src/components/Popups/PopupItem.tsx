@@ -5,7 +5,7 @@ import { Flex } from 'rebass'
 import styled, { DefaultTheme, keyframes } from 'styled-components'
 
 import useTheme from 'hooks/useTheme'
-import { PopupContentListUpdate, PopupContentSimple, PopupContentTxn, PopupType } from 'state/application/actions'
+import { PopupContentSimple, PopupContentTxn, PopupType } from 'state/application/actions'
 import { NotificationType, useRemovePopup } from 'state/application/hooks'
 
 import SimplePopup from './SimplePopup'
@@ -112,7 +112,7 @@ export default function PopupItem({
   popupType,
 }: {
   removeAfterMs: number | null
-  content: PopupContentTxn | PopupContentListUpdate | PopupContentSimple
+  content: PopupContentTxn | PopupContentSimple
   popKey: string
   popupType: PopupType
 }) {

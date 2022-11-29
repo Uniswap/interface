@@ -2,7 +2,6 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 import { createAction } from '@reduxjs/toolkit'
 
 import { SupportedLocale } from 'constants/locales'
-import { LiteTokenList } from 'state/lists/wrappedTokenInfo'
 
 export interface SerializedToken {
   chainId: number
@@ -11,7 +10,6 @@ export interface SerializedToken {
   symbol?: string
   name?: string
   logoURI?: string
-  list?: LiteTokenList
 }
 
 export interface SerializedPair {

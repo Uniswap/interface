@@ -1,34 +1,34 @@
 import { Token } from '@kyberswap/ks-sdk-core'
-import { TokenInfo, TokenList } from '@uniswap/token-lists'
 
 import { MultiChainTokenInfo } from 'pages/Bridge/type'
 import { isAddress } from 'utils'
 
-/**
- * Token instances created from token info on a token list.
- */
-
-export type LiteTokenList = Omit<TokenList, 'tokens'>
+export interface TokenInfo {
+  readonly chainId: number
+  readonly address: string
+  readonly name: string
+  readonly decimals: number
+  readonly symbol: string
+  readonly logoURI?: string
+  readonly isWhitelisted?: boolean // from backend
+  readonly multichainInfo?: MultiChainTokenInfo // from multichain api
+}
 
 export class WrappedTokenInfo extends Token {
   public readonly isNative: false = false
   public readonly isToken: true = true
-  public readonly tokenInfo: TokenInfo
 
-  public readonly isWhitelisted: boolean = false // from backend
-  public readonly multichainInfo: MultiChainTokenInfo | undefined = undefined // from multichain api
+  public readonly logoURI: string | undefined
+  public readonly isWhitelisted: boolean = false
+  public readonly multichainInfo: MultiChainTokenInfo | undefined
 
-  constructor(tokenInfo: TokenInfo & { isWhitelisted?: boolean; multichainInfo?: MultiChainTokenInfo }) {
-    const { isWhitelisted, multichainInfo, chainId, decimals, symbol, name, address } = tokenInfo
+  constructor(tokenInfo: TokenInfo) {
+    const { isWhitelisted, multichainInfo, chainId, decimals, symbol, name, address, logoURI } = tokenInfo
     super(chainId, isAddress(chainId, address) || address, decimals, symbol, name)
-    this.tokenInfo = tokenInfo
 
-    if (isWhitelisted) this.isWhitelisted = isWhitelisted
-    if (multichainInfo) this.multichainInfo = multichainInfo
-  }
-
-  public get logoURI(): string | undefined {
-    return this.tokenInfo.logoURI
+    this.multichainInfo = multichainInfo
+    this.isWhitelisted = !!isWhitelisted
+    this.logoURI = logoURI
   }
 
   equals(other: Token): boolean {

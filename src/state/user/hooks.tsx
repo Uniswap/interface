@@ -46,12 +46,12 @@ function serializeToken(token: Token | WrappedTokenInfo): SerializedToken {
     decimals: token.decimals,
     symbol: token.symbol,
     name: token.name,
-    logoURI: token instanceof WrappedTokenInfo ? token.tokenInfo.logoURI : undefined,
+    logoURI: token instanceof WrappedTokenInfo ? token.logoURI : undefined,
   }
 }
 
 function deserializeToken(serializedToken: SerializedToken): Token {
-  return serializedToken?.logoURI && serializedToken?.list
+  return serializedToken?.logoURI
     ? new WrappedTokenInfo({
         chainId: serializedToken.chainId,
         address: serializedToken.address,

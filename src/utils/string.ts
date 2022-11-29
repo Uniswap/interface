@@ -1,4 +1,5 @@
 import { Currency, Token } from '@kyberswap/ks-sdk-core'
+import { parse } from 'querystring'
 
 /**
  * ex:  nguyen hoai danh => nguyen-hoai-danh
@@ -15,6 +16,10 @@ export function convertToSlug(text: string) {
 
 export const getSymbolSlug = (token: Currency | Token | undefined) =>
   token ? convertToSlug(token?.symbol || token?.wrapped?.symbol || '') : ''
+
+export const queryStringToObject = (queryString: string) => {
+  return parse(queryString.startsWith('?') ? queryString.substring(1) : queryString)
+}
 
 export const isInEnum = <T extends Record<string, string>>(str: string, enumParam: T): str is T[keyof T] => {
   return Object.values(enumParam).includes(str)

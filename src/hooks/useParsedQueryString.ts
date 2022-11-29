@@ -1,12 +1,10 @@
-import { ParsedQs, parse } from 'qs'
+import { ParsedUrlQuery } from 'querystring'
 import { useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 
-export default function useParsedQueryString<T extends ParsedQs>(): ParsedQs & Partial<T> {
+import { queryStringToObject } from 'utils/string'
+
+export default function useParsedQueryString<T extends ParsedUrlQuery>(): ParsedUrlQuery & Partial<T> {
   const { search } = useLocation()
-  return useMemo(
-    () =>
-      (search && search.length > 1 ? parse(search, { parseArrays: false, ignoreQueryPrefix: true }) : {}) as Partial<T>,
-    [search],
-  )
+  return useMemo(() => (search && search.length > 1 ? queryStringToObject(search) : {}) as Partial<T>, [search])
 }

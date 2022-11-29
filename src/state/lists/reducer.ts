@@ -1,69 +1,31 @@
+import { ChainId } from '@kyberswap/ks-sdk-core'
 import { createReducer } from '@reduxjs/toolkit'
-import { TokenList } from '@uniswap/token-lists/dist/types'
 
-import { NETWORKS_INFO, SUPPORTED_NETWORKS } from 'constants/networks'
+import { SUPPORTED_NETWORKS } from 'constants/networks'
+import { TokenMap } from 'hooks/Tokens'
 
-import { fetchTokenList } from './actions'
+import { setTokenList } from './actions'
+import { WrappedTokenInfo } from './wrappedTokenInfo'
 
-const KyberTokensList = SUPPORTED_NETWORKS.map(chainId => NETWORKS_INFO[chainId].tokenListUrl)
-
-export interface ListsState {
-  readonly byUrl: {
-    readonly [url: string]: {
-      readonly current: TokenList | null
-      readonly loadingRequestId: string | null
-      readonly error: string | null
-    }
-  }
+export type TokenAddressMap = {
+  [chainId in ChainId | number]: { [tokenAddress: string]: WrappedTokenInfo }
 }
-
-type ListState = ListsState['byUrl'][string]
-
-const NEW_LIST_STATE: ListState = {
-  error: null,
-  current: null,
-  loadingRequestId: null,
+interface ListsState {
+  readonly mapWhitelistTokens: TokenAddressMap
 }
-
-type Mutable<T> = { -readonly [P in keyof T]: T[P] extends ReadonlyArray<infer U> ? U[] : T[P] }
 
 const initialState: ListsState = {
-  byUrl: {
-    ...KyberTokensList.reduce<Mutable<ListsState['byUrl']>>((memo, listUrl) => {
-      memo[listUrl] = { ...NEW_LIST_STATE }
+  mapWhitelistTokens: {
+    ...SUPPORTED_NETWORKS.reduce((memo: ListsState['mapWhitelistTokens'], chainId: ChainId | number) => {
+      if (chainId) memo[chainId] = {} as TokenMap
       return memo
     }, {}),
   },
 }
 
 export default createReducer(initialState, builder =>
-  builder
-    .addCase(fetchTokenList.pending, (state, { payload: { requestId, url } }) => {
-      state.byUrl[url] = {
-        ...state.byUrl[url],
-        loadingRequestId: requestId,
-        error: null,
-      }
-    })
-    .addCase(fetchTokenList.fulfilled, (state, { payload: { requestId, tokenList, url } }) => {
-      state.byUrl[url] = {
-        ...state.byUrl[url],
-        loadingRequestId: null,
-        error: null,
-        current: tokenList,
-      }
-    })
-    .addCase(fetchTokenList.rejected, (state, { payload: { url, requestId, errorMessage } }) => {
-      if (state.byUrl[url]?.loadingRequestId !== requestId) {
-        // no-op since it's not the latest request
-        return
-      }
-
-      state.byUrl[url] = {
-        ...state.byUrl[url],
-        loadingRequestId: null,
-        error: errorMessage,
-        current: null,
-      }
-    }),
+  builder.addCase(setTokenList, (state, { payload: { tokenList, chainId } }) => {
+    if (!state.mapWhitelistTokens) state.mapWhitelistTokens = {}
+    state.mapWhitelistTokens[chainId] = tokenList || {}
+  }),
 )

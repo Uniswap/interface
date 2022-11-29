@@ -3,7 +3,7 @@ import { Trade } from '@kyberswap/ks-sdk-classic'
 import { ChainId, Currency, CurrencyAmount, TradeType } from '@kyberswap/ks-sdk-core'
 import { t } from '@lingui/macro'
 import JSBI from 'jsbi'
-import { ParsedQs } from 'qs'
+import { ParsedUrlQuery } from 'querystring'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -308,7 +308,7 @@ function validatedRecipient(recipient: any, chainId: ChainId): string | null {
   return null
 }
 
-function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId): Omit<SwapState, 'saveGas'> {
+function queryParametersToSwapState(parsedQs: ParsedUrlQuery, chainId: ChainId): Omit<SwapState, 'saveGas'> {
   let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency, chainId)
   let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency, chainId)
   if (inputCurrency === outputCurrency) {

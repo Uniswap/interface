@@ -1,6 +1,5 @@
 import { ChainId, Currency, Token } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
-import { TokenInfo } from '@uniswap/token-lists'
 import axios from 'axios'
 import { rgba } from 'polished'
 import { stringify } from 'querystring'
@@ -15,13 +14,13 @@ import { RowBetween } from 'components/Row'
 import { KS_SETTING_API } from 'constants/env'
 import { NativeCurrencies } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
-import { AllTokenType, useAllTokens, useToken } from 'hooks/Tokens'
+import { TokenMap, useAllTokens, useToken } from 'hooks/Tokens'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import usePrevious from 'hooks/usePrevious'
 import useTheme from 'hooks/useTheme'
 import useToggle from 'hooks/useToggle'
-import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
+import { TokenInfo, WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { useRemoveUserAddedToken, useUserAddedTokens, useUserFavoriteTokens } from 'state/user/hooks'
 import { ButtonText, CloseIcon, TYPE } from 'theme'
 import { filterTruthy, isAddress } from 'utils'
@@ -85,7 +84,7 @@ interface CurrencySearchProps {
 
 export type TokenResponse = Token & { isWhitelisted: boolean }
 
-const cacheTokens: AllTokenType = {}
+const cacheTokens: TokenMap = {}
 
 const fetchTokenByAddress = async (address: string, chainId: ChainId) => {
   const cachedToken = cacheTokens[address] || cacheTokens[address.toLowerCase()]
