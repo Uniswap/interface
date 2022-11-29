@@ -6,7 +6,7 @@ import { reduceFilters } from 'nft/components/collection/Activity'
 import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import { Center } from 'nft/components/Flex'
-import { vars } from 'nft/css/sprinkles.css'
+import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
 import { ActivityEventResponse, ActivityEventType, CollectionInfoForAsset, GenieAsset } from 'nft/types'
 import { shortenAddress } from 'nft/utils/address'
@@ -124,9 +124,9 @@ const ContentNotAvailable = styled.div`
   height: 450px;
 `
 
-const FilterBox = styled.div<{ backgroundColor?: string }>`
+const FilterBox = styled.div<{ backgroundColor: string }>`
   box-sizing: border-box;
-  background-color: ${({ theme, backgroundColor }) => backgroundColor ?? theme.backgroundInteractive};
+  background-color: ${({ backgroundColor }) => backgroundColor};
   font-size: 14px;
   font-weight: 600;
   line-height: 14px;
@@ -292,7 +292,9 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
 
       return (
         <FilterBox
-          backgroundColor={isActive ? (isDarkMode ? vars.color.gray500 : vars.color.gray200) : undefined}
+          backgroundColor={
+            isActive ? (isDarkMode ? vars.color.gray500 : vars.color.gray200) : themeVars.colors.backgroundInteractive
+          }
           onClick={() => filtersDispatch({ eventType })}
         >
           {eventType === ActivityEventType.CancelListing
