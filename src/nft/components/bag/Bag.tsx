@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther } from '@ethersproject/units'
 import { useWeb3React } from '@web3-react/core'
-import { useIsNftDetailsPage, useIsNftExplorePage, useIsNftPage, useIsNftProfilePage } from 'hooks/useIsNftPage'
+import { useIsNftDetailsPage, useIsNftPage, useIsNftProfilePage } from 'hooks/useIsNftPage'
 import { BagFooter } from 'nft/components/bag/BagFooter'
 import ListingModal from 'nft/components/bag/profile/ListingModal'
 import { Box } from 'nft/components/Box'
@@ -47,10 +47,31 @@ interface SeparatorProps {
 const DetailsPageBackground = styled.div`
   position: fixed;
   background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(12px);
   top: 72px;
   width: 100%;
   height: 100%;
+`
+
+const BagContainer = styled.div`
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  right: 0px;
+  background: ${({ theme }) => theme.backgroundSurface};
+  border-left-style: solid;
+  border-color: ${({ theme }) => theme.backgroundOutline};
+  border-width: 1px;
+  color: ${({ theme }) => theme.textPrimary};
+  z-index: ${Z_INDEX.dropdown};
+
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
+    width: 360px;
+    top: 72px;
+    border-top-style: solid;
+  }
 `
 
 const ScrollingIndicator = ({ top, show }: SeparatorProps) => (
@@ -101,7 +122,6 @@ const Bag = () => {
 
   const isProfilePage = useIsNftProfilePage()
   const isDetailsPage = useIsNftDetailsPage()
-  const isNFTExplorePage = useIsNftExplorePage()
   const isNFTPage = useIsNftPage()
   const isMobile = useIsMobile()
 
@@ -284,7 +304,7 @@ const Bag = () => {
 
   return (
     <Portal>
-      <BagContainer $renderBelowNavbar={isNFTExplorePage}>
+      <BagContainer>
         {!(isProfilePage && profilePageState === ProfilePageStateType.LISTING) ? (
           <>
             <BagHeader
@@ -337,26 +357,5 @@ const Bag = () => {
     </Portal>
   )
 }
-
-const BagContainer = styled.div<{ $renderBelowNavbar: boolean }>`
-  position: fixed;
-  display: flex;
-  flex-direction: column;
-  top: 0px;
-  width: 100%;
-  height: 100%;
-  right: 0px;
-  background: ${({ theme }) => theme.backgroundSurface};
-  border-left-style: solid;
-  border-color: ${({ theme }) => theme.backgroundOutline};
-  border-width: 1px;
-  color: ${({ theme }) => theme.textPrimary};
-  z-index: ${Z_INDEX.dropdown};
-
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
-    width: 360px;
-    ${({ $renderBelowNavbar }) => ($renderBelowNavbar ? 'padding-top: 72px;' : 'top: 72px; border-top-style: solid;')}
-  }
-`
 
 export default Bag

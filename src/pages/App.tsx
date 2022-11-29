@@ -8,6 +8,7 @@ import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
 import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
 import { ProfilePageLoadingSkeleton } from 'nft/components/profile/view/ProfilePageLoadingSkeleton'
+import { useBag } from 'nft/hooks'
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -78,14 +79,15 @@ const BodyWrapper = styled.div`
   `};
 `
 
-const HeaderWrapper = styled.div<{ scrolledState?: boolean }>`
+const HeaderWrapper = styled.div<{ transparent?: boolean; disableTransition?: boolean }>`
   ${flexRowNoWrap};
-  background-color: ${({ theme, scrolledState }) => scrolledState && theme.backgroundSurface};
-  border-bottom: ${({ theme, scrolledState }) => scrolledState && `1px solid ${theme.backgroundOutline}`};
+  background-color: ${({ theme, transparent }) => (transparent ? 'transparent' : theme.backgroundSurface)};
+  border-bottom: ${({ theme, transparent }) => !transparent && `1px solid ${theme.backgroundOutline}`};
   width: 100%;
   justify-content: space-between;
   position: fixed;
-  transition: ${({ theme }) =>
+  transition: ${({ theme, disableTransition }) =>
+    !disableTransition &&
     `background-color ${theme.transition.duration.fast} ease-in-out,
     border-width ${theme.transition.duration.fast} ease-in-out`};
   top: 0;
@@ -182,13 +184,17 @@ export default function App() {
     return () => window.removeEventListener('scroll', scrollListener)
   }, [])
 
+  const isBagExpanded = useBag((state) => state.bagExpanded)
+
+  const isHeaderTransparent = !scrolledState && !isBagExpanded
+
   return (
     <ErrorBoundary>
       <DarkModeQueryParamReader />
       <ApeModeQueryParamReader />
       <AppWrapper>
         <Trace page={currentPage}>
-          <HeaderWrapper scrolledState={scrolledState}>
+          <HeaderWrapper transparent={isHeaderTransparent} disableTransition={isBagExpanded}>
             <NavBar />
           </HeaderWrapper>
           <BodyWrapper>
