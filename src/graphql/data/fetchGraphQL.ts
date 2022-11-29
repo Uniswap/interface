@@ -1,10 +1,9 @@
 import { Variables } from 'react-relay'
 import { GraphQLResponse, RequestParameters } from 'relay-runtime'
 
-const TOKEN_URL = process.env.REACT_APP_AWS_API_ENDPOINT
-const NFT_URL = process.env.REACT_APP_NFT_AWS_API_ENDPOINT ?? ''
+const GRAPHQL_URL = process.env.REACT_APP_AWS_API_ENDPOINT
 
-if (!TOKEN_URL) {
+if (!GRAPHQL_URL) {
   throw new Error('AWS URL MISSING FROM ENVIRONMENT')
 }
 
@@ -13,7 +12,6 @@ const baseHeaders = {
 }
 const nftHeaders = {
   'Content-Type': 'application/json',
-  'from-x-api-key': process.env.REACT_APP_NFT_FROM_AWS_X_API_KEY ?? '',
   'x-api-key': process.env.REACT_APP_NFT_AWS_X_API_KEY ?? '',
 }
 
@@ -35,10 +33,10 @@ const fetchQuery = (params: RequestParameters, variables: Variables): Promise<Gr
     query: params.text, // GraphQL text from input
     variables,
   })
-  const url = isNFT ? NFT_URL : TOKEN_URL
+  // TODO: When gating is removed from gql endpoint, we can remove the isNFT check and just use base headers
   const headers = isNFT ? nftHeaders : baseHeaders
 
-  return fetch(url, { method: 'POST', body, headers })
+  return fetch(GRAPHQL_URL, { method: 'POST', body, headers })
     .then((res) => res.json())
     .catch((e) => {
       console.error(e)
