@@ -5,7 +5,7 @@ import { useCollectionQuery } from 'graphql/data/nft/Collection'
 import { VerifiedIcon } from 'nft/components/icons'
 import { Markets, TrendingCollection } from 'nft/types'
 import { formatWeiToDecimal } from 'nft/utils'
-import styled, { useTheme } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { ThemedText } from 'theme/components/text'
 
 const CarouselCardBorder = styled.div`
@@ -176,7 +176,8 @@ const CarouselCardContainer = styled.div`
     justify-self: right;
   }
 
-  @media (max-width: 396px) or ((min-width: ${({ theme }) => theme.breakpoint.sm}px) and (max-width: 880px)) {
+  @media (max-width: ${({ theme }) => theme.breakpoint.xs}px) or ((min-width: ${({ theme }) =>
+      theme.breakpoint.sm}px) and (max-width: 880px)) {
     ${FirstColumnTextWrapper} {
       display: none;
     }
@@ -300,13 +301,12 @@ const CollectionName = styled(ThemedText.MediumHeader)`
 `
 
 const CarouselCardHeader = ({ collection }: { collection: TrendingCollection }) => {
-  const theme = useTheme()
   return (
     <CardHeaderContainer src={collection.bannerImageUrl}>
       <CardHeaderColumn>
         <CollectionImage src={collection.imageUrl} />
         <CollectionNameContainer>
-          <CollectionName color={theme.accentTextLightPrimary} fontWeight="500">
+          <CollectionName color="accentTextLightPrimary" fontWeight="500">
             {collection.name}
           </CollectionName>
           {collection.isVerified && (
