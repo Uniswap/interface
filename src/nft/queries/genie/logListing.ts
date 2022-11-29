@@ -5,7 +5,7 @@ interface Listing extends ListingRow {
 }
 
 export const logListing = async (listings: ListingRow[], userAddress: string): Promise<boolean> => {
-  const url = `${process.env.REACT_APP_GENIE_V3_API_URL}/logGenieList`
+  const url = `${process.env.REACT_APP_TEMP_API_URL}/nft/logGenieList`
   const listingsConsolidated: Listing[] = listings.map((el) => ({ ...el, marketplaces: [] }))
   const marketplacesById: Record<string, ListingMarket[]> = {}
   const listingsWithMarketsConsolidated = listingsConsolidated.reduce((uniqueListings, curr) => {

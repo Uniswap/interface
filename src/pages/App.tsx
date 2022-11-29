@@ -79,17 +79,13 @@ const BodyWrapper = styled.div`
   `};
 `
 
-const HeaderWrapper = styled.div<{ transparent?: boolean; disableTransition?: boolean }>`
+const HeaderWrapper = styled.div<{ transparent?: boolean; }>`
   ${flexRowNoWrap};
   background-color: ${({ theme, transparent }) => !transparent && theme.backgroundSurface};
   border-bottom: ${({ theme, transparent }) => !transparent && `1px solid ${theme.backgroundOutline}`};
   width: 100%;
   justify-content: space-between;
   position: fixed;
-  transition: ${({ theme, disableTransition }) =>
-    !disableTransition &&
-    `background-color ${theme.transition.duration.fast} ease-in-out,
-    border-width ${theme.transition.duration.fast} ease-in-out`};
   top: 0;
   z-index: ${Z_INDEX.sticky};
 `
@@ -190,7 +186,7 @@ export default function App() {
       <ApeModeQueryParamReader />
       <AppWrapper>
         <Trace page={currentPage}>
-          <HeaderWrapper transparent={isHeaderTransparent} disableTransition={isBagExpanded}>
+          <HeaderWrapper transparent={isHeaderTransparent}>
             <NavBar />
           </HeaderWrapper>
           <BodyWrapper>

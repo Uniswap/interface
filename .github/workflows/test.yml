@@ -59,7 +59,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        containers: [1, 2, 3, 4]
+        containers: [1, 2, 3, 4, 5]
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
