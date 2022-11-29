@@ -101,8 +101,7 @@ export function useSimulatedGasLimit(
     amountSpecified: debouncedAmountSpecified,
     otherCurrency,
     tradeType,
-    // TODO: Remove the Arbitrum chain ID check once Tenderly simulations start working on Arbitrum.
-    skip: skip || chainId === ChainId.ArbitrumOne,
+    skip,
     fetchSimulatedGasLimit: true,
     permitSignatureInfo,
   })
