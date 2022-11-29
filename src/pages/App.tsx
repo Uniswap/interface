@@ -145,14 +145,6 @@ export default function App() {
 
   useAnalyticsReporter()
 
-  const scrollListener = (e: Event) => {
-    if (window.scrollY > 0) {
-      setScrolledState(true)
-    } else {
-      setScrolledState(false)
-    }
-  }
-
   useEffect(() => {
     window.scrollTo(0, 0)
     setScrolledState(false)
@@ -179,7 +171,15 @@ export default function App() {
   }, [isExpertMode])
 
   useEffect(() => {
+    const scrollListener = (e: Event) => {
+      if (window.scrollY > 0) {
+        setScrolledState(true)
+      } else {
+        setScrolledState(false)
+      }
+    }
     window.addEventListener('scroll', scrollListener)
+    return () => window.removeEventListener('scroll', scrollListener)
   }, [])
 
   return (

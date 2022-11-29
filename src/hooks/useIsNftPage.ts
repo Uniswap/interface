@@ -5,6 +5,11 @@ export function useIsNftPage() {
   return pathname.startsWith('/nfts')
 }
 
+export function useIsNftExplorePage() {
+  const { pathname } = useLocation()
+  return pathname === '/nfts'
+}
+
 export function useIsNftProfilePage() {
   const { pathname } = useLocation()
   return pathname.startsWith('/nfts/profile')

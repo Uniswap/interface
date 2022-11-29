@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther } from '@ethersproject/units'
 import { useWeb3React } from '@web3-react/core'
-import { useIsNftDetailsPage, useIsNftPage, useIsNftProfilePage } from 'hooks/useIsNftPage'
+import { useIsNftDetailsPage, useIsNftExplorePage, useIsNftPage, useIsNftProfilePage } from 'hooks/useIsNftPage'
 import { BagFooter } from 'nft/components/bag/BagFooter'
 import ListingModal from 'nft/components/bag/profile/ListingModal'
 import { Box } from 'nft/components/Box'
@@ -101,6 +101,7 @@ const Bag = () => {
 
   const isProfilePage = useIsNftProfilePage()
   const isDetailsPage = useIsNftDetailsPage()
+  const isNFTExplorePage = useIsNftExplorePage()
   const isNFTPage = useIsNftPage()
   const isMobile = useIsMobile()
 
@@ -283,7 +284,7 @@ const Bag = () => {
 
   return (
     <Portal>
-      <BagContainer>
+      <BagContainer $renderBelowNavbar={isNFTExplorePage}>
         {!(isProfilePage && profilePageState === ProfilePageStateType.LISTING) ? (
           <>
             <BagHeader
@@ -337,7 +338,7 @@ const Bag = () => {
   )
 }
 
-const BagContainer = styled.div`
+const BagContainer = styled.div<{ $renderBelowNavbar: boolean }>`
   position: fixed;
   display: flex;
   flex-direction: column;
@@ -350,12 +351,11 @@ const BagContainer = styled.div`
   border-color: ${({ theme }) => theme.backgroundOutline};
   border-width: 1px;
   color: ${({ theme }) => theme.textPrimary};
-  z-index: ${Z_INDEX.modalOverTooltip};
+  z-index: ${Z_INDEX.dropdown};
 
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
     width: 360px;
-    top: 72px;
-    height: calc(100vh - 72px);
+    ${({ $renderBelowNavbar }) => ($renderBelowNavbar ? 'padding-top: 72px;' : 'top: 72px; border-top-style: solid;')}
   }
 `
 
