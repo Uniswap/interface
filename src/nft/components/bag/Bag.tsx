@@ -65,10 +65,11 @@ const BagContainer = styled.div`
   border-color: ${({ theme }) => theme.backgroundOutline};
   border-width: 1px;
   color: ${({ theme }) => theme.textPrimary};
-  z-index: ${Z_INDEX.dropdown};
+  z-index: ${Z_INDEX.fixed};
 
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
     width: 360px;
+    border-top-style: solid;
     top: 72px;
   }
 `
