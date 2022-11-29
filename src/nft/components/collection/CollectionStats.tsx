@@ -284,7 +284,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
   const floorPriceStr = floorFormatter(stats.stats?.floor_price ?? 0)
   // graphQL formatted %age values out of 100, whereas v3 endpoint did a decimal between 0 & 1
   const floorChangeStr = Math.round(Math.abs(stats?.stats?.one_day_floor_change ?? 0))
-  const arrow = stats?.stats?.one_day_floor_change ? getDeltaArrow(stats.stats.one_day_floor_change, 20) : undefined
+  const arrow = stats?.stats?.one_day_floor_change ? getDeltaArrow(stats.stats.one_day_floor_change) : undefined
 
   return (
     <Row gap={{ sm: '24', md: '36', lg: '48', xl: '60' }} {...props}>

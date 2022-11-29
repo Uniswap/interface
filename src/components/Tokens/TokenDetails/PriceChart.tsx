@@ -42,7 +42,7 @@ export function calculateDelta(start: number, current: number) {
   return (current / start - 1) * 100
 }
 
-export function getDeltaArrow(delta: number | null | undefined, iconSize: number) {
+export function getDeltaArrow(delta: number | null | undefined, iconSize = 20) {
   // Null-check not including zero
   if (delta === null || delta === undefined) {
     return null
@@ -218,7 +218,7 @@ export function PriceChart({ width, height, prices, timePeriod }: PriceChartProp
   const [tickFormatter, crosshairDateFormatter, ticks] = tickFormat(timePeriod, locale)
   const delta = calculateDelta(startingPrice.value, displayPrice.value)
   const formattedDelta = formatDelta(delta)
-  const arrow = getDeltaArrow(delta, 20)
+  const arrow = getDeltaArrow(delta)
   const crosshairEdgeMax = width * 0.85
   const crosshairAtEdge = !!crosshair && crosshair > crosshairEdgeMax
   const hasData = prices && prices.length > 0
