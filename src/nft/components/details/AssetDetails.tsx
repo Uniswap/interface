@@ -6,6 +6,7 @@ import { reduceFilters } from 'nft/components/collection/Activity'
 import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import { Center } from 'nft/components/Flex'
+import { vars } from 'nft/css/sprinkles.css'
 import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
 import { ActivityEventResponse, ActivityEventType, CollectionInfoForAsset, GenieAsset } from 'nft/types'
 import { shortenAddress } from 'nft/utils/address'
@@ -18,6 +19,7 @@ import { useCallback, useMemo, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery, useQuery } from 'react-query'
 import { Link as RouterLink } from 'react-router-dom'
+import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 
 import AssetActivity from './AssetActivity'
@@ -117,14 +119,14 @@ const ContentNotAvailable = styled.div`
   line-height: 20px;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
+  border-radius: 12px;<
   width: 450px;
   height: 450px;
 `
 
-const FilterBox = styled.div<{ isActive?: boolean }>`
+const FilterBox = styled.div<{ backgroundColor?: string }>`
   box-sizing: border-box;
-  background-color: ${({ theme }) => theme.backgroundInteractive};
+  background-color: ${({ theme, backgroundColor }) => backgroundColor ?? theme.backgroundInteractive};
   font-size: 14px;
   font-weight: 600;
   line-height: 14px;
@@ -133,7 +135,6 @@ const FilterBox = styled.div<{ isActive?: boolean }>`
   border-radius: 12px;
   cursor: pointer;
   box-sizing: border-box;
-  border: ${({ isActive, theme }) => (isActive ? `1px solid ${theme.accentActive}` : undefined)};
   ${OpacityHoverState};
 `
 
@@ -287,9 +288,13 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   const Filter = useCallback(
     function ActivityFilter({ eventType }: { eventType: ActivityEventType }) {
       const isActive = activeFilters[eventType]
+      const isDarkMode = useIsDarkMode()
 
       return (
-        <FilterBox isActive={isActive} onClick={() => filtersDispatch({ eventType })}>
+        <FilterBox
+          backgroundColor={isActive ? (isDarkMode ? vars.color.gray500 : vars.color.gray200) : undefined}
+          onClick={() => filtersDispatch({ eventType })}
+        >
           {eventType === ActivityEventType.CancelListing
             ? 'Cancellations'
             : eventType.charAt(0) + eventType.slice(1).toLowerCase() + 's'}

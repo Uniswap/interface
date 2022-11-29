@@ -1,4 +1,5 @@
 import clsx from 'clsx'
+import { OpacityHoverState } from 'components/Common'
 import { Box } from 'nft/components/Box'
 import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
 import { Center, Column, Row } from 'nft/components/Flex'
@@ -11,6 +12,7 @@ import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
 import { useIsDarkMode } from 'state/user/hooks'
+import styled from 'styled-components/macro'
 
 import * as styles from './Activity.css'
 import { AddressCell, BuyCell, EventCell, ItemCell, PriceCell } from './ActivityCells'
@@ -23,6 +25,10 @@ enum ColumnHeaders {
   By = 'By',
   To = 'To',
 }
+
+const FilterBox = styled(Box)`
+  ${OpacityHoverState};
+`
 
 export const HeaderRow = () => {
   return (
@@ -122,13 +128,15 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
       const activeBackgroundColor = isDarkMode ? vars.color.gray500 : vars.color.gray200
 
       return (
-        <Box
+        <FilterBox
           className={clsx(styles.filter)}
-          style={{ background: isActive ? activeBackgroundColor : themeVars.colors.backgroundInteractive }}
+          style={{
+            background: isActive ? activeBackgroundColor : themeVars.colors.backgroundInteractive,
+          }}
           onClick={() => filtersDispatch({ eventType })}
         >
           {eventType.charAt(0) + eventType.slice(1).toLowerCase() + 's'}
-        </Box>
+        </FilterBox>
       )
     },
     [activeFilters, isDarkMode]
