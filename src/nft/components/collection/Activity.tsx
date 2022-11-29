@@ -1,4 +1,3 @@
-import clsx from 'clsx'
 import { OpacityHoverState } from 'components/Common'
 import { Box } from 'nft/components/Box'
 import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
@@ -129,7 +128,7 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
 
       return (
         <FilterBox
-          className={clsx(styles.filter)}
+          className={styles.filter}
           style={{
             background: isActive ? activeBackgroundColor : themeVars.colors.backgroundInteractive,
           }}
