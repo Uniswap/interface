@@ -198,7 +198,7 @@ export const NftsTab = forwardRef<FlashList<any>, NftsTabProps>(
     if (isNonPollingRequestInFlight(networkStatus)) {
       return (
         <View style={containerProps?.loadingContainerStyle}>
-          <Flex px="xs">
+          <Flex>
             <Loading repeat={6} type="nft" />
           </Flex>
         </View>
