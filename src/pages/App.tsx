@@ -29,8 +29,6 @@ import DarkModeQueryParamReader from '../theme/components/DarkModeQueryParamRead
 import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
-import Earn from './Earn'
-import Manage from './Earn/Manage'
 import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
 import Pool from './Pool'
@@ -210,8 +208,6 @@ export default function App() {
                   />
                   <Route path="create-proposal" element={<Navigate to="/vote/create-proposal" replace />} />
                   <Route path="claim" element={<OpenClaimAddressModalAndRedirectToSwap />} />
-                  <Route path="uni" element={<Earn />} />
-                  <Route path="uni/:currencyIdA/:currencyIdB" element={<Manage />} />
 
                   <Route path="send" element={<RedirectPathToSwapOnly />} />
                   <Route path="swap/:outputCurrency" element={<RedirectToSwap />} />
