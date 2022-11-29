@@ -95,6 +95,7 @@ export function ExploreScreen({ navigation }: Props) {
             showCancelButton
             backgroundColor={isSearchMode ? contrastBackgroundColor : searchBarBackgroundColor}
             placeholder={t('Search tokens and wallets')}
+            showShadow={!isSearchMode}
             value={searchQuery}
             onCancel={onSearchCancel}
             onChangeText={onChangeSearchFilter}

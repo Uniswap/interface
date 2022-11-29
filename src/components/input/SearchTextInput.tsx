@@ -35,6 +35,7 @@ export type SearchTextInputProps = TextInputProps & {
   disableClearable?: boolean
   endAdornment?: ReactElement
   showCancelButton?: boolean
+  showShadow?: boolean
 }
 
 export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>((props, ref) => {
@@ -52,6 +53,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
     onFocus,
     placeholder,
     showCancelButton,
+    showShadow,
     value,
   } = props
 
@@ -137,6 +139,15 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
     }
   })
 
+  const shadowProps = showShadow
+    ? {
+        shadowColor: isDarkMode ? 'black' : 'brandedAccentSoft',
+        shadowOffset: SHADOW_OFFSET_SMALL,
+        shadowOpacity: 0.25,
+        shadowRadius: 6,
+      }
+    : null
+
   return (
     <Box alignItems="center" flexDirection="row" flexShrink={1}>
       <AnimatedFlex
@@ -149,11 +160,8 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
         gap="none"
         minHeight={48}
         px="sm"
-        shadowColor={isDarkMode ? 'black' : 'brandedAccentSoft'}
-        shadowOffset={SHADOW_OFFSET_SMALL}
-        shadowOpacity={0.25}
-        shadowRadius={6}
-        style={textInputStyle}>
+        style={textInputStyle}
+        {...shadowProps}>
         <SearchIcon color={theme.colors.textTertiary} height={20} width={20} />
         <TextInput
           ref={ref}
