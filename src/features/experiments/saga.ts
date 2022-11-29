@@ -6,28 +6,28 @@ import { initAnalytics, logException } from 'src/features/telemetry'
 import { LogContext } from 'src/features/telemetry/constants'
 import { call, put } from 'typed-redux-saga'
 
+const experimentClient = Experiment.initialize(config.amplitudeExperimentsDeploymentKey)
+
 async function initializeExperiments() {
   try {
-    await Experiment.initialize(config.amplitudeExperimentsDeploymentKey)
-
     const uniqueID = await getUniqueId()
     const user = {
       device_id: uniqueID,
     }
 
-    await Experiment.fetch(user)
+    await experimentClient.fetch(user)
   } catch (err) {
     logException(LogContext.Experiments, err)
   }
 }
 
 export async function retrieveRemoteExperiments() {
-  const fetchedAmplitudeExperiments = await Experiment.all()
+  const fetchedAmplitudeExperiments = await experimentClient.all()
 
   const fetchedFeatureFlags: FeatureFlagsMap = {}
   const fetchedExperiments: ExperimentsMap = {}
   Object.keys(fetchedAmplitudeExperiments).map((experimentKey) => {
-    const variant = fetchedAmplitudeExperiments[experimentKey].value
+    const variant = fetchedAmplitudeExperiments[experimentKey].value!
     if (['on'].includes(variant)) {
       fetchedFeatureFlags[experimentKey] = variant === 'on'
     } else {

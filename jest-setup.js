@@ -14,6 +14,15 @@ jest.mock('@amplitude/analytics-react-native', () => ({
   track: () => jest.fn(),
 }))
 
+jest.mock('@amplitude/experiment-react-native-client', () =>  ({
+  Experiment: {
+    initialize: () => ({
+      fetch: jest.fn(),
+      all: jest.fn()
+    })
+  }
+}))
+
 // Mock Sentry crash reporting
 jest.mock('@sentry/react-native', () => ({
   init: () => jest.fn(),
@@ -37,6 +46,8 @@ jest.mock('react-native-vision-camera', () => {})
 
 // Mock expo clipboard lib due to native deps
 jest.mock('expo-clipboard', () => {})
+jest.mock('expo-blur', () => ({BlurView: {}}))
+jest.mock('expo-av', () => {})
 
 // Setup Async Storage mocking: https://react-native-async-storage.github.io/async-storage/docs/advanced/jest/
 jest.mock('@react-native-async-storage/async-storage', () => mockAsyncStorage)
