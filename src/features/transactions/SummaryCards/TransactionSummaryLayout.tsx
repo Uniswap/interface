@@ -112,13 +112,13 @@ function TransactionSummaryLayout({
           justifyContent="space-between"
           mb={showBackground ? 'sm' : 'none'}
           p="sm">
-          <Flex row alignItems="center" gap="sm" height="100%" justifyContent="flex-start">
+          <Flex row shrink alignItems="center" gap="sm" height="100%" justifyContent="flex-start">
             {icon && (
               <Flex centered height={TXN_HISTORY_ICON_SIZE} width={TXN_HISTORY_ICON_SIZE}>
                 {icon}
               </Flex>
             )}
-            <Flex grow gap="none">
+            <Flex shrink gap="none">
               <Flex row alignItems="center" gap="xxs">
                 <Text numberOfLines={1} variant="bodyLarge">
                   {title}
@@ -126,7 +126,7 @@ function TransactionSummaryLayout({
                 {chainId !== ChainId.Mainnet && <InlineNetworkPill chainId={chainId} />}
               </Flex>
               {caption && (
-                <Text color="textSecondary" variant="subheadSmall">
+                <Text color="textSecondary" numberOfLines={1} variant="subheadSmall">
                   {caption}
                 </Text>
               )}
@@ -206,7 +206,7 @@ export function AssetUpdateLayout({
   caption?: string | undefined
 }) {
   return (
-    <Flex shrink alignItems="flex-end" gap="none">
+    <Flex grow alignItems="flex-end" gap="none">
       <Text numberOfLines={1} variant="bodyLarge">
         {title}
       </Text>

@@ -53,7 +53,7 @@ export function ActivityScreen() {
     readonly && !hasImportedSeedPhrase ? t('Import recovery phrase') : t('Receive tokens or NFTs')
 
   return (
-    <Screen>
+    <Screen edges={['top', 'left', 'right']}>
       <BackHeader p="md">
         <Text variant="buttonLabelMedium">{t('Activity')}</Text>
       </BackHeader>
