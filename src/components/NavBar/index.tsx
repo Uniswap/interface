@@ -9,12 +9,30 @@ import { Row } from 'nft/components/Flex'
 import { UniIcon } from 'nft/components/icons'
 import { ReactNode } from 'react'
 import { NavLink, NavLinkProps, useLocation } from 'react-router-dom'
+import styled from 'styled-components/macro'
 
 import { Bag } from './Bag'
 import { ChainSelector } from './ChainSelector'
 import { MenuDropdown } from './MenuDropdown'
 import { SearchBar } from './SearchBar'
 import * as styles from './style.css'
+
+const MobileBottomBar = styled.div`
+  position: fixed;
+  display: flex;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  justify-content: space-between;
+  padding: 4px 8px;
+  height: 56px;
+  background: ${({ theme }) => theme.backgroundSurface};
+  border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
+
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
+    display: none;
+  }
+`
 
 interface MenuItemProps {
   href: string
@@ -114,12 +132,12 @@ const Navbar = () => {
           </Box>
         </Box>
       </nav>
-      <Box className={styles.mobileBottomBar}>
+      <MobileBottomBar>
         <PageTabs />
         <Box marginY="4">
           <MenuDropdown />
         </Box>
-      </Box>
+      </MobileBottomBar>
     </>
   )
 }

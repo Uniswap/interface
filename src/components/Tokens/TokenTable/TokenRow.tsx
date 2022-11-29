@@ -32,7 +32,7 @@ import {
   useSetSortMethod,
 } from '../state'
 import InfoTip from '../TokenDetails/InfoTip'
-import { formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
+import { ArrowCell, DeltaText, formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
 
 const Cell = styled.div`
   display: flex;
@@ -197,6 +197,7 @@ const PriceInfoCell = styled(Cell)`
     align-items: flex-end;
   }
 `
+
 const HeaderCellWrapper = styled.span<{ onClick?: () => void }>`
   align-items: center;
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'unset')};
@@ -442,6 +443,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const timePeriod = useAtomValue(filterTimeAtom)
   const delta = token.market?.pricePercentChange?.value
   const arrow = getDeltaArrow(delta)
+  const smallArrow = getDeltaArrow(delta, 14)
   const formattedDelta = formatDelta(delta)
   const rank = sortAscending ? tokenListLength - tokenListIndex : tokenListIndex + 1
 
@@ -483,16 +485,16 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               <PriceInfoCell>
                 {formatUSDPrice(token.market?.price?.value)}
                 <PercentChangeInfoCell>
-                  {formattedDelta}
-                  {arrow}
+                  <ArrowCell>{smallArrow}</ArrowCell>
+                  <DeltaText delta={delta}>{formattedDelta}</DeltaText>
                 </PercentChangeInfoCell>
               </PriceInfoCell>
             </ClickableContent>
           }
           percentChange={
             <ClickableContent>
-              {formattedDelta}
-              {arrow}
+              <ArrowCell>{arrow}</ArrowCell>
+              <DeltaText delta={delta}>{formattedDelta}</DeltaText>
             </ClickableContent>
           }
           tvl={

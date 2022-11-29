@@ -35,13 +35,14 @@ const MarketNameWrapper = styled(Row)`
 `
 
 export const MARKETPLACE_ITEMS = {
-  looksrare: 'LooksRare',
-  nft20: 'NFT20',
-  nftx: 'NFTX',
-  opensea: 'OpenSea',
   x2y2: 'X2Y2',
-  cryptopunks: 'LarvaLabs',
+  opensea: 'OpenSea',
+  looksrare: 'LooksRare',
   sudoswap: 'SudoSwap',
+
+  nftx: 'NFTX',
+  nft20: 'NFT20',
+  cryptopunks: 'LarvaLabs',
 }
 
 function getMarketLogoSrc(market: string) {
