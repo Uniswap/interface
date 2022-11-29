@@ -129,6 +129,12 @@ export const getAlertColor = (severity?: WarningSeverity): WarningColor => {
         background: 'textSecondary',
         buttonEmphasis: ButtonEmphasis.Secondary,
       }
+    case WarningSeverity.Low:
+      return {
+        text: 'textSecondary',
+        background: 'background2',
+        buttonEmphasis: ButtonEmphasis.Tertiary,
+      }
     case WarningSeverity.High:
       return {
         text: 'accentCritical',

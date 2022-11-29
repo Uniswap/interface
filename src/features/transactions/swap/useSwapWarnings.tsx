@@ -2,6 +2,8 @@ import { NetInfoState, useNetInfo } from '@react-native-community/netinfo'
 import { CurrencyAmount, NativeCurrency, Percent } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { TFunction, useTranslation } from 'react-i18next'
+import { useAppTheme } from 'src/app/hooks'
+import Eye from 'src/assets/icons/eye.svg'
 import { getNetworkWarning } from 'src/components/modals/WarningModal/constants'
 import {
   Warning,
@@ -14,6 +16,7 @@ import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { hasSufficientFundsIncludingGas } from 'src/features/transactions/utils'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
+import { Theme } from 'src/styles/theme'
 import { formatPriceImpact } from 'src/utils/format'
 
 const PRICE_IMPACT_THRESHOLD_MEDIUM = new Percent(3, 100) // 3%
@@ -21,6 +24,7 @@ const PRICE_IMPACT_THRESHOLD_HIGH = new Percent(5, 100) // 5%
 
 export function getSwapWarnings(
   t: TFunction,
+  theme: Theme,
   account: Account,
   derivedSwapInfo: DerivedSwapInfo,
   networkStatus: NetInfoState
@@ -119,10 +123,11 @@ export function getSwapWarnings(
   if (account?.type === AccountType.Readonly) {
     warnings.push({
       type: WarningLabel.ViewOnlyAccount,
-      severity: WarningSeverity.Medium,
+      severity: WarningSeverity.Low,
       action: WarningAction.DisableSubmit,
       title: t('This wallet is view-only'),
       message: t('You need to import this wallet via recovery phrase to swap tokens.'),
+      icon: Eye,
     })
   }
 
@@ -131,9 +136,10 @@ export function getSwapWarnings(
 
 export function useSwapWarnings(t: TFunction, account: Account, derivedSwapInfo: DerivedSwapInfo) {
   const networkStatus = useNetInfo()
+  const theme = useAppTheme()
   return useMemo(() => {
-    return getSwapWarnings(t, account, derivedSwapInfo, networkStatus)
-  }, [account, derivedSwapInfo, t, networkStatus])
+    return getSwapWarnings(t, theme, account, derivedSwapInfo, networkStatus)
+  }, [account, derivedSwapInfo, t, networkStatus, theme])
 }
 
 const formIncomplete = (derivedSwapInfo: DerivedSwapInfo) => {

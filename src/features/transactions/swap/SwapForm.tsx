@@ -99,7 +99,7 @@ export function SwapForm({
   const actionButtonDisabled =
     noValidSwap || blockingWarning || swapDataRefreshing || isBlocked || isBlockedLoading
 
-  const swapWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Medium)
+  const swapWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Low)
   const swapWarningColor = getAlertColor(swapWarning?.severity)
 
   const onSwapWarningClick = () => {
@@ -153,13 +153,21 @@ export function SwapForm({
   const SWAP_DIRECTION_BUTTON_BORDER_WIDTH = theme.spacing.xxs
 
   useSwapAnalytics(derivedSwapInfo)
+  const SwapWarningIcon = swapWarning?.icon ?? AlertTriangleIcon
 
   return (
     <>
       {showWarningModal && swapWarning?.title && (
         <WarningModal
           caption={swapWarning.message}
-          confirmText={t('OK')}
+          confirmText={t('Close')}
+          icon={
+            <SwapWarningIcon
+              color={theme.colors[swapWarningColor.text]}
+              height={theme.iconSizes.lg}
+              width={theme.iconSizes.lg}
+            />
+          }
           modalName={ModalName.SwapWarning}
           severity={swapWarning.severity}
           title={swapWarning.title}
@@ -222,7 +230,7 @@ export function SwapForm({
           </Box>
 
           <Trace section={SectionName.CurrencyOutputPanel}>
-            <Flex gap="none">
+            <Box>
               <Flex
                 backgroundColor="background2"
                 borderBottomLeftRadius={swapWarning || showRate || isBlocked ? 'none' : 'xl'}
@@ -259,7 +267,7 @@ export function SwapForm({
                 />
               </Flex>
               {swapWarning && !isBlocked ? (
-                <TouchableArea onPress={onSwapWarningClick}>
+                <TouchableArea mt="xxxxs" onPress={onSwapWarningClick}>
                   <Flex
                     row
                     alignItems="center"
@@ -271,9 +279,10 @@ export function SwapForm({
                     gap="xs"
                     px="md"
                     py="sm">
-                    <AlertTriangleIcon
+                    <SwapWarningIcon
                       color={theme.colors[swapWarningColor.text]}
                       height={theme.iconSizes.sm}
+                      strokeWidth={1.5}
                       width={theme.iconSizes.sm}
                     />
                     <Flex row gap="none">
@@ -348,7 +357,7 @@ export function SwapForm({
                   </Flex>
                 </TouchableArea>
               ) : null}
-            </Flex>
+            </Box>
           </Trace>
         </AnimatedFlex>
         <AnimatedFlex

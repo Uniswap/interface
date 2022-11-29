@@ -1,8 +1,11 @@
+import { FunctionComponent } from 'react'
+import { SvgProps } from 'react-native-svg'
 import { ButtonEmphasis } from 'src/components/buttons/Button'
 import { Theme } from 'src/styles/theme'
 
 export enum WarningSeverity {
   None = 0,
+  Low = 1,
   Medium = 5,
   High = 10,
 }
@@ -53,4 +56,5 @@ export interface Warning {
   action: WarningAction
   title?: string
   message?: string
+  icon?: FunctionComponent<SvgProps>
 }
