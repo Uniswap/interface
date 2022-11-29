@@ -174,11 +174,7 @@ export default function App() {
 
   useEffect(() => {
     const scrollListener = (e: Event) => {
-      if (window.scrollY > 0) {
-        setScrolledState(true)
-      } else {
-        setScrolledState(false)
-      }
+      setScrolledState(window.scrollY > 0)
     }
     window.addEventListener('scroll', scrollListener)
     return () => window.removeEventListener('scroll', scrollListener)
