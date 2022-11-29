@@ -1,6 +1,6 @@
 import { useNftBalanceQuery } from 'graphql/data/nft/NftBalance'
 import { AnimatedBox, Box } from 'nft/components/Box'
-import { ClearAllButton, CollectionNftsLoading } from 'nft/components/collection/CollectionNfts'
+import { ClearAllButton, LoadingAssets } from 'nft/components/collection/CollectionNfts'
 import { assetList } from 'nft/components/collection/CollectionNfts.css'
 import { FilterButton } from 'nft/components/collection/FilterButton'
 import { Column, Row } from 'nft/components/Flex'
@@ -200,6 +200,7 @@ const ProfilePageNfts = ({
     walletAssets: ownerAssets,
     loadNext,
     hasNext,
+    isLoadingNext,
   } = useNftBalanceQuery(address, collectionFilters, [], DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
 
   const { gridX } = useSpring({
@@ -244,27 +245,24 @@ const ProfilePageNfts = ({
             next={() => loadNext(DEFAULT_WALLET_ASSET_QUERY_AMOUNT)}
             hasMore={hasNext}
             loader={
-              Boolean(hasNext && ownerAssets?.length) && (
-                <CollectionNftsLoading count={DEFAULT_WALLET_ASSET_QUERY_AMOUNT} />
-              )
+              Boolean(hasNext && ownerAssets?.length) && <LoadingAssets count={DEFAULT_WALLET_ASSET_QUERY_AMOUNT} />
             }
             dataLength={ownerAssets?.length ?? 0}
+            className={ownerAssets?.length || isLoadingNext ? assetList : undefined}
             style={{ overflow: 'unset' }}
           >
-            <div className={assetList}>
-              {ownerAssets?.length
-                ? ownerAssets.map((asset, index) => (
-                    <div key={index}>
-                      <ViewMyNftsAsset
-                        asset={asset}
-                        mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
-                        setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-                        hideDetails={sellAssets.length > 0}
-                      />
-                    </div>
-                  ))
-                : null}
-            </div>
+            {ownerAssets?.length
+              ? ownerAssets.map((asset, index) => (
+                  <div key={index}>
+                    <ViewMyNftsAsset
+                      asset={asset}
+                      mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
+                      setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+                      hideDetails={sellAssets.length > 0}
+                    />
+                  </div>
+                ))
+              : null}
           </InfiniteScroll>
         </AnimatedBox>
       )}
