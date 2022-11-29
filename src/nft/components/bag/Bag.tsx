@@ -30,6 +30,7 @@ import { combineBuyItemsWithTxRoute } from 'nft/utils/txRoute/combineItemsWithTx
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from 'react-query'
 import styled from 'styled-components/macro'
+import { Z_INDEX } from 'theme/zIndex'
 import shallow from 'zustand/shallow'
 
 import * as styles from './Bag.css'
@@ -46,10 +47,31 @@ interface SeparatorProps {
 const DetailsPageBackground = styled.div`
   position: fixed;
   background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(12px);
   top: 72px;
   width: 100%;
   height: 100%;
+`
+
+const BagContainer = styled.div`
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  right: 0px;
+  background: ${({ theme }) => theme.backgroundSurface};
+  border-left-style: solid;
+  border-color: ${({ theme }) => theme.backgroundOutline};
+  border-width: 1px;
+  color: ${({ theme }) => theme.textPrimary};
+  z-index: ${Z_INDEX.fixed};
+
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
+    width: 360px;
+    border-top-style: solid;
+    top: 72px;
+  }
 `
 
 const ScrollingIndicator = ({ top, show }: SeparatorProps) => (
@@ -282,7 +304,7 @@ const Bag = () => {
 
   return (
     <Portal>
-      <Column zIndex={isMobile || isOpen ? 'modalOverTooltip' : '3'} className={styles.bagContainer}>
+      <BagContainer>
         {!(isProfilePage && profilePageState === ProfilePageStateType.LISTING) ? (
           <>
             <BagHeader
@@ -326,7 +348,7 @@ const Bag = () => {
         ) : (
           <ListingModal />
         )}
-      </Column>
+      </BagContainer>
       {isDetailsPage ? (
         <DetailsPageBackground onClick={toggleBag} />
       ) : (
