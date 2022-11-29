@@ -1,10 +1,9 @@
 import { useNftBalanceQuery } from 'graphql/data/nft/NftBalance'
 import { AnimatedBox, Box } from 'nft/components/Box'
-import { ClearAllButton } from 'nft/components/collection/CollectionNfts'
+import { ClearAllButton, LoadingAssets } from 'nft/components/collection/CollectionNfts'
 import { assetList } from 'nft/components/collection/CollectionNfts.css'
 import { FilterButton } from 'nft/components/collection/FilterButton'
-import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
-import { Center, Column, Row } from 'nft/components/Flex'
+import { Column, Row } from 'nft/components/Flex'
 import { CrossIcon } from 'nft/components/icons'
 import { FilterSidebar } from 'nft/components/profile/view/FilterSidebar'
 import { subhead } from 'nft/css/common.css'
@@ -51,7 +50,7 @@ const ProfileHeader = styled.div`
 `
 
 export const DEFAULT_WALLET_ASSET_QUERY_AMOUNT = 25
-const WALLET_COLLECTIONS_PAGINATION_LIMIT = 300
+export const WALLET_COLLECTIONS_PAGINATION_LIMIT = 300
 const FILTER_SIDEBAR_WIDTH = 300
 const PADDING = 16
 
@@ -171,7 +170,7 @@ export const ProfilePage = () => {
             paddingY="8"
             paddingX="28"
           >
-            Sell
+            List for sale
           </Box>
         </Row>
       )}
@@ -201,6 +200,7 @@ const ProfilePageNfts = ({
     walletAssets: ownerAssets,
     loadNext,
     hasNext,
+    isLoadingNext,
   } = useNftBalanceQuery(address, collectionFilters, [], DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
 
   const { gridX } = useSpring({
@@ -245,27 +245,24 @@ const ProfilePageNfts = ({
             next={() => loadNext(DEFAULT_WALLET_ASSET_QUERY_AMOUNT)}
             hasMore={hasNext}
             loader={
-              <Center>
-                <LoadingSparkle />
-              </Center>
+              Boolean(hasNext && ownerAssets?.length) && <LoadingAssets count={DEFAULT_WALLET_ASSET_QUERY_AMOUNT} />
             }
             dataLength={ownerAssets?.length ?? 0}
+            className={ownerAssets?.length || isLoadingNext ? assetList : undefined}
             style={{ overflow: 'unset' }}
           >
-            <div className={assetList}>
-              {ownerAssets?.length
-                ? ownerAssets.map((asset, index) => (
-                    <div key={index}>
-                      <ViewMyNftsAsset
-                        asset={asset}
-                        mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
-                        setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-                        hideDetails={sellAssets.length > 0}
-                      />
-                    </div>
-                  ))
-                : null}
-            </div>
+            {ownerAssets?.length
+              ? ownerAssets.map((asset, index) => (
+                  <div key={index}>
+                    <ViewMyNftsAsset
+                      asset={asset}
+                      mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
+                      setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+                      hideDetails={sellAssets.length > 0}
+                    />
+                  </div>
+                ))
+              : null}
           </InfiniteScroll>
         </AnimatedBox>
       )}

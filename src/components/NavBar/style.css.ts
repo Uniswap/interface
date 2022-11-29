@@ -29,14 +29,7 @@ export const logo = style([
   }),
 ])
 
-export const baseContainer = style([
-  sprinkles({
-    alignItems: 'center',
-  }),
-])
-
 export const baseSideContainer = style([
-  baseContainer,
   sprinkles({
     display: 'flex',
     width: 'full',
@@ -53,12 +46,12 @@ export const leftSideContainer = style([
 ])
 
 export const middleContainer = style([
-  baseContainer,
   sprinkles({
     flex: '1',
     flexShrink: '1',
-    justifyContent: 'center',
+    justifyContent: { lg: 'flex-end', xl: 'center' },
     display: { sm: 'none', xl: 'flex' },
+    alignItems: 'flex-start',
   }),
 ])
 
@@ -102,20 +95,5 @@ export const activeMenuItem = style([
   sprinkles({
     color: 'textPrimary',
     background: 'backgroundFloating',
-  }),
-])
-
-export const mobileBottomBar = style([
-  sprinkles({
-    position: 'fixed',
-    display: { sm: 'flex', lg: 'none' },
-    bottom: '0',
-    right: '0',
-    left: '0',
-    justifyContent: 'space-between',
-    paddingY: '4',
-    paddingX: '8',
-    height: '56',
-    background: 'backgroundSurface',
   }),
 ])

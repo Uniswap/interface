@@ -6,33 +6,20 @@ import { VerifiedIcon } from 'nft/components/icons'
 import { Markets, TrendingCollection } from 'nft/types'
 import { formatWeiToDecimal } from 'nft/utils'
 import styled, { useTheme } from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components/text'
 
-const CarouselCardContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  background-color: ${({ theme }) => theme.backgroundSurface};
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
-  border-radius: 20px;
-  gap: 8px;
-  overflow: hidden;
-  height: 100%;
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
-    gap: 20px;
-  }
-`
 const CarouselCardBorder = styled.div`
   width: 100%;
   position: relative;
-  border-radius: 22px;
+  border-radius: 21px;
   cursor: pointer;
-  border: 2px solid transparent;
+  border: 1px solid transparent;
   transition-property: border-color;
   transition-duration: ${({ theme }) => theme.transition.duration.fast};
   transition-timing-function: ${({ theme }) => theme.transition.timing.inOut};
 
   :hover {
-    border: 2px solid ${({ theme }) => theme.backgroundOutline};
+    border: 1px solid ${({ theme }) => theme.backgroundOutline};
   }
 
   ::after {
@@ -43,7 +30,7 @@ const CarouselCardBorder = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    border-radius: 22px;
+    border-radius: 21px;
     z-index: -1;
     box-shadow: ${({ theme }) => theme.deepShadow};
     transition-property: opacity;
@@ -58,12 +45,6 @@ const CarouselCardBorder = styled.div`
 
 const CardHeaderContainer = styled.div<{ src: string }>`
   position: relative;
-  width: 100%;
-  height: 108px;
-  padding-top: 32px;
-  padding-bottom: 16px;
-  padding-left: 28px;
-  padding-right: 28px;
   background-image: ${({ src }) => `url(${src})`};
   background-size: cover;
   background-position: center;
@@ -71,12 +52,6 @@ const CardHeaderContainer = styled.div<{ src: string }>`
 
 const LoadingCardHeaderContainer = styled.div`
   position: relative;
-  width: 100%;
-  height: 108px;
-  padding-top: 32px;
-  padding-bottom: 16px;
-  padding-left: 28px;
-  padding-right: 28px;
   animation: ${loadingAnimation} 1.5s infinite;
   animation-fill-mode: both;
   background: linear-gradient(
@@ -89,35 +64,31 @@ const LoadingCardHeaderContainer = styled.div`
   background-size: 400%;
 `
 
-const CardHeaderRow = styled.div`
+const CardHeaderColumn = styled.div`
   position: relative;
-  z-index: 1;
   display: flex;
-  gap: 8px;
+  flex: 1;
   align-items: center;
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
-    gap: 12px;
-  }
-`
-
-const CardNameRow = styled.div`
-  display: flex;
-  gap: 2px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  flex-direction: column;
+  gap: 8px;
+  height: 202px;
+  justify-content: center;
+  padding: 0 40px;
+  z-index: 1;
 `
 const IconContainer = styled.div`
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
+  display: inline;
+  vertical-align: text-bottom;
+  margin-left: 2px;
 `
-
 const CollectionNameContainer = styled.div`
-  display: flex;
+  display: -webkit-box;
   overflow: hidden;
-  white-space: nowrap;
   text-overflow: ellipsis;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-align: center;
+  max-height: 56px;
 `
 
 const LoadingCollectionNameContainer = styled(LoadingBubble)`
@@ -125,26 +96,31 @@ const LoadingCollectionNameContainer = styled(LoadingBubble)`
 `
 
 const HeaderOverlay = styled.div`
-  position: absolute;
-  height: 108px;
-  top: 0px;
-  right: 0px;
-  left: 0px;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 100%, rgba(0, 0, 0, 0.08));
+  bottom: 0px;
+  left: 0px;
+  position: absolute;
+  right: 0px;
+  top: 0px;
   z-index: 0;
+
+  // overlay workaround for firefox only
+  @supports (-moz-appearance: none) {
+    bottom: -1px;
+  }
 `
 
 const CollectionImage = styled.img`
-  width: 60px;
-  height: 60px;
+  width: 86px;
+  height: 86px;
   background: ${({ theme }) => theme.accentTextLightPrimary};
   border: 2px solid ${({ theme }) => theme.accentTextLightPrimary};
   border-radius: 100px;
 `
 
 const LoadingCollectionImage = styled.div`
-  width: 60px;
-  height: 60px;
+  width: 86px;
+  height: 86px;
   border-radius: 100px;
   animation: ${loadingAnimation} 1.5s infinite;
   animation-fill-mode: both;
@@ -158,44 +134,59 @@ const LoadingCollectionImage = styled.div`
   background-size: 400%;
 `
 
-const CardBottomContainer = styled.div`
-  display: grid;
-  grid-template-columns: auto auto auto;
-  row-gap: 8px;
-  column-gap: 20px;
-  padding-right: 28px;
-  padding-left: 28px;
-  padding-bottom: 20px;
-  justify-content: space-between;
-
-  @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
-    row-gap: 16px;
-  }
-`
-
-const HeaderRow = styled.div`
-  color: ${({ theme }) => theme.userThemeColor};
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 20px;
-  row-gap: 8px;
-
-  @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
-    font-size: 16px;
-    line-height: 24px;
-    row-gap: 12px;
-  }
-`
-
 const LoadingTableElement = styled(LoadingBubble)`
   width: 50px;
 `
 
 const TableElement = styled.div`
-  color: ${({ theme }) => theme.textSecondary};
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+`
+
+const FirstColumnTextWrapper = styled.div``
+
+const CardBottomContainer = styled.div`
+  display: grid;
+  flex: 1;
+  gap: 8px;
+  grid-template-columns: auto auto auto;
+  padding: 16px 16px 20px;
+`
+
+const MarketplaceIcon = styled.img`
+  width: 20px;
+  height: 20px;
+`
+
+const CarouselCardContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  background-color: ${({ theme }) => theme.backgroundSurface};
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-radius: 20px;
+  overflow: hidden;
+  height: 100%;
+
+  ${TableElement}:nth-child(3n-1), ${LoadingTableElement}:nth-child(3n-1) {
+    justify-self: center;
+  }
+
+  ${TableElement}:nth-child(3n), ${LoadingTableElement}:nth-child(3n) {
+    justify-self: right;
+  }
+
+  @media (max-width: 396px) or ((min-width: ${({ theme }) => theme.breakpoint.sm}px) and (max-width: 880px)) {
+    ${FirstColumnTextWrapper} {
+      display: none;
+    }
+    ${TableElement} {
+      justify-self: left !important;
+    }
+    ${CardHeaderColumn} {
+      padding: 0 20px;
+    }
+  }
 `
 
 interface MarketplaceRowProps {
@@ -207,12 +198,25 @@ interface MarketplaceRowProps {
 export const MarketplaceRow = ({ marketplace, floorInEth, listings }: MarketplaceRowProps) => {
   return (
     <>
-      <TableElement>{marketplace}</TableElement>
       <TableElement>
-        {floorInEth !== undefined ? formatNumberOrString(floorInEth, NumberType.NFTTokenFloorPriceTrailingZeros) : '-'}{' '}
-        ETH
+        <MarketplaceIcon
+          src={`/nft/svgs/marketplaces/${marketplace.toLowerCase()}-grey.svg`}
+          alt={`${marketplace} icon`}
+        />
+        <FirstColumnTextWrapper>
+          <ThemedText.BodySmall color="textSecondary">{marketplace}</ThemedText.BodySmall>
+        </FirstColumnTextWrapper>
       </TableElement>
-      <TableElement>{listings ?? '-'}</TableElement>
+      <TableElement>
+        <ThemedText.BodySmall color="textSecondary">
+          {Number(floorInEth) > 0
+            ? `${formatNumberOrString(floorInEth, NumberType.NFTTokenFloorPriceTrailingZeros)} ETH`
+            : '-'}
+        </ThemedText.BodySmall>
+      </TableElement>
+      <TableElement>
+        <ThemedText.BodySmall color="textSecondary">{Number(listings) > 0 ? listings : 'None'}</ThemedText.BodySmall>
+      </TableElement>
     </>
   )
 }
@@ -238,9 +242,22 @@ export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
         <CarouselCardHeader collection={collection} />
         <CardBottomContainer>
           <>
-            <HeaderRow>Uniswap</HeaderRow>
-            <HeaderRow>{formatWeiToDecimal(collection.floor.toString())} ETH Floor</HeaderRow>
-            <HeaderRow>{gqlCollection.marketplaceCount?.reduce((acc, cur) => acc + cur.count, 0)} Listings</HeaderRow>
+            <TableElement>
+              <MarketplaceIcon src="/nft/svgs/marketplaces/uniswap-magenta.svg" alt="Uniswap icon" />
+              <FirstColumnTextWrapper>
+                <ThemedText.SubHeaderSmall color="userThemeColor">Uniswap</ThemedText.SubHeaderSmall>
+              </FirstColumnTextWrapper>
+            </TableElement>
+            <TableElement>
+              <ThemedText.SubHeaderSmall color="userThemeColor">
+                {formatWeiToDecimal(collection.floor.toString())} ETH Floor
+              </ThemedText.SubHeaderSmall>
+            </TableElement>
+            <TableElement>
+              <ThemedText.SubHeaderSmall color="userThemeColor">
+                {gqlCollection.marketplaceCount?.reduce((acc, cur) => acc + cur.count, 0)} Listings
+              </ThemedText.SubHeaderSmall>
+            </TableElement>
             {MARKETS_TO_CHECK.map((market) => {
               const marketplace = gqlCollection.marketplaceCount?.find(
                 (marketplace) => marketplace.marketplace === market
@@ -276,25 +293,29 @@ export const LoadingTable = () => {
   )
 }
 
+const CollectionName = styled(ThemedText.MediumHeader)`
+  display: inline;
+  vertical-align: text-bottom;
+  line-height: 28px;
+`
+
 const CarouselCardHeader = ({ collection }: { collection: TrendingCollection }) => {
   const theme = useTheme()
   return (
     <CardHeaderContainer src={collection.bannerImageUrl}>
-      <CardHeaderRow>
+      <CardHeaderColumn>
         <CollectionImage src={collection.imageUrl} />
-        <CardNameRow>
-          <CollectionNameContainer>
-            <ThemedText.MediumHeader color={theme.accentTextLightPrimary} fontWeight="500" lineHeight="28px">
-              {collection.name}
-            </ThemedText.MediumHeader>
-          </CollectionNameContainer>
+        <CollectionNameContainer>
+          <CollectionName color={theme.accentTextLightPrimary} fontWeight="500">
+            {collection.name}
+          </CollectionName>
           {collection.isVerified && (
             <IconContainer>
               <VerifiedIcon width="24px" height="24px" />
             </IconContainer>
           )}
-        </CardNameRow>
-      </CardHeaderRow>
+        </CollectionNameContainer>
+      </CardHeaderColumn>
       <HeaderOverlay />
     </CardHeaderContainer>
   )
@@ -308,10 +329,10 @@ export const LoadingCarouselCard = ({ collection }: { collection?: TrendingColle
           <CarouselCardHeader collection={collection} />
         ) : (
           <LoadingCardHeaderContainer>
-            <CardHeaderRow>
+            <CardHeaderColumn>
               <LoadingCollectionImage />
               <LoadingCollectionNameContainer />
-            </CardHeaderRow>
+            </CardHeaderColumn>
             <HeaderOverlay />
           </LoadingCardHeaderContainer>
         )}

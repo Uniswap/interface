@@ -66,7 +66,7 @@ const formatListingStatus = (status: OrderStatus): string => {
     case OrderStatus.EXPIRED:
       return 'Expired'
     case OrderStatus.VALID:
-      return 'Buy Now'
+      return 'Add to Bag'
   }
 }
 
@@ -125,7 +125,7 @@ export const BuyCell = ({
           disabled={event.orderStatus !== OrderStatus.VALID}
         >
           {event.orderStatus === OrderStatus.VALID ? (
-            <>{`${itemsInBag.length === 0 ? 'Buy Now' : isSelected ? 'Remove' : 'Add to bag'}`}</>
+            <>{`${isSelected ? 'Remove' : 'Add to bag'}`}</>
           ) : (
             <>{`${formatListingStatus(event.orderStatus)}`}</>
           )}

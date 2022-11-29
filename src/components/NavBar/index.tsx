@@ -9,12 +9,30 @@ import { Row } from 'nft/components/Flex'
 import { UniIcon } from 'nft/components/icons'
 import { ReactNode } from 'react'
 import { NavLink, NavLinkProps, useLocation } from 'react-router-dom'
+import styled from 'styled-components/macro'
 
 import { Bag } from './Bag'
 import { ChainSelector } from './ChainSelector'
 import { MenuDropdown } from './MenuDropdown'
 import { SearchBar } from './SearchBar'
 import * as styles from './style.css'
+
+const MobileBottomBar = styled.div`
+  position: fixed;
+  display: flex;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  justify-content: space-between;
+  padding: 4px 8px;
+  height: 56px;
+  background: ${({ theme }) => theme.backgroundSurface};
+  border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
+
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
+    display: none;
+  }
+`
 
 interface MenuItemProps {
   href: string
@@ -87,16 +105,16 @@ const Navbar = () => {
                 <ChainSelector leftAlign={true} />
               </Box>
             )}
-            <Row gap="8" display={{ sm: 'none', lg: 'flex' }}>
+            <Row gap={{ xl: '0', xxl: '8' }} display={{ sm: 'none', lg: 'flex' }}>
               <PageTabs />
             </Row>
           </Box>
-          <Box className={styles.middleContainer}>
+          <Box className={styles.middleContainer} alignItems="flex-start">
             <SearchBar />
           </Box>
           <Box className={styles.rightSideContainer}>
             <Row gap="12">
-              <Box display={{ sm: 'flex', xl: 'none' }}>
+              <Box position="relative" display={{ sm: 'flex', xl: 'none' }}>
                 <SearchBar />
               </Box>
               <Box display={{ sm: 'none', lg: 'flex' }}>
@@ -114,12 +132,12 @@ const Navbar = () => {
           </Box>
         </Box>
       </nav>
-      <Box className={styles.mobileBottomBar}>
+      <MobileBottomBar>
         <PageTabs />
         <Box marginY="4">
           <MenuDropdown />
         </Box>
-      </Box>
+      </MobileBottomBar>
     </>
   )
 }

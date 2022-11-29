@@ -85,9 +85,6 @@ const HeaderWrapper = styled.div<{ scrolledState?: boolean }>`
   width: 100%;
   justify-content: space-between;
   position: fixed;
-  transition: ${({ theme }) =>
-    `background-color ${theme.transition.duration.fast} ease-in-out,
-    border-width ${theme.transition.duration.fast} ease-in-out`};
   top: 0;
   z-index: ${Z_INDEX.sticky};
 `
@@ -97,15 +94,23 @@ const Marginer = styled.div`
 `
 
 function getCurrentPageFromLocation(locationPathname: string): PageName | undefined {
-  switch (locationPathname) {
-    case '/swap':
+  switch (true) {
+    case locationPathname.startsWith('/swap'):
       return PageName.SWAP_PAGE
-    case '/vote':
+    case locationPathname.startsWith('/vote'):
       return PageName.VOTE_PAGE
-    case '/pool':
+    case locationPathname.startsWith('/pool'):
       return PageName.POOL_PAGE
-    case '/tokens':
+    case locationPathname.startsWith('/tokens'):
       return PageName.TOKENS_PAGE
+    case locationPathname.startsWith('/nfts/profile'):
+      return PageName.NFT_PROFILE_PAGE
+    case locationPathname.startsWith('/nfts/asset'):
+      return PageName.NFT_DETAILS_PAGE
+    case locationPathname.startsWith('/nfts/collection'):
+      return PageName.NFT_COLLECTION_PAGE
+    case locationPathname.startsWith('/nfts'):
+      return PageName.NFT_EXPLORE_PAGE
     default:
       return undefined
   }
@@ -244,7 +249,15 @@ export default function App() {
 
                   {nftFlag === NftVariant.Enabled && (
                     <>
-                      <Route path="/nfts" element={<NftExplore />} />
+                      <Route
+                        path="/nfts"
+                        element={
+                          // TODO: replace loading state during Apollo migration
+                          <Suspense fallback={null}>
+                            <NftExplore />
+                          </Suspense>
+                        }
+                      />
                       <Route
                         path="/nfts/asset/:contractAddress/:tokenId"
                         element={

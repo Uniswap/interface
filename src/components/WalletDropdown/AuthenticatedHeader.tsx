@@ -9,6 +9,7 @@ import useCopyClipboard from 'hooks/useCopyClipboard'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
+import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useMemo } from 'react'
 import { Copy, ExternalLink, Power } from 'react-feather'
@@ -117,6 +118,7 @@ const AuthenticatedHeader = () => {
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const resetSellAssets = useSellAsset((state) => state.reset)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
+  const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
 
   const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
   const isUnclaimed = useUserHasAvailableClaim(account)
@@ -187,7 +189,7 @@ const AuthenticatedHeader = () => {
             <Trans>Claim</Trans> {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} <Trans>reward</Trans>
           </UNIButton>
         )}
-        {nftFlag === NftVariant.Enabled && (
+        {nftFlag === NftVariant.Enabled && isClaimAvailable && (
           <UNIButton size={ButtonSize.medium} emphasis={ButtonEmphasis.medium} onClick={openNftModal}>
             <Trans>Claim Uniswap NFT Airdrop</Trans>
           </UNIButton>

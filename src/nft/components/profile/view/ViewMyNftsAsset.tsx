@@ -37,7 +37,7 @@ const getNftDisplayComponent = (
 const getUnsupportedNftTextComponent = (asset: WalletAsset) => (
   <Box as="span" className={bodySmall} style={{ color: themeVars.colors.textPrimary }}>
     {asset.asset_contract.tokenType === TokenType.ERC1155 ? (
-      <Trans>ERC-1155 support coming soon</Trans>
+      <Trans>Selling ERC-1155s coming soon</Trans>
     ) : (
       <Trans>Blocked from trading</Trans>
     )}

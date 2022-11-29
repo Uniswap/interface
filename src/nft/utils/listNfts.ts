@@ -25,6 +25,8 @@ import { INVERSE_BASIS_POINTS, OPENSEA_DEFAULT_FEE, OPENSEA_FEE_ADDRESS } from '
 import { ListingMarket, ListingStatus, WalletAsset } from '../types'
 import { createSellOrder, encodeOrder, OfferItem, OrderPayload, signOrderData } from './x2y2'
 
+export const LOOKS_RARE_CREATOR_BASIS_POINTS = 50
+
 export const ListingMarkets: ListingMarket[] = [
   {
     name: 'X2Y2',

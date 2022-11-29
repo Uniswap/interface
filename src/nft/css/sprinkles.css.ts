@@ -7,6 +7,7 @@ const themeContractValues = {
     accentFailureSoft: '',
     accentAction: '',
     accentActionSoft: '',
+    accentSuccess: '',
 
     explicitWhite: '',
     gold: '',
@@ -22,11 +23,16 @@ const themeContractValues = {
 
     modalBackdrop: '',
 
+    searchBackground: '',
+    searchOutline: '',
+
     stateOverlayHover: '',
 
     textPrimary: '',
     textSecondary: '',
     textTertiary: '',
+
+    dropShadow: '',
   },
 
   shadows: {
@@ -154,7 +160,6 @@ export const vars = createGlobalTheme(':root', {
     genieBlue: '#4C82FB',
     fallbackGradient: 'linear-gradient(270deg, #D1D5DB 0%, #F6F6F6 100%)',
     loadingBackground: '#24272e',
-    dropShadow: '0px 4px 16px rgba(70, 115, 250, 0.4)',
     cardDropShadow: 'rgba(0, 0, 0, 10%) 0px 4px 12px',
     green: '#209853',
     orange: '#FA2C38',
@@ -177,6 +182,7 @@ export const vars = createGlobalTheme(':root', {
     gold200: '#EEB317',
     gold400: '#B17900',
     green200: '#5CFE9D',
+    green300: '#40B66B',
     green400: '#1A9550',
     violet200: '#BDB8FA',
     violet400: '#7A7BEB',

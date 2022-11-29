@@ -11,7 +11,7 @@ const Grid = styled.div`
   gap: 16px;
   max-width: 780px;
 
-  @media (max-width: 960px) {
+  @media (max-width: 1080px) {
     grid-template-columns: 1fr 1fr 1fr;
   }
 

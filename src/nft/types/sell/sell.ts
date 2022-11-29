@@ -104,6 +104,7 @@ export interface AssetRow {
 export interface ListingRow extends AssetRow {
   asset: WalletAsset
   marketplace: ListingMarket
+  price?: number
 }
 
 export interface CollectionRow extends AssetRow {

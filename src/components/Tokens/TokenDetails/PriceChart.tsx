@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { formatUSDPrice } from '@uniswap/conedison/format'
 import { AxisBottom, TickFormatter } from '@visx/axis'
 import { localPoint } from '@visx/event'
 import { EventType } from '@visx/event/lib/types'
@@ -20,7 +21,6 @@ import {
   monthYearDayFormatter,
   weekFormatter,
 } from 'utils/formatChartTimes'
-import { formatDollar } from 'utils/formatNumbers'
 
 export const DATA_EMPTY = { value: 0, timestamp: 0 }
 
@@ -42,14 +42,14 @@ export function calculateDelta(start: number, current: number) {
   return (current / start - 1) * 100
 }
 
-export function getDeltaArrow(delta: number | null | undefined) {
+export function getDeltaArrow(delta: number | null | undefined, iconSize = 20) {
   // Null-check not including zero
   if (delta === null || delta === undefined) {
     return null
   } else if (Math.sign(delta) < 0) {
-    return <StyledDownArrow size={24} key="arrow-down" />
+    return <StyledDownArrow size={iconSize} key="arrow-down" aria-label="down" />
   }
-  return <StyledUpArrow size={24} key="arrow-up" />
+  return <StyledUpArrow size={iconSize} key="arrow-up" aria-label="up" />
 }
 
 export function formatDelta(delta: number | null | undefined) {
@@ -57,12 +57,14 @@ export function formatDelta(delta: number | null | undefined) {
   if (delta === null || delta === undefined || delta === Infinity || isNaN(delta)) {
     return '-'
   }
-  let formattedDelta = delta.toFixed(2) + '%'
-  if (Math.sign(delta) > 0) {
-    formattedDelta = '+' + formattedDelta
-  }
+  const formattedDelta = Math.abs(delta).toFixed(2) + '%'
   return formattedDelta
 }
+
+export const DeltaText = styled.span<{ delta: number | undefined }>`
+  color: ${({ theme, delta }) =>
+    delta !== undefined ? (Math.sign(delta) < 0 ? theme.accentFailure : theme.accentSuccess) : theme.textPrimary};
+`
 
 export const ChartHeader = styled.div`
   position: absolute;
@@ -77,8 +79,8 @@ export const DeltaContainer = styled.div`
   align-items: center;
   margin-top: 4px;
 `
-const ArrowCell = styled.div`
-  padding-left: 2px;
+export const ArrowCell = styled.div`
+  padding-right: 3px;
   display: flex;
 `
 
@@ -90,6 +92,16 @@ interface PriceChartProps {
   height: number
   prices: PricePoint[] | undefined | null
   timePeriod: TimePeriod
+}
+
+function formatDisplayPrice(value: number) {
+  const str = value.toFixed(9)
+  const [digits, decimals] = str.split('.')
+  // Displays longer string for numbers < $2 to show changes in both stablecoins & small values
+  if (digits === '0' || digits === '1')
+    return `$${digits + '.' + decimals.substring(0, 2) + decimals.substring(2).replace(/0+$/, '')}`
+
+  return formatUSDPrice(value)
 }
 
 export function PriceChart({ width, height, prices, timePeriod }: PriceChartProps) {
@@ -104,9 +116,7 @@ export function PriceChart({ width, height, prices, timePeriod }: PriceChartProp
 
   // set display price to ending price when prices have changed.
   useEffect(() => {
-    if (prices) {
-      setDisplayPrice(endingPrice)
-    }
+    setDisplayPrice(endingPrice)
   }, [prices, endingPrice])
   const [crosshair, setCrosshair] = useState<number | null>(null)
 
@@ -226,10 +236,10 @@ export function PriceChart({ width, height, prices, timePeriod }: PriceChartProp
   return (
     <>
       <ChartHeader>
-        <TokenPrice>{formatDollar({ num: displayPrice.value, isPrice: true })}</TokenPrice>
+        <TokenPrice>{formatDisplayPrice(displayPrice.value)}</TokenPrice>
         <DeltaContainer>
-          {formattedDelta}
           <ArrowCell>{arrow}</ArrowCell>
+          <DeltaText delta={delta}>{formattedDelta}</DeltaText>
         </DeltaContainer>
       </ChartHeader>
       {!hasData ? (

@@ -6,6 +6,7 @@ export const darkTheme: Theme = {
     accentFailureSoft: 'rgba(253, 118, 107, 0.12)',
     accentAction: vars.color.blue400,
     accentActionSoft: 'rgba(76, 130, 251, 0.24)',
+    accentSuccess: vars.color.green200,
 
     explicitWhite: '#FFFFFF',
     green: vars.color.green200,
@@ -21,11 +22,15 @@ export const darkTheme: Theme = {
 
     modalBackdrop: 'linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7))',
 
+    searchBackground: `rgba(255,255,255,0.07)`,
+    searchOutline: `rgba(255,255,255,0.07)`,
     stateOverlayHover: `rgba(153,161,189,0.08)`,
 
     textPrimary: '#FFFFFF',
     textSecondary: vars.color.gray300,
     textTertiary: vars.color.gray500,
+
+    dropShadow: `0px 4px 16px rgba(76, 130, 251, 0.4)`,
   },
   shadows: {
     menu: '0px 10px 30px rgba(0, 0, 0, 0.1)',

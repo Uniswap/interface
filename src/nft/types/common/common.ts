@@ -155,7 +155,8 @@ export enum Markets {
   CryptoPhunks = 'cryptophunks',
 }
 
-export const isPooledMarket = (market: Markets): boolean => {
+export const isPooledMarket = (market?: Markets): boolean => {
+  if (!market) return false
   return market === Markets.NFTX || market === Markets.NFT20 || market === Markets.Sudoswap
 }
 
