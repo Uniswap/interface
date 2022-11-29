@@ -1,4 +1,4 @@
-import { DrawerActions } from '@react-navigation/core'
+import { DrawerActions, useIsFocused } from '@react-navigation/core'
 import { useScrollToTop } from '@react-navigation/native'
 import { FlashList } from '@shopify/flash-list'
 import { default as React, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -69,6 +69,7 @@ export function HomeScreen() {
   const theme = useAppTheme()
   const insets = useSafeAreaInsets()
 
+  const isFocused = useIsFocused()
   const [tabIndex, setTabIndex] = useState(0)
   const routes = useMemo(
     () => [
@@ -159,7 +160,7 @@ export function HomeScreen() {
     [nftsTabScrollRef, nftsTabScrollValue, tokensTabScrollRef, tokensTabScrollValue]
   )
 
-  const { sync } = useScrollSync(scrollPairs, headerConfig)
+  const { sync } = useScrollSync(scrollPairs, headerConfig, isFocused)
 
   const openSidebar = useCallback(() => {
     navigation.dispatch(DrawerActions.openDrawer())

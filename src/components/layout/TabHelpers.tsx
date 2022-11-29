@@ -108,10 +108,15 @@ export const panHeaderGestureAction = (openSidebar: () => void) =>
 /**
  * Keeps tab content in sync, by scrolling content in case collapsing header height has changed between tabs
  */
-export const useScrollSync = (scrollPairs: ScrollPair[], headerConfig: HeaderConfig) => {
+export const useScrollSync = (
+  scrollPairs: ScrollPair[],
+  headerConfig: HeaderConfig,
+  isFocused: boolean
+) => {
   const sync:
     | FlatListProps<any>['onMomentumScrollEnd']
     | FlashListProps<any>['onMomentumScrollEnd'] = (event) => {
+    if (!isFocused) return
     const { y } = event.nativeEvent.contentOffset
 
     const { heightCollapsed, heightExpanded } = headerConfig
