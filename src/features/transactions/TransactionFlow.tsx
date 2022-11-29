@@ -105,8 +105,8 @@ export function TransactionFlow({
 
   return (
     <TouchableWithoutFeedback>
-      <AnimatedFlex grow row gap="none" height="100%" paddingBottom="xl" style={wrapperStyle}>
-        <Flex gap="sm" px="md" width="100%">
+      <AnimatedFlex grow row gap="none" height="100%" style={wrapperStyle}>
+        <Flex gap="sm" pb="xl" px="md" width="100%">
           {step !== TransactionStep.SUBMITTED && (
             <Flex row alignItems="center" justifyContent="space-between" px="sm">
               <Text pt="xs" textAlign="left" variant={{ xs: 'subheadSmall', sm: 'subheadLarge' }}>
