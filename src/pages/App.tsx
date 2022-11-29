@@ -85,9 +85,6 @@ const HeaderWrapper = styled.div<{ scrolledState?: boolean }>`
   width: 100%;
   justify-content: space-between;
   position: fixed;
-  transition: ${({ theme }) =>
-    `background-color ${theme.transition.duration.fast} ease-in-out,
-    border-width ${theme.transition.duration.fast} ease-in-out`};
   top: 0;
   z-index: ${Z_INDEX.sticky};
 `
