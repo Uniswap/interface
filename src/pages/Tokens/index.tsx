@@ -4,11 +4,11 @@ import { PageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { filterStringAtom } from 'components/Tokens/state'
-import PopoverText from 'components/Tokens/TokenDetails/PopoverText'
 import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
 import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
 import TokenTable, { LoadingTokenTable } from 'components/Tokens/TokenTable/TokenTable'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { PAGE_SIZE } from 'graphql/data/TopTokens'
 import { chainIdToBackendName, isValidBackendChainName } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
@@ -100,14 +100,14 @@ const Tokens = () => {
     <Trace page={PageName.TOKENS_PAGE} shouldLogImpression>
       <ExploreContainer>
         <TitleContainer>
-          <ThemedText.LargeHeader>
-            <PopoverText
-              text={<Trans>This table contains the top tokens by Uniswap volume, sorted based on your input.</Trans>}
-              placement="bottom"
-            >
-              <Trans>Top tokens on Uniswap</Trans>
-            </PopoverText>
-          </ThemedText.LargeHeader>
+          <MouseoverTooltip
+            text={<Trans>This table contains the top tokens by Uniswap volume, sorted based on your input.</Trans>}
+            placement="bottom"
+          >
+            <ThemedText.LargeHeader>
+              <Trans>Top tokens on Uniswap</Trans>{' '}
+            </ThemedText.LargeHeader>
+          </MouseoverTooltip>
         </TitleContainer>
         <FiltersWrapper>
           <FiltersContainer>
