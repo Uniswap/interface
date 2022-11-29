@@ -2,12 +2,12 @@ import {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
   BottomSheetModal as BaseModal,
-  BottomSheetScrollView,
   BottomSheetView,
   useBottomSheetDynamicSnapPoints,
 } from '@gorhom/bottom-sheet'
 import React, { ComponentProps, PropsWithChildren, useCallback, useEffect, useRef } from 'react'
 import { StyleSheet } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout'
 import { Trace } from 'src/components/telemetry/Trace'
@@ -48,7 +48,6 @@ const Backdrop = (props: BottomSheetBackdropProps) => {
 
 const CONTENT_HEIGHT_SNAP_POINTS = ['CONTENT_HEIGHT']
 const FULL_HEIGHT = 0.91
-const FULL_HEIGHT_SNAP_POINTS = ['91%']
 
 export function BottomSheetModal({
   children,
@@ -62,6 +61,7 @@ export function BottomSheetModal({
   backgroundColor,
   isDismissible = true,
 }: Props) {
+  const insets = useSafeAreaInsets()
   const modalRef = useRef<BaseModal>(null)
   const { animatedHandleHeight, animatedSnapPoints, animatedContentHeight, handleContentLayout } =
     useBottomSheetDynamicSnapPoints(snapPoints)
@@ -97,6 +97,7 @@ export function BottomSheetModal({
       handleHeight={animatedHandleHeight}
       snapPoints={animatedSnapPoints}
       stackBehavior={stackBehavior}
+      topInset={insets.top}
       onDismiss={onClose}>
       <Trace logImpression modal={name} properties={properties}>
         <BottomSheetView
@@ -112,37 +113,6 @@ export function BottomSheetModal({
   )
 }
 
-export function BottomSheetScrollModal({
-  children,
-  name,
-  onClose,
-  snapPoints = FULL_HEIGHT_SNAP_POINTS,
-  stackBehavior = 'push',
-}: Props) {
-  const modalRef = useRef<BaseModal>(null)
-
-  const theme = useAppTheme()
-
-  useEffect(() => {
-    modalRef.current?.present()
-  }, [modalRef])
-
-  return (
-    <BaseModal
-      ref={modalRef}
-      backdropComponent={Backdrop}
-      backgroundStyle={{ backgroundColor: theme.colors.background0 }}
-      handleComponent={HandleBar}
-      snapPoints={snapPoints}
-      stackBehavior={stackBehavior}
-      onDismiss={onClose}>
-      <Trace logImpression modal={name}>
-        <BottomSheetScrollView>{children}</BottomSheetScrollView>
-      </Trace>
-    </BaseModal>
-  )
-}
-
 export function BottomSheetDetachedModal({
   children,
   name,
@@ -153,6 +123,7 @@ export function BottomSheetDetachedModal({
   hideHandlebar,
   backgroundColor,
 }: Props) {
+  const insets = useSafeAreaInsets()
   const modalRef = useRef<BaseModal>(null)
   const { animatedHandleHeight, animatedSnapPoints, animatedContentHeight, handleContentLayout } =
     useBottomSheetDynamicSnapPoints(snapPoints)
@@ -177,6 +148,7 @@ export function BottomSheetDetachedModal({
       snapPoints={animatedSnapPoints}
       stackBehavior={stackBehavior}
       style={BottomSheetStyle.detached}
+      topInset={insets.top}
       onDismiss={onClose}>
       <Trace logImpression modal={name}>
         <BottomSheetView
