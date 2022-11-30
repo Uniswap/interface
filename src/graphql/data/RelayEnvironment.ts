@@ -35,8 +35,11 @@ function beforeRetry({ abort, attempt }: { abort: AbortFn; attempt: number }) {
 function customErrorRemovalMiddleware(next: MiddlewareNextFn) {
   return async (req: RelayRequestAny) => {
     const res = await next(req)
-    console.error(res.errors)
-    return { data: [] }
+    if (res.errors) {
+      console.error(res.errors)
+      return { data: [] }
+    }
+    return res
   }
 }
 
