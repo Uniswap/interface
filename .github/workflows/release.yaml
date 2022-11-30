@@ -97,7 +97,7 @@ jobs:
 
             ${{ needs.tag.outputs.changelog }}
 
-      - name: Install node@16 (for Cloudflare Pages compat)
+      - name: Setup node@16 (required by Cloudflare Pages)
         uses: actions/setup-node@v3
         with:
           node-version: 16
