@@ -212,6 +212,7 @@
     "react-query": "^3.39.1",
     "react-redux": "^8.0.2",
     "react-relay": "^14.1.0",
+    "react-relay-network-modern": "^6.2.1",
     "react-router-dom": "^6.3.0",
     "react-spring": "^9.5.5",
     "react-table": "^7.8.0",
