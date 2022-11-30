@@ -1,8 +1,8 @@
 import ms from 'ms.macro'
 import {
-  AbortFn,
   MiddlewareNextFn,
   RelayNetworkLayer,
+  RelayNetworkLayerResponse,
   RelayRequestAny,
   retryMiddleware,
   urlMiddleware,
@@ -20,29 +20,7 @@ if (!GRAPHQL_URL) {
   throw new Error('AWS URL MISSING FROM ENVIRONMENT')
 }
 
-function getDelayWithBackoff(attempt: number) {
-  return Math.pow(2, attempt + 4) * 100 // or simple array [3200, 6400, 12800]
-}
-
-function getRetryStatusCodes(statusCode: number) {
-  return statusCode >= 500 && statusCode < 600
-}
-
-function beforeRetry({ abort, attempt }: { abort: AbortFn; attempt: number }) {
-  if (attempt > MAX_RETRIES) abort()
-}
-
-function customErrorRemovalMiddleware(next: MiddlewareNextFn) {
-  return async (req: RelayRequestAny) => {
-    const res = await next(req)
-    if (res.errors?.length) {
-      console.error(res.errors)
-      return { data: [] }
-    }
-    return res
-  }
-}
-
+const RETRY_TIME_MS = [3200, 6400, 12800]
 const MAX_RETRIES = 3
 
 // This network layer must not cache, or it will break cache-evicting network policies
@@ -54,13 +32,23 @@ const network = new RelayNetworkLayer([
     },
   }),
   retryMiddleware({
-    // Mirrors backend's timeout in case that fails
-    fetchTimeout: ms`30s`,
-    retryDelays: getDelayWithBackoff,
-    statusCodes: getRetryStatusCodes,
-    beforeRetry,
+    fetchTimeout: ms`30s`, // mirrors backend's timeout in case that fails
+    retryDelays: (attempt) => RETRY_TIME_MS[attempt],
+    statusCodes: (statusCode) => statusCode >= 500 && statusCode < 600,
+    beforeRetry: ({ abort, attempt }) => {
+      if (attempt > MAX_RETRIES) abort()
+    },
   }),
-  customErrorRemovalMiddleware,
+  function logAndIgnoreErrors(next: MiddlewareNextFn): MiddlewareNextFn {
+    return async (req: RelayRequestAny) => {
+      try {
+        return await next(req)
+      } catch (e) {
+        console.error(e)
+        return RelayNetworkLayerResponse.createFromGraphQL({ data: [] })
+      }
+    }
+  },
 ])
 
 export const CachingEnvironment = new Environment({
