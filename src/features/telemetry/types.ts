@@ -1,9 +1,6 @@
 import { TraceProps } from 'src/components/telemetry/Trace'
 import { TraceEventProps } from 'src/components/telemetry/TraceEvent'
-import {
-  MoonpayIPAddressesResponse,
-  MoonpayTransactionsResponse,
-} from 'src/features/fiatOnRamp/types'
+import { MoonpayIPAddressesResponse } from 'src/features/fiatOnRamp/types'
 import { ImportType } from 'src/features/onboarding/utils'
 import { EventName } from 'src/features/telemetry/constants'
 import { EthMethod, WCEventType, WCRequestOutcome } from 'src/features/walletConnect/types'
@@ -27,24 +24,8 @@ export type SwapTradeBaseProperties = {
 // NOTE: we do not currently have access to the full life cycle of these txs
 // because we do not yet use Moonpay's webhook
 export type MoonpayTransactionEventProperties = BaseEventProperty &
-  Pick<
-    MoonpayTransactionsResponse[0],
-    | 'id'
-    | 'externalCustomerId'
-    | 'status'
-    | 'createdAt'
-    | 'updatedAt'
-    | 'baseCurrencyAmount'
-    | 'quoteCurrencyAmount'
-    | 'baseCurrency'
-    | 'currency'
-    | 'feeAmount'
-    | 'extraFeeAmount'
-    | 'networkFeeAmount'
-    | 'paymentMethod'
-    | 'failureReason'
-    | 'stages'
-  >
+  // allow any object of strings for now
+  Record<string, string>
 
 export type EventProperties = {
   [EventName.AppLoaded]: BaseEventProperty
@@ -53,6 +34,7 @@ export type EventProperties = {
     'isBuyAllowed' | 'isAllowed' | 'isSellAllowed' | 'alpha3'
   > &
     BaseEventProperty
+  [EventName.FiatOnRampQuickActionButtonPressed]: BaseEventProperty
   [EventName.FiatOnRampBannerPressed]: BaseEventProperty
   [EventName.FiatOnRampWidgetOpened]: BaseEventProperty & { externalTransactionId: string }
   [EventName.Impression]: BaseEventProperty

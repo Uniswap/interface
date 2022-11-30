@@ -11,8 +11,9 @@ export enum EventName {
   AppLoaded = 'app-loaded',
   // General fiat onramp events like in-app buttons and modals
   FiatOnRampBannerPressed = 'Fiat OnRamp Banner Pressed',
-  FiatOnRampWidgetOpened = 'Fiat OnRamp Widget Opened',
+  FiatOnRampQuickActionButtonPressed = 'Fiat OnRamp QuickAction Button Pressed',
   FiatOnRampRegionCheck = 'Fiat OnRamp Widget Check',
+  FiatOnRampWidgetOpened = 'Fiat OnRamp Widget Opened',
   Impression = 'impression',
   MarkMeasure = 'mark-measure',
   Moonpay = 'Moonpay', // Moonpay-specific events

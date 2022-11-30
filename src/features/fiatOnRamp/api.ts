@@ -15,6 +15,7 @@ import { extractFiatOnRampTransactionDetails } from 'src/features/transactions/h
 import { serializeQueryParams } from 'src/features/transactions/swap/utils'
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
 import { logger } from 'src/utils/logger'
+import { unnestObject } from 'src/utils/objects'
 import { ONE_MINUTE_MS } from 'src/utils/time'
 
 const COMMON_QUERY_PARAMS = serializeQueryParams({ apiKey: config.moonpayApiKey })
@@ -167,23 +168,24 @@ function logMoonpayEvent(moonpayTransactionResponse: MoonpayTransactionsResponse
     paymentMethod,
     failureReason,
     stages,
-  }: MoonpayTransactionsResponse[0]) => ({
-    id,
-    externalCustomerId,
-    status,
-    createdAt,
-    updatedAt,
-    baseCurrencyAmount,
-    quoteCurrencyAmount,
-    baseCurrency,
-    currency,
-    feeAmount,
-    extraFeeAmount,
-    networkFeeAmount,
-    paymentMethod,
-    failureReason,
-    stages,
-  })
+  }: MoonpayTransactionsResponse[0]) =>
+    unnestObject({
+      id,
+      externalCustomerId,
+      status,
+      createdAt,
+      updatedAt,
+      baseCurrencyAmount,
+      quoteCurrencyAmount,
+      baseCurrency,
+      currency,
+      feeAmount,
+      extraFeeAmount,
+      networkFeeAmount,
+      paymentMethod,
+      failureReason,
+      stages,
+    })
 
   sendAnalyticsEvent(EventName.Moonpay, extractProperties(moonpayTransactionResponse))
 

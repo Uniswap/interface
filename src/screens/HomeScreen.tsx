@@ -46,7 +46,7 @@ import { Text } from 'src/components/Text'
 import { PortfolioBalance } from 'src/features/balances/PortfolioBalance'
 import { useFiatOnRampEnabled } from 'src/features/experiments/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
-import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
+import { ElementName, EventName, ModalName, SectionName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
@@ -366,6 +366,7 @@ function QuickActions() {
       {fiatOnRampShown && (
         <ActionButton
           Icon={DollarIcon}
+          eventName={EventName.FiatOnRampQuickActionButtonPressed}
           label={t('Buy')}
           name={ElementName.Buy}
           onPress={onPressBuy}
@@ -388,11 +389,13 @@ function QuickActions() {
 }
 
 function ActionButton({
+  eventName,
   name,
   label,
   Icon,
   onPress,
 }: {
+  eventName?: EventName
   name: ElementName
   label: string
   Icon: React.FC<SvgProps>
@@ -408,6 +411,7 @@ function ActionButton({
       borderColor="brandedAccentSoft"
       borderRadius="lg"
       borderWidth={1}
+      eventName={eventName}
       flex={1}
       name={name}
       padding="sm"
