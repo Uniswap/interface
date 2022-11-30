@@ -92,9 +92,8 @@ export const TokenBalanceList = forwardRef<Animated.FlatList<any>, TokenBalanceL
     const { balances, smallBalances, spamBalances } = data
     const numHiddenTokens = smallBalances.length + spamBalances.length
 
-    return balances.length === 0 ? (
-      <Flex centered grow style={containerProps?.loadingContainerStyle}>
-        <HiddenTokensRow address={owner} mt="xs" numHidden={numHiddenTokens} />
+    return balances.length === 0 && numHiddenTokens === 0 ? (
+      <Flex grow style={containerProps?.loadingContainerStyle}>
         {empty}
       </Flex>
     ) : (
@@ -155,7 +154,7 @@ function HiddenTokensRow({
 
   return (
     <TouchableArea onPress={onPressHiddenTokens} {...props}>
-      <Flex row justifyContent="space-between">
+      <Flex row alignItems="center" justifyContent="space-between">
         <Text color="textSecondary" variant="subheadSmall">
           {t('Hidden ({{numHidden}})', { numHidden })}
         </Text>
