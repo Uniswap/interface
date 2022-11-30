@@ -125,12 +125,7 @@ export function NFTCollectionModal({
 
           {/* Collection description */}
           {collection?.description && (
-            <LongText
-              renderAsMarkdown
-              color="textPrimary"
-              initialDisplayedLines={20}
-              text={collection?.description}
-            />
+            <LongText renderAsMarkdown initialDisplayedLines={20} text={collection?.description} />
           )}
 
           <Button
