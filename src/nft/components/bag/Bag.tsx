@@ -322,7 +322,9 @@ const Bag = () => {
           )}
         </Column>
       ) : (
-        <ListingModal />
+        <Column zIndex={isMobile || isOpen ? 'modalOverTooltip' : '3'} className={styles.bagContainer}>
+          <ListingModal />
+        </Column>
       )}
 
       {isDetailsPage ? (
