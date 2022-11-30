@@ -81,17 +81,14 @@ const StyledTokenRow = styled.div<{
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
     grid-template-columns: 1fr 6.5fr 4.5fr 4.5fr 4.5fr 4.5fr 1.7fr;
-    width: fit-content;
   }
 
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
     grid-template-columns: 1fr 7.5fr 4.5fr 4.5fr 4.5fr 1.7fr;
-    width: fit-content;
   }
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
     grid-template-columns: 1fr 10fr 5fr 5fr 1.2fr;
-    width: fit-content;
   }
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
