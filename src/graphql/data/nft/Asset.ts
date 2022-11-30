@@ -3,6 +3,7 @@ import { parseEther } from 'ethers/lib/utils'
 import useInterval from 'lib/hooks/useInterval'
 import ms from 'ms.macro'
 import { GenieAsset, Trait } from 'nft/types'
+import { wrapScientificNotation } from 'nft/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { fetchQuery, useLazyLoadQuery, usePaginationFragment, useQueryLoader, useRelayEnvironment } from 'react-relay'
 
@@ -125,13 +126,7 @@ type NftAssetsQueryAsset = NonNullable<
 
 function formatAssetQueryData(queryAsset: NftAssetsQueryAsset, totalCount?: number) {
   const asset = queryAsset.node
-  const ethPrice = parseEther(
-    parseFloat(
-      (asset.listings?.edges[0]?.node.price.value?.toLocaleString('fullwide', { useGrouping: false }) ?? '0')
-        .replace(',', '.')
-        .replace(' ', '')
-    ).toString()
-  ).toString()
+  const ethPrice = parseEther(wrapScientificNotation(asset.listings?.edges[0]?.node.price.value ?? 0)).toString()
   return {
     id: asset.id,
     address: asset?.collection?.nftContracts?.[0]?.address,
