@@ -8,6 +8,7 @@ import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
 import { Text } from 'src/components/Text'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { PortfolioBalance } from 'src/features/dataApi/types'
+import { EventName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount, useDisplayName } from 'src/features/wallet/hooks'
 import { iconSizes } from 'src/styles/sizing'
@@ -115,7 +116,10 @@ function OtherChainBalance({
   navigate: (currencyId: CurrencyId) => void
 }) {
   return (
-    <TouchableArea hapticFeedback onPress={() => navigate(balance.currencyInfo.currencyId)}>
+    <TouchableArea
+      hapticFeedback
+      eventName={EventName.TokenDetailsOtherChainButtonPressed}
+      onPress={() => navigate(balance.currencyInfo.currencyId)}>
       <Flex row alignItems="center" justifyContent="space-between">
         <Flex row alignItems="center" gap="xxs">
           <TokenLogo

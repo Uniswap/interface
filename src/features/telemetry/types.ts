@@ -78,6 +78,7 @@ export type EventProperties = {
   [EventName.SwapQuoteReceived]: {
     quote_latency_milliseconds?: number
   } & SwapTradeBaseProperties
+  [EventName.TokenDetailsOtherChainButtonPressed]: BaseEventProperty
   [EventName.UserEvent]: BaseEventProperty
   [EventName.WalletConnectSheetCompleted]: {
     request_type: WCEventType

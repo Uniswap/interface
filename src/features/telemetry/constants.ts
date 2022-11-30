@@ -20,6 +20,7 @@ export enum EventName {
   SwapQuoteReceived = 'Swap Quote Received',
   SwapSubmitButtonPressed = 'Swap Submit Button Pressed',
   SwapSubmitted = 'Swap Submitted to Provider',
+  TokenDetailsOtherChainButtonPressed = 'TokenDetailsOtherChainButtonPressed',
   Transaction = 'transaction',
   UserEvent = 'user-event',
   WalletAdded = 'wallet-added',
