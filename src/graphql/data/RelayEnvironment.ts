@@ -1,5 +1,5 @@
 import ms from 'ms.macro'
-import { RelayNetworkLayer, retryMiddleware, urlMiddleware } from 'react-relay-network-modern'
+import { AbortFn, RelayNetworkLayer, retryMiddleware, urlMiddleware } from 'react-relay-network-modern'
 import { Environment, RecordSource, Store } from 'relay-runtime'
 
 // This makes it possible (and more likely) to be able to reuse data when navigating back to a page,
@@ -17,6 +17,14 @@ function getDelayWithBackoff(attempt: number) {
   return Math.pow(2, attempt + 4) * 100 // or simple array [3200, 6400, 12800]
 }
 
+function getRetryStatusCodes(statusCode: number) {
+  return statusCode >= 500 && statusCode < 600
+}
+
+function beforeRetry({ abort, attempt }: { abort: AbortFn; attempt: number }) {
+  if (attempt > MAX_RETRIES) abort()
+}
+
 const MAX_RETRIES = 3
 
 // This network layer must not cache, or it will break cache-evicting network policies
@@ -28,12 +36,11 @@ const network = new RelayNetworkLayer([
     },
   }),
   retryMiddleware({
+    // Mirrors backend's timeout in case that fails
     fetchTimeout: ms`30s`,
     retryDelays: getDelayWithBackoff,
-    statusCodes: [500, 503, 504],
-    beforeRetry: ({ abort, attempt }) => {
-      if (attempt > MAX_RETRIES) abort()
-    },
+    statusCodes: getRetryStatusCodes,
+    beforeRetry,
   }),
 ])
 
