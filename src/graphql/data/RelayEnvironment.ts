@@ -2,7 +2,6 @@ import ms from 'ms.macro'
 import {
   RelayNetworkLayer,
   RelayNetworkLayerResponse,
-  RelayRequestAny,
   retryMiddleware,
   urlMiddleware,
 } from 'react-relay-network-modern'
@@ -39,7 +38,7 @@ const network = new RelayNetworkLayer([
     },
   }),
   function logAndIgnoreErrors(next) {
-    return async (req: RelayRequestAny) => {
+    return async (req) => {
       try {
         return await next(req)
       } catch (e) {
