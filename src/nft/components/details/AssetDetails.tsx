@@ -196,7 +196,7 @@ const AssetView = ({
   asset,
   dominantColor,
 }: {
-  mediaType: 'image' | 'video' | 'audio'
+  mediaType: 'image' | 'video' | 'audio' | 'embed'
   asset: GenieAsset
   dominantColor: [number, number, number]
 }) => {
@@ -211,6 +211,23 @@ const AssetView = ({
       )
     case 'audio':
       return <AudioPlayer {...asset} dominantColor={dominantColor} />
+    case 'embed':
+      return (
+        <div className={styles.embedContainer}>
+          <iframe
+            title={asset.name ?? `${asset.collectionName} #${asset.tokenId}`}
+            src={asset.animationUrl}
+            className={styles.embed}
+            style={style}
+            frameBorder={0}
+            height="100%"
+            width="100%"
+            sandbox="allow-scripts"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        </div>
+      )
   }
 }
 
@@ -218,6 +235,7 @@ enum MediaType {
   Audio = 'audio',
   Video = 'video',
   Image = 'image',
+  Embed = 'embed',
 }
 
 interface AssetDetailsProps {
@@ -245,6 +263,8 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       return MediaType.Audio
     } else if (isVideo(asset.animationUrl ?? '')) {
       return MediaType.Video
+    } else if (asset.animationUrl !== undefined) {
+      return MediaType.Embed
     }
     return MediaType.Image
   }, [asset])
