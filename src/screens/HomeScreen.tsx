@@ -3,7 +3,7 @@ import { useScrollToTop } from '@react-navigation/native'
 import { FlashList } from '@shopify/flash-list'
 import { default as React, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleProp, useColorScheme, View, ViewProps, ViewStyle } from 'react-native'
+import { FlatList, StyleProp, useColorScheme, View, ViewProps, ViewStyle } from 'react-native'
 import { GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   interpolateColor,
@@ -104,7 +104,7 @@ export function HomeScreen() {
     (event) => (nftsTabScrollValue.value = event.contentOffset.y)
   )
 
-  const tokensTabScrollRef = useAnimatedRef<FlashList<any>>()
+  const tokensTabScrollRef = useAnimatedRef<FlatList>()
   const nftsTabScrollRef = useAnimatedRef<FlashList<any>>()
 
   const сurrentScrollValue = useDerivedValue(

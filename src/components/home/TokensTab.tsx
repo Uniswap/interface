@@ -1,4 +1,3 @@
-import { FlashList } from '@shopify/flash-list'
 import React, { forwardRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native'
@@ -23,7 +22,7 @@ type TokensTabProps = {
   scrollHandler?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
 }
 
-export const TokensTab = forwardRef<FlashList<any>, TokensTabProps>(
+export const TokensTab = forwardRef<any, TokensTabProps>(
   ({ owner, containerProps, scrollHandler }, ref) => {
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
