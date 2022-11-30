@@ -23,6 +23,7 @@ import {
 } from '../queries'
 import { INVERSE_BASIS_POINTS, OPENSEA_DEFAULT_FEE, OPENSEA_FEE_ADDRESS } from '../queries/openSea'
 import { ListingMarket, ListingStatus, WalletAsset } from '../types'
+import { wrapScientificNotation } from './currency'
 import { createSellOrder, encodeOrder, OfferItem, OrderPayload, signOrderData } from './x2y2'
 
 export const LOOKS_RARE_CREATOR_BASIS_POINTS = 50
@@ -240,12 +241,7 @@ export async function signListing(
         tokens: [
           {
             token: asset.asset_contract.address,
-            tokenId: BigNumber.from(
-              parseFloat(asset.tokenId)
-                .toLocaleString('fullwide', { useGrouping: false })
-                .replace(',', '.')
-                .replace(' ', '')
-            ),
+            tokenId: BigNumber.from(wrapScientificNotation(asset.tokenId)),
           },
         ],
       }
