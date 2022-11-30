@@ -56,7 +56,7 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
     yield* call(logEvent, 'deeplink', { coldStart, success: true })
   } catch (error: any) {
     const errorMessage = error?.message
-    logger.info('handleDeepLink', 'handleDeepLink', errorMessage)
+    logger.error('handleDeepLink', 'handleDeepLink', errorMessage)
     yield* call(logEvent, 'deeplink', { coldStart, success: false, error: errorMessage })
   }
 }

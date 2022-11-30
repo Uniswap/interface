@@ -316,7 +316,7 @@ export const getFormattedCurrencyAmount = (
     const formattedAmount = formatCurrencyAmount(currencyAmount, NumberType.TokenTx)
     return isApproximateAmount ? `~${formattedAmount} ` : `${formattedAmount} `
   } catch (e) {
-    logger.info('notifications/utils', 'getFormattedCurrencyAmount', 'could not format amount', e)
+    logger.error('notifications/utils', 'getFormattedCurrencyAmount', 'could not format amount', e)
     return ''
   }
 }

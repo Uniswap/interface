@@ -9,8 +9,6 @@ import { Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { backupMnemonicToICloud } from 'src/features/CloudBackup/RNICloudBackupsManager'
-import { logException } from 'src/features/telemetry'
-import { LogContext } from 'src/features/telemetry/constants'
 import { BackupType } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useActiveAccount } from 'src/features/wallet/hooks'
@@ -41,7 +39,7 @@ export function CloudBackupProcessingScreen({
 
   const handleBackupError = useCallback(
     (error) => {
-      logException(LogContext.CloudBackup, error)
+      logger.error('CloudBackupProcessingScreen', 'handleBackupError', error)
       Alert.alert(
         t('iCloud error'),
         t(

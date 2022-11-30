@@ -14,9 +14,8 @@ import { fiatOnRampApi } from 'src/features/fiatOnRamp/api'
 import { forceUpgradeApi } from 'src/features/forceUpgrade/forceUpgradeApi'
 import { gasApi } from 'src/features/gas/api'
 import { routingApi } from 'src/features/routing/routingApi'
-import { logException } from 'src/features/telemetry'
-import { LogContext } from 'src/features/telemetry/constants'
 import { trmApi } from 'src/features/trm/api'
+import { logger } from 'src/utils/logger'
 
 const storage = new MMKV()
 
@@ -45,7 +44,7 @@ const sagaMiddleware = createSagaMiddleware({
 
 const rtkQueryErrorLogger: Middleware = () => (next) => (action) => {
   if (isRejectedWithValue(action)) {
-    logException(LogContext.RTKQuery, action.payload ?? action.error)
+    logger.error('store', 'rtkQueryErrorLogger', action.payload ?? action.error)
   }
 
   return next(action)

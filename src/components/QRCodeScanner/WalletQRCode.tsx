@@ -11,8 +11,7 @@ import { UniconThemedRadial } from 'src/components/gradients/UniconThemedRadial'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { QRCodeDisplay } from 'src/components/QRCodeScanner/QRCode'
 import { useUniconColors } from 'src/components/unicons/utils'
-import { logMessage } from 'src/features/telemetry'
-import { LogContext } from 'src/features/telemetry/constants'
+import { logger } from 'src/utils/logger'
 
 const QR_CODE_SIZE = 220
 const UNICON_SIZE = QR_CODE_SIZE / 4.2
@@ -33,7 +32,7 @@ export function WalletQRCode({ address }: Props) {
         message: address,
       })
     } catch (e) {
-      logMessage(LogContext.Share, (e as any as Error).message, { screen: 'WalletQRCode' })
+      logger.error('WalletQRCode', 'onShare', (e as any as Error).message)
     }
   }
 

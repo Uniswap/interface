@@ -14,12 +14,12 @@ import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { backupMnemonicToICloud } from 'src/features/CloudBackup/RNICloudBackupsManager'
 import { CloudBackupSetPassword } from 'src/features/onboarding/CloudBackupSetPassword'
-import { logException } from 'src/features/telemetry'
-import { ElementName, LogContext, ModalName } from 'src/features/telemetry/constants'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { BackupType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useAccounts } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
+import { logger } from 'src/utils/logger'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsCloudBackupScreen>
 
@@ -53,7 +53,7 @@ export function SettingsCloudBackupScreen({
         })
       )
     } catch (error) {
-      logException(LogContext.CloudBackup, error)
+      logger.error('SettingsCloudBackupScreen', 'onPressNext', `${error}`)
       Alert.alert(
         t('iCloud error'),
         t(

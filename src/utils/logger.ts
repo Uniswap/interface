@@ -1,6 +1,9 @@
 /* eslint-disable no-console */
 
 import { config } from 'src/config'
+// actually calls `logException`
+// eslint-disable-next-line no-restricted-imports
+import { logException } from 'src/features/telemetry'
 
 // Cache of the last n messages, n is config.logBufferSize
 const logBuffer = new Array<string>(config.logBufferSize)
@@ -36,7 +39,12 @@ function logMessage(
   }
   functionName ||= fileName // To allow omitting function when it's same as file
   const formatted = formatMessage(fileName, functionName, message)
+
   console[level](formatted, ...args)
+  if (level === 'error') {
+    logException(`${fileName}#${functionName}`, message)
+  }
+
   logBuffer[logBufferIndex] = level + '::' + formatted + argsToString(args)
   logBufferIndex = (logBufferIndex + 1) % config.logBufferSize
 }

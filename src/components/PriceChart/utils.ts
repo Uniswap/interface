@@ -2,10 +2,9 @@ import { scaleLinear } from 'd3-scale'
 import { curveBasis, line } from 'd3-shape'
 import { getYForX, parse, Path } from 'react-native-redash'
 import { GraphData, PriceList } from 'src/components/PriceChart/types'
-import { logException } from 'src/features/telemetry'
-import { LogContext } from 'src/features/telemetry/constants'
 import { dimensions } from 'src/styles/sizing'
 import { theme as FixedTheme } from 'src/styles/theme'
+import { logger } from 'src/utils/logger'
 
 // sets the height of the chart short enough on small devices that the
 // "Your balance" section will always show above the fold
@@ -106,7 +105,11 @@ export function buildGraph(
       path,
     }
   } catch (e: any) {
-    logException(LogContext.TokenModel, `Error while normalizing path. ${formattedValues}`)
+    logger.error(
+      'PriceChart/utils',
+      'buildGraph',
+      `Error while normalizing path. ${formattedValues}`
+    )
     return null
   }
 }

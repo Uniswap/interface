@@ -166,20 +166,12 @@ export const enum MarkNames {
  */
 export const enum LogContext {
   Analytics = 'Analytics',
-  ApolloClient = 'ApolloClient',
-  CloudBackup = 'CloudBackup',
   ErrorBoundary = 'ErrorBoundary',
-  Experiments = 'Experiments',
-  FiatOnRamp = 'FiatOnRamp',
-  ForceUpgrade = 'ForceUpgrade',
   ImageUtils = 'ImageUtils',
   Marks = 'Marks',
   OpenUri = 'OpenUri',
   ProviderManager = 'ProviderManager',
-  RTKQuery = 'RTK-Query',
   SecurityConcern = 'SecurityConcern',
-  Share = 'Share',
-  TokenModel = 'TokenModel',
   ValidateAddress = 'ValidateAddress',
   // alphabetize additional values.
 }

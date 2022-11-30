@@ -2,7 +2,7 @@ import * as WebBrowser from 'expo-web-browser'
 import { Linking } from 'react-native'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { uniswapUrls } from 'src/constants/urls'
-import { logException, logMessage } from 'src/features/telemetry'
+import { logMessage } from 'src/features/telemetry'
 import { LogContext } from 'src/features/telemetry/constants'
 import { FiatPurchaseTransactionInfo } from 'src/features/transactions/types'
 import { theme } from 'src/styles/theme'
@@ -29,8 +29,7 @@ export async function openUri(
   const trimmedURI = uri.trim()
   if (!isSafeUri && !ALLOWED_EXTERNAL_URI_SCHEMES.some((scheme) => trimmedURI.startsWith(scheme))) {
     // TODO: show a visual warning that the link cannot be opened.
-    logMessage(LogContext.SecurityConcern, `potentially unsafe URI scheme provided ${uri}`)
-    logger.info('utils/linking', 'openUri', 'cannot open an unsafe URI scheme', uri)
+    logger.error('linking', 'openUri', `potentially unsafe URI scheme provided ${uri}`)
     return
   }
 
@@ -47,7 +46,7 @@ export async function openUri(
       await WebBrowser.openBrowserAsync(uri, { controlsColor })
     }
   } catch (error) {
-    logException(LogContext.OpenUri, error)
+    logger.error('linking', 'openUri', `${error}`)
   }
 }
 

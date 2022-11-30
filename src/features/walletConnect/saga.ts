@@ -315,7 +315,7 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
         address: account.address,
       })
     )
-    logger.info('wcSaga', 'signMessage', 'signing error:', err)
+    logger.error('wcSaga', 'signMessage', 'signing error:', err)
   }
 }
 

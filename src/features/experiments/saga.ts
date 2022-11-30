@@ -2,8 +2,8 @@ import { Experiment } from '@amplitude/experiment-react-native-client'
 import { getUniqueId } from 'react-native-device-info'
 import { config } from 'src/config'
 import { ExperimentsMap, FeatureFlagsMap, mergeRemoteConfig } from 'src/features/experiments/slice'
-import { initAnalytics, logException } from 'src/features/telemetry'
-import { LogContext } from 'src/features/telemetry/constants'
+import { initAnalytics } from 'src/features/telemetry'
+import { logger } from 'src/utils/logger'
 import { call, put } from 'typed-redux-saga'
 
 const experimentClient = Experiment.initialize(config.amplitudeExperimentsDeploymentKey)
@@ -17,7 +17,7 @@ async function initializeExperiments() {
 
     await experimentClient.fetch(user)
   } catch (err) {
-    logException(LogContext.Experiments, err)
+    logger.error('experiments/saga', 'initializeExperiments', `${err}`)
   }
 }
 

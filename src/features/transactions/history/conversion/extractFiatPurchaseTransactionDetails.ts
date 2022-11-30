@@ -1,7 +1,5 @@
 import { ChainId } from 'src/constants/chains'
 import { MoonpayTransactionsResponse } from 'src/features/fiatOnRamp/types'
-import { logException } from 'src/features/telemetry'
-import { LogContext } from 'src/features/telemetry/constants'
 import {
   FiatPurchaseTransactionInfo,
   TransactionDetails,
@@ -10,6 +8,7 @@ import {
 } from 'src/features/transactions/types'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { getNativeCurrencyAddressForChain } from 'src/utils/currencyId'
+import { logger } from 'src/utils/logger'
 
 const MOONPAY_ETH_CONTRACT_ADDRESS = '0x0000000000000000000000000000000000000000'
 
@@ -90,7 +89,7 @@ export function extractFiatOnRampTransactionDetails(
       options: { request: {} },
     }
   } catch (e) {
-    logException(LogContext.FiatOnRamp, `Failed to parse transaction: ${e}`)
+    logger.error('extractFiatPurchaseTransactionDetails', '', `Failed to parse transaction: ${e}`)
     return
   }
 }

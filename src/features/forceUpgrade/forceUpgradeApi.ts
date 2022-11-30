@@ -3,8 +3,7 @@ import { getUniqueId } from 'react-native-device-info'
 import { config } from 'src/config'
 import { flags } from 'src/features/experiments/flagsConstants'
 import { UpgradeStatus } from 'src/features/forceUpgrade/types'
-import { logException } from 'src/features/telemetry'
-import { LogContext } from 'src/features/telemetry/constants'
+import { logger } from 'src/utils/logger'
 import { getFullAppVersion } from 'src/utils/version'
 
 type UpgradeStatusReponse = {
@@ -54,7 +53,7 @@ const fetchUpgradeStatus = async (): Promise<UpgradeStatusReponse> => {
   try {
     return (await response.json()) as UpgradeStatusReponse
   } catch (error) {
-    logException(LogContext.ForceUpgrade, error)
+    logger.error('forceUpgrdeApi', 'fetchUpgradeStatus', `${error}`)
     return flags.force_upgrade.defaultValue
   }
 }

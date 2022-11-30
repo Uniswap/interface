@@ -3,6 +3,8 @@ import { useColorScheme } from 'react-native'
 import renderer, { act } from 'react-test-renderer'
 import { TraceUserProperties } from 'src/components/telemetry/TraceUserProperties'
 import * as biometricHooks from 'src/features/biometrics/hooks'
+// ok to import in test file
+// eslint-disable-next-line no-restricted-imports
 import * as telemetry from 'src/features/telemetry'
 import { AuthMethod, UserPropertyName } from 'src/features/telemetry/constants'
 import { AccountType, BackupType } from 'src/features/wallet/accounts/types'

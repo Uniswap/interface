@@ -13,8 +13,6 @@ import { useCallback, useEffect, useState } from 'react'
 import { MMKV } from 'react-native-mmkv'
 import { config } from 'src/config'
 import { uniswapUrls } from 'src/constants/urls'
-import { logException } from 'src/features/telemetry'
-import { LogContext } from 'src/features/telemetry/constants'
 import { logger } from 'src/utils/logger'
 
 const mmkv = new MMKV()
@@ -65,14 +63,15 @@ export const usePersistedApolloClient = () => {
       const errorLink = onError(({ graphQLErrors, networkError }) => {
         if (graphQLErrors) {
           graphQLErrors.forEach(({ message, locations, path }) =>
-            logException(
-              LogContext.ApolloClient,
+            logger.error(
+              'data/hooks',
+              '',
               `[GraphQL Error]: Message: ${message}, Location: ${locations}, Path: ${path}`
             )
           )
         }
         if (networkError) {
-          logException(LogContext.ApolloClient, `[Network error]: ${networkError}`)
+          logger.error('data/hooks', '', `[Network error]: ${networkError}`)
         }
       })
 

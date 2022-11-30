@@ -88,7 +88,7 @@ function getTransferParams(
   const assetType = currencyTypes[CurrencyField.INPUT]
 
   if (!chainId || !tokenAddress || !recipient || !assetType) {
-    logger.info(
+    logger.error(
       'hooks',
       'useUpdateTransferGasEstimate',
       'One of the required parameters is undefined'
@@ -100,7 +100,7 @@ function getTransferParams(
     case AssetType.ERC1155:
     case AssetType.ERC721: {
       if (!nftIn) {
-        logger.info(
+        logger.error(
           'hooks',
           'useUpdateTransferGasEstimate',
           'Asset type corresponds to a NFT but `nftIn` is undefined'
@@ -120,7 +120,7 @@ function getTransferParams(
 
     case AssetType.Currency: {
       if (!currencyIn || amount === undefined) {
-        logger.info(
+        logger.error(
           'hooks',
           'useUpdateTransferGasEstimate',
           'Asset type corresponds to a Currency but `currencyIn` or `amount` is undefined'

@@ -7,7 +7,7 @@ import { FLASHBOTS_URLS } from 'src/features/providers/constants'
 import { FLASHBOTS_SUPPORTED_CHAINS } from 'src/features/providers/flashbotsProvider'
 import { getEthersProvider } from 'src/features/providers/getEthersProvider'
 import { getInfuraChainName } from 'src/features/providers/utils'
-import { logException, logMessage } from 'src/features/telemetry'
+import { logMessage } from 'src/features/telemetry'
 import { LogContext } from 'src/features/telemetry/constants'
 import { logger } from 'src/utils/logger'
 import { isStale } from 'src/utils/time'
@@ -34,7 +34,7 @@ const getChainDetails = (chainId: ChainId) => {
   const chainDetails = CHAIN_INFO[chainId]
   if (!chainDetails) {
     const error = new Error(`Cannot create provider for invalid chain details for ${chainId}`)
-    logException(LOG_CONTEXT, error)
+    logger.error('ProviderManager', 'getChainDetails', `${error}`)
     throw error
   }
   return chainDetails
@@ -74,7 +74,7 @@ export class ProviderManager {
         return newProvider
       } else {
         const error = new Error(`Failed to create new provider for ${chainId}`)
-        logException(LOG_CONTEXT, error)
+        logger.error('ProviderManager', 'createProvider', `${error}`)
         // Otherwise show error
         throw error
       }
@@ -181,9 +181,8 @@ export class ProviderManager {
       }
       throw new Error(`Unable to sync ${getInfuraChainName(chainId)} after 3 attempts`)
     } catch (error) {
-      logException(LOG_CONTEXT, error)
       logger.error(
-        LOG_CONTEXT,
+        'ProviderManager',
         'initProvider',
         `Failed to connect to infura rpc provider for: ${getInfuraChainName(chainId)}`,
         error

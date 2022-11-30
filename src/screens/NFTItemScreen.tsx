@@ -21,8 +21,6 @@ import { CHAIN_INFO } from 'src/constants/chains'
 import { PollingInterval } from 'src/constants/misc'
 import { uniswapUrls } from 'src/constants/urls'
 import { useNftItemScreenQuery } from 'src/data/__generated__/types-and-hooks'
-import { logMessage } from 'src/features/telemetry'
-import { LogContext } from 'src/features/telemetry/constants'
 import { useDisplayName } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { iconSizes, imageSizes } from 'src/styles/sizing'
@@ -30,6 +28,7 @@ import { shortenAddress } from 'src/utils/addresses'
 import { fromGraphQLChain } from 'src/utils/chainId'
 import { formatNumber, NumberType } from 'src/utils/format'
 import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
+import { logger } from 'src/utils/logger'
 
 export function NFTItemScreen({
   route: {
@@ -61,7 +60,7 @@ export function NFTItemScreen({
         message: `${uniswapUrls.nftUrl}/asset/${asset.nftContract.address}/${asset.tokenId}`,
       })
     } catch (e) {
-      logMessage(LogContext.Share, (e as any as Error).message, { screen: 'NFTItemScreen' })
+      logger.error('NFTItemScreen', 'onShare', (e as any as Error).message)
     }
   }, [asset?.nftContract, asset?.tokenId])
 

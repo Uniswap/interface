@@ -32,8 +32,7 @@ export async function initAnalytics() {
       }
     )
   } catch (err) {
-    logException(LogContext.Analytics, err)
-    logger.error('telemetry', 'enableAnalytics', 'error initializing analytics', err)
+    logger.error('telemetry/index', 'initiAnalytics', `${err}`)
   }
 }
 
@@ -55,12 +54,11 @@ export async function logEvent(name: string, params: {}) {
  * @param extraTags Key/value pairs to enrich logging and allow filtering.
  *                  More info here: https://docs.sentry.io/platforms/react-native/enriching-events/tags/
  */
-export function logException(context: LogContext, error: any, extraTags?: LogTags) {
+export function logException(context: string, error: any, extraTags?: LogTags) {
   if (__DEV__) {
-    logger.error('telemetry', 'logException', context, error)
+    // should already be logged by logger
     return
   }
-
   Sentry.captureException(error, { tags: { ...(extraTags || {}), mobileContext: context } })
 }
 

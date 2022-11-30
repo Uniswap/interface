@@ -13,9 +13,9 @@ import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
 import { uniswapUrls } from 'src/constants/urls'
 import { NftItemScreenQuery } from 'src/data/__generated__/types-and-hooks'
-import { logMessage } from 'src/features/telemetry'
-import { LogContext, ModalName } from 'src/features/telemetry/constants'
+import { ModalName } from 'src/features/telemetry/constants'
 import { formatNumber, NumberType } from 'src/utils/format'
+import { logger } from 'src/utils/logger'
 
 export function NFTCollectionModal({
   collection,
@@ -46,7 +46,7 @@ export function NFTCollectionModal({
         message: `${uniswapUrls.nftUrl}/collection/${address}`,
       })
     } catch (e) {
-      logMessage(LogContext.Share, (e as any as Error).message, { screen: 'NFTCollectionModal' })
+      logger.error('NFTCollectionModal', 'onShare', (e as any as Error).message)
     }
   }, [collection.nftContracts])
 

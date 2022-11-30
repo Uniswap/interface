@@ -59,6 +59,11 @@ module.exports = {
             importNames: ['Suspense'],
             message: 'Please use Suspense from src/components/data instead.',
           },
+          {
+            name: 'src/features/telemetry',
+            importNames: ['logException'],
+            message: 'Please use `logger.error` instead.',
+          },
         ],
       },
     ],

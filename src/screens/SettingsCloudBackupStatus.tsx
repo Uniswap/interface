@@ -14,12 +14,12 @@ import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { Text } from 'src/components/Text'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { deleteICloudMnemonicBackup } from 'src/features/CloudBackup/RNICloudBackupsManager'
-import { logException } from 'src/features/telemetry'
-import { ElementName, LogContext, ModalName } from 'src/features/telemetry/constants'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { AccountType, BackupType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useAccounts } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
+import { logger } from 'src/utils/logger'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsCloudBackupStatus>
 
@@ -63,7 +63,7 @@ export function SettingsCloudBackupStatus({
     } catch (error) {
       setShowBackupDeleteWarning(false)
       const err = error as Error
-      logException(LogContext.CloudBackup, err)
+      logger.error('SettingsCloudBackStatus', 'deleteBackup', `${error}`)
       Alert.alert(t('iCloud error'), err.message, [
         {
           text: t('OK'),

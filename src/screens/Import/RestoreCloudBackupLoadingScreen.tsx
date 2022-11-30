@@ -14,9 +14,8 @@ import {
 } from 'src/features/CloudBackup/RNICloudBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType } from 'src/features/onboarding/utils'
-import { logMessage } from 'src/features/telemetry'
-import { LogContext } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
+import { logger } from 'src/utils/logger'
 import { ONE_SECOND_MS } from 'src/utils/time'
 import { useTimeout } from 'src/utils/timing'
 
@@ -53,7 +52,11 @@ export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } 
     startFetchingICloudBackups()
 
     return setTimeout(() => {
-      logMessage(LogContext.CloudBackup, 'Timed out fetching iCloud backups')
+      logger.error(
+        'RestoreCloudBackupLoadingScreen',
+        'fetchICloudBackupsWithTimeout',
+        `Timed out fetching iCloud backups after ${MAX_LOADING_TIMEOUT_MS}ms`
+      )
       setIsLoading(false)
       stopFetchingICloudBackups()
     }, MAX_LOADING_TIMEOUT_MS)

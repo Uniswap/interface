@@ -78,7 +78,7 @@ export function createSwapFromStateFromDetails({
 
     return swapFormState
   } catch (error: any) {
-    logger.info('hooks', 'useRecreateSwapFormState', error?.message)
+    logger.error('hooks', 'useRecreateSwapFormState', error?.message)
     return undefined
   }
 }
@@ -133,7 +133,7 @@ export function createWrapFormStateFromDetails({
 
     return swapFormState
   } catch (error: any) {
-    logger.info('hooks', 'useCreateWrapFormState', error?.message)
+    logger.error('hooks', 'useCreateWrapFormState', error?.message)
     return undefined
   }
 }

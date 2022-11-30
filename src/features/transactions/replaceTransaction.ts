@@ -61,7 +61,7 @@ export function* attemptReplaceTransaction(
     }
     yield* put(updateTransaction(updatedTransaction))
   } catch (error) {
-    logger.info('replaceTransaction', '', 'Error while attempting tx replacement', hash, error)
+    logger.error('replaceTransaction', '', 'Error while attempting tx replacement', hash, error)
 
     // Caught an invalid replacement, which is a failed cancelation attempt. Aka previous
     // txn was already mined. Mark as finalized.
