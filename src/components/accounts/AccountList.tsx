@@ -1,6 +1,6 @@
 import { useDrawerStatus } from '@react-navigation/drawer'
 import { LinearGradient } from 'expo-linear-gradient'
-import { ComponentProps, default as React, useMemo } from 'react'
+import { ComponentProps, default as React, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo, StyleSheet } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
@@ -24,7 +24,7 @@ type AccountListProps = Pick<ComponentProps<typeof AccountCardItem>, 'onPress' |
 type AccountWithPortfolioValue = {
   account: Account
   isPortfolioValueLoading: boolean
-  portfolioValue: NullUndefined<number>
+  portfolioValue: number | undefined
 }
 
 const STICKY_HEADER_INDICES = [0]
@@ -36,12 +36,20 @@ export function AccountList({ accounts, onAddWallet, onPressEdit, onPress }: Acc
   const activeAccount = useActiveAccount()
   const addresses = accounts.map((a) => a.address)
 
-  const { data, networkStatus } = usePortfolioTotalValuesQuery({
+  const { data, networkStatus, refetch, startPolling, stopPolling } = usePortfolioTotalValuesQuery({
     variables: { addresses },
     notifyOnNetworkStatusChange: true,
-    pollInterval: PollingInterval.Fast,
-    skip: !isDrawerOpen, // Only poll account total value when the AccountDrawer is open
   })
+
+  // Only poll account total value when the AccountDrawer is open
+  useEffect(() => {
+    if (isDrawerOpen) {
+      refetch()
+      startPolling(PollingInterval.Fast)
+    } else {
+      stopPolling()
+    }
+  }, [isDrawerOpen, refetch, startPolling, stopPolling])
 
   const isPortfolioValueLoading = isNonPollingRequestInFlight(networkStatus)
 

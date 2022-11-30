@@ -26,13 +26,13 @@ type AccountCardItemProps = {
 
 type PortfolioValueProps = {
   isPortfolioValueLoading: boolean
-  portfolioValue: NullUndefined<number>
+  portfolioValue: number | undefined
 }
 
 function PortfolioValue({ isPortfolioValueLoading, portfolioValue }: PortfolioValueProps) {
   const theme = useAppTheme()
 
-  if (isPortfolioValueLoading && !portfolioValue) {
+  if (isPortfolioValueLoading && portfolioValue === undefined) {
     return (
       <Box width="50%">
         <Loading height={theme.textVariants.bodySmall.lineHeight} type="text" />
