@@ -8,3 +8,5 @@ src/abis/uniswapV3
 
 generated*.ts
 __generated__/
+
+storybook-static
