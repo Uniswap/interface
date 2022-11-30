@@ -240,12 +240,7 @@ export async function signListing(
         tokens: [
           {
             token: asset.asset_contract.address,
-            tokenId: BigNumber.from(
-              parseFloat(asset.tokenId)
-                .toLocaleString('fullwide', { useGrouping: false })
-                .replace(',', '.')
-                .replace(' ', '')
-            ),
+            tokenId: BigNumber.from(asset.tokenId),
           },
         ],
       }
