@@ -65,6 +65,7 @@ export const UNSUPPORTED_V2POOL_CHAIN_IDS = [
   SupportedChainId.POLYGON,
   SupportedChainId.OPTIMISM,
   SupportedChainId.ARBITRUM_ONE,
+  SupportedChainId.ARBITRUM_GOERLI,
 ]
 
 export const TESTNET_CHAIN_IDS = [
@@ -74,6 +75,7 @@ export const TESTNET_CHAIN_IDS = [
   SupportedChainId.KOVAN,
   SupportedChainId.POLYGON_MUMBAI,
   SupportedChainId.ARBITRUM_RINKEBY,
+  SupportedChainId.ARBITRUM_GOERLI,
   SupportedChainId.OPTIMISM_GOERLI,
 ] as const
 
