@@ -41,7 +41,10 @@ const network = new RelayNetworkLayer([
     return async (req) => {
       try {
         const res = await next(req)
-        if (res.errors) throw res.errors
+        if (res.errors) {
+          console.error(res.errors)
+          delete res.errors
+        }
         return res
       } catch (e) {
         console.error(e)
