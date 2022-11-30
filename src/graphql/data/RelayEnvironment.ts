@@ -13,7 +13,13 @@ if (!GRAPHQL_URL) {
   throw new Error('AWS URL MISSING FROM ENVIRONMENT')
 }
 
+function getDelayWithBackoff(attempt: number) {
+  return Math.pow(2, attempt + 4) * 100 // or simple array [3200, 6400, 12800]
+}
+
 const MAX_RETRIES = 3
+
+// This network layer must not cache, or it will break cache-evicting network policies
 const network = new RelayNetworkLayer([
   urlMiddleware({
     url: GRAPHQL_URL,
@@ -22,12 +28,11 @@ const network = new RelayNetworkLayer([
     },
   }),
   retryMiddleware({
-    fetchTimeout: ms`15s`,
-    retryDelays: (attempt) => Math.pow(2, attempt + 4) * 100, // or simple array [3200, 6400, 12800],
+    fetchTimeout: ms`30s`,
+    retryDelays: getDelayWithBackoff,
     statusCodes: [500, 503, 504],
     beforeRetry: ({ abort, attempt }) => {
       if (attempt > MAX_RETRIES) abort()
-      console.log(attempt)
     },
   }),
 ])
