@@ -1,16 +1,23 @@
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
+import { FlashList } from '@shopify/flash-list'
 import { SpacingShorthandProps } from '@shopify/restyle'
 import React, { forwardRef, ReactElement, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native'
-import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated'
+import { FadeInDown, FadeOut } from 'react-native-reanimated'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
 import { AnimatedBox, Box, Flex } from 'src/components/layout'
-import { AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
+import { AnimatedFlashList } from 'src/components/layout/AnimatedFlashList'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { TabContentProps, TAB_VIEW_SCROLL_THROTTLE } from 'src/components/layout/TabHelpers'
+import {
+  TabContentProps,
+  TAB_BAR_HEIGHT,
+  TAB_VIEW_SCROLL_THROTTLE,
+} from 'src/components/layout/TabHelpers'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
@@ -22,6 +29,7 @@ import {
   makeSelectAccountHideSpamTokens,
 } from 'src/features/wallet/selectors'
 import { Screens } from 'src/screens/Screens'
+import { dimensions } from 'src/styles/sizing'
 import { Theme } from 'src/styles/theme'
 import { CurrencyId } from 'src/utils/currencyId'
 
@@ -33,9 +41,13 @@ type TokenBalanceListProps = {
   scrollHandler?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
 }
 
-export const TokenBalanceList = forwardRef<Animated.FlatList<any>, TokenBalanceListProps>(
+const ESTIMATED_TOKEN_ITEM_HEIGHT = 64
+
+export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps>(
   ({ owner, empty, onPressToken, containerProps, scrollHandler }, ref) => {
     const { t } = useTranslation()
+    const bottomTabHeight = useBottomTabBarHeight()
+    const insets = useSafeAreaInsets()
 
     const hideSmallBalances: boolean = useAppSelector(makeSelectAccountHideSmallBalances(owner))
     const hideSpamTokens: boolean = useAppSelector(makeSelectAccountHideSpamTokens(owner))
@@ -92,16 +104,29 @@ export const TokenBalanceList = forwardRef<Animated.FlatList<any>, TokenBalanceL
     const { balances, smallBalances, spamBalances } = data
     const numHiddenTokens = smallBalances.length + spamBalances.length
 
+    const estimatedContentHeight =
+      dimensions.fullHeight - bottomTabHeight - TAB_BAR_HEIGHT - insets.top
+
     return balances.length === 0 ? (
       <Flex centered grow style={containerProps?.loadingContainerStyle}>
         <HiddenTokensRow address={owner} mt="xs" numHidden={numHiddenTokens} />
         {empty}
       </Flex>
     ) : (
-      <AnimatedFlatList
+      <AnimatedFlashList
         ref={ref}
         ListFooterComponent={
-          <HiddenTokensRow address={owner} mb="xl" mt="sm" numHidden={numHiddenTokens} />
+          <>
+            <HiddenTokensRow address={owner} mb="xl" mt="sm" numHidden={numHiddenTokens} />
+
+            <Box
+              height={
+                // We need this since FlashList doesn't support minHeight as part of its contentContainerStyle.
+                // Ensures content fills remainder of screen to support smooth tab switching
+                estimatedContentHeight - (balances.length + 1) * ESTIMATED_TOKEN_ITEM_HEIGHT
+              }
+            />
+          </>
         }
         ListHeaderComponent={
           isError(networkStatus, !!data) ? (
@@ -114,6 +139,7 @@ export const TokenBalanceList = forwardRef<Animated.FlatList<any>, TokenBalanceL
           ) : null
         }
         data={balances}
+        estimatedItemSize={ESTIMATED_TOKEN_ITEM_HEIGHT}
         keyExtractor={key}
         renderItem={(item) => (
           <TokenBalanceItem
