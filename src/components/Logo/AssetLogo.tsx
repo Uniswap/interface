@@ -55,6 +55,8 @@ export default function AssetLogo({
 
   const [src, nextSrc] = useTokenLogoSource(address, chainId, isNative, backupImg)
 
+  console.log(src)
+
   if (src) {
     return <LogoImage {...imageProps} src={src} onError={nextSrc} />
   } else {
