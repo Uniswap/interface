@@ -13,6 +13,7 @@ if (!GRAPHQL_URL) {
   throw new Error('AWS URL MISSING FROM ENVIRONMENT')
 }
 
+const MAX_RETRIES = 10
 const network = new RelayNetworkLayer([
   urlMiddleware({
     url: GRAPHQL_URL,
@@ -22,12 +23,15 @@ const network = new RelayNetworkLayer([
   }),
   cacheMiddleware({
     size: 100, // max 100 requests
-    ttl: 900000, // 15 minutes
+    ttl: queryCacheExpirationTime,
   }),
   retryMiddleware({
     fetchTimeout: 15000,
     retryDelays: (attempt) => Math.pow(2, attempt + 4) * 100, // or simple array [3200, 6400, 12800, 25600, 51200, 102400, 204800, 409600],
     statusCodes: [500, 503, 504],
+    beforeRetry: ({ abort, attempt }) => {
+      if (attempt > MAX_RETRIES) abort()
+    },
   }),
 ])
 
