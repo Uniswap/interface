@@ -76,6 +76,7 @@ export function NFTItemScreen({
             />
           </TouchableOpacity>
         }
+        pb="xs"
         pt="xxs"
         px="xs"
       />
