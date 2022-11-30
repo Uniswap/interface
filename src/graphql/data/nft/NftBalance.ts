@@ -168,7 +168,11 @@ export function useNftBalanceQuery(
   const walletAssets: WalletAsset[] = data.nftBalances?.edges?.map((queryAsset: NftBalanceQueryAsset) => {
     const asset = queryAsset.node.ownedAsset
     const ethPrice = parseEther(
-      asset?.listings?.edges[0]?.node.price.value?.toLocaleString('fullwide', { useGrouping: false }) ?? '0'
+      parseFloat(
+        (asset?.listings?.edges[0]?.node.price.value?.toLocaleString('fullwide', { useGrouping: false }) ?? '0')
+          .replace(',', '.')
+          .replace(' ', '')
+      ).toString()
     ).toString()
     return {
       id: asset?.id,

@@ -126,7 +126,11 @@ type NftAssetsQueryAsset = NonNullable<
 function formatAssetQueryData(queryAsset: NftAssetsQueryAsset, totalCount?: number) {
   const asset = queryAsset.node
   const ethPrice = parseEther(
-    asset.listings?.edges[0]?.node.price.value?.toLocaleString('fullwide', { useGrouping: false }) ?? '0'
+    parseFloat(
+      (asset.listings?.edges[0]?.node.price.value?.toLocaleString('fullwide', { useGrouping: false }) ?? '0')
+        .replace(',', '.')
+        .replace(' ', '')
+    ).toString()
   ).toString()
   return {
     id: asset.id,
