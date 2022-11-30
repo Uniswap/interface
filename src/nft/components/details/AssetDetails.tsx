@@ -191,27 +191,34 @@ const initialFilterState = {
   [ActivityEventType.CancelListing]: false,
 }
 
+enum MediaType {
+  Audio = 'audio',
+  Video = 'video',
+  Image = 'image',
+  Embed = 'embed',
+}
+
 const AssetView = ({
   mediaType,
   asset,
   dominantColor,
 }: {
-  mediaType: 'image' | 'video' | 'audio' | 'embed'
+  mediaType: MediaType
   asset: GenieAsset
   dominantColor: [number, number, number]
 }) => {
   const style = { ['--shadow' as string]: `rgba(${dominantColor.join(', ')}, 0.5)` }
 
   switch (mediaType) {
-    case 'video':
+    case MediaType.Video:
       return <video src={asset.animationUrl} className={styles.image} autoPlay controls muted loop style={style} />
-    case 'image':
+    case MediaType.Image:
       return (
         <img className={styles.image} src={asset.imageUrl} alt={asset.name || asset.collectionName} style={style} />
       )
-    case 'audio':
+    case MediaType.Audio:
       return <AudioPlayer {...asset} dominantColor={dominantColor} />
-    case 'embed':
+    case MediaType.Embed:
       return (
         <div className={styles.embedContainer}>
           <iframe
@@ -229,13 +236,6 @@ const AssetView = ({
         </div>
       )
   }
-}
-
-enum MediaType {
-  Audio = 'audio',
-  Video = 'video',
-  Image = 'image',
-  Embed = 'embed',
 }
 
 interface AssetDetailsProps {
