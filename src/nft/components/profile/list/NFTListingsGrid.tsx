@@ -255,8 +255,6 @@ const EthPriceDisplay = ({ ethPrice = 0 }: { ethPrice?: number }) => {
   useEffect(() => {
     fetchPrice().then((price) => {
       setEthConversion(price ?? 0)
-      console.log(price)
-      console.log(typeof price)
     })
   }, [])
 
