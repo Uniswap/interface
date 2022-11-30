@@ -19,7 +19,6 @@ if (!GRAPHQL_URL) {
 }
 
 const RETRY_TIME_MS = [3200, 6400, 12800]
-const MAX_RETRIES = 3
 
 // This network layer must not cache, or it will break cache-evicting network policies
 const network = new RelayNetworkLayer(
@@ -32,11 +31,8 @@ const network = new RelayNetworkLayer(
     }),
     retryMiddleware({
       fetchTimeout: ms`30s`, // mirrors backend's timeout in case that fails
-      retryDelays: (attempt) => RETRY_TIME_MS[attempt],
+      retryDelays: RETRY_TIME_MS,
       statusCodes: (statusCode) => statusCode >= 500 && statusCode < 600,
-      beforeRetry: ({ abort, attempt }) => {
-        if (attempt > MAX_RETRIES) abort()
-      },
     }),
     function logAndIgnoreErrors(next) {
       return async (req) => {
