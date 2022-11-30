@@ -8,6 +8,7 @@ import { Button } from 'src/components/buttons/Button'
 import { Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loading } from 'src/components/loading'
+import { EMPTY_ARRAY } from 'src/constants/misc'
 import { useSelectWalletScreenQuery } from 'src/data/__generated__/types-and-hooks'
 import { importAccountSagaName } from 'src/features/import/importAccountSaga'
 import WalletPreviewCard from 'src/features/import/WalletPreviewCard'
@@ -58,15 +59,24 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
         portfolio?.tokensTotalDenominatedValue?.value &&
         portfolio.tokensTotalDenominatedValue.value > 0
     )
+
+    if (filtered?.length) {
+      return filtered
+    }
+
+    if (allAddressBalances?.length) {
+      return [allAddressBalances?.[0]]
+    }
+
     // if none of the addresses have a balance then just display the first one
-    return filtered?.length
-      ? filtered
-      : allAddressBalances?.length
-      ? [allAddressBalances?.[0]]
-      : addresses.length
-      ? [{ id: FALLBACK_ID, ownerAddress: addresses[0], tokensTotalDenominatedValue: null }] // if query returned null, fallback to the first address
-      : []
+    if (addresses.length) {
+      return [{ id: FALLBACK_ID, ownerAddress: addresses[0], tokensTotalDenominatedValue: null }] // if query returned null, fallback to the first address
+    }
+
+    return EMPTY_ARRAY
   }, [allAddressBalances, addresses])
+
+  const showError = error && !initialShownAccounts.length
 
   const [selectedAddresses, setSelectedAddresses] = useReducer(
     (currentAddresses: string[], addressToProcess: string) =>
@@ -146,14 +156,14 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
     <>
       <OnboardingScreen
         subtitle={
-          !error
+          !showError
             ? t(
                 'You can import any of your wallet addresses that are associated with your recovery phrase.'
               )
             : undefined
         }
-        title={!error ? t('Select addresses to import') : ''}>
-        {error ? (
+        title={!showError ? t('Select addresses to import') : ''}>
+        {showError ? (
           <BaseCard.ErrorState
             retryButtonLabel={t('Retry')}
             title={t("Couldn't load addresses")}
@@ -183,9 +193,9 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
             </Flex>
           </ScrollView>
         )}
-        <Box opacity={error ? 0 : 1}>
+        <Box opacity={showError ? 0 : 1}>
           <Button
-            disabled={isLoadingAccounts || loading || !!error || selectedAddresses.length === 0}
+            disabled={isLoadingAccounts || loading || !!showError || selectedAddresses.length === 0}
             label={t('Continue')}
             name={ElementName.Next}
             onPress={onSubmit}
