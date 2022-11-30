@@ -29,11 +29,6 @@ const network = new RelayNetworkLayer(
         'Content-Type': 'application/json',
       },
     }),
-    retryMiddleware({
-      fetchTimeout: ms`30s`, // mirrors backend's timeout in case that fails
-      retryDelays: RETRY_TIME_MS,
-      statusCodes: (statusCode) => statusCode >= 500 && statusCode < 600,
-    }),
     function logAndIgnoreErrors(next) {
       return async (req) => {
         try {
@@ -46,6 +41,11 @@ const network = new RelayNetworkLayer(
         }
       }
     },
+    retryMiddleware({
+      fetchTimeout: ms`30s`, // mirrors backend's timeout in case that fails
+      retryDelays: RETRY_TIME_MS,
+      statusCodes: (statusCode) => statusCode >= 500 && statusCode < 600,
+    }),
   ],
   { noThrow: true }
 )
