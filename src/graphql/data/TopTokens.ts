@@ -129,12 +129,7 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   const environment = useRelayEnvironment()
   const [sparklines, setSparklines] = useState<SparklineMap>({})
   useEffect(() => {
-    const subscription = fetchQuery<TopTokensSparklineQuery>(
-      environment,
-      tokenSparklineQuery,
-      { duration, chain },
-      { networkCacheConfig: { force: false }, fetchPolicy: 'store-or-network' }
-    )
+    const subscription = fetchQuery<TopTokensSparklineQuery>(environment, tokenSparklineQuery, { duration, chain })
       .map((data) => ({
         topTokens: data.topTokens?.map((token) => unwrapToken(chainId, token)),
       }))
