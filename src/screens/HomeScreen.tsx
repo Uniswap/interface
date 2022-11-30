@@ -1,4 +1,4 @@
-import { DrawerActions, useIsFocused } from '@react-navigation/core'
+import { DrawerActions } from '@react-navigation/core'
 import { useScrollToTop } from '@react-navigation/native'
 import { FlashList } from '@shopify/flash-list'
 import { default as React, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -50,6 +50,7 @@ import { ElementName, ModalName, SectionName } from 'src/features/telemetry/cons
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
+import { Screens } from 'src/screens/Screens'
 import { dimensions } from 'src/styles/sizing'
 
 const CONTENT_HEADER_HEIGHT_ESTIMATE = 270
@@ -69,7 +70,6 @@ export function HomeScreen() {
   const theme = useAppTheme()
   const insets = useSafeAreaInsets()
 
-  const isFocused = useIsFocused()
   const [tabIndex, setTabIndex] = useState(0)
   const routes = useMemo(
     () => [
@@ -160,7 +160,7 @@ export function HomeScreen() {
     [nftsTabScrollRef, nftsTabScrollValue, tokensTabScrollRef, tokensTabScrollValue]
   )
 
-  const { sync } = useScrollSync(scrollPairs, headerConfig, isFocused)
+  const { sync } = useScrollSync(scrollPairs, headerConfig)
 
   const openSidebar = useCallback(() => {
     navigation.dispatch(DrawerActions.openDrawer())
@@ -312,7 +312,8 @@ export function HomeScreen() {
           navigationState={{ index: tabIndex, routes }}
           renderScene={renderTab}
           renderTabBar={renderTabBar}
-          onIndexChange={(index) => setTabIndex(index)}
+          screenName={Screens.Home}
+          onIndexChange={setTabIndex}
         />
       </View>
       <AnimatedBox

@@ -2,21 +2,20 @@ import React from 'react'
 import { Route, TabView, TabViewProps } from 'react-native-tab-view'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { EventName, SectionName } from 'src/features/telemetry/constants'
-import { useTrace } from 'src/features/telemetry/hooks'
+import { Screens } from 'src/screens/Screens'
 
 type TraceRouteProps = { key: SectionName } & Route
 
 export default function TraceTabView<T extends TraceRouteProps>({
   onIndexChange,
   navigationState,
+  screenName,
   ...rest
-}: TabViewProps<T>) {
-  const parentTrace = useTrace()
-
+}: TabViewProps<T> & { screenName: Screens }) {
   const onIndexChangeTrace = (index: number) => {
     sendAnalyticsEvent(EventName.Impression, {
       section: navigationState.routes[index].key,
-      ...parentTrace,
+      screen: screenName,
     })
     onIndexChange(index)
   }

@@ -19,7 +19,6 @@ import {
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { EventName, SectionName } from 'src/features/telemetry/constants'
-import { useTrace } from 'src/features/telemetry/hooks'
 import { Screens, Tabs } from 'src/screens/Screens'
 import { flex } from 'src/styles/flex'
 import { Theme } from 'src/styles/theme'
@@ -32,7 +31,6 @@ type Props = NativeStackScreenProps<ExploreStackParamList, Screens.Explore>
 export function ExploreScreen({ navigation }: Props) {
   const { t } = useTranslation()
   const isDarkMode = useColorScheme() === 'dark'
-  const parentTrace = useTrace()
 
   const listRef = useRef(null)
   useScrollToTop(listRef)
@@ -50,7 +48,7 @@ export function ExploreScreen({ navigation }: Props) {
     setIsSearchMode(true)
     sendAnalyticsEvent(EventName.Impression, {
       section: SectionName.ExploreSearch,
-      ...parentTrace,
+      screen: Screens.Explore,
     })
   }
 

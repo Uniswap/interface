@@ -87,6 +87,7 @@ export function ExternalProfileScreen({
           navigationState={{ index: tabIndex, routes: tabs }}
           renderScene={renderTab}
           renderTabBar={renderTabBar}
+          screenName={Screens.ExternalProfile}
           onIndexChange={setIndex}
         />
       </Flex>
