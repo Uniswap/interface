@@ -126,7 +126,7 @@ export const darkTheme = {
   userThemeColor: colors.magentaVibrant,
 
   background: colors.gray800,
-  backgroundBackdrop: colors.gray950,
+  backgroundBackdrop: colors.gray900,
   backgroundSurface: colors.gray900,
   backgroundModule: colors.gray800,
   backgroundInteractive: colors.gray700,
