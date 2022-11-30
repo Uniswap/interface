@@ -5,10 +5,8 @@ import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
-import { AutoRow } from 'components/Row'
 import { networkConnection } from 'connection'
 import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsInjected, getIsMetaMask } from 'connection/utils'
-import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import usePrevious from 'hooks/usePrevious'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
@@ -23,9 +21,7 @@ import { isMobile } from 'utils/userAgent'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { useModalIsOpen, useToggleWalletModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
-import { ExternalLink, ThemedText } from '../../theme'
 import AccountDetails from '../AccountDetails'
-import { LightCard } from '../Card'
 import Modal from '../Modal'
 import { CoinbaseWalletOption, OpenCoinbaseWalletOption } from './CoinbaseWalletOption'
 import { InjectedOption, InstallMetaMaskOption, MetaMaskOption } from './InjectedOption'
@@ -155,7 +151,6 @@ export default function WalletModal({
 
   const [connectedWallets, addWalletToConnectedWallets] = useConnectedWallets()
 
-  const nftFlagEnabled = useNftFlag() === NftVariant.Enabled
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const [lastActiveWalletAddress, setLastActiveWalletAddress] = useState<string | undefined>(account)
 
@@ -314,31 +309,6 @@ export default function WalletModal({
       )
     }
 
-    function getTermsOfService(nftFlagEnabled: boolean, walletView: string) {
-      if (nftFlagEnabled && walletView === WALLET_VIEWS.PENDING) return null
-
-      const content = (
-        <Trans>
-          By connecting a wallet, you agree to Uniswap Labs’{' '}
-          <ExternalLink href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and consent to its{' '}
-          <ExternalLink href="https://uniswap.org/privacy-policy">Privacy Policy</ExternalLink>.
-        </Trans>
-      )
-      return nftFlagEnabled ? (
-        <AutoRow style={{ flexWrap: 'nowrap', padding: '4px 16px' }}>
-          <ThemedText.BodySecondary fontSize={16} lineHeight="24px">
-            {content}
-          </ThemedText.BodySecondary>
-        </AutoRow>
-      ) : (
-        <LightCard>
-          <AutoRow style={{ flexWrap: 'nowrap' }}>
-            <ThemedText.DeprecatedBody fontSize={12}>{content}</ThemedText.DeprecatedBody>
-          </AutoRow>
-        </LightCard>
-      )
-    }
-
     return (
       <UpperSection>
         <CloseIcon data-testid="wallet-modal-close" onClick={toggleWalletModal}>
@@ -356,7 +326,6 @@ export default function WalletModal({
               />
             )}
             {walletView !== WALLET_VIEWS.PENDING && <OptionGrid data-testid="option-grid">{getOptions()}</OptionGrid>}
-            {!pendingError && getTermsOfService(nftFlagEnabled, walletView)}
           </AutoColumn>
         </ContentWrapper>
       </UpperSection>
