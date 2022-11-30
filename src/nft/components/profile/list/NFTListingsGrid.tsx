@@ -164,7 +164,7 @@ const PriceTextInput = ({
             ? 'genieBlue'
             : listPrice != null
             ? 'textSecondary'
-            : 'gray700'
+            : 'blue400'
         }
       >
         <NumericInput

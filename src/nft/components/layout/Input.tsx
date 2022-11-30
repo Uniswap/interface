@@ -28,7 +28,7 @@ export const NumericInput = forwardRef<HTMLInputElement, BoxProps>((props, ref) 
       as="input"
       autoComplete="off"
       type="text"
-      borderColor={{ default: 'backgroundOutline', focus: 'textSecondary' }}
+      borderColor={{ default: 'white', focus: 'white' }}
       color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
       onInput={(v: FormEvent<HTMLInputElement>) => {
         if (v.currentTarget.value === '.') {
