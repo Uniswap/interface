@@ -1,5 +1,5 @@
 import ms from 'ms.macro'
-import { cacheMiddleware, RelayNetworkLayer, retryMiddleware, urlMiddleware } from 'react-relay-network-modern'
+import { RelayNetworkLayer, retryMiddleware, urlMiddleware } from 'react-relay-network-modern'
 import { Environment, RecordSource, Store } from 'relay-runtime'
 
 // This makes it possible (and more likely) to be able to reuse data when navigating back to a page,
@@ -20,10 +20,6 @@ const network = new RelayNetworkLayer([
     headers: {
       'Content-Type': 'application/json',
     },
-  }),
-  cacheMiddleware({
-    size: 100, // max 100 requests
-    ttl: queryCacheExpirationTime,
   }),
   retryMiddleware({
     fetchTimeout: 15000,
