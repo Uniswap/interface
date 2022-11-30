@@ -449,7 +449,6 @@ const MarketplaceRow = ({
       <Row style={{ flex: '1.5' }} display={{ sm: 'none', md: 'flex' }}>
         <Column width="full">
           <EthPriceDisplay ethPrice={userReceives} />
-
           {(showGlobalPrice ? globalPrice && globalPrice !== 0 : listPrice !== 0) && (
             <Row marginTop="4" width="full" fontSize="12" color="textSecondary">
               {profit ? <Box marginLeft="auto">Profit: {formatEth(profit)} ETH</Box> : null}
