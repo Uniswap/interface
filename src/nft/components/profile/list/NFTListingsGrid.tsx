@@ -326,8 +326,6 @@ const MarketplaceRow = ({
       : asset.basisPoints) * 0.01
   const feeInEth = price && (price * (royalties + marketplaceFee)) / 100
   const userReceives = price && feeInEth && price - feeInEth
-  const profit = userReceives && asset.lastPrice && userReceives - asset.lastPrice
-  const profitPercent = profit && asset.lastPrice && Math.round(profit && (profit / asset.lastPrice) * 100)
 
   useEffect(() => {
     if (globalPriceMethod === SetPriceMethod.FLOOR_PRICE) {
