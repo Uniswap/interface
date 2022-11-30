@@ -40,7 +40,9 @@ const network = new RelayNetworkLayer([
   function logAndIgnoreErrors(next) {
     return async (req) => {
       try {
-        return await next(req)
+        const res = await next(req)
+        if (res.errors) throw res.errors
+        return res
       } catch (e) {
         console.error(e)
         return RelayNetworkLayerResponse.createFromGraphQL({ data: [] })
