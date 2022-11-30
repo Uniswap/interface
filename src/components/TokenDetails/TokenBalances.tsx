@@ -36,13 +36,13 @@ export function TokenBalances({
   const hasCurrentChainBalances = Boolean(currentChainBalance)
   const hasOtherChainBalances = Boolean(otherChainBalances && otherChainBalances.length > 0)
 
-  const { preload, navigate } = useTokenDetailsNavigation()
+  const { preload, navigateWithPop } = useTokenDetailsNavigation()
   const navigateToCurrency = useCallback(
     (currencyId: CurrencyId) => {
       preload(currencyId)
-      navigate(currencyId)
+      navigateWithPop(currencyId)
     },
-    [navigate, preload]
+    [navigateWithPop, preload]
   )
 
   if (!hasCurrentChainBalances && !hasOtherChainBalances) return null
