@@ -1,6 +1,5 @@
 import ms from 'ms.macro'
 import {
-  MiddlewareNextFn,
   RelayNetworkLayer,
   RelayNetworkLayerResponse,
   RelayRequestAny,
@@ -39,7 +38,7 @@ const network = new RelayNetworkLayer([
       if (attempt > MAX_RETRIES) abort()
     },
   }),
-  function logAndIgnoreErrors(next: MiddlewareNextFn): MiddlewareNextFn {
+  function logAndIgnoreErrors(next) {
     return async (req: RelayRequestAny) => {
       try {
         return await next(req)
