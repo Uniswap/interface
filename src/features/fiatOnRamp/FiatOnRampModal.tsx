@@ -89,17 +89,17 @@ function FiatOnRampModalInner() {
 
   return (
     <BottomSheetModal disableSwipe name={ModalName.FiatOnRamp} onClose={onClose}>
-      <Screen bg="background1" edges={['bottom']} mb="md" pt="md" px="lg">
+      <Screen bg="background1" edges={['bottom']} mb="lg" pt="md" px="lg">
         <Flex gap="lg">
           <FiatOnRampModalBackground color={theme.colors.background1} width="100%" />
           <Flex alignItems="center" gap="lg">
             <Flex alignItems="center" gap="sm">
-              <Text color="textPrimary" variant="headlineSmall">
-                {t('Buy crypto with low fees')}
+              <Text color="textPrimary" textAlign="center" variant="headlineSmall">
+                {t('Buy crypto with your back account or card')}
               </Text>
               <Box alignItems="center">
                 <Text color="textSecondary" textAlign="center" variant="bodySmall">
-                  {t('Buy crypto at the lowest rates on Uniswap Wallet, powered by MoonPay.')}
+                  {t('Get tokens on all supported chains at the best prices, powered by MoonPay.')}
                 </Text>
               </Box>
             </Flex>

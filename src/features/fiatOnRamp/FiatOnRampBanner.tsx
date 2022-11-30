@@ -45,7 +45,7 @@ export function FiatOnRampBanner(props: ComponentProps<typeof Box>) {
         </Flex>
 
         <Text color="textOnBrightPrimary" opacity={0.72} variant="subheadSmall">
-          {t('Buy crypto at the lowest rates on Uniswap Wallet, powered by MoonPay.')}
+          {t('Get tokens at the best prices in web3 with Uniswap Wallet.')}
         </Text>
       </Flex>
     </TouchableArea>
