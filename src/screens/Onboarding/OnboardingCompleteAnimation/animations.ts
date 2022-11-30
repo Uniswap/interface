@@ -32,57 +32,7 @@ interface AnimationConfig {
   [key: string]: AnimationPropertySettings
 }
 
-// 1. Background blur animation
-// Moves navy blur background from left to right
-//    - Moves from x:0 to x:150 from frame 0 to frame 228
-//    - Moves from x:150 to x:290 from frame 228 to frame 258
-const bgGlowTranslateXConfig: AnimationConfig = {
-  translateYIn: {
-    startValue: 0,
-    endValue: 150,
-    delay: 0,
-    duration: FPMS[228],
-  },
-  translateYOut: {
-    endValue: 290,
-    delay: 0,
-    duration: FPMS[258] - FPMS[228],
-  },
-}
-
-export const bgGlowTranslateX: EntryExitAnimationFunction = () => {
-  'worklet'
-  const animations: AnimateStyle<any> = {
-    transform: [
-      {
-        translateX: withSequence(
-          withDelay(
-            bgGlowTranslateXConfig.translateYIn.delay,
-            withTiming(bgGlowTranslateXConfig.translateYIn.endValue, {
-              duration: bgGlowTranslateXConfig.translateYIn.duration,
-            })
-          ),
-          withDelay(
-            bgGlowTranslateXConfig.translateYOut.delay,
-            withTiming(bgGlowTranslateXConfig.translateYOut.endValue, {
-              duration: bgGlowTranslateXConfig.translateYOut.duration,
-              easing: Easing.bezierFn(0.66, 0.0, 0.34, 1.0),
-            })
-          )
-        ),
-      },
-    ],
-  }
-  const initialValues: AnimateStyle<any> = {
-    transform: [{ translateX: bgGlowTranslateXConfig.translateYIn.startValue }],
-  }
-  return {
-    initialValues,
-    animations,
-  }
-}
-
-// 2. QR slide up animation
+// 1. QR slide up animation
 // Moves QR code box from bottom to top and fades it in
 //    - Moves QR from y:-64 to y:0 from frame 29 to frame 60
 //    - Fades in QR from 0 to 1 opacity from frame 29 to frame 60
@@ -102,7 +52,7 @@ export const qrSlideUpAndFadeInConfig: AnimationConfig = {
   },
 }
 
-// 3. QR scale in animation
+// 2. QR scale in animation
 // Scales QR code box from 80% to 100% scale from frame 130 to frame 179
 const qrScaleInConfig: AnimationConfig = {
   scale: { startValue: 0.8, endValue: 1, delay: FPMS[130], duration: FPMS[179] - FPMS[130] },
@@ -132,7 +82,7 @@ export const qrScaleIn: EntryExitAnimationFunction = () => {
   }
 }
 
-// 4. QR inner glow animation
+// 3. QR inner glow animation
 // Animates inner glowing circle of QR code box to slowly fade in
 // NOTE: for now, it animates the inner glow's blur amount, as a proxy for its size because to animate its size makes it hard to keep it centered in the canvas. In order to do so, we would need to run the computing of the inner glow's size on the UI thread instead of the JS thread in order to transform the x and y of the Canvas Group the Oval and Blur are inside of by the correct amount as it animates (size / 2).
 // NOTE 2: the actual animation had to be kept coupled to the component because it would become too unwieldy to abstract it here.
@@ -151,7 +101,7 @@ export const qrInnerBlurConfig: AnimationConfig = {
   },
 }
 
-// 5. Flash wipe animation
+// 4. Flash wipe animation
 // Covers the etching video with a flash wipe animation
 //    - Fades in flash wipe from 80% to 100% scale from frame 130 to frame 179
 //    - Fades in flash wipe from 0% opacity to 100% opacity from frame 165 to frame 180
@@ -215,7 +165,7 @@ export const flashWipeAnimation: EntryExitAnimationFunction = () => {
   }
 }
 
-// 6. Video fade out
+// 5. Video fade out
 // Fades out video after flash wipe has covered etching video
 export const videoFadeOut = () => {
   'worklet'
@@ -234,14 +184,17 @@ export const videoFadeOut = () => {
   }
 }
 
-// 7. QR top glow fade in
+// 6. QR top glow fade in
 // Fades in glow on top of real QR code and unicon after flash wipe
 export const realQrTopGlowFadeIn = () => {
   'worklet'
   const animations = {
     opacity: withDelay(
-      flashWipeConfig.opacityIn.delay + flashWipeConfig.opacityIn.duration,
-      withTiming(1, { duration: 1, easing: Easing.bezierFn(0.4, 0.0, 0.68, 0.06) })
+      flashWipeConfig.opacityIn.delay,
+      withTiming(flashWipeConfig.opacityIn.endValue, {
+        duration: flashWipeConfig.opacityIn.duration,
+        easing: Easing.bezierFn(0.4, 0.0, 0.68, 0.06),
+      })
     ),
   }
   const initialValues = {
@@ -253,7 +206,7 @@ export const realQrTopGlowFadeIn = () => {
   }
 }
 
-// 8. Real QR code fade in
+// 7. Real QR code fade in
 // Show the real QR code and Unicon after the flash wipe
 export const realQrFadeIn = () => {
   'worklet'
@@ -272,7 +225,7 @@ export const realQrFadeIn = () => {
   }
 }
 
-// 9. Text slide up and fade in
+// 8. Text slide up and fade in
 const textSlideUpAndFadeInConfig: AnimationConfig = {
   opacityIn: {
     startValue: 0,
@@ -326,7 +279,7 @@ export const textSlideUpAtEnd: EntryExitAnimationFunction = () => {
   }
 }
 
-// 10. Button slide up and fade in
+// 9. Button slide up and fade in
 export const letsGoButtonFadeIn = () => {
   'worklet'
   const animations = {
@@ -346,7 +299,7 @@ export const letsGoButtonFadeIn = () => {
   }
 }
 
-// 11. Whole QR container (showing real QR and Unicon now) slides up
+// 10. Whole QR container (showing real QR and Unicon now) slides up
 const qrSlideUpAtEndConfig: AnimationConfig = {
   translateY: {
     startValue: 0,

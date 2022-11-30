@@ -33,7 +33,6 @@ import { Text } from 'src/components/Text'
 import { useUniconColors } from 'src/components/unicons/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import {
-  bgGlowTranslateX,
   flashWipeAnimation,
   letsGoButtonFadeIn,
   qrInnerBlurConfig,
@@ -46,7 +45,6 @@ import {
   videoFadeOut,
 } from 'src/screens/Onboarding/OnboardingCompleteAnimation/animations'
 import { flex } from 'src/styles/flex'
-import { dimensions } from 'src/styles/sizing'
 
 export function OnboardingCompleteAnimation({
   activeAddress,
@@ -152,9 +150,6 @@ export function OnboardingCompleteAnimation({
 
   const UNICON_SIZE = 48
 
-  // for background glow
-  const screenWidth = dimensions.fullWidth
-
   const mt = useResponsiveProp({ xs: 'xl', sm: 'none' })
   const finalTitleMaxFontSizeMultiplier = useResponsiveProp({
     xs: 1.1,
@@ -174,6 +169,7 @@ export function OnboardingCompleteAnimation({
             borderRadius="lg"
             gradientEndColor={uniconColors.gradientEnd}
             gradientStartColor={uniconColors.glow}
+            opacity={0.4}
             // we use the glow color here, since otherwise that color doesn't show up at all on the screen, which can look weird if it's a dominant color in the Unicon (the QR code gradient uses the start / end colors but not glow)
           />
         </GradientBackground>
@@ -181,19 +177,6 @@ export function OnboardingCompleteAnimation({
       <Flex grow justifyContent="space-between" px="md" py="lg">
         <Flex centered grow gap="xl" mb="sm" mt={mt}>
           <Flex centered gap="sm" pt="xxl">
-            <Animated.View entering={bgGlowTranslateX} style={styles.bgGlowTranslateXStyles}>
-              <Canvas style={flex.fill}>
-                <Group transform={[{ translateX: 150 }, { translateY: 100 }]}>
-                  <Oval
-                    color={theme.colors.background3}
-                    height={screenWidth * 1.1}
-                    opacity={1}
-                    width={screenWidth * 0.75}
-                  />
-                  <Blur blur={100} />
-                </Group>
-              </Canvas>
-            </Animated.View>
             <Animated.View entering={qrSlideUpAndFadeIn}>
               <Animated.View entering={qrSlideUpAtEnd}>
                 <Animated.View entering={flashWipeAnimation} style={styles.behindQrBlur}>
@@ -314,14 +297,6 @@ const styles = StyleSheet.create({
     top: -50,
     zIndex: -1,
   },
-  bgGlowTranslateXStyles: {
-    bottom: 0,
-    left: -250,
-    position: 'absolute',
-    right: 0,
-    top: -500,
-    zIndex: -1,
-  },
   glow: {
     bottom: 0,
     left: 0,
@@ -351,7 +326,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    marginHorizontal: 16,
+    marginHorizontal: 28,
   },
   video: {
     bottom: 4,

@@ -7,10 +7,12 @@ function _UniconThemedRadial({
   gradientStartColor,
   gradientEndColor,
   borderRadius,
+  opacity = 0.25,
 }: {
   gradientStartColor: string
   gradientEndColor: string
   borderRadius: keyof Theme['borderRadii']
+  opacity?: number
 }) {
   const theme = useAppTheme()
 
@@ -25,7 +27,7 @@ function _UniconThemedRadial({
       <Rect
         fill="url(#background)"
         height="100%"
-        opacity={0.25}
+        opacity={opacity}
         rx={theme.borderRadii[borderRadius]}
         width="100%"
         x="0"
