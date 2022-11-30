@@ -97,6 +97,11 @@ jobs:
 
             ${{ needs.tag.outputs.changelog }}
 
+      - name: Install node@16 (for Cloudflare Pages compat)
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
       - name: Update Cloudflare Pages deployment
         uses: cloudflare/pages-action@364c7ca09a4b57837c5967871d64a2c31adb8c0d
         with:
