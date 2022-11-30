@@ -73,3 +73,11 @@ export const formatWeiToDecimal = (amount: string, removeZeroes = false) => {
   if (!amount) return '-'
   return ethNumberStandardFormatter(formatEther(amount), false, removeZeroes, false)
 }
+
+// prevent BigNumber overflow by properly handling scientific notation and comma delimited values
+export function wrapScientificNotation(value: string | number): string {
+  return parseFloat(value.toString())
+    .toLocaleString('fullwide', { useGrouping: false })
+    .replace(',', '.')
+    .replace(' ', '')
+}
