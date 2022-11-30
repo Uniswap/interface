@@ -175,7 +175,7 @@ const CHAIN_INFO: ChainInfoMap = {
     infoLink: 'https://info.uniswap.org/#/arbitrum/',
     label: 'Arbitrum Goerli',
     logoUrl: arbitrumLogoUrl,
-    defaultListUrl: ARBITRUM_LIST,
+    defaultListUrl: ARBITRUM_LIST, // TODO: use arbitrum goerli token list
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
     nativeCurrency: { name: 'Goerli Arbitrum Ether', symbol: 'goerliArbETH', decimals: 18 },
     color: darkTheme.chain_421613,

@@ -76,7 +76,7 @@ export const USDC_ARBITRUM_RINKEBY = new Token(
 )
 export const USDC_ARBITRUM_GOERLI = new Token(
   SupportedChainId.ARBITRUM_GOERLI,
-  '0x8fb1e3fc51f3b789ded7557e680551d93ea9d892',
+  '0x8fb1e3fc51f3b789ded7557e680551d93ea9d892', // TODO: Use the bridge version of USDC
   6,
   'USDC',
   'USD//C'
