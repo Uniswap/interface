@@ -1,5 +1,12 @@
 import ms from 'ms.macro'
-import { AbortFn, RelayNetworkLayer, retryMiddleware, urlMiddleware } from 'react-relay-network-modern'
+import {
+  AbortFn,
+  MiddlewareNextFn,
+  RelayNetworkLayer,
+  RelayRequestAny,
+  retryMiddleware,
+  urlMiddleware,
+} from 'react-relay-network-modern'
 import { Environment, RecordSource, Store } from 'relay-runtime'
 
 // This makes it possible (and more likely) to be able to reuse data when navigating back to a page,
@@ -25,6 +32,13 @@ function beforeRetry({ abort, attempt }: { abort: AbortFn; attempt: number }) {
   if (attempt > MAX_RETRIES) abort()
 }
 
+function customErrorRemovalMiddleware(next: MiddlewareNextFn) {
+  return async (req: RelayRequestAny) => {
+    const res = await next(req)
+    res.errors = undefined
+    return res
+  }
+}
 const MAX_RETRIES = 3
 
 // This network layer must not cache, or it will break cache-evicting network policies
@@ -42,6 +56,7 @@ const network = new RelayNetworkLayer([
     statusCodes: getRetryStatusCodes,
     beforeRetry,
   }),
+  customErrorRemovalMiddleware,
 ])
 
 export const CachingEnvironment = new Environment({
