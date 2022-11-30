@@ -87,7 +87,7 @@ export default function RadialGradientByChainUpdater(): null {
         setBackground(initialStyles)
         const defaultLightGradient =
           'radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0.51) 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF'
-        const defaultDarkGradient = 'linear-gradient(180deg, #202738 0%, #070816 100%)'
+        const defaultDarkGradient = '#0D111C'
         backgroundRadialGradientElement.style.background = darkMode ? defaultDarkGradient : defaultLightGradient
     }
   }, [darkMode, chainId, isNftPage])
