@@ -1,8 +1,8 @@
 import { useWeb3React } from '@web3-react/core'
 import { ConnectionType } from 'connection'
-import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import useENSAvatar from 'hooks/useENSAvatar'
 import styled from 'styled-components/macro'
+import { flexColumnNoWrap } from 'theme/styles'
 
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
@@ -10,9 +10,9 @@ import sockImg from '../../assets/svg/socks.svg'
 import { useHasSocks } from '../../hooks/useSocksBalance'
 import Identicon from '../Identicon'
 
-const IconWrapper = styled.div<{ size?: number }>`
+export const IconWrapper = styled.div<{ size?: number }>`
   position: relative;
-  ${({ theme }) => theme.flexColumnNoWrap};
+  ${flexColumnNoWrap};
   align-items: center;
   justify-content: center;
   margin-right: 8px;
@@ -53,9 +53,8 @@ const Socks = () => {
 const useIcon = (connectionType: ConnectionType) => {
   const { account } = useWeb3React()
   const { avatar } = useENSAvatar(account ?? undefined)
-  const isNavbarEnabled = useNavBarFlag() === NavBarVariant.Enabled
 
-  if ((isNavbarEnabled && avatar) || connectionType === ConnectionType.INJECTED) {
+  if (avatar || connectionType === ConnectionType.INJECTED) {
     return <Identicon />
   } else if (connectionType === ConnectionType.WALLET_CONNECT) {
     return <img src={WalletConnectIcon} alt="WalletConnect" />
@@ -68,12 +67,11 @@ const useIcon = (connectionType: ConnectionType) => {
 
 export default function StatusIcon({ connectionType, size }: { connectionType: ConnectionType; size?: number }) {
   const hasSocks = useHasSocks()
-  const isNavbarEnabled = useNavBarFlag() === NavBarVariant.Enabled
   const icon = useIcon(connectionType)
 
   return (
     <IconWrapper size={size ?? 16}>
-      {isNavbarEnabled && hasSocks && <Socks />}
+      {hasSocks && <Socks />}
       {icon}
     </IconWrapper>
   )

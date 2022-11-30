@@ -1,24 +1,83 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { parseEther } from '@ethersproject/units'
+import { Trans } from '@lingui/macro'
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
+import { useWeb3React } from '@web3-react/core'
 import Loader from 'components/Loader'
+import { SupportedChainId } from 'constants/chains'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
-import { bodySmall, headlineSmall } from 'nft/css/common.css'
+import { bodySmall } from 'nft/css/common.css'
+import { useBag } from 'nft/hooks/useBag'
+import { useWalletBalance } from 'nft/hooks/useWalletBalance'
 import { BagStatus } from 'nft/types'
 import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils'
-import { useModalIsOpen, useToggleWalletModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
+import { PropsWithChildren, useMemo } from 'react'
+import { AlertTriangle } from 'react-feather'
+import { useToggleWalletModal } from 'state/application/hooks'
+import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
+import { switchChain } from 'utils/switchChain'
 
 import * as styles from './BagFooter.css'
 
+const Footer = styled.div`
+  border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
+  color: ${({ theme }) => theme.textPrimary};
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+  padding: 12px 16px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+`
+
+const WarningIcon = styled(AlertTriangle)`
+  width: 14px;
+  margin-right: 4px;
+  color: ${({ theme }) => theme.accentWarning};
+`
+const WarningText = styled(ThemedText.BodyPrimary)`
+  align-items: center;
+  color: ${({ theme }) => theme.accentWarning};
+  display: flex;
+  justify-content: center;
+  margin: 12px 0 !important;
+  text-align: center;
+`
+
+interface ActionButtonProps {
+  disabled?: boolean
+  onClick: () => void
+}
+
+const ActionButton = ({ disabled, children, onClick }: PropsWithChildren<ActionButtonProps>) => {
+  return (
+    <Row as="button" color="explicitWhite" className={styles.payButton} disabled={disabled} onClick={onClick}>
+      {children}
+    </Row>
+  )
+}
+
+const Warning = ({ children }: PropsWithChildren<unknown>) => {
+  if (!children) {
+    return null
+  }
+  return (
+    <WarningText fontSize="14px" lineHeight="20px">
+      <WarningIcon />
+      {children}
+    </WarningText>
+  )
+}
+
 interface BagFooterProps {
-  balance: BigNumber
-  isConnected: boolean
-  sufficientBalance: boolean
   totalEthPrice: BigNumber
   totalUsdPrice: number | undefined
   bagStatus: BagStatus
   fetchAssets: () => void
-  assetsAreInReview: boolean
+  eventProperties: Record<string, unknown>
 }
 
 const PENDING_BAG_STATUSES = [
@@ -29,73 +88,98 @@ const PENDING_BAG_STATUSES = [
 ]
 
 export const BagFooter = ({
-  balance,
-  isConnected,
-  sufficientBalance,
   totalEthPrice,
   totalUsdPrice,
   bagStatus,
   fetchAssets,
-  assetsAreInReview,
+  eventProperties,
 }: BagFooterProps) => {
   const toggleWalletModal = useToggleWalletModal()
-  const walletModalIsOpen = useModalIsOpen(ApplicationModal.WALLET)
+  const { account, chainId, connector } = useWeb3React()
+  const connected = Boolean(account && chainId)
 
-  const isPending = PENDING_BAG_STATUSES.includes(bagStatus) || walletModalIsOpen
-  const isDisabled = isConnected && (isPending || !sufficientBalance || assetsAreInReview)
+  const setBagExpanded = useBag((state) => state.setBagExpanded)
 
-  const showWarning = isConnected && (!sufficientBalance || bagStatus === BagStatus.WARNING)
+  const { balance: balanceInEth } = useWalletBalance()
+  const sufficientBalance = useMemo(() => {
+    if (!connected || chainId !== SupportedChainId.MAINNET) {
+      return undefined
+    }
+    return parseEther(balanceInEth).gte(totalEthPrice)
+  }, [connected, chainId, balanceInEth, totalEthPrice])
+
+  const { buttonText, disabled, warningText, handleClick } = useMemo(() => {
+    let handleClick = fetchAssets
+    let buttonText = <Trans>Something went wrong</Trans>
+    let disabled = true
+    let warningText = null
+
+    if (connected && chainId !== SupportedChainId.MAINNET) {
+      handleClick = () => switchChain(connector, SupportedChainId.MAINNET)
+      buttonText = <Trans>Switch networks</Trans>
+      disabled = false
+      warningText = <Trans>Wrong network</Trans>
+    } else if (sufficientBalance === false) {
+      buttonText = <Trans>Pay</Trans>
+      disabled = true
+      warningText = <Trans>Insufficient funds</Trans>
+    } else if (bagStatus === BagStatus.WARNING) {
+      warningText = <Trans>Something went wrong. Please try again.</Trans>
+    } else if (!connected) {
+      handleClick = () => {
+        toggleWalletModal()
+        setBagExpanded({ bagExpanded: false })
+      }
+      disabled = false
+      buttonText = <Trans>Connect wallet</Trans>
+    } else if (bagStatus === BagStatus.FETCHING_FINAL_ROUTE || bagStatus === BagStatus.CONFIRMING_IN_WALLET) {
+      disabled = true
+      buttonText = <Trans>Proceed in wallet</Trans>
+    } else if (bagStatus === BagStatus.PROCESSING_TRANSACTION) {
+      disabled = true
+      buttonText = <Trans>Transaction pending</Trans>
+    } else if (sufficientBalance === true) {
+      disabled = false
+      buttonText = <Trans>Pay</Trans>
+    }
+
+    return { buttonText, disabled, warningText, handleClick }
+  }, [bagStatus, chainId, connected, connector, fetchAssets, setBagExpanded, sufficientBalance, toggleWalletModal])
+
+  const isPending = PENDING_BAG_STATUSES.includes(bagStatus)
 
   return (
     <Column className={styles.footerContainer}>
-      {showWarning && (
-        <Row className={styles.warningContainer}>
-          {!sufficientBalance
-            ? `Insufficient funds (${formatWeiToDecimal(balance.toString())} ETH)`
-            : `Something went wrong. Please try again.`}
-        </Row>
-      )}
-      <Column
-        borderTopLeftRadius={showWarning ? '0' : '12'}
-        borderTopRightRadius={showWarning ? '0' : '12'}
-        className={styles.footer}
-      >
+      <Footer>
         <Column gap="4" paddingTop="8" paddingBottom="20">
           <Row justifyContent="space-between">
-            <Box fontWeight="semibold" className={headlineSmall}>
-              Total
+            <Box>
+              <ThemedText.HeadlineSmall>Total</ThemedText.HeadlineSmall>
             </Box>
-            <Box fontWeight="semibold" className={headlineSmall}>
-              {`${formatWeiToDecimal(totalEthPrice.toString())} ETH`}
+            <Box>
+              <ThemedText.HeadlineSmall>
+                {formatWeiToDecimal(totalEthPrice.toString())}&nbsp;ETH
+              </ThemedText.HeadlineSmall>
             </Box>
           </Row>
           <Row justifyContent="flex-end" color="textSecondary" className={bodySmall}>
             {`${ethNumberStandardFormatter(totalUsdPrice, true)}`}
           </Row>
         </Column>
-        <Row
-          as="button"
-          color="explicitWhite"
-          className={styles.payButton}
-          disabled={isDisabled}
-          onClick={() => {
-            if (!isConnected) {
-              toggleWalletModal()
-            } else {
-              fetchAssets()
-            }
-          }}
+        <TraceEvent
+          events={[BrowserEvent.onClick]}
+          name={EventName.NFT_BUY_BAG_PAY}
+          element={ElementName.NFT_BUY_BAG_PAY_BUTTON}
+          properties={{ ...eventProperties }}
+          shouldLogImpression={connected && !disabled}
         >
-          {isPending && <Loader size="20px" stroke="white" />}
-          {!isConnected || walletModalIsOpen
-            ? 'Connect wallet'
-            : bagStatus === BagStatus.FETCHING_FINAL_ROUTE || bagStatus === BagStatus.CONFIRMING_IN_WALLET
-            ? 'Proceed in wallet'
-            : bagStatus === BagStatus.PROCESSING_TRANSACTION
-            ? 'Transaction pending'
-            : 'Pay'}
-        </Row>
-      </Column>
+          <Warning>{warningText}</Warning>
+          <ActionButton onClick={handleClick} disabled={disabled}>
+            {isPending && <Loader size="20px" stroke="white" />}
+            {buttonText}
+          </ActionButton>
+        </TraceEvent>
+      </Footer>
     </Column>
   )
 }

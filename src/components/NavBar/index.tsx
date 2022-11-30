@@ -3,17 +3,36 @@ import { useWeb3React } from '@web3-react/core'
 import Web3Status from 'components/Web3Status'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { chainIdToBackendName } from 'graphql/data/util'
+import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { UniIcon } from 'nft/components/icons'
 import { ReactNode } from 'react'
 import { NavLink, NavLinkProps, useLocation } from 'react-router-dom'
+import styled from 'styled-components/macro'
 
+import { Bag } from './Bag'
 import { ChainSelector } from './ChainSelector'
 import { MenuDropdown } from './MenuDropdown'
 import { SearchBar } from './SearchBar'
-import { ShoppingBag } from './ShoppingBag'
 import * as styles from './style.css'
+
+const MobileBottomBar = styled.div`
+  position: fixed;
+  display: flex;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  justify-content: space-between;
+  padding: 4px 8px;
+  height: 56px;
+  background: ${({ theme }) => theme.backgroundSurface};
+  border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
+
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
+    display: none;
+  }
+`
 
 interface MenuItemProps {
   href: string
@@ -48,6 +67,8 @@ const PageTabs = () => {
     pathname.startsWith('/increase') ||
     pathname.startsWith('/find')
 
+  const isNftPage = useIsNftPage()
+
   return (
     <>
       <MenuItem href="/swap" isActive={pathname.startsWith('/swap')}>
@@ -57,11 +78,11 @@ const PageTabs = () => {
         <Trans>Tokens</Trans>
       </MenuItem>
       {nftFlag === NftVariant.Enabled && (
-        <MenuItem href="/nfts" isActive={pathname.startsWith('/nfts')}>
+        <MenuItem href="/nfts" isActive={isNftPage}>
           <Trans>NFTs</Trans>
         </MenuItem>
       )}
-      <MenuItem href="/pool" id={'pool-nav-link'} isActive={isPoolActive}>
+      <MenuItem href="/pool" id="pool-nav-link" isActive={isPoolActive}>
         <Trans>Pool</Trans>
       </MenuItem>
     </>
@@ -69,8 +90,7 @@ const PageTabs = () => {
 }
 
 const Navbar = () => {
-  const { pathname } = useLocation()
-  const showShoppingBag = pathname.startsWith('/nfts') || pathname.startsWith('/profile')
+  const isNftPage = useIsNftPage()
 
   return (
     <>
@@ -80,40 +100,44 @@ const Navbar = () => {
             <Box as="a" href="#/swap" className={styles.logoContainer}>
               <UniIcon width="48" height="48" className={styles.logo} />
             </Box>
-            <Box display={{ sm: 'flex', lg: 'none' }}>
-              <ChainSelector leftAlign={true} />
-            </Box>
-            <Row gap="8" display={{ sm: 'none', lg: 'flex' }}>
+            {!isNftPage && (
+              <Box display={{ sm: 'flex', lg: 'none' }}>
+                <ChainSelector leftAlign={true} />
+              </Box>
+            )}
+            <Row gap={{ xl: '0', xxl: '8' }} display={{ sm: 'none', lg: 'flex' }}>
               <PageTabs />
             </Row>
           </Box>
-          <Box className={styles.middleContainer}>
+          <Box className={styles.middleContainer} alignItems="flex-start">
             <SearchBar />
           </Box>
           <Box className={styles.rightSideContainer}>
             <Row gap="12">
-              <Box display={{ sm: 'flex', xl: 'none' }}>
+              <Box position="relative" display={{ sm: 'flex', xl: 'none' }}>
                 <SearchBar />
               </Box>
               <Box display={{ sm: 'none', lg: 'flex' }}>
                 <MenuDropdown />
               </Box>
-              {showShoppingBag && <ShoppingBag />}
-              <Box display={{ sm: 'none', lg: 'flex' }}>
-                <ChainSelector />
-              </Box>
+              {isNftPage && <Bag />}
+              {!isNftPage && (
+                <Box display={{ sm: 'none', lg: 'flex' }}>
+                  <ChainSelector />
+                </Box>
+              )}
 
               <Web3Status />
             </Row>
           </Box>
         </Box>
       </nav>
-      <Box className={styles.mobileBottomBar}>
+      <MobileBottomBar>
         <PageTabs />
         <Box marginY="4">
           <MenuDropdown />
         </Box>
-      </Box>
+      </MobileBottomBar>
     </>
   )
 }

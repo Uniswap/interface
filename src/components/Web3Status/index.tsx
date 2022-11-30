@@ -1,22 +1,24 @@
-// eslint-disable-next-line no-restricted-imports
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { ElementName, Event, EventName } from 'analytics/constants'
-import { TraceEvent } from 'analytics/TraceEvent'
+import { IconWrapper } from 'components/Identicon/StatusIcon'
 import WalletDropdown from 'components/WalletDropdown'
 import { getConnection } from 'connection/utils'
-import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
+import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { Portal } from 'nft/components/common/Portal'
+import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { getIsValidSwapQuote } from 'pages/Swap'
 import { darken } from 'polished'
 import { useMemo, useRef } from 'react'
 import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
 import { useAppSelector } from 'state/hooks'
 import { useDerivedSwapInfo } from 'state/swap/hooks'
-import styled, { css, useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
+import { colors } from 'theme/colors'
+import { flexRowNoWrap } from 'theme/styles'
 
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import { useHasSocks } from '../../hooks/useSocksBalance'
 import {
   useCloseModal,
   useModalIsOpen,
@@ -54,7 +56,7 @@ const ChevronWrapper = styled.button`
 `
 
 const Web3StatusGeneric = styled(ButtonSecondary)`
-  ${({ theme }) => theme.flexRowNoWrap}
+  ${flexRowNoWrap};
   width: 100%;
   align-items: center;
   padding: 0.5rem;
@@ -80,7 +82,7 @@ const Web3StatusError = styled(Web3StatusGeneric)`
 `
 
 const Web3StatusConnectWrapper = styled.div<{ faded?: boolean }>`
-  ${({ theme }) => theme.flexRowNoWrap}
+  ${flexRowNoWrap};
   align-items: center;
   background-color: ${({ theme }) => theme.accentActionSoft};
   border-radius: ${FULL_BORDER_RADIUS}px;
@@ -95,38 +97,16 @@ const Web3StatusConnectWrapper = styled.div<{ faded?: boolean }>`
   }
 `
 
-const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
-  background-color: ${({ theme }) => theme.deprecated_primary4};
-  border: none;
-  color: ${({ theme }) => theme.deprecated_primaryText1};
-  font-weight: 500;
-
-  :hover,
-  :focus {
-    border: 1px solid ${({ theme }) => darken(0.05, theme.deprecated_primary4)};
-    color: ${({ theme }) => theme.deprecated_primaryText1};
-  }
-
-  ${({ faded }) =>
-    faded &&
-    css`
-      background-color: ${({ theme }) => theme.deprecated_primary5};
-      border: 1px solid ${({ theme }) => theme.deprecated_primary5};
-      color: ${({ theme }) => theme.deprecated_primaryText1};
-
-      :hover,
-      :focus {
-        border: 1px solid ${({ theme }) => darken(0.05, theme.deprecated_primary4)};
-        color: ${({ theme }) => darken(0.05, theme.deprecated_primaryText1)};
-      }
-    `}
-`
-
-const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
+const Web3StatusConnected = styled(Web3StatusGeneric)<{
+  pending?: boolean
+  isNftActive?: boolean
+  isClaimAvailable?: boolean
+}>`
   background-color: ${({ pending, theme }) => (pending ? theme.deprecated_primary1 : theme.deprecated_bg1)};
   border: 1px solid ${({ pending, theme }) => (pending ? theme.deprecated_primary1 : theme.deprecated_bg1)};
   color: ${({ pending, theme }) => (pending ? theme.deprecated_white : theme.deprecated_text1)};
   font-weight: 500;
+  border: ${({ isClaimAvailable }) => isClaimAvailable && `1px solid ${colors.purple300}`};
   :hover,
   :focus {
     border: 1px solid ${({ theme }) => darken(0.05, theme.deprecated_bg3)};
@@ -136,6 +116,22 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
         ${({ pending, theme }) =>
           pending ? darken(0.1, theme.deprecated_primary1) : darken(0.1, theme.deprecated_bg2)};
     }
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
+    width: ${({ isNftActive, pending }) => isNftActive && !pending && '36px'};
+
+    ${IconWrapper} {
+      margin-right: ${({ isNftActive }) => isNftActive && 0};
+    }
+  }
+`
+
+const AddressAndChevronContainer = styled.div<{ isNftActive?: boolean }>`
+  display: flex;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
+    display: ${({ isNftActive }) => isNftActive && 'none'};
   }
 `
 
@@ -160,14 +156,6 @@ const NetworkIcon = styled(AlertTriangle)`
 // we want the latest one to come first, so return negative if a is after b
 function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
   return b.addedTime - a.addedTime
-}
-
-function Sock() {
-  return (
-    <span role="img" aria-label={t`has socks emoji`} style={{ marginTop: -4, marginBottom: -4 }}>
-      🧦
-    </span>
-  )
 }
 
 const VerticalDivider = styled.div`
@@ -217,13 +205,14 @@ function Web3StatusInner() {
     inputError: swapInputError,
   } = useDerivedSwapInfo()
   const validSwapQuote = getIsValidSwapQuote(trade, tradeState, swapInputError)
-  const navbarFlagEnabled = useNavBarFlag() === NavBarVariant.Enabled
   const theme = useTheme()
   const toggleWalletDropdown = useToggleWalletDropdown()
   const toggleWalletModal = useToggleWalletModal()
-  const walletIsOpen = useIsOpen()
+  const walletIsOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
+  const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
 
   const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
+  const isNftActive = useNftFlag() === NftVariant.Enabled
 
   const allTransactions = useAllTransactions()
 
@@ -235,8 +224,7 @@ function Web3StatusInner() {
   const pending = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
 
   const hasPendingTransactions = !!pending.length
-  const hasSocks = useHasSocks()
-  const toggleWallet = navbarFlagEnabled ? toggleWalletDropdown : toggleWalletModal
+  const toggleWallet = toggleWalletDropdown
 
   if (!chainId) {
     return null
@@ -254,9 +242,16 @@ function Web3StatusInner() {
       ...CHEVRON_PROPS,
       color: theme.textSecondary,
     }
+
     return (
-      <Web3StatusConnected data-testid="web3-status-connected" onClick={toggleWallet} pending={hasPendingTransactions}>
-        {navbarFlagEnabled && !hasPendingTransactions && <StatusIcon size={24} connectionType={connectionType} />}
+      <Web3StatusConnected
+        data-testid="web3-status-connected"
+        isNftActive={isNftActive}
+        onClick={toggleWallet}
+        pending={hasPendingTransactions}
+        isClaimAvailable={isClaimAvailable}
+      >
+        {!hasPendingTransactions && <StatusIcon size={24} connectionType={connectionType} />}
         {hasPendingTransactions ? (
           <RowBetween>
             <Text>
@@ -265,19 +260,11 @@ function Web3StatusInner() {
             <Loader stroke="white" />
           </RowBetween>
         ) : (
-          <>
-            {hasSocks && !navbarFlagEnabled ? <Sock /> : null}
+          <AddressAndChevronContainer isNftActive={isNftActive}>
             <Text>{ENSName || shortenAddress(account)}</Text>
-            {navbarFlagEnabled ? (
-              walletIsOpen ? (
-                <ChevronUp {...chevronProps} />
-              ) : (
-                <ChevronDown {...chevronProps} />
-              )
-            ) : null}
-          </>
+            {walletIsOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
+          </AddressAndChevronContainer>
         )}
-        {!navbarFlagEnabled && !hasPendingTransactions && <StatusIcon connectionType={connectionType} />}
       </Web3StatusConnected>
     )
   } else {
@@ -288,38 +275,23 @@ function Web3StatusInner() {
     }
     return (
       <TraceEvent
-        events={[Event.onClick]}
+        events={[BrowserEvent.onClick]}
         name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
         properties={{ received_swap_quote: validSwapQuote }}
         element={ElementName.CONNECT_WALLET_BUTTON}
       >
-        {navbarFlagEnabled ? (
-          <Web3StatusConnectWrapper faded={!account}>
-            <StyledConnectButton data-testid="navbar-connect-wallet" onClick={toggleWalletModal}>
-              <Trans>Connect</Trans>
-            </StyledConnectButton>
-            <VerticalDivider />
-            <ChevronWrapper onClick={toggleWalletDropdown}>
-              {walletIsOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
-            </ChevronWrapper>
-          </Web3StatusConnectWrapper>
-        ) : (
-          <Web3StatusConnect onClick={toggleWallet} faded={!account}>
-            <Text>
-              <Trans>Connect Wallet</Trans>
-            </Text>
-          </Web3StatusConnect>
-        )}
+        <Web3StatusConnectWrapper faded={!account}>
+          <StyledConnectButton data-testid="navbar-connect-wallet" onClick={toggleWalletModal}>
+            <Trans>Connect</Trans>
+          </StyledConnectButton>
+          <VerticalDivider />
+          <ChevronWrapper onClick={toggleWalletDropdown}>
+            {walletIsOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
+          </ChevronWrapper>
+        </Web3StatusConnectWrapper>
       </TraceEvent>
     )
   }
-}
-
-const useIsOpen = () => {
-  const walletDropdownOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
-  const navbarFlag = useNavBarFlag()
-
-  return useMemo(() => navbarFlag === NavBarVariant.Enabled && walletDropdownOpen, [navbarFlag, walletDropdownOpen])
 }
 
 export default function Web3Status() {
@@ -329,7 +301,7 @@ export default function Web3Status() {
   const ref = useRef<HTMLDivElement>(null)
   const walletRef = useRef<HTMLDivElement>(null)
   const closeModal = useCloseModal(ApplicationModal.WALLET_DROPDOWN)
-  const isOpen = useIsOpen()
+  const isOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
 
   useOnClickOutside(ref, isOpen ? closeModal : undefined, [walletRef])
 

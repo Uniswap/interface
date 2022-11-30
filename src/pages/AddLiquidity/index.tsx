@@ -1,15 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { ElementName, Event, EventName } from 'analytics/constants'
-import { TraceEvent } from 'analytics/TraceEvent'
 import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
-import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useCallback, useEffect, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
@@ -80,8 +78,6 @@ import {
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
 export default function AddLiquidity() {
-  const navBarFlag = useNavBarFlag()
-  const navBarFlagEnabled = navBarFlag === NavBarVariant.Enabled
   const navigate = useNavigate()
   const {
     currencyIdA,
@@ -91,8 +87,6 @@ export default function AddLiquidity() {
   } = useParams<{ currencyIdA?: string; currencyIdB?: string; feeAmount?: string; tokenId?: string }>()
   const { account, chainId, provider } = useWeb3React()
   const theme = useTheme()
-  const redesignFlag = useRedesignFlag()
-  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
 
   const toggleWalletModal = useToggleWalletModal() // toggle wallet when disconnected
   const expertMode = useIsExpertMode()
@@ -440,24 +434,24 @@ export default function AddLiquidity() {
 
   const Buttons = () =>
     addIsUnsupported ? (
-      <ButtonPrimary disabled={true} $borderRadius="12px" padding={'12px'}>
+      <ButtonPrimary disabled={true} $borderRadius="12px" padding="12px">
         <ThemedText.DeprecatedMain mb="4px">
           <Trans>Unsupported Asset</Trans>
         </ThemedText.DeprecatedMain>
       </ButtonPrimary>
     ) : !account ? (
       <TraceEvent
-        events={[Event.onClick]}
+        events={[BrowserEvent.onClick]}
         name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
         properties={{ received_swap_quote: false }}
         element={ElementName.CONNECT_WALLET_BUTTON}
       >
-        <ButtonLight onClick={toggleWalletModal} $borderRadius="12px" padding={'12px'}>
+        <ButtonLight onClick={toggleWalletModal} $borderRadius="12px" padding="12px">
           <Trans>Connect Wallet</Trans>
         </ButtonLight>
       </TraceEvent>
     ) : (
-      <AutoColumn gap={'md'}>
+      <AutoColumn gap="md">
         {(approvalA === ApprovalState.NOT_APPROVED ||
           approvalA === ApprovalState.PENDING ||
           approvalB === ApprovalState.NOT_APPROVED ||
@@ -514,7 +508,7 @@ export default function AddLiquidity() {
 
   return (
     <>
-      <ScrollablePage navBarFlag={navBarFlagEnabled}>
+      <ScrollablePage>
         <TransactionConfirmationModal
           isOpen={showConfirm}
           onDismiss={handleDismissConfirmation}
@@ -868,9 +862,7 @@ export default function AddLiquidity() {
                                       Full range positions may earn less fees than concentrated positions. Learn more{' '}
                                       <ExternalLink
                                         style={{ color: theme.deprecated_yellow3, textDecoration: 'underline' }}
-                                        href={
-                                          'https://help.uniswap.org/en/articles/5434296-can-i-provide-liquidity-over-the-full-range-in-v3'
-                                        }
+                                        href="https://help.uniswap.org/en/articles/5434296-can-i-provide-liquidity-over-the-full-range-in-v3"
                                       >
                                         here
                                       </ExternalLink>
@@ -884,7 +876,6 @@ export default function AddLiquidity() {
                                     marginRight="8px"
                                     $borderRadius="8px"
                                     width="auto"
-                                    redesignFlag={redesignFlagEnabled}
                                     onClick={() => {
                                       setShowCapitalEfficiencyWarning(false)
                                       getSetFullRange()

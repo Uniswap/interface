@@ -29,8 +29,8 @@ export const Wrapper = styled.div`
 `};
 `
 
-export const ScrollablePage = styled.div<{ navBarFlag: boolean }>`
-  padding: ${({ navBarFlag }) => (navBarFlag ? '68px 8px 0px' : '0px')};
+export const ScrollablePage = styled.div`
+  padding: 68px 8px 0px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -41,11 +41,11 @@ export const ScrollablePage = styled.div<{ navBarFlag: boolean }>`
   `};
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    padding: ${({ navBarFlag }) => (navBarFlag ? '48px 8px 0px' : '0px 8px 0px')};
+    padding: 48px 8px 0px;
   }
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    padding-top: ${({ navBarFlag }) => (navBarFlag ? '20px' : '0px')};
+    padding-top: 20px;
   }
 `
 

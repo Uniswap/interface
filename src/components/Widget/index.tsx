@@ -1,7 +1,5 @@
-// Import fonts.css for the side-effect of loading fonts for @uniswap/widgets.
-// eslint-disable-next-line no-restricted-imports
-import '@uniswap/widgets/dist/fonts.css'
-
+import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
+import { EventName, SectionName, SwapPriceUpdateUserResponse } from '@uniswap/analytics-events'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import {
@@ -12,50 +10,71 @@ import {
   SwapWidgetSkeleton,
 } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent } from 'analytics'
-import { EventName, SectionName } from 'analytics/constants'
-import { SWAP_PRICE_UPDATE_USER_RESPONSE } from 'analytics/constants'
-import { useTrace } from 'analytics/Trace'
+import { useActiveLocale } from 'hooks/useActiveLocale'
 import {
   formatPercentInBasisPointsNumber,
+  formatSwapQuoteReceivedEventProperties,
   formatToDecimal,
+  getDurationFromDateMilliseconds,
   getPriceUpdateBasisPoints,
   getTokenAddress,
-} from 'analytics/utils'
-import { useActiveLocale } from 'hooks/useActiveLocale'
-import { useCallback } from 'react'
+} from 'lib/utils/analytics'
+import { useCallback, useState } from 'react'
 import { useIsDarkMode } from 'state/user/hooks'
-import { DARK_THEME, LIGHT_THEME } from 'theme/widget'
 import { computeRealizedPriceImpact } from 'utils/prices'
 import { switchChain } from 'utils/switchChain'
 
 import { useSyncWidgetInputs } from './inputs'
 import { useSyncWidgetSettings } from './settings'
+import { DARK_THEME, LIGHT_THEME } from './theme'
 import { useSyncWidgetTransactions } from './transactions'
 
 export const WIDGET_WIDTH = 360
 
 const WIDGET_ROUTER_URL = 'https://api.uniswap.org/v1/'
 
+function useWidgetTheme() {
+  return useIsDarkMode() ? DARK_THEME : LIGHT_THEME
+}
+
 export interface WidgetProps {
-  defaultToken?: Currency
+  token?: Currency
+  onTokenChange?: (token: Currency) => void
   onReviewSwapClick?: OnReviewSwapClick
 }
 
-export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps) {
-  const locale = useActiveLocale()
-  const theme = useIsDarkMode() ? DARK_THEME : LIGHT_THEME
+export default function Widget({ token, onTokenChange, onReviewSwapClick }: WidgetProps) {
   const { connector, provider } = useWeb3React()
-
-  const { inputs, tokenSelector } = useSyncWidgetInputs(defaultToken)
+  const locale = useActiveLocale()
+  const theme = useWidgetTheme()
+  const { inputs, tokenSelector } = useSyncWidgetInputs({ token, onTokenChange })
   const { settings } = useSyncWidgetSettings()
   const { transactions } = useSyncWidgetTransactions()
 
+  const onSwitchChain = useCallback(
+    // TODO(WEB-1757): Widget should not break if this rejects - upstream the catch to ignore it.
+    ({ chainId }: AddEthereumChainParameter) => switchChain(connector, Number(chainId)).catch(() => undefined),
+    [connector]
+  )
+
   const trace = useTrace({ section: SectionName.WIDGET })
-
-  // TODO(lynnshaoyu): add back onInitialSwapQuote logging once widget side logic is fixed
-  // in onInitialSwapQuote handler.
-
+  const [initialQuoteDate, setInitialQuoteDate] = useState<Date>()
+  const onInitialSwapQuote = useCallback(
+    (trade: Trade<Currency, Currency, TradeType>) => {
+      setInitialQuoteDate(new Date())
+      const eventProperties = {
+        // TODO(1416): Include undefined values.
+        ...formatSwapQuoteReceivedEventProperties(
+          trade,
+          /* gasUseEstimateUSD= */ undefined,
+          /* fetchingSwapQuoteStartTime= */ undefined
+        ),
+        ...trace,
+      }
+      sendAnalyticsEvent(EventName.SWAP_QUOTE_RECEIVED, eventProperties)
+    },
+    [trace]
+  )
   const onApproveToken = useCallback(() => {
     const input = inputs.value.INPUT
     if (!input) return
@@ -67,16 +86,14 @@ export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps)
     }
     sendAnalyticsEvent(EventName.APPROVE_TOKEN_TXN_SUBMITTED, eventProperties)
   }, [inputs.value.INPUT, trace])
-
   const onExpandSwapDetails = useCallback(() => {
     sendAnalyticsEvent(EventName.SWAP_DETAILS_EXPANDED, { ...trace })
   }, [trace])
-
   const onSwapPriceUpdateAck = useCallback(
     (stale: Trade<Currency, Currency, TradeType>, update: Trade<Currency, Currency, TradeType>) => {
       const eventProperties = {
         chain_id: update.inputAmount.currency.chainId,
-        response: SWAP_PRICE_UPDATE_USER_RESPONSE.ACCEPTED,
+        response: SwapPriceUpdateUserResponse.ACCEPTED,
         token_in_symbol: update.inputAmount.currency.symbol,
         token_out_symbol: update.outputAmount.currency.symbol,
         price_update_basis_points: getPriceUpdateBasisPoints(stale.executionPrice, update.executionPrice),
@@ -86,7 +103,6 @@ export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps)
     },
     [trace]
   )
-
   const onSubmitSwapClick = useCallback(
     (trade: Trade<Currency, Currency, TradeType>) => {
       const eventProperties = {
@@ -106,23 +122,16 @@ export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps)
         is_auto_router_api: undefined,
         is_auto_slippage: undefined,
         chain_id: trade.inputAmount.currency.chainId,
-        // duration should be getDurationFromDateMilliseconds(initialQuoteDate) once initialQuoteDate
-        // is made available from TODO above for onInitialSwapQuote logging.
-        duration_from_first_quote_to_swap_submission_milliseconds: undefined,
+        duration_from_first_quote_to_swap_submission_milliseconds: getDurationFromDateMilliseconds(initialQuoteDate),
         swap_quote_block_number: undefined,
         ...trace,
       }
       sendAnalyticsEvent(EventName.SWAP_SUBMITTED_BUTTON_CLICKED, eventProperties)
     },
-    [trace]
-  )
-  const onSwitchChain = useCallback(
-    // TODO: Widget should not break if this rejects - upstream the catch to ignore it.
-    ({ chainId }: AddEthereumChainParameter) => switchChain(connector, Number(chainId)).catch(() => undefined),
-    [connector]
+    [initialQuoteDate, trace]
   )
 
-  if (!inputs.value.INPUT && !inputs.value.OUTPUT) {
+  if (!(inputs.value.INPUT || inputs.value.OUTPUT)) {
     return <WidgetSkeleton />
   }
 
@@ -132,9 +141,9 @@ export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps)
         disableBranding
         hideConnectionUI
         routerUrl={WIDGET_ROUTER_URL}
-        width={WIDGET_WIDTH}
         locale={locale}
         theme={theme}
+        width={WIDGET_WIDTH}
         // defaultChainId is excluded - it is always inferred from the passed provider
         provider={provider}
         onSwitchChain={onSwitchChain}
@@ -146,6 +155,7 @@ export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps)
         onReviewSwapClick={onReviewSwapClick}
         onSubmitSwapClick={onSubmitSwapClick}
         onSwapApprove={onApproveToken}
+        onInitialSwapQuote={onInitialSwapQuote}
         onSwapPriceUpdateAck={onSwapPriceUpdateAck}
       />
       {tokenSelector}
@@ -154,5 +164,6 @@ export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps)
 }
 
 export function WidgetSkeleton() {
-  return <SwapWidgetSkeleton theme={useIsDarkMode() ? DARK_THEME : LIGHT_THEME} width={WIDGET_WIDTH} />
+  const theme = useWidgetTheme()
+  return <SwapWidgetSkeleton theme={theme} width={WIDGET_WIDTH} />
 }

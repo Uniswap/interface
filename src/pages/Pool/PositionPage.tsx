@@ -1,24 +1,23 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
+import { Trace } from '@uniswap/analytics'
+import { PageName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { PageName } from 'analytics/constants'
-import { Trace } from 'analytics/Trace'
 import { sendEvent } from 'components/analytics'
 import Badge from 'components/Badge'
 import { ButtonConfirmed, ButtonGray, ButtonPrimary } from 'components/Button'
 import { DarkCard, LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import CurrencyLogo from 'components/CurrencyLogo'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import Loader from 'components/Loader'
+import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
 import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
-import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { useToken } from 'hooks/Tokens'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
@@ -49,18 +48,18 @@ import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { LoadingRows } from './styleds'
 
-const PageWrapper = styled.div<{ navBarFlag: boolean }>`
-  padding: ${({ navBarFlag }) => (navBarFlag ? '68px 8px 0px' : '0px')};
+const PageWrapper = styled.div`
+  padding: 68px 8px 0px;
 
   min-width: 800px;
   max-width: 960px;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    padding: ${({ navBarFlag }) => (navBarFlag ? '48px 8px 0px' : '0px 8px 0px')};
+    padding: 48px 8px 0px;
   }
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    padding-top: ${({ navBarFlag }) => (navBarFlag ? '20px' : '0px')};
+    padding-top: 20px;
   }
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
@@ -197,7 +196,7 @@ function LinkedCurrency({ chainId, currency }: { chainId?: number; currency?: Cu
     return (
       <ExternalLink href={getExplorerLink(chainId, address, ExplorerDataType.TOKEN)}>
         <RowFixed>
-          <CurrencyLogo currency={currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
+          <CurrencyLogo currency={currency} size="20px" style={{ marginRight: '0.5rem' }} />
           <ThemedText.DeprecatedMain>{currency?.symbol} ↗</ThemedText.DeprecatedMain>
         </RowFixed>
       </ExternalLink>
@@ -206,7 +205,7 @@ function LinkedCurrency({ chainId, currency }: { chainId?: number; currency?: Cu
 
   return (
     <RowFixed>
-      <CurrencyLogo currency={currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
+      <CurrencyLogo currency={currency} size="20px" style={{ marginRight: '0.5rem' }} />
       <ThemedText.DeprecatedMain>{currency?.symbol}</ThemedText.DeprecatedMain>
     </RowFixed>
   )
@@ -326,8 +325,6 @@ const useInverter = ({
 }
 
 export function PositionPage() {
-  const navBarFlag = useNavBarFlag()
-  const navBarFlagEnabled = navBarFlag === NavBarVariant.Enabled
   const { tokenId: tokenIdFromUrl } = useParams<{ tokenId?: string }>()
   const { chainId, account, provider } = useWeb3React()
   const theme = useTheme()
@@ -526,12 +523,12 @@ export function PositionPage() {
 
   function modalHeader() {
     return (
-      <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
+      <AutoColumn gap="md" style={{ marginTop: '20px' }}>
         <LightCard padding="12px 16px">
           <AutoColumn gap="md">
             <RowBetween>
               <RowFixed>
-                <CurrencyLogo currency={feeValueUpper?.currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
+                <CurrencyLogo currency={feeValueUpper?.currency} size="20px" style={{ marginRight: '0.5rem' }} />
                 <ThemedText.DeprecatedMain>
                   {feeValueUpper ? formatCurrencyAmount(feeValueUpper, 4) : '-'}
                 </ThemedText.DeprecatedMain>
@@ -540,7 +537,7 @@ export function PositionPage() {
             </RowBetween>
             <RowBetween>
               <RowFixed>
-                <CurrencyLogo currency={feeValueLower?.currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
+                <CurrencyLogo currency={feeValueLower?.currency} size="20px" style={{ marginRight: '0.5rem' }} />
                 <ThemedText.DeprecatedMain>
                   {feeValueLower ? formatCurrencyAmount(feeValueLower, 4) : '-'}
                 </ThemedText.DeprecatedMain>
@@ -586,7 +583,7 @@ export function PositionPage() {
   ) : (
     <Trace page={PageName.POOL_PAGE} shouldLogImpression>
       <>
-        <PageWrapper navBarFlag={navBarFlagEnabled}>
+        <PageWrapper>
           <TransactionConfirmationModal
             isOpen={showConfirm}
             onDismiss={() => setShowConfirm(false)}
@@ -615,7 +612,7 @@ export function PositionPage() {
               <ResponsiveRow>
                 <RowFixed>
                   <DoubleCurrencyLogo currency0={currencyBase} currency1={currencyQuote} size={24} margin={true} />
-                  <ThemedText.DeprecatedLabel fontSize={'24px'} mr="10px">
+                  <ThemedText.DeprecatedLabel fontSize="24px" mr="10px">
                     &nbsp;{currencyQuote?.symbol}&nbsp;/&nbsp;{currencyBase?.symbol}
                   </ThemedText.DeprecatedLabel>
                   <Badge style={{ marginRight: '8px' }}>
@@ -810,7 +807,7 @@ export function PositionPage() {
                           <RowFixed>
                             <CurrencyLogo
                               currency={feeValueUpper?.currency}
-                              size={'20px'}
+                              size="20px"
                               style={{ marginRight: '0.5rem' }}
                             />
                             <ThemedText.DeprecatedMain>{feeValueUpper?.currency?.symbol}</ThemedText.DeprecatedMain>
@@ -825,7 +822,7 @@ export function PositionPage() {
                           <RowFixed>
                             <CurrencyLogo
                               currency={feeValueLower?.currency}
-                              size={'20px'}
+                              size="20px"
                               style={{ marginRight: '0.5rem' }}
                             />
                             <ThemedText.DeprecatedMain>{feeValueLower?.currency?.symbol}</ThemedText.DeprecatedMain>

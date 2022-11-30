@@ -1,31 +1,36 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 
 /**
  * Invokes callback repeatedly over an interval defined by the delay
+ *
  * @param callback
  * @param delay if null, the callback will not be invoked
- * @param leading if true, the callback will be invoked immediately (on the leading edge); otherwise, it will be invoked after delay
+ * @param leading by default, the callback will be invoked immediately (on the leading edge);
+ *                if false, the callback will not be invoked until a first delay
  */
-export default function useInterval(callback: () => void, delay: null | number, leading = true) {
-  const savedCallback = useRef<() => void>()
-
-  // Remember the latest callback.
+export default function useInterval(callback: () => void | Promise<void>, delay: null | number, leading = true) {
   useEffect(() => {
-    savedCallback.current = callback
-  }, [callback])
-
-  // Set up the interval.
-  useEffect(() => {
-    function tick() {
-      const { current } = savedCallback
-      current && current()
+    if (delay === null) {
+      return
     }
 
-    if (delay !== null) {
-      if (leading) tick()
-      const id = setInterval(tick, delay)
-      return () => clearInterval(id)
+    let timeout: ReturnType<typeof setTimeout>
+    tick(delay, /* skip= */ !leading)
+    return () => {
+      if (timeout) {
+        clearInterval(timeout)
+      }
     }
-    return
-  }, [delay, leading])
+
+    async function tick(delay: number, skip = false) {
+      if (!skip) {
+        const promise = callback()
+
+        // Defer the next interval until the current callback has resolved.
+        if (promise) await promise
+      }
+
+      timeout = setTimeout(() => tick(delay), delay)
+    }
+  }, [callback, delay, leading])
 }

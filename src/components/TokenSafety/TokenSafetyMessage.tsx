@@ -1,15 +1,14 @@
 import { Trans } from '@lingui/macro'
 import { getWarningCopy, TOKEN_SAFETY_ARTICLE, Warning } from 'constants/tokenSafety'
 import { useTokenWarningColor } from 'hooks/useTokenWarningColor'
-import { AlertOctagon, AlertTriangle } from 'react-feather'
+import { AlertTriangle, Slash } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 import { ExternalLink } from 'theme'
-import { Color } from 'theme/styled'
 
-const Label = styled.div<{ color: Color }>`
+const Label = styled.div<{ color: string }>`
   width: 100%;
-  padding: 12px 20px;
+  padding: 12px 20px 16px;
   background-color: ${({ color }) => color + '1F'};
   border-radius: 16px;
   color: ${({ color }) => color};
@@ -31,7 +30,13 @@ const Title = styled(Text)`
 const DetailsRow = styled.div`
   margin-top: 8px;
   font-size: 12px;
+  line-height: 16px;
   color: ${({ theme }) => theme.textSecondary};
+`
+
+const StyledLink = styled(ExternalLink)`
+  color: ${({ theme }) => theme.textSecondary};
+  font-weight: 700;
 `
 
 type TokenWarningMessageProps = {
@@ -46,7 +51,7 @@ export default function TokenWarningMessage({ warning, tokenAddress }: TokenWarn
   return (
     <Label color={color}>
       <TitleRow>
-        {warning.canProceed ? <AlertTriangle size={'16px'} /> : <AlertOctagon size={'16px'} />}
+        {warning.canProceed ? <AlertTriangle size="16px" /> : <Slash size="16px" />}
         <Title marginLeft="7px">{warning.message}</Title>
       </TitleRow>
 
@@ -56,9 +61,9 @@ export default function TokenWarningMessage({ warning, tokenAddress }: TokenWarn
         {description}
         {Boolean(description) && ' '}
         {tokenAddress && (
-          <ExternalLink href={TOKEN_SAFETY_ARTICLE}>
+          <StyledLink href={TOKEN_SAFETY_ARTICLE}>
             <Trans>Learn more</Trans>
-          </ExternalLink>
+          </StyledLink>
         )}
       </DetailsRow>
     </Label>

@@ -18,12 +18,6 @@ export const title = style([
   }),
 ])
 
-export const openAddress = sprinkles({
-  minWidth: '20',
-  height: '20',
-  width: '20',
-})
-
 export const address = style([
   title,
   sprinkles({
@@ -38,6 +32,7 @@ export const address = style([
 ])
 
 export const verifiedBadge = sprinkles({
+  marginLeft: '4',
   display: 'inline-block',
   paddingTop: '4',
   height: '28',

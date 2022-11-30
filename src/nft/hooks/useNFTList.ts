@@ -33,7 +33,32 @@ export const useNFTList = create<NFTListState>()(
       }),
     setListings: (listings) =>
       set(() => {
-        return { listings }
+        const updatedListings = listings.map((listing) => {
+          const oldStatus = get().listings.find(
+            (oldListing) =>
+              oldListing.asset.asset_contract.address === listing.asset.asset_contract.address &&
+              oldListing.asset.tokenId === listing.asset.tokenId &&
+              oldListing.marketplace.name === listing.marketplace.name &&
+              oldListing.price === listing.price
+          )?.status
+          const status = () => {
+            switch (oldStatus) {
+              case ListingStatus.APPROVED:
+                return ListingStatus.APPROVED
+              case ListingStatus.FAILED:
+                return listing.status === ListingStatus.SIGNING ? ListingStatus.SIGNING : ListingStatus.FAILED
+              default:
+                return listing.status
+            }
+          }
+          return {
+            ...listing,
+            status: status(),
+          }
+        })
+        return {
+          listings: updatedListings,
+        }
       }),
     setCollectionsRequiringApproval: (collections) =>
       set(() => {

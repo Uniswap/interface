@@ -1,14 +1,13 @@
 import { defaultAbiCoder } from '@ethersproject/abi'
 import { getAddress, isAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
+import { Trace } from '@uniswap/analytics'
+import { PageName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { PageName } from 'analytics/constants'
-import { Trace } from 'analytics/Trace'
 import { ButtonError } from 'components/Button'
 import { BlueCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { Wrapper } from 'pages/Pool/styleds'
@@ -34,15 +33,15 @@ import { ProposalAction, ProposalActionSelector, ProposalActionSelectorModal } f
 import { ProposalEditor } from './ProposalEditor'
 import { ProposalSubmissionModal } from './ProposalSubmissionModal'
 
-const PageWrapper = styled(AutoColumn)<{ navBarFlag: boolean }>`
-  padding: ${({ navBarFlag }) => (navBarFlag ? '68px 8px 0px' : '0px')};
+const PageWrapper = styled(AutoColumn)`
+  padding: 68px 8px 0px;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    padding: ${({ navBarFlag }) => (navBarFlag ? '48px 8px 0px' : '0px 8px 0px')};
+    padding: 48px 8px 0px;
   }
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    padding-top: ${({ navBarFlag }) => (navBarFlag ? '20px' : '0px')};
+    padding-top: 20px;
   }
 `
 
@@ -101,8 +100,6 @@ const AutonomousProposalCTA = styled.div`
 `
 
 export default function CreateProposal() {
-  const navBarFlag = useNavBarFlag()
-  const navBarFlagEnabled = navBarFlag === NavBarVariant.Enabled
   const { account, chainId } = useWeb3React()
 
   const latestProposalId = useLatestProposalId(account ?? undefined) ?? '0'
@@ -243,13 +240,13 @@ ${bodyValue}
 
   return (
     <Trace page={PageName.VOTE_PAGE} shouldLogImpression>
-      <PageWrapper navBarFlag={navBarFlagEnabled}>
+      <PageWrapper>
         <AppBody {...{ maxWidth: '800px' }}>
           <CreateProposalTabs />
           <CreateProposalWrapper>
             <BlueCard>
               <AutoColumn gap="10px">
-                <ThemedText.DeprecatedLink fontWeight={400} color={'deprecated_primaryText1'}>
+                <ThemedText.DeprecatedLink fontWeight={400} color="deprecated_primaryText1">
                   <Trans>
                     <strong>Tip:</strong> Select an action and describe your proposal for the community. The proposal
                     cannot be modified after submission, so please verify all information before submitting. The voting

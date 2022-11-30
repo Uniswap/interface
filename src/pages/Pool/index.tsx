@@ -1,9 +1,7 @@
 import { Trans } from '@lingui/macro'
+import { Trace, TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName, PageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { PageName } from 'analytics/constants'
-import { ElementName, Event, EventName } from 'analytics/constants'
-import { Trace } from 'analytics/Trace'
-import { TraceEvent } from 'analytics/TraceEvent'
 import { ButtonGray, ButtonPrimary, ButtonText } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { FlyoutAlignment, NewMenu } from 'components/Menu'
@@ -11,7 +9,6 @@ import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { isSupportedChain } from 'constants/chains'
-import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { AlertTriangle, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -25,8 +22,8 @@ import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import CTACards from './CTACards'
 import { LoadingRows } from './styleds'
 
-const PageWrapper = styled(AutoColumn)<{ navBarFlag: boolean }>`
-  padding: ${({ navBarFlag }) => (navBarFlag ? '68px 8px 0px' : '0px')};
+const PageWrapper = styled(AutoColumn)`
+  padding: 68px 8px 0px;
   max-width: 870px;
   width: 100%;
 
@@ -39,11 +36,11 @@ const PageWrapper = styled(AutoColumn)<{ navBarFlag: boolean }>`
   `};
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    padding-top: ${({ navBarFlag }) => (navBarFlag ? '48px' : '0px')};
+    padding-top: 48px;
   }
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    padding-top: ${({ navBarFlag }) => (navBarFlag ? '20px' : '0px')};
+    padding-top: 20px;
   }
 `
 const TitleRow = styled(RowBetween)`
@@ -125,6 +122,7 @@ const InboxIcon = styled(Inbox)`
 
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   border-radius: 12px;
+  font-size: 16px;
   padding: 6px 8px;
   width: fit-content;
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
@@ -135,10 +133,13 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
 
 const MainContentWrapper = styled.main`
   background-color: ${({ theme }) => theme.deprecated_bg0};
-  padding: 8px;
-  border-radius: 20px;
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  padding: 0;
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
+    0px 24px 32px rgba(0, 0, 0, 0.01);
 `
 
 function PositionsLoadingPlaceholder() {
@@ -161,15 +162,14 @@ function PositionsLoadingPlaceholder() {
 }
 
 function WrongNetworkCard() {
-  const navBarFlag = useNavBarFlag()
-  const navBarFlagEnabled = navBarFlag === NavBarVariant.Enabled
   const theme = useTheme()
+
   return (
     <>
-      <PageWrapper navBarFlag={navBarFlagEnabled}>
+      <PageWrapper>
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
-            <TitleRow padding={'0'}>
+            <TitleRow padding="0">
               <ThemedText.LargeHeader>
                 <Trans>Pools</Trans>
               </ThemedText.LargeHeader>
@@ -194,8 +194,6 @@ function WrongNetworkCard() {
 }
 
 export default function Pool() {
-  const navBarFlag = useNavBarFlag()
-  const navBarFlagEnabled = navBarFlag === NavBarVariant.Enabled
   const { account, chainId } = useWeb3React()
   const toggleWalletModal = useToggleWalletModal()
 
@@ -266,10 +264,10 @@ export default function Pool() {
   return (
     <Trace page={PageName.POOL_PAGE} shouldLogImpression>
       <>
-        <PageWrapper navBarFlag={navBarFlagEnabled}>
+        <PageWrapper>
           <AutoColumn gap="lg" justify="center">
             <AutoColumn gap="lg" style={{ width: '100%' }}>
-              <TitleRow padding={'0'}>
+              <TitleRow padding="0">
                 <ThemedText.LargeHeader>
                   <Trans>Pools</Trans>
                 </ThemedText.LargeHeader>
@@ -306,7 +304,7 @@ export default function Pool() {
                 ) : (
                   <ErrorContainer>
                     <ThemedText.DeprecatedBody color={theme.deprecated_text3} textAlign="center">
-                      <InboxIcon strokeWidth={1} />
+                      <InboxIcon strokeWidth={1} style={{ marginTop: '2em' }} />
                       <div>
                         <Trans>Your active V3 liquidity positions will appear here.</Trans>
                       </div>
@@ -321,12 +319,15 @@ export default function Pool() {
                     )}
                     {showConnectAWallet && (
                       <TraceEvent
-                        events={[Event.onClick]}
+                        events={[BrowserEvent.onClick]}
                         name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
                         properties={{ received_swap_quote: false }}
                         element={ElementName.CONNECT_WALLET_BUTTON}
                       >
-                        <ButtonPrimary style={{ marginTop: '2em', padding: '8px 16px' }} onClick={toggleWalletModal}>
+                        <ButtonPrimary
+                          style={{ marginTop: '2em', marginBottom: '2em', padding: '8px 16px' }}
+                          onClick={toggleWalletModal}
+                        >
                           <Trans>Connect a wallet</Trans>
                         </ButtonPrimary>
                       </TraceEvent>

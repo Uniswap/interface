@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { sendEvent } from 'components/analytics'
-import Card, { DarkGreyCard } from 'components/Card'
+import Card, { DarkGrayCard } from 'components/Card'
 import Row, { AutoRow, RowBetween } from 'components/Row'
 import { useEffect, useRef } from 'react'
 import { ArrowDown, Info, X } from 'react-feather'
@@ -124,11 +124,11 @@ export function PrivacyPolicy() {
       <AutoColumn gap="16px">
         <AutoColumn gap="8px" style={{ width: '100%' }}>
           <StyledExternalCard>
-            <ExternalLink href={'https://uniswap.org/terms-of-service'}>
+            <ExternalLink href="https://uniswap.org/terms-of-service">
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />
-                  <ThemedText.DeprecatedMain fontSize={14} color={'deprecated_primaryText1'}>
+                  <ThemedText.DeprecatedMain fontSize={14} color="deprecated_primaryText1">
                     <Trans>Uniswap Labs&apos; Terms of Service</Trans>
                   </ThemedText.DeprecatedMain>
                 </AutoRow>
@@ -137,12 +137,12 @@ export function PrivacyPolicy() {
             </ExternalLink>
           </StyledExternalCard>
           <StyledExternalCard>
-            <ExternalLink href={'https://uniswap.org/disclaimer/'}>
+            <ExternalLink href="https://uniswap.org/privacy-policy/">
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />
-                  <ThemedText.DeprecatedMain fontSize={14} color={'deprecated_primaryText1'}>
-                    <Trans>Protocol Disclaimer</Trans>
+                  <ThemedText.DeprecatedMain fontSize={14} color="deprecated_primaryText1">
+                    <Trans>Privacy Policy</Trans>
                   </ThemedText.DeprecatedMain>
                 </AutoRow>
                 <StyledLinkOut size={20} />
@@ -155,17 +155,17 @@ export function PrivacyPolicy() {
         </ThemedText.DeprecatedMain>
         <AutoColumn gap="12px">
           {EXTERNAL_APIS.map(({ name, description }, i) => (
-            <DarkGreyCard key={i}>
+            <DarkGrayCard key={i}>
               <AutoColumn gap="8px">
                 <AutoRow gap="4px">
                   <Info size={18} />
-                  <ThemedText.DeprecatedMain fontSize={14} color={'deprecated_text1'}>
+                  <ThemedText.DeprecatedMain fontSize={14} color="deprecated_text1">
                     {name}
                   </ThemedText.DeprecatedMain>
                 </AutoRow>
                 <ThemedText.DeprecatedMain fontSize={14}>{description}</ThemedText.DeprecatedMain>
               </AutoColumn>
-            </DarkGreyCard>
+            </DarkGrayCard>
           ))}
           <ThemedText.DeprecatedBody fontSize={12}>
             <Row justify="center" marginBottom="1rem">

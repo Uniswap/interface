@@ -8,6 +8,9 @@ import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
+import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
+import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
+import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useMemo } from 'react'
 import { Copy, ExternalLink, Power } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
@@ -21,11 +24,11 @@ import { shortenAddress } from '../../nft/utils/address'
 import { useCloseModal, useToggleModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
-import { ButtonPrimary } from '../Button'
+import { ButtonEmphasis, ButtonSize, ThemeButton } from '../Button'
 import StatusIcon from '../Identicon/StatusIcon'
 import IconButton, { IconHoverText } from './IconButton'
 
-const WalletButton = styled(ButtonPrimary)`
+const WalletButton = styled(ThemeButton)`
   border-radius: 12px;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -35,7 +38,7 @@ const WalletButton = styled(ButtonPrimary)`
 `
 
 const ProfileButton = styled(WalletButton)`
-  background: ${({ theme }) => theme.backgroundInteractive};
+  background: ${({ theme }) => theme.accentAction};
   transition: ${({ theme }) => theme.transition.duration.fast} ${({ theme }) => theme.transition.timing.ease}
     background-color;
 `
@@ -112,12 +115,18 @@ const AuthenticatedHeader = () => {
   const navigate = useNavigate()
   const closeModal = useCloseModal(ApplicationModal.WALLET_DROPDOWN)
 
+  const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
+  const resetSellAssets = useSellAsset((state) => state.reset)
+  const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
+  const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
+
   const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
   const isUnclaimed = useUserHasAvailableClaim(account)
   const connectionType = getConnection(connector).type
   const nativeCurrency = useNativeCurrency()
   const nativeCurrencyPrice = useStablecoinPrice(nativeCurrency ?? undefined) || 0
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
+  const openNftModal = useToggleModal(ApplicationModal.UNISWAP_NFT_AIRDROP_CLAIM)
   const disconnect = useCallback(() => {
     if (connector && connector.deactivate) {
       connector.deactivate()
@@ -133,7 +142,10 @@ const AuthenticatedHeader = () => {
   }, [balanceString, nativeCurrencyPrice])
 
   const navigateToProfile = () => {
-    navigate('/profile')
+    resetSellAssets()
+    setSellPageState(ProfilePageStateType.VIEWING)
+    clearCollectionFilters()
+    navigate('/nfts/profile')
     closeModal()
   }
 
@@ -168,13 +180,18 @@ const AuthenticatedHeader = () => {
           <USDText>${amountUSD.toFixed(2)} USD</USDText>
         </BalanceWrapper>
         {nftFlag === NftVariant.Enabled && (
-          <ProfileButton onClick={navigateToProfile}>
+          <ProfileButton onClick={navigateToProfile} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
             <Trans>View and sell NFTs</Trans>
           </ProfileButton>
         )}
         {isUnclaimed && (
-          <UNIButton onClick={openClaimModal}>
+          <UNIButton onClick={openClaimModal} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
             <Trans>Claim</Trans> {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} <Trans>reward</Trans>
+          </UNIButton>
+        )}
+        {nftFlag === NftVariant.Enabled && isClaimAvailable && (
+          <UNIButton size={ButtonSize.medium} emphasis={ButtonEmphasis.medium} onClick={openNftModal}>
+            <Trans>Claim Uniswap NFT Airdrop</Trans>
           </UNIButton>
         )}
       </Column>

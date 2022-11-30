@@ -1,12 +1,18 @@
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { EventName } from '@uniswap/analytics-events'
+import { formatUSDPrice } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
+import AssetLogo from 'components/Logo/AssetLogo'
 import { L2NetworkLogo, LogoContainer } from 'components/Tokens/TokenTable/TokenRow'
-import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
+import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { getChainInfo } from 'constants/chainInfo'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { checkWarning } from 'constants/tokenSafety'
 import { getTokenDetailsURL } from 'graphql/data/util'
-import uriToHttp from 'lib/utils/uriToHttp'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
+import { VerifiedIcon } from 'nft/components/icons'
 import { vars } from 'nft/css/sprinkles.css'
 import { useSearchHistory } from 'nft/hooks'
 import { FungibleToken, GenieCollection } from 'nft/types'
@@ -14,17 +20,37 @@ import { ethNumberStandardFormatter } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { formatDollar } from 'utils/formatNumbers'
+import styled from 'styled-components/macro'
 
+import { getDeltaArrow } from '../Tokens/TokenDetails/PriceChart'
 import * as styles from './SearchBar.css'
+
+const StyledLogoContainer = styled(LogoContainer)`
+  margin-right: 8px;
+`
+const PriceChangeContainer = styled.div`
+  display: flex;
+  align-items: center;
+`
+
+const PriceChangeText = styled.span<{ isNegative: boolean }>`
+  font-size: 14px;
+  line-height: 20px;
+  color: ${({ theme, isNegative }) => (isNegative ? theme.accentFailure : theme.accentSuccess)};
+`
+
+const ArrowCell = styled.span`
+  padding-top: 5px;
+  padding-right: 3px;
+`
 
 interface CollectionRowProps {
   collection: GenieCollection
   isHovered: boolean
   setHoveredIndex: (index: number | undefined) => void
   toggleOpen: () => void
-  traceEvent: () => void
   index: number
+  eventProperties: Record<string, unknown>
 }
 
 export const CollectionRow = ({
@@ -32,8 +58,8 @@ export const CollectionRow = ({
   isHovered,
   setHoveredIndex,
   toggleOpen,
-  traceEvent,
   index,
+  eventProperties,
 }: CollectionRowProps) => {
   const [brokenImage, setBrokenImage] = useState(false)
   const [loaded, setLoaded] = useState(false)
@@ -45,8 +71,8 @@ export const CollectionRow = ({
   const handleClick = useCallback(() => {
     addToSearchHistory(collection)
     toggleOpen()
-    traceEvent()
-  }, [addToSearchHistory, collection, toggleOpen, traceEvent])
+    sendAnalyticsEvent(EventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
+  }, [addToSearchHistory, collection, toggleOpen, eventProperties])
 
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
@@ -89,13 +115,13 @@ export const CollectionRow = ({
             <Box className={styles.primaryText}>{collection.name}</Box>
             {collection.isVerified && <VerifiedIcon className={styles.suggestionIcon} />}
           </Row>
-          <Box className={styles.secondaryText}>{putCommas(collection.stats.total_supply)} items</Box>
+          <Box className={styles.secondaryText}>{putCommas(collection?.stats?.total_supply ?? 0)} items</Box>
         </Column>
       </Row>
-      {collection.floorPrice ? (
+      {collection.stats?.floor_price ? (
         <Column className={styles.suggestionSecondaryContainer}>
           <Row gap="4">
-            <Box className={styles.primaryText}>{ethNumberStandardFormatter(collection.floorPrice)} ETH</Box>
+            <Box className={styles.primaryText}>{ethNumberStandardFormatter(collection.stats?.floor_price)} ETH</Box>
           </Row>
           <Box className={styles.secondaryText}>Floor</Box>
         </Column>
@@ -118,13 +144,11 @@ interface TokenRowProps {
   isHovered: boolean
   setHoveredIndex: (index: number | undefined) => void
   toggleOpen: () => void
-  traceEvent: () => void
   index: number
+  eventProperties: Record<string, unknown>
 }
 
-export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceEvent, index }: TokenRowProps) => {
-  const [brokenImage, setBrokenImage] = useState(false)
-  const [loaded, setLoaded] = useState(false)
+export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index, eventProperties }: TokenRowProps) => {
   const addToSearchHistory = useSearchHistory(
     (state: { addItem: (item: FungibleToken | GenieCollection) => void }) => state.addItem
   )
@@ -133,8 +157,8 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceE
   const handleClick = useCallback(() => {
     addToSearchHistory(token)
     toggleOpen()
-    traceEvent()
-  }, [addToSearchHistory, toggleOpen, token, traceEvent])
+    sendAnalyticsEvent(EventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
+  }, [addToSearchHistory, toggleOpen, token, eventProperties])
 
   const [bridgedAddress, bridgedChain, L2Icon] = useBridgedAddress(token)
   const tokenDetailsPath = getTokenDetailsURL(bridgedAddress ?? token.address, undefined, bridgedChain ?? token.chainId)
@@ -153,6 +177,8 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceE
     }
   }, [toggleOpen, isHovered, token, navigate, handleClick, tokenDetailsPath])
 
+  const arrow = getDeltaArrow(token.price24hChange, 18)
+
   return (
     <Link
       to={tokenDetailsPath}
@@ -163,25 +189,21 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceE
       style={{ background: isHovered ? vars.color.lightGrayOverlay : 'none' }}
     >
       <Row style={{ width: '65%' }}>
-        {!brokenImage && token.logoURI ? (
-          <LogoContainer>
-            <Box
-              as="img"
-              src={token.logoURI.includes('ipfs://') ? uriToHttp(token.logoURI)[0] : token.logoURI}
-              alt={token.name}
-              className={clsx(loaded ? styles.suggestionImage : styles.imageHolder)}
-              onError={() => setBrokenImage(true)}
-              onLoad={() => setLoaded(true)}
-            />
-            <L2NetworkLogo networkUrl={L2Icon} size="16px" />
-          </LogoContainer>
-        ) : (
-          <Box className={styles.imageHolder} />
-        )}
+        <StyledLogoContainer>
+          <AssetLogo
+            isNative={token.address === NATIVE_CHAIN_ID}
+            address={token.address}
+            chainId={token.chainId}
+            symbol={token.symbol}
+            size="36px"
+            backupImg={token.logoURI}
+          />
+          <L2NetworkLogo networkUrl={L2Icon} size="16px" />
+        </StyledLogoContainer>
         <Column className={styles.suggestionPrimaryContainer}>
           <Row gap="4" width="full">
             <Box className={styles.primaryText}>{token.name}</Box>
-            {token.onDefaultList && <VerifiedIcon className={styles.suggestionIcon} />}
+            <TokenSafetyIcon warning={checkWarning(token.address)} />
           </Row>
           <Box className={styles.secondaryText}>{token.symbol}</Box>
         </Column>
@@ -190,13 +212,16 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceE
       <Column className={styles.suggestionSecondaryContainer}>
         {token.priceUsd && (
           <Row gap="4">
-            <Box className={styles.primaryText}>{formatDollar({ num: token.priceUsd, isPrice: true })}</Box>
+            <Box className={styles.primaryText}>{formatUSDPrice(token.priceUsd)}</Box>
           </Row>
         )}
         {token.price24hChange && (
-          <Box className={styles.secondaryText} color={token.price24hChange >= 0 ? 'green400' : 'red400'}>
-            {token.price24hChange.toFixed(2)}%
-          </Box>
+          <PriceChangeContainer>
+            <ArrowCell>{arrow}</ArrowCell>
+            <PriceChangeText isNegative={token.price24hChange < 0}>
+              {Math.abs(token.price24hChange).toFixed(2)}%
+            </PriceChangeText>
+          </PriceChangeContainer>
         )}
       </Column>
     </Link>

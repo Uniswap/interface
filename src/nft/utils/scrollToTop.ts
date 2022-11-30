@@ -1,3 +1,10 @@
-const DESKTOP_OFFSET = 420
+import { getIsMobile } from 'nft/hooks'
 
-export const scrollToTop = () => window.scrollTo({ top: DESKTOP_OFFSET })
+export const scrollToTop = () => {
+  const isMobile = getIsMobile()
+  const anchorElement = isMobile ? 'nft-anchor-mobile' : 'nft-anchor'
+
+  window.document.getElementById(anchorElement)?.scrollIntoView({
+    behavior: 'smooth',
+  })
+}

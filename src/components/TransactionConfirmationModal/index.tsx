@@ -4,7 +4,6 @@ import { useWeb3React } from '@web3-react/core'
 import Badge from 'components/Badge'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedL2ChainId } from 'constants/chains'
-import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import { ReactNode, useCallback, useState } from 'react'
 import { AlertCircle, AlertTriangle, ArrowUpCircle, CheckCircle } from 'react-feather'
@@ -24,9 +23,10 @@ import Modal from '../Modal'
 import { RowBetween, RowFixed } from '../Row'
 import AnimatedConfirmation from './AnimatedConfirmation'
 
-const Wrapper = styled.div<{ redesignFlag?: boolean }>`
-  background-color: ${({ redesignFlag, theme }) => redesignFlag && theme.backgroundSurface};
-  outline: ${({ redesignFlag, theme }) => redesignFlag && `1px solid ${theme.backgroundOutline}`};
+const Wrapper = styled.div`
+  background-color: ${({ theme }) => theme.backgroundSurface};
+  border-radius: 20px;
+  outline: 1px solid ${({ theme }) => theme.backgroundOutline};
   width: 100%;
   padding: 1rem;
 `
@@ -59,11 +59,9 @@ function ConfirmationPendingContent({
   pendingText: ReactNode
   inline?: boolean // not in modal
 }) {
-  const redesignFlag = useRedesignFlag()
-  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
   const theme = useTheme()
 
-  return redesignFlagEnabled ? (
+  return (
     <Wrapper>
       <AutoColumn gap="md">
         {!inline && (
@@ -75,7 +73,7 @@ function ConfirmationPendingContent({
         <ConfirmedIcon inline={inline}>
           <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
         </ConfirmedIcon>
-        <AutoColumn gap="12px" justify={'center'}>
+        <AutoColumn gap="12px" justify="center">
           <Text fontWeight={500} fontSize={20} color={theme.textPrimary} textAlign="center">
             <Trans>Waiting for confirmation</Trans>
           </Text>
@@ -83,31 +81,6 @@ function ConfirmationPendingContent({
             {pendingText}
           </Text>
           <Text fontWeight={400} fontSize={12} color={theme.textSecondary} textAlign="center" marginBottom="12px">
-            <Trans>Confirm this transaction in your wallet</Trans>
-          </Text>
-        </AutoColumn>
-      </AutoColumn>
-    </Wrapper>
-  ) : (
-    <Wrapper>
-      <AutoColumn gap="md">
-        {!inline && (
-          <RowBetween>
-            <div />
-            <CloseIcon onClick={onDismiss} />
-          </RowBetween>
-        )}
-        <ConfirmedIcon inline={inline}>
-          <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
-        </ConfirmedIcon>
-        <AutoColumn gap="12px" justify={'center'}>
-          <Text fontWeight={500} fontSize={20} textAlign="center">
-            <Trans>Waiting For Confirmation</Trans>
-          </Text>
-          <Text fontWeight={400} fontSize={16} textAlign="center">
-            {pendingText}
-          </Text>
-          <Text fontWeight={500} fontSize={14} color="#565A69" textAlign="center" marginBottom="12px">
             <Trans>Confirm this transaction in your wallet</Trans>
           </Text>
         </AutoColumn>
@@ -135,9 +108,6 @@ function TransactionSubmittedContent({
   const token = currencyToAdd?.wrapped
   const logoURL = useCurrencyLogoURIs(token)[0]
 
-  const redesignFlag = useRedesignFlag()
-  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
-
   const [success, setSuccess] = useState<boolean | undefined>()
 
   const addToken = useCallback(() => {
@@ -153,7 +123,7 @@ function TransactionSubmittedContent({
       .catch(() => setSuccess(false))
   }, [connector, logoURL, token])
 
-  return redesignFlagEnabled ? (
+  return (
     <Wrapper>
       <Section inline={inline}>
         {!inline && (
@@ -165,7 +135,7 @@ function TransactionSubmittedContent({
         <ConfirmedIcon inline={inline}>
           <ArrowUpCircle strokeWidth={1} size={inline ? '40px' : '75px'} color={theme.accentActive} />
         </ConfirmedIcon>
-        <AutoColumn gap="12px" justify={'center'} style={{ paddingBottom: '12px' }}>
+        <AutoColumn gap="12px" justify="center" style={{ paddingBottom: '12px' }}>
           <ThemedText.MediumHeader textAlign="center">
             <Trans>Transaction submitted</Trans>
           </ThemedText.MediumHeader>
@@ -178,7 +148,7 @@ function TransactionSubmittedContent({
               ) : (
                 <RowFixed>
                   <Trans>Added {currencyToAdd.symbol} </Trans>
-                  <CheckCircle size={'16px'} stroke={theme.deprecated_green1} style={{ marginLeft: '6px' }} />
+                  <CheckCircle size="16px" stroke={theme.deprecated_green1} style={{ marginLeft: '6px' }} />
                 </RowFixed>
               )}
             </ButtonLight>
@@ -195,51 +165,6 @@ function TransactionSubmittedContent({
               </Text>
             </ExternalLink>
           )}
-        </AutoColumn>
-      </Section>
-    </Wrapper>
-  ) : (
-    <Wrapper>
-      <Section inline={inline}>
-        {!inline && (
-          <RowBetween>
-            <div />
-            <CloseIcon onClick={onDismiss} />
-          </RowBetween>
-        )}
-        <ConfirmedIcon inline={inline}>
-          <ArrowUpCircle strokeWidth={0.5} size={inline ? '40px' : '90px'} color={theme.deprecated_primary1} />
-        </ConfirmedIcon>
-        <AutoColumn gap="12px" justify={'center'}>
-          <Text fontWeight={500} fontSize={20} textAlign="center">
-            <Trans>Transaction Submitted</Trans>
-          </Text>
-          {chainId && hash && (
-            <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
-              <Text fontWeight={500} fontSize={14} color={theme.deprecated_primary1}>
-                <Trans>View on Explorer</Trans>
-              </Text>
-            </ExternalLink>
-          )}
-          {currencyToAdd && connector.watchAsset && (
-            <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={addToken}>
-              {!success ? (
-                <RowFixed>
-                  <Trans>Add {currencyToAdd.symbol}</Trans>
-                </RowFixed>
-              ) : (
-                <RowFixed>
-                  <Trans>Added {currencyToAdd.symbol} </Trans>
-                  <CheckCircle size={'16px'} stroke={theme.deprecated_green1} style={{ marginLeft: '6px' }} />
-                </RowFixed>
-              )}
-            </ButtonLight>
-          )}
-          <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
-            <Text fontWeight={500} fontSize={20}>
-              {inline ? <Trans>Return</Trans> : <Trans>Close</Trans>}
-            </Text>
-          </ButtonPrimary>
         </AutoColumn>
       </Section>
     </Wrapper>
@@ -274,48 +199,19 @@ export function ConfirmationModalContent({
 }
 
 export function TransactionErrorContent({ message, onDismiss }: { message: ReactNode; onDismiss: () => void }) {
-  const redesignFlag = useRedesignFlag()
-  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
   const theme = useTheme()
-  return redesignFlagEnabled ? (
-    <Wrapper redesignFlag={true}>
+  return (
+    <Wrapper>
       <Section>
         <RowBetween>
           <Text fontWeight={600} fontSize={16}>
             <Trans>Error</Trans>
           </Text>
-          <CloseIcon onClick={onDismiss} redesignFlag={true} />
+          <CloseIcon onClick={onDismiss} />
         </RowBetween>
         <AutoColumn style={{ marginTop: 20, padding: '2rem 0' }} gap="24px" justify="center">
           <AlertTriangle color={theme.accentCritical} style={{ strokeWidth: 1 }} size={90} />
           <ThemedText.MediumHeader textAlign="center">{message}</ThemedText.MediumHeader>
-        </AutoColumn>
-      </Section>
-      <BottomSection gap="12px">
-        <ButtonPrimary onClick={onDismiss} redesignFlag={true}>
-          <Trans>Dismiss</Trans>
-        </ButtonPrimary>
-      </BottomSection>
-    </Wrapper>
-  ) : (
-    <Wrapper>
-      <Section>
-        <RowBetween>
-          <Text fontWeight={500} fontSize={20}>
-            <Trans>Error</Trans>
-          </Text>
-          <CloseIcon onClick={onDismiss} />
-        </RowBetween>
-        <AutoColumn style={{ marginTop: 20, padding: '2rem 0' }} gap="24px" justify="center">
-          <AlertTriangle color={theme.deprecated_red1} style={{ strokeWidth: 1.5 }} size={64} />
-          <Text
-            fontWeight={500}
-            fontSize={16}
-            color={theme.deprecated_red1}
-            style={{ textAlign: 'center', width: '85%', wordBreak: 'break-word' }}
-          >
-            {message}
-          </Text>
         </AutoColumn>
       </Section>
       <BottomSection gap="12px">
@@ -380,7 +276,7 @@ function L2Content({
             <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
           )}
         </ConfirmedIcon>
-        <AutoColumn gap="12px" justify={'center'}>
+        <AutoColumn gap="12px" justify="center">
           <Text fontWeight={500} fontSize={20} textAlign="center">
             {!hash ? (
               <Trans>Confirm transaction in wallet</Trans>
@@ -404,7 +300,7 @@ function L2Content({
           ) : (
             <div style={{ height: '17px' }} />
           )}
-          <Text color={theme.deprecated_text3} style={{ margin: '20px 0 0 0' }} fontSize={'14px'}>
+          <Text color={theme.deprecated_text3} style={{ margin: '20px 0 0 0' }} fontSize="14px">
             {!secondsToConfirm ? (
               <div style={{ height: '24px' }} />
             ) : (
@@ -447,14 +343,12 @@ export default function TransactionConfirmationModal({
   currencyToAdd,
 }: ConfirmationModalProps) {
   const { chainId } = useWeb3React()
-  const redesignFlag = useRedesignFlag()
-  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
 
   if (!chainId) return null
 
   // confirmation screen
   return (
-    <Modal isOpen={isOpen} scrollOverlay={true} onDismiss={onDismiss} maxHeight={90} redesignFlag={redesignFlagEnabled}>
+    <Modal isOpen={isOpen} scrollOverlay={true} onDismiss={onDismiss} maxHeight={90}>
       {isL2ChainId(chainId) && (hash || attemptingTxn) ? (
         <L2Content chainId={chainId} hash={hash} onDismiss={onDismiss} pendingText={pendingText} />
       ) : attemptingTxn ? (

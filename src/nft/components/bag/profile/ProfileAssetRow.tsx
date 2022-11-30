@@ -1,11 +1,13 @@
+import { ButtonEmphasis, ButtonSize } from 'components/Button'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
-import { bodySmall, subhead } from 'nft/css/common.css'
+import { VerifiedIcon } from 'nft/components/icons'
 import { useIsMobile, useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
 import { useState } from 'react'
 
-import * as styles from './ProfileAssetRow.css'
+import { RemoveAssetButton, RemoveButton } from '../BagRow'
+import * as styles from '../BagRow.css'
 
 const ProfileAssetRow = ({ asset }: { asset: WalletAsset }) => {
   const removeAsset = useSellAsset((state) => state.removeSellAsset)
@@ -13,43 +15,31 @@ const ProfileAssetRow = ({ asset }: { asset: WalletAsset }) => {
   const [hovered, setHovered] = useState(false)
   const handleHover = () => setHovered(!hovered)
 
+  const handleRemoveAsset: React.MouseEventHandler<HTMLElement> = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    removeAsset(asset)
+  }
+
   return (
-    <Row paddingY="8" position="relative" onMouseEnter={handleHover} onMouseLeave={handleHover}>
-      <div>
-        <Box
-          display={isMobile ? 'flex' : 'none'}
-          className={styles.removeAsset}
-          onClick={(e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            removeAsset(asset)
-          }}
-        >
-          <img className={styles.removeIcon} src={'/nft/svgs/minusCircle.svg'} alt="Remove item" />
-        </Box>
-        <img className={styles.tagAssetImage} src={asset.image_url} alt={asset.name} />
-      </div>
-      <Column gap="4" overflow="hidden" flexWrap="nowrap">
-        <Box overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap" className={subhead}>
-          {asset.name ?? `#${asset.tokenId}`}
-        </Box>
-        <Box overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap" className={bodySmall}>
-          {asset.collection?.name}
-        </Box>
+    <Row className={styles.bagRow} onMouseEnter={handleHover} onMouseLeave={handleHover}>
+      <Box position="relative" display="flex">
+        {isMobile && <RemoveAssetButton onClick={handleRemoveAsset} />}
+        <img src={asset.smallImageUrl} alt={asset.name} className={styles.bagRowImage} />
+      </Box>
+      <Column overflow="hidden" width="full" color="textPrimary">
+        <Row overflow="hidden" width="full" justifyContent="space-between" whiteSpace="nowrap" gap="16">
+          <Box className={styles.assetName}>{asset.name || `#${asset.tokenId}`}</Box>
+        </Row>
+        <Row overflow="hidden" whiteSpace="nowrap" gap="2">
+          <Box className={styles.collectionName}>{asset.asset_contract.name}</Box>
+          {asset.collectionIsVerified && <VerifiedIcon className={styles.icon} />}
+        </Row>
       </Column>
       {hovered && !isMobile && (
-        <Box
-          marginLeft="auto"
-          marginRight="0"
-          className={styles.removeBagRowButton}
-          onClick={(e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            removeAsset(asset)
-          }}
-        >
+        <RemoveButton onClick={handleRemoveAsset} emphasis={ButtonEmphasis.medium} size={ButtonSize.medium}>
           Remove
-        </Box>
+        </RemoveButton>
       )}
     </Row>
   )

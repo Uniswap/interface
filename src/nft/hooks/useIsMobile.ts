@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 
 const isClient = typeof window !== 'undefined'
 
-function getIsMobile() {
+export function getIsMobile() {
   return isClient ? window.innerWidth < breakpoints.sm : false
 }
 

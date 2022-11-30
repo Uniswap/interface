@@ -5,7 +5,7 @@ import { Row } from 'nft/components/Flex'
 import { ArrowsIcon, ChevronUpIcon, ReversedArrowsIcon } from 'nft/components/icons'
 import { buttonTextMedium } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
-import { useIsCollectionLoading } from 'nft/hooks'
+import { useCollectionFilters, useIsCollectionLoading } from 'nft/hooks'
 import { DropDownOption } from 'nft/types'
 import { useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react'
 
@@ -26,12 +26,17 @@ export const SortDropdown = ({
   top?: number
   left?: number
 }) => {
+  const sortBy = useCollectionFilters((state) => state.sortBy)
   const [isOpen, toggleOpen] = useReducer((s) => !s, false)
   const [isReversed, toggleReversed] = useReducer((s) => !s, false)
-  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [selectedIndex, setSelectedIndex] = useState(sortBy)
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
 
   const [maxWidth, setMaxWidth] = useState(0)
+
+  useEffect(() => {
+    setSelectedIndex(sortBy)
+  }, [sortBy])
 
   const ref = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, () => isOpen && toggleOpen())
@@ -48,11 +53,9 @@ export const SortDropdown = ({
   return (
     <Box
       ref={ref}
-      transition="250"
       borderRadius="12"
       borderBottomLeftRadius={isOpen ? '0' : undefined}
       borderBottomRightRadius={isOpen ? '0' : undefined}
-      height="44"
       style={{ width }}
     >
       <Box
@@ -60,7 +63,7 @@ export const SortDropdown = ({
         fontSize="14"
         borderRadius="12"
         borderStyle={isOpen && !mini ? 'solid' : 'none'}
-        background={mini ? 'none' : 'backgroundModule'}
+        background={mini ? 'none' : 'backgroundInteractive'}
         borderColor="backgroundOutline"
         borderWidth="1px"
         borderBottomLeftRadius={isOpen ? '0' : undefined}
@@ -78,7 +81,7 @@ export const SortDropdown = ({
       >
         {!isCollectionStatsLoading && (
           <>
-            <Box display="flex" alignItems="center">
+            <Box display="flex" alignItems="center" color="textPrimary">
               {!isOpen && reversable && (
                 <Row
                   onClick={(e) => {
@@ -127,7 +130,7 @@ export const SortDropdown = ({
       </Box>
       <Box
         position="absolute"
-        zIndex="2"
+        zIndex="3"
         width={inFilters ? 'auto' : 'inherit'}
         right={inFilters ? '16' : 'auto'}
         paddingBottom="8"
@@ -211,11 +214,6 @@ const DropDownItem = ({
       onClick={onClick}
       cursor="pointer"
     >
-      {option.icon && (
-        <Box width="28" height="28">
-          {option.icon}
-        </Box>
-      )}
       <Box marginLeft="8" className={buttonTextMedium}>
         {option.displayText}
       </Box>

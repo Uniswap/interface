@@ -1,11 +1,12 @@
 import { transparentize } from 'polished'
-import { ReactNode, useCallback, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
 
 import Popover, { PopoverProps } from '../Popover'
 
 export const TooltipContainer = styled.div`
   max-width: 256px;
+  cursor: default;
   padding: 0.6rem 1rem;
   font-weight: 400;
   word-break: break-word;
@@ -18,7 +19,11 @@ export const TooltipContainer = styled.div`
 
 interface TooltipProps extends Omit<PopoverProps, 'content'> {
   text: ReactNode
+  open?: () => void
+  close?: () => void
+  noOp?: () => void
   disableHover?: boolean // disable the hover and content display
+  timeout?: number
 }
 
 interface TooltipContentProps extends Omit<PopoverProps, 'content'> {
@@ -29,8 +34,19 @@ interface TooltipContentProps extends Omit<PopoverProps, 'content'> {
   disableHover?: boolean // disable the hover and content display
 }
 
-export default function Tooltip({ text, ...rest }: TooltipProps) {
-  return <Popover content={text && <TooltipContainer>{text}</TooltipContainer>} {...rest} />
+export default function Tooltip({ text, open, close, noOp, disableHover, ...rest }: TooltipProps) {
+  return (
+    <Popover
+      content={
+        text && (
+          <TooltipContainer onMouseEnter={disableHover ? noOp : open} onMouseLeave={disableHover ? noOp : close}>
+            {text}
+          </TooltipContainer>
+        )
+      }
+      {...rest}
+    />
+  )
 }
 
 function TooltipContent({ content, wrap = false, ...rest }: TooltipContentProps) {
@@ -38,13 +54,36 @@ function TooltipContent({ content, wrap = false, ...rest }: TooltipContentProps)
 }
 
 /** Standard text tooltip. */
-export function MouseoverTooltip({ text, disableHover, children, ...rest }: Omit<TooltipProps, 'show'>) {
+export function MouseoverTooltip({ text, disableHover, children, timeout, ...rest }: Omit<TooltipProps, 'show'>) {
   const [show, setShow] = useState(false)
   const open = useCallback(() => setShow(true), [setShow])
   const close = useCallback(() => setShow(false), [setShow])
+
+  useEffect(() => {
+    if (show && timeout) {
+      const tooltipTimer = setTimeout(() => {
+        setShow(false)
+      }, timeout)
+
+      return () => {
+        clearTimeout(tooltipTimer)
+      }
+    }
+    return
+  }, [timeout, show])
+
+  const noOp = () => null
   return (
-    <Tooltip {...rest} show={show} text={disableHover ? null : text}>
-      <div onMouseEnter={open} onMouseLeave={close}>
+    <Tooltip
+      {...rest}
+      open={open}
+      close={close}
+      noOp={noOp}
+      disableHover={disableHover}
+      show={show}
+      text={disableHover ? null : text}
+    >
+      <div onMouseEnter={disableHover ? noOp : open} onMouseLeave={disableHover || timeout ? noOp : close}>
         {children}
       </div>
     </Tooltip>

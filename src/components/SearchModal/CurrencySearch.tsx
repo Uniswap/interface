@@ -1,11 +1,10 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
+import { Trace } from '@uniswap/analytics'
+import { EventName, ModalName } from '@uniswap/analytics-events'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { EventName, ModalName } from 'analytics/constants'
-import { Trace } from 'analytics/Trace'
 import { sendEvent } from 'components/analytics'
-import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useToggle from 'hooks/useToggle'
@@ -18,6 +17,7 @@ import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import { useAllTokenBalances } from 'state/connection/hooks'
 import styled, { useTheme } from 'styled-components/macro'
+import { UserAddedToken } from 'types/tokens'
 
 import { useAllTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
 import { CloseIcon, ThemedText } from '../../theme'
@@ -29,8 +29,8 @@ import { CurrencyRow, formatAnalyticsEventProperties } from './CurrencyList'
 import CurrencyList from './CurrencyList'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 
-const ContentWrapper = styled(Column)<{ redesignFlag?: boolean }>`
-  background-color: ${({ theme, redesignFlag }) => redesignFlag && theme.backgroundSurface};
+const ContentWrapper = styled(Column)`
+  background-color: ${({ theme }) => theme.backgroundSurface};
   width: 100%;
   flex: 1 1;
   position: relative;
@@ -57,9 +57,6 @@ export function CurrencySearch({
   onDismiss,
   isOpen,
 }: CurrencySearchProps) {
-  const redesignFlag = useRedesignFlag()
-  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
-
   const { chainId } = useWeb3React()
   const theme = useTheme()
 
@@ -70,14 +67,8 @@ export function CurrencySearch({
 
   const [searchQuery, setSearchQuery] = useState<string>('')
   const debouncedQuery = useDebounce(searchQuery, 200)
-
-  const allTokens = useAllTokens()
-
-  // if they input an address, use it
   const isAddressSearch = isAddress(debouncedQuery)
-
   const searchToken = useToken(debouncedQuery)
-
   const searchTokenIsAdded = useIsUserAddedToken(searchToken)
 
   useEffect(() => {
@@ -90,34 +81,44 @@ export function CurrencySearch({
     }
   }, [isAddressSearch])
 
+  const defaultTokens = useAllTokens()
   const filteredTokens: Token[] = useMemo(() => {
-    return Object.values(allTokens).filter(getTokenFilter(debouncedQuery))
-  }, [allTokens, debouncedQuery])
+    return Object.values(defaultTokens).filter(getTokenFilter(debouncedQuery))
+  }, [defaultTokens, debouncedQuery])
 
   const [balances, balancesAreLoading] = useAllTokenBalances()
   const sortedTokens: Token[] = useMemo(
-    () => (!balancesAreLoading ? [...filteredTokens].sort(tokenComparator.bind(null, balances)) : []),
-    [balances, filteredTokens, balancesAreLoading]
+    () =>
+      !balancesAreLoading
+        ? filteredTokens
+            .filter((token) => {
+              // If there is no query, filter out unselected user-added tokens with no balance.
+              if (!debouncedQuery && token instanceof UserAddedToken) {
+                if (selectedCurrency?.equals(token) || otherSelectedCurrency?.equals(token)) return true
+                return balances[token.address]?.greaterThan(0)
+              }
+              return true
+            })
+            .sort(tokenComparator.bind(null, balances))
+        : [],
+    [balances, balancesAreLoading, debouncedQuery, filteredTokens, otherSelectedCurrency, selectedCurrency]
   )
   const isLoading = Boolean(balancesAreLoading && !tokenLoaderTimerElapsed)
 
   const filteredSortedTokens = useSortTokensByQuery(debouncedQuery, sortedTokens)
 
   const native = useNativeCurrency()
+  const wrapped = native.wrapped
 
-  const filteredSortedTokensWithETH: Currency[] = useMemo(() => {
-    // Use Celo ERC20 Implementation and exclude the native asset
-    if (!native) {
-      return filteredSortedTokens
-    }
-
+  const searchCurrencies: Currency[] = useMemo(() => {
     const s = debouncedQuery.toLowerCase().trim()
-    if (native.symbol?.toLowerCase()?.indexOf(s) !== -1) {
-      // Always bump the native token to the top of the list.
-      return [native, ...filteredSortedTokens.filter((t) => !t.equals(native))]
-    }
-    return filteredSortedTokens
-  }, [debouncedQuery, native, filteredSortedTokens])
+
+    const tokens = filteredSortedTokens.filter((t) => !(t.equals(wrapped) || (disableNonToken && t.isNative)))
+    const natives = (disableNonToken || native.equals(wrapped) ? [wrapped] : [native, wrapped]).filter(
+      (n) => n.symbol?.toLowerCase()?.indexOf(s) !== -1 || n.name?.toLowerCase()?.indexOf(s) !== -1
+    )
+    return [...natives, ...tokens]
+  }, [debouncedQuery, filteredSortedTokens, wrapped, disableNonToken, native])
 
   const handleCurrencySelect = useCallback(
     (currency: Currency, hasWarning?: boolean) => {
@@ -147,17 +148,17 @@ export function CurrencySearch({
         const s = debouncedQuery.toLowerCase().trim()
         if (s === native?.symbol?.toLowerCase()) {
           handleCurrencySelect(native)
-        } else if (filteredSortedTokensWithETH.length > 0) {
+        } else if (searchCurrencies.length > 0) {
           if (
-            filteredSortedTokensWithETH[0].symbol?.toLowerCase() === debouncedQuery.trim().toLowerCase() ||
-            filteredSortedTokensWithETH.length === 1
+            searchCurrencies[0].symbol?.toLowerCase() === debouncedQuery.trim().toLowerCase() ||
+            searchCurrencies.length === 1
           ) {
-            handleCurrencySelect(filteredSortedTokensWithETH[0])
+            handleCurrencySelect(searchCurrencies[0])
           }
         }
       }
     },
-    [debouncedQuery, native, filteredSortedTokensWithETH, handleCurrencySelect]
+    [debouncedQuery, native, searchCurrencies, handleCurrencySelect]
   )
 
   // menu ui
@@ -179,7 +180,7 @@ export function CurrencySearch({
   }, [])
 
   return (
-    <ContentWrapper redesignFlag={redesignFlagEnabled}>
+    <ContentWrapper>
       <Trace name={EventName.TOKEN_SELECTOR_OPENED} modal={ModalName.TOKEN_SELECTOR} shouldLogImpression>
         <PaddedColumn gap="16px">
           <RowBetween>
@@ -194,7 +195,6 @@ export function CurrencySearch({
               id="token-search-input"
               placeholder={t`Search name or paste address`}
               autoComplete="off"
-              redesignFlag={redesignFlagEnabled}
               value={searchQuery}
               ref={inputRef as RefObject<HTMLInputElement>}
               onChange={handleInput}
@@ -211,7 +211,7 @@ export function CurrencySearch({
             />
           )}
         </PaddedColumn>
-        <Separator redesignFlag={redesignFlagEnabled} />
+        <Separator />
         {searchToken && !searchTokenIsAdded ? (
           <Column style={{ padding: '20px 0', height: '100%' }}>
             <CurrencyRow
@@ -229,13 +229,13 @@ export function CurrencySearch({
               )}
             />
           </Column>
-        ) : filteredSortedTokens?.length > 0 || filteredInactiveTokens?.length > 0 || isLoading ? (
+        ) : searchCurrencies?.length > 0 || filteredInactiveTokens?.length > 0 || isLoading ? (
           <div style={{ flex: '1' }}>
             <AutoSizer disableWidth>
               {({ height }) => (
                 <CurrencyList
                   height={height}
-                  currencies={disableNonToken ? filteredSortedTokens : filteredSortedTokensWithETH}
+                  currencies={searchCurrencies}
                   otherListTokens={filteredInactiveTokens}
                   onCurrencySelect={handleCurrencySelect}
                   otherCurrency={otherSelectedCurrency}

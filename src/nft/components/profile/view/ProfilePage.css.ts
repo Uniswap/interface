@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css'
+import { subheadSmall } from 'nft/css/common.css'
 
-import { sprinkles, vars } from '../../../css/sprinkles.css'
+import { sprinkles, themeVars, vars } from '../../../css/sprinkles.css'
 
 export const section = style([
   sprinkles({
@@ -10,8 +11,6 @@ export const section = style([
   { maxWidth: '1000px', margin: '0 auto' },
 ])
 
-export const filterRowIcon = sprinkles({ color: { default: 'textSecondary', hover: 'blue' } })
-
 export const buttonSelected = style({
   border: `2px solid ${vars.color.genieBlue}`,
 })
@@ -20,16 +19,12 @@ export const ethIcon = style({
   marginBottom: '-3px',
 })
 
-export const collectionName = style([
-  sprinkles({
-    fontWeight: 'normal',
-    overflow: 'hidden',
-    paddingRight: '14',
-  }),
+export const subRowHover = style([
+  subheadSmall,
   {
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    maxWidth: '180px',
+    ':hover': {
+      background: themeVars.colors.backgroundInteractive,
+    },
   },
 ])
 

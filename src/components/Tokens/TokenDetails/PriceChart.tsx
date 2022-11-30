@@ -1,16 +1,15 @@
 import { Trans } from '@lingui/macro'
+import { formatUSDPrice } from '@uniswap/conedison/format'
 import { AxisBottom, TickFormatter } from '@visx/axis'
 import { localPoint } from '@visx/event'
 import { EventType } from '@visx/event/lib/types'
 import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
 import AnimatedInLineChart from 'components/Charts/AnimatedInLineChart'
-import { filterTimeAtom } from 'components/Tokens/state'
 import { bisect, curveCardinal, NumberValue, scaleLinear, timeDay, timeHour, timeMinute, timeMonth } from 'd3'
-import { PricePoint } from 'graphql/data/Token'
+import { PricePoint } from 'graphql/data/util'
 import { TimePeriod } from 'graphql/data/util'
 import { useActiveLocale } from 'hooks/useActiveLocale'
-import { useAtom } from 'jotai'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight, TrendingUp } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
@@ -22,10 +21,6 @@ import {
   monthYearDayFormatter,
   weekFormatter,
 } from 'utils/formatChartTimes'
-import { formatDollar } from 'utils/formatNumbers'
-
-import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
-import { DISPLAYS, ORDERED_TIMES } from '../TokenTable/TimeSelector'
 
 export const DATA_EMPTY = { value: 0, timestamp: 0 }
 
@@ -47,27 +42,29 @@ export function calculateDelta(start: number, current: number) {
   return (current / start - 1) * 100
 }
 
-export function getDeltaArrow(delta: number | null | undefined) {
+export function getDeltaArrow(delta: number | null | undefined, iconSize = 20) {
   // Null-check not including zero
   if (delta === null || delta === undefined) {
     return null
   } else if (Math.sign(delta) < 0) {
-    return <StyledDownArrow size={16} key="arrow-down" />
+    return <StyledDownArrow size={iconSize} key="arrow-down" aria-label="down" />
   }
-  return <StyledUpArrow size={16} key="arrow-up" />
+  return <StyledUpArrow size={iconSize} key="arrow-up" aria-label="up" />
 }
 
 export function formatDelta(delta: number | null | undefined) {
   // Null-check not including zero
-  if (delta === null || delta === undefined) {
+  if (delta === null || delta === undefined || delta === Infinity || isNaN(delta)) {
     return '-'
   }
-  let formattedDelta = delta.toFixed(2) + '%'
-  if (Math.sign(delta) > 0) {
-    formattedDelta = '+' + formattedDelta
-  }
+  const formattedDelta = Math.abs(delta).toFixed(2) + '%'
   return formattedDelta
 }
+
+export const DeltaText = styled.span<{ delta: number | undefined }>`
+  color: ${({ theme, delta }) =>
+    delta !== undefined ? (Math.sign(delta) < 0 ? theme.accentFailure : theme.accentSuccess) : theme.textPrimary};
+`
 
 export const ChartHeader = styled.div`
   position: absolute;
@@ -82,49 +79,9 @@ export const DeltaContainer = styled.div`
   align-items: center;
   margin-top: 4px;
 `
-const ArrowCell = styled.div`
-  padding-left: 2px;
+export const ArrowCell = styled.div`
+  padding-right: 3px;
   display: flex;
-`
-export const TimeOptionsWrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-`
-export const TimeOptionsContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 4px;
-  gap: 4px;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
-  border-radius: 16px;
-  height: 40px;
-  padding: 4px;
-  width: fit-content;
-
-  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    width: 100%;
-    justify-content: space-between;
-    border: none;
-  }
-`
-const TimeButton = styled.button<{ active: boolean }>`
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: ${({ theme, active }) => (active ? theme.backgroundInteractive : 'transparent')};
-  font-weight: 600;
-  font-size: 16px;
-  padding: 6px 12px;
-  border-radius: 12px;
-  line-height: 20px;
-  border: none;
-  cursor: pointer;
-  color: ${({ theme, active }) => (active ? theme.textPrimary : theme.textSecondary)};
-  transition-duration: ${({ theme }) => theme.transition.duration.fast};
-  :hover {
-    ${({ active, theme }) => !active && `opacity: ${theme.opacity.hover};`}
-  }
 `
 
 const margin = { top: 100, bottom: 48, crosshair: 72 }
@@ -133,11 +90,21 @@ const timeOptionsHeight = 44
 interface PriceChartProps {
   width: number
   height: number
-  prices: PricePoint[] | undefined
+  prices: PricePoint[] | undefined | null
+  timePeriod: TimePeriod
 }
 
-export function PriceChart({ width, height, prices }: PriceChartProps) {
-  const [timePeriod, setTimePeriod] = useAtom(filterTimeAtom)
+function formatDisplayPrice(value: number) {
+  const str = value.toFixed(9)
+  const [digits, decimals] = str.split('.')
+  // Displays longer string for numbers < $2 to show changes in both stablecoins & small values
+  if (digits === '0' || digits === '1')
+    return `$${digits + '.' + decimals.substring(0, 2) + decimals.substring(2).replace(/0+$/, '')}`
+
+  return formatUSDPrice(value)
+}
+
+export function PriceChart({ width, height, prices, timePeriod }: PriceChartProps) {
   const locale = useActiveLocale()
   const theme = useTheme()
 
@@ -149,9 +116,7 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
 
   // set display price to ending price when prices have changed.
   useEffect(() => {
-    if (prices) {
-      setDisplayPrice(endingPrice)
-    }
+    setDisplayPrice(endingPrice)
   }, [prices, endingPrice])
   const [crosshair, setCrosshair] = useState<number | null>(null)
 
@@ -271,20 +236,26 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
   return (
     <>
       <ChartHeader>
-        <TokenPrice>{formatDollar({ num: displayPrice.value, isPrice: true })}</TokenPrice>
+        <TokenPrice>{formatDisplayPrice(displayPrice.value)}</TokenPrice>
         <DeltaContainer>
-          {formattedDelta}
           <ArrowCell>{arrow}</ArrowCell>
+          <DeltaText delta={delta}>{formattedDelta}</DeltaText>
         </DeltaContainer>
       </ChartHeader>
       {!hasData ? (
         <MissingPriceChart
           width={width}
           height={graphHeight}
-          message={prices && prices.length === 0 ? <NoV3DataMessage /> : <MissingDataMessage />}
+          message={
+            prices?.length === 0 ? (
+              <Trans>This token doesn&apos;t have chart data because it hasn&apos;t been traded on Uniswap v3</Trans>
+            ) : (
+              <Trans>Missing chart data</Trans>
+            )
+          }
         />
       ) : (
-        <svg width={width} height={graphHeight}>
+        <svg width={width} height={graphHeight} style={{ minWidth: '100%' }}>
           <AnimatedInLineChart
             data={prices}
             getX={getX}
@@ -302,7 +273,7 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
                 tickStroke={theme.backgroundOutline}
                 tickLength={4}
                 hideTicks={true}
-                tickTransform={'translate(0 -5)'}
+                tickTransform="translate(0 -5)"
                 tickValues={ticks}
                 top={graphHeight - 1}
                 tickLabelProps={() => ({
@@ -341,12 +312,25 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
           ) : (
             <AxisBottom scale={timeScale} stroke={theme.backgroundOutline} top={graphHeight - 1} hideTicks />
           )}
+          {!width && (
+            // Ensures an axis is drawn even if the width is not yet initialized.
+            <line
+              x1={0}
+              y1={graphHeight - 1}
+              x2="100%"
+              y2={graphHeight - 1}
+              fill="transparent"
+              shapeRendering="crispEdges"
+              stroke={theme.backgroundOutline}
+              strokeWidth={1}
+            />
+          )}
           <rect
             x={0}
             y={0}
             width={width}
             height={graphHeight}
-            fill={'transparent'}
+            fill="transparent"
             onTouchStart={handleHover}
             onTouchMove={handleHover}
             onMouseMove={handleHover}
@@ -354,21 +338,6 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
           />
         </svg>
       )}
-      <TimeOptionsWrapper>
-        <TimeOptionsContainer>
-          {ORDERED_TIMES.map((time) => (
-            <TimeButton
-              key={DISPLAYS[time]}
-              active={timePeriod === time}
-              onClick={() => {
-                setTimePeriod(time)
-              }}
-            >
-              {DISPLAYS[time]}
-            </TimeButton>
-          ))}
-        </TimeOptionsContainer>
-      </TimeOptionsWrapper>
     </>
   )
 }
@@ -382,16 +351,11 @@ const StyledMissingChart = styled.svg`
 
 const chartBottomPadding = 15
 
-const NoV3DataMessage = () => (
-  <Trans>This token doesn&apos;t have chart data because it hasn&apos;t been traded on Uniswap v3</Trans>
-)
-const MissingDataMessage = () => <Trans>Missing chart data</Trans>
-
 function MissingPriceChart({ width, height, message }: { width: number; height: number; message: ReactNode }) {
   const theme = useTheme()
   const midPoint = height / 2 + 45
   return (
-    <StyledMissingChart width={width} height={height}>
+    <StyledMissingChart width={width} height={height} style={{ minWidth: '100%' }}>
       <path
         d={`M 0 ${midPoint} Q 104 ${midPoint - 70}, 208 ${midPoint} T 416 ${midPoint}
           M 416 ${midPoint} Q 520 ${midPoint - 70}, 624 ${midPoint} T 832 ${midPoint}`}

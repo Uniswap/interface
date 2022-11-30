@@ -11,30 +11,37 @@ import {
   OPENSEA_DEFAULT_CROSS_CHAIN_CONDUIT_KEY,
   OPENSEA_DEFAULT_ZONE,
   OPENSEA_KEY_TO_CONDUIT,
-  OPENSEA_LISTINGS_API_PATH,
 } from 'nft/queries/openSea'
 
 import ERC721 from '../../abis/erc721.json'
-import { createLooksRareOrder, LOOKSRARE_MARKETPLACE_CONTRACT, newX2Y2Order, PostOpenSeaSellOrder } from '../queries'
+import {
+  createLooksRareOrder,
+  getOrderId,
+  LOOKSRARE_MARKETPLACE_CONTRACT,
+  newX2Y2Order,
+  PostOpenSeaSellOrder,
+} from '../queries'
 import { INVERSE_BASIS_POINTS, OPENSEA_DEFAULT_FEE, OPENSEA_FEE_ADDRESS } from '../queries/openSea'
 import { ListingMarket, ListingStatus, WalletAsset } from '../types'
 import { createSellOrder, encodeOrder, OfferItem, OrderPayload, signOrderData } from './x2y2'
 
+export const LOOKS_RARE_CREATOR_BASIS_POINTS = 50
+
 export const ListingMarkets: ListingMarket[] = [
   {
+    name: 'X2Y2',
+    fee: 0.5,
+    icon: '/nft/svgs/marketplaces/x2y2.svg',
+  },
+  {
     name: 'LooksRare',
-    fee: 2.0,
+    fee: 1.5,
     icon: '/nft/svgs/marketplaces/looksrare.svg',
   },
   {
     name: 'OpenSea',
     fee: 2.5,
     icon: '/nft/svgs/marketplaces/opensea.svg',
-  },
-  {
-    name: 'X2Y2',
-    fee: 0.5,
-    icon: '/nft/svgs/marketplaces/x2y2.svg',
   },
 ]
 
@@ -55,7 +62,7 @@ const getConsiderationItems = (
   creatorFee?: ConsiderationInputItem
 } => {
   const openSeaBasisPoints = OPENSEA_DEFAULT_FEE * INVERSE_BASIS_POINTS
-  const creatorFeeBasisPoints = asset.creatorPercentage * INVERSE_BASIS_POINTS
+  const creatorFeeBasisPoints = asset.basisPoints
   const sellerBasisPoints = INVERSE_BASIS_POINTS - openSeaBasisPoints - creatorFeeBasisPoints
 
   const openseaFee = price.mul(BigNumber.from(openSeaBasisPoints)).div(BigNumber.from(INVERSE_BASIS_POINTS)).toString()
@@ -151,9 +158,9 @@ export async function signListing(
         )
 
         const order = await executeAllActions()
-        const res = await PostOpenSeaSellOrder(OPENSEA_LISTINGS_API_PATH, order)
+        const res = await PostOpenSeaSellOrder(order)
         if (res) setStatus(ListingStatus.APPROVED)
-        return true
+        return res
       } catch (error) {
         if (error.code === 4001) setStatus(ListingStatus.REJECTED)
         else setStatus(ListingStatus.FAILED)
@@ -186,8 +193,9 @@ export async function signListing(
         // endTime timestamp in seconds
         endTime: BigNumber.from(asset.expirationTime),
         // minimum ratio to be received by the user (per 10000)
+        // As of 11.10.22 LooksRare charges 1.5% + 0.5% if there's creator royalties set https://docs.looksrare.org/blog/looksrare-offers-zero-royalty-trading-shares-protocol-fees-with-creators-instead
         minPercentageToAsk: BigNumber.from(10000)
-          .sub(BigNumber.from(200).add(BigNumber.from(asset.creatorPercentage * 10000)))
+          .sub(BigNumber.from(150 + (asset.basisPoints ? 50 : 0)))
           .toNumber(),
         // params (e.g., price, target account for private sale)
         params: [],
@@ -214,7 +222,7 @@ export async function signListing(
           price: parseEther(listingPrice.toString()).toString(),
           startTime: currentTime,
           endTime: asset.expirationTime,
-          minPercentageToAsk: 10000 - (200 + asset.creatorPercentage * 10000),
+          minPercentageToAsk: 10000 - (150 + (asset.basisPoints ? 50 : 0)),
           params: [],
         }
         const res = await createLooksRareOrder(payload)
@@ -238,14 +246,15 @@ export async function signListing(
       }
       const order = createSellOrder(signerAddress, asset.expirationTime, [orderItem])
       try {
+        const prevOrderId = await getOrderId(asset.asset_contract.address, asset.tokenId)
         await signOrderData(provider, order)
         const payload: OrderPayload = {
           order: encodeOrder(order),
           isBundle: false,
           bundleName: '',
           bundleDesc: '',
-          orderIds: [],
-          changePrice: false,
+          orderIds: prevOrderId ? [prevOrderId] : [],
+          changePrice: Boolean(prevOrderId),
           isCollection: false,
         }
         setStatus(ListingStatus.PENDING)

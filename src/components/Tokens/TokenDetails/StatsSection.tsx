@@ -1,9 +1,9 @@
 import { Trans } from '@lingui/macro'
+import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { textFadeIn } from 'theme/animations'
-import { formatDollar } from 'utils/formatNumbers'
+import { textFadeIn } from 'theme/styles'
 
 import { TokenSortMethod } from '../state'
 import { HEADER_DESCRIPTIONS } from '../TokenTable/TokenRow'
@@ -44,7 +44,7 @@ const StatPrice = styled.span`
 const NoData = styled.div`
   color: ${({ theme }) => theme.textTertiary};
 `
-const Wrapper = styled.div`
+export const StatsWrapper = styled.div`
   gap: 16px;
   ${textFadeIn}
 `
@@ -69,7 +69,7 @@ function Stat({
         {description && <InfoTip text={description}></InfoTip>}
       </StatTitle>
 
-      <StatPrice>{formatDollar({ num: value, isPrice })}</StatPrice>
+      <StatPrice>{formatNumber(value, NumberType.FiatTokenStats)}</StatPrice>
     </StatWrapper>
   )
 }
@@ -84,7 +84,7 @@ export default function StatsSection(props: StatsSectionProps) {
   const { priceLow52W, priceHigh52W, TVL, volume24H } = props
   if (TVL || volume24H || priceLow52W || priceHigh52W) {
     return (
-      <Wrapper>
+      <StatsWrapper>
         <Header>
           <Trans>Stats</Trans>
         </Header>
@@ -110,7 +110,7 @@ export default function StatsSection(props: StatsSectionProps) {
             <Stat value={priceHigh52W} title={<Trans>52W high</Trans>} isPrice={true} />
           </StatPair>
         </TokenStatsSection>
-      </Wrapper>
+      </StatsWrapper>
     )
   } else {
     return <NoData>No stats available</NoData>

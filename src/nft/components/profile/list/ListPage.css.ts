@@ -20,28 +20,6 @@ export const nftDivider = style([
   }),
 ])
 
-export const priceChevron = style([
-  sprinkles({
-    height: '20',
-    width: '20',
-    transition: '250',
-  }),
-  {
-    marginBottom: '-6px',
-  },
-])
-
-export const durationChevron = style([
-  sprinkles({
-    height: '16',
-    width: '16',
-    transition: '250',
-  }),
-  {
-    marginBottom: '-4px',
-  },
-])
-
 export const chevronDown = style({
   transform: 'rotate(180deg)',
 })
@@ -53,7 +31,7 @@ export const dropdown = style({
 
 export const removeAsset = style({
   top: '31px',
-  left: '15px',
+  left: '8px',
 })
 
 export const removeMarketplace = style({

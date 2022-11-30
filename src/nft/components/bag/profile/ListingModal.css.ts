@@ -13,6 +13,7 @@ export const chevron = style([
 
 export const chevronDown = style({
   transform: 'rotate(180deg)',
+  cursor: 'pointer',
 })
 
 export const sectionDivider = style([
@@ -53,6 +54,7 @@ export const listingModalIcon = style([
   {
     boxSizing: 'border-box',
     marginLeft: '-2px',
+    marginRight: '4px',
   },
 ])
 

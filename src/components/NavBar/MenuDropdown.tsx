@@ -42,7 +42,7 @@ const PrimaryMenuRow = ({
           <Row onClick={close}>{children}</Row>
         </NavLink>
       ) : (
-        <Row as="a" href={href} target={'_blank'} rel={'noopener noreferrer'} className={styles.MenuRow}>
+        <Row as="a" href={href} target="_blank" rel="noopener noreferrer" className={styles.MenuRow}>
           {children}
         </Row>
       )}
@@ -123,7 +123,7 @@ export const MenuDropdown = () => {
     <>
       <Box position="relative" ref={ref}>
         <NavIcon isActive={isOpen} onClick={toggleOpen}>
-          <EllipsisIcon width={20} height={20} />
+          <EllipsisIcon viewBox="0 0 20 20" width={24} height={24} />
         </NavIcon>
 
         {isOpen && (

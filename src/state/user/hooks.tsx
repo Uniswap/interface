@@ -8,6 +8,7 @@ import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual } from 'react-redux'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { UserAddedToken } from 'types/tokens'
 
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants/routing'
@@ -18,8 +19,9 @@ import {
   addSerializedToken,
   removeSerializedToken,
   updateHideClosedPositions,
+  updateHideNFTWelcomeModal,
+  updateShowNftPromoBanner,
   updateShowSurveyPopup,
-  updateShowTokensPromoBanner,
   updateUserClientSideRouter,
   updateUserDarkMode,
   updateUserDeadline,
@@ -39,8 +41,8 @@ function serializeToken(token: Token): SerializedToken {
   }
 }
 
-function deserializeToken(serializedToken: SerializedToken): Token {
-  return new Token(
+function deserializeToken(serializedToken: SerializedToken, Class: typeof Token = Token): Token {
+  return new Class(
     serializedToken.chainId,
     serializedToken.address,
     serializedToken.decimals,
@@ -117,16 +119,13 @@ export function useShowSurveyPopup(): [boolean | undefined, (showPopup: boolean)
   return [showSurveyPopup, toggleShowSurveyPopup]
 }
 
-export function useShowTokensPromoBanner(): [boolean, (showTokensBanner: boolean) => void] {
+export function useHideNFTWelcomeModal(): [boolean | undefined, () => void] {
   const dispatch = useAppDispatch()
-  const showTokensPromoBanner = useAppSelector((state) => state.user.showTokensPromoBanner)
-  const toggleShowTokensPromoBanner = useCallback(
-    (showTokensBanner: boolean) => {
-      dispatch(updateShowTokensPromoBanner({ showTokensPromoBanner: showTokensBanner }))
-    },
-    [dispatch]
-  )
-  return [showTokensPromoBanner, toggleShowTokensPromoBanner]
+  const hideNFTWelcomeModal = useAppSelector((state) => state.user.hideNFTWelcomeModal)
+  const hideModal = useCallback(() => {
+    dispatch(updateHideNFTWelcomeModal({ hideNFTWelcomeModal: true }))
+  }, [dispatch])
+  return [hideNFTWelcomeModal, hideModal]
 }
 
 export function useClientSideRouter(): [boolean, (userClientSideRouter: boolean) => void] {
@@ -251,7 +250,7 @@ export function useUserAddedTokensOnChain(chainId: number | undefined | null): T
   return useMemo(() => {
     if (!chainId) return []
     const tokenMap: Token[] = serializedTokensMap?.[chainId]
-      ? Object.values(serializedTokensMap[chainId]).map(deserializeToken)
+      ? Object.values(serializedTokensMap[chainId]).map((value) => deserializeToken(value, UserAddedToken))
       : []
     return tokenMap
   }, [serializedTokensMap, chainId])
@@ -281,6 +280,17 @@ export function usePairAdder(): (pair: Pair) => void {
 
 export function useURLWarningVisible(): boolean {
   return useAppSelector((state: AppState) => state.user.URLWarningVisible)
+}
+
+export function useHideNftPromoBanner(): [boolean, () => void] {
+  const dispatch = useAppDispatch()
+  const hideNftPromoBanner = useAppSelector((state) => state.user.hideNFTPromoBanner)
+
+  const toggleHideNftPromoBanner = useCallback(() => {
+    dispatch(updateShowNftPromoBanner({ hideNFTPromoBanner: true }))
+  }, [dispatch])
+
+  return [hideNftPromoBanner, toggleHideNftPromoBanner]
 }
 
 /**

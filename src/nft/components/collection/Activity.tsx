@@ -1,7 +1,8 @@
-import clsx from 'clsx'
+import { OpacityHoverState } from 'components/Common'
 import { Box } from 'nft/components/Box'
 import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
 import { Center, Column, Row } from 'nft/components/Flex'
+import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile } from 'nft/hooks'
 import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
 import { ActivityEvent, ActivityEventResponse, ActivityEventType } from 'nft/types'
@@ -9,6 +10,8 @@ import { fetchPrice } from 'nft/utils/fetchPrice'
 import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
+import { useIsDarkMode } from 'state/user/hooks'
+import styled from 'styled-components/macro'
 
 import * as styles from './Activity.css'
 import { AddressCell, BuyCell, EventCell, ItemCell, PriceCell } from './ActivityCells'
@@ -22,6 +25,12 @@ enum ColumnHeaders {
   To = 'To',
 }
 
+const FilterBox = styled.div<{ backgroundColor: string }>`
+  display: flex;
+  background: ${({ backgroundColor }) => backgroundColor};
+  ${OpacityHoverState};
+`
+
 export const HeaderRow = () => {
   return (
     <Box className={styles.headerRow}>
@@ -30,7 +39,6 @@ export const HeaderRow = () => {
       <Box display={{ sm: 'none', md: 'block' }}>{ColumnHeaders.Price}</Box>
       <Box display={{ sm: 'none', xl: 'block' }}>{ColumnHeaders.By}</Box>
       <Box display={{ sm: 'none', xxl: 'block' }}>{ColumnHeaders.To}</Box>
-      <Box display={{ sm: 'none', lg: 'block' }}>Buy</Box>
     </Box>
   )
 }
@@ -39,6 +47,7 @@ interface ActivityProps {
   contractAddress: string
   rarityVerified: boolean
   collectionName: string
+  chainId?: number
 }
 
 const initialFilterState = {
@@ -48,13 +57,13 @@ const initialFilterState = {
   [ActivityEventType.CancelListing]: false,
 }
 
-const reduceFilters = (state: typeof initialFilterState, action: { eventType: ActivityEventType }) => {
+export const reduceFilters = (state: typeof initialFilterState, action: { eventType: ActivityEventType }) => {
   return { ...state, [action.eventType]: !state[action.eventType] }
 }
 
 const baseHref = (event: ActivityEvent) => `/#/nfts/asset/${event.collectionAddress}/${event.tokenId}?origin=activity`
 
-export const Activity = ({ contractAddress, rarityVerified, collectionName }: ActivityProps) => {
+export const Activity = ({ contractAddress, rarityVerified, collectionName, chainId }: ActivityProps) => {
   const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
 
   const {
@@ -100,12 +109,13 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName }: Ac
   )
 
   const itemsInBag = useBag((state) => state.itemsInBag)
-  const addAssetToBag = useBag((state) => state.addAssetToBag)
-  const removeAssetFromBag = useBag((state) => state.removeAssetFromBag)
+  const addAssetsToBag = useBag((state) => state.addAssetsToBag)
+  const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
   const cartExpanded = useBag((state) => state.bagExpanded)
   const toggleCart = useBag((state) => state.toggleBag)
   const isMobile = useIsMobile()
   const [ethPriceInUSD, setEthPriceInUSD] = useState(0)
+  const isDarkMode = useIsDarkMode()
 
   useEffect(() => {
     fetchPrice().then((price) => {
@@ -116,22 +126,24 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName }: Ac
   const Filter = useCallback(
     function ActivityFilter({ eventType }: { eventType: ActivityEventType }) {
       const isActive = activeFilters[eventType]
+      const activeBackgroundColor = isDarkMode ? vars.color.gray500 : vars.color.gray200
 
       return (
-        <Box
-          className={clsx(styles.filter, isActive && styles.activeFilter)}
+        <FilterBox
+          className={styles.filter}
+          backgroundColor={isActive ? activeBackgroundColor : themeVars.colors.backgroundInteractive}
           onClick={() => filtersDispatch({ eventType })}
         >
           {eventType.charAt(0) + eventType.slice(1).toLowerCase() + 's'}
-        </Box>
+        </FilterBox>
       )
     },
-    [activeFilters]
+    [activeFilters, isDarkMode]
   )
 
   return (
-    <Box>
-      <Row gap="8">
+    <Box marginLeft={{ sm: '16', md: '48' }}>
+      <Row gap="8" paddingTop={{ sm: '0', md: '16' }}>
         <Filter eventType={ActivityEventType.Listing} />
         <Filter eventType={ActivityEventType.Sale} />
         <Filter eventType={ActivityEventType.Transfer} />
@@ -155,20 +167,28 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName }: Ac
           >
             {events.map((event, i) => (
               <Box as="a" href={baseHref(event)} className={styles.eventRow} key={i}>
-                <ItemCell event={event} rarityVerified={rarityVerified} collectionName={collectionName} />
+                <ItemCell
+                  event={event}
+                  rarityVerified={rarityVerified}
+                  collectionName={collectionName}
+                  eventTimestamp={event.eventTimestamp}
+                  isMobile={isMobile}
+                />
                 <EventCell
                   eventType={event.eventType}
                   eventTimestamp={event.eventTimestamp}
                   eventTransactionHash={event.transactionHash}
+                  price={event.price}
+                  isMobile={isMobile}
                 />
                 <PriceCell marketplace={event.marketplace} price={event.price} />
-                <AddressCell address={event.fromAddress} />
-                <AddressCell address={event.toAddress} desktopLBreakpoint />
+                <AddressCell address={event.fromAddress} chainId={chainId} />
+                <AddressCell address={event.toAddress} chainId={chainId} desktopLBreakpoint />
                 <BuyCell
                   event={event}
                   collectionName={collectionName}
-                  selectAsset={addAssetToBag}
-                  removeAsset={removeAssetFromBag}
+                  selectAsset={addAssetsToBag}
+                  removeAsset={removeAssetsFromBag}
                   itemsInBag={itemsInBag}
                   cartExpanded={cartExpanded}
                   toggleCart={toggleCart}

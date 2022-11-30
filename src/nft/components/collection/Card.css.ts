@@ -1,27 +1,29 @@
 import { style } from '@vanilla-extract/css'
 import { calc } from '@vanilla-extract/css-utils'
-import { breakpoints, sprinkles, themeVars, vars } from 'nft/css/sprinkles.css'
+import { sprinkles, themeVars, vars } from 'nft/css/sprinkles.css'
 
 export const card = style([
   sprinkles({
     overflow: 'hidden',
-    borderStyle: 'solid',
-    borderWidth: '1px',
+    paddingBottom: '12',
+    borderRadius: '16',
   }),
   {
     boxSizing: 'border-box',
     WebkitBoxSizing: 'border-box',
-    '@media': {
-      [`(max-width: ${breakpoints.sm - 1}px)`]: {
-        ':hover': {
-          borderColor: themeVars.colors.backgroundOutline,
-          cursor: 'pointer',
-          background: vars.color.lightGrayOverlay,
-        },
-      },
-    },
-    ':hover': {
-      boxShadow: themeVars.shadows.deep,
+    boxShadow: vars.color.cardDropShadow,
+    backgroundColor: themeVars.colors.backgroundSurface,
+    ':after': {
+      content: '',
+      position: 'absolute',
+      top: '0px',
+      right: ' 0px',
+      bottom: ' 0px',
+      left: '0px',
+      border: ' 1px solid',
+      borderRadius: '16px',
+      borderColor: '#5D678524',
+      pointerEvents: 'none',
     },
   },
 ])
@@ -30,14 +32,6 @@ export const loadingBackground = style({
   background: `linear-gradient(270deg, ${themeVars.colors.backgroundOutline} 0%, ${themeVars.colors.backgroundSurface} 100%)`,
 })
 
-export const notSelectedCard = style([
-  card,
-  sprinkles({
-    backgroundColor: 'backgroundSurface',
-    borderColor: 'transparent',
-  }),
-])
-
 export const cardImageHover = style({
   transform: 'scale(1.15)',
 })
@@ -45,9 +39,14 @@ export const cardImageHover = style({
 export const selectedCard = style([
   card,
   sprinkles({
-    background: 'lightGrayOverlay',
-    borderColor: 'backgroundOutline',
+    background: 'backgroundSurface',
   }),
+  {
+    ':after': {
+      border: '2px solid',
+      borderColor: vars.color.accentAction,
+    },
+  },
 ])
 
 export const button = style([
@@ -80,62 +79,6 @@ export const marketplaceIcon = style([
   }),
   {
     verticalAlign: 'top',
-  },
-])
-
-export const erc1155ButtonRow = sprinkles({
-  flexShrink: '0',
-  gap: '12',
-  marginTop: { sm: '8', md: '10' },
-  marginBottom: '12',
-})
-
-export const erc1155QuantityText = style([
-  sprinkles({
-    color: 'textPrimary',
-  }),
-  {
-    lineHeight: '20px',
-    userSelect: 'none',
-  },
-])
-
-export const erc1155Button = sprinkles({
-  display: 'flex',
-  justifyContent: 'center',
-  backgroundColor: 'accentActionSoft',
-  textAlign: 'center',
-  background: 'none',
-  border: 'none',
-  borderRadius: 'round',
-  cursor: 'pointer',
-  padding: '0',
-  transition: '250',
-})
-
-export const erc1155PlusButton = style([
-  erc1155Button,
-  sprinkles({
-    color: 'backgroundSurface',
-  }),
-  {
-    ':hover': {
-      backgroundColor: themeVars.colors.accentAction,
-      color: themeVars.colors.textPrimary,
-    },
-  },
-])
-
-export const erc1155MinusButton = style([
-  erc1155Button,
-  sprinkles({
-    color: 'accentFailure',
-  }),
-  {
-    ':hover': {
-      backgroundColor: themeVars.colors.accentFailure,
-      color: themeVars.colors.textPrimary,
-    },
   },
 ])
 

@@ -3,7 +3,7 @@ import { darken } from 'polished'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { textFadeIn } from 'theme/animations'
+import { textFadeIn } from 'theme/styles'
 
 import Resource from './Resource'
 
@@ -99,10 +99,10 @@ export function AboutSection({ address, description, homepageUrl, twitterName }:
         <Trans>Links</Trans>
       </ThemedText.SubHeaderSmall>
       <ResourcesContainer>
-        <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
-        <Resource name={'More analytics'} link={`https://info.uniswap.org/#/tokens/${address}`} />
-        {homepageUrl && <Resource name={'Website'} link={homepageUrl} />}
-        {twitterName && <Resource name={'Twitter'} link={`https://twitter.com/${twitterName}`} />}
+        <Resource name="Etherscan" link={`https://etherscan.io/address/${address}`} />
+        <Resource name="More analytics" link={`https://info.uniswap.org/#/tokens/${address}`} />
+        {homepageUrl && <Resource name="Website" link={homepageUrl} />}
+        {twitterName && <Resource name="Twitter" link={`https://twitter.com/${twitterName}`} />}
       </ResourcesContainer>
     </AboutContainer>
   )

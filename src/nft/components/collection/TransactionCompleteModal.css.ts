@@ -1,5 +1,4 @@
 import { style } from '@vanilla-extract/css'
-import { center } from 'nft/css/common.css'
 import { sprinkles, themeVars, vars } from 'nft/css/sprinkles.css'
 
 export const modalContainer = style([
@@ -12,14 +11,21 @@ export const modalContainer = style([
     left: { sm: '0', md: '1/2' },
     top: '0',
     zIndex: 'modal',
+    overflow: 'scroll',
+    paddingY: '72',
+    paddingX: '12',
   }),
   {
-    alignContent: 'center',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    gap: '24px',
     '@media': {
       'screen and (min-width: 656px)': {
         marginLeft: '-320px',
       },
     },
+    '::-webkit-scrollbar': { display: 'none' },
+    scrollbarWidth: 'none',
   },
 ])
 
@@ -49,8 +55,8 @@ export const successModal = style([
 export const uniLogo = style([
   sprinkles({
     position: 'absolute',
-    left: '32',
-    right: '40',
+    left: { sm: '12', md: '32' },
+    top: { sm: '16', md: '20' },
   }),
 ])
 
@@ -137,7 +143,7 @@ export const successAssetsContainer = style([
 
 export const successAssetImage = style([
   sprinkles({
-    borderRadius: '20',
+    borderRadius: '12',
     flexShrink: '0',
   }),
   {
@@ -163,28 +169,10 @@ export const overflowFade = style({
   marginTop: '-20px',
 })
 
-export const successfulNftCount = style([
-  sprinkles({
-    fontWeight: 'normal',
-    fontSize: '14',
-    color: 'textPrimary',
-    marginTop: '0',
-    marginRight: '16',
-    marginBottom: '0',
-  }),
-  {
-    lineHeight: '20px',
-    // TODO: find a way to download the success modal with webkit text gradients
-    // background: 'magicGradient',
-    // backgroundClip: 'text',
-    // color: 'transparent',
-  },
-])
-
 export const totalEthCost = style([
   sprinkles({
     fontSize: '14',
-    color: 'textPrimary',
+    color: 'textSecondary',
     marginTop: '1',
     marginBottom: '0',
   }),
@@ -198,19 +186,6 @@ export const bottomBar = style([
     color: 'textPrimary',
     fontSize: '14',
   }),
-])
-
-export const refundTextEthIcon = style([
-  sprinkles({
-    height: '16',
-    width: '16',
-    fill: 'textSecondary',
-  }),
-  {
-    marginLeft: '-2px',
-    marginBottom: '-3px',
-    marginRight: '-3px',
-  },
 ])
 
 export const button = style([
@@ -232,31 +207,6 @@ export const button = style([
     lineHeight: '18px',
     borderRadius: '100px',
     marginTop: '15px',
-  },
-])
-
-export const backArrow = style([
-  sprinkles({
-    fill: 'genieBlue',
-    marginLeft: '6',
-    marginRight: '1',
-  }),
-])
-
-export const circleButton = style([
-  center,
-  sprinkles({
-    marginRight: '8',
-    marginTop: '16',
-    marginBottom: 'auto',
-    borderRadius: 'round',
-    cursor: 'pointer',
-    backgroundColor: 'white',
-    border: 'none',
-  }),
-  {
-    height: '44px',
-    width: '44px',
   },
 ])
 
@@ -365,33 +315,6 @@ export const refundAssetImage = style([
   },
 ])
 
-export const refundEthCost = style([
-  sprinkles({
-    fontSize: '12',
-    color: 'textPrimary',
-    marginTop: '0',
-    marginLeft: 'auto',
-    marginRight: '0',
-    textAlign: 'right',
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    width: '36',
-  }),
-  {
-    lineHeight: '15px',
-    marginBottom: '9px',
-    textOverflow: 'ellipsis ".."',
-  },
-])
-
-export const refundEthIcon = style({
-  height: '14px',
-  width: '14px',
-  marginTop: '0px',
-  marginLeft: '-2px',
-  marginRight: '2px',
-})
-
 export const refundOverflowFade = style([
   sprinkles({
     width: { sm: 'full', md: 'half' },
@@ -469,7 +392,6 @@ export const bodySmall = style([
 
 export const allUnavailableAssets = style([
   sprinkles({
-    height: 'full',
     width: 'full',
   }),
   {

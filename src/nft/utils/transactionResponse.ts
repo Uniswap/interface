@@ -54,7 +54,7 @@ export const parseTransactionResponse = (transactionResponse: TxResponse | undef
 export const getSuccessfulImageSize = (numSuccessful: number, isMobile: boolean) => {
   const sizeModifier = isMobile ? 2 : 1
   if (numSuccessful === 1) {
-    return 574 / sizeModifier
+    return 474 / sizeModifier
   } else if (numSuccessful === 2) {
     return 280 / sizeModifier
   } else if (numSuccessful === 3 || (numSuccessful >= 5 && numSuccessful < 7)) {

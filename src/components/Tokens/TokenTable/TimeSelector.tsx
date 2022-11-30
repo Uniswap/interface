@@ -111,7 +111,7 @@ export default function TimeSelector() {
 
   return (
     <StyledMenu ref={node}>
-      <FilterOption onClick={toggleMenu} aria-label={`timeSelector`} active={open}>
+      <FilterOption onClick={toggleMenu} aria-label="timeSelector" active={open}>
         <StyledMenuContent>
           {DISPLAYS[activeTime]}
           <Chevron open={open}>

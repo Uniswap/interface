@@ -75,7 +75,7 @@ function ClaimSummary({ info: { recipient, uniAmountRaw } }: { info: ClaimTransa
   const { ENSName } = useENSName()
   return typeof uniAmountRaw === 'string' ? (
     <Trans>
-      Claim <FormattedCurrencyAmount rawAmount={uniAmountRaw} symbol={'UNI'} decimals={18} sigFigs={4} /> for{' '}
+      Claim <FormattedCurrencyAmount rawAmount={uniAmountRaw} symbol="UNI" decimals={18} sigFigs={4} /> for{' '}
       {ENSName ?? recipient}
     </Trans>
   ) : (

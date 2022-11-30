@@ -1,19 +1,12 @@
 import { Currency, Token } from '@uniswap/sdk-core'
-import { TokenList } from '@uniswap/token-lists'
 import TokenSafety from 'components/TokenSafety'
-import { TokenSafetyVariant, useTokenSafetyFlag } from 'featureFlags/flags/tokenSafety'
-import usePrevious from 'hooks/usePrevious'
 import { memo, useCallback, useEffect, useState } from 'react'
-import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { useUserAddedTokens } from 'state/user/hooks'
 
 import useLast from '../../hooks/useLast'
 import { useWindowSize } from '../../hooks/useWindowSize'
 import Modal from '../Modal'
 import { CurrencySearch } from './CurrencySearch'
-import { ImportList } from './ImportList'
-import { ImportToken } from './ImportToken'
-import Manage from './Manage'
 
 interface CurrencySearchModalProps {
   isOpen: boolean
@@ -28,9 +21,7 @@ interface CurrencySearchModalProps {
 
 export enum CurrencyModalView {
   search,
-  manage,
   importToken,
-  importList,
   tokenSafety,
 }
 
@@ -59,42 +50,19 @@ export default memo(function CurrencySearchModal({
     setModalView(CurrencyModalView.tokenSafety)
   }
 
-  const tokenSafetyFlag = useTokenSafetyFlag()
-
   const handleCurrencySelect = useCallback(
     (currency: Currency, hasWarning?: boolean) => {
-      if (
-        tokenSafetyFlag === TokenSafetyVariant.Enabled &&
-        hasWarning &&
-        currency.isToken &&
-        !userAddedTokens.find((token) => token.equals(currency))
-      ) {
+      if (hasWarning && currency.isToken && !userAddedTokens.find((token) => token.equals(currency))) {
         showTokenSafetySpeedbump(currency)
       } else {
         onCurrencySelect(currency)
         onDismiss()
       }
     },
-    [onDismiss, onCurrencySelect, tokenSafetyFlag, userAddedTokens]
+    [onDismiss, onCurrencySelect, userAddedTokens]
   )
-
-  // for token import view
-  const prevView = usePrevious(modalView)
-
-  // used for import token flow
-  const [importToken, setImportToken] = useState<Token | undefined>()
-
-  // used for import list
-  const [importList, setImportList] = useState<TokenList | undefined>()
-  const [listURL, setListUrl] = useState<string | undefined>()
-
   // used for token safety
   const [warningToken, setWarningToken] = useState<Token | undefined>()
-
-  const handleBackImport = useCallback(
-    () => setModalView(prevView && prevView !== CurrencyModalView.importToken ? prevView : CurrencyModalView.search),
-    [setModalView, prevView]
-  )
 
   const { height: windowHeight } = useWindowSize()
   // change min height if not searching
@@ -121,7 +89,7 @@ export default memo(function CurrencySearchModal({
       break
     case CurrencyModalView.tokenSafety:
       modalHeight = undefined
-      if (tokenSafetyFlag === TokenSafetyVariant.Enabled && warningToken) {
+      if (warningToken) {
         content = (
           <TokenSafety
             tokenAddress={warningToken.address}
@@ -131,40 +99,6 @@ export default memo(function CurrencySearchModal({
           />
         )
       }
-      break
-    case CurrencyModalView.importToken:
-      if (importToken) {
-        modalHeight = undefined
-        if (tokenSafetyFlag === TokenSafetyVariant.Enabled) {
-          showTokenSafetySpeedbump(importToken)
-        }
-        content = (
-          <ImportToken
-            tokens={[importToken]}
-            onDismiss={onDismiss}
-            list={importToken instanceof WrappedTokenInfo ? importToken.list : undefined}
-            onBack={handleBackImport}
-            handleCurrencySelect={handleCurrencySelect}
-          />
-        )
-      }
-      break
-    case CurrencyModalView.importList:
-      modalHeight = 40
-      if (importList && listURL) {
-        content = <ImportList list={importList} listURL={listURL} onDismiss={onDismiss} setModalView={setModalView} />
-      }
-      break
-    case CurrencyModalView.manage:
-      content = (
-        <Manage
-          onDismiss={onDismiss}
-          setModalView={setModalView}
-          setImportToken={setImportToken}
-          setImportList={setImportList}
-          setListUrl={setListUrl}
-        />
-      )
       break
   }
   return (

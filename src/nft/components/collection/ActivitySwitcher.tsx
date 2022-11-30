@@ -1,8 +1,21 @@
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { useIsCollectionLoading } from 'nft/hooks'
+import styled from 'styled-components/macro'
 
 import * as styles from './ActivitySwitcher.css'
+
+const BaseActivityContainer = styled(Row)`
+  border-bottom: 1px solid;
+  border-color: ${({ theme }) => theme.backgroundInteractive};
+  margin-right: 12px;
+`
+
+export const ActivitySwitcherLoading = new Array(2)
+  .fill(null)
+  .map((_, index) => <div className={styles.styledLoading} key={`ActivitySwitcherLoading-key-${index}`} />)
 
 export const ActivitySwitcher = ({
   showActivity,
@@ -12,12 +25,11 @@ export const ActivitySwitcher = ({
   toggleActivity: () => void
 }) => {
   const isLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
-  const loadingVals = new Array(2).fill(<div className={styles.styledLoading} />)
 
   return (
-    <Row gap="24" marginBottom="28">
+    <BaseActivityContainer gap="24" marginBottom="16">
       {isLoading ? (
-        loadingVals
+        ActivitySwitcherLoading
       ) : (
         <>
           <Box
@@ -27,15 +39,21 @@ export const ActivitySwitcher = ({
           >
             Items
           </Box>
-          <Box
-            as="button"
-            className={!showActivity ? styles.activitySwitcherToggle : styles.selectedActivitySwitcherToggle}
-            onClick={() => !showActivity && toggleActivity()}
+          <TraceEvent
+            events={[BrowserEvent.onClick]}
+            element={ElementName.NFT_ACTIVITY_TAB}
+            name={EventName.NFT_ACTIVITY_SELECTED}
           >
-            Activity
-          </Box>
+            <Box
+              as="button"
+              className={!showActivity ? styles.activitySwitcherToggle : styles.selectedActivitySwitcherToggle}
+              onClick={() => !showActivity && toggleActivity()}
+            >
+              Activity
+            </Box>
+          </TraceEvent>
         </>
       )}
-    </Row>
+    </BaseActivityContainer>
   )
 }

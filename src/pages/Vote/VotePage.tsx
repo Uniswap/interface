@@ -1,12 +1,11 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
+import { Trace } from '@uniswap/analytics'
+import { PageName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Fraction, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { PageName } from 'analytics/constants'
-import { Trace } from 'analytics/Trace'
 import ExecuteModal from 'components/vote/ExecuteModal'
 import QueueModal from 'components/vote/QueueModal'
-import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
@@ -19,7 +18,7 @@ import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { ButtonPrimary } from '../../components/Button'
-import { GreyCard } from '../../components/Card'
+import { GrayCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import { CardSection, DataCard } from '../../components/earn/styled'
 import { RowBetween, RowFixed } from '../../components/Row'
@@ -56,16 +55,16 @@ import { isAddress } from '../../utils'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ProposalStatus } from './styled'
 
-const PageWrapper = styled(AutoColumn)<{ navBarFlag: boolean }>`
-  padding-top: ${({ navBarFlag }) => (navBarFlag ? '68px' : '0px')};
+const PageWrapper = styled(AutoColumn)`
+  padding-top: 68px;
   width: 100%;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    padding: ${({ navBarFlag }) => (navBarFlag ? '48px 8px 0px' : '0px 8px 0px')};
+    padding: 48px 8px 0px;
   }
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    padding-top: ${({ navBarFlag }) => (navBarFlag ? '20px' : '0px')};
+    padding-top: 20px;
   }
 `
 
@@ -163,8 +162,6 @@ function getDateFromBlock(
 }
 
 export default function VotePage() {
-  const navBarFlag = useNavBarFlag()
-  const navBarFlagEnabled = navBarFlag === NavBarVariant.Enabled
   // see https://github.com/remix-run/react-router/issues/8200#issuecomment-962520661
   const { governorIndex, id } = useParams() as { governorIndex: string; id: string }
   const parsedGovernorIndex = Number.parseInt(governorIndex)
@@ -276,7 +273,7 @@ export default function VotePage() {
   return (
     <Trace page={PageName.VOTE_PAGE} shouldLogImpression>
       <>
-        <PageWrapper gap="lg" justify="center" navBarFlag={navBarFlagEnabled}>
+        <PageWrapper gap="lg" justify="center">
           <VoteModal
             isOpen={showVoteModal}
             onDismiss={toggleVoteModal}
@@ -321,7 +318,7 @@ export default function VotePage() {
                 </ThemedText.DeprecatedMain>
               </RowBetween>
               {proposalData && proposalData.status === ProposalState.ACTIVE && !showVotingButtons && (
-                <GreyCard>
+                <GrayCard>
                   <ThemedText.DeprecatedBlack>
                     <Trans>
                       Only UNI votes that were self delegated or delegated to another address before block{' '}
@@ -336,7 +333,7 @@ export default function VotePage() {
                       </span>
                     )}
                   </ThemedText.DeprecatedBlack>
-                </GreyCard>
+                </GrayCard>
               )}
             </AutoColumn>
             {showVotingButtons && (
@@ -422,7 +419,7 @@ export default function VotePage() {
                   </AutoColumn>
                   <ProgressWrapper>
                     <Progress
-                      status={'for'}
+                      status="for"
                       percentageString={
                         proposalData?.forCount.greaterThan(0) ? `${forPercentage?.toFixed(0) ?? 0}%` : '0%'
                       }
@@ -446,7 +443,7 @@ export default function VotePage() {
                   </AutoColumn>
                   <ProgressWrapper>
                     <Progress
-                      status={'against'}
+                      status="against"
                       percentageString={
                         proposalData?.againstCount?.greaterThan(0) ? `${againstPercentage?.toFixed(0) ?? 0}%` : '0%'
                       }

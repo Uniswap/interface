@@ -21,12 +21,14 @@ export interface AssetPayload {
 }
 
 export interface CollectionInfoForAsset {
-  collectionSymbol: string
-  collectionDescription: string | null
-  collectionImageUrl: string
-  collectionName: string
-  isVerified: boolean
-  totalSupply: number
+  collectionDescription?: string | null
+  collectionImageUrl?: string
+  collectionName?: string
+  isVerified?: boolean
+  totalSupply?: number
+  discordUrl?: string
+  twitterUrl?: string
+  externalUrl?: string
 }
 
 export type CollectionSort = Record<
@@ -52,7 +54,7 @@ export enum ActivityEventTypeDisplay {
   'LISTING' = 'Listed',
   'SALE' = 'Sold',
   'TRANSFER' = 'Transferred',
-  'CANCEL_LISTING' = 'Cancelled',
+  'CANCEL_LISTING' = 'Cancellation',
 }
 
 export enum OrderStatus {
@@ -66,6 +68,7 @@ export interface ActivityFilter {
   collectionAddress?: string
   eventTypes?: ActivityEventType[]
   marketplaces?: Markets[]
+  token_id?: string
 }
 
 export interface ActivityEventResponse {

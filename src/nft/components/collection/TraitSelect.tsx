@@ -1,27 +1,35 @@
-import clsx from 'clsx'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { EventName, FilterTypes } from '@uniswap/analytics-events'
 import useDebounce from 'hooks/useDebounce'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
-import { ChevronUpIcon } from 'nft/components/icons'
 import { Checkbox } from 'nft/components/layout/Checkbox'
 import { subheadSmall } from 'nft/css/common.css'
 import { Trait, useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { scrollToTop } from 'nft/utils/scrollToTop'
-import { FormEvent, MouseEvent, useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import { CSSProperties, FormEvent, MouseEvent, useCallback, useEffect, useMemo, useState } from 'react'
+import AutoSizer from 'react-virtualized-auto-sizer'
+import { FixedSizeList } from 'react-window'
 
+import { Input } from '../layout/Input'
 import * as styles from './Filters.css'
+import { TraitsHeader } from './TraitsHeader'
+
+const TRAIT_ROW_HEIGHT = 44
 
 const TraitItem = ({
   trait,
   addTrait,
   removeTrait,
   isTraitSelected,
+  style,
 }: {
   trait: Trait
   addTrait: (trait: Trait) => void
   removeTrait: (trait: Trait) => void
   isTraitSelected: boolean
+  style?: CSSProperties
 }) => {
   const [isCheckboxSelected, setCheckboxSelected] = useState(false)
   const [hovered, setHovered] = useState(false)
@@ -53,6 +61,7 @@ const TraitItem = ({
       removeTrait(trait)
       setCheckboxSelected(false)
     }
+    sendAnalyticsEvent(EventName.NFT_FILTER_SELECTED, { filter_type: FilterTypes.TRAIT })
   }
 
   const showFullTraitName = shouldShow && trait_type === trait.trait_type && trait_value === trait.trait_value
@@ -61,15 +70,21 @@ const TraitItem = ({
     <Row
       key={trait.trait_value}
       maxWidth="full"
-      overflowX={'hidden'}
-      overflowY={'hidden'}
+      overflowX="hidden"
+      overflowY="hidden"
       fontWeight="normal"
       className={`${subheadSmall} ${styles.subRowHover}`}
       justifyContent="space-between"
       cursor="pointer"
       paddingLeft="12"
-      paddingRight="12"
-      style={{ paddingBottom: '21px', paddingTop: '21px', maxHeight: '44px' }}
+      paddingRight="16"
+      borderRadius="12"
+      style={{
+        paddingBottom: '22px',
+        paddingTop: '22px',
+        ...style,
+      }}
+      maxHeight="44"
       onMouseEnter={handleHover}
       onMouseLeave={handleHover}
       onClick={handleCheckbox}
@@ -79,6 +94,7 @@ const TraitItem = ({
         whiteSpace="nowrap"
         textOverflow="ellipsis"
         overflow="hidden"
+        style={{ minHeight: 15 }}
         maxWidth={!showFullTraitName ? '160' : 'full'}
         onMouseOver={(e) => isEllipsisActive(e)}
         onMouseLeave={() => toggleShowFullTraitName({ shouldShow: false, trait_type: '', trait_value: '' })}
@@ -88,7 +104,7 @@ const TraitItem = ({
           : trait.trait_value}
       </Box>
       <Checkbox checked={isCheckboxSelected} hovered={hovered} onChange={handleCheckbox}>
-        <Box as="span" color="textSecondary" minWidth={'8'} paddingTop={'2'} paddingRight={'12'} position={'relative'}>
+        <Box as="span" color="textTertiary" minWidth="8" paddingTop="2" paddingRight="12" position="relative">
           {!showFullTraitName && trait.trait_count}
         </Box>
       </Checkbox>
@@ -96,97 +112,73 @@ const TraitItem = ({
   )
 }
 
-export const TraitSelect = ({ traits, type, search }: { traits: Trait[]; type: string; search: string }) => {
-  const debouncedSearch = useDebounce(search, 300)
+interface TraitRowProps {
+  data: Array<Trait>
+  index: number
+  style: CSSProperties
+}
 
+export const TraitSelect = ({ traits, type, index }: { traits: Trait[]; type: string; index: number }) => {
   const addTrait = useCollectionFilters((state) => state.addTrait)
   const removeTrait = useCollectionFilters((state) => state.removeTrait)
   const selectedTraits = useCollectionFilters((state) => state.traits)
+  const [search, setSearch] = useState('')
+  const debouncedSearch = useDebounce(search, 300)
 
-  const [isOpen, setOpen] = useState(
-    traits.some(({ trait_type, trait_value }) => {
-      return selectedTraits.some((selectedTrait) => {
-        return selectedTrait.trait_type === trait_type && selectedTrait.trait_value === String(trait_value)
-      })
-    })
+  const searchedTraits = useMemo(
+    () => traits.filter((t) => t.trait_value?.toString().toLowerCase().includes(debouncedSearch.toLowerCase())),
+    [debouncedSearch, traits]
   )
 
-  const { isTypeIncluded, searchedTraits } = useMemo(() => {
-    const isTypeIncluded = type.includes(debouncedSearch)
-    const searchedTraits = traits.filter(
-      (t) => isTypeIncluded || t.trait_value.toString().toLowerCase().includes(debouncedSearch.toLowerCase())
-    )
-    return { searchedTraits, isTypeIncluded }
-  }, [debouncedSearch, traits, type])
+  const Row = useCallback(
+    function TraitRow({ data, index, style }: TraitRowProps) {
+      const trait: Trait = data[index]
 
-  useLayoutEffect(() => {
-    if (debouncedSearch && searchedTraits.length) {
-      setOpen(true)
-      return () => {
-        setOpen(false)
-      }
-    }
-    return
-  }, [searchedTraits, debouncedSearch, setOpen])
+      const isTraitSelected = selectedTraits.find(
+        ({ trait_type, trait_value }) =>
+          trait_type === trait.trait_type && String(trait_value) === String(trait.trait_value)
+      )
+      return <TraitItem style={style} isTraitSelected={!!isTraitSelected} {...{ trait, addTrait, removeTrait }} />
+    },
+    [selectedTraits, addTrait, removeTrait]
+  )
 
-  return searchedTraits.length || isTypeIncluded ? (
-    <Box
-      as="details"
-      className={clsx(subheadSmall, !isOpen && styles.rowHover, isOpen && styles.detailsOpen)}
-      borderRadius="12"
-      open={isOpen}
-    >
-      <Box
-        as="summary"
-        className={clsx(isOpen && styles.summaryOpen, isOpen ? styles.rowHoverOpen : styles.rowHover)}
-        display="flex"
-        paddingTop="8"
-        paddingRight="12"
-        paddingBottom="8"
-        paddingLeft="12"
-        justifyContent="space-between"
-        cursor="pointer"
-        alignItems="center"
-        onClick={(e) => {
-          e.preventDefault()
-          setOpen(!isOpen)
-        }}
+  const itemKey = useCallback((index: number, data: Trait[]) => {
+    const trait = data[index]
+    return `${trait.trait_type}_${trait.trait_value}_${index}`
+  }, [])
+
+  return traits.length ? (
+    <TraitsHeader index={index} numTraits={traits.length} title={type}>
+      <Input
+        value={search}
+        onChange={(e: FormEvent<HTMLInputElement>) => setSearch(e.currentTarget.value)}
+        placeholder="Search"
+        marginTop="8"
+        marginBottom="8"
+        autoComplete="off"
+        position="static"
+        width="full"
+      />
+      <Column
+        className={styles.filterDropDowns}
+        style={{ height: `${Math.min(TRAIT_ROW_HEIGHT * searchedTraits.length, styles.MAX_FILTER_DROPDOWN_HEIGHT)}px` }}
       >
-        {type}
-        <Box display="flex" alignItems="center">
-          <Box color="textSecondary" display="inline-block" marginRight="12">
-            {searchedTraits.length}
-          </Box>
-          <Box
-            color="textSecondary"
-            display="inline-block"
-            transition="250"
-            height="28"
-            width="28"
-            style={{
-              transform: `rotate(${isOpen ? 0 : 180}deg)`,
-            }}
-          >
-            <ChevronUpIcon />
-          </Box>
-        </Box>
-      </Box>
-      <Column className={styles.filterDropDowns} paddingLeft="0">
-        {searchedTraits.map((trait) => {
-          const isTraitSelected = selectedTraits.find(
-            ({ trait_type, trait_value }) =>
-              trait_type === trait.trait_type && String(trait_value) === String(trait.trait_value)
-          )
-
-          return (
-            <TraitItem
-              isTraitSelected={!!isTraitSelected}
-              key={trait.trait_value}
-              {...{ trait, addTrait, removeTrait }}
-            />
-          )
-        })}
+        <AutoSizer disableWidth>
+          {({ height }) => (
+            <FixedSizeList
+              height={height}
+              width="100%"
+              itemData={searchedTraits}
+              itemCount={searchedTraits.length}
+              itemSize={TRAIT_ROW_HEIGHT}
+              itemKey={itemKey}
+            >
+              {({ index, style, data }) => <Row style={style} key={itemKey(index, data)} data={data} index={index} />}
+            </FixedSizeList>
+          )}
+        </AutoSizer>
       </Column>
-    </Box>
+    </TraitsHeader>
   ) : null
 }

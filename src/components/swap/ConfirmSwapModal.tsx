@@ -1,12 +1,9 @@
 import { Trans } from '@lingui/macro'
+import { Trace } from '@uniswap/analytics'
+import { ModalName } from '@uniswap/analytics-events'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
-import { sendAnalyticsEvent } from 'analytics'
-import { ModalName } from 'analytics/constants'
-import { EventName } from 'analytics/constants'
-import { Trace } from 'analytics/Trace'
-import { formatSwapSignedAnalyticsEventProperties } from 'analytics/utils'
-import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
+import { ReactNode, useCallback, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
@@ -51,7 +48,6 @@ export default function ConfirmSwapModal({
   // shouldLogModalCloseEvent lets the child SwapModalHeader component know when modal has been closed
   // and an event triggered by modal closing should be logged.
   const [shouldLogModalCloseEvent, setShouldLogModalCloseEvent] = useState(false)
-  const [lastTxnHashLogged, setLastTxnHashLogged] = useState<string | null>(null)
   const showAcceptChanges = useMemo(
     () => Boolean(trade && originalTrade && tradeMeaningfullyDiffers(trade, originalTrade)),
     [originalTrade, trade]
@@ -124,13 +120,6 @@ export default function ConfirmSwapModal({
       ),
     [onModalDismiss, modalBottom, modalHeader, swapErrorMessage]
   )
-
-  useEffect(() => {
-    if (!attemptingTxn && isOpen && txHash && trade && txHash !== lastTxnHashLogged) {
-      sendAnalyticsEvent(EventName.SWAP_SIGNED, formatSwapSignedAnalyticsEventProperties({ trade, txHash }))
-      setLastTxnHashLogged(txHash)
-    }
-  }, [attemptingTxn, isOpen, txHash, trade, lastTxnHashLogged])
 
   return (
     <Trace modal={ModalName.CONFIRM_SWAP}>

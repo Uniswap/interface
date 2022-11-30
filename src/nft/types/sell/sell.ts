@@ -1,4 +1,6 @@
-import { GenieCollection } from '../common'
+import { NftMarketplace, OrderStatus, OrderType } from 'graphql/data/nft/__generated__/DetailsQuery.graphql'
+
+import { GenieCollection, PriceInfo, TokenType } from '../common'
 
 export interface ListingMarket {
   name: string
@@ -11,21 +13,24 @@ export interface ListingWarning {
 }
 
 export interface SellOrder {
-  assetId: string
-  ethPrice: number
-  basePrice: number
-  baseCurrency: string
-  baseCurrencyDecimal: number
-  orderCreatedDate: string
-  orderClosingDate: string
-  quantity: number
-  timestamp: string
-  marketplace: string
+  address: string
+  createdAt: number
+  endAt: number
+  id: string
+  maker: string
+  marketplace: NftMarketplace
   marketplaceUrl: string
   orderHash: string
-  ammFeePercent?: number
-  ethReserves?: number
-  tokenReserves?: number
+  price: {
+    currency: string
+    value: number
+  }
+  quantity: number
+  startAt: number
+  status: OrderStatus
+  tokenId: string
+  type: OrderType
+  protocolParameters: Record<string, unknown>
 }
 
 export interface Listing {
@@ -36,29 +41,28 @@ export interface Listing {
 
 export interface WalletAsset {
   id?: string
-  image_url: string
-  image_preview_url: string
+  imageUrl: string
+  smallImageUrl: string
+  notForSale: boolean
+  animationUrl: string
+  susFlag: boolean
+  priceInfo: PriceInfo
   name: string
   tokenId: string
   asset_contract: {
     address: string
     schema_name: 'ERC1155' | 'ERC721' | string
-    asset_contract_type: string
-    created_date: string
     name: string
-    symbol: string
     description: string
-    external_link: string
     image_url: string
-    default_to_fiat: boolean
-    only_proxied_transfers: boolean
     payout_address: string
+    tokenType: TokenType
   }
   collection: GenieCollection
   collectionIsVerified: boolean
   lastPrice: number
   floorPrice: number
-  creatorPercentage: number
+  basisPoints: number
   listing_date: string
   date_acquired: string
   sellOrders: SellOrder[]
@@ -100,6 +104,7 @@ export interface AssetRow {
 export interface ListingRow extends AssetRow {
   asset: WalletAsset
   marketplace: ListingMarket
+  price?: number
 }
 
 export interface CollectionRow extends AssetRow {

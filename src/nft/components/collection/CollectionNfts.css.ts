@@ -1,21 +1,30 @@
 import { style } from '@vanilla-extract/css'
 
-import { sprinkles } from '../../css/sprinkles.css'
+import { breakpoints, sprinkles } from '../../css/sprinkles.css'
 
 export const assetList = style([
   sprinkles({
     display: 'grid',
-    marginTop: '24',
-    gap: { sm: '8', md: '12', lg: '20' },
+    gap: { sm: '8', md: '8', lg: '12', xl: '16' },
   }),
   {
-    gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr) )',
+    //This treatment of the grid still uses minmax, but enforces an amount of grid items per breakpoint. This means that when the bag and filter panels appear, we no longer get layout thrash and have a consistent animation as the width changes. It uses calc() and subtracts the grid gap to ensure the min size will always fit without wrapping.
+    gridTemplateColumns: 'repeat(auto-fill, minmax(calc(100%/2 - 8px), 1fr) )',
     '@media': {
-      'screen and (min-width: 708px)': {
-        gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr) )',
+      [`screen and (min-width: ${breakpoints.md}px)`]: {
+        gridTemplateColumns: 'repeat(auto-fill, minmax(calc(100%/3 - 8px), 1fr) )',
       },
-      'screen and (min-width: 1185px)': {
-        gridTemplateColumns: 'repeat(auto-fill, minmax(1fr, 280px) )',
+      [`screen and (min-width: ${breakpoints.lg}px)`]: {
+        gridTemplateColumns: 'repeat(auto-fill, minmax(calc(100%/3 - 12px), 1fr) )',
+      },
+      [`screen and (min-width: ${breakpoints.xl}px)`]: {
+        gridTemplateColumns: 'repeat(auto-fill, minmax(calc(100%/4 - 16px), 1fr) )',
+      },
+      [`screen and (min-width: ${breakpoints.xxl}px)`]: {
+        gridTemplateColumns: 'repeat(auto-fill, minmax(calc(100%/5 - 16px), 1fr) )',
+      },
+      [`screen and (min-width: ${breakpoints.xxxl}px)`]: {
+        gridTemplateColumns: 'repeat(auto-fill, minmax(calc(100%/7 - 16px), 1fr) )',
       },
     },
   },

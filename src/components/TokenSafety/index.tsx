@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Token } from '@uniswap/sdk-core'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
-import CurrencyLogo from 'components/CurrencyLogo'
+import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import TokenSafetyLabel from 'components/TokenSafety/TokenSafetyLabel'
 import { checkWarning, getWarningCopy, TOKEN_SAFETY_ARTICLE, Warning } from 'constants/tokenSafety'
 import { useToken } from 'hooks/Tokens'
@@ -244,6 +244,11 @@ export default function TokenSafety({
   }
 
   const { heading, description } = getWarningCopy(displayWarning, plural)
+  const learnMoreUrl = (
+    <StyledExternalLink href={TOKEN_SAFETY_ARTICLE}>
+      <Trans>Learn more</Trans>
+    </StyledExternalLink>
+  )
 
   return (
     displayWarning && (
@@ -255,13 +260,9 @@ export default function TokenSafety({
           <ShortColumn>
             <SafetyLabel warning={displayWarning} />
           </ShortColumn>
-          <ShortColumn>{heading && <InfoText fontSize="20px">{heading}</InfoText>}</ShortColumn>
           <ShortColumn>
             <InfoText>
-              {description}{' '}
-              <StyledExternalLink href={TOKEN_SAFETY_ARTICLE}>
-                <Trans>Learn more</Trans>
-              </StyledExternalLink>
+              {heading} {description} {learnMoreUrl}
             </InfoText>
           </ShortColumn>
           <LinkColumn>{urls}</LinkColumn>

@@ -1,44 +1,57 @@
+import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
+import { EventName, SectionName } from '@uniswap/analytics-events'
 import { Currency, Field, SwapController, SwapEventHandlers, TradeType } from '@uniswap/widgets'
-import { sendAnalyticsEvent } from 'analytics'
-import { EventName, SectionName } from 'analytics/constants'
-import { useTrace } from 'analytics/Trace'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 const EMPTY_AMOUNT = ''
 
+type SwapValue = Required<SwapController>['value']
+type SwapTokens = Pick<SwapValue, Field.INPUT | Field.OUTPUT> & { default?: Currency }
+
+function includesDefaultToken(tokens: SwapTokens) {
+  if (!tokens.default) return true
+  return tokens[Field.INPUT]?.equals(tokens.default) || tokens[Field.OUTPUT]?.equals(tokens.default)
+}
+
 /**
  * Integrates the Widget's inputs.
  * Treats the Widget as a controlled component, using the app's own token selector for selection.
+ * Enforces that token is a part of the returned value.
  */
-export function useSyncWidgetInputs(defaultToken?: Currency) {
+export function useSyncWidgetInputs({
+  token,
+  onTokenChange,
+}: {
+  token?: Currency
+  onTokenChange?: (token: Currency) => void
+}) {
   const trace = useTrace({ section: SectionName.WIDGET })
 
-  const [type, setType] = useState(TradeType.EXACT_INPUT)
-  const [amount, setAmount] = useState(EMPTY_AMOUNT)
+  const [type, setType] = useState<SwapValue['type']>(TradeType.EXACT_INPUT)
+  const [amount, setAmount] = useState<SwapValue['amount']>(EMPTY_AMOUNT)
+  const [tokens, setTokens] = useState<SwapTokens>({ [Field.OUTPUT]: token, default: token })
+
+  useEffect(() => {
+    setTokens((tokens) => {
+      const update = { ...tokens, default: token }
+      if (!includesDefaultToken(update)) {
+        return { [Field.OUTPUT]: update.default, default: update.default }
+      }
+      return update
+    })
+  }, [token])
+
   const onAmountChange = useCallback(
     (field: Field, amount: string, origin?: 'max') => {
       if (origin === 'max') {
         sendAnalyticsEvent(EventName.SWAP_MAX_TOKEN_AMOUNT_SELECTED, { ...trace })
       }
-      setType(toTradeType(field))
+      setType(field === Field.INPUT ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT)
       setAmount(amount)
     },
     [trace]
   )
-
-  const [tokens, setTokens] = useState<{ [Field.INPUT]?: Currency; [Field.OUTPUT]?: Currency }>({
-    [Field.OUTPUT]: defaultToken,
-  })
-
-  useEffect(() => {
-    // Avoid overwriting tokens if none are specified, so that a loading token does not cause layout flashing.
-    if (!defaultToken) return
-    setTokens({
-      [Field.OUTPUT]: defaultToken,
-    })
-    setAmount(EMPTY_AMOUNT)
-  }, [defaultToken])
 
   const onSwitchTokens = useCallback(() => {
     sendAnalyticsEvent(EventName.SWAP_TOKENS_REVERSED, { ...trace })
@@ -46,58 +59,84 @@ export function useSyncWidgetInputs(defaultToken?: Currency) {
     setTokens((tokens) => ({
       [Field.INPUT]: tokens[Field.OUTPUT],
       [Field.OUTPUT]: tokens[Field.INPUT],
+      default: tokens.default,
     }))
   }, [trace])
 
   const [selectingField, setSelectingField] = useState<Field>()
-  const otherField = useMemo(() => (selectingField === Field.INPUT ? Field.OUTPUT : Field.INPUT), [selectingField])
-  const [selectingToken, otherToken] = useMemo(() => {
-    if (selectingField === undefined) return [undefined, undefined]
-    return [tokens[selectingField], tokens[otherField]]
-  }, [otherField, selectingField, tokens])
   const onTokenSelectorClick = useCallback((field: Field) => {
     setSelectingField(field)
     return false
   }, [])
+
   const onTokenSelect = useCallback(
-    (token: Currency) => {
+    (selectingToken: Currency) => {
       if (selectingField === undefined) return
-      setType(TradeType.EXACT_INPUT)
-      setTokens(() => {
-        return {
-          [otherField]: otherToken?.equals(token) ? selectingToken : otherToken,
-          [selectingField]: token,
+
+      const otherField = invertField(selectingField)
+      const isFlip = tokens[otherField]?.equals(selectingToken)
+      const update: SwapTokens = {
+        [selectingField]: selectingToken,
+        [otherField]: isFlip ? tokens[selectingField] : tokens[otherField],
+        default: tokens.default,
+      }
+
+      setType((type) => {
+        // If flipping the tokens, also flip the type/amount.
+        if (isFlip) {
+          return invertTradeType(type)
         }
+
+        // Setting a new token should clear its amount, if it is set.
+        const activeField = type === TradeType.EXACT_INPUT ? Field.INPUT : Field.OUTPUT
+        if (selectingField === activeField) {
+          setAmount(() => EMPTY_AMOUNT)
+        }
+
+        return type
       })
+
+      if (!includesDefaultToken(update)) {
+        onTokenChange?.(update[Field.OUTPUT] || selectingToken)
+      }
+      setTokens(update)
     },
-    [otherField, otherToken, selectingField, selectingToken]
+    [onTokenChange, selectingField, tokens]
   )
   const tokenSelector = (
     <CurrencySearchModal
       isOpen={selectingField !== undefined}
       onDismiss={() => setSelectingField(undefined)}
-      selectedCurrency={selectingToken}
-      otherSelectedCurrency={otherToken}
+      selectedCurrency={selectingField && tokens[selectingField]}
+      otherSelectedCurrency={selectingField && tokens[invertField(selectingField)]}
       onCurrencySelect={onTokenSelect}
     />
   )
 
-  const value: SwapController['value'] = useMemo(() => ({ type, amount, ...tokens }), [amount, tokens, type])
+  const value: SwapValue = useMemo(
+    () => ({
+      type,
+      amount,
+      // If the default has not yet been handled, preemptively disable the widget by passing no tokens. Effectively,
+      // this resets the widget - avoiding rendering stale state - because with no tokens the skeleton will be rendered.
+      ...(token && tokens.default?.equals(token) ? tokens : undefined),
+    }),
+    [amount, token, tokens, type]
+  )
   const valueHandlers: SwapEventHandlers = useMemo(
     () => ({ onAmountChange, onSwitchTokens, onTokenSelectorClick }),
     [onAmountChange, onSwitchTokens, onTokenSelectorClick]
   )
-
   return { inputs: { value, ...valueHandlers }, tokenSelector }
 }
 
 // TODO(zzmp): Move to @uniswap/widgets.
-function toTradeType(modifiedField: Field) {
-  switch (modifiedField) {
+function invertField(field: Field) {
+  switch (field) {
     case Field.INPUT:
-      return TradeType.EXACT_INPUT
+      return Field.OUTPUT
     case Field.OUTPUT:
-      return TradeType.EXACT_OUTPUT
+      return Field.INPUT
   }
 }
 

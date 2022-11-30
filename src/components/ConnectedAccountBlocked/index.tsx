@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
-import { AlertOctagon } from 'react-feather'
+import { BlockedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import styled, { useTheme } from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
 
@@ -12,11 +12,6 @@ const ContentWrapper = styled(Column)`
   margin: 32px;
   text-align: center;
   font-size: 12px;
-`
-const WarningIcon = styled(AlertOctagon)`
-  min-height: 22px;
-  min-width: 22px;
-  color: ${({ theme }) => theme.deprecated_warning};
 `
 const Copy = styled(CopyHelper)`
   font-size: 12px;
@@ -32,7 +27,7 @@ export default function ConnectedAccountBlocked(props: ConnectedAccountBlockedPr
   return (
     <Modal isOpen={props.isOpen} onDismiss={Function.prototype()}>
       <ContentWrapper>
-        <WarningIcon />
+        <BlockedIcon size="22px" />
         <ThemedText.DeprecatedLargeHeader lineHeight={2} marginBottom={1} marginTop={1}>
           <Trans>Blocked Address</Trans>
         </ThemedText.DeprecatedLargeHeader>

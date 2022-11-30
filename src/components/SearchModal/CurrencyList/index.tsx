@@ -1,14 +1,10 @@
-import { Trans } from '@lingui/macro'
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { ElementName, Event, EventName } from 'analytics/constants'
-import { TraceEvent } from 'analytics/TraceEvent'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkWarning } from 'constants/tokenSafety'
-import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
-import { TokenSafetyVariant, useTokenSafetyFlag } from 'featureFlags/flags/tokenSafety'
 import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
-import { XOctagon } from 'react-feather'
 import { Check } from 'react-feather'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
@@ -16,13 +12,11 @@ import styled from 'styled-components/macro'
 
 import { useIsUserAddedToken } from '../../../hooks/Tokens'
 import { useCurrencyBalance } from '../../../state/connection/hooks'
-import { useCombinedActiveList } from '../../../state/lists/hooks'
 import { WrappedTokenInfo } from '../../../state/lists/wrappedTokenInfo'
 import { ThemedText } from '../../../theme'
-import { isTokenOnList } from '../../../utils'
 import Column, { AutoColumn } from '../../Column'
-import CurrencyLogo from '../../CurrencyLogo'
 import Loader from '../../Loader'
+import CurrencyLogo from '../../Logo/CurrencyLogo'
 import Row, { RowFixed } from '../../Row'
 import { MouseoverTooltip } from '../../Tooltip'
 import { LoadingRows, MenuItem } from '../styleds'
@@ -66,10 +60,8 @@ const Tag = styled.div`
   margin-right: 4px;
 `
 
-export const BlockedTokenIcon = styled(XOctagon)<{ size?: string }>`
+export const WarningContainer = styled.div`
   margin-left: 0.3em;
-  width: 1em;
-  height: 1em;
 `
 
 function Balance({ balance }: { balance: CurrencyAmount<Currency> }) {
@@ -129,27 +121,22 @@ export function CurrencyRow({
 }) {
   const { account } = useWeb3React()
   const key = currencyKey(currency)
-  const selectedTokenList = useCombinedActiveList()
-  const isOnSelectedList = isTokenOnList(selectedTokenList, currency.isToken ? currency : undefined)
   const customAdded = useIsUserAddedToken(currency)
   const balance = useCurrencyBalance(account ?? undefined, currency)
   const warning = currency.isNative ? null : checkWarning(currency.address)
-  const redesignFlagEnabled = useRedesignFlag() === RedesignVariant.Enabled
-  const tokenSafetyFlagEnabled = useTokenSafetyFlag() === TokenSafetyVariant.Enabled
   const isBlockedToken = !!warning && !warning.canProceed
   const blockedTokenOpacity = '0.6'
 
   // only show add or remove buttons if not on selected list
   return (
     <TraceEvent
-      events={[Event.onClick, Event.onKeyPress]}
+      events={[BrowserEvent.onClick, BrowserEvent.onKeyPress]}
       name={EventName.TOKEN_SELECTED}
       properties={{ is_imported_by_user: customAdded, ...eventProperties }}
       element={ElementName.TOKEN_SELECTOR_ROW}
     >
       <MenuItem
         tabIndex={0}
-        redesignFlag={redesignFlagEnabled}
         style={style}
         className={`token-item-${key}`}
         onKeyPress={(e) => (!isSelected && e.key === 'Enter' ? onSelect(!!warning) : null)}
@@ -161,22 +148,19 @@ export function CurrencyRow({
         <Column>
           <CurrencyLogo
             currency={currency}
-            size={'36px'}
+            size="36px"
             style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }}
           />
         </Column>
         <AutoColumn style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }}>
           <Row>
             <CurrencyName title={currency.name}>{currency.name}</CurrencyName>
-            {tokenSafetyFlagEnabled && <TokenSafetyIcon warning={warning} />}
-            {isBlockedToken && <BlockedTokenIcon />}
+            <WarningContainer>
+              <TokenSafetyIcon warning={warning} />
+            </WarningContainer>
           </Row>
-          <ThemedText.DeprecatedDarkGray ml="0px" fontSize={'12px'} fontWeight={300}>
-            {!currency.isNative && !isOnSelectedList && customAdded ? (
-              <Trans>{currency.symbol} • Added by user</Trans>
-            ) : (
-              currency.symbol
-            )}
+          <ThemedText.DeprecatedDarkGray ml="0px" fontSize="12px" fontWeight={300}>
+            {currency.symbol}
           </ThemedText.DeprecatedDarkGray>
         </AutoColumn>
         <Column>
@@ -187,10 +171,9 @@ export function CurrencyRow({
         {showCurrencyAmount ? (
           <RowFixed style={{ justifySelf: 'flex-end' }}>
             {balance ? <Balance balance={balance} /> : account ? <Loader /> : null}
-            {redesignFlagEnabled && isSelected && <CheckIcon />}
+            {isSelected && <CheckIcon />}
           </RowFixed>
         ) : (
-          redesignFlagEnabled &&
           isSelected && (
             <RowFixed style={{ justifySelf: 'flex-end' }}>
               <CheckIcon />

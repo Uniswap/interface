@@ -7,6 +7,7 @@ const themeContractValues = {
     accentFailureSoft: '',
     accentAction: '',
     accentActionSoft: '',
+    accentSuccess: '',
 
     explicitWhite: '',
     gold: '',
@@ -18,14 +19,20 @@ const themeContractValues = {
     backgroundModule: '',
     backgroundOutline: '',
     backgroundSurface: '',
+    backgroundBackdrop: '',
 
     modalBackdrop: '',
+
+    searchBackground: '',
+    searchOutline: '',
 
     stateOverlayHover: '',
 
     textPrimary: '',
     textSecondary: '',
     textTertiary: '',
+
+    dropShadow: '',
   },
 
   shadows: {
@@ -34,6 +41,12 @@ const themeContractValues = {
     elevation: '',
     tooltip: '',
     deep: '',
+    shallow: '',
+  },
+
+  opacity: {
+    hover: '0.6',
+    pressed: '0.4',
   },
 }
 
@@ -77,6 +90,7 @@ const dimensions = {
   '276': '276px',
   '288': '288px',
   '292': '292px',
+  '332': '332px',
   '386': '386px',
   half: '50%',
   full: '100%',
@@ -137,6 +151,7 @@ const zIndices = {
   modal: '1060',
   popover: '1070',
   tooltip: '1080',
+  modalOverTooltip: '1090',
 }
 
 export const vars = createGlobalTheme(':root', {
@@ -145,7 +160,7 @@ export const vars = createGlobalTheme(':root', {
     genieBlue: '#4C82FB',
     fallbackGradient: 'linear-gradient(270deg, #D1D5DB 0%, #F6F6F6 100%)',
     loadingBackground: '#24272e',
-    dropShadow: '0px 4px 16px rgba(70, 115, 250, 0.4)',
+    cardDropShadow: 'rgba(0, 0, 0, 10%) 0px 4px 12px',
     green: '#209853',
     orange: '#FA2C38',
     black: 'black',
@@ -167,22 +182,34 @@ export const vars = createGlobalTheme(':root', {
     gold200: '#EEB317',
     gold400: '#B17900',
     green200: '#5CFE9D',
+    green300: '#40B66B',
     green400: '#1A9550',
     violet200: '#BDB8FA',
     violet400: '#7A7BEB',
-    grey900: '#0E111A',
-    grey800: '#141B2B',
-    grey700: '#293249',
-    grey500: '#5E6887',
-    grey400: '#7C85A2',
-    grey300: '#99A1BD',
-    grey200: '#B7BED4',
-    grey100: '#DDE3F7',
-    grey50: '#EDEFF7',
+    gray50: '#F5F6FC',
+    gray100: '#E8ECFB',
+    gray150: '#D2D9EE',
+    gray200: '#B8C0DC',
+    gray250: '#A6AFCA',
+    gray300: '#98A1C0',
+    gray350: '#888FAB',
+    gray400: '#7780A0',
+    gray450: '#6B7594',
+    gray500: '#5D6785',
+    gray550: '#505A78',
+    gray600: '#404A67',
+    gray650: '#333D59',
+    gray700: '#293249',
+    gray750: '#1B2236',
+    gray800: '#131A2A',
+    gray850: '#0E1524',
+    gray900: '#0D111C',
+    gray950: '#080B11',
     accentTextLightTertiary: 'rgba(255, 255, 255, 0.12)',
     outline: 'rgba(153, 161, 189, 0.24)',
     lightGrayOverlay: '#99A1BD14',
     accentActiveSoft: '#4c82fb3d',
+    accentActive: '#4C82FB',
   },
   border: {
     transculent: '1.5px solid rgba(0, 0, 0, 0.1)',
@@ -262,19 +289,9 @@ const flexAlignment = [
 
 const overflow = ['hidden', 'inherit', 'scroll', 'visible', 'auto'] as const
 
-const borderWidth = ['0px', '0.5px', '1px', '1.5px', '2px', '4px']
+const borderWidth = ['0px', '0.5px', '1px', '1.5px', '2px', '3px', '4px']
 
 const borderStyle = ['none', 'solid'] as const
-
-// TODO: remove when code is done being ported over
-// I'm leaving this here as a reference of the old breakpoints while we port over the new code
-// tabletSm: 656,
-// tablet: 708,
-// tabletL: 784,
-// tabletXl: 830,
-// desktop: 948,
-// desktopL: 1030,
-// desktopXl: 1260,
 
 export const breakpoints = {
   sm: 640,
@@ -327,7 +344,7 @@ const layoutStyles = defineProperties({
     zIndex: zIndices,
     gap: spacing,
     flexShrink: spacing,
-    flex: ['1', '2', '3'],
+    flex: ['1', '1.5', '2', '3'],
     flexWrap: ['nowrap', 'wrap', 'wrap-reverse'],
     display: ['none', 'block', 'flex', 'inline-flex', 'inline-block', 'grid', 'inline'],
     whiteSpace: ['nowrap'],
@@ -363,6 +380,7 @@ const colorStyles = defineProperties({
     color: vars.color,
     background: vars.color,
     borderColor: vars.color,
+    borderLeftColor: vars.color,
     borderBottomColor: vars.color,
     borderTopColor: vars.color,
     backgroundColor: vars.color,
@@ -382,7 +400,9 @@ const unresponsiveProperties = defineProperties({
   properties: {
     cursor: ['default', 'pointer', 'auto'],
     borderStyle,
+    borderLeftStyle: borderStyle,
     borderBottomStyle: borderStyle,
+    borderTopStyle: borderStyle,
     borderRadius: vars.radii,
     borderTopLeftRadius: vars.radii,
     borderTopRightRadius: vars.radii,
@@ -393,6 +413,7 @@ const unresponsiveProperties = defineProperties({
     borderTop: vars.border,
     borderWidth,
     borderBottomWidth: borderWidth,
+    borderTopWidth: borderWidth,
     fontFamily: vars.fonts,
     overflow,
     overflowX: overflow,

@@ -1,12 +1,9 @@
 import { Trans } from '@lingui/macro'
+import { sendAnalyticsEvent, Trace, TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName, PageName, SectionName } from '@uniswap/analytics-events'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent } from 'analytics'
-import { ElementName, Event, EventName, PageName, SectionName } from 'analytics/constants'
-import { Trace } from 'analytics/Trace'
-import { TraceEvent } from 'analytics/TraceEvent'
-import { formatSwapQuoteReceivedEventProperties } from 'analytics/utils'
 import { sendEvent } from 'components/analytics'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
@@ -15,11 +12,10 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { isSupportedChain } from 'constants/chains'
-import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
-import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
+import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ReactNode } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
@@ -28,12 +24,12 @@ import { Text } from 'rebass'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
-import styled, { css, useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/formatNumbers'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { GreyCard } from '../../components/Card'
+import { GrayCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import SwapCurrencyInputPanel from '../../components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import Loader from '../../components/Loader'
@@ -43,7 +39,6 @@ import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import { ArrowWrapper, PageWrapper, SwapCallbackError, SwapWrapper } from '../../components/swap/styleds'
 import SwapHeader from '../../components/swap/SwapHeader'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
-import TokenWarningModal from '../../components/TokenWarningModal'
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
@@ -77,56 +72,51 @@ const ArrowContainer = styled.div`
   height: 100%;
 `
 
-const SwapSection = styled.div<{ redesignFlag: boolean }>`
+const SwapSection = styled.div`
   position: relative;
+  background-color: ${({ theme }) => theme.backgroundModule};
+  border-radius: 12px;
+  padding: 16px;
+  color: ${({ theme }) => theme.textSecondary};
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
 
-  ${({ redesignFlag }) =>
-    redesignFlag &&
-    css`
-      background-color: ${({ theme }) => theme.backgroundModule};
-      border-radius: 12px;
-      padding: 16px;
-      color: ${({ theme }) => theme.textSecondary};
-      font-size: 14px;
-      line-height: 20px;
-      font-weight: 500;
+  &:before {
+    box-sizing: border-box;
+    background-size: 100%;
+    border-radius: inherit;
 
-      &:before {
-        box-sizing: border-box;
-        background-size: 100%;
-        border-radius: inherit;
+    position: absolute;
+    top: 0;
+    left: 0;
 
-        position: absolute;
-        top: 0;
-        left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    content: '';
+    border: 1px solid ${({ theme }) => theme.backgroundModule};
+  }
 
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        content: '';
-        border: 1px solid ${({ theme }) => theme.backgroundModule};
-      }
+  &:hover:before {
+    border-color: ${({ theme }) => theme.stateOverlayHover};
+  }
 
-      &:hover:before {
-        border-color: ${({ theme }) => theme.stateOverlayHover};
-      }
-
-      &:focus-within:before {
-        border-color: ${({ theme }) => theme.stateOverlayPressed};
-      }
-    `}
+  &:focus-within:before {
+    border-color: ${({ theme }) => theme.stateOverlayPressed};
+  }
 `
 
 const OutputSwapSection = styled(SwapSection)<{ showDetailsDropdown: boolean }>`
-  border-bottom: ${({ theme, redesignFlag }) => redesignFlag && `1px solid ${theme.backgroundSurface}`};
-  border-bottom-left-radius: ${({ redesignFlag, showDetailsDropdown }) => redesignFlag && showDetailsDropdown && '0'};
-  border-bottom-right-radius: ${({ redesignFlag, showDetailsDropdown }) => redesignFlag && showDetailsDropdown && '0'};
+  border-bottom: ${({ theme }) => `1px solid ${theme.backgroundSurface}`};
+  border-bottom-left-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
+  border-bottom-right-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
 `
 
 const DetailsSwapSection = styled(SwapSection)`
   padding: 0;
-  border-top-left-radius: ${({ redesignFlag }) => redesignFlag && '0'};
-  border-top-right-radius: ${({ redesignFlag }) => redesignFlag && '0'};
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 `
 
 export function getIsValidSwapQuote(
@@ -152,10 +142,6 @@ const TRADE_STRING = 'SwapRouter'
 
 export default function Swap() {
   const navigate = useNavigate()
-  const navBarFlag = useNavBarFlag()
-  const navBarFlagEnabled = navBarFlag === NavBarVariant.Enabled
-  const redesignFlag = useRedesignFlag()
-  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
   const { account, chainId } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
   const [newSwapQuoteNeedsLogging, setNewSwapQuoteNeedsLogging] = useState(true)
@@ -514,25 +500,16 @@ export default function Swap() {
   return (
     <Trace page={PageName.SWAP_PAGE} shouldLogImpression>
       <>
-        {redesignFlagEnabled ? (
-          <TokenSafetyModal
-            isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
-            tokenAddress={importTokensNotInDefault[0]?.address}
-            secondTokenAddress={importTokensNotInDefault[1]?.address}
-            onContinue={handleConfirmTokenWarning}
-            onCancel={handleDismissTokenWarning}
-            showCancel={true}
-          />
-        ) : (
-          <TokenWarningModal
-            isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
-            tokens={importTokensNotInDefault}
-            onConfirm={handleConfirmTokenWarning}
-            onDismiss={handleDismissTokenWarning}
-          />
-        )}
-        <PageWrapper redesignFlag={redesignFlagEnabled} navBarFlag={navBarFlagEnabled}>
-          <SwapWrapper id="swap-page" redesignFlag={redesignFlagEnabled}>
+        <TokenSafetyModal
+          isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
+          tokenAddress={importTokensNotInDefault[0]?.address}
+          secondTokenAddress={importTokensNotInDefault[1]?.address}
+          onContinue={handleConfirmTokenWarning}
+          onCancel={handleDismissTokenWarning}
+          showCancel={true}
+        />
+        <PageWrapper>
+          <SwapWrapper id="swap-page">
             <SwapHeader allowedSlippage={allowedSlippage} />
             <ConfirmSwapModal
               isOpen={showConfirm}
@@ -552,7 +529,7 @@ export default function Swap() {
             />
 
             <div style={{ display: 'relative' }}>
-              <SwapSection redesignFlag={redesignFlagEnabled}>
+              <SwapSection>
                 <Trace section={SectionName.CURRENCY_INPUT_PANEL}>
                   <SwapCurrencyInputPanel
                     label={
@@ -576,9 +553,9 @@ export default function Swap() {
                   />
                 </Trace>
               </SwapSection>
-              <ArrowWrapper clickable={isSupportedChain(chainId)} redesignFlag={redesignFlagEnabled}>
+              <ArrowWrapper clickable={isSupportedChain(chainId)}>
                 <TraceEvent
-                  events={[Event.onClick]}
+                  events={[BrowserEvent.onClick]}
                   name={EventName.SWAP_TOKENS_REVERSED}
                   element={ElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON}
                 >
@@ -601,9 +578,9 @@ export default function Swap() {
                 </TraceEvent>
               </ArrowWrapper>
             </div>
-            <AutoColumn gap={redesignFlagEnabled ? '12px' : '8px'}>
+            <AutoColumn gap="12px">
               <div>
-                <OutputSwapSection redesignFlag={redesignFlagEnabled} showDetailsDropdown={showDetailsDropdown}>
+                <OutputSwapSection showDetailsDropdown={showDetailsDropdown}>
                   <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
                     <SwapCurrencyInputPanel
                       value={formattedAmounts[Field.OUTPUT]}
@@ -627,7 +604,7 @@ export default function Swap() {
                   {recipient !== null && !showWrap ? (
                     <>
                       <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                        <ArrowWrapper clickable={false} redesignFlag={redesignFlagEnabled}>
+                        <ArrowWrapper clickable={false}>
                           <ArrowDown size="16" color={theme.deprecated_text2} />
                         </ArrowWrapper>
                         <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
@@ -639,7 +616,7 @@ export default function Swap() {
                   ) : null}
                 </OutputSwapSection>
                 {showDetailsDropdown && (
-                  <DetailsSwapSection redesignFlag={redesignFlagEnabled}>
+                  <DetailsSwapSection>
                     <SwapDetailsDropdown
                       trade={trade}
                       syncing={routeIsSyncing}
@@ -661,12 +638,12 @@ export default function Swap() {
                   </ButtonPrimary>
                 ) : !account ? (
                   <TraceEvent
-                    events={[Event.onClick]}
+                    events={[BrowserEvent.onClick]}
                     name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
                     properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
                     element={ElementName.CONNECT_WALLET_BUTTON}
                   >
-                    <ButtonLight onClick={toggleWalletModal} redesignFlag={redesignFlagEnabled} fontWeight={600}>
+                    <ButtonLight onClick={toggleWalletModal} fontWeight={600}>
                       <Trans>Connect Wallet</Trans>
                     </ButtonLight>
                   </TraceEvent>
@@ -681,11 +658,11 @@ export default function Swap() {
                     ) : null}
                   </ButtonPrimary>
                 ) : routeNotFound && userHasSpecifiedInputOutput && !routeIsLoading && !routeIsSyncing ? (
-                  <GreyCard style={{ textAlign: 'center' }}>
+                  <GrayCard style={{ textAlign: 'center' }}>
                     <ThemedText.DeprecatedMain mb="4px">
                       <Trans>Insufficient liquidity for this trade.</Trans>
                     </ThemedText.DeprecatedMain>
-                  </GreyCard>
+                  </GrayCard>
                 ) : showApproveFlow ? (
                   <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
                     <AutoColumn style={{ width: '100%' }} gap="12px">
@@ -700,7 +677,7 @@ export default function Swap() {
                         }
                       >
                         <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }} height="20px">
-                          <span style={{ display: 'flex', alignItems: 'center' }}>
+                          <ThemedText.SubHeader width="100%" textAlign="center" color="white">
                             {/* we need to shorten this string on mobile */}
                             {approvalState === ApprovalState.APPROVED ||
                             signatureState === UseERC20PermitState.SIGNED ? (
@@ -708,7 +685,7 @@ export default function Swap() {
                             ) : (
                               <Trans>Allow the Uniswap Protocol to use your {currencies[Field.INPUT]?.symbol}</Trans>
                             )}
-                          </span>
+                          </ThemedText.SubHeader>
                           {approvalPending || approvalState === ApprovalState.PENDING ? (
                             <Loader stroke={theme.white} />
                           ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||

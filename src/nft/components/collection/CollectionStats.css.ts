@@ -1,8 +1,8 @@
-import { style } from '@vanilla-extract/css'
-import { body, bodySmall } from 'nft/css/common.css'
+import { globalStyle, style } from '@vanilla-extract/css'
+import { bodySmall, headlineSmall, subheadSmall } from 'nft/css/common.css'
 import { loadingAsset, loadingBlock } from 'nft/css/loading.css'
 
-import { breakpoints, sprinkles } from '../../css/sprinkles.css'
+import { breakpoints, sprinkles, themeVars, vars } from '../../css/sprinkles.css'
 
 export const statsText = style([
   sprinkles({
@@ -18,17 +18,13 @@ export const statsText = style([
   },
 ])
 
-export const smallStatsText = style({
-  marginLeft: '84px',
-})
-
-export const statsRowItem = sprinkles({ paddingRight: '12' })
-
 export const baseCollectionImage = sprinkles({
   left: '0',
   borderStyle: 'solid',
   borderWidth: '4px',
   borderColor: 'backgroundSurface',
+  borderRadius: 'round',
+  position: 'absolute',
 })
 
 export const collectionImage = style([
@@ -38,6 +34,7 @@ export const collectionImage = style([
     height: '143px',
     verticalAlign: 'top',
     top: '-118px',
+    boxShadow: vars.color.cardDropShadow,
     '@media': {
       [`(max-width: ${breakpoints.sm - 1}px)`]: {
         width: '60px',
@@ -67,6 +64,23 @@ export const description = style([
   },
 ])
 
+globalStyle(`${description} a[href]`, {
+  color: `${themeVars.colors.textSecondary}`,
+  textDecoration: 'none',
+})
+
+globalStyle(`${description} a[href]:hover`, {
+  color: `${themeVars.colors.textSecondary}`,
+  opacity: `${themeVars.opacity.hover}`,
+  textDecoration: 'none',
+})
+
+globalStyle(`${description} a[href]:focus`, {
+  color: `${themeVars.colors.textSecondary}`,
+  opacity: `${themeVars.opacity.pressed}`,
+  textDecoration: 'none',
+})
+
 export const descriptionOpen = style([
   {
     whiteSpace: 'normal',
@@ -81,22 +95,20 @@ export const descriptionOpen = style([
 ])
 
 export const readMore = style([
+  bodySmall,
   {
     verticalAlign: 'top',
-    lineHeight: '20px',
   },
   sprinkles({
-    color: 'blue400',
+    color: 'textSecondary',
     cursor: 'pointer',
     marginLeft: '4',
-    fontSize: '14',
   }),
 ])
 
 export const statsLabel = style([
-  bodySmall,
+  subheadSmall,
   sprinkles({
-    fontWeight: 'normal',
     color: 'textSecondary',
     whiteSpace: 'nowrap',
   }),
@@ -106,12 +118,10 @@ export const statsLabel = style([
 ])
 
 export const statsValue = style([
-  body,
-  sprinkles({
-    fontWeight: 'medium',
-  }),
+  headlineSmall,
   {
     lineHeight: '24px',
+    whiteSpace: 'nowrap',
   },
 ])
 

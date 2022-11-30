@@ -4,7 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import { ButtonEmpty } from 'components/Button'
 import Card, { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import CurrencyLogo from 'components/CurrencyLogo'
+import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Modal from 'components/Modal'
 import { AutoRow, RowBetween } from 'components/Row'
 import { useState } from 'react'
@@ -84,7 +84,7 @@ export default function UnsupportedCurrencyFooter({
                   <OutlineCard key={token.address?.concat('not-supported')}>
                     <AutoColumn gap="10px">
                       <AutoRow gap="5px" align="center">
-                        <CurrencyLogo currency={token} size={'24px'} />
+                        <CurrencyLogo currency={token} size="24px" />
                         <ThemedText.DeprecatedBody fontWeight={500}>{token.symbol}</ThemedText.DeprecatedBody>
                       </AutoRow>
                       {chainId && (
@@ -108,7 +108,7 @@ export default function UnsupportedCurrencyFooter({
           </AutoColumn>
         </Card>
       </Modal>
-      <StyledButtonEmpty padding={'0'} onClick={() => setShowDetails(true)}>
+      <StyledButtonEmpty padding="0" onClick={() => setShowDetails(true)}>
         <ThemedText.DeprecatedBlue>
           <Trans>Read more about unsupported assets</Trans>
         </ThemedText.DeprecatedBlue>

@@ -1,319 +1,272 @@
+import { useNftBalanceQuery } from 'graphql/data/nft/NftBalance'
 import { AnimatedBox, Box } from 'nft/components/Box'
+import { ClearAllButton, LoadingAssets } from 'nft/components/collection/CollectionNfts'
 import { assetList } from 'nft/components/collection/CollectionNfts.css'
 import { FilterButton } from 'nft/components/collection/FilterButton'
-import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
-import { Center, Column, Row } from 'nft/components/Flex'
-import { CrossIcon, TagIcon } from 'nft/components/icons'
+import { Column, Row } from 'nft/components/Flex'
+import { CrossIcon } from 'nft/components/icons'
 import { FilterSidebar } from 'nft/components/profile/view/FilterSidebar'
-import { buttonTextMedium, subhead } from 'nft/css/common.css'
+import { subhead } from 'nft/css/common.css'
 import {
   useBag,
   useFiltersExpanded,
   useIsMobile,
-  useProfilePageState,
   useSellAsset,
   useWalletBalance,
   useWalletCollections,
 } from 'nft/hooks'
-import { fetchMultipleCollectionStats, fetchWalletAssets, OSCollectionsFetcher } from 'nft/queries'
-import { ProfilePageStateType, WalletCollection } from 'nft/types'
-import { Dispatch, SetStateAction, useEffect, useMemo, useReducer, useState } from 'react'
+import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
+import { OSCollectionsFetcher } from 'nft/queries'
+import { WalletCollection } from 'nft/types'
+import { Dispatch, SetStateAction, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { useInfiniteQuery, useQuery } from 'react-query'
-import { useSpring } from 'react-spring'
+import { useInfiniteQuery } from 'react-query'
+import { easings, useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
+import shallow from 'zustand/shallow'
 
 import { EmptyWalletContent } from './EmptyWalletContent'
-import { ProfileAccountDetails } from './ProfileAccountDetails'
 import * as styles from './ProfilePage.css'
-import { ProfilePageLoadingSkeleton } from './ProfilePageLoadingSkeleton'
-import { WalletAssetDisplay } from './WalletAssetDisplay'
+import { ProfileBodyLoadingSkeleton } from './ProfilePageLoadingSkeleton'
+import { ViewMyNftsAsset } from './ViewMyNftsAsset'
 
-const SellModeButton = styled.button<{ active: boolean }>`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 10px 12px;
-  border-radius: 12px;
-  gap: 8px;
-  cursor: pointer;
-  background-color: ${({ theme, active }) => (active ? theme.accentAction : theme.backgroundInteractive)};
-  color: #fff;
-  border: none;
-  outline: none;
-  &:hover {
-    background-color: ${({ theme }) => theme.accentAction};
+const ProfilePageColumn = styled(Column)`
+  ${ScreenBreakpointsPaddings}
+`
+
+const ProfileHeader = styled.div`
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 38px;
+  padding-bottom: 16px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    font-size: 20px;
+    line-height: 28px;
+    margin-bottom: 0px;
   }
 `
 
+export const DEFAULT_WALLET_ASSET_QUERY_AMOUNT = 25
+export const WALLET_COLLECTIONS_PAGINATION_LIMIT = 300
 const FILTER_SIDEBAR_WIDTH = 300
 const PADDING = 16
 
-function roundFloorPrice(price?: number, n?: number) {
-  return price ? Math.round(price * Math.pow(10, n ?? 3) + Number.EPSILON) / Math.pow(10, n ?? 3) : 0
-}
-
 export const ProfilePage = () => {
   const { address } = useWalletBalance()
-  const collectionFilters = useWalletCollections((state) => state.collectionFilters)
-  const setCollectionFilters = useWalletCollections((state) => state.setCollectionFilters)
-  const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
-  const walletAssets = useWalletCollections((state) => state.walletAssets)
-  const setWalletAssets = useWalletCollections((state) => state.setWalletAssets)
-  const displayAssets = useWalletCollections((state) => state.displayAssets)
-  const setDisplayAssets = useWalletCollections((state) => state.setDisplayAssets)
   const walletCollections = useWalletCollections((state) => state.walletCollections)
   const setWalletCollections = useWalletCollections((state) => state.setWalletCollections)
-  const listFilter = useWalletCollections((state) => state.listFilter)
+  const { resetSellAssets } = useSellAsset(
+    ({ reset }) => ({
+      resetSellAssets: reset,
+    }),
+    shallow
+  )
   const sellAssets = useSellAsset((state) => state.sellAssets)
-  const reset = useSellAsset((state) => state.reset)
-  const resetSellAssets = useSellAsset((state) => state.reset)
-  const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
+  const toggleBag = useBag((state) => state.toggleBag)
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
-  const isBagExpanded = useBag((state) => state.bagExpanded)
   const isMobile = useIsMobile()
-  const [isSellMode, toggleSellMode] = useReducer((s) => !s, false)
 
-  const handleSellModeClick = () => {
-    resetSellAssets()
-    toggleSellMode()
+  const getOwnerCollections = async ({ pageParam = 0 }) => {
+    const res = await OSCollectionsFetcher({
+      params: {
+        asset_owner: address,
+        offset: `${pageParam * WALLET_COLLECTIONS_PAGINATION_LIMIT}`,
+        limit: `${WALLET_COLLECTIONS_PAGINATION_LIMIT}`,
+      },
+    })
+    return {
+      data: res,
+      nextPage: pageParam + 1,
+    }
   }
 
-  const { data: ownerCollections, isLoading: collectionsAreLoading } = useQuery(
-    ['ownerCollections', address],
-    () => OSCollectionsFetcher({ params: { asset_owner: address, offset: '0', limit: '300' } }),
-    {
-      refetchOnWindowFocus: false,
-    }
-  )
-
-  const ownerCollectionsAddresses = useMemo(() => ownerCollections?.map(({ address }) => address), [ownerCollections])
-  const { data: collectionStats, isLoading: collectionStatsAreLoading } = useQuery(
-    ['ownerCollectionStats', ownerCollectionsAddresses],
-    () => fetchMultipleCollectionStats({ addresses: ownerCollectionsAddresses ?? [] }),
-    {
-      refetchOnWindowFocus: false,
-    }
-  )
-
   const {
-    data: ownerAssetsData,
+    data: ownerCollectionsData,
     fetchNextPage,
     hasNextPage,
+    isFetchingNextPage,
     isSuccess,
-    isLoading: assetsAreLoading,
-  } = useInfiniteQuery(
-    ['ownerAssets', address, collectionFilters],
-    async ({ pageParam = 0 }) => {
-      return await fetchWalletAssets({
-        ownerAddress: address ?? '',
-        collectionAddresses: collectionFilters,
-        pageParam,
-      })
-    },
-    {
-      getNextPageParam: (lastPage, pages) => {
-        return lastPage?.flat().length === 25 ? pages.length : null
-      },
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-    }
+  } = useInfiniteQuery(['ownerCollections', { address }], getOwnerCollections, {
+    getNextPageParam: (lastGroup, _allGroups) => (lastGroup.data.length === 0 ? undefined : lastGroup.nextPage),
+    refetchInterval: 15000,
+    refetchIntervalInBackground: false,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  })
+
+  const ownerCollections = useMemo(
+    () => (isSuccess ? ownerCollectionsData?.pages.map((page) => page.data).flat() : null),
+    [isSuccess, ownerCollectionsData]
   )
-
-  const anyQueryIsLoading = collectionsAreLoading || collectionStatsAreLoading || assetsAreLoading
-
-  const ownerAssets = useMemo(() => (isSuccess ? ownerAssetsData?.pages.flat() : null), [isSuccess, ownerAssetsData])
-
-  useEffect(() => {
-    setDisplayAssets(walletAssets, listFilter)
-  }, [walletAssets, listFilter, setDisplayAssets])
-
-  useEffect(() => {
-    setWalletAssets(ownerAssets?.flat() ?? [])
-  }, [ownerAssets, setWalletAssets])
 
   useEffect(() => {
     ownerCollections && setWalletCollections(ownerCollections)
   }, [ownerCollections, setWalletCollections])
 
-  useEffect(() => {
-    if (ownerCollections?.length && collectionStats?.length) {
-      const ownerCollectionsCopy = [...ownerCollections]
-      for (const collection of ownerCollectionsCopy) {
-        const floorPrice = collectionStats.find((stat) => stat.address === collection.address)?.floorPrice
-        collection.floorPrice = roundFloorPrice(floorPrice)
-      }
-      setWalletCollections(ownerCollectionsCopy)
-    }
-  }, [collectionStats, ownerCollections, setWalletCollections])
-
-  useEffect(() => {
-    if (ownerCollections?.length && collectionStats?.length) {
-      const ownerCollectionsCopy = [...ownerCollections]
-      for (const collection of ownerCollectionsCopy) {
-        const floorPrice = collectionStats.find((stat) => stat.address === collection.address)?.floorPrice
-        collection.floorPrice = floorPrice ? Math.round(floorPrice * 1000 + Number.EPSILON) / 1000 : 0 //round to at most 3 digits
-      }
-      setWalletCollections(ownerCollectionsCopy)
-    }
-  }, [collectionStats, ownerCollections, setWalletCollections])
-
-  const { gridX } = useSpring({
-    gridX: isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING,
-  })
-
   return (
-    <Column
-      width="full"
-      paddingLeft={{ sm: `${PADDING}`, md: '52' }}
-      paddingRight={{ sm: `${PADDING}`, md: isBagExpanded ? '0' : '72' }}
-      paddingTop={{ sm: `${PADDING}`, md: '40' }}
-    >
-      {anyQueryIsLoading ? (
-        <ProfilePageLoadingSkeleton />
-      ) : walletAssets.length === 0 ? (
-        <EmptyWalletContent />
-      ) : (
+    <ProfilePageColumn width="full" paddingTop={{ sm: `${PADDING}`, md: '40' }}>
+      <>
+        <ProfileHeader>My NFTs</ProfileHeader>
         <Row alignItems="flex-start" position="relative">
-          <FilterSidebar />
-
+          <FilterSidebar
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+            walletCollections={walletCollections}
+          />
           {(!isMobile || !isFiltersExpanded) && (
-            <Column width="full">
-              <ProfileAccountDetails />
-              <AnimatedBox
-                flexShrink="0"
-                style={{
-                  transform: gridX.to(
-                    (x) =>
-                      `translate(${Number(x) - (!isMobile && isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING)}px)`
-                  ),
-                }}
-              >
-                <Row gap="8" flexWrap="nowrap" justifyContent="space-between">
-                  <FilterButton
-                    isMobile={isMobile}
-                    isFiltersExpanded={isFiltersExpanded}
-                    results={displayAssets.length}
-                    onClick={() => setFiltersExpanded(!isFiltersExpanded)}
-                  />
-                  <Row gap="8" flexWrap="nowrap">
-                    {isSellMode && <SelectAllButton />}
-                    <SellModeButton active={isSellMode} onClick={handleSellModeClick}>
-                      <TagIcon height={20} width={20} />
-                      Sell
-                    </SellModeButton>
-                  </Row>
-                </Row>
-                <Row>
-                  <CollectionFiltersRow
-                    collections={walletCollections}
-                    collectionFilters={collectionFilters}
-                    setCollectionFilters={setCollectionFilters}
-                    clearCollectionFilters={clearCollectionFilters}
-                  />
-                </Row>
-                <InfiniteScroll
-                  next={fetchNextPage}
-                  hasMore={hasNextPage ?? false}
-                  loader={
-                    hasNextPage ? (
-                      <Center>
-                        <LoadingSparkle />
-                      </Center>
-                    ) : null
-                  }
-                  dataLength={displayAssets.length}
-                  style={{ overflow: 'unset' }}
-                >
-                  <div className={assetList}>
-                    {displayAssets && displayAssets.length
-                      ? displayAssets.map((asset, index) => (
-                          <WalletAssetDisplay asset={asset} isSellMode={isSellMode} key={index} />
-                        ))
-                      : null}
-                  </div>
-                </InfiniteScroll>
-              </AnimatedBox>
-            </Column>
+            <Suspense fallback={<ProfileBodyLoadingSkeleton />}>
+              <ProfilePageNfts
+                walletCollections={walletCollections}
+                isFiltersExpanded={isFiltersExpanded}
+                setFiltersExpanded={setFiltersExpanded}
+              />
+            </Suspense>
           )}
         </Row>
-      )}
+      </>
       {sellAssets.length > 0 && (
         <Row
           display={{ sm: 'flex', md: 'none' }}
           position="fixed"
-          bottom="24"
           left="16"
           height="56"
           borderRadius="12"
           paddingX="16"
           paddingY="12"
-          style={{ background: '#0d0e0ef2', width: 'calc(100% - 32px)', lineHeight: '24px' }}
+          background="backgroundModule"
+          borderStyle="solid"
+          borderColor="backgroundOutline"
+          borderWidth="1px"
+          style={{ bottom: '68px', width: 'calc(100% - 32px)', lineHeight: '24px' }}
           className={subhead}
         >
-          {sellAssets.length}&nbsp; selected item{sellAssets.length === 1 ? '' : 's'}
+          {sellAssets.length} NFT{sellAssets.length === 1 ? '' : 's'}
           <Box
             fontWeight="semibold"
             fontSize="14"
             cursor="pointer"
-            color="genieBlue"
+            color="textSecondary"
             marginRight="20"
             marginLeft="auto"
-            onClick={reset}
+            onClick={resetSellAssets}
             lineHeight="16"
           >
             Clear
           </Box>
           <Box
+            color="white"
             marginRight="0"
             fontWeight="medium"
             fontSize="14"
             cursor="pointer"
-            backgroundColor="genieBlue"
-            onClick={() => setSellPageState(ProfilePageStateType.LISTING)}
+            backgroundColor="accentAction"
+            onClick={toggleBag}
             lineHeight="16"
             borderRadius="12"
-            padding="8"
+            paddingY="8"
+            paddingX="28"
           >
-            Continue
+            List for sale
           </Box>
         </Row>
       )}
-    </Column>
+    </ProfilePageColumn>
   )
 }
 
-const SelectAllButton = () => {
-  const [isAllSelected, setIsAllSelected] = useState(false)
-  const displayAssets = useWalletCollections((state) => state.displayAssets)
-  const selectSellAsset = useSellAsset((state) => state.selectSellAsset)
-  const resetSellAssets = useSellAsset((state) => state.reset)
+const ProfilePageNfts = ({
+  walletCollections,
+  isFiltersExpanded,
+  setFiltersExpanded,
+}: {
+  walletCollections: WalletCollection[]
+  isFiltersExpanded: boolean
+  setFiltersExpanded: (filtersExpanded: boolean) => void
+}) => {
+  const { address } = useWalletBalance()
+  const setCollectionFilters = useWalletCollections((state) => state.setCollectionFilters)
+  const collectionFilters = useWalletCollections((state) => state.collectionFilters)
+  const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
+  const isBagExpanded = useBag((state) => state.bagExpanded)
+  const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
+  const isMobile = useIsMobile()
+  const sellAssets = useSellAsset((state) => state.sellAssets)
 
-  useEffect(() => {
-    if (isAllSelected) {
-      displayAssets.forEach((asset) => selectSellAsset(asset))
-    } else {
-      resetSellAssets()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAllSelected, resetSellAssets, selectSellAsset])
+  const {
+    walletAssets: ownerAssets,
+    loadNext,
+    hasNext,
+    isLoadingNext,
+  } = useNftBalanceQuery(address, collectionFilters, [], DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
 
-  const toggleAllSelected = () => {
-    setIsAllSelected(!isAllSelected)
-  }
+  const { gridX } = useSpring({
+    gridX: isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING,
+    config: {
+      duration: 250,
+      easing: easings.easeOutSine,
+    },
+  })
+
   return (
-    <Box
-      marginRight="12"
-      paddingX="12"
-      paddingY="10"
-      cursor="pointer"
-      color="textSecondary"
-      onClick={toggleAllSelected}
-      className={buttonTextMedium}
-    >
-      {isAllSelected ? 'Deselect all' : 'Select all'}
-    </Box>
+    <Column width="full">
+      {ownerAssets?.length === 0 ? (
+        <EmptyWalletContent />
+      ) : (
+        <AnimatedBox
+          flexShrink="0"
+          position={isMobile && isBagExpanded ? 'fixed' : 'static'}
+          style={{
+            transform: gridX.to(
+              (x) => `translate(${Number(x) - (!isMobile && isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING)}px)`
+            ),
+          }}
+          paddingY="20"
+        >
+          <Row gap="8" flexWrap="nowrap" justifyContent="space-between">
+            <FilterButton
+              isMobile={isMobile}
+              isFiltersExpanded={isFiltersExpanded}
+              onClick={() => setFiltersExpanded(!isFiltersExpanded)}
+            />
+          </Row>
+          <Row>
+            <CollectionFiltersRow
+              collections={walletCollections}
+              collectionFilters={collectionFilters}
+              setCollectionFilters={setCollectionFilters}
+              clearCollectionFilters={clearCollectionFilters}
+            />
+          </Row>
+          <InfiniteScroll
+            next={() => loadNext(DEFAULT_WALLET_ASSET_QUERY_AMOUNT)}
+            hasMore={hasNext}
+            loader={
+              Boolean(hasNext && ownerAssets?.length) && <LoadingAssets count={DEFAULT_WALLET_ASSET_QUERY_AMOUNT} />
+            }
+            dataLength={ownerAssets?.length ?? 0}
+            className={ownerAssets?.length || isLoadingNext ? assetList : undefined}
+            style={{ overflow: 'unset' }}
+          >
+            {ownerAssets?.length
+              ? ownerAssets.map((asset, index) => (
+                  <div key={index}>
+                    <ViewMyNftsAsset
+                      asset={asset}
+                      mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
+                      setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+                      hideDetails={sellAssets.length > 0}
+                    />
+                  </div>
+                ))
+              : null}
+          </InfiniteScroll>
+        </AnimatedBox>
+      )}
+    </Column>
   )
 }
 
@@ -331,31 +284,18 @@ const CollectionFiltersRow = ({
   const getCollection = (collectionAddress: string) => {
     return collections?.find((collection) => collection.address === collectionAddress)
   }
+  const handleClearAllClick = useCallback(() => clearCollectionFilters(), [clearCollectionFilters])
   return (
-    <Row paddingTop="18" gap="8" flexWrap="wrap">
-      {collectionFilters &&
+    <Row paddingY="18" gap="8" flexWrap="wrap">
+      {Boolean(collectionFilters?.length) &&
         collectionFilters.map((collectionAddress, index) => (
           <CollectionFilterItem
             collection={getCollection(collectionAddress)}
-            key={index}
+            key={`CollectionFilterItem-${collectionAddress}-${index}`}
             setCollectionFilters={setCollectionFilters}
           />
         ))}
-      {collectionFilters?.length ? (
-        <Box
-          as="button"
-          paddingLeft="8"
-          paddingRight="8"
-          color="genieBlue"
-          background="none"
-          fontSize="16"
-          border="none"
-          cursor="pointer"
-          onClick={() => clearCollectionFilters()}
-        >
-          Clear all
-        </Box>
-      ) : null}
+      {Boolean(collectionFilters?.length) && <ClearAllButton onClick={handleClearAllClick}>Clear all</ClearAllButton>}
     </Row>
   )
 }
@@ -371,11 +311,11 @@ const CollectionFilterItem = ({
   return (
     <Row
       justifyContent="center"
-      paddingRight="4"
-      paddingTop="4"
-      paddingBottom="4"
-      paddingLeft="8"
-      borderRadius="12"
+      paddingTop="6"
+      paddingRight="6"
+      paddingBottom="6"
+      paddingLeft="12"
+      borderRadius="8"
       background="backgroundOutline"
       fontSize="14"
     >

@@ -1,7 +1,8 @@
 import { Trans } from '@lingui/macro'
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
-import { ElementName, Event, EventName } from 'analytics/constants'
-import { TraceEvent } from 'analytics/TraceEvent'
+import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import {
   formatPercentInBasisPointsNumber,
   formatPercentNumber,
@@ -9,8 +10,7 @@ import {
   getDurationFromDateMilliseconds,
   getDurationUntilTimestampSeconds,
   getTokenAddress,
-} from 'analytics/utils'
-import useTransactionDeadline from 'hooks/useTransactionDeadline'
+} from 'lib/utils/analytics'
 import { ReactNode } from 'react'
 import { Text } from 'rebass'
 import { InterfaceTrade } from 'state/routing/types'
@@ -130,7 +130,7 @@ export default function SwapModalFooter({
     <>
       <AutoRow>
         <TraceEvent
-          events={[Event.onClick]}
+          events={[BrowserEvent.onClick]}
           element={ElementName.CONFIRM_SWAP_BUTTON}
           name={EventName.SWAP_SUBMITTED_BUTTON_CLICKED}
           properties={formatAnalyticsEventProperties({

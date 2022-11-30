@@ -1,3 +1,4 @@
+import { NftAssetSortableField } from 'graphql/data/nft/__generated__/AssetPaginationQuery.graphql'
 import create from 'zustand'
 import { devtools } from 'zustand/middleware'
 
@@ -14,16 +15,27 @@ export const SortByPointers = {
   [SortBy.RareToCommon]: 'rare',
   [SortBy.CommonToRare]: 'common',
 }
+interface QueryInfo {
+  field: NftAssetSortableField
+  asc: boolean
+}
+export const SortByQueries = {
+  [SortBy.HighToLow]: { field: 'PRICE', asc: false } as QueryInfo,
+  [SortBy.LowToHigh]: { field: 'PRICE', asc: true } as QueryInfo,
+  [SortBy.RareToCommon]: { field: 'RARITY', asc: true } as QueryInfo,
+  [SortBy.CommonToRare]: { field: 'RARITY', asc: false } as QueryInfo,
+}
 
 export type Trait = {
   trait_type: string
   trait_value: string
-  trait_count: number
+  trait_count?: number
   floorPrice?: number
 }
 
 interface State {
   traits: Trait[]
+  hasRarity: boolean
   markets: string[]
   minPrice: string
   maxPrice: string
@@ -37,6 +49,7 @@ interface State {
 }
 
 type Actions = {
+  setHasRarity: (hasRarity: boolean) => void
   setMarketCount: (_: Record<string, number>) => void
   addMarket: (market: string) => void
   removeMarket: (market: string) => void
@@ -61,9 +74,10 @@ export const initialCollectionFilterState: State = {
   minRarity: '',
   maxRarity: '',
   traits: [],
+  hasRarity: false,
   markets: [],
   marketCount: {},
-  buyNow: true,
+  buyNow: false,
   search: '',
   sortBy: SortBy.LowToHigh,
   showFullTraitName: { shouldShow: false, trait_value: '', trait_type: '' },
@@ -73,6 +87,7 @@ export const useCollectionFilters = create<CollectionFilters>()(
   devtools(
     (set) => ({
       ...initialCollectionFilterState,
+      setHasRarity: (hasRarity) => set({ hasRarity }),
       setSortBy: (sortBy) => set({ sortBy }),
       setSearch: (search) => set({ search }),
       setBuyNow: (buyNow) => set({ buyNow }),

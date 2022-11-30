@@ -1,9 +1,8 @@
 import { Trans } from '@lingui/macro'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { EventName, SwapPriceUpdateUserResponse } from '@uniswap/analytics-events'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { sendAnalyticsEvent } from 'analytics'
-import { EventName, SWAP_PRICE_UPDATE_USER_RESPONSE } from 'analytics/constants'
-import { getPriceUpdateBasisPoints } from 'analytics/utils'
-import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
+import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useEffect, useState } from 'react'
 import { AlertTriangle, ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
@@ -18,17 +17,17 @@ import { ButtonPrimary } from '../Button'
 import { LightCard } from '../Card'
 import { AutoColumn } from '../Column'
 import { FiatValue } from '../CurrencyInputPanel/FiatValue'
-import CurrencyLogo from '../CurrencyLogo'
+import CurrencyLogo from '../Logo/CurrencyLogo'
 import { RowBetween, RowFixed } from '../Row'
 import TradePrice from '../swap/TradePrice'
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import { SwapShowAcceptChanges, TruncatedText } from './styleds'
 
-const ArrowWrapper = styled.div<{ redesignFlag: boolean }>`
+const ArrowWrapper = styled.div`
   padding: 4px;
   border-radius: 12px;
-  height: ${({ redesignFlag }) => (redesignFlag ? '40px' : '32px')};
-  width: ${({ redesignFlag }) => (redesignFlag ? '40px' : '32px')};
+  height: 40px;
+  width: 40px;
   position: relative;
   margin-top: -18px;
   margin-bottom: -18px;
@@ -36,16 +35,16 @@ const ArrowWrapper = styled.div<{ redesignFlag: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundSurface : theme.deprecated_bg1)};
+  background-color: ${({ theme }) => theme.backgroundSurface};
   border: 4px solid;
-  border-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundModule : theme.deprecated_bg0)};
+  border-color: ${({ theme }) => theme.backgroundModule};
   z-index: 2;
 `
 
 const formatAnalyticsEventProperties = (
   trade: InterfaceTrade<Currency, Currency, TradeType>,
   priceUpdate: number | undefined,
-  response: SWAP_PRICE_UPDATE_USER_RESPONSE
+  response: SwapPriceUpdateUserResponse
 ) => ({
   chain_id:
     trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
@@ -75,8 +74,6 @@ export default function SwapModalHeader({
   onAcceptChanges: () => void
 }) {
   const theme = useTheme()
-  const redesignFlag = useRedesignFlag()
-  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
 
   const [showInverted, setShowInverted] = useState<boolean>(false)
   const [lastExecutionPrice, setLastExecutionPrice] = useState(trade.executionPrice)
@@ -96,17 +93,17 @@ export default function SwapModalHeader({
     if (shouldLogModalCloseEvent && showAcceptChanges)
       sendAnalyticsEvent(
         EventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED,
-        formatAnalyticsEventProperties(trade, priceUpdate, SWAP_PRICE_UPDATE_USER_RESPONSE.REJECTED)
+        formatAnalyticsEventProperties(trade, priceUpdate, SwapPriceUpdateUserResponse.REJECTED)
       )
     setShouldLogModalCloseEvent(false)
   }, [shouldLogModalCloseEvent, showAcceptChanges, setShouldLogModalCloseEvent, trade, priceUpdate])
 
   return (
-    <AutoColumn gap={'4px'} style={{ marginTop: '1rem' }}>
+    <AutoColumn gap="4px" style={{ marginTop: '1rem' }}>
       <LightCard padding="0.75rem 1rem">
-        <AutoColumn gap={'8px'}>
+        <AutoColumn gap="8px">
           <RowBetween align="center">
-            <RowFixed gap={'0px'}>
+            <RowFixed gap="0px">
               <TruncatedText
                 fontSize={24}
                 fontWeight={500}
@@ -115,8 +112,8 @@ export default function SwapModalHeader({
                 {trade.inputAmount.toSignificant(6)}
               </TruncatedText>
             </RowFixed>
-            <RowFixed gap={'0px'}>
-              <CurrencyLogo currency={trade.inputAmount.currency} size={'20px'} style={{ marginRight: '12px' }} />
+            <RowFixed gap="0px">
+              <CurrencyLogo currency={trade.inputAmount.currency} size="20px" style={{ marginRight: '12px' }} />
               <Text fontSize={20} fontWeight={500}>
                 {trade.inputAmount.currency.symbol}
               </Text>
@@ -127,19 +124,19 @@ export default function SwapModalHeader({
           </RowBetween>
         </AutoColumn>
       </LightCard>
-      <ArrowWrapper redesignFlag={redesignFlagEnabled}>
-        <ArrowDown size="16" color={redesignFlagEnabled ? theme.textPrimary : theme.deprecated_text2} />
+      <ArrowWrapper>
+        <ArrowDown size="16" color={theme.textPrimary} />
       </ArrowWrapper>
       <LightCard padding="0.75rem 1rem" style={{ marginBottom: '0.25rem' }}>
-        <AutoColumn gap={'8px'}>
+        <AutoColumn gap="8px">
           <RowBetween align="flex-end">
-            <RowFixed gap={'0px'}>
+            <RowFixed gap="0px">
               <TruncatedText fontSize={24} fontWeight={500}>
                 {trade.outputAmount.toSignificant(6)}
               </TruncatedText>
             </RowFixed>
-            <RowFixed gap={'0px'}>
-              <CurrencyLogo currency={trade.outputAmount.currency} size={'20px'} style={{ marginRight: '12px' }} />
+            <RowFixed gap="0px">
+              <CurrencyLogo currency={trade.outputAmount.currency} size="20px" style={{ marginRight: '12px' }} />
               <Text fontSize={20} fontWeight={500}>
                 {trade.outputAmount.currency.symbol}
               </Text>
@@ -162,7 +159,7 @@ export default function SwapModalHeader({
         <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} />
       </LightCard>
       {showAcceptChanges ? (
-        <SwapShowAcceptChanges justify="flex-start" gap={'0px'}>
+        <SwapShowAcceptChanges justify="flex-start" gap="0px">
           <RowBetween>
             <RowFixed>
               <AlertTriangle size={20} style={{ marginRight: '8px', minWidth: 24 }} />

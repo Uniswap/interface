@@ -2,7 +2,7 @@ import { SupportedChainId } from 'constants/chains'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 
-import { Chain, HistoryDuration } from './__generated__/TokenQuery.graphql'
+import { Chain, HistoryDuration } from './__generated__/TopTokens100Query.graphql'
 
 export enum TimePeriod {
   HOUR,
@@ -25,6 +25,12 @@ export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
     case TimePeriod.YEAR:
       return 'YEAR'
   }
+}
+
+export type PricePoint = { timestamp: number; value: number }
+
+export function isPricePoint(p: PricePoint | null): p is PricePoint {
+  return p !== null
 }
 
 export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
