@@ -84,12 +84,12 @@ function FiatOnRampModalInner() {
   }
 
   const isLoading = isEligibleLoading || isWidgetUrlLoading
-  const buttonEnabled =
-    eligible && fiatOnRampHostUrl && !isFiatBuyAllowedQueryError && !isWidgetUrlQueryError
+  const isError = isFiatBuyAllowedQueryError || isWidgetUrlQueryError
+  const buttonEnabled = eligible && !isError && fiatOnRampHostUrl
 
   return (
     <BottomSheetModal disableSwipe name={ModalName.FiatOnRamp} onClose={onClose}>
-      <Screen bg="background1" edges={['bottom']} mb="lg" pt="md" px="lg">
+      <Screen bg="background1" edges={['bottom']} mb="md" pt="md" px="lg">
         <Flex gap="lg">
           <FiatOnRampModalBackground color={theme.colors.background1} width="100%" />
           <Flex alignItems="center" gap="lg">
@@ -109,7 +109,7 @@ function FiatOnRampModalInner() {
                 CustomIcon={
                   isLoading ? (
                     <SpinningLoader color="textOnBrightPrimary" />
-                  ) : !eligible ? (
+                  ) : eligible === false ? (
                     <TouchableArea onPress={() => openUri(MOONPAY_UNSUPPORTED_REGION_HELP_URL)}>
                       <InformationIcon color={theme.colors.white} width={theme.iconSizes.md} />
                     </TouchableArea>
@@ -121,16 +121,16 @@ function FiatOnRampModalInner() {
                 label={
                   isLoading
                     ? undefined
-                    : eligible
-                    ? t('Buy Crypto')
-                    : t('Not supported in your region')
+                    : eligible === false
+                    ? t('Not supported in your region')
+                    : t('Buy Crypto')
                 }
                 name={ElementName.FiatOnRampWidgetButton}
                 properties={{ externalTransactionId }}
                 size={ButtonSize.Medium}
                 onPress={onPress}
               />
-              {isFiatBuyAllowedQueryError || isWidgetUrlQueryError ? (
+              {isError ? (
                 <Text color="textSecondary" textAlign="center" variant="bodyMicro">
                   {t('Something went wrong on our side.')}
                 </Text>

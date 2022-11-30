@@ -1,6 +1,9 @@
 import { TraceProps } from 'src/components/telemetry/Trace'
 import { TraceEventProps } from 'src/components/telemetry/TraceEvent'
-import { MoonpayTransactionsResponse } from 'src/features/fiatOnRamp/types'
+import {
+  MoonpayIPAddressesResponse,
+  MoonpayTransactionsResponse,
+} from 'src/features/fiatOnRamp/types'
 import { ImportType } from 'src/features/onboarding/utils'
 import { EventName } from 'src/features/telemetry/constants'
 import { EthMethod, WCEventType, WCRequestOutcome } from 'src/features/walletConnect/types'
@@ -45,9 +48,11 @@ export type MoonpayTransactionEventProperties = BaseEventProperty &
 
 export type EventProperties = {
   [EventName.AppLoaded]: BaseEventProperty
-  [EventName.FiatOnRampRegionCheck]: {
-    status: 'failed' | 'success' | 'unknown'
-  } & BaseEventProperty
+  [EventName.FiatOnRampRegionCheck]: { networkStatus: 'success' | 'failed' } & Pick<
+    MoonpayIPAddressesResponse,
+    'isBuyAllowed' | 'isAllowed' | 'isSellAllowed' | 'alpha3'
+  > &
+    BaseEventProperty
   [EventName.FiatOnRampBannerPressed]: BaseEventProperty
   [EventName.FiatOnRampWidgetOpened]: BaseEventProperty & { externalTransactionId: string }
   [EventName.Impression]: BaseEventProperty

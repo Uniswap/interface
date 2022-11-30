@@ -17,7 +17,7 @@ import { TransactionDetails, TransactionStatus } from 'src/features/transactions
 import { logger } from 'src/utils/logger'
 import { ONE_MINUTE_MS } from 'src/utils/time'
 
-const COMMON_PARAMS = serializeQueryParams({ apiKey: config.moonpayApiKey })
+const COMMON_QUERY_PARAMS = serializeQueryParams({ apiKey: config.moonpayApiKey })
 const TRANSACTION_NOT_FOUND = 404
 const FIAT_ONRAMP_STALE_TX_TIMEOUT = ONE_MINUTE_MS * 20
 
@@ -39,20 +39,27 @@ export const fiatOnRampApi = createApi({
   reducerPath: 'fiatOnRampApi',
   baseQuery: fetchBaseQuery({ baseUrl: config.moonpayApiUrl }),
   endpoints: (builder) => ({
-    isFiatOnRampBuyAllowed: builder.query<boolean | null, void>({
-      // TODO: consider a reverse proxy for privacy reasons
-      query: () => `/v4/ip_address?${COMMON_PARAMS}`,
-      transformResponse: (response: MoonpayIPAddressesResponse) => {
-        sendAnalyticsEvent(EventName.FiatOnRampRegionCheck, {
-          status:
-            response.isBuyAllowed === undefined
-              ? 'unknown'
-              : response.isBuyAllowed
-              ? 'success'
-              : 'failed',
-        })
-        return response.isBuyAllowed ?? null
-      },
+    isFiatOnRampBuyAllowed: builder.query<boolean, void>({
+      queryFn: () =>
+        // TODO: consider a reverse proxy for privacy reasons
+        fetch(`${config.moonpayApiUrl}/v4/ip_address?${COMMON_QUERY_PARAMS}`)
+          .then((response) => response.json())
+          .then((response: MoonpayIPAddressesResponse) => {
+            sendAnalyticsEvent(EventName.FiatOnRampRegionCheck, {
+              alpha3: response.alpha3,
+              isAllowed: response.isAllowed,
+              isBuyAllowed: response.isBuyAllowed,
+              isSellAllowed: response.isSellAllowed,
+              networkStatus: 'success',
+            })
+            return { data: response.isBuyAllowed ?? false }
+          })
+          .catch((e) => {
+            logger.error('fiatOnRamp/api', 'isFiatOnRampBuyAllowed', e)
+            sendAnalyticsEvent(EventName.FiatOnRampRegionCheck, { networkStatus: 'failed' })
+
+            return { data: undefined, error: e }
+          }),
     }),
     fiatOnRampWidgetUrl: builder.query<
       string,
@@ -87,7 +94,7 @@ export function fetchFiatOnRampTransaction(
   previousTransactionDetails: TransactionDetails
 ): Promise<TransactionDetails | undefined> {
   return fetch(
-    `${config.moonpayApiUrl}/v1/transactions/ext/${previousTransactionDetails.id}?apiKey=${config.moonpayApiKey}`
+    `${config.moonpayApiUrl}/v1/transactions/ext/${previousTransactionDetails.id}?${COMMON_QUERY_PARAMS}`
   ).then((res) => {
     if (res.status === TRANSACTION_NOT_FOUND) {
       // If Moonpay API returned 404 for the given external trasnsaction id
@@ -96,7 +103,7 @@ export function fetchFiatOnRampTransaction(
       // to avoid leaving placeholders as "pending" for too long, we mark them
       // as "unknown" after some time
       const isStale = dayjs(previousTransactionDetails.addedTime).isBefore(
-        dayjs().subtract(FIAT_ONRAMP_STALE_TX_TIMEOUT)
+        dayjs().subtract(FIAT_ONRAMP_STALE_TX_TIMEOUT, 'ms')
       )
 
       if (isStale) {
@@ -116,7 +123,11 @@ export function fetchFiatOnRampTransaction(
         logger.debug(
           'fiatOnRamp/api',
           'fetchFiatOnRampTransaction',
-          `Transaction with id ${previousTransactionDetails.id} not found, but not stale yet.`
+          `Transaction with id ${
+            previousTransactionDetails.id
+          } not found, but not stale yet (${dayjs()
+            .subtract(previousTransactionDetails.addedTime, 'ms')
+            .unix()}s old).`
         )
 
         return previousTransactionDetails

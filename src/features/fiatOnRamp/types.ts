@@ -7,6 +7,7 @@ export type FiatOnRampWidgetUrlQueryResponse = { url: string }
 
 /** @ref https://dashboard.moonpay.com/api_reference/client_side_api#ip_addresses */
 export type MoonpayIPAddressesResponse = {
+  alpha3?: string
   isAllowed?: boolean
   isBuyAllowed?: boolean
   isSellAllowed?: boolean

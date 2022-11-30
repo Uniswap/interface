@@ -37,7 +37,7 @@ function parseFiatPurchaseTransaction(
 
   return {
     type: TransactionType.FiatPurchase,
-    explorerUrl: transaction.returnUrl, // Moonpay's transaction tracker page
+    explorerUrl: formatReturnUrl(transaction.returnUrl, transaction.id), // Moonpay's transaction tracker page
     outputTokenAddress: outputTokenAddress,
     outputCurrencyAmountFormatted:
       getValidQuote?.quoteCurrencyAmount ?? transaction.quoteCurrencyAmount ?? 0,
@@ -64,6 +64,20 @@ function moonpayStatusToTransactionInfoStatus(
       // completed fiat onramp transactions show up in on-chain history
       return TransactionStatus.Success
   }
+}
+
+// MoonPay does not always (ever?) return the transaction id inside `returnUrl`
+//  returnUrl": "https://buy-sandbox.moonpay.com/transaction_receipt
+// This adds `transactinId` param if required
+function formatReturnUrl(providedReturnUrl: string | undefined, id: string | undefined) {
+  if (!providedReturnUrl || !id) return
+
+  if (providedReturnUrl.includes('?transactionId=')) {
+    return providedReturnUrl
+  }
+
+  // TODO: improve formatting when MoonPay provides us with more info
+  return `${providedReturnUrl}?transactionId=${id}`
 }
 
 export function extractFiatOnRampTransactionDetails(

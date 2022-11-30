@@ -60,7 +60,8 @@ export default function TransactionActionsModal({
   }, [onClose])
 
   const options = useMemo(() => {
-    const isFiatOnRampTransction = transactionDetails.typeInfo.type === TransactionType.FiatPurchase
+    const isFiatOnRampTransaction =
+      transactionDetails.typeInfo.type === TransactionType.FiatPurchase
 
     const maybeViewOnMoonpayOption = onViewMoonpay
       ? [
@@ -94,14 +95,14 @@ export default function TransactionActionsModal({
           dispatch(pushNotification({ type: AppNotificationType.Copied }))
           handleClose()
         },
-        render: isFiatOnRampTransction
+        render: onViewMoonpay
           ? renderOptionItem(t('Copy MoonPay transaction ID'))
           : renderOptionItem(t('Copy transaction ID')),
       },
       {
         key: ElementName.GetHelp,
         onPress: () => {
-          if (isFiatOnRampTransction) {
+          if (isFiatOnRampTransaction) {
             openMoonpayHelpLink()
           } else {
             openUniswapHelpLink()
