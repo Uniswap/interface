@@ -53,17 +53,6 @@ const Fallback = ({ error }: { error: Error & { cause?: Error } }) => {
           </CodeBlockWrapper>
           <AutoRow>
             <Padding>
-              <ThemedText.DeprecatedLink
-                fontSize={16}
-                color="deprecated_blue1"
-                onClick={() => window.location.reload()}
-              >
-                <Trans>Reload application</Trans>
-              </ThemedText.DeprecatedLink>
-            </Padding>
-          </AutoRow>
-          <AutoRow>
-            <Padding>
               <ExternalLink id="get-support-on-discord" href="https://discord.gg/FCfyBSbCU5" target="_blank">
                 <ThemedText.DeprecatedLink fontSize={16} color="deprecated_blue1">
                   <Trans>Get support on Discord</Trans>
@@ -97,6 +86,8 @@ const reloadIfUpdateAvailable = async () => {
       // Makes Workbox call skipWaiting().
       // For more info on skipWaiting see: https://web.dev/service-worker-lifecycle/#skip-the-waiting-phase
       registration.waiting.postMessage({ type: 'SKIP_WAITING' })
+
+      window.location.reload()
     }
   } catch (error) {
     console.error('Failed to update service worker', error)
