@@ -1,7 +1,7 @@
 import { formatEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { Trace, useTrace } from '@uniswap/analytics'
-import { EventName, ModalName } from '@uniswap/analytics-events'
+import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
 import clsx from 'clsx'
 import { OpacityHoverState } from 'components/Common'
 import { Box } from 'nft/components/Box'
@@ -58,7 +58,7 @@ const TxCompleteModal = () => {
   const isMobile = useIsMobile()
   const txHashUrl = getExplorerLink(1, txHash, ExplorerDataType.TRANSACTION)
   const shouldShowModal = (txState === TxStateType.Success || txState === TxStateType.Failed) && txState
-  const trace = useTrace({ modal: ModalName.NFT_TX_COMPLETE })
+  const trace = useTrace({ modal: InterfaceModalName.NFT_TX_COMPLETE })
   const {
     nftsPurchased,
     nftsNotPurchased,
@@ -110,7 +110,7 @@ const TxCompleteModal = () => {
             {/* Successfully purchased NFTs */}
             {showPurchasedModal && (
               <Trace
-                name={EventName.NFT_BUY_BAG_SUCCEEDED}
+                name={NFTEventName.NFT_BUY_BAG_SUCCEEDED}
                 properties={{
                   buy_quantity: nftsPurchased.length,
                   usd_value: parseFloat(formatEther(totalPurchaseValue)) * ethPrice,
@@ -189,7 +189,7 @@ const TxCompleteModal = () => {
               /* Showing both purchases & refunds */
               (showPurchasedModal ? (
                 <Trace
-                  name={EventName.NFT_BUY_BAG_REFUNDED}
+                  name={NFTEventName.NFT_BUY_BAG_REFUNDED}
                   properties={{
                     buy_quantity: nftsPurchased.length,
                     fail_quantity: nftsNotPurchased.length,
@@ -266,7 +266,7 @@ const TxCompleteModal = () => {
               ) : (
                 // Only showing when all assets are unavailable
                 <Trace
-                  name={EventName.NFT_BUY_BAG_REFUNDED}
+                  name={NFTEventName.NFT_BUY_BAG_REFUNDED}
                   properties={{
                     buy_quantity: 0,
                     fail_quantity: nftsNotPurchased.length,

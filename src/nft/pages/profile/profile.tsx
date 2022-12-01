@@ -1,5 +1,5 @@
 import { Trace } from '@uniswap/analytics'
-import { PageName } from '@uniswap/analytics-events'
+import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { Box } from 'nft/components/Box'
 import { Center, Column } from 'nft/components/Flex'
@@ -44,7 +44,7 @@ const ProfileContent = () => {
   const cartExpanded = useBag((state) => state.bagExpanded)
 
   return (
-    <Trace page={PageName.NFT_PROFILE_PAGE} shouldLogImpression>
+    <Trace page={InterfacePageName.NFT_PROFILE_PAGE} shouldLogImpression>
       <Box className={styles.profileWrapper}>
         {/* <Head> TODO: figure out metadata tagging
           <title>Genie | Sell</title>

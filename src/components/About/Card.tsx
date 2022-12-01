@@ -1,5 +1,5 @@
 import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, EventName } from '@uniswap/analytics-events'
+import { BrowserEvent, SharedEventName } from '@uniswap/analytics-events'
 import { Link } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled, { DefaultTheme } from 'styled-components/macro'
@@ -123,7 +123,7 @@ const Card = ({
 }) => {
   const isDarkMode = useIsDarkMode()
   return (
-    <TraceEvent events={[BrowserEvent.onClick]} name={EventName.ELEMENT_CLICKED} element={elementName}>
+    <TraceEvent events={[BrowserEvent.onClick]} name={SharedEventName.ELEMENT_CLICKED} element={elementName}>
       <StyledCard
         type={type}
         as={external ? 'a' : Link}

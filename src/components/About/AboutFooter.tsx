@@ -1,5 +1,5 @@
 import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import { Link } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
@@ -123,7 +123,11 @@ const LogoSectionContent = () => {
         <SocialLink href="https://github.com/Uniswap" target="_blank" rel="noopener noreferrer">
           <DiscordIcon size={32} />
         </SocialLink>
-        <TraceEvent events={[BrowserEvent.onClick]} name={EventName.ELEMENT_CLICKED} element={ElementName.TWITTER_LINK}>
+        <TraceEvent
+          events={[BrowserEvent.onClick]}
+          name={SharedEventName.ELEMENT_CLICKED}
+          element={InterfaceElementName.TWITTER_LINK}
+        >
           <SocialLink href="https://twitter.com/uniswap" target="_blank" rel="noopener noreferrer">
             <TwitterIcon size={32} />
           </SocialLink>

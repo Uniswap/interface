@@ -1,7 +1,7 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
-import { EventName } from '@uniswap/analytics-events'
+import { InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useTokenContract } from 'hooks/useContract'
@@ -97,7 +97,7 @@ export function useApproval(
           token_symbol: token?.symbol,
           token_address: getTokenAddress(token),
         }
-        sendAnalyticsEvent(EventName.APPROVE_TOKEN_TXN_SUBMITTED, eventProperties)
+        sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, eventProperties)
         return {
           response,
           tokenAddress: token.address,

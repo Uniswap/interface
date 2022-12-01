@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { FiatOnrampAnnouncement } from 'components/FiatOnrampAnnouncement'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
@@ -284,9 +284,9 @@ function Web3StatusInner() {
     return (
       <TraceEvent
         events={[BrowserEvent.onClick]}
-        name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
+        name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
         properties={{ received_swap_quote: validSwapQuote }}
-        element={ElementName.CONNECT_WALLET_BUTTON}
+        element={InterfaceElementName.CONNECT_WALLET_BUTTON}
       >
         <Web3StatusConnectWrapper faded={!account}>
           <StyledConnectButton data-testid="navbar-connect-wallet" onClick={toggleWalletModal}>

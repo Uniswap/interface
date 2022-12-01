@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
-import { PageName } from '@uniswap/analytics-events'
+import { InterfacePageName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Fraction, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import ExecuteModal from 'components/vote/ExecuteModal'
@@ -271,7 +271,7 @@ export default function VotePage() {
   }
 
   return (
-    <Trace page={PageName.VOTE_PAGE} shouldLogImpression>
+    <Trace page={InterfacePageName.VOTE_PAGE} shouldLogImpression>
       <>
         <PageWrapper gap="lg" justify="center">
           <VoteModal
