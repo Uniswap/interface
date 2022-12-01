@@ -13,12 +13,14 @@ export const OSCollectionsFetcher = async ({ params }: any): Promise<WalletColle
   const r = await fetch(`https://api.opensea.io/api/v1/collections?${new URLSearchParams(params).toString()}`)
   const walletCollections = await r.json()
   if (walletCollections) {
-    return walletCollections.map((collection: any) => ({
-      address: collection.primary_asset_contracts[0].address,
-      name: collection.name,
-      image: collection.image_url,
-      count: collection.owned_asset_count,
-    }))
+    return walletCollections
+      .filter((collection: any) => collection.primary_asset_contracts.length)
+      .map((collection: any) => ({
+        address: collection.primary_asset_contracts[0].address,
+        name: collection.name,
+        image: collection.image_url,
+        count: collection.owned_asset_count,
+      }))
   } else {
     return []
   }
