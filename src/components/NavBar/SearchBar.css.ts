@@ -104,16 +104,6 @@ export const searchBarInput = style([
   }),
 ])
 
-export const searchBarDropdown = style([
-  baseSearchStyle,
-  sprinkles({
-    borderBottomLeftRadius: '12',
-    borderBottomRightRadius: '12',
-    height: { sm: 'viewHeight', md: 'auto' },
-    borderTop: 'none',
-  }),
-])
-
 export const searchBarDropdownNft = style([
   baseSearchNftStyle,
   sprinkles({
