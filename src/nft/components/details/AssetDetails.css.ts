@@ -30,31 +30,18 @@ export const embedContainer = style({
   paddingTop: '100%',
 })
 
-export const embed = style({
-  borderRadius: '20px',
-  alignSelf: 'center',
-  maxHeight: 'calc(90vh - 165px)',
-  minHeight: 400,
-  maxWidth: 780,
-  boxShadow: `0px 20px 50px var(--shadow), 0px 10px 50px rgba(70, 115, 250, 0.2)`,
-  '@media': {
-    '(max-width: 1024px)': {
-      maxHeight: '64vh',
-    },
-    '(max-width: 640px)': {
-      minHeight: 280,
-      maxHeight: '56vh',
-      maxWidth: '100%',
-    },
+export const embed = style([
+  image,
+  {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    width: '100%',
+    height: '100%',
   },
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  bottom: 0,
-  right: 0,
-  width: '100%',
-  height: '100%',
-})
+])
 
 export const container = style([
   center,
