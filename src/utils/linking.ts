@@ -43,7 +43,10 @@ export async function openUri(
     if (openExternalBrowser) {
       await Linking.openURL(uri)
     } else {
-      await WebBrowser.openBrowserAsync(uri, { controlsColor })
+      await WebBrowser.openBrowserAsync(uri, {
+        controlsColor,
+        presentationStyle: WebBrowser.WebBrowserPresentationStyle.FULL_SCREEN,
+      })
     }
   } catch (error) {
     logger.error('linking', 'openUri', `${error}`)

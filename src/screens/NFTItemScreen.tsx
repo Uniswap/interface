@@ -64,24 +64,28 @@ export function NFTItemScreen({
     }
   }, [asset?.nftContract, asset?.tokenId])
 
-  const Header = useMemo(
+  const FixedHeader = useMemo(
     () => (
       <BackHeader
         endAdornment={
-          <TouchableOpacity onPress={onShare}>
+          <TouchableArea onPress={onShare}>
             <ShareIcon
               color={theme.colors.textSecondary}
               height={iconSizes.lg}
               width={iconSizes.lg}
             />
-          </TouchableOpacity>
+          </TouchableArea>
         }
-        pb="xs"
-        pt="xxs"
-        px="xs"
-      />
+        pb="sm"
+        pt="md">
+        <Flex shrink>
+          <Text color="textPrimary" numberOfLines={1} variant="bodyLarge">
+            {asset?.name}
+          </Text>
+        </Flex>
+      </BackHeader>
     ),
-    [theme.colors.textSecondary, onShare]
+    [theme.colors.textSecondary, onShare, asset]
   )
 
   const creatorInfo = useMemo(() => {
@@ -114,37 +118,56 @@ export function NFTItemScreen({
 
   return (
     <>
-      <HeaderScrollScreen contentHeader={<Box px="md">{Header}</Box>} fixedHeader={Header}>
-        <Flex mb="xxl" mt="md" mx="lg" pb="xxl">
-          <Flex centered borderRadius="lg" overflow="hidden">
-            {nftLoading ? (
-              <Box aspectRatio={1} width="100%">
-                <Loading type="image" />
-              </Box>
-            ) : asset?.image?.url ? (
-              <NFTViewer autoplay uri={asset.image.url} />
-            ) : (
-              <Box aspectRatio={1} bg="background2" width="100%">
-                <BaseCard.ErrorState
-                  retryButtonLabel="Retry"
-                  title={t("Couldn't load NFT details")}
-                  onRetry={() => refetch?.()}
+      <HeaderScrollScreen
+        contentHeader={
+          <BackHeader
+            endAdornment={
+              <TouchableOpacity onPress={onShare}>
+                <ShareIcon
+                  color={theme.colors.textSecondary}
+                  height={iconSizes.lg}
+                  width={iconSizes.lg}
                 />
-              </Box>
-            )}
-          </Flex>
+              </TouchableOpacity>
+            }
+            pb="sm"
+            pt="md"
+            px="md"
+          />
+        }
+        fixedHeader={FixedHeader}>
+        <Flex gap="lg" mb="xxl" mt="md" mx="lg" pb="xxl">
+          <Flex gap="lg">
+            <Flex centered borderRadius="lg" overflow="hidden">
+              {nftLoading ? (
+                <Box aspectRatio={1} width="100%">
+                  <Loading type="image" />
+                </Box>
+              ) : asset?.image?.url ? (
+                <NFTViewer autoplay uri={asset.image.url} />
+              ) : (
+                <Box aspectRatio={1} bg="background2" width="100%">
+                  <BaseCard.ErrorState
+                    retryButtonLabel="Retry"
+                    title={t("Couldn't load NFT details")}
+                    onRetry={() => refetch?.()}
+                  />
+                </Box>
+              )}
+            </Flex>
 
-          <Flex gap="xxs">
-            {nftLoading ? (
-              <Loading height={theme.textVariants.subheadLarge.lineHeight} type="text" />
-            ) : (
-              <Text numberOfLines={2} variant="subheadLarge">
-                {asset?.name || '-'}
+            <Flex gap="xxs">
+              {nftLoading ? (
+                <Loading height={theme.textVariants.subheadLarge.lineHeight} type="text" />
+              ) : (
+                <Text numberOfLines={2} variant="subheadLarge">
+                  {asset?.name || '-'}
+                </Text>
+              )}
+              <Text color="textSecondary" variant="subheadSmall">
+                {t('Owned by {{owner}}', { owner: ownerDisplayName?.name })}
               </Text>
-            )}
-            <Text color="textSecondary" variant="subheadSmall">
-              {t('Owned by {{owner}}', { owner: ownerDisplayName?.name })}
-            </Text>
+            </Flex>
           </Flex>
 
           {/* Collection info */}
