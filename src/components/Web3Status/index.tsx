@@ -20,12 +20,7 @@ import { colors } from 'theme/colors'
 import { flexRowNoWrap } from 'theme/styles'
 
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import {
-  useCloseModal,
-  useModalIsOpen,
-  useToggleWalletDropdown,
-  useToggleWalletModal,
-} from '../../state/application/hooks'
+import { useCloseModal, useModalIsOpen, useToggleWalletDropdown } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import { TransactionDetails } from '../../state/transactions/types'
@@ -208,7 +203,6 @@ function Web3StatusInner() {
   const validSwapQuote = getIsValidSwapQuote(trade, tradeState, swapInputError)
   const theme = useTheme()
   const toggleWalletDropdown = useToggleWalletDropdown()
-  const toggleWalletModal = useToggleWalletModal()
   const walletIsOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
 
@@ -225,13 +219,12 @@ function Web3StatusInner() {
   const pending = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
 
   const hasPendingTransactions = !!pending.length
-  const toggleWallet = toggleWalletDropdown
 
   if (!chainId) {
     return null
   } else if (error) {
     return (
-      <Web3StatusError onClick={toggleWallet}>
+      <Web3StatusError onClick={toggleWalletDropdown}>
         <NetworkIcon />
         <Text>
           <Trans>Error</Trans>
@@ -248,7 +241,7 @@ function Web3StatusInner() {
       <Web3StatusConnected
         data-testid="web3-status-connected"
         isNftActive={isNftActive}
-        onClick={toggleWallet}
+        onClick={toggleWalletDropdown}
         pending={hasPendingTransactions}
         isClaimAvailable={isClaimAvailable}
       >
@@ -282,7 +275,7 @@ function Web3StatusInner() {
         element={ElementName.CONNECT_WALLET_BUTTON}
       >
         <Web3StatusConnectWrapper faded={!account}>
-          <StyledConnectButton data-testid="navbar-connect-wallet" onClick={toggleWalletModal}>
+          <StyledConnectButton data-testid="navbar-connect-wallet" onClick={toggleWalletDropdown}>
             <Trans>Connect</Trans>
           </StyledConnectButton>
           <VerticalDivider />

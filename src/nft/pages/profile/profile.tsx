@@ -10,7 +10,7 @@ import { buttonMedium, headlineMedium } from 'nft/css/common.css'
 import { useBag, useNFTList, useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { ListingStatus, ProfilePageStateType } from 'nft/types'
 import { Suspense, useEffect, useRef } from 'react'
-import { useToggleWalletModal } from 'state/application/hooks'
+import { useToggleWalletDropdown } from 'state/application/hooks'
 
 import * as styles from './profile.css'
 
@@ -31,7 +31,7 @@ const ProfileContent = () => {
 
   const { account } = useWeb3React()
   const accountRef = useRef(account)
-  const toggleWalletModal = useToggleWalletModal()
+  const toggleWalletDropdown = useToggleWalletDropdown()
 
   useEffect(() => {
     if (accountRef.current !== account) {
@@ -60,7 +60,7 @@ const ProfileContent = () => {
                 <Box as="span" className={headlineMedium} color="textSecondary" marginBottom="24" display="block">
                   No items to display
                 </Box>
-                <Box as="button" className={buttonMedium} onClick={toggleWalletModal}>
+                <Box as="button" className={buttonMedium} onClick={toggleWalletDropdown}>
                   Connect Wallet
                 </Box>
               </Center>

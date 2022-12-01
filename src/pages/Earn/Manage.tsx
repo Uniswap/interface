@@ -22,7 +22,7 @@ import usePrevious from '../../hooks/usePrevious'
 import useStablecoinPrice from '../../hooks/useStablecoinPrice'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useV2Pair } from '../../hooks/useV2Pairs'
-import { useToggleWalletModal } from '../../state/application/hooks'
+import { useToggleWalletDropdown } from '../../state/application/hooks'
 import { useTokenBalance } from '../../state/connection/hooks'
 import { useStakingInfo } from '../../state/stake/hooks'
 import { ThemedText } from '../../theme'
@@ -149,15 +149,15 @@ export default function Manage() {
   const valueOfTotalStakedAmountInUSDC =
     valueOfTotalStakedAmountInWETH && USDPrice?.quote(valueOfTotalStakedAmountInWETH)
 
-  const toggleWalletModal = useToggleWalletModal()
+  const toggleWalletDropdown = useToggleWalletDropdown()
 
   const handleDepositClick = useCallback(() => {
     if (account) {
       setShowStakingModal(true)
     } else {
-      toggleWalletModal()
+      toggleWalletDropdown()
     }
-  }, [account, toggleWalletModal])
+  }, [account, toggleWalletDropdown])
 
   return (
     <PageWrapper gap="lg" justify="center">

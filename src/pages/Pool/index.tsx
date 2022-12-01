@@ -12,7 +12,7 @@ import { isSupportedChain } from 'constants/chains'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { AlertTriangle, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
-import { useToggleWalletModal } from 'state/application/hooks'
+import { useToggleWalletDropdown } from 'state/application/hooks'
 import { useUserHideClosedPositions } from 'state/user/hooks'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { HideSmall, ThemedText } from 'theme'
@@ -195,7 +195,7 @@ function WrongNetworkCard() {
 
 export default function Pool() {
   const { account, chainId } = useWeb3React()
-  const toggleWalletModal = useToggleWalletModal()
+  const toggleWalletDropdown = useToggleWalletDropdown()
 
   const theme = useTheme()
   const [userHideClosedPositions, setUserHideClosedPositions] = useUserHideClosedPositions()
@@ -326,7 +326,7 @@ export default function Pool() {
                       >
                         <ButtonPrimary
                           style={{ marginTop: '2em', marginBottom: '2em', padding: '8px 16px' }}
-                          onClick={toggleWalletModal}
+                          onClick={toggleWalletDropdown}
                         >
                           <Trans>Connect a wallet</Trans>
                         </ButtonPrimary>

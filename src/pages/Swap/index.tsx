@@ -21,7 +21,7 @@ import { ReactNode } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
-import { useToggleWalletModal } from 'state/application/hooks'
+import { useToggleWalletDropdown } from 'state/application/hooks'
 import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
@@ -185,7 +185,7 @@ export default function Swap() {
   const theme = useTheme()
 
   // toggle wallet when disconnected
-  const toggleWalletModal = useToggleWalletModal()
+  const toggleWalletDropdown = useToggleWalletDropdown()
 
   // for expert mode
   const [isExpertMode] = useExpertModeManager()
@@ -643,7 +643,7 @@ export default function Swap() {
                     properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
                     element={ElementName.CONNECT_WALLET_BUTTON}
                   >
-                    <ButtonLight onClick={toggleWalletModal} fontWeight={600}>
+                    <ButtonLight onClick={toggleWalletDropdown} fontWeight={600}>
                       <Trans>Connect Wallet</Trans>
                     </ButtonLight>
                   </TraceEvent>

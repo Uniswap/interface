@@ -15,7 +15,7 @@ import { BagStatus } from 'nft/types'
 import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils'
 import { PropsWithChildren, useMemo } from 'react'
 import { AlertTriangle } from 'react-feather'
-import { useToggleWalletModal } from 'state/application/hooks'
+import { useToggleWalletDropdown } from 'state/application/hooks'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { switchChain } from 'utils/switchChain'
@@ -94,7 +94,7 @@ export const BagFooter = ({
   fetchAssets,
   eventProperties,
 }: BagFooterProps) => {
-  const toggleWalletModal = useToggleWalletModal()
+  const toggleWalletDropdown = useToggleWalletDropdown()
   const { account, chainId, connector } = useWeb3React()
   const connected = Boolean(account && chainId)
 
@@ -127,7 +127,7 @@ export const BagFooter = ({
       warningText = <Trans>Something went wrong. Please try again.</Trans>
     } else if (!connected) {
       handleClick = () => {
-        toggleWalletModal()
+        toggleWalletDropdown()
         setBagExpanded({ bagExpanded: false })
       }
       disabled = false
@@ -144,7 +144,7 @@ export const BagFooter = ({
     }
 
     return { buttonText, disabled, warningText, handleClick }
-  }, [bagStatus, chainId, connected, connector, fetchAssets, setBagExpanded, sufficientBalance, toggleWalletModal])
+  }, [bagStatus, chainId, connected, connector, fetchAssets, setBagExpanded, sufficientBalance, toggleWalletDropdown])
 
   const isPending = PENDING_BAG_STATUSES.includes(bagStatus)
 
