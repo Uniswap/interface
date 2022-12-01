@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
 import fiatMaskUrl from 'assets/svg/fiat_mask.svg'
 import { BaseVariant } from 'featureFlags'
 import { useFiatOnrampFlag } from 'featureFlags/flags/fiatOnramp'
@@ -47,8 +48,9 @@ const CloseIcon = styled(X)`
   color: white;
   cursor: pointer;
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
 `
 const Wrapper = styled.button`
   background: radial-gradient(105% 250% at 100% 5%, hsla(318, 95%, 85%) 1%, hsla(331, 80%, 75%, 0.1) 84%),
@@ -56,6 +58,7 @@ const Wrapper = styled.button`
   background-color: hsla(297, 93%, 68%, 1);
   border-radius: 12px;
   border: none;
+  cursor: pointer;
   outline: none;
   overflow: hidden;
   position: relative;
@@ -89,10 +92,12 @@ const Body = styled(ThemedText.BodySmall)`
 `
 
 export function FiatOnrampAnnouncement() {
+  const { account } = useWeb3React()
   const [fiatOnrampAcknowledged, acknowledge] = useFiatOnrampAck()
 
   const handleClose = useCallback(
     (e: MouseEvent<HTMLOrSVGElement>) => {
+      e.preventDefault()
       e.stopPropagation()
       acknowledge()
     },
@@ -106,14 +111,16 @@ export function FiatOnrampAnnouncement() {
   }, [acknowledge, toggleWalletDropdown])
   const fiatOnrampFlag = useFiatOnrampFlag()
 
-  if (fiatOnrampAcknowledged || fiatOnrampFlag === BaseVariant.Control) {
+  acknowledge(false)
+
+  if (!account || fiatOnrampAcknowledged || fiatOnrampFlag === BaseVariant.Control) {
     return null
   }
   return (
     <ArrowWrapper>
       <Arrow />
+      <CloseIcon onClick={handleClose} />
       <Wrapper onClick={handleClick}>
-        <CloseIcon onClick={handleClose} />
         <Header>
           <Trans>Buy crypto</Trans>
         </Header>
