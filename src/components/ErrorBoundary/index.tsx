@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import * as Sentry from '@sentry/react'
-import { sendEvent } from 'components/analytics'
 import React, { PropsWithChildren } from 'react'
 import styled from 'styled-components/macro'
 
@@ -98,11 +97,10 @@ export default function ErrorBoundary({ children }: PropsWithChildren): JSX.Elem
   return (
     <Sentry.ErrorBoundary
       fallback={Fallback}
+      beforeCapture={(scope) => {
+        scope.setLevel('fatal')
+      }}
       onError={async (error) => {
-        sendEvent('exception', {
-          description: error.toString(),
-          fatal: true,
-        })
         reloadIfUpdateAvailable()
       }}
     >
