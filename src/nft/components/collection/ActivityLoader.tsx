@@ -50,9 +50,7 @@ export const ActivityLoader = () => {
   return (
     <Column marginTop="36">
       <HeaderRow />
-      {[...Array(10)].map((_, index) => (
-        <ActivityLoadingRow key={index} />
-      ))}
+      <ActivityPageLoader rowCount={10} />
     </Column>
   )
 }
