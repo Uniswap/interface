@@ -100,9 +100,7 @@ export default function ErrorBoundary({ children }: PropsWithChildren): JSX.Elem
       beforeCapture={(scope) => {
         scope.setLevel('fatal')
       }}
-      onError={async (error) => {
-        reloadIfUpdateAvailable()
-      }}
+      onError={reloadIfUpdateAvailable}
     >
       {children}
     </Sentry.ErrorBoundary>
