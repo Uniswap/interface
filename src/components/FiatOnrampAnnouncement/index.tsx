@@ -111,8 +111,6 @@ export function FiatOnrampAnnouncement() {
   }, [acknowledge, toggleWalletDropdown])
   const fiatOnrampFlag = useFiatOnrampFlag()
 
-  acknowledge(false)
-
   if (!account || fiatOnrampAcknowledged || fiatOnrampFlag === BaseVariant.Control) {
     return null
   }
