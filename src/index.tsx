@@ -3,6 +3,7 @@ import 'inter-ui'
 import 'polyfills'
 import 'components/analytics'
 
+import * as Sentry from '@sentry/react'
 import { FeatureFlagsProvider } from 'featureFlags'
 import RelayEnvironment from 'graphql/data/RelayEnvironment'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
@@ -46,6 +47,10 @@ function Updaters() {
     </>
   )
 }
+
+Sentry.init({
+  dsn: 'https://a3c62e400b8748b5a8d007150e2f38b7@o1037921.ingest.sentry.io/4504255148851200',
+})
 
 const container = document.getElementById('root') as HTMLElement
 

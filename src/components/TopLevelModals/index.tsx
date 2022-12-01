@@ -25,7 +25,6 @@ export default function TopLevelModals() {
     location.pathname.startsWith('/swap') ||
     location.pathname.startsWith('/tokens') ||
     location.pathname.startsWith('/pool')
-
   useAccountRiskCheck(account)
   const open = Boolean(blockedAccountModalOpen && account)
   return (
