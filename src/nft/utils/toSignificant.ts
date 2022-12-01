@@ -25,14 +25,3 @@ export function nFormat(num: number, digits = 0): string {
     .find((item) => num >= item.value)
   return item ? (num / item.value).toFixed(digits).replace(rx, '$1') + item.symbol : '0'
 }
-
-/**
- * Formats percent change values
- * @param v number
- * @returns formatted number
- */
-export const formatChange = (v: number) => {
-  if (v >= 98) return nFormat(v, 2)
-  else if (v <= 0.1) return v.toFixed(2)
-  else return v.toPrecision(2)
-}
