@@ -10,9 +10,9 @@ import {
 import { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import X from 'src/assets/icons/x.svg'
-import { AnimatedTouchableArea, TouchableArea } from 'src/components/buttons/TouchableArea'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TextInput, TextInputProps } from 'src/components/input/TextInput'
-import { AnimatedFlex, Box } from 'src/components/layout'
+import { AnimatedBox, AnimatedFlex, Box } from 'src/components/layout'
 import { SHADOW_OFFSET_SMALL } from 'src/components/layout/BaseCard'
 import { Text } from 'src/components/Text'
 import { dimensions } from 'src/styles/sizing'
@@ -63,6 +63,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
 
   const onPressCancel = () => {
     isFocus.value = false
+    showClearButton.value = false
     Keyboard.dismiss()
     onChangeText?.('')
     onCancel?.()
@@ -86,7 +87,6 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
   }
 
   const onTextInputSubmitEditing = () => {
-    isFocus.value = false
     Keyboard.dismiss()
   }
 
@@ -113,8 +113,8 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
 
   const clearButtonStyle = useAnimatedStyle(() => {
     return {
-      opacity: withTiming(isFocus.value && showClearButton.value ? 1 : 0),
-      transform: [{ scale: withTiming(isFocus.value && showClearButton.value ? 1 : 0) }],
+      opacity: withTiming(showClearButton.value ? 1 : 0),
+      transform: [{ scale: withTiming(showClearButton.value ? 1 : 0) }],
     }
   })
 
@@ -185,20 +185,21 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           onSubmitEditing={onTextInputSubmitEditing}
         />
         {showClearButton.value ? (
-          <AnimatedFlex style={[clearButtonStyle]}>
+          <AnimatedBox style={[clearButtonStyle]}>
             <ClearButton clearIcon={clearIcon} onPress={onClear} />
-          </AnimatedFlex>
+          </AnimatedBox>
         ) : (
-          <AnimatedFlex style={[endAdornmentStyle]}>{endAdornment}</AnimatedFlex>
+          <AnimatedBox style={[endAdornmentStyle]}>{endAdornment}</AnimatedBox>
         )}
       </AnimatedFlex>
       {showCancelButton && (
-        <AnimatedTouchableArea
+        <AnimatedBox
           style={[cancelButtonStyle, CancelButtonDefaultStyle]}
-          onLayout={onCancelLayout}
-          onPress={onPressCancel}>
-          <Text variant="buttonLabelMedium">{t('Cancel')}</Text>
-        </AnimatedTouchableArea>
+          onLayout={onCancelLayout}>
+          <TouchableArea onPress={onPressCancel}>
+            <Text variant="buttonLabelMedium">{t('Cancel')}</Text>
+          </TouchableArea>
+        </AnimatedBox>
       )}
     </Box>
   )
