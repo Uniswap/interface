@@ -33,7 +33,7 @@ export const grayBorderRadio = style([
 export const blueBorderRadio = style([
   radio,
   sprinkles({
-    borderColor: 'blue400',
+    borderColor: 'accentAction',
   }),
 ])
 
@@ -42,7 +42,7 @@ export const selectedRadio = style([
   {
     ':before': {
       position: 'absolute',
-      backgroundColor: vars.color.blue400,
+      backgroundColor: vars.color.accentAction,
       content: '',
       height: '14px',
       width: '14px',

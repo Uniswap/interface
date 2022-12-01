@@ -610,7 +610,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
                   onClick={reset}
                   type="button"
                   className={clsx(bodySmall, buttonTextMedium)}
-                  color="blue"
+                  color="accentAction"
                   cursor="pointer"
                 >
                   <ViewFullCollection>View full collection</ViewFullCollection>
