@@ -7,7 +7,6 @@ import { useAppStackNavigation, useExploreStackNavigation } from 'src/app/naviga
 import { baseCurrencyIds } from 'src/components/TokenSelector/hooks'
 import {
   useExploreTokensTabLazyQuery,
-  useNftsTabLazyQuery,
   usePortfolioBalanceLazyQuery,
   usePortfolioBalancesLazyQuery,
   useTokenProjectsLazyQuery,
@@ -110,17 +109,6 @@ export function usePreloadedHomeScreenQueries() {
 
 /** Set of queries that should be preloaded, but can wait for idle time. */
 export function useLowPriorityPreloadedQueries() {
-  // NFTs tab
-  const [loadNftsTab] = useNftsTabLazyQuery()
-  const activeAccountAddress = useActiveAccountAddress()
-
-  useEffect(() => {
-    if (!activeAccountAddress) return
-    InteractionManager.runAfterInteractions(() => {
-      loadNftsTab({ variables: { ownerAddress: activeAccountAddress, first: 30 } })
-    })
-  }, [activeAccountAddress, loadNftsTab])
-
   // Explore screen
   const [loadExploreTokens] = useExploreTokensTabLazyQuery()
   const orderBy = useAppSelector(selectTokensOrderBy)
