@@ -32,39 +32,45 @@ const CodeBlockWrapper = styled.div`
   color: ${({ theme }) => theme.deprecated_text1};
 `
 
-const LinkWrapper = styled.div`
-  color: ${({ theme }) => theme.deprecated_blue1};
+const Padding = styled.div`
   padding: 6px 24px;
 `
 
-const SomethingWentWrongWrapper = styled.div`
-  padding: 6px 24px;
-`
-
-const Fallback = ({ error }: { error: Error }) => {
+const Fallback = ({ error }: { error: Error & { cause?: Error } }) => {
   return (
     <FallbackWrapper>
       <BodyWrapper>
         <AutoColumn gap="md">
-          <SomethingWentWrongWrapper>
+          <Padding>
             <ThemedText.DeprecatedLabel fontSize={24} fontWeight={600}>
               <Trans>Something went wrong</Trans>
             </ThemedText.DeprecatedLabel>
-          </SomethingWentWrongWrapper>
+          </Padding>
           <CodeBlockWrapper>
             <code>
               <ThemedText.DeprecatedMain fontSize={10}>{error.stack}</ThemedText.DeprecatedMain>
             </code>
           </CodeBlockWrapper>
           <AutoRow>
-            <LinkWrapper>
+            <Padding>
+              <ThemedText.DeprecatedLink
+                fontSize={16}
+                color="deprecated_blue1"
+                onClick={() => window.location.reload()}
+              >
+                <Trans>Reload application</Trans>
+              </ThemedText.DeprecatedLink>
+            </Padding>
+          </AutoRow>
+          <AutoRow>
+            <Padding>
               <ExternalLink id="get-support-on-discord" href="https://discord.gg/FCfyBSbCU5" target="_blank">
-                <ThemedText.DeprecatedLink fontSize={16}>
+                <ThemedText.DeprecatedLink fontSize={16} color="deprecated_blue1">
                   <Trans>Get support on Discord</Trans>
                   <span>↗</span>
                 </ThemedText.DeprecatedLink>
               </ExternalLink>
-            </LinkWrapper>
+            </Padding>
           </AutoRow>
         </AutoColumn>
       </BodyWrapper>
@@ -91,10 +97,6 @@ const reloadIfUpdateAvailable = async () => {
       // Makes Workbox call skipWaiting().
       // For more info on skipWaiting see: https://web.dev/service-worker-lifecycle/#skip-the-waiting-phase
       registration.waiting.postMessage({ type: 'SKIP_WAITING' })
-
-      // Once the service worker is unregistered, we can reload the page to let
-      // the browser download a fresh copy of our app (invalidating the cache)
-      window.location.reload()
     }
   } catch (error) {
     console.error('Failed to update service worker', error)
