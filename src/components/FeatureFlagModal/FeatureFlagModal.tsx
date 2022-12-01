@@ -1,4 +1,5 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
+import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
@@ -207,6 +208,14 @@ export default function FeatureFlagModal() {
           value={useTraceJsonRpcFlag()}
           featureFlag={FeatureFlag.traceJsonRpc}
           label="Enables JSON-RPC tracing"
+        />
+      </FeatureFlagGroup>
+      <FeatureFlagGroup name="Tokens">
+        <FeatureFlagOption
+          variant={LandingPageVariant}
+          value={useLandingPageFlag()}
+          featureFlag={FeatureFlag.landingPage}
+          label="Landing Page"
         />
       </FeatureFlagGroup>
       <SaveButton onClick={() => window.location.reload()}>Reload</SaveButton>
