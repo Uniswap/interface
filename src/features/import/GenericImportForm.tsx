@@ -134,6 +134,7 @@ export function GenericImportForm({
             {inputSuffix && value && !value.includes(inputSuffix) ? (
               <View pointerEvents="none">
                 <TextInput
+                  backgroundColor="none"
                   color="textSecondary"
                   editable={false}
                   fontSize={INPUT_FONT_SIZE}
