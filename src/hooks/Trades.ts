@@ -201,7 +201,6 @@ export function useTradeExactInV2(
     [
       isEVM,
       allTxGroup,
-      // allFinalizedTxs,
       debounceCurrencyAmountIn,
       currencyOut,
       chainId,
@@ -213,8 +212,8 @@ export function useTradeExactInV2(
       dexes,
       allowedSlippage,
       feeConfig,
-      // trade, //don't add this
-      // comparer, //don't add this
+      // trade, // don't add this
+      // comparer, // don't add this
     ],
   )
 

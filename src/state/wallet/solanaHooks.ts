@@ -17,6 +17,7 @@ export const useSOLBalance = (uncheckedAddress?: string): CurrencyAmount<Currenc
 
   useEffect(() => {
     let canceled = false
+    let triedCount = 0
     const getBalance = async () => {
       if (!isSolana) return
       if (!account || !isAddress(chainId, account)) {
@@ -35,8 +36,7 @@ export const useSOLBalance = (uncheckedAddress?: string): CurrencyAmount<Currenc
           if (solBalance !== undefined) setSolBalance(undefined)
         }
       } catch (error) {
-        console.error('get Sol balance failed:', { error })
-        if (!canceled) getBalance()
+        if (!canceled && triedCount++ < 20) getBalance()
       }
     }
     getBalance()
