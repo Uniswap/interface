@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Token } from '@uniswap/sdk-core'
+import { PoolType } from 'src/features/routing/types'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { computeRoutes } from 'src/features/transactions/swap/routeUtils'
 
@@ -35,7 +36,7 @@ describe('#useRoute', () => {
       route: [
         [
           {
-            type: 'v3-pool',
+            type: PoolType.V3Pool,
             address: '0x1f8F72aA9304c8B593d555F12eF6589cC3A579A2',
             amountIn: amount`1`,
             amountOut: amount`5`,
@@ -67,7 +68,7 @@ describe('#useRoute', () => {
       route: [
         [
           {
-            type: 'v2-pool',
+            type: PoolType.V2Pool,
             address: '0x1f8F72aA9304c8B593d555F12eF6589cC3A579A2',
             amountIn: amount`1`,
             amountOut: amount`5`,
@@ -103,7 +104,7 @@ describe('#useRoute', () => {
       route: [
         [
           {
-            type: 'v2-pool',
+            type: PoolType.V2Pool,
             address: '0x1f8F72aA9304c8B593d555F12eF6589cC3A579A2',
             amountIn: amount`5`,
             amountOut: amount`6`,
@@ -121,7 +122,7 @@ describe('#useRoute', () => {
         ],
         [
           {
-            type: 'v3-pool',
+            type: PoolType.V3Pool,
             address: '0x2f8F72aA9304c8B593d555F12eF6589cC3A579A2',
             amountIn: amount`10`,
             amountOut: amount`1`,
@@ -133,7 +134,7 @@ describe('#useRoute', () => {
             tickCurrent: '-69633',
           },
           {
-            type: 'v3-pool',
+            type: PoolType.V3Pool,
             address: '0x3f8F72aA9304c8B593d555F12eF6589cC3A579A2',
             amountIn: amount`1`,
             amountOut: amount`200`,
@@ -172,7 +173,7 @@ describe('#useRoute', () => {
       route: [
         [
           {
-            type: 'v3-pool',
+            type: PoolType.V3Pool,
             address: '0x1f8F72aA9304c8B593d555F12eF6589cC3A579A2',
             amountIn: amount`1`,
             amountOut: amount`5`,
@@ -186,7 +187,7 @@ describe('#useRoute', () => {
         ],
         [
           {
-            type: 'v3-pool',
+            type: PoolType.V3Pool,
             address: '0x2f8F72aA9304c8B593d555F12eF6589cC3A579A2',
             amountIn: amount`10`,
             amountOut: amount`50`,
@@ -209,6 +210,50 @@ describe('#useRoute', () => {
     expect(result?.[0].inputAmount.toSignificant()).toBe('1')
   })
 
+  it('computes mixed routes correctly', () => {
+    const result = computeRoutes(false, false, {
+      route: [
+        [
+          {
+            type: PoolType.V3Pool,
+            address: '0x1f8F72aA9304c8B593d555F12eF6589cC3A579A2',
+            amountIn: amount`1`,
+            amountOut: amount`5`,
+            fee: '500',
+            tokenIn: DAI,
+            tokenOut: ETH,
+            sqrtRatioX96: '2437312313659959819381354528',
+            liquidity: '10272714736694327408',
+            tickCurrent: '-69633',
+          },
+          {
+            type: PoolType.V2Pool,
+            address: '0x2f8F72aA9304c8B593d555F12eF6589cC3A579A2',
+            amountIn: amount`10`,
+            amountOut: amount`50`,
+            tokenIn: ETH,
+            tokenOut: USDC,
+            reserve0: {
+              token: ETH,
+              quotient: amount`100`,
+            },
+            reserve1: {
+              token: USDC,
+              quotient: amount`200`,
+            },
+          },
+        ],
+      ],
+    })
+
+    expect(result).toBeDefined()
+    expect(result?.length).toBe(1)
+    expect(result?.[0].routev3).toBeNull()
+    expect(result?.[0].routev2).toBeNull()
+    expect(result?.[0].mixedRoute?.output).toStrictEqual(USDC)
+    expect(result?.[0].inputAmount.toSignificant()).toBe('1')
+  })
+
   describe('with ETH', () => {
     it('outputs native ETH as input currency', () => {
       const WETH = ETH.wrapped
@@ -217,7 +262,7 @@ describe('#useRoute', () => {
         route: [
           [
             {
-              type: 'v3-pool',
+              type: PoolType.V3Pool,
               address: '0x1f8F72aA9304c8B593d555F12eF6589cC3A579A2',
               amountIn: (1e18).toString(),
               amountOut: amount`5`,
@@ -246,7 +291,7 @@ describe('#useRoute', () => {
         route: [
           [
             {
-              type: 'v3-pool',
+              type: PoolType.V3Pool,
               address: '0x1f8F72aA9304c8B593d555F12eF6589cC3A579A2',
               amountIn: amount`5`,
               amountOut: (1e18).toString(),
@@ -275,7 +320,7 @@ describe('#useRoute', () => {
         route: [
           [
             {
-              type: 'v2-pool',
+              type: PoolType.V2Pool,
               address: '0x1f8F72aA9304c8B593d555F12eF6589cC3A579A2',
               amountIn: (1e18).toString(),
               amountOut: amount`5`,
@@ -308,7 +353,7 @@ describe('#useRoute', () => {
         route: [
           [
             {
-              type: 'v2-pool',
+              type: PoolType.V2Pool,
               address: '0x1f8F72aA9304c8B593d555F12eF6589cC3A579A2',
               amountIn: amount`5`,
               amountOut: (1e18).toString(),

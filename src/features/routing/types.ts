@@ -25,7 +25,7 @@ export interface QuoteResult {
   quoteDecimals: string
   quoteGasAdjusted: string
   quoteGasAdjustedDecimals: string
-  route: Array<V3PoolInRoute[] | V2PoolInRoute[]>
+  route: Array<(V3PoolInRoute | V2PoolInRoute)[]>
   routeString: string
   simulationError?: boolean
 }
@@ -38,8 +38,13 @@ export interface TradeQuoteResult {
 
 export type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
 
+export enum PoolType {
+  V2Pool = 'v2-pool',
+  V3Pool = 'v3-pool',
+}
+
 export type V3PoolInRoute = {
-  type: 'v3-pool'
+  type: PoolType.V3Pool
   tokenIn: TokenInRoute
   tokenOut: TokenInRoute
   sqrtRatioX96: string
@@ -59,7 +64,7 @@ export type V2Reserve = {
 }
 
 export type V2PoolInRoute = {
-  type: 'v2-pool'
+  type: PoolType.V2Pool
   tokenIn: TokenInRoute
   tokenOut: TokenInRoute
   reserve0: V2Reserve

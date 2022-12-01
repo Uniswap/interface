@@ -11,7 +11,7 @@ import { PermitSignatureInfo } from 'src/features/transactions/swap/usePermit2Si
 import { serializeQueryParams } from 'src/features/transactions/swap/utils'
 import { SwapRouterNativeAssets } from 'src/utils/currencyId'
 
-const protocols: string[] = ['v2', 'v3']
+const protocols: string[] = ['v2', 'v3', 'mixed']
 
 const DEFAULT_QUERY_PARAMS = {
   protocols: protocols.map((p) => p.toLowerCase()).join(','),
@@ -125,6 +125,7 @@ export const routingApi = createApi({
           slippageTolerance,
           result
         )
+
         return {
           trade,
           simulationError: result.simulationError,

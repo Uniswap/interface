@@ -1,8 +1,9 @@
+import { MixedRouteSDK } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { EMPTY_ARRAY } from 'src/constants/misc'
-import { QuoteResult, V2PoolInRoute, V3PoolInRoute } from 'src/features/routing/types'
+import { PoolType, QuoteResult, V2PoolInRoute, V3PoolInRoute } from 'src/features/routing/types'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { Trade } from 'src/features/transactions/swap/useTrade'
 
@@ -36,6 +37,14 @@ export function transformQuoteToTrade(
           inputAmount,
           outputAmount,
         })) ?? [],
+    mixedRoutes:
+      routes
+        ?.filter((r) => r.mixedRoute !== null)
+        .map(({ mixedRoute, inputAmount, outputAmount }) => ({
+          mixedRoute: mixedRoute!,
+          inputAmount,
+          outputAmount,
+        })) ?? [],
     tradeType,
   })
 }
@@ -52,6 +61,7 @@ export function computeRoutes(
   | {
       routev3: V3Route<Currency, Currency> | null
       routev2: V2Route<Currency, Currency> | null
+      mixedRoute: MixedRouteSDK<Currency, Currency> | null
       inputAmount: CurrencyAmount<Currency>
       outputAmount: CurrencyAmount<Currency>
     }[]
@@ -83,13 +93,20 @@ export function computeRoutes(
         throw new Error('Expected both amountIn and amountOut to be present')
       }
 
+      const isOnlyV2 = isV2OnlyRoute(route)
+      const isOnlyV3 = isV3OnlyRoute(route)
+
       return {
-        routev3: isV3Route(route)
+        routev3: isOnlyV3
           ? new V3Route(route.map(parsePool), parsedCurrencyIn, parsedCurrencyOut)
           : null,
-        routev2: !isV3Route(route)
+        routev2: isOnlyV2
           ? new V2Route(route.map(parsePair), parsedCurrencyIn, parsedCurrencyOut)
           : null,
+        mixedRoute:
+          !isOnlyV3 && !isOnlyV2
+            ? new MixedRouteSDK(route.map(parsePoolOrPair), parsedCurrencyIn, parsedCurrencyOut)
+            : null,
         inputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyIn, rawAmountIn),
         outputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyOut, rawAmountOut),
       }
@@ -106,6 +123,10 @@ const parseToken = ({
   symbol,
 }: QuoteResult['route'][0][0]['tokenIn']): Token => {
   return new Token(chainId, address, parseInt(decimals.toString(), 10), symbol)
+}
+
+const parsePoolOrPair = (pool: V3PoolInRoute | V2PoolInRoute): Pool | Pair => {
+  return pool.type === PoolType.V3Pool ? parsePool(pool) : parsePair(pool)
 }
 
 const parsePool = ({
@@ -131,6 +152,10 @@ const parsePair = ({ reserve0, reserve1 }: V2PoolInRoute): Pair =>
     CurrencyAmount.fromRawAmount(parseToken(reserve1.token), reserve1.quotient)
   )
 
-function isV3Route(route: V3PoolInRoute[] | V2PoolInRoute[]): route is V3PoolInRoute[] {
-  return route[0].type === 'v3-pool'
+function isV2OnlyRoute(route: (V3PoolInRoute | V2PoolInRoute)[]): route is V2PoolInRoute[] {
+  return route.every((pool) => pool.type === PoolType.V2Pool)
+}
+
+function isV3OnlyRoute(route: (V3PoolInRoute | V2PoolInRoute)[]): route is V3PoolInRoute[] {
+  return route.every((pool) => pool.type === PoolType.V3Pool)
 }
