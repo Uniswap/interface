@@ -13,6 +13,11 @@ import {
  * Uses server side sort by Volume if applying a client side sort after
  * ex. % change sorting use the top 100 tokens by Uniswap Volume, then sorts by % change
  *
+ * Note that server side sort by Volume (TokenSortableField.Volume) requires an
+ * additional client side sort because there may be a discrepancy in the server's
+ * sort by Volume list which is calculated once per 24h and each token's
+ * token.market.volume which is updated more frequently
+ *
  * @param orderBy currently selected TokensOrderBy value to sort tokens by
  * @returns serverOrderBy to be used in topTokens query, clientOrderBy to be used to determine if client side sort is necessary
  */
@@ -26,12 +31,16 @@ export function getTokensOrderByValues(orderBy: TokensOrderBy): {
     serverOrderBy: requiresClientOrderBy
       ? TokenSortableField.Volume
       : (orderBy as TokenSortableField),
-    clientOrderBy: requiresClientOrderBy ? (orderBy as ClientTokensOrderBy) : undefined,
+    clientOrderBy: requiresClientOrderBy
+      ? (orderBy as ClientTokensOrderBy)
+      : orderBy === TokenSortableField.Volume
+      ? ClientTokensOrderBy.Volume24hDesc
+      : undefined,
   }
 }
 
 /**
- * Returns a compare function to sort tokens client side
+ * Returns a compare function to sort tokens client side.
  */
 export function getClientTokensOrderByCompareFn(orderBy: ClientTokensOrderBy) {
   let compareField: keyof TokenItemData
@@ -44,6 +53,10 @@ export function getClientTokensOrderByCompareFn(orderBy: ClientTokensOrderBy) {
       break
     case ClientTokensOrderBy.PriceChangePercentage24hDesc:
       compareField = 'pricePercentChange24h'
+      direction = -1
+      break
+    case ClientTokensOrderBy.Volume24hDesc:
+      compareField = 'volume24h'
       direction = -1
       break
   }
