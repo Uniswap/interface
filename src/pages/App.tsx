@@ -3,7 +3,6 @@ import { CustomUserProperties, EventName, getBrowser, PageName } from '@uniswap/
 import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
-import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
 import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
@@ -133,7 +132,6 @@ const LazyLoadSpinner = () => (
 
 export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
-  const nftFlag = useNftFlag()
 
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
@@ -169,7 +167,7 @@ export default function App() {
   }, [isExpertMode])
 
   useEffect(() => {
-    const scrollListener = (e: Event) => {
+    const scrollListener = () => {
       setScrolledState(window.scrollY > 0)
     }
     window.addEventListener('scroll', scrollListener)
@@ -247,51 +245,47 @@ export default function App() {
 
                   <Route path="*" element={<RedirectPathToSwapOnly />} />
 
-                  {nftFlag === NftVariant.Enabled && (
-                    <>
-                      <Route
-                        path="/nfts"
-                        element={
-                          // TODO: replace loading state during Apollo migration
-                          <Suspense fallback={null}>
-                            <NftExplore />
-                          </Suspense>
-                        }
-                      />
-                      <Route
-                        path="/nfts/asset/:contractAddress/:tokenId"
-                        element={
-                          <Suspense fallback={<AssetDetailsLoading />}>
-                            <Asset />
-                          </Suspense>
-                        }
-                      />
-                      <Route
-                        path="/nfts/profile"
-                        element={
-                          <Suspense fallback={<ProfilePageLoadingSkeleton />}>
-                            <Profile />
-                          </Suspense>
-                        }
-                      />
-                      <Route
-                        path="/nfts/collection/:contractAddress"
-                        element={
-                          <Suspense fallback={<CollectionPageSkeleton />}>
-                            <Collection />
-                          </Suspense>
-                        }
-                      />
-                      <Route
-                        path="/nfts/collection/:contractAddress/activity"
-                        element={
-                          <Suspense fallback={<CollectionPageSkeleton />}>
-                            <Collection />
-                          </Suspense>
-                        }
-                      />
-                    </>
-                  )}
+                  <Route
+                    path="/nfts"
+                    element={
+                      // TODO: replace loading state during Apollo migration
+                      <Suspense fallback={null}>
+                        <NftExplore />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/nfts/asset/:contractAddress/:tokenId"
+                    element={
+                      <Suspense fallback={<AssetDetailsLoading />}>
+                        <Asset />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/nfts/profile"
+                    element={
+                      <Suspense fallback={<ProfilePageLoadingSkeleton />}>
+                        <Profile />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/nfts/collection/:contractAddress"
+                    element={
+                      <Suspense fallback={<CollectionPageSkeleton />}>
+                        <Collection />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/nfts/collection/:contractAddress/activity"
+                    element={
+                      <Suspense fallback={<CollectionPageSkeleton />}>
+                        <Collection />
+                      </Suspense>
+                    }
+                  />
                 </Routes>
               ) : (
                 <Loader />
