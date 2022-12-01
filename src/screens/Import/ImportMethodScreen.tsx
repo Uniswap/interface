@@ -44,7 +44,7 @@ const options: ImportMethodOption[] = [
     title: (t: TFunction) => t('Create a new wallet'),
     blurb: (t: TFunction) => t('Start fresh with a new recovery phrase'),
     icon: (theme: Theme) => (
-      <SeedPhraseIcon color={theme.colors.textPrimary} height={16} width={16} />
+      <SeedPhraseIcon color={theme.colors.textPrimary} height={22} strokeWidth="1.5" width={22} />
     ),
     nav: OnboardingScreens.EditName,
     importType: ImportType.CreateNew,
@@ -53,15 +53,19 @@ const options: ImportMethodOption[] = [
   {
     title: (t: TFunction) => t('Import an existing wallet'),
     blurb: (t: TFunction) => t('Enter your recovery phrase'),
-    icon: (theme: Theme) => <ImportIcon color={theme.colors.textPrimary} height={14} width={14} />,
+    icon: (theme: Theme) => (
+      <ImportIcon color={theme.colors.textPrimary} height={18} strokeWidth="1.5" width={18} />
+    ),
     nav: OnboardingScreens.SeedPhraseInput,
     importType: ImportType.SeedPhrase,
     name: ElementName.OnboardingImportSeedPhrase,
   },
   {
     title: (t: TFunction) => t('Add a view-only wallet'),
-    blurb: (t: TFunction) => t('Try it out without importing your wallet'),
-    icon: (theme: Theme) => <EyeIcon color={theme.colors.textPrimary} height={16} width={16} />,
+    blurb: (t: TFunction) => t('Explore the contents of any wallet'),
+    icon: (theme: Theme) => (
+      <EyeIcon color={theme.colors.textPrimary} height={20} strokeWidth="1.5" width={20} />
+    ),
     nav: OnboardingScreens.WatchWallet,
     importType: ImportType.Watch,
     name: ElementName.OnboardingImportWatchedAccount,
@@ -221,19 +225,19 @@ function OptionCard({
       name={name}
       opacity={opacity}
       px="md"
-      py="md"
+      py="lg"
       testID={name}
       onPress={onPress}>
-      <Flex alignItems="flex-start" gap="sm">
+      <Flex row alignContent="center" alignItems="center" gap="md">
         <Box
           alignItems="center"
           borderColor="accentBranded"
           borderRadius="md"
-          borderWidth={1}
-          height={32}
+          borderWidth={1.25}
+          height={40}
           justifyContent="center"
           padding="md"
-          width={32}>
+          width={40}>
           {icon}
         </Box>
         <Flex row alignItems="center" gap="xxs">

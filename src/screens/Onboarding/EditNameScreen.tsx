@@ -1,5 +1,4 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { TFunction } from 'i18next'
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, TextInput as NativeTextInput } from 'react-native'
@@ -9,7 +8,6 @@ import { OnboardingStackParamList } from 'src/app/navigation/types'
 import PencilIcon from 'src/assets/icons/pencil-detailed.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { AnimatedButton, Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TextInput } from 'src/components/input/TextInput'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -100,10 +98,10 @@ export function EditNameScreen({ navigation, route: { params } }: Props) {
   return (
     <OnboardingScreen
       subtitle={t(
-        'It has a public address for making transactions, and a nickname that’s only visible to you.'
+        'It has a public address that starts with 0x but you can set a private nickname to remember it by'
       )}
       title={t('Say hello to your new wallet')}>
-      <Box>
+      <Box paddingTop="xl">
         {pendingAccount ? (
           <CustomizationSection
             accountName={newAccountName}
@@ -123,13 +121,6 @@ export function EditNameScreen({ navigation, route: { params } }: Props) {
   )
 }
 
-const defaultNames = (t: TFunction) => {
-  return [
-    [t('Main wallet'), t('Test wallet')],
-    [t('Investing'), t('Savings'), t('NFTs')],
-  ]
-}
-
 function CustomizationSection({
   address,
   accountName,
@@ -144,7 +135,6 @@ function CustomizationSection({
   setFocused: Dispatch<SetStateAction<boolean>>
 }) {
   const theme = useAppTheme()
-  const { t } = useTranslation()
   const textInputRef = useRef<NativeTextInput>(null)
 
   const focusInputWithKeyboard = () => {
@@ -157,6 +147,7 @@ function CustomizationSection({
         <Flex centered row gap="none">
           <TextInput
             ref={textInputRef}
+            autoFocus
             backgroundColor="none"
             fontSize={theme.textVariants.headlineMedium.fontSize}
             maxFontSizeMultiplier={theme.textVariants.headlineMedium.maxFontSizeMultiplier}
@@ -184,29 +175,6 @@ function CustomizationSection({
         <Text color="textSecondary" variant="bodyLarge">
           {shortenAddress(address)}
         </Text>
-      </Flex>
-      <Flex centered gap="md">
-        {defaultNames(t).map((items, i) => (
-          <Flex key={i} centered row>
-            {items.map((item) => (
-              <TouchableArea
-                key={item}
-                backgroundColor={accountName === item ? 'background3' : 'background2'}
-                borderColor={accountName === item ? 'accentAction' : 'none'}
-                borderRadius="xxl"
-                borderWidth={1.5}
-                px="md"
-                py="xs"
-                onPress={() => setAccountName(item)}>
-                <Text
-                  color={accountName === item ? 'textPrimary' : 'textSecondary'}
-                  variant="buttonLabelMedium">
-                  {item}
-                </Text>
-              </TouchableArea>
-            ))}
-          </Flex>
-        ))}
       </Flex>
     </Flex>
   )
