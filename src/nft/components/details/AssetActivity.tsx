@@ -1,4 +1,4 @@
-import { defineMessage, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { OpacityHoverState, ScrollBarStyles } from 'components/Common'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { EventCell, MarketplaceIcon } from 'nft/components/collection/ActivityCells'
@@ -90,22 +90,6 @@ const LoadingCell = styled(LoadingBubble)`
   width: 80px;
 `
 
-enum AssetActivityColumnHeader {
-  Event = 'Event',
-  Price = 'Price',
-  By = 'By',
-  To = 'To',
-  Time = 'Time',
-}
-
-const AssetActivityHeaders = {
-  [AssetActivityColumnHeader.Event]: defineMessage({ message: AssetActivityColumnHeader.Event }),
-  [AssetActivityColumnHeader.Price]: defineMessage({ message: AssetActivityColumnHeader.Price }),
-  [AssetActivityColumnHeader.By]: defineMessage({ message: AssetActivityColumnHeader.By }),
-  [AssetActivityColumnHeader.To]: defineMessage({ message: AssetActivityColumnHeader.To }),
-  [AssetActivityColumnHeader.Time]: defineMessage({ message: AssetActivityColumnHeader.Time }),
-}
-
 const ActivityTable = ({ children }: { children: ReactNode }) => {
   return (
     <ActivityContainer id="activityContainer">
@@ -113,19 +97,19 @@ const ActivityTable = ({ children }: { children: ReactNode }) => {
         <thead>
           <TR>
             <TH>
-              <Trans id={AssetActivityHeaders[AssetActivityColumnHeader.Event].id} />
+              <Trans>Event</Trans>
             </TH>
             <TH>
-              <Trans id={AssetActivityHeaders[AssetActivityColumnHeader.Price].id} />
+              <Trans>Price</Trans>
             </TH>
             <TH>
-              <Trans id={AssetActivityHeaders[AssetActivityColumnHeader.By].id} />
+              <Trans>By</Trans>
             </TH>
             <TH>
-              <Trans id={AssetActivityHeaders[AssetActivityColumnHeader.To].id} />
+              <Trans>To</Trans>
             </TH>
             <TH>
-              <Trans id={AssetActivityHeaders[AssetActivityColumnHeader.Time].id} />
+              <Trans>Time</Trans>
             </TH>
           </TR>
         </thead>
@@ -157,7 +141,7 @@ export const LoadingAssetActivity = ({ rowCount }: { rowCount: number }) => {
       {Array(rowCount)
         .fill(null)
         .map((_, index) => {
-          return <LoadingAssetActivityRow key={index} cellCount={Object.keys(AssetActivityHeaders).length} />
+          return <LoadingAssetActivityRow key={index} cellCount={5} />
         })}
     </ActivityTable>
   )
