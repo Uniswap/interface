@@ -82,7 +82,8 @@ export function getTokenMetadataDisplayType(orderBy: TokensOrderBy): TokenMetada
   }
 }
 
-export function getTokensOrderByLabel(orderBy: TokensOrderBy, t: TFunction) {
+// Label shown in the popover context menu.
+export function getTokensOrderByMenuLabel(orderBy: TokensOrderBy, t: TFunction) {
   switch (orderBy) {
     case TokenSortableField.MarketCap:
       return t('Market cap')
@@ -96,5 +97,23 @@ export function getTokensOrderByLabel(orderBy: TokensOrderBy, t: TFunction) {
       return t('Price decrease (24H)')
     default:
       throw new Error('Unexpected order by value ' + orderBy)
+  }
+}
+
+// Label shown when option is selected in dropdown.
+export function getTokensOrderBySelectedLabel(orderBy: TokensOrderBy, t: TFunction) {
+  switch (orderBy) {
+    case TokenSortableField.MarketCap:
+      return t('Market cap')
+    case TokenSortableField.Volume:
+      return t('Volume')
+    case TokenSortableField.TotalValueLocked:
+      return t('TVL')
+    case ClientTokensOrderBy.PriceChangePercentage24hDesc:
+      return t('Price increase')
+    case ClientTokensOrderBy.PriceChangePercentage24hAsc:
+      return t('Price decrease')
+    default:
+      throw new Error('Unexpected order by value in option text ' + orderBy)
   }
 }

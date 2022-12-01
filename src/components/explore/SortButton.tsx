@@ -8,7 +8,10 @@ import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { TokenSortableField } from 'src/data/__generated__/types-and-hooks'
 import { ClientTokensOrderBy, TokensOrderBy } from 'src/features/explore/types'
-import { getTokensOrderByLabel } from 'src/features/explore/utils'
+import {
+  getTokensOrderByMenuLabel,
+  getTokensOrderBySelectedLabel,
+} from 'src/features/explore/utils'
 import { setTokensOrderBy } from 'src/features/wallet/walletSlice'
 import { logger } from 'src/utils/logger'
 interface FilterGroupProps {
@@ -23,27 +26,27 @@ function _SortButton({ orderBy }: FilterGroupProps) {
   const menuActions = useMemo(() => {
     return [
       {
-        title: getTokensOrderByLabel(TokenSortableField.Volume, t),
+        title: getTokensOrderByMenuLabel(TokenSortableField.Volume, t),
         systemIcon: orderBy === TokenSortableField.Volume ? 'checkmark' : '',
         orderBy: TokenSortableField.Volume,
       },
       {
-        title: getTokensOrderByLabel(TokenSortableField.TotalValueLocked, t),
+        title: getTokensOrderByMenuLabel(TokenSortableField.TotalValueLocked, t),
         systemIcon: orderBy === TokenSortableField.TotalValueLocked ? 'checkmark' : '',
         orderBy: TokenSortableField.TotalValueLocked,
       },
       {
-        title: getTokensOrderByLabel(TokenSortableField.MarketCap, t),
+        title: getTokensOrderByMenuLabel(TokenSortableField.MarketCap, t),
         systemIcon: orderBy === TokenSortableField.MarketCap ? 'checkmark' : '',
         orderBy: TokenSortableField.MarketCap,
       },
       {
-        title: getTokensOrderByLabel(ClientTokensOrderBy.PriceChangePercentage24hDesc, t),
+        title: getTokensOrderByMenuLabel(ClientTokensOrderBy.PriceChangePercentage24hDesc, t),
         systemIcon: orderBy === ClientTokensOrderBy.PriceChangePercentage24hDesc ? 'checkmark' : '',
         orderBy: ClientTokensOrderBy.PriceChangePercentage24hDesc,
       },
       {
-        title: getTokensOrderByLabel(ClientTokensOrderBy.PriceChangePercentage24hAsc, t),
+        title: getTokensOrderByMenuLabel(ClientTokensOrderBy.PriceChangePercentage24hAsc, t),
         systemIcon: orderBy === ClientTokensOrderBy.PriceChangePercentage24hAsc ? 'checkmark' : '',
         orderBy: ClientTokensOrderBy.PriceChangePercentage24hAsc,
       },
@@ -74,11 +77,7 @@ function _SortButton({ orderBy }: FilterGroupProps) {
           />
         )}
         <Text color="textSecondary" variant="buttonLabelSmall">
-          {orderBy === TokenSortableField.Volume
-            ? t('Volume (24H)')
-            : orderBy === TokenSortableField.TotalValueLocked
-            ? t('TVL')
-            : getTokensOrderByLabel(orderBy, t)}
+          {getTokensOrderBySelectedLabel(orderBy, t)}
         </Text>
         <Chevron
           color={theme.colors.textSecondary}
