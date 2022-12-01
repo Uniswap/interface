@@ -22,7 +22,7 @@ import { Link as RouterLink } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 
-import AssetActivity from './AssetActivity'
+import AssetActivity, { LoadingAssetActivity } from './AssetActivity'
 import * as styles from './AssetDetails.css'
 import DetailsContainer from './DetailsContainer'
 import InfoContainer from './InfoContainer'
@@ -312,6 +312,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     hasNextPage,
     isFetchingNextPage,
     isSuccess,
+    isLoading: isActivityLoading,
   } = useInfiniteQuery<ActivityEventResponse>(
     [
       'collectionActivity',
@@ -410,16 +411,17 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
             <Filter eventType={ActivityEventType.Transfer} />
             <Filter eventType={ActivityEventType.CancelListing} />
           </ActivitySelectContainer>
+          {isActivityLoading && <LoadingAssetActivity rowCount={10} />}
           {events && events.length > 0 ? (
             <InfiniteScroll
               next={fetchNextPage}
               hasMore={!!hasNextPage}
               loader={
-                isFetchingNextPage ? (
+                isFetchingNextPage && (
                   <Center>
                     <LoadingSparkle />
                   </Center>
-                ) : null
+                )
               }
               dataLength={events?.length ?? 0}
               scrollableTarget="activityContainer"
@@ -427,10 +429,14 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
               <AssetActivity eventsData={{ events }} />
             </InfiniteScroll>
           ) : (
-            <EmptyActivitiesContainer>
-              <div>No activities yet</div>
-              <Link to={`/nfts/collection/${asset.address}`}>View collection items</Link>{' '}
-            </EmptyActivitiesContainer>
+            <>
+              {!isActivityLoading && (
+                <EmptyActivitiesContainer>
+                  <div>No activities yet</div>
+                  <Link to={`/nfts/collection/${asset.address}`}>View collection items</Link>{' '}
+                </EmptyActivitiesContainer>
+              )}
+            </>
           )}
         </>
       </InfoContainer>
