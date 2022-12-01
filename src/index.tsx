@@ -14,6 +14,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
 import { RelayEnvironmentProvider } from 'react-relay'
 import { HashRouter } from 'react-router-dom'
+import { isProductionEnv } from 'utils/env'
 
 import Web3Provider from './components/Web3Provider'
 import { LanguageProvider } from './i18n'
@@ -48,10 +49,11 @@ function Updaters() {
   )
 }
 
-Sentry.init({
-  dsn: process.env.REACT_APP_SENTRY_DSN,
-  environment: process.env.NODE_ENV,
-})
+if (isProductionEnv()) {
+  Sentry.init({
+    dsn: process.env.REACT_APP_SENTRY_DSN,
+  })
+}
 
 const container = document.getElementById('root') as HTMLElement
 
