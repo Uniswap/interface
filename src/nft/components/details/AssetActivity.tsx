@@ -1,3 +1,4 @@
+import { defineMessage, Trans } from '@lingui/macro'
 import { OpacityHoverState, ScrollBarStyles } from 'components/Common'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { EventCell, MarketplaceIcon } from 'nft/components/collection/ActivityCells'
@@ -97,17 +98,35 @@ enum AssetActivityColumnHeader {
   Time = 'Time',
 }
 
+const AssetActivityHeaders = {
+  [AssetActivityColumnHeader.Event]: defineMessage({ message: AssetActivityColumnHeader.Event }),
+  [AssetActivityColumnHeader.Price]: defineMessage({ message: AssetActivityColumnHeader.Price }),
+  [AssetActivityColumnHeader.By]: defineMessage({ message: AssetActivityColumnHeader.By }),
+  [AssetActivityColumnHeader.To]: defineMessage({ message: AssetActivityColumnHeader.To }),
+  [AssetActivityColumnHeader.Time]: defineMessage({ message: AssetActivityColumnHeader.Time }),
+}
+
 const ActivityTable = ({ children }: { children: ReactNode }) => {
   return (
     <ActivityContainer id="activityContainer">
       <Table>
         <thead>
           <TR>
-            <TH>{AssetActivityColumnHeader.Event}</TH>
-            <TH>{AssetActivityColumnHeader.Price}</TH>
-            <TH>{AssetActivityColumnHeader.By}</TH>
-            <TH>{AssetActivityColumnHeader.To}</TH>
-            <TH>{AssetActivityColumnHeader.Time}</TH>
+            <TH>
+              <Trans id={AssetActivityHeaders[AssetActivityColumnHeader.Event].id} />
+            </TH>
+            <TH>
+              <Trans id={AssetActivityHeaders[AssetActivityColumnHeader.Price].id} />
+            </TH>
+            <TH>
+              <Trans id={AssetActivityHeaders[AssetActivityColumnHeader.By].id} />
+            </TH>
+            <TH>
+              <Trans id={AssetActivityHeaders[AssetActivityColumnHeader.To].id} />
+            </TH>
+            <TH>
+              <Trans id={AssetActivityHeaders[AssetActivityColumnHeader.Time].id} />
+            </TH>
           </TR>
         </thead>
         <tbody>{children}</tbody>
@@ -116,24 +135,18 @@ const ActivityTable = ({ children }: { children: ReactNode }) => {
   )
 }
 
-const LoadingAssetActivityRow = () => {
+const LoadingAssetActivityRow = ({ cellCount }: { cellCount: number }) => {
   return (
     <TR>
-      <TD>
-        <LoadingCell />
-      </TD>
-      <TD>
-        <LoadingCell />
-      </TD>
-      <TD>
-        <LoadingCell />
-      </TD>
-      <TD>
-        <LoadingCell />
-      </TD>
-      <TD>
-        <LoadingCell />
-      </TD>
+      {Array(cellCount)
+        .fill(null)
+        .map((_, index) => {
+          return (
+            <TD key={index}>
+              <LoadingCell />
+            </TD>
+          )
+        })}
     </TR>
   )
 }
@@ -144,7 +157,7 @@ export const LoadingAssetActivity = ({ rowCount }: { rowCount: number }) => {
       {Array(rowCount)
         .fill(null)
         .map((_, index) => {
-          return <LoadingAssetActivityRow key={index} />
+          return <LoadingAssetActivityRow key={index} cellCount={Object.keys(AssetActivityHeaders).length} />
         })}
     </ActivityTable>
   )
