@@ -36,7 +36,7 @@ const Padding = styled.div`
   padding: 6px 24px;
 `
 
-const Fallback = ({ error }: { error: Error & { cause?: Error } }) => {
+const Fallback = ({ error }: { error: Error }) => {
   return (
     <FallbackWrapper>
       <BodyWrapper>
