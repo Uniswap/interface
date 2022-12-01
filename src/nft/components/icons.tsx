@@ -694,32 +694,6 @@ export const ActivityExternalLinkIcon = (_props: SVGProps) => (
   </svg>
 )
 
-export const LargeBagIcon = (props: SVGProps) => (
-  <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <path
-      d="M76 24H20C15.5817 24 12 27.2832 12 31.3333V82.6667C12 86.7168 15.5817 90 20 90H76C80.4183 90 84 86.7168 84 82.6667V31.3333C84 27.2832 80.4183 24 76 24Z"
-      stroke="currentColor"
-      strokeWidth="2.4"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M60 40C60 43.1826 58.7357 46.2348 56.4853 48.4853C54.2348 50.7357 51.1826 52 48 52C44.8174 52 41.7652 50.7357 39.5147 48.4853C37.2643 46.2348 36 43.1826 36 40"
-      stroke="currentColor"
-      strokeWidth="2.4"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M36 24L36 21C36 17.8174 37.2643 14.7651 39.5147 12.5147C41.7652 10.2643 44.8174 8.99999 48 8.99999C51.1826 8.99999 54.2348 10.2643 56.4853 12.5147C58.7357 14.7651 60 17.8174 60 21L60 24"
-      stroke="currentColor"
-      strokeWidth="2.4"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-)
-
 export const LargeTagIcon = (props: SVGProps) => (
   <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
