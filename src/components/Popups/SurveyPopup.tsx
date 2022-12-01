@@ -51,7 +51,7 @@ const WrappedCloseIcon = styled(X)`
 
 const END_TIMESTAMP = 1642272346 // Jan 15th
 
-export default function SurveyPopup() {
+function SurveyPopup() {
   const theme = useTheme()
   const [showPopup, setShowSurveyPopup] = useShowSurveyPopup()
 
