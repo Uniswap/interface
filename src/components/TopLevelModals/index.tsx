@@ -16,7 +16,6 @@ const AirdropModal = lazy(() => import('components/AirdropModal'))
 export default function TopLevelModals() {
   const addressClaimOpen = useModalIsOpen(ApplicationModal.ADDRESS_CLAIM)
   const addressClaimToggle = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
-
   const blockedAccountModalOpen = useModalIsOpen(ApplicationModal.BLOCKED_ACCOUNT)
   const { account } = useWeb3React()
   const location = useLocation()

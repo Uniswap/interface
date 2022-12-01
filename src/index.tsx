@@ -49,7 +49,8 @@ function Updaters() {
 }
 
 Sentry.init({
-  dsn: 'https://a3c62e400b8748b5a8d007150e2f38b7@o1037921.ingest.sentry.io/4504255148851200',
+  dsn: process.env.REACT_APP_SENTRY_DSN,
+  environment: process.env.NODE_ENV,
 })
 
 const container = document.getElementById('root') as HTMLElement
