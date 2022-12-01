@@ -1,5 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex, Flex } from 'src/components/layout'
@@ -8,7 +9,7 @@ import { ChainId } from 'src/constants/chains'
 import { ElementName } from 'src/features/telemetry/constants'
 import { StatusAnimation } from 'src/features/transactions/TransactionPending/StatusAnimation'
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
-import { openTransactionLink } from 'src/utils/linking'
+import { Screens } from 'src/screens/Screens'
 
 type TransactionStatusProps = {
   transaction: TransactionDetails | undefined
@@ -26,7 +27,6 @@ function isFinalizedState(status: TransactionStatus) {
 
 export function TransactionPending({
   transaction,
-  chainId,
   title,
   description,
   onNext,
@@ -34,6 +34,11 @@ export function TransactionPending({
   transactionType,
 }: TransactionStatusProps) {
   const { t } = useTranslation()
+
+  const onPressViewTransaction = () => {
+    navigate(Screens.Activity)
+    onNext()
+  }
 
   return (
     <AnimatedFlex grow px="sm">
@@ -59,7 +64,7 @@ export function TransactionPending({
         <Button
           emphasis={ButtonEmphasis.Tertiary}
           label={t('View transaction')}
-          onPress={() => openTransactionLink(transaction.hash, chainId)}
+          onPress={onPressViewTransaction}
         />
       ) : null}
       <Button label={t('Close')} name={ElementName.OK} onPress={onNext} />
