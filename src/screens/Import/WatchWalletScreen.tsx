@@ -7,6 +7,7 @@ import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
+import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { useENS } from 'src/features/ens/useENS'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
@@ -96,10 +97,10 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props) {
     setValue(text?.trim())
   }
 
-  // TODO(MOB-3789): add back when demo wallet has been created
-  // const onPressDemoWallet = () => {
-  //   setValue('uniswapdemo')
-  // }
+  const onPressDemoWallet = () => {
+    setValue('uniswapdemo')
+    setShowLiveCheck(false)
+  }
 
   useEffect(() => {
     const delayFn = setTimeout(() => {
@@ -131,15 +132,14 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props) {
             isValid && Keyboard.dismiss()
           }}
         />
-        {/* TODO(MOB-3789): add back after demo wallet ENS has been created and populated */}
-        {/* <Flex>
+        <Flex>
           <Text color="textTertiary" mx="xxs" textAlign="center" variant="subheadSmall">
             Not sure? Try adding{' '}
             <Text color="accentAction" variant="buttonLabelSmall" onPress={onPressDemoWallet}>
               uniswapdemo.eth
             </Text>
           </Text>
-        </Flex> */}
+        </Flex>
       </Flex>
       <Button
         disabled={!isValid}
