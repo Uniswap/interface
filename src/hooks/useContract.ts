@@ -30,7 +30,7 @@ import WETH_ABI from 'constants/abis/weth.json'
 import ZAP_STATIC_FEE_ABI from 'constants/abis/zap-static-fee.json'
 import ZAP_ABI from 'constants/abis/zap.json'
 import { MULTICALL_ABI } from 'constants/multicall'
-import { EVM_NETWORK, isEVM } from 'constants/networks'
+import { EVM_NETWORK, NETWORKS_INFO, isEVM } from 'constants/networks'
 import { EVMNetworkInfo } from 'constants/networks/type'
 import { useWeb3React } from 'hooks'
 import { FairLaunchVersion, RewardLockerVersion } from 'state/farms/types'
@@ -168,10 +168,9 @@ export function usePairContract(pairAddress?: string, withSignerIfPossible?: boo
 }
 
 export function useMulticallContract(customChainId?: ChainId): Contract | null {
-  const { chainId: curChainId, networkInfo } = useActiveWeb3React()
+  const { chainId: curChainId } = useActiveWeb3React()
   const chainId = customChainId || curChainId
-
-  return useContractForReading(isEVM(chainId) ? (networkInfo as EVMNetworkInfo).multicall : undefined, MULTICALL_ABI)
+  return useContractForReading(isEVM(chainId) ? NETWORKS_INFO[chainId].multicall : undefined, MULTICALL_ABI, chainId)
 }
 
 export function useOldStaticFeeFactoryContract(): Contract | null {
