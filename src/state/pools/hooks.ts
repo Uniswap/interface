@@ -1,6 +1,6 @@
 import { ApolloClient, NormalizedCacheObject, useQuery } from '@apollo/client'
 import { ChainId, WETH } from '@kyberswap/ks-sdk-core'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import {
@@ -368,11 +368,11 @@ export function useSinglePoolData(
   const [error, setError] = useState<Error | undefined>(undefined)
   const [poolData, setPoolData] = useState<SubgraphPoolData>()
 
-  const latestRenderTime = useRef(0)
   useEffect(() => {
     if (!isEVM) return
+    let isCanceled = false
     const apolloClient = (networkInfo as EVMNetworkInfo).classicClient
-    async function checkForPools(currentRenderTime: number) {
+    async function checkForPools() {
       setLoading(true)
 
       try {
@@ -380,21 +380,20 @@ export function useSinglePoolData(
           const pools = await getBulkPoolDataFromPoolList([poolAddress], apolloClient, chainId, ethPrice)
 
           if (pools.length > 0) {
-            currentRenderTime === latestRenderTime.current && setPoolData(pools[0])
+            !isCanceled && setPoolData(pools[0])
           }
         }
       } catch (error) {
-        currentRenderTime === latestRenderTime.current && setError(error as Error)
+        !isCanceled && setError(error as Error)
       }
 
       setLoading(false)
     }
 
-    checkForPools(latestRenderTime.current)
+    checkForPools()
 
     return () => {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      latestRenderTime.current++
+      isCanceled = true
     }
   }, [ethPrice, error, poolAddress, chainId, isEVM, networkInfo])
 

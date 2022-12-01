@@ -176,16 +176,22 @@ export function useTradeExactInV2(
         ])
 
         if (!signal.aborted) {
-          try {
-            if (JSON.stringify(trade) !== JSON.stringify(state)) setTrade(state)
-          } catch (e) {
-            setTrade(state)
-          }
-          try {
-            if (JSON.stringify(comparer) !== JSON.stringify(comparedResult)) setComparer(comparedResult)
-          } catch (e) {
-            setComparer(comparedResult)
-          }
+          setTrade(prev => {
+            try {
+              if (JSON.stringify(prev) !== JSON.stringify(state)) return state
+            } catch (e) {
+              return state
+            }
+            return prev
+          })
+          setComparer(prev => {
+            try {
+              if (JSON.stringify(prev) !== JSON.stringify(comparedResult)) return comparedResult
+            } catch (e) {
+              return comparedResult
+            }
+            return prev
+          })
         }
         setLoading(false)
         // if (!signal.aborted && state) {
@@ -200,7 +206,7 @@ export function useTradeExactInV2(
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       isEVM,
-      allTxGroup,
+      allTxGroup, // required. Refresh aggregator data after swap.
       debounceCurrencyAmountIn,
       currencyOut,
       chainId,
@@ -212,8 +218,6 @@ export function useTradeExactInV2(
       dexes,
       allowedSlippage,
       feeConfig,
-      // trade, // don't add this
-      // comparer, // don't add this
     ],
   )
 

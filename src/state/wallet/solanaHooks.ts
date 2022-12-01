@@ -9,6 +9,7 @@ import { useActiveWeb3React } from 'hooks'
 import connection from 'state/connection/connection'
 import { useAllTransactions } from 'state/transactions/hooks'
 import { isAddress } from 'utils'
+import { wait } from 'utils/retry'
 
 export const useSOLBalance = (uncheckedAddress?: string): CurrencyAmount<Currency> | undefined => {
   const { chainId, account, isSolana } = useActiveWeb3React()
@@ -30,12 +31,19 @@ export const useSOLBalance = (uncheckedAddress?: string): CurrencyAmount<Currenc
           const balance = await connection.getBalance(publicKey)
           if (canceled) return
           const balanceJSBI = JSBI.BigInt(balance)
-          if (solBalance === undefined || !JSBI.equal(balanceJSBI, solBalance.quotient))
-            setSolBalance(CurrencyAmount.fromRawAmount(NativeCurrencies[chainId], balanceJSBI))
+          setSolBalance(prev => {
+            if (prev === undefined || !JSBI.equal(balanceJSBI, prev.quotient))
+              return CurrencyAmount.fromRawAmount(NativeCurrencies[chainId], balanceJSBI)
+            return prev
+          })
         } else {
-          if (solBalance !== undefined) setSolBalance(undefined)
+          setSolBalance(prev => {
+            if (prev !== undefined) return undefined
+            return prev
+          })
         }
       } catch (error) {
+        await wait(100)
         if (!canceled && triedCount++ < 20) getBalance()
       }
     }
@@ -43,16 +51,7 @@ export const useSOLBalance = (uncheckedAddress?: string): CurrencyAmount<Currenc
     return () => {
       canceled = true
     }
-    // do not add solBalance to deps list, it would trigger infinity loops calling rpc calls
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    allTransactions,
-    account,
-    chainId,
-    isSolana,
-    // solBalance,
-    uncheckedAddress,
-  ])
+  }, [allTransactions, account, chainId, isSolana, uncheckedAddress])
 
   return solBalance
 }
@@ -74,6 +73,7 @@ export const useAssociatedTokensAccounts = (): { [mintAddress: string]: AccountI
     if (!isSolana) return
     if (!account) return
     let canceled = false
+    let triedCount = 0
     async function getTokenAccounts(publicKey: PublicKey) {
       try {
         const response = await connection.getTokenAccountsByOwner(publicKey, {
@@ -94,7 +94,8 @@ export const useAssociatedTokensAccounts = (): { [mintAddress: string]: AccountI
         setAtas(atas)
       } catch (error) {
         console.error('get ata failed', { error })
-        if (!canceled) getTokenAccounts(publicKey)
+        await wait(100)
+        if (!canceled && triedCount++ < 20) getTokenAccounts(publicKey)
       }
     }
 
