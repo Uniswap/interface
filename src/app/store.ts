@@ -44,7 +44,7 @@ const sagaMiddleware = createSagaMiddleware({
 
 const rtkQueryErrorLogger: Middleware = () => (next) => (action) => {
   if (isRejectedWithValue(action)) {
-    logger.error('store', 'rtkQueryErrorLogger', action.payload ?? action.error)
+    logger.error('store', 'rtkQueryErrorLogger', JSON.stringify(action.payload ?? action.error))
   }
 
   return next(action)
