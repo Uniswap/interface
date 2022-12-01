@@ -1,8 +1,6 @@
 // Based mostly on https://github.com/Uniswap/interface/blob/main/src/theme/index.tsx
 import { opacify } from './utils'
 
-export const meow = 'hi'
-
 export const colors = {
   white: '#FFFFFF',
   black: '#000000',
