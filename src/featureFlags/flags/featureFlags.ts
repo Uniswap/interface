@@ -4,4 +4,5 @@ export enum FeatureFlag {
   nft = 'nfts',
   traceJsonRpc = 'traceJsonRpc',
   multiNetworkBalances = 'multiNetworkBalances',
+  landingPage = 'landingPage',
 }

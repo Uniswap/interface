@@ -184,7 +184,7 @@ const PriceTextInput = ({
           }}
           ref={inputRef}
           onChange={(v: FormEvent<HTMLInputElement>) => {
-            if (!listPrice && v.currentTarget.value === '0.') {
+            if (!listPrice && v.currentTarget.value.includes('.') && parseFloat(v.currentTarget.value) === 0) {
               return
             }
             const val = parseFloat(v.currentTarget.value)
@@ -262,9 +262,16 @@ const EthPriceDisplay = ({ ethPrice = 0 }: { ethPrice?: number }) => {
     <Column width="full">
       <Row width="full" justifyContent="flex-end">
         {ethPrice !== 0 ? (
-          <Box className={body} color="textSecondary" marginLeft="12" marginRight="0">
-            {formatUsdPrice(ethPrice * ethConversion)}
-          </Box>
+          <>
+            <Column>
+              <Box className={body} color="textPrimary" marginLeft="12" marginRight="0">
+                {ethPrice} ETH
+              </Box>
+              <Box className={body} color="textSecondary" marginLeft="12" marginRight="0">
+                {formatUsdPrice(ethPrice * ethConversion)}
+              </Box>
+            </Column>
+          </>
         ) : (
           '- ETH'
         )}

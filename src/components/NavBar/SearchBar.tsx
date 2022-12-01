@@ -25,7 +25,7 @@ import * as styles from './SearchBar.css'
 import { SearchBarDropdown } from './SearchBarDropdown'
 
 const KeyShortCut = styled.div`
-  background-color: ${({ theme }) => theme.searchOutline};
+  background-color: ${({ theme }) => theme.hoverState};
   color: ${({ theme }) => theme.textSecondary};
   padding: 0px 8px;
   width: 20px;

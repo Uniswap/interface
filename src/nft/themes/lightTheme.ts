@@ -29,6 +29,8 @@ export const lightTheme: Theme = {
     textPrimary: vars.color.gray900,
     textSecondary: vars.color.gray500,
     textTertiary: vars.color.gray300,
+
+    dropShadow: `0px 4px 16px rgba(251, 17, 142, 0.4)`,
   },
   shadows: {
     menu: '0px 10px 30px rgba(0, 0, 0, 0.1)',

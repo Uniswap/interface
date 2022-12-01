@@ -1,7 +1,8 @@
-import clsx from 'clsx'
+import { OpacityHoverState } from 'components/Common'
 import { Box } from 'nft/components/Box'
 import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
 import { Center, Column, Row } from 'nft/components/Flex'
+import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile } from 'nft/hooks'
 import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
 import { ActivityEvent, ActivityEventResponse, ActivityEventType } from 'nft/types'
@@ -9,6 +10,8 @@ import { fetchPrice } from 'nft/utils/fetchPrice'
 import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
+import { useIsDarkMode } from 'state/user/hooks'
+import styled from 'styled-components/macro'
 
 import * as styles from './Activity.css'
 import { AddressCell, BuyCell, EventCell, ItemCell, PriceCell } from './ActivityCells'
@@ -21,6 +24,12 @@ enum ColumnHeaders {
   By = 'By',
   To = 'To',
 }
+
+const FilterBox = styled.div<{ backgroundColor: string }>`
+  display: flex;
+  background: ${({ backgroundColor }) => backgroundColor};
+  ${OpacityHoverState};
+`
 
 export const HeaderRow = () => {
   return (
@@ -106,6 +115,7 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
   const toggleCart = useBag((state) => state.toggleBag)
   const isMobile = useIsMobile()
   const [ethPriceInUSD, setEthPriceInUSD] = useState(0)
+  const isDarkMode = useIsDarkMode()
 
   useEffect(() => {
     fetchPrice().then((price) => {
@@ -116,17 +126,19 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
   const Filter = useCallback(
     function ActivityFilter({ eventType }: { eventType: ActivityEventType }) {
       const isActive = activeFilters[eventType]
+      const activeBackgroundColor = isDarkMode ? vars.color.gray500 : vars.color.gray200
 
       return (
-        <Box
-          className={clsx(styles.filter, isActive && styles.activeFilter)}
+        <FilterBox
+          className={styles.filter}
+          backgroundColor={isActive ? activeBackgroundColor : themeVars.colors.backgroundInteractive}
           onClick={() => filtersDispatch({ eventType })}
         >
           {eventType.charAt(0) + eventType.slice(1).toLowerCase() + 's'}
-        </Box>
+        </FilterBox>
       )
     },
-    [activeFilters]
+    [activeFilters, isDarkMode]
   )
 
   return (

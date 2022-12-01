@@ -1,7 +1,7 @@
-import { BaseVariant, FeatureFlag, useBaseFlag } from '../index'
+import { BaseVariant } from '../index'
 
 export function useNftFlag(): BaseVariant {
-  return useBaseFlag(FeatureFlag.nft)
+  return BaseVariant.Enabled
 }
 
 export { BaseVariant as NftVariant }

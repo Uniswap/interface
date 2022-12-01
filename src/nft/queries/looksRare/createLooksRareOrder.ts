@@ -1,5 +1,5 @@
 export const createLooksRareOrder = async (payload: any): Promise<boolean> => {
-  const url = `${process.env.REACT_APP_GENIE_V3_API_URL}/createLooksRareOrder`
+  const url = `${process.env.REACT_APP_TEMP_API_URL}/nft/createLooksRareOrder`
   const res = await fetch(url, {
     method: 'POST',
     headers: {
