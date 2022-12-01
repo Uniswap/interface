@@ -40,8 +40,9 @@
     "prettier/@typescript-eslint",
     "plugin:prettier/recommended"
   ],
-  "plugins": ["simple-import-sort", "unused-imports"],
+  "plugins": ["imports", "simple-import-sort", "unused-imports"],
   "rules": {
+    "import/no-unused-modules": [1, { "unusedExports": true }]
     "unused-imports/no-unused-imports": "error",
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
