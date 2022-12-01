@@ -1,7 +1,6 @@
 import { OpacityHoverState } from 'components/Common'
 import { Box } from 'nft/components/Box'
-import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
-import { Center, Column, Row } from 'nft/components/Flex'
+import { Column, Row } from 'nft/components/Flex'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile } from 'nft/hooks'
 import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
@@ -15,7 +14,7 @@ import styled from 'styled-components/macro'
 
 import * as styles from './Activity.css'
 import { AddressCell, BuyCell, EventCell, ItemCell, PriceCell } from './ActivityCells'
-import { ActivityLoader } from './ActivityLoader'
+import { ActivityLoader, ActivityPageLoader } from './ActivityLoader'
 
 enum ColumnHeaders {
   Item = 'Item',
@@ -155,13 +154,7 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
           <InfiniteScroll
             next={fetchNextPage}
             hasMore={!!hasNextPage}
-            loader={
-              isFetchingNextPage ? (
-                <Center paddingY="20">
-                  <LoadingSparkle />
-                </Center>
-              ) : null
-            }
+            loader={isFetchingNextPage ? <ActivityPageLoader rowCount={2} /> : null}
             dataLength={events?.length ?? 0}
             style={{ overflow: 'unset' }}
           >
