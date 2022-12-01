@@ -40,7 +40,7 @@ import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import Swap from './Swap'
-import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
+import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly } from './Swap/redirects'
 import Tokens from './Tokens'
 
 const TokenDetails = lazy(() => import('./TokenDetails'))
@@ -214,7 +214,6 @@ export default function App() {
                   <Route path="uni/:currencyIdA/:currencyIdB" element={<Manage />} />
 
                   <Route path="send" element={<RedirectPathToSwapOnly />} />
-                  <Route path="swap/:outputCurrency" element={<RedirectToSwap />} />
                   <Route path="swap" element={<Swap />} />
 
                   <Route path="pool/v2/find" element={<PoolFinder />} />
