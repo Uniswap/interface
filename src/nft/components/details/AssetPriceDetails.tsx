@@ -255,7 +255,7 @@ export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
       )}
       {!listing ? (
         <BuyNowButton assetInBag={false} margin={true} useAccentColor={true} onClick={goToListPage}>
-          <ThemedText.SubHeader lineHeight="20px" style={{ color: 'white' }}>
+          <ThemedText.SubHeader lineHeight="20px" color="white">
             List
           </ThemedText.SubHeader>
         </BuyNowButton>
