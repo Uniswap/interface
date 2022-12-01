@@ -9,7 +9,6 @@ import {
   Copy,
   ExternalLink as ExternalLinkIconFeather,
   Link as LinkIconFeather,
-  Trash,
   X,
 } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -134,17 +133,6 @@ const CopyIcon = styled(Copy)`
   ${ClickableStyle}
   ${LinkStyle}
   stroke: ${({ theme }) => theme.accentAction};
-`
-
-export const TrashIcon = styled(Trash)`
-  ${ClickableStyle}
-  ${IconStyle}
-  stroke: ${({ theme }) => theme.deprecated_text3};
-
-  cursor: pointer;
-  align-items: center;
-  justify-content: center;
-  display: flex;
 `
 
 const rotateImg = keyframes`

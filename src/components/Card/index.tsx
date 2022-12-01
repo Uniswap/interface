@@ -14,10 +14,6 @@ export const LightCard = styled(Card)`
   background-color: ${({ theme }) => theme.deprecated_bg1};
 `
 
-export const LightGrayCard = styled(Card)`
-  background-color: ${({ theme }) => theme.deprecated_bg2};
-`
-
 export const GrayCard = styled(Card)`
   background-color: ${({ theme }) => theme.deprecated_bg3};
 `
