@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router'
 
 import { NETWORKS_INFO } from 'constants/networks'
-import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import {
   setClaimingCampaignRewardId,
   setRecaptchaCampaignId,
@@ -109,13 +108,11 @@ export function useRecaptchaCampaignManager() {
 }
 
 export function useSwapNowHandler() {
-  const { mixpanelHandler } = useMixpanel()
   const selectedCampaign = useSelector((state: AppState) => state.campaigns.selectedCampaign)
   const history = useHistory()
 
   return useCallback(
     (chainId: ChainId) => {
-      mixpanelHandler(MIXPANEL_TYPE.CAMPAIGN_SWAP_NOW_CLICKED, { campaign_name: selectedCampaign?.name })
       let path = `/swap/${NETWORKS_INFO[chainId].route}`
       if (selectedCampaign?.eligibleTokens?.length) {
         const firstTokenOfChain = selectedCampaign.eligibleTokens.find(token => token.chainId === chainId)
@@ -125,7 +122,7 @@ export function useSwapNowHandler() {
       }
       history.push(path)
     },
-    [history, mixpanelHandler, selectedCampaign],
+    [history, selectedCampaign],
   )
 }
 

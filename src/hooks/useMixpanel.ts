@@ -109,7 +109,7 @@ export enum MIXPANEL_TYPE {
   DISCOVER_CLICK_UNSUBSCRIBE_TRENDING_SOON,
   DISCOVER_SUBSCRIBE_TRENDING_SOON_SUCCESS,
   DISCOVER_UNSUBSCRIBE_TRENDING_SOON_SUCCESS,
-  CAMPAIGN_SWAP_NOW_CLICKED,
+  CAMPAIGN_ENTER_NOW_CLICKED,
   CAMPAIGN_SHARE_TRADING_CONTEST_CLICKED,
   CAMPAIGN_CLAIM_REWARDS_CLICKED,
   CAMPAIGN_WALLET_CONNECTED,
@@ -605,8 +605,8 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
           mixpanel.track('Faucet feature - Request faucet Completed')
           break
         }
-        case MIXPANEL_TYPE.CAMPAIGN_SWAP_NOW_CLICKED: {
-          mixpanel.track('Campaign - Enter Trading Contest "Swap Now"', payload)
+        case MIXPANEL_TYPE.CAMPAIGN_ENTER_NOW_CLICKED: {
+          mixpanel.track('Campaign - Enter Trading Contest "Enter Now"', payload)
           break
         }
         case MIXPANEL_TYPE.CAMPAIGN_SHARE_TRADING_CONTEST_CLICKED: {
