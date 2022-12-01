@@ -2,6 +2,11 @@
 directive @defer on FIELD
 
 """
+Tells the service this field/object has access authorized by an OIDC token.
+"""
+directive @aws_oidc on OBJECT | FIELD_DEFINITION
+
+"""
 Tells the service this field/object has access authorized by a Cognito User Pools token.
 """
 directive @aws_cognito_user_pools(
@@ -9,10 +14,15 @@ directive @aws_cognito_user_pools(
   cognito_groups: [String]
 ) on OBJECT | FIELD_DEFINITION
 
-"""Directs the schema to enforce authorization on a field"""
-directive @aws_auth(
-  """List of cognito user pool groups which have access on this field"""
-  cognito_groups: [String]
+"""
+Tells the service which subscriptions will be published to when this mutation is
+called. This directive is deprecated use @aws_susbscribe directive instead.
+"""
+directive @aws_publish(
+  """
+  List of subscriptions which will be published to when this mutation is called.
+  """
+  subscriptions: [String]
 ) on FIELD_DEFINITION
 
 """
@@ -34,24 +44,14 @@ directive @aws_subscribe(
 ) on FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by an OIDC token.
-"""
-directive @aws_oidc on OBJECT | FIELD_DEFINITION
-
-"""
 Tells the service this field/object has access authorized by an API key.
 """
 directive @aws_api_key on OBJECT | FIELD_DEFINITION
 
-"""
-Tells the service which subscriptions will be published to when this mutation is
-called. This directive is deprecated use @aws_susbscribe directive instead.
-"""
-directive @aws_publish(
-  """
-  List of subscriptions which will be published to when this mutation is called.
-  """
-  subscriptions: [String]
+"""Directs the schema to enforce authorization on a field"""
+directive @aws_auth(
+  """List of cognito user pool groups which have access on this field"""
+  cognito_groups: [String]
 ) on FIELD_DEFINITION
 
 enum ActivityType {
@@ -499,7 +499,7 @@ type Query {
   searchTokens(searchQuery: String!): [Token]
   searchTokenProjects(searchQuery: String!): [TokenProject]
   assetActivities(address: String!, page: Int, pageSize: Int): [AssetActivity]
-  portfolios(ownerAddresses: [String!]!, useNxyz: Boolean): [Portfolio]
+  portfolios(ownerAddresses: [String!]!, useAltDataSource: Boolean): [Portfolio]
   nftCollectionsById(collectionIds: [String]): [NftCollection]
   topTokens(chain: Chain, page: Int!, pageSize: Int!, orderBy: TokenSortableField): [Token]
   nftAssets(chain: Chain, address: String!, orderBy: NftAssetSortableField, asc: Boolean, filter: NftAssetsFilterInput, first: Int, last: Int, after: String, before: String): NftAssetConnection
