@@ -158,7 +158,9 @@ export const NftsTab = forwardRef<FlashList<any>, NftsTabProps>(
                     ellipsizeMode="tail"
                     numberOfLines={1}
                     variant="bodySmall">
-                    {formatNumber(item.floorPrice, NumberType.NFTTokenFloorPrice)} ETH
+                    {t('Floor: {{floorPrice}} ETH', {
+                      floorPrice: formatNumber(item.floorPrice, NumberType.NFTTokenFloorPrice),
+                    })}
                   </Text>
                 )}
               </Flex>
@@ -166,7 +168,7 @@ export const NftsTab = forwardRef<FlashList<any>, NftsTabProps>(
           </Box>
         )
       },
-      [onPressItem, theme.colors.userThemeMagenta]
+      [onPressItem, theme.colors.userThemeMagenta, t]
     )
 
     /**
