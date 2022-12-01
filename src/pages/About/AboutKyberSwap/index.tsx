@@ -61,7 +61,7 @@ import { useDarkModeManager } from 'state/user/hooks'
 import { ExternalLink, StyledInternalLink } from 'theme'
 import { formatBigLiquidity } from 'utils/formatBalance'
 
-import KyberSwapGeneralIntro from './KyberSwapGeneralIntro'
+import KyberSwapGeneralIntro from '../KyberSwapGeneralIntro'
 import {
   AboutKNC,
   AboutPage,
@@ -87,7 +87,8 @@ import {
   TypicalAMM,
   VerticalDivider,
   Wrapper,
-} from './styleds'
+} from '../styleds'
+import MeetTheTeam from './MeetTheTeam'
 
 const KNCBlack = styled(KNCSVG)`
   path {
@@ -1007,6 +1008,8 @@ function AboutKyberSwap() {
               </BtnPrimary>
             </Flex>
           </AboutKNC>
+
+          <MeetTheTeam />
 
           <Text as="h2" marginTop={['100px', '160px']} fontSize={['28px', '36px']} fontWeight="500" textAlign="center">
             <Trans>Powered by</Trans>
