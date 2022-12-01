@@ -269,6 +269,7 @@ export default function App() {
                     <Route exact path={`${APP_PATHS.CAMPAIGN}/:slug?`} component={Campaign} />
                     <Route exact path={`${APP_PATHS.BRIDGE}`} component={Bridge} />
                     <Route exact path={`${APP_PATHS.VERIFY}`} component={Verify} />
+                    <Route exact path={`${APP_PATHS.VERIFY_EXTERNAL}`} component={Verify} />
 
                     <Route component={RedirectPathToSwapNetwork} />
                   </Switch>
