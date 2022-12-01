@@ -18,34 +18,28 @@ export const USDC_MAINNET = new Token(
   'USDC',
   'USD//C'
 )
-export const USDC_ROPSTEN = new Token(
+const USDC_ROPSTEN = new Token(
   SupportedChainId.ROPSTEN,
   '0x07865c6e87b9f70255377e024ace6630c1eaa37f',
   6,
   'USDC',
   'USD//C'
 )
-export const USDC_RINKEBY = new Token(
+const USDC_RINKEBY = new Token(
   SupportedChainId.RINKEBY,
   '0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b',
   6,
   'tUSDC',
   'test USD//C'
 )
-export const USDC_GOERLI = new Token(
+const USDC_GOERLI = new Token(
   SupportedChainId.GOERLI,
   '0x07865c6e87b9f70255377e024ace6630c1eaa37f',
   6,
   'USDC',
   'USD//C'
 )
-export const USDC_KOVAN = new Token(
-  SupportedChainId.KOVAN,
-  '0x31eeb2d0f9b6fd8642914ab10f4dd473677d80df',
-  6,
-  'USDC',
-  'USD//C'
-)
+const USDC_KOVAN = new Token(SupportedChainId.KOVAN, '0x31eeb2d0f9b6fd8642914ab10f4dd473677d80df', 6, 'USDC', 'USD//C')
 export const USDC_OPTIMISM = new Token(
   SupportedChainId.OPTIMISM,
   '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
@@ -53,7 +47,7 @@ export const USDC_OPTIMISM = new Token(
   'USDC',
   'USD//C'
 )
-export const USDC_OPTIMISM_GOERLI = new Token(
+const USDC_OPTIMISM_GOERLI = new Token(
   SupportedChainId.OPTIMISM_GOERLI,
   '0x7E07E15D2a87A24492740D16f5bdF58c16db0c4E',
   6,
@@ -67,7 +61,7 @@ export const USDC_ARBITRUM = new Token(
   'USDC',
   'USD//C'
 )
-export const USDC_ARBITRUM_RINKEBY = new Token(
+const USDC_ARBITRUM_RINKEBY = new Token(
   SupportedChainId.ARBITRUM_RINKEBY,
   '0x09b98f8b2395d076514037ff7d39a091a536206c',
   6,
@@ -81,7 +75,7 @@ export const USDC_POLYGON = new Token(
   'USDC',
   'USD//C'
 )
-export const USDC_POLYGON_MUMBAI = new Token(
+const USDC_POLYGON_MUMBAI = new Token(
   SupportedChainId.POLYGON_MUMBAI,
   '0xe11a86849d99f524cac3e7a0ec1241828e332c62',
   6,
@@ -95,7 +89,7 @@ export const PORTAL_USDC_CELO = new Token(
   'USDCet',
   'USDC (Portal from Ethereum)'
 )
-export const USDC_CELO_ALFAJORES = new Token(
+const USDC_CELO_ALFAJORES = new Token(
   SupportedChainId.CELO_ALFAJORES,
   '0x41F4a5d2632b019Ae6CE9625bE3c9CaC143AcC7D',
   6,
@@ -286,13 +280,7 @@ export const WETH_POLYGON = new Token(
   'WETH',
   'Wrapped Ether'
 )
-export const CELO_CELO = new Token(
-  SupportedChainId.CELO,
-  '0x471EcE3750Da237f93B8E339c536989b8978a438',
-  18,
-  'CELO',
-  'Celo'
-)
+const CELO_CELO = new Token(SupportedChainId.CELO, '0x471EcE3750Da237f93B8E339c536989b8978a438', 18, 'CELO', 'Celo')
 export const CUSD_CELO = new Token(
   SupportedChainId.CELO,
   '0x765DE816845861e75A25fCA122bb6898B8B1282a',
@@ -321,7 +309,7 @@ export const CMC02_CELO = new Token(
   'cMCO2',
   'Celo Moss Carbon Credit'
 )
-export const CELO_CELO_ALFAJORES = new Token(
+const CELO_CELO_ALFAJORES = new Token(
   SupportedChainId.CELO_ALFAJORES,
   '0xF194afDf50B03e69Bd7D057c1Aa9e10c9954E4C9',
   18,

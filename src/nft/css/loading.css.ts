@@ -3,7 +3,7 @@ import { darken } from 'polished'
 
 import { sprinkles } from './sprinkles.css'
 
-export const loadingAnimation = keyframes({
+const loadingAnimation = keyframes({
   '0%': {
     backgroundPosition: '100% 50%',
   },
