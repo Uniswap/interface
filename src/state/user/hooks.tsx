@@ -18,6 +18,7 @@ import {
   addSerializedPair,
   addSerializedToken,
   removeSerializedToken,
+  updateFiatOnrampAcknowledged,
   updateHideClosedPositions,
   updateHideNFTWelcomeModal,
   updateShowNftPromoBanner,
@@ -105,6 +106,20 @@ export function useExpertModeManager(): [boolean, () => void] {
   }, [expertMode, dispatch])
 
   return [expertMode, toggleSetExpertMode]
+}
+
+export function useFiatOnrampAck(): [boolean, (b?: boolean) => void] {
+  const dispatch = useAppDispatch()
+  const fiatOnrampAcknowledged = useAppSelector((state) => state.user.fiatOnrampAcknowledged)
+
+  const toggleSetExpertMode = useCallback(
+    (b = true) => {
+      dispatch(updateFiatOnrampAcknowledged(b))
+    },
+    [dispatch]
+  )
+
+  return [fiatOnrampAcknowledged, toggleSetExpertMode]
 }
 
 export function useShowSurveyPopup(): [boolean | undefined, (showPopup: boolean) => void] {

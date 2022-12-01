@@ -89,7 +89,7 @@ const HeaderWrapper = styled.div<{ scrolledState?: boolean }>`
     `background-color ${theme.transition.duration.fast} ease-in-out,
     border-width ${theme.transition.duration.fast} ease-in-out`};
   top: 0;
-  z-index: ${Z_INDEX.sticky};
+  z-index: ${Z_INDEX.dropdown};
 `
 
 const Marginer = styled.div`
