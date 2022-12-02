@@ -7,6 +7,7 @@ export interface ConnectionState {
 
 export const initialState: ConnectionState = {
   errorByConnectionType: {
+    [ConnectionType.UNIWALLET]: undefined,
     [ConnectionType.INJECTED]: undefined,
     [ConnectionType.WALLET_CONNECT]: undefined,
     [ConnectionType.COINBASE_WALLET]: undefined,

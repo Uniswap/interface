@@ -41,6 +41,7 @@ export function getConnection(c: Connector | ConnectionType) {
       case ConnectionType.COINBASE_WALLET:
         return coinbaseWalletConnection
       case ConnectionType.WALLET_CONNECT:
+      case ConnectionType.UNIWALLET:
         return walletConnectConnection
       case ConnectionType.NETWORK:
         return networkConnection
@@ -52,6 +53,8 @@ export function getConnection(c: Connector | ConnectionType) {
 
 export function getConnectionName(connectionType: ConnectionType, isMetaMask?: boolean) {
   switch (connectionType) {
+    case ConnectionType.UNIWALLET:
+      return 'Uniswap Wallet'
     case ConnectionType.INJECTED:
       return isMetaMask ? 'MetaMask' : 'Injected'
     case ConnectionType.COINBASE_WALLET:

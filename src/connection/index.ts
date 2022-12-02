@@ -12,6 +12,7 @@ import { RPC_URLS } from '../constants/networks'
 import { RPC_PROVIDERS } from '../constants/providers'
 
 export enum ConnectionType {
+  UNIWALLET = 'UNIWALLET',
   INJECTED = 'INJECTED',
   COINBASE_WALLET = 'COINBASE_WALLET',
   WALLET_CONNECT = 'WALLET_CONNECT',

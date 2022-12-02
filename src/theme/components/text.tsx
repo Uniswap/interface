@@ -46,6 +46,9 @@ export const ThemedText = {
   SubHeaderSmall(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={14} color="textSecondary" {...props} />
   },
+  UtilityBadge(props: TextProps) {
+    return <TextWrapper fontWeight={600} fontSize={10} {...props} />
+  },
   DeprecatedMain(props: TextProps) {
     return <TextWrapper fontWeight={500} color="deprecated_text2" {...props} />
   },

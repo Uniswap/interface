@@ -18,6 +18,7 @@ import { isMobile } from 'utils/userAgent'
 import { CoinbaseWalletOption, OpenCoinbaseWalletOption } from './CoinbaseWalletOption'
 import { InjectedOption, InstallMetaMaskOption, MetaMaskOption } from './InjectedOption'
 import PendingView from './PendingView'
+import { UniwalletOption } from './UniwalletOption'
 import { WalletConnectOption } from './WalletConnectOption'
 
 const Wrapper = styled.div`
@@ -192,6 +193,7 @@ export default function WalletModal() {
             {walletView !== WALLET_VIEWS.PENDING && (
               <OptionGrid data-testid="option-grid">
                 <>
+                  <UniwalletOption tryActivation={tryActivation} />
                   {!isInjected
                     ? !isMobile && <InstallMetaMaskOption />
                     : !isCoinbaseWallet &&

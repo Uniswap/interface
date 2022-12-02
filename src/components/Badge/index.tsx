@@ -8,6 +8,8 @@ export enum BadgeVariant {
   POSITIVE = 'POSITIVE',
   PRIMARY = 'PRIMARY',
   WARNING = 'WARNING',
+  PROMOTIONAL = 'PROMOTIONAL',
+  BRANDED = 'BRANDED',
 
   WARNING_OUTLINE = 'WARNING_OUTLINE',
 }
@@ -18,14 +20,18 @@ interface BadgeProps {
 
 function pickBackgroundColor(variant: BadgeVariant | undefined, theme: DefaultTheme): string {
   switch (variant) {
+    case BadgeVariant.BRANDED:
+      return theme.brandedGradient
+    case BadgeVariant.PROMOTIONAL:
+      return theme.promotionalGradient
     case BadgeVariant.NEGATIVE:
-      return theme.deprecated_error
+      return theme.accentCritical
     case BadgeVariant.POSITIVE:
-      return theme.deprecated_success
+      return theme.accentSuccess
     case BadgeVariant.PRIMARY:
       return theme.deprecated_primary1
     case BadgeVariant.WARNING:
-      return theme.deprecated_warning
+      return theme.accentWarning
     case BadgeVariant.WARNING_OUTLINE:
       return 'transparent'
     default:
@@ -44,6 +50,8 @@ function pickBorder(variant: BadgeVariant | undefined, theme: DefaultTheme): str
 
 function pickFontColor(variant: BadgeVariant | undefined, theme: DefaultTheme): string {
   switch (variant) {
+    case BadgeVariant.BRANDED:
+      return theme.accentTextDarkPrimary
     case BadgeVariant.NEGATIVE:
       return readableColor(theme.deprecated_error)
     case BadgeVariant.POSITIVE:
@@ -59,7 +67,7 @@ function pickFontColor(variant: BadgeVariant | undefined, theme: DefaultTheme): 
 
 const Badge = styled.div<PropsWithChildren<BadgeProps>>`
   align-items: center;
-  background-color: ${({ theme, variant }) => pickBackgroundColor(variant, theme)};
+  background: ${({ theme, variant }) => pickBackgroundColor(variant, theme)};
   border: ${({ theme, variant }) => pickBorder(variant, theme)};
   border-radius: 0.5rem;
   color: ${({ theme, variant }) => pickFontColor(variant, theme)};
