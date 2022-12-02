@@ -33,8 +33,8 @@ export function usePortfolioBalances(
     error,
   } = usePortfolioBalancesQuery({
     // query is re-used by multiple components
-    // attempt to load from cache instead of always sending a reqquest (default)
-    fetchPolicy: 'cache-first',
+    // load from cache and update it if the response has new data
+    fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,
     onCompleted,
     pollInterval: shouldPoll ? PollingInterval.Fast : undefined,

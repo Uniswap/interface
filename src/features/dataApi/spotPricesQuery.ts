@@ -16,7 +16,7 @@ export function useSpotPrice(
 ): GqlResult<SpotPrice> {
   const { data, loading } = useSpotPricesQuery({
     // query is re-used by multiple components
-    // attempt to load from cache instead of always sending a reqquest (default)
+    // attempt to load from cache instead of always sending a request (default)
     fetchPolicy: 'cache-first',
     pollInterval: PollingInterval.Fast,
     skip: skip || !currency,
