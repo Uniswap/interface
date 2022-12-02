@@ -1,6 +1,7 @@
 /// <reference types="react-scripts" />
 
 declare module '@metamask/jazzicon' {
+  // eslint-disable-next-line import/no-unused-modules
   export default function (diameter: number, seed: number): HTMLElement
 }
 
@@ -27,5 +28,6 @@ declare module 'multihashes' {
 }
 
 declare module 'babel-plugin-relay/macro' {
+  // eslint-disable-next-line import/no-unused-modules
   export { graphql as default } from 'react-relay'
 }

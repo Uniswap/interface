@@ -62,7 +62,7 @@ const tokenSparklineQuery = graphql`
   }
 `
 
-export type PrefetchedTopToken = NonNullable<TopTokens100Query['response']['topTokens']>[number]
+type PrefetchedTopToken = NonNullable<TopTokens100Query['response']['topTokens']>[number]
 
 function useSortedTokens(tokens: NonNullable<TopTokens100Query['response']['topTokens']>) {
   const sortMethod = useAtomValue(sortMethodAtom)

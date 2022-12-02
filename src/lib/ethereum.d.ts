@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-unused-modules
 export interface EthereumProvider {
   on?: (...args: any[]) => void
   removeListener?: (...args: any[]) => void

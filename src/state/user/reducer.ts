@@ -117,9 +117,6 @@ const userSlice = createSlice({
     updateHideClosedPositions(state, action) {
       state.userHideClosedPositions = action.payload.userHideClosedPositions
     },
-    updateShowSurveyPopup(state, action) {
-      state.showSurveyPopup = action.payload.showSurveyPopup
-    },
     updateHideNFTWelcomeModal(state, action) {
       state.hideNFTWelcomeModal = action.payload.hideNFTWelcomeModal
     },
@@ -189,7 +186,6 @@ export const {
   addSerializedToken,
   updateHideClosedPositions,
   updateMatchesDarkMode,
-  updateShowSurveyPopup,
   updateUserClientSideRouter,
   updateHideNFTWelcomeModal,
   updateUserDarkMode,
