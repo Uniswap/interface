@@ -10,7 +10,7 @@ import { ExploreSections } from 'src/components/explore/ExploreSections'
 import { SearchEmptySection } from 'src/components/explore/search/SearchEmptySection'
 import { SearchResultsSection } from 'src/components/explore/search/SearchResultsSection'
 import { SearchTextInput } from 'src/components/input/SearchTextInput'
-import { AnimatedFlex, Box, Flex } from 'src/components/layout'
+import { AnimatedFlex, Box } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import {
   panHeaderGestureAction,
@@ -101,24 +101,22 @@ export function ExploreScreen({ navigation }: Props) {
           />
         </Box>
       </GestureDetector>
-      <Flex grow>
+      <KeyboardAvoidingView behavior="height" style={flex.fill}>
         {isSearchMode ? (
-          <KeyboardAvoidingView behavior="height" style={flex.fill}>
-            <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} mx="md">
-              <VirtualizedList>
-                <Box p="xxs" />
-                {debouncedSearchQuery.length === 0 ? (
-                  <SearchEmptySection />
-                ) : (
-                  <SearchResultsSection searchQuery={debouncedSearchQuery} />
-                )}
-              </VirtualizedList>
-            </AnimatedFlex>
-          </KeyboardAvoidingView>
+          <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} mx="md">
+            <VirtualizedList>
+              <Box p="xxs" />
+              {debouncedSearchQuery.length === 0 ? (
+                <SearchEmptySection />
+              ) : (
+                <SearchResultsSection searchQuery={debouncedSearchQuery} />
+              )}
+            </VirtualizedList>
+          </AnimatedFlex>
         ) : (
           <ExploreSections listRef={listRef} />
         )}
-      </Flex>
+      </KeyboardAvoidingView>
 
       <GestureDetector gesture={panSidebarContainerGesture}>
         <Box
