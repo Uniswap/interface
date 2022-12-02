@@ -40,7 +40,8 @@ export function usePendingTransactions(
     if (!transactions) return
     return transactions.filter(
       (tx) =>
-        tx.status === TransactionStatus.Pending && ignoreTransactionTypes.includes(tx.typeInfo.type)
+        tx.status === TransactionStatus.Pending &&
+        !ignoreTransactionTypes.includes(tx.typeInfo.type)
     )
   }, [ignoreTransactionTypes, transactions])
 }
