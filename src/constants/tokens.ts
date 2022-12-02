@@ -89,13 +89,6 @@ export const PORTAL_USDC_CELO = new Token(
   'USDCet',
   'USDC (Portal from Ethereum)'
 )
-const USDC_CELO_ALFAJORES = new Token(
-  SupportedChainId.CELO_ALFAJORES,
-  '0x41F4a5d2632b019Ae6CE9625bE3c9CaC143AcC7D',
-  6,
-  'USDC',
-  'USD//C'
-)
 export const AMPL = new Token(
   SupportedChainId.MAINNET,
   '0xD46bA6D942050d489DBd938a2C909A5d5039A161',
@@ -124,21 +117,6 @@ export const DAI_OPTIMISM = new Token(
   'DAI',
   'Dai stable coin'
 )
-export const USDC: { [chainId in SupportedChainId]: Token } = {
-  [SupportedChainId.MAINNET]: USDC_MAINNET,
-  [SupportedChainId.ARBITRUM_ONE]: USDC_ARBITRUM,
-  [SupportedChainId.OPTIMISM]: USDC_OPTIMISM,
-  [SupportedChainId.ARBITRUM_RINKEBY]: USDC_ARBITRUM_RINKEBY,
-  [SupportedChainId.OPTIMISM_GOERLI]: USDC_OPTIMISM_GOERLI,
-  [SupportedChainId.POLYGON]: USDC_POLYGON,
-  [SupportedChainId.POLYGON_MUMBAI]: USDC_POLYGON_MUMBAI,
-  [SupportedChainId.CELO]: PORTAL_USDC_CELO,
-  [SupportedChainId.CELO_ALFAJORES]: USDC_CELO_ALFAJORES,
-  [SupportedChainId.GOERLI]: USDC_GOERLI,
-  [SupportedChainId.RINKEBY]: USDC_RINKEBY,
-  [SupportedChainId.KOVAN]: USDC_KOVAN,
-  [SupportedChainId.ROPSTEN]: USDC_ROPSTEN,
-}
 export const DAI_POLYGON = new Token(
   SupportedChainId.POLYGON,
   '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
@@ -436,7 +414,7 @@ class MaticNativeCurrency extends NativeCurrency {
   }
 }
 
-export class ExtendedEther extends Ether {
+class ExtendedEther extends Ether {
   public get wrapped(): Token {
     const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
     if (wrapped) return wrapped
