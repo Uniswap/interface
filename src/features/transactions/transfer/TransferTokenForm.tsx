@@ -172,7 +172,7 @@ export function TransferTokenForm({
     setShowWarningModal(true)
   }
 
-  const transferWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Medium)
+  const transferWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Low)
   const transferWarningColor = getAlertColor(transferWarning?.severity)
 
   const { showNativeKeyboard, onDecimalPadLayout, isLayoutPending, onInputPanelLayout } =
@@ -181,13 +181,21 @@ export function TransferTokenForm({
   const TRANSFER_DIRECTION_BUTTON_SIZE = theme.iconSizes.md
   const TRANSFER_DIRECTION_BUTTON_INNER_PADDING = theme.spacing.sm
   const TRANSFER_DIRECTION_BUTTON_BORDER_WIDTH = theme.spacing.xxs
+  const SendWarningIcon = transferWarning?.icon ?? AlertTriangleIcon
 
   return (
     <>
       {showWarningModal && transferWarning?.title && (
         <WarningModal
           caption={transferWarning.message}
-          confirmText={t('OK')}
+          confirmText={t('Close')}
+          icon={
+            <SendWarningIcon
+              color={theme.colors[transferWarningColor.text]}
+              height={theme.iconSizes.lg}
+              width={theme.iconSizes.lg}
+            />
+          }
           modalName={ModalName.SendWarning}
           severity={transferWarning.severity}
           title={transferWarning.title}
@@ -207,11 +215,15 @@ export function TransferTokenForm({
         />
       </Suspense>
       <Flex grow gap="xs" justifyContent="space-between">
-        <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xxxxs" onLayout={onInputPanelLayout}>
+        <AnimatedFlex
+          entering={FadeIn}
+          exiting={FadeOut}
+          gap="xxxxxs"
+          onLayout={onInputPanelLayout}>
           {nftIn ? (
             <NFTTransfer asset={nftIn} nftSize={dimensions.fullHeight / 4} />
           ) : (
-            <Flex backgroundColor="background2" borderRadius="xl" justifyContent="center">
+            <Box backgroundColor="background2" borderRadius="xl" justifyContent="center">
               <CurrencyInputPanel
                 focus
                 currency={currencyIn}
@@ -231,7 +243,7 @@ export function TransferTokenForm({
                 onSetMax={onSetMax}
                 onShowTokenSelector={() => onShowTokenSelector(CurrencyField.INPUT)}
               />
-            </Flex>
+            </Box>
           )}
 
           <Box zIndex="popover">
@@ -275,7 +287,7 @@ export function TransferTokenForm({
               )}
             </Flex>
             {transferWarning && !isBlocked ? (
-              <TouchableArea onPress={onTransferWarningClick}>
+              <TouchableArea mt="xxxxs" onPress={onTransferWarningClick}>
                 <Flex
                   row
                   alignItems="center"
@@ -287,9 +299,10 @@ export function TransferTokenForm({
                   gap="xs"
                   px="md"
                   py="sm">
-                  <AlertTriangleIcon
+                  <SendWarningIcon
                     color={theme.colors[transferWarningColor.text]}
                     height={theme.iconSizes.sm}
+                    strokeWidth={1.5}
                     width={theme.iconSizes.sm}
                   />
                   <Text color={transferWarningColor.text} variant="subheadSmall">

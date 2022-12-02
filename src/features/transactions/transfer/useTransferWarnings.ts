@@ -2,6 +2,7 @@ import { NetInfoState, useNetInfo } from '@react-native-community/netinfo'
 import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { TFunction } from 'react-i18next'
+import Eye from 'src/assets/icons/eye.svg'
 import { getNetworkWarning } from 'src/components/modals/WarningModal/constants'
 import {
   Warning,
@@ -69,10 +70,11 @@ export function getTransferWarnings(
   if (account?.type === AccountType.Readonly) {
     warnings.push({
       type: WarningLabel.ViewOnlyAccount,
-      severity: WarningSeverity.Medium,
+      severity: WarningSeverity.Low,
       action: WarningAction.DisableSubmit,
       title: t('This wallet is view-only'),
       message: t('You need to import this wallet via recovery phrase to send assets.'),
+      icon: Eye,
     })
   }
 
