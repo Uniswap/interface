@@ -8,18 +8,6 @@ export const center = sprinkles({
   alignItems: 'center',
 })
 
-export const row = sprinkles({
-  display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'center',
-})
-
-export const column = sprinkles({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-})
-
 // TYPOGRAPHY
 export const headlineLarge = sprinkles({ fontWeight: 'semibold', fontSize: '36', lineHeight: '44' })
 export const headlineMedium = sprinkles({ fontWeight: 'semibold', fontSize: '28', lineHeight: '36' })
@@ -67,24 +55,7 @@ export const buttonMedium = style([
   },
 ])
 
-export const disabled = style([
-  {
-    padding: '19px 17px',
-    boxSizing: 'border-box',
-    textAlign: 'left',
-  },
-  sprinkles({
-    color: 'textTertiary',
-    fontWeight: 'medium',
-    background: 'whitesmoke',
-    borderRadius: '14',
-    borderStyle: 'none',
-    width: 'full',
-    fontSize: '16',
-  }),
-])
-
-export const magicalGradient = style({
+const magicalGradient = style({
   selectors: {
     '&::before': {
       content: '',
