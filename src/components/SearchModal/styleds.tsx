@@ -5,12 +5,6 @@ import styled from 'styled-components/macro'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
 
-export const Checkbox = styled.input`
-  border: 1px solid ${({ theme }) => theme.deprecated_red3};
-  height: 20px;
-  margin: 0;
-`
-
 export const PaddedColumn = styled(AutoColumn)`
   padding: 20px;
 `
