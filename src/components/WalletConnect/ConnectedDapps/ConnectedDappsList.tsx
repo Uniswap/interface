@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { FlatList, StyleSheet, ViewStyle } from 'react-native'
 import 'react-native-reanimated'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { AnimatedFlex, Flex } from 'src/components/layout'
+import { useAppTheme } from 'src/app/hooks'
+import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Text } from 'src/components/Text'
 import { DappConnectionItem } from 'src/components/WalletConnect/ConnectedDapps/DappConnectionItem'
@@ -18,6 +19,7 @@ type ConnectedDappsProps = {
 
 export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps) {
   const { t } = useTranslation()
+  const theme = useAppTheme()
 
   const [selectedSession, setSelectedSession] = useState<WalletConnectSession>()
 
@@ -27,9 +29,10 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
     </Text>
   )
   const header = backButton ? (
-    <Flex row alignItems="center">
+    <Flex row alignItems="center" justifyContent="space-between" pb="xs">
       {backButton}
       {headerText}
+      <Box width={theme.iconSizes.lg} />
     </Flex>
   ) : (
     <BackHeader alignment="center">{headerText}</BackHeader>

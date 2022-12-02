@@ -146,7 +146,11 @@ export function WalletConnectModal({
               <ConnectedDappsList
                 backButton={
                   <TouchableArea hapticFeedback onPress={onPressShowScanQr}>
-                    <Chevron color={theme.colors.textSecondary} height={24} width={24} />
+                    <Chevron
+                      color={theme.colors.textSecondary}
+                      height={theme.iconSizes.lg}
+                      width={theme.iconSizes.lg}
+                    />
                   </TouchableArea>
                 }
                 sessions={sessions}

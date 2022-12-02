@@ -49,7 +49,7 @@ export function DappSwitchNetworkModal({ selectedSession, onClose }: DappSwitchN
             <>
               <Separator />
               <Flex centered row px="lg" py="md">
-                <Text color="accentCritical" variant="subheadLarge">
+                <Text color="accentCritical" variant="bodyLarge">
                   {t('Disconnect')}
                 </Text>
               </Flex>

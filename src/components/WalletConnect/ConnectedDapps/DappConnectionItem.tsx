@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { ListRenderItemInfo } from 'react-native'
+import { ListRenderItemInfo, useColorScheme } from 'react-native'
 import 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -12,7 +12,6 @@ import { Text } from 'src/components/Text'
 import { CHAIN_INFO } from 'src/constants/chains'
 import { ElementName } from 'src/features/telemetry/constants'
 import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
-import { flex } from 'src/styles/flex'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { openUri } from 'src/utils/linking'
 
@@ -24,6 +23,7 @@ export function DappConnectionItem({
   onPressChangeNetwork: () => void
 }) {
   const theme = useAppTheme()
+  const isDarkMode = useColorScheme() === 'dark'
   const { t } = useTranslation()
 
   const { dapp } = wrapped.item
@@ -31,7 +31,7 @@ export function DappConnectionItem({
 
   return (
     <Flex
-      bg="translucentBackground"
+      bg={isDarkMode ? 'background1' : 'background2'}
       borderRadius="md"
       gap="md"
       justifyContent="space-between"
@@ -76,13 +76,13 @@ export function DappConnectionItem({
             <Flex fill row shrink gap="xs">
               <NetworkLogo chainId={chainId} />
               <Flex shrink>
-                <Text color="textSecondary" numberOfLines={1} variant="bodySmall">
+                <Text color="textSecondary" numberOfLines={1} variant="buttonLabelSmall">
                   {CHAIN_INFO[chainId].label}
                 </Text>
               </Flex>
             </Flex>
           ) : (
-            <Text color="textSecondary" style={flex.shrink} variant="bodySmall">
+            <Text color="textSecondary" textAlign="center" variant="buttonLabelSmall">
               {t('Unsupported chain')}
             </Text>
           )}
