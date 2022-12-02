@@ -208,8 +208,7 @@ const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
   const resetSellAssets = useSellAsset((state) => state.reset)
 
   const listing = asset.sellOrders && asset.sellOrders.length > 0 ? asset.sellOrders[0] : undefined
-  const cheapestOrder = asset.sellOrders && asset.sellOrders.length > 0 ? asset.sellOrders[0] : undefined
-  const expirationDate = cheapestOrder ? new Date(cheapestOrder.endAt) : undefined
+  const expirationDate = listing ? new Date(listing.endAt) : undefined
 
   const USDPrice = useMemo(
     () => (USDValue ? USDValue * asset.floor_sell_order_price : undefined),
