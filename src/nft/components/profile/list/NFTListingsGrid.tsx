@@ -453,7 +453,7 @@ const MarketplaceRow = ({
   )
 }
 
-export interface NFTListRowProps {
+interface NFTListRowProps {
   asset: WalletAsset
   globalPriceMethod?: SetPriceMethod
   setGlobalPrice: Dispatch<number | undefined>
