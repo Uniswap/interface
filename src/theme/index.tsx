@@ -17,7 +17,7 @@ export const MEDIA_WIDTHS = {
   deprecated_upToLarge: 1280,
 }
 
-const BREAKPOINTS = {
+export const BREAKPOINTS = {
   xs: 396,
   sm: 640,
   md: 768,
