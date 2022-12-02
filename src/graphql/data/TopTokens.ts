@@ -1,11 +1,5 @@
 import graphql from 'babel-plugin-relay/macro'
-import {
-  filterStringAtom,
-  filterTimeAtom,
-  sortAscendingAtom,
-  sortMethodAtom,
-  TokenSortMethod,
-} from 'components/Tokens/state'
+import { filterStringAtom, filterTimeAtom } from 'components/Tokens/state'
 import { useAtomValue } from 'jotai/utils'
 import { useEffect, useMemo, useState } from 'react'
 import { fetchQuery, useLazyLoadQuery, useRelayEnvironment } from 'react-relay'
@@ -61,37 +55,6 @@ const tokenSparklineQuery = graphql`
     }
   }
 `
-
-export type PrefetchedTopToken = NonNullable<TopTokens100Query['response']['topTokens']>[number]
-
-function useSortedTokens(tokens: NonNullable<TopTokens100Query['response']['topTokens']>) {
-  const sortMethod = useAtomValue(sortMethodAtom)
-  const sortAscending = useAtomValue(sortAscendingAtom)
-
-  return useMemo(() => {
-    let tokenArray = Array.from(tokens)
-    switch (sortMethod) {
-      case TokenSortMethod.PRICE:
-        tokenArray = tokenArray.sort((a, b) => (b?.market?.price?.value ?? 0) - (a?.market?.price?.value ?? 0))
-        break
-      case TokenSortMethod.PERCENT_CHANGE:
-        tokenArray = tokenArray.sort(
-          (a, b) => (b?.market?.pricePercentChange?.value ?? 0) - (a?.market?.pricePercentChange?.value ?? 0)
-        )
-        break
-      case TokenSortMethod.TOTAL_VALUE_LOCKED:
-        tokenArray = tokenArray.sort(
-          (a, b) => (b?.market?.totalValueLocked?.value ?? 0) - (a?.market?.totalValueLocked?.value ?? 0)
-        )
-        break
-      case TokenSortMethod.VOLUME:
-        tokenArray = tokenArray.sort((a, b) => (b?.market?.volume?.value ?? 0) - (a?.market?.volume?.value ?? 0))
-        break
-    }
-
-    return sortAscending ? tokenArray.reverse() : tokenArray
-  }, [tokens, sortMethod, sortAscending])
-}
 
 function useFilteredTokens(tokens: NonNullable<TopTokens100Query['response']['topTokens']>) {
   const filterString = useAtomValue(filterStringAtom)

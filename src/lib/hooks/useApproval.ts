@@ -10,7 +10,7 @@ import { getTokenAddress } from 'lib/utils/analytics'
 import { useCallback, useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
-export enum ApprovalState {
+enum ApprovalState {
   UNKNOWN = 'UNKNOWN',
   NOT_APPROVED = 'NOT_APPROVED',
   PENDING = 'PENDING',

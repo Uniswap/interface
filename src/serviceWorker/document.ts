@@ -5,7 +5,7 @@ import { Route } from 'workbox-routing'
 import { isDevelopment } from './utils'
 
 const fileExtensionRegexp = new RegExp('/[^/?]+\\.[^/]+$')
-export const DOCUMENT = process.env.PUBLIC_URL + '/index.html'
+const DOCUMENT = process.env.PUBLIC_URL + '/index.html'
 
 /**
  * Matches with App Shell-style routing, so that navigation requests are fulfilled with an index.html shell.
