@@ -53,8 +53,6 @@ export interface UserState {
   // undefined means has not gone through A/B split yet
   showSurveyPopup: boolean | undefined
 
-  showDonationLink: boolean
-
   hideNFTWelcomeModal: boolean
 }
 
@@ -79,7 +77,6 @@ export const initialState: UserState = {
   URLWarningVisible: true,
   hideNFTPromoBanner: false,
   showSurveyPopup: undefined,
-  showDonationLink: true,
   hideNFTWelcomeModal: false,
 }
 
@@ -122,9 +119,6 @@ const userSlice = createSlice({
     },
     updateShowSurveyPopup(state, action) {
       state.showSurveyPopup = action.payload.showSurveyPopup
-    },
-    updateShowDonationLink(state, action) {
-      state.showDonationLink = action.payload.showDonationLink
     },
     updateHideNFTWelcomeModal(state, action) {
       state.hideNFTWelcomeModal = action.payload.hideNFTWelcomeModal
@@ -213,7 +207,6 @@ export const {
   removeSerializedToken,
   updateHideClosedPositions,
   updateMatchesDarkMode,
-  updateShowDonationLink,
   updateShowSurveyPopup,
   updateUserClientSideRouter,
   updateHideNFTWelcomeModal,

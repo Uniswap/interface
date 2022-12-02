@@ -5,11 +5,11 @@ import { Wallet } from './types'
 
 /* Used to track wallets that have been connected by the user in current session, and remove them when deliberately disconnected. 
   Used to compute is_reconnect event property for analytics */
-export interface WalletState {
+interface WalletState {
   connectedWallets: Wallet[]
 }
 
-export const initialState: WalletState = {
+const initialState: WalletState = {
   connectedWallets: [],
 }
 
