@@ -154,13 +154,13 @@ export function HomeScreen() {
 
   const scrollPairs = useMemo<ScrollPair[]>(
     () => [
-      { list: tokensTabScrollRef, position: tokensTabScrollValue },
-      { list: nftsTabScrollRef, position: nftsTabScrollValue },
+      { list: tokensTabScrollRef, position: tokensTabScrollValue, index: 0 },
+      { list: nftsTabScrollRef, position: nftsTabScrollValue, index: 1 },
     ],
     [nftsTabScrollRef, nftsTabScrollValue, tokensTabScrollRef, tokensTabScrollValue]
   )
 
-  const { sync } = useScrollSync(scrollPairs, headerConfig)
+  const { sync } = useScrollSync(tabIndex, scrollPairs, headerConfig)
 
   const openSidebar = useCallback(() => {
     navigation.dispatch(DrawerActions.openDrawer())

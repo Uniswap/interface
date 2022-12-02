@@ -68,6 +68,7 @@ export type HeaderConfig = {
 export type ScrollPair = {
   list: RefObject<FlatList> | RefObject<FlashList<any>>
   position: Animated.SharedValue<number>
+  index: number
 }
 
 export type TabContentProps = Partial<FlatListProps<any>> & {
@@ -108,7 +109,11 @@ export const panHeaderGestureAction = (openSidebar: () => void) =>
 /**
  * Keeps tab content in sync, by scrolling content in case collapsing header height has changed between tabs
  */
-export const useScrollSync = (scrollPairs: ScrollPair[], headerConfig: HeaderConfig) => {
+export const useScrollSync = (
+  currentTabIndex: number,
+  scrollPairs: ScrollPair[],
+  headerConfig: HeaderConfig
+) => {
   const sync:
     | FlatListProps<any>['onMomentumScrollEnd']
     | FlashListProps<any>['onMomentumScrollEnd'] = (event) => {
@@ -118,17 +123,19 @@ export const useScrollSync = (scrollPairs: ScrollPair[], headerConfig: HeaderCon
 
     const headerDiff = heightExpanded - heightCollapsed
 
-    for (const { list, position } of scrollPairs) {
-      const scrollPosition = position.value ?? 0
+    for (const { list, position, index } of scrollPairs) {
+      const scrollPosition = position.value
 
       if (scrollPosition > headerDiff && y > headerDiff) {
         continue
       }
 
-      list.current?.scrollToOffset({
-        offset: Math.min(y, headerDiff),
-        animated: false,
-      })
+      if (index !== currentTabIndex) {
+        list.current?.scrollToOffset({
+          offset: Math.min(y, headerDiff),
+          animated: false,
+        })
+      }
     }
   }
 
