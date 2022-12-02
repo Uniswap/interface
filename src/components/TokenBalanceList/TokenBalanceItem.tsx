@@ -1,3 +1,4 @@
+import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { memo } from 'react'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -27,9 +28,11 @@ export const TokenBalanceItem = memo(
 
     return (
       <TouchableArea
+        hapticFeedback
         alignItems="flex-start"
         bg="none"
         flexDirection="row"
+        hapticStyle={ImpactFeedbackStyle.Light}
         justifyContent="space-between"
         minHeight={56}
         py="xs"

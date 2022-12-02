@@ -1,3 +1,4 @@
+import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
@@ -42,6 +43,8 @@ export function SearchWalletItem({ wallet }: SearchWalletItemProps) {
   return (
     <ContextMenu actions={menuActions} onPress={toggleFavoriteWallet}>
       <TouchableArea
+        hapticFeedback
+        hapticStyle={ImpactFeedbackStyle.Light}
         name={ElementName.SearchWalletItem}
         testID={`wallet-item-${address}`}
         onPress={onPress}>

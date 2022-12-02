@@ -1,3 +1,4 @@
+import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
@@ -133,7 +134,9 @@ export const TokenItem = memo(
           }
         }}>
         <TouchableArea
+          hapticFeedback
           disabled={isEditing}
+          hapticStyle={ImpactFeedbackStyle.Light}
           testID={`token-item-${name}`}
           onPress={() => {
             if (isEditing) return

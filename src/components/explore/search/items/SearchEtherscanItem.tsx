@@ -1,3 +1,4 @@
+import { ImpactFeedbackStyle } from 'expo-haptics'
 import { default as React } from 'react'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
@@ -38,7 +39,11 @@ export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProp
   }
 
   return (
-    <TouchableArea name={ElementName.SearchEtherscanItem} onPress={onPressViewEtherscan}>
+    <TouchableArea
+      hapticFeedback
+      hapticStyle={ImpactFeedbackStyle.Light}
+      name={ElementName.SearchEtherscanItem}
+      onPress={onPressViewEtherscan}>
       <Flex row alignItems="center" gap="sm" justifyContent="space-between" px="xs" py="sm">
         <Flex centered row gap="sm">
           <EtherscanIcon size={theme.iconSizes.xxxl} />

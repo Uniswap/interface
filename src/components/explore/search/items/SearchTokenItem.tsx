@@ -1,3 +1,4 @@
+import { ImpactFeedbackStyle } from 'expo-haptics'
 import { default as React } from 'react'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -46,7 +47,11 @@ export function SearchTokenItem({ token }: SearchTokenItemProps) {
   }
 
   return (
-    <TouchableArea name={ElementName.SearchTokenItem} onPress={onPress}>
+    <TouchableArea
+      hapticFeedback
+      hapticStyle={ImpactFeedbackStyle.Light}
+      name={ElementName.SearchTokenItem}
+      onPress={onPress}>
       <Flex row alignItems="center" gap="sm" px="xs" py="sm">
         <TokenLogo chainId={chainId} symbol={symbol} url={logoUrl ?? undefined} />
         <Flex gap="none">

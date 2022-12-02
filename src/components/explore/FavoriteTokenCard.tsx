@@ -1,3 +1,4 @@
+import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ViewProps } from 'react-native'
@@ -139,9 +140,11 @@ function FavoriteTokenCard({
       }}
       {...rest}>
       <AnimatedTouchableArea
+        hapticFeedback
         borderRadius="lg"
         entering={FadeIn}
         exiting={FadeOut}
+        hapticStyle={ImpactFeedbackStyle.Light}
         testID={`token-box-${token?.symbol}`}
         onPress={onPress}>
         <BaseCard.Shadow>

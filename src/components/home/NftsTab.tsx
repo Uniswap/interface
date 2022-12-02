@@ -1,5 +1,6 @@
 import { NetworkStatus } from '@apollo/client'
 import { FlashList } from '@shopify/flash-list'
+import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { forwardRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, NativeScrollEvent, NativeSyntheticEvent, View } from 'react-native'
@@ -122,7 +123,11 @@ export const NftsTab = forwardRef<FlashList<any>, NftsTabProps>(
           <Loading repeat={1} type="nft" />
         ) : (
           <Box flex={1} justifyContent="flex-start" m="xs">
-            <TouchableArea activeOpacity={1} onPress={() => onPressItem(item)}>
+            <TouchableArea
+              hapticFeedback
+              activeOpacity={1}
+              hapticStyle={ImpactFeedbackStyle.Light}
+              onPress={() => onPressItem(item)}>
               <Box
                 alignItems="center"
                 aspectRatio={1}

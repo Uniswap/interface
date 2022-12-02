@@ -1,3 +1,4 @@
+import { ImpactFeedbackStyle } from 'expo-haptics'
 import { default as React, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ViewProps } from 'react-native'
@@ -83,7 +84,9 @@ export default function FavoriteWalletCard({
       }}
       {...rest}>
       <TouchableArea
+        hapticFeedback
         borderRadius="lg"
+        hapticStyle={ImpactFeedbackStyle.Light}
         onPress={() => {
           preload(address)
           navigate(address)
