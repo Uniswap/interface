@@ -135,7 +135,6 @@ const MemberView: React.FC<Member> = props => {
     <Flex
       sx={{
         flexDirection: 'column',
-        gap: '8px',
         width: 'min-content',
         alignItems: 'center',
       }}
@@ -155,8 +154,8 @@ const MemberView: React.FC<Member> = props => {
         sx={{
           fontWeight: 700,
           fontSize: '14px',
-          lineHeight: '20px',
           color: theme.text,
+          marginTop: '12px',
         }}
       >
         {props.name}
@@ -167,10 +166,11 @@ const MemberView: React.FC<Member> = props => {
         sx={{
           fontWeight: 400,
           fontSize: '12px',
-          lineHeight: '20px',
+          lineHeight: '16px',
           color: theme.subText,
           whiteSpace: 'normal',
           textAlign: 'center',
+          marginTop: '4px',
         }}
       >
         {props.title}
@@ -182,6 +182,7 @@ const MemberView: React.FC<Member> = props => {
             alignItems: 'center',
             justifyContent: 'center',
             gap: '12px',
+            marginTop: '4px',
           }}
         >
           {props.handles.twitter && (
