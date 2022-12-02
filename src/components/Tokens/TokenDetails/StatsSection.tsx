@@ -19,7 +19,7 @@ export const StatWrapper = styled.div`
   gap: 4px;
   padding: 24px 0px;
 `
-export const TokenStatsSection = styled.div`
+const TokenStatsSection = styled.div`
   display: flex;
   flex-wrap: wrap;
 `
