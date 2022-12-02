@@ -39,6 +39,25 @@ const ReviewButton = styled(ThemeButton)`
   padding: 8px;
   width: 50%;
 `
+const RemoveAssetOverlay = styled.div`
+  position: absolute;
+  display: block;
+  right: -11px;
+  top: -11px;
+  z-index: 1;
+  transition: 250ms;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+export const RemoveAssetButton = ({ onClick }: { onClick: (e: MouseEvent<HTMLDivElement>) => void }) => (
+  <RemoveAssetOverlay onClick={onClick}>
+    <CircularCloseIcon />
+  </RemoveAssetOverlay>
+)
 
 const NoContentContainer = () => (
   <Box position="relative" background="loadingBackground" className={styles.bagRowImage}>
@@ -87,7 +106,7 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
   )
 
   const handleRemoveClick = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
+    (e: MouseEvent<HTMLElement>) => {
       e.preventDefault()
       e.stopPropagation()
       removeAsset([asset])
@@ -99,15 +118,7 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
     <Link to={getAssetHref(asset)} style={{ textDecoration: 'none' }}>
       <Row className={styles.bagRow} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
         <Box position="relative" display="flex">
-          <Box
-            display={showRemove && isMobile ? 'block' : 'none'}
-            className={styles.removeAssetOverlay}
-            onClick={handleRemoveClick}
-            transition="250"
-            zIndex="1"
-          >
-            <CircularCloseIcon />
-          </Box>
+          {showRemove && isMobile && <RemoveAssetButton onClick={handleRemoveClick} />}
           {!noImageAvailable && (
             <Box
               as="img"

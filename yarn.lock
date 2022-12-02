@@ -4342,10 +4342,10 @@
     "@uniswap/v3-core" "1.0.0"
     "@uniswap/v3-periphery" "^1.0.1"
 
-"@uniswap/widgets@^2.19.2":
-  version "2.19.2"
-  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.19.2.tgz#5f26f35da0c3bce624a9b0f8362bc975f7a31ec0"
-  integrity sha512-5wlpfLITh4Xsnpbgb3BaXggvg6t3q+frsySHOmtVW5IEYhfVs5k2hsCbmLscKyY2b/83Oewb2wP6pXkm61u13Q==
+"@uniswap/widgets@2.20.0":
+  version "2.20.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.20.0.tgz#eb7ca21ae360a51ff04d86ec5c18255bfb0ff52e"
+  integrity sha512-JAjcxczWJzod1QDFunKvYGpCCyneqSV6Zh6GyGaB1jbcThJ/GZ6yxmebeZIzGV+OiIFV2c2xMSjUq5KwNLSCaw==
   dependencies:
     "@babel/runtime" ">=7.17.0"
     "@fontsource/ibm-plex-mono" "^4.5.1"
@@ -7130,7 +7130,7 @@ core-js-pure@^3.16.0:
   resolved "https://registry.yarnpkg.com/core-js-pure/-/core-js-pure-3.24.1.tgz#8839dde5da545521bf282feb7dc6d0b425f39fd3"
   integrity sha512-r1nJk41QLLPyozHUUPmILCEMtMw24NG4oWK6RbsDdjzQgg9ZvrUsPBj1MnG0wXXp1DCDU6j+wUvEmBSrtRbLXg==
 
-core-js@3.6.5, core-js@^3.6.5:
+core-js@3.6.5:
   version "3.6.5"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.6.5.tgz#7395dc273af37fb2e50e9bd3d9fe841285231d1a"
   integrity sha512-vZVEEwZoIsI+vPEuoF9Iqf5H7/M3eeQqWlQnYa8FSKKePuYTf5MWnxb5SDAzCa60b3JBRS5g9b+Dq7b1y/RCrA==
@@ -7139,6 +7139,11 @@ core-js@^2.4.0:
   version "2.6.12"
   resolved "https://registry.npmjs.org/core-js/-/core-js-2.6.12.tgz"
   integrity sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==
+
+core-js@^3.0.0, core-js@^3.6.5:
+  version "3.26.1"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.26.1.tgz#7a9816dabd9ee846c1c0fe0e8fcad68f3709134e"
+  integrity sha512-21491RRQVzUn0GGM9Z1Jrpr6PNPxPi+Za8OM9q4tksTSnlbXXGKK1nXNg/QvwFYettXvSX6zWKCtHHfjN4puyA==
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
@@ -14810,13 +14815,6 @@ react-clientside-effect@^1.2.2:
   dependencies:
     "@babel/runtime" "^7.12.13"
 
-react-confetti@^6.0.0:
-  version "6.0.1"
-  resolved "https://registry.npmjs.org/react-confetti/-/react-confetti-6.0.1.tgz"
-  integrity sha512-ZpOTBrqSNhWE4rRXCZ6E6U+wGd7iYHF5MGrqwikoiBpgBq9Akdu0DcLW+FdFnLjyZYC+VfAiV2KeFgYRMyMrkA==
-  dependencies:
-    tween-functions "^1.2.0"
-
 react-dev-utils@^11.0.3:
   version "11.0.4"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-11.0.4.tgz#a7ccb60257a1ca2e0efe7a83e38e6700d17aa37a"
@@ -14958,6 +14956,14 @@ react-refresh@^0.8.3:
   version "0.8.3"
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.8.3.tgz#721d4657672d400c5e3c75d063c4a85fb2d5d68f"
   integrity sha512-X8jZHc7nCMjaCqoU+V2I0cOhNW+QMBwSUkeXnTi8IPe6zaRWfn60ZzvFDZqWPfmSJfjub7dDW1SP0jaHWLu/hg==
+
+react-relay-network-modern@^6.2.1:
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/react-relay-network-modern/-/react-relay-network-modern-6.2.1.tgz#34e93110cf1bb0e666bffb00b513335c37950bc9"
+  integrity sha512-O1kP9GkNrm4d+ibfuTY9yNbkXV6vAByJ4jYTZIXn8nh7jLWoe6PneF1VcBYvYvzWYsebpCLDQHDPoXI05S+rhQ==
+  dependencies:
+    core-js "^3.0.0"
+    extract-files "^9.0.0"
 
 react-relay@^14.1.0:
   version "14.1.0"
@@ -17129,11 +17135,6 @@ tunnel-agent@^0.6.0:
   integrity sha1-J6XeoGs2sEoKmWZ3SykIaPD8QP0=
   dependencies:
     safe-buffer "^5.0.1"
-
-tween-functions@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.npmjs.org/tween-functions/-/tween-functions-1.2.0.tgz"
-  integrity sha1-GuOlDnxguz3vd06scHrLynO7w/8=
 
 tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   version "0.14.5"

@@ -17,7 +17,6 @@ import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText, UniTokenAnimat
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
-import Confetti from '../Confetti'
 import { Break, CardBGImage, CardBGImageSmaller, CardNoise, CardSection, DataCard } from '../earn/styled'
 import Modal from '../Modal'
 import { RowBetween } from '../Row'
@@ -92,7 +91,6 @@ export default function ClaimModal() {
 
   return (
     <Modal isOpen={isOpen} onDismiss={toggleClaimModal} maxHeight={90}>
-      <Confetti start={Boolean(isOpen && claimConfirmed)} />
       {!attempting && !claimConfirmed && (
         <ContentWrapper gap="lg">
           <ModalUpper>

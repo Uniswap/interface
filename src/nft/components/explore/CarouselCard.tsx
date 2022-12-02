@@ -5,21 +5,21 @@ import { useCollectionQuery } from 'graphql/data/nft/Collection'
 import { VerifiedIcon } from 'nft/components/icons'
 import { Markets, TrendingCollection } from 'nft/types'
 import { formatWeiToDecimal } from 'nft/utils'
-import styled, { useTheme } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { ThemedText } from 'theme/components/text'
 
 const CarouselCardBorder = styled.div`
   width: 100%;
   position: relative;
-  border-radius: 22px;
+  border-radius: 21px;
   cursor: pointer;
-  border: 2px solid transparent;
+  border: 1px solid transparent;
   transition-property: border-color;
   transition-duration: ${({ theme }) => theme.transition.duration.fast};
   transition-timing-function: ${({ theme }) => theme.transition.timing.inOut};
 
   :hover {
-    border: 2px solid ${({ theme }) => theme.backgroundOutline};
+    border: 1px solid ${({ theme }) => theme.backgroundOutline};
   }
 
   ::after {
@@ -30,7 +30,7 @@ const CarouselCardBorder = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    border-radius: 22px;
+    border-radius: 21px;
     z-index: -1;
     box-shadow: ${({ theme }) => theme.deepShadow};
     transition-property: opacity;
@@ -96,13 +96,18 @@ const LoadingCollectionNameContainer = styled(LoadingBubble)`
 `
 
 const HeaderOverlay = styled.div`
-  position: absolute;
-  bottom: 0px;
-  top: 0px;
-  right: 0px;
-  left: 0px;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 100%, rgba(0, 0, 0, 0.08));
+  bottom: 0px;
+  left: 0px;
+  position: absolute;
+  right: 0px;
+  top: 0px;
   z-index: 0;
+
+  // overlay workaround for firefox only
+  @supports (-moz-appearance: none) {
+    bottom: -1px;
+  }
 `
 
 const CollectionImage = styled.img`
@@ -171,7 +176,8 @@ const CarouselCardContainer = styled.div`
     justify-self: right;
   }
 
-  @media (max-width: 396px) or ((min-width: ${({ theme }) => theme.breakpoint.sm}px) and (max-width: 880px)) {
+  @media (max-width: ${({ theme }) => theme.breakpoint.xs}px) or ((min-width: ${({ theme }) =>
+      theme.breakpoint.sm}px) and (max-width: 880px)) {
     ${FirstColumnTextWrapper} {
       display: none;
     }
@@ -190,7 +196,7 @@ interface MarketplaceRowProps {
   listings?: number
 }
 
-export const MarketplaceRow = ({ marketplace, floorInEth, listings }: MarketplaceRowProps) => {
+const MarketplaceRow = ({ marketplace, floorInEth, listings }: MarketplaceRowProps) => {
   return (
     <>
       <TableElement>
@@ -278,7 +284,7 @@ export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
 
 const DEFAULT_TABLE_ELEMENTS = 12
 
-export const LoadingTable = () => {
+const LoadingTable = () => {
   return (
     <>
       {[...Array(DEFAULT_TABLE_ELEMENTS)].map((index) => (
@@ -295,13 +301,12 @@ const CollectionName = styled(ThemedText.MediumHeader)`
 `
 
 const CarouselCardHeader = ({ collection }: { collection: TrendingCollection }) => {
-  const theme = useTheme()
   return (
     <CardHeaderContainer src={collection.bannerImageUrl}>
       <CardHeaderColumn>
         <CollectionImage src={collection.imageUrl} />
         <CollectionNameContainer>
-          <CollectionName color={theme.accentTextLightPrimary} fontWeight="500">
+          <CollectionName color="accentTextLightPrimary" fontWeight="500">
             {collection.name}
           </CollectionName>
           {collection.isVerified && (

@@ -96,7 +96,7 @@ const ActionsSubContainer = styled.div`
   }
 `
 
-export const SortDropdownContainer = styled.div<{ isFiltersExpanded: boolean }>`
+const SortDropdownContainer = styled.div<{ isFiltersExpanded: boolean }>`
   width: max-content;
   height: 44px;
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
@@ -168,15 +168,15 @@ const MarketNameWrapper = styled(Row)`
   gap: 8px;
 `
 
-const LoadingAssets = () => (
+export const LoadingAssets = ({ count }: { count?: number }) => (
   <>
-    {Array.from(Array(ASSET_PAGE_SIZE), (_, index) => (
+    {Array.from(Array(count ?? ASSET_PAGE_SIZE), (_, index) => (
       <CollectionAssetLoading key={index} />
     ))}
   </>
 )
 
-export const CollectionNftsLoading = () => (
+const CollectionNftsLoading = () => (
   <Box width="full" className={styles.assetList}>
     <LoadingAssets />
   </Box>
@@ -185,7 +185,7 @@ export const CollectionNftsLoading = () => (
 export const CollectionNftsAndMenuLoading = () => (
   <InfiniteScrollWrapper>
     <Column alignItems="flex-start" position="relative" width="full">
-      <Row marginY="12" gap="12">
+      <Row marginY="12" gap="12" marginBottom="40">
         <Box className={loadingAsset} borderRadius="12" width={{ sm: '44', md: '100' }} height="44" />
         <Box
           className={loadingAsset}

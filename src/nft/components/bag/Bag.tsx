@@ -46,7 +46,6 @@ interface SeparatorProps {
 const DetailsPageBackground = styled.div`
   position: fixed;
   background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(12px);
   top: 72px;
   width: 100%;
   height: 100%;
@@ -282,51 +281,52 @@ const Bag = () => {
 
   return (
     <Portal>
-      <Column zIndex={isMobile || isOpen ? 'modalOverTooltip' : '3'} className={styles.bagContainer}>
-        {!(isProfilePage && profilePageState === ProfilePageStateType.LISTING) ? (
-          <>
-            <BagHeader
-              numberOfAssets={isProfilePage ? sellAssets.length : itemsInBag.length}
-              closeBag={handleCloseBag}
-              resetFlow={isProfilePage ? resetSellAssets : reset}
-              isProfilePage={isProfilePage}
+      {!(isProfilePage && profilePageState === ProfilePageStateType.LISTING) ? (
+        <Column zIndex={isMobile || isOpen ? 'modalOverTooltip' : '3'} className={styles.bagContainer}>
+          <BagHeader
+            numberOfAssets={isProfilePage ? sellAssets.length : itemsInBag.length}
+            closeBag={handleCloseBag}
+            resetFlow={isProfilePage ? resetSellAssets : reset}
+            isProfilePage={isProfilePage}
+          />
+          {shouldRenderEmptyState && <EmptyState />}
+          <ScrollingIndicator top show={userCanScroll && scrollProgress > 0} />
+          <Column ref={scrollRef} className={styles.assetsContainer} onScroll={scrollHandler} gap="12">
+            {isProfilePage ? <ProfileBagContent /> : <BagContent />}
+          </Column>
+          {hasAssetsToShow && !isProfilePage && (
+            <BagFooter
+              totalEthPrice={totalEthPrice}
+              totalUsdPrice={totalUsdPrice}
+              bagStatus={bagStatus}
+              fetchAssets={fetchAssets}
+              eventProperties={eventProperties}
             />
-            {shouldRenderEmptyState && <EmptyState />}
-            <ScrollingIndicator top show={userCanScroll && scrollProgress > 0} />
-            <Column ref={scrollRef} className={styles.assetsContainer} onScroll={scrollHandler} gap="12">
-              {isProfilePage ? <ProfileBagContent /> : <BagContent />}
-            </Column>
-            {hasAssetsToShow && !isProfilePage && (
-              <BagFooter
-                totalEthPrice={totalEthPrice}
-                totalUsdPrice={totalUsdPrice}
-                bagStatus={bagStatus}
-                fetchAssets={fetchAssets}
-                eventProperties={eventProperties}
-              />
-            )}
-            {isSellingAssets && isProfilePage && (
-              <Box
-                marginTop="32"
-                marginX="28"
-                paddingY="10"
-                className={`${buttonTextMedium} ${commonButtonStyles}`}
-                backgroundColor="accentAction"
-                color="white"
-                textAlign="center"
-                onClick={() => {
-                  isMobile && toggleBag()
-                  setProfilePageState(ProfilePageStateType.LISTING)
-                }}
-              >
-                Continue
-              </Box>
-            )}
-          </>
-        ) : (
+          )}
+          {isSellingAssets && isProfilePage && (
+            <Box
+              marginTop="32"
+              marginX="28"
+              paddingY="10"
+              className={`${buttonTextMedium} ${commonButtonStyles}`}
+              backgroundColor="accentAction"
+              color="white"
+              textAlign="center"
+              onClick={() => {
+                isMobile && toggleBag()
+                setProfilePageState(ProfilePageStateType.LISTING)
+              }}
+            >
+              Continue
+            </Box>
+          )}
+        </Column>
+      ) : (
+        <Column zIndex={isMobile || isOpen ? 'modalOverTooltip' : '3'} className={styles.bagContainer}>
           <ListingModal />
-        )}
-      </Column>
+        </Column>
+      )}
+
       {isDetailsPage ? (
         <DetailsPageBackground onClick={toggleBag} />
       ) : (

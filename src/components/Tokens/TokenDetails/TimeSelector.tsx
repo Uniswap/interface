@@ -5,12 +5,12 @@ import styled from 'styled-components/macro'
 import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
 import { DISPLAYS, ORDERED_TIMES } from '../TokenTable/TimeSelector'
 
-export const TimeOptionsWrapper = styled.div`
+const TimeOptionsWrapper = styled.div`
   display: flex;
   width: 100%;
   justify-content: flex-end;
 `
-export const TimeOptionsContainer = styled.div`
+const TimeOptionsContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-top: 4px;

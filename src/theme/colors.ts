@@ -167,6 +167,9 @@ export const darkTheme = {
 
   stateOverlayHover: opacify(8, colors.gray300),
   stateOverlayPressed: opacify(24, colors.gray200),
+
+  searchBackground: `rgba(255,255,255,0.07)`,
+  searchOutline: `rgba(255,255,255,0.07)`,
 }
 
 export const lightTheme: Theme = {
@@ -218,4 +221,7 @@ export const lightTheme: Theme = {
 
   stateOverlayHover: opacify(8, colors.gray300),
   stateOverlayPressed: opacify(24, colors.gray200),
+
+  searchBackground: opacify(4, colors.white),
+  searchOutline: opacify(1, colors.black),
 }

@@ -164,7 +164,7 @@ const PriceTextInput = ({
             ? 'genieBlue'
             : listPrice != null
             ? 'textSecondary'
-            : 'gray700'
+            : 'blue400'
         }
       >
         <NumericInput
@@ -184,7 +184,7 @@ const PriceTextInput = ({
           }}
           ref={inputRef}
           onChange={(v: FormEvent<HTMLInputElement>) => {
-            if (!listPrice && v.currentTarget.value === '0.') {
+            if (!listPrice && v.currentTarget.value.includes('.') && parseFloat(v.currentTarget.value) === 0) {
               return
             }
             const val = parseFloat(v.currentTarget.value)
@@ -262,9 +262,16 @@ const EthPriceDisplay = ({ ethPrice = 0 }: { ethPrice?: number }) => {
     <Column width="full">
       <Row width="full" justifyContent="flex-end">
         {ethPrice !== 0 ? (
-          <Box className={body} color="textSecondary" marginLeft="12" marginRight="0">
-            {formatUsdPrice(ethPrice * ethConversion)}
-          </Box>
+          <>
+            <Column>
+              <Box className={body} color="textPrimary" marginLeft="12" marginRight="0">
+                {ethPrice} ETH
+              </Box>
+              <Box className={body} color="textSecondary" marginLeft="12" marginRight="0">
+                {formatUsdPrice(ethPrice * ethConversion)}
+              </Box>
+            </Column>
+          </>
         ) : (
           '- ETH'
         )}
@@ -319,8 +326,6 @@ const MarketplaceRow = ({
       : asset.basisPoints) * 0.01
   const feeInEth = price && (price * (royalties + marketplaceFee)) / 100
   const userReceives = price && feeInEth && price - feeInEth
-  const profit = userReceives && asset.lastPrice && userReceives - asset.lastPrice
-  const profitPercent = profit && asset.lastPrice && Math.round(profit && (profit / asset.lastPrice) * 100)
 
   useEffect(() => {
     if (globalPriceMethod === SetPriceMethod.FLOOR_PRICE) {
@@ -442,17 +447,6 @@ const MarketplaceRow = ({
       <Row style={{ flex: '1.5' }} display={{ sm: 'none', md: 'flex' }}>
         <Column width="full">
           <EthPriceDisplay ethPrice={userReceives} />
-          {(showGlobalPrice ? globalPrice && globalPrice !== 0 : listPrice !== 0) && (
-            <Row marginTop="4" width="full" fontSize="12" color="textSecondary">
-              {profit ? <Box marginLeft="auto">Profit: {formatEth(profit)} ETH</Box> : null}
-              {profitPercent ? (
-                <Box marginLeft="8" marginRight="0">
-                  ({profitPercent > 0 && '+'}
-                  {profitPercent > 1000 ? Math.round(profitPercent / 1000) + 'K' : profitPercent}%)
-                </Box>
-              ) : null}
-            </Row>
-          )}
         </Column>
       </Row>
     </Row>
