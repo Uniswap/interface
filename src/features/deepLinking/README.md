@@ -10,12 +10,12 @@ Failing to include a valid `screen` or `userAddress` will result in the app open
 
 ### Activity Screen
 
-When routing to the activity screen, including the `fiatOnRamp` query parameter the app will open up to the activity screen and if an in-app browser is open it will close it.
+Routes to activity screen for given `userAddress`.
 
 Example:
 
 ```
-https://uniswap.org/app?screen=transaction&userAddress=0x123...789&fiatOnRamp=true
+https://uniswap.org/app?screen=transaction&userAddress=0x123...789
 ```
 
 ### Swap Screen

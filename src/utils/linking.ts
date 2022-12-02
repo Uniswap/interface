@@ -63,7 +63,8 @@ export async function openUniswapHelpLink() {
 }
 
 export async function openMoonpayTransactionLink(info: FiatPurchaseTransactionInfo) {
-  return openUri(info.explorerUrl ?? 'https://support.moonpay.com/hc/en-gb')
+  // Open all Moonpay URLs in external browser for saved cookies
+  return openUri(info.explorerUrl ?? 'https://support.moonpay.com/hc/en-gb', true)
 }
 
 export async function openMoonpayHelpLink() {

@@ -14,7 +14,6 @@ import { account } from 'src/test/fixtures'
 const swapUrl = `https://uniswap.org/app?screen=swap&userAddress=${account.address}`
 const transactionUrl = `https://uniswap.org/app?screen=transaction&userAddress=${account.address}`
 const swapUrlObj = new URL(swapUrl)
-const transactionUrlObj = new URL(transactionUrl)
 const swapDeepLinkPayload = { url: swapUrl, coldStart: false }
 const transactionDeepLinkPayload = { url: transactionUrl, coldStart: false }
 const unsupportedScreenDeepLinkPayload = {
@@ -54,7 +53,7 @@ describe(handleDeepLink, () => {
         },
       })
       .provide([
-        [call(handleTransactionLink, transactionUrlObj), undefined],
+        [call(handleTransactionLink), undefined],
         [
           call(logEvent, 'deeplink', {
             coldStart: transactionDeepLinkPayload.coldStart,

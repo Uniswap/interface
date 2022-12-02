@@ -44,7 +44,7 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
 
     switch (screen) {
       case 'transaction':
-        yield* call(handleTransactionLink, url)
+        yield* call(handleTransactionLink)
         break
       case 'swap':
         yield* call(handleSwapLink, url)

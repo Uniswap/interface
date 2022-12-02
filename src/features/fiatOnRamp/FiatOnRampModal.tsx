@@ -1,4 +1,3 @@
-import * as WebBrowser from 'expo-web-browser'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
@@ -74,10 +73,12 @@ function FiatOnRampModalInner() {
   const onPress = () => {
     if (!fiatOnRampHostUrl) return
 
-    const webBrowserOptions: WebBrowser.WebBrowserOpenOptions = {
-      controlsColor: theme.colors.accentAction,
-    }
-    WebBrowser.openBrowserAsync(fiatOnRampHostUrl, webBrowserOptions)
+    // ideally, we would keep users inside our app and open an inapp browser
+    // however, as of iOS 11, Safari won't share cookies with SafariViewControllers,
+    // meaning users have to sign in every time, and some redirects links won't work
+    // (e.g. after using plaid)
+    const openExternalBrowser = true
+    openUri(fiatOnRampHostUrl, openExternalBrowser)
 
     dispatchAddTransaction()
     onClose()
