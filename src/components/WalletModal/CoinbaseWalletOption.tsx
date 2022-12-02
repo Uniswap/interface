@@ -17,7 +17,7 @@ export function OpenCoinbaseWalletOption() {
     <Option
       {...BASE_PROPS}
       isActive={isActive}
-      link="https://go.cb-w.com/mtUDhEZPy1"
+      onClick={() => window.open('https://go.cb-w.com/mtUDhEZPy1', 'cbwallet')}
       header="Open in Coinbase Wallet"
     />
   )

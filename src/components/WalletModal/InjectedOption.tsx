@@ -20,7 +20,13 @@ const METAMASK_PROPS = {
 }
 
 export function InstallMetaMaskOption() {
-  return <Option {...METAMASK_PROPS} header={<Trans>Install MetaMask</Trans>} link="https://metamask.io/" />
+  return (
+    <Option
+      {...METAMASK_PROPS}
+      header={<Trans>Install MetaMask</Trans>}
+      onClick={() => window.open('https://metamask.io/', 'inst_metamask')}
+    />
+  )
 }
 
 export function MetaMaskOption({ tryActivation }: { tryActivation: (connector: Connector) => void }) {

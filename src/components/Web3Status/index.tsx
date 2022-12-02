@@ -29,7 +29,6 @@ import { ButtonSecondary } from '../Button'
 import StatusIcon from '../Identicon/StatusIcon'
 import Loader from '../Loader'
 import { RowBetween } from '../Row'
-import WalletModal from '../WalletModal'
 
 // https://stackoverflow.com/a/31617326
 const FULL_BORDER_RADIUS = 9999
@@ -267,11 +266,11 @@ function Web3StatusInner() {
         properties={{ received_swap_quote: validSwapQuote }}
         element={ElementName.CONNECT_WALLET_BUTTON}
       >
-        <Web3StatusConnectWrapper faded={!account}>
-          <StyledConnectButton data-testid="navbar-connect-wallet" onClick={toggleWalletDropdown}>
+        <Web3StatusConnectWrapper faded={!account} onClick={toggleWalletDropdown}>
+          <StyledConnectButton data-testid="navbar-connect-wallet">
             <Trans>Connect</Trans>
           </StyledConnectButton>
-          <ChevronWrapper onClick={toggleWalletDropdown}>
+          <ChevronWrapper>
             {walletIsOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
           </ChevronWrapper>
         </Web3StatusConnectWrapper>
@@ -281,9 +280,6 @@ function Web3StatusInner() {
 }
 
 export default function Web3Status() {
-  const { ENSName } = useWeb3React()
-
-  const allTransactions = useAllTransactions()
   const ref = useRef<HTMLDivElement>(null)
   const walletRef = useRef<HTMLDivElement>(null)
   const closeModal = useCloseModal(ApplicationModal.WALLET_DROPDOWN)
@@ -291,19 +287,10 @@ export default function Web3Status() {
 
   useOnClickOutside(ref, isOpen ? closeModal : undefined, [walletRef])
 
-  const sortedRecentTransactions = useMemo(() => {
-    const txs = Object.values(allTransactions)
-    return txs.filter(isTransactionRecent).sort(newTransactionsFirst)
-  }, [allTransactions])
-
-  const pending = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
-  const confirmed = sortedRecentTransactions.filter((tx) => tx.receipt).map((tx) => tx.hash)
-
   return (
     <span ref={ref}>
       <Web3StatusInner />
       <FiatOnrampAnnouncement />
-      <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
       <Portal>
         <span ref={walletRef}>
           <WalletDropdown />

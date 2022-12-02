@@ -1,9 +1,8 @@
-import { FeatureFlag } from '../../src/featureFlags/flags/featureFlags'
 import { getTestSelector } from '../utils'
 
 describe('Wallet Dropdown', () => {
   before(() => {
-    cy.visit('/', { featureFlags: [FeatureFlag.navBar, FeatureFlag.tokenSafety] })
+    cy.visit('/')
   })
 
   it('should change the theme', () => {
@@ -40,11 +39,5 @@ describe('Wallet Dropdown', () => {
     cy.get(getTestSelector('wallet-language-item')).contains('English').click({ force: true })
     cy.get(getTestSelector('wallet-header')).should('contain', 'Language')
     cy.get(getTestSelector('wallet-back')).click()
-  })
-
-  it('should open the wallet connect modal from the drop down when not connected', () => {
-    cy.get(getTestSelector('wallet-connect-wallet')).click()
-    cy.get(getTestSelector('wallet-modal')).should('exist')
-    cy.get(getTestSelector('wallet-modal-close')).click()
   })
 })

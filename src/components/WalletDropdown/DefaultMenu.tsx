@@ -1,30 +1,14 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { ButtonPrimary } from 'components/Button'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useMemo } from 'react'
 import { ChevronRight, Moon, Sun } from 'react-feather'
-import { useToggleWalletModal } from 'state/application/hooks'
 import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 
 import { useAllTransactions } from '../../state/transactions/hooks'
 import AuthenticatedHeader from './AuthenticatedHeader'
 import { MenuState } from './index'
-
-const ConnectButton = styled(ButtonPrimary)`
-  border-radius: 12px;
-  height: 44px;
-  width: 288px;
-  font-weight: 600;
-  font-size: 16px;
-  margin-left: auto;
-  margin-right: auto;
-
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    width: 100%;
-  }
-`
 
 const Divider = styled.div`
   border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
@@ -102,7 +86,6 @@ const WalletDropdown = ({ setMenu }: { setMenu: (state: MenuState) => void }) =>
   const activeLocale = useActiveLocale()
   const ISO = activeLocale.split('-')[0].toUpperCase()
   const allTransactions = useAllTransactions()
-  const toggleWalletModal = useToggleWalletModal()
 
   const pendingTransactions = useMemo(
     () => Object.values(allTransactions).filter((tx) => !tx.receipt),
@@ -111,13 +94,7 @@ const WalletDropdown = ({ setMenu }: { setMenu: (state: MenuState) => void }) =>
 
   return (
     <DefaultMenuWrap>
-      {isAuthenticated ? (
-        <AuthenticatedHeader />
-      ) : (
-        <ConnectButton data-testid="wallet-connect-wallet" onClick={toggleWalletModal}>
-          Connect wallet
-        </ConnectButton>
-      )}
+      {isAuthenticated ? <AuthenticatedHeader /> : null}
       <Divider />
       {isAuthenticated && (
         <ToggleMenuItem data-testid="wallet-transactions" onClick={() => setMenu(MenuState.TRANSACTIONS)}>

@@ -1,3 +1,5 @@
+import { useWeb3React } from '@web3-react/core'
+import WalletModal from 'components/WalletModal'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
 import { Z_INDEX } from 'theme/zIndex'
@@ -49,15 +51,17 @@ const WalletDropdownWrapper = styled.div`
   }
 `
 
-const WalletDropdown = () => {
+function WalletDropdown() {
   const [menu, setMenu] = useState<MenuState>(MenuState.DEFAULT)
   const walletDropdownOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
+  const { account } = useWeb3React()
 
   return (
     <>
       {walletDropdownOpen && (
         <WalletDropdownWrapper>
           <WalletWrapper>
+            {account === undefined && <WalletModal />}
             {menu === MenuState.TRANSACTIONS && <TransactionHistoryMenu onClose={() => setMenu(MenuState.DEFAULT)} />}
             {menu === MenuState.LANGUAGE && <LanguageMenu onClose={() => setMenu(MenuState.DEFAULT)} />}
             {menu === MenuState.DEFAULT && <DefaultMenu setMenu={setMenu} />}
