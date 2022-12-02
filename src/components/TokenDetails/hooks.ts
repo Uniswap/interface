@@ -4,6 +4,7 @@ import { Chain, useTokenDetailsScreenLazyQuery } from 'src/data/__generated__/ty
 import { useMultipleBalances, useSingleBalance } from 'src/features/dataApi/balances'
 import { currencyIdToContractInput } from 'src/features/dataApi/utils'
 import { Screens } from 'src/screens/Screens'
+import { getChecksumAddress } from 'src/utils/addresses'
 import { fromGraphQLChain } from 'src/utils/chainId'
 import {
   buildCurrencyId,
@@ -27,7 +28,8 @@ export function useCrossChainBalances(
           const chainId = fromGraphQLChain(chain)
           if (!chainId || chainId === currentChainId) return null
           if (!address) return buildNativeCurrencyId(chainId)
-          return buildCurrencyId(chainId, address)
+          // Use checksummed address for useMultipleBalances to lookup portfolio balances
+          return buildCurrencyId(chainId, getChecksumAddress(address))
         })
         .filter((b): b is string => !!b),
 

@@ -17,7 +17,7 @@ type SortedPortfolioBalances = {
   spamBalances: PortfolioBalance[]
 }
 
-/** Returns all balances indexed by currencyId for a given address */
+/** Returns all balances indexed by checksummed currencyId for a given address */
 export function usePortfolioBalances(
   address: Address,
   shouldPoll?: boolean,
