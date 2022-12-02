@@ -1,4 +1,3 @@
-import { Currency } from '@uniswap/sdk-core'
 import { TFunction } from 'i18next'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -16,6 +15,7 @@ import { SafetyLevel } from 'src/data/__generated__/types-and-hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useTokenSafetyLevelColors } from 'src/features/tokens/safetyHooks'
 import { opacify } from 'src/utils/colors'
+import { currencyIdToAddress, currencyIdToChain } from 'src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink, openUri } from 'src/utils/linking'
 
 function getTokenSafetyBodyText(safetyLevel: NullUndefined<SafetyLevel>, t: TFunction) {
@@ -37,7 +37,7 @@ function getTokenSafetyBodyText(safetyLevel: NullUndefined<SafetyLevel>, t: TFun
 
 interface Props {
   isVisible: boolean
-  currency: Currency
+  currencyId: string
   safetyLevel: NullUndefined<SafetyLevel>
   disableAccept?: boolean // only show message and close button
   onClose: () => void
@@ -49,7 +49,7 @@ interface Props {
  */
 export default function TokenWarningModal({
   isVisible,
-  currency,
+  currencyId,
   safetyLevel,
   disableAccept,
   onClose,
@@ -59,11 +59,10 @@ export default function TokenWarningModal({
   const theme = useAppTheme()
   const warningColor = useTokenSafetyLevelColors(safetyLevel)
 
-  const explorerLink = getExplorerLink(
-    currency.chainId,
-    currency.wrapped.address,
-    ExplorerDataType.ADDRESS
-  )
+  const chainId = currencyIdToChain(currencyId)
+  const address = currencyIdToAddress(currencyId)
+
+  const explorerLink = getExplorerLink(chainId, address, ExplorerDataType.ADDRESS)
 
   // always hide accept button if blocked token
   const hideAcceptButton = disableAccept || safetyLevel === SafetyLevel.Blocked

@@ -101,7 +101,7 @@ export function TokenOptionItem({ option, showNetworkPill, onPress }: OptionProp
       {showWarningModal ? (
         <TokenWarningModal
           isVisible
-          currency={currency}
+          currencyId={currencyId}
           safetyLevel={safetyLevel}
           onAccept={onAcceptTokenWarning}
           onClose={() => setShowWarningModal(false)}

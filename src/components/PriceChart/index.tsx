@@ -1,4 +1,3 @@
-import { Currency } from '@uniswap/sdk-core'
 import React, { ComponentProps, useMemo } from 'react'
 import { Box } from 'src/components/layout/Box'
 import { PriceChartError } from 'src/components/PriceChart/PriceChartError'
@@ -10,18 +9,18 @@ import { useSpotPrice } from 'src/features/dataApi/spotPricesQuery'
 import { theme as FixedTheme } from 'src/styles/theme'
 
 export function CurrencyPriceChart({
-  currency,
+  currencyId,
   tokenColor,
   tokenColorLoading,
 }: {
-  currency: Currency
+  currencyId: string
   tokenColor?: NullUndefined<string>
   tokenColorLoading?: boolean
 }) {
-  const { data: graphs, loading, refetch } = useTokenPriceGraphs(currency.wrapped)
+  const { data: graphs, loading, refetch } = useTokenPriceGraphs(currencyId)
   // using a separate query for spot price because 1/ most likely already cached
   // and 2/ `tokenPriceCharts` query is already computationally expensive on the backend
-  const { data: spotPrice } = useSpotPrice(currency)
+  const { data: spotPrice } = useSpotPrice(currencyId)
 
   if (!graphs) {
     if (loading || tokenColorLoading) {

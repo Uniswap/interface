@@ -1,4 +1,3 @@
-import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeOut } from 'react-native-reanimated'
@@ -14,7 +13,7 @@ import { TokenDetailsMarketData } from 'src/components/TokenDetails/TokenDetails
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow, useDisplayName } from 'src/features/wallet/hooks'
 
-export function TokenDetailsLoader({ currency }: { currency: Currency }) {
+export function TokenDetailsLoader({ currencyId }: { currencyId: string }) {
   const { t } = useTranslation()
 
   const activeAccount = useActiveAccountWithThrow()
@@ -26,10 +25,10 @@ export function TokenDetailsLoader({ currency }: { currency: Currency }) {
     <AnimatedBox exiting={FadeOut} flexGrow={1}>
       <Screen>
         <Flex flex={1}>
-          <TokenDetailsBackButtonRow currency={currency} />
+          <TokenDetailsBackButtonRow currencyId={currencyId} />
           <Flex gap="xl">
             <Flex gap="xxs">
-              <TokenDetailsHeader currency={currency} onPressWarningIcon={() => {}} />
+              <TokenDetailsHeader onPressWarningIcon={() => {}} />
               <PriceChartLoading />
             </Flex>
             <Flex gap="lg">

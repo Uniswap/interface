@@ -4,6 +4,7 @@ import { Text } from 'src/components/Text'
 import { useSpotPrice } from 'src/features/dataApi/spotPricesQuery'
 import { createBalanceUpdate } from 'src/features/notifications/utils'
 import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
+import { currencyId } from 'src/utils/currencyId'
 
 interface BalanceUpdateProps {
   currency: NullUndefined<Currency>
@@ -18,7 +19,8 @@ export default function BalanceUpdate({
   transactionType,
   transactionStatus,
 }: BalanceUpdateProps) {
-  const { data: spotPrice, loading } = useSpotPrice(currency)
+  const _currencyId = currency ? currencyId(currency) : null
+  const { data: spotPrice, loading } = useSpotPrice(_currencyId)
   return useMemo(() => {
     if (!amountRaw || !currency || loading) {
       return null

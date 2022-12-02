@@ -1,4 +1,3 @@
-import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -13,15 +12,10 @@ import { fromGraphQLChain } from 'src/utils/chainId'
 
 export interface TokenDetailsHeaderProps {
   data?: TokenDetailsScreenQuery
-  currency: Currency
   onPressWarningIcon: () => void
 }
 
-export function TokenDetailsHeader({
-  data,
-  currency,
-  onPressWarningIcon,
-}: TokenDetailsHeaderProps) {
+export function TokenDetailsHeader({ data, onPressWarningIcon }: TokenDetailsHeaderProps) {
   const { t } = useTranslation()
 
   const token = data?.tokens?.[0]
@@ -36,7 +30,7 @@ export function TokenDetailsHeader({
       />
       <Flex row alignItems="center" gap="xs">
         <Text color="textPrimary" numberOfLines={1} style={flex.shrink} variant="subheadLarge">
-          {currency.name ?? t('Unknown token')}
+          {tokenProject?.name ?? t('Unknown token')}
         </Text>
         {/* Suppress warning icon on low warning level */}
         {(tokenProject?.safetyLevel === SafetyLevel.StrongWarning ||

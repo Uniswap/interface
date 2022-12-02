@@ -1,5 +1,5 @@
 import { NetworkStatus } from '@apollo/client'
-import { Currency, Token } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { useCallback, useMemo } from 'react'
 import { PollingInterval } from 'src/constants/misc'
 import { usePortfolioBalancesQuery } from 'src/data/__generated__/types-and-hooks'
@@ -197,16 +197,14 @@ export function sortPortfolioBalances(balances: PortfolioBalance[]) {
 }
 
 /** Helper hook to retrieve balance for a single currency for the active account. */
-export function useSingleBalance(currency: NullUndefined<Currency>): PortfolioBalance | null {
+export function useSingleBalance(_currencyId: CurrencyId): PortfolioBalance | null {
   const address = useActiveAccountAddressWithThrow()
   const { data: portfolioBalances } = usePortfolioBalances(address, /*shouldPoll=*/ false)
 
   return useMemo(() => {
-    if (!currency || !portfolioBalances) return null
-
-    const id = currencyId(currency)
-    return portfolioBalances[id] ?? null
-  }, [portfolioBalances, currency])
+    if (!portfolioBalances) return null
+    return portfolioBalances[_currencyId] ?? null
+  }, [portfolioBalances, _currencyId])
 }
 
 /** Helper hook to retrieve balances for a set of currencies for the active account. */

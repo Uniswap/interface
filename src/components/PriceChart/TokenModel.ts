@@ -1,4 +1,3 @@
-import { Token } from '@uniswap/sdk-core'
 import { useCallback, useMemo } from 'react'
 import { PriceChartLabel } from 'src/components/PriceChart/PriceChartLabels'
 import { GraphMetadatas } from 'src/components/PriceChart/types'
@@ -8,10 +7,9 @@ import { isNonPollingRequestInFlight } from 'src/data/utils'
 import { useTokenPriceChartsQuery } from 'src/data/__generated__/types-and-hooks'
 import { GqlResult } from 'src/features/dataApi/types'
 import { currencyIdToContractInput } from 'src/features/dataApi/utils'
-import { currencyId } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 
-export function useTokenPriceGraphs(token: Token): GqlResult<GraphMetadatas> {
+export function useTokenPriceGraphs(currencyId: string): GqlResult<GraphMetadatas> {
   const {
     data: priceData,
     refetch,
@@ -19,15 +17,15 @@ export function useTokenPriceGraphs(token: Token): GqlResult<GraphMetadatas> {
     error,
   } = useTokenPriceChartsQuery({
     variables: {
-      contract: currencyIdToContractInput(currencyId(token)),
+      contract: currencyIdToContractInput(currencyId),
     },
     notifyOnNetworkStatusChange: true,
     pollInterval: PollingInterval.Normal,
   })
 
   const retry = useCallback(() => {
-    refetch({ contract: currencyIdToContractInput(currencyId(token)) })
-  }, [refetch, token])
+    refetch({ contract: currencyIdToContractInput(currencyId) })
+  }, [refetch, currencyId])
 
   const formattedData = useMemo(() => {
     if (!priceData) {

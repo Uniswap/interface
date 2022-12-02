@@ -1,5 +1,4 @@
 import { useResponsiveProp } from '@shopify/restyle'
-import { Currency } from '@uniswap/sdk-core'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
@@ -21,6 +20,7 @@ import { TokenDetailsHeader } from 'src/components/TokenDetails/TokenDetailsHead
 import { TokenDetailsLoader } from 'src/components/TokenDetails/TokenDetailsLoader'
 import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
+import { ChainId } from 'src/constants/chains'
 import { PollingInterval } from 'src/constants/misc'
 import { isError, isNonPollingRequestInFlight } from 'src/data/utils'
 import {
@@ -33,7 +33,6 @@ import { currencyIdToContractInput } from 'src/features/dataApi/utils'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useTokenWarningDismissed } from 'src/features/tokens/safetyHooks'
-import { useCurrency } from 'src/features/tokens/useCurrency'
 import {
   CurrencyField,
   TransactionState,
@@ -42,7 +41,7 @@ import { Screens } from 'src/screens/Screens'
 import { iconSizes } from 'src/styles/sizing'
 import { fromGraphQLChain } from 'src/utils/chainId'
 import { useExtractedTokenColor } from 'src/utils/colors'
-import { currencyAddress, currencyId } from 'src/utils/currencyId'
+import { currencyIdToAddress, currencyIdToChain } from 'src/utils/currencyId'
 import { formatUSDPrice } from 'src/utils/format'
 
 type Price = NonNullable<
@@ -95,7 +94,6 @@ enum TransactionType {
 
 export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDetails>) {
   const { currencyId: _currencyId } = route.params
-  const currency = useCurrency(_currencyId)
 
   const { data, refetch, networkStatus } = useTokenDetailsScreenQuery({
     variables: {
@@ -109,19 +107,13 @@ export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDe
     refetch({ contract: currencyIdToContractInput(_currencyId) })
   }, [_currencyId, refetch])
 
-  if (!currency) {
-    // truly cannot render the component or a loading state without a currency
-    // we could consider showing an activity spinner here
-    return null
-  }
-
   if (!data && isNonPollingRequestInFlight(networkStatus)) {
-    return <TokenDetailsLoader currency={currency} />
+    return <TokenDetailsLoader currencyId={_currencyId} />
   }
 
   return (
     <TokenDetails
-      currency={currency}
+      _currencyId={_currencyId}
       data={data}
       error={isError(networkStatus, !!data)}
       retry={retry}
@@ -130,21 +122,24 @@ export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDe
 }
 
 function TokenDetails({
-  currency,
+  _currencyId,
   data,
   error,
   retry,
 }: {
-  currency: Currency
+  _currencyId: string
   data: TokenDetailsScreenQuery | undefined
   error: boolean
   retry: () => void
 }) {
   const dispatch = useAppDispatch()
 
+  const currencyChainId = currencyIdToChain(_currencyId) ?? ChainId.Mainnet
+  const currencyAddress = currencyIdToAddress(_currencyId)
+
   const crossChainTokens = data?.tokens?.[0]?.project?.tokens
   const { currentChainBalance, otherChainBalances } = useCrossChainBalances(
-    currency,
+    _currencyId,
     crossChainTokens
   )
   const theme = useAppTheme()
@@ -163,7 +158,6 @@ function TokenDetails({
     undefined
   )
 
-  const _currencyId = currencyId(currency)
   const [showWarningModal, setShowWarningModal] = useState(false)
   const { tokenWarningDismissed, dismissWarningCallback } = useTokenWarningDismissed(_currencyId)
 
@@ -174,14 +168,14 @@ function TokenDetails({
       exactCurrencyField: CurrencyField.INPUT,
       exactAmountToken: '',
       [CurrencyField.INPUT]: {
-        address: currencyAddress(currency),
-        chainId: currency.wrapped.chainId,
+        address: currencyAddress,
+        chainId: currencyChainId,
         type: AssetType.Currency,
       },
       [CurrencyField.OUTPUT]: null,
       showRecipientSelector: true,
     }
-  }, [currency])
+  }, [currencyAddress, currencyChainId])
 
   const navigateToSwapBuy = useCallback(() => {
     setActiveTransactionType(undefined)
@@ -190,13 +184,13 @@ function TokenDetails({
       exactAmountToken: '',
       [CurrencyField.INPUT]: null,
       [CurrencyField.OUTPUT]: {
-        address: currencyAddress(currency),
-        chainId: currency.wrapped.chainId,
+        address: currencyAddress,
+        chainId: currencyChainId,
         type: AssetType.Currency,
       },
     }
     dispatch(openModal({ name: ModalName.Swap, initialState: swapFormState }))
-  }, [currency, dispatch])
+  }, [currencyAddress, currencyChainId, dispatch])
 
   const navigateToSwapSell = useCallback(() => {
     setActiveTransactionType(undefined)
@@ -204,14 +198,14 @@ function TokenDetails({
       exactCurrencyField: CurrencyField.INPUT,
       exactAmountToken: '',
       [CurrencyField.INPUT]: {
-        address: currencyAddress(currency),
-        chainId: currency.wrapped.chainId,
+        address: currencyAddress,
+        chainId: currencyChainId,
         type: AssetType.Currency,
       },
       [CurrencyField.OUTPUT]: null,
     }
     dispatch(openModal({ name: ModalName.Swap, initialState: swapFormState }))
-  }, [currency, dispatch])
+  }, [currencyAddress, currencyChainId, dispatch])
 
   const onPressSwap = useCallback(
     (swapType: TransactionType.BUY | TransactionType.SELL) => {
@@ -267,23 +261,19 @@ function TokenDetails({
   return (
     <AnimatedBox flexGrow={1} pb={pb}>
       <HeaderScrollScreen
-        contentHeader={<TokenDetailsBackButtonRow currency={currency} />}
+        contentHeader={<TokenDetailsBackButtonRow currencyId={_currencyId} />}
         fixedHeader={
           <Flex row alignItems="center" justifyContent="space-between" pt="xxs" px="none">
             <BackButton />
             <HeaderTitleElement data={data} />
-            <TokenDetailsFavoriteButton currency={currency} />
+            <TokenDetailsFavoriteButton currencyId={_currencyId} />
           </Flex>
         }>
         <Flex gap="xl" my="md">
           <Flex gap="xxs">
-            <TokenDetailsHeader
-              currency={currency}
-              data={data}
-              onPressWarningIcon={() => setShowWarningModal(true)}
-            />
+            <TokenDetailsHeader data={data} onPressWarningIcon={() => setShowWarningModal(true)} />
             <CurrencyPriceChart
-              currency={currency}
+              currencyId={_currencyId}
               tokenColor={tokenColor}
               tokenColorLoading={tokenColorLoading}
             />
@@ -299,7 +289,7 @@ function TokenDetails({
               otherChainBalances={otherChainBalances}
             />
             <Box mb="xs" mx="md">
-              <TokenDetailsStats currency={currency} data={data} tokenColor={tokenColor} />
+              <TokenDetailsStats currencyId={_currencyId} data={data} tokenColor={tokenColor} />
             </Box>
           </Flex>
         </Flex>
@@ -322,7 +312,7 @@ function TokenDetails({
       ) : null}
 
       <TokenWarningModal
-        currency={currency}
+        currencyId={_currencyId}
         disableAccept={activeTransactionType === undefined}
         isVisible={showWarningModal}
         safetyLevel={safetyLevel}

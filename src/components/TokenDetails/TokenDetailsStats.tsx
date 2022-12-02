@@ -1,4 +1,3 @@
-import { Currency } from '@uniswap/sdk-core'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
@@ -8,7 +7,7 @@ import { Shimmer } from 'src/components/loading/Shimmer'
 import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
 import { TokenDetailsScreenQuery } from 'src/data/__generated__/types-and-hooks'
-import { currencyAddress } from 'src/utils/currencyId'
+import { currencyIdToAddress, currencyIdToChain } from 'src/utils/currencyId'
 import { formatNumber, NumberType } from 'src/utils/format'
 import { ExplorerDataType, getExplorerLink, getTwitterLink } from 'src/utils/linking'
 
@@ -83,11 +82,11 @@ export function TokenDetailsMarketData({
 }
 
 export function TokenDetailsStats({
-  currency,
+  currencyId,
   data,
   tokenColor,
 }: {
-  currency: Currency
+  currencyId: string
   data: TokenDetailsScreenQuery | undefined
   tokenColor?: NullUndefined<string>
 }) {
@@ -99,11 +98,10 @@ export function TokenDetailsStats({
 
   const marketData = tokenProjectData?.markets ? tokenProjectData.markets[0] : null
 
-  const explorerLink = getExplorerLink(
-    currency.chainId,
-    currencyAddress(currency),
-    ExplorerDataType.ADDRESS
-  )
+  const chainId = currencyIdToChain(currencyId)
+  const address = currencyIdToAddress(currencyId)
+
+  const explorerLink = getExplorerLink(chainId, address, ExplorerDataType.ADDRESS)
 
   return (
     <Flex gap="lg">

@@ -4,6 +4,7 @@ import { useSpotPrice } from 'src/features/dataApi/spotPricesQuery'
 import { createBalanceUpdate } from 'src/features/notifications/utils'
 import { AssetUpdateLayout } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { NFTTradeType, TransactionStatus, TransactionType } from 'src/features/transactions/types'
+import { currencyId } from 'src/utils/currencyId'
 
 interface BalanceUpdateProps {
   currency: Currency
@@ -24,7 +25,8 @@ export default function BalanceUpdate({
 }: BalanceUpdateProps) {
   // Skip fetching spot price if known USD transacted value
   const skipQuery = !!transactedUSDValue
-  const { data: spotPrice, loading } = useSpotPrice(currency, skipQuery)
+  const _currencyId = currencyId(currency)
+  const { data: spotPrice, loading } = useSpotPrice(_currencyId, skipQuery)
 
   const balanceUpdate = useMemo(() => {
     if (!amountRaw || loading) {
