@@ -134,14 +134,6 @@ const userSlice = createSlice({
       state.tokens[serializedToken.chainId][serializedToken.address] = serializedToken
       state.timestamp = currentTimestamp()
     },
-    removeSerializedToken(state, { payload: { address, chainId } }) {
-      if (!state.tokens) {
-        state.tokens = {}
-      }
-      state.tokens[chainId] = state.tokens[chainId] || {}
-      delete state.tokens[chainId][address]
-      state.timestamp = currentTimestamp()
-    },
     addSerializedPair(state, { payload: { serializedPair } }) {
       if (
         serializedPair.token0.chainId === serializedPair.token1.chainId &&
@@ -150,14 +142,6 @@ const userSlice = createSlice({
         const chainId = serializedPair.token0.chainId
         state.pairs[chainId] = state.pairs[chainId] || {}
         state.pairs[chainId][pairKey(serializedPair.token0.address, serializedPair.token1.address)] = serializedPair
-      }
-      state.timestamp = currentTimestamp()
-    },
-    removeSerializedPair(state, { payload: { chainId, tokenAAddress, tokenBAddress } }) {
-      if (state.pairs[chainId]) {
-        // just delete both keys if either exists
-        delete state.pairs[chainId][pairKey(tokenAAddress, tokenBAddress)]
-        delete state.pairs[chainId][pairKey(tokenBAddress, tokenAAddress)]
       }
       state.timestamp = currentTimestamp()
     },
@@ -203,8 +187,6 @@ export const {
   updateSelectedWallet,
   addSerializedPair,
   addSerializedToken,
-  removeSerializedPair,
-  removeSerializedToken,
   updateHideClosedPositions,
   updateMatchesDarkMode,
   updateShowSurveyPopup,
