@@ -30,7 +30,7 @@ const transitions = {
   },
 }
 
-export const fadeIn = keyframes`
+const fadeIn = keyframes`
   from {
     opacity: 0;
   }

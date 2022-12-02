@@ -52,7 +52,7 @@ export function chainIdToBackendName(chainId: number | undefined) {
     : CHAIN_ID_TO_BACKEND_NAME[SupportedChainId.MAINNET]
 }
 
-export const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
+const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
   ethereum: 'ETHEREUM',
   polygon: 'POLYGON',
   celo: 'CELO',

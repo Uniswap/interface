@@ -157,7 +157,7 @@ const LinkIconWrapper = styled.div`
   display: flex;
 `
 
-export function ExternalLinkIcon() {
+function ExternalLinkIcon() {
   return (
     <LinkIconWrapper>
       <ExplorerLinkIcon />

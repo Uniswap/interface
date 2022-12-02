@@ -9,7 +9,7 @@ interface FeatureFlagsContextType {
 
 const FeatureFlagContext = createContext<FeatureFlagsContextType>({ isLoaded: false, flags: {} })
 
-export function useFeatureFlagsContext(): FeatureFlagsContextType {
+function useFeatureFlagsContext(): FeatureFlagsContextType {
   const context = useContext(FeatureFlagContext)
   if (!context) {
     throw Error('Feature flag hooks can only be used by children of FeatureFlagProvider.')

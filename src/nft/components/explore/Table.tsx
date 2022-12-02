@@ -1,3 +1,6 @@
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
+import { useWeb3React } from '@web3-react/core'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { useIsMobile } from 'nft/hooks'
@@ -99,6 +102,7 @@ export function Table<D extends Record<string, unknown>>({
   ...props
 }: TableProps<D>) {
   const theme = useTheme()
+  const { chainId } = useWeb3React()
   const { width } = useWindowSize()
   const isMobile = useIsMobile()
 
@@ -183,37 +187,45 @@ export function Table<D extends Record<string, unknown>>({
             prepareRow(row)
 
             return (
-              <StyledRow
-                {...row.getRowProps()}
-                key={row.id}
-                onClick={() => navigate(`/nfts/collection/${row.original.collection.address}`)}
+              <TraceEvent
+                events={[BrowserEvent.onClick]}
+                name={EventName.NFT_TRENDING_ROW_SELECTED}
+                properties={{ collection_address: row.original.collection.address, chain_id: chainId }}
+                element={ElementName.NFT_TRENDING_ROW}
+                key={i}
               >
-                {row.cells.map((cell, cellIndex) => {
-                  return (
-                    <td
-                      className={styles.td}
-                      {...cell.getCellProps()}
-                      key={cellIndex}
-                      style={{
-                        maxWidth: cellIndex === 0 ? (isMobile ? MOBILE_CELL_WIDTH : DESKTOP_CELL_WIDTH) : CELL_WIDTH,
-                      }}
-                    >
-                      {cellIndex === 0 ? (
-                        <RankCellContainer>
-                          {!isMobile && (
-                            <ThemedText.BodySecondary fontSize="14px" lineHeight="20px">
-                              {i + 1}
-                            </ThemedText.BodySecondary>
-                          )}
-                          {cell.render('Cell')}
-                        </RankCellContainer>
-                      ) : (
-                        cell.render('Cell')
-                      )}
-                    </td>
-                  )
-                })}
-              </StyledRow>
+                <StyledRow
+                  {...row.getRowProps()}
+                  key={row.id}
+                  onClick={() => navigate(`/nfts/collection/${row.original.collection.address}`)}
+                >
+                  {row.cells.map((cell, cellIndex) => {
+                    return (
+                      <td
+                        className={styles.td}
+                        {...cell.getCellProps()}
+                        key={cellIndex}
+                        style={{
+                          maxWidth: cellIndex === 0 ? (isMobile ? MOBILE_CELL_WIDTH : DESKTOP_CELL_WIDTH) : CELL_WIDTH,
+                        }}
+                      >
+                        {cellIndex === 0 ? (
+                          <RankCellContainer>
+                            {!isMobile && (
+                              <ThemedText.BodySecondary fontSize="14px" lineHeight="20px">
+                                {i + 1}
+                              </ThemedText.BodySecondary>
+                            )}
+                            {cell.render('Cell')}
+                          </RankCellContainer>
+                        ) : (
+                          cell.render('Cell')
+                        )}
+                      </td>
+                    )
+                  })}
+                </StyledRow>
+              </TraceEvent>
             )
           })}
         </tbody>
