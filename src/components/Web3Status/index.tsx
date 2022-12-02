@@ -39,7 +39,7 @@ const ChevronWrapper = styled.button`
   border: none;
   cursor: pointer;
   display: flex;
-  padding: 10px 16px 10px 4px;
+  padding: 10px 12px 10px 4px;
 
   :hover {
     color: ${({ theme }) => theme.accentActionSoft};
@@ -154,13 +154,6 @@ function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
   return b.addedTime - a.addedTime
 }
 
-const VerticalDivider = styled.div`
-  height: 20px;
-  margin: 0px;
-  width: 1px;
-  background-color: ${({ theme }) => theme.accentAction};
-`
-
 const StyledConnectButton = styled.button`
   background-color: transparent;
   border: none;
@@ -170,7 +163,7 @@ const StyledConnectButton = styled.button`
   cursor: pointer;
   font-weight: 600;
   font-size: 16px;
-  padding: 10px 8px 10px 12px;
+  padding: 10px 4px 10px 12px;
 
   transition: ${({
     theme: {
@@ -278,7 +271,6 @@ function Web3StatusInner() {
           <StyledConnectButton data-testid="navbar-connect-wallet" onClick={toggleWalletDropdown}>
             <Trans>Connect</Trans>
           </StyledConnectButton>
-          <VerticalDivider />
           <ChevronWrapper onClick={toggleWalletDropdown}>
             {walletIsOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
           </ChevronWrapper>
