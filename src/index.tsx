@@ -29,10 +29,15 @@ import UserUpdater from './state/user/updater'
 import ThemeProvider, { ThemedGlobalStyle } from './theme'
 import RadialGradientByChainUpdater from './theme/components/RadialGradientByChainUpdater'
 
-const queryClient = new QueryClient()
-
 if (!!window.ethereum) {
   window.ethereum.autoRefreshOnNetworkChange = false
+}
+
+if (isProductionEnv()) {
+  Sentry.init({
+    dsn: process.env.REACT_APP_SENTRY_DSN,
+    release: process.env.REACT_APP_GIT_COMMIT_HASH,
+  })
 }
 
 function Updaters() {
@@ -49,12 +54,7 @@ function Updaters() {
   )
 }
 
-if (isProductionEnv()) {
-  Sentry.init({
-    dsn: process.env.REACT_APP_SENTRY_DSN,
-    release: process.env.REACT_APP_GIT_COMMIT_HASH,
-  })
-}
+const queryClient = new QueryClient()
 
 const container = document.getElementById('root') as HTMLElement
 
