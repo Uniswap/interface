@@ -1,5 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther } from '@ethersproject/units'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { EventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { useIsNftDetailsPage, useIsNftPage, useIsNftProfilePage } from 'hooks/useIsNftPage'
 import { BagFooter } from 'nft/components/bag/BagFooter'
@@ -315,6 +317,7 @@ const Bag = () => {
               onClick={() => {
                 isMobile && toggleBag()
                 setProfilePageState(ProfilePageStateType.LISTING)
+                sendAnalyticsEvent(EventName.NFT_SELL_START_LISTING)
               }}
             >
               Continue

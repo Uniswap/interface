@@ -174,7 +174,7 @@ const ListingModal = () => {
     } else if (!paused) {
       setListingStatus(ListingStatus.FAILED)
     }
-    sendAnalyticsEvent(EventName.NFT_LISTING_COMPLETED, {
+    sendAnalyticsEvent(EventName.NFT_LISTING_SIGNED, {
       signatures_requested: listings.length,
       signatures_approved: listings.filter((asset) => asset.status === ListingStatus.APPROVED),
       ...approvalEventProperties,
@@ -241,6 +241,7 @@ const ListingModal = () => {
             <Trace
               name={EventName.NFT_LISTING_COMPLETED}
               properties={{ list_quantity: listings.length, usd_value: ethPriceInUSD * totalEthListingValue, ...trace }}
+              shouldLogImpression
             >
               <ListingSection
                 sectionTitle={`Listed ${listings.length} item${pluralize(listings.length)} for sale`}
