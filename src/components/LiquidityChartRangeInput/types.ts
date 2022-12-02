@@ -5,12 +5,12 @@ export interface ChartEntry {
   price0: number
 }
 
-export interface Dimensions {
+interface Dimensions {
   width: number
   height: number
 }
 
-export interface Margins {
+interface Margins {
   top: number
   right: number
   bottom: number
