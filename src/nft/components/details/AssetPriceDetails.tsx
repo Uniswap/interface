@@ -336,7 +336,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
     )
   }
 
-  const isOwner = asset.owner && !!walletAsset ? account?.toLowerCase() === asset.owner?.address?.toLowerCase() : false
+  const isOwner = asset.owner && !!walletAsset && account?.toLowerCase() === asset.owner?.address?.toLowerCase()
   const isForSale = cheapestOrder && asset.priceInfo
 
   return (
