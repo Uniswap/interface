@@ -1,3 +1,5 @@
+import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
+import { EventName } from '@uniswap/analytics-events'
 import create from 'zustand'
 import { devtools } from 'zustand/middleware'
 
@@ -23,6 +25,12 @@ export const useSellAsset = create<SellAssetState>()(
       sellAssets: [],
       selectSellAsset: (asset) =>
         set(({ sellAssets }) => {
+          const trace = useTrace()
+          sendAnalyticsEvent(EventName.NFT_SELL_ITEM_ADDED, {
+            collection_address: asset.asset_contract.address,
+            token_id: asset.tokenId,
+            ...trace,
+          })
           if (sellAssets.length === 0) return { sellAssets: [asset] }
           else return { sellAssets: [...sellAssets, asset] }
         }),
