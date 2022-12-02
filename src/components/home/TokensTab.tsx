@@ -34,7 +34,6 @@ export const TokensTab = forwardRef<any, TokensTabProps>(
       useFiatOnRampEnabled() && ownerAccount?.type === AccountType.SignerMnemonic
 
     const onPressToken = (currencyId: CurrencyId) => {
-      tokenDetailsNavigation.preload(currencyId)
       tokenDetailsNavigation.navigate(currencyId)
     }
 
