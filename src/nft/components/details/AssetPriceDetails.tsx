@@ -6,6 +6,7 @@ import { useBag, useProfilePageState, useSellAsset } from 'nft/hooks'
 import { CollectionInfoForAsset, GenieAsset, ProfilePageStateType, WalletAsset } from 'nft/types'
 import {
   ethNumberStandardFormatter,
+  fetchPrice,
   formatEthPrice,
   generateTweetForAsset,
   getMarketplaceIcon,
@@ -15,6 +16,7 @@ import {
 import { shortenAddress } from 'nft/utils/address'
 import { useMemo } from 'react'
 import { Upload } from 'react-feather'
+import { useQuery } from 'react-query'
 import { Link, useNavigate } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
@@ -198,25 +200,25 @@ const DefaultLink = styled(Link)`
   text-decoration: none;
 `
 
-const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
+const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
   const navigate = useNavigate()
-  const USDPrice = useUsdPrice(asset)
+  const { data: USDValue } = useQuery(['fetchPrice', {}], () => fetchPrice(), {})
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const selectSellAsset = useSellAsset((state) => state.selectSellAsset)
   const resetSellAssets = useSellAsset((state) => state.reset)
-  const { account } = useWeb3React()
-  const assetsFilter = [{ address: asset.address, tokenId: asset.tokenId }]
-  const { walletAssets: ownerAssets } = useNftBalanceQuery(account ?? '', [], assetsFilter, 1)
-  const walletAsset: WalletAsset = useMemo(() => ownerAssets[0], [ownerAssets])
 
-  const listing = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
-  const cheapestOrder = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
-  const expirationDate = cheapestOrder ? new Date(cheapestOrder.endAt) : undefined
+  const listing = asset.sellOrders && asset.sellOrders.length > 0 ? asset.sellOrders[0] : undefined
+  const expirationDate = listing ? new Date(listing.endAt) : undefined
+
+  const USDPrice = useMemo(
+    () => (USDValue ? USDValue * asset.floor_sell_order_price : undefined),
+    [USDValue, asset.floor_sell_order_price]
+  )
 
   const goToListPage = () => {
     resetSellAssets()
     navigate('/nfts/profile')
-    selectSellAsset(walletAsset)
+    selectSellAsset(asset)
     setSellPageState(ProfilePageStateType.LISTING)
   }
 
@@ -312,6 +314,13 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
 
   const USDPrice = useUsdPrice(asset)
 
+  const assetsFilter = [{ address: asset.address, tokenId: asset.tokenId }]
+  const { walletAssets: ownerAssets } = useNftBalanceQuery(account ?? '', [], assetsFilter, 1)
+  const walletAsset: WalletAsset | undefined = useMemo(
+    () => (ownerAssets?.length > 0 ? ownerAssets[0] : undefined),
+    [ownerAssets]
+  )
+
   const { assetInBag } = useMemo(() => {
     return {
       assetInBag: itemsInBag.some(
@@ -330,7 +339,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
     )
   }
 
-  const isOwner = asset.owner ? account?.toLowerCase() === asset.owner?.address?.toLowerCase() : false
+  const isOwner = asset.owner && !!walletAsset && account?.toLowerCase() === asset.owner?.address?.toLowerCase()
   const isForSale = cheapestOrder && asset.priceInfo
 
   return (
@@ -349,7 +358,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
         <AssetHeader>{asset.name ?? `${asset.collectionName} #${asset.tokenId}`}</AssetHeader>
       </AssetInfoContainer>
       {isOwner ? (
-        <OwnerContainer asset={asset} />
+        <OwnerContainer asset={walletAsset} />
       ) : isForSale ? (
         <BestPriceContainer>
           <HeaderRow>
