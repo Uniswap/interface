@@ -9,10 +9,12 @@ import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useState } from 'react'
 
 import { WRAPPED_NATIVE_CURRENCY } from '../constants/tokens'
+import useENS from '../hooks/useENS'
 import { useCurrencyBalance } from '../state/connection/hooks'
+import { useSwapState } from '../state/swap/hooks'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { TransactionType } from '../state/transactions/types'
-import { useWETHContract } from './useContract'
+import { usePoolContract, useWETHContract } from './useContract'
 
 export enum WrapType {
   NOT_APPLICABLE,
@@ -60,9 +62,15 @@ export default function useWrapCallback(
   outputCurrency: Currency | undefined | null,
   typedValue: string | undefined
 ): { wrapType: WrapType; execute?: undefined | (() => Promise<void>); inputError?: WrapInputError } {
-  const { chainId, account } = useWeb3React()
+  const { chainId } = useWeb3React()
   const wethContract = useWETHContract()
-  const balance = useCurrencyBalance(account ?? undefined, inputCurrency ?? undefined)
+
+  const { recipient } = useSwapState()
+  const recipientLookup = useENS(recipient ?? undefined)
+  const poolAddress = recipientLookup.address
+  const poolContract = usePoolContract(poolAddress ?? undefined)
+
+  const balance = useCurrencyBalance(poolAddress ?? undefined, inputCurrency ?? undefined)
   // we can always parse the amount typed as the input currency, since wrapping is 1:1
   const inputAmount = useMemo(
     () => tryParseCurrencyAmount(typedValue, inputCurrency ?? undefined),
@@ -76,7 +84,7 @@ export default function useWrapCallback(
   if (error) throw error
 
   return useMemo(() => {
-    if (!wethContract || !chainId || !inputCurrency || !outputCurrency) return NOT_APPLICABLE
+    if (!poolContract || !wethContract || !chainId || !inputCurrency || !outputCurrency) return NOT_APPLICABLE
     const weth = WRAPPED_NATIVE_CURRENCY[chainId]
     if (!weth) return NOT_APPLICABLE
 
@@ -115,7 +123,7 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
                     setError(error)
                     throw error
                   }
-                  const txReceipt = await wethContract.deposit({ value: `0x${inputAmount.quotient.toString(16)}` })
+                  const txReceipt = await poolContract.wrapETH(`0x${inputAmount.quotient.toString(16)}`)
                   addTransaction(txReceipt, {
                     type: TransactionType.WRAP,
                     unwrapped: false,
@@ -141,7 +149,7 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
           sufficientBalance && inputAmount
             ? async () => {
                 try {
-                  const txReceipt = await wethContract.withdraw(`0x${inputAmount.quotient.toString(16)}`)
+                  const txReceipt = await poolContract.unwrapWETH9(`0x${inputAmount.quotient.toString(16)}`)
                   addTransaction(txReceipt, {
                     type: TransactionType.WRAP,
                     unwrapped: true,
@@ -163,5 +171,5 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
     } else {
       return NOT_APPLICABLE
     }
-  }, [wethContract, chainId, inputCurrency, outputCurrency, inputAmount, balance, addTransaction])
+  }, [poolContract, wethContract, chainId, inputCurrency, outputCurrency, inputAmount, balance, addTransaction])
 }

@@ -101,9 +101,10 @@ export function useDerivedSwapInfo(): {
   const outputCurrency = useCurrency(outputCurrencyId)
   const recipientLookup = useENS(recipient ?? undefined)
   const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
+  const poolAddress = recipientLookup.address
 
   const relevantTokenBalances = useCurrencyBalances(
-    account ?? undefined,
+    poolAddress ?? undefined,
     useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency])
   )
 

@@ -3,12 +3,14 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
+import { MulticallExtended, PaymentsExtended } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import useParsedQueryString from 'hooks/useParsedQueryString'
+import JSBI from 'jsbi'
 import { useCallback, useEffect, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -44,12 +46,14 @@ import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallbac
 import { useArgentWalletContract } from '../../hooks/useArgentWalletContract'
 import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
 import { useDerivedPositionInfo } from '../../hooks/useDerivedPositionInfo'
+import useENS from '../../hooks/useENS'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useStablecoinValue } from '../../hooks/useStablecoinPrice'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useV3PositionFromTokenId } from '../../hooks/useV3Positions'
 import { useToggleWalletModal } from '../../state/application/hooks'
 import { Bound, Field } from '../../state/mint/v3/actions'
+import { useSwapState } from '../../state/swap/hooks'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { TransactionType } from '../../state/transactions/types'
 import { useIsExpertMode, useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
@@ -88,6 +92,12 @@ export default function AddLiquidity() {
   const { account, chainId, provider } = useWeb3React()
   const theme = useTheme()
 
+  // we query pool address from swap state
+  const { recipient } = useSwapState()
+  const recipientLookup = useENS(recipient ?? undefined)
+  const poolAddress = recipientLookup.address
+
+  // TODO: fix token balances
   const toggleWalletModal = useToggleWalletModal() // toggle wallet when disconnected
   const expertMode = useIsExpertMode()
   const addTransaction = useTransactionAdder()
@@ -232,7 +242,7 @@ export default function AddLiquidity() {
   )
 
   async function onAdd() {
-    if (!chainId || !provider || !account) return
+    if (!chainId || !provider || !account || !poolAddress) return
 
     if (!positionManager || !baseCurrency || !quoteCurrency) {
       return
@@ -257,9 +267,9 @@ export default function AddLiquidity() {
             })
 
       let txn: { to: string; data: string; value: string } = {
-        to: NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId],
-        data: calldata,
-        value,
+        to: poolAddress, //NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId],
+        data: MulticallExtended.encodeMulticall([PaymentsExtended.encodeWrapETH(JSBI.BigInt(value)), calldata]),
+        value: '0x0',
       }
 
       if (argentWalletContract) {

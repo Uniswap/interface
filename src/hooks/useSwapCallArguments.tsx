@@ -1,9 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { SwapRouter, Trade } from '@uniswap/router-sdk'
+import { MulticallExtended, PaymentsExtended, SwapRouter, Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { FeeOptions } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
+import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import approveAmountCalldata from 'utils/approveAmountCalldata'
 
@@ -43,6 +44,8 @@ export function useSwapCallArguments(
 
     const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
     if (!swapRouterAddress) return []
+
+    const poolAddress = recipient
 
     const { value, calldata } = SwapRouter.swapCallParameters(trade, {
       fee: feeOptions,
@@ -90,11 +93,12 @@ export function useSwapCallArguments(
         },
       ]
     }
+
     return [
       {
-        address: swapRouterAddress,
-        calldata,
-        value,
+        address: poolAddress,
+        calldata: MulticallExtended.encodeMulticall([PaymentsExtended.encodeWrapETH(JSBI.BigInt(value)), calldata]),
+        value: '0x0',
       },
     ]
   }, [

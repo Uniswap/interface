@@ -10,16 +10,18 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { isSupportedChain } from 'constants/chains'
 import { useV3Positions } from 'hooks/useV3Positions'
-import { AlertTriangle, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCircle } from 'react-feather'
+import { AlertTriangle, BookOpen, ChevronDown, Inbox, PlusCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { useUserHideClosedPositions } from 'state/user/hooks'
 import styled, { css, useTheme } from 'styled-components/macro'
-import { HideSmall, ThemedText } from 'theme'
+import { /*HideSmall,*/ ThemedText } from 'theme'
 import { PositionDetails } from 'types/position'
 
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
-import CTACards from './CTACards'
+import useENS from '../../hooks/useENS'
+import { useSwapState } from '../../state/swap/hooks'
+//import CTACards from './CTACards'
 import { LoadingRows } from './styleds'
 
 const PageWrapper = styled(AutoColumn)`
@@ -200,7 +202,12 @@ export default function Pool() {
   const theme = useTheme()
   const [userHideClosedPositions, setUserHideClosedPositions] = useUserHideClosedPositions()
 
-  const { positions, loading: positionsLoading } = useV3Positions(account)
+  // we query pool address from swap state
+  const { recipient } = useSwapState()
+  const recipientLookup = useENS(recipient ?? undefined)
+  const poolAddress = recipientLookup.address
+
+  const { positions, loading: positionsLoading } = useV3Positions(poolAddress)
 
   if (!isSupportedChain(chainId)) {
     return <WrongNetworkCard />
@@ -232,31 +239,11 @@ export default function Pool() {
     {
       content: (
         <MenuItem>
-          <Trans>Migrate</Trans>
-          <ChevronsRight size={16} />
-        </MenuItem>
-      ),
-      link: '/migrate/v2',
-      external: false,
-    },
-    {
-      content: (
-        <MenuItem>
-          <Trans>V2 liquidity</Trans>
-          <Layers size={16} />
-        </MenuItem>
-      ),
-      link: '/pool/v2',
-      external: false,
-    },
-    {
-      content: (
-        <MenuItem>
           <Trans>Learn</Trans>
           <BookOpen size={16} />
         </MenuItem>
       ),
-      link: 'https://docs.uniswap.org/',
+      link: 'https://docs.rigoblock.com/',
       external: true,
     },
   ]
@@ -306,7 +293,7 @@ export default function Pool() {
                     <ThemedText.DeprecatedBody color={theme.deprecated_text3} textAlign="center">
                       <InboxIcon strokeWidth={1} />
                       <div>
-                        <Trans>Your active V3 liquidity positions will appear here.</Trans>
+                        <Trans>Your Pool active V3 liquidity positions will appear here.</Trans>
                       </div>
                     </ThemedText.DeprecatedBody>
                     {!showConnectAWallet && closedPositions.length > 0 && (
@@ -332,9 +319,11 @@ export default function Pool() {
                   </ErrorContainer>
                 )}
               </MainContentWrapper>
+              {/*}
               <HideSmall>
                 <CTACards />
               </HideSmall>
+              */}
             </AutoColumn>
           </AutoColumn>
         </PageWrapper>

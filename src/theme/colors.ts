@@ -58,7 +58,9 @@ export const colors = {
   yellowVibrant: '#FAF40A',
   // TODO: add gold 50-900
   gold200: '#EEB317',
+  gold400: '#B17900',
   goldVibrant: '#FEB239',
+  goldRigoblock: '#F5EFE4',
   green50: '#E3F3E6',
   green100: '#BFEECA',
   green200: '#76D191',
@@ -122,7 +124,7 @@ const commonTheme = {
 export const darkTheme = {
   ...commonTheme,
 
-  userThemeColor: colors.magentaVibrant,
+  userThemeColor: colors.goldRigoblock,
 
   background: colors.gray800,
   backgroundBackdrop: colors.gray950,
@@ -171,9 +173,9 @@ export const darkTheme = {
 export const lightTheme: Theme = {
   ...commonTheme,
 
-  userThemeColor: colors.magentaVibrant,
+  userThemeColor: colors.goldVibrant,
 
-  background: '#faf9fa', //INTENTIONALLY OFF THEME TO GIVE WHITE BG A SOFTER VISUAL
+  background: '#ffae00', //INTENTIONALLY OFF THEME TO GIVE WHITE BG A SOFTER VISUAL
   backgroundBackdrop: colors.white,
   backgroundSurface: colors.white,
   backgroundModule: colors.gray50,
@@ -187,14 +189,14 @@ export const lightTheme: Theme = {
   textSecondary: colors.gray400,
   textTertiary: colors.gray300,
 
-  accentAction: colors.pink400,
+  accentAction: colors.goldVibrant,
   accentActive: colors.blue400,
   accentSuccess: colors.green300,
   accentWarning: colors.gold200,
   accentFailure: colors.red400,
   accentCritical: colors.red400,
 
-  accentActionSoft: opacify(24, colors.pink400),
+  accentActionSoft: opacify(24, colors.gold400),
   accentActiveSoft: opacify(24, colors.blue400),
   accentSuccessSoft: opacify(24, colors.green400),
   accentWarningSoft: opacify(24, colors.gold200),
@@ -213,7 +215,7 @@ export const lightTheme: Theme = {
   shallowShadow:
     '6px 6px 10px rgba(51, 53, 72, 0.01), 2px 2px 6px rgba(51, 53, 72, 0.02), 1px 2px 2px rgba(51, 53, 72, 0.02);',
 
-  networkDefaultShadow: `0px 40px 120px ${opacify(12, colors.pink400)}`,
+  networkDefaultShadow: `0px 40px 120px ${opacify(12, colors.gold200)}`,
 
   stateOverlayHover: opacify(8, colors.gray300),
   stateOverlayPressed: opacify(24, colors.gray200),

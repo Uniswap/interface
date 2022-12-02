@@ -42,7 +42,9 @@ import RangeBadge from '../../components/Badge/RangeBadge'
 import { getPriceOrderingFromPositionForUI } from '../../components/PositionListItem'
 import RateToggle from '../../components/RateToggle'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
+import useENS from '../../hooks/useENS'
 import { usePositionTokenURI } from '../../hooks/usePositionTokenURI'
+import { useSwapState } from '../../state/swap/hooks'
 import { TransactionType } from '../../state/transactions/types'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
@@ -329,6 +331,11 @@ export function PositionPage() {
   const { chainId, account, provider } = useWeb3React()
   const theme = useTheme()
 
+  // we query pool address from swap state
+  const { recipient } = useSwapState()
+  const recipientLookup = useENS(recipient ?? undefined)
+  const poolAddress = recipientLookup.address
+
   const parsedTokenId = tokenIdFromUrl ? BigNumber.from(tokenIdFromUrl) : undefined
   const { loading, position: positionDetails } = useV3PositionFromTokenId(parsedTokenId)
 
@@ -353,7 +360,8 @@ export function PositionPage() {
   const currency1 = token1 ? unwrappedToken(token1) : undefined
 
   // flag for receiving WETH
-  const [receiveWETH, setReceiveWETH] = useState(false)
+  // we always collect as weth as unwrap, sweepToken methods would clash otherwise
+  const [receiveWETH, setReceiveWETH] = useState(true)
   const nativeCurrency = useNativeCurrency()
   const nativeWrappedSymbol = nativeCurrency.wrapped.symbol
 
@@ -440,6 +448,7 @@ export function PositionPage() {
       !chainId ||
       !positionManager ||
       !account ||
+      !poolAddress ||
       !tokenId ||
       !provider
     )
@@ -453,11 +462,11 @@ export function PositionPage() {
       tokenId: tokenId.toString(),
       expectedCurrencyOwed0: feeValue0 ?? CurrencyAmount.fromRawAmount(currency0ForFeeCollectionPurposes, 0),
       expectedCurrencyOwed1: feeValue1 ?? CurrencyAmount.fromRawAmount(currency1ForFeeCollectionPurposes, 0),
-      recipient: account,
+      recipient: poolAddress,
     })
 
     const txn = {
-      to: positionManager.address,
+      to: poolAddress, //positionManager.address,
       data: calldata,
       value,
     }
@@ -505,13 +514,15 @@ export function PositionPage() {
     currency1ForFeeCollectionPurposes,
     positionManager,
     account,
+    poolAddress,
     tokenId,
     addTransaction,
     provider,
   ])
 
+  // TODO: poolAddress
   const owner = useSingleCallResult(!!tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
-  const ownsNFT = owner === account || positionDetails?.operator === account
+  const ownsNFT = owner === poolAddress || positionDetails?.operator === poolAddress
 
   const feeValueUpper = inverted ? feeValue0 : feeValue1
   const feeValueLower = inverted ? feeValue1 : feeValue0
@@ -556,9 +567,11 @@ export function PositionPage() {
     )
   }
 
+  // TODO: unwrap and sweepToken methods would clash if implemented in separate adapters
+  // when removing liquidity or collecting fees we can't collect as weth
   const showCollectAsWeth = Boolean(
     ownsNFT &&
-      (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0)) &&
+      //(feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0)) &&
       currency0 &&
       currency1 &&
       (currency0.isNative || currency1.isNative) &&
@@ -835,7 +848,7 @@ export function PositionPage() {
                         </RowBetween>
                       </AutoColumn>
                     </LightCard>
-                    {showCollectAsWeth && (
+                    {!showCollectAsWeth && (
                       <AutoColumn gap="md">
                         <RowBetween>
                           <ThemedText.DeprecatedMain>

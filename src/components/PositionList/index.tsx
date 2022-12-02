@@ -74,7 +74,7 @@ export default function PositionList({
     <>
       <DesktopHeader>
         <div>
-          <Trans>Your positions</Trans>
+          <Trans>Rigoblock Pool positions</Trans>
           {positions && ' (' + positions.length + ')'}
         </div>
 
@@ -88,7 +88,7 @@ export default function PositionList({
         </ToggleLabel>
       </DesktopHeader>
       <MobileHeader>
-        <Trans>Your positions</Trans>
+        <Trans>Rigoblock Pool positions</Trans>
         <ToggleWrap>
           <ToggleLabel
             onClick={() => {

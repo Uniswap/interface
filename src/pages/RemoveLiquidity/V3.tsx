@@ -34,6 +34,8 @@ import { ThemedText } from 'theme'
 
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
+import useENS from '../../hooks/useENS'
+import { useSwapState } from '../../state/swap/hooks'
 import { TransactionType } from '../../state/transactions/types'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { currencyId } from '../../utils/currencyId'
@@ -65,8 +67,14 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
   const theme = useTheme()
   const { account, chainId, provider } = useWeb3React()
 
+  // we query pool address from swap state
+  const { recipient } = useSwapState()
+  const recipientLookup = useENS(recipient ?? undefined)
+  const poolAddress = recipientLookup.address
+
   // flag for receiving WETH
-  const [receiveWETH, setReceiveWETH] = useState(false)
+  // we always collect as WETH as unwrap, sweep token methods would clash between adapters otherwise
+  const [receiveWETH, setReceiveWETH] = useState(true)
   const nativeCurrency = useNativeCurrency()
   const nativeWrappedSymbol = nativeCurrency.wrapped.symbol
 
@@ -105,6 +113,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       !liquidityValue1 ||
       !deadline ||
       !account ||
+      !poolAddress ||
       !chainId ||
       !positionSDK ||
       !liquidityPercentage ||
@@ -128,7 +137,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     })
 
     const txn = {
-      to: positionManager.address,
+      to: poolAddress, //positionManager.address,
       data: calldata,
       value,
     }
@@ -172,6 +181,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     liquidityValue1,
     deadline,
     account,
+    poolAddress,
     chainId,
     feeValue0,
     feeValue1,
@@ -396,7 +406,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                 </AutoColumn>
               </LightCard>
 
-              {showCollectAsWeth && (
+              {!showCollectAsWeth && (
                 <RowBetween>
                   <ThemedText.DeprecatedMain>
                     <Trans>Collect as {nativeWrappedSymbol}</Trans>
