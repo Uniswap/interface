@@ -314,7 +314,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
 
   const USDPrice = useUsdPrice(asset)
 
-  const assetsFilter = [{ address: asset.address, tokenId: asset.tokenId + 'adskhdashk' }]
+  const assetsFilter = [{ address: asset.address, tokenId: asset.tokenId }]
   const { walletAssets: ownerAssets } = useNftBalanceQuery(account ?? '', [], assetsFilter, 1)
   const walletAsset: WalletAsset | undefined = useMemo(
     () => (ownerAssets?.length > 0 ? ownerAssets[0] : undefined),
