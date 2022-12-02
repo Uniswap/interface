@@ -23,6 +23,26 @@ export const image = style([
   },
 ])
 
+export const embedContainer = style({
+  position: 'relative',
+  overflow: 'hidden',
+  width: '100%',
+  paddingTop: '100%',
+})
+
+export const embed = style([
+  image,
+  {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    width: '100%',
+    height: '100%',
+  },
+])
+
 export const container = style([
   center,
   {
