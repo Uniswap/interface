@@ -96,7 +96,7 @@ const ActionsSubContainer = styled.div`
   }
 `
 
-export const SortDropdownContainer = styled.div<{ isFiltersExpanded: boolean }>`
+const SortDropdownContainer = styled.div<{ isFiltersExpanded: boolean }>`
   width: max-content;
   height: 44px;
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
@@ -127,7 +127,7 @@ export const ClearAllButton = styled.button`
   background: none;
 `
 
-export const InfiniteScrollWrapper = styled.div`
+const InfiniteScrollWrapper = styled.div`
   ${InfiniteScrollWrapperCss}
 `
 
@@ -176,7 +176,7 @@ export const LoadingAssets = ({ count }: { count?: number }) => (
   </>
 )
 
-export const CollectionNftsLoading = () => (
+const CollectionNftsLoading = () => (
   <Box width="full" className={styles.assetList}>
     <LoadingAssets />
   </Box>

@@ -72,13 +72,6 @@ export const searchBarContainerNft = style([
   },
 ])
 
-export const searchBarContainerNftOpen = style([
-  searchBarContainerNft,
-  {
-    boxShadow: vars.color.cardDropShadow,
-  },
-])
-
 export const searchBar = style([
   baseSearchStyle,
   sprinkles({
@@ -108,16 +101,6 @@ export const searchBarInput = style([
     background: 'none',
     lineHeight: '24',
     height: 'full',
-  }),
-])
-
-export const searchBarDropdown = style([
-  baseSearchStyle,
-  sprinkles({
-    borderBottomLeftRadius: '12',
-    borderBottomRightRadius: '12',
-    height: { sm: 'viewHeight', md: 'auto' },
-    borderTop: 'none',
   }),
 ])
 
@@ -243,16 +226,6 @@ export const visible = style([
     height: 'full',
   }),
 ])
-
-export const searchContentCentered = style({
-  '@media': {
-    [`screen and (min-width: ${breakpoints.lg}px)`]: {
-      transform: `translateX(${DESKTOP_NAVBAR_WIDTH / 4}px)`,
-      transition: `transform ${vars.time[125]}`,
-      transitionTimingFunction: 'ease-out',
-    },
-  },
-})
 
 export const searchContentLeftAlign = style({
   '@media': {

@@ -110,7 +110,7 @@ export function PrivacyPolicyModal() {
   )
 }
 
-export function PrivacyPolicy() {
+function PrivacyPolicy() {
   return (
     <Wrapper
       draggable="true"

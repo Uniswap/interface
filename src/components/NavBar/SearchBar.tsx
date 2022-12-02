@@ -3,7 +3,6 @@ import { t } from '@lingui/macro'
 import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from '@uniswap/analytics'
 import { BrowserEvent, ElementName, EventName, SectionName } from '@uniswap/analytics-events'
 import clsx from 'clsx'
-import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import useDebounce from 'hooks/useDebounce'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -47,10 +46,8 @@ export const SearchBar = () => {
   const searchRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const { pathname } = useLocation()
-  const phase1Flag = useNftFlag()
   const isMobile = useIsMobile()
   const isTablet = useIsTablet()
-  const isPhase1 = phase1Flag === NftVariant.Enabled
 
   useOnClickOutside(searchRef, () => {
     isOpen && toggleOpen()
@@ -63,7 +60,7 @@ export const SearchBar = () => {
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,
-      enabled: !!debouncedSearchValue.length && isPhase1,
+      enabled: !!debouncedSearchValue.length,
     }
   )
 
@@ -111,8 +108,6 @@ export const SearchBar = () => {
   }, [isOpen])
 
   const isMobileOrTablet = isMobile || isTablet
-  const showCenteredSearchContent =
-    !isOpen && phase1Flag !== NftVariant.Enabled && !isMobileOrTablet && searchValue.length === 0
 
   const trace = useTrace({ section: SectionName.NAVBAR_SEARCH })
 
@@ -122,12 +117,8 @@ export const SearchBar = () => {
     ...trace,
   }
   const placeholderText = useMemo(() => {
-    return phase1Flag === NftVariant.Enabled
-      ? isMobileOrTablet
-        ? t`Search`
-        : t`Search tokens and NFT collections`
-      : t`Search tokens`
-  }, [phase1Flag, isMobileOrTablet])
+    return isMobileOrTablet ? t`Search` : t`Search tokens and NFT collections`
+  }, [isMobileOrTablet])
 
   const handleKeyPress = useCallback(
     (event: any) => {
@@ -160,12 +151,12 @@ export const SearchBar = () => {
         position={{ sm: 'fixed', md: 'absolute', xl: 'relative' }}
         width={{ sm: isOpen ? 'viewWidth' : 'auto', md: 'auto' }}
         ref={searchRef}
-        className={isPhase1 ? styles.searchBarContainerNft : styles.searchBarContainer}
+        className={styles.searchBarContainerNft}
         display={{ sm: isOpen ? 'inline-block' : 'none', xl: 'inline-block' }}
       >
         <Row
           className={clsx(
-            ` ${isPhase1 ? styles.nftSearchBar : styles.searchBar} ${!isOpen && !isMobile && magicalGradientOnHover} ${
+            ` ${styles.nftSearchBar} ${!isOpen && !isMobile && magicalGradientOnHover} ${
               isMobileOrTablet && (isOpen ? styles.visible : styles.hidden)
             } `
           )}
@@ -177,7 +168,7 @@ export const SearchBar = () => {
           onClick={() => !isOpen && toggleOpen()}
           gap="12"
         >
-          <Box className={showCenteredSearchContent ? styles.searchContentCentered : styles.searchContentLeftAlign}>
+          <Box className={styles.searchContentLeftAlign}>
             <Box display={{ sm: 'none', md: 'flex' }}>
               <MagnifyingGlassIcon />
             </Box>
@@ -199,15 +190,13 @@ export const SearchBar = () => {
                 setSearchValue(event.target.value)
               }}
               onBlur={() => sendAnalyticsEvent(EventName.NAVBAR_SEARCH_EXITED, navbarSearchEventProperties)}
-              className={`${styles.searchBarInput} ${
-                showCenteredSearchContent ? styles.searchContentCentered : styles.searchContentLeftAlign
-              }`}
+              className={`${styles.searchBarInput} ${styles.searchContentLeftAlign}`}
               value={searchValue}
               ref={inputRef}
-              width={phase1Flag === NftVariant.Enabled || isOpen ? 'full' : '160'}
+              width="full"
             />
           </TraceEvent>
-          {!isOpen && isPhase1 && <KeyShortCut>/</KeyShortCut>}
+          {!isOpen && <KeyShortCut>/</KeyShortCut>}
         </Row>
         <Box className={clsx(isOpen ? styles.visible : styles.hidden)}>
           {isOpen && (
@@ -217,7 +206,7 @@ export const SearchBar = () => {
               collections={reducedCollections}
               queryText={debouncedSearchValue}
               hasInput={debouncedSearchValue.length > 0}
-              isLoading={tokensAreLoading || (collectionsAreLoading && phase1Flag === NftVariant.Enabled)}
+              isLoading={tokensAreLoading || collectionsAreLoading}
             />
           )}
         </Box>

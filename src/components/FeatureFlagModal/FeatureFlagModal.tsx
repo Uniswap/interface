@@ -1,5 +1,5 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
-import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
+import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
@@ -202,15 +202,20 @@ export default function FeatureFlagModal() {
           <X size={24} />
         </CloseButton>
       </Header>
-      <FeatureFlagGroup name="Phase 1">
-        <FeatureFlagOption variant={NftVariant} value={useNftFlag()} featureFlag={FeatureFlag.nft} label="NFTs" />
-      </FeatureFlagGroup>
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption
           variant={TraceJsonRpcVariant}
           value={useTraceJsonRpcFlag()}
           featureFlag={FeatureFlag.traceJsonRpc}
           label="Enables JSON-RPC tracing"
+        />
+      </FeatureFlagGroup>
+      <FeatureFlagGroup name="Tokens">
+        <FeatureFlagOption
+          variant={LandingPageVariant}
+          value={useLandingPageFlag()}
+          featureFlag={FeatureFlag.landingPage}
+          label="Landing Page"
         />
       </FeatureFlagGroup>
       <SaveButton onClick={() => window.location.reload()}>Reload</SaveButton>

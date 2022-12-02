@@ -339,7 +339,7 @@ function HeaderCell({
 }
 
 /* Token Row: skeleton row component */
-export function TokenRow({
+function TokenRow({
   header,
   listNumber,
   tokenInfo,
