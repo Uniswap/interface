@@ -153,11 +153,11 @@ function FavoriteTokenCard({
               <Flex grow row alignItems="center" gap="xxs">
                 <TokenLogo
                   chainId={chainId ?? undefined}
-                  size={theme.imageSizes.xs}
+                  size={theme.imageSizes.sm}
                   symbol={token?.symbol ?? undefined}
                   url={token?.project?.logoUrl ?? undefined}
                 />
-                <Text variant="subheadSmall">{token?.symbol}</Text>
+                <Text variant="bodyLarge">{token?.symbol}</Text>
               </Flex>
               {isEditing ? (
                 <RemoveButton onPress={onRemove} />
