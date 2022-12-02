@@ -136,7 +136,7 @@ interface NftDisplayProps {
   nfts: GenieAsset[]
 }
 
-export const NftDisplay = ({ nfts }: NftDisplayProps) => {
+const NftDisplay = ({ nfts }: NftDisplayProps) => {
   return (
     <NftDisplayContainer>
       {[...Array(3)].map((_, index) => {
