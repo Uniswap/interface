@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { FunctionComponent, PropsWithChildren, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components/macro'
@@ -80,6 +79,8 @@ const InternalMenuItem = styled(Link)`
   flex: 1;
   padding: 0.5rem 0.5rem;
   color: ${({ theme }) => theme.deprecated_text2};
+  width: max-content;
+  text-decoration: none;
   :hover {
     color: ${({ theme }) => theme.deprecated_text1};
     cursor: pointer;
@@ -90,7 +91,7 @@ const InternalMenuItem = styled(Link)`
   }
 `
 
-interface NewMenuProps {
+interface MenuProps {
   flyoutAlignment?: FlyoutAlignment
   ToggleUI?: FunctionComponent<PropsWithChildren<unknown>>
   menuItems: {
@@ -100,20 +101,12 @@ interface NewMenuProps {
   }[]
 }
 
-const NewMenuFlyout = styled(MenuFlyout)`
-  top: 3rem !important;
-`
-const NewMenuItem = styled(InternalMenuItem)`
-  width: max-content;
-  text-decoration: none;
-`
-
 const ExternalMenuItem = styled(MenuItem)`
   width: max-content;
   text-decoration: none;
 `
 
-export const NewMenu = ({ flyoutAlignment = FlyoutAlignment.RIGHT, ToggleUI, menuItems, ...rest }: NewMenuProps) => {
+export const Menu = ({ flyoutAlignment = FlyoutAlignment.RIGHT, ToggleUI, menuItems, ...rest }: MenuProps) => {
   const node = useRef<HTMLDivElement>()
   const open = useModalIsOpen(ApplicationModal.POOL_OVERVIEW_OPTIONS)
   const toggle = useToggleModal(ApplicationModal.POOL_OVERVIEW_OPTIONS)
@@ -123,19 +116,19 @@ export const NewMenu = ({ flyoutAlignment = FlyoutAlignment.RIGHT, ToggleUI, men
     <StyledMenu ref={node as any} {...rest}>
       <ToggleElement onClick={toggle} />
       {open && (
-        <NewMenuFlyout flyoutAlignment={flyoutAlignment}>
+        <MenuFlyout flyoutAlignment={flyoutAlignment}>
           {menuItems.map(({ content, link, external }, i) =>
             external ? (
               <ExternalMenuItem href={link} key={i}>
                 {content}
               </ExternalMenuItem>
             ) : (
-              <NewMenuItem to={link} key={i}>
+              <InternalMenuItem to={link} key={i}>
                 {content}
-              </NewMenuItem>
+              </InternalMenuItem>
             )
           )}
-        </NewMenuFlyout>
+        </MenuFlyout>
       )}
     </StyledMenu>
   )
