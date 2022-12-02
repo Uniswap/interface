@@ -48,10 +48,10 @@ const BagContainer = styled.div<{ raiseZIndex: boolean }>`
   position: fixed;
   display: flex;
   flex-direction: column;
-  top: 72px;
-  right: 0px;
+  top: 88px;
+  right: 20px;
   width: 320px;
-  height: calc(100vh - 72px);
+  height: calc(100vh - 108px);
   background: ${({ theme }) => theme.backgroundSurface};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 16px;
@@ -68,7 +68,7 @@ const BagContainer = styled.div<{ raiseZIndex: boolean }>`
 const DetailsPageBackground = styled.div`
   position: fixed;
   background: rgba(0, 0, 0, 0.7);
-  top: 72px;
+  top: 0px;
   width: 100%;
   height: 100%;
 `
@@ -134,7 +134,7 @@ const Bag = () => {
 
   const itemsInBag = useMemo(() => recalculateBagUsingPooledAssets(uncheckedItemsInBag), [uncheckedItemsInBag])
 
-  const [isOpen, setModalIsOpen] = useState(false)
+  const [isModalOpen, setModalIsOpen] = useState(false)
   const [userCanScroll, setUserCanScroll] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)
   const scrollRef = (node: HTMLDivElement) => {
@@ -251,8 +251,8 @@ const Bag = () => {
   }, [])
 
   useEffect(() => {
-    if (bagIsLocked && !isOpen) setModalIsOpen(true)
-  }, [bagIsLocked, isOpen])
+    if (bagIsLocked && !isModalOpen) setModalIsOpen(true)
+  }, [bagIsLocked, isModalOpen])
 
   useEffect(() => {
     if (transactionStateRef.current === TxStateType.Confirming) setBagStatus(BagStatus.PROCESSING_TRANSACTION)
@@ -304,7 +304,7 @@ const Bag = () => {
   return (
     <Portal>
       {!(isProfilePage && profilePageState === ProfilePageStateType.LISTING) ? (
-        <BagContainer raiseZIndex={isMobile || isOpen}>
+        <BagContainer raiseZIndex={isMobile || isModalOpen}>
           <BagHeader
             numberOfAssets={isProfilePage ? sellAssets.length : itemsInBag.length}
             closeBag={handleCloseBag}
@@ -344,15 +344,15 @@ const Bag = () => {
           )}
         </BagContainer>
       ) : (
-        <Column zIndex={isMobile || isOpen ? 'modalOverTooltip' : '3'} className={styles.bagContainer}>
+        <BagContainer raiseZIndex={isMobile || isModalOpen}>
           <ListingModal />
-        </Column>
+        </BagContainer>
       )}
 
       {isDetailsPage ? (
         <DetailsPageBackground onClick={toggleBag} />
       ) : (
-        isOpen && <Overlay onClick={() => (!bagIsLocked ? setModalIsOpen(false) : undefined)} />
+        isModalOpen && <Overlay onClick={() => (!bagIsLocked ? setModalIsOpen(false) : undefined)} />
       )}
     </Portal>
   )

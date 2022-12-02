@@ -82,7 +82,9 @@ export const BagHeader = ({ numberOfAssets, closeBag, resetFlow, isProfilePage }
       {numberOfAssets > 0 && (
         <>
           <CounterDot sizing={sizing}>{numberOfAssets}</CounterDot>
-          <ClearButton onClick={resetFlow}>Clear all</ClearButton>
+          <ClearButton onClick={resetFlow}>
+            <Trans>Clear all</Trans>
+          </ClearButton>
         </>
       )}
       <IconWrapper onClick={closeBag}>

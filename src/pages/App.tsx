@@ -7,7 +7,6 @@ import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
 import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
 import { ProfilePageLoadingSkeleton } from 'nft/components/profile/view/ProfilePageLoadingSkeleton'
-import { useBag } from 'nft/hooks'
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -174,9 +173,7 @@ export default function App() {
     return () => window.removeEventListener('scroll', scrollListener)
   }, [])
 
-  const isBagExpanded = useBag((state) => state.bagExpanded)
-
-  const isHeaderTransparent = !scrolledState && !isBagExpanded
+  const isHeaderTransparent = !scrolledState
 
   return (
     <ErrorBoundary>
