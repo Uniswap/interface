@@ -2801,13 +2801,20 @@
     react-remove-scroll "^2.3.0"
     tslib "^2.0.0"
 
-"@reach/portal@0.10.5", "@reach/portal@^0.10.3":
+"@reach/portal@0.10.5":
   version "0.10.5"
   resolved "https://registry.npmjs.org/@reach/portal/-/portal-0.10.5.tgz"
   integrity sha512-K5K8gW99yqDPDCWQjEfSNZAbGOQWSx5AN2lpuR1gDVoz4xyWpTJ0k0LbetYJTDVvLP/InEcR7AU42JaDYDCXQw==
   dependencies:
     "@reach/utils" "0.10.5"
     tslib "^2.0.0"
+
+"@reach/portal@^0.18.0":
+  version "0.18.0"
+  resolved "https://registry.yarnpkg.com/@reach/portal/-/portal-0.18.0.tgz#dd466f5110689d14a0e7491b3aa8a449e8cefb40"
+  integrity sha512-TImozRapd576ofRk30Le2L3lRTFXF1p47B182wnp5eMTdZa74JX138BtNGEPJFOyrMaVmguVF8SSwZ6a0fon1Q==
+  dependencies:
+    "@reach/utils" "0.18.0"
 
 "@reach/utils@0.10.5":
   version "0.10.5"
@@ -2817,6 +2824,11 @@
     "@types/warning" "^3.0.0"
     tslib "^2.0.0"
     warning "^4.0.3"
+
+"@reach/utils@0.18.0":
+  version "0.18.0"
+  resolved "https://registry.yarnpkg.com/@reach/utils/-/utils-0.18.0.tgz#4f3cebe093dd436eeaff633809bf0f68f4f9d2ee"
+  integrity sha512-KdVMdpTgDyK8FzdKO9SCpiibuy/kbv3pwgfXshTI6tEcQT1OOwj7BAksnzGC0rPz0UholwC+AgkqEl3EJX3M1A==
 
 "@react-hook/event@^1.2.1":
   version "1.2.3"
