@@ -1,16 +1,22 @@
 import { Trans } from '@lingui/macro'
 import { Fraction, TradeType } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
+import { VoteOption } from 'state/governance/types'
 import {
   AddLiquidityV3PoolTransactionInfo,
   ApproveTransactionInfo,
   ClaimTransactionInfo,
   CollectFeesTransactionInfo,
+  DelegateTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
+  ExecuteTransactionInfo,
+  QueueTransactionInfo,
   RemoveLiquidityV3TransactionInfo,
+  SubmitProposalTransactionInfo,
   TransactionInfo,
   TransactionType,
+  VoteTransactionInfo,
   WrapTransactionInfo,
 } from 'state/transactions/types'
 import styled from 'styled-components/macro'
@@ -312,6 +318,130 @@ const WrapSummary = ({
   )
 }
 
+const VoteSummary = ({
+  info: { proposalId, decision },
+  transactionState,
+}: {
+  info: VoteTransactionInfo
+  transactionState: TransactionState
+}) => {
+  const actionProps = {
+    transactionState,
+    pending: <Trans>Voting</Trans>,
+    success: <Trans>Voted</Trans>,
+    failed: <Trans>Vote</Trans>,
+  }
+
+  return (
+    <BodyWrap>
+      <Action {...actionProps} />{' '}
+      {(function () {
+        switch (decision) {
+          case VoteOption.For:
+            return <Trans>for proposal</Trans>
+          case VoteOption.Abstain:
+            return <Trans>to abstain on proposal</Trans>
+          case VoteOption.Against:
+            return <Trans>against proposal</Trans>
+        }
+      })()}{' '}
+      <HighlightText>#{proposalId}</HighlightText>
+      <FailedText transactionState={transactionState} />
+    </BodyWrap>
+  )
+}
+
+const DelegateSummary = ({
+  info: { delegatee },
+  transactionState,
+}: {
+  info: DelegateTransactionInfo
+  transactionState: TransactionState
+}) => {
+  const { ENSName } = useENSName()
+  const actionProps = {
+    transactionState,
+    pending: <Trans>Delegating</Trans>,
+    success: <Trans>Delegated</Trans>,
+    failed: <Trans>Delegate</Trans>,
+  }
+
+  return (
+    <BodyWrap>
+      <Action {...actionProps} /> <Trans>to</Trans>{' '}
+      <HighlightText>{ENSName ?? shortenAddress(delegatee)}</HighlightText>
+      <FailedText transactionState={transactionState} />
+    </BodyWrap>
+  )
+}
+
+const QueueSummary = ({
+  info: { proposalId },
+  transactionState,
+}: {
+  info: QueueTransactionInfo
+  transactionState: TransactionState
+}) => {
+  const actionProps = {
+    transactionState,
+    pending: <Trans>Queuing proposal</Trans>,
+    success: <Trans>Queued proposal</Trans>,
+    failed: <Trans>Queue proposal</Trans>,
+  }
+
+  return (
+    <BodyWrap>
+      <Action {...actionProps} /> <HighlightText>#{proposalId}</HighlightText>
+      <FailedText transactionState={transactionState} />
+    </BodyWrap>
+  )
+}
+
+const ExecuteSummary = ({
+  info: { proposalId },
+  transactionState,
+}: {
+  info: ExecuteTransactionInfo
+  transactionState: TransactionState
+}) => {
+  const actionProps = {
+    transactionState,
+    pending: <Trans>Executing proposal</Trans>,
+    success: <Trans>Executed proposal</Trans>,
+    failed: <Trans>Execute proposal</Trans>,
+  }
+
+  return (
+    <BodyWrap>
+      <Action {...actionProps} /> <HighlightText>#{proposalId}</HighlightText>
+      <FailedText transactionState={transactionState} />
+    </BodyWrap>
+  )
+}
+
+const SubmitProposalTransactionSummary = ({
+  // eslint-disable-next-line
+  info: {},
+  transactionState,
+}: {
+  info: SubmitProposalTransactionInfo
+  transactionState: TransactionState
+}) => {
+  const actionProps = {
+    transactionState,
+    pending: <Trans>Submitting</Trans>,
+    success: <Trans>Submitted</Trans>,
+    failed: <Trans>Submit</Trans>,
+  }
+
+  return (
+    <BodyWrap>
+      <Action {...actionProps} /> <Trans>proposal</Trans>
+      <FailedText transactionState={transactionState} />
+    </BodyWrap>
+  )
+}
+
 const TransactionBody = ({ info, transactionState }: { info: TransactionInfo; transactionState: TransactionState }) => {
   switch (info.type) {
     case TransactionType.SWAP:
@@ -328,6 +458,16 @@ const TransactionBody = ({ info, transactionState }: { info: TransactionInfo; tr
       return <ApprovalSummary info={info} transactionState={transactionState} />
     case TransactionType.CLAIM:
       return <ClaimSummary info={info} transactionState={transactionState} />
+    case TransactionType.VOTE:
+      return <VoteSummary info={info} transactionState={transactionState} />
+    case TransactionType.DELEGATE:
+      return <DelegateSummary info={info} transactionState={transactionState} />
+    case TransactionType.QUEUE:
+      return <QueueSummary info={info} transactionState={transactionState} />
+    case TransactionType.EXECUTE:
+      return <ExecuteSummary info={info} transactionState={transactionState} />
+    case TransactionType.SUBMIT_PROPOSAL:
+      return <SubmitProposalTransactionSummary info={info} transactionState={transactionState} />
     default:
       return <span />
   }
