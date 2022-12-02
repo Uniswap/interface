@@ -9,7 +9,7 @@ import { BaseCard } from 'src/components/layout/BaseCard'
 import { TAB_STYLES } from 'src/components/layout/TabHelpers'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
-import { EMPTY_ARRAY } from 'src/constants/misc'
+import { EMPTY_ARRAY, PollingInterval } from 'src/constants/misc'
 import { isNonPollingRequestInFlight } from 'src/data/utils'
 import {
   TransactionListQuery,
@@ -25,6 +25,7 @@ import TransactionSummaryRouter from 'src/features/transactions/SummaryCards/Tra
 import { TransactionDetails } from 'src/features/transactions/types'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { makeSelectAccountHideSpamTokens } from 'src/features/wallet/selectors'
+import { usePollOnFocusOnly } from 'src/utils/hooks'
 
 const PENDING_TITLE = (t: TFunction) => t('Pending')
 const TODAY_TITLE = (t: TFunction) => t('Today')
@@ -59,15 +60,21 @@ export default function TransactionList(props: TransactionListProps) {
     loading: requestLoading,
     data,
     error: requestError,
+    startPolling,
+    stopPolling,
   } = useTransactionListQuery({
     variables: { address: props.ownerAddress },
     notifyOnNetworkStatusChange: true,
   })
+
+  usePollOnFocusOnly(startPolling, stopPolling, PollingInterval.Fast)
+
   const onRetry = useCallback(() => {
     refetch({
       address: props.ownerAddress,
     })
   }, [props.ownerAddress, refetch])
+
   const hasData = !!data?.portfolios?.[0]?.assetActivities
   const isLoading = isNonPollingRequestInFlight(networkStatus)
   const isError = usePersistedError(requestLoading, requestError)

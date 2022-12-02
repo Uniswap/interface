@@ -94,6 +94,7 @@ export function useEagerExternalProfileRootNavigation() {
 export function usePreloadedHomeScreenQueries() {
   const [loadPortfolioBalance] = usePortfolioBalanceLazyQuery()
   const [loadPortfolioBalances] = usePortfolioBalancesLazyQuery()
+  const [loadTransactionHistory] = useTransactionListLazyQuery()
 
   const activeAccountAddress = useActiveAccountAddress()
 
@@ -104,7 +105,8 @@ export function usePreloadedHomeScreenQueries() {
 
     loadPortfolioBalance({ variables: { owner: activeAccountAddress } })
     loadPortfolioBalances({ variables: { ownerAddress: activeAccountAddress } })
-  }, [activeAccountAddress, loadPortfolioBalance, loadPortfolioBalances])
+    loadTransactionHistory({ variables: { address: activeAccountAddress } })
+  }, [activeAccountAddress, loadPortfolioBalance, loadPortfolioBalances, loadTransactionHistory])
 }
 
 /** Set of queries that should be preloaded, but can wait for idle time. */
