@@ -198,7 +198,7 @@ const DefaultLink = styled(Link)`
   text-decoration: none;
 `
 
-export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
+const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
   const navigate = useNavigate()
   const USDPrice = useUsdPrice(asset)
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
@@ -275,7 +275,7 @@ const StyledLink = styled(Link)`
   ${OpacityHoverState}
 `
 
-export const NotForSale = ({ collectionName, collectionUrl }: { collectionName: string; collectionUrl: string }) => {
+const NotForSale = ({ collectionName, collectionUrl }: { collectionName: string; collectionUrl: string }) => {
   const theme = useTheme()
 
   return (
