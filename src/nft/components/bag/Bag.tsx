@@ -30,6 +30,7 @@ import { combineBuyItemsWithTxRoute } from 'nft/utils/txRoute/combineItemsWithTx
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from 'react-query'
 import styled from 'styled-components/macro'
+import { Z_INDEX } from 'theme/zIndex'
 import shallow from 'zustand/shallow'
 
 import * as styles from './Bag.css'
@@ -42,6 +43,27 @@ interface SeparatorProps {
   top?: boolean
   show?: boolean
 }
+
+const BagContainer = styled.div<{ raiseZIndex: boolean }>`
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  top: 72px;
+  right: 0px;
+  width: 320px;
+  height: calc(100vh - 72px);
+  background: ${({ theme }) => theme.backgroundSurface};
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-radius: 16px;
+  box-shadow: ${({ theme }) => theme.shallowShadow};
+  z-index: ${({ raiseZIndex }) => (raiseZIndex ? Z_INDEX.modalOverTooltip : 3)};
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    top: 0px;
+    width: 100%;
+    height: 100%;
+  }
+`
 
 const DetailsPageBackground = styled.div`
   position: fixed;
@@ -282,7 +304,7 @@ const Bag = () => {
   return (
     <Portal>
       {!(isProfilePage && profilePageState === ProfilePageStateType.LISTING) ? (
-        <Column zIndex={isMobile || isOpen ? 'modalOverTooltip' : '3'} className={styles.bagContainer}>
+        <BagContainer raiseZIndex={isMobile || isOpen}>
           <BagHeader
             numberOfAssets={isProfilePage ? sellAssets.length : itemsInBag.length}
             closeBag={handleCloseBag}
@@ -320,7 +342,7 @@ const Bag = () => {
               Continue
             </Box>
           )}
-        </Column>
+        </BagContainer>
       ) : (
         <Column zIndex={isMobile || isOpen ? 'modalOverTooltip' : '3'} className={styles.bagContainer}>
           <ListingModal />
