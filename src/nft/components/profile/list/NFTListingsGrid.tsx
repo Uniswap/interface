@@ -161,7 +161,7 @@ const PriceTextInput = ({
           warningType !== WarningType.NONE && !focused
             ? 'orange'
             : isGlobalPrice
-            ? 'genieBlue'
+            ? 'accentAction'
             : listPrice != null
             ? 'textSecondary'
             : 'blue400'
@@ -231,7 +231,7 @@ const PriceTextInput = ({
                       : formatEth(asset.floor_sell_order_price)}
                     ETH
                     <Box
-                      color={warningType === WarningType.BELOW_FLOOR ? 'genieBlue' : 'orange'}
+                      color={warningType === WarningType.BELOW_FLOOR ? 'accentAction' : 'orange'}
                       marginLeft="8"
                       cursor="pointer"
                       onClick={() => {

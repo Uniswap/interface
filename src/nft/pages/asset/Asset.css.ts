@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css'
 
-import { center, subhead } from '../../css/common.css'
-import { sprinkles, vars } from '../../css/sprinkles.css'
+import { center } from '../../css/common.css'
+import { sprinkles } from '../../css/sprinkles.css'
 
 export const image = style([
   sprinkles({ borderRadius: '20', height: 'full', alignSelf: 'center' }),
@@ -32,22 +32,6 @@ export const container = style([
 ])
 
 export const marketplace = sprinkles({ borderRadius: '4' })
-
-export const tab = style([
-  subhead,
-  sprinkles({ color: 'textSecondary', border: 'none', padding: '0', background: 'transparent', cursor: 'pointer' }),
-  {
-    selectors: {
-      '&[data-active="true"]': {
-        textDecoration: 'underline',
-        textDecorationColor: vars.color.genieBlue,
-        textUnderlineOffset: '8px',
-        textDecorationThickness: '2px',
-        color: vars.color.textPrimary,
-      },
-    },
-  },
-])
 
 export const creator = style({
   '@media': {

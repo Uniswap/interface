@@ -37,7 +37,6 @@ const themeContractValues = {
 
   shadows: {
     menu: '',
-    genieBlue: '',
     elevation: '',
     tooltip: '',
     deep: '',
@@ -157,7 +156,6 @@ const zIndices = {
 export const vars = createGlobalTheme(':root', {
   color: {
     ...themeVars.colors,
-    genieBlue: '#4C82FB',
     fallbackGradient: 'linear-gradient(270deg, #D1D5DB 0%, #F6F6F6 100%)',
     loadingBackground: '#24272e',
     cardDropShadow: 'rgba(0, 0, 0, 10%) 0px 4px 12px',
@@ -165,7 +163,6 @@ export const vars = createGlobalTheme(':root', {
     orange: '#FA2C38',
     black: 'black',
     whitesmoke: '#F5F5F5',
-    blue: '#4C82FB',
     gray: '#CBCEDC',
     transculent: '#7F7F7F',
     transparent: 'transparent',

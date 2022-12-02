@@ -354,7 +354,7 @@ export const returnButton = style([
     fontWeight: 'bold',
     fontSize: '14',
     color: 'explicitWhite',
-    backgroundColor: 'genieBlue',
+    backgroundColor: 'accentAction',
     display: 'flex',
     alignItems: 'center',
     marginLeft: 'auto',

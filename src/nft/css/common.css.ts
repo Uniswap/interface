@@ -56,7 +56,7 @@ export const buttonMedium = style([
   buttonTextMedium,
   commonButtonStyles,
   sprinkles({
-    backgroundColor: 'blue',
+    backgroundColor: 'accentAction',
     color: 'explicitWhite',
   }),
   {

@@ -39,7 +39,7 @@ export const tab = style([
     selectors: {
       '&[data-active="true"]': {
         textDecoration: 'underline',
-        textDecorationColor: vars.color.genieBlue,
+        textDecorationColor: vars.color.accentAction,
         textUnderlineOffset: '8px',
         textDecorationThickness: '2px',
         color: vars.color.textPrimary,
