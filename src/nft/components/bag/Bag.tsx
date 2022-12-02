@@ -317,7 +317,11 @@ const Bag = () => {
               onClick={() => {
                 isMobile && toggleBag()
                 setProfilePageState(ProfilePageStateType.LISTING)
-                sendAnalyticsEvent(EventName.NFT_SELL_START_LISTING)
+                sendAnalyticsEvent(EventName.NFT_PROFILE_PAGE_START_SELL, {
+                  list_quantity: sellAssets.length,
+                  collection_addresses: sellAssets.map((asset) => asset.asset_contract.address),
+                  token_ids: sellAssets.map((asset) => asset.tokenId),
+                })
               }}
             >
               Continue

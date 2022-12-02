@@ -62,12 +62,6 @@ const ListingModal = () => {
     ...trace,
   }
 
-  const approvalEventProperties = {
-    list_quantity: listings.length,
-    usd_value: ethPriceInUSD * totalEthListingValue,
-    ...trace,
-  }
-
   // when all collections have been approved, auto start the signing process
   useEffect(() => {
     collectionsRequiringApproval?.length &&
@@ -177,7 +171,9 @@ const ListingModal = () => {
     sendAnalyticsEvent(EventName.NFT_LISTING_SIGNED, {
       signatures_requested: listings.length,
       signatures_approved: listings.filter((asset) => asset.status === ListingStatus.APPROVED),
-      ...approvalEventProperties,
+      list_quantity: listings.length,
+      usd_value: ethPriceInUSD * totalEthListingValue,
+      ...trace,
     })
     await logListing(listings, (await signer?.getAddress()) ?? '')
   }
