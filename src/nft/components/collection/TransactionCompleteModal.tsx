@@ -364,7 +364,7 @@ const TxCompleteModal = () => {
                     <Box
                       as="button"
                       border="none"
-                      backgroundColor="genieBlue"
+                      backgroundColor="accentAction"
                       cursor="pointer"
                       className={styles.returnButton}
                       type="button"
