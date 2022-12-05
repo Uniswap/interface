@@ -1,7 +1,9 @@
 import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import Column from 'components/Column'
 import { OpacityHoverState } from 'components/Common'
+import Row from 'components/Row'
 import { useLoadAssetsQuery } from 'graphql/data/nft/Asset'
 import { useCollectionQuery, useLoadCollectionQuery } from 'graphql/data/nft/Collection'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
@@ -9,7 +11,6 @@ import { AnimatedBox, Box } from 'nft/components/Box'
 import { Activity, ActivitySwitcher, CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
 import { CollectionNftsAndMenuLoading } from 'nft/components/collection/CollectionNfts'
 import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
-import { Column, Row } from 'nft/components/Flex'
 import { BagCloseIcon } from 'nft/components/icons'
 import { useBag, useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
@@ -22,16 +23,25 @@ import { ThemedText } from 'theme'
 import { TRANSITION_DURATIONS } from 'theme/styles'
 
 const FILTER_WIDTH = 332
-const BAG_WIDTH = 324
+const BAG_WIDTH = 320
 
-export const BannerWrapper = styled(Box)`
+export const CollectionBannerLoading = () => <Box height="full" width="full" className={styles.loadingBanner} />
+
+const CollectionContainer = styled(Column)`
+  width: 100%;
+`
+
+export const BannerWrapper = styled.div<{ bagExpanded: boolean }>`
   height: 100px;
+  margin-top: 16px;
+  margin-left: 20px;
+  margin-right: 20px;
+  max-width: ${({ bagExpanded }) => (bagExpanded ? `calc(100% - ${BAG_WIDTH + 56}px)` : `100%`)};
+
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
     height: 288px;
   }
 `
-
-export const CollectionBannerLoading = () => <Box height="full" width="full" className={styles.loadingBanner} />
 
 const CollectionDescriptionSection = styled(Column)`
   ${styles.ScreenBreakpointsPaddings}
@@ -119,10 +129,10 @@ const Collection = () => {
         properties={{ collection_address: contractAddress, chain_id: chainId, is_activity_view: isActivityToggled }}
         shouldLogImpression
       >
-        <Column width="full">
+        <CollectionContainer>
           {contractAddress ? (
             <>
-              <BannerWrapper width="full">
+              <BannerWrapper bagExpanded={isBagExpanded}>
                 <Box
                   as={collectionStats?.bannerImageUrl ? 'img' : 'div'}
                   height="full"
@@ -134,6 +144,7 @@ const Collection = () => {
                   }
                   className={styles.bannerImage}
                   background="none"
+                  borderRadius="16"
                 />
               </BannerWrapper>
               <CollectionDescriptionSection>
@@ -209,7 +220,7 @@ const Collection = () => {
             // TODO: Put no collection asset page here
             <div className={styles.noCollectionAssets}>No collection assets exist at this address</div>
           )}
-        </Column>
+        </CollectionContainer>
       </Trace>
       <MobileHoverBag />
     </>
