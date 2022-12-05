@@ -1,3 +1,4 @@
+import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { useCallback, useState } from 'react'
 import { Keyboard } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
@@ -51,6 +52,8 @@ export function TokenOptionItem({ option, showNetworkPill, onPress }: OptionProp
   return (
     <>
       <TouchableArea
+        hapticFeedback
+        hapticStyle={ImpactFeedbackStyle.Light}
         opacity={safetyLevel === SafetyLevel.Blocked ? 0.5 : 1}
         testID={`token-option-${currency.chainId}-${currency.symbol}`}
         onPress={onPressTokenOption}>
