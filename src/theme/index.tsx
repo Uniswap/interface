@@ -88,7 +88,7 @@ function getSettings(darkMode: boolean) {
   }
 }
 
-export function getTheme(darkMode: boolean) {
+function getTheme(darkMode: boolean) {
   return {
     darkMode,
     ...(darkMode ? darkTheme : lightTheme),
