@@ -46,6 +46,8 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
 
   const { data, loading, refetch, error } = useSelectWalletScreenQuery({
     variables: { ownerAddresses: addresses },
+    // Wait until all the addresses have been added to the store before querying. Because the accounts get added one at a time but we want to just make one call
+    // to get all the balances.
     skip: isLoadingAccounts,
   })
 
