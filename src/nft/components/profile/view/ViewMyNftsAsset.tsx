@@ -72,7 +72,6 @@ export const ViewMyNftsAsset = ({
   const onCardClick = () => handleSelect(isSelected)
 
   const handleSelect = (removeAsset: boolean) => {
-    removeAsset ? removeSellAsset(asset) : selectSellAsset(asset)
     if (removeAsset) {
       removeSellAsset(asset)
     } else {
