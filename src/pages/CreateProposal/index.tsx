@@ -241,7 +241,7 @@ ${bodyValue}
   return (
     <Trace page={PageName.VOTE_PAGE} shouldLogImpression>
       <PageWrapper>
-        <AppBody {...{ maxWidth: '800px' }}>
+        <AppBody $maxWidth="800px">
           <CreateProposalTabs />
           <CreateProposalWrapper>
             <BlueCard>
