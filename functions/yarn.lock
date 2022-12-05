@@ -24,7 +24,7 @@
   dependencies:
     text-decoding "^1.0.0"
 
-"@firebase/app-types@0.8.1":
+"@firebase/app-types@0.8.1", "@firebase/app-types@^0.8.1":
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/@firebase/app-types/-/app-types-0.8.1.tgz#4c7f916281aed570581fc667e3eb6cc730119a95"
   integrity sha512-p75Ow3QhB82kpMzmOntv866wH9eZ3b4+QbUY+8/DA5Zzdf1c8Nsk8B7kbFpzJt4wwHMdy5LTF5YUnoTc1JiWkw==
@@ -73,6 +73,11 @@
     "@firebase/util" "1.7.3"
     faye-websocket "0.11.4"
     tslib "^2.1.0"
+
+"@firebase/functions-types@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@firebase/functions-types/-/functions-types-0.5.1.tgz#7633fd2ade99c1b8c0c5037fa369fc91849e3b15"
+  integrity sha512-olEJnTuULM/ws0pwhHA0Ze5oIdpFbZsdBGCaBhyL4pm1NUR4Moh0cyAsqr+VtqHCNMGquHU1GJ77qITkoonp0w==
 
 "@firebase/logger@0.3.4":
   version "0.3.4"
@@ -285,6 +290,13 @@
   version "3.4.35"
   resolved "https://registry.yarnpkg.com/@types/connect/-/connect-3.4.35.tgz#5fcf6ae445e4021d1fc2219a4873cc73a3bb2ad1"
   integrity sha512-cdeYyv4KWoEgpBISTxWvqYsVy444DOqehiF3fM3ne10AmJ62RSyNkUnxMJXHQWRQQX2eR94m5y1IZyDwBjV9FQ==
+  dependencies:
+    "@types/node" "*"
+
+"@types/cors@^2.8.13":
+  version "2.8.13"
+  resolved "https://registry.yarnpkg.com/@types/cors/-/cors-2.8.13.tgz#b8ade22ba455a1b8cb3b5d3f35910fd204f84f94"
+  integrity sha512-RG8AStHlUiV5ysZQKq97copd2UmVYw3/pRMLefISZ3S1hK104Cwm7iLQ3fTKx+lsUH2CE8FlLaYeEA2LSeqYUA==
   dependencies:
     "@types/node" "*"
 
