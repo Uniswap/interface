@@ -58,6 +58,7 @@ initializeAnalytics(ANALYTICS_DUMMY_KEY, OriginApplication.INTERFACE, {
   defaultEventName: EventName.PAGE_VIEWED,
   commitHash: COMMIT_HASH,
   isProductionEnv: isProductionEnv(),
+  debug: true,
 })
 
 const AppWrapper = styled.div`

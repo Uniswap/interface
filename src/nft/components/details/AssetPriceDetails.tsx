@@ -1,3 +1,6 @@
+import { useTrace } from '@uniswap/analytics'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { EventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { OpacityHoverState } from 'components/Common'
 import { useNftBalanceQuery } from 'graphql/data/nft/NftBalance'
@@ -212,11 +215,17 @@ const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
   const listing = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
   const cheapestOrder = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
   const expirationDate = cheapestOrder ? new Date(cheapestOrder.endAt) : undefined
+  const trace = useTrace()
 
   const goToListPage = () => {
     resetSellAssets()
     navigate('/nfts/profile')
     selectSellAsset(walletAsset)
+    sendAnalyticsEvent(EventName.NFT_SELL_ITEM_ADDED, {
+      collection_address: asset.address,
+      token_id: asset.tokenId,
+      ...trace,
+    })
     setSellPageState(ProfilePageStateType.LISTING)
   }
 
