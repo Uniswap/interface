@@ -79,7 +79,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
     <>
       {userPoolBalance && JSBI.greaterThan(userPoolBalance.quotient, JSBI.BigInt(0)) ? (
         <GrayCard border={border}>
-          <AutoColumn gap="12px">
+          <AutoColumn gap="md">
             <FixedHeightRow>
               <RowFixed>
                 <Text fontWeight={500} fontSize={16}>
@@ -195,7 +195,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
   return (
     <StyledPositionCard border={border} bgColor={backgroundColor}>
       <CardNoise />
-      <AutoColumn gap="12px">
+      <AutoColumn gap="md">
         <FixedHeightRow>
           <AutoRow gap="8px" style={{ marginLeft: '8px' }}>
             <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={20} />
@@ -227,7 +227,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
         </FixedHeightRow>
 
         {showMore && (
-          <AutoColumn gap="8px">
+          <AutoColumn gap="sm">
             <FixedHeightRow>
               <Text fontSize={16} fontWeight={500}>
                 <Trans>Your total pool tokens:</Trans>

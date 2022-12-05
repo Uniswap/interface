@@ -24,7 +24,7 @@ export const ProposalSubmissionModal = ({
     <Modal isOpen={isOpen} onDismiss={onDismiss}>
       {!hash ? (
         <LoadingView onDismiss={onDismiss}>
-          <AutoColumn gap="12px" justify="center">
+          <AutoColumn gap="md" justify="center">
             <ThemedText.DeprecatedLargeHeader>
               <Trans>Submitting Proposal</Trans>
             </ThemedText.DeprecatedLargeHeader>
@@ -32,7 +32,7 @@ export const ProposalSubmissionModal = ({
         </LoadingView>
       ) : (
         <SubmittedView onDismiss={onDismiss} hash={hash}>
-          <AutoColumn gap="12px" justify="center">
+          <AutoColumn gap="md" justify="center">
             <Text fontWeight={500} fontSize={20} textAlign="center">
               <Trans>Proposal Submitted</Trans>
             </Text>

@@ -123,7 +123,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
             <CustomLightSpinner src={Circle} alt="loader" size="90px" />
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify="center">
-            <AutoColumn gap="12px" justify="center">
+            <AutoColumn gap="md" justify="center">
               <ThemedText.DeprecatedLargeHeader>
                 <Trans>Submitting Vote</Trans>
               </ThemedText.DeprecatedLargeHeader>
@@ -144,7 +144,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
             <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.deprecated_primary1} />
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify="center">
-            <AutoColumn gap="12px" justify="center">
+            <AutoColumn gap="md" justify="center">
               <ThemedText.DeprecatedLargeHeader>
                 <Trans>Transaction Submitted</Trans>
               </ThemedText.DeprecatedLargeHeader>

@@ -189,7 +189,6 @@ export default function Swap() {
 
   // for expert mode
   const [isExpertMode] = useExpertModeManager()
-
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
   const {
@@ -496,7 +495,6 @@ export default function Swap() {
   const showDetailsDropdown = Boolean(
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
   )
-
   return (
     <Trace page={PageName.SWAP_PAGE} shouldLogImpression>
       <>
@@ -578,7 +576,7 @@ export default function Swap() {
                 </TraceEvent>
               </ArrowWrapper>
             </div>
-            <AutoColumn gap="12px">
+            <AutoColumn gap="md">
               <div>
                 <OutputSwapSection showDetailsDropdown={showDetailsDropdown}>
                   <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
