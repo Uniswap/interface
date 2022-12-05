@@ -22,12 +22,14 @@ const ethereumInfo: EVMNetworkInfo = {
   iconSelected: NOT_SUPPORT,
   iconDarkSelected: NOT_SUPPORT,
   classicClient: createClient(
-    'https://ethereum-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-ethereum',
+    'https://ethereumpow-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-ethereumpow',
   ),
   elasticClient: createClient(
-    'https://ethereum-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-elastic-ethereum',
+    'https://ethereumpow-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-elastic-ethereumpow',
   ),
-  blockClient: createClient('https://ethereum-graph.kyberengineering.io/subgraphs/name/kybernetwork/ethereum-blocks'),
+  blockClient: createClient(
+    'https://ethereumpow-graph.kyberengineering.io/subgraphs/name/kybernetwork/ethereumpow-blocks',
+  ),
   etherscanUrl: 'https://www.oklink.com/en/ethw',
   etherscanName: 'Ethwscan',
   tokenListUrl: `${KS_SETTING_API}/v1/tokens?chainIds=${ChainId.ETHW}&isWhitelisted=${true}`,
