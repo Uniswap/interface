@@ -37,8 +37,7 @@ import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import { TransactionType } from '../../state/transactions/types'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { currencyId } from '../../utils/currencyId'
-import AppBody from '../AppBody'
-import { ResponsiveHeaderText, SmallMaxButton, Wrapper } from './styled'
+import { Body, ResponsiveHeaderText, SmallMaxButton, Wrapper } from './styled'
 
 const DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
 
@@ -290,7 +289,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         )}
         pendingText={pendingText}
       />
-      <AppBody>
+      <Body>
         <AddRemoveTabs
           creating={false}
           adding={false}
@@ -425,7 +424,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
             <Loader />
           )}
         </Wrapper>
-      </AppBody>
+      </Body>
     </AutoColumn>
   )
 }
