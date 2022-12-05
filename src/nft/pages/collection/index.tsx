@@ -4,10 +4,10 @@ import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import { OpacityHoverState } from 'components/Common'
 import Row from 'components/Row'
+import { LoadingBubble } from 'components/Tokens/loading'
 import { useLoadAssetsQuery } from 'graphql/data/nft/Asset'
 import { useCollectionQuery, useLoadCollectionQuery } from 'graphql/data/nft/Collection'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
-import { Box } from 'nft/components/Box'
 import { Activity, ActivitySwitcher, CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
 import { CollectionNftsAndMenuLoading } from 'nft/components/collection/CollectionNfts'
 import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
@@ -21,11 +21,20 @@ import { animated, easings, useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { TRANSITION_DURATIONS } from 'theme/styles'
+import { Z_INDEX } from 'theme/zIndex'
 
 const FILTER_WIDTH = 332
 const BAG_WIDTH = 320
 
-export const CollectionBannerLoading = () => <Box height="full" width="full" className={styles.loadingBanner} />
+export const CollectionBannerLoading = styled(LoadingBubble)`
+  width: 100%;
+  height: 100%;
+  border-radius: 0px;
+
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    border-radius: 16px;
+  }
+`
 
 const CollectionContainer = styled(Column)`
   width: 100%;
@@ -53,8 +62,33 @@ export const BannerWrapper = styled.div`
   }
 `
 
+const Banner = styled.div<{ src: string }>`
+  height: 100%;
+  width: 100%;
+  background-image: url(${({ src }) => src});
+  object-fit: cover;
+
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    border-radius: 16px;
+  }
+`
+
 const CollectionDescriptionSection = styled(Column)`
   ${styles.ScreenBreakpointsPaddings}
+`
+
+const FiltersContainer = styled.div<{ isMobile: boolean; isFiltersExpanded: boolean }>`
+  position: ${({ isMobile }) => (isMobile ? 'fixed' : 'sticky')};
+  left: 0px;
+  width: ${({ isMobile }) => (isMobile ? '100%' : '0px')};
+  height: ${({ isMobile, isFiltersExpanded }) => (isMobile && isFiltersExpanded ? '100%' : undefined)};
+  background: ${({ isMobile }) => (isMobile ? 'backgroundBackdrop' : undefined)};
+  z-index: ${Z_INDEX.modalBackdrop};
+  overflow-y: ${({ isMobile }) => (isMobile ? 'scroll' : undefined)};
+
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    top: 72px;
+  }
 `
 
 const MobileFilterHeader = styled(Row)`
@@ -147,18 +181,10 @@ const Collection = () => {
           {contractAddress ? (
             <>
               <BannerWrapper>
-                <Box
-                  as={collectionStats?.bannerImageUrl ? 'img' : 'div'}
-                  height="full"
-                  width="full"
+                <Banner
                   src={
-                    collectionStats?.bannerImageUrl
-                      ? `${collectionStats.bannerImageUrl}?w=${window.innerWidth}`
-                      : undefined
+                    collectionStats?.bannerImageUrl ? `${collectionStats.bannerImageUrl}?w=${window.innerWidth}` : ''
                   }
-                  className={styles.bannerImage}
-                  background="none"
-                  borderRadius={isMobile ? '0' : '16'}
                 />
               </BannerWrapper>
               <CollectionDescriptionSection>
@@ -175,16 +201,7 @@ const Collection = () => {
                 />
               </CollectionDescriptionSection>
               <CollectionDisplaySection>
-                <Box
-                  position={isMobile ? 'fixed' : 'sticky'}
-                  top={{ sm: '0', md: '72' }}
-                  left="0"
-                  width={isMobile ? 'full' : '0'}
-                  height={isMobile && isFiltersExpanded ? 'full' : undefined}
-                  background={isMobile ? 'backgroundBackdrop' : undefined}
-                  zIndex="modalBackdrop"
-                  overflowY={isMobile ? 'scroll' : undefined}
-                >
+                <FiltersContainer isMobile={isMobile} isFiltersExpanded={isFiltersExpanded}>
                   {isFiltersExpanded && (
                     <>
                       {isMobile && (
@@ -198,7 +215,7 @@ const Collection = () => {
                       <Filters traitsByGroup={collectionStats?.traits ?? {}} />
                     </>
                   )}
-                </Box>
+                </FiltersContainer>
 
                 <AnimatedCollectionAssetsContainer
                   hideUnderneath={isMobile && (isFiltersExpanded || isBagExpanded)}
@@ -230,7 +247,6 @@ const Collection = () => {
               </CollectionDisplaySection>
             </>
           ) : (
-            // TODO: Put no collection asset page here
             <div className={styles.noCollectionAssets}>No collection assets exist at this address</div>
           )}
         </AnimatedCollectionContainer>
