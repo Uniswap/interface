@@ -10,7 +10,7 @@ const oldestBlockMapAtom = atomWithImmer<{ [chainId: number]: number }>({})
 
 const DEFAULT_MAX_BLOCK_AGE = 10
 
-export function useGetIsValidBlock(maxBlockAge = DEFAULT_MAX_BLOCK_AGE): (block: number) => boolean {
+function useGetIsValidBlock(maxBlockAge = DEFAULT_MAX_BLOCK_AGE): (block: number) => boolean {
   const { chainId } = useWeb3React()
   const currentBlock = useBlockNumber()
   const oldestBlockMap = useAtomValue(oldestBlockMapAtom)

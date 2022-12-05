@@ -4,7 +4,7 @@ import uriToHttp from 'lib/utils/uriToHttp'
 import { useCallback, useEffect, useState } from 'react'
 import { isAddress } from 'utils'
 
-export const BAD_SRCS: { [tokenAddress: string]: true } = {}
+const BAD_SRCS: { [tokenAddress: string]: true } = {}
 
 // Converts uri's into fetchable urls
 function parseLogoSources(uris: string[]) {

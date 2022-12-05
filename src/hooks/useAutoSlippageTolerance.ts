@@ -13,9 +13,9 @@ import { InterfaceTrade } from 'state/routing/types'
 import useGasPrice from './useGasPrice'
 import useStablecoinPrice, { useStablecoinValue } from './useStablecoinPrice'
 
-export const V3_SWAP_DEFAULT_SLIPPAGE = new Percent(50, 10_000) // .50%
+const V3_SWAP_DEFAULT_SLIPPAGE = new Percent(50, 10_000) // .50%
 const ONE_TENTHS_PERCENT = new Percent(10, 10_000) // .10%
-export const DEFAULT_AUTO_SLIPPAGE = ONE_TENTHS_PERCENT
+const DEFAULT_AUTO_SLIPPAGE = ONE_TENTHS_PERCENT
 const GAS_ESTIMATE_BUFFER = new Percent(10, 100) // 10%
 
 // Base costs regardless of how many hops in the route
