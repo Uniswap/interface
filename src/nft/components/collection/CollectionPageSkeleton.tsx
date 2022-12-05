@@ -26,7 +26,7 @@ export const CollectionPageSkeleton = () => {
   const isMobile = useIsMobile()
   return (
     <StyledColumn>
-      <BannerWrapper bagExpanded={false}>
+      <BannerWrapper>
         <CollectionBannerLoading />
       </BannerWrapper>
       <CollectionDescriptionSection>

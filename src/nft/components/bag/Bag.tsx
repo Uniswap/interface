@@ -59,6 +59,7 @@ const BagContainer = styled.div<{ raiseZIndex: boolean }>`
   z-index: ${({ raiseZIndex }) => (raiseZIndex ? Z_INDEX.modalOverTooltip : 3)};
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    right: 0px;
     top: 0px;
     width: 100%;
     height: 100%;

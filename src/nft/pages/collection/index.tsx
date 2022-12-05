@@ -7,7 +7,7 @@ import Row from 'components/Row'
 import { useLoadAssetsQuery } from 'graphql/data/nft/Asset'
 import { useCollectionQuery, useLoadCollectionQuery } from 'graphql/data/nft/Collection'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
-import { AnimatedBox, Box } from 'nft/components/Box'
+import { Box } from 'nft/components/Box'
 import { Activity, ActivitySwitcher, CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
 import { CollectionNftsAndMenuLoading } from 'nft/components/collection/CollectionNfts'
 import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
@@ -17,7 +17,7 @@ import * as styles from 'nft/pages/collection/index.css'
 import { GenieCollection } from 'nft/types'
 import { Suspense, useEffect } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { easings, useSpring } from 'react-spring'
+import { animated, easings, useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { TRANSITION_DURATIONS } from 'theme/styles'
@@ -29,14 +29,24 @@ export const CollectionBannerLoading = () => <Box height="full" width="full" cla
 
 const CollectionContainer = styled(Column)`
   width: 100%;
+  align-self: start;
+  will-change: width;
 `
 
-export const BannerWrapper = styled.div<{ bagExpanded: boolean }>`
+const AnimatedCollectionContainer = animated(CollectionContainer)
+
+const CollectionAssetsContainer = styled.div<{ hideUnderneath: boolean }>`
+  position: ${({ hideUnderneath }) => (hideUnderneath ? 'fixed' : 'static')};
+`
+
+const AnimatedCollectionAssetsContainer = animated(CollectionAssetsContainer)
+
+export const BannerWrapper = styled.div`
   height: 100px;
+  max-width: 100%;
   margin-top: 16px;
   margin-left: 20px;
   margin-right: 20px;
-  max-width: ${({ bagExpanded }) => (bagExpanded ? `calc(100% - ${BAG_WIDTH + 56}px)` : `100%`)};
 
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
     height: 288px;
@@ -87,16 +97,16 @@ const Collection = () => {
 
   const collectionStats = useCollectionQuery(contractAddress as string)
 
-  const { gridX, gridWidthOffset } = useSpring({
-    gridX: isFiltersExpanded && !isMobile ? FILTER_WIDTH : 0,
-    gridWidthOffset:
-      isFiltersExpanded && !isMobile
-        ? isBagExpanded
-          ? BAG_WIDTH + FILTER_WIDTH
-          : FILTER_WIDTH
-        : isBagExpanded && !isMobile
-        ? BAG_WIDTH
-        : 0,
+  const { CollectionContainerWidthChange } = useSpring({
+    CollectionContainerWidthChange: isBagExpanded && !isMobile ? BAG_WIDTH + 16 : 0,
+    config: {
+      duration: TRANSITION_DURATIONS.medium,
+      easing: easings.easeOutSine,
+    },
+  })
+
+  const { gridWidthOffset } = useSpring({
+    gridWidthOffset: isFiltersExpanded && !isMobile ? FILTER_WIDTH : 0,
     config: {
       duration: TRANSITION_DURATIONS.medium,
       easing: easings.easeOutSine,
@@ -129,10 +139,14 @@ const Collection = () => {
         properties={{ collection_address: contractAddress, chain_id: chainId, is_activity_view: isActivityToggled }}
         shouldLogImpression
       >
-        <CollectionContainer>
+        <AnimatedCollectionContainer
+          style={{
+            width: CollectionContainerWidthChange.to((x) => `calc(100% - ${x as number}px)`),
+          }}
+        >
           {contractAddress ? (
             <>
-              <BannerWrapper bagExpanded={isBagExpanded}>
+              <BannerWrapper>
                 <Box
                   as={collectionStats?.bannerImageUrl ? 'img' : 'div'}
                   height="full"
@@ -186,11 +200,10 @@ const Collection = () => {
                   )}
                 </Box>
 
-                {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
-                <AnimatedBox
-                  position={isMobile && (isFiltersExpanded || isBagExpanded) ? 'fixed' : 'static'}
+                <AnimatedCollectionAssetsContainer
+                  hideUnderneath={isMobile && (isFiltersExpanded || isBagExpanded)}
                   style={{
-                    transform: gridX.to((x) => `translate(${x as number}px)`),
+                    transform: gridWidthOffset.to((x) => `translate(${x as number}px)`),
                     width: gridWidthOffset.to((x) => `calc(100% - ${x as number}px)`),
                   }}
                 >
@@ -213,14 +226,14 @@ const Collection = () => {
                           />
                         </Suspense>
                       )}
-                </AnimatedBox>
+                </AnimatedCollectionAssetsContainer>
               </CollectionDisplaySection>
             </>
           ) : (
             // TODO: Put no collection asset page here
             <div className={styles.noCollectionAssets}>No collection assets exist at this address</div>
           )}
-        </CollectionContainer>
+        </AnimatedCollectionContainer>
       </Trace>
       <MobileHoverBag />
     </>
