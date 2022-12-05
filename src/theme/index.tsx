@@ -49,6 +49,10 @@ const opacities = {
   enabled: 1,
 }
 
+const fonts = {
+  code: 'courier, courier new, serif',
+}
+
 const deprecated_mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(
   MEDIA_WIDTHS
 ).reduce((accumulator, size) => {
@@ -63,10 +67,12 @@ const deprecated_mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: ty
 function getSettings(darkMode: boolean) {
   return {
     grids: {
-      sm: 8,
-      md: 12,
-      lg: 24,
+      sm: '8px',
+      md: '12px',
+      lg: '24px',
+      xl: '32px',
     },
+    fonts,
 
     // shadows
     shadow1: darkMode ? '#000' : '#2F80ED',
