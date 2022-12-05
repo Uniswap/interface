@@ -20,24 +20,22 @@ const SMALL_CARD_ICON_SIZE = 32
 
 const Icon = ({ href, children }: { href?: string; children: ReactNode }) => {
   return (
-    <>
-      <Box
-        as={href ? 'a' : 'div'}
-        href={href ?? undefined}
-        target={href ? '_blank' : undefined}
-        rel={href ? 'noopener noreferrer' : undefined}
-        display="flex"
-        flexDirection="column"
-        color="textPrimary"
-        background="none"
-        border="none"
-        justifyContent="center"
-        textAlign="center"
-        marginRight="12"
-      >
-        {children}
-      </Box>
-    </>
+    <Box
+      as={href ? 'a' : 'div'}
+      href={href ?? undefined}
+      target={href ? '_blank' : undefined}
+      rel={href ? 'noopener noreferrer' : undefined}
+      display="flex"
+      flexDirection="column"
+      color="textPrimary"
+      background="none"
+      border="none"
+      justifyContent="center"
+      textAlign="center"
+      marginRight="12"
+    >
+      {children}
+    </Box>
   )
 }
 
