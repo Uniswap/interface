@@ -2,12 +2,13 @@ import { Trans } from '@lingui/macro'
 import * as Sentry from '@sentry/react'
 import { ButtonLight, ButtonPrimary } from 'components/Button'
 import { ChevronUpIcon } from 'nft/components/icons'
+import { useIsMobile } from 'nft/hooks'
 import React, { PropsWithChildren, useState } from 'react'
 import { Copy } from 'react-feather'
 import styled from 'styled-components/macro'
 
 import { CopyToClipboard, ExternalLink, ThemedText } from '../../theme'
-import { AutoColumn } from '../Column'
+import { Column } from '../Column'
 
 const FallbackWrapper = styled.div`
   display: flex;
@@ -16,7 +17,7 @@ const FallbackWrapper = styled.div`
 `
 
 const BodyWrapper = styled.div<{ margin?: string }>`
-  width: 500px;
+  width: min(100%, 500px);
   margin: auto;
   padding: 1rem;
 `
@@ -52,6 +53,8 @@ const Code = styled.code`
   width: 100%;
   color: ${({ theme }) => theme.textPrimary};
   font-family: courier, courier new, serif;
+  overflow: scroll;
+  max-height: calc(100vh - 450px);
 `
 
 const Separator = styled.div`
@@ -62,7 +65,6 @@ const CodeBlockWrapper = styled.div`
   display: flex;
   flex-direction: column;
   background: ${({ theme }) => theme.backgroundModule};
-  overflow-y: scroll;
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 24px;
@@ -89,30 +91,39 @@ const CodeTitle = styled.div`
   display: flex;
   gap: 14px;
   align-items: center;
+  word-break: break-word;
 `
 
 const Fallback = ({ error, eventId }: { error: Error; eventId: string | null }) => {
   const [isExpanded, setExpanded] = useState(false)
+  const isMobile = useIsMobile()
+
+  const errorId = eventId || 'unknown-error'
+
+  // @todo: ThemedText components should be responsive by default
+  const [Title, Description] = isMobile
+    ? [ThemedText.HeadlineSmall, ThemedText.BodySmall]
+    : [ThemedText.HeadlineLarge, ThemedText.BodySecondary]
 
   return (
     <FallbackWrapper>
       <BodyWrapper>
-        <AutoColumn gap="xl">
-          <AutoColumn gap="sm">
-            <ThemedText.HeadlineLarge textAlign="center">
+        <Column gap="xl">
+          <Column gap="sm">
+            <Title textAlign="center">
               <Trans>Something went wrong</Trans>
-            </ThemedText.HeadlineLarge>
-            <ThemedText.BodySecondary textAlign="center">
+            </Title>
+            <Description textAlign="center" color="textSecondary">
               <Trans>
                 Sorry, an error occured while processing your request. If you request support, be sure to provide your
                 error ID.
               </Trans>
-            </ThemedText.BodySecondary>
-          </AutoColumn>
+            </Description>
+          </Column>
           <CodeBlockWrapper>
             <CodeTitle>
-              <ThemedText.SubHeader fontWeight={500}>Error ID: {eventId}</ThemedText.SubHeader>
-              <CopyToClipboard toCopy="4325">
+              <ThemedText.SubHeader fontWeight={500}>Error ID: {errorId}</ThemedText.SubHeader>
+              <CopyToClipboard toCopy={errorId}>
                 <CopyIcon />
               </CopyToClipboard>
             </CodeTitle>
@@ -140,7 +151,7 @@ const Fallback = ({ error, eventId }: { error: Error; eventId: string | null }) 
               </SmallButtonLight>
             </ExternalLink>
           </StretchedRow>
-        </AutoColumn>
+        </Column>
       </BodyWrapper>
     </FallbackWrapper>
   )

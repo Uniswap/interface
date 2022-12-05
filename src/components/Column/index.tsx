@@ -1,9 +1,17 @@
 import styled from 'styled-components/macro'
 
-const Column = styled.div`
+type Gap = 'sm' | 'md' | 'lg' | 'xl' | string
+
+const getGapValue = (gap: Gap) =>
+  (gap === 'sm' && '8px') || (gap === 'md' && '12px') || (gap === 'lg' && '24px') || (gap === 'xl' && '32px') || gap
+
+export const Column = styled.div<{
+  gap?: Gap
+}>`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  gap: ${({ gap }) => gap && getGapValue(gap)};
 `
 export const ColumnCenter = styled(Column)`
   width: 100%;
@@ -11,13 +19,12 @@ export const ColumnCenter = styled(Column)`
 `
 
 export const AutoColumn = styled.div<{
-  gap?: 'sm' | 'md' | 'lg' | 'xl' | string
+  gap?: Gap
   justify?: 'stretch' | 'center' | 'start' | 'end' | 'flex-start' | 'flex-end' | 'space-between'
 }>`
   display: grid;
   grid-auto-rows: auto;
-  grid-row-gap: ${({ gap }) =>
-    (gap === 'sm' && '8px') || (gap === 'md' && '12px') || (gap === 'lg' && '24px') || (gap === 'xl' && '32px') || gap};
+  grid-row-gap: ${({ gap }) => gap && getGapValue(gap)};
   justify-items: ${({ justify }) => justify && justify};
 `
 
