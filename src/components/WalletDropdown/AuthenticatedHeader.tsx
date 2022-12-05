@@ -23,7 +23,7 @@ import styled, { css } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { shortenAddress } from '../../nft/utils/address'
-import { useCloseModal, useToggleModal } from '../../state/application/hooks'
+import { useCloseModal, useOpenModal, useToggleModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from '../Button'
@@ -143,7 +143,6 @@ const AuthenticatedHeader = () => {
   } = getChainInfoOrDefault(chainId ? chainId : SupportedChainId.MAINNET)
   const navigate = useNavigate()
   const closeModal = useCloseModal(ApplicationModal.WALLET_DROPDOWN)
-  const fiatOnrampFlag = useFiatOnrampFlag()
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const resetSellAssets = useSellAsset((state) => state.reset)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
@@ -170,13 +169,16 @@ const AuthenticatedHeader = () => {
     return price * balance
   }, [balanceString, nativeCurrencyPrice])
 
-  const navigateToProfile = () => {
+  const navigateToProfile = useCallback(() => {
     resetSellAssets()
     setSellPageState(ProfilePageStateType.VIEWING)
     clearCollectionFilters()
     navigate('/nfts/profile')
     closeModal()
-  }
+  }, [clearCollectionFilters, closeModal, navigate, resetSellAssets, setSellPageState])
+
+  const fiatOnrampFlag = useFiatOnrampFlag()
+  const openFiatOnrampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
 
   return (
     <AuthenticatedHeaderWrapper>
@@ -222,7 +224,7 @@ const AuthenticatedHeader = () => {
           <Trans>View and sell NFTs</Trans>
         </ProfileButton>
         {fiatOnrampFlag === BaseVariant.Enabled && (
-          <BuyCryptoButton size={ButtonSize.medium} emphasis={ButtonEmphasis.medium} onClick={openNftModal}>
+          <BuyCryptoButton size={ButtonSize.medium} emphasis={ButtonEmphasis.medium} onClick={openFiatOnrampModal}>
             <CreditCard /> <Trans>Buy crypto</Trans>
           </BuyCryptoButton>
         )}
