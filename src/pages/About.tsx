@@ -90,14 +90,6 @@ const ContentWrapper = styled.span`
   }
 `
 
-// const MobileOnlyLineBreak = styled.br`
-//   display: flex;
-
-//   @media screen and (min-width: ${MOBILE_BREAKPOINT}px) {
-//     display: none;
-//   }
-// `
-
 const SmallCardContainer = styled.div`
   display: grid;
   gap: 12px;
