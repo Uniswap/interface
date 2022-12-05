@@ -44,11 +44,11 @@ const AnimatedCollectionAssetsContainer = animated(CollectionAssetsContainer)
 export const BannerWrapper = styled.div`
   height: 100px;
   max-width: 100%;
-  margin-top: 16px;
-  margin-left: 20px;
-  margin-right: 20px;
 
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    margin-top: 16px;
+    margin-left: 20px;
+    margin-right: 20px;
     height: 288px;
   }
 `
@@ -158,7 +158,7 @@ const Collection = () => {
                   }
                   className={styles.bannerImage}
                   background="none"
-                  borderRadius="16"
+                  borderRadius={isMobile ? '0' : '16'}
                 />
               </BannerWrapper>
               <CollectionDescriptionSection>
