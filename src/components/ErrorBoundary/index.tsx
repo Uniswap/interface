@@ -1,10 +1,12 @@
 import { Trans } from '@lingui/macro'
 import * as Sentry from '@sentry/react'
 import { ButtonLight, ButtonPrimary } from 'components/Button'
-import React, { PropsWithChildren } from 'react'
+import { ChevronUpIcon } from 'nft/components/icons'
+import React, { PropsWithChildren, useState } from 'react'
+import { Copy } from 'react-feather'
 import styled from 'styled-components/macro'
 
-import { ExternalLink, ThemedText } from '../../theme'
+import { CopyToClipboard, ExternalLink, ThemedText } from '../../theme'
 import { AutoColumn } from '../Column'
 
 const FallbackWrapper = styled.div`
@@ -52,18 +54,46 @@ const Code = styled.code`
   font-family: courier, courier new, serif;
 `
 
+const Separator = styled.div`
+  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
+`
+
 const CodeBlockWrapper = styled.div`
   display: flex;
+  flex-direction: column;
   background: ${({ theme }) => theme.backgroundModule};
   overflow-y: scroll;
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 24px;
-  padding: 18px 24px;
-  color: ${({ theme }) => theme.deprecated_text1};
+  padding: 24px;
+  gap: 10px;
+  color: ${({ theme }) => theme.textPrimary};
+`
+
+const ShowMoreButton = styled.div`
+  display: flex;
+  cursor: pointer;
+  justify-content: space-between;
+`
+
+const CopyIcon = styled(Copy)`
+  stroke: ${({ theme }) => theme.textSecondary};
+`
+
+const ShowMoreIcon = styled(ChevronUpIcon)<{ $isExpanded?: boolean }>`
+  transform: ${({ $isExpanded }) => ($isExpanded ? 'none' : 'rotate(180deg)')};
+`
+
+const CodeTitle = styled.div`
+  display: flex;
+  gap: 14px;
+  align-items: center;
 `
 
 const Fallback = ({ error }: { error: Error }) => {
+  const [isExpanded, setExpanded] = useState(false)
+
   return (
     <FallbackWrapper>
       <BodyWrapper>
@@ -80,7 +110,25 @@ const Fallback = ({ error }: { error: Error }) => {
             </ThemedText.BodySecondary>
           </AutoColumn>
           <CodeBlockWrapper>
-            <Code>{error.stack}</Code>
+            <CodeTitle>
+              <ThemedText.SubHeader fontWeight={500}>Error ID: 4325</ThemedText.SubHeader>
+              <CopyToClipboard toCopy="4325">
+                <CopyIcon />
+              </CopyToClipboard>
+            </CodeTitle>
+            <Separator />
+            {isExpanded && (
+              <>
+                <Code>{error.stack}</Code>
+                <Separator />
+              </>
+            )}
+            <ShowMoreButton onClick={() => setExpanded((s) => !s)}>
+              <ThemedText.Link color="textSecondary">
+                <Trans>{isExpanded ? 'Show less' : 'Show more'}</Trans>
+              </ThemedText.Link>
+              <ShowMoreIcon $isExpanded={isExpanded} secondaryWidth="20" secondaryHeight="20" />
+            </ShowMoreButton>
           </CodeBlockWrapper>
           <StretchedRow>
             <SmallButtonPrimary onClick={() => window.location.reload()}>
