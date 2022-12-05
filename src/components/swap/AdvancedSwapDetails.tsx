@@ -64,7 +64,7 @@ export function AdvancedSwapDetails({
 
   return !trade ? null : (
     <StyledCard>
-      <AutoColumn gap="8px">
+      <AutoColumn gap="sm">
         <RowBetween>
           <RowFixed>
             <MouseoverTooltip

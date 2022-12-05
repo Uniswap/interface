@@ -7,7 +7,7 @@ import { RowBetween } from '../Row'
 
 type ButtonProps = Omit<ButtonPropsOriginal, 'css'>
 
-export const BaseButton = styled(RebassButton)<
+const BaseButton = styled(RebassButton)<
   {
     padding?: string
     width?: string

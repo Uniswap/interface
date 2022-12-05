@@ -194,7 +194,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
             <Row
               marginLeft="72"
               cursor="pointer"
-              color="genieBlue"
+              color="accentAction"
               onClick={() => {
                 setShowWarning(false)
                 setCanContinue(true)
@@ -210,7 +210,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
       <Box
         as="button"
         border="none"
-        backgroundColor="genieBlue"
+        backgroundColor="accentAction"
         cursor={
           [ListingStatus.APPROVED, ListingStatus.PENDING, ListingStatus.SIGNING].includes(listingStatus) ||
           disableListButton

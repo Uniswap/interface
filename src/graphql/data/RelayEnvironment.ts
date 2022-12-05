@@ -50,7 +50,7 @@ const network = new RelayNetworkLayer(
   { noThrow: true }
 )
 
-export const CachingEnvironment = new Environment({
+const CachingEnvironment = new Environment({
   network,
   store: new Store(new RecordSource(), { gcReleaseBufferSize, queryCacheExpirationTime }),
 })

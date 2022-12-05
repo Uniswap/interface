@@ -4,7 +4,7 @@ import { buttonTextMedium } from 'nft/css/common.css'
 import { loadingBlock } from 'nft/css/loading.css'
 import { css } from 'styled-components/macro'
 
-import { sprinkles, vars } from '../../css/sprinkles.css'
+import { sprinkles } from '../../css/sprinkles.css'
 
 export const bannerImage = style({ objectFit: 'cover' })
 
@@ -26,25 +26,6 @@ export const activitySwitcherToggle = style([
   sprinkles({
     color: 'textSecondary',
   }),
-])
-
-export const selectedActivitySwitcherToggle = style([
-  baseActivitySwitcherToggle,
-  sprinkles({
-    color: 'textPrimary',
-  }),
-  {
-    ':after': {
-      content: '',
-      position: 'absolute',
-      background: vars.color.genieBlue,
-      width: '100%',
-      height: '2px',
-      left: '0px',
-      right: '0px',
-      bottom: '-8px',
-    },
-  },
 ])
 
 export const loadingBanner = style([
