@@ -1,9 +1,6 @@
-import styled from 'styled-components/macro'
+import styled, { DefaultTheme } from 'styled-components/macro'
 
-type Gap = 'sm' | 'md' | 'lg' | 'xl' | string
-
-const getGapValue = (gap: Gap) =>
-  (gap === 'sm' && '8px') || (gap === 'md' && '12px') || (gap === 'lg' && '24px') || (gap === 'xl' && '32px') || gap
+type Gap = keyof DefaultTheme['grids']
 
 export const Column = styled.div<{
   gap?: Gap
@@ -11,7 +8,7 @@ export const Column = styled.div<{
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: ${({ gap }) => gap && getGapValue(gap)};
+  gap: ${({ gap, theme }) => gap && theme.grids[gap]};
 `
 export const ColumnCenter = styled(Column)`
   width: 100%;
@@ -19,12 +16,12 @@ export const ColumnCenter = styled(Column)`
 `
 
 export const AutoColumn = styled.div<{
-  gap?: Gap
+  gap?: Gap | string
   justify?: 'stretch' | 'center' | 'start' | 'end' | 'flex-start' | 'flex-end' | 'space-between'
 }>`
   display: grid;
   grid-auto-rows: auto;
-  grid-row-gap: ${({ gap }) => gap && getGapValue(gap)};
+  grid-row-gap: ${({ gap, theme }) => (gap && theme.grids[gap as Gap]) || gap};
   justify-items: ${({ justify }) => justify && justify};
 `
 

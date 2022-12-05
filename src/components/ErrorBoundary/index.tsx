@@ -53,7 +53,7 @@ const Code = styled.code`
   word-wrap: break-word;
   width: 100%;
   color: ${({ theme }) => theme.textPrimary};
-  font-family: courier, courier new, serif;
+  font-family: ${({ theme }) => theme.fonts.code};
   overflow: scroll;
   max-height: calc(100vh - 450px);
 `
