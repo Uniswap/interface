@@ -155,10 +155,8 @@ export function ConfirmAddModalBottom({
         </Section>
       )}
 
-      <ButtonPrimary style={{ margin: '4px 0 0 0', padding: '16px' }} onClick={onAdd}>
-        <Text fontWeight={500} fontSize={18}>
-          {noLiquidity ? 'Create Pool' : 'Confirm'}
-        </Text>
+      <ButtonPrimary style={{ margin: '4px 0 0 0', padding: '12px' }} onClick={onAdd}>
+        <Text fontWeight={500}>{noLiquidity ? <Trans>Create Pool</Trans> : <Trans>Confirm</Trans>}</Text>
       </ButtonPrimary>
     </>
   )

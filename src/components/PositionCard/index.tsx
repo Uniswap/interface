@@ -158,7 +158,7 @@ export function NarrowPositionCard({ pair, showUnwrapped = false, border }: Posi
           <FixedHeightRow>
             <RowFixed>
               <Text fontWeight={500} fontSize={16}>
-                <Trans>Your position</Trans>
+                <Trans>My position</Trans>
               </Text>
             </RowFixed>
           </FixedHeightRow>
@@ -178,7 +178,7 @@ export function NarrowPositionCard({ pair, showUnwrapped = false, border }: Posi
           <AutoColumn gap="4px">
             <FixedHeightRow>
               <Text fontSize={16} fontWeight={500}>
-                <Trans>Your pool share:</Trans>
+                <Trans>My pool share:</Trans>
               </Text>
               <Text fontSize={16} fontWeight={500}>
                 {poolTokenPercentage ? poolTokenPercentage.toFixed(6) + '%' : '-'}
@@ -261,7 +261,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false }: PositionCar
         paddingY="1rem"
         style={{ borderBottom: `1px solid ${theme.border}` }}
       >
-        <Trans>Your Current Position</Trans>
+        <Trans>My Current Position</Trans>
       </Text>
 
       <StyledMinimalPositionCard>
@@ -339,7 +339,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false }: PositionCar
         <MinimalPositionItem gap="4px" noBorder={true} noPadding={true}>
           <Text fontSize={12} fontWeight={500} color={theme.subText}>
             <UppercaseText>
-              <Trans>Your Share Of Pool</Trans>
+              <Trans>My Share Of Pool</Trans>
             </UppercaseText>
           </Text>
           <Text fontSize={14} fontWeight={400}>
@@ -560,7 +560,7 @@ export default function FullPositionCard({
 
       <Flex alignItems="center" justifyContent="space-between" marginTop="1rem">
         <Text fontSize="1rem" fontWeight={500} color={theme.subText}>
-          {tab === 'ALL' ? <Trans>Your Liquidity</Trans> : <Trans>Your Staked</Trans>}
+          {tab === 'ALL' ? <Trans>My Liquidity</Trans> : <Trans>My Staked</Trans>}
         </Text>
         <Flex fontSize={12} color={theme.subText} marginTop="2px" alignItems="baseline" sx={{ gap: '4px' }}>
           <Flex alignItems="center" flexDirection="row">
@@ -581,7 +581,7 @@ export default function FullPositionCard({
           <>
             <Row>
               <Text>
-                <Trans>Your Liquidity Balance</Trans>
+                <Trans>My Liquidity Balance</Trans>
               </Text>
               <Text fontSize={14} color={theme.text}>
                 {totalDeposit}
@@ -640,7 +640,7 @@ export default function FullPositionCard({
 
             <Row>
               <Text>
-                <Trans>Your Share Of Pool</Trans>
+                <Trans>My Share Of Pool</Trans>
               </Text>
               <Text fontSize={14} color={theme.text}>
                 {poolTokenPercentage
@@ -653,7 +653,7 @@ export default function FullPositionCard({
           <>
             <Row>
               <Text>
-                <Trans>Your Staked Balance</Trans>
+                <Trans>My Staked Balance</Trans>
               </Text>
               <Text fontSize={14} color={theme.text}>
                 {formattedNum(stakedUSD.toString(), true)}
