@@ -66,7 +66,8 @@ const Banner = styled.div<{ src: string }>`
   height: 100%;
   width: 100%;
   background-image: url(${({ src }) => src});
-  object-fit: cover;
+  background-position-y: center;
+  background-size: cover;
 
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
     border-radius: 16px;
