@@ -88,9 +88,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
           </RowBetween>
           {stakingInfo?.earnedAmount && (
             <AutoColumn justify="center" gap="md">
-              <ThemedText.DeprecatedBody fontWeight={600} fontSize={36}>
-                {stakingInfo?.earnedAmount?.toSignificant(6)}
-              </ThemedText.DeprecatedBody>
+              <ThemedText.HeadlineLarge>{stakingInfo?.earnedAmount?.toSignificant(6)}</ThemedText.HeadlineLarge>
               <ThemedText.DeprecatedBody>
                 <Trans>Unclaimed UNI</Trans>
               </ThemedText.DeprecatedBody>

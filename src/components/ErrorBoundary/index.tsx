@@ -1,29 +1,61 @@
 import { Trans } from '@lingui/macro'
 import * as Sentry from '@sentry/react'
+import { ButtonLight, ButtonPrimary } from 'components/Button'
 import React, { PropsWithChildren } from 'react'
 import styled from 'styled-components/macro'
 
 import { ExternalLink, ThemedText } from '../../theme'
 import { AutoColumn } from '../Column'
-import { AutoRow } from '../Row'
 
 const FallbackWrapper = styled.div`
   display: flex;
-  flex-direction: column;
-  width: 100%;
-  align-items: center;
-  z-index: 1;
+  width: 100vw;
+  height: 100vh;
 `
 
 const BodyWrapper = styled.div<{ margin?: string }>`
+  width: 480px;
+  margin: auto;
   padding: 1rem;
+`
+
+const SmallButtonPrimary = styled(ButtonPrimary)`
+  width: auto;
+  font-size: 16px;
+  padding: 10px 16px;
+  border-radius: 12px;
+`
+
+const SmallButtonLight = styled(ButtonLight)`
+  font-size: 16px;
+  padding: 10px 16px;
+  border-radius: 12px;
+`
+
+const StretchedRow = styled.div`
+  display: flex;
+  gap: 24px;
+
+  > * {
+    display: flex;
+    flex: 1;
+  }
+`
+
+const Code = styled.code`
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 16px;
+  word-wrap: break-word;
   width: 100%;
+  color: ${({ theme }) => theme.textPrimary};
+  font-family: courier, courier new, serif;
 `
 
 const CodeBlockWrapper = styled.div`
-  background: ${({ theme }) => theme.deprecated_bg0};
-  overflow: auto;
-  white-space: pre;
+  display: flex;
+  background: ${({ theme }) => theme.backgroundModule};
+  overflow-y: scroll;
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 24px;
@@ -31,35 +63,35 @@ const CodeBlockWrapper = styled.div`
   color: ${({ theme }) => theme.deprecated_text1};
 `
 
-const Padding = styled.div`
-  padding: 6px 24px;
-`
-
 const Fallback = ({ error }: { error: Error }) => {
   return (
     <FallbackWrapper>
       <BodyWrapper>
-        <AutoColumn gap="md">
-          <Padding>
-            <ThemedText.DeprecatedLabel fontSize={24} fontWeight={600}>
+        <AutoColumn gap="xl">
+          <AutoColumn gap="sm">
+            <ThemedText.HeadlineLarge textAlign="center">
               <Trans>Something went wrong</Trans>
-            </ThemedText.DeprecatedLabel>
-          </Padding>
+            </ThemedText.HeadlineLarge>
+            <ThemedText.BodySecondary textAlign="center">
+              <Trans>
+                Sorry, an error occured while processing your request. If you request support, be sure to provide your
+                error ID.
+              </Trans>
+            </ThemedText.BodySecondary>
+          </AutoColumn>
           <CodeBlockWrapper>
-            <code>
-              <ThemedText.DeprecatedMain fontSize={10}>{error.stack}</ThemedText.DeprecatedMain>
-            </code>
+            <Code>{error.stack}</Code>
           </CodeBlockWrapper>
-          <AutoRow>
-            <Padding>
-              <ExternalLink id="get-support-on-discord" href="https://discord.gg/FCfyBSbCU5" target="_blank">
-                <ThemedText.DeprecatedLink fontSize={16} color="deprecated_blue1">
-                  <Trans>Get support on Discord</Trans>
-                  <span>↗</span>
-                </ThemedText.DeprecatedLink>
-              </ExternalLink>
-            </Padding>
-          </AutoRow>
+          <StretchedRow>
+            <SmallButtonPrimary onClick={() => window.location.reload()}>
+              <Trans>Reload the app</Trans>
+            </SmallButtonPrimary>
+            <ExternalLink id="get-support-on-discord" href="https://discord.gg/FCfyBSbCU5" target="_blank">
+              <SmallButtonLight>
+                <Trans>Get support</Trans>
+              </SmallButtonLight>
+            </ExternalLink>
+          </StretchedRow>
         </AutoColumn>
       </BodyWrapper>
     </FallbackWrapper>
@@ -73,7 +105,7 @@ async function updateServiceWorker(): Promise<ServiceWorkerRegistration> {
   return ready.update() as unknown as Promise<ServiceWorkerRegistration>
 }
 
-const reloadIfUpdateAvailable = async () => {
+const updateServiceWorkerInBackground = async () => {
   try {
     const registration = await updateServiceWorker()
 
@@ -85,8 +117,6 @@ const reloadIfUpdateAvailable = async () => {
       // Makes Workbox call skipWaiting().
       // For more info on skipWaiting see: https://web.dev/service-worker-lifecycle/#skip-the-waiting-phase
       registration.waiting.postMessage({ type: 'SKIP_WAITING' })
-
-      window.location.reload()
     }
   } catch (error) {
     console.error('Failed to update service worker', error)
@@ -100,7 +130,7 @@ export default function ErrorBoundary({ children }: PropsWithChildren): JSX.Elem
       beforeCapture={(scope) => {
         scope.setLevel('fatal')
       }}
-      onError={reloadIfUpdateAvailable}
+      onError={updateServiceWorkerInBackground}
     >
       {children}
     </Sentry.ErrorBoundary>
