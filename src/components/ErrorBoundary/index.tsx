@@ -16,7 +16,7 @@ const FallbackWrapper = styled.div`
 `
 
 const BodyWrapper = styled.div<{ margin?: string }>`
-  width: 480px;
+  width: 500px;
   margin: auto;
   padding: 1rem;
 `
@@ -91,7 +91,7 @@ const CodeTitle = styled.div`
   align-items: center;
 `
 
-const Fallback = ({ error }: { error: Error }) => {
+const Fallback = ({ error, eventId }: { error: Error; eventId: string | null }) => {
   const [isExpanded, setExpanded] = useState(false)
 
   return (
@@ -111,7 +111,7 @@ const Fallback = ({ error }: { error: Error }) => {
           </AutoColumn>
           <CodeBlockWrapper>
             <CodeTitle>
-              <ThemedText.SubHeader fontWeight={500}>Error ID: 4325</ThemedText.SubHeader>
+              <ThemedText.SubHeader fontWeight={500}>Error ID: {eventId}</ThemedText.SubHeader>
               <CopyToClipboard toCopy="4325">
                 <CopyIcon />
               </CopyToClipboard>
@@ -174,7 +174,7 @@ const updateServiceWorkerInBackground = async () => {
 export default function ErrorBoundary({ children }: PropsWithChildren): JSX.Element {
   return (
     <Sentry.ErrorBoundary
-      fallback={Fallback}
+      fallback={({ error, eventId }) => <Fallback error={error} eventId={eventId} />}
       beforeCapture={(scope) => {
         scope.setLevel('fatal')
       }}
