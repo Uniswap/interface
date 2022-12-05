@@ -17,7 +17,8 @@ const FallbackWrapper = styled.div`
 `
 
 const BodyWrapper = styled.div<{ margin?: string }>`
-  width: min(100%, 500px);
+  width: 100%;
+  max-width: 500px;
   margin: auto;
   padding: 1rem;
 `
