@@ -4,6 +4,7 @@ import { ZERO } from '@kyberswap/ks-sdk-classic'
 import { Currency, CurrencyAmount, Percent, WETH } from '@kyberswap/ks-sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@kyberswap/ks-sdk-elastic'
 import { Trans, t } from '@lingui/macro'
+import { captureException } from '@sentry/react'
 import JSBI from 'jsbi'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useHistory } from 'react-router'
@@ -23,7 +24,10 @@ import ProAmmFee from 'components/ProAmm/ProAmmFee'
 import ProAmmPoolInfo from 'components/ProAmm/ProAmmPoolInfo'
 import ProAmmPooledTokens from 'components/ProAmm/ProAmmPooledTokens'
 import Slider from 'components/Slider'
-import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
+import TransactionConfirmationModal, {
+  ConfirmationModalContent,
+  TransactionErrorContent,
+} from 'components/TransactionConfirmationModal'
 import { TutorialType } from 'components/Tutorial'
 import { VERSION } from 'constants/v2'
 import { useActiveWeb3React, useWeb3React } from 'hooks'
@@ -112,6 +116,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
   const { account, chainId, isEVM } = useActiveWeb3React()
   const { library } = useWeb3React()
   const toggleWalletModal = useWalletModalToggle()
+  const [removeLiquidityError, setRemoveLiquidityError] = useState<string>('')
 
   const owner = useSingleCallResult(!!tokenId ? positionManager : null, 'ownerOf', [tokenId.toNumber()]).result?.[0]
   const ownsNFT = owner === account
@@ -218,6 +223,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       !library
     ) {
       setAttemptingTxn(false)
+      setRemoveLiquidityError('Some things went wrong')
       return
     }
     // const partialPosition = new Position({
@@ -281,30 +287,17 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       })
       .catch((error: any) => {
         setAttemptingTxn(false)
-        console.error(error)
-        // const newTxn = {
-        //   ...txn,
-        //   gasLimit: '0x0827f6'
-        // }
-        // return library
-        //   .getSigner()
-        //   .sendTransaction(newTxn)
-        //   .then((response: TransactionResponse) => {
-        //     setAttemptingTxn(false)
 
-        //     addTransactionWithType({hash: response.hash,
-        //       type: TRANSACTION_TYPE.REMOVE_LIQUIDITY,
-        //       summary:
-        //         liquidityValue0?.toSignificant(6) +
-        //         ' ' +
-        //         liquidityValue0?.currency.symbol +
-        //         ' and ' +
-        //         liquidityValue1?.toSignificant(6) +
-        //         ' ' +
-        //         liquidityValue1?.currency.symbol
-        //     })
-        //     setTxnHash(response.hash)
-        //   })
+        const e = new Error('Remove Elastic Liquidity Error', { cause: error })
+        e.name = 'RemoveElasticLiquidityError'
+        captureException(e, {
+          extra: {
+            calldata,
+            value,
+            to: positionManager.address,
+          },
+        })
+        setRemoveLiquidityError(error?.message || JSON.stringify(error))
       })
   }, [
     positionManager,
@@ -333,6 +326,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     }
     setAttemptingTxn(false)
     setTxnHash('')
+    setRemoveLiquidityError('')
   }, [onUserInput, txnHash])
 
   const pendingText = (
@@ -372,33 +366,37 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         onDismiss={handleDismissConfirmation}
         attemptingTxn={attemptingTxn}
         hash={txnHash}
-        content={() => (
-          <ConfirmationModalContent
-            title={t`Remove Liquidity`}
-            onDismiss={handleDismissConfirmation}
-            topContent={() => (
-              <>
-                <ProAmmPooledTokens
-                  liquidityValue0={liquidityValue0}
-                  liquidityValue1={liquidityValue1}
-                  title={t`Remove Amount`}
-                />
-                {positionSDK ? (
-                  <ProAmmFee
-                    totalFeeRewardUSD={totalFeeRewardUSD}
-                    feeValue0={feeValue0}
-                    feeValue1={feeValue1}
-                    position={positionSDK}
-                    tokenId={tokenId}
+        content={() =>
+          removeLiquidityError ? (
+            <TransactionErrorContent onDismiss={handleDismissConfirmation} message={removeLiquidityError} />
+          ) : (
+            <ConfirmationModalContent
+              title={t`Remove Liquidity`}
+              onDismiss={handleDismissConfirmation}
+              topContent={() => (
+                <>
+                  <ProAmmPooledTokens
+                    liquidityValue0={liquidityValue0}
+                    liquidityValue1={liquidityValue1}
+                    title={t`Remove Amount`}
                   />
-                ) : (
-                  <Loader />
-                )}
-              </>
-            )}
-            bottomContent={modalFooter}
-          />
-        )}
+                  {positionSDK ? (
+                    <ProAmmFee
+                      totalFeeRewardUSD={totalFeeRewardUSD}
+                      feeValue0={feeValue0}
+                      feeValue1={feeValue1}
+                      position={positionSDK}
+                      tokenId={tokenId}
+                    />
+                  ) : (
+                    <Loader />
+                  )}
+                </>
+              )}
+              bottomContent={modalFooter}
+            />
+          )
+        }
         pendingText={pendingText}
       />
       <Container>

@@ -167,6 +167,7 @@ export default function ProAmmPool() {
           .flat()
       })
       .flat()
+      .filter(item => item.liquidity.gt(0))
   }, [farmingPools, userFarmInfo, isEVM, networkInfo])
 
   const [openPositions, closedPositions] = useMemo(

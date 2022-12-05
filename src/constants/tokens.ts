@@ -64,6 +64,7 @@ export const STABLE_COINS_ADDRESS: { [chainId in ChainId]: string[] } = {
     '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1', //dai
     '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8', //usdc
     '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9', //usdt
+    '0x3F56e0c36d275367b8C502090EDF38289b3dEa0d', //MAI
   ],
   [ChainId.BTTC]: [
     '0x9B5F27f6ea9bBD753ce3793a07CbA3C74644330d', // usdt_b
@@ -94,6 +95,7 @@ export const STABLE_COINS_ADDRESS: { [chainId in ChainId]: string[] } = {
     '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1', // Dai
     '0x94b008aA00579c1307B0EF2c499aD98a8ce58e58', //usdt
     '0x7F5c764cBc14f9669B88837ca1490cCa17c31607', //usdc
+    '0xdFA46478F9e5EA86d57387849598dbFB2e964b02', // MAI
   ],
   [ChainId.SOLANA]: [
     'EjmyN6qEC1Tf1JxiG1ae7UTJhUxSwk1TCWNWqxWV4J6o', // Dai
