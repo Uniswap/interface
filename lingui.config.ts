@@ -55,5 +55,4 @@ const linguiConfig = {
   pseudoLocale: 'pseudo',
 }
 
-// eslint-disable-next-line import/no-unused-modules
 export default linguiConfig
