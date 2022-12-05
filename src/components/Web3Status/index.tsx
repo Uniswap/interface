@@ -34,20 +34,12 @@ import { RowBetween } from '../Row'
 const FULL_BORDER_RADIUS = 9999
 
 const ChevronWrapper = styled.button`
+  color: ${({ theme }) => theme.accentAction};
   background-color: transparent;
   border: none;
   cursor: pointer;
   display: flex;
   padding: 10px 12px 10px 4px;
-
-  :hover {
-    color: ${({ theme }) => theme.accentActionSoft};
-  }
-  :hover,
-  :active,
-  :focus {
-    border: none;
-  }
 `
 
 const Web3StatusGeneric = styled(ButtonSecondary)`
@@ -85,11 +77,17 @@ const Web3StatusConnectWrapper = styled.div<{ faded?: boolean }>`
   padding: 0;
   height: 40px;
 
-  :hover,
-  :active,
-  :focus {
-    border: none;
+  color: ${({ theme }) => theme.accentAction};
+  :hover {
+    color: ${({ theme }) => theme.accentActionSoft};
+    stroke: ${({ theme }) => theme.accentActionSoft};
   }
+
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => `${duration.fast} color ${timing.in}`};
 `
 
 const Web3StatusConnected = styled(Web3StatusGeneric)<{
@@ -158,26 +156,11 @@ const StyledConnectButton = styled.button`
   border: none;
   border-top-left-radius: ${FULL_BORDER_RADIUS}px;
   border-bottom-left-radius: ${FULL_BORDER_RADIUS}px;
-  color: ${({ theme }) => theme.accentAction};
   cursor: pointer;
   font-weight: 600;
   font-size: 16px;
   padding: 10px 4px 10px 12px;
-
-  transition: ${({
-    theme: {
-      transition: { duration, timing },
-    },
-  }) => `${duration.fast} color ${timing.in}`};
-
-  :hover,
-  :active,
-  :focus {
-    border: none;
-  }
-  :hover {
-    color: ${({ theme }) => theme.accentActionSoft};
-  }
+  color: inherit;
 `
 
 const CHEVRON_PROPS = {
@@ -256,7 +239,6 @@ function Web3StatusInner() {
   } else {
     const chevronProps = {
       ...CHEVRON_PROPS,
-      color: theme.accentAction,
       'data-testid': 'navbar-wallet-dropdown',
     }
     return (

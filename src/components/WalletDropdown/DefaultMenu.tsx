@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import WalletModal from 'components/WalletModal'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useMemo } from 'react'
 import { ChevronRight, Moon, Sun } from 'react-feather'
@@ -66,7 +67,6 @@ const IconWrap = styled.span`
 const DefaultMenuWrap = styled.div`
   width: 100%;
   height: 100%;
-  padding: 0 8px;
 `
 
 const DefaultText = styled.span`
@@ -79,7 +79,7 @@ const CenterVertically = styled.div`
   margin-bottom: auto;
 `
 
-const WalletDropdown = ({ setMenu }: { setMenu: (state: MenuState) => void }) => {
+const DefaultMenu = ({ setMenu }: { setMenu: (state: MenuState) => void }) => {
   const { account } = useWeb3React()
   const isAuthenticated = !!account
   const [darkMode, toggleDarkMode] = useDarkModeManager()
@@ -94,7 +94,7 @@ const WalletDropdown = ({ setMenu }: { setMenu: (state: MenuState) => void }) =>
 
   return (
     <DefaultMenuWrap>
-      {isAuthenticated ? <AuthenticatedHeader /> : null}
+      {isAuthenticated ? <AuthenticatedHeader /> : <WalletModal />}
       <Divider />
       {isAuthenticated && (
         <ToggleMenuItem data-testid="wallet-transactions" onClick={() => setMenu(MenuState.TRANSACTIONS)}>
@@ -132,4 +132,4 @@ const WalletDropdown = ({ setMenu }: { setMenu: (state: MenuState) => void }) =>
   )
 }
 
-export default WalletDropdown
+export default DefaultMenu

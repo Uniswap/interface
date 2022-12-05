@@ -128,6 +128,7 @@ export default function NftExploreBanner() {
         </TextContainer>
         {/* </Description> */}
         <StyledXButton
+          data-testid="nft-banner"
           size={20}
           onClick={(e) => {
             e.preventDefault()

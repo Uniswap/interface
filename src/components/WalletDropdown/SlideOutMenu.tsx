@@ -56,10 +56,7 @@ const StyledChevron = styled(ChevronLeft)`
 `
 
 const BackSection = styled.div`
-  position: absolute;
   background-color: ${({ theme }) => theme.backgroundSurface};
-  width: 99%;
-  padding: 0 16px 16px 16px;
   color: ${({ theme }) => theme.textSecondary};
   cursor: default;
   display: flex;
@@ -75,7 +72,7 @@ const BackSectionContainer = styled.div`
 `
 
 const ChildrenContainer = styled.div`
-  margin-top: 40px;
+  margin-top: 20px;
 `
 
 export const SlideOutMenu = ({

@@ -6,6 +6,8 @@ describe('Wallet Dropdown', () => {
   })
 
   it('should change the theme', () => {
+    // TODO(cartcrom): Remove banner code once it's gone
+    cy.get(getTestSelector('nft-banner')).click()
     cy.get(getTestSelector('web3-status-connected')).click()
     cy.get(getTestSelector('wallet-select-theme')).click()
     cy.get(getTestSelector('wallet-select-theme')).contains('Light theme').should('exist')

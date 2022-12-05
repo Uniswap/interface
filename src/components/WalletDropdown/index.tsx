@@ -1,5 +1,3 @@
-import { useWeb3React } from '@web3-react/core'
-import WalletModal from 'components/WalletModal'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
 import { Z_INDEX } from 'theme/zIndex'
@@ -10,7 +8,21 @@ import DefaultMenu from './DefaultMenu'
 import LanguageMenu from './LanguageMenu'
 import { TransactionHistoryMenu } from './TransactionMenu'
 
-const WalletWrapper = styled.div`
+const WalletDropdownAnchor = styled.div`
+  position: fixed;
+  top: 72px;
+  right: 20px;
+  z-index: ${Z_INDEX.dropdown};
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    top: unset;
+    left: 0;
+    right: 0;
+    bottom: 56px;
+  }
+`
+
+const WalletDropdownWrapper = styled.div`
   border-radius: 12px;
   width: 320px;
   display: flex;
@@ -21,7 +33,7 @@ const WalletWrapper = styled.div`
   background-color: ${({ theme }) => theme.backgroundSurface};
   border: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
   box-shadow: ${({ theme }) => theme.deepShadow};
-  padding: 16px 0;
+  padding: 16px;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     width: 100%;
@@ -37,36 +49,20 @@ export enum MenuState {
   TRANSACTIONS = 'TRANSACTIONS',
 }
 
-const WalletDropdownWrapper = styled.div`
-  position: fixed;
-  top: 72px;
-  right: 20px;
-  z-index: ${Z_INDEX.dropdown};
-
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    top: unset;
-    left: 0;
-    right: 0;
-    bottom: 56px;
-  }
-`
-
 function WalletDropdown() {
   const [menu, setMenu] = useState<MenuState>(MenuState.DEFAULT)
   const walletDropdownOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
-  const { account } = useWeb3React()
 
   return (
     <>
       {walletDropdownOpen && (
-        <WalletDropdownWrapper>
-          <WalletWrapper>
-            {account === undefined && <WalletModal />}
+        <WalletDropdownAnchor>
+          <WalletDropdownWrapper>
+            {menu === MenuState.DEFAULT && <DefaultMenu setMenu={setMenu} />}
             {menu === MenuState.TRANSACTIONS && <TransactionHistoryMenu onClose={() => setMenu(MenuState.DEFAULT)} />}
             {menu === MenuState.LANGUAGE && <LanguageMenu onClose={() => setMenu(MenuState.DEFAULT)} />}
-            {menu === MenuState.DEFAULT && <DefaultMenu setMenu={setMenu} />}
-          </WalletWrapper>
-        </WalletDropdownWrapper>
+          </WalletDropdownWrapper>
+        </WalletDropdownAnchor>
       )}
     </>
   )

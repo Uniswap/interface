@@ -26,10 +26,6 @@ export function useCloseModal(_modal: ApplicationModal): () => void {
   return useCallback(() => dispatch(setOpenModal(null)), [dispatch])
 }
 
-export function useToggleWalletModal(): () => void {
-  return useToggleModal(ApplicationModal.WALLET)
-}
-
 export function useToggleWalletDropdown(): () => void {
   return useToggleModal(ApplicationModal.WALLET_DROPDOWN)
 }

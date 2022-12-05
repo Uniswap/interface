@@ -15,6 +15,7 @@ import styled from 'styled-components/macro'
 import { flexColumnNoWrap } from 'theme/styles'
 import { isMobile } from 'utils/userAgent'
 
+import AccordionGroup from './Accordion/AccordionGroup'
 import { CoinbaseWalletOption, OpenCoinbaseWalletOption } from './CoinbaseWalletOption'
 import { InjectedOption, InstallMetaMaskOption, MetaMaskOption } from './InjectedOption'
 import PendingView from './PendingView'
@@ -29,32 +30,7 @@ const Wrapper = styled.div`
   width: 100%;
 `
 
-const ContentWrapper = styled.div`
-  background-color: ${({ theme }) => theme.backgroundSurface};
-  padding: 0 1rem 1rem 1rem;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`padding: 0 1rem 1rem 1rem`};
-`
-
-const UpperSection = styled.div`
-  position: relative;
-  h5 {
-    margin: 0;
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
-    font-weight: 400;
-  }
-  h5:last-child {
-    margin-bottom: 0px;
-  }
-  h4 {
-    margin-top: 0;
-    font-weight: 500;
-  }
-`
-
-const OptionGrid = styled.div`
+export const OptionGrid = styled.div`
   display: grid;
   grid-gap: 2px;
   border-radius: 12px;
@@ -179,41 +155,49 @@ export default function WalletModal() {
 
   return (
     <Wrapper data-testid="wallet-modal">
-      <UpperSection>
-        <ContentWrapper>
-          <AutoColumn gap="16px">
-            {walletView === WALLET_VIEWS.PENDING && pendingConnector && (
-              <PendingView
-                openOptions={openOptions}
-                connector={pendingConnector}
-                error={!!pendingError}
-                tryActivation={tryActivation}
-              />
-            )}
-            {walletView !== WALLET_VIEWS.PENDING && (
-              <OptionGrid data-testid="option-grid">
-                <>
-                  <UniwalletOption tryActivation={tryActivation} />
-                  {!isInjected
-                    ? !isMobile && <InstallMetaMaskOption />
-                    : !isCoinbaseWallet &&
-                      (isMetaMask ? (
-                        <MetaMaskOption tryActivation={tryActivation} />
-                      ) : (
-                        <InjectedOption tryActivation={tryActivation} />
-                      ))}
-                  {!isInjectedMobileBrowser ? <WalletConnectOption tryActivation={tryActivation} /> : null}
-                  {isMobile && !isInjectedMobileBrowser ? (
-                    <OpenCoinbaseWalletOption />
-                  ) : !isMobile || isCoinbaseWalletBrowser ? (
-                    <CoinbaseWalletOption tryActivation={tryActivation} />
-                  ) : null}
-                </>
-              </OptionGrid>
-            )}
-          </AutoColumn>
-        </ContentWrapper>
-      </UpperSection>
+      <AutoColumn gap="16px">
+        {walletView === WALLET_VIEWS.PENDING && pendingConnector && (
+          <PendingView
+            openOptions={openOptions}
+            connector={pendingConnector}
+            error={!!pendingError}
+            tryActivation={tryActivation}
+          />
+        )}
+        {walletView !== WALLET_VIEWS.PENDING && (
+          <OptionGrid data-testid="option-grid">
+            <>
+              <UniwalletOption tryActivation={tryActivation} />
+              {!isInjected
+                ? !isMobile && <InstallMetaMaskOption />
+                : !isCoinbaseWallet &&
+                  (isMetaMask ? (
+                    <MetaMaskOption tryActivation={tryActivation} />
+                  ) : (
+                    <InjectedOption tryActivation={tryActivation} />
+                  ))}
+              {!isInjectedMobileBrowser ? <WalletConnectOption tryActivation={tryActivation} /> : null}
+              {isMobile && !isInjectedMobileBrowser ? (
+                <OpenCoinbaseWalletOption />
+              ) : !isMobile || isCoinbaseWalletBrowser ? (
+                <CoinbaseWalletOption tryActivation={tryActivation} />
+              ) : null}
+            </>
+          </OptionGrid>
+        )}
+        <AccordionGroup
+          options={[
+            {
+              header: "Don't have a wallet?",
+              text: 'With Uniswap Wallet, you can safely store and send tokens and NFTs, swap tokens, and connect to crypto apps.',
+            },
+            {
+              header: "What's a wallet?",
+              text: 'Connecting with a crypto wallet is a new way to log into apps on the decentralized web.',
+            },
+          ]}
+        />
+      </AutoColumn>
     </Wrapper>
   )
 }
