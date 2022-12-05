@@ -187,7 +187,8 @@ function TransactionListInner({
       return (
         <TransactionSummaryRouter
           readonly={readonly}
-          // We will most likely need this when design updates.
+          // TODO: @ianlapham Implement finalized inline/card designs for special case txns (failure, pending failure, etc)
+          // When finalized, delete this prop if no longer using inline copy.
           showInlineWarning={false}
           transaction={item}
         />

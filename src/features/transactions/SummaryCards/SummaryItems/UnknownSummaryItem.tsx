@@ -6,25 +6,24 @@ import TransactionSummaryLayout, {
   TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { BaseTransactionSummaryProps } from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
-import { formatTitleWithStatus } from 'src/features/transactions/SummaryCards/utils'
+import { getTransactionTitle } from 'src/features/transactions/SummaryCards/utils'
 import { UnknownTransactionInfo } from 'src/features/transactions/types'
 import { getValidAddress, shortenAddress } from 'src/utils/addresses'
 
 export default function UnknownSummaryItem({
   transaction,
-  showInlineWarning,
   readonly,
   ...rest
 }: BaseTransactionSummaryProps & { transaction: { typeInfo: UnknownTransactionInfo } }) {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
-  const title = formatTitleWithStatus({
-    status: transaction.status,
-    text: t('Contract interaction'),
-    showInlineWarning,
-    t,
-  })
+  const title = getTransactionTitle(
+    transaction.status,
+    t('Contract Interaction'),
+    undefined /*=pastText*/,
+    t
+  )
 
   const caption = useMemo(() => {
     return transaction.typeInfo.tokenAddress && getValidAddress(transaction.typeInfo.tokenAddress)

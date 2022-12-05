@@ -14,7 +14,7 @@ import TransactionSummaryLayout, {
   TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { BaseTransactionSummaryProps } from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
-import { formatTitleWithStatus } from 'src/features/transactions/SummaryCards/utils'
+import { getTransactionTitle } from 'src/features/transactions/SummaryCards/utils'
 import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
@@ -65,12 +65,7 @@ export default function SwapSummaryItem({
     return inputCurrency.symbol + '→' + outputCurrency.symbol
   }, [inputAmountRaw, inputCurrency, outputAmountRaw, outputCurrency, status])
 
-  const title = formatTitleWithStatus({
-    status,
-    text: t('Swap'),
-    showInlineWarning,
-    t,
-  })
+  const title = getTransactionTitle(transaction.status, t('Swap'), t('Swapped'), t)
 
   // For retrying failed, locally submitted swaps
   const swapFormState = useCreateSwapFormState(

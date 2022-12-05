@@ -8,7 +8,7 @@ import TransactionSummaryLayout, {
   TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { BaseTransactionSummaryProps } from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
-import { formatTitleWithStatus } from 'src/features/transactions/SummaryCards/utils'
+import { getTransactionTitle } from 'src/features/transactions/SummaryCards/utils'
 import { ApproveTransactionInfo, TransactionType } from 'src/features/transactions/types'
 import { shortenAddress } from 'src/utils/addresses'
 import { buildCurrencyId } from 'src/utils/currencyId'
@@ -16,7 +16,6 @@ import { formatNumberOrString, NumberType } from 'src/utils/format'
 
 export default function ApproveSummaryItem({
   transaction,
-  showInlineWarning,
   readonly,
   ...rest
 }: BaseTransactionSummaryProps & { transaction: { typeInfo: ApproveTransactionInfo } }) {
@@ -24,12 +23,8 @@ export default function ApproveSummaryItem({
   const currency = useCurrency(
     buildCurrencyId(transaction.chainId, transaction.typeInfo.tokenAddress)
   )
-  const title = formatTitleWithStatus({
-    status: transaction.status,
-    text: t('Approve'),
-    showInlineWarning,
-    t,
-  })
+
+  const title = getTransactionTitle(transaction.status, t('Approve'), t('Approved'), t)
 
   const { approvalAmount } = transaction.typeInfo
 

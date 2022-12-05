@@ -11,14 +11,13 @@ import TransactionSummaryLayout, {
   TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { BaseTransactionSummaryProps } from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
-import { formatTitleWithStatus } from 'src/features/transactions/SummaryCards/utils'
+import { getTransactionTitle } from 'src/features/transactions/SummaryCards/utils'
 import { ReceiveTokenTransactionInfo } from 'src/features/transactions/types'
 import { shortenAddress } from 'src/utils/addresses'
 import { buildCurrencyId } from 'src/utils/currencyId'
 
 export default function ReceiveSummaryItem({
   transaction,
-  showInlineWarning,
   readonly,
   ...rest
 }: BaseTransactionSummaryProps & { transaction: { typeInfo: ReceiveTokenTransactionInfo } }) {
@@ -56,12 +55,7 @@ export default function ReceiveSummaryItem({
     transaction.typeInfo.type,
   ])
 
-  const title = formatTitleWithStatus({
-    status: transaction.status,
-    text: t('Receive'),
-    showInlineWarning,
-    t,
-  })
+  const title = getTransactionTitle(transaction.status, t('Receive'), t('Received'), t)
 
   // Search for matching ENS
   const { name: ensName } = useENS(ChainId.Mainnet, transaction.typeInfo.sender, true)

@@ -8,23 +8,16 @@ import TransactionSummaryLayout, {
   TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { BaseTransactionSummaryProps } from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
-import { formatTitleWithStatus } from 'src/features/transactions/SummaryCards/utils'
+import { getTransactionTitle } from 'src/features/transactions/SummaryCards/utils'
 import { NFTMintTransactionInfo, TransactionType } from 'src/features/transactions/types'
 
 export default function NFTMintSummaryItem({
   transaction,
-  showInlineWarning,
   readonly,
   ...rest
 }: BaseTransactionSummaryProps & { transaction: { typeInfo: NFTMintTransactionInfo } }) {
   const { t } = useTranslation()
-  const title = formatTitleWithStatus({
-    status: transaction.status,
-    text: t('Mint'),
-    showInlineWarning,
-    t,
-  })
-
+  const title = getTransactionTitle(transaction.status, t('Mint'), t('Minted'), t)
   const currency = useCurrency(transaction.typeInfo.purchaseCurrencyId)
   const amountRaw = transaction.typeInfo.purchaseCurrencyAmountRaw
 

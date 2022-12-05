@@ -7,7 +7,7 @@ import TransactionSummaryLayout, {
   TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { BaseTransactionSummaryProps } from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
-import { formatTitleWithStatus } from 'src/features/transactions/SummaryCards/utils'
+import { getTransactionTitle } from 'src/features/transactions/SummaryCards/utils'
 import { TransactionStatus, WrapTransactionInfo } from 'src/features/transactions/types'
 
 export default function WrapSummaryItem({
@@ -26,13 +26,11 @@ export default function WrapSummaryItem({
     (transaction.status === TransactionStatus.Cancelled ||
       transaction.status === TransactionStatus.Cancelling) &&
     showInlineWarning
-  const titleText = transaction.typeInfo.unwrapped ? t('Unwrap') : t('Wrap')
-  const title = formatTitleWithStatus({
-    status: transaction.status,
-    text: titleText,
-    showInlineWarning,
-    t,
-  })
+
+  const titleTextPresent = transaction.typeInfo.unwrapped ? t('Unwrap') : t('Wrap')
+  const titleTextPast = transaction.typeInfo.unwrapped ? t('Unwrapped') : t('Wrapped')
+
+  const title = getTransactionTitle(transaction.status, titleTextPresent, titleTextPast, t)
 
   const caption = transaction.typeInfo.unwrapped
     ? `${wrappedNativeCurrency.symbol} → ${nativeCurrency.symbol}`
