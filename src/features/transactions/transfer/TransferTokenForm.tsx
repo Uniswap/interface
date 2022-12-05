@@ -215,11 +215,7 @@ export function TransferTokenForm({
         />
       </Suspense>
       <Flex grow gap="xs" justifyContent="space-between">
-        <AnimatedFlex
-          entering={FadeIn}
-          exiting={FadeOut}
-          gap="xxxxxs"
-          onLayout={onInputPanelLayout}>
+        <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xxxs" onLayout={onInputPanelLayout}>
           {nftIn ? (
             <NFTTransfer asset={nftIn} nftSize={dimensions.fullHeight / 4} />
           ) : (
@@ -276,7 +272,6 @@ export function TransferTokenForm({
               borderTopLeftRadius="xl"
               borderTopRightRadius="xl"
               justifyContent="center"
-              mt="xxs"
               px="md"
               py="lg">
               {recipient && (

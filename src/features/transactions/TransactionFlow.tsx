@@ -3,6 +3,7 @@ import { providers } from 'ethers'
 import React, { Dispatch, ReactElement, useCallback, useEffect } from 'react'
 import { TouchableWithoutFeedback } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppTheme } from 'src/app/hooks'
 import SortIcon from 'src/assets/icons/sort.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -90,6 +91,7 @@ export function TransactionFlow({
   showUSDToggle,
 }: TransactionFlowProps) {
   const theme = useAppTheme()
+  const insets = useSafeAreaInsets()
 
   const screenXOffset = useSharedValue(showTokenSelector || showRecipientSelector ? 1 : 0)
   useEffect(() => {
@@ -106,7 +108,7 @@ export function TransactionFlow({
   return (
     <TouchableWithoutFeedback>
       <AnimatedFlex grow row gap="none" height="100%" style={wrapperStyle}>
-        <Flex gap="sm" pb="xl" px="md" width="100%">
+        <Flex gap="sm" pb="md" px="md" style={{ marginBottom: insets.bottom }} width="100%">
           {step !== TransactionStep.SUBMITTED && (
             <Flex row alignItems="center" justifyContent="space-between" px="sm">
               <Text pt="xs" textAlign="left" variant={{ xs: 'subheadSmall', sm: 'subheadLarge' }}>
