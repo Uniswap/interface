@@ -1,4 +1,5 @@
 import { SMALL_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
+import { useNftListingFlag, NFTListingVariant } from 'featureFlags/flags/listingPage'
 import { ListingButton } from 'nft/components/bag/profile/ListingButton'
 import { getListingState } from 'nft/components/bag/profile/utils'
 import { Column, Row } from 'nft/components/Flex'
@@ -10,6 +11,7 @@ import { ListingStatus, ProfilePageStateType } from 'nft/types'
 import { ListingMarkets } from 'nft/utils/listNfts'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
+import { FloatingBanner } from './FloatingBanner'
 
 import { NFTListingsGrid } from './NFTListingsGrid'
 import { SelectMarketplacesDropdown } from './SelectMarketplacesDropdown'
@@ -39,6 +41,7 @@ const ListingHeader = styled(Row)`
 `
 
 const GridWrapper = styled.div`
+  position: relative;
   margin-top: 24px;
 
   @media screen and (min-width: ${SMALL_MEDIA_BREAKPOINT}) {
@@ -65,6 +68,7 @@ export const ListPage = () => {
   const listingStatus = useNFTList((state) => state.listingStatus)
   const setListingStatus = useNFTList((state) => state.setListingStatus)
   const isMobile = useIsMobile()
+  const isNftListingFlagEnabled = useNftListingFlag() === NFTListingVariant.Enabled
 
   useEffect(() => {
     const state = getListingState(collectionsRequiringApproval, listings)
@@ -106,6 +110,7 @@ export const ListPage = () => {
         </ListingHeader>
         <GridWrapper>
           <NFTListingsGrid selectedMarkets={selectedMarkets} />
+          {isNftListingFlagEnabled && <FloatingBanner />}
         </GridWrapper>
       </MarketWrap>
       <MobileListButtonWrapper>

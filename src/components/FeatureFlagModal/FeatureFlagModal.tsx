@@ -1,5 +1,6 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
+import { NFTListingVariant, useNftListingFlag } from 'featureFlags/flags/listingPage'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
@@ -216,6 +217,14 @@ export default function FeatureFlagModal() {
           value={useLandingPageFlag()}
           featureFlag={FeatureFlag.landingPage}
           label="Landing Page"
+        />
+      </FeatureFlagGroup>
+      <FeatureFlagGroup name="Nft">
+        <FeatureFlagOption
+          variant={NFTListingVariant}
+          value={useNftListingFlag()}
+          featureFlag={FeatureFlag.nftListing}
+          label="Listing Page"
         />
       </FeatureFlagGroup>
       <SaveButton onClick={() => window.location.reload()}>Reload</SaveButton>
