@@ -34,7 +34,6 @@ export const darkTheme: Theme = {
   },
   shadows: {
     menu: '0px 10px 30px rgba(0, 0, 0, 0.1)',
-    genieBlue: '0 4px 16px 0 rgba(70, 115, 250, 0.4)',
     elevation: '0px 4px 16px rgba(70, 115, 250, 0.4)',
     tooltip: '0px 4px 16px rgba(255, 255, 255, 0.2)',
     deep: '12px 16px 24px rgba(0, 0, 0, 0.24), 12px 8px 12px rgba(0, 0, 0, 0.24), 4px 4px 8px rgba(0, 0, 0, 0.32)',

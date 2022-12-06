@@ -189,7 +189,6 @@ export default function Swap() {
 
   // for expert mode
   const [isExpertMode] = useExpertModeManager()
-
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
   const {
@@ -496,7 +495,6 @@ export default function Swap() {
   const showDetailsDropdown = Boolean(
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
   )
-
   return (
     <Trace page={PageName.SWAP_PAGE} shouldLogImpression>
       <>
@@ -578,7 +576,7 @@ export default function Swap() {
                 </TraceEvent>
               </ArrowWrapper>
             </div>
-            <AutoColumn gap="12px">
+            <AutoColumn gap="md">
               <div>
                 <OutputSwapSection showDetailsDropdown={showDetailsDropdown}>
                   <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
@@ -677,15 +675,17 @@ export default function Swap() {
                         }
                       >
                         <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }} height="20px">
-                          <ThemedText.SubHeader width="100%" textAlign="center" color="white">
-                            {/* we need to shorten this string on mobile */}
-                            {approvalState === ApprovalState.APPROVED ||
-                            signatureState === UseERC20PermitState.SIGNED ? (
+                          {/* we need to shorten this string on mobile */}
+                          {approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED ? (
+                            <ThemedText.SubHeader width="100%" textAlign="center" color="textSecondary">
                               <Trans>You can now trade {currencies[Field.INPUT]?.symbol}</Trans>
-                            ) : (
+                            </ThemedText.SubHeader>
+                          ) : (
+                            <ThemedText.SubHeader width="100%" textAlign="center" color="white">
                               <Trans>Allow the Uniswap Protocol to use your {currencies[Field.INPUT]?.symbol}</Trans>
-                            )}
-                          </ThemedText.SubHeader>
+                            </ThemedText.SubHeader>
+                          )}
+
                           {approvalPending || approvalState === ApprovalState.PENDING ? (
                             <Loader stroke={theme.white} />
                           ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||

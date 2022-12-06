@@ -22,7 +22,7 @@ import {
   weekFormatter,
 } from 'utils/formatChartTimes'
 
-export const DATA_EMPTY = { value: 0, timestamp: 0 }
+const DATA_EMPTY = { value: 0, timestamp: 0 }
 
 export function getPriceBounds(pricePoints: PricePoint[]): [number, number] {
   const prices = pricePoints.map((x) => x.value)
@@ -38,7 +38,7 @@ const StyledDownArrow = styled(ArrowDownRight)`
   color: ${({ theme }) => theme.accentFailure};
 `
 
-export function calculateDelta(start: number, current: number) {
+function calculateDelta(start: number, current: number) {
   return (current / start - 1) * 100
 }
 
@@ -66,7 +66,7 @@ export const DeltaText = styled.span<{ delta: number | undefined }>`
     delta !== undefined ? (Math.sign(delta) < 0 ? theme.accentFailure : theme.accentSuccess) : theme.textPrimary};
 `
 
-export const ChartHeader = styled.div`
+const ChartHeader = styled.div`
   position: absolute;
 `
 export const TokenPrice = styled.span`
@@ -104,7 +104,7 @@ function formatDisplayPrice(value: number) {
   return formatUSDPrice(value)
 }
 
-export function PriceChart({ width, height, prices, timePeriod }: PriceChartProps) {
+function PriceChart({ width, height, prices, timePeriod }: PriceChartProps) {
   const locale = useActiveLocale()
   const theme = useTheme()
 

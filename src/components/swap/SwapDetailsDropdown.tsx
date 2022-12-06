@@ -129,7 +129,7 @@ export default function SwapDetailsDropdown({
 
   return (
     <Wrapper style={{ marginTop: '0' }}>
-      <AutoColumn gap="8px" style={{ width: '100%', marginBottom: '-8px' }}>
+      <AutoColumn gap="sm" style={{ width: '100%', marginBottom: '-8px' }}>
         <TraceEvent
           events={[BrowserEvent.onClick]}
           name={EventName.SWAP_DETAILS_EXPANDED}
@@ -201,7 +201,7 @@ export default function SwapDetailsDropdown({
           </StyledHeaderRow>
         </TraceEvent>
         <AnimatedDropdown open={showDetails}>
-          <AutoColumn gap="8px" style={{ padding: '0', paddingBottom: '8px' }}>
+          <AutoColumn gap="sm" style={{ padding: '0', paddingBottom: '8px' }}>
             {trade ? (
               <StyledCard>
                 <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />

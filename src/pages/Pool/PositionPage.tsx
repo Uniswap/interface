@@ -132,6 +132,7 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   border-radius: 12px;
   padding: 6px 8px;
   width: fit-content;
+  font-size: 16px;
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     flex: 1 1 auto;
     width: 49%;
@@ -172,7 +173,7 @@ function CurrentPriceCard({
 
   return (
     <LightCard padding="12px ">
-      <AutoColumn gap="8px" justify="center">
+      <AutoColumn gap="sm" justify="center">
         <ExtentsText>
           <Trans>Current price</Trans>
         </ExtentsText>
@@ -880,7 +881,7 @@ export function PositionPage() {
 
                 <RowBetween>
                   <LightCard padding="12px" width="100%">
-                    <AutoColumn gap="8px" justify="center">
+                    <AutoColumn gap="sm" justify="center">
                       <ExtentsText>
                         <Trans>Min price</Trans>
                       </ExtentsText>
@@ -904,7 +905,7 @@ export function PositionPage() {
 
                   <DoubleArrow>⟷</DoubleArrow>
                   <LightCard padding="12px" width="100%">
-                    <AutoColumn gap="8px" justify="center">
+                    <AutoColumn gap="sm" justify="center">
                       <ExtentsText>
                         <Trans>Max price</Trans>
                       </ExtentsText>

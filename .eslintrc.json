@@ -11,6 +11,14 @@
   "settings": {
     "react": {
       "version": "detect"
+    },
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true
+      }
     }
   },
   "ignorePatterns": [
@@ -38,10 +46,12 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:react-hooks/recommended",
     "prettier/@typescript-eslint",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
+    "plugin:import/typescript"
   ],
-  "plugins": ["simple-import-sort", "unused-imports"],
+  "plugins": ["import", "simple-import-sort", "unused-imports"],
   "rules": {
+    "import/no-unused-modules": [2, { "unusedExports": true }],
     "unused-imports/no-unused-imports": "error",
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
@@ -52,7 +62,7 @@
     "@typescript-eslint/ban-ts-ignore": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "react/react-in-jsx-scope": "off",
-    "react/jsx-curly-brace-presence": ["error", {"props": "never", "children": "never" }],
+    "react/jsx-curly-brace-presence": ["error", { "props": "never", "children": "never" }],
     "object-shorthand": ["error", "always"],
     "no-restricted-imports": [
       "error",

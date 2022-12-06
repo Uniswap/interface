@@ -4,6 +4,7 @@ import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { ArrowRightIcon, HazardIcon, LoadingIcon, XMarkIcon } from 'nft/components/icons'
 import { bodySmall } from 'nft/css/common.css'
+import { themeVars } from 'nft/css/sprinkles.css'
 import { useNFTList, useSellAsset } from 'nft/hooks'
 import { Listing, ListingStatus, WalletAsset } from 'nft/types'
 import { pluralize } from 'nft/utils/roundAndPluralize'
@@ -187,13 +188,13 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
           </Box>
           {!!disableListButton ? (
             <Box paddingTop="6">
-              <XMarkIcon fill="textSecondary" height="20" width="20" />
+              <XMarkIcon fill={themeVars.colors.textSecondary} height="20" width="20" />
             </Box>
           ) : (
             <Row
               marginLeft="72"
               cursor="pointer"
-              color="genieBlue"
+              color="accentAction"
               onClick={() => {
                 setShowWarning(false)
                 setCanContinue(true)
@@ -209,7 +210,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
       <Box
         as="button"
         border="none"
-        backgroundColor="genieBlue"
+        backgroundColor="accentAction"
         cursor={
           [ListingStatus.APPROVED, ListingStatus.PENDING, ListingStatus.SIGNING].includes(listingStatus) ||
           disableListButton

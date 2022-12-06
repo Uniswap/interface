@@ -37,7 +37,7 @@ function useWidgetTheme() {
   return useIsDarkMode() ? DARK_THEME : LIGHT_THEME
 }
 
-export interface WidgetProps {
+interface WidgetProps {
   token?: Currency
   onTokenChange?: (token: Currency) => void
   onReviewSwapClick?: OnReviewSwapClick

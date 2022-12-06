@@ -62,12 +62,6 @@ export type OrderPayload = {
   isCollection: boolean
 }
 
-export type OrderResp = {
-  success: boolean
-  code: number
-  error?: string
-}
-
 const randomSalt = () => {
   const randomHex = BigNumber.from(randomBytes(16)).toHexString()
   return hexZeroPad(randomHex, 64)
