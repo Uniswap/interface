@@ -10,8 +10,8 @@ import FailedNetworkSwitchPopup from './FailedNetworkSwitchPopup'
 
 const StyledClose = styled(X)`
   position: absolute;
-  right: 10px;
-  top: 10px;
+  right: 20px;
+  top: 20px;
 
   :hover {
     cursor: pointer;
@@ -83,7 +83,7 @@ export default function PopupItem({
 
   return popupContent ? (
     <Popup>
-      <StyledClose color={theme.deprecated_text2} onClick={removeThisPopup} />
+      <StyledClose color={theme.textSecondary} onClick={removeThisPopup} />
       {popupContent}
       {removeAfterMs !== null ? <AnimatedFader style={faderStyle} /> : null}
     </Popup>
