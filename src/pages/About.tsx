@@ -47,6 +47,7 @@ const PageWrapper = styled.span<{ isDarkMode: boolean }>`
 `
 
 const TitleText = styled.h1<{ isDarkMode: boolean }>`
+  color: transparent;
   font-size: 48px;
   font-weight: 600;
   margin-bottom: 0px;
@@ -57,7 +58,6 @@ const TitleText = styled.h1<{ isDarkMode: boolean }>`
 
   background-clip: text;
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
 
   @media screen and (min-width: ${MOBILE_BREAKPOINT}px) {
     font-size: 72px;
