@@ -1,7 +1,6 @@
 import React from 'react'
-import { Image } from 'react-native'
+import { Image, ImageResizeMode } from 'react-native'
 import { SvgUri } from 'react-native-svg'
-import { resizeModeContain } from 'src/styles/image'
 import { logger } from 'src/utils/logger'
 import { uriToHttp } from 'src/utils/uriToHttp'
 
@@ -12,6 +11,8 @@ type Props = {
   height: number
   width: number
 }
+
+const RESIZE_MODE_CONTAIN: ImageResizeMode = 'contain'
 
 export function RemoteImage({ backgroundColor, borderRadius, uri, height, width }: Props) {
   const imageHttpUrl = uriToHttp(uri)[0]
@@ -39,7 +40,7 @@ export function RemoteImage({ backgroundColor, borderRadius, uri, height, width 
         backgroundColor,
         borderRadius,
         height,
-        resizeMode: resizeModeContain,
+        resizeMode: RESIZE_MODE_CONTAIN,
         width,
       }}
     />
