@@ -145,7 +145,7 @@ export const NftsTab = forwardRef<FlashList<any>, NftsTabProps>(
               </Box>
               <Flex gap="none" py="xs">
                 <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
-                  {item.name}
+                  {item.name ?? '-'}
                 </Text>
                 <Flex row alignItems="center" gap="xs" justifyContent="flex-start">
                   <Flex row shrink>
