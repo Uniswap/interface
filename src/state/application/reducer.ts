@@ -81,5 +81,5 @@ const applicationSlice = createSlice({
   },
 })
 
-export const { updateChainId, setOpenModal, setOpenLanding, addPopup, removePopup } = applicationSlice.actions
+export const { updateChainId, setOpenModal, addPopup, removePopup } = applicationSlice.actions
 export default applicationSlice.reducer

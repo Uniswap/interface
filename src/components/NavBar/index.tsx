@@ -8,7 +8,6 @@ import { Row } from 'nft/components/Flex'
 import { UniIcon } from 'nft/components/icons'
 import { ReactNode } from 'react'
 import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
-import { useToggleLanding } from 'state/application/hooks'
 import styled from 'styled-components/macro'
 
 import { Bag } from './Bag'
@@ -42,14 +41,11 @@ interface MenuItemProps {
 }
 
 const MenuItem = ({ href, id, isActive, children }: MenuItemProps) => {
-  const toggleLanding = useToggleLanding(false)
-
   return (
     <NavLink
       to={href}
       className={isActive ? styles.activeMenuItem : styles.menuItem}
       id={id}
-      onClick={() => toggleLanding()}
       style={{ textDecoration: 'none' }}
     >
       {children}
@@ -91,7 +87,6 @@ const PageTabs = () => {
 
 const Navbar = () => {
   const isNftPage = useIsNftPage()
-  const toggleLanding = useToggleLanding(true)
   const navigate = useNavigate()
 
   return (
@@ -105,7 +100,6 @@ const Navbar = () => {
                 height="48"
                 className={styles.logo}
                 onClick={() => {
-                  toggleLanding()
                   navigate('/')
                 }}
               />

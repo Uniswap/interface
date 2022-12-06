@@ -224,17 +224,6 @@ export const ButtonCTA = styled(BaseButton)<{ redesignFlag?: boolean }>`
     opacity: 75%;
   }
 `
-export const ButtonCTASecondary = styled(BaseButton)<{ redesignFlag?: boolean }>`
-  background: none;
-  width: fit-content;
-  border-radius: 12px;
-  border: ${({ theme }) => `1px solid ${theme.textPrimary}`};
-  padding: 16px 28px;
-  &:hover {
-    opacity: 50%;
-  }
-`
-
 export const ButtonText = styled(BaseButton)`
   padding: 0;
   width: fit-content;

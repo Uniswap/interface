@@ -1,10 +1,7 @@
-import { useWeb3React } from '@web3-react/core'
 import { Box } from 'nft/components/Box'
 import { DiscordIconMenu, GithubIconMenu, TwitterIconMenu } from 'nft/components/icons'
-import React, { useEffect } from 'react'
 import { ReactNode } from 'react'
 import { BookOpen, Globe, Heart, HelpCircle, Terminal, Twitter } from 'react-feather'
-import { useLandingIsOpen, useToggleLanding } from 'state/application/hooks'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
@@ -39,7 +36,7 @@ const Icon = ({ href, children }: { href?: string; children: ReactNode }) => {
   )
 }
 
-const PageWrapper = styled.span<{ visible: boolean; isDarkMode: boolean }>`
+const PageWrapper = styled.span<{ isDarkMode: boolean }>`
   width: 100%;
   align-self: center;
   display: flex;
@@ -126,21 +123,11 @@ const SmallCard = styled.a`
 `
 
 export default function About() {
-  const open = useLandingIsOpen()
-  const toggleLanding = useToggleLanding(false)
   const isDarkMode = useIsDarkMode()
-
-  const { account } = useWeb3React()
   const theme = useTheme()
 
-  useEffect(() => {
-    if (account !== undefined) {
-      toggleLanding()
-    }
-  }, [account, toggleLanding])
-
   return (
-    <PageWrapper isDarkMode={isDarkMode} visible={open}>
+    <PageWrapper isDarkMode={isDarkMode}>
       <ContentWrapper>
         <TitleText isDarkMode={isDarkMode}>
           Our mission: <br />

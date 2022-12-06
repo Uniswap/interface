@@ -1,9 +1,7 @@
-import { useWeb3React } from '@web3-react/core'
 import { ButtonCTA } from 'components/Button'
 import { AutoRow } from 'components/Row'
-import React, { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { useLandingIsOpen, useToggleLanding } from 'state/application/hooks'
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
@@ -24,7 +22,7 @@ const UniswapIcon = (props: SVGProps) => (
   </svg>
 )
 
-const PageWrapper = styled.span<{ visible: boolean; isDarkMode: boolean }>`
+const PageWrapper = styled.span<{ isDarkMode: boolean }>`
   width: 100%;
   height: calc(100vh - 72px);
   position: absolute;
@@ -32,14 +30,13 @@ const PageWrapper = styled.span<{ visible: boolean; isDarkMode: boolean }>`
     isDarkMode
       ? 'linear-gradient(rgba(8, 10, 24, 0) 9.84%, rgb(8 10 24 / 86%) 35.35%)'
       : 'linear-gradient(rgba(8, 10, 24, 0) 9.84%, rgb(255 255 255 / 86%) 35.35%)'};
-  z-index: ${({ visible }) => (visible ? '999' : '-1')};
+  z-index: 999;
   display: flex;
   flex-direction: column;
   justify-content: end;
   padding: 24px 24px 64px 24px;
   align-items: center;
   pointer-events: none;
-  opacity: ${({ visible }) => (visible ? '1' : '0')};
   transition: 250ms ease opacity;
 
   @media screen and (min-width: ${MOBILE_BREAKPOINT}px) {
@@ -110,44 +107,24 @@ const ButtonCTAText = styled.p`
   }
 `
 
-const TitleContentWrapper = styled.span<{ visible: boolean }>`
+const TitleContentWrapper = styled.span`
   max-width: 720px;
-  pointer-events: ${({ visible }) => (visible ? 'all' : 'none')};
 `
 
-const ContentWrapper = styled.span<{ visible: boolean }>`
+const ContentWrapper = styled.span`
   max-width: 720px;
-  pointer-events: ${({ visible }) => (visible ? 'all' : 'none')};
 `
 
-const FooterWrapper = styled.span<{ visible: boolean }>`
+const FooterWrapper = styled.span`
   margin-bottom: 20px;
-  pointer-events: ${({ visible }) => (visible ? 'all' : 'none')};
 `
 
 export default function Landing() {
-  const open = useLandingIsOpen()
-  const toggleLanding = useToggleLanding(false)
-  const [show, setShow] = useState(false)
   const [isHoveredText, setIsHoveredText] = useState(false)
 
   const isDarkMode = useIsDarkMode()
 
-  const { account } = useWeb3React()
-
   const navigate = useNavigate()
-  const { pathname } = useLocation()
-
-  useEffect(() => {
-    if (account !== undefined) {
-      toggleLanding()
-    }
-  }, [account, toggleLanding])
-
-  useEffect(() => {
-    const shouldShow = pathname === '/'
-    setShow(shouldShow)
-  }, [open, pathname])
 
   const handleMouseOver = () => {
     setIsHoveredText(true)
@@ -158,24 +135,23 @@ export default function Landing() {
   }
 
   return (
-    <PageWrapper isDarkMode={isDarkMode} visible={show}>
-      <TitleContentWrapper visible={show}>
+    <PageWrapper isDarkMode={isDarkMode}>
+      <TitleContentWrapper>
         <TitleText isDarkMode={isDarkMode}>Trade crypto & NFTs with confidence.</TitleText>
         <SubText>
           Swap tokens with the deepest liquidity and <br /> buy NFTs at the best prices.
         </SubText>
       </TitleContentWrapper>
-      <ContentWrapper visible={show}>
+      <ContentWrapper>
         <ButtonCTA
           onClick={() => {
-            toggleLanding()
             navigate('/swap')
           }}
         >
           <ButtonCTAText>Get started</ButtonCTAText>
         </ButtonCTA>
       </ContentWrapper>
-      <FooterWrapper visible={show} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
+      <FooterWrapper onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
         <AutoRow>
           <UniswapIcon width="32" height="32" />
           {isHoveredText ? (
