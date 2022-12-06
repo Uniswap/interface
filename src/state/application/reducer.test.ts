@@ -16,7 +16,6 @@ describe('application reducer', () => {
     store = createStore(reducer, {
       chainId: null,
       openModal: null,
-      showLandingOverlay: true,
       popupList: [],
     })
   })

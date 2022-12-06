@@ -21,7 +21,7 @@ import { ReactNode } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
-import { useLandingIsOpen, useToggleLanding, useToggleWalletModal } from 'state/application/hooks'
+import { useToggleWalletModal } from 'state/application/hooks'
 import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
@@ -457,9 +457,6 @@ export default function Swap() {
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
   const showPriceImpactWarning = largerPriceImpact && priceImpactSeverity > 3
 
-  const open = useLandingIsOpen()
-  const toggleLanding = useToggleLanding(false)
-
   // Handle time based logging events and event properties.
   useEffect(() => {
     const now = new Date()
@@ -516,9 +513,8 @@ export default function Swap() {
           <SwapWrapper
             onClick={() => {
               navigate('/swap')
-              toggleLanding()
             }}
-            open={location.pathname === '/swap' ? false : open}
+            open={location.pathname !== '/swap'}
             id="swap-page"
           >
             <SwapHeader allowedSlippage={allowedSlippage} />
