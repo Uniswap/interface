@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import { UniwalletBadge } from 'components/WalletModal/UniwalletOption'
 import Web3Status from 'components/Web3Status'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { chainIdToBackendName } from 'graphql/data/util'
@@ -85,6 +86,12 @@ const PageTabs = () => {
       <MenuItem href="/pool" id="pool-nav-link" isActive={isPoolActive}>
         <Trans>Pool</Trans>
       </MenuItem>
+      <Box display={{ sm: 'none', xxl: 'flex' }}>
+        <MenuItem href="/wallet" isActive={pathname.startsWith('/wallet')}>
+          <Trans>Wallet</Trans>
+          <UniwalletBadge />
+        </MenuItem>
+      </Box>
     </>
   )
 }
@@ -105,7 +112,7 @@ const Navbar = () => {
                 <ChainSelector leftAlign={true} />
               </Box>
             )}
-            <Row gap={{ xl: '0', xxl: '8' }} display={{ sm: 'none', lg: 'flex' }}>
+            <Row display={{ sm: 'none', lg: 'flex' }}>
               <PageTabs />
             </Row>
           </Box>

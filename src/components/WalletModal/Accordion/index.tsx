@@ -1,7 +1,7 @@
 import React, { PropsWithChildren, ReactNode } from 'react'
 import { ChevronDown } from 'react-feather'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { ClickableStyle, ThemedText } from 'theme'
 
 const InfoCard = styled.div`
   background-color: ${({ theme }) => theme.backgroundModule};
@@ -11,7 +11,7 @@ const InfoCard = styled.div`
   border: none;
   display: flex;
   flex-direction: column;
-  padding: 12px;
+  align-items: center;
 `
 
 const StyledChevron = styled(ChevronDown)`
@@ -20,11 +20,17 @@ const StyledChevron = styled(ChevronDown)`
 `
 
 const Header = styled.div`
+  ${ClickableStyle}
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   color: ${({ theme }) => theme.textSecondary};
+  padding: 12px;
+`
+
+const Body = styled.div`
+  padding: 0 12px 12px;
 `
 
 export default function Accordion({
@@ -38,12 +44,12 @@ export default function Accordion({
   setOpen: (b: boolean) => void
 }>) {
   const content = (
-    <InfoCard onClick={() => setOpen(!open)}>
-      <Header>
+    <InfoCard onClick={() => !open && setOpen(true)}>
+      <Header onClick={() => setOpen(!open)}>
         <ThemedText.Caption color="textSecondary">{header}</ThemedText.Caption>
         <StyledChevron />
       </Header>
-      {open && <ThemedText.Caption paddingTop="12px">{children}</ThemedText.Caption>}
+      {open && <Body>{children}</Body>}
     </InfoCard>
   )
 

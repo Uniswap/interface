@@ -4,6 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
+import { DownloadButton } from 'components/WalletDropdown/DownloadButton'
 import { networkConnection } from 'connection'
 import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsInjected, getIsMetaMask } from 'connection/utils'
 import { useCallback, useEffect, useState } from 'react'
@@ -12,9 +13,11 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
 import { useConnectedWallets } from 'state/wallets/hooks'
 import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 import { flexColumnNoWrap } from 'theme/styles'
 import { isMobile } from 'utils/userAgent'
 
+import { BaseButton as LearnMoreButton } from '../WalletDropdown/DownloadButton'
 import AccordionGroup from './Accordion/AccordionGroup'
 import { CoinbaseWalletOption, OpenCoinbaseWalletOption } from './CoinbaseWalletOption'
 import { InjectedOption, InstallMetaMaskOption, MetaMaskOption } from './InjectedOption'
@@ -189,11 +192,26 @@ export default function WalletModal() {
           options={[
             {
               header: "Don't have a wallet?",
-              text: 'With Uniswap Wallet, you can safely store and send tokens and NFTs, swap tokens, and connect to crypto apps.',
+              text: (
+                <>
+                  <ThemedText.Caption paddingBottom="12px">
+                    With Uniswap Wallet, you can safely store and send tokens and NFTs, swap tokens, and connect to
+                    crypto apps.
+                  </ThemedText.Caption>
+                  <DownloadButton text="Download the app" />
+                </>
+              ),
             },
             {
               header: "What's a wallet?",
-              text: 'Connecting with a crypto wallet is a new way to log into apps on the decentralized web.',
+              text: (
+                <>
+                  <ThemedText.Caption paddingBottom="12px">
+                    Connecting with a crypto wallet is a new way to log into apps on the decentralized web.
+                  </ThemedText.Caption>
+                  <LearnMoreButton>Learn More</LearnMoreButton>
+                </>
+              ),
             },
           ]}
         />

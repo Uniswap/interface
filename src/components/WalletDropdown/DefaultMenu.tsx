@@ -1,14 +1,21 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import { BadgeVariant, SmallBadge } from 'components/Badge'
 import WalletModal from 'components/WalletModal'
+import { ConnectionType } from 'connection'
+import { getConnection } from 'connection/utils'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useMemo } from 'react'
 import { ChevronRight, Moon, Sun } from 'react-feather'
+import { useNavigate } from 'react-router-dom'
 import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
+import { isIOS } from 'utils/userAgent'
 
 import { useAllTransactions } from '../../state/transactions/hooks'
 import AuthenticatedHeader from './AuthenticatedHeader'
+import { APP_STORE_LINK } from './DownloadButton'
 import { MenuState } from './index'
 
 const Divider = styled.div`
@@ -19,7 +26,6 @@ const Divider = styled.div`
 
 const ToggleMenuItem = styled.button`
   background-color: transparent;
-  margin: 0;
   border: none;
   cursor: pointer;
   display: flex;
@@ -31,11 +37,10 @@ const ToggleMenuItem = styled.button`
   font-size: 14px;
   font-weight: 400;
   width: 100%;
-  padding: 12px 8px;
+  padding: 8px 0;
   color: ${({ theme }) => theme.textSecondary};
   :hover {
     color: ${({ theme }) => theme.textPrimary};
-    background-color: ${({ theme }) => theme.backgroundModule};
     transition: ${({
       theme: {
         transition: { duration, timing },
@@ -80,9 +85,12 @@ const CenterVertically = styled.div`
 `
 
 const DefaultMenu = ({ setMenu }: { setMenu: (state: MenuState) => void }) => {
-  const { account } = useWeb3React()
-  const isAuthenticated = !!account
   const [darkMode, toggleDarkMode] = useDarkModeManager()
+
+  const { account, connector } = useWeb3React()
+  const isAuthenticated = !!account
+  const isUniwallet = getConnection(connector).type === ConnectionType.UNIWALLET
+
   const activeLocale = useActiveLocale()
   const ISO = activeLocale.split('-')[0].toUpperCase()
   const allTransactions = useAllTransactions()
@@ -91,6 +99,8 @@ const DefaultMenu = ({ setMenu }: { setMenu: (state: MenuState) => void }) => {
     () => Object.values(allTransactions).filter((tx) => !tx.receipt),
     [allTransactions]
   )
+
+  const navigate = useNavigate()
 
   return (
     <DefaultMenuWrap>
@@ -128,6 +138,19 @@ const DefaultMenu = ({ setMenu }: { setMenu: (state: MenuState) => void }) => {
         <DefaultText>{darkMode ? <Trans> Light theme</Trans> : <Trans>Dark theme</Trans>}</DefaultText>
         <IconWrap>{darkMode ? <Sun size={16} /> : <Moon size={16} />}</IconWrap>
       </ToggleMenuItem>
+      {Boolean(isAuthenticated && !isUniwallet) && (
+        <>
+          <Divider />
+          <ToggleMenuItem onClick={() => (isIOS ? window.open(APP_STORE_LINK) : navigate('/wallet'))}>
+            <DefaultText>
+              <Trans>Download Uniswap Wallet for iOS</Trans>
+            </DefaultText>
+            <SmallBadge variant={BadgeVariant.PROMOTIONAL}>
+              <ThemedText.UtilityBadge>NEW</ThemedText.UtilityBadge>
+            </SmallBadge>
+          </ToggleMenuItem>
+        </>
+      )}
     </DefaultMenuWrap>
   )
 }

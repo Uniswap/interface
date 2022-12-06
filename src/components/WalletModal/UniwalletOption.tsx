@@ -1,6 +1,6 @@
 import { Connector } from '@web3-react/types'
 import UNIWALLET_ICON_URL from 'assets/images/uniwallet.png'
-import Badge, { BadgeVariant } from 'components/Badge'
+import { BadgeVariant, SmallBadge } from 'components/Badge'
 import { ConnectionType, uniwalletConnectConnection } from 'connection'
 import { getConnectionName } from 'connection/utils'
 import { useCallback } from 'react'
@@ -28,9 +28,15 @@ export function UniwalletOption({ tryActivation }: { tryActivation: (connector: 
       onClick={activateUniwallet}
       header={getConnectionName(ConnectionType.UNIWALLET)}
     >
-      <Badge variant={BadgeVariant.BRANDED}>
-        <ThemedText.UtilityBadge>New</ThemedText.UtilityBadge>
-      </Badge>
+      <UniwalletBadge />
     </Option>
+  )
+}
+
+export function UniwalletBadge() {
+  return (
+    <SmallBadge variant={BadgeVariant.BRANDED}>
+      <ThemedText.UtilityBadge>NEW</ThemedText.UtilityBadge>
+    </SmallBadge>
   )
 }

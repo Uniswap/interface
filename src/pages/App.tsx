@@ -213,6 +213,8 @@ export default function App() {
                   <Route path="uni" element={<Earn />} />
                   <Route path="uni/:currencyIdA/:currencyIdB" element={<Manage />} />
 
+                  <Route path="wallet" element={<div>wallet</div>} />
+
                   <Route path="send" element={<RedirectPathToSwapOnly />} />
                   <Route path="swap" element={<Swap />} />
 

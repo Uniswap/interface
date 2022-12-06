@@ -47,7 +47,7 @@ export const ThemedText = {
     return <TextWrapper fontWeight={500} fontSize={14} color="textSecondary" {...props} />
   },
   UtilityBadge(props: TextProps) {
-    return <TextWrapper fontWeight={600} fontSize={10} {...props} />
+    return <TextWrapper fontWeight={600} fontSize="8px" lineHeight="12px" {...props} />
   },
   DeprecatedMain(props: TextProps) {
     return <TextWrapper fontWeight={500} color="deprecated_text2" {...props} />

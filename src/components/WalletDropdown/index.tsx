@@ -28,12 +28,11 @@ const WalletDropdownWrapper = styled.div`
   display: flex;
   flex-direction: column;
   font-size: 16px;
-  top: 60px;
-  right: 70px;
   background-color: ${({ theme }) => theme.backgroundSurface};
   border: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
-  box-shadow: ${({ theme }) => theme.deepShadow};
   padding: 16px;
+
+  box-shadow: ${({ theme }) => theme.deepShadow};
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     width: 100%;

@@ -78,3 +78,8 @@ const Badge = styled.div<PropsWithChildren<BadgeProps>>`
 `
 
 export default Badge
+
+export const SmallBadge = styled(Badge)`
+  border-radius: 5px;
+  padding: 2px 4px;
+`
