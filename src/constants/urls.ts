@@ -44,5 +44,4 @@ export const TOKEN_WARNING_HELP_PAGE_URL =
 export const getTokenLogoURL = (address: string) =>
   `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/${address}/logo.png`
 
-export const APP_STORE_LINK =
-  'https://apps.apple.com/us/app/uniswap-wallet-crypto-nfts/id6443944476'
+export const APP_STORE_LINK = 'https://apps.apple.com/us/app/uniswap-wallet-defi-nfts/id6443944476'

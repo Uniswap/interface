@@ -58,7 +58,7 @@
   "{{num}} TVL": "{{num}} TVL",
   "Update app": "Update app",
   "Update the app to continue": "Update the app to continue",
-  "The version of Uniswap Wallet you’re using is out of date and is missing critical upgrades. If you don’t update the app or you don’t have your recovery phrase written down, you won’t be able to access your assets. ": "The version of Uniswap Wallet you’re using is out of date and is missing critical upgrades. If you don’t update the app or you don’t have your recovery phrase written down, you won’t be able to access your assets. ",
+  "The version of Uniswap Wallet you’re using is out of date and is missing critical upgrades. If you don’t update the app or you don’t have your recovery phrase written down, you won’t be able to access your assets.": "The version of Uniswap Wallet you’re using is out of date and is missing critical upgrades. If you don’t update the app or you don’t have your recovery phrase written down, you won’t be able to access your assets.",
   "View recovery phrase": "View recovery phrase",
   "Recovery phrase": "Recovery phrase",
   "Floor: {{floorPrice}} ETH": "Floor: {{floorPrice}} ETH",

@@ -68,7 +68,7 @@ export function ForceUpgradeModal() {
           onConfirm={onPressConfirm}>
           <Text color="textSecondary" textAlign="center" variant="bodySmall">
             {t(
-              'The version of Uniswap Wallet you’re using is out of date and is missing critical upgrades. If you don’t update the app or you don’t have your recovery phrase written down, you won’t be able to access your assets. '
+              'The version of Uniswap Wallet you’re using is out of date and is missing critical upgrades. If you don’t update the app or you don’t have your recovery phrase written down, you won’t be able to access your assets.'
             )}
             {mnemonicId && (
               <Text color="white" onPress={onPressViewRecovery}>
