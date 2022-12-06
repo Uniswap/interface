@@ -2,6 +2,8 @@ import clsx from 'clsx'
 import { getDeltaArrow } from 'components/Tokens/TokenDetails/PriceChart'
 import { Box, BoxProps } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
+import { headlineMedium, headlineSmall } from 'nft/css/common.css'
+import { loadingAsset } from 'nft/css/loading.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { GenieCollection, TokenType } from 'nft/types'
@@ -19,6 +21,19 @@ const PercentChange = styled.div<{ isNegative: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
+`
+
+const CollectionNameText = styled.div<{ isVerified: boolean }>`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: ${({ isVerified }) => (isVerified ? '12px' : '0px')};
+`
+
+const CollectionNameTextLoading = styled.div`
+  ${loadingAsset}
+  height: 32px;
+  width: 236px;
 `
 
 const MobileSocialsIcon = ({ children, href }: { children: ReactNode; href: string }) => {
@@ -133,14 +148,17 @@ const CollectionName = ({
   toggleCollectionSocials: () => void
 }) => {
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
-  const nameClass = isCollectionStatsLoading ? styles.nameTextLoading : styles.nameText
 
   return (
     <Row justifyContent="space-between">
       <Row minWidth="0">
-        <ThemedText.HeadlineSmall marginRight={!isVerified ? '12' : '0'} className={nameClass}>
-          {name}
-        </ThemedText.HeadlineSmall>
+        {isCollectionStatsLoading ? (
+          <CollectionNameTextLoading />
+        ) : (
+          <CollectionNameText isVerified={isVerified} className={isMobile ? headlineSmall : headlineMedium}>
+            {name}
+          </CollectionNameText>
+        )}
         {isVerified && <VerifiedIcon style={{ width: '32px', height: '32px' }} />}
         <Row
           display={{ sm: 'none', md: 'flex' }}
