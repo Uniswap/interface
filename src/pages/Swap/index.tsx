@@ -12,6 +12,7 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { isSupportedChain } from 'constants/chains'
+import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
@@ -498,6 +499,8 @@ export default function Swap() {
 
   const location = useLocation()
 
+  const landingPageFlag = useLandingPageFlag()
+
   return (
     <Trace page={PageName.SWAP_PAGE} shouldLogImpression>
       <>
@@ -511,10 +514,8 @@ export default function Swap() {
         />
         <PageWrapper>
           <SwapWrapper
-            onClick={() => {
-              navigate('/swap')
-            }}
-            open={location.pathname !== '/swap'}
+            onClick={() => landingPageFlag === LandingPageVariant.Enabled && navigate('/swap')}
+            open={landingPageFlag === LandingPageVariant.Enabled && location.pathname === '/'}
             id="swap-page"
           >
             <SwapHeader allowedSlippage={allowedSlippage} />

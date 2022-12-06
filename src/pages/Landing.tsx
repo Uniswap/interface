@@ -1,5 +1,6 @@
 import { ButtonCTA } from 'components/Button'
 import { AutoRow } from 'components/Row'
+import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
 import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -137,7 +138,7 @@ export default function Landing() {
   const location = useLocation()
   const isOpen = location.pathname === '/'
 
-  if (!isOpen) return null
+  if (useLandingPageFlag() === LandingPageVariant.Control || !isOpen) return null
 
   return (
     <PageWrapper isDarkMode={isDarkMode}>
