@@ -1,7 +1,7 @@
 import { ButtonCTA } from 'components/Button'
 import { AutoRow } from 'components/Row'
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
@@ -133,6 +133,11 @@ export default function Landing() {
   const handleMouseOut = () => {
     setIsHoveredText(false)
   }
+
+  const location = useLocation()
+  const isOpen = location.pathname === '/'
+
+  if (!isOpen) return null
 
   return (
     <PageWrapper isDarkMode={isDarkMode}>
