@@ -4241,7 +4241,7 @@
   resolved "https://registry.npmjs.org/@uniswap/merkle-distributor/-/merkle-distributor-1.0.1.tgz"
   integrity sha512-5gDiTI5hrXIh5UWTrxKYjw30QQDnpl8ckDSpefldNenDlYO1RKkdUYMYpvrqGi2r7YzLYTlO6+TDlNs6O7hDRw==
 
-"@uniswap/permit2-sdk@^1.2.0":
+"@uniswap/permit2-sdk@1.2.0", "@uniswap/permit2-sdk@^1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@uniswap/permit2-sdk/-/permit2-sdk-1.2.0.tgz#ed86440a87a6c318169c8e6f161fc263ad040891"
   integrity sha512-Ietv3FxN7+RCXcPSED/i/8b0a2GUZrMdyX05k3FsSztvYKyPFAMS/hBXojF0NZqYB1bHecqYc7Ej+7tV/rdYXg==
@@ -4329,7 +4329,7 @@
   resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.30.tgz#2103ca23b8007c59ec71718d34cdc97861c409e5"
   integrity sha512-HwY2VvkQ8lNR6ks5NqQfAtg+4IZqz3KV1T8d2DlI8emIn9uMmaoFbIOg0nzjqAVKKnZSbMTRRtUoAh6mmjRvog==
 
-"@uniswap/universal-router-sdk@^1.2.1":
+"@uniswap/universal-router-sdk@1.2.1", "@uniswap/universal-router-sdk@^1.2.1":
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/@uniswap/universal-router-sdk/-/universal-router-sdk-1.2.1.tgz#6ebd2830cf5abc4e132df4458e92bb33c171b604"
   integrity sha512-NntAR9owpWy0zlDpaOiMqGHR+UK50R9pIOQBa8TwRL4cRdQpXTs9/hjynTMZYDri/fYiW/+111hv4BPwvh7RFQ==
@@ -4429,21 +4429,23 @@
     "@uniswap/v3-core" "1.0.0"
     "@uniswap/v3-periphery" "^1.0.1"
 
-"@uniswap/widgets@2.20.0":
-  version "2.20.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.20.0.tgz#eb7ca21ae360a51ff04d86ec5c18255bfb0ff52e"
-  integrity sha512-JAjcxczWJzod1QDFunKvYGpCCyneqSV6Zh6GyGaB1jbcThJ/GZ6yxmebeZIzGV+OiIFV2c2xMSjUq5KwNLSCaw==
+"@uniswap/widgets@2.22.0":
+  version "2.22.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.22.0.tgz#dd2ba224c7c9ef3106b5eb66c3d49d24950b9560"
+  integrity sha512-mY3n0zRZMak4VHZ2kBqWUvIkFyYBk4SFcTlrKP3w3W5YbXdEH/xHWO8oIuwfSOig/kveVy6jjnjSa05FWJbDhg==
   dependencies:
     "@babel/runtime" ">=7.17.0"
     "@fontsource/ibm-plex-mono" "^4.5.1"
     "@fontsource/inter" "^4.5.1"
     "@popperjs/core" "^2.4.4"
     "@reduxjs/toolkit" "^1.6.1"
+    "@uniswap/permit2-sdk" "^1.2.0"
     "@uniswap/redux-multicall" "^1.1.8"
     "@uniswap/router-sdk" "^1.3.0"
     "@uniswap/sdk-core" "^3.0.1"
     "@uniswap/smart-order-router" "^2.10.0"
     "@uniswap/token-lists" "^1.0.0-beta.30"
+    "@uniswap/universal-router-sdk" "^1.2.1"
     "@uniswap/v2-sdk" "^3.0.1"
     "@uniswap/v3-sdk" "^3.8.2"
     "@web3-react/core" "8.0.35-beta.0"
