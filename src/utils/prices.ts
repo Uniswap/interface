@@ -1,10 +1,12 @@
 import { Fraction, JSBI, Percent, TokenAmount, Trade } from '@ubeswap/sdk'
+import { MinimaRouterTrade } from 'components/swap/routing/trade'
 
 import {
   ALLOWED_PRICE_IMPACT_HIGH,
   ALLOWED_PRICE_IMPACT_LOW,
   ALLOWED_PRICE_IMPACT_MEDIUM,
   BLOCKED_PRICE_IMPACT_NON_EXPERT,
+  ZERO_PERCENT,
 } from '../constants'
 import { Field } from '../state/swap/actions'
 import { basisPointsToPercent } from './index'
@@ -22,6 +24,8 @@ export function computeTradePriceBreakdown(trade?: Trade | null): {
   // e.g. for 3 tokens/2 hops: 1 - ((1 - .03) * (1-.03))
   const realizedLPFee = !trade
     ? undefined
+    : trade instanceof MinimaRouterTrade
+    ? ZERO_PERCENT
     : ONE_HUNDRED_PERCENT.subtract(
         trade.route.pairs.reduce<Fraction>(
           (currentFee: Fraction): Fraction => currentFee.multiply(INPUT_FRACTION_AFTER_FEE),
