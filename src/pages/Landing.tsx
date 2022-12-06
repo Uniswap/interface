@@ -138,7 +138,7 @@ export default function Landing() {
   const location = useLocation()
   const isOpen = location.pathname === '/'
 
-  const onGetStartedClick = () => navigate('/swap')
+  const onContinueClick = () => navigate('/swap')
 
   if (useLandingPageFlag() === LandingPageVariant.Control || !isOpen) return null
 
@@ -151,8 +151,8 @@ export default function Landing() {
         </SubText>
       </TitleContentWrapper>
       <ContentWrapper>
-        <ButtonCTA onClick={onGetStartedClick}>
-          <ButtonCTAText>Get started</ButtonCTAText>
+        <ButtonCTA onClick={onContinueClick}>
+          <ButtonCTAText>Continue</ButtonCTAText>
         </ButtonCTA>
       </ContentWrapper>
       <FooterWrapper onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
