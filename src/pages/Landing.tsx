@@ -24,7 +24,7 @@ const UniswapIcon = (props: SVGProps) => (
   </svg>
 )
 
-const PageWrapper = styled.span<{ isDarkMode: boolean }>`
+const PageWrapper = styled.div<{ isDarkMode: boolean }>`
   width: 100%;
   height: calc(100vh - 72px);
   position: absolute;
@@ -50,6 +50,7 @@ const PageWrapper = styled.span<{ isDarkMode: boolean }>`
 `
 
 const TitleText = styled.h1<{ isDarkMode: boolean }>`
+  color: transparent;
   font-size: 36px;
   font-weight: 600;
   text-align: center;
@@ -61,7 +62,6 @@ const TitleText = styled.h1<{ isDarkMode: boolean }>`
 
   background-clip: text;
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
 
   @media screen and (min-width: ${MOBILE_BREAKPOINT}px) {
     font-size: 48px;
