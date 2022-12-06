@@ -5,6 +5,7 @@ import styled from 'styled-components/macro'
 import { flexColumnNoWrap } from 'theme/styles'
 
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
+import UniwalletIcon from '../../assets/images/uniwallet.png'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import sockImg from '../../assets/svg/socks.svg'
 import { useHasSocks } from '../../hooks/useSocksBalance'
@@ -56,6 +57,8 @@ const useIcon = (connectionType: ConnectionType) => {
 
   if (avatar || connectionType === ConnectionType.INJECTED) {
     return <Identicon />
+  } else if (connectionType === ConnectionType.UNIWALLET) {
+    return <img src={UniwalletIcon} alt="Uniwallet" />
   } else if (connectionType === ConnectionType.WALLET_CONNECT) {
     return <img src={WalletConnectIcon} alt="WalletConnect" />
   } else if (connectionType === ConnectionType.COINBASE_WALLET) {

@@ -5,6 +5,7 @@ import {
   gnosisSafeConnection,
   injectedConnection,
   networkConnection,
+  uniwalletConnectConnection,
   walletConnectConnection,
 } from 'connection'
 
@@ -25,6 +26,7 @@ const CONNECTIONS = [
   injectedConnection,
   coinbaseWalletConnection,
   walletConnectConnection,
+  uniwalletConnectConnection,
   networkConnection,
 ]
 export function getConnection(c: Connector | ConnectionType) {
@@ -41,8 +43,9 @@ export function getConnection(c: Connector | ConnectionType) {
       case ConnectionType.COINBASE_WALLET:
         return coinbaseWalletConnection
       case ConnectionType.WALLET_CONNECT:
-      case ConnectionType.UNIWALLET:
         return walletConnectConnection
+      case ConnectionType.UNIWALLET:
+        return uniwalletConnectConnection
       case ConnectionType.NETWORK:
         return networkConnection
       case ConnectionType.GNOSIS_SAFE:
