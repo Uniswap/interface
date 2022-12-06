@@ -222,7 +222,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
       )}
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOnDismiss}>
-          <AutoColumn gap="12px" justify="center">
+          <AutoColumn gap="md" justify="center">
             <ThemedText.DeprecatedLargeHeader>
               <Trans>Depositing Liquidity</Trans>
             </ThemedText.DeprecatedLargeHeader>
@@ -234,7 +234,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
       )}
       {attempting && hash && (
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
-          <AutoColumn gap="12px" justify="center">
+          <AutoColumn gap="md" justify="center">
             <ThemedText.DeprecatedLargeHeader>
               <Trans>Transaction Submitted</Trans>
             </ThemedText.DeprecatedLargeHeader>

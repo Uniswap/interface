@@ -79,7 +79,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
   return (
     <StyledPositionCard border={border} bgColor={backgroundColor}>
       <CardNoise />
-      <AutoColumn gap="12px">
+      <AutoColumn gap="md">
         <FixedHeightRow>
           <AutoRow gap="8px">
             <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={20} />
@@ -116,7 +116,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
         </FixedHeightRow>
 
         {showMore && (
-          <AutoColumn gap="8px">
+          <AutoColumn gap="sm">
             <FixedHeightRow>
               <Text fontSize={16} fontWeight={500}>
                 <Trans>Your total pool tokens:</Trans>

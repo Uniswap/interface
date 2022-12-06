@@ -1,7 +1,6 @@
 export enum FeatureFlag {
-  favoriteTokens = 'favoriteTokens',
   traceJsonRpc = 'traceJsonRpc',
-  multiNetworkBalances = 'multiNetworkBalances',
   landingPage = 'landingPage',
   nftListing = 'nftListing',
+  permit2 = 'permit2',
 }

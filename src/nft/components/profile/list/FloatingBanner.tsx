@@ -1,9 +1,8 @@
 import { addressesByNetwork, SupportedChainId } from '@looksrare/sdk'
-import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { EventName, ModalName } from '@uniswap/analytics-events'
+import { useWeb3React } from '@web3-react/core'
 import { ListingButton } from 'nft/components/bag/profile/ListingButton'
-import { formatUsdPrice } from 'nft/utils/currency'
 import {
   approveCollectionRow,
   getTotalEthValue,
@@ -15,6 +14,7 @@ import {
 import { useIsMobile, useNFTList, useSellAsset } from 'nft/hooks'
 import { logListing, looksRareNonceFetcher } from 'nft/queries'
 import { AssetRow, Listing, ListingRow, ListingStatus, WalletAsset } from 'nft/types'
+import { formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { Dispatch, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components/macro'
@@ -50,7 +50,7 @@ const Content = styled.div`
 `
 
 export const FloatingBanner = () => {
-  const [allCollectionsApproved, setAllCollectionsApproved] = useState(false)
+  const [allCollectionsApproved] = useState(false)
   const setCollectionsRequiringApproval = useNFTList((state) => state.setCollectionsRequiringApproval)
   const collectionsRequiringApproval = useNFTList((state) => state.collectionsRequiringApproval)
   const listings = useNFTList((state) => state.listings)
@@ -58,10 +58,10 @@ export const FloatingBanner = () => {
   const setListingStatus = useNFTList((state) => state.setListingStatus)
   const { provider } = useWeb3React()
   const signer = provider?.getSigner()
-  const [openIndex, setOpenIndex] = useState(0)
+  const [, setOpenIndex] = useState(0)
   const getLooksRareNonce = useNFTList((state) => state.getLooksRareNonce)
   const setLooksRareNonce = useNFTList((state) => state.setLooksRareNonce)
-  const [ethPriceInUSD, setEthPriceInUSD] = useState(0)
+  const [ethPriceInUSD] = useState(0)
   const sellAssets = useSellAsset((state) => state.sellAssets)
   const trace = useTrace({ modal: ModalName.NFT_LISTING })
   const isMobile = useIsMobile()

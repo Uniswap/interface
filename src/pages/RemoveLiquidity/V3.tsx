@@ -290,7 +290,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         )}
         pendingText={pendingText}
       />
-      <AppBody>
+      <AppBody $maxWidth="unset">
         <AddRemoveTabs
           creating={false}
           adding={false}
@@ -410,7 +410,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               )}
 
               <div style={{ display: 'flex' }}>
-                <AutoColumn gap="12px" style={{ flex: '1' }}>
+                <AutoColumn gap="md" style={{ flex: '1' }}>
                   <ButtonConfirmed
                     confirmed={false}
                     disabled={removed || percent === 0 || !liquidityValue0}

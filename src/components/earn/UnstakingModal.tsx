@@ -90,9 +90,9 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
           </RowBetween>
           {stakingInfo?.stakedAmount && (
             <AutoColumn justify="center" gap="md">
-              <ThemedText.DeprecatedBody fontWeight={600} fontSize={36}>
+              <ThemedText.HeadlineLarge>
                 <FormattedCurrencyAmount currencyAmount={stakingInfo.stakedAmount} />
-              </ThemedText.DeprecatedBody>
+              </ThemedText.HeadlineLarge>
               <ThemedText.DeprecatedBody>
                 <Trans>Deposited liquidity:</Trans>
               </ThemedText.DeprecatedBody>
@@ -100,9 +100,9 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
           )}
           {stakingInfo?.earnedAmount && (
             <AutoColumn justify="center" gap="md">
-              <ThemedText.DeprecatedBody fontWeight={600} fontSize={36}>
+              <ThemedText.HeadlineLarge>
                 <FormattedCurrencyAmount currencyAmount={stakingInfo?.earnedAmount} />
-              </ThemedText.DeprecatedBody>
+              </ThemedText.HeadlineLarge>
               <ThemedText.DeprecatedBody>
                 <Trans>Unclaimed UNI</Trans>
               </ThemedText.DeprecatedBody>
@@ -118,7 +118,7 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
       )}
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOnDismiss}>
-          <AutoColumn gap="12px" justify="center">
+          <AutoColumn gap="md" justify="center">
             <ThemedText.DeprecatedBody fontSize={20}>
               <Trans>Withdrawing {stakingInfo?.stakedAmount?.toSignificant(4)} UNI-V2</Trans>
             </ThemedText.DeprecatedBody>
@@ -130,7 +130,7 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
       )}
       {hash && (
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
-          <AutoColumn gap="12px" justify="center">
+          <AutoColumn gap="md" justify="center">
             <ThemedText.DeprecatedLargeHeader>
               <Trans>Transaction Submitted</Trans>
             </ThemedText.DeprecatedLargeHeader>

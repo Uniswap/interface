@@ -10,6 +10,7 @@ import {
   SwapWidgetSkeleton,
 } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
+import { Permit2Variant, usePermit2Flag } from 'featureFlags/flags/permit2'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import {
   formatPercentInBasisPointsNumber,
@@ -131,6 +132,8 @@ export default function Widget({ token, onTokenChange, onReviewSwapClick }: Widg
     [initialQuoteDate, trace]
   )
 
+  const permit2Enabled = usePermit2Flag() === Permit2Variant.Enabled
+
   if (!(inputs.value.INPUT || inputs.value.OUTPUT)) {
     return <WidgetSkeleton />
   }
@@ -138,8 +141,9 @@ export default function Widget({ token, onTokenChange, onReviewSwapClick }: Widg
   return (
     <>
       <SwapWidget
-        disableBranding
         hideConnectionUI
+        brandedFooter={false}
+        permit2={permit2Enabled}
         routerUrl={WIDGET_ROUTER_URL}
         locale={locale}
         theme={theme}
