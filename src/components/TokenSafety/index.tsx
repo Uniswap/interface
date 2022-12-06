@@ -184,7 +184,7 @@ function ExplorerView({ token }: { token: Token }) {
 
 const StyledExternalLink = styled(ExternalLink)`
   color: ${({ theme }) => theme.textSecondary};
-  stroke: ${({ theme }) => theme.textSecondary};
+  stroke: currentColor;
   font-weight: 600;
 `
 
