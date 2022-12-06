@@ -89,3 +89,6 @@ storybook-static/*
 .dccache
 
 lib/
+
+# Jest
+coverage/
