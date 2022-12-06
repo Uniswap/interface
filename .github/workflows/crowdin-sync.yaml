@@ -12,12 +12,12 @@ jobs:
   download-translations:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
       - uses: ./.github/actions/setup
       - run: yarn i18n:extract
 
       - name: Download Crowdin translations
-        uses: crowdin/github-action@1.4.9
+        uses: crowdin/github-action@ecd7eb0ef6f3cfa16293c79e9cbc4bc5b5fd9c49
         with:
           upload_sources: false
           download_translations: true

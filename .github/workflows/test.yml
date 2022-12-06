@@ -12,21 +12,21 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
       - uses: ./.github/actions/setup
       - run: yarn lint
 
   deps-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
       - uses: ./.github/actions/setup
       - run: yarn yarn-deduplicate --strategy=highest --list --fail
 
   unit-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
       - uses: ./.github/actions/setup
       - run: yarn prepare
       - run: yarn test
@@ -34,18 +34,18 @@ jobs:
   cypress-build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
       - uses: ./.github/actions/setup
       - run: yarn prepare
 
       - run: yarn build
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@82c141cc518b40d92cc801eee768e7aafc9c2fa2
         with:
           name: build
           path: build
           if-no-files-found: error
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7
         id: cypress-cache
         with:
           path: /home/runner/.cache/Cypress
@@ -61,15 +61,15 @@ jobs:
       matrix:
         containers: [1, 2, 3, 4, 5]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
       - uses: ./.github/actions/setup
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@f023be2c48cc18debc3bacd34cb396e0295e2869
         with:
           name: build
           path: build
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7
         id: cypress-cache
         with:
           path: /home/runner/.cache/Cypress
@@ -77,7 +77,7 @@ jobs:
       - if: steps.cypress-cache.outputs.cache-hit != 'true'
         run: yarn cypress install
 
-      - uses: cypress-io/github-action@v4
+      - uses: cypress-io/github-action@d79d2d530a66e641eb4a5f227e13bc985c60b964
         with:
           install: false
           start: yarn serve
