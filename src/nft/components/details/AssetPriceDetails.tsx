@@ -189,14 +189,21 @@ const CollectionNameContainer = styled.div`
 `
 
 const CollectionHeader = styled.span`
-  display: flex;
-  align-items: center;
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
   color: ${({ theme }) => theme.textPrimary};
   text-decoration: none;
   ${OpacityHoverState};
+`
+
+const VerifiedIconContainer = styled.span`
+  position: relative;
+`
+
+const StyledVerifiedIcon = styled(VerifiedIcon)`
+  position: absolute;
+  top: 0px;
 `
 
 const DefaultLink = styled(Link)`
@@ -357,7 +364,8 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
         <CollectionNameContainer>
           <DefaultLink to={`/nfts/collection/${asset.address}`}>
             <CollectionHeader>
-              {collection.collectionName} {collection.isVerified && <VerifiedIcon />}
+              {collection.collectionName}
+              <VerifiedIconContainer>{collection.isVerified && <StyledVerifiedIcon />}</VerifiedIconContainer>
             </CollectionHeader>
           </DefaultLink>
           <UploadLink onClick={shareTweet} target="_blank">
