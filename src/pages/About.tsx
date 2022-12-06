@@ -43,7 +43,6 @@ const PageWrapper = styled.span<{ isDarkMode: boolean }>`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  transition: 250ms ease opacity;
 `
 
 const TitleText = styled.h1<{ isDarkMode: boolean }>`
@@ -117,7 +116,7 @@ const SmallCard = styled.a`
   transition: 200ms ease all;
 
   &:hover {
-    transition: 200ms ease all;
+    transition: 200ms ease background-color;
     background-color: ${({ theme }) => theme.backgroundModule};
   }
 `
