@@ -1,3 +1,6 @@
+import { useTrace } from '@uniswap/analytics'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { EventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { OpacityHoverState } from 'components/Common'
 import { useNftBalanceQuery } from 'graphql/data/nft/NftBalance'
@@ -186,14 +189,21 @@ const CollectionNameContainer = styled.div`
 `
 
 const CollectionHeader = styled.span`
-  display: flex;
-  align-items: center;
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
   color: ${({ theme }) => theme.textPrimary};
   text-decoration: none;
   ${OpacityHoverState};
+`
+
+const VerifiedIconContainer = styled.span`
+  position: relative;
+`
+
+const StyledVerifiedIcon = styled(VerifiedIcon)`
+  position: absolute;
+  top: 0px;
 `
 
 const DefaultLink = styled(Link)`
@@ -214,11 +224,17 @@ const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
     () => (USDValue ? USDValue * asset.floor_sell_order_price : undefined),
     [USDValue, asset.floor_sell_order_price]
   )
+  const trace = useTrace()
 
   const goToListPage = () => {
     resetSellAssets()
     navigate('/nfts/profile')
     selectSellAsset(asset)
+    sendAnalyticsEvent(EventName.NFT_SELL_ITEM_ADDED, {
+      collection_address: asset.asset_contract.address,
+      token_id: asset.tokenId,
+      ...trace,
+    })
     setSellPageState(ProfilePageStateType.LISTING)
   }
 
@@ -348,7 +364,8 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
         <CollectionNameContainer>
           <DefaultLink to={`/nfts/collection/${asset.address}`}>
             <CollectionHeader>
-              {collection.collectionName} {collection.isVerified && <VerifiedIcon />}
+              {collection.collectionName}
+              <VerifiedIconContainer>{collection.isVerified && <StyledVerifiedIcon />}</VerifiedIconContainer>
             </CollectionHeader>
           </DefaultLink>
           <UploadLink onClick={shareTweet} target="_blank">
