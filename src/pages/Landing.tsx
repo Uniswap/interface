@@ -37,7 +37,6 @@ const PageWrapper = styled.span<{ isDarkMode: boolean }>`
   justify-content: end;
   padding: 24px 24px 64px 24px;
   align-items: center;
-  pointer-events: none;
   transition: 250ms ease opacity;
 
   @media screen and (min-width: ${MOBILE_BREAKPOINT}px) {
@@ -138,6 +137,8 @@ export default function Landing() {
   const location = useLocation()
   const isOpen = location.pathname === '/'
 
+  const onGetStartedClick = () => navigate('/swap')
+
   if (useLandingPageFlag() === LandingPageVariant.Control || !isOpen) return null
 
   return (
@@ -149,11 +150,7 @@ export default function Landing() {
         </SubText>
       </TitleContentWrapper>
       <ContentWrapper>
-        <ButtonCTA
-          onClick={() => {
-            navigate('/swap')
-          }}
-        >
+        <ButtonCTA onClick={onGetStartedClick}>
           <ButtonCTAText>Get started</ButtonCTAText>
         </ButtonCTA>
       </ContentWrapper>
