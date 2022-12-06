@@ -20,10 +20,6 @@ export const NUM_GRAPHS = 5
 // most paths have fewer than or exactly 365 points
 export const GRAPH_PRECISION = 365
 
-export function takeSubset(arr: Array<any> | undefined, end?: number) {
-  return arr?.slice(0, end)
-}
-
 /**
  * Normalizes a Path by rescaling the x-axis and mapping to the Path.
  * Required because different date ranges have different number of points.

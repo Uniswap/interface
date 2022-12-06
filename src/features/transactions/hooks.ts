@@ -21,16 +21,6 @@ import {
 } from 'src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 
-// sorted oldest to newest
-export function useSortedTransactions(address: Address | null) {
-  const transactions = useSelectAddressTransactions(address)
-
-  return useMemo(() => {
-    if (!transactions) return
-    return transactions.sort((a, b) => a.addedTime - b.addedTime)
-  }, [transactions])
-}
-
 export function usePendingTransactions(
   address: Address | null,
   ignoreTransactionTypes = [TransactionType.FiatPurchase]

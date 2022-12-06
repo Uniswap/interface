@@ -57,10 +57,6 @@ const GradientBlur = ({
   )
 }
 
-export const EXPORT_FOR_TESTING = {
-  UniconSvg,
-}
-
 function UniconMask({
   size,
   attributeData,

@@ -91,33 +91,6 @@ export const useTimeout = (
   return cancel
 }
 
-export const useSecondCountdownTimer = (
-  shouldRun: boolean,
-  time: number, // in seconds
-  timerEndCallback: () => void,
-  countdownInterval = 1 // in seconds
-) => {
-  const [countdownTime, setCountdownTime] = useState(time)
-
-  useEffect(() => {
-    if (!shouldRun) return
-    const interval = setInterval(() => {
-      if (countdownTime === 0) {
-        timerEndCallback()
-        setCountdownTime(time)
-        return
-      }
-
-      setCountdownTime(countdownTime - countdownInterval)
-    }, countdownInterval * 1000)
-    return () => {
-      clearInterval(interval)
-    }
-  }, [shouldRun, countdownTime, countdownInterval, timerEndCallback, time])
-
-  return countdownTime
-}
-
 // Copied from https://github.com/Uniswap/interface/blob/main/src/hooks/useDebounce.ts
 // Which is modified from https://usehooks.com/useDebounce/
 export function useDebounce<T>(value: T, delay: number = DEFAULT_DELAY): T {

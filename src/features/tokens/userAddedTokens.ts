@@ -1,6 +1,6 @@
 // Copied some parts from https://github.com/Uniswap/interface/blob/main/src/state/user/hooks.tsx
 
-import { Currency, Token } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useAppSelector } from 'src/app/hooks'
 import { SerializedToken } from 'src/features/tokenLists/types'
@@ -38,11 +38,4 @@ export function useUserAddedTokens(): Token[] {
     }
     return result
   }, [serializedTokensMap])
-}
-
-// Check if currency is included in custom list from user storage
-export function useIsUserAddedToken(currency: Currency | undefined | null): boolean {
-  const userAddedTokens = useUserAddedTokens()
-  if (!currency) return false
-  return !!userAddedTokens.find((token) => currency.equals(token))
 }

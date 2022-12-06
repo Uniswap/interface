@@ -48,13 +48,6 @@ export const L2_CHAIN_IDS = [
   ChainId.PolygonMumbai,
 ] as const
 
-export const EIP_1559_CHAINS = [
-  ChainId.Mainnet,
-  ChainId.Goerli,
-  ChainId.Polygon,
-  ChainId.PolygonMumbai,
-]
-
 // Renamed from SupportedL2ChainId in web app
 export type L2ChainId = typeof L2_CHAIN_IDS[number]
 
@@ -151,11 +144,6 @@ export const CHAIN_INFO: ChainInfo = {
     rpcUrls: ['https://rpc-endpoints.superfluid.dev/mumbai'],
   },
 }
-
-export const ARBITRUM_HELP_CENTER_LINK =
-  'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum'
-export const OPTIMISM_HELP_CENTER_LINK =
-  'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ'
 
 export function isPolygonChain(
   chainId: number

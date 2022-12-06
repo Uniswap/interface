@@ -2,7 +2,6 @@ import { createSelector } from '@reduxjs/toolkit'
 import type { RootState } from 'src/app/rootReducer'
 import { TokenSortableField } from 'src/data/__generated__/types-and-hooks'
 import { DEMO_ACCOUNT_ADDRESS } from 'src/features/wallet/accounts/useTestAccount'
-import { NFTViewType } from 'src/features/wallet/types'
 import { AccountType, SignerMnemonicAccount } from './accounts/types'
 
 const DEFAULT_TOKENS_ORDER_BY = TokenSortableField.Volume
@@ -65,22 +64,11 @@ export const selectUserPalette = createSelector(
   (activeAccount) => activeAccount?.customizations?.palette
 )
 
-export const makeSelectLocalPfp = (address: Address) =>
-  createSelector(selectAccounts, (accounts) => accounts[address]?.customizations?.localPfp)
-
 export const selectFinishedOnboarding = (state: RootState) => state.wallet.finishedOnboarding
 export const selectFlashbotsEnabled = (state: RootState) => state.wallet.flashbotsEnabled
-export const selectNFTViewType = (state: RootState) =>
-  state.wallet.settings.nftViewType ?? NFTViewType.Grid
 
 export const selectTokensOrderBy = (state: RootState) =>
   state.wallet.settings.tokensOrderBy ?? DEFAULT_TOKENS_ORDER_BY
-
-export const selectInactiveAccountAddresses = createSelector(
-  selectActiveAccountAddress,
-  selectAccounts,
-  (activeAddress, accounts) => Object.keys(accounts).filter((address) => address !== activeAddress)
-)
 
 export const selectInactiveAccounts = createSelector(
   selectActiveAccountAddress,

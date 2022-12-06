@@ -1,12 +1,9 @@
 import { CurrencyAmount, NativeCurrency, TradeType } from '@uniswap/sdk-core'
 import { BigNumber, providers } from 'ethers'
-import { TFunction } from 'i18next'
 import { ChainId } from 'src/constants/chains'
 import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
-  TransactionDetails,
-  TransactionType,
 } from 'src/features/transactions/types'
 import { v4 as uuid } from 'uuid'
 
@@ -30,19 +27,6 @@ export function getSerializableTransactionRequest(
     maxPriorityFeePerGas: maxPriorityFeePerGas?.toString(),
     maxFeePerGas: maxFeePerGas?.toString(),
   }
-}
-
-export function getNotificationName(transaction: TransactionDetails, t: TFunction) {
-  switch (transaction.typeInfo.type) {
-    case TransactionType.Approve:
-      return t('Approve')
-    case TransactionType.Swap:
-      return t('Swap')
-    case TransactionType.Wrap:
-      return transaction.typeInfo.unwrapped ? t('Unwrapped') : t('Wrap')
-  }
-
-  return t('Transaction')
 }
 
 function getNativeCurrencyTotalSpend(

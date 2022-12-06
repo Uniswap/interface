@@ -3,7 +3,7 @@
 import { TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useAppSelector } from 'src/app/hooks'
-import { UNI_LIST, UNSUPPORTED_LIST_URLS } from 'src/constants/tokenLists/tokenLists'
+import { UNSUPPORTED_LIST_URLS } from 'src/constants/tokenLists/tokenLists'
 import { ChainIdToListedTokens } from 'src/features/tokenLists/types'
 import sortByListPriority from 'src/features/tokenLists/utils'
 import { WrappedTokenInfo } from 'src/features/tokenLists/wrappedTokenInfo'
@@ -104,34 +104,9 @@ export function useActiveListUrls(): string[] | undefined {
   }, [activeUrls])
 }
 
-export function useInactiveListUrls(): string[] {
-  const lists = useAllLists()
-  const allActiveListUrls = useActiveListUrls()
-  return Object.keys(lists).filter(
-    (url) => !allActiveListUrls?.includes(url) && !UNSUPPORTED_LIST_URLS.includes(url)
-  )
-}
-
 // get all the tokens from active lists, combine with local default tokens
 export function useCombinedActiveList(): ChainIdToListedTokens {
   const activeListUrls = useActiveListUrls()
   const activeTokens = useCombinedTokenMapFromUrls(activeListUrls)
   return activeTokens
-}
-
-// list of tokens not supported for various reasons, used to show warnings and prevent swaps
-export function useUnsupportedTokenList(): ChainIdToListedTokens {
-  // get dynamic list of unsupported tokens
-  const loadedUnsupportedListMap = useCombinedTokenMapFromUrls(UNSUPPORTED_LIST_URLS)
-  return loadedUnsupportedListMap
-}
-
-const ONLY_UNISWAP_LIST = [UNI_LIST]
-export function useUniswapDefaultList(): ChainIdToListedTokens {
-  return useCombinedTokenMapFromUrls(ONLY_UNISWAP_LIST)
-}
-
-export function useIsListActive(url: string): boolean {
-  const activeListUrls = useActiveListUrls()
-  return Boolean(activeListUrls?.includes(url))
 }

@@ -54,13 +54,6 @@ export function validateMnemonic(mnemonic?: string): {
   return { validMnemonic: formatted }
 }
 
-export function isValidDerivationPath(derivationPath: string) {
-  if (!derivationPath) return false
-  const split = derivationPath.trim().split('/')
-  // TODO validate each path segment individually here
-  return split[0] === 'm' && split.length === 6
-}
-
 // Check if phrase has trailing whitespace, indicating the user is done typing the previous word.
 export function userFinishedTypingWord(mnemonic: string | undefined) {
   if (!mnemonic) return false

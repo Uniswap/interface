@@ -123,10 +123,6 @@ export function areAddressesEqual(a1: NullUndefined<Address>, a2: NullUndefined<
   return validA1 !== null && validA2 !== null && validA1 === validA2
 }
 
-export function trimLeading0x(input: Address): string {
-  return input.startsWith('0x') ? input.substring(2) : input
-}
-
 export function ensureLeading0x(input: Address): Address {
   return input.startsWith('0x') ? input : `0x${input}`
 }

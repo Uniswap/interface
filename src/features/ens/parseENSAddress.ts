@@ -36,7 +36,3 @@ export function parseENSAddress(
   }
   return { ensName: domain, ensPath: path }
 }
-
-export function isValidEnsName(value: string) {
-  return value && parseENSAddress(value) !== undefined
-}

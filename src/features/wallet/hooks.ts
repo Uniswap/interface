@@ -6,7 +6,6 @@ import { useENSName } from 'src/features/ens/api'
 import { Account } from 'src/features/wallet/accounts/types'
 import {
   makeSelectAccountNotificationSetting,
-  makeSelectLocalPfp,
   selectActiveAccount,
   selectActiveAccountAddress,
   selectNonPendingAccounts,
@@ -64,10 +63,6 @@ export function useActiveAccountWithThrow(): Account {
   const activeAccount = useAppSelector(selectActiveAccount)
   if (!activeAccount) throw new Error('No active account')
   return activeAccount
-}
-
-export function useSelectLocalPfp(address: Address) {
-  return useAppSelector(makeSelectLocalPfp(address))
 }
 
 export function useSelectAccountNotificationSetting(address: Address) {

@@ -53,10 +53,6 @@ export const WalletContextProvider = ({ children }: PropsWithChildren<any>) => {
   )
 }
 
-export function useWalletContext(): WalletContextValue {
-  return useContext(WalletContext).value
-}
-
 export function useWalletSigners(): SignerManager {
   return useContext(WalletContext).value.signers
 }

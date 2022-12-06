@@ -9,8 +9,6 @@ export enum ImportAccountEnsType {
   ENS = 'ens',
 }
 
-export const ImportAccountInputType = { ...ImportAccountType, ...ImportAccountEnsType }
-
 interface BaseImportAccountParams {
   type: ImportAccountType
   name?: string

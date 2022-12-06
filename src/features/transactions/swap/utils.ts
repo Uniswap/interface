@@ -1,4 +1,4 @@
-import { Currency, Price, TradeType } from '@uniswap/sdk-core'
+import { Currency, TradeType } from '@uniswap/sdk-core'
 import { BigNumber, BigNumberish } from 'ethers'
 import { TFunction } from 'i18next'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
@@ -22,14 +22,6 @@ export function serializeQueryParams(
     queryString.push(`${encodeURIComponent(param)}=${encodeURIComponent(params[param])}`)
   }
   return queryString.join('&')
-}
-
-export function formatExecutionPrice(price: Price<Currency, Currency> | undefined) {
-  if (!price) return '-'
-
-  return `1 ${price.quoteCurrency?.symbol} = ${formatPrice(price, NumberType.FiatTokenPrice)} ${
-    price?.baseCurrency.symbol
-  }`
 }
 
 export function getWrapType(

@@ -48,8 +48,6 @@ interface SwapFormProps {
   showingSelectorScreen: boolean
 }
 
-export const ARROW_SIZE = 44
-
 export function SwapForm({
   dispatch,
   onNext,

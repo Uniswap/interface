@@ -173,6 +173,5 @@ export type RootParamList = TabParamList &
 export const useAppStackNavigation = () => useNavigation<AppStackNavigationProp>()
 export const useHomeStackNavigation = () => useNavigation<HomeStackNavigationProp>()
 export const useExploreStackNavigation = () => useNavigation<ExploreStackNavigationProp>()
-export const useAccountStackNavigation = () => useNavigation<AccountStackNavigationProp>()
 export const useSettingsStackNavigation = () => useNavigation<SettingsStackNavigationProp>()
 export const useOnboardingStackNavigation = () => useNavigation<OnboardingStackNavigationProp>()

@@ -9,10 +9,5 @@ export enum PollingInterval {
   LightningMcQueen = 3 * 1000, // 3 seconds, approx block times for polygon
 }
 
-export const NetworkPollConfig = {
-  Fast: { networkCacheConfig: { poll: PollingInterval.Fast } },
-  Slow: { networkCacheConfig: { poll: PollingInterval.Slow } },
-}
-
 // Used when referential equality is required
 export const EMPTY_ARRAY: any[] = []
