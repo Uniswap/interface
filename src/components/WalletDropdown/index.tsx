@@ -7,6 +7,7 @@ import { ApplicationModal } from '../../state/application/reducer'
 import DefaultMenu from './DefaultMenu'
 import LanguageMenu from './LanguageMenu'
 import { TransactionHistoryMenu } from './TransactionMenu'
+import UniwalletModal from './UniwalletModal'
 
 const WalletDropdownAnchor = styled.div`
   position: fixed;
@@ -51,10 +52,12 @@ export enum MenuState {
 function WalletDropdown() {
   const [menu, setMenu] = useState<MenuState>(MenuState.DEFAULT)
   const walletDropdownOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
+  const uniwalletDropdownOpen = useModalIsOpen(ApplicationModal.UNIWALLET_CONNECT)
 
   return (
     <>
-      {walletDropdownOpen && (
+      <UniwalletModal />
+      {Boolean(walletDropdownOpen || uniwalletDropdownOpen) && (
         <WalletDropdownAnchor>
           <WalletDropdownWrapper>
             {menu === MenuState.DEFAULT && <DefaultMenu setMenu={setMenu} />}
