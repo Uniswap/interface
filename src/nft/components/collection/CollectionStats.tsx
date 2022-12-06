@@ -2,9 +2,10 @@ import clsx from 'clsx'
 import { getDeltaArrow } from 'components/Tokens/TokenDetails/PriceChart'
 import { Box, BoxProps } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
-import { headlineMedium, headlineSmall } from 'nft/css/common.css'
+import { body, bodySmall, headlineMedium, headlineSmall } from 'nft/css/common.css'
 import { loadingAsset } from 'nft/css/loading.css'
 import { themeVars } from 'nft/css/sprinkles.css'
+import { useIsMobile } from 'nft/hooks'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { GenieCollection, TokenType } from 'nft/types'
 import { floorFormatter, quantityFormatter, roundWholePercentage, volumeFormatter } from 'nft/utils/numbers'
@@ -226,6 +227,7 @@ const CollectionDescription = ({ description }: { description: string }) => {
   const baseRef = useRef<HTMLDivElement>(null)
   const descriptionRef = useRef<HTMLDivElement>(null)
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     if (
@@ -245,7 +247,12 @@ const CollectionDescription = ({ description }: { description: string }) => {
     <Box ref={baseRef} marginTop={{ sm: '12', md: '16' }} style={{ maxWidth: '680px' }}>
       <Box
         ref={descriptionRef}
-        className={clsx(styles.description, styles.nameText, readMore && styles.descriptionOpen)}
+        className={clsx(
+          styles.description,
+          styles.nameText,
+          readMore && styles.descriptionOpen,
+          isMobile ? bodySmall : body
+        )}
       >
         <ReactMarkdown
           source={description}
@@ -253,7 +260,12 @@ const CollectionDescription = ({ description }: { description: string }) => {
           renderers={{ paragraph: 'span' }}
         />
       </Box>
-      <Box as="span" display={showReadMore ? 'inline' : 'none'} className={styles.readMore} onClick={toggleReadMore}>
+      <Box
+        as="span"
+        display={showReadMore ? 'inline' : 'none'}
+        className={clsx(styles.readMore, isMobile ? bodySmall : body)}
+        onClick={toggleReadMore}
+      >
         show {readMore ? 'less' : 'more'}
       </Box>
     </Box>

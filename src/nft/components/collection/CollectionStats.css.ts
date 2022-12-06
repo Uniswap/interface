@@ -1,5 +1,5 @@
 import { globalStyle, style } from '@vanilla-extract/css'
-import { bodySmall, headlineSmall, subheadSmall } from 'nft/css/common.css'
+import { headlineSmall, subheadSmall } from 'nft/css/common.css'
 import { loadingAsset, loadingBlock } from 'nft/css/loading.css'
 
 import { breakpoints, sprinkles, themeVars, vars } from '../../css/sprinkles.css'
@@ -54,13 +54,11 @@ export const nameText = sprinkles({
 
 export const description = style([
   sprinkles({
-    fontSize: '14',
     display: 'inline-block',
   }),
   {
     maxWidth: 'min(calc(100% - 112px), 600px)',
     verticalAlign: 'top',
-    lineHeight: '20px',
   },
 ])
 
@@ -85,7 +83,6 @@ export const descriptionOpen = style([
   {
     whiteSpace: 'normal',
     verticalAlign: 'top',
-    lineHeight: '20px',
   },
   sprinkles({
     overflow: 'visible',
@@ -95,7 +92,6 @@ export const descriptionOpen = style([
 ])
 
 export const readMore = style([
-  bodySmall,
   {
     verticalAlign: 'top',
   },
