@@ -77,11 +77,6 @@ const CurrencySelect = styled(ButtonGray)<{
   justify-content: space-between;
   margin-left: ${({ hideInput }) => (hideInput ? '0' : '12px')};
 
-  &:hover,
-  &:active {
-    background-color: ${({ theme, selected }) => (selected ? theme.backgroundInteractive : theme.accentAction)};
-  }
-
   &:before {
     background-size: 100%;
     border-radius: inherit;
@@ -95,12 +90,14 @@ const CurrencySelect = styled(ButtonGray)<{
     content: '';
   }
 
-  &:hover:before {
-    background-color: ${({ theme }) => theme.stateOverlayHover};
+  :hover {
+    background: ${({ theme }) => theme.stateOverlayHover};
+    mix-blend-mode: normal;
   }
 
-  &:active:before {
-    background-color: ${({ theme }) => theme.stateOverlayPressed};
+  :active {
+    background: ${({ theme }) => theme.stateOverlayPressed};
+    mix-blend-mode: normal;
   }
 
   visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
