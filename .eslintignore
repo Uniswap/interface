@@ -1,2 +1,3 @@
 *.config.ts
 *.d.ts
+src/schema/schema.graphql
