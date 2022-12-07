@@ -3,6 +3,7 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
+import { NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
@@ -886,7 +887,12 @@ export function PositionPage() {
                         <Trans>Min price</Trans>
                       </ExtentsText>
                       <ThemedText.DeprecatedMediumHeader textAlign="center">
-                        {formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)}
+                        {formatTickPrice({
+                          price: priceLower,
+                          atLimit: tickAtLimit,
+                          direction: Bound.LOWER,
+                          numberType: NumberType.TokenNonTx,
+                        })}
                       </ThemedText.DeprecatedMediumHeader>
                       <ExtentsText>
                         {' '}
@@ -910,7 +916,12 @@ export function PositionPage() {
                         <Trans>Max price</Trans>
                       </ExtentsText>
                       <ThemedText.DeprecatedMediumHeader textAlign="center">
-                        {formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)}
+                        {formatTickPrice({
+                          price: priceUpper,
+                          atLimit: tickAtLimit,
+                          direction: Bound.UPPER,
+                          numberType: NumberType.TokenNonTx,
+                        })}
                       </ThemedText.DeprecatedMediumHeader>
                       <ExtentsText>
                         {' '}

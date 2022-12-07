@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { NumberType } from '@uniswap/conedison/format'
 import { Percent, Price, Token } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge'
@@ -232,8 +233,13 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
               <Trans>Min: </Trans>
             </ExtentsText>
             <Trans>
-              {formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} <HoverInlineText text={currencyQuote?.symbol} />{' '}
-              per <HoverInlineText text={currencyBase?.symbol ?? ''} />
+              {formatTickPrice({
+                price: priceLower,
+                atLimit: tickAtLimit,
+                direction: Bound.LOWER,
+                numberType: NumberType.TokenNonTx,
+              })}{' '}
+              <HoverInlineText text={currencyQuote?.symbol} /> per <HoverInlineText text={currencyBase?.symbol ?? ''} />
             </Trans>
           </RangeText>{' '}
           <HideSmall>
@@ -247,8 +253,14 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
               <Trans>Max:</Trans>
             </ExtentsText>
             <Trans>
-              {formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)} <HoverInlineText text={currencyQuote?.symbol} />{' '}
-              per <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
+              {formatTickPrice({
+                price: priceUpper,
+                atLimit: tickAtLimit,
+                direction: Bound.UPPER,
+                numberType: NumberType.TokenNonTx,
+              })}{' '}
+              <HoverInlineText text={currencyQuote?.symbol} /> per{' '}
+              <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
             </Trans>
           </RangeText>
         </RangeLineItem>
