@@ -859,7 +859,7 @@ export default function Swap() {
                       priceImpactTooHigh ||
                       Boolean(!permit2Enabled && swapCallbackError)
                     }
-                    error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
+                    error={isValid && priceImpactSeverity > 2 && (permit2Enabled || !swapCallbackError)}
                   >
                     <Text fontSize={20} fontWeight={600}>
                       {swapInputError ? (
