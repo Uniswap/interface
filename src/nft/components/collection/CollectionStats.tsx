@@ -36,6 +36,14 @@ const CollectionNameTextLoading = styled.div`
   width: 236px;
 `
 
+const MobileSocialsOverflowIcon = styled.div`
+  display: flex;
+  margin-left: 4px;
+  flex-direction: column;
+  justify-content: center;
+  height: 28px;
+`
+
 const MobileSocialsIcon = ({ children, href }: { children: ReactNode; href: string }) => {
   return (
     <Box
@@ -65,13 +73,13 @@ const MobileSocialsPopover = ({
 }) => {
   return (
     <>
-      <Row marginLeft="4" onClick={() => toggleCollectionSocials()}>
+      <MobileSocialsOverflowIcon onClick={toggleCollectionSocials}>
         {collectionSocialsIsOpen ? (
           <XMarkIcon width="28" height="28" fill={themeVars.colors.textSecondary} />
         ) : (
-          <EllipsisIcon width="28" height="28" fill={themeVars.colors.textSecondary} />
+          <EllipsisIcon width="28" height="20" fill={themeVars.colors.textSecondary} />
         )}
-      </Row>
+      </MobileSocialsOverflowIcon>
       {collectionSocialsIsOpen && (
         <Row
           position="absolute"
@@ -278,7 +286,8 @@ const CollectionDescription = ({ description }: { description: string }) => {
         descriptionRef.current.getBoundingClientRect().width >= 590)
     )
       setShowReadMore(true)
-  }, [descriptionRef, baseRef, isCollectionStatsLoading])
+    else setShowReadMore(false)
+  }, [descriptionRef, baseRef, isCollectionStatsLoading, description])
 
   return isCollectionStatsLoading ? (
     <CollectionDescriptionLoading />
