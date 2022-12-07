@@ -1,4 +1,4 @@
-import { ButtonCTA } from 'components/Button'
+import { BaseButton } from 'components/Button'
 import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -70,6 +70,27 @@ const SubText = styled.h3`
   }
 `
 
+const CTAButton = styled(BaseButton)`
+  width: 288px;
+  padding: 16px;
+  border-radius: 24px;
+  color: ${({ theme }) => theme.white};
+
+  &:hover {
+    opacity: 50%;
+  }
+`
+
+const ButtonCTA = styled(CTAButton)`
+  background: linear-gradient(10deg, rgba(255, 0, 199, 1) 0%, rgba(255, 159, 251, 1) 100%);
+  border: none;
+`
+
+const ButtonCTASecondary = styled(CTAButton)`
+  background: none;
+  border: ${({ theme }) => `1px solid ${theme.textPrimary}`};
+`
+
 const ButtonCTAText = styled.p`
   margin: 0px;
   font-size: 16px;
@@ -89,6 +110,8 @@ const TitleContentWrapper = styled.span`
 `
 
 const ContentWrapper = styled.span`
+  display: flex;
+  gap: 12px;
   max-width: 720px;
 `
 
@@ -101,6 +124,7 @@ export default function Landing() {
   const isOpen = location.pathname === '/'
 
   const onContinueClick = () => navigate('/swap')
+  const onAboutClick = () => navigate('/about')
 
   if (useLandingPageFlag() === LandingPageVariant.Control || !isOpen) return null
 
@@ -114,6 +138,9 @@ export default function Landing() {
         <ButtonCTA onClick={onContinueClick}>
           <ButtonCTAText>Continue</ButtonCTAText>
         </ButtonCTA>
+        <ButtonCTASecondary onClick={onAboutClick}>
+          <ButtonCTAText>Learn More</ButtonCTAText>
+        </ButtonCTASecondary>
       </ContentWrapper>
     </PageWrapper>
   )
