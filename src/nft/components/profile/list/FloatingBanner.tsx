@@ -9,8 +9,9 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 const FloatingBannerGradientContainer = styled.div`
+  display: none;
   position: fixed;
-  display: flex;
+
   justify-content: center;
   bottom: 0;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
@@ -19,13 +20,17 @@ const FloatingBannerGradientContainer = styled.div`
   transform: translateX(-50%);
   padding-top: 48px;
   padding-bottom: 48px;
+
+  @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
+    display: flex;
+  }
 `
 
 const FloatingBannerContainer = styled.div`
   background-color: ${({ theme }) => theme.backgroundSurface};
   border-radius: 20px;
   display: flex;
-  width: 900px;
+  width: calc(100% - 100px);
   justify-content: space-between;
   align-items: center;
   padding: 24px 48px;
