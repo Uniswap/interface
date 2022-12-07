@@ -1,14 +1,16 @@
-import clsx from 'clsx'
 import { getDeltaArrow } from 'components/Tokens/TokenDetails/PriceChart'
 import { Box, BoxProps } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
+import { body, bodySmall, headlineMedium, headlineSmall } from 'nft/css/common.css'
+import { loadingAsset } from 'nft/css/loading.css'
 import { themeVars } from 'nft/css/sprinkles.css'
+import { useIsMobile } from 'nft/hooks'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { GenieCollection, TokenType } from 'nft/types'
 import { floorFormatter, quantityFormatter, roundWholePercentage, volumeFormatter } from 'nft/utils/numbers'
 import { ReactNode, useEffect, useReducer, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { DiscordIcon, EllipsisIcon, ExternalIcon, InstagramIcon, TwitterIcon, VerifiedIcon, XMarkIcon } from '../icons'
@@ -19,6 +21,19 @@ const PercentChange = styled.div<{ isNegative: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
+`
+
+const CollectionNameText = styled.div<{ isVerified: boolean }>`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: ${({ isVerified }) => (isVerified ? '12px' : '0px')};
+`
+
+const CollectionNameTextLoading = styled.div`
+  ${loadingAsset}
+  height: 32px;
+  width: 236px;
 `
 
 const MobileSocialsOverflowIcon = styled.div`
@@ -141,14 +156,17 @@ const CollectionName = ({
   toggleCollectionSocials: () => void
 }) => {
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
-  const nameClass = isCollectionStatsLoading ? styles.nameTextLoading : styles.nameText
 
   return (
     <Row justifyContent="space-between">
       <Row minWidth="0">
-        <ThemedText.HeadlineSmall marginRight={!isVerified ? '12' : '0'} className={nameClass}>
-          {name}
-        </ThemedText.HeadlineSmall>
+        {isCollectionStatsLoading ? (
+          <CollectionNameTextLoading />
+        ) : (
+          <CollectionNameText isVerified={isVerified} className={isMobile ? headlineSmall : headlineMedium}>
+            {name}
+          </CollectionNameText>
+        )}
         {isVerified && <VerifiedIcon style={{ width: '32px', height: '32px' }} />}
         <Row
           display={{ sm: 'none', md: 'flex' }}
@@ -206,6 +224,46 @@ const CollectionName = ({
   )
 }
 
+const CollectionDescriptionText = styled.div<{ readMore: boolean }>`
+  vertical-align: top;
+  text-overflow: ellipsis;
+
+  ${({ readMore }) =>
+    readMore
+      ? css`
+          white-space: normal;
+          overflow: visible;
+          display: inline;
+          max-width: 100%;
+        `
+      : css`
+          white-space: nowrap;
+          overflow: hidden;
+          display: inline-block;
+          max-width: min(calc(100% - 112px), 600px);
+        `}
+
+  a[href] {
+    color: ${({ theme }) => theme.textSecondary};
+    text-decoration: none;
+
+    :hover {
+      opacity: ${({ theme }) => theme.opacity.hover};
+    }
+
+    :focus {
+      opacity: ${({ theme }) => theme.opacity.click};
+    }
+  }
+`
+
+const ReadMore = styled.span`
+  vertical-align: top;
+  color: ${({ theme }) => theme.textSecondary};
+  cursor: pointer;
+  margin-left: 4px;
+`
+
 const CollectionDescriptionLoading = () => (
   <Box marginTop={{ sm: '12', md: '16' }} className={styles.descriptionLoading} />
 )
@@ -216,6 +274,7 @@ const CollectionDescription = ({ description }: { description: string }) => {
   const baseRef = useRef<HTMLDivElement>(null)
   const descriptionRef = useRef<HTMLDivElement>(null)
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     if (
@@ -234,19 +293,18 @@ const CollectionDescription = ({ description }: { description: string }) => {
     <CollectionDescriptionLoading />
   ) : (
     <Box ref={baseRef} marginTop={{ sm: '12', md: '16' }} style={{ maxWidth: '680px' }}>
-      <Box
-        ref={descriptionRef}
-        className={clsx(styles.description, styles.nameText, readMore && styles.descriptionOpen)}
-      >
+      <CollectionDescriptionText readMore={readMore} ref={descriptionRef} className={isMobile ? bodySmall : body}>
         <ReactMarkdown
           source={description}
           allowedTypes={['link', 'paragraph', 'strong', 'code', 'emphasis', 'text']}
           renderers={{ paragraph: 'span' }}
         />
-      </Box>
-      <Box as="span" display={showReadMore ? 'inline' : 'none'} className={styles.readMore} onClick={toggleReadMore}>
-        show {readMore ? 'less' : 'more'}
-      </Box>
+      </CollectionDescriptionText>
+      {showReadMore && (
+        <ReadMore className={isMobile ? bodySmall : body} onClick={toggleReadMore}>
+          show {readMore ? 'less' : 'more'}
+        </ReadMore>
+      )}
     </Box>
   )
 }
