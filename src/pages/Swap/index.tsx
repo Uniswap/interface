@@ -578,8 +578,8 @@ export default function Swap() {
                       size="16"
                       color={
                         currencies[Field.INPUT] && currencies[Field.OUTPUT]
-                          ? theme.deprecated_text1
-                          : theme.deprecated_text3
+                          ? theme.textPrimary
+                          : theme.textTertiary
                       }
                     />
                   </ArrowContainer>
@@ -613,7 +613,7 @@ export default function Swap() {
                     <>
                       <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
                         <ArrowWrapper clickable={false}>
-                          <ArrowDown size="16" color={theme.deprecated_text2} />
+                          <ArrowDown size="16" color={theme.textSecondary} />
                         </ArrowWrapper>
                         <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
                           <Trans>- Remove recipient</Trans>
@@ -700,7 +700,7 @@ export default function Swap() {
                             <Loader stroke={theme.white} />
                           ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||
                             signatureState === UseERC20PermitState.SIGNED ? (
-                            <CheckCircle size="20" color={theme.deprecated_green1} />
+                            <CheckCircle size="20" color={theme.accentSuccess} />
                           ) : (
                             <MouseoverTooltip
                               text={
@@ -710,7 +710,7 @@ export default function Swap() {
                                 </Trans>
                               }
                             >
-                              <HelpCircle size="20" color={theme.deprecated_white} style={{ marginLeft: '8px' }} />
+                              <HelpCircle size="20" color={theme.white} style={{ marginLeft: '8px' }} />
                             </MouseoverTooltip>
                           )}
                         </AutoRow>

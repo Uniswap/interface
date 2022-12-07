@@ -61,7 +61,7 @@ const StyledDataCard = styled(DataCard)<{ bgColor?: any; showBackground?: any }>
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   background: ${({ theme, bgColor, showBackground }) =>
     `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%,  ${
-      showBackground ? theme.deprecated_black : theme.deprecated_bg5
+      showBackground ? theme.black : theme.deprecated_bg5
     } 100%) `};
 `
 

@@ -26,7 +26,7 @@ const ContainerRow = styled.div<{ error: boolean }>`
   justify-content: center;
   align-items: center;
   border-radius: 1.25rem;
-  border: 1px solid ${({ error, theme }) => (error ? theme.deprecated_red1 : theme.deprecated_bg2)};
+  border: 1px solid ${({ error, theme }) => (error ? theme.accentFailure : theme.backgroundInteractive)};
   transition: border-color 300ms ${({ error }) => (error ? 'step-end' : 'step-start')},
     color 500ms ${({ error }) => (error ? 'step-end' : 'step-start')};
   background-color: ${({ theme }) => theme.deprecated_bg1};
@@ -45,7 +45,7 @@ const Input = styled.input<{ error?: boolean }>`
   width: 0;
   background-color: ${({ theme }) => theme.deprecated_bg1};
   transition: color 300ms ${({ error }) => (error ? 'step-end' : 'step-start')};
-  color: ${({ error, theme }) => (error ? theme.deprecated_red1 : theme.deprecated_text1)};
+  color: ${({ error, theme }) => (error ? theme.accentFailure : theme.textPrimary)};
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 500;
@@ -109,7 +109,7 @@ export default function AddressInputPanel({
         <InputContainer>
           <AutoColumn gap="md">
             <RowBetween>
-              <ThemedText.DeprecatedBlack color={theme.deprecated_text2} fontWeight={500} fontSize={14}>
+              <ThemedText.DeprecatedBlack color={theme.textSecondary} fontWeight={500} fontSize={14}>
                 {label ?? <Trans>Recipient</Trans>}
               </ThemedText.DeprecatedBlack>
               {address && chainId && (
