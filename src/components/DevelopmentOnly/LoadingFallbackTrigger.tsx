@@ -23,3 +23,12 @@ export const LoadingFallbackTrigger = ({ ms = 2000 }: { ms?: number }) => {
     </DevelopmentOnly>
   )
 }
+
+export const useLoadingTrigger = (ms = 2000) => {
+  const [isLoading, setIsLoading] = useState(false)
+  const frequency = ms
+
+  useInterval(() => setIsLoading((prev) => !prev), frequency)
+
+  return isLoading
+}

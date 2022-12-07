@@ -27,15 +27,22 @@ const TextLoaderWrapper = ({ children }: PropsWithChildren<unknown>) => {
   return (
     <Shimmer>
       <Box alignItems="center" flexDirection="row">
-        <Box bg="background3" borderRadius="xs">
+        <Box alignItems="center" flexDirection="row" position="relative">
           <HiddenFromScreenReaders>{children}</HiddenFromScreenReaders>
+          <Box
+            bg="background3"
+            borderRadius="xs"
+            bottom="5%"
+            left={0}
+            position="absolute"
+            right={0}
+            top="5%"
+          />
         </Box>
       </Box>
     </Shimmer>
   )
 }
-
-// Wrap themed restyle text component with RN Text component to add support for maxFontSizeMultiplier prop so app is still usable with large text
 
 /**
  * Use this component instead of the default React Native <Text> component anywhere text shows up throughout the app, so we can use the design system values for colors and sizes, and make sure all text looks and behaves the same way
@@ -74,7 +81,7 @@ export const Text = ({
           maxFontSizeMultiplier={multiplier}
           opacity={0}
           {...rest}>
-          {/* Important that `children` isn't used or rendered by <Text> when `loading` is true, because if the child of a <Text> component is a dynamic variable that might not be finished fetching yet, it'll result in an error until it's finished loading. We use `placeholderText` to set the size of the loading element instead. */}
+          {/* Important that `children` isn't used or rendered by <Text> when `loading` is true, because if the child of a <Text> component is a dynamic variable that might not be finished fetching yet, it'll result in an error until it's finished loading. We use `loadingPlaceholderText` to set the size of the loading element instead. */}
           {loadingPlaceholderText}
         </ThemedText>
       </TextLoaderWrapper>

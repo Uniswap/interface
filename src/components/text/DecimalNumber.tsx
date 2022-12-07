@@ -21,7 +21,7 @@ export function DecimalNumber({
   const [pre, post] = number.split(separator)
 
   return (
-    <Text loading={loading} loadingPlaceholderText="$0,000.00" variant={variant} {...rest}>
+    <Text loading={loading} loadingPlaceholderText="$000.00" variant={variant} {...rest}>
       {pre}
       {post && (
         <Text color="textTertiary" variant={variant}>

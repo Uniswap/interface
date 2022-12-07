@@ -42,7 +42,7 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps) {
     <WarmLoadingShimmer isWarmLoading={isWarmLoading && !isLoading}>
       <Flex gap="xxs">
         <DecimalNumber
-          adjustsFontSizeToFit
+          adjustsFontSizeToFit={!isLoading}
           color={isWarmLoading ? 'textSecondary' : undefined}
           // initially set color to textSecondary when isWarm because the shimmer mask takes a second to load, resulting in a flash of the underlying color
           fontWeight="600"

@@ -50,7 +50,7 @@ export function RelativeChange(props: RelativeChangeProps) {
           semanticColor ? (isPositiveChange ? 'accentSuccess' : 'accentCritical') : 'textSecondary'
         }
         loading={loading}
-        loadingPlaceholderText="|| $20.00 (1.0%)"
+        loadingPlaceholderText="$0.00 (0.00)%"
         variant={variant}>
         {absoluteChange ? `${formattedAbsChange} (${formattedChange})` : formattedChange}
       </Text>
