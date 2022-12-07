@@ -303,7 +303,7 @@ export default function Swap() {
   const [isPermitPending, setIsPermitPending] = useState(false)
   const [isPermitFailed, setIsPermitFailed] = useState(false)
   const addTransaction = useTransactionAdder()
-  const pendingApproval = useHasPendingApproval(maximumAmountIn?.currency, PERMIT2_ADDRESS)
+  const isApprovalPending = useHasPendingApproval(maximumAmountIn?.currency, PERMIT2_ADDRESS)
   const updatePermit = useCallback(async () => {
     setIsPermitPending(true)
     try {
@@ -792,7 +792,7 @@ export default function Swap() {
                   <ButtonYellow
                     onClick={updatePermit}
                     id="permit-button"
-                    disabled={isPermitPending}
+                    disabled={isPermitPending || isApprovalPending}
                     style={{ gap: 14 }}
                   >
                     {isPermitPending ? (
@@ -809,7 +809,7 @@ export default function Swap() {
                           <Trans>Approval failed. Try again.</Trans>
                         </ThemedText.SubHeader>
                       </>
-                    ) : pendingApproval ? (
+                    ) : isApprovalPending ? (
                       <>
                         <Loader size="20px" stroke={theme.accentWarning} />
                         <ThemedText.SubHeader color="accentWarning">

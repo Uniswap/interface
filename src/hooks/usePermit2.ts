@@ -38,11 +38,7 @@ export default function usePermit(amount?: CurrencyAmount<Token>, spender?: stri
   const updatePermitAllowance = useUpdatePermitAllowance(amount?.currency, spender, allowanceData?.nonce, setSignature)
 
   const updateTokenAndPermitAllowance = useCallback(async () => {
-    // Queue both transactions.
-    const info = updateTokenAllowance()
-    // Delay the permit allowance to ensure the approval is prompted for first;
-    // but do not wait until token allowance resolves, to avoid some wallets closing their modal in between prompts (eg MetaMask).
-    await new Promise((resolve) => setTimeout(resolve, 500))
+    const info = await updateTokenAllowance()
     await updatePermitAllowance()
     return info
   }, [updatePermitAllowance, updateTokenAllowance])
