@@ -46,6 +46,7 @@ export const OpacityHoverState = css`
   }) => `opacity ${duration.medium} ${timing.ease}`};
 `
 
+// eslint-disable-next-line no-use-before-define
 export const buttonHoverState = css`
   :hover::after {
     border-radius: 12px;
