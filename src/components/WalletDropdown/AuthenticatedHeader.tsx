@@ -184,7 +184,7 @@ const AuthenticatedHeader = () => {
                 <AccountContainer>{account && shortenAddress(account, 2, 4)}</AccountContainer>
               </AccountNamesWrapper>
             ) : (
-              <ThemedText.BodySmall marginTop="2.5px">{account && shortenAddress(account, 2, 4)}</ThemedText.BodySmall>
+              <ThemedText.SubHeader marginTop="2.5px">{account && shortenAddress(account, 2, 4)}</ThemedText.SubHeader>
             )}
           </FlexContainer>
         </StatusWrapper>
