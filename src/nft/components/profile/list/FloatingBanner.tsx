@@ -2,7 +2,7 @@ import { addressesByNetwork, SupportedChainId } from '@looksrare/sdk'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { EventName, ModalName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { ListingButton } from 'nft/components/bag/profile/ListingButton'
+import { NFTButton, ThemeButton } from 'components/Button'
 import {
   approveCollectionRow,
   getTotalEthValue,
@@ -17,7 +17,7 @@ import { AssetRow, Listing, ListingRow, ListingStatus, WalletAsset } from 'nft/t
 import { formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { Dispatch, useEffect, useMemo, useState } from 'react'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 const FloatBContainer = styled.div`
@@ -47,6 +47,47 @@ const Content = styled.div`
   display: flex;
   gap: 16px;
   align-items: center;
+`
+const hoverState = css`
+  :hover::after {
+    border-radius: 12px;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: ${({ theme }) => theme.stateOverlayHover};
+    z-index: 0;
+  }
+
+  :active::after {
+    border-radius: 12px;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: ${({ theme }) => theme.stateOverlayPressed};
+    z-index: 0;
+  }
+`
+
+const BuyNowButton = styled.button`
+  position: relative;
+  background-color: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.white};
+  outline: none;
+  border: none;
+  font-weight: 500;
+  border-radius: 12px;
+  padding: 10px 12px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 16px;
+
+  ${hoverState}
 `
 
 export const FloatingBanner = () => {
@@ -217,12 +258,12 @@ export const FloatingBanner = () => {
             </ThemedText.HeadlineSmall>
           )}
 
-          <span style={{ maxWidth: 200 }}>
-            <ListingButton
-              onClick={clickStartListingFlow}
-              buttonText={listingsMissingPrice ? 'Set prices to continue' : 'Start listing'}
-            ></ListingButton>
-          </span>
+          <NFTButton onClick={clickStartListingFlow}>
+            {listingsMissingPrice ? 'Set prices to continue' : 'Start listing'}
+          </NFTButton>
+          <BuyNowButton onClick={clickStartListingFlow}>
+            {listingsMissingPrice ? 'Set prices to continue' : 'Start listing'}
+          </BuyNowButton>
         </Content>
       </FloatingBannerContainer>
     </FloatBContainer>

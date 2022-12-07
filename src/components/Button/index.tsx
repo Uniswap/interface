@@ -1,7 +1,7 @@
 import { darken } from 'polished'
 import { Check, ChevronDown } from 'react-feather'
 import { Button as RebassButton, ButtonProps as ButtonPropsOriginal } from 'rebass/styled-components'
-import styled, { DefaultTheme, useTheme } from 'styled-components/macro'
+import styled, { css, DefaultTheme, useTheme } from 'styled-components/macro'
 
 import { RowBetween } from '../Row'
 
@@ -231,6 +231,43 @@ export const ButtonText = styled(BaseButton)`
     opacity: 50%;
     cursor: auto;
   }
+`
+
+const hoverState = css`
+  :hover::after {
+    border-radius: 12px;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: ${({ theme }) => theme.stateOverlayHover};
+    z-index: 0;
+  }
+
+  :active::after {
+    border-radius: 12px;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: ${({ theme }) => theme.stateOverlayPressed};
+    z-index: 0;
+  }
+`
+
+export const NFTButton = styled.div`
+  position: relative;
+  background-color: ${({ theme }) => theme.accentAction};
+  border-radius: 12px;
+  padding: 10px 12px;
+  text-align: center;
+  cursor: pointer;
+
+  ${hoverState}
 `
 
 const ButtonConfirmedStyle = styled(BaseButton)`
