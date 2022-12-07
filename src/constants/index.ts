@@ -204,3 +204,9 @@ export const IMPORTED_FARMS = 'imported_farms'
 export const MINIMA_API_URL = 'https://router.nodefinance.org/routes'
 
 export const FETCH_MINIMA_ROUTER_TIMER = 5000
+
+export const DEXES_TO_EXCLUDE = [
+  'sushiswap',
+  'uniswap-v3',
+  ...(process.env.REACT_APP_DEX_EXCLUSION_LIST?.split(',') ?? []),
+]
