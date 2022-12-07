@@ -1,4 +1,4 @@
-import { colors, darkTheme, lightTheme } from './colors'
+import { colors } from './colors'
 import { opacify } from './utils'
 
 function getDeprecatedTheme(darkMode: boolean) {

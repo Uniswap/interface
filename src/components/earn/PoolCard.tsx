@@ -41,8 +41,7 @@ const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
     `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%, ${
       showBackground ? theme.black : theme.deprecated_bg5
     } 100%) `};
-  color: ${({ theme, showBackground }) =>
-    showBackground ? theme.white : theme.textPrimary} !important;
+  color: ${({ theme, showBackground }) => (showBackground ? theme.white : theme.textPrimary)} !important;
 
   ${({ showBackground }) =>
     showBackground &&

@@ -577,9 +577,7 @@ export default function Swap() {
                     <ArrowDown
                       size="16"
                       color={
-                        currencies[Field.INPUT] && currencies[Field.OUTPUT]
-                          ? theme.textPrimary
-                          : theme.textTertiary
+                        currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.textPrimary : theme.textTertiary
                       }
                     />
                   </ArrowContainer>

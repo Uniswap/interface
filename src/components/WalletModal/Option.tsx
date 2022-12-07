@@ -64,8 +64,7 @@ const HeaderText = styled.div`
   ${flexRowNoWrap};
   align-items: center;
   justify-content: center;
-  color: ${(props) =>
-    props.color === 'blue' ? ({ theme }) => theme.accentAction : ({ theme }) => theme.textPrimary};
+  color: ${(props) => (props.color === 'blue' ? ({ theme }) => theme.accentAction : ({ theme }) => theme.textPrimary)};
   font-size: 16px;
   font-weight: 600;
 `
