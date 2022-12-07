@@ -5,3 +5,7 @@ export function useNftListingFlag(): BaseVariant {
 }
 
 export { BaseVariant as NFTListingVariant }
+
+export function useIsNftListingFlagEnabled(): boolean {
+  return useNftListingFlag() === BaseVariant.Enabled
+}

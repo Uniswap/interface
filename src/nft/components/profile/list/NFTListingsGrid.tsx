@@ -1,4 +1,4 @@
-import { NFTListingVariant, useNftListingFlag } from 'featureFlags/flags/listingPage'
+import { useIsNftListingFlagEnabled } from 'featureFlags/flags/listingPage'
 import { Box } from 'nft/components/Box'
 import { SortDropdown } from 'nft/components/common/SortDropdown'
 import { Column, Row } from 'nft/components/Flex'
@@ -24,7 +24,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
   const sellAssets = useSellAsset((state) => state.sellAssets)
   const [globalPriceMethod, setGlobalPriceMethod] = useState<SetPriceMethod>()
   const [globalPrice, setGlobalPrice] = useState<number>()
-  const isNftListingFlagEnabled = useNftListingFlag() === NFTListingVariant.Enabled
+  const isNftListingFlagEnabled = useIsNftListingFlagEnabled()
 
   const priceDropdownOptions: DropDownOption[] = useMemo(
     () => [

@@ -1,5 +1,5 @@
 import { SMALL_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
-import { NFTListingVariant, useNftListingFlag } from 'featureFlags/flags/listingPage'
+import { useIsNftListingFlagEnabled } from 'featureFlags/flags/listingPage'
 import { ListingButton } from 'nft/components/bag/profile/ListingButton'
 import { getListingState } from 'nft/components/bag/profile/utils'
 import { Column, Row } from 'nft/components/Flex'
@@ -68,7 +68,7 @@ export const ListPage = () => {
   const listingStatus = useNFTList((state) => state.listingStatus)
   const setListingStatus = useNFTList((state) => state.setListingStatus)
   const isMobile = useIsMobile()
-  const isNftListingFlagEnabled = useNftListingFlag() === NFTListingVariant.Enabled
+  const isNftListingFlagEnabled = useIsNftListingFlagEnabled()
 
   useEffect(() => {
     const state = getListingState(collectionsRequiringApproval, listings)
