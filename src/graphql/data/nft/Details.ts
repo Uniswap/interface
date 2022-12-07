@@ -1,10 +1,12 @@
 import { parseEther } from '@ethersproject/units'
 import graphql from 'babel-plugin-relay/macro'
 import { CollectionInfoForAsset, GenieAsset, SellOrder, TokenType } from 'nft/types'
-import { useEffect } from 'react'
-import { useLazyLoadQuery, useQueryLoader } from 'react-relay'
+import { useEffect, useMemo, useState } from 'react'
+import { fetchQuery, useLazyLoadQuery, useQueryLoader, useRelayEnvironment } from 'react-relay'
+import { Subscription } from 'relay-runtime'
 
 import { DetailsQuery } from './__generated__/DetailsQuery.graphql'
+import { DetailsSellOrdersQuery } from './__generated__/DetailsSellOrdersQuery.graphql'
 
 const detailsQuery = graphql`
   query DetailsQuery($address: String!, $tokenId: String!) {
@@ -93,8 +95,8 @@ const detailsQuery = graphql`
 `
 
 const sellOrdersQuery = graphql`
-  query DetailsQuery($address: String!, $tokenId: String!) {
-    nftAssets(address: $address, filter: { listed: false, tokenIds: [$tokenId] }) {
+  query DetailsSellOrdersQuery($address: String!, $tokenId: String!) {
+    nftAssets(address: $address, filter: { tokenIds: [$tokenId] }) {
       edges {
         node {
           listings(first: 10) {
@@ -219,24 +221,37 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
   ]
 }
 
-export function useSellOrdersQuery(address: string, tokenId: string): SellOrder[] | undefined {
-  const queryData = useLazyLoadQuery<DetailsQuery>(
-    sellOrdersQuery,
-    {
-      address,
-      tokenId,
-    },
-    { fetchPolicy: 'store-or-network' }
-  )
+export function useSellOrdersQuery(address: string, tokenId: string, enabled: boolean): SellOrder[] | undefined {
+  const environment = useRelayEnvironment()
+  const [listings, setListings] = useState<SellOrder[] | undefined>()
 
-  const asset = queryData.nftAssets?.edges[0]?.node
+  useEffect(() => {
+    let subscription: Subscription | undefined
 
-  return asset?.listings?.edges.map((listingNode) => {
-    return {
-      ...listingNode.node,
-      protocolParameters: listingNode.node.protocolParameters
-        ? JSON.parse(listingNode.node.protocolParameters.toString())
-        : undefined,
-    } as SellOrder
-  })
+    if (enabled) {
+      subscription = fetchQuery<DetailsSellOrdersQuery>(environment, sellOrdersQuery, {
+        address,
+        tokenId,
+      }).subscribe({
+        next(data) {
+          const asset = data.nftAssets?.edges[0]?.node
+          const map = asset?.listings?.edges.map((listingNode) => {
+            return {
+              ...listingNode.node,
+              protocolParameters: listingNode.node.protocolParameters
+                ? JSON.parse(listingNode.node.protocolParameters.toString())
+                : undefined,
+            } as SellOrder
+          })
+          setListings(map)
+        },
+      })
+    }
+
+    return () => {
+      if (subscription) subscription.unsubscribe()
+    }
+  }, [address, enabled, environment, tokenId])
+
+  return useMemo(() => listings, [listings])
 }

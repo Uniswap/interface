@@ -1,4 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { parseEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { EventName, PageName } from '@uniswap/analytics-events'
@@ -53,24 +54,23 @@ export const CollectionAsset = ({
   const bagExpanded = useBag((state) => state.bagExpanded)
   const setBagExpanded = useBag((state) => state.setBagExpanded)
   const trace = useTrace({ page: PageName.NFT_COLLECTION_PAGE })
-  const sellOrders = useSellOrdersQuery(asset.address, asset.tokenId)
-  console.log()
-  console.log('sell orders below')
-  console.log(sellOrders)
 
-  const { isSelected } = useMemo(() => {
-    const matchingItems = itemsInBag.filter(
+  const { quantitySelected } = useMemo(() => {
+    const quantitySelected = itemsInBag.filter(
       (item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address
-    )
-
-    const isSelected = matchingItems.length > 0
+    ).length
     return {
-      isSelected,
+      quantitySelected,
     }
   }, [asset, itemsInBag])
 
+  const isSelected = quantitySelected > 0
+  const isErc1155 = asset.tokenType === TokenType.ERC1155
+  const sellOrders = useSellOrdersQuery(asset.address, asset.tokenId, isSelected && isErc1155)
+  console.log(sellOrders)
+
   const [showTooltip, setShowTooltip] = useState(false)
-  const isSelectedRef = useRef(isSelected)
+  const quantitySelectedRef = useRef(quantitySelected)
 
   const notForSale = useNotForSale(asset)
   const assetMediaType = useAssetMediaType(asset)
@@ -86,7 +86,18 @@ export const CollectionAsset = ({
 
   const handleAddAssetToBag = useCallback(() => {
     if (BigNumber.from(asset.priceInfo?.ETHPrice ?? 0).gte(0)) {
-      addAssetsToBag([asset])
+      const assetToAdd: GenieAsset =
+        isErc1155 && isSelected && sellOrders && sellOrders?.length >= quantitySelected
+          ? {
+              ...asset,
+              priceInfo: {
+                ...asset.priceInfo,
+                ETHPrice: parseEther(sellOrders[quantitySelected].price.value.toString()).toString(),
+                basePrice: parseEther(sellOrders[quantitySelected].price.value.toString()).toString(),
+              },
+            }
+          : asset
+      addAssetsToBag([assetToAdd])
       if (!bagExpanded && !isMobile && !bagManuallyClosed) {
         setBagExpanded({ bagExpanded: true })
       }
@@ -97,12 +108,24 @@ export const CollectionAsset = ({
         ...trace,
       })
     }
-  }, [addAssetsToBag, asset, bagExpanded, bagManuallyClosed, isMobile, setBagExpanded, trace])
+  }, [
+    addAssetsToBag,
+    asset,
+    bagExpanded,
+    bagManuallyClosed,
+    isErc1155,
+    isMobile,
+    isSelected,
+    quantitySelected,
+    sellOrders,
+    setBagExpanded,
+    trace,
+  ])
 
   useEffect(() => {
-    if (isSelected !== isSelectedRef.current && !usedSweep) {
+    if (quantitySelected !== quantitySelectedRef.current && !usedSweep) {
       setShowTooltip(true)
-      isSelectedRef.current = isSelected
+      quantitySelectedRef.current = quantitySelected
       const tooltipTimer = setTimeout(() => {
         setShowTooltip(false)
       }, TOOLTIP_TIMEOUT)
@@ -111,9 +134,9 @@ export const CollectionAsset = ({
         clearTimeout(tooltipTimer)
       }
     }
-    isSelectedRef.current = isSelected
+    quantitySelectedRef.current = quantitySelected
     return undefined
-  }, [isSelected, isSelectedRef, usedSweep])
+  }, [quantitySelected, quantitySelectedRef, usedSweep])
 
   const handleRemoveAssetFromBag = useCallback(() => {
     removeAssetsFromBag([asset])
@@ -151,6 +174,7 @@ export const CollectionAsset = ({
             rarityLogo={rarityLogo}
           />
         )}
+        {isErc1155 && <Card.Erc1155Controls quantity={quantitySelected} />}
         <MouseoverTooltip
           text={
             <Box as="span" className={bodySmall} color="textPrimary">
@@ -190,9 +214,7 @@ export const CollectionAsset = ({
               </Card.SecondaryInfo>
               {isPooledMarket(asset.marketplace) && <Card.Pool />}
             </Card.SecondaryDetails>
-            {asset.tokenType !== TokenType.ERC1155 && asset.marketplace && (
-              <Card.MarketplaceIcon marketplace={asset.marketplace} />
-            )}
+            {!isErc1155 && asset.marketplace && <Card.MarketplaceIcon marketplace={asset.marketplace} />}
           </Card.SecondaryRow>
         </Card.InfoContainer>
       </Card.DetailsContainer>

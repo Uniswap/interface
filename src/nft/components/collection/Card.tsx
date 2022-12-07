@@ -595,11 +595,13 @@ const TertiaryInfo = ({ children }: { children: ReactNode }) => {
 }
 
 interface Erc1155ControlsInterface {
-  quantity: string
+  quantity: number
 }
 
 const Erc1155Controls = ({ quantity }: Erc1155ControlsInterface) => {
   const { addAssetToBag, removeAssetFromBag } = useCardContext()
+
+  if (quantity === 0) return null
 
   return (
     <Erc1155ControlsRow>
