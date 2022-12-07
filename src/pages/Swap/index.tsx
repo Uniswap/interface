@@ -771,7 +771,9 @@ export default function Swap() {
                           !isValid ||
                           routeIsSyncing ||
                           routeIsLoading ||
-                          (approvalState !== ApprovalState.APPROVED && signatureState !== UseERC20PermitState.SIGNED) ||
+                          (!permit2Enabled &&
+                            approvalState !== ApprovalState.APPROVED &&
+                            signatureState !== UseERC20PermitState.SIGNED) ||
                           priceImpactTooHigh
                         }
                         error={isValid && priceImpactSeverity > 2}
