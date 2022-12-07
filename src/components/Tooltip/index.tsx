@@ -7,7 +7,7 @@ import Popover, { PopoverProps } from 'components/Popover'
 
 const TooltipContainer = styled.div<{ width?: string; size?: number }>`
   width: ${({ width }) => width || '228px'};
-  padding: 0.6rem 1rem;
+  padding: 0.5rem 0.75rem;
   line-height: 150%;
   font-weight: 400;
   font-size: ${({ size }) => size || 14}px;

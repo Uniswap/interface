@@ -5,7 +5,7 @@ import { rgba } from 'polished'
 import { useMemo, useRef, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { Info } from 'react-feather'
-import { Redirect, useHistory, useLocation } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
@@ -189,11 +189,11 @@ export default function ProAmmPool() {
     tab: string
   }>()
 
-  const history = useHistory()
+  const navigate = useNavigate()
   const location = useLocation()
 
   const onSearch = (search: string) => {
-    history.replace(location.pathname + '?search=' + search + '&tab=' + tab)
+    navigate(location.pathname + '?search=' + search + '&tab=' + tab, { replace: true })
   }
 
   const debouncedSearchText = useDebounce(searchValueInQs.trim().toLowerCase(), 300)
@@ -250,7 +250,7 @@ export default function ProAmmPool() {
     )
   }, [farms])
 
-  if (!isEVM) return <Redirect to="/" />
+  if (!isEVM) return <Navigate to="/" />
   return (
     <>
       <PageWrapper style={{ padding: 0, marginTop: '24px' }}>

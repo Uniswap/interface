@@ -7,8 +7,7 @@ import { Trans, t } from '@lingui/macro'
 import { captureException } from '@sentry/react'
 import JSBI from 'jsbi'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useHistory } from 'react-router'
-import { Redirect, RouteComponentProps } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
@@ -89,12 +88,10 @@ const PercentText = styled(Text)`
   `}
 `
 
-export default function RemoveLiquidityProAmm({
-  location,
-  match: {
-    params: { tokenId },
-  },
-}: RouteComponentProps<{ tokenId: string }>) {
+export default function RemoveLiquidityProAmm() {
+  const { tokenId } = useParams()
+
+  const location = useLocation()
   const parsedTokenId = useMemo(() => {
     try {
       return BigNumber.from(tokenId)
@@ -104,7 +101,7 @@ export default function RemoveLiquidityProAmm({
   }, [tokenId])
 
   if (parsedTokenId === null || parsedTokenId.eq(0)) {
-    return <Redirect to={{ ...location, pathname: '/myPools' }} />
+    return <Navigate to={{ ...location, pathname: '/myPools' }} />
   }
   return <Remove tokenId={parsedTokenId} />
 }
@@ -120,14 +117,14 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
 
   const owner = useSingleCallResult(!!tokenId ? positionManager : null, 'ownerOf', [tokenId.toNumber()]).result?.[0]
   const ownsNFT = owner === account
-  const history = useHistory()
+  const navigate = useNavigate()
   const prevChainId = usePrevious(chainId)
 
   useEffect(() => {
     if (!!chainId && !!prevChainId && chainId !== prevChainId) {
-      history.push('/myPools')
+      navigate('/myPools')
     }
-  }, [chainId, prevChainId, history])
+  }, [chainId, prevChainId, navigate])
   // flag for receiving WETH
   const [receiveWETH, setReceiveWETH] = useState(false)
 
@@ -358,7 +355,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     [onUserInput],
   )
 
-  if (!isEVM) return <Redirect to="/" />
+  if (!isEVM) return <Navigate to="/" />
   return (
     <>
       <TransactionConfirmationModal

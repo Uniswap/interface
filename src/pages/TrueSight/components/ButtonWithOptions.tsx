@@ -2,8 +2,7 @@ import { getAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
 import { rgba } from 'polished'
 import { CSSProperties, useRef, useState } from 'react'
-import { useHistory } from 'react-router'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
 
 import { ReactComponent as ChevronDown } from 'assets/svg/down.svg'
@@ -49,7 +48,7 @@ const ButtonWithOptions = ({
   }
 
   const location = useLocation()
-  const history = useHistory()
+  const navigate = useNavigate()
   const isInSwapPage = location.pathname === '/swap'
   const toggleTrendingSoonTokenDetailModal = useToggleModal(ApplicationModal.TRENDING_SOON_TOKEN_DETAIL)
 
@@ -89,7 +88,7 @@ const ButtonWithOptions = ({
                     alignItems="center"
                     onClick={() => {
                       toggleTrendingSoonTokenDetailModal()
-                      history.push(
+                      navigate(
                         `/swap/${NETWORKS_INFO[mappedChainId].route}?inputCurrency=ETH&outputCurrency=${getAddress(
                           platforms.get(platform) ?? '',
                         )}`,

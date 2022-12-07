@@ -1,7 +1,7 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 
 import { NETWORKS_INFO } from 'constants/networks'
 import {
@@ -109,7 +109,7 @@ export function useRecaptchaCampaignManager() {
 
 export function useSwapNowHandler() {
   const selectedCampaign = useSelector((state: AppState) => state.campaigns.selectedCampaign)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   return useCallback(
     (chainId: ChainId) => {
@@ -120,9 +120,9 @@ export function useSwapNowHandler() {
           path += '&outputCurrency=' + firstTokenOfChain.address
         }
       }
-      history.push(path)
+      navigate(path)
     },
-    [history, selectedCampaign],
+    [navigate, selectedCampaign],
   )
 }
 

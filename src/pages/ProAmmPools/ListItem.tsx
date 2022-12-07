@@ -3,7 +3,7 @@ import { Trans, t } from '@lingui/macro'
 import { rgba } from 'polished'
 import { useState } from 'react'
 import { BarChart2, ChevronUp, Plus, Share2 } from 'react-feather'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
 import styled, { css } from 'styled-components'
 
@@ -95,7 +95,7 @@ export default function ProAmmPoolListItem({ pair, idx, onShared, userPositions,
   const { chainId } = useActiveWeb3React()
   const theme = useTheme()
   const [isOpen, setIsOpen] = useState(pair.length > 1 ? idx === 0 : false)
-  const history = useHistory()
+  const navigate = useNavigate()
   const [, setUrlOnEthPoWAck] = useUrlOnEthPowAck()
   const toggleEthPowAckModal = useToggleEthPowAckModal()
 
@@ -267,7 +267,7 @@ export default function ProAmmPoolListItem({ pair, idx, onShared, userPositions,
                       setUrlOnEthPoWAck(url)
                       toggleEthPowAckModal()
                     } else {
-                      history.push(url)
+                      navigate(url)
                     }
                   }}
                 >

@@ -7,7 +7,7 @@ import { BigNumber } from 'ethers'
 import JSBI from 'jsbi'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
-import { Redirect, RouteComponentProps } from 'react-router-dom'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
@@ -77,12 +77,9 @@ const ArrowWrapper = styled(ArrowWrapperVertical)<{ rotated?: boolean }>`
   width: 40px;
   height: 40px;
 `
-export default function AddLiquidity({
-  match: {
-    params: { currencyIdA, currencyIdB, feeAmount: feeAmountFromUrl },
-  },
-  history,
-}: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string; feeAmount?: string; tokenId?: string }>) {
+export default function AddLiquidity() {
+  const { currencyIdA, currencyIdB, feeAmount: feeAmountFromUrl } = useParams()
+  const navigate = useNavigate()
   const [rotate, setRotate] = useState(false)
   const { account, chainId, isEVM, networkInfo } = useActiveWeb3React()
   const { library } = useWeb3React()
@@ -365,33 +362,33 @@ export default function AddLiquidity({
     (currencyANew: Currency) => {
       const [idA, idB] = handleCurrencySelect(currencyANew, currencyIdB)
       if (idB === undefined) {
-        history.push(`/elastic/add/${idA}`)
+        navigate(`/elastic/add/${idA}`)
       } else {
-        history.push(`/elastic/add/${idA}/${idB}`)
+        navigate(`/elastic/add/${idA}/${idB}`)
       }
     },
-    [handleCurrencySelect, currencyIdB, history],
+    [handleCurrencySelect, currencyIdB, navigate],
   )
 
   const handleCurrencyBSelect = useCallback(
     (currencyBNew: Currency) => {
       const [idB, idA] = handleCurrencySelect(currencyBNew, currencyIdA)
       if (idA === undefined) {
-        history.push(`/elastic/add/${idB}`)
+        navigate(`/elastic/add/${idB}`)
       } else {
-        history.push(`/elastic/add/${idA}/${idB}`)
+        navigate(`/elastic/add/${idA}/${idB}`)
       }
     },
-    [handleCurrencySelect, currencyIdA, history],
+    [handleCurrencySelect, currencyIdA, navigate],
   )
 
   const handleFeePoolSelect = useCallback(
     (newFeeAmount: FeeAmount) => {
       onLeftRangeInput('')
       onRightRangeInput('')
-      history.push(`/elastic/add/${currencyIdA}/${currencyIdB}/${newFeeAmount}`)
+      navigate(`/elastic/add/${currencyIdA}/${currencyIdB}/${newFeeAmount}`)
     },
-    [currencyIdA, currencyIdB, history, onLeftRangeInput, onRightRangeInput],
+    [currencyIdA, currencyIdB, navigate, onLeftRangeInput, onRightRangeInput],
   )
 
   const handleDismissConfirmation = useCallback(() => {
@@ -400,10 +397,10 @@ export default function AddLiquidity({
     if (txHash) {
       onFieldAInput('')
       // dont jump to pool page if creating
-      history.push('/myPools?tab=elastic')
+      navigate('/myPools?tab=elastic')
     }
     setTxHash('')
-  }, [history, onFieldAInput, txHash])
+  }, [navigate, onFieldAInput, txHash])
 
   const addIsUnsupported = false
 
@@ -706,7 +703,7 @@ export default function AddLiquidity({
     </>
   )
 
-  if (!isEVM) return <Redirect to="/" />
+  if (!isEVM) return <Navigate to="/" />
   return (
     <>
       <TransactionConfirmationModal
@@ -763,10 +760,10 @@ export default function AddLiquidity({
             onCleared={() => {
               onFieldAInput('0')
               onFieldBInput('0')
-              history.push('/elastic/add')
+              navigate('/elastic/add')
             }}
             onBack={() => {
-              history.replace('/pools?tab=elastic')
+              navigate('/pools?tab=elastic')
             }}
             tutorialType={TutorialType.ELASTIC_ADD_LIQUIDITY}
           />
@@ -871,10 +868,11 @@ export default function AddLiquidity({
                       isSwitchMode={baseCurrencyIsETHER || baseCurrencyIsWETH}
                       onSwitchCurrency={() => {
                         chainId &&
-                          history.replace(
+                          navigate(
                             `/elastic/add/${
                               baseCurrencyIsETHER ? WETH[chainId].address : NativeCurrencies[chainId].symbol
                             }/${currencyIdB}/${feeAmount}`,
+                            { replace: true },
                           )
                       }}
                     />
@@ -902,10 +900,11 @@ export default function AddLiquidity({
                       isSwitchMode={quoteCurrencyIsETHER || quoteCurrencyIsWETH}
                       onSwitchCurrency={() => {
                         chainId &&
-                          history.replace(
+                          navigate(
                             `/elastic/add/${currencyIdA}/${
                               quoteCurrencyIsETHER ? WETH[chainId].address : NativeCurrencies[chainId].symbol
                             }/${feeAmount}`,
+                            { replace: true },
                           )
                       }}
                     />

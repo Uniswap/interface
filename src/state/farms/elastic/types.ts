@@ -59,6 +59,9 @@ export interface UserInfo {
   rewardPendings: {
     [pid: string]: Array<CurrencyAmount<Currency>>
   }
+  rewardByNft: {
+    [pid_nftId: string]: Array<CurrencyAmount<Currency>>
+  }
 }
 
 export interface UserFarmInfo {

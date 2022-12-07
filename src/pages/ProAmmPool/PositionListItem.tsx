@@ -286,7 +286,7 @@ function PositionListItem({
     )
   }, 0)
 
-  const farmAPR = (farmRewardValue * 365 * 100) / usd
+  const farmAPR = reward24h !== null ? (farmRewardValue * 365 * 100) / usd : 0
 
   const tickAtLimit = useIsTickAtLimit(feeAmount, tickLower, tickUpper)
 

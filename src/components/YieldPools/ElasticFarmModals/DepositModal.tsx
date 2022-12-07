@@ -119,7 +119,6 @@ const PositionRow = ({
           </Flex>
           <Flex justifyContent="flex-end">
             <HoverDropdown
-              placement="right"
               content={<Text>{formatDollarAmount(usd)}</Text>}
               dropdownContent={
                 <>

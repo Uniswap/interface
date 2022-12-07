@@ -98,7 +98,7 @@
     "react-loading-skeleton": "^3.1.0",
     "react-popper": "^2.2.3",
     "react-redux": "^7.2.9",
-    "react-router-dom": "^5.3.4",
+    "react-router-dom": "^6.4.3",
     "react-spring": "^9.5.5",
     "react-use": "^15.3.4",
     "react-use-gesture": "^6.0.14",

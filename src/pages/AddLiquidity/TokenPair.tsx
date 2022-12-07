@@ -7,7 +7,7 @@ import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
 import { useCallback, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
 
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
@@ -375,7 +375,7 @@ const TokenPair = ({
   const marketPrice = marketPrices[1] && marketPrices[0] / marketPrices[1]
 
   const showSanityPriceWarning = !!(poolPrice && marketPrice && Math.abs(poolPrice - marketPrice) / marketPrice > 0.05)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const modalHeader = () => {
     return (
@@ -479,10 +479,11 @@ const TokenPair = ({
                 isSwitchMode={currencyAIsWETH || currencyAIsETHER}
                 onSwitchCurrency={() => {
                   chainId &&
-                    history.replace(
+                    navigate(
                       `/add/${
                         currencyAIsETHER ? WETH[chainId].address : NativeCurrencies[chainId].symbol
                       }/${currencyIdB}/${pairAddress}`,
+                      { replace: true },
                     )
                 }}
               />

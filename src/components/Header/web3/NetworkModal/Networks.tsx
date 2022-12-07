@@ -2,7 +2,7 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import { stringify } from 'querystring'
 import React from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { css } from 'styled-components'
 
@@ -140,7 +140,7 @@ const Networks = ({
 }) => {
   const changeNetwork = useChangeNetwork()
   const qs = useParsedQueryString()
-  const history = useHistory()
+  const navigate = useNavigate()
   const isDarkMode = useIsDarkMode()
   const theme = useTheme()
   const dispatch = useAppDispatch()
@@ -152,9 +152,12 @@ const Networks = ({
     } else {
       changeNetwork(chainId, () => {
         const { networkId, inputCurrency, outputCurrency, ...rest } = qs
-        history.replace({
-          search: stringify(rest),
-        })
+        navigate(
+          {
+            search: stringify(rest),
+          },
+          { replace: true },
+        )
         onChangedNetwork?.()
 
         dispatch(updateChainId(chainId))

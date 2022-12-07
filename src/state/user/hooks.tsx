@@ -21,6 +21,7 @@ import {
   ToggleFavoriteTokenPayload,
   addSerializedPair,
   addSerializedToken,
+  changeViewMode,
   removeSerializedToken,
   toggleFavoriteToken as toggleFavoriteTokenAction,
   toggleLiveChart,
@@ -36,7 +37,7 @@ import {
   updateUserLocale,
   updateUserSlippageTolerance,
 } from 'state/user/actions'
-import { defaultShowLiveCharts, getFavoriteTokenDefault } from 'state/user/reducer'
+import { VIEW_MODE, defaultShowLiveCharts, getFavoriteTokenDefault } from 'state/user/reducer'
 import { isAddress } from 'utils'
 
 function serializeToken(token: Token | WrappedTokenInfo): SerializedToken {
@@ -408,4 +409,13 @@ export const useUserFavoriteTokens = (chainId: ChainId) => {
   )
 
   return { favoriteTokens, toggleFavoriteToken }
+}
+
+export const useViewMode: () => [VIEW_MODE, (mode: VIEW_MODE) => void] = () => {
+  const dispatch = useAppDispatch()
+  const viewMode = useAppSelector(state => state.user.viewMode || VIEW_MODE.GRID)
+
+  const setViewMode = useCallback((mode: VIEW_MODE) => dispatch(changeViewMode(mode)), [dispatch])
+
+  return [viewMode, setViewMode]
 }

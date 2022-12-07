@@ -3,7 +3,7 @@ import { Trans, t } from '@lingui/macro'
 import { rgba } from 'polished'
 import { useState } from 'react'
 import { ChevronUp, Share2 } from 'react-feather'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
@@ -73,7 +73,7 @@ export default function ProAmmPoolCardItem({ pair, onShared, userPositions, idx 
   const { chainId } = useActiveWeb3React()
   const theme = useTheme()
   const [isOpen, setIsOpen] = useState(true)
-  const history = useHistory()
+  const navigate = useNavigate()
   const [, setUrlOnEthPoWAck] = useUrlOnEthPowAck()
   const toggleEthPowAckModal = useToggleEthPowAckModal()
 
@@ -268,7 +268,7 @@ export default function ProAmmPoolCardItem({ pair, onShared, userPositions, idx 
                     setUrlOnEthPoWAck(url)
                     toggleEthPowAckModal()
                   } else {
-                    history.push(url)
+                    navigate(url)
                   }
                 }}
               >

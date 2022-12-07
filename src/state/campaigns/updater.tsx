@@ -5,7 +5,7 @@ import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
 import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import useSWR from 'swr'
 import useSWRImmutable from 'swr/immutable'
 
@@ -284,22 +284,22 @@ export default function CampaignsUpdater(): null {
   const slug = pathname.replace(APP_PATHS.CAMPAIGN, '')
   const { selectedCampaignId = getCampaignIdFromSlug(slug) } = useParsedQueryString<{ selectedCampaignId: string }>()
 
-  const history = useHistory()
+  const navigate = useNavigate()
   useEffect(() => {
     dispatch(setCampaignData({ campaigns: campaignData ?? [] }))
     if (campaignData && campaignData.length) {
       if (selectedCampaignId === undefined) {
-        history.push(getSlugUrlCampaign(campaignData[0]))
+        navigate(getSlugUrlCampaign(campaignData[0]))
       } else {
         const selectedCampaign = campaignData.find(campaign => campaign.id.toString() === selectedCampaignId)
         if (selectedCampaign) {
           dispatch(setSelectedCampaign({ campaign: selectedCampaign }))
         } else {
-          history.push(getSlugUrlCampaign(campaignData[0]))
+          navigate(getSlugUrlCampaign(campaignData[0]))
         }
       }
     }
-  }, [campaignData, dispatch, selectedCampaignId, history])
+  }, [campaignData, dispatch, selectedCampaignId, navigate])
 
   useEffect(() => {
     dispatch(setLoadingCampaignData(isLoadingCampaignData))

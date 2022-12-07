@@ -17,12 +17,10 @@ export const PageWrapper = styled(AutoColumn)`
 `
 
 export const ProMMFarmGuideWrapper = styled.div`
-  padding: 1rem 0;
   font-size: 12px;
   color: ${({ theme }) => theme.subText};
   line-height: 1.5;
-  border-top: 1px solid ${({ theme }) => theme.border};
-  border-bottom: 1px solid ${({ theme }) => theme.border};
+  margin-top: 12px;
 `
 
 export const ProMMFarmGuide = styled.div`
@@ -33,6 +31,8 @@ export const ShowGuideBtn = styled.button<{ show: boolean }>`
   border: none;
   outline: none;
   line-height: 0;
+  width: 36px;
+  height: 36px;
   background: transparent;
   color: ${({ theme }) => theme.text};
   cursor: pointer;
@@ -95,6 +95,7 @@ export const TabContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
+  gap: 24px;
 `
 
 export const TabWrapper = styled.div`
@@ -133,20 +134,6 @@ export const Tab = styled(ButtonEmpty)<{ isActive: boolean }>`
 export const PoolTitleContainer = styled.div`
   display: flex;
   align-items: center;
-`
-
-export const UpcomingPoolsWrapper = styled.div`
-  position: relative;
-  margin-right: 4px;
-`
-
-export const NewText = styled.div`
-  position: absolute;
-  top: -10px;
-  right: -12px;
-  font-size: 10px;
-  font-weight: 500;
-  color: #ff537b;
 `
 
 export const StakedOnlyToggleWrapper = styled.div`
@@ -369,12 +356,14 @@ export const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
 `
 
 export const ProMMFarmTableHeader = styled(TableHeader)`
-  grid-template-columns: 200px 0.5fr 0.75fr 1fr 1fr 0.75fr 120px;
+  padding: 16px;
+  grid-template-columns: 230px 0.5fr 0.5fr 1fr 1fr 0.75fr 120px;
   grid-template-areas: 'token_pairs staked_tvl apr ending_in my_deposit reward action';
   grid-gap: 2rem;
 
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+  background-color: ${({ theme }) => theme.buttonGray};
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
     grid-template-columns: 170px 0.5fr 0.75fr 1fr 1fr 0.75fr 120px;
@@ -382,13 +371,11 @@ export const ProMMFarmTableHeader = styled(TableHeader)`
   `};
 `
 
-export const ProMMFarmTableRow = styled(ProMMFarmTableHeader)`
+export const ProMMFarmTableRow = styled(ProMMFarmTableHeader)<{ isOpen: boolean }>`
   font-size: 14px;
-  background-color: ${({ theme }) => theme.background};
+  background-color: ${({ theme, isOpen }) => (isOpen ? theme.buttonGray : theme.buttonBlack)};
   border-radius: 0;
-  :not(:last-child) {
-    border-bottom: 1px solid ${({ theme }) => theme.border};
-  }
+  box-shadow: none;
 `
 
 export const ClickableText = styled(Text)`
@@ -573,28 +560,6 @@ export const SearchInput = styled.input`
   :placeholder {
     color: ${({ theme }) => theme.disableText};
   }
-`
-
-export const ProMMFarmTableRowMobile = styled.div`
-  background: ${({ theme }) => theme.background};
-  padding: 24px 16px;
-  :not(:last-child) {
-    border-bottom: 1px solid ${({ theme }) => theme.border};
-  }
-`
-
-export const InfoRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-top: 12px;
-  font-size: 12px;
-`
-
-export const RewardMobileArea = styled.div`
-  background: ${({ theme }) => theme.buttonBlack};
-  border-radius: 16px;
-  padding: 12px;
-  margin-top: 12px;
 `
 
 export const ActionButton = styled(ButtonLight)<{ backgroundColor?: string }>`

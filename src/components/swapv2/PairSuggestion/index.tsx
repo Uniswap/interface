@@ -4,7 +4,7 @@ import { debounce } from 'lodash'
 import { stringify } from 'querystring'
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import { BrowserView, MobileView, isIOS, isMobile } from 'react-device-detect'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 import Modal from 'components/Modal'
@@ -68,7 +68,7 @@ export default forwardRef<PairSuggestionHandle, Props>(function PairSuggestionIn
 
   const { account, chainId } = useActiveWeb3React()
   const qs = useParsedQueryString()
-  const history = useHistory()
+  const navigate = useNavigate()
   const { mixpanelHandler } = useMixpanel()
 
   const refLoading = useRef(false) // prevent spam call api
@@ -213,7 +213,7 @@ export default forwardRef<PairSuggestionHandle, Props>(function PairSuggestionIn
         inputCurrency: getAddressParam(item.tokenIn, chainId),
         outputCurrency: getAddressParam(item.tokenOut, chainId),
       }
-      history.push({
+      navigate({
         search: stringify(newQs),
       })
       setShowModalImportToken(true)

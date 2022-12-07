@@ -1,8 +1,7 @@
 import { Trans } from '@lingui/macro'
 import React, { useEffect, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
-import { useHistory } from 'react-router'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
@@ -39,8 +38,8 @@ const TrendingSoonLayout = ({
   const [selectedToken, setSelectedToken] = useState<TrueSightTokenData>()
   const [isOpenChartModal, setIsOpenChartModal] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
-  const { tab, token_id: selectedTokenIdFromQs } = useParsedQueryString<{ tab: string; token_id: string }>()
-  const history = useHistory()
+  const { tab, token_id: selectedTokenIdFromQs } = useParsedQueryString()
+  const navigate = useNavigate()
   const location = useLocation()
 
   const {
@@ -56,10 +55,10 @@ const TrendingSoonLayout = ({
       const newSelectedTokenData = trendingSoonTokens.find(
         tokenData => tokenData.token_id.toString() === selectedTokenIdFromQs,
       )
-      history.replace({ ...location, search: `?tab=${tab}` })
+      navigate({ ...location, search: `?tab=${tab}` }, { replace: true })
       setFilter(prev => ({ ...prev, selectedTag: undefined, selectedTokenData: newSelectedTokenData }))
     }
-  }, [history, location, selectedTokenIdFromQs, setFilter, tab, trendingSoonTokens])
+  }, [navigate, location, selectedTokenIdFromQs, setFilter, tab, trendingSoonTokens])
 
   useEffect(() => {
     setCurrentPage(1)

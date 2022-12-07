@@ -2,7 +2,7 @@ import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import { useCallback, useMemo, useState } from 'react'
 import { Plus } from 'react-feather'
-import { Redirect, RouteComponentProps } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 import styled, { DefaultTheme, keyframes } from 'styled-components'
@@ -72,13 +72,10 @@ const TextWithTooltip = styled(Text)`
   }
 `
 
-const Pools = ({
-  match: {
-    params: { currencyIdA, currencyIdB },
-  },
-  location,
-  history,
-}: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) => {
+const Pools = () => {
+  const { currencyIdA, currencyIdB } = useParams()
+  const navigate = useNavigate()
+  const location = useLocation()
   const theme = useTheme()
   const { chainId, isEVM, networkInfo } = useActiveWeb3React()
   const above1000 = useMedia('(min-width: 1000px)')
@@ -103,12 +100,9 @@ const Pools = ({
   const [, setUrlOnEthPowAck] = useUrlOnEthPowAck()
   const toggleEthPowAckModal = useToggleEthPowAckModal()
 
-  const onSearch = useCallback(
-    (search: string) => {
-      history.replace(location.pathname + '?search=' + search + '&tab=' + tab)
-    },
-    [tab, history, location.pathname],
-  )
+  const onSearch = (search: string) => {
+    navigate(location.pathname + '?search=' + search + '&tab=' + tab, { replace: true })
+  }
 
   useSyncNetworkParamWithStore()
 
@@ -127,31 +121,31 @@ const Pools = ({
     (currencyA: Currency) => {
       const newCurrencyIdA = currencyId(currencyA, chainId)
       if (newCurrencyIdA === currencyIdB) {
-        history.push(`/pools/${chainRoute}/${currencyIdB}/${currencyIdA}?tab=${tab}`)
+        navigate(`/pools/${chainRoute}/${currencyIdB}/${currencyIdA}?tab=${tab}`)
       } else {
-        history.push(`/pools/${chainRoute}/${newCurrencyIdA}/${currencyIdB}?tab=${tab}`)
+        navigate(`/pools/${chainRoute}/${newCurrencyIdA}/${currencyIdB}?tab=${tab}`)
       }
     },
-    [chainRoute, currencyIdB, history, currencyIdA, chainId, tab],
+    [chainRoute, currencyIdB, navigate, currencyIdA, chainId, tab],
   )
 
   const handleCurrencyBSelect = useCallback(
     (currencyB: Currency) => {
       const newCurrencyIdB = currencyId(currencyB, chainId)
       if (currencyIdA === newCurrencyIdB) {
-        history.push(`/pools/${chainRoute}/${currencyIdB}/${currencyIdA}?tab=${tab}`)
+        navigate(`/pools/${chainRoute}/${currencyIdB}/${currencyIdA}?tab=${tab}`)
       } else {
-        history.push(`/pools/${chainRoute}/${currencyIdA}/${newCurrencyIdB}?tab=${tab}`)
+        navigate(`/pools/${chainRoute}/${currencyIdA}/${newCurrencyIdB}?tab=${tab}`)
       }
     },
-    [chainRoute, currencyIdA, history, currencyIdB, chainId, tab],
+    [chainRoute, currencyIdA, navigate, currencyIdB, chainId, tab],
   )
   const handleClearCurrencyA = useCallback(() => {
-    history.push(`/pools/${chainRoute}/undefined/${currencyIdB}?tab=${tab}`)
-  }, [currencyIdB, history, tab, chainRoute])
+    navigate(`/pools/${chainRoute}/undefined/${currencyIdB}?tab=${tab}`)
+  }, [chainRoute, currencyIdB, navigate, tab])
   const handleClearCurrencyB = useCallback(() => {
-    history.push(`/pools/${chainRoute}/${currencyIdA}/undefined?tab=${tab}`)
-  }, [currencyIdA, history, tab, chainRoute])
+    navigate(`/pools/${chainRoute}/${currencyIdA}/undefined?tab=${tab}`)
+  }, [chainRoute, currencyIdA, navigate, tab])
 
   const { mixpanelHandler } = useMixpanel()
 
@@ -177,11 +171,11 @@ const Pools = ({
       setUrlOnEthPowAck(url)
       toggleEthPowAckModal()
     } else {
-      history.push(url)
+      navigate(url)
     }
   }
 
-  if (!isEVM) return <Redirect to="/" />
+  if (!isEVM) return <Navigate to="/" />
   return (
     <>
       <PoolsPageWrapper>
@@ -246,18 +240,16 @@ const Pools = ({
                 style={{ marginLeft: '16px', borderRadius: '40px', fontSize: '14px' }}
                 onClick={() => {
                   if (currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B]) {
-                    history.push(
+                    navigate(
                       `/swap?inputCurrency=${currencyId(
                         currencies[Field.CURRENCY_A] as Currency,
                         chainId,
                       )}&outputCurrency=${currencyId(currencies[Field.CURRENCY_B] as Currency, chainId)}`,
                     )
                   } else if (currencies[Field.CURRENCY_A]) {
-                    history.push(`/swap?inputCurrency=${currencyId(currencies[Field.CURRENCY_A] as Currency, chainId)}`)
+                    navigate(`/swap?inputCurrency=${currencyId(currencies[Field.CURRENCY_A] as Currency, chainId)}`)
                   } else if (currencies[Field.CURRENCY_B]) {
-                    history.push(
-                      `/swap?outputCurrency=${currencyId(currencies[Field.CURRENCY_B] as Currency, chainId)}`,
-                    )
+                    navigate(`/swap?outputCurrency=${currencyId(currencies[Field.CURRENCY_B] as Currency, chainId)}`)
                   }
                 }}
                 disabled={!currencies[Field.CURRENCY_A] && !currencies[Field.CURRENCY_B]}
@@ -376,18 +368,16 @@ const Pools = ({
                 style={{ marginLeft: '8px', borderRadius: '40px', fontSize: '14px' }}
                 onClick={() => {
                   if (currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B]) {
-                    history.push(
+                    navigate(
                       `/swap?inputCurrency=${currencyId(
                         currencies[Field.CURRENCY_A] as Currency,
                         chainId,
                       )}&outputCurrency=${currencyId(currencies[Field.CURRENCY_B] as Currency, chainId)}`,
                     )
                   } else if (currencies[Field.CURRENCY_A]) {
-                    history.push(`/swap?inputCurrency=${currencyId(currencies[Field.CURRENCY_A] as Currency, chainId)}`)
+                    navigate(`/swap?inputCurrency=${currencyId(currencies[Field.CURRENCY_A] as Currency, chainId)}`)
                   } else if (currencies[Field.CURRENCY_B]) {
-                    history.push(
-                      `/swap?outputCurrency=${currencyId(currencies[Field.CURRENCY_B] as Currency, chainId)}`,
-                    )
+                    navigate(`/swap?outputCurrency=${currencyId(currencies[Field.CURRENCY_B] as Currency, chainId)}`)
                   }
                 }}
                 disabled={!currencies[Field.CURRENCY_A] && !currencies[Field.CURRENCY_B]}

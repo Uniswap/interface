@@ -22,10 +22,12 @@ export default function RangeBadge({
   removed,
   inRange,
   hideText = false,
+  size = 16,
 }: {
   removed: boolean | undefined
   inRange: boolean | undefined
   hideText?: boolean
+  size?: number
 }) {
   const theme = useTheme()
   return (
@@ -33,7 +35,7 @@ export default function RangeBadge({
       {removed ? (
         <MouseoverTooltip text={<Trans>Your position has 0 liquidity, and is not earning fees</Trans>}>
           <Badge variant={BadgeVariant.NEGATIVE}>
-            <AlertCircle width={16} height={16} />
+            <AlertCircle width={size} height={size} />
             &nbsp;
             <BadgeText>
               <Trans>Closed</Trans>
@@ -48,7 +50,7 @@ export default function RangeBadge({
         >
           <Badge variant={BadgeVariant.PRIMARY} style={{ padding: hideText ? '4px' : undefined }}>
             {/* <ActiveDot /> &nbsp; */}
-            <Info size={16} color={theme.primary} />
+            <Info size={size} color={theme.primary} />
             {!hideText && (
               <>
                 &nbsp;
@@ -69,7 +71,7 @@ export default function RangeBadge({
           }
         >
           <Badge variant={BadgeVariant.WARNING} style={{ padding: hideText ? '4px' : undefined }}>
-            <Info size={16} color={theme.warning} />
+            <Info size={size} color={theme.warning} />
             {!hideText && (
               <>
                 &nbsp;

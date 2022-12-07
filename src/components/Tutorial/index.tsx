@@ -60,6 +60,7 @@ export enum TutorialType {
 interface Props {
   type: TutorialType
   customIcon?: ReactNode
+  showTooltip?: boolean
 }
 const mapVideoId = {
   [TutorialType.ELASTIC_POOLS]: 'HCTI3pNDXIM',
@@ -79,7 +80,7 @@ export const getTutorialVideoId = (type: TutorialType) => {
   return mapVideoId[type] || ''
 }
 
-function Tutorial({ customIcon, type }: Props) {
+function Tutorial({ customIcon, type, showTooltip }: Props) {
   const theme = useTheme()
   const [show, setShow] = useState(false)
 
@@ -148,11 +149,11 @@ function Tutorial({ customIcon, type }: Props) {
   return (
     <>
       {customIcon ? (
-        <div onClick={() => setShow(true)}>
-          <MouseoverTooltip text={t`Tutorial`} placement="top" width="fit-content">
+        <Flex onClick={() => setShow(true)} alignItems="center">
+          <MouseoverTooltip text={t`Tutorial`} placement="top" width="fit-content" disableTooltip={!showTooltip}>
             {customIcon}
           </MouseoverTooltip>
-        </div>
+        </Flex>
       ) : (
         <Btn onClick={() => setShow(true)}>
           <MouseoverTooltip text={t`Tutorial`} placement="top" width="fit-content">

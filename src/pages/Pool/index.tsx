@@ -4,7 +4,7 @@ import { Trans, t } from '@lingui/macro'
 import { rgba } from 'polished'
 import { useMemo, useState } from 'react'
 import { Info } from 'react-feather'
-import { Redirect } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 import styled, { keyframes } from 'styled-components'
@@ -281,7 +281,7 @@ function Pool() {
 
   const upToSmall = useMedia('(max-width: 768px)')
 
-  if (!isEVM) return <Redirect to="/" />
+  if (!isEVM) return <Navigate to="/" replace />
   return (
     <>
       <PageWrapper style={{ padding: 0, marginTop: '24px' }}>

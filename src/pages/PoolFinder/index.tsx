@@ -4,7 +4,7 @@ import { Trans, t } from '@lingui/macro'
 import JSBI from 'jsbi'
 import { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
-import { Redirect } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 import { Text } from 'rebass'
 
 import { ButtonDropdownLight } from 'components/Button'
@@ -33,7 +33,7 @@ enum Fields {
 }
 
 export default function PoolFinder() {
-  const { account, chainId, isEVM } = useActiveWeb3React()
+  const { account, chainId, isEVM, networkInfo } = useActiveWeb3React()
 
   const [showSearch, setShowSearch] = useState<boolean>(false)
   const [activeField, setActiveField] = useState<number>(Fields.TOKEN1)
@@ -113,7 +113,7 @@ export default function PoolFinder() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if (!isEVM) return <Redirect to="/" />
+  if (!isEVM) return <Navigate to="/" />
   return (
     <AppBody>
       <FindPoolTabs />
@@ -162,7 +162,7 @@ export default function PoolFinder() {
           )}
         </ButtonDropdownLight>
         <StyledInternalLink
-          to={`/pools/${!!currency0 ? currencyId(currency0, chainId) : undefined}/${
+          to={`/pools/${networkInfo.route}/${!!currency0 ? currencyId(currency0, chainId) : undefined}/${
             !!currency1 ? currencyId(currency1, chainId) : undefined
           }?tab=classic`}
         >

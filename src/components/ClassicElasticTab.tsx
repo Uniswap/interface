@@ -1,8 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { stringify } from 'querystring'
-import { useHistory } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
 
+import { APP_PATHS } from 'constants/index'
 import { ELASTIC_NOT_SUPPORTED, VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
@@ -22,9 +23,10 @@ function ClassicElasticTab() {
   const notSupportedMsg = ELASTIC_NOT_SUPPORTED[chainId]
 
   const theme = useTheme()
-  const history = useHistory()
+  const location = useLocation()
+  const navigate = useNavigate()
 
-  const isFarmpage = history.location.pathname === '/farms'
+  const isFarmpage = location.pathname.includes('/farms')
 
   return (
     <Flex>
@@ -35,19 +37,12 @@ function ClassicElasticTab() {
             if (!!notSupportedMsg) return
             const newQs = { ...qs, tab: VERSION.ELASTIC }
             let type: MIXPANEL_TYPE | '' = ''
-            switch (history.location.pathname) {
-              case '/pools':
-                type = MIXPANEL_TYPE.ELASTIC_POOLS_ELASTIC_POOLS_CLICKED
-                break
-              case '/myPools':
-                type = MIXPANEL_TYPE.ELASTIC_MYPOOLS_ELASTIC_POOLS_CLICKED
-                break
-
-              default:
-                break
-            }
+            if (location.pathname.startsWith(APP_PATHS.POOLS)) {
+              type = MIXPANEL_TYPE.ELASTIC_POOLS_ELASTIC_POOLS_CLICKED
+            } else if (location.pathname.startsWith(APP_PATHS.MY_POOLS))
+              type = MIXPANEL_TYPE.ELASTIC_MYPOOLS_ELASTIC_POOLS_CLICKED
             if (type) mixpanelHandler(type)
-            history.replace({ search: stringify(newQs) })
+            navigate({ search: stringify(newQs) }, { replace: true })
           }}
         >
           <Text
@@ -74,7 +69,7 @@ function ClassicElasticTab() {
         alignItems={'center'}
         onClick={() => {
           const newQs = { ...qs, tab: VERSION.CLASSIC }
-          history.replace({ search: stringify(newQs) })
+          navigate({ search: stringify(newQs) }, { replace: true })
         }}
       >
         <Text

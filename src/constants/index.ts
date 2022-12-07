@@ -335,3 +335,10 @@ export const APP_PATHS = {
   VERIFY: '/verify',
   VERIFY_EXTERNAL: '/verify-external',
 }
+
+export enum FARM_TAB {
+  ACTIVE = 'active',
+  ENDED = 'ended',
+  MY_FARMS = 'my_farms',
+  VESTING = 'vesting',
+}

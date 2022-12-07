@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { darken } from 'polished'
 import { X } from 'react-feather'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
@@ -36,7 +36,7 @@ const ModalEthPoWAck = () => {
   const theme = useTheme()
   const isModalOpen = useModalOpen(ApplicationModal.ETH_POW_ACK)
   const toggleOpenThisModal = useToggleEthPowAckModal()
-  const history = useHistory()
+  const navigate = useNavigate()
   const [url] = useUrlOnEthPowAck()
 
   return (
@@ -84,7 +84,7 @@ const ModalEthPoWAck = () => {
         <AckButton
           onClick={() => {
             toggleOpenThisModal()
-            history.push(url)
+            navigate(url)
           }}
         >
           <Trans>Acknowledge</Trans>

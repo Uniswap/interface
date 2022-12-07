@@ -121,6 +121,8 @@ const useGetUserFarmingInfo = (interval?: boolean) => {
           const depositedPositions: NFTPosition[] = []
           const joinedPositions: { [pid: string]: NFTPosition[] } = {}
           const rewardPendings: { [pid: string]: CurrencyAmount<Currency>[] } = {}
+          const rewardByNft: { [pid_nftId: string]: CurrencyAmount<Currency>[] } = {}
+
           // nft got underflow issue from contract and need to emergencyWithdraw
           const errorNFTs: string[] = []
 
@@ -191,11 +193,16 @@ const useGetUserFarmingInfo = (interval?: boolean) => {
                   })
                   joinedPositions[pid].push(pos)
 
+                  const id = `${pid}_${nftId.toString()}`
+                  if (!rewardByNft[id]) {
+                    rewardByNft[id] = []
+                  }
                   if (!rewardPendings[pid]) {
                     rewardPendings[pid] = []
                   }
                   farmingPool.rewardTokens.forEach((currency, i) => {
                     const amount = CurrencyAmount.fromRawAmount(currency, result[index].rewardPending[i])
+                    rewardByNft[id][i] = amount
                     if (!rewardPendings[pid][i]) {
                       rewardPendings[pid][i] = amount
                     } else {
@@ -210,6 +217,7 @@ const useGetUserFarmingInfo = (interval?: boolean) => {
             depositedPositions,
             joinedPositions,
             rewardPendings,
+            rewardByNft,
             errorNFTs,
           }
         }) || []

@@ -3,13 +3,18 @@ import { Trans, t } from '@lingui/macro'
 import { stringify } from 'querystring'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Search } from 'react-feather'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 
+import { ReactComponent as GridViewIcon } from 'assets/svg/grid_view.svg'
+import { ReactComponent as ListViewIcon } from 'assets/svg/list_view.svg'
+import { ButtonEmpty } from 'components/Button'
 import FarmIssueAnnouncement from 'components/FarmIssueAnnouncement'
 import LocalLoader from 'components/LocalLoader'
 import ShareModal from 'components/ShareModal'
 import Toggle from 'components/Toggle'
+import { FARM_TAB } from 'constants/index'
 import { EVMNetworkInfo } from 'constants/networks/type'
 import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
@@ -19,6 +24,8 @@ import useTheme from 'hooks/useTheme'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useOpenModal } from 'state/application/hooks'
 import { useElasticFarms, useFailedNFTs } from 'state/farms/elastic/hooks'
+import { useViewMode } from 'state/user/hooks'
+import { VIEW_MODE } from 'state/user/reducer'
 import { StyledInternalLink } from 'theme'
 import { isAddressString } from 'utils'
 
@@ -26,6 +33,7 @@ import ElasticFarmGroup from './ElasticFarmGroup'
 import { DepositModal, StakeUnstakeModal } from './ElasticFarmModals'
 import HarvestModal from './ElasticFarmModals/HarvestModal'
 import WithdrawModal from './ElasticFarmModals/WithdrawModal'
+import FarmSort from './FarmSort'
 import { SharePoolContext } from './SharePoolContext'
 import {
   HeadingContainer,
@@ -38,17 +46,23 @@ import {
 
 type ModalType = 'deposit' | 'withdraw' | 'stake' | 'unstake' | 'harvest' | 'forcedWithdraw'
 
-// this address exists on both Polygon and Avalanche
-
-function ElasticFarms({ active }: { active: boolean }) {
+function ElasticFarms() {
   const theme = useTheme()
   const { isEVM, networkInfo, chainId } = useActiveWeb3React()
+  const [viewMode, setViewMode] = useViewMode()
+
+  const [searchParams] = useSearchParams()
+
+  const activeTab: string = searchParams.get('type') || FARM_TAB.ACTIVE
+
   const [stakedOnly, setStakedOnly] = useState({
     active: false,
-    ended: false,
+    ended: true,
   })
-  const activeTab = active ? 'active' : 'ended'
 
+  const stakedOnlyKey = activeTab === FARM_TAB.ACTIVE ? 'active' : 'ended'
+
+  const above1000 = useMedia('(min-width: 1000px)')
   const { farms, loading, userFarmInfo } = useElasticFarms()
 
   const failedNFTs = useFailedNFTs()
@@ -58,7 +72,7 @@ function ElasticFarms({ active }: { active: boolean }) {
   useOnClickOutside(ref, open ? () => setOpen(prev => !prev) : undefined)
   const qs = useParsedQueryString<{ search: string; type: string; tab: string }>()
   const { search = '', type, tab } = qs
-  const history = useHistory()
+  const navigate = useNavigate()
   const location = useLocation()
 
   const handleSearch = useCallback(
@@ -68,9 +82,9 @@ function ElasticFarms({ active }: { active: boolean }) {
         search: stringify({ ...qs, search }),
       }
 
-      history.replace(target)
+      navigate(target, { replace: true })
     },
-    [history, location, qs],
+    [navigate, location, qs],
   )
 
   const filteredFarms = useMemo(() => {
@@ -79,7 +93,13 @@ function ElasticFarms({ active }: { active: boolean }) {
     // filter active/ended farm
     let result = farms
       ?.map(farm => {
-        const pools = farm.pools.filter(pool => (active ? pool.endTime >= now : pool.endTime < now))
+        const pools = farm.pools.filter(pool =>
+          activeTab === FARM_TAB.MY_FARMS
+            ? true
+            : activeTab === FARM_TAB.ACTIVE
+            ? pool.endTime >= now
+            : pool.endTime < now,
+        )
         return { ...farm, pools }
       })
       .filter(farm => !!farm.pools.length)
@@ -116,7 +136,7 @@ function ElasticFarms({ active }: { active: boolean }) {
       })
     }
 
-    if (stakedOnly[activeTab] && isEVM) {
+    if (stakedOnly[stakedOnlyKey] && isEVM) {
       result = result?.map(item => {
         if (!userFarmInfo?.[item.id].depositedPositions.length) {
           return { ...item, pools: [] }
@@ -137,7 +157,7 @@ function ElasticFarms({ active }: { active: boolean }) {
     }
 
     return result?.filter(farm => !!farm.pools.length) || []
-  }, [farms, active, search, stakedOnly, activeTab, chainId, userFarmInfo, isEVM, networkInfo])
+  }, [farms, search, stakedOnly, stakedOnlyKey, activeTab, chainId, userFarmInfo, isEVM, networkInfo])
 
   const noFarms = !filteredFarms.length
 
@@ -192,6 +212,25 @@ function ElasticFarms({ active }: { active: boolean }) {
     })
   }, [isShareModalOpen, setSharePoolAddress])
 
+  const gridListViewGroup = (
+    <Flex sx={{ gap: '0.5rem' }} marginRight="0.75rem">
+      <ButtonEmpty
+        padding="0"
+        style={{ color: viewMode === VIEW_MODE.GRID ? theme.subText : theme.primary }}
+        onClick={() => setViewMode(VIEW_MODE.LIST)}
+      >
+        <ListViewIcon />
+      </ButtonEmpty>
+      <ButtonEmpty
+        padding="0"
+        style={{ color: viewMode === VIEW_MODE.LIST ? theme.subText : theme.primary }}
+        onClick={() => setViewMode(VIEW_MODE.GRID)}
+      >
+        <GridViewIcon />
+      </ButtonEmpty>
+    </Flex>
+  )
+
   return (
     <SharePoolContext.Provider value={setSharePoolAddress}>
       {selectedFarm && selectedModal === 'deposit' && (
@@ -223,24 +262,33 @@ function ElasticFarms({ active }: { active: boolean }) {
 
       <HeadingContainer>
         <StakedOnlyToggleWrapper>
-          <StakedOnlyToggleText>
-            <Trans>Staked Only</Trans>
-          </StakedOnlyToggleText>
-          <Toggle
-            isActive={stakedOnly[active ? 'active' : 'ended']}
-            toggle={() => setStakedOnly(prev => ({ ...prev, [activeTab]: !prev[activeTab] }))}
-          />
+          {above1000 && gridListViewGroup}
+
+          {activeTab !== FARM_TAB.MY_FARMS && (
+            <>
+              <StakedOnlyToggleText>
+                <Trans>Staked Only</Trans>
+              </StakedOnlyToggleText>
+              <Toggle
+                isActive={stakedOnly[stakedOnlyKey]}
+                toggle={() => setStakedOnly(prev => ({ ...prev, [activeTab]: !prev[stakedOnlyKey] }))}
+              />
+            </>
+          )}
         </StakedOnlyToggleWrapper>
         <HeadingRight>
-          <SearchContainer>
-            <SearchInput
-              placeholder={t`Search by token name or pool address`}
-              maxLength={255}
-              value={search}
-              onChange={e => handleSearch(e.target.value)}
-            />
-            <Search color={theme.subText} />
-          </SearchContainer>
+          <Flex sx={{ gap: '16px' }} flex={1}>
+            <FarmSort />
+            <SearchContainer>
+              <SearchInput
+                placeholder={t`Search by token name or pool address`}
+                maxLength={255}
+                value={search}
+                onChange={e => handleSearch(e.target.value)}
+              />
+              <Search color={theme.subText} />
+            </SearchContainer>
+          </Flex>
         </HeadingRight>
       </HeadingContainer>
 
@@ -253,19 +301,18 @@ function ElasticFarms({ active }: { active: boolean }) {
         </Text>
       )}
 
-      {(!type || type === 'active') && tab !== VERSION.CLASSIC && (
-        <>
-          <Text fontSize={12} fontWeight="500" marginBottom="0.375rem">
-            <Trans>Farms will run in multiple phases</Trans>
-          </Text>
-          <Text fontStyle="italic" fontSize={12} marginBottom="1rem" color={theme.subText}>
-            <Trans>
-              Once the current phase ends, you can harvest your rewards from the farm in the{' '}
-              <StyledInternalLink to="/farms?type=ended">Ended</StyledInternalLink> tab. To continue earning rewards in
-              the new phase, you must restake your NFT position into the active farm
-            </Trans>
-          </Text>
-        </>
+      {(!type || type === 'active') && qs.tab !== VERSION.CLASSIC && (
+        <Text fontSize={12} marginBottom="1.25rem" color={theme.subText}>
+          <Trans>
+            Note: Farms will run in{' '}
+            <Text as="span" color={theme.warning}>
+              multiple phases
+            </Text>
+            . Once the current phase ends, you can harvest your rewards from the farm in the{' '}
+            <StyledInternalLink to="/farms?type=ended">Ended</StyledInternalLink> tab. To continue earning rewards in
+            the new phase, you must restake your NFT position into the active farm
+          </Trans>
+        </Text>
       )}
 
       {loading && noFarms ? (
@@ -285,7 +332,7 @@ function ElasticFarms({ active }: { active: boolean }) {
           style={{ borderBottomLeftRadius: '20px', borderBottomRightRadius: '20px' }}
         >
           <Text color={theme.subText}>
-            {stakedOnly[activeTab] || search ? (
+            {stakedOnly[stakedOnlyKey] || search ? (
               <Trans>No Farms found</Trans>
             ) : (
               <Trans>Currently there are no Farms.</Trans>
@@ -317,7 +364,10 @@ function ElasticFarms({ active }: { active: boolean }) {
           })}
         </Flex>
       )}
-      <ShareModal title={t`Share this farm with your friends!`} url={shareUrl} />
+      <ShareModal
+        title={!sharePoolAddress ? t`Share farms with your friends` : t`Share this farm with your friends!`}
+        url={shareUrl}
+      />
     </SharePoolContext.Provider>
   )
 }

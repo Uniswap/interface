@@ -5,7 +5,7 @@ import { rgba } from 'polished'
 import React, { CSSProperties, useState } from 'react'
 import { AlertTriangle, ChevronDown, ChevronUp, Info, Minus, Plus, Share2 } from 'react-feather'
 import { useDispatch } from 'react-redux'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Flex } from 'rebass'
 
 import { ButtonEmpty } from 'components/Button'
@@ -132,7 +132,7 @@ const ListItemGroup = ({
 
   const amp = new Fraction(poolData.amp).divide(JSBI.BigInt(10000))
 
-  const history = useHistory()
+  const navigate = useNavigate()
   const [, setUrlOnEthPoWAck] = useUrlOnEthPowAck()
   const toggleEthPowAckModal = useToggleEthPowAckModal()
 
@@ -299,7 +299,7 @@ const ListItemGroup = ({
               if (chainId === ChainId.ETHW) {
                 toggleEthPowAckModal()
               } else {
-                history.push(url)
+                navigate(url)
               }
             }}
           >

@@ -3,7 +3,7 @@ import { Trans } from '@lingui/macro'
 import JSBI from 'jsbi'
 import { useState } from 'react'
 import { AlertTriangle, Share2 } from 'react-feather'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 
@@ -57,7 +57,7 @@ const TAB = {
 const ItemCard = ({ poolData, style = {}, myLiquidity }: ListItemProps) => {
   const { chainId } = useActiveWeb3React()
   const amp = new Fraction(poolData.amp).divide(JSBI.BigInt(SUBGRAPH_AMP_MULTIPLIER))
-  const history = useHistory()
+  const navigate = useNavigate()
   const [, setUrlOnEthPoWAck] = useUrlOnEthPowAck()
   const toggleEthPowAckModal = useToggleEthPowAckModal()
 
@@ -223,7 +223,7 @@ const ItemCard = ({ poolData, style = {}, myLiquidity }: ListItemProps) => {
               setUrlOnEthPoWAck(url)
               toggleEthPowAckModal()
             } else {
-              history.push(url)
+              navigate(url)
             }
           }}
           style={{

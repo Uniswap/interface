@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import axios from 'axios'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
@@ -54,7 +54,7 @@ function Verify() {
   const qs = useParsedQueryString()
   const theme = useTheme()
   const refTimeoutCountDown = useRef<NodeJS.Timeout>()
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const { pathname } = useLocation()
 
@@ -73,9 +73,9 @@ function Verify() {
     if (isVerifyExternal) {
       if (redirectUrl) window.location.href = redirectUrl
     } else {
-      history.push(APP_PATHS.SWAP)
+      navigate(APP_PATHS.SWAP)
     }
-  }, [history, isVerifyExternal, redirectUrl])
+  }, [isVerifyExternal, navigate, redirectUrl])
 
   useEffect(() => {
     return () => refTimeoutCountDown.current && clearInterval(refTimeoutCountDown.current)
@@ -100,7 +100,7 @@ function Verify() {
         if (code === '4001' && isVerifyExternal) setIsExpireError(true)
         setStatus(STATUS.ERROR)
       })
-  }, [qs?.confirmation, history, isVerifyExternal, time, handleCountDown])
+  }, [qs?.confirmation, isVerifyExternal, time, handleCountDown])
 
   const icon = (() => {
     switch (status) {

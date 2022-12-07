@@ -54,6 +54,7 @@ export interface Colors {
   bg23: Color
   buttonBlack: Color
   buttonGray: Color
+  radialGradient: Color
 
   modalBG: Color
   advancedBG: Color
@@ -76,6 +77,7 @@ export interface Colors {
   red2: Color
   red3: Color
   green: Color
+  darkGreen: Color
   green1: Color
   yellow1: Color
   yellow2: Color

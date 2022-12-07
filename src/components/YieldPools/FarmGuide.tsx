@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { Fragment, useState } from 'react'
-import { isMobile } from 'react-device-detect'
-import { ChevronDown, Edit2, Eye } from 'react-feather'
+import { Edit2, Eye } from 'react-feather'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
+import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
 import { Drop, MoneyBagOutline } from 'components/Icons'
 import AgriCulture from 'components/Icons/AgriCulture'
 import Deposit from 'components/Icons/Deposit'
@@ -136,7 +136,7 @@ const guideStepByVersion: Record<
 }
 
 function FarmGuide({ farmType }: { farmType: VERSION }) {
-  const [show, setShow] = useState(!isMobile)
+  const [show, setShow] = useState(false)
   const theme = useTheme()
   const upToMedium = useMedia('(max-width: 992px)')
 
@@ -144,39 +144,32 @@ function FarmGuide({ farmType }: { farmType: VERSION }) {
 
   return (
     <ProMMFarmGuideWrapper>
-      <Flex justifyContent="space-between" alignItems="center">
+      <Flex alignItems="center">
         <ProMMFarmGuide>
           {farmType === VERSION.ELASTIC ? (
             <>
               <Trans>
-                Deposit your liquidity position (NFT token) from the Elastic Pools here, and then stake it to earn even
-                more attractive farming rewards.
-              </Trans>
-
-              {(!upToMedium || !show) && (
-                <ExternalLink href="https://docs.kyberswap.com/guides/how-to-farm">
-                  {' '}
-                  <Trans>Learn More ↗</Trans>
-                </ExternalLink>
-              )}
+                Deposit your liquidity from the Elastic Pools here, and then stake it to earn even more attractive
+                farming rewards. Learn about our farming mechanisms
+              </Trans>{' '}
+              <ExternalLink href="https://docs.kyberswap.com/guides/how-to-farm">
+                <Trans>here ↗</Trans>
+              </ExternalLink>
             </>
           ) : (
             <>
               <Trans>
                 Deposit your liquidity from the Classic Pools here to earn even more attractive farming rewards.
-              </Trans>
-              {(!upToMedium || !show) && (
-                <ExternalLink href="https://docs.kyberswap.com/classic/guides/yield-farming-guide">
-                  {' '}
-                  <Trans>Learn More ↗</Trans>
-                </ExternalLink>
-              )}
+              </Trans>{' '}
+              <ExternalLink href="https://docs.kyberswap.com/classic/guides/yield-farming-guide">
+                <Trans>Learn More ↗</Trans>
+              </ExternalLink>
             </>
           )}
         </ProMMFarmGuide>
 
         <ShowGuideBtn onClick={() => setShow(prev => !prev)} show={show}>
-          <ChevronDown />
+          <DropdownSVG />
         </ShowGuideBtn>
       </Flex>
 
@@ -207,20 +200,6 @@ function FarmGuide({ farmType }: { farmType: VERSION }) {
             </Fragment>
           )
         })}
-
-        {upToMedium && (
-          <Flex justifyContent="flex-end">
-            {farmType === VERSION.ELASTIC ? (
-              <ExternalLink href="https://docs.kyberswap.com/guides/how-to-farm">
-                <Trans>Learn More ↗</Trans>
-              </ExternalLink>
-            ) : (
-              <ExternalLink href="https://docs.kyberswap.com/classic/guides/yield-farming-guide">
-                <Trans>Learn More ↗</Trans>
-              </ExternalLink>
-            )}
-          </Flex>
-        )}
       </GuideWrapper>
     </ProMMFarmGuideWrapper>
   )

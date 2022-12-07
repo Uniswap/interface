@@ -6,7 +6,7 @@ import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle, Plus } from 'react-feather'
-import { Link, Redirect, RouteComponentProps } from 'react-router-dom'
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
 
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
@@ -73,12 +73,9 @@ export enum FEE_TYPE {
   DYNAMIC = 'dynamic',
 }
 
-export default function CreatePool({
-  match: {
-    params: { currencyIdA, currencyIdB },
-  },
-  history,
-}: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
+export default function CreatePool() {
+  const { currencyIdA, currencyIdB } = useParams()
+  const navigate = useNavigate()
   const { account, chainId, isEVM, networkInfo } = useActiveWeb3React()
   const { library } = useWeb3React()
   const theme = useTheme()
@@ -354,32 +351,32 @@ export default function CreatePool({
 
       // support WETH
       if (isWrappedTokenInPool(currencyA, selectedCurrencyA)) {
-        history.push(`/create/${newCurrencyIdA}/${currencyIdB}`)
+        navigate(`/create/${newCurrencyIdA}/${currencyIdB}`)
       } else if (newCurrencyIdA === currencyIdB) {
-        history.push(`/create/${currencyIdB}/${currencyIdA}`)
+        navigate(`/create/${currencyIdB}/${currencyIdA}`)
       } else {
-        history.push(`/create/${newCurrencyIdA}/${currencyIdB}`)
+        navigate(`/create/${newCurrencyIdA}/${currencyIdB}`)
       }
     },
-    [currencyIdB, history, currencyIdA, isWrappedTokenInPool, currencyA, chainId],
+    [currencyIdB, navigate, currencyIdA, isWrappedTokenInPool, currencyA, chainId],
   )
   const handleCurrencyBSelect = useCallback(
     (selectedCurrencyB: Currency) => {
       const newCurrencyIdB = currencyId(selectedCurrencyB, chainId)
 
       if (isWrappedTokenInPool(currencyB, selectedCurrencyB)) {
-        history.push(`/create/${currencyIdA}/${newCurrencyIdB}`)
+        navigate(`/create/${currencyIdA}/${newCurrencyIdB}`)
       } else if (newCurrencyIdB === currencyIdA) {
         if (currencyIdB) {
-          history.push(`/create/${currencyIdB}/${currencyIdA}`)
+          navigate(`/create/${currencyIdB}/${currencyIdA}`)
         } else {
-          history.push(`/create/${newCurrencyIdB}`)
+          navigate(`/create/${newCurrencyIdB}`)
         }
       } else {
-        history.push(`/create/${currencyIdA ? currencyIdA : 'ETH'}/${newCurrencyIdB}`)
+        navigate(`/create/${currencyIdA ? currencyIdA : 'ETH'}/${newCurrencyIdB}`)
       }
     },
-    [currencyIdA, history, currencyIdB, isWrappedTokenInPool, currencyB, chainId],
+    [currencyIdA, navigate, currencyIdB, isWrappedTokenInPool, currencyB, chainId],
   )
 
   const handleDismissConfirmation = useCallback(() => {
@@ -424,7 +421,7 @@ export default function CreatePool({
     }
   }, [chainId])
 
-  if (!isEVM) return <Redirect to="/" />
+  if (!isEVM) return <Navigate to="/" />
   return (
     <PageWrapper>
       <Container>
@@ -485,7 +482,7 @@ export default function CreatePool({
                   {isPoolExisted && (
                     <TYPE.link fontSize="14px" lineHeight="22px" color={'text1'} fontWeight="normal">
                       <Trans>Note: There are existing pools for this token pair. Please check</Trans>{' '}
-                      <Link to={`/pools/${currencyIdA}/${currencyIdB}`}>
+                      <Link to={`/pools/${networkInfo.route}/${currencyIdA}/${currencyIdB}?tab=classic`}>
                         <Trans>here</Trans>
                       </Link>
                     </TYPE.link>

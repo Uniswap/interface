@@ -5,7 +5,7 @@ import { Trans, t } from '@lingui/macro'
 import { BigNumber } from 'ethers'
 import JSBI from 'jsbi'
 import { useCallback, useEffect, useState } from 'react'
-import { Redirect, RouteComponentProps } from 'react-router-dom'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
 
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
@@ -22,6 +22,7 @@ import { RowBetween } from 'components/Row'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { TutorialType } from 'components/Tutorial'
 import { Dots } from 'components/swap/styleds'
+import { APP_PATHS } from 'constants/index'
 import { EVMNetworkInfo } from 'constants/networks/type'
 import { NativeCurrencies } from 'constants/tokens'
 import { VERSION } from 'constants/v2'
@@ -48,14 +49,11 @@ import { unwrappedToken } from 'utils/wrappedCurrency'
 
 import { Container, FirstColumn, GridColumn, SecondColumn } from './styled'
 
-export default function AddLiquidity({
-  match: {
-    params: { currencyIdA, currencyIdB, feeAmount: feeAmountFromUrl, tokenId },
-  },
-  history,
-}: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string; feeAmount?: string; tokenId?: string }>) {
+export default function AddLiquidity() {
+  const { currencyIdB, currencyIdA, feeAmount: feeAmountFromUrl, tokenId } = useParams()
   const { account, chainId, isEVM, networkInfo } = useActiveWeb3React()
   const { library } = useWeb3React()
+  const navigate = useNavigate()
   const theme = useTheme()
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
   const [expertMode] = useExpertModeManager()
@@ -65,9 +63,9 @@ export default function AddLiquidity({
 
   useEffect(() => {
     if (!!chainId && !!prevChainId && chainId !== prevChainId) {
-      history.push('/myPools')
+      navigate(APP_PATHS.MY_POOLS)
     }
-  }, [chainId, prevChainId, history])
+  }, [chainId, prevChainId, navigate])
 
   const positionManager = useProAmmNFTPositionManagerContract()
 
@@ -266,10 +264,10 @@ export default function AddLiquidity({
     if (txHash) {
       onFieldAInput('')
       // dont jump to pool page if creating
-      history.push('/myPools')
+      navigate('/myPools')
     }
     setTxHash('')
-  }, [history, onFieldAInput, txHash])
+  }, [navigate, onFieldAInput, txHash])
 
   const addIsUnsupported = false
 
@@ -350,7 +348,7 @@ export default function AddLiquidity({
       </Flex>
     )
 
-  if (!isEVM) return <Redirect to="/" />
+  if (!isEVM) return <Navigate to="/" />
   return (
     <>
       <TransactionConfirmationModal
@@ -455,10 +453,13 @@ export default function AddLiquidity({
                     isSwitchMode={baseCurrencyIsETHER || baseCurrencyIsWETH}
                     onSwitchCurrency={() => {
                       chainId &&
-                        history.replace(
+                        navigate(
                           `/elastic/increase/${
                             baseCurrencyIsETHER ? WETH[chainId].address : NativeCurrencies[chainId].symbol
                           }/${currencyIdB}/${feeAmount}/${tokenId}`,
+                          {
+                            replace: true,
+                          },
                         )
                     }}
                   />
@@ -481,10 +482,11 @@ export default function AddLiquidity({
                     isSwitchMode={quoteCurrencyIsETHER || quoteCurrencyIsWETH}
                     onSwitchCurrency={() => {
                       chainId &&
-                        history.replace(
+                        navigate(
                           `/elastic/increase/${currencyIdA}/${
                             quoteCurrencyIsETHER ? WETH[chainId].address : NativeCurrencies[chainId].symbol
                           }/${feeAmount}/${tokenId}`,
+                          { replace: true },
                         )
                     }}
                   />

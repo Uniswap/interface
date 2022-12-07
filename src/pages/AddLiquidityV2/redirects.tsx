@@ -1,18 +1,12 @@
 import { WETH } from '@kyberswap/ks-sdk-core'
-import { Redirect, RouteComponentProps } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router-dom'
 
 import { useActiveWeb3React } from 'hooks'
 
 import ProAmmAddLiquidity from './index'
 
-export function RedirectDuplicateTokenIds(
-  props: RouteComponentProps<{ currencyIdA: string; currencyIdB: string; feeAmount?: string }>,
-) {
-  const {
-    match: {
-      params: { currencyIdA, currencyIdB },
-    },
-  } = props
+export function RedirectDuplicateTokenIds() {
+  const { currencyIdA, currencyIdB } = useParams()
 
   const { chainId } = useActiveWeb3React()
 
@@ -25,7 +19,7 @@ export function RedirectDuplicateTokenIds(
     currencyIdB &&
     (currencyIdA.toLowerCase() === currencyIdB.toLowerCase() || (isETHOrWETHA && isETHOrWETHB))
   ) {
-    return <Redirect to={`proamm/add/${currencyIdA}`} />
+    return <Navigate to={`/elastic/add/${currencyIdA}`} />
   }
-  return <ProAmmAddLiquidity {...props} />
+  return <ProAmmAddLiquidity />
 }

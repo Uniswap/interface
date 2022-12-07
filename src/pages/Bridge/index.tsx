@@ -1,7 +1,7 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import { useCallback, useEffect, useRef } from 'react'
-import { Redirect } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 
@@ -159,7 +159,7 @@ export default function Bridge() {
     setBridgeState({ listTokenOut })
   }, [chainIdOut, tokenInfoIn, chainId, setBridgeState])
 
-  if (isSolana) return <Redirect to="/" />
+  if (isSolana) return <Navigate to="/" />
   return (
     <PageWrapper>
       <Disclaimer />

@@ -8,7 +8,6 @@ import useTheme from 'hooks/useTheme'
 import { usePrommSchedules } from 'state/vesting/hooks'
 
 import ScheduleCard from './ScheduleCard'
-import VestingSummary from './VestingSummary'
 import { ScheduleGrid } from './styleds'
 
 const ProMMVesting = () => {
@@ -79,18 +78,6 @@ const ProMMVesting = () => {
 
   return (
     <>
-      <VestingSummary
-        loading={loading}
-        totalHarvested={totalHarvested}
-        locked={locked}
-        unlocked={unlocked}
-        claimed={claimed}
-      />
-
-      <Text fontSize={16} fontWeight="500" marginTop="24px">
-        <Trans>Vesting Schedules</Trans>
-      </Text>
-
       {noVesting ? (
         loading ? (
           <LocalLoader />

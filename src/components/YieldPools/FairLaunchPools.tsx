@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import { useEffect, useState } from 'react'
-import { Redirect } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 import { Text } from 'rebass'
 
 import ShareModal from 'components/ShareModal'
@@ -63,7 +63,7 @@ const FairLaunchPools = ({ fairLaunchAddress, farms }: FarmsListProps) => {
     })
   }, [isShareModalOpen, setSharedPoolAddress])
 
-  if (!isEVM) return <Redirect to="/" />
+  if (!isEVM) return <Navigate to="/" />
   const shareUrl = sharedPoolAddress
     ? window.location.origin + `/farms/${networkRoute}?search=` + sharedPoolAddress + '&tab=classic'
     : undefined

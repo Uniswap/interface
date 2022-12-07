@@ -1,7 +1,7 @@
 import { stringify } from 'querystring'
 import { isMobile } from 'react-device-detect'
 import { ArrowLeft, Check } from 'react-feather'
-import { useHistory, useLocation } from 'react-router'
+import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { ButtonEmpty } from 'components/Button'
@@ -35,7 +35,7 @@ export default function LanguageSelector({
   setIsSelectingLanguage: (isSelectingLanguage: boolean) => void
 }) {
   const theme = useTheme()
-  const history = useHistory()
+  const navigate = useNavigate()
   const location = useLocation()
   const qs = useParsedQueryString()
   const userLocale = useUserLocale()
@@ -46,7 +46,7 @@ export default function LanguageSelector({
       search: stringify({ ...qs, lng: locale }),
     }
 
-    history.push(target)
+    navigate(target)
     setIsSelectingLanguage(false)
   }
 

@@ -1,10 +1,10 @@
 import { Trans, t } from '@lingui/macro'
 import dayjs from 'dayjs'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { BarChart, ChevronDown, Clock, Share2, Star, Users } from 'react-feather'
 import { useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 import styled, { css } from 'styled-components'
@@ -308,9 +308,9 @@ export default function Campaign() {
 
   const toggleSelectCampaignModal = useSelectCampaignModalToggle()
 
-  const history = useHistory()
+  const navigate = useNavigate()
   const onSelectCampaign = (campaign: CampaignData) => {
-    history.push(getSlugUrlCampaign(campaign))
+    navigate(getSlugUrlCampaign(campaign))
   }
 
   const now = Date.now()

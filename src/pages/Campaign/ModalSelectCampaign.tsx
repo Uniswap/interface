@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import { X } from 'react-feather'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import Modal from 'components/Modal'
 import useTheme from 'hooks/useTheme'
@@ -15,9 +15,9 @@ const ModalSelectCampaign = () => {
   const toggleSelectCampaignModal = useSelectCampaignModalToggle()
   const theme = useTheme()
 
-  const history = useHistory()
+  const navigate = useNavigate()
   const onSelectCampaign = (campaign: CampaignData) => {
-    history.push(getSlugUrlCampaign(campaign))
+    navigate(getSlugUrlCampaign(campaign))
     setTimeout(() => {
       // UX Improvement
       toggleSelectCampaignModal()
