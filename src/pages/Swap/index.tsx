@@ -387,7 +387,8 @@ export default function Swap() {
     trade,
     allowedSlippage,
     recipient,
-    signatureData
+    signatureData,
+    permit
   )
 
   const handleSwap = useCallback(() => {

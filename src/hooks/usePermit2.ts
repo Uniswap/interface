@@ -16,7 +16,7 @@ export enum PermitState {
   PERMITTED,
 }
 
-interface Permit {
+export interface Permit {
   state: PermitState
   signature?: PermitSignature
   callback?: () => Promise<{
