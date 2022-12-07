@@ -30,8 +30,9 @@ export const SwapWrapper = styled.main<{ margin?: string; maxWidth?: string; ope
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   padding: 8px;
   z-index: ${Z_INDEX.deprecated_content};
-  cursor: ${({ open }) => (open ? 'pointer' : 'suto')};
+  cursor: ${({ open }) => open && 'pointer'};
   transition: transform 250ms ease;
+
   &:hover {
     border: 1px solid ${({ theme, open }) => (open ? theme.accentAction : theme.backgroundOutline)};
     transform: ${({ open }) => (open ? `translateY(-4px)` : `none`)};
