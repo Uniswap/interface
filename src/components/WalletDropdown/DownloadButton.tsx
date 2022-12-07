@@ -5,6 +5,7 @@ import styled from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
 import { isIOS } from 'utils/userAgent'
 
+// TODO(cartcrom): add a LearnMore Button that links out to site migration wallet page
 export const BaseButton = styled.button<{ padded?: boolean }>`
   ${ClickableStyle}
   width: 100%;

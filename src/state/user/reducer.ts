@@ -51,6 +51,7 @@ export interface UserState {
   timestamp: number
   URLWarningVisible: boolean
   hideNFTPromoBanner: boolean // whether or not we should hide the nft explore promo banner
+  hideUniswapWalletBanner: boolean
 
   // undefined means has not gone through A/B split yet
   showSurveyPopup: boolean | undefined
@@ -81,6 +82,7 @@ export const initialState: UserState = {
   timestamp: currentTimestamp(),
   URLWarningVisible: true,
   hideNFTPromoBanner: false,
+  hideUniswapWalletBanner: false,
   showSurveyPopup: undefined,
   showDonationLink: true,
   hideNFTWelcomeModal: false,
@@ -137,6 +139,9 @@ const userSlice = createSlice({
     },
     updateShowNftPromoBanner(state, action) {
       state.hideNFTPromoBanner = action.payload.hideNFTPromoBanner
+    },
+    updateHideUniswapWalletBanner(state, action) {
+      state.hideUniswapWalletBanner = action.payload.hideUniswapWalletBanner
     },
     addSerializedToken(state, { payload: { serializedToken } }) {
       if (!state.tokens) {
@@ -230,5 +235,6 @@ export const {
   updateUserLocale,
   updateUserSlippageTolerance,
   updateShowNftPromoBanner,
+  updateHideUniswapWalletBanner,
 } = userSlice.actions
 export default userSlice.reducer

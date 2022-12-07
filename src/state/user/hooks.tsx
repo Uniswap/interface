@@ -21,6 +21,7 @@ import {
   updateFiatOnrampAcknowledged,
   updateHideClosedPositions,
   updateHideNFTWelcomeModal,
+  updateHideUniswapWalletBanner,
   updateShowNftPromoBanner,
   updateShowSurveyPopup,
   updateUserClientSideRouter,
@@ -306,6 +307,17 @@ export function useHideNftPromoBanner(): [boolean, () => void] {
   }, [dispatch])
 
   return [hideNftPromoBanner, toggleHideNftPromoBanner]
+}
+
+export function useHideUniswapWalletBanner(): [boolean, () => void] {
+  const dispatch = useAppDispatch()
+  const hideUniswapWalletBanner = useAppSelector((state) => state.user.hideUniswapWalletBanner)
+
+  const toggleHideUniswapWalletBanner = useCallback(() => {
+    dispatch(updateHideUniswapWalletBanner({ hideUniswapWalletBanner: true }))
+  }, [dispatch])
+
+  return [hideUniswapWalletBanner, toggleHideUniswapWalletBanner]
 }
 
 /**
