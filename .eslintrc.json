@@ -1,3 +1,3 @@
 {
-  "extends": "@uniswap"
+  "extends": "@uniswap/eslint-config/react"
 }
