@@ -8,7 +8,7 @@ import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-const FloatBContainer = styled.div`
+const FloatingBannerGradientContainer = styled.div`
   position: fixed;
   display: flex;
   justify-content: center;
@@ -46,10 +46,13 @@ const ListButton = styled.button`
   border-radius: 12px;
   padding: 10px 12px;
   text-align: center;
-  cursor: pointer;
   font-size: 16px;
 
   ${buttonHoverState}
+
+  &:disabled {
+    opacity: 0.3;
+  }
 `
 
 export const FloatingBanner = () => {
@@ -78,7 +81,7 @@ export const FloatingBanner = () => {
   }, [sellAssets])
 
   return (
-    <FloatBContainer>
+    <FloatingBannerGradientContainer>
       <FloatingBannerContainer>
         <ThemedText.HeadlineSmall fontWeight={500}>Proceeds if sold</ThemedText.HeadlineSmall>
         <Content>
@@ -94,11 +97,11 @@ export const FloatingBanner = () => {
               {formatUsdPrice(totalEthListingValue * ethConversion)}
             </ThemedText.HeadlineSmall>
           )}
-          <ListButton onClick={() => true}>
+          <ListButton disabled={listingsMissingPrice} onClick={() => true}>
             {listingsMissingPrice ? 'Set prices to continue' : 'Start listing'}
           </ListButton>
         </Content>
       </FloatingBannerContainer>
-    </FloatBContainer>
+    </FloatingBannerGradientContainer>
   )
 }
