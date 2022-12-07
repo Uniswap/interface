@@ -240,7 +240,9 @@ function BuyCrypto() {
     ',',
   )}&networks=${Object.values(supportedNetworks).filter(Boolean).join(',')}${
     account ? `&walletAddress=${account}` : ''
-  }&defaultNetwork=${supportedNetworks[chainId] || supportedNetworks[ChainId.MAINNET]}&redirectURL=${redirectURL}`
+  }&defaultNetwork=${
+    supportedNetworks[chainId] || supportedNetworks[ChainId.MAINNET]
+  }&excludeFiatCurrencies=SGD&redirectURL=${redirectURL}`
 
   const [isDarkMode] = useDarkModeManager()
   const { mixpanelHandler } = useMixpanel()
