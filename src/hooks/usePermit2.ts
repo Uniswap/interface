@@ -2,8 +2,8 @@ import { ContractTransaction } from '@ethersproject/contracts'
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
 import useInterval from 'lib/hooks/useInterval'
-import ms from 'ms.macro'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ApproveTransactionInfo } from 'state/transactions/types'
 
@@ -54,7 +54,7 @@ export default function usePermit(amount?: CurrencyAmount<Token>, spender?: stri
         setPermitAllowance(undefined)
       }
     },
-    ms`12s`,
+    AVERAGE_L1_BLOCK_TIME,
     true
   )
 
