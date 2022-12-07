@@ -24,7 +24,7 @@ export default function PriceImpactWarning({ priceImpact }: PriceImpactWarningPr
 
   return (
     <StyledCard>
-      <AutoColumn gap="8px">
+      <AutoColumn gap="sm">
         <MouseoverTooltip
           text={
             <Trans>
