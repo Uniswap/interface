@@ -1,9 +1,8 @@
-import { FeatureFlag } from '../../src/featureFlags/flags/featureFlags'
 import { getTestSelector } from '../utils'
 
 describe('Wallet Dropdown', () => {
   before(() => {
-    cy.visit('/', { featureFlags: [FeatureFlag.navBar, FeatureFlag.tokenSafety] })
+    cy.visit('/')
   })
 
   it('should change the theme', () => {
