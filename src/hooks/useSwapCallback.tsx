@@ -1,7 +1,7 @@
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { Permit2Variant, usePermit2Flag } from 'featureFlags/flags/permit2'
+import { usePermit2Enabled } from 'featureFlags/flags/permit2'
 import { SwapCallbackState, useSwapCallback as useLibSwapCallBack } from 'lib/hooks/swap/useSwapCallback'
 import { ReactNode, useMemo } from 'react'
 
@@ -32,7 +32,7 @@ export function useSwapCallback(
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
 
-  const permit2Enabled = usePermit2Flag() === Permit2Variant.Enabled
+  const permit2Enabled = usePermit2Enabled()
   const {
     state,
     callback: libCallback,

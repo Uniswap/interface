@@ -15,7 +15,7 @@ import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { isSupportedChain } from 'constants/chains'
 import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
-import { Permit2Variant, usePermit2Flag } from 'featureFlags/flags/permit2'
+import { usePermit2Enabled } from 'featureFlags/flags/permit2'
 import usePermit, { PermitState } from 'hooks/usePermit2'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
@@ -292,14 +292,14 @@ export default function Swap() {
     currencies[Field.INPUT] && currencies[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
   )
 
-  const permit2Enabled = usePermit2Flag() === Permit2Variant.Enabled
+  const permit2Enabled = usePermit2Enabled()
   const maximumAmountIn = useMemo(() => {
     const maximumAmountIn = trade?.maximumAmountIn(allowedSlippage)
     return maximumAmountIn?.currency.isToken ? (maximumAmountIn as CurrencyAmount<Token>) : undefined
   }, [allowedSlippage, trade])
   const permit = usePermit(
     permit2Enabled ? maximumAmountIn : undefined,
-    chainId ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
+    permit2Enabled && chainId ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
   )
   const [isPermitPending, setIsPermitPending] = useState(false)
   const [isPermitFailed, setIsPermitFailed] = useState(false)
