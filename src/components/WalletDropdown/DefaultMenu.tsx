@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { BadgeVariant, SmallBadge } from 'components/Badge'
 import WalletModal from 'components/WalletModal'
+import { UniwalletBadge } from 'components/WalletModal/UniwalletOption'
 import { ConnectionType } from 'connection'
 import { getConnection } from 'connection/utils'
 import { useActiveLocale } from 'hooks/useActiveLocale'
@@ -10,7 +10,6 @@ import { ChevronRight, Moon, Sun } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
 import { isIOS } from 'utils/userAgent'
 
 import { useAllTransactions } from '../../state/transactions/hooks'
@@ -145,9 +144,7 @@ const DefaultMenu = ({ setMenu }: { setMenu: (state: MenuState) => void }) => {
             <DefaultText>
               <Trans>Download Uniswap Wallet for iOS</Trans>
             </DefaultText>
-            <SmallBadge variant={BadgeVariant.PROMOTIONAL}>
-              <ThemedText.UtilityBadge>NEW</ThemedText.UtilityBadge>
-            </SmallBadge>
+            <UniwalletBadge />
           </ToggleMenuItem>
         </>
       )}
