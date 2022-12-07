@@ -71,7 +71,6 @@ const SubText = styled.h3`
 `
 
 const CTAButton = styled(BaseButton)`
-  width: 288px;
   padding: 16px;
   border-radius: 24px;
   color: ${({ theme }) => theme.white};
@@ -105,14 +104,20 @@ const ButtonCTAText = styled.p`
   }
 `
 
-const TitleContentWrapper = styled.span`
+const TitleWrapper = styled.span`
   max-width: 720px;
 `
 
-const ContentWrapper = styled.span`
+const ActionsWrapper = styled.span`
   display: flex;
+  justify-content: center;
   gap: 24px;
-  max-width: 720px;
+  width: 100%;
+
+  & > * {
+    max-width: 288px;
+    flex: 1;
+  }
 `
 
 export default function Landing() {
@@ -130,18 +135,18 @@ export default function Landing() {
 
   return (
     <PageWrapper isDarkMode={isDarkMode}>
-      <TitleContentWrapper>
+      <TitleWrapper>
         <TitleText isDarkMode={isDarkMode}>Trade crypto & NFTs with confidence.</TitleText>
         <SubText>Uniswap is the best way to buy, sell, and manage your tokens and NFTs.</SubText>
-      </TitleContentWrapper>
-      <ContentWrapper>
+      </TitleWrapper>
+      <ActionsWrapper>
         <ButtonCTA onClick={onContinueClick}>
           <ButtonCTAText>Continue</ButtonCTAText>
         </ButtonCTA>
         <ButtonCTASecondary onClick={onAboutClick}>
           <ButtonCTAText>Learn More</ButtonCTAText>
         </ButtonCTASecondary>
-      </ContentWrapper>
+      </ActionsWrapper>
     </PageWrapper>
   )
 }
