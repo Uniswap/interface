@@ -1,6 +1,7 @@
 import React from 'react'
 import { Box } from 'src/components/layout'
-import { Loading } from 'src/components/loading'
+import { Loader } from 'src/components/loading'
+import { PriceHeaderLoader } from 'src/components/loading/PriceHeaderLoader'
 import { PriceChartLabel } from 'src/components/PriceChart/PriceChartLabels'
 import { BUTTON_WIDTH } from 'src/components/PriceChart/PriceExplorer'
 import { CHART_WIDTH } from 'src/components/PriceChart/utils'
@@ -10,10 +11,10 @@ export function PriceChartLoading() {
   return (
     <>
       <Box>
-        <Loading type="price-header" />
+        <PriceHeaderLoader />
       </Box>
       <Box my="lg">
-        <Loading type="graph" />
+        <Loader.Graph />
       </Box>
       <Box alignSelf="center" flexDirection="row" width={CHART_WIDTH}>
         {Object.entries(PriceChartLabel).map(([_key, label]) => {

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Flex } from 'src/components/layout'
-import { Loading } from 'src/components/loading'
+import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { HiddenFromScreenReaders } from 'src/components/text/HiddenFromScreenReaders'
 
@@ -22,7 +22,7 @@ export default function TransactionLoader() {
           </Text>
         </HiddenFromScreenReaders>
       </Box>
-      <Loading repeat={2} type="token" />
+      <Loader.Token repeat={2} />
       <Box
         bg="background3"
         borderRadius="xs"
@@ -36,7 +36,7 @@ export default function TransactionLoader() {
           </Text>
         </HiddenFromScreenReaders>
       </Box>
-      <Loading repeat={2} type="token" />
+      <Loader.Token repeat={2} />
     </Flex>
   )
 }

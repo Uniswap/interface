@@ -6,7 +6,7 @@ import { OnboardingStackParamList } from 'src/app/navigation/types'
 import CloudIcon from 'src/assets/icons/cloud.svg'
 import { Box } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { Loading } from 'src/components/loading'
+import { Loader } from 'src/components/loading'
 import { useCloudBackups } from 'src/features/CloudBackup/hooks'
 import {
   startFetchingICloudBackups,
@@ -107,7 +107,7 @@ export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } 
 
   return (
     <OnboardingScreen title={t('Searching for backups...')}>
-      <Loading repeat={5} type="wallets" />
+      <Loader.Wallets repeat={5} />
     </OnboardingScreen>
   )
 }

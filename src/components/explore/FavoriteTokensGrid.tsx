@@ -8,7 +8,7 @@ import FavoriteTokenCard, {
   FAVORITE_TOKEN_CARD_LOADER_HEIGHT,
 } from 'src/components/explore/FavoriteTokenCard'
 import { AnimatedBox, Box, Flex } from 'src/components/layout'
-import { Loading } from 'src/components/loading'
+import { Loader } from 'src/components/loading'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { flex } from 'src/styles/flex'
 import { theme as FixedTheme } from 'src/styles/theme'
@@ -76,14 +76,14 @@ export function FavoriteTokensGrid({
   )
 }
 
-export function FavoriteTokensGridLoader() {
+function FavoriteTokensGridLoader() {
   return (
     <Flex row gap="xs">
       <Box style={ITEM_FLEX}>
-        <Loading height={FAVORITE_TOKEN_CARD_LOADER_HEIGHT} type="favorite" />
+        <Loader.Favorite height={FAVORITE_TOKEN_CARD_LOADER_HEIGHT} />
       </Box>
       <Box style={ITEM_FLEX}>
-        <Loading height={FAVORITE_TOKEN_CARD_LOADER_HEIGHT} type="favorite" />
+        <Loader.Favorite height={FAVORITE_TOKEN_CARD_LOADER_HEIGHT} />
       </Box>
     </Flex>
   )

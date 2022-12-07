@@ -6,7 +6,7 @@ import { useAppSelector } from 'src/app/hooks'
 import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
 import FavoriteWalletCard from 'src/components/explore/FavoriteWalletCard'
 import { AnimatedBox, Box, Flex } from 'src/components/layout'
-import { Loading } from 'src/components/loading'
+import { Loader } from 'src/components/loading'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { theme } from 'src/styles/theme'
 
@@ -72,14 +72,14 @@ export function FavoriteWalletsGrid({
   )
 }
 
-export function FavoriteWalletsGridLoader() {
+function FavoriteWalletsGridLoader() {
   return (
     <Flex row gap="xs">
       <Box style={ITEM_FLEX}>
-        <Loading height={50} type="favorite" />
+        <Loader.Favorite height={48} />
       </Box>
       <Box style={ITEM_FLEX}>
-        <Loading height={50} type="favorite" />
+        <Loader.Favorite height={48} />
       </Box>
     </Flex>
   )

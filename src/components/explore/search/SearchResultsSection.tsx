@@ -7,7 +7,7 @@ import { SearchTokenItem } from 'src/components/explore/search/items/SearchToken
 import { SearchWalletItem } from 'src/components/explore/search/items/SearchWalletItem'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { Loading } from 'src/components/loading'
+import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
@@ -174,13 +174,13 @@ const SearchResultsLoader = () => {
         <Text color="textSecondary" variant="subheadSmall">
           {t('Tokens')}
         </Text>
-        <Loading repeat={2} type="token" />
+        <Loader.Token repeat={2} />
       </Flex>
       <Flex gap="sm">
         <Text color="textSecondary" variant="subheadSmall">
           {t('Wallets')}
         </Text>
-        <Loading repeat={1} type="token" />
+        <Loader.Token />
       </Flex>
     </AnimatedFlex>
   )

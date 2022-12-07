@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
 import { Inset } from 'src/components/layout'
-import { Loading } from 'src/components/loading'
+import { Loader } from 'src/components/loading'
 import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
@@ -49,7 +49,7 @@ export function SearchPopularTokens() {
   if (loading) {
     return (
       <Inset all="xs">
-        <Loading repeat={3} type="token" />
+        <Loader.Token repeat={3} />
       </Inset>
     )
   }

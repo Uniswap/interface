@@ -4,7 +4,7 @@ import { FadeOut } from 'react-native-reanimated'
 import { AnimatedBox, Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Separator } from 'src/components/layout/Separator'
-import { Loading } from 'src/components/loading'
+import { TokenBalanceLoader } from 'src/components/loading/TokenBalanceLoader'
 import { PriceChartLoading } from 'src/components/PriceChart/PriceChartLoading'
 import { Text } from 'src/components/Text'
 import { TokenDetailsBackButtonRow } from 'src/components/TokenDetails/TokenDetailsBackButtonRow'
@@ -40,7 +40,7 @@ export function TokenDetailsLoader({ currencyId }: { currencyId: string }) {
                       ? t("{{owner}}'s balance", { owner: displayName })
                       : t('Your balance')}
                   </Text>
-                  <Loading type="balance" />
+                  <TokenBalanceLoader />
                 </Flex>
               </Flex>
               <Separator mx="md" />

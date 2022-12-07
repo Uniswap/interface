@@ -8,7 +8,7 @@ import { Box, Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Screen } from 'src/components/layout/Screen'
-import { Loading } from 'src/components/loading'
+import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
@@ -71,7 +71,7 @@ export function HiddenTokensScreen({
       <Box flex={1} px="lg">
         {!data ? (
           isNonPollingRequestInFlight(networkStatus) ? (
-            <Loading repeat={4} type="token" />
+            <Loader.Token repeat={4} />
           ) : (
             <BaseCard.ErrorState
               retryButtonLabel="Retry"

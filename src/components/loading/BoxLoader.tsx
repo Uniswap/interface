@@ -4,6 +4,28 @@ import { ViewProps } from 'react-native'
 import { Box } from 'src/components/layout'
 import { Theme } from 'src/styles/theme'
 
-export function BoxLoader({ ...props }: BoxProps<Theme, true> & ViewProps) {
-  return <Box backgroundColor="background3" borderRadius="md" width="100%" {...props} />
+export type BoxLoaderProps = { repeat?: number } & BoxProps<Theme, true> & ViewProps
+export function BoxLoader({
+  repeat = 1,
+  backgroundColor = 'background3',
+  borderRadius = 'md',
+  width = '100%',
+  height,
+  ...props
+}: BoxLoaderProps) {
+  return (
+    <Box>
+      {new Array(repeat).fill(null).map((_, i) => (
+        <React.Fragment key={i}>
+          <Box
+            backgroundColor={backgroundColor}
+            borderRadius={borderRadius}
+            height={height}
+            width={width}
+            {...props}
+          />
+        </React.Fragment>
+      ))}
+    </Box>
+  )
 }

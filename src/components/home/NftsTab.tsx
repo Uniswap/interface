@@ -15,7 +15,7 @@ import { BaseCard } from 'src/components/layout/BaseCard'
 import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
 import { TabContentProps } from 'src/components/layout/TabHelpers'
-import { Loading } from 'src/components/loading'
+import { Loader } from 'src/components/loading'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { Text } from 'src/components/Text'
 import { EMPTY_ARRAY } from 'src/constants/misc'
@@ -120,7 +120,7 @@ export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
     const renderItem = useCallback(
       ({ item }: ListRenderItemInfo<string | NFTItem>) => {
         return typeof item === 'string' ? (
-          <Loading repeat={1} type="nft" />
+          <Loader.NFT />
         ) : (
           <Box flex={1} justifyContent="flex-start" m="xs">
             <TouchableArea
@@ -206,7 +206,7 @@ export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
       return (
         <View style={containerProps?.loadingContainerStyle}>
           <Flex>
-            <Loading repeat={6} type="nft" />
+            <Loader.NFT repeat={6} />
           </Flex>
         </View>
       )
@@ -229,7 +229,7 @@ export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
           ListFooterComponent={
             // If not loading, we add a footer  to cover any possible space that is covered up by bottom tab bar
             networkStatus === NetworkStatus.fetchMore ? (
-              <Loading repeat={4} type="nft" />
+              <Loader.NFT repeat={4} />
             ) : (
               <Box height={footerPadding} />
             )

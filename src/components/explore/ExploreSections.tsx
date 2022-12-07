@@ -10,7 +10,7 @@ import { TokenItem, TokenItemData } from 'src/components/explore/TokenItem'
 import { Box, Flex, Inset } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
-import { Loading } from 'src/components/loading'
+import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY, PollingInterval } from 'src/constants/misc'
@@ -185,7 +185,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps) {
       <FlatList
         ListEmptyComponent={
           <Box mx="lg" my="sm">
-            <Loading repeat={5} type="token" />
+            <Loader.Token repeat={5} />
           </Box>
         }
         ListFooterComponent={<Inset all="sm" />}

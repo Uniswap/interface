@@ -11,7 +11,7 @@ import RemoveButton from 'src/components/explore/RemoveButton'
 import { Box } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Flex } from 'src/components/layout/Flex'
-import { Loading } from 'src/components/loading'
+import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
@@ -32,7 +32,7 @@ import { fromGraphQLChain } from 'src/utils/chainId'
 import { formatUSDPrice } from 'src/utils/format'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
 
-export const FAVORITE_TOKEN_CARD_LOADER_HEIGHT = 100
+export const FAVORITE_TOKEN_CARD_LOADER_HEIGHT = 102
 
 type FavoriteTokenCardProps = {
   currencyId: string
@@ -115,7 +115,7 @@ function FavoriteTokenCard({
   }
 
   if (isNonPollingRequestInFlight(networkStatus)) {
-    return <Loading height={FAVORITE_TOKEN_CARD_LOADER_HEIGHT} type="favorite" />
+    return <Loader.Favorite height={FAVORITE_TOKEN_CARD_LOADER_HEIGHT} />
   }
 
   return (

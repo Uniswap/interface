@@ -2,6 +2,7 @@ import React from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout'
 
+// TODO(loader refactor): remove this and add inline to PriceChartLoading.tsx
 export function PriceHeaderLoader() {
   const theme = useAppTheme()
 

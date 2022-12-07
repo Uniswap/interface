@@ -7,7 +7,7 @@ import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
 import { Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { Loading } from 'src/components/loading'
+import { Loader } from 'src/components/loading'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import { useSelectWalletScreenQuery } from 'src/data/__generated__/types-and-hooks'
 import { importAccountSagaName } from 'src/features/import/importAccountSaga'
@@ -173,7 +173,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
           />
         ) : isLoadingAccounts || loading ? (
           <Flex grow justifyContent="space-between">
-            <Loading repeat={5} type="wallets" />
+            <Loader.Wallets repeat={5} />
           </Flex>
         ) : (
           <ScrollView>

@@ -7,7 +7,7 @@ import { useAppSelector } from 'src/app/hooks'
 import { Box } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { TAB_STYLES } from 'src/components/layout/TabHelpers'
-import { Loading } from 'src/components/loading'
+import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { EMPTY_ARRAY, PollingInterval } from 'src/constants/misc'
 import { isNonPollingRequestInFlight } from 'src/data/utils'
@@ -86,7 +86,7 @@ export default function TransactionList(props: TransactionListProps) {
   if (showLoading) {
     return (
       <Box style={TAB_STYLES.tabListInner}>
-        <Loading type="transactions" />
+        <Loader.Transaction />
       </Box>
     )
   }

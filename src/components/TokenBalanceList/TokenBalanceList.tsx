@@ -11,7 +11,7 @@ import { AnimatedBox, Box, Flex } from 'src/components/layout'
 import { AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { TabContentProps, TAB_VIEW_SCROLL_THROTTLE } from 'src/components/layout/TabHelpers'
-import { Loading } from 'src/components/loading'
+import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import { isError, isNonPollingRequestInFlight, isWarmLoadingStatus } from 'src/data/utils'
@@ -71,7 +71,7 @@ export const TokenBalanceList = forwardRef<Animated.FlatList<any>, TokenBalanceL
       if (isNonPollingRequestInFlight(networkStatus)) {
         return (
           <Box my="sm" style={containerProps?.loadingContainerStyle}>
-            <Loading repeat={4} type="token" />
+            <Loader.Token repeat={4} />
           </Box>
         )
       }

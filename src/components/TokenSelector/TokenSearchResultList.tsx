@@ -6,7 +6,7 @@ import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import { Box, Flex, Inset } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { Loading } from 'src/components/loading'
+import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { filter } from 'src/components/TokenSelector/filter'
 import { useAllCommonBaseCurrencies } from 'src/components/TokenSelector/hooks'
@@ -329,9 +329,9 @@ function _TokenSearchResultList({
     return (
       <Box>
         <Box py="md" width={80}>
-          <Loading height={theme.textVariants.subheadSmall.lineHeight} />
+          <Loader.Box height={theme.textVariants.subheadSmall.lineHeight} />
         </Box>
-        <Loading repeat={5} type="token" />
+        <Loader.Token repeat={5} />
       </Box>
     )
   }

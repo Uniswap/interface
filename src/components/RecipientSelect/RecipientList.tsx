@@ -5,7 +5,7 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex } from 'src/components/layout'
-import { Loading } from 'src/components/loading'
+import { Loader } from 'src/components/loading'
 import { SearchableRecipient } from 'src/components/RecipientSelect/types'
 import { Text } from 'src/components/Text'
 
@@ -66,7 +66,7 @@ export function RecipientLoadingRow() {
       <Text color="textTertiary" variant="bodySmall">
         {t('Search Results')}
       </Text>
-      <Loading type="token" />
+      <Loader.Token />
     </AnimatedFlex>
   )
 }

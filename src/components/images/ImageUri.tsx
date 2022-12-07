@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { Image, ImageResizeMode, ImageStyle, StyleSheet } from 'react-native'
-import { Loading } from 'src/components/loading'
+import { Loader } from 'src/components/loading'
 
 export function ImageUri({
   maxHeight,
@@ -40,7 +40,7 @@ export function ImageUri({
   }
 
   if (!width || !height || !uri) {
-    return <Loading type="image" />
+    return <Loader.Image />
   }
 
   return (

@@ -13,7 +13,7 @@ import { Box, Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
-import { Loading } from 'src/components/loading'
+import { Loader } from 'src/components/loading'
 import { NFTCollectionModal } from 'src/components/NFT/NFTCollectionModal'
 import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
@@ -141,7 +141,7 @@ export function NFTItemScreen({
             <Flex centered borderRadius="lg" overflow="hidden">
               {nftLoading ? (
                 <Box aspectRatio={1} width="100%">
-                  <Loading type="image" />
+                  <Loader.Image />
                 </Box>
               ) : asset?.image?.url ? (
                 <NFTViewer autoplay uri={asset.image.url} />
@@ -173,7 +173,7 @@ export function NFTItemScreen({
           {/* Collection info */}
           <TouchableArea disabled={!asset?.collection} onPress={onPressCollection}>
             {nftLoading ? (
-              <Loading type="nft-collection-button" />
+              <Loader.Box borderRadius="lg" height={64} />
             ) : (
               <Flex
                 row
@@ -184,7 +184,7 @@ export function NFTItemScreen({
                 px="md"
                 py="sm">
                 {nftLoading ? (
-                  <Loading height={40} />
+                  <Loader.Box height={40} />
                 ) : (
                   <Flex row alignItems="center" gap="sm" overflow="hidden">
                     {asset?.collection?.image?.url ? (
@@ -247,7 +247,7 @@ export function NFTItemScreen({
             </Text>
             {nftLoading ? (
               <Box mt="sm">
-                <Loading height={theme.textVariants.bodySmall.lineHeight} repeat={6} />
+                <Loader.Box height={theme.textVariants.bodySmall.lineHeight} mb="xxs" repeat={6} />
               </Box>
             ) : asset?.description ? (
               <LongText

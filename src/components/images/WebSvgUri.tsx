@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Platform, StyleSheet } from 'react-native'
 import WebView from 'react-native-webview'
 import { fetchSVG } from 'src/components/images/utils'
-import { Loading } from 'src/components/loading'
+import { Loader } from 'src/components/loading'
 import { logger } from 'src/utils/logger'
 
 const heightUnits = Platform.OS === 'ios' ? 'vh' : '%'
@@ -101,7 +101,7 @@ export function WebSvgUri({ autoplay, maxHeight, uri }: SvgUriProps) {
       />
     )
   } else {
-    return <Loading type="image" />
+    return <Loader.Image />
   }
 }
 
