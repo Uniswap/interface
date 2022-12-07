@@ -111,7 +111,7 @@ const TitleContentWrapper = styled.span`
 
 const ContentWrapper = styled.span`
   display: flex;
-  gap: 12px;
+  gap: 24px;
   max-width: 720px;
 `
 
