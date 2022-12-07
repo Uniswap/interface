@@ -1,6 +1,7 @@
 import { ButtonCTA } from 'components/Button'
-import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
-import { useLocation, useNavigate } from 'react-router-dom'
+import Swap from 'pages/Swap'
+import { PropsWithChildren } from 'react'
+import { Link } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
@@ -70,8 +71,7 @@ const SubText = styled.h3`
   }
 `
 
-const ButtonCTAText = styled.p`
-  margin: 0px;
+const Button = styled(ButtonCTA)`
   font-size: 16px;
   white-space: nowrap;
 
@@ -92,29 +92,23 @@ const ContentWrapper = styled.span`
   max-width: 720px;
 `
 
-export default function Landing() {
+export default function Landing(props: PropsWithChildren) {
   const isDarkMode = useIsDarkMode()
 
-  const navigate = useNavigate()
-
-  const location = useLocation()
-  const isOpen = location.pathname === '/'
-
-  const onContinueClick = () => navigate('/swap')
-
-  if (useLandingPageFlag() === LandingPageVariant.Control || !isOpen) return null
-
   return (
-    <PageWrapper isDarkMode={isDarkMode}>
-      <TitleContentWrapper>
-        <TitleText isDarkMode={isDarkMode}>Trade crypto & NFTs with confidence.</TitleText>
-        <SubText>Uniswap is the best way to buy, sell, and manage your tokens and NFTs.</SubText>
-      </TitleContentWrapper>
-      <ContentWrapper>
-        <ButtonCTA onClick={onContinueClick}>
-          <ButtonCTAText>Continue</ButtonCTAText>
-        </ButtonCTA>
-      </ContentWrapper>
-    </PageWrapper>
+    <>
+      <PageWrapper isDarkMode={isDarkMode}>
+        <TitleContentWrapper>
+          <TitleText isDarkMode={isDarkMode}>Trade crypto & NFTs with confidence.</TitleText>
+          <SubText>Uniswap is the best way to buy, sell, and manage your tokens and NFTs.</SubText>
+        </TitleContentWrapper>
+        <ContentWrapper>
+          <Button as={Link} to="/swap">
+            Continue
+          </Button>
+        </ContentWrapper>
+      </PageWrapper>
+      <Swap />
+    </>
   )
 }
