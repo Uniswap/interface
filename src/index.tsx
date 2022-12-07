@@ -3,8 +3,10 @@ import 'inter-ui'
 import 'polyfills'
 import 'components/analytics'
 
+import { ApolloProvider } from '@apollo/client'
 import * as Sentry from '@sentry/react'
 import { FeatureFlagsProvider } from 'featureFlags'
+import { apolloClient } from 'graphql/data/apollo'
 import RelayEnvironment from 'graphql/data/RelayEnvironment'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { MulticallUpdater } from 'lib/state/multicall'
@@ -66,15 +68,17 @@ createRoot(container).render(
           <HashRouter>
             <LanguageProvider>
               <Web3Provider>
-                <RelayEnvironmentProvider environment={RelayEnvironment}>
-                  <BlockNumberProvider>
-                    <Updaters />
-                    <ThemeProvider>
-                      <ThemedGlobalStyle />
-                      <App />
-                    </ThemeProvider>
-                  </BlockNumberProvider>
-                </RelayEnvironmentProvider>
+                <ApolloProvider client={apolloClient}>
+                  <RelayEnvironmentProvider environment={RelayEnvironment}>
+                    <BlockNumberProvider>
+                      <Updaters />
+                      <ThemeProvider>
+                        <ThemedGlobalStyle />
+                        <App />
+                      </ThemeProvider>
+                    </BlockNumberProvider>
+                  </RelayEnvironmentProvider>
+                </ApolloProvider>
               </Web3Provider>
             </LanguageProvider>
           </HashRouter>
