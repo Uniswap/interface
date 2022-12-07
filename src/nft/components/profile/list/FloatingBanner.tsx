@@ -1,22 +1,9 @@
-import { addressesByNetwork, SupportedChainId } from '@looksrare/sdk'
-import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
-import { EventName, ModalName } from '@uniswap/analytics-events'
-import { useWeb3React } from '@web3-react/core'
-import { NFTButton, ThemeButton } from 'components/Button'
-import {
-  approveCollectionRow,
-  getTotalEthValue,
-  pauseRow,
-  resetRow,
-  signListingRow,
-  verifyStatus,
-} from 'nft/components/bag/profile/utils'
-import { useIsMobile, useNFTList, useSellAsset } from 'nft/hooks'
-import { logListing, looksRareNonceFetcher } from 'nft/queries'
-import { AssetRow, Listing, ListingRow, ListingStatus, WalletAsset } from 'nft/types'
+import { getTotalEthValue } from 'nft/components/bag/profile/utils'
+import { useSellAsset } from 'nft/hooks'
+import { Listing, WalletAsset } from 'nft/types'
 import { formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
-import { Dispatch, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styled, { css } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -74,7 +61,7 @@ const hoverState = css`
   }
 `
 
-const BuyNowButton = styled.button`
+const ListButton = styled.button`
   position: relative;
   background-color: ${({ theme }) => theme.accentAction};
   color: ${({ theme }) => theme.white};
@@ -91,21 +78,7 @@ const BuyNowButton = styled.button`
 `
 
 export const FloatingBanner = () => {
-  const [allCollectionsApproved] = useState(false)
-  const setCollectionsRequiringApproval = useNFTList((state) => state.setCollectionsRequiringApproval)
-  const collectionsRequiringApproval = useNFTList((state) => state.collectionsRequiringApproval)
-  const listings = useNFTList((state) => state.listings)
-  const setListings = useNFTList((state) => state.setListings)
-  const setListingStatus = useNFTList((state) => state.setListingStatus)
-  const { provider } = useWeb3React()
-  const signer = provider?.getSigner()
-  const [, setOpenIndex] = useState(0)
-  const getLooksRareNonce = useNFTList((state) => state.getLooksRareNonce)
-  const setLooksRareNonce = useNFTList((state) => state.setLooksRareNonce)
-  const [ethPriceInUSD] = useState(0)
   const sellAssets = useSellAsset((state) => state.sellAssets)
-  const trace = useTrace({ modal: ModalName.NFT_LISTING })
-  const isMobile = useIsMobile()
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
   const [ethConversion, setEthConversion] = useState(3000)
 
@@ -114,117 +87,6 @@ export const FloatingBanner = () => {
       setEthConversion(price ?? 0)
     })
   }, [])
-
-  const resetAllRows = () => {
-    for (const collection of collectionsRequiringApproval) {
-      resetRow(collection, collectionsRequiringApproval, setCollectionsRequiringApproval as Dispatch<AssetRow[]>)
-    }
-    for (const listing of listings) {
-      resetRow(listing, listings, setListings as Dispatch<AssetRow[]>)
-    }
-  }
-
-  const pauseAllRows = () => {
-    for (const collection of collectionsRequiringApproval) {
-      pauseRow(collection, collectionsRequiringApproval, setCollectionsRequiringApproval as Dispatch<AssetRow[]>)
-    }
-    for (const listing of listings) {
-      pauseRow(listing, listings, setListings as Dispatch<AssetRow[]>)
-    }
-  }
-
-  const signListings = async () => {
-    if (!signer || !provider) return
-    setListingStatus(ListingStatus.SIGNING)
-    setOpenIndex(2)
-    // sign listings
-    for (const listing of listings) {
-      verifyStatus(listing.status) &&
-        (await signListingRow(
-          listing,
-          listings,
-          setListings,
-          signer,
-          provider,
-          getLooksRareNonce,
-          setLooksRareNonce,
-          pauseAllRows
-        ))
-    }
-
-    const allListingsSigned = listings.every((listing: ListingRow) => listing.status === ListingStatus.APPROVED)
-    const paused = listings.some((listing: ListingRow) => listing.status === ListingStatus.PAUSED)
-
-    const approvalEventProperties = {
-      list_quantity: listings.length,
-      usd_value: ethPriceInUSD * totalEthListingValue,
-      ...trace,
-    }
-
-    if (allListingsSigned) {
-      setOpenIndex(0)
-      setListingStatus(ListingStatus.APPROVED)
-    } else if (!paused) {
-      setListingStatus(ListingStatus.FAILED)
-    }
-    sendAnalyticsEvent(EventName.NFT_LISTING_COMPLETED, {
-      signatures_requested: listings.length,
-      signatures_approved: listings.filter((asset) => asset.status === ListingStatus.APPROVED),
-      ...approvalEventProperties,
-    })
-    await logListing(listings, (await signer?.getAddress()) ?? '')
-  }
-
-  const clickStartListingFlow = () => {
-    resetAllRows()
-    allCollectionsApproved ? signListings() : startListingFlow()
-  }
-
-  const startListingEventProperties = {
-    collection_addresses: sellAssets.map((asset) => asset.asset_contract.address),
-    token_ids: sellAssets.map((asset) => asset.tokenId),
-    marketplaces: Array.from(new Set(listings.map((asset) => asset.marketplace.name))),
-    list_quantity: listings.length,
-    usd_value: ethPriceInUSD * totalEthListingValue,
-    ...trace,
-  }
-
-  const startListingFlow = async () => {
-    if (!signer) return
-    sendAnalyticsEvent(EventName.NFT_SELL_START_LISTING, { ...startListingEventProperties })
-    setListingStatus(ListingStatus.SIGNING)
-    const addresses = addressesByNetwork[SupportedChainId.MAINNET]
-    const signerAddress = await signer.getAddress()
-    const nonce = await looksRareNonceFetcher(signerAddress)
-    setLooksRareNonce(nonce ?? 0)
-
-    if (!collectionsRequiringApproval?.some((collection) => collection.status === ListingStatus.PAUSED)) {
-      setListingStatus(ListingStatus.SIGNING)
-      setOpenIndex(1)
-    }
-    const looksRareAddress = addresses.TRANSFER_MANAGER_ERC721
-    // for all unique collection, marketplace combos -> approve collections
-    for (const collectionRow of collectionsRequiringApproval) {
-      verifyStatus(collectionRow.status) &&
-        (isMobile
-          ? await approveCollectionRow(
-              collectionRow,
-              collectionsRequiringApproval,
-              setCollectionsRequiringApproval,
-              signer,
-              looksRareAddress,
-              pauseAllRows
-            )
-          : approveCollectionRow(
-              collectionRow,
-              collectionsRequiringApproval,
-              setCollectionsRequiringApproval,
-              signer,
-              looksRareAddress,
-              pauseAllRows
-            ))
-    }
-  }
 
   const listingsMissingPrice = useMemo(() => {
     const listingsMissingPrice: [WalletAsset, Listing][] = []
@@ -257,13 +119,9 @@ export const FloatingBanner = () => {
               {formatUsdPrice(totalEthListingValue * ethConversion)}
             </ThemedText.HeadlineSmall>
           )}
-
-          <NFTButton onClick={clickStartListingFlow}>
+          <ListButton onClick={() => true}>
             {listingsMissingPrice ? 'Set prices to continue' : 'Start listing'}
-          </NFTButton>
-          <BuyNowButton onClick={clickStartListingFlow}>
-            {listingsMissingPrice ? 'Set prices to continue' : 'Start listing'}
-          </BuyNowButton>
+          </ListButton>
         </Content>
       </FloatingBannerContainer>
     </FloatBContainer>
