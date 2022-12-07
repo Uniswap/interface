@@ -97,7 +97,7 @@ export const useBag = create<BagState>()(
               itemsInBagCopy[index].inSweep = fromSweep
             } else {
               const assetWithId = {
-                asset: { id: uuidv4(), ...asset },
+                asset: { ...asset, id: uuidv4() },
                 status: BagItemStatus.ADDED_TO_BAG,
                 inSweep: fromSweep,
               }

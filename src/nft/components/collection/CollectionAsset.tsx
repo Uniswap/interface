@@ -67,7 +67,6 @@ export const CollectionAsset = ({
   const isSelected = quantitySelected > 0
   const isErc1155 = asset.tokenType === TokenType.ERC1155
   const sellOrders = useSellOrdersQuery(asset.address, asset.tokenId, isSelected && isErc1155)
-  console.log(sellOrders)
 
   const [showTooltip, setShowTooltip] = useState(false)
   const quantitySelectedRef = useRef(quantitySelected)
@@ -122,6 +121,24 @@ export const CollectionAsset = ({
     trace,
   ])
 
+  const handleRemoveAssetFromBag = useCallback(() => {
+    removeAssetsFromBag([asset])
+  }, [asset, removeAssetsFromBag])
+
+  const handleRemoveErc1155FromBag = useCallback(() => {
+    if (!isErc1155) return
+    const tokens = itemsInBag
+      .filter((item) => item.asset.address === asset.address && item.asset.tokenId === asset.tokenId)
+      .map((item) => item.asset)
+    if (tokens.length === 0) return
+
+    const mostExpensiveAsset = tokens.reduce(
+      (acc, cur) => (BigNumber.from(cur.priceInfo.basePrice).gte(BigNumber.from(acc.priceInfo.basePrice)) ? cur : acc),
+      tokens[0]
+    )
+    removeAssetsFromBag([mostExpensiveAsset])
+  }, [asset, isErc1155, itemsInBag, removeAssetsFromBag])
+
   useEffect(() => {
     if (quantitySelected !== quantitySelectedRef.current && !usedSweep) {
       setShowTooltip(true)
@@ -138,16 +155,12 @@ export const CollectionAsset = ({
     return undefined
   }, [quantitySelected, quantitySelectedRef, usedSweep])
 
-  const handleRemoveAssetFromBag = useCallback(() => {
-    removeAssetsFromBag([asset])
-  }, [asset, removeAssetsFromBag])
-
   return (
     <Card.Container
       asset={asset}
       selected={isSelected}
       addAssetToBag={handleAddAssetToBag}
-      removeAssetFromBag={handleRemoveAssetFromBag}
+      removeAssetFromBag={isErc1155 ? handleRemoveErc1155FromBag : handleRemoveAssetFromBag}
     >
       <Card.ImageContainer isDisabled={asset.notForSale}>
         <StyledContainer>

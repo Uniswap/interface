@@ -128,7 +128,7 @@ function formatAssetQueryData(queryAsset: NftAssetsQueryAsset, totalCount?: numb
   const asset = queryAsset.node
   const ethPrice = parseEther(wrapScientificNotation(asset.listings?.edges[0]?.node.price.value ?? 0)).toString()
   return {
-    id: asset.id,
+    id: undefined,
     address: asset?.collection?.nftContracts?.[0]?.address,
     notForSale: asset.listings?.edges?.length === 0,
     collectionName: asset.collection?.name,
