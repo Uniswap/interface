@@ -44,8 +44,12 @@ const TransactionList = ({ transactionInformation }: { transactionInformation: T
   return (
     <TransactionListWrapper key={title}>
       <TransactionTitle>{title}</TransactionTitle>
-      {transactions.map((transactionDetails) => (
-        <TransactionSummary key={transactionDetails.hash} transactionDetails={transactionDetails} />
+      {transactions.map((transactionDetails, index) => (
+        <TransactionSummary
+          key={transactionDetails.hash}
+          transactionDetails={transactionDetails}
+          isLastTransactionInList={index === transactions.length - 1}
+        />
       ))}
     </TransactionListWrapper>
   )
@@ -142,7 +146,7 @@ export const TransactionHistoryMenu = ({ onClose }: { onClose: () => void }) => 
 
   const confirmedTransactions = useMemo(() => getConfirmedTransactions(confirmed), [confirmed])
 
-  if (pending.length) transactionGroupsInformation.push({ title: `Pending (${pending.length})`, transactions: pending })
+  transactionGroupsInformation.push({ title: `Pending (${pending.length})`, transactions: pending })
   if (confirmedTransactions.length) transactionGroupsInformation.push(...confirmedTransactions)
 
   return (
@@ -154,7 +158,7 @@ export const TransactionHistoryMenu = ({ onClose }: { onClose: () => void }) => 
       <Divider />
       {transactionGroupsInformation.length > 0 ? (
         <>
-          {transactionGroupsInformation.map((transactionInformation, index) => (
+          {transactionGroupsInformation.map((transactionInformation) => (
             <TransactionList key={transactionInformation.title} transactionInformation={transactionInformation} />
           ))}
         </>
