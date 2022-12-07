@@ -1,8 +1,10 @@
+import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, user } from '@uniswap/analytics'
 import { CustomUserProperties, EventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { sendEvent } from 'components/analytics'
+import { BadgeVariant, SmallBadge } from 'components/Badge'
 import { AutoColumn } from 'components/Column'
 import { DownloadButton } from 'components/WalletDropdown/DownloadButton'
 import { networkConnection } from 'connection'
@@ -13,7 +15,7 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
 import { useConnectedWallets } from 'state/wallets/hooks'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { ExternalLink, ThemedText } from 'theme'
 import { flexColumnNoWrap } from 'theme/styles'
 import { isMobile } from 'utils/userAgent'
 
@@ -215,7 +217,32 @@ export default function WalletModal() {
             },
           ]}
         />
+        <ThemedText.Caption>
+          <Trans>By connecting a wallet, you agree to Uniswap Labs&apos;</Trans>{' '}
+          <ExternalLink href="https://uniswap.org/terms-of-service/">
+            <Trans>Terms of Service</Trans>{' '}
+          </ExternalLink>
+          <Trans>and consent to its</Trans>{' '}
+          <ExternalLink href="https://uniswap.org/privacy-policy">
+            <Trans>Privacy Policy.</Trans>
+          </ExternalLink>
+          <UpdateBadge date="11.30.22" />
+        </ThemedText.Caption>
       </AutoColumn>
     </Wrapper>
+  )
+}
+
+const UpdateBadgeWrapper = styled.span`
+  margin-left: 4px;
+`
+
+function UpdateBadge({ date }: { date: string }) {
+  return (
+    <UpdateBadgeWrapper>
+      <SmallBadge variant={BadgeVariant.SOFT}>
+        <ThemedText.UtilityBadge>{`Updated ${date}`}</ThemedText.UtilityBadge>
+      </SmallBadge>
+    </UpdateBadgeWrapper>
   )
 }

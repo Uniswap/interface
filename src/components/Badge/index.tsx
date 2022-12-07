@@ -10,6 +10,7 @@ export enum BadgeVariant {
   WARNING = 'WARNING',
   PROMOTIONAL = 'PROMOTIONAL',
   BRANDED = 'BRANDED',
+  SOFT = 'SOFT',
 
   WARNING_OUTLINE = 'WARNING_OUTLINE',
 }
@@ -28,6 +29,8 @@ function pickBackgroundColor(variant: BadgeVariant | undefined, theme: DefaultTh
       return theme.accentCritical
     case BadgeVariant.POSITIVE:
       return theme.accentSuccess
+    case BadgeVariant.SOFT:
+      return theme.accentActionSoft
     case BadgeVariant.PRIMARY:
       return theme.deprecated_primary1
     case BadgeVariant.WARNING:
@@ -56,6 +59,8 @@ function pickFontColor(variant: BadgeVariant | undefined, theme: DefaultTheme): 
       return readableColor(theme.deprecated_error)
     case BadgeVariant.POSITIVE:
       return readableColor(theme.deprecated_success)
+    case BadgeVariant.SOFT:
+      return theme.accentAction
     case BadgeVariant.WARNING:
       return readableColor(theme.deprecated_warning)
     case BadgeVariant.WARNING_OUTLINE:
