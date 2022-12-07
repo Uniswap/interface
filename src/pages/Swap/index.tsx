@@ -852,7 +852,13 @@ export default function Swap() {
                       }
                     }}
                     id="swap-button"
-                    disabled={!isValid || routeIsSyncing || routeIsLoading || priceImpactTooHigh || !!swapCallbackError}
+                    disabled={
+                      !isValid ||
+                      routeIsSyncing ||
+                      routeIsLoading ||
+                      priceImpactTooHigh ||
+                      Boolean(!permit2Enabled && swapCallbackError)
+                    }
                     error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
                   >
                     <Text fontSize={20} fontWeight={600}>
