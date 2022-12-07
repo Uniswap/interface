@@ -3,6 +3,7 @@ import React, { ComponentProps, PropsWithChildren } from 'react'
 import { useWindowDimensions } from 'react-native'
 import Animated from 'react-native-reanimated'
 import { Box } from 'src/components/layout'
+import { Shimmer } from 'src/components/loading/Shimmer'
 import { HiddenFromScreenReaders } from 'src/components/text/HiddenFromScreenReaders'
 import { textVariants } from 'src/styles/font'
 import { Theme } from 'src/styles/theme'
@@ -15,29 +16,22 @@ export type TextProps = ComponentProps<typeof ThemedText> & {
   allowFontScaling?: boolean
   loading?: boolean
   loadingPlaceholderText?: string
-} & Pick<ComponentProps<typeof Box>, 'height' | 'width'>
+}
 
 // Use this text component throughout the app instead of
 // Default RN Text for theme support
 const ThemedText = createText<Theme>()
 const ThemedAnimatedText = createText<Theme>(Animated.Text)
 
-const TextLoaderWrapper = ({
-  children,
-  height = '90%',
-  width = 'auto',
-}: PropsWithChildren<TextProps>) => {
+const TextLoaderWrapper = ({ children }: PropsWithChildren<unknown>) => {
   return (
-    <Box alignItems="center" flexDirection="row">
-      <Box
-        bg="background3"
-        borderRadius="xs"
-        // 90% height (or anything less than 100%) plus the wrapping flex row allow us to get the loader to take up exactly the same amount of space as the text, without looking visually weird when the final text layout doesn't have any gap between two vertically stacked text boxes, e.g. header and body (otherwise the loaders would just be two boxes with no gap between them, OR the loader would take up more space than the final layout if we add a gap)
-        height={height}
-        width={width}>
-        <HiddenFromScreenReaders>{children}</HiddenFromScreenReaders>
+    <Shimmer>
+      <Box alignItems="center" flexDirection="row">
+        <Box bg="background3" borderRadius="xs">
+          <HiddenFromScreenReaders>{children}</HiddenFromScreenReaders>
+        </Box>
       </Box>
-    </Box>
+    </Shimmer>
   )
 }
 
@@ -53,8 +47,6 @@ export const Text = ({
   loading = false,
   maxFontSizeMultiplier,
   allowFontScaling,
-  height,
-  width,
   loadingPlaceholderText = '$00.00',
   ...rest
 }: TextProps) => {
@@ -75,7 +67,7 @@ export const Text = ({
 
   if (loading) {
     return (
-      <TextLoaderWrapper height={height} width={width}>
+      <TextLoaderWrapper>
         <ThemedText
           allowFontScaling={enableFontScaling}
           color="none"

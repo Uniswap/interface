@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
 import { LinkButton } from 'src/components/buttons/LinkButton'
 import { Box, Flex } from 'src/components/layout'
-import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { SpendingDetails } from 'src/components/WalletConnect/RequestModal/SpendingDetails'
 import { ChainId } from 'src/constants/chains'
@@ -15,7 +14,6 @@ import {
   isTransactionRequest,
   WalletConnectRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
-import { textVariants } from 'src/styles/font'
 import { Theme } from 'src/styles/theme'
 import { getValidAddress, shortenAddress } from 'src/utils/addresses'
 import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
@@ -161,19 +159,15 @@ function TransactionDetails({
         <Text color="textSecondary" variant="bodySmall">
           {t('Function')}:
         </Text>
-        {isLoading ? (
-          <Flex py="xxs" width="20%">
-            <Loading height={textVariants.bodySmall.lineHeight} type="text" />
-          </Flex>
-        ) : (
-          <Flex row alignItems="center" gap="md">
-            <Box backgroundColor="backgroundOutline" borderRadius="xs" px="xs" py="xxs">
-              <Text color="textPrimary" variant="monospace">
-                {parsedData ? parsedData.name : t('Unknown')}
-              </Text>
-            </Box>
-          </Flex>
-        )}
+        <Box
+          backgroundColor={isLoading ? 'none' : 'backgroundOutline'}
+          borderRadius="xs"
+          px="xs"
+          py="xxs">
+          <Text color="textPrimary" loading={isLoading} variant="monospace">
+            {parsedData ? parsedData.name : t('Unknown')}
+          </Text>
+        </Box>
       </Flex>
     </Flex>
   )

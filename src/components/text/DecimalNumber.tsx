@@ -6,15 +6,22 @@ type DecimalNumberProps = TextProps & {
   number: string
   separator?: string
   variant: keyof Theme['textVariants']
+  loading?: boolean
 }
 
 // Utility component to display decimal numbers where the decimal part
 // is dimmed
-export function DecimalNumber({ number, separator = '.', variant, ...rest }: DecimalNumberProps) {
+export function DecimalNumber({
+  loading = false,
+  number,
+  separator = '.',
+  variant,
+  ...rest
+}: DecimalNumberProps) {
   const [pre, post] = number.split(separator)
 
   return (
-    <Text variant={variant} {...rest}>
+    <Text loading={loading} loadingPlaceholderText="$0,000.00" variant={variant} {...rest}>
       {pre}
       {post && (
         <Text color="textTertiary" variant={variant}>

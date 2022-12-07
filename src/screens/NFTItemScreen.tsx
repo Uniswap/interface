@@ -157,13 +157,13 @@ export function NFTItemScreen({
             </Flex>
 
             <Flex gap="xxs">
-              {nftLoading ? (
-                <Loading height={theme.textVariants.subheadLarge.lineHeight} type="text" />
-              ) : (
-                <Text numberOfLines={2} variant="subheadLarge">
-                  {asset?.name || '-'}
-                </Text>
-              )}
+              <Text
+                loading={nftLoading}
+                loadingPlaceholderText="#0000 NFT Title"
+                numberOfLines={2}
+                variant="subheadLarge">
+                {asset?.name || '-'}
+              </Text>
               <Text color="textSecondary" variant="subheadSmall">
                 {t('Owned by {{owner}}', { owner: ownerDisplayName?.name })}
               </Text>
@@ -184,7 +184,7 @@ export function NFTItemScreen({
                 px="md"
                 py="sm">
                 {nftLoading ? (
-                  <Loading height={40} type="text" />
+                  <Loading height={40} />
                 ) : (
                   <Flex row alignItems="center" gap="sm" overflow="hidden">
                     {asset?.collection?.image?.url ? (
@@ -247,7 +247,7 @@ export function NFTItemScreen({
             </Text>
             {nftLoading ? (
               <Box mt="sm">
-                <Loading height={theme.textVariants.bodySmall.lineHeight} repeat={6} type="text" />
+                <Loading height={theme.textVariants.bodySmall.lineHeight} repeat={6} />
               </Box>
             ) : asset?.description ? (
               <LongText

@@ -14,6 +14,7 @@ interface RelativeChangeProps {
   positiveChangeColor?: keyof Theme['colors']
   negativeChangeColor?: keyof Theme['colors']
   arrowSize?: number
+  loading?: boolean
 }
 
 export function RelativeChange(props: RelativeChangeProps) {
@@ -26,6 +27,7 @@ export function RelativeChange(props: RelativeChangeProps) {
     positiveChangeColor = 'accentSuccess',
     negativeChangeColor = 'accentCritical',
     arrowSize = theme.iconSizes.sm,
+    loading = false,
   } = props
 
   const isPositiveChange = change !== undefined ? change >= 0 : undefined
@@ -47,6 +49,8 @@ export function RelativeChange(props: RelativeChangeProps) {
         color={
           semanticColor ? (isPositiveChange ? 'accentSuccess' : 'accentCritical') : 'textSecondary'
         }
+        loading={loading}
+        loadingPlaceholderText="|| $20.00 (1.0%)"
         variant={variant}>
         {absoluteChange ? `${formattedAbsChange} (${formattedChange})` : formattedChange}
       </Text>

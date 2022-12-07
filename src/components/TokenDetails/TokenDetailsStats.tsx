@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import { LinkButton } from 'src/components/buttons/LinkButton'
 import { Flex } from 'src/components/layout'
-import { Shimmer } from 'src/components/loading/Shimmer'
 import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
 import { TokenDetailsScreenQuery } from 'src/data/__generated__/types-and-hooks'
@@ -29,20 +28,11 @@ export function TokenDetailsMarketData({
   // Utility component to render formatted values
   const FormattedValue = useCallback(
     ({ value, numberType }: { value?: number; numberType: NumberType }) => {
-      if (isLoading) {
-        return (
-          <Shimmer>
-            <Text
-              loading
-              height="100%"
-              loadingPlaceholderText="$0.00"
-              variant="bodyLarge"
-              width="50%"
-            />
-          </Shimmer>
-        )
-      }
-      return <Text variant="bodyLarge">{formatNumber(value, numberType)}</Text>
+      return (
+        <Text loading={isLoading} variant="bodyLarge">
+          {formatNumber(value, numberType)}
+        </Text>
+      )
     },
     [isLoading]
   )

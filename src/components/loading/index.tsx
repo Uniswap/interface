@@ -18,7 +18,6 @@ type SkeletonType =
   | 'graph'
   | 'image'
   | 'nft'
-  | 'text'
   | 'token'
   | 'transactions'
   | 'wallets'
@@ -67,14 +66,6 @@ const getChildFromType = (type: SkeletonType, repeat: number, height?: number) =
     case 'image':
       if (repeat > 1) throw new Error('Loading placeholder for images does not support repeat')
       return <BoxLoader aspectRatio={1} borderRadius="none" />
-    case 'text':
-      return (
-        <Flex gap="xs">
-          {new Array(repeat).fill(null).map((_, i) => (
-            <BoxLoader key={i} borderRadius="xs" height={height ?? 16} />
-          ))}
-        </Flex>
-      )
     case 'nft':
       return repeat === 1 ? (
         <NftCardLoader opacity={1} />

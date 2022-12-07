@@ -1,18 +1,19 @@
 import React from 'react'
+import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout'
-import { Text } from 'src/components/Text'
 
 export function PriceHeaderLoader() {
+  const theme = useAppTheme()
+
   return (
     <Box mx="sm">
-      <Text
-        loading
-        height="80%%"
-        loadingPlaceholderText="$1.00"
-        variant="headlineLarge"
-        width="40%"
-      />
-      <Text loading loadingPlaceholderText="0.01" variant="bodyLarge" width="20%" />
+      {/* TODO(loader refactor): replace this with the text loading component so it scales automatically. */}
+      <Box height={theme.textVariants.headlineLarge.lineHeight} justifyContent="center">
+        <Box backgroundColor="background3" borderRadius="sm" height="80%" width="30%" />
+      </Box>
+      <Box height={theme.textVariants.bodyLarge.lineHeight} justifyContent="center">
+        <Box backgroundColor="background3" borderRadius="sm" height="80%" width="10%" />
+      </Box>
     </Box>
   )
 }

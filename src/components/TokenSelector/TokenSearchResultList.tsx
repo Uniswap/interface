@@ -329,7 +329,7 @@ function _TokenSearchResultList({
     return (
       <Box>
         <Box py="md" width={80}>
-          <Loading height={theme.textVariants.subheadSmall.lineHeight} type="text" />
+          <Loading height={theme.textVariants.subheadSmall.lineHeight} />
         </Box>
         <Loading repeat={5} type="token" />
       </Box>

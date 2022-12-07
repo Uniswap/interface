@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Flex } from 'src/components/layout'
-import { Loading } from 'src/components/loading'
+import { Flex } from 'src/components/layout'
 import { WarmLoadingShimmer } from 'src/components/loading/WarmLoadingShimmer'
 import { DecimalNumber } from 'src/components/text/DecimalNumber'
 import { RelativeChange } from 'src/components/text/RelativeChange'
@@ -28,6 +27,7 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps) {
   })
 
   const [isWarmLoading, setIsWarmLoading] = useState(false)
+  const isLoading = loading && !data
 
   useEffect(() => {
     if (!!data && isWarmLoadingStatus(networkStatus)) {
@@ -35,30 +35,18 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps) {
     }
   }, [data, networkStatus])
 
-  if (loading && !data) {
-    return (
-      <Flex gap="xxs" width="70%">
-        <Box width="100%">
-          <Loading height={theme.textVariants.headlineLarge.lineHeight} type="text" />
-        </Box>
-        <Box width="50%">
-          <Loading height={theme.textVariants.bodyLarge.lineHeight} type="text" />
-        </Box>
-      </Flex>
-    )
-  }
-
   const portfolioBalance = data?.portfolios?.[0]
   const portfolioChange = portfolioBalance?.tokensTotalDenominatedValueChange
 
   return (
-    <WarmLoadingShimmer isWarmLoading={isWarmLoading}>
+    <WarmLoadingShimmer isWarmLoading={isWarmLoading && !isLoading}>
       <Flex gap="xxs">
         <DecimalNumber
           adjustsFontSizeToFit
           color={isWarmLoading ? 'textSecondary' : undefined}
           // initially set color to textSecondary when isWarm because the shimmer mask takes a second to load, resulting in a flash of the underlying color
           fontWeight="600"
+          loading={isLoading}
           number={formatUSDPrice(
             portfolioBalance?.tokensTotalDenominatedValue?.value ?? undefined,
             NumberType.PortfolioBalance
@@ -70,6 +58,7 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps) {
           absoluteChange={portfolioChange?.absolute?.value}
           arrowSize={theme.iconSizes.md}
           change={portfolioChange?.percentage?.value}
+          loading={isLoading}
           negativeChangeColor={isWarmLoading ? 'textSecondary' : 'accentCritical'}
           positiveChangeColor={isWarmLoading ? 'textSecondary' : 'accentSuccess'}
           variant="bodyLarge"

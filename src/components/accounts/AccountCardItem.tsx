@@ -4,8 +4,7 @@ import Check from 'src/assets/icons/check.svg'
 import TripleDots from 'src/assets/icons/triple-dots.svg'
 import { AccountIcon } from 'src/components/AccountIcon'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Box, Flex } from 'src/components/layout'
-import { Loading } from 'src/components/loading'
+import { Flex } from 'src/components/layout'
 import { NotificationBadge } from 'src/components/notifications/Badge'
 import { Text } from 'src/components/Text'
 import { DecimalNumber } from 'src/components/text/DecimalNumber'
@@ -30,19 +29,12 @@ type PortfolioValueProps = {
 }
 
 function PortfolioValue({ isPortfolioValueLoading, portfolioValue }: PortfolioValueProps) {
-  const theme = useAppTheme()
-
-  if (isPortfolioValueLoading && portfolioValue === undefined) {
-    return (
-      <Box width="50%">
-        <Loading height={theme.textVariants.bodySmall.lineHeight} type="text" />
-      </Box>
-    )
-  }
+  const isLoading = isPortfolioValueLoading && portfolioValue === undefined
 
   return (
     <DecimalNumber
       color="textSecondary"
+      loading={isLoading}
       number={formatUSDPrice(portfolioValue, NumberType.FiatTokenQuantity)}
       variant="bodySmall"
     />
