@@ -54,10 +54,10 @@ export interface PermitSignature extends Permit {
 }
 
 export function useUpdatePermitAllowance(
-  token?: Token,
-  spender?: string,
-  nonce?: number,
-  onPermitSignature?: (signature: PermitSignature) => void
+  token: Token | undefined,
+  spender: string | undefined,
+  nonce: number | undefined,
+  onPermitSignature: (signature: PermitSignature) => void
 ) {
   const { account, chainId, provider } = useWeb3React()
 

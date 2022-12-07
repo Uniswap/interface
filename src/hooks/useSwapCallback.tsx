@@ -44,12 +44,12 @@ export function useSwapCallback(
     signatureData,
     deadline,
   })
-  const universalRouterCallback = useUniversalRouterSwapCallback(permit2Enabled ? trade : undefined, {
+  const universalRouterSwapCallback = useUniversalRouterSwapCallback(permit2Enabled ? trade : undefined, {
     slippageTolerance: allowedSlippage,
     deadline,
     permit: permit?.signature,
   })
-  const swapCallback = permit2Enabled ? universalRouterCallback : libCallback
+  const swapCallback = permit2Enabled ? universalRouterSwapCallback : libCallback
 
   const callback = useMemo(() => {
     if (!trade || !swapCallback) return null

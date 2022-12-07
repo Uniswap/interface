@@ -20,7 +20,7 @@ export function useTokenAllowance(token?: Token, owner?: string, spender?: strin
   )
 }
 
-export function useUpdateTokenAllowance(amount?: CurrencyAmount<Token>, spender?: string) {
+export function useUpdateTokenAllowance(amount: CurrencyAmount<Token> | undefined, spender: string) {
   const contract = useTokenContract(amount?.currency.address)
 
   return useCallback(async (): Promise<{
