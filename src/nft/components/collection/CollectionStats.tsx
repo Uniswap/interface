@@ -219,7 +219,8 @@ const CollectionDescription = ({ description }: { description: string }) => {
         descriptionRef.current.getBoundingClientRect().width >= 590)
     )
       setShowReadMore(true)
-  }, [descriptionRef, baseRef, isCollectionStatsLoading])
+    else setShowReadMore(false)
+  }, [descriptionRef, baseRef, isCollectionStatsLoading, description])
 
   return isCollectionStatsLoading ? (
     <CollectionDescriptionLoading />
