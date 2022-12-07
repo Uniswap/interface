@@ -96,7 +96,7 @@ function FiatOnRampModalInner() {
           <Flex alignItems="center" gap="lg">
             <Flex alignItems="center" gap="sm">
               <Text color="textPrimary" textAlign="center" variant="headlineSmall">
-                {t('Buy crypto with your back account or card')}
+                {t('Buy crypto with your bank account or card')}
               </Text>
               <Box alignItems="center">
                 <Text color="textSecondary" textAlign="center" variant="bodySmall">
