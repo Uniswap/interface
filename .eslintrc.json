@@ -38,8 +38,7 @@
     ".idea/",
     ".vscode/",
     "package-lock.json",
-    "yarn.lock",
-    "src/*"
+    "yarn.lock"
   ],
   "extends": [
     "react-app",
