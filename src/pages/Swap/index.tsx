@@ -12,6 +12,7 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { isSupportedChain } from 'constants/chains'
+import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
@@ -19,7 +20,7 @@ import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ReactNode } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { InterfaceTrade } from 'state/routing/types'
@@ -495,6 +496,11 @@ export default function Swap() {
   const showDetailsDropdown = Boolean(
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
   )
+
+  const location = useLocation()
+
+  const landingPageFlag = useLandingPageFlag()
+
   return (
     <Trace page={PageName.SWAP_PAGE} shouldLogImpression>
       <>
@@ -507,7 +513,11 @@ export default function Swap() {
           showCancel={true}
         />
         <PageWrapper>
-          <SwapWrapper id="swap-page">
+          <SwapWrapper
+            onClick={() => landingPageFlag === LandingPageVariant.Enabled && navigate('/swap')}
+            open={landingPageFlag === LandingPageVariant.Enabled && location.pathname === '/'}
+            id="swap-page"
+          >
             <SwapHeader allowedSlippage={allowedSlippage} />
             <ConfirmSwapModal
               isOpen={showConfirm}
