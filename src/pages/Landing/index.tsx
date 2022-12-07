@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { ButtonCTA } from 'components/Button'
 import Swap from 'pages/Swap'
 import { PropsWithChildren } from 'react'
@@ -99,16 +98,12 @@ export default function Landing(props: PropsWithChildren) {
     <>
       <PageWrapper isDarkMode={isDarkMode}>
         <TitleContentWrapper>
-          <TitleText isDarkMode={isDarkMode}>
-            <Trans>Trade crypto & NFTs with confidence.</Trans>
-          </TitleText>
-          <SubText>
-            <Trans>Uniswap is the best way to buy, sell, and manage your tokens and NFTs.</Trans>
-          </SubText>
+          <TitleText isDarkMode={isDarkMode}>Trade crypto & NFTs with confidence.</TitleText>
+          <SubText>Uniswap is the best way to buy, sell, and manage your tokens and NFTs.</SubText>
         </TitleContentWrapper>
         <ContentWrapper>
           <Button as={Link} to="/swap">
-            <Trans>Continue</Trans>
+            Continue
           </Button>
         </ContentWrapper>
       </PageWrapper>
