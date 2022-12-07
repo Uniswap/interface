@@ -1,6 +1,5 @@
+import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { BigNumber } from '@ethersproject/bignumber'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { TransactionResponse } from '@ethersproject/providers'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
