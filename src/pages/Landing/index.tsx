@@ -1,6 +1,8 @@
 import { BaseButton } from 'components/Button'
 import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
+import Swap from 'pages/Swap'
+import { Link } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
@@ -123,30 +125,28 @@ const ActionsWrapper = styled.span`
 export default function Landing() {
   const isDarkMode = useIsDarkMode()
 
-  const navigate = useNavigate()
-
   const location = useLocation()
   const isOpen = location.pathname === '/'
-
-  const onContinueClick = () => navigate('/swap')
-  const onAboutClick = () => navigate('/about')
 
   if (useLandingPageFlag() === LandingPageVariant.Control || !isOpen) return null
 
   return (
-    <PageWrapper isDarkMode={isDarkMode}>
-      <TitleWrapper>
-        <TitleText isDarkMode={isDarkMode}>Trade crypto & NFTs with confidence.</TitleText>
-        <SubText>Uniswap is the best way to buy, sell, and manage your tokens and NFTs.</SubText>
-      </TitleWrapper>
-      <ActionsWrapper>
-        <ButtonCTA onClick={onContinueClick}>
-          <ButtonCTAText>Continue</ButtonCTAText>
-        </ButtonCTA>
-        <ButtonCTASecondary onClick={onAboutClick}>
-          <ButtonCTAText>Learn More</ButtonCTAText>
-        </ButtonCTASecondary>
-      </ActionsWrapper>
-    </PageWrapper>
+    <>
+      <PageWrapper isDarkMode={isDarkMode}>
+        <TitleWrapper>
+          <TitleText isDarkMode={isDarkMode}>Trade crypto & NFTs with confidence.</TitleText>
+          <SubText>Uniswap is the best way to buy, sell, and manage your tokens and NFTs.</SubText>
+        </TitleWrapper>
+        <ActionsWrapper>
+          <ButtonCTA as={Link} to="/swap">
+            <ButtonCTAText>Continue</ButtonCTAText>
+          </ButtonCTA>
+          <ButtonCTASecondary as={Link} to="/about">
+            <ButtonCTAText>Learn More</ButtonCTAText>
+          </ButtonCTASecondary>
+        </ActionsWrapper>
+      </PageWrapper>
+      <Swap />
+    </>
   )
 }
