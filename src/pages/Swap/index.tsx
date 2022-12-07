@@ -801,7 +801,6 @@ export default function Swap() {
                 ) : permit.state === PermitState.PERMIT_NEEDED ? (
                   <ButtonYellow
                     onClick={updatePermit}
-                    id="permit-button"
                     disabled={isPermitPending || isApprovalPending}
                     style={{ gap: 14 }}
                   >
