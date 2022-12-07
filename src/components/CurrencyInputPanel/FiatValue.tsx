@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { Spinner, StyledPolling } from 'components/swap/SwapDetailsDropdown'
 import { useMemo } from 'react'
 import { useTheme } from 'styled-components/macro'
 
@@ -31,15 +32,21 @@ export function FiatValue({
 
   return (
     <ThemedText.DeprecatedBody fontSize={14} color={theme.textSecondary}>
-      {fiatValue && <>${fiatValue?.toFixed(visibleDecimalPlaces, { groupSeparator: ',' })}</>}
-      {priceImpact ? (
-        <span style={{ color: priceImpactColor }}>
-          {' '}
-          <MouseoverTooltip text={t`The estimated difference between the USD values of input and output amounts.`}>
-            (<Trans>{priceImpact.multiply(-1).toSignificant(3)}%</Trans>)
-          </MouseoverTooltip>
-        </span>
-      ) : null}
+      {!fiatValue || !priceImpact ? (
+        <StyledPolling color={theme.gray500}>
+          <Spinner />
+        </StyledPolling>
+      ) : (
+        <div>
+          <>${fiatValue?.toFixed(visibleDecimalPlaces, { groupSeparator: ',' })}</>
+          <span style={{ color: priceImpactColor }}>
+            {' '}
+            <MouseoverTooltip text={t`The estimated difference between the USD values of input and output amounts.`}>
+              (<Trans>{priceImpact.multiply(-1).toSignificant(3)}%</Trans>)
+            </MouseoverTooltip>
+          </span>
+        </div>
+      )}
     </ThemedText.DeprecatedBody>
   )
 }
