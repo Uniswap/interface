@@ -61,9 +61,9 @@ export function formatTransactionsByDate(
 
   // sort pending txns based on nonces
   const pendingSorted = pending.sort((a, b) => {
-    const nonceA = a.options?.request?.nonce ?? '-1'
-    const nonceB = b.options?.request?.nonce ?? '-1'
-    return nonceA < nonceB ? 1 : -1
+    const nonceA = a.options?.request?.nonce
+    const nonceB = b.options?.request?.nonce
+    return nonceA && nonceB ? (nonceA < nonceB ? -1 : 1) : -1
   })
 
   // For all transaction before current month, group by month
