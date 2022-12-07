@@ -4,6 +4,7 @@ import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { EventName, PageName } from '@uniswap/analytics-events'
 import { MouseoverTooltip } from 'components/Tooltip'
 import Tooltip from 'components/Tooltip'
+import { useSellOrdersQuery } from 'graphql/data/nft/Details'
 import { Box } from 'nft/components/Box'
 import { bodySmall } from 'nft/css/common.css'
 import { useBag } from 'nft/hooks'
@@ -52,6 +53,10 @@ export const CollectionAsset = ({
   const bagExpanded = useBag((state) => state.bagExpanded)
   const setBagExpanded = useBag((state) => state.setBagExpanded)
   const trace = useTrace({ page: PageName.NFT_COLLECTION_PAGE })
+  const sellOrders = useSellOrdersQuery(asset.address, asset.tokenId)
+  console.log()
+  console.log('sell orders below')
+  console.log(sellOrders)
 
   const { isSelected } = useMemo(() => {
     const matchingItems = itemsInBag.filter(

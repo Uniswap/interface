@@ -92,6 +92,43 @@ const detailsQuery = graphql`
   }
 `
 
+const sellOrdersQuery = graphql`
+  query DetailsQuery($address: String!, $tokenId: String!) {
+    nftAssets(address: $address, filter: { listed: false, tokenIds: [$tokenId] }) {
+      edges {
+        node {
+          listings(first: 10) {
+            edges {
+              node {
+                address
+                createdAt
+                endAt
+                id
+                maker
+                marketplace
+                marketplaceUrl
+                orderHash
+                price {
+                  currency
+                  value
+                }
+                quantity
+                startAt
+                status
+                taker
+                tokenId
+                type
+                protocolParameters
+              }
+              cursor
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
 export function useLoadDetailsQuery(address?: string, tokenId?: string): void {
   const [, loadQuery] = useQueryLoader(detailsQuery)
   useEffect(() => {
@@ -180,4 +217,26 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
       externalUrl: collection?.homepageUrl ?? undefined,
     },
   ]
+}
+
+export function useSellOrdersQuery(address: string, tokenId: string): SellOrder[] | undefined {
+  const queryData = useLazyLoadQuery<DetailsQuery>(
+    sellOrdersQuery,
+    {
+      address,
+      tokenId,
+    },
+    { fetchPolicy: 'store-or-network' }
+  )
+
+  const asset = queryData.nftAssets?.edges[0]?.node
+
+  return asset?.listings?.edges.map((listingNode) => {
+    return {
+      ...listingNode.node,
+      protocolParameters: listingNode.node.protocolParameters
+        ? JSON.parse(listingNode.node.protocolParameters.toString())
+        : undefined,
+    } as SellOrder
+  })
 }
