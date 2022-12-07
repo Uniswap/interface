@@ -146,7 +146,7 @@ export const TransactionHistoryMenu = ({ onClose }: { onClose: () => void }) => 
 
   const confirmedTransactions = useMemo(() => getConfirmedTransactions(confirmed), [confirmed])
 
-  transactionGroupsInformation.push({ title: `Pending (${pending.length})`, transactions: pending })
+  if (pending.length) transactionGroupsInformation.push({ title: `Pending (${pending.length})`, transactions: pending })
   if (confirmedTransactions.length) transactionGroupsInformation.push(...confirmedTransactions)
 
   return (

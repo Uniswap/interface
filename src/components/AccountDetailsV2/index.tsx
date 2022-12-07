@@ -4,6 +4,7 @@ import { SupportedChainId } from 'constants/chains'
 import { useMemo } from 'react'
 import { AlertTriangle, CheckCircle } from 'react-feather'
 import styled from 'styled-components/macro'
+import { ExternalLink } from 'theme'
 import { colors } from 'theme/colors'
 
 import { TransactionDetails } from '../../state/transactions/types'
@@ -17,7 +18,7 @@ export enum TransactionState {
   Failed,
 }
 
-const Grid = styled.a<{ isLastTransactionInList?: boolean }>`
+const Grid = styled(ExternalLink)<{ isLastTransactionInList?: boolean }>`
   cursor: pointer;
   display: grid;
   grid-template-columns: 44px auto 24px;
