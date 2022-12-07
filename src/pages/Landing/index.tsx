@@ -73,6 +73,7 @@ const SubText = styled.h3`
 
 const Button = styled(ButtonCTA)`
   font-size: 16px;
+  white-space: nowrap;
 
   @media screen and (min-width: ${MOBILE_BREAKPOINT}px) {
     font-size: 20px;
