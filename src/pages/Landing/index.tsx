@@ -1,7 +1,7 @@
 import { BaseButton } from 'components/Button'
 import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
-import { useLocation } from 'react-router-dom'
 import Swap from 'pages/Swap'
+import { useLocation } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
