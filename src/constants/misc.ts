@@ -10,4 +10,6 @@ export enum PollingInterval {
 }
 
 // Used when referential equality is required
+// useful as a catch-all
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const EMPTY_ARRAY: any[] = []

@@ -1,12 +1,13 @@
 import { render } from '@testing-library/react-native'
-import React, { createElement } from 'react'
+import React, { createElement, PropsWithChildren } from 'react'
 import { View } from 'react-native'
 import { UniconAttributes } from 'src/components/unicons/types'
 import { Unicon } from 'src/components/unicons/Unicon'
 import { deriveUniconAttributeIndices, isEthAddress } from 'src/components/unicons/utils'
 import { renderWithTheme } from 'src/test/render'
 
-const PlainView = ({ children, ...props }: any) => createElement(View, props, children)
+const PlainView = ({ children, ...props }: PropsWithChildren<unknown>) =>
+  createElement(View, props, children)
 const noop = () => null
 
 jest.mock('@shopify/react-native-skia', () => {

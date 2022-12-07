@@ -189,7 +189,7 @@ export function DappLogoWithTxStatus({
   const getStatusIcon = () => {
     switch (event) {
       case WalletConnectEvent.NetworkChanged:
-        return chainId ? <NetworkLogo chainId={chainId!} size={statusSize} /> : undefined
+        return chainId ? <NetworkLogo chainId={chainId} size={statusSize} /> : undefined
       case WalletConnectEvent.TransactionConfirmed:
         return <Approve color={green} fill={fill} height={statusSize} width={statusSize} />
       case WalletConnectEvent.TransactionFailed:

@@ -56,13 +56,13 @@ export function TokenBalances({
           isReadonly={isReadonly}
         />
       )}
-      {hasOtherChainBalances && (
+      {hasOtherChainBalances && otherChainBalances ? (
         <Flex>
           <Text color="textTertiary" variant="subheadSmall">
             {t('Balances on other networks')}
           </Text>
           <Flex gap="sm">
-            {otherChainBalances!.map((balance) => {
+            {otherChainBalances.map((balance) => {
               return (
                 <OtherChainBalance
                   key={balance.currencyInfo.currency.chainId}
@@ -73,7 +73,7 @@ export function TokenBalances({
             })}
           </Flex>
         </Flex>
-      )}
+      ) : null}
       <Separator />
     </Flex>
   )

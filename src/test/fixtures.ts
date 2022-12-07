@@ -1,4 +1,8 @@
-import { NetInfoState, NetInfoStateType } from '@react-native-community/netinfo'
+import {
+  NetInfoNoConnectionState,
+  NetInfoState,
+  NetInfoStateType,
+} from '@react-native-community/netinfo'
 import { TradeType } from '@uniswap/sdk-core'
 import dayjs from 'dayjs'
 import { BigNumber, providers } from 'ethers'
@@ -243,12 +247,11 @@ export const unknownNotification = {
   tokenAddress: '0x939C8d89EBC11fA45e576215E2353673AD0bA18A',
 }
 
-export const networkDown: NetInfoState = {
+export const networkDown: NetInfoNoConnectionState = {
   isConnected: false,
   type: NetInfoStateType.none,
   isInternetReachable: false,
-  // @ts-ignore this is the actual details object if there's no connection
-  details: {},
+  details: null,
 }
 
 export const networkUp: NetInfoState = {

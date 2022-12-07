@@ -2,10 +2,13 @@ import { navigationRef } from 'src/app/navigation/NavigationContainer'
 import { RootParamList } from 'src/app/navigation/types'
 import { logger } from 'src/utils/logger'
 
-export async function navigate<RouteName extends keyof RootParamList>(
-  ...args: undefined extends RootParamList[RouteName]
+export type RootNavigationArgs<RouteName extends keyof RootParamList> =
+  undefined extends RootParamList[RouteName]
     ? [RouteName] | [RouteName, RootParamList[RouteName]]
     : [RouteName, RootParamList[RouteName]]
+
+export async function navigate<RouteName extends keyof RootParamList>(
+  ...args: RootNavigationArgs<RouteName>
 ) {
   const [routeName, params] = args
   if (!navigationRef.isReady()) {

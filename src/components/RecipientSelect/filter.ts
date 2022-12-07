@@ -61,6 +61,6 @@ export function filterRecipientByNameAndAddress(
       ...filterRecipientsByAddress(searchPattern, list),
       ...filterRecipientsByName(searchPattern, list),
     ],
-    (v, i, a) => a.findIndex((v2) => (v2 as any).data.address === (v as any).data.address) === i
+    (v, i, a) => a.findIndex((v2) => v2.data.address === v.data.address) === i
   )
 }

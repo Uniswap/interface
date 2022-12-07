@@ -10,7 +10,7 @@ const corsHandler = cors({ origin: true })
  * @return {string} A serialized string of query params
  */
 function serializeQueryParams(params: Record<string, Parameters<typeof encodeURIComponent>[0]>) {
-  const queryString = []
+  const queryString: string[] = []
   for (const param in params) {
     if (params[param]) {
       queryString.push(`${encodeURIComponent(param)}=${encodeURIComponent(params[param])}`)
@@ -28,7 +28,9 @@ export const signMoonpayLinkStaging = functions
       'MOONPAY_SECRET_KEY_STAGING_WEB',
     ],
   })
-  .https.onRequest((request: functions.Request<any>, response: functions.Response<any>) => {
+  // todo: type request params
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  .https.onRequest((request: functions.Request<any>, response: functions.Response<unknown>) => {
     corsHandler(request, response, () => {
       const platform = request.query.platform
 

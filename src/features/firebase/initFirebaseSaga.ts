@@ -12,6 +12,7 @@ function* anonFirebaseSignIn() {
   try {
     const firebaseAuth = firebase.app().auth()
     yield* call([firebaseAuth, 'signInAnonymously'])
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     logger.error(
       'initFirebaseSaga',

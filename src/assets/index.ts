@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
 export const ETHEREUM_LOGO = require('./logos/ethereum-logo.png')
 export const OPTIMISM_LOGO = require('./logos/optimism-logo.png')
 export const ARBITRUM_LOGO = require('./logos/arbitrum-logo.png')

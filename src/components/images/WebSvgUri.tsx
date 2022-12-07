@@ -60,6 +60,7 @@ export function WebSvgUri({ autoplay, maxHeight, uri }: SvgUriProps) {
 
         setSvgContent(content)
         setDimensions(_aspectRatio)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         if (err.hasOwnProperty('name') && err.name === 'AbortError') {
           return // expect AbortError on unmount

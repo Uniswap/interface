@@ -1,7 +1,7 @@
 import MaskedView from '@react-native-masked-view/masked-view'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert, LayoutRectangle, StyleSheet, ViewStyle } from 'react-native'
+import { Alert, LayoutChangeEvent, LayoutRectangle, StyleSheet, ViewStyle } from 'react-native'
 import { FadeIn, FadeOut, runOnJS } from 'react-native-reanimated'
 import {
   Camera,
@@ -141,7 +141,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps) {
             }}
             top={0}
             width="100%"
-            onLayout={(event: any) => setInfoLayout(event.nativeEvent.layout)}>
+            onLayout={(event: LayoutChangeEvent) => setInfoLayout(event.nativeEvent.layout)}>
             <Text color="textPrimary" variant="subheadLarge">
               {t('Scan a QR code')}
             </Text>
@@ -180,7 +180,9 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps) {
                   },
                 ],
               }}
-              onLayout={(event: any) => setConnectionLayout(event.nativeEvent.layout)}>
+              onLayout={(event: LayoutChangeEvent) =>
+                setConnectionLayout(event.nativeEvent.layout)
+              }>
               <Button
                 IconName={GlobalIcon}
                 emphasis={ButtonEmphasis.Secondary}

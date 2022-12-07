@@ -14,12 +14,15 @@ const createNativeAccount = async (initialAccounts = {}, timeout = 250) => {
     })
     .run(timeout)
 
-  return storeState
+  return storeState as { wallet: { accounts: Account } }
 }
 
 // even when we test scenarios of deleting seed phrase accounts, we must first create them so that generated menmonic is stored
-const createMultipleNativeAccounts = async (initialAccountState = {}, numAccounts = 0) => {
-  let accounts = initialAccountState
+const createMultipleNativeAccounts = async (
+  initialAccountState = {},
+  numAccounts = 0
+): Promise<Account> => {
+  let accounts = initialAccountState as Account
   for (let i = 0; i < numAccounts; i++) {
     const storedState = await createNativeAccount(accounts)
     accounts = storedState.wallet.accounts
@@ -33,7 +36,7 @@ describe(createAccount, () => {
     const state = await createNativeAccount()
 
     const wallets = state.wallet.accounts
-    const accounts = Object.values(wallets) as Account[]
+    const accounts = Object.values(wallets)
     expect(accounts).toHaveLength(1)
     const newlyCreatedWallet = accounts[0] as SignerMnemonicAccount
     expect(newlyCreatedWallet.timeImportedMs).toBeDefined()
@@ -43,9 +46,7 @@ describe(createAccount, () => {
 
   it('Adds a second native account with existing seed phrase', async () => {
     const wallets = await createMultipleNativeAccounts({}, 2)
-    const accounts = (Object.values(wallets) as SignerMnemonicAccount[]).sort(
-      (a, b) => a.derivationIndex - b.derivationIndex
-    )
+    const accounts = Object.values(wallets).sort((a, b) => a.derivationIndex - b.derivationIndex)
     expect(accounts).toHaveLength(2)
     const existingWallet = accounts[0]
     const newlyCreatedWallet = accounts[1]
@@ -66,7 +67,7 @@ describe(createAccount, () => {
     })
 
     const wallets = state.wallet.accounts
-    const accounts = Object.values(wallets) as Account[]
+    const accounts = Object.values(wallets)
     expect(accounts).toHaveLength(2)
     expect(accounts.filter((a) => a.type === AccountType.Readonly)).toHaveLength(1)
     const newlyCreatedWallet = accounts.find(
@@ -79,7 +80,7 @@ describe(createAccount, () => {
 
   it('Creates new native account when wallet with derivation index 0 is deleted', async () => {
     const initialAccountsMap = await createMultipleNativeAccounts({}, 2)
-    const initialAccounts = (Object.values(initialAccountsMap) as SignerMnemonicAccount[])
+    const initialAccounts = Object.values(initialAccountsMap)
       .filter((a) => a.type === AccountType.SignerMnemonic)
       .sort((a, b) => a.derivationIndex - b.derivationIndex)
     const state = await createNativeAccount({
@@ -87,9 +88,7 @@ describe(createAccount, () => {
     })
 
     const wallets = state.wallet.accounts
-    const accounts = (Object.values(wallets) as SignerMnemonicAccount[]).sort(
-      (a, b) => a.derivationIndex - b.derivationIndex
-    ) as SignerMnemonicAccount[]
+    const accounts = Object.values(wallets).sort((a, b) => a.derivationIndex - b.derivationIndex)
     expect(accounts).toHaveLength(2)
     const newlyCreatedWallet = accounts[0]
     const existingWallet = accounts[1]
@@ -100,7 +99,7 @@ describe(createAccount, () => {
 
   it('Creates new native account when wallet with derivation index 1 of [0,1,2] is deleted', async () => {
     const initialAccountsMap = await createMultipleNativeAccounts({}, 3)
-    const initialAccounts = (Object.values(initialAccountsMap) as SignerMnemonicAccount[])
+    const initialAccounts = Object.values(initialAccountsMap)
       .filter((a) => a.type === AccountType.SignerMnemonic)
       .sort((a, b) => a.derivationIndex - b.derivationIndex)
 
@@ -111,9 +110,7 @@ describe(createAccount, () => {
     })
 
     const wallets = state.wallet.accounts
-    const accounts = (Object.values(wallets) as SignerMnemonicAccount[]).sort(
-      (a, b) => a.derivationIndex - b.derivationIndex
-    ) as SignerMnemonicAccount[]
+    const accounts = Object.values(wallets).sort((a, b) => a.derivationIndex - b.derivationIndex)
     expect(accounts).toHaveLength(3)
     const newlyCreatedWallet = accounts[1]
     expect(newlyCreatedWallet.derivationIndex).toEqual(1)

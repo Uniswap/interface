@@ -14,7 +14,7 @@ export function uriToHttp(uri: string): string[] {
     case 'http':
       return ['https' + uri.substr(4), uri]
     case 'ipfs':
-      let hash = uri.match(/^ipfs:(\/\/)?(ipfs\/)?(.*)$/i)?.[3]
+      const hash = uri.match(/^ipfs:(\/\/)?(ipfs\/)?(.*)$/i)?.[3]
       return [`https://cloudflare-ipfs.com/ipfs/${hash}`, `https://ipfs.io/ipfs/${hash}`]
     case 'ipns':
       const name = uri.match(/^ipns:(\/\/)?(.*)$/i)?.[2]

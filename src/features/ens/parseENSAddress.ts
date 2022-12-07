@@ -15,7 +15,7 @@ export function parseENSAddress(
     return undefined
   }
   if (ensAddress.includes('/')) {
-    let addrSplit = ensAddress.split('/')
+    const addrSplit = ensAddress.split('/')
     domain = addrSplit[0]
     path = '/' + addrSplit[1]
   } else {
@@ -30,7 +30,7 @@ export function parseENSAddress(
   ) {
     return undefined
   }
-  let domainNoEth = domain.replace(/\.eth$/g, '')
+  const domainNoEth = domain.replace(/\.eth$/g, '')
   if (domainNoEth.endsWith('-') || domainNoEth.endsWith('.')) {
     return undefined
   }

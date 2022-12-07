@@ -1,10 +1,5 @@
 import { appSelect } from 'src/app/hooks'
-import {
-  Account,
-  AccountType,
-  BackupType,
-  SignerMnemonicAccount,
-} from 'src/features/wallet/accounts/types'
+import { Account, AccountType, BackupType } from 'src/features/wallet/accounts/types'
 import { selectAccounts } from 'src/features/wallet/selectors'
 import {
   editAccount as editInStore,
@@ -144,9 +139,7 @@ function* addBackupMethod(params: AddBackupMethodParams, account: Account) {
 
   const accounts = yield* appSelect(selectAccounts)
   const mnemonicAccounts = Object.values(accounts).filter(
-    (a) =>
-      a.type === AccountType.SignerMnemonic &&
-      a.mnemonicId === (account as SignerMnemonicAccount).mnemonicId
+    (a) => a.type === AccountType.SignerMnemonic && a.mnemonicId === account.mnemonicId
   )
 
   const updatedBackups: BackupType[] = unique([...(account.backups ?? []), backupMethod])
@@ -180,9 +173,7 @@ function* removeBackupMethod(params: RemoveBackupMethodParams, account: Account)
 
   const accounts = yield* appSelect(selectAccounts)
   const mnemonicAccounts = Object.values(accounts).filter(
-    (a) =>
-      a.type === AccountType.SignerMnemonic &&
-      a.mnemonicId === (account as SignerMnemonicAccount).mnemonicId
+    (a) => a.type === AccountType.SignerMnemonic && a.mnemonicId === account.mnemonicId
   )
 
   const updatedBackups = account.backups?.filter((backup) => backup !== backupMethod)

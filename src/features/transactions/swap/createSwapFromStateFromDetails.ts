@@ -77,6 +77,7 @@ export function createSwapFromStateFromDetails({
     }
 
     return swapFormState
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     logger.error('hooks', 'useRecreateSwapFormState', error?.message)
     return undefined
@@ -132,6 +133,7 @@ export function createWrapFormStateFromDetails({
     }
 
     return swapFormState
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     logger.error('hooks', 'useCreateWrapFormState', error?.message)
     return undefined

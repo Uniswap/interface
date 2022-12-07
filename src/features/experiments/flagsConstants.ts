@@ -6,7 +6,7 @@ import { UpgradeStatus } from 'src/features/forceUpgrade/types'
  */
 type Flag = {
   name: string
-  defaultValue: any
+  defaultValue: unknown
 }
 
 /**

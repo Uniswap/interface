@@ -28,7 +28,7 @@ export function TokenDetailsLoader({ currencyId }: { currencyId: string }) {
           <TokenDetailsBackButtonRow currencyId={currencyId} />
           <Flex gap="xl">
             <Flex gap="xxs">
-              <TokenDetailsHeader onPressWarningIcon={() => {}} />
+              <TokenDetailsHeader onPressWarningIcon={() => undefined} />
               <PriceChartLoading />
             </Flex>
             <Flex gap="lg">

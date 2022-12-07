@@ -58,13 +58,13 @@ export interface SessionConnectedEvent extends BaseSessionEvent {
   client_id: string
 }
 
-export interface SessionUpdatedEvent extends BaseSessionEvent {}
+export type SessionUpdatedEvent = BaseSessionEvent
 
 export interface SessionDisconnectedEvent extends BaseSessionEvent {
   client_id: string
 }
 
-export interface SessionPendingEvent extends BaseSessionEvent {}
+export type SessionPendingEvent = BaseSessionEvent
 
 export interface DappInfo {
   name: string
@@ -147,6 +147,8 @@ export enum DappSourceInfo { // for future use in WalletConnectModal when we hav
   Malicious,
 }
 
-export function isPrimaryTypePermit(message: any): message is PermitMessage {
-  return message.primaryType === 'Permit'
+export function isPrimaryTypePermit(
+  message: PermitMessage | Record<string, unknown>
+): message is PermitMessage {
+  return (message as PermitMessage).primaryType === 'Permit'
 }

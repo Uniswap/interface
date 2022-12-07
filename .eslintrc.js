@@ -1,6 +1,21 @@
 module.exports = {
   root: true,
-  extends: ['@react-native-community', 'plugin:jest/recommended', 'plugin:prettier/recommended'],
+  parser: '@typescript-eslint/parser',
+  extends: [
+    '@react-native-community',
+    'plugin:jest/recommended',
+    'plugin:prettier/recommended',
+    'plugin:@typescript-eslint/recommended',
+  ],
+  plugins: [
+    'detox',
+    'jest',
+    'react',
+    'react-native',
+    'no-unsanitized',
+    'security',
+    '@typescript-eslint',
+  ],
   rules: {
     'no-eval': 'error',
     'no-extra-boolean-cast': 'error',
@@ -9,16 +24,18 @@ module.exports = {
     // https://stackoverflow.com/questions/63961803/eslint-says-all-enums-in-typescript-app-are-already-declared-in-the-upper-scope
     'no-shadow': 'off',
     '@typescript-eslint/no-shadow': 'error',
-    '@typescript-eslint/no-require-imports': 'warn',
+    // use throughtout the app when importing devtools, or in test files
+    '@typescript-eslint/no-var-requires': 'off',
+    '@typescript-eslint/no-require-imports': 'off',
     '@typescript-eslint/no-unused-expressions': [
-      'error',
+      2,
       {
         allowShortCircuit: true,
         allowTernary: true,
       },
     ],
     '@typescript-eslint/naming-convention': [
-      'error',
+      2,
       {
         selector: 'enumMember',
         format: ['PascalCase'],
@@ -28,26 +45,26 @@ module.exports = {
     'jest/no-export': 'off',
     'jest/valid-describe-callback': 'off',
     'jest/valid-title': [
-      'error',
+      2,
       {
         // jest expect string titles, but we use function names in the codebase
         ignoreTypeOfDescribeName: true,
       },
     ],
     // Required for e2e usecases
-    'jest/expect-expect': ['off', { assertFunctionNames: ['expect', 'expectSaga'] }],
+    'jest/expect-expect': [0, { assertFunctionNames: ['expect', 'expectSaga'] }],
     // Required for exception catching tests
     'jest/no-conditional-expect': 'off',
     'jest/no-disabled-tests': 'off',
     // TODO consider enabling these:
     // '@typescript-eslint/no-floating-promises': 'error',
-    // 'import/no-self-import': 2,
-    // 'import/no-duplicates': 2,
-    // 'import/no-default-export': 1,
+    // 'import/no-self-import': 'error',
+    // 'import/no-duplicates': 'error',
+    // 'import/no-default-export': 'warn',
     // 'react/jsx-uses-react': 'off',
     // 'react/react-in-jsx-scope': 'off',
     'no-restricted-imports': [
-      'error',
+      2,
       {
         paths: [
           {
@@ -71,7 +88,7 @@ module.exports = {
     // Overrides rules from @react-native-community:
     // https://github.com/facebook/react-native/blob/3cf0291008dfeed4d967ebb95bdccbe2d52c5b81/packages/eslint-config-react-native-community/index.js#L287
     'react/jsx-sort-props': [
-      'error',
+      2,
       {
         callbacksLast: true,
         shorthandFirst: true,
@@ -82,7 +99,7 @@ module.exports = {
     ],
     // Disallow unnecessary curly braces in JSX props and children
     'react/jsx-curly-brace-presence': [
-      'error',
+      2,
       { props: 'never', children: 'never', propElementValues: 'always' },
     ],
     // TODO: consider re-enabling this as part of perf assessment
@@ -112,7 +129,7 @@ module.exports = {
     'react/no-unsafe': 'error',
     // Overwrite default Prettier settings - https://prettier.io/docs/en/options.html
     'prettier/prettier': [
-      'error',
+      2,
       {
         bracketSameLine: true,
         singleQuote: true,
@@ -121,7 +138,6 @@ module.exports = {
       },
     ],
   },
-  plugins: ['detox', 'jest', 'react', 'react-native', 'no-unsanitized', 'security'],
   overrides: [
     {
       files: ['*.e2e.js'],
@@ -137,5 +153,4 @@ module.exports = {
     AddressTo: 'readonly',
     Nullable: 'readonly',
   },
-  parser: '@typescript-eslint/parser',
 }

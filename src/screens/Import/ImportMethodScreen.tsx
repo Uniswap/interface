@@ -34,7 +34,7 @@ interface ImportMethodOption {
   title: (t: TFunction) => string
   blurb: (t: TFunction) => string
   icon: (theme: Theme) => React.ReactNode
-  nav: any
+  nav: OnboardingScreens
   importType: ImportType
   name: ElementName
 }

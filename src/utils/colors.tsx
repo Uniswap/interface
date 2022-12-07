@@ -72,7 +72,7 @@ const specialCaseTokenColors: { [key: string]: string } = {
 export function useExtractedColors(
   imageUrl: NullUndefined<string>,
   fallback: keyof Theme['colors'] = 'magentaVibrant',
-  cache: boolean = true
+  cache = true
 ) {
   const [colors, setColors] = useState<ExtractedColors | null>(null)
   const [colorsLoading, setColorsLoading] = useState(true)

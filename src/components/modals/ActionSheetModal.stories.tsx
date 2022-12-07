@@ -8,7 +8,7 @@ import { ActionSheetModalContent } from './ActionSheetModal'
 const options = [
   {
     key: '1',
-    onPress: () => {},
+    onPress: () => undefined,
     render: () => (
       <Flex row flex={1} justifyContent="space-between" p="md">
         <Text variant="bodyLarge">Market Cap</Text>
@@ -18,7 +18,7 @@ const options = [
   },
   {
     key: '2',
-    onPress: () => {},
+    onPress: () => undefined,
     render: () => (
       <Box p="md">
         <Text variant="bodyLarge">Volume</Text>
@@ -27,7 +27,7 @@ const options = [
   },
   {
     key: '3',
-    onPress: () => {},
+    onPress: () => undefined,
     render: () => (
       <Box p="md">
         <Text variant="bodyLarge">Percent Change</Text>

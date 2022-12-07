@@ -144,11 +144,14 @@ async function updateFirebaseMetadata(address: Address, metadata: AccountMetadat
     const metadataRef = getFirestoreMetadataRef(firebaseApp, address, pushId)
 
     // Firestore does not support updating properties with an `undefined` value so must strip them out
-    const metadataWithDefinedPropsOnly = getKeys(metadata).reduce((obj: any, prop) => {
-      const value = metadata[prop]
-      if (value !== undefined) obj[prop] = value
-      return obj
-    }, {})
+    const metadataWithDefinedPropsOnly = getKeys(metadata).reduce(
+      (obj: Record<string, unknown>, prop) => {
+        const value = metadata[prop]
+        if (value !== undefined) obj[prop] = value
+        return obj
+      },
+      {}
+    )
 
     await metadataRef.set(metadataWithDefinedPropsOnly, { merge: true })
   } catch (error) {

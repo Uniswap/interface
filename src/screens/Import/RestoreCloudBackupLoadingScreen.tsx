@@ -80,7 +80,7 @@ export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } 
             })
           }
         }
-      : () => {},
+      : () => undefined,
     MIN_LOADING_UI_MS
   )
 

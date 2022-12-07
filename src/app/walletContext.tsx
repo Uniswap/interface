@@ -30,7 +30,7 @@ export const WalletContext = createContext<{ value: WalletContextValue; version:
   version: 0,
 })
 
-export const WalletContextProvider = ({ children }: PropsWithChildren<any>) => {
+export const WalletContextProvider = ({ children }: PropsWithChildren<unknown>) => {
   // This state allows the managers to trigger re-renders when relevant values change (i.e. new provider ready)
   // Probably not strictly necessary but more robust than relying on 'organic' re-renders
   const [contextVersion, updateContextVersion] = useState(0)

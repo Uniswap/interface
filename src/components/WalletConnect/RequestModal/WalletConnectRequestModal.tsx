@@ -28,7 +28,6 @@ import { signWcRequestActions } from 'src/features/walletConnect/saga'
 import {
   EthMethod,
   isPrimaryTypePermit,
-  PermitMessage,
   WCEventType,
   WCRequestOutcome,
 } from 'src/features/walletConnect/types'
@@ -69,7 +68,7 @@ const getPermitInfo = (request: WalletConnectRequest): PermitInfo | undefined =>
       return undefined
     }
 
-    const { domain, message: permitPayload } = message as PermitMessage
+    const { domain, message: permitPayload } = message
     const currencyId = buildCurrencyId(domain.chainId, domain.verifyingContract)
     const amount = permitPayload.value
 
@@ -193,8 +192,9 @@ export function WalletConnectRequestModal({ onClose, request }: Props) {
         signWcRequestActions.trigger({
           requestInternalId: request.internalId,
           method: request.type,
-          // @ts-ignore this is EthSignMessage type
-          message: request.message || request.rawMessage,
+          // this is EthSignMessage type
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          message: (request as any).message || (request as any).rawMessage,
           account: signerAccount,
           dapp: request.dapp,
         })
@@ -233,7 +233,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props) {
   }
 
   const nativeCurrency = chainId && NativeCurrency.onChain(chainId)
-  let permitInfo = getPermitInfo(request)
+  const permitInfo = getPermitInfo(request)
 
   return (
     <BottomSheetModal name={ModalName.WCSignRequest} onClose={handleClose}>

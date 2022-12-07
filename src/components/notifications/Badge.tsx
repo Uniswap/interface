@@ -4,11 +4,10 @@ import { Theme } from 'src/styles/theme'
 
 const NOTIFICATION_DOT_SIZE = 10
 
-type Props = {
-  children: PropsWithChildren<any>
+type Props = PropsWithChildren<{
   showIndicator?: boolean
   borderColor?: keyof Theme['colors']
-}
+}>
 
 function _NotificationBadge({ borderColor = 'background0', children, showIndicator }: Props) {
   return (

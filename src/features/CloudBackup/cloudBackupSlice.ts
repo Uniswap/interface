@@ -15,7 +15,7 @@ const slice = createSlice({
   reducers: {
     foundCloudBackup: (state, action: PayloadAction<{ backup: ICloudMnemonicBackup }>) => {
       const { backup } = action.payload
-      let duplicateBackup = state.backupsFound.some((b) => b.mnemonicId === backup.mnemonicId)
+      const duplicateBackup = state.backupsFound.some((b) => b.mnemonicId === backup.mnemonicId)
       if (!duplicateBackup) state.backupsFound.push(backup)
     },
     clearCloudBackups: (state) => {

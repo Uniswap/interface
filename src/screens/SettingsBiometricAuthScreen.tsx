@@ -31,6 +31,11 @@ interface BiometricAuthSetting {
   subText: string
 }
 
+type BiometricPromptTriggerArgs = {
+  biometricAppSettingType: BiometricSettingType | null
+  newValue: boolean
+}
+
 export function SettingsBiometricAuthScreen() {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
@@ -46,16 +51,20 @@ export function SettingsBiometricAuthScreen() {
   const authenticationTypeName = touchId ? 'Touch' : 'Face'
 
   const { requiredForAppAccess, requiredForTransactions } = useBiometricAppSettings()
-  const { trigger } = useBiometricPrompt(({ biometricAppSettingType, newValue }) => {
-    switch (biometricAppSettingType) {
-      case BiometricSettingType.RequiredForAppAccess:
-        dispatch(setRequiredForAppAccess(newValue))
-        break
-      case BiometricSettingType.RequiredForTransactions:
-        dispatch(setRequiredForTransactions(newValue))
-        break
+  const { trigger } = useBiometricPrompt<BiometricPromptTriggerArgs>(
+    (args?: BiometricPromptTriggerArgs) => {
+      if (!args) return
+      const { biometricAppSettingType, newValue } = args
+      switch (biometricAppSettingType) {
+        case BiometricSettingType.RequiredForAppAccess:
+          dispatch(setRequiredForAppAccess(newValue))
+          break
+        case BiometricSettingType.RequiredForTransactions:
+          dispatch(setRequiredForTransactions(newValue))
+          break
+      }
     }
-  })
+  )
 
   const options: BiometricAuthSetting[] = useMemo((): BiometricAuthSetting[] => {
     const handleFaceIdTurnedOff = () => {

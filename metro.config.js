@@ -5,8 +5,6 @@
  * @format
  */
 
-/* eslint-disable @typescript-eslint/no-require-imports */
-const { getDefaultConfig } = require('metro-config')
 
 module.exports = (async () => {
   const {

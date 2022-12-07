@@ -29,7 +29,7 @@ export type GraphMetadatas = readonly [
   GraphMetadata
 ]
 
-type Price = {
+export type Price = {
   timestamp: number
   close: number
 }

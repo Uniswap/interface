@@ -50,27 +50,27 @@ export function useTokenPriceGraphs(currencyId: string): GqlResult<GraphMetadata
       {
         label: PriceChartLabel.Hour,
         index: 0,
-        data: buildGraph([...priceHistory1H].reverse() as any, GRAPH_PRECISION),
+        data: buildGraph([...priceHistory1H].reverse(), GRAPH_PRECISION),
       },
       {
         label: PriceChartLabel.Day,
         index: 1,
-        data: buildGraph([...priceHistory1D].reverse() as any, GRAPH_PRECISION),
+        data: buildGraph([...priceHistory1D].reverse(), GRAPH_PRECISION),
       },
       {
         label: PriceChartLabel.Week,
         index: 2,
-        data: buildGraph([...priceHistory1W].reverse() as any, GRAPH_PRECISION),
+        data: buildGraph([...priceHistory1W].reverse(), GRAPH_PRECISION),
       },
       {
         label: PriceChartLabel.Month,
         index: 3,
-        data: buildGraph([...priceHistory1M].reverse() as any, GRAPH_PRECISION),
+        data: buildGraph([...priceHistory1M].reverse(), GRAPH_PRECISION),
       },
       {
         label: PriceChartLabel.Year,
         index: 4,
-        data: buildGraph([...priceHistory1Y].reverse() as any, GRAPH_PRECISION),
+        data: buildGraph([...priceHistory1Y].reverse(), GRAPH_PRECISION),
       },
     ] as const
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { ScrollView } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Switch } from 'src/components/buttons/Switch'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -22,7 +23,7 @@ import { resetWallet, toggleFlashbots } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
 import { logger } from 'src/utils/logger'
 
-export function DevScreen({ navigation }: any) {
+export function DevScreen() {
   const dispatch = useAppDispatch()
   const activeAccount = useActiveAccount()
   const [currentChain] = useState(ChainId.Goerli)
@@ -37,7 +38,7 @@ export function DevScreen({ navigation }: any) {
   }
 
   const activateWormhole = (s: Screens) => {
-    navigation.navigate(s)
+    navigate(s)
   }
 
   const activeChains = useActiveChainIds()

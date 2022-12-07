@@ -290,7 +290,7 @@ function FooterSettings() {
       ? () => {
           setShowSignature(false)
         }
-      : () => {},
+      : () => undefined,
     SIGNATURE_VISIBLE_DURATION
   )
 

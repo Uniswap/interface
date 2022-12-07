@@ -36,14 +36,17 @@ export default function createMigrate(
 
       logger.info('redux-persist', 'createMigrate', `migrationKeys: ${migrationKeys}`)
 
-      const migratedState: any = migrationKeys.reduce((versionState: any, versionKey) => {
-        logger.info(
-          'redux-persist',
-          'createMigrate',
-          `running migration for versionKey: ${versionKey}`
-        )
-        return migrations[versionKey](versionState)
-      }, state)
+      const migratedState: PersistedState = migrationKeys.reduce(
+        (versionState: PersistedState, versionKey) => {
+          logger.info(
+            'redux-persist',
+            'createMigrate',
+            `running migration for versionKey: ${versionKey}`
+          )
+          return migrations[versionKey](versionState)
+        },
+        state
+      )
 
       return Promise.resolve(migratedState)
     } catch (err) {

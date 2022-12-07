@@ -1,6 +1,11 @@
 import { BaseTheme } from '@shopify/restyle'
 import React, { ReactElement } from 'react'
-import { SettingsStackNavigationProp, SettingsStackParamList } from 'src/app/navigation/types'
+import { ValueOf } from 'react-native-gesture-handler/lib/typescript/typeUtils'
+import {
+  AppStackParamList,
+  SettingsStackNavigationProp,
+  SettingsStackParamList,
+} from 'src/app/navigation/types'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Arrow } from 'src/components/icons/Arrow'
 import { Chevron } from 'src/components/icons/Chevron'
@@ -21,7 +26,7 @@ export interface SettingsSectionItemComponent {
 
 export interface SettingsSectionItem {
   screen?: keyof SettingsStackParamList
-  screenProps?: any
+  screenProps?: ValueOf<SettingsStackParamList | AppStackParamList>
   externalLink?: string
   action?: ReactElement
   text: string
@@ -44,8 +49,8 @@ export function SettingsRow({
   const handleRow = () => {
     if (screen) {
       navigation.navigate(screen, screenProps)
-    } else {
-      openUri(externalLink!)
+    } else if (externalLink) {
+      openUri(externalLink)
     }
   }
   return (

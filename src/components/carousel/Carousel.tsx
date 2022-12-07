@@ -23,8 +23,8 @@ interface CarouselContextProps {
 
 // Allows child components to control the carousel
 export const CarouselContext = createContext<CarouselContextProps>({
-  goToNext: () => {},
-  goToPrev: () => {},
+  goToNext: () => undefined,
+  goToPrev: () => undefined,
   current: 0,
 })
 
@@ -34,7 +34,7 @@ type CarouselProps = {
 
 export const Carousel = ({ slides, ...flatListProps }: CarouselProps) => {
   const scroll = useSharedValue(0)
-  const myRef = useRef<Animated.FlatList<any>>(null)
+  const myRef = useRef<Animated.FlatList<unknown>>(null)
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {

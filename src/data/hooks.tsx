@@ -18,7 +18,6 @@ import { logger } from 'src/utils/logger'
 const mmkv = new MMKV()
 if (__DEV__) {
   // requires Flipper plugin `react-native-mmkv` to be installed
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
   require('react-native-mmkv-flipper-plugin').initializeMMKVFlipper({ default: mmkv })
 }
 
@@ -99,7 +98,6 @@ export const usePersistedApolloClient = () => {
   useEffect(() => {
     if (__DEV__) {
       // requires Flipper plugin `react-native-apollo-devtools` to be installed
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
       require('react-native-apollo-devtools-client').apolloDevToolsInit(client)
     }
   }, [client])

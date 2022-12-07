@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView, TextInput, useColorScheme } from 'react-native'
 import { GestureDetector } from 'react-native-gesture-handler'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { ExploreStackParamList, TabNavigationProp } from 'src/app/navigation/types'
+import { ExploreStackParamList } from 'src/app/navigation/types'
 import { ExploreSections } from 'src/components/explore/ExploreSections'
 import { SearchEmptySection } from 'src/components/explore/search/SearchEmptySection'
 import { SearchResultsSection } from 'src/components/explore/search/SearchResultsSection'
@@ -19,7 +19,7 @@ import {
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { EventName, SectionName } from 'src/features/telemetry/constants'
-import { Screens, Tabs } from 'src/screens/Screens'
+import { Screens } from 'src/screens/Screens'
 import { flex } from 'src/styles/flex'
 import { Theme } from 'src/styles/theme'
 import { useDebounce } from 'src/utils/timing'
@@ -58,13 +58,14 @@ export function ExploreScreen({ navigation }: Props) {
 
   // Reset search mode on tab press
   useEffect(() => {
-    const unsubscribe = (navigation.getParent() as TabNavigationProp<Tabs.Explore>).addListener(
-      'tabPress',
-      () => {
-        textInputRef?.current?.clear()
-        onSearchCancel()
-      }
-    )
+    const parentNavigation = navigation.getParent()
+    if (!parentNavigation) return
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore cannot figure out the right type here
+    const unsubscribe = parentNavigation.addListener('tabPress', () => {
+      textInputRef?.current?.clear()
+      onSearchCancel()
+    })
     return unsubscribe
   }, [navigation])
 

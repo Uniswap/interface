@@ -66,12 +66,12 @@ export type HeaderConfig = {
 }
 
 export type ScrollPair = {
-  list: RefObject<FlatList> | RefObject<FlashList<any>>
+  list: RefObject<FlatList> | RefObject<FlashList<unknown>>
   position: Animated.SharedValue<number>
   index: number
 }
 
-export type TabContentProps = Partial<FlatListProps<any>> & {
+export type TabContentProps = Partial<FlatListProps<unknown>> & {
   loadingContainerStyle: StyleProp<ViewStyle>
   estimatedItemSize?: number
 }
@@ -115,8 +115,8 @@ export const useScrollSync = (
   headerConfig: HeaderConfig
 ) => {
   const sync:
-    | FlatListProps<any>['onMomentumScrollEnd']
-    | FlashListProps<any>['onMomentumScrollEnd'] = (event) => {
+    | FlatListProps<unknown>['onMomentumScrollEnd']
+    | FlashListProps<unknown>['onMomentumScrollEnd'] = (event) => {
     const { y } = event.nativeEvent.contentOffset
 
     const { heightCollapsed, heightExpanded } = headerConfig

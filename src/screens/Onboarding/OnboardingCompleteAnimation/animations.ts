@@ -60,7 +60,7 @@ const qrScaleInConfig: AnimationConfig = {
 
 export const qrScaleIn: EntryExitAnimationFunction = () => {
   'worklet'
-  const animations: AnimateStyle<any> = {
+  const animations: AnimateStyle<unknown> = {
     transform: [
       {
         scale: withDelay(
@@ -73,7 +73,7 @@ export const qrScaleIn: EntryExitAnimationFunction = () => {
       },
     ],
   }
-  const initialValues: AnimateStyle<any> = {
+  const initialValues: AnimateStyle<unknown> = {
     transform: [{ scale: qrScaleInConfig.scale.startValue }],
   }
   return {
@@ -129,7 +129,7 @@ export const flashWipeConfig: AnimationConfig = {
 
 export const flashWipeAnimation: EntryExitAnimationFunction = () => {
   'worklet'
-  const animations: AnimateStyle<any> = {
+  const animations: AnimateStyle<unknown> = {
     opacity: withSequence(
       withDelay(
         flashWipeConfig.opacityIn.delay,
@@ -155,7 +155,7 @@ export const flashWipeAnimation: EntryExitAnimationFunction = () => {
       },
     ],
   }
-  const initialValues: AnimateStyle<any> = {
+  const initialValues: AnimateStyle<unknown> = {
     opacity: flashWipeConfig.opacityIn.startValue,
     transform: [{ scale: flashWipeConfig.scale.startValue }],
   }
@@ -249,7 +249,7 @@ const textSlideUpAndFadeInConfig: AnimationConfig = {
 
 export const textSlideUpAtEnd: EntryExitAnimationFunction = () => {
   'worklet'
-  const animations: AnimateStyle<any> = {
+  const animations: AnimateStyle<unknown> = {
     opacity: withDelay(
       textSlideUpAndFadeInConfig.opacityOut.delay,
       withTiming(textSlideUpAndFadeInConfig.opacityOut.endValue, {
@@ -269,7 +269,7 @@ export const textSlideUpAtEnd: EntryExitAnimationFunction = () => {
       },
     ],
   }
-  const initialValues: AnimateStyle<any> = {
+  const initialValues: AnimateStyle<unknown> = {
     transform: [{ translateY: textSlideUpAndFadeInConfig.translateY.startValue }],
     opacity: textSlideUpAndFadeInConfig.opacityOut.startValue,
   }
@@ -311,7 +311,7 @@ const qrSlideUpAtEndConfig: AnimationConfig = {
 
 export const qrSlideUpAtEnd: EntryExitAnimationFunction = () => {
   'worklet'
-  const animations: AnimateStyle<any> = {
+  const animations: AnimateStyle<unknown> = {
     transform: [
       {
         translateY: withDelay(
@@ -324,7 +324,7 @@ export const qrSlideUpAtEnd: EntryExitAnimationFunction = () => {
       },
     ],
   }
-  const initialValues: AnimateStyle<any> = {
+  const initialValues: AnimateStyle<unknown> = {
     transform: [{ translateY: qrSlideUpAndFadeInConfig.translateY.startValue }],
   }
   return {

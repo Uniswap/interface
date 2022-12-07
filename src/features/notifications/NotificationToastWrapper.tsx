@@ -18,7 +18,7 @@ import { selectActiveAccountNotifications } from 'src/features/notifications/sel
 import { AppNotification, AppNotificationType } from 'src/features/notifications/types'
 import { TransactionType } from 'src/features/transactions/types'
 
-export function NotificationToastWrapper({ children }: PropsWithChildren<any>) {
+export function NotificationToastWrapper({ children }: PropsWithChildren<unknown>) {
   const notifications = useAppSelector(selectActiveAccountNotifications)
   const notification = notifications[0]
   return (

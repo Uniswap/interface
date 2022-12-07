@@ -1,7 +1,7 @@
 import { scaleLinear } from 'd3-scale'
 import { curveBasis, line } from 'd3-shape'
 import { getYForX, parse, Path } from 'react-native-redash'
-import { GraphData, PriceList } from 'src/components/PriceChart/types'
+import { GraphData, Price, PriceList } from 'src/components/PriceChart/types'
 import { dimensions } from 'src/styles/sizing'
 import { theme as FixedTheme } from 'src/styles/theme'
 import { logger } from 'src/utils/logger'
@@ -60,8 +60,8 @@ export function buildGraph(
   priceList = priceList.slice().reverse()
 
   const formattedValues = priceList
-    .filter((value) => !!value)
-    .map((price) => [price!.timestamp, price!.close] as [number, number])
+    .filter((value): value is Price => !!value)
+    .map((price) => [price.timestamp, price.close] as [number, number])
 
   const prices = formattedValues.map(([, price]) => price)
   const dates = formattedValues.map(([date]) => date)
@@ -83,8 +83,8 @@ export function buildGraph(
     const path = normalizePath(
       parse(
         line()
-          .x(([x]) => scaleX(x) as number)
-          .y(([, y]) => scaleY(y) as number)
+          .x(([x]) => scaleX(x))
+          .y(([, y]) => scaleY(y))
           .curve(curveBasis)(formattedValues) as string
       ),
       precision,
@@ -100,7 +100,7 @@ export function buildGraph(
       closePrice,
       path,
     }
-  } catch (e: any) {
+  } catch (e: unknown) {
     logger.error(
       'PriceChart/utils',
       'buildGraph',

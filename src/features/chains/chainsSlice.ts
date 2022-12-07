@@ -22,6 +22,7 @@ const slice = createSlice({
     ) => {
       const { chainId, isActive } = action.payload
       state.byChainId[chainId] ??= { isActive }
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       state.byChainId[chainId]!.isActive = isActive
     },
     resetNetwork: () => initialChainsState,

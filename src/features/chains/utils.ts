@@ -15,7 +15,7 @@ export function* selectActiveChainIds() {
 
 // ALL_SUPPORTED_CHAINS is manually sorted by chain TVL
 export function getSortedActiveChainIds(chains: ChainIdTo<ChainState>) {
-  return ALL_SUPPORTED_CHAIN_IDS.filter((n: ChainId) => !!chains[n]?.isActive) as ChainId[]
+  return ALL_SUPPORTED_CHAIN_IDS.filter((n: ChainId) => !!chains[n]?.isActive)
 }
 
 export function chainListToStateMap(chainIds: ChainId[]) {

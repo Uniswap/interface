@@ -1,3 +1,4 @@
+import { AnyAction } from '@reduxjs/toolkit'
 import { NATIVE_ADDRESS } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { AssetType, CurrencyAsset } from 'src/entities/assets'
@@ -30,7 +31,7 @@ const testInitialState: Readonly<TransactionState> = {
 }
 
 test('should return the initial state', () => {
-  expect(transactionStateReducer(undefined, {} as any)).toEqual(initialState)
+  expect(transactionStateReducer(undefined, {} as AnyAction)).toEqual(initialState)
 })
 
 describe(selectCurrency, () => {

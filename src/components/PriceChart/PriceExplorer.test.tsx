@@ -5,6 +5,7 @@ import { PriceExplorer } from 'src/components/PriceChart/PriceExplorer'
 import { buildGraph } from 'src/components/PriceChart/utils'
 import { renderWithTheme } from 'src/test/render'
 
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const graphDatapoints = buildGraph(
   [
     {

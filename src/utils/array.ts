@@ -2,7 +2,10 @@ function onlyUnique<T>(value: T, index: number, self: T[]) {
   return self.indexOf(value) === index
 }
 
-export function unique<T>(array: any[], isUnique: typeof onlyUnique = onlyUnique): T[] {
+export function unique<T>(
+  array: T[],
+  isUnique: (value: T, index: number, self: T[]) => boolean = onlyUnique
+): T[] {
   return array.filter(isUnique)
 }
 

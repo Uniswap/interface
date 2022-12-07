@@ -55,6 +55,7 @@ const AddressButton = ({ address, chainId, ...rest }: AddressButtonProps) => {
 const MAX_TYPED_DATA_PARSE_DEPTH = 3
 
 // recursively parses typed data objects and adds margin to left
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0) => {
   if (depth === MAX_TYPED_DATA_PARSE_DEPTH + 1) {
     return <Text variant="monospace">...</Text>

@@ -38,6 +38,8 @@ export function HeaderScrollScreen({
   maxScrollHeightOverride,
   children,
 }: PropsWithChildren<HeaderScrollScreenProps>) {
+  // difficult to properly type
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const listRef = useRef<any>(null)
 
   // scrolls to top when tapping on the active tab

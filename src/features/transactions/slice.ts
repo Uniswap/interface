@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* helpful when dealing with deeply nested state objects */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { providers } from 'ethers'
 import {

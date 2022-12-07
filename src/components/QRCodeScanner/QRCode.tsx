@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react'
-import { StyleSheet } from 'react-native'
+import { ImageSourcePropType, StyleSheet } from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout'
@@ -35,7 +35,7 @@ export const AddressQRCode = ({
     let safeAreaPropsObject: {
       logoSize?: number
       logoMargin?: number
-      logo?: any
+      logo?: ImageSourcePropType
       logoBackgroundColor?: string
       logoBorderRadius?: number
     } = {}

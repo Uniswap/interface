@@ -28,7 +28,7 @@ function listToTokenMap(list: TokenList): ChainIdToListedTokens {
       list,
     }
     return tokenMap
-  }, {}) as ChainIdToListedTokens
+  }, {})
   listCache?.set(list, map)
   return map
 }
@@ -62,7 +62,7 @@ export function combineMaps(
       ...map1[chainId],
     }
     return memo
-  }, {}) as ChainIdToListedTokens
+  }, {})
 }
 
 // merge tokens contained within lists from urls

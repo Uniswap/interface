@@ -76,7 +76,6 @@ const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 const middlewares: Middleware[] = []
 if (__DEV__) {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const createDebugger = require('redux-flipper').default
   middlewares.push(createDebugger())
 }

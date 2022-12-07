@@ -13,13 +13,13 @@ type LogLevel = 'debug' | 'info' | 'warn' | 'error'
 
 // Example: logger.warn('myFile','myFunc','Some warning',myArray)
 export const logger = {
-  debug: (fileName: string, functionName: string, message: string, ...args: any[]) =>
+  debug: (fileName: string, functionName: string, message: string, ...args: unknown[]) =>
     logMessage('debug', fileName, functionName, message, ...args),
-  info: (fileName: string, functionName: string, message: string, ...args: any[]) =>
+  info: (fileName: string, functionName: string, message: string, ...args: unknown[]) =>
     logMessage('info', fileName, functionName, message, ...args),
-  warn: (fileName: string, functionName: string, message: string, ...args: any[]) =>
+  warn: (fileName: string, functionName: string, message: string, ...args: unknown[]) =>
     logMessage('warn', fileName, functionName, message, ...args),
-  error: (fileName: string, functionName: string, message: string, ...args: any[]) =>
+  error: (fileName: string, functionName: string, message: string, ...args: unknown[]) =>
     logMessage('error', fileName, functionName, message, ...args),
 }
 
@@ -28,7 +28,7 @@ function logMessage(
   fileName: string,
   functionName: string,
   message: string,
-  ...args: any[]
+  ...args: unknown[]
 ) {
   // disable logs in jest
   if (__DEV__ && process.env.JEST_WORKER_ID !== undefined) return
@@ -54,6 +54,7 @@ function formatMessage(fileName: string, functionName: string, message: string):
   return `${t.getHours()}:${t.getMinutes()}:${t.getSeconds()}:${t.getMilliseconds()}::${fileName}#${functionName}:${message}`
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function argsToString(args: any[]): string {
   if (!args || !args.length) return ''
   return args
@@ -74,13 +75,13 @@ export function getLogBuffer() {
 // Creates a logger instance scoped to a particular file for convenience
 export function createLogger(fileName: string): typeof logger {
   return {
-    debug: (functionName: string, message: string, ...args: any[]) =>
+    debug: (functionName: string, message: string, ...args: unknown[]) =>
       logger.debug(fileName, functionName, message, ...args),
-    info: (functionName: string, message: string, ...args: any[]) =>
+    info: (functionName: string, message: string, ...args: unknown[]) =>
       logger.info(fileName, functionName, message, ...args),
-    warn: (functionName: string, message: string, ...args: any[]) =>
+    warn: (functionName: string, message: string, ...args: unknown[]) =>
       logger.warn(fileName, functionName, message, ...args),
-    error: (functionName: string, message: string, ...args: any[]) =>
+    error: (functionName: string, message: string, ...args: unknown[]) =>
       logger.error(fileName, functionName, message, ...args),
   }
 }

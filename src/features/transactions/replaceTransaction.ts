@@ -29,6 +29,7 @@ export function* attemptReplaceTransaction(
     )
 
     const accounts = yield* appSelect(selectAccounts)
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const account = accounts[getChecksumAddress(from!)]
     assert(account, `Cannot replace transaction, account missing: ${hash}`)
 

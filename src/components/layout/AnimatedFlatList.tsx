@@ -5,6 +5,8 @@ import React, { forwardRef } from 'react'
 import { FlatList, FlatListProps, LayoutChangeEvent, View } from 'react-native'
 import Animated, { ILayoutAnimationBuilder } from 'react-native-reanimated'
 
+// difficult to properly type
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ReanimatedFlatList = Animated.createAnimatedComponent(FlatList as any) as any
 const AnimatedView = Animated.createAnimatedComponent(View)
 
@@ -33,6 +35,8 @@ interface ReanimatedFlatlistProps<T> extends FlatListProps<T> {
  *
  * TODO: remove this and use Animated.FlatList directly when can use refs with it. Also type the generic T properly for FlatList and dont use `any`
  */
+// difficult to properly type
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const AnimatedFlatList = forwardRef<Animated.FlatList<any>, ReanimatedFlatlistProps<any>>(
   ({ itemLayoutAnimation, ...restProps }, ref) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps

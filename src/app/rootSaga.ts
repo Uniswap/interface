@@ -51,10 +51,10 @@ import {
   pendingAccountSagaName,
 } from 'src/features/wallet/pendingAcccountsSaga'
 import { signWcRequestSaga, walletConnectSaga } from 'src/features/walletConnect/saga'
-import { SagaActions, SagaState } from 'src/utils/saga'
+import { SagaState } from 'src/utils/saga'
 
 // All regular sagas must be included here
-const sagas: any[] = [
+const sagas = [
   amplitudeSaga,
   initProviders,
   initFirebase,
@@ -67,17 +67,8 @@ const sagas: any[] = [
   cloudBackupsManagerSaga,
 ]
 
-interface MonitoredSaga {
-  name: string
-  wrappedSaga: any
-  reducer: Reducer<SagaState>
-  actions: SagaActions
-}
-
 // All monitored sagas must be included here
-export const monitoredSagas: {
-  [name: string]: MonitoredSaga
-} = {
+export const monitoredSagas = {
   [createAccountSagaName]: {
     name: createAccountSagaName,
     wrappedSaga: createAccountSaga,

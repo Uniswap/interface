@@ -19,7 +19,7 @@ export function useTestConfigManager(): [
 ] {
   const [testConfigs, setTestConfigs] = useState(remoteConfig().getAll())
 
-  const _toggleLocalConfig = useCallback(async (args: any) => {
+  const _toggleLocalConfig = useCallback(async (args: LocalConfig) => {
     await toggleLocalConfig(args)
 
     setTestConfigs(remoteConfig().getAll())
@@ -28,16 +28,14 @@ export function useTestConfigManager(): [
   return [Object.entries(testConfigs), _toggleLocalConfig]
 }
 
-/** Toggles a local config to the given value. */
-function toggleLocalConfig({
-  config,
-  enabled,
-  configDefaults = TestConfigValues,
-}: {
+type LocalConfig = {
   config: string
   enabled: boolean
   configDefaults?: typeof TestConfigValues
-}) {
+}
+
+/** Toggles a local config to the given value. */
+function toggleLocalConfig({ config, enabled, configDefaults = TestConfigValues }: LocalConfig) {
   return initializeRemoteConfig({
     ...configDefaults,
     [config]: enabled ? 'enabled' : 'disabled',

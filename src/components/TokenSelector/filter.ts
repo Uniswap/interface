@@ -54,8 +54,8 @@ export function filter(
   if (!tokenOptions || !tokenOptions.length) return []
   if (!chainFilter && !searchFilter) return tokenOptions
 
-  let andPatterns: Fuse.Expression[] = []
-  let orPatterns: Fuse.Expression[] = []
+  const andPatterns: Fuse.Expression[] = []
+  const orPatterns: Fuse.Expression[] = []
 
   const chainSearchPattern = getChainSearchPattern(chainFilter)
   if (chainSearchPattern) andPatterns.push(chainSearchPattern)

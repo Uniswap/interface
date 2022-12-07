@@ -27,6 +27,8 @@ export async function retrieveRemoteExperiments() {
   const fetchedFeatureFlags: FeatureFlagsMap = {}
   const fetchedExperiments: ExperimentsMap = {}
   Object.keys(fetchedAmplitudeExperiments).map((experimentKey) => {
+    // safe assertion
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const variant = fetchedAmplitudeExperiments[experimentKey].value!
     if (['on'].includes(variant)) {
       fetchedFeatureFlags[experimentKey] = variant === 'on'

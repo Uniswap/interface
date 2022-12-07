@@ -15,8 +15,7 @@ import { ModalName } from 'src/features/telemetry/constants'
 import { TelemetryTraceProps } from 'src/features/telemetry/types'
 import { dimensions, spacing } from 'src/styles/sizing'
 
-type Props = {
-  children: PropsWithChildren<any>
+type Props = PropsWithChildren<{
   disableSwipe?: boolean
   hideHandlebar?: boolean
   name: ModalName
@@ -26,7 +25,8 @@ type Props = {
   fullScreen?: boolean
   backgroundColor?: string
   isDismissible?: boolean
-} & TelemetryTraceProps
+}> &
+  TelemetryTraceProps
 
 const HandleBar = () => {
   return (

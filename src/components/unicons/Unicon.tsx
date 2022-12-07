@@ -14,7 +14,12 @@ import React, { memo, useMemo } from 'react'
 import { useColorScheme } from 'react-native'
 import 'react-native-reanimated'
 import { Box } from 'src/components/layout'
-import { blurs, UniconAttributes, UniconAttributesToIndices } from 'src/components/unicons/types'
+import {
+  blurs,
+  UniconAttributeData,
+  UniconAttributes,
+  UniconAttributesToIndices,
+} from 'src/components/unicons/types'
 import {
   deriveUniconAttributeIndices,
   getUniconAttributeData,
@@ -63,7 +68,7 @@ function UniconMask({
   overlay = false,
 }: {
   size: number
-  attributeData: any
+  attributeData: UniconAttributeData
   overlay?: boolean
 }) {
   return (
@@ -72,12 +77,12 @@ function UniconMask({
       transform={[{ scale: size / ORIGINAL_SVG_SIZE }]}>
       <Group transform={[{ translateX: EMBLEM_XY_SHIFT }, { translateY: EMBLEM_XY_SHIFT }]}>
         {/* This is the shape generation code */}
-        {attributeData[UniconAttributes.Shape].map((pathProps: any) => (
+        {attributeData[UniconAttributes.Shape].map((pathProps) => (
           <Path key={pathProps.path as string} {...pathProps} />
         ))}
       </Group>
       {/* This is the container generation code */}
-      {attributeData[UniconAttributes.Container].map((pathProps: any) => (
+      {attributeData[UniconAttributes.Container].map((pathProps) => (
         <Path key={pathProps.path as string} {...pathProps} />
       ))}
     </Group>

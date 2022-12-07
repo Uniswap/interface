@@ -9,7 +9,7 @@ const PromiseThrower = ({ ms }: { ms: number }) => {
   useInterval(() => setIsLoading((prev) => !prev), frequency)
 
   if (isLoading) {
-    throw new Promise(() => {})
+    throw new Promise(() => undefined)
   }
   return null
 }

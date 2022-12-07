@@ -57,10 +57,12 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
-import { Account, AccountType } from 'src/features/wallet/accounts/types'
+import { Account, AccountType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
 import { initialWalletState } from 'src/features/wallet/walletSlice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
 
+// helps with object assignement
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getAllKeysOfNestedObject = (obj: any, prefix = ''): string[] => {
   const keys = Object.keys(obj)
   if (!keys.length && prefix !== '') return [prefix.slice(0, -1)]
@@ -123,7 +125,7 @@ describe('Redux state migrations', () => {
       },
     }
 
-    const migratedSchemaKeys = new Set(getAllKeysOfNestedObject(migratedSchema as any))
+    const migratedSchemaKeys = new Set(getAllKeysOfNestedObject(migratedSchema))
     const latestSchemaKeys = new Set(getAllKeysOfNestedObject(getSchema()))
     const initialStateKeys = new Set(getAllKeysOfNestedObject(initialState))
 
@@ -381,9 +383,9 @@ describe('Redux state migrations', () => {
     expect(Object.values(v6SchemaStub.wallet.accounts)).toHaveLength(4)
     const v7 = migrations[7](v6SchemaStub)
 
-    const accounts = Object.values(v7.wallet.accounts)
+    const accounts = Object.values(v7.wallet.accounts) as SignerMnemonicAccount[]
     expect(accounts).toHaveLength(1)
-    expect((accounts[0] as any)?.mnemonicId).toEqual(TEST_ADDRESSES[0])
+    expect(accounts[0]?.mnemonicId).toEqual(TEST_ADDRESSES[0])
   })
 
   it('migrates from v7 to v8', () => {

@@ -22,6 +22,8 @@ type TokensTabProps = {
   scrollHandler?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
 }
 
+// ignore ref type
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const TokensTab = forwardRef<any, TokensTabProps>(
   ({ owner, containerProps, scrollHandler }, ref) => {
     const { t } = useTranslation()

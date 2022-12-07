@@ -77,7 +77,15 @@ async function getPermit2PermitSignature(
     chainId
   )
 
-  const signature = await signTypedData(domain, types, values, account, signerManager)
+  const signature = await signTypedData(
+    domain,
+    types,
+    // required to makes values less specific than `Record<string, unknown>`
+    // alternative would be to modify the sdk to use type aliases over interfaces
+    { ...values },
+    account,
+    signerManager
+  )
   return {
     signature,
     permitMessage,

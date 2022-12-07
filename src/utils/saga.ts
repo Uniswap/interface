@@ -10,7 +10,7 @@ import { errorToString } from 'src/utils/validation'
  * Use to create simple sagas, for more complex ones use createMonitoredSaga.
  * Note: the wrapped saga this returns must be added to rootSaga.ts
  */
-export function createSaga<SagaParams = void>(saga: (params: SagaParams) => any, name: string) {
+export function createSaga<SagaParams = void>(saga: (params: SagaParams) => unknown, name: string) {
   const triggerAction = createAction<SagaParams>(`${name}/trigger`)
 
   const wrappedSaga = function* () {
@@ -42,11 +42,11 @@ export enum SagaStatus {
 }
 
 export interface SagaActions {
-  trigger: PayloadActionCreator<any>
-  cancel: PayloadActionCreator<any>
-  progress: PayloadActionCreator<any>
-  error: PayloadActionCreator<any>
-  reset: PayloadActionCreator<any>
+  trigger: PayloadActionCreator<unknown>
+  cancel: PayloadActionCreator<unknown>
+  progress: PayloadActionCreator<unknown>
+  error: PayloadActionCreator<unknown>
+  reset: PayloadActionCreator<unknown>
 }
 
 export interface SagaState {
@@ -67,7 +67,7 @@ interface MonitoredSagaOptions {
  * Note: the wrapped saga and reducer this returns must be added to rootSaga.ts
  */
 export function createMonitoredSaga<SagaParams = void>(
-  saga: (params: SagaParams) => any,
+  saga: (params: SagaParams) => unknown,
   name: string,
   options?: MonitoredSagaOptions
 ) {
@@ -124,6 +124,7 @@ export function createMonitoredSaga<SagaParams = void>(
 
         yield put(statusAction(SagaStatus.Success))
         logger.debug('saga', 'monitoredSaga', `${name} finished`)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         logger.error('saga', 'monitoredSaga', `${name} error`, error)
         const errorMessage = errorToString(error)

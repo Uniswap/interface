@@ -5,7 +5,7 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { ChainId } from 'src/constants/chains'
 
-export function getEthersProvider(chainId, _config) {
+export function getEthersProvider(chainId) {
   if (chainId === ChainId.Mainnet) {
     const provider = new TestProvider('http://127.0.0.1:8545/', chainId)
     return provider

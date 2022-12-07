@@ -60,7 +60,7 @@ export function NFTItemScreen({
         message: `${uniswapUrls.nftUrl}/asset/${asset.nftContract.address}/${asset.tokenId}`,
       })
     } catch (e) {
-      logger.error('NFTItemScreen', 'onShare', (e as any as Error).message)
+      logger.error('NFTItemScreen', 'onShare', (e as unknown as Error).message)
     }
   }, [asset?.nftContract, asset?.tokenId])
 

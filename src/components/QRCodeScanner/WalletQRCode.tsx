@@ -32,7 +32,7 @@ export function WalletQRCode({ address }: Props) {
         message: address,
       })
     } catch (e) {
-      logger.error('WalletQRCode', 'onShare', (e as any as Error).message)
+      logger.error('WalletQRCode', 'onShare', (e as unknown as Error).message)
     }
   }
 

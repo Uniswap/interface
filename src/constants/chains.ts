@@ -1,5 +1,6 @@
 // Based on https://github.com/Uniswap/interface/blob/main/src/constants/chains.ts
 
+import { ImageSourcePropType } from 'react-native'
 import {
   ARBITRUM_LOGO,
   ETHEREUM_LOGO,
@@ -62,7 +63,7 @@ export interface L1ChainInfo {
   readonly infoLink: string
   readonly label: string
   readonly logoUrl?: string
-  readonly logo?: any
+  readonly logo?: ImageSourcePropType
   readonly rpcUrls?: string[]
   readonly nativeCurrency: {
     name: string // 'Goerli ETH',
@@ -151,7 +152,7 @@ export function isPolygonChain(
   return chainId === ChainId.PolygonMumbai || chainId === ChainId.Polygon
 }
 
-export const CHAIN_ID_TO_LOGO: Record<ChainId, any> = {
+export const CHAIN_ID_TO_LOGO: Record<ChainId, ImageSourcePropType> = {
   [ChainId.Mainnet]: ETHEREUM_LOGO,
   [ChainId.Goerli]: ETHEREUM_LOGO,
   [ChainId.Optimism]: ETHEREUM_LOGO,

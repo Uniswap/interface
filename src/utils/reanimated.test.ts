@@ -1,4 +1,4 @@
-import { numberToLocaleStringWorklet } from 'src/utils/reanimated'
+import { Language, numberToLocaleStringWorklet } from 'src/utils/reanimated'
 
 describe('reanimated numberToLocaleStringWorklet', function () {
   'use strict'
@@ -90,8 +90,7 @@ describe('reanimated numberToLocaleStringWorklet', function () {
     const locale = 'i'
 
     function testLocale() {
-      // @ts-ignore
-      return numberToLocaleStringWorklet(num, locale)
+      return numberToLocaleStringWorklet(num, locale as Language)
     }
 
     expect(testLocale).toThrow(new RangeError('Invalid language tag: ' + locale))
@@ -101,10 +100,8 @@ describe('reanimated numberToLocaleStringWorklet', function () {
     const num = 1234.5
 
     expect(numberToLocaleStringWorklet(num)).toBe('1,234.50')
-    //@ts-ignore
-    expect(numberToLocaleStringWorklet(num, 'es')).toBe('1,234.50')
-    //@ts-ignore
-    expect(numberToLocaleStringWorklet(num, 'AU')).toBe('1,234.50')
+    expect(numberToLocaleStringWorklet(num, 'es' as Language)).toBe('1,234.50')
+    expect(numberToLocaleStringWorklet(num, 'AU' as Language)).toBe('1,234.50')
   })
 
   it('returns a string formatted in Hungarian style (1 234,56) by default', function () {

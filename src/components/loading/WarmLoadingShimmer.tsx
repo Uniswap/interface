@@ -11,17 +11,13 @@ import Reanimated, {
 } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout'
-import { Theme } from 'src/styles/theme'
 import { opacify } from 'src/utils/colors'
 
 const SHIMMER_DURATION = 2000 // 2 seconds
 
 type WarmLoadingShimmerProps = {
   isWarmLoading?: boolean
-  color?: keyof Theme['colors']
-  number?: any
-  variant?: keyof Theme['textVariants']
-  children: ReactElement<any, string | JSXElementConstructor<any>>
+  children: ReactElement<unknown, string | JSXElementConstructor<unknown>>
 }
 
 // TODO(MOB-3553): bake this component's functionality into the Shimmer component

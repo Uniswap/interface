@@ -7,7 +7,7 @@ import { URL } from 'url'
  * @return {string} A serialized string of query params
  */
 function serializeQueryParams(params: Record<string, Parameters<typeof encodeURIComponent>[0]>) {
-  const queryString = []
+  const queryString: string[] = []
   for (const param in params) {
     if (params[param]) {
       queryString.push(`${encodeURIComponent(param)}=${encodeURIComponent(params[param])}`)
@@ -18,7 +18,9 @@ function serializeQueryParams(params: Record<string, Parameters<typeof encodeURI
 
 export const signMoonpayLink = functions
   .runWith({ secrets: ['MOONPAY_API_KEY', 'MOONPAY_SECRET_KEY'] })
-  .https.onRequest((request: functions.Request<any>, response: functions.Response<any>) => {
+  // todo: type request params
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  .https.onRequest((request: functions.Request<any>, response: functions.Response<unknown>) => {
     const { MOONPAY_URL, MOONPAY_API_KEY, MOONPAY_SECRET_KEY } = process.env
 
     const {

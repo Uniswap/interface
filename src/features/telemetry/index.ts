@@ -37,7 +37,7 @@ export async function initAnalytics() {
 }
 
 /** Logs a generic event with payload. */
-export async function logEvent(name: string, params: {}) {
+export async function logEvent(name: string, params: Record<string, unknown>) {
   if (__DEV__) {
     logger.info('telemetry', 'logEvent', `${name}: ${JSON.stringify(params)}`)
     return
@@ -54,7 +54,7 @@ export async function logEvent(name: string, params: {}) {
  * @param extraTags Key/value pairs to enrich logging and allow filtering.
  *                  More info here: https://docs.sentry.io/platforms/react-native/enriching-events/tags/
  */
-export function logException(context: string, error: any, extraTags?: LogTags) {
+export function logException(context: string, error: unknown, extraTags?: LogTags) {
   if (__DEV__) {
     // should already be logged by logger
     return

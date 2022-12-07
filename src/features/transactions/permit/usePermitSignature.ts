@@ -161,7 +161,7 @@ async function getPermitSignature(
   }
 
   const signature = await signTypedData(domain, permitTypes, message, account, signerManager)
-  const signatureData = await splitSignature(signature)
+  const signatureData = splitSignature(signature)
   const v = signatureData.v as 0 | 1 | 27 | 28
   const permitOptions: PermitOptions = allowed
     ? {

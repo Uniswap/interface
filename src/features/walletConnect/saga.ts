@@ -22,7 +22,6 @@ import {
   DappInfo,
   EthMethod,
   EthSignMethod,
-  EthTransactionMethod,
   SessionConnectedEvent,
   SessionDisconnectedEvent,
   SessionPendingEvent,
@@ -158,7 +157,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
         addRequest({
           account: req.account,
           request: {
-            type: req.type as EthTransactionMethod,
+            type: req.type,
             transaction: {
               to: to ?? undefined,
               from: from ?? undefined,
@@ -272,7 +271,7 @@ type SignTransactionParams = {
 type EthTypedMessage = {
   domain: TypedDataDomain
   types: Record<string, Array<TypedDataField>>
-  message: Record<string, any>
+  message: Record<string, unknown>
 }
 
 export function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
@@ -347,7 +346,7 @@ async function signTransaction(
 export async function signTypedData(
   domain: TypedDataDomain,
   types: Record<string, TypedDataField[]>,
-  value: Record<string, any>,
+  value: Record<string, unknown>,
   account: Account,
   signerManager: SignerManager
 ) {

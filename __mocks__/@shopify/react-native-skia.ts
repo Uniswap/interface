@@ -1,9 +1,10 @@
-import { createElement } from 'react'
+import { createElement, PropsWithChildren } from 'react'
 import { View } from 'react-native'
 
 // Source: https://github.com/Shopify/react-native-skia/issues/548#issuecomment-1157609472
 
-const PlainView = ({ children, ...props }: any) => createElement(View, props, children)
+const PlainView = ({ children, ...props }: PropsWithChildren<unknown>) =>
+  createElement(View, props, children)
 const noop = () => null
 
 jest.mock('@shopify/react-native-skia', () => {

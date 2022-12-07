@@ -44,7 +44,7 @@ export class NativeSigner extends Signer {
   async _signTypedData(
     domain: TypedDataDomain,
     types: Record<string, Array<TypedDataField>>,
-    value: Record<string, any>
+    value: Record<string, unknown>
   ): Promise<string> {
     const signature = await signHashForAddress(
       this.address,
@@ -56,6 +56,9 @@ export class NativeSigner extends Signer {
 
   async signTransaction(transaction: providers.TransactionRequest): Promise<string> {
     const tx = await utils.resolveProperties(transaction)
+    if (tx.chainId === undefined) {
+      throw new Error('Expected chainId to be defined')
+    }
     if (tx.from != null) {
       if (getChecksumAddress(tx.from) !== this.address) {
         throw new Error('transaction from address mismatch')
@@ -68,7 +71,7 @@ export class NativeSigner extends Signer {
     const signature = await signTransactionHashForAddress(
       this.address,
       hashedTx.slice(2),
-      tx.chainId!
+      tx.chainId
     )
 
     return utils.serializeTransaction(ut, `0x${signature}`)

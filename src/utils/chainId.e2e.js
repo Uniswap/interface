@@ -8,7 +8,7 @@ export function parseActiveChains() {
   return [ChainId.Mainnet]
 }
 
-export function isTestnet(chainId) {
+export function isTestnet() {
   // prevents network request to covalent
   return true
 }

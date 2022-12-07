@@ -8,12 +8,12 @@ export interface BiometricContextValue {
 
 const biomericContextValue: BiometricContextValue = {
   authenticationStatus: undefined,
-  setAuthenticationStatus: () => {},
+  setAuthenticationStatus: () => undefined,
 }
 
 const BiometricContext = createContext<BiometricContextValue>(biomericContextValue)
 
-export const BiometricContextProvider = ({ children }: PropsWithChildren<any>) => {
+export const BiometricContextProvider = ({ children }: PropsWithChildren<unknown>) => {
   // global authenticationStatus
   const [status, setStatus] = useState<NullUndefined<BiometricAuthenticationStatus>>()
   const setAuthenticationStatus = (value: NullUndefined<BiometricAuthenticationStatus>) => {

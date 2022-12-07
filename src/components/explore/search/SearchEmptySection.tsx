@@ -12,11 +12,9 @@ import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import {
   clearSearchHistory,
-  EtherscanSearchResult,
   SearchResult,
   SearchResultType,
   selectSearchHistory,
-  TokenSearchResult,
   WalletCategory,
   WalletSearchResult,
 } from 'src/features/explore/searchHistorySlice'
@@ -91,11 +89,11 @@ export function SearchEmptySection() {
 
 const renderSearchHistoryItem = ({ item: searchResult }: ListRenderItemInfo<SearchResult>) => {
   if (searchResult.type === SearchResultType.Token) {
-    return <SearchTokenItem token={searchResult as TokenSearchResult} />
+    return <SearchTokenItem token={searchResult} />
   } else if (searchResult.type === SearchResultType.Wallet) {
-    return <SearchWalletItem wallet={searchResult as WalletSearchResult} />
+    return <SearchWalletItem wallet={searchResult} />
   } else {
-    return <SearchEtherscanItem etherscanResult={searchResult as EtherscanSearchResult} />
+    return <SearchEtherscanItem etherscanResult={searchResult} />
   }
 }
 

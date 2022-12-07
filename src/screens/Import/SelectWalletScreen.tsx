@@ -87,7 +87,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
         : [...currentAddresses, addressToProcess],
     initialShownAccounts
       ?.filter((a) => a != null && a?.ownerAddress != null)
-      .map((a) => a!.ownerAddress) ?? []
+      .map((a) => a.ownerAddress) ?? []
   )
 
   useEffect(() => {
@@ -105,7 +105,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
 
     initialShownAccounts
       ?.filter((a) => a != null && a?.ownerAddress != null)
-      .map((a) => setSelectedAddresses(a!.ownerAddress))
+      .map((a) => setSelectedAddresses(a.ownerAddress))
   }, [initialShownAccounts, isLoadingAccounts, loading, selectedAddresses.length])
 
   const onPress = (address: string) => {
@@ -179,7 +179,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
           <ScrollView>
             <Flex gap="sm">
               {initialShownAccounts?.map((portfolio, i) => {
-                const { ownerAddress, tokensTotalDenominatedValue } = portfolio!
+                const { ownerAddress, tokensTotalDenominatedValue } = portfolio
                 return (
                   <WalletPreviewCard
                     key={ownerAddress}

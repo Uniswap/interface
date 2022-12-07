@@ -33,6 +33,8 @@ type TokenBalanceListProps = {
   scrollHandler?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
 }
 
+// accept any ref
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const TokenBalanceList = forwardRef<Animated.FlatList<any>, TokenBalanceListProps>(
   ({ owner, empty, onPressToken, containerProps, scrollHandler }, ref) => {
     const { t } = useTranslation()

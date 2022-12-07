@@ -20,14 +20,14 @@ export function useSagaStatus(sagaName: string, onSuccess?: () => void, resetSag
 
   useEffect(() => {
     if (status === SagaStatus.Success) {
-      if (resetSagaOnSuccess) dispatch(saga.actions.reset(null))
+      if (resetSagaOnSuccess) dispatch(saga.actions.reset())
       if (onSuccess) onSuccess()
     }
   }, [saga, status, error, onSuccess, resetSagaOnSuccess, dispatch])
 
   useEffect(() => {
     return () => {
-      if (resetSagaOnSuccess) dispatch(saga.actions.reset(null))
+      if (resetSagaOnSuccess) dispatch(saga.actions.reset())
     }
   }, [saga, resetSagaOnSuccess, dispatch])
 

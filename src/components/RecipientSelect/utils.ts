@@ -11,7 +11,7 @@ export function uniqueAddressesOnly<T extends HasAddress>(objectsWithAddress: T[
   // had to cast to any because ts doesn't recognize it as HasAddress... maybe issue with unique
   return unique(
     objectsWithAddress,
-    (v, i, a) => a.findIndex((v2) => (v2 as any).address === (v as any).address) === i
+    (v, i, a) => a.findIndex((v2) => v2.address === v.address) === i
   )
 }
 

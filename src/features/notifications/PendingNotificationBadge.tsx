@@ -60,7 +60,7 @@ export function PendingNotificationBadge({ size = 24, sortedPendingTransactions 
   return (
     <TouchableArea
       position="relative"
-      onPress={activeAccountAddress ? navigate : () => {}}
+      onPress={activeAccountAddress ? navigate : () => undefined}
       onPressIn={() => (activeAccountAddress ? preload(activeAccountAddress) : null)}>
       <Box
         alignItems="center"

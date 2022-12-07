@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { BigNumber } from 'ethers'
+import { BigNumber, providers } from 'ethers'
 import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
 import { getProvider, getProviderManager, getSignerManager } from 'src/app/walletContext'
@@ -27,7 +27,7 @@ const sendParams = {
 }
 
 describe(sendTransaction, () => {
-  let dateNowSpy: any
+  let dateNowSpy: jest.SpyInstance
 
   beforeAll(() => {
     // Lock Time
@@ -47,7 +47,13 @@ describe(sendTransaction, () => {
         [call(getProviderManager), providerManager],
         [call(getSignerManager), signerManager],
         [
-          call(signAndSendTransaction, txRequest, account, provider as any, signerManager),
+          call(
+            signAndSendTransaction,
+            txRequest,
+            account,
+            provider as providers.Provider,
+            signerManager
+          ),
           { transactionResponse: txResponse, populatedRequest: txRequest },
         ],
       ])

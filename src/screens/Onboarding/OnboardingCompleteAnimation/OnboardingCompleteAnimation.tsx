@@ -12,7 +12,7 @@ import { useResponsiveProp } from '@shopify/restyle'
 import { ResizeMode, Video } from 'expo-av'
 import React, { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet, useColorScheme, View } from 'react-native'
+import { StyleProp, StyleSheet, useColorScheme, View, ViewStyle } from 'react-native'
 import Animated, {
   AnimateStyle,
   Easing,
@@ -73,7 +73,7 @@ export function OnboardingCompleteAnimation({
   // the config for this animation is defined in the animations.ts file in the same folder as this component, but because of the callback it made more sense to leave the actual animation definition in this file
   const qrSlideUpAndFadeIn: EntryExitAnimationFunction = () => {
     'worklet'
-    const animations: AnimateStyle<any> = {
+    const animations: AnimateStyle<StyleProp<ViewStyle>> = {
       opacity: withDelay(
         qrSlideUpAndFadeInConfig.opacity.delay,
         withTiming(qrSlideUpAndFadeInConfig.opacity.endValue, {
@@ -93,6 +93,8 @@ export function OnboardingCompleteAnimation({
         },
       ],
     }
+    // <StyleProp<ViewStyle>> doesn't quite work because of translateY
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const initialValues: AnimateStyle<any> = {
       opacity: qrSlideUpAndFadeInConfig.opacity.startValue,
       transform: [{ translateY: qrSlideUpAndFadeInConfig.translateY.startValue }],

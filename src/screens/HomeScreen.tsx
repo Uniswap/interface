@@ -105,6 +105,7 @@ export function HomeScreen() {
   )
 
   const tokensTabScrollRef = useAnimatedRef<FlatList>()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const nftsTabScrollRef = useAnimatedRef<FlashList<any>>()
 
   const сurrentScrollValue = useDerivedValue(

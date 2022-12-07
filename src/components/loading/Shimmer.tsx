@@ -14,7 +14,7 @@ import { Box } from 'src/components/layout'
 const SHIMMER_DURATION = 2000 // 2 seconds
 
 type Props = {
-  children: ReactElement<any, string | JSXElementConstructor<any>>
+  children: ReactElement<unknown, string | JSXElementConstructor<unknown>>
 }
 // inspired by tutorial found here: https://github.com/kadikraman/skeleton-loader
 export function Shimmer({ children }: Props) {

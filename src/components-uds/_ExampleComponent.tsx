@@ -3,7 +3,7 @@ import { Box, Flex } from 'src/components/layout'
 
 type ExampleComponentProps = PropsWithChildren<{
   header: ReactNode
-  success: Boolean
+  success: boolean
 }>
 
 export const ExampleComponent = ({ children, header, success }: ExampleComponentProps) => {

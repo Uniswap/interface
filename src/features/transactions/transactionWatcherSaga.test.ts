@@ -60,7 +60,7 @@ describe(transactionWatcher, () => {
 })
 
 describe(watchFlashbotsTransaction, () => {
-  let dateNowSpy: any
+  let dateNowSpy: jest.SpyInstance
   beforeAll(() => {
     dateNowSpy = jest.spyOn(Date, 'now').mockImplementation(() => 1400000000000)
   })
@@ -102,7 +102,7 @@ describe(watchFlashbotsTransaction, () => {
 })
 
 describe(watchTransaction, () => {
-  let dateNowSpy: any
+  let dateNowSpy: jest.SpyInstance
   beforeAll(() => {
     dateNowSpy = jest.spyOn(Date, 'now').mockImplementation(() => 1400000000000)
   })
@@ -188,7 +188,7 @@ describe(watchFiatOnRampTransaction, () => {
               }
             },
           },
-          [call(sleep, PollingInterval.Normal), Promise.resolve(() => {})],
+          [call(sleep, PollingInterval.Normal), Promise.resolve(() => undefined)],
         ])
         .call(sleep, PollingInterval.Normal)
         // only called once

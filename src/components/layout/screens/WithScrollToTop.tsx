@@ -1,8 +1,10 @@
 import React, { forwardRef, PropsWithChildren } from 'react'
 import { Pressable } from 'react-native'
 
-export const WithScrollToTop = forwardRef<any, PropsWithChildren<{}>>(
-  ({ children }: PropsWithChildren<{}>, ref) => {
+// accept any ref
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const WithScrollToTop = forwardRef<any, PropsWithChildren<unknown>>(
+  ({ children }: PropsWithChildren<unknown>, ref) => {
     const onPress = () => {
       if (!ref || typeof ref === 'function') return
       ref.current.scrollToOffset({ animated: true, offset: 0 })

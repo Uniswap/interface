@@ -37,7 +37,7 @@ export function formatTransactionsByDate(
   const msTimestampCutoffYear = dayjs().startOf('year').unix() * 1000
 
   // Segement by time periods.
-  let [pending, todayTransactionList, monthTransactionList, beforeCurrentMonth] =
+  const [pending, todayTransactionList, monthTransactionList, beforeCurrentMonth] =
     transactions.reduce(
       (accum: TransactionDetails[][], item) => {
         if (
@@ -60,10 +60,10 @@ export function formatTransactionsByDate(
     )
 
   // sort pending txns based on nonces
-  pending = pending.sort((a, b) => {
-    const nonceA = a.options?.request?.nonce
-    const nonceB = b.options?.request?.nonce
-    return nonceA && nonceB ? (nonceA < nonceB ? -1 : 1) : -1
+  const pendingSorted = pending.sort((a, b) => {
+    const nonceA = a.options?.request?.nonce ?? '-1'
+    const nonceB = b.options?.request?.nonce ?? '-1'
+    return nonceA < nonceB ? 1 : -1
   })
 
   // For all transaction before current month, group by month
@@ -85,7 +85,7 @@ export function formatTransactionsByDate(
 
   return {
     combinedTransactionList: transactions,
-    pending,
+    pending: pendingSorted,
     todayTransactionList,
     monthTransactionList,
     priorByMonthTransactionList,

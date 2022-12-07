@@ -10,7 +10,7 @@
 
 function replaceSeparators(sNum: string, separators: { decimal: string; thousands: string }) {
   'worklet'
-  let sNumParts = sNum.split('.')
+  const sNumParts = sNum.split('.')
   if (separators && separators.thousands) {
     // every three digits, replace it with the digits + the thousands separator
     // $1 indicates that the matched substring is to be replaced by the first captured group
@@ -21,9 +21,12 @@ function replaceSeparators(sNum: string, separators: { decimal: string; thousand
   return sNum
 }
 
-function renderFormat(template: string, options: { [x: string]: any; num?: any; code?: any }) {
+function renderFormat(
+  template: string,
+  options: Record<string, string> & { num?: string; code?: string }
+) {
   'worklet'
-  for (let option in options) {
+  for (const option in options) {
     if (options[option].indexOf('-') !== -1) {
       options[option] = options[option].replace('-', '')
       template = '-' + template

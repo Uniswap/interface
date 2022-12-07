@@ -54,7 +54,7 @@ const fetchUpgradeStatus = async (): Promise<UpgradeStatusReponse> => {
     return (await response.json()) as UpgradeStatusReponse
   } catch (error) {
     logger.error('forceUpgrdeApi', 'fetchUpgradeStatus', `${error}`)
-    return flags.force_upgrade.defaultValue
+    return flags.force_upgrade.defaultValue as UpgradeStatusReponse
   }
 }
 

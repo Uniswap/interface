@@ -66,7 +66,7 @@ const keyExtractor = (item: NFTItem | string) =>
     ? LOADING_ITEM
     : getNFTAssetKey(item.contractAddress ?? '', item.tokenId ?? '')
 
-export const NftsTab = forwardRef<FlashList<any>, NftsTabProps>(
+export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
   ({ owner, containerProps, scrollHandler }, ref) => {
     const navigation = useHomeStackNavigation()
     const { t } = useTranslation()

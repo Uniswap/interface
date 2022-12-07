@@ -46,7 +46,7 @@ export function NFTCollectionModal({
         message: `${uniswapUrls.nftUrl}/collection/${address}`,
       })
     } catch (e) {
-      logger.error('NFTCollectionModal', 'onShare', (e as any as Error).message)
+      logger.error('NFTCollectionModal', 'onShare', (e as unknown as Error).message)
     }
   }, [collection.nftContracts])
 

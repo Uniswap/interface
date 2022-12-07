@@ -11,6 +11,8 @@ import { AccountType, BackupType } from 'src/features/wallet/accounts/types'
 import * as walletHooks from 'src/features/wallet/hooks'
 import * as versionUtils from 'src/utils/version'
 
+// `any` is the actual type used by `jest.spyOn`
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mockFn(module: any, func: string, returnValue: any) {
   return jest.spyOn(module, func).mockImplementation(() => returnValue)
 }

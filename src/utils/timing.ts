@@ -6,7 +6,7 @@ export function sleep(milliseconds: number) {
   return new Promise((resolve) => setTimeout(() => resolve(true), milliseconds))
 }
 
-export async function promiseTimeout<T extends any>(promise: Promise<T>, milliseconds: number) {
+export async function promiseTimeout<T>(promise: Promise<T>, milliseconds: number) {
   // Create a promise that rejects in <ms> milliseconds
   const timeout = new Promise<null>((resolve) => {
     const id = setTimeout(() => {
@@ -24,7 +24,7 @@ export async function promiseTimeout<T extends any>(promise: Promise<T>, millise
  * @param promise to execute
  * @param milliseconds length of minimum delay time in ms
  */
-export async function promiseMinDelay<T extends any>(promise: Promise<T>, milliseconds: number) {
+export async function promiseMinDelay(promise: Promise<unknown>, milliseconds: number) {
   const minDelay = new Promise<null>((resolve) => {
     const id = setTimeout(() => {
       clearTimeout(id)
@@ -71,7 +71,7 @@ export const useTimeout = (
   callback: () => void,
   delay = 0 // in ms (default: immediately put into JS Event Queue)
 ): (() => void) => {
-  const timeoutIdRef = useRef<any>()
+  const timeoutIdRef = useRef<NodeJS.Timeout>()
 
   const cancel = useCallback(() => {
     const timeoutId = timeoutIdRef.current

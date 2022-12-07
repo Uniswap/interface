@@ -21,7 +21,11 @@ const {
 
 // Create wrappers for hooks so consumers don't need to get latest block themselves
 
+// todo: figure out non-any typing
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type SkipFirstParam<T extends (...args: any) => any> = SkipFirst<Parameters<T>, 1>
+// todo: figure out non-any typing
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type SkipFirstTwoParams<T extends (...args: any) => any> = SkipFirst<Parameters<T>, 2>
 
 export function useMultipleContractSingleData(

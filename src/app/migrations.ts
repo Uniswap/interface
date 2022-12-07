@@ -1,3 +1,5 @@
+// Type information currently gets lost after a migration
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import dayjs from 'dayjs'
 import { ChainId } from 'src/constants/chains'
 import { BlockState } from 'src/features/blocks/blocksSlice'
@@ -104,7 +106,7 @@ export const migrations = {
 
   7: (state: any) => {
     const newState = { ...state }
-    let accounts = newState?.wallet?.accounts ?? {}
+    const accounts = newState?.wallet?.accounts ?? {}
     const originalAccountValues = Object.keys(accounts)
     for (const account of originalAccountValues) {
       if (accounts[account].type === 'native' && accounts[account].derivationIndex !== 0) {

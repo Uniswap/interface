@@ -18,6 +18,8 @@ export function useSpotPrice(
     fetchPolicy: 'cache-first',
     pollInterval: PollingInterval.Fast,
     skip: skip || !currencyId,
+    // also assert non-null value in `skip`
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     variables: { contracts: [currencyIdToContractInput(currencyId!)] },
   })
 

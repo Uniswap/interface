@@ -25,7 +25,7 @@ export function LockScreenModal() {
       presentationStyle="fullScreen"
       showCloseButton={false}
       transparent={false}>
-      <TouchableArea onPress={trigger}>
+      <TouchableArea onPress={() => trigger()}>
         <Flex
           centered
           alignItems="center"

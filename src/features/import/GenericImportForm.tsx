@@ -1,7 +1,13 @@
 import { ResponsiveValue, useResponsiveProp } from '@shopify/restyle'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { LayoutRectangle, StyleSheet, TextInput as NativeTextInput, View } from 'react-native'
+import {
+  LayoutChangeEvent,
+  LayoutRectangle,
+  StyleSheet,
+  TextInput as NativeTextInput,
+  View,
+} from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import PasteButton from 'src/components/buttons/PasteButton'
@@ -157,7 +163,7 @@ export function GenericImportForm({
               row
               gap="xs"
               position="absolute"
-              onLayout={(event: any) => setLayout(event.nativeEvent.layout)}>
+              onLayout={(event: LayoutChangeEvent) => setLayout(event.nativeEvent.layout)}>
               <Text
                 adjustsFontSizeToFit
                 color="textSecondary"

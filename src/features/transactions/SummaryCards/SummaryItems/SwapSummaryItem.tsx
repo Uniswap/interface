@@ -31,7 +31,7 @@ export default function SwapSummaryItem({
 }) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
-  let { status } = transaction
+  const { status } = transaction
 
   const inputCurrency = useCurrency(transaction.typeInfo.inputCurrencyId)
   const outputCurrency = useCurrency(transaction.typeInfo.outputCurrencyId)

@@ -14,10 +14,10 @@ import { useAsyncData } from 'src/utils/hooks'
  * Hook shortcut to use the biometric prompt.
  * @returns trigger Trigger the OS biometric flow and invokes successCallback on success.
  */
-export function useBiometricPrompt(successCallback?: (params?: any) => void) {
+export function useBiometricPrompt<T = undefined>(successCallback?: (params?: T) => void) {
   const { setAuthenticationStatus } = useBiometricContext()
 
-  const trigger = async (params?: any) => {
+  const trigger = async (params?: T) => {
     setAuthenticationStatus(BiometricAuthenticationStatus.Authenticating)
     const authStatus = await tryLocalAuthenticate()
 

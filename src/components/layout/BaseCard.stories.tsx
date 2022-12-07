@@ -26,7 +26,7 @@ Primary.args = {
   ...Primary.args,
   children: (
     <Flex>
-      <BaseCard.Header subtitle="$124.34" title="Tokens" onPress={() => {}} />
+      <BaseCard.Header subtitle="$124.34" title="Tokens" onPress={() => undefined} />
       <Text variant="bodyLarge">My Content</Text>
     </Flex>
   ),
@@ -40,7 +40,7 @@ EmptyState.args = {
       buttonLabel="Explore"
       description="Buy tokens on any Uniswap supported chains to start building your all-in-one portfolio and wallet."
       title="Explore NFTs"
-      onPress={() => {}}
+      onPress={() => undefined}
     />
   ),
 }

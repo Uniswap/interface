@@ -1,4 +1,5 @@
-import { Contract, providers } from 'ethers'
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { Contract, ContractInterface, providers } from 'ethers'
 import { ChainId } from 'src/constants/chains'
 import { getValidAddress } from 'src/utils/addresses'
 import { isNativeCurrencyAddress } from 'src/utils/currencyId'
@@ -7,7 +8,12 @@ import { logger } from 'src/utils/logger'
 export class ContractManager {
   private _contracts: Partial<Record<ChainId, Record<string, Contract>>> = {}
 
-  createContract(chainId: ChainId, address: Address, provider: providers.Provider, ABI: any) {
+  createContract(
+    chainId: ChainId,
+    address: Address,
+    provider: providers.Provider,
+    ABI: ContractInterface
+  ) {
     if (isNativeCurrencyAddress(address) || !getValidAddress(address, true)) {
       throw Error(`Invalid address for contract: ${address}`)
     }
@@ -51,7 +57,7 @@ export class ContractManager {
     chainId: ChainId,
     address: Address,
     provider: providers.Provider,
-    ABI: any
+    ABI: ContractInterface
   ) {
     const cachedContract = this.getContract<T>(chainId, address)
     return (cachedContract ?? this.createContract(chainId, address, provider, ABI)) as T

@@ -263,7 +263,7 @@ function getFormatterRule(input: number, type: NumberType) {
 export function formatNumber(
   input?: number | null,
   type: NumberType = NumberType.TokenNonTx,
-  placeholder: string = '-'
+  placeholder = '-'
 ) {
   if (input === null || input === undefined) {
     return placeholder

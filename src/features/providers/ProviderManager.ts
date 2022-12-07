@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Mutex } from 'async-mutex'
 import { providers as ethersProviders } from 'ethers'
 import { Task } from 'redux-saga'
@@ -60,8 +61,9 @@ export class ProviderManager {
 
     const mutex = this._mutex[chainId]!
     const provider: ethersProviders.Provider = await mutex.runExclusive(async () => {
-      if (this._providers[chainId]) {
-        return this._providers[chainId]?.provider!
+      const cachedProvider = this._providers[chainId]
+      if (cachedProvider) {
+        return cachedProvider.provider
       }
       // Try all rpcUrls until one works
       const newProvider = await this.initProvider(chainId)
@@ -79,7 +81,7 @@ export class ProviderManager {
         throw error
       }
     })
-    return provider!
+    return provider
   }
 
   private getFlashbotsProvider(chainId: ChainId) {

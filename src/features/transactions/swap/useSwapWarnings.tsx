@@ -57,6 +57,7 @@ export function getSwapWarnings(
   if (trade.error) {
     // cast as any here because rtk-query recommends not typing error objects
     // https://github.com/reduxjs/redux-toolkit/issues/1591
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const errorData = trade.error as any
     // assume swaps with no routes available are due to low liquidity
     if (errorData?.data?.errorCode === SWAP_NO_ROUTE_ERROR) {

@@ -25,6 +25,8 @@ export function transformQuoteToTrade(
       routes
         ?.filter((r) => r.routev2 !== null)
         .map(({ routev2, inputAmount, outputAmount }) => ({
+          // should figure out how to properly type the inner route type
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           routev2: routev2!,
           inputAmount,
           outputAmount,
@@ -33,6 +35,8 @@ export function transformQuoteToTrade(
       routes
         ?.filter((r) => r.routev3 !== null)
         .map(({ routev3, inputAmount, outputAmount }) => ({
+          // should figure out how to properly type the inner route type
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           routev3: routev3!,
           inputAmount,
           outputAmount,
@@ -41,6 +45,8 @@ export function transformQuoteToTrade(
       routes
         ?.filter((r) => r.mixedRoute !== null)
         .map(({ mixedRoute, inputAmount, outputAmount }) => ({
+          // should figure out how to properly type the inner route type
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           mixedRoute: mixedRoute!,
           inputAmount,
           outputAmount,

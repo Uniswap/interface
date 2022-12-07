@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 // Based on code copied from https://github.com/Uniswap/interface/blob/main/src/hooks/Tokens.ts
 
 import { useMemo } from 'react'

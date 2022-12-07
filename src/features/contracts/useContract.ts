@@ -1,7 +1,7 @@
 // Based partly on https://github.com/Uniswap/interface/blob/main/src/hooks/useContract.ts
 
 import { abi as MulticallABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
-import { Contract } from 'ethers'
+import { Contract, ContractInterface } from 'ethers'
 import { useMemo } from 'react'
 import ERC20_ABI from 'src/abis/erc20.json'
 import ERC20_BYTES32_ABI from 'src/abis/erc20_bytes32.json'
@@ -15,7 +15,7 @@ import { logger } from 'src/utils/logger'
 export function useContract<T extends Contract = Contract>(
   chainId: ChainId,
   addressOrAddressMap: string | { [chainId: number]: string } | undefined,
-  ABI: any
+  ABI: ContractInterface
 ): T | null {
   const providerManager = useProviderManager()
   const provider = providerManager.tryGetProvider(chainId)
