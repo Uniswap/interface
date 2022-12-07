@@ -1,8 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, Trace, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, ElementName, EventName, PageName, SectionName } from '@uniswap/analytics-events'
+import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
@@ -13,23 +15,25 @@ import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { isSupportedChain } from 'constants/chains'
 import { Permit2Variant, usePermit2Flag } from 'featureFlags/flags/permit2'
+import usePermit, { PermitState } from 'hooks/usePermit2'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ReactNode } from 'react'
-import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
+import { AlertTriangle, ArrowDown, CheckCircle, HelpCircle, Info } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
+import { useHasPendingApproval, useTransactionAdder } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/formatNumbers'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
-import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
+import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary, ButtonYellow } from '../../components/Button'
 import { GrayCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import SwapCurrencyInputPanel from '../../components/CurrencyInputPanel/SwapCurrencyInputPanel'
@@ -288,6 +292,34 @@ export default function Swap() {
   )
 
   const permit2Enabled = usePermit2Flag() === Permit2Variant.Enabled
+  const maximumAmountIn = useMemo(() => {
+    const maximumAmountIn = trade?.maximumAmountIn(allowedSlippage)
+    return maximumAmountIn?.currency.isToken ? (maximumAmountIn as CurrencyAmount<Token>) : undefined
+  }, [allowedSlippage, trade])
+  const permit = usePermit(
+    permit2Enabled ? maximumAmountIn : undefined,
+    chainId ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
+  )
+  const [isPermitPending, setIsPermitPending] = useState(false)
+  const [isPermitFailed, setIsPermitFailed] = useState(false)
+  const addTransaction = useTransactionAdder()
+  const pendingApproval = useHasPendingApproval(maximumAmountIn?.currency, PERMIT2_ADDRESS)
+  const updatePermit = useCallback(async () => {
+    setIsPermitPending(true)
+    try {
+      const approval = await permit.callback?.()
+      if (approval) {
+        const { response, info } = approval
+        addTransaction(response, info)
+      }
+      setIsPermitFailed(false)
+    } catch (e) {
+      console.error(e)
+      setIsPermitFailed(true)
+    } finally {
+      setIsPermitPending(false)
+    }
+  }, [addTransaction, permit])
 
   // check whether the user has approved the router on the input token
   const [approvalState, approveCallback] = useApproveCallbackFromTrade(
@@ -749,6 +781,54 @@ export default function Swap() {
                       </ButtonError>
                     </AutoColumn>
                   </AutoRow>
+                ) : permit.state === PermitState.PERMIT_NEEDED ? (
+                  <ButtonYellow
+                    onClick={updatePermit}
+                    id="permit-button"
+                    disabled={isPermitPending}
+                    style={{ gap: 14 }}
+                  >
+                    {isPermitPending ? (
+                      <>
+                        <Loader size="20px" stroke={theme.accentWarning} />
+                        <ThemedText.SubHeader color="accentWarning">
+                          <Trans>Approve in your wallet</Trans>
+                        </ThemedText.SubHeader>
+                      </>
+                    ) : isPermitFailed ? (
+                      <>
+                        <AlertTriangle size={20} stroke={theme.accentWarning} />
+                        <ThemedText.SubHeader color="accentWarning">
+                          <Trans>Approval failed. Try again.</Trans>
+                        </ThemedText.SubHeader>
+                      </>
+                    ) : pendingApproval ? (
+                      <>
+                        <Loader size="20px" stroke={theme.accentWarning} />
+                        <ThemedText.SubHeader color="accentWarning">
+                          <Trans>Approval pending</Trans>
+                        </ThemedText.SubHeader>
+                      </>
+                    ) : (
+                      <>
+                        <div style={{ height: 20 }}>
+                          <MouseoverTooltip
+                            text={
+                              <Trans>
+                                Permission is required for Uniswap to swap each token. This will expire after one month
+                                for your security.
+                              </Trans>
+                            }
+                          >
+                            <Info size={20} color={theme.accentWarning} />
+                          </MouseoverTooltip>
+                        </div>
+                        <ThemedText.SubHeader color="accentWarning">
+                          <Trans>Approve use of {currencies[Field.INPUT]?.symbol}</Trans>
+                        </ThemedText.SubHeader>
+                      </>
+                    )}
+                  </ButtonYellow>
                 ) : (
                   <ButtonError
                     onClick={() => {
