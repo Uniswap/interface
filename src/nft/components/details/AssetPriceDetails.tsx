@@ -2,7 +2,7 @@ import { useTrace } from '@uniswap/analytics'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { EventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { OpacityHoverState } from 'components/Common'
+import { buttonHoverState, OpacityHoverState } from 'components/Common'
 import { useNftBalanceQuery } from 'graphql/data/nft/NftBalance'
 import { CancelListingIcon, VerifiedIcon } from 'nft/components/icons'
 import { useBag, useProfilePageState, useSellAsset } from 'nft/hooks'
@@ -21,7 +21,7 @@ import { useMemo } from 'react'
 import { Upload } from 'react-feather'
 import { useQuery } from 'react-query'
 import { Link, useNavigate } from 'react-router-dom'
-import styled, { css, useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
 
 const TWITTER_WIDTH = 560
@@ -31,32 +31,6 @@ interface AssetPriceDetailsProps {
   asset: GenieAsset
   collection: CollectionInfoForAsset
 }
-
-const hoverState = css`
-  :hover::after {
-    border-radius: 12px;
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: ${({ theme }) => theme.stateOverlayHover};
-    z-index: 0;
-  }
-
-  :active::after {
-    border-radius: 12px;
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: ${({ theme }) => theme.stateOverlayPressed};
-    z-index: 0;
-  }
-`
 
 const Container = styled.div`
   display: flex;
@@ -111,7 +85,7 @@ const BuyNowButton = styled.div<{ assetInBag: boolean; margin: boolean; useAccen
   text-align: center;
   cursor: pointer;
 
-  ${hoverState}
+  ${buttonHoverState}
 `
 
 const BuyNowButtonContainer = styled.div`

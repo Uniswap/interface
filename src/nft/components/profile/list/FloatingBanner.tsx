@@ -1,10 +1,11 @@
+import { buttonHoverState } from 'components/Common'
 import { getTotalEthValue } from 'nft/components/bag/profile/utils'
 import { useSellAsset } from 'nft/hooks'
 import { Listing, WalletAsset } from 'nft/types'
 import { formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { useEffect, useMemo, useState } from 'react'
-import styled, { css } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 const FloatBContainer = styled.div`
@@ -35,37 +36,11 @@ const Content = styled.div`
   gap: 16px;
   align-items: center;
 `
-const hoverState = css`
-  :hover::after {
-    border-radius: 12px;
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: ${({ theme }) => theme.stateOverlayHover};
-    z-index: 0;
-  }
-
-  :active::after {
-    border-radius: 12px;
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: ${({ theme }) => theme.stateOverlayPressed};
-    z-index: 0;
-  }
-`
 
 const ListButton = styled.button`
   position: relative;
   background-color: ${({ theme }) => theme.accentAction};
   color: ${({ theme }) => theme.white};
-  outline: none;
   border: none;
   font-weight: 500;
   border-radius: 12px;
@@ -74,7 +49,7 @@ const ListButton = styled.button`
   cursor: pointer;
   font-size: 16px;
 
-  ${hoverState}
+  ${buttonHoverState}
 `
 
 export const FloatingBanner = () => {
