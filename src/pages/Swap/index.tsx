@@ -308,7 +308,7 @@ export default function Swap() {
   const updatePermit = useCallback(async () => {
     setIsPermitPending(true)
     try {
-      const approval = await permit.callback?.()
+      const approval = await permit.callback?.(isApprovalPending)
       if (approval) {
         sendAnalyticsEvent(EventName.APPROVE_TOKEN_TXN_SUBMITTED, {
           chain_id: chainId,
@@ -326,7 +326,14 @@ export default function Swap() {
     } finally {
       setIsPermitPending(false)
     }
-  }, [addTransaction, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol, permit])
+  }, [
+    addTransaction,
+    chainId,
+    isApprovalPending,
+    maximumAmountIn?.currency.address,
+    maximumAmountIn?.currency.symbol,
+    permit,
+  ])
 
   // check whether the user has approved the router on the input token
   const [approvalState, approveCallback] = useApproveCallbackFromTrade(
