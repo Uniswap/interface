@@ -1,7 +1,6 @@
 import { Box } from 'nft/components/Box'
 import { DiscordIconMenu, GithubIconMenu, TwitterIconMenu } from 'nft/components/icons'
 import { ReactNode } from 'react'
-import { BookOpen, Globe, Heart, HelpCircle, Terminal, Twitter } from 'react-feather'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
@@ -12,8 +11,6 @@ const IconRow = styled.span`
   display: flex;
   flex-direction: row;
 `
-
-const SMALL_CARD_ICON_SIZE = 32
 
 const Icon = ({ href, children }: { href?: string; children: ReactNode }) => {
   return (
@@ -86,7 +83,7 @@ const ContentWrapper = styled.span`
   }
 `
 
-const SmallCardContainer = styled.div`
+const CardContainer = styled.div`
   display: grid;
   gap: 12px;
   width: 100%;
@@ -100,26 +97,43 @@ const SmallCardContainer = styled.div`
   }
 `
 
-const SmallCard = styled.a`
+const StyledCard = styled.a`
   background-color: #0e111a;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   text-decoration: none;
-  color: white;
-  padding: 32px;
-  min-height: 220px;
-  font-weight: light;
-  border-radius: 12px;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
-  font-size: 32px;
-  transition: 200ms ease all;
+  color: ${({ theme }) => theme.white};
+  padding: 40px;
+  height: 400px;
+  border-radius: 24px;
+  transition: 200ms ease background-color;
 
   &:hover {
-    transition: 200ms ease background-color;
     background-color: ${({ theme }) => theme.backgroundModule};
   }
 `
+
+const CardTitle = styled.div`
+  font-weight: 600;
+  font-size: 48px;
+  line-height: 56px;
+`
+
+const CardDescription = styled.div`
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 36px;
+`
+
+const Card = ({ title, description, to }: { title: string; description: string; to: string }) => {
+  return (
+    <StyledCard href={to}>
+      <CardTitle>{title}</CardTitle>
+      <CardDescription>{description}</CardDescription>
+    </StyledCard>
+  )
+}
 
 export default function About() {
   const isDarkMode = useIsDarkMode()
@@ -135,39 +149,12 @@ export default function About() {
         <Body>
           Uniswap Labs is building the future of decentralized finance by harnessing the power of the Uniswap Protocol.
         </Body>
-
-        <SmallCardContainer>
-          <SmallCard href="https://uniswap.org" target="_blank" rel="noopener noreferrer">
-            <Globe size={SMALL_CARD_ICON_SIZE} strokeWidth={1} color={theme.textSecondary} />
-            Uniswap Protocol
-          </SmallCard>
-          <SmallCard href="https://uniswap.org/blog" target="_blank" rel="noopener noreferrer">
-            <BookOpen size={SMALL_CARD_ICON_SIZE} strokeWidth={1} color={theme.textSecondary} />
-            Blog
-          </SmallCard>
-          <SmallCard href="https://boards.greenhouse.io/uniswaplabs" target="_blank" rel="noopener noreferrer">
-            <Heart size={SMALL_CARD_ICON_SIZE} strokeWidth={1} color={theme.textSecondary} />
-            Careers
-          </SmallCard>
-          <SmallCard href="https://support.uniswap.org/" target="_blank" rel="noopener noreferrer">
-            <HelpCircle size={SMALL_CARD_ICON_SIZE} strokeWidth={1} color={theme.textSecondary} />
-            Support
-          </SmallCard>
-          <SmallCard href="https://twitter.com/Uniswap" target="_blank" rel="noopener noreferrer">
-            <Twitter size={SMALL_CARD_ICON_SIZE} strokeWidth={1} color={theme.textSecondary} />
-            Twitter
-          </SmallCard>
-          <SmallCard href="https://uniswap.org/developers" target="_blank" rel="noopener noreferrer">
-            <Terminal size={SMALL_CARD_ICON_SIZE} strokeWidth={1} color={theme.textSecondary} />
-            Developers
-          </SmallCard>
-        </SmallCardContainer>
-
-        <span>
-          <small>
-            Media inquires for Uniswap Labs - Contact <a href="mailto:media@uniswap.org">media@uniswap.org</a>
-          </small>
-        </span>
+        <CardContainer>
+          <Card to="https://app.uniswap.org/#/swap" title="Swap tokens" description="" />
+          <Card to="https://app.uniswap.org/#/nfts" title="Trade NFTs" description="" />
+          <Card to="https://app.uniswap.org/#/pool" title="Earn fees" description="" />
+          <Card to="https://support.uniswap.org/" title="Build dApps" description="" />
+        </CardContainer>
         <IconRow>
           <Icon href="https://discord.com/invite/FCfyBSbCU5">
             <DiscordIconMenu width={24} height={24} color={theme.textSecondary} />
