@@ -4,9 +4,7 @@ import phantomIcon from 'assets/images/phantom.png'
 import rainbowIcon from 'assets/images/rainbow.png'
 import walletConnectIcon from 'assets/images/walletConnectIcon.svg'
 import { ButtonOutlined } from 'components/Button'
-import { Box } from 'nft/components/Box'
-import { DiscordIconMenu, GithubIconMenu, TwitterIconMenu } from 'nft/components/icons'
-import { ReactNode, useState } from 'react'
+import { useState } from 'react'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
@@ -16,32 +14,6 @@ import Step from './Step'
 import { SubTitle, Title } from './Title'
 
 const MOBILE_BREAKPOINT = BREAKPOINTS.md
-
-const IconRow = styled.span`
-  display: flex;
-  flex-direction: row;
-`
-
-const Icon = ({ href, children }: { href?: string; children: ReactNode }) => {
-  return (
-    <Box
-      as={href ? 'a' : 'div'}
-      href={href ?? undefined}
-      target={href ? '_blank' : undefined}
-      rel={href ? 'noopener noreferrer' : undefined}
-      display="flex"
-      flexDirection="column"
-      color="textPrimary"
-      background="none"
-      border="none"
-      justifyContent="center"
-      textAlign="center"
-      marginRight="12"
-    >
-      {children}
-    </Box>
-  )
-}
 
 const Page = styled.span<{ isDarkMode: boolean }>`
   width: 100%;
@@ -244,17 +216,6 @@ export default function About() {
             ))}
           </StepList>
         </Body>
-        <IconRow>
-          <Icon href="https://discord.com/invite/FCfyBSbCU5">
-            <DiscordIconMenu width={24} height={24} color={theme.textSecondary} />
-          </Icon>
-          <Icon href="https://twitter.com/Uniswap">
-            <TwitterIconMenu width={24} height={24} color={theme.textSecondary} />
-          </Icon>
-          <Icon href="https://github.com/Uniswap">
-            <GithubIconMenu width={24} height={24} color={theme.textSecondary} />
-          </Icon>
-        </IconRow>
       </Content>
     </Page>
   )
