@@ -97,7 +97,7 @@ const TokenLogoBubble = styled(DetailBubble)`
   border-radius: 50%;
 `
 const TitleBubble = styled(DetailBubble)`
-  width: 137px;
+  width: 136px;
 `
 const PriceBubble = styled(SquaredBubble)`
   margin-top: 4px;
