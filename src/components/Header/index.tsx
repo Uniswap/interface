@@ -464,26 +464,9 @@ export default function Header() {
 
           {!upTo420 && (
             <CampaignWrapper id={TutorialIds.CAMPAIGN_LINK}>
-              <HoverDropdown
-                active={
-                  pathname.toLowerCase().includes(APP_PATHS.CAMPAIGN) ||
-                  pathname.toLowerCase().includes(APP_PATHS.GRANT_PROGRAMS)
-                }
-              >
-                <Flex alignItems="center">
-                  <Trans>Campaigns</Trans>
-                  <DropdownIcon />
-                </Flex>
-                <Dropdown>
-                  <StyledNavLink id="campaigns" to={APP_PATHS.CAMPAIGN}>
-                    <Trans>Trading Campaigns</Trans>
-                  </StyledNavLink>
-
-                  {/* <StyledNavLink id="grant_programs" to={APP_PATHS.GRANT_PROGRAMS}>
-                    <Trans>Inter-Project Trading</Trans>
-                  </StyledNavLink> */}
-                </Dropdown>
-              </HoverDropdown>
+              <StyledNavLink id="campaigns" to={APP_PATHS.CAMPAIGN}>
+                <Trans>Campaigns</Trans>
+              </StyledNavLink>
             </CampaignWrapper>
           )}
 
