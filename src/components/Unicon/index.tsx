@@ -7,10 +7,6 @@ import { deriveUniconAttributeIndices, getUniconAttributeData, isEthAddress } fr
 const ORIGINAL_CONTAINER_SIZE = 36
 const EMBLEM_XY_SHIFT = 10
 
-export const EXPORT_FOR_TESTING = {
-  UniconSvg,
-}
-
 function PathMask({
   id,
   paths,
@@ -149,9 +145,7 @@ interface Props {
   mobile?: boolean
 }
 
-export const Unicon = memo(_Unicon)
-
-export function _Unicon({ address, size = 24, randomSeed = 0, mobile }: Props) {
+function _Unicon({ address, size = 24, randomSeed = 0, mobile }: Props) {
   const attributeIndices = useMemo(() => deriveUniconAttributeIndices(address, randomSeed), [address, randomSeed])
 
   if (!address || !isEthAddress(address) || !attributeIndices) return null
@@ -162,3 +156,5 @@ export function _Unicon({ address, size = 24, randomSeed = 0, mobile }: Props) {
     </div>
   )
 }
+
+export const Unicon = memo(_Unicon)

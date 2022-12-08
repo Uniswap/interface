@@ -22,7 +22,7 @@ import { Link as RouterLink } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 
-import AssetActivity from './AssetActivity'
+import AssetActivity, { LoadingAssetActivity } from './AssetActivity'
 import * as styles from './AssetDetails.css'
 import DetailsContainer from './DetailsContainer'
 import InfoContainer from './InfoContainer'
@@ -191,33 +191,51 @@ const initialFilterState = {
   [ActivityEventType.CancelListing]: false,
 }
 
+enum MediaType {
+  Audio = 'audio',
+  Video = 'video',
+  Image = 'image',
+  Embed = 'embed',
+}
+
 const AssetView = ({
   mediaType,
   asset,
   dominantColor,
 }: {
-  mediaType: 'image' | 'video' | 'audio'
+  mediaType: MediaType
   asset: GenieAsset
   dominantColor: [number, number, number]
 }) => {
   const style = { ['--shadow' as string]: `rgba(${dominantColor.join(', ')}, 0.5)` }
 
   switch (mediaType) {
-    case 'video':
+    case MediaType.Video:
       return <video src={asset.animationUrl} className={styles.image} autoPlay controls muted loop style={style} />
-    case 'image':
+    case MediaType.Image:
       return (
         <img className={styles.image} src={asset.imageUrl} alt={asset.name || asset.collectionName} style={style} />
       )
-    case 'audio':
+    case MediaType.Audio:
       return <AudioPlayer {...asset} dominantColor={dominantColor} />
+    case MediaType.Embed:
+      return (
+        <div className={styles.embedContainer}>
+          <iframe
+            title={asset.name ?? `${asset.collectionName} #${asset.tokenId}`}
+            src={asset.animationUrl}
+            className={styles.embed}
+            style={style}
+            frameBorder={0}
+            height="100%"
+            width="100%"
+            sandbox="allow-scripts"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        </div>
+      )
   }
-}
-
-enum MediaType {
-  Audio = 'audio',
-  Video = 'video',
-  Image = 'image',
 }
 
 interface AssetDetailsProps {
@@ -245,6 +263,8 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       return MediaType.Audio
     } else if (isVideo(asset.animationUrl ?? '')) {
       return MediaType.Video
+    } else if (asset.animationUrl !== undefined) {
+      return MediaType.Embed
     }
     return MediaType.Image
   }, [asset])
@@ -312,6 +332,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     hasNextPage,
     isFetchingNextPage,
     isSuccess,
+    isLoading: isActivityLoading,
   } = useInfiniteQuery<ActivityEventResponse>(
     [
       'collectionActivity',
@@ -410,16 +431,17 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
             <Filter eventType={ActivityEventType.Transfer} />
             <Filter eventType={ActivityEventType.CancelListing} />
           </ActivitySelectContainer>
+          {isActivityLoading && <LoadingAssetActivity rowCount={10} />}
           {events && events.length > 0 ? (
             <InfiniteScroll
               next={fetchNextPage}
               hasMore={!!hasNextPage}
               loader={
-                isFetchingNextPage ? (
+                isFetchingNextPage && (
                   <Center>
                     <LoadingSparkle />
                   </Center>
-                ) : null
+                )
               }
               dataLength={events?.length ?? 0}
               scrollableTarget="activityContainer"
@@ -427,10 +449,14 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
               <AssetActivity eventsData={{ events }} />
             </InfiniteScroll>
           ) : (
-            <EmptyActivitiesContainer>
-              <div>No activities yet</div>
-              <Link to={`/nfts/collection/${asset.address}`}>View collection items</Link>{' '}
-            </EmptyActivitiesContainer>
+            <>
+              {!isActivityLoading && (
+                <EmptyActivitiesContainer>
+                  <div>No activities yet</div>
+                  <Link to={`/nfts/collection/${asset.address}`}>View collection items</Link>{' '}
+                </EmptyActivitiesContainer>
+              )}
+            </>
           )}
         </>
       </InfoContainer>

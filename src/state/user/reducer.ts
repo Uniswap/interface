@@ -56,8 +56,6 @@ export interface UserState {
   // undefined means has not gone through A/B split yet
   showSurveyPopup: boolean | undefined
 
-  showDonationLink: boolean
-
   hideNFTWelcomeModal: boolean
 }
 
@@ -84,7 +82,6 @@ export const initialState: UserState = {
   hideNFTPromoBanner: false,
   hideUniswapWalletBanner: false,
   showSurveyPopup: undefined,
-  showDonationLink: true,
   hideNFTWelcomeModal: false,
 }
 
@@ -131,9 +128,6 @@ const userSlice = createSlice({
     updateShowSurveyPopup(state, action) {
       state.showSurveyPopup = action.payload.showSurveyPopup
     },
-    updateShowDonationLink(state, action) {
-      state.showDonationLink = action.payload.showDonationLink
-    },
     updateHideNFTWelcomeModal(state, action) {
       state.hideNFTWelcomeModal = action.payload.hideNFTWelcomeModal
     },
@@ -151,14 +145,6 @@ const userSlice = createSlice({
       state.tokens[serializedToken.chainId][serializedToken.address] = serializedToken
       state.timestamp = currentTimestamp()
     },
-    removeSerializedToken(state, { payload: { address, chainId } }) {
-      if (!state.tokens) {
-        state.tokens = {}
-      }
-      state.tokens[chainId] = state.tokens[chainId] || {}
-      delete state.tokens[chainId][address]
-      state.timestamp = currentTimestamp()
-    },
     addSerializedPair(state, { payload: { serializedPair } }) {
       if (
         serializedPair.token0.chainId === serializedPair.token1.chainId &&
@@ -167,14 +153,6 @@ const userSlice = createSlice({
         const chainId = serializedPair.token0.chainId
         state.pairs[chainId] = state.pairs[chainId] || {}
         state.pairs[chainId][pairKey(serializedPair.token0.address, serializedPair.token1.address)] = serializedPair
-      }
-      state.timestamp = currentTimestamp()
-    },
-    removeSerializedPair(state, { payload: { chainId, tokenAAddress, tokenBAddress } }) {
-      if (state.pairs[chainId]) {
-        // just delete both keys if either exists
-        delete state.pairs[chainId][pairKey(tokenAAddress, tokenBAddress)]
-        delete state.pairs[chainId][pairKey(tokenBAddress, tokenAAddress)]
       }
       state.timestamp = currentTimestamp()
     },
@@ -219,14 +197,10 @@ const userSlice = createSlice({
 export const {
   addSerializedPair,
   addSerializedToken,
-  removeSerializedPair,
-  removeSerializedToken,
   updateFiatOnrampAcknowledgments,
   updateSelectedWallet,
   updateHideClosedPositions,
   updateMatchesDarkMode,
-  updateShowDonationLink,
-  updateShowSurveyPopup,
   updateUserClientSideRouter,
   updateHideNFTWelcomeModal,
   updateUserDarkMode,
@@ -236,5 +210,6 @@ export const {
   updateUserSlippageTolerance,
   updateShowNftPromoBanner,
   updateHideUniswapWalletBanner,
+  updateShowSurveyPopup,
 } = userSlice.actions
 export default userSlice.reducer

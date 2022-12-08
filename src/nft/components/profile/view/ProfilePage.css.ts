@@ -11,10 +11,6 @@ export const section = style([
   { maxWidth: '1000px', margin: '0 auto' },
 ])
 
-export const buttonSelected = style({
-  border: `2px solid ${vars.color.genieBlue}`,
-})
-
 export const ethIcon = style({
   marginBottom: '-3px',
 })

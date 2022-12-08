@@ -5,7 +5,6 @@ import ConnectedAccountBlocked from 'components/ConnectedAccountBlocked'
 import FiatOnrampModal from 'components/FiatOnrampModal'
 import { BaseVariant } from 'featureFlags'
 import { useFiatOnrampFlag } from 'featureFlags/flags/fiatOnramp'
-import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
 import NftExploreBanner from 'nft/components/nftExploreBanner/NftExploreBanner'
 import { lazy } from 'react'
@@ -20,11 +19,9 @@ const AirdropModal = lazy(() => import('components/AirdropModal'))
 export default function TopLevelModals() {
   const addressClaimOpen = useModalIsOpen(ApplicationModal.ADDRESS_CLAIM)
   const addressClaimToggle = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
-
   const blockedAccountModalOpen = useModalIsOpen(ApplicationModal.BLOCKED_ACCOUNT)
   const { account } = useWeb3React()
   const location = useLocation()
-  const isNftEnabled = useNftFlag() === NftVariant.Enabled
 
   const fiatOnrampFlagEnabled = useFiatOnrampFlag() === BaseVariant.Enabled
 
@@ -32,7 +29,6 @@ export default function TopLevelModals() {
     location.pathname.startsWith('/swap') ||
     location.pathname.startsWith('/tokens') ||
     location.pathname.startsWith('/pool')
-
   useAccountRiskCheck(account)
   const accountBlocked = Boolean(blockedAccountModalOpen && account)
   return (
@@ -41,14 +37,10 @@ export default function TopLevelModals() {
       <ConnectedAccountBlocked account={account} isOpen={accountBlocked} />
       <Bag />
       {fiatOnrampFlagEnabled && <FiatOnrampModal />}
-      {isNftEnabled && (
-        <>
-          <TransactionCompleteModal />
-          <AirdropModal />
-          {pageShowsNftPromoBanner && <NftExploreBanner />}
-          <UniswapWalletBanner />
-        </>
-      )}
+      <TransactionCompleteModal />
+      <AirdropModal />
+      {pageShowsNftPromoBanner && <NftExploreBanner />}
+      <UniswapWalletBanner />
     </>
   )
 }

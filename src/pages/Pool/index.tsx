@@ -4,7 +4,7 @@ import { BrowserEvent, ElementName, EventName, PageName } from '@uniswap/analyti
 import { useWeb3React } from '@web3-react/core'
 import { ButtonGray, ButtonPrimary, ButtonText } from 'components/Button'
 import { AutoColumn } from 'components/Column'
-import { FlyoutAlignment, NewMenu } from 'components/Menu'
+import { FlyoutAlignment, Menu } from 'components/Menu'
 import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
@@ -63,7 +63,7 @@ const ButtonRow = styled(RowFixed)`
     flex-direction: row-reverse;
   `};
 `
-const Menu = styled(NewMenu)`
+const PoolMenu = styled(Menu)`
   margin-left: 0;
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     flex: 1 1 auto;
@@ -75,7 +75,7 @@ const Menu = styled(NewMenu)`
     width: 100%;
   }
 `
-const MenuItem = styled.div`
+const PoolMenuItem = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;
@@ -221,40 +221,40 @@ export default function Pool() {
   const menuItems = [
     {
       content: (
-        <MenuItem>
+        <PoolMenuItem>
           <Trans>Create a pool</Trans>
           <PlusCircle size={16} />
-        </MenuItem>
+        </PoolMenuItem>
       ),
       link: '/add/ETH',
       external: false,
     },
     {
       content: (
-        <MenuItem>
+        <PoolMenuItem>
           <Trans>Migrate</Trans>
           <ChevronsRight size={16} />
-        </MenuItem>
+        </PoolMenuItem>
       ),
       link: '/migrate/v2',
       external: false,
     },
     {
       content: (
-        <MenuItem>
+        <PoolMenuItem>
           <Trans>V2 liquidity</Trans>
           <Layers size={16} />
-        </MenuItem>
+        </PoolMenuItem>
       ),
       link: '/pool/v2',
       external: false,
     },
     {
       content: (
-        <MenuItem>
+        <PoolMenuItem>
           <Trans>Learn</Trans>
           <BookOpen size={16} />
-        </MenuItem>
+        </PoolMenuItem>
       ),
       link: 'https://docs.uniswap.org/',
       external: true,
@@ -273,7 +273,7 @@ export default function Pool() {
                 </ThemedText.LargeHeader>
                 <ButtonRow>
                   {showV2Features && (
-                    <Menu
+                    <PoolMenu
                       menuItems={menuItems}
                       flyoutAlignment={FlyoutAlignment.LEFT}
                       ToggleUI={(props: any) => (

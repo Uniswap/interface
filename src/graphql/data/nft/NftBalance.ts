@@ -72,6 +72,7 @@ const nftBalancePaginationQuery = graphql`
                   }
                   createdAt
                   marketplace
+                  endAt
                 }
               }
             }

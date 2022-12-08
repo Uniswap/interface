@@ -2,14 +2,13 @@ import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { UniwalletBadge } from 'components/WalletModal/UniwalletOption'
 import Web3Status from 'components/Web3Status'
-import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { UniIcon } from 'nft/components/icons'
 import { ReactNode } from 'react'
-import { NavLink, NavLinkProps, useLocation } from 'react-router-dom'
+import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { Bag } from './Bag'
@@ -57,7 +56,6 @@ const MenuItem = ({ href, id, isActive, children }: MenuItemProps) => {
 
 const PageTabs = () => {
   const { pathname } = useLocation()
-  const nftFlag = useNftFlag()
   const { chainId: connectedChainId } = useWeb3React()
   const chainName = chainIdToBackendName(connectedChainId)
 
@@ -78,11 +76,9 @@ const PageTabs = () => {
       <MenuItem href={`/tokens/${chainName.toLowerCase()}`} isActive={pathname.startsWith('/tokens')}>
         <Trans>Tokens</Trans>
       </MenuItem>
-      {nftFlag === NftVariant.Enabled && (
-        <MenuItem href="/nfts" isActive={isNftPage}>
-          <Trans>NFTs</Trans>
-        </MenuItem>
-      )}
+      <MenuItem href="/nfts" isActive={isNftPage}>
+        <Trans>NFTs</Trans>
+      </MenuItem>
       <MenuItem href="/pool" id="pool-nav-link" isActive={isPoolActive}>
         <Trans>Pool</Trans>
       </MenuItem>
@@ -98,14 +94,22 @@ const PageTabs = () => {
 
 const Navbar = () => {
   const isNftPage = useIsNftPage()
+  const navigate = useNavigate()
 
   return (
     <>
       <nav className={styles.nav}>
         <Box display="flex" height="full" flexWrap="nowrap" alignItems="stretch">
           <Box className={styles.leftSideContainer}>
-            <Box as="a" href="#/swap" className={styles.logoContainer}>
-              <UniIcon width="48" height="48" className={styles.logo} />
+            <Box className={styles.logoContainer}>
+              <UniIcon
+                width="48"
+                height="48"
+                className={styles.logo}
+                onClick={() => {
+                  navigate('/')
+                }}
+              />
             </Box>
             {!isNftPage && (
               <Box display={{ sm: 'flex', lg: 'none' }}>

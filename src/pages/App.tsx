@@ -3,7 +3,7 @@ import { CustomUserProperties, EventName, getBrowser, PageName } from '@uniswap/
 import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
-import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
+import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
 import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
@@ -26,11 +26,13 @@ import Polling from '../components/Polling'
 import Popups from '../components/Popups'
 import { useIsExpertMode } from '../state/user/hooks'
 import DarkModeQueryParamReader from '../theme/components/DarkModeQueryParamReader'
+import About from './About'
 import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import Earn from './Earn'
 import Manage from './Earn/Manage'
+import Landing from './Landing'
 import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
 import Pool from './Pool'
@@ -133,7 +135,6 @@ const LazyLoadSpinner = () => (
 
 export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
-  const nftFlag = useNftFlag()
 
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
@@ -169,7 +170,7 @@ export default function App() {
   }, [isExpertMode])
 
   useEffect(() => {
-    const scrollListener = (e: Event) => {
+    const scrollListener = () => {
       setScrolledState(window.scrollY > 0)
     }
     window.addEventListener('scroll', scrollListener)
@@ -179,6 +180,8 @@ export default function App() {
   const isBagExpanded = useBag((state) => state.bagExpanded)
 
   const isHeaderTransparent = !scrolledState && !isBagExpanded
+
+  const landingPageFlag = useLandingPageFlag()
 
   return (
     <ErrorBoundary>
@@ -196,6 +199,7 @@ export default function App() {
             <Suspense fallback={<Loader />}>
               {isLoaded ? (
                 <Routes>
+                  {landingPageFlag === LandingPageVariant.Enabled && <Route path="/" element={<Landing />} />}
                   <Route path="tokens" element={<Tokens />}>
                     <Route path=":chainName" />
                   </Route>
@@ -247,53 +251,51 @@ export default function App() {
                   <Route path="migrate/v2" element={<MigrateV2 />} />
                   <Route path="migrate/v2/:address" element={<MigrateV2Pair />} />
 
+                  <Route path="about" element={<About />} />
+
                   <Route path="*" element={<RedirectPathToSwapOnly />} />
 
-                  {nftFlag === NftVariant.Enabled && (
-                    <>
-                      <Route
-                        path="/nfts"
-                        element={
-                          // TODO: replace loading state during Apollo migration
-                          <Suspense fallback={null}>
-                            <NftExplore />
-                          </Suspense>
-                        }
-                      />
-                      <Route
-                        path="/nfts/asset/:contractAddress/:tokenId"
-                        element={
-                          <Suspense fallback={<AssetDetailsLoading />}>
-                            <Asset />
-                          </Suspense>
-                        }
-                      />
-                      <Route
-                        path="/nfts/profile"
-                        element={
-                          <Suspense fallback={<ProfilePageLoadingSkeleton />}>
-                            <Profile />
-                          </Suspense>
-                        }
-                      />
-                      <Route
-                        path="/nfts/collection/:contractAddress"
-                        element={
-                          <Suspense fallback={<CollectionPageSkeleton />}>
-                            <Collection />
-                          </Suspense>
-                        }
-                      />
-                      <Route
-                        path="/nfts/collection/:contractAddress/activity"
-                        element={
-                          <Suspense fallback={<CollectionPageSkeleton />}>
-                            <Collection />
-                          </Suspense>
-                        }
-                      />
-                    </>
-                  )}
+                  <Route
+                    path="/nfts"
+                    element={
+                      // TODO: replace loading state during Apollo migration
+                      <Suspense fallback={null}>
+                        <NftExplore />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/nfts/asset/:contractAddress/:tokenId"
+                    element={
+                      <Suspense fallback={<AssetDetailsLoading />}>
+                        <Asset />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/nfts/profile"
+                    element={
+                      <Suspense fallback={<ProfilePageLoadingSkeleton />}>
+                        <Profile />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/nfts/collection/:contractAddress"
+                    element={
+                      <Suspense fallback={<CollectionPageSkeleton />}>
+                        <Collection />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/nfts/collection/:contractAddress/activity"
+                    element={
+                      <Suspense fallback={<CollectionPageSkeleton />}>
+                        <Collection />
+                      </Suspense>
+                    }
+                  />
                 </Routes>
               ) : (
                 <Loader />

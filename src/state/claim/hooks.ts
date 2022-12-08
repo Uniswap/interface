@@ -99,7 +99,7 @@ function fetchClaim(account: string): Promise<UserClaimData> {
 
 // parse distributorContract blob and detect if user has claim data
 // null means we know it does not
-export function useUserClaimData(account: string | null | undefined): UserClaimData | null {
+function useUserClaimData(account: string | null | undefined): UserClaimData | null {
   const { chainId } = useWeb3React()
 
   const [claimInfo, setClaimInfo] = useState<{ [account: string]: UserClaimData | null }>({})

@@ -59,7 +59,7 @@ export function getConnectionName(connectionType: ConnectionType, isMetaMask?: b
     case ConnectionType.UNIWALLET:
       return 'Uniswap Wallet'
     case ConnectionType.INJECTED:
-      return isMetaMask ? 'MetaMask' : 'Injected'
+      return isMetaMask ? 'MetaMask' : 'Browser Wallet'
     case ConnectionType.COINBASE_WALLET:
       return 'Coinbase Wallet'
     case ConnectionType.WALLET_CONNECT:

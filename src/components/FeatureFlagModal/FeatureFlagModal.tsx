@@ -1,6 +1,7 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { useFiatOnrampFlag } from 'featureFlags/flags/fiatOnramp'
-import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
+import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
+import { Permit2Variant, usePermit2Flag } from 'featureFlags/flags/permit2'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
@@ -211,9 +212,18 @@ export default function FeatureFlagModal() {
           label="Fiat on-ramp"
         />
       </FeatureFlagGroup>
-      <FeatureFlagGroup name="Phase 1">
-        <FeatureFlagOption variant={NftVariant} value={useNftFlag()} featureFlag={FeatureFlag.nft} label="NFTs" />
-      </FeatureFlagGroup>
+      <FeatureFlagOption
+        variant={LandingPageVariant}
+        value={useLandingPageFlag()}
+        featureFlag={FeatureFlag.landingPage}
+        label="Landing page"
+      />
+      <FeatureFlagOption
+        variant={Permit2Variant}
+        value={usePermit2Flag()}
+        featureFlag={FeatureFlag.permit2}
+        label="Permit 2 / Universal Router"
+      />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption
           variant={TraceJsonRpcVariant}

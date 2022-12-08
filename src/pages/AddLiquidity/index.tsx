@@ -849,7 +849,7 @@ export default function AddLiquidity() {
                                 border: '1px solid',
                               }}
                             >
-                              <AutoColumn gap="8px" style={{ height: '100%' }}>
+                              <AutoColumn gap="sm" style={{ height: '100%' }}>
                                 <RowFixed>
                                   <AlertTriangle stroke={theme.deprecated_yellow3} size="16px" />
                                   <ThemedText.DeprecatedYellow ml="12px" fontSize="15px">

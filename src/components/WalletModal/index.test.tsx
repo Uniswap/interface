@@ -78,7 +78,7 @@ it('loads Wallet Modal on desktop with generic Injected', async () => {
 
   render(<WalletModal />)
   expect(screen.getByText('Uniswap Wallet')).toBeInTheDocument()
-  expect(screen.getByText('Injected')).toBeInTheDocument()
+  expect(screen.getByText('Browser Wallet')).toBeInTheDocument()
   expect(screen.getByText('Coinbase Wallet')).toBeInTheDocument()
   expect(screen.getByText('WalletConnect')).toBeInTheDocument()
   expect(screen.getAllByTestId('wallet-modal-option')).toHaveLength(4)

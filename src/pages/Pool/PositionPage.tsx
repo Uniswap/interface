@@ -173,7 +173,7 @@ function CurrentPriceCard({
 
   return (
     <LightCard padding="12px ">
-      <AutoColumn gap="8px" justify="center">
+      <AutoColumn gap="sm" justify="center">
         <ExtentsText>
           <Trans>Current price</Trans>
         </ExtentsText>
@@ -881,7 +881,7 @@ export function PositionPage() {
 
                 <RowBetween>
                   <LightCard padding="12px" width="100%">
-                    <AutoColumn gap="8px" justify="center">
+                    <AutoColumn gap="sm" justify="center">
                       <ExtentsText>
                         <Trans>Min price</Trans>
                       </ExtentsText>
@@ -905,7 +905,7 @@ export function PositionPage() {
 
                   <DoubleArrow>⟷</DoubleArrow>
                   <LightCard padding="12px" width="100%">
-                    <AutoColumn gap="8px" justify="center">
+                    <AutoColumn gap="sm" justify="center">
                       <ExtentsText>
                         <Trans>Max price</Trans>
                       </ExtentsText>

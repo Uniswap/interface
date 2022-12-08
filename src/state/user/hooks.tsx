@@ -17,7 +17,6 @@ import { AppState } from '../index'
 import {
   addSerializedPair,
   addSerializedToken,
-  removeSerializedToken,
   updateFiatOnrampAcknowledgments,
   updateHideClosedPositions,
   updateHideNFTWelcomeModal,
@@ -128,6 +127,7 @@ export function useFiatOnrampAck(): [
   return [fiatOnrampAcknowledgments, setAcknowledgements]
 }
 
+// eslint-disable-next-line import/no-unused-modules
 export function useShowSurveyPopup(): [boolean | undefined, (showPopup: boolean) => void] {
   const dispatch = useAppDispatch()
   const showSurveyPopup = useAppSelector((state) => state.user.showSurveyPopup)
@@ -250,16 +250,6 @@ export function useAddUserToken(): (token: Token) => void {
   return useCallback(
     (token: Token) => {
       dispatch(addSerializedToken({ serializedToken: serializeToken(token) }))
-    },
-    [dispatch]
-  )
-}
-
-export function useRemoveUserAddedToken(): (chainId: number, address: string) => void {
-  const dispatch = useAppDispatch()
-  return useCallback(
-    (chainId: number, address: string) => {
-      dispatch(removeSerializedToken({ chainId, address }))
     },
     [dispatch]
   )

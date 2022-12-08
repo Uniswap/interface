@@ -2,6 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { EventName, PageName } from '@uniswap/analytics-events'
+import { MouseoverTooltip } from 'components/Tooltip'
 import Tooltip from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
 import { bodySmall } from 'nft/css/common.css'
@@ -120,7 +121,7 @@ export const CollectionAsset = ({
       addAssetToBag={handleAddAssetToBag}
       removeAssetFromBag={handleRemoveAssetFromBag}
     >
-      <Card.ImageContainer>
+      <Card.ImageContainer isDisabled={asset.notForSale}>
         <StyledContainer>
           <Tooltip
             text={
@@ -145,13 +146,28 @@ export const CollectionAsset = ({
             rarityLogo={rarityLogo}
           />
         )}
-        {assetMediaType === AssetMediaType.Image ? (
-          <Card.Image />
-        ) : assetMediaType === AssetMediaType.Video ? (
-          <Card.Video shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
-        ) : (
-          <Card.Audio shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
-        )}
+        <MouseoverTooltip
+          text={
+            <Box as="span" className={bodySmall} color="textPrimary">
+              <Trans>This item is not for sale</Trans>
+            </Box>
+          }
+          placement="bottom"
+          offsetX={0}
+          offsetY={-50}
+          style={{ display: 'block' }}
+          hideArrow={true}
+          disableHover={!asset.notForSale}
+          timeout={isMobile ? TOOLTIP_TIMEOUT : undefined}
+        >
+          {assetMediaType === AssetMediaType.Image ? (
+            <Card.Image />
+          ) : assetMediaType === AssetMediaType.Video ? (
+            <Card.Video shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
+          ) : (
+            <Card.Audio shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
+          )}
+        </MouseoverTooltip>
       </Card.ImageContainer>
       <Card.DetailsContainer>
         <Card.InfoContainer>
