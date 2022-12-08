@@ -227,7 +227,6 @@ export const AGGREGATOR_ROUTER_SWAPPED_EVENT_TOPIC =
   '0xd6d4f5681c246c9f42c203e287975af1601f8df8035a9251f79aab5c8f09e2f8'
 
 export const CLAIM_REWARDS_DATA_URL: { [chainId: number]: string } = {
-  [ChainId.ROPSTEN]: '/claim-reward-data.json',
   [ChainId.AVAXMAINNET]:
     'https://raw.githubusercontent.com/KyberNetwork/avax-trading-contest-reward-distribution/develop/results/reward_proof.json',
   [ChainId.MATIC]:
@@ -246,8 +245,6 @@ export const STATIC_FEE_OPTIONS: { [chainId: number]: number[] | undefined } = {
   [ChainId.VELAS]: [8, 10, 50, 300, 500, 1000],
   [ChainId.OASIS]: [8, 10, 50, 300, 500, 1000],
   [ChainId.MAINNET]: [8, 10, 50, 300, 500, 1000],
-  [ChainId.ROPSTEN]: [8, 10, 50, 300, 500, 1000],
-  [ChainId.RINKEBY]: [8, 10, 50, 300, 500, 1000],
   [ChainId.MATIC]: [8, 10, 50, 300, 500, 1000],
   [ChainId.AVAXMAINNET]: [8, 10, 50, 300, 500, 1000],
   [ChainId.FANTOM]: [8, 10, 50, 300, 500, 1000],

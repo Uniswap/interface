@@ -54,7 +54,6 @@ const FlipCardFront = styled.div`
   height: 100%;
   flex-direction: column;
   backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
 `
 
 const FlipCardBack = styled.div`
@@ -62,7 +61,6 @@ const FlipCardBack = styled.div`
   display: flex;
   flex-direction: column;
   backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
   transform: rotateY(180deg);
 `
 

@@ -7,7 +7,7 @@ import Numeral from 'numeral'
 import { GET_BLOCK, GET_BLOCKS } from 'apollo/queries'
 import { DEFAULT_GAS_LIMIT_MARGIN, ZERO_ADDRESS } from 'constants/index'
 import { NETWORKS_INFO, isEVM } from 'constants/networks'
-import { KNC, KNCL_ADDRESS, KNCL_ADDRESS_ROPSTEN } from 'constants/tokens'
+import { KNC, KNCL_ADDRESS } from 'constants/tokens'
 import { EVMWalletInfo, SUPPORTED_WALLET, SolanaWalletInfo, WalletInfo } from 'constants/wallets'
 import store from 'state'
 import { GroupedTxsByHash, TransactionDetails } from 'state/transactions/type'
@@ -320,10 +320,7 @@ export const getTokenLogoURL = (inputAddress: string, chainId: ChainId): string 
       return 'https://raw.githubusercontent.com/KyberNetwork/kyberswap-interface/develop/src/assets/images/KNC.svg'
     }
 
-    if (
-      address.toLowerCase() === KNCL_ADDRESS.toLowerCase() ||
-      address.toLowerCase() === KNCL_ADDRESS_ROPSTEN.toLowerCase()
-    ) {
+    if (address.toLowerCase() === KNCL_ADDRESS.toLowerCase()) {
       return 'https://raw.githubusercontent.com/KyberNetwork/kyberswap-interface/develop/src/assets/images/KNCL.png'
     }
 

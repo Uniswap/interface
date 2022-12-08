@@ -37,14 +37,10 @@ const NetworkString: { [chain in ChainId]: string } = {
   [ChainId.SOLANA]: 'chain-solana',
 
   [ChainId.BTTC]: '',
-  [ChainId.ROPSTEN]: '',
-  [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
-  [ChainId.KOVAN]: '',
   [ChainId.BSCTESTNET]: '',
   [ChainId.MUMBAI]: '',
   [ChainId.AVAXTESTNET]: '',
-  [ChainId.CRONOSTESTNET]: '',
   [ChainId.ARBITRUM_TESTNET]: '',
 }
 
@@ -64,14 +60,10 @@ const DextoolSearchV2ChainId: { [chain in ChainId]: string } = {
   [ChainId.SOLANA]: 'solana',
 
   [ChainId.BTTC]: '',
-  [ChainId.ROPSTEN]: '',
-  [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
-  [ChainId.KOVAN]: '',
   [ChainId.BSCTESTNET]: '',
   [ChainId.MUMBAI]: '',
   [ChainId.AVAXTESTNET]: '',
-  [ChainId.CRONOSTESTNET]: '',
   [ChainId.ARBITRUM_TESTNET]: '',
 }
 

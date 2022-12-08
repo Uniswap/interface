@@ -102,14 +102,10 @@ export const STABLE_COINS_ADDRESS: { [chainId in ChainId]: string[] } = {
     'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', //usdc
     'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB', //usdt
   ],
-  [ChainId.ROPSTEN]: [],
-  [ChainId.RINKEBY]: [],
   [ChainId.GÖRLI]: [],
-  [ChainId.KOVAN]: [],
   [ChainId.MUMBAI]: [],
   [ChainId.BSCTESTNET]: [],
   [ChainId.AVAXTESTNET]: [],
-  [ChainId.CRONOSTESTNET]: [],
   [ChainId.ARBITRUM_TESTNET]: [],
 }
 
@@ -122,22 +118,7 @@ export const DAI = {
     'Dai Stablecoin',
   ),
   [ChainId.ETHW]: new Token(ChainId.ETHW, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin'),
-  [ChainId.ROPSTEN]: new Token(
-    ChainId.ROPSTEN,
-    '0xaD6D458402F60fD3Bd25163575031ACDce07538D',
-    18,
-    'DAI',
-    'Dai Stablecoin',
-  ),
-  [ChainId.RINKEBY]: new Token(
-    ChainId.RINKEBY,
-    '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735',
-    18,
-    'DAI',
-    'Dai Stablecoin',
-  ),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, '0x1BBeeEdCF32dc2c1Ebc2F138e3FC7f3DeCD44D6A', 18, 'DAI', 'Dai Stablecoin'),
-  [ChainId.KOVAN]: new Token(ChainId.KOVAN, '0xaD6D458402F60fD3Bd25163575031ACDce07538D', 18, 'DAI', 'Dai Stablecoin'),
   [ChainId.MATIC]: new Token(ChainId.MATIC, '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063', 18, 'DAI', 'Dai Stablecoin'),
   [ChainId.MUMBAI]: new Token(
     ChainId.MUMBAI,
@@ -177,13 +158,6 @@ export const DAI = {
   [ChainId.FANTOM]: new Token(
     ChainId.FANTOM,
     '0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E',
-    18,
-    'DAI',
-    'Dai Stablecoin',
-  ),
-  [ChainId.CRONOSTESTNET]: new Token(
-    ChainId.CRONOSTESTNET,
-    '0xFEC9C3feCB5f17A2C7b01492498D00966E623454',
     18,
     'DAI',
     'Dai Stablecoin',
@@ -240,10 +214,7 @@ export const DAI = {
 export const USDC: { [chainId in ChainId]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD Coin'),
   [ChainId.ETHW]: new Token(ChainId.MAINNET, '0x25de68ef588cb0c2c8f3537861e828ae699cd0db', 6, 'USDC', 'USD Coin'),
-  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x068B43f7F2f2c6a662C36E201144aE45f7a1C040', 6, 'USDC', 'USD Coin'),
-  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, '0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b', 6, 'USDC', 'USD Coin'),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, '0x8e9Bd30D15420bAe4B7EC0aC014B7ECeE864373C', 18, 'USDC', 'USD Coin'),
-  [ChainId.KOVAN]: new Token(ChainId.KOVAN, '0x068B43f7F2f2c6a662C36E201144aE45f7a1C040', 6, 'USDC', 'USD Coin'),
   [ChainId.MATIC]: new Token(ChainId.MATIC, '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174', 6, 'USDC', 'USD Coin'),
   [ChainId.MUMBAI]: new Token(ChainId.MUMBAI, '0x2CeC76B26A8d96BF3072D34A01BB3a4edE7c06BE', 6, 'USDC', 'USD Coin'),
   [ChainId.BSCTESTNET]: new Token(
@@ -275,13 +246,6 @@ export const USDC: { [chainId in ChainId]: Token } = {
     'USD Coin',
   ),
   [ChainId.FANTOM]: new Token(ChainId.FANTOM, '0x04068DA6C83AFCFA0e13ba15A6696662335D5B75', 6, 'USDC', 'USD Coin'),
-  [ChainId.CRONOSTESTNET]: new Token(
-    ChainId.CRONOSTESTNET,
-    '0x136ae5CC3150C4e53AF8b1DC886464CB9AF1AB61',
-    6,
-    'USDC',
-    'USD Coin',
-  ),
   [ChainId.CRONOS]: new Token(ChainId.CRONOS, '0xc21223249CA28397B4B6541dfFaEcC539BfF0c59', 6, 'USDC', 'USD Coin'),
   [ChainId.ARBITRUM_TESTNET]: new Token(
     ChainId.ARBITRUM_TESTNET,
@@ -309,10 +273,7 @@ export const USDC: { [chainId in ChainId]: Token } = {
 export const USDT: { [chainId in ChainId]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD'),
   [ChainId.ETHW]: new Token(ChainId.MAINNET, '0x2ad7868ca212135c6119fd7ad1ce51cfc5702892', 6, 'USDT', 'Tether USD'),
-  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x65Bd1F48f1dd07bb285a3715c588F75684128acE', 6, 'USDT', 'Tether USD'),
-  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, '0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02', 18, 'USDT', 'Tether USD'),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, '0x2bf64acf7ead856209749d0d125e9ade2d908e7f', 18, 'USDT', 'Tether USD'),
-  [ChainId.KOVAN]: new Token(ChainId.KOVAN, '0x65Bd1F48f1dd07bb285a3715c588F75684128acE', 6, 'USDT', 'Tether USD'),
   [ChainId.MATIC]: new Token(ChainId.MATIC, '0xc2132D05D31c914a87C6611C10748AEb04B58e8F', 6, 'USDT', 'Tether USD'),
   [ChainId.MUMBAI]: new Token(ChainId.MUMBAI, '0x064B91Bda6d178DfE03835de9450BFe78201c43F', 6, 'USDT', 'Tether USD'),
   [ChainId.BSCTESTNET]: new Token(
@@ -344,13 +305,6 @@ export const USDT: { [chainId in ChainId]: Token } = {
     'Tether USD',
   ),
   [ChainId.FANTOM]: new Token(ChainId.FANTOM, '0x049d68029688eAbF473097a2fC38ef61633A3C7A', 6, 'fUSDT', 'Tether USD'),
-  [ChainId.CRONOSTESTNET]: new Token(
-    ChainId.CRONOSTESTNET,
-    '0x0b19552b293Be73D147159537706450B52f53a61',
-    6,
-    'USDT',
-    'Tether USD',
-  ),
   [ChainId.CRONOS]: new Token(ChainId.CRONOS, '0x66e428c3f67a68878562e79A0234c1F83c208770', 6, 'USDT', 'Tether USD'),
   [ChainId.ARBITRUM_TESTNET]: new Token(
     ChainId.ARBITRUM_TESTNET,
@@ -393,35 +347,13 @@ export const WBTC_ARBITRUM = new Token(
 
 export const KNC_ADDRESS = '0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202'
 export const KNCL_ADDRESS = '0xdd974D5C2e2928deA5F71b9825b8b646686BD200'
-export const KNCL_ADDRESS_ROPSTEN = '0x7b2810576aa1cce68f2b118cef1f36467c648f92'
 
 // todo: make it nullable
 export const KNC: { [chainId in ChainId]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
   [ChainId.ETHW]: new Token(ChainId.ETHW, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
-  [ChainId.RINKEBY]: new Token(
-    ChainId.RINKEBY,
-    '0x8B4DDF9F13f382aff76D262F6C8C50E6d7961b94',
-    18,
-    'KNC',
-    'Kyber Network Crystal',
-  ),
-  [ChainId.ROPSTEN]: new Token(
-    ChainId.ROPSTEN,
-    '0x8B4DDF9F13f382aff76D262F6C8C50E6d7961b94',
-    18,
-    'KNC',
-    'Kyber Network Crystal',
-  ),
   [ChainId.GÖRLI]: new Token(
     ChainId.GÖRLI,
-    '0x8B4DDF9F13f382aff76D262F6C8C50E6d7961b94',
-    18,
-    'KNC',
-    'Kyber Network Crystal',
-  ),
-  [ChainId.KOVAN]: new Token(
-    ChainId.KOVAN,
     '0x8B4DDF9F13f382aff76D262F6C8C50E6d7961b94',
     18,
     'KNC',
@@ -464,13 +396,6 @@ export const KNC: { [chainId in ChainId]: Token } = {
     'Kyber Network Crystal',
   ),
   [ChainId.FANTOM]: new Token(ChainId.FANTOM, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
-  [ChainId.CRONOSTESTNET]: new Token(
-    ChainId.CRONOSTESTNET,
-    '0x868FC5cB3367C4A43c350b85D5001acaF58A857E',
-    18,
-    'KNC',
-    'Kyber Network Crystal',
-  ),
   [ChainId.CRONOS]: new Token(ChainId.CRONOS, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
   [ChainId.AURORA]: new Token(ChainId.AURORA, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
 

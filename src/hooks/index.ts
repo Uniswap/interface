@@ -154,41 +154,23 @@ async function isAuthorized(): Promise<boolean> {
   }
 }
 
-let globalTried = false
-
 export function useEagerConnect() {
   const { activate, active } = useWeb3React()
   const [tried, setTried] = useState(false)
   const [isManuallyDisconnect] = useIsUserManuallyDisconnect()
-  useEffect(() => {
-    globalTried = tried
-  }, [tried])
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (!globalTried) setTried(true)
-    }, 3000)
-
-    return () => clearTimeout(timeout)
-  }, [])
 
   useEffect(() => {
     try {
       isAuthorized()
         .then(isAuthorized => {
+          setTried(true)
           // try to connect if previous connected to Coinbase Link
           if (isAuthorized && window.localStorage.getItem(WALLETLINK_LOCALSTORAGE_NAME)) {
-            activate(walletlink).catch(() => {
-              setTried(true)
-            })
+            activate(walletlink)
           } else if (isAuthorized && !isManuallyDisconnect) {
-            activate(injected, undefined, true).catch(() => {
-              setTried(true)
-            })
+            activate(injected, undefined, true)
           } else if (isMobile && window.ethereum) {
-            activate(injected, undefined, true).catch(() => {
-              setTried(true)
-            })
+            activate(injected, undefined, true)
           }
         })
         .catch(e => {

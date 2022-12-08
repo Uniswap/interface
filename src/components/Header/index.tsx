@@ -1,8 +1,8 @@
 import { Trans, t } from '@lingui/macro'
 import { darken } from 'polished'
-import { useState } from 'react'
+import { CSSProperties, forwardRef, useState } from 'react'
 import { Repeat } from 'react-feather'
-import { Link, NavLink, useLocation } from 'react-router-dom'
+import { NavLink as BaseNavLink, Link, NavLinkProps, useLocation } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
 import styled, { css, keyframes } from 'styled-components'
 
@@ -28,6 +28,27 @@ import { useWindowSize } from 'hooks/useWindowSize'
 import { useTutorialSwapGuide } from 'state/tutorial/hooks'
 import { useIsDarkMode } from 'state/user/hooks'
 import { ExternalLink } from 'theme/components'
+
+interface Props extends NavLinkProps {
+  activeClassName?: string
+  activeStyle?: CSSProperties
+}
+// fix warning of activeClassName: https://reactrouter.com/en/6.4.5/upgrading/v5#remove-activeclassname-and-activestyle-props-from-navlink-
+const NavLink = forwardRef(({ activeClassName, activeStyle, ...props }: Props, ref: any) => {
+  return (
+    <BaseNavLink
+      ref={ref}
+      {...props}
+      className={({ isActive }) => [props.className, isActive ? activeClassName : null].filter(Boolean).join(' ')}
+      style={({ isActive }) => ({
+        ...props.style,
+        ...(isActive ? activeStyle : null),
+      })}
+    />
+  )
+})
+
+NavLink.displayName = 'NavLink'
 
 const VisaSVG = styled(Visa)`
   path {

@@ -3055,17 +3055,17 @@
     bs58 "^5.0.0"
     uuid "^8.3.2"
 
-"@kyberswap/ks-sdk-classic@^1.0.0-rc.1":
-  version "1.0.0-rc.1"
-  resolved "https://registry.yarnpkg.com/@kyberswap/ks-sdk-classic/-/ks-sdk-classic-1.0.0-rc.1.tgz#0dd4e64902fc10a430eb45b7f7aeb1866171bb9a"
-  integrity sha512-Ygzil4FyqJO6GfseP0H1dse/KDR3aFO8hxGauYibkAeHzPa7wFJwVQn4zA3Ax7m/UzAoJU25MkuDsgE5wFaQqA==
+"@kyberswap/ks-sdk-classic@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@kyberswap/ks-sdk-classic/-/ks-sdk-classic-1.0.1.tgz#5f060de9cab959acc71621dbe5dc2545001ecb68"
+  integrity sha512-KFj+5e4J3JHEInfU8nVEWlmwewQcWycJi9gbYx3JO/7jbFRQEXK2VnNBjCeZMVsjZOEUpXJ70NSIcPwJP4tzpw==
   dependencies:
     "@ethersproject/address" "^5.0.2"
     "@ethersproject/contracts" "^5.0.2"
     "@ethersproject/networks" "^5.0.2"
     "@ethersproject/providers" "^5.0.5"
     "@ethersproject/solidity" "^5.0.2"
-    "@kyberswap/ks-sdk-core" "^1.0.0-rc.1"
+    "@kyberswap/ks-sdk-core" "^1.0.1"
     big.js "^5.2.2"
     decimal.js-light "^2.5.0"
     jsbi "^3.1.4"
@@ -3073,10 +3073,10 @@
     tiny-warning "^1.0.3"
     toformat "^2.0.0"
 
-"@kyberswap/ks-sdk-core@^1.0.0-rc.1":
-  version "1.0.0-rc.1"
-  resolved "https://registry.yarnpkg.com/@kyberswap/ks-sdk-core/-/ks-sdk-core-1.0.0-rc.1.tgz#261629643ddc88a7fae567c4c4d0c385788a4c4d"
-  integrity sha512-BeItlnktI0OhaDOrNw6exupd8fFre+uTVTy9IeqXmhfw6r9E18oC6aOMcWaKMF109R0ayDPG40woLfqCFlX+pw==
+"@kyberswap/ks-sdk-core@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@kyberswap/ks-sdk-core/-/ks-sdk-core-1.0.1.tgz#9f38746eb684abdafcb746165b25a7afd249e7da"
+  integrity sha512-zfMpXF5r8NoI4mZ3asCkM2jS6J5FVrJT1NHxaEXhHJ93chypJivCg221sgC9qAFjDEI3JCnA/cLW9G/qHmfTmA==
   dependencies:
     "@ethersproject/address" "^5.0.2"
     "@solana/web3.js" "^1.66.2"
@@ -3087,24 +3087,24 @@
     tiny-invariant "^1.1.0"
     toformat "^2.0.0"
 
-"@kyberswap/ks-sdk-elastic@^1.0.0-rc.1":
-  version "1.0.0-rc.1"
-  resolved "https://registry.yarnpkg.com/@kyberswap/ks-sdk-elastic/-/ks-sdk-elastic-1.0.0-rc.1.tgz#346049da8511f83ab7ad48498aeda852f3c56096"
-  integrity sha512-pDSt92o6ZbwYPwVcDkYchT5EmW47ceeuw3KqldmFxMRcQ+7H71ZVKrfDByo63lGKS4uKhq1bQlJ0bO0qEBPxng==
+"@kyberswap/ks-sdk-elastic@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@kyberswap/ks-sdk-elastic/-/ks-sdk-elastic-1.0.1.tgz#dd072e7ddf278f7ee4c8b8e0250d38f0e1d6ed63"
+  integrity sha512-uSu0/UDjaL8YZckCsf1/VEYckZ5W+qfI3QcT7zU8n546MELiQzwgcQ0fET5PNVnvgdEg9tSXY95FiQwXthdWew==
   dependencies:
     "@ethersproject/abi" "^5.0.12"
     "@ethersproject/solidity" "^5.0.9"
-    "@kyberswap/ks-sdk-core" "^1.0.0-rc.1"
+    "@kyberswap/ks-sdk-core" "^1.0.1"
     "@uniswap/v3-periphery" "^1.3.0"
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"
 
-"@kyberswap/ks-sdk-solana@^1.0.0-rc.1":
-  version "1.0.0-rc.1"
-  resolved "https://registry.yarnpkg.com/@kyberswap/ks-sdk-solana/-/ks-sdk-solana-1.0.0-rc.1.tgz#4e5c7067d7b0ca975a56dae2eb0464b082a6f4bb"
-  integrity sha512-fKHUPAFtCIoEux4wLXdTlZ2qwXjiJuz+8PYxeAe80eop38lDsD3cAExXTFyBB+NU6Zkce3X3oHXnEhJ9dkq9lA==
+"@kyberswap/ks-sdk-solana@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@kyberswap/ks-sdk-solana/-/ks-sdk-solana-1.0.1.tgz#0e929f1a2598c19cc0a57aa5286383daa564b583"
+  integrity sha512-39Hz2ChDOHwQ7Zza8UN0WMHQYIzEjiEX/nCbB/N7vWdQOltDaQ3gOtkJoRAudKwYslhGzPHLmhnyWiMvXzqyLw==
   dependencies:
-    "@kyberswap/ks-sdk-core" "^1.0.0-rc.1"
+    "@kyberswap/ks-sdk-core" "^1.0.1"
     "@project-serum/anchor" "^0.25.0"
     "@solana/spl-token" "~0.3.6"
     "@solana/web3.js" "^1.66.2"
@@ -11862,11 +11862,6 @@ is-wsl@^2.1.1, is-wsl@^2.2.0:
   integrity sha512-fKzAra0rGJUUBwGBgNkHZuToZcn+TtXHpeCgmkMJMMYx1sQDYaCSyjJBSCa2nH1DGm7s3n1oBnohoVTBaN7Lww==
   dependencies:
     is-docker "^2.0.0"
-
-isarray@0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/isarray/-/isarray-0.0.1.tgz#8a18acfca9a8f4177e09abfc6038939b05d1eedf"
-  integrity sha512-D2S+3GLxWH+uhrNEcoh/fnmYeP8E8/zHl644d/jdA0g2uyXvy3sb0qxotE+ne0LtccHknQzWwZEzhak7oJ0COQ==
 
 isarray@1.0.0, isarray@^1.0.0, isarray@~1.0.0:
   version "1.0.0"

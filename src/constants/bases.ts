@@ -10,10 +10,7 @@ type ChainTokenList = {
 // help init default values for `BASES_TO_CHECK_TRADES_AGAINST`, `SUGGESTED_BASES` below by ...WETH_ONLY
 const WETH_ONLY: ChainTokenList = {
   [ChainId.MAINNET]: [WETH[ChainId.MAINNET]],
-  [ChainId.ROPSTEN]: [WETH[ChainId.ROPSTEN]],
-  [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
   [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI]],
-  [ChainId.KOVAN]: [WETH[ChainId.KOVAN]],
   [ChainId.MATIC]: [WETH[ChainId.MATIC]],
   [ChainId.MUMBAI]: [WETH[ChainId.MUMBAI]],
   [ChainId.BSCTESTNET]: [WETH[ChainId.BSCTESTNET]],
@@ -21,7 +18,6 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.AVAXTESTNET]: [WETH[ChainId.AVAXTESTNET]],
   [ChainId.AVAXMAINNET]: [WETH[ChainId.AVAXMAINNET]],
   [ChainId.FANTOM]: [WETH[ChainId.FANTOM]],
-  [ChainId.CRONOSTESTNET]: [WETH[ChainId.CRONOSTESTNET]],
   [ChainId.CRONOS]: [WETH[ChainId.CRONOS]],
   [ChainId.AURORA]: [WETH[ChainId.AURORA]],
   [ChainId.BTTC]: [WETH[ChainId.BTTC]],
@@ -44,12 +40,6 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     USDT[ChainId.MAINNET],
     COMP,
     MKR,
-  ],
-  [ChainId.ROPSTEN]: [
-    ...WETH_ONLY[ChainId.ROPSTEN],
-    DAI[ChainId.ROPSTEN],
-    USDC[ChainId.ROPSTEN],
-    USDT[ChainId.ROPSTEN],
   ],
   [ChainId.MUMBAI]: [...WETH_ONLY[ChainId.MUMBAI], DAI[ChainId.MUMBAI], USDC[ChainId.MUMBAI], USDT[ChainId.MUMBAI]],
   [ChainId.MATIC]: [
