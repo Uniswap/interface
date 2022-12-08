@@ -10,7 +10,7 @@ const StyledCard = styled.a`
   padding: 40px;
   height: 400px;
   border-radius: 24px;
-  transition: 200ms ease background-color;
+  transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease}  background-color`};
 
   &:hover {
     background-color: ${({ theme }) => theme.backgroundModule};
