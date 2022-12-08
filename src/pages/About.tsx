@@ -142,12 +142,10 @@ export default function About() {
   return (
     <PageWrapper isDarkMode={isDarkMode}>
       <ContentWrapper>
-        <TitleText isDarkMode={isDarkMode}>
-          Our mission: <br />
-          Unlock universal ownership & exchange
-        </TitleText>
+        <TitleText isDarkMode={isDarkMode}>The best way to buy, sell and own crypto and NFTs</TitleText>
         <Body>
-          Uniswap Labs is building the future of decentralized finance by harnessing the power of the Uniswap Protocol.
+          The Uniswap Protocol is the world’s leading decentralized exchange protocol, allowing anyone to swap tokens,
+          list a token, or provide liquidity in a pool to earn fees.
         </Body>
         <CardContainer>
           <Card to="https://app.uniswap.org/#/swap" title="Swap tokens" description="" />
