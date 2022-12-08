@@ -1,2 +1,3 @@
 *.config.ts
 *.d.ts
+/src/graphql/data/__generated__/types-and-hooks.ts

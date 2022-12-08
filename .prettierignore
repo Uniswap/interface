@@ -1,1 +1,2 @@
 /src/schema/schema.graphql
+/src/graphql/data/__generated__/types-and-hooks.ts
