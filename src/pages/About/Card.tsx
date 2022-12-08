@@ -2,6 +2,7 @@ import styled from 'styled-components/macro'
 
 const StyledCard = styled.a`
   display: flex;
+  background: linear-gradient(180deg, rgba(19, 22, 27, 0.54) 0%, #13161B 100%);
   flex-direction: column;
   justify-content: space-between;
   text-decoration: none;
