@@ -34,7 +34,7 @@ const Step = ({
 }: {
   index: number
   title: string
-  description?: string
+  description: string
   isLast?: boolean
 }) => {
   return (
@@ -42,7 +42,7 @@ const Step = ({
       <StepIndex>{index + 1}</StepIndex>
       <div>
         <StepTitle>{title}</StepTitle>
-        {description && <StepDescription>{description}</StepDescription>}
+        <StepDescription>{description}</StepDescription>
       </div>
     </StyledStep>
   )
