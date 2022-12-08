@@ -112,7 +112,7 @@ const CardGrid = styled.div`
   }
 `
 
-const PoweredBy = styled.h2<{ isDarkMode?: boolean }>`
+const SubTitle = styled.h2<{ isDarkMode?: boolean }>`
   margin: 0;
   font-weight: 600;
   max-width: 340px;
@@ -166,6 +166,10 @@ const IntroCopy = styled.p`
   margin: 0;
 `
 
+const GetStarted = styled.div`
+  margin-bottom: 100px;
+`
+
 export default function About() {
   const isDarkMode = useIsDarkMode()
   const theme = useTheme()
@@ -176,7 +180,7 @@ export default function About() {
         <Title isDarkMode={isDarkMode}>The best way to buy, sell and own crypto and NFTs</Title>
         <Body>
           <div>
-            <PoweredBy isDarkMode={isDarkMode}>Powered by the Uniswap Protocol</PoweredBy>
+            <SubTitle isDarkMode={isDarkMode}>Powered by the Uniswap Protocol</SubTitle>
           </div>
           <Intro>
             <IntroCopy>
@@ -213,14 +217,19 @@ export default function About() {
           />
         </CardGrid>
         <Body>
-          <WalletIconGrid>
-            <WalletIcon src={metaMaskIcon} alt="MetaMask" />
-            <WalletIcon src={walletConnectIcon} alt="WalletConnect" />
-            <WalletIcon src={coinbaseWalletIcon} alt="Coinbase Wallet" />
-            <WalletIcon src={rainbowIcon} alt="Rainbow" />
-            <WalletIcon src={phantomIcon} alt="Phantom" />
-            <WalletIcon src={walletConnectIcon} alt="WalletConnect" />
-          </WalletIconGrid>
+          <div>
+            <GetStarted>
+              <SubTitle isDarkMode={isDarkMode}>Get Started</SubTitle>
+            </GetStarted>
+            <WalletIconGrid>
+              <WalletIcon src={metaMaskIcon} alt="MetaMask" />
+              <WalletIcon src={walletConnectIcon} alt="WalletConnect" />
+              <WalletIcon src={coinbaseWalletIcon} alt="Coinbase Wallet" />
+              <WalletIcon src={rainbowIcon} alt="Rainbow" />
+              <WalletIcon src={phantomIcon} alt="Phantom" />
+              <WalletIcon src={walletConnectIcon} alt="WalletConnect" />
+            </WalletIconGrid>
+          </div>
           <div></div>
         </Body>
         <IconRow>
