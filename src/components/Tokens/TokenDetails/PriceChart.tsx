@@ -73,7 +73,7 @@ export const TokenPrice = styled.span`
   font-size: 36px;
   line-height: 44px;
 `
-export const DeltaContainer = styled.div`
+const DeltaContainer = styled.div`
   height: 16px;
   display: flex;
   align-items: center;
