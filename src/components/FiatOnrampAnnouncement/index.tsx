@@ -93,13 +93,13 @@ const Body = styled(ThemedText.BodySmall)`
 
 export function FiatOnrampAnnouncement() {
   const { account } = useWeb3React()
-  const [fiatOnrampAcknowledged, acknowledge] = useFiatOnrampAck()
+  const [acks, acknowledge] = useFiatOnrampAck()
 
   const handleClose = useCallback(
     (e: MouseEvent<HTMLOrSVGElement>) => {
       e.preventDefault()
       e.stopPropagation()
-      acknowledge()
+      acknowledge({ user: false })
     },
     [acknowledge]
   )
@@ -107,11 +107,11 @@ export function FiatOnrampAnnouncement() {
   const toggleWalletDropdown = useToggleWalletDropdown()
   const handleClick = useCallback(() => {
     toggleWalletDropdown()
-    acknowledge()
+    acknowledge({ user: true })
   }, [acknowledge, toggleWalletDropdown])
   const fiatOnrampFlag = useFiatOnrampFlag()
 
-  if (!account || fiatOnrampAcknowledged || fiatOnrampFlag === BaseVariant.Control) {
+  if (!account || acks?.user || fiatOnrampFlag === BaseVariant.Control) {
     return null
   }
   return (
