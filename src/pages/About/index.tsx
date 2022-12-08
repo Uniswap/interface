@@ -1,4 +1,5 @@
 import metaMaskIcon from 'assets/images/metamask.png'
+import { ButtonOutlined } from 'components/Button'
 import { Box } from 'nft/components/Box'
 import { DiscordIconMenu, GithubIconMenu, TwitterIconMenu } from 'nft/components/icons'
 import { ReactNode } from 'react'
@@ -124,6 +125,7 @@ const PoweredBy = styled.h2<{ isDarkMode?: boolean }>`
 
 const WalletIconContainer = styled.div`
   display: grid;
+  gap: 50px;
   grid-template-columns: 1fr 1fr 1fr;
 `
 
@@ -145,8 +147,14 @@ export default function About() {
             <PoweredBy isDarkMode={isDarkMode}>Powered by the Uniswap Protocol</PoweredBy>
           </div>
           <div>
-            The Uniswap Protocol is the world’s leading decentralized exchange protocol, allowing anyone to swap tokens,
-            list a token, or provide liquidity in a pool to earn fees.
+            <p>
+              The Uniswap Protocol is the world’s leading decentralized exchange protocol, allowing anyone to swap
+              tokens, list a token, or provide liquidity in a pool to earn fees.
+            </p>
+            <div>
+              <ButtonOutlined>Learn more</ButtonOutlined>
+              <ButtonOutlined>Read the docs</ButtonOutlined>
+            </div>
           </div>
         </Body>
         <CardContainer>
