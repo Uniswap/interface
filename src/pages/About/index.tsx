@@ -219,7 +219,7 @@ export default function About() {
               title="Connect a wallet"
               description="Connect your preferred crypto wallet to the Uniswap Interface."
             />
-            <Step isLast index={2} title="Swap!" description="Trade crypto and NFTs through Uniswap’s platform" />
+            <Step isLast index={1} title="Swap!" description="Trade crypto and NFTs through Uniswap’s platform" />
           </StepList>
         </Body>
         <IconRow>
