@@ -115,6 +115,7 @@ const CardContainer = styled.div`
 
 const PoweredBy = styled.h2<{ isDarkMode?: boolean }>`
   margin: 0;
+  font-weight: 600;
   max-width: 340px;
   color: transparent;
   font-size: 40px;
