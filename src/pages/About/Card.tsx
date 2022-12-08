@@ -1,6 +1,7 @@
+import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
-const StyledCard = styled.a`
+const StyledCard = styled.div`
   display: flex;
   background: linear-gradient(180deg, rgba(19, 22, 27, 0.54) 0%, #13161b 100%);
   flex-direction: column;
@@ -29,9 +30,25 @@ const CardDescription = styled.div`
   line-height: 36px;
 `
 
-const Card = ({ title, description, to }: { title: string; description: string; to: string; external?: boolean }) => {
+const Card = ({
+  title,
+  description,
+  to,
+  external,
+}: {
+  title: string
+  description: string
+  to: string
+  external?: boolean
+}) => {
   return (
-    <StyledCard href={to}>
+    <StyledCard
+      as={external ? 'a' : Link}
+      to={external ? undefined : to}
+      href={external ? to : undefined}
+      target={external ? '_blank' : undefined}
+      rel={external ? 'noopenener noreferrer' : undefined}
+    >
       <CardTitle>{title}</CardTitle>
       <CardDescription>{description}</CardDescription>
     </StyledCard>
