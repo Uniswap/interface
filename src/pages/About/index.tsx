@@ -41,7 +41,7 @@ const Icon = ({ href, children }: { href?: string; children: ReactNode }) => {
   )
 }
 
-const PageWrapper = styled.span<{ isDarkMode: boolean }>`
+const Page = styled.span<{ isDarkMode: boolean }>`
   width: 100%;
   align-self: center;
   display: flex;
@@ -86,7 +86,7 @@ const Body = styled.p`
   }
 `
 
-const ContentWrapper = styled.span`
+const Content = styled.div`
   max-width: 1280px;
   pointer-events: all;
   display: flex;
@@ -98,11 +98,11 @@ const ContentWrapper = styled.span`
 
   @media screen and (min-width: ${MOBILE_BREAKPOINT}px) {
     padding: 8rem 5rem 5rem 5rem;
-    gap: 56px;
+    gap: 120px;
   }
 `
 
-const CardContainer = styled.div`
+const CardGrid = styled.div`
   display: grid;
   gap: 36px;
   width: 100%;
@@ -157,30 +157,40 @@ const ActionsContainer = styled.span`
   }
 `
 
+const Intro = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+`
+
+const IntroCopy = styled.p`
+  margin: 0;
+`
+
 export default function About() {
   const isDarkMode = useIsDarkMode()
   const theme = useTheme()
 
   return (
-    <PageWrapper isDarkMode={isDarkMode}>
-      <ContentWrapper>
+    <Page isDarkMode={isDarkMode}>
+      <Content>
         <Title isDarkMode={isDarkMode}>The best way to buy, sell and own crypto and NFTs</Title>
         <Body>
           <div>
             <PoweredBy isDarkMode={isDarkMode}>Powered by the Uniswap Protocol</PoweredBy>
           </div>
-          <div>
-            <p>
+          <Intro>
+            <IntroCopy>
               The Uniswap Protocol is the world’s leading decentralized exchange protocol, allowing anyone to swap
               tokens, list a token, or provide liquidity in a pool to earn fees.
-            </p>
+            </IntroCopy>
             <ActionsContainer>
               <InfoButton>Learn more</InfoButton>
               <InfoButton>Read the docs</InfoButton>
             </ActionsContainer>
-          </div>
+          </Intro>
         </Body>
-        <CardContainer>
+        <CardGrid>
           <Card
             to="/swap"
             title="Swap tokens"
@@ -202,7 +212,7 @@ export default function About() {
             title="Build dApps"
             description="Build on the largest DeFi protocol on Ethereum with our tools."
           />
-        </CardContainer>
+        </CardGrid>
         <Body>
           <WalletIconContainer>
             <WalletIcon src={metaMaskIcon} alt="MetaMask" />
@@ -225,7 +235,7 @@ export default function About() {
             <GithubIconMenu width={24} height={24} color={theme.textSecondary} />
           </Icon>
         </IconRow>
-      </ContentWrapper>
-    </PageWrapper>
+      </Content>
+    </Page>
   )
 }
