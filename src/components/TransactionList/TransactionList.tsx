@@ -6,7 +6,6 @@ import { SectionList } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
 import { Box } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { TAB_STYLES } from 'src/components/layout/TabHelpers'
 import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { EMPTY_ARRAY, PollingInterval } from 'src/constants/misc'
@@ -31,11 +30,30 @@ const PENDING_TITLE = (t: TFunction) => t('Pending')
 const TODAY_TITLE = (t: TFunction) => t('Today')
 const MONTH_TITLE = (t: TFunction) => t('This Month')
 
+const LOADING_ITEM_TITLE = 'Section Title'
+const LOADING_ITEM = { type: 'loading' }
+function isLoadingItem(
+  item: TransactionDetails | typeof LOADING_ITEM
+): item is typeof LOADING_ITEM {
+  return item === LOADING_ITEM
+}
+const LOADING_DATA = [
+  {
+    title: LOADING_ITEM_TITLE,
+    data: [LOADING_ITEM],
+  },
+  { title: LOADING_ITEM_TITLE, data: [LOADING_ITEM] },
+]
+
 const key = (info: TransactionDetails) => info.id
 
 const SectionTitle: SectionList['props']['renderSectionHeader'] = ({ section: { title } }) => (
   <Box pb="xxxs" pt="sm" px="sm">
-    <Text color="textSecondary" variant="subheadSmall">
+    <Text
+      color="textSecondary"
+      loading={title === LOADING_ITEM_TITLE}
+      loadingPlaceholderText={LOADING_ITEM_TITLE}
+      variant="subheadSmall">
       {title}
     </Text>
   </Box>
@@ -83,15 +101,7 @@ export default function TransactionList(props: TransactionListProps) {
   const showLoading =
     (!hasData && isLoading) || (Boolean(isError) && networkStatus === NetworkStatus.refetch)
 
-  if (showLoading) {
-    return (
-      <Box style={TAB_STYLES.tabListInner}>
-        <Loader.Transaction />
-      </Box>
-    )
-  }
-
-  if (!hasData && isError) {
+  if (!showLoading && !hasData && isError) {
     return (
       <Box height="100%" pb="xxxl">
         <BaseCard.ErrorState
@@ -103,7 +113,7 @@ export default function TransactionList(props: TransactionListProps) {
     )
   }
 
-  return <TransactionListInner {...props} data={data} />
+  return <TransactionListInner {...props} data={data} showLoading={showLoading} />
 }
 
 /** Displays historical and pending transactions for a given address. */
@@ -112,8 +122,10 @@ function TransactionListInner({
   ownerAddress,
   readonly,
   emptyStateContent,
+  showLoading,
 }: TransactionListProps & {
   data?: TransactionListQuery
+  showLoading: boolean
 }) {
   const { t } = useTranslation()
 
@@ -144,6 +156,10 @@ function TransactionListInner({
   const hasTransactions = combinedTransactionList?.length > 0
 
   const sectionData = useMemo(() => {
+    if (showLoading) {
+      return LOADING_DATA
+    }
+
     if (!hasTransactions) {
       return EMPTY_ARRAY
     }
@@ -180,10 +196,19 @@ function TransactionListInner({
     priorByMonthTransactionList,
     t,
     todayTransactionList,
+    showLoading,
   ])
 
   const renderItem = useMemo(() => {
     return ({ item }: { item: TransactionDetails }) => {
+      if (isLoadingItem(item)) {
+        return (
+          <Box p="sm">
+            <Loader.Token repeat={4} />
+          </Box>
+        )
+      }
+
       return (
         <TransactionSummaryRouter
           readonly={readonly}
@@ -196,7 +221,7 @@ function TransactionListInner({
     }
   }, [readonly])
 
-  if (!hasTransactions) {
+  if (!showLoading && !hasTransactions) {
     return emptyStateContent
   }
 
