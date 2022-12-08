@@ -240,7 +240,6 @@ export default function About() {
                 index={index}
                 key={step.title}
                 {...step}
-                isLast={index === STEPS.length - 1}
               />
             ))}
           </StepList>
