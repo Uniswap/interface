@@ -1,4 +1,5 @@
 import styled from 'styled-components/macro'
+import { BREAKPOINTS } from 'theme'
 
 export const Title = styled.h1<{ isDarkMode: boolean }>`
   color: transparent;
@@ -13,7 +14,7 @@ export const Title = styled.h1<{ isDarkMode: boolean }>`
   background-clip: text;
   -webkit-background-clip: text;
 
-  @media screen and (min-width: ${MOBILE_BREAKPOINT}px) {
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
     font-size: 72px;
   }
 `
