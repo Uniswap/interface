@@ -1,11 +1,11 @@
 import { useWeb3React } from '@web3-react/core'
+import { Unicon } from 'components/Unicon'
 import { ConnectionType } from 'connection'
 import useENSAvatar from 'hooks/useENSAvatar'
 import styled from 'styled-components/macro'
 import { flexColumnNoWrap } from 'theme/styles'
 
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
-import UniwalletIcon from '../../assets/images/uniwallet.png'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import sockImg from '../../assets/svg/socks.svg'
 import { useHasSocks } from '../../hooks/useSocksBalance'
@@ -55,10 +55,11 @@ const useIcon = (connectionType: ConnectionType) => {
   const { account } = useWeb3React()
   const { avatar } = useENSAvatar(account ?? undefined)
 
+  if (!account) return undefined
   if (avatar || connectionType === ConnectionType.INJECTED) {
     return <Identicon />
   } else if (connectionType === ConnectionType.UNIWALLET) {
-    return <img src={UniwalletIcon} alt="Uniwallet" />
+    return <Unicon address={account} />
   } else if (connectionType === ConnectionType.WALLET_CONNECT) {
     return <img src={WalletConnectIcon} alt="WalletConnect" />
   } else if (connectionType === ConnectionType.COINBASE_WALLET) {
