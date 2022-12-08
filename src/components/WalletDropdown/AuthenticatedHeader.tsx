@@ -1,6 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { ButtonEmphasis, ButtonSize, LoadingButtonSpinner, ThemeButton } from 'components/Button'
+import Tooltip from 'components/Tooltip'
 import { getConnection } from 'connection/utils'
 import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
@@ -9,31 +11,58 @@ import { useFiatOnrampFlag } from 'featureFlags/flags/fiatOnramp'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
+import ms from 'ms.macro'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { ProfilePageStateType } from 'nft/types'
-import { useCallback, useMemo } from 'react'
-import { Copy, CreditCard, ExternalLink, Power } from 'react-feather'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Copy, CreditCard, ExternalLink as ExternalLinkIcon, Info, Power } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useCurrencyBalanceString } from 'state/connection/hooks'
 import { useAppDispatch } from 'state/hooks'
+import { useFiatOnrampAck } from 'state/user/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
-import styled, { css } from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import styled, { css, keyframes } from 'styled-components/macro'
+import { ExternalLink, ThemedText } from 'theme'
 
 import { shortenAddress } from '../../nft/utils/address'
-import { useCloseModal, useOpenModal, useToggleModal } from '../../state/application/hooks'
+import { useCloseModal, useFiatOnrampAvailability, useOpenModal, useToggleModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
-import { ButtonEmphasis, ButtonSize, ThemeButton } from '../Button'
 import StatusIcon from '../Identicon/StatusIcon'
 import IconButton, { IconHoverText } from './IconButton'
 
-const BuyCryptoButton = styled(ThemeButton)`
-  margin-top: 12px;
+const BuyCryptoButtonBorderKeyframes = keyframes`
+  0% {
+    border-color: transparent;
+  }
+  33% {
+    border-color: hsla(225, 95%, 63%, 1);
+  }
+  66% {
+    border-color: hsla(267, 95%, 63%, 1);
+  }
+  100% {
+    border-color: transparent;
+  }
 `
 
+const BuyCryptoButton = styled(ThemeButton)<{ $animateBorder: boolean }>`
+  border-color: transparent;
+  border-radius: 12px;
+  border-style: solid;
+  border-width: 1px;
+  height: 40px;
+  margin-top: 12px;
+  animation-direction: alternate;
+  animation-duration: ${({ theme }) => theme.transition.duration.slow};
+  animation-fill-mode: none;
+  animation-iteration-count: 2;
+  animation-name: ${BuyCryptoButtonBorderKeyframes};
+  animation-play-state: ${({ $animateBorder }) => ($animateBorder ? 'running' : 'paused')};
+  animation-timing-function: ${({ theme }) => theme.transition.timing.inOut};
+`
 const WalletButton = styled(ThemeButton)`
   border-radius: 12px;
   padding-top: 10px;
@@ -81,7 +110,20 @@ const USDText = styled.div`
   color: ${({ theme }) => theme.textSecondary};
   margin-top: 8px;
 `
-
+const FiatOnrampNotAvailableText = styled(ThemedText.Caption)`
+  align-items: center;
+  color: ${({ theme }) => theme.textSecondary};
+  display: flex;
+  justify-content: center;
+`
+const FiatOnrampAvailabilityExternalLink = styled(ExternalLink)`
+  align-items: center;
+  display: flex;
+  height: 14px;
+  justify-content: center;
+  margin-left: 6px;
+  width: 14px;
+`
 const FlexContainer = styled.div`
   display: flex;
 `
@@ -113,6 +155,11 @@ const AccountContainer = styled(ThemedText.BodySmall)`
   ${TruncatedTextStyle}
   color: ${({ theme }) => theme.textSecondary};
   margin-top: 2.5px;
+`
+const StyledInfoIcon = styled(Info)`
+  height: 12px;
+  width: 12px;
+  flex: 1 1 auto;
 `
 
 const BalanceWrapper = styled.div`
@@ -178,7 +225,49 @@ const AuthenticatedHeader = () => {
   }, [clearCollectionFilters, closeModal, navigate, resetSellAssets, setSellPageState])
 
   const fiatOnrampFlag = useFiatOnrampFlag()
+
+  // animate the border of the buy crypto button when a user navigates here from the feature announcement
+  // can be removed when components/FiatOnrampAnnouncment.tsx is no longer used
+  const [acknowledgements, acknowledge] = useFiatOnrampAck()
+  const animateBuyCryptoButtonBorder = acknowledgements?.user && !acknowledgements.system
+  useEffect(() => {
+    let stale = false
+    let timeoutId = 0
+    if (animateBuyCryptoButtonBorder) {
+      timeoutId = setTimeout(() => {
+        if (stale) return
+        acknowledge({ system: true })
+      }, ms`2 seconds`) as unknown as number
+      // as unknown as number is necessary so it's not incorrectly typed as a NodeJS.Timeout
+    }
+    return () => {
+      stale = true
+      clearTimeout(timeoutId)
+    }
+  }, [acknowledge, animateBuyCryptoButtonBorder])
+
   const openFiatOnrampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
+  const [shouldCheck, setShouldCheck] = useState(false)
+  const {
+    available: fiatOnrampAvailable,
+    availabilityChecked: fiatOnrampAvailabilityChecked,
+    error,
+    loading: fiatOnrampAvailabilityLoading,
+  } = useFiatOnrampAvailability(shouldCheck, openFiatOnrampModal)
+
+  const handleBuyCryptoClick = useCallback(() => {
+    if (!fiatOnrampAvailabilityChecked) {
+      setShouldCheck(true)
+    } else if (fiatOnrampAvailable) {
+      openFiatOnrampModal()
+    }
+  }, [fiatOnrampAvailabilityChecked, fiatOnrampAvailable, openFiatOnrampModal])
+  const disableBuyCryptoButton = Boolean(
+    error || (!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) || fiatOnrampAvailabilityLoading
+  )
+  const [showFiatOnrampUnavailableTooltip, setShow] = useState<boolean>(false)
+  const openFiatOnrampUnavailableTooltip = useCallback(() => setShow(true), [setShow])
+  const closeFiatOnrampUnavailableTooltip = useCallback(() => setShow(false), [setShow])
 
   return (
     <AuthenticatedHeaderWrapper>
@@ -200,7 +289,7 @@ const AuthenticatedHeader = () => {
           <IconButton onClick={copy} Icon={Copy}>
             {isCopied ? <Trans>Copied!</Trans> : <Trans>Copy</Trans>}
           </IconButton>
-          <IconButton href={`${explorer}address/${account}`} target="_blank" Icon={ExternalLink}>
+          <IconButton href={`${explorer}address/${account}`} target="_blank" Icon={ExternalLinkIcon}>
             <Trans>Explore</Trans>
           </IconButton>
           <IconButton data-testid="wallet-disconnect" onClick={disconnect} Icon={Power}>
@@ -224,9 +313,50 @@ const AuthenticatedHeader = () => {
           <Trans>View and sell NFTs</Trans>
         </ProfileButton>
         {fiatOnrampFlag === BaseVariant.Enabled && (
-          <BuyCryptoButton size={ButtonSize.medium} emphasis={ButtonEmphasis.medium} onClick={openFiatOnrampModal}>
-            <CreditCard /> <Trans>Buy crypto</Trans>
-          </BuyCryptoButton>
+          <>
+            <BuyCryptoButton
+              $animateBorder={animateBuyCryptoButtonBorder}
+              size={ButtonSize.medium}
+              emphasis={ButtonEmphasis.medium}
+              onClick={handleBuyCryptoClick}
+              disabled={disableBuyCryptoButton}
+            >
+              {fiatOnrampAvailabilityLoading ? (
+                <>
+                  <LoadingButtonSpinner />
+                  <Trans>Checking availability</Trans>
+                </>
+              ) : error ? (
+                <ThemedText.BodyPrimary>{error}</ThemedText.BodyPrimary>
+              ) : (
+                <>
+                  <CreditCard /> <Trans>Buy crypto</Trans>
+                </>
+              )}
+            </BuyCryptoButton>
+            {Boolean(!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) && (
+              <FiatOnrampNotAvailableText marginTop="8px">
+                <Trans>Not available in your region</Trans>
+                <Tooltip
+                  show={showFiatOnrampUnavailableTooltip}
+                  text={
+                    <Trans>
+                      Moonpay is not supported in some regions in and outside of the US. Click to learn more.
+                    </Trans>
+                  }
+                >
+                  <FiatOnrampAvailabilityExternalLink
+                    onMouseEnter={openFiatOnrampUnavailableTooltip}
+                    onMouseLeave={closeFiatOnrampUnavailableTooltip}
+                    style={{ color: 'inherit' }}
+                    href="https://support.uniswap.org/hc/en-us/articles/10966551707533-Why-is-MoonPay-not-supported-in-my-region-"
+                  >
+                    <StyledInfoIcon />
+                  </FiatOnrampAvailabilityExternalLink>
+                </Tooltip>
+              </FiatOnrampNotAvailableText>
+            )}
+          </>
         )}
         {isUnclaimed && (
           <UNIButton onClick={openClaimModal} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>

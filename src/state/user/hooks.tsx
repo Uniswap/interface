@@ -17,7 +17,7 @@ import { AppState } from '../index'
 import {
   addSerializedPair,
   addSerializedToken,
-  updateFiatOnrampAcknowledged,
+  updateFiatOnrampAcknowledgments,
   updateHideClosedPositions,
   updateHideNFTWelcomeModal,
   updateShowNftPromoBanner,
@@ -26,7 +26,7 @@ import {
   updateUserDeadline,
   updateUserExpertMode,
   updateUserLocale,
-  updateUserSlippageTolerance
+  updateUserSlippageTolerance,
 } from './reducer'
 import { SerializedPair, SerializedToken } from './types'
 
@@ -106,18 +106,23 @@ export function useExpertModeManager(): [boolean, () => void] {
   return [expertMode, toggleSetExpertMode]
 }
 
-export function useFiatOnrampAck(): [boolean, (b?: boolean) => void] {
+interface FiatOnrampAcknowledgements {
+  user: boolean
+  system: boolean
+}
+export function useFiatOnrampAck(): [
+  FiatOnrampAcknowledgements,
+  (acknowledgements: Partial<FiatOnrampAcknowledgements>) => void
+] {
   const dispatch = useAppDispatch()
-  const fiatOnrampAcknowledged = useAppSelector((state) => state.user.fiatOnrampAcknowledged)
-
-  const toggleSetExpertMode = useCallback(
-    (b = true) => {
-      dispatch(updateFiatOnrampAcknowledged(b))
+  const fiatOnrampAcknowledgments = useAppSelector((state) => state.user.fiatOnrampAcknowledgments)
+  const setAcknowledgements = useCallback(
+    (acks: Partial<FiatOnrampAcknowledgements>) => {
+      dispatch(updateFiatOnrampAcknowledgments(acks))
     },
     [dispatch]
   )
-
-  return [fiatOnrampAcknowledged, toggleSetExpertMode]
+  return [fiatOnrampAcknowledgments, setAcknowledgements]
 }
 export function useHideNFTWelcomeModal(): [boolean | undefined, () => void] {
   const dispatch = useAppDispatch()

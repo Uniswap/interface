@@ -41,11 +41,13 @@ type PopupList = Array<{ key: string; show: boolean; content: PopupContent; remo
 
 export interface ApplicationState {
   readonly chainId: number | null
+  readonly fiatOnramp: { available: boolean; availabilityChecked: boolean }
   readonly openModal: ApplicationModal | null
   readonly popupList: PopupList
 }
 
 const initialState: ApplicationState = {
+  fiatOnramp: { available: false, availabilityChecked: false },
   chainId: null,
   openModal: null,
   popupList: [],
@@ -55,6 +57,9 @@ const applicationSlice = createSlice({
   name: 'application',
   initialState,
   reducers: {
+    setFiatOnrampAvailability(state, { payload: available }) {
+      state.fiatOnramp = { available, availabilityChecked: true }
+    },
     updateChainId(state, action) {
       const { chainId } = action.payload
       state.chainId = chainId
@@ -82,5 +87,6 @@ const applicationSlice = createSlice({
   },
 })
 
-export const { updateChainId, setOpenModal, addPopup, removePopup } = applicationSlice.actions
+export const { updateChainId, setFiatOnrampAvailability, setOpenModal, addPopup, removePopup } =
+  applicationSlice.actions
 export default applicationSlice.reducer
