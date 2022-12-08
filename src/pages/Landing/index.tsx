@@ -65,6 +65,7 @@ const SubText = styled.h3`
   line-height: 24px;
   font-weight: 400;
   text-align: center;
+  max-width: 600px;
 
   @media screen and (min-width: ${DESKTOP_BREAKPOINT}px) {
     font-size: 28px;
