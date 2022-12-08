@@ -66,7 +66,7 @@ export const CollectionAsset = ({
 
   const isSelected = quantitySelected > 0
   const isErc1155 = asset.tokenType === TokenType.ERC1155
-  const sellOrders = useSellOrdersQuery(asset.address, asset.tokenId, isSelected && isErc1155)
+  const { sellOrders, isLoading } = useSellOrdersQuery(asset.address, asset.tokenId, isSelected && isErc1155)
 
   const [showTooltip, setShowTooltip] = useState(false)
   const quantitySelectedRef = useRef(quantitySelected)
@@ -85,17 +85,20 @@ export const CollectionAsset = ({
 
   const handleAddAssetToBag = useCallback(() => {
     if (BigNumber.from(asset.priceInfo?.ETHPrice ?? 0).gte(0)) {
-      const assetToAdd: GenieAsset =
-        isErc1155 && isSelected && sellOrders && sellOrders?.length >= quantitySelected
-          ? {
-              ...asset,
-              priceInfo: {
-                ...asset.priceInfo,
-                ETHPrice: parseEther(sellOrders[quantitySelected].price.value.toString()).toString(),
-                basePrice: parseEther(sellOrders[quantitySelected].price.value.toString()).toString(),
-              },
-            }
-          : asset
+      const shouldUseSellOrders = isErc1155 && isSelected && sellOrders && sellOrders?.length > quantitySelected
+      const newSellOrderPrice = shouldUseSellOrders
+        ? parseEther(sellOrders[quantitySelected].price.value.toString()).toString()
+        : undefined
+      const assetToAdd: GenieAsset = newSellOrderPrice
+        ? {
+            ...asset,
+            priceInfo: {
+              ...asset.priceInfo,
+              ETHPrice: newSellOrderPrice,
+              basePrice: newSellOrderPrice,
+            },
+          }
+        : asset
       addAssetsToBag([assetToAdd])
       if (!bagExpanded && !isMobile && !bagManuallyClosed) {
         setBagExpanded({ bagExpanded: true })
@@ -187,7 +190,13 @@ export const CollectionAsset = ({
             rarityLogo={rarityLogo}
           />
         )}
-        {isErc1155 && <Card.Erc1155Controls quantity={quantitySelected} />}
+        {isErc1155 && (
+          <Card.Erc1155Controls
+            quantity={quantitySelected}
+            isLoadingSellOrders={isLoading}
+            disableBuy={!!sellOrders && quantitySelected >= sellOrders.length}
+          />
+        )}
         <MouseoverTooltip
           text={
             <Box as="span" className={bodySmall} color="textPrimary">

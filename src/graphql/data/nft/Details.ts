@@ -221,9 +221,14 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
   ]
 }
 
-export function useSellOrdersQuery(address: string, tokenId: string, enabled: boolean): SellOrder[] | undefined {
+export function useSellOrdersQuery(
+  address: string,
+  tokenId: string,
+  enabled: boolean
+): { sellOrders: SellOrder[] | undefined; isLoading: boolean } {
   const environment = useRelayEnvironment()
-  const [listings, setListings] = useState<SellOrder[] | undefined>()
+  const [sellOrders, setSellOrders] = useState<SellOrder[] | undefined>()
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     let subscription: Subscription | undefined
@@ -243,8 +248,9 @@ export function useSellOrdersQuery(address: string, tokenId: string, enabled: bo
                 : undefined,
             } as SellOrder
           })
-          setListings(map)
+          setSellOrders(map)
         },
+        complete: () => setIsLoading(false),
       })
     }
 
@@ -253,5 +259,11 @@ export function useSellOrdersQuery(address: string, tokenId: string, enabled: bo
     }
   }, [address, enabled, environment, tokenId])
 
-  return useMemo(() => listings, [listings])
+  return useMemo(
+    () => ({
+      sellOrders,
+      isLoading,
+    }),
+    [sellOrders, isLoading]
+  )
 }

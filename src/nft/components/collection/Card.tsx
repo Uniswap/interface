@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import clsx from 'clsx'
 import { OpacityHoverState } from 'components/Common'
+import Loader from 'components/Loader'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
@@ -32,7 +33,7 @@ import {
   useState,
 } from 'react'
 import { AlertTriangle } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import * as styles from './Card.css'
@@ -136,17 +137,27 @@ const Erc1155ControlsDisplay = styled(ThemedText.HeadlineSmall)`
   cursor: default;
 `
 
-const Erc1155ControlsInput = styled.div`
+const Erc1155ControlsInput = styled.div<{ $disabled?: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
   width: 40px;
   background: ${({ theme }) => theme.backgroundInteractive};
   color: ${({ theme }) => theme.textPrimary};
+  ${({ $disabled }) => $disabled && 'cursor: default;'}
 
   :hover {
-    color: ${({ theme }) => theme.accentAction};
+    color: ${({ theme, $disabled }) => !$disabled && theme.accentAction};
   }
+`
+const Erc1155ControlsLoading = styled(ThemedText.HeadlineSmall)`
+  display: flex;
+  width: 140px;
+  height: 40px;
+  background: ${({ theme }) => theme.backgroundBackdrop};
+  align-items: center;
+  justify-content: center;
+  cursor: default;
 `
 
 const RankingContainer = styled.div`
@@ -596,33 +607,46 @@ const TertiaryInfo = ({ children }: { children: ReactNode }) => {
 
 interface Erc1155ControlsInterface {
   quantity: number
+  isLoadingSellOrders: boolean
+  disableBuy: boolean
 }
 
-const Erc1155Controls = ({ quantity }: Erc1155ControlsInterface) => {
+const Erc1155Controls = ({ quantity, isLoadingSellOrders, disableBuy }: Erc1155ControlsInterface) => {
   const { addAssetToBag, removeAssetFromBag } = useCardContext()
+  const theme = useTheme()
 
   if (quantity === 0) return null
 
   return (
     <Erc1155ControlsRow>
       <Erc1155ControlsContainer>
-        <Erc1155ControlsInput
-          onClick={(e: MouseEvent) => {
-            e.stopPropagation()
-            removeAssetFromBag()
-          }}
-        >
-          <MinusIconLarge width="24px" height="24px" />
-        </Erc1155ControlsInput>
-        <Erc1155ControlsDisplay>{quantity}</Erc1155ControlsDisplay>
-        <Erc1155ControlsInput
-          onClick={(e: MouseEvent) => {
-            e.stopPropagation()
-            addAssetToBag()
-          }}
-        >
-          <PlusIconLarge width="24px" height="24px" />
-        </Erc1155ControlsInput>
+        {isLoadingSellOrders && (
+          <Erc1155ControlsLoading>
+            <Loader size="24px" stroke="white" />
+          </Erc1155ControlsLoading>
+        )}
+        {!isLoadingSellOrders && (
+          <>
+            <Erc1155ControlsInput
+              onClick={(e: MouseEvent) => {
+                e.stopPropagation()
+                removeAssetFromBag()
+              }}
+            >
+              <MinusIconLarge width="24px" height="24px" />
+            </Erc1155ControlsInput>
+            <Erc1155ControlsDisplay>{quantity}</Erc1155ControlsDisplay>
+            <Erc1155ControlsInput
+              $disabled={disableBuy}
+              onClick={(e: MouseEvent) => {
+                e.stopPropagation()
+                !disableBuy && addAssetToBag()
+              }}
+            >
+              <PlusIconLarge width="24px" height="24px" opacity={disableBuy ? theme.opacity.disabled : 1} />
+            </Erc1155ControlsInput>
+          </>
+        )}
       </Erc1155ControlsContainer>
     </Erc1155ControlsRow>
   )
