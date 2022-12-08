@@ -94,9 +94,6 @@ const CardContainer = styled.div`
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     grid-template-columns: 1fr 1fr;
   }
-  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
 `
 
 export default function About() {
