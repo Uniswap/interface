@@ -1,3 +1,6 @@
+import swapSrc from './images/swap.png'
+import walletsSrc from './images/wallets.png'
+
 export const CARDS = [
   {
     to: '/swap',
@@ -26,9 +29,11 @@ export const STEPS = [
   {
     title: 'Connect a wallet',
     description: 'Connect your preferred crypto wallet to the Uniswap Interface.',
+    imgSrc: walletsSrc,
   },
   {
     title: 'Swap!',
     description: 'Trade crypto and NFTs through Uniswap’s platform',
+    imgSrc: swapSrc,
   },
 ]

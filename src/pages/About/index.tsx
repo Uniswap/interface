@@ -1,8 +1,3 @@
-import coinbaseWalletIcon from 'assets/images/coinbaseWalletIcon.svg'
-import metaMaskIcon from 'assets/images/metamask.png'
-import phantomIcon from 'assets/images/phantom.png'
-import rainbowIcon from 'assets/images/rainbow.png'
-import walletConnectIcon from 'assets/images/walletConnectIcon.svg'
 import { ButtonOutlined } from 'components/Button'
 import { useState } from 'react'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -70,23 +65,6 @@ const CardGrid = styled.div`
   }
 `
 
-const WalletIconGrid = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 50px;
-`
-
-const WalletIconRow = styled.div`
-  display: flex;
-  gap: 50px;
-`
-
-const WalletIcon = styled.img`
-  width: 100px;
-  height: 100px;
-`
-
 const InfoButton = styled(ButtonOutlined)`
   font-size: 24px;
   line-height: 32px;
@@ -118,8 +96,12 @@ const IntroCopy = styled.p`
   margin: 0;
 `
 
-const GetStarted = styled.div`
-  margin-bottom: 100px;
+const ThumbnailContainer = styled.div`
+  align-self: center;
+`
+
+const Thumbnail = styled.img`
+  width: 100%;
 `
 
 export default function About() {
@@ -151,37 +133,26 @@ export default function About() {
             <Card key={card.title} {...card} />
           ))}
         </CardGrid>
-        <Body>
-          <div>
-            <GetStarted>
-              <SubTitle isDarkMode={isDarkMode}>Get Started</SubTitle>
-            </GetStarted>
-            <WalletIconGrid>
-              <WalletIconRow>
-                <WalletIcon src={metaMaskIcon} alt="MetaMask" />
-                <WalletIcon src={walletConnectIcon} alt="WalletConnect" />
-                <WalletIcon src={coinbaseWalletIcon} alt="Coinbase Wallet" />
-              </WalletIconRow>
-              <WalletIconRow>
-                <WalletIcon src={rainbowIcon} alt="Rainbow" />
-                <WalletIcon src={phantomIcon} alt="Phantom" />
-                <WalletIcon src={walletConnectIcon} alt="WalletConnect" />
-              </WalletIconRow>
-            </WalletIconGrid>
-          </div>
-          <StepList>
-            {STEPS.map((step, index) => (
-              <Step
-                expanded={selectedStepIndex === index}
-                onClick={() => setSelectedStepIndex(index)}
-                index={index}
-                key={step.title}
-                title={step.title}
-                description={step.description}
-              />
-            ))}
-          </StepList>
-        </Body>
+        <div>
+          <SubTitle isDarkMode={isDarkMode}>Get Started</SubTitle>
+          <Body>
+            <ThumbnailContainer>
+              <Thumbnail alt="Thumbnail" src={STEPS[selectedStepIndex]?.imgSrc} />
+            </ThumbnailContainer>
+            <StepList>
+              {STEPS.map((step, index) => (
+                <Step
+                  expanded={selectedStepIndex === index}
+                  onClick={() => setSelectedStepIndex(index)}
+                  index={index}
+                  key={step.title}
+                  title={step.title}
+                  description={step.description}
+                />
+              ))}
+            </StepList>
+          </Body>
+        </div>
       </Content>
     </Page>
   )
