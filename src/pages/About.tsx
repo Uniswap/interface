@@ -64,7 +64,6 @@ const Body = styled.p`
   color: ${({ theme }) => theme.textPrimary};
   font-size: 24px;
   line-height: 36px;
-  padding: 0;
   margin: 0;
 `
 
@@ -149,10 +148,26 @@ export default function About() {
           list a token, or provide liquidity in a pool to earn fees.
         </Body>
         <CardContainer>
-          <Card to="https://app.uniswap.org/#/swap" title="Swap tokens" description="" />
-          <Card to="https://app.uniswap.org/#/nfts" title="Trade NFTs" description="" />
-          <Card to="https://app.uniswap.org/#/pool" title="Earn fees" description="" />
-          <Card to="https://support.uniswap.org/" title="Build dApps" description="" />
+          <Card
+            to="https://app.uniswap.org/#/swap"
+            title="Swap tokens"
+            description="Discover and swap top tokens on Ethereum, Polygon, Optimism, and more."
+          />
+          <Card
+            to="https://app.uniswap.org/#/nfts"
+            title="Trade NFTs"
+            description="Buy & sell NFTs across marketplaces to find more listings at better prices."
+          />
+          <Card
+            to="https://app.uniswap.org/#/pool"
+            title="Earn fees"
+            description="Provide liquidity to pools on Uniswap and earn fees on swaps."
+          />
+          <Card
+            to="https://support.uniswap.org/"
+            title="Build dApps"
+            description="Build on the largest DeFi protocol on Ethereum with our tools."
+          />
         </CardContainer>
         <IconRow>
           <Icon href="https://discord.com/invite/FCfyBSbCU5">
