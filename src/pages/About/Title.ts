@@ -34,4 +34,3 @@ export const SubTitle = styled.h2<{ isDarkMode?: boolean }>`
   background-clip: text;
   -webkit-background-clip: text;
 `
-

@@ -13,7 +13,7 @@ import { BREAKPOINTS } from 'theme'
 
 import Card from './Card'
 import Step from './Step'
-import { Title, SubTitle } from './Title'
+import { SubTitle, Title } from './Title'
 
 const MOBILE_BREAKPOINT = BREAKPOINTS.md
 
