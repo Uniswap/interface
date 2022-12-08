@@ -1,47 +1,15 @@
-import coinbaseWalletIcon from 'assets/images/coinbaseWalletIcon.svg'
-import metaMaskIcon from 'assets/images/metamask.png'
-import phantomIcon from 'assets/images/phantom.png'
-import rainbowIcon from 'assets/images/rainbow.png'
-import walletConnectIcon from 'assets/images/walletConnectIcon.svg'
 import { ButtonOutlined } from 'components/Button'
-import { Box } from 'nft/components/Box'
-import { DiscordIconMenu, GithubIconMenu, TwitterIconMenu } from 'nft/components/icons'
-import { ReactNode, useState } from 'react'
+import { useState } from 'react'
 import { useIsDarkMode } from 'state/user/hooks'
-import styled, { useTheme } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 
 import Card from './Card'
+import { CARDS, STEPS } from './constants'
 import Step from './Step'
 import { SubTitle, Title } from './Title'
 
 const MOBILE_BREAKPOINT = BREAKPOINTS.md
-
-const IconRow = styled.span`
-  display: flex;
-  flex-direction: row;
-`
-
-const Icon = ({ href, children }: { href?: string; children: ReactNode }) => {
-  return (
-    <Box
-      as={href ? 'a' : 'div'}
-      href={href ?? undefined}
-      target={href ? '_blank' : undefined}
-      rel={href ? 'noopener noreferrer' : undefined}
-      display="flex"
-      flexDirection="column"
-      color="textPrimary"
-      background="none"
-      border="none"
-      justifyContent="center"
-      textAlign="center"
-      marginRight="12"
-    >
-      {children}
-    </Box>
-  )
-}
 
 const Page = styled.span<{ isDarkMode: boolean }>`
   width: 100%;
@@ -97,23 +65,6 @@ const CardGrid = styled.div`
   }
 `
 
-const WalletIconGrid = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 50px;
-`
-
-const WalletIconRow = styled.div`
-  display: flex;
-  gap: 50px;
-`
-
-const WalletIcon = styled.img`
-  width: 100px;
-  height: 100px;
-`
-
 const InfoButton = styled(ButtonOutlined)`
   font-size: 24px;
   line-height: 32px;
@@ -145,48 +96,16 @@ const IntroCopy = styled.p`
   margin: 0;
 `
 
-const GetStarted = styled.div`
-  margin-bottom: 100px;
+const ThumbnailContainer = styled.div`
+  align-self: center;
 `
 
-const CARDS = [
-  {
-    to: '/swap',
-    title: 'Swap tokens',
-    description: 'Discover and swap top tokens on Ethereum, Polygon, Optimism, and more.',
-  },
-  {
-    to: '/nfts',
-    title: 'Trade NFTs',
-    description: 'Buy & sell NFTs across marketplaces to find more listings at better prices.',
-  },
-  {
-    to: '/pool',
-    title: 'Earn fees',
-    description: 'Provide liquidity to pools on Uniswap and earn fees on swaps.',
-  },
-  {
-    to: 'https://support.uniswap.org/',
-    external: true,
-    title: 'Build dApps',
-    description: 'Build on the largest DeFi protocol on Ethereum with our tools.',
-  },
-]
-
-const STEPS = [
-  {
-    title: 'Connect a wallet',
-    description: 'Connect your preferred crypto wallet to the Uniswap Interface.',
-  },
-  {
-    title: 'Swap!',
-    description: 'Trade crypto and NFTs through Uniswap’s platform',
-  },
-]
+const Thumbnail = styled.img`
+  width: 100%;
+`
 
 export default function About() {
   const isDarkMode = useIsDarkMode()
-  const theme = useTheme()
 
   const [selectedStepIndex, setSelectedStepIndex] = useState(0)
 
@@ -214,47 +133,26 @@ export default function About() {
             <Card key={card.title} {...card} />
           ))}
         </CardGrid>
-        <Body>
-          <div>
-            <GetStarted>
-              <SubTitle isDarkMode={isDarkMode}>Get Started</SubTitle>
-            </GetStarted>
-            <WalletIconGrid>
-              <WalletIconRow>
-                <WalletIcon src={metaMaskIcon} alt="MetaMask" />
-                <WalletIcon src={walletConnectIcon} alt="WalletConnect" />
-                <WalletIcon src={coinbaseWalletIcon} alt="Coinbase Wallet" />
-              </WalletIconRow>
-              <WalletIconRow>
-                <WalletIcon src={rainbowIcon} alt="Rainbow" />
-                <WalletIcon src={phantomIcon} alt="Phantom" />
-                <WalletIcon src={walletConnectIcon} alt="WalletConnect" />
-              </WalletIconRow>
-            </WalletIconGrid>
-          </div>
-          <StepList>
-            {STEPS.map((step, index) => (
-              <Step
-                expanded={selectedStepIndex === index}
-                onClick={() => setSelectedStepIndex(index)}
-                index={index}
-                key={step.title}
-                {...step}
-              />
-            ))}
-          </StepList>
-        </Body>
-        <IconRow>
-          <Icon href="https://discord.com/invite/FCfyBSbCU5">
-            <DiscordIconMenu width={24} height={24} color={theme.textSecondary} />
-          </Icon>
-          <Icon href="https://twitter.com/Uniswap">
-            <TwitterIconMenu width={24} height={24} color={theme.textSecondary} />
-          </Icon>
-          <Icon href="https://github.com/Uniswap">
-            <GithubIconMenu width={24} height={24} color={theme.textSecondary} />
-          </Icon>
-        </IconRow>
+        <div>
+          <SubTitle isDarkMode={isDarkMode}>Get Started</SubTitle>
+          <Body>
+            <ThumbnailContainer>
+              <Thumbnail alt="Thumbnail" src={STEPS[selectedStepIndex]?.imgSrc} />
+            </ThumbnailContainer>
+            <StepList>
+              {STEPS.map((step, index) => (
+                <Step
+                  expanded={selectedStepIndex === index}
+                  onClick={() => setSelectedStepIndex(index)}
+                  index={index}
+                  key={step.title}
+                  title={step.title}
+                  description={step.description}
+                />
+              ))}
+            </StepList>
+          </Body>
+        </div>
       </Content>
     </Page>
   )
