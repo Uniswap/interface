@@ -1,3 +1,4 @@
+import metaMaskIcon from 'assets/images/metamask.png'
 import { Box } from 'nft/components/Box'
 import { DiscordIconMenu, GithubIconMenu, TwitterIconMenu } from 'nft/components/icons'
 import { ReactNode } from 'react'
@@ -121,6 +122,16 @@ const PoweredBy = styled.h2<{ isDarkMode?: boolean }>`
   -webkit-background-clip: text;
 `
 
+const WalletIconContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+`
+
+const WalletIcon = styled.img`
+  width: 100px;
+  height: 100px;
+`
+
 export default function About() {
   const isDarkMode = useIsDarkMode()
   const theme = useTheme()
@@ -160,6 +171,17 @@ export default function About() {
             description="Build on the largest DeFi protocol on Ethereum with our tools."
           />
         </CardContainer>
+        <Body>
+          <WalletIconContainer>
+            <WalletIcon src={metaMaskIcon} alt="MetaMask" />
+            <WalletIcon src={metaMaskIcon} alt="MetaMask" />
+            <WalletIcon src={metaMaskIcon} alt="MetaMask" />
+            <WalletIcon src={metaMaskIcon} alt="MetaMask" />
+            <WalletIcon src={metaMaskIcon} alt="MetaMask" />
+            <WalletIcon src={metaMaskIcon} alt="MetaMask" />
+          </WalletIconContainer>
+          <div></div>
+        </Body>
         <IconRow>
           <Icon href="https://discord.com/invite/FCfyBSbCU5">
             <DiscordIconMenu width={24} height={24} color={theme.textSecondary} />
