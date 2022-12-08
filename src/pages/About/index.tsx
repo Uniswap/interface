@@ -137,8 +137,12 @@ export default function About() {
               tokens, list a token, or provide liquidity in a pool to earn fees.
             </IntroCopy>
             <ActionsContainer>
-              <InfoButton>Learn more</InfoButton>
-              <InfoButton>Read the docs</InfoButton>
+              <InfoButton as="a" rel="noopener noreferrer" href="https://uniswap.org" target="_blank">
+                Learn more
+              </InfoButton>
+              <InfoButton as="a" rel="noopener noreferrer" href="https://docs.uniswap.org" target="_blank">
+                Read the docs
+              </InfoButton>
             </ActionsContainer>
           </Intro>
         </PoweredBySection>
