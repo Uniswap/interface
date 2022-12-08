@@ -7,6 +7,14 @@ import { t } from '@lingui/macro'
  */
 export function swapErrorToUserReadableMessage(error: any): string {
   let reason: string | undefined
+
+  if (error.code) {
+    switch (error.code) {
+      case 4001:
+        return t`Transaction rejected`
+    }
+  }
+
   while (Boolean(error)) {
     reason = error.reason ?? error.message ?? reason
     error = error.error ?? error.data?.originalError

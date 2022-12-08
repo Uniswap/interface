@@ -64,7 +64,7 @@ export function useUniversalRouterSwapCallback(
       return response
     } catch (swapError: unknown) {
       const message = swapErrorToUserReadableMessage(swapError)
-      throw new Error(`Trade failed: ${message}`)
+      throw new Error(message)
     }
   }, [
     account,
