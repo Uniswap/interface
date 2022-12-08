@@ -1,3 +1,4 @@
+import { Trace } from '@uniswap/analytics'
 import { ButtonOutlined } from 'components/Button'
 import { useState } from 'react'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -124,54 +125,56 @@ export default function About() {
   const [selectedStepIndex, setSelectedStepIndex] = useState(0)
 
   return (
-    <Page isDarkMode={isDarkMode}>
-      <Content>
-        <Title isDarkMode={isDarkMode}>The best way to buy, sell and own crypto and NFTs</Title>
-        <PoweredBySection>
+    <Trace page="about-page" shouldLogImpression>
+      <Page isDarkMode={isDarkMode}>
+        <Content>
+          <Title isDarkMode={isDarkMode}>The best way to buy, sell and own crypto and NFTs</Title>
+          <PoweredBySection>
+            <div>
+              <SubTitle isDarkMode={isDarkMode}>Powered by the Uniswap Protocol</SubTitle>
+            </div>
+            <Intro>
+              <IntroCopy>
+                The Uniswap Protocol is the world’s leading decentralized exchange protocol, allowing anyone to swap
+                tokens, list a token, or provide liquidity in a pool to earn fees.
+              </IntroCopy>
+              <ActionsContainer>
+                <InfoButton as="a" rel="noopener noreferrer" href="https://uniswap.org" target="_blank">
+                  Learn more
+                </InfoButton>
+                <InfoButton as="a" rel="noopener noreferrer" href="https://docs.uniswap.org" target="_blank">
+                  Read the docs
+                </InfoButton>
+              </ActionsContainer>
+            </Intro>
+          </PoweredBySection>
+          <CardGrid>
+            {CARDS.map((card) => (
+              <Card key={card.title} {...card} />
+            ))}
+          </CardGrid>
           <div>
-            <SubTitle isDarkMode={isDarkMode}>Powered by the Uniswap Protocol</SubTitle>
+            <SubTitle isDarkMode={isDarkMode}>Get Started</SubTitle>
+            <Panels>
+              <ThumbnailContainer>
+                <Thumbnail alt="Thumbnail" src={STEPS[selectedStepIndex]?.imgSrc} />
+              </ThumbnailContainer>
+              <StepList>
+                {STEPS.map((step, index) => (
+                  <Step
+                    expanded={selectedStepIndex === index}
+                    onClick={() => setSelectedStepIndex(index)}
+                    index={index}
+                    key={step.title}
+                    title={step.title}
+                    description={step.description}
+                  />
+                ))}
+              </StepList>
+            </Panels>
           </div>
-          <Intro>
-            <IntroCopy>
-              The Uniswap Protocol is the world’s leading decentralized exchange protocol, allowing anyone to swap
-              tokens, list a token, or provide liquidity in a pool to earn fees.
-            </IntroCopy>
-            <ActionsContainer>
-              <InfoButton as="a" rel="noopener noreferrer" href="https://uniswap.org" target="_blank">
-                Learn more
-              </InfoButton>
-              <InfoButton as="a" rel="noopener noreferrer" href="https://docs.uniswap.org" target="_blank">
-                Read the docs
-              </InfoButton>
-            </ActionsContainer>
-          </Intro>
-        </PoweredBySection>
-        <CardGrid>
-          {CARDS.map((card) => (
-            <Card key={card.title} {...card} />
-          ))}
-        </CardGrid>
-        <div>
-          <SubTitle isDarkMode={isDarkMode}>Get Started</SubTitle>
-          <Panels>
-            <ThumbnailContainer>
-              <Thumbnail alt="Thumbnail" src={STEPS[selectedStepIndex]?.imgSrc} />
-            </ThumbnailContainer>
-            <StepList>
-              {STEPS.map((step, index) => (
-                <Step
-                  expanded={selectedStepIndex === index}
-                  onClick={() => setSelectedStepIndex(index)}
-                  index={index}
-                  key={step.title}
-                  title={step.title}
-                  description={step.description}
-                />
-              ))}
-            </StepList>
-          </Panels>
-        </div>
-      </Content>
-    </Page>
+        </Content>
+      </Page>
+    </Trace>
   )
 }

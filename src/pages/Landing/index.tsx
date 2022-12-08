@@ -1,3 +1,4 @@
+import { Trace } from '@uniswap/analytics'
 import { BaseButton } from 'components/Button'
 import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
 import Swap from 'pages/Swap'
@@ -133,7 +134,7 @@ export default function Landing() {
   if (useLandingPageFlag() === LandingPageVariant.Control || !isOpen) return null
 
   return (
-    <>
+    <Trace page="landing-page" shouldLogImpression>
       <PageWrapper isDarkMode={isDarkMode}>
         <TitleWrapper>
           <TitleText isDarkMode={isDarkMode}>Trade crypto & NFTs with confidence.</TitleText>
@@ -149,6 +150,6 @@ export default function Landing() {
         </ActionsWrapper>
       </PageWrapper>
       <Swap />
-    </>
+    </Trace>
   )
 }
