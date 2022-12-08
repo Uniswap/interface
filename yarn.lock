@@ -4329,7 +4329,7 @@
   resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.30.tgz#2103ca23b8007c59ec71718d34cdc97861c409e5"
   integrity sha512-HwY2VvkQ8lNR6ks5NqQfAtg+4IZqz3KV1T8d2DlI8emIn9uMmaoFbIOg0nzjqAVKKnZSbMTRRtUoAh6mmjRvog==
 
-"@uniswap/universal-router-sdk@^1.2.1", "@uniswap/universal-router-sdk@1.2.2":
+"@uniswap/universal-router-sdk@1.2.2", "@uniswap/universal-router-sdk@^1.2.1":
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/@uniswap/universal-router-sdk/-/universal-router-sdk-1.2.2.tgz#26ece606279d1cd9823277b74cd43575caf160e9"
   integrity sha512-L+MkvMiLyG1vfpEoLbe9xquSApSrfe1m0iLuIjgkZ4qR2Kb0NU8nZXNqeyTJmTZhNbYYIJA0AwRawAN+90NKIw==
@@ -4429,10 +4429,10 @@
     "@uniswap/v3-core" "1.0.0"
     "@uniswap/v3-periphery" "^1.0.1"
 
-"@uniswap/widgets@2.22.0":
-  version "2.22.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.22.0.tgz#dd2ba224c7c9ef3106b5eb66c3d49d24950b9560"
-  integrity sha512-mY3n0zRZMak4VHZ2kBqWUvIkFyYBk4SFcTlrKP3w3W5YbXdEH/xHWO8oIuwfSOig/kveVy6jjnjSa05FWJbDhg==
+"@uniswap/widgets@2.22.2":
+  version "2.22.2"
+  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.22.2.tgz#d4e7cffd8ce127a99428575b8be9d87adbbf53ba"
+  integrity sha512-77YJbw69us0XMxHJpcqEoMa63KZLfWFa7BHBH2GVwJ1worOo2AVAmrAOngvSnEQ0/5U/Uw7hFpgbFy0LBtsv4Q==
   dependencies:
     "@babel/runtime" ">=7.17.0"
     "@fontsource/ibm-plex-mono" "^4.5.1"
