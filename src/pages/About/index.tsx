@@ -12,6 +12,7 @@ import styled, { useTheme } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 
 import Card from './Card'
+import Step from './Step'
 
 const MOBILE_BREAKPOINT = BREAKPOINTS.md
 
@@ -71,7 +72,7 @@ const Title = styled.h1<{ isDarkMode: boolean }>`
 const Body = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 120px;
   justify-content: space-between;
   color: ${({ theme }) => theme.textPrimary};
   font-size: 24px;
@@ -131,9 +132,15 @@ const SubTitle = styled.h2<{ isDarkMode?: boolean }>`
 `
 
 const WalletIconGrid = styled.div`
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   gap: 50px;
-  grid-template-columns: 1fr 1fr 1fr;
+`
+
+const WalletIconRow = styled.div`
+  display: flex;
+  gap: 50px;
 `
 
 const WalletIcon = styled.img`
@@ -157,6 +164,11 @@ const ActionsContainer = styled.span`
   }
 `
 
+const StepList = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
 const Intro = styled.div`
   display: flex;
   flex-direction: column;
@@ -170,59 +182,6 @@ const IntroCopy = styled.p`
 const GetStarted = styled.div`
   margin-bottom: 100px;
 `
-
-const StepList = styled.div`
-  display: flex;
-  flex-direction: column;
-`
-
-const StyledStep = styled.div<{ isLast?: boolean }>`
-  display: flex;
-  gap: 36px;
-  padding: 24px 0;
-  border-bottom: ${({ isLast, theme }) => !isLast && `1px solid ${theme.backgroundOutline}`};
-`
-
-const StepTitle = styled.div`
-  color: ${({ theme }) => theme.textPrimary};
-  font-size: 36px;
-  line-height: 44px;
-  font-weight: 600;
-`
-
-const StepDescription = styled.div`
-  color: ${({ theme }) => theme.textSecondary};
-  font-size: 24px;
-  line-height: 36px;
-`
-
-const StepIndex = styled.div`
-  color: ${({ theme }) => theme.textPrimary};
-  font-size: 36px;
-  line-height: 44px;
-`
-
-const Step = ({
-  index,
-  title,
-  description,
-  isLast,
-}: {
-  index: number
-  title: string
-  description?: string
-  isLast?: boolean
-}) => {
-  return (
-    <StyledStep isLast={isLast}>
-      <StepIndex>{index + 1}</StepIndex>
-      <div>
-        <StepTitle>{title}</StepTitle>
-        {description && <StepDescription>{description}</StepDescription>}
-      </div>
-    </StyledStep>
-  )
-}
 
 export default function About() {
   const isDarkMode = useIsDarkMode()
@@ -276,12 +235,16 @@ export default function About() {
               <SubTitle isDarkMode={isDarkMode}>Get Started</SubTitle>
             </GetStarted>
             <WalletIconGrid>
-              <WalletIcon src={metaMaskIcon} alt="MetaMask" />
-              <WalletIcon src={walletConnectIcon} alt="WalletConnect" />
-              <WalletIcon src={coinbaseWalletIcon} alt="Coinbase Wallet" />
-              <WalletIcon src={rainbowIcon} alt="Rainbow" />
-              <WalletIcon src={phantomIcon} alt="Phantom" />
-              <WalletIcon src={walletConnectIcon} alt="WalletConnect" />
+              <WalletIconRow>
+                <WalletIcon src={metaMaskIcon} alt="MetaMask" />
+                <WalletIcon src={walletConnectIcon} alt="WalletConnect" />
+                <WalletIcon src={coinbaseWalletIcon} alt="Coinbase Wallet" />
+              </WalletIconRow>
+              <WalletIconRow>
+                <WalletIcon src={rainbowIcon} alt="Rainbow" />
+                <WalletIcon src={phantomIcon} alt="Phantom" />
+                <WalletIcon src={walletConnectIcon} alt="WalletConnect" />
+              </WalletIconRow>
             </WalletIconGrid>
           </div>
           <StepList>
