@@ -1,5 +1,7 @@
 import coinbaseWalletIcon from 'assets/images/coinbaseWalletIcon.svg'
 import metaMaskIcon from 'assets/images/metamask.png'
+import phantomIcon from 'assets/images/phantom.png'
+import rainbowIcon from 'assets/images/rainbow.png'
 import walletConnectIcon from 'assets/images/walletConnectIcon.svg'
 import { ButtonOutlined } from 'components/Button'
 import { Box } from 'nft/components/Box'
@@ -205,9 +207,9 @@ export default function About() {
             <WalletIcon src={metaMaskIcon} alt="MetaMask" />
             <WalletIcon src={walletConnectIcon} alt="WalletConnect" />
             <WalletIcon src={coinbaseWalletIcon} alt="Coinbase Wallet" />
-            <WalletIcon src={metaMaskIcon} alt="MetaMask" />
+            <WalletIcon src={rainbowIcon} alt="Rainbow" />
+            <WalletIcon src={phantomIcon} alt="Phantom" />
             <WalletIcon src={walletConnectIcon} alt="WalletConnect" />
-            <WalletIcon src={coinbaseWalletIcon} alt="Coinbase Wallet" />
           </WalletIconContainer>
           <div></div>
         </Body>
