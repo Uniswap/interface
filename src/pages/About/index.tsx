@@ -9,8 +9,6 @@ import { CARDS, STEPS } from './constants'
 import Step from './Step'
 import { SubTitle, Title } from './Title'
 
-const MOBILE_BREAKPOINT = BREAKPOINTS.md
-
 const Page = styled.span<{ isDarkMode: boolean }>`
   width: 100%;
   align-self: center;
@@ -23,13 +21,14 @@ const Page = styled.span<{ isDarkMode: boolean }>`
 const Body = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 120px;
   justify-content: space-between;
   color: ${({ theme }) => theme.textPrimary};
   font-size: 24px;
   line-height: 36px;
+  gap: 24px;
 
-  @media screen and (min-width: ${MOBILE_BREAKPOINT}px) {
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    gap: 120px;
     flex-direction: row;
   }
 
@@ -48,7 +47,7 @@ const Content = styled.div`
   padding: 128px 16px 16px 16px;
   gap: 24px;
 
-  @media screen and (min-width: ${MOBILE_BREAKPOINT}px) {
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
     padding: 128px 80px 80px 80px;
     gap: 120px;
   }
