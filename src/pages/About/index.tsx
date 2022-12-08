@@ -13,6 +13,7 @@ import { BREAKPOINTS } from 'theme'
 
 import Card from './Card'
 import Step from './Step'
+import { Title, SubTitle } from './Title'
 
 const MOBILE_BREAKPOINT = BREAKPOINTS.md
 
@@ -49,24 +50,6 @@ const Page = styled.span<{ isDarkMode: boolean }>`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-`
-
-const Title = styled.h1<{ isDarkMode: boolean }>`
-  color: transparent;
-  font-size: 48px;
-  font-weight: 600;
-  margin-bottom: 0px;
-  background: ${({ isDarkMode }) =>
-    isDarkMode
-      ? 'linear-gradient(20deg, rgba(255, 244, 207, 1) 10%, rgba(255, 87, 218, 1) 100%)'
-      : 'linear-gradient(10deg, rgba(255,79,184,1) 0%, rgba(255,159,251,1) 100%)'};
-
-  background-clip: text;
-  -webkit-background-clip: text;
-
-  @media screen and (min-width: ${MOBILE_BREAKPOINT}px) {
-    font-size: 72px;
-  }
 `
 
 const Body = styled.div`
@@ -112,23 +95,6 @@ const CardGrid = styled.div`
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     grid-template-columns: 1fr 1fr;
   }
-`
-
-const SubTitle = styled.h2<{ isDarkMode?: boolean }>`
-  margin: 0;
-  font-weight: 600;
-  max-width: 340px;
-  color: transparent;
-  font-size: 40px;
-  line-height: 48px;
-
-  background: ${({ isDarkMode }) =>
-    isDarkMode
-      ? 'linear-gradient(20deg, rgba(255, 244, 207, 1) 10%, rgba(255, 87, 218, 1) 100%)'
-      : 'linear-gradient(10deg, rgba(255,79,184,1) 0%, rgba(255,159,251,1) 100%)'};
-
-  background-clip: text;
-  -webkit-background-clip: text;
 `
 
 const WalletIconGrid = styled.div`
