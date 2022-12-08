@@ -182,7 +182,9 @@ export default function ShareModal({
   )
 }
 
-export function ShareButtonWithModal({ url, onShared }: { url?: string; onShared?: () => void }) {
+type Props = { url?: string; onShared?: () => void; color?: string }
+
+export const ShareButtonWithModal: React.FC<Props> = ({ url, onShared, color }) => {
   const theme = useTheme()
   const toggle = useToggleModal(ApplicationModal.SHARE)
 
@@ -190,7 +192,7 @@ export function ShareButtonWithModal({ url, onShared }: { url?: string; onShared
     <>
       <StyledActionButtonSwapForm onClick={toggle}>
         <MouseoverTooltip text={t`Share`} placement="top" width="fit-content">
-          <Share2 size={18} color={theme.subText} />
+          <Share2 size={18} color={color || theme.subText} />
         </MouseoverTooltip>
       </StyledActionButtonSwapForm>
       <ShareModal url={url} onShared={onShared} />

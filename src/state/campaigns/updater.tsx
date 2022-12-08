@@ -99,7 +99,6 @@ const fetchLeaderBoard = ({
       pageNumber,
       userAddress,
       lookupAddress,
-      eligibleOnly: true,
     },
   }).then(({ data }) => formatLeaderboardData(data.data))
 }
@@ -108,7 +107,7 @@ const LEADERBOARD_DEFAULT: CampaignLeaderboard = {
   finalizedAt: 0,
   distributedRewardsAt: 0,
   userRank: 0,
-  numberOfEligibleParticipants: 0,
+  totalParticipants: 0,
   rankings: [],
   rewards: [],
 }
@@ -289,13 +288,13 @@ export default function CampaignsUpdater(): null {
     dispatch(setCampaignData({ campaigns: campaignData ?? [] }))
     if (campaignData && campaignData.length) {
       if (selectedCampaignId === undefined) {
-        navigate(getSlugUrlCampaign(campaignData[0]))
+        navigate(getSlugUrlCampaign(campaignData[0].id, campaignData[0].name))
       } else {
         const selectedCampaign = campaignData.find(campaign => campaign.id.toString() === selectedCampaignId)
         if (selectedCampaign) {
           dispatch(setSelectedCampaign({ campaign: selectedCampaign }))
         } else {
-          navigate(getSlugUrlCampaign(campaignData[0]))
+          navigate(getSlugUrlCampaign(campaignData[0].id, campaignData[0].name))
         }
       }
     }

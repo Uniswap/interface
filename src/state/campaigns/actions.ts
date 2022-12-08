@@ -16,9 +16,8 @@ export enum CampaignState {
 }
 
 export enum CampaignUserInfoStatus {
-  Eligible = 'ELIGIBLE',
-  Ineligible = 'INELIGIBLE',
-  Banned = 'BANNED',
+  Eligible = 'eligible',
+  Ineligible = 'ineligible',
 }
 
 export type CampaignUserInfo = {
@@ -76,7 +75,7 @@ export interface CampaignLeaderboardReward {
 }
 
 export interface CampaignLeaderboard {
-  numberOfEligibleParticipants: number
+  totalParticipants: number
   userRank: number
   finalizedAt: number
   distributedRewardsAt: number

@@ -29,7 +29,7 @@ import Faucet from 'components/Icons/Faucet'
 import Loader from 'components/Loader'
 import MenuFlyout from 'components/MenuFlyout'
 import { ENV_LEVEL, ENV_TYPE, TAG } from 'constants/env'
-import { AGGREGATOR_ANALYTICS_URL, DMM_ANALYTICS_URL } from 'constants/index'
+import { AGGREGATOR_ANALYTICS_URL, APP_PATHS, DMM_ANALYTICS_URL } from 'constants/index'
 import { FAUCET_NETWORKS } from 'constants/networks'
 import { EVMNetworkInfo } from 'constants/networks/type'
 import { useActiveWeb3React } from 'hooks'
@@ -181,7 +181,7 @@ export default function Menu() {
   const under1440 = useMedia('(max-width: 1440px)')
   const above1321 = useMedia('(min-width: 1321px)')
   const above768 = useMedia('(min-width: 768px)')
-  const under369 = useMedia('(max-width: 370px)')
+  const under420 = useMedia('(max-width: 420px)')
 
   const bridgeLink = networkInfo.bridgeURL
   const toggleClaimPopup = useToggleModal(ApplicationModal.CLAIM_POPUP)
@@ -240,11 +240,16 @@ export default function Menu() {
           </NavMenuItem>
         )}
 
-        {under369 && (
-          <NavMenuItem to="/campaigns" onClick={toggle}>
-            <Award size={14} />
-            <Trans>Campaigns</Trans>
-          </NavMenuItem>
+        {under420 && (
+          <NavDropDown
+            icon={<Award size={14} />}
+            title="Campaigns"
+            link="#"
+            options={[
+              { link: APP_PATHS.CAMPAIGN, label: t`Trading campaigns` },
+              { link: APP_PATHS.GRANT_PROGRAMS, label: t`Project trading grant` },
+            ]}
+          />
         )}
         {under1440 && (
           <NavDropDown
@@ -269,10 +274,10 @@ export default function Menu() {
             link="#"
             title={'Analytics'}
             options={[
-              { link: DMM_ANALYTICS_URL[chainId], label: 'Liquidity', external: true },
+              { link: DMM_ANALYTICS_URL[chainId], label: t`Liquidity`, external: true },
               {
                 link: AGGREGATOR_ANALYTICS_URL,
-                label: 'Aggregator',
+                label: t`Aggregator`,
                 external: true,
               },
             ]}

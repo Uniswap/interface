@@ -14,10 +14,9 @@ const ModalSelectCampaign = () => {
   const isSelectCampaignModalOpen = useModalOpen(ApplicationModal.SELECT_CAMPAIGN)
   const toggleSelectCampaignModal = useSelectCampaignModalToggle()
   const theme = useTheme()
-
   const navigate = useNavigate()
   const onSelectCampaign = (campaign: CampaignData) => {
-    navigate(getSlugUrlCampaign(campaign))
+    navigate(getSlugUrlCampaign(campaign.id, campaign.name))
     setTimeout(() => {
       // UX Improvement
       toggleSelectCampaignModal()

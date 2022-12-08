@@ -47,14 +47,14 @@ import {
 } from 'state/campaigns/actions'
 import { useAppDispatch } from 'state/hooks'
 import { HideMedium, MediumOnly } from 'theme'
+// This is needed to make sure the UI looks just like in Editor
+import 'theme/CKEditor/CKEditor5.css'
+import 'theme/CKEditor/CKEditor5_custom.css'
 import { formatNumberWithPrecisionRange } from 'utils'
 import { getSlugUrlCampaign } from 'utils/campaign'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
 import oembed2iframe from 'utils/oembed2iframe'
 
-// This is needed to make sure the UI looks just like in Editor
-import './CKEditor5.css'
-import './CKEditor5_custom.css'
 import ModalSelectCampaign from './ModalSelectCampaign'
 
 const LoaderParagraphs = () => (
@@ -310,7 +310,7 @@ export default function Campaign() {
 
   const navigate = useNavigate()
   const onSelectCampaign = (campaign: CampaignData) => {
-    navigate(getSlugUrlCampaign(campaign))
+    navigate(getSlugUrlCampaign(campaign.id, campaign.name))
   }
 
   const now = Date.now()
@@ -550,8 +550,8 @@ export default function Campaign() {
                 {!isMobile && <Users size={20} color={theme.subText} />}
                 {isSelectedCampaignMediaLoaded ? (
                   <Text fontSize={20} fontWeight={500} style={{ gridColumn: '1 / -1' }}>
-                    {selectedCampaignLeaderboard?.numberOfEligibleParticipants
-                      ? formatNumberWithPrecisionRange(selectedCampaignLeaderboard.numberOfEligibleParticipants, 0, 0)
+                    {selectedCampaignLeaderboard?.totalParticipants
+                      ? formatNumberWithPrecisionRange(selectedCampaignLeaderboard.totalParticipants, 0, 0)
                       : '--'}
                   </Text>
                 ) : (

@@ -27,7 +27,7 @@ import {
 import { formatNumberWithPrecisionRange } from 'utils'
 import getShortenAddress from 'utils/getShortenAddress'
 
-const leaderboardTableBodyBackgroundColorsByRank: { [p: string]: string } = {
+export const leaderboardTableBodyBackgroundColorsByRank: { [p: string]: string } = {
   1: `linear-gradient(90deg, rgba(255, 204, 102, 0.25) 0%, rgba(255, 204, 102, 0) 54.69%, rgba(255, 204, 102, 0) 100%)`,
   2: `linear-gradient(90deg, rgba(224, 224, 224, 0.25) 0%, rgba(224, 224, 224, 0) 54.69%, rgba(224, 224, 224, 0) 100%)`,
   3: `linear-gradient(90deg, rgba(255, 152, 56, 0.25) 0%, rgba(255, 152, 56, 0) 54.69%, rgba(255, 152, 56, 0) 100%)`,
@@ -64,7 +64,7 @@ export default function LeaderboardLayout({
   let totalItems = 0
   if (type === 'leaderboard') {
     if (selectedCampaignLeaderboard) {
-      totalItems = leaderboardSearchValue ? 1 : selectedCampaignLeaderboard.numberOfEligibleParticipants
+      totalItems = leaderboardSearchValue ? 1 : selectedCampaignLeaderboard.totalParticipants
     }
   }
   if (type === 'lucky_winner') {
@@ -75,9 +75,7 @@ export default function LeaderboardLayout({
         0,
       )
 
-      totalItems = searchValue
-        ? 1
-        : Math.min(totalRandomRewardItems, selectedCampaignLeaderboard.numberOfEligibleParticipants)
+      totalItems = searchValue ? 1 : Math.min(totalRandomRewardItems, selectedCampaignLeaderboard.totalParticipants)
     }
   }
 

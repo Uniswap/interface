@@ -3,6 +3,7 @@ import { darken } from 'polished'
 import { CSSProperties, forwardRef, useState } from 'react'
 import { Repeat } from 'react-feather'
 import { NavLink as BaseNavLink, Link, NavLinkProps, useLocation } from 'react-router-dom'
+import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 import styled, { css, keyframes } from 'styled-components'
 
@@ -24,7 +25,6 @@ import { TutorialIds } from 'components/Tutorial/TutorialSwap/constant'
 import { AGGREGATOR_ANALYTICS_URL, APP_PATHS, PROMM_ANALYTICS_URL } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
-import { useWindowSize } from 'hooks/useWindowSize'
 import { useTutorialSwapGuide } from 'state/tutorial/hooks'
 import { useIsDarkMode } from 'state/user/hooks'
 import { ExternalLink } from 'theme/components'
@@ -355,13 +355,12 @@ const StyledBridgeIcon = styled(BridgeIcon)`
 export default function Header() {
   const { chainId, isEVM, isSolana, walletKey } = useActiveWeb3React()
 
+  const upTo420 = useMedia('(max-width: 420px)')
   const isDark = useIsDarkMode()
   const { pathname } = useLocation()
   const [isHoverSlide, setIsHoverSlide] = useState(false)
 
-  const { width } = useWindowSize()
   const [{ show: isShowTutorial = false, stepInfo }] = useTutorialSwapGuide()
-  const under369 = width && width < 369
   const { mixpanelHandler } = useMixpanel()
   return (
     <HeaderFrame>
@@ -463,11 +462,28 @@ export default function Header() {
             </Flex>
           )}
 
-          {!under369 && (
+          {!upTo420 && (
             <CampaignWrapper id={TutorialIds.CAMPAIGN_LINK}>
-              <StyledNavLink id={`campaigns`} to={'/campaigns'}>
-                <Trans>Campaigns</Trans>
-              </StyledNavLink>
+              <HoverDropdown
+                active={
+                  pathname.toLowerCase().includes(APP_PATHS.CAMPAIGN) ||
+                  pathname.toLowerCase().includes(APP_PATHS.GRANT_PROGRAMS)
+                }
+              >
+                <Flex alignItems="center">
+                  <Trans>Campaigns</Trans>
+                  <DropdownIcon />
+                </Flex>
+                <Dropdown>
+                  <StyledNavLink id="campaigns" to={APP_PATHS.CAMPAIGN}>
+                    <Trans>Trading Campaigns</Trans>
+                  </StyledNavLink>
+
+                  {/* <StyledNavLink id="grant_programs" to={APP_PATHS.GRANT_PROGRAMS}>
+                    <Trans>Inter-Project Trading</Trans>
+                  </StyledNavLink> */}
+                </Dropdown>
+              </HoverDropdown>
             </CampaignWrapper>
           )}
 

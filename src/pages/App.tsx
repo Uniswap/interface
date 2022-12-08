@@ -76,6 +76,7 @@ const TrueSight = lazy(() => import(/* webpackChunkName: 'true-sight-page' */ '.
 const BuyCrypto = lazy(() => import(/* webpackChunkName: 'true-sight-page' */ './BuyCrypto'))
 
 const Campaign = lazy(() => import(/* webpackChunkName: 'campaigns-page' */ './Campaign'))
+const GrantProgramPage = lazy(() => import(/* webpackChunkName: 'grant-program-page' */ './GrantProgram'))
 
 const AppWrapper = styled.div`
   display: flex;
@@ -101,6 +102,7 @@ const BodyWrapper = styled.div`
 
   ${isMobile && `overflow-x: hidden;`}
 `
+
 export default function App() {
   const { account, chainId, networkInfo } = useActiveWeb3React()
 
@@ -262,6 +264,8 @@ export default function App() {
                     <Route path={`${APP_PATHS.BRIDGE}`} element={<Bridge />} />
                     <Route path={`${APP_PATHS.VERIFY}`} element={<Verify />} />
                     <Route path={`${APP_PATHS.VERIFY_EXTERNAL}`} element={<Verify />} />
+                    <Route path={`${APP_PATHS.GRANT_PROGRAMS}`} element={<GrantProgramPage />} />
+                    <Route path={`${APP_PATHS.GRANT_PROGRAMS}/:slug`} element={<GrantProgramPage />} />
 
                     <Route path="*" element={<RedirectPathToSwapNetwork />} />
                   </Routes>

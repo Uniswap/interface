@@ -16,6 +16,7 @@ export default function Pagination({
   pageSize,
   style = {},
   haveBg = true,
+  className,
 }: {
   onPageChange: (newPage: number) => void
   totalCount: number
@@ -24,6 +25,7 @@ export default function Pagination({
   pageSize: number
   style?: CSSProperties
   haveBg?: boolean
+  className?: string
 }) {
   const upToExtraSmall = useMedia('(max-width: 576px)')
 
@@ -66,7 +68,10 @@ export default function Pagination({
 
   if (upToExtraSmall) {
     return (
-      <PaginationContainer style={{ columnGap: '4px', background: haveBg ? undefined : 'transparent', ...style }}>
+      <PaginationContainer
+        className={className}
+        style={{ columnGap: '4px', background: haveBg ? undefined : 'transparent', ...style }}
+      >
         <PaginationItem $disabled={currentPage === 1} onClick={handleClickToFirstPage}>
           <PaginationButton haveBg={haveBg}>
             <ChevronsLeft width={16} color={theme.subText} />
@@ -97,7 +102,7 @@ export default function Pagination({
   }
 
   return (
-    <PaginationContainer style={{ background: haveBg ? undefined : 'transparent', ...style }}>
+    <PaginationContainer className={className} style={{ background: haveBg ? undefined : 'transparent', ...style }}>
       <PaginationItem $disabled={currentPage === 1} onClick={onPrevious}>
         <PaginationButton haveBg={haveBg}>
           <ChevronLeft width={16} color={theme.subText} />
