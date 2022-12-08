@@ -71,6 +71,7 @@ const Title = styled.h1<{ isDarkMode: boolean }>`
 const Body = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 32px;
   justify-content: space-between;
   color: ${({ theme }) => theme.textPrimary};
   font-size: 24px;
@@ -170,6 +171,59 @@ const GetStarted = styled.div`
   margin-bottom: 100px;
 `
 
+const StepList = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const StyledStep = styled.div<{ isLast?: boolean }>`
+  display: flex;
+  gap: 36px;
+  padding: 24px 0;
+  border-bottom: ${({ isLast, theme }) => !isLast && `1px solid ${theme.backgroundOutline}`};
+`
+
+const StepTitle = styled.div`
+  color: ${({ theme }) => theme.textPrimary};
+  font-size: 36px;
+  line-height: 44px;
+  font-weight: 600;
+`
+
+const StepDescription = styled.div`
+  color: ${({ theme }) => theme.textSecondary};
+  font-size: 24px;
+  line-height: 36px;
+`
+
+const StepIndex = styled.div`
+  color: ${({ theme }) => theme.textPrimary};
+  font-size: 36px;
+  line-height: 44px;
+`
+
+const Step = ({
+  index,
+  title,
+  description,
+  isLast,
+}: {
+  index: number
+  title: string
+  description?: string
+  isLast?: boolean
+}) => {
+  return (
+    <StyledStep isLast={isLast}>
+      <StepIndex>{index + 1}</StepIndex>
+      <div>
+        <StepTitle>{title}</StepTitle>
+        {description && <StepDescription>{description}</StepDescription>}
+      </div>
+    </StyledStep>
+  )
+}
+
 export default function About() {
   const isDarkMode = useIsDarkMode()
   const theme = useTheme()
@@ -230,7 +284,15 @@ export default function About() {
               <WalletIcon src={walletConnectIcon} alt="WalletConnect" />
             </WalletIconGrid>
           </div>
-          <div></div>
+          <StepList>
+            <Step
+              index={0}
+              title="Connect a wallet"
+              description="Connect your preferred crypto wallet to the Uniswap Interface."
+            />
+            <Step index={1} title="Transfer crypto" />
+            <Step isLast index={2} title="Swap!" />
+          </StepList>
         </Body>
         <IconRow>
           <Icon href="https://discord.com/invite/FCfyBSbCU5">
