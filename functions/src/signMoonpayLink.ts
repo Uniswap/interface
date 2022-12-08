@@ -1,6 +1,11 @@
+import cors from 'cors'
 import * as crypto from 'crypto'
 import * as functions from 'firebase-functions'
 import { URL } from 'url'
+
+const corsHandler = cors({
+  origin: [/localhost:(?:\d{0,5})$/, /\.uniswap\.(org|com)$/, /\.vercel\.app$/],
+})
 
 /**
  * @param {object} params Object of query params
@@ -17,27 +22,28 @@ function serializeQueryParams(params: Record<string, Parameters<typeof encodeURI
 }
 
 export const signMoonpayLink = functions
-  .runWith({ secrets: ['MOONPAY_API_KEY', 'MOONPAY_SECRET_KEY'] })
+  .runWith({
+    secrets: [
+      'MOONPAY_API_KEY',
+      'MOONPAY_SECRET_KEY',
+      'MOONPAY_PUBLISHABLE_KEY_WEB',
+      'MOONPAY_SECRET_KEY_WEB',
+    ],
+  })
   // todo: type request params
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   .https.onRequest((request: functions.Request<any>, response: functions.Response<unknown>) => {
-    const { MOONPAY_URL, MOONPAY_API_KEY, MOONPAY_SECRET_KEY } = process.env
+    corsHandler(request, response, () => {
+      const platform = request.query.platform
 
-    const {
-      baseCurrencyAmount,
-      colorCode,
-      currencyCode,
-      defaultCurrencyCode,
-      externalTransactionId,
-      externalCustomerId,
-      redirectURL,
-      walletAddress,
-      walletAddresses,
-    } = request.body
+      const { MOONPAY_URL } = process.env
+      let { MOONPAY_API_KEY, MOONPAY_SECRET_KEY } = process.env
+      if (platform && platform === 'web') {
+        MOONPAY_API_KEY = process.env.MOONPAY_PUBLISHABLE_KEY_WEB
+        MOONPAY_SECRET_KEY = process.env.MOONPAY_SECRET_KEY_WEB
+      }
 
-    const url = `${MOONPAY_URL}?`.concat(
-      serializeQueryParams({
-        apiKey: MOONPAY_API_KEY ?? '',
+      const {
         baseCurrencyAmount,
         colorCode,
         currencyCode,
@@ -47,18 +53,33 @@ export const signMoonpayLink = functions
         redirectURL,
         walletAddress,
         walletAddresses,
-      })
-    )
+      } = request.body
 
-    console.log(`Requested signature for: ${url}`)
+      const url = `${MOONPAY_URL}?`.concat(
+        serializeQueryParams({
+          apiKey: MOONPAY_API_KEY ?? '',
+          baseCurrencyAmount,
+          colorCode,
+          currencyCode,
+          defaultCurrencyCode,
+          externalTransactionId,
+          externalCustomerId,
+          redirectURL,
+          walletAddress,
+          walletAddresses,
+        })
+      )
 
-    const signature = crypto
-      .createHmac('sha256', MOONPAY_SECRET_KEY ?? '')
-      .update(new URL(url).search)
-      .digest('base64')
+      console.log(`Requested signature for: ${url}`)
 
-    const urlWithSignature = `${url}&signature=${encodeURIComponent(signature)}`
+      const signature = crypto
+        .createHmac('sha256', MOONPAY_SECRET_KEY ?? '')
+        .update(new URL(url).search)
+        .digest('base64')
 
-    console.log(`Returning signed URL: ${urlWithSignature}`)
-    response.send(JSON.stringify({ url: urlWithSignature }))
+      const urlWithSignature = `${url}&signature=${encodeURIComponent(signature)}`
+
+      console.log(`Returning signed URL: ${urlWithSignature}`)
+      response.send(JSON.stringify({ url: urlWithSignature }))
+    })
   })

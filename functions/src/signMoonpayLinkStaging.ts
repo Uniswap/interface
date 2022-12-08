@@ -3,8 +3,9 @@ import * as crypto from 'crypto'
 import * as functions from 'firebase-functions'
 import { URL } from 'url'
 
-const corsHandler = cors({ origin: true })
-
+const corsHandler = cors({
+  origin: [/localhost:(?:\d{0,5})$/, /\.uniswap\.(org|com)$/, /\.vercel\.app$/],
+})
 /**
  * @param {object} params Object of query params
  * @return {string} A serialized string of query params
