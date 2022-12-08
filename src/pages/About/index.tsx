@@ -83,7 +83,7 @@ const Body = styled.p`
 `
 
 const ContentWrapper = styled.span`
-  max-width: 960px;
+  max-width: 1280px;
   pointer-events: all;
   display: flex;
   flex-direction: column;
@@ -136,6 +136,22 @@ const WalletIcon = styled.img`
   height: 100px;
 `
 
+const InfoButton = styled(ButtonOutlined)`
+  font-size: 24px;
+  line-height: 32px;
+  padding: 16px;
+`
+
+const ActionsContainer = styled.span`
+  display: flex;
+  gap: 16px;
+  width: 100%;
+
+  & > * {
+    flex: 1;
+  }
+`
+
 export default function About() {
   const isDarkMode = useIsDarkMode()
   const theme = useTheme()
@@ -153,10 +169,10 @@ export default function About() {
               The Uniswap Protocol is the world’s leading decentralized exchange protocol, allowing anyone to swap
               tokens, list a token, or provide liquidity in a pool to earn fees.
             </p>
-            <div>
-              <ButtonOutlined>Learn more</ButtonOutlined>
-              <ButtonOutlined>Read the docs</ButtonOutlined>
-            </div>
+            <ActionsContainer>
+              <InfoButton>Learn more</InfoButton>
+              <InfoButton>Read the docs</InfoButton>
+            </ActionsContainer>
           </div>
         </Body>
         <CardContainer>
