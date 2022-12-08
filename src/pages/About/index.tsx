@@ -113,6 +113,8 @@ const PoweredBy = styled.h2<{ isDarkMode?: boolean }>`
   margin: 0;
   max-width: 340px;
   color: transparent;
+  font-size: 40px;
+  line-height: 48px;
 
   background: ${({ isDarkMode }) =>
     isDarkMode
