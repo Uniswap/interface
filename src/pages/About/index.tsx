@@ -5,6 +5,8 @@ import { useIsDarkMode } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 
+import Card from './Card'
+
 const MOBILE_BREAKPOINT = BREAKPOINTS.md
 
 const IconRow = styled.span`
@@ -96,44 +98,6 @@ const CardContainer = styled.div`
     grid-template-columns: 1fr 1fr 1fr;
   }
 `
-
-const StyledCard = styled.a`
-  background-color: #0e111a;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  text-decoration: none;
-  color: ${({ theme }) => theme.white};
-  padding: 40px;
-  height: 400px;
-  border-radius: 24px;
-  transition: 200ms ease background-color;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.backgroundModule};
-  }
-`
-
-const CardTitle = styled.div`
-  font-weight: 600;
-  font-size: 48px;
-  line-height: 56px;
-`
-
-const CardDescription = styled.div`
-  font-weight: 400;
-  font-size: 24px;
-  line-height: 36px;
-`
-
-const Card = ({ title, description, to }: { title: string; description: string; to: string }) => {
-  return (
-    <StyledCard href={to}>
-      <CardTitle>{title}</CardTitle>
-      <CardDescription>{description}</CardDescription>
-    </StyledCard>
-  )
-}
 
 export default function About() {
   const isDarkMode = useIsDarkMode()
