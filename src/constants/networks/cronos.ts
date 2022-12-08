@@ -20,7 +20,7 @@ const cronosInfo: EVMNetworkInfo = {
   icon: CRONOS,
   iconDark: CRONOS_DARK,
   iconDarkSelected: CRONOS,
-  iconSelected: NOT_SUPPORT,
+  iconSelected: CRONOS,
   classicClient: createClient(
     'https://cronos-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-cronos',
   ),

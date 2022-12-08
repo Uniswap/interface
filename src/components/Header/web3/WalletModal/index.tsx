@@ -1,8 +1,8 @@
-import { Trans, t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { WalletReadyState } from '@solana/wallet-adapter-base'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { UnsupportedChainIdError } from '@web3-react/core'
-import { transparentize } from 'polished'
+import { rgba, transparentize } from 'polished'
 import { useCallback, useEffect, useState } from 'react'
 import { ChevronLeft } from 'react-feather'
 import { useLocation } from 'react-router-dom'
@@ -13,10 +13,9 @@ import { ReactComponent as Close } from 'assets/images/x.svg'
 import { AutoColumn } from 'components/Column'
 import ExpandableBox from 'components/ExpandableBox'
 import AccountDetails from 'components/Header/web3/AccountDetails'
-import Networks from 'components/Header/web3/NetworkModal/Networks'
 import WarningIcon from 'components/Icons/WarningIcon'
 import Modal from 'components/Modal'
-import { AutoRow, RowFixed } from 'components/Row'
+import Row, { AutoRow, RowFixed } from 'components/Row'
 import { APP_PATHS } from 'constants/index'
 import { SUPPORTED_WALLET, SUPPORTED_WALLETS, WalletInfo } from 'constants/wallets'
 import { useActiveWeb3React, useWeb3React } from 'hooks'
@@ -59,7 +58,6 @@ const Wrapper = styled.div`
 
 const HeaderRow = styled.div<{ padding?: string }>`
   ${({ theme }) => theme.flexRowNoWrap};
-  padding: ${({ padding }) => padding ?? '30px 24px 0 24px'};
   font-weight: 500;
   color: ${props => (props.color === 'blue' ? ({ theme }) => theme.primary : 'inherit')};
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -67,8 +65,7 @@ const HeaderRow = styled.div<{ padding?: string }>`
   `};
 `
 
-const ContentWrapper = styled.div<{ padding?: string }>`
-  padding: ${({ padding }) => padding ?? '24px'};
+const ContentWrapper = styled.div`
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 
@@ -76,35 +73,26 @@ const ContentWrapper = styled.div<{ padding?: string }>`
 `
 
 const TermAndCondition = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap};
-  padding: 28px 24px 0px 24px;
+  padding: 8px;
+  font-size: 12px;
   font-weight: 500;
+  line-height: 16px;
+  background-color: ${({ theme }) => rgba(theme.buttonBlack, 0.35)};
   color: ${props => (props.color === 'blue' ? ({ theme }) => theme.primary : 'inherit')};
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: 1rem;
-  `};
   accent-color: ${({ theme }) => theme.primary};
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  :hover {
+    background-color: ${({ theme }) => rgba(theme.buttonBlack, 0.5)};
+  }
 `
 
 const UpperSection = styled.div`
-  position: relative;
-
-  h5 {
-    margin: 0;
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
-    font-weight: 400;
-  }
-
-  h5:last-child {
-    margin-bottom: 0px;
-  }
-
-  h4 {
-    margin-top: 0;
-    font-weight: 500;
-  }
+  padding: 24px;
 `
+
 const gap = '1rem'
 const OptionGrid = styled.div`
   display: flex;
@@ -113,18 +101,9 @@ const OptionGrid = styled.div`
   flex-wrap: wrap;
   margin-top: 16px;
   & > * {
-    width: calc(20% - ${gap} * 4 / 5);
+    width: calc(33.33% - ${gap} * 2 / 3);
   }
-  ${({ theme }) => theme.mediaWidth.upToXXL`
-    & > * {
-      width: calc(25% - ${gap} * 3 / 4);
-    }
-  `}
-  ${({ theme }) => theme.mediaWidth.upToXL`
-    & > * {
-      width: calc(33.33% - ${gap} * 2 / 3);
-    }
-  `}
+
   ${({ theme }) => theme.mediaWidth.upToSmall`
     & > * {
       width: calc(50% - ${gap} / 2);
@@ -140,11 +119,6 @@ const HoverText = styled.div`
   :hover {
     cursor: pointer;
   }
-`
-
-const ToSText = styled.span`
-  color: ${({ theme }) => theme.text9};
-  font-weight: 500;
 `
 
 const Step = styled(Flex)`
@@ -171,7 +145,7 @@ type WalletInfoExtended = WalletInfo & {
 }
 
 export default function WalletModal() {
-  const { account, isSolana, isEVM, chainId, walletKey } = useActiveWeb3React()
+  const { account, isSolana, isEVM, walletKey } = useActiveWeb3React()
   // important that these are destructed from the account-specific web3-react context
   const { active, connector, error } = useWeb3React()
   const { connected, connecting, wallet: solanaWallet } = useWallet()
@@ -265,39 +239,30 @@ export default function WalletModal() {
         return (isEVM && readyStateEVM) || (isSolana && readyStateSolana) || readyStateEVM || readyStateSolana
       })()
       const isSupportCurrentChain = (isEVMWallet(wallet) && isEVM) || (isSolanaWallet(wallet) && isSolana) || false
-      const overridden = isOverriddenWallet(k)
+      const overridden = isOverriddenWallet(k) || (walletKey === 'COIN98' && !window.ethereum?.isCoin98)
+      const installLink =
+        k === 'COINBASE' && isEVM
+          ? undefined
+          : readyState === WalletReadyState.NotDetected
+          ? wallet.installLink
+          : undefined
+
       return {
         ...wallet,
         key: k,
         readyState,
         isSupportCurrentChain,
         isOverridden: overridden,
+        installLink: installLink,
       }
     })
 
     const sortWallets = (walletA: WalletInfoExtended, walletB: WalletInfoExtended): -1 | 0 | 1 => {
-      if (walletA.isSupportCurrentChain === walletB.isSupportCurrentChain) {
-        if (!!walletA.isOverridden === !!walletB.isOverridden) {
-          if (walletA.readyState === walletB.readyState) {
-            return 0
-          } else {
-            // Wallet installed will have higher priority
-            if (
-              walletA.readyState === WalletReadyState.Installed ||
-              (walletA.readyState === WalletReadyState.Loadable && walletB.readyState === WalletReadyState.NotDetected)
-            )
-              return -1
-            return 1
-          }
-        }
-        // Wallet not be overridden will have higher priority
-        if (!walletA.isOverridden) return -1
-        return 1
-      } else {
-        // Current chain supported wallet higher priority
-        if (walletA.isSupportCurrentChain) return -1
-        return 1
+      if (!walletA.installLink && !walletA.isOverridden && !walletB.installLink && !walletB.isOverridden) {
+        return walletA.name < walletB.name ? -1 : 1
       }
+      if (walletA.installLink || walletA.isOverridden) return 1
+      return -1
     }
     return (
       parsedWalletList
@@ -310,7 +275,9 @@ export default function WalletModal() {
             walletKey={wallet.key}
             onSelected={handleWalletChange}
             isSupportCurrentChain={wallet.isSupportCurrentChain}
+            isOverridden={wallet.isOverridden}
             readyState={wallet.readyState}
+            installLink={wallet.installLink}
           />
         ))
     )
@@ -326,7 +293,7 @@ export default function WalletModal() {
           <HeaderRow padding="1rem">
             <Trans>Error connecting</Trans>
           </HeaderRow>
-          <ContentWrapper padding="1rem 1.5rem 1.5rem">
+          <ContentWrapper>
             <Trans>Error connecting. Try refreshing the page.</Trans>
           </ContentWrapper>
         </UpperSection>
@@ -346,7 +313,7 @@ export default function WalletModal() {
         <CloseIcon onClick={toggleWalletModal}>
           <CloseColor />
         </CloseIcon>
-        <HeaderRow>
+        <Row marginBottom="26px">
           {(walletView === WALLET_VIEWS.CHANGE_WALLET || walletView === WALLET_VIEWS.PENDING) && (
             <HoverText
               onClick={() => {
@@ -367,25 +334,24 @@ export default function WalletModal() {
               <Trans>Connecting Wallet</Trans>
             )}
           </HoverText>
-        </HeaderRow>
+        </Row>
         {(walletView === WALLET_VIEWS.ACCOUNT || walletView === WALLET_VIEWS.CHANGE_WALLET) && (
-          <TermAndCondition>
+          <TermAndCondition onClick={() => setIsAcceptedTerm(!isAcceptedTerm)}>
             <input
               type="checkbox"
               checked={isAcceptedTerm}
-              onChange={() => setIsAcceptedTerm(!isAcceptedTerm)}
-              style={{ marginRight: '12px' }}
+              style={{ marginRight: '12px', height: '14px', width: '14px', cursor: 'pointer' }}
             />
-            <ToSText>
-              <Trans>Accept</Trans>{' '}
-              <ExternalLink href="/15022022KyberSwapTermsofUse.pdf">
+            <Text color={theme.subText}>
+              <Trans>By connecting a wallet, you agree to KyberSwap&lsquo;s </Trans>{' '}
+              <ExternalLink href="/15022022KyberSwapTermsofUse.pdf" onClick={e => e.stopPropagation()}>
                 <Trans>Terms of Use</Trans>
               </ExternalLink>{' '}
               <Trans>and</Trans>{' '}
-              <ExternalLink href="http://files.dmm.exchange/privacy.pdf">
+              <ExternalLink href="http://files.dmm.exchange/privacy.pdf" onClick={e => e.stopPropagation()}>
                 <Trans>Privacy Policy</Trans>
               </ExternalLink>
-            </ToSText>
+            </Text>
           </TermAndCondition>
         )}
         <ContentWrapper>
@@ -455,20 +421,7 @@ export default function WalletModal() {
               }
             />
           ) : (
-            <>
-              <Trans>Select a Network</Trans>
-              <Networks
-                width={5}
-                mt={16}
-                mb={24}
-                isAcceptedTerm={isAcceptedTerm}
-                selectedId={chainId}
-                disabledAll={walletKey === 'WALLET_CONNECT'}
-                disabledAllMsg={t`You are currently connected through WalletConnect. If you want to change the connected network, please disconnect your wallet before changing the network.`}
-              />
-              <Trans>Select a Wallet</Trans>
-              <OptionGrid>{getOptions()}</OptionGrid>
-            </>
+            <OptionGrid>{getOptions()}</OptionGrid>
           )}
         </ContentWrapper>
       </UpperSection>
@@ -476,13 +429,7 @@ export default function WalletModal() {
   }
 
   return (
-    <Modal
-      isOpen={walletModalOpen}
-      onDismiss={toggleWalletModal}
-      minHeight={false}
-      maxHeight={90}
-      maxWidth={account && walletView === WALLET_VIEWS.ACCOUNT ? 544 : 850}
-    >
+    <Modal isOpen={walletModalOpen} onDismiss={toggleWalletModal} minHeight={false} maxHeight={90} maxWidth={600}>
       <Wrapper>{getModalContent()}</Wrapper>
     </Modal>
   )

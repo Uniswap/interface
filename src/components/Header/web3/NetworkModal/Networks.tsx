@@ -1,5 +1,6 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
+import { darken, rgba } from 'polished'
 import { stringify } from 'querystring'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -10,6 +11,8 @@ import { ButtonEmpty } from 'components/Button'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { MAINNET_NETWORKS, NETWORKS_INFO } from 'constants/networks'
 import { Z_INDEXS } from 'constants/styles'
+import { SUPPORTED_WALLETS } from 'constants/wallets'
+import { useActiveWeb3React } from 'hooks'
 import { useChangeNetwork } from 'hooks/useChangeNetwork'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import useTheme from 'hooks/useTheme'
@@ -34,38 +37,33 @@ const ListItem = styled.div<{ selected?: boolean }>`
   overflow: hidden;
   white-space: nowrap;
   font-size: 14px;
+  height: 36px;
   ${({ theme, selected }) =>
-    selected
-      ? css`
-          background-color: ${theme.primary};
-          & > div {
-            color: ${theme.background};
-          }
-        `
-      : css`
-          background-color: ${theme.buttonBlack};
-        `};
+    selected &&
+    css`
+      background-color: ${theme.darkMode ? theme.buttonBlack : theme.buttonGray};
+      & > div {
+        color: ${theme.text};
+      }
+    `}
+
   ${({ theme }) => theme.mediaWidth.upToSmall`
     font-size: 12px;
   `}
 `
 
 const SelectNetworkButton = styled(ButtonEmpty)<{ disabled: boolean }>`
-  background-color: transparent;
   color: ${({ theme }) => theme.primary};
+  background-color: ${({ theme }) => theme.tableHeader};
   display: flex;
   justify-content: center;
   align-items: center;
   height: fit-content;
-  &:focus {
-    text-decoration: none;
-  }
+  text-decoration: none;
+  transition: all 0.1s ease;
   &:hover {
-    text-decoration: none;
-    border: 1px solid ${({ theme }) => theme.primary};
-  }
-  &:active {
-    text-decoration: none;
+    background-color: ${({ theme }) => darken(0.1, theme.tableHeader)};
+    color: ${({ theme }) => theme.text} !important;
   }
   &:disabled {
     opacity: 50%;
@@ -76,7 +74,7 @@ const SelectNetworkButton = styled(ButtonEmpty)<{ disabled: boolean }>`
   }
 `
 const gap = '1rem'
-const NetworkList = styled.div<{ width: number; mt: number; mb: number }>`
+const NetworkList = styled.div<{ mt: number; mb: number }>`
   display: flex;
   align-items: center;
   gap: ${gap};
@@ -84,26 +82,9 @@ const NetworkList = styled.div<{ width: number; mt: number; mb: number }>`
   width: 100%;
   margin-top: ${({ mt }) => mt}px;
   margin-bottom: ${({ mb }) => mb}px;
-
   & > * {
-    width: ${({ width }) => css`
-    // when width = 3 => width: calc(33.33% - 1rem * 2 / 3)
-      calc(100% / ${width} - ${gap} * ${width - 1} / ${width})
-    `};
+    width: calc(33.33% - ${gap} * 2 / 3);
   }
-
-  ${({ theme, width }) =>
-    width > 3 &&
-    theme.mediaWidth.upToXXL`
-    & > * {
-      width: calc(25% - ${gap} * 3 / 4);
-    }
-  `}
-  ${({ theme }) => theme.mediaWidth.upToXL`
-    & > * {
-      width: calc(33.33% - ${gap} * 2 / 3);
-    }
-  `}
   ${({ theme }) => theme.mediaWidth.upToSmall`
     & > * {
       width: calc(50% - ${gap} / 2);
@@ -111,9 +92,28 @@ const NetworkList = styled.div<{ width: number; mt: number; mb: number }>`
   `}
 `
 
+const CircleGreen = styled.div`
+  height: 16px;
+  width: 16px;
+  background-color: ${({ theme }) => theme.primary};
+  background-clip: content-box;
+  border: solid 2px ${({ theme }) => rgba(theme.primary, 0.3)};
+  border-radius: 8px;
+  margin-left: auto;
+`
+const WalletWrapper = styled.div`
+  height: 18px;
+  width: 18px;
+  margin-left: auto;
+  margin-right: 4px;
+  > img {
+    height: 18px;
+    width: 18px;
+  }
+`
+
 const Networks = ({
   onChangedNetwork,
-  width = 3,
   mt = 30,
   mb = 0,
   isAcceptedTerm = true,
@@ -126,7 +126,6 @@ const Networks = ({
   disabledAllMsg,
 }: {
   onChangedNetwork?: () => void
-  width: number
   mt?: number
   mb?: number
   isAcceptedTerm?: boolean
@@ -144,7 +143,7 @@ const Networks = ({
   const isDarkMode = useIsDarkMode()
   const theme = useTheme()
   const dispatch = useAppDispatch()
-
+  const { walletEVM, walletSolana } = useActiveWeb3React()
   const onSelect = (chainId: ChainId) => {
     customToggleModal?.()
     if (customOnSelectNetwork) {
@@ -166,18 +165,15 @@ const Networks = ({
   }
 
   return (
-    <NetworkList width={width} mt={mt} mb={mb}>
+    <NetworkList mt={mt} mb={mb}>
       {MAINNET_NETWORKS.map((key: ChainId, i: number) => {
-        const { iconDark, icon, iconDarkSelected, iconSelected, name } = NETWORKS_INFO[key]
+        const { iconDark, icon, name } = NETWORKS_INFO[key]
         const disabled = !isAcceptedTerm || (activeChainIds ? !activeChainIds?.includes(key) : false)
         const selected = selectedId === key
 
-        const imgSrc = selected
-          ? isDarkMode
-            ? iconDarkSelected || iconSelected || iconDark || icon
-            : iconSelected || icon
-          : (isDarkMode && iconDark) || icon
-
+        const imgSrc = (isDarkMode ? iconDark : icon) || icon
+        const walletKey =
+          key === ChainId.SOLANA ? walletSolana.walletKey : walletEVM.chainId === key ? walletEVM.walletKey : null
         return (
           <MouseoverTooltip
             style={{ zIndex: Z_INDEXS.MODAL + 1 }}
@@ -197,6 +193,15 @@ const Networks = ({
                   <NewLabel>
                     <Trans>New</Trans>
                   </NewLabel>
+                )}
+                {selected && !walletKey && <CircleGreen />}
+                {walletKey && (
+                  <WalletWrapper>
+                    <img
+                      src={isDarkMode ? SUPPORTED_WALLETS[walletKey].icon : SUPPORTED_WALLETS[walletKey].iconLight}
+                      alt={SUPPORTED_WALLETS[walletKey].name + ' icon'}
+                    />
+                  </WalletWrapper>
                 )}
               </ListItem>
             </SelectNetworkButton>

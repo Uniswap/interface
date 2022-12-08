@@ -71,19 +71,19 @@ export const SUPPORTED_NETWORKS = Object.keys(NETWORKS_INFO).map(Number) as Chai
 
 export const MAINNET_NETWORKS = [
   ChainId.MAINNET,
-  ChainId.ETHW,
-  ChainId.MATIC,
   ChainId.BSCMAINNET,
+  ChainId.MATIC,
   ChainId.AVAXMAINNET,
-  ChainId.FANTOM,
-  ChainId.CRONOS,
   ChainId.ARBITRUM,
-  ChainId.BTTC,
-  ChainId.VELAS,
-  ChainId.AURORA,
-  ChainId.OASIS,
   ChainId.OPTIMISM,
   ChainId.SOLANA,
+  ChainId.BTTC,
+  ChainId.OASIS,
+  ChainId.FANTOM,
+  ChainId.CRONOS,
+  ChainId.VELAS,
+  ChainId.AURORA,
+  ChainId.ETHW,
 ] as const
 export type MAINNET_NETWORK = typeof MAINNET_NETWORKS[number]
 

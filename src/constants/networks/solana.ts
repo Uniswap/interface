@@ -2,7 +2,6 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
 import { Connection, PublicKey } from '@solana/web3.js'
 
-import SolanaDark from 'assets/networks/solana-network-dark.svg'
 import Solana from 'assets/networks/solana-network.svg'
 import { AGGREGATOR_API, KS_SETTING_API } from 'constants/env'
 import { SolanaNetworkInfo } from 'constants/networks/type'
@@ -17,7 +16,7 @@ const solanaInfo: SolanaNetworkInfo = {
   priceRoute: 'solana',
   name: 'Solana',
   icon: Solana,
-  iconSelected: SolanaDark,
+  iconSelected: Solana,
   iconDark: NOT_SUPPORT,
   iconDarkSelected: NOT_SUPPORT,
   etherscanUrl: 'https://solscan.io',

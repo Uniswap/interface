@@ -49,7 +49,7 @@ export default function NetworkModal({
       <Wrapper>
         <Flex alignItems="center" justifyContent="space-between">
           <Text fontWeight="500" fontSize={20}>
-            {isWrongNetwork ? <Trans>Wrong Network</Trans> : <Trans>Select a Network</Trans>}
+            {isWrongNetwork ? <Trans>Wrong Chain</Trans> : <Trans>Select a Chain</Trans>}
           </Text>
 
           <Flex sx={{ cursor: 'pointer' }} role="button" onClick={toggleNetworkModal}>
@@ -58,12 +58,11 @@ export default function NetworkModal({
         </Flex>
         {isWrongNetwork && (
           <TYPE.main fontSize={16} marginTop={14}>
-            <Trans>Please connect to the appropriate network.</Trans>
+            <Trans>Please connect to the appropriate chain.</Trans>
           </TYPE.main>
         )}
         <Networks
           onChangedNetwork={toggleNetworkModal}
-          width={3}
           selectedId={selectedId}
           activeChainIds={activeChainIds}
           customOnSelectNetwork={customOnSelectNetwork}

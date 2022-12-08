@@ -1,14 +1,15 @@
 import { Trans } from '@lingui/macro'
 import { WalletReadyState } from '@solana/wallet-adapter-base'
+import { darken } from 'polished'
 import React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { MouseoverTooltip } from 'components/Tooltip'
 import { SUPPORTED_WALLET, SUPPORTED_WALLETS } from 'constants/wallets'
 import { useActiveWeb3React } from 'hooks'
 import { useIsAcceptedTerm, useIsDarkMode } from 'state/user/hooks'
 import { ExternalLink } from 'theme'
-import { isEVMWallet, isOverriddenWallet, isSolanaWallet } from 'utils'
+import { isEVMWallet, isSolanaWallet } from 'utils'
 import checkForBraveBrowser from 'utils/checkForBraveBrowser'
 
 import { C98OverrideGuide } from './WarningBox'
@@ -35,27 +36,21 @@ const HeaderText = styled.div`
   font-weight: 500;
 `
 
-const OptionCardClickable = styled.button<{
+const OptionCardClickable = styled.div<{
   connected: boolean
   installLink?: string
   isDisabled?: boolean
   overridden?: boolean
 }>`
+  height: 36px;
   width: 100%;
-  border: 1px solid transparent;
-  border-radius: 42px;
-  &:nth-child(2n) {
-    margin-right: 0;
-  }
-  padding: 0;
+  border-radius: 18px;
   display: flex;
-  gap: 8px;
   flex-direction: row;
+  gap: 8px;
   align-items: center;
-  margin-top: 2rem;
-  margin-top: 0;
-  padding: 10px 8px;
-  background-color: ${({ theme }) => theme.buttonBlack};
+  padding: 8px 10px;
+  background-color: ${({ theme }) => theme.tableHeader};
   overflow: hidden;
   white-space: nowrap;
   font-size: 14px;
@@ -75,26 +70,24 @@ const OptionCardClickable = styled.button<{
 
   &:hover {
     text-decoration: none;
-    ${({ installLink, isDisabled, overridden, theme }) =>
-      installLink || isDisabled || overridden ? '' : `border: 1px solid ${theme.primary};`}
+    ${({ installLink, isDisabled, overridden }) =>
+      installLink || isDisabled || overridden
+        ? ''
+        : css`
+            background-color: ${({ theme }) => darken(0.1, theme.tableHeader)};
+            color: ${({ theme }) => theme.text} !important;
+          `}
   }
 
   ${({ isDisabled, installLink, overridden, theme }) =>
-    !isDisabled && (installLink || overridden)
+    isDisabled || installLink || overridden
       ? `
-      filter: grayscale(50%);
+      filter: grayscale(100%);
       & ${HeaderText} {
         color: ${theme.border};
       }
     `
       : ''}
-  ${({ isDisabled }) => (isDisabled ? `opacity: 0.5; filter: grayscale(100%);` : `opacity: 1;`)}
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: 100%;
-    margin: 0 0 8px 0;
-    font-size:12px;
-  `};
 `
 
 const OptionCardLeft = styled.div`
@@ -114,11 +107,15 @@ const Option = ({
   walletKey,
   readyState,
   isSupportCurrentChain,
+  installLink,
+  isOverridden,
   onSelected,
 }: {
   walletKey: SUPPORTED_WALLET
   isSupportCurrentChain: boolean
   readyState?: WalletReadyState
+  installLink?: string
+  isOverridden?: boolean
   onSelected?: (walletKey: SUPPORTED_WALLET) => any
 }) => {
   const isDarkMode = useIsDarkMode()
@@ -129,8 +126,6 @@ const Option = ({
   const wallet = SUPPORTED_WALLETS[walletKey]
   const isConnected = !!walletKeyConnected && walletKey === walletKeyConnected
 
-  const overridden = isOverriddenWallet(walletKey)
-  const installLink = readyState === WalletReadyState.NotDetected ? wallet.installLink : undefined
   const icon = isDarkMode ? wallet.icon : wallet.iconLight
 
   const content = (
@@ -144,15 +139,15 @@ const Option = ({
           (readyState === WalletReadyState.Loadable && isSolanaWallet(wallet))) &&
         isAcceptedTerm &&
         isSupportCurrentChain &&
-        !overridden &&
+        !isOverridden &&
         !(walletKey === 'BRAVE' && !isBraveBrowser)
           ? () => onSelected(walletKey)
           : undefined
       }
       connected={isConnected}
-      isDisabled={!isAcceptedTerm || !isSupportCurrentChain}
-      installLink={walletKey === 'COINBASE' && isEVM ? undefined : installLink}
-      overridden={overridden || (walletKey === 'COIN98' && !window.ethereum?.isCoin98)}
+      isDisabled={!isAcceptedTerm}
+      installLink={installLink}
+      overridden={isOverridden}
     >
       <IconWrapper>
         <img src={icon} alt={'Icon'} />
@@ -163,18 +158,11 @@ const Option = ({
     </OptionCardClickable>
   )
 
-  if (!isAcceptedTerm) return content
-
   if (!isSupportCurrentChain) {
-    return (
-      <MouseoverTooltip
-        placement="top"
-        text={<Trans>Please select another wallet that is {isEVM ? 'EVM' : 'Solana'} compatible</Trans>}
-      >
-        {content}
-      </MouseoverTooltip>
-    )
+    return null
   }
+
+  if (!isAcceptedTerm) return content
 
   if (readyState === WalletReadyState.Loadable && isEVMWallet(wallet) && wallet.href) {
     return <StyledLink href={wallet.href}>{content}</StyledLink>
@@ -185,7 +173,7 @@ const Option = ({
     if (!isBraveBrowser) {
       return (
         <MouseoverTooltip
-          placement="top"
+          placement="bottom"
           text={
             <Trans>
               Brave wallet can only be used in Brave Browser. Download it{' '}
@@ -201,7 +189,7 @@ const Option = ({
     if (isBraveBrowser && !window.ethereum?.isBraveWallet && isEVM) {
       return (
         <MouseoverTooltip
-          placement="top"
+          placement="bottom"
           text={
             <Trans>
               Brave Wallet overridden by MetaMask Wallet. Disable MetaMask extension in order to use Brave Wallet.
@@ -216,7 +204,7 @@ const Option = ({
     if (isBraveBrowser && !window.solana?.isBraveWallet && isSolana) {
       return (
         <MouseoverTooltip
-          placement="top"
+          placement="bottom"
           text={
             <Trans>
               Brave Wallet overridden by Phantom Wallet. Disable Phantom extension in order to use Brave Wallet.
@@ -232,7 +220,7 @@ const Option = ({
   if (readyState === WalletReadyState.NotDetected && (walletKey !== 'COINBASE' || !isEVM)) {
     return (
       <MouseoverTooltip
-        placement="top"
+        placement="bottom"
         text={
           <Trans>
             You will need to install {wallet.name} extension/dapp before you can connect with it on KyberSwap. Get it{' '}
@@ -245,7 +233,7 @@ const Option = ({
     )
   }
 
-  if (overridden) {
+  if (isOverridden) {
     return (
       <MouseoverTooltip
         width="500px"
@@ -258,7 +246,7 @@ const Option = ({
             <C98OverrideGuide walletKey={walletKey} />
           )
         }
-        placement="top"
+        placement="bottom"
       >
         {content}
       </MouseoverTooltip>
