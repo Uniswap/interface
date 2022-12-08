@@ -112,7 +112,7 @@ export function WelcomeModal({ onDismissed }: { onDismissed: () => void }) {
               Learn more.
             </Link>
           </Paragraph>
-          <CloseButton size={24} onClick={dismiss} />
+          <CloseButton data-testid="nft-intro-modal" size={24} onClick={dismiss} />
         </Content>
       </Container>
     </Modal>

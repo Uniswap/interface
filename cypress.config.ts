@@ -5,6 +5,7 @@ export default defineConfig({
   videoUploadOnPasses: false,
   defaultCommandTimeout: 24000, // 2x average block time
   chromeWebSecurity: false,
+
   e2e: {
     setupNodeEvents(on, config) {
       return {

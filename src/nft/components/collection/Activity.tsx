@@ -159,7 +159,7 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
             style={{ overflow: 'unset' }}
           >
             {events.map((event, i) => (
-              <Box as="a" href={baseHref(event)} className={styles.eventRow} key={i}>
+              <Box as="a" data-testid="nft-activity-row" href={baseHref(event)} className={styles.eventRow} key={i}>
                 <ItemCell
                   event={event}
                   rarityVerified={rarityVerified}
