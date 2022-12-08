@@ -21,14 +21,12 @@ describe('Testing nfts', () => {
   })
 
   it('should load bored ape collection page and be able to open bag and sweep', () => {
-    cy.visit('/#/nfts/collection/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d')
     cy.get(getTestSelector('nft-sweep-button')).first().click()
     cy.get(getTestSelector('nft-empty-bag')).should('exist')
     cy.get(getTestSelector('nft-sweep-slider')).should('exist')
   })
 
   it('should load bored ape collection page and be able to navigate to activity', () => {
-    cy.visit('/#/nfts/collection/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d')
     cy.get(getTestSelector('nft-activity')).first().click()
     cy.get(getTestSelector('nft-activity-row')).should('exist')
   })
