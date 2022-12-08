@@ -77,11 +77,11 @@ const Content = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  padding: 8rem 1rem 1rem 1rem;
+  padding: 128px 16px 16px 16px;
   gap: 24px;
 
   @media screen and (min-width: ${MOBILE_BREAKPOINT}px) {
-    padding: 8rem 5rem 5rem 5rem;
+    padding: 128px 80px 80px 80px;
     gap: 120px;
   }
 `
