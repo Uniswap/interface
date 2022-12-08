@@ -18,7 +18,7 @@ const Page = styled.span<{ isDarkMode: boolean }>`
   align-items: center;
 `
 
-const Body = styled.div`
+const Panels = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -103,6 +103,14 @@ const Thumbnail = styled.img`
   width: 100%;
 `
 
+const PoweredBySection = styled(Panels)`
+  order: 1;
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    order: 0;
+  }
+`
+
 export default function About() {
   const isDarkMode = useIsDarkMode()
 
@@ -112,7 +120,7 @@ export default function About() {
     <Page isDarkMode={isDarkMode}>
       <Content>
         <Title isDarkMode={isDarkMode}>The best way to buy, sell and own crypto and NFTs</Title>
-        <Body>
+        <PoweredBySection>
           <div>
             <SubTitle isDarkMode={isDarkMode}>Powered by the Uniswap Protocol</SubTitle>
           </div>
@@ -126,7 +134,7 @@ export default function About() {
               <InfoButton>Read the docs</InfoButton>
             </ActionsContainer>
           </Intro>
-        </Body>
+        </PoweredBySection>
         <CardGrid>
           {CARDS.map((card) => (
             <Card key={card.title} {...card} />
@@ -134,7 +142,7 @@ export default function About() {
         </CardGrid>
         <div>
           <SubTitle isDarkMode={isDarkMode}>Get Started</SubTitle>
-          <Body>
+          <Panels>
             <ThumbnailContainer>
               <Thumbnail alt="Thumbnail" src={STEPS[selectedStepIndex]?.imgSrc} />
             </ThumbnailContainer>
@@ -150,7 +158,7 @@ export default function About() {
                 />
               ))}
             </StepList>
-          </Body>
+          </Panels>
         </div>
       </Content>
     </Page>
