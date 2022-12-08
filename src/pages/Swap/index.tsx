@@ -873,7 +873,7 @@ export default function Swap() {
                       routeIsSyncing ||
                       routeIsLoading ||
                       priceImpactTooHigh ||
-                      Boolean(!permit2Enabled && swapCallbackError)
+                      (permit2Enabled ? permit.state === PermitState.LOADING : Boolean(swapCallbackError))
                     }
                     error={isValid && priceImpactSeverity > 2 && (permit2Enabled || !swapCallbackError)}
                   >
