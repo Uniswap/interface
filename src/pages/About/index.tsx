@@ -100,7 +100,7 @@ const ContentWrapper = styled.span`
 
 const CardContainer = styled.div`
   display: grid;
-  gap: 12px;
+  gap: 36px;
   width: 100%;
   grid-template-columns: 1fr;
 
