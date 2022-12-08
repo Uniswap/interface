@@ -13,9 +13,11 @@ import { MouseoverTooltip } from '../Tooltip'
 export function FiatValue({
   fiatValue,
   priceImpact,
+  isLoading = false,
 }: {
   fiatValue: CurrencyAmount<Currency> | null | undefined
   priceImpact?: Percent
+  isLoading?: boolean
 }) {
   const theme = useTheme()
   const priceImpactColor = useMemo(() => {
@@ -32,19 +34,21 @@ export function FiatValue({
 
   return (
     <ThemedText.DeprecatedBody fontSize={14} color={theme.textSecondary}>
-      {!fiatValue || !priceImpact ? (
+      {isLoading ? (
         <StyledPolling color={theme.gray500}>
           <Spinner />
         </StyledPolling>
       ) : (
         <div>
-          <>${fiatValue?.toFixed(visibleDecimalPlaces, { groupSeparator: ',' })}</>
-          <span style={{ color: priceImpactColor }}>
-            {' '}
-            <MouseoverTooltip text={t`The estimated difference between the USD values of input and output amounts.`}>
-              (<Trans>{priceImpact.multiply(-1).toSignificant(3)}%</Trans>)
-            </MouseoverTooltip>
-          </span>
+          {fiatValue && <>${fiatValue?.toFixed(visibleDecimalPlaces, { groupSeparator: ',' })}</>}
+          {priceImpact && (
+            <span style={{ color: priceImpactColor }}>
+              {' '}
+              <MouseoverTooltip text={t`The estimated difference between the USD values of input and output amounts.`}>
+                (<Trans>{priceImpact.multiply(-1).toSignificant(3)}%</Trans>)
+              </MouseoverTooltip>
+            </span>
+          )}
         </div>
       )}
     </ThemedText.DeprecatedBody>
