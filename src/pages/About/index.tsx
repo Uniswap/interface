@@ -6,7 +6,7 @@ import walletConnectIcon from 'assets/images/walletConnectIcon.svg'
 import { ButtonOutlined } from 'components/Button'
 import { useState } from 'react'
 import { useIsDarkMode } from 'state/user/hooks'
-import styled, { useTheme } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 
 import Card from './Card'
@@ -158,7 +158,6 @@ const STEPS = [
 
 export default function About() {
   const isDarkMode = useIsDarkMode()
-  const theme = useTheme()
 
   const [selectedStepIndex, setSelectedStepIndex] = useState(0)
 
@@ -211,7 +210,8 @@ export default function About() {
                 onClick={() => setSelectedStepIndex(index)}
                 index={index}
                 key={step.title}
-                {...step}
+                title={step.title}
+                description={step.description}
               />
             ))}
           </StepList>
