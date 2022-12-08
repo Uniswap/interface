@@ -45,11 +45,10 @@ const Content = styled.div`
   justify-content: center;
   align-items: flex-start;
   padding: 128px 16px 16px 16px;
-  gap: 24px;
+  gap: 96px;
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     padding: 128px 80px 80px 80px;
-    gap: 120px;
   }
 `
 
