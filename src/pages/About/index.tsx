@@ -159,22 +159,23 @@ export default function About() {
         </Body>
         <CardContainer>
           <Card
-            to="https://app.uniswap.org/#/swap"
+            to="/swap"
             title="Swap tokens"
             description="Discover and swap top tokens on Ethereum, Polygon, Optimism, and more."
           />
           <Card
-            to="https://app.uniswap.org/#/nfts"
+            to="/nfts"
             title="Trade NFTs"
             description="Buy & sell NFTs across marketplaces to find more listings at better prices."
           />
           <Card
-            to="https://app.uniswap.org/#/pool"
+            to="/pool"
             title="Earn fees"
             description="Provide liquidity to pools on Uniswap and earn fees on swaps."
           />
           <Card
             to="https://support.uniswap.org/"
+            external
             title="Build dApps"
             description="Build on the largest DeFi protocol on Ethereum with our tools."
           />

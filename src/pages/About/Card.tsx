@@ -29,7 +29,7 @@ const CardDescription = styled.div`
   line-height: 36px;
 `
 
-const Card = ({ title, description, to }: { title: string; description: string; to: string }) => {
+const Card = ({ title, description, to }: { title: string; description: string; to: string; external?: boolean }) => {
   return (
     <StyledCard href={to}>
       <CardTitle>{title}</CardTitle>
