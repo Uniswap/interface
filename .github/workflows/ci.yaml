@@ -8,7 +8,6 @@ on:
   push:
     branches:
       - main
-      - release-v**
 
 env:
   SERVICE: kyberswap-interface
@@ -21,6 +20,7 @@ jobs:
       head_sha: ${{ steps.head_sha.outputs.value }}
       image_name: "asia.gcr.io/kyber-operation/core/${{ env.SERVICE }}"
       image_tag: ${{ steps.get_tag.outputs.image_tag }}
+      image_tag_stg: ${{ steps.get_tag.outputs.image_tag_stg }}
       branch_tag: ${{ steps.get_tag.outputs.branch_tag }}
     steps:
       - name: Checkout
@@ -57,22 +57,13 @@ jobs:
         env:
           CURRENT_BRANCH: ${{ steps.current_branch.outputs.value }}
         run: |
-          if [[ $CURRENT_BRANCH = "main" ]]; then
-            short_sha="$(git rev-parse --short HEAD)"
-            branch_tag="$(echo "$CURRENT_BRANCH" | sed 's/[^a-zA-Z0-9]/-/g' | sed 's/--*/-/g' | sed 's/-$//g')"
-            echo "::set-output name=image_tag::$branch_tag-$short_sha"
-            echo "::set-output name=branch_tag::$branch_tag-$short_sha"
-          else
-            branch_tag="$(echo "$CURRENT_BRANCH")"
-            if [[ ! $CURRENT_BRANCH =~ release-* ]]; then
-              branch_tag="$(echo "$CURRENT_BRANCH" | sed 's/[^a-zA-Z0-9]/-/g' | sed 's/--*/-/g' | sed 's/-$//g')"
-            fi
-            echo "::set-output name=image_tag::$branch_tag.${GITHUB_RUN_NUMBER}"
-            echo "::set-output name=branch_tag::$branch_tag.${GITHUB_RUN_NUMBER}"
-          fi
+          short_sha="$(git rev-parse --short HEAD)"
+          branch_tag="$(echo "$CURRENT_BRANCH" | sed 's/[^a-zA-Z0-9]/-/g' | sed 's/--*/-/g' | sed 's/-$//g')"
+          echo "::set-output name=image_tag::$branch_tag-$short_sha"
+          echo "::set-output name=image_tag_stg::$branch_tag-stg-build-$short_sha"
+          echo "::set-output name=branch_tag::$branch_tag-$short_sha"
 
-
-  build:
+  build-dev:
     runs-on: ubuntu-18.04
     needs:
       - prepare
@@ -121,13 +112,7 @@ jobs:
         env:
           CI: false
           REACT_APP_TAG: ${{ needs.prepare.outputs.image_tag }}
-          CURRENT_BRANCH: ${{ needs.prepare.outputs.current_branch }}
-        run: |
-          if [[ $CURRENT_BRANCH = "main" ]]; then
-            yarn build-dev
-          else
-            yarn build-stg
-          fi
+        run: yarn build-dev
 
       - name: Docker build and push
         uses: docker/build-push-action@v2
@@ -141,7 +126,77 @@ jobs:
             kyber.network.name=${{ env.SERVICE }}
           tags: |
             ${{ needs.prepare.outputs.image_name }}:${{ needs.prepare.outputs.image_tag }}
-            ${{ needs.prepare.outputs.image_name }}:${{ needs.prepare.outputs.current_branch }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
+
+      - name: Move Docker cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+  build-stg:
+    runs-on: ubuntu-18.04
+    needs:
+      - prepare
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js 16.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.18.1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@master
+
+      - name: Gcloud Auth
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: '${{ secrets.GCR_CREDENTIALS }}'
+
+      - name: Setup Gcloud SDK
+        uses: google-github-actions/setup-gcloud@v0
+
+      - name: Configure docker
+        run: gcloud auth configure-docker
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-${{ env.SERVICE }}-buildx
+
+      - name: Restore node_modules
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install dependences
+        uses: bahmutov/npm-install@HEAD
+
+      - name: Run Lint
+        run: yarn lint --quiet
+
+      - name: Yarn Build
+        env:
+          CI: false
+          REACT_APP_TAG: ${{ needs.prepare.outputs.image_tag_stg }}
+        run: yarn build-stg
+
+      - name: Docker build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          labels: |
+            kyber.network.schema-version=1.0
+            kyber.network.vcs-ref=${{ github.sha }}
+            kyber.network.version=${{ needs.prepare.outputs.image_tag_stg }}
+            kyber.network.name=${{ env.SERVICE }}
+          tags: |
+            ${{ needs.prepare.outputs.image_name }}:${{ needs.prepare.outputs.image_tag_stg }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
