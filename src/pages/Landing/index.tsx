@@ -76,7 +76,6 @@ const SubText = styled.h3`
 const CTAButton = styled(BaseButton)`
   padding: 16px;
   border-radius: 24px;
-  color: ${({ theme }) => theme.textPrimary};
 
   &:hover {
     opacity: 50%;
@@ -86,11 +85,13 @@ const CTAButton = styled(BaseButton)`
 const ButtonCTA = styled(CTAButton)`
   background: linear-gradient(10deg, rgba(255, 0, 199, 1) 0%, rgba(255, 159, 251, 1) 100%);
   border: none;
+  color: ${({ theme }) => theme.white};
 `
 
 const ButtonCTASecondary = styled(CTAButton)`
   background: none;
   border: ${({ theme }) => `1px solid ${theme.textPrimary}`};
+  color: ${({ theme }) => theme.textPrimary};
 `
 
 const ButtonCTAText = styled.p`
