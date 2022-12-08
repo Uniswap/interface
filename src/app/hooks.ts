@@ -1,4 +1,6 @@
 import { useTheme } from '@shopify/restyle'
+import { useEffect, useState } from 'react'
+import { AccessibilityInfo } from 'react-native'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import type { RootState } from 'src/app/rootReducer'
 import type { AppDispatch } from 'src/app/store'
@@ -16,4 +18,27 @@ export const useAppTheme = () => useTheme<Theme>()
 export function* appSelect<T>(fn: (state: RootState) => T) {
   const state = yield* select(fn)
   return state
+}
+
+export function useAccessibilityInfo() {
+  const [reduceMotionEnabled, setReduceMotionEnabled] = useState(false)
+
+  useEffect(() => {
+    const reduceMotionChangedSubscription = AccessibilityInfo.addEventListener(
+      'reduceMotionChanged',
+      (isReduceMotionEnabled) => {
+        setReduceMotionEnabled(isReduceMotionEnabled)
+      }
+    )
+
+    AccessibilityInfo.isReduceMotionEnabled().then((isReduceMotionEnabled) => {
+      setReduceMotionEnabled(isReduceMotionEnabled)
+    })
+
+    return () => {
+      reduceMotionChangedSubscription.remove()
+    }
+  }, [])
+
+  return { reduceMotionEnabled }
 }

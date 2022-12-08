@@ -60,7 +60,7 @@ export const TextInput = forwardRef<TextInputBase, TextInputProps>(
     return (
       <TextInputBase
         ref={ref}
-        autoCompleteType="off"
+        autoComplete="off"
         selectionColor={theme.colors.textTertiary}
         onBlur={onBlur}
         onChangeText={onChangeText}

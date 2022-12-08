@@ -58,7 +58,6 @@ function useColorScheme() {
     Appearance.addChangeListener(onColorSchemeChange)
     return () => {
       resetCurrentTimeout()
-      Appearance.removeChangeListener(onColorSchemeChange)
     }
   }, [onColorSchemeChange, resetCurrentTimeout])
 
