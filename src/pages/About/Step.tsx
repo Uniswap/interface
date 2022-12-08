@@ -1,10 +1,14 @@
 import styled from 'styled-components/macro'
 
-const StyledStep = styled.div<{ isLast?: boolean }>`
+const StyledStep = styled.div`
+  cursor: pointer;
   display: flex;
   gap: 36px;
   padding: 24px 0;
-  border-bottom: ${({ isLast, theme }) => !isLast && `1px solid ${theme.backgroundOutline}`};
+
+  &:not(:last-of-type) {
+    border-bottom: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
+  }
 `
 
 const StepTitle = styled.div`
@@ -30,19 +34,21 @@ const Step = ({
   index,
   title,
   description,
-  isLast,
+  expanded,
+  onClick,
 }: {
   index: number
   title: string
   description: string
-  isLast?: boolean
+  onClick: () => void
+  expanded?: boolean
 }) => {
   return (
-    <StyledStep isLast={isLast}>
+    <StyledStep onClick={onClick}>
       <StepIndex>{index + 1}</StepIndex>
       <div>
         <StepTitle>{title}</StepTitle>
-        <StepDescription>{description}</StepDescription>
+        {expanded && <StepDescription>{description}</StepDescription>}
       </div>
     </StyledStep>
   )
