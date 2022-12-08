@@ -46,7 +46,7 @@ const PageWrapper = styled.span<{ isDarkMode: boolean }>`
   align-items: center;
 `
 
-const TitleText = styled.h1<{ isDarkMode: boolean }>`
+const Title = styled.h1<{ isDarkMode: boolean }>`
   color: transparent;
   font-size: 48px;
   font-weight: 600;
@@ -143,7 +143,7 @@ export default function About() {
   return (
     <PageWrapper isDarkMode={isDarkMode}>
       <ContentWrapper>
-        <TitleText isDarkMode={isDarkMode}>The best way to buy, sell and own crypto and NFTs</TitleText>
+        <Title isDarkMode={isDarkMode}>The best way to buy, sell and own crypto and NFTs</Title>
         <Body>
           <div>
             <PoweredBy isDarkMode={isDarkMode}>Powered by the Uniswap Protocol</PoweredBy>
