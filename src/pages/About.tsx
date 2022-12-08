@@ -62,7 +62,8 @@ const TitleText = styled.h1<{ isDarkMode: boolean }>`
 
 const Body = styled.p`
   color: ${({ theme }) => theme.textPrimary};
-  font-size: 18px;
+  font-size: 24px;
+  line-height: 36px;
   padding: 0;
   margin: 0;
 `
