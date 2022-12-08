@@ -63,10 +63,21 @@ const TitleText = styled.h1<{ isDarkMode: boolean }>`
 `
 
 const Body = styled.p`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   color: ${({ theme }) => theme.textPrimary};
   font-size: 24px;
   line-height: 36px;
   margin: 0;
+
+  @media screen and (min-width: ${MOBILE_BREAKPOINT}px) {
+    flex-direction: row;
+  }
+
+  & > * {
+    flex: 1;
+  }
 `
 
 const ContentWrapper = styled.span`
@@ -96,6 +107,11 @@ const CardContainer = styled.div`
   }
 `
 
+const PoweredBy = styled.h2`
+  margin: 0;
+  max-width: 340px;
+`
+
 export default function About() {
   const isDarkMode = useIsDarkMode()
   const theme = useTheme()
@@ -105,8 +121,13 @@ export default function About() {
       <ContentWrapper>
         <TitleText isDarkMode={isDarkMode}>The best way to buy, sell and own crypto and NFTs</TitleText>
         <Body>
-          The Uniswap Protocol is the world’s leading decentralized exchange protocol, allowing anyone to swap tokens,
-          list a token, or provide liquidity in a pool to earn fees.
+          <div>
+            <PoweredBy>Powered by the Uniswap Protocol</PoweredBy>
+          </div>
+          <div>
+            The Uniswap Protocol is the world’s leading decentralized exchange protocol, allowing anyone to swap tokens,
+            list a token, or provide liquidity in a pool to earn fees.
+          </div>
         </Body>
         <CardContainer>
           <Card
