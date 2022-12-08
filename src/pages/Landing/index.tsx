@@ -1,6 +1,8 @@
-import { ButtonCTA } from 'components/Button'
+import { BaseButton } from 'components/Button'
 import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
-import { useLocation, useNavigate } from 'react-router-dom'
+import Swap from 'pages/Swap'
+import { useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
@@ -60,16 +62,34 @@ const TitleText = styled.h1<{ isDarkMode: boolean }>`
 const SubText = styled.h3`
   color: ${({ theme }) => theme.textSecondary};
   font-size: 16px;
+  line-height: 24px;
   font-weight: 400;
   text-align: center;
 
-  @media screen and (min-width: ${MOBILE_BREAKPOINT}px) {
-    font-size: 20px;
-  }
-
   @media screen and (min-width: ${DESKTOP_BREAKPOINT}px) {
     font-size: 28px;
+    line-height: 36px;
   }
+`
+
+const CTAButton = styled(BaseButton)`
+  padding: 16px;
+  border-radius: 24px;
+  color: ${({ theme }) => theme.textPrimary};
+
+  &:hover {
+    opacity: 50%;
+  }
+`
+
+const ButtonCTA = styled(CTAButton)`
+  background: linear-gradient(10deg, rgba(255, 0, 199, 1) 0%, rgba(255, 159, 251, 1) 100%);
+  border: none;
+`
+
+const ButtonCTASecondary = styled(CTAButton)`
+  background: none;
+  border: ${({ theme }) => `1px solid ${theme.textPrimary}`};
 `
 
 const ButtonCTAText = styled.p`
@@ -86,39 +106,47 @@ const ButtonCTAText = styled.p`
   }
 `
 
-const TitleContentWrapper = styled.span`
+const TitleWrapper = styled.span`
   max-width: 720px;
 `
 
-const ContentWrapper = styled.span`
-  max-width: 720px;
+const ActionsWrapper = styled.span`
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  width: 100%;
+
+  & > * {
+    max-width: 288px;
+    flex: 1;
+  }
 `
 
 export default function Landing() {
   const isDarkMode = useIsDarkMode()
 
-  const navigate = useNavigate()
-
   const location = useLocation()
   const isOpen = location.pathname === '/'
-
-  const onContinueClick = () => navigate('/swap')
 
   if (useLandingPageFlag() === LandingPageVariant.Control || !isOpen) return null
 
   return (
-    <PageWrapper isDarkMode={isDarkMode}>
-      <TitleContentWrapper>
-        <TitleText isDarkMode={isDarkMode}>Trade crypto & NFTs with confidence.</TitleText>
-        <SubText>
-          Swap tokens with the deepest liquidity and <br /> buy NFTs at the best prices.
-        </SubText>
-      </TitleContentWrapper>
-      <ContentWrapper>
-        <ButtonCTA onClick={onContinueClick}>
-          <ButtonCTAText>Continue</ButtonCTAText>
-        </ButtonCTA>
-      </ContentWrapper>
-    </PageWrapper>
+    <>
+      <PageWrapper isDarkMode={isDarkMode}>
+        <TitleWrapper>
+          <TitleText isDarkMode={isDarkMode}>Trade crypto & NFTs with confidence.</TitleText>
+          <SubText>Uniswap is the best way to buy, sell, and manage your tokens and NFTs.</SubText>
+        </TitleWrapper>
+        <ActionsWrapper>
+          <ButtonCTA as={Link} to="/swap">
+            <ButtonCTAText>Continue</ButtonCTAText>
+          </ButtonCTA>
+          <ButtonCTASecondary as={Link} to="/about">
+            <ButtonCTAText>Learn More</ButtonCTAText>
+          </ButtonCTASecondary>
+        </ActionsWrapper>
+      </PageWrapper>
+      <Swap />
+    </>
   )
 }
