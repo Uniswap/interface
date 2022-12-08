@@ -149,6 +149,41 @@ const GetStarted = styled.div`
   margin-bottom: 100px;
 `
 
+const CARDS = [
+  {
+    to: '/swap',
+    title: 'Swap tokens',
+    description: 'Discover and swap top tokens on Ethereum, Polygon, Optimism, and more.',
+  },
+  {
+    to: '/nfts',
+    title: 'Trade NFTs',
+    description: 'Buy & sell NFTs across marketplaces to find more listings at better prices.',
+  },
+  {
+    to: '/pool',
+    title: 'Earn fees',
+    description: 'Provide liquidity to pools on Uniswap and earn fees on swaps.',
+  },
+  {
+    to: 'https://support.uniswap.org/',
+    external: true,
+    title: 'Build dApps',
+    description: 'Build on the largest DeFi protocol on Ethereum with our tools.',
+  },
+]
+
+const STEPS = [
+  {
+    title: 'Connect a wallet',
+    description: 'Connect your preferred crypto wallet to the Uniswap Interface.',
+  },
+  {
+    title: 'Swap!',
+    description: 'Trade crypto and NFTs through Uniswap’s platform',
+  },
+]
+
 export default function About() {
   const isDarkMode = useIsDarkMode()
   const theme = useTheme()
@@ -173,27 +208,9 @@ export default function About() {
           </Intro>
         </Body>
         <CardGrid>
-          <Card
-            to="/swap"
-            title="Swap tokens"
-            description="Discover and swap top tokens on Ethereum, Polygon, Optimism, and more."
-          />
-          <Card
-            to="/nfts"
-            title="Trade NFTs"
-            description="Buy & sell NFTs across marketplaces to find more listings at better prices."
-          />
-          <Card
-            to="/pool"
-            title="Earn fees"
-            description="Provide liquidity to pools on Uniswap and earn fees on swaps."
-          />
-          <Card
-            to="https://support.uniswap.org/"
-            external
-            title="Build dApps"
-            description="Build on the largest DeFi protocol on Ethereum with our tools."
-          />
+          {CARDS.map((card) => (
+            <Card key={card.title} {...card} />
+          ))}
         </CardGrid>
         <Body>
           <div>
@@ -214,12 +231,9 @@ export default function About() {
             </WalletIconGrid>
           </div>
           <StepList>
-            <Step
-              index={0}
-              title="Connect a wallet"
-              description="Connect your preferred crypto wallet to the Uniswap Interface."
-            />
-            <Step isLast index={1} title="Swap!" description="Trade crypto and NFTs through Uniswap’s platform" />
+            {STEPS.map((step, index) => (
+              <Step index={index} key={step.title} {...step} isLast={index === STEPS.length - 1} />
+            ))}
           </StepList>
         </Body>
         <IconRow>
