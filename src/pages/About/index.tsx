@@ -68,14 +68,13 @@ const Title = styled.h1<{ isDarkMode: boolean }>`
   }
 `
 
-const Body = styled.p`
+const Body = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   color: ${({ theme }) => theme.textPrimary};
   font-size: 24px;
   line-height: 36px;
-  margin: 0;
 
   @media screen and (min-width: ${MOBILE_BREAKPOINT}px) {
     flex-direction: row;
@@ -130,7 +129,7 @@ const PoweredBy = styled.h2<{ isDarkMode?: boolean }>`
   -webkit-background-clip: text;
 `
 
-const WalletIconContainer = styled.div`
+const WalletIconGrid = styled.div`
   display: grid;
   gap: 50px;
   grid-template-columns: 1fr 1fr 1fr;
@@ -214,14 +213,14 @@ export default function About() {
           />
         </CardGrid>
         <Body>
-          <WalletIconContainer>
+          <WalletIconGrid>
             <WalletIcon src={metaMaskIcon} alt="MetaMask" />
             <WalletIcon src={walletConnectIcon} alt="WalletConnect" />
             <WalletIcon src={coinbaseWalletIcon} alt="Coinbase Wallet" />
             <WalletIcon src={rainbowIcon} alt="Rainbow" />
             <WalletIcon src={phantomIcon} alt="Phantom" />
             <WalletIcon src={walletConnectIcon} alt="WalletConnect" />
-          </WalletIconContainer>
+          </WalletIconGrid>
           <div></div>
         </Body>
         <IconRow>
