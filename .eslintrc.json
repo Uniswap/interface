@@ -51,7 +51,7 @@
   ],
   "plugins": ["import", "simple-import-sort", "unused-imports"],
   "rules": {
-    "import/no-unused-modules": [1, { "unusedExports": true }],
+    "import/no-unused-modules": [2, { "unusedExports": true }],
     "unused-imports/no-unused-imports": "error",
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
