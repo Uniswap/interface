@@ -6,7 +6,7 @@ import walletConnectIcon from 'assets/images/walletConnectIcon.svg'
 import { ButtonOutlined } from 'components/Button'
 import { Box } from 'nft/components/Box'
 import { DiscordIconMenu, GithubIconMenu, TwitterIconMenu } from 'nft/components/icons'
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
@@ -188,6 +188,8 @@ export default function About() {
   const isDarkMode = useIsDarkMode()
   const theme = useTheme()
 
+  const [selectedStepIndex, setSelectedStepIndex] = useState(0)
+
   return (
     <Page isDarkMode={isDarkMode}>
       <Content>
@@ -232,7 +234,14 @@ export default function About() {
           </div>
           <StepList>
             {STEPS.map((step, index) => (
-              <Step index={index} key={step.title} {...step} isLast={index === STEPS.length - 1} />
+              <Step
+                expanded={selectedStepIndex === index}
+                onClick={() => setSelectedStepIndex(index)}
+                index={index}
+                key={step.title}
+                {...step}
+                isLast={index === STEPS.length - 1}
+              />
             ))}
           </StepList>
         </Body>

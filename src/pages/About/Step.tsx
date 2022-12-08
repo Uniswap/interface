@@ -1,6 +1,7 @@
 import styled from 'styled-components/macro'
 
 const StyledStep = styled.div<{ isLast?: boolean }>`
+  cursor: pointer;
   display: flex;
   gap: 36px;
   padding: 24px 0;
@@ -31,18 +32,22 @@ const Step = ({
   title,
   description,
   isLast,
+  expanded,
+  onClick,
 }: {
   index: number
   title: string
   description: string
   isLast?: boolean
+  onClick: () => void
+  expanded?: boolean
 }) => {
   return (
-    <StyledStep isLast={isLast}>
+    <StyledStep isLast={isLast} onClick={onClick}>
       <StepIndex>{index + 1}</StepIndex>
       <div>
         <StepTitle>{title}</StepTitle>
-        <StepDescription>{description}</StepDescription>
+        {expanded && <StepDescription>{description}</StepDescription>}
       </div>
     </StyledStep>
   )
