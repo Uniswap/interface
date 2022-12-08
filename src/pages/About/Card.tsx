@@ -2,12 +2,11 @@ import styled from 'styled-components/macro'
 
 const StyledCard = styled.a`
   display: flex;
-  background: linear-gradient(180deg, rgba(19, 22, 27, 0.54) 0%, #13161B 100%);
+  background: linear-gradient(180deg, rgba(19, 22, 27, 0.54) 0%, #13161b 100%);
   flex-direction: column;
   justify-content: space-between;
   text-decoration: none;
   color: ${({ theme }) => theme.textPrimary};
-  border: 1px solid black;
   padding: 40px;
   height: 400px;
   border-radius: 24px;
