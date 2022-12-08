@@ -76,7 +76,7 @@ const SubText = styled.h3`
 const CTAButton = styled(BaseButton)`
   padding: 16px;
   border-radius: 24px;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.white};
 
   &:hover {
     opacity: 50%;
