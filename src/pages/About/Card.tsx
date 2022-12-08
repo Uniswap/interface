@@ -1,12 +1,12 @@
 import styled from 'styled-components/macro'
 
 const StyledCard = styled.a`
-  background-color: #0e111a;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   text-decoration: none;
-  color: ${({ theme }) => theme.white};
+  color: ${({ theme }) => theme.textPrimary};
+  border: 1px solid black;
   padding: 40px;
   height: 400px;
   border-radius: 24px;
