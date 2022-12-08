@@ -64,8 +64,8 @@ const CardGrid = styled.div`
 `
 
 const InfoButton = styled(ButtonOutlined)`
-  font-size: 24px;
-  line-height: 32px;
+  font-size: 20px;
+  line-height: 28px;
   padding: 16px;
 `
 
@@ -76,6 +76,14 @@ const ActionsContainer = styled.span`
 
   & > * {
     flex: 1;
+  }
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    flex-direction: column;
+  }
+
+  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
+    flex-direction: row;
   }
 `
 
