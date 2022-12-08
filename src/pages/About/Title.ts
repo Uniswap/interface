@@ -8,8 +8,8 @@ export const Title = styled.h1<{ isDarkMode: boolean }>`
   margin-bottom: 0px;
   background: ${({ isDarkMode }) =>
     isDarkMode
-      ? 'linear-gradient(20deg, rgba(255, 244, 207, 1) 10%, rgba(255, 87, 218, 1) 100%)'
-      : 'linear-gradient(10deg, rgba(255,79,184,1) 0%, rgba(255,159,251,1) 100%)'};
+      ? 'linear-gradient(20deg, rgb(255, 244, 207) 10%, rgb(255, 87, 218) 100%)'
+      : 'linear-gradient(10deg, rgb(255,79,184) 0%, rgb(255,159,251) 100%)'};
 
   background-clip: text;
   -webkit-background-clip: text;
@@ -29,8 +29,8 @@ export const SubTitle = styled.h2<{ isDarkMode?: boolean }>`
 
   background: ${({ isDarkMode }) =>
     isDarkMode
-      ? 'linear-gradient(20deg, rgba(255, 244, 207, 1) 10%, rgba(255, 87, 218, 1) 100%)'
-      : 'linear-gradient(10deg, rgba(255,79,184,1) 0%, rgba(255,159,251,1) 100%)'};
+      ? 'linear-gradient(20deg, rgb(255, 244, 207) 10%, rgb(255, 87, 218) 100%)'
+      : 'linear-gradient(10deg, rgb(255,79,184) 0%, rgb(255,159,251) 100%)'};
 
   background-clip: text;
   -webkit-background-clip: text;
