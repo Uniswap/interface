@@ -1,7 +1,6 @@
-import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
 import { ButtonOutlined } from 'components/Button'
-import { useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
@@ -11,13 +10,14 @@ import { CARDS, STEPS } from './constants'
 import Step from './Step'
 import { SubTitle, Title } from './Title'
 
-const Page = styled.span<{ isDarkMode: boolean }>`
+const Page = styled.span<{ isDarkMode: boolean; titleHeight: number }>`
   width: 100%;
   align-self: center;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  padding-top: calc(100vh - ${({ titleHeight }) => titleHeight + 200}px);
 `
 
 const Panels = styled.div`
@@ -46,11 +46,11 @@ const Content = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  padding: 128px 16px 16px 16px;
+  padding: 0px 16px 16px 16px;
   gap: 96px;
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
-    padding: 128px 80px 80px 80px;
+    padding: 0px 80px 80px 80px;
   }
 `
 
@@ -123,13 +123,25 @@ const PoweredBySection = styled(Panels)`
 export default function About() {
   const isDarkMode = useIsDarkMode()
 
+  const titleRef = useRef<HTMLDivElement>(null)
+  const [titleHeight, setTitleHeight] = useState(0)
+  useLayoutEffect(() => {
+    if (titleRef.current) {
+      setTitleHeight(titleRef.current.scrollHeight)
+    }
+  }, [])
+
   const [selectedStepIndex, setSelectedStepIndex] = useState(0)
+  const selectedStep = STEPS[selectedStepIndex]
+  const thumbnailImgSrc = isDarkMode ? selectedStep?.darkImgSrc : selectedStep?.lightImgSrc
 
   return (
     <Trace page={PageName.ABOUT_PAGE} shouldLogImpression>
-      <Page isDarkMode={isDarkMode}>
+      <Page isDarkMode={isDarkMode} titleHeight={titleHeight}>
         <Content>
-          <Title isDarkMode={isDarkMode}>The best way to buy, sell and own crypto and NFTs</Title>
+          <Title ref={titleRef} isDarkMode={isDarkMode}>
+            The best way to buy, sell and own crypto and NFTs
+          </Title>
           <PoweredBySection>
             <div>
               <SubTitle isDarkMode={isDarkMode}>Powered by the Uniswap Protocol</SubTitle>
@@ -158,7 +170,7 @@ export default function About() {
             <SubTitle isDarkMode={isDarkMode}>Get Started</SubTitle>
             <Panels>
               <ThumbnailContainer>
-                <Thumbnail alt="Thumbnail" src={STEPS[selectedStepIndex]?.imgSrc} />
+                <Thumbnail alt="Thumbnail" src={thumbnailImgSrc} />
               </ThumbnailContainer>
               <StepList>
                 {STEPS.map((step, index) => (

@@ -2,6 +2,7 @@ import { Trace } from '@uniswap/analytics'
 import { BaseButton } from 'components/Button'
 import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
 import Swap from 'pages/Swap'
+import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -9,8 +10,7 @@ import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 
-const MOBILE_BREAKPOINT = BREAKPOINTS.sm
-const DESKTOP_BREAKPOINT = BREAKPOINTS.md
+const PADDING_BOTTOM = 64
 
 const PageWrapper = styled.div<{ isDarkMode: boolean }>`
   width: 100%;
@@ -24,16 +24,16 @@ const PageWrapper = styled.div<{ isDarkMode: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: end;
-  padding: 24px 24px 64px 24px;
+  padding-bottom: 24px 24px ${PADDING_BOTTOM}px;
   align-items: center;
   transition: 250ms ease opacity;
 
-  @media screen and (min-width: ${MOBILE_BREAKPOINT}px) {
-    padding: 4rem;
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    padding: 64px 64px ${PADDING_BOTTOM}px;
   }
 
-  @media screen and (min-width: ${DESKTOP_BREAKPOINT}px) {
-    padding: 2rem;
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    padding: 32px 32px ${PADDING_BOTTOM}px;
   }
 `
 
@@ -51,11 +51,11 @@ const TitleText = styled.h1<{ isDarkMode: boolean }>`
   background-clip: text;
   -webkit-background-clip: text;
 
-  @media screen and (min-width: ${MOBILE_BREAKPOINT}px) {
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     font-size: 48px;
   }
 
-  @media screen and (min-width: ${DESKTOP_BREAKPOINT}px) {
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
     font-size: 72px;
   }
 `
@@ -68,10 +68,15 @@ const SubText = styled.h3`
   text-align: center;
   max-width: 600px;
 
-  @media screen and (min-width: ${DESKTOP_BREAKPOINT}px) {
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
     font-size: 28px;
     line-height: 36px;
   }
+`
+
+const SubTextContainer = styled.div`
+  display: flex;
+  justify-content: center;
 `
 
 const CTAButton = styled(BaseButton)`
@@ -100,11 +105,11 @@ const ButtonCTAText = styled.p`
   font-size: 16px;
   white-space: nowrap;
 
-  @media screen and (min-width: ${MOBILE_BREAKPOINT}px) {
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     font-size: 20px;
   }
 
-  @media screen and (min-width: ${DESKTOP_BREAKPOINT}px) {
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
     font-size: 24px;
   }
 `
@@ -131,14 +136,30 @@ export default function Landing() {
   const location = useLocation()
   const isOpen = location.pathname === '/'
 
-  if (useLandingPageFlag() === LandingPageVariant.Control || !isOpen) return null
+  const landingPageFlag = useLandingPageFlag()
+
+  useEffect(() => {
+    if (landingPageFlag) {
+      document.body.style.overflow = 'hidden'
+      return () => {
+        document.body.style.overflow = 'auto'
+      }
+    }
+    return () => {
+      // need to have a return so the hook doesn't throw.
+    }
+  }, [landingPageFlag])
+
+  if (landingPageFlag === LandingPageVariant.Control || !isOpen) return null
 
   return (
     <Trace page="landing-page" shouldLogImpression>
       <PageWrapper isDarkMode={isDarkMode}>
         <TitleWrapper>
           <TitleText isDarkMode={isDarkMode}>Trade crypto & NFTs with confidence.</TitleText>
-          <SubText>Uniswap is the best way to buy, sell, and manage your tokens and NFTs.</SubText>
+          <SubTextContainer>
+            <SubText>Uniswap is the best way to buy, sell, and manage your tokens and NFTs.</SubText>
+          </SubTextContainer>
         </TitleWrapper>
         <ActionsWrapper>
           <ButtonCTA as={Link} to="/swap">
