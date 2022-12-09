@@ -137,17 +137,17 @@ const Erc1155ControlsDisplay = styled(ThemedText.HeadlineSmall)`
   cursor: default;
 `
 
-const Erc1155ControlsInput = styled.div<{ $disabled?: boolean }>`
+const Erc1155ControlsInput = styled.div<{ disabled?: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
   width: 40px;
   background: ${({ theme }) => theme.backgroundInteractive};
   color: ${({ theme }) => theme.textPrimary};
-  ${({ $disabled }) => $disabled && 'cursor: default;'}
+  cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
 
   :hover {
-    color: ${({ theme, $disabled }) => !$disabled && theme.accentAction};
+    color: ${({ theme, disabled }) => !disabled && theme.accentAction};
   }
 `
 const Erc1155ControlsLoading = styled(ThemedText.HeadlineSmall)`
@@ -622,7 +622,7 @@ const Erc1155Controls = ({ quantity, isLoadingSellOrders, disableBuy }: Erc1155C
       <Erc1155ControlsContainer>
         {isLoadingSellOrders && (
           <Erc1155ControlsLoading>
-            <Loader size="24px" stroke="white" />
+            <Loader size="24px" stroke={theme.textPrimary} />
           </Erc1155ControlsLoading>
         )}
         {!isLoadingSellOrders && (
@@ -637,7 +637,7 @@ const Erc1155Controls = ({ quantity, isLoadingSellOrders, disableBuy }: Erc1155C
             </Erc1155ControlsInput>
             <Erc1155ControlsDisplay>{quantity}</Erc1155ControlsDisplay>
             <Erc1155ControlsInput
-              $disabled={disableBuy}
+              disabled={disableBuy}
               onClick={(e: MouseEvent) => {
                 e.stopPropagation()
                 !disableBuy && addAssetToBag()
