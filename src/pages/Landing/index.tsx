@@ -87,22 +87,27 @@ const SubTextContainer = styled.div`
 const CTAButton = styled(BaseButton)`
   padding: 16px;
   border-radius: 24px;
-
-  &:hover {
-    opacity: 50%;
-  }
 `
 
 const ButtonCTA = styled(CTAButton)`
   background: linear-gradient(10deg, rgba(255, 0, 199, 1) 0%, rgba(255, 159, 251, 1) 100%);
   border: none;
   color: ${({ theme }) => theme.white};
+  transition: ${({ theme }) => `all ${theme.transition.duration.medium} ${theme.transition.timing.ease}`};
+
+  &:hover {
+    box-shadow: 0px 0px 16px 0px #ff00c7;
+  }
 `
 
 const ButtonCTASecondary = styled(CTAButton)`
   background: none;
   border: ${({ theme }) => `1px solid ${theme.textPrimary}`};
   color: ${({ theme }) => theme.textPrimary};
+
+  &:hover {
+    border: 1px solid rgba(255, 0, 199, 1);
+  }
 `
 
 const ButtonCTAText = styled.p`

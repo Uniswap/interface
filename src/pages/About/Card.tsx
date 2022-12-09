@@ -14,11 +14,14 @@ const StyledCard = styled.div<{ isDarkMode: boolean }>`
   padding: 40px;
   height: 200px;
   border-radius: 24px;
-  transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease}  background-color`};
+  transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease}  background`};
   border: 1px solid ${({ theme, isDarkMode }) => (isDarkMode ? 'transparent' : theme.backgroundOutline)};
 
   &:hover {
-    background-color: ${({ theme }) => theme.backgroundModule};
+    background: ${({ theme, isDarkMode }) =>
+      isDarkMode
+        ? theme.backgroundModule
+        : 'linear-gradient(180deg,rgba(93, 103, 133, 0.08) 0%, rgba(0, 0, 0, 0) 100%)'};
   }
 `
 

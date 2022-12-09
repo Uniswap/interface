@@ -9,7 +9,7 @@ export const Title = styled.h1<{ isDarkMode: boolean }>`
   background: ${({ isDarkMode }) =>
     isDarkMode
       ? 'conic-gradient(from 180deg at 50% 50%, #FFF4CF 0deg, #EBFFBF 95.62deg, #E3CDFF 175.81deg, #FFCDF4 269.07deg, #FFFBEF 360deg);'
-      : 'linear-gradient(10deg, rgb(255,79,184) 0%, rgb(255,159,251) 100%)'};
+      : 'linear-gradient(230.12deg, #8A80FF 37.26%, #FF7DE2 52.98%, #FF3998 68.06%)'};
 
   background-clip: text;
   -webkit-background-clip: text;
@@ -31,7 +31,7 @@ export const SubTitle = styled.h2<{ isDarkMode?: boolean }>`
   background: ${({ isDarkMode }) =>
     isDarkMode
       ? 'conic-gradient(from 180deg at 50% 50%, #FFF4CF 0deg, #EBFFBF 95.62deg, #E3CDFF 175.81deg, #FFCDF4 269.07deg, #FFFBEF 360deg);'
-      : 'linear-gradient(10deg, rgb(255,79,184) 0%, rgb(255,159,251) 100%)'};
+      : 'linear-gradient(230.12deg, #8A80FF 37.26%, #FF7DE2 52.98%, #FF3998 68.06%)'};
 
   background-clip: text;
   -webkit-background-clip: text;

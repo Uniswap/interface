@@ -151,7 +151,7 @@ export const ButtonSecondary = styled(BaseButton)`
 `
 
 export const ButtonOutlined = styled(BaseButton)`
-  border: 1px solid ${({ theme }) => theme.deprecated_bg2};
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
   background-color: transparent;
   color: ${({ theme }) => theme.deprecated_text1};
   &:focus {
