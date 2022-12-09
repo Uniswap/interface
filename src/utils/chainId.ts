@@ -15,7 +15,11 @@ export function toSupportedChainId(chainId?: BigNumberish) {
 
 // variant on `toSupportedChain` with a narrower return type
 export function parseActiveChains(activeChainsString: string): ChainId[] {
-  return activeChainsString.split(',').map((id) => parseInt(id, 10) as ChainId)
+  if (!activeChainsString) return []
+  return activeChainsString
+    .split(',')
+    .map((id) => parseInt(id, 10) as ChainId)
+    .filter(Boolean)
 }
 
 export function isTestnet(chainId: ChainId): boolean {
