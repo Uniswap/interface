@@ -921,8 +921,8 @@ export type TransactionListQuery = { __typename?: 'Query', portfolios?: Array<{ 
 
 export type TopTokensQueryVariables = Exact<{
   chain?: InputMaybe<Chain>;
-  page: Scalars['Int'];
-  pageSize: Scalars['Int'];
+  page?: InputMaybe<Scalars['Int']>;
+  pageSize?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<TokenSortableField>;
 }>;
 
@@ -1804,7 +1804,7 @@ export type TransactionListQueryHookResult = ReturnType<typeof useTransactionLis
 export type TransactionListLazyQueryHookResult = ReturnType<typeof useTransactionListLazyQuery>;
 export type TransactionListQueryResult = Apollo.QueryResult<TransactionListQuery, TransactionListQueryVariables>;
 export const TopTokensDocument = gql`
-    query TopTokens($chain: Chain, $page: Int!, $pageSize: Int!, $orderBy: TokenSortableField) {
+    query TopTokens($chain: Chain, $page: Int = 1, $pageSize: Int = 100, $orderBy: TokenSortableField = POPULARITY) {
   topTokens(chain: $chain, page: $page, pageSize: $pageSize, orderBy: $orderBy) {
     id
     address
@@ -1841,7 +1841,7 @@ export const TopTokensDocument = gql`
  *   },
  * });
  */
-export function useTopTokensQuery(baseOptions: Apollo.QueryHookOptions<TopTokensQuery, TopTokensQueryVariables>) {
+export function useTopTokensQuery(baseOptions?: Apollo.QueryHookOptions<TopTokensQuery, TopTokensQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<TopTokensQuery, TopTokensQueryVariables>(TopTokensDocument, options);
       }
