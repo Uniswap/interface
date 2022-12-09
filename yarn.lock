@@ -10613,6 +10613,15 @@ eslint-plugin-security@1.5.0:
   dependencies:
     safe-regex "^2.1.1"
 
+eslint-plugin-spellcheck@0.0.20:
+  version "0.0.20"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-spellcheck/-/eslint-plugin-spellcheck-0.0.20.tgz#32c7a42d26238e42e65a20e695062f5ce18f0115"
+  integrity sha512-GJa6vgzWAYqe0elKADAsiBRrhvqBnKyt7tpFSqlCZJsK2W9+K80oMyHhKolA7vJ13H5RCGs5/KCN+mKUyKoAiA==
+  dependencies:
+    globals "^13.0.0"
+    hunspell-spellchecker "^1.0.2"
+    lodash "^4.17.15"
+
 eslint-scope@^4.0.3:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/eslint-scope/-/eslint-scope-4.0.3.tgz#ca03833310f6889a3264781aa82e63eb9cfe7848"
@@ -12320,10 +12329,10 @@ globals@^11.1.0:
   resolved "https://registry.yarnpkg.com/globals/-/globals-11.12.0.tgz#ab8795338868a0babd8525758018c2a7eb95c42e"
   integrity sha512-WOBp/EEGUiIsJSp7wcv/y6MO+lV9UoncWqxuFfm8eBwzWNgyfBd6Gz+IeKQ9jCmyhoH99g15M3T+QaVHFjizVA==
 
-globals@^13.6.0, globals@^13.9.0:
-  version "13.17.0"
-  resolved "https://registry.yarnpkg.com/globals/-/globals-13.17.0.tgz#902eb1e680a41da93945adbdcb5a9f361ba69bd4"
-  integrity sha512-1C+6nQRb1GwGMKm2dH/E7enFAMxGTmGI7/dEdhy/DNelv85w9B72t3uc5frtMNXIbzrarJJ/lTCjcaZwbLJmyw==
+globals@^13.0.0, globals@^13.6.0, globals@^13.9.0:
+  version "13.18.0"
+  resolved "https://registry.yarnpkg.com/globals/-/globals-13.18.0.tgz#fb224daeeb2bb7d254cd2c640f003528b8d0c1dc"
+  integrity sha512-/mR4KI8Ps2spmoc0Ulu9L7agOF0du1CZNQ3dke8yItYlyKNmGrkONemBbd6V8UTc1Wgcqn21t3WYB7dbRmh6/A==
   dependencies:
     type-fest "^0.20.2"
 
@@ -13022,6 +13031,11 @@ humps@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/humps/-/humps-2.0.1.tgz#dd02ea6081bd0568dc5d073184463957ba9ef9aa"
   integrity sha1-3QLqYIG9BWjcXQcxhEY5V7qe+ao=
+
+hunspell-spellchecker@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/hunspell-spellchecker/-/hunspell-spellchecker-1.0.2.tgz#a10b0bd2fa00a65ab62a4c6b734ce496d318910e"
+  integrity sha512-4DwmFAvlz+ChsqLDsZT2cwBsYNXh+oWboemxXtafwKIyItq52xfR4e4kr017sLAoPaSYVofSOvPUfmOAhXyYvw==
 
 hyperlinker@^1.0.0:
   version "1.0.0"

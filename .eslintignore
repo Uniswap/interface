@@ -10,3 +10,5 @@ generated*.ts
 __generated__/
 
 storybook-static
+
+coverage
