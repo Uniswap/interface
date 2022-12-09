@@ -5,8 +5,8 @@ const StyledStep = styled.div<{ selected: boolean }>`
   display: flex;
   padding: 24px 0;
   color: ${({ theme, selected }) => (selected ? theme.textPrimary : theme.textSecondary)};
-  font-size: 36px;
-  line-height: 44px;
+  font-size: 20px;
+  line-height: 28px;
 
   &:not(:last-of-type) {
     border-bottom: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};

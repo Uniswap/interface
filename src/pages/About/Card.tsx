@@ -11,7 +11,7 @@ const StyledCard = styled.div<{ isDarkMode: boolean }>`
   text-decoration: none;
   color: ${({ theme }) => theme.textPrimary};
   padding: 40px;
-  height: 400px;
+  height: 200px;
   border-radius: 24px;
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease}  background-color`};
   border: 1px solid ${({ theme, isDarkMode }) => (isDarkMode ? 'transparent' : theme.backgroundOutline)};
@@ -22,15 +22,13 @@ const StyledCard = styled.div<{ isDarkMode: boolean }>`
 `
 
 const CardTitle = styled.div`
-  font-weight: 600;
-  font-size: 48px;
-  line-height: 56px;
+  font-size: 28px;
+  line-height: 36px;
 `
 
 const CardDescription = styled.div`
-  font-weight: 400;
-  font-size: 24px;
-  line-height: 36px;
+  font-size: 20px;
+  line-height: 28px;
 `
 
 const Card = ({
