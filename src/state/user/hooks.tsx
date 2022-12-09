@@ -4,6 +4,8 @@ import { useWeb3React } from '@web3-react/core'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import { SupportedLocale } from 'constants/locales'
 import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
+import { BaseVariant } from 'featureFlags'
+import { useFiatOnrampFlag } from 'featureFlags/flags/fiatOnramp'
 import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual } from 'react-redux'
@@ -109,8 +111,9 @@ export function useExpertModeManager(): [boolean, () => void] {
 }
 
 interface FiatOnrampAcknowledgements {
-  user: boolean
+  renderCount: number
   system: boolean
+  user: boolean
 }
 export function useFiatOnrampAck(): [
   FiatOnrampAcknowledgements,
@@ -142,7 +145,8 @@ export function useShowSurveyPopup(): [boolean | undefined, (showPopup: boolean)
 
 export function useHideNFTWelcomeModal(): [boolean | undefined, () => void] {
   const dispatch = useAppDispatch()
-  const hideNFTWelcomeModal = useAppSelector((state) => state.user.hideNFTWelcomeModal)
+  const fiatOnrampFlagEnabled = useFiatOnrampFlag() === BaseVariant.Enabled
+  const hideNFTWelcomeModal = useAppSelector((state) => state.user.hideNFTWelcomeModal) || fiatOnrampFlagEnabled
   const hideModal = useCallback(() => {
     dispatch(updateHideNFTWelcomeModal({ hideNFTWelcomeModal: true }))
   }, [dispatch])

@@ -204,14 +204,12 @@ export default function FeatureFlagModal() {
           <X size={24} />
         </CloseButton>
       </Header>
-      <FeatureFlagGroup name="Fiat on-ramp">
-        <FeatureFlagOption
-          variant={BaseVariant}
-          value={useFiatOnrampFlag()}
-          featureFlag={FeatureFlag.fiatOnramp}
-          label="Fiat on-ramp"
-        />
-      </FeatureFlagGroup>
+      <FeatureFlagOption
+        variant={BaseVariant}
+        value={useFiatOnrampFlag()}
+        featureFlag={FeatureFlag.fiatOnramp}
+        label="Fiat on-ramp"
+      />
       <FeatureFlagOption
         variant={LandingPageVariant}
         value={useLandingPageFlag()}

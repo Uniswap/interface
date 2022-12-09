@@ -3,7 +3,7 @@ import { useWeb3React } from '@web3-react/core'
 import fiatMaskUrl from 'assets/svg/fiat_mask.svg'
 import { BaseVariant } from 'featureFlags'
 import { useFiatOnrampFlag } from 'featureFlags/flags/fiatOnramp'
-import { MouseEvent, useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { X } from 'react-feather'
 import { useToggleWalletDropdown } from 'state/application/hooks'
 import { useFiatOnrampAck } from 'state/user/hooks'
@@ -91,18 +91,26 @@ const Body = styled(ThemedText.BodySmall)`
   position: relative;
 `
 
+const ANNOUNCEMENT_RENDERED = 'FiatOnrampAnnouncement-rendered'
+const ANNOUNCEMENT_DISMISSED = 'FiatOnrampAnnouncement-dismissed'
+
+const MAX_RENDER_COUNT = 3
 export function FiatOnrampAnnouncement() {
   const { account } = useWeb3React()
   const [acks, acknowledge] = useFiatOnrampAck()
+  const [locallyDismissed, setLocallyDismissed] = useState(false)
 
-  const handleClose = useCallback(
-    (e: MouseEvent<HTMLOrSVGElement>) => {
-      e.preventDefault()
-      e.stopPropagation()
-      acknowledge({ user: false })
-    },
-    [acknowledge]
-  )
+  useEffect(() => {
+    if (!sessionStorage.getItem(ANNOUNCEMENT_RENDERED)) {
+      acknowledge({ renderCount: acks.renderCount + 1 })
+      sessionStorage.setItem(ANNOUNCEMENT_RENDERED, 'true')
+    }
+  }, [acknowledge, acks.renderCount])
+
+  const handleClose = useCallback(() => {
+    setLocallyDismissed(true)
+    sessionStorage.setItem(ANNOUNCEMENT_DISMISSED, 'true')
+  }, [])
 
   const toggleWalletDropdown = useToggleWalletDropdown()
   const handleClick = useCallback(() => {
@@ -111,7 +119,14 @@ export function FiatOnrampAnnouncement() {
   }, [acknowledge, toggleWalletDropdown])
   const fiatOnrampFlag = useFiatOnrampFlag()
 
-  if (!account || acks?.user || fiatOnrampFlag === BaseVariant.Control) {
+  if (
+    !account ||
+    acks?.user ||
+    fiatOnrampFlag === BaseVariant.Control ||
+    locallyDismissed ||
+    sessionStorage.getItem(ANNOUNCEMENT_DISMISSED) ||
+    acks.renderCount >= MAX_RENDER_COUNT
+  ) {
     return null
   }
   return (
