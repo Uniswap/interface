@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
+import { BREAKPOINTS } from 'theme'
 
 const StyledCard = styled.div<{ isDarkMode: boolean }>`
   display: flex;
@@ -24,11 +25,32 @@ const StyledCard = styled.div<{ isDarkMode: boolean }>`
 const CardTitle = styled.div`
   font-size: 28px;
   line-height: 36px;
+  font-weight: 500;
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    font-size: 20px;
+    line-height: 28px;
+  }
+
+  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
+    font-size: 28px;
+    line-height: 36px;
+  }
 `
 
 const CardDescription = styled.div`
   font-size: 20px;
   line-height: 28px;
+
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
+    font-size: 20px;
+    line-height: 28px;
+  }
 `
 
 const Card = ({
