@@ -68,13 +68,13 @@ const CardGrid = styled.div`
 
 const InfoButton = styled(ButtonOutlined)`
   font-size: 20px;
-  line-height: 28px;
-  padding: 16px;
+  line-height: 24px;
+  padding: 12px;
 `
 
 const ActionsContainer = styled.span`
   display: flex;
-  gap: 16px;
+  gap: 24px;
   width: 100%;
 
   & > * {
@@ -102,6 +102,8 @@ const Intro = styled.div`
 `
 
 const IntroCopy = styled.p`
+  font-size: 16px;
+  line-height: 24px;
   margin: 0;
 `
 
@@ -141,17 +143,14 @@ export default function About() {
       <Page isDarkMode={isDarkMode} titleHeight={titleHeight}>
         <Content>
           <Title ref={titleRef} isDarkMode={isDarkMode}>
-            The best way to buy, sell and own crypto and NFTs
+            Uniswap is the largest on-chain marketplace for tokens and NFTs.
           </Title>
           <PoweredBySection>
             <div>
               <SubTitle isDarkMode={isDarkMode}>Powered by the Uniswap Protocol</SubTitle>
             </div>
             <Intro>
-              <IntroCopy>
-                The Uniswap Protocol is the world’s leading decentralized exchange protocol, allowing anyone to swap
-                tokens, list a token, or provide liquidity in a pool to earn fees.
-              </IntroCopy>
+              <IntroCopy>The leading decentralized crypto trading protocol, governed by a global community.</IntroCopy>
               <ActionsContainer>
                 <InfoButton as="a" rel="noopener noreferrer" href="https://uniswap.org" target="_blank">
                   Learn more
