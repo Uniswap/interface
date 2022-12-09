@@ -175,12 +175,11 @@ export default function About() {
               <StepList>
                 {STEPS.map((step, index) => (
                   <Step
-                    expanded={selectedStepIndex === index}
-                    onClick={() => setSelectedStepIndex(index)}
+                    selected={selectedStepIndex === index}
+                    onSelect={() => setSelectedStepIndex(index)}
                     index={index}
                     key={step.title}
                     title={step.title}
-                    description={step.description}
                   />
                 ))}
               </StepList>
