@@ -30,4 +30,10 @@ describe('Testing nfts', () => {
     cy.get(getTestSelector('nft-activity')).first().click()
     cy.get(getTestSelector('nft-activity-row')).should('exist')
   })
+
+  it('should go to the details page', () => {
+    cy.visit('/#/nfts/collection/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d')
+    cy.get(getTestSelector('nft-details-link')).first().click()
+    cy.wait(10000)
+  })
 })
