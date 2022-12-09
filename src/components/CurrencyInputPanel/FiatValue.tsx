@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
-import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
+import { formatCurrencyAmount, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
@@ -40,13 +40,15 @@ export function FiatValue({
   useEffect(() => {
     const stale = false
     let timeoutId = 0
-    if (isLoading && !stale) {
-      timeoutId = setTimeout(() => setShowLoadingPlaceholder(true), 200) as unknown as number
+    if (isLoading && !fiatValue) {
+      timeoutId = setTimeout(() => {
+        if (!stale) setShowLoadingPlaceholder(true)
+      }, 200) as unknown as number
     } else {
       setShowLoadingPlaceholder(false)
     }
     return () => clearTimeout(timeoutId)
-  }, [isLoading])
+  }, [isLoading, fiatValue])
 
   return (
     <ThemedText.DeprecatedBody fontSize={14} color={theme.textSecondary}>
@@ -59,7 +61,7 @@ export function FiatValue({
             <span style={{ color: priceImpactColor }}>
               {' '}
               <MouseoverTooltip text={t`The estimated difference between the USD values of input and output amounts.`}>
-                (<Trans>{priceImpact.multiply(-1).toSignificant(3)}%</Trans>)
+                (<Trans>{formatPriceImpact(priceImpact)}%</Trans>)
               </MouseoverTooltip>
             </span>
           )}
