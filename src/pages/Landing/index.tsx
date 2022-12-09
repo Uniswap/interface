@@ -9,8 +9,7 @@ import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 
-const MOBILE_BREAKPOINT = BREAKPOINTS.sm
-const DESKTOP_BREAKPOINT = BREAKPOINTS.md
+const PADDING_BOTTOM = 64
 
 const PageWrapper = styled.div<{ isDarkMode: boolean }>`
   width: 100%;
@@ -24,16 +23,16 @@ const PageWrapper = styled.div<{ isDarkMode: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: end;
-  padding: 24px 24px 64px 24px;
+  padding-bottom: 24px 24px ${PADDING_BOTTOM}px;
   align-items: center;
   transition: 250ms ease opacity;
 
-  @media screen and (min-width: ${MOBILE_BREAKPOINT}px) {
-    padding: 4rem;
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    padding: 64px 64px ${PADDING_BOTTOM}px;
   }
 
-  @media screen and (min-width: ${DESKTOP_BREAKPOINT}px) {
-    padding: 2rem;
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    padding: 32px 32px ${PADDING_BOTTOM}px;
   }
 `
 
@@ -51,11 +50,11 @@ const TitleText = styled.h1<{ isDarkMode: boolean }>`
   background-clip: text;
   -webkit-background-clip: text;
 
-  @media screen and (min-width: ${MOBILE_BREAKPOINT}px) {
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     font-size: 48px;
   }
 
-  @media screen and (min-width: ${DESKTOP_BREAKPOINT}px) {
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
     font-size: 72px;
   }
 `
@@ -68,7 +67,7 @@ const SubText = styled.h3`
   text-align: center;
   max-width: 600px;
 
-  @media screen and (min-width: ${DESKTOP_BREAKPOINT}px) {
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
     font-size: 28px;
     line-height: 36px;
   }
@@ -100,11 +99,11 @@ const ButtonCTAText = styled.p`
   font-size: 16px;
   white-space: nowrap;
 
-  @media screen and (min-width: ${MOBILE_BREAKPOINT}px) {
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     font-size: 20px;
   }
 
-  @media screen and (min-width: ${DESKTOP_BREAKPOINT}px) {
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
     font-size: 24px;
   }
 `
