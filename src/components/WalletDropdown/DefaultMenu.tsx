@@ -117,6 +117,10 @@ const WalletDropdown = ({ setMenu }: { setMenu: (state: MenuState) => void }) =>
     () => Object.values(allTransactions).filter((tx) => !tx.receipt),
     [allTransactions]
   )
+  const latestPendingTransaction =
+    pendingTransactions.length > 0
+      ? pendingTransactions.sort((tx1, tx2) => tx2.addedTime - tx1.addedTime)[0]
+      : undefined
 
   return (
     <DefaultMenuWrap>
@@ -143,15 +147,13 @@ const WalletDropdown = ({ setMenu }: { setMenu: (state: MenuState) => void }) =>
               <ChevronRight size={16} strokeWidth={3} />
             </IconWrap>
           </ToggleMenuItem>
-          {pendingTransactions.length > 0 && (
+          {!!latestPendingTransaction && (
             <LatestPendingTxnBox>
-              {pendingTransactions.map((transactionDetails, index) => (
-                <TransactionSummary
-                  key={transactionDetails.hash}
-                  transactionDetails={transactionDetails}
-                  isLastTransactionInList={index === pendingTransactions.length - 1}
-                />
-              ))}
+              <TransactionSummary
+                key={latestPendingTransaction.hash}
+                transactionDetails={latestPendingTransaction}
+                isLastTransactionInList={true}
+              />
             </LatestPendingTxnBox>
           )}
         </div>
