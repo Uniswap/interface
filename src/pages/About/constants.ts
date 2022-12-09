@@ -29,11 +29,13 @@ export const STEPS = [
   {
     title: 'Connect a wallet',
     description: 'Connect your preferred crypto wallet to the Uniswap Interface.',
-    imgSrc: walletsSrc,
+    lightImgSrc: walletsSrc,
+    darkImgSrc: walletsSrc,
   },
   {
     title: 'Swap!',
     description: 'Trade crypto and NFTs through Uniswap’s platform',
-    imgSrc: swapSrc,
+    lightImgSrc: swapSrc,
+    darkImgSrc: swapSrc,
   },
 ]
