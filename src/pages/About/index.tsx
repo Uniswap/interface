@@ -131,6 +131,8 @@ export default function About() {
   }, [])
 
   const [selectedStepIndex, setSelectedStepIndex] = useState(0)
+  const selectedStep = STEPS[selectedStepIndex]
+  const thumbnailImgSrc = isDarkMode ? selectedStep?.darkImgSrc : selectedStep?.lightImgSrc
 
   return (
     <Page isDarkMode={isDarkMode} titleHeight={titleHeight}>
@@ -166,7 +168,7 @@ export default function About() {
           <SubTitle isDarkMode={isDarkMode}>Get Started</SubTitle>
           <Panels>
             <ThumbnailContainer>
-              <Thumbnail alt="Thumbnail" src={STEPS[selectedStepIndex]?.imgSrc} />
+              <Thumbnail alt="Thumbnail" src={thumbnailImgSrc} />
             </ThumbnailContainer>
             <StepList>
               {STEPS.map((step, index) => (
