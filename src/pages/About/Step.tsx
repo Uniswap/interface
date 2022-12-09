@@ -3,7 +3,6 @@ import styled from 'styled-components/macro'
 const StyledStep = styled.div<{ selected: boolean }>`
   cursor: pointer;
   display: flex;
-  align-content: center;
   padding: 24px 0;
   color: ${({ theme, selected }) => (selected ? theme.textPrimary : theme.textSecondary)};
   font-size: 28px;
