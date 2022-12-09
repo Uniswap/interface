@@ -1,5 +1,5 @@
 import { ButtonOutlined } from 'components/Button'
-import { useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
@@ -9,13 +9,14 @@ import { CARDS, STEPS } from './constants'
 import Step from './Step'
 import { SubTitle, Title } from './Title'
 
-const Page = styled.span<{ isDarkMode: boolean }>`
+const Page = styled.span<{ isDarkMode: boolean; titleHeight: number }>`
   width: 100%;
   align-self: center;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  padding-top: calc(100vh - ${({ titleHeight }) => titleHeight + 72}px);
 `
 
 const Panels = styled.div`
@@ -44,11 +45,11 @@ const Content = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  padding: 128px 16px 16px 16px;
+  padding: 0px 16px 16px 16px;
   gap: 96px;
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
-    padding: 128px 80px 80px 80px;
+    padding: 0px 80px 80px 80px;
   }
 `
 
@@ -121,12 +122,22 @@ const PoweredBySection = styled(Panels)`
 export default function About() {
   const isDarkMode = useIsDarkMode()
 
+  const titleRef = useRef<HTMLDivElement>(null)
+  const [titleHeight, setTitleHeight] = useState(0)
+  useLayoutEffect(() => {
+    if (titleRef.current) {
+      setTitleHeight(titleRef.current.clientHeight)
+    }
+  }, [])
+
   const [selectedStepIndex, setSelectedStepIndex] = useState(0)
 
   return (
-    <Page isDarkMode={isDarkMode}>
+    <Page isDarkMode={isDarkMode} titleHeight={titleHeight}>
       <Content>
-        <Title isDarkMode={isDarkMode}>The best way to buy, sell and own crypto and NFTs</Title>
+        <Title ref={titleRef} isDarkMode={isDarkMode}>
+          The best way to buy, sell and own crypto and NFTs
+        </Title>
         <PoweredBySection>
           <div>
             <SubTitle isDarkMode={isDarkMode}>Powered by the Uniswap Protocol</SubTitle>
