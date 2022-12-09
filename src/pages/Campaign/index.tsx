@@ -172,7 +172,7 @@ export default function Campaign() {
   const isOngoing = selectedCampaign?.status === CampaignStatus.ONGOING
 
   useEffect(() => {
-    if (selectedCampaign?.status === CampaignStatus.ONGOING || selectedCampaign?.status === CampaignStatus.ENDED) {
+    if (selectedCampaign?.status === CampaignStatus.ENDED) {
       setActiveTab('leaderboard')
     }
   }, [selectedCampaign])
