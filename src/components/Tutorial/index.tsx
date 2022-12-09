@@ -71,7 +71,7 @@ const mapVideoId = {
   [TutorialType.ELASTIC_REMOVE_LIQUIDITY]: 'VE58XeRVXgQ',
   [TutorialType.ELASTIC_INCREASE_LIQUIDITY]: 'goMNh3hsjt4',
   [TutorialType.SWAP]: '1cW_IhT4_dw',
-  [TutorialType.ELASTIC_FARMS]: 'eWHTX5jrib8',
+  [TutorialType.ELASTIC_FARMS]: 'zvq62WtE_YA',
   [TutorialType.CLASSIC_FARMS]: 'FoQRGcf5tJc',
   [TutorialType.CLASSIC_CREATE_POOL]: 'wIMzSIKXUbs',
   [TutorialType.CLASSIC_ADD_LIQUIDITY]: '9Pudw0LqBQE',

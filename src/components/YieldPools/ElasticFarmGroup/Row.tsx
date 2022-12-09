@@ -367,10 +367,10 @@ const Row = ({
         <Flex flexDirection="column" alignItems="flex-start" justifyContent="center" sx={{ gap: '8px' }}>
           {farmingPool.startTime > currentTimestamp ? (
             <>
-              <Text color={theme.subText} fontSize="12px">
+              <Text fontSize="12px" color={theme.warning}>
                 <Trans>New phase will start in</Trans>
               </Text>
-              {getFormattedTimeFromSecond(farmingPool.startTime - currentTimestamp)}
+              <Text color={theme.warning}>{getFormattedTimeFromSecond(farmingPool.startTime - currentTimestamp)}</Text>
             </>
           ) : farmingPool.endTime > currentTimestamp ? (
             <>

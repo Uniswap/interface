@@ -81,7 +81,7 @@ const ProMMFarmGroup: React.FC<Props> = ({ address, onOpenModal, pools, userInfo
   const { account, chainId } = useActiveWeb3React()
   const above1000 = useMedia('(min-width: 1000px)')
 
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const sortField = searchParams.get('orderBy') || 'my_deposit'
   const sortDirection = searchParams.get('orderDirection') || 'desc'
 
@@ -352,6 +352,19 @@ const ProMMFarmGroup: React.FC<Props> = ({ address, onOpenModal, pools, userInfo
     )
   }
 
+  const handleSort = (field: SORT_FIELD) => {
+    const direction =
+      sortField !== field
+        ? SORT_DIRECTION.DESC
+        : sortDirection === SORT_DIRECTION.DESC
+        ? SORT_DIRECTION.ASC
+        : SORT_DIRECTION.DESC
+
+    searchParams.set('orderDirection', direction)
+    searchParams.set('orderBy', field)
+    setSearchParams(searchParams)
+  }
+
   const renderTableHeaderOnDesktop = () => {
     return (
       <ProMMFarmTableHeader>
@@ -368,7 +381,11 @@ const ProMMFarmGroup: React.FC<Props> = ({ address, onOpenModal, pools, userInfo
         </Flex>
 
         <Flex grid-area="liq" alignItems="center" justifyContent="flex-start">
-          <ClickableText>
+          <ClickableText
+            onClick={() => {
+              handleSort(SORT_FIELD.STAKED_TVL)
+            }}
+          >
             <Trans>Staked TVL</Trans>
             {sortField === SORT_FIELD.STAKED_TVL &&
               (sortDirection === SORT_DIRECTION.DESC ? (
@@ -380,7 +397,11 @@ const ProMMFarmGroup: React.FC<Props> = ({ address, onOpenModal, pools, userInfo
         </Flex>
 
         <Flex grid-area="apy" alignItems="center" justifyContent="flex-start">
-          <ClickableText>
+          <ClickableText
+            onClick={() => {
+              handleSort(SORT_FIELD.APR)
+            }}
+          >
             <Trans>AVG APR</Trans>
 
             {sortField === SORT_FIELD.APR &&
@@ -396,7 +417,11 @@ const ProMMFarmGroup: React.FC<Props> = ({ address, onOpenModal, pools, userInfo
         </Flex>
 
         <Flex grid-area="end" alignItems="center" justifyContent="flex-start">
-          <ClickableText>
+          <ClickableText
+            onClick={() => {
+              handleSort(SORT_FIELD.END_TIME)
+            }}
+          >
             <Trans>Ending In</Trans>
             {sortField === SORT_FIELD.END_TIME &&
               (sortDirection === SORT_DIRECTION.DESC ? (
@@ -408,7 +433,14 @@ const ProMMFarmGroup: React.FC<Props> = ({ address, onOpenModal, pools, userInfo
           <InfoHelper text={t`Once a farm has ended, you will continue to receive returns through LP Fees`} />
         </Flex>
 
-        <Flex grid-area="staked_balance" alignItems="center" justifyContent="flex-start">
+        <Flex
+          grid-area="staked_balance"
+          alignItems="center"
+          justifyContent="flex-start"
+          onClick={() => {
+            handleSort(SORT_FIELD.MY_DEPOSIT)
+          }}
+        >
           <HoverDropdown
             padding="8px 0"
             hideIcon
@@ -443,7 +475,14 @@ const ProMMFarmGroup: React.FC<Props> = ({ address, onOpenModal, pools, userInfo
           />
         </Flex>
 
-        <Flex grid-area="reward" alignItems="center" justifyContent="flex-end">
+        <Flex
+          grid-area="reward"
+          alignItems="center"
+          justifyContent="flex-end"
+          onClick={() => {
+            handleSort(SORT_FIELD.MY_REWARD)
+          }}
+        >
           <ClickableText>
             <Trans>My Rewards</Trans>
             {sortField === SORT_FIELD.MY_REWARD &&

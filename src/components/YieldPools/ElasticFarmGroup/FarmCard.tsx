@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
-import bgimg from 'assets/images/farm-card-background.png'
+import bgimg from 'assets/images/card-background.png'
 import { ReactComponent as DropIcon } from 'assets/svg/drop.svg'
 import { ButtonEmpty, ButtonLight } from 'components/Button'
 import CopyHelper from 'components/Copy'
@@ -169,7 +169,7 @@ const FarmCard = ({
               </Text>
             </Link>
 
-            <FeeTag>FEE {(pool.pool.fee * 100) / ELASTIC_BASE_FEE_UNIT}%</FeeTag>
+            <FeeTag style={{ fontSize: '12px' }}>FEE {(pool.pool.fee * 100) / ELASTIC_BASE_FEE_UNIT}%</FeeTag>
           </Flex>
 
           <Flex
