@@ -2,6 +2,7 @@ import darkSwapSrc from './images/darkSwap.png'
 import darkWalletsSrc from './images/darkWallets.png'
 import lightSwapSrc from './images/lightSwap.png'
 import lightWalletsSrc from './images/lightWallets.png'
+import tokens from './images/tokens.png'
 
 export const CARDS = [
   {
@@ -35,7 +36,13 @@ export const STEPS = [
     darkImgSrc: darkWalletsSrc,
   },
   {
-    title: 'Swap!',
+    title: 'Transfer crypto',
+    description: 'Trade crypto and NFTs through Uniswap’s platform',
+    lightImgSrc: tokens,
+    darkImgSrc: tokens,
+  },
+  {
+    title: 'Trade tokens and NFTs',
     description: 'Trade crypto and NFTs through Uniswap’s platform',
     lightImgSrc: lightSwapSrc,
     darkImgSrc: darkSwapSrc,
