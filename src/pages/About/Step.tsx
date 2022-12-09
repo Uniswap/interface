@@ -3,10 +3,12 @@ import styled from 'styled-components/macro'
 const StyledStep = styled.div<{ selected: boolean }>`
   cursor: pointer;
   display: flex;
+  align-content: center;
   padding: 24px 0;
   color: ${({ theme, selected }) => (selected ? theme.textPrimary : theme.textSecondary)};
-  font-size: 20px;
-  line-height: 28px;
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 36px;
 
   &:not(:last-of-type) {
     border-bottom: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
