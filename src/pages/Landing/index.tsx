@@ -41,9 +41,10 @@ const PageWrapper = styled.div<{ isDarkMode: boolean }>`
 const TitleText = styled.h1<{ isDarkMode: boolean }>`
   color: transparent;
   font-size: 36px;
-  font-weight: 600;
+  line-height: 44px;
+  font-weight: 500;
   text-align: center;
-  margin-bottom: 0px;
+  margin: 0 0 24px;
   background: ${({ isDarkMode }) =>
     isDarkMode
       ? 'linear-gradient(20deg, rgba(255, 244, 207, 1) 10%, rgba(255, 87, 218, 1) 100%)'
@@ -54,10 +55,12 @@ const TitleText = styled.h1<{ isDarkMode: boolean }>`
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     font-size: 48px;
+    line-height: 56px;
   }
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
-    font-size: 72px;
+    font-size: 64px;
+    line-height: 72px;
   }
 `
 
@@ -65,13 +68,14 @@ const SubText = styled.h3`
   color: ${({ theme }) => theme.textSecondary};
   font-size: 16px;
   line-height: 24px;
-  font-weight: 400;
+  font-weight: 500;
   text-align: center;
   max-width: 600px;
+  margin: 0 0 32px;
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
-    font-size: 28px;
-    line-height: 36px;
+    font-size: 20px;
+    line-height: 28px;
   }
 `
 
@@ -159,7 +163,7 @@ export default function Landing() {
         <TitleWrapper>
           <TitleText isDarkMode={isDarkMode}>Trade crypto & NFTs with confidence.</TitleText>
           <SubTextContainer>
-            <SubText>Uniswap is the best way to buy, sell, and manage your tokens and NFTs.</SubText>
+            <SubText>Buy, sell, and explore tokens and NFTs </SubText>
           </SubTextContainer>
         </TitleWrapper>
         <ActionsWrapper>
