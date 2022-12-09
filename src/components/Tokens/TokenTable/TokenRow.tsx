@@ -272,11 +272,10 @@ const MediumLoadingBubble = styled(LoadingBubble)`
 const LongLoadingBubble = styled(LoadingBubble)`
   width: 90%;
 `
-export const IconLoadingBubble = styled(LoadingBubble)`
+const IconLoadingBubble = styled(LoadingBubble)`
   border-radius: 50%;
   width: 24px;
 `
-
 export const SparkLineLoadingBubble = styled(LongLoadingBubble)`
   height: 4px;
 `
