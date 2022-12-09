@@ -169,7 +169,6 @@ const ListingModal = () => {
       setListingStatus(ListingStatus.FAILED)
     }
     sendAnalyticsEvent(EventName.NFT_LISTING_SIGNED, {
-      signatures_requested: listings.length,
       signatures_approved: listings.filter((asset) => asset.status === ListingStatus.APPROVED),
       list_quantity: listings.length,
       usd_value: ethPriceInUSD * totalEthListingValue,
