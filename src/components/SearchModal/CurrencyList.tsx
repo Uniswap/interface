@@ -13,11 +13,11 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import Loader from 'components/Loader'
 import { RowBetween, RowFixed } from 'components/Row'
 import { useActiveWeb3React } from 'hooks'
+import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { useUserAddedTokens, useUserFavoriteTokens } from 'state/user/hooks'
 import { useCurrencyBalances } from 'state/wallet/hooks'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 
-import { TokenResponse } from './CurrencySearch'
 import ImportRow from './ImportRow'
 
 const StyledBalanceText = styled(Text)`
@@ -213,7 +213,7 @@ function CurrencyList({
       const handleSelect = () => currency && onCurrencySelect(currency)
 
       const token = currency?.wrapped
-      const extendCurrency = currency as TokenResponse
+      const extendCurrency = currency as WrappedTokenInfo
       const tokenImports = useUserAddedTokens()
       const showImport =
         token &&

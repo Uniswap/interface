@@ -1,4 +1,4 @@
-import { Token } from '@kyberswap/ks-sdk-core'
+import { Currency, Token } from '@kyberswap/ks-sdk-core'
 
 import Modal from 'components/Modal'
 import { ImportToken } from 'components/SearchModal/ImportToken'
@@ -11,7 +11,7 @@ export default function TokenWarningModal({
 }: {
   isOpen: boolean
   tokens: Token[]
-  onConfirm: () => void
+  onConfirm: (token: Currency[]) => void
   onDismiss: () => void
 }) {
   return (

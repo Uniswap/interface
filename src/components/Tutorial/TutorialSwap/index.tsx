@@ -327,14 +327,12 @@ const getListSteps = (isLogin: boolean, isSolana: boolean) => {
       description: (
         <Layout title={LIST_TITLE.BRIDGE}>
           <Desc>
-            <Trans>
-              You can <b>Buy crypto easily with over 50+ currencies using a wide range of payment options!</b> or{' '}
-              <b>Easily transfer tokens from one chain to another</b>
-            </Trans>
+            <Trans> You can place limit orders, bridge tokens, or buy crypto with multiple payment options!</Trans>
           </Desc>
         </Layout>
       ),
       orientationPreferences: [CardinalOrientation.SOUTH],
+      popupStyle: { width: 430 },
     },
     isSolana
       ? null

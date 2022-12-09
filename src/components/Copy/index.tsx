@@ -29,11 +29,13 @@ export default function CopyHelper({
   toCopy,
   margin,
   style = {},
+  size = '14',
 }: {
   toCopy: string
   children?: React.ReactNode
   margin?: string
   style?: CSSProperties
+  size?: string
 }) {
   const [isCopied, setCopied] = useCopyClipboard()
 
@@ -46,11 +48,11 @@ export default function CopyHelper({
     <CopyIcon onClick={onCopy} margin={margin} style={style}>
       {isCopied ? (
         <TransactionStatusText>
-          <CheckCircle size={'14'} />
+          <CheckCircle size={size} />
         </TransactionStatusText>
       ) : (
         <TransactionStatusText>
-          <Copy size={'14'} />
+          <Copy size={size} />
         </TransactionStatusText>
       )}
     </CopyIcon>

@@ -1,17 +1,20 @@
 import { parseBytes32String } from '@ethersproject/strings'
-import { Currency, NativeCurrency, Token } from '@kyberswap/ks-sdk-core'
+import { ChainId, Currency, NativeCurrency, Token } from '@kyberswap/ks-sdk-core'
+import axios from 'axios'
 import { arrayify } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
+import useSWR from 'swr'
 
 import ERC20_INTERFACE, { ERC20_BYTES32_INTERFACE } from 'constants/abis/erc20'
+import { KS_SETTING_API } from 'constants/env'
 import { ZERO_ADDRESS } from 'constants/index'
 import { NativeCurrencies } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks/index'
 import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
 import { AppState } from 'state'
 import { TokenAddressMap } from 'state/lists/reducer'
-import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
+import { TokenInfo, WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { NEVER_RELOAD, useMultipleContractSingleData, useSingleCallResult } from 'state/multicall/hooks'
 import { useUserAddedTokens } from 'state/user/hooks'
 import { isAddress } from 'utils'
@@ -60,6 +63,12 @@ export function useAllTokens(lowercaseAddress = false): TokenMap {
   const { mapWhitelistTokens } = useSelector((state: AppState) => state.lists)
   const allTokens = useDebounce(mapWhitelistTokens, 300)
   return useTokensFromMap(allTokens, lowercaseAddress)
+}
+
+export function useIsLoadedTokenDefault() {
+  const defaultTokens = useAllTokens()
+  const tokenImports: Token[] = useUserAddedTokens()
+  return Object.keys(defaultTokens).length > tokenImports.length
 }
 
 // parse a name or symbol from a token response
@@ -216,6 +225,43 @@ export function useToken(tokenAddress?: string): Token | NativeCurrency | undefi
   ])
 }
 
+const cacheTokens: TokenMap = {}
+export const fetchTokenByAddress = async (address: string, chainId: ChainId) => {
+  if (address === ZERO_ADDRESS) return NativeCurrencies[chainId]
+  const findToken = cacheTokens[address] || cacheTokens[address.toLowerCase()]
+  if (findToken) return findToken
+  const response = await axios.get(`${KS_SETTING_API}/v1/tokens?query=${address}&chainIds=${chainId}`)
+  const token = response.data.data.tokens[0]
+  return token ? formatAndCacheToken(token) : undefined
+}
+
+export const formatAndCacheToken = (tokenResponse: TokenInfo) => {
+  try {
+    const tokenInfo = new WrappedTokenInfo(tokenResponse)
+    cacheTokens[tokenResponse.address] = tokenInfo
+    return tokenInfo
+  } catch (e) {
+    return null
+  }
+}
+
+function useTokenV2(tokenAddress?: string): WrappedTokenInfo | Token | NativeCurrency | undefined | null {
+  const { chainId } = useActiveWeb3React()
+  const address = isAddress(chainId, tokenAddress)
+  const { data, isValidating } = useSWR(
+    address.toString() + chainId?.toString(),
+    async () => {
+      try {
+        if (chainId && address) return await fetchTokenByAddress(address, chainId)
+      } catch (error) {}
+      return undefined
+    },
+    { revalidateOnFocus: false, shouldRetryOnError: false, revalidateIfStale: false },
+  )
+  return isValidating ? null : data
+}
+
+// todo: danh update use useCurrencyV2 and remove useCurrency
 export function useCurrency(currencyId: string | undefined): Currency | null | undefined {
   const { chainId } = useActiveWeb3React()
   const isETH = useMemo(
@@ -224,4 +270,24 @@ export function useCurrency(currencyId: string | undefined): Currency | null | u
   )
   const token = useToken(isETH ? undefined : currencyId)
   return useMemo(() => (isETH ? NativeCurrencies[chainId] : token), [chainId, isETH, token])
+}
+
+// not use data from contract, in the future we will remove useCurrency
+export function useCurrencyV2(currencyId: string | undefined): Currency | null | undefined {
+  const { chainId } = useActiveWeb3React()
+  const isETH = useMemo(
+    () => chainId && currencyId?.toUpperCase() === NativeCurrencies[chainId].symbol?.toUpperCase(),
+    [chainId, currencyId],
+  )
+  const whitelistTokens = useAllTokens()
+  const tokenInWhitelist = currencyId
+    ? whitelistTokens[currencyId] || whitelistTokens[currencyId?.toLowerCase()]
+    : undefined
+  const token = useTokenV2(isETH || tokenInWhitelist ? undefined : currencyId)
+
+  return useMemo(() => {
+    if (!currencyId) return
+    if (isETH) return NativeCurrencies[chainId]
+    return tokenInWhitelist || token
+  }, [chainId, isETH, token, currencyId, tokenInWhitelist])
 }

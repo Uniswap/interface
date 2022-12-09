@@ -13,9 +13,8 @@ import { NETWORKS_INFO } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
 import { OutputBridgeInfo, useBridgeState } from 'state/bridge/hooks'
+import { TransactionFlowState } from 'types'
 import { formatNumberWithPrecisionRange, shortenAddress } from 'utils'
-
-import { BridgeSwapState } from './type'
 
 const Container = styled.div`
   padding: 25px 30px;
@@ -52,7 +51,7 @@ export default memo(function Disclaimer({
   onSwap: () => void
   onDismiss: () => void
   outputInfo: OutputBridgeInfo
-  swapState: BridgeSwapState
+  swapState: TransactionFlowState
 }) {
   const theme = useTheme()
   const { account, chainId } = useActiveWeb3React()
@@ -114,8 +113,8 @@ export default memo(function Disclaimer({
 
   const confirmationContent = useCallback(
     () =>
-      swapState.swapErrorMessage ? (
-        <TransactionErrorContent onDismiss={onDismiss} message={swapState.swapErrorMessage} />
+      swapState.errorMessage ? (
+        <TransactionErrorContent onDismiss={onDismiss} message={swapState.errorMessage} />
       ) : (
         <Container>
           <Flex flexDirection={'column'} style={{ gap: 25 }}>
@@ -168,7 +167,7 @@ export default memo(function Disclaimer({
           </Flex>
         </Container>
       ),
-    [onDismiss, swapState.swapErrorMessage, listData, onSwap, outputInfo, theme, currencyIn?.symbol],
+    [onDismiss, swapState.errorMessage, listData, onSwap, outputInfo, theme, currencyIn?.symbol],
   )
 
   return (

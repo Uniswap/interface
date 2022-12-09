@@ -182,19 +182,19 @@ const CampaignItem = ({ campaign, onSelectCampaign, isSelected }: CampaignItemPr
           </Text>
           {tradingVolumeRequired > 0 && (
             <ProgressBar
-              title={t`Your Trading Volume`}
+              label={t`Your Trading Volume`}
               percent={percentTradingVolume}
               value={isPassedVolume ? <Check width={17} height={17} /> : `${percentTradingVolume}%`}
-              valueTextColor={isPassedVolume ? theme.primary : theme.subText}
+              valueColor={isPassedVolume ? theme.primary : theme.subText}
               color={isPassedVolume ? theme.primary : theme.warning}
             />
           )}
           {tradingNumberRequired > 1 && (
             <ProgressBar
-              title={t`Your Number of Trades`}
+              label={t`Your Number of Trades`}
               percent={percentTradingNumber}
               value={isPassedNumberOfTrade ? <Check width={17} height={17} /> : `${percentTradingNumber}%`}
-              valueTextColor={isPassedNumberOfTrade ? theme.primary : theme.subText}
+              valueColor={isPassedNumberOfTrade ? theme.primary : theme.subText}
               color={isPassedNumberOfTrade ? theme.primary : theme.warning}
             />
           )}

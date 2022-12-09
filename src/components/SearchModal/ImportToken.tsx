@@ -52,7 +52,7 @@ interface ImportProps {
   tokens: Token[]
   onBack?: () => void
   onDismiss?: () => void
-  handleCurrencySelect?: (currency: Currency) => void
+  handleCurrencySelect?: (currency: Currency[]) => void
 }
 
 export function ImportToken({ enterToImport = false, tokens, onBack, onDismiss, handleCurrencySelect }: ImportProps) {
@@ -61,10 +61,12 @@ export function ImportToken({ enterToImport = false, tokens, onBack, onDismiss, 
   const { chainId } = useActiveWeb3React()
 
   const addToken = useAddUserToken()
+
   const onClickImport = useCallback(() => {
     tokens.forEach(addToken)
-    handleCurrencySelect?.(tokens[0])
+    handleCurrencySelect?.(tokens)
   }, [tokens, addToken, handleCurrencySelect])
+
   useEffect(() => {
     function onKeydown(e: KeyboardEvent) {
       if (e.key === 'Enter' && enterToImport) {

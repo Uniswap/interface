@@ -1,3 +1,4 @@
+import { ChainId } from '@kyberswap/ks-sdk-core'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -11,7 +12,7 @@ export default function Updater(): null {
   const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
-    MAINNET_NETWORKS.forEach(chainId => {
+    ;[...MAINNET_NETWORKS, ChainId.GÖRLI].forEach(chainId => {
       const listUrl = NETWORKS_INFO[chainId].tokenListUrl
       getTokenList(listUrl, chainId)
         .then(tokenList => {

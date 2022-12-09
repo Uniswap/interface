@@ -117,7 +117,7 @@ function RankDetail({ campaign }: { campaign: CampaignData | undefined }) {
             {tradingVolumeRequired > 0 && (
               <ProgressBar
                 percent={percentTradingVolume}
-                title={t`Trading Volume`}
+                label={t`Trading Volume`}
                 value={`${percentTradingVolume}%`}
                 color={isPassedVolume ? theme.primary : theme.warning}
               />
@@ -125,7 +125,7 @@ function RankDetail({ campaign }: { campaign: CampaignData | undefined }) {
             {tradingNumberRequired > 1 && (
               <ProgressBar
                 percent={percentTradingNumber}
-                title={t`Number of Trades`}
+                label={t`Number of Trades`}
                 value={`${percentTradingNumber}%`}
                 color={isPassedNumberOfTrade ? theme.primary : theme.warning}
               />
@@ -488,6 +488,7 @@ export default function Campaign() {
                   <Share2 size={20} color={theme.primary} style={{ minWidth: '20px', minHeight: '20px' }} />
                 </ButtonLight>
                 <ShareModal
+                  title={t`Share this campaign with your friends!`}
                   url={window.location.href}
                   onShared={() =>
                     mixpanelHandler(MIXPANEL_TYPE.CAMPAIGN_SHARE_TRADING_CONTEST_CLICKED, {

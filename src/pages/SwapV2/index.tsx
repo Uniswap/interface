@@ -5,19 +5,19 @@ import { stringify } from 'querystring'
 import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import Skeleton from 'react-loading-skeleton'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Box, Flex, Text } from 'rebass'
 import styled, { DefaultTheme, keyframes } from 'styled-components'
 
 import { ReactComponent as TutorialSvg } from 'assets/svg/play_circle_outline.svg'
 import { ReactComponent as RoutingIcon } from 'assets/svg/routing-icon.svg'
 import AddressInputPanel from 'components/AddressInputPanel'
+import ArrowRotate from 'components/ArrowRotate'
 import Banner from 'components/Banner'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { GreyCard } from 'components/Card/index'
 import Column from 'components/Column/index'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
-import { Swap as SwapIcon } from 'components/Icons'
 import TransactionSettingsIcon from 'components/Icons/TransactionSettingsIcon'
 import InfoHelper from 'components/InfoHelper'
 import Loader from 'components/Loader'
@@ -36,6 +36,9 @@ import { TutorialIds } from 'components/Tutorial/TutorialSwap/constant'
 import AdvancedSwapDetailsDropdown from 'components/swapv2/AdvancedSwapDetailsDropdown'
 import ConfirmSwapModal from 'components/swapv2/ConfirmSwapModal'
 import GasPriceTrackerPanel from 'components/swapv2/GasPriceTrackerPanel'
+import LimitOrder from 'components/swapv2/LimitOrder'
+import ListLimitOrder from 'components/swapv2/LimitOrder/ListOrder'
+import { ListOrderHandle } from 'components/swapv2/LimitOrder/type'
 import LiquiditySourcesPanel from 'components/swapv2/LiquiditySourcesPanel'
 import MobileTokenInfo from 'components/swapv2/MobileTokenInfo'
 import PairSuggestion, { PairSuggestionHandle } from 'components/swapv2/PairSuggestion'
@@ -46,7 +49,6 @@ import TokenInfoV2 from 'components/swapv2/TokenInfoV2'
 import TradePrice from 'components/swapv2/TradePrice'
 import TradeTypeSelection from 'components/swapv2/TradeTypeSelection'
 import {
-  ArrowWrapper,
   BottomGrouping,
   Container,
   Dots,
@@ -65,25 +67,24 @@ import {
   TabWrapper,
   Wrapper,
 } from 'components/swapv2/styleds'
-import { AGGREGATOR_WAITING_TIME, TIME_TO_REFRESH_SWAP_RATE } from 'constants/index'
-import { NETWORKS_INFO, SUPPORTED_NETWORKS } from 'constants/networks'
-import { Z_INDEXS } from 'constants/styles'
-import { NativeCurrencies, STABLE_COINS_ADDRESS } from 'constants/tokens'
+import { AGGREGATOR_WAITING_TIME, APP_PATHS, SUPPORT_LIMIT_ORDER, TIME_TO_REFRESH_SWAP_RATE } from 'constants/index'
+import { STABLE_COINS_ADDRESS } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
-import { useAllTokens, useCurrency } from 'hooks/Tokens'
+import { useAllTokens, useIsLoadedTokenDefault } from 'hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTradeV2 } from 'hooks/useApproveCallback'
-import { useChangeNetwork } from 'hooks/useChangeNetwork'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import usePrevious from 'hooks/usePrevious'
 import { useSwapV2Callback } from 'hooks/useSwapV2Callback'
 import { useSyncNetworkParamWithStore } from 'hooks/useSyncNetworkParamWithStore'
+import useSyncTokenSymbolToUrl from 'hooks/useSyncTokenSymbolToUrl'
 import useTheme from 'hooks/useTheme'
 import useWrapCallback, { WrapType } from 'hooks/useWrapCallback'
 import { BodyWrapper } from 'pages/AppBody'
 import { ClickableText } from 'pages/Pool/styleds'
 import { useToggleTransactionSettingsMenu, useWalletModalToggle } from 'state/application/hooks'
 import { useAllDexes } from 'state/customizeDexes/hooks'
+import { useLimitActionHandlers, useLimitState } from 'state/limit/hooks'
 import { Field } from 'state/swap/actions'
 import { useDefaultsFromURLSearch, useEncodeSolana, useSwapActionHandlers, useSwapState } from 'state/swap/hooks'
 import { useDerivedSwapInfoV2 } from 'state/swap/useAggregator'
@@ -93,17 +94,17 @@ import {
   useShowLiveChart,
   useShowTokenInfo,
   useShowTradeRoutes,
+  useToggleProLiveChart,
   useUserAddedTokens,
   useUserSlippageTolerance,
 } from 'state/user/hooks'
 import { TYPE } from 'theme'
-import { formattedNum, isAddressString } from 'utils'
+import { formattedNum } from 'utils'
 import { Aggregator } from 'utils/aggregator'
 import { currencyId } from 'utils/currencyId'
-import { filterTokensWithExactKeyword } from 'utils/filtering'
 import { halfAmountSpend, maxAmountSpend } from 'utils/maxAmountSpend'
-import { convertToSlug, getSymbolSlug } from 'utils/string'
-import { checkPairInWhiteList, convertSymbol } from 'utils/tokenInfo'
+import { getSymbolSlug } from 'utils/string'
+import { checkPairInWhiteList } from 'utils/tokenInfo'
 
 const LiveChart = lazy(() => import('components/LiveChart'))
 const Routing = lazy(() => import('components/swapv2/Routing'))
@@ -122,7 +123,7 @@ enum TAB {
   SETTINGS = 'settings',
   GAS_PRICE_TRACKER = 'gas_price_tracker',
   LIQUIDITY_SOURCES = 'liquidity_sources',
-  // LIMIT = 'limit'
+  LIMIT = 'limit',
 }
 
 const highlight = (theme: DefaultTheme) => keyframes`
@@ -141,7 +142,6 @@ const highlight = (theme: DefaultTheme) => keyframes`
 
 const AppBodyWrapped = styled(BodyWrapper)`
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
-  z-index: ${Z_INDEXS.SWAP_FORM};
   padding: 16px 16px 24px;
   margin-top: 0;
 
@@ -170,8 +170,8 @@ export default function Swap() {
   const navigateFn = useNavigate()
   const { account, chainId, networkInfo, isSolana, isEVM } = useActiveWeb3React()
   const [rotate, setRotate] = useState(false)
-  const [showInverted, setShowInverted] = useState<boolean>(false)
   const isShowLiveChart = useShowLiveChart()
+  const toggleProLiveChart = useToggleProLiveChart()
   const isShowTradeRoutes = useShowTradeRoutes()
   const isShowTokenInfoSetting = useShowTokenInfo()
   const qs = useParsedQueryString<{
@@ -181,10 +181,13 @@ export default function Swap() {
   }>()
   const allDexes = useAllDexes()
   const [{ show: isShowTutorial = false }] = useTutorialSwapGuide()
+  const { pathname } = useLocation()
   useSyncNetworkParamWithStore()
   const [encodeSolana] = useEncodeSolana()
 
   const refSuggestPair = useRef<PairSuggestionHandle>(null)
+  const refListLimitOrder = useRef<ListOrderHandle>(null)
+
   const [showingPairSuggestionImport, setShowingPairSuggestionImport] = useState<boolean>(false) // show modal import when click pair suggestion
 
   const shouldHighlightSwapBox = qs.highlightBox === 'true'
@@ -192,29 +195,27 @@ export default function Swap() {
   const [isSelectCurrencyManually, setIsSelectCurrencyManually] = useState(false) // true when: select token input, output manualy or click rotate token.
   // else select via url
 
-  const [activeTab, setActiveTab] = useState<TAB>(TAB.SWAP)
+  const isSwapPage = pathname.startsWith(APP_PATHS.SWAP)
+  const isLimitPage = pathname.startsWith(APP_PATHS.LIMIT)
+  const [activeTab, setActiveTab] = useState<TAB>(isSwapPage ? TAB.SWAP : TAB.LIMIT)
+  const { onSelectPair: onSelectPairLimit } = useLimitActionHandlers()
+  const limitState = useLimitState()
+  const currenciesLimit = useMemo(() => {
+    return { [Field.INPUT]: limitState.currencyIn, [Field.OUTPUT]: limitState.currencyOut }
+  }, [limitState.currencyIn, limitState.currencyOut])
 
-  const loadedUrlParams = useDefaultsFromURLSearch()
+  useEffect(() => {
+    setActiveTab(isSwapPage ? TAB.SWAP : TAB.LIMIT)
+  }, [isSwapPage])
 
-  // token warning stuff
-  const [loadedInputCurrency, loadedOutputCurrency] = [
-    useCurrency(loadedUrlParams?.inputCurrencyId),
-    useCurrency(loadedUrlParams?.outputCurrencyId),
-  ]
+  const refreshListOrder = useCallback(() => {
+    if (isLimitPage) {
+      refListLimitOrder.current?.refreshListOrder()
+    }
+  }, [isLimitPage])
 
+  useDefaultsFromURLSearch()
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
-  const urlLoadedTokens: Token[] = useMemo(
-    () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c instanceof Token) ?? [],
-    [loadedInputCurrency, loadedOutputCurrency],
-  )
-
-  // dismiss warning if all imported tokens are in active lists
-  const defaultTokens = useAllTokens()
-  const importTokensNotInDefault =
-    urlLoadedTokens &&
-    urlLoadedTokens.filter((token: Token) => {
-      return !Boolean(token.address in defaultTokens)
-    })
 
   const theme = useTheme()
 
@@ -256,7 +257,6 @@ export default function Swap() {
     tradeComparer,
     onRefresh,
     loading: loadingAPI,
-    isPairNotfound,
   } = useDerivedSwapInfoV2()
 
   // modal and loading
@@ -280,6 +280,22 @@ export default function Swap() {
   )
   const currencyIn: Currency | undefined = currencies[Field.INPUT]
   const currencyOut: Currency | undefined = currencies[Field.OUTPUT]
+
+  const urlLoadedTokens: Token[] = useMemo(
+    () =>
+      (isSwapPage ? [currencyIn, currencyOut] : [limitState.currencyIn, limitState.currencyOut])?.filter(
+        (c): c is Token => c instanceof Token,
+      ) ?? [],
+    [isSwapPage, currencyIn, currencyOut, limitState.currencyIn, limitState.currencyOut],
+  )
+  // dismiss warning if all imported tokens are in active lists
+  const defaultTokens = useAllTokens()
+  const importTokensNotInDefault =
+    urlLoadedTokens &&
+    urlLoadedTokens.filter((token: Token) => {
+      return !Boolean(token.address in defaultTokens)
+    })
+
   const balanceIn: CurrencyAmount<Currency> | undefined = currencyBalances[Field.INPUT]
   const balanceOut: CurrencyAmount<Currency> | undefined = currencyBalances[Field.OUTPUT]
 
@@ -347,12 +363,18 @@ export default function Swap() {
     }
   }, [showingPairSuggestionImport])
 
-  const handleConfirmTokenWarning = useCallback(() => {
-    handleDismissTokenWarning()
-    if (showingPairSuggestionImport) {
-      refSuggestPair.current?.onConfirmImportToken() // callback from children
-    }
-  }, [handleDismissTokenWarning, showingPairSuggestionImport])
+  const handleConfirmTokenWarning = useCallback(
+    (tokens: Currency[]) => {
+      handleDismissTokenWarning()
+      if (showingPairSuggestionImport) {
+        refSuggestPair.current?.onConfirmImportToken() // callback from children
+      }
+      if (isLimitPage) {
+        onSelectPairLimit(tokens[0], tokens[1])
+      }
+    },
+    [isLimitPage, onSelectPairLimit, showingPairSuggestionImport, handleDismissTokenWarning],
+  )
 
   const formattedAmounts = {
     [independentField]: typedValue,
@@ -480,226 +502,47 @@ export default function Swap() {
     mixpanelHandler(MIXPANEL_TYPE.SWAP_INITIATED)
   }
 
-  /** check url params format `/swap/network/x-to-y` and then auto select token input
-   * - Flow: check network first and find token pairs (x vs y)
-   */
-
-  const params = useParams<{
-    fromCurrency: string
-    toCurrency: string
-    network: string
-  }>()
-
-  const getUrlMatchParams = () => {
-    const fromCurrency = (params.fromCurrency || '').toLowerCase()
-    const toCurrency = (params.toCurrency || '').toLowerCase()
-    const network: string = convertToSlug(params.network || '')
-    return { fromCurrency, toCurrency, network }
-  }
-
-  const changeNetwork = useChangeNetwork()
-  const refIsCheckNetworkAutoSelect = useRef<boolean>(false) // has done check network
-  const refIsImportUserToken = useRef<boolean>(false)
-
-  const findToken = (keyword: string) => {
-    const nativeToken = NativeCurrencies[chainId]
-    if (keyword === getSymbolSlug(nativeToken)) {
-      return nativeToken
-    }
-    return filterTokensWithExactKeyword(chainId, Object.values(defaultTokens), keyword)[0]
-  }
-
-  const navigate = useCallback(
-    (url: string) => {
-      // /swap/net/symA-to-symB?inputCurrency= addressC/symC &outputCurrency= addressD/symD
-      const { inputCurrency, outputCurrency, ...newQs } = qs
-      navigateFn(`${url}?${stringify(newQs)}`) // keep query params
-    },
-    [navigateFn, qs],
-  )
-
-  function findTokenPairFromUrl() {
-    let { fromCurrency, toCurrency, network } = getUrlMatchParams()
-    if (!fromCurrency || !network) return
-
-    const compareNetwork = networkInfo.route
-
-    if (compareNetwork && network !== compareNetwork) {
-      // when select change network => force get new network
-      network = compareNetwork
-      navigate(`/swap/${network}/${fromCurrency}${toCurrency ? `-to-${toCurrency}` : ''}`)
-    }
-
-    const isSame = fromCurrency && fromCurrency === toCurrency
-    if (!toCurrency || isSame) {
-      // net/symbol
-      const fromToken = findToken(fromCurrency)
-      if (fromToken) {
-        onCurrencySelection(Field.INPUT, fromToken)
-        if (isSame) navigate(`/swap/${network}/${fromCurrency}`)
-      } else navigate('/swap')
-      return
-    }
-
-    const isAddress1 = isAddressString(chainId, fromCurrency)
-    const isAddress2 = isAddressString(chainId, toCurrency)
-
-    // net/add-to-add
-    if (isAddress1 && isAddress2) {
-      const fromToken = findToken(fromCurrency)
-      const toToken = findToken(toCurrency)
-      if (fromToken && toToken) {
-        navigate(`/swap/${network}/${getSymbolSlug(fromToken)}-to-${getSymbolSlug(toToken)}`)
-        onCurrencySelection(Field.INPUT, fromToken)
-        onCurrencySelection(Field.OUTPUT, toToken)
-      } else navigate('/swap')
-      return
-    }
-
-    // sym-to-sym
-    fromCurrency = convertSymbol(network, fromCurrency)
-    toCurrency = convertSymbol(network, toCurrency)
-
-    const fromToken = findToken(fromCurrency)
-    const toToken = findToken(toCurrency)
-
-    if (!toToken || !fromToken) {
-      navigate('/swap')
-      return
-    }
-    onCurrencySelection(Field.INPUT, fromToken)
-    onCurrencySelection(Field.OUTPUT, toToken)
-  }
-
-  const checkAutoSelectTokenFromUrl = () => {
-    // check case:  `/swap/net/sym-to-sym` or `/swap/net/sym` is valid
-    const { fromCurrency, network } = getUrlMatchParams()
-    if (!fromCurrency || !network) return
-
-    const findChainId = SUPPORTED_NETWORKS.find(chainId => NETWORKS_INFO[chainId].route === network)
-    if (!findChainId) {
-      return navigate('/swap')
-    }
-    if (findChainId !== chainId) {
-      changeNetwork(
-        findChainId,
-        () => {
-          refIsCheckNetworkAutoSelect.current = true
-        },
-        () => {
-          navigate('/swap')
-        },
-      )
-    } else {
-      refIsCheckNetworkAutoSelect.current = true
-    }
-  }
-
-  const syncUrl = useCallback(
-    (currencyIn: Currency | undefined, currencyOut: Currency | undefined) => {
-      const symbolIn = getSymbolSlug(currencyIn)
-      const symbolOut = getSymbolSlug(currencyOut)
-      if (symbolIn && symbolOut && chainId) {
-        navigate(`/swap/${networkInfo.route}/${symbolIn}-to-${symbolOut}`)
-      }
-    },
-    [navigate, networkInfo, chainId],
-  )
-
   const onSelectSuggestedPair = useCallback(
-    (fromToken: Currency | undefined, toToken: Currency | undefined, amount: string) => {
+    (fromToken: Currency | undefined, toToken: Currency | undefined, amount?: string) => {
+      if (isLimitPage) {
+        onSelectPairLimit(fromToken, toToken)
+        return
+      }
       if (fromToken) onCurrencySelection(Field.INPUT, fromToken)
       if (toToken) onCurrencySelection(Field.OUTPUT, toToken)
       if (amount) handleTypeInput(amount)
     },
-    [handleTypeInput, onCurrencySelection],
+    [handleTypeInput, onCurrencySelection, onSelectPairLimit, isLimitPage],
   )
 
   const tokenImports: Token[] = useUserAddedTokens()
-  const prevTokenImports = usePrevious(tokenImports) || []
+  const prevTokenImports = usePrevious(tokenImports)
 
   useEffect(() => {
-    const { network } = getUrlMatchParams()
-    const isChangeNetwork = network !== networkInfo.route
-    if (isChangeNetwork) return
-
-    // when import/remove token
+    // when remove token imported
+    if (!prevTokenImports) return
     const isRemoved = prevTokenImports?.length > tokenImports.length
+    if (!isRemoved || prevTokenImports[0].chainId !== chainId) return
+
     const addressIn = currencyIn?.wrapped?.address
     const addressOut = currencyOut?.wrapped?.address
+    // removed token => deselect input
+    const tokenRemoved = prevTokenImports.filter(
+      token => !tokenImports.find(token2 => token2.address === token.address),
+    )
 
-    if (isRemoved) {
-      // removed token => deselect input
-      const tokenRemoved = prevTokenImports.filter(
-        token => !tokenImports.find(token2 => token2.address === token.address),
-      )
-      tokenRemoved.forEach(({ address }: Token) => {
-        if (address === addressIn || !currencyIn) {
-          onResetSelectCurrency(Field.INPUT)
-        }
-        if (address === addressOut || !currencyOut) {
-          onResetSelectCurrency(Field.OUTPUT)
-        }
-      })
-    }
-    // import token
-    else if (tokenImports.find(({ address }: Token) => address === addressIn || address === addressOut)) {
-      refIsImportUserToken.current = true
-    }
+    tokenRemoved.forEach(({ address }: Token) => {
+      if (address === addressIn || !currencyIn) {
+        onResetSelectCurrency(Field.INPUT)
+      }
+      if (address === addressOut || !currencyOut) {
+        onResetSelectCurrency(Field.OUTPUT)
+      }
+    })
+  }, [tokenImports, chainId, prevTokenImports, currencyIn, currencyOut, onResetSelectCurrency])
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tokenImports])
-
-  const initialTotalTokenDefault = useRef<number | null>(null)
-
-  useEffect(() => {
-    checkAutoSelectTokenFromUrl()
-    initialTotalTokenDefault.current = Object.keys(defaultTokens).length // it will be equal with tokenImports.length
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const isLoadedTokenDefault = account
-    ? Object.keys(defaultTokens).length > tokenImports.length
-    : initialTotalTokenDefault.current !== null && Object.keys(defaultTokens).length > initialTotalTokenDefault.current //
-
-  useEffect(() => {
-    /**
-     * defaultTokens change only when:
-     * - the first time get data
-     * - change network
-     * - import/remove token */
-    if (refIsCheckNetworkAutoSelect.current && !refIsImportUserToken.current && isLoadedTokenDefault) {
-      findTokenPairFromUrl()
-    }
-    refIsImportUserToken.current = false
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [defaultTokens, refIsCheckNetworkAutoSelect.current])
-
-  useEffect(() => {
-    if (isSelectCurrencyManually) syncUrl(currencyIn, currencyOut) // when we select token manual
-  }, [currencyIn, currencyOut, isSelectCurrencyManually, syncUrl])
-
-  // swap?inputCurrency=xxx&outputCurrency=yyy. xxx yyy not exist in chain => remove params => select default pair
-
-  const checkParamsWrong = () => {
-    if (isPairNotfound && !currencyIn && !currencyOut) {
-      const newQuery = { ...qs }
-      delete newQuery.inputCurrency
-      delete newQuery.outputCurrency
-      navigateFn(
-        {
-          search: stringify(newQuery),
-        },
-        { replace: true },
-      )
-    }
-  }
-
-  const refCheckParamWrong = useRef(checkParamsWrong)
-  refCheckParamWrong.current = checkParamsWrong
-  useEffect(() => {
-    refCheckParamWrong.current()
-  }, [chainId])
+  useSyncTokenSymbolToUrl(currencyIn, currencyOut, onSelectSuggestedPair, isSelectCurrencyManually, isLimitPage)
+  const isLoadedTokenDefault = useIsLoadedTokenDefault()
 
   useEffect(() => {
     if (isExpertMode) {
@@ -729,15 +572,17 @@ export default function Swap() {
   }, [isStableCoinSwap, setRawSlippage])
 
   const shareUrl = useMemo(() => {
-    return `${window.location.origin}/swap/${networkInfo.route}${
-      currencyIn && currencyOut
+    const tokenIn = isSwapPage ? currencyIn : limitState.currencyIn
+    const tokenOut = isSwapPage ? currencyOut : limitState.currencyOut
+    return `${window.location.origin}${isSwapPage ? APP_PATHS.SWAP : APP_PATHS.LIMIT}}/${networkInfo.route}${
+      tokenIn && tokenOut
         ? `?${stringify({
-            inputCurrency: currencyId(currencyIn, chainId),
-            outputCurrency: currencyId(currencyOut, chainId),
+            inputCurrency: currencyId(tokenIn, chainId),
+            outputCurrency: currencyId(tokenOut, chainId),
           })}`
         : ''
     }`
-  }, [networkInfo.route, currencyIn, currencyOut, chainId])
+  }, [networkInfo.route, currencyIn, currencyOut, chainId, limitState.currencyIn, limitState.currencyOut, isSwapPage])
 
   const { isInWhiteList: isPairInWhiteList, canonicalUrl } = checkPairInWhiteList(
     chainId,
@@ -745,7 +590,10 @@ export default function Swap() {
     getSymbolSlug(currencyOut),
   )
 
-  const shouldRenderTokenInfo = isShowTokenInfoSetting && currencyIn && currencyOut && isPairInWhiteList
+  const onBackToSwapTab = () => setActiveTab(isLimitPage ? TAB.LIMIT : TAB.SWAP)
+  const onToggleActionTab = (tab: TAB) => setActiveTab(activeTab === tab ? (isLimitPage ? TAB.LIMIT : TAB.SWAP) : tab)
+
+  const shouldRenderTokenInfo = isShowTokenInfoSetting && currencyIn && currencyOut && isPairInWhiteList && isSwapPage
 
   const isShowModalImportToken =
     isLoadedTokenDefault && importTokensNotInDefault.length > 0 && (!dismissTokenWarning || showingPairSuggestionImport)
@@ -785,6 +633,17 @@ export default function Swap() {
   */
   }, [])
 
+  const onClickTab = (tab: TAB) => {
+    setActiveTab(tab)
+    const isLimit = tab === TAB.LIMIT
+    isLimit && toggleProLiveChart(true)
+    const { inputCurrency, outputCurrency, ...newQs } = qs
+    navigateFn({
+      pathname: `${isLimit ? APP_PATHS.LIMIT : APP_PATHS.SWAP}/${networkInfo.route}`,
+      search: stringify(newQs),
+    })
+  }
+
   return (
     <>
       {/**
@@ -804,14 +663,21 @@ export default function Swap() {
         {chainId !== ChainId.ETHW && <TopTrendingSoonTokensInCurrentNetwork />}
         <Container>
           <SwapFormWrapper isShowTutorial={isShowTutorial}>
-            <RowBetween mb={'16px'}>
+            <RowBetween>
               <TabContainer>
                 <TabWrapper>
-                  <Tab onClick={() => setActiveTab(TAB.SWAP)} isActive={activeTab === TAB.SWAP}>
+                  <Tab onClick={() => onClickTab(TAB.SWAP)} isActive={isSwapPage}>
                     <Text fontSize={20} fontWeight={500}>
                       <Trans>Swap</Trans>
                     </Text>
                   </Tab>
+                  {SUPPORT_LIMIT_ORDER && (
+                    <Tab onClick={() => onClickTab(TAB.LIMIT)} isActive={isLimitPage}>
+                      <Text fontSize={20} fontWeight={500}>
+                        <Trans>Limit</Trans>
+                      </Text>
+                    </Tab>
+                  )}
                 </TabWrapper>
               </TabContainer>
 
@@ -826,11 +692,12 @@ export default function Swap() {
                 />
                 {chainId !== ChainId.ETHW && (
                   <MobileTokenInfo
-                    currencies={currencies}
-                    onClick={() => setActiveTab(prev => (prev === TAB.INFO ? TAB.SWAP : TAB.INFO))}
+                    currencies={isSwapPage ? currencies : currenciesLimit}
+                    onClick={() => onToggleActionTab(TAB.INFO)}
                   />
                 )}
                 <ShareButtonWithModal
+                  title={t`Share this with your friends!`}
                   url={shareUrl}
                   onShared={() => {
                     mixpanelHandler(MIXPANEL_TYPE.TOKEN_SWAP_LINK_SHARED)
@@ -838,7 +705,7 @@ export default function Swap() {
                 />
                 <StyledActionButtonSwapForm
                   active={activeTab === TAB.SETTINGS}
-                  onClick={() => setActiveTab(prev => (prev === TAB.SETTINGS ? TAB.SWAP : TAB.SETTINGS))}
+                  onClick={() => onToggleActionTab(TAB.SETTINGS)}
                   aria-label="Swap Settings"
                 >
                   <MouseoverTooltip
@@ -851,12 +718,21 @@ export default function Swap() {
                     </span>
                   </MouseoverTooltip>
                 </StyledActionButtonSwapForm>
-                {/* <TransactionSettings isShowDisplaySettings /> */}
               </SwapFormActions>
             </RowBetween>
 
+            <RowBetween>
+              <Text fontSize={12} color={theme.subText}>
+                {isLimitPage ? (
+                  <Trans>Buy or sell any token at a specific price</Trans>
+                ) : (
+                  <Trans>Buy or sell any token instantly at the best price</Trans>
+                )}
+              </Text>
+            </RowBetween>
+
             {chainId !== ChainId.ETHW && !isSolana && (
-              <RowBetween mb={'16px'}>
+              <RowBetween>
                 <PairSuggestion
                   ref={refSuggestPair}
                   onSelectSuggestedPair={onSelectSuggestedPair}
@@ -866,7 +742,7 @@ export default function Swap() {
             )}
 
             <AppBodyWrapped data-highlight={shouldHighlightSwapBox} id={TutorialIds.SWAP_FORM}>
-              {activeTab === TAB.SWAP && (
+              {activeTab === TAB.SWAP && ( // todo danh split component, check router api call
                 <>
                   <Wrapper id={TutorialIds.SWAP_FORM_CONTENT}>
                     <ConfirmSwapModal
@@ -905,18 +781,12 @@ export default function Swap() {
                           {!showWrap && (
                             <>
                               <RefreshButton isConfirming={showConfirm} trade={trade} onRefresh={onRefresh} />
-                              <TradePrice
-                                price={trade?.executionPrice}
-                                showInverted={showInverted}
-                                setShowInverted={setShowInverted}
-                              />
+                              <TradePrice price={trade?.executionPrice} />
                             </>
                           )}
                         </Flex>
 
-                        <ArrowWrapper rotated={rotate} onClick={handleRotateClick}>
-                          <SwapIcon size={24} color={theme.subText} />
-                        </ArrowWrapper>
+                        <ArrowRotate rotate={rotate} onClick={handleRotateClick} />
                       </AutoRow>
                       <Box sx={{ position: 'relative' }}>
                         {tradeComparer?.tradeSaved?.usd && comparedDex && (
@@ -993,7 +863,11 @@ export default function Swap() {
                     <TradeTypeSelection />
 
                     {chainId !== ChainId.ETHW && (
-                      <TrendingSoonTokenBanner currencies={currencies} style={{ marginTop: '24px' }} />
+                      <TrendingSoonTokenBanner
+                        currencyIn={currencyIn}
+                        currencyOut={currencyOut}
+                        style={{ marginTop: '24px' }}
+                      />
                     )}
 
                     {isPriceImpactInvalid ? (
@@ -1183,10 +1057,13 @@ export default function Swap() {
                   </Wrapper>
                 </>
               )}
-              {activeTab === TAB.INFO && <TokenInfo currencies={currencies} onBack={() => setActiveTab(TAB.SWAP)} />}
+              {activeTab === TAB.INFO && (
+                <TokenInfo currencies={isSwapPage ? currencies : currenciesLimit} onBack={onBackToSwapTab} />
+              )}
               {activeTab === TAB.SETTINGS && (
                 <SettingsPanel
-                  onBack={() => setActiveTab(TAB.SWAP)}
+                  isLimitOrder={isLimitPage}
+                  onBack={onBackToSwapTab}
                   onClickLiquiditySources={() => setActiveTab(TAB.LIQUIDITY_SOURCES)}
                   onClickGasPriceTracker={() => setActiveTab(TAB.GAS_PRICE_TRACKER)}
                 />
@@ -1197,11 +1074,18 @@ export default function Swap() {
               {activeTab === TAB.LIQUIDITY_SOURCES && (
                 <LiquiditySourcesPanel onBack={() => setActiveTab(TAB.SETTINGS)} />
               )}
+              {activeTab === TAB.LIMIT && (
+                <LimitOrder
+                  isSelectCurrencyManual={isSelectCurrencyManually}
+                  setIsSelectCurrencyManual={setIsSelectCurrencyManually}
+                  refreshListOrder={refreshListOrder}
+                />
+              )}
             </AppBodyWrapped>
-            <AdvancedSwapDetailsDropdown trade={trade} feeConfig={feeConfig} />
+            {isSwapPage && <AdvancedSwapDetailsDropdown trade={trade} feeConfig={feeConfig} />}
           </SwapFormWrapper>
 
-          {(isShowLiveChart || isShowTradeRoutes || shouldRenderTokenInfo) && (
+          {(isShowLiveChart || isShowTradeRoutes || shouldRenderTokenInfo || isLimitPage) && (
             <InfoComponentsWrapper>
               {isShowLiveChart && (
                 <LiveChartWrapper>
@@ -1215,11 +1099,14 @@ export default function Swap() {
                       />
                     }
                   >
-                    <LiveChart onRotateClick={handleRotateClick} currencies={currencies} />
+                    <LiveChart
+                      onRotateClick={handleRotateClick}
+                      currencies={isSwapPage ? currencies : currenciesLimit}
+                    />
                   </Suspense>
                 </LiveChartWrapper>
               )}
-              {isShowTradeRoutes && (
+              {isShowTradeRoutes && isSwapPage && (
                 <RoutesWrapper isOpenChart={isShowLiveChart}>
                   <Flex flexDirection="column" width="100%">
                     <Flex alignItems={'center'}>
@@ -1243,7 +1130,8 @@ export default function Swap() {
                   </Flex>
                 </RoutesWrapper>
               )}
-              {shouldRenderTokenInfo ? <TokenInfoV2 currencyIn={currencyIn} currencyOut={currencyOut} /> : null}
+              {isLimitPage && <ListLimitOrder ref={refListLimitOrder} />}
+              {shouldRenderTokenInfo && <TokenInfoV2 currencyIn={currencyIn} currencyOut={currencyOut} />}
             </InfoComponentsWrapper>
           )}
         </Container>

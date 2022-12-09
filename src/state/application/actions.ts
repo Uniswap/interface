@@ -1,4 +1,5 @@
 import { createAction } from '@reduxjs/toolkit'
+import { ReactNode } from 'react'
 
 import { TRANSACTION_TYPE } from 'state/transactions/type'
 
@@ -13,7 +14,7 @@ export type PopupContentTxn = {
 
 export type PopupContentSimple = {
   title: string
-  summary?: string
+  summary?: ReactNode
   type: NotificationType
 }
 

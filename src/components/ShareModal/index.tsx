@@ -1,7 +1,6 @@
 import { t } from '@lingui/macro'
 import { useState } from 'react'
 import { Share2, X } from 'react-feather'
-import { useLocation } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
@@ -93,22 +92,13 @@ export default function ShareModal({
   url,
   onShared = () => null,
 }: {
-  title?: string
+  title: string
   url?: string
   onShared?: () => void
 }) {
   const isOpen = useModalOpen(ApplicationModal.SHARE)
   const toggle = useToggleModal(ApplicationModal.SHARE)
   const theme = useTheme()
-  const { pathname } = useLocation()
-
-  const modalTitle =
-    title ??
-    (pathname.startsWith('/swap')
-      ? t`Share this with your friends!`
-      : pathname.startsWith('/campaigns')
-      ? t`Share this campaign with your friends!`
-      : t`Share this pool with your friends!`)
 
   const [isCopied, setCopied] = useCopyClipboard()
   const shareUrl = url || window.location.href
@@ -122,7 +112,7 @@ export default function ShareModal({
       <Flex flexDirection="column" alignItems="center" padding="25px" width="100%">
         <RowBetween>
           <Text fontSize={18} fontWeight={500}>
-            {modalTitle}
+            {title}
           </Text>
           <ButtonText onClick={toggle} style={{ lineHeight: '0' }}>
             <X color={theme.text} />
@@ -182,9 +172,9 @@ export default function ShareModal({
   )
 }
 
-type Props = { url?: string; onShared?: () => void; color?: string }
+type Props = { url?: string; onShared?: () => void; color?: string; title: string }
 
-export const ShareButtonWithModal: React.FC<Props> = ({ url, onShared, color }) => {
+export const ShareButtonWithModal: React.FC<Props> = ({ url, onShared, color, title }) => {
   const theme = useTheme()
   const toggle = useToggleModal(ApplicationModal.SHARE)
 
@@ -195,7 +185,7 @@ export const ShareButtonWithModal: React.FC<Props> = ({ url, onShared, color }) 
           <Share2 size={18} color={color || theme.subText} />
         </MouseoverTooltip>
       </StyledActionButtonSwapForm>
-      <ShareModal url={url} onShared={onShared} />
+      <ShareModal url={url} onShared={onShared} title={title} />
     </>
   )
 }

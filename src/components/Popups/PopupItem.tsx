@@ -13,6 +13,7 @@ import TransactionPopup from './TransactionPopup'
 
 const StyledClose = styled(X)`
   margin-left: 10px;
+  min-width: 24px;
   :hover {
     cursor: pointer;
   }

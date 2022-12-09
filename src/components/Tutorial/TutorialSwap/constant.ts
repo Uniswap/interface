@@ -46,5 +46,5 @@ export const LIST_TITLE = {
   DISCOVER: t`Discover trending soon tokens`,
   CAMPAIGN: t`Participate in our campaigns`,
   VIEW_GUIDE: t`View our KyberSwap Guide again`,
-  BRIDGE: t`Buy Crypto or Bridge Tokens`,
+  BRIDGE: t`Place Limit Orders, Bridge Tokens or Buy Crypto`,
 }

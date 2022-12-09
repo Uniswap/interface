@@ -163,7 +163,7 @@ export const useNotify = () => {
   const addPopup = useAddPopup()
   return useCallback(
     (data: PopupContentSimple, removeAfterMs = 4000) => {
-      addPopup(data, PopupType.SIMPLE, data.title, removeAfterMs)
+      addPopup(data, PopupType.SIMPLE, data.title + Math.random(), removeAfterMs)
     },
     [addPopup],
   )

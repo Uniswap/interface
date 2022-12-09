@@ -16,7 +16,7 @@ const QuestionWrapper = styled.div<{ useCurrentColor?: boolean }>`
   outline: none;
   cursor: default;
   border-radius: 36px;
-  color: ${({ theme, useCurrentColor, color }) => (useCurrentColor ? 'inherit' : theme.text2)};
+  color: ${({ theme, useCurrentColor }) => (useCurrentColor ? 'inherit' : theme.text2)};
 
   :hover,
   :focus {

@@ -2,13 +2,14 @@ import { t } from '@lingui/macro'
 import { rgba } from 'polished'
 import React from 'react'
 import { Info } from 'react-feather'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Flex, Image, Text } from 'rebass'
 import styled from 'styled-components'
 
 import { ButtonEmpty } from 'components/Button'
 import Cart from 'components/Icons/Cart'
 import { MouseoverTooltipDesktopOnly } from 'components/Tooltip'
+import { APP_PATHS } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
@@ -29,7 +30,7 @@ const TopTrendingSoonTokenItem = ({
   const { networkInfo } = useActiveWeb3React()
   const currentNetwork = networkInfo.trueSightId || ''
   const toggleTrendingSoonTokenDetailModal = useToggleModal(ApplicationModal.TRENDING_SOON_TOKEN_DETAIL)
-
+  const { pathname } = useLocation()
   const onSelectToken = () => {
     setSelectedToken(tokenData)
     toggleTrendingSoonTokenDetailModal()
@@ -95,11 +96,12 @@ const TopTrendingSoonTokenItem = ({
             <Info size="10px" color={theme.subText} />
           </ButtonEmpty>
         </MouseoverTooltipDesktopOnly>
-        {/*<MouseoverTooltipDesktopOnly text={t`Buy now`} placement="top" width="fit-content">*/}
         <ButtonEmpty
           padding="0"
           as={Link}
-          to={`/swap?inputCurrency=ETH&outputCurrency=${tokenData.platforms.get(currentNetwork)}`}
+          to={`${
+            pathname.startsWith(APP_PATHS.SWAP) ? APP_PATHS.SWAP : APP_PATHS.LIMIT
+          }?inputCurrency=ETH&outputCurrency=${tokenData.platforms.get(currentNetwork)}`}
           style={{
             background: rgba(theme.primary, 0.2),
             width: '16px',
@@ -112,7 +114,6 @@ const TopTrendingSoonTokenItem = ({
         >
           <Cart color={theme.primary} size={10} />
         </ButtonEmpty>
-        {/*</MouseoverTooltipDesktopOnly>*/}
       </Flex>
     </Container>
   )

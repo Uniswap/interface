@@ -273,7 +273,7 @@ function useBridgeSwap(
               if (contractETH) {
                 txReceipt = await contractETH.Swapout(`0x${inputAmount.quotient.toString(16)}`, toAddress)
               } else {
-                Promise.reject('not found contractETH')
+                return Promise.reject('not found contractETH')
               }
             }
           }

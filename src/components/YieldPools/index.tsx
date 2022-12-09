@@ -7,9 +7,9 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 
-import Search from 'components/Icons/Search'
 import InfoHelper from 'components/InfoHelper'
 import LocalLoader from 'components/LocalLoader'
+import SearchInput from 'components/SearchInput'
 import Toggle from 'components/Toggle'
 import FairLaunchPools from 'components/YieldPools/FairLaunchPools'
 import { AMP_HINT, FARM_TAB, TOBE_EXTENDED_FARMING_POOLS } from 'constants/index'
@@ -28,8 +28,6 @@ import {
   ClickableText,
   HeadingContainer,
   HeadingRight,
-  SearchContainer,
-  SearchInput,
   StakedOnlyToggleText,
   StakedOnlyToggleWrapper,
   TableHeader,
@@ -191,15 +189,12 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
           )}
         </StakedOnlyToggleWrapper>
         <HeadingRight>
-          <SearchContainer>
-            <SearchInput
-              placeholder={t`Search by token name or pool address`}
-              maxLength={255}
-              value={search}
-              onChange={e => doSearch(e.target.value)}
-            />
-            <Search color={theme.subText} />
-          </SearchContainer>
+          <SearchInput
+            placeholder={t`Search by token name or pool address`}
+            maxLength={255}
+            value={search}
+            onChange={doSearch}
+          />
         </HeadingRight>
       </HeadingContainer>
 

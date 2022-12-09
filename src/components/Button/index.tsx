@@ -1,10 +1,16 @@
+import { Trans } from '@lingui/macro'
 import { darken, rgba } from 'polished'
 import React from 'react'
-import { ChevronDown } from 'react-feather'
+import { ChevronDown, Info } from 'react-feather'
+import { Flex, Text } from 'rebass'
 import { ButtonProps, Button as RebassButton } from 'rebass/styled-components'
 import styled from 'styled-components'
 
-import { RowBetween } from 'components/Row'
+import Loader from 'components/Loader'
+import { MouseoverTooltip } from 'components/Tooltip'
+import { ApprovalState } from 'hooks/useApproveCallback'
+
+import { AutoRow, RowBetween } from '../Row'
 
 const Base = styled(RebassButton)<{
   padding?: string
@@ -255,5 +261,60 @@ export function ButtonDropdownLight({
         <ChevronDown size={24} />
       </RowBetween>
     </ButtonOutlined>
+  )
+}
+
+const BtnApprovedWraper = styled(ButtonConfirmed)`
+  padding: 0;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  width: 48%;
+`
+
+export const ButtonApprove = ({
+  tooltipMsg,
+  tokenSymbol,
+  approval,
+  onClick,
+  disabled,
+  forceApprove = false,
+}: {
+  tooltipMsg?: string
+  tokenSymbol: string | undefined
+  approval: ApprovalState
+  onClick: () => void
+  disabled: boolean
+  forceApprove?: boolean
+}) => {
+  return (
+    <BtnApprovedWraper
+      disabled={disabled}
+      onClick={onClick}
+      altDisabledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
+      confirmed={approval === ApprovalState.APPROVED && !forceApprove}
+    >
+      {approval === ApprovalState.PENDING ? (
+        <AutoRow gap="6px" justify="center">
+          <Trans>Approving</Trans> <Loader stroke="white" />
+        </AutoRow>
+      ) : (
+        <>
+          {tooltipMsg && (
+            <MouseoverTooltip width="300px" text={tooltipMsg}>
+              <Flex
+                style={{ alignItems: 'center', height: 44, paddingRight: 8, paddingLeft: 2 }}
+                onClick={e => e.stopPropagation()}
+              >
+                <Info size={20} />
+              </Flex>
+            </MouseoverTooltip>
+          )}
+          <Text textAlign="left">
+            <Trans>Approve {tokenSymbol}</Trans>
+          </Text>
+        </>
+      )}
+    </BtnApprovedWraper>
   )
 }

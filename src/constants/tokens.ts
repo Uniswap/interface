@@ -354,7 +354,7 @@ export const KNC: { [chainId in ChainId]: Token } = {
   [ChainId.ETHW]: new Token(ChainId.ETHW, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
   [ChainId.GÖRLI]: new Token(
     ChainId.GÖRLI,
-    '0x8B4DDF9F13f382aff76D262F6C8C50E6d7961b94',
+    '0x4f6519025e6de0edb6e4901827c1956ce18c39d3',
     18,
     'KNC',
     'Kyber Network Crystal',
@@ -460,4 +460,5 @@ export const DEFAULT_OUTPUT_TOKEN_BY_CHAIN: Partial<Record<ChainId, Token>> = {
   [ChainId.OASIS]: USDC[ChainId.OASIS],
   [ChainId.BTTC]: USDT[ChainId.BTTC], // USDT_b
   [ChainId.SOLANA]: USDC[ChainId.SOLANA],
+  [ChainId.GÖRLI]: KNC[ChainId.GÖRLI],
 }

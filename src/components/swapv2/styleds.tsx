@@ -100,25 +100,6 @@ export const Wrapper = styled.div`
   background: ${({ theme }) => theme.background};
 `
 
-export const ArrowWrapper = styled.div<{ rotated?: boolean }>`
-  padding: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: ${({ theme }) => theme.buttonBlack};
-  width: fit-content;
-  height: fit-content;
-  cursor: pointer;
-  border-radius: 999px;
-
-  transform: rotate(${({ rotated }) => (rotated ? '180deg' : '0')});
-  transition: transform 300ms;
-
-  :hover {
-    opacity: 0.8;
-  }
-`
-
 export const BottomGrouping = styled.div`
   margin-top: 24px;
 `
@@ -291,6 +272,7 @@ export const SwapFormWrapper = styled.div<{ isShowTutorial?: boolean }>`
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  gap: 16px;
   @media only screen and (min-width: 1100px) {
     position: ${({ isShowTutorial }) => (isShowTutorial ? 'unset' : 'sticky')};
     /**

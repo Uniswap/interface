@@ -223,8 +223,8 @@ export default createReducer(initialState, builder =>
       }
       state.showLiveCharts[chainId] = !state.showLiveCharts[chainId]
     })
-    .addCase(toggleProLiveChart, state => {
-      state.showProLiveChart = !state.showProLiveChart
+    .addCase(toggleProLiveChart, (state, { payload: showProLiveChart }) => {
+      state.showProLiveChart = showProLiveChart !== undefined ? showProLiveChart : !state.showProLiveChart
     })
     .addCase(toggleTradeRoutes, state => {
       state.showTradeRoutes = !state.showTradeRoutes

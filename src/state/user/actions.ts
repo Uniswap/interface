@@ -40,7 +40,7 @@ export const toggleTradeRoutes = createAction<void>('user/toggleTradeRoutes')
 export const toggleTokenInfo = createAction<void>('user/toggleTokenInfo')
 
 export const toggleTopTrendingTokens = createAction<void>('user/toggleTopTrendingTokens')
-export const toggleProLiveChart = createAction<void>('user/toggleProLiveChart')
+export const toggleProLiveChart = createAction<boolean | undefined>('user/toggleProLiveChart')
 
 export type ToggleFavoriteTokenPayload = {
   chainId: ChainId

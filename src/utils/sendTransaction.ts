@@ -20,7 +20,7 @@ export async function sendEVMTransaction(
   encodedData: string,
   value: BigNumber,
   handler?: (response: TransactionResponse) => void,
-): Promise<string | undefined> {
+): Promise<TransactionResponse | undefined> {
   if (!account || !library) return
 
   const estimateGasOption = {
@@ -69,7 +69,7 @@ export async function sendEVMTransaction(
   try {
     const response = await library.getSigner().sendTransaction(sendTransactionOption)
     handler?.(response)
-    return response.hash
+    return response
   } catch (error) {
     // if the user rejected the tx, pass this along
     if (error?.code === 4001 || error?.code === 'ACTION_REJECTED') {

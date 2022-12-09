@@ -95,6 +95,7 @@ export interface ModalProps {
   className?: string
   children?: React.ReactNode
   transition?: boolean
+  enableSwipeGesture?: boolean
 }
 
 export default function Modal({
@@ -115,6 +116,7 @@ export default function Modal({
   transition = true,
   zindex = 100,
   borderRadius = '20px',
+  enableSwipeGesture = true,
 }: ModalProps) {
   const fadeTransition = useTransition(isOpen, {
     config: { duration: transition ? 200 : 0 },
@@ -141,7 +143,7 @@ export default function Modal({
           item && (
             <StyledDialogOverlay zindex={zindex} style={style} onDismiss={onDismiss}>
               <StyledDialogContent
-                {...(isMobile
+                {...(isMobile && enableSwipeGesture
                   ? {
                       ...bind(),
                       style: { transform: y.interpolate(y => `translateY(${(y as number) > 0 ? y : 0}px)`) },

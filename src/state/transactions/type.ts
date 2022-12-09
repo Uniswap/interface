@@ -49,4 +49,5 @@ export enum TRANSACTION_TYPE {
   WITHDRAW = 'Withdraw',
   FORCE_WITHDRAW = 'ForceWithdraw',
   SETUP = 'Setting up your swap',
+  CANCEL_LIMIT_ORDER = 'Cancel Limit Order',
 }

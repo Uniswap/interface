@@ -31,12 +31,14 @@ interface CurrencyInputPanelBridgeProps {
   chainIds: ChainId[]
   selectedChainId: ChainId | undefined
 }
+
+const noop = (value: string) => {
+  //
+}
 export default function CurrencyInputPanelBridge({
   error,
   value,
-  onUserInput = (value: string) => {
-    //
-  },
+  onUserInput = noop,
   onSelectNetwork,
   chainIds,
   onMax,

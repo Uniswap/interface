@@ -3,23 +3,20 @@ import { Trans, t } from '@lingui/macro'
 import { isAddress } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Info } from 'react-feather'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
 import MultichainLogoDark from 'assets/images/multichain_black.png'
 import MultichainLogoLight from 'assets/images/multichain_white.png'
 import { ReactComponent as ArrowUp } from 'assets/svg/arrow_up.svg'
-import { ButtonConfirmed, ButtonError, ButtonLight } from 'components/Button'
+import { ButtonApprove, ButtonError, ButtonLight } from 'components/Button'
 import CurrencyInputPanelBridge from 'components/CurrencyInputPanel/CurrencyInputPanelBridge'
-import Loader from 'components/Loader'
 import ProgressSteps from 'components/ProgressSteps'
-import { AutoRow, RowBetween } from 'components/Row'
-import Tooltip, { MouseoverTooltip } from 'components/Tooltip'
+import { RowBetween } from 'components/Row'
+import Tooltip from 'components/Tooltip'
 import { AdvancedSwapDetailsDropdownBridge } from 'components/swapv2/AdvancedSwapDetailsDropdown'
 import { SwapFormWrapper } from 'components/swapv2/styleds'
 import { NETWORKS_INFO, SUPPORTED_NETWORKS } from 'constants/networks'
-import { Z_INDEXS } from 'constants/styles'
 import { useActiveWeb3React } from 'hooks'
 import { useMultichainPool } from 'hooks/bridge'
 import useBridgeCallback from 'hooks/bridge/useBridgeCallback'
@@ -37,17 +34,16 @@ import { tryParseAmount } from 'state/swap/hooks'
 import { useIsDarkMode } from 'state/user/hooks'
 import { useCurrencyBalance } from 'state/wallet/hooks'
 import { ExternalLink } from 'theme'
+import { TRANSACTION_STATE_DEFAULT, TransactionFlowState } from 'types/index'
 import { formattedNum } from 'utils'
 
 import ComfirmBridgeModal from './ComfirmBridgeModal'
 import ErrorWarningPanel from './ErrorWarning'
 import PoolInfo from './PoolInfo'
 import { formatPoolValue } from './helpers'
-import { BridgeSwapState } from './type'
 
 const AppBodyWrapped = styled(BodyWrapper)`
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
-  z-index: ${Z_INDEXS.SWAP_FORM};
   padding: 20px 16px;
   margin-top: 0;
 `
@@ -108,12 +104,7 @@ export default function SwapForm() {
   })
 
   // modal and loading
-  const [swapState, setSwapState] = useState<BridgeSwapState>({
-    showConfirm: false,
-    attemptingTxn: false,
-    swapErrorMessage: '',
-    txHash: undefined,
-  })
+  const [swapState, setSwapState] = useState<TransactionFlowState>(TRANSACTION_STATE_DEFAULT)
 
   const listChainOut = useMemo(() => {
     const destChainInfo = tokenInfoIn?.destChains || {}
@@ -276,7 +267,7 @@ export default function SwapForm() {
   )
 
   const showPreview = () => {
-    setSwapState(state => ({ ...state, showConfirm: true, swapErrorMessage: '', txHash: '' }))
+    setSwapState(state => ({ ...state, showConfirm: true, errorMessage: '', txHash: '' }))
     if (chainId && chainIdOut) {
       mixpanelHandler(MIXPANEL_TYPE.BRIDGE_CLICK_REVIEW_TRANSFER, {
         from_network: NETWORKS_INFO[chainId].name,
@@ -308,7 +299,7 @@ export default function SwapForm() {
       setSwapState(state => ({ ...state, attemptingTxn: false, txHash }))
     } catch (error) {
       console.error(error)
-      setSwapState(state => ({ ...state, attemptingTxn: false, swapErrorMessage: error?.message || error }))
+      setSwapState(state => ({ ...state, attemptingTxn: false, errorMessage: error?.message || error }))
     }
   }, [
     useSwapMethods,
@@ -450,32 +441,13 @@ export default function SwapForm() {
               showApproveFlow && (
                 <>
                   <RowBetween>
-                    <ButtonConfirmed
+                    <ButtonApprove
                       onClick={approveCallback}
                       disabled={disableBtnApproved}
-                      width="48%"
-                      altDisabledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
-                      confirmed={approval === ApprovalState.APPROVED}
-                    >
-                      {approval === ApprovalState.PENDING ? (
-                        <AutoRow gap="6px" justify="center">
-                          <Trans>Approving</Trans> <Loader stroke="white" />
-                        </AutoRow>
-                      ) : (
-                        <Flex alignContent={'center'}>
-                          <MouseoverTooltip
-                            placement="bottom"
-                            width="300px"
-                            text={t`You would need to first allow Multichain smart contract to use your ${tokenInfoIn?.symbol}. This has to be done only once for each token.`}
-                          >
-                            <Info size={18} />
-                          </MouseoverTooltip>
-                          <Text marginLeft={'5px'}>
-                            <Trans>Approve {tokenInfoIn?.symbol}</Trans>
-                          </Text>
-                        </Flex>
-                      )}
-                    </ButtonConfirmed>
+                      tooltipMsg={t`You would need to first allow Multichain smart contract to use your ${tokenInfoIn?.symbol}. This has to be done only once for each token.`}
+                      tokenSymbol={tokenInfoIn?.symbol}
+                      approval={approval}
+                    />
                     <ButtonError width="48%" id="swap-button" disabled={disableBtnReviewTransfer} onClick={showPreview}>
                       <Text fontSize={16} fontWeight={500}>
                         {t`Review transfer`}

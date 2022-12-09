@@ -373,9 +373,9 @@ export function useToggleLiveChart(): () => void {
   const { chainId } = useActiveWeb3React()
   return useCallback(() => dispatch(toggleLiveChart({ chainId: chainId })), [dispatch, chainId])
 }
-export function useToggleProLiveChart(): () => void {
+export function useToggleProLiveChart(): (showProLiveChart?: boolean) => void {
   const dispatch = useDispatch<AppDispatch>()
-  return useCallback(() => dispatch(toggleProLiveChart()), [dispatch])
+  return useCallback((showProLiveChart?: boolean) => dispatch(toggleProLiveChart(showProLiveChart)), [dispatch])
 }
 export function useToggleTradeRoutes(): () => void {
   const dispatch = useDispatch<AppDispatch>()

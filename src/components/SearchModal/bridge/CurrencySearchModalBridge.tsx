@@ -1,7 +1,6 @@
 import { useCallback } from 'react'
 
 import Modal from 'components/Modal'
-import { Z_INDEXS } from 'constants/styles'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 import CurrencySearchBridge from './CurrencySearchBridge'
@@ -29,7 +28,6 @@ export default function CurrencySearchModalBridge({
 
   return (
     <Modal
-      zindex={Z_INDEXS.MODAL}
       isOpen={isOpen}
       onDismiss={onDismiss}
       margin="auto"

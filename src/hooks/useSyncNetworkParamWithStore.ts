@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import { NETWORKS_INFO, isEVM, isSolana } from 'constants/networks'
@@ -9,12 +9,13 @@ import { useChangeNetwork } from './useChangeNetwork'
 export function useSyncNetworkParamWithStore() {
   const params = useParams<{ network?: string }>()
   const changeNetwork = useChangeNetwork()
-  const { networkInfo, walletEVM, walletSolana } = useActiveWeb3React()
+  const { networkInfo, walletEVM, walletSolana, chainId } = useActiveWeb3React()
   const isOnInit = useRef(true)
   const navigate = useNavigate()
   const triedEager = useEagerConnect()
 
   const location = useLocation()
+  const [requestingNetwork, setRequestingNetwork] = useState<string>()
 
   useEffect(() => {
     if (!params?.network) {
@@ -30,10 +31,17 @@ export function useSyncNetworkParamWithStore() {
        */
       ;(async () => {
         if (paramChainId && isEVM(paramChainId)) {
+          setRequestingNetwork(params?.network)
           await changeNetwork(paramChainId, undefined, () => {
-            navigate({ ...location, pathname: location.pathname + '/' + networkInfo.route }, { replace: true })
+            if (params.network) {
+              navigate(
+                { ...location, pathname: location.pathname.replace(params.network, networkInfo.route) },
+                { replace: true },
+              )
+            }
           })
         } else if (paramChainId && isSolana(paramChainId)) {
+          setRequestingNetwork(params?.network)
           await changeNetwork(paramChainId)
         }
       })()
@@ -50,14 +58,24 @@ export function useSyncNetworkParamWithStore() {
   ])
 
   useEffect(() => {
+    if (NETWORKS_INFO[chainId].route === requestingNetwork) setRequestingNetwork(undefined)
+  }, [chainId, requestingNetwork])
+
+  useEffect(() => {
     /**
      * Sync network route param with current active network, only after eager tried
      */
-    if (params.network && networkInfo.route !== params?.network && !isOnInit.current && triedEager) {
+    if (
+      ((requestingNetwork && requestingNetwork !== params?.network) || !requestingNetwork) &&
+      params.network &&
+      networkInfo.route !== params?.network &&
+      !isOnInit.current &&
+      triedEager
+    ) {
       navigate(
         { ...location, pathname: location.pathname.replace(params.network, networkInfo.route) },
         { replace: true },
       )
     }
-  }, [location, networkInfo.route, navigate, triedEager, params?.network])
+  }, [location, networkInfo.route, navigate, triedEager, params?.network, requestingNetwork])
 }

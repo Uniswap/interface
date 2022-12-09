@@ -28,7 +28,7 @@ import { ArrowWrapper, BottomGrouping, Dots, Wrapper } from 'components/swap/sty
 import { SwapCallbackError } from 'components/swapv2/styleds'
 import { INITIAL_ALLOWED_SLIPPAGE } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
-import { useAllTokens, useCurrency } from 'hooks/Tokens'
+import { useAllTokens, useCurrencyV2 } from 'hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from 'hooks/useApproveCallback'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTheme from 'hooks/useTheme'
@@ -53,8 +53,8 @@ export default function Swap() {
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
-    useCurrency(loadedUrlParams?.inputCurrencyId),
-    useCurrency(loadedUrlParams?.outputCurrencyId),
+    useCurrencyV2(loadedUrlParams?.inputCurrencyId),
+    useCurrencyV2(loadedUrlParams?.outputCurrencyId),
   ]
 
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)

@@ -556,7 +556,6 @@ export const SearchInput = styled.input`
   flex: 1;
   color: ${({ theme }) => theme.text};
   background: ${({ theme }) => theme.background};
-
   :placeholder {
     color: ${({ theme }) => theme.disableText};
   }

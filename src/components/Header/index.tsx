@@ -12,8 +12,9 @@ import { ReactComponent as Visa } from 'assets/buy-crypto/visa.svg'
 import MultichainLogoDark from 'assets/images/multichain_black.png'
 import MultichainLogoLight from 'assets/images/multichain_white.png'
 import { ReactComponent as BridgeIcon } from 'assets/svg/bridge_icon.svg'
-import { ReactComponent as Dollar } from 'assets/svg/dollar.svg'
+import { ReactComponent as BuyCrypto } from 'assets/svg/buy_crypto.svg'
 import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
+import { ReactComponent as LimitOrderIcon } from 'assets/svg/limit_order.svg'
 import SelectNetwork from 'components/Header/web3/SelectNetwork'
 import SelectWallet from 'components/Header/web3/SelectWallet'
 import DiscoverIcon from 'components/Icons/DiscoverIcon'
@@ -22,7 +23,7 @@ import Row, { RowFixed } from 'components/Row'
 import Settings from 'components/Settings'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { TutorialIds } from 'components/Tutorial/TutorialSwap/constant'
-import { AGGREGATOR_ANALYTICS_URL, APP_PATHS, PROMM_ANALYTICS_URL } from 'constants/index'
+import { AGGREGATOR_ANALYTICS_URL, APP_PATHS, PROMM_ANALYTICS_URL, SUPPORT_LIMIT_ORDER } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { useTutorialSwapGuide } from 'state/tutorial/hooks'
@@ -78,6 +79,7 @@ const HeaderFrame = styled.div`
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
    padding: 0.5rem 1rem;
+   height: 60px;
   `}
 `
 
@@ -101,6 +103,9 @@ const HeaderControls = styled.div`
     height: 72px;
     border-radius: 12px 12px 0 0;
     background-color: ${({ theme }) => theme.background};
+  `};
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+      height: 60px;
   `};
 `
 
@@ -352,6 +357,12 @@ const StyledBridgeIcon = styled(BridgeIcon)`
     fill: currentColor;
   }
 `
+const StyledBuyCrypto = styled(BuyCrypto)`
+  path {
+    fill: currentColor;
+  }
+`
+
 export default function Header() {
   const { chainId, isEVM, isSolana, walletKey } = useActiveWeb3React()
 
@@ -380,50 +391,58 @@ export default function Header() {
               <DropdownIcon />
             </Flex>
 
-            <Dropdown>
+            <Dropdown id={TutorialIds.BRIDGE_LINKS}>
               <StyledNavLink id={`swapv2-nav-link`} to={APP_PATHS.SWAP} style={{ flexDirection: 'column' }}>
                 <Flex alignItems="center" sx={{ gap: '13px' }}>
                   <Repeat size={16} />
                   <Trans>Swap</Trans>
                 </Flex>
               </StyledNavLink>
-              <div id={TutorialIds.BRIDGE_LINKS}>
-                <StyledNavLink
-                  id={`buy-crypto-nav-link`}
-                  to={APP_PATHS.BUY_CRYPTO}
-                  onClick={() => {
-                    mixpanelHandler(MIXPANEL_TYPE.SWAP_BUY_CRYPTO_CLICKED)
-                  }}
-                >
-                  <Flex alignItems="center" sx={{ gap: '8px' }}>
-                    <Flex sx={{ gap: '10px' }}>
-                      <Dollar style={{ marginLeft: -1 }} />
-                      <Trans>Buy Crypto</Trans>
-                    </Flex>
-                    <Flex sx={{ gap: '8px' }}>
-                      <VisaSVG width="20" height="20" />
-                      <MasterCard width="20" height="20" />
+
+              {SUPPORT_LIMIT_ORDER && (
+                <StyledNavLink to={APP_PATHS.LIMIT} style={{ flexDirection: 'column' }}>
+                  <Flex alignItems="center" sx={{ gap: '13px' }}>
+                    <LimitOrderIcon />
+                    <Trans>Limit Order</Trans>
+                  </Flex>
+                </StyledNavLink>
+              )}
+
+              {isSolana || (
+                <StyledNavLink to={APP_PATHS.BRIDGE} style={{ flexDirection: 'column', width: '100%' }}>
+                  <Flex alignItems="center" sx={{ gap: '10px' }} justifyContent="space-between">
+                    <StyledBridgeIcon height={15} />
+                    <Flex alignItems={'center'} sx={{ flex: 1 }} justifyContent={'space-between'}>
+                      <Text>
+                        <Trans>Bridge</Trans>
+                      </Text>
+                      <img
+                        src={isDark ? MultichainLogoLight : MultichainLogoDark}
+                        alt="kyberswap with multichain"
+                        height={10}
+                      />
                     </Flex>
                   </Flex>
                 </StyledNavLink>
-                {isSolana || (
-                  <StyledNavLink to={APP_PATHS.BRIDGE} style={{ flexDirection: 'column', width: '100%' }}>
-                    <Flex alignItems="center" sx={{ gap: '10px' }} justifyContent="space-between">
-                      <StyledBridgeIcon height={15} />
-                      <Flex alignItems={'center'} style={{ flex: 1 }} justifyContent={'space-between'}>
-                        <Text>
-                          <Trans>Bridge</Trans>
-                        </Text>
-                        <img
-                          src={isDark ? MultichainLogoLight : MultichainLogoDark}
-                          alt="kyberswap with multichain"
-                          height={10}
-                        />
-                      </Flex>
-                    </Flex>
-                  </StyledNavLink>
-                )}
-              </div>
+              )}
+              <StyledNavLink
+                id={`buy-crypto-nav-link`}
+                to={'/buy-crypto'}
+                onClick={() => {
+                  mixpanelHandler(MIXPANEL_TYPE.SWAP_BUY_CRYPTO_CLICKED)
+                }}
+              >
+                <Flex alignItems="center" sx={{ gap: '8px' }} justifyContent="space-between">
+                  <Flex sx={{ gap: '10px' }}>
+                    <StyledBuyCrypto />
+                    <Trans>Buy Crypto</Trans>
+                  </Flex>
+                  <Flex sx={{ gap: '8px' }}>
+                    <VisaSVG width="20" height="20" />
+                    <MasterCard width="20" height="20" />
+                  </Flex>
+                </Flex>
+              </StyledNavLink>
             </Dropdown>
           </HoverDropdown>
 

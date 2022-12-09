@@ -125,7 +125,7 @@ export default function CurrencySearchBridge({
             <Trans>Select a token</Trans>
             {!isOutput && (
               <InfoHelper
-                zIndexTooltip={Z_INDEXS.MODAL + 1}
+                zIndexTooltip={Z_INDEXS.MODAL}
                 size={16}
                 text={
                   <Trans>You can select and transfer any token supported by Multichain from one chain to another</Trans>

@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/macro'
+import { Trans, t } from '@lingui/macro'
 import { Flex } from 'rebass'
 import styled, { css } from 'styled-components'
 
@@ -149,7 +149,7 @@ const ExpandedRankingSection: React.FC<Props> = ({ name, description, campaigns,
                     marginRight: '-8px',
                   }}
                 >
-                  <ShareButtonWithModal url={url} color={theme.primary} />
+                  <ShareButtonWithModal url={url} color={theme.primary} title={t`Share with your friends!`} />
                 </Flex>
               </Flex>
             )

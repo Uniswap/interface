@@ -432,7 +432,7 @@ export default function ProAmmPoolList({
           haveBg={above1000}
         />
       )}
-      <ShareModal url={shareUrl} />
+      <ShareModal url={shareUrl} title={t`Share this pool with your friends!`} />
       <FarmUpdater interval={false} />
     </PageWrapper>
   )

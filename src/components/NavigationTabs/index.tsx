@@ -201,7 +201,7 @@ export function AddRemoveTabs({
             </StyledMenuButton>
           )}
           <TransactionSettings hoverBg={theme.buttonBlack} />
-          {!hideShare && <ShareButtonWithModal onShared={onShared} />}
+          {!hideShare && <ShareButtonWithModal onShared={onShared} title={t`Share with your friends!`} />}
         </Flex>
       </Wrapper>
     </Tabs>

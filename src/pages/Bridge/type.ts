@@ -38,10 +38,3 @@ type DestChainInfo = {
     [key: string]: MultiChainTokenInfo
   }
 }
-
-export type BridgeSwapState = {
-  showConfirm: boolean
-  attemptingTxn: boolean
-  swapErrorMessage: string | undefined
-  txHash: string | undefined
-}

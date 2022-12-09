@@ -29,6 +29,7 @@ export enum ApprovalState {
 export function useApproveCallback(
   amountToApprove?: CurrencyAmount<Currency>,
   spender?: string,
+  forceApprove = false,
 ): [ApprovalState, () => Promise<void>] {
   const { account, chainId, isSolana } = useActiveWeb3React()
   const token = amountToApprove?.currency.wrapped
@@ -62,7 +63,7 @@ export function useApproveCallback(
   const addTransactionWithType = useTransactionAdder()
 
   const approve = useCallback(async (): Promise<void> => {
-    if (approvalState !== ApprovalState.NOT_APPROVED) {
+    if (approvalState !== ApprovalState.NOT_APPROVED && !forceApprove) {
       console.error('approve was called unnecessarily')
       return
     }
@@ -122,7 +123,7 @@ export function useApproveCallback(
         console.debug('Failed to approve token', error)
         throw error
       })
-  }, [approvalState, token, tokenContract, amountToApprove, spender, addTransactionWithType, chainId])
+  }, [approvalState, token, tokenContract, amountToApprove, spender, addTransactionWithType, chainId, forceApprove])
 
   return [approvalState, approve]
 }

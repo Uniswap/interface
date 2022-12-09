@@ -16,6 +16,7 @@ interface CurrencySearchModalProps {
   onCurrencySelect: (currency: Currency) => void
   otherSelectedCurrency?: Currency | null
   showCommonBases?: boolean
+  supportNative?: boolean
 }
 
 export enum CurrencyModalView {
@@ -32,6 +33,7 @@ export default function CurrencySearchModal({
   selectedCurrency,
   otherSelectedCurrency,
   showCommonBases = false,
+  supportNative = true,
 }: CurrencySearchModalProps) {
   const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.manage)
   const lastOpen = useLast(isOpen)
@@ -43,8 +45,8 @@ export default function CurrencySearchModal({
   }, [isOpen, lastOpen])
 
   const handleCurrencySelect = useCallback(
-    (currency: Currency) => {
-      onCurrencySelect(currency)
+    (currency: Currency[] | Currency) => {
+      onCurrencySelect(Array.isArray(currency) ? currency[0] : currency)
       onDismiss()
     },
     [onDismiss, onCurrencySelect],
@@ -82,6 +84,7 @@ export default function CurrencySearchModal({
           showImportView={showImportView}
           setImportToken={setImportToken}
           showManageView={showManageView}
+          supportNative={supportNative}
         />
       ) : modalView === CurrencyModalView.importToken && importToken ? (
         <ImportToken

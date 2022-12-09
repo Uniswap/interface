@@ -43,7 +43,10 @@ export function useChangeNetwork() {
 
   const changeNetwork = useCallback(
     async (desiredChainId: ChainId, successCallback?: () => void, failureCallback?: () => void) => {
-      if (desiredChainId === chainId) return
+      if (desiredChainId === chainId) {
+        successCallback?.()
+        return
+      }
 
       const wallet = walletKey && SUPPORTED_WALLETS[walletKey]
       if (wallet && isEVMWallet(wallet) && !isSolana(desiredChainId)) {

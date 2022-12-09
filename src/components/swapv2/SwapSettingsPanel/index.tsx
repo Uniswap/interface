@@ -36,6 +36,7 @@ type Props = {
   onBack: () => void
   onClickGasPriceTracker: () => void
   onClickLiquiditySources: () => void
+  isLimitOrder: boolean
 }
 const BackIconWrapper = styled(ArrowLeft)`
   height: 20px;
@@ -53,7 +54,13 @@ const BackText = styled.span`
   color: ${({ theme }) => theme.text};
 `
 
-const SettingsPanel: React.FC<Props> = ({ className, onBack, onClickLiquiditySources, onClickGasPriceTracker }) => {
+const SettingsPanel: React.FC<Props> = ({
+  isLimitOrder,
+  className,
+  onBack,
+  onClickLiquiditySources,
+  onClickGasPriceTracker,
+}) => {
   const theme = useTheme()
 
   const { data: topTrendingSoonTokens } = useTopTrendingSoonTokensInCurrentNetwork()
@@ -105,18 +112,22 @@ const SettingsPanel: React.FC<Props> = ({ className, onBack, onClickLiquiditySou
             width: '100%',
           }}
         >
-          <span className="settingTitle">
-            <Trans>Advanced Settings</Trans>
-          </span>
+          {!isLimitOrder && (
+            <>
+              <span className="settingTitle">
+                <Trans>Advanced Settings</Trans>
+              </span>
 
-          <SlippageSetting />
-          <TransactionTimeLimitSetting />
+              <SlippageSetting />
+              <TransactionTimeLimitSetting />
 
-          <AdvancedModeSetting />
+              <AdvancedModeSetting />
 
-          <GasPriceTrackerSetting onClick={onClickGasPriceTracker} />
+              <GasPriceTrackerSetting onClick={onClickGasPriceTracker} />
 
-          <LiquiditySourcesSetting onClick={onClickLiquiditySources} />
+              <LiquiditySourcesSetting onClick={onClickLiquiditySources} />
+            </>
+          )}
           <Flex
             sx={{
               flexDirection: 'column',
@@ -145,25 +156,28 @@ const SettingsPanel: React.FC<Props> = ({ className, onBack, onClickLiquiditySou
                 </RowFixed>
                 <Toggle isActive={isShowLiveChart} toggle={handleToggleLiveChart} />
               </RowBetween>
-              <RowBetween>
-                <RowFixed>
-                  <span className="settingLabel">
-                    <Trans>Trade Route</Trans>
-                  </span>
-                  <QuestionHelper text={t`Turn on to display trade route`} />
-                </RowFixed>
-                <Toggle isActive={isShowTradeRoutes} toggle={handleToggleTradeRoute} />
-              </RowBetween>
-
-              <RowBetween>
-                <RowFixed>
-                  <span className="settingLabel">
-                    <Trans>Token Info</Trans>
-                  </span>
-                  <QuestionHelper text={t`Turn on to display token info`} />
-                </RowFixed>
-                <Toggle isActive={isShowTokenInfo} toggle={toggleTokenInfo} />
-              </RowBetween>
+              {!isLimitOrder && (
+                <>
+                  <RowBetween>
+                    <RowFixed>
+                      <span className="settingLabel">
+                        <Trans>Trade Route</Trans>
+                      </span>
+                      <QuestionHelper text={t`Turn on to display trade route`} />
+                    </RowFixed>
+                    <Toggle isActive={isShowTradeRoutes} toggle={handleToggleTradeRoute} />
+                  </RowBetween>
+                  <RowBetween>
+                    <RowFixed>
+                      <span className="settingLabel">
+                        <Trans>Token Info</Trans>
+                      </span>
+                      <QuestionHelper text={t`Turn on to display token info`} />
+                    </RowFixed>
+                    <Toggle isActive={isShowTokenInfo} toggle={toggleTokenInfo} />
+                  </RowBetween>
+                </>
+              )}
             </AutoColumn>
           </Flex>
         </Flex>

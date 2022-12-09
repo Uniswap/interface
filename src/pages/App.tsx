@@ -18,7 +18,7 @@ import Loader from 'components/LocalLoader'
 import Modal from 'components/Modal'
 import Popups from 'components/Popups'
 import Web3ReactManager from 'components/Web3ReactManager'
-import { APP_PATHS, BLACKLIST_WALLETS } from 'constants/index'
+import { APP_PATHS, BLACKLIST_WALLETS, SUPPORT_LIMIT_ORDER } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import { useGlobalMixpanelEvents } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
@@ -203,6 +203,15 @@ export default function App() {
                     <Route path={`${APP_PATHS.SWAP}/:network/:fromCurrency-to-:toCurrency`} element={<SwapV2 />} />
                     <Route path={`${APP_PATHS.SWAP}/:network/:fromCurrency`} element={<SwapV2 />} />
                     <Route path={`${APP_PATHS.SWAP}/:network`} element={<SwapV2 />} />
+
+                    {SUPPORT_LIMIT_ORDER && (
+                      <>
+                        <Route path={`${APP_PATHS.LIMIT}/:network/:fromCurrency-to-:toCurrency`} element={<SwapV2 />} />
+                        <Route path={`${APP_PATHS.LIMIT}/:network/:fromCurrency`} element={<SwapV2 />} />
+                        <Route path={`${APP_PATHS.LIMIT}/:network`} element={<SwapV2 />} />
+                      </>
+                    )}
+
                     <Route path={`${APP_PATHS.FIND_POOL}`} element={<PoolFinder />} />
                     <Route path={`${APP_PATHS.POOLS}/:network`} element={<Pools />} />
                     <Route path={`${APP_PATHS.POOLS}/:network/:currencyIdA`} element={<Pools />} />

@@ -150,7 +150,7 @@ const Networks = ({
       customOnSelectNetwork(chainId)
     } else {
       changeNetwork(chainId, () => {
-        const { networkId, inputCurrency, outputCurrency, ...rest } = qs
+        const { inputCurrency, outputCurrency, ...rest } = qs
         navigate(
           {
             search: stringify(rest),

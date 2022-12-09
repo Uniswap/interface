@@ -9,8 +9,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
-import styled from 'styled-components'
 
+import { ArrowWrapper } from 'components/ArrowRotate'
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonWarning } from 'components/Button'
 import { OutlineCard, WarningCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -29,7 +29,7 @@ import PresetsButtons from 'components/RangeSelector/PresetsButtons'
 import Row, { RowBetween, RowFixed } from 'components/Row'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { TutorialType } from 'components/Tutorial'
-import { ArrowWrapper as ArrowWrapperVertical, Dots } from 'components/swapv2/styleds'
+import { Dots } from 'components/swapv2/styleds'
 import { EVMNetworkInfo } from 'constants/networks/type'
 import { NativeCurrencies } from 'constants/tokens'
 import { VERSION } from 'constants/v2'
@@ -72,11 +72,6 @@ import {
   StyledInput,
 } from './styled'
 
-const ArrowWrapper = styled(ArrowWrapperVertical)<{ rotated?: boolean }>`
-  transform: rotate(${({ rotated }) => (rotated ? '270deg' : '90deg')});
-  width: 40px;
-  height: 40px;
-`
 export default function AddLiquidity() {
   const { currencyIdA, currencyIdB, feeAmount: feeAmountFromUrl } = useParams()
   const navigate = useNavigate()
@@ -786,6 +781,7 @@ export default function AddLiquidity() {
                 />
 
                 <ArrowWrapper
+                  isVertical
                   rotated={rotate}
                   onClick={() => {
                     if (!!rightPrice) {

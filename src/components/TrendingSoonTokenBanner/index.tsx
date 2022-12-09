@@ -11,28 +11,29 @@ import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import useGetTrendingSoonTokenId from 'pages/TrueSight/hooks/useGetTrendingSoonTokenId'
-import { Field } from 'state/swap/actions'
 import { ExternalLink } from 'theme'
 import { FadeIn } from 'utils/keyframes'
 
 const TrendingSoonTokenBanner = ({
-  currencies,
+  currencyIn,
+  currencyOut,
   style,
 }: {
-  currencies: { [field in Field]?: Currency }
   style?: CSSProperties
+  currencyIn: Currency | undefined
+  currencyOut: Currency | undefined
 }) => {
   const { chainId } = useActiveWeb3React()
   const theme = useTheme()
   const { mixpanelHandler } = useMixpanel()
 
-  const token0 = currencies[Field.INPUT]?.wrapped
-  const token1 = currencies[Field.OUTPUT]?.wrapped
+  const token0 = currencyIn?.wrapped
+  const token1 = currencyOut?.wrapped
   const trendingToken0Id = useGetTrendingSoonTokenId(token0)
   const trendingToken1Id = useGetTrendingSoonTokenId(token1)
   const trendingSoonCurrency = useMemo(
-    () => (trendingToken0Id ? currencies[Field.INPUT] : trendingToken1Id ? currencies[Field.OUTPUT] : undefined),
-    [currencies, trendingToken0Id, trendingToken1Id],
+    () => (trendingToken0Id ? currencyIn : trendingToken1Id ? currencyOut : undefined),
+    [currencyIn, currencyOut, trendingToken0Id, trendingToken1Id],
   )
 
   if (trendingSoonCurrency === undefined) return null

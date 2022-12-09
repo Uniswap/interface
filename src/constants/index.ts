@@ -333,6 +333,7 @@ export const APP_PATHS = {
   BUY_CRYPTO: '/buy-crypto',
   BRIDGE: '/bridge',
   VERIFY: '/verify',
+  LIMIT: '/limit',
   VERIFY_EXTERNAL: '/verify-external',
   GRANT_PROGRAMS: '/inter-project-trading-campaigns',
 }
@@ -343,3 +344,12 @@ export enum FARM_TAB {
   MY_FARMS = 'my_farms',
   VESTING = 'vesting',
 }
+
+export const EIP712Domain = [
+  { name: 'name', type: 'string' },
+  { name: 'version', type: 'string' },
+  { name: 'chainId', type: 'uint256' },
+  { name: 'verifyingContract', type: 'address' },
+]
+
+export const SUPPORT_LIMIT_ORDER = window.location.host !== 'kyberswap.com'

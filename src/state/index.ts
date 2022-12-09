@@ -12,6 +12,7 @@ import customizeDexes from './customizeDexes'
 import elasticFarm from './farms/elastic'
 import farms from './farms/reducer'
 import { updateVersion } from './global/actions'
+import limit from './limit/reducer'
 import lists from './lists/reducer'
 import mintV2 from './mint/proamm/reducer'
 import mint from './mint/reducer'
@@ -35,6 +36,7 @@ const store = configureStore({
     user,
     transactions,
     swap,
+    limit,
     mint,
     mintV2,
     burn,

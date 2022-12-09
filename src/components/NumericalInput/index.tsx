@@ -47,6 +47,7 @@ export const Input = React.memo(function InnerInput({
   value,
   onUserInput,
   placeholder,
+  maxLength = 79,
   ...rest
 }: {
   value: string | number
@@ -79,7 +80,7 @@ export const Input = React.memo(function InnerInput({
       pattern="^[0-9]*[.,]?[0-9]*$"
       placeholder={placeholder || '0.0'}
       minLength={1}
-      maxLength={79}
+      maxLength={maxLength}
       spellCheck="false"
     />
   )

@@ -1,5 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit'
 
+import { APP_PATHS } from 'constants/index'
 import { FeeConfig } from 'hooks/useSwapV2Callback'
 import { Aggregator } from 'utils/aggregator'
 import { queryStringToObject } from 'utils/string'
@@ -11,7 +12,6 @@ import {
   replaceSwapState,
   resetSelectCurrency,
   selectCurrency,
-  setFeeConfig,
   setRecipient,
   setTrade,
   setTrendingSoonShowed,
@@ -45,8 +45,10 @@ export interface SwapState {
   readonly txHash: string | undefined
 }
 
-const { search } = window.location
-const { inputCurrency, outputCurrency } = queryStringToObject(search)
+const { search, pathname } = window.location
+const { inputCurrency = '', outputCurrency = '' } = pathname.startsWith(APP_PATHS.SWAP)
+  ? queryStringToObject(search)
+  : {}
 
 const initialState: SwapState = {
   independentField: Field.INPUT,
@@ -134,9 +136,7 @@ export default createReducer<SwapState>(initialState, builder =>
     .addCase(switchCurrenciesV2, state => {
       return {
         ...state,
-        // independentField: state.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
         independentField: Field.INPUT,
-        // typedValue: '',
         [Field.INPUT]: { currencyId: state[Field.OUTPUT].currencyId },
         [Field.OUTPUT]: { currencyId: state[Field.INPUT].currencyId },
       }
@@ -153,9 +153,6 @@ export default createReducer<SwapState>(initialState, builder =>
     })
     .addCase(chooseToSaveGas, (state, { payload: { saveGas } }) => {
       state.saveGas = saveGas
-    })
-    .addCase(setFeeConfig, (state, { payload: { feeConfig } }) => {
-      state.feeConfig = feeConfig
     })
     .addCase(setTrendingSoonShowed, state => {
       state.trendingSoonShowed = true

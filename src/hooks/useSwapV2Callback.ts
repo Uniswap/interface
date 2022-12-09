@@ -118,7 +118,7 @@ export function useSwapV2Callback(
 
     const value = BigNumber.from(trade.inputAmount.currency.isNative ? trade.inputAmount.quotient.toString() : 0)
     const onSwapWithBackendEncode = async (): Promise<string> => {
-      const hash = await sendEVMTransaction(
+      const response = await sendEVMTransaction(
         account,
         library,
         trade.routerAddress,
@@ -126,8 +126,8 @@ export function useSwapV2Callback(
         value,
         onHandleSwapResponse,
       )
-      if (hash === undefined) throw new Error('sendTransaction returned undefined.')
-      return hash
+      if (response?.hash === undefined) throw new Error('sendTransaction returned undefined.')
+      return response?.hash
     }
     const onSwapSolana = async (): Promise<string> => {
       if (!provider) throw new Error('Please connect wallet first')
