@@ -1,16 +1,18 @@
-import swapSrc from './images/swap.png'
-import walletsSrc from './images/wallets.png'
+import darkSwapSrc from './images/darkSwap.png'
+import darkWalletsSrc from './images/darkWallets.png'
+import lightSwapSrc from './images/lightSwap.png'
+import lightWalletsSrc from './images/lightWallets.png'
 
 export const CARDS = [
   {
     to: '/swap',
     title: 'Swap tokens',
-    description: 'Discover and swap top tokens on Ethereum, Polygon, Optimism, and more.',
+    description: 'Buy, sell, and explore tokens on Ethereum, Polygon, Optimism, and more.',
   },
   {
     to: '/nfts',
     title: 'Trade NFTs',
-    description: 'Buy & sell NFTs across marketplaces to find more listings at better prices.',
+    description: 'Buy and sell NFTs across marketplaces to find more listings at better prices.',
   },
   {
     to: '/pool',
@@ -29,13 +31,13 @@ export const STEPS = [
   {
     title: 'Connect a wallet',
     description: 'Connect your preferred crypto wallet to the Uniswap Interface.',
-    lightImgSrc: walletsSrc,
-    darkImgSrc: walletsSrc,
+    lightImgSrc: lightWalletsSrc,
+    darkImgSrc: darkWalletsSrc,
   },
   {
     title: 'Swap!',
     description: 'Trade crypto and NFTs through Uniswap’s platform',
-    lightImgSrc: swapSrc,
-    darkImgSrc: swapSrc,
+    lightImgSrc: lightSwapSrc,
+    darkImgSrc: darkSwapSrc,
   },
 ]
