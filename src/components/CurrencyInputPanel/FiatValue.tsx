@@ -1,14 +1,19 @@
-import { Trans } from '@lingui/macro'
 // eslint-disable-next-line no-restricted-imports
-import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import { Spinner, StyledPolling } from 'components/swap/SwapDetailsDropdown'
-import { useMemo } from 'react'
-import { useTheme } from 'styled-components/macro'
+import { LoadingBubble } from 'components/Tokens/loading'
+import { MouseoverTooltip } from 'components/Tooltip'
+import { useEffect, useMemo, useState } from 'react'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { ThemedText } from '../../theme'
 import { warningSeverity } from '../../utils/prices'
-import { MouseoverTooltip } from '../Tooltip'
+
+const FiatLoadingBubble = styled(LoadingBubble)`
+  border-radius: 4px;
+  width: 4rem;
+  height: 1rem;
+`
 
 export function FiatValue({
   fiatValue,
@@ -20,6 +25,7 @@ export function FiatValue({
   isLoading?: boolean
 }) {
   const theme = useTheme()
+  const [showLoadingPlaceholder, setShowLoadingPlaceholder] = useState(false)
   const priceImpactColor = useMemo(() => {
     if (!priceImpact) return undefined
     if (priceImpact.lessThan('0')) return theme.deprecated_green1
@@ -32,19 +38,27 @@ export function FiatValue({
   const p = Number(fiatValue?.toFixed())
   const visibleDecimalPlaces = p < 1.05 ? 4 : 2
 
+  useEffect(() => {
+    if (isLoading) {
+      const timeout = setTimeout(() => setShowLoadingPlaceholder(true), 200)
+      return () => clearTimeout(timeout)
+    } else {
+      setShowLoadingPlaceholder(false)
+      return
+    }
+  }, [isLoading])
+
   return (
     <ThemedText.DeprecatedBody fontSize={14} color={theme.textSecondary}>
-      {isLoading ? (
-        <StyledPolling color={theme.gray500}>
-          <Spinner />
-        </StyledPolling>
+      {showLoadingPlaceholder ? (
+        <FiatLoadingBubble />
       ) : (
         <div>
           {fiatValue && <>${fiatValue?.toFixed(visibleDecimalPlaces, { groupSeparator: ',' })}</>}
           {priceImpact && (
             <span style={{ color: priceImpactColor }}>
               {' '}
-              <MouseoverTooltip text={t`The estimated difference between the USD values of input and output amounts.`}>
+              <MouseoverTooltip text="The estimated difference between the USD values of input and output amounts.">
                 (<Trans>{priceImpact.multiply(-1).toSignificant(3)}%</Trans>)
               </MouseoverTooltip>
             </span>

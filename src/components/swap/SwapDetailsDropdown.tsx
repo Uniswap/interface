@@ -54,7 +54,7 @@ const RotatingArrow = styled(ChevronDown)<{ open?: boolean }>`
   transition: transform 0.1s linear;
 `
 
-export const StyledPolling = styled.div`
+const StyledPolling = styled.div`
   display: flex;
   height: 16px;
   width: 16px;
@@ -89,7 +89,7 @@ const rotate360 = keyframes`
   }
 `
 
-export const Spinner = styled.div`
+const Spinner = styled.div`
   animation: ${rotate360} 1s cubic-bezier(0.83, 0, 0.17, 1) infinite;
   transform: translateZ(0);
   border-top: 1px solid transparent;
