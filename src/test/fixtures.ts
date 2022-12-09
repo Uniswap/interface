@@ -12,7 +12,7 @@ import WETH_ABI from 'src/abis/weth.json'
 import { config } from 'src/config'
 import { NATIVE_ADDRESS, SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
-import { DAI, WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
+import { DAI, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import { AssetType } from 'src/entities/assets'
 import { ContractManager } from 'src/features/contracts/ContractManager'
 import { AppNotificationType } from 'src/features/notifications/types'
@@ -26,6 +26,8 @@ import {
 import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
+
+export const MainnetEth = nativeOnChain(ChainId.Mainnet)
 
 export const account: Account = {
   type: AccountType.SignerMnemonic,
