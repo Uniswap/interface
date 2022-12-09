@@ -2,7 +2,6 @@ import {
   ACTIVE_CHAINS,
   AMPLITUDE_API_URL,
   AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY,
-  COINGECKO_API_URL,
   DEBUG,
   INFURA_PROJECT_ID,
   LOG_BUFFER_SIZE,
@@ -25,7 +24,6 @@ export interface Config {
   activeChains: ChainIdTo<ChainState>
   amplitudeExperimentsDeploymentKey: string
   amplitudeApiUrl: string
-  coingeckoApiUrl: string
   debug: boolean
   moonpayApiKey: string
   moonpayApiUrl: string
@@ -45,7 +43,6 @@ const _config: Config = {
   amplitudeApiUrl: AMPLITUDE_API_URL,
   amplitudeExperimentsDeploymentKey:
     process.env.AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY || AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY,
-  coingeckoApiUrl: COINGECKO_API_URL,
   debug: parseBoolean(DEBUG),
   moonpayApiKey: process.env.MOONPAY_API_KEY || MOONPAY_API_KEY,
   moonpayApiUrl: process.env.MOONPAY_API_URL || MOONPAY_API_URL,

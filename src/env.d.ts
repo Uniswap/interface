@@ -4,7 +4,6 @@ declare module 'react-native-dotenv' {
   export const ACTIVE_CHAINS: string
   export const AMPLITUDE_API_URL: string
   export const AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY: string
-  export const COINGECKO_API_URL: string
   export const DEBUG: string
   export const MOONPAY_API_KEY: string
   export const MOONPAY_API_URL: string
