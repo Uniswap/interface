@@ -14,7 +14,7 @@ const StyledCard = styled.div<{ isDarkMode: boolean }>`
   height: 400px;
   border-radius: 24px;
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease}  background-color`};
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1px solid ${({ theme, isDarkMode }) => (isDarkMode ? 'transparent' : theme.backgroundOutline)};
 
   &:hover {
     background-color: ${({ theme }) => theme.backgroundModule};
