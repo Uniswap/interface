@@ -133,7 +133,7 @@ const WalletDropdown = ({ setMenu }: { setMenu: (state: MenuState) => void }) =>
       )}
       <Divider />
       {isAuthenticated && (
-        <div>
+        <>
           <ToggleMenuItem data-testid="wallet-transactions" onClick={() => setMenu(MenuState.TRANSACTIONS)}>
             <DefaultText>
               <Trans>Transactions</Trans>{' '}
@@ -156,7 +156,7 @@ const WalletDropdown = ({ setMenu }: { setMenu: (state: MenuState) => void }) =>
               />
             </LatestPendingTxnBox>
           )}
-        </div>
+        </>
       )}
       <ToggleMenuItem data-testid="wallet-select-language" onClick={() => setMenu(MenuState.LANGUAGE)}>
         <DefaultText>
