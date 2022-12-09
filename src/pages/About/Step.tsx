@@ -1,55 +1,37 @@
 import styled from 'styled-components/macro'
 
-const StyledStep = styled.div`
+const StyledStep = styled.div<{ selected: boolean }>`
   cursor: pointer;
   display: flex;
-  gap: 36px;
   padding: 24px 0;
+  color: ${({ theme, selected }) => (selected ? theme.textPrimary : theme.textSecondary)};
+  font-size: 36px;
+  line-height: 44px;
 
   &:not(:last-of-type) {
     border-bottom: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
   }
 `
 
-const StepTitle = styled.div`
-  color: ${({ theme }) => theme.textPrimary};
-  font-size: 36px;
-  line-height: 44px;
-  font-weight: 600;
-`
-
-const StepDescription = styled.div`
-  color: ${({ theme }) => theme.textSecondary};
-  font-size: 24px;
-  line-height: 36px;
-`
-
-const StepIndex = styled.div`
-  color: ${({ theme }) => theme.textPrimary};
-  font-size: 36px;
-  line-height: 44px;
+const StepIndex = styled.span`
+  margin-right: 36px;
 `
 
 const Step = ({
   index,
   title,
-  description,
-  expanded,
-  onClick,
+  onSelect,
+  selected,
 }: {
   index: number
   title: string
-  description: string
-  onClick: () => void
-  expanded?: boolean
+  onSelect: () => void
+  selected: boolean
 }) => {
   return (
-    <StyledStep onClick={onClick}>
+    <StyledStep onClick={onSelect} onMouseEnter={onSelect} selected={selected}>
       <StepIndex>{index + 1}</StepIndex>
-      <div>
-        <StepTitle>{title}</StepTitle>
-        {expanded && <StepDescription>{description}</StepDescription>}
-      </div>
+      {title}
     </StyledStep>
   )
 }
