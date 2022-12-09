@@ -74,6 +74,11 @@ const SubText = styled.h3`
   }
 `
 
+const SubTextContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`
+
 const CTAButton = styled(BaseButton)`
   padding: 16px;
   border-radius: 24px;
@@ -152,7 +157,9 @@ export default function Landing() {
       <PageWrapper isDarkMode={isDarkMode}>
         <TitleWrapper>
           <TitleText isDarkMode={isDarkMode}>Trade crypto & NFTs with confidence.</TitleText>
-          <SubText>Uniswap is the best way to buy, sell, and manage your tokens and NFTs.</SubText>
+          <SubTextContainer>
+            <SubText>Uniswap is the best way to buy, sell, and manage your tokens and NFTs.</SubText>
+          </SubTextContainer>
         </TitleWrapper>
         <ActionsWrapper>
           <ButtonCTA as={Link} to="/swap">
