@@ -4,11 +4,11 @@ import { BREAKPOINTS } from 'theme'
 export const Title = styled.h1<{ isDarkMode: boolean }>`
   color: transparent;
   font-size: 48px;
-  font-weight: 600;
+  font-weight: 500;
   margin-bottom: 0px;
   background: ${({ isDarkMode }) =>
     isDarkMode
-      ? 'linear-gradient(20deg, rgb(255, 244, 207) 10%, rgb(255, 87, 218) 100%)'
+      ? 'conic-gradient(from 180deg at 50% 50%, #FFF4CF 0deg, #EBFFBF 95.62deg, #E3CDFF 175.81deg, #FFCDF4 269.07deg, #FFFBEF 360deg);'
       : 'linear-gradient(10deg, rgb(255,79,184) 0%, rgb(255,159,251) 100%)'};
 
   background-clip: text;
@@ -22,7 +22,7 @@ export const Title = styled.h1<{ isDarkMode: boolean }>`
 
 export const SubTitle = styled.h2<{ isDarkMode?: boolean }>`
   margin: 0;
-  font-weight: 600;
+  font-weight: 500;
   max-width: 340px;
   color: transparent;
   font-size: 36px;
@@ -30,7 +30,7 @@ export const SubTitle = styled.h2<{ isDarkMode?: boolean }>`
 
   background: ${({ isDarkMode }) =>
     isDarkMode
-      ? 'linear-gradient(20deg, rgb(255, 244, 207) 10%, rgb(255, 87, 218) 100%)'
+      ? 'conic-gradient(from 180deg at 50% 50%, #FFF4CF 0deg, #EBFFBF 95.62deg, #E3CDFF 175.81deg, #FFCDF4 269.07deg, #FFFBEF 360deg);'
       : 'linear-gradient(10deg, rgb(255,79,184) 0%, rgb(255,159,251) 100%)'};
 
   background-clip: text;
