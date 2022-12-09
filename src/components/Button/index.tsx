@@ -7,7 +7,7 @@ import { RowBetween } from '../Row'
 
 type ButtonProps = Omit<ButtonPropsOriginal, 'css'>
 
-const BaseButton = styled(RebassButton)<
+export const BaseButton = styled(RebassButton)<
   {
     padding?: string
     width?: string
@@ -211,30 +211,15 @@ export const ButtonEmpty = styled(BaseButton)`
   }
 `
 
-export const ButtonCTA = styled(BaseButton)<{ redesignFlag?: boolean }>`
-  background: linear-gradient(10deg, rgba(255, 0, 199, 1) 0%, rgba(255, 159, 251, 1) 100%);
-  width: fit-content;
-  border-radius: 24px;
-  border: none;
-  padding: 16px 77.5px;
-  margin-left: 12px;
-  margin-bottom: 12px;
-  color: ${({ theme }) => theme.white};
-  &:hover {
-    opacity: 75%;
-  }
-`
 export const ButtonText = styled(BaseButton)`
   padding: 0;
   width: fit-content;
   background: none;
   text-decoration: none;
   &:focus {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     text-decoration: underline;
   }
   &:hover {
-    // text-decoration: underline;
     opacity: 0.9;
   }
   &:active {

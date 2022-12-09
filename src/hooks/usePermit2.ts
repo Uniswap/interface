@@ -11,7 +11,8 @@ import { PermitSignature, usePermitAllowance, useUpdatePermitAllowance } from '.
 import { useTokenAllowance, useUpdateTokenAllowance } from './useTokenAllowance'
 
 export enum PermitState {
-  UNKNOWN,
+  INVALID,
+  LOADING,
   PERMIT_NEEDED,
   PERMITTED,
 }
@@ -19,7 +20,7 @@ export enum PermitState {
 export interface Permit {
   state: PermitState
   signature?: PermitSignature
-  callback?: () => Promise<{
+  callback?: (sPendingApproval: boolean) => Promise<{
     response: ContractTransaction
     info: ApproveTransactionInfo
   } | void>
@@ -29,10 +30,18 @@ export default function usePermit(amount?: CurrencyAmount<Token>, spender?: stri
   const { account } = useWeb3React()
   const tokenAllowance = useTokenAllowance(amount?.currency, account, PERMIT2_ADDRESS)
   const updateTokenAllowance = useUpdateTokenAllowance(amount, PERMIT2_ADDRESS)
+  const isAllowed = useMemo(
+    () => amount && (tokenAllowance?.greaterThan(amount) || tokenAllowance?.equalTo(amount)),
+    [amount, tokenAllowance]
+  )
 
   const permitAllowance = usePermitAllowance(amount?.currency, spender)
   const [permitAllowanceAmount, setPermitAllowanceAmount] = useState(permitAllowance?.amount)
   useEffect(() => setPermitAllowanceAmount(permitAllowance?.amount), [permitAllowance?.amount])
+  const isPermitted = useMemo(
+    () => amount && permitAllowanceAmount?.gte(amount.quotient.toString()),
+    [amount, permitAllowanceAmount]
+  )
 
   const [signature, setSignature] = useState<PermitSignature>()
   const updatePermitAllowance = useUpdatePermitAllowance(
@@ -41,12 +50,10 @@ export default function usePermit(amount?: CurrencyAmount<Token>, spender?: stri
     permitAllowance?.nonce,
     setSignature
   )
-
-  const updateTokenAndPermitAllowance = useCallback(async () => {
-    const info = await updateTokenAllowance()
-    await updatePermitAllowance()
-    return info
-  }, [updatePermitAllowance, updateTokenAllowance])
+  const isSigned = useMemo(
+    () => amount && signature?.details.token === amount?.currency.address && signature?.spender === spender,
+    [amount, signature?.details.token, signature?.spender, spender]
+  )
 
   // Trigger a re-render if either tokenAllowance or signature expire.
   useInterval(
@@ -64,27 +71,32 @@ export default function usePermit(amount?: CurrencyAmount<Token>, spender?: stri
     true
   )
 
-  return useMemo(() => {
-    if (!amount || !tokenAllowance) {
-      return { state: PermitState.UNKNOWN }
-    } else if (tokenAllowance.greaterThan(amount) || tokenAllowance.equalTo(amount)) {
-      if (permitAllowanceAmount?.gte(amount.quotient.toString())) {
-        return { state: PermitState.PERMITTED }
-      } else if (signature?.details.token === amount.currency.address && signature?.spender === spender) {
-        return { state: PermitState.PERMITTED, signature }
-      } else {
-        return { state: PermitState.PERMIT_NEEDED, callback: updatePermitAllowance }
+  const callback = useCallback(
+    async (isPendingApproval: boolean) => {
+      let info
+      if (!isAllowed && !isPendingApproval) {
+        info = await updateTokenAllowance()
       }
-    } else {
-      return { state: PermitState.PERMIT_NEEDED, callback: updateTokenAndPermitAllowance }
+      if (!isPermitted && !isSigned) {
+        await updatePermitAllowance()
+      }
+      return info
+    },
+    [isAllowed, isPermitted, isSigned, updatePermitAllowance, updateTokenAllowance]
+  )
+
+  return useMemo(() => {
+    if (!amount) {
+      return { state: PermitState.INVALID }
+    } else if (!tokenAllowance || !permitAllowance) {
+      return { state: PermitState.LOADING }
+    } else if (isAllowed) {
+      if (isPermitted) {
+        return { state: PermitState.PERMITTED }
+      } else if (isSigned) {
+        return { state: PermitState.PERMITTED, signature }
+      }
     }
-  }, [
-    amount,
-    permitAllowanceAmount,
-    signature,
-    spender,
-    tokenAllowance,
-    updatePermitAllowance,
-    updateTokenAndPermitAllowance,
-  ])
+    return { state: PermitState.PERMIT_NEEDED, callback }
+  }, [amount, callback, isAllowed, isPermitted, isSigned, permitAllowance, signature, tokenAllowance])
 }
