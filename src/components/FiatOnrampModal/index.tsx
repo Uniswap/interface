@@ -76,7 +76,6 @@ export default function FiatOnrampModal() {
         method: 'POST',
         body: JSON.stringify({
           colorCode: theme.accentAction,
-          currencyCode: 'eth',
           defaultCurrencyCode: 'eth',
           redirectUrl: 'https://app.uniswap.org/#/swap',
           walletAddress: account,
