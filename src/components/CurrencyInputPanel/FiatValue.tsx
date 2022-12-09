@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
+import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
@@ -36,17 +37,15 @@ export function FiatValue({
     return theme.deprecated_red1
   }, [priceImpact, theme.deprecated_green1, theme.deprecated_red1, theme.deprecated_text3, theme.deprecated_yellow1])
 
-  const p = Number(fiatValue?.toFixed())
-  const visibleDecimalPlaces = p < 1.05 ? 4 : 2
-
   useEffect(() => {
-    if (isLoading) {
-      const timeout = setTimeout(() => setShowLoadingPlaceholder(true), 200)
-      return () => clearTimeout(timeout)
+    const stale = false
+    let timeoutId = 0
+    if (isLoading && !stale) {
+      timeoutId = setTimeout(() => setShowLoadingPlaceholder(true), 200) as unknown as number
     } else {
       setShowLoadingPlaceholder(false)
-      return
     }
+    return () => clearTimeout(timeoutId)
   }, [isLoading])
 
   return (
@@ -55,7 +54,7 @@ export function FiatValue({
         <FiatLoadingBubble />
       ) : (
         <div>
-          {fiatValue && <>${fiatValue?.toFixed(visibleDecimalPlaces, { groupSeparator: ',' })}</>}
+          {fiatValue && <>{formatCurrencyAmount(fiatValue, NumberType.FiatTokenPrice)}</>}
           {priceImpact && (
             <span style={{ color: priceImpactColor }}>
               {' '}
