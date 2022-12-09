@@ -1,7 +1,7 @@
-import { BaseVariant, FeatureFlag, useBaseFlag } from '../index'
+import { BaseVariant } from '../index'
 
 export function useLandingPageFlag(): BaseVariant {
-  return useBaseFlag(FeatureFlag.landingPage)
+  return BaseVariant.Enabled
 }
 
 export { BaseVariant as LandingPageVariant }
