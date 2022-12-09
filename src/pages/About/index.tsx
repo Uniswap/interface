@@ -16,7 +16,7 @@ const Page = styled.span<{ isDarkMode: boolean; titleHeight: number }>`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding-top: calc(100vh - ${({ titleHeight }) => titleHeight + 72}px);
+  padding-top: calc(100vh - ${({ titleHeight }) => titleHeight + 200}px);
 `
 
 const Panels = styled.div`
@@ -126,7 +126,7 @@ export default function About() {
   const [titleHeight, setTitleHeight] = useState(0)
   useLayoutEffect(() => {
     if (titleRef.current) {
-      setTitleHeight(titleRef.current.clientHeight)
+      setTitleHeight(titleRef.current.scrollHeight)
     }
   }, [])
 
