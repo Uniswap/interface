@@ -1,3 +1,4 @@
+import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
 import { ButtonOutlined } from 'components/Button'
 import { useLayoutEffect, useRef, useState } from 'react'
