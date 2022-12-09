@@ -168,7 +168,7 @@ export default function Landing() {
         </TitleWrapper>
         <ActionsWrapper>
           <ButtonCTA as={Link} to="/swap">
-            <ButtonCTAText>Continue</ButtonCTAText>
+            <ButtonCTAText>Swap</ButtonCTAText>
           </ButtonCTA>
           <ButtonCTASecondary as={Link} to="/about">
             <ButtonCTAText>Learn More</ButtonCTAText>
