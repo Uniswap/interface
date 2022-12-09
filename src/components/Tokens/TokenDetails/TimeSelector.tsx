@@ -15,7 +15,6 @@ const TimeOptionsContainer = styled.div`
   justify-content: flex-end;
   margin-top: 4px;
   gap: 4px;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 16px;
   height: 40px;
   padding: 4px;
