@@ -224,6 +224,23 @@ query TransactionHistoryUpdater($addresses: [String!]!) {
   }
 }
 
+query Token($chain: Chain!, $address: String) {
+  token(chain: $chain, address: $address) {
+    id
+    name
+    symbol
+    decimals
+    chain
+    address
+    project {
+      id
+      logoUrl
+      safetyLevel 
+      isSpam
+    }
+  }
+}
+
 query TokenDetailsScreen($contract: ContractInput!) {
   tokens(contracts: [$contract]) {
     id

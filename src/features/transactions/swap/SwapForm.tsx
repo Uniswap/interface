@@ -62,6 +62,7 @@ export function SwapForm({
   const {
     chainId,
     currencies,
+    currencyLogos,
     currencyAmounts,
     currencyBalances,
     exactCurrencyField,
@@ -181,6 +182,7 @@ export function SwapForm({
                 currency={currencies[CurrencyField.INPUT]}
                 currencyAmount={currencyAmounts[CurrencyField.INPUT]}
                 currencyBalance={currencyBalances[CurrencyField.INPUT]}
+                currencyLogo={currencyLogos[CurrencyField.INPUT]}
                 dimTextColor={exactCurrencyField === CurrencyField.OUTPUT && swapDataRefreshing}
                 focus={focusOnCurrencyField === CurrencyField.INPUT}
                 isOnScreen={!showingSelectorScreen}
@@ -243,6 +245,7 @@ export function SwapForm({
                   currency={currencies[CurrencyField.OUTPUT]}
                   currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
                   currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
+                  currencyLogo={currencyLogos[CurrencyField.OUTPUT]}
                   dimTextColor={exactCurrencyField === CurrencyField.INPUT && swapDataRefreshing}
                   focus={focusOnCurrencyField === CurrencyField.OUTPUT}
                   isOnScreen={!showingSelectorScreen}

@@ -66,6 +66,7 @@ export function TransferTokenForm({
     recipient,
     isUSDInput = false,
     currencyIn,
+    currencyInLogo,
     nftIn,
     chainId,
   } = derivedTransferInfo
@@ -225,6 +226,7 @@ export function TransferTokenForm({
                 currency={currencyIn}
                 currencyAmount={currencyAmounts[CurrencyField.INPUT]}
                 currencyBalance={currencyBalances[CurrencyField.INPUT]}
+                currencyLogo={currencyInLogo}
                 isOnScreen={!showingSelectorScreen}
                 isUSDInput={isUSDInput}
                 selection={inputSelection}

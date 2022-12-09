@@ -15,7 +15,6 @@ import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { currencyAddress, isNativeCurrencyAddress } from 'src/utils/currencyId'
 import { useAsyncData } from 'src/utils/hooks'
-import { logger } from 'src/utils/logger'
 
 export interface BaseTransferParams {
   type: AssetType
@@ -88,11 +87,6 @@ function getTransferParams(
   const assetType = currencyTypes[CurrencyField.INPUT]
 
   if (!chainId || !tokenAddress || !recipient || !assetType) {
-    logger.error(
-      'hooks',
-      'useUpdateTransferGasEstimate',
-      'One of the required parameters is undefined'
-    )
     return
   }
 
@@ -100,11 +94,6 @@ function getTransferParams(
     case AssetType.ERC1155:
     case AssetType.ERC721: {
       if (!nftIn) {
-        logger.error(
-          'hooks',
-          'useUpdateTransferGasEstimate',
-          'Asset type corresponds to a NFT but `nftIn` is undefined'
-        )
         return
       }
 
@@ -120,11 +109,6 @@ function getTransferParams(
 
     case AssetType.Currency: {
       if (!currencyIn || amount === undefined) {
-        logger.error(
-          'hooks',
-          'useUpdateTransferGasEstimate',
-          'Asset type corresponds to a Currency but `currencyIn` or `amount` is undefined'
-        )
         return
       }
 

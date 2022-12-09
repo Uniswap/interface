@@ -177,8 +177,8 @@ export function useAllTransactionsBetweenAddresses(
 const MIN_INPUT_DECIMALPAD_GAP = 50
 
 export function useShouldShowNativeKeyboard() {
-  const [containerHeight, setContainerHeight] = useState<number | undefined>()
-  const [decimalPadY, setDecimalPadY] = useState<number | undefined>()
+  const [containerHeight, setContainerHeight] = useState<number>()
+  const [decimalPadY, setDecimalPadY] = useState<number>()
 
   const onInputPanelLayout = (event: LayoutChangeEvent) => {
     if (containerHeight === undefined) {

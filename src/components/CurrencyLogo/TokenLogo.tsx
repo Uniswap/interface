@@ -9,7 +9,7 @@ import { ChainId } from 'src/constants/chains'
 import { iconSizes } from 'src/styles/sizing'
 
 interface TokenLogoProps {
-  url?: string
+  url?: string | null
   symbol?: string
   chainId?: ChainId
   size?: number

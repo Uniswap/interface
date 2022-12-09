@@ -1,11 +1,6 @@
 import { ACTIVE_CHAINS } from 'react-native-dotenv'
-import {
-  DEFAULT_ACTIVE_LIST_URLS,
-  DEFAULT_LIST_OF_LISTS,
-} from 'src/constants/tokenLists/tokenLists'
 import { chainListToStateMap } from 'src/features/chains/utils'
 import { ModalName } from 'src/features/telemetry/constants'
-import { BY_URL_DEFAULT_LISTS } from 'src/features/tokenLists/reducer'
 import { parseActiveChains } from 'src/utils/chainId'
 
 export const initialSchema = {
@@ -30,11 +25,7 @@ export const initialSchema = {
     isInitialized: false,
   },
   saga: {},
-  tokenLists: {
-    lastInitializedDefaultListOfLists: DEFAULT_LIST_OF_LISTS,
-    byUrl: BY_URL_DEFAULT_LISTS,
-    activeListUrls: DEFAULT_ACTIVE_LIST_URLS,
-  },
+  tokenLists: {},
   tokens: {
     watchedTokens: {},
     customTokens: {},
@@ -199,6 +190,8 @@ export const v27Schema = { ...v26Schema }
 
 export const v28Schema = { ...v27Schema }
 
+export const v29Schema = { ...v28Schema }
+
 // TODO: use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = () => v28Schema
+export const getSchema = () => v29Schema

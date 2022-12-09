@@ -3,7 +3,7 @@ import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { CurrencyLogo } from 'src/components/CurrencyLogo'
+import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -15,11 +15,13 @@ interface SelectTokenButtonProps {
   showNonZeroBalancesOnly?: boolean
   onPress: () => void
   selectedCurrency?: Currency | null
+  selectedCurrencyLogo?: string | null
 }
 
 export function SelectTokenButton({
   showNonZeroBalancesOnly,
   selectedCurrency,
+  selectedCurrencyLogo,
   onPress,
 }: SelectTokenButtonProps) {
   const { t } = useTranslation()
@@ -35,7 +37,12 @@ export function SelectTokenButton({
       onPress={onPress}>
       {selectedCurrency ? (
         <Flex centered row flexDirection="row" gap="xxs" p="xxs">
-          <CurrencyLogo currency={selectedCurrency} size={iconSizes.xl} />
+          <TokenLogo
+            chainId={selectedCurrency.chainId}
+            size={iconSizes.xl}
+            symbol={selectedCurrency.symbol}
+            url={selectedCurrencyLogo}
+          />
           <Text color="textPrimary" pl="xxs" variant="buttonLabelLarge">
             {selectedCurrency.symbol}
           </Text>

@@ -33,6 +33,30 @@ export const usePersistedApolloClient = () => {
             fields: {
               // relayStylePagination function unfortunately generates a field policy that ignores args
               nftBalances: relayStylePagination(['ownerAddress']),
+
+              // tell apollo client how to reference Token items in the cache after being fetched by queries that return Token[]
+              token: {
+                read(_, { args, toReference }) {
+                  return toReference({
+                    __typename: 'Token',
+                    chain: args?.chain,
+                    address: args?.address,
+                  })
+                },
+              },
+            },
+          },
+          Token: {
+            // key by chain, address combination so that Token(chain, address) endpoint can read from cache
+            keyFields: ['chain', 'address'],
+            fields: {
+              address: {
+                read(address: string | null) {
+                  // backend endpoint sometimes returns checksummed, sometimes lowercased addresses
+                  // always use lowercased addresses in our app for consistency
+                  return address?.toLowerCase() ?? null
+                },
+              },
             },
           },
         },

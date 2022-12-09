@@ -24,6 +24,7 @@ import {
   v25Schema,
   v26Schema,
   v27Schema,
+  v28Schema,
   v2Schema,
   v3Schema,
   v4Schema,
@@ -49,7 +50,6 @@ import { initialModalState } from 'src/features/modals/modalSlice'
 import { initialNotificationsState } from 'src/features/notifications/notificationSlice'
 import { initialProvidersState } from 'src/features/providers/providerSlice'
 import { ModalName } from 'src/features/telemetry/constants'
-import { initialTokenListsState } from 'src/features/tokenLists/reducer'
 import { initialTokensState } from 'src/features/tokens/tokensSlice'
 import { initialTransactionsState, TransactionState } from 'src/features/transactions/slice'
 import {
@@ -114,7 +114,7 @@ describe('Redux state migrations', () => {
       providers: initialProvidersState,
       saga: {},
       searchHistory: initialSearchHistoryState,
-      tokenLists: initialTokenListsState,
+      tokenLists: {},
       tokens: initialTokensState,
       transactions: initialTransactionsState,
       wallet: initialWalletState,
@@ -834,5 +834,14 @@ describe('Redux state migrations', () => {
     }
     const v28 = migrations[28](v27Stub)
     expect(v28.wallet.settings.tokensMetadataDisplayType).toBeUndefined()
+  })
+
+  it('migrates from v28 to v29', () => {
+    const v28Stub = {
+      ...v28Schema,
+    }
+    const v29 = migrations[29](v28Stub)
+    expect(v29.tokenLists).toBeUndefined()
+    expect(v29.tokens.customTokens).toBeUndefined()
   })
 })

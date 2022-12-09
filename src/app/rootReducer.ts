@@ -17,7 +17,6 @@ import { multicall } from 'src/features/multicall'
 import { notificationReducer } from 'src/features/notifications/notificationSlice'
 import { providersReducer } from 'src/features/providers/providerSlice'
 import { routingApi } from 'src/features/routing/routingApi'
-import { tokenListsReducer } from 'src/features/tokenLists/reducer'
 import { tokensReducer } from 'src/features/tokens/tokensSlice'
 import { transactionReducer } from 'src/features/transactions/slice'
 import { trmApi } from 'src/features/trm/api'
@@ -41,7 +40,6 @@ export const rootReducer = combineReducers({
   providers: providersReducer,
   saga: monitoredSagaReducers,
   searchHistory: searchHistoryReducer,
-  tokenLists: tokenListsReducer,
   tokens: tokensReducer,
   transactions: transactionReducer,
   wallet: walletReducer,

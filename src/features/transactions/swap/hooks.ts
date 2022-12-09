@@ -29,7 +29,7 @@ import { useSimulatedGasLimit } from 'src/features/routing/hooks'
 import { STABLECOIN_AMOUNT_OUT, useUSDCPrice } from 'src/features/routing/useUSDCPrice'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { EventName } from 'src/features/telemetry/constants'
-import { useCurrency } from 'src/features/tokens/useCurrency'
+import { useCurrencyInfo } from 'src/features/tokens/useCurrency'
 import { PERMITTABLE_TOKENS } from 'src/features/transactions/permit/permittableTokens'
 import { usePermitSignature } from 'src/features/transactions/permit/usePermitSignature'
 import { getBaseTradeAnalyticsProperties } from 'src/features/transactions/swap/analytics'
@@ -69,6 +69,10 @@ export type DerivedSwapInfo<
   currencies: BaseDerivedInfo<TInput>['currencies'] & {
     [CurrencyField.OUTPUT]: NullUndefined<TOutput>
   }
+  currencyLogos: {
+    [CurrencyField.INPUT]: NullUndefined<string>
+    [CurrencyField.OUTPUT]: NullUndefined<string>
+  }
   currencyAmounts: BaseDerivedInfo<TInput>['currencyAmounts'] & {
     [CurrencyField.OUTPUT]: NullUndefined<CurrencyAmount<TOutput>>
   }
@@ -98,15 +102,25 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
 
   const activeAccount = useActiveAccount()
 
-  const currencyIn = useCurrency(
-    currencyAssetIn ? buildCurrencyId(currencyAssetIn.chainId, currencyAssetIn?.address) : undefined
+  const currencyInInfo = useCurrencyInfo(
+    currencyAssetIn ? buildCurrencyId(currencyAssetIn.chainId, currencyAssetIn.address) : undefined
   )
 
-  const currencyOut = useCurrency(
+  const currencyOutInfo = useCurrencyInfo(
     currencyAssetOut
-      ? buildCurrencyId(currencyAssetOut.chainId, currencyAssetOut?.address)
+      ? buildCurrencyId(currencyAssetOut.chainId, currencyAssetOut.address)
       : undefined
   )
+
+  const currencyLogos = useMemo(() => {
+    return {
+      [CurrencyField.INPUT]: currencyInInfo?.logoUrl,
+      [CurrencyField.OUTPUT]: currencyOutInfo?.logoUrl,
+    }
+  }, [currencyInInfo, currencyOutInfo])
+
+  const currencyIn = currencyInInfo?.currency
+  const currencyOut = currencyOutInfo?.currency
 
   const currencies = useMemo(() => {
     return {
@@ -200,6 +214,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
       currencies,
       currencyAmounts,
       currencyBalances,
+      currencyLogos,
       exactAmountToken,
       exactAmountUSD,
       exactCurrencyField,
@@ -215,6 +230,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     currencies,
     currencyAmounts,
     currencyBalances,
+    currencyLogos,
     exactAmountToken,
     exactAmountUSD,
     exactCurrencyField,

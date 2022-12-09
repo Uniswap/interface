@@ -367,4 +367,11 @@ export const migrations = {
     delete newState.wallet.settings.tokensMetadataDisplayType
     return newState
   },
+
+  29: (state: any) => {
+    const newState = { ...state }
+    delete newState.tokenLists
+    delete newState.tokens?.customTokens
+    return newState
+  },
 }

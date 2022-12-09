@@ -22,6 +22,7 @@ interface CurrencyLogoOnlyProps extends CurrencyLogoProps {
   size: number
 }
 
+// TODO: Deprecate this in favor of TokenLogo
 export function CurrencyLogo({ currency, size = iconSizes.xxxl }: CurrencyLogoProps) {
   const notOnMainnet = currency && currency.chainId !== ChainId.Mainnet
 

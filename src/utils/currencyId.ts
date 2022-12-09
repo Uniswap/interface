@@ -59,7 +59,9 @@ export function currencyIdToAddress(_currencyId: string): Address {
 }
 
 // Similar to `currencyIdToAddress`, except native addresses are `null`.
-export function currencyIdToGraphQLAddress(_currencyId: string): Address | null {
+export function currencyIdToGraphQLAddress(_currencyId?: string): Address | null {
+  if (!_currencyId) return null
+
   const address = currencyIdToAddress(_currencyId)
 
   // backend only expects `null` when address is `NATIVE_ADDRESS`,

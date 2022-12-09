@@ -24,7 +24,6 @@ import { NotificationToastWrapper } from 'src/features/notifications/Notificatio
 import { initOneSignal } from 'src/features/notifications/Onesignal'
 import { initializeRemoteConfig } from 'src/features/remoteConfig'
 import { MarkNames } from 'src/features/telemetry/constants'
-import { TokenListUpdater } from 'src/features/tokenLists/updater'
 import { TransactionHistoryUpdater } from 'src/features/transactions/TransactionHistoryUpdater'
 import { useTrmPrefetch } from 'src/features/trm/api'
 import { useSignerAccounts } from 'src/features/wallet/hooks'
@@ -127,7 +126,6 @@ function DataUpdaters() {
       <TraceUserProperties />
       <TransactionHistoryUpdater />
       <MulticallUpdaters />
-      <TokenListUpdater />
     </>
   )
 }

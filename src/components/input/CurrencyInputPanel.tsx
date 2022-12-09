@@ -19,6 +19,7 @@ type RestyleProps = BackgroundColorProps<Theme>
 
 type CurrentInputPanelProps = {
   currency: Currency | null | undefined
+  currencyLogo?: string | null
   currencyAmount: CurrencyAmount<Currency> | null | undefined
   currencyBalance: CurrencyAmount<Currency> | null | undefined
   onShowTokenSelector: () => void
@@ -89,6 +90,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
     currency,
     currencyAmount,
     currencyBalance,
+    currencyLogo,
     onSetAmount,
     onSetMax,
     onShowTokenSelector,
@@ -214,6 +216,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
         <Flex row alignItems="center" gap="none">
           <SelectTokenButton
             selectedCurrency={currency}
+            selectedCurrencyLogo={currencyLogo}
             showNonZeroBalancesOnly={showNonZeroBalancesOnly}
             onPress={onShowTokenSelector}
           />

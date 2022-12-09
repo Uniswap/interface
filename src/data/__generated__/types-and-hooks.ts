@@ -66,6 +66,7 @@ export type AmountChange = {
 export type AssetActivity = {
   __typename?: 'AssetActivity';
   assetChanges: Array<Maybe<AssetChange>>;
+  chain: Chain;
   gasUsed?: Maybe<Scalars['Float']>;
   id: Scalars['ID'];
   timestamp: Scalars['Int'];
@@ -542,9 +543,9 @@ export type Query = {
   portfolios?: Maybe<Array<Maybe<Portfolio>>>;
   searchTokenProjects?: Maybe<Array<Maybe<TokenProject>>>;
   searchTokens?: Maybe<Array<Maybe<Token>>>;
+  token?: Maybe<Token>;
   tokenProjects?: Maybe<Array<Maybe<TokenProject>>>;
   tokens?: Maybe<Array<Maybe<Token>>>;
-  topTokenProjects?: Maybe<Array<Maybe<TokenProject>>>;
   topTokens?: Maybe<Array<Maybe<Token>>>;
 };
 
@@ -610,6 +611,12 @@ export type QuerySearchTokensArgs = {
 };
 
 
+export type QueryTokenArgs = {
+  address?: InputMaybe<Scalars['String']>;
+  chain: Chain;
+};
+
+
 export type QueryTokenProjectsArgs = {
   contracts: Array<ContractInput>;
 };
@@ -617,14 +624,6 @@ export type QueryTokenProjectsArgs = {
 
 export type QueryTokensArgs = {
   contracts: Array<ContractInput>;
-};
-
-
-export type QueryTopTokenProjectsArgs = {
-  currency?: InputMaybe<Currency>;
-  orderBy: MarketSortableField;
-  page: Scalars['Int'];
-  pageSize: Scalars['Int'];
 };
 
 
@@ -735,6 +734,7 @@ export type TokenProject = {
   name?: Maybe<Scalars['String']>;
   safetyLevel?: Maybe<SafetyLevel>;
   smallLogo?: Maybe<Image>;
+  spamCode?: Maybe<Scalars['Int']>;
   tokens: Array<Token>;
   twitterName?: Maybe<Scalars['String']>;
 };
@@ -882,6 +882,14 @@ export type TransactionHistoryUpdaterQueryVariables = Exact<{
 
 
 export type TransactionHistoryUpdaterQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', id: string, ownerAddress: string, assetActivities?: Array<{ __typename?: 'AssetActivity', id: string, timestamp: number } | null> | null } | null> | null };
+
+export type TokenQueryVariables = Exact<{
+  chain: Chain;
+  address?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type TokenQuery = { __typename?: 'Query', token?: { __typename?: 'Token', id: string, name?: string | null, symbol?: string | null, decimals?: number | null, chain: Chain, address?: string | null, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string | null, safetyLevel?: SafetyLevel | null, isSpam?: boolean | null } | null } | null };
 
 export type TokenDetailsScreenQueryVariables = Exact<{
   contract: ContractInput;
@@ -1440,6 +1448,53 @@ export function useTransactionHistoryUpdaterLazyQuery(baseOptions?: Apollo.LazyQ
 export type TransactionHistoryUpdaterQueryHookResult = ReturnType<typeof useTransactionHistoryUpdaterQuery>;
 export type TransactionHistoryUpdaterLazyQueryHookResult = ReturnType<typeof useTransactionHistoryUpdaterLazyQuery>;
 export type TransactionHistoryUpdaterQueryResult = Apollo.QueryResult<TransactionHistoryUpdaterQuery, TransactionHistoryUpdaterQueryVariables>;
+export const TokenDocument = gql`
+    query Token($chain: Chain!, $address: String) {
+  token(chain: $chain, address: $address) {
+    id
+    name
+    symbol
+    decimals
+    chain
+    address
+    project {
+      id
+      logoUrl
+      safetyLevel
+      isSpam
+    }
+  }
+}
+    `;
+
+/**
+ * __useTokenQuery__
+ *
+ * To run a query within a React component, call `useTokenQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTokenQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTokenQuery({
+ *   variables: {
+ *      chain: // value for 'chain'
+ *      address: // value for 'address'
+ *   },
+ * });
+ */
+export function useTokenQuery(baseOptions: Apollo.QueryHookOptions<TokenQuery, TokenQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TokenQuery, TokenQueryVariables>(TokenDocument, options);
+      }
+export function useTokenLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TokenQuery, TokenQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TokenQuery, TokenQueryVariables>(TokenDocument, options);
+        }
+export type TokenQueryHookResult = ReturnType<typeof useTokenQuery>;
+export type TokenLazyQueryHookResult = ReturnType<typeof useTokenLazyQuery>;
+export type TokenQueryResult = Apollo.QueryResult<TokenQuery, TokenQueryVariables>;
 export const TokenDetailsScreenDocument = gql`
     query TokenDetailsScreen($contract: ContractInput!) {
   tokens(contracts: [$contract]) {

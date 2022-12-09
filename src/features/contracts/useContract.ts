@@ -4,7 +4,6 @@ import { abi as MulticallABI } from '@uniswap/v3-periphery/artifacts/contracts/l
 import { Contract, ContractInterface } from 'ethers'
 import { useMemo } from 'react'
 import ERC20_ABI from 'src/abis/erc20.json'
-import ERC20_BYTES32_ABI from 'src/abis/erc20_bytes32.json'
 import { Erc20 } from 'src/abis/types'
 import { UniswapInterfaceMulticall } from 'src/abis/uniswapV3/types'
 import { useContractManager, useProviderManager } from 'src/app/walletContext'
@@ -34,10 +33,6 @@ export function useContract<T extends Contract = Contract>(
       return null
     }
   }, [chainId, addressOrAddressMap, ABI, provider, contractsManager]) as T
-}
-
-export function useBytes32TokenContract(chainId: ChainId, tokenAddress?: Address): Contract | null {
-  return useContract(chainId, tokenAddress, ERC20_BYTES32_ABI)
 }
 
 export function useMulticall2Contract(chainId: ChainId) {
