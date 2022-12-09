@@ -11,10 +11,15 @@ import { fromGraphQLChain } from 'src/utils/chainId'
 
 export interface TokenDetailsHeaderProps {
   data?: TokenDetailsScreenQuery
+  loading?: boolean
   onPressWarningIcon: () => void
 }
 
-export function TokenDetailsHeader({ data, onPressWarningIcon }: TokenDetailsHeaderProps) {
+export function TokenDetailsHeader({
+  data,
+  loading = false,
+  onPressWarningIcon,
+}: TokenDetailsHeaderProps) {
   const token = data?.tokens?.[0]
   const tokenProject = token?.project
 
@@ -26,7 +31,12 @@ export function TokenDetailsHeader({ data, onPressWarningIcon }: TokenDetailsHea
         url={tokenProject?.logoUrl ?? undefined}
       />
       <Flex row alignItems="center" gap="xs">
-        <Text color="textPrimary" numberOfLines={1} style={flex.shrink} variant="subheadLarge">
+        <Text
+          color="textPrimary"
+          loading={loading}
+          numberOfLines={1}
+          style={flex.shrink}
+          variant="subheadLarge">
           {tokenProject?.name ?? '—'}
         </Text>
         {/* Suppress warning icon on low warning level */}

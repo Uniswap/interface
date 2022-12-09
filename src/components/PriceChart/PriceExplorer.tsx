@@ -13,12 +13,14 @@ import Svg, { Defs, LinearGradient, Path, Stop } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedBox, Box } from 'src/components/layout/Box'
+import { Loader } from 'src/components/loading'
 import { Cursor } from 'src/components/PriceChart/Cursor'
 import { PriceChartLabel } from 'src/components/PriceChart/PriceChartLabels'
 import { PriceHeader } from 'src/components/PriceChart/PriceHeader'
 import { TimeRangeLabel } from 'src/components/PriceChart/TimeRangeLabel'
 import { GraphMetadatas } from 'src/components/PriceChart/types'
 import { CHART_HEIGHT, CHART_WIDTH, NUM_GRAPHS } from 'src/components/PriceChart/utils'
+import { Text } from 'src/components/Text'
 
 const AnimatedPath = Animated.createAnimatedComponent(Path)
 
@@ -27,10 +29,11 @@ export const BUTTON_WIDTH = CHART_WIDTH / NUM_GRAPHS
 export const LABEL_WIDTH = BUTTON_WIDTH - BUTTON_PADDING * 2
 
 interface GraphProps {
-  graphs: GraphMetadatas
+  graphs: GraphMetadatas | undefined
   headerCustomPrice?: number
   headerCustomPercentChange?: number
   chartColor?: string
+  loading?: boolean
 }
 
 /**
@@ -44,6 +47,7 @@ export const PriceExplorer = ({
   headerCustomPrice,
   chartColor,
   headerCustomPercentChange,
+  loading,
 }: GraphProps) => {
   const theme = useAppTheme()
 
@@ -58,10 +62,14 @@ export const PriceExplorer = ({
   // graph index used to display the current graph
   const currentGraphIndex = useSharedValue<number>(1)
 
-  const currentIndexData = useDerivedValue(() => graphs[currentGraphIndex.value].data)
+  const currentIndexData = useDerivedValue(() => graphs?.[currentGraphIndex.value].data)
 
   // mixes graph paths on index change
   const graphTransitionAnimatedProps = useAnimatedProps(() => {
+    if (graphs === undefined || currentIndexData.value === undefined) {
+      return {}
+    }
+
     const previousPath = graphs[previousGraphIndex.value].data.path
     const currentPath = currentIndexData.value.path
     const d = {
@@ -79,6 +87,10 @@ export const PriceExplorer = ({
 
   // retrieves price and formats it
   const price = useDerivedValue(() => {
+    if (!currentIndexData.value) {
+      return 0 // Return 0 as a placeholder. In this case though the UI would just show loading so the number doesn't matter won't appear
+    }
+
     if (isPanning.value) {
       return interpolate(
         translation.y.value,
@@ -92,6 +104,10 @@ export const PriceExplorer = ({
 
   // retrieves percent change and formats it
   const percentChange = useDerivedValue(() => {
+    if (!graphs || !currentIndexData.value) {
+      return 0
+    }
+
     if (
       isPanning.value ||
       headerCustomPercentChange === undefined ||
@@ -110,7 +126,7 @@ export const PriceExplorer = ({
 
   // retrieves date and formats it
   const date = useDerivedValue(() => {
-    if (!isPanning.value) {
+    if (!isPanning.value || !currentIndexData.value) {
       return ''
     }
 
@@ -125,62 +141,87 @@ export const PriceExplorer = ({
 
   return (
     <Box>
-      <PriceHeader date={date} percentChange={percentChange} price={price} />
-      <Box my="lg">
-        <Svg height={CHART_HEIGHT} width={CHART_WIDTH}>
-          <AnimatedPath
-            animatedProps={graphTransitionAnimatedProps}
-            fill="transparent"
-            stroke={chartColor ?? theme.colors.accentAction}
-            strokeWidth={3}
-          />
-
-          <Defs>
-            <LinearGradient id="gradient" x1="50%" x2="50%" y1="0%" y2="100%">
-              <Stop offset="0%" stopColor={theme.colors.accentAction} stopOpacity="0.2" />
-              <Stop offset="100%" stopColor={theme.colors.accentAction} stopOpacity="0" />
-            </LinearGradient>
-          </Defs>
-        </Svg>
-        <Cursor
-          cursorColor={chartColor}
-          graphs={graphs}
-          index={currentGraphIndex}
-          isActive={isPanning}
-          translation={translation}
-        />
-      </Box>
-      <Box alignSelf="center" flexDirection="row" width={CHART_WIDTH}>
-        <View style={StyleSheet.absoluteFill}>
-          <AnimatedBox
-            bg="background3"
-            borderRadius="xl"
-            style={[StyleSheet.absoluteFillObject, sliderStyle]}
-            width={LABEL_WIDTH}
-          />
-        </View>
-        {graphs.map((graph, index) => {
-          return (
-            <TouchableArea
-              key={graph.label}
-              p="xxs"
-              width={BUTTON_WIDTH}
-              onPress={() => {
-                previousGraphIndex.value = currentGraphIndex.value
-                transition.value = 0
-                currentGraphIndex.value = index
-                transition.value = withTiming(1)
-              }}>
-              <TimeRangeLabel
-                index={index}
-                label={graph.label}
-                selectedIndex={currentGraphIndex}
-                transition={transition}
+      <PriceHeader date={date} loading={loading} percentChange={percentChange} price={price} />
+      {loading || !graphs ? (
+        <>
+          <Box my="lg">
+            <Loader.Graph />
+          </Box>
+          <Box alignSelf="center" flexDirection="row" width={CHART_WIDTH}>
+            {Object.entries(PriceChartLabel).map(([_key, label]) => {
+              return (
+                <Box key={label} p="xxs" width={BUTTON_WIDTH}>
+                  <Text
+                    allowFontScaling={false}
+                    color="textTertiary"
+                    textAlign="center"
+                    variant="buttonLabelSmall">
+                    {label}
+                  </Text>
+                </Box>
+              )
+            })}
+          </Box>
+        </>
+      ) : (
+        <>
+          <Box my="lg">
+            <Svg height={CHART_HEIGHT} width={CHART_WIDTH}>
+              <AnimatedPath
+                animatedProps={graphTransitionAnimatedProps}
+                fill="transparent"
+                stroke={chartColor ?? theme.colors.accentAction}
+                strokeWidth={3}
               />
-            </TouchableArea>
-          )
-        })}
-      </Box>
+
+              <Defs>
+                <LinearGradient id="gradient" x1="50%" x2="50%" y1="0%" y2="100%">
+                  <Stop offset="0%" stopColor={theme.colors.accentAction} stopOpacity="0.2" />
+                  <Stop offset="100%" stopColor={theme.colors.accentAction} stopOpacity="0" />
+                </LinearGradient>
+              </Defs>
+            </Svg>
+            <Cursor
+              cursorColor={chartColor}
+              graphs={graphs}
+              index={currentGraphIndex}
+              isActive={isPanning}
+              translation={translation}
+            />
+          </Box>
+          <Box alignSelf="center" flexDirection="row" width={CHART_WIDTH}>
+            <View style={StyleSheet.absoluteFill}>
+              <AnimatedBox
+                bg="background3"
+                borderRadius="xl"
+                style={[StyleSheet.absoluteFillObject, sliderStyle]}
+                width={LABEL_WIDTH}
+              />
+            </View>
+            {graphs.map((graph, index) => {
+              return (
+                <TouchableArea
+                  key={graph.label}
+                  p="xxs"
+                  width={BUTTON_WIDTH}
+                  onPress={() => {
+                    previousGraphIndex.value = currentGraphIndex.value
+                    transition.value = 0
+                    currentGraphIndex.value = index
+                    transition.value = withTiming(1)
+                  }}>
+                  <TimeRangeLabel
+                    index={index}
+                    label={graph.label}
+                    selectedIndex={currentGraphIndex}
+                    transition={transition}
+                  />
+                </TouchableArea>
+              )
+            })}
+          </Box>
+        </>
+      )}
     </Box>
   )
 }

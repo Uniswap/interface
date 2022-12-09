@@ -1,7 +1,6 @@
 import React, { ComponentProps, useMemo } from 'react'
 import { Box } from 'src/components/layout/Box'
 import { PriceChartError } from 'src/components/PriceChart/PriceChartError'
-import { PriceChartLoading } from 'src/components/PriceChart/PriceChartLoading'
 import { PriceExplorer } from 'src/components/PriceChart/PriceExplorer'
 import { useTokenPriceGraphs } from 'src/components/PriceChart/TokenModel'
 import { GraphMetadatas } from 'src/components/PriceChart/types'
@@ -22,12 +21,9 @@ export function CurrencyPriceChart({
   // and 2/ `tokenPriceCharts` query is already computationally expensive on the backend
   const { data: spotPrice } = useSpotPrice(currencyId)
 
-  if (!graphs) {
-    if (loading || tokenColorLoading) {
-      return <PriceChartLoading />
-    }
-
-    // otherwise, assume error
+  const isLoading = loading || tokenColorLoading
+  if (!isLoading && !graphs) {
+    // assume error
     return <PriceChartError onRetry={refetch} />
   }
 
@@ -56,15 +52,12 @@ export function PriceChart({
 
   return (
     <Box overflow="hidden">
-      {loading ? (
-        <PriceChartLoading />
-      ) : (
-        <PriceExplorer
-          chartColor={tokenColor ?? FixedTheme.colors.magentaVibrant}
-          graphs={graphs}
-          {...rest}
-        />
-      )}
+      <PriceExplorer
+        chartColor={tokenColor ?? FixedTheme.colors.magentaVibrant}
+        graphs={graphs}
+        loading={loading}
+        {...rest}
+      />
     </Box>
   )
 }

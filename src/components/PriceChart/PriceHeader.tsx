@@ -15,7 +15,7 @@ import { ReText, round } from 'react-native-redash'
 import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout'
 import { Flex } from 'src/components/layout/Flex'
-import { DEFAULT_FONT_SCALE } from 'src/components/Text'
+import { DEFAULT_FONT_SCALE, Text } from 'src/components/Text'
 import { textVariants } from 'src/styles/font'
 import { Theme } from 'src/styles/theme'
 import { numberToLocaleStringWorklet } from 'src/utils/reanimated'
@@ -24,6 +24,7 @@ interface HeaderProps {
   price: SharedValue<number>
   percentChange: SharedValue<number>
   date: SharedValue<string>
+  loading?: boolean
 }
 
 const StyledReText = createRestyleComponent<
@@ -50,7 +51,7 @@ const ScaledReText = (props: React.ComponentProps<typeof StyledReText>) => {
   )
 }
 
-export const PriceHeader = ({ price, percentChange, date }: HeaderProps) => {
+export const PriceHeader = ({ price, percentChange, date, loading }: HeaderProps) => {
   const theme = useAppTheme()
 
   const priceFormatted = useDerivedValue(() => {
@@ -73,18 +74,30 @@ export const PriceHeader = ({ price, percentChange, date }: HeaderProps) => {
 
   return (
     <Box mx="sm">
-      <ScaledReText color="textPrimary" text={priceFormatted} variant="headlineLarge" />
-      <Flex row gap="xxs">
-        <Flex row gap="xxxs">
-          <ScaledReText style={percentChangeStyles} text={percentChangeIcon} variant="bodyLarge" />
-          <ScaledReText
-            style={percentChangeStyles}
-            text={percentChangeFormatted}
-            variant="bodyLarge"
-          />
+      {loading ? (
+        <Text loading loadingPlaceholderText="$10,000" variant="headlineLarge" />
+      ) : (
+        <ScaledReText color="textPrimary" text={priceFormatted} variant="headlineLarge" />
+      )}
+      {loading ? (
+        <Text loading loadingPlaceholderText="00.00%" variant="bodyLarge" />
+      ) : (
+        <Flex row gap="xxs">
+          <Flex row gap="xxxs">
+            <ScaledReText
+              style={percentChangeStyles}
+              text={percentChangeIcon}
+              variant="bodyLarge"
+            />
+            <ScaledReText
+              style={percentChangeStyles}
+              text={percentChangeFormatted}
+              variant="bodyLarge"
+            />
+          </Flex>
+          <ScaledReText color="textSecondary" text={date} variant="bodyLarge" />
         </Flex>
-        <ScaledReText color="textSecondary" text={date} variant="bodyLarge" />
-      </Flex>
+      )}
     </Box>
   )
 }

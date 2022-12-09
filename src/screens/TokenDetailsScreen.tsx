@@ -17,7 +17,6 @@ import { TokenDetailsActionButtons } from 'src/components/TokenDetails/TokenDeta
 import { TokenDetailsBackButtonRow } from 'src/components/TokenDetails/TokenDetailsBackButtonRow'
 import { TokenDetailsFavoriteButton } from 'src/components/TokenDetails/TokenDetailsFavoriteButton'
 import { TokenDetailsHeader } from 'src/components/TokenDetails/TokenDetailsHeader'
-import { TokenDetailsLoader } from 'src/components/TokenDetails/TokenDetailsLoader'
 import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
 import { ChainId } from 'src/constants/chains'
@@ -107,15 +106,14 @@ export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDe
     refetch({ contract: currencyIdToContractInput(_currencyId) })
   }, [_currencyId, refetch])
 
-  if (!data && isNonPollingRequestInFlight(networkStatus)) {
-    return <TokenDetailsLoader currencyId={_currencyId} />
-  }
+  const isLoading = !data && isNonPollingRequestInFlight(networkStatus)
 
   return (
     <TokenDetails
       _currencyId={_currencyId}
       data={data}
       error={isError(networkStatus, !!data)}
+      loading={isLoading}
       retry={retry}
     />
   )
@@ -126,11 +124,13 @@ function TokenDetails({
   data,
   error,
   retry,
+  loading,
 }: {
   _currencyId: string
   data: TokenDetailsScreenQuery | undefined
   error: boolean
   retry: () => void
+  loading: boolean
 }) {
   const dispatch = useAppDispatch()
 
@@ -271,7 +271,11 @@ function TokenDetails({
         }>
         <Flex gap="xl" my="md">
           <Flex gap="xxs">
-            <TokenDetailsHeader data={data} onPressWarningIcon={() => setShowWarningModal(true)} />
+            <TokenDetailsHeader
+              data={data}
+              loading={loading}
+              onPressWarningIcon={() => setShowWarningModal(true)}
+            />
             <CurrencyPriceChart
               currencyId={_currencyId}
               tokenColor={tokenColor}
@@ -295,7 +299,7 @@ function TokenDetails({
         </Flex>
       </HeaderScrollScreen>
 
-      {!tokenColorLoading ? (
+      {!loading && !tokenColorLoading ? (
         <AnimatedFlex entering={FadeInDown}>
           <TokenDetailsActionButtons
             showSend={!!currentChainBalance}
