@@ -16,7 +16,7 @@ const Page = styled.span<{ isDarkMode: boolean; titleHeight: number }>`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding-top: calc(100vh - ${({ titleHeight }) => titleHeight}px);
+  padding-top: calc(100vh - ${({ titleHeight }) => titleHeight + 200}px);
 `
 
 const Panels = styled.div`
