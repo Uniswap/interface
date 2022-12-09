@@ -5,23 +5,13 @@ import { BigintIsh, Currency, CurrencyAmount, Percent, Price, Token, TradeType }
 import { computePoolAddress, encodeSqrtRatioX96, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { toHex } from '@uniswap/v3-sdk'
 import { useTokenComparator } from 'components/SearchModal/sorting'
-import {
-  KROM_TOKEN_ADDRESSES,
-  KROMATIKA_ROUTER_ADDRESSES,
-  LIMIT_ORDER_MANAGER_ADDRESSES,
-  V3_CORE_FACTORY_ADDRESSES,
-} from 'constants/addresses'
+import { KROM_TOKEN_ADDRESSES, LIMIT_ORDER_MANAGER_ADDRESSES, V3_CORE_FACTORY_ADDRESSES } from 'constants/addresses'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { poll } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
 import { ReactNode, useMemo } from 'react'
 import { useSingleCallResult } from 'state/multicall/hooks'
-import {
-  useIsExpertMode,
-  useIsGaslessMode,
-  useUserSlippageToleranceWithDefault,
-  useUserTickSize,
-} from 'state/user/hooks'
+import { useUserSlippageToleranceWithDefault, useUserTickSize } from 'state/user/hooks'
 import { calculateSlippageAmount } from 'utils/calculateSlippageAmount'
 
 import { TransactionType } from '../state/transactions/actions'
@@ -34,10 +24,10 @@ import { useArgentWalletContract } from './useArgentWalletContract'
 import { useKromatikaRouter, useLimitOrderManager, useUniswapUtils } from './useContract'
 import useENS from './useENS'
 import { SignatureData, UseERC20PermitState } from './useERC20Permit'
-import { useGaslessCallback, useGaslessProvider } from './useGaslessCallback'
+import { useGaslessCallback } from './useGaslessCallback'
 import { useActiveWeb3React } from './web3'
 
-const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
+const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
 enum SwapCallbackState {
   INVALID,
@@ -366,7 +356,8 @@ export function useSwapCallback(
 
   const { gaslessCallback } = useGaslessCallback()
 
-  const isExpertMode = useIsGaslessMode()
+  // FIXME disabled
+  const isExpertMode = false
 
   const kromatikaRouter = useKromatikaRouter()
 

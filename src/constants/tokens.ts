@@ -215,6 +215,47 @@ export const KROM: { [chainId: number]: Token } = {
     'Kromatika'
   ),
 }
+
+export const WETH: { [chainId: number]: Token } = {
+  [SupportedChainId.OPTIMISM]: new Token(
+    SupportedChainId.OPTIMISM,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'KROM',
+    'Kromatika'
+  ),
+  [SupportedChainId.ARBITRUM_ONE]: new Token(
+    SupportedChainId.ARBITRUM_ONE,
+    '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [SupportedChainId.MAINNET]: new Token(
+    SupportedChainId.MAINNET,
+    '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [SupportedChainId.POLYGON]: new Token(
+    SupportedChainId.POLYGON,
+    '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+}
+
+export const CHAIN_NATIVE_TOKEN_SYMBOL: { [chainId: number]: string } = {
+  [SupportedChainId.OPTIMISM]: 'ETH',
+  [SupportedChainId.ARBITRUM_ONE]: 'ETH',
+  [SupportedChainId.MAINNET]: 'ETH',
+  [SupportedChainId.POLYGON]: 'MATIC',
+}
+
+export const NATIVE_TOKEN_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+
 export const WETH_POLYGON_MUMBAI = new Token(
   SupportedChainId.POLYGON_MUMBAI,
   '0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa',

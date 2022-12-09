@@ -4,19 +4,23 @@ import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { ChainName } from 'constants/chains'
 import { BETTER_TRADE_LESS_HOPS_THRESHOLD, TWO_PERCENT } from 'constants/misc'
 import { useMemo } from 'react'
-import { use0xQuoteAPITrade } from 'state/quote/useQuoteAPITrade'
-import { SwapTransaction, V3TradeState } from 'state/routing/types'
 import { useInchQuoteAPITrade } from 'state/routing/useRoutingAPITrade'
 import { useRoutingAPIEnabled } from 'state/user/hooks'
-import { isTradeBetter } from 'utils/isTradeBetter'
+import { SwapTransaction, V3TradeState } from 'state/validator/types'
+import { useGaslessAPITrade, useValidatorAPITrade } from 'state/validator/useValidatorAPITrade'
 
 import { useClientSideV3Trade } from './useClientSideV3Trade'
+import { useKromatikaMetaswap } from './useContract'
 import useDebounce from './useDebounce'
+import { SignatureData } from './useERC20Permit'
 import useIsWindowVisible from './useIsWindowVisible'
 import { useUSDCValue } from './useUSDCPrice'
 import { useActiveWeb3React } from './web3'
 
 export function useBestMarketTrade(
+  showConfirm: boolean,
+  gasless: boolean,
+  signatureData: SignatureData | null,
   tradeType: TradeType,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
@@ -25,20 +29,76 @@ export function useBestMarketTrade(
   trade: V3Trade<Currency, Currency, typeof tradeType> | undefined
   tx: SwapTransaction | undefined
   savings: CurrencyAmount<Token> | null
+  paymentToken: Token | undefined | null
+  paymentFees: CurrencyAmount<Currency> | undefined
 } {
   const isWindowVisible = useIsWindowVisible()
-
   const { chainId } = useActiveWeb3React()
   const debouncedAmount = useDebounce(amountSpecified, 100)
+  const kromatikaMetaswap = useKromatikaMetaswap()
+
+  // parse signature data
+  let signaturePermitData
+  if (signatureData && kromatikaMetaswap && debouncedAmount) {
+    // create call data
+    const inputTokenPermit =
+      'allowed' in signatureData
+        ? {
+            expiry: signatureData.deadline,
+            nonce: signatureData.nonce,
+            s: signatureData.s,
+            r: signatureData.r,
+            v: signatureData.v as any,
+          }
+        : {
+            deadline: signatureData.deadline,
+            amount: signatureData.amount,
+            s: signatureData.s,
+            r: signatureData.r,
+            v: signatureData.v as any,
+          }
+    if ('nonce' in inputTokenPermit) {
+      signaturePermitData = kromatikaMetaswap.interface.encodeFunctionData('selfPermitAllowed', [
+        debouncedAmount.currency.isToken ? debouncedAmount.currency.address : undefined,
+        inputTokenPermit.nonce,
+        inputTokenPermit.expiry,
+        inputTokenPermit.v,
+        inputTokenPermit.r,
+        inputTokenPermit.s,
+      ])
+    } else {
+      signaturePermitData = kromatikaMetaswap.interface.encodeFunctionData('selfPermit', [
+        debouncedAmount.currency.isToken ? debouncedAmount.currency.address : undefined,
+        inputTokenPermit.amount,
+        inputTokenPermit.deadline,
+        inputTokenPermit.v,
+        inputTokenPermit.r,
+        inputTokenPermit.s,
+      ])
+    }
+  }
 
   const routingAPIEnabled = useRoutingAPIEnabled()
-  const routingAPITrade = use0xQuoteAPITrade(
+  const quoteTrade = useValidatorAPITrade(
     tradeType,
     null,
-    true,
-    false,
+    null,
+    !showConfirm,
+    gasless,
     routingAPIEnabled && isWindowVisible ? debouncedAmount : undefined,
-    otherCurrency
+    otherCurrency,
+    signaturePermitData
+  )
+
+  const gaslessTrade = useGaslessAPITrade(
+    tradeType,
+    null,
+    null,
+    !showConfirm,
+    !gasless,
+    routingAPIEnabled && isWindowVisible ? debouncedAmount : undefined,
+    otherCurrency,
+    signaturePermitData
   )
 
   const nameOfNetwork = useMemo(() => {
@@ -63,29 +123,8 @@ export function useBestMarketTrade(
     protocols
   )
 
-  const swapAPITrade = useInchQuoteAPITrade(
-    tradeType,
-    routingAPIEnabled && isWindowVisible ? debouncedAmount : undefined,
-    otherCurrency
-  )
-
-  const isLoading = routingAPITrade.state === V3TradeState.LOADING || swapAPITrade.state === V3TradeState.LOADING
-
-  const betterTrade = useMemo(() => {
-    try {
-      // compare if tradeB is better than tradeA
-      return !isLoading
-        ? isTradeBetter(swapAPITrade.trade, routingAPITrade.trade, BETTER_TRADE_LESS_HOPS_THRESHOLD)
-          ? routingAPITrade
-          : swapAPITrade
-        : undefined
-    } catch (e) {
-      // v3 trade may be debouncing or fetching and have different
-      // inputs/ouputs than v2
-      console.log('Error')
-      return undefined
-    }
-  }, [isLoading, routingAPITrade, swapAPITrade])
+  const betterTrade = gasless ? gaslessTrade : quoteTrade
+  const isLoading = betterTrade.state === V3TradeState.LOADING
 
   const debouncing =
     betterTrade?.trade &&
@@ -106,10 +145,15 @@ export function useBestMarketTrade(
       trade: betterTrade?.trade,
       tx: betterTrade?.tx,
       savings,
+      // @ts-ignore
+      paymentFees: gasless ? betterTrade.paymentFees : undefined,
+      // @ts-ignore
+      paymentToken: gasless ? betterTrade.paymentToken : undefined,
+
       ...(debouncing ? { state: V3TradeState.SYNCING } : {}),
       ...(isLoading ? { state: V3TradeState.LOADING } : {}),
     }),
-    [betterTrade, debouncing, isLoading, savings]
+    [betterTrade, debouncing, gasless, isLoading, savings]
   )
 }
 

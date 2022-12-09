@@ -3,13 +3,18 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { TWO_PERCENT } from 'constants/misc'
+import { SupportedChainId } from 'constants/chains'
+import { FEE_IMPACT_MIN, TWO_PERCENT } from 'constants/misc'
+import { CHAIN_NATIVE_TOKEN_SYMBOL, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useBestMarketTrade, useBestV3Trade } from 'hooks/useBestV3Trade'
+import { SignatureData } from 'hooks/useERC20Permit'
 import JSBI from 'jsbi'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { SwapTransaction, V3TradeState } from 'state/routing/types'
+import { useIsGaslessMode } from 'state/user/hooks'
+import { SwapTransaction, V3TradeState } from 'state/validator/types'
+import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { isTradeBetter } from 'utils/isTradeBetter'
 
 import { useCurrency } from '../../hooks/Tokens'
@@ -116,7 +121,14 @@ function involvesAddress(
 }
 
 // from the current swap inputs, compute the best trade and return it.
-export function useDerivedMarketInfo(toggledVersion: Version | undefined): {
+export function useDerivedMarketInfo(
+  toggledVersion: Version | undefined,
+  showConfirm: boolean,
+  gasless: boolean,
+  signatureData: SignatureData | null,
+  feeImpactAccepted: boolean,
+  priceImpactAccepted: boolean
+): {
   currencies: { [field in Field]?: Currency | null }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
   parsedAmount: CurrencyAmount<Currency> | undefined
@@ -129,8 +141,15 @@ export function useDerivedMarketInfo(toggledVersion: Version | undefined): {
   }
   bestTrade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
   allowedSlippage: Percent
+  paymentToken: Token | null | undefined
+  paymentFees: CurrencyAmount<Currency> | undefined
+  priceImpactHigh: boolean
+  feeImpactHigh: boolean
+  amountToReceive: CurrencyAmount<Currency> | undefined
+  inputTokenShouldBeWrapped: boolean
 } {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
+  const isGaslessMode = useIsGaslessMode() && chainId == SupportedChainId.POLYGON
 
   const {
     independentField,
@@ -157,6 +176,9 @@ export function useDerivedMarketInfo(toggledVersion: Version | undefined): {
   )
 
   const v2Trade = useBestMarketTrade(
+    showConfirm,
+    gasless,
+    signatureData,
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     toggledVersion !== Version.v3 ? parsedAmount : undefined,
     (isExactIn ? outputCurrency : inputCurrency) ?? undefined
@@ -180,6 +202,44 @@ export function useDerivedMarketInfo(toggledVersion: Version | undefined): {
     [inputCurrency, outputCurrency]
   )
 
+  const allowedSlippage = useSwapSlippageTolerance(bestTrade ?? undefined)
+
+  const outputAmount = useMemo(() => v2Trade?.trade?.outputAmount, [v2Trade?.trade?.outputAmount])
+
+  const paymentFees = useMemo(() => v2Trade?.paymentFees, [v2Trade?.paymentFees])
+
+  const outputAfterFees = useMemo(
+    () =>
+      paymentFees && outputAmount && paymentFees.currency.equals(outputAmount.currency)
+        ? outputAmount.subtract(paymentFees)
+        : outputAmount,
+    [outputAmount, paymentFees]
+  )
+
+  const feeImpact = outputAmount
+    ? computeFiatValuePriceImpact(outputAmount as CurrencyAmount<Token>, outputAfterFees as CurrencyAmount<Token>)
+    : undefined
+
+  const feeImpactHigh = useMemo(() => (feeImpact ? feeImpact?.greaterThan(FEE_IMPACT_MIN) : false), [feeImpact])
+
+  const amountToReceive = useMemo(
+    () => outputAfterFees?.subtract(outputAfterFees.multiply(allowedSlippage).divide(100)),
+    [allowedSlippage, outputAfterFees]
+  )
+
+  const priceImpact = outputAmount
+    ? computeFiatValuePriceImpact(outputAmount as CurrencyAmount<Token>, amountToReceive as CurrencyAmount<Token>)
+    : undefined
+
+  const priceImpactHigh = useMemo(() => (priceImpact ? priceImpact?.greaterThan(FEE_IMPACT_MIN) : false), [priceImpact])
+
+  const inputTokenShouldBeWrapped =
+    isGaslessMode &&
+    currencies &&
+    currencies[Field.INPUT]?.symbol === CHAIN_NATIVE_TOKEN_SYMBOL[chainId ?? 1] &&
+    currencies[Field.OUTPUT] !== null &&
+    currencies[Field.OUTPUT]?.symbol !== WRAPPED_NATIVE_CURRENCY[chainId ?? 1]?.symbol
+
   let inputError: ReactNode | undefined
   if (!account) {
     inputError = <Trans>Connect Wallet</Trans>
@@ -193,6 +253,27 @@ export function useDerivedMarketInfo(toggledVersion: Version | undefined): {
     inputError = inputError ?? <Trans>Select a token</Trans>
   }
 
+  if ((feeImpactHigh && !feeImpactAccepted) || (priceImpactHigh && !priceImpactAccepted)) {
+    inputError = inputError ?? <Trans>Impact is too high</Trans>
+  }
+
+  if (inputTokenShouldBeWrapped && isGaslessMode) {
+    inputError = inputError ?? <Trans>Wrap your native token</Trans>
+  }
+
+  if (paymentFees && outputAmount?.lessThan(paymentFees)) {
+    inputError = inputError ?? <Trans>Buy amount lower than fee amount</Trans>
+  }
+
+  if (
+    currencies[Field.OUTPUT] !== null &&
+    v2Trade?.paymentToken?.symbol !== undefined &&
+    currencies[Field.OUTPUT]?.symbol !== v2Trade?.paymentToken?.symbol &&
+    currencies[Field.OUTPUT]?.wrapped.symbol !== v2Trade?.paymentToken?.symbol
+  ) {
+    inputError = inputError ?? <Trans>Loading ...</Trans>
+  }
+
   const formattedTo = isAddress(to)
   if (!to || !formattedTo) {
     inputError = inputError ?? <Trans>Enter a recipient</Trans>
@@ -204,8 +285,6 @@ export function useDerivedMarketInfo(toggledVersion: Version | undefined): {
       inputError = inputError ?? <Trans>Invalid recipient</Trans>
     }
   }
-
-  const allowedSlippage = useSwapSlippageTolerance(bestTrade ?? undefined)
 
   // compare input balance to max input based on version
   const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], bestTrade?.maximumAmountIn(allowedSlippage)]
@@ -222,6 +301,12 @@ export function useDerivedMarketInfo(toggledVersion: Version | undefined): {
     v2Trade,
     bestTrade: bestTrade ?? undefined,
     allowedSlippage,
+    paymentToken: v2Trade?.paymentToken,
+    paymentFees: v2Trade?.paymentFees,
+    priceImpactHigh,
+    feeImpactHigh,
+    amountToReceive,
+    inputTokenShouldBeWrapped,
   }
 }
 

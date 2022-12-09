@@ -61,6 +61,7 @@ const BodyWrapper = styled.div`
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 6rem 16px 16px 16px;
+    margin-bottom: 60px;
   `};
 `
 
@@ -102,7 +103,7 @@ export default function App() {
               <Route exact strict path="/limitorder/:outputCurrency" component={RedirectToLimitOrder} />
               <Route exact strict path="/limitorder" component={LimitOrder} />
               <Route exact strict path="/swap/:outputCurrency" component={RedirectToMarket} />
-              <Route exact strict path="/swap" component={Market} />
+              <Route path="/swap" component={Market} />
 
               <Route exact strict path="/pool" component={Pool} />
               <Route exact strict path="/pool/:tokenId" component={PositionPage} />

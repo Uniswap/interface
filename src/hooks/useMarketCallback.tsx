@@ -1,15 +1,20 @@
+import { defaultAbiCoder } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Router, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { SwapRouter, toHex, Trade as V3Trade } from '@uniswap/v3-sdk'
+import { SupportedChainId } from 'constants/chains'
+import { poll } from 'ethers/lib/utils'
 import { ReactNode, useMemo } from 'react'
-import { use0xQuoteAPITrade } from 'state/quote/useQuoteAPITrade'
-import { SwapTransaction, V3TradeState } from 'state/routing/types'
-import { useInchSwapAPITrade } from 'state/routing/useRoutingAPITrade'
+import { useLazyFeeTierDistributionQuery } from 'state/data/generated'
+import { useIsGaslessMode } from 'state/user/hooks'
+import { SwapTransaction, V3TradeState } from 'state/validator/types'
+import { useGaslessAPITrade, useValidatorAPITrade } from 'state/validator/useValidatorAPITrade'
+import { calculateSlippageAmount } from 'utils/calculateSlippageAmount'
 
-import { SWAP_ROUTER_ADDRESSES, V2_ROUTER_ADDRESS } from '../constants/addresses'
+import { KROMATIKA_METASWAP_ADDRESSES, SWAP_ROUTER_ADDRESSES, V2_ROUTER_ADDRESS } from '../constants/addresses'
 import { TransactionType } from '../state/transactions/actions'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import approveAmountCalldata from '../utils/approveAmountCalldata'
@@ -17,9 +22,10 @@ import { calculateGasMargin } from '../utils/calculateGasMargin'
 import { currencyId } from '../utils/currencyId'
 import isZero from '../utils/isZero'
 import { useArgentWalletContract } from './useArgentWalletContract'
-import { useKromatikaRouter, useV2RouterContract } from './useContract'
+import { useKromatikaMetaswap, useKromatikaRouter, useV2RouterContract } from './useContract'
 import useENS from './useENS'
 import { SignatureData } from './useERC20Permit'
+import { useGaslessCallback } from './useGaslessCallback'
 import useTransactionDeadline from './useTransactionDeadline'
 import { useActiveWeb3React } from './web3'
 
@@ -61,9 +67,12 @@ function useMarketCallArguments(
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
   allowedSlippage: Percent, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  referer: string | null,
   signatureData: SignatureData | null | undefined,
+  parsedAmount: CurrencyAmount<Currency> | undefined,
   swapTransaction: SwapTransaction | null | undefined,
-  showConfirm: boolean
+  showConfirm: boolean,
+  gasless: boolean
 ): {
   state: V3TradeState
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined | null // trade to execute, required
@@ -74,37 +83,12 @@ function useMarketCallArguments(
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
+  const affiliate = referer === null || referer == account ? null : referer
   const deadline = useTransactionDeadline()
   const argentWalletContract = useArgentWalletContract()
 
-  // 1 - 0xProtocol ; 2-1inch
-
-  const swapAPITrade = useInchSwapAPITrade(
-    swapTransaction,
-    swapTransaction?.type == 1 ? TradeType.EXACT_OUTPUT : trade ? trade.tradeType : TradeType.EXACT_OUTPUT,
-    recipient,
-    showConfirm,
-    trade?.inputAmount,
-    trade?.outputAmount.currency
-  )
-
-  const routingAPITrade = use0xQuoteAPITrade(
-    trade ? trade.tradeType : TradeType.EXACT_OUTPUT,
-    recipient,
-    true,
-    showConfirm,
-    trade?.tradeType == TradeType.EXACT_INPUT ? trade?.inputAmount : trade?.outputAmount,
-    trade?.tradeType == TradeType.EXACT_INPUT ? trade?.outputAmount.currency : trade?.inputAmount.currency
-  )
-
-  const updatedSwapTxn = useMemo(() => {
-    if (swapTransaction?.type == 1) return routingAPITrade
-
-    return swapAPITrade
-  }, [routingAPITrade, swapAPITrade, swapTransaction?.type])
-
   return useMemo(() => {
-    if (!trade || !recipient || !library || !account || !chainId || !deadline || !updatedSwapTxn || !updatedSwapTxn.tx)
+    if (!trade || !recipient || !library || !account || !chainId || !deadline || !parsedAmount || !swapTransaction)
       return {
         state: V3TradeState.LOADING,
         trade: null,
@@ -112,45 +96,56 @@ function useMarketCallArguments(
         marketcall: [],
       }
     // trade is V3Trade
-    const swapRouterAddress = updatedSwapTxn.tx?.to
+    const callData = swapTransaction.data
     if (argentWalletContract && trade.inputAmount.currency.isToken) {
       return {
-        state: updatedSwapTxn.state,
-        trade: updatedSwapTxn.trade,
-        tx: updatedSwapTxn.tx,
+        state: V3TradeState.VALID,
+        trade,
+        tx: swapTransaction,
         marketcall: [
           {
             address: argentWalletContract.address,
             calldata: argentWalletContract.interface.encodeFunctionData('wc_multiCall', [
               [
-                approveAmountCalldata(trade.maximumAmountIn(allowedSlippage), swapRouterAddress),
+                approveAmountCalldata(trade.maximumAmountIn(allowedSlippage), swapTransaction?.to),
                 {
-                  to: swapRouterAddress,
-                  value: updatedSwapTxn.tx.value,
-                  data: updatedSwapTxn.tx.data,
+                  to: swapTransaction?.to,
+                  value: swapTransaction.value,
+                  data: callData,
                 },
               ],
             ]),
             value: '0x0',
-            gas: updatedSwapTxn.tx.gas,
+            gas: swapTransaction.gas,
           },
         ],
       }
     }
     return {
-      state: updatedSwapTxn.state,
-      trade: updatedSwapTxn.trade,
-      tx: updatedSwapTxn.tx,
+      state: V3TradeState.VALID,
+      trade,
+      tx: swapTransaction,
       marketcall: [
         {
-          address: swapRouterAddress,
-          value: toHex(updatedSwapTxn.tx.value),
-          calldata: updatedSwapTxn.tx.data,
-          gas: updatedSwapTxn.tx.gas,
+          address: swapTransaction?.to,
+          value: toHex(swapTransaction.value),
+          calldata: callData,
+          gas: swapTransaction.gas,
         },
       ],
     }
-  }, [trade, recipient, library, account, chainId, deadline, updatedSwapTxn, argentWalletContract, allowedSlippage])
+  }, [
+    trade,
+    recipient,
+    library,
+    account,
+    chainId,
+    deadline,
+    parsedAmount,
+    swapTransaction,
+    argentWalletContract,
+    allowedSlippage,
+  ])
 }
 
 /**
@@ -238,19 +233,27 @@ export function useMarketCallback(
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
   allowedSlippage: Percent, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  referer: string | null,
   signatureData: SignatureData | undefined | null,
+  parsedAmount: CurrencyAmount<Currency> | undefined,
   swapTransaction: SwapTransaction | undefined | null,
-  showConfirm: boolean
+  showConfirm: boolean,
+  gasless: boolean
 ): { state: MarketCallbackState; callback: null | (() => Promise<string>); error: ReactNode | null } {
   const { account, chainId, library } = useActiveWeb3React()
+
+  const { gaslessCallback } = useGaslessCallback()
 
   const swapCalls = useMarketCallArguments(
     trade,
     allowedSlippage,
     recipientAddressOrName,
+    referer,
     signatureData,
+    parsedAmount,
     swapTransaction,
-    showConfirm
+    showConfirm,
+    gasless
   )
 
   const addTransaction = useTransactionAdder()
@@ -301,7 +304,7 @@ export function useMarketCallback(
                 }
               })
               .catch((gasError) => {
-                console.debug('Gas estimate failed, trying eth_call to extract error', call, gasError)
+                console.log('Gas estimate failed, trying eth_call to extract error', call, gasError)
 
                 return {
                   call,
@@ -332,55 +335,119 @@ export function useMarketCallback(
           call: { address, calldata, value },
         } = bestCallOption
 
-        return library
-          .getSigner()
-          .sendTransaction({
-            from: account,
-            to: address,
+        if (gasless) {
+          const gasLimit =
+            'gasEstimate' in bestCallOption ? { gasLimit: calculateGasMargin(chainId, bestCallOption.gasEstimate) } : {}
+          const txParams = {
             data: calldata,
-            // let the wallet try if we can't estimate the gas
-            ...('gasEstimate' in bestCallOption
-              ? { gasLimit: calculateGasMargin(chainId, bestCallOption.gasEstimate) }
-              : {}),
+            to: address,
+            from: account,
+            gasLimit: gasLimit ? gasLimit?.gasLimit?.toHexString() : 700000,
+            signatureType: library.provider.isMetaMask ? 'EIP712_SIGN' : 'PERSONAL_SIGN',
             ...(value && !isZero(value) ? { value } : {}),
-          })
-          .then((response) => {
-            addTransaction(
-              response,
-              trade.tradeType === TradeType.EXACT_INPUT
-                ? {
-                    type: TransactionType.SWAP,
-                    tradeType: TradeType.EXACT_INPUT,
-                    inputCurrencyId: currencyId(trade.inputAmount.currency),
-                    inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-                    expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-                    outputCurrencyId: currencyId(trade.outputAmount.currency),
-                    minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(allowedSlippage).quotient.toString(),
-                  }
-                : {
-                    type: TransactionType.SWAP,
-                    tradeType: TradeType.EXACT_OUTPUT,
-                    inputCurrencyId: currencyId(trade.inputAmount.currency),
-                    maximumInputCurrencyAmountRaw: trade.maximumAmountIn(allowedSlippage).quotient.toString(),
-                    outputCurrencyId: currencyId(trade.outputAmount.currency),
-                    outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-                    expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-                  }
-            )
+          }
+          // sending gasless txn
+          return gaslessCallback()
+            .then((gaslessProvider) => {
+              if (!gaslessProvider) return
+              return gaslessProvider.send('eth_sendTransaction', [txParams]).then(async (response: any) => {
+                const txResponse = await poll(
+                  async () => {
+                    const tx = await gaslessProvider.getTransaction(response)
+                    if (tx === null) {
+                      return undefined
+                    }
+                    const blockNumber = await gaslessProvider._getInternalBlockNumber(
+                      100 + 2 * gaslessProvider.pollingInterval
+                    )
+                    return gaslessProvider._wrapTransaction(tx, response, blockNumber)
+                  },
+                  { oncePoll: gaslessProvider }
+                )
+                if (txResponse) {
+                  addTransaction(
+                    txResponse,
+                    trade.tradeType === TradeType.EXACT_INPUT
+                      ? {
+                          type: TransactionType.SWAP,
+                          tradeType: TradeType.EXACT_INPUT,
+                          inputCurrencyId: currencyId(trade.inputAmount.currency),
+                          inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+                          expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+                          outputCurrencyId: currencyId(trade.outputAmount.currency),
+                          minimumOutputCurrencyAmountRaw: '',
+                        }
+                      : {
+                          type: TransactionType.SWAP,
+                          tradeType: TradeType.EXACT_OUTPUT,
+                          inputCurrencyId: currencyId(trade.inputAmount.currency),
+                          maximumInputCurrencyAmountRaw: '',
+                          outputCurrencyId: currencyId(trade.outputAmount.currency),
+                          outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+                          expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+                        }
+                  )
+                }
 
-            return response.hash
-          })
-          .catch((error) => {
-            // if the user rejected the tx, pass this along
-            if (error?.code === 4001) {
-              throw new Error(t`Transaction rejected.`)
-            } else {
-              // otherwise, the error was unexpected and we need to convey that
-              console.error(`Swap failed`, error, address, calldata, value)
+                return response
+              })
+            })
+            .catch((error) => {
+              // TODO
+              console.log(error)
+              throw new Error(t`Transaction rejected: ${marketErrorToUserReadableMessage(error)}`)
+            })
+        } else {
+          return library
+            .getSigner()
+            .sendTransaction({
+              from: account,
+              to: address,
+              data: calldata,
+              // let the wallet try if we can't estimate the gas
+              ...('gasEstimate' in bestCallOption
+                ? { gasLimit: calculateGasMargin(chainId, bestCallOption.gasEstimate) }
+                : {}),
+              ...(value && !isZero(value) ? { value } : {}),
+            })
+            .then((response) => {
+              addTransaction(
+                response,
+                trade.tradeType === TradeType.EXACT_INPUT
+                  ? {
+                      type: TransactionType.SWAP,
+                      tradeType: TradeType.EXACT_INPUT,
+                      inputCurrencyId: currencyId(trade.inputAmount.currency),
+                      inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+                      expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+                      outputCurrencyId: currencyId(trade.outputAmount.currency),
+                      minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(allowedSlippage).quotient.toString(),
+                    }
+                  : {
+                      type: TransactionType.SWAP,
+                      tradeType: TradeType.EXACT_OUTPUT,
+                      inputCurrencyId: currencyId(trade.inputAmount.currency),
+                      maximumInputCurrencyAmountRaw: trade.maximumAmountIn(allowedSlippage).quotient.toString(),
+                      outputCurrencyId: currencyId(trade.outputAmount.currency),
+                      outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+                      expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+                    }
+              )
 
-              throw new Error(t`Swap failed: ${marketErrorToUserReadableMessage(error)}`)
-            }
-          })
+              return response.hash
+            })
+            .catch((error) => {
+              // if the user rejected the tx, pass this along
+              if (error?.code === 4001) {
+                throw new Error(t`Transaction rejected.`)
+              } else {
+                // otherwise, the error was unexpected and we need to convey that
+                console.error(`Swap failed`, error, address, calldata, value)
+
+                throw new Error(t`Swap failed: ${marketErrorToUserReadableMessage(error)}`)
+              }
+            })
+        }
       },
       error: null,
     }
@@ -391,8 +458,11 @@ export function useMarketCallback(
     chainId,
     swapTransaction,
     recipient,
+    swapCalls.state,
+    swapCalls.marketcall,
     recipientAddressOrName,
-    swapCalls,
+    gasless,
+    gaslessCallback,
     addTransaction,
     allowedSlippage,
   ])

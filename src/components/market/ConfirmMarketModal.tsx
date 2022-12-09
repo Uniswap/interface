@@ -1,12 +1,14 @@
 import { Trans } from '@lingui/macro'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { ReactNode, useCallback, useMemo } from 'react'
+import { ReactNode, useCallback, useMemo, useState } from 'react'
+import { SwapTransaction } from 'state/validator/types'
 
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent,
+  TransactionPreparingContent,
 } from '../TransactionConfirmationModal'
 import MarketModalFooter from './MarketModalFooter'
 import MarketModalHeader from './MarketModalHeader'
@@ -33,6 +35,8 @@ function tradeMeaningfullyDiffers(
 export default function ConfirmMarketModal({
   trade,
   originalTrade,
+  swapTransaction,
+  originalSwapTransaction,
   onAcceptChanges,
   allowedSlippage,
   onConfirm,
@@ -42,10 +46,22 @@ export default function ConfirmMarketModal({
   isOpen,
   attemptingTxn,
   txHash,
+  referer,
+  paymentToken,
+  paymentFees,
+  priceImpactHigh,
+  feeImpactHigh,
+  updateFeeImpact,
+  updatePriceImpact,
+  priceImpactAccepted,
+  feeImpactAccepted,
+  routeIsNotFound,
 }: {
   isOpen: boolean
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
   originalTrade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
+  swapTransaction: SwapTransaction | undefined
+  originalSwapTransaction: SwapTransaction | undefined
   attemptingTxn: boolean
   txHash: string | undefined
   recipient: string | null
@@ -54,6 +70,16 @@ export default function ConfirmMarketModal({
   onConfirm: () => void
   swapErrorMessage: ReactNode | undefined
   onDismiss: () => void
+  referer: string | null
+  paymentToken: Token | undefined | null
+  paymentFees: CurrencyAmount<Currency> | undefined
+  priceImpactHigh: boolean
+  feeImpactHigh: boolean
+  updateFeeImpact: () => void
+  updatePriceImpact: () => void
+  priceImpactAccepted: boolean
+  feeImpactAccepted: boolean
+  routeIsNotFound: boolean
 }) {
   const showAcceptChanges = useMemo(
     () =>
@@ -68,6 +94,11 @@ export default function ConfirmMarketModal({
     [originalTrade, trade]
   )
 
+  const showTransactionInfo = useMemo(
+    () => Boolean(originalSwapTransaction?.data || (!originalSwapTransaction?.data && swapTransaction?.data)),
+    [originalSwapTransaction?.data, swapTransaction?.data]
+  )
+
   const modalHeader = useCallback(() => {
     return trade ? (
       <MarketModalHeader
@@ -76,16 +107,40 @@ export default function ConfirmMarketModal({
         recipient={recipient}
         showAcceptChanges={showAcceptChanges}
         onAcceptChanges={onAcceptChanges}
+        referer={referer}
+        paymentToken={paymentToken}
+        paymentFees={paymentFees}
+        priceImpactHigh={priceImpactHigh}
+        feeImpactHigh={feeImpactHigh}
+        updateFeeImpact={updateFeeImpact}
+        updatePriceImpact={updatePriceImpact}
+        priceImpactAccepted={priceImpactAccepted}
+        feeImpactAccepted={feeImpactAccepted}
       />
     ) : null
-  }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade])
+  }, [
+    allowedSlippage,
+    feeImpactHigh,
+    onAcceptChanges,
+    paymentFees,
+    paymentToken,
+    priceImpactHigh,
+    recipient,
+    referer,
+    showAcceptChanges,
+    trade,
+    updateFeeImpact,
+    updatePriceImpact,
+  ])
 
   const modalBottom = useCallback(() => {
     return trade ? (
       <MarketModalFooter
         onConfirm={onConfirm}
         trade={trade}
-        disabledConfirm={showAcceptChanges}
+        disabledConfirm={
+          showAcceptChanges || (priceImpactHigh && !priceImpactAccepted) || (!feeImpactAccepted && feeImpactHigh)
+        }
         swapErrorMessage={swapErrorMessage}
       />
     ) : null
@@ -103,15 +158,17 @@ export default function ConfirmMarketModal({
     () =>
       swapErrorMessage ? (
         <TransactionErrorContent onDismiss={onDismiss} message={swapErrorMessage} />
-      ) : (
+      ) : swapTransaction?.data ? (
         <ConfirmationModalContent
           title={<Trans>Confirm Swap</Trans>}
           onDismiss={onDismiss}
           topContent={modalHeader}
           bottomContent={modalBottom}
         />
+      ) : (
+        <TransactionPreparingContent onDismiss={onDismiss} routeIsNotFound={routeIsNotFound} />
       ),
-    [onDismiss, modalBottom, modalHeader, swapErrorMessage]
+    [swapErrorMessage, onDismiss, swapTransaction?.data, modalHeader, modalBottom]
   )
 
   return (

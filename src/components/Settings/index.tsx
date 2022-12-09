@@ -127,7 +127,10 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
 
   const theme = useContext(ThemeContext)
 
-  const [expertMode, toggleExpertMode] = useGaslessModeManager()
+  const [gaslessMode, toggleGaslessMode] = useGaslessModeManager()
+
+  // FIXME enable for Polygon first
+  const isGaslessEnabledForNetwork = chainId == SupportedChainId.POLYGON
 
   const [clientSideRouter, setClientSideRouter] = useClientSideRouter()
 
@@ -157,7 +160,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                 </Trans>
               </Text>
               <Text fontWeight={600} fontSize={20}>
-                <Trans>ONLY USE THIS MODE IF YOU HAVE ENOUGH KROM DEPOSIT BALANCE IN KROMATIKA.</Trans>
+                <Trans>BETA FEATURE.</Trans>
               </Text>
               <ButtonError
                 error={true}
@@ -165,7 +168,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                 onClick={() => {
                   const confirmWord = t`gasless`
                   if (window.prompt(t`Please type the word "${confirmWord}" to enable gasless mode.`) === confirmWord) {
-                    toggleExpertMode()
+                    toggleGaslessMode()
                     setShowConfirmation(false)
                   }
                 }}
@@ -180,7 +183,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
       </Modal>
       <StyledMenuButton onClick={toggle} id="open-settings-dialog-button" aria-label={t`Transaction Settings`}>
         <StyledMenuIcon />
-        {expertMode ? (
+        {gaslessMode ? (
           <EmojiWrapper>
             <span role="img" aria-label="wizard-icon">
               🧙
@@ -202,22 +205,25 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                 </TYPE.black>
                 <QuestionHelper text={<Trans>Enables gasless transactions by compensating them with KROM.</Trans>} />
               </RowFixed>
-              <Trans>Coming Soon</Trans>
-              {/* <Toggle
-                id="toggle-expert-mode-button"
-                isActive={expertMode}
-                toggle={
-                  expertMode
-                    ? () => {
-                        toggleExpertMode()
-                        setShowConfirmation(false)
-                      }
-                    : () => {
-                        toggle()
-                        setShowConfirmation(true)
-                      }
-                }
-              /> */}
+              {isGaslessEnabledForNetwork ? (
+                <Toggle
+                  id="toggle-expert-mode-button"
+                  isActive={gaslessMode}
+                  toggle={
+                    gaslessMode
+                      ? () => {
+                          toggleGaslessMode()
+                          setShowConfirmation(false)
+                        }
+                      : () => {
+                          toggle()
+                          setShowConfirmation(true)
+                        }
+                  }
+                />
+              ) : (
+                <Trans>Coming Soon</Trans>
+              )}
             </RowBetween>
             <RowBetween>
               <RowFixed>

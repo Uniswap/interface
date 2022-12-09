@@ -138,6 +138,13 @@ export const UNISWAP_UTILS_ADDRESSES: AddressMap = {
 }
 export const KROMATIKA_ROUTER_ADDRESSES: AddressMap = {
   [SupportedChainId.ARBITRUM_ONE]: '0x79ba1CFF3998D7ce3DF452c3Fd6FCf817971Ea39',
+  [SupportedChainId.POLYGON]: '0xCe7cbDA67DE0BFdBBBAEA0DB94434a722A353CF4',
+}
+export const KROMATIKA_METASWAP_ADDRESSES: AddressMap = {
+  [SupportedChainId.POLYGON]: '0xE10F5F77CF90c99976BceE524Fbf88504A2e6616',
+}
+export const BICONOMY_DAPP_API: AddressMap = {
+  [SupportedChainId.POLYGON]: 'lD1x8FLPD.45318b65-8ab0-45c7-b59c-2f73137fb751',
 }
 export const V3_MIGRATOR_ADDRESSES: AddressMap = constructSameAddressMap('0xA5644E29708357803b5A882D272c41cC0dF92B34', [
   SupportedChainId.ARBITRUM_ONE,

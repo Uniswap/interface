@@ -53,7 +53,7 @@ export default function RangeBadge({
             <AlertCircle width={14} height={14} />
             &nbsp;
             <BadgeText>
-              <Trans>Not Processing</Trans>
+              <Trans>Deposit KROM to process trade</Trans>
             </BadgeText>
           </Badge>
         </MouseoverTooltip>

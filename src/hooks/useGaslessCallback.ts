@@ -1,7 +1,8 @@
 import { Biconomy } from '@biconomy/mexa'
 import { Web3Provider } from '@ethersproject/providers'
+import { BICONOMY_DAPP_API } from 'constants/addresses'
 import { useEffect, useMemo, useState } from 'react'
-import { useIsExpertMode, useIsGaslessMode } from 'state/user/hooks'
+import { useIsGaslessMode } from 'state/user/hooks'
 
 import { useActiveWeb3React } from './web3'
 
@@ -16,8 +17,9 @@ export function useGaslessCallback(): {
     if (!isExpertMode || !library || !chainId) return undefined
 
     const biconomy = new Biconomy(library, {
-      apiKey: 'pPZoouN0Y.0be679ec-46b9-47c0-a288-d27ef9bd989a',
+      apiKey: BICONOMY_DAPP_API[chainId],
       debug: true,
+      strictMode: true,
     })
     return new Promise<Web3Provider>((resolve, reject) => {
       biconomy
@@ -39,18 +41,18 @@ export function useGaslessCallback(): {
 export function useGaslessProvider(): {
   gaslessProvider: Web3Provider | undefined
 } {
-  const { library } = useActiveWeb3React()
+  const { library, chainId } = useActiveWeb3React()
   const isExpertMode = useIsGaslessMode()
 
   const [gaslessLib, setGaslessLib] = useState<Web3Provider | undefined>(undefined)
 
   useEffect(() => {
-    if (!library || !isExpertMode) return undefined
+    if (!library || !isExpertMode || !chainId) return undefined
 
     if (isExpertMode) {
       const biconomy = new Biconomy(library, {
-        apiKey: 'GqIZAmZu6.f435c0cb-8cb8-4395-95d7-284a5c735ed5',
-        debug: true,
+        apiKey: BICONOMY_DAPP_API[chainId],
+        debug: false,
       })
       return biconomy
         .onEvent(biconomy.READY, () => {
@@ -62,7 +64,7 @@ export function useGaslessProvider(): {
           setGaslessLib(library)
         })
     }
-  }, [isExpertMode, library])
+  }, [chainId, isExpertMode, library])
 
   return {
     gaslessProvider: gaslessLib,

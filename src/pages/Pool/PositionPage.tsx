@@ -20,7 +20,7 @@ import { DAI, KROM, USDC, USDT } from 'constants/tokens'
 import { poll } from 'ethers/lib/utils'
 import { useToken } from 'hooks/Tokens'
 import { useKromatikaRouter, useLimitOrderManager, useV3NFTPositionManagerContract } from 'hooks/useContract'
-import { useGaslessCallback, useGaslessProvider } from 'hooks/useGaslessCallback'
+import { useGaslessCallback } from 'hooks/useGaslessCallback'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { PoolState, usePool } from 'hooks/usePools'
 import useUSDCPrice from 'hooks/useUSDCPrice'
@@ -35,7 +35,6 @@ import { Link, RouteComponentProps } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
-import { useIsExpertMode, useIsGaslessMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ExternalLink, HideExtraSmall, HideSmall, TYPE } from 'theme'
 import { MEDIA_WIDTHS } from 'theme'
@@ -422,7 +421,8 @@ export function PositionPage({
 
   const kromatikaRouter = useKromatikaRouter()
 
-  const isExpertMode = useIsGaslessMode()
+  // FIXME disabled
+  const isExpertMode = false
 
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)

@@ -23,10 +23,10 @@ import { ArrowDown, CheckCircle, HelpCircle, Inbox, Info, X } from 'react-feathe
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
-import { V3TradeState } from 'state/routing/types'
 import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
 import { TransactionDetails } from 'state/transactions/reducer'
 import { useDarkModeManager, useUserHideClosedPositions } from 'state/user/hooks'
+import { V3TradeState } from 'state/validator/types'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { PositionDetails } from 'types/position'
 import { IUniswapV3Factory } from 'types/v3'
@@ -597,7 +597,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
     if (txHash) {
       history.push('/limitorder/')
     }
-  }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
+  }, [attemptingTxn, history, swapErrorMessage, tradeToConfirm, txHash])
 
   const handleAcceptChanges = useCallback(() => {
     setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm })
@@ -958,6 +958,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                               id="swap-button"
                               disabled={
                                 !isValid ||
+                                !approvalState ||
                                 (approvalState !== ApprovalState.APPROVED &&
                                   signatureState !== UseERC20PermitState.SIGNED)
                               }

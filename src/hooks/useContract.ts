@@ -16,6 +16,7 @@ import ENS_ABI from 'abis/ens-registrar.json'
 import ERC20_ABI from 'abis/erc20.json'
 import ERC20_BYTES32_ABI from 'abis/erc20_bytes32.json'
 import GOVERNOR_BRAVO_ABI from 'abis/governor-bravo.json'
+import KROMATIKA_METASWAP_ABI from 'abis/kromatika-metaswap.json'
 import KROMATIKA_ROUTER_ABI from 'abis/kromatika-router.json'
 import LIMIT_ORDER_MANAGER_ABI from 'abis/limit-order-manager.json'
 import SKROMATIKA_ABI from 'abis/sKromatika.json'
@@ -30,6 +31,7 @@ import {
   GOVERNANCE_ALPHA_V0_ADDRESSES,
   GOVERNANCE_ALPHA_V1_ADDRESSES,
   GOVERNANCE_BRAVO_ADDRESSES,
+  KROMATIKA_METASWAP_ADDRESSES,
   KROMATIKA_ROUTER_ADDRESSES,
   LIMIT_ORDER_MANAGER_ADDRESSES,
   MERKLE_DISTRIBUTOR_ADDRESS,
@@ -53,6 +55,7 @@ import {
   EnsPublicResolver,
   EnsRegistrar,
   Erc20,
+  KromatikaMetaswap,
   KromatikaRouter,
   LimitOrderManager,
   SKromatika,
@@ -198,4 +201,8 @@ export function useUniswapUtils(): Contract | null {
 
 export function useKromatikaRouter(): Contract | null {
   return useContract<KromatikaRouter>(KROMATIKA_ROUTER_ADDRESSES, KROMATIKA_ROUTER_ABI, false)
+}
+
+export function useKromatikaMetaswap(): Contract | null {
+  return useContract<KromatikaMetaswap>(KROMATIKA_METASWAP_ADDRESSES, KROMATIKA_METASWAP_ABI, false)
 }

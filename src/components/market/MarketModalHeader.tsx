@@ -1,10 +1,13 @@
 import { Trans } from '@lingui/macro'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Fraction, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { SupportedChainId } from 'constants/chains'
+import { useActiveWeb3React } from 'hooks/web3'
 import { useContext, useState } from 'react'
 import { AlertTriangle, ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
+import { useIsGaslessMode } from 'state/user/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
@@ -12,7 +15,7 @@ import { TYPE } from '../../theme'
 import { isAddress, shortenAddress } from '../../utils'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { ButtonPrimary } from '../Button'
-import { LightCard } from '../Card'
+import { DarkCard, LightCard } from '../Card'
 import { AutoColumn } from '../Column'
 import { FiatValue } from '../CurrencyInputPanel/FiatValue'
 import CurrencyLogo from '../CurrencyLogo'
@@ -39,18 +42,48 @@ const ArrowWrapper = styled.div`
   z-index: 2;
 `
 
+const ImpactWarning = styled.div`
+  border: 1px solid red;
+  border-radius: 10px;
+  background-color: #ff4343;
+  margin-bottom: 3px;
+  padding: 10px;
+  display: flex;
+  font-size: 14px;
+  width: 100%;
+  justify-content: center;
+`
+
 export default function MarketModalHeader({
   trade,
   allowedSlippage,
   recipient,
   showAcceptChanges,
   onAcceptChanges,
+  referer,
+  paymentToken,
+  paymentFees,
+  priceImpactHigh,
+  feeImpactHigh,
+  updateFeeImpact,
+  updatePriceImpact,
+  priceImpactAccepted,
+  feeImpactAccepted,
 }: {
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
   allowedSlippage: Percent
   recipient: string | null
   showAcceptChanges: boolean
   onAcceptChanges: () => void
+  referer: string | null
+  paymentToken: Token | undefined | null
+  paymentFees: CurrencyAmount<Currency> | undefined
+  priceImpactHigh: boolean
+  feeImpactHigh: boolean
+  updateFeeImpact: () => void
+  updatePriceImpact: () => void
+  priceImpactAccepted: boolean
+  feeImpactAccepted: boolean
 }) {
   const theme = useContext(ThemeContext)
 
@@ -58,6 +91,31 @@ export default function MarketModalHeader({
 
   const fiatValueInput = useUSDCValue(trade.inputAmount)
   const fiatValueOutput = useUSDCValue(trade.outputAmount)
+
+  const { chainId } = useActiveWeb3React()
+
+  const calculateMinimumReceived = (
+    slippage: Percent,
+    fees: CurrencyAmount<Currency>,
+    receive: CurrencyAmount<Currency>
+  ) => {
+    const received = receive.subtract(fees)
+
+    return received.subtract(received.multiply(slippage as Fraction)).toSignificant(4)
+  }
+
+  // build fee token with the same currency as output amount, if their currencies differ
+  const fee = paymentFees
+    ? paymentFees.currency !== trade.outputAmount.currency
+      ? CurrencyAmount.fromRawAmount(trade.outputAmount.currency, paymentFees.numerator)
+      : paymentFees
+    : undefined
+
+  const minimumReceived = fee
+    ? Number(calculateMinimumReceived(allowedSlippage, fee, trade.outputAmount))
+    : +trade.minimumAmountOut(allowedSlippage).toSignificant(6)
+
+  const isGaslessMode = useIsGaslessMode() && chainId == SupportedChainId.POLYGON
 
   return (
     <AutoColumn gap={'4px'} style={{ marginTop: '1rem' }}>
@@ -91,7 +149,7 @@ export default function MarketModalHeader({
       <ArrowWrapper>
         <ArrowDown size="16" color={theme.text2} />
       </ArrowWrapper>
-      <LightCard padding="0.75rem 1rem" style={{ marginBottom: '0.25rem' }}>
+      <LightCard padding="0.75rem 1rem" style={{ marginBottom: '0', borderRadius: '5px 5px 0px 0px' }}>
         <AutoColumn gap={'8px'}>
           <RowBetween>
             <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
@@ -119,6 +177,33 @@ export default function MarketModalHeader({
           </RowBetween>
         </AutoColumn>
       </LightCard>
+      {isGaslessMode && (
+        <DarkCard
+          padding="0.75rem 1rem"
+          style={{
+            marginBottom: '0.25rem',
+            borderRadius: '0px 0px 10px 10px',
+            border: '1px solid #2C2F36',
+            marginTop: '0px',
+            position: 'relative',
+            top: '-5px',
+          }}
+        >
+          <AutoColumn gap={'8px'}>
+            <RowBetween align="flex-end">
+              <TYPE.body fontSize={14} color={'white'}>
+                <RowFixed gap={'0px'}>Received (including fees)</RowFixed>
+              </TYPE.body>
+              <RowFixed gap={'0px'}>
+                <TruncatedText fontSize={14} fontWeight={500}>
+                  {fee ? trade.outputAmount.subtract(fee).toSignificant(6) : 'undefined'} {paymentToken?.symbol}
+                </TruncatedText>
+              </RowFixed>
+            </RowBetween>
+          </AutoColumn>
+        </DarkCard>
+      )}
+
       <RowBetween style={{ marginTop: '0.25rem', padding: '0 1rem' }}>
         <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
           <Trans>Price</Trans>
@@ -127,7 +212,14 @@ export default function MarketModalHeader({
       </RowBetween>
 
       <LightCard style={{ padding: '.75rem', marginTop: '0.5rem' }}>
-        <AdvancedMarketDetails trade={trade} allowedSlippage={allowedSlippage} />
+        <AdvancedMarketDetails
+          trade={trade}
+          allowedSlippage={allowedSlippage}
+          referer={referer}
+          paymentToken={paymentToken}
+          paymentFees={fee}
+          minimumReceived={minimumReceived}
+        />
       </LightCard>
 
       {showAcceptChanges ? (
@@ -155,7 +247,18 @@ export default function MarketModalHeader({
             <Trans>
               Output is estimated. You will receive at least{' '}
               <b>
-                {trade.minimumAmountOut(allowedSlippage).toSignificant(6)} {trade.outputAmount.currency.symbol}
+                {isGaslessMode ? (
+                  <span>
+                    {' '}
+                    {fee && calculateMinimumReceived(allowedSlippage, fee, trade.outputAmount)}{' '}
+                    {trade.outputAmount.currency.symbol}{' '}
+                  </span>
+                ) : (
+                  <span>
+                    {' '}
+                    {trade.minimumAmountOut(allowedSlippage).toSignificant(6)} {trade.outputAmount.currency.symbol}
+                  </span>
+                )}{' '}
               </b>{' '}
               or the transaction will revert.
             </Trans>
@@ -180,6 +283,26 @@ export default function MarketModalHeader({
               <b title={recipient}>{isAddress(recipient) ? shortenAddress(recipient) : recipient}</b>
             </Trans>
           </TYPE.main>
+        </AutoColumn>
+      ) : null}
+      {priceImpactHigh ? (
+        <AutoColumn justify="flex-start" gap="sm" style={{ padding: '0px 0 0 0px' }}>
+          <ImpactWarning>
+            <span>
+              Price impact is greater than 20%. Swap anyway?{' '}
+              <input type="checkbox" onChange={updatePriceImpact} defaultChecked={priceImpactAccepted} />{' '}
+            </span>
+          </ImpactWarning>
+        </AutoColumn>
+      ) : null}
+      {feeImpactHigh ? (
+        <AutoColumn justify="flex-start" gap="sm" style={{ padding: '0px 0 0 0px' }}>
+          <ImpactWarning>
+            <span>
+              Fee impact is greater than 20%. Swap anyway?{' '}
+              <input type="checkbox" onChange={updateFeeImpact} defaultChecked={feeImpactAccepted} />{' '}
+            </span>
+          </ImpactWarning>{' '}
         </AutoColumn>
       ) : null}
     </AutoColumn>
