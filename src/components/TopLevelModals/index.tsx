@@ -23,9 +23,10 @@ export default function TopLevelModals() {
   const location = useLocation()
   const fiatOnrampFlagEnabled = useFiatOnrampFlag() === BaseVariant.Enabled
   const pageShowsNftPromoBanner =
-    location.pathname.startsWith('/swap') ||
-    location.pathname.startsWith('/tokens') ||
-    location.pathname.startsWith('/pool')
+    !fiatOnrampFlagEnabled &&
+    (location.pathname.startsWith('/swap') ||
+      location.pathname.startsWith('/tokens') ||
+      location.pathname.startsWith('/pool'))
   useAccountRiskCheck(account)
   const accountBlocked = Boolean(blockedAccountModalOpen && account)
   return (
