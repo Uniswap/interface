@@ -310,7 +310,13 @@ function PriceChart({ width, height, prices, timePeriod }: PriceChartProps) {
               />
             </g>
           ) : (
-            <AxisBottom scale={timeScale} stroke={theme.backgroundOutline} top={graphHeight - 1} hideTicks />
+            <AxisBottom
+              hideAxisLine={true}
+              scale={timeScale}
+              stroke={theme.backgroundOutline}
+              top={graphHeight - 1}
+              hideTicks
+            />
           )}
           {!width && (
             // Ensures an axis is drawn even if the width is not yet initialized.

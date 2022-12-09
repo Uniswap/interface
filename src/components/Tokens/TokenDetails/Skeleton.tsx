@@ -62,7 +62,6 @@ const LoadingChartContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: flex-end;
-  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
   height: 100%;
   margin-bottom: 44px;
   padding-bottom: 66px;
