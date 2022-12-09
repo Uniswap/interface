@@ -4190,10 +4190,10 @@
     "@typescript-eslint/types" "4.33.0"
     eslint-visitor-keys "^2.0.0"
 
-"@uniswap/analytics-events@1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/analytics-events/-/analytics-events-1.1.0.tgz#459236d86f864039c3931d21ba80f41575d2ce4e"
-  integrity sha512-ZJ99dLhJ4q2c0g0PoMxDPbeC010DrdIBLf7jnUsTf/hYm2LfHryr31Sv204xNO7rWVWHi1dk6jdab8DdBnHgPA==
+"@uniswap/analytics-events@1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/analytics-events/-/analytics-events-1.2.0.tgz#9a509cd782dcf170b3b7cf1207126ee197658cc5"
+  integrity sha512-CGvvG6jiGx/ez5rJqWavAV3CDlecX2ZR7oBl1mMYVSnzXv9GsoleeiZAYcETJvEt2hKhmEq0tg7xjwP0pMav9A==
 
 "@uniswap/analytics@1.2.0":
   version "1.2.0"
@@ -4329,7 +4329,7 @@
   resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.30.tgz#2103ca23b8007c59ec71718d34cdc97861c409e5"
   integrity sha512-HwY2VvkQ8lNR6ks5NqQfAtg+4IZqz3KV1T8d2DlI8emIn9uMmaoFbIOg0nzjqAVKKnZSbMTRRtUoAh6mmjRvog==
 
-"@uniswap/universal-router-sdk@^1.2.1", "@uniswap/universal-router-sdk@1.2.2":
+"@uniswap/universal-router-sdk@1.2.2", "@uniswap/universal-router-sdk@^1.2.1":
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/@uniswap/universal-router-sdk/-/universal-router-sdk-1.2.2.tgz#26ece606279d1cd9823277b74cd43575caf160e9"
   integrity sha512-L+MkvMiLyG1vfpEoLbe9xquSApSrfe1m0iLuIjgkZ4qR2Kb0NU8nZXNqeyTJmTZhNbYYIJA0AwRawAN+90NKIw==

@@ -1,4 +1,5 @@
 import { Trace } from '@uniswap/analytics'
+import { PageName } from '@uniswap/analytics-events'
 import { ButtonOutlined } from 'components/Button'
 import { useState } from 'react'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -125,7 +126,7 @@ export default function About() {
   const [selectedStepIndex, setSelectedStepIndex] = useState(0)
 
   return (
-    <Trace page="about-page" shouldLogImpression>
+    <Trace page={PageName.ABOUT_PAGE} shouldLogImpression>
       <Page isDarkMode={isDarkMode}>
         <Content>
           <Title isDarkMode={isDarkMode}>The best way to buy, sell and own crypto and NFTs</Title>
