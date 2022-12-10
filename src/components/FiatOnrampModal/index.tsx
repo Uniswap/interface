@@ -49,6 +49,18 @@ const StyledSpinner = styled(CustomLightSpinner)`
   top: 0;
 `
 
+const MOONPAY_SUPPORTED_CURRENCY_CODES = [
+  'eth',
+  'eth_arbitrum',
+  'eth_optimism',
+  'eth_polygon',
+  'matic_polygon',
+  'polygon',
+  'usdc_arbitrum',
+  'usdc_optimism',
+  'usdc_polygon',
+]
+
 export default function FiatOnrampModal() {
   const { account } = useWeb3React()
   const theme = useTheme()
@@ -78,7 +90,13 @@ export default function FiatOnrampModal() {
           colorCode: theme.accentAction,
           defaultCurrencyCode: 'eth',
           redirectUrl: 'https://app.uniswap.org/#/swap',
-          walletAddress: account,
+          walletAddressed: MOONPAY_SUPPORTED_CURRENCY_CODES.reduce(
+            (acc, currencyCode) => ({
+              ...acc,
+              [currencyCode]: account,
+            }),
+            {}
+          ),
         }),
       })
       const { url } = await res.json()
