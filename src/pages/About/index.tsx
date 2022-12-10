@@ -27,7 +27,7 @@ const BackgroundImage = styled.img`
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
+  height: calc(100vh - 72px);
 `
 
 const AboutTitle = styled(Title)`
