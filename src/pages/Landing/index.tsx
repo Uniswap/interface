@@ -11,8 +11,6 @@ import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 
-const PADDING_BOTTOM = 64
-
 const PageWrapper = styled.div<{ isDarkMode: boolean }>`
   width: 100%;
   height: calc(100vh - 72px);
@@ -25,17 +23,9 @@ const PageWrapper = styled.div<{ isDarkMode: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: end;
-  padding-bottom: 24px 24px ${PADDING_BOTTOM}px;
+  padding: 64px 24px;
   align-items: center;
   transition: 250ms ease opacity;
-
-  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
-    padding: 64px 64px ${PADDING_BOTTOM}px;
-  }
-
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
-    padding: 32px 32px ${PADDING_BOTTOM}px;
-  }
 `
 
 const TitleText = styled.h1<{ isDarkMode: boolean }>`
