@@ -20,8 +20,8 @@ const PageWrapper = styled.div<{ isDarkMode: boolean }>`
   bottom: 0;
   background: ${({ isDarkMode }) =>
     isDarkMode
-      ? 'linear-gradient(179.82deg, rgba(0, 0, 0, 0) 0.16%, #050026 99.85%)'
-      : 'linear-gradient(179.82deg, rgba(255, 255, 255, 0) 0.16%, #EAEAEA 99.85%)'};
+      ? 'linear-gradient(rgba(8, 10, 24, 0) 9.84%, rgb(8 10 24 / 86%) 35.35%)'
+      : 'linear-gradient(rgba(8, 10, 24, 0) 9.84%, rgb(255 255 255 / 86%) 35.35%)'};
   z-index: ${Z_INDEX.sticky};
   display: flex;
   flex-direction: column;
