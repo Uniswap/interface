@@ -29,7 +29,7 @@ export function HeaderText({
         <Text textAlign="center" variant="headlineSmall">
           Allow {dapp.name} to use up to
           <Text fontWeight="bold"> {readablePermitAmount} </Text>
-          {permitCurrency?.name}?
+          {permitCurrency?.symbol}?
         </Text>
       </Trans>
     ) : (
