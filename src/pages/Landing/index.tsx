@@ -14,6 +14,7 @@ import { Z_INDEX } from 'theme/zIndex'
 const PADDING_BOTTOM = 64
 
 const PageWrapper = styled.div<{ isDarkMode: boolean }>`
+  height: 100%;
   width: 100%;
   position: absolute;
   bottom: 0;
@@ -28,6 +29,7 @@ const PageWrapper = styled.div<{ isDarkMode: boolean }>`
   padding-bottom: 24px 24px ${PADDING_BOTTOM}px;
   align-items: center;
   transition: 250ms ease opacity;
+  pointer-events: none;
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     padding: 64px 64px ${PADDING_BOTTOM}px;
