@@ -121,12 +121,16 @@ const TitleWrapper = styled.span`
 const ActionsWrapper = styled.span`
   display: flex;
   justify-content: center;
-  gap: 24px;
+  gap: 12px;
   width: 100%;
 
   & > * {
     max-width: 288px;
     flex: 1;
+  }
+
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    gap: 24px;
   }
 `
 
