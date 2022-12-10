@@ -8,10 +8,12 @@ import { BREAKPOINTS } from 'theme'
 
 import Card from './Card'
 import { CARDS, STEPS } from './constants'
+import backgroundImgSrc from './images/background.jpg'
 import Step from './Step'
 import { SubTitle, Title } from './Title'
 
 const Page = styled.span<{ isDarkMode: boolean; titleHeight: number }>`
+  position: relative;
   width: 100%;
   align-self: center;
   display: flex;
@@ -19,6 +21,17 @@ const Page = styled.span<{ isDarkMode: boolean; titleHeight: number }>`
   justify-content: center;
   align-items: center;
   padding-top: calc(100vh - ${({ titleHeight }) => titleHeight + 200}px);
+`
+
+const BackgroundImage = styled.img`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+`
+
+const AboutTitle = styled(Title)`
+  z-index: 1;
 `
 
 const Panels = styled.div`
@@ -141,10 +154,11 @@ export default function About() {
   return (
     <Trace page={PageName.ABOUT_PAGE} shouldLogImpression>
       <Page isDarkMode={isDarkMode} titleHeight={titleHeight}>
+        <BackgroundImage src={backgroundImgSrc} />
         <Content>
-          <Title ref={titleRef} isDarkMode={isDarkMode}>
+          <AboutTitle ref={titleRef} isDarkMode={isDarkMode}>
             Uniswap is the largest on-chain marketplace for tokens and NFTs.
-          </Title>
+          </AboutTitle>
           <PoweredBySection>
             <div>
               <SubTitle isDarkMode={isDarkMode}>Powered by the Uniswap Protocol</SubTitle>
