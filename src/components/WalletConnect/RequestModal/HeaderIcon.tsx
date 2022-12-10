@@ -1,25 +1,25 @@
-import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { Image } from 'react-native'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { Box } from 'src/components/layout'
 import { ChainId } from 'src/constants/chains'
+import { CurrencyInfo } from 'src/features/dataApi/types'
 import { DappInfo } from 'src/features/walletConnect/types'
 import { iconSizes } from 'src/styles/sizing'
 import { toSupportedChainId } from 'src/utils/chainId'
 
 export function HeaderIcon({
   dapp,
-  permitCurrency,
+  permitCurrencyInfo,
   showChain = true,
 }: {
   dapp: DappInfo
-  permitCurrency?: Currency | null
+  permitCurrencyInfo?: CurrencyInfo | null
   showChain?: boolean
 }) {
-  if (permitCurrency) {
-    return <CurrencyLogo currency={permitCurrency} />
+  if (permitCurrencyInfo) {
+    return <CurrencyLogo currencyInfo={permitCurrencyInfo} />
   }
 
   const chainId = toSupportedChainId(dapp.chain_id) ?? ChainId.Mainnet

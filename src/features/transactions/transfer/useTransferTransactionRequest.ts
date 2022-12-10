@@ -80,9 +80,11 @@ function getTransferParams(
   account: Account,
   derivedTransferInfo: DerivedTransferInfo
 ): TransferTokenParams | undefined {
-  const { currencyAmounts, currencyTypes, chainId, recipient, currencyIn, nftIn } =
+  const { currencyAmounts, currencyTypes, chainId, recipient, currencyInInfo, nftIn } =
     derivedTransferInfo
-  const tokenAddress = currencyIn ? currencyAddress(currencyIn) : nftIn?.nftContract?.address
+  const tokenAddress = currencyInInfo
+    ? currencyAddress(currencyInInfo.currency)
+    : nftIn?.nftContract?.address
   const amount = currencyAmounts[CurrencyField.INPUT]?.quotient.toString()
   const assetType = currencyTypes[CurrencyField.INPUT]
 
@@ -108,7 +110,7 @@ function getTransferParams(
     }
 
     case AssetType.Currency: {
-      if (!currencyIn || amount === undefined) {
+      if (!currencyInInfo || amount === undefined) {
         return
       }
 

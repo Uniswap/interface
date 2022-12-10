@@ -4,7 +4,7 @@ import { LinkButton } from 'src/components/buttons/LinkButton'
 import { Flex } from 'src/components/layout'
 import { HeaderIcon } from 'src/components/WalletConnect/RequestModal/HeaderIcon'
 import { HeaderText } from 'src/components/WalletConnect/RequestModal/HeaderText'
-import { useCurrency } from 'src/features/tokens/useCurrency'
+import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import { WalletConnectRequest } from 'src/features/walletConnect/walletConnectSlice'
 
 export interface PermitInfo {
@@ -22,15 +22,15 @@ export function ClientDetails({
   const { dapp } = request
   const theme = useAppTheme()
 
-  const permitCurrency = useCurrency(permitInfo?.currencyId)
+  const permitCurrencyInfo = useCurrencyInfo(permitInfo?.currencyId)
 
   return (
     <Flex centered gap="md">
-      <HeaderIcon dapp={dapp} permitCurrency={permitCurrency} />
+      <HeaderIcon dapp={dapp} permitCurrencyInfo={permitCurrencyInfo} />
       <Flex centered gap="sm">
         <HeaderText
           permitAmount={permitInfo?.amount}
-          permitCurrency={permitCurrency}
+          permitCurrency={permitCurrencyInfo?.currency}
           request={request}
         />
         <LinkButton

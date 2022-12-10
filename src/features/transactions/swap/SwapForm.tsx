@@ -62,7 +62,6 @@ export function SwapForm({
   const {
     chainId,
     currencies,
-    currencyLogos,
     currencyAmounts,
     currencyBalances,
     exactCurrencyField,
@@ -179,10 +178,9 @@ export function SwapForm({
           <Trace section={SectionName.CurrencyInputPanel}>
             <Flex backgroundColor="background2" borderRadius="xl">
               <CurrencyInputPanel
-                currency={currencies[CurrencyField.INPUT]}
                 currencyAmount={currencyAmounts[CurrencyField.INPUT]}
                 currencyBalance={currencyBalances[CurrencyField.INPUT]}
-                currencyLogo={currencyLogos[CurrencyField.INPUT]}
+                currencyInfo={currencies[CurrencyField.INPUT]}
                 dimTextColor={exactCurrencyField === CurrencyField.OUTPUT && swapDataRefreshing}
                 focus={focusOnCurrencyField === CurrencyField.INPUT}
                 isOnScreen={!showingSelectorScreen}
@@ -242,10 +240,9 @@ export function SwapForm({
                 position="relative">
                 <CurrencyInputPanel
                   isOutput
-                  currency={currencies[CurrencyField.OUTPUT]}
                   currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
                   currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
-                  currencyLogo={currencyLogos[CurrencyField.OUTPUT]}
+                  currencyInfo={currencies[CurrencyField.OUTPUT]}
                   dimTextColor={exactCurrencyField === CurrencyField.INPUT && swapDataRefreshing}
                   focus={focusOnCurrencyField === CurrencyField.OUTPUT}
                   isOnScreen={!showingSelectorScreen}

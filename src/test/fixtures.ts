@@ -12,10 +12,19 @@ import WETH_ABI from 'src/abis/weth.json'
 import { config } from 'src/config'
 import { NATIVE_ADDRESS, SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
-import { DAI, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
+import {
+  DAI,
+  DAI_ARBITRUM_ONE,
+  nativeOnChain,
+  UNI,
+  WRAPPED_NATIVE_CURRENCY,
+} from 'src/constants/tokens'
+import { SafetyLevel } from 'src/data/__generated__/types-and-hooks'
 import { AssetType } from 'src/entities/assets'
 import { ContractManager } from 'src/features/contracts/ContractManager'
+import { CurrencyInfo } from 'src/features/dataApi/types'
 import { AppNotificationType } from 'src/features/notifications/types'
+import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { finalizeTransaction } from 'src/features/transactions/slice'
 import {
   ApproveTransactionInfo,
@@ -26,6 +35,7 @@ import {
 import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
+import { currencyId } from 'src/utils/currencyId'
 
 export const MainnetEth = nativeOnChain(ChainId.Mainnet)
 
@@ -256,9 +266,42 @@ export const networkDown: NetInfoNoConnectionState = {
   details: null,
 }
 
+const ETH = NativeCurrency.onChain(ChainId.Mainnet)
+
 export const networkUp: NetInfoState = {
   isConnected: true,
   type: NetInfoStateType.other,
   isInternetReachable: true,
   details: { isConnectionExpensive: false },
+}
+
+export const ethCurrencyInfo: CurrencyInfo = {
+  currencyId: currencyId(ETH),
+  currency: ETH,
+  logoUrl: 'https://token-icons.s3.amazonaws.com/eth.png',
+  safetyLevel: SafetyLevel.Verified,
+}
+
+export const uniCurrencyInfo: CurrencyInfo = {
+  currencyId: currencyId(UNI[ChainId.Mainnet]),
+  currency: UNI[ChainId.Mainnet],
+  logoUrl:
+    'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png',
+  safetyLevel: SafetyLevel.Verified,
+}
+
+export const daiCurrencyInfo: CurrencyInfo = {
+  currencyId: currencyId(DAI),
+  currency: DAI,
+  logoUrl:
+    'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png',
+  safetyLevel: SafetyLevel.Verified,
+}
+
+export const arbitrumDaiCurrencyInfo: CurrencyInfo = {
+  currencyId: currencyId(DAI_ARBITRUM_ONE),
+  currency: DAI_ARBITRUM_ONE,
+  logoUrl:
+    'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png',
+  safetyLevel: SafetyLevel.Verified,
 }

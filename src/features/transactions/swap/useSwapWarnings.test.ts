@@ -8,28 +8,25 @@ import { getSwapWarnings } from 'src/features/transactions/swap/useSwapWarnings'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { theme } from 'src/styles/theme'
-import { account, networkDown, networkUp } from 'src/test/fixtures'
+import {
+  account,
+  daiCurrencyInfo,
+  ethCurrencyInfo,
+  networkDown,
+  networkUp,
+} from 'src/test/fixtures'
 
 const ETH = NativeCurrency.onChain(ChainId.Mainnet)
 
 const emptySwapInfo: Pick<
   DerivedSwapInfo,
-  | 'exactAmountToken'
-  | 'exactAmountUSD'
-  | 'chainId'
-  | 'wrapType'
-  | 'focusOnCurrencyField'
-  | 'currencyLogos'
+  'exactAmountToken' | 'exactAmountUSD' | 'chainId' | 'wrapType' | 'focusOnCurrencyField'
 > = {
   chainId: 1,
   wrapType: WrapType.NotApplicable,
   exactAmountToken: '1000',
   exactAmountUSD: '1000',
   focusOnCurrencyField: CurrencyField.INPUT,
-  currencyLogos: {
-    [CurrencyField.INPUT]: undefined,
-    [CurrencyField.OUTPUT]: undefined,
-  },
 }
 
 const swapState: DerivedSwapInfo = {
@@ -43,7 +40,7 @@ const swapState: DerivedSwapInfo = {
     [CurrencyField.OUTPUT]: undefined,
   },
   currencies: {
-    [CurrencyField.INPUT]: ETH,
+    [CurrencyField.INPUT]: ethCurrencyInfo,
     [CurrencyField.OUTPUT]: undefined,
   },
   exactCurrencyField: CurrencyField.INPUT,
@@ -62,8 +59,8 @@ const insufficientBalanceState: DerivedSwapInfo = {
     [CurrencyField.OUTPUT]: CurrencyAmount.fromRawAmount(DAI, '0'),
   },
   currencies: {
-    [CurrencyField.INPUT]: ETH,
-    [CurrencyField.OUTPUT]: DAI,
+    [CurrencyField.INPUT]: ethCurrencyInfo,
+    [CurrencyField.OUTPUT]: daiCurrencyInfo,
   },
   exactCurrencyField: CurrencyField.INPUT,
   trade: { loading: false, error: undefined, trade: null },
@@ -81,8 +78,8 @@ const tradeErrorState: DerivedSwapInfo = {
     [CurrencyField.OUTPUT]: CurrencyAmount.fromRawAmount(ETH, '0'),
   },
   currencies: {
-    [CurrencyField.INPUT]: DAI,
-    [CurrencyField.OUTPUT]: ETH,
+    [CurrencyField.INPUT]: daiCurrencyInfo,
+    [CurrencyField.OUTPUT]: ethCurrencyInfo,
   },
   exactCurrencyField: CurrencyField.INPUT,
   trade: {

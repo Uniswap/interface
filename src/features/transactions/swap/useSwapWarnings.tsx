@@ -114,8 +114,8 @@ export function getSwapWarnings(
       message: t(
         'Due to the amount of {{ currencyOut }} liquidity currently available, the more {{ currencyIn }} you try to swap, the less {{ currencyOut }} you will receive.',
         {
-          currencyIn: currencies[CurrencyField.INPUT]?.symbol,
-          currencyOut: currencies[CurrencyField.OUTPUT]?.symbol,
+          currencyIn: currencies[CurrencyField.INPUT]?.currency.symbol,
+          currencyOut: currencies[CurrencyField.OUTPUT]?.currency.symbol,
         }
       ),
     })

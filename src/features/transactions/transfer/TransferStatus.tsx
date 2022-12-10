@@ -26,12 +26,12 @@ const getTextFromTransferStatus = (
   recipient: string | undefined,
   transactionDetails?: TransactionDetails
 ) => {
-  const { currencyIn, nftIn, currencyAmounts, isUSDInput, exactAmountUSD } = derivedTransferInfo
+  const { currencyInInfo, nftIn, currencyAmounts, isUSDInput, exactAmountUSD } = derivedTransferInfo
   if (
     !transactionDetails ||
     transactionDetails.typeInfo.type !== TransactionType.Send ||
     !recipient ||
-    (!currencyIn && !nftIn)
+    (!currencyInInfo && !nftIn)
   ) {
     // TODO: should never go into this state but should probably do some
     // error display here as well as log to sentry or amplitude
@@ -51,7 +51,7 @@ const getTextFromTransferStatus = (
             ? ''
             : formatCurrencyAmount(currencyAmounts[CurrencyField.INPUT], NumberType.TokenTx),
           usdValue: isUSDInput ? ` ($${exactAmountUSD})` : '',
-          tokenName: nftIn?.name ?? ` ${currencyIn?.symbol}` ?? ' tokens',
+          tokenName: nftIn?.name ?? ` ${currencyInInfo?.currency.symbol}` ?? ' tokens',
           recipient,
         }
       ),

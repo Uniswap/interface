@@ -65,12 +65,12 @@ export function TransferTokenForm({
     exactAmountUSD,
     recipient,
     isUSDInput = false,
-    currencyIn,
-    currencyInLogo,
+    currencyInInfo,
     nftIn,
     chainId,
   } = derivedTransferInfo
 
+  const currencyIn = currencyInInfo?.currency
   useUSDTokenUpdater(
     dispatch,
     isUSDInput,
@@ -223,10 +223,9 @@ export function TransferTokenForm({
             <Box backgroundColor="background2" borderRadius="xl" justifyContent="center">
               <CurrencyInputPanel
                 focus
-                currency={currencyIn}
                 currencyAmount={currencyAmounts[CurrencyField.INPUT]}
                 currencyBalance={currencyBalances[CurrencyField.INPUT]}
-                currencyLogo={currencyInLogo}
+                currencyInfo={currencyInInfo}
                 isOnScreen={!showingSelectorScreen}
                 isUSDInput={isUSDInput}
                 selection={inputSelection}

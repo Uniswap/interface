@@ -1,5 +1,4 @@
 import { NetInfoState, useNetInfo } from '@react-native-community/netinfo'
-import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { TFunction } from 'react-i18next'
 import Eye from 'src/assets/icons/eye.svg'
@@ -11,6 +10,7 @@ import {
   WarningSeverity,
 } from 'src/components/modals/WarningModal/types'
 import { ChainId } from 'src/constants/chains'
+import { CurrencyInfo } from 'src/features/dataApi/types'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
@@ -28,13 +28,13 @@ export function getTransferWarnings(
     warnings.push(getNetworkWarning(t))
   }
 
-  const { currencyBalances, currencyAmounts, recipient, currencyIn, nftIn, chainId } =
+  const { currencyBalances, currencyAmounts, recipient, currencyInInfo, nftIn, chainId } =
     derivedTransferInfo
 
   const currencyBalanceIn = currencyBalances[CurrencyField.INPUT]
   const currencyAmountIn = currencyAmounts[CurrencyField.INPUT]
   const isMissingRequiredParams = checkIsMissingRequiredParams(
-    currencyIn,
+    currencyInInfo,
     nftIn,
     chainId,
     recipient,
@@ -95,17 +95,19 @@ export function useTransferWarnings(
 }
 
 const checkIsMissingRequiredParams = (
-  currencyIn: Currency | undefined,
+  currencyInInfo: NullUndefined<CurrencyInfo>,
   nftIn: GQLNftAsset | undefined,
   chainId: ChainId | undefined,
   recipient: Address | undefined,
   hasCurrencyAmount: boolean,
   hasCurrencyBalance: boolean
 ) => {
-  const tokenAddress = currencyIn ? currencyAddress(currencyIn) : nftIn?.nftContract?.address
+  const tokenAddress = currencyInInfo
+    ? currencyAddress(currencyInInfo.currency)
+    : nftIn?.nftContract?.address
 
   if (!tokenAddress || !chainId || !recipient) return true
-  if (!currencyIn && !nftIn) return true
-  if (currencyIn && (!hasCurrencyAmount || !hasCurrencyBalance)) return true
+  if (!currencyInInfo && !nftIn) return true
+  if (currencyInInfo && (!hasCurrencyAmount || !hasCurrencyBalance)) return true
   return false
 }

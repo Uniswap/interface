@@ -156,12 +156,12 @@ export function SwapReview({
     )
   }
 
-  const currencyIn = currencies[CurrencyField.INPUT]
-  const currencyOut = currencies[CurrencyField.OUTPUT]
+  const currencyInInfo = currencies[CurrencyField.INPUT]
+  const currencyOutInfo = currencies[CurrencyField.OUTPUT]
 
   if (
-    !currencyIn ||
-    !currencyOut ||
+    !currencyInInfo ||
+    !currencyOutInfo ||
     !currencyAmounts[CurrencyField.INPUT] ||
     !currencyAmounts[CurrencyField.OUTPUT]
   ) {
@@ -197,8 +197,8 @@ export function SwapReview({
       )}
       <TransactionReview
         actionButtonProps={actionButtonProps}
-        currencyIn={currencyIn}
-        currencyOut={currencyOut}
+        currencyInInfo={currencyInInfo}
+        currencyOutInfo={currencyOutInfo}
         formattedAmountIn={amountIn}
         formattedAmountOut={amountOut}
         inputCurrencyUSDValue={inputCurrencyUSDValue}

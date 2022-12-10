@@ -19,6 +19,7 @@ import { DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/misc'
 import { AssetType } from 'src/entities/assets'
 import { useNativeCurrencyBalance, useTokenBalance } from 'src/features/balances/hooks'
 import { ContractManager } from 'src/features/contracts/ContractManager'
+import { CurrencyInfo } from 'src/features/dataApi/types'
 import { FEATURE_FLAGS } from 'src/features/experiments/constants'
 import { useFeatureFlag } from 'src/features/experiments/hooks'
 import { useTransactionGasFee } from 'src/features/gas/hooks'
@@ -29,7 +30,7 @@ import { useSimulatedGasLimit } from 'src/features/routing/hooks'
 import { STABLECOIN_AMOUNT_OUT, useUSDCPrice } from 'src/features/routing/useUSDCPrice'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { EventName } from 'src/features/telemetry/constants'
-import { useCurrencyInfo } from 'src/features/tokens/useCurrency'
+import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import { PERMITTABLE_TOKENS } from 'src/features/transactions/permit/permittableTokens'
 import { usePermitSignature } from 'src/features/transactions/permit/usePermitSignature'
 import { getBaseTradeAnalyticsProperties } from 'src/features/transactions/swap/analytics'
@@ -62,22 +63,18 @@ export const DEFAULT_SLIPPAGE_TOLERANCE_PERCENT = new Percent(DEFAULT_SLIPPAGE_T
 const NUM_USD_DECIMALS_DISPLAY = 2
 
 export type DerivedSwapInfo<
-  TInput = Currency,
-  TOutput extends Currency = Currency
+  TInput = CurrencyInfo,
+  TOutput extends CurrencyInfo = CurrencyInfo
 > = BaseDerivedInfo<TInput> & {
   chainId: ChainId
   currencies: BaseDerivedInfo<TInput>['currencies'] & {
     [CurrencyField.OUTPUT]: NullUndefined<TOutput>
   }
-  currencyLogos: {
-    [CurrencyField.INPUT]: NullUndefined<string>
-    [CurrencyField.OUTPUT]: NullUndefined<string>
-  }
   currencyAmounts: BaseDerivedInfo<TInput>['currencyAmounts'] & {
-    [CurrencyField.OUTPUT]: NullUndefined<CurrencyAmount<TOutput>>
+    [CurrencyField.OUTPUT]: NullUndefined<CurrencyAmount<Currency>>
   }
   currencyBalances: BaseDerivedInfo<TInput>['currencyBalances'] & {
-    [CurrencyField.OUTPUT]: NullUndefined<CurrencyAmount<TOutput>>
+    [CurrencyField.OUTPUT]: NullUndefined<CurrencyAmount<Currency>>
   }
   focusOnCurrencyField: CurrencyField
   trade: ReturnType<typeof useTrade>
@@ -112,22 +109,15 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
       : undefined
   )
 
-  const currencyLogos = useMemo(() => {
+  const currencies = useMemo(() => {
     return {
-      [CurrencyField.INPUT]: currencyInInfo?.logoUrl,
-      [CurrencyField.OUTPUT]: currencyOutInfo?.logoUrl,
+      [CurrencyField.INPUT]: currencyInInfo,
+      [CurrencyField.OUTPUT]: currencyOutInfo,
     }
   }, [currencyInInfo, currencyOutInfo])
 
   const currencyIn = currencyInInfo?.currency
   const currencyOut = currencyOutInfo?.currency
-
-  const currencies = useMemo(() => {
-    return {
-      [CurrencyField.INPUT]: currencyIn,
-      [CurrencyField.OUTPUT]: currencyOut,
-    }
-  }, [currencyIn, currencyOut])
 
   const chainId = currencyIn?.chainId ?? currencyOut?.chainId ?? ChainId.Mainnet
 
@@ -214,7 +204,6 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
       currencies,
       currencyAmounts,
       currencyBalances,
-      currencyLogos,
       exactAmountToken,
       exactAmountUSD,
       exactCurrencyField,
@@ -230,7 +219,6 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     currencies,
     currencyAmounts,
     currencyBalances,
-    currencyLogos,
     exactAmountToken,
     exactAmountUSD,
     exactCurrencyField,
@@ -621,8 +609,8 @@ export function useSwapTransactionRequest(
 
   const [otherCurrency, tradeType] =
     exactCurrencyField === CurrencyField.INPUT
-      ? [currencies[CurrencyField.OUTPUT], TradeType.EXACT_INPUT]
-      : [currencies[CurrencyField.INPUT], TradeType.EXACT_OUTPUT]
+      ? [currencies[CurrencyField.OUTPUT]?.currency, TradeType.EXACT_INPUT]
+      : [currencies[CurrencyField.INPUT]?.currency, TradeType.EXACT_OUTPUT]
 
   // get simulated gasLimit only if token doesn't have enough allowance AND we can't get the allowance
   // through .permit instead

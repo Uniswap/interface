@@ -1,14 +1,13 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { WarningLabel } from 'src/components/modals/WarningModal/types'
 import { ChainId } from 'src/constants/chains'
-import { DAI } from 'src/constants/tokens'
 import { AssetType } from 'src/entities/assets'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 import { getTransferWarnings } from 'src/features/transactions/transfer/useTransferWarnings'
-import { account, networkDown, networkUp } from 'src/test/fixtures'
+import { account, networkDown, networkUp, uniCurrencyInfo } from 'src/test/fixtures'
 
 const ETH = NativeCurrency.onChain(ChainId.Mainnet)
 
@@ -37,7 +36,7 @@ const transferState: DerivedTransferInfo = {
     [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(ETH, '20000'),
   },
   chainId: ChainId.Mainnet,
-  currencyIn: DAI,
+  currencyInInfo: uniCurrencyInfo,
   nftIn: undefined,
 }
 
@@ -51,7 +50,7 @@ const transferState2: DerivedTransferInfo = {
   },
   recipient: '0x0eae044f00b0af300500f090ea00027097d03000',
   chainId: ChainId.Mainnet,
-  currencyIn: DAI,
+  currencyInInfo: uniCurrencyInfo,
   nftIn: undefined,
 }
 
@@ -93,7 +92,7 @@ const transferNFT: DerivedTransferInfo = {
   },
   recipient: '0x0eae044f00b0af300500f090ea00027097d03000',
   chainId: ChainId.Mainnet,
-  currencyIn: undefined,
+  currencyInInfo: undefined,
   nftIn: mockNFT,
 }
 
@@ -107,7 +106,7 @@ const transferCurrency: DerivedTransferInfo = {
   },
   recipient: '0x0eae044f00b0af300500f090ea00027097d03000',
   chainId: ChainId.Mainnet,
-  currencyIn: DAI,
+  currencyInInfo: uniCurrencyInfo,
   nftIn: undefined,
 }
 
@@ -121,7 +120,7 @@ const insufficientBalanceState: DerivedTransferInfo = {
   },
   recipient: '0x0eae044f00b0af300500f090ea00027097d03000',
   chainId: ChainId.Mainnet,
-  currencyIn: DAI,
+  currencyInInfo: uniCurrencyInfo,
   nftIn: undefined,
 }
 

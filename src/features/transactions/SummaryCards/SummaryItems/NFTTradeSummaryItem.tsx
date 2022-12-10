@@ -2,7 +2,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { AssetType } from 'src/entities/assets'
-import { useCurrency } from 'src/features/tokens/useCurrency'
+import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import BalanceUpdate from 'src/features/transactions/SummaryCards/BalanceUpdate'
 import TransactionSummaryLayout, {
   TXN_HISTORY_ICON_SIZE,
@@ -18,7 +18,7 @@ export default function NFTTradeSummaryItem({
 }: BaseTransactionSummaryProps & { transaction: { typeInfo: NFTTradeTransactionInfo } }) {
   const { t } = useTranslation()
 
-  const purchaseCurrency = useCurrency(transaction.typeInfo.purchaseCurrencyId)
+  const purchaseCurrencyInfo = useCurrencyInfo(transaction.typeInfo.purchaseCurrencyId)
   const purchaseAmountRaw = transaction.typeInfo.purchaseCurrencyAmountRaw
 
   const titleTextPresent =
@@ -32,10 +32,10 @@ export default function NFTTradeSummaryItem({
     <TransactionSummaryLayout
       caption={transaction.typeInfo.nftSummaryInfo.collectionName}
       endAdornment={
-        purchaseAmountRaw && purchaseCurrency ? (
+        purchaseAmountRaw && purchaseCurrencyInfo ? (
           <BalanceUpdate
             amountRaw={purchaseAmountRaw}
-            currency={purchaseCurrency}
+            currency={purchaseCurrencyInfo.currency}
             nftTradeType={transaction.typeInfo.tradeType}
             transactedUSDValue={transaction.typeInfo.transactedUSDValue}
             transactionStatus={transaction.status}

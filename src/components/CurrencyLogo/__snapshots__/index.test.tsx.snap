@@ -14,40 +14,28 @@ exports[`renders a currency logo with network logo 1`] = `
     ]
   }
 >
-  <View
+  <Image
+    source={
+      Object {
+        "uri": "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png",
+      }
+    }
     style={
       Array [
         Object {
-          "alignItems": "center",
+          "resizeMode": "contain",
+        },
+        Object {
           "backgroundColor": "#D2D9EE",
-          "borderRadius": 999999,
-          "display": "flex",
+          "borderColor": "#D2D9EE",
+          "borderRadius": 10,
+          "borderWidth": 0.5,
           "height": 20,
-          "justifyContent": "center",
-          "paddingHorizontal": 8,
           "width": 20,
         },
       ]
     }
-  >
-    <Text
-      adjustsFontSizeToFit={true}
-      allowFontScaling={true}
-      maxFontSizeMultiplier={1.4}
-      numberOfLines={1}
-      style={
-        Array [
-          Object {
-            "color": "#0D111C",
-            "display": "flex",
-            "textAlign": "center",
-          },
-        ]
-      }
-    >
-      UNI
-    </Text>
-  </View>
+  />
   <View
     style={
       Array [
@@ -76,7 +64,7 @@ exports[`renders a currency logo with network logo 1`] = `
             "display": "flex",
           },
           Object {
-            "borderColor": "#209853",
+            "borderColor": "#515EDC",
           },
         ]
       }
@@ -100,13 +88,10 @@ exports[`renders a currency logo without network logo 1`] = `
   }
 >
   <Image
-    onError={[Function]}
     source={
-      Array [
-        Object {
-          "uri": "https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png",
-        },
-      ]
+      Object {
+        "uri": "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png",
+      }
     }
     style={
       Array [
@@ -114,8 +99,8 @@ exports[`renders a currency logo without network logo 1`] = `
           "resizeMode": "contain",
         },
         Object {
-          "backgroundColor": undefined,
-          "borderColor": undefined,
+          "backgroundColor": "#D2D9EE",
+          "borderColor": "#D2D9EE",
           "borderRadius": 10,
           "borderWidth": 0.5,
           "height": 20,

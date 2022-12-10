@@ -4,7 +4,7 @@ import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { useENS } from 'src/features/ens/useENS'
-import { useCurrency } from 'src/features/tokens/useCurrency'
+import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import BalanceUpdate from 'src/features/transactions/SummaryCards/BalanceUpdate'
 import TransactionSummaryLayout, {
   AssetUpdateLayout,
@@ -22,7 +22,7 @@ export default function SendSummaryItem({
   ...rest
 }: BaseTransactionSummaryProps & { transaction: { typeInfo: SendTokenTransactionInfo } }) {
   const { t } = useTranslation()
-  const currency = useCurrency(
+  const currencyInfo = useCurrencyInfo(
     buildCurrencyId(transaction.chainId, transaction.typeInfo.tokenAddress)
   )
 
@@ -31,7 +31,7 @@ export default function SendSummaryItem({
       return (
         <LogoWithTxStatus
           assetType={AssetType.Currency}
-          currency={currency}
+          currencyInfo={currencyInfo}
           size={TXN_HISTORY_ICON_SIZE}
           txStatus={transaction.status}
           txType={transaction.typeInfo.type}
@@ -48,7 +48,7 @@ export default function SendSummaryItem({
       />
     )
   }, [
-    currency,
+    currencyInfo,
     transaction.status,
     transaction.typeInfo.assetType,
     transaction.typeInfo.nftSummaryInfo?.imageURL,
@@ -63,11 +63,11 @@ export default function SendSummaryItem({
 
   const endAdornement = useMemo(() => {
     if (transaction.typeInfo.assetType === AssetType.Currency) {
-      if (currency && transaction.typeInfo.currencyAmountRaw) {
+      if (currencyInfo && transaction.typeInfo.currencyAmountRaw) {
         return (
           <BalanceUpdate
             amountRaw={transaction.typeInfo.currencyAmountRaw}
-            currency={currency}
+            currency={currencyInfo.currency}
             transactedUSDValue={transaction.typeInfo.transactedUSDValue}
             transactionStatus={transaction.status}
             transactionType={transaction.typeInfo.type}
@@ -87,7 +87,7 @@ export default function SendSummaryItem({
       )
     }
   }, [
-    currency,
+    currencyInfo,
     transaction.status,
     transaction.typeInfo.assetType,
     transaction.typeInfo.currencyAmountRaw,

@@ -5,7 +5,7 @@ import { LayoutChangeEvent } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
-import { useCurrency } from 'src/features/tokens/useCurrency'
+import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import {
   makeSelectAddressTransactions,
   makeSelectTransaction,
@@ -74,8 +74,8 @@ export function useCreateSwapFormState(
       ? transaction.typeInfo.outputCurrencyId
       : undefined
 
-  const inputCurrency = useCurrency(inputCurrencyId)
-  const outputCurrency = useCurrency(outputCurrencyId)
+  const inputCurrencyInfo = useCurrencyInfo(inputCurrencyId)
+  const outputCurrencyInfo = useCurrencyInfo(outputCurrencyId)
 
   return useMemo(() => {
     if (!chainId || !txId || !transaction) {
@@ -84,18 +84,18 @@ export function useCreateSwapFormState(
 
     return createSwapFromStateFromDetails({
       transactionDetails: transaction,
-      inputCurrency,
-      outputCurrency,
+      inputCurrency: inputCurrencyInfo?.currency,
+      outputCurrency: outputCurrencyInfo?.currency,
     })
-  }, [chainId, inputCurrency, outputCurrency, transaction, txId])
+  }, [chainId, inputCurrencyInfo, outputCurrencyInfo, transaction, txId])
 }
 
 export function useCreateWrapFormState(
   address: Address | undefined,
   chainId: ChainId | undefined,
   txId: string | undefined,
-  inputCurrency: Currency,
-  outputCurrency: Currency
+  inputCurrency: NullUndefined<Currency>,
+  outputCurrency: NullUndefined<Currency>
 ) {
   const transaction = useSelectTransaction(address, chainId, txId)
 

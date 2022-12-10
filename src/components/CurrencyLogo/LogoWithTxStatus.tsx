@@ -1,4 +1,3 @@
-import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
@@ -9,13 +8,14 @@ import UnknownStatus from 'src/assets/icons/question-in-circle.svg'
 import SlashCircleIcon from 'src/assets/icons/slash-circle.svg'
 import WalletConnectLogo from 'src/assets/icons/walletconnect.svg'
 import MoonpayLogo from 'src/assets/logos/moonpay.svg'
-import { CurrencyLogoOnly } from 'src/components/CurrencyLogo'
+import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { RemoteImage } from 'src/components/images/RemoteImage'
 import { Box } from 'src/components/layout/Box'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
+import { CurrencyInfo } from 'src/features/dataApi/types'
 import { NFTTradeType, TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import { logger } from 'src/utils/logger'
@@ -35,8 +35,8 @@ interface DappLogoWithTxStatusProps {
 }
 
 interface SwapLogoOrLogoWithTxStatusProps {
-  inputCurrency: NullUndefined<Currency>
-  outputCurrency: NullUndefined<Currency>
+  inputCurrencyInfo: NullUndefined<CurrencyInfo>
+  outputCurrencyInfo: NullUndefined<CurrencyInfo>
   txStatus: TransactionStatus
   size: number
   showCancelIcon?: boolean
@@ -44,7 +44,7 @@ interface SwapLogoOrLogoWithTxStatusProps {
 
 interface CurrencyStatusProps extends LogoWithTxStatusProps {
   assetType: AssetType.Currency
-  currency?: Currency | null
+  currencyInfo?: CurrencyInfo | null
 }
 
 interface NFTStatusProps extends LogoWithTxStatusProps {
@@ -63,7 +63,7 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps) {
     txType === TransactionType.FiatPurchase ? (
       <MoonpayLogo width={size} />
     ) : assetType === AssetType.Currency ? (
-      <CurrencyLogoOnly currency={props.currency} size={size} />
+      <CurrencyLogo hideNetworkLogo currencyInfo={props.currencyInfo} size={size} />
     ) : (
       <Box
         alignItems="center"
@@ -139,8 +139,8 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps) {
 
 export function SwapLogoOrLogoWithTxStatus({
   size,
-  inputCurrency,
-  outputCurrency,
+  inputCurrencyInfo,
+  outputCurrencyInfo,
   txStatus,
   showCancelIcon,
 }: SwapLogoOrLogoWithTxStatusProps) {
@@ -151,7 +151,7 @@ export function SwapLogoOrLogoWithTxStatus({
     return (
       <LogoWithTxStatus
         assetType={AssetType.Currency}
-        currency={inputCurrency}
+        currencyInfo={inputCurrencyInfo}
         size={size}
         txStatus={txStatus}
         txType={TransactionType.Swap}
@@ -162,10 +162,10 @@ export function SwapLogoOrLogoWithTxStatus({
   return (
     <Box height={size} width={size}>
       <Box left={0} position="absolute" testID="swap-success-toast" top={0}>
-        <CurrencyLogoOnly currency={inputCurrency} size={size * (2 / 3)} />
+        <CurrencyLogo hideNetworkLogo currencyInfo={inputCurrencyInfo} size={size * (2 / 3)} />
       </Box>
       <Box bottom={0} position="absolute" right={0}>
-        <CurrencyLogoOnly currency={outputCurrency} size={size * (2 / 3)} />
+        <CurrencyLogo hideNetworkLogo currencyInfo={outputCurrencyInfo} size={size * (2 / 3)} />
       </Box>
     </Box>
   )

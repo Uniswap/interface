@@ -2,7 +2,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { AssetType } from 'src/entities/assets'
-import { useCurrency } from 'src/features/tokens/useCurrency'
+import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import TransactionSummaryLayout, {
   AssetUpdateLayout,
   TXN_HISTORY_ICON_SIZE,
@@ -23,7 +23,7 @@ export default function FiatPurchaseSummaryItem({
   const { chainId, typeInfo } = transaction
   const { outputCurrencyAmountFormatted, outputCurrencyAmountPrice, outputTokenAddress } = typeInfo
 
-  const outputCurrency = useCurrency(
+  const outputCurrencyInfo = useCurrencyInfo(
     outputTokenAddress ? buildCurrencyId(chainId, outputTokenAddress) : undefined
   )
 
@@ -34,18 +34,22 @@ export default function FiatPurchaseSummaryItem({
 
   const title = getTransactionTitle(transaction.status, t('Purchase'), t('Purchased'), t)
 
-  const caption = outputCurrency
-    ? `${formatUSDPrice(transactedUSDValue)} of ${outputCurrency.symbol ?? t('Unknown token')}`
+  const caption = outputCurrencyInfo
+    ? `${formatUSDPrice(transactedUSDValue)} of ${
+        outputCurrencyInfo.currency.symbol ?? t('Unknown token')
+      }`
     : ''
 
   const endAdornment =
-    outputCurrency && outputCurrencyAmountFormatted ? (
+    outputCurrencyInfo && outputCurrencyAmountFormatted ? (
       // bypassing BalanceUpdate since we do not have an actual raw amount here
       <AssetUpdateLayout
         caption={formatUSDPrice(transactedUSDValue)}
         title={
-          '+' + outputCurrencyAmountFormatted.toString() + ' ' + outputCurrency.symbol ??
-          t('unknown token')
+          '+' +
+            outputCurrencyAmountFormatted.toString() +
+            ' ' +
+            outputCurrencyInfo.currency.symbol ?? t('unknown token')
         }
       />
     ) : undefined
@@ -57,7 +61,7 @@ export default function FiatPurchaseSummaryItem({
       icon={
         <LogoWithTxStatus
           assetType={AssetType.Currency}
-          currency={outputCurrency}
+          currencyInfo={outputCurrencyInfo}
           size={TXN_HISTORY_ICON_SIZE}
           txStatus={transaction.status}
           txType={transaction.typeInfo.type}

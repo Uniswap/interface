@@ -5,7 +5,7 @@ import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { useUSDValue } from 'src/features/gas/hooks'
-import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
+import { useNativeCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import { iconSizes } from 'src/styles/sizing'
 import { formatCurrencyAmount, formatUSDPrice, NumberType } from 'src/utils/format'
 import { tryParseRawAmount } from 'src/utils/tryParseAmount'
@@ -13,8 +13,10 @@ import { tryParseRawAmount } from 'src/utils/tryParseAmount'
 export function SpendingDetails({ value, chainId }: { value: string; chainId: ChainId }) {
   const { t } = useTranslation()
 
-  const nativeCurrency = NativeCurrency.onChain(chainId)
-  const nativeCurrencyAmount = tryParseRawAmount(value, nativeCurrency)
+  const nativeCurrencyInfo = useNativeCurrencyInfo(chainId)
+  const nativeCurrencyAmount = nativeCurrencyInfo
+    ? tryParseRawAmount(value, nativeCurrencyInfo.currency)
+    : null
   const usdValue = useUSDValue(chainId, value)
 
   return (
@@ -23,9 +25,10 @@ export function SpendingDetails({ value, chainId }: { value: string; chainId: Ch
         {t('Sending')}:
       </Text>
       <Flex row alignItems="center" gap="xxs">
-        <CurrencyLogo currency={nativeCurrency} size={iconSizes.sm} />
+        <CurrencyLogo currencyInfo={nativeCurrencyInfo} size={iconSizes.sm} />
         <Text variant="bodySmall">
-          {formatCurrencyAmount(nativeCurrencyAmount, NumberType.TokenTx)} {nativeCurrency.symbol}
+          {formatCurrencyAmount(nativeCurrencyAmount, NumberType.TokenTx)}{' '}
+          {nativeCurrencyInfo?.currency.symbol}
         </Text>
         <Text color="textSecondary" loading={!usdValue} variant="bodySmall">
           ({formatUSDPrice(usdValue)})

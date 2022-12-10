@@ -48,7 +48,7 @@ export function TransferReview({
     currencyAmounts,
     recipient,
     isUSDInput = false,
-    currencyIn,
+    currencyInInfo,
     nftIn,
     chainId,
     txId,
@@ -69,7 +69,7 @@ export function TransferReview({
     txId,
     chainId,
     recipient,
-    currencyIn ? currencyAddress(currencyIn) : undefined,
+    currencyInInfo ? currencyAddress(currencyInInfo.currency) : undefined,
     currencyAmounts[CurrencyField.INPUT]?.quotient.toString(),
     txRequest,
     onNext
@@ -126,7 +126,7 @@ export function TransferReview({
       )}
       <TransactionReview
         actionButtonProps={actionButtonProps}
-        currencyIn={currencyIn}
+        currencyInInfo={currencyInInfo}
         formattedAmountIn={formattedAmountIn}
         inputCurrencyUSDValue={inputCurrencyUSDValue}
         isUSDInput={isUSDInput}

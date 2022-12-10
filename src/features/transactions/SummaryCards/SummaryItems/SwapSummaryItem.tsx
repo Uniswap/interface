@@ -7,7 +7,7 @@ import { Text } from 'src/components/Text'
 import { openModal } from 'src/features/modals/modalSlice'
 import { getFormattedCurrencyAmount } from 'src/features/notifications/utils'
 import { ModalName } from 'src/features/telemetry/constants'
-import { useCurrency } from 'src/features/tokens/useCurrency'
+import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import { useCreateSwapFormState } from 'src/features/transactions/hooks'
 import BalanceUpdate from 'src/features/transactions/SummaryCards/BalanceUpdate'
 import TransactionSummaryLayout, {
@@ -33,8 +33,8 @@ export default function SwapSummaryItem({
   const dispatch = useAppDispatch()
   const { status } = transaction
 
-  const inputCurrency = useCurrency(transaction.typeInfo.inputCurrencyId)
-  const outputCurrency = useCurrency(transaction.typeInfo.outputCurrencyId)
+  const inputCurrencyInfo = useCurrencyInfo(transaction.typeInfo.inputCurrencyId)
+  const outputCurrencyInfo = useCurrencyInfo(transaction.typeInfo.outputCurrencyId)
 
   const showCancelIcon =
     (status === TransactionStatus.Cancelled || status === TransactionStatus.Cancelling) &&
@@ -54,16 +54,19 @@ export default function SwapSummaryItem({
   }, [transaction.typeInfo])
 
   const caption = useMemo(() => {
-    if (!inputCurrency || !outputCurrency) {
+    if (!inputCurrencyInfo || !outputCurrencyInfo) {
       return ''
     }
+
+    const { currency: inputCurrency } = inputCurrencyInfo
+    const { currency: outputCurrency } = outputCurrencyInfo
     if (status !== TransactionStatus.Success) {
       const currencyAmount = getFormattedCurrencyAmount(inputCurrency, inputAmountRaw)
       const otherCurrencyAmount = getFormattedCurrencyAmount(outputCurrency, outputAmountRaw)
       return `${currencyAmount}${inputCurrency.symbol} → ${otherCurrencyAmount}${outputCurrency.symbol}`
     }
     return inputCurrency.symbol + '→' + outputCurrency.symbol
-  }, [inputAmountRaw, inputCurrency, outputAmountRaw, outputCurrency, status])
+  }, [inputAmountRaw, inputCurrencyInfo, outputAmountRaw, outputCurrencyInfo, status])
 
   const title = getTransactionTitle(transaction.status, t('Swap'), t('Swapped'), t)
 
@@ -88,18 +91,18 @@ export default function SwapSummaryItem({
         )
       } else return undefined
     }
-    if (outputCurrency) {
+    if (outputCurrencyInfo) {
       return (
         <BalanceUpdate
           amountRaw={outputAmountRaw}
-          currency={outputCurrency}
+          currency={outputCurrencyInfo.currency}
           transactedUSDValue={transaction.typeInfo.transactedUSDValue}
           transactionStatus={transaction.status}
           transactionType={transaction.typeInfo.type}
         />
       )
     }
-  }, [onRetry, outputAmountRaw, outputCurrency, status, swapFormState, t, transaction])
+  }, [onRetry, outputAmountRaw, outputCurrencyInfo, status, swapFormState, t, transaction])
 
   return (
     <TransactionSummaryLayout
@@ -107,8 +110,8 @@ export default function SwapSummaryItem({
       endAdornment={endAdornment}
       icon={
         <SwapLogoOrLogoWithTxStatus
-          inputCurrency={inputCurrency}
-          outputCurrency={outputCurrency}
+          inputCurrencyInfo={inputCurrencyInfo}
+          outputCurrencyInfo={outputCurrencyInfo}
           showCancelIcon={showCancelIcon}
           size={TXN_HISTORY_ICON_SIZE}
           txStatus={status}

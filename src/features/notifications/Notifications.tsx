@@ -12,7 +12,6 @@ import {
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { CHAIN_INFO } from 'src/constants/chains'
-import { nativeOnChain } from 'src/constants/tokens'
 import { AssetType } from 'src/entities/assets'
 import { useENS } from 'src/features/ens/useENS'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
@@ -42,7 +41,11 @@ import {
   formWrapNotificationTitle,
 } from 'src/features/notifications/utils'
 import { ModalName } from 'src/features/telemetry/constants'
-import { useCurrency } from 'src/features/tokens/useCurrency'
+import {
+  useCurrencyInfo,
+  useNativeCurrencyInfo,
+  useWrappedNativeCurrencyInfo,
+} from 'src/features/tokens/useCurrencyInfo'
 import { useCreateSwapFormState, useCreateWrapFormState } from 'src/features/transactions/hooks'
 import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
@@ -124,12 +127,17 @@ export function ApproveNotification({
 }) {
   const { onPress, onPressIn } = useNavigateToProfileTab(address)
 
-  const currency = useCurrency(buildCurrencyId(chainId, tokenAddress))
-  const title = formApproveNotificationTitle(txStatus, currency, tokenAddress, spender)
+  const currencyInfo = useCurrencyInfo(buildCurrencyId(chainId, tokenAddress))
+  const title = formApproveNotificationTitle(
+    txStatus,
+    currencyInfo?.currency,
+    tokenAddress,
+    spender
+  )
   const icon = (
     <LogoWithTxStatus
       assetType={AssetType.Currency}
-      currency={currency}
+      currencyInfo={currencyInfo}
       size={NOTIFICATION_ICON_SIZE}
       txStatus={txStatus}
       txType={txType}
@@ -165,13 +173,13 @@ export function SwapNotification({
 }: {
   notification: SwapTxNotification
 }) {
-  const inputCurrency = useCurrency(inputCurrencyId)
-  const outputCurrency = useCurrency(outputCurrencyId)
+  const inputCurrencyInfo = useCurrencyInfo(inputCurrencyId)
+  const outputCurrencyInfo = useCurrencyInfo(outputCurrencyId)
   const title = formSwapNotificationTitle(
     txStatus,
     tradeType,
-    inputCurrency,
-    outputCurrency,
+    inputCurrencyInfo?.currency,
+    outputCurrencyInfo?.currency,
     inputCurrencyId,
     outputCurrencyId,
     inputCurrencyAmountRaw,
@@ -196,8 +204,8 @@ export function SwapNotification({
 
   const icon = (
     <SwapLogoOrLogoWithTxStatus
-      inputCurrency={inputCurrency}
-      outputCurrency={outputCurrency}
+      inputCurrencyInfo={inputCurrencyInfo}
+      outputCurrencyInfo={outputCurrencyInfo}
       size={NOTIFICATION_ICON_SIZE}
       txStatus={txStatus}
     />
@@ -210,7 +218,7 @@ export function SwapNotification({
       balanceUpdate={
         <BalanceUpdateDisplay
           amountRaw={outputCurrencyAmountRaw}
-          currency={outputCurrency}
+          currency={outputCurrencyInfo?.currency}
           transactionStatus={txStatus}
           transactionType={txType}
         />
@@ -238,15 +246,15 @@ export function WrapNotification({
 }: {
   notification: WrapTxNotification
 }) {
-  const nativeCurrency = nativeOnChain(chainId)
-  const wrappedNativeCurrency = nativeCurrency?.wrapped
-  const inputCurrency = unwrapped ? wrappedNativeCurrency : nativeCurrency
-  const outputCurrency = unwrapped ? nativeCurrency : wrappedNativeCurrency
+  const nativeCurrencyInfo = useNativeCurrencyInfo(chainId)
+  const wrappedCurrencyInfo = useWrappedNativeCurrencyInfo(chainId)
+  const inputCurrencyInfo = unwrapped ? wrappedCurrencyInfo : nativeCurrencyInfo
+  const outputCurrencyInfo = unwrapped ? nativeCurrencyInfo : wrappedCurrencyInfo
 
   const title = formWrapNotificationTitle(
     txStatus,
-    inputCurrency,
-    outputCurrency,
+    inputCurrencyInfo?.currency,
+    outputCurrencyInfo?.currency,
     currencyAmountRaw,
     unwrapped
   )
@@ -255,8 +263,8 @@ export function WrapNotification({
     address,
     chainId,
     txId,
-    inputCurrency,
-    outputCurrency
+    inputCurrencyInfo?.currency,
+    outputCurrencyInfo?.currency
   )
 
   const dispatch = useAppDispatch()
@@ -276,8 +284,8 @@ export function WrapNotification({
 
   const icon = (
     <SwapLogoOrLogoWithTxStatus
-      inputCurrency={inputCurrency}
-      outputCurrency={outputCurrency}
+      inputCurrencyInfo={inputCurrencyInfo}
+      outputCurrencyInfo={outputCurrencyInfo}
       size={NOTIFICATION_ICON_SIZE}
       txStatus={txStatus}
     />
@@ -290,7 +298,7 @@ export function WrapNotification({
       balanceUpdate={
         <BalanceUpdateDisplay
           amountRaw={currencyAmountRaw}
-          currency={outputCurrency}
+          currency={outputCurrencyInfo?.currency}
           transactionStatus={txStatus}
           transactionType={txType}
         />
@@ -322,12 +330,12 @@ export function TransferCurrencyNotification({
   const senderOrRecipient =
     txType === TransactionType.Send ? notification.recipient : notification.sender
   const { name: ensName } = useENS(chainId, senderOrRecipient)
-  const currency = useCurrency(buildCurrencyId(chainId, tokenAddress))
+  const currencyInfo = useCurrencyInfo(buildCurrencyId(chainId, tokenAddress))
 
   const title = formTransferCurrencyNotificationTitle(
     txType,
     txStatus,
-    currency,
+    currencyInfo?.currency,
     tokenAddress,
     currencyAmountRaw,
     ensName ?? senderOrRecipient
@@ -338,7 +346,7 @@ export function TransferCurrencyNotification({
   const icon = (
     <LogoWithTxStatus
       assetType={assetType}
-      currency={currency}
+      currencyInfo={currencyInfo}
       size={NOTIFICATION_ICON_SIZE}
       txStatus={txStatus}
       txType={txType}
@@ -351,7 +359,7 @@ export function TransferCurrencyNotification({
       balanceUpdate={
         <BalanceUpdateDisplay
           amountRaw={currencyAmountRaw}
-          currency={currency}
+          currency={currencyInfo?.currency}
           transactionStatus={txStatus}
           transactionType={txType}
         />
@@ -417,12 +425,12 @@ export function UnknownTxNotification({
   notification: TransactionNotificationBase
 }) {
   const { name: ensName } = useENS(chainId, tokenAddress)
-  const currency = useCurrency(buildCurrencyId(chainId, tokenAddress ?? ''))
+  const currencyInfo = useCurrencyInfo(buildCurrencyId(chainId, tokenAddress ?? ''))
   const title = formUnknownTxTitle(txStatus, tokenAddress, ensName)
   const icon = (
     <LogoWithTxStatus
       assetType={AssetType.Currency}
-      currency={currency}
+      currencyInfo={currencyInfo}
       size={NOTIFICATION_ICON_SIZE}
       txStatus={txStatus}
       txType={txType}

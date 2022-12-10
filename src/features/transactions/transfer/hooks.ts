@@ -1,4 +1,3 @@
-import { Currency } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { useEffect, useMemo, useState } from 'react'
 import { useAppDispatch } from 'src/app/hooks'
@@ -6,8 +5,9 @@ import { useProvider } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { useNativeCurrencyBalance, useTokenBalance } from 'src/features/balances/hooks'
+import { CurrencyInfo } from 'src/features/dataApi/types'
 import { GQLNftAsset, useNFT } from 'src/features/nfts/hooks'
-import { useCurrencyInfo } from 'src/features/tokens/useCurrency'
+import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import {
   CurrencyField,
   TransactionState,
@@ -19,10 +19,9 @@ import { useActiveAccount } from 'src/features/wallet/hooks'
 import { buildCurrencyId } from 'src/utils/currencyId'
 import { tryParseExactAmount } from 'src/utils/tryParseAmount'
 
-export type DerivedTransferInfo = BaseDerivedInfo<Currency | GQLNftAsset> & {
+export type DerivedTransferInfo = BaseDerivedInfo<CurrencyInfo | GQLNftAsset> & {
   currencyTypes: { [CurrencyField.INPUT]?: AssetType }
-  currencyIn: Currency | undefined
-  currencyInLogo?: string | null
+  currencyInInfo?: CurrencyInfo | null
   nftIn: GQLNftAsset | undefined
   chainId: ChainId
   exactCurrencyField: CurrencyField.INPUT
@@ -52,8 +51,6 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
   )
 
   const currencyIn = currencyInInfo?.currency
-  const currencyInLogo = currencyInInfo?.logoUrl
-
   const { data: nftIn } = useNFT(
     activeAccount?.address,
     tradeableAsset?.address,
@@ -64,9 +61,9 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
 
   const currencies = useMemo(
     () => ({
-      [CurrencyField.INPUT]: currencyIn ?? nftIn,
+      [CurrencyField.INPUT]: currencyInInfo ?? nftIn,
     }),
-    [currencyIn, nftIn]
+    [currencyInInfo, nftIn]
   )
 
   const { balance: tokenInBalance } = useTokenBalance(
@@ -102,9 +99,8 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
       currencyAmounts,
       currencyBalances,
       currencyTypes: { [CurrencyField.INPUT]: tradeableAsset?.type },
+      currencyInInfo,
       chainId,
-      currencyIn: currencyIn ?? undefined,
-      currencyInLogo,
       nftIn: nftIn ?? undefined,
       exactAmountUSD: exactAmountUSD ?? '',
       exactAmountToken,
@@ -118,8 +114,7 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
       currencies,
       currencyAmounts,
       currencyBalances,
-      currencyIn,
-      currencyInLogo,
+      currencyInInfo,
       exactAmountToken,
       exactAmountUSD,
       isUSDInput,

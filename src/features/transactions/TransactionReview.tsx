@@ -16,6 +16,7 @@ import { AnimatedFlex, Flex } from 'src/components/layout'
 import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
 import { Text } from 'src/components/Text'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
+import { CurrencyInfo } from 'src/features/dataApi/types'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import { dimensions, iconSizes } from 'src/styles/sizing'
@@ -26,8 +27,8 @@ interface BaseReviewProps {
   isUSDInput?: boolean
   transactionDetails?: ReactNode
   nftIn?: GQLNftAsset
-  currencyIn?: Currency
-  currencyOut?: Currency
+  currencyInInfo: NullUndefined<CurrencyInfo>
+  currencyOutInfo?: CurrencyInfo
   formattedAmountIn?: string
   formattedAmountOut?: string
   recipient?: string
@@ -42,8 +43,8 @@ interface TransferReviewProps extends BaseReviewProps {
 }
 
 interface SwapReviewProps extends BaseReviewProps {
-  currencyIn: Currency
-  currencyOut: Currency
+  currencyInInfo: CurrencyInfo
+  currencyOutInfo: CurrencyInfo
   formattedAmountIn: string
   formattedAmountOut: string
 }
@@ -52,9 +53,9 @@ type TransactionReviewProps = TransferReviewProps | SwapReviewProps
 
 export function TransactionReview({
   actionButtonProps,
-  currencyIn,
+  currencyInInfo,
   formattedAmountIn,
-  currencyOut,
+  currencyOutInfo,
   formattedAmountOut,
   inputCurrencyUSDValue,
   outputCurrencyUSDValue,
@@ -113,7 +114,7 @@ export function TransactionReview({
   return (
     <>
       <AnimatedFlex centered grow entering={FadeInUp} exiting={FadeOut} gap={spacingGap}>
-        {currencyIn ? (
+        {currencyInInfo ? (
           <Flex centered gap={innerGap}>
             <Flex centered gap={amountAndEquivalentValueGap}>
               <AmountInput
@@ -147,7 +148,7 @@ export function TransactionReview({
                 </Text>
               ) : null}
             </Flex>
-            <CurrencyLogoWithLabel currency={currencyIn} />
+            <CurrencyLogoWithLabel currencyInfo={currencyInInfo} />
           </Flex>
         ) : nftIn ? (
           <Flex mt="xxxl">
@@ -155,7 +156,7 @@ export function TransactionReview({
           </Flex>
         ) : null}
         <TransferArrowButton disabled bg="none" borderColor="none" padding={arrowPadding} />
-        {currencyOut && formattedAmountOut ? (
+        {currencyOutInfo && formattedAmountOut ? (
           <Flex centered gap={innerGap} pb={{ xs: 'xxs', sm: 'none' }}>
             <Flex centered gap={amountAndEquivalentValueGap}>
               <AmountInput
@@ -179,7 +180,7 @@ export function TransactionReview({
                 </Text>
               ) : null}
             </Flex>
-            <CurrencyLogoWithLabel currency={currencyOut} />
+            <CurrencyLogoWithLabel currencyInfo={currencyOutInfo} />
           </Flex>
         ) : recipient ? (
           <Flex centered gap="sm">
@@ -235,14 +236,14 @@ export function TransactionReview({
   )
 }
 
-function CurrencyLogoWithLabel({ currency }: { currency: Currency }) {
+function CurrencyLogoWithLabel({ currencyInfo }: { currencyInfo: CurrencyInfo }) {
   const gap = useResponsiveProp({ xs: 'xxs', sm: 'xs' })
   const size = useResponsiveProp({ xs: iconSizes.md, sm: iconSizes.xl })
   return (
     <Flex centered row gap={gap}>
-      <CurrencyLogo currency={currency} size={size} />
+      <CurrencyLogo currencyInfo={currencyInfo} size={size} />
       <Text color="textPrimary" variant="buttonLabelLarge">
-        {currency.symbol}
+        {currencyInfo.currency.symbol}
       </Text>
     </Flex>
   )

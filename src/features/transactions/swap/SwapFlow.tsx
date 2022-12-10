@@ -71,6 +71,14 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
   )
 
   const exactValue = state.isUSDInput ? state.exactAmountUSD : state.exactAmountToken
+
+  const selectedCurrency = selectingCurrencyField
+    ? currencies[selectingCurrencyField]?.currency
+    : undefined
+  const otherCurrency = selectingCurrencyField
+    ? currencies[otherCurrencyField(selectingCurrencyField)]?.currency
+    : undefined
+
   return (
     <TransactionFlow
       approveTxRequest={approveTxRequest}
@@ -83,12 +91,8 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
       step={step}
       tokenSelector={
         <TokenSelector
-          otherCurrency={
-            selectingCurrencyField
-              ? currencies[otherCurrencyField(selectingCurrencyField)]
-              : undefined
-          }
-          selectedCurrency={selectingCurrencyField ? currencies[selectingCurrencyField] : undefined}
+          otherCurrency={otherCurrency}
+          selectedCurrency={selectedCurrency}
           variation={listVariation}
           onBack={onHideTokenSelector}
           onSelectCurrency={onTokenSelectorSelectCurrency}

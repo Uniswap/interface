@@ -2,7 +2,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { AssetType } from 'src/entities/assets'
-import { useCurrency } from 'src/features/tokens/useCurrency'
+import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import TransactionSummaryLayout, {
   AssetUpdateLayout,
   TXN_HISTORY_ICON_SIZE,
@@ -20,7 +20,7 @@ export default function ApproveSummaryItem({
   ...rest
 }: BaseTransactionSummaryProps & { transaction: { typeInfo: ApproveTransactionInfo } }) {
   const { t } = useTranslation()
-  const currency = useCurrency(
+  const currencyInfo = useCurrencyInfo(
     buildCurrencyId(transaction.chainId, transaction.typeInfo.tokenAddress)
   )
 
@@ -33,7 +33,7 @@ export default function ApproveSummaryItem({
     !approvalAmount || approvalAmount === 'INF'
       ? ''
       : formatNumberOrString(transaction.typeInfo.approvalAmount, NumberType.TokenTx)
-  } ${currency?.symbol ?? ''}`
+  } ${currencyInfo?.currency.symbol ?? ''}`
 
   return (
     <TransactionSummaryLayout
@@ -44,7 +44,7 @@ export default function ApproveSummaryItem({
       icon={
         <LogoWithTxStatus
           assetType={AssetType.Currency}
-          currency={currency}
+          currencyInfo={currencyInfo}
           size={TXN_HISTORY_ICON_SIZE}
           txStatus={transaction.status}
           txType={TransactionType.Approve}

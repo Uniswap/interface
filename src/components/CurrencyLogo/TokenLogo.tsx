@@ -13,11 +13,18 @@ interface TokenLogoProps {
   symbol?: string
   chainId?: ChainId
   size?: number
+  hideNetworkLogo?: boolean
 }
 
-export function TokenLogo({ url, symbol, chainId, size = iconSizes.xxxl }: TokenLogoProps) {
+export function TokenLogo({
+  url,
+  symbol,
+  chainId,
+  size = iconSizes.xxxl,
+  hideNetworkLogo,
+}: TokenLogoProps) {
   const theme = useAppTheme()
-  const showNetworkLogo = chainId && chainId !== ChainId.Mainnet
+  const showNetworkLogo = !hideNetworkLogo && chainId && chainId !== ChainId.Mainnet
 
   return (
     <Box alignItems="center" height={size} justifyContent="center" width={size}>

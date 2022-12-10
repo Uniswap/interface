@@ -69,7 +69,7 @@ const getTextFromWrapStatus = (
 
     // input and output amounts are the same for wraps/unwraps
     const inputAmount = getFormattedCurrencyAmount(
-      currencies[CurrencyField.INPUT],
+      currencies[CurrencyField.INPUT]?.currency,
       typeInfo.currencyAmountRaw
     )
 
@@ -80,8 +80,8 @@ const getTextFromWrapStatus = (
           'You unwrapped {{ inputAmount }}{{ inputCurrency }} for {{ inputAmount }}{{ outputCurrency }}.',
           {
             inputAmount,
-            inputCurrency: currencies[CurrencyField.INPUT]?.symbol,
-            outputCurrency: currencies[CurrencyField.OUTPUT]?.symbol,
+            inputCurrency: currencies[CurrencyField.INPUT]?.currency.symbol,
+            outputCurrency: currencies[CurrencyField.OUTPUT]?.currency.symbol,
           }
         ),
       }
@@ -93,8 +93,8 @@ const getTextFromWrapStatus = (
         'You wrapped {{ inputAmount }}{{ inputCurrency }} for {{ inputAmount }}{{ outputCurrency }}.',
         {
           inputAmount,
-          inputCurrency: currencies[CurrencyField.INPUT]?.symbol,
-          outputCurrency: currencies[CurrencyField.OUTPUT]?.symbol,
+          inputCurrency: currencies[CurrencyField.INPUT]?.currency.symbol,
+          outputCurrency: currencies[CurrencyField.OUTPUT]?.currency.symbol,
         }
       ),
     }
@@ -147,13 +147,13 @@ const getTextFromSwapStatus = (
     const outputCurrency = currencies[CurrencyField.OUTPUT]
 
     const inputAmount = getFormattedCurrencyAmount(
-      inputCurrency,
+      inputCurrency?.currency,
       inputCurrencyAmountRaw,
       typeInfo.tradeType === TradeType.EXACT_OUTPUT
     )
 
     const outputAmount = getFormattedCurrencyAmount(
-      outputCurrency,
+      outputCurrency?.currency,
       outputCurrencyAmountRaw,
       typeInfo.tradeType === TradeType.EXACT_INPUT
     )
@@ -164,9 +164,9 @@ const getTextFromSwapStatus = (
         'You swapped {{ inputAmount }}{{ inputCurrency }} for {{ outputAmount }}{{ outputCurrency }}.',
         {
           inputAmount,
-          inputCurrency: inputCurrency?.symbol,
+          inputCurrency: inputCurrency?.currency.symbol,
           outputAmount,
-          outputCurrency: outputCurrency?.symbol,
+          outputCurrency: outputCurrency?.currency.symbol,
         }
       ),
     }
@@ -185,7 +185,8 @@ const getTextFromSwapStatus = (
 export function SwapStatus({ derivedSwapInfo, onNext, onTryAgain }: SwapStatusProps) {
   const { t } = useTranslation()
   const { txId, currencies } = derivedSwapInfo
-  const chainId = toSupportedChainId(currencies[CurrencyField.INPUT]?.chainId) ?? ChainId.Mainnet
+  const chainId =
+    toSupportedChainId(currencies[CurrencyField.INPUT]?.currency.chainId) ?? ChainId.Mainnet
   const activeAddress = useActiveAccountAddressWithThrow()
   const transaction = useSelectTransaction(activeAddress, chainId, txId)
 

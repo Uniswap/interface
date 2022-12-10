@@ -10,6 +10,7 @@ import { Flex } from 'src/components/layout/Flex'
 import { Warning, WarningLabel } from 'src/components/modals/WarningModal/types'
 import { Text } from 'src/components/Text'
 import { SelectTokenButton } from 'src/components/TokenSelector/SelectTokenButton'
+import { CurrencyInfo } from 'src/features/dataApi/types'
 import { useDynamicFontSizing } from 'src/features/transactions/hooks'
 import { Theme } from 'src/styles/theme'
 import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'src/utils/format'
@@ -18,10 +19,9 @@ const restyleFunctions = [backgroundColor]
 type RestyleProps = BackgroundColorProps<Theme>
 
 type CurrentInputPanelProps = {
-  currency: Currency | null | undefined
-  currencyLogo?: string | null
-  currencyAmount: CurrencyAmount<Currency> | null | undefined
-  currencyBalance: CurrencyAmount<Currency> | null | undefined
+  currencyInfo: NullUndefined<CurrencyInfo>
+  currencyAmount: NullUndefined<CurrencyAmount<Currency>>
+  currencyBalance: NullUndefined<CurrencyAmount<Currency>>
   onShowTokenSelector: () => void
   onSetAmount: (amount: string) => void
   value?: string
@@ -87,10 +87,9 @@ const getSwapPanelPaddingValues = (isOutputBox: boolean, hasCurrencyValue: boole
 /** Input panel for a single side of a transfer action. */
 export function CurrencyInputPanel(props: CurrentInputPanelProps) {
   const {
-    currency,
     currencyAmount,
     currencyBalance,
-    currencyLogo,
+    currencyInfo,
     onSetAmount,
     onSetMax,
     onShowTokenSelector,
@@ -165,8 +164,8 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
   )
 
   const paddingStyles = useMemo(
-    () => getSwapPanelPaddingValues(isOutput, Boolean(currency)),
-    [isOutput, currency]
+    () => getSwapPanelPaddingValues(isOutput, Boolean(currencyInfo)),
+    [isOutput, currencyInfo]
   )
 
   const { outerPadding, innerPadding } = paddingStyles
@@ -179,10 +178,10 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
         row
         alignItems="center"
         gap="xxxs"
-        justifyContent={!currency ? 'center' : 'space-between'}
+        justifyContent={!currencyInfo ? 'center' : 'space-between'}
         paddingBottom={innerPaddingBottom}
         paddingTop={innerPaddingTop}>
-        {!!currency && (
+        {currencyInfo && (
           <Flex fill grow row onLayout={onLayout}>
             <AmountInput
               ref={inputRef}
@@ -215,33 +214,30 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
         )}
         <Flex row alignItems="center" gap="none">
           <SelectTokenButton
-            selectedCurrency={currency}
-            selectedCurrencyLogo={currencyLogo}
+            selectedCurrencyInfo={currencyInfo}
             showNonZeroBalancesOnly={showNonZeroBalancesOnly}
             onPress={onShowTokenSelector}
           />
         </Flex>
       </Flex>
 
-      {!!currency && (
+      {currencyInfo && (
         <Flex row alignItems="center" gap="xs" justifyContent="space-between" mb="xxs">
-          {currency && (
-            <Text color="textSecondary" variant="bodySmall">
-              {!isUSDInput ? formattedUSDValue : formattedCurrencyAmount}
-            </Text>
-          )}
+          <Text color="textSecondary" variant="bodySmall">
+            {!isUSDInput ? formattedUSDValue : formattedCurrencyAmount}
+          </Text>
           <Flex row alignItems="center" gap="xs" justifyContent="flex-end">
             {showInsufficientBalanceWarning && (
               <Text color="accentWarning" variant="bodySmall">
                 {insufficientBalanceWarning.title}
               </Text>
             )}
-            {currency && !showInsufficientBalanceWarning && (
+            {!showInsufficientBalanceWarning && (
               <Text color="textSecondary" variant="bodySmall">
                 {t('Balance')}: {formatCurrencyAmount(currencyBalance, NumberType.TokenTx)}
               </Text>
             )}
-            {currency && onSetMax && (
+            {onSetMax && (
               <MaxAmountButton
                 currencyAmount={currencyAmount}
                 currencyBalance={currencyBalance}

@@ -9,7 +9,7 @@ import { currencyAddress, currencyIdToAddress } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { tryParseRawAmount } from 'src/utils/tryParseAmount'
 
-interface props {
+interface Props {
   transactionDetails: TransactionDetails
   inputCurrency: NullUndefined<Currency>
   outputCurrency: NullUndefined<Currency>
@@ -22,7 +22,7 @@ export function createSwapFromStateFromDetails({
   transactionDetails,
   inputCurrency,
   outputCurrency,
-}: props) {
+}: Props) {
   const txHash = transactionDetails?.hash
   const chainId = transactionDetails?.chainId
 
@@ -91,7 +91,7 @@ export function createWrapFormStateFromDetails({
   transactionDetails,
   inputCurrency,
   outputCurrency,
-}: props) {
+}: Props) {
   const txHash = transactionDetails?.hash
   const chainId = transactionDetails?.chainId
 
