@@ -25,8 +25,8 @@ export const SubTitle = styled.h2<{ isDarkMode?: boolean }>`
   font-weight: 500;
   max-width: 340px;
   color: transparent;
-  font-size: 36px;
-  line-height: 44px;
+  font-size: 20px;
+  line-height: 28px;
 
   background: ${({ isDarkMode }) =>
     isDarkMode
@@ -35,4 +35,9 @@ export const SubTitle = styled.h2<{ isDarkMode?: boolean }>`
 
   background-clip: text;
   -webkit-background-clip: text;
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    font-size: 36px;
+    line-height: 44px;
+  }
 `

@@ -48,10 +48,11 @@ const Content = styled.div`
   justify-content: center;
   align-items: flex-start;
   padding: 0px 16px 16px 16px;
-  gap: 96px;
+  gap: 48px;
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     padding: 0px 80px 80px 80px;
+    gap: 96px;
   }
 `
 
@@ -115,14 +116,6 @@ const Thumbnail = styled.img`
   width: 100%;
 `
 
-const PoweredBySection = styled(Panels)`
-  order: 1;
-
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
-    order: 0;
-  }
-`
-
 export default function About() {
   const isDarkMode = useIsDarkMode()
 
@@ -145,7 +138,7 @@ export default function About() {
           <Title ref={titleRef} isDarkMode={isDarkMode}>
             Uniswap is the largest on-chain marketplace for tokens and NFTs.
           </Title>
-          <PoweredBySection>
+          <Panels>
             <div>
               <SubTitle isDarkMode={isDarkMode}>Powered by the Uniswap Protocol</SubTitle>
             </div>
@@ -160,7 +153,7 @@ export default function About() {
                 </InfoButton>
               </ActionsContainer>
             </Intro>
-          </PoweredBySection>
+          </Panels>
           <CardGrid>
             {CARDS.map((card) => (
               <Card key={card.title} {...card} />
