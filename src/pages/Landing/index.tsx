@@ -176,7 +176,7 @@ export default function Landing() {
             <ButtonCTAText>Continue</ButtonCTAText>
           </ButtonCTA>
           <ButtonCTASecondary as={Link} to="/about">
-            <ButtonCTAText>Learn More</ButtonCTAText>
+            <ButtonCTAText>Learn more</ButtonCTAText>
           </ButtonCTASecondary>
         </ActionsWrapper>
       </PageWrapper>
