@@ -11,13 +11,11 @@ import { CARDS, STEPS } from './constants'
 import Step from './Step'
 import { SubTitle, Title } from './Title'
 
-const Page = styled.span<{ isDarkMode: boolean; titleHeight: number }>`
-  width: 100%;
-  align-self: center;
+const Page = styled.div<{ isDarkMode: boolean; titleHeight: number }>`
   display: flex;
-  flex-direction: row;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  width: 100%;
   padding-top: calc(100vh - ${({ titleHeight }) => titleHeight + 200}px);
 `
 
@@ -123,6 +121,29 @@ const PoweredBySection = styled(Panels)`
   }
 `
 
+const SocialRow = styled.div`
+  display: flex;
+  gap: 24px;
+
+  & > * {
+    flex: 1;
+  }
+`
+
+const Footer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 48px;
+`
+
+const Copyright = styled.span`
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+  color: ${({ theme }) => theme.textTertiary};
+`
+
 export default function About() {
   const isDarkMode = useIsDarkMode()
 
@@ -185,6 +206,15 @@ export default function About() {
               </StepList>
             </Panels>
           </div>
+          <Footer>
+            <SocialRow>
+              <button>button</button>
+              <button>button</button>
+              <button>button</button>
+              <button>button</button>
+            </SocialRow>
+            <Copyright>© {new Date().getFullYear()} Uniswap Labs</Copyright>
+          </Footer>
         </Content>
       </Page>
     </Trace>
