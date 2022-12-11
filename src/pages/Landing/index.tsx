@@ -86,12 +86,13 @@ const SubTextContainer = styled.div`
   justify-content: center;
 `
 
-const CTAButton = styled(BaseButton)`
+const LandingButton = styled(BaseButton)`
   padding: 16px;
   border-radius: 24px;
+  pointer-events: auto;
 `
 
-const ButtonCTA = styled(CTAButton)`
+const ButtonCTA = styled(LandingButton)`
   background: linear-gradient(10deg, rgba(255, 0, 199, 1) 0%, rgba(255, 159, 251, 1) 100%);
   border: none;
   color: ${({ theme }) => theme.white};
@@ -102,7 +103,7 @@ const ButtonCTA = styled(CTAButton)`
   }
 `
 
-const ButtonCTASecondary = styled(CTAButton)`
+const ButtonCTASecondary = styled(LandingButton)`
   background: none;
   border: ${({ theme }) => `1px solid ${theme.textPrimary}`};
   color: ${({ theme }) => theme.textPrimary};
