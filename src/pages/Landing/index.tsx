@@ -14,9 +14,10 @@ import { Z_INDEX } from 'theme/zIndex'
 const PADDING_BOTTOM = 64
 
 const PageWrapper = styled.div<{ isDarkMode: boolean }>`
+  height: 100%;
   width: 100%;
-  height: calc(100vh - 72px);
   position: absolute;
+  bottom: 0;
   background: ${({ isDarkMode }) =>
     isDarkMode
       ? 'linear-gradient(rgba(8, 10, 24, 0) 9.84%, rgb(8 10 24 / 86%) 35.35%)'
@@ -28,6 +29,11 @@ const PageWrapper = styled.div<{ isDarkMode: boolean }>`
   padding-bottom: 24px 24px ${PADDING_BOTTOM}px;
   align-items: center;
   transition: 250ms ease opacity;
+  pointer-events: none;
+
+  * {
+    pointer-events: auto;
+  }
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     padding: 64px 64px ${PADDING_BOTTOM}px;
@@ -84,12 +90,12 @@ const SubTextContainer = styled.div`
   justify-content: center;
 `
 
-const CTAButton = styled(BaseButton)`
+const LandingButton = styled(BaseButton)`
   padding: 16px;
   border-radius: 24px;
 `
 
-const ButtonCTA = styled(CTAButton)`
+const ButtonCTA = styled(LandingButton)`
   background: linear-gradient(10deg, rgba(255, 0, 199, 1) 0%, rgba(255, 159, 251, 1) 100%);
   border: none;
   color: ${({ theme }) => theme.white};
@@ -100,7 +106,7 @@ const ButtonCTA = styled(CTAButton)`
   }
 `
 
-const ButtonCTASecondary = styled(CTAButton)`
+const ButtonCTASecondary = styled(LandingButton)`
   background: none;
   border: ${({ theme }) => `1px solid ${theme.textPrimary}`};
   color: ${({ theme }) => theme.textPrimary};
