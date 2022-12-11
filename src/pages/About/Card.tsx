@@ -9,7 +9,7 @@ const StyledCard = styled.div<{ isDarkMode: boolean; backgroundImgSrc?: string }
   display: flex;
   background: ${({ isDarkMode, backgroundImgSrc }) =>
     isDarkMode
-      ? `${DARK_MODE_GRADIENT} ${backgroundImgSrc ? `url(${backgroundImgSrc}), ` : ''}`
+      ? `${DARK_MODE_GRADIENT} ${backgroundImgSrc ? `, url(${backgroundImgSrc})` : ''}`
       : `url(${backgroundImgSrc})`};
   background-size: auto 100%;
   background-position: right;
