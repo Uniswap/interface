@@ -22,7 +22,7 @@ const Page = styled.div<{ isDarkMode: boolean; titleHeight: number; backgroundIm
   width: 100%;
   padding-top: calc(100vh - ${({ titleHeight }) => titleHeight + 200}px);
   background: url(${backgroundImgSrc});
-  background-size: contain;
+  background-size: auto 100vh;
   background-repeat: no-repeat;
 `
 
