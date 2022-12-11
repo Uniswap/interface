@@ -24,13 +24,20 @@ const MobileBottomBar = styled.div`
   left: 0;
   justify-content: space-between;
   padding: 4px 8px;
-  height: 56px;
+  height: ${({ theme }) => theme.mobileBottomBarHeight}px;
   background: ${({ theme }) => theme.backgroundSurface};
   border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
 
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
     display: none;
   }
+`
+
+const Nav = styled.nav`
+  padding: 20px 12px;
+  width: 100%;
+  height: ${({ theme }) => theme.navHeight}px;
+  z-index: 2;
 `
 
 interface MenuItemProps {
@@ -91,7 +98,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className={styles.nav}>
+      <Nav>
         <Box display="flex" height="full" flexWrap="nowrap" alignItems="stretch">
           <Box className={styles.leftSideContainer}>
             <Box className={styles.logoContainer}>
@@ -135,7 +142,7 @@ const Navbar = () => {
             </Row>
           </Box>
         </Box>
-      </nav>
+      </Nav>
       <MobileBottomBar>
         <PageTabs />
         <Box marginY="4">
