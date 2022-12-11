@@ -24,7 +24,7 @@ const PageWrapper = styled.div`
   }
 `
 
-const Shadow = styled.div<{ isDarkMode: boolean }>`
+const Gradient = styled.div<{ isDarkMode: boolean }>`
   position: absolute;
   top: 0;
   bottom: 0;
@@ -55,7 +55,7 @@ const ContentWrapper = styled.div<{ isDarkMode: boolean }>`
   bottom: 0;
   z-index: ${Z_INDEX.dropdown};
   padding: 32px 0;
-  transition: 250ms ease opacity;
+  transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} opacity`};
 
   * {
     pointer-events: auto;
@@ -195,7 +195,7 @@ export default function Landing() {
       <PageWrapper>
         <Swap />
         <Glow />
-        <Shadow isDarkMode={isDarkMode} />
+        <Gradient isDarkMode={isDarkMode} />
         <ContentWrapper isDarkMode={isDarkMode}>
           <TitleText isDarkMode={isDarkMode}>Trade crypto & NFTs with confidence.</TitleText>
           <SubTextContainer>
