@@ -11,30 +11,54 @@ import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 
-const PageWrapper = styled.div<{ isDarkMode: boolean }>`
-  height: 100%;
+const PageWrapper = styled.div`
   width: 100%;
+  height: calc(100vh - 72px);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`
+
+const Shadow = styled.div<{ isDarkMode: boolean }>`
   position: absolute;
+  top: 0;
   bottom: 0;
+  width: 100%;
   background: ${({ isDarkMode }) =>
     isDarkMode
       ? 'linear-gradient(rgba(8, 10, 24, 0) 9.84%, rgb(8 10 24 / 86%) 35.35%)'
       : 'linear-gradient(rgba(8, 10, 24, 0) 9.84%, rgb(255 255 255 / 86%) 35.35%)'};
   z-index: ${Z_INDEX.dropdown};
-  display: flex;
-  flex-direction: column;
-  justify-content: end;
-  align-items: center;
-  padding: 32px;
-  transition: 250ms ease opacity;
   pointer-events: none;
+`
+
+const Glow = styled.div`
+  position: absolute;
+  top: 68px;
+  bottom: 0;
+  background: radial-gradient(72.04% 72.04% at 50% 3.99%, #ff37eb 0%, rgba(166, 151, 255, 0) 100%);
+  filter: blur(72px);
+  border-radius: 24px;
+  max-width: 480px;
+  width: 100%;
+`
+
+const ContentWrapper = styled.div<{ isDarkMode: boolean }>`
+  width: 100%;
+  max-width: 720px;
+  position: absolute;
+  bottom: 0;
+  z-index: ${Z_INDEX.dropdown};
+  padding: 32px 0;
+  transition: 250ms ease opacity;
 
   * {
     pointer-events: auto;
   }
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
-    padding: 64px;
+    padding: 64px 0;
   }
 `
 
@@ -124,10 +148,6 @@ const ButtonCTAText = styled.p`
   }
 `
 
-const TitleWrapper = styled.span`
-  max-width: 720px;
-`
-
 const ActionsWrapper = styled.span`
   display: flex;
   justify-content: center;
@@ -168,23 +188,25 @@ export default function Landing() {
 
   return (
     <Trace page={PageName.LANDING_PAGE} shouldLogImpression>
-      <PageWrapper isDarkMode={isDarkMode}>
-        <TitleWrapper>
+      <PageWrapper>
+        <Swap />
+        <Glow />
+        <Shadow isDarkMode={isDarkMode} />
+        <ContentWrapper isDarkMode={isDarkMode}>
           <TitleText isDarkMode={isDarkMode}>Trade crypto & NFTs with confidence.</TitleText>
           <SubTextContainer>
             <SubText>Buy, sell, and explore tokens and NFTs </SubText>
           </SubTextContainer>
-        </TitleWrapper>
-        <ActionsWrapper>
-          <ButtonCTA as={Link} to="/swap">
-            <ButtonCTAText>Continue</ButtonCTAText>
-          </ButtonCTA>
-          <ButtonCTASecondary as={Link} to="/about">
-            <ButtonCTAText>Learn more</ButtonCTAText>
-          </ButtonCTASecondary>
-        </ActionsWrapper>
+          <ActionsWrapper>
+            <ButtonCTA as={Link} to="/swap">
+              <ButtonCTAText>Continue</ButtonCTAText>
+            </ButtonCTA>
+            <ButtonCTASecondary as={Link} to="/about">
+              <ButtonCTAText>Learn more</ButtonCTAText>
+            </ButtonCTASecondary>
+          </ActionsWrapper>
+        </ContentWrapper>
       </PageWrapper>
-      <Swap />
     </Trace>
   )
 }

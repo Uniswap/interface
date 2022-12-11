@@ -12,9 +12,6 @@ export const nav = style([
     zIndex: '2',
     background: 'backgroundFloating',
   }),
-  {
-    backdropFilter: 'blur(24px)',
-  },
 ])
 
 export const logoContainer = style([
