@@ -38,7 +38,6 @@ const Nav = styled.nav`
   width: 100%;
   height: ${({ theme }) => theme.navHeight}px;
   z-index: 2;
-  background: ${({ theme }) => theme.backgroundFloating};
 `
 
 interface MenuItemProps {
