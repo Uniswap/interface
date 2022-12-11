@@ -189,8 +189,12 @@ export default function About() {
             </Intro>
           </Panels>
           <CardGrid>
-            {CARDS.map((card) => (
-              <Card key={card.title} {...card} />
+            {CARDS.map(({ darkBackgroundImgSrc, lightBackgroundImgSrc, ...card }) => (
+              <Card
+                key={card.title}
+                {...card}
+                backgroundImgSrc={isDarkMode ? darkBackgroundImgSrc : lightBackgroundImgSrc}
+              />
             ))}
           </CardGrid>
           <div>
