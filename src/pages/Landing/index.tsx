@@ -13,11 +13,15 @@ import { Z_INDEX } from 'theme/zIndex'
 
 const PageWrapper = styled.div`
   width: 100%;
-  height: calc(100vh - 72px);
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  height: calc(100vh - 72px - 56px);
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    height: calc(100vh - 72px);
+  }
 `
 
 const Shadow = styled.div<{ isDarkMode: boolean }>`
@@ -46,7 +50,7 @@ const Glow = styled.div`
 
 const ContentWrapper = styled.div<{ isDarkMode: boolean }>`
   width: 100%;
-  max-width: 720px;
+  max-width: min(720px, 90%);
   position: absolute;
   bottom: 0;
   z-index: ${Z_INDEX.dropdown};
