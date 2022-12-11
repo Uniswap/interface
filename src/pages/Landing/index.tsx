@@ -31,6 +31,10 @@ const PageWrapper = styled.div<{ isDarkMode: boolean }>`
   transition: 250ms ease opacity;
   pointer-events: none;
 
+  * {
+    pointer-events: auto;
+  }
+
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     padding: 64px 64px ${PADDING_BOTTOM}px;
   }
@@ -89,7 +93,6 @@ const SubTextContainer = styled.div`
 const LandingButton = styled(BaseButton)`
   padding: 16px;
   border-radius: 24px;
-  pointer-events: auto;
 `
 
 const ButtonCTA = styled(LandingButton)`
