@@ -3,25 +3,28 @@ import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 
-const StyledCard = styled.div<{ isDarkMode: boolean }>`
+const DARK_MODE_GRADIENT = 'linear-gradient(180deg, rgba(19, 22, 27, 0.54) 0%, #13161b 100%)'
+
+const StyledCard = styled.div<{ isDarkMode: boolean; backgroundImgSrc?: string }>`
   display: flex;
-  background: ${({ isDarkMode }) =>
-    isDarkMode ? 'linear-gradient(180deg, rgba(19, 22, 27, 0.54) 0%, #13161b 100%)' : 'transparent'};
+  background: ${({ isDarkMode, backgroundImgSrc }) =>
+    isDarkMode
+      ? `${DARK_MODE_GRADIENT} ${backgroundImgSrc ? `, url(${backgroundImgSrc})` : ''}`
+      : `url(${backgroundImgSrc})`};
+  background-size: auto 100%;
+  background-position: right;
+  background-repeat: no-repeat;
   flex-direction: column;
   justify-content: space-between;
   text-decoration: none;
   color: ${({ theme }) => theme.textPrimary};
   padding: 40px;
-  height: 200px;
+  height: ${({ backgroundImgSrc }) => (backgroundImgSrc ? 360 : 200)}px;
   border-radius: 24px;
-  transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease}  background`};
   border: 1px solid ${({ theme, isDarkMode }) => (isDarkMode ? 'transparent' : theme.backgroundOutline)};
 
   &:hover {
-    background: ${({ theme, isDarkMode }) =>
-      isDarkMode
-        ? theme.backgroundModule
-        : 'linear-gradient(180deg,rgba(93, 103, 133, 0.08) 0%, rgba(0, 0, 0, 0) 100%)'};
+    background: ${({ isDarkMode }) => (isDarkMode ? DARK_MODE_GRADIENT : 'transparent')};
   }
 `
 
@@ -61,11 +64,13 @@ const Card = ({
   description,
   to,
   external,
+  backgroundImgSrc,
 }: {
   title: string
   description: string
   to: string
   external?: boolean
+  backgroundImgSrc?: string
 }) => {
   const isDarkMode = useIsDarkMode()
   return (
@@ -76,6 +81,7 @@ const Card = ({
       target={external ? '_blank' : undefined}
       rel={external ? 'noopenener noreferrer' : undefined}
       isDarkMode={isDarkMode}
+      backgroundImgSrc={backgroundImgSrc}
     >
       <CardTitle>{title}</CardTitle>
       <CardDescription>{description}</CardDescription>
