@@ -18,9 +18,9 @@ const PageWrapper = styled.div`
   flex-direction: column;
   align-items: center;
 
-  height: calc(100vh - 72px - 56px);
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
-    height: calc(100vh - 72px);
+  height: ${({ theme }) => `calc(100vh - ${theme.navHeight + theme.mobileBottomBarHeight}px)`};
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
+    height: ${({ theme }) => `calc(100vh - ${theme.navHeight}px)`};
   }
 `
 

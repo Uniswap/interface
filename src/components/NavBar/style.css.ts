@@ -3,17 +3,6 @@ import { style } from '@vanilla-extract/css'
 import { subhead } from '../../nft/css/common.css'
 import { sprinkles, vars } from '../../nft/css/sprinkles.css'
 
-export const nav = style([
-  sprinkles({
-    paddingX: '20',
-    paddingY: '12',
-    width: 'full',
-    height: '72',
-    zIndex: '2',
-    background: 'backgroundFloating',
-  }),
-])
-
 export const logoContainer = style([
   sprinkles({
     display: 'flex',
