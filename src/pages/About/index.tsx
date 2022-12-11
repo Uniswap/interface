@@ -30,10 +30,6 @@ const BackgroundImage = styled.img`
   height: calc(100vh - 72px);
 `
 
-const AboutTitle = styled(Title)`
-  z-index: 1;
-`
-
 const Panels = styled.div`
   display: flex;
   flex-direction: column;
@@ -62,10 +58,11 @@ const Content = styled.div`
   justify-content: center;
   align-items: flex-start;
   padding: 0px 16px 16px 16px;
-  gap: 96px;
+  gap: 48px;
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     padding: 0px 80px 80px 80px;
+    gap: 96px;
   }
 `
 
@@ -129,14 +126,6 @@ const Thumbnail = styled.img`
   width: 100%;
 `
 
-const PoweredBySection = styled(Panels)`
-  order: 1;
-
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
-    order: 0;
-  }
-`
-
 const SocialRow = styled.div`
   display: flex;
   gap: 24px;
@@ -180,10 +169,10 @@ export default function About() {
       <Page isDarkMode={isDarkMode} titleHeight={titleHeight}>
         <BackgroundImage src={backgroundImgSrc} />
         <Content>
-          <AboutTitle ref={titleRef} isDarkMode={isDarkMode}>
+          <Title ref={titleRef} isDarkMode={isDarkMode}>
             Uniswap is the leading on-chain marketplace for tokens and NFTs.
-          </AboutTitle>
-          <PoweredBySection>
+          </Title>
+          <Panels>
             <div>
               <SubTitle isDarkMode={isDarkMode}>Powered by the Uniswap Protocol</SubTitle>
             </div>
@@ -198,7 +187,7 @@ export default function About() {
                 </InfoButton>
               </ActionsContainer>
             </Intro>
-          </PoweredBySection>
+          </Panels>
           <CardGrid>
             {CARDS.map((card) => (
               <Card key={card.title} {...card} />
