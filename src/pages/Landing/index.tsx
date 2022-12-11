@@ -24,8 +24,8 @@ const PageWrapper = styled.div<{ isDarkMode: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: end;
-  padding: 64px 24px;
   align-items: center;
+  padding: 32px;
   transition: 250ms ease opacity;
   pointer-events: none;
 
@@ -34,11 +34,7 @@ const PageWrapper = styled.div<{ isDarkMode: boolean }>`
   }
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
-    padding: 64px 64px ${PADDING_BOTTOM}px;
-  }
-
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
-    padding: 32px 32px ${PADDING_BOTTOM}px;
+    padding: 64px;
   }
 `
 
