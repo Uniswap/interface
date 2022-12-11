@@ -31,6 +31,7 @@ const Panels = styled.div`
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     gap: 120px;
     flex-direction: row;
+    align-items: center;
   }
 
   & > * {
