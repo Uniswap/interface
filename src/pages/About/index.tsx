@@ -172,7 +172,7 @@ export default function About() {
               <SubTitle isDarkMode={isDarkMode}>Powered by the Uniswap Protocol</SubTitle>
             </div>
             <Intro>
-              <IntroCopy>The leading decentralized crypto trading protocol, governed by a global community.</IntroCopy>
+              <IntroCopy>The leading decentralized crypto trading protocol, governed by a global community</IntroCopy>
               <ActionsContainer>
                 <InfoButton as="a" rel="noopener noreferrer" href="https://uniswap.org" target="_blank">
                   Learn more
