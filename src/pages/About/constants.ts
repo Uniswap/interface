@@ -15,17 +15,6 @@ export const CARDS = [
     title: 'Trade NFTs',
     description: 'Buy and sell NFTs across marketplaces to find more listings at better prices.',
   },
-  {
-    to: '/pool',
-    title: 'Earn fees',
-    description: 'Provide liquidity to pools on Uniswap and earn fees on swaps.',
-  },
-  {
-    to: 'https://support.uniswap.org/',
-    external: true,
-    title: 'Build dApps',
-    description: 'Build on the largest DeFi protocol on Ethereum with our tools.',
-  },
 ]
 
 export const STEPS = [
