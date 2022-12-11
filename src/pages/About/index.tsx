@@ -12,7 +12,7 @@ import backgroundImgSrc from './images/background.jpg'
 import Step from './Step'
 import { SubTitle, Title } from './Title'
 
-const Page = styled.div<{ isDarkMode: boolean; titleHeight: number }>`
+const Page = styled.div<{ isDarkMode: boolean; titleHeight: number; backgroundImgSrc: string }>`
   position: relative;
   width: 100%;
   align-self: center;
@@ -21,13 +21,9 @@ const Page = styled.div<{ isDarkMode: boolean; titleHeight: number }>`
   align-items: center;
   width: 100%;
   padding-top: calc(100vh - ${({ titleHeight }) => titleHeight + 200}px);
-`
-
-const BackgroundImage = styled.img`
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: calc(100vh - 72px);
+  background: url(${backgroundImgSrc});
+  background-size: auto 100vh;
+  background-repeat: no-repeat;
 `
 
 const Panels = styled.div`
@@ -166,8 +162,7 @@ export default function About() {
 
   return (
     <Trace page={PageName.ABOUT_PAGE} shouldLogImpression>
-      <Page isDarkMode={isDarkMode} titleHeight={titleHeight}>
-        <BackgroundImage src={backgroundImgSrc} />
+      <Page isDarkMode={isDarkMode} titleHeight={titleHeight} backgroundImgSrc={backgroundImgSrc}>
         <Content>
           <Title ref={titleRef} isDarkMode={isDarkMode}>
             Uniswap is the leading on-chain marketplace for tokens and NFTs.
