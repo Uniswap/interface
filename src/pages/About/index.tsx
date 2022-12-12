@@ -28,7 +28,7 @@ const PageBackground = styled.div<{ isDarkMode: boolean }>`
   position: absolute;
   width: 100%;
   height: 100vh;
-  top: 0;
+  top: -72px;
   left: 0;
   opacity: ${({ isDarkMode }) => (isDarkMode ? 0.4 : 0.2)};
   background: ${({ isDarkMode }) => (isDarkMode ? `url(${backgroundImgSrcDark})` : `url(${backgroundImgSrcLight})`)};
@@ -153,7 +153,7 @@ const FooterLink = styled.a`
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 24px;
+  padding: 16px;
   color: ${({ theme }) => theme.textPrimary};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   font-size: 20px;
@@ -162,6 +162,11 @@ const FooterLink = styled.a`
   border-radius: 8px;
   cursor: pointer;
   text-decoration: none;
+
+  svg {
+    color: ${({ theme }) => theme.textSecondary};
+    stroke-width: 1;
+  }
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     font-size: 16px;
