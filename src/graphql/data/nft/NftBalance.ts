@@ -1,17 +1,19 @@
 import graphql from 'babel-plugin-relay/macro'
 import { parseEther } from 'ethers/lib/utils'
-import { DEFAULT_WALLET_ASSET_QUERY_AMOUNT } from 'nft/components/profile/view/ProfilePage'
-import { WalletAsset } from 'nft/types'
+import { GenieCollection, WalletAsset } from 'nft/types'
 import { wrapScientificNotation } from 'nft/utils'
-import { useEffect } from 'react'
-import { useLazyLoadQuery, usePaginationFragment, useQueryLoader } from 'react-relay'
 
-import { NftBalancePaginationQuery } from './__generated__/NftBalancePaginationQuery.graphql'
-import { NftBalanceQuery } from './__generated__/NftBalanceQuery.graphql'
-import { NftBalanceQuery_nftBalances$data } from './__generated__/NftBalanceQuery_nftBalances.graphql'
+import { useNftBalanceQueryQuery } from '../__generated__/types-and-hooks'
 
 const nftBalancePaginationQuery = graphql`
-  fragment NftBalanceQuery_nftBalances on Query @refetchable(queryName: "NftBalancePaginationQuery") {
+  query NftBalanceQuery(
+    $ownerAddress: String!
+    $filter: NftBalancesFilterInput
+    $first: Int
+    $after: String
+    $last: Int
+    $before: String
+  ) {
     nftBalances(
       ownerAddress: $ownerAddress
       filter: $filter
@@ -19,7 +21,7 @@ const nftBalancePaginationQuery = graphql`
       after: $after
       last: $last
       before: $before
-    ) @connection(key: "NftBalanceQuery_nftBalances") {
+    ) {
       edges {
         node {
           ownedAsset {
@@ -99,41 +101,7 @@ const nftBalancePaginationQuery = graphql`
   }
 `
 
-const nftBalanceQuery = graphql`
-  query NftBalanceQuery(
-    $ownerAddress: String!
-    $filter: NftBalancesFilterInput
-    $first: Int
-    $after: String
-    $last: Int
-    $before: String
-  ) {
-    ...NftBalanceQuery_nftBalances
-  }
-`
-
-type NftBalanceQueryAsset = NonNullable<
-  NonNullable<NonNullable<NftBalanceQuery_nftBalances$data['nftBalances']>['edges']>[number]
->
-
-export function useLoadNftBalanceQuery(
-  ownerAddress?: string,
-  collectionAddress?: string | string[],
-  tokenId?: string
-): void {
-  const [, loadQuery] = useQueryLoader(nftBalanceQuery)
-  useEffect(() => {
-    if (ownerAddress) {
-      loadQuery({
-        ownerAddress,
-        filter: tokenId
-          ? { assets: [{ address: collectionAddress, tokenId }] }
-          : { addresses: Array.isArray(collectionAddress) ? collectionAddress : [collectionAddress] },
-        first: tokenId ? 1 : DEFAULT_WALLET_ASSET_QUERY_AMOUNT,
-      })
-    }
-  }, [ownerAddress, loadQuery, collectionAddress, tokenId])
-}
+// type NftBalanceQueryAsset = NonNullable<NonNullable<NftBalanceConnection>['edges']>[number]
 
 export function useNftBalanceQuery(
   ownerAddress: string,
@@ -144,9 +112,8 @@ export function useNftBalanceQuery(
   last?: number,
   before?: string
 ) {
-  const queryData = useLazyLoadQuery<NftBalanceQuery>(
-    nftBalanceQuery,
-    {
+  const { data, loading, fetchMore } = useNftBalanceQueryQuery({
+    variables: {
       ownerAddress,
       filter:
         assetsFilter && assetsFilter.length > 0
@@ -161,14 +128,18 @@ export function useNftBalanceQuery(
       last,
       before,
     },
-    { fetchPolicy: 'store-or-network' }
-  )
-  const { data, hasNext, loadNext, isLoadingNext } = usePaginationFragment<NftBalancePaginationQuery, any>(
-    nftBalancePaginationQuery,
-    queryData
-  )
-  const walletAssets: WalletAsset[] = data.nftBalances?.edges?.map((queryAsset: NftBalanceQueryAsset) => {
-    const asset = queryAsset.node.ownedAsset
+  })
+
+  const hasNext = data?.nftBalances?.pageInfo?.hasNextPage
+  const loadMore = () =>
+    fetchMore({
+      variables: {
+        after: data?.nftBalances?.pageInfo?.endCursor,
+      },
+    })
+
+  const walletAssets: WalletAsset[] | undefined = data?.nftBalances?.edges?.map((queryAsset) => {
+    const asset = queryAsset?.node.ownedAsset
     const ethPrice = parseEther(wrapScientificNotation(asset?.listings?.edges[0]?.node.price.value ?? 0)).toString()
     return {
       id: asset?.id,
@@ -194,18 +165,17 @@ export function useNftBalanceQuery(
         description: asset?.description,
         image_url: asset?.collection?.image?.url,
         payout_address: queryAsset?.node?.listingFees?.[0]?.payoutAddress,
-        tokenType: asset?.collection?.nftContracts?.[0].standard,
       },
-      collection: asset?.collection,
+      collection: asset?.collection as GenieCollection,
       collectionIsVerified: asset?.collection?.isVerified,
       lastPrice: queryAsset.node.lastPrice?.value,
       floorPrice: asset?.collection?.markets?.[0]?.floorPrice?.value,
       basisPoints: queryAsset?.node?.listingFees?.[0]?.basisPoints ?? 0 / 10000,
-      listing_date: asset?.listings?.edges?.[0]?.node?.createdAt,
-      date_acquired: queryAsset.node.lastPrice?.timestamp,
+      listing_date: asset?.listings?.edges?.[0]?.node?.createdAt?.toString(),
+      date_acquired: queryAsset.node.lastPrice?.timestamp?.toString(),
       sellOrders: asset?.listings?.edges.map((edge: any) => edge.node),
       floor_sell_order_price: asset?.listings?.edges?.[0]?.node?.price?.value,
     }
   })
-  return { walletAssets, hasNext, isLoadingNext, loadNext }
+  return { walletAssets, hasNext, loadMore, loading }
 }

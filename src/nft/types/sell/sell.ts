@@ -1,6 +1,7 @@
+import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { NftMarketplace, OrderStatus, OrderType } from 'graphql/data/nft/__generated__/DetailsQuery.graphql'
 
-import { GenieCollection, PriceInfo, TokenType } from '../common'
+import { GenieCollection, PriceInfo } from '../common'
 
 export interface ListingMarket {
   name: string
@@ -41,32 +42,31 @@ export interface Listing {
 
 export interface WalletAsset {
   id?: string
-  imageUrl: string
-  smallImageUrl: string
+  imageUrl?: string
+  smallImageUrl?: string
   notForSale: boolean
-  animationUrl: string
-  susFlag: boolean
-  priceInfo: PriceInfo
-  name: string
-  tokenId: string
+  animationUrl?: string
+  susFlag?: boolean
+  priceInfo?: PriceInfo
+  name?: string
+  tokenId?: string
   asset_contract: {
-    address: string
-    schema_name: 'ERC1155' | 'ERC721' | string
-    name: string
-    description: string
-    image_url: string
-    payout_address: string
-    tokenType: TokenType
+    address?: string
+    name?: string
+    description?: string
+    image_url?: string
+    payout_address?: string
+    tokenType?: NftStandard
   }
-  collection: GenieCollection
-  collectionIsVerified: boolean
-  lastPrice: number
-  floorPrice: number
-  basisPoints: number
-  listing_date: string
-  date_acquired: string
-  sellOrders: SellOrder[]
-  floor_sell_order_price: number
+  collection?: GenieCollection
+  collectionIsVerified?: boolean
+  lastPrice?: number
+  floorPrice?: number
+  basisPoints?: number
+  listing_date?: string
+  date_acquired?: string
+  sellOrders?: SellOrder[]
+  floor_sell_order_price?: number
   // Used for creating new listings
   expirationTime?: number
   marketAgnosticPrice?: number

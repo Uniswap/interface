@@ -1,3 +1,4 @@
+import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import create from 'zustand'
 import { devtools } from 'zustand/middleware'
 
@@ -28,7 +29,7 @@ export const useWalletCollections = create<WalletCollectionState>()(
       setWalletAssets: (assets) =>
         set(() => {
           return {
-            walletAssets: assets?.filter((asset) => asset.asset_contract?.schema_name === 'ERC721'),
+            walletAssets: assets?.filter((asset) => asset.asset_contract?.tokenType === NftStandard.Erc721),
           }
         }),
       setWalletCollections: (collections) =>

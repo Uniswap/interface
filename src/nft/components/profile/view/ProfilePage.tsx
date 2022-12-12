@@ -198,9 +198,9 @@ const ProfilePageNfts = ({
 
   const {
     walletAssets: ownerAssets,
-    loadNext,
+    loading,
     hasNext,
-    isLoadingNext,
+    loadMore,
   } = useNftBalanceQuery(address, collectionFilters, [], DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
 
   const { gridX } = useSpring({
@@ -211,7 +211,9 @@ const ProfilePageNfts = ({
     },
   })
 
-  return (
+  return loading ? (
+    <ProfileBodyLoadingSkeleton />
+  ) : (
     <Column width="full">
       {ownerAssets?.length === 0 ? (
         <EmptyWalletContent />
@@ -242,13 +244,13 @@ const ProfilePageNfts = ({
             />
           </Row>
           <InfiniteScroll
-            next={() => loadNext(DEFAULT_WALLET_ASSET_QUERY_AMOUNT)}
-            hasMore={hasNext}
+            next={loadMore}
+            hasMore={hasNext ?? false}
             loader={
               Boolean(hasNext && ownerAssets?.length) && <LoadingAssets count={DEFAULT_WALLET_ASSET_QUERY_AMOUNT} />
             }
             dataLength={ownerAssets?.length ?? 0}
-            className={ownerAssets?.length || isLoadingNext ? assetList : undefined}
+            className={ownerAssets?.length ? assetList : undefined}
             style={{ overflow: 'unset' }}
           >
             {ownerAssets?.length

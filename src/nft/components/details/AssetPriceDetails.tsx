@@ -221,7 +221,7 @@ const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
   const expirationDate = listing ? new Date(listing.endAt) : undefined
 
   const USDPrice = useMemo(
-    () => (USDValue ? USDValue * asset.floor_sell_order_price : undefined),
+    () => (USDValue && asset.floor_sell_order_price ? USDValue * asset.floor_sell_order_price : undefined),
     [USDValue, asset.floor_sell_order_price]
   )
   const trace = useTrace()
@@ -254,7 +254,7 @@ const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
         {listing ? (
           <>
             <ThemedText.MediumHeader fontSize="28px" lineHeight="36px">
-              {formatEthPrice(asset.priceInfo.ETHPrice)} ETH
+              {formatEthPrice(asset.priceInfo?.ETHPrice)} ETH
             </ThemedText.MediumHeader>
             {USDPrice && (
               <ThemedText.BodySecondary lineHeight="24px">
@@ -333,7 +333,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const assetsFilter = [{ address: asset.address, tokenId: asset.tokenId }]
   const { walletAssets: ownerAssets } = useNftBalanceQuery(account ?? '', [], assetsFilter, 1)
   const walletAsset: WalletAsset | undefined = useMemo(
-    () => (ownerAssets?.length > 0 ? ownerAssets[0] : undefined),
+    () => (ownerAssets && ownerAssets?.length > 0 ? ownerAssets[0] : undefined),
     [ownerAssets]
   )
 

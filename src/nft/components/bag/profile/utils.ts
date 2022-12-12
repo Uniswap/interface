@@ -127,7 +127,7 @@ export const getTotalEthValue = (sellAssets: WalletAsset[]) => {
       // LooksRare is a unique case where creator royalties are a flat 0.5% or 50 basis points
       const maxFee =
         maxListing.marketplace.fee +
-        (maxListing.marketplace.name === 'LooksRare' ? LOOKS_RARE_CREATOR_BASIS_POINTS : asset.basisPoints) / 100
+        (maxListing.marketplace.name === 'LooksRare' ? LOOKS_RARE_CREATOR_BASIS_POINTS : asset?.basisPoints ?? 0) / 100
       return total + (maxListing.price ?? 0) - (maxListing.price ?? 0) * (maxFee / 100)
     }
     return total
@@ -142,7 +142,7 @@ export const getListings = (sellAssets: WalletAsset[]): [CollectionRow[], Listin
   sellAssets.forEach((asset) => {
     asset.marketplaces?.forEach((marketplace: ListingMarket) => {
       const newListing = {
-        images: [asset.smallImageUrl, marketplace.icon],
+        images: [asset.smallImageUrl ?? '', marketplace.icon],
         name: asset.name || `#${asset.tokenId}`,
         status: ListingStatus.DEFINED,
         asset,
@@ -158,10 +158,10 @@ export const getListings = (sellAssets: WalletAsset[]): [CollectionRow[], Listin
         )
       ) {
         const newCollectionRow = {
-          images: [asset.asset_contract.image_url, marketplace.icon],
-          name: asset.asset_contract.name,
+          images: [asset.asset_contract.image_url ?? '', marketplace.icon],
+          name: asset.asset_contract.name ?? '',
           status: ListingStatus.DEFINED,
-          collectionAddress: asset.asset_contract.address,
+          collectionAddress: asset.asset_contract.address ?? '',
           marketplace,
         }
         newCollectionsToApprove.push(newCollectionRow)
