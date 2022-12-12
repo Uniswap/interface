@@ -70,7 +70,7 @@ const AppWrapper = styled.div`
   display: flex;
   flex-flow: column;
   align-items: flex-start;
-  height: 100%;
+  height: 100vh;
 `
 
 const BodyWrapper = styled.div`
