@@ -1,0 +1,62 @@
+[
+  {
+    "tokenIn": { "symbol": "BNB", "name": "BNB" },
+    "tokenOut": { "symbol": "KNC", "name": "Kyber Network Crystal" },
+    "amountIn": 1
+  },
+  {
+    "tokenIn": { "symbol": "BNB", "name": "BNB" },
+    "tokenOut": { "symbol": "KNC", "name": "Kyber Network Crystal" },
+    "amountIn": 1000
+  },
+  {
+    "tokenIn": { "symbol": "KNC", "name": "Kyber Network Crystal" },
+    "tokenOut": { "symbol": "USDC", "name": "USDC" },
+    "amountIn": 1
+  },
+  {
+    "tokenIn": { "symbol": "KNC", "name": "Kyber Network Crystal" },
+    "tokenOut": { "symbol": "USDC", "name": "USDC" },
+    "amountIn": 100000
+  },
+  {
+    "tokenIn": { "symbol": "KNC", "name": "Kyber Network Crystal" },
+    "tokenOut": { "symbol": "USDC", "name": "USDC" },
+    "amountIn": 10000
+  },
+  {
+    "tokenIn": { "symbol": "KNC", "name": "Kyber Network Crystal" },
+    "tokenOut": { "symbol": "USDT", "name": "USDT" },
+    "amountIn": 1000
+  },
+  {
+    "tokenIn": { "symbol": "USDT", "name": "USDT" },
+    "tokenOut": { "symbol": "UND", "name": "Unbound Dollar" },
+    "amountIn": 1
+  },
+  {
+    "tokenIn": { "symbol": "USDT", "name": "USDT" },
+    "tokenOut": { "symbol": "UND", "name": "Unbound Dollar" },
+    "amountIn": 10000
+  },
+  {
+    "tokenIn": { "symbol": "EBA", "name": "Elpis Battle" },
+    "tokenOut": { "symbol": "BUSD", "name": "BUSD" },
+    "amountIn": 1000
+  },
+  {
+    "tokenIn": { "symbol": "DAI", "name": "DAI" },
+    "tokenOut": { "symbol": "DEXT", "name": "DEXTools" },
+    "amountIn": 1
+  },
+  {
+    "tokenIn": { "symbol": "DAI", "name": "DAI" },
+    "tokenOut": { "symbol": "DEXT", "name": "DEXTools" },
+    "amountIn": 1000
+  },
+  {
+    "tokenIn": { "symbol": "DAI", "name": "DAI" },
+    "tokenOut": { "symbol": "DEXT", "name": "DEXTools" },
+    "amountIn": 10000
+  }
+]
