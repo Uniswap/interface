@@ -1,5 +1,6 @@
 import { BigNumberish } from 'ethers'
-import { ChainId, TESTNET_CHAIN_IDS } from 'src/constants/chains'
+import { ChainId, isL2Chain, TESTNET_CHAIN_IDS } from 'src/constants/chains'
+import { PollingInterval } from 'src/constants/misc'
 import { Chain } from 'src/data/__generated__/types-and-hooks'
 
 const supportedChains = Object.values(ChainId).map((c) => c.toString())
@@ -57,4 +58,8 @@ export function toGraphQLChain(chainId: ChainId): Chain | null {
       return Chain.Polygon
   }
   return null // TODO: throw error?
+}
+
+export function getPollingIntervalByBlocktime(chainId?: ChainId) {
+  return isL2Chain(chainId) ? PollingInterval.LightningMcQueen : PollingInterval.Fast
 }

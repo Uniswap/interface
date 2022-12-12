@@ -4,7 +4,10 @@ import { useAppDispatch } from 'src/app/hooks'
 import { useProvider } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
-import { useNativeCurrencyBalance, useTokenBalance } from 'src/features/balances/hooks'
+import {
+  useOnChainCurrencyBalance,
+  useOnChainNativeCurrencyBalance,
+} from 'src/features/balances/api'
 import { CurrencyInfo } from 'src/features/dataApi/types'
 import { GQLNftAsset, useNFT } from 'src/features/nfts/hooks'
 import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
@@ -66,12 +69,12 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
     [currencyInInfo, nftIn]
   )
 
-  const { balance: tokenInBalance } = useTokenBalance(
+  const { balance: tokenInBalance } = useOnChainCurrencyBalance(
     currencyIn?.isToken ? currencyIn : undefined,
     activeAccount?.address
   )
 
-  const { balance: nativeInBalance } = useNativeCurrencyBalance(
+  const { balance: nativeInBalance } = useOnChainNativeCurrencyBalance(
     chainId ?? ChainId.Mainnet,
     activeAccount?.address
   )

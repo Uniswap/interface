@@ -17,7 +17,10 @@ import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/misc'
 import { AssetType } from 'src/entities/assets'
-import { useNativeCurrencyBalance, useTokenBalance } from 'src/features/balances/hooks'
+import {
+  useOnChainCurrencyBalance,
+  useOnChainNativeCurrencyBalance,
+} from 'src/features/balances/api'
 import { ContractManager } from 'src/features/contracts/ContractManager'
 import { CurrencyInfo } from 'src/features/dataApi/types'
 import { FEATURE_FLAGS } from 'src/features/experiments/constants'
@@ -121,21 +124,14 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
 
   const chainId = currencyIn?.chainId ?? currencyOut?.chainId ?? ChainId.Mainnet
 
-  const { balance: tokenInBalance } = useTokenBalance(
-    currencyIn?.isToken ? currencyIn : undefined,
-    activeAccount?.address
-  )
-  const { balance: tokenOutBalance } = useTokenBalance(
-    currencyOut?.isToken ? currencyOut : undefined,
+  const { balance: tokenInBalance } = useOnChainCurrencyBalance(currencyIn, activeAccount?.address)
+  const { balance: tokenOutBalance } = useOnChainCurrencyBalance(
+    currencyOut,
     activeAccount?.address
   )
 
-  const { balance: nativeInBalance } = useNativeCurrencyBalance(
-    currencyIn?.chainId ?? ChainId.Mainnet,
-    activeAccount?.address
-  )
-  const { balance: nativeOutBalance } = useNativeCurrencyBalance(
-    currencyOut?.chainId ?? ChainId.Mainnet,
+  const { balance: nativeCurrencyBalance } = useOnChainNativeCurrencyBalance(
+    chainId,
     activeAccount?.address
   )
 
@@ -186,17 +182,10 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
 
   const currencyBalances = useMemo(() => {
     return {
-      [CurrencyField.INPUT]: currencyIn?.isNative ? nativeInBalance : tokenInBalance,
-      [CurrencyField.OUTPUT]: currencyOut?.isNative ? nativeOutBalance : tokenOutBalance,
+      [CurrencyField.INPUT]: tokenInBalance,
+      [CurrencyField.OUTPUT]: tokenOutBalance,
     }
-  }, [
-    currencyIn?.isNative,
-    currencyOut?.isNative,
-    nativeInBalance,
-    nativeOutBalance,
-    tokenInBalance,
-    tokenOutBalance,
-  ])
+  }, [tokenInBalance, tokenOutBalance])
 
   return useMemo(() => {
     return {
@@ -210,7 +199,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
       focusOnCurrencyField,
       trade,
       wrapType,
-      nativeCurrencyBalance: nativeInBalance,
+      nativeCurrencyBalance,
       selectingCurrencyField,
       txId,
     }
@@ -223,7 +212,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     exactAmountUSD,
     exactCurrencyField,
     focusOnCurrencyField,
-    nativeInBalance,
+    nativeCurrencyBalance,
     selectingCurrencyField,
     trade,
     txId,

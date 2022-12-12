@@ -1,8 +1,10 @@
 import { BigNumber } from 'ethers'
 import { ChainId, TESTNET_CHAIN_IDS } from 'src/constants/chains'
+import { PollingInterval } from 'src/constants/misc'
 import { Chain } from 'src/data/__generated__/types-and-hooks'
 import {
   fromGraphQLChain,
+  getPollingIntervalByBlocktime,
   isTestnet,
   parseActiveChains,
   toGraphQLChain,
@@ -72,5 +74,15 @@ describe(toGraphQLChain, () => {
 
   it('handle unsupported chain', () => {
     expect(toGraphQLChain(ChainId.PolygonMumbai)).toEqual(null)
+  })
+})
+
+describe(getPollingIntervalByBlocktime, () => {
+  it('returns the correct value for L1', () => {
+    expect(getPollingIntervalByBlocktime(ChainId.Mainnet)).toEqual(PollingInterval.Fast)
+  })
+
+  it('returns the correct value for L2', () => {
+    expect(getPollingIntervalByBlocktime(ChainId.Polygon)).toEqual(PollingInterval.LightningMcQueen)
   })
 })

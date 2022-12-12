@@ -9,6 +9,7 @@ import { rootReducer } from 'src/app/rootReducer'
 import { rootSaga } from 'src/app/rootSaga'
 import { walletContextValue } from 'src/app/walletContext'
 import { config } from 'src/config'
+import { onChainBalanceApi } from 'src/features/balances/api'
 import { ensApi } from 'src/features/ens/api'
 import { fiatOnRampApi } from 'src/features/fiatOnRamp/api'
 import { forceUpgradeApi } from 'src/features/forceUpgrade/forceUpgradeApi'
@@ -65,6 +66,7 @@ export const persistConfig = {
     'tokens',
     'transactions',
     'wallet',
+    onChainBalanceApi.reducerPath,
     ensApi.reducerPath,
     trmApi.reducerPath,
   ],
@@ -99,10 +101,11 @@ export const store = configureStore({
       fiatOnRampApi.middleware,
       forceUpgradeApi.middleware,
       gasApi.middleware,
+      onChainBalanceApi.middleware,
       routingApi.middleware,
-      trmApi.middleware,
-      sagaMiddleware,
       rtkQueryErrorLogger,
+      sagaMiddleware,
+      trmApi.middleware,
       ...middlewares
     ),
   devTools: config.debug,

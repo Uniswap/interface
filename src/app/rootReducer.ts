@@ -1,5 +1,6 @@
 import { combineReducers } from '@reduxjs/toolkit'
 import { monitoredSagaReducers } from 'src/app/rootSaga'
+import { onChainBalanceApi } from 'src/features/balances/api'
 import { biometricSettingsReducer } from 'src/features/biometrics/slice'
 import { blocksReducer } from 'src/features/blocks/blocksSlice'
 import { chainsReducer } from 'src/features/chains/chainsSlice'
@@ -28,6 +29,7 @@ export const rootReducer = combineReducers({
   [forceUpgradeApi.reducerPath]: forceUpgradeApi.reducer,
   [gasApi.reducerPath]: gasApi.reducer,
   [multicall.reducerPath]: multicall.reducer,
+  [onChainBalanceApi.reducerPath]: onChainBalanceApi.reducer,
   [routingApi.reducerPath]: routingApi.reducer,
   [trmApi.reducerPath]: trmApi.reducer,
   biometricSettings: biometricSettingsReducer,
