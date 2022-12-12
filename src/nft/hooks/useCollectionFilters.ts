@@ -1,4 +1,4 @@
-import { NftAssetSortableField } from 'graphql/data/nft/__generated__/AssetPaginationQuery.graphql'
+import { NftAssetSortableField } from 'graphql/data/__generated__/types-and-hooks'
 import create from 'zustand'
 import { devtools } from 'zustand/middleware'
 

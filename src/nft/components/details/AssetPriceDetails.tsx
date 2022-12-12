@@ -218,7 +218,7 @@ const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
   const resetSellAssets = useSellAsset((state) => state.reset)
 
   const listing = asset.sellOrders && asset.sellOrders.length > 0 ? asset.sellOrders[0] : undefined
-  const expirationDate = listing ? new Date(listing.endAt) : undefined
+  const expirationDate = listing?.endAt ? new Date(listing.endAt) : undefined
 
   const USDPrice = useMemo(
     () => (USDValue ? USDValue * asset.floor_sell_order_price : undefined),
@@ -320,7 +320,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const { account } = useWeb3React()
 
   const cheapestOrder = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
-  const expirationDate = cheapestOrder ? new Date(cheapestOrder.endAt) : undefined
+  const expirationDate = cheapestOrder?.endAt ? new Date(cheapestOrder.endAt) : undefined
 
   const itemsInBag = useBag((s) => s.itemsInBag)
   const addAssetsToBag = useBag((s) => s.addAssetsToBag)

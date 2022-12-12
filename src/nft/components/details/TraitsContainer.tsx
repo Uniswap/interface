@@ -77,7 +77,7 @@ const TraitsContainer = ({ asset }: { asset: GenieAsset }) => {
   return (
     <Grid>
       {traits?.map((trait) => {
-        return <GridItem key={trait.trait_type} trait={trait} collectionAddress={asset.address} />
+        return !!asset.address && <GridItem key={trait.trait_type} trait={trait} collectionAddress={asset.address} />
       })}
     </Grid>
   )

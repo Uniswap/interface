@@ -1,4 +1,5 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client'
+import { relayStylePagination } from '@apollo/client/utilities'
 
 const GRAPHQL_URL = process.env.REACT_APP_AWS_API_ENDPOINT
 if (!GRAPHQL_URL) {
@@ -11,5 +12,13 @@ export const apolloClient = new ApolloClient({
     'Content-Type': 'application/json',
     Origin: 'https://app.uniswap.org',
   },
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          nftAssets: relayStylePagination(),
+        },
+      },
+    },
+  }),
 })

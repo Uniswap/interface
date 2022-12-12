@@ -2,7 +2,6 @@ import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { OpacityHoverState } from 'components/Common'
-import { useLoadAssetsQuery } from 'graphql/data/nft/Asset'
 import { useCollectionQuery, useLoadCollectionQuery } from 'graphql/data/nft/Collection'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
 import { AnimatedBox, Box } from 'nft/components/Box'
@@ -222,7 +221,6 @@ const Collection = () => {
 const CollectionPage = () => {
   const { contractAddress } = useParams()
   useLoadCollectionQuery(contractAddress)
-  useLoadAssetsQuery(contractAddress)
 
   // The Collection must be wrapped in suspense so that it does not suspend the CollectionPage,
   // which is needed to trigger query loads.
