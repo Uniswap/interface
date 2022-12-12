@@ -14,7 +14,7 @@ describe('Testing nfts', () => {
     cy.get(getTestSelector('nft-trending-collection')).should('have.length', 100)
   })
 
-  it('should load bored ape collection page', () => {
+  it('should load pudgy penguin collection page', () => {
     cy.visit(`/#/nfts/collection/${COLLECTION_ADDRESS}`)
     cy.get(getTestSelector('nft-collection-asset')).should('exist')
     cy.get(getTestSelector('nft-collection-filter-buy-now')).should('not.exist')
