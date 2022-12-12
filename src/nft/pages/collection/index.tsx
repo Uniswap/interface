@@ -160,6 +160,10 @@ const Collection = () => {
   }, [collectionStats?.marketplaceCount, setMarketCount])
 
   useEffect(() => {
+    if (isBagExpanded && isFiltersExpanded && !screenSize['xl']) setFiltersExpanded(false)
+  }, [isBagExpanded, isFiltersExpanded, screenSize, setFiltersExpanded])
+
+  useEffect(() => {
     setBagExpanded({ bagExpanded: false, manualClose: false })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

@@ -31,6 +31,7 @@ import {
   useCollectionFilters,
   useFiltersExpanded,
   useIsMobile,
+  useScreenSize,
 } from 'nft/hooks'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { usePriceRange } from 'nft/hooks/usePriceRange'
@@ -378,6 +379,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const oldStateRef = useRef<CollectionFilters | null>(null)
   const isMobile = useIsMobile()
+  const screenSize = useScreenSize()
 
   useEffect(() => {
     setIsCollectionNftsLoading(isLoadingNext)
@@ -514,7 +516,10 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
                 isMobile={isMobile}
                 isFiltersExpanded={isFiltersExpanded}
                 collectionCount={collectionAssets?.[0]?.totalCount ?? 0}
-                onClick={() => setFiltersExpanded(!isFiltersExpanded)}
+                onClick={() => {
+                  if (bagExpanded && !screenSize['xl']) toggleBag()
+                  setFiltersExpanded(!isFiltersExpanded)
+                }}
               />
             </TraceEvent>
             <SortDropdownContainer isFiltersExpanded={isFiltersExpanded}>
