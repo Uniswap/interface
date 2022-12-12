@@ -796,7 +796,7 @@ export default function Swap({ className }: { className?: string }) {
                       </ButtonError>
                     </AutoColumn>
                   </AutoRow>
-                ) : permit.state === PermitState.PERMIT_NEEDED ? (
+                ) : isValid && permit.state === PermitState.PERMIT_NEEDED ? (
                   <ButtonYellow
                     onClick={updatePermit}
                     disabled={isPermitPending || isApprovalPending}
