@@ -7,7 +7,7 @@ import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { UniIcon } from 'nft/components/icons'
 import { ReactNode } from 'react'
-import { NavLink, NavLinkProps, useLocation } from 'react-router-dom'
+import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { Bag } from './Bag'
@@ -24,13 +24,20 @@ const MobileBottomBar = styled.div`
   left: 0;
   justify-content: space-between;
   padding: 4px 8px;
-  height: 56px;
+  height: ${({ theme }) => theme.mobileBottomBarHeight}px;
   background: ${({ theme }) => theme.backgroundSurface};
   border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
 
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
     display: none;
   }
+`
+
+const Nav = styled.nav`
+  padding: 20px 12px;
+  width: 100%;
+  height: ${({ theme }) => theme.navHeight}px;
+  z-index: 2;
 `
 
 interface MenuItemProps {
@@ -87,14 +94,22 @@ const PageTabs = () => {
 
 const Navbar = () => {
   const isNftPage = useIsNftPage()
+  const navigate = useNavigate()
 
   return (
     <>
-      <nav className={styles.nav}>
+      <Nav>
         <Box display="flex" height="full" flexWrap="nowrap" alignItems="stretch">
           <Box className={styles.leftSideContainer}>
-            <Box as="a" href="#/swap" className={styles.logoContainer}>
-              <UniIcon width="48" height="48" className={styles.logo} />
+            <Box className={styles.logoContainer}>
+              <UniIcon
+                width="48"
+                height="48"
+                className={styles.logo}
+                onClick={() => {
+                  navigate('/')
+                }}
+              />
             </Box>
             {!isNftPage && (
               <Box display={{ sm: 'flex', lg: 'none' }}>
@@ -127,7 +142,7 @@ const Navbar = () => {
             </Row>
           </Box>
         </Box>
-      </nav>
+      </Nav>
       <MobileBottomBar>
         <PageTabs />
         <Box marginY="4">

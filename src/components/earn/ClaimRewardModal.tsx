@@ -88,9 +88,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
           </RowBetween>
           {stakingInfo?.earnedAmount && (
             <AutoColumn justify="center" gap="md">
-              <ThemedText.DeprecatedBody fontWeight={600} fontSize={36}>
-                {stakingInfo?.earnedAmount?.toSignificant(6)}
-              </ThemedText.DeprecatedBody>
+              <ThemedText.HeadlineLarge>{stakingInfo?.earnedAmount?.toSignificant(6)}</ThemedText.HeadlineLarge>
               <ThemedText.DeprecatedBody>
                 <Trans>Unclaimed UNI</Trans>
               </ThemedText.DeprecatedBody>
@@ -106,7 +104,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
       )}
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOnDismiss}>
-          <AutoColumn gap="12px" justify="center">
+          <AutoColumn gap="md" justify="center">
             <ThemedText.DeprecatedBody fontSize={20}>
               <Trans>Claiming {stakingInfo?.earnedAmount?.toSignificant(6)} UNI</Trans>
             </ThemedText.DeprecatedBody>
@@ -115,7 +113,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
       )}
       {hash && (
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
-          <AutoColumn gap="12px" justify="center">
+          <AutoColumn gap="md" justify="center">
             <ThemedText.DeprecatedLargeHeader>
               <Trans>Transaction Submitted</Trans>
             </ThemedText.DeprecatedLargeHeader>
