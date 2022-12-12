@@ -34,8 +34,31 @@ describe('Testing nfts', () => {
   })
 
   it('should go to the details page', () => {
-    cy.visit('/#/nfts/collection/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d')
+    cy.visit(`/#/nfts/collection/${COLLECTION_ADDRESS}`)
+    cy.get(getTestSelector('nft-filter')).first().click()
+    cy.get(getTestSelector('nft-collection-filter-buy-now')).click()
     cy.get(getTestSelector('nft-details-link')).first().click()
-    cy.wait(10000)
+    cy.get(getTestSelector('nft-details-traits')).should('exist')
+    cy.get(getTestSelector('nft-details-activity')).should('exist')
+    cy.get(getTestSelector('nft-details-description')).should('exist')
+    cy.get(getTestSelector('nft-details-details')).should('exist')
+  })
+
+  it('should toggle buy now', () => {
+    cy.get(getTestSelector('nft-details-description-text')).should('exist')
+    cy.get(getTestSelector('nft-details-description')).click()
+    cy.get(getTestSelector('nft-details-description-text')).should('not.exist')
+    cy.get(getTestSelector('nft-details-add-to-bag')).eq(1).click()
+    cy.get(getTestSelector('nft-bag')).should('exist')
+  })
+
+  it('should toggle buy now', () => {
+    cy.get(getTestSelector('web3-status-connected')).click()
+    cy.get(getTestSelector('nft-view-self-nfts')).click()
+    cy.get(getTestSelector('nft-explore-nfts')).should('exist')
+    cy.get(getTestSelector('nft-no-nfts-selected')).should('exist')
+    cy.get(getTestSelector('nft-bag-icon-close')).click()
+    cy.get(getTestSelector('nft-explore-nfts')).click()
+    cy.get(getTestSelector('nft-welcome-modal')).should('exist')
   })
 })
