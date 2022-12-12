@@ -91,12 +91,14 @@ export default function FiatOnrampModal() {
           colorCode: theme.accentAction,
           defaultCurrencyCode: 'eth',
           redirectUrl: 'https://app.uniswap.org/#/swap',
-          walletAddresses: MOONPAY_SUPPORTED_CURRENCY_CODES.reduce(
-            (acc, currencyCode) => ({
-              ...acc,
-              [currencyCode]: account,
-            }),
-            {}
+          walletAddresses: JSON.stringify(
+            MOONPAY_SUPPORTED_CURRENCY_CODES.reduce(
+              (acc, currencyCode) => ({
+                ...acc,
+                [currencyCode]: account,
+              }),
+              {}
+            )
           ),
         }),
       })
