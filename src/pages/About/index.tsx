@@ -27,7 +27,7 @@ const PageBackground = styled.div<{ isDarkMode: boolean }>`
   position: absolute;
   width: 100%;
   height: 100vh;
-  top: 0; //TODO -72px to full bleed the image
+  top: 0;
   left: 0;
   opacity: ${({ isDarkMode }) => (isDarkMode ? 0.4 : 0.2)};
   background: ${({ isDarkMode }) => (isDarkMode ? `url(${backgroundImgSrcDark})` : `url(${backgroundImgSrcLight})`)};
