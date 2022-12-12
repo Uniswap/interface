@@ -52,7 +52,7 @@ const Wrapper = styled.div`
   flex-direction: row;
   gap: 8px;
   justify-content: flex-start;
-  margin: 16px 20px;
+  margin: 16px 28px;
   text-align: center;
 `
 interface BagHeaderProps {
