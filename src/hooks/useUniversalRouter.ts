@@ -3,7 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
-import { FeeOptions } from '@uniswap/v3-sdk'
+import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
@@ -38,19 +38,13 @@ export function useUniversalRouterSwapCallback(
         inputTokenPermit: options.permit,
         fee: options.feeOptions,
       })
-      const tx =
-        value && !isZero(value)
-          ? {
-              from: account,
-              to: UNIVERSAL_ROUTER_ADDRESS(chainId),
-              data,
-              value,
-            }
-          : {
-              from: account,
-              to: UNIVERSAL_ROUTER_ADDRESS(chainId),
-              data,
-            }
+      const tx = {
+        from: account,
+        to: UNIVERSAL_ROUTER_ADDRESS(chainId),
+        data,
+        // TODO: universal-router-sdk returns a non-hexlified value.
+        ...(value && !isZero(value) ? { value: toHex(value) } : {}),
+      }
 
       let gasEstimate: BigNumber
       try {
