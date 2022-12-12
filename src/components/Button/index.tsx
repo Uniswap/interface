@@ -151,14 +151,14 @@ export const ButtonSecondary = styled(BaseButton)`
 `
 
 export const ButtonOutlined = styled(BaseButton)`
-  border: 1px solid ${({ theme }) => theme.deprecated_bg2};
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
   background-color: transparent;
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${({ theme }) => theme.textPrimary};
   &:focus {
     box-shadow: 0 0 0 1px ${({ theme }) => theme.deprecated_bg4};
   }
   &:hover {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.deprecated_bg4};
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.textTertiary};
   }
   &:active {
     box-shadow: 0 0 0 1px ${({ theme }) => theme.deprecated_bg4};

@@ -8,6 +8,7 @@ const StyledStep = styled.div<{ selected: boolean }>`
   font-size: 28px;
   font-weight: 500;
   line-height: 36px;
+  transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease}  color`};
 
   &:not(:last-of-type) {
     border-bottom: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};

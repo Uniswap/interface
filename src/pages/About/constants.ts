@@ -1,29 +1,27 @@
+import darkNftCardImgSrc from './images/darkNftCard.png'
 import darkSwapSrc from './images/darkSwap.png'
+import darkSwapCardImgSrc from './images/darkSwapCard.png'
 import darkWalletsSrc from './images/darkWallets.png'
+import lightNftCardImgSrc from './images/lightNftCard.png'
 import lightSwapSrc from './images/lightSwap.png'
+import lightSwapCardImgSrc from './images/lightSwapCard.png'
 import lightWalletsSrc from './images/lightWallets.png'
+import tokens from './images/tokens.png'
 
 export const CARDS = [
   {
     to: '/swap',
     title: 'Swap tokens',
     description: 'Buy, sell, and explore tokens on Ethereum, Polygon, Optimism, and more.',
+    darkBackgroundImgSrc: darkSwapCardImgSrc,
+    lightBackgroundImgSrc: lightSwapCardImgSrc,
   },
   {
     to: '/nfts',
     title: 'Trade NFTs',
     description: 'Buy and sell NFTs across marketplaces to find more listings at better prices.',
-  },
-  {
-    to: '/pool',
-    title: 'Earn fees',
-    description: 'Provide liquidity to pools on Uniswap and earn fees on swaps.',
-  },
-  {
-    to: 'https://support.uniswap.org/',
-    external: true,
-    title: 'Build dApps',
-    description: 'Build on the largest DeFi protocol on Ethereum with our tools.',
+    darkBackgroundImgSrc: darkNftCardImgSrc,
+    lightBackgroundImgSrc: lightNftCardImgSrc,
   },
 ]
 
@@ -35,7 +33,13 @@ export const STEPS = [
     darkImgSrc: darkWalletsSrc,
   },
   {
-    title: 'Swap!',
+    title: 'Transfer crypto',
+    description: 'Trade crypto and NFTs through Uniswap’s platform',
+    lightImgSrc: tokens,
+    darkImgSrc: tokens,
+  },
+  {
+    title: 'Trade tokens and NFTs',
     description: 'Trade crypto and NFTs through Uniswap’s platform',
     lightImgSrc: lightSwapSrc,
     darkImgSrc: darkSwapSrc,
