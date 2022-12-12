@@ -5,7 +5,7 @@ import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landi
 import Swap from 'pages/Swap'
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { Link } from 'react-router-dom'
+import { Link as NativeLink } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
@@ -168,6 +168,23 @@ const ActionsWrapper = styled.span`
   }
 `
 
+const LandingSwap = styled(Swap)`
+  * {
+    pointer-events: none;
+  }
+
+  &:hover {
+    border: 1px solid ${({ theme }) => theme.accentAction};
+    transform: translateY(-4px);
+  }
+`
+
+const Link = styled(NativeLink)`
+  text-decoration: none;
+  max-width: 480px;
+  width: 100%;
+`
+
 export default function Landing() {
   const isDarkMode = useIsDarkMode()
 
@@ -193,7 +210,9 @@ export default function Landing() {
   return (
     <Trace page={PageName.LANDING_PAGE} shouldLogImpression>
       <PageWrapper>
-        <Swap />
+        <Link to="/swap">
+          <LandingSwap />
+        </Link>
         <Glow />
         <Gradient isDarkMode={isDarkMode} />
         <ContentWrapper isDarkMode={isDarkMode}>
