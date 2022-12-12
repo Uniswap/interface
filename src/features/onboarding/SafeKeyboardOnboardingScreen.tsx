@@ -4,7 +4,7 @@ import React, { PropsWithChildren } from 'react'
 import { KeyboardAvoidingView, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useAccessibilityInfo, useAppTheme } from 'src/app/hooks'
+import { useAppTheme } from 'src/app/hooks'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
@@ -29,7 +29,6 @@ export function SafeKeyboardOnboardingScreen({
   const theme = useAppTheme()
   const insets = useSafeAreaInsets()
   const keyboard = useKeyboardLayout()
-  const { reduceMotionEnabled } = useAccessibilityInfo()
 
   const header = (
     <Flex gap="sm" m="sm">
@@ -58,8 +57,7 @@ export function SafeKeyboardOnboardingScreen({
     />
   )
 
-  const compact = keyboard.isVisible && !reduceMotionEnabled
-
+  const compact = keyboard.isVisible && keyboard.containerHeight !== 0
   const containerStyle = compact ? styles.compact : styles.expand
 
   // This makes sure this component behaves just like `behavior="padding"` when
@@ -69,10 +67,8 @@ export function SafeKeyboardOnboardingScreen({
   return (
     <Screen edges={['right', 'left']}>
       <KeyboardAvoidingView
-        behavior="position"
+        behavior="padding"
         contentContainerStyle={containerStyle}
-        // TODO: Temporary fix to disable KeyboardAvoidingView when "Prefer Cross-Fade Transitions" is enabled, can remove when we upgrade to RN 0.70.1+ https://github.com/facebook/react-native/blob/main/CHANGELOG.md#ios-specific-4
-        enabled={!reduceMotionEnabled}
         style={[styles.base, { marginBottom: insets.bottom }]}>
         <AnimatedFlex
           entering={FadeIn}

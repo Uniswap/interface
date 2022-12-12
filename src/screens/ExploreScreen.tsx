@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView, TextInput, useColorScheme } from 'react-native'
 import { GestureDetector } from 'react-native-gesture-handler'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { useAccessibilityInfo } from 'src/app/hooks'
 import { ExploreStackParamList } from 'src/app/navigation/types'
 import { ExploreSections } from 'src/components/explore/ExploreSections'
 import { SearchEmptySection } from 'src/components/explore/search/SearchEmptySection'
@@ -32,7 +31,6 @@ type Props = NativeStackScreenProps<ExploreStackParamList, Screens.Explore>
 export function ExploreScreen({ navigation }: Props) {
   const { t } = useTranslation()
   const isDarkMode = useColorScheme() === 'dark'
-  const { reduceMotionEnabled } = useAccessibilityInfo()
 
   const listRef = useRef(null)
   useScrollToTop(listRef)
@@ -104,11 +102,7 @@ export function ExploreScreen({ navigation }: Props) {
           />
         </Box>
       </GestureDetector>
-      <KeyboardAvoidingView
-        behavior="height"
-        // TODO: Temporary fix to disable KeyboardAvoidingView when "Prefer Cross-Fade Transitions" is enabled, can remove when we upgrade to RN 0.70.1+ https://github.com/facebook/react-native/blob/main/CHANGELOG.md#ios-specific-4
-        enabled={!reduceMotionEnabled}
-        style={flex.fill}>
+      <KeyboardAvoidingView behavior="height" style={flex.fill}>
         {isSearchMode ? (
           <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} mx="md">
             <VirtualizedList>
