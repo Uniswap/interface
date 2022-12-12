@@ -151,6 +151,7 @@ const FooterLinks = styled.div`
 
 const FooterLink = styled.a`
   display: flex;
+  align-items: center;
   gap: 16px;
   padding: 24px;
   color: ${({ theme }) => theme.textPrimary};
