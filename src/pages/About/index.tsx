@@ -28,13 +28,13 @@ const PageBackground = styled.div<{ isDarkMode: boolean }>`
   position: absolute;
   width: 100%;
   height: 100vh;
-  top: -72px;
+  top: -${({ theme }) => theme.navHeight}px;
   left: 0;
   opacity: ${({ isDarkMode }) => (isDarkMode ? 0.4 : 0.2)};
   background: ${({ isDarkMode }) => (isDarkMode ? `url(${backgroundImgSrcDark})` : `url(${backgroundImgSrcLight})`)};
   -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
   mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
-  background-size: auto 100vh;
+  background-size: cover;
   background-repeat: no-repeat;
 `
 
@@ -212,7 +212,7 @@ export default function About() {
       <Page isDarkMode={isDarkMode} titleHeight={titleHeight}>
         <Content>
           <Title ref={titleRef} isDarkMode={isDarkMode}>
-            Uniswap is the leading on-chain marketplace for tokens and NFTs.
+            Uniswap is the leading on-chain marketplace for tokens and NFTs
           </Title>
           <Panels>
             <div>
@@ -225,7 +225,7 @@ export default function About() {
                   Learn more<WrappedExternalArrow> ↗</WrappedExternalArrow>
                 </InfoButton>
                 <InfoButton as="a" rel="noopener noreferrer" href="https://docs.uniswap.org" target="_blank">
-                  Read the docs<WrappedExternalArrow> ↗</WrappedExternalArrow>
+                  Read docs<WrappedExternalArrow> ↗</WrappedExternalArrow>
                 </InfoButton>
               </ActionsContainer>
             </Intro>
