@@ -170,6 +170,10 @@ const FooterLink = styled.a`
     stroke-width: 1.5;
   }
 
+  &:hover {
+    border: 1px solid ${({ theme }) => theme.textTertiary};
+  }
+
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     font-size: 20px;
     line-height: 24px;
