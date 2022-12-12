@@ -20,11 +20,7 @@ const Page = styled.div<{ isDarkMode: boolean; titleHeight: number }>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
   padding-top: calc(100vh - ${({ titleHeight }) => titleHeight + 200}px);
-  background-size: auto 100vh;
-  background-repeat: no-repeat;
-  background-size: contain;
 `
 
 const PageBackground = styled.div<{ isDarkMode: boolean }>`
