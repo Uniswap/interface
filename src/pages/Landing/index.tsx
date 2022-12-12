@@ -169,6 +169,10 @@ const ActionsWrapper = styled.span`
 `
 
 const LandingSwap = styled(Swap)`
+  * {
+    pointer-events: none;
+  }
+
   &:hover {
     border: 1px solid ${({ theme }) => theme.accentAction};
     transform: translateY(-4px);
