@@ -77,12 +77,13 @@ const Content = styled.div`
 
 const CardGrid = styled.div`
   display: grid;
-  gap: 36px;
+  gap: 12px;
   width: 100%;
   grid-template-columns: 1fr;
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     grid-template-columns: 1fr 1fr;
+    gap: 32px;
   }
 `
 
