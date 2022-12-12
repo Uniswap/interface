@@ -24,7 +24,7 @@ const StyledCard = styled.div<{ isDarkMode: boolean; backgroundImgSrc?: string }
   border: 1px solid ${({ theme, isDarkMode }) => (isDarkMode ? 'transparent' : theme.backgroundOutline)};
 
   &:hover {
-    background: ${({ isDarkMode }) => (isDarkMode ? DARK_MODE_GRADIENT : 'transparent')};
+    border: 1px solid ${({ theme, isDarkMode }) => (isDarkMode ? theme.backgroundOutline : theme.textTertiary)};
   }
 `
 
