@@ -241,15 +241,10 @@ export default function Menu() {
         )}
 
         {under420 && (
-          <NavDropDown
-            icon={<Award size={14} />}
-            title="Campaigns"
-            link="#"
-            options={[
-              { link: APP_PATHS.CAMPAIGN, label: t`Trading campaigns` },
-              { link: APP_PATHS.GRANT_PROGRAMS, label: t`Project trading grant` },
-            ]}
-          />
+          <NavMenuItem to="/campaigns" onClick={toggle}>
+            <Award size={14} />
+            <Trans>Campaigns</Trans>
+          </NavMenuItem>
         )}
         {under1440 && (
           <NavDropDown
