@@ -7,7 +7,7 @@ import { RowBetween } from '../Row'
 
 type ButtonProps = Omit<ButtonPropsOriginal, 'css'>
 
-const BaseButton = styled(RebassButton)<
+export const BaseButton = styled(RebassButton)<
   {
     padding?: string
     width?: string
@@ -217,11 +217,9 @@ export const ButtonText = styled(BaseButton)`
   background: none;
   text-decoration: none;
   &:focus {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     text-decoration: underline;
   }
   &:hover {
-    // text-decoration: underline;
     opacity: 0.9;
   }
   &:active {
