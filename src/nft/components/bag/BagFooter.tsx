@@ -23,7 +23,6 @@ import { switchChain } from 'utils/switchChain'
 import * as styles from './BagFooter.css'
 
 const FooterContainer = styled.div`
-  margin-top: 8px;
   padding: 0px 12px;
 `
 
@@ -32,8 +31,8 @@ const Footer = styled.div`
   color: ${({ theme }) => theme.textPrimary};
   display: flex;
   flex-direction: column;
-  margin-bottom: 8px;
-  padding: 12px 16px;
+  margin: 8px 16px;
+  padding: 12px 0px;
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
 `
