@@ -94,7 +94,7 @@ export function usePortfolioBalances(
       const portfolioBalance: PortfolioBalance = {
         quantity: balance.quantity,
         balanceUSD: balance.denominatedValue?.value,
-        currencyInfo: currencyInfo,
+        currencyInfo,
         relativeChange24: balance.tokenProjectMarket?.relativeChange24?.value,
       }
 

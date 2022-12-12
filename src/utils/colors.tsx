@@ -84,15 +84,15 @@ export function useExtractedColors(
 
     ImageColors.getColors(imageUrl, {
       fallback,
-      cache: cache,
+      cache,
       key: imageUrl,
     }).then((result) => {
       const { background, detail, secondary, primary } = result as IOSImageColors
       setColors({
-        background: background,
-        detail: detail,
-        secondary: secondary,
-        primary: primary,
+        background,
+        detail,
+        secondary,
+        primary,
       })
     })
     setColorsLoading(false)

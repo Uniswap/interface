@@ -40,7 +40,7 @@ export function SettingsChainsScreen() {
                 <Switch
                   value={isActive}
                   onValueChange={(newValue: boolean) => {
-                    dispatch(setChainActiveStatus({ chainId: chainId, isActive: newValue }))
+                    dispatch(setChainActiveStatus({ chainId, isActive: newValue }))
                   }}
                 />
               </Box>

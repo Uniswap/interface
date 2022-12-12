@@ -119,49 +119,49 @@ describe('reanimated numberToLocaleStringWorklet', function () {
 
     expect(
       numberToLocaleStringWorklet(num, 'en-US', {
-        style: style,
-        currency: currency,
+        style,
+        currency,
       })
     ).toBe('$1,234.56')
 
     expect(
       numberToLocaleStringWorklet(negative_num, 'en-US', {
-        style: style,
-        currency: currency,
+        style,
+        currency,
       })
     ).toBe('-$1,234.56')
 
     expect(
       numberToLocaleStringWorklet(num, 'de-DE', {
-        style: style,
-        currency: currency,
+        style,
+        currency,
       })
     ).toBe('1.234,56 $')
 
     expect(
       numberToLocaleStringWorklet(num, 'hu', {
-        style: style,
+        style,
         currency: 'huf',
       })
     ).toBe('1\u00A0234,56 Ft')
 
     expect(
       numberToLocaleStringWorklet(num, 'hu-HU', {
-        style: style,
+        style,
         currency: 'huf',
       })
     ).toBe('1\u00A0234,56 Ft')
 
     expect(
       numberToLocaleStringWorklet(num, 'da-DK', {
-        style: style,
+        style,
         currency: 'DKK',
       })
     ).toBe('1.234,56 kr')
 
     expect(
       numberToLocaleStringWorklet(num, 'nb-NO', {
-        style: style,
+        style,
         currency: 'NOK',
       })
     ).toBe('1\u00A0234,56 kr')

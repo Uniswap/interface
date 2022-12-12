@@ -44,13 +44,12 @@ function parseFiatPurchaseTransaction(
     type: TransactionType.FiatPurchase,
     explorerUrl: formatReturnUrl(transaction.returnUrl, transaction.id), // Moonpay's transaction tracker page
     inputCurrency: { type: inputCurrency.type, code: inputCurrency.code },
-    inputCurrencyAmount: inputCurrencyAmount,
+    inputCurrencyAmount,
     outputCurrency: {
       type: outputCurrency.type,
       metadata: { chainId: moonpayChainId, contractAddress: outputTokenAddress },
     },
     outputCurrencyAmount,
-
     // mark this local tx as synced given we updated it with server information
     // this marks the tx as 'valid' / ready to display in the ui
     syncedWithBackend: true,

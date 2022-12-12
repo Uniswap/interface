@@ -166,7 +166,7 @@ function ExperimentRow({
             size={ButtonSize.Small}
             onPress={() => {
               if (!textInput) return
-              dispatch(addExperimentOverride({ name: name, variant: textInput }))
+              dispatch(addExperimentOverride({ name, variant: textInput }))
             }}
           />
         </Flex>
@@ -195,7 +195,7 @@ function FeatureFlagRow({
         thumbColor={isExperimentOverridden ? theme.colors.accentAction : theme.colors.accentActive}
         value={localFeatureFlags[name]}
         onValueChange={(newValue: boolean) => {
-          dispatch(addFeatureFlagOverride({ name: name, enabled: newValue }))
+          dispatch(addFeatureFlagOverride({ name, enabled: newValue }))
         }}
       />
     </Flex>

@@ -19,7 +19,7 @@ import { account, mockContractManager, mockProvider, txRequest } from 'src/test/
 const erc20TranferParams: TransferCurrencyParams = {
   txId: '1',
   type: AssetType.Currency,
-  account: account,
+  account,
   tokenAddress: DAI.address,
   chainId: ChainId.Goerli,
   toAddress: '0xdefaced',
@@ -33,7 +33,7 @@ const erc721TransferParams: TransferNFTParams = {
   txId: '1',
   type: AssetType.ERC721,
   chainId: ChainId.Goerli,
-  account: account,
+  account,
   toAddress: '0xdefaced',
   tokenAddress: '0xdeadbeef',
   tokenId: '123567',

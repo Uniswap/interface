@@ -37,7 +37,7 @@ export function useTokenBalance(
     return amount && token ? CurrencyAmount.fromRawAmount<Token>(token, amount) : undefined
   }, [amount, token])
 
-  return useMemo(() => ({ balance: currencyAmount, loading: loading }), [currencyAmount, loading])
+  return useMemo(() => ({ balance: currencyAmount, loading }), [currencyAmount, loading])
 }
 
 export function useNativeCurrencyBalance(

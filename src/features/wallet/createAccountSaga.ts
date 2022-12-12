@@ -21,11 +21,11 @@ export function* createAccount() {
   yield* put(
     addAccount({
       type: AccountType.SignerMnemonic,
-      address: address,
+      address,
       pending: true,
       timeImportedMs: dayjs().valueOf(),
       derivationIndex: nextDerivationIndex,
-      mnemonicId: mnemonicId,
+      mnemonicId,
       backups: existingBackups,
     })
   )
@@ -40,7 +40,7 @@ async function getNewAccountParams(sortedAccounts: SignerMnemonicAccount[]): Pro
 }> {
   if (sortedAccounts.length === 0) {
     const mnemonicId = await generateAndStoreMnemonic()
-    return { nextDerivationIndex: 0, mnemonicId: mnemonicId }
+    return { nextDerivationIndex: 0, mnemonicId }
   }
   return {
     nextDerivationIndex: getNextDerivationIndex(sortedAccounts),

@@ -19,7 +19,7 @@ export function CloudBackupPasswordScreen({ navigation, route: { params } }: Pro
       name: OnboardingScreens.BackupCloudProcessing,
       params: {
         ...params,
-        password: password,
+        password,
       },
       merge: true,
     })

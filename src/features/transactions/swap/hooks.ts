@@ -670,7 +670,7 @@ export function useSwapTransactionRequest(
       return {
         ...baseSwapTx,
         data: calldata,
-        value: value,
+        value,
         gasLimit: shouldFetchSimulatedGasLimit ? simulatedGasLimit : undefined,
       }
     }

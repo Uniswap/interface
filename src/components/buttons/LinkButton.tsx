@@ -33,7 +33,7 @@ export function LinkButton({
   const theme = useAppTheme()
   const colorStyles = useMemo(() => {
     return color
-      ? { style: { color: color } }
+      ? { style: { color } }
       : // if a hex color is not defined, don't give the Text component a style prop, because that will override its default behavior of using textPrimary when no color prop is defined
         {}
   }, [color])

@@ -69,7 +69,7 @@ export function* attemptReplaceTransaction(
     if (transaction.status === TransactionStatus.Cancelling && isCancellation) {
       const updatedTransaction: TransactionDetails = {
         ...transaction,
-        hash: hash,
+        hash,
         status: TransactionStatus.FailedCancel,
         receipt: undefined,
         options: {

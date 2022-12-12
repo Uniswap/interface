@@ -72,14 +72,14 @@ export function LongText(props: LongTextProps) {
         style={
           renderAsMarkdown
             ? {
-                color: color,
+                color,
                 height:
                   !textLengthExceedsLimit || maximized
                     ? 'auto'
                     : maxVisibleHeight - theme.spacing.xxxs,
                 overflow: 'hidden',
               }
-            : { color: color }
+            : { color }
         }
         variant={variant}
         onLayout={onLayout}
@@ -88,7 +88,7 @@ export function LongText(props: LongTextProps) {
         {renderAsMarkdown ? (
           <Markdown
             style={{
-              body: { color: color },
+              body: { color },
               link: { color: linkColor },
               paragraph: {
                 marginBottom: 0,

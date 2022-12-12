@@ -101,7 +101,7 @@ export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
     const onPressItem = useCallback(
       (asset: NFTItem) => {
         navigation.navigate(Screens.NFTItem, {
-          owner: owner,
+          owner,
           address: asset.contractAddress ?? '',
           tokenId: asset.tokenId ?? '',
         })

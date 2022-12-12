@@ -48,7 +48,7 @@ export function SettingsCloudBackupScreen({
       dispatch(
         editAccountActions.trigger({
           type: EditAccountAction.AddBackupMethod,
-          address: address,
+          address,
           backupMethod: BackupType.Cloud,
         })
       )

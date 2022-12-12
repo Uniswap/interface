@@ -22,6 +22,7 @@ module.exports = {
     'no-extra-boolean-cast': 'error',
     'no-ex-assign': 'error',
     'no-console': 'warn',
+    'object-shorthand': 'error',
     // https://stackoverflow.com/questions/63961803/eslint-says-all-enums-in-typescript-app-are-already-declared-in-the-upper-scope
     'no-shadow': 'off',
     '@typescript-eslint/no-shadow': 'error',

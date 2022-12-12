@@ -25,7 +25,7 @@ const createFinalizedTxAction = (
 ): ReturnType<typeof finalizeTransaction> => ({
   payload: {
     ...finalizedTxAction.payload,
-    typeInfo: typeInfo,
+    typeInfo,
     id: txId,
   },
   type: '',

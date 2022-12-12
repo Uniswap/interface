@@ -92,7 +92,7 @@ function FavoriteTokenCard({
       exactAmountToken: '0',
       [CurrencyField.INPUT]: {
         address: token.address,
-        chainId: chainId,
+        chainId,
         type: AssetType.Currency,
       },
       [CurrencyField.OUTPUT]: null,

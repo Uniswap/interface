@@ -54,7 +54,7 @@ export function SettingsCloudBackupStatus({
       dispatch(
         editAccountActions.trigger({
           type: EditAccountAction.RemoveBackupMethod,
-          address: address,
+          address,
           backupMethod: BackupType.Cloud,
         })
       )

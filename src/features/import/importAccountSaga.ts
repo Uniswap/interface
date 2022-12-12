@@ -67,7 +67,7 @@ function* importMnemonicAccounts(
         pending: true,
         timeImportedMs: dayjs().valueOf(),
         derivationIndex: index + 1,
-        mnemonicId: mnemonicId,
+        mnemonicId,
       }
       return put(addAccount(account))
     })
@@ -80,7 +80,7 @@ function* importMnemonicAccounts(
     pending: !markAsActive,
     timeImportedMs: dayjs().valueOf(),
     derivationIndex: indexes[0],
-    mnemonicId: mnemonicId,
+    mnemonicId,
   }
   yield* call(onAccountImport, activeAccount, ignoreActivate)
 }
