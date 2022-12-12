@@ -113,7 +113,7 @@ const SubTextContainer = styled.div`
 `
 
 const LandingButton = styled(BaseButton)`
-  padding: 16px;
+  padding: 16px 0px;
   border-radius: 24px;
 `
 
@@ -141,14 +141,11 @@ const ButtonCTASecondary = styled(LandingButton)`
 const ButtonCTAText = styled.p`
   margin: 0px;
   font-size: 16px;
+  font-weight: 600;
   white-space: nowrap;
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     font-size: 20px;
-  }
-
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
-    font-size: 24px;
   }
 `
 
@@ -157,6 +154,8 @@ const ActionsWrapper = styled.span`
   justify-content: center;
   gap: 12px;
   width: 100%;
+  max-width: 600px;
+  margin: 0px auto;
 
   & > * {
     max-width: 288px;
