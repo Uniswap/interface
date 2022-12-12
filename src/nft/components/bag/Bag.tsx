@@ -85,7 +85,7 @@ const DetailsPageBackground = styled.div`
 
 const ScrollingIndicator = ({ top, show }: SeparatorProps) => (
   <Box
-    marginX="16"
+    marginX="24"
     borderWidth="1px"
     borderStyle="solid"
     borderColor="transparent"
