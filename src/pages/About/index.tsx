@@ -86,14 +86,18 @@ const CardGrid = styled.div`
 `
 
 const InfoButton = styled(ButtonOutlined)`
-  font-size: 20px;
-  line-height: 24px;
+  font-size: 16px;
+  line-height: 20px;
   padding: 12px;
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    font-size: 20px;
+    line-height: 24px;
+  }
 `
 
 const ActionsContainer = styled.span`
   display: flex;
-  gap: 24px;
+  gap: 16px;
   width: 100%;
 
   & > * {
@@ -102,6 +106,7 @@ const ActionsContainer = styled.span`
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     flex-direction: column;
+    gap: 24px;
   }
 
   @media screen and (min-width: ${BREAKPOINTS.lg}px) {
@@ -158,6 +163,7 @@ const Copyright = styled.span`
 
 const WrappedExternalArrow = styled.span`
   color: ${({ theme }) => theme.textTertiary};
+  margin-left: 4px;
 `
 
 export default function About() {
