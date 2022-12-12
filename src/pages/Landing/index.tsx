@@ -49,6 +49,9 @@ const Glow = styled.div`
 `
 
 const ContentWrapper = styled.div<{ isDarkMode: boolean }>`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   max-width: min(720px, 90%);
   position: absolute;
@@ -155,7 +158,6 @@ const ActionsWrapper = styled.span`
   gap: 12px;
   width: 100%;
   max-width: 600px;
-  margin: 0px auto;
 
   & > * {
     max-width: 288px;
