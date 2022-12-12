@@ -530,10 +530,11 @@ export const ThemeButton = ({ children, ...rest }: ThemeButtonProps) => {
   )
 }
 
-export const ButtonLight = ({ ...rest }: BaseButtonProps) => {
+export const ButtonLight = ({ children, ...rest }: BaseButtonProps) => {
   return (
     <BaseButtonLight {...rest}>
       <ButtonOverlay />
+      {children}
     </BaseButtonLight>
   )
 }
