@@ -18,19 +18,23 @@ const StyledCard = styled.div<{ isDarkMode: boolean; backgroundImgSrc?: string }
   justify-content: space-between;
   text-decoration: none;
   color: ${({ theme }) => theme.textPrimary};
-  padding: 40px;
-  height: ${({ backgroundImgSrc }) => (backgroundImgSrc ? 360 : 200)}px;
+  padding: 24px;
+  height: 200px;
   border-radius: 24px;
   border: 1px solid ${({ theme, isDarkMode }) => (isDarkMode ? 'transparent' : theme.backgroundOutline)};
 
   &:hover {
     border: 1px solid ${({ theme, isDarkMode }) => (isDarkMode ? theme.backgroundOutline : theme.textTertiary)};
   }
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    height: ${({ backgroundImgSrc }) => (backgroundImgSrc ? 360 : 200)}px;
+    padding: 40px;
+  }
 `
 
 const CardTitle = styled.div`
-  font-size: 28px;
-  line-height: 36px;
+  font-size: 20px;
+  line-height: 28px;
   font-weight: 500;
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
@@ -45,12 +49,12 @@ const CardTitle = styled.div`
 `
 
 const CardDescription = styled.div`
-  font-size: 20px;
-  line-height: 28px;
+  font-size: 14px;
+  line-height: 20px;
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
-    font-size: 14px;
-    line-height: 20px;
+    font-size: 20px;
+    line-height: 28px;
   }
 
   @media screen and (min-width: ${BREAKPOINTS.lg}px) {
