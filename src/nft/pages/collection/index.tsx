@@ -24,7 +24,7 @@ import { TRANSITION_DURATIONS } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 
 const FILTER_WIDTH = 332
-const BAG_WIDTH = 320
+export const BAG_WIDTH = 320
 
 export const CollectionBannerLoading = styled(LoadingBubble)`
   width: 100%;
@@ -80,10 +80,11 @@ const CollectionDescriptionSection = styled(Column)`
 
 const FiltersContainer = styled.div<{ isMobile: boolean; isFiltersExpanded: boolean }>`
   position: ${({ isMobile }) => (isMobile ? 'fixed' : 'sticky')};
+  top: 0px;
   left: 0px;
   width: ${({ isMobile }) => (isMobile ? '100%' : '0px')};
   height: ${({ isMobile, isFiltersExpanded }) => (isMobile && isFiltersExpanded ? '100%' : undefined)};
-  background: ${({ isMobile }) => (isMobile ? 'backgroundBackdrop' : undefined)};
+  background: ${({ theme, isMobile }) => (isMobile ? theme.backgroundBackdrop : undefined)};
   z-index: ${Z_INDEX.modalBackdrop};
   overflow-y: ${({ isMobile }) => (isMobile ? 'scroll' : undefined)};
 

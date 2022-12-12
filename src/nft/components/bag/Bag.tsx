@@ -63,6 +63,8 @@ const BagContainer = styled.div<{ raiseZIndex: boolean }>`
     top: 0px;
     width: 100%;
     height: 100%;
+    border-radius: 0px;
+    border: none;
   }
 `
 
