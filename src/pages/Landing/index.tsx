@@ -49,6 +49,9 @@ const Glow = styled.div`
 `
 
 const ContentWrapper = styled.div<{ isDarkMode: boolean }>`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   max-width: min(720px, 90%);
   position: absolute;
@@ -113,7 +116,7 @@ const SubTextContainer = styled.div`
 `
 
 const LandingButton = styled(BaseButton)`
-  padding: 16px;
+  padding: 16px 0px;
   border-radius: 24px;
 `
 
@@ -142,14 +145,11 @@ const ButtonCTASecondary = styled(LandingButton)`
 const ButtonCTAText = styled.p`
   margin: 0px;
   font-size: 16px;
+  font-weight: 600;
   white-space: nowrap;
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     font-size: 20px;
-  }
-
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
-    font-size: 24px;
   }
 `
 
@@ -158,6 +158,7 @@ const ActionsWrapper = styled.span`
   justify-content: center;
   gap: 12px;
   width: 100%;
+  max-width: 600px;
 
   & > * {
     max-width: 288px;
