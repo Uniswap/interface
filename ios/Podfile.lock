@@ -351,7 +351,7 @@ PODS:
   - CryptoSwift (1.4.3)
   - DoubleConversion (1.1.6)
   - EthersRS (0.0.1)
-  - EXApplication (4.1.0):
+  - EXApplication (5.0.1):
     - ExpoModulesCore
   - EXAV (13.0.2):
     - ExpoModulesCore
@@ -364,7 +364,7 @@ PODS:
     - ExpoModulesCore
   - experiment-react-native-client (1.0.0):
     - React-Core
-  - Expo (45.0.8):
+  - Expo (47.0.8):
     - ExpoModulesCore
   - ExpoHaptics (12.0.1):
     - ExpoModulesCore
@@ -978,7 +978,7 @@ DEPENDENCIES:
   - EXClipboard (from `../node_modules/expo-clipboard/ios`)
   - EXLocalAuthentication (from `../node_modules/expo-local-authentication/ios`)
   - "experiment-react-native-client (from `../node_modules/@amplitude/experiment-react-native-client`)"
-  - Expo (from `../node_modules/expo/ios`)
+  - Expo (from `../node_modules/expo`)
   - ExpoHaptics (from `../node_modules/expo-haptics/ios`)
   - ExpoLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
@@ -1113,7 +1113,7 @@ EXTERNAL SOURCES:
   experiment-react-native-client:
     :path: "../node_modules/@amplitude/experiment-react-native-client"
   Expo:
-    :path: "../node_modules/expo/ios"
+    :path: "../node_modules/expo"
   ExpoHaptics:
     :path: "../node_modules/expo-haptics/ios"
   ExpoLinearGradient:
@@ -1258,13 +1258,13 @@ SPEC CHECKSUMS:
   CryptoSwift: a0799ee936271bd2253a006f1e4523df21845000
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   EthersRS: fcaf94e30ebdd795bfe1f9332cec8175566ba066
-  EXApplication: d6562af1204162e0ac46d341a7d4e5dc720b33de
+  EXApplication: 034b1c40a8e9fe1bff76a1e511ee90dff64ad834
   EXAV: 9a45d37772c5329294c054a041dcc39931fc5032
   EXBlur: d87af64a1b4ae264059983bf54baca72be2cbc7d
   EXClipboard: ead52260683fc856e58f5cc70f5ea5999bb9c049
   EXLocalAuthentication: 4c7166ed3133d2c75586093833936652e7d2c7fc
   experiment-react-native-client: c2af8630b6209c5d4dcebdcd71ba7ad38abdcc38
-  Expo: 1133eaf0e12dc265ac82a256f3815401b7570f96
+  Expo: 36b5f625d36728adbdd1934d4d57182f319ab832
   ExpoHaptics: 5a56d30a87ea213dd00b09566dc4b441a4dff97f
   ExpoLinearGradient: b40c2133ad57ae105b1b12a319e314463c817f6b
   ExpoModulesCore: b5d21c8880afda6fb6ee95469f9ac2ec9b98e995
