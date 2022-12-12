@@ -5,6 +5,7 @@ import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
+import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
 import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
 import { ProfilePageLoadingSkeleton } from 'nft/components/profile/view/ProfilePageLoadingSkeleton'
 import { useBag } from 'nft/hooks'
@@ -254,7 +255,14 @@ export default function App() {
 
                   <Route path="*" element={<RedirectPathToSwapOnly />} />
 
-                  <Route path="/nfts" element={<NftExplore />} />
+                  <Route
+                    path="/nfts"
+                    element={
+                      <Suspense fallback={null}>
+                        <NftExplore />
+                      </Suspense>
+                    }
+                  />
                   <Route
                     path="/nfts/asset/:contractAddress/:tokenId"
                     element={
@@ -271,8 +279,22 @@ export default function App() {
                       </Suspense>
                     }
                   />
-                  <Route path="/nfts/collection/:contractAddress" element={<Collection />} />
-                  <Route path="/nfts/collection/:contractAddress/activity" element={<Collection />} />
+                  <Route
+                    path="/nfts/collection/:contractAddress"
+                    element={
+                      <Suspense fallback={<CollectionPageSkeleton />}>
+                        <Collection />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/nfts/collection/:contractAddress/activity"
+                    element={
+                      <Suspense fallback={<CollectionPageSkeleton />}>
+                        <Collection />
+                      </Suspense>
+                    }
+                  />
                 </Routes>
               ) : (
                 <Loader />
