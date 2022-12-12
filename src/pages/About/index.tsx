@@ -193,7 +193,7 @@ export default function About() {
                   Learn more<WrappedExternalArrow> ↗</WrappedExternalArrow>
                 </InfoButton>
                 <InfoButton as="a" rel="noopener noreferrer" href="https://docs.uniswap.org" target="_blank">
-                  Read the docs<WrappedExternalArrow> ↗</WrappedExternalArrow>
+                  Read docs<WrappedExternalArrow> ↗</WrappedExternalArrow>
                 </InfoButton>
               </ActionsContainer>
             </Intro>
