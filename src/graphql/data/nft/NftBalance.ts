@@ -101,8 +101,6 @@ const nftBalancePaginationQuery = graphql`
   }
 `
 
-// type NftBalanceQueryAsset = NonNullable<NonNullable<NftBalanceConnection>['edges']>[number]
-
 export function useNftBalanceQuery(
   ownerAddress: string,
   collectionFilters?: string[],
