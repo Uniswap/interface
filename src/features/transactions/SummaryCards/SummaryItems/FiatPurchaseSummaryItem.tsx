@@ -11,7 +11,7 @@ import { BaseTransactionSummaryProps } from 'src/features/transactions/SummaryCa
 import { getTransactionTitle } from 'src/features/transactions/SummaryCards/utils'
 import { FiatPurchaseTransactionInfo } from 'src/features/transactions/types'
 import { buildCurrencyId } from 'src/utils/currencyId'
-import { formatUSDPrice } from 'src/utils/format'
+import { formatFiatPrice } from 'src/utils/format'
 
 export default function FiatPurchaseSummaryItem({
   transaction,
@@ -21,38 +21,33 @@ export default function FiatPurchaseSummaryItem({
   const { t } = useTranslation()
 
   const { chainId, typeInfo } = transaction
-  const { outputCurrencyAmountFormatted, outputCurrencyAmountPrice, outputTokenAddress } = typeInfo
+  const { inputCurrency, inputCurrencyAmount, outputCurrency, outputCurrencyAmount } = typeInfo
 
   const outputCurrencyInfo = useCurrencyInfo(
-    outputTokenAddress ? buildCurrencyId(chainId, outputTokenAddress) : undefined
-  )
-
-  const transactedUSDValue =
-    outputCurrencyAmountFormatted && outputCurrencyAmountPrice
-      ? outputCurrencyAmountPrice * outputCurrencyAmountFormatted
+    outputCurrency?.metadata.contractAddress
+      ? buildCurrencyId(chainId, outputCurrency?.metadata.contractAddress)
       : undefined
+  )
 
   const title = getTransactionTitle(transaction.status, t('Purchase'), t('Purchased'), t)
 
-  const caption = outputCurrencyInfo
-    ? `${formatUSDPrice(transactedUSDValue)} of ${
-        outputCurrencyInfo.currency.symbol ?? t('Unknown token')
-      }`
+  const fiatPurchaseAmount = formatFiatPrice(
+    inputCurrencyAmount && inputCurrencyAmount > 0 ? inputCurrencyAmount : undefined,
+    inputCurrency?.code
+  )
+  const caption = fiatPurchaseAmount
+    ? `${fiatPurchaseAmount} of ${outputCurrencyInfo?.currency.symbol ?? t('Unknown token')}`
     : ''
 
-  const endAdornment =
-    outputCurrencyInfo && outputCurrencyAmountFormatted ? (
-      // bypassing BalanceUpdate since we do not have an actual raw amount here
-      <AssetUpdateLayout
-        caption={formatUSDPrice(transactedUSDValue)}
-        title={
-          '+' +
-            outputCurrencyAmountFormatted.toString() +
-            ' ' +
-            outputCurrencyInfo.currency.symbol ?? t('unknown token')
-        }
-      />
-    ) : undefined
+  const endAdornment = outputCurrency ? (
+    // bypassing BalanceUpdate since we do not have an actual raw amount here
+    <AssetUpdateLayout
+      caption={fiatPurchaseAmount}
+      title={
+        '+' + outputCurrencyAmount + ' ' + outputCurrencyInfo?.currency.symbol ?? t('unknown token')
+      }
+    />
+  ) : undefined
 
   return (
     <TransactionSummaryLayout

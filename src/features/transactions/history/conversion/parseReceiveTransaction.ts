@@ -10,6 +10,7 @@ import {
   ReceiveTokenTransactionInfo,
   TransactionType,
 } from 'src/features/transactions/types'
+import { fromGraphQLChain } from 'src/utils/chainId'
 
 // Non-exhaustive list of addresses Moonpay uses when sending purchased tokens
 const MOONPAY_SENDER_ADDRESSES = [
@@ -79,9 +80,17 @@ export default function parseReceiveTransaction(
     if (isMoonpayPurchase) {
       return {
         type: TransactionType.FiatPurchase,
-        outputTokenAddress: tokenAddress,
-        outputCurrencyAmountFormatted: Number(change.quantity),
-        outputCurrencyAmountPrice: Number(change.transactedValue?.value) / Number(change.quantity),
+        inputCurrency: { type: 'fiat', code: change.transactedValue?.currency },
+        inputCurrencyAmount: Number(change.transactedValue?.value),
+        outputCurrency: {
+          type: 'crypto',
+          metadata: {
+            chainId: fromGraphQLChain(change.asset.chain)?.toString(),
+            contractAddress: tokenAddress,
+          },
+        },
+        outputCurrencyAmount: Number(change.quantity),
+        syncedWithBackend: true,
       } as FiatPurchaseTransactionInfo
     }
 

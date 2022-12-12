@@ -325,3 +325,9 @@ export function formatUSDPrice(
 ) {
   return formatNumberOrString(price, type)
 }
+
+/** Formats USD and non-USD prices */
+export function formatFiatPrice(price: NullUndefined<number>, currency = 'USD') {
+  if (price === null || price === undefined) return '-'
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(price)
+}

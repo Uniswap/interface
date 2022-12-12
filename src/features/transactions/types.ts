@@ -2,6 +2,7 @@ import { TradeType } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { ChainId, ChainIdTo } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
+import { MoonpayCurrency } from 'src/features/fiatOnRamp/types'
 import { DappInfo } from 'src/features/walletConnect/types'
 
 export type ChainIdToTxIdToDetails = ChainIdTo<{ [txId: string]: TransactionDetails }>
@@ -174,9 +175,12 @@ export interface ReceiveTokenTransactionInfo extends BaseTransactionInfo {
 export interface FiatPurchaseTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.FiatPurchase
   explorerUrl?: string
-  outputTokenAddress?: string
-  outputCurrencyAmountFormatted?: number
-  outputCurrencyAmountPrice?: number
+  // code will be used for formatting amounts
+  inputCurrency?: Pick<MoonpayCurrency, 'type' | 'code'>
+  inputCurrencyAmount?: number
+  // metadata will be used to get the output currency
+  outputCurrency?: Required<Pick<MoonpayCurrency, 'type' | 'metadata'>>
+  outputCurrencyAmount?: number
   syncedWithBackend: boolean
 }
 

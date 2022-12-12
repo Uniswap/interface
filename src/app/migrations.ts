@@ -6,7 +6,11 @@ import { BlockState } from 'src/features/blocks/blocksSlice'
 import { ChainsState } from 'src/features/chains/chainsSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { TransactionState } from 'src/features/transactions/slice'
-import { ChainIdToTxIdToDetails } from 'src/features/transactions/types'
+import {
+  ChainIdToTxIdToDetails,
+  TransactionStatus,
+  TransactionType,
+} from 'src/features/transactions/types'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { toSupportedChainId } from 'src/utils/chainId'
 
@@ -373,5 +377,71 @@ export const migrations = {
     delete newState.tokenLists
     delete newState.tokens?.customTokens
     return newState
+  },
+
+  // Fiat onramp tx typeInfo schema changed
+  // Updates every fiat onramp tx in store to new schema
+  // leaves non-for txs untouched
+  30: function MigrateFiatPurchaseTransactionInfo(state: any) {
+    const newState = { ...state }
+
+    const oldTransactionState = state?.transactions
+    const newTransactionState: any = {}
+
+    const addresses = Object.keys(oldTransactionState ?? {})
+    for (const address of addresses) {
+      const chainIds = Object.keys(oldTransactionState[address] ?? {})
+      for (const chainId of chainIds) {
+        const transactions = oldTransactionState[address][chainId]
+        const txIds = Object.keys(transactions ?? {})
+
+        for (const txId of txIds) {
+          const txDetails = transactions[txId]
+
+          if (!txDetails) {
+            // we iterative over very chain, need to no-op on some combinations
+            continue
+          }
+
+          if (txDetails.typeInfo.type === TransactionType.FiatPurchase) {
+            if (txDetails.status === TransactionStatus.Failed) {
+              // delete failed moonpay transactions as we do not have enough information to migrate
+              continue
+            }
+
+            const {
+              explorerUrl,
+              outputTokenAddress,
+              outputCurrencyAmountFormatted,
+              outputCurrencyAmountPrice,
+              syncedWithBackend,
+            } = txDetails.typeInfo
+
+            const newTypeInfo = {
+              type: TransactionType.FiatPurchase,
+              explorerUrl,
+              inputCurrency: undefined,
+              inputCurrencyAmount: outputCurrencyAmountFormatted / outputCurrencyAmountPrice,
+              outputCurrency: {
+                type: 'crypto',
+                metadata: { chainId: undefined, contractAddress: outputTokenAddress },
+              },
+              outputCurrencyAmount: undefined,
+              syncedWithBackend,
+            }
+
+            newTransactionState[address] ??= {}
+            newTransactionState[address][chainId] ??= {}
+            newTransactionState[address][chainId][txId] = { ...txDetails, typeInfo: newTypeInfo }
+          } else {
+            newTransactionState[address] ??= {}
+            newTransactionState[address][chainId] ??= {}
+            newTransactionState[address][chainId][txId] = txDetails
+          }
+        }
+      }
+    }
+
+    return { ...newState, transactions: newTransactionState }
   },
 }

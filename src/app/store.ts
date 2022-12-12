@@ -68,7 +68,7 @@ export const persistConfig = {
     ensApi.reducerPath,
     trmApi.reducerPath,
   ],
-  version: 29,
+  version: 30,
   migrate: createMigrate(migrations),
 }
 

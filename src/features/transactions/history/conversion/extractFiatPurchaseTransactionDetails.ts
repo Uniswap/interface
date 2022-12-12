@@ -15,34 +15,42 @@ const MOONPAY_ETH_CONTRACT_ADDRESS = '0x0000000000000000000000000000000000000000
 function parseFiatPurchaseTransaction(
   transaction: Partial<MoonpayTransactionsResponse[0]>
 ): FiatPurchaseTransactionInfo & { chainId: ChainId } {
-  const { currency: outputCurrency, getValidQuote } = transaction
+  const {
+    currency: outputCurrency,
+    baseCurrencyAmount: inputCurrencyAmount,
+    baseCurrency: inputCurrency,
+    quoteCurrencyAmount: outputCurrencyAmount,
+  } = transaction
 
-  if (!outputCurrency) {
-    throw new Error('Expected output currency to be defined.')
-  }
-
-  if (outputCurrency.type !== 'crypto') {
+  if (!outputCurrency) throw new Error('Expected output currency to be defined.')
+  if (!inputCurrency) throw new Error('Expected input currency to be defined.')
+  if (!inputCurrencyAmount) throw new Error('Expected inputCurrencyAmount to be defined')
+  if (outputCurrency.type !== 'crypto')
     throw new Error('Expected output currency to be crypto but received ' + outputCurrency.type)
-  }
 
-  const chainId = toSupportedChainId(outputCurrency.metadata.chainId ?? undefined)
-  if (!chainId) {
-    throw new Error('Unable to parse chain id' + outputCurrency.metadata.chainId)
+  const moonpayChainId = outputCurrency.metadata?.chainId
+  const chainId = toSupportedChainId(moonpayChainId ?? undefined)
+  if (!chainId || !moonpayChainId) {
+    throw new Error('Unable to parse chain id' + outputCurrency.metadata?.chainId)
   }
 
   const outputTokenAddress =
-    outputCurrency.metadata.contractAddress === MOONPAY_ETH_CONTRACT_ADDRESS
+    outputCurrency.metadata?.contractAddress === MOONPAY_ETH_CONTRACT_ADDRESS
       ? getNativeCurrencyAddressForChain(chainId)
-      : outputCurrency.metadata.contractAddress
+      : outputCurrency.metadata?.contractAddress
+  if (!outputTokenAddress) throw new Error('Expected output currency address to be defined')
 
   return {
     type: TransactionType.FiatPurchase,
     explorerUrl: formatReturnUrl(transaction.returnUrl, transaction.id), // Moonpay's transaction tracker page
-    outputTokenAddress: outputTokenAddress,
-    outputCurrencyAmountFormatted:
-      getValidQuote?.quoteCurrencyAmount ?? transaction.quoteCurrencyAmount ?? 0,
-    outputCurrencyAmountPrice:
-      getValidQuote?.quoteCurrencyPrice ?? transaction.quoteCurrencyPrice ?? 0,
+    inputCurrency: { type: inputCurrency.type, code: inputCurrency.code },
+    inputCurrencyAmount: inputCurrencyAmount,
+    outputCurrency: {
+      type: outputCurrency.type,
+      metadata: { chainId: moonpayChainId, contractAddress: outputTokenAddress },
+    },
+    outputCurrencyAmount,
+
     // mark this local tx as synced given we updated it with server information
     // this marks the tx as 'valid' / ready to display in the ui
     syncedWithBackend: true,

@@ -25,6 +25,7 @@ import {
   v26Schema,
   v27Schema,
   v28Schema,
+  v29Schema,
   v2Schema,
   v3Schema,
   v4Schema,
@@ -60,6 +61,7 @@ import {
 import { Account, AccountType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
 import { initialWalletState } from 'src/features/wallet/walletSlice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
+import { account, txDetailsConfirmed } from 'src/test/fixtures'
 
 // helps with object assignement
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -843,5 +845,103 @@ describe('Redux state migrations', () => {
     const v29 = migrations[29](v28Stub)
     expect(v29.tokenLists).toBeUndefined()
     expect(v29.tokens.customTokens).toBeUndefined()
+  })
+
+  it('migrates from v29 to v30', () => {
+    const oldFiatOnRampTxDetails = {
+      chainId: ChainId.Mainnet,
+      id: '0',
+      from: account.address,
+      options: {
+        request: {},
+      },
+      // expect this payload to change
+      typeInfo: {
+        type: TransactionType.FiatPurchase,
+        explorerUrl: 'explorer',
+        outputTokenAddress: '0xtokenAddress',
+        outputCurrencyAmountFormatted: 50,
+        outputCurrencyAmountPrice: 2,
+        syncedWithBackend: true,
+      },
+      status: TransactionStatus.Pending,
+      addedTime: 1487076708000,
+      hash: '0x123',
+    }
+    const expectedTypeInfo = {
+      type: TransactionType.FiatPurchase,
+      explorerUrl: 'explorer',
+      inputCurrency: undefined,
+      inputCurrencyAmount: 25,
+      outputCurrency: {
+        type: 'crypto',
+        metadata: {
+          chainId: undefined,
+          contractAddress: '0xtokenAddress',
+        },
+      },
+      outputCurrencyAmount: undefined,
+      syncedWithBackend: true,
+    }
+    const transactions = {
+      [account.address]: {
+        [ChainId.Mainnet]: {
+          '0': oldFiatOnRampTxDetails,
+          '1': txDetailsConfirmed,
+        },
+        [ChainId.Goerli]: {
+          '0': { ...oldFiatOnRampTxDetails, status: TransactionStatus.Failed },
+          '1': txDetailsConfirmed,
+        },
+        [ChainId.ArbitrumOne]: {
+          '0': { ...oldFiatOnRampTxDetails, status: TransactionStatus.Failed },
+        },
+      },
+      ['0xshadowySuperCoder']: {
+        [ChainId.ArbitrumOne]: {
+          '0': oldFiatOnRampTxDetails,
+          '1': txDetailsConfirmed,
+        },
+        [ChainId.Optimism]: {
+          '0': oldFiatOnRampTxDetails,
+          '1': oldFiatOnRampTxDetails,
+          '2': txDetailsConfirmed,
+        },
+      },
+      ['0xdeleteMe']: {
+        [ChainId.Mainnet]: {
+          '0': { ...oldFiatOnRampTxDetails, status: TransactionStatus.Failed },
+        },
+      },
+    }
+    const v29Stub = { ...v29Schema, transactions }
+
+    const v30 = migrations[30](v29Stub)
+
+    // expect fiat onramp txdetails to change
+    expect(v30.transactions[account.address][ChainId.Mainnet]['0'].typeInfo).toEqual(
+      expectedTypeInfo
+    )
+    expect(v30.transactions[account.address][ChainId.Goerli]['0']).toBeUndefined()
+    expect(v30.transactions[account.address][ChainId.ArbitrumOne]).toBeUndefined() // does not create an object for chain
+    expect(v30.transactions['0xshadowySuperCoder'][ChainId.ArbitrumOne]['0'].typeInfo).toEqual(
+      expectedTypeInfo
+    )
+    expect(v30.transactions['0xshadowySuperCoder'][ChainId.Optimism]['0'].typeInfo).toEqual(
+      expectedTypeInfo
+    )
+    expect(v30.transactions['0xshadowySuperCoder'][ChainId.Optimism]['1'].typeInfo).toEqual(
+      expectedTypeInfo
+    )
+    expect(v30.transactions['0xdeleteMe']).toBe(undefined)
+    // expect non-for txdetails to not change
+    expect(v30.transactions[account.address][ChainId.Mainnet]['1']).toEqual(txDetailsConfirmed)
+    expect(v30.transactions[account.address][ChainId.Goerli]['1']).toEqual(txDetailsConfirmed)
+    expect(v30.transactions['0xshadowySuperCoder'][ChainId.ArbitrumOne]['1']).toEqual(
+      txDetailsConfirmed
+    )
+    expect(v30.transactions['0xshadowySuperCoder'][ChainId.Optimism]['2']).toEqual(
+      txDetailsConfirmed
+    )
   })
 })

@@ -14,12 +14,12 @@ export type MoonpayIPAddressesResponse = {
 }
 
 /** @ref https://dashboard.moonpay.com/api_reference/client_side_api#currencies */
-type MoonpayCurrency = {
+export type MoonpayCurrency = {
   id: string
   type: 'crypto' | 'fiat'
-  name: string
+  name?: string
   code: string
-  metadata: {
+  metadata?: {
     contractAddress: string
     chainId: string
   }
@@ -54,7 +54,6 @@ export type MoonpayTransactionsResponse = Array<
     createdAt: string
     // Time at which the object was last updated. Returned as an ISO 8601 string.
     updatedAt: string
-    getValidQuote: MoonpayQuote | undefined
     baseCurrency: MoonpayCurrency
     currency: MoonpayCurrency
     // The transaction's status.
