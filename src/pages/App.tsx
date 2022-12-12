@@ -67,12 +67,14 @@ const AppWrapper = styled.div`
   display: flex;
   flex-flow: column;
   align-items: flex-start;
+  height: 100%;
 `
 
 const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: 100%;
   padding: 72px 0px 0px 0px;
   align-items: center;
   flex: 1;
@@ -196,11 +198,10 @@ export default function App() {
             <Popups />
             <Polling />
             <TopLevelModals />
-            <Landing />
             <Suspense fallback={<Loader />}>
               {isLoaded ? (
                 <Routes>
-                  {landingPageFlag === LandingPageVariant.Enabled && <Route path="/" element={<Swap />} />}
+                  {landingPageFlag === LandingPageVariant.Enabled && <Route path="/" element={<Landing />} />}
                   <Route path="tokens" element={<Tokens />}>
                     <Route path=":chainName" />
                   </Route>
