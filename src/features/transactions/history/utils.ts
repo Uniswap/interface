@@ -2,7 +2,6 @@ import dayjs from 'dayjs'
 import { BigNumber } from 'ethers'
 import { parseUnits } from 'ethers/lib/utils'
 import { ChainId } from 'src/constants/chains'
-import { nativeOnChain } from 'src/constants/tokens'
 import {
   Amount,
   Chain,
@@ -10,6 +9,7 @@ import {
   TokenStandard,
   TransactionListQuery,
 } from 'src/data/__generated__/types-and-hooks'
+import { NativeCurrency } from 'src/features/tokens/NativeCurrency'
 import extractTransactionDetails from 'src/features/transactions/history/conversion/extractTransactionDetails'
 import {
   TransactionDetails,
@@ -130,11 +130,10 @@ export function deriveCurrencyAmountFromAssetResponse(
   quantity: string,
   decimals: NullUndefined<number>
 ) {
-  const nativeCurrency = nativeOnChain(ChainId.Mainnet)
   return parseUnits(
     quantity,
     tokenStandard === TokenStandard.Native
-      ? BigNumber.from(nativeCurrency.decimals)
+      ? BigNumber.from(NativeCurrency.onChain(ChainId.Mainnet).decimals)
       : decimals
       ? BigNumber.from(decimals)
       : undefined

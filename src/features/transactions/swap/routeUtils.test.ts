@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Token } from '@uniswap/sdk-core'
 import { PoolType } from 'src/features/routing/types'
-import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
+import { NativeCurrency } from 'src/features/tokens/NativeCurrency'
 import { computeRoutes } from 'src/features/transactions/swap/routeUtils'
 
 const USDC = new Token(1, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC')

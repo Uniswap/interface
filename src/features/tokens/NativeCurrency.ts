@@ -1,6 +1,6 @@
 // adapted from https://github.com/Uniswap/interface/src/constants/tokens.ts
 import { Currency, NativeCurrency as NativeCurrencyClass, Token } from '@uniswap/sdk-core'
-import { NATIVE_ADDRESS } from 'src/constants/addresses'
+import { NATIVE_ADDRESS, NATIVE_ADDRESS_ALT } from 'src/constants/addresses'
 import { CHAIN_INFO, isPolygonChain } from 'src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 
@@ -47,6 +47,8 @@ export class NativeCurrency implements NativeCurrencyClass {
 }
 
 class MaticNativeCurrency extends NativeCurrency {
+  address = NATIVE_ADDRESS_ALT
+
   equals(other: Currency): boolean {
     return other.isNative && other.chainId === this.chainId
   }

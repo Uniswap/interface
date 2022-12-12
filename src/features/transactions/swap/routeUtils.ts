@@ -4,7 +4,7 @@ import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import { PoolType, QuoteResult, V2PoolInRoute, V3PoolInRoute } from 'src/features/routing/types'
-import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
+import { NativeCurrency } from 'src/features/tokens/NativeCurrency'
 import { Trade } from 'src/features/transactions/swap/useTrade'
 
 export function transformQuoteToTrade(

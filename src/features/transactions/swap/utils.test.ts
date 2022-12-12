@@ -1,7 +1,7 @@
 import { ChainId } from 'src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import { getFlow, ImportType } from 'src/features/onboarding/utils'
-import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
+import { NativeCurrency } from 'src/features/tokens/NativeCurrency'
 import { getWrapType, serializeQueryParams } from 'src/features/transactions/swap/utils'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 

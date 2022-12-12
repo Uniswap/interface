@@ -1,10 +1,10 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { Currency, CurrencyAmount, NativeCurrency } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, NativeCurrency as NativeCurrencyClass } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import ERC20_ABI from 'src/abis/erc20.json'
 import { walletContextValue } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
-import { nativeOnChain } from 'src/constants/tokens'
+import { NativeCurrency } from 'src/features/tokens/NativeCurrency'
 import { getPollingIntervalByBlocktime } from 'src/utils/chainId'
 import { buildCurrencyId, currencyAddress as getCurrencyAddress } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
@@ -100,8 +100,8 @@ export function useOnChainCurrencyBalance(
 export function useOnChainNativeCurrencyBalance(
   chain: ChainId,
   accountAddress?: Address
-): { balance: CurrencyAmount<NativeCurrency> | undefined; isLoading: boolean } {
-  const currency = nativeOnChain(chain)
+): { balance: CurrencyAmount<NativeCurrencyClass> | undefined; isLoading: boolean } {
+  const currency = NativeCurrency.onChain(chain)
   const { balance, isLoading } = useOnChainCurrencyBalance(currency, accountAddress)
-  return { balance: balance as CurrencyAmount<NativeCurrency> | undefined, isLoading }
+  return { balance: balance as CurrencyAmount<NativeCurrencyClass> | undefined, isLoading }
 }

@@ -10,7 +10,7 @@ import {
   TopTokensQuery,
 } from 'src/data/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'src/features/dataApi/types'
-import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
+import { NativeCurrency } from 'src/features/tokens/NativeCurrency'
 import { fromGraphQLChain, toGraphQLChain } from 'src/utils/chainId'
 import {
   currencyId,
@@ -42,7 +42,7 @@ export function tokenProjectToCurrencyInfos(
         if (chainFilter && chainFilter !== chainId) return null
         const currency = isNonNativeAddress(chainId, address)
           ? new Token(chainId, address, decimals, symbol.toLocaleUpperCase(), name)
-          : new NativeCurrency(chainId)
+          : NativeCurrency.onChain(chainId)
 
         const currencyInfo: CurrencyInfo = {
           currency,
@@ -78,7 +78,7 @@ export function gqlTokenToCurrencyInfo(
 
   const currency = isNonNativeAddress(chainId, address)
     ? new Token(chainId, address, decimals, symbol, name)
-    : new NativeCurrency(chainId)
+    : NativeCurrency.onChain(chainId)
 
   const currencyInfo: CurrencyInfo = {
     currency,

@@ -1,6 +1,7 @@
 import { NATIVE_ADDRESS, NATIVE_ADDRESS_ALT } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
-import { DAI, nativeOnChain } from 'src/constants/tokens'
+import { DAI } from 'src/constants/tokens'
+import { NativeCurrency } from 'src/features/tokens/NativeCurrency'
 import {
   buildCurrencyId,
   buildNativeCurrencyId,
@@ -16,8 +17,8 @@ import {
   SwapRouterNativeAssets,
 } from 'src/utils/currencyId'
 
-const ETH = nativeOnChain(ChainId.Mainnet)
-const MATIC = nativeOnChain(ChainId.Polygon)
+const ETH = NativeCurrency.onChain(ChainId.Mainnet)
+const MATIC = NativeCurrency.onChain(ChainId.Polygon)
 const DAI_ADDRESS = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
 
 describe(currencyId, () => {

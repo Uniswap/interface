@@ -8,7 +8,7 @@ import { FeeDetails, getAdjustedGasFeeDetails } from 'src/features/gas/adjustGas
 import { useGasFeeQuery } from 'src/features/gas/api'
 import { FeeType, GasSpeed, TransactionGasFeeInfo } from 'src/features/gas/types'
 import { useUSDCValue } from 'src/features/routing/useUSDCPrice'
-import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
+import { NativeCurrency } from 'src/features/tokens/NativeCurrency'
 import { TransactionDetails } from 'src/features/transactions/types'
 import { getPollingIntervalByBlocktime } from 'src/utils/chainId'
 
