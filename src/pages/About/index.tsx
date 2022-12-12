@@ -178,7 +178,7 @@ export default function About() {
                   Learn more
                 </InfoButton>
                 <InfoButton as="a" rel="noopener noreferrer" href="https://docs.uniswap.org" target="_blank">
-                  Read the docs
+                  Read docs
                 </InfoButton>
               </ActionsContainer>
             </Intro>
