@@ -117,7 +117,6 @@ export function useDetailsQuery(
         collectionSymbol: asset?.collection?.image?.url ?? undefined,
         imageUrl: asset?.image?.url ?? undefined,
         animationUrl: asset?.animationUrl ?? undefined,
-        // todo: fix the back/frontend discrepency here and drop the any
         marketplace: listing?.marketplace.toLowerCase() as unknown as Markets,
         name: asset?.name ?? undefined,
         priceInfo: {
