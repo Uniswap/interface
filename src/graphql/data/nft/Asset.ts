@@ -119,10 +119,6 @@ const assetPaginationQuery = graphql`
   }
 `
 
-// type NftAssetsQueryAsset = NonNullable<
-//   NonNullable<NonNullable<AssetQuery_nftAssets$data['nftAssets']>['edges']>[number]
-// >
-
 function formatAssetQueryData(queryAsset: NftAssetEdge, totalCount?: number) {
   const asset = queryAsset.node
   const ethPrice = parseEther(wrapScientificNotation(asset.listings?.edges[0]?.node.price.value ?? 0)).toString()
