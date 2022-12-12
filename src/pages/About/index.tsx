@@ -8,20 +8,31 @@ import { BREAKPOINTS } from 'theme'
 
 import Card from './Card'
 import { CARDS, STEPS } from './constants'
-import backgroundImgSrc from './images/background.jpg'
+import backgroundImgSrcDark from './images/About_BG_Dark.jpg'
+import backgroundImgSrcLight from './images/About_BG_Light.jpg'
 import Step from './Step'
 import { SubTitle, Title } from './Title'
 
-const Page = styled.div<{ isDarkMode: boolean; titleHeight: number; backgroundImgSrc: string }>`
+const Page = styled.div<{ isDarkMode: boolean; titleHeight: number }>`
   position: relative;
   width: 100%;
   align-self: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
   padding-top: calc(100vh - ${({ titleHeight }) => titleHeight + 200}px);
-  background: url(${backgroundImgSrc});
+`
+
+const PageBackground = styled.div<{ isDarkMode: boolean }>`
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  opacity: ${({ isDarkMode }) => (isDarkMode ? 0.4 : 0.2)};
+  background: ${({ isDarkMode }) => (isDarkMode ? `url(${backgroundImgSrcDark})` : `url(${backgroundImgSrcLight})`)};
+  -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
   background-size: auto 100vh;
   background-repeat: no-repeat;
 `
@@ -55,6 +66,7 @@ const Content = styled.div`
   align-items: flex-start;
   padding: 0px 16px 16px 16px;
   gap: 48px;
+  z-index: 1;
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     padding: 0px 80px 80px 80px;
@@ -139,9 +151,12 @@ const Footer = styled.div`
 `
 
 const Copyright = styled.span`
-  font-weight: 600;
   font-size: 16px;
   line-height: 20px;
+  color: ${({ theme }) => theme.textTertiary};
+`
+
+const WrappedExternalArrow = styled.span`
   color: ${({ theme }) => theme.textTertiary};
 `
 
@@ -162,7 +177,7 @@ export default function About() {
 
   return (
     <Trace page={PageName.ABOUT_PAGE} shouldLogImpression>
-      <Page isDarkMode={isDarkMode} titleHeight={titleHeight} backgroundImgSrc={backgroundImgSrc}>
+      <Page isDarkMode={isDarkMode} titleHeight={titleHeight}>
         <Content>
           <Title ref={titleRef} isDarkMode={isDarkMode}>
             Uniswap is the leading on-chain marketplace for tokens and NFTs.
@@ -175,10 +190,10 @@ export default function About() {
               <IntroCopy>The leading decentralized crypto trading protocol, governed by a global community</IntroCopy>
               <ActionsContainer>
                 <InfoButton as="a" rel="noopener noreferrer" href="https://uniswap.org" target="_blank">
-                  Learn more
+                  Learn more<WrappedExternalArrow> ↗</WrappedExternalArrow>
                 </InfoButton>
                 <InfoButton as="a" rel="noopener noreferrer" href="https://docs.uniswap.org" target="_blank">
-                  Read the docs
+                  Read the docs<WrappedExternalArrow> ↗</WrappedExternalArrow>
                 </InfoButton>
               </ActionsContainer>
             </Intro>
@@ -221,6 +236,7 @@ export default function About() {
             <Copyright>© {new Date().getFullYear()} Uniswap Labs</Copyright>
           </Footer>
         </Content>
+        <PageBackground isDarkMode={isDarkMode} />
       </Page>
     </Trace>
   )
