@@ -31,8 +31,8 @@ const Gradient = styled.div<{ isDarkMode: boolean }>`
   width: 100%;
   background: ${({ isDarkMode }) =>
     isDarkMode
-      ? 'linear-gradient(rgba(8, 10, 24, 0) 9.84%, rgb(8 10 24 / 86%) 35.35%)'
-      : 'linear-gradient(rgba(8, 10, 24, 0) 9.84%, rgb(255 255 255 / 86%) 35.35%)'};
+      ? 'linear-gradient(rgba(8, 10, 24, 0) 0%, rgb(8 10 24 / 100%) 45%)'
+      : 'linear-gradient(rgba(255, 255, 255, 0) 0%, rgb(255 255 255 /100%) 45%)'};
   z-index: ${Z_INDEX.dropdown};
   pointer-events: none;
 `
@@ -132,6 +132,7 @@ const ButtonCTASecondary = styled(LandingButton)`
   background: none;
   border: ${({ theme }) => `1px solid ${theme.textPrimary}`};
   color: ${({ theme }) => theme.textPrimary};
+  transition: ${({ theme }) => `all ${theme.transition.duration.medium} ${theme.transition.timing.ease}`};
 
   &:hover {
     border: 1px solid rgba(255, 0, 199, 1);
