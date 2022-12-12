@@ -113,6 +113,7 @@ const ActionsContainer = styled.span`
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     flex-direction: column;
+    gap: 24px;
   }
 
   @media screen and (min-width: ${BREAKPOINTS.lg}px) {
