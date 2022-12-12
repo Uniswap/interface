@@ -170,7 +170,7 @@ const FooterLink = styled.a`
   }
 
   &:hover {
-    border: 1px solid ${({ theme }) => theme.deprecated_bg4};
+    border: 1px solid ${({ theme }) => theme.textTertiary};
   }
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
