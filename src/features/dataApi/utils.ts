@@ -1,7 +1,8 @@
 import { ApolloError } from '@apollo/client'
 import { Token } from '@uniswap/sdk-core'
 import { useEffect, useState } from 'react'
-import { ChainId } from 'src/constants/chains'
+import { NATIVE_ADDRESS, NATIVE_ADDRESS_ALT } from 'src/constants/addresses'
+import { ChainId, isPolygonChain } from 'src/constants/chains'
 import {
   Chain,
   ContractInput,
@@ -39,7 +40,7 @@ export function tokenProjectToCurrencyInfos(
         if (!chainId || !decimals || !symbol || !name) return null
 
         if (chainFilter && chainFilter !== chainId) return null
-        const currency = address
+        const currency = isNonNativeAddress(chainId, address)
           ? new Token(chainId, address, decimals, symbol.toLocaleUpperCase(), name)
           : new NativeCurrency(chainId)
 
@@ -56,6 +57,13 @@ export function tokenProjectToCurrencyInfos(
     .filter(Boolean) as CurrencyInfo[]
 }
 
+// use inverse check here (instead of isNativeAddress) so we can typeguard address as must be string if this is true
+function isNonNativeAddress(chainId: ChainId, address: NullUndefined<string>): address is string {
+  if (!address) return false
+
+  return isPolygonChain(chainId) ? address !== NATIVE_ADDRESS_ALT : address !== NATIVE_ADDRESS
+}
+
 export function gqlTokenToCurrencyInfo(
   token: NonNullable<NonNullable<TopTokensQuery['topTokens']>[0]>,
   chainFilter?: ChainId | null
@@ -68,7 +76,7 @@ export function gqlTokenToCurrencyInfo(
 
   const { logoUrl, safetyLevel, isSpam } = project
 
-  const currency = address
+  const currency = isNonNativeAddress(chainId, address)
     ? new Token(chainId, address, decimals, symbol, name)
     : new NativeCurrency(chainId)
 
