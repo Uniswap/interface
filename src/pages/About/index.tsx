@@ -180,7 +180,7 @@ export default function About() {
       <Page isDarkMode={isDarkMode} titleHeight={titleHeight}>
         <Content>
           <Title ref={titleRef} isDarkMode={isDarkMode}>
-            Uniswap is the leading on-chain marketplace for tokens and NFTs.
+            Uniswap is the leading on-chain marketplace for tokens and NFTs
           </Title>
           <Panels>
             <div>
