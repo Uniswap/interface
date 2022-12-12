@@ -235,9 +235,11 @@ const MARKETS_ENUM_TO_NAME = {
 }
 
 export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
-  const gqlCollection = useCollectionQuery(collection.address)
+  const { data: gqlCollection, loading } = useCollectionQuery(collection.address)
 
-  return (
+  return loading ? (
+    <LoadingCarouselCard />
+  ) : (
     <CarouselCardBorder>
       <CarouselCardContainer onClick={onClick}>
         <CarouselCardHeader collection={collection} />

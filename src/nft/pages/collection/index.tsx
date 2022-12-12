@@ -3,7 +3,7 @@ import { PageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { OpacityHoverState } from 'components/Common'
 import { useLoadAssetsQuery } from 'graphql/data/nft/Asset'
-import { useCollectionQuery, useLoadCollectionQuery } from 'graphql/data/nft/Collection'
+import { useCollectionQuery } from 'graphql/data/nft/Collection'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { Activity, ActivitySwitcher, CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
@@ -75,7 +75,7 @@ const Collection = () => {
   const setBagExpanded = useBag((state) => state.setBagExpanded)
   const { chainId } = useWeb3React()
 
-  const collectionStats = useCollectionQuery(contractAddress as string)
+  const { data: collectionStats, loading } = useCollectionQuery(contractAddress as string)
 
   const { gridX, gridWidthOffset } = useSpring({
     gridX: isFiltersExpanded && !isMobile ? FILTER_WIDTH : 0,
@@ -121,90 +121,94 @@ const Collection = () => {
       >
         <Column width="full">
           {contractAddress ? (
-            <>
-              <BannerWrapper width="full">
-                <Box
-                  as={collectionStats?.bannerImageUrl ? 'img' : 'div'}
-                  height="full"
-                  width="full"
-                  src={
-                    collectionStats?.bannerImageUrl
-                      ? `${collectionStats.bannerImageUrl}?w=${window.innerWidth}`
-                      : undefined
-                  }
-                  className={styles.bannerImage}
-                  background="none"
-                />
-              </BannerWrapper>
-              <CollectionDescriptionSection>
-                {collectionStats && (
-                  <CollectionStats stats={collectionStats || ({} as GenieCollection)} isMobile={isMobile} />
-                )}
-                <div id="nft-anchor" />
-                <ActivitySwitcher
-                  showActivity={isActivityToggled}
-                  toggleActivity={() => {
-                    isFiltersExpanded && setFiltersExpanded(false)
-                    toggleActivity()
-                  }}
-                />
-              </CollectionDescriptionSection>
-              <CollectionDisplaySection>
-                <Box
-                  position={isMobile ? 'fixed' : 'sticky'}
-                  top={{ sm: '0', md: '72' }}
-                  left="0"
-                  width={isMobile ? 'full' : '0'}
-                  height={isMobile && isFiltersExpanded ? 'full' : undefined}
-                  background={isMobile ? 'backgroundBackdrop' : undefined}
-                  zIndex="modalBackdrop"
-                  overflowY={isMobile ? 'scroll' : undefined}
-                >
-                  {isFiltersExpanded && (
-                    <>
-                      {isMobile && (
-                        <MobileFilterHeader>
-                          <ThemedText.HeadlineSmall>Filter</ThemedText.HeadlineSmall>
-                          <IconWrapper onClick={() => setFiltersExpanded(false)}>
-                            <BagCloseIcon />
-                          </IconWrapper>
-                        </MobileFilterHeader>
-                      )}
-                      <Filters traitsByGroup={collectionStats?.traits ?? {}} />
-                    </>
+            loading ? (
+              <CollectionPageSkeleton />
+            ) : (
+              <>
+                <BannerWrapper width="full">
+                  <Box
+                    as={collectionStats?.bannerImageUrl ? 'img' : 'div'}
+                    height="full"
+                    width="full"
+                    src={
+                      collectionStats?.bannerImageUrl
+                        ? `${collectionStats.bannerImageUrl}?w=${window.innerWidth}`
+                        : undefined
+                    }
+                    className={styles.bannerImage}
+                    background="none"
+                  />
+                </BannerWrapper>
+                <CollectionDescriptionSection>
+                  {collectionStats && (
+                    <CollectionStats stats={collectionStats || ({} as GenieCollection)} isMobile={isMobile} />
                   )}
-                </Box>
+                  <div id="nft-anchor" />
+                  <ActivitySwitcher
+                    showActivity={isActivityToggled}
+                    toggleActivity={() => {
+                      isFiltersExpanded && setFiltersExpanded(false)
+                      toggleActivity()
+                    }}
+                  />
+                </CollectionDescriptionSection>
+                <CollectionDisplaySection>
+                  <Box
+                    position={isMobile ? 'fixed' : 'sticky'}
+                    top={{ sm: '0', md: '72' }}
+                    left="0"
+                    width={isMobile ? 'full' : '0'}
+                    height={isMobile && isFiltersExpanded ? 'full' : undefined}
+                    background={isMobile ? 'backgroundBackdrop' : undefined}
+                    zIndex="modalBackdrop"
+                    overflowY={isMobile ? 'scroll' : undefined}
+                  >
+                    {isFiltersExpanded && (
+                      <>
+                        {isMobile && (
+                          <MobileFilterHeader>
+                            <ThemedText.HeadlineSmall>Filter</ThemedText.HeadlineSmall>
+                            <IconWrapper onClick={() => setFiltersExpanded(false)}>
+                              <BagCloseIcon />
+                            </IconWrapper>
+                          </MobileFilterHeader>
+                        )}
+                        <Filters traitsByGroup={collectionStats?.traits ?? {}} />
+                      </>
+                    )}
+                  </Box>
 
-                {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
-                <AnimatedBox
-                  position={isMobile && (isFiltersExpanded || isBagExpanded) ? 'fixed' : 'static'}
-                  style={{
-                    transform: gridX.to((x) => `translate(${x as number}px)`),
-                    width: gridWidthOffset.to((x) => `calc(100% - ${x as number}px)`),
-                  }}
-                >
-                  {isActivityToggled
-                    ? contractAddress && (
-                        <Activity
-                          contractAddress={contractAddress}
-                          rarityVerified={collectionStats?.rarityVerified ?? false}
-                          collectionName={collectionStats?.name ?? ''}
-                          chainId={chainId}
-                        />
-                      )
-                    : contractAddress &&
-                      collectionStats && (
-                        <Suspense fallback={<CollectionNftsAndMenuLoading />}>
-                          <CollectionNfts
-                            collectionStats={collectionStats || ({} as GenieCollection)}
+                  {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
+                  <AnimatedBox
+                    position={isMobile && (isFiltersExpanded || isBagExpanded) ? 'fixed' : 'static'}
+                    style={{
+                      transform: gridX.to((x) => `translate(${x as number}px)`),
+                      width: gridWidthOffset.to((x) => `calc(100% - ${x as number}px)`),
+                    }}
+                  >
+                    {isActivityToggled
+                      ? contractAddress && (
+                          <Activity
                             contractAddress={contractAddress}
-                            rarityVerified={collectionStats?.rarityVerified}
+                            rarityVerified={collectionStats?.rarityVerified ?? false}
+                            collectionName={collectionStats?.name ?? ''}
+                            chainId={chainId}
                           />
-                        </Suspense>
-                      )}
-                </AnimatedBox>
-              </CollectionDisplaySection>
-            </>
+                        )
+                      : contractAddress &&
+                        collectionStats && (
+                          <Suspense fallback={<CollectionNftsAndMenuLoading />}>
+                            <CollectionNfts
+                              collectionStats={collectionStats || ({} as GenieCollection)}
+                              contractAddress={contractAddress}
+                              rarityVerified={collectionStats?.rarityVerified}
+                            />
+                          </Suspense>
+                        )}
+                  </AnimatedBox>
+                </CollectionDisplaySection>
+              </>
+            )
           ) : (
             // TODO: Put no collection asset page here
             <div className={styles.noCollectionAssets}>No collection assets exist at this address</div>
@@ -216,12 +220,12 @@ const Collection = () => {
   )
 }
 
+// TODO: Remove when assets query is migrated to Apollo
 // The page is responsible for any queries that must be run on initial load.
 // Triggering query load from the page prevents waterfalled requests, as lazy-loading them in components would prevent
 // any children from rendering.
 const CollectionPage = () => {
   const { contractAddress } = useParams()
-  useLoadCollectionQuery(contractAddress)
   useLoadAssetsQuery(contractAddress)
 
   // The Collection must be wrapped in suspense so that it does not suspend the CollectionPage,

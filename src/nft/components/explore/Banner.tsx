@@ -1,8 +1,7 @@
-import { useLoadCollectionQuery } from 'graphql/data/nft/Collection'
 import { fetchTrendingCollections } from 'nft/queries'
 import { TimePeriod } from 'nft/types'
 import { calculateCardIndex } from 'nft/utils'
-import { Suspense, useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -137,10 +136,6 @@ const Banner = () => {
     [data]
   )
 
-  // Trigger queries for the top trending collections, so that the data is immediately available if the user clicks through.
-  const collectionAddresses = useMemo(() => collections?.map(({ address }) => address), [collections])
-  useLoadCollectionQuery(collectionAddresses)
-
   const [activeCollectionIdx, setActiveCollectionIdx] = useState(0)
   const onToggleNextSlide = useCallback(
     (direction: number) => {
@@ -169,13 +164,11 @@ const Banner = () => {
         {collections ? (
           <Carousel activeIndex={activeCollectionIdx} toggleNextSlide={onToggleNextSlide}>
             {collections.map((collection) => (
-              <Suspense fallback={<LoadingCarouselCard collection={collection} />} key={collection.address}>
-                <CarouselCard
-                  key={collection.address}
-                  collection={collection}
-                  onClick={() => navigate(`/nfts/collection/${collection.address}`)}
-                />
-              </Suspense>
+              <CarouselCard
+                key={collection.address}
+                collection={collection}
+                onClick={() => navigate(`/nfts/collection/${collection.address}`)}
+              />
             ))}
           </Carousel>
         ) : (
