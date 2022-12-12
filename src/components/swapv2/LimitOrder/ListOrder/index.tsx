@@ -168,12 +168,8 @@ export default forwardRef<ListOrderHandle>(function ListLimitOrder(props, ref) {
   )
 
   const fetchListOrderDebounce = useMemo(() => debounce(fetchListOrder, 400), [fetchListOrder])
-
-  const isInit = useRef(false)
   useEffect(() => {
-    if (!isInit.current) return
     fetchListOrderDebounce(orderType, keyword, curPage)
-    isInit.current = true
   }, [orderType, keyword, fetchListOrderDebounce, curPage])
 
   const refreshListOrder = useCallback(() => {

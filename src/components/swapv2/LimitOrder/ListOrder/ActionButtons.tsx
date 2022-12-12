@@ -71,9 +71,8 @@ const ActionButtons = ({
       </IconWrap>
     ) : null
 
-  const isDisabledCopy = [LimitOrderStatus.CANCELLED, LimitOrderStatus.CANCELLING, LimitOrderStatus.EXPIRED].includes(
-    status,
-  )
+  const isDisabledCopy =
+    !isChildren && [LimitOrderStatus.CANCELLED, LimitOrderStatus.CANCELLING, LimitOrderStatus.EXPIRED].includes(status)
   const disabledCancel = isCancelling
 
   return (

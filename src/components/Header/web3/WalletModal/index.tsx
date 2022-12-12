@@ -338,6 +338,9 @@ export default function WalletModal() {
         {(walletView === WALLET_VIEWS.ACCOUNT || walletView === WALLET_VIEWS.CHANGE_WALLET) && (
           <TermAndCondition onClick={() => setIsAcceptedTerm(!isAcceptedTerm)}>
             <input
+              onChange={() => {
+                //
+              }}
               type="checkbox"
               checked={isAcceptedTerm}
               style={{ marginRight: '12px', height: '14px', width: '14px', cursor: 'pointer' }}
