@@ -19,15 +19,14 @@ const ButtonOverlay = styled.div`
   transition: 150ms ease background-color;
   width: 100%;
 `
+type BaseButtonProps = {
+  padding?: string
+  width?: string
+  $borderRadius?: string
+  altDisabledStyle?: boolean
+} & ButtonProps
 
-export const BaseButton = styled(RebassButton)<
-  {
-    padding?: string
-    width?: string
-    $borderRadius?: string
-    altDisabledStyle?: boolean
-  } & ButtonProps
->`
+export const BaseButton = styled(RebassButton)<BaseButtonProps>`
   padding: ${({ padding }) => padding ?? '16px'};
   width: ${({ width }) => width ?? '100%'};
   font-weight: 500;
@@ -402,7 +401,7 @@ export enum ButtonEmphasis {
   warning,
   destructive,
 }
-interface BaseButtonProps {
+interface BaseThemeButtonProps {
   size: ButtonSize
   emphasis: ButtonEmphasis
 }
@@ -481,7 +480,7 @@ function pickThemeButtonTextColor({ theme, emphasis }: { theme: DefaultTheme; em
   }
 }
 
-const BaseThemeButton = styled.button<BaseButtonProps>`
+const BaseThemeButton = styled.button<BaseThemeButtonProps>`
   align-items: center;
   background-color: ${pickThemeButtonBackgroundColor};
   border-radius: 16px;
@@ -520,7 +519,7 @@ const BaseThemeButton = styled.button<BaseButtonProps>`
   }
 `
 
-interface ThemeButtonProps extends React.ComponentPropsWithoutRef<'button'>, BaseButtonProps {}
+interface ThemeButtonProps extends React.ComponentPropsWithoutRef<'button'>, BaseThemeButtonProps {}
 
 export const ThemeButton = ({ children, ...rest }: ThemeButtonProps) => {
   return (
@@ -531,11 +530,10 @@ export const ThemeButton = ({ children, ...rest }: ThemeButtonProps) => {
   )
 }
 
-export const ButtonLight = ({ children, ...rest }: ThemeButtonProps) => {
+export const ButtonLight = ({ ...rest }: BaseButtonProps) => {
   return (
     <BaseButtonLight {...rest}>
       <ButtonOverlay />
-      {children}
     </BaseButtonLight>
   )
 }
