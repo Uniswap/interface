@@ -9,7 +9,7 @@ import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { isSupportedChain } from 'constants/chains'
 import { darken } from 'polished'
-import { ReactNode, useCallback, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { Lock } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
@@ -229,6 +229,7 @@ export default function SwapCurrencyInputPanel({
   ...rest
 }: SwapCurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
+  const [fiatValueIsLoading, setFiatValueIsLoading] = useState(false)
   const { account, chainId } = useWeb3React()
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const theme = useTheme()
@@ -238,6 +239,10 @@ export default function SwapCurrencyInputPanel({
   }, [setModalOpen])
 
   const chainAllowed = isSupportedChain(chainId)
+
+  useEffect(() => {
+    !!value && !fiatValue ? setFiatValueIsLoading(true) : setFiatValueIsLoading(false)
+  }, [fiatValueIsLoading, value, fiatValue])
 
   return (
     <InputPanel id={id} hideInput={hideInput} {...rest}>
@@ -306,7 +311,7 @@ export default function SwapCurrencyInputPanel({
           <FiatRow>
             <RowBetween>
               <LoadingOpacityContainer $loading={loading}>
-                <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
+                <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} isLoading={fiatValueIsLoading} />
               </LoadingOpacityContainer>
               {account ? (
                 <RowFixed style={{ height: '17px' }}>
