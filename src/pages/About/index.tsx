@@ -33,7 +33,7 @@ const PageBackground = styled.div<{ isDarkMode: boolean }>`
   background: ${({ isDarkMode }) => (isDarkMode ? `url(${backgroundImgSrcDark})` : `url(${backgroundImgSrcLight})`)};
   -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
   mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
-  background-size: auto 100vh;
+  background-size: cover;
   background-repeat: no-repeat;
 `
 
