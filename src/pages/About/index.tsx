@@ -2,6 +2,7 @@ import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
 import { ButtonOutlined } from 'components/Button'
 import { useLayoutEffect, useRef, useState } from 'react'
+import { BookOpen, Globe, Heart, Twitter } from 'react-feather'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
@@ -134,12 +135,43 @@ const Thumbnail = styled.img`
   width: 100%;
 `
 
-const SocialRow = styled.div`
-  display: flex;
-  gap: 24px;
+const FooterLinks = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
 
-  & > * {
-    flex: 1;
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+`
+
+const FooterLink = styled.a`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  color: ${({ theme }) => theme.textPrimary};
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+
+  svg {
+    color: ${({ theme }) => theme.textSecondary};
+    stroke-width: 1.5;
+  }
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    font-size: 20px;
+    line-height: 24px;
   }
 `
 
@@ -227,12 +259,20 @@ export default function About() {
             </Panels>
           </div>
           <Footer>
-            <SocialRow>
-              <button>button</button>
-              <button>button</button>
-              <button>button</button>
-              <button>button</button>
-            </SocialRow>
+            <FooterLinks>
+              <FooterLink rel="noopener noreferrer" target="_blank" href="https://support.uniswap.org">
+                <Globe /> Support
+              </FooterLink>
+              <FooterLink rel="noopener noreferrer" target="_blank" href="https://twitter.com/uniswap">
+                <Twitter /> Twitter
+              </FooterLink>
+              <FooterLink rel="noopener noreferrer" target="_blank" href="https://uniswap.org/blog">
+                <BookOpen /> Blog
+              </FooterLink>
+              <FooterLink rel="noopener noreferrer" target="_blank" href="https://boards.greenhouse.io/uniswaplabs">
+                <Heart /> Careers
+              </FooterLink>
+            </FooterLinks>
             <Copyright>© {new Date().getFullYear()} Uniswap Labs</Copyright>
           </Footer>
         </Content>
