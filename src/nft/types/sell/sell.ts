@@ -1,4 +1,4 @@
-import { NftMarketplace, OrderStatus, OrderType } from 'graphql/data/nft/__generated__/DetailsQuery.graphql'
+import { NftMarketplace, OrderStatus, OrderType } from 'graphql/data/__generated__/types-and-hooks'
 
 import { GenieCollection, PriceInfo, TokenType } from '../common'
 
