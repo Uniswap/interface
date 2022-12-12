@@ -62,7 +62,7 @@ const getConsiderationItems = (
   creatorFee?: ConsiderationInputItem
 } => {
   const openSeaBasisPoints = OPENSEA_DEFAULT_FEE * INVERSE_BASIS_POINTS
-  const creatorFeeBasisPoints = asset.basisPoints
+  const creatorFeeBasisPoints = asset?.basisPoints ?? 0
   const sellerBasisPoints = INVERSE_BASIS_POINTS - openSeaBasisPoints - creatorFeeBasisPoints
 
   const openseaFee = price.mul(BigNumber.from(openSeaBasisPoints)).div(BigNumber.from(INVERSE_BASIS_POINTS)).toString()
@@ -76,7 +76,9 @@ const getConsiderationItems = (
     sellerFee: createConsiderationItem(sellerFee, signerAddress),
     openseaFee: createConsiderationItem(openseaFee, OPENSEA_FEE_ADDRESS),
     creatorFee:
-      creatorFeeBasisPoints > 0 ? createConsiderationItem(creatorFee, asset.asset_contract.payout_address) : undefined,
+      creatorFeeBasisPoints > 0
+        ? createConsiderationItem(creatorFee, asset?.asset_contract?.payout_address ?? '')
+        : undefined,
   }
 }
 
@@ -175,7 +177,7 @@ export async function signListing(
         // signer address of the maker order
         signer: signerAddress,
         // collection address
-        collection: asset.asset_contract.address,
+        collection: asset.asset_contract.address ?? '',
         // Price in WEI
         price: parseEther(listingPrice.toString()),
         // Token ID
@@ -239,14 +241,14 @@ export async function signListing(
         price: parseEther(listingPrice.toString()),
         tokens: [
           {
-            token: asset.asset_contract.address,
+            token: asset.asset_contract.address ?? '',
             tokenId: BigNumber.from(asset.tokenId),
           },
         ],
       }
       const order = createSellOrder(signerAddress, asset.expirationTime, [orderItem])
       try {
-        const prevOrderId = await getOrderId(asset.asset_contract.address, asset.tokenId)
+        const prevOrderId = await getOrderId(asset.asset_contract.address ?? '', asset.tokenId ?? '')
         await signOrderData(provider, order)
         const payload: OrderPayload = {
           order: encodeOrder(order),

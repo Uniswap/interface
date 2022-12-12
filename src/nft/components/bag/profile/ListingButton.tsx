@@ -71,7 +71,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
         for (const listing of asset.newListings) {
           if (!listing.price) listingsMissingPrice.push([asset, listing])
           else if (isNaN(listing.price) || listing.price < 0) invalidPrices.push([asset, listing])
-          else if (listing.price < asset.floorPrice && !listing.overrideFloorPrice)
+          else if (listing.price < (asset?.floorPrice ?? 0) && !listing.overrideFloorPrice)
             listingsBelowFloor.push([asset, listing])
           else if (asset.floor_sell_order_price && listing.price > asset.floor_sell_order_price)
             listingsAboveSellOrderFloor.push([asset, listing])
