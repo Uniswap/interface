@@ -13,6 +13,7 @@ import {
   useLoadSweepAssetsQuery,
 } from 'graphql/data/nft/Asset'
 import useDebounce from 'hooks/useDebounce'
+import { useScreenSize } from 'hooks/useScreenSize'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { CollectionSearch, FilterButton } from 'nft/components/collection'
 import { CollectionAsset } from 'nft/components/collection/CollectionAsset'
@@ -31,7 +32,6 @@ import {
   useCollectionFilters,
   useFiltersExpanded,
   useIsMobile,
-  useScreenSize,
 } from 'nft/hooks'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { usePriceRange } from 'nft/hooks/usePriceRange'
