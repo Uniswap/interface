@@ -218,9 +218,9 @@ export default function Landing() {
         <Glow />
         <Gradient isDarkMode={isDarkMode} />
         <ContentWrapper isDarkMode={isDarkMode}>
-          <TitleText isDarkMode={isDarkMode}>Trade crypto & NFTs with confidence.</TitleText>
+          <TitleText isDarkMode={isDarkMode}>Trade crypto & NFTs with confidence</TitleText>
           <SubTextContainer>
-            <SubText>Buy, sell, and explore tokens and NFTs </SubText>
+            <SubText>Buy, sell, and explore tokens and NFTs</SubText>
           </SubTextContainer>
           <ActionsWrapper>
             <ButtonCTA as={Link} to="/swap">
