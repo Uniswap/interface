@@ -166,7 +166,7 @@
     "@types/d3-scale": "4.0.1",
     "@types/d3-shape": "3.0.2",
     "@types/jest": "27.0.1",
-    "@types/react-native": "0.69.7",
+    "@types/react-native": "0.70.6",
     "@types/uuid": "8.3.4",
     "@types/wcag-contrast": "3.0.0",
     "@welldone-software/why-did-you-render": "7.0.1",
