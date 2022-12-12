@@ -584,11 +584,11 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             next={loadMore}
             hasMore={hasNext ?? false}
             loader={Boolean(hasNext && hasNfts) && <LoadingAssets />}
-            dataLength={collectionNfts?.length ?? 0}
+            dataLength={collectionAssets?.length ?? 0}
             style={{ overflow: 'unset' }}
             className={hasNfts || loading ? styles.assetList : undefined}
           >
-            {collectionNfts?.length === 0 ? (
+            {collectionAssets?.length === 0 ? (
               <Center width="full" color="textSecondary" textAlign="center" style={{ height: '60vh' }}>
                 <EmptyCollectionWrapper>
                   <p className={headlineMedium}>No NFTS found</p>
