@@ -39,7 +39,6 @@ const PageBackground = styled.div<{ isDarkMode: boolean }>`
   mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
   background-size: auto 100vh;
   background-repeat: no-repeat;
-  background-size: contain;
 `
 
 const Panels = styled.div`
