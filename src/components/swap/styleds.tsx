@@ -33,6 +33,10 @@ export const SwapWrapper = styled.main<{ margin?: string; maxWidth?: string; ope
   cursor: ${({ open }) => open && 'pointer'};
   transition: transform 250ms ease;
 
+  * {
+    pointer-events: ${({ open }) => open && 'none'};
+  }
+
   &:hover {
     border: 1px solid ${({ theme, open }) => (open ? theme.accentAction : theme.backgroundOutline)};
     transform: ${({ open }) => (open ? `translateY(-4px)` : `none`)};
