@@ -4334,10 +4334,10 @@
   resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.30.tgz#2103ca23b8007c59ec71718d34cdc97861c409e5"
   integrity sha512-HwY2VvkQ8lNR6ks5NqQfAtg+4IZqz3KV1T8d2DlI8emIn9uMmaoFbIOg0nzjqAVKKnZSbMTRRtUoAh6mmjRvog==
 
-"@uniswap/universal-router-sdk@1.2.3", "@uniswap/universal-router-sdk@^1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@uniswap/universal-router-sdk/-/universal-router-sdk-1.2.3.tgz#5df1c9cd9b36b271c6760c4e5258f5bedb6bb9a7"
-  integrity sha512-rb7ZYLKbV8xGHBHaA9hPDlRX4JWdhsAPgj7SCZUk+XQ6M7UvLhx2SapUoVzup+ylh8W66u6QqCuVoLruNboXHg==
+"@uniswap/universal-router-sdk@1.3.0", "@uniswap/universal-router-sdk@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/universal-router-sdk/-/universal-router-sdk-1.3.0.tgz#f44262eafe729651d383f46a647399658d45baf7"
+  integrity sha512-Q7/Gw059JQDO7exxV791QzghEOiWomdvxvqidozDvkiZE7paIlSWq1vDVF4H3zB2GYy5Hu7HM8krl2l0KS9X5g==
   dependencies:
     "@uniswap/permit2-sdk" "^1.2.0"
     "@uniswap/router-sdk" "^1.4.0"
@@ -4438,10 +4438,10 @@
     "@uniswap/v3-core" "1.0.0"
     "@uniswap/v3-periphery" "^1.0.1"
 
-"@uniswap/widgets@2.22.5":
-  version "2.22.5"
-  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.22.5.tgz#a075304836fd7069da2918b993cbe5cd0e86b55e"
-  integrity sha512-F7quX7m/wsQOwW4NnH+Fnm3xrZYygiCInL2kR7eCj9s34l6YaZeRm/TuC1GsUshuLHqEkPyyMv7UoEnVv7egwA==
+"@uniswap/widgets@2.22.9":
+  version "2.22.9"
+  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.22.9.tgz#59c3d59505f5ae14a04d425661a3f865a3e6679c"
+  integrity sha512-G6f+Tc870wa9FYtwO+QrpeD/2oSmb8DsrLGO9BMbqSQsD31euoQiE0lqg/a2kXEAaU4VVJ2xzzSatoYAN5GbkQ==
   dependencies:
     "@babel/runtime" ">=7.17.0"
     "@fontsource/ibm-plex-mono" "^4.5.1"
@@ -4454,7 +4454,7 @@
     "@uniswap/sdk-core" "^3.0.1"
     "@uniswap/smart-order-router" "^2.10.0"
     "@uniswap/token-lists" "^1.0.0-beta.30"
-    "@uniswap/universal-router-sdk" "^1.2.3"
+    "@uniswap/universal-router-sdk" "^1.3.0"
     "@uniswap/v2-sdk" "^3.0.1"
     "@uniswap/v3-sdk" "^3.8.2"
     "@web3-react/core" "8.0.35-beta.0"
