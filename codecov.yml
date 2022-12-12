@@ -4,11 +4,6 @@ coverage:
       default:
         target: auto # each pr must increase coverage
         threshold: 1% # adjust for flakiness
-    patch:
-      default:
-        target: auto
-        threshold: 0%
-        base: auto
 
 comment:
   layout: "reach, diff, files"
