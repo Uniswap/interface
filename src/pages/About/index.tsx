@@ -138,10 +138,11 @@ const Thumbnail = styled.img`
 const FooterLinks = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  gap: 24px;
+  gap: 12px;
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     grid-template-columns: 1fr 1fr;
+    gap: 24px;
   }
 
   @media screen and (min-width: ${BREAKPOINTS.lg}px) {
@@ -156,8 +157,8 @@ const FooterLink = styled.a`
   padding: 16px;
   color: ${({ theme }) => theme.textPrimary};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
-  font-size: 20px;
-  line-height: 24px;
+  font-size: 16px;
+  line-height: 20px;
   font-weight: 600;
   border-radius: 8px;
   cursor: pointer;
@@ -165,12 +166,12 @@ const FooterLink = styled.a`
 
   svg {
     color: ${({ theme }) => theme.textSecondary};
-    stroke-width: 1;
+    stroke-width: 1.5;
   }
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
-    font-size: 16px;
-    line-height: 20px;
+    font-size: 20px;
+    line-height: 24px;
   }
 `
 
