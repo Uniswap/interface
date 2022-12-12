@@ -39,6 +39,9 @@ import { BagHeader } from './BagHeader'
 import EmptyState from './EmptyContent'
 import { ProfileBagContent } from './profile/ProfileBagContent'
 
+export const BAG_WIDTH = 320
+export const XXXL_BAG_WIDTH = 360
+
 interface SeparatorProps {
   top?: boolean
   show?: boolean
@@ -50,7 +53,7 @@ const BagContainer = styled.div<{ raiseZIndex: boolean }>`
   flex-direction: column;
   top: 88px;
   right: 20px;
-  width: 320px;
+  width: ${BAG_WIDTH}px;
   height: calc(100vh - 108px);
   background: ${({ theme }) => theme.backgroundSurface};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
@@ -65,6 +68,10 @@ const BagContainer = styled.div<{ raiseZIndex: boolean }>`
     height: 100%;
     border-radius: 0px;
     border: none;
+  }
+
+  @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.xxxl}px`}) {
+    width: ${XXXL_BAG_WIDTH}px;
   }
 `
 

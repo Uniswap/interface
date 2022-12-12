@@ -7,12 +7,13 @@ import Row from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useLoadAssetsQuery } from 'graphql/data/nft/Asset'
 import { useCollectionQuery, useLoadCollectionQuery } from 'graphql/data/nft/Collection'
+import { BAG_WIDTH, XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
 import { Activity, ActivitySwitcher, CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
 import { CollectionNftsAndMenuLoading } from 'nft/components/collection/CollectionNfts'
 import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
 import { BagCloseIcon } from 'nft/components/icons'
-import { useBag, useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
+import { useBag, useCollectionFilters, useFiltersExpanded, useIsMobile, useScreenSize } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
 import { GenieCollection } from 'nft/types'
 import { Suspense, useEffect } from 'react'
@@ -24,7 +25,6 @@ import { TRANSITION_DURATIONS } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 
 const FILTER_WIDTH = 332
-export const BAG_WIDTH = 320
 
 export const CollectionBannerLoading = styled(LoadingBubble)`
   width: 100%;
@@ -130,11 +130,13 @@ const Collection = () => {
   const isBagExpanded = useBag((state) => state.bagExpanded)
   const setBagExpanded = useBag((state) => state.setBagExpanded)
   const { chainId } = useWeb3React()
+  const screenSize = useScreenSize()
 
   const collectionStats = useCollectionQuery(contractAddress as string)
 
   const { CollectionContainerWidthChange } = useSpring({
-    CollectionContainerWidthChange: isBagExpanded && !isMobile ? BAG_WIDTH + 16 : 0,
+    CollectionContainerWidthChange:
+      isBagExpanded && !isMobile ? (screenSize['xxxl'] ? XXXL_BAG_WIDTH : BAG_WIDTH) + 16 : 0,
     config: {
       duration: TRANSITION_DURATIONS.medium,
       easing: easings.easeOutSine,
