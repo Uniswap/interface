@@ -99,7 +99,7 @@ const Navbar = () => {
   return (
     <>
       <Nav>
-        <Box display="flex" height="full" flexWrap="nowrap" alignItems="stretch">
+        <Box display="flex" height="full" flexWrap="nowrap" alignItems="center">
           <Box className={styles.leftSideContainer}>
             <Box className={styles.logoContainer}>
               <UniIcon
@@ -112,7 +112,7 @@ const Navbar = () => {
               />
             </Box>
             {!isNftPage && (
-              <Box display={{ sm: 'flex', lg: 'none' }}>
+              <Box display={{ sm: 'flex', lg: 'none' }} alignSelf="center">
                 <ChainSelector leftAlign={true} />
               </Box>
             )}
