@@ -35,6 +35,7 @@ const StyledIframe = styled.iframe`
   left: 0;
   height: 100%;
   margin: auto;
+  padding: 8px;
   position: absolute;
   right: 0;
   top: 0;
@@ -90,7 +91,7 @@ export default function FiatOnrampModal() {
           colorCode: theme.accentAction,
           defaultCurrencyCode: 'eth',
           redirectUrl: 'https://app.uniswap.org/#/swap',
-          walletAddressed: MOONPAY_SUPPORTED_CURRENCY_CODES.reduce(
+          walletAddresses: MOONPAY_SUPPORTED_CURRENCY_CODES.reduce(
             (acc, currencyCode) => ({
               ...acc,
               [currencyCode]: account,

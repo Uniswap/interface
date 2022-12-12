@@ -1,7 +1,7 @@
 import { SpinnerSVG } from 'theme'
 
 const ButtonLoadingSpinner = (props: React.ComponentPropsWithoutRef<'svg'>) => (
-  <SpinnerSVG width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <SpinnerSVG width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
       opacity="0.1"
       d="M18.8334 10.0003C18.8334 14.6027 15.1025 18.3337 10.5001 18.3337C5.89771 18.3337 2.16675 14.6027 2.16675 10.0003C2.16675 5.39795 5.89771 1.66699 10.5001 1.66699C15.1025 1.66699 18.8334 5.39795 18.8334 10.0003ZM4.66675 10.0003C4.66675 13.222 7.27842 15.8337 10.5001 15.8337C13.7217 15.8337 16.3334 13.222 16.3334 10.0003C16.3334 6.77867 13.7217 4.16699 10.5001 4.16699C7.27842 4.16699 4.66675 6.77867 4.66675 10.0003Z"

@@ -10,6 +10,7 @@ import { useFiatOnrampAck } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
+import { isIOS, isMobile } from 'utils/userAgent'
 
 const Arrow = styled.div`
   top: -4px;
@@ -125,7 +126,8 @@ export function FiatOnrampAnnouncement() {
     fiatOnrampFlag === BaseVariant.Control ||
     locallyDismissed ||
     sessionStorage.getItem(ANNOUNCEMENT_DISMISSED) ||
-    acks.renderCount >= MAX_RENDER_COUNT
+    acks.renderCount >= MAX_RENDER_COUNT ||
+    (isIOS && isMobile)
   ) {
     return null
   }
@@ -138,7 +140,7 @@ export function FiatOnrampAnnouncement() {
           <Trans>Buy crypto</Trans>
         </Header>
         <Body>
-          <Trans>Get the lowest rates on the market on Uniswap with Moonpay.</Trans>
+          <Trans>Get tokens at the best prices in web3 on Uniswap, powered by Moonpay.</Trans>
         </Body>
       </Wrapper>
     </ArrowWrapper>

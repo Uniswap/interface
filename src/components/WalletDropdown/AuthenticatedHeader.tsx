@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { formatUSDPrice } from '@uniswap/conedison/format'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { ButtonEmphasis, ButtonSize, LoadingButtonSpinner, ThemeButton } from 'components/Button'
@@ -161,7 +162,9 @@ const StyledInfoIcon = styled(Info)`
   width: 12px;
   flex: 1 1 auto;
 `
-
+const StyledLoadingButtonSpinner = styled(LoadingButtonSpinner)`
+  fill: ${({ theme }) => theme.accentAction};
+`
 const BalanceWrapper = styled.div`
   padding: 16px 0;
 `
@@ -199,7 +202,7 @@ const AuthenticatedHeader = () => {
   const isUnclaimed = useUserHasAvailableClaim(account)
   const connectionType = getConnection(connector).type
   const nativeCurrency = useNativeCurrency()
-  const nativeCurrencyPrice = useStablecoinPrice(nativeCurrency ?? undefined) || 0
+  const nativeCurrencyPrice = useStablecoinPrice(nativeCurrency ?? undefined)
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
   const openNftModal = useToggleModal(ApplicationModal.UNISWAP_NFT_AIRDROP_CLAIM)
   const disconnect = useCallback(() => {
@@ -211,8 +214,9 @@ const AuthenticatedHeader = () => {
   }, [connector, dispatch])
 
   const amountUSD = useMemo(() => {
+    if (!nativeCurrencyPrice || !balanceString) return undefined
     const price = parseFloat(nativeCurrencyPrice.toFixed(5))
-    const balance = parseFloat(balanceString || '0')
+    const balance = parseFloat(balanceString)
     return price * balance
   }, [balanceString, nativeCurrencyPrice])
 
@@ -302,7 +306,7 @@ const AuthenticatedHeader = () => {
           <Text fontSize={36} fontWeight={400}>
             {balanceString} {nativeCurrencySymbol}
           </Text>
-          <USDText>${amountUSD.toFixed(2)} USD</USDText>
+          {amountUSD !== undefined && <USDText>{formatUSDPrice(amountUSD)} USD</USDText>}
         </BalanceWrapper>
         <ProfileButton
           data-testid="nft-view-self-nfts"
@@ -321,16 +325,12 @@ const AuthenticatedHeader = () => {
               onClick={handleBuyCryptoClick}
               disabled={disableBuyCryptoButton}
             >
-              {fiatOnrampAvailabilityLoading ? (
-                <>
-                  <LoadingButtonSpinner />
-                  <Trans>Checking availability</Trans>
-                </>
-              ) : error ? (
+              {error ? (
                 <ThemedText.BodyPrimary>{error}</ThemedText.BodyPrimary>
               ) : (
                 <>
-                  <CreditCard /> <Trans>Buy crypto</Trans>
+                  {fiatOnrampAvailabilityLoading ? <StyledLoadingButtonSpinner /> : <CreditCard />}{' '}
+                  <Trans>Buy crypto</Trans>
                 </>
               )}
             </BuyCryptoButton>
@@ -339,11 +339,7 @@ const AuthenticatedHeader = () => {
                 <Trans>Not available in your region</Trans>
                 <Tooltip
                   show={showFiatOnrampUnavailableTooltip}
-                  text={
-                    <Trans>
-                      Moonpay is not supported in some regions in and outside of the US. Click to learn more.
-                    </Trans>
-                  }
+                  text={<Trans>Moonpay is not available in some regions. Click to learn more.</Trans>}
                 >
                   <FiatOnrampAvailabilityExternalLink
                     onMouseEnter={openFiatOnrampUnavailableTooltip}
