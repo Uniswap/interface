@@ -60,7 +60,15 @@ export default function useWrapCallback(
                 }
               }
             : undefined,
-        inputError: sufficientBalance ? undefined : hasInputAmount ? 'Insufficient ETH balance' : 'Enter ETH amount',
+        inputError: sufficientBalance
+          ? undefined
+          : hasInputAmount
+          ? chainId !== 137
+            ? 'Insufficient ETH balance'
+            : 'Insufficient MATIC balance'
+          : chainId !== 137
+          ? 'Enter ETH amount'
+          : 'Enter MATIC amount',
       }
     } else if (weth.equals(inputCurrency) && outputCurrency.isNative) {
       return {
@@ -80,7 +88,15 @@ export default function useWrapCallback(
                 }
               }
             : undefined,
-        inputError: sufficientBalance ? undefined : hasInputAmount ? 'Insufficient WETH balance' : 'Enter WETH amount',
+        inputError: sufficientBalance
+          ? undefined
+          : hasInputAmount
+          ? chainId !== 137
+            ? 'Insufficient WETH balance'
+            : 'Insufficient WMATIC balance'
+          : chainId !== 137
+          ? 'Enter WETH amount'
+          : 'Enter WMATIC amount',
       }
     } else {
       return NOT_APPLICABLE

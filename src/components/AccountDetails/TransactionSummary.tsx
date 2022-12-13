@@ -5,6 +5,7 @@ import JSBI from 'jsbi'
 import { nativeOnChain } from '../../constants/tokens'
 import { useCurrency, useToken } from '../../hooks/Tokens'
 import useENSName from '../../hooks/useENSName'
+import { useActiveWeb3React } from '../../hooks/web3'
 import { VoteOption } from '../../state/governance/types'
 import {
   AddFundingTransactionInfo,
@@ -79,6 +80,11 @@ function UnStakeSummary() {
   return <Trans>UnStake Summary called</Trans>
 }
 
+function GetChainId() {
+  const { chainId } = useActiveWeb3React()
+  return chainId
+}
+
 function ClaimSummary({ info: { recipient, uniAmountRaw } }: { info: ClaimTransactionInfo }) {
   const { ENSName } = useENSName()
   return typeof uniAmountRaw === 'string' ? (
@@ -150,11 +156,11 @@ function WrapSummary({ info: { chainId, currencyAmountRaw, unwrapped } }: { info
         Unwrap{' '}
         <FormattedCurrencyAmount
           rawAmount={currencyAmountRaw}
-          symbol={native?.wrapped?.symbol ?? 'WETH'}
+          symbol={native?.wrapped?.symbol ?? GetChainId() !== 137 ? 'WETH' : 'WMATIC'}
           decimals={18}
           sigFigs={6}
         />{' '}
-        to {native?.symbol ?? 'ETH'}
+        to {native?.symbol ?? GetChainId() !== 137 ? 'ETH' : 'MATIC'}
       </Trans>
     )
   } else {
@@ -163,11 +169,11 @@ function WrapSummary({ info: { chainId, currencyAmountRaw, unwrapped } }: { info
         Wrap{' '}
         <FormattedCurrencyAmount
           rawAmount={currencyAmountRaw}
-          symbol={native?.symbol ?? 'ETH'}
+          symbol={native?.symbol ?? GetChainId() !== 137 ? 'ETH' : 'MATIC'}
           decimals={18}
           sigFigs={6}
         />{' '}
-        to {native?.wrapped?.symbol ?? 'WETH'}
+        to {native?.wrapped?.symbol ?? GetChainId() !== 137 ? 'WETH' : 'WMATIC'}
       </Trans>
     )
   }
