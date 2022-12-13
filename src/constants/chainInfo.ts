@@ -9,7 +9,7 @@ import ms from 'ms.macro'
 import { darkTheme } from 'theme/colors'
 
 import { SupportedChainId, SupportedL1ChainId, SupportedL2ChainId } from './chains'
-import { ARBITRUM_LIST, CELO_LIST, OPTIMISM_LIST } from './lists'
+import { ARBITRUM_LIST, CELO_LIST, OPTIMISM_LIST, SCROLL_PREALPHA_LIST } from './lists'
 
 export const AVERAGE_L1_BLOCK_TIME = ms`12s`
 
@@ -217,8 +217,8 @@ const CHAIN_INFO: ChainInfoMap = {
     nativeCurrency: { name: 'Celo', symbol: 'CELO', decimals: 18 },
     defaultListUrl: CELO_LIST,
   },
-  [SupportedChainId.SCROLL]: {
-    networkType: NetworkType.L1,
+  [SupportedChainId.SCROLL_PREALPHA]: {
+    networkType: NetworkType.L2,
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://l2scan.scroll.io/',
     infoLink: 'https://info.uniswap.org/#/',
@@ -226,6 +226,12 @@ const CHAIN_INFO: ChainInfoMap = {
     logoUrl: ethereumLogoUrl,
     nativeCurrency: { name: 'TSETH', symbol: 'TSETH', decimals: 18 },
     color: darkTheme.chain_5,
+
+    // Required for L2 networks
+    blockWaitMsBeforeWarning: ms`10m`,
+    bridge: 'https://prealpha.scroll.io/bridge/',
+    defaultListUrl: SCROLL_PREALPHA_LIST,
+    helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
   },
 }
 

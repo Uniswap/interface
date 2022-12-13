@@ -295,7 +295,6 @@ const CELO_CELO_ALFAJORES = new Token(
   'Celo'
 )
 
-/*
 export const CUSD_CELO_ALFAJORES = new Token(
   SupportedChainId.CELO_ALFAJORES,
   '0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1',
@@ -309,38 +308,6 @@ export const CEUR_CELO_ALFAJORES = new Token(
   18,
   'CEUR',
   'Celo Euro Stablecoin'
-)
-
-export const TA_SCROLL = new Token(
-  SupportedChainId.SCROLL,
-  '0xEb2e4162759EeE7F3b0f327eE052FFC25f39F6d2',
-  18,
-  'TA',
-  'Token A'
-)
-
-export const TB_SCROLL = new Token(
-  SupportedChainId.SCROLL,
-  '0x5daBD5879a1e5c86454893640F902eE0A1c78F54',
-  18,
-  'TB',
-  'Token B'
-)
-*/
-
-export const CUSD_CELO_ALFAJORES = new Token(
-  SupportedChainId.SCROLL,
-  '0xEb2e4162759EeE7F3b0f327eE052FFC25f39F6d2',
-  18,
-  'TA',
-  'Token A'
-)
-export const CEUR_CELO_ALFAJORES = new Token(
-  SupportedChainId.SCROLL,
-  '0x5daBD5879a1e5c86454893640F902eE0A1c78F54',
-  18,
-  'TB',
-  'Token B'
 )
 
 export const UNI: { [chainId: number]: Token } = {
@@ -409,9 +376,9 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     'CELO',
     'Celo native asset'
   ),
-  [SupportedChainId.SCROLL]: new Token(
-    SupportedChainId.SCROLL,
-    '0xB465EECe4D73D2cc061b9BB09a65FF36421Ff715',
+  [SupportedChainId.SCROLL_PREALPHA]: new Token(
+    SupportedChainId.SCROLL_PREALPHA,
+    '0xb1eA5EaAaC5a4eF08499caE4b587CaF3DD2a0Bdb',
     18,
     'WETH',
     'Wrapped Ether'

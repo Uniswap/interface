@@ -3,8 +3,8 @@ import { deepCopy } from '@ethersproject/properties'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { StaticJsonRpcProvider } from '@ethersproject/providers'
 import { isPlain } from '@reduxjs/toolkit'
-import { AVERAGE_L1_BLOCK_TIME } from './chainInfo'
 
+import { AVERAGE_L1_BLOCK_TIME } from './chainInfo'
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from './chains'
 import { RPC_URLS } from './networks'
 
