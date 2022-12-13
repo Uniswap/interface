@@ -56,4 +56,8 @@ describe(tryParseRawAmount, () => {
   it('handle fractional raw input', () => {
     expect(tryParseRawAmount('500000000000000000', DAI)).toEqual(HALF_DAI)
   })
+
+  it('handle non-raw amount', () => {
+    expect(tryParseRawAmount('0.01', DAI)).toBeNull()
+  })
 })
