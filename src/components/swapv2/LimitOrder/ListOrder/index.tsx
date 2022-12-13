@@ -129,6 +129,7 @@ export default forwardRef<ListOrderHandle>(function ListLimitOrder(props, ref) {
   const [flowState, setFlowState] = useState<TransactionFlowState>(TRANSACTION_STATE_DEFAULT)
   const [currentOrder, setCurrentOrder] = useState<LimitOrder>()
   const [isCancelAll, setIsCancelAll] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   const onPageChange = (page: number) => {
     setCurPage(page)
@@ -142,6 +143,11 @@ export default forwardRef<ListOrderHandle>(function ListLimitOrder(props, ref) {
   const onSelectTab = (type: LimitOrderStatus) => {
     setOrderType(type)
     onReset()
+  }
+
+  const onChangeKeyword = (val: string) => {
+    setKeyword(val)
+    setCurPage(1)
   }
 
   const fetchListOrder = useCallback(
@@ -163,12 +169,15 @@ export default forwardRef<ListOrderHandle>(function ListLimitOrder(props, ref) {
       } catch (error) {
         console.error(error)
       }
+      setLoading(false)
     },
     [account, chainId, orderType],
   )
 
   const fetchListOrderDebounce = useMemo(() => debounce(fetchListOrder, 400), [fetchListOrder])
   useEffect(() => {
+    setLoading(true)
+    setOrders([])
     fetchListOrderDebounce(orderType, keyword, curPage)
   }, [orderType, keyword, fetchListOrderDebounce, curPage])
 
@@ -180,12 +189,6 @@ export default forwardRef<ListOrderHandle>(function ListLimitOrder(props, ref) {
   useImperativeHandle(ref, () => ({
     refreshListOrder,
   }))
-
-  const [loading, setLoading] = useState(true)
-  useEffect(() => {
-    const timeout = setTimeout(() => setLoading(false), 500)
-    return () => clearTimeout(timeout)
-  }, [])
 
   const isTransactionFailed = (txHash: string) => {
     const transactionInfo = findTx(transactions, txHash)
@@ -463,7 +466,7 @@ export default forwardRef<ListOrderHandle>(function ListLimitOrder(props, ref) {
             placeholder={t`Search by token symbol or token address`}
             maxLength={255}
             value={keyword}
-            onChange={setKeyword}
+            onChange={onChangeKeyword}
           />
         </SearchFilter>
         {loading ? (

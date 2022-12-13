@@ -24,70 +24,37 @@ const required = (envKey: string): string => {
 //   return envValue as T
 // }
 
-const ENV = {
-  GOOGLE_RECAPTCHA_KEY: required('GOOGLE_RECAPTCHA_KEY'),
-  PRICE_API: required('PRICE_API'),
-  AGGREGATOR_API: required('AGGREGATOR_API'),
-  SENTRY_DNS: required('SENTRY_DNS'),
-  REWARD_SERVICE_API: required('REWARD_SERVICE_API'),
-  KS_SETTING_API: required('KS_SETTING_API'),
-  PRICE_CHART_API: required('PRICE_CHART_API'),
-  AGGREGATOR_STATS_API: required('AGGREGATOR_STATS_API'),
-  FIREBASE_API_KEY: required('FIREBASE_API_KEY'),
-  FIREBASE_AUTH_DOMAIN: required('FIREBASE_AUTH_DOMAIN'),
-  FIREBASE_PROJECT_ID: required('FIREBASE_PROJECT_ID'),
-  FIREBASE_STORAGE_BUCKET: required('FIREBASE_STORAGE_BUCKET'),
-  FIREBASE_MESSAGING_SENDER_ID: required('FIREBASE_MESSAGING_SENDER_ID'),
-  FIREBASE_APP_ID: required('FIREBASE_APP_ID'),
-  NOTIFICATION_API: required('NOTIFICATION_API'),
-  TRUESIGHT_API: required('TRUESIGHT_API'),
-  TRANSAK_URL: required('TRANSAK_URL'),
-  TRANSAK_API_KEY: required('TRANSAK_API_KEY'),
-  TYPE_AND_SWAP_URL: required('TYPE_AND_SWAP_URL'),
-  MIXPANEL_PROJECT_TOKEN: required('MIXPANEL_PROJECT_TOKEN'),
-  CAMPAIGN_BASE_URL: required('CAMPAIGN_BASE_URL'),
-  GTM_ID: process.env.REACT_APP_GTM_ID,
-  TAG: process.env.REACT_APP_TAG || 'localhost',
-  ENV_LEVEL: !process.env.REACT_APP_TAG
-    ? ENV_TYPE.LOCAL
-    : process.env.REACT_APP_TAG.startsWith('adpr')
-    ? ENV_TYPE.ADPR
-    : process.env.REACT_APP_TAG.startsWith('main')
-    ? ENV_TYPE.DEV
-    : process.env.REACT_APP_TAG.startsWith('release')
-    ? ENV_TYPE.STG
-    : ENV_TYPE.PROD,
-  LIMIT_ORDER_API_READ: required('LIMIT_ORDER_API_READ'),
-  LIMIT_ORDER_API_WRITE: required('LIMIT_ORDER_API_WRITE'),
-} as const
-
-export const {
-  GOOGLE_RECAPTCHA_KEY,
-  PRICE_API,
-  AGGREGATOR_API,
-  SENTRY_DNS,
-  REWARD_SERVICE_API,
-  KS_SETTING_API,
-  PRICE_CHART_API,
-  AGGREGATOR_STATS_API,
-  FIREBASE_API_KEY,
-  FIREBASE_AUTH_DOMAIN,
-  FIREBASE_PROJECT_ID,
-  FIREBASE_STORAGE_BUCKET,
-  FIREBASE_MESSAGING_SENDER_ID,
-  FIREBASE_APP_ID,
-  NOTIFICATION_API,
-  TRUESIGHT_API,
-  TRANSAK_URL,
-  TRANSAK_API_KEY,
-  TYPE_AND_SWAP_URL,
-  MIXPANEL_PROJECT_TOKEN,
-  CAMPAIGN_BASE_URL,
-  GTM_ID,
-  TAG,
-  ENV_LEVEL,
-  LIMIT_ORDER_API_READ,
-  LIMIT_ORDER_API_WRITE,
-} = ENV
-
-ENV_LEVEL < ENV_TYPE.PROD && console.info({ ENV })
+export const GOOGLE_RECAPTCHA_KEY = required('GOOGLE_RECAPTCHA_KEY')
+export const PRICE_API = required('PRICE_API')
+export const AGGREGATOR_API = required('AGGREGATOR_API')
+export const SENTRY_DNS = required('SENTRY_DNS')
+export const REWARD_SERVICE_API = required('REWARD_SERVICE_API')
+export const KS_SETTING_API = required('KS_SETTING_API')
+export const PRICE_CHART_API = required('PRICE_CHART_API')
+export const AGGREGATOR_STATS_API = required('AGGREGATOR_STATS_API')
+export const FIREBASE_API_KEY = required('FIREBASE_API_KEY')
+export const FIREBASE_AUTH_DOMAIN = required('FIREBASE_AUTH_DOMAIN')
+export const FIREBASE_PROJECT_ID = required('FIREBASE_PROJECT_ID')
+export const FIREBASE_STORAGE_BUCKET = required('FIREBASE_STORAGE_BUCKET')
+export const FIREBASE_MESSAGING_SENDER_ID = required('FIREBASE_MESSAGING_SENDER_ID')
+export const FIREBASE_APP_ID = required('FIREBASE_APP_ID')
+export const NOTIFICATION_API = required('NOTIFICATION_API')
+export const TRUESIGHT_API = required('TRUESIGHT_API')
+export const TRANSAK_URL = required('TRANSAK_URL')
+export const TRANSAK_API_KEY = required('TRANSAK_API_KEY')
+export const TYPE_AND_SWAP_URL = required('TYPE_AND_SWAP_URL')
+export const MIXPANEL_PROJECT_TOKEN = required('MIXPANEL_PROJECT_TOKEN')
+export const CAMPAIGN_BASE_URL = required('CAMPAIGN_BASE_URL')
+export const GTM_ID = process.env.REACT_APP_GTM_ID
+export const TAG = process.env.REACT_APP_TAG || 'localhost'
+export const ENV_LEVEL = !process.env.REACT_APP_TAG
+  ? ENV_TYPE.LOCAL
+  : process.env.REACT_APP_TAG.startsWith('adpr')
+  ? ENV_TYPE.ADPR
+  : process.env.REACT_APP_TAG.startsWith('main')
+  ? ENV_TYPE.DEV
+  : process.env.REACT_APP_TAG.startsWith('release')
+  ? ENV_TYPE.STG
+  : ENV_TYPE.PROD
+export const LIMIT_ORDER_API_READ = required('LIMIT_ORDER_API_READ')
+export const LIMIT_ORDER_API_WRITE = required('LIMIT_ORDER_API_WRITE')

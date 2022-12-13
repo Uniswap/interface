@@ -88,7 +88,7 @@ export default function LeaderboardLayout({
   useEffect(() => {
     setCurrentPage(0)
     setCurrentPageLuckyWinner(0)
-  }, [selectedCampaign, setCurrentPageLuckyWinner, setCurrentPage])
+  }, [searchValue, selectedCampaign, setCurrentPageLuckyWinner, setCurrentPage])
 
   const leaderboardTableBody = (selectedCampaignLeaderboard?.rankings ?? []).map((data, index) => {
     const isThisRankingEligible = Boolean(selectedCampaign && data.totalPoint >= selectedCampaign.tradingVolumeRequired)

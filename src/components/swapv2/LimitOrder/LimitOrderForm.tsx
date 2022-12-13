@@ -637,10 +637,7 @@ const LimitOrderForm = function LimitOrderForm({
                 onUserInput={onChangeRate}
               />
               {currencyIn && currencyOut && (
-                <Flex
-                  style={{ gap: 6, cursor: 'pointer' }}
-                  onClick={() => displayRate && onInvertRate(!rateInfo.invert)}
-                >
+                <Flex style={{ gap: 6, cursor: 'pointer' }} onClick={() => onInvertRate(!rateInfo.invert)}>
                   <Text fontSize={14} color={theme.subText}>
                     {rateInfo.invert
                       ? `${currencyOut?.symbol}/${currencyIn?.symbol}`

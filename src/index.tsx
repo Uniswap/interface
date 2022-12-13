@@ -19,6 +19,7 @@ import 'swiper/swiper.min.css'
 
 import SolanaWalletContext from 'components/SolanaWalletContext'
 import { ENV_LEVEL, ENV_TYPE, GTM_ID, MIXPANEL_PROJECT_TOKEN, SENTRY_DNS, TAG } from 'constants/env'
+import * as ENV from 'constants/env'
 // import { updateServiceWorker } from 'state/application/actions'
 import CampaignsUpdater from 'state/campaigns/updater'
 
@@ -38,6 +39,8 @@ import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 import getLibrary from './utils/getLibrary'
 
 dayjs.extend(utc)
+
+ENV_LEVEL < ENV_TYPE.PROD && console.info({ ENV })
 
 mixpanel.init(MIXPANEL_PROJECT_TOKEN, {
   debug: ENV_LEVEL < ENV_TYPE.PROD,
