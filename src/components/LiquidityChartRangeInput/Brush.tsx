@@ -18,7 +18,7 @@ const HandleAccent = styled.path`
   pointer-events: none;
 
   stroke-width: 1.5;
-  stroke: ${({ theme }) => theme.white};
+  stroke: ${({ theme }) => theme.deprecated_white};
   opacity: ${({ theme }) => theme.opacity.hover};
 `
 
@@ -28,13 +28,13 @@ const LabelGroup = styled.g<{ visible: boolean }>`
 `
 
 const TooltipBackground = styled.rect`
-  fill: ${({ theme }) => theme.backgroundInteractive};
+  fill: ${({ theme }) => theme.deprecated_bg2};
 `
 
 const Tooltip = styled.text`
   text-anchor: middle;
   font-size: 13px;
-  fill: ${({ theme }) => theme.textPrimary};
+  fill: ${({ theme }) => theme.deprecated_text1};
 `
 
 // flips the handles draggers when close to the container edges

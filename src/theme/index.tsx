@@ -105,7 +105,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
 
 export const ThemedGlobalStyle = createGlobalStyle`
   html {
-    color: ${({ theme }) => theme.textPrimary};
+    color: ${({ theme }) => theme.deprecated_text1};
     background-color: ${({ theme }) => theme.background} !important;
   }
 
@@ -114,7 +114,7 @@ export const ThemedGlobalStyle = createGlobalStyle`
   }
 
   a {
-    color: ${({ theme }) => theme.accentAction}; 
+    color: ${({ theme }) => theme.deprecated_blue1}; 
   }
 
   :root {

@@ -137,7 +137,7 @@ export const PositionPreview = ({
               </ThemedText.DeprecatedMain>
               <ThemedText.DeprecatedSmall
                 textAlign="center"
-                color={theme.textTertiary}
+                color={theme.deprecated_text3}
                 style={{ marginTop: '4px' }}
               >
                 <Trans>Your position will be 100% composed of {baseCurrency?.symbol} at this price</Trans>
@@ -162,7 +162,7 @@ export const PositionPreview = ({
               </ThemedText.DeprecatedMain>
               <ThemedText.DeprecatedSmall
                 textAlign="center"
-                color={theme.textTertiary}
+                color={theme.deprecated_text3}
                 style={{ marginTop: '4px' }}
               >
                 <Trans>Your position will be 100% composed of {quoteCurrency?.symbol} at this price</Trans>

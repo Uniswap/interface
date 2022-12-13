@@ -49,7 +49,7 @@ export default function ConnectedAccountBlocked(props: ConnectedAccountBlockedPr
           fontSize={14}
           iconSize={16}
           gap={6}
-          color={theme.accentAction}
+          color={theme.deprecated_primary1}
           iconPosition="right"
         >
           compliance@uniswap.org

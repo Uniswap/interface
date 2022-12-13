@@ -51,22 +51,22 @@ export const ThemedText = {
     return <TextWrapper fontWeight={500} fontSize={14} color="textSecondary" {...props} />
   },
   DeprecatedMain(props: TextProps) {
-    return <TextWrapper fontWeight={500} color="textSecondary" {...props} />
+    return <TextWrapper fontWeight={500} color="deprecated_text2" {...props} />
   },
   DeprecatedLink(props: TextProps) {
-    return <TextWrapper fontWeight={500} color="accentAction" {...props} />
+    return <TextWrapper fontWeight={500} color="deprecated_primary1" {...props} />
   },
   DeprecatedLabel(props: TextProps) {
-    return <TextWrapper fontWeight={600} color="textPrimary" {...props} />
+    return <TextWrapper fontWeight={600} color="deprecated_text1" {...props} />
   },
   DeprecatedBlack(props: TextProps) {
-    return <TextWrapper fontWeight={500} color="textPrimary" {...props} />
+    return <TextWrapper fontWeight={500} color="deprecated_text1" {...props} />
   },
   DeprecatedWhite(props: TextProps) {
-    return <TextWrapper fontWeight={500} color="white" {...props} />
+    return <TextWrapper fontWeight={500} color="deprecated_white" {...props} />
   },
   DeprecatedBody(props: TextProps) {
-    return <TextWrapper fontWeight={400} fontSize={16} color="textPrimary" {...props} />
+    return <TextWrapper fontWeight={400} fontSize={16} color="deprecated_text1" {...props} />
   },
   DeprecatedLargeHeader(props: TextProps) {
     return <TextWrapper fontWeight={600} fontSize={24} {...props} />
@@ -81,21 +81,21 @@ export const ThemedText = {
     return <TextWrapper fontWeight={500} fontSize={11} {...props} />
   },
   DeprecatedBlue(props: TextProps) {
-    return <TextWrapper fontWeight={500} color="accentAction" {...props} />
+    return <TextWrapper fontWeight={500} color="deprecated_blue1" {...props} />
   },
   DeprecatedYellow(props: TextProps) {
     return <TextWrapper fontWeight={500} color="deprecated_yellow3" {...props} />
   },
   DeprecatedDarkGray(props: TextProps) {
-    return <TextWrapper fontWeight={500} color="textTertiary" {...props} />
+    return <TextWrapper fontWeight={500} color="deprecated_text3" {...props} />
   },
   DeprecatedGray(props: TextProps) {
     return <TextWrapper fontWeight={500} color="deprecated_bg3" {...props} />
   },
   DeprecatedItalic(props: TextProps) {
-    return <TextWrapper fontWeight={500} fontSize={12} fontStyle="italic" color="textSecondary" {...props} />
+    return <TextWrapper fontWeight={500} fontSize={12} fontStyle="italic" color="deprecated_text2" {...props} />
   },
   DeprecatedError({ error, ...props }: { error: boolean } & TextProps) {
-    return <TextWrapper fontWeight={500} color={error ? 'accentFailure' : 'textSecondary'} {...props} />
+    return <TextWrapper fontWeight={500} color={error ? 'deprecated_red1' : 'deprecated_text2'} {...props} />
   },
 }

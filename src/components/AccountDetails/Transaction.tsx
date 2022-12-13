@@ -27,12 +27,12 @@ const TransactionState = styled(ExternalLink)<{ pending: boolean; success?: bool
   padding: 0.25rem 0rem;
   font-weight: 500;
   font-size: 0.825rem;
-  color: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.deprecated_primary1};
 `
 
 const IconWrapper = styled.div<{ pending: boolean; success?: boolean }>`
   color: ${({ pending, success, theme }) =>
-    pending ? theme.accentAction : success ? theme.accentSuccess : theme.accentFailure};
+    pending ? theme.deprecated_primary1 : success ? theme.deprecated_green1 : theme.deprecated_red1};
 `
 
 export default function Transaction({ hash }: { hash: string }) {

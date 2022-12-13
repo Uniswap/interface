@@ -107,7 +107,7 @@ export default function SwapModalHeader({
               <TruncatedText
                 fontSize={24}
                 fontWeight={500}
-                color={showAcceptChanges && trade.tradeType === TradeType.EXACT_OUTPUT ? theme.accentAction : ''}
+                color={showAcceptChanges && trade.tradeType === TradeType.EXACT_OUTPUT ? theme.deprecated_primary1 : ''}
               >
                 {trade.inputAmount.toSignificant(6)}
               </TruncatedText>
@@ -143,7 +143,7 @@ export default function SwapModalHeader({
             </RowFixed>
           </RowBetween>
           <RowBetween>
-            <ThemedText.DeprecatedBody fontSize={14} color={theme.textTertiary}>
+            <ThemedText.DeprecatedBody fontSize={14} color={theme.deprecated_text3}>
               <FiatValue
                 fiatValue={fiatValueOutput}
                 priceImpact={computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)}
@@ -163,7 +163,7 @@ export default function SwapModalHeader({
           <RowBetween>
             <RowFixed>
               <AlertTriangle size={20} style={{ marginRight: '8px', minWidth: 24 }} />
-              <ThemedText.DeprecatedMain color={theme.accentAction}>
+              <ThemedText.DeprecatedMain color={theme.deprecated_primary1}>
                 <Trans>Price Updated</Trans>
               </ThemedText.DeprecatedMain>
             </RowFixed>

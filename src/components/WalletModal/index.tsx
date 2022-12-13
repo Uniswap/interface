@@ -61,7 +61,7 @@ const HeaderRow = styled.div`
   padding: 1rem 1rem;
   font-weight: 600;
   size: 16px;
-  color: ${(props) => (props.color === 'blue' ? ({ theme }) => theme.accentAction : 'inherit')};
+  color: ${(props) => (props.color === 'blue' ? ({ theme }) => theme.deprecated_primary1 : 'inherit')};
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     padding: 1rem;
   `};
@@ -103,7 +103,7 @@ const OptionGrid = styled.div`
 
 const HoverText = styled.div`
   text-decoration: none;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.deprecated_text1};
   display: flex;
   align-items: center;
 

@@ -229,7 +229,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
           <>
             <ThemedText.DeprecatedItalic
               fontSize={12}
-              color={theme.textSecondary}
+              color={theme.deprecated_text2}
               textAlign="left"
               padding="8px 0 0 0"
             >

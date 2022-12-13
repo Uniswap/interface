@@ -76,7 +76,7 @@ export function AdvancedSwapDetails({
               }
               disableHover={hideInfoTooltips}
             >
-              <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+              <ThemedText.DeprecatedSubHeader color={theme.deprecated_text1}>
                 <Trans>Expected Output</Trans>
               </ThemedText.DeprecatedSubHeader>
             </MouseoverTooltip>
@@ -95,7 +95,7 @@ export function AdvancedSwapDetails({
               text={<Trans>The impact your trade has on the market price of this pool.</Trans>}
               disableHover={hideInfoTooltips}
             >
-              <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+              <ThemedText.DeprecatedSubHeader color={theme.deprecated_text1}>
                 <Trans>Price Impact</Trans>
               </ThemedText.DeprecatedSubHeader>
             </MouseoverTooltip>
@@ -118,7 +118,7 @@ export function AdvancedSwapDetails({
               }
               disableHover={hideInfoTooltips}
             >
-              <ThemedText.DeprecatedSubHeader color={theme.textTertiary}>
+              <ThemedText.DeprecatedSubHeader color={theme.deprecated_text3}>
                 {trade.tradeType === TradeType.EXACT_INPUT ? (
                   <Trans>Minimum received</Trans>
                 ) : (
@@ -129,7 +129,7 @@ export function AdvancedSwapDetails({
             </MouseoverTooltip>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={70}>
-            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14} color={theme.textTertiary}>
+            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14} color={theme.deprecated_text3}>
               {trade.tradeType === TradeType.EXACT_INPUT
                 ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
                 : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
@@ -146,12 +146,12 @@ export function AdvancedSwapDetails({
               }
               disableHover={hideInfoTooltips}
             >
-              <ThemedText.DeprecatedSubHeader color={theme.textTertiary}>
+              <ThemedText.DeprecatedSubHeader color={theme.deprecated_text3}>
                 <Trans>Network Fee</Trans>
               </ThemedText.DeprecatedSubHeader>
             </MouseoverTooltip>
             <TextWithLoadingPlaceholder syncing={syncing} width={50}>
-              <ThemedText.DeprecatedBlack textAlign="right" fontSize={14} color={theme.textTertiary}>
+              <ThemedText.DeprecatedBlack textAlign="right" fontSize={14} color={theme.deprecated_text3}>
                 ~${trade.gasUseEstimateUSD.toFixed(2)}
               </ThemedText.DeprecatedBlack>
             </TextWithLoadingPlaceholder>

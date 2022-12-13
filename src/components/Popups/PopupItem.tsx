@@ -21,7 +21,7 @@ const Popup = styled.div`
   display: inline-block;
   width: 100%;
   padding: 1em;
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme }) => theme.deprecated_bg0};
   position: relative;
   border-radius: 10px;
   padding: 20px;

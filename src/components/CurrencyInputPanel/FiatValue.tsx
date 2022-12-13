@@ -19,12 +19,12 @@ export function FiatValue({
   const theme = useTheme()
   const priceImpactColor = useMemo(() => {
     if (!priceImpact) return undefined
-    if (priceImpact.lessThan('0')) return theme.accentSuccess
+    if (priceImpact.lessThan('0')) return theme.deprecated_green1
     const severity = warningSeverity(priceImpact)
-    if (severity < 1) return theme.textTertiary
+    if (severity < 1) return theme.deprecated_text3
     if (severity < 3) return theme.deprecated_yellow1
-    return theme.accentFailure
-  }, [priceImpact, theme.accentSuccess, theme.accentFailure, theme.textTertiary, theme.deprecated_yellow1])
+    return theme.deprecated_red1
+  }, [priceImpact, theme.deprecated_green1, theme.deprecated_red1, theme.deprecated_text3, theme.deprecated_yellow1])
 
   const p = Number(fiatValue?.toFixed())
   const visibleDecimalPlaces = p < 1.05 ? 4 : 2

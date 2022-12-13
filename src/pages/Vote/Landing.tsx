@@ -60,14 +60,14 @@ const Proposal = styled(Button)`
   text-align: left;
   outline: none;
   cursor: pointer;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.deprecated_text1};
   text-decoration: none;
   background-color: ${({ theme }) => theme.deprecated_bg1};
   &:focus {
     background-color: ${({ theme }) => darken(0.05, theme.deprecated_bg1)};
   }
   &:hover {
-    background-color: ${({ theme }) => theme.backgroundInteractive};
+    background-color: ${({ theme }) => theme.deprecated_bg2};
   }
 `
 
@@ -98,7 +98,7 @@ const WrapSmall = styled(RowBetween)`
 `
 
 const TextButton = styled(ThemedText.DeprecatedMain)`
-  color: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.deprecated_primary1};
   :hover {
     cursor: pointer;
     text-decoration: underline;
@@ -115,7 +115,7 @@ const AddressButton = styled.div`
 `
 
 const StyledExternalLink = styled(ExternalLink)`
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.deprecated_text1};
 `
 
 export default function Landing() {
@@ -173,7 +173,7 @@ export default function Landing() {
                   </RowBetween>
                   <ExternalLink
                     style={{
-                      color: theme.white,
+                      color: theme.deprecated_white,
                       textDecoration: 'underline',
                     }}
                     href="https://uniswap.org/blog/uni"

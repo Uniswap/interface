@@ -31,7 +31,7 @@ const CTA1 = styled(ExternalLink)`
   border: 1px solid ${({ theme }) => theme.deprecated_bg3};
 
   * {
-    color: ${({ theme }) => theme.textPrimary};
+    color: ${({ theme }) => theme.deprecated_text1};
     text-decoration: none !important;
   }
 
@@ -56,7 +56,7 @@ const CTA2 = styled(ExternalLink)`
   border: 1px solid ${({ theme }) => theme.deprecated_bg3};
 
   * {
-    color: ${({ theme }) => theme.textPrimary};
+    color: ${({ theme }) => theme.deprecated_text1};
     text-decoration: none !important;
   }
 

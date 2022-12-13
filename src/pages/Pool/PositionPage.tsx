@@ -99,7 +99,7 @@ const Label = styled(({ end, ...props }) => <ThemedText.DeprecatedLabel {...prop
 `
 
 const ExtentsText = styled.span`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.deprecated_text2};
   font-size: 14px;
   text-align: center;
   margin-right: 4px;
@@ -108,15 +108,15 @@ const ExtentsText = styled.span`
 
 const HoverText = styled(ThemedText.DeprecatedMain)`
   text-decoration: none;
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.deprecated_text3};
   :hover {
-    color: ${({ theme }) => theme.textPrimary};
+    color: ${({ theme }) => theme.deprecated_text1};
     text-decoration: none;
   }
 `
 
 const DoubleArrow = styled.span`
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.deprecated_text3};
   margin: 0 1rem;
 `
 const ResponsiveRow = styled(RowBetween)`
@@ -700,7 +700,7 @@ export function PositionPage() {
                         </ThemedText.DeprecatedLargeHeader>
                       ) : (
                         <ThemedText.DeprecatedLargeHeader
-                          color={theme.textPrimary}
+                          color={theme.deprecated_text1}
                           fontSize="36px"
                           fontWeight={500}
                         >
@@ -733,7 +733,7 @@ export function PositionPage() {
                             </ThemedText.DeprecatedMain>
                             {typeof ratio === 'number' && !removed ? (
                               <Badge style={{ marginLeft: '10px' }}>
-                                <ThemedText.DeprecatedMain color={theme.textSecondary} fontSize={11}>
+                                <ThemedText.DeprecatedMain color={theme.deprecated_text2} fontSize={11}>
                                   <Trans>{inverted ? 100 - ratio : ratio}%</Trans>
                                 </ThemedText.DeprecatedMain>
                               </Badge>
@@ -754,7 +754,7 @@ export function PositionPage() {
                           </Label>
                           {fiatValueOfFees?.greaterThan(new Fraction(1, 100)) ? (
                             <ThemedText.DeprecatedLargeHeader
-                              color={theme.accentSuccess}
+                              color={theme.deprecated_green1}
                               fontSize="36px"
                               fontWeight={500}
                             >
@@ -762,7 +762,7 @@ export function PositionPage() {
                             </ThemedText.DeprecatedLargeHeader>
                           ) : (
                             <ThemedText.DeprecatedLargeHeader
-                              color={theme.textPrimary}
+                              color={theme.deprecated_text1}
                               fontSize="36px"
                               fontWeight={500}
                             >
@@ -781,11 +781,11 @@ export function PositionPage() {
                             onClick={() => setShowConfirm(true)}
                           >
                             {!!collectMigrationHash && !isCollectPending ? (
-                              <ThemedText.DeprecatedMain color={theme.textPrimary}>
+                              <ThemedText.DeprecatedMain color={theme.deprecated_text1}>
                                 <Trans> Collected</Trans>
                               </ThemedText.DeprecatedMain>
                             ) : isCollectPending || collecting ? (
-                              <ThemedText.DeprecatedMain color={theme.textPrimary}>
+                              <ThemedText.DeprecatedMain color={theme.deprecated_text1}>
                                 {' '}
                                 <Dots>
                                   <Trans>Collecting</Trans>
@@ -793,7 +793,7 @@ export function PositionPage() {
                               </ThemedText.DeprecatedMain>
                             ) : (
                               <>
-                                <ThemedText.DeprecatedMain color={theme.white}>
+                                <ThemedText.DeprecatedMain color={theme.deprecated_white}>
                                   <Trans>Collect fees</Trans>
                                 </ThemedText.DeprecatedMain>
                               </>
@@ -896,7 +896,7 @@ export function PositionPage() {
                       </ExtentsText>
 
                       {inRange && (
-                        <ThemedText.DeprecatedSmall color={theme.textTertiary}>
+                        <ThemedText.DeprecatedSmall color={theme.deprecated_text3}>
                           <Trans>Your position will be 100% {currencyBase?.symbol} at this price.</Trans>
                         </ThemedText.DeprecatedSmall>
                       )}
@@ -920,7 +920,7 @@ export function PositionPage() {
                       </ExtentsText>
 
                       {inRange && (
-                        <ThemedText.DeprecatedSmall color={theme.textTertiary}>
+                        <ThemedText.DeprecatedSmall color={theme.deprecated_text3}>
                           <Trans>Your position will be 100% {currencyQuote?.symbol} at this price.</Trans>
                         </ThemedText.DeprecatedSmall>
                       )}

@@ -23,7 +23,7 @@ enum DeadlineError {
 }
 
 const FancyButton = styled.button`
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.deprecated_text1};
   align-items: center;
   height: 2rem;
   border-radius: 36px;
@@ -37,7 +37,7 @@ const FancyButton = styled.button`
     border: 1px solid ${({ theme }) => theme.deprecated_bg4};
   }
   :focus {
-    border: 1px solid ${({ theme }) => theme.accentAction};
+    border: 1px solid ${({ theme }) => theme.deprecated_primary1};
   }
 `
 
@@ -47,8 +47,8 @@ const Option = styled(FancyButton)<{ active: boolean }>`
   :hover {
     cursor: pointer;
   }
-  background-color: ${({ active, theme }) => active && theme.accentAction};
-  color: ${({ active, theme }) => (active ? theme.white : theme.textPrimary)};
+  background-color: ${({ active, theme }) => active && theme.deprecated_primary1};
+  color: ${({ active, theme }) => (active ? theme.deprecated_white : theme.deprecated_text1)};
 `
 
 const Input = styled.input`
@@ -61,7 +61,7 @@ const Input = styled.input`
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;
   }
-  color: ${({ theme, color }) => (color === 'red' ? theme.accentFailure : theme.textPrimary)};
+  color: ${({ theme, color }) => (color === 'red' ? theme.deprecated_red1 : theme.deprecated_text1)};
   text-align: right;
 
   ::placeholder {
@@ -77,11 +77,11 @@ const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean }
   flex: 1;
   border: ${({ theme, active, warning }) =>
     active
-      ? `1px solid ${warning ? theme.accentFailure : theme.accentAction}`
-      : warning && `1px solid ${theme.accentFailure}`};
+      ? `1px solid ${warning ? theme.deprecated_red1 : theme.deprecated_primary1}`
+      : warning && `1px solid ${theme.deprecated_red1}`};
   :hover {
     border: ${({ theme, active, warning }) =>
-      active && `1px solid ${warning ? darken(0.1, theme.accentFailure) : darken(0.1, theme.accentAction)}`};
+      active && `1px solid ${warning ? darken(0.1, theme.deprecated_red1) : darken(0.1, theme.deprecated_primary1)}`};
   }
 
   input {
@@ -171,7 +171,7 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
     <AutoColumn gap="md">
       <AutoColumn gap="sm">
         <RowFixed>
-          <ThemedText.DeprecatedBlack fontWeight={400} fontSize={14} color={theme.textSecondary}>
+          <ThemedText.DeprecatedBlack fontWeight={400} fontSize={14} color={theme.deprecated_text2}>
             <Trans>Slippage tolerance</Trans>
           </ThemedText.DeprecatedBlack>
           <QuestionHelper
@@ -240,7 +240,7 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
       {showCustomDeadlineRow && (
         <AutoColumn gap="sm">
           <RowFixed>
-            <ThemedText.DeprecatedBlack fontSize={14} fontWeight={400} color={theme.textSecondary}>
+            <ThemedText.DeprecatedBlack fontSize={14} fontWeight={400} color={theme.deprecated_text2}>
               <Trans>Transaction deadline</Trans>
             </ThemedText.DeprecatedBlack>
             <QuestionHelper

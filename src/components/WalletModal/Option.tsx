@@ -65,13 +65,13 @@ const HeaderText = styled.div`
   align-items: center;
   justify-content: center;
   color: ${(props) =>
-    props.color === 'blue' ? ({ theme }) => theme.accentAction : ({ theme }) => theme.textPrimary};
+    props.color === 'blue' ? ({ theme }) => theme.deprecated_primary1 : ({ theme }) => theme.deprecated_text1};
   font-size: 16px;
   font-weight: 600;
 `
 
 const SubHeader = styled.div`
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.deprecated_text1};
   margin-top: 10px;
   font-size: 12px;
 `

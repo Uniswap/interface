@@ -44,7 +44,7 @@ const StyledPollingBlockNumber = styled(ThemedText.DeprecatedSmall)<{
   hovering: boolean
   warning: boolean
 }>`
-  color: ${({ theme, warning }) => (warning ? theme.deprecated_yellow3 : theme.accentSuccess)};
+  color: ${({ theme, warning }) => (warning ? theme.deprecated_yellow3 : theme.deprecated_green1)};
   transition: opacity 0.25s ease;
   opacity: ${({ breathe, hovering }) => (hovering ? 0.7 : breathe ? 1 : 0.5)};
   :hover {
@@ -66,12 +66,12 @@ const StyledPollingDot = styled.div<{ warning: boolean }>`
   min-width: 8px;
   border-radius: 50%;
   position: relative;
-  background-color: ${({ theme, warning }) => (warning ? theme.deprecated_yellow3 : theme.accentSuccess)};
+  background-color: ${({ theme, warning }) => (warning ? theme.deprecated_yellow3 : theme.deprecated_green1)};
   transition: 250ms ease background-color;
 `
 
 const StyledGasDot = styled.div`
-  background-color: ${({ theme }) => theme.textTertiary};
+  background-color: ${({ theme }) => theme.deprecated_text3};
   border-radius: 50%;
   height: 4px;
   min-height: 4px;
@@ -97,7 +97,7 @@ const Spinner = styled.div<{ warning: boolean }>`
   border-top: 1px solid transparent;
   border-right: 1px solid transparent;
   border-bottom: 1px solid transparent;
-  border-left: 2px solid ${({ theme, warning }) => (warning ? theme.deprecated_yellow3 : theme.accentSuccess)};
+  border-left: 2px solid ${({ theme, warning }) => (warning ? theme.deprecated_yellow3 : theme.deprecated_green1)};
   background: transparent;
   width: 14px;
   height: 14px;
