@@ -1,113 +1,30 @@
-/**
- * List of all the networks supported by the Uniswap Interface
- */
- export enum SupportedChainId {
-  MAINNET = 1,
-  ROPSTEN = 3,
-  RINKEBY = 4,
-  GOERLI = 5,
-  KOVAN = 42,
+import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from './chains'
 
-  ARBITRUM_ONE = 42161,
-  ARBITRUM_RINKEBY = 421611,
+describe('chains', () => {
+  describe('ALL_SUPPORTED_CHAIN_IDS', () => {
+    it('contains all the values in the SupportedChainId enum', () => {
+      Object.values(SupportedChainId).forEach((chainId) => {
+        if (typeof chainId === 'number') expect(ALL_SUPPORTED_CHAIN_IDS.includes(chainId as number)).toBeTruthy()
+      })
+    })
 
-  OPTIMISM = 10,
-  OPTIMISM_GOERLI = 420,
+    it('contains no duplicates', () => {
+      const set = new Set<number>()
+      ALL_SUPPORTED_CHAIN_IDS.forEach((chainId) => {
+        expect(set.has(chainId)).toEqual(false)
+        set.add(chainId)
+      })
+    })
 
-  POLYGON = 137,
-  POLYGON_MUMBAI = 80001,
+    it('all values are in the SupportedChainId mapping', () => {
+      ALL_SUPPORTED_CHAIN_IDS.forEach((chainId) => {
+        // takes advantage of the reverse mapping
+        expect(SupportedChainId[chainId]).toBeTruthy()
+      })
+    })
 
-  CELO = 42220,
-  CELO_ALFAJORES = 44787,
-
-  SCROLL = 534354,
-}
-
-export const CHAIN_IDS_TO_NAMES = {
-  [SupportedChainId.MAINNET]: 'mainnet',
-  [SupportedChainId.ROPSTEN]: 'ropsten',
-  [SupportedChainId.RINKEBY]: 'rinkeby',
-  [SupportedChainId.GOERLI]: 'goerli',
-  [SupportedChainId.KOVAN]: 'kovan',
-  [SupportedChainId.POLYGON]: 'polygon',
-  [SupportedChainId.POLYGON_MUMBAI]: 'polygon_mumbai',
-  [SupportedChainId.CELO]: 'celo',
-  [SupportedChainId.CELO_ALFAJORES]: 'celo_alfajores',
-  [SupportedChainId.ARBITRUM_ONE]: 'arbitrum',
-  [SupportedChainId.ARBITRUM_RINKEBY]: 'arbitrum_rinkeby',
-  [SupportedChainId.OPTIMISM]: 'optimism',
-  [SupportedChainId.OPTIMISM_GOERLI]: 'optimism_goerli',
-  [SupportedChainId.SCROLL]: 'scroll',
-}
-
-/**
- * Array of all the supported chain IDs
- */
-export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = Object.values(SupportedChainId).filter(
-  (id) => typeof id === 'number'
-) as SupportedChainId[]
-
-export function isSupportedChain(chainId: number | null | undefined): chainId is SupportedChainId {
-  return !!chainId && !!SupportedChainId[chainId]
-}
-
-export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [
-  SupportedChainId.MAINNET,
-  SupportedChainId.POLYGON,
-  SupportedChainId.CELO,
-  SupportedChainId.OPTIMISM,
-  SupportedChainId.ARBITRUM_ONE,
-]
-
-/**
- * Unsupported networks for V2 pool behavior.
- */
-export const UNSUPPORTED_V2POOL_CHAIN_IDS = [
-  SupportedChainId.POLYGON,
-  SupportedChainId.OPTIMISM,
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.SCROLL,
-]
-
-export const TESTNET_CHAIN_IDS = [
-  SupportedChainId.ROPSTEN,
-  SupportedChainId.RINKEBY,
-  SupportedChainId.GOERLI,
-  SupportedChainId.KOVAN,
-  SupportedChainId.POLYGON_MUMBAI,
-  SupportedChainId.ARBITRUM_RINKEBY,
-  SupportedChainId.OPTIMISM_GOERLI,
-] as const
-
-export type SupportedTestnetChainId = typeof TESTNET_CHAIN_IDS[number]
-
-/**
- * All the chain IDs that are running the Ethereum protocol.
- */
-export const L1_CHAIN_IDS = [
-  SupportedChainId.MAINNET,
-  SupportedChainId.ROPSTEN,
-  SupportedChainId.RINKEBY,
-  SupportedChainId.GOERLI,
-  SupportedChainId.KOVAN,
-  SupportedChainId.POLYGON,
-  SupportedChainId.POLYGON_MUMBAI,
-  SupportedChainId.CELO,
-  SupportedChainId.CELO_ALFAJORES,
-  SupportedChainId.SCROLL,
-] as const
-
-export type SupportedL1ChainId = typeof L1_CHAIN_IDS[number]
-
-/**
- * Controls some L2 specific behavior, e.g. slippage tolerance, special UI behavior.
- * The expectation is that all of these networks have immediate transaction confirmation.
- */
-export const L2_CHAIN_IDS = [
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.ARBITRUM_RINKEBY,
-  SupportedChainId.OPTIMISM,
-  SupportedChainId.OPTIMISM_GOERLI,
-] as const
-
-export type SupportedL2ChainId = typeof L2_CHAIN_IDS[number]
+    it('all values are numeric', () => {
+      expect(ALL_SUPPORTED_CHAIN_IDS.every((chainId) => typeof chainId === 'number')).toBeTruthy()
+    })
+  })
+})
