@@ -160,7 +160,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                 </Trans>
               </Text>
               <Text fontWeight={600} fontSize={20}>
-                <Trans>BETA FEATURE.</Trans>
+                <Trans>BETA FEATURE. Use at own risk.</Trans>
               </Text>
               <ButtonError
                 error={true}
