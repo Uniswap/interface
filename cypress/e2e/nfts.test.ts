@@ -44,7 +44,7 @@ describe('Testing nfts', () => {
     cy.get(getTestSelector('nft-details-details')).should('exist')
   })
 
-  it('should toggle buy now', () => {
+  it('should toggle buy now on details page', () => {
     cy.get(getTestSelector('nft-details-description-text')).should('exist')
     cy.get(getTestSelector('nft-details-description')).click()
     cy.get(getTestSelector('nft-details-description-text')).should('not.exist')
@@ -52,7 +52,7 @@ describe('Testing nfts', () => {
     cy.get(getTestSelector('nft-bag')).should('exist')
   })
 
-  it('should toggle buy now', () => {
+  it('should go view my nfts', () => {
     cy.get(getTestSelector('web3-status-connected')).click()
     cy.get(getTestSelector('nft-view-self-nfts')).click()
     cy.get(getTestSelector('nft-explore-nfts')).should('exist')
