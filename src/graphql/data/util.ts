@@ -2,7 +2,7 @@ import { SupportedChainId } from 'constants/chains'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 
-import { Chain, HistoryDuration } from './__generated__/TopTokens100Query.graphql'
+import { Chain, HistoryDuration } from './__generated__/types-and-hooks'
 
 export enum TimePeriod {
   HOUR,
@@ -15,15 +15,15 @@ export enum TimePeriod {
 export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
   switch (timePeriod) {
     case TimePeriod.HOUR:
-      return 'HOUR'
+      return HistoryDuration.Hour
     case TimePeriod.DAY:
-      return 'DAY'
+      return HistoryDuration.Day
     case TimePeriod.WEEK:
-      return 'WEEK'
+      return HistoryDuration.Week
     case TimePeriod.MONTH:
-      return 'MONTH'
+      return HistoryDuration.Month
     case TimePeriod.YEAR:
-      return 'YEAR'
+      return HistoryDuration.Year
   }
 }
 
@@ -34,16 +34,16 @@ export function isPricePoint(p: PricePoint | null): p is PricePoint {
 }
 
 export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
-  [SupportedChainId.MAINNET]: 'ETHEREUM',
-  [SupportedChainId.GOERLI]: 'ETHEREUM_GOERLI',
-  [SupportedChainId.POLYGON]: 'POLYGON',
-  [SupportedChainId.POLYGON_MUMBAI]: 'POLYGON',
-  [SupportedChainId.CELO]: 'CELO',
-  [SupportedChainId.CELO_ALFAJORES]: 'CELO',
-  [SupportedChainId.ARBITRUM_ONE]: 'ARBITRUM',
-  [SupportedChainId.ARBITRUM_RINKEBY]: 'ARBITRUM',
-  [SupportedChainId.OPTIMISM]: 'OPTIMISM',
-  [SupportedChainId.OPTIMISM_GOERLI]: 'OPTIMISM',
+  [SupportedChainId.MAINNET]: Chain.Ethereum,
+  [SupportedChainId.GOERLI]: Chain.EthereumGoerli,
+  [SupportedChainId.POLYGON]: Chain.Polygon,
+  [SupportedChainId.POLYGON_MUMBAI]: Chain.Polygon,
+  [SupportedChainId.CELO]: Chain.Celo,
+  [SupportedChainId.CELO_ALFAJORES]: Chain.Celo,
+  [SupportedChainId.ARBITRUM_ONE]: Chain.Arbitrum,
+  [SupportedChainId.ARBITRUM_RINKEBY]: Chain.Arbitrum,
+  [SupportedChainId.OPTIMISM]: Chain.Optimism,
+  [SupportedChainId.OPTIMISM_GOERLI]: Chain.Optimism,
 }
 
 export function chainIdToBackendName(chainId: number | undefined) {
@@ -53,11 +53,11 @@ export function chainIdToBackendName(chainId: number | undefined) {
 }
 
 const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
-  ethereum: 'ETHEREUM',
-  polygon: 'POLYGON',
-  celo: 'CELO',
-  arbitrum: 'ARBITRUM',
-  optimism: 'OPTIMISM',
+  ethereum: Chain.Ethereum,
+  polygon: Chain.Polygon,
+  celo: Chain.Celo,
+  arbitrum: Chain.Arbitrum,
+  optimism: Chain.Optimism,
 }
 
 export function validateUrlChainParam(chainName: string | undefined) {
@@ -72,7 +72,7 @@ export const CHAIN_NAME_TO_CHAIN_ID: { [key: string]: SupportedChainId } = {
   OPTIMISM: SupportedChainId.OPTIMISM,
 }
 
-export const BACKEND_CHAIN_NAMES: Chain[] = ['ETHEREUM', 'POLYGON', 'OPTIMISM', 'ARBITRUM', 'CELO']
+export const BACKEND_CHAIN_NAMES: Chain[] = [Chain.Ethereum, Chain.Polygon, Chain.Optimism, Chain.Arbitrum, Chain.Celo]
 
 export function isValidBackendChainName(chainName: string | undefined): chainName is Chain {
   if (!chainName) return false
