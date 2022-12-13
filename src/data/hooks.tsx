@@ -15,6 +15,11 @@ import { config } from 'src/config'
 import { uniswapUrls } from 'src/constants/urls'
 import { logger } from 'src/utils/logger'
 
+// Samples error reports to reduce load on backend
+// Recurring errors that we must fix should have enough occurrences that we detect them still
+const APOLLO_GRAPHQL_ERROR_SAMPLING_RATE = 0.1
+const APOLLO_NETWORK_ERROR_SAMPLING_RATE = 0.01
+
 const mmkv = new MMKV()
 if (__DEV__) {
   // requires Flipper plugin `react-native-mmkv` to be installed
@@ -85,15 +90,17 @@ export const usePersistedApolloClient = () => {
       // Log any GraphQL errors or network error that occurred
       const errorLink = onError(({ graphQLErrors, networkError }) => {
         if (graphQLErrors) {
-          graphQLErrors.forEach(({ message, locations, path }) =>
+          graphQLErrors.forEach(({ message, locations, path }) => {
+            if (Math.random() < APOLLO_GRAPHQL_ERROR_SAMPLING_RATE) return
             logger.error(
               'data/hooks',
               '',
               `[GraphQL Error]: Message: ${message}, Location: ${locations}, Path: ${path}`
             )
-          )
+          })
         }
         if (networkError) {
+          if (Math.random() < APOLLO_NETWORK_ERROR_SAMPLING_RATE) return
           logger.error('data/hooks', '', `[Network error]: ${networkError}`)
         }
       })

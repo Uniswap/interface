@@ -36,8 +36,7 @@ if (!__DEV__) {
   Sentry.init({
     dsn: config.sentryDsn,
     tracesSampler: (_) => {
-      // Lower to ~20% before going live: MOB-1634
-      return 1
+      return 0.2
     },
     integrations: [
       new Sentry.ReactNativeTracing({
