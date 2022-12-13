@@ -19,6 +19,7 @@ module.exports = {
     'spellcheck',
   ],
   rules: {
+    'guard-for-in': 'error',
     'no-eval': 'error',
     'no-extra-boolean-cast': 'error',
     'no-ex-assign': 'error',

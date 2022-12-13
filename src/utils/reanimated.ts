@@ -26,14 +26,14 @@ function renderFormat(
   options: Record<string, string> & { num?: string; code?: string }
 ) {
   'worklet'
-  for (const option in options) {
-    if (options[option].indexOf('-') !== -1) {
-      options[option] = options[option].replace('-', '')
+  for (const [option, value] of Object.entries(options)) {
+    if (value.indexOf('-') !== -1) {
+      options[option] = value.replace('-', '')
       template = '-' + template
     }
 
-    if (options[option].indexOf('<') !== -1) {
-      options[option] = options[option].replace('<', '')
+    if (value.indexOf('<') !== -1) {
+      options[option] = value.replace('<', '')
       template = '<' + template
     }
 

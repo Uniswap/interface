@@ -18,8 +18,8 @@ export function serializeQueryParams(
   params: Record<string, Parameters<typeof encodeURIComponent>[0]>
 ) {
   const queryString = []
-  for (const param in params) {
-    queryString.push(`${encodeURIComponent(param)}=${encodeURIComponent(params[param])}`)
+  for (const [param, value] of Object.entries(params)) {
+    queryString.push(`${encodeURIComponent(param)}=${encodeURIComponent(value)}`)
   }
   return queryString.join('&')
 }

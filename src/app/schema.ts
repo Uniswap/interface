@@ -170,7 +170,7 @@ export const v21Schema = { ...v20Schema, experiments: { experiments: {}, feature
 
 export const v22Schema = { ...v21Schema }
 
-// schema did not change, updated the types of wallet.settings.tokensOrderBy and wallet.settings.tokensMetadataDisplayType
+// schema did not change, updated the types of `wallet.settings.tokensOrderBy` and `wallet.settings.tokensMetadataDisplayType`
 export const v23Schema = { ...v22Schema }
 
 export const v24Schema = {
