@@ -16,7 +16,7 @@ import {
 import { body, bodySmall, buttonTextMedium, subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
-import { GenieAsset, Rarity, TokenType, WalletAsset } from 'nft/types'
+import { GenieAsset, Rarity, TokenType, UniformAspectRatio, UniformAspectRatios, WalletAsset } from 'nft/types'
 import { fallbackProvider, isAudio, isVideo, putCommas } from 'nft/utils'
 import { floorFormatter } from 'nft/utils/numbers'
 import {
@@ -240,16 +240,29 @@ const ImageContainer = ({ children, isDisabled = false }: { children: ReactNode;
   <StyledImageContainer isDisabled={isDisabled}>{children}</StyledImageContainer>
 )
 
-/* -------- CARD IMAGE -------- */
+interface ImageProps {
+  uniformAspectRatio: UniformAspectRatio
+  setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void
+  renderedHeight?: number
+  setRenderedHeight?: (renderedHeight: number) => void
+}
 
-const Image = () => {
+const Image = ({ uniformAspectRatio, setUniformAspectRatio, renderedHeight, setRenderedHeight }: ImageProps) => {
   const { hovered, asset } = useCardContext()
   const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
   const [loaded, setLoaded] = useState(false)
   const isMobile = useIsMobile()
 
   if (noContent) {
-    return <NoContentContainer />
+    return (
+      <NoContentContainer
+        height={
+          uniformAspectRatio === UniformAspectRatios.square || uniformAspectRatio === UniformAspectRatios.unset
+            ? undefined
+            : renderedHeight
+        }
+      />
+    )
   }
 
   return (
@@ -258,7 +271,7 @@ const Image = () => {
         as="img"
         width="full"
         style={{
-          aspectRatio: '1',
+          aspectRatio: `${uniformAspectRatio === UniformAspectRatios.square || !setUniformAspectRatio ? '1' : 'auto'}`,
           transition: 'transform 0.25s ease 0s',
         }}
         src={asset.imageUrl || asset.smallImageUrl}
@@ -266,6 +279,22 @@ const Image = () => {
         draggable={false}
         onError={() => setNoContent(true)}
         onLoad={(e) => {
+          if (uniformAspectRatio !== UniformAspectRatios.square && setUniformAspectRatio) {
+            const height = e.currentTarget.clientHeight
+            const width = e.currentTarget.clientWidth
+
+            if ((!renderedHeight || renderedHeight !== height) && setRenderedHeight) {
+              setRenderedHeight(height)
+            }
+
+            const ar = parseFloat((width / height).toFixed(1))
+            if (uniformAspectRatio === UniformAspectRatios.unset) {
+              setUniformAspectRatio(ar >= 1 ? UniformAspectRatios.square : ar)
+            } else if (uniformAspectRatio !== ar) {
+              setUniformAspectRatio(UniformAspectRatios.square)
+            }
+          }
+
           setLoaded(true)
         }}
         className={clsx(hovered && !isMobile && styles.cardImageHover, !loaded && styles.loadingBackground)}
@@ -729,12 +758,13 @@ const Pool = () => {
   )
 }
 
-const NoContentContainer = () => (
+const NoContentContainer = ({ height }: { height?: number }) => (
   <>
     <Box
       position="relative"
       width="full"
       style={{
+        height: height ? `${height}px` : 'auto',
         paddingTop: '100%',
         background: `linear-gradient(90deg, ${themeVars.colors.backgroundSurface} 0%, ${themeVars.colors.backgroundInteractive} 95.83%)`,
       }}

@@ -34,7 +34,16 @@ import {
 } from 'nft/hooks'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { usePriceRange } from 'nft/hooks/usePriceRange'
-import { DropDownOption, GenieAsset, GenieCollection, isPooledMarket, Markets, TokenType } from 'nft/types'
+import {
+  DropDownOption,
+  GenieAsset,
+  GenieCollection,
+  isPooledMarket,
+  Markets,
+  TokenType,
+  UniformAspectRatio,
+  UniformAspectRatios,
+} from 'nft/types'
 import {
   calcPoolPrice,
   calcSudoSwapPrice,
@@ -268,6 +277,9 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const debouncedMaxPrice = useDebounce(maxPrice, 500)
   const debouncedSearchByNameText = useDebounce(searchByNameText, 500)
 
+  const [uniformAspectRatio, setUniformAspectRatio] = useState<UniformAspectRatio>(UniformAspectRatios.unset)
+  const [renderedHeight, setRenderedHeight] = useState<number | undefined>()
+
   const [sweepIsOpen, setSweepOpen] = useState(false)
   // Load all sweep queries. Loading them on the parent allows lazy-loading, but avoids waterfalling requests.
   const collectionParams = useSweepFetcherParams(contractAddress, 'others', debouncedMinPrice, debouncedMaxPrice)
@@ -411,9 +423,13 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
         setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
         rarityVerified={rarityVerified}
+        uniformAspectRatio={uniformAspectRatio}
+        setUniformAspectRatio={setUniformAspectRatio}
+        renderedHeight={renderedHeight}
+        setRenderedHeight={setRenderedHeight}
       />
     ))
-  }, [collectionAssets, currentTokenPlayingMedia, isMobile, rarityVerified])
+  }, [collectionAssets, isMobile, currentTokenPlayingMedia, rarityVerified, uniformAspectRatio, renderedHeight])
 
   const hasNfts = collectionAssets && collectionAssets.length > 0
   const hasErc1155s = hasNfts && collectionAssets[0] && collectionAssets[0].tokenType === TokenType.ERC1155
@@ -458,6 +474,10 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location])
+
+  useEffect(() => {
+    setUniformAspectRatio(UniformAspectRatios.unset)
+  }, [contractAddress])
 
   useEffect(() => {
     if (collectionStats && collectionStats.stats?.floor_price) {
