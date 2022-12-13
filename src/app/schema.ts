@@ -3,11 +3,9 @@ import { chainListToStateMap } from 'src/features/chains/utils'
 import { ModalName } from 'src/features/telemetry/constants'
 import { parseActiveChains } from 'src/utils/chainId'
 
+// only add fields that are persisted
 export const initialSchema = {
   balances: {
-    byChainId: {},
-  },
-  blocks: {
     byChainId: {},
   },
   chains: {
@@ -25,7 +23,11 @@ export const initialSchema = {
     isInitialized: false,
   },
   saga: {},
-  tokenLists: {},
+  tokenLists: {
+    lastInitializedDefaultListOfLists: [],
+    byUrl: [],
+    activeListUrls: [],
+  },
   tokens: {
     watchedTokens: {},
     customTokens: {},
@@ -194,6 +196,10 @@ export const v29Schema = { ...v28Schema }
 
 export const v30Schema = { ...v29Schema }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const { tokenLists, ...v31SchemaIntermediate } = { ...v30Schema }
+export const v31Schema = v31SchemaIntermediate
+
 // TODO: use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = () => v29Schema
+export const getSchema = () => v31Schema

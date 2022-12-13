@@ -19,7 +19,6 @@ import { config } from 'src/config'
 import { usePersistedApolloClient } from 'src/data/hooks'
 import { LockScreenContextProvider } from 'src/features/authentication/lockScreenContext'
 import { BiometricContextProvider } from 'src/features/biometrics/context'
-import { MulticallUpdaters } from 'src/features/multicall'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
 import { initOneSignal } from 'src/features/notifications/Onesignal'
 import { initializeRemoteConfig } from 'src/features/remoteConfig'
@@ -124,7 +123,6 @@ function DataUpdaters() {
     <>
       <TraceUserProperties />
       <TransactionHistoryUpdater />
-      <MulticallUpdaters />
     </>
   )
 }

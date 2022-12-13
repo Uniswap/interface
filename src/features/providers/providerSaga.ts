@@ -5,13 +5,12 @@ import { RootState } from 'src/app/rootReducer'
 import { getProviderManager } from 'src/app/walletContext'
 import { config } from 'src/config'
 import { ChainId } from 'src/constants/chains'
-import { blockChannelWatcher, createBlockChannel } from 'src/features/blocks/blockListeners'
 import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
 import { getSortedActiveChainIds } from 'src/features/chains/utils'
 import { ProviderManager } from 'src/features/providers/ProviderManager'
 import { initialized } from 'src/features/providers/providerSlice'
 import { logger } from 'src/utils/logger'
-import { call, cancel, fork, join, put, spawn, take, takeEvery } from 'typed-redux-saga'
+import { call, fork, join, put, take, takeEvery } from 'typed-redux-saga'
 
 // Initialize Ethers providers for the chains the wallet interacts with
 export function* initProviders() {
@@ -41,10 +40,7 @@ function* initProvider(chainId: ChainId, manager: ProviderManager) {
       logger.debug('providerSaga', 'initProvider', 'Provider already exists for:', chainId)
       return
     }
-    const provider = yield* call(createProvider, chainId, manager)
-    const blockChannel = createBlockChannel(provider, chainId)
-    const blockWatcher = yield* spawn(blockChannelWatcher, blockChannel, chainId)
-    manager.setProviderBlockWatcher(chainId, blockWatcher)
+    yield* call(createProvider, chainId, manager)
   } catch (error) {
     // TODO surface to UI when there's a global error modal setup
     logger.error(
@@ -61,10 +57,6 @@ function* destroyProvider(chainId: ChainId, manager: ProviderManager) {
   if (!manager.hasProvider(chainId)) {
     logger.debug('providerSaga', 'destroyProvider', 'Provider does not exists for:', chainId)
     return
-  }
-  const blockWatcher = manager.getProviderBlockWatcher(chainId)
-  if (blockWatcher) {
-    yield* cancel(blockWatcher)
   }
   manager.removeProvider(chainId)
 }

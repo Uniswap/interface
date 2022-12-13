@@ -141,20 +141,6 @@ export class ProviderManager {
     return this._providers
   }
 
-  getProviderBlockWatcher(chainId: ChainId) {
-    if (!this._providers[chainId]) {
-      throw new Error(`No provider initialized for chain: ${chainId}`)
-    }
-    return this._providers[chainId]?.blockWatcher
-  }
-
-  setProviderBlockWatcher(chainId: ChainId, watcher: Task) {
-    if (!this._providers[chainId]) {
-      throw new Error(`No provider initialized for chain: ${chainId}`)
-    }
-    this._providers[chainId]!.blockWatcher = watcher
-  }
-
   private async initProvider(chainId: ChainId) {
     try {
       logger.info(

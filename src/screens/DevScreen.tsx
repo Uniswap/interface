@@ -10,7 +10,6 @@ import { Box } from 'src/components/layout/Box'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
-import { useCurrentBlockTimestamp } from 'src/features/blocks/useCurrentBlockTimestamp'
 import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
@@ -51,8 +50,6 @@ export function DevScreen() {
   const onToggleFlashbots = (enabled: boolean) => {
     dispatch(toggleFlashbots(enabled))
   }
-
-  const blockTimestamp = useCurrentBlockTimestamp(currentChain)
 
   const onPressShowError = () => {
     const address = activeAccount?.address
@@ -134,9 +131,6 @@ export function DevScreen() {
           </Text>
           <Text color="textPrimary" mt="sm" textAlign="center">
             {`Current Chain: ${currentChain}`}
-          </Text>
-          <Text color="textPrimary" mt="sm" textAlign="center">
-            {`Block Timestamp: ${blockTimestamp}`}
           </Text>
         </Box>
       </ScrollView>

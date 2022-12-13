@@ -6186,11 +6186,6 @@
     "@ethersproject/providers" "^5.7.2"
     "@ethersproject/strings" "^5.7.0"
 
-"@uniswap/redux-multicall@1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/redux-multicall/-/redux-multicall-1.1.0.tgz#1d974df6fe5964990f59cc7de8823cdef2e87b48"
-  integrity sha512-SaHlDZZL/PzWkD9raey/WJ2OgGmfiong/cqQXMfp8baHeXz1HdqriJt/I0d43dczSp5fjp40ZFGF7/qoepRXXg==
-
 "@uniswap/router-sdk@1.4.0", "@uniswap/router-sdk@^1.4.0":
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@uniswap/router-sdk/-/router-sdk-1.4.0.tgz#0e8d49f37b36e74b6a70ec257ec0561bf1f249c3"

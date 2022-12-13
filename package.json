@@ -73,7 +73,6 @@
     "@shopify/restyle": "1.6.1",
     "@uniswap/ethers-rs-mobile": "0.0.1",
     "@uniswap/permit2-sdk": "1.0.0",
-    "@uniswap/redux-multicall": "1.1.0",
     "@uniswap/router-sdk": "1.4.0",
     "@uniswap/sdk-core": "3.1.0",
     "@uniswap/universal-router-sdk": "1.1.1",

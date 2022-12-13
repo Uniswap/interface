@@ -2,7 +2,6 @@ import { combineReducers } from '@reduxjs/toolkit'
 import { monitoredSagaReducers } from 'src/app/rootSaga'
 import { onChainBalanceApi } from 'src/features/balances/api'
 import { biometricSettingsReducer } from 'src/features/biometrics/slice'
-import { blocksReducer } from 'src/features/blocks/blocksSlice'
 import { chainsReducer } from 'src/features/chains/chainsSlice'
 import { cloudBackupReducer } from 'src/features/CloudBackup/cloudBackupSlice'
 import { passwordLockoutReducer } from 'src/features/CloudBackup/passwordLockoutSlice'
@@ -14,7 +13,6 @@ import { fiatOnRampApi } from 'src/features/fiatOnRamp/api'
 import { forceUpgradeApi } from 'src/features/forceUpgrade/forceUpgradeApi'
 import { gasApi } from 'src/features/gas/api'
 import { modalsReducer } from 'src/features/modals/modalSlice'
-import { multicall } from 'src/features/multicall'
 import { notificationReducer } from 'src/features/notifications/notificationSlice'
 import { providersReducer } from 'src/features/providers/providerSlice'
 import { routingApi } from 'src/features/routing/routingApi'
@@ -28,12 +26,10 @@ export const rootReducer = combineReducers({
   [fiatOnRampApi.reducerPath]: fiatOnRampApi.reducer,
   [forceUpgradeApi.reducerPath]: forceUpgradeApi.reducer,
   [gasApi.reducerPath]: gasApi.reducer,
-  [multicall.reducerPath]: multicall.reducer,
   [onChainBalanceApi.reducerPath]: onChainBalanceApi.reducer,
   [routingApi.reducerPath]: routingApi.reducer,
   [trmApi.reducerPath]: trmApi.reducer,
   biometricSettings: biometricSettingsReducer,
-  blocks: blocksReducer,
   chains: chainsReducer,
   favorites: favoritesReducer,
   modals: modalsReducer,

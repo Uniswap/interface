@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import dayjs from 'dayjs'
 import { ChainId } from 'src/constants/chains'
-import { BlockState } from 'src/features/blocks/blocksSlice'
 import { ChainsState } from 'src/features/chains/chainsSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { TransactionState } from 'src/features/transactions/slice'
@@ -251,8 +250,8 @@ export const migrations = {
       { byChainId: {} }
     )
 
-    const blockState: BlockState | undefined = newState?.blocks
-    const newBlockState = Object.keys(blockState?.byChainId ?? {}).reduce<BlockState>(
+    const blockState: any | undefined = newState?.blocks
+    const newBlockState = Object.keys(blockState?.byChainId ?? {}).reduce<any>(
       (tempState, chainIdString) => {
         const chainId = toSupportedChainId(chainIdString)
         if (!chainId) return tempState
@@ -446,5 +445,10 @@ export const migrations = {
     }
 
     return { ...newState, transactions: newTransactionState }
+  },
+
+  31: function emptyMigration(state: any) {
+    // no persisted state removed but need to update schema
+    return state
   },
 }

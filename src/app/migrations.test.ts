@@ -40,7 +40,6 @@ import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { initialBiometricsSettingsState } from 'src/features/biometrics/slice'
-import { BlockState, initialBlockState } from 'src/features/blocks/blocksSlice'
 import { ChainsState, initialChainsState } from 'src/features/chains/chainsSlice'
 import { initialCloudBackupState } from 'src/features/CloudBackup/cloudBackupSlice'
 import { initialPasswordLockoutState } from 'src/features/CloudBackup/passwordLockoutSlice'
@@ -104,7 +103,7 @@ describe('Redux state migrations', () => {
     // Add new slices here!
     const initialState = {
       biometricSettings: initialBiometricsSettingsState,
-      blocks: initialBlockState,
+      blocks: { byChainId: {} },
       chains: initialChainsState,
       cloudBackup: initialCloudBackupState,
       ens: { ensForAddress: {} },
@@ -688,7 +687,7 @@ describe('Redux state migrations', () => {
       },
     }
 
-    const blocks: BlockState = {
+    const blocks = {
       byChainId: {
         [ChainId.Mainnet]: { latestBlockNumber: 123456789 },
         [ChainId.Goerli]: { latestBlockNumber: 123456789 },
