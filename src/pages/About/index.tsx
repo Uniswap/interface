@@ -2,13 +2,12 @@ import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
 import { ButtonOutlined } from 'components/Button'
 import { useLayoutEffect, useRef, useState } from 'react'
-import { BookOpen, Globe, Heart, Twitter } from 'react-feather'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 
 import Card from './Card'
-import { CARDS, STEPS } from './constants'
+import { CARDS, SOCIAL_LINKS, STEPS } from './constants'
 import backgroundImgSrcDark from './images/About_BG_Dark.jpg'
 import backgroundImgSrcLight from './images/About_BG_Light.jpg'
 import Step from './Step'
@@ -276,18 +275,11 @@ export default function About() {
           </div>
           <Footer>
             <FooterLinks>
-              <FooterLink rel="noopener noreferrer" target="_blank" href="https://support.uniswap.org">
-                <Globe /> Support
-              </FooterLink>
-              <FooterLink rel="noopener noreferrer" target="_blank" href="https://twitter.com/uniswap">
-                <Twitter /> Twitter
-              </FooterLink>
-              <FooterLink rel="noopener noreferrer" target="_blank" href="https://uniswap.org/blog">
-                <BookOpen /> Blog
-              </FooterLink>
-              <FooterLink rel="noopener noreferrer" target="_blank" href="https://boards.greenhouse.io/uniswaplabs">
-                <Heart /> Careers
-              </FooterLink>
+              {SOCIAL_LINKS.map(({ title, Icon, href }) => (
+                <FooterLink rel="noopener noreferrer" target="_blank" href={href} key={title}>
+                  <Icon /> {title}
+                </FooterLink>
+              ))}
             </FooterLinks>
             <Copyright>© {new Date().getFullYear()} Uniswap Labs</Copyright>
           </Footer>

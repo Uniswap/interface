@@ -1,3 +1,5 @@
+import { BookOpen, Globe, Heart, Twitter } from 'react-feather'
+
 import darkNftCardImgSrc from './images/darkNftCard.png'
 import darkSwapSrc from './images/darkSwap.png'
 import darkSwapCardImgSrc from './images/darkSwapCard.png'
@@ -43,5 +45,28 @@ export const STEPS = [
     description: 'Trade crypto and NFTs through Uniswap’s platform',
     lightImgSrc: lightSwapSrc,
     darkImgSrc: darkSwapSrc,
+  },
+]
+
+export const SOCIAL_LINKS = [
+  {
+    title: 'Support',
+    Icon: Globe,
+    href: 'https://support.uniswap.org',
+  },
+  {
+    title: 'Twitter',
+    Icon: Twitter,
+    href: 'https://twitter.com/uniswap',
+  },
+  {
+    title: 'Blog',
+    Icon: BookOpen,
+    href: 'https://uniswap.org/blog',
+  },
+  {
+    title: 'Careers',
+    Icon: Heart,
+    href: 'https://boards.greenhouse.io/uniswaplabs',
   },
 ]
