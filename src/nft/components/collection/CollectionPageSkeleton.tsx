@@ -15,11 +15,11 @@ const CollectionDescriptionSection = styled(Column)`
 `
 
 const StyledColumn = styled(Column)<{ isBagExpanded: boolean }>`
-  width: ${({ isBagExpanded }) => (isBagExpanded ? `calc(100% - ${BAG_WIDTH}px)` : '100%')};
+  width: ${({ isBagExpanded }) => (isBagExpanded ? `calc(100% - ${BAG_WIDTH + 16}px)` : '100%')};
   align-self: start;
 
   @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.xxxl}px`}) {
-    width: ${({ isBagExpanded }) => (isBagExpanded ? `calc(100% - ${XXXL_BAG_WIDTH}px)` : '100%')};
+    width: ${({ isBagExpanded }) => (isBagExpanded ? `calc(100% - ${XXXL_BAG_WIDTH + 16}px)` : '100%')};
   }
 `
 

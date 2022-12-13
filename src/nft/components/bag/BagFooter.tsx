@@ -155,7 +155,7 @@ export const BagFooter = ({
   return (
     <FooterContainer>
       <Footer>
-        <Column gap="4" paddingTop="8" paddingBottom="20">
+        <Column gap="4" paddingTop="8" paddingBottom={warningText ? '8' : '20'}>
           <Row justifyContent="space-between">
             <Box>
               <ThemedText.HeadlineSmall>Total</ThemedText.HeadlineSmall>
