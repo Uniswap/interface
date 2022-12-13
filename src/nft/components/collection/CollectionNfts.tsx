@@ -177,17 +177,17 @@ const MarketNameWrapper = styled(Row)`
   gap: 8px;
 `
 
-export const LoadingAssets = ({ count }: { count?: number }) => (
+export const LoadingAssets = ({ count, height }: { count?: number; height?: number }) => (
   <>
     {Array.from(Array(count ?? ASSET_PAGE_SIZE), (_, index) => (
-      <CollectionAssetLoading key={index} />
+      <CollectionAssetLoading key={index} height={height} />
     ))}
   </>
 )
 
-const CollectionNftsLoading = () => (
+const CollectionNftsLoading = ({ height }: { height?: number }) => (
   <Box width="full" className={styles.assetList}>
-    <LoadingAssets />
+    <LoadingAssets height={height} />
   </Box>
 )
 
@@ -477,6 +477,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   useEffect(() => {
     setUniformAspectRatio(UniformAspectRatios.unset)
+    setRenderedHeight(undefined)
   }, [contractAddress])
 
   useEffect(() => {
@@ -616,7 +617,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         <InfiniteScroll
           next={handleNextPageLoad}
           hasMore={hasNext}
-          loader={Boolean(hasNext && hasNfts) && <LoadingAssets />}
+          loader={Boolean(hasNext && hasNfts) && <LoadingAssets height={renderedHeight} />}
           dataLength={collectionAssets?.length ?? 0}
           style={{ overflow: 'unset' }}
           className={hasNfts || isLoadingNext ? styles.assetList : undefined}
@@ -639,7 +640,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
               </EmptyCollectionWrapper>
             </Center>
           ) : (
-            <CollectionNftsLoading />
+            <CollectionNftsLoading height={renderedHeight} />
           )}
         </InfiniteScroll>
       </InfiniteScrollWrapper>
