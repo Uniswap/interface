@@ -25,7 +25,7 @@ interface CollectionAssetProps {
   uniformAspectRatio: UniformAspectRatio
   setUniformAspectRatio: (uniformAspectRatio: UniformAspectRatio) => void
   renderedHeight?: number
-  setRenderedHeight: (renderedHeight: number) => void
+  setRenderedHeight: (renderedHeight: number | undefined) => void
 }
 
 const TOOLTIP_TIMEOUT = 2000

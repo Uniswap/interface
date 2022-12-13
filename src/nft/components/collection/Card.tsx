@@ -245,14 +245,19 @@ const handleUniformAspectRatio = (
   e: React.SyntheticEvent<HTMLElement, Event>,
   setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void,
   renderedHeight?: number,
-  setRenderedHeight?: (renderedHeight: number) => void
+  setRenderedHeight?: (renderedHeight: number | undefined) => void
 ) => {
   if (uniformAspectRatio !== UniformAspectRatios.square && setUniformAspectRatio) {
     const height = e.currentTarget.clientHeight
     const width = e.currentTarget.clientWidth
     const ar = parseFloat((width / height).toFixed(1))
 
-    if ((!renderedHeight || renderedHeight !== height) && ar < 1 && setRenderedHeight) {
+    if (
+      (!renderedHeight || renderedHeight !== height) &&
+      ar < 1 &&
+      uniformAspectRatio !== UniformAspectRatios.square &&
+      setRenderedHeight
+    ) {
       setRenderedHeight(height)
     }
 
@@ -260,6 +265,7 @@ const handleUniformAspectRatio = (
       setUniformAspectRatio(ar >= 1 ? UniformAspectRatios.square : ar)
     } else if (uniformAspectRatio !== ar) {
       setUniformAspectRatio(UniformAspectRatios.square)
+      setRenderedHeight && setRenderedHeight(undefined)
     }
   }
 }
@@ -268,7 +274,7 @@ interface ImageProps {
   uniformAspectRatio: UniformAspectRatio
   setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void
   renderedHeight?: number
-  setRenderedHeight?: (renderedHeight: number) => void
+  setRenderedHeight?: (renderedHeight: number | undefined) => void
 }
 
 const Image = ({ uniformAspectRatio, setUniformAspectRatio, renderedHeight, setRenderedHeight }: ImageProps) => {
