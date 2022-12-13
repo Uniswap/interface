@@ -48,6 +48,7 @@ export const ActivitySwitcher = ({
               as="button"
               className={!showActivity ? styles.activitySwitcherToggle : styles.selectedActivitySwitcherToggle}
               onClick={() => !showActivity && toggleActivity()}
+              data-testid="nft-activity"
             >
               Activity
             </Box>

@@ -528,6 +528,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
               disabled={hasErc1155s}
               className={buttonTextMedium}
               onClick={handleSweepClick}
+              data-testid="nft-sweep-button"
             >
               <SweepIcon viewBox="0 0 24 24" width="20px" height="20px" />
               <SweepText fontWeight={600} color="currentColor" lineHeight="20px">
