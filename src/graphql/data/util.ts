@@ -61,7 +61,7 @@ const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
 }
 
 export function validateUrlChainParam(chainName: string | undefined) {
-  return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName] ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : 'ETHEREUM'
+  return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName] ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Ethereum
 }
 
 export const CHAIN_NAME_TO_CHAIN_ID: { [key: string]: SupportedChainId } = {
@@ -95,7 +95,11 @@ export function getTokenDetailsURL(address: string, chainName?: Chain, chainId?:
   }
 }
 
-export function unwrapToken<T extends { address: string | null } | null>(chainId: number, token: T): T {
+export function unwrapToken<
+  T extends {
+    address?: string | null | undefined
+  } | null
+>(chainId: number, token: T): T {
   if (!token?.address) return token
 
   const address = token.address.toLowerCase()

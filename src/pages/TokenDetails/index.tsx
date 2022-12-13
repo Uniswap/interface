@@ -2,11 +2,11 @@ import { filterTimeAtom } from 'components/Tokens/state'
 import TokenDetails from 'components/Tokens/TokenDetails'
 import { TokenDetailsPageSkeleton } from 'components/Tokens/TokenDetails/Skeleton'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
-import { TokenQuery, tokenQuery } from 'graphql/data/Token'
+import { useTokenQueryQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { TokenPriceQuery, tokenPriceQuery } from 'graphql/data/TokenPrice'
 import { CHAIN_NAME_TO_CHAIN_ID, TimePeriod, toHistoryDuration, validateUrlChainParam } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
-import { Suspense, useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useQueryLoader } from 'react-relay'
 import { useParams } from 'react-router-dom'
 
@@ -24,13 +24,13 @@ export default function TokenDetailsPage() {
     [chain, isNative, pageChainId, timePeriod, tokenAddress]
   )
 
-  const [tokenQueryReference, loadTokenQuery] = useQueryLoader<TokenQuery>(tokenQuery)
-  const [priceQueryReference, loadPriceQuery] = useQueryLoader<TokenPriceQuery>(tokenPriceQuery)
+  const { data, loading } = useTokenQueryQuery({
+    variables: {
+      contract,
+    },
+  })
 
-  useEffect(() => {
-    loadTokenQuery({ contract })
-    loadPriceQuery({ contract, duration })
-  }, [contract, duration, loadPriceQuery, loadTokenQuery, timePeriod])
+  const [priceQueryReference, loadPriceQuery] = useQueryLoader<TokenPriceQuery>(tokenPriceQuery)
 
   const refetchTokenPrices = useCallback(
     (t: TimePeriod) => {
@@ -39,19 +39,15 @@ export default function TokenDetailsPage() {
     [contract, loadPriceQuery]
   )
 
-  if (!tokenQueryReference) {
-    return <TokenDetailsPageSkeleton />
-  }
-
-  return (
-    <Suspense fallback={<TokenDetailsPageSkeleton />}>
-      <TokenDetails
-        urlAddress={tokenAddress}
-        chain={chain}
-        tokenQueryReference={tokenQueryReference}
-        priceQueryReference={priceQueryReference}
-        refetchTokenPrices={refetchTokenPrices}
-      />
-    </Suspense>
+  return loading || !data ? (
+    <TokenDetailsPageSkeleton />
+  ) : (
+    <TokenDetails
+      urlAddress={tokenAddress}
+      chain={chain}
+      tokenQuery={data}
+      priceQueryReference={priceQueryReference}
+      refetchTokenPrices={refetchTokenPrices}
+    />
   )
 }

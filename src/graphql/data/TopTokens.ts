@@ -8,20 +8,21 @@ import {
 } from 'components/Tokens/state'
 import { useAtomValue } from 'jotai/utils'
 import { useEffect, useMemo, useState } from 'react'
-import { fetchQuery, useLazyLoadQuery, useRelayEnvironment } from 'react-relay'
+import { fetchQuery, useRelayEnvironment } from 'react-relay'
 
-import type { Chain, TopTokens100Query } from './__generated__/TopTokens100Query.graphql'
 import { TopTokensSparklineQuery } from './__generated__/TopTokensSparklineQuery.graphql'
+import { Chain, TopTokens100QueryQuery, useTopTokens100QueryQuery } from './__generated__/types-and-hooks'
 import { isPricePoint, PricePoint } from './util'
 import { CHAIN_NAME_TO_CHAIN_ID, toHistoryDuration, unwrapToken } from './util'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const topTokens100Query = graphql`
   query TopTokens100Query($duration: HistoryDuration!, $chain: Chain!) {
     topTokens(pageSize: 100, page: 1, chain: $chain) {
-      id @required(action: LOG)
+      id
       name
-      chain @required(action: LOG)
-      address @required(action: LOG)
+      chain
+      address
       symbol
       market(currency: USD) {
         totalValueLocked {
@@ -62,7 +63,7 @@ const tokenSparklineQuery = graphql`
   }
 `
 
-function useSortedTokens(tokens: NonNullable<TopTokens100Query['response']['topTokens']>) {
+function useSortedTokens(tokens: NonNullable<TopTokens100QueryQuery['topTokens']>) {
   const sortMethod = useAtomValue(sortMethodAtom)
   const sortAscending = useAtomValue(sortAscendingAtom)
 
@@ -91,7 +92,7 @@ function useSortedTokens(tokens: NonNullable<TopTokens100Query['response']['topT
   }, [tokens, sortMethod, sortAscending])
 }
 
-function useFilteredTokens(tokens: NonNullable<TopTokens100Query['response']['topTokens']>) {
+function useFilteredTokens(tokens: NonNullable<TopTokens100QueryQuery['topTokens']>) {
   const filterString = useAtomValue(filterStringAtom)
 
   const lowercaseFilterString = useMemo(() => filterString.toLowerCase(), [filterString])
@@ -113,10 +114,12 @@ function useFilteredTokens(tokens: NonNullable<TopTokens100Query['response']['to
 // Number of items to render in each fetch in infinite scroll.
 export const PAGE_SIZE = 20
 
-export type TopToken = NonNullable<NonNullable<TopTokens100Query['response']>['topTokens']>[number]
+// eslint-disable-next-line import/no-unused-modules
+export type TopToken = NonNullable<NonNullable<TopTokens100QueryQuery>['topTokens']>[number]
 export type SparklineMap = { [key: string]: PricePoint[] | undefined }
 interface UseTopTokensReturnValue {
   tokens: TopToken[] | undefined
+  loadingTokens: boolean
   sparklines: SparklineMap
 }
 
@@ -148,9 +151,12 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
     setSparklines({})
   }, [duration])
 
-  const { topTokens } = useLazyLoadQuery<TopTokens100Query>(topTokens100Query, { duration, chain })
-  const mappedTokens = useMemo(() => topTokens?.map((token) => unwrapToken(chainId, token)) ?? [], [chainId, topTokens])
+  const { data, loading: loadingTokens } = useTopTokens100QueryQuery({ variables: { duration, chain } })
+  const mappedTokens = useMemo(
+    () => data?.topTokens?.map((token) => unwrapToken(chainId, token)) ?? [],
+    [chainId, data]
+  )
   const filteredTokens = useFilteredTokens(mappedTokens)
   const sortedTokens = useSortedTokens(filteredTokens)
-  return useMemo(() => ({ tokens: sortedTokens, sparklines }), [sortedTokens, sparklines])
+  return useMemo(() => ({ tokens: sortedTokens, loadingTokens, sparklines }), [loadingTokens, sortedTokens, sparklines])
 }

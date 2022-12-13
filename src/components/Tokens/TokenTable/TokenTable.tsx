@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { PAGE_SIZE, useTopTokens } from 'graphql/data/TopTokens'
 import { validateUrlChainParam } from 'graphql/data/util'
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -64,7 +64,7 @@ const LoadingRows = ({ rowCount }: { rowCount: number }) => (
   </>
 )
 
-export function LoadingTokenTable({ rowCount = PAGE_SIZE }: { rowCount?: number }) {
+function LoadingTokenTable({ rowCount = PAGE_SIZE }: { rowCount?: number }) {
   return (
     <GridContainer>
       <HeaderRow />
@@ -75,14 +75,17 @@ export function LoadingTokenTable({ rowCount = PAGE_SIZE }: { rowCount?: number 
   )
 }
 
-export default function TokenTable({ setRowCount }: { setRowCount: (c: number) => void }) {
+export default function TokenTable() {
   // TODO: consider moving prefetched call into app.tsx and passing it here, use a preloaded call & updated on interval every 60s
   const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
-  const { tokens, sparklines } = useTopTokens(chainName)
+  const { tokens, loadingTokens, sparklines } = useTopTokens(chainName)
+  const [rowCount, setRowCount] = useState(PAGE_SIZE)
+  console.log(tokens, loadingTokens, sparklines)
   setRowCount(tokens?.length ?? PAGE_SIZE)
 
   /* loading and error state */
-  if (!tokens) {
+  if (loadingTokens) return <LoadingTokenTable rowCount={rowCount} />
+  else if (!tokens) {
     return (
       <NoTokensState
         message={
@@ -100,7 +103,7 @@ export default function TokenTable({ setRowCount }: { setRowCount: (c: number) =
       <GridContainer>
         <HeaderRow />
         <TokenDataContainer>
-          {tokens.map(
+          {tokens?.map(
             (token, index) =>
               token && (
                 <LoadedRow
