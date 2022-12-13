@@ -55,6 +55,8 @@ const MOONPAY_SUPPORTED_CURRENCY_CODES = [
   'eth_arbitrum',
   'eth_optimism',
   'eth_polygon',
+  'weth',
+  'wbtc',
   'matic_polygon',
   'polygon',
   'usdc_arbitrum',

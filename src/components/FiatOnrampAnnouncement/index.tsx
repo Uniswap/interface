@@ -10,7 +10,7 @@ import { useFiatOnrampAck } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
-import { isIOS, isMobile } from 'utils/userAgent'
+import { isMobile } from 'utils/userAgent'
 
 const Arrow = styled.div`
   top: -4px;
@@ -127,7 +127,7 @@ export function FiatOnrampAnnouncement() {
     locallyDismissed ||
     sessionStorage.getItem(ANNOUNCEMENT_DISMISSED) ||
     acks.renderCount >= MAX_RENDER_COUNT ||
-    (isIOS && isMobile)
+    isMobile
   ) {
     return null
   }
