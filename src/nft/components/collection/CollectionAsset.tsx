@@ -176,9 +176,23 @@ export const CollectionAsset = ({
               setRenderedHeight={setRenderedHeight}
             />
           ) : assetMediaType === AssetMediaType.Video ? (
-            <Card.Video shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
+            <Card.Video
+              shouldPlay={mediaShouldBePlaying}
+              setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+              uniformAspectRatio={uniformAspectRatio}
+              setUniformAspectRatio={setUniformAspectRatio}
+              renderedHeight={renderedHeight}
+              setRenderedHeight={setRenderedHeight}
+            />
           ) : (
-            <Card.Audio shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
+            <Card.Audio
+              shouldPlay={mediaShouldBePlaying}
+              setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+              uniformAspectRatio={uniformAspectRatio}
+              setUniformAspectRatio={setUniformAspectRatio}
+              renderedHeight={renderedHeight}
+              setRenderedHeight={setRenderedHeight}
+            />
           )}
         </MouseoverTooltip>
       </Card.ImageContainer>

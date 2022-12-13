@@ -240,6 +240,30 @@ const ImageContainer = ({ children, isDisabled = false }: { children: ReactNode;
   <StyledImageContainer isDisabled={isDisabled}>{children}</StyledImageContainer>
 )
 
+const handleUniformAspectRatio = (
+  uniformAspectRatio: UniformAspectRatio,
+  e: React.SyntheticEvent<HTMLElement, Event>,
+  setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void,
+  renderedHeight?: number,
+  setRenderedHeight?: (renderedHeight: number) => void
+) => {
+  if (uniformAspectRatio !== UniformAspectRatios.square && setUniformAspectRatio) {
+    const height = e.currentTarget.clientHeight
+    const width = e.currentTarget.clientWidth
+    const ar = parseFloat((width / height).toFixed(1))
+
+    if ((!renderedHeight || renderedHeight !== height) && ar < 1 && setRenderedHeight) {
+      setRenderedHeight(height)
+    }
+
+    if (uniformAspectRatio === UniformAspectRatios.unset) {
+      setUniformAspectRatio(ar >= 1 ? UniformAspectRatios.square : ar)
+    } else if (uniformAspectRatio !== ar) {
+      setUniformAspectRatio(UniformAspectRatios.square)
+    }
+  }
+}
+
 interface ImageProps {
   uniformAspectRatio: UniformAspectRatio
   setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void
@@ -279,22 +303,7 @@ const Image = ({ uniformAspectRatio, setUniformAspectRatio, renderedHeight, setR
         draggable={false}
         onError={() => setNoContent(true)}
         onLoad={(e) => {
-          if (uniformAspectRatio !== UniformAspectRatios.square && setUniformAspectRatio) {
-            const height = e.currentTarget.clientHeight
-            const width = e.currentTarget.clientWidth
-
-            if ((!renderedHeight || renderedHeight !== height) && setRenderedHeight) {
-              setRenderedHeight(height)
-            }
-
-            const ar = parseFloat((width / height).toFixed(1))
-            if (uniformAspectRatio === UniformAspectRatios.unset) {
-              setUniformAspectRatio(ar >= 1 ? UniformAspectRatios.square : ar)
-            } else if (uniformAspectRatio !== ar) {
-              setUniformAspectRatio(UniformAspectRatios.square)
-            }
-          }
-
+          handleUniformAspectRatio(uniformAspectRatio, e, setUniformAspectRatio, renderedHeight, setRenderedHeight)
           setLoaded(true)
         }}
         className={clsx(hovered && !isMobile && styles.cardImageHover, !loaded && styles.loadingBackground)}
@@ -308,7 +317,14 @@ interface MediaProps {
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
 }
 
-const Video = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
+const Video = ({
+  uniformAspectRatio,
+  setUniformAspectRatio,
+  renderedHeight,
+  setRenderedHeight,
+  shouldPlay,
+  setCurrentTokenPlayingMedia,
+}: MediaProps & ImageProps) => {
   const vidRef = useRef<HTMLVideoElement>(null)
   const { hovered, asset } = useCardContext()
   const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
@@ -322,7 +338,15 @@ const Video = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
   }
 
   if (noContent) {
-    return <NoContentContainer />
+    return (
+      <NoContentContainer
+        height={
+          uniformAspectRatio === UniformAspectRatios.square || uniformAspectRatio === UniformAspectRatios.unset
+            ? undefined
+            : renderedHeight
+        }
+      />
+    )
   }
 
   return (
@@ -333,7 +357,9 @@ const Video = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
           alt={asset.name || asset.tokenId}
           width="full"
           style={{
-            aspectRatio: '1',
+            aspectRatio: `${
+              uniformAspectRatio === UniformAspectRatios.square || !setUniformAspectRatio ? '1' : 'auto'
+            }`,
             transition: 'transform 0.25s ease 0s',
             willChange: 'transform',
           }}
@@ -341,7 +367,8 @@ const Video = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
           objectFit="contain"
           draggable={false}
           onError={() => setNoContent(true)}
-          onLoad={() => {
+          onLoad={(e) => {
+            handleUniformAspectRatio(uniformAspectRatio, e, setUniformAspectRatio, renderedHeight, setRenderedHeight)
             setImageLoaded(true)
           }}
           visibility={shouldPlay ? 'hidden' : 'visible'}
@@ -368,7 +395,9 @@ const Video = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
               ref={vidRef}
               width="full"
               style={{
-                aspectRatio: '1',
+                aspectRatio: `${
+                  uniformAspectRatio === UniformAspectRatios.square || !setUniformAspectRatio ? '1' : 'auto'
+                }`,
               }}
               onEnded={(e) => {
                 e.preventDefault()
@@ -401,7 +430,14 @@ const Video = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
   )
 }
 
-const Audio = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
+const Audio = ({
+  uniformAspectRatio,
+  setUniformAspectRatio,
+  renderedHeight,
+  setRenderedHeight,
+  shouldPlay,
+  setCurrentTokenPlayingMedia,
+}: MediaProps & ImageProps) => {
   const audRef = useRef<HTMLAudioElement>(null)
   const { hovered, asset } = useCardContext()
   const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
@@ -415,7 +451,15 @@ const Audio = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
   }
 
   if (noContent) {
-    return <NoContentContainer />
+    return (
+      <NoContentContainer
+        height={
+          uniformAspectRatio === UniformAspectRatios.square || uniformAspectRatio === UniformAspectRatios.unset
+            ? undefined
+            : renderedHeight
+        }
+      />
+    )
   }
 
   return (
@@ -426,7 +470,9 @@ const Audio = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
           alt={asset.name || asset.tokenId}
           width="full"
           style={{
-            aspectRatio: '1',
+            aspectRatio: `${
+              uniformAspectRatio === UniformAspectRatios.square || !setUniformAspectRatio ? '1' : 'auto'
+            }`,
             transition: 'transform 0.4s ease 0s',
           }}
           src={asset.imageUrl || asset.smallImageUrl}
@@ -434,6 +480,7 @@ const Audio = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
           draggable={false}
           onError={() => setNoContent(true)}
           onLoad={(e) => {
+            handleUniformAspectRatio(uniformAspectRatio, e, setUniformAspectRatio, renderedHeight, setRenderedHeight)
             setImageLoaded(true)
           }}
           className={clsx(hovered && !isMobile && styles.cardImageHover, !imageLoaded && styles.loadingBackground)}

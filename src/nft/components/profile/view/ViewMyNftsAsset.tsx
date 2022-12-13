@@ -31,9 +31,21 @@ const getNftDisplayComponent = (
     case AssetMediaType.Image:
       return <Card.Image uniformAspectRatio={UniformAspectRatios.square} />
     case AssetMediaType.Video:
-      return <Card.Video shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
+      return (
+        <Card.Video
+          shouldPlay={mediaShouldBePlaying}
+          setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+          uniformAspectRatio={UniformAspectRatios.square}
+        />
+      )
     case AssetMediaType.Audio:
-      return <Card.Audio shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
+      return (
+        <Card.Audio
+          shouldPlay={mediaShouldBePlaying}
+          setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+          uniformAspectRatio={UniformAspectRatios.square}
+        />
+      )
   }
 }
 
