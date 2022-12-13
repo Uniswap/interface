@@ -70,7 +70,7 @@ const AppWrapper = styled.div`
   display: flex;
   flex-flow: column;
   align-items: flex-start;
-  height: 100vh;
+  height: 100%;
 `
 
 const BodyWrapper = styled.div`
@@ -87,6 +87,7 @@ const BodyWrapper = styled.div`
 `
 
 const MobileBottomBar = styled.div`
+  z-index: ${Z_INDEX.sticky};
   position: sticky;
   display: flex;
   bottom: 0;
