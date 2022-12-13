@@ -1,5 +1,5 @@
 import { Trace, TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, PageName } from '@uniswap/analytics-events'
+import { BrowserEvent, ElementName, EventName, PageName } from '@uniswap/analytics-events'
 import { BaseButton } from 'components/Button'
 import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
 import Swap from 'pages/Swap'
@@ -212,7 +212,11 @@ export default function Landing() {
   return (
     <Trace page={PageName.LANDING_PAGE} shouldLogImpression>
       <PageWrapper>
-        <TraceEvent events={[BrowserEvent.onClick]} name="Element Clicked" element="">
+        <TraceEvent
+          events={[BrowserEvent.onClick]}
+          name={EventName.ELEMENT_CLICKED}
+          element={ElementName.LANDING_PAGE_SWAP_ELEMENT}
+        >
           <Link to="/swap">
             <LandingSwap />
           </Link>
@@ -225,12 +229,20 @@ export default function Landing() {
             <SubText>Buy, sell, and explore tokens and NFTs</SubText>
           </SubTextContainer>
           <ActionsWrapper>
-            <TraceEvent events={[BrowserEvent.onClick]} name="Element Clicked" element="">
+            <TraceEvent
+              events={[BrowserEvent.onClick]}
+              name={EventName.ELEMENT_CLICKED}
+              element={ElementName.CONTINUE_BUTTON}
+            >
               <ButtonCTA as={Link} to="/swap">
                 <ButtonCTAText>Continue</ButtonCTAText>
               </ButtonCTA>
             </TraceEvent>
-            <TraceEvent events={[BrowserEvent.onClick]} name="Element Clicked" element="">
+            <TraceEvent
+              events={[BrowserEvent.onClick]}
+              name={EventName.ELEMENT_CLICKED}
+              element={ElementName.LEARN_MORE_LINK}
+            >
               <ButtonCTASecondary as={Link} to="/about">
                 <ButtonCTAText>Learn more</ButtonCTAText>
               </ButtonCTASecondary>

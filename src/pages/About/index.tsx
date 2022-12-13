@@ -1,5 +1,5 @@
 import { Trace, TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, PageName } from '@uniswap/analytics-events'
+import { BrowserEvent, ElementName, EventName, PageName } from '@uniswap/analytics-events'
 import { ButtonOutlined } from 'components/Button'
 import { useLayoutEffect, useRef, useState } from 'react'
 import { BookOpen, Globe, Heart, Twitter } from 'react-feather'
@@ -237,12 +237,20 @@ export default function About() {
             <Intro>
               <IntroCopy>The leading decentralized crypto trading protocol, governed by a global community</IntroCopy>
               <ActionsContainer>
-                <TraceEvent events={[BrowserEvent.onClick]} name="Element Clicked" element="">
+                <TraceEvent
+                  events={[BrowserEvent.onClick]}
+                  name={EventName.ELEMENT_CLICKED}
+                  element={ElementName.LEGACY_LANDING_PAGE_LINK}
+                >
                   <InfoButton as="a" rel="noopener noreferrer" href="https://uniswap.org" target="_blank">
                     Learn more<WrappedExternalArrow> ↗</WrappedExternalArrow>
                   </InfoButton>
                 </TraceEvent>
-                <TraceEvent events={[BrowserEvent.onClick]} name="Element Clicked" element="">
+                <TraceEvent
+                  events={[BrowserEvent.onClick]}
+                  name={EventName.ELEMENT_CLICKED}
+                  element={ElementName.DOCS_LINK}
+                >
                   <InfoButton as="a" rel="noopener noreferrer" href="https://docs.uniswap.org" target="_blank">
                     Read docs<WrappedExternalArrow> ↗</WrappedExternalArrow>
                   </InfoButton>
@@ -251,8 +259,13 @@ export default function About() {
             </Intro>
           </Panels>
           <CardGrid>
-            {CARDS.map(({ darkBackgroundImgSrc, lightBackgroundImgSrc, ...card }) => (
-              <TraceEvent events={[BrowserEvent.onClick]} name="Element Clicked" element="" key={card.title}>
+            {CARDS.map(({ darkBackgroundImgSrc, lightBackgroundImgSrc, elementName, ...card }) => (
+              <TraceEvent
+                events={[BrowserEvent.onClick]}
+                name={EventName.ELEMENT_CLICKED}
+                element={elementName}
+                key={card.title}
+              >
                 <Card {...card} backgroundImgSrc={isDarkMode ? darkBackgroundImgSrc : lightBackgroundImgSrc} />
               </TraceEvent>
             ))}
@@ -278,22 +291,38 @@ export default function About() {
           </div>
           <Footer>
             <FooterLinks>
-              <TraceEvent events={[BrowserEvent.onClick]} name="Element Clicked" element="">
+              <TraceEvent
+                events={[BrowserEvent.onClick]}
+                name={EventName.ELEMENT_CLICKED}
+                element={ElementName.SUPPORT_LINK}
+              >
                 <FooterLink rel="noopener noreferrer" target="_blank" href="https://support.uniswap.org">
                   <Globe /> Support
                 </FooterLink>
               </TraceEvent>
-              <TraceEvent events={[BrowserEvent.onClick]} name="Element Clicked" element="">
+              <TraceEvent
+                events={[BrowserEvent.onClick]}
+                name={EventName.ELEMENT_CLICKED}
+                element={ElementName.TWITTER_LINK}
+              >
                 <FooterLink rel="noopener noreferrer" target="_blank" href="https://twitter.com/uniswap">
                   <Twitter /> Twitter
                 </FooterLink>
               </TraceEvent>
-              <TraceEvent events={[BrowserEvent.onClick]} name="Element Clicked" element="">
+              <TraceEvent
+                events={[BrowserEvent.onClick]}
+                name={EventName.ELEMENT_CLICKED}
+                element={ElementName.BLOG_LINK}
+              >
                 <FooterLink rel="noopener noreferrer" target="_blank" href="https://uniswap.org/blog">
                   <BookOpen /> Blog
                 </FooterLink>
               </TraceEvent>
-              <TraceEvent events={[BrowserEvent.onClick]} name="Element Clicked" element="">
+              <TraceEvent
+                events={[BrowserEvent.onClick]}
+                name={EventName.ELEMENT_CLICKED}
+                element={ElementName.CAREERS_LINK}
+              >
                 <FooterLink rel="noopener noreferrer" target="_blank" href="https://boards.greenhouse.io/uniswaplabs">
                   <Heart /> Careers
                 </FooterLink>
