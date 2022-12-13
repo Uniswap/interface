@@ -1,8 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { Fraction, TradeType } from '@uniswap/sdk-core'
+import { useActiveWeb3React } from 'hooks/web3'
 import JSBI from 'jsbi'
 
-import { nativeOnChain } from '../../constants/tokens'
+import { CHAIN_NATIVE_TOKEN_SYMBOL, nativeOnChain } from '../../constants/tokens'
 import { useCurrency, useToken } from '../../hooks/Tokens'
 import useENSName from '../../hooks/useENSName'
 import { VoteOption } from '../../state/governance/types'
@@ -141,7 +142,8 @@ function DelegateSummary({ info: { delegatee } }: { info: DelegateTransactionInf
   return <Trans>Delegate voting power to {ENSName ?? delegatee}</Trans>
 }
 
-function WrapSummary({ info: { chainId, currencyAmountRaw, unwrapped } }: { info: WrapTransactionInfo }) {
+function WrapSummary({ info: { currencyAmountRaw, unwrapped } }: { info: WrapTransactionInfo }) {
+  const { chainId } = useActiveWeb3React()
   const native = chainId ? nativeOnChain(chainId) : undefined
 
   if (unwrapped) {
@@ -150,11 +152,11 @@ function WrapSummary({ info: { chainId, currencyAmountRaw, unwrapped } }: { info
         Unwrap{' '}
         <FormattedCurrencyAmount
           rawAmount={currencyAmountRaw}
-          symbol={native?.wrapped?.symbol ?? 'WETH'}
+          symbol={native?.wrapped?.symbol ?? CHAIN_NATIVE_TOKEN_SYMBOL[chainId || 1]}
           decimals={18}
           sigFigs={6}
         />{' '}
-        to {native?.symbol ?? 'ETH'}
+        to {native?.symbol ?? CHAIN_NATIVE_TOKEN_SYMBOL[chainId || 1]}
       </Trans>
     )
   } else {
@@ -163,11 +165,11 @@ function WrapSummary({ info: { chainId, currencyAmountRaw, unwrapped } }: { info
         Wrap{' '}
         <FormattedCurrencyAmount
           rawAmount={currencyAmountRaw}
-          symbol={native?.symbol ?? 'ETH'}
+          symbol={native?.symbol ?? CHAIN_NATIVE_TOKEN_SYMBOL[chainId || 1]}
           decimals={18}
           sigFigs={6}
         />{' '}
-        to {native?.wrapped?.symbol ?? 'WETH'}
+        to {native?.wrapped?.symbol ?? CHAIN_NATIVE_TOKEN_SYMBOL[chainId || 1]}
       </Trans>
     )
   }

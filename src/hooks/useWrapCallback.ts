@@ -6,6 +6,7 @@ import { tryParseAmount } from '../state/swap/hooks'
 import { TransactionType } from '../state/transactions/actions'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { useCurrencyBalance } from '../state/wallet/hooks'
+import { CHAIN_NATIVE_TOKEN_SYMBOL } from './../constants/tokens'
 import { useWETHContract } from './useContract'
 import { useActiveWeb3React } from './web3'
 
@@ -60,7 +61,11 @@ export default function useWrapCallback(
                 }
               }
             : undefined,
-        inputError: sufficientBalance ? undefined : hasInputAmount ? 'Insufficient ETH balance' : 'Enter ETH amount',
+        inputError: sufficientBalance
+          ? undefined
+          : hasInputAmount
+          ? `Insufficient ${CHAIN_NATIVE_TOKEN_SYMBOL[chainId]} balance`
+          : `Enter ${CHAIN_NATIVE_TOKEN_SYMBOL[chainId]} amount`,
       }
     } else if (weth.equals(inputCurrency) && outputCurrency.isNative) {
       return {
@@ -80,7 +85,15 @@ export default function useWrapCallback(
                 }
               }
             : undefined,
-        inputError: sufficientBalance ? undefined : hasInputAmount ? 'Insufficient WETH balance' : 'Enter WETH amount',
+        inputError: sufficientBalance
+          ? undefined
+          : hasInputAmount
+          ? chainId !== 137
+            ? 'Insufficient WETH balance'
+            : 'Insufficient WMATIC balance'
+          : chainId !== 137
+          ? 'Enter WETH amount'
+          : 'Enter WMATIC amount',
       }
     } else {
       return NOT_APPLICABLE
