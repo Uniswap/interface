@@ -52,7 +52,7 @@ function* initProvider(chainId: ChainId, manager: ProviderManager) {
   }
 }
 
-function* destroyProvider(chainId: ChainId, manager: ProviderManager) {
+function destroyProvider(chainId: ChainId, manager: ProviderManager) {
   logger.debug('providerSaga', 'destroyProvider', 'Disabling a provider for:', chainId)
   if (!manager.hasProvider(chainId)) {
     logger.debug('providerSaga', 'destroyProvider', 'Provider does not exists for:', chainId)
@@ -68,7 +68,7 @@ function* modifyProviders(action: PayloadAction<{ chainId: ChainId; isActive: bo
     if (isActive) {
       yield* call(initProvider, chainId, manager)
     } else {
-      yield* call(destroyProvider, chainId, manager)
+      destroyProvider(chainId, manager)
     }
   } catch (error) {
     // TODO surface to UI when there's a global error modal setup
