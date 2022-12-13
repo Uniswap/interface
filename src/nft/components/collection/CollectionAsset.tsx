@@ -122,7 +122,7 @@ export const CollectionAsset = ({
       removeAssetFromBag={handleRemoveAssetFromBag}
     >
       <Card.ImageContainer isDisabled={asset.notForSale}>
-        <StyledContainer>
+        <StyledContainer data-testid="nft-collection-asset">
           <Tooltip
             text={
               <Box as="span" className={bodySmall} color="textPrimary">

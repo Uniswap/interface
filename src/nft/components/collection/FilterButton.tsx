@@ -34,6 +34,7 @@ export const FilterButton = ({
       height="44"
       whiteSpace="nowrap"
       color="white"
+      data-testid="nft-filter"
     >
       <FilterIcon />
       {!isMobile ? (
