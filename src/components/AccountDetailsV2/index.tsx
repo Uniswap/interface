@@ -9,9 +9,7 @@ import { colors } from 'theme/colors'
 import { TransactionDetails } from '../../state/transactions/types'
 import Loader from '../Loader'
 import LogoView from './LogoView'
-
 import TransactionBody from './TransactionBody'
-
 
 export enum TransactionState {
   Pending,
