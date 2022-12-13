@@ -65,6 +65,17 @@ beforeEach(() => {
     res.headers['origin'] = 'http://localhost:3000'
     res.continue()
   })
+
+  // Graphql security policies are based on Origin headers.
+  // These are stripped by cypress because chromeWebSecurity === false; this adds them back in.
+  cy.intercept('https://api.uniswap.org/v1/graphql', (res) => {
+    res.headers['origin'] = 'https://app.uniswap.org'
+    res.continue()
+  })
+  cy.intercept('https://beta.api.uniswap.org/v1/graphql', (res) => {
+    res.headers['origin'] = 'https://app.uniswap.org'
+    res.continue()
+  })
 })
 
 Cypress.on('uncaught:exception', (_err, _runnable) => {

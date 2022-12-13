@@ -24,7 +24,7 @@ const MobileBottomBar = styled.div`
   left: 0;
   justify-content: space-between;
   padding: 4px 8px;
-  height: 56px;
+  height: ${({ theme }) => theme.mobileBottomBarHeight}px;
   background: ${({ theme }) => theme.backgroundSurface};
   border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
 
@@ -33,20 +33,29 @@ const MobileBottomBar = styled.div`
   }
 `
 
+const Nav = styled.nav`
+  padding: 20px 12px;
+  width: 100%;
+  height: ${({ theme }) => theme.navHeight}px;
+  z-index: 2;
+`
+
 interface MenuItemProps {
   href: string
   id?: NavLinkProps['id']
   isActive?: boolean
   children: ReactNode
+  dataTestId?: string
 }
 
-const MenuItem = ({ href, id, isActive, children }: MenuItemProps) => {
+const MenuItem = ({ href, dataTestId, id, isActive, children }: MenuItemProps) => {
   return (
     <NavLink
       to={href}
       className={isActive ? styles.activeMenuItem : styles.menuItem}
       id={id}
       style={{ textDecoration: 'none' }}
+      data-testid={dataTestId}
     >
       {children}
     </NavLink>
@@ -75,7 +84,7 @@ const PageTabs = () => {
       <MenuItem href={`/tokens/${chainName.toLowerCase()}`} isActive={pathname.startsWith('/tokens')}>
         <Trans>Tokens</Trans>
       </MenuItem>
-      <MenuItem href="/nfts" isActive={isNftPage}>
+      <MenuItem dataTestId="nft-nav" href="/nfts" isActive={isNftPage}>
         <Trans>NFTs</Trans>
       </MenuItem>
       <MenuItem href="/pool" id="pool-nav-link" isActive={isPoolActive}>
@@ -91,8 +100,8 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className={styles.nav}>
-        <Box display="flex" height="full" flexWrap="nowrap" alignItems="stretch">
+      <Nav>
+        <Box display="flex" height="full" flexWrap="nowrap">
           <Box className={styles.leftSideContainer}>
             <Box className={styles.logoContainer}>
               <UniIcon
@@ -113,7 +122,7 @@ const Navbar = () => {
               <PageTabs />
             </Row>
           </Box>
-          <Box className={styles.middleContainer} alignItems="flex-start">
+          <Box className={styles.searchContainer}>
             <SearchBar />
           </Box>
           <Box className={styles.rightSideContainer}>
@@ -135,7 +144,7 @@ const Navbar = () => {
             </Row>
           </Box>
         </Box>
-      </nav>
+      </Nav>
       <MobileBottomBar>
         <PageTabs />
         <Box marginY="4">
