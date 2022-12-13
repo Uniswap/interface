@@ -1,5 +1,5 @@
 import { createAction, createReducer, PayloadActionCreator } from '@reduxjs/toolkit'
-import { call, delay, Effect, put, race, take } from 'redux-saga/effects'
+import { call, CallEffect, delay, Effect, put, race, take, TakeEffect } from 'redux-saga/effects'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { logger } from 'src/utils/logger'
@@ -10,10 +10,22 @@ import { errorToString } from 'src/utils/validation'
  * Use to create simple sagas, for more complex ones use createMonitoredSaga.
  * Note: the wrapped saga this returns must be added to rootSaga.ts
  */
-export function createSaga<SagaParams = void>(saga: (params: SagaParams) => unknown, name: string) {
+export function createSaga<SagaParams = void>(
+  saga: (params: SagaParams) => unknown,
+  name: string
+): {
+  wrappedSaga: () => Generator<Effect, void, unknown>
+  actions: {
+    trigger: PayloadActionCreator<SagaParams>
+  }
+} {
   const triggerAction = createAction<SagaParams>(`${name}/trigger`)
 
-  const wrappedSaga = function* () {
+  const wrappedSaga = function* (): Generator<
+    CallEffect<unknown> | TakeEffect,
+    never,
+    Effect<unknown, unknown>
+  > {
     while (true) {
       try {
         const trigger: Effect = yield take(triggerAction.type)
@@ -70,7 +82,11 @@ export function createMonitoredSaga<SagaParams = void>(
   saga: (params: SagaParams) => unknown,
   name: string,
   options?: MonitoredSagaOptions
-) {
+  // TODO(MOB-3857): Make return type for this function and the one below more explicit and specific.
+  // Types are a little tricky with these generator functions.
+  // https://stackoverflow.com/questions/66893967/typing-generator-functions-in-redux-saga-with-typescript
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): any {
   const triggerAction = createAction<SagaParams>(`${name}/trigger`)
   const cancelAction = createAction<void>(`${name}/cancel`)
   const statusAction = createAction<SagaStatus>(`${name}/progress`)
@@ -93,7 +109,8 @@ export function createMonitoredSaga<SagaParams = void>(
       })
   )
 
-  const wrappedSaga = function* () {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const wrappedSaga = function* (): any {
     while (true) {
       try {
         const trigger: Effect = yield take(triggerAction.type)

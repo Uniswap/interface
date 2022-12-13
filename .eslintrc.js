@@ -151,6 +151,16 @@ module.exports = {
         'jest/globals': true,
       },
     },
+    // {
+    //   // enable the rule specifically for TypeScript files
+    //   files: ['*.ts', '*.mts', '*.cts', '*.tsx'],
+    //   rules: {
+    //     '@typescript-eslint/explicit-function-return-type': [
+    //       'error',
+    //       { allowedNames: ['useEffect'] },
+    //     ],
+    //   },
+    // },
     {
       files: ['*.json'],
       rules: {

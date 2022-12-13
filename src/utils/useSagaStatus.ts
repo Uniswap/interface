@@ -1,10 +1,14 @@
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { monitoredSagas } from 'src/app/rootSaga'
-import { SagaStatus } from 'src/utils/saga'
+import { SagaState, SagaStatus } from 'src/utils/saga'
 
 // Convenience hook to get the status + error of an active saga
-export function useSagaStatus(sagaName: string, onSuccess?: () => void, resetSagaOnSuccess = true) {
+export function useSagaStatus(
+  sagaName: string,
+  onSuccess?: () => void,
+  resetSagaOnSuccess = true
+): SagaState {
   const dispatch = useAppDispatch()
   const sagaState = useAppSelector((s) => s.saga[sagaName])
   if (!sagaState) {

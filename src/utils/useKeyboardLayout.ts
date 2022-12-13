@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Keyboard, KeyboardEvent, useWindowDimensions } from 'react-native'
 
-export function useKeyboardLayout() {
+export function useKeyboardLayout(): { isVisible: boolean; containerHeight: number } {
   const window = useWindowDimensions()
 
   const [keyboardPosition, setKeyboardPosition] = useState(window.height)

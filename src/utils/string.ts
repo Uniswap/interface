@@ -1,10 +1,10 @@
-export function trimToLength(value: string, maxLength: number) {
+export function trimToLength(value: string, maxLength: number): string {
   if (!value) return ''
   const trimmed = value.trim()
   return trimmed.length > maxLength ? trimmed.substring(0, maxLength) + '...' : trimmed
 }
 
-export function normalizeTextInput(input: string, toLowerCase = true) {
+export function normalizeTextInput(input: string, toLowerCase = true): string {
   // Trim and replace all white spaces with a single space
   const trimmed = input.trim().replace(/\s+/g, ' ')
   return toLowerCase ? trimmed.toLowerCase() : trimmed

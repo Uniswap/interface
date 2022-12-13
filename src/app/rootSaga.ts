@@ -67,8 +67,13 @@ const sagas = [
   cloudBackupsManagerSaga,
 ]
 
+interface MonitoredSaga {
+  // TODO(MOB-3857): Add more specific types
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any
+}
 // All monitored sagas must be included here
-export const monitoredSagas = {
+export const monitoredSagas: Record<string, MonitoredSaga> = {
   [createAccountSagaName]: {
     name: createAccountSagaName,
     wrappedSaga: createAccountSaga,

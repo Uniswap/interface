@@ -6,7 +6,7 @@ import DeviceInfo from 'react-native-device-info'
  * DEV: AppSemVer.BuildNumber: e.g. 1.2.3.233
  * PROD: AppSemVer: eg. 1
  */
-export function getFullAppVersion() {
+export function getFullAppVersion(): string {
   const version = DeviceInfo.getVersion()
   const buildVersion = DeviceInfo.getBuildNumber()
 

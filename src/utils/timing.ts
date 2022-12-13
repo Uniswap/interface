@@ -2,11 +2,14 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 export const DEFAULT_DELAY = 200
 
-export function sleep(milliseconds: number) {
+export function sleep(milliseconds: number): Promise<boolean> {
   return new Promise((resolve) => setTimeout(() => resolve(true), milliseconds))
 }
 
-export async function promiseTimeout<T>(promise: Promise<T>, milliseconds: number) {
+export async function promiseTimeout<T>(
+  promise: Promise<T>,
+  milliseconds: number
+): Promise<T | null> {
   // Create a promise that rejects in <ms> milliseconds
   const timeout = new Promise<null>((resolve) => {
     const id = setTimeout(() => {
@@ -24,7 +27,10 @@ export async function promiseTimeout<T>(promise: Promise<T>, milliseconds: numbe
  * @param promise to execute
  * @param milliseconds length of minimum delay time in ms
  */
-export async function promiseMinDelay(promise: Promise<unknown>, milliseconds: number) {
+export async function promiseMinDelay(
+  promise: Promise<unknown>,
+  milliseconds: number
+): Promise<unknown> {
   const minDelay = new Promise<null>((resolve) => {
     const id = setTimeout(() => {
       clearTimeout(id)
@@ -37,7 +43,11 @@ export async function promiseMinDelay(promise: Promise<unknown>, milliseconds: n
 }
 
 // https://usehooks-typescript.com/react-hook/use-interval
-export function useInterval(callback: () => void, delay: number | null, immediateStart?: boolean) {
+export function useInterval(
+  callback: () => void,
+  delay: number | null,
+  immediateStart?: boolean
+): void {
   const savedCallback = useRef<() => void | null>()
 
   // Remember the latest callback.
@@ -47,7 +57,7 @@ export function useInterval(callback: () => void, delay: number | null, immediat
 
   // Set up the interval.
   useEffect(() => {
-    const tick = () => {
+    const tick = (): void => {
       if (typeof savedCallback?.current !== 'undefined') {
         savedCallback?.current()
       }

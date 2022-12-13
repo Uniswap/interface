@@ -4,3 +4,4 @@ src/abis/types
 src/abis/uniswapV3
 generated*.ts
 __generated__/
+.eslintrc.js

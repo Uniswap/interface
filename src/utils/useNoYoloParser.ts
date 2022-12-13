@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { config } from 'src/config'
 import { ChainId } from 'src/constants/chains'
 
-export function useNoYoloParser(chainId: ChainId) {
+export function useNoYoloParser(chainId: ChainId): Parser {
   const parser = useMemo(() => {
     // TODO: use better ABI Fetchers and/or our own Infura nodes for all chains.
     const abiFetchers = getAbiFetchersForChainId(chainId, {
