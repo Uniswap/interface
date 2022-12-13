@@ -170,7 +170,7 @@ export default forwardRef<ListOrderHandle>(function ListLimitOrder(props, ref) {
             },
             controller.current.signal,
           )
-          orders = response.orders
+          orders = response.orders ?? []
           totalItems = response.pagination.totalItems ?? 0
         }
         setOrders(orders)

@@ -140,7 +140,7 @@ export const CHAINS_SUPPORT_NEW_POOL_FARM_API = [
   ChainId.OPTIMISM,
   ChainId.AVAXMAINNET,
   ChainId.ARBITRUM,
-  ChainId.MAINNET,
+  // ChainId.MAINNET,
   ChainId.CRONOS,
   ChainId.BTTC,
   ChainId.VELAS,
