@@ -6,6 +6,7 @@ import { tryParseAmount } from '../state/swap/hooks'
 import { TransactionType } from '../state/transactions/actions'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { useCurrencyBalance } from '../state/wallet/hooks'
+import { CHAIN_NATIVE_TOKEN_SYMBOL } from './../constants/tokens'
 import { useWETHContract } from './useContract'
 import { useActiveWeb3React } from './web3'
 
@@ -63,12 +64,8 @@ export default function useWrapCallback(
         inputError: sufficientBalance
           ? undefined
           : hasInputAmount
-          ? chainId !== 137
-            ? 'Insufficient ETH balance'
-            : 'Insufficient MATIC balance'
-          : chainId !== 137
-          ? 'Enter ETH amount'
-          : 'Enter MATIC amount',
+          ? `Insufficient ${CHAIN_NATIVE_TOKEN_SYMBOL[chainId]} balance`
+          : `Enter ${CHAIN_NATIVE_TOKEN_SYMBOL[chainId]} amount`,
       }
     } else if (weth.equals(inputCurrency) && outputCurrency.isNative) {
       return {

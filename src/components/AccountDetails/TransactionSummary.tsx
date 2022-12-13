@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { Fraction, TradeType } from '@uniswap/sdk-core'
+import { useActiveWeb3React } from 'hooks/web3'
 import JSBI from 'jsbi'
 
-import { nativeOnChain } from '../../constants/tokens'
+import { CHAIN_NATIVE_TOKEN_SYMBOL, nativeOnChain } from '../../constants/tokens'
 import { useCurrency, useToken } from '../../hooks/Tokens'
 import useENSName from '../../hooks/useENSName'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { VoteOption } from '../../state/governance/types'
 import {
   AddFundingTransactionInfo,
@@ -80,11 +80,6 @@ function UnStakeSummary() {
   return <Trans>UnStake Summary called</Trans>
 }
 
-function GetChainId() {
-  const { chainId } = useActiveWeb3React()
-  return chainId
-}
-
 function ClaimSummary({ info: { recipient, uniAmountRaw } }: { info: ClaimTransactionInfo }) {
   const { ENSName } = useENSName()
   return typeof uniAmountRaw === 'string' ? (
@@ -147,7 +142,8 @@ function DelegateSummary({ info: { delegatee } }: { info: DelegateTransactionInf
   return <Trans>Delegate voting power to {ENSName ?? delegatee}</Trans>
 }
 
-function WrapSummary({ info: { chainId, currencyAmountRaw, unwrapped } }: { info: WrapTransactionInfo }) {
+function WrapSummary({ info: { currencyAmountRaw, unwrapped } }: { info: WrapTransactionInfo }) {
+  const { chainId } = useActiveWeb3React()
   const native = chainId ? nativeOnChain(chainId) : undefined
 
   if (unwrapped) {
@@ -156,11 +152,11 @@ function WrapSummary({ info: { chainId, currencyAmountRaw, unwrapped } }: { info
         Unwrap{' '}
         <FormattedCurrencyAmount
           rawAmount={currencyAmountRaw}
-          symbol={native?.wrapped?.symbol ?? GetChainId() !== 137 ? 'WETH' : 'WMATIC'}
+          symbol={native?.wrapped?.symbol ?? CHAIN_NATIVE_TOKEN_SYMBOL[chainId || 1]}
           decimals={18}
           sigFigs={6}
         />{' '}
-        to {native?.symbol ?? GetChainId() !== 137 ? 'ETH' : 'MATIC'}
+        to {native?.symbol ?? CHAIN_NATIVE_TOKEN_SYMBOL[chainId || 1]}
       </Trans>
     )
   } else {
@@ -169,11 +165,11 @@ function WrapSummary({ info: { chainId, currencyAmountRaw, unwrapped } }: { info
         Wrap{' '}
         <FormattedCurrencyAmount
           rawAmount={currencyAmountRaw}
-          symbol={native?.symbol ?? GetChainId() !== 137 ? 'ETH' : 'MATIC'}
+          symbol={native?.symbol ?? CHAIN_NATIVE_TOKEN_SYMBOL[chainId || 1]}
           decimals={18}
           sigFigs={6}
         />{' '}
-        to {native?.wrapped?.symbol ?? GetChainId() !== 137 ? 'WETH' : 'WMATIC'}
+        to {native?.wrapped?.symbol ?? CHAIN_NATIVE_TOKEN_SYMBOL[chainId || 1]}
       </Trans>
     )
   }
