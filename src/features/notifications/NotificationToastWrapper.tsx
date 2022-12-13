@@ -51,8 +51,7 @@ export function NotificationToastRouter({ notification }: { notification: AppNot
           return <WrapNotification notification={notification} />
         case TransactionType.Send:
         case TransactionType.Receive:
-          const { assetType } = notification
-          if (assetType === AssetType.Currency) {
+          if (notification.assetType === AssetType.Currency) {
             return <TransferCurrencyNotification notification={notification} />
           } else {
             return <TransferNFTNotification notification={notification} />

@@ -31,8 +31,8 @@ describe(unnestObject, () => {
   })
 
   it('handles arrays', () => {
-    expect(unnestObject({ a: [1, 2, 3], b: [{ c: 1 }, { d: 2 }] })).toEqual({
-      'a.0': 1,
+    expect(unnestObject({ a: ['constructor', 2, 3], b: [{ c: 1 }, { d: 2 }] })).toEqual({
+      'a.0': 'constructor',
       'a.1': 2,
       'a.2': 3,
       'b.0.c': 1,

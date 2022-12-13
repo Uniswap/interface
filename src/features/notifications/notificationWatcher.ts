@@ -25,138 +25,130 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
     txId: id,
   }
 
-  switch (typeInfo.type) {
-    case TransactionType.Approve:
-      const shouldSuppressNotification = yield* call(
-        suppressApproveNotification,
-        from,
-        chainId,
-        addedTime
-      )
-      if (!shouldSuppressNotification) {
-        yield* put(
-          pushNotification({
-            ...baseNotificationData,
-            type: AppNotificationType.Transaction,
-            txType: TransactionType.Approve,
-            tokenAddress: typeInfo.tokenAddress,
-            spender: typeInfo.spender,
-          })
-        )
-      }
-      break
-    case TransactionType.Swap:
-      const inputCurrencyAmountRaw = getInputAmountFromTrade(typeInfo)
-      const outputCurrencyAmountRaw = getOutputAmountFromTrade(typeInfo)
+  if (typeInfo.type === TransactionType.Approve) {
+    const shouldSuppressNotification = yield* call(
+      suppressApproveNotification,
+      from,
+      chainId,
+      addedTime
+    )
+    if (!shouldSuppressNotification) {
       yield* put(
         pushNotification({
           ...baseNotificationData,
           type: AppNotificationType.Transaction,
-          txType: TransactionType.Swap,
-          inputCurrencyId: typeInfo.inputCurrencyId,
-          outputCurrencyId: typeInfo.outputCurrencyId,
-          inputCurrencyAmountRaw,
-          outputCurrencyAmountRaw,
-          tradeType: typeInfo.tradeType,
+          txType: TransactionType.Approve,
+          tokenAddress: typeInfo.tokenAddress,
+          spender: typeInfo.spender,
         })
       )
-      break
-    case TransactionType.Wrap:
+    }
+  } else if (typeInfo.type === TransactionType.Swap) {
+    const inputCurrencyAmountRaw = getInputAmountFromTrade(typeInfo)
+    const outputCurrencyAmountRaw = getOutputAmountFromTrade(typeInfo)
+    yield* put(
+      pushNotification({
+        ...baseNotificationData,
+        type: AppNotificationType.Transaction,
+        txType: TransactionType.Swap,
+        inputCurrencyId: typeInfo.inputCurrencyId,
+        outputCurrencyId: typeInfo.outputCurrencyId,
+        inputCurrencyAmountRaw,
+        outputCurrencyAmountRaw,
+        tradeType: typeInfo.tradeType,
+      })
+    )
+  } else if (typeInfo.type === TransactionType.Wrap) {
+    yield* put(
+      pushNotification({
+        ...baseNotificationData,
+        type: AppNotificationType.Transaction,
+        txType: TransactionType.Wrap,
+        currencyAmountRaw: typeInfo.currencyAmountRaw,
+        unwrapped: typeInfo.unwrapped,
+      })
+    )
+  } else if (typeInfo.type === TransactionType.Send) {
+    if (typeInfo?.assetType === AssetType.Currency && typeInfo?.currencyAmountRaw) {
       yield* put(
         pushNotification({
           ...baseNotificationData,
           type: AppNotificationType.Transaction,
-          txType: TransactionType.Wrap,
+          txType: TransactionType.Send,
+          assetType: typeInfo.assetType,
+          tokenAddress: typeInfo.tokenAddress,
           currencyAmountRaw: typeInfo.currencyAmountRaw,
-          unwrapped: typeInfo.unwrapped,
+          recipient: typeInfo.recipient,
         })
       )
-      break
-    case TransactionType.Send:
-      if (typeInfo?.assetType === AssetType.Currency && typeInfo?.currencyAmountRaw) {
-        yield* put(
-          pushNotification({
-            ...baseNotificationData,
-            type: AppNotificationType.Transaction,
-            txType: TransactionType.Send,
-            assetType: typeInfo.assetType,
-            tokenAddress: typeInfo.tokenAddress,
-            currencyAmountRaw: typeInfo.currencyAmountRaw,
-            recipient: typeInfo.recipient,
-          })
-        )
-      } else if (
-        (typeInfo?.assetType === AssetType.ERC1155 || typeInfo?.assetType === AssetType.ERC721) &&
-        typeInfo?.tokenId
-      ) {
-        yield* put(
-          pushNotification({
-            ...baseNotificationData,
-            type: AppNotificationType.Transaction,
-            txType: TransactionType.Send,
-            assetType: typeInfo.assetType,
-            tokenAddress: typeInfo.tokenAddress,
-            tokenId: typeInfo.tokenId,
-            recipient: typeInfo.recipient,
-          })
-        )
-      }
-      break
-    case TransactionType.Receive:
-      if (
-        typeInfo?.assetType === AssetType.Currency &&
-        typeInfo?.currencyAmountRaw &&
-        typeInfo?.sender
-      ) {
-        yield* put(
-          pushNotification({
-            ...baseNotificationData,
-            type: AppNotificationType.Transaction,
-            txType: TransactionType.Receive,
-            assetType: typeInfo.assetType,
-            tokenAddress: typeInfo.tokenAddress,
-            currencyAmountRaw: typeInfo.currencyAmountRaw,
-            sender: typeInfo.sender,
-          })
-        )
-      } else if (
-        (typeInfo?.assetType === AssetType.ERC1155 || typeInfo?.assetType === AssetType.ERC721) &&
-        typeInfo?.tokenId
-      ) {
-        yield* put(
-          pushNotification({
-            ...baseNotificationData,
-            type: AppNotificationType.Transaction,
-            txType: TransactionType.Receive,
-            assetType: typeInfo.assetType,
-            tokenAddress: typeInfo.tokenAddress,
-            tokenId: typeInfo.tokenId,
-            sender: typeInfo.sender,
-          })
-        )
-      }
-      break
-    case TransactionType.WCConfirm:
-      yield* put(
-        pushNotification({
-          type: AppNotificationType.WalletConnect,
-          event: WalletConnectEvent.TransactionConfirmed,
-          dappName: typeInfo.dapp.name,
-          imageUrl: typeInfo.dapp.icon,
-          chainId: typeInfo.dapp.chain_id,
-        })
-      )
-      break
-    case TransactionType.Unknown:
+    } else if (
+      (typeInfo?.assetType === AssetType.ERC1155 || typeInfo?.assetType === AssetType.ERC721) &&
+      typeInfo?.tokenId
+    ) {
       yield* put(
         pushNotification({
           ...baseNotificationData,
           type: AppNotificationType.Transaction,
-          txType: TransactionType.Unknown,
-          tokenAddress: typeInfo?.tokenAddress,
+          txType: TransactionType.Send,
+          assetType: typeInfo.assetType,
+          tokenAddress: typeInfo.tokenAddress,
+          tokenId: typeInfo.tokenId,
+          recipient: typeInfo.recipient,
         })
       )
-      break
+    }
+  } else if (typeInfo.type === TransactionType.Receive) {
+    if (
+      typeInfo?.assetType === AssetType.Currency &&
+      typeInfo?.currencyAmountRaw &&
+      typeInfo?.sender
+    ) {
+      yield* put(
+        pushNotification({
+          ...baseNotificationData,
+          type: AppNotificationType.Transaction,
+          txType: TransactionType.Receive,
+          assetType: typeInfo.assetType,
+          tokenAddress: typeInfo.tokenAddress,
+          currencyAmountRaw: typeInfo.currencyAmountRaw,
+          sender: typeInfo.sender,
+        })
+      )
+    } else if (
+      (typeInfo?.assetType === AssetType.ERC1155 || typeInfo?.assetType === AssetType.ERC721) &&
+      typeInfo?.tokenId
+    ) {
+      yield* put(
+        pushNotification({
+          ...baseNotificationData,
+          type: AppNotificationType.Transaction,
+          txType: TransactionType.Receive,
+          assetType: typeInfo.assetType,
+          tokenAddress: typeInfo.tokenAddress,
+          tokenId: typeInfo.tokenId,
+          sender: typeInfo.sender,
+        })
+      )
+    }
+  } else if (typeInfo.type === TransactionType.WCConfirm) {
+    yield* put(
+      pushNotification({
+        type: AppNotificationType.WalletConnect,
+        event: WalletConnectEvent.TransactionConfirmed,
+        dappName: typeInfo.dapp.name,
+        imageUrl: typeInfo.dapp.icon,
+        chainId: typeInfo.dapp.chain_id,
+      })
+    )
+  } else if (typeInfo.type === TransactionType.Unknown) {
+    yield* put(
+      pushNotification({
+        ...baseNotificationData,
+        type: AppNotificationType.Transaction,
+        txType: TransactionType.Unknown,
+        tokenAddress: typeInfo?.tokenAddress,
+      })
+    )
   }
 }
 

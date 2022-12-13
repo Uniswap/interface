@@ -17,12 +17,13 @@ export function unnestObject(ob: Record<string, any>) {
   const toReturn: Record<string, string> = {}
 
   for (const i in ob) {
-    if (!ob.hasOwnProperty(i)) continue
+    // `in` is safe because keys are extracted from object properties
+    if (!Object.prototype.hasOwnProperty.call(ob, i)) continue
 
     if (typeof ob[i] === 'object' && ob[i] !== null) {
       const flatObject = unnestObject(ob[i])
       for (const x in flatObject) {
-        if (!flatObject.hasOwnProperty(x)) continue
+        if (!Object.prototype.hasOwnProperty.call(flatObject, x)) continue
 
         toReturn[i + '.' + x] = flatObject[x]
       }

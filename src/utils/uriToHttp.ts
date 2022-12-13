@@ -8,18 +8,20 @@ export function uriToHttp(uri: string): string[] {
   if (!uri) return []
 
   const protocol = uri.split(':')[0].toLowerCase()
-  switch (protocol) {
-    case 'https':
-      return [uri]
-    case 'http':
-      return ['https' + uri.substr(4), uri]
-    case 'ipfs':
-      const hash = uri.match(/^ipfs:(\/\/)?(ipfs\/)?(.*)$/i)?.[3]
-      return [`https://cloudflare-ipfs.com/ipfs/${hash}`, `https://ipfs.io/ipfs/${hash}`]
-    case 'ipns':
-      const name = uri.match(/^ipns:(\/\/)?(.*)$/i)?.[2]
-      return [`https://cloudflare-ipfs.com/ipns/${name}`, `https://ipfs.io/ipns/${name}`]
-    default:
-      return []
+  if (protocol === 'https') {
+    return [uri]
   }
+  if (protocol === 'http') {
+    return ['https' + uri.slice(4), uri]
+  }
+  if (protocol === 'ipfs') {
+    const hash = uri.match(/^ipfs:(\/\/)?(ipfs\/)?(.*)$/i)?.[3]
+    return [`https://cloudflare-ipfs.com/ipfs/${hash}`, `https://ipfs.io/ipfs/${hash}`]
+  }
+  if (protocol === 'ipns') {
+    const name = uri.match(/^ipns:(\/\/)?(.*)$/i)?.[2]
+    return [`https://cloudflare-ipfs.com/ipns/${name}`, `https://ipfs.io/ipns/${name}`]
+  }
+
+  return []
 }

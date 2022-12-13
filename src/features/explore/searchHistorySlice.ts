@@ -51,8 +51,7 @@ export type SearchResult = TokenSearchResult | WalletSearchResult | EtherscanSea
 export function searchResultId(searchResult: SearchResult) {
   switch (searchResult.type) {
     case SearchResultType.Token:
-      const { chainId, address } = searchResult
-      return `token-${chainId}-${address}`
+      return `token-${searchResult.chainId}-${searchResult.address}`
     case SearchResultType.Wallet:
       return `wallet-${searchResult.address}`
     case SearchResultType.Etherscan:
