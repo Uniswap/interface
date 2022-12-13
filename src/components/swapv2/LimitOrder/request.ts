@@ -1,13 +1,19 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import axios from 'axios'
+import { stringify } from 'querystring'
 
 import { LIMIT_ORDER_API_READ, LIMIT_ORDER_API_WRITE } from 'constants/env'
 
 import { LimitOrder, LimitOrderStatus } from './type'
 
 const formatData = (data: any) => data.data.data
-export const getListOrder = (params: any): Promise<{ orders: LimitOrder[]; pagination: { totalItems: number } }> => {
-  return axios.get(`${LIMIT_ORDER_API_READ}/v1/orders`, { params }).then(formatData)
+export const getListOrder = (
+  params: any,
+  signal: AbortSignal,
+): Promise<{ orders: LimitOrder[]; pagination: { totalItems: number } }> => {
+  return fetch(`${LIMIT_ORDER_API_READ}/v1/orders?${stringify(params)}`, { signal })
+    .then(data => data.json())
+    .then(data => data.data)
 }
 
 export const submitOrder = (data: any) => {
