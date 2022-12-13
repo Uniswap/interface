@@ -11,7 +11,7 @@ describe('Testing nfts', () => {
     cy.get(getTestSelector('nft-nav')).first().click()
     cy.get(getTestSelector('nft-nav')).first().should('exist')
     cy.get(getTestSelector('nft-nav')).first().click()
-    cy.get(getTestSelector('nft-trending-collection')).should('have.length', 100)
+    cy.get(getTestSelector('nft-trending-collection')).its('length').should('be.gte', 25)
   })
 
   it('should load pudgy penguin collection page', () => {
