@@ -465,8 +465,6 @@ class ExtendedEther extends Ether {
   private static _cachedExtendedEther: { [chainId: number]: NativeCurrency } = {}
 
   public static onChain(chainId: number): ExtendedEther {
-    console.log("!!!")
-    console.log(chainId)
     return this._cachedExtendedEther[chainId] ?? (this._cachedExtendedEther[chainId] = new ExtendedEther(chainId))
   }
 }
