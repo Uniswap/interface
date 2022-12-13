@@ -217,6 +217,16 @@ const CHAIN_INFO: ChainInfoMap = {
     nativeCurrency: { name: 'Celo', symbol: 'CELO', decimals: 18 },
     defaultListUrl: CELO_LIST,
   },
+  [SupportedChainId.SCROLL]: {
+    networkType: NetworkType.L1,
+    docs: 'https://docs.uniswap.org/',
+    explorer: 'https://l2scan.scroll.io/',
+    infoLink: 'https://info.uniswap.org/#/',
+    label: 'Scroll Pre-Alpha',
+    logoUrl: ethereumLogoUrl,
+    nativeCurrency: { name: 'TSETH', symbol: 'TSETH', decimals: 18 },
+    color: darkTheme.chain_5,
+  },
 }
 
 export function getChainInfo(chainId: SupportedL1ChainId): L1ChainInfo

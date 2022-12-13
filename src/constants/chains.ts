@@ -1,7 +1,7 @@
 /**
  * List of all the networks supported by the Uniswap Interface
  */
-export enum SupportedChainId {
+ export enum SupportedChainId {
   MAINNET = 1,
   ROPSTEN = 3,
   RINKEBY = 4,
@@ -19,6 +19,8 @@ export enum SupportedChainId {
 
   CELO = 42220,
   CELO_ALFAJORES = 44787,
+
+  SCROLL = 534354,
 }
 
 export const CHAIN_IDS_TO_NAMES = {
@@ -35,6 +37,7 @@ export const CHAIN_IDS_TO_NAMES = {
   [SupportedChainId.ARBITRUM_RINKEBY]: 'arbitrum_rinkeby',
   [SupportedChainId.OPTIMISM]: 'optimism',
   [SupportedChainId.OPTIMISM_GOERLI]: 'optimism_goerli',
+  [SupportedChainId.SCROLL]: 'scroll',
 }
 
 /**
@@ -63,6 +66,7 @@ export const UNSUPPORTED_V2POOL_CHAIN_IDS = [
   SupportedChainId.POLYGON,
   SupportedChainId.OPTIMISM,
   SupportedChainId.ARBITRUM_ONE,
+  SupportedChainId.SCROLL,
 ]
 
 export const TESTNET_CHAIN_IDS = [
@@ -90,6 +94,7 @@ export const L1_CHAIN_IDS = [
   SupportedChainId.POLYGON_MUMBAI,
   SupportedChainId.CELO,
   SupportedChainId.CELO_ALFAJORES,
+  SupportedChainId.SCROLL,
 ] as const
 
 export type SupportedL1ChainId = typeof L1_CHAIN_IDS[number]

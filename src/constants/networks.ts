@@ -34,9 +34,7 @@ export const FALLBACK_URLS: { [key in SupportedChainId]: string[] } = {
   ],
   [SupportedChainId.GOERLI]: [
     // "Safe" URLs
-    'https://rpc.goerli.mudit.blog/',
-    // "Fallback" URLs
-    'https://rpc.ankr.com/eth_goerli',
+    'https://kovan.poa.network',
   ],
   [SupportedChainId.KOVAN]: [
     // "Safe" URLs
@@ -87,6 +85,12 @@ export const FALLBACK_URLS: { [key in SupportedChainId]: string[] } = {
     // "Safe" URLs
     `https://alfajores-forno.celo-testnet.org`,
   ],
+  [SupportedChainId.SCROLL]: [
+    // "Safe" URLs
+    'https://rpc.goerli.mudit.blog/',
+    // "Fallback" URLs
+    'https://rpc.ankr.com/eth_goerli',
+  ],
 }
 
 /**
@@ -106,7 +110,7 @@ export const RPC_URLS: { [key in SupportedChainId]: string[] } = {
     `https://ropsten.infura.io/v3/${INFURA_KEY}`,
     ...FALLBACK_URLS[SupportedChainId.ROPSTEN],
   ],
-  [SupportedChainId.GOERLI]: [`https://goerli.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS[SupportedChainId.GOERLI]],
+  [SupportedChainId.GOERLI]: [`https://kovan.poa.network`, ...FALLBACK_URLS[SupportedChainId.GOERLI]],
   [SupportedChainId.KOVAN]: [`https://kovan.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS[SupportedChainId.KOVAN]],
   [SupportedChainId.OPTIMISM]: [
     `https://optimism-mainnet.infura.io/v3/${INFURA_KEY}`,
@@ -117,7 +121,7 @@ export const RPC_URLS: { [key in SupportedChainId]: string[] } = {
     ...FALLBACK_URLS[SupportedChainId.OPTIMISM_GOERLI],
   ],
   [SupportedChainId.ARBITRUM_ONE]: [
-    `https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY}`,
+    `https://arbitrum-mainnet.infura.ioxx/v3/${INFURA_KEY}`,
     ...FALLBACK_URLS[SupportedChainId.ARBITRUM_ONE],
   ],
   [SupportedChainId.ARBITRUM_RINKEBY]: [
@@ -134,4 +138,5 @@ export const RPC_URLS: { [key in SupportedChainId]: string[] } = {
   ],
   [SupportedChainId.CELO]: FALLBACK_URLS[SupportedChainId.CELO],
   [SupportedChainId.CELO_ALFAJORES]: FALLBACK_URLS[SupportedChainId.CELO_ALFAJORES],
+  [SupportedChainId.SCROLL]: FALLBACK_URLS[SupportedChainId.SCROLL],
 }

@@ -185,6 +185,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     CUSD_CELO_ALFAJORES,
     CEUR_CELO_ALFAJORES,
   ],
+  [SupportedChainId.SCROLL]: [nativeOnChain(SupportedChainId.SCROLL), CUSD_CELO_ALFAJORES, CEUR_CELO_ALFAJORES],
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
