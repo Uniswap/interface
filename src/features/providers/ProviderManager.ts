@@ -114,7 +114,7 @@ export class ProviderManager {
     return provider.provider
   }
 
-  getProvider(chainId: ChainId, isFlashbots?: boolean): ethersProviders.Provider {
+  getProvider(chainId: ChainId, isFlashbots?: boolean): ethersProviders.JsonRpcProvider {
     if (isFlashbots) return this.getFlashbotsProvider(chainId)
 
     if (!this._providers[chainId]) {
