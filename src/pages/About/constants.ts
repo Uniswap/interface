@@ -17,7 +17,7 @@ export const CARDS = [
     description: 'Buy, sell, and explore tokens on Ethereum, Polygon, Optimism, and more.',
     darkBackgroundImgSrc: darkSwapCardImgSrc,
     lightBackgroundImgSrc: lightSwapCardImgSrc,
-    elementName: ElementName.ABOUT_PAGE_NFTS_CARD,
+    elementName: ElementName.ABOUT_PAGE_SWAP_CARD,
   },
   {
     to: '/nfts',
@@ -25,7 +25,7 @@ export const CARDS = [
     description: 'Buy and sell NFTs across marketplaces to find more listings at better prices.',
     darkBackgroundImgSrc: darkNftCardImgSrc,
     lightBackgroundImgSrc: lightNftCardImgSrc,
-    elementName: ElementName.ABOUT_PAGE_SWAP_CARD,
+    elementName: ElementName.ABOUT_PAGE_NFTS_CARD,
   },
 ]
 
