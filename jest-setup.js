@@ -2,9 +2,21 @@
 // For example: https://reactnavigation.org/docs/testing/
 
 import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/async-storage-mock'
-import mockRNDeviceInfo from 'react-native-device-info/jest/react-native-device-info-mock'
+import mockRNCNetInfo from '@react-native-community/netinfo/jest/netinfo-mock.js'
 // required polyfill for rtk-query baseQueryFn
 import 'cross-fetch/polyfill'
+import mockRNDeviceInfo from 'react-native-device-info/jest/react-native-device-info-mock'
+
+// avoids polutting console in test runs, while keeping important log levels
+global.console = {
+  ...console,
+  // uncomment to ignore a specific log level
+  log: jest.fn(),
+  debug: jest.fn(),
+  info: jest.fn(),
+  // warn: jest.fn(),
+  // error: jest.fn(),
+}
 
 // Mock Amplitde log reporting
 jest.mock('@amplitude/analytics-react-native', () => ({
@@ -14,13 +26,13 @@ jest.mock('@amplitude/analytics-react-native', () => ({
   track: () => jest.fn(),
 }))
 
-jest.mock('@amplitude/experiment-react-native-client', () =>  ({
+jest.mock('@amplitude/experiment-react-native-client', () => ({
   Experiment: {
     initialize: () => ({
       fetch: jest.fn(),
-      all: jest.fn()
-    })
-  }
+      all: jest.fn(),
+    }),
+  },
 }))
 
 // Mock Sentry crash reporting
@@ -42,12 +54,15 @@ jest.mock('redux-persist', () => {
 })
 
 // Mock vision lib due to native deps
-jest.mock('react-native-vision-camera', () => {})
+jest.mock('react-native-vision-camera', () => ({}))
 
 // Mock expo clipboard lib due to native deps
-jest.mock('expo-clipboard', () => {})
-jest.mock('expo-blur', () => ({BlurView: {}}))
-jest.mock('expo-av', () => {})
+jest.mock('expo-clipboard', () => ({}))
+jest.mock('expo-blur', () => ({ BlurView: {} }))
+jest.mock('expo-av', () => ({}))
+jest.mock('expo-haptics', () => ({ impactAsync: jest.fn(), ImpactFeedbackStyle: jest.fn() }))
+jest.mock('expo-linear-gradient', () => ({}))
+jest.mock('expo-screen-capture', () => ({ addScreenshotListener: jest.fn() }))
 
 // Setup Async Storage mocking: https://react-native-async-storage.github.io/async-storage/docs/advanced/jest/
 jest.mock('@react-native-async-storage/async-storage', () => mockAsyncStorage)
@@ -60,10 +75,16 @@ jest.mock('src/features/providers/providerSaga')
 jest.mock('src/lib/RNEthersRs')
 
 // Mock Firebase packages
-jest.mock('@react-native-firebase/remote-config', () => {})
-jest.mock('@react-native-firebase/app', () => {})
-jest.mock('@react-native-firebase/auth', () => {})
-jest.mock('@react-native-firebase/firestore', () => {})
+jest.mock('@react-native-firebase/remote-config', () => ({}))
+jest.mock('@react-native-firebase/app', () => ({
+  app: jest.fn(() => ({
+    auth: jest.fn(() => ({
+      signInAnonymously: jest.fn(),
+    })),
+  })),
+}))
+jest.mock('@react-native-firebase/auth', () => ({}))
+jest.mock('@react-native-firebase/firestore', () => ({}))
 
 // Mock OneSignal package
 jest.mock('react-native-onesignal', () => {
@@ -76,11 +97,51 @@ jest.mock('react-native-onesignal', () => {
   }
 })
 
-jest.mock('expo-linear-gradient', () => {})
-
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter')
-jest.mock('react-native-permissions', () => {})
+jest.mock('react-native-permissions', () => ({}))
 jest.mock('react-native-device-info', () => mockRNDeviceInfo)
 
-global.__reanimatedWorkletInit = () => {}
+// NetInfo mock does not export typescript types
+const NetInfoStateType = {
+  unknown: 'unknown',
+  none: 'none',
+  cellular: 'cellular',
+  wifi: 'wifi',
+  bluetooth: 'bluetooth',
+  ethernet: 'ethernet',
+  wimax: 'wimax',
+  vpn: 'vpn',
+  other: 'other',
+}
+jest.mock('@react-native-community/netinfo', () => ({ ...mockRNCNetInfo, NetInfoStateType }))
+
+// from https://github.com/facebook/react-native/issues/28839#issuecomment-625453688
+jest.mock('react-native', () => {
+  const RN = jest.requireActual('react-native') // use original implementation, which comes with mocks out of the box
+
+  // mock modules/components created by assigning to NativeModules
+  RN.NativeModules.RNWalletConnect = {
+    initialize: jest.fn(),
+    reconnectAccountSessions: jest.fn(),
+  }
+
+  return RN
+})
+
+jest.mock('@amplitude/experiment-react-native-client', () => {
+  const mockExperimentClient = {
+    initialize: jest.fn(() => ({
+      fetch: () => Promise.resolve('123'),
+      all: () => {
+        return {}
+      },
+    })),
+  }
+
+  return {
+    Experiment: mockExperimentClient,
+  }
+})
+
+global.__reanimatedWorkletInit = () => ({})
 jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'))

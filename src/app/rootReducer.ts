@@ -21,6 +21,7 @@ import { transactionReducer } from 'src/features/transactions/slice'
 import { trmApi } from 'src/features/trm/api'
 import { walletReducer } from 'src/features/wallet/walletSlice'
 import { walletConnectReducer } from 'src/features/walletConnect/walletConnectSlice'
+
 export const rootReducer = combineReducers({
   [ensApi.reducerPath]: ensApi.reducer,
   [fiatOnRampApi.reducerPath]: fiatOnRampApi.reducer,

@@ -1,11 +1,11 @@
-import type { Middleware } from '@reduxjs/toolkit'
+import type { Middleware, PreloadedState } from '@reduxjs/toolkit'
 import { configureStore, isRejectedWithValue } from '@reduxjs/toolkit'
 import { MMKV } from 'react-native-mmkv'
 import { persistReducer, persistStore, Storage } from 'redux-persist'
 import createSagaMiddleware from 'redux-saga'
 import createMigrate from 'src/app/createMigrate'
 import { migrations } from 'src/app/migrations'
-import { rootReducer } from 'src/app/rootReducer'
+import { rootReducer, RootState } from 'src/app/rootReducer'
 import { rootSaga } from 'src/app/rootSaga'
 import { walletContextValue } from 'src/app/walletContext'
 import { config } from 'src/config'
@@ -16,6 +16,7 @@ import { forceUpgradeApi } from 'src/features/forceUpgrade/forceUpgradeApi'
 import { gasApi } from 'src/features/gas/api'
 import { routingApi } from 'src/features/routing/routingApi'
 import { trmApi } from 'src/features/trm/api'
+import { isNonJestDev } from 'src/utils/environment'
 import { logger } from 'src/utils/logger'
 
 const storage = new MMKV()
@@ -74,44 +75,49 @@ export const persistConfig = {
   migrate: createMigrate(migrations),
 }
 
-const persistedReducer = persistReducer(persistConfig, rootReducer)
+export const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 const middlewares: Middleware[] = []
-if (__DEV__) {
+if (isNonJestDev()) {
   const createDebugger = require('redux-flipper').default
   middlewares.push(createDebugger())
 }
 
-export const store = configureStore({
-  reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      // required for rtk-query
-      thunk: true,
-      // turn off since it slows down for dev and also doesn't run in prod
-      // TODO: figure out why this is slow: MOB-681
-      serializableCheck: false,
-      invariantCheck: {
-        warnAfter: 256,
-      },
-      // slows down dev build considerably
-      immutableCheck: false,
-    }).concat(
-      ensApi.middleware,
-      fiatOnRampApi.middleware,
-      forceUpgradeApi.middleware,
-      gasApi.middleware,
-      onChainBalanceApi.middleware,
-      routingApi.middleware,
-      rtkQueryErrorLogger,
-      sagaMiddleware,
-      trmApi.middleware,
-      ...middlewares
-    ),
-  devTools: config.debug,
-})
+export const setupStore = (preloadedState?: PreloadedState<RootState>) => {
+  return configureStore({
+    reducer: persistedReducer,
+    preloadedState,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        // required for rtk-query
+        thunk: true,
+        // turn off since it slows down for dev and also doesn't run in prod
+        // TODO: figure out why this is slow: MOB-681
+        serializableCheck: false,
+        invariantCheck: {
+          warnAfter: 256,
+        },
+        // slows down dev build considerably
+        immutableCheck: false,
+      }).concat(
+        ensApi.middleware,
+        fiatOnRampApi.middleware,
+        forceUpgradeApi.middleware,
+        gasApi.middleware,
+        onChainBalanceApi.middleware,
+        routingApi.middleware,
+        rtkQueryErrorLogger,
+        sagaMiddleware,
+        trmApi.middleware,
+        ...middlewares
+      ),
+    devTools: config.debug,
+  })
+}
+export const store = setupStore()
 
 export const persistor = persistStore(store)
 sagaMiddleware.run(rootSaga)
 
 export type AppDispatch = typeof store.dispatch
+export type AppStore = typeof store

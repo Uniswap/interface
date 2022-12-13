@@ -13,6 +13,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { MMKV } from 'react-native-mmkv'
 import { config } from 'src/config'
 import { uniswapUrls } from 'src/constants/urls'
+import { isNonJestDev } from 'src/utils/environment'
 import { logger } from 'src/utils/logger'
 
 // Samples error reports to reduce load on backend
@@ -21,7 +22,7 @@ const APOLLO_GRAPHQL_ERROR_SAMPLING_RATE = 0.1
 const APOLLO_NETWORK_ERROR_SAMPLING_RATE = 0.01
 
 const mmkv = new MMKV()
-if (__DEV__) {
+if (isNonJestDev()) {
   // requires Flipper plugin `react-native-mmkv` to be installed
   require('react-native-mmkv-flipper-plugin').initializeMMKVFlipper({ default: mmkv })
 }
@@ -127,7 +128,7 @@ export const usePersistedApolloClient = () => {
   }, [])
 
   useEffect(() => {
-    if (__DEV__) {
+    if (isNonJestDev()) {
       // requires Flipper plugin `react-native-apollo-devtools` to be installed
       require('react-native-apollo-devtools-client').apolloDevToolsInit(client)
     }

@@ -1,6 +1,5 @@
 metro.config.js
 node_modules
-jest-setup.js
 
 # Generated contract types
 src/abis/types

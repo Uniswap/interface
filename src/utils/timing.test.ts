@@ -1,4 +1,5 @@
 import { renderHook } from '@testing-library/react-hooks'
+import { act } from 'react-test-renderer'
 import { DEFAULT_DELAY, useDebounceWithStatus } from 'src/utils/timing'
 
 jest.useFakeTimers()
@@ -14,7 +15,9 @@ describe('useDebounceWithStatus', () => {
     rerender()
     expect(result.current[0]).toEqual('first')
 
-    jest.advanceTimersByTime(DEFAULT_DELAY)
+    act(() => {
+      jest.advanceTimersByTime(DEFAULT_DELAY)
+    })
     rerender()
     expect(result.current[0]).toEqual('second')
   })
@@ -29,11 +32,15 @@ describe('useDebounceWithStatus', () => {
     rerender()
     expect(result.current[1]).toEqual(true)
 
-    jest.advanceTimersByTime(DEFAULT_DELAY / 2)
+    act(() => {
+      jest.advanceTimersByTime(DEFAULT_DELAY / 2)
+    })
     rerender()
     expect(result.current[1]).toEqual(true)
 
-    jest.advanceTimersByTime(DEFAULT_DELAY / 2)
+    act(() => {
+      jest.advanceTimersByTime(DEFAULT_DELAY / 2)
+    })
     rerender()
     expect(result.current[1]).toEqual(false)
   })

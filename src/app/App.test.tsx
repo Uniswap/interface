@@ -1,8 +1,7 @@
 import React from 'react'
 import 'react-native'
-// Note: test renderer must be required after react-native.
-import renderer from 'react-test-renderer'
 import App from 'src/app/App'
+import { renderWithProviders } from 'src/test/render'
 
 jest.mock('src/data/hooks', () => {
   return {
@@ -11,5 +10,5 @@ jest.mock('src/data/hooks', () => {
 })
 
 it('renders correctly', () => {
-  renderer.create(<App />)
+  renderWithProviders(<App />)
 })

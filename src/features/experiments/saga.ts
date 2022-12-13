@@ -22,7 +22,7 @@ async function initializeExperiments() {
 }
 
 export async function retrieveRemoteExperiments() {
-  const fetchedAmplitudeExperiments = await experimentClient.all()
+  const fetchedAmplitudeExperiments = experimentClient.all()
 
   const fetchedFeatureFlags: FeatureFlagsMap = {}
   const fetchedExperiments: ExperimentsMap = {}
