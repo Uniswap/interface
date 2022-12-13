@@ -260,14 +260,11 @@ export default function About() {
           </Panels>
           <CardGrid>
             {CARDS.map(({ darkBackgroundImgSrc, lightBackgroundImgSrc, elementName, ...card }) => (
-              <TraceEvent
-                events={[BrowserEvent.onClick]}
-                name={EventName.ELEMENT_CLICKED}
-                element={elementName}
+              <Card
+                {...card}
+                backgroundImgSrc={isDarkMode ? darkBackgroundImgSrc : lightBackgroundImgSrc}
                 key={card.title}
-              >
-                <Card {...card} backgroundImgSrc={isDarkMode ? darkBackgroundImgSrc : lightBackgroundImgSrc} />
-              </TraceEvent>
+              />
             ))}
           </CardGrid>
           <div>
