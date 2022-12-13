@@ -49,7 +49,7 @@ export default function TokenDetailsPage() {
   return (
     <Suspense fallback={<TokenDetailsPageSkeleton />}>
       <TokenDetails
-        tokenAddress={tokenAddress}
+        urlAddress={tokenAddress}
         chain={chain}
         tokenQueryReference={tokenQueryReference}
         priceQueryReference={priceQueryReference}

@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { EventName } from '@uniswap/analytics-events'
+import { formatNumber, formatUSDPrice, NumberType } from '@uniswap/conedison/format'
 import { ParentSize } from '@visx/responsive'
 import SparklineChart from 'components/Charts/SparklineChart'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
@@ -14,7 +15,6 @@ import { ArrowDown, ArrowUp } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
-import { formatDollar } from 'utils/formatNumbers'
 
 import {
   LARGE_MEDIA_BREAKPOINT,
@@ -32,7 +32,7 @@ import {
   useSetSortMethod,
 } from '../state'
 import InfoTip from '../TokenDetails/InfoTip'
-import { formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
+import { ArrowCell, DeltaText, formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
 
 const Cell = styled.div`
   display: flex;
@@ -81,17 +81,14 @@ const StyledTokenRow = styled.div<{
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
     grid-template-columns: 1fr 6.5fr 4.5fr 4.5fr 4.5fr 4.5fr 1.7fr;
-    width: fit-content;
   }
 
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
     grid-template-columns: 1fr 7.5fr 4.5fr 4.5fr 4.5fr 1.7fr;
-    width: fit-content;
   }
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
     grid-template-columns: 1fr 10fr 5fr 5fr 1.2fr;
-    width: fit-content;
   }
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
@@ -197,6 +194,7 @@ const PriceInfoCell = styled(Cell)`
     align-items: flex-end;
   }
 `
+
 const HeaderCellWrapper = styled.span<{ onClick?: () => void }>`
   align-items: center;
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'unset')};
@@ -341,7 +339,7 @@ function HeaderCell({
 }
 
 /* Token Row: skeleton row component */
-export function TokenRow({
+function TokenRow({
   header,
   listNumber,
   tokenInfo,
@@ -442,6 +440,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const timePeriod = useAtomValue(filterTimeAtom)
   const delta = token.market?.pricePercentChange?.value
   const arrow = getDeltaArrow(delta)
+  const smallArrow = getDeltaArrow(delta, 14)
   const formattedDelta = formatDelta(delta)
   const rank = sortAscending ? tokenListLength - tokenListIndex : tokenListIndex + 1
 
@@ -481,22 +480,28 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           price={
             <ClickableContent>
               <PriceInfoCell>
-                {formatDollar({ num: token.market?.price?.value, isPrice: true, lessPreciseStablecoinValues: true })}
+                {formatUSDPrice(token.market?.price?.value)}
                 <PercentChangeInfoCell>
-                  {formattedDelta}
-                  {arrow}
+                  <ArrowCell>{smallArrow}</ArrowCell>
+                  <DeltaText delta={delta}>{formattedDelta}</DeltaText>
                 </PercentChangeInfoCell>
               </PriceInfoCell>
             </ClickableContent>
           }
           percentChange={
             <ClickableContent>
-              {formattedDelta}
-              {arrow}
+              <ArrowCell>{arrow}</ArrowCell>
+              <DeltaText delta={delta}>{formattedDelta}</DeltaText>
             </ClickableContent>
           }
-          tvl={<ClickableContent>{formatDollar({ num: token.market?.totalValueLocked?.value })}</ClickableContent>}
-          volume={<ClickableContent>{formatDollar({ num: token.market?.volume?.value })}</ClickableContent>}
+          tvl={
+            <ClickableContent>
+              {formatNumber(token.market?.totalValueLocked?.value, NumberType.FiatTokenStats)}
+            </ClickableContent>
+          }
+          volume={
+            <ClickableContent>{formatNumber(token.market?.volume?.value, NumberType.FiatTokenStats)}</ClickableContent>
+          }
           sparkLine={
             <SparkLine>
               <ParentSize>

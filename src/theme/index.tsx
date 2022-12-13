@@ -17,7 +17,8 @@ export const MEDIA_WIDTHS = {
   deprecated_upToLarge: 1280,
 }
 
-const BREAKPOINTS = {
+export const BREAKPOINTS = {
+  xs: 396,
   sm: 640,
   md: 768,
   lg: 1024,
@@ -48,6 +49,10 @@ const opacities = {
   enabled: 1,
 }
 
+const fonts = {
+  code: 'courier, courier new, serif',
+}
+
 const deprecated_mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(
   MEDIA_WIDTHS
 ).reduce((accumulator, size) => {
@@ -62,16 +67,21 @@ const deprecated_mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: ty
 function getSettings(darkMode: boolean) {
   return {
     grids: {
-      sm: 8,
-      md: 12,
-      lg: 24,
+      sm: '8px',
+      md: '12px',
+      lg: '24px',
+      xl: '32px',
     },
+    fonts,
 
     // shadows
     shadow1: darkMode ? '#000' : '#2F80ED',
 
     // media queries
     deprecated_mediaWidth: deprecated_mediaWidthTemplates,
+
+    navHeight: 72,
+    mobileBottomBarHeight: 52,
 
     // deprecated - please use hardcoded exported values instead of
     // adding to the theme object
@@ -81,7 +91,7 @@ function getSettings(darkMode: boolean) {
   }
 }
 
-export function getTheme(darkMode: boolean) {
+function getTheme(darkMode: boolean) {
   return {
     darkMode,
     ...(darkMode ? darkTheme : lightTheme),
@@ -100,6 +110,10 @@ export const ThemedGlobalStyle = createGlobalStyle`
   html {
     color: ${({ theme }) => theme.deprecated_text1};
     background-color: ${({ theme }) => theme.background} !important;
+  }
+
+  summary::-webkit-details-marker {
+    display:none;
   }
 
   a {

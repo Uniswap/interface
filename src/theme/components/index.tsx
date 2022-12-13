@@ -2,14 +2,21 @@ import { Trans } from '@lingui/macro'
 import { outboundLink } from 'components/analytics'
 import { MOBILE_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import useCopyClipboard from 'hooks/useCopyClipboard'
-import React, { forwardRef, HTMLProps, ReactNode, useCallback, useImperativeHandle, useState } from 'react'
+import React, {
+  forwardRef,
+  HTMLProps,
+  PropsWithChildren,
+  ReactNode,
+  useCallback,
+  useImperativeHandle,
+  useState,
+} from 'react'
 import {
   ArrowLeft,
   CheckCircle,
   Copy,
   ExternalLink as ExternalLinkIconFeather,
   Link as LinkIconFeather,
-  Trash,
   X,
 } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -136,17 +143,6 @@ const CopyIcon = styled(Copy)`
   stroke: ${({ theme }) => theme.accentAction};
 `
 
-export const TrashIcon = styled(Trash)`
-  ${ClickableStyle}
-  ${IconStyle}
-  stroke: ${({ theme }) => theme.deprecated_text3};
-
-  cursor: pointer;
-  align-items: center;
-  justify-content: center;
-  display: flex;
-`
-
 const rotateImg = keyframes`
   0% {
     transform: perspective(1000px) rotateY(0deg);
@@ -262,16 +258,24 @@ const CopyIconWrapper = styled.div`
   display: flex;
 `
 
-export function CopyLinkIcon({ toCopy }: { toCopy: string }) {
+export function CopyToClipboard({ toCopy, children }: PropsWithChildren<{ toCopy: string }>) {
   const [isCopied, setCopied] = useCopyClipboard()
   const copy = useCallback(() => {
     setCopied(toCopy)
   }, [toCopy, setCopied])
   return (
     <CopyIconWrapper onClick={copy}>
-      <CopyIcon />
+      {children}
       {isCopied && <Tooltip isCopyContractTooltip={false} />}
     </CopyIconWrapper>
+  )
+}
+
+export function CopyLinkIcon({ toCopy }: { toCopy: string }) {
+  return (
+    <CopyToClipboard toCopy={toCopy}>
+      <CopyIcon />
+    </CopyToClipboard>
   )
 }
 

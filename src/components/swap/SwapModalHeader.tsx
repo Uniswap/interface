@@ -101,7 +101,7 @@ export default function SwapModalHeader({
   return (
     <AutoColumn gap="4px" style={{ marginTop: '1rem' }}>
       <LightCard padding="0.75rem 1rem">
-        <AutoColumn gap="8px">
+        <AutoColumn gap="sm">
           <RowBetween align="center">
             <RowFixed gap="0px">
               <TruncatedText
@@ -128,7 +128,7 @@ export default function SwapModalHeader({
         <ArrowDown size="16" color={theme.textPrimary} />
       </ArrowWrapper>
       <LightCard padding="0.75rem 1rem" style={{ marginBottom: '0.25rem' }}>
-        <AutoColumn gap="8px">
+        <AutoColumn gap="sm">
           <RowBetween align="flex-end">
             <RowFixed gap="0px">
               <TruncatedText fontSize={24} fontWeight={500}>

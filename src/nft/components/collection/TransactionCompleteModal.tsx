@@ -2,6 +2,7 @@ import { formatEther } from '@ethersproject/units'
 import { Trace, useTrace } from '@uniswap/analytics'
 import { EventName, ModalName } from '@uniswap/analytics-events'
 import clsx from 'clsx'
+import { OpacityHoverState } from 'components/Common'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
 import { Row } from 'nft/components/Flex'
@@ -15,15 +16,35 @@ import {
   formatEthPrice,
   formatUsdPrice,
   formatUSDPriceWithCommas,
+  generateTweetForPurchase,
   getSuccessfulImageSize,
   parseTransactionResponse,
-  shortenTxHash,
 } from 'nft/utils'
 import { formatAssetEventProperties } from 'nft/utils/formatEventProperties'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { Upload } from 'react-feather'
+import styled from 'styled-components/macro'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import * as styles from './TransactionCompleteModal.css'
+
+const TWITTER_WIDTH = 560
+const TWITTER_HEIGHT = 480
+
+const UploadLink = styled.a`
+  position: absolute;
+  right: 32px;
+  top: 32px;
+  color: ${({ theme }) => theme.textSecondary};
+  cursor: pointer;
+
+  ${OpacityHoverState}
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    right: 12px;
+    top: 28px;
+  }
+`
 
 const TxCompleteModal = () => {
   const [ethPrice, setEthPrice] = useState(3000)
@@ -70,6 +91,16 @@ const TxCompleteModal = () => {
     useSendTransaction.subscribe((state) => (transactionStateRef.current = state.state))
   }, [])
 
+  const shareTweet = () => {
+    window.open(
+      generateTweetForPurchase(nftsPurchased, txHashUrl),
+      'newwindow',
+      `left=${(window.screen.width - TWITTER_WIDTH) / 2}, top=${
+        (window.screen.height - TWITTER_HEIGHT) / 2
+      }, width=${TWITTER_WIDTH}, height=${TWITTER_HEIGHT}`
+    )
+  }
+
   return (
     <>
       {shouldShowModal && (
@@ -95,6 +126,9 @@ const TxCompleteModal = () => {
                     <h1 className={styles.title}>Complete!</h1>
                     <p className={styles.subHeading}>Uniswap has granted your wish!</p>
                   </Box>
+                  <UploadLink onClick={shareTweet} target="_blank">
+                    <Upload size={24} strokeWidth={2} />
+                  </UploadLink>
                   <Box
                     className={styles.successAssetsContainer}
                     style={{
@@ -138,8 +172,8 @@ const TxCompleteModal = () => {
                       <Box>{formatEthPrice(totalPurchaseValue.toString())} ETH</Box>
                     </Row>
                     <a href={txHashUrl} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
-                      <Box color="textPrimary" fontWeight="normal">
-                        {shortenTxHash(txHash, 2, 2)}
+                      <Box color="textSecondary" fontWeight="normal">
+                        View on Etherscan
                       </Box>
                     </a>
                   </Box>
@@ -203,8 +237,13 @@ const TxCompleteModal = () => {
                           width={{ sm: 'half', md: 'auto' }}
                         >
                           <a href={txHashUrl} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
-                            <Box fontWeight="normal" marginTop="16" className={styles.totalEthCost}>
-                              {shortenTxHash(txHash, 2, 2)}
+                            <Box
+                              fontWeight="normal"
+                              marginTop="16"
+                              color="textSecondary"
+                              className={styles.totalEthCost}
+                            >
+                              View on Etherscan
                             </Box>
                           </a>
                         </Box>
@@ -315,7 +354,7 @@ const TxCompleteModal = () => {
                     <p className={styles.totalUsdRefund}>{formatUSDPriceWithCommas(totalUSDRefund)}</p>
                     <Box className={styles.walletAddress} marginLeft="auto" marginRight="0">
                       <a href={txHashUrl} target="_blank" rel="noreferrer">
-                        <Box className={styles.addressHash}>{shortenTxHash(txHash, 2, 2)}</Box>
+                        <Box className={styles.addressHash}>View on Etherscan</Box>
                       </a>
                     </Box>
                     <p className={styles.totalEthCost}>
@@ -325,7 +364,7 @@ const TxCompleteModal = () => {
                     <Box
                       as="button"
                       border="none"
-                      backgroundColor="genieBlue"
+                      backgroundColor="accentAction"
                       cursor="pointer"
                       className={styles.returnButton}
                       type="button"

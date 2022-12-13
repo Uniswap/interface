@@ -48,14 +48,14 @@ export const tokenQuery = graphql`
         twitterName
         logoUrl
         tokens {
-          chain
-          address
+          chain @required(action: LOG)
+          address @required(action: LOG)
         }
       }
     }
   }
 `
-export type { Chain, ContractInput, TokenQuery } from './__generated__/TokenQuery.graphql'
+export type { Chain, TokenQuery } from './__generated__/TokenQuery.graphql'
 
 export type TokenQueryData = NonNullable<TokenQuery$data['tokens']>[number]
 

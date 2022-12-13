@@ -10,14 +10,26 @@ import { subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useFiltersExpanded, useIsMobile, useWalletCollections } from 'nft/hooks'
 import { WalletCollection } from 'nft/types'
-import { CSSProperties, Dispatch, FormEvent, SetStateAction, useCallback, useEffect, useReducer, useState } from 'react'
+import {
+  CSSProperties,
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+} from 'react'
 import { easings, useSpring } from 'react-spring'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList, ListOnItemsRenderedProps } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
 import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 import { TRANSITION_DURATIONS } from 'theme/styles'
 
+import { WALLET_COLLECTIONS_PAGINATION_LIMIT } from './ProfilePage'
 import * as styles from './ProfilePage.css'
 
 const COLLECTION_ROW_HEIGHT = 44
@@ -36,6 +48,11 @@ const SmallLoadingBubble = styled(LoadingBubble)`
   height: 20px;
   width: 20px;
   margin-right: 8px;
+`
+
+const MobileMenuHeader = styled(Row)`
+  justify-content: space-between;
+  padding-bottom: 8px;
 `
 
 const LoadingCollectionItem = ({ style }: { style?: CSSProperties }) => {
@@ -81,17 +98,24 @@ export const FilterSidebar = ({
       easing: easings.easeOutSine,
     },
   })
+
+  const hideSearch = useMemo(
+    () => (walletCollections && walletCollections?.length >= WALLET_COLLECTIONS_PAGINATION_LIMIT) || isFetchingNextPage,
+    [walletCollections, isFetchingNextPage]
+  )
+
   return (
     // @ts-ignore
     <AnimatedBox
-      position="sticky"
-      top="72"
+      position={{ sm: 'fixed', md: 'sticky' }}
+      top={{ sm: '0', md: '72' }}
       left={{ sm: '0', md: 'unset' }}
       width={{ sm: 'full', md: '332', lg: '332' }}
       height={{ sm: 'full', md: 'auto' }}
-      zIndex={{ sm: '3', md: 'auto' }}
+      zIndex={{ sm: 'modal', md: 'auto' }}
       display={isFiltersExpanded ? 'flex' : 'none'}
       style={{ transform: isMobile ? undefined : sidebarX.to((x) => `translateX(${x}px)`) }}
+      background="backgroundBackdrop"
     >
       <Box
         paddingTop={{ sm: '24', md: '0' }}
@@ -99,19 +123,17 @@ export const FilterSidebar = ({
         paddingRight="16"
         width={{ sm: 'full', md: '332', lg: '332' }}
       >
-        <Row width="full" justifyContent="space-between">
-          {isMobile && (
-            <Box
-              as="button"
-              border="none"
-              backgroundColor="transparent"
-              color="textSecondary"
+        {isMobile && (
+          <MobileMenuHeader>
+            <ThemedText.HeadlineSmall>Filter</ThemedText.HeadlineSmall>
+            <XMarkIcon
+              height={28}
+              width={28}
+              fill={themeVars.colors.textPrimary}
               onClick={() => setFiltersExpanded(false)}
-            >
-              <XMarkIcon fill={themeVars.colors.textPrimary} />
-            </Box>
-          )}
-        </Row>
+            />
+          </MobileMenuHeader>
+        )}
         <CollectionSelect
           collections={walletCollections}
           collectionFilters={collectionFilters}
@@ -119,6 +141,7 @@ export const FilterSidebar = ({
           fetchNextPage={fetchNextPage}
           hasNextPage={hasNextPage}
           isFetchingNextPage={isFetchingNextPage}
+          hideSearch={hideSearch}
         />
       </Box>
     </AnimatedBox>
@@ -132,6 +155,7 @@ const CollectionSelect = ({
   fetchNextPage,
   hasNextPage,
   isFetchingNextPage,
+  hideSearch,
 }: {
   collections: WalletCollection[]
   collectionFilters: Array<string>
@@ -139,6 +163,7 @@ const CollectionSelect = ({
   fetchNextPage: () => void
   hasNextPage?: boolean
   isFetchingNextPage: boolean
+  hideSearch: boolean
 }) => {
   const [collectionSearchText, setCollectionSearchText] = useState('')
   const [displayCollections, setDisplayCollections] = useState(collections)
@@ -199,10 +224,12 @@ const CollectionSelect = ({
       </Box>
       <Box paddingBottom="12" borderRadius="8">
         <Column as="ul" paddingLeft="0" gap="10" style={{ maxHeight: '80vh' }}>
-          <CollectionFilterSearch
-            collectionSearchText={collectionSearchText}
-            setCollectionSearchText={setCollectionSearchText}
-          />
+          {!hideSearch && (
+            <CollectionFilterSearch
+              collectionSearchText={collectionSearchText}
+              setCollectionSearchText={setCollectionSearchText}
+            />
+          )}
           <ItemsContainer>
             <AutoSizer disableWidth>
               {({ height }) => (

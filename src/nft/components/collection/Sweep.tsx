@@ -136,7 +136,7 @@ interface NftDisplayProps {
   nfts: GenieAsset[]
 }
 
-export const NftDisplay = ({ nfts }: NftDisplayProps) => {
+const NftDisplay = ({ nfts }: NftDisplayProps) => {
   return (
     <NftDisplayContainer>
       {[...Array(3)].map((_, index) => {
@@ -168,6 +168,7 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
   const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
   const itemsInBag = useBag((state) => state.itemsInBag)
   const lockSweepItems = useBag((state) => state.lockSweepItems)
+  const setBagExpanded = useBag((state) => state.setBagExpanded)
 
   const traits = useCollectionFilters((state) => state.traits)
   const markets = useCollectionFilters((state) => state.markets)
@@ -197,7 +198,7 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
     if (nft20Assets) jointCollections = [...jointCollections, ...nft20Assets]
 
     const sudoSwapAssetsInJointCollections = jointCollections.filter(
-      (sweepAsset) => sweepAsset.marketplace === Markets.Sudoswap
+      (sweepAsset) => sweepAsset.marketplace === Markets.Sudoswap && !sweepAsset.susFlag
     )
 
     jointCollections.forEach((asset) => {
@@ -215,8 +216,8 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
           const poolPrice = calcPoolPrice(asset, isNFTX ? counterNFTX : counterNFT20)
           if (BigNumber.from(poolPrice).gt(0)) {
             isNFTX ? counterNFTX++ : counterNFT20++
-            asset.priceInfo.ETHPrice = poolPrice
           }
+          asset.priceInfo.ETHPrice = poolPrice
         }
       }
     })
@@ -279,6 +280,8 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
   const handleSweep = (value: number) => {
     if (sortedAssets) {
       if (isItemsToggled) {
+        if (sweepItemsInBag.length === 0 && value > 0) setBagExpanded({ bagExpanded: true })
+
         if (sweepItemsInBag.length < value) {
           addAssetsToBag(sortedAssets.slice(sweepItemsInBag.length, value), true)
         } else {
@@ -302,6 +305,7 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
           }
 
           if (wishAssets.length > 0) {
+            if (sweepItemsInBag.length === 0) setBagExpanded({ bagExpanded: true })
             addAssetsToBag(wishAssets, true)
           }
         } else {

@@ -1,4 +1,7 @@
 import { Trans } from '@lingui/macro'
+import { useTrace } from '@uniswap/analytics'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { EventName } from '@uniswap/analytics-events'
 import { MouseoverTooltip } from 'components/Tooltip'
 import Tooltip from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
@@ -37,7 +40,7 @@ const getNftDisplayComponent = (
 const getUnsupportedNftTextComponent = (asset: WalletAsset) => (
   <Box as="span" className={bodySmall} style={{ color: themeVars.colors.textPrimary }}>
     {asset.asset_contract.tokenType === TokenType.ERC1155 ? (
-      <Trans>ERC-1155 support coming soon</Trans>
+      <Trans>Selling ERC-1155s coming soon</Trans>
     ) : (
       <Trans>Blocked from trading</Trans>
     )}
@@ -65,11 +68,20 @@ export const ViewMyNftsAsset = ({
 
   const [showTooltip, setShowTooltip] = useState(false)
   const isSelectedRef = useRef(isSelected)
-
+  const trace = useTrace()
   const onCardClick = () => handleSelect(isSelected)
 
   const handleSelect = (removeAsset: boolean) => {
-    removeAsset ? removeSellAsset(asset) : selectSellAsset(asset)
+    if (removeAsset) {
+      removeSellAsset(asset)
+    } else {
+      selectSellAsset(asset)
+      sendAnalyticsEvent(EventName.NFT_SELL_ITEM_ADDED, {
+        collection_address: asset.asset_contract.address,
+        token_id: asset.tokenId,
+        ...trace,
+      })
+    }
     if (
       !cartExpanded &&
       !sellAssets.find(
@@ -126,7 +138,8 @@ export const ViewMyNftsAsset = ({
             text={getUnsupportedNftTextComponent(asset)}
             placement="bottom"
             offsetX={0}
-            offsetY={-100}
+            offsetY={-60}
+            hideArrow={true}
             style={{ display: 'block' }}
             disableHover={!isDisabled}
             timeout={isMobile ? TOOLTIP_TIMEOUT : undefined}

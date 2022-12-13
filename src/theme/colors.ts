@@ -83,6 +83,7 @@ export const colors = {
   blueVibrant: '#587BFF',
   // TODO: add magenta 50-900
   magentaVibrant: '#FC72FF',
+  purple300: '#8440F2',
   purple900: '#1C0337',
   // TODO: add all other vibrant variations
   networkEthereum: '#627EEA',
@@ -94,7 +95,7 @@ export const colors = {
   networkEthereumSoft: 'rgba(98, 126, 234, 0.16)',
 }
 
-export type Theme = typeof darkTheme
+type Theme = typeof darkTheme
 
 const commonTheme = {
   white: colors.white,
@@ -166,6 +167,9 @@ export const darkTheme = {
 
   stateOverlayHover: opacify(8, colors.gray300),
   stateOverlayPressed: opacify(24, colors.gray200),
+
+  searchBackground: `rgba(255,255,255,0.07)`,
+  searchOutline: `rgba(255,255,255,0.07)`,
 }
 
 export const lightTheme: Theme = {
@@ -217,4 +221,7 @@ export const lightTheme: Theme = {
 
   stateOverlayHover: opacify(8, colors.gray300),
   stateOverlayPressed: opacify(24, colors.gray200),
+
+  searchBackground: opacify(4, colors.white),
+  searchOutline: opacify(1, colors.black),
 }

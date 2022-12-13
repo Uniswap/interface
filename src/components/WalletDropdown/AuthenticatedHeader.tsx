@@ -4,11 +4,11 @@ import { useWeb3React } from '@web3-react/core'
 import { getConnection } from 'connection/utils'
 import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
-import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
+import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useMemo } from 'react'
 import { Copy, ExternalLink, Power } from 'react-feather'
@@ -17,7 +17,8 @@ import { Text } from 'rebass'
 import { useCurrencyBalanceString } from 'state/connection/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
 import { shortenAddress } from '../../nft/utils/address'
 import { useCloseModal, useToggleModal } from '../../state/application/hooks'
@@ -82,6 +83,30 @@ const FlexContainer = styled.div`
 const StatusWrapper = styled.div`
   display: inline-block;
   margin-top: 4px;
+  width: 70%;
+`
+
+const TruncatedTextStyle = css`
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+`
+
+const AccountNamesWrapper = styled.div`
+  ${TruncatedTextStyle}
+  margin-right: 8px;
+`
+
+const ENSNameContainer = styled(ThemedText.SubHeader)`
+  ${TruncatedTextStyle}
+  color: ${({ theme }) => theme.textPrimary};
+  margin-top: 2.5px;
+`
+
+const AccountContainer = styled(ThemedText.BodySmall)`
+  ${TruncatedTextStyle}
+  color: ${({ theme }) => theme.textSecondary};
+  margin-top: 2.5px;
 `
 
 const BalanceWrapper = styled.div`
@@ -99,7 +124,7 @@ const AuthenticatedHeaderWrapper = styled.div`
 `
 
 const AuthenticatedHeader = () => {
-  const { account, chainId, connector } = useWeb3React()
+  const { account, chainId, connector, ENSName } = useWeb3React()
   const [isCopied, setCopied] = useCopyClipboard()
   const copy = useCallback(() => {
     setCopied(account || '')
@@ -110,13 +135,13 @@ const AuthenticatedHeader = () => {
     nativeCurrency: { symbol: nativeCurrencySymbol },
     explorer,
   } = getChainInfoOrDefault(chainId ? chainId : SupportedChainId.MAINNET)
-  const nftFlag = useNftFlag()
   const navigate = useNavigate()
   const closeModal = useCloseModal(ApplicationModal.WALLET_DROPDOWN)
 
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const resetSellAssets = useSellAsset((state) => state.reset)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
+  const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
 
   const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
   const isUnclaimed = useUserHasAvailableClaim(account)
@@ -153,9 +178,14 @@ const AuthenticatedHeader = () => {
         <StatusWrapper>
           <FlexContainer>
             <StatusIcon connectionType={connectionType} size={24} />
-            <Text fontSize={16} fontWeight={600} marginTop="2.5px">
-              {account && shortenAddress(account, 2, 4)}
-            </Text>
+            {ENSName ? (
+              <AccountNamesWrapper>
+                <ENSNameContainer>{ENSName}</ENSNameContainer>
+                <AccountContainer>{account && shortenAddress(account, 2, 4)}</AccountContainer>
+              </AccountNamesWrapper>
+            ) : (
+              <ThemedText.SubHeader marginTop="2.5px">{account && shortenAddress(account, 2, 4)}</ThemedText.SubHeader>
+            )}
           </FlexContainer>
         </StatusWrapper>
         <IconContainer>
@@ -177,17 +207,15 @@ const AuthenticatedHeader = () => {
           </Text>
           <USDText>${amountUSD.toFixed(2)} USD</USDText>
         </BalanceWrapper>
-        {nftFlag === NftVariant.Enabled && (
-          <ProfileButton onClick={navigateToProfile} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
-            <Trans>View and sell NFTs</Trans>
-          </ProfileButton>
-        )}
+        <ProfileButton onClick={navigateToProfile} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
+          <Trans>View and sell NFTs</Trans>
+        </ProfileButton>
         {isUnclaimed && (
           <UNIButton onClick={openClaimModal} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
             <Trans>Claim</Trans> {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} <Trans>reward</Trans>
           </UNIButton>
         )}
-        {nftFlag === NftVariant.Enabled && (
+        {isClaimAvailable && (
           <UNIButton size={ButtonSize.medium} emphasis={ButtonEmphasis.medium} onClick={openNftModal}>
             <Trans>Claim Uniswap NFT Airdrop</Trans>
           </UNIButton>

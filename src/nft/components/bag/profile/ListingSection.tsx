@@ -61,7 +61,7 @@ export const ListingSection = ({
       marginTop="10"
       marginBottom="10"
       onClick={() => rows.length > 0 && setIsOpen(!isOpen)}
-      color={allApproved ? 'green' : 'textPrimary'}
+      color={allApproved ? 'accentSuccess' : 'textPrimary'}
     >
       {allApproved && <ApprovedCheckmarkIcon style={{ marginRight: '8px' }} />}
       {sectionTitle}
@@ -161,7 +161,7 @@ export const ListingSection = ({
                         className={buttonTextSmall}
                         borderRadius="12"
                         border="none"
-                        color="genieBlue"
+                        color="accentAction"
                         height="32"
                         cursor="pointer"
                         style={{ backgroundColor: '#4C82FB29' }}

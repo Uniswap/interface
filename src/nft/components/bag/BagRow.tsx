@@ -39,6 +39,25 @@ const ReviewButton = styled(ThemeButton)`
   padding: 8px;
   width: 50%;
 `
+const RemoveAssetOverlay = styled.div`
+  position: absolute;
+  display: block;
+  right: -11px;
+  top: -11px;
+  z-index: 1;
+  transition: 250ms;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+export const RemoveAssetButton = ({ onClick }: { onClick: (e: MouseEvent<HTMLDivElement>) => void }) => (
+  <RemoveAssetOverlay onClick={onClick}>
+    <CircularCloseIcon />
+  </RemoveAssetOverlay>
+)
 
 const NoContentContainer = () => (
   <Box position="relative" background="loadingBackground" className={styles.bagRowImage}>
@@ -87,7 +106,7 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
   )
 
   const handleRemoveClick = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
+    (e: MouseEvent<HTMLElement>) => {
       e.preventDefault()
       e.stopPropagation()
       removeAsset([asset])
@@ -99,15 +118,7 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
     <Link to={getAssetHref(asset)} style={{ textDecoration: 'none' }}>
       <Row className={styles.bagRow} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
         <Box position="relative" display="flex">
-          <Box
-            display={showRemove && isMobile ? 'block' : 'none'}
-            className={styles.removeAssetOverlay}
-            onClick={handleRemoveClick}
-            transition="250"
-            zIndex="1"
-          >
-            <CircularCloseIcon />
-          </Box>
+          {showRemove && isMobile && <RemoveAssetButton onClick={handleRemoveClick} />}
           {!noImageAvailable && (
             <Box
               as="img"
@@ -278,57 +289,59 @@ export const UnavailableAssetsHeaderRow = ({
 
   if (!assets || assets.length === 0) return null
 
+  const moreThanOneUnavailable = assets.length > 1
+  const isShowingAssets = isOpen || !moreThanOneUnavailable
+
   return (
     <Column className={styles.unavailableAssetsContainer}>
-      {assets.length === 1 && (
-        <BagRow asset={assets[0]} usdPrice={usdPrice} removeAsset={() => undefined} grayscale isMobile={isMobile} />
-      )}
-      {assets.length > 1 && (
-        <Column>
-          <Row
-            justifyContent="space-between"
-            marginBottom={isOpen ? '12' : '0'}
-            cursor="pointer"
-            onClick={() => {
+      <Column>
+        <Row
+          justifyContent="space-between"
+          marginBottom={isShowingAssets ? '12' : '0'}
+          cursor={moreThanOneUnavailable ? 'pointer' : 'default'}
+          onClick={() => {
+            if (moreThanOneUnavailable) {
               !didOpenUnavailableAssets && setDidOpenUnavailableAssets(true)
               toggleOpen()
-            }}
-          >
-            <Row gap="12" color="textPrimary" className={bodySmall}>
-              {!isOpen && <UnavailableAssetsPreview assets={assets.slice(0, 5)} />}
-              No longer available
-            </Row>
-            <Row color="textSecondary">{isOpen ? <ChevronUpBagIcon /> : <ChevronDownBagIcon />}</Row>
-            {!didOpenUnavailableAssets && (
-              <Row
-                position="relative"
-                width="20"
-                height="20"
-                color="textPrimary"
-                justifyContent="center"
-                cursor="pointer"
-                onClick={clearUnavailableAssets}
-              >
-                <TimedLoader />
-                <CloseTimerIcon />
-              </Row>
-            )}
+            }
+          }}
+        >
+          <Row gap="12" color="textSecondary" className={bodySmall}>
+            {!isShowingAssets && <UnavailableAssetsPreview assets={assets.slice(0, 5)} />}
+            No longer available
           </Row>
-          <Column gap="8" style={{ marginLeft: '-8px', marginRight: '-8px' }}>
-            {isOpen &&
-              assets.map((asset) => (
-                <BagRow
-                  key={asset.id}
-                  asset={asset}
-                  usdPrice={usdPrice}
-                  removeAsset={() => undefined}
-                  grayscale
-                  isMobile={isMobile}
-                />
-              ))}
-          </Column>
+          {moreThanOneUnavailable && (
+            <Row color="textSecondary">{isOpen ? <ChevronUpBagIcon /> : <ChevronDownBagIcon />}</Row>
+          )}
+          {!didOpenUnavailableAssets && (
+            <Row
+              position="relative"
+              width="20"
+              height="20"
+              color="textPrimary"
+              justifyContent="center"
+              cursor="pointer"
+              onClick={clearUnavailableAssets}
+            >
+              <TimedLoader />
+              <CloseTimerIcon />
+            </Row>
+          )}
+        </Row>
+        <Column gap="8" style={{ marginLeft: '-8px', marginRight: '-8px' }}>
+          {isShowingAssets &&
+            assets.map((asset) => (
+              <BagRow
+                key={asset.id}
+                asset={asset}
+                usdPrice={usdPrice}
+                removeAsset={() => undefined}
+                grayscale
+                isMobile={isMobile}
+              />
+            ))}
         </Column>
-      )}
+      </Column>
     </Column>
   )
 }

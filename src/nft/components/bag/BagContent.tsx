@@ -56,6 +56,10 @@ export const BagContent = () => {
       if (hasAssets) setBagStatus(BagStatus.CONFIRM_REVIEW)
       else setBagStatus(BagStatus.ADDING_TO_BAG)
     }
+
+    if (bagStatus === BagStatus.CONFIRM_REVIEW && !hasAssets) {
+      setBagStatus(BagStatus.ADDING_TO_BAG)
+    }
   }, [bagStatus, itemsInBag, priceChangedAssets, setBagStatus, fetchedPriceData])
 
   return (

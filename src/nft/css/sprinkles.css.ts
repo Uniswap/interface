@@ -7,6 +7,7 @@ const themeContractValues = {
     accentFailureSoft: '',
     accentAction: '',
     accentActionSoft: '',
+    accentSuccess: '',
 
     explicitWhite: '',
     gold: '',
@@ -22,16 +23,20 @@ const themeContractValues = {
 
     modalBackdrop: '',
 
+    searchBackground: '',
+    searchOutline: '',
+
     stateOverlayHover: '',
 
     textPrimary: '',
     textSecondary: '',
     textTertiary: '',
+
+    dropShadow: '',
   },
 
   shadows: {
     menu: '',
-    genieBlue: '',
     elevation: '',
     tooltip: '',
     deep: '',
@@ -45,11 +50,6 @@ const themeContractValues = {
 }
 
 export type Theme = typeof themeContractValues
-
-type DeepPartial<T> = {
-  [P in keyof T]?: DeepPartial<T[P]>
-}
-export type ThemePartial = DeepPartial<Theme>
 
 export const themeVars = createGlobalThemeContract(themeContractValues, (_, path) => `genie-${path.join('-')}`)
 
@@ -151,16 +151,13 @@ const zIndices = {
 export const vars = createGlobalTheme(':root', {
   color: {
     ...themeVars.colors,
-    genieBlue: '#4C82FB',
     fallbackGradient: 'linear-gradient(270deg, #D1D5DB 0%, #F6F6F6 100%)',
     loadingBackground: '#24272e',
-    dropShadow: '0px 4px 16px rgba(70, 115, 250, 0.4)',
     cardDropShadow: 'rgba(0, 0, 0, 10%) 0px 4px 12px',
     green: '#209853',
     orange: '#FA2C38',
     black: 'black',
     whitesmoke: '#F5F5F5',
-    blue: '#4C82FB',
     gray: '#CBCEDC',
     transculent: '#7F7F7F',
     transparent: 'transparent',
@@ -177,6 +174,7 @@ export const vars = createGlobalTheme(':root', {
     gold200: '#EEB317',
     gold400: '#B17900',
     green200: '#5CFE9D',
+    green300: '#40B66B',
     green400: '#1A9550',
     violet200: '#BDB8FA',
     violet400: '#7A7BEB',
@@ -419,8 +417,6 @@ const unresponsiveProperties = defineProperties({
     animationDuration: vars.time,
   },
 })
-
-export type UnresponsiveProperties = keyof typeof unresponsiveProperties
 
 export const sprinkles = createSprinkles(layoutStyles, colorStyles, unresponsiveProperties)
 export type Sprinkles = Parameters<typeof sprinkles>[0]

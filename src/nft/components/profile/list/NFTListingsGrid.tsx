@@ -6,6 +6,7 @@ import { NumericInput } from 'nft/components/layout/Input'
 import { badge, body, bodySmall, subheadSmall } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { DropDownOption, ListingMarket, ListingWarning, WalletAsset } from 'nft/types'
+import { LOOKS_RARE_CREATOR_BASIS_POINTS } from 'nft/utils'
 import { formatEth, formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { Dispatch, FormEvent, useEffect, useMemo, useRef, useState } from 'react'
@@ -160,10 +161,10 @@ const PriceTextInput = ({
           warningType !== WarningType.NONE && !focused
             ? 'orange'
             : isGlobalPrice
-            ? 'genieBlue'
+            ? 'accentAction'
             : listPrice != null
             ? 'textSecondary'
-            : 'gray700'
+            : 'blue400'
         }
       >
         <NumericInput
@@ -183,6 +184,9 @@ const PriceTextInput = ({
           }}
           ref={inputRef}
           onChange={(v: FormEvent<HTMLInputElement>) => {
+            if (!listPrice && v.currentTarget.value.includes('.') && parseFloat(v.currentTarget.value) === 0) {
+              return
+            }
             const val = parseFloat(v.currentTarget.value)
             setListPrice(isNaN(val) ? undefined : val)
           }}
@@ -227,7 +231,7 @@ const PriceTextInput = ({
                       : formatEth(asset.floor_sell_order_price)}
                     ETH
                     <Box
-                      color={warningType === WarningType.BELOW_FLOOR ? 'genieBlue' : 'orange'}
+                      color={warningType === WarningType.BELOW_FLOOR ? 'accentAction' : 'orange'}
                       marginLeft="8"
                       cursor="pointer"
                       onClick={() => {
@@ -258,9 +262,16 @@ const EthPriceDisplay = ({ ethPrice = 0 }: { ethPrice?: number }) => {
     <Column width="full">
       <Row width="full" justifyContent="flex-end">
         {ethPrice !== 0 ? (
-          <Box className={body} color="textSecondary" marginLeft="12" marginRight="0">
-            {formatUsdPrice(ethPrice * ethConversion)}
-          </Box>
+          <>
+            <Column>
+              <Box className={body} color="textPrimary" marginLeft="12" marginRight="0">
+                {ethPrice} ETH
+              </Box>
+              <Box className={body} color="textSecondary" marginLeft="12" marginRight="0">
+                {formatUsdPrice(ethPrice * ethConversion)}
+              </Box>
+            </Column>
+          </>
         ) : (
           '- ETH'
         )}
@@ -308,10 +319,13 @@ const MarketplaceRow = ({
 
   const marketplaceFee = selectedMarkets.length > 0 ? maxMarketFee(selectedMarkets) : 0
   const price = showGlobalPrice ? globalPrice : listPrice
-  const feeInEth = price && (price * (asset.basisPoints * 0.01 + marketplaceFee)) / 100
+  // LooksRare is a unique case where royalties for creators are a flat 0.5% or 50 basis points
+  const royalties =
+    (selectedMarkets.length === 1 && selectedMarkets[0].name === 'LooksRare'
+      ? LOOKS_RARE_CREATOR_BASIS_POINTS
+      : asset.basisPoints) * 0.01
+  const feeInEth = price && (price * (royalties + marketplaceFee)) / 100
   const userReceives = price && feeInEth && price - feeInEth
-  const profit = userReceives && asset.lastPrice && userReceives - asset.lastPrice
-  const profitPercent = profit && asset.lastPrice && Math.round(profit && (profit / asset.lastPrice) * 100)
 
   useEffect(() => {
     if (globalPriceMethod === SetPriceMethod.FLOOR_PRICE) {
@@ -427,30 +441,19 @@ const MarketplaceRow = ({
       </Row>
       <Row flex="1" display={{ sm: 'none', md: 'flex' }}>
         <Box className={body} color="textSecondary" width="full" textAlign="right">
-          {(asset.basisPoints * 0.01).toFixed(1)}%
+          {royalties.toFixed(1)}%
         </Box>
       </Row>
       <Row style={{ flex: '1.5' }} display={{ sm: 'none', md: 'flex' }}>
         <Column width="full">
           <EthPriceDisplay ethPrice={userReceives} />
-          {(showGlobalPrice ? globalPrice && globalPrice !== 0 : listPrice !== 0) && (
-            <Row marginTop="4" width="full" fontSize="12" color="textSecondary">
-              {profit ? <Box marginLeft="auto">Profit: {formatEth(profit)} ETH</Box> : null}
-              {profitPercent ? (
-                <Box marginLeft="8" marginRight="0">
-                  ({profitPercent > 0 && '+'}
-                  {profitPercent > 1000 ? Math.round(profitPercent / 1000) + 'K' : profitPercent}%)
-                </Box>
-              ) : null}
-            </Row>
-          )}
         </Column>
       </Row>
     </Row>
   )
 }
 
-export interface NFTListRowProps {
+interface NFTListRowProps {
   asset: WalletAsset
   globalPriceMethod?: SetPriceMethod
   setGlobalPrice: Dispatch<number | undefined>

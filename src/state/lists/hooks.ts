@@ -22,7 +22,7 @@ export function useAllLists(): AppState['lists']['byUrl'] {
  * @param map1 the base token map
  * @param map2 the map of additioanl tokens to add to the base map
  */
-export function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
+function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
   const chainIds = Object.keys(
     Object.keys(map1)
       .concat(Object.keys(map2))

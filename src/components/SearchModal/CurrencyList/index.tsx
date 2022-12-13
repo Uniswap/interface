@@ -60,7 +60,7 @@ const Tag = styled.div`
   margin-right: 4px;
 `
 
-export const WarningContainer = styled.div`
+const WarningContainer = styled.div`
   margin-left: 0.3em;
 `
 

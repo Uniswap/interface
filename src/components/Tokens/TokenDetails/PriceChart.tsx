@@ -50,18 +50,18 @@ const StyledDownArrow = styled(ArrowDownRight)`
   color: ${({ theme }) => theme.accentFailure};
 `
 
-export function calculateDelta(start: number, current: number) {
+function calculateDelta(start: number, current: number) {
   return (current / start - 1) * 100
 }
 
-export function getDeltaArrow(delta: number | null | undefined) {
+export function getDeltaArrow(delta: number | null | undefined, iconSize = 20) {
   // Null-check not including zero
   if (delta === null || delta === undefined) {
     return null
   } else if (Math.sign(delta) < 0) {
-    return <StyledDownArrow size={24} key="arrow-down" />
+    return <StyledDownArrow size={iconSize} key="arrow-down" aria-label="down" />
   }
-  return <StyledUpArrow size={24} key="arrow-up" />
+  return <StyledUpArrow size={iconSize} key="arrow-up" aria-label="up" />
 }
 
 export function formatDelta(delta: number | null | undefined) {
@@ -69,14 +69,16 @@ export function formatDelta(delta: number | null | undefined) {
   if (delta === null || delta === undefined || delta === Infinity || isNaN(delta)) {
     return '-'
   }
-  let formattedDelta = delta.toFixed(2) + '%'
-  if (Math.sign(delta) > 0) {
-    formattedDelta = '+' + formattedDelta
-  }
+  const formattedDelta = Math.abs(delta).toFixed(2) + '%'
   return formattedDelta
 }
 
-export const ChartHeader = styled.div`
+export const DeltaText = styled.span<{ delta: number | undefined }>`
+  color: ${({ theme, delta }) =>
+    delta !== undefined ? (Math.sign(delta) < 0 ? theme.accentFailure : theme.accentSuccess) : theme.textPrimary};
+`
+
+const ChartHeader = styled.div`
   position: absolute;
   ${textFadeIn};
   animation-duration: ${({ theme }) => theme.transition.duration.medium};
@@ -96,8 +98,8 @@ export const DeltaContainer = styled.div`
   align-items: center;
   margin-top: 4px;
 `
-const ArrowCell = styled.div`
-  padding-left: 2px;
+export const ArrowCell = styled.div`
+  padding-right: 3px;
   display: flex;
 `
 
@@ -151,9 +153,7 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
 
   // set display price to ending price when prices have changed.
   useEffect(() => {
-    if (prices) {
-      setDisplayPrice(endingPrice)
-    }
+    setDisplayPrice(endingPrice)
   }, [prices, endingPrice])
   const [crosshair, setCrosshair] = useState<number | null>(null)
 
@@ -371,7 +371,13 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
               />
             </g>
           ) : (
-            <AxisBottom scale={timeScale} stroke={theme.backgroundOutline} top={graphHeight - 1} hideTicks />
+            <AxisBottom
+              hideAxisLine={true}
+              scale={timeScale}
+              stroke={theme.backgroundOutline}
+              top={graphHeight - 1}
+              hideTicks
+            />
           )}
           {!width && (
             // Ensures an axis is drawn even if the width is not yet initialized.

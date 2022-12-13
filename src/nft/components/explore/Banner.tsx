@@ -1,12 +1,11 @@
 import { useLoadCollectionQuery } from 'graphql/data/nft/Collection'
-import { useIsMobile } from 'nft/hooks'
 import { fetchTrendingCollections } from 'nft/queries'
 import { TimePeriod } from 'nft/types'
 import { calculateCardIndex } from 'nft/utils'
 import { Suspense, useCallback, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
-import styled, { css } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { opacify } from 'theme/utils'
 
 import { Carousel, LoadingCarousel } from './Carousel'
@@ -16,14 +15,12 @@ const BannerContainer = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
-  padding: 32px 16px 0 16px;
+  padding-top: 22px;
   position: relative;
-`
 
-// Safari has issues with blur / overflow
-// https://stackoverflow.com/a/71353198
-const fixBlurOnSafari = css`
-  transform: translate3d(0, 0, 0);
+  @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    padding: 32px 16px;
+  }
 `
 
 const AbsoluteFill = styled.div`
@@ -34,13 +31,15 @@ const AbsoluteFill = styled.div`
   bottom: 0;
 `
 
+// Safari has issues with blur / overflow, forcing GPU rendering with `translate3d` fixes it
+// https://stackoverflow.com/a/71353198
 const BannerBackground = styled(AbsoluteFill)<{ backgroundImage: string }>`
-  ${fixBlurOnSafari}
+  transform: translate3d(0, 0, 0) scaleY(1.1);
 
   background-image: ${(props) => `url(${props.backgroundImage})`};
   filter: blur(62px);
+
   opacity: ${({ theme }) => (theme.darkMode ? 0.3 : 0.2)};
-  transform: scaleY(1.1);
 `
 
 const PlainBackground = styled(AbsoluteFill)`
@@ -72,8 +71,6 @@ const HeaderContainer = styled.div`
   font-weight: 500;
   font-size: 72px;
   line-height: 88px;
-  justify-content: start;
-  align-items: start;
   align-self: center;
   flex-shrink: 0;
   padding-bottom: 32px;
@@ -91,12 +88,24 @@ const HeaderContainer = styled.div`
   }
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    font-size: 20px;
-    line-height: 28px;
-    justify-content: center;
-    align-items: center;
-    padding-top: 0px;
-    padding-bottom: 0px;
+    line-height: 43px;
+    text-align: center;
+    padding-bottom: 16px;
+
+    br {
+      display: none;
+    }
+  }
+
+  /* Custom breakpoint to split into two lines on smaller screens */
+  @media only screen and (max-width: 550px) {
+    font-size: 28px;
+    line-height: 34px;
+    padding-bottom: 0;
+
+    br {
+      display: unset;
+    }
   }
 `
 
@@ -106,7 +115,6 @@ const TRENDING_COLLECTION_SIZE = 5
 
 const Banner = () => {
   const navigate = useNavigate()
-  const isMobile = useIsMobile()
 
   const { data } = useQuery(
     ['trendingCollections'],
@@ -155,7 +163,7 @@ const Banner = () => {
       ) : null}
       <BannerMainArea>
         <HeaderContainer>
-          Better prices. {!isMobile && <br />}
+          Better prices. <br />
           More listings.
         </HeaderContainer>
         {collections ? (
