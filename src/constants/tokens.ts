@@ -396,6 +396,10 @@ export function isCelo(chainId: number): chainId is SupportedChainId.CELO | Supp
   return chainId === SupportedChainId.CELO_ALFAJORES || chainId === SupportedChainId.CELO
 }
 
+export function isScroll(chainId: number): chainId is SupportedChainId.SCROLL_PREALPHA {
+  return chainId === SupportedChainId.SCROLL_PREALPHA
+}
+
 function getCeloNativeCurrency(chainId: number) {
   switch (chainId) {
     case SupportedChainId.CELO_ALFAJORES:
