@@ -313,7 +313,7 @@ const Bag = () => {
 
   return (
     <Portal>
-      <BagContainer raiseZIndex={isMobile || isModalOpen}>
+      <BagContainer data-testid="nft-bag" raiseZIndex={isMobile || isModalOpen}>
         {!(isProfilePage && profilePageState === ProfilePageStateType.LISTING) ? (
           <>
             <BagHeader
