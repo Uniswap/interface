@@ -5,10 +5,6 @@ export enum ImportAccountType {
   Indexed = 'indexed',
 }
 
-export enum ImportAccountEnsType {
-  ENS = 'ens',
-}
-
 interface BaseImportAccountParams {
   type: ImportAccountType
   name?: string

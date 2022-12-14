@@ -3,13 +3,6 @@ import { Token } from '@uniswap/sdk-core'
 import { UNI_ADDRESS } from './addresses'
 import { ChainId } from './chains'
 
-export const AMPL = new Token(
-  ChainId.Mainnet,
-  '0xD46bA6D942050d489DBd938a2C909A5d5039A161',
-  9,
-  'AMPL',
-  'Ampleforth'
-)
 export const DAI = new Token(
   ChainId.Mainnet,
   '0x6B175474E89094C44Da98b954EedeAC495271d0F',

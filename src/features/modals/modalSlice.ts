@@ -98,4 +98,4 @@ export const selectModalsState = (state: RootState): ModalsState => {
 }
 
 export const { openModal, closeModal } = slice.actions
-export const { reducer: modalsReducer, actions: modalsActions } = slice
+export const { reducer: modalsReducer } = slice

@@ -34,4 +34,4 @@ export const {
   setLockoutEndTime,
   resetLockoutEndTime,
 } = slice.actions
-export const { reducer: passwordLockoutReducer, actions: passwordLockoutActions } = slice
+export const { reducer: passwordLockoutReducer } = slice

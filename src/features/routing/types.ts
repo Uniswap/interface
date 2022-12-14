@@ -1,13 +1,6 @@
 import { Token } from '@uniswap/sdk-core'
 import { Trade } from 'src/features/transactions/swap/useTrade'
 
-export type QuoteParams = {
-  amountIn?: string
-  amountOut?: string
-  inAddress?: string
-  outAddress?: string
-}
-
 // Routing API types
 
 export interface QuoteResult {

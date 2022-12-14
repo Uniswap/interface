@@ -1,4 +1,3 @@
-import { BottomTabNavigationProp, BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import {
   CompositeNavigationProp,
   CompositeScreenProps,
@@ -114,40 +113,15 @@ export type AppStackScreenProp<Screen extends keyof AppStackParamList> = NativeS
   Screen
 >
 
-export type TabNavigationProp<Screen extends keyof TabParamList> = CompositeNavigationProp<
-  BottomTabNavigationProp<TabParamList, Screen>,
-  AppStackNavigationProp
->
-export type TabScreenProp<Screen extends keyof TabParamList> = CompositeScreenProps<
-  BottomTabScreenProps<TabParamList, Screen>,
-  AppStackScreenProps
->
-
-export type AccountStackNavigationProp = CompositeNavigationProp<
-  NativeStackNavigationProp<AccountStackParamList>,
-  AppStackNavigationProp
->
-
-export type AccountStackScreenProp<Screen extends keyof AccountStackParamList> =
-  CompositeScreenProps<NativeStackScreenProps<AccountStackParamList, Screen>, AppStackScreenProps>
-
 export type HomeStackNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<HomeStackParamList>,
   AppStackNavigationProp
->
-
-export type HomeStackScreenProp<Screen extends keyof HomeStackParamList> = CompositeScreenProps<
-  NativeStackScreenProps<HomeStackParamList, Screen>,
-  AppStackScreenProps
 >
 
 export type ExploreStackNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<ExploreStackParamList>,
   AppStackNavigationProp
 >
-
-export type ExploreStackScreenProp<Screen extends keyof ExploreStackParamList> =
-  CompositeScreenProps<NativeStackScreenProps<ExploreStackParamList, Screen>, AppStackScreenProps>
 
 export type SettingsStackNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<SettingsStackParamList>,

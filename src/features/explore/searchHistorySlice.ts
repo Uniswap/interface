@@ -96,4 +96,4 @@ export const selectSearchHistory = (state: RootState): SearchResult[] => {
 }
 
 export const { addToSearchHistory, clearSearchHistory } = slice.actions
-export const { reducer: searchHistoryReducer, actions: searchHistoryActions } = slice
+export const { reducer: searchHistoryReducer } = slice

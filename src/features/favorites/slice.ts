@@ -89,4 +89,4 @@ export const slice = createSlice({
 
 export const { addFavoriteToken, removeFavoriteToken, addWatchedAddress, removeWatchedAddress } =
   slice.actions
-export const { reducer: favoritesReducer, actions: favoritesActions } = slice
+export const { reducer: favoritesReducer } = slice

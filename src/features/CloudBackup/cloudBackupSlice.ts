@@ -25,4 +25,4 @@ const slice = createSlice({
 })
 
 export const { foundCloudBackup, clearCloudBackups } = slice.actions
-export const { reducer: cloudBackupReducer, actions: cloudBackupActions } = slice
+export const { reducer: cloudBackupReducer } = slice

@@ -141,12 +141,6 @@ export interface PermitMessage {
   }
 }
 
-export enum DappSourceInfo { // for future use in WalletConnectModal when we have a list of trusted dapps
-  Trusted,
-  Unknown,
-  Malicious,
-}
-
 export function isPrimaryTypePermit(
   message: PermitMessage | Record<string, unknown>
 ): message is PermitMessage {

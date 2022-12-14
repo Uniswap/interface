@@ -53,14 +53,6 @@ export enum SagaStatus {
   Failure = 'SagaFailure',
 }
 
-export interface SagaActions {
-  trigger: PayloadActionCreator<unknown>
-  cancel: PayloadActionCreator<unknown>
-  progress: PayloadActionCreator<unknown>
-  error: PayloadActionCreator<unknown>
-  reset: PayloadActionCreator<unknown>
-}
-
 export interface SagaState {
   status: SagaStatus | null
   error: string | null // error details

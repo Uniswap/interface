@@ -2,11 +2,6 @@ import { NativeModules } from 'react-native'
 
 const { RNEthersRS } = NativeModules
 
-export enum RNEthersRSErrorType {
-  StoreMnemonicError = 'storeMnemonicError',
-  RetrieveMnemonicError = 'retrieveMnemonicError',
-}
-
 export function getMnemonicIds(): Promise<string[]> {
   return RNEthersRS.getMnemonicIds()
 }

@@ -11,6 +11,4 @@ export type TupleSplit<
   ? TupleSplit<readonly [...R], N, readonly [...O, F]>
   : [O, T]
 
-export type TakeFirst<T extends readonly unknown[], N extends number> = TupleSplit<T, N>[0]
-
 export type SkipFirst<T extends readonly unknown[], N extends number> = TupleSplit<T, N>[1]

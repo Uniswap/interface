@@ -72,17 +72,3 @@ export function getLogBuffer() {
   }
   return logs
 }
-
-// Creates a logger instance scoped to a particular file for convenience
-export function createLogger(fileName: string): typeof logger {
-  return {
-    debug: (functionName: string, message: string, ...args: unknown[]) =>
-      logger.debug(fileName, functionName, message, ...args),
-    info: (functionName: string, message: string, ...args: unknown[]) =>
-      logger.info(fileName, functionName, message, ...args),
-    warn: (functionName: string, message: string, ...args: unknown[]) =>
-      logger.warn(fileName, functionName, message, ...args),
-    error: (functionName: string, message: string, ...args: unknown[]) =>
-      logger.error(fileName, functionName, message, ...args),
-  }
-}

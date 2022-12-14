@@ -52,4 +52,4 @@ export const {
   resetFeatureFlagOverrides,
   resetExperimentOverrides,
 } = slice.actions
-export const { reducer: experimentsReducer, actions: experimentsActions } = slice
+export const { reducer: experimentsReducer } = slice

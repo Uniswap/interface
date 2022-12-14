@@ -133,4 +133,4 @@ export const {
   addRequest,
   removeRequest,
 } = slice.actions
-export const { reducer: walletConnectReducer, actions: walletConnectActions } = slice
+export const { reducer: walletConnectReducer } = slice
