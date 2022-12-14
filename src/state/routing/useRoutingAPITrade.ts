@@ -2,7 +2,7 @@ import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order-router'
 import { sendTiming } from 'components/analytics'
-import { POLLING_INTERVAL } from 'constants/providers'
+import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useStablecoinPrice'
 import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
 import useIsValidBlock from 'lib/hooks/useIsValidBlock'
@@ -46,7 +46,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
 
   const { isLoading, isError, data, currentData } = useGetQuoteQuery(queryArgs ?? skipToken, {
     // Price-fetching is informational and costly, so it's done less frequently.
-    pollingInterval: routerPreference === RouterPreference.PRICE ? ms`2m` : POLLING_INTERVAL,
+    pollingInterval: routerPreference === RouterPreference.PRICE ? ms`2m` : AVERAGE_L1_BLOCK_TIME,
   })
 
   const quoteResult: GetQuoteResult | undefined = useIsValidBlock(Number(data?.blockNumber) || 0) ? data : undefined

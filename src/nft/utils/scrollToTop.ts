@@ -1,4 +1,9 @@
-import { getIsMobile } from 'nft/hooks'
+import { breakpoints } from 'nft/css/sprinkles.css'
+const isClient = typeof window !== 'undefined'
+
+function getIsMobile() {
+  return isClient ? window.innerWidth < breakpoints.sm : false
+}
 
 export const scrollToTop = () => {
   const isMobile = getIsMobile()

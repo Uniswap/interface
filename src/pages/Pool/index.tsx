@@ -165,7 +165,7 @@ function WrongNetworkCard() {
   const theme = useTheme()
 
   return (
-    <>
+    <div style={{ height: '100vh' }}>
       <PageWrapper>
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
@@ -189,7 +189,7 @@ function WrongNetworkCard() {
         </AutoColumn>
       </PageWrapper>
       <SwitchLocaleLink />
-    </>
+    </div>
   )
 }
 
@@ -263,7 +263,7 @@ export default function Pool() {
 
   return (
     <Trace page={PageName.POOL_PAGE} shouldLogImpression>
-      <>
+      <div style={{ height: '100vh' }}>
         <PageWrapper>
           <AutoColumn gap="lg" justify="center">
             <AutoColumn gap="lg" style={{ width: '100%' }}>
@@ -342,7 +342,7 @@ export default function Pool() {
           </AutoColumn>
         </PageWrapper>
         <SwitchLocaleLink />
-      </>
+      </div>
     </Trace>
   )
 }

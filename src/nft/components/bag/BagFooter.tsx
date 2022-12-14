@@ -22,13 +22,17 @@ import { switchChain } from 'utils/switchChain'
 
 import * as styles from './BagFooter.css'
 
+const FooterContainer = styled.div`
+  padding: 0px 12px;
+`
+
 const Footer = styled.div`
   border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
   color: ${({ theme }) => theme.textPrimary};
   display: flex;
   flex-direction: column;
-  margin-bottom: 8px;
-  padding: 12px 16px;
+  margin: 0px 16px 8px;
+  padding: 12px 0px;
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
 `
@@ -149,9 +153,9 @@ export const BagFooter = ({
   const isPending = PENDING_BAG_STATUSES.includes(bagStatus)
 
   return (
-    <Column className={styles.footerContainer}>
+    <FooterContainer>
       <Footer>
-        <Column gap="4" paddingTop="8" paddingBottom="20">
+        <Column gap="4" paddingTop="8" paddingBottom={warningText ? '8' : '20'}>
           <Row justifyContent="space-between">
             <Box>
               <ThemedText.HeadlineSmall>Total</ThemedText.HeadlineSmall>
@@ -180,6 +184,6 @@ export const BagFooter = ({
           </ActionButton>
         </TraceEvent>
       </Footer>
-    </Column>
+    </FooterContainer>
   )
 }

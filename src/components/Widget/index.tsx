@@ -10,7 +10,7 @@ import {
   SwapWidgetSkeleton,
 } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
-import { Permit2Variant, usePermit2Flag } from 'featureFlags/flags/permit2'
+import { usePermit2Enabled } from 'featureFlags/flags/permit2'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import {
   formatPercentInBasisPointsNumber,
@@ -132,7 +132,7 @@ export default function Widget({ token, onTokenChange, onReviewSwapClick }: Widg
     [initialQuoteDate, trace]
   )
 
-  const permit2Enabled = usePermit2Flag() === Permit2Variant.Enabled
+  const permit2Enabled = usePermit2Enabled()
 
   if (!(inputs.value.INPUT || inputs.value.OUTPUT)) {
     return <WidgetSkeleton />

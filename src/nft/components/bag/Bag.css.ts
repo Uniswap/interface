@@ -3,7 +3,7 @@ import { breakpoints, sprinkles } from 'nft/css/sprinkles.css'
 
 export const assetsContainer = style([
   sprinkles({
-    paddingX: '16',
+    paddingX: '20',
     maxHeight: 'full',
     overflowY: 'scroll',
   }),

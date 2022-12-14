@@ -1,14 +1,15 @@
 import { initializeAnalytics, OriginApplication, sendAnalyticsEvent, Trace, user } from '@uniswap/analytics'
 import { CustomUserProperties, EventName, getBrowser, PageName } from '@uniswap/analytics-events'
 import Loader from 'components/Loader'
+import { MenuDropdown } from 'components/NavBar/MenuDropdown'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
+import { Box } from 'nft/components/Box'
 import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
 import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
 import { ProfilePageLoadingSkeleton } from 'nft/components/profile/view/ProfilePageLoadingSkeleton'
-import { useBag } from 'nft/hooks'
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -21,6 +22,7 @@ import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import { useAnalyticsReporter } from '../components/analytics'
 import ErrorBoundary from '../components/ErrorBoundary'
+import { PageTabs } from '../components/NavBar'
 import NavBar from '../components/NavBar'
 import Polling from '../components/Polling'
 import Popups from '../components/Popups'
@@ -67,18 +69,39 @@ const AppWrapper = styled.div`
   display: flex;
   flex-flow: column;
   align-items: flex-start;
+  height: 100%;
 `
 
 const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: 100%;
   padding: 72px 0px 0px 0px;
   align-items: center;
   flex: 1;
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     padding: 52px 0px 16px 0px;
   `};
+`
+
+const MobileBottomBar = styled.div`
+  z-index: ${Z_INDEX.sticky};
+  position: sticky;
+  display: flex;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  width: 100vw;
+  justify-content: space-between;
+  padding: 4px 8px;
+  height: ${({ theme }) => theme.mobileBottomBarHeight}px;
+  background: ${({ theme }) => theme.backgroundSurface};
+  border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
+
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
+    display: none;
+  }
 `
 
 const HeaderWrapper = styled.div<{ transparent?: boolean }>`
@@ -177,9 +200,7 @@ export default function App() {
     return () => window.removeEventListener('scroll', scrollListener)
   }, [])
 
-  const isBagExpanded = useBag((state) => state.bagExpanded)
-
-  const isHeaderTransparent = !scrolledState && !isBagExpanded
+  const isHeaderTransparent = !scrolledState
 
   const landingPageFlag = useLandingPageFlag()
 
@@ -196,11 +217,10 @@ export default function App() {
             <Popups />
             <Polling />
             <TopLevelModals />
-            <Landing />
             <Suspense fallback={<Loader />}>
               {isLoaded ? (
                 <Routes>
-                  {landingPageFlag === LandingPageVariant.Enabled && <Route path="/" element={<Swap />} />}
+                  {landingPageFlag === LandingPageVariant.Enabled && <Route path="/" element={<Landing />} />}
                   <Route path="tokens" element={<Tokens />}>
                     <Route path=":chainName" />
                   </Route>
@@ -302,6 +322,12 @@ export default function App() {
             </Suspense>
             <Marginer />
           </BodyWrapper>
+          <MobileBottomBar>
+            <PageTabs />
+            <Box marginY="4">
+              <MenuDropdown />
+            </Box>
+          </MobileBottomBar>
         </Trace>
       </AppWrapper>
     </ErrorBoundary>

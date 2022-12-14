@@ -12,6 +12,7 @@ export const PageWrapper = styled.div`
   padding: 68px 8px 0px;
   max-width: 480px;
   width: 100%;
+  height: 100vh;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     padding-top: 48px;
@@ -23,18 +24,17 @@ export const PageWrapper = styled.div`
 `
 
 // Mostly copied from `AppBody` but it was getting too hard to maintain backwards compatibility.
-export const SwapWrapper = styled.main<{ margin?: string; maxWidth?: string; open: boolean }>`
+export const SwapWrapper = styled.main`
   position: relative;
   background: ${({ theme }) => theme.backgroundSurface};
   border-radius: 16px;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   padding: 8px;
   z-index: ${Z_INDEX.deprecated_content};
-  cursor: ${({ open }) => (open ? 'pointer' : 'suto')};
   transition: transform 250ms ease;
+
   &:hover {
-    border: 1px solid ${({ theme, open }) => (open ? theme.accentAction : theme.backgroundOutline)};
-    transform: ${({ open }) => (open ? `translateY(-4px)` : `none`)};
+    border: 1px solid ${({ theme }) => theme.backgroundOutline};
   }
 `
 

@@ -281,7 +281,7 @@ function Web3StatusInner() {
             <Trans>Connect</Trans>
           </StyledConnectButton>
           <VerticalDivider />
-          <ChevronWrapper onClick={toggleWalletDropdown}>
+          <ChevronWrapper onClick={toggleWalletDropdown} data-testid="navbar-toggle-dropdown">
             {walletIsOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
           </ChevronWrapper>
         </Web3StatusConnectWrapper>
