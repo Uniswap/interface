@@ -45,7 +45,9 @@ export const EmptyWalletContent = () => {
       <EmptyWalletText className={headlineMedium}>
         <Trans>No NFTs in</Trans>&nbsp;{shortenAddress(account ?? '')}
       </EmptyWalletText>
-      <ExploreNFTsButton onClick={() => navigate('/nfts')}>Explore NFTs</ExploreNFTsButton>
+      <ExploreNFTsButton data-testid="nft-explore-nfts-button" onClick={() => navigate('/nfts')}>
+        Explore NFTs
+      </ExploreNFTsButton>
     </EmptyWalletContainer>
   )
 }

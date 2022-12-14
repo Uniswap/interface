@@ -796,7 +796,7 @@ export default function Swap({ className }: { className?: string }) {
                       </ButtonError>
                     </AutoColumn>
                   </AutoRow>
-                ) : permit.state === PermitState.PERMIT_NEEDED ? (
+                ) : isValid && permit.state === PermitState.PERMIT_NEEDED ? (
                   <ButtonYellow
                     onClick={updatePermit}
                     disabled={isPermitPending || isApprovalPending}
@@ -873,10 +873,10 @@ export default function Swap({ className }: { className?: string }) {
                         swapInputError
                       ) : routeIsSyncing || routeIsLoading ? (
                         <Trans>Swap</Trans>
-                      ) : priceImpactSeverity > 2 ? (
-                        <Trans>Swap Anyway</Trans>
                       ) : priceImpactTooHigh ? (
                         <Trans>Price Impact Too High</Trans>
+                      ) : priceImpactSeverity > 2 ? (
+                        <Trans>Swap Anyway</Trans>
                       ) : (
                         <Trans>Swap</Trans>
                       )}

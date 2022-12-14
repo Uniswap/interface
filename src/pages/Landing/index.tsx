@@ -1,5 +1,5 @@
-import { Trace } from '@uniswap/analytics'
-import { PageName } from '@uniswap/analytics-events'
+import { Trace, TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName, PageName } from '@uniswap/analytics-events'
 import { BaseButton } from 'components/Button'
 import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
 import Swap from 'pages/Swap'
@@ -31,8 +31,8 @@ const Gradient = styled.div<{ isDarkMode: boolean }>`
   width: 100%;
   background: ${({ isDarkMode }) =>
     isDarkMode
-      ? 'linear-gradient(rgba(8, 10, 24, 0) 9.84%, rgb(8 10 24 / 86%) 35.35%)'
-      : 'linear-gradient(rgba(8, 10, 24, 0) 9.84%, rgb(255 255 255 / 86%) 35.35%)'};
+      ? 'linear-gradient(rgba(8, 10, 24, 0) 0%, rgb(8 10 24 / 100%) 45%)'
+      : 'linear-gradient(rgba(255, 255, 255, 0) 0%, rgb(255 255 255 /100%) 45%)'};
   z-index: ${Z_INDEX.dropdown};
   pointer-events: none;
 `
@@ -49,6 +49,9 @@ const Glow = styled.div`
 `
 
 const ContentWrapper = styled.div<{ isDarkMode: boolean }>`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   max-width: min(720px, 90%);
   position: absolute;
@@ -113,7 +116,7 @@ const SubTextContainer = styled.div`
 `
 
 const LandingButton = styled(BaseButton)`
-  padding: 16px;
+  padding: 16px 0px;
   border-radius: 24px;
 `
 
@@ -132,6 +135,7 @@ const ButtonCTASecondary = styled(LandingButton)`
   background: none;
   border: ${({ theme }) => `1px solid ${theme.textPrimary}`};
   color: ${({ theme }) => theme.textPrimary};
+  transition: ${({ theme }) => `all ${theme.transition.duration.medium} ${theme.transition.timing.ease}`};
 
   &:hover {
     border: 1px solid rgba(255, 0, 199, 1);
@@ -141,14 +145,11 @@ const ButtonCTASecondary = styled(LandingButton)`
 const ButtonCTAText = styled.p`
   margin: 0px;
   font-size: 16px;
+  font-weight: 600;
   white-space: nowrap;
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     font-size: 20px;
-  }
-
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
-    font-size: 24px;
   }
 `
 
@@ -157,6 +158,7 @@ const ActionsWrapper = styled.span`
   justify-content: center;
   gap: 12px;
   width: 100%;
+  max-width: 600px;
 
   & > * {
     max-width: 288px;
@@ -210,23 +212,41 @@ export default function Landing() {
   return (
     <Trace page={PageName.LANDING_PAGE} shouldLogImpression>
       <PageWrapper>
-        <Link to="/swap">
-          <LandingSwap />
-        </Link>
+        <TraceEvent
+          events={[BrowserEvent.onClick]}
+          name={EventName.ELEMENT_CLICKED}
+          element={ElementName.LANDING_PAGE_SWAP_ELEMENT}
+        >
+          <Link to="/swap">
+            <LandingSwap />
+          </Link>
+        </TraceEvent>
         <Glow />
         <Gradient isDarkMode={isDarkMode} />
         <ContentWrapper isDarkMode={isDarkMode}>
-          <TitleText isDarkMode={isDarkMode}>Trade crypto & NFTs with confidence.</TitleText>
+          <TitleText isDarkMode={isDarkMode}>Trade crypto & NFTs with confidence</TitleText>
           <SubTextContainer>
-            <SubText>Buy, sell, and explore tokens and NFTs </SubText>
+            <SubText>Buy, sell, and explore tokens and NFTs</SubText>
           </SubTextContainer>
           <ActionsWrapper>
-            <ButtonCTA as={Link} to="/swap">
-              <ButtonCTAText>Continue</ButtonCTAText>
-            </ButtonCTA>
-            <ButtonCTASecondary as={Link} to="/about">
-              <ButtonCTAText>Learn more</ButtonCTAText>
-            </ButtonCTASecondary>
+            <TraceEvent
+              events={[BrowserEvent.onClick]}
+              name={EventName.ELEMENT_CLICKED}
+              element={ElementName.CONTINUE_BUTTON}
+            >
+              <ButtonCTA as={Link} to="/swap">
+                <ButtonCTAText>Continue</ButtonCTAText>
+              </ButtonCTA>
+            </TraceEvent>
+            <TraceEvent
+              events={[BrowserEvent.onClick]}
+              name={EventName.ELEMENT_CLICKED}
+              element={ElementName.LEARN_MORE_LINK}
+            >
+              <ButtonCTASecondary as={Link} to="/about">
+                <ButtonCTAText>Learn more</ButtonCTAText>
+              </ButtonCTASecondary>
+            </TraceEvent>
           </ActionsWrapper>
         </ContentWrapper>
       </PageWrapper>
