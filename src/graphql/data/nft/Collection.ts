@@ -1,11 +1,11 @@
-import graphql from 'babel-plugin-relay/macro'
+import { gql } from '@apollo/client'
 import { GenieCollection, Trait } from 'nft/types'
 import { useMemo } from 'react'
 
 import { NftCollection, useCollectionQuery } from '../__generated__/types-and-hooks'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const collectionQuery = graphql`
+const collectionQuery = gql`
   query Collection($addresses: [String!]!) {
     nftCollections(filter: { addresses: $addresses }) {
       edges {
@@ -126,19 +126,17 @@ export function useCollection(address: string): useCollectionReturnProps {
         description: queryCollection?.description,
         standard: queryCollection?.nftContracts?.[0]?.standard,
         bannerImageUrl: queryCollection?.bannerImage?.url,
-        stats: queryCollection?.markets
-          ? {
-              num_owners: market?.owners,
-              floor_price: market?.floorPrice?.value,
-              one_day_volume: market?.volume?.value,
-              one_day_change: market?.volumePercentChange?.value,
-              one_day_floor_change: market?.floorPricePercentChange?.value,
-              banner_image_url: queryCollection?.bannerImage?.url,
-              total_supply: queryCollection?.numAssets,
-              total_listings: market?.listings?.value,
-              total_volume: market?.totalVolume?.value,
-            }
-          : {},
+        stats: {
+          num_owners: market?.owners,
+          floor_price: market?.floorPrice?.value,
+          one_day_volume: market?.volume?.value,
+          one_day_change: market?.volumePercentChange?.value,
+          one_day_floor_change: market?.floorPricePercentChange?.value,
+          banner_image_url: queryCollection?.bannerImage?.url,
+          total_supply: queryCollection?.numAssets,
+          total_listings: market?.listings?.value,
+          total_volume: market?.totalVolume?.value,
+        },
         traits,
         marketplaceCount: market?.marketplaces?.map((market) => {
           return {
