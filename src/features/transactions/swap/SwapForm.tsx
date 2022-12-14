@@ -1,7 +1,7 @@
 // TODO(MOB-3866): reduce component complexity
 /* eslint-disable complexity */
 import { AnyAction } from '@reduxjs/toolkit'
-import React, { Dispatch, useCallback, useMemo, useState } from 'react'
+import React, { Dispatch, memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, StyleSheet, TextInputProps } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
@@ -50,7 +50,7 @@ interface SwapFormProps {
   showingSelectorScreen: boolean
 }
 
-export function SwapForm({
+function _SwapForm({
   dispatch,
   onNext,
   derivedSwapInfo,
@@ -391,3 +391,5 @@ export function SwapForm({
     </>
   )
 }
+
+export const SwapForm = memo(_SwapForm)
