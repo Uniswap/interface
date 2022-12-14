@@ -11,7 +11,7 @@ import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 
-const PageWrapper = styled.div`
+const PageContainer = styled.div`
   width: 100%;
   position: relative;
   display: flex;
@@ -48,7 +48,7 @@ const Glow = styled.div`
   width: 100%;
 `
 
-const ContentWrapper = styled.div<{ isDarkMode: boolean }>`
+const ContentContainer = styled.div<{ isDarkMode: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -131,17 +131,6 @@ const ButtonCTA = styled(LandingButton)`
   }
 `
 
-const ButtonCTASecondary = styled(LandingButton)`
-  background: none;
-  border: ${({ theme }) => `1px solid ${theme.textPrimary}`};
-  color: ${({ theme }) => theme.textPrimary};
-  transition: ${({ theme }) => `all ${theme.transition.duration.medium} ${theme.transition.timing.ease}`};
-
-  &:hover {
-    border: 1px solid rgba(255, 0, 199, 1);
-  }
-`
-
 const ButtonCTAText = styled.p`
   margin: 0px;
   font-size: 16px;
@@ -153,21 +142,9 @@ const ButtonCTAText = styled.p`
   }
 `
 
-const ActionsWrapper = styled.span`
-  display: flex;
-  justify-content: center;
-  gap: 12px;
+const ActionsContainer = styled.span`
+  max-width: 300px;
   width: 100%;
-  max-width: 600px;
-
-  & > * {
-    max-width: 288px;
-    flex: 1;
-  }
-
-  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
-    gap: 24px;
-  }
 `
 
 const LandingSwap = styled(Swap)`
@@ -211,7 +188,7 @@ export default function Landing() {
 
   return (
     <Trace page={PageName.LANDING_PAGE} shouldLogImpression>
-      <PageWrapper>
+      <PageContainer>
         <TraceEvent
           events={[BrowserEvent.onClick]}
           name={EventName.ELEMENT_CLICKED}
@@ -223,33 +200,24 @@ export default function Landing() {
         </TraceEvent>
         <Glow />
         <Gradient isDarkMode={isDarkMode} />
-        <ContentWrapper isDarkMode={isDarkMode}>
+        <ContentContainer isDarkMode={isDarkMode}>
           <TitleText isDarkMode={isDarkMode}>Trade crypto & NFTs with confidence</TitleText>
           <SubTextContainer>
             <SubText>Buy, sell, and explore tokens and NFTs</SubText>
           </SubTextContainer>
-          <ActionsWrapper>
+          <ActionsContainer>
             <TraceEvent
               events={[BrowserEvent.onClick]}
               name={EventName.ELEMENT_CLICKED}
               element={ElementName.CONTINUE_BUTTON}
             >
               <ButtonCTA as={Link} to="/swap">
-                <ButtonCTAText>Continue</ButtonCTAText>
+                <ButtonCTAText>Get started</ButtonCTAText>
               </ButtonCTA>
             </TraceEvent>
-            <TraceEvent
-              events={[BrowserEvent.onClick]}
-              name={EventName.ELEMENT_CLICKED}
-              element={ElementName.LEARN_MORE_LINK}
-            >
-              <ButtonCTASecondary as={Link} to="/about">
-                <ButtonCTAText>Learn more</ButtonCTAText>
-              </ButtonCTASecondary>
-            </TraceEvent>
-          </ActionsWrapper>
-        </ContentWrapper>
-      </PageWrapper>
+          </ActionsContainer>
+        </ContentContainer>
+      </PageContainer>
     </Trace>
   )
 }
