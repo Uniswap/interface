@@ -282,7 +282,11 @@ const Bag = () => {
   return (
     <Portal>
       {!(isProfilePage && profilePageState === ProfilePageStateType.LISTING) ? (
-        <Column zIndex={isMobile || isOpen ? 'modalOverTooltip' : '3'} className={styles.bagContainer}>
+        <Column
+          data-testid="nft-bag"
+          zIndex={isMobile || isOpen ? 'modalOverTooltip' : '3'}
+          className={styles.bagContainer}
+        >
           <BagHeader
             numberOfAssets={isProfilePage ? sellAssets.length : itemsInBag.length}
             closeBag={handleCloseBag}
