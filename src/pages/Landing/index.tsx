@@ -212,7 +212,7 @@ export default function Landing() {
               element={ElementName.CONTINUE_BUTTON}
             >
               <ButtonCTA as={Link} to="/swap">
-                <ButtonCTAText>Get Started</ButtonCTAText>
+                <ButtonCTAText>Get started</ButtonCTAText>
               </ButtonCTA>
             </TraceEvent>
           </ActionsContainer>
