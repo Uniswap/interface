@@ -347,13 +347,13 @@ export default function AddLiquidity() {
                 <ColumnCenter>
                   <BlueCard>
                     <AutoColumn gap="10px">
-                      <ThemedText.DeprecatedLink fontWeight={600} color="deprecated_primaryText1">
+                      <ThemedText.DeprecatedLink fontWeight={600} color="accentAction">
                         <Trans>You are the first liquidity provider.</Trans>
                       </ThemedText.DeprecatedLink>
-                      <ThemedText.DeprecatedLink fontWeight={400} color="deprecated_primaryText1">
+                      <ThemedText.DeprecatedLink fontWeight={400} color="accentAction">
                         <Trans>The ratio of tokens you add will set the price of this pool.</Trans>
                       </ThemedText.DeprecatedLink>
-                      <ThemedText.DeprecatedLink fontWeight={400} color="deprecated_primaryText1">
+                      <ThemedText.DeprecatedLink fontWeight={400} color="accentAction">
                         <Trans>Once you are happy with the rate click supply to review.</Trans>
                       </ThemedText.DeprecatedLink>
                     </AutoColumn>
@@ -363,7 +363,7 @@ export default function AddLiquidity() {
                 <ColumnCenter>
                   <BlueCard>
                     <AutoColumn gap="10px">
-                      <ThemedText.DeprecatedLink fontWeight={400} color="deprecated_primaryText1">
+                      <ThemedText.DeprecatedLink fontWeight={400} color="accentAction">
                         <Trans>
                           <b>
                             <Trans>Tip:</Trans>
@@ -390,7 +390,7 @@ export default function AddLiquidity() {
               showCommonBases
             />
             <ColumnCenter>
-              <Plus size="16" color={theme.deprecated_text2} />
+              <Plus size="16" color={theme.textSecondary} />
             </ColumnCenter>
             <CurrencyInputPanel
               value={formattedAmounts[Field.CURRENCY_B]}

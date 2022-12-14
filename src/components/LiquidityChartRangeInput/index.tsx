@@ -167,7 +167,7 @@ export default function LiquidityChartRangeInput({
       {isUninitialized ? (
         <InfoBox
           message={<Trans>Your position will appear here.</Trans>}
-          icon={<Inbox size={56} stroke={theme.deprecated_text1} />}
+          icon={<Inbox size={56} stroke={theme.textPrimary} />}
         />
       ) : isLoading ? (
         <InfoBox icon={<Loader size="40px" stroke={theme.deprecated_text4} />} />
@@ -189,12 +189,12 @@ export default function LiquidityChartRangeInput({
             margins={{ top: 10, right: 2, bottom: 20, left: 0 }}
             styles={{
               area: {
-                selection: theme.deprecated_blue1,
+                selection: theme.accentAction,
               },
               brush: {
                 handle: {
-                  west: saturate(0.1, tokenAColor) ?? theme.deprecated_red1,
-                  east: saturate(0.1, tokenBColor) ?? theme.deprecated_blue1,
+                  west: saturate(0.1, tokenAColor) ?? theme.accentFailure,
+                  east: saturate(0.1, tokenBColor) ?? theme.accentAction,
                 },
               },
             }}

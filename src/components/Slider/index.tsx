@@ -19,7 +19,7 @@ const StyledRangeInput = styled.input<{ size: number }>`
     -webkit-appearance: none;
     height: ${({ size }) => size}px;
     width: ${({ size }) => size}px;
-    background-color: ${({ theme }) => theme.deprecated_blue1};
+    background-color: ${({ theme }) => theme.accentAction};
     border-radius: 100%;
     border: none;
     transform: translateY(-50%);
@@ -62,11 +62,7 @@ const StyledRangeInput = styled.input<{ size: number }>`
   }
 
   &::-webkit-slider-runnable-track {
-    background: linear-gradient(
-      90deg,
-      ${({ theme }) => theme.deprecated_blue1},
-      ${({ theme }) => theme.deprecated_blue2}
-    );
+    background: linear-gradient(90deg, ${({ theme }) => theme.accentAction}, ${({ theme }) => theme.accentAction});
     height: 2px;
   }
 

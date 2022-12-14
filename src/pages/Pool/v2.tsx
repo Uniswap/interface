@@ -162,7 +162,7 @@ export default function Pool() {
                   </ThemedText.DeprecatedWhite>
                 </RowBetween>
                 <ExternalLink
-                  style={{ color: theme.deprecated_white, textDecoration: 'underline' }}
+                  style={{ color: theme.white, textDecoration: 'underline' }}
                   target="_blank"
                   href="https://docs.uniswap.org/protocol/V2/concepts/core-concepts/pools"
                 >
@@ -180,7 +180,7 @@ export default function Pool() {
             <AutoColumn gap="lg" justify="center">
               <AutoColumn gap="md" style={{ width: '100%' }}>
                 <Layer2Prompt>
-                  <ThemedText.DeprecatedBody color={theme.deprecated_text3} textAlign="center">
+                  <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
                     <Trans>V2 Pool is not available on Layer 2. Switch to Layer 1 Ethereum.</Trans>
                   </ThemedText.DeprecatedBody>
                 </Layer2Prompt>
@@ -214,13 +214,13 @@ export default function Pool() {
 
                 {!account ? (
                   <Card padding="40px">
-                    <ThemedText.DeprecatedBody color={theme.deprecated_text3} textAlign="center">
+                    <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
                       <Trans>Connect to a wallet to view your liquidity.</Trans>
                     </ThemedText.DeprecatedBody>
                   </Card>
                 ) : v2IsLoading ? (
                   <EmptyProposals>
-                    <ThemedText.DeprecatedBody color={theme.deprecated_text3} textAlign="center">
+                    <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
                       <Dots>
                         <Trans>Loading</Trans>
                       </Dots>
@@ -271,7 +271,7 @@ export default function Pool() {
                   </>
                 ) : (
                   <EmptyProposals>
-                    <ThemedText.DeprecatedBody color={theme.deprecated_text3} textAlign="center">
+                    <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
                       <Trans>No liquidity found.</Trans>
                     </ThemedText.DeprecatedBody>
                   </EmptyProposals>

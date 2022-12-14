@@ -55,7 +55,7 @@ export const LinkStyledButton = styled.button<{ disabled?: boolean }>`
   background: none;
 
   cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
-  color: ${({ theme, disabled }) => (disabled ? theme.deprecated_text2 : theme.deprecated_primary1)};
+  color: ${({ theme, disabled }) => (disabled ? theme.textSecondary : theme.accentAction)};
   font-weight: 500;
 
   :hover {
@@ -435,7 +435,7 @@ export const SpinnerSVG = styled.svg`
 `
 
 const BackArrowLink = styled(StyledInternalLink)`
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${({ theme }) => theme.textPrimary};
 `
 export function BackArrow({ to }: { to: string }) {
   return (
