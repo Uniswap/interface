@@ -86,7 +86,12 @@ const collectionQuery = graphql`
   }
 `
 
-export function useCollection(address: string): { data: GenieCollection; loading: boolean } {
+interface useCollectionReturnProps {
+  data: GenieCollection
+  loading: boolean
+}
+
+export function useCollection(address: string): useCollectionReturnProps {
   const { data: queryData, loading } = useCollectionQuery({
     variables: {
       addresses: address,
