@@ -16,23 +16,6 @@ import { MenuDropdown } from './MenuDropdown'
 import { SearchBar } from './SearchBar'
 import * as styles from './style.css'
 
-const MobileBottomBar = styled.div`
-  position: fixed;
-  display: flex;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  justify-content: space-between;
-  padding: 4px 8px;
-  height: ${({ theme }) => theme.mobileBottomBarHeight}px;
-  background: ${({ theme }) => theme.backgroundSurface};
-  border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
-
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
-    display: none;
-  }
-`
-
 const Nav = styled.nav`
   padding: 20px 12px;
   width: 100%;
@@ -45,22 +28,24 @@ interface MenuItemProps {
   id?: NavLinkProps['id']
   isActive?: boolean
   children: ReactNode
+  dataTestId?: string
 }
 
-const MenuItem = ({ href, id, isActive, children }: MenuItemProps) => {
+const MenuItem = ({ href, dataTestId, id, isActive, children }: MenuItemProps) => {
   return (
     <NavLink
       to={href}
       className={isActive ? styles.activeMenuItem : styles.menuItem}
       id={id}
       style={{ textDecoration: 'none' }}
+      data-testid={dataTestId}
     >
       {children}
     </NavLink>
   )
 }
 
-const PageTabs = () => {
+export const PageTabs = () => {
   const { pathname } = useLocation()
   const { chainId: connectedChainId } = useWeb3React()
   const chainName = chainIdToBackendName(connectedChainId)
@@ -82,7 +67,7 @@ const PageTabs = () => {
       <MenuItem href={`/tokens/${chainName.toLowerCase()}`} isActive={pathname.startsWith('/tokens')}>
         <Trans>Tokens</Trans>
       </MenuItem>
-      <MenuItem href="/nfts" isActive={isNftPage}>
+      <MenuItem dataTestId="nft-nav" href="/nfts" isActive={isNftPage}>
         <Trans>NFTs</Trans>
       </MenuItem>
       <MenuItem href="/pool" id="pool-nav-link" isActive={isPoolActive}>
@@ -99,7 +84,7 @@ const Navbar = () => {
   return (
     <>
       <Nav>
-        <Box display="flex" height="full" flexWrap="nowrap" alignItems="center">
+        <Box display="flex" height="full" flexWrap="nowrap">
           <Box className={styles.leftSideContainer}>
             <Box className={styles.logoContainer}>
               <UniIcon
@@ -112,7 +97,7 @@ const Navbar = () => {
               />
             </Box>
             {!isNftPage && (
-              <Box display={{ sm: 'flex', lg: 'none' }} alignSelf="center">
+              <Box display={{ sm: 'flex', lg: 'none' }}>
                 <ChainSelector leftAlign={true} />
               </Box>
             )}
@@ -120,7 +105,7 @@ const Navbar = () => {
               <PageTabs />
             </Row>
           </Box>
-          <Box className={styles.middleContainer} alignItems="flex-start">
+          <Box className={styles.searchContainer}>
             <SearchBar />
           </Box>
           <Box className={styles.rightSideContainer}>
@@ -143,12 +128,6 @@ const Navbar = () => {
           </Box>
         </Box>
       </Nav>
-      <MobileBottomBar>
-        <PageTabs />
-        <Box marginY="4">
-          <MenuDropdown />
-        </Box>
-      </MobileBottomBar>
     </>
   )
 }

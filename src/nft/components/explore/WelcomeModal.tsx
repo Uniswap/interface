@@ -87,7 +87,7 @@ export function WelcomeModal({ onDismissed }: { onDismissed: () => void }) {
 
   return (
     <Modal isOpen={isOpen} onSwipe={dismiss} maxWidth={720} isBottomSheet={false}>
-      <Container>
+      <Container data-testid="nft-welcome-modal">
         <Background
           {...(theme.darkMode ? BACKGROUND_IMAGE.dark : BACKGROUND_IMAGE.light)}
           alt="Welcome modal background"
@@ -112,7 +112,7 @@ export function WelcomeModal({ onDismissed }: { onDismissed: () => void }) {
               Learn more.
             </Link>
           </Paragraph>
-          <CloseButton size={24} onClick={dismiss} />
+          <CloseButton data-testid="nft-intro-modal" size={24} onClick={dismiss} />
         </Content>
       </Container>
     </Modal>

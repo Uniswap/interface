@@ -86,7 +86,7 @@ export const BagHeader = ({ numberOfAssets, closeBag, resetFlow, isProfilePage }
         </>
       )}
       <IconWrapper onClick={closeBag}>
-        <BagCloseIcon />
+        <BagCloseIcon data-testid="nft-bag-close-icon" />
       </IconWrapper>
     </Wrapper>
   )
