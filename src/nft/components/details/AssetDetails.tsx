@@ -490,7 +490,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
           </SocialsContainer>
         </>
       </InfoContainer>
-      <InfoContainer primaryHeader="Details" defaultOpen secondaryHeader={null} data-testid="nft-details-details">
+      <InfoContainer primaryHeader="Details" defaultOpen secondaryHeader={null} data-testid="nft-details-asset-details">
         <DetailsContainer asset={asset} collection={collection} />
       </InfoContainer>
     </Column>
