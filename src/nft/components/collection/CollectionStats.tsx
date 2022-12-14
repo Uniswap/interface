@@ -356,7 +356,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
 
   const isBagExpanded = useBag((state) => state.bagExpanded)
   const isScreenSize = useScreenSize()
-  const isSmallContainer = isMobile || (!isScreenSize['xl'] && isBagExpanded)
+  const isSmallContainer = isMobile || (!isScreenSize['lg'] && isBagExpanded)
 
   return (
     <Row gap={{ sm: '24', md: '36', lg: '48', xl: '60' }} {...props}>
@@ -383,7 +383,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
             </StatsItem>
           ) : null}
           {totalSupplyStr ? (
-            <StatsItem label="Items" shouldHide={isSmallContainer ?? false}>
+            <StatsItem label="Items" shouldHide={isMobile ?? false}>
               {totalSupplyStr}
             </StatsItem>
           ) : null}
