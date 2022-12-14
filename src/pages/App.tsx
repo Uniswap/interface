@@ -1,5 +1,7 @@
 import { MinimalPositionCard } from 'components/Stake'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
+import { useEffect } from 'react'
+import ReactGA from 'react-ga'
 import { Route, Switch } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
@@ -37,6 +39,9 @@ import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import Vote from './Vote'
 import VotePage from './Vote/VotePage'
+
+const TRACKING_ID = 'UA-249910106-2'
+ReactGA.initialize(TRACKING_ID)
 
 const AppWrapper = styled.div`
   display: flex;
@@ -85,6 +90,10 @@ function TopLevelModals() {
 }
 
 export default function App() {
+  useEffect(() => {
+    ReactGA.pageview(window.location.pathname + window.location.search)
+  }, [])
+
   return (
     <ErrorBoundary>
       <Route component={GoogleAnalyticsReporter} />
