@@ -13,7 +13,6 @@ import { Column, Row } from 'nft/components/Flex'
 import { BagCloseIcon } from 'nft/components/icons'
 import { useBag, useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
-import { GenieCollection } from 'nft/types'
 import { Suspense, useEffect } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { easings, useSpring } from 'react-spring'
@@ -114,6 +113,8 @@ const Collection = () => {
       : navigate(`/nfts/collection/${contractAddress}/activity`)
   }
 
+  const EMPTY_TRAIT_OBJ = {}
+
   return (
     <>
       <Trace
@@ -139,9 +140,7 @@ const Collection = () => {
                 />
               </BannerWrapper>
               <CollectionDescriptionSection>
-                {collectionStats && (
-                  <CollectionStats stats={collectionStats || ({} as GenieCollection)} isMobile={isMobile} />
-                )}
+                {collectionStats && <CollectionStats stats={collectionStats} isMobile={isMobile} />}
                 <div id="nft-anchor" />
                 <ActivitySwitcher
                   showActivity={isActivityToggled}
@@ -172,7 +171,7 @@ const Collection = () => {
                           </IconWrapper>
                         </MobileFilterHeader>
                       )}
-                      <Filters traitsByGroup={collectionStats?.traits ?? {}} />
+                      <Filters traitsByGroup={collectionStats?.traits ?? EMPTY_TRAIT_OBJ} />
                     </>
                   )}
                 </Box>
@@ -198,7 +197,7 @@ const Collection = () => {
                       collectionStats && (
                         <Suspense fallback={<CollectionNftsAndMenuLoading />}>
                           <CollectionNfts
-                            collectionStats={collectionStats || ({} as GenieCollection)}
+                            collectionStats={collectionStats}
                             contractAddress={contractAddress}
                             rarityVerified={collectionStats?.rarityVerified}
                           />
