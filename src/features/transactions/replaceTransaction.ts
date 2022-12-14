@@ -11,7 +11,6 @@ import { getSerializableTransactionRequest } from 'src/features/transactions/uti
 import { selectAccounts } from 'src/features/wallet/selectors'
 import { getChecksumAddress } from 'src/utils/addresses'
 import { logger } from 'src/utils/logger'
-import { assert } from 'src/utils/validation'
 import { call, put } from 'typed-redux-saga'
 
 export function* attemptReplaceTransaction(
@@ -23,15 +22,15 @@ export function* attemptReplaceTransaction(
   logger.debug('replaceTransaction', '', 'Attempting tx replacement', hash)
   try {
     const { from, nonce } = options.request
-    assert(
-      from && nonce && BigNumber.from(nonce).gte(0),
-      `Cannot replace invalid transaction: ${hash}`
-    )
+    if (!from || !nonce || !BigNumber.from(nonce).gte(0)) {
+      throw new Error(`Cannot replace invalid transaction: ${hash}`)
+    }
 
     const accounts = yield* appSelect(selectAccounts)
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const account = accounts[getChecksumAddress(from!)]
-    assert(account, `Cannot replace transaction, account missing: ${hash}`)
+    const account = accounts[getChecksumAddress(from)]
+    if (!account) {
+      throw new Error(`Cannot replace transaction, account missing: ${hash}`)
+    }
 
     const request: providers.TransactionRequest = {
       ...newTxRequest,
@@ -41,6 +40,7 @@ export function* attemptReplaceTransaction(
 
     const provider = yield* call(getProvider, chainId)
     const signerManager = yield* call(getSignerManager)
+
     const { transactionResponse, populatedRequest } = yield* call(
       signAndSendTransaction,
       request,

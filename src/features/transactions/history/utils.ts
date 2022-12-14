@@ -38,8 +38,10 @@ export function formatTransactionsByDate(
 
   // Segement by time periods.
   const [pending, todayTransactionList, monthTransactionList, beforeCurrentMonth] =
-    transactions.reduce(
-      (accum: TransactionDetails[][], item) => {
+    transactions.reduce<
+      [TransactionDetails[], TransactionDetails[], TransactionDetails[], TransactionDetails[]]
+    >(
+      (accum, item) => {
         if (
           // Want all incomplete transactions
           item.status === TransactionStatus.Pending ||

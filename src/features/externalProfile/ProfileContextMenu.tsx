@@ -47,7 +47,7 @@ export function ProfileContextMenu({ address }: { address: Address }) {
       actions={menuActions}
       dropdownMenuMode={true}
       onPress={(e) => {
-        menuActions[e.nativeEvent.index].action()
+        menuActions[e.nativeEvent.index]?.action()
       }}>
       <TouchableArea
         backgroundColor="textOnDimTertiary"

@@ -322,6 +322,10 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
 // https://docs.ethers.io/v5/api/signer/#Signer--signing-methods
 async function signMessage(message: string, account: Account, signerManager: SignerManager) {
   const signer = await signerManager.getSignerForAccount(account)
+  if (!signer) {
+    logger.error('signers', 'signMessage', `no signer found for ${account}`)
+    return ''
+  }
 
   let signature
   if (isHexString(ensureLeading0x(message))) {
@@ -339,6 +343,11 @@ async function signTransaction(
   signerManager: SignerManager
 ) {
   const signer = await signerManager.getSignerForAccount(account)
+  if (!signer) {
+    logger.error('signers', 'signTransaction', `no signer found for ${account}`)
+    return ''
+  }
+
   const signature = await signer.signTransaction(transaction)
   return ensureLeading0x(signature)
 }
@@ -354,14 +363,14 @@ export async function signTypedData(
 
   // https://github.com/LedgerHQ/ledgerjs/issues/86
   // Ledger does not support signTypedData yet
-  if (signer instanceof NativeSigner || signer instanceof Wallet) {
-    const signature = await signer._signTypedData(domain, types, value)
-
-    return ensureLeading0x(signature)
-  } else {
+  if (!(signer instanceof NativeSigner) && !(signer instanceof Wallet)) {
     logger.error('signers', 'signTypedData', 'cannot sign typed data')
     return ''
   }
+
+  const signature = await signer._signTypedData(domain, types, value)
+
+  return ensureLeading0x(signature)
 }
 
 export async function signTypedDataMessage(

@@ -122,7 +122,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
           editAccountActions.trigger({
             type: EditAccountAction.Remove,
             address,
-            notificationsEnabled: !!pendingAccounts[address].pushNotificationsEnabled,
+            notificationsEnabled: !!pendingAccounts[address]?.pushNotificationsEnabled,
           })
         )
       } else {
@@ -131,7 +131,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
           isFirstAccountActive.current = true
         }
         const account = pendingAccounts[address]
-        if (!account.name && account.type !== AccountType.Readonly) {
+        if (account && !account.name && account.type !== AccountType.Readonly) {
           dispatch(
             editAccountActions.trigger({
               type: EditAccountAction.Rename,

@@ -339,7 +339,12 @@ describe('Redux state migrations', () => {
   })
 
   it('migrates from v6 to v7', () => {
-    const TEST_ADDRESSES = ['0xTest', '0xTest2', '0xTest3', '0xTest4']
+    const TEST_ADDRESSES: [string, string, string, string] = [
+      '0xTest',
+      '0xTest2',
+      '0xTest3',
+      '0xTest4',
+    ]
     const TEST_IMPORT_TIME_MS = 12345678912345
 
     const v6SchemaStub = {
@@ -397,7 +402,12 @@ describe('Redux state migrations', () => {
   })
 
   it('migrates from v8 to v9', () => {
-    const TEST_ADDRESSES = ['0xTest', '0xTest2', '0xTest3', '0xTest4']
+    const TEST_ADDRESSES: [string, string, string, string] = [
+      '0xTest',
+      '0xTest2',
+      '0xTest3',
+      '0xTest4',
+    ]
     const TEST_IMPORT_TIME_MS = 12345678912345
 
     const v8SchemaStub = {

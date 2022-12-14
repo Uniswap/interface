@@ -88,7 +88,7 @@ function formatReturnUrl(providedReturnUrl: string | undefined, id: string | und
 }
 
 export function extractFiatOnRampTransactionDetails(
-  transaction: MoonpayTransactionsResponse[0]
+  transaction?: MoonpayTransactionsResponse[0]
 ): TransactionDetails | undefined {
   if (!transaction) return
 

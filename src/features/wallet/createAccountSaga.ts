@@ -38,7 +38,7 @@ async function getNewAccountParams(sortedAccounts: SignerMnemonicAccount[]): Pro
   mnemonicId: string
   existingBackups?: BackupType[]
 }> {
-  if (sortedAccounts.length === 0) {
+  if (sortedAccounts.length === 0 || !sortedAccounts[0]) {
     const mnemonicId = await generateAndStoreMnemonic()
     return { nextDerivationIndex: 0, mnemonicId }
   }

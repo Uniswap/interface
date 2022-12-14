@@ -193,7 +193,7 @@ function FeatureFlagRow({
       <Text variant="bodyLarge">{name}</Text>
       <Switch
         thumbColor={isExperimentOverridden ? theme.colors.accentAction : theme.colors.accentActive}
-        value={localFeatureFlags[name]}
+        value={localFeatureFlags[name] ?? false}
         onValueChange={(newValue: boolean) => {
           dispatch(addFeatureFlagOverride({ name, enabled: newValue }))
         }}

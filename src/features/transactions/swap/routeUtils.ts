@@ -76,8 +76,10 @@ export function computeRoutes(
 
   if (quoteResult.route.length === 0) return EMPTY_ARRAY
 
-  const tokenIn = quoteResult.route[0][0].tokenIn
-  const tokenOut = quoteResult.route[0][quoteResult.route[0].length - 1].tokenOut
+  const tokenIn = quoteResult.route[0]?.[0]?.tokenIn
+  const tokenOut = quoteResult.route[0]?.[quoteResult.route[0]?.length - 1]?.tokenOut
+
+  if (!tokenIn || !tokenOut) throw new Error('Expected both tokenIn and tokenOut to be present')
 
   const parsedCurrencyIn = tokenInIsNative
     ? NativeCurrency.onChain(tokenIn.chainId)
@@ -92,8 +94,8 @@ export function computeRoutes(
       if (route.length === 0) {
         throw new Error('Expected route to have at least one pair or pool')
       }
-      const rawAmountIn = route[0].amountIn
-      const rawAmountOut = route[route.length - 1].amountOut
+      const rawAmountIn = route[0]?.amountIn
+      const rawAmountOut = route[route.length - 1]?.amountOut
 
       if (!rawAmountIn || !rawAmountOut) {
         throw new Error('Expected both amountIn and amountOut to be present')

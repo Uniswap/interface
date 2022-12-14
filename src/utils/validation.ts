@@ -11,6 +11,6 @@ export function errorToString(
   if (!error) return 'Unknown Error'
   if (typeof error === 'string') return trimToLength(error, maxLength)
   if (typeof error === 'number') return `Error code: ${error}`
-  if ('message' in error) return trimToLength(error.message, maxLength)
+  if (error.message) return trimToLength(error.message, maxLength)
   return trimToLength(JSON.stringify(error), maxLength)
 }

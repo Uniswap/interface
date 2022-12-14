@@ -30,8 +30,8 @@ const slice = createSlice({
       )
 
       state[from] ??= {}
-      state[from][chainId] ??= {}
-      state[from][chainId]![id] = transaction
+      state[from]![chainId] ??= {}
+      state[from]![chainId]![id] = transaction
     },
     updateTransaction: (state, { payload: transaction }: PayloadAction<TransactionDetails>) => {
       const { chainId, id, from } = transaction
@@ -39,7 +39,7 @@ const slice = createSlice({
         state?.[from]?.[chainId]?.[id],
         `updateTransaction: Attempted to update a missing tx with id ${id}`
       )
-      state[from][chainId]![id] = transaction
+      state[from]![chainId]![id] = transaction
     },
     finalizeTransaction: (
       state,
@@ -50,8 +50,8 @@ const slice = createSlice({
         state?.[from]?.[chainId]?.[id],
         `finalizeTransaction: Attempted to finalize a missing tx with id ${id}`
       )
-      state[from][chainId]![id].status = status
-      if (receipt) state[from][chainId]![id].receipt = receipt
+      state[from]![chainId]![id]!.status = status
+      if (receipt) state[from]![chainId]![id]!.receipt = receipt
     },
     cancelTransaction: (
       state,
@@ -65,8 +65,8 @@ const slice = createSlice({
         state?.[address]?.[chainId]?.[id],
         `cancelTransaction: Attempted to cancel a tx that doesnt exist with id ${id}`
       )
-      state[address][chainId]![id].status = TransactionStatus.Cancelling
-      state[address][chainId]![id].cancelRequest = cancelRequest
+      state[address]![chainId]![id]!.status = TransactionStatus.Cancelling
+      state[address]![chainId]![id]!.cancelRequest = cancelRequest
     },
     replaceTransaction: (
       state,
@@ -82,7 +82,7 @@ const slice = createSlice({
         state?.[address]?.[chainId]?.[id],
         `replaceTransaction: Attempted to replace a tx that doesnt exist with id ${id}`
       )
-      state[address][chainId]![id].status = TransactionStatus.Replacing
+      state[address]![chainId]![id]!.status = TransactionStatus.Replacing
     },
     resetTransactions: () => initialTransactionsState,
     // fiat onramp transactions re-use this slice to store (off-chain) pending txs
@@ -112,8 +112,8 @@ const slice = createSlice({
         case TransactionStatus.Failed:
         case TransactionStatus.Pending:
           state[from] ??= {}
-          state[from][chainId] ??= {}
-          state[from][chainId]![id] = transaction
+          state[from]![chainId] ??= {}
+          state[from]![chainId]![id] = transaction
           break
       }
     },

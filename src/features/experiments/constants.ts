@@ -16,4 +16,6 @@ export enum FEATURE_FLAGS {
  * Experiment variants
  * These should match the `Variant Value` on Amplitude
  */
-export enum EXP_VARIANTS {}
+export enum EXP_VARIANTS {
+  Control = 'control',
+}

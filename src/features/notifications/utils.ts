@@ -273,9 +273,9 @@ export function convertScientificNotationToNumber(value: string) {
     const [xStr, eStr] = value.split('e')
     let x = Number(xStr)
     let e = Number(eStr)
-    if (xStr.includes('.')) {
+    if (xStr?.includes('.')) {
       const splitX = xStr.split('.')
-      const decimalPlaces = splitX[1].split('').length
+      const decimalPlaces = splitX[1]?.split('').length ?? 0
       e -= decimalPlaces
       x *= Math.pow(10, decimalPlaces)
     }

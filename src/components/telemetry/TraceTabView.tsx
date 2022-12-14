@@ -14,7 +14,7 @@ export default function TraceTabView<T extends TraceRouteProps>({
 }: TabViewProps<T> & { screenName: Screens }) {
   const onIndexChangeTrace = (index: number) => {
     sendAnalyticsEvent(EventName.Impression, {
-      section: navigationState.routes[index].key,
+      section: navigationState.routes[index]?.key,
       screen: screenName,
     })
     onIndexChange(index)

@@ -150,19 +150,19 @@ describe('#useRoute', () => {
     expect(result?.length).toBe(2)
 
     // first route is v2
-    expect(result?.[0].routev2?.input).toStrictEqual(DAI)
-    expect(result?.[0].routev2?.output).toStrictEqual(USDC)
-    expect(result?.[0].routev2?.path).toEqual([DAI, USDC])
-    expect(result?.[0].routev3).toBeNull()
+    expect(result?.[0]?.routev2?.input).toStrictEqual(DAI)
+    expect(result?.[0]?.routev2?.output).toStrictEqual(USDC)
+    expect(result?.[0]?.routev2?.path).toEqual([DAI, USDC])
+    expect(result?.[0]?.routev3).toBeNull()
 
     // second route is v3
-    expect(result?.[1].routev3?.input).toStrictEqual(DAI)
-    expect(result?.[1].routev3?.output).toStrictEqual(USDC)
-    expect(result?.[1].routev3?.tokenPath).toEqual([DAI, MKR, USDC])
-    expect(result?.[1].routev2).toBeNull()
+    expect(result?.[1]?.routev3?.input).toStrictEqual(DAI)
+    expect(result?.[1]?.routev3?.output).toStrictEqual(USDC)
+    expect(result?.[1]?.routev3?.tokenPath).toEqual([DAI, MKR, USDC])
+    expect(result?.[1]?.routev2).toBeNull()
 
-    expect(result?.[0].outputAmount.toSignificant()).toBe('6')
-    expect(result?.[1].outputAmount.toSignificant()).toBe('200')
+    expect(result?.[0]?.outputAmount.toSignificant()).toBe('6')
+    expect(result?.[1]?.outputAmount.toSignificant()).toBe('200')
   })
 
   it('handles a single route trade with same token pair, different fee tiers', () => {
@@ -201,10 +201,10 @@ describe('#useRoute', () => {
 
     expect(result).toBeDefined()
     expect(result?.length).toBe(2)
-    expect(result?.[0].routev3?.input).toStrictEqual(DAI)
-    expect(result?.[0].routev3?.output).toStrictEqual(USDC)
-    expect(result?.[0].routev3?.tokenPath).toEqual([DAI, USDC])
-    expect(result?.[0].inputAmount.toSignificant()).toBe('1')
+    expect(result?.[0]?.routev3?.input).toStrictEqual(DAI)
+    expect(result?.[0]?.routev3?.output).toStrictEqual(USDC)
+    expect(result?.[0]?.routev3?.tokenPath).toEqual([DAI, USDC])
+    expect(result?.[0]?.inputAmount.toSignificant()).toBe('1')
   })
 
   it('computes mixed routes correctly', () => {
@@ -245,10 +245,10 @@ describe('#useRoute', () => {
 
     expect(result).toBeDefined()
     expect(result?.length).toBe(1)
-    expect(result?.[0].routev3).toBeNull()
-    expect(result?.[0].routev2).toBeNull()
-    expect(result?.[0].mixedRoute?.output).toStrictEqual(USDC)
-    expect(result?.[0].inputAmount.toSignificant()).toBe('1')
+    expect(result?.[0]?.routev3).toBeNull()
+    expect(result?.[0]?.routev2).toBeNull()
+    expect(result?.[0]?.mixedRoute?.output).toStrictEqual(USDC)
+    expect(result?.[0]?.inputAmount.toSignificant()).toBe('1')
   })
 
   describe('with ETH', () => {
@@ -276,10 +276,10 @@ describe('#useRoute', () => {
 
       expect(result).toBeDefined()
       expect(result?.length).toBe(1)
-      expect(result?.[0].routev3?.input).toStrictEqual(ETH)
-      expect(result?.[0].routev3?.output).toStrictEqual(USDC)
-      expect(result?.[0].routev3?.tokenPath).toStrictEqual([WETH, USDC])
-      expect(result && result[0].outputAmount.toSignificant()).toBe('5')
+      expect(result?.[0]?.routev3?.input).toStrictEqual(ETH)
+      expect(result?.[0]?.routev3?.output).toStrictEqual(USDC)
+      expect(result?.[0]?.routev3?.tokenPath).toStrictEqual([WETH, USDC])
+      expect(result?.[0]?.outputAmount.toSignificant()).toBe('5')
     })
 
     it('outputs native ETH as output currency', () => {
@@ -304,10 +304,10 @@ describe('#useRoute', () => {
       })
 
       expect(result?.length).toBe(1)
-      expect(result?.[0].routev3?.input).toStrictEqual(USDC)
-      expect(result?.[0].routev3?.output).toStrictEqual(ETH)
-      expect(result?.[0].routev3?.tokenPath).toStrictEqual([USDC, WETH])
-      expect(result?.[0].outputAmount.toSignificant()).toBe('1')
+      expect(result?.[0]?.routev3?.input).toStrictEqual(USDC)
+      expect(result?.[0]?.routev3?.output).toStrictEqual(ETH)
+      expect(result?.[0]?.routev3?.tokenPath).toStrictEqual([USDC, WETH])
+      expect(result?.[0]?.outputAmount.toSignificant()).toBe('1')
     })
 
     it('outputs native ETH as input currency for v2 routes', () => {
@@ -338,10 +338,10 @@ describe('#useRoute', () => {
 
       expect(result).toBeDefined()
       expect(result?.length).toBe(1)
-      expect(result?.[0].routev2?.input).toStrictEqual(ETH)
-      expect(result?.[0].routev2?.output).toStrictEqual(USDC)
-      expect(result?.[0].routev2?.path).toStrictEqual([WETH, USDC])
-      expect(result && result[0].outputAmount.toSignificant()).toBe('5')
+      expect(result?.[0]?.routev2?.input).toStrictEqual(ETH)
+      expect(result?.[0]?.routev2?.output).toStrictEqual(USDC)
+      expect(result?.[0]?.routev2?.path).toStrictEqual([WETH, USDC])
+      expect(result?.[0]?.outputAmount.toSignificant()).toBe('5')
     })
 
     it('outputs native ETH as output currency for v2 routes', () => {
@@ -370,10 +370,10 @@ describe('#useRoute', () => {
       })
 
       expect(result?.length).toBe(1)
-      expect(result?.[0].routev2?.input).toStrictEqual(USDC)
-      expect(result?.[0].routev2?.output).toStrictEqual(ETH)
-      expect(result?.[0].routev2?.path).toStrictEqual([USDC, WETH])
-      expect(result?.[0].outputAmount.toSignificant()).toBe('1')
+      expect(result?.[0]?.routev2?.input).toStrictEqual(USDC)
+      expect(result?.[0]?.routev2?.output).toStrictEqual(ETH)
+      expect(result?.[0]?.routev2?.path).toStrictEqual([USDC, WETH])
+      expect(result?.[0]?.outputAmount.toSignificant()).toBe('1')
     })
   })
 })

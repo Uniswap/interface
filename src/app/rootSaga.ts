@@ -122,7 +122,9 @@ type MonitoredSagaReducer = Reducer<Record<string, SagaState>>
 export const monitoredSagaReducers: MonitoredSagaReducer = combineReducers(
   Object.keys(monitoredSagas).reduce(
     (acc: { [name: string]: Reducer<SagaState> }, sagaName: string) => {
-      acc[sagaName] = monitoredSagas[sagaName].reducer
+      // Safe non-null assertion because key `sagaName` comes from `Object.keys(monitoredSagas)`
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      acc[sagaName] = monitoredSagas[sagaName]!.reducer
       return acc
     },
     {}

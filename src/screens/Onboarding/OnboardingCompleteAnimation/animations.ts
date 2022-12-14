@@ -21,23 +21,12 @@ const FPMS = {
   360: 6000,
 }
 
-type AnimationPropertySettings = {
-  startValue?: number
-  endValue: number
-  delay: number
-  duration: number
-}
-
-interface AnimationConfig {
-  [key: string]: AnimationPropertySettings
-}
-
 // 1. QR slide up animation
 // Moves QR code box from bottom to top and fades it in
 //    - Moves QR from y:-64 to y:0 from frame 29 to frame 60
 //    - Fades in QR from 0 to 1 opacity from frame 29 to frame 60
 //    - Triggers etching video as a callback when complete
-export const qrSlideUpAndFadeInConfig: AnimationConfig = {
+export const qrSlideUpAndFadeInConfig = {
   opacity: {
     startValue: 0,
     endValue: 1,
@@ -54,7 +43,7 @@ export const qrSlideUpAndFadeInConfig: AnimationConfig = {
 
 // 2. QR scale in animation
 // Scales QR code box from 80% to 100% scale from frame 130 to frame 179
-const qrScaleInConfig: AnimationConfig = {
+const qrScaleInConfig = {
   scale: { startValue: 0.8, endValue: 1, delay: FPMS[130], duration: FPMS[179] - FPMS[130] },
 }
 
@@ -86,7 +75,7 @@ export const qrScaleIn: EntryExitAnimationFunction = () => {
 // Animates inner glowing circle of QR code box to slowly fade in
 // NOTE: for now, it animates the inner glow's blur amount, as a proxy for its size because to animate its size makes it hard to keep it centered in the canvas. In order to do so, we would need to run the computing of the inner glow's size on the UI thread instead of the JS thread in order to transform the x and y of the Canvas Group the Oval and Blur are inside of by the correct amount as it animates (size / 2).
 // NOTE 2: the actual animation had to be kept coupled to the component because it would become too unwieldy to abstract it here.
-export const qrInnerBlurConfig: AnimationConfig = {
+export const qrInnerBlurConfig = {
   opacity: {
     startValue: 0,
     endValue: 1,
@@ -106,7 +95,7 @@ export const qrInnerBlurConfig: AnimationConfig = {
 //    - Fades in flash wipe from 80% to 100% scale from frame 130 to frame 179
 //    - Fades in flash wipe from 0% opacity to 100% opacity from frame 165 to frame 180
 //    - Fades out flash wipe from 100% to 0% opacity from frame 180 to frame 228
-export const flashWipeConfig: AnimationConfig = {
+export const flashWipeConfig = {
   scale: {
     startValue: 0.8,
     endValue: 1,
@@ -226,7 +215,7 @@ export const realQrFadeIn = () => {
 }
 
 // 8. Text slide up and fade in
-const textSlideUpAndFadeInConfig: AnimationConfig = {
+const textSlideUpAndFadeInConfig = {
   opacityIn: {
     startValue: 0,
     endValue: 1,
@@ -300,7 +289,7 @@ export const letsGoButtonFadeIn = () => {
 }
 
 // 10. Whole QR container (showing real QR and Unicon now) slides up
-const qrSlideUpAtEndConfig: AnimationConfig = {
+const qrSlideUpAtEndConfig = {
   translateY: {
     startValue: 0,
     endValue: -64,

@@ -93,6 +93,8 @@ export function* toggleFirebaseNotificationSettings({
   try {
     const accounts = yield* appSelect(selectAccounts)
     const account = accounts[address]
+    if (!account) throw new Error(`Account not found for address ${address}`)
+
     if (enabled) {
       yield* call(addAccountToFirebase, account)
     } else {

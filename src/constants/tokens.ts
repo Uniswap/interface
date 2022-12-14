@@ -1,5 +1,5 @@
 // Copied from https://github.com/Uniswap/interface/blob/main/src/constants/tokens.ts
-import { Token, WETH9 } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { UNI_ADDRESS } from './addresses'
 import { ChainId } from './chains'
 
@@ -77,13 +77,26 @@ export const WBTC = new Token(
   'Wrapped BTC'
 )
 
-export const UNI: { [chainId: number]: Token } = {
-  [ChainId.Mainnet]: new Token(ChainId.Mainnet, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),
-  [ChainId.Goerli]: new Token(ChainId.Goerli, UNI_ADDRESS[5], 18, 'UNI', 'Uniswap'),
+export const UNI = {
+  [ChainId.Mainnet]: new Token(ChainId.Mainnet, UNI_ADDRESS[ChainId.Mainnet], 18, 'UNI', 'Uniswap'),
+  [ChainId.Goerli]: new Token(ChainId.Goerli, UNI_ADDRESS[ChainId.Goerli], 18, 'UNI', 'Uniswap'),
 }
 
-export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
-  ...WETH9,
+export const WRAPPED_NATIVE_CURRENCY = {
+  [ChainId.Mainnet]: new Token(
+    1,
+    '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [ChainId.Goerli]: new Token(
+    5,
+    '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
   [ChainId.Optimism]: new Token(
     ChainId.Optimism,
     '0x4200000000000000000000000000000000000006',

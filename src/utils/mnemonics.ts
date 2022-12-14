@@ -21,7 +21,7 @@ export function validateSetOfWords(mnemonic?: string): {
   const split = formatted.split(' ')
   const isValidLength = split.length >= MNEMONIC_LENGTH_MIN && split.length <= MNEMONIC_LENGTH_MAX
 
-  const invalidWords = split.filter((item) => wordlists.en.getWordIndex(item) === -1)
+  const invalidWords = split.filter((item) => wordlists.en?.getWordIndex(item) === -1)
   if (invalidWords.length) {
     return {
       error: MnemonicValidationError.InvalidWord,

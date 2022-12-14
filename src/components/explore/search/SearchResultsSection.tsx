@@ -62,7 +62,8 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }) {
       } as TokenSearchResult & { volume1Y: number }
 
       // For token results that share the same TokenProject id, use the token with highest volume
-      if (!tokensMap[project.id] || tokenResult.volume1Y > tokensMap[project.id].volume1Y) {
+      const currentTokenResult = tokensMap[project.id]
+      if (!currentTokenResult || tokenResult.volume1Y > currentTokenResult.volume1Y) {
         tokensMap[project.id] = tokenResult
       }
       return tokensMap

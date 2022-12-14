@@ -56,7 +56,10 @@ export const Cursor = ({ graphs, index, isActive, translation, cursorColor }: Cu
 
       // Then update value continuously
       translation.x.value = event.x
-      translation.y.value = getYForX(graphs[index.value].data.path, translation.x.value) || 0
+      const graph = graphs[index.value]
+      if (graph) {
+        translation.y.value = getYForX(graph.data.path, translation.x.value) || 0
+      }
     })
     .onFinalize(() => (isActive.value = false))
 

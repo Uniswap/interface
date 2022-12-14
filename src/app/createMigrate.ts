@@ -43,7 +43,9 @@ export default function createMigrate(
             'createMigrate',
             `running migration for versionKey: ${versionKey}`
           )
-          return migrations[versionKey](versionState)
+          // Safe non-null assertion because `versionKey` comes from `Object.keys(migrations)`
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          return migrations[versionKey]!(versionState)
         },
         state
       )

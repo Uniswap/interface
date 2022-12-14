@@ -145,13 +145,13 @@ describe(getTransferWarnings, () => {
   it('catches incomplete form errors: no recipient', async () => {
     const warnings = getTransferWarnings(mockTranslate, account, transferState, networkUp)
     expect(warnings.length).toBe(1)
-    expect(warnings[0].type).toEqual(WarningLabel.FormIncomplete)
+    expect(warnings[0]?.type).toEqual(WarningLabel.FormIncomplete)
   })
 
   it('catches incomplete form errors: no amount', async () => {
     const warnings = getTransferWarnings(mockTranslate, account, transferState2, networkUp)
     expect(warnings.length).toBe(1)
-    expect(warnings[0].type).toEqual(WarningLabel.FormIncomplete)
+    expect(warnings[0]?.type).toEqual(WarningLabel.FormIncomplete)
   })
 
   it('catches insufficient balance errors', () => {
@@ -162,7 +162,7 @@ describe(getTransferWarnings, () => {
       networkUp
     )
     expect(warnings.length).toBe(1)
-    expect(warnings[0].type).toEqual(WarningLabel.InsufficientFunds)
+    expect(warnings[0]?.type).toEqual(WarningLabel.InsufficientFunds)
   })
 
   it('catches multiple errors', () => {

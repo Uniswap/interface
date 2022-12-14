@@ -73,9 +73,17 @@ export const useUniconColors = (
     }
 
   const attributeData = getUniconAttributeData(attributeIndices)
+  const blurColor = blurs[attributeIndices[UniconAttributes.GradientStart]]
+  if (!blurColor)
+    return {
+      gradientStart: theme.colors.accentAction,
+      gradientEnd: theme.colors.accentActionSoft,
+      glow: theme.colors.accentAction,
+    }
+
   return {
     gradientStart: attributeData[UniconAttributes.GradientStart].toString(),
     gradientEnd: attributeData[UniconAttributes.GradientEnd].toString(),
-    glow: blurs[attributeIndices[UniconAttributes.GradientStart]].toString(),
+    glow: blurColor.toString(),
   }
 }

@@ -140,7 +140,9 @@ export function fetchFiatOnRampTransaction(
         // log while we have the full moonpay tx response
         logMoonpayEvent(
           // take the most recent transaction
-          transactions.sort((a, b) => (dayjs(a.createdAt).isAfter(dayjs(b.createdAt)) ? 1 : -1))[0]
+          transactions.sort((a, b) =>
+            dayjs(a.createdAt).isAfter(dayjs(b.createdAt)) ? 1 : -1
+          )?.[0]
         )
       )
     )
@@ -149,7 +151,7 @@ export function fetchFiatOnRampTransaction(
 
 // Logs an Amplitude event whenever we process a tx update from Moonpay
 // NOTE: this will not attempt to dedupe by externalTxId
-function logMoonpayEvent(moonpayTransactionResponse: MoonpayTransactionsResponse[0]) {
+function logMoonpayEvent(moonpayTransactionResponse?: MoonpayTransactionsResponse[0]) {
   const extractProperties: (
     response: MoonpayTransactionsResponse[0]
   ) => MoonpayTransactionEventProperties = ({
@@ -186,6 +188,8 @@ function logMoonpayEvent(moonpayTransactionResponse: MoonpayTransactionsResponse
       failureReason,
       stages,
     })
+
+  if (!moonpayTransactionResponse) return
 
   sendAnalyticsEvent(EventName.Moonpay, extractProperties(moonpayTransactionResponse))
 

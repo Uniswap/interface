@@ -181,7 +181,7 @@ function TransactionListInner({
           month
         ) => {
           const transactionList = priorByMonthTransactionList[month]
-          if (transactionList.length > 0) {
+          if (transactionList && transactionList.length > 0) {
             accum.push({ title: month, data: transactionList })
           }
           return accum

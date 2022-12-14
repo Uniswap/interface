@@ -16,6 +16,7 @@ export function parseENSAddress(
   }
   if (ensAddress.includes('/')) {
     const addrSplit = ensAddress.split('/')
+    if (!addrSplit[0]) return undefined
     domain = addrSplit[0]
     path = '/' + addrSplit[1]
   } else {

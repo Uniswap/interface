@@ -217,6 +217,8 @@ export function useMultipleBalances(
   return useMemo(() => {
     if (!currencies || !currencies.length || !balances) return null
 
-    return currencies.map((id: CurrencyId) => balances[id] ?? null).filter(Boolean)
+    return currencies
+      .map((id: CurrencyId) => balances[id] ?? null)
+      .filter((x): x is PortfolioBalance => Boolean(x))
   }, [balances, currencies])
 }

@@ -1,6 +1,7 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { BigNumber, BigNumberish } from 'ethers'
 import { TFunction } from 'i18next'
+import { ChainId } from 'src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import { DEFAULT_SLIPPAGE_TOLERANCE_PERCENT } from 'src/features/transactions/swap/hooks'
 import { Trade } from 'src/features/transactions/swap/useTrade'
@@ -32,7 +33,7 @@ export function getWrapType(
     return WrapType.NotApplicable
   }
 
-  const weth = WRAPPED_NATIVE_CURRENCY[inputCurrency.chainId]
+  const weth = WRAPPED_NATIVE_CURRENCY[inputCurrency.chainId as ChainId]
 
   if (inputCurrency.isNative && outputCurrency.equals(weth)) {
     return WrapType.Wrap

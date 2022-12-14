@@ -28,8 +28,9 @@ export function unnestObject(ob: Record<string, any>) {
     const flatObject = unnestObject(ob[i])
     for (const x in flatObject) {
       if (!Object.prototype.hasOwnProperty.call(flatObject, x)) continue
-
-      toReturn[i + '.' + x] = flatObject[x]
+      const property = flatObject[x]
+      if (property === undefined) continue
+      toReturn[i + '.' + x] = property
     }
   }
 

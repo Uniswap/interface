@@ -55,7 +55,9 @@ export const isNativeCurrencyAddress = (address: Address) =>
 
 // Currency ids are formatted as `chainId-tokenaddress`
 export function currencyIdToAddress(_currencyId: string): Address {
-  return _currencyId.split('-')[1]
+  const currencyIdParts = _currencyId.split('-')
+  if (!currencyIdParts[1]) throw new Error(`Invalid currencyId format: ${_currencyId}`)
+  return currencyIdParts[1]
 }
 
 // Similar to `currencyIdToAddress`, except native addresses are `null`.

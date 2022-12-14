@@ -74,6 +74,14 @@ export function buildGraph(
   const openDate = dates[0]
   const closeDate = dates[dates.length - 1]
 
+  if (
+    openDate === undefined ||
+    closeDate === undefined ||
+    openPrice === undefined ||
+    closePrice === undefined
+  )
+    return null
+
   // TODO: consider using `scaleTime`
   const scaleX = scaleLinear().domain([openDate, closeDate]).range([0, width])
   const scaleY = scaleLinear().domain([lowPrice, highPrice]).range([height, 0])

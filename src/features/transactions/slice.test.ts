@@ -58,9 +58,9 @@ describe('transaction reducer', () => {
         })
       )
       const txs = store.getState()[address]
-      expect(txs[ChainId.Mainnet]).toBeTruthy()
-      expect(txs[ChainId.Mainnet]?.['0']).toBeTruthy()
-      const tx = txs[ChainId.Mainnet]?.['0']
+      expect(txs?.[ChainId.Mainnet]).toBeTruthy()
+      expect(txs?.[ChainId.Mainnet]?.['0']).toBeTruthy()
+      const tx = txs?.[ChainId.Mainnet]?.['0']
       expect(tx).toBeTruthy()
       expect(tx?.hash).toEqual('0x0')
       expect(tx?.from).toEqual(address)
@@ -148,7 +148,7 @@ describe('transaction reducer', () => {
 
       store.dispatch(addTransaction(transaction))
       store.dispatch(updateTransaction({ ...transaction, status: TransactionStatus.Cancelled }))
-      const tx = store.getState()[address][chainId]?.[id]
+      const tx = store.getState()[address]?.[chainId]?.[id]
       expect(tx?.status).toEqual(TransactionStatus.Cancelled)
     })
   })
@@ -180,7 +180,7 @@ describe('transaction reducer', () => {
         })
       )
       store.dispatch(finalizeTransaction(finalizedTxAction.payload))
-      const tx = store.getState()[from][chainId]?.[id]
+      const tx = store.getState()[from]?.[chainId]?.[id]
       expect(tx?.receipt).toEqual(receipt)
     })
   })
@@ -222,7 +222,7 @@ describe('transaction reducer', () => {
         })
       )
       store.dispatch(cancelTransaction({ chainId, id, address, cancelRequest: {} }))
-      const tx = store.getState()[address][chainId]?.[id]
+      const tx = store.getState()[address]?.[chainId]?.[id]
       expect(tx?.status).toEqual(TransactionStatus.Cancelling)
     })
   })
@@ -265,7 +265,7 @@ describe('transaction reducer', () => {
 
       store.dispatch(addTransaction(transaction))
       store.dispatch(replaceTransaction({ chainId, id, newTxParams, address }))
-      const tx = store.getState()[address][chainId]?.[id]
+      const tx = store.getState()[address]?.[chainId]?.[id]
       expect(tx?.status).toEqual(TransactionStatus.Replacing)
     })
   })
@@ -303,8 +303,8 @@ describe('transaction reducer', () => {
       const txs = store.getState()
       expect(Object.keys(txs)).toHaveLength(2)
       expect(Object.keys(txs)).toEqual([address1, address2])
-      expect(Object.keys(txs[address1][chainId1] ?? {})).toEqual(['0'])
-      expect(Object.keys(txs[address2][chainId2] ?? {})).toEqual(['1'])
+      expect(Object.keys(txs[address1]?.[chainId1] ?? {})).toEqual(['0'])
+      expect(Object.keys(txs[address2]?.[chainId2] ?? {})).toEqual(['1'])
       store.dispatch(resetTransactions())
       expect(Object.keys(store.getState())).toHaveLength(0)
     })

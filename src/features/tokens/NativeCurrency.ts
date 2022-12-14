@@ -1,17 +1,18 @@
 // adapted from https://github.com/Uniswap/interface/src/constants/tokens.ts
 import { Currency, NativeCurrency as NativeCurrencyClass, Token } from '@uniswap/sdk-core'
 import { NATIVE_ADDRESS, NATIVE_ADDRESS_ALT } from 'src/constants/addresses'
-import { CHAIN_INFO, isPolygonChain } from 'src/constants/chains'
+import { ChainId, CHAIN_INFO, isPolygonChain } from 'src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 
 export class NativeCurrency implements NativeCurrencyClass {
   constructor(chainId: number) {
-    if (!CHAIN_INFO[chainId]) throw new Error('Native currrency info not found')
+    const chainInfo = CHAIN_INFO[chainId]
+    if (!chainInfo) throw new Error('Native currrency info not found')
 
     this.chainId = chainId
-    this.decimals = CHAIN_INFO[chainId].nativeCurrency.decimals
-    this.name = CHAIN_INFO[chainId].nativeCurrency.name
-    this.symbol = CHAIN_INFO[chainId].nativeCurrency.symbol
+    this.decimals = chainInfo.nativeCurrency.decimals
+    this.name = chainInfo.nativeCurrency.name
+    this.symbol = chainInfo.nativeCurrency.symbol
     this.isNative = true
     this.isToken = false
   }
@@ -30,8 +31,10 @@ export class NativeCurrency implements NativeCurrencyClass {
   }
 
   public get wrapped(): Token {
-    if (this.chainId in WRAPPED_NATIVE_CURRENCY) return WRAPPED_NATIVE_CURRENCY[this.chainId]
-    throw new Error('Unsupported chain ID')
+    const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId as ChainId]
+    if (!wrapped) throw new Error('Unsupported chain ID')
+
+    return wrapped
   }
 
   private static _cachedNativeCurrency: { [chainId: number]: NativeCurrency } = {}
@@ -55,7 +58,11 @@ class MaticNativeCurrency extends NativeCurrency {
 
   get wrapped(): Token {
     if (!isPolygonChain(this.chainId)) throw new Error('Not matic')
-    return WRAPPED_NATIVE_CURRENCY[this.chainId]
+
+    const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
+    if (!wrapped) throw new Error('Wrapped currency info not found')
+
+    return wrapped
   }
 
   public constructor(chainId: number) {

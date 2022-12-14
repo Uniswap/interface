@@ -7,7 +7,7 @@
 export function uriToHttp(uri: string): string[] {
   if (!uri) return []
 
-  const protocol = uri.split(':')[0].toLowerCase()
+  const protocol = uri.split(':')[0]?.toLowerCase()
   if (protocol === 'https') {
     return [uri]
   }

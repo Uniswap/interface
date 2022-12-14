@@ -46,7 +46,7 @@ const fetchUpgradeStatus = async (): Promise<UpgradeStatusReponse> => {
 
   const uniqueID = await getUniqueId()
   const response = await fetch(
-    `${config.amplitudeApiUrl}?device_id=${uniqueID}&flag_key=${flags.force_upgrade.name}`,
+    `${config.amplitudeApiUrl}?device_id=${uniqueID}&flag_key=${flags.force_upgrade?.name}`,
     request
   )
 
@@ -54,7 +54,7 @@ const fetchUpgradeStatus = async (): Promise<UpgradeStatusReponse> => {
     return (await response.json()) as UpgradeStatusReponse
   } catch (error) {
     logger.error('forceUpgrdeApi', 'fetchUpgradeStatus', `${error}`)
-    return flags.force_upgrade.defaultValue as UpgradeStatusReponse
+    return flags.force_upgrade?.defaultValue as UpgradeStatusReponse
   }
 }
 

@@ -215,7 +215,7 @@ export function NFTItemScreen({
                         )}
                       </Flex>
                     </Box>
-                    {asset?.collection?.markets?.[0].floorPrice?.value && (
+                    {asset?.collection?.markets?.[0]?.floorPrice?.value && (
                       <Box flexGrow={1}>
                         <Text
                           color="textSecondary"

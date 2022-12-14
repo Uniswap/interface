@@ -71,7 +71,8 @@ const slice = createSlice({
     ) => {
       const { wcSession, account } = action.payload
       state.byAccount[account] ??= { sessions: {} }
-      state.byAccount[account].sessions[wcSession.id] = wcSession
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      state.byAccount[account]!.sessions[wcSession.id] = wcSession
       state.pendingSession = null
     },
 
@@ -80,13 +81,17 @@ const slice = createSlice({
       action: PayloadAction<{ account: string; wcSession: WalletConnectSession }>
     ) => {
       const { wcSession, account } = action.payload
-      state.byAccount[account].sessions[wcSession.id] = wcSession
+      const wcAccount = state.byAccount[account]
+      if (wcAccount) {
+        wcAccount.sessions[wcSession.id] = wcSession
+      }
     },
 
     removeSession: (state, action: PayloadAction<{ account: string; sessionId: string }>) => {
       const { sessionId, account } = action.payload
-      if (state.byAccount[account]) {
-        delete state.byAccount[account].sessions[sessionId]
+      const wcAccount = state.byAccount[account]
+      if (wcAccount) {
+        delete wcAccount.sessions[sessionId]
       }
     },
 

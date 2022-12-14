@@ -49,7 +49,7 @@ export const onChainBalanceApi = createApi({
             provider,
             ERC20_ABI
           )
-          const balance = await erc20Contract.callStatic.balanceOf(accountAddress)
+          const balance = await erc20Contract.callStatic.balanceOf?.(accountAddress)
           return { data: balance.toString() }
         } catch (e: unknown) {
           logger.error(

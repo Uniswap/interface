@@ -42,7 +42,7 @@ export function useUSDCPrice(
       return new Price(stablecoin, stablecoin, '1', '1')
     }
 
-    if (!trade || !trade.routes.length || !quoteAmount || !currency) {
+    if (!trade || !trade.routes.length || !trade.routes[0] || !quoteAmount || !currency) {
       return
     }
 

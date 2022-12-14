@@ -115,7 +115,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
         type: EditAccountAction.Remove,
         address: pendingRemoveAccount.address,
         notificationsEnabled:
-          !!addressToAccount[pendingRemoveAccount.address].pushNotificationsEnabled,
+          !!addressToAccount[pendingRemoveAccount.address]?.pushNotificationsEnabled,
       })
     )
     setPendingRemoveAccount(null)
@@ -165,9 +165,11 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     }
 
     const onPressRemove = () => {
-      if (!pendingEditAddress || !addressToAccount[pendingEditAddress]) return
+      if (!pendingEditAddress) return
+      const account = addressToAccount[pendingEditAddress]
+      if (!account) return
       setShowEditAccountModal(false)
-      setPendingRemoveAccount(addressToAccount[pendingEditAddress])
+      setPendingRemoveAccount(account)
     }
 
     const editWalletOptions = [

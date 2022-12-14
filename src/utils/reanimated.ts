@@ -11,7 +11,7 @@
 function replaceSeparators(sNum: string, separators: { decimal: string; thousands: string }) {
   'worklet'
   const sNumParts = sNum.split('.')
-  if (separators && separators.thousands) {
+  if (separators && separators.thousands && sNumParts[0]) {
     // every three digits, replace it with the digits + the thousands separator
     // $1 indicates that the matched substring is to be replaced by the first captured group
     sNumParts[0] = sNumParts[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1' + separators.thousands)
@@ -27,17 +27,18 @@ function renderFormat(
 ) {
   'worklet'
   for (const [option, value] of Object.entries(options)) {
+    let updatedValue = value
     if (value.indexOf('-') !== -1) {
-      options[option] = value.replace('-', '')
+      updatedValue = updatedValue.replace('-', '')
       template = '-' + template
     }
 
     if (value.indexOf('<') !== -1) {
-      options[option] = value.replace('<', '')
+      updatedValue = updatedValue.replace('<', '')
       template = '<' + template
     }
 
-    template = template.replace('{{' + option + '}}', options[option])
+    template = template.replace('{{' + option + '}}', updatedValue)
   }
 
   return template
@@ -328,15 +329,11 @@ export function numberToLocaleStringWorklet(
   if (options && options.currency && options.style === 'currency') {
     const format = currencyFormats[<string>mapMatch(currencyFormatMap, locale)]
     const symbol = currencySymbols[options.currency.toLowerCase()]
-    if (options.currencyDisplay === 'code' || !symbol) {
+    if (format) {
       sNum = renderFormat(format, {
         num: sNum,
-        code: options.currency.toUpperCase(),
-      })
-    } else {
-      sNum = renderFormat(format, {
-        num: sNum,
-        code: symbol,
+        code:
+          options.currencyDisplay === 'code' || !symbol ? options.currency.toUpperCase() : symbol,
       })
     }
   }

@@ -107,11 +107,14 @@ function UniconSvg({
 
   if (!attributeIndices || !attributeData) return null
 
+  const blurColor = blurs[attributeIndices[UniconAttributes.GradientStart]]
+  if (!blurColor) return null
+
   return (
     <Canvas style={flex.fill}>
       <Mask clip={true} mask={<UniconMask attributeData={attributeData} size={size} />}>
         <GradientBlur
-          blurColor={blurs[attributeIndices[UniconAttributes.GradientStart]]}
+          blurColor={blurColor}
           gradientEnd={attributeData[UniconAttributes.GradientEnd]}
           gradientStart={attributeData[UniconAttributes.GradientStart]}
           size={size}

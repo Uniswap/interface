@@ -23,7 +23,9 @@ export function parseActiveChains(activeChainsString: string): ChainId[] {
     .filter(Boolean)
 }
 
-export function isTestnet(chainId: ChainId): boolean {
+export function isTestnet(chainId?: ChainId): boolean {
+  if (!chainId) return false
+
   return TESTNET_CHAIN_IDS.includes(chainId)
 }
 

@@ -15,9 +15,11 @@ export const selectTransactions = (state: RootState) => state.transactions
 
 export const makeSelectAddressTransactions = (address: Address | null) =>
   createSelector(selectTransactions, (transactions) => {
-    if (!address || !transactions[address]) return undefined
+    if (!address) return undefined
+    const addressTransactions = transactions[address]
+    if (!addressTransactions) return undefined
     return (
-      flattenObjectOfObjects(transactions[address])
+      flattenObjectOfObjects(addressTransactions)
         // remove dummy fiat onramp transactions from TransactionList, notification badge, etc.
         .filter(
           (tx) => tx.typeInfo.type !== TransactionType.FiatPurchase || tx.typeInfo.syncedWithBackend

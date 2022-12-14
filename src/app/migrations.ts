@@ -12,7 +12,6 @@ import {
 } from 'src/features/transactions/types'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { toSupportedChainId } from 'src/utils/chainId'
-import { getKeys } from 'src/utils/objects'
 
 export const migrations = {
   0: (state: any) => {
@@ -217,8 +216,8 @@ export const migrations = {
     const accounts: Record<Address, Account> | undefined = state?.wallet?.accounts
     if (!accounts) return
 
-    for (const address of getKeys(accounts)) {
-      accounts[address].pushNotificationsEnabled = false
+    for (const account of Object.values(accounts)) {
+      account.pushNotificationsEnabled = false
     }
 
     const newState = { ...state }

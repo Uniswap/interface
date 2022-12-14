@@ -66,12 +66,11 @@ export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } 
   useTimeout(
     backups.length > 0
       ? () => {
-          if (backups.length === 1) {
-            const backup = backups[0]
+          if (backups.length === 1 && backups[0]) {
             navigation.replace(OnboardingScreens.RestoreCloudBackupPassword, {
               importType: ImportType.Restore,
               entryPoint,
-              mnemonicId: backup.mnemonicId,
+              mnemonicId: backups[0].mnemonicId,
             })
           } else {
             navigation.replace(OnboardingScreens.RestoreCloudBackup, {

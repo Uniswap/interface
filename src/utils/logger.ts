@@ -67,7 +67,8 @@ export function getLogBuffer() {
   const logs: string[] = []
   for (let i = 0; i < config.logBufferSize; i++) {
     const nextIndex = (i + logBufferIndex) % config.logBufferSize
-    if (logBuffer[nextIndex]) logs.push(logBuffer[nextIndex])
+    const log = logBuffer[nextIndex]
+    if (log) logs.push(log)
   }
   return logs
 }

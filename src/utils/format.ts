@@ -247,8 +247,7 @@ const TYPE_TO_FORMATTER_RULES = {
 
 function getFormatterRule(input: number, type: NumberType) {
   const rules = TYPE_TO_FORMATTER_RULES[type]
-  for (let i = 0; i < rules.length; i++) {
-    const rule = rules[i]
+  for (const rule of rules) {
     if (
       (rule.exact !== undefined && input === rule.exact) ||
       (rule.upperBound !== undefined && input < rule.upperBound)

@@ -242,7 +242,7 @@ export function useUSDTokenUpdater(
     if (shouldUseUSDRef.current) {
       const stablecoinAmount = tryParseExactAmount(
         exactAmountUSD,
-        STABLECOIN_AMOUNT_OUT[exactCurrency.chainId].currency
+        STABLECOIN_AMOUNT_OUT[exactCurrency.chainId]?.currency
       )
       const currencyAmount = stablecoinAmount ? price?.invert().quote(stablecoinAmount) : undefined
 
@@ -532,7 +532,7 @@ const getTokenApprovalInfo = async (
   if (currencyIn.isNative) return { action: ApprovalAction.None, txRequest: null }
 
   const currencyInAmountRaw = currencyInAmount.quotient.toString()
-  const chainId = currencyInAmount.currency.chainId
+  const chainId = currencyInAmount.currency.chainId as ChainId
   const spender = SWAP_ROUTER_ADDRESSES[chainId]
   const tokenContract = contractManager.getOrCreateContract<Erc20>(
     chainId,

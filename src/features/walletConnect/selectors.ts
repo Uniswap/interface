@@ -8,9 +8,12 @@ import {
 export const selectSessions =
   (address: NullUndefined<string>) =>
   (state: RootState): WalletConnectSession[] => {
-    if (!address || !state.walletConnect.byAccount[address]) return EMPTY_ARRAY
+    if (!address) return EMPTY_ARRAY
 
-    return Object.values(state.walletConnect.byAccount[address].sessions)
+    const wcAccount = state.walletConnect.byAccount[address]
+    if (!wcAccount) return EMPTY_ARRAY
+
+    return Object.values(wcAccount.sessions)
   }
 
 export const selectPendingRequests = (state: RootState): WalletConnectRequest[] => {

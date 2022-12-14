@@ -58,6 +58,11 @@ function* importMnemonicAccounts(
       return call(generateAndStorePrivateKey, mnemonicId, index)
     })
   )
+
+  if (!addresses[0]) throw new Error('Cannot import account with undefined address')
+  if (indexes[0] === undefined)
+    throw new Error('Cannot import account with undefined derivation index')
+
   yield* all(
     addresses.slice(1, addresses.length).map((address, index) => {
       const account: Account = {

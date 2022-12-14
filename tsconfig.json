@@ -31,6 +31,7 @@
     "alwaysStrict": true /* Parse in strict mode and emit "use strict" for each source file. */,
 
     /* Additional Checks */
+    "noUncheckedIndexedAccess": true          /* Add `undefined` to a type when accessed using an index. */,
     // "noUnusedLocals": true,                /* Report errors on unused locals. */
     // "noUnusedParameters": true,            /* Report errors on unused parameters. */
     // "noImplicitReturns": true,             /* Report error when not all code paths in function return a value. */

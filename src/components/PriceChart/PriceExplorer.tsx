@@ -62,7 +62,7 @@ export const PriceExplorer = ({
   // graph index used to display the current graph
   const currentGraphIndex = useSharedValue<number>(1)
 
-  const currentIndexData = useDerivedValue(() => graphs?.[currentGraphIndex.value].data)
+  const currentIndexData = useDerivedValue(() => graphs?.[currentGraphIndex.value]?.data)
 
   // mixes graph paths on index change
   const graphTransitionAnimatedProps = useAnimatedProps(() => {
@@ -70,7 +70,9 @@ export const PriceExplorer = ({
       return {}
     }
 
-    const previousPath = graphs[previousGraphIndex.value].data.path
+    const previousPath = graphs[previousGraphIndex.value]?.data.path
+    if (!previousPath) return {}
+
     const currentPath = currentIndexData.value.path
     const d = {
       d: mixPath(transition.value, previousPath, currentPath),
@@ -114,7 +116,7 @@ export const PriceExplorer = ({
       // historical chart data is not always live to the latest block
       // for this reason, we usually pass down the latest 24h change to the component and render it when not panning
       // however, we only want to do this for the daily time range to keep 24h consistent across the app
-      graphs[currentGraphIndex.value].label !== PriceChartLabel.Day
+      graphs[currentGraphIndex.value]?.label !== PriceChartLabel.Day
     ) {
       return (
         ((price.value - currentIndexData.value.openPrice) / currentIndexData.value.openPrice) * 100

@@ -96,7 +96,7 @@ describe(getSwapWarnings, () => {
   it('catches incomplete form errors', async () => {
     const warnings = getSwapWarnings(mockTranslate, theme, account, swapState, networkUp)
     expect(warnings.length).toBe(1)
-    expect(warnings[0].type).toEqual(WarningLabel.FormIncomplete)
+    expect(warnings[0]?.type).toEqual(WarningLabel.FormIncomplete)
   })
 
   it('catches insufficient balance errors', () => {
@@ -108,7 +108,7 @@ describe(getSwapWarnings, () => {
       networkUp
     )
     expect(warnings.length).toBe(1)
-    expect(warnings[0].type).toEqual(WarningLabel.InsufficientFunds)
+    expect(warnings[0]?.type).toEqual(WarningLabel.InsufficientFunds)
   })
 
   it('catches multiple errors', () => {

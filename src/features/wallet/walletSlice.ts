@@ -46,14 +46,16 @@ const slice = createSlice({
       // If removed account was active, activate first one
       if (state.activeAccountAddress && areAddressesEqual(state.activeAccountAddress, address)) {
         const firstAccountId = Object.keys(state.accounts)[0]
+        if (!firstAccountId) throw new Error(`No accounts available to activate`)
         state.activeAccountAddress = firstAccountId
       }
     },
     markAsNonPending: (state, action: PayloadAction<Address>) => {
       const address = action.payload
       const id = getChecksumAddress(address)
-      if (!state.accounts[id]) throw new Error(`Cannot enable missing account ${id}`)
-      state.accounts[id].pending = false
+      const account = state.accounts[id]
+      if (!account) throw new Error(`Cannot enable missing account ${id}`)
+      account.pending = false
     },
     editAccount: (state, action: PayloadAction<{ address: Address; updatedAccount: Account }>) => {
       const { address, updatedAccount } = action.payload
