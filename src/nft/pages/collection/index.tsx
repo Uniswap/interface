@@ -106,6 +106,8 @@ const Collection = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  if (loading) return <CollectionPageSkeleton />
+
   const toggleActivity = () => {
     isActivityToggled
       ? navigate(`/nfts/collection/${contractAddress}`)
@@ -121,94 +123,90 @@ const Collection = () => {
       >
         <Column width="full">
           {contractAddress ? (
-            loading ? (
-              <CollectionPageSkeleton />
-            ) : (
-              <>
-                <BannerWrapper width="full">
-                  <Box
-                    as={collectionStats?.bannerImageUrl ? 'img' : 'div'}
-                    height="full"
-                    width="full"
-                    src={
-                      collectionStats?.bannerImageUrl
-                        ? `${collectionStats.bannerImageUrl}?w=${window.innerWidth}`
-                        : undefined
-                    }
-                    className={styles.bannerImage}
-                    background="none"
-                  />
-                </BannerWrapper>
-                <CollectionDescriptionSection>
-                  {collectionStats && (
-                    <CollectionStats stats={collectionStats || ({} as GenieCollection)} isMobile={isMobile} />
+            <>
+              <BannerWrapper width="full">
+                <Box
+                  as={collectionStats?.bannerImageUrl ? 'img' : 'div'}
+                  height="full"
+                  width="full"
+                  src={
+                    collectionStats?.bannerImageUrl
+                      ? `${collectionStats.bannerImageUrl}?w=${window.innerWidth}`
+                      : undefined
+                  }
+                  className={styles.bannerImage}
+                  background="none"
+                />
+              </BannerWrapper>
+              <CollectionDescriptionSection>
+                {collectionStats && (
+                  <CollectionStats stats={collectionStats || ({} as GenieCollection)} isMobile={isMobile} />
+                )}
+                <div id="nft-anchor" />
+                <ActivitySwitcher
+                  showActivity={isActivityToggled}
+                  toggleActivity={() => {
+                    isFiltersExpanded && setFiltersExpanded(false)
+                    toggleActivity()
+                  }}
+                />
+              </CollectionDescriptionSection>
+              <CollectionDisplaySection>
+                <Box
+                  position={isMobile ? 'fixed' : 'sticky'}
+                  top={{ sm: '0', md: '72' }}
+                  left="0"
+                  width={isMobile ? 'full' : '0'}
+                  height={isMobile && isFiltersExpanded ? 'full' : undefined}
+                  background={isMobile ? 'backgroundBackdrop' : undefined}
+                  zIndex="modalBackdrop"
+                  overflowY={isMobile ? 'scroll' : undefined}
+                >
+                  {isFiltersExpanded && (
+                    <>
+                      {isMobile && (
+                        <MobileFilterHeader>
+                          <ThemedText.HeadlineSmall>Filter</ThemedText.HeadlineSmall>
+                          <IconWrapper onClick={() => setFiltersExpanded(false)}>
+                            <BagCloseIcon />
+                          </IconWrapper>
+                        </MobileFilterHeader>
+                      )}
+                      <Filters traitsByGroup={collectionStats?.traits ?? {}} />
+                    </>
                   )}
-                  <div id="nft-anchor" />
-                  <ActivitySwitcher
-                    showActivity={isActivityToggled}
-                    toggleActivity={() => {
-                      isFiltersExpanded && setFiltersExpanded(false)
-                      toggleActivity()
-                    }}
-                  />
-                </CollectionDescriptionSection>
-                <CollectionDisplaySection>
-                  <Box
-                    position={isMobile ? 'fixed' : 'sticky'}
-                    top={{ sm: '0', md: '72' }}
-                    left="0"
-                    width={isMobile ? 'full' : '0'}
-                    height={isMobile && isFiltersExpanded ? 'full' : undefined}
-                    background={isMobile ? 'backgroundBackdrop' : undefined}
-                    zIndex="modalBackdrop"
-                    overflowY={isMobile ? 'scroll' : undefined}
-                  >
-                    {isFiltersExpanded && (
-                      <>
-                        {isMobile && (
-                          <MobileFilterHeader>
-                            <ThemedText.HeadlineSmall>Filter</ThemedText.HeadlineSmall>
-                            <IconWrapper onClick={() => setFiltersExpanded(false)}>
-                              <BagCloseIcon />
-                            </IconWrapper>
-                          </MobileFilterHeader>
-                        )}
-                        <Filters traitsByGroup={collectionStats?.traits ?? {}} />
-                      </>
-                    )}
-                  </Box>
+                </Box>
 
-                  {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
-                  <AnimatedBox
-                    position={isMobile && (isFiltersExpanded || isBagExpanded) ? 'fixed' : 'static'}
-                    style={{
-                      transform: gridX.to((x) => `translate(${x as number}px)`),
-                      width: gridWidthOffset.to((x) => `calc(100% - ${x as number}px)`),
-                    }}
-                  >
-                    {isActivityToggled
-                      ? contractAddress && (
-                          <Activity
+                {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
+                <AnimatedBox
+                  position={isMobile && (isFiltersExpanded || isBagExpanded) ? 'fixed' : 'static'}
+                  style={{
+                    transform: gridX.to((x) => `translate(${x as number}px)`),
+                    width: gridWidthOffset.to((x) => `calc(100% - ${x as number}px)`),
+                  }}
+                >
+                  {isActivityToggled
+                    ? contractAddress && (
+                        <Activity
+                          contractAddress={contractAddress}
+                          rarityVerified={collectionStats?.rarityVerified ?? false}
+                          collectionName={collectionStats?.name ?? ''}
+                          chainId={chainId}
+                        />
+                      )
+                    : contractAddress &&
+                      collectionStats && (
+                        <Suspense fallback={<CollectionNftsAndMenuLoading />}>
+                          <CollectionNfts
+                            collectionStats={collectionStats || ({} as GenieCollection)}
                             contractAddress={contractAddress}
-                            rarityVerified={collectionStats?.rarityVerified ?? false}
-                            collectionName={collectionStats?.name ?? ''}
-                            chainId={chainId}
+                            rarityVerified={collectionStats?.rarityVerified}
                           />
-                        )
-                      : contractAddress &&
-                        collectionStats && (
-                          <Suspense fallback={<CollectionNftsAndMenuLoading />}>
-                            <CollectionNfts
-                              collectionStats={collectionStats || ({} as GenieCollection)}
-                              contractAddress={contractAddress}
-                              rarityVerified={collectionStats?.rarityVerified}
-                            />
-                          </Suspense>
-                        )}
-                  </AnimatedBox>
-                </CollectionDisplaySection>
-              </>
-            )
+                        </Suspense>
+                      )}
+                </AnimatedBox>
+              </CollectionDisplaySection>
+            </>
           ) : (
             // TODO: Put no collection asset page here
             <div className={styles.noCollectionAssets}>No collection assets exist at this address</div>
