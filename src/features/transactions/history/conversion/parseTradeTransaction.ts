@@ -1,3 +1,5 @@
+// TODO(MOB-3866): reduce component complexity
+/* eslint-disable complexity */
 import { TradeType } from '@uniswap/sdk-core'
 import { TransactionListQueryResponse } from 'src/components/TransactionList/TransactionList'
 import { ChainId } from 'src/constants/chains'

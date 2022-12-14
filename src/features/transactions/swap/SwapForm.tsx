@@ -1,3 +1,5 @@
+// TODO(MOB-3866): reduce component complexity
+/* eslint-disable complexity */
 import { AnyAction } from '@reduxjs/toolkit'
 import React, { Dispatch, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'

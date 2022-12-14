@@ -1,3 +1,6 @@
+// TODO(MOB-3867): reduce file length
+// consider splitting into multiple files
+/* eslint-disable max-lines */
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'

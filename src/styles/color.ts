@@ -1,3 +1,5 @@
+// allow long constants file
+/* eslint-disable max-lines */
 // Based mostly on https://github.com/Uniswap/interface/blob/main/src/theme/index.tsx
 
 import { opacify } from 'src/utils/colors'

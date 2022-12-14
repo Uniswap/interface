@@ -1,3 +1,5 @@
+// TODO(MOB-3866): reduce component complexity
+/* eslint-disable complexity */
 import { providers } from 'ethers'
 import { default as React, ReactElement, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'

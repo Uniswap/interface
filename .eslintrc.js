@@ -1,3 +1,11 @@
+// reduces code complexity
+const complexityRules = {
+  'max-depth': ['error', 4], // prevent deeply nested code paths which are hard to read
+  'max-nested-callbacks': ['error', 3],
+  'max-lines': ['error', 500], // cap file length
+  complexity: ['error', 20], // restrict cyclomatic complexity (number of linearly independent paths )
+}
+
 module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
@@ -19,6 +27,7 @@ module.exports = {
     'spellcheck',
   ],
   rules: {
+    ...complexityRules,
     'guard-for-in': 'error',
     'no-eval': 'error',
     'no-extra-boolean-cast': 'error',

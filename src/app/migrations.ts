@@ -405,41 +405,43 @@ export const migrations = {
             continue
           }
 
-          if (txDetails.typeInfo.type === TransactionType.FiatPurchase) {
-            if (txDetails.status === TransactionStatus.Failed) {
-              // delete failed moonpay transactions as we do not have enough information to migrate
-              continue
-            }
-
-            const {
-              explorerUrl,
-              outputTokenAddress,
-              outputCurrencyAmountFormatted,
-              outputCurrencyAmountPrice,
-              syncedWithBackend,
-            } = txDetails.typeInfo
-
-            const newTypeInfo = {
-              type: TransactionType.FiatPurchase,
-              explorerUrl,
-              inputCurrency: undefined,
-              inputCurrencyAmount: outputCurrencyAmountFormatted / outputCurrencyAmountPrice,
-              outputCurrency: {
-                type: 'crypto',
-                metadata: { chainId: undefined, contractAddress: outputTokenAddress },
-              },
-              outputCurrencyAmount: undefined,
-              syncedWithBackend,
-            }
-
-            newTransactionState[address] ??= {}
-            newTransactionState[address][chainId] ??= {}
-            newTransactionState[address][chainId][txId] = { ...txDetails, typeInfo: newTypeInfo }
-          } else {
+          if (txDetails.typeInfo.type !== TransactionType.FiatPurchase) {
             newTransactionState[address] ??= {}
             newTransactionState[address][chainId] ??= {}
             newTransactionState[address][chainId][txId] = txDetails
+
+            continue
           }
+
+          if (txDetails.status === TransactionStatus.Failed) {
+            // delete failed moonpay transactions as we do not have enough information to migrate
+            continue
+          }
+
+          const {
+            explorerUrl,
+            outputTokenAddress,
+            outputCurrencyAmountFormatted,
+            outputCurrencyAmountPrice,
+            syncedWithBackend,
+          } = txDetails.typeInfo
+
+          const newTypeInfo = {
+            type: TransactionType.FiatPurchase,
+            explorerUrl,
+            inputCurrency: undefined,
+            inputCurrencyAmount: outputCurrencyAmountFormatted / outputCurrencyAmountPrice,
+            outputCurrency: {
+              type: 'crypto',
+              metadata: { chainId: undefined, contractAddress: outputTokenAddress },
+            },
+            outputCurrencyAmount: undefined,
+            syncedWithBackend,
+          }
+
+          newTransactionState[address] ??= {}
+          newTransactionState[address][chainId] ??= {}
+          newTransactionState[address][chainId][txId] = { ...txDetails, typeInfo: newTypeInfo }
         }
       }
     }

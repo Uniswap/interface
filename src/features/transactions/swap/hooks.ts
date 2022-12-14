@@ -1,3 +1,5 @@
+// TODO(MOB-3867): reduce file length
+/* eslint-disable max-lines */
 import { MaxUint256 } from '@ethersproject/constants'
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { SwapRouter } from '@uniswap/router-sdk'

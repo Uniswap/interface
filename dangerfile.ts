@@ -29,10 +29,11 @@ for (const file of updatedTsFiles) {
   danger.git.structuredDiffForFile(file).then((diff) => {
     for (const chunk of diff?.chunks || []) {
       for (const change of chunk.changes) {
-        if (change.type === 'add') {
-          if (change.content.includes('logMessage') || change.content.includes('logger.')) {
-            warn('You are logging data. Please confirm that nothing sensitive is being logged!')
-          }
+        if (change.type !== 'add') {
+          return
+        }
+        if (change.content.includes('logMessage') || change.content.includes('logger.')) {
+          warn('You are logging data. Please confirm that nothing sensitive is being logged!')
         }
       }
     }

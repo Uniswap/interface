@@ -20,16 +20,18 @@ export function unnestObject(ob: Record<string, any>) {
     // `in` is safe because keys are extracted from object properties
     if (!Object.prototype.hasOwnProperty.call(ob, i)) continue
 
-    if (typeof ob[i] === 'object' && ob[i] !== null) {
-      const flatObject = unnestObject(ob[i])
-      for (const x in flatObject) {
-        if (!Object.prototype.hasOwnProperty.call(flatObject, x)) continue
-
-        toReturn[i + '.' + x] = flatObject[x]
-      }
-    } else {
+    if (typeof ob[i] !== 'object' || ob[i] === null) {
       toReturn[i] = ob[i]
+      continue
+    }
+
+    const flatObject = unnestObject(ob[i])
+    for (const x in flatObject) {
+      if (!Object.prototype.hasOwnProperty.call(flatObject, x)) continue
+
+      toReturn[i + '.' + x] = flatObject[x]
     }
   }
+
   return toReturn
 }
