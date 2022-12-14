@@ -7,12 +7,12 @@ query PortfolioBalance($owner: String!) {
     }
     tokensTotalDenominatedValueChange(duration: DAY) {
       absolute {
+        id
         value
-        currency
       }
       percentage {
+        id
         value
-        currency
       }
     }
   }

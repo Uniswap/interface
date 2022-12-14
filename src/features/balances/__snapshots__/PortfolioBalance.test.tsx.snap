@@ -1,0 +1,314 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders without error 1`] = `
+<View
+  onLayout={[Function]}
+>
+  <View
+    style={
+      Array [
+        Object {
+          "alignItems": "stretch",
+          "display": "flex",
+          "flexDirection": "column",
+          "justifyContent": "flex-start",
+        },
+      ]
+    }
+  >
+    <View
+      onLayout={[Function]}
+    >
+      <View
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+              "flexDirection": "row",
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {
+                "alignItems": "center",
+                "display": "flex",
+                "flexDirection": "row",
+                "position": "relative",
+              },
+            ]
+          }
+        >
+          <View
+            accessibilityElementsHidden={true}
+            importantForAccessibility="no-hide-descendants"
+          >
+            <Text
+              adjustsFontSizeToFit={false}
+              allowFontScaling={true}
+              maxFontSizeMultiplier={1.2}
+              numberOfLines={1}
+              style={
+                Array [
+                  Object {
+                    "color": "#0D111C",
+                    "display": "flex",
+                    "fontFamily": "Inter-SemiBold",
+                    "fontSize": 40,
+                    "fontWeight": "600",
+                    "lineHeight": 48,
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              $000.00
+            </Text>
+          </View>
+          <View
+            style={
+              Array [
+                Object {
+                  "backgroundColor": "#E8ECFB",
+                  "borderRadius": 4,
+                  "bottom": "5%",
+                  "display": "flex",
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": "5%",
+                },
+              ]
+            }
+          />
+        </View>
+      </View>
+    </View>
+    <View
+      style={
+        Array [
+          Object {
+            "display": "flex",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "height": 4,
+          },
+        ]
+      }
+    />
+    <View
+      style={
+        Array [
+          Object {
+            "alignItems": "center",
+            "display": "flex",
+            "flexDirection": "row",
+            "justifyContent": "flex-start",
+          },
+        ]
+      }
+    >
+      <View
+        onLayout={[Function]}
+      >
+        <View
+          style={
+            Array [
+              Object {
+                "alignItems": "center",
+                "display": "flex",
+                "flexDirection": "row",
+              },
+            ]
+          }
+        >
+          <View
+            style={
+              Array [
+                Object {
+                  "alignItems": "center",
+                  "display": "flex",
+                  "flexDirection": "row",
+                  "position": "relative",
+                },
+              ]
+            }
+          >
+            <View
+              accessibilityElementsHidden={true}
+              importantForAccessibility="no-hide-descendants"
+            >
+              <Text
+                allowFontScaling={true}
+                maxFontSizeMultiplier={1.4}
+                style={
+                  Array [
+                    Object {
+                      "color": "#505A78",
+                      "display": "flex",
+                      "fontFamily": "Inter-Medium",
+                      "fontSize": 16,
+                      "lineHeight": 24,
+                      "opacity": 0,
+                    },
+                  ]
+                }
+              >
+                $0.00 (0.00)%
+              </Text>
+            </View>
+            <View
+              style={
+                Array [
+                  Object {
+                    "backgroundColor": "#E8ECFB",
+                    "borderRadius": 4,
+                    "bottom": "5%",
+                    "display": "flex",
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": "5%",
+                  },
+                ]
+              }
+            />
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`renders without error 2`] = `
+<View
+  onLayout={[Function]}
+>
+  <View
+    style={
+      Array [
+        Object {
+          "alignItems": "stretch",
+          "display": "flex",
+          "flexDirection": "column",
+          "justifyContent": "flex-start",
+        },
+      ]
+    }
+  >
+    <Text
+      adjustsFontSizeToFit={true}
+      allowFontScaling={true}
+      maxFontSizeMultiplier={1.2}
+      numberOfLines={1}
+      style={
+        Array [
+          Object {
+            "color": "#0D111C",
+            "display": "flex",
+            "fontFamily": "Inter-SemiBold",
+            "fontSize": 40,
+            "fontWeight": "600",
+            "lineHeight": 48,
+          },
+        ]
+      }
+    >
+      $55
+      <Text
+        allowFontScaling={true}
+        maxFontSizeMultiplier={1.2}
+        style={
+          Array [
+            Object {
+              "color": "#888FAB",
+              "display": "flex",
+              "fontFamily": "Inter-SemiBold",
+              "fontSize": 40,
+              "lineHeight": 48,
+            },
+          ]
+        }
+      >
+        .
+        00
+      </Text>
+    </Text>
+    <View
+      style={
+        Array [
+          Object {
+            "display": "flex",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "height": 4,
+          },
+        ]
+      }
+    />
+    <View
+      style={
+        Array [
+          Object {
+            "alignItems": "center",
+            "display": "flex",
+            "flexDirection": "row",
+            "justifyContent": "flex-start",
+          },
+        ]
+      }
+    >
+      <svg
+        color="#40B66B"
+        data-file-name="SvgArrowDown"
+        height={20}
+        strokeWidth={2}
+        style={
+          Object {
+            "transform": Array [
+              Object {
+                "rotate": "225deg",
+              },
+            ],
+          }
+        }
+        width={20}
+      />
+      <View
+        style={
+          Array [
+            Object {
+              "display": "flex",
+              "flexGrow": 0,
+              "flexShrink": 0,
+              "height": 2,
+              "width": 2,
+            },
+          ]
+        }
+      />
+      <Text
+        allowFontScaling={true}
+        maxFontSizeMultiplier={1.4}
+        style={
+          Array [
+            Object {
+              "color": "#505A78",
+              "display": "flex",
+              "fontFamily": "Inter-Medium",
+              "fontSize": 16,
+              "lineHeight": 24,
+            },
+          ]
+        }
+      >
+        $5.00 (0.05%)
+      </Text>
+    </View>
+  </View>
+</View>
+`;
