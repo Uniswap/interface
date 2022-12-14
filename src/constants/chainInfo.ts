@@ -5,6 +5,7 @@ import { default as arbitrumCircleLogoUrl, default as arbitrumLogoUrl } from 'as
 import celoLogo from 'assets/svg/celo_logo.svg'
 import optimismLogoUrl from 'assets/svg/optimistic_ethereum.svg'
 import polygonMaticLogo from 'assets/svg/polygon-matic-logo.svg'
+import scrollLogo from 'assets/svg/scroll_logo.svg'
 import ms from 'ms.macro'
 import { darkTheme } from 'theme/colors'
 
@@ -223,8 +224,9 @@ const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://l2scan.scroll.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Scroll Pre-Alpha',
-    logoUrl: ethereumLogoUrl,
-    nativeCurrency: { name: 'TSETH', symbol: 'TSETH', decimals: 18 },
+    logoUrl: scrollLogo,
+    nativeCurrency: { name: 'Scroll Prealpha Ether', symbol: 'TSETH', decimals: 18 },
+    //TODO: Add Scroll Brand Color
     color: darkTheme.chain_5,
 
     // Required for L2 networks

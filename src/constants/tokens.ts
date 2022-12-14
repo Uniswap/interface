@@ -82,6 +82,13 @@ const USDC_POLYGON_MUMBAI = new Token(
   'USDC',
   'USD//C'
 )
+const USDC_SCROLL_PREALPHA = new Token(
+  SupportedChainId.SCROLL_PREALPHA,
+  '0x80732890c93c6D9c6C23E06F888eD0CB88A06018',
+  6,
+  'USDC',
+  'USD//C'
+)
 export const PORTAL_USDC_CELO = new Token(
   SupportedChainId.CELO,
   '0x37f750B7cC259A2f741AF45294f6a16572CF5cAd',
@@ -465,5 +472,6 @@ export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedCha
     [SupportedChainId.RINKEBY]: USDC_RINKEBY.address,
     [SupportedChainId.KOVAN]: USDC_KOVAN.address,
     [SupportedChainId.ROPSTEN]: USDC_ROPSTEN.address,
+    [SupportedChainId.SCROLL_PREALPHA]: USDC_SCROLL_PREALPHA.address,
   },
 }

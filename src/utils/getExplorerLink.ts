@@ -56,6 +56,20 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
     }
   }
 
+  if (chainId === SupportedChainId.SCROLL_PREALPHA) {
+    switch (type) {
+      case ExplorerDataType.TRANSACTION:
+        return `https://l2scan.scroll.io/tx/${data}`
+      case ExplorerDataType.ADDRESS:
+      case ExplorerDataType.TOKEN:
+        return `https://l2scan.scroll.io/address/${data}`
+      case ExplorerDataType.BLOCK:
+        return `https://l2scan.scroll.io/block/${data}`
+      default:
+        return `https://l2scan.scroll.io/`
+    }
+  }
+
   const prefix = BLOCK_EXPLORER_PREFIXES[chainId] ?? 'https://etherscan.io'
 
   switch (type) {
