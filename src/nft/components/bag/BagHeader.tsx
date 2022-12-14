@@ -52,7 +52,7 @@ const Wrapper = styled.div`
   flex-direction: row;
   gap: 8px;
   justify-content: flex-start;
-  margin: 16px 20px;
+  margin: 16px 28px;
   text-align: center;
 `
 interface BagHeaderProps {
@@ -82,7 +82,9 @@ export const BagHeader = ({ numberOfAssets, closeBag, resetFlow, isProfilePage }
       {numberOfAssets > 0 && (
         <>
           <CounterDot sizing={sizing}>{numberOfAssets}</CounterDot>
-          <ClearButton onClick={resetFlow}>Clear all</ClearButton>
+          <ClearButton onClick={resetFlow}>
+            <Trans>Clear all</Trans>
+          </ClearButton>
         </>
       )}
       <IconWrapper onClick={closeBag}>

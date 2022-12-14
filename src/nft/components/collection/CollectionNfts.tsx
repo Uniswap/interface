@@ -13,6 +13,7 @@ import {
   useLoadSweepAssetsQuery,
 } from 'graphql/data/nft/Asset'
 import useDebounce from 'hooks/useDebounce'
+import { useScreenSize } from 'hooks/useScreenSize'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { CollectionSearch, FilterButton } from 'nft/components/collection'
 import { CollectionAsset } from 'nft/components/collection/CollectionAsset'
@@ -378,6 +379,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const oldStateRef = useRef<CollectionFilters | null>(null)
   const isMobile = useIsMobile()
+  const screenSize = useScreenSize()
 
   useEffect(() => {
     setIsCollectionNftsLoading(isLoadingNext)
@@ -514,7 +516,10 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
                 isMobile={isMobile}
                 isFiltersExpanded={isFiltersExpanded}
                 collectionCount={collectionAssets?.[0]?.totalCount ?? 0}
-                onClick={() => setFiltersExpanded(!isFiltersExpanded)}
+                onClick={() => {
+                  if (bagExpanded && !screenSize['xl']) toggleBag()
+                  setFiltersExpanded(!isFiltersExpanded)
+                }}
               />
             </TraceEvent>
             <SortDropdownContainer isFiltersExpanded={isFiltersExpanded}>

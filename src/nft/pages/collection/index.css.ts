@@ -6,8 +6,6 @@ import { css } from 'styled-components/macro'
 
 import { sprinkles } from '../../css/sprinkles.css'
 
-export const bannerImage = style({ objectFit: 'cover' })
-
 export const baseActivitySwitcherToggle = style([
   buttonTextMedium,
   sprinkles({
