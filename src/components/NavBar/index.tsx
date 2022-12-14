@@ -16,23 +16,6 @@ import { MenuDropdown } from './MenuDropdown'
 import { SearchBar } from './SearchBar'
 import * as styles from './style.css'
 
-const MobileBottomBar = styled.div`
-  position: fixed;
-  display: flex;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  justify-content: space-between;
-  padding: 4px 8px;
-  height: ${({ theme }) => theme.mobileBottomBarHeight}px;
-  background: ${({ theme }) => theme.backgroundSurface};
-  border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
-
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
-    display: none;
-  }
-`
-
 const Nav = styled.nav`
   padding: 20px 12px;
   width: 100%;
@@ -62,7 +45,7 @@ const MenuItem = ({ href, dataTestId, id, isActive, children }: MenuItemProps) =
   )
 }
 
-const PageTabs = () => {
+export const PageTabs = () => {
   const { pathname } = useLocation()
   const { chainId: connectedChainId } = useWeb3React()
   const chainName = chainIdToBackendName(connectedChainId)
@@ -145,12 +128,6 @@ const Navbar = () => {
           </Box>
         </Box>
       </Nav>
-      <MobileBottomBar>
-        <PageTabs />
-        <Box marginY="4">
-          <MenuDropdown />
-        </Box>
-      </MobileBottomBar>
     </>
   )
 }

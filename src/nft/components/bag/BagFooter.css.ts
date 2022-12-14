@@ -2,10 +2,6 @@ import { style } from '@vanilla-extract/css'
 import { body } from 'nft/css/common.css'
 import { sprinkles } from 'nft/css/sprinkles.css'
 
-export const footerContainer = sprinkles({
-  paddingX: '16',
-})
-
 export const footer = style([
   sprinkles({
     background: 'backgroundModule',

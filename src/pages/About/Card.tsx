@@ -1,3 +1,5 @@
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, EventName } from '@uniswap/analytics-events'
 import { Link } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
@@ -69,27 +71,31 @@ const Card = ({
   to,
   external,
   backgroundImgSrc,
+  elementName,
 }: {
   title: string
   description: string
   to: string
   external?: boolean
   backgroundImgSrc?: string
+  elementName: string
 }) => {
   const isDarkMode = useIsDarkMode()
   return (
-    <StyledCard
-      as={external ? 'a' : Link}
-      to={external ? undefined : to}
-      href={external ? to : undefined}
-      target={external ? '_blank' : undefined}
-      rel={external ? 'noopenener noreferrer' : undefined}
-      isDarkMode={isDarkMode}
-      backgroundImgSrc={backgroundImgSrc}
-    >
-      <CardTitle>{title}</CardTitle>
-      <CardDescription>{description}</CardDescription>
-    </StyledCard>
+    <TraceEvent events={[BrowserEvent.onClick]} name={EventName.ELEMENT_CLICKED} element={elementName}>
+      <StyledCard
+        as={external ? 'a' : Link}
+        to={external ? undefined : to}
+        href={external ? to : undefined}
+        target={external ? '_blank' : undefined}
+        rel={external ? 'noopenener noreferrer' : undefined}
+        isDarkMode={isDarkMode}
+        backgroundImgSrc={backgroundImgSrc}
+      >
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
+      </StyledCard>
+    </TraceEvent>
   )
 }
 

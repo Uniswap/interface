@@ -1,40 +1,97 @@
 import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import Column from 'components/Column'
 import { OpacityHoverState } from 'components/Common'
+import Row from 'components/Row'
+import { LoadingBubble } from 'components/Tokens/loading'
 import { useLoadAssetsQuery } from 'graphql/data/nft/Asset'
 import { useCollectionQuery, useLoadCollectionQuery } from 'graphql/data/nft/Collection'
+import { useScreenSize } from 'hooks/useScreenSize'
+import { BAG_WIDTH, XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
-import { AnimatedBox, Box } from 'nft/components/Box'
 import { Activity, ActivitySwitcher, CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
 import { CollectionNftsAndMenuLoading } from 'nft/components/collection/CollectionNfts'
 import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
-import { Column, Row } from 'nft/components/Flex'
 import { BagCloseIcon } from 'nft/components/icons'
 import { useBag, useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
 import { GenieCollection } from 'nft/types'
 import { Suspense, useEffect } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { easings, useSpring } from 'react-spring'
+import { animated, easings, useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { TRANSITION_DURATIONS } from 'theme/styles'
+import { Z_INDEX } from 'theme/zIndex'
 
 const FILTER_WIDTH = 332
-const BAG_WIDTH = 324
 
-export const BannerWrapper = styled(Box)`
-  height: 100px;
+export const CollectionBannerLoading = styled(LoadingBubble)`
+  width: 100%;
+  height: 100%;
+  border-radius: 0px;
+
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    border-radius: 16px;
+  }
+`
+
+const CollectionContainer = styled(Column)`
+  width: 100%;
+  align-self: start;
+  will-change: width;
+`
+
+const AnimatedCollectionContainer = animated(CollectionContainer)
+
+const CollectionAssetsContainer = styled.div<{ hideUnderneath: boolean }>`
+  position: ${({ hideUnderneath }) => (hideUnderneath ? 'fixed' : 'static')};
+`
+
+const AnimatedCollectionAssetsContainer = animated(CollectionAssetsContainer)
+
+export const BannerWrapper = styled.div`
+  height: 100px;
+  max-width: 100%;
+
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    margin-top: 16px;
+    margin-left: 20px;
+    margin-right: 20px;
     height: 288px;
   }
 `
 
-export const CollectionBannerLoading = () => <Box height="full" width="full" className={styles.loadingBanner} />
+const Banner = styled.div<{ src: string }>`
+  height: 100%;
+  width: 100%;
+  background-image: url(${({ src }) => src});
+  background-position-y: center;
+  background-size: cover;
+
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    border-radius: 16px;
+  }
+`
 
 const CollectionDescriptionSection = styled(Column)`
   ${styles.ScreenBreakpointsPaddings}
+`
+
+const FiltersContainer = styled.div<{ isMobile: boolean; isFiltersExpanded: boolean }>`
+  position: ${({ isMobile }) => (isMobile ? 'fixed' : 'sticky')};
+  top: 0px;
+  left: 0px;
+  width: ${({ isMobile }) => (isMobile ? '100%' : '0px')};
+  height: ${({ isMobile, isFiltersExpanded }) => (isMobile && isFiltersExpanded ? '100%' : undefined)};
+  background: ${({ theme, isMobile }) => (isMobile ? theme.backgroundBackdrop : undefined)};
+  z-index: ${Z_INDEX.modalBackdrop};
+  overflow-y: ${({ isMobile }) => (isMobile ? 'scroll' : undefined)};
+
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    top: 72px;
+  }
 `
 
 const MobileFilterHeader = styled(Row)`
@@ -74,19 +131,21 @@ const Collection = () => {
   const isBagExpanded = useBag((state) => state.bagExpanded)
   const setBagExpanded = useBag((state) => state.setBagExpanded)
   const { chainId } = useWeb3React()
+  const screenSize = useScreenSize()
 
   const collectionStats = useCollectionQuery(contractAddress as string)
 
-  const { gridX, gridWidthOffset } = useSpring({
-    gridX: isFiltersExpanded && !isMobile ? FILTER_WIDTH : 0,
-    gridWidthOffset:
-      isFiltersExpanded && !isMobile
-        ? isBagExpanded
-          ? BAG_WIDTH + FILTER_WIDTH
-          : FILTER_WIDTH
-        : isBagExpanded && !isMobile
-        ? BAG_WIDTH
-        : 0,
+  const { CollectionContainerWidthChange } = useSpring({
+    CollectionContainerWidthChange:
+      isBagExpanded && !isMobile ? (screenSize['xxxl'] ? XXXL_BAG_WIDTH : BAG_WIDTH) + 16 : 0,
+    config: {
+      duration: TRANSITION_DURATIONS.medium,
+      easing: easings.easeOutSine,
+    },
+  })
+
+  const { gridWidthOffset } = useSpring({
+    gridWidthOffset: isFiltersExpanded && !isMobile ? FILTER_WIDTH : 0,
     config: {
       duration: TRANSITION_DURATIONS.medium,
       easing: easings.easeOutSine,
@@ -100,6 +159,10 @@ const Collection = () => {
     })
     setMarketCount(marketCount)
   }, [collectionStats?.marketplaceCount, setMarketCount])
+
+  useEffect(() => {
+    if (isBagExpanded && isFiltersExpanded && !screenSize['xl']) setFiltersExpanded(false)
+  }, [isBagExpanded, isFiltersExpanded, screenSize, setFiltersExpanded])
 
   useEffect(() => {
     setBagExpanded({ bagExpanded: false, manualClose: false })
@@ -119,21 +182,18 @@ const Collection = () => {
         properties={{ collection_address: contractAddress, chain_id: chainId, is_activity_view: isActivityToggled }}
         shouldLogImpression
       >
-        <Column width="full">
+        <AnimatedCollectionContainer
+          style={{
+            width: CollectionContainerWidthChange.to((x) => `calc(100% - ${x as number}px)`),
+          }}
+        >
           {contractAddress ? (
             <>
-              <BannerWrapper width="full">
-                <Box
-                  as={collectionStats?.bannerImageUrl ? 'img' : 'div'}
-                  height="full"
-                  width="full"
+              <BannerWrapper>
+                <Banner
                   src={
-                    collectionStats?.bannerImageUrl
-                      ? `${collectionStats.bannerImageUrl}?w=${window.innerWidth}`
-                      : undefined
+                    collectionStats?.bannerImageUrl ? `${collectionStats.bannerImageUrl}?w=${window.innerWidth}` : ''
                   }
-                  className={styles.bannerImage}
-                  background="none"
                 />
               </BannerWrapper>
               <CollectionDescriptionSection>
@@ -150,16 +210,7 @@ const Collection = () => {
                 />
               </CollectionDescriptionSection>
               <CollectionDisplaySection>
-                <Box
-                  position={isMobile ? 'fixed' : 'sticky'}
-                  top={{ sm: '0', md: '72' }}
-                  left="0"
-                  width={isMobile ? 'full' : '0'}
-                  height={isMobile && isFiltersExpanded ? 'full' : undefined}
-                  background={isMobile ? 'backgroundBackdrop' : undefined}
-                  zIndex="modalBackdrop"
-                  overflowY={isMobile ? 'scroll' : undefined}
-                >
+                <FiltersContainer isMobile={isMobile} isFiltersExpanded={isFiltersExpanded}>
                   {isFiltersExpanded && (
                     <>
                       {isMobile && (
@@ -173,13 +224,12 @@ const Collection = () => {
                       <Filters traitsByGroup={collectionStats?.traits ?? {}} />
                     </>
                   )}
-                </Box>
+                </FiltersContainer>
 
-                {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
-                <AnimatedBox
-                  position={isMobile && (isFiltersExpanded || isBagExpanded) ? 'fixed' : 'static'}
+                <AnimatedCollectionAssetsContainer
+                  hideUnderneath={isMobile && (isFiltersExpanded || isBagExpanded)}
                   style={{
-                    transform: gridX.to((x) => `translate(${x as number}px)`),
+                    transform: gridWidthOffset.to((x) => `translate(${x as number}px)`),
                     width: gridWidthOffset.to((x) => `calc(100% - ${x as number}px)`),
                   }}
                 >
@@ -202,14 +252,13 @@ const Collection = () => {
                           />
                         </Suspense>
                       )}
-                </AnimatedBox>
+                </AnimatedCollectionAssetsContainer>
               </CollectionDisplaySection>
             </>
           ) : (
-            // TODO: Put no collection asset page here
             <div className={styles.noCollectionAssets}>No collection assets exist at this address</div>
           )}
-        </Column>
+        </AnimatedCollectionContainer>
       </Trace>
       <MobileHoverBag />
     </>

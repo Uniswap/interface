@@ -873,10 +873,10 @@ export default function Swap({ className }: { className?: string }) {
                         swapInputError
                       ) : routeIsSyncing || routeIsLoading ? (
                         <Trans>Swap</Trans>
-                      ) : priceImpactSeverity > 2 ? (
-                        <Trans>Swap Anyway</Trans>
                       ) : priceImpactTooHigh ? (
                         <Trans>Price Impact Too High</Trans>
+                      ) : priceImpactSeverity > 2 ? (
+                        <Trans>Swap Anyway</Trans>
                       ) : (
                         <Trans>Swap</Trans>
                       )}
