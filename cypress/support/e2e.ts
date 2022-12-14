@@ -71,9 +71,11 @@ beforeEach(() => {
   cy.intercept('https://api.uniswap.org/v1/graphql', (res) => {
     res.headers['origin'] = 'https://app.uniswap.org'
     res.continue()
+
+    // https://beta.api.uniswap.org/v1/graphql
   })
   cy.intercept('https://beta.api.uniswap.org/v1/graphql', (res) => {
-    res.headers['origin'] = 'https://app.uniswap.org'
+    res.headers['origin'] = 'http://localhost:3000'
     res.continue()
   })
 })

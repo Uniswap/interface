@@ -185,7 +185,7 @@ export default function TokenDetails({
         {token && !isPending ? (
           <LeftPanel>
             <BreadcrumbNavLink to={`/tokens/${chain.toLowerCase()}`}>
-              <ArrowLeft size={14} /> Tokens
+              <ArrowLeft data-testid="token-details-return-button" size={14} /> Tokens
             </BreadcrumbNavLink>
             <TokenInfoContainer>
               <TokenNameCell>
