@@ -1,9 +1,10 @@
+import { Currency } from '@uniswap/sdk-core'
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
 import { AppState } from '../index'
-import { addPopup, ApplicationModal, PopupContent, removePopup, setOpenModal } from './reducer'
+import { addPopup, ApplicationModal, PopupContent, removePopup, setOpenModal, setQuoteCurrency } from './reducer'
 
 export function useModalIsOpen(modal: ApplicationModal): boolean {
   const openModal = useAppSelector((state: AppState) => state.application.openModal)
@@ -96,4 +97,14 @@ export function useRemovePopup(): (key: string) => void {
 export function useActivePopups(): AppState['application']['popupList'] {
   const list = useAppSelector((state: AppState) => state.application.popupList)
   return useMemo(() => list.filter((item) => item.show), [list])
+}
+
+export function useSetQuoteCurrency(): (currency: Currency) => void {
+  const dispatch = useAppDispatch()
+  return useCallback(
+    (currency: Currency) => {
+      dispatch(setQuoteCurrency(currency))
+    },
+    [dispatch]
+  )
 }

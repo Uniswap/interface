@@ -6,6 +6,7 @@ import { useModalIsOpen } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import DefaultMenu from './DefaultMenu'
 import LanguageMenu from './LanguageMenu'
+import QuoteCurrencyMenu from './QuoteCurrencyMenu'
 import { TransactionHistoryMenu } from './TransactionMenu'
 
 const WalletWrapper = styled.div`
@@ -33,6 +34,7 @@ export enum MenuState {
   DEFAULT = 'DEFAULT',
   LANGUAGE = 'LANGUAGE',
   TRANSACTIONS = 'TRANSACTIONS',
+  QUOTE_CURRENCY = 'QUOTE_CURRENCY',
 }
 
 const WalletDropdownWrapper = styled.div`
@@ -57,6 +59,7 @@ const WalletDropdown = () => {
       {walletDropdownOpen && (
         <WalletDropdownWrapper>
           <WalletWrapper>
+            {menu === MenuState.QUOTE_CURRENCY && <QuoteCurrencyMenu onClose={() => setMenu(MenuState.DEFAULT)} />}
             {menu === MenuState.TRANSACTIONS && <TransactionHistoryMenu onClose={() => setMenu(MenuState.DEFAULT)} />}
             {menu === MenuState.LANGUAGE && <LanguageMenu onClose={() => setMenu(MenuState.DEFAULT)} />}
             {menu === MenuState.DEFAULT && <DefaultMenu setMenu={setMenu} />}

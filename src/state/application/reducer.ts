@@ -1,5 +1,7 @@
 import { createSlice, nanoid } from '@reduxjs/toolkit'
+import { Currency } from '@uniswap/sdk-core'
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
+import { USDC_MAINNET } from 'constants/tokens'
 
 import { SupportedChainId } from '../../constants/chains'
 
@@ -42,18 +44,23 @@ export interface ApplicationState {
   readonly chainId: number | null
   readonly openModal: ApplicationModal | null
   readonly popupList: PopupList
+  readonly quoteCurrency: Currency
 }
 
 const initialState: ApplicationState = {
   chainId: null,
   openModal: null,
   popupList: [],
+  quoteCurrency: USDC_MAINNET,
 }
 
 const applicationSlice = createSlice({
   name: 'application',
   initialState,
   reducers: {
+    setQuoteCurrency(state, action) {
+      state.quoteCurrency = action.payload
+    },
     updateChainId(state, action) {
       const { chainId } = action.payload
       state.chainId = chainId
@@ -81,5 +88,5 @@ const applicationSlice = createSlice({
   },
 })
 
-export const { updateChainId, setOpenModal, addPopup, removePopup } = applicationSlice.actions
+export const { updateChainId, setOpenModal, addPopup, removePopup, setQuoteCurrency } = applicationSlice.actions
 export default applicationSlice.reducer
