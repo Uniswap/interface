@@ -6,17 +6,7 @@ import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
 import AnimatedInLineChart from 'components/Charts/AnimatedInLineChart'
 import FadedInLineChart from 'components/Charts/FadeInLineChart'
-import {
-  bisect,
-  curveCardinal,
-  NumberValue,
-  ScaleLinear,
-  scaleLinear,
-  timeDay,
-  timeHour,
-  timeMinute,
-  timeMonth,
-} from 'd3'
+import { bisect, curveCardinal, NumberValue, scaleLinear, timeDay, timeHour, timeMinute, timeMonth } from 'd3'
 import { PricePoint, toTranslatedTimePeriod } from 'graphql/data/util'
 import { TimePeriod } from 'graphql/data/util'
 import { useActiveLocale } from 'hooks/useActiveLocale'
@@ -87,12 +77,13 @@ export const TokenPrice = styled.span`
   font-size: 36px;
   line-height: 44px;
 `
-export const MissingPrice = styled(TokenPrice)`
+const MissingPrice = styled(TokenPrice)`
   font-size: 24px;
   line-height: 44px;
   color: ${({ theme }) => theme.textTertiary};
 `
-export const DeltaContainer = styled.div`
+
+const DeltaContainer = styled.div`
   height: 16px;
   display: flex;
   align-items: center;
@@ -136,15 +127,28 @@ interface PriceChartProps {
   timePeriod: TimePeriod
 }
 
+// eslint-disable-next-line import/no-unused-modules
 export function PriceChart({ width, height, prices: originalPrices, timePeriod }: PriceChartProps) {
   const locale = useActiveLocale()
   const theme = useTheme()
+
   const { prices, blanks } = useMemo(
-    () => (originalPrices ? fixChart(originalPrices) : { prices: null, blanks: [] }),
+    () => (originalPrices && originalPrices.length > 0 ? fixChart(originalPrices) : { prices: null, blanks: [] }),
     [originalPrices]
   )
 
-  console.log(width)
+  const chartAvailable = !!prices && prices.length > 0
+  const missingPricesMessage = !chartAvailable ? (
+    prices?.length === 0 ? (
+      <>
+        <Trans>This token doesn&apos;t have chart data because it has low trading volume in the past </Trans>{' '}
+        {toTranslatedTimePeriod(timePeriod)} <Trans> on Uniswap v3</Trans>
+      </>
+    ) : (
+      <Trans>Missing chart data</Trans>
+    )
+  ) : null
+
   // first price point on the x-axis of the current time period's chart
   const startingPrice = originalPrices?.[0] ?? DATA_EMPTY
   // last price point on the x-axis of the current time period's chart
@@ -259,8 +263,6 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
   const crosshairEdgeMax = width * 0.85
   const crosshairAtEdge = !!crosshair && crosshair > crosshairEdgeMax
 
-  const canDisplay = !!prices && prices.length > 0
-
   /*
    * Default curve doesn't look good for the HOUR chart.
    * Higher values make the curve more rigid, lower values smooth the curve but make it less "sticky" to real data points,
@@ -282,26 +284,14 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
               {formattedDelta}
               <ArrowCell>{arrow}</ArrowCell>
             </DeltaContainer>
+            <div>{missingPricesMessage}</div>
           </>
         ) : (
           <MissingPrice>Price Unavailable</MissingPrice>
         )}
       </ChartHeader>
-      {!canDisplay ? (
-        <MissingPriceChart
-          width={width}
-          height={graphHeight}
-          message={
-            prices?.length === 0 ? (
-              <>
-                <Trans>This token doesn&apos;t have chart data because it has low trading volume in the past </Trans>{' '}
-                {toTranslatedTimePeriod(timePeriod)} <Trans> on Uniswap v3</Trans>
-              </>
-            ) : (
-              <Trans>Missing chart data</Trans>
-            )
-          }
-        />
+      {!chartAvailable ? (
+        <MissingPriceChart width={width} height={graphHeight} message={missingPricesMessage} />
       ) : (
         <svg width={width} height={graphHeight} style={{ minWidth: '100%' }}>
           <AnimatedInLineChart
@@ -409,41 +399,6 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
   )
 }
 
-function BottomAxis({
-  timeScale,
-  tickFormatter,
-  ticks,
-  graphHeight,
-  showTicks,
-}: {
-  timeScale: ScaleLinear<number, number>
-  tickFormatter: TickFormatter<NumberValue>
-  ticks: NumberValue[]
-  graphHeight: number
-  showTicks: boolean
-}) {
-  const theme = useTheme()
-  return (
-    <AxisBottom
-      scale={timeScale}
-      stroke={theme.backgroundOutline}
-      tickFormat={tickFormatter}
-      tickStroke={theme.backgroundOutline}
-      tickLength={4}
-      hideTicks={true}
-      tickTransform="translate(0 -5)"
-      tickValues={ticks}
-      top={graphHeight - 1}
-      tickLabelProps={() => ({
-        fill: theme.textSecondary,
-        fontSize: 12,
-        textAnchor: 'middle',
-        transform: 'translate(0 -24)',
-      })}
-    />
-  )
-}
-
 const StyledMissingChart = styled.svg`
   text {
     font-size: 12px;
@@ -467,12 +422,6 @@ function MissingPriceChart({ width, height, message }: { width: number; height: 
       <text y={height - chartBottomPadding} x="20" fill={theme.textTertiary}>
         {message || <Trans>Missing chart data</Trans>}
       </text>
-      <path
-        d={`M 0 ${height - 1}, ${width} ${height - 1}`}
-        stroke={theme.backgroundOutline}
-        fill="transparent"
-        strokeWidth="1"
-      />
     </StyledMissingChart>
   )
 }
