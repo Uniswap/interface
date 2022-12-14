@@ -878,12 +878,12 @@ export type AssetQueryQueryVariables = Exact<{
 
 export type AssetQueryQuery = { __typename?: 'Query', nftAssets?: { __typename?: 'NftAssetConnection', totalCount?: number | null, edges: Array<{ __typename?: 'NftAssetEdge', node: { __typename?: 'NftAsset', id: string, name?: string | null, ownerAddress?: string | null, tokenId: string, description?: string | null, animationUrl?: string | null, suspiciousFlag?: boolean | null, metadataUrl?: string | null, image?: { __typename?: 'Image', url: string } | null, smallImage?: { __typename?: 'Image', url: string } | null, originalImage?: { __typename?: 'Image', url: string } | null, collection?: { __typename?: 'NftCollection', name?: string | null, isVerified?: boolean | null, image?: { __typename?: 'Image', url: string } | null, creator?: { __typename?: 'NftProfile', address: string, isVerified?: boolean | null, profileImage?: { __typename?: 'Image', url: string } | null } | null, nftContracts?: Array<{ __typename?: 'NftContract', address: string, standard?: NftStandard | null }> | null } | null, listings?: { __typename?: 'NftOrderConnection', edges: Array<{ __typename?: 'NftOrderEdge', cursor: string, node: { __typename?: 'NftOrder', address: string, createdAt: number, endAt?: number | null, id: string, maker: string, marketplace: NftMarketplace, marketplaceUrl: string, orderHash?: string | null, quantity: number, startAt: number, status: OrderStatus, taker?: string | null, tokenId?: string | null, type: OrderType, protocolParameters?: any | null, price: { __typename?: 'Amount', currency?: Currency | null, value: number } } }> } | null, rarities?: Array<{ __typename?: 'NftAssetRarity', provider?: NftRarityProvider | null, rank?: number | null, score?: number | null }> | null } }> } | null };
 
-export type CollectionQueryQueryVariables = Exact<{
+export type CollectionQueryVariables = Exact<{
   addresses: Array<Scalars['String']> | Scalars['String'];
 }>;
 
 
-export type CollectionQueryQuery = { __typename?: 'Query', nftCollections?: { __typename?: 'NftCollectionConnection', edges: Array<{ __typename?: 'NftCollectionEdge', cursor: string, node: { __typename?: 'NftCollection', collectionId: string, description?: string | null, discordUrl?: string | null, homepageUrl?: string | null, instagramName?: string | null, isVerified?: boolean | null, name?: string | null, numAssets?: number | null, twitterName?: string | null, bannerImage?: { __typename?: 'Image', url: string } | null, image?: { __typename?: 'Image', url: string } | null, nftContracts?: Array<{ __typename?: 'NftContract', address: string, chain: Chain, name?: string | null, standard?: NftStandard | null, symbol?: string | null, totalSupply?: number | null }> | null, traits?: Array<{ __typename?: 'NftCollectionTrait', name?: string | null, values?: Array<string> | null, stats?: Array<{ __typename?: 'NftCollectionTraitStats', name?: string | null, value?: string | null, assets?: number | null, listings?: number | null }> | null }> | null, markets?: Array<{ __typename?: 'NftCollectionMarket', owners?: number | null, floorPrice?: { __typename?: 'TimestampedAmount', currency?: Currency | null, value: number } | null, totalVolume?: { __typename?: 'TimestampedAmount', value: number, currency?: Currency | null } | null, listings?: { __typename?: 'TimestampedAmount', value: number } | null, volume?: { __typename?: 'TimestampedAmount', value: number, currency?: Currency | null } | null, volumePercentChange?: { __typename?: 'TimestampedAmount', value: number, currency?: Currency | null } | null, floorPricePercentChange?: { __typename?: 'TimestampedAmount', value: number, currency?: Currency | null } | null, marketplaces?: Array<{ __typename?: 'NftCollectionMarketplace', marketplace?: NftMarketplace | null, listings?: number | null, floorPrice?: number | null }> | null }> | null } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null, hasPreviousPage?: boolean | null, startCursor?: string | null } } | null };
+export type CollectionQuery = { __typename?: 'Query', nftCollections?: { __typename?: 'NftCollectionConnection', edges: Array<{ __typename?: 'NftCollectionEdge', cursor: string, node: { __typename?: 'NftCollection', collectionId: string, description?: string | null, discordUrl?: string | null, homepageUrl?: string | null, instagramName?: string | null, isVerified?: boolean | null, name?: string | null, numAssets?: number | null, twitterName?: string | null, bannerImage?: { __typename?: 'Image', url: string } | null, image?: { __typename?: 'Image', url: string } | null, nftContracts?: Array<{ __typename?: 'NftContract', address: string, chain: Chain, name?: string | null, standard?: NftStandard | null, symbol?: string | null, totalSupply?: number | null }> | null, traits?: Array<{ __typename?: 'NftCollectionTrait', name?: string | null, values?: Array<string> | null, stats?: Array<{ __typename?: 'NftCollectionTraitStats', name?: string | null, value?: string | null, assets?: number | null, listings?: number | null }> | null }> | null, markets?: Array<{ __typename?: 'NftCollectionMarket', owners?: number | null, floorPrice?: { __typename?: 'TimestampedAmount', currency?: Currency | null, value: number } | null, totalVolume?: { __typename?: 'TimestampedAmount', value: number, currency?: Currency | null } | null, listings?: { __typename?: 'TimestampedAmount', value: number } | null, volume?: { __typename?: 'TimestampedAmount', value: number, currency?: Currency | null } | null, volumePercentChange?: { __typename?: 'TimestampedAmount', value: number, currency?: Currency | null } | null, floorPricePercentChange?: { __typename?: 'TimestampedAmount', value: number, currency?: Currency | null } | null, marketplaces?: Array<{ __typename?: 'NftCollectionMarketplace', marketplace?: NftMarketplace | null, listings?: number | null, floorPrice?: number | null }> | null }> | null } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null, hasPreviousPage?: boolean | null, startCursor?: string | null } } | null };
 
 export type DetailsQueryQueryVariables = Exact<{
   address: Scalars['String'];
@@ -1338,8 +1338,8 @@ export function useAssetQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type AssetQueryQueryHookResult = ReturnType<typeof useAssetQueryQuery>;
 export type AssetQueryLazyQueryHookResult = ReturnType<typeof useAssetQueryLazyQuery>;
 export type AssetQueryQueryResult = Apollo.QueryResult<AssetQueryQuery, AssetQueryQueryVariables>;
-export const CollectionQueryDocument = gql`
-    query CollectionQuery($addresses: [String!]!) {
+export const CollectionDocument = gql`
+    query Collection($addresses: [String!]!) {
   nftCollections(filter: {addresses: $addresses}) {
     edges {
       cursor
@@ -1421,32 +1421,32 @@ export const CollectionQueryDocument = gql`
     `;
 
 /**
- * __useCollectionQueryQuery__
+ * __useCollectionQuery__
  *
- * To run a query within a React component, call `useCollectionQueryQuery` and pass it any options that fit your needs.
- * When your component renders, `useCollectionQueryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useCollectionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCollectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useCollectionQueryQuery({
+ * const { data, loading, error } = useCollectionQuery({
  *   variables: {
  *      addresses: // value for 'addresses'
  *   },
  * });
  */
-export function useCollectionQueryQuery(baseOptions: Apollo.QueryHookOptions<CollectionQueryQuery, CollectionQueryQueryVariables>) {
+export function useCollectionQuery(baseOptions: Apollo.QueryHookOptions<CollectionQuery, CollectionQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<CollectionQueryQuery, CollectionQueryQueryVariables>(CollectionQueryDocument, options);
+        return Apollo.useQuery<CollectionQuery, CollectionQueryVariables>(CollectionDocument, options);
       }
-export function useCollectionQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CollectionQueryQuery, CollectionQueryQueryVariables>) {
+export function useCollectionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CollectionQuery, CollectionQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<CollectionQueryQuery, CollectionQueryQueryVariables>(CollectionQueryDocument, options);
+          return Apollo.useLazyQuery<CollectionQuery, CollectionQueryVariables>(CollectionDocument, options);
         }
-export type CollectionQueryQueryHookResult = ReturnType<typeof useCollectionQueryQuery>;
-export type CollectionQueryLazyQueryHookResult = ReturnType<typeof useCollectionQueryLazyQuery>;
-export type CollectionQueryQueryResult = Apollo.QueryResult<CollectionQueryQuery, CollectionQueryQueryVariables>;
+export type CollectionQueryHookResult = ReturnType<typeof useCollectionQuery>;
+export type CollectionLazyQueryHookResult = ReturnType<typeof useCollectionLazyQuery>;
+export type CollectionQueryResult = Apollo.QueryResult<CollectionQuery, CollectionQueryVariables>;
 export const DetailsQueryDocument = gql`
     query DetailsQuery($address: String!, $tokenId: String!) {
   nftAssets(address: $address, filter: {listed: false, tokenIds: [$tokenId]}) {

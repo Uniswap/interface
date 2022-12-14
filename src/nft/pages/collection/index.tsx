@@ -3,7 +3,7 @@ import { PageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { OpacityHoverState } from 'components/Common'
 import { useLoadAssetsQuery } from 'graphql/data/nft/Asset'
-import { useCollectionQuery } from 'graphql/data/nft/Collection'
+import { useCollection } from 'graphql/data/nft/Collection'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { Activity, ActivitySwitcher, CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
@@ -75,7 +75,7 @@ const Collection = () => {
   const setBagExpanded = useBag((state) => state.setBagExpanded)
   const { chainId } = useWeb3React()
 
-  const { data: collectionStats, loading } = useCollectionQuery(contractAddress as string)
+  const { data: collectionStats, loading } = useCollection(contractAddress as string)
 
   const { gridX, gridWidthOffset } = useSpring({
     gridX: isFiltersExpanded && !isMobile ? FILTER_WIDTH : 0,

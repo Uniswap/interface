@@ -1,11 +1,11 @@
 import graphql from 'babel-plugin-relay/macro'
 import { GenieCollection, Trait } from 'nft/types'
 
-import { useCollectionQueryQuery } from '../__generated__/types-and-hooks'
+import { useCollectionQuery } from '../__generated__/types-and-hooks'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const collectionQuery = graphql`
-  query CollectionQuery($addresses: [String!]!) {
+  query Collection($addresses: [String!]!) {
     nftCollections(filter: { addresses: $addresses }) {
       edges {
         cursor
@@ -86,8 +86,8 @@ const collectionQuery = graphql`
   }
 `
 
-export function useCollectionQuery(address: string): { data: GenieCollection; loading: boolean } {
-  const { data: queryData, loading } = useCollectionQueryQuery({
+export function useCollection(address: string): { data: GenieCollection; loading: boolean } {
+  const { data: queryData, loading } = useCollectionQuery({
     variables: {
       addresses: address,
     },

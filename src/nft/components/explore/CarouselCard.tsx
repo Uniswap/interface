@@ -1,7 +1,7 @@
 import { formatNumberOrString, NumberType } from '@uniswap/conedison/format'
 import { loadingAnimation } from 'components/Loader/styled'
 import { LoadingBubble } from 'components/Tokens/loading'
-import { useCollectionQuery } from 'graphql/data/nft/Collection'
+import { useCollection } from 'graphql/data/nft/Collection'
 import { VerifiedIcon } from 'nft/components/icons'
 import { Markets, TrendingCollection } from 'nft/types'
 import { formatWeiToDecimal } from 'nft/utils'
@@ -235,7 +235,7 @@ const MARKETS_ENUM_TO_NAME = {
 }
 
 export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
-  const { data: gqlCollection, loading } = useCollectionQuery(collection.address)
+  const { data: gqlCollection, loading } = useCollection(collection.address)
 
   return loading ? (
     <LoadingCarouselCard />
