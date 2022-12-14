@@ -95,22 +95,24 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
           } else if (!reserves || !amp) {
             vv[vv.length - 1].push([PairState.NOT_EXISTS, null])
           } else {
-            const { _reserve0, _reserve1, _vReserve0, _vReserve1, feeInPrecision } = reserves
-            const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
+            try {
+              const { _reserve0, _reserve1, _vReserve0, _vReserve1, feeInPrecision } = reserves
+              const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA] // .sortsBefore may throw
 
-            vv[vv.length - 1].push([
-              PairState.EXISTS,
-              // TODO: Check reserve
-              new Pair(
-                pairAddresses[start],
-                TokenAmount.fromRawAmount(token0, _reserve0.toString()),
-                TokenAmount.fromRawAmount(token1, _reserve1.toString()),
-                TokenAmount.fromRawAmount(token0, _vReserve0.toString()),
-                TokenAmount.fromRawAmount(token1, _vReserve1.toString()),
-                JSBI.BigInt(feeInPrecision),
-                JSBI.BigInt(amp[0]),
-              ),
-            ])
+              vv[vv.length - 1].push([
+                PairState.EXISTS,
+                // TODO: Check reserve
+                new Pair(
+                  pairAddresses[start],
+                  TokenAmount.fromRawAmount(token0, _reserve0.toString()),
+                  TokenAmount.fromRawAmount(token1, _reserve1.toString()),
+                  TokenAmount.fromRawAmount(token0, _vReserve0.toString()),
+                  TokenAmount.fromRawAmount(token1, _vReserve1.toString()),
+                  JSBI.BigInt(feeInPrecision),
+                  JSBI.BigInt(amp[0]),
+                ),
+              ])
+            } catch {}
           }
           start += 1
         }
