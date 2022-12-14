@@ -99,8 +99,8 @@ const TopTrendingSoonTokenItem = ({
         <ButtonEmpty
           padding="0"
           as={Link}
-          to={`${
-            pathname.startsWith(APP_PATHS.SWAP) ? APP_PATHS.SWAP : APP_PATHS.LIMIT
+          to={`${pathname.startsWith(APP_PATHS.SWAP) ? APP_PATHS.SWAP : APP_PATHS.LIMIT}/${
+            networkInfo.route
           }?inputCurrency=ETH&outputCurrency=${tokenData.platforms.get(currentNetwork)}`}
           style={{
             background: rgba(theme.primary, 0.2),

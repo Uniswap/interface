@@ -1,5 +1,6 @@
 import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
+import { stringify } from 'querystring'
 import { useCallback, useMemo, useState } from 'react'
 import { Plus } from 'react-feather'
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
@@ -17,6 +18,7 @@ import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import Toggle from 'components/Toggle'
 import { MouseoverTooltip } from 'components/Tooltip'
 import Tutorial, { TutorialType } from 'components/Tutorial'
+import { APP_PATHS } from 'constants/index'
 import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
@@ -175,6 +177,16 @@ const Pools = () => {
     }
   }
 
+  const onClickSwap = () => {
+    const inputCurrency = currencyId(currencies[Field.CURRENCY_A], chainId)
+    const outputCurrency = currencyId(currencies[Field.CURRENCY_B], chainId)
+    const params: { [key: string]: string } = {}
+    if (inputCurrency) params.inputCurrency = inputCurrency
+    if (outputCurrency) params.outputCurrency = outputCurrency
+    if (!Object.keys(params).length) return
+    navigate(`${APP_PATHS.SWAP}/${networkInfo.route}?${stringify(params)} `)
+  }
+
   if (!isEVM) return <Navigate to="/" />
   return (
     <>
@@ -238,20 +250,7 @@ const Pools = () => {
                 padding="9px 13px"
                 width="fit-content"
                 style={{ marginLeft: '16px', borderRadius: '40px', fontSize: '14px' }}
-                onClick={() => {
-                  if (currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B]) {
-                    navigate(
-                      `/swap?inputCurrency=${currencyId(
-                        currencies[Field.CURRENCY_A] as Currency,
-                        chainId,
-                      )}&outputCurrency=${currencyId(currencies[Field.CURRENCY_B] as Currency, chainId)}`,
-                    )
-                  } else if (currencies[Field.CURRENCY_A]) {
-                    navigate(`/swap?inputCurrency=${currencyId(currencies[Field.CURRENCY_A] as Currency, chainId)}`)
-                  } else if (currencies[Field.CURRENCY_B]) {
-                    navigate(`/swap?outputCurrency=${currencyId(currencies[Field.CURRENCY_B] as Currency, chainId)}`)
-                  }
-                }}
+                onClick={onClickSwap}
                 disabled={!currencies[Field.CURRENCY_A] && !currencies[Field.CURRENCY_B]}
               >
                 <Trans>Swap</Trans>
@@ -366,20 +365,7 @@ const Pools = () => {
                 padding="9px 13px"
                 width="fit-content"
                 style={{ marginLeft: '8px', borderRadius: '40px', fontSize: '14px' }}
-                onClick={() => {
-                  if (currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B]) {
-                    navigate(
-                      `/swap?inputCurrency=${currencyId(
-                        currencies[Field.CURRENCY_A] as Currency,
-                        chainId,
-                      )}&outputCurrency=${currencyId(currencies[Field.CURRENCY_B] as Currency, chainId)}`,
-                    )
-                  } else if (currencies[Field.CURRENCY_A]) {
-                    navigate(`/swap?inputCurrency=${currencyId(currencies[Field.CURRENCY_A] as Currency, chainId)}`)
-                  } else if (currencies[Field.CURRENCY_B]) {
-                    navigate(`/swap?outputCurrency=${currencyId(currencies[Field.CURRENCY_B] as Currency, chainId)}`)
-                  }
-                }}
+                onClick={onClickSwap}
                 disabled={!currencies[Field.CURRENCY_A] && !currencies[Field.CURRENCY_B]}
               >
                 <Trans>Swap</Trans>

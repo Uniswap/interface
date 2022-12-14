@@ -44,7 +44,7 @@ import useBaseTradeInfo from './useBaseTradeInfo'
 
 export const Label = styled.div`
   font-weight: 500;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 16px;
   color: ${({ theme }) => theme.subText};
   margin-bottom: 0.5rem;

@@ -35,7 +35,7 @@ import {
   TokenRatioPercent,
 } from 'components/PoolList/styled'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { DMM_ANALYTICS_URL, SUBGRAPH_AMP_MULTIPLIER } from 'constants/index'
+import { APP_PATHS, DMM_ANALYTICS_URL, SUBGRAPH_AMP_MULTIPLIER } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
 import { IconWrapper } from 'pages/Pools/styleds'
@@ -55,7 +55,7 @@ const TAB = {
 }
 
 const ItemCard = ({ poolData, style = {}, myLiquidity }: ListItemProps) => {
-  const { chainId } = useActiveWeb3React()
+  const { chainId, networkInfo } = useActiveWeb3React()
   const amp = new Fraction(poolData.amp).divide(JSBI.BigInt(SUBGRAPH_AMP_MULTIPLIER))
   const navigate = useNavigate()
   const [, setUrlOnEthPoWAck] = useUrlOnEthPowAck()
@@ -204,7 +204,10 @@ const ItemCard = ({ poolData, style = {}, myLiquidity }: ListItemProps) => {
           to={
             isHaveLiquidity
               ? `/remove/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${poolData.id}`
-              : `/swap?inputCurrency=${currencyId(currency0, chainId)}&outputCurrency=${currencyId(currency1, chainId)}`
+              : `${APP_PATHS.SWAP}/${networkInfo.route}?inputCurrency=${currencyId(
+                  currency0,
+                  chainId,
+                )}&outputCurrency=${currencyId(currency1, chainId)}`
           }
           style={{
             padding: '10px',

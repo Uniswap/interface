@@ -505,7 +505,7 @@ export default forwardRef<ListOrderHandle>(function ListLimitOrder(props, ref) {
                   {isTabActive ? (
                     <Trans>You don&apos;t have any active orders yet</Trans>
                   ) : (
-                    <Trans>You don&apos;t have any history orders yet</Trans>
+                    <Trans>You don&apos;t have any order history</Trans>
                   )}
                 </Text>
               </NoResultWrapper>

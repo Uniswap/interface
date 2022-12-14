@@ -157,11 +157,6 @@ const TopTrendingSoonTokensInCurrentNetwork = () => {
                 </ButtonLight>
               </ExternalLink>
             </TrendingSoonTokensContainer>
-            <TextNote>
-              <Trans>
-                Powered by <span style={{ fontWeight: 700 }}>TrueSight</span>, our AI prediction model
-              </Trans>
-            </TextNote>
           </TrendingSoonTokensAndNoteContainer>
         </FadeInAnimation>
       </>
@@ -297,16 +292,6 @@ const TrendingSoonTokensMobileContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-`
-
-const TextNote = styled(Text)`
-  padding: 0 12px;
-  color: ${({ theme }) => theme.subText};
-  font-style: italic;
-  font-size: 10px;
-  font-weight: 500;
-  width: 100%;
-  text-align: end;
 `
 
 export default TopTrendingSoonTokensInCurrentNetwork
