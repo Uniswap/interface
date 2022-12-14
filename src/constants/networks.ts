@@ -139,7 +139,7 @@ export const FAUCET_NETWORKS = [ChainId.BTTC]
 export const CHAINS_SUPPORT_NEW_POOL_FARM_API = [
   ChainId.OPTIMISM,
   ChainId.AVAXMAINNET,
-  ChainId.ARBITRUM,
+  // ChainId.ARBITRUM,
   // ChainId.MAINNET,
   ChainId.CRONOS,
   ChainId.BTTC,
