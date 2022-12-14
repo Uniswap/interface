@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi, fetchBaseQuery, retry } from '@reduxjs/toolkit/query/react'
 import { walletContextValue } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { areAddressesEqual } from 'src/utils/addresses'
@@ -12,9 +12,13 @@ export type EnslookupParams = {
 
 const ENS_REDUCER_NAME = 'ENS'
 
+const staggeredBaseQuery = retry(fetchBaseQuery({ baseUrl: '/' }), {
+  maxRetries: 5,
+})
+
 export const ensApi = createApi({
   reducerPath: ENS_REDUCER_NAME,
-  baseQuery: fetchBaseQuery({ baseUrl: '/' }),
+  baseQuery: staggeredBaseQuery,
   keepUnusedDataFor: ONE_DAY_MS / ONE_SECOND_MS, // one day in seconds
   endpoints: (builder) => ({
     // takes an address "0xasdf..." and converts it to the ENS "x.eth"
@@ -50,6 +54,7 @@ export const ensApi = createApi({
           if (!name) return { data: null }
           const provider = walletContextValue.providers.getProvider(ChainId.Mainnet)
           const address = await provider.resolveName(name)
+
           return { data: address }
         } catch (e: unknown) {
           logger.error('ens/api', 'name', 'Error getting ens address', e)
