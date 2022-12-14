@@ -13,6 +13,7 @@ import { useActiveLocale } from 'hooks/useActiveLocale'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight, TrendingUp } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
+import { ThemedText } from 'theme'
 import { textFadeIn } from 'theme/styles'
 import {
   dayHourFormatter,
@@ -148,6 +149,15 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
       <Trans>Missing chart data</Trans>
     )
   ) : null
+  const tempMsg =
+    prices?.length === 0 ? (
+      <>
+        <Trans>This token doesn&apos;t have chart data because it has low trading volume in the past </Trans>{' '}
+        {toTranslatedTimePeriod(timePeriod)} <Trans> on Uniswap v3</Trans>
+      </>
+    ) : (
+      <Trans>Missing chart data</Trans>
+    )
 
   // first price point on the x-axis of the current time period's chart
   const startingPrice = originalPrices?.[0] ?? DATA_EMPTY
@@ -284,14 +294,16 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
               {formattedDelta}
               <ArrowCell>{arrow}</ArrowCell>
             </DeltaContainer>
-            <div>{missingPricesMessage}</div>
           </>
         ) : (
-          <MissingPrice>Price Unavailable</MissingPrice>
+          <>
+            <MissingPrice>Price Unavailable</MissingPrice>
+            <ThemedText.Caption style={{ color: theme.textTertiary }}>{tempMsg}</ThemedText.Caption>
+          </>
         )}
       </ChartHeader>
       {!chartAvailable ? (
-        <MissingPriceChart width={width} height={graphHeight} message={missingPricesMessage} />
+        <MissingPriceChart width={width} height={graphHeight} message={!!displayPrice.value && missingPricesMessage} />
       ) : (
         <svg width={width} height={graphHeight} style={{ minWidth: '100%' }}>
           <AnimatedInLineChart
@@ -418,9 +430,9 @@ function MissingPriceChart({ width, height, message }: { width: number; height: 
         fill="transparent"
         strokeWidth="2"
       />
-      <TrendingUp stroke={theme.textTertiary} x={0} size={12} y={height - chartBottomPadding - 10} />
+      {message && <TrendingUp stroke={theme.textTertiary} x={0} size={12} y={height - chartBottomPadding - 10} />}
       <text y={height - chartBottomPadding} x="20" fill={theme.textTertiary}>
-        {message || <Trans>Missing chart data</Trans>}
+        {message}
       </text>
     </StyledMissingChart>
   )
