@@ -145,7 +145,7 @@ const FarmCard = ({
     pool.token1.isNative ? pool.token1.symbol : pool.token1.address
   }/${pool.pool.fee}`
 
-  const representedPostion = depositedPositions?.[0]
+  const representedPostion = depositedPositions?.[0] as NFTPosition | undefined
   const price =
     representedPostion &&
     (isRevertPrice
@@ -414,9 +414,13 @@ const FarmCard = ({
           </Flex>
 
           <Flex marginTop="4px" alignItems="center">
-            <Text fontSize={'12px'} fontWeight="500" style={{ textAlign: 'right' }}>{`${price.toSignificant(10)} ${
-              price.quoteCurrency.symbol
-            } per ${price.baseCurrency.symbol}`}</Text>
+            {price && (
+              <Text fontSize={'12px'} fontWeight="500" style={{ textAlign: 'right' }}>
+                <Trans>
+                  {price.toSignificant(10)} {price.quoteCurrency.symbol} per {price.baseCurrency.symbol}
+                </Trans>
+              </Text>
+            )}
 
             <span
               onClick={() => setIsRevertPrice(prev => !prev)}
@@ -433,20 +437,21 @@ const FarmCard = ({
             sx={{ overflowY: 'scroll', gap: '12px' }}
             flexDirection="column"
           >
-            {depositedPositions.map(item => {
-              return (
-                <PositionDetail
-                  key={item.nftId.toString()}
-                  farmAddress={farmAddress}
-                  isRevertPrice={isRevertPrice}
-                  price={price}
-                  pool={pool}
-                  nftInfo={item}
-                  tokenPrices={tokenPrices}
-                  targetPercent={targetPercentByNFT[item.nftId.toString()]}
-                />
-              )
-            })}
+            {price &&
+              depositedPositions.map(item => {
+                return (
+                  <PositionDetail
+                    key={item.nftId.toString()}
+                    farmAddress={farmAddress}
+                    isRevertPrice={isRevertPrice}
+                    price={price}
+                    pool={pool}
+                    nftInfo={item}
+                    tokenPrices={tokenPrices}
+                    targetPercent={targetPercentByNFT[item.nftId.toString()]}
+                  />
+                )
+              })}
           </Flex>
 
           <Flex

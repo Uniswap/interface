@@ -25,7 +25,7 @@ import { useActiveWeb3React } from 'hooks'
 import { useProMMFarmContract } from 'hooks/useContract'
 import useTheme from 'hooks/useTheme'
 import { useElasticFarms } from 'state/farms/elastic/hooks'
-import { FarmingPool } from 'state/farms/elastic/types'
+import { FarmingPool, NFTPosition } from 'state/farms/elastic/types'
 import { useViewMode } from 'state/user/hooks'
 import { VIEW_MODE } from 'state/user/reducer'
 import { shortenAddress } from 'utils'
@@ -262,7 +262,7 @@ const Row = ({
     )
   }
 
-  const representedPostion = depositedPositions?.[0]
+  const representedPostion = depositedPositions?.[0] as NFTPosition | undefined
   const price =
     representedPostion &&
     (isRevertPrice
@@ -463,29 +463,36 @@ const Row = ({
             <Text color={theme.subText}>
               <Trans>Current Price</Trans>:
             </Text>
-            <Text fontSize={'12px'} fontWeight="500" style={{ textAlign: 'right' }}>{`${price.toSignificant(10)} ${
-              price.quoteCurrency.symbol
-            } per ${price.baseCurrency.symbol}`}</Text>
+            <Text fontSize={'12px'} fontWeight="500" style={{ textAlign: 'right' }}>
+              {price ? (
+                <Trans>
+                  {price.toSignificant(10)} {price.quoteCurrency.symbol} per {price.baseCurrency.symbol}
+                </Trans>
+              ) : (
+                '--'
+              )}
+            </Text>
 
             <span onClick={() => setIsRevertPrice(prev => !prev)} style={{ marginLeft: '2px', cursor: 'pointer' }}>
               <SwapIcon size={14} />
             </span>
           </Flex>
           <NFTListWrapper>
-            {depositedPositions.map(item => {
-              return (
-                <PositionDetail
-                  key={item.nftId.toString()}
-                  farmAddress={fairlaunchAddress}
-                  pool={farmingPool}
-                  price={price}
-                  isRevertPrice={isRevertPrice}
-                  nftInfo={item}
-                  tokenPrices={tokenPrices}
-                  targetPercent={targetPercentByNFT[item.nftId.toString()]}
-                />
-              )
-            })}
+            {price &&
+              depositedPositions.map(item => {
+                return (
+                  <PositionDetail
+                    key={item.nftId.toString()}
+                    farmAddress={fairlaunchAddress}
+                    pool={farmingPool}
+                    price={price}
+                    isRevertPrice={isRevertPrice}
+                    nftInfo={item}
+                    tokenPrices={tokenPrices}
+                    targetPercent={targetPercentByNFT[item.nftId.toString()]}
+                  />
+                )
+              })}
           </NFTListWrapper>
         </>
       )}
