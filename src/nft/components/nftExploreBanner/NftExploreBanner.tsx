@@ -4,20 +4,27 @@ import { Box } from 'nft/components/Box'
 import { bodySmall, subhead } from 'nft/css/common.css'
 import { X } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 import { useHideNftPromoBanner } from 'state/user/hooks'
 import styled, { css } from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
+import { ExternalLink } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 
-import nftPromoImage1 from '../nftExploreBanner/nftArt1.png'
-import nftPromoImage2 from '../nftExploreBanner/nftArt2.png'
-import nftPromoImage3 from '../nftExploreBanner/nftArt3.png'
+import scrollLogo from '../../../assets/svg/scroll_logo.svg'
+// import nftPromoImage1 from '../nftExploreBanner/nftArt1.png'
+// import nftPromoImage2 from '../nftExploreBanner/nftArt2.png'
+// import nftPromoImage3 from '../nftExploreBanner/nftArt3.png'
 
+
+const Link = styled(ExternalLink)`
+  color: ${({ theme }) => theme.accentActive};
+  stroke: ${({ theme }) => theme.accentActive};
+`
 function getRandom(list: any[]) {
   return list[Math.floor(Math.random() * list.length)]
 }
-const randomizedNftImage = getRandom([nftPromoImage1, nftPromoImage2, nftPromoImage3])
+// const randomizedNftImage = getRandom([nftPromoImage1, nftPromoImage2, nftPromoImage3])
 
 const PopupContainer = styled.div<{ show: boolean }>`
   background-color: ${({ theme }) => theme.backgroundSurface};
@@ -108,22 +115,26 @@ export default function NftExploreBanner() {
   }
 
   return (
-    <PopupContainer show={!hideNftPromoBanner} onClick={navigateToNfts}>
+    <PopupContainer show={!hideNftPromoBanner}>
       <InnerContainer>
-        <StyledImageContainer as="img" src={randomizedNftImage} draggable={false} />
+        <StyledImageContainer as="img" src={scrollLogo} draggable={false} />
         <TextContainer>
           {/* <HeaderText> */}
           <div className={subhead}>
-            <Trans>Introducing NFTs on Uniswap</Trans>
+            <Trans>Scroll &#9825; Uniswap</Trans>
           </div>
           {/* </HeaderText> */}
 
           {/* <Description> */}
           <div className={bodySmall}>
-            <Trans>Buy and sell NFTs across more listings at better prices.</Trans>{' '}
-            <StyledLink to="/nfts">
-              <Trans>Explore NFTs</Trans>
-            </StyledLink>{' '}
+            <Trans>We&rsquo;re scaling Ethereum with the power of zero-knowledge proofs and open-source community.</Trans>{' '}
+            <Link href="https://scroll.io" title="Scroll.io">
+              <Trans>Join us.</Trans>
+            </Link>{' '}
+          </div>
+          <div className={bodySmall}>
+
+            <Trans><em>This site is for demonstration purposes only.</em></Trans>{' '}
           </div>
         </TextContainer>
         {/* </Description> */}
