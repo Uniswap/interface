@@ -2,7 +2,6 @@ import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { OpacityHoverState } from 'components/Common'
-import { useLoadAssetsQuery } from 'graphql/data/nft/Asset'
 import { useCollection } from 'graphql/data/nft/Collection'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
 import { AnimatedBox, Box } from 'nft/components/Box'
@@ -216,21 +215,4 @@ const Collection = () => {
   )
 }
 
-// TODO: Remove when assets query is migrated to Apollo
-// The page is responsible for any queries that must be run on initial load.
-// Triggering query load from the page prevents waterfalled requests, as lazy-loading them in components would prevent
-// any children from rendering.
-const CollectionPage = () => {
-  const { contractAddress } = useParams()
-  useLoadAssetsQuery(contractAddress)
-
-  // The Collection must be wrapped in suspense so that it does not suspend the CollectionPage,
-  // which is needed to trigger query loads.
-  return (
-    <Suspense fallback={<CollectionPageSkeleton />}>
-      <Collection />
-    </Suspense>
-  )
-}
-
-export default CollectionPage
+export default Collection

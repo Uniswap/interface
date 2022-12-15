@@ -9,5 +9,6 @@ module.exports = {
     '**/__generated__/**',
     '**/thegraph/**',
     '**/graphql/data/nft/Collection.ts',
+    '**/graphql/data/nft/Asset.ts',
   ],
 }
