@@ -4,10 +4,6 @@ import Loader from 'components/Loader'
 import { MenuDropdown } from 'components/NavBar/MenuDropdown'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
-<<<<<<< HEAD
-import { useLandingPageFlag } from 'featureFlags/flags/landingPage'
-=======
->>>>>>> main
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { Box } from 'nft/components/Box'
 import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
@@ -37,6 +33,7 @@ import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import Earn from './Earn'
 import Manage from './Earn/Manage'
+import Landing from './Landing'
 import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
 import NotFound from './NotFound'
@@ -72,6 +69,7 @@ const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  min-height: 100vh;
   padding: ${({ theme }) => theme.navHeight}px 0px 5rem 0px;
   align-items: center;
   flex: 1;
@@ -205,7 +203,11 @@ export default function App() {
           <Suspense fallback={<Loader />}>
             {isLoaded ? (
               <Routes>
+                <Route path="*" element={<Navigate to="/not-found" replace />} />
+                <Route path="/not-found" element={<NotFound />} />
+
                 <Route path="/" element={<Landing />} />
+
                 <Route path="tokens" element={<Tokens />}>
                   <Route path=":chainName" />
                 </Route>
@@ -256,8 +258,6 @@ export default function App() {
                 <Route path="migrate/v2/:address" element={<MigrateV2Pair />} />
 
                 <Route path="about" element={<About />} />
-
-                <Route path="*" element={<RedirectPathToSwapOnly />} />
 
                 <Route
                   path="/nfts"
