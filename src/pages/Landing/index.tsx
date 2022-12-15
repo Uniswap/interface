@@ -3,7 +3,6 @@ import { BrowserEvent, ElementName, EventName, PageName } from '@uniswap/analyti
 import { BaseButton } from 'components/Button'
 import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
 import Swap from 'pages/Swap'
-import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { Link as NativeLink } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -171,18 +170,6 @@ export default function Landing() {
   const isOpen = location.pathname === '/'
 
   const landingPageFlag = useLandingPageFlag()
-
-  useEffect(() => {
-    if (landingPageFlag) {
-      document.body.style.overflow = 'hidden'
-      return () => {
-        document.body.style.overflow = 'auto'
-      }
-    }
-    return () => {
-      // need to have a return so the hook doesn't throw.
-    }
-  }, [landingPageFlag])
 
   if (landingPageFlag === LandingPageVariant.Control || !isOpen) return null
 
