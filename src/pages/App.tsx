@@ -69,12 +69,9 @@ const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: ${({ theme }) => theme.navHeight}px 0px 0px 0px;
+  padding: ${({ theme }) => theme.navHeight}px 0px 5rem 0px;
   align-items: center;
   flex: 1;
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
-    padding: ${theme.navHeight}px 0 ${theme.mobileBottomBarHeight}px;
-  `};
 `
 
 const MobileBottomBar = styled.div`
@@ -105,10 +102,6 @@ const HeaderWrapper = styled.div<{ transparent?: boolean }>`
   position: fixed;
   top: 0;
   z-index: ${Z_INDEX.sticky};
-`
-
-const Marginer = styled.div`
-  margin-top: 5rem;
 `
 
 function getCurrentPageFromLocation(locationPathname: string): PageName | undefined {
@@ -311,7 +304,6 @@ export default function App() {
               <Loader />
             )}
           </Suspense>
-          <Marginer />
         </BodyWrapper>
         <MobileBottomBar>
           <PageTabs />
