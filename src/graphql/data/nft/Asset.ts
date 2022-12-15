@@ -3,7 +3,7 @@ import { gql } from '@apollo/client'
 import { parseEther } from 'ethers/lib/utils'
 import { GenieAsset, Markets, Trait } from 'nft/types'
 import { wrapScientificNotation } from 'nft/utils'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 
 import {
   AssetQueryVariables,
@@ -203,14 +203,18 @@ export function useNftAssets(params: AssetFetcherParams) {
 
   const { data, loading, fetchMore } = useAssetQuery({
     variables,
+    fetchPolicy: 'cache-and-network',
   })
   const hasNext = data?.nftAssets?.pageInfo?.hasNextPage
-  const loadMore = () =>
-    fetchMore({
-      variables: {
-        after: data?.nftAssets?.pageInfo?.endCursor,
-      },
-    })
+  const loadMore = useCallback(
+    () =>
+      fetchMore({
+        variables: {
+          after: data?.nftAssets?.pageInfo?.endCursor,
+        },
+      }),
+    [data, fetchMore]
+  )
 
   // TODO: setup polling while handling pagination
 
@@ -231,7 +235,7 @@ export function useNftAssets(params: AssetFetcherParams) {
       loading,
       loadMore,
     }
-  }, [assets, hasNext, loadMore, loading, params])
+  }, [assets, hasNext, loadMore, loading])
 }
 
 const DEFAULT_SWEEP_AMOUNT = 50

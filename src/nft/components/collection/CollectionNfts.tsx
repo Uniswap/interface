@@ -265,36 +265,25 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   const [sweepIsOpen, setSweepOpen] = useState(false)
 
-  const assetQueryParams: AssetFetcherParams = useMemo(() => {
-    return {
-      address: contractAddress,
-      orderBy: SortByQueries[sortBy].field,
-      asc: SortByQueries[sortBy].asc,
-      filter: {
-        listed: buyNow,
-        marketplaces: markets.length > 0 ? markets.map((market) => market.toUpperCase() as NftMarketplace) : undefined,
-        maxPrice: debouncedMaxPrice ? parseEther(debouncedMaxPrice).toString() : undefined,
-        minPrice: debouncedMinPrice ? parseEther(debouncedMinPrice).toString() : undefined,
-        tokenSearchQuery: debouncedSearchByNameText,
-        traits:
-          traits.length > 0
-            ? traits.map((trait) => {
-                return { name: trait.trait_type, values: [trait.trait_value] } as unknown as NftAssetTraitInput
-              })
-            : undefined,
-      },
-      first: ASSET_PAGE_SIZE,
-    }
-  }, [
-    buyNow,
-    contractAddress,
-    debouncedMaxPrice,
-    debouncedMinPrice,
-    debouncedSearchByNameText,
-    markets,
-    sortBy,
-    traits,
-  ])
+  const assetQueryParams: AssetFetcherParams = {
+    address: contractAddress,
+    orderBy: SortByQueries[sortBy].field,
+    asc: SortByQueries[sortBy].asc,
+    filter: {
+      listed: buyNow,
+      marketplaces: markets.length > 0 ? markets.map((market) => market.toUpperCase() as NftMarketplace) : undefined,
+      maxPrice: debouncedMaxPrice ? parseEther(debouncedMaxPrice).toString() : undefined,
+      minPrice: debouncedMinPrice ? parseEther(debouncedMinPrice).toString() : undefined,
+      tokenSearchQuery: debouncedSearchByNameText,
+      traits:
+        traits.length > 0
+          ? traits.map((trait) => {
+              return { name: trait.trait_type, values: [trait.trait_value] } as unknown as NftAssetTraitInput
+            })
+          : undefined,
+    },
+    first: ASSET_PAGE_SIZE,
+  }
 
   const { data: collectionNfts, loading, hasNext, loadMore } = useNftAssets(assetQueryParams)
 
