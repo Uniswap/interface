@@ -111,8 +111,14 @@ jobs:
           directory: build
           githubToken: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Dotenv Action
+        uses: falti/dotenv-action@v1.0.2
+        with:
+          path: '.env.production'
+
       - name: Upload source maps to Sentry
-        uses: getsentry/action-release@bd5f874fcda966ba48139b0140fb3ec0cb3aabdd 
+        uses: getsentry/action-release@bd5f874fcda966ba48139b0140fb3ec0cb3aabdd
+        if: steps.dotenv.outputs.SENTRY_DISABLED == false
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
