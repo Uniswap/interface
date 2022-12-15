@@ -1,7 +1,15 @@
 import { faker } from '@faker-js/faker'
 import { ChainId } from 'src/constants/chains'
 import { USDC, WBTC, WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
-import { Amount, Chain, Currency, Portfolio, Token } from 'src/data/__generated__/types-and-hooks'
+import {
+  Amount,
+  Chain,
+  Currency,
+  Portfolio,
+  SafetyLevel,
+  Token,
+  TokenProject,
+} from 'src/data/__generated__/types-and-hooks'
 
 export const Amounts: Record<'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl', Amount> = {
   none: {
@@ -56,6 +64,40 @@ export const Portfolios: [Portfolio, Portfolio] = [
       absolute: Amounts.sm,
       percentage: Amounts.xs,
     },
+  },
+]
+
+export const TokenProjects: [TokenProject] = [
+  {
+    id: faker.datatype.uuid(),
+    description: faker.lorem.sentence(),
+    logoUrl: faker.image.imageUrl(),
+    name: faker.lorem.word(),
+    safetyLevel: SafetyLevel.Verified,
+    tokens: [
+      {
+        id: faker.datatype.uuid(),
+        address: faker.finance.ethereumAddress(),
+        chain: Chain.Ethereum,
+        decimals: 6,
+        symbol: faker.lorem.word(),
+      },
+    ],
+    markets: [
+      {
+        currency: Currency.Eth,
+        tokenProject: { id: faker.datatype.uuid(), tokens: [] },
+        id: faker.datatype.uuid(),
+        price: {
+          id: faker.datatype.uuid(),
+          value: faker.datatype.number(),
+        },
+        pricePercentChange24h: {
+          id: faker.datatype.uuid(),
+          value: 50,
+        },
+      },
+    ],
   },
 ]
 
