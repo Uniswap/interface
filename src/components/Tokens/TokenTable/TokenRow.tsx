@@ -457,7 +457,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
 
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
-    <div ref={ref}>
+    <div ref={ref} data-testid={`token-table-row-${tokenName}`}>
       <StyledLink
         to={getTokenDetailsURL(token.address, token.chain)}
         onClick={() => sendAnalyticsEvent(EventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)}

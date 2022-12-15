@@ -413,7 +413,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
                 }}
               >
                 <ThemedText.SubHeader color="white" lineHeight="20px">
-                  <span>{assetInBag ? 'Remove' : 'Add to Bag'}</span>
+                  <span data-testid="nft-details-toggle-bag">{assetInBag ? 'Remove' : 'Add to Bag'}</span>
                 </ThemedText.SubHeader>
               </BuyNowButton>
             </BuyNowButtonContainer>
