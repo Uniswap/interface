@@ -51,11 +51,9 @@ export default function NotFound() {
           </ThemedText.HeadlineLarge>
           <Image src={isDarkMode ? darkImage : lightImage} alt="404 page" />
         </Center>
-        <div>
-          <SmallButtonPrimary as={Link} to="/">
-            <Trans>Oops, take me back to Swap</Trans>
-          </SmallButtonPrimary>
-        </div>
+        <SmallButtonPrimary as={Link} to="/">
+          <Trans>Oops, take me back to Swap</Trans>
+        </SmallButtonPrimary>
       </Trace>
     </PageWrapper>
   )
