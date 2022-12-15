@@ -57,7 +57,7 @@ const ContentContainer = styled.div<{ isDarkMode: boolean }>`
   position: absolute;
   bottom: 0;
   z-index: ${Z_INDEX.dropdown};
-  padding: 32px 0 80px;
+  padding: 32px 0 100px;
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} opacity`};
 
   * {
