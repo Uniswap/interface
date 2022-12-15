@@ -1,4 +1,4 @@
-import { useNftBalanceQuery } from 'graphql/data/nft/NftBalance'
+import { useNftBalance } from 'graphql/data/nft/NftBalance'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { ClearAllButton, LoadingAssets } from 'nft/components/collection/CollectionNfts'
 import { assetList } from 'nft/components/collection/CollectionNfts.css'
@@ -201,7 +201,7 @@ const ProfilePageNfts = ({
     loading,
     hasNext,
     loadMore,
-  } = useNftBalanceQuery(address, collectionFilters, [], DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
+  } = useNftBalance(address, collectionFilters, [], DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
 
   const { gridX } = useSpring({
     gridX: isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING,

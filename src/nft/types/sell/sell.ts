@@ -16,20 +16,20 @@ export interface ListingWarning {
 export interface SellOrder {
   address: string
   createdAt: number
-  endAt: number
+  endAt?: number
   id: string
   maker: string
   marketplace: NftMarketplace
   marketplaceUrl: string
-  orderHash: string
+  orderHash?: string
   price: {
-    currency: string
+    currency?: string
     value: number
   }
   quantity: number
   startAt: number
   status: OrderStatus
-  tokenId: string
+  tokenId?: string
   type: OrderType
   protocolParameters: Record<string, unknown>
 }

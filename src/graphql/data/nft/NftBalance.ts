@@ -1,12 +1,13 @@
-import graphql from 'babel-plugin-relay/macro'
 import { parseEther } from 'ethers/lib/utils'
+import gql from 'graphql-tag'
 import { GenieCollection, WalletAsset } from 'nft/types'
 import { wrapScientificNotation } from 'nft/utils'
 
-import { useNftBalanceQueryQuery } from '../__generated__/types-and-hooks'
+import { NftAsset, useNftBalanceQuery } from '../__generated__/types-and-hooks'
 
-const nftBalancePaginationQuery = graphql`
-  query NftBalanceQuery(
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const nftBalanceQuery = gql`
+  query NftBalance(
     $ownerAddress: String!
     $filter: NftBalancesFilterInput
     $first: Int
@@ -101,7 +102,7 @@ const nftBalancePaginationQuery = graphql`
   }
 `
 
-export function useNftBalanceQuery(
+export function useNftBalance(
   ownerAddress: string,
   collectionFilters?: string[],
   assetsFilter?: { address: string; tokenId: string }[],
@@ -110,7 +111,7 @@ export function useNftBalanceQuery(
   last?: number,
   before?: string
 ) {
-  const { data, loading, fetchMore } = useNftBalanceQueryQuery({
+  const { data, loading, fetchMore } = useNftBalanceQuery({
     variables: {
       ownerAddress,
       filter:
@@ -126,6 +127,7 @@ export function useNftBalanceQuery(
       last,
       before,
     },
+    fetchPolicy: 'cache-and-network',
   })
 
   const hasNext = data?.nftBalances?.pageInfo?.hasNextPage
@@ -137,7 +139,7 @@ export function useNftBalanceQuery(
     })
 
   const walletAssets: WalletAsset[] | undefined = data?.nftBalances?.edges?.map((queryAsset) => {
-    const asset = queryAsset?.node.ownedAsset
+    const asset = queryAsset?.node.ownedAsset as NonNullable<NftAsset>
     const ethPrice = parseEther(wrapScientificNotation(asset?.listings?.edges[0]?.node.price.value ?? 0)).toString()
     return {
       id: asset?.id,
@@ -146,25 +148,23 @@ export function useNftBalanceQuery(
       notForSale: asset?.listings?.edges?.length === 0,
       animationUrl: asset?.animationUrl,
       susFlag: asset?.suspiciousFlag,
-      priceInfo: asset?.listings
-        ? {
-            ETHPrice: ethPrice,
-            baseAsset: 'ETH',
-            baseDecimals: '18',
-            basePrice: ethPrice,
-          }
-        : undefined,
+      priceInfo: {
+        ETHPrice: ethPrice,
+        baseAsset: 'ETH',
+        baseDecimals: '18',
+        basePrice: ethPrice,
+      },
       name: asset?.name,
       tokenId: asset?.tokenId,
       asset_contract: {
         address: asset?.collection?.nftContracts?.[0]?.address,
-        schema_name: asset?.collection?.nftContracts?.[0]?.standard,
+        tokenType: asset?.collection?.nftContracts?.[0]?.standard,
         name: asset?.collection?.name,
         description: asset?.description,
         image_url: asset?.collection?.image?.url,
         payout_address: queryAsset?.node?.listingFees?.[0]?.payoutAddress,
       },
-      collection: asset?.collection as GenieCollection,
+      collection: asset?.collection as unknown as GenieCollection,
       collectionIsVerified: asset?.collection?.isVerified,
       lastPrice: queryAsset.node.lastPrice?.value,
       floorPrice: asset?.collection?.markets?.[0]?.floorPrice?.value,

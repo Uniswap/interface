@@ -508,8 +508,7 @@ const ProfileNftDetails = ({ asset, hideDetails }: ProfileNftDetailsProps) => {
     return !!asset.name ? asset.name : `#${asset.tokenId}`
   }
 
-  const shouldShowUserListedPrice =
-    !!asset.floor_sell_order_price && !asset.notForSale && asset.asset_contract.tokenType !== NftStandard.Erc1155
+  const shouldShowUserListedPrice = !asset.notForSale && asset.asset_contract.tokenType !== NftStandard.Erc1155
 
   return (
     <Box overflow="hidden" width="full" flexWrap="nowrap">
@@ -533,11 +532,11 @@ const ProfileNftDetails = ({ asset, hideDetails }: ProfileNftDetailsProps) => {
         </TruncatedTextRow>
         {asset.susFlag && <Suspicious />}
       </Row>
-      {asset.floor_sell_order_price && (
-        <TruncatedTextRow className={buttonTextMedium} style={{ color: themeVars.colors.textPrimary }}>
-          {shouldShowUserListedPrice ? `${floorFormatter(asset.floor_sell_order_price)} ETH` : ' '}
-        </TruncatedTextRow>
-      )}
+      <TruncatedTextRow className={buttonTextMedium} style={{ color: themeVars.colors.textPrimary }}>
+        {shouldShowUserListedPrice && asset.floor_sell_order_price
+          ? `${floorFormatter(asset.floor_sell_order_price)} ETH`
+          : ' '}
+      </TruncatedTextRow>
     </Box>
   )
 }
