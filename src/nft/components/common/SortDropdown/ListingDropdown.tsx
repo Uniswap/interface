@@ -87,7 +87,7 @@ const ListingDropdown = ({ dropDownOptions }: { dropDownOptions: DropDownOption[
   useOnClickOutside(ref, () => setIsOpen(false))
 
   return (
-    <>
+    <div ref={ref}>
       <DropdownContainer onClick={() => setIsOpen(!isOpen)}>
         <ThemedText.Caption color="textSecondary">Price: </ThemedText.Caption>{' '}
         <DropdownOptionButton>
@@ -96,7 +96,7 @@ const ListingDropdown = ({ dropDownOptions }: { dropDownOptions: DropDownOption[
       </DropdownContainer>
 
       {isOpen && (
-        <DropdownOptionsContainer ref={ref}>
+        <DropdownOptionsContainer>
           <DropdownOptionsContainerTwo>
             {dropDownOptions.map((dropdownOption) => (
               <DropdownOption
@@ -113,7 +113,7 @@ const ListingDropdown = ({ dropDownOptions }: { dropDownOptions: DropDownOption[
           </DropdownOptionsContainerTwo>
         </DropdownOptionsContainer>
       )}
-    </>
+    </div>
   )
 }
 
