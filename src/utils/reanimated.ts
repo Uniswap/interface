@@ -8,7 +8,10 @@
  * https://github.com/willsp/polyfill-Number.toLocaleString-with-Locales/blob/master/polyfill.number.toLocaleString.js
  */
 
-function replaceSeparators(sNum: string, separators: { decimal: string; thousands: string }) {
+function replaceSeparators(
+  sNum: string,
+  separators: { decimal: string; thousands: string }
+): string {
   'worklet'
   const sNumParts = sNum.split('.')
   if (separators && separators.thousands && sNumParts[0]) {
@@ -24,7 +27,7 @@ function replaceSeparators(sNum: string, separators: { decimal: string; thousand
 function renderFormat(
   template: string,
   options: Record<string, string> & { num?: string; code?: string }
-) {
+): string {
   'worklet'
   for (const [option, value] of Object.entries(options)) {
     let updatedValue = value
@@ -58,7 +61,7 @@ function mapMatch(
   return map[match]
 }
 
-function dotThousCommaDec(sNum: string) {
+function dotThousCommaDec(sNum: string): string {
   'worklet'
   const separators = {
     decimal: ',',
@@ -68,7 +71,7 @@ function dotThousCommaDec(sNum: string) {
   return replaceSeparators(sNum, separators)
 }
 
-function commaThousDotDec(sNum: string) {
+function commaThousDotDec(sNum: string): string {
   'worklet'
   const separators = {
     decimal: '.',
@@ -78,7 +81,7 @@ function commaThousDotDec(sNum: string) {
   return replaceSeparators(sNum, separators)
 }
 
-function spaceThousCommaDec(sNum: string) {
+function spaceThousCommaDec(sNum: string): string {
   'worklet'
   const separators = {
     decimal: ',',
@@ -88,7 +91,7 @@ function spaceThousCommaDec(sNum: string) {
   return replaceSeparators(sNum, separators)
 }
 
-function apostropheThousDotDec(sNum: string) {
+function apostropheThousDotDec(sNum: string): string {
   'worklet'
   const separators = {
     decimal: '.',
@@ -282,7 +285,7 @@ interface OptionsType {
 }
 
 // need this function because JS will auto convert very small numbers to scientific notation
-function convertSmallSciNotationToDecimal(value: number) {
+function convertSmallSciNotationToDecimal(value: number): string {
   'worklet'
   const num = value.toPrecision(3)
   if (!num.includes('e-')) return num
@@ -298,7 +301,7 @@ export function numberToLocaleStringWorklet(
   value: number,
   locale: Language = 'en-US',
   options: OptionsType = {}
-) {
+): string {
   'worklet'
   if (locale && locale.length < 2) {
     throw new RangeError('Invalid language tag: ' + locale)

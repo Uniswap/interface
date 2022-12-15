@@ -7,7 +7,7 @@ describe('reanimated numberToLocaleStringWorklet', function () {
     const num = 123456
     const locale = 'en-GB'
 
-    function testLocale() {
+    function testLocale(): string {
       return numberToLocaleStringWorklet(num, locale)
     }
 
@@ -89,7 +89,7 @@ describe('reanimated numberToLocaleStringWorklet', function () {
     const num = 1234.5
     const locale = 'i'
 
-    function testLocale() {
+    function testLocale(): string {
       return numberToLocaleStringWorklet(num, locale as Language)
     }
 

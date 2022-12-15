@@ -3,10 +3,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { PollingInterval } from 'src/constants/misc'
 
 // modified from https://usehooks.com/usePrevious/
-export function usePrevious<T>(value: T) {
+export function usePrevious<T>(value: T): T | undefined {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  const ref = useRef<T>()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const ref: any = useRef<T>()
 
   // Store current value in ref
   useEffect(() => {
@@ -19,7 +20,10 @@ export function usePrevious<T>(value: T) {
 
 // adapted from https://usehooks.com/useAsync/ but simplified
 // above link contains example on how to add delayed execution if ever needed
-export function useAsyncData<T>(asyncCallback: () => Promise<T> | undefined) {
+export function useAsyncData<T>(asyncCallback: () => Promise<T> | undefined): {
+  isLoading: boolean
+  data: T | undefined
+} {
   const [data, setData] = useState<{
     res: T | undefined
     input: () => Promise<T> | undefined
@@ -32,7 +36,7 @@ export function useAsyncData<T>(asyncCallback: () => Promise<T> | undefined) {
   useEffect(() => {
     setIsLoading(true)
 
-    async function runCallback() {
+    async function runCallback(): Promise<void> {
       const res = await asyncCallback()
       setIsLoading(false)
       setData({
@@ -55,7 +59,7 @@ export function usePollOnFocusOnly(
   startPolling: (interval: PollingInterval) => void,
   stopPolling: () => void,
   pollingInterval: PollingInterval
-) {
+): void {
   useFocusEffect(
     useCallback(() => {
       startPolling(pollingInterval)

@@ -17,11 +17,11 @@ export function currencyId(currency: Currency): CurrencyId {
   return buildCurrencyId(currency.chainId, currencyAddress(currency))
 }
 
-export function buildCurrencyId(chainId: ChainId, address: string) {
+export function buildCurrencyId(chainId: ChainId, address: string): string {
   return `${chainId}-${address}`
 }
 
-export function buildNativeCurrencyId(chainId: ChainId) {
+export function buildNativeCurrencyId(chainId: ChainId): string {
   const nativeAddress = getNativeCurrencyAddressForChain(chainId)
   return buildCurrencyId(chainId, nativeAddress)
 }
@@ -44,13 +44,15 @@ export function currencyAddress(currency: Currency): string {
   return currency.address
 }
 
-export function getNativeCurrencyAddressForChain(chainId: ChainId) {
+export function getNativeCurrencyAddressForChain(
+  chainId: ChainId
+): typeof NATIVE_ADDRESS | typeof NATIVE_ADDRESS_ALT {
   if (chainId === ChainId.Polygon) return NATIVE_ADDRESS_ALT
 
   return NATIVE_ADDRESS
 }
 
-export const isNativeCurrencyAddress = (address: Address) =>
+export const isNativeCurrencyAddress = (address: Address): boolean =>
   areAddressesEqual(address, NATIVE_ADDRESS) || areAddressesEqual(address, NATIVE_ADDRESS_ALT)
 
 // Currency ids are formatted as `chainId-tokenaddress`
@@ -80,7 +82,7 @@ export function currencyIdToChain(_currencyId?: string): ChainId | null {
   return toSupportedChainId(_currencyId.split('-')[0])
 }
 
-export function checksumCurrencyId(_currencyId: string) {
+export function checksumCurrencyId(_currencyId: string): string {
   return buildCurrencyId(
     currencyIdToChain(_currencyId) ?? ChainId.Mainnet,
     getChecksumAddress(currencyIdToAddress(_currencyId))

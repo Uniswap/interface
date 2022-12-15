@@ -245,7 +245,7 @@ const TYPE_TO_FORMATTER_RULES = {
   [NumberType.NFTCollectionStats]: ntfCollectionStatsFormatter,
 }
 
-function getFormatterRule(input: number, type: NumberType) {
+function getFormatterRule(input: number, type: NumberType): Format {
   const rules = TYPE_TO_FORMATTER_RULES[type]
   for (const rule of rules) {
     if (
@@ -263,7 +263,7 @@ export function formatNumber(
   input?: number | null,
   type: NumberType = NumberType.TokenNonTx,
   placeholder = '-'
-) {
+): string {
   if (input === null || input === undefined) {
     return placeholder
   }
@@ -277,11 +277,11 @@ export function formatCurrencyAmount(
   amount?: CurrencyAmount<Currency> | null,
   type: NumberType = NumberType.TokenNonTx,
   placeholder?: string
-) {
+): string {
   return formatNumber(amount ? parseFloat(amount.toSignificant()) : undefined, type, placeholder)
 }
 
-export function formatPriceImpact(priceImpact: Percent | undefined) {
+export function formatPriceImpact(priceImpact: Percent | undefined): string {
   if (!priceImpact) return '-'
 
   return `${priceImpact.multiply(-1).toFixed(3)}%`
@@ -290,7 +290,7 @@ export function formatPriceImpact(priceImpact: Percent | undefined) {
 export function formatPrice(
   price?: Price<Currency, Currency> | null,
   type: NumberType = NumberType.FiatTokenPrice
-) {
+): string {
   if (price === null || price === undefined) {
     return '-'
   }
@@ -302,7 +302,7 @@ export function formatPrice(
  * Very simple date formatter
  * Feel free to add more options / adapt to your needs.
  */
-export function formatDate(date: Date) {
+export function formatDate(date: Date): string {
   return date.toLocaleString('en-US', {
     day: 'numeric', // numeric, 2-digit
     year: 'numeric', // numeric, 2-digit
@@ -312,7 +312,10 @@ export function formatDate(date: Date) {
   })
 }
 
-export function formatNumberOrString(price: NullUndefined<number | string>, type: NumberType) {
+export function formatNumberOrString(
+  price: NullUndefined<number | string>,
+  type: NumberType
+): string {
   if (price === null || price === undefined) return '-'
   if (typeof price === 'string') return formatNumber(parseFloat(price), type)
   return formatNumber(price, type)
@@ -321,12 +324,12 @@ export function formatNumberOrString(price: NullUndefined<number | string>, type
 export function formatUSDPrice(
   price: NullUndefined<number | string>,
   type: NumberType = NumberType.FiatTokenPrice
-) {
+): string {
   return formatNumberOrString(price, type)
 }
 
 /** Formats USD and non-USD prices */
-export function formatFiatPrice(price: NullUndefined<number>, currency = 'USD') {
+export function formatFiatPrice(price: NullUndefined<number>, currency = 'USD'): string {
   if (price === null || price === undefined) return '-'
   return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(price)
 }

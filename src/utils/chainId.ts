@@ -7,7 +7,7 @@ const supportedChains = Object.values(ChainId).map((c) => c.toString())
 
 // Some code from the web app uses chainId types as numbers
 // This validates them as coerces into SupportedChainId
-export function toSupportedChainId(chainId?: BigNumberish) {
+export function toSupportedChainId(chainId?: BigNumberish): ChainId | null {
   if (!chainId || !supportedChains.includes(chainId.toString())) {
     return null
   }
@@ -62,6 +62,6 @@ export function toGraphQLChain(chainId: ChainId): Chain | null {
   return null
 }
 
-export function getPollingIntervalByBlocktime(chainId?: ChainId) {
+export function getPollingIntervalByBlocktime(chainId?: ChainId): PollingInterval {
   return isL2Chain(chainId) ? PollingInterval.LightningMcQueen : PollingInterval.Fast
 }

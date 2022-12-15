@@ -34,10 +34,13 @@ export function opacify(amount: number, hexColor: string): string {
 }
 
 /** Helper to retrieve foreground and background colors for a given chain */
-export function useNetworkColors(chainId: ChainId) {
+export function useNetworkColors(chainId: ChainId): { foreground: string; background: string } {
   const theme = useAppTheme()
 
-  const foreground = theme.colors[`chain_${chainId}`]
+  const chainColorName = `chain_${chainId}` as keyof Theme['colors']
+  const color = theme.colors[chainColorName]
+
+  const foreground = color
   assert(foreground, 'Network color is not defined in Theme')
 
   return {
@@ -73,8 +76,8 @@ export function useExtractedColors(
   imageUrl: NullUndefined<string>,
   fallback: keyof Theme['colors'] = 'magentaVibrant',
   cache = true
-) {
-  const [colors, setColors] = useState<ExtractedColors | null>(null)
+): { colors: Nullable<ExtractedColors>; colorsLoading: boolean } {
+  const [colors, setColors] = useState<Nullable<ExtractedColors>>(null)
   const [colorsLoading, setColorsLoading] = useState(true)
 
   useEffect(() => {
@@ -83,9 +86,9 @@ export function useExtractedColors(
     setColorsLoading(true)
 
     ImageColors.getColors(imageUrl, {
-      fallback,
-      cache,
       key: imageUrl,
+      ...(fallback && { fallback }),
+      ...(cache && { cache }),
     }).then((result) => {
       const { background, detail, secondary, primary } = result as IOSImageColors
       setColors({
@@ -101,11 +104,11 @@ export function useExtractedColors(
   return { colors, colorsLoading }
 }
 
-function getSpecialCaseTokenColor(imageUrl: NullUndefined<string>) {
+function getSpecialCaseTokenColor(imageUrl: NullUndefined<string>): Nullable<string> {
   if (!imageUrl || !specialCaseTokenColors[imageUrl]) {
     return null
   }
-  return specialCaseTokenColors[imageUrl]
+  return specialCaseTokenColors[imageUrl] ?? null
 }
 /**
  * Picks a contrast-passing color from a given token image URL and background color.
@@ -131,13 +134,13 @@ export function useExtractedTokenColor(
   imageUrl: NullUndefined<string>,
   backgroundColor: string,
   defaultColor: string
-) {
+): { tokenColor: Nullable<string>; tokenColorLoading: boolean } {
   const { colors, colorsLoading } = useExtractedColors(imageUrl)
   const [tokenColor, setTokenColor] = useState(defaultColor)
   const [tokenColorLoading, setTokenColorLoading] = useState(true)
 
   useEffect(() => {
-    if (!colorsLoading && colors !== null) {
+    if (!colorsLoading && !!colors) {
       setTokenColor(pickContrastPassingColor(colors, backgroundColor))
       setTokenColorLoading(false)
     }
@@ -164,7 +167,9 @@ export function useExtractedTokenColor(
  * @param backgroundColor The hex value of the background color to check contrast against
  * @returns either 'textOnBrightPrimary' or 'textOnDimPrimary'
  */
-export function getContrastPassingTextColor(backgroundColor: string) {
+export function getContrastPassingTextColor(
+  backgroundColor: string
+): 'textOnBrightPrimary' | 'textOnDimPrimary' {
   const contrastThreshold = 3
 
   const lightText = FixedTheme.colors.textOnBrightPrimary
@@ -175,7 +180,11 @@ export function getContrastPassingTextColor(backgroundColor: string) {
   return 'textOnDimPrimary'
 }
 
-function passesContrast(color: string, backgroundColor: string, contrastThreshold: number) {
+function passesContrast(
+  color: string,
+  backgroundColor: string,
+  contrastThreshold: number
+): boolean {
   // sometimes the extracted colors come back as black or white, discard those
   if (color === '#000000' || color === '#FFFFFF') {
     return false
@@ -196,7 +205,7 @@ function passesContrast(color: string, backgroundColor: string, contrastThreshol
  * color against
  * @returns a hex code that will pass a contrast check against the background
  */
-function pickContrastPassingColor(extractedColors: ExtractedColors, backgroundHex: string) {
+function pickContrastPassingColor(extractedColors: ExtractedColors, backgroundHex: string): string {
   const contrastThreshold = 1.95
 
   const { background, detail, secondary, primary } = extractedColors

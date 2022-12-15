@@ -25,7 +25,7 @@ export async function openUri(
   isSafeUri = false,
   // NOTE: okay to use theme object directly as we want the same color for light/dark modes
   controlsColor = theme.colors.magentaVibrant
-) {
+): Promise<void> {
   const trimmedURI = uri.trim()
   if (!isSafeUri && !ALLOWED_EXTERNAL_URI_SCHEMES.some((scheme) => trimmedURI.startsWith(scheme))) {
     // TODO: [MOB-3925] show a visual warning that the link cannot be opened.
@@ -53,25 +53,25 @@ export async function openUri(
   }
 }
 
-export async function openTransactionLink(hash: string, chainId: ChainId) {
+export async function openTransactionLink(hash: string, chainId: ChainId): Promise<void> {
   const explorerUrl = getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)
   return openUri(explorerUrl)
 }
 
-export async function openUniswapHelpLink() {
+export async function openUniswapHelpLink(): Promise<void> {
   return openUri(`${uniswapUrls.helpUrl}/hc/en-us/requests/new`)
 }
 
-export async function openMoonpayTransactionLink(info: FiatPurchaseTransactionInfo) {
+export async function openMoonpayTransactionLink(info: FiatPurchaseTransactionInfo): Promise<void> {
   // Open all Moonpay URLs in external browser for saved cookies
   return openUri(info.explorerUrl ?? 'https://support.moonpay.com/hc/en-gb', true)
 }
 
-export async function openMoonpayHelpLink() {
+export async function openMoonpayHelpLink(): Promise<void> {
   return openUri('https://support.moonpay.com/')
 }
 
-export function openSettings() {
+export function openSettings(): void {
   Linking.openSettings()
 }
 
@@ -130,6 +130,6 @@ export function getExplorerLink(
   }
 }
 
-export function getTwitterLink(twitterName: string) {
+export function getTwitterLink(twitterName: string): string {
   return `https://twitter.com/${twitterName}`
 }

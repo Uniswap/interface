@@ -55,7 +55,7 @@ export function validateMnemonic(mnemonic?: string): {
 }
 
 // Check if phrase has trailing whitespace, indicating the user is done typing the previous word.
-export function userFinishedTypingWord(mnemonic: string | undefined) {
+export function userFinishedTypingWord(mnemonic: string | undefined): boolean {
   if (!mnemonic) return false
   const lastChar = mnemonic[mnemonic.length - 1]
   return lastChar === ' '

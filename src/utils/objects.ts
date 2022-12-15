@@ -1,7 +1,7 @@
 // To work around Object.keys losing types in Typescript
 // Useful for maintaining string-like Enum types when getting keys, as for SupportedChainId
 // Warning: Like Object.keys(), this returns strings
-export function getKeys<T extends object>(obj: T) {
+export function getKeys<T extends object>(obj: T): (keyof T)[] {
   return Object.keys(obj) as Array<keyof T>
 }
 
@@ -13,7 +13,7 @@ export function flattenObjectOfObjects<T>(obj: Record<string, Record<string, T>>
 
 // yolo copied from https://stackoverflow.com/questions/44134212/best-way-to-flatten-js-object-keys-and-values-to-a-single-depth-array
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function unnestObject(ob: Record<string, any>) {
+export function unnestObject(ob: Record<string, any>): Record<string, string> {
   const toReturn: Record<string, string> = {}
 
   for (const i in ob) {

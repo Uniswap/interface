@@ -13,13 +13,13 @@ type LogLevel = 'debug' | 'info' | 'warn' | 'error'
 
 // Example: logger.warn('myFile','myFunc','Some warning',myArray)
 export const logger = {
-  debug: (fileName: string, functionName: string, message: string, ...args: unknown[]) =>
+  debug: (fileName: string, functionName: string, message: string, ...args: unknown[]): void =>
     logMessage('debug', fileName, functionName, message, ...args),
-  info: (fileName: string, functionName: string, message: string, ...args: unknown[]) =>
+  info: (fileName: string, functionName: string, message: string, ...args: unknown[]): void =>
     logMessage('info', fileName, functionName, message, ...args),
-  warn: (fileName: string, functionName: string, message: string, ...args: unknown[]) =>
+  warn: (fileName: string, functionName: string, message: string, ...args: unknown[]): void =>
     logMessage('warn', fileName, functionName, message, ...args),
-  error: (fileName: string, functionName: string, message: string, ...args: unknown[]) =>
+  error: (fileName: string, functionName: string, message: string, ...args: unknown[]): void =>
     logMessage('error', fileName, functionName, message, ...args),
 }
 
@@ -29,7 +29,7 @@ function logMessage(
   functionName: string,
   message: string,
   ...args: unknown[]
-) {
+): void {
   if (!fileName || !message) {
     console.warn('Invalid log message format, skipping')
     return
@@ -60,7 +60,7 @@ function argsToString(args: any[]): string {
     .join(',')
 }
 
-export function getLogBuffer() {
+export function getLogBuffer(): string[] {
   const logs: string[] = []
   for (let i = 0; i < config.logBufferSize; i++) {
     const nextIndex = (i + logBufferIndex) % config.logBufferSize

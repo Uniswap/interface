@@ -117,7 +117,7 @@ export function sanitizeAddressText(address?: string): NullUndefined<string> {
   return address?.replace('x', `x${zws}`)
 }
 
-export function areAddressesEqual(a1: NullUndefined<Address>, a2: NullUndefined<Address>) {
+export function areAddressesEqual(a1: NullUndefined<Address>, a2: NullUndefined<Address>): boolean {
   const validA1 = getValidAddress(a1)
   const validA2 = getValidAddress(a2)
   return validA1 !== null && validA2 !== null && validA1 === validA2

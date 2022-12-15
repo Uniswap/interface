@@ -1,7 +1,7 @@
 import * as Clipboard from 'expo-clipboard'
 import { logger } from 'src/utils/logger'
 
-export function setClipboard(value: string) {
+export function setClipboard(value: string): void {
   try {
     Clipboard.setString(value)
   } catch (error) {
@@ -9,7 +9,7 @@ export function setClipboard(value: string) {
   }
 }
 
-export async function getClipboard() {
+export async function getClipboard(): Promise<string | void> {
   try {
     const value = await Clipboard.getStringAsync()
     return value
