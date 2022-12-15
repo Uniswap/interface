@@ -30,12 +30,12 @@ export function FiatValue({
   const [showLoadingPlaceholder, setShowLoadingPlaceholder] = useState(false)
   const priceImpactColor = useMemo(() => {
     if (!priceImpact) return undefined
-    if (priceImpact.lessThan('0')) return theme.deprecated_green1
+    if (priceImpact.lessThan('0')) return theme.accentSuccess
     const severity = warningSeverity(priceImpact)
-    if (severity < 1) return theme.deprecated_text3
+    if (severity < 1) return theme.textTertiary
     if (severity < 3) return theme.deprecated_yellow1
-    return theme.deprecated_red1
-  }, [priceImpact, theme.deprecated_green1, theme.deprecated_red1, theme.deprecated_text3, theme.deprecated_yellow1])
+    return theme.accentFailure
+  }, [priceImpact, theme.accentSuccess, theme.accentFailure, theme.textTertiary, theme.deprecated_yellow1])
 
   useEffect(() => {
     const stale = false
