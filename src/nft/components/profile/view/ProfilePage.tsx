@@ -211,9 +211,9 @@ const ProfilePageNfts = ({
     },
   })
 
-  return loading ? (
-    <ProfileBodyLoadingSkeleton />
-  ) : (
+  if (loading) return <ProfileBodyLoadingSkeleton />
+
+  return (
     <Column width="full">
       {ownerAssets?.length === 0 ? (
         <EmptyWalletContent />
