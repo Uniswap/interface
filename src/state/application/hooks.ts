@@ -91,6 +91,11 @@ export function useCloseModal(_modal: ApplicationModal): () => void {
   return useCallback(() => dispatch(setOpenModal(null)), [dispatch])
 }
 
+export function useOpenModal(modal: ApplicationModal): () => void {
+  const dispatch = useAppDispatch()
+  return useCallback(() => dispatch(setOpenModal(modal)), [dispatch, modal])
+}
+
 export function useToggleWalletModal(): () => void {
   return useToggleModal(ApplicationModal.WALLET)
 }
