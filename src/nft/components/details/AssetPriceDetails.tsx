@@ -332,10 +332,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
 
   const assetsFilter = [{ address: asset.address, tokenId: asset.tokenId }]
   const { walletAssets: ownerAssets } = useNftBalance(account ?? '', [], assetsFilter, 1)
-  const walletAsset: WalletAsset | undefined = useMemo(
-    () => (ownerAssets && ownerAssets?.length > 0 ? ownerAssets[0] : undefined),
-    [ownerAssets]
-  )
+  const walletAsset: WalletAsset | undefined = useMemo(() => ownerAssets?.[0], [ownerAssets])
 
   const { assetInBag } = useMemo(() => {
     return {

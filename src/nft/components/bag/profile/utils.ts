@@ -58,14 +58,15 @@ export async function approveCollectionRow(
       : marketplace.name === 'X2Y2'
       ? X2Y2_TRANSFER_CONTRACT
       : looksRareAddress
-  await approveCollection(spender ?? '', collectionAddress, signer, (newStatus: ListingStatus) =>
-    updateStatus({
-      listing: collectionRow,
-      newStatus,
-      rows: collectionsRequiringApproval,
-      setRows: setCollectionsRequiringApproval as Dispatch<AssetRow[]>,
-    })
-  )
+  !!collectionAddress &&
+    (await approveCollection(spender, collectionAddress, signer, (newStatus: ListingStatus) =>
+      updateStatus({
+        listing: collectionRow,
+        newStatus,
+        rows: collectionsRequiringApproval,
+        setRows: setCollectionsRequiringApproval as Dispatch<AssetRow[]>,
+      })
+    ))
   if (collectionRow.status === ListingStatus.REJECTED || collectionRow.status === ListingStatus.FAILED) pauseAllRows()
 }
 
@@ -142,7 +143,7 @@ export const getListings = (sellAssets: WalletAsset[]): [CollectionRow[], Listin
   sellAssets.forEach((asset) => {
     asset.marketplaces?.forEach((marketplace: ListingMarket) => {
       const newListing = {
-        images: [asset.smallImageUrl ?? '', marketplace.icon],
+        images: [asset.smallImageUrl, marketplace.icon],
         name: asset.name || `#${asset.tokenId}`,
         status: ListingStatus.DEFINED,
         asset,
@@ -158,10 +159,10 @@ export const getListings = (sellAssets: WalletAsset[]): [CollectionRow[], Listin
         )
       ) {
         const newCollectionRow = {
-          images: [asset.asset_contract.image_url ?? '', marketplace.icon],
-          name: asset.asset_contract.name ?? '',
+          images: [asset.asset_contract.image_url, marketplace.icon],
+          name: asset.asset_contract.name,
           status: ListingStatus.DEFINED,
-          collectionAddress: asset.asset_contract.address ?? '',
+          collectionAddress: asset.asset_contract.address,
           marketplace,
         }
         newCollectionsToApprove.push(newCollectionRow)

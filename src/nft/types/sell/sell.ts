@@ -95,8 +95,8 @@ export enum ListingStatus {
 }
 
 export interface AssetRow {
-  images: string[]
-  name: string
+  images: (string | undefined)[]
+  name?: string
   status: ListingStatus
   callback?: () => Promise<void>
 }
@@ -108,7 +108,7 @@ export interface ListingRow extends AssetRow {
 }
 
 export interface CollectionRow extends AssetRow {
-  collectionAddress: string
+  collectionAddress?: string
   marketplace: ListingMarket
 }
 
