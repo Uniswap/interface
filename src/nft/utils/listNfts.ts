@@ -130,7 +130,7 @@ export async function signListing(
 
   const signerAddress = await signer.getAddress()
   const listingPrice = asset.newListings?.find((listing) => listing.marketplace.name === marketplace.name)?.price
-  if (!listingPrice || !asset.expirationTime) return false
+  if (!listingPrice || !asset.expirationTime || !asset.asset_contract.address || !asset.tokenId) return false
   switch (marketplace.name) {
     case 'OpenSea':
       try {
@@ -177,7 +177,7 @@ export async function signListing(
         // signer address of the maker order
         signer: signerAddress,
         // collection address
-        collection: asset.asset_contract.address ?? '',
+        collection: asset.asset_contract.address,
         // Price in WEI
         price: parseEther(listingPrice.toString()),
         // Token ID
@@ -241,14 +241,14 @@ export async function signListing(
         price: parseEther(listingPrice.toString()),
         tokens: [
           {
-            token: asset.asset_contract.address ?? '',
+            token: asset.asset_contract.address,
             tokenId: BigNumber.from(asset.tokenId),
           },
         ],
       }
       const order = createSellOrder(signerAddress, asset.expirationTime, [orderItem])
       try {
-        const prevOrderId = await getOrderId(asset.asset_contract.address ?? '', asset.tokenId ?? '')
+        const prevOrderId = await getOrderId(asset.asset_contract.address, asset.tokenId)
         await signOrderData(provider, order)
         const payload: OrderPayload = {
           order: encodeOrder(order),
