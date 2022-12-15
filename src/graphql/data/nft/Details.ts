@@ -1,8 +1,8 @@
-import { gql } from '@apollo/client'
 import { parseEther } from '@ethersproject/units'
+import gql from 'graphql-tag'
 import { CollectionInfoForAsset, GenieAsset, Markets, SellOrder, TokenType } from 'nft/types'
 
-import { useDetailsQuery } from '../__generated__/types-and-hooks'
+import { NftAsset, useDetailsQuery } from '../__generated__/types-and-hooks'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const detailsQuery = gql`
@@ -102,7 +102,7 @@ export function useNftAssetDetails(
     },
   })
 
-  const asset = queryData?.nftAssets?.edges[0]?.node
+  const asset = queryData?.nftAssets?.edges[0]?.node as NonNullable<NftAsset>
   const collection = asset?.collection
   const listing = asset?.listings?.edges[0]?.node
   const ethPrice = parseEther(listing?.price?.value?.toString() ?? '0').toString()
@@ -113,19 +113,19 @@ export function useNftAssetDetails(
         id: asset?.id,
         address,
         notForSale: asset?.listings === null,
-        collectionName: asset?.collection?.name ?? undefined,
-        collectionSymbol: asset?.collection?.image?.url ?? undefined,
-        imageUrl: asset?.image?.url ?? undefined,
-        animationUrl: asset?.animationUrl ?? undefined,
+        collectionName: asset?.collection?.name,
+        collectionSymbol: asset?.collection?.image?.url,
+        imageUrl: asset?.image?.url,
+        animationUrl: asset?.animationUrl,
         marketplace: listing?.marketplace.toLowerCase() as unknown as Markets,
-        name: asset?.name ?? undefined,
+        name: asset?.name,
         priceInfo: {
           ETHPrice: ethPrice,
           baseAsset: 'ETH',
           baseDecimals: '18',
           basePrice: ethPrice,
         },
-        susFlag: asset?.suspiciousFlag ?? undefined,
+        susFlag: asset?.suspiciousFlag,
         sellorders: asset?.listings?.edges.map((listingNode) => {
           return {
             ...listingNode.node,
@@ -134,22 +134,20 @@ export function useNftAssetDetails(
               : undefined,
           } as SellOrder
         }),
-        smallImageUrl: asset?.smallImage?.url ?? undefined,
+        smallImageUrl: asset?.smallImage?.url,
         tokenId,
         tokenType: (asset?.collection?.nftContracts &&
           asset?.collection.nftContracts[0]?.standard) as unknown as TokenType,
-        collectionIsVerified: asset?.collection?.isVerified ?? undefined,
+        collectionIsVerified: asset?.collection?.isVerified,
         rarity: {
           primaryProvider: 'Rarity Sniper', // TODO update when backend adds more providers
-          providers: asset?.rarities
-            ? asset?.rarities?.map((rarity) => {
-                return {
-                  rank: rarity.rank ?? undefined,
-                  score: rarity.score ?? undefined,
-                  provider: 'Rarity Sniper',
-                }
-              })
-            : undefined,
+          providers: asset?.rarities?.map((rarity) => {
+            return {
+              rank: rarity.rank,
+              score: rarity.score,
+              provider: 'Rarity Sniper',
+            }
+          }),
         },
         owner: { address: asset?.ownerAddress ?? '' },
         creator: {
@@ -162,14 +160,14 @@ export function useNftAssetDetails(
         }),
       },
       {
-        collectionDescription: collection?.description ?? undefined,
-        collectionImageUrl: collection?.image?.url ?? undefined,
-        collectionName: collection?.name ?? undefined,
-        isVerified: collection?.isVerified ?? undefined,
-        totalSupply: collection?.numAssets ?? undefined,
-        twitterUrl: collection?.twitterName ?? undefined,
-        discordUrl: collection?.discordUrl ?? undefined,
-        externalUrl: collection?.homepageUrl ?? undefined,
+        collectionDescription: collection?.description,
+        collectionImageUrl: collection?.image?.url,
+        collectionName: collection?.name,
+        isVerified: collection?.isVerified,
+        totalSupply: collection?.numAssets,
+        twitterUrl: collection?.twitterName,
+        discordUrl: collection?.discordUrl,
+        externalUrl: collection?.homepageUrl,
       },
     ],
     loading,
