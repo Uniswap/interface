@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, Trace, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, ElementName, EventName, PageName, SectionName } from '@uniswap/analytics-events'
-import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
@@ -28,7 +27,7 @@ import { Text } from 'rebass'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
-import { useHasPendingApproval, useTransactionAdder } from 'state/transactions/hooks'
+import { useTransactionAdder } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/formatNumbers'
 
@@ -300,14 +299,14 @@ export default function Swap({ className }: { className?: string }) {
     permit2Enabled ? maximumAmountIn : undefined,
     permit2Enabled && chainId ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
   )
+  const isApprovalPending = permit.isSyncing
   const [isPermitPending, setIsPermitPending] = useState(false)
   const [isPermitFailed, setIsPermitFailed] = useState(false)
   const addTransaction = useTransactionAdder()
-  const isApprovalPending = useHasPendingApproval(maximumAmountIn?.currency, PERMIT2_ADDRESS)
   const updatePermit = useCallback(async () => {
     setIsPermitPending(true)
     try {
-      const approval = await permit.callback?.(isApprovalPending)
+      const approval = await permit.callback?.()
       if (approval) {
         sendAnalyticsEvent(EventName.APPROVE_TOKEN_TXN_SUBMITTED, {
           chain_id: chainId,
@@ -325,14 +324,7 @@ export default function Swap({ className }: { className?: string }) {
     } finally {
       setIsPermitPending(false)
     }
-  }, [
-    addTransaction,
-    chainId,
-    isApprovalPending,
-    maximumAmountIn?.currency.address,
-    maximumAmountIn?.currency.symbol,
-    permit,
-  ])
+  }, [addTransaction, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol, permit])
 
   // check whether the user has approved the router on the input token
   const [approvalState, approveCallback] = useApproveCallbackFromTrade(
