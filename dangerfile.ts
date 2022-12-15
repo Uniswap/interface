@@ -40,24 +40,6 @@ for (const file of updatedTsFiles) {
   })
 }
 
-// More tests
-const modifiedAppFiles = danger.git.modified_files.filter(
-  (f) =>
-    f.includes('src/') &&
-    (f.endsWith('.ts') || f.endsWith('.js') || f.endsWith('.tsx') || f.endsWith('.jsx'))
-)
-/* Encourage more testing */
-const hasAppChanges = modifiedAppFiles.length > 0
-const testChanges = modifiedAppFiles.filter((filepath) => filepath.includes('.test.'))
-const hasTestChanges = testChanges.length > 0
-
-// Warn if there are library changes, but not tests
-if (hasAppChanges && !hasTestChanges) {
-  warn(
-    "There are ts changes, but not tests. That's OK as we're iterating fast right now, but consider unit tests for isolated logic, Storybook stories for primitive components, or snapshot tests for more complex components."
-  )
-}
-
 // Stories for new components
 const createdComponents = danger.git.created_files.filter(
   (f) =>
