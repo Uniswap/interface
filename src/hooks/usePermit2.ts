@@ -26,7 +26,7 @@ export enum PermitState {
 
 export interface Permit {
   state: PermitState
-  pending?: boolean
+  isSyncing?: boolean
   signature?: PermitSignature
   callback?: () => Promise<{
     response: ContractTransaction
@@ -36,30 +36,33 @@ export interface Permit {
 
 export default function usePermit(amount?: CurrencyAmount<Token>, spender?: string): Permit {
   const { account } = useWeb3React()
-  const { amount: tokenAllowance, syncing } = useTokenAllowance(amount?.currency, account, PERMIT2_ADDRESS)
+  const { tokenAllowance, isSyncing: isSyncingApproval } = useTokenAllowance(amount?.currency, account, PERMIT2_ADDRESS)
   const updateTokenAllowance = useUpdateTokenAllowance(amount, PERMIT2_ADDRESS)
   const isAllowed = useMemo(
     () => amount && (tokenAllowance?.greaterThan(amount) || tokenAllowance?.equalTo(amount)),
     [amount, tokenAllowance]
   )
 
+  // Permit2 should be marked isSyncing from the time approval is submitted until it is reflected
+  // in tokenAllowance, to avoid re-prompting the user for an already-submitted approval.
   const [syncState, setSyncState] = useState(SyncState.SYNCED)
+  const isSyncing = syncState !== SyncState.SYNCED
   const hasPendingApproval = useHasPendingApproval(amount?.currency, PERMIT2_ADDRESS)
   useEffect(() => {
     if (hasPendingApproval) {
       setSyncState(SyncState.PENDING)
     } else {
       setSyncState((state) => {
-        if (state === SyncState.PENDING && syncing) {
+        if (state === SyncState.PENDING && isSyncingApproval) {
           return SyncState.SYNCING
-        } else if (state === SyncState.SYNCING && !syncing) {
+        } else if (state === SyncState.SYNCING && !isSyncingApproval) {
           return SyncState.SYNCED
         } else {
           return state
         }
       })
     }
-  }, [hasPendingApproval, syncing])
+  }, [hasPendingApproval, isSyncingApproval])
 
   const permitAllowance = usePermitAllowance(amount?.currency, spender)
   const [permitAllowanceAmount, setPermitAllowanceAmount] = useState(permitAllowance?.amount)
@@ -120,6 +123,6 @@ export default function usePermit(amount?: CurrencyAmount<Token>, spender?: stri
         return { state: PermitState.PERMITTED, signature }
       }
     }
-    return { state: PermitState.PERMIT_NEEDED, pending: syncState !== SyncState.SYNCED, callback }
-  }, [amount, callback, isAllowed, isPermitted, isSigned, permitAllowance, signature, syncState, tokenAllowance])
+    return { state: PermitState.PERMIT_NEEDED, isSyncing: isSyncing && (isPermitted || isSigned), callback }
+  }, [amount, callback, isAllowed, isPermitted, isSigned, isSyncing, permitAllowance, signature, tokenAllowance])
 }

@@ -299,7 +299,7 @@ export default function Swap({ className }: { className?: string }) {
     permit2Enabled ? maximumAmountIn : undefined,
     permit2Enabled && chainId ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
   )
-  const isApprovalPending = permit.pending
+  const isApprovalPending = permit.isSyncing
   const [isPermitPending, setIsPermitPending] = useState(false)
   const [isPermitFailed, setIsPermitFailed] = useState(false)
   const addTransaction = useTransactionAdder()

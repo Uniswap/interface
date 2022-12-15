@@ -13,18 +13,18 @@ export function useTokenAllowance(
   owner?: string,
   spender?: string
 ): {
-  amount: CurrencyAmount<Token> | undefined
-  syncing: boolean
+  tokenAllowance: CurrencyAmount<Token> | undefined
+  isSyncing: boolean
 } {
   const contract = useTokenContract(token?.address, false)
 
   const inputs = useMemo(() => [owner, spender], [owner, spender])
-  const { result, syncing } = useSingleCallResult(contract, 'allowance', inputs)
+  const { result, syncing: isSyncing } = useSingleCallResult(contract, 'allowance', inputs)
 
   return useMemo(() => {
-    const amount = token && result && CurrencyAmount.fromRawAmount(token, result.toString())
-    return { amount, syncing }
-  }, [result, syncing, token])
+    const tokenAllowance = token && result && CurrencyAmount.fromRawAmount(token, result.toString())
+    return { tokenAllowance, isSyncing }
+  }, [isSyncing, result, token])
 }
 
 export function useUpdateTokenAllowance(amount: CurrencyAmount<Token> | undefined, spender: string) {
