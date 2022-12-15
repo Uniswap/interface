@@ -1,12 +1,12 @@
+import { gql } from '@apollo/client'
 import { parseEther } from '@ethersproject/units'
-import graphql from 'babel-plugin-relay/macro'
 import { CollectionInfoForAsset, GenieAsset, Markets, SellOrder, TokenType } from 'nft/types'
 
-import { useDetailsQueryQuery } from '../__generated__/types-and-hooks'
+import { useDetailsQuery } from '../__generated__/types-and-hooks'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const detailsQuery = graphql`
-  query DetailsQuery($address: String!, $tokenId: String!) {
+const detailsQuery = gql`
+  query Details($address: String!, $tokenId: String!) {
     nftAssets(address: $address, filter: { listed: false, tokenIds: [$tokenId] }) {
       edges {
         node {
@@ -91,11 +91,11 @@ const detailsQuery = graphql`
   }
 `
 
-export function useDetailsQuery(
+export function useNftAssetDetails(
   address: string,
   tokenId: string
 ): { data: [GenieAsset, CollectionInfoForAsset]; loading: boolean } {
-  const { data: queryData, loading } = useDetailsQueryQuery({
+  const { data: queryData, loading } = useDetailsQuery({
     variables: {
       address,
       tokenId,

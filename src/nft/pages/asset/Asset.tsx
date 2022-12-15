@@ -1,6 +1,6 @@
 import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
-import { useDetailsQuery } from 'graphql/data/nft/Details'
+import { useNftAssetDetails } from 'graphql/data/nft/Details'
 import { AssetDetails } from 'nft/components/details/AssetDetails'
 import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
@@ -37,7 +37,7 @@ const AssetPriceDetailsContainer = styled.div`
 
 const AssetPage = () => {
   const { tokenId = '', contractAddress = '' } = useParams()
-  const { data, loading } = useDetailsQuery(contractAddress, tokenId)
+  const { data, loading } = useNftAssetDetails(contractAddress, tokenId)
 
   const [asset, collection] = useMemo(() => data ?? [], [data])
 
