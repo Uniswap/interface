@@ -2,7 +2,7 @@ import { getTestSelector } from '../utils'
 
 describe.skip('Wallet Dropdown', () => {
   beforeEach(() => {
-    cy.visit('/swap')
+    cy.visit('/pool')
   })
 
   it('should change the theme', () => {
