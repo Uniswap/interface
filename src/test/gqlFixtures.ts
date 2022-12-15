@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { Amount, Currency } from 'src/data/__generated__/types-and-hooks'
+import { Amount, Currency, Portfolio } from 'src/data/__generated__/types-and-hooks'
 
 export const Amounts: Record<'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl', Amount> = {
   none: {
@@ -33,3 +33,26 @@ export const Amounts: Record<'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl', Amount> 
     currency: Currency.Usd,
   },
 }
+
+export const Portfolios: [Portfolio, Portfolio] = [
+  {
+    id: faker.datatype.uuid(),
+    ownerAddress: faker.finance.ethereumAddress(),
+    tokensTotalDenominatedValue: Amounts.md,
+    tokensTotalDenominatedValueChange: {
+      id: faker.datatype.uuid(),
+      absolute: Amounts.sm,
+      percentage: Amounts.xs,
+    },
+  },
+  {
+    id: faker.datatype.uuid(),
+    ownerAddress: faker.finance.ethereumAddress(),
+    tokensTotalDenominatedValue: Amounts.md,
+    tokensTotalDenominatedValueChange: {
+      id: faker.datatype.uuid(),
+      absolute: Amounts.sm,
+      percentage: Amounts.xs,
+    },
+  },
+]

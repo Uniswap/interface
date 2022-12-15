@@ -35,7 +35,7 @@ function PortfolioValue({ isPortfolioValueLoading, portfolioValue }: PortfolioVa
     <DecimalNumber
       color="textSecondary"
       loading={isLoading}
-      number={formatUSDPrice(portfolioValue, NumberType.FiatTokenQuantity)}
+      number={formatUSDPrice(portfolioValue, NumberType.PortfolioBalance)}
       variant="bodySmall"
     />
   )

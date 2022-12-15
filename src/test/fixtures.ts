@@ -4,7 +4,6 @@ import {
   NetInfoStateType,
 } from '@react-native-community/netinfo'
 import { TradeType } from '@uniswap/sdk-core'
-import dayjs from 'dayjs'
 import { BigNumber, providers } from 'ethers'
 import ERC20_ABI from 'src/abis/erc20.json'
 import { Erc20, Weth } from 'src/abis/types'
@@ -38,7 +37,7 @@ export const account: Account = {
   address: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
   derivationIndex: 0,
   name: 'Test Account',
-  timeImportedMs: dayjs().valueOf(),
+  timeImportedMs: 10,
   mnemonicId: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
 }
 

@@ -11,7 +11,7 @@ import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { PollingInterval } from 'src/constants/misc'
 import { isNonPollingRequestInFlight } from 'src/data/utils'
-import { usePortfolioTotalValuesQuery } from 'src/data/__generated__/types-and-hooks'
+import { useAccountListQuery } from 'src/data/__generated__/types-and-hooks'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { spacing } from 'src/styles/sizing'
@@ -36,7 +36,7 @@ export function AccountList({ accounts, onAddWallet, onPressEdit, onPress }: Acc
   const activeAccount = useActiveAccount()
   const addresses = accounts.map((a) => a.address)
 
-  const { data, networkStatus, refetch, startPolling, stopPolling } = usePortfolioTotalValuesQuery({
+  const { data, networkStatus, refetch, startPolling, stopPolling } = useAccountListQuery({
     variables: { addresses },
     notifyOnNetworkStatusChange: true,
   })

@@ -1,0 +1,9 @@
+query AccountList($addresses: [String!]!) {
+  portfolios(ownerAddresses: $addresses) {
+    id
+    tokensTotalDenominatedValue {
+      id
+      value
+    }
+  }
+}
