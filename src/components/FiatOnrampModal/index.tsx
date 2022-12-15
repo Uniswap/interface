@@ -11,14 +11,13 @@ import Modal from '../Modal'
 
 const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.backgroundSurface};
+  border-radius: 20px;
   box-shadow: ${({ theme }) => theme.deepShadow};
   display: flex;
   flex-flow: column nowrap;
   margin: 0;
-  min-height: 600px;
+  min-height: 720px;
   min-width: 375px;
-  outline: 1px solid ${({ theme }) => theme.backgroundOutline};
-  padding: 12px;
   position: relative;
   width: 100%;
 `
@@ -31,15 +30,16 @@ const ErrorText = styled(ThemedText.BodyPrimary)`
 `
 const StyledIframe = styled.iframe`
   background-color: ${({ theme }) => theme.white};
+  border-radius: 12px;
   bottom: 0;
   left: 0;
-  height: 100%;
-  margin: auto;
-  padding: 8px;
+  height: calc(100% - 16px);
+  margin: 8px;
+  padding: 0;
   position: absolute;
   right: 0;
   top: 0;
-  width: 100%;
+  width: calc(100% - 16px);
 `
 const StyledSpinner = styled(CustomLightSpinner)`
   bottom: 0;
@@ -119,7 +119,7 @@ export default function FiatOnrampModal() {
   }, [fetchSignedIframeUrl])
 
   return (
-    <Modal isOpen={fiatOnrampModalOpen} onDismiss={closeModal} minHeight={false} maxHeight={90}>
+    <Modal isOpen={fiatOnrampModalOpen} onDismiss={closeModal} maxHeight={720}>
       <Wrapper data-testid="fiat-onramp-modal">
         {error ? (
           <>
