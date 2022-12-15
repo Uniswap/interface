@@ -64,29 +64,18 @@ initializeAnalytics(ANALYTICS_DUMMY_KEY, OriginApplication.INTERFACE, {
   isProductionEnv: isProductionEnv(),
 })
 
-const AppWrapper = styled.div`
-  display: flex;
-  flex-flow: column;
-  align-items: flex-start;
-  height: 100%;
-`
-
 const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%;
-  padding: 72px 0px 0px 0px;
+  padding: ${({ theme }) => theme.navHeight}px 0px 5rem 0px;
   align-items: center;
   flex: 1;
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
-    padding: 52px 0px 16px 0px;
-  `};
 `
 
 const MobileBottomBar = styled.div`
   z-index: ${Z_INDEX.sticky};
-  position: sticky;
+  position: fixed;
   display: flex;
   bottom: 0;
   right: 0;
@@ -112,10 +101,6 @@ const HeaderWrapper = styled.div<{ transparent?: boolean }>`
   position: fixed;
   top: 0;
   z-index: ${Z_INDEX.sticky};
-`
-
-const Marginer = styled.div`
-  margin-top: 5rem;
 `
 
 function getCurrentPageFromLocation(locationPathname: string): PageName | undefined {
@@ -205,128 +190,125 @@ export default function App() {
     <ErrorBoundary>
       <DarkModeQueryParamReader />
       <ApeModeQueryParamReader />
-      <AppWrapper>
-        <Trace page={currentPage}>
-          <HeaderWrapper transparent={isHeaderTransparent}>
-            <NavBar />
-          </HeaderWrapper>
-          <BodyWrapper>
-            <Popups />
-            <Polling />
-            <TopLevelModals />
-            <Suspense fallback={<Loader />}>
-              {isLoaded ? (
-                <Routes>
-                  <Route path="/" element={<Landing />} />
-                  <Route path="tokens" element={<Tokens />}>
-                    <Route path=":chainName" />
-                  </Route>
-                  <Route path="tokens/:chainName/:tokenAddress" element={<TokenDetails />} />
-                  <Route
-                    path="vote/*"
-                    element={
-                      <Suspense fallback={<LazyLoadSpinner />}>
-                        <Vote />
-                      </Suspense>
-                    }
-                  />
-                  <Route path="create-proposal" element={<Navigate to="/vote/create-proposal" replace />} />
-                  <Route path="claim" element={<OpenClaimAddressModalAndRedirectToSwap />} />
-                  <Route path="uni" element={<Earn />} />
-                  <Route path="uni/:currencyIdA/:currencyIdB" element={<Manage />} />
+      <Trace page={currentPage}>
+        <HeaderWrapper transparent={isHeaderTransparent}>
+          <NavBar />
+        </HeaderWrapper>
+        <BodyWrapper>
+          <Popups />
+          <Polling />
+          <TopLevelModals />
+          <Suspense fallback={<Loader />}>
+            {isLoaded ? (
+              <Routes>
+                <Route path="/" element={<Landing />} />
+                <Route path="tokens" element={<Tokens />}>
+                  <Route path=":chainName" />
+                </Route>
+                <Route path="tokens/:chainName/:tokenAddress" element={<TokenDetails />} />
+                <Route
+                  path="vote/*"
+                  element={
+                    <Suspense fallback={<LazyLoadSpinner />}>
+                      <Vote />
+                    </Suspense>
+                  }
+                />
+                <Route path="create-proposal" element={<Navigate to="/vote/create-proposal" replace />} />
+                <Route path="claim" element={<OpenClaimAddressModalAndRedirectToSwap />} />
+                <Route path="uni" element={<Earn />} />
+                <Route path="uni/:currencyIdA/:currencyIdB" element={<Manage />} />
 
-                  <Route path="send" element={<RedirectPathToSwapOnly />} />
-                  <Route path="swap" element={<Swap />} />
+                <Route path="send" element={<RedirectPathToSwapOnly />} />
+                <Route path="swap" element={<Swap />} />
 
-                  <Route path="pool/v2/find" element={<PoolFinder />} />
-                  <Route path="pool/v2" element={<PoolV2 />} />
-                  <Route path="pool" element={<Pool />} />
-                  <Route path="pool/:tokenId" element={<PositionPage />} />
+                <Route path="pool/v2/find" element={<PoolFinder />} />
+                <Route path="pool/v2" element={<PoolV2 />} />
+                <Route path="pool" element={<Pool />} />
+                <Route path="pool/:tokenId" element={<PositionPage />} />
 
-                  <Route path="add/v2" element={<RedirectDuplicateTokenIdsV2 />}>
-                    <Route path=":currencyIdA" />
-                    <Route path=":currencyIdA/:currencyIdB" />
-                  </Route>
-                  <Route path="add" element={<RedirectDuplicateTokenIds />}>
-                    {/* this is workaround since react-router-dom v6 doesn't support optional parameters any more */}
-                    <Route path=":currencyIdA" />
-                    <Route path=":currencyIdA/:currencyIdB" />
-                    <Route path=":currencyIdA/:currencyIdB/:feeAmount" />
-                  </Route>
+                <Route path="add/v2" element={<RedirectDuplicateTokenIdsV2 />}>
+                  <Route path=":currencyIdA" />
+                  <Route path=":currencyIdA/:currencyIdB" />
+                </Route>
+                <Route path="add" element={<RedirectDuplicateTokenIds />}>
+                  {/* this is workaround since react-router-dom v6 doesn't support optional parameters any more */}
+                  <Route path=":currencyIdA" />
+                  <Route path=":currencyIdA/:currencyIdB" />
+                  <Route path=":currencyIdA/:currencyIdB/:feeAmount" />
+                </Route>
 
-                  <Route path="increase" element={<AddLiquidity />}>
-                    <Route path=":currencyIdA" />
-                    <Route path=":currencyIdA/:currencyIdB" />
-                    <Route path=":currencyIdA/:currencyIdB/:feeAmount" />
-                    <Route path=":currencyIdA/:currencyIdB/:feeAmount/:tokenId" />
-                  </Route>
+                <Route path="increase" element={<AddLiquidity />}>
+                  <Route path=":currencyIdA" />
+                  <Route path=":currencyIdA/:currencyIdB" />
+                  <Route path=":currencyIdA/:currencyIdB/:feeAmount" />
+                  <Route path=":currencyIdA/:currencyIdB/:feeAmount/:tokenId" />
+                </Route>
 
-                  <Route path="remove/v2/:currencyIdA/:currencyIdB" element={<RemoveLiquidity />} />
-                  <Route path="remove/:tokenId" element={<RemoveLiquidityV3 />} />
+                <Route path="remove/v2/:currencyIdA/:currencyIdB" element={<RemoveLiquidity />} />
+                <Route path="remove/:tokenId" element={<RemoveLiquidityV3 />} />
 
-                  <Route path="migrate/v2" element={<MigrateV2 />} />
-                  <Route path="migrate/v2/:address" element={<MigrateV2Pair />} />
+                <Route path="migrate/v2" element={<MigrateV2 />} />
+                <Route path="migrate/v2/:address" element={<MigrateV2Pair />} />
 
-                  <Route path="about" element={<About />} />
+                <Route path="about" element={<About />} />
 
-                  <Route path="*" element={<RedirectPathToSwapOnly />} />
+                <Route path="*" element={<RedirectPathToSwapOnly />} />
 
-                  <Route
-                    path="/nfts"
-                    element={
-                      // TODO: replace loading state during Apollo migration
-                      <Suspense fallback={null}>
-                        <NftExplore />
-                      </Suspense>
-                    }
-                  />
-                  <Route
-                    path="/nfts/asset/:contractAddress/:tokenId"
-                    element={
-                      <Suspense fallback={<AssetDetailsLoading />}>
-                        <Asset />
-                      </Suspense>
-                    }
-                  />
-                  <Route
-                    path="/nfts/profile"
-                    element={
-                      <Suspense fallback={<ProfilePageLoadingSkeleton />}>
-                        <Profile />
-                      </Suspense>
-                    }
-                  />
-                  <Route
-                    path="/nfts/collection/:contractAddress"
-                    element={
-                      <Suspense fallback={<CollectionPageSkeleton />}>
-                        <Collection />
-                      </Suspense>
-                    }
-                  />
-                  <Route
-                    path="/nfts/collection/:contractAddress/activity"
-                    element={
-                      <Suspense fallback={<CollectionPageSkeleton />}>
-                        <Collection />
-                      </Suspense>
-                    }
-                  />
-                </Routes>
-              ) : (
-                <Loader />
-              )}
-            </Suspense>
-            <Marginer />
-          </BodyWrapper>
-          <MobileBottomBar>
-            <PageTabs />
-            <Box marginY="4">
-              <MenuDropdown />
-            </Box>
-          </MobileBottomBar>
-        </Trace>
-      </AppWrapper>
+                <Route
+                  path="/nfts"
+                  element={
+                    // TODO: replace loading state during Apollo migration
+                    <Suspense fallback={null}>
+                      <NftExplore />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/nfts/asset/:contractAddress/:tokenId"
+                  element={
+                    <Suspense fallback={<AssetDetailsLoading />}>
+                      <Asset />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/nfts/profile"
+                  element={
+                    <Suspense fallback={<ProfilePageLoadingSkeleton />}>
+                      <Profile />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/nfts/collection/:contractAddress"
+                  element={
+                    <Suspense fallback={<CollectionPageSkeleton />}>
+                      <Collection />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/nfts/collection/:contractAddress/activity"
+                  element={
+                    <Suspense fallback={<CollectionPageSkeleton />}>
+                      <Collection />
+                    </Suspense>
+                  }
+                />
+              </Routes>
+            ) : (
+              <Loader />
+            )}
+          </Suspense>
+        </BodyWrapper>
+        <MobileBottomBar>
+          <PageTabs />
+          <Box marginY="4">
+            <MenuDropdown />
+          </Box>
+        </MobileBottomBar>
+      </Trace>
     </ErrorBoundary>
   )
 }
