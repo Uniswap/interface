@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
 import { SmallButtonPrimary } from 'components/Button'
+import { Link } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -51,7 +52,7 @@ export default function NotFound() {
           <Image src={isDarkMode ? darkImage : lightImage} alt="404 page" />
         </Center>
         <div>
-          <SmallButtonPrimary onClick={() => window.location.reload()}>
+          <SmallButtonPrimary as={Link} to="/">
             <Trans>Oops, take me back to Swap</Trans>
           </SmallButtonPrimary>
         </div>
