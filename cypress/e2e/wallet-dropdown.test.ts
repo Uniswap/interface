@@ -1,6 +1,6 @@
 import { getTestSelector } from '../utils'
 
-describe('Wallet Dropdown', () => {
+describe.skip('Wallet Dropdown', () => {
   beforeEach(() => {
     cy.visit('/pool')
   })
