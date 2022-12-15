@@ -1,10 +1,10 @@
-import { DropDownOption } from 'nft/types'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { CheckMarkIcon } from 'nft/components/icons'
+import { DropDownOption } from 'nft/types'
 import { useRef, useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
 
 const DropdownContainer = styled.div`
   display: flex;
