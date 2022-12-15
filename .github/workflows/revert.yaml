@@ -1,4 +1,4 @@
-name: Release
+name: Revert
 on:
   # manual trigger
   workflow_dispatch:
