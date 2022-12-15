@@ -126,7 +126,7 @@ function* renameAccount(params: RenameParams, account: Account) {
 function* removeAccount(params: RemoveParams) {
   const { address } = params
   logger.info('editAccountSaga', 'removeAccount', 'Removing account', address)
-  // TODO cleanup account artifacts in native-land (i.e. keystore)
+  // TODO [MOB-3913] cleanup account artifacts in native-land (i.e. keystore)
   yield* put(removeInStore(address))
   yield* call(disconnectWCForAccount, address)
 }

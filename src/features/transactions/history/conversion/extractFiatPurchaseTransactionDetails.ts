@@ -83,7 +83,7 @@ function formatReturnUrl(providedReturnUrl: string | undefined, id: string | und
     return providedReturnUrl
   }
 
-  // TODO: improve formatting when MoonPay provides us with more info
+  // TODO: [MOB-3900] improve formatting when MoonPay provides us with more info
   return `${providedReturnUrl}?transactionId=${id}`
 }
 

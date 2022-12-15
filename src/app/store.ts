@@ -92,7 +92,7 @@ export const setupStore = (preloadedState?: PreloadedState<RootState>) => {
         // required for rtk-query
         thunk: true,
         // turn off since it slows down for dev and also doesn't run in prod
-        // TODO: figure out why this is slow: MOB-681
+        // TODO: [MOB-681] figure out why this is slow
         serializableCheck: false,
         invariantCheck: {
           warnAfter: 256,

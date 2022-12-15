@@ -164,7 +164,7 @@ async function getErc1155TransferRequest(
     ERC1155_ABI
   )
 
-  // TODO: handle `non ERC1155 Receiver implement` error
+  // TODO: [MOB-3911] handle `non ERC1155 Receiver implement` error
   const baseRequest = await erc1155Contract.populateTransaction.safeTransferFrom(
     account.address,
     toAddress,

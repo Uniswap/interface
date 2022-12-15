@@ -5,7 +5,7 @@ import { ChainId } from 'src/constants/chains'
 
 export function useNoYoloParser(chainId: ChainId): Parser {
   const parser = useMemo(() => {
-    // TODO: use better ABI Fetchers and/or our own Infura nodes for all chains.
+    // TODO: [MOB-178] use better ABI Fetchers and/or our own Infura nodes for all chains.
     const abiFetchers = getAbiFetchersForChainId(chainId, {
       rpcUrls: {
         [ChainId.Mainnet]: `https://mainnet.infura.io/v3/${config.infuraProjectId}`,

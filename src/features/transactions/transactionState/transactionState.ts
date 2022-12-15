@@ -29,7 +29,7 @@ const ETH_TRADEABLE_ASSET: TradeableAsset = {
   type: AssetType.Currency,
 }
 
-// TODO: use native token for chain with highest total USD balance
+// TODO: [MOB-3907] use native token for chain with highest total USD balance
 // instead of defaulting to mainnet eth
 export const initialState: Readonly<TransactionState> = {
   [CurrencyField.INPUT]: ETH_TRADEABLE_ASSET,

@@ -17,7 +17,7 @@ interface Props extends ModalProps {
   dimBackground?: boolean
 }
 
-// TODO excluding some props here due to bug with React Native's Modal and reanimated
+// TODO: [MOB-3859] excluding some props here due to bug with React Native's Modal and reanimated
 // May be resolved after upgrading reanimated to latest but uncertain
 // https://github.com/facebook/react-native/issues/32329
 export function Modal({

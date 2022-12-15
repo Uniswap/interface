@@ -4,7 +4,7 @@ import { danger, fail, markdown, message, warn } from 'danger'
 //  - verify TODO have work items linked
 
 /* Keep Lockfile up to date  */
-// TODO: CI job to run `yarn install` and confirm no changes
+// TODO: [MOB-3860] CI job to run `yarn install` and confirm no changes
 const packageChanged = danger.git.modified_files.includes('package.json')
 const lockfileChanged = danger.git.modified_files.includes('yarn.lock')
 if (packageChanged && !lockfileChanged) {

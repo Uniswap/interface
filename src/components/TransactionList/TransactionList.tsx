@@ -212,7 +212,7 @@ function TransactionListInner({
       return (
         <TransactionSummaryRouter
           readonly={readonly}
-          // TODO: @ianlapham Implement finalized inline/card designs for special case txns (failure, pending failure, etc)
+          // TODO: [MOB-3879] @ianlapham Implement finalized inline/card designs for special case txns (failure, pending failure, etc)
           // When finalized, delete this prop if no longer using inline copy.
           showInlineWarning={false}
           transaction={item}

@@ -59,7 +59,7 @@ export function toGraphQLChain(chainId: ChainId): Chain | null {
     case ChainId.Polygon:
       return Chain.Polygon
   }
-  return null // TODO: throw error?
+  return null
 }
 
 export function getPollingIntervalByBlocktime(chainId?: ChainId) {

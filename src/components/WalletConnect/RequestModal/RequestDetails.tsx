@@ -94,7 +94,7 @@ const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0) => {
           )
         }
 
-        // TODO: handle array child types
+        // TODO: [MOB-3881] handle array child types
         return null
       })}
     </Flex>

@@ -53,7 +53,7 @@ function App() {
   const client = usePersistedApolloClient()
 
   if (!client) {
-    // TODO(MOB-3515): delay splash screen until client is rehydated
+    // TODO: [MOB-3515] delay splash screen until client is rehydated
     return null
   }
 

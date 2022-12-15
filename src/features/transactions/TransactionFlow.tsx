@@ -30,7 +30,7 @@ export enum TransactionStep {
 }
 
 interface TransactionFlowProps {
-  dispatch: Dispatch<AnyAction> // TODO: remove when gas endpoint work lands
+  dispatch: Dispatch<AnyAction>
   showTokenSelector: boolean
   showRecipientSelector?: boolean
   tokenSelector: ReactElement

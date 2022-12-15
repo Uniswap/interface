@@ -47,7 +47,7 @@ export function PriceChart({
   tokenColor?: NullUndefined<string>
 } & Pick<ComponentProps<typeof PriceExplorer>, 'headerCustomPrice' | 'headerCustomPercentChange'>) {
   // require all graphs to be loaded before rendering the chart
-  // TODO(judo): improve loading state by lazy loading time ranges
+  // TODO: [MOB-3875] improve loading state by lazy loading time ranges
   const loading = useMemo(() => graphs?.some((g) => !g.data), [graphs]) || graphs === undefined
 
   return (

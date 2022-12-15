@@ -11,7 +11,7 @@ import { QuoteResult } from 'src/features/routing/types'
 import { clearStaleTrades } from 'src/features/transactions/swap/utils'
 import { useDebounceWithStatus } from 'src/utils/timing'
 
-// TODO: use composition instead of inheritance
+// TODO: [MOB-3906] use composition instead of inheritance
 export class Trade<
   TInput extends Currency = Currency,
   TOutput extends Currency = Currency,

@@ -59,7 +59,7 @@ class WalletConnectServerWrapper {
     guard let completePendingSession = self.settlePendingSession else {
       throw WCSwiftError.pendingSessionNotFound
     }
-    // TODO: pass in client info on initialization, also update these values when link is ready
+    // TODO: [MOB-3872] pass in client info on initialization, also update these values when link is ready
     
     let walletMeta = Session.ClientMeta(name: "Uniswap Wallet",
                                         description: "A very cool wallet!",
@@ -314,7 +314,7 @@ extension WalletConnectServerWrapper: ServerDelegate {
     ])
   }
   
-  // TODO: figure out why this update function is never called on network change
+  // TODO: [MOB-3873] figure out why this update function is never called on network change
   func server(_ server: Server, didUpdate session: Session) {
     self.topicToSession.updateValue(session, forKey: session.url.topic)
   }

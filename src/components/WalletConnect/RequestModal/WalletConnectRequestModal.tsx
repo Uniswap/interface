@@ -148,7 +148,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   /**
-   * TODO: implement this behavior in a less janky way. Ideally if we can distinguish between `onClose` being called programmatically and `onClose` as a results of a user dismissing the modal then we can determine what this value should be without this class variable.
+   * TODO: [MOB-3908] implement this behavior in a less janky way. Ideally if we can distinguish between `onClose` being called programmatically and `onClose` as a results of a user dismissing the modal then we can determine what this value should be without this class variable.
    * Indicates that the modal can reject the request when the modal happens. This will be false when the modal closes as a result of the user explicitly confirming or rejecting a request and true otherwise.
    */
   const rejectOnCloseRef = useRef(true)

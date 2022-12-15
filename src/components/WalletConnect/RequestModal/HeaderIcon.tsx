@@ -25,7 +25,7 @@ export function HeaderIcon({
   const chainId = toSupportedChainId(dapp.chain_id) ?? ChainId.Mainnet
   return (
     <Box>
-      {/* TODO: Add placeholder logo here for dapps without icons */}
+      {/* TODO: [MOB-3880] Add placeholder logo here for dapps without icons */}
       {dapp.icon ? (
         <Image source={{ uri: dapp.icon, height: iconSizes.xxxl, width: iconSizes.xxxl }} />
       ) : null}

@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 
-// TODO: better handle non-ETH
+// TODO: [MOB-3924] better handle non-ETH
 export const MIN_NATIVE_CURRENCY_FOR_GAS: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
 
 /**

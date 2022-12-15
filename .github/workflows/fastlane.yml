@@ -10,7 +10,6 @@ jobs:
   ios:
     name: iOS
     runs-on: macos-latest
-    # TODO matrix across APIs, at least 11 and 15 (lowest to highest)
     timeout-minutes: 180
     env:
       UNISWAP_API_KEY: ${{ secrets.UNISWAP_API_KEY }}

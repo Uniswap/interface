@@ -20,7 +20,7 @@ export function* managePendingAccounts(pendingAccountAction: PendingAccountActio
       if (pendingAccountAction === PendingAccountActions.ACTIVATE) {
         return put(markAsNonPending(address))
       } else if (pendingAccountAction === PendingAccountActions.DELETE) {
-        // TODO: cleanup low level RS key storage.
+        // TODO: [MOB-3914] cleanup low level RS key storage.
         return put(removeAccount(address))
       }
     })

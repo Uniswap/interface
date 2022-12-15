@@ -112,7 +112,6 @@ const _Button = ({
       onLongPress={onLongPress}
       onPress={onPressHandler}
       onPressIn={onPressIn}>
-      {/* TODO: fix gradient definition so it fills space properly (right now needs 200% height on rect) */}
       {/* Absolutely positioned at -1 so because the button has 1 px border that needs to be covered by the gradient. */}
       {emphasis === ButtonEmphasis.Primary && label ? (
         <Flex

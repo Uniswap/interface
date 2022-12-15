@@ -81,8 +81,8 @@ export function* attemptReplaceTransaction(
       )
     } else {
       // Finalize and end attempts to replace.
-      // TODO: Can we check for specific errors here?.  Sometimes this might mark actually succesful result.
-      // TODO: should we even finalize this?
+      // TODO: [MOB-3898] Can we check for specific errors here?.  Sometimes this might mark actually succesful result.
+      // TODO: [MOB-3898] should we even finalize this?
       yield* put(finalizeTransaction({ ...transaction, status: TransactionStatus.Failed }))
     }
 

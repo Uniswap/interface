@@ -46,8 +46,7 @@ export const makeSelectTransaction = (
   })
 
 // Returns a list of past recipients ordered from most to least recent
-// TODO: either revert this to return addresses or keep but also return
-//     displayName so that it's searchable for RecipientSelect
+// TODO: [MOB-3899] either revert this to return addresses or keep but also return displayName so that it's searchable for RecipientSelect
 export const selectRecipientsByRecency = (state: RootState) => {
   const transactionsByChainId = flattenObjectOfObjects(state.transactions)
   const sendTransactions = transactionsByChainId.reduce<TransactionDetails[]>(

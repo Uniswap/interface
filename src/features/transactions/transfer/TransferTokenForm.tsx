@@ -10,7 +10,6 @@ import AlertTriangleIcon from 'src/assets/icons/alert-triangle.svg'
 import { Button, ButtonSize } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
-import { Suspense } from 'src/components/data/Suspense'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { RecipientInputPanel } from 'src/components/input/RecipientInputPanel'
@@ -206,17 +205,15 @@ export function TransferTokenForm({
           onConfirm={() => setShowWarningModal(false)}
         />
       )}
-      <Suspense fallback={null}>
-        <TransferFormSpeedbumps
-          chainId={chainId}
-          dispatch={dispatch}
-          recipient={recipient}
-          setShowSpeedbumpModal={onSetShowSpeedbumpModal}
-          setTransferSpeedbump={onSetTransferSpeedbump}
-          showSpeedbumpModal={showSpeedbumpModal}
-          onNext={goToNext}
-        />
-      </Suspense>
+      <TransferFormSpeedbumps
+        chainId={chainId}
+        dispatch={dispatch}
+        recipient={recipient}
+        setShowSpeedbumpModal={onSetShowSpeedbumpModal}
+        setTransferSpeedbump={onSetTransferSpeedbump}
+        showSpeedbumpModal={showSpeedbumpModal}
+        onNext={goToNext}
+      />
       <Flex grow gap="xs" justifyContent="space-between">
         <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xxxs" onLayout={onInputPanelLayout}>
           {nftIn ? (

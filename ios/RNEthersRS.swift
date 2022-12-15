@@ -14,7 +14,7 @@
 import Foundation
 import CryptoKit
 
-// TODO(cmcewen): move constants to another file
+// TODO: [MOB-3863] move constants to another file
 let prefix = "com.uniswap.mobile"
 let mnemonicPrefix = ".mnemonic."
 let privateKeyPrefix = ".privateKey."
@@ -30,7 +30,7 @@ enum RNEthersRSError: String, Error  {
 
 class RNEthersRS: NSObject {
   private let keychain = KeychainSwift(keyPrefix: prefix)
-  // TODO: LRU cache to ensure we don't create too many (unlikely to happen)
+  // TODO: [MOB-3871] LRU cache to ensure we don't create too many (unlikely to happen)
   private var walletCache: [String: OpaquePointer] = [:]
   
   @objc static func requiresMainQueueSetup() -> Bool {

@@ -42,7 +42,6 @@ function* initProvider(chainId: ChainId, manager: ProviderManager) {
     }
     yield* call(createProvider, chainId, manager)
   } catch (error) {
-    // TODO surface to UI when there's a global error modal setup
     logger.error(
       'providerSaga',
       'initProvider',
@@ -71,7 +70,6 @@ function* modifyProviders(action: PayloadAction<{ chainId: ChainId; isActive: bo
       destroyProvider(chainId, manager)
     }
   } catch (error) {
-    // TODO surface to UI when there's a global error modal setup
     logger.error(
       'providerSaga',
       'modifyProviders',

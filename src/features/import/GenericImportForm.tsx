@@ -103,7 +103,7 @@ export function GenericImportForm({
           px={px}
           py={py}
           width="100%">
-          {/* TODO: make Box press re-focus TextInput. Fine for now since TexInput has autoFocus */}
+          {/* TODO: [MOB-3890] make Box press re-focus TextInput. Fine for now since TexInput has autoFocus */}
           <Box
             alignItems="flex-end"
             flexDirection="row"

@@ -48,7 +48,6 @@ export const parameters = {
   },
   docs: {
     inlineStories: false,
-    // TODO: eventually make this value dynamically adjust to content height
     iframeHeight: 300,
   },
 }

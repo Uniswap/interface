@@ -26,7 +26,7 @@ export function ActivityScreen() {
   const readonly = type === AccountType.Readonly
   const hasImportedSeedPhrase = useNativeAccountExists()
 
-  // TODO: remove when buy flow ready
+  // TODO: [MOB-3918] remove when buy flow ready
   const onPressScan = () => {
     // in case we received a pending session from a previous scan after closing modal
     dispatch(removePendingSession())

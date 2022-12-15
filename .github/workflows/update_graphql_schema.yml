@@ -7,7 +7,7 @@ on:
   # manual trigger
   workflow_dispatch:
 
-  # TODO: consider using a dispatch from @uniswap/data-api-graphql
+  # TODO: [MOB-3861] consider using a dispatch from @uniswap/data-api-graphql
     
 jobs:
   update-graphql-schema:

@@ -33,7 +33,7 @@ const getTextFromTransferStatus = (
     !recipient ||
     (!currencyInInfo && !nftIn)
   ) {
-    // TODO: should never go into this state but should probably do some
+    // TODO: [MOB-3909] should never go into this state but should probably do some
     // error display here as well as log to sentry or amplitude
     return {
       title: t('Sending'),
@@ -65,7 +65,7 @@ const getTextFromTransferStatus = (
     }
   }
 
-  // TODO: handle TransactionStatus.Unknown state
+  // TODO: [MOB-3910] handle TransactionStatus.Unknown state
   return {
     title: t('Sending'),
     description: t('We’ll notify you once your transaction is complete.'),

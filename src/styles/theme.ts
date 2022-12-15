@@ -37,7 +37,7 @@ export const darkTheme: Theme = {
     translucentBackgroundBackdrop: opacify(5, colorsDark.background0),
     // This color is incorrect for dark mode but we rely on the incorrect color right now.
     // The translucentBackgroundBackdrop is the correct translucent background in dark mode.
-    // TODO: come up with a better name for translucentBackground and add it to the theme.
+    // TODO: [MOB-3923] come up with a better name for translucentBackground and add it to the theme.
     translucentBackground: opacify(5, colorsDark.white),
     imageTintBackground: opacify(80, colorsDark.background1),
     ...colorsDark,

@@ -27,7 +27,7 @@ function getPermitStruct(
   return {
     details: {
       token: tokenAddress,
-      // TODO: import constant from permit2-sdk
+      // TODO: [MOB-3905] import constant from permit2-sdk
       // this is BigUInt160
       amount: BigNumber.from('0xffffffffffffffffffffffffffffffffffffffff'),
       // expiration specifies when the allowance will need to be re-set

@@ -7,10 +7,10 @@ import { ElementName, EventName, ReactNativeEvent } from 'src/features/telemetry
 export type TraceEventProps = {
   // Element name used to identify events sources
   // e.g. account-card, onboarding-create-wallet
-  // TODO: Enforce ElementName type only
+  // TODO: [MOB-3877] Enforce ElementName type only
   elementName?: ElementName
   // event name to log
-  // TODO: Enforce EventName type only
+  // TODO: [MOB-3878] Enforce EventName type only
   eventName: EventName
   // Known components' events that trigger callbacks to be augmented with telemetry logging
   events: ReactNativeEvent[]

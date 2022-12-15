@@ -200,6 +200,6 @@ export const v30Schema = { ...v29Schema }
 const { tokenLists, ...v31SchemaIntermediate } = { ...v30Schema }
 export const v31Schema = v31SchemaIntermediate
 
-// TODO: use function with typed output when API reducers are removed from rootReducer
+// TODO: [MOB-3864] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
 export const getSchema = () => v31Schema

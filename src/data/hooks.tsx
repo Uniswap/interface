@@ -43,7 +43,7 @@ export const usePersistedApolloClient = () => {
         headers: {
           'Content-Type': 'application/json',
           'X-API-KEY': config.uniswapApiKey,
-          // TODO: remove once API gateway supports mobile origin URL
+          // TODO: [MOB-3883] remove once API gateway supports mobile origin URL
           Origin: uniswapUrls.apiBaseUrl,
         },
       })

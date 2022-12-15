@@ -9,7 +9,7 @@ export const gasApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: uniswapUrls.gasServiceUrl,
     prepareHeaders: (headers) => {
-      // TODO remove once gas service supports mobile origin URL
+      // TODO: [MOB-3883] remove once gas service supports mobile origin URL
       headers.set('Origin', config.uniswapAppUrl)
       return headers
     },

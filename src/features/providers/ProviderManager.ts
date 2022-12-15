@@ -127,7 +127,7 @@ export class ProviderManager {
     return provider.provider
   }
 
-  // TODO responsibility of this overlaps with init code in providerSaga which is initializing all upfront
+  // TODO: [MOB-3895] responsibility of this overlaps with init code in providerSaga which is initializing all upfront
   // Switch to using lazy init throughout app or cut this
   async getInitalizedProvider(chainId: ChainId): Promise<ethersProviders.Provider> {
     if (this.hasProvider(chainId)) {

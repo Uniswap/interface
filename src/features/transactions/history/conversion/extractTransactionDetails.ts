@@ -54,7 +54,7 @@ export default function extractTransactionDetails(
 
   return {
     id: transaction.transaction.hash,
-    // @TODO: update with chainId from txn when backend supports other networks
+    // @TODO: [MOB-3901] update with chainId from txn when backend supports other networks
     chainId: ChainId.Mainnet,
     hash: transaction.transaction.hash,
     addedTime: transaction.timestamp * 1000, // convert to ms

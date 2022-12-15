@@ -28,7 +28,7 @@ export async function openUri(
 ) {
   const trimmedURI = uri.trim()
   if (!isSafeUri && !ALLOWED_EXTERNAL_URI_SCHEMES.some((scheme) => trimmedURI.startsWith(scheme))) {
-    // TODO: show a visual warning that the link cannot be opened.
+    // TODO: [MOB-3925] show a visual warning that the link cannot be opened.
     logger.error('linking', 'openUri', `potentially unsafe URI scheme provided ${uri}`)
     return
   }

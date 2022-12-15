@@ -42,7 +42,7 @@ export const fiatOnRampApi = createApi({
   endpoints: (builder) => ({
     isFiatOnRampBuyAllowed: builder.query<boolean, void>({
       queryFn: () =>
-        // TODO: consider a reverse proxy for privacy reasons
+        // TODO: [MOB-3888] consider a reverse proxy for privacy reasons
         fetch(`${config.moonpayApiUrl}/v4/ip_address?${COMMON_QUERY_PARAMS}`)
           .then((response) => response.json())
           .then((response: MoonpayIPAddressesResponse) => {

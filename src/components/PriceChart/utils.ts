@@ -82,7 +82,7 @@ export function buildGraph(
   )
     return null
 
-  // TODO: consider using `scaleTime`
+  // TODO: [MOB-3876] consider using `scaleTime`
   const scaleX = scaleLinear().domain([openDate, closeDate]).range([0, width])
   const scaleY = scaleLinear().domain([lowPrice, highPrice]).range([height, 0])
 

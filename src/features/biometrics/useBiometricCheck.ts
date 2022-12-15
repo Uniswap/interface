@@ -5,7 +5,7 @@ import { useBiometricContext } from 'src/features/biometrics/context'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 
-// TODO: handle scenario where user has biometrics enabled as in-app security but disables it at the OS level
+// TODO: [MOB-3886] handle scenario where user has biometrics enabled as in-app security but disables it at the OS level
 export function useBiometricCheck() {
   const { requiredForAppAccess } = useBiometricAppSettings()
   const { setIsLockScreenVisible } = useLockScreenContext()

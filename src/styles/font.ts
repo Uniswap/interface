@@ -1,14 +1,3 @@
-// TODO set actual fonts
-export const sizes = {
-  0: 8,
-  1: 12,
-  2: 14,
-  3: 16,
-  4: 20,
-  5: 24,
-  6: 36,
-}
-
 export const fontFamily = {
   serif: 'serif',
   sansSerif: {

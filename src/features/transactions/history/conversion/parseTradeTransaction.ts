@@ -47,7 +47,7 @@ export default function parseTradeTransaction(
     sent.__typename === 'TokenTransfer' && received.__typename === 'TokenTransfer'
   const containsNFT = sent.__typename === 'NftTransfer' || received.__typename === 'NftTransfer'
 
-  // TODO: Currently no spec for advanced transfer types.
+  // TODO: [MOB-3902] Currently no spec for advanced transfer types.
   if (!(onlyERC20Tokens || containsNFT)) {
     return undefined
   }
@@ -112,7 +112,7 @@ export default function parseTradeTransaction(
   if (containsNFT) {
     const nftChange = [received, sent].find((t) => t.__typename === 'NftTransfer')
     const tokenChange = [received, sent].find((t) => t.__typename === 'TokenTransfer')
-    // TODO: Monitor txns where we have only NFT swaps
+    // TODO: [MOB-3903] Monitor txns where we have only NFT swaps
     if (nftChange?.__typename !== 'NftTransfer' || tokenChange?.__typename !== 'TokenTransfer') {
       return undefined
     }

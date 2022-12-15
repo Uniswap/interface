@@ -3,7 +3,7 @@ import { logger } from 'src/utils/logger'
 
 /**
  * Simple logging util to display enabled experiments.
- * TODO(judo): display experiments on dev screen.
+ * TODO: [MOB-3896] display experiments on dev screen.
  */
 export function printDebugLogs() {
   const values = Object.entries(remoteConfig().getAll())

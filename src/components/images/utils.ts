@@ -4,7 +4,7 @@ import { logger } from 'src/utils/logger'
 
 const VIEWBOX_REGEX = /viewBox=["']\d+ \d+ (\d+) (\d+)["']/
 const FALLBACK_ASPECT_RATIO = 1
-// TODO: return a nicer SVG asset with an error message
+// TODO: [MOB-3868] return a nicer SVG asset with an error message
 const INVALID_SVG = { content: 'Invalid SVG', aspectRatio: FALLBACK_ASPECT_RATIO }
 
 export async function fetchSVG(
@@ -14,8 +14,6 @@ export async function fetchSVG(
 ): Promise<{ content: string; aspectRatio: number }> {
   const res = await fetch(uri, { signal })
   const text = await res.text()
-
-  // TODO: add a feature flag in here that will not render NFTs in a webview if malicious NFTs have been detected. The feature flag could check for a foreignObjectTag
 
   const formatted = autoplay ? text : freezeSvgAnimations(text)
   const result = VIEWBOX_REGEX.exec(text)

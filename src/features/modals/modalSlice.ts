@@ -77,7 +77,7 @@ const slice = createSlice({
   },
 })
 
-// TODO: combine all of these using a selector factory while preserving return types
+// TODO: [MOB-3891] combine all of these using a selector factory while preserving return types
 export const selectFiatOnRampModalState = (state: RootState): AppModalState<undefined> => {
   return state.modals[ModalName.FiatOnRamp]
 }

@@ -28,7 +28,7 @@ export const signMoonpayLink = functions
       'MOONPAY_SECRET_KEY_WEB',
     ],
   })
-  // todo: type request params
+  // TODO: [MOB-3862] type request params
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   .https.onRequest((request: functions.Request<any>, response: functions.Response<unknown>) => {
     corsHandler(request, response, () => {

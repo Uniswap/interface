@@ -38,7 +38,7 @@ const FLOWS: Record<ImportType, OnboardingScreens[]> = {
     OnboardingScreens.Notifications,
     OnboardingScreens.Security,
   ],
-  // @TODO Fill out restore flow.
+  // @TODO [MOB-3894] Fill out restore flow.
   [ImportType.Restore]: [],
 }
 

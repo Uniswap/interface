@@ -13,7 +13,7 @@ export function useNFT(
   address?: Address,
   tokenId?: string
 ): GqlResult<GQLNftAsset> {
-  // TODO: do a direct cache lookup in Apollo using id instead of re-querying
+  // TODO: [MOB-3893] do a direct cache lookup in Apollo using id instead of re-querying
   const { data, loading, refetch } = useNftsQuery({
     variables: { ownerAddress: owner },
     pollInterval: PollingInterval.Slow,

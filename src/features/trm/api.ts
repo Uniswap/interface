@@ -11,7 +11,7 @@ export const trmApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: uniswapUrls.trmUrl,
     prepareHeaders: (headers) => {
-      // TODO remove once routing api officially supports mobile
+      // TODO: [MOB-3883] remove once routing api officially supports mobile
       // spoof origin to go around server permissions
       headers.set('Origin', config.uniswapAppUrl)
       return headers

@@ -73,7 +73,7 @@ export function SettingsScreen() {
               <FaceIdIcon {...iconProps} />
             ),
           },
-          // @TODO: add back testnet toggle when Zerion provides data for testnets correctly.
+          // @TODO: [MOB-3920] add back testnet toggle when Zerion provides data for testnets correctly.
         ],
       },
       {
@@ -106,7 +106,7 @@ export function SettingsScreen() {
           {
             screen: Screens.SettingsChains,
             text: t('Chains'),
-            // TODO use chains icon when available
+            // TODO [MOB-3921] use chains icon when available
             icon: <FlashbotsIcon {...iconProps} />,
           },
           {

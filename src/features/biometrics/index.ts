@@ -19,7 +19,7 @@ export enum BiometricAuthenticationStatus {
   Authenticating = 'AUTHENTICATING',
 }
 
-// TODO: Move into a saga
+// TODO: [MOB-3885] Move into a saga
 export async function tryLocalAuthenticate(
   authenticateOptions?: LocalAuthenticationOptions
 ): Promise<BiometricAuthenticationStatus> {

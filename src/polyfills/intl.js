@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { Platform } from 'react-native'
 
-// TODO: remove polyfill once Hermes support it
+// TODO: [MOB-3917] remove polyfill once Hermes support it
 // https://github.com/facebook/hermes/issues/23
 
 if (Platform.OS === 'ios') {
