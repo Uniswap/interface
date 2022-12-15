@@ -1,0 +1,26 @@
+query SearchPopularTokens {
+  topTokens(chain: ETHEREUM, orderBy: VOLUME, page: 1, pageSize: 3) {
+    id
+    address
+    chain
+    name
+    symbol
+    project {
+      id
+      logoUrl
+    }
+  }
+  # `topTokens` returns WETH rather than ETH
+  # here we retrieve ETH information to swap out in the UI
+  eth: tokens(contracts: [{ address: null, chain: ETHEREUM }]) {
+    id
+    address
+    chain
+    name
+    symbol
+    project {
+      id
+      logoUrl
+    }
+  }
+}

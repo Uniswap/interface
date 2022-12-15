@@ -1,5 +1,6 @@
 import { ApolloLink } from '@apollo/client'
 import { MockedProvider, MockedResponse, MockLink } from '@apollo/client/testing'
+import { NavigationContainer } from '@react-navigation/native'
 import type { PreloadedState } from '@reduxjs/toolkit'
 import { configureStore } from '@reduxjs/toolkit'
 import { ThemeProvider } from '@shopify/restyle'
@@ -46,7 +47,9 @@ export function renderWithProviders(
     return (
       <MockedProvider addTypename={false} cache={setupCache()} link={link} mocks={mocks}>
         <Provider store={store}>
-          <ThemeProvider theme={theme}>{children}</ThemeProvider>
+          <NavigationContainer>
+            <ThemeProvider theme={theme}>{children}</ThemeProvider>
+          </NavigationContainer>
         </Provider>
       </MockedProvider>
     )

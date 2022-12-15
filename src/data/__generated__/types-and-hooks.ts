@@ -838,6 +838,11 @@ export type AccountListQueryVariables = Exact<{
 
 export type AccountListQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', id: string, tokensTotalDenominatedValue?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null };
 
+export type SearchPopularTokensQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SearchPopularTokensQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', id: string, address?: string | null, chain: Chain, name?: string | null, symbol?: string | null, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string | null } | null } | null> | null, eth?: Array<{ __typename?: 'Token', id: string, address?: string | null, chain: Chain, name?: string | null, symbol?: string | null, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string | null } | null } | null> | null };
+
 export type NftsQueryVariables = Exact<{
   ownerAddress: Scalars['String'];
 }>;
@@ -928,11 +933,6 @@ export type TopTokensQueryVariables = Exact<{
 
 
 export type TopTokensQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', id: string, address?: string | null, chain: Chain, decimals?: number | null, name?: string | null, symbol?: string | null, project?: { __typename?: 'TokenProject', id: string, isSpam?: boolean | null, logoUrl?: string | null, safetyLevel?: SafetyLevel | null } | null } | null> | null };
-
-export type SearchPopularTokensQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type SearchPopularTokensQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', id: string, address?: string | null, chain: Chain, name?: string | null, symbol?: string | null, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string | null } | null } | null> | null, eth?: Array<{ __typename?: 'Token', id: string, address?: string | null, chain: Chain, name?: string | null, symbol?: string | null, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string | null } | null } | null> | null };
 
 export type SearchTokensQueryVariables = Exact<{
   searchQuery: Scalars['String'];
@@ -1055,6 +1055,59 @@ export function useAccountListLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type AccountListQueryHookResult = ReturnType<typeof useAccountListQuery>;
 export type AccountListLazyQueryHookResult = ReturnType<typeof useAccountListLazyQuery>;
 export type AccountListQueryResult = Apollo.QueryResult<AccountListQuery, AccountListQueryVariables>;
+export const SearchPopularTokensDocument = gql`
+    query SearchPopularTokens {
+  topTokens(chain: ETHEREUM, orderBy: VOLUME, page: 1, pageSize: 3) {
+    id
+    address
+    chain
+    name
+    symbol
+    project {
+      id
+      logoUrl
+    }
+  }
+  eth: tokens(contracts: [{address: null, chain: ETHEREUM}]) {
+    id
+    address
+    chain
+    name
+    symbol
+    project {
+      id
+      logoUrl
+    }
+  }
+}
+    `;
+
+/**
+ * __useSearchPopularTokensQuery__
+ *
+ * To run a query within a React component, call `useSearchPopularTokensQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchPopularTokensQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchPopularTokensQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSearchPopularTokensQuery(baseOptions?: Apollo.QueryHookOptions<SearchPopularTokensQuery, SearchPopularTokensQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchPopularTokensQuery, SearchPopularTokensQueryVariables>(SearchPopularTokensDocument, options);
+      }
+export function useSearchPopularTokensLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchPopularTokensQuery, SearchPopularTokensQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchPopularTokensQuery, SearchPopularTokensQueryVariables>(SearchPopularTokensDocument, options);
+        }
+export type SearchPopularTokensQueryHookResult = ReturnType<typeof useSearchPopularTokensQuery>;
+export type SearchPopularTokensLazyQueryHookResult = ReturnType<typeof useSearchPopularTokensLazyQuery>;
+export type SearchPopularTokensQueryResult = Apollo.QueryResult<SearchPopularTokensQuery, SearchPopularTokensQueryVariables>;
 export const NftsDocument = gql`
     query Nfts($ownerAddress: String!) {
   portfolios(ownerAddresses: [$ownerAddress]) {
@@ -1852,59 +1905,6 @@ export function useTopTokensLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
 export type TopTokensQueryHookResult = ReturnType<typeof useTopTokensQuery>;
 export type TopTokensLazyQueryHookResult = ReturnType<typeof useTopTokensLazyQuery>;
 export type TopTokensQueryResult = Apollo.QueryResult<TopTokensQuery, TopTokensQueryVariables>;
-export const SearchPopularTokensDocument = gql`
-    query SearchPopularTokens {
-  topTokens(chain: ETHEREUM, orderBy: VOLUME, page: 1, pageSize: 3) {
-    id
-    address
-    chain
-    name
-    symbol
-    project {
-      id
-      logoUrl
-    }
-  }
-  eth: tokens(contracts: [{address: null, chain: ETHEREUM}]) {
-    id
-    address
-    chain
-    name
-    symbol
-    project {
-      id
-      logoUrl
-    }
-  }
-}
-    `;
-
-/**
- * __useSearchPopularTokensQuery__
- *
- * To run a query within a React component, call `useSearchPopularTokensQuery` and pass it any options that fit your needs.
- * When your component renders, `useSearchPopularTokensQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useSearchPopularTokensQuery({
- *   variables: {
- *   },
- * });
- */
-export function useSearchPopularTokensQuery(baseOptions?: Apollo.QueryHookOptions<SearchPopularTokensQuery, SearchPopularTokensQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SearchPopularTokensQuery, SearchPopularTokensQueryVariables>(SearchPopularTokensDocument, options);
-      }
-export function useSearchPopularTokensLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchPopularTokensQuery, SearchPopularTokensQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SearchPopularTokensQuery, SearchPopularTokensQueryVariables>(SearchPopularTokensDocument, options);
-        }
-export type SearchPopularTokensQueryHookResult = ReturnType<typeof useSearchPopularTokensQuery>;
-export type SearchPopularTokensLazyQueryHookResult = ReturnType<typeof useSearchPopularTokensLazyQuery>;
-export type SearchPopularTokensQueryResult = Apollo.QueryResult<SearchPopularTokensQuery, SearchPopularTokensQueryVariables>;
 export const SearchTokensDocument = gql`
     query SearchTokens($searchQuery: String!) {
   searchTokens(searchQuery: $searchQuery) {

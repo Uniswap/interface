@@ -1,0 +1,1032 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SearchPopularTokens renders without error 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "display": "flex",
+        "padding": 8,
+      },
+    ]
+  }
+>
+  <View
+    onLayout={[Function]}
+  >
+    <View
+      style={
+        Array [
+          Object {
+            "alignItems": "stretch",
+            "display": "flex",
+            "flexDirection": "column",
+            "justifyContent": "flex-start",
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "opacity": 1,
+              "overflow": "hidden",
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {
+                "backgroundColor": "#E8ECFB",
+                "borderRadius": 999999,
+                "display": "flex",
+                "height": 40,
+                "width": 40,
+              },
+            ]
+          }
+        />
+        <View
+          style={
+            Array [
+              Object {
+                "display": "flex",
+                "flexGrow": 0,
+                "flexShrink": 0,
+                "height": 12,
+                "width": 12,
+              },
+            ]
+          }
+        />
+        <View
+          style={
+            Array [
+              Object {
+                "alignItems": "flex-start",
+                "display": "flex",
+                "flexDirection": "column",
+                "flexShrink": 1,
+                "justifyContent": "flex-start",
+                "width": "100%",
+              },
+            ]
+          }
+        >
+          <View
+            style={
+              Array [
+                Object {
+                  "backgroundColor": "#E8ECFB",
+                  "borderRadius": 4,
+                  "display": "flex",
+                  "width": "80%",
+                },
+              ]
+            }
+          >
+            <View
+              accessibilityElementsHidden={true}
+              importantForAccessibility="no-hide-descendants"
+            >
+              <Text
+                allowFontScaling={true}
+                maxFontSizeMultiplier={1.4}
+                style={
+                  Array [
+                    Object {
+                      "color": "transparent",
+                      "display": "flex",
+                      "fontFamily": "Inter-Medium",
+                      "fontSize": 16,
+                      "lineHeight": 24,
+                      "opacity": 0,
+                    },
+                  ]
+                }
+              >
+                Token Name
+              </Text>
+            </View>
+          </View>
+          <View
+            style={
+              Array [
+                Object {
+                  "display": "flex",
+                  "flexGrow": 0,
+                  "flexShrink": 0,
+                  "height": 8,
+                },
+              ]
+            }
+          />
+          <View
+            style={
+              Array [
+                Object {
+                  "backgroundColor": "#E8ECFB",
+                  "borderRadius": 4,
+                  "display": "flex",
+                  "width": "30%",
+                },
+              ]
+            }
+          >
+            <View
+              accessibilityElementsHidden={true}
+              importantForAccessibility="no-hide-descendants"
+            >
+              <Text
+                allowFontScaling={true}
+                maxFontSizeMultiplier={1.4}
+                style={
+                  Array [
+                    Object {
+                      "color": "transparent",
+                      "display": "flex",
+                      "fontFamily": "Inter-Medium",
+                      "fontSize": 14,
+                      "lineHeight": 20,
+                      "opacity": 0,
+                    },
+                  ]
+                }
+              >
+                Ticker
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
+      <View
+        style={
+          Array [
+            Object {
+              "display": "flex",
+              "flexGrow": 0,
+              "flexShrink": 0,
+              "height": 16,
+            },
+          ]
+        }
+      />
+      <View
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "opacity": 0.6666666666666666,
+              "overflow": "hidden",
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {
+                "backgroundColor": "#E8ECFB",
+                "borderRadius": 999999,
+                "display": "flex",
+                "height": 40,
+                "width": 40,
+              },
+            ]
+          }
+        />
+        <View
+          style={
+            Array [
+              Object {
+                "display": "flex",
+                "flexGrow": 0,
+                "flexShrink": 0,
+                "height": 12,
+                "width": 12,
+              },
+            ]
+          }
+        />
+        <View
+          style={
+            Array [
+              Object {
+                "alignItems": "flex-start",
+                "display": "flex",
+                "flexDirection": "column",
+                "flexShrink": 1,
+                "justifyContent": "flex-start",
+                "width": "100%",
+              },
+            ]
+          }
+        >
+          <View
+            style={
+              Array [
+                Object {
+                  "backgroundColor": "#E8ECFB",
+                  "borderRadius": 4,
+                  "display": "flex",
+                  "width": "80%",
+                },
+              ]
+            }
+          >
+            <View
+              accessibilityElementsHidden={true}
+              importantForAccessibility="no-hide-descendants"
+            >
+              <Text
+                allowFontScaling={true}
+                maxFontSizeMultiplier={1.4}
+                style={
+                  Array [
+                    Object {
+                      "color": "transparent",
+                      "display": "flex",
+                      "fontFamily": "Inter-Medium",
+                      "fontSize": 16,
+                      "lineHeight": 24,
+                      "opacity": 0,
+                    },
+                  ]
+                }
+              >
+                Token Name
+              </Text>
+            </View>
+          </View>
+          <View
+            style={
+              Array [
+                Object {
+                  "display": "flex",
+                  "flexGrow": 0,
+                  "flexShrink": 0,
+                  "height": 8,
+                },
+              ]
+            }
+          />
+          <View
+            style={
+              Array [
+                Object {
+                  "backgroundColor": "#E8ECFB",
+                  "borderRadius": 4,
+                  "display": "flex",
+                  "width": "30%",
+                },
+              ]
+            }
+          >
+            <View
+              accessibilityElementsHidden={true}
+              importantForAccessibility="no-hide-descendants"
+            >
+              <Text
+                allowFontScaling={true}
+                maxFontSizeMultiplier={1.4}
+                style={
+                  Array [
+                    Object {
+                      "color": "transparent",
+                      "display": "flex",
+                      "fontFamily": "Inter-Medium",
+                      "fontSize": 14,
+                      "lineHeight": 20,
+                      "opacity": 0,
+                    },
+                  ]
+                }
+              >
+                Ticker
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
+      <View
+        style={
+          Array [
+            Object {
+              "display": "flex",
+              "flexGrow": 0,
+              "flexShrink": 0,
+              "height": 16,
+            },
+          ]
+        }
+      />
+      <View
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "opacity": 0.3333333333333333,
+              "overflow": "hidden",
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {
+                "backgroundColor": "#E8ECFB",
+                "borderRadius": 999999,
+                "display": "flex",
+                "height": 40,
+                "width": 40,
+              },
+            ]
+          }
+        />
+        <View
+          style={
+            Array [
+              Object {
+                "display": "flex",
+                "flexGrow": 0,
+                "flexShrink": 0,
+                "height": 12,
+                "width": 12,
+              },
+            ]
+          }
+        />
+        <View
+          style={
+            Array [
+              Object {
+                "alignItems": "flex-start",
+                "display": "flex",
+                "flexDirection": "column",
+                "flexShrink": 1,
+                "justifyContent": "flex-start",
+                "width": "100%",
+              },
+            ]
+          }
+        >
+          <View
+            style={
+              Array [
+                Object {
+                  "backgroundColor": "#E8ECFB",
+                  "borderRadius": 4,
+                  "display": "flex",
+                  "width": "80%",
+                },
+              ]
+            }
+          >
+            <View
+              accessibilityElementsHidden={true}
+              importantForAccessibility="no-hide-descendants"
+            >
+              <Text
+                allowFontScaling={true}
+                maxFontSizeMultiplier={1.4}
+                style={
+                  Array [
+                    Object {
+                      "color": "transparent",
+                      "display": "flex",
+                      "fontFamily": "Inter-Medium",
+                      "fontSize": 16,
+                      "lineHeight": 24,
+                      "opacity": 0,
+                    },
+                  ]
+                }
+              >
+                Token Name
+              </Text>
+            </View>
+          </View>
+          <View
+            style={
+              Array [
+                Object {
+                  "display": "flex",
+                  "flexGrow": 0,
+                  "flexShrink": 0,
+                  "height": 8,
+                },
+              ]
+            }
+          />
+          <View
+            style={
+              Array [
+                Object {
+                  "backgroundColor": "#E8ECFB",
+                  "borderRadius": 4,
+                  "display": "flex",
+                  "width": "30%",
+                },
+              ]
+            }
+          >
+            <View
+              accessibilityElementsHidden={true}
+              importantForAccessibility="no-hide-descendants"
+            >
+              <Text
+                allowFontScaling={true}
+                maxFontSizeMultiplier={1.4}
+                style={
+                  Array [
+                    Object {
+                      "color": "transparent",
+                      "display": "flex",
+                      "fontFamily": "Inter-Medium",
+                      "fontSize": 14,
+                      "lineHeight": 20,
+                      "opacity": 0,
+                    },
+                  ]
+                }
+              >
+                Ticker
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`SearchPopularTokens renders without error 2`] = `
+<RCTScrollView
+  data={
+    Array [
+      Object {
+        "address": null,
+        "chainId": 1,
+        "logoUrl": "ethlogo.png",
+        "name": "Ethereum",
+        "symbol": "ETH",
+        "type": 1,
+      },
+      Object {
+        "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+        "chainId": 1,
+        "logoUrl": "wbtclogo.png",
+        "name": "Wrapped Bitcoin",
+        "symbol": "WBTC",
+        "type": 1,
+      },
+      Object {
+        "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "chainId": 1,
+        "logoUrl": "usdclogo.png",
+        "name": "USD Coin",
+        "symbol": "USDC",
+        "type": 1,
+      },
+    ]
+  }
+  getItem={[Function]}
+  getItemCount={[Function]}
+  keyExtractor={[Function]}
+  listKey="tokens"
+  onContentSizeChange={[Function]}
+  onLayout={[Function]}
+  onMomentumScrollBegin={[Function]}
+  onMomentumScrollEnd={[Function]}
+  onScroll={[Function]}
+  onScrollBeginDrag={[Function]}
+  onScrollEndDrag={[Function]}
+  removeClippedSubviews={false}
+  renderItem={[Function]}
+  scrollEventThrottle={50}
+  stickyHeaderIndices={Array []}
+  viewabilityConfigCallbackPairs={Array []}
+>
+  <View>
+    <View
+      onLayout={[Function]}
+      style={null}
+    >
+      <View
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        hitSlop={
+          Object {
+            "bottom": 5,
+            "left": 5,
+            "right": 5,
+            "top": 5,
+          }
+        }
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "display": "flex",
+            "opacity": 1,
+          }
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {
+                "alignItems": "center",
+                "display": "flex",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "paddingHorizontal": 8,
+                "paddingVertical": 12,
+              },
+            ]
+          }
+        >
+          <View
+            style={
+              Array [
+                Object {
+                  "alignItems": "center",
+                  "display": "flex",
+                  "height": 40,
+                  "justifyContent": "center",
+                  "width": 40,
+                },
+              ]
+            }
+          >
+            <Image
+              source={
+                Object {
+                  "uri": "ethlogo.png",
+                }
+              }
+              style={
+                Array [
+                  Object {
+                    "resizeMode": "contain",
+                  },
+                  Object {
+                    "backgroundColor": "#D2D9EE",
+                    "borderColor": "#D2D9EE",
+                    "borderRadius": 20,
+                    "borderWidth": 0.5,
+                    "height": 40,
+                    "width": 40,
+                  },
+                ]
+              }
+            />
+          </View>
+          <View
+            style={
+              Array [
+                Object {
+                  "display": "flex",
+                  "flexGrow": 0,
+                  "flexShrink": 0,
+                  "height": 12,
+                  "width": 12,
+                },
+              ]
+            }
+          />
+          <View
+            style={
+              Array [
+                Object {
+                  "alignItems": "stretch",
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "justifyContent": "flex-start",
+                },
+              ]
+            }
+          >
+            <View
+              style={
+                Array [
+                  Object {
+                    "alignItems": "center",
+                    "display": "flex",
+                    "flexDirection": "row",
+                    "justifyContent": "flex-start",
+                  },
+                ]
+              }
+            >
+              <Text
+                allowFontScaling={true}
+                maxFontSizeMultiplier={1.4}
+                style={
+                  Array [
+                    Object {
+                      "color": "#0D111C",
+                      "display": "flex",
+                      "fontFamily": "Inter-Medium",
+                      "fontSize": 16,
+                      "lineHeight": 24,
+                    },
+                  ]
+                }
+              >
+                Ethereum
+              </Text>
+            </View>
+            <View
+              style={
+                Array [
+                  Object {
+                    "display": "flex",
+                    "flexGrow": 0,
+                    "flexShrink": 0,
+                    "height": 0,
+                  },
+                ]
+              }
+            />
+            <Text
+              allowFontScaling={true}
+              maxFontSizeMultiplier={1.4}
+              style={
+                Array [
+                  Object {
+                    "color": "#505A78",
+                    "display": "flex",
+                    "fontFamily": "Inter-Medium",
+                    "fontSize": 14,
+                    "lineHeight": 20,
+                  },
+                ]
+              }
+            >
+              ETH
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+    <View
+      onLayout={[Function]}
+      style={null}
+    >
+      <View
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        hitSlop={
+          Object {
+            "bottom": 5,
+            "left": 5,
+            "right": 5,
+            "top": 5,
+          }
+        }
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "display": "flex",
+            "opacity": 1,
+          }
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {
+                "alignItems": "center",
+                "display": "flex",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "paddingHorizontal": 8,
+                "paddingVertical": 12,
+              },
+            ]
+          }
+        >
+          <View
+            style={
+              Array [
+                Object {
+                  "alignItems": "center",
+                  "display": "flex",
+                  "height": 40,
+                  "justifyContent": "center",
+                  "width": 40,
+                },
+              ]
+            }
+          >
+            <Image
+              source={
+                Object {
+                  "uri": "wbtclogo.png",
+                }
+              }
+              style={
+                Array [
+                  Object {
+                    "resizeMode": "contain",
+                  },
+                  Object {
+                    "backgroundColor": "#D2D9EE",
+                    "borderColor": "#D2D9EE",
+                    "borderRadius": 20,
+                    "borderWidth": 0.5,
+                    "height": 40,
+                    "width": 40,
+                  },
+                ]
+              }
+            />
+          </View>
+          <View
+            style={
+              Array [
+                Object {
+                  "display": "flex",
+                  "flexGrow": 0,
+                  "flexShrink": 0,
+                  "height": 12,
+                  "width": 12,
+                },
+              ]
+            }
+          />
+          <View
+            style={
+              Array [
+                Object {
+                  "alignItems": "stretch",
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "justifyContent": "flex-start",
+                },
+              ]
+            }
+          >
+            <View
+              style={
+                Array [
+                  Object {
+                    "alignItems": "center",
+                    "display": "flex",
+                    "flexDirection": "row",
+                    "justifyContent": "flex-start",
+                  },
+                ]
+              }
+            >
+              <Text
+                allowFontScaling={true}
+                maxFontSizeMultiplier={1.4}
+                style={
+                  Array [
+                    Object {
+                      "color": "#0D111C",
+                      "display": "flex",
+                      "fontFamily": "Inter-Medium",
+                      "fontSize": 16,
+                      "lineHeight": 24,
+                    },
+                  ]
+                }
+              >
+                Wrapped Bitcoin
+              </Text>
+            </View>
+            <View
+              style={
+                Array [
+                  Object {
+                    "display": "flex",
+                    "flexGrow": 0,
+                    "flexShrink": 0,
+                    "height": 0,
+                  },
+                ]
+              }
+            />
+            <Text
+              allowFontScaling={true}
+              maxFontSizeMultiplier={1.4}
+              style={
+                Array [
+                  Object {
+                    "color": "#505A78",
+                    "display": "flex",
+                    "fontFamily": "Inter-Medium",
+                    "fontSize": 14,
+                    "lineHeight": 20,
+                  },
+                ]
+              }
+            >
+              WBTC
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+    <View
+      onLayout={[Function]}
+      style={null}
+    >
+      <View
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        hitSlop={
+          Object {
+            "bottom": 5,
+            "left": 5,
+            "right": 5,
+            "top": 5,
+          }
+        }
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "display": "flex",
+            "opacity": 1,
+          }
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {
+                "alignItems": "center",
+                "display": "flex",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "paddingHorizontal": 8,
+                "paddingVertical": 12,
+              },
+            ]
+          }
+        >
+          <View
+            style={
+              Array [
+                Object {
+                  "alignItems": "center",
+                  "display": "flex",
+                  "height": 40,
+                  "justifyContent": "center",
+                  "width": 40,
+                },
+              ]
+            }
+          >
+            <Image
+              source={
+                Object {
+                  "uri": "usdclogo.png",
+                }
+              }
+              style={
+                Array [
+                  Object {
+                    "resizeMode": "contain",
+                  },
+                  Object {
+                    "backgroundColor": "#D2D9EE",
+                    "borderColor": "#D2D9EE",
+                    "borderRadius": 20,
+                    "borderWidth": 0.5,
+                    "height": 40,
+                    "width": 40,
+                  },
+                ]
+              }
+            />
+          </View>
+          <View
+            style={
+              Array [
+                Object {
+                  "display": "flex",
+                  "flexGrow": 0,
+                  "flexShrink": 0,
+                  "height": 12,
+                  "width": 12,
+                },
+              ]
+            }
+          />
+          <View
+            style={
+              Array [
+                Object {
+                  "alignItems": "stretch",
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "justifyContent": "flex-start",
+                },
+              ]
+            }
+          >
+            <View
+              style={
+                Array [
+                  Object {
+                    "alignItems": "center",
+                    "display": "flex",
+                    "flexDirection": "row",
+                    "justifyContent": "flex-start",
+                  },
+                ]
+              }
+            >
+              <Text
+                allowFontScaling={true}
+                maxFontSizeMultiplier={1.4}
+                style={
+                  Array [
+                    Object {
+                      "color": "#0D111C",
+                      "display": "flex",
+                      "fontFamily": "Inter-Medium",
+                      "fontSize": 16,
+                      "lineHeight": 24,
+                    },
+                  ]
+                }
+              >
+                USD Coin
+              </Text>
+            </View>
+            <View
+              style={
+                Array [
+                  Object {
+                    "display": "flex",
+                    "flexGrow": 0,
+                    "flexShrink": 0,
+                    "height": 0,
+                  },
+                ]
+              }
+            />
+            <Text
+              allowFontScaling={true}
+              maxFontSizeMultiplier={1.4}
+              style={
+                Array [
+                  Object {
+                    "color": "#505A78",
+                    "display": "flex",
+                    "fontFamily": "Inter-Medium",
+                    "fontSize": 14,
+                    "lineHeight": 20,
+                  },
+                ]
+              }
+            >
+              USDC
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>
+</RCTScrollView>
+`;

@@ -1,5 +1,7 @@
 import { faker } from '@faker-js/faker'
-import { Amount, Currency, Portfolio } from 'src/data/__generated__/types-and-hooks'
+import { ChainId } from 'src/constants/chains'
+import { USDC, WBTC, WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
+import { Amount, Chain, Currency, Portfolio, Token } from 'src/data/__generated__/types-and-hooks'
 
 export const Amounts: Record<'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl', Amount> = {
   none: {
@@ -53,6 +55,60 @@ export const Portfolios: [Portfolio, Portfolio] = [
       id: faker.datatype.uuid(),
       absolute: Amounts.sm,
       percentage: Amounts.xs,
+    },
+  },
+]
+
+export const EthToken: [Token] = [
+  {
+    id: faker.datatype.uuid(),
+    address: null,
+    chain: Chain.Ethereum,
+    name: 'Ethereum',
+    symbol: 'ETH',
+    project: {
+      id: faker.datatype.uuid(),
+      logoUrl: 'ethlogo.png',
+      tokens: [],
+    },
+  },
+]
+
+export const TopTokens: [Token, Token, Token] = [
+  {
+    id: faker.datatype.uuid(),
+    address: WRAPPED_NATIVE_CURRENCY[ChainId.Mainnet].address,
+    chain: Chain.Ethereum,
+    name: 'Wrapped Ether',
+    symbol: 'WETH',
+    project: {
+      id: faker.datatype.uuid(),
+      logoUrl: 'wethlogo.png',
+      tokens: [],
+    },
+  },
+  {
+    id: faker.datatype.uuid(),
+    address: WBTC.address,
+    chain: Chain.Ethereum,
+    name: 'Wrapped Bitcoin',
+    symbol: 'WBTC',
+    project: {
+      id: faker.datatype.uuid(),
+      logoUrl: 'wbtclogo.png',
+      tokens: [],
+    },
+  },
+  {
+    id: faker.datatype.uuid(),
+    address: USDC.address,
+    chain: Chain.Ethereum,
+    name: 'USD Coin',
+    symbol: 'USDC',
+    project: {
+      id: faker.datatype.uuid(),
+      logoUrl: 'usdclogo.png',
+      tokens: [],
     },
   },
 ]

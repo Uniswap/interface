@@ -93,7 +93,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps) {
         const isWeth =
           areAddressesEqual(token.address, weth.address) && token?.chain === Chain.Ethereum
 
-        // manually replace eth with eth given backend only returns eth data as a proxy for eth
+        // manually replace weth with eth given backend only returns eth data as a proxy for eth
         if (isWeth && eth) {
           return gqlTokenToTokenItemData(eth)
         }
