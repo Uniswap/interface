@@ -72,6 +72,8 @@ export const TokenInfoContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 4px;
+  ${textFadeIn};
+  animation-duration: ${({ theme }) => theme.transition.duration.medium};
 `
 export const TokenNameCell = styled.div`
   display: flex;
@@ -79,7 +81,6 @@ export const TokenNameCell = styled.div`
   font-size: 20px;
   line-height: 28px;
   align-items: center;
-  ${textFadeIn}
 `
 /* Loading state bubbles */
 const DetailBubble = styled(LoadingBubble)`

@@ -33,7 +33,7 @@ const StyledExternalCard = styled(Card)`
 
 const HoverText = styled.div`
   text-decoration: none;
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${({ theme }) => theme.textPrimary};
   display: flex;
   align-items: center;
 
@@ -128,7 +128,7 @@ function PrivacyPolicy() {
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />
-                  <ThemedText.DeprecatedMain fontSize={14} color="deprecated_primaryText1">
+                  <ThemedText.DeprecatedMain fontSize={14} color="accentAction">
                     <Trans>Uniswap Labs&apos; Terms of Service</Trans>
                   </ThemedText.DeprecatedMain>
                 </AutoRow>
@@ -141,7 +141,7 @@ function PrivacyPolicy() {
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />
-                  <ThemedText.DeprecatedMain fontSize={14} color="deprecated_primaryText1">
+                  <ThemedText.DeprecatedMain fontSize={14} color="accentAction">
                     <Trans>Privacy Policy</Trans>
                   </ThemedText.DeprecatedMain>
                 </AutoRow>
@@ -159,7 +159,7 @@ function PrivacyPolicy() {
               <AutoColumn gap="sm">
                 <AutoRow gap="4px">
                   <Info size={18} />
-                  <ThemedText.DeprecatedMain fontSize={14} color="deprecated_text1">
+                  <ThemedText.DeprecatedMain fontSize={14} color="textPrimary">
                     {name}
                   </ThemedText.DeprecatedMain>
                 </AutoRow>

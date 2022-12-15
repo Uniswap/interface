@@ -85,7 +85,7 @@ export default function Earn() {
                 </ThemedText.DeprecatedWhite>
               </RowBetween>{' '}
               <ExternalLink
-                style={{ color: theme.deprecated_white, textDecoration: 'underline' }}
+                style={{ color: theme.white, textDecoration: 'underline' }}
                 href="https://uniswap.org/blog/uni/"
                 target="_blank"
               >

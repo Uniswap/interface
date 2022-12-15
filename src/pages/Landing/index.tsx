@@ -1,7 +1,6 @@
 import { Trace, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, ElementName, EventName, PageName } from '@uniswap/analytics-events'
 import { BaseButton } from 'components/Button'
-import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
 import Swap from 'pages/Swap'
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
@@ -11,7 +10,7 @@ import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 
-const PageWrapper = styled.div`
+const PageContainer = styled.div`
   width: 100%;
   position: relative;
   display: flex;
@@ -48,23 +47,23 @@ const Glow = styled.div`
   width: 100%;
 `
 
-const ContentWrapper = styled.div<{ isDarkMode: boolean }>`
+const ContentContainer = styled.div<{ isDarkMode: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
   max-width: min(720px, 90%);
-  position: absolute;
+  position: sticky;
   bottom: 0;
   z-index: ${Z_INDEX.dropdown};
-  padding: 32px 0;
+  padding: 32px 0 80px;
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} opacity`};
 
   * {
     pointer-events: auto;
   }
 
-  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
     padding: 64px 0;
   }
 `
@@ -131,17 +130,6 @@ const ButtonCTA = styled(LandingButton)`
   }
 `
 
-const ButtonCTASecondary = styled(LandingButton)`
-  background: none;
-  border: ${({ theme }) => `1px solid ${theme.textPrimary}`};
-  color: ${({ theme }) => theme.textPrimary};
-  transition: ${({ theme }) => `all ${theme.transition.duration.medium} ${theme.transition.timing.ease}`};
-
-  &:hover {
-    border: 1px solid rgba(255, 0, 199, 1);
-  }
-`
-
 const ButtonCTAText = styled.p`
   margin: 0px;
   font-size: 16px;
@@ -153,21 +141,9 @@ const ButtonCTAText = styled.p`
   }
 `
 
-const ActionsWrapper = styled.span`
-  display: flex;
-  justify-content: center;
-  gap: 12px;
+const ActionsContainer = styled.span`
+  max-width: 300px;
   width: 100%;
-  max-width: 600px;
-
-  & > * {
-    max-width: 288px;
-    flex: 1;
-  }
-
-  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
-    gap: 24px;
-  }
 `
 
 const LandingSwap = styled(Swap)`
@@ -193,25 +169,18 @@ export default function Landing() {
   const location = useLocation()
   const isOpen = location.pathname === '/'
 
-  const landingPageFlag = useLandingPageFlag()
-
   useEffect(() => {
-    if (landingPageFlag) {
-      document.body.style.overflow = 'hidden'
-      return () => {
-        document.body.style.overflow = 'auto'
-      }
-    }
+    document.body.style.overflow = 'hidden'
     return () => {
-      // need to have a return so the hook doesn't throw.
+      document.body.style.overflow = 'auto'
     }
-  }, [landingPageFlag])
+  }, [])
 
-  if (landingPageFlag === LandingPageVariant.Control || !isOpen) return null
+  if (!isOpen) return null
 
   return (
     <Trace page={PageName.LANDING_PAGE} shouldLogImpression>
-      <PageWrapper>
+      <PageContainer>
         <TraceEvent
           events={[BrowserEvent.onClick]}
           name={EventName.ELEMENT_CLICKED}
@@ -223,33 +192,24 @@ export default function Landing() {
         </TraceEvent>
         <Glow />
         <Gradient isDarkMode={isDarkMode} />
-        <ContentWrapper isDarkMode={isDarkMode}>
+        <ContentContainer isDarkMode={isDarkMode}>
           <TitleText isDarkMode={isDarkMode}>Trade crypto & NFTs with confidence</TitleText>
           <SubTextContainer>
             <SubText>Buy, sell, and explore tokens and NFTs</SubText>
           </SubTextContainer>
-          <ActionsWrapper>
+          <ActionsContainer>
             <TraceEvent
               events={[BrowserEvent.onClick]}
               name={EventName.ELEMENT_CLICKED}
               element={ElementName.CONTINUE_BUTTON}
             >
               <ButtonCTA as={Link} to="/swap">
-                <ButtonCTAText>Continue</ButtonCTAText>
+                <ButtonCTAText>Get started</ButtonCTAText>
               </ButtonCTA>
             </TraceEvent>
-            <TraceEvent
-              events={[BrowserEvent.onClick]}
-              name={EventName.ELEMENT_CLICKED}
-              element={ElementName.LEARN_MORE_LINK}
-            >
-              <ButtonCTASecondary as={Link} to="/about">
-                <ButtonCTAText>Learn more</ButtonCTAText>
-              </ButtonCTASecondary>
-            </TraceEvent>
-          </ActionsWrapper>
-        </ContentWrapper>
-      </PageWrapper>
+          </ActionsContainer>
+        </ContentContainer>
+      </PageContainer>
     </Trace>
   )
 }
