@@ -131,19 +131,12 @@ function formatAssetQueryData(queryAsset: NftAssetEdge, totalCount?: number) {
     animationUrl: asset.animationUrl,
     marketplace: asset.listings?.edges[0]?.node?.marketplace?.toLowerCase() as unknown as Markets,
     name: asset.name,
-    priceInfo: asset.listings
-      ? {
-          ETHPrice: ethPrice,
-          baseAsset: 'ETH',
-          baseDecimals: '18',
-          basePrice: ethPrice,
-        }
-      : {
-          ETHPrice: '0',
-          baseAsset: 'ETH',
-          baseDecimals: '18',
-          basePrice: '0',
-        },
+    priceInfo: {
+      ETHPrice: ethPrice,
+      baseAsset: 'ETH',
+      baseDecimals: '18',
+      basePrice: ethPrice,
+    },
     susFlag: asset.suspiciousFlag,
     sellorders: asset.listings?.edges.map((listingNode) => {
       return {
@@ -221,8 +214,7 @@ export function useNftAssets(params: AssetFetcherParams) {
   const assets: GenieAsset[] | undefined = useMemo(
     () =>
       data?.nftAssets?.edges?.map((queryAsset) => {
-        const castedAsset = queryAsset as unknown as NftAssetEdge
-        return formatAssetQueryData(castedAsset, data.nftAssets?.totalCount)
+        return formatAssetQueryData(queryAsset as NonNullable<NftAssetEdge>, data.nftAssets?.totalCount)
       }),
     [data?.nftAssets?.edges, data?.nftAssets?.totalCount]
   )
@@ -279,14 +271,15 @@ export function useSweepNftAssets(params: SweepFetcherParams) {
   const variables = useSweepFetcherVars(params)
   const { data, loading } = useAssetQuery({
     variables,
+    // This prevents overwriting the page's call to assets for cards shown
+    fetchPolicy: 'no-cache',
   })
   const assets = useMemo<GenieAsset[] | undefined>(
     () =>
       data?.nftAssets?.edges?.map((queryAsset) => {
-        const castedAsset = queryAsset as unknown as NftAssetEdge
-        return formatAssetQueryData(castedAsset, data.nftAssets?.totalCount)
+        return formatAssetQueryData(queryAsset as NonNullable<NftAssetEdge>, data.nftAssets?.totalCount)
       }),
     [data?.nftAssets?.edges, data?.nftAssets?.totalCount]
   )
-  return { data: assets, loading }
+  return useMemo(() => ({ data: assets, loading }), [assets, loading])
 }

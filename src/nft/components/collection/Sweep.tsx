@@ -179,12 +179,12 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
   const nft20Params = useSweepFetcherParams(contractAddress, Markets.NFT20, minPrice, maxPrice)
   // These calls will suspend if the query is not yet loaded.
   const { data: collectionAssets } = useSweepNftAssets(collectionParams)
-  const { data: sudoSwapAsssets } = useSweepNftAssets(sudoSwapParams)
+  const { data: sudoSwapAssets } = useSweepNftAssets(sudoSwapParams)
   const { data: nftxAssets } = useSweepNftAssets(nftxParams)
   const { data: nft20Assets } = useSweepNftAssets(nft20Params)
 
   const { sortedAssets, sortedAssetsTotalEth } = useMemo(() => {
-    if (!collectionAssets && !sudoSwapAsssets && !nftxAssets && !nft20Assets) {
+    if (!collectionAssets && !sudoSwapAssets && !nftxAssets && !nft20Assets) {
       return { sortedAssets: undefined, sortedAssetsTotalEth: BigNumber.from(0) }
     }
 
@@ -193,7 +193,7 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
 
     let jointCollections: GenieAsset[] = []
 
-    if (sudoSwapAsssets) jointCollections = [...jointCollections, ...sudoSwapAsssets]
+    if (sudoSwapAssets) jointCollections = [...jointCollections, ...sudoSwapAssets]
     if (nftxAssets) jointCollections = [...jointCollections, ...nftxAssets]
     if (nft20Assets) jointCollections = [...jointCollections, ...nft20Assets]
 
@@ -236,7 +236,7 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
       0,
       Math.max(
         collectionAssets?.length ?? 0,
-        sudoSwapAsssets?.length ?? 0,
+        sudoSwapAssets?.length ?? 0,
         nftxAssets?.length ?? 0,
         nft20Assets?.length ?? 0
       )
@@ -249,7 +249,7 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
         BigNumber.from(0)
       ),
     }
-  }, [collectionAssets, sudoSwapAsssets, nftxAssets, nft20Assets])
+  }, [collectionAssets, sudoSwapAssets, nftxAssets, nft20Assets])
 
   const { sweepItemsInBag, sweepEthPrice } = useMemo(() => {
     const sweepItemsInBag = itemsInBag
