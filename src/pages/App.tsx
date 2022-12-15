@@ -1,7 +1,7 @@
 import { datadogRum } from '@datadog/browser-rum'
 import { Trans, t } from '@lingui/macro'
 import * as Sentry from '@sentry/react'
-import { Popover, Sidetab } from '@typeform/embed-react'
+import { Sidetab } from '@typeform/embed-react'
 import { Suspense, lazy, useEffect } from 'react'
 import { isMobile } from 'react-device-detect'
 import { AlertTriangle } from 'react-feather'
@@ -141,12 +141,7 @@ export default function App() {
           buttonColor={theme.primary}
           customIcon={isDarkTheme ? 'https://i.imgur.com/iTOOKnr.png' : 'https://i.imgur.com/aPCpnGg.png'}
         />
-      ) : (
-        <Popover
-          id={feedbackId}
-          customIcon={isDarkTheme ? 'https://i.imgur.com/iTOOKnr.png' : 'https://i.imgur.com/aPCpnGg.png'}
-        />
-      )}
+      ) : null}
       {(BLACKLIST_WALLETS.includes(isAddressString(chainId, account)) ||
         BLACKLIST_WALLETS.includes(account?.toLowerCase() || '')) && (
         <Modal

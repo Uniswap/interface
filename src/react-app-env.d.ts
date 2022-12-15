@@ -36,6 +36,7 @@ interface Window {
   opr?: any
   solana?: any
   recaptchaOptions?: any
+  zESettings: any
 }
 
 declare module 'content-hash' {
