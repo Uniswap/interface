@@ -1,8 +1,10 @@
 import { DropDownOption } from 'nft/types'
-import { useState } from 'react'
-import { ChevronDown } from 'react-feather'
+import { CheckMarkIcon } from 'nft/components/icons'
+import { useRef, useState } from 'react'
+import { ChevronDown, ChevronUp } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
 
 const DropdownContainer = styled.div`
   display: flex;
@@ -20,10 +22,10 @@ const DropdownOptionButton = styled.span`
   align-items: center;
   width: 92px;
   margin-left: 4px;
-  // padding-left: 8px
   height: 20px;
   cursor: pointer;
   padding-left: 8px;
+  user-select: none;
 `
 
 const DropdownOptionsContainer = styled.div`
@@ -38,21 +40,29 @@ const DropdownOptionsContainerTwo = styled.div`
   background-color: ${({ theme }) => theme.backgroundModule};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   z-index: 1;
-  width: 115px;
+  width: 160px;
   justify-content: center;
   border-radius: 12px;
   margin-top: 8px;
   border-radius: 12px;
 `
 
+const StyledCheckmark = styled(CheckMarkIcon)`
+  height: 16px;
+  width: 16px;
+  margin-left: 8px;
+  color: ${({ theme }) => theme.accentAction};
+`
+
 const DropdownOption = styled.div`
   display: flex;
-  justify-content: center;
   padding-top: 12px;
   padding-bottom: 12px;
   cursor: pointer;
   font-size: 16px;
   line-height: 24px;
+  padding-left: 16px;
+  padding-right: 16px;
 
   &:hover {
     background-color: ${({ theme }) => theme.backgroundInteractive};
@@ -72,18 +82,21 @@ const DropdownOption = styled.div`
 const ListingDropdown = ({ dropDownOptions }: { dropDownOptions: DropDownOption[] }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [dropdownText, setDropdownText] = useState('Custom')
+  const ref = useRef(null)
+
+  useOnClickOutside(ref, () => setIsOpen(false))
 
   return (
     <>
       <DropdownContainer onClick={() => setIsOpen(!isOpen)}>
         <ThemedText.Caption color="textSecondary">Price: </ThemedText.Caption>{' '}
         <DropdownOptionButton>
-          {dropdownText} <ChevronDown size={16} />
+          {dropdownText} {isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
         </DropdownOptionButton>
       </DropdownContainer>
 
       {isOpen && (
-        <DropdownOptionsContainer>
+        <DropdownOptionsContainer ref={ref}>
           <DropdownOptionsContainerTwo>
             {dropDownOptions.map((dropdownOption) => (
               <DropdownOption
@@ -94,7 +107,7 @@ const ListingDropdown = ({ dropDownOptions }: { dropDownOptions: DropDownOption[
                   setDropdownText(dropdownOption.displayText)
                 }}
               >
-                {dropdownOption.displayText}
+                {dropdownOption.displayText} {dropdownText === dropdownOption.displayText && <StyledCheckmark />}
               </DropdownOption>
             ))}
           </DropdownOptionsContainerTwo>
