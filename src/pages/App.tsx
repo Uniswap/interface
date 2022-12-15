@@ -4,7 +4,6 @@ import Loader from 'components/Loader'
 import { MenuDropdown } from 'components/NavBar/MenuDropdown'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
-import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { Box } from 'nft/components/Box'
 import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
@@ -202,8 +201,6 @@ export default function App() {
 
   const isHeaderTransparent = !scrolledState
 
-  const landingPageFlag = useLandingPageFlag()
-
   return (
     <ErrorBoundary>
       <DarkModeQueryParamReader />
@@ -220,7 +217,7 @@ export default function App() {
             <Suspense fallback={<Loader />}>
               {isLoaded ? (
                 <Routes>
-                  {landingPageFlag === LandingPageVariant.Enabled && <Route path="/" element={<Landing />} />}
+                  <Route path="/" element={<Landing />} />
                   <Route path="tokens" element={<Tokens />}>
                     <Route path=":chainName" />
                   </Route>

@@ -1,7 +1,6 @@
 import { Trace, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, ElementName, EventName, PageName } from '@uniswap/analytics-events'
 import { BaseButton } from 'components/Button'
-import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
 import Swap from 'pages/Swap'
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
@@ -170,21 +169,14 @@ export default function Landing() {
   const location = useLocation()
   const isOpen = location.pathname === '/'
 
-  const landingPageFlag = useLandingPageFlag()
-
   useEffect(() => {
-    if (landingPageFlag) {
-      document.body.style.overflow = 'hidden'
-      return () => {
-        document.body.style.overflow = 'auto'
-      }
-    }
+    document.body.style.overflow = 'hidden'
     return () => {
-      // need to have a return so the hook doesn't throw.
+      document.body.style.overflow = 'auto'
     }
-  }, [landingPageFlag])
+  }, [])
 
-  if (landingPageFlag === LandingPageVariant.Control || !isOpen) return null
+  if (!isOpen) return null
 
   return (
     <Trace page={PageName.LANDING_PAGE} shouldLogImpression>
