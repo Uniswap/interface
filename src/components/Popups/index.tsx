@@ -74,16 +74,18 @@ export default function Popups() {
           <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
         ))}
       </FixedPopupColumn>
-      <MobilePopupWrapper height={activePopups?.length > 0 ? 'fit-content' : 0}>
-        <MobilePopupInner>
-          {activePopups // reverse so new items up front
-            .slice(0)
-            .reverse()
-            .map((item) => (
-              <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
-            ))}
-        </MobilePopupInner>
-      </MobilePopupWrapper>
+      {activePopups?.length > 0 && (
+        <MobilePopupWrapper height="fit-content">
+          <MobilePopupInner>
+            {activePopups // reverse so new items up front
+              .slice(0)
+              .reverse()
+              .map((item) => (
+                <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
+              ))}
+          </MobilePopupInner>
+        </MobilePopupWrapper>
+      )}
     </>
   )
 }
