@@ -22,6 +22,7 @@ import { TRANSITION_DURATIONS } from 'theme/styles'
 
 const FILTER_WIDTH = 332
 const BAG_WIDTH = 324
+const EMPTY_TRAIT_OBJ = {}
 
 export const BannerWrapper = styled(Box)`
   height: 100px;
@@ -112,8 +113,6 @@ const Collection = () => {
       ? navigate(`/nfts/collection/${contractAddress}`)
       : navigate(`/nfts/collection/${contractAddress}/activity`)
   }
-
-  const EMPTY_TRAIT_OBJ = {}
 
   return (
     <>

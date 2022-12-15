@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import gql from 'graphql-tag'
 import { GenieCollection, Trait } from 'nft/types'
 import { useMemo } from 'react'
 
