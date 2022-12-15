@@ -258,7 +258,6 @@ export default function App() {
                   <Route
                     path="/nfts"
                     element={
-                      // TODO: replace loading state during Apollo migration
                       <Suspense fallback={null}>
                         <NftExplore />
                       </Suspense>

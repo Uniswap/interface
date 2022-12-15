@@ -1,6 +1,6 @@
 import { parseEther } from '@ethersproject/units'
 import gql from 'graphql-tag'
-import { CollectionInfoForAsset, GenieAsset, Markets, SellOrder, TokenType } from 'nft/types'
+import { CollectionInfoForAsset, GenieAsset, Markets, SellOrder } from 'nft/types'
 
 import { NftAsset, useDetailsQuery } from '../__generated__/types-and-hooks'
 
@@ -137,8 +137,7 @@ export function useNftAssetDetails(
         }),
         smallImageUrl: asset?.smallImage?.url,
         tokenId,
-        tokenType: (asset?.collection?.nftContracts &&
-          asset?.collection.nftContracts[0]?.standard) as unknown as TokenType,
+        tokenType: asset?.collection?.nftContracts?.[0]?.standard,
         collectionIsVerified: asset?.collection?.isVerified,
         rarity: {
           primaryProvider: 'Rarity Sniper', // TODO update when backend adds more providers
@@ -150,7 +149,7 @@ export function useNftAssetDetails(
             }
           }),
         },
-        owner: { address: asset?.ownerAddress ?? '' },
+        ownerAddress: asset?.ownerAddress,
         creator: {
           profile_img_url: asset?.creator?.profileImage?.url ?? '',
           address: asset?.creator?.address ?? '',
