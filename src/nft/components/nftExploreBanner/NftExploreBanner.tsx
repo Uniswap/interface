@@ -3,11 +3,9 @@ import { LARGE_MEDIA_BREAKPOINT, SMALL_MOBILE_MEDIA_BREAKPOINT } from 'component
 import { Box } from 'nft/components/Box'
 import { bodySmall, subhead } from 'nft/css/common.css'
 import { X } from 'react-feather'
-import { useNavigate } from 'react-router-dom'
 // import { Link } from 'react-router-dom'
 import { useHideNftPromoBanner } from 'state/user/hooks'
 import styled, { css } from 'styled-components/macro'
-import { ClickableStyle } from 'theme'
 import { ExternalLink } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 
@@ -21,9 +19,9 @@ const Link = styled(ExternalLink)`
   color: ${({ theme }) => theme.accentActive};
   stroke: ${({ theme }) => theme.accentActive};
 `
-function getRandom(list: any[]) {
-  return list[Math.floor(Math.random() * list.length)]
-}
+// function getRandom(list: any[]) {
+//   return list[Math.floor(Math.random() * list.length)]
+// }
 // const randomizedNftImage = getRandom([nftPromoImage1, nftPromoImage2, nftPromoImage3])
 
 const PopupContainer = styled.div<{ show: boolean }>`
@@ -100,19 +98,19 @@ const LinkStyle = css`
   stroke: ${({ theme }) => theme.accentActive};
 `
 
-const StyledLink = styled(Link)`
-  ${ClickableStyle}
-  ${LinkStyle}
-`
+// const StyledLink = styled(Link)`
+//   ${ClickableStyle}
+//   ${LinkStyle}
+// `
 
 export default function NftExploreBanner() {
   const [hideNftPromoBanner, toggleHideNftPromoBanner] = useHideNftPromoBanner()
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
 
-  const navigateToNfts = () => {
-    navigate('/nfts')
-    toggleHideNftPromoBanner()
-  }
+  // const navigateToNfts = () => {
+  //   navigate('/nfts')
+  //   toggleHideNftPromoBanner()
+  // }
 
   return (
     <PopupContainer show={!hideNftPromoBanner}>

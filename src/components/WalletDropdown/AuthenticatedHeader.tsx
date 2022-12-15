@@ -9,7 +9,6 @@ import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
-import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useMemo } from 'react'
 import { Copy, ExternalLink, Power } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
@@ -37,11 +36,11 @@ const WalletButton = styled(ThemeButton)`
   border: none;
 `
 
-const ProfileButton = styled(WalletButton)`
-  background: ${({ theme }) => theme.accentAction};
-  transition: ${({ theme }) => theme.transition.duration.fast} ${({ theme }) => theme.transition.timing.ease}
-    background-color;
-`
+// const ProfileButton = styled(WalletButton)`
+//   background: ${({ theme }) => theme.accentAction};
+//   transition: ${({ theme }) => theme.transition.duration.fast} ${({ theme }) => theme.transition.timing.ease}
+//     background-color;
+// `
 
 const UNIButton = styled(WalletButton)`
   background: linear-gradient(to right, #9139b0 0%, #4261d6 100%);
@@ -164,13 +163,13 @@ const AuthenticatedHeader = () => {
     return price * balance
   }, [balanceString, nativeCurrencyPrice])
 
-  const navigateToProfile = () => {
-    resetSellAssets()
-    setSellPageState(ProfilePageStateType.VIEWING)
-    clearCollectionFilters()
-    navigate('/nfts/profile')
-    closeModal()
-  }
+  // const navigateToProfile = () => {
+  //   resetSellAssets()
+  //   setSellPageState(ProfilePageStateType.VIEWING)
+  //   clearCollectionFilters()
+  //   navigate('/nfts/profile')
+  //   closeModal()
+  // }
 
   return (
     <AuthenticatedHeaderWrapper>
