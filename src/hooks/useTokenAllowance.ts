@@ -8,16 +8,23 @@ import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 import { useTokenContract } from './useContract'
 
-export function useTokenAllowance(token?: Token, owner?: string, spender?: string): CurrencyAmount<Token> | undefined {
+export function useTokenAllowance(
+  token?: Token,
+  owner?: string,
+  spender?: string
+): {
+  amount: CurrencyAmount<Token> | undefined
+  syncing: boolean
+} {
   const contract = useTokenContract(token?.address, false)
 
   const inputs = useMemo(() => [owner, spender], [owner, spender])
-  const allowance = useSingleCallResult(contract, 'allowance', inputs).result
+  const { result, syncing } = useSingleCallResult(contract, 'allowance', inputs)
 
-  return useMemo(
-    () => (token && allowance ? CurrencyAmount.fromRawAmount(token, allowance.toString()) : undefined),
-    [token, allowance]
-  )
+  return useMemo(() => {
+    const amount = token && result && CurrencyAmount.fromRawAmount(token, result.toString())
+    return { amount, syncing }
+  }, [result, syncing, token])
 }
 
 export function useUpdateTokenAllowance(amount: CurrencyAmount<Token> | undefined, spender: string) {
