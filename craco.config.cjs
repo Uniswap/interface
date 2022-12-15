@@ -7,7 +7,7 @@ const commitHash = require('child_process').execSync('git rev-parse HEAD')
 
 module.exports = {
   babel: {
-    plugins: ['@vanilla-extract/babel-plugin', 'graphql-tag'],
+    plugins: ['@vanilla-extract/babel-plugin'],
   },
   webpack: {
     plugins: [
