@@ -3,7 +3,7 @@ import { CustomUserProperties, EventName, getBrowser, PageName } from '@uniswap/
 import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
-import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
+import { useLandingPageFlag } from 'featureFlags/flags/landingPage'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
 import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
@@ -32,9 +32,9 @@ import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import Earn from './Earn'
 import Manage from './Earn/Manage'
-import Landing from './Landing'
 import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
+import NotFound from './NotFound'
 import Pool from './Pool'
 import { PositionPage } from './Pool/PositionPage'
 import PoolV2 from './Pool/v2'
@@ -201,7 +201,6 @@ export default function App() {
             <Suspense fallback={<Loader />}>
               {isLoaded ? (
                 <Routes>
-                  {landingPageFlag === LandingPageVariant.Enabled && <Route path="/" element={<Landing />} />}
                   <Route path="tokens" element={<Tokens />}>
                     <Route path=":chainName" />
                   </Route>
@@ -253,8 +252,6 @@ export default function App() {
 
                   <Route path="about" element={<About />} />
 
-                  <Route path="*" element={<RedirectPathToSwapOnly />} />
-
                   <Route
                     path="/nfts"
                     element={
@@ -296,6 +293,10 @@ export default function App() {
                       </Suspense>
                     }
                   />
+
+                  <Route path="*" element={<Navigate to="/not-found" />} />
+
+                  <Route path="/not-found" element={<NotFound />} />
                 </Routes>
               ) : (
                 <Loader />

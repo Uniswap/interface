@@ -37,6 +37,9 @@ export const ThemedText = {
   LargeHeader(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={36} color="textPrimary" {...props} />
   },
+  Hero(props: TextProps) {
+    return <TextWrapper fontWeight={500} fontSize={48} color="textPrimary" {...props} />
+  },
   Link(props: TextProps) {
     return <TextWrapper fontWeight={600} fontSize={14} color="accentAction" {...props} />
   },
