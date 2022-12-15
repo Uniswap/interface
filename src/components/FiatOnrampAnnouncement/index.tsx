@@ -6,10 +6,10 @@ import { useFiatOnrampFlag } from 'featureFlags/flags/fiatOnramp'
 import { useCallback, useEffect, useState } from 'react'
 import { X } from 'react-feather'
 import { useToggleWalletDropdown } from 'state/application/hooks'
+import { useAppSelector } from 'state/hooks'
 import { useFiatOnrampAck } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { Z_INDEX } from 'theme/zIndex'
 import { isMobile } from 'utils/userAgent'
 
 const Arrow = styled.div`
@@ -38,7 +38,6 @@ const ArrowWrapper = styled.div`
   width: 100%;
   max-width: 320px;
   min-height: 92px;
-  z-index: ${Z_INDEX.dropdown - 1};
 
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
     right: 36px;
@@ -100,7 +99,6 @@ export function FiatOnrampAnnouncement() {
   const { account } = useWeb3React()
   const [acks, acknowledge] = useFiatOnrampAck()
   const [locallyDismissed, setLocallyDismissed] = useState(false)
-
   useEffect(() => {
     if (!sessionStorage.getItem(ANNOUNCEMENT_RENDERED)) {
       acknowledge({ renderCount: acks.renderCount + 1 })
@@ -119,6 +117,7 @@ export function FiatOnrampAnnouncement() {
     acknowledge({ user: true })
   }, [acknowledge, toggleWalletDropdown])
   const fiatOnrampFlag = useFiatOnrampFlag()
+  const openModal = useAppSelector((state) => state.application.openModal)
 
   if (
     !account ||
@@ -127,7 +126,8 @@ export function FiatOnrampAnnouncement() {
     locallyDismissed ||
     sessionStorage.getItem(ANNOUNCEMENT_DISMISSED) ||
     acks.renderCount >= MAX_RENDER_COUNT ||
-    isMobile
+    isMobile ||
+    openModal !== null
   ) {
     return null
   }
