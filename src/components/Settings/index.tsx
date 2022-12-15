@@ -12,6 +12,7 @@ import ArrowRight from 'components/Icons/ArrowRight'
 import LanguageSelector from 'components/LanguageSelector'
 import MenuFlyout from 'components/MenuFlyout'
 import { RowBetween, RowFixed } from 'components/Row'
+import Toggle from 'components/Toggle'
 import ThemeToggle from 'components/Toggle/ThemeToggle'
 import { TutorialIds } from 'components/Tutorial/TutorialSwap/constant'
 import { APP_PATHS } from 'constants/index'
@@ -21,7 +22,8 @@ import useTheme from 'hooks/useTheme'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useToggleSettingsMenu } from 'state/application/hooks'
 import { useTutorialSwapGuide } from 'state/tutorial/hooks'
-import { useDarkModeManager, useUserLocale } from 'state/user/hooks'
+import { useDarkModeManager, useHolidayMode, useUserLocale } from 'state/user/hooks'
+import { isChristmasTime } from 'utils'
 
 const StyledMenuIcon = styled(Settings)`
   height: 20px;
@@ -103,6 +105,7 @@ export default function SettingsTab() {
   const userLocale = useUserLocale()
   useLingui() // To re-render t`Preferences` when language change
 
+  const [holidayMode, toggleHolidayMode] = useHolidayMode()
   const [isSelectingLanguage, setIsSelectingLanguage] = useState(false)
 
   useEffect(() => {
@@ -158,6 +161,17 @@ export default function SettingsTab() {
               </RowFixed>
               <ThemeToggle id="toggle-dark-mode-button" isDarkMode={darkMode} toggle={toggleSetDarkMode} />
             </RowBetween>
+
+            {isChristmasTime() && (
+              <RowBetween style={{ marginTop: '15px' }}>
+                <RowFixed>
+                  <StyledLabel>
+                    <Trans>Holiday Mode</Trans>
+                  </StyledLabel>
+                </RowFixed>
+                <Toggle isActive={holidayMode} toggle={toggleHolidayMode} />
+              </RowBetween>
+            )}
 
             <RowBetween style={{ marginTop: '15px' }}>
               <RowFixed>

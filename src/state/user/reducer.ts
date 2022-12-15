@@ -16,6 +16,7 @@ import {
   removeSerializedPair,
   removeSerializedToken,
   toggleFavoriteToken,
+  toggleHolidayMode,
   toggleLiveChart,
   toggleProLiveChart,
   toggleTokenInfo,
@@ -91,6 +92,7 @@ export interface UserState {
   isUserManuallyDisconnect: boolean
   isAcceptedTerm: boolean
   viewMode: VIEW_MODE
+  holidayMode: boolean
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -145,6 +147,7 @@ const initialState: UserState = {
   isUserManuallyDisconnect: false,
   isAcceptedTerm: false,
   viewMode: VIEW_MODE.GRID,
+  holidayMode: true,
 }
 
 export default createReducer(initialState, builder =>
@@ -273,5 +276,9 @@ export default createReducer(initialState, builder =>
     })
     .addCase(changeViewMode, (state, { payload: viewType }) => {
       state.viewMode = viewType
+    })
+    .addCase(toggleHolidayMode, state => {
+      const oldMode = state.holidayMode
+      state.holidayMode = !oldMode
     }),
 )

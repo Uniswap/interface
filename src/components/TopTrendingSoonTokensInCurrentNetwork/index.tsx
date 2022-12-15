@@ -6,6 +6,7 @@ import { useMedia } from 'react-use'
 import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
+import christmasImg from 'assets/images/christmas-decor.svg'
 import { FadeInAnimation } from 'components/Animation'
 import { ButtonLight } from 'components/Button'
 import Divider from 'components/Divider'
@@ -29,8 +30,14 @@ import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { setTrendingSoonShowed } from 'state/swap/actions'
 import { useSwapState } from 'state/swap/hooks'
-import { useShowTopTrendingSoonTokens } from 'state/user/hooks'
+import { useHolidayMode, useShowTopTrendingSoonTokens } from 'state/user/hooks'
 import { ExternalLink } from 'theme'
+
+const ChristmasDecor = styled.img`
+  position: absolute;
+  top: -12px;
+  right: -12px;
+`
 
 const TopTrendingSoonTokensInCurrentNetwork = () => {
   const theme = useTheme()
@@ -81,6 +88,8 @@ const TopTrendingSoonTokensInCurrentNetwork = () => {
       sto && clearTimeout(sto)
     }
   }, [dispatch, trendingSoonShowed])
+
+  const [holidayMode] = useHolidayMode()
 
   if (isLoadingTrendingSoonTokens) return above768 ? <Box height="61px" /> : <Box height="83px" />
 
@@ -151,9 +160,10 @@ const TopTrendingSoonTokensInCurrentNetwork = () => {
                   padding="6px 12px"
                   borderRadius="20px"
                   margin="0 0 0 12px"
-                  style={{ fontSize: '14px', whiteSpace: 'nowrap' }}
+                  style={{ fontSize: '14px', whiteSpace: 'nowrap', position: 'relative' }}
                 >
                   <Trans>Discover more</Trans>
+                  {holidayMode && <ChristmasDecor src={christmasImg} />}
                 </ButtonLight>
               </ExternalLink>
             </TrendingSoonTokensContainer>

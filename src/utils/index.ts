@@ -414,3 +414,8 @@ export const findTx = (txs: GroupedTxsByHash | undefined, hash: string): Transac
           .find(tx => tx?.hash === hash)
     : undefined
 }
+
+export const isChristmasTime = () => {
+  const currentTime = dayjs()
+  return currentTime.month() === 11 && currentTime.date() >= 15
+}

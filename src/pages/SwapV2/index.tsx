@@ -9,6 +9,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { Box, Flex, Text } from 'rebass'
 import styled, { DefaultTheme, keyframes } from 'styled-components'
 
+import christmasImg from 'assets/images/christmas-decor2.svg'
 import { ReactComponent as TutorialSvg } from 'assets/svg/play_circle_outline.svg'
 import { ReactComponent as RoutingIcon } from 'assets/svg/routing-icon.svg'
 import AddressInputPanel from 'components/AddressInputPanel'
@@ -99,7 +100,7 @@ import {
   useUserSlippageTolerance,
 } from 'state/user/hooks'
 import { TYPE } from 'theme'
-import { formattedNum } from 'utils'
+import { formattedNum, isChristmasTime } from 'utils'
 import { Aggregator } from 'utils/aggregator'
 import { currencyId } from 'utils/currencyId'
 import { halfAmountSpend, maxAmountSpend } from 'utils/maxAmountSpend'
@@ -126,6 +127,18 @@ enum TAB {
   LIMIT = 'limit',
 }
 
+const ChristmasDecor = styled.div`
+  position: absolute;
+  top: -20px;
+  right: -8px;
+  left: -8px;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    top: -16px;
+    right: -6px;
+    left: -4px;
+  `}
+`
 const highlight = (theme: DefaultTheme) => keyframes`
   0% {
     box-shadow: 0 0 0 0 ${theme.primary};
@@ -1019,6 +1032,7 @@ export default function Swap() {
                             (isExpertMode && isSolana && !encodeSolana)
                           }
                           style={{
+                            position: 'relative',
                             border: 'none',
                             ...(!(
                               !!swapInputError ||
@@ -1049,6 +1063,12 @@ export default function Swap() {
                               <Trans>Swap</Trans>
                             )}
                           </Text>
+
+                          {isChristmasTime() && !swapInputError && (
+                            <ChristmasDecor>
+                              <img src={christmasImg} width="100%" alt="" />
+                            </ChristmasDecor>
+                          )}
                         </ButtonError>
                       )}
 
