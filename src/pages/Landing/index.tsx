@@ -54,17 +54,17 @@ const ContentContainer = styled.div<{ isDarkMode: boolean }>`
   align-items: center;
   width: 100%;
   max-width: min(720px, 90%);
-  position: absolute;
+  position: sticky;
   bottom: 0;
   z-index: ${Z_INDEX.dropdown};
-  padding: 32px 0 64px;
+  padding: 32px 0 80px;
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} opacity`};
 
   * {
     pointer-events: auto;
   }
 
-  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
     padding: 64px 0;
   }
 `
