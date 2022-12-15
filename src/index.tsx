@@ -14,6 +14,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
 import { RelayEnvironmentProvider } from 'react-relay'
 import { HashRouter } from 'react-router-dom'
+import { isSentryEnabled } from 'utils/env'
 
 import Web3Provider from './components/Web3Provider'
 import { LanguageProvider } from './i18n'
@@ -32,7 +33,7 @@ if (!!window.ethereum) {
   window.ethereum.autoRefreshOnNetworkChange = false
 }
 
-if (!process.env.REACT_APP_SENTRY_DISABLED) {
+if (isSentryEnabled()) {
   Sentry.init({
     dsn: process.env.REACT_APP_SENTRY_DSN,
     release: process.env.REACT_APP_GIT_COMMIT_HASH,
