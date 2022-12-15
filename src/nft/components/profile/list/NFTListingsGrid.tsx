@@ -1,5 +1,6 @@
 import { Box } from 'nft/components/Box'
 import { SortDropdown } from 'nft/components/common/SortDropdown'
+import ListingDropdown from 'nft/components/common/SortDropdown/ListingDropdown'
 import { Column, Row } from 'nft/components/Flex'
 import { AttachPriceIcon, EditPriceIcon, RowsCollpsedIcon, RowsExpandedIcon, VerifiedIcon } from 'nft/components/icons'
 import { NumericInput } from 'nft/components/layout/Input'
@@ -26,6 +27,10 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
 
   const priceDropdownOptions: DropDownOption[] = useMemo(
     () => [
+      {
+        displayText: 'Custom',
+        onClick: () => setGlobalPriceMethod(undefined),
+      },
       {
         displayText: 'Same price',
         onClick: () => setGlobalPriceMethod(SetPriceMethod.SAME_PRICE),
@@ -56,7 +61,8 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
         </Column>
         <Row flex={{ sm: '1.5', md: '3' }}>
           <Column className={subheadSmall} flex="1.5">
-            <SortDropdown dropDownOptions={priceDropdownOptions} mini miniPrompt="Set price by" />
+            {/* <SortDropdown dropDownOptions={priceDropdownOptions} mini miniPrompt="Set price by" /> */}
+            <ListingDropdown dropDownOptions={priceDropdownOptions} />
           </Column>
           <Column
             className={bodySmall}
