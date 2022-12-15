@@ -1,6 +1,5 @@
-/* eslint-disable import/no-unused-modules */
-import { gql } from '@apollo/client'
 import { parseEther } from 'ethers/lib/utils'
+import gql from 'graphql-tag'
 import { GenieAsset, Markets, Trait } from 'nft/types'
 import { wrapScientificNotation } from 'nft/utils'
 import { useCallback, useMemo } from 'react'

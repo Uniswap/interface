@@ -18566,6 +18566,11 @@ ts-pnp@1.2.0, ts-pnp@^1.1.6:
   resolved "https://registry.yarnpkg.com/ts-pnp/-/ts-pnp-1.2.0.tgz#a500ad084b0798f1c3071af391e65912c86bca92"
   integrity sha512-csd+vJOb/gkzvcCHgTGSChYpy5f1/XKNsmvBGO4JXS+z1v2HobugDz4s1IeFXM3wZB44uczs+eazB5Q/ccdhQw==
 
+ts-transform-graphql-tag@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/ts-transform-graphql-tag/-/ts-transform-graphql-tag-0.2.1.tgz#f596c491196b6a6a65b65a8b99bf6e2314c78017"
+  integrity sha512-gciNzCpVafccayI/VQKU2ROaol4gMpz0t5sAW/jzG/J/wnjPYCn06yKzlM4mkQ5tjCvPmFuZnLYF4i0tUiIiMQ==
+
 tsconfig-paths@^3.14.1:
   version "3.14.1"
   resolved "https://registry.yarnpkg.com/tsconfig-paths/-/tsconfig-paths-3.14.1.tgz#ba0734599e8ea36c862798e920bcf163277b137a"
