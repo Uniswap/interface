@@ -91,7 +91,7 @@
     "@types/ua-parser-js": "^0.7.35",
     "@types/uuid": "^8.3.4",
     "@types/wcag-contrast": "^3.0.0",
-    "@uniswap/eslint-config": "git+ssh://git@github.com:uniswap/eslint-config.git#da8c311",
+    "@uniswap/eslint-config": "^1.0.0",
     "@vanilla-extract/babel-plugin": "^1.1.7",
     "@vanilla-extract/webpack-plugin": "^2.1.11",
     "babel-plugin-relay": "^14.1.0",
