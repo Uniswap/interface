@@ -36,33 +36,12 @@ export interface Permit {
 
 export default function usePermit(amount?: CurrencyAmount<Token>, spender?: string): Permit {
   const { account } = useWeb3React()
-  const { tokenAllowance, isSyncing: isSyncingApproval } = useTokenAllowance(amount?.currency, account, PERMIT2_ADDRESS)
+  const { tokenAllowance, isSyncing: isApprovalSyncing } = useTokenAllowance(amount?.currency, account, PERMIT2_ADDRESS)
   const updateTokenAllowance = useUpdateTokenAllowance(amount, PERMIT2_ADDRESS)
   const isAllowed = useMemo(
     () => amount && (tokenAllowance?.greaterThan(amount) || tokenAllowance?.equalTo(amount)),
     [amount, tokenAllowance]
   )
-
-  // Permit2 should be marked isSyncing from the time approval is submitted until it is reflected
-  // in tokenAllowance, to avoid re-prompting the user for an already-submitted approval.
-  const [syncState, setSyncState] = useState(SyncState.SYNCED)
-  const isSyncing = syncState !== SyncState.SYNCED
-  const hasPendingApproval = useHasPendingApproval(amount?.currency, PERMIT2_ADDRESS)
-  useEffect(() => {
-    if (hasPendingApproval) {
-      setSyncState(SyncState.PENDING)
-    } else {
-      setSyncState((state) => {
-        if (state === SyncState.PENDING && isSyncingApproval) {
-          return SyncState.SYNCING
-        } else if (state === SyncState.SYNCING && !isSyncingApproval) {
-          return SyncState.SYNCED
-        } else {
-          return state
-        }
-      })
-    }
-  }, [hasPendingApproval, isSyncingApproval])
 
   const permitAllowance = usePermitAllowance(amount?.currency, spender)
   const [permitAllowanceAmount, setPermitAllowanceAmount] = useState(permitAllowance?.amount)
@@ -100,6 +79,28 @@ export default function usePermit(amount?: CurrencyAmount<Token>, spender?: stri
     true
   )
 
+  // Permit2 should be marked syncing from the time approval is submitted (pending) until it is
+  // synced in tokenAllowance, to avoid re-prompting the user for an already-submitted approval.
+  // It should *not* be marked syncing if not permitted, because the user must still take action.
+  const [syncState, setSyncState] = useState(SyncState.SYNCED)
+  const isSyncing = isPermitted || isSigned ? false : syncState !== SyncState.SYNCED
+  const hasPendingApproval = useHasPendingApproval(amount?.currency, PERMIT2_ADDRESS)
+  useEffect(() => {
+    if (hasPendingApproval) {
+      setSyncState(SyncState.PENDING)
+    } else {
+      setSyncState((state) => {
+        if (state === SyncState.PENDING && isApprovalSyncing) {
+          return SyncState.SYNCING
+        } else if (state === SyncState.SYNCING && !isApprovalSyncing) {
+          return SyncState.SYNCED
+        } else {
+          return state
+        }
+      })
+    }
+  }, [hasPendingApproval, isApprovalSyncing])
+
   const callback = useCallback(async () => {
     let info
     if (!isAllowed && !hasPendingApproval) {
@@ -123,6 +124,6 @@ export default function usePermit(amount?: CurrencyAmount<Token>, spender?: stri
         return { state: PermitState.PERMITTED, signature }
       }
     }
-    return { state: PermitState.PERMIT_NEEDED, isSyncing: isSyncing && (isPermitted || isSigned), callback }
+    return { state: PermitState.PERMIT_NEEDED, isSyncing, callback }
   }, [amount, callback, isAllowed, isPermitted, isSigned, isSyncing, permitAllowance, signature, tokenAllowance])
 }
