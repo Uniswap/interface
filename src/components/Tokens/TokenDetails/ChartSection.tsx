@@ -8,7 +8,7 @@ import { pageTimePeriodAtom } from 'pages/TokenDetails'
 import { startTransition, Suspense, useMemo } from 'react'
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
 
-import PriceChart from './PriceChart'
+import { PriceChart } from './PriceChart'
 import TimePeriodSelector from './TimeSelector'
 
 function usePreloadedTokenPriceQuery(priceQueryReference: PreloadedQuery<TokenPriceQuery>): PricePoint[] | undefined {

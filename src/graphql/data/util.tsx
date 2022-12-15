@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { SupportedChainId } from 'constants/chains'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
@@ -25,21 +24,6 @@ export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
       return 'MONTH'
     case TimePeriod.YEAR:
       return 'YEAR'
-  }
-}
-
-export function toTranslatedTimePeriod(timePeriod: TimePeriod) {
-  switch (timePeriod) {
-    case TimePeriod.HOUR:
-      return <Trans>hour</Trans>
-    case TimePeriod.DAY:
-      return <Trans>day</Trans>
-    case TimePeriod.WEEK:
-      return <Trans>week</Trans>
-    case TimePeriod.MONTH:
-      return <Trans>month</Trans>
-    case TimePeriod.YEAR:
-      return <Trans>year</Trans>
   }
 }
 

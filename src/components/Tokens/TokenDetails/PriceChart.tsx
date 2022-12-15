@@ -426,5 +426,3 @@ function MissingPriceChart({ width, height, message }: { width: number; height: 
     </StyledMissingChart>
   )
 }
-
-export default PriceChart
