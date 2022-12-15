@@ -20,13 +20,13 @@ enum SyncState {
 export enum PermitState {
   INVALID,
   LOADING,
-  PERMIT_NEEDED,
-  PERMITTED,
+  APPROVAL_OR_PERMIT_NEEDED,
+  APPROVAL_LOADING,
+  APPROVED_AND_PERMITTED,
 }
 
 export interface Permit {
   state: PermitState
-  isSyncing?: boolean
   signature?: PermitSignature
   callback?: () => Promise<{
     response: ContractTransaction
@@ -81,9 +81,8 @@ export default function usePermit(amount?: CurrencyAmount<Token>, spender?: stri
 
   // Permit2 should be marked syncing from the time approval is submitted (pending) until it is
   // synced in tokenAllowance, to avoid re-prompting the user for an already-submitted approval.
-  // It should *not* be marked syncing if not permitted, because the user must still take action.
   const [syncState, setSyncState] = useState(SyncState.SYNCED)
-  const isSyncing = isPermitted || isSigned ? false : syncState !== SyncState.SYNCED
+  const isApprovalLoading = syncState !== SyncState.SYNCED
   const hasPendingApproval = useHasPendingApproval(amount?.currency, PERMIT2_ADDRESS)
   useEffect(() => {
     if (hasPendingApproval) {
@@ -117,13 +116,25 @@ export default function usePermit(amount?: CurrencyAmount<Token>, spender?: stri
       return { state: PermitState.INVALID }
     } else if (!tokenAllowance || !permitAllowance) {
       return { state: PermitState.LOADING }
-    } else if (isAllowed) {
-      if (isPermitted) {
-        return { state: PermitState.PERMITTED }
-      } else if (isSigned) {
-        return { state: PermitState.PERMITTED, signature }
+    } else if (!(isPermitted || isSigned)) {
+      return { state: PermitState.APPROVAL_OR_PERMIT_NEEDED, callback }
+    } else if (!isAllowed) {
+      return {
+        state: isApprovalLoading ? PermitState.APPROVAL_LOADING : PermitState.APPROVAL_OR_PERMIT_NEEDED,
+        callback,
       }
+    } else {
+      return { state: PermitState.APPROVED_AND_PERMITTED, signature: isPermitted ? undefined : signature }
     }
-    return { state: PermitState.PERMIT_NEEDED, isSyncing, callback }
-  }, [amount, callback, isAllowed, isPermitted, isSigned, isSyncing, permitAllowance, signature, tokenAllowance])
+  }, [
+    amount,
+    callback,
+    isAllowed,
+    isApprovalLoading,
+    isPermitted,
+    isSigned,
+    permitAllowance,
+    signature,
+    tokenAllowance,
+  ])
 }

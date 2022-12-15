@@ -299,7 +299,7 @@ export default function Swap({ className }: { className?: string }) {
     permit2Enabled ? maximumAmountIn : undefined,
     permit2Enabled && chainId ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
   )
-  const isApprovalPending = permit.isSyncing
+  const isApprovalLoading = permit.state === PermitState.APPROVAL_LOADING
   const [isPermitPending, setIsPermitPending] = useState(false)
   const [isPermitFailed, setIsPermitFailed] = useState(false)
   const addTransaction = useTransactionAdder()
@@ -786,10 +786,12 @@ export default function Swap({ className }: { className?: string }) {
                       </ButtonError>
                     </AutoColumn>
                   </AutoRow>
-                ) : isValid && permit.state === PermitState.PERMIT_NEEDED ? (
+                ) : isValid &&
+                  (permit.state === PermitState.APPROVAL_OR_PERMIT_NEEDED ||
+                    permit.state === PermitState.APPROVAL_LOADING) ? (
                   <ButtonYellow
                     onClick={updatePermit}
-                    disabled={isPermitPending || isApprovalPending}
+                    disabled={isPermitPending || isApprovalLoading}
                     style={{ gap: 14 }}
                   >
                     {isPermitPending ? (
@@ -806,7 +808,7 @@ export default function Swap({ className }: { className?: string }) {
                           <Trans>Approval failed. Try again.</Trans>
                         </ThemedText.SubHeader>
                       </>
-                    ) : isApprovalPending ? (
+                    ) : isApprovalLoading ? (
                       <>
                         <Loader size="20px" stroke={theme.accentWarning} />
                         <ThemedText.SubHeader color="accentWarning">
