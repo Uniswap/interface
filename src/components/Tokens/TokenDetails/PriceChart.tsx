@@ -7,7 +7,7 @@ import { Line } from '@visx/shape'
 import AnimatedInLineChart from 'components/Charts/AnimatedInLineChart'
 import FadedInLineChart from 'components/Charts/FadeInLineChart'
 import { bisect, curveCardinal, NumberValue, scaleLinear, timeDay, timeHour, timeMinute, timeMonth } from 'd3'
-import { PricePoint, toTranslatedTimePeriod } from 'graphql/data/util'
+import { PricePoint } from 'graphql/data/util'
 import { TimePeriod } from 'graphql/data/util'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
@@ -128,7 +128,6 @@ interface PriceChartProps {
   timePeriod: TimePeriod
 }
 
-// eslint-disable-next-line import/no-unused-modules
 export function PriceChart({ width, height, prices: originalPrices, timePeriod }: PriceChartProps) {
   const locale = useActiveLocale()
   const theme = useTheme()
@@ -142,22 +141,12 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
   const missingPricesMessage = !chartAvailable ? (
     prices?.length === 0 ? (
       <>
-        <Trans>This token doesn&apos;t have chart data because it has low trading volume in the past </Trans>{' '}
-        {toTranslatedTimePeriod(timePeriod)} <Trans> on Uniswap v3</Trans>
+        <Trans>Missing price data due to recently low trading volume on Uniswap v3</Trans>
       </>
     ) : (
       <Trans>Missing chart data</Trans>
     )
   ) : null
-  const tempMsg =
-    prices?.length === 0 ? (
-      <>
-        <Trans>This token doesn&apos;t have chart data because it has low trading volume in the past </Trans>{' '}
-        {toTranslatedTimePeriod(timePeriod)} <Trans> on Uniswap v3</Trans>
-      </>
-    ) : (
-      <Trans>Missing chart data</Trans>
-    )
 
   // first price point on the x-axis of the current time period's chart
   const startingPrice = originalPrices?.[0] ?? DATA_EMPTY
@@ -298,7 +287,7 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
         ) : (
           <>
             <MissingPrice>Price Unavailable</MissingPrice>
-            <ThemedText.Caption style={{ color: theme.textTertiary }}>{tempMsg}</ThemedText.Caption>
+            <ThemedText.Caption style={{ color: theme.textTertiary }}>{missingPricesMessage}</ThemedText.Caption>
           </>
         )}
       </ChartHeader>
