@@ -5,7 +5,7 @@ import { bodySmall, subhead } from 'nft/css/common.css'
 import { X } from 'react-feather'
 // import { Link } from 'react-router-dom'
 import { useHideNftPromoBanner } from 'state/user/hooks'
-import styled, { css } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { ExternalLink } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 
@@ -93,10 +93,10 @@ const StyledImageContainer = styled(Box)`
   object-fit: contain;
 `
 
-const LinkStyle = css`
-  color: ${({ theme }) => theme.accentActive};
-  stroke: ${({ theme }) => theme.accentActive};
-`
+// const LinkStyle = css`
+//   color: ${({ theme }) => theme.accentActive};
+//   stroke: ${({ theme }) => theme.accentActive};
+// `
 
 // const StyledLink = styled(Link)`
 //   ${ClickableStyle}
