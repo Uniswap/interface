@@ -87,7 +87,7 @@ export function WelcomeModal({ onDismissed }: { onDismissed: () => void }) {
 
   return (
     <Modal isOpen={isOpen} onSwipe={dismiss} maxWidth={720} isBottomSheet={false}>
-      <Container>
+      <Container data-testid="nft-welcome-modal">
         <Background
           {...(theme.darkMode ? BACKGROUND_IMAGE.dark : BACKGROUND_IMAGE.light)}
           alt="Welcome modal background"

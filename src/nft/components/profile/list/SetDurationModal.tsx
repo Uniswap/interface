@@ -66,11 +66,11 @@ enum ErrorState {
 export const SetDurationModal = () => {
   const [duration, setDuration] = useState(Duration.day)
   const [displayDuration, setDisplayDuration] = useState(Duration.day)
-  const [amount, setAmount] = useState(7)
+  const [amount, setAmount] = useState('7')
   const [errorState, setErrorState] = useState(ErrorState.valid)
   const setGlobalExpiration = useSellAsset((state) => state.setGlobalExpiration)
   const setCustomExpiration = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAmount(!!event.target.value.length ? parseFloat(event.target.value) : 0)
+    setAmount(!!event.target.value.length ? event.target.value : '')
     setDuration(displayDuration)
   }
   const selectDuration = (duration: Duration) => {
@@ -99,8 +99,9 @@ export const SetDurationModal = () => {
     []
   )
   useEffect(() => {
-    const expiration = convertDurationToExpiration(amount, duration)
-    if (expiration * 1000 - Date.now() < ms`60 seconds`) setErrorState(ErrorState.empty)
+    const expiration = convertDurationToExpiration(parseFloat(amount), duration)
+
+    if (expiration * 1000 - Date.now() < ms`60 seconds` || isNaN(expiration)) setErrorState(ErrorState.empty)
     else if (expiration * 1000 - Date.now() > ms`180 days`) setErrorState(ErrorState.overMax)
     else setErrorState(ErrorState.valid)
     setGlobalExpiration(expiration)
@@ -127,7 +128,7 @@ export const SetDurationModal = () => {
           <SortDropdown
             dropDownOptions={durationOptions}
             mini
-            miniPrompt={displayDuration + (displayDuration === duration ? pluralize(amount) : 's')}
+            miniPrompt={displayDuration + (displayDuration === duration ? pluralize(parseFloat(amount)) : 's')}
             left={38}
             top={38}
           />

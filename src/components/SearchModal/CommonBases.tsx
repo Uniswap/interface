@@ -18,7 +18,7 @@ const MobileWrapper = styled(AutoColumn)`
 `
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
-  border: 1px solid ${({ theme, disable }) => (disable ? theme.accentAction : theme.backgroundOutline)};
+  border: 1px solid ${({ theme, disable }) => (disable ? theme.accentActive : theme.backgroundOutline)};
   border-radius: 16px;
   display: flex;
   padding: 6px;
@@ -30,8 +30,8 @@ const BaseWrapper = styled.div<{ disable?: boolean }>`
     background-color: ${({ theme }) => theme.hoverDefault};
   }
 
-  color: ${({ theme, disable }) => disable && theme.accentAction};
-  background-color: ${({ theme, disable }) => disable && theme.accentActionSoft};
+  color: ${({ theme, disable }) => disable && theme.accentActive};
+  background-color: ${({ theme, disable }) => disable && theme.accentActiveSoft};
 `
 
 const formatAnalyticsEventProperties = (currency: Currency, searchQuery: string, isAddressSearch: string | false) => ({

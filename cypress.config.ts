@@ -3,7 +3,7 @@ import { defineConfig } from 'cypress'
 export default defineConfig({
   projectId: 'yp82ef',
   videoUploadOnPasses: false,
-  defaultCommandTimeout: 4000, // 2x average block time
+  defaultCommandTimeout: 24000, // 2x average block time
   chromeWebSecurity: false,
   e2e: {
     setupNodeEvents(on, config) {
