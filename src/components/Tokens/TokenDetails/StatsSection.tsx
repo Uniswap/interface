@@ -84,7 +84,7 @@ export default function StatsSection(props: StatsSectionProps) {
   const { priceLow52W, priceHigh52W, TVL, volume24H } = props
   if (TVL || volume24H || priceLow52W || priceHigh52W) {
     return (
-      <StatsWrapper>
+      <StatsWrapper data-testid="token-details-stats">
         <Header>
           <Trans>Stats</Trans>
         </Header>
