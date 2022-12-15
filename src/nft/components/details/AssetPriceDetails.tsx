@@ -355,7 +355,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
     )
   }
 
-  const isOwner = asset.owner && !!walletAsset && account?.toLowerCase() === asset.owner?.address?.toLowerCase()
+  const isOwner = asset.ownerAddress && !!walletAsset && account?.toLowerCase() === asset.ownerAddress?.toLowerCase()
   const isForSale = cheapestOrder && asset.priceInfo
 
   return (
@@ -424,20 +424,20 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
       )}
       {isForSale && (
         <OwnerInformationContainer>
-          {asset.tokenType !== 'ERC1155' && asset.owner.address && (
+          {asset.tokenType !== 'ERC1155' && asset.ownerAddress && (
             <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
               Seller:
             </ThemedText.BodySmall>
           )}
           <OwnerText
             target="_blank"
-            href={`https://etherscan.io/address/${asset.owner.address}`}
+            href={`https://etherscan.io/address/${asset.ownerAddress}`}
             rel="noopener noreferrer"
           >
             {asset.tokenType === 'ERC1155' ? (
               ''
             ) : (
-              <span> {isOwner ? 'You' : asset.owner.address && shortenAddress(asset.owner.address, 2, 4)}</span>
+              <span> {isOwner ? 'You' : asset.ownerAddress && shortenAddress(asset.ownerAddress, 2, 4)}</span>
             )}
           </OwnerText>
         </OwnerInformationContainer>

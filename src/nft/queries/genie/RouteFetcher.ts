@@ -1,6 +1,5 @@
 import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
-
-import { GenieAsset, RouteResponse } from '../../types'
+import { GenieAsset, RouteResponse } from 'nft/types'
 
 export const fetchRoute = async ({
   toSell,

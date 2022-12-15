@@ -6,7 +6,7 @@ import clsx from 'clsx'
 import { OpacityHoverState } from 'components/Common'
 import { parseEther } from 'ethers/lib/utils'
 import { NftAssetTraitInput, NftMarketplace, NftStandard } from 'graphql/data/__generated__/types-and-hooks'
-import { ASSET_PAGE_SIZE, AssetFetcherParams, useLoadAssetsQuery } from 'graphql/data/nft/Asset'
+import { ASSET_PAGE_SIZE, AssetFetcherParams, useNftAssets } from 'graphql/data/nft/Asset'
 import useDebounce from 'hooks/useDebounce'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { CollectionSearch, FilterButton } from 'nft/components/collection'
@@ -265,27 +265,38 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   const [sweepIsOpen, setSweepOpen] = useState(false)
 
-  const assetQueryParams: AssetFetcherParams = {
-    address: contractAddress,
-    orderBy: SortByQueries[sortBy].field,
-    asc: SortByQueries[sortBy].asc,
-    filter: {
-      listed: buyNow,
-      marketplaces: markets.length > 0 ? markets.map((market) => market.toUpperCase() as NftMarketplace) : undefined,
-      maxPrice: debouncedMaxPrice ? parseEther(debouncedMaxPrice).toString() : undefined,
-      minPrice: debouncedMinPrice ? parseEther(debouncedMinPrice).toString() : undefined,
-      tokenSearchQuery: debouncedSearchByNameText,
-      traits:
-        traits.length > 0
-          ? traits.map((trait) => {
-              return { name: trait.trait_type, values: [trait.trait_value] } as unknown as NftAssetTraitInput
-            })
-          : undefined,
-    },
-    first: ASSET_PAGE_SIZE,
-  }
+  const assetQueryParams: AssetFetcherParams = useMemo(() => {
+    return {
+      address: contractAddress,
+      orderBy: SortByQueries[sortBy].field,
+      asc: SortByQueries[sortBy].asc,
+      filter: {
+        listed: buyNow,
+        marketplaces: markets.length > 0 ? markets.map((market) => market.toUpperCase() as NftMarketplace) : undefined,
+        maxPrice: debouncedMaxPrice ? parseEther(debouncedMaxPrice).toString() : undefined,
+        minPrice: debouncedMinPrice ? parseEther(debouncedMinPrice).toString() : undefined,
+        tokenSearchQuery: debouncedSearchByNameText,
+        traits:
+          traits.length > 0
+            ? traits.map((trait) => {
+                return { name: trait.trait_type, values: [trait.trait_value] } as unknown as NftAssetTraitInput
+              })
+            : undefined,
+      },
+      first: ASSET_PAGE_SIZE,
+    }
+  }, [
+    buyNow,
+    contractAddress,
+    debouncedMaxPrice,
+    debouncedMinPrice,
+    debouncedSearchByNameText,
+    markets,
+    sortBy,
+    traits,
+  ])
 
-  const { data: collectionNfts, loading, hasNext, loadMore } = useLoadAssetsQuery(assetQueryParams)
+  const { data: collectionNfts, loading, hasNext, loadMore } = useNftAssets(assetQueryParams)
 
   const getPoolPosition = useCallback(
     (asset: GenieAsset) => {
@@ -586,9 +597,9 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             loader={Boolean(hasNext && hasNfts) && <LoadingAssets />}
             dataLength={collectionAssets?.length ?? 0}
             style={{ overflow: 'unset' }}
-            className={hasNfts || loading ? styles.assetList : undefined}
+            className={hasNfts ? styles.assetList : undefined}
           >
-            {collectionAssets?.length === 0 ? (
+            {!hasNfts ? (
               <Center width="full" color="textSecondary" textAlign="center" style={{ height: '60vh' }}>
                 <EmptyCollectionWrapper>
                   <p className={headlineMedium}>No NFTS found</p>

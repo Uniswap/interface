@@ -160,7 +160,7 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
             })
           : undefined,
       },
-      owner: { address: asset?.ownerAddress ?? '' },
+      ownerAddress: asset?.ownerAddress ?? '',
       creator: {
         profile_img_url: asset?.creator?.profileImage?.url ?? '',
         address: asset?.creator?.address ?? '',

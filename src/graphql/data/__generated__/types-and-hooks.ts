@@ -862,7 +862,7 @@ export type TopTokensSparklineQueryQueryVariables = Exact<{
 
 export type TopTokensSparklineQueryQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', address?: string, market?: { __typename?: 'TokenMarket', priceHistory?: Array<{ __typename?: 'TimestampedAmount', timestamp: number, value: number }> } }> };
 
-export type AssetQueryQueryVariables = Exact<{
+export type AssetQueryVariables = Exact<{
   address: Scalars['String'];
   orderBy?: InputMaybe<NftAssetSortableField>;
   asc?: InputMaybe<Scalars['Boolean']>;
@@ -874,7 +874,7 @@ export type AssetQueryQueryVariables = Exact<{
 }>;
 
 
-export type AssetQueryQuery = { __typename?: 'Query', nftAssets?: { __typename?: 'NftAssetConnection', totalCount?: number, edges: Array<{ __typename?: 'NftAssetEdge', cursor: string, node: { __typename?: 'NftAsset', id: string, name?: string, ownerAddress?: string, tokenId: string, description?: string, animationUrl?: string, suspiciousFlag?: boolean, metadataUrl?: string, image?: { __typename?: 'Image', url: string }, smallImage?: { __typename?: 'Image', url: string }, originalImage?: { __typename?: 'Image', url: string }, collection?: { __typename?: 'NftCollection', name?: string, isVerified?: boolean, image?: { __typename?: 'Image', url: string }, creator?: { __typename?: 'NftProfile', address: string, isVerified?: boolean, profileImage?: { __typename?: 'Image', url: string } }, nftContracts?: Array<{ __typename?: 'NftContract', address: string, standard?: NftStandard }> }, listings?: { __typename?: 'NftOrderConnection', edges: Array<{ __typename?: 'NftOrderEdge', cursor: string, node: { __typename?: 'NftOrder', address: string, createdAt: number, endAt?: number, id: string, maker: string, marketplace: NftMarketplace, marketplaceUrl: string, orderHash?: string, quantity: number, startAt: number, status: OrderStatus, taker?: string, tokenId?: string, type: OrderType, protocolParameters?: any, price: { __typename?: 'Amount', currency?: Currency, value: number } } }> }, rarities?: Array<{ __typename?: 'NftAssetRarity', provider?: NftRarityProvider, rank?: number, score?: number }> } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string, hasNextPage?: boolean, hasPreviousPage?: boolean, startCursor?: string } } };
+export type AssetQuery = { __typename?: 'Query', nftAssets?: { __typename?: 'NftAssetConnection', totalCount?: number, edges: Array<{ __typename?: 'NftAssetEdge', cursor: string, node: { __typename?: 'NftAsset', id: string, name?: string, ownerAddress?: string, tokenId: string, description?: string, animationUrl?: string, suspiciousFlag?: boolean, metadataUrl?: string, image?: { __typename?: 'Image', url: string }, smallImage?: { __typename?: 'Image', url: string }, originalImage?: { __typename?: 'Image', url: string }, collection?: { __typename?: 'NftCollection', name?: string, isVerified?: boolean, image?: { __typename?: 'Image', url: string }, creator?: { __typename?: 'NftProfile', address: string, isVerified?: boolean, profileImage?: { __typename?: 'Image', url: string } }, nftContracts?: Array<{ __typename?: 'NftContract', address: string, standard?: NftStandard }> }, listings?: { __typename?: 'NftOrderConnection', edges: Array<{ __typename?: 'NftOrderEdge', cursor: string, node: { __typename?: 'NftOrder', address: string, createdAt: number, endAt?: number, id: string, maker: string, marketplace: NftMarketplace, marketplaceUrl: string, orderHash?: string, quantity: number, startAt: number, status: OrderStatus, taker?: string, tokenId?: string, type: OrderType, protocolParameters?: any, price: { __typename?: 'Amount', currency?: Currency, value: number } } }> }, rarities?: Array<{ __typename?: 'NftAssetRarity', provider?: NftRarityProvider, rank?: number, score?: number }> } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string, hasNextPage?: boolean, hasPreviousPage?: boolean, startCursor?: string } } };
 
 export type CollectionQueryQueryVariables = Exact<{
   addresses: Array<Scalars['String']> | Scalars['String'];
@@ -1210,8 +1210,8 @@ export function useTopTokensSparklineQueryLazyQuery(baseOptions?: Apollo.LazyQue
 export type TopTokensSparklineQueryQueryHookResult = ReturnType<typeof useTopTokensSparklineQueryQuery>;
 export type TopTokensSparklineQueryLazyQueryHookResult = ReturnType<typeof useTopTokensSparklineQueryLazyQuery>;
 export type TopTokensSparklineQueryQueryResult = Apollo.QueryResult<TopTokensSparklineQueryQuery, TopTokensSparklineQueryQueryVariables>;
-export const AssetQueryDocument = gql`
-    query AssetQuery($address: String!, $orderBy: NftAssetSortableField, $asc: Boolean, $filter: NftAssetsFilterInput, $first: Int, $after: String, $last: Int, $before: String) {
+export const AssetDocument = gql`
+    query Asset($address: String!, $orderBy: NftAssetSortableField, $asc: Boolean, $filter: NftAssetsFilterInput, $first: Int, $after: String, $last: Int, $before: String) {
   nftAssets(
     address: $address
     orderBy: $orderBy
@@ -1305,16 +1305,16 @@ export const AssetQueryDocument = gql`
     `;
 
 /**
- * __useAssetQueryQuery__
+ * __useAssetQuery__
  *
- * To run a query within a React component, call `useAssetQueryQuery` and pass it any options that fit your needs.
- * When your component renders, `useAssetQueryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useAssetQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAssetQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useAssetQueryQuery({
+ * const { data, loading, error } = useAssetQuery({
  *   variables: {
  *      address: // value for 'address'
  *      orderBy: // value for 'orderBy'
@@ -1327,17 +1327,17 @@ export const AssetQueryDocument = gql`
  *   },
  * });
  */
-export function useAssetQueryQuery(baseOptions: Apollo.QueryHookOptions<AssetQueryQuery, AssetQueryQueryVariables>) {
+export function useAssetQuery(baseOptions: Apollo.QueryHookOptions<AssetQuery, AssetQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<AssetQueryQuery, AssetQueryQueryVariables>(AssetQueryDocument, options);
+        return Apollo.useQuery<AssetQuery, AssetQueryVariables>(AssetDocument, options);
       }
-export function useAssetQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AssetQueryQuery, AssetQueryQueryVariables>) {
+export function useAssetLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AssetQuery, AssetQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<AssetQueryQuery, AssetQueryQueryVariables>(AssetQueryDocument, options);
+          return Apollo.useLazyQuery<AssetQuery, AssetQueryVariables>(AssetDocument, options);
         }
-export type AssetQueryQueryHookResult = ReturnType<typeof useAssetQueryQuery>;
-export type AssetQueryLazyQueryHookResult = ReturnType<typeof useAssetQueryLazyQuery>;
-export type AssetQueryQueryResult = Apollo.QueryResult<AssetQueryQuery, AssetQueryQueryVariables>;
+export type AssetQueryHookResult = ReturnType<typeof useAssetQuery>;
+export type AssetLazyQueryHookResult = ReturnType<typeof useAssetLazyQuery>;
+export type AssetQueryResult = Apollo.QueryResult<AssetQuery, AssetQueryVariables>;
 export const CollectionQueryDocument = gql`
     query CollectionQuery($addresses: [String!]!) {
   nftCollections(filter: {addresses: $addresses}) {

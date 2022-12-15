@@ -1,23 +1,23 @@
 /* eslint-disable import/no-unused-modules */
-import graphql from 'babel-plugin-relay/macro'
+import { gql } from '@apollo/client'
 import { parseEther } from 'ethers/lib/utils'
 import { GenieAsset, Markets, Trait } from 'nft/types'
 import { wrapScientificNotation } from 'nft/utils'
 import { useMemo } from 'react'
 
 import {
-  AssetQueryQueryVariables,
+  AssetQueryVariables,
   NftAssetEdge,
   NftAssetsFilterInput,
   NftAssetSortableField,
   NftAssetTraitInput,
   NftMarketplace,
-  useAssetQueryQuery,
+  useAssetQuery,
 } from '../__generated__/types-and-hooks'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const assetPaginationQuery = graphql`
-  query AssetQuery(
+const assetQuery = gql`
+  query Asset(
     $address: String!
     $orderBy: NftAssetSortableField
     $asc: Boolean
@@ -168,7 +168,7 @@ function formatAssetQueryData(queryAsset: NftAssetEdge, totalCount?: number) {
         }
       }),
     },
-    owner: { address: asset.ownerAddress },
+    ownerAddress: asset.ownerAddress,
     creator: {
       profile_img_url: asset.collection?.creator?.profileImage?.url,
       address: asset.collection?.creator?.address,
@@ -190,7 +190,7 @@ export interface AssetFetcherParams {
   before?: string
 }
 
-const defaultAssetFetcherParams: Omit<AssetQueryQueryVariables, 'address'> = {
+const defaultAssetFetcherParams: Omit<AssetQueryVariables, 'address'> = {
   orderBy: NftAssetSortableField.Price,
   asc: true,
   // tokenSearchQuery must be specified so that this exactly matches the initial query.
@@ -198,10 +198,10 @@ const defaultAssetFetcherParams: Omit<AssetQueryQueryVariables, 'address'> = {
   first: ASSET_PAGE_SIZE,
 }
 
-export function useLoadAssetsQuery(params: AssetFetcherParams) {
+export function useNftAssets(params: AssetFetcherParams) {
   const variables = useMemo(() => ({ ...defaultAssetFetcherParams, ...params }), [params])
 
-  const { data, loading, fetchMore } = useAssetQueryQuery({
+  const { data, loading, fetchMore } = useAssetQuery({
     variables,
   })
   const hasNext = data?.nftAssets?.pageInfo?.hasNextPage
@@ -224,7 +224,14 @@ export function useLoadAssetsQuery(params: AssetFetcherParams) {
     [data?.nftAssets?.edges, data?.nftAssets?.totalCount]
   )
 
-  return { data: assets, hasNext, loading, loadMore }
+  return useMemo(() => {
+    return {
+      data: assets,
+      hasNext,
+      loading,
+      loadMore,
+    }
+  }, [assets, hasNext, loadMore, loading, params])
 }
 
 const DEFAULT_SWEEP_AMOUNT = 50
@@ -236,12 +243,7 @@ export interface SweepFetcherParams {
   traits?: Trait[]
 }
 
-function useSweepFetcherVars({
-  contractAddress,
-  markets,
-  price,
-  traits,
-}: SweepFetcherParams): AssetQueryQueryVariables {
+function useSweepFetcherVars({ contractAddress, markets, price, traits }: SweepFetcherParams): AssetQueryVariables {
   const filter: NftAssetsFilterInput = useMemo(
     () => ({
       listed: true,
@@ -270,12 +272,9 @@ function useSweepFetcherVars({
   )
 }
 
-// Lazy-loads an already loaded AssetsQuery.
-// This will *not* trigger a query - that must be done from a parent component to ensure proper query coalescing and to
-// prevent waterfalling. Use useLoadSweepAssetsQuery to trigger the query.
-export function useLoadSweepAssetsQuery(params: SweepFetcherParams) {
+export function useSweepNftAssets(params: SweepFetcherParams) {
   const variables = useSweepFetcherVars(params)
-  const { data, loading } = useAssetQueryQuery({
+  const { data, loading } = useAssetQuery({
     variables,
   })
   const assets = useMemo<GenieAsset[] | undefined>(
