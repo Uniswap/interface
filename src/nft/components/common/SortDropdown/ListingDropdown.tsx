@@ -1,8 +1,8 @@
-import { ThemedText } from 'theme'
-import styled from 'styled-components'
-import { ChevronDown } from 'react-feather'
 import { DropDownOption } from 'nft/types'
 import { useState } from 'react'
+import { ChevronDown } from 'react-feather'
+import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
 const DropdownContainer = styled.div`
   display: flex;
@@ -87,6 +87,7 @@ const ListingDropdown = ({ dropDownOptions }: { dropDownOptions: DropDownOption[
           <DropdownOptionsContainerTwo>
             {dropDownOptions.map((dropdownOption) => (
               <DropdownOption
+                key={dropdownOption.displayText}
                 onClick={() => {
                   dropdownOption.onClick()
                   setIsOpen(false)

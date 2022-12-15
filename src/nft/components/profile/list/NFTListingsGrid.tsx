@@ -1,5 +1,4 @@
 import { Box } from 'nft/components/Box'
-import { SortDropdown } from 'nft/components/common/SortDropdown'
 import ListingDropdown from 'nft/components/common/SortDropdown/ListingDropdown'
 import { Column, Row } from 'nft/components/Flex'
 import { AttachPriceIcon, EditPriceIcon, RowsCollpsedIcon, RowsExpandedIcon, VerifiedIcon } from 'nft/components/icons'
