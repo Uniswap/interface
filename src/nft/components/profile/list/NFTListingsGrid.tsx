@@ -468,7 +468,7 @@ const MarketplaceRow = ({
         )}
       </Column>
 
-      <Column flex="1">
+      <Column flex="1" display={{ sm: 'none', md: 'flex' }}>
         <Box className={body} color="textSecondary" width="full" textAlign="right">
           <MouseoverTooltip
             text={
@@ -521,7 +521,7 @@ const NFTListRow = ({ asset, globalPriceMethod, globalPrice, setGlobalPrice, sel
 
   return (
     <Row marginTop="24" marginBottom="24">
-      <Row flexWrap="nowrap" flex="1.5" marginTop="0" marginBottom="auto" minWidth="0">
+      <Row flexWrap="nowrap" flex={{ sm: '1', md: '1.5' }} marginTop="0" marginBottom="auto" minWidth="0">
         <Box
           transition="500"
           style={{
