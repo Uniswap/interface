@@ -1,3 +1,4 @@
+import { MouseoverTooltip } from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
 import { SortDropdown } from 'nft/components/common/SortDropdown'
 import { Column, Row } from 'nft/components/Flex'
@@ -10,6 +11,7 @@ import { LOOKS_RARE_CREATOR_BASIS_POINTS } from 'nft/utils'
 import { formatEth, formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { Dispatch, FormEvent, useEffect, useMemo, useRef, useState } from 'react'
+import styled from 'styled-components/macro'
 
 import * as styles from './ListPage.css'
 
@@ -67,15 +69,6 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
           >
             Fees
           </Column>
-          {/* <Column
-            className={bodySmall}
-            color="textSecondary"
-            flex="1"
-            display={{ sm: 'none', md: 'flex' }}
-            textAlign="right"
-          >
-            Royalties
-          </Column> */}
           <Column
             className={bodySmall}
             color="textSecondary"
@@ -290,6 +283,11 @@ function maxMarketFee(markets: ListingMarket[]): number {
   return max
 }
 
+const FeeWrap = styled.div`
+  margin-bottom: 4px;
+  color: ${({ theme }) => theme.textPrimary};
+`
+
 interface MarketplaceRowProps {
   globalPriceMethod?: SetPriceMethod
   globalPrice?: number
@@ -436,11 +434,29 @@ const MarketplaceRow = ({
           />
         )}
       </Column>
+
       <Row flex="1" display={{ sm: 'none', md: 'flex' }}>
         <Box className={body} color="textSecondary" width="full" textAlign="right">
-          {fees > 0 ? `${fees} ${selectedMarkets.length > 1 ? '% max' : '%'}` : '--%'}
+          <MouseoverTooltip
+            text={
+              <Row>
+                <Box width="full" fontSize="14">
+                  {selectedMarkets.map((selectedMarket) => (
+                    <FeeWrap key={selectedMarket.name}>
+                      {selectedMarket.name}: {selectedMarket.fee}%
+                    </FeeWrap>
+                  ))}
+                  <FeeWrap>Creator royalties: {royalties}%</FeeWrap>
+                </Box>
+              </Row>
+            }
+            placement="left"
+          >
+            {fees > 0 ? `${fees} ${selectedMarkets.length > 1 ? '% max' : '%'}` : '--%'}
+          </MouseoverTooltip>
         </Box>
       </Row>
+
       <Row style={{ flex: '1.5' }} display={{ sm: 'none', md: 'flex' }}>
         <Column width="full">
           <EthPriceDisplay ethPrice={userReceives} />
