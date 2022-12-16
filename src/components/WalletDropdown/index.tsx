@@ -52,7 +52,6 @@ const WalletDropdownWrapper = styled.div`
 const WalletDropdown = () => {
   const [menu, setMenu] = useState<MenuState>(MenuState.DEFAULT)
   const walletDropdownOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
-
   return (
     <>
       {walletDropdownOpen && (

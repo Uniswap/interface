@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { formatUSDPrice } from '@uniswap/conedison/format'
 import { AxisBottom, TickFormatter } from '@visx/axis'
 import { localPoint } from '@visx/event'
 import { EventType } from '@visx/event/lib/types'
 import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
 import AnimatedInLineChart from 'components/Charts/AnimatedInLineChart'
+import FadedInLineChart from 'components/Charts/FadeInLineChart'
 import { bisect, curveCardinal, NumberValue, scaleLinear, timeDay, timeHour, timeMinute, timeMonth } from 'd3'
 import { PricePoint } from 'graphql/data/util'
 import { TimePeriod } from 'graphql/data/util'
@@ -13,6 +13,8 @@ import { useActiveLocale } from 'hooks/useActiveLocale'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight, TrendingUp } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
+import { ThemedText } from 'theme'
+import { textFadeIn } from 'theme/styles'
 import {
   dayHourFormatter,
   hourFormatter,
@@ -21,6 +23,7 @@ import {
   monthYearDayFormatter,
   weekFormatter,
 } from 'utils/formatChartTimes'
+import { formatDollar } from 'utils/formatNumbers'
 
 const DATA_EMPTY = { value: 0, timestamp: 0 }
 
@@ -68,11 +71,19 @@ export const DeltaText = styled.span<{ delta: number | undefined }>`
 
 const ChartHeader = styled.div`
   position: absolute;
+  ${textFadeIn};
+  animation-duration: ${({ theme }) => theme.transition.duration.medium};
 `
 export const TokenPrice = styled.span`
   font-size: 36px;
   line-height: 44px;
 `
+const MissingPrice = styled(TokenPrice)`
+  font-size: 24px;
+  line-height: 44px;
+  color: ${({ theme }) => theme.textTertiary};
+`
+
 const DeltaContainer = styled.div`
   height: 16px;
   display: flex;
@@ -84,6 +95,29 @@ export const ArrowCell = styled.div`
   display: flex;
 `
 
+function fixChart(prices: PricePoint[] | undefined | null) {
+  if (!prices) return { prices: null, blanks: [] }
+
+  const fixedChart: PricePoint[] = []
+  const blanks: PricePoint[][] = []
+  let lastValue: PricePoint | undefined = undefined
+  for (let i = 0; i < prices.length; i++) {
+    if (prices[i].value !== 0) {
+      if (fixedChart.length === 0 && i !== 0) {
+        blanks.push([{ ...prices[0], value: prices[i].value }, prices[i]])
+      }
+      lastValue = prices[i]
+      fixedChart.push(prices[i])
+    }
+  }
+
+  if (lastValue && lastValue !== prices[prices.length - 1]) {
+    blanks.push([lastValue, { ...prices[prices.length - 1], value: lastValue.value }])
+  }
+
+  return { prices: fixedChart, blanks }
+}
+
 const margin = { top: 100, bottom: 48, crosshair: 72 }
 const timeOptionsHeight = 44
 
@@ -94,24 +128,30 @@ interface PriceChartProps {
   timePeriod: TimePeriod
 }
 
-function formatDisplayPrice(value: number) {
-  const str = value.toFixed(9)
-  const [digits, decimals] = str.split('.')
-  // Displays longer string for numbers < $2 to show changes in both stablecoins & small values
-  if (digits === '0' || digits === '1')
-    return `$${digits + '.' + decimals.substring(0, 2) + decimals.substring(2).replace(/0+$/, '')}`
-
-  return formatUSDPrice(value)
-}
-
-function PriceChart({ width, height, prices, timePeriod }: PriceChartProps) {
+export function PriceChart({ width, height, prices: originalPrices, timePeriod }: PriceChartProps) {
   const locale = useActiveLocale()
   const theme = useTheme()
 
+  const { prices, blanks } = useMemo(
+    () => (originalPrices && originalPrices.length > 0 ? fixChart(originalPrices) : { prices: null, blanks: [] }),
+    [originalPrices]
+  )
+
+  const chartAvailable = !!prices && prices.length > 0
+  const missingPricesMessage = !chartAvailable ? (
+    prices?.length === 0 ? (
+      <>
+        <Trans>Missing price data due to recently low trading volume on Uniswap v3</Trans>
+      </>
+    ) : (
+      <Trans>Missing chart data</Trans>
+    )
+  ) : null
+
   // first price point on the x-axis of the current time period's chart
-  const startingPrice = prices?.[0] ?? DATA_EMPTY
+  const startingPrice = originalPrices?.[0] ?? DATA_EMPTY
   // last price point on the x-axis of the current time period's chart
-  const endingPrice = prices?.[prices.length - 1] ?? DATA_EMPTY
+  const endingPrice = originalPrices?.[originalPrices.length - 1] ?? DATA_EMPTY
   const [displayPrice, setDisplayPrice] = useState(startingPrice)
 
   // set display price to ending price when prices have changed.
@@ -133,9 +173,9 @@ function PriceChart({ width, height, prices, timePeriod }: PriceChartProps) {
   const rdScale = useMemo(
     () =>
       scaleLinear()
-        .domain(getPriceBounds(prices ?? []))
+        .domain(getPriceBounds(originalPrices ?? []))
         .range([graphInnerHeight, 0]),
-    [prices, graphInnerHeight]
+    [originalPrices, graphInnerHeight]
   )
 
   function tickFormat(
@@ -221,7 +261,6 @@ function PriceChart({ width, height, prices, timePeriod }: PriceChartProps) {
   const arrow = getDeltaArrow(delta)
   const crosshairEdgeMax = width * 0.85
   const crosshairAtEdge = !!crosshair && crosshair > crosshairEdgeMax
-  const hasData = prices && prices.length > 0
 
   /*
    * Default curve doesn't look good for the HOUR chart.
@@ -233,27 +272,27 @@ function PriceChart({ width, height, prices, timePeriod }: PriceChartProps) {
   const getX = useMemo(() => (p: PricePoint) => timeScale(p.timestamp), [timeScale])
   const getY = useMemo(() => (p: PricePoint) => rdScale(p.value), [rdScale])
   const curve = useMemo(() => curveCardinal.tension(curveTension), [curveTension])
+
   return (
     <>
       <ChartHeader>
-        <TokenPrice>{formatDisplayPrice(displayPrice.value)}</TokenPrice>
-        <DeltaContainer>
-          <ArrowCell>{arrow}</ArrowCell>
-          <DeltaText delta={delta}>{formattedDelta}</DeltaText>
-        </DeltaContainer>
+        {displayPrice.value ? (
+          <>
+            <TokenPrice>{formatDollar({ num: displayPrice.value, isPrice: true })}</TokenPrice>
+            <DeltaContainer>
+              {formattedDelta}
+              <ArrowCell>{arrow}</ArrowCell>
+            </DeltaContainer>
+          </>
+        ) : (
+          <>
+            <MissingPrice>Price Unavailable</MissingPrice>
+            <ThemedText.Caption style={{ color: theme.textTertiary }}>{missingPricesMessage}</ThemedText.Caption>
+          </>
+        )}
       </ChartHeader>
-      {!hasData ? (
-        <MissingPriceChart
-          width={width}
-          height={graphHeight}
-          message={
-            prices?.length === 0 ? (
-              <Trans>This token doesn&apos;t have chart data because it hasn&apos;t been traded on Uniswap v3</Trans>
-            ) : (
-              <Trans>Missing chart data</Trans>
-            )
-          }
-        />
+      {!chartAvailable ? (
+        <MissingPriceChart width={width} height={graphHeight} message={!!displayPrice.value && missingPricesMessage} />
       ) : (
         <svg width={width} height={graphHeight} style={{ minWidth: '100%' }}>
           <AnimatedInLineChart
@@ -264,6 +303,19 @@ function PriceChart({ width, height, prices, timePeriod }: PriceChartProps) {
             curve={curve}
             strokeWidth={2}
           />
+          {blanks.map((blank, index) => (
+            <FadedInLineChart
+              key={index}
+              data={blank}
+              getX={getX}
+              getY={getY}
+              marginTop={margin.top}
+              curve={curve}
+              strokeWidth={2}
+              color={theme.textTertiary}
+              dashed
+            />
+          ))}
           {crosshair !== null ? (
             <g>
               <AxisBottom
@@ -354,9 +406,7 @@ const StyledMissingChart = styled.svg`
     font-weight: 400;
   }
 `
-
 const chartBottomPadding = 15
-
 function MissingPriceChart({ width, height, message }: { width: number; height: number; message: ReactNode }) {
   const theme = useTheme()
   const midPoint = height / 2 + 45
@@ -369,18 +419,10 @@ function MissingPriceChart({ width, height, message }: { width: number; height: 
         fill="transparent"
         strokeWidth="2"
       />
-      <TrendingUp stroke={theme.textTertiary} x={0} size={12} y={height - chartBottomPadding - 10} />
+      {message && <TrendingUp stroke={theme.textTertiary} x={0} size={12} y={height - chartBottomPadding - 10} />}
       <text y={height - chartBottomPadding} x="20" fill={theme.textTertiary}>
-        {message || <Trans>Missing chart data</Trans>}
+        {message}
       </text>
-      <path
-        d={`M 0 ${height - 1}, ${width} ${height - 1}`}
-        stroke={theme.backgroundOutline}
-        fill="transparent"
-        strokeWidth="1"
-      />
     </StyledMissingChart>
   )
 }
-
-export default PriceChart

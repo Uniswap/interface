@@ -1,17 +1,16 @@
-import { Trace } from '@uniswap/analytics'
-import { PageName } from '@uniswap/analytics-events'
+import { Trace, TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName, PageName } from '@uniswap/analytics-events'
 import { BaseButton } from 'components/Button'
-import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
 import Swap from 'pages/Swap'
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { Link } from 'react-router-dom'
+import { Link as NativeLink } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 
-const PageWrapper = styled.div`
+const PageContainer = styled.div`
   width: 100%;
   position: relative;
   display: flex;
@@ -31,8 +30,8 @@ const Gradient = styled.div<{ isDarkMode: boolean }>`
   width: 100%;
   background: ${({ isDarkMode }) =>
     isDarkMode
-      ? 'linear-gradient(rgba(8, 10, 24, 0) 9.84%, rgb(8 10 24 / 86%) 35.35%)'
-      : 'linear-gradient(rgba(8, 10, 24, 0) 9.84%, rgb(255 255 255 / 86%) 35.35%)'};
+      ? 'linear-gradient(rgba(8, 10, 24, 0) 0%, rgb(8 10 24 / 100%) 45%)'
+      : 'linear-gradient(rgba(255, 255, 255, 0) 0%, rgb(255 255 255 /100%) 45%)'};
   z-index: ${Z_INDEX.dropdown};
   pointer-events: none;
 `
@@ -48,20 +47,23 @@ const Glow = styled.div`
   width: 100%;
 `
 
-const ContentWrapper = styled.div<{ isDarkMode: boolean }>`
+const ContentContainer = styled.div<{ isDarkMode: boolean }>`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   max-width: min(720px, 90%);
-  position: absolute;
+  position: sticky;
   bottom: 0;
   z-index: ${Z_INDEX.dropdown};
-  padding: 32px 0;
+  padding: 32px 0 80px;
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} opacity`};
 
   * {
     pointer-events: auto;
   }
 
-  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
     padding: 64px 0;
   }
 `
@@ -113,7 +115,7 @@ const SubTextContainer = styled.div`
 `
 
 const LandingButton = styled(BaseButton)`
-  padding: 16px;
+  padding: 16px 0px;
   border-radius: 24px;
 `
 
@@ -128,44 +130,37 @@ const ButtonCTA = styled(LandingButton)`
   }
 `
 
-const ButtonCTASecondary = styled(LandingButton)`
-  background: none;
-  border: ${({ theme }) => `1px solid ${theme.textPrimary}`};
-  color: ${({ theme }) => theme.textPrimary};
-
-  &:hover {
-    border: 1px solid rgba(255, 0, 199, 1);
-  }
-`
-
 const ButtonCTAText = styled.p`
   margin: 0px;
   font-size: 16px;
+  font-weight: 600;
   white-space: nowrap;
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     font-size: 20px;
   }
+`
 
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
-    font-size: 24px;
+const ActionsContainer = styled.span`
+  max-width: 300px;
+  width: 100%;
+`
+
+const LandingSwap = styled(Swap)`
+  * {
+    pointer-events: none;
+  }
+
+  &:hover {
+    border: 1px solid ${({ theme }) => theme.accentAction};
+    transform: translateY(-4px);
   }
 `
 
-const ActionsWrapper = styled.span`
-  display: flex;
-  justify-content: center;
-  gap: 12px;
+const Link = styled(NativeLink)`
+  text-decoration: none;
+  max-width: 480px;
   width: 100%;
-
-  & > * {
-    max-width: 288px;
-    flex: 1;
-  }
-
-  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
-    gap: 24px;
-  }
 `
 
 export default function Landing() {
@@ -174,43 +169,47 @@ export default function Landing() {
   const location = useLocation()
   const isOpen = location.pathname === '/'
 
-  const landingPageFlag = useLandingPageFlag()
-
   useEffect(() => {
-    if (landingPageFlag) {
-      document.body.style.overflow = 'hidden'
-      return () => {
-        document.body.style.overflow = 'auto'
-      }
-    }
+    document.body.style.overflow = 'hidden'
     return () => {
-      // need to have a return so the hook doesn't throw.
+      document.body.style.overflow = 'auto'
     }
-  }, [landingPageFlag])
+  }, [])
 
-  if (landingPageFlag === LandingPageVariant.Control || !isOpen) return null
+  if (!isOpen) return null
 
   return (
     <Trace page={PageName.LANDING_PAGE} shouldLogImpression>
-      <PageWrapper>
-        <Swap />
+      <PageContainer>
+        <TraceEvent
+          events={[BrowserEvent.onClick]}
+          name={EventName.ELEMENT_CLICKED}
+          element={ElementName.LANDING_PAGE_SWAP_ELEMENT}
+        >
+          <Link to="/swap">
+            <LandingSwap />
+          </Link>
+        </TraceEvent>
         <Glow />
         <Gradient isDarkMode={isDarkMode} />
-        <ContentWrapper isDarkMode={isDarkMode}>
-          <TitleText isDarkMode={isDarkMode}>Trade crypto & NFTs with confidence.</TitleText>
+        <ContentContainer isDarkMode={isDarkMode}>
+          <TitleText isDarkMode={isDarkMode}>Trade crypto & NFTs with confidence</TitleText>
           <SubTextContainer>
-            <SubText>Buy, sell, and explore tokens and NFTs </SubText>
+            <SubText>Buy, sell, and explore tokens and NFTs</SubText>
           </SubTextContainer>
-          <ActionsWrapper>
-            <ButtonCTA as={Link} to="/swap">
-              <ButtonCTAText>Continue</ButtonCTAText>
-            </ButtonCTA>
-            <ButtonCTASecondary as={Link} to="/about">
-              <ButtonCTAText>Learn more</ButtonCTAText>
-            </ButtonCTASecondary>
-          </ActionsWrapper>
-        </ContentWrapper>
-      </PageWrapper>
+          <ActionsContainer>
+            <TraceEvent
+              events={[BrowserEvent.onClick]}
+              name={EventName.ELEMENT_CLICKED}
+              element={ElementName.CONTINUE_BUTTON}
+            >
+              <ButtonCTA as={Link} to="/swap">
+                <ButtonCTAText>Get started</ButtonCTAText>
+              </ButtonCTA>
+            </TraceEvent>
+          </ActionsContainer>
+        </ContentContainer>
+      </PageContainer>
     </Trace>
   )
 }

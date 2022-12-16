@@ -1,9 +1,10 @@
 import { parseEther } from '@ethersproject/units'
 import graphql from 'babel-plugin-relay/macro'
-import { CollectionInfoForAsset, GenieAsset, SellOrder, TokenType } from 'nft/types'
+import { CollectionInfoForAsset, GenieAsset, SellOrder } from 'nft/types'
 import { useEffect } from 'react'
 import { useLazyLoadQuery, useQueryLoader } from 'react-relay'
 
+import { NftStandard } from '../__generated__/types-and-hooks'
 import { DetailsQuery } from './__generated__/DetailsQuery.graphql'
 
 const detailsQuery = graphql`
@@ -145,7 +146,7 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
       }),
       smallImageUrl: asset?.smallImage?.url ?? undefined,
       tokenId,
-      tokenType: (asset?.collection?.nftContracts && asset?.collection.nftContracts[0]?.standard) as TokenType,
+      tokenType: (asset?.collection?.nftContracts && asset?.collection.nftContracts[0]?.standard) as NftStandard,
       collectionIsVerified: asset?.collection?.isVerified ?? undefined,
       rarity: {
         primaryProvider: 'Rarity Sniper', // TODO update when backend adds more providers
@@ -159,7 +160,7 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
             })
           : undefined,
       },
-      owner: { address: asset?.ownerAddress ?? '' },
+      ownerAddress: asset?.ownerAddress ?? '',
       creator: {
         profile_img_url: asset?.creator?.profileImage?.url ?? '',
         address: asset?.creator?.address ?? '',
