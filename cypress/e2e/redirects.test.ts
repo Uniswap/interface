@@ -5,6 +5,6 @@ describe('Redirect', () => {
   })
   it('should redirect to /swap when visiting nonexist url', () => {
     cy.visit('/none-exist-url')
-    cy.url().should('match', /\/swap/)
+    cy.url().should('match', /\/not-found/)
   })
 })
