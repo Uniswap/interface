@@ -1,4 +1,5 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+/* eslint-env node */
+
 const defaultConfig = require('./relay.config')
 
 module.exports = {
