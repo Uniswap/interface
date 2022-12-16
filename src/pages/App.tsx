@@ -36,6 +36,7 @@ import Manage from './Earn/Manage'
 import Landing from './Landing'
 import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
+import NotFound from './NotFound'
 import Pool from './Pool'
 import { PositionPage } from './Pool/PositionPage'
 import PoolV2 from './Pool/v2'
@@ -68,6 +69,7 @@ const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  min-height: 100vh;
   padding: ${({ theme }) => theme.navHeight}px 0px 5rem 0px;
   align-items: center;
   flex: 1;
@@ -202,6 +204,7 @@ export default function App() {
             {isLoaded ? (
               <Routes>
                 <Route path="/" element={<Landing />} />
+
                 <Route path="tokens" element={<Tokens />}>
                   <Route path=":chainName" />
                 </Route>
@@ -253,8 +256,6 @@ export default function App() {
 
                 <Route path="about" element={<About />} />
 
-                <Route path="*" element={<RedirectPathToSwapOnly />} />
-
                 <Route
                   path="/nfts"
                   element={
@@ -296,6 +297,9 @@ export default function App() {
                     </Suspense>
                   }
                 />
+
+                <Route path="*" element={<Navigate to="/not-found" replace />} />
+                <Route path="/not-found" element={<NotFound />} />
               </Routes>
             ) : (
               <Loader />
