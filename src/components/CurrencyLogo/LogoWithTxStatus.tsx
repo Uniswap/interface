@@ -118,7 +118,7 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps) {
       case TransactionType.Unknown:
         return <UnknownStatus color={gray} fill={fill} height={statusSize} width={statusSize} />
     }
-    logger.info(
+    logger.debug(
       'statusIcon',
       'GenerateStatusIcon',
       'Could not find icon for transaction type:',

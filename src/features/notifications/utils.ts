@@ -286,7 +286,7 @@ export function convertScientificNotationToNumber(value: string) {
       )
     } catch (error) {
       // If the numbers can't be converted to BigInts then just do regular arithmetic (i.e. when the exponent is negative)
-      logger.info(
+      logger.debug(
         'notifications/utils',
         'convertScientificNotationToNumber',
         'BigInt arithmetic unsuccessful',

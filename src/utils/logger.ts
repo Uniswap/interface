@@ -1,9 +1,7 @@
 /* eslint-disable no-console */
 
 import { config } from 'src/config'
-// actually calls `logException`
-// eslint-disable-next-line no-restricted-imports
-import { logException } from 'src/features/telemetry'
+import { captureException, captureMessage } from 'src/features/telemetry'
 
 // Cache of the last n messages, n is config.logBufferSize
 const logBuffer = new Array<string>(config.logBufferSize)
@@ -11,7 +9,17 @@ let logBufferIndex = 0
 
 type LogLevel = 'debug' | 'info' | 'warn' | 'error'
 
-// Example: logger.warn('myFile','myFunc','Some warning',myArray)
+/**
+ * Logs a message to console. Additionally sends log to Sentry if using 'error', 'warn', or 'info'.
+ * Use `logger.debug` for development only logs.
+ *
+ * ex. `logger.warn('myFile', 'myFunc', 'Some warning', myArray)`
+ *
+ * @param fileName Name of file where logging from
+ * @param functionName Name of function where logging from
+ * @param message Message to log
+ * @param args Additional values to log
+ */
 export const logger = {
   debug: (fileName: string, functionName: string, message: string, ...args: unknown[]): void =>
     logMessage('debug', fileName, functionName, message, ...args),
@@ -37,9 +45,18 @@ function logMessage(
   functionName ||= fileName // To allow omitting function when it's same as file
   const formatted = formatMessage(fileName, functionName, message)
 
-  console[level](formatted, ...args)
+  if (__DEV__) {
+    console[level](formatted, ...args)
+    return
+  }
+
+  // Send error, warn, info logs to Sentry
   if (level === 'error') {
-    logException(`${fileName}#${functionName}`, message)
+    captureException(`${fileName}#${functionName}`, message)
+  } else if (level === 'warn') {
+    captureMessage('warning', `${fileName}#${functionName}`, message)
+  } else if (level === 'info') {
+    captureMessage('info', `${fileName}#${functionName}`, message)
   }
 
   logBuffer[logBufferIndex] = level + '::' + formatted + argsToString(args)

@@ -8,8 +8,6 @@ import { FLASHBOTS_URLS } from 'src/features/providers/constants'
 import { FLASHBOTS_SUPPORTED_CHAINS } from 'src/features/providers/flashbotsProvider'
 import { getEthersProvider } from 'src/features/providers/getEthersProvider'
 import { getInfuraChainName } from 'src/features/providers/utils'
-import { logMessage } from 'src/features/telemetry'
-import { LogContext } from 'src/features/telemetry/constants'
 import { logger } from 'src/utils/logger'
 import { isStale } from 'src/utils/time'
 import { promiseTimeout, sleep } from 'src/utils/timing'
@@ -28,8 +26,6 @@ interface ProviderDetails {
 
 export type ChainIdToProvider = Partial<Record<ChainId, ProviderDetails>>
 export type ChainIdToMutex = Partial<Record<ChainId, Mutex>>
-
-const LOG_CONTEXT = LogContext.ProviderManager
 
 const getChainDetails = (chainId: ChainId) => {
   const chainDetails = CHAIN_INFO[chainId]
@@ -95,7 +91,11 @@ export class ProviderManager {
 
   removeProvider(chainId: ChainId) {
     if (!this._providers[chainId]) {
-      logMessage(LOG_CONTEXT, `Attempting to remove non-existing provider: ${chainId}`)
+      logger.warn(
+        'ProviderManager',
+        'removeProvider',
+        `Attempting to remove non-existent provider: ${chainId}`
+      )
       return
     }
     this._providers[chainId]?.provider.removeAllListeners()
@@ -143,11 +143,12 @@ export class ProviderManager {
 
   private async initProvider(chainId: ChainId) {
     try {
-      logger.info(
-        LOG_CONTEXT,
+      logger.debug(
+        'ProviderManager',
         'initProvider',
         `Connecting to infura rpc provider for ${getInfuraChainName(chainId)}`
       )
+
       const provider = getEthersProvider(chainId, config)
       for (let i = 0; i < 3; i++) {
         const blockAndNetworkP = Promise.all([provider.getBlock('latest'), provider.getNetwork()])
@@ -157,8 +158,8 @@ export class ProviderManager {
           blockAndNetwork &&
           this.isProviderSynced(chainId, blockAndNetwork[0], blockAndNetwork[1])
         ) {
-          logger.info(
-            LOG_CONTEXT,
+          logger.debug(
+            'ProviderManager',
             'initProvider',
             `${getInfuraChainName(chainId)} Provider is connected`
           )
@@ -191,7 +192,7 @@ export class ProviderManager {
     }
     if (isStale(block.timestamp * 1000, staleTime)) {
       logger.debug(
-        LOG_CONTEXT,
+        'ProviderManager',
         'isProviderSynced',
         `Provider ${getInfuraChainName(chainId)} is stale`
       )

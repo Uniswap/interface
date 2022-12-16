@@ -5,7 +5,7 @@ import { call } from 'typed-redux-saga'
 
 export function* initFirebase() {
   yield* call(anonFirebaseSignIn)
-  logger.info('initFirebaseSaga', 'initFirebase', 'Firebase initialization successful')
+  logger.debug('initFirebaseSaga', 'initFirebase', 'Firebase initialization successful')
 }
 
 function* anonFirebaseSignIn() {

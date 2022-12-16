@@ -2,8 +2,6 @@ import * as WebBrowser from 'expo-web-browser'
 import { Linking } from 'react-native'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { uniswapUrls } from 'src/constants/urls'
-import { logMessage } from 'src/features/telemetry'
-import { LogContext } from 'src/features/telemetry/constants'
 import { FiatPurchaseTransactionInfo } from 'src/features/transactions/types'
 import { theme } from 'src/styles/theme'
 import { logger } from 'src/utils/logger'
@@ -35,7 +33,7 @@ export async function openUri(
 
   const supported = await Linking.canOpenURL(uri)
   if (!supported) {
-    logMessage(LogContext.OpenUri, `Cannot open URI: ${uri}`)
+    logger.warn('linking', 'openUri', `Cannot open URI: ${uri}`)
     return
   }
 

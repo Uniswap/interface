@@ -135,7 +135,7 @@ function TransactionDetails({
       })
       .catch((error) => {
         setParsedData(undefined)
-        logger.info('RequestMessage', 'DecodedDataDetails', 'Could not parse data', error)
+        logger.warn('RequestMessage', 'DecodedDataDetails', 'Could not parse data', error)
       })
       .finally(() => {
         setIsLoading(false)

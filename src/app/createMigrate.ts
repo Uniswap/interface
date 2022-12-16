@@ -9,14 +9,14 @@ export default function createMigrate(
   return function (state: PersistedState, currentVersion: number): Promise<PersistedState> {
     try {
       if (!state) {
-        logger.info('redux-persist', 'createMigrate', 'no inbound state, skipping migration')
+        logger.debug('redux-persist', 'createMigrate', 'no inbound state, skipping migration')
         return Promise.resolve(undefined)
       }
 
       const inboundVersion: number = state._persist?.version ?? DEFAULT_VERSION
 
       if (inboundVersion === currentVersion) {
-        logger.info(
+        logger.debug(
           'redux-persist',
           'createMigrate',
           `versions match (${currentVersion}), noop migration`
@@ -25,7 +25,7 @@ export default function createMigrate(
       }
 
       if (inboundVersion > currentVersion) {
-        logger.info('redux-persist', 'createMigrate', 'downgrading version is not supported')
+        logger.debug('redux-persist', 'createMigrate', 'downgrading version is not supported')
         return Promise.resolve(state)
       }
 
@@ -34,11 +34,11 @@ export default function createMigrate(
         .filter((key) => currentVersion >= key && key > inboundVersion)
         .sort((a, b) => a - b)
 
-      logger.info('redux-persist', 'createMigrate', `migrationKeys: ${migrationKeys}`)
+      logger.debug('redux-persist', 'createMigrate', `migrationKeys: ${migrationKeys}`)
 
       const migratedState: PersistedState = migrationKeys.reduce(
         (versionState: PersistedState, versionKey) => {
-          logger.info(
+          logger.debug(
             'redux-persist',
             'createMigrate',
             `running migration for versionKey: ${versionKey}`

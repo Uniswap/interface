@@ -33,7 +33,7 @@ export const promptPushPermission = (
   failureCallback?: () => void
 ) => {
   OneSignal.promptForPushNotificationsWithUserResponse((response) => {
-    logger.info(
+    logger.debug(
       'Onesignal',
       'promptForPushNotificationsWithUserResponse',
       `Prompt response: ${response}`

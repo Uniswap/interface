@@ -1,10 +1,12 @@
 import { flush, Identify, identify, init, track } from '@amplitude/analytics-react-native'
 import * as Sentry from '@sentry/react-native'
+import { Primitive, SeverityLevel } from '@sentry/types'
 import { uniswapUrls } from 'src/constants/urls'
 import { ApplicationTransport } from 'src/features/telemetry/ApplicationTransport'
-import { LogContext, UserPropertyName } from 'src/features/telemetry/constants'
+import { UserPropertyName } from 'src/features/telemetry/constants'
 import { EventProperties } from 'src/features/telemetry/types'
 import { logger } from 'src/utils/logger'
+
 type LogTags = {
   [key: string]: Primitive
 }
@@ -39,7 +41,7 @@ export async function initAnalytics() {
 /** Logs a generic event with payload. */
 export async function logEvent(name: string, params: Record<string, unknown>) {
   if (__DEV__) {
-    logger.info('telemetry', 'logEvent', `${name}: ${JSON.stringify(params)}`)
+    logger.debug('telemetry', 'logEvent', `${name}: ${JSON.stringify(params)}`)
     return
   }
 }
@@ -54,29 +56,26 @@ export async function logEvent(name: string, params: Record<string, unknown>) {
  * @param extraTags Key/value pairs to enrich logging and allow filtering.
  *                  More info here: https://docs.sentry.io/platforms/react-native/enriching-events/tags/
  */
-export function logException(context: string, error: unknown, extraTags?: LogTags) {
-  if (__DEV__) {
-    // should already be logged by logger
-    return
-  }
+export function captureException(context: string, error: unknown, extraTags?: LogTags) {
   Sentry.captureException(error, { tags: { ...(extraTags || {}), mobileContext: context } })
 }
 
 /**
  * Sends a message to our Sentry Dashboard
  *
+ * @param level Sentry severity level
  * @param context Context from where this method is called
  * @param message Message
  * @param extraTags Key/value pairs to enrich logging and allow filtering.
  *                  More info here: https://docs.sentry.io/platforms/react-native/enriching-events/tags/
  */
-export function logMessage(context: LogContext, message: string, extraTags?: LogTags) {
-  if (__DEV__) {
-    logger.info('telemetry', 'logMessage', context, message)
-    return
-  }
-
-  Sentry.captureMessage(message, { tags: { ...(extraTags || {}), mobileContext: context } })
+export function captureMessage(
+  level: SeverityLevel,
+  context: string,
+  message: string,
+  extraTags?: LogTags
+) {
+  Sentry.captureMessage(message, { level, tags: { ...(extraTags || {}), mobileContext: context } })
 }
 
 //#endregion
@@ -93,7 +92,7 @@ export function sendAnalyticsEvent<EventName extends keyof EventProperties>(
 ) {
   const [eventName, eventProperties] = args
   if (__DEV__) {
-    logger.info(
+    logger.debug(
       'telemetry',
       'sendAnalyticsEvent',
       `[analytics(${eventName})]: ${JSON.stringify(eventProperties)}`
@@ -105,7 +104,7 @@ export function sendAnalyticsEvent<EventName extends keyof EventProperties>(
 
 export function flushAnalyticsEvents() {
   if (__DEV__) {
-    logger.info('telemetry', 'flushAnalyticsEvents', 'flushing analytics events')
+    logger.debug('telemetry', 'flushAnalyticsEvents', 'flushing analytics events')
   }
   flush()
 }
@@ -115,7 +114,7 @@ type ValidPropertyValue = number | string | boolean | Array<string | number>
 
 export function setUserProperty(property: UserPropertyName, value: ValidPropertyValue) {
   if (__DEV__) {
-    logger.info('telemetry', 'setUserProperty', `property: ${property}, value: ${value}`)
+    logger.debug('telemetry', 'setUserProperty', `property: ${property}, value: ${value}`)
   }
   identify(new Identify().set(property, value))
 }

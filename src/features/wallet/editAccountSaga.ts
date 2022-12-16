@@ -106,12 +106,12 @@ function* editAccount(params: EditAccountParams) {
       break
   }
 
-  logger.info('editAccountSaga', 'editAccount', 'Account updated:', address)
+  logger.debug('editAccountSaga', 'editAccount', 'Account updated:', address)
 }
 
 function* renameAccount(params: RenameParams, account: Account) {
   const { address, newName } = params
-  logger.info('editAccountSaga', 'renameAccount', 'Renaming account', address, 'to ', newName)
+  logger.debug('editAccountSaga', 'renameAccount', 'Renaming account', address, 'to ', newName)
   yield* put(
     editInStore({
       address,
@@ -125,7 +125,7 @@ function* renameAccount(params: RenameParams, account: Account) {
 
 function* removeAccount(params: RemoveParams) {
   const { address } = params
-  logger.info('editAccountSaga', 'removeAccount', 'Removing account', address)
+  logger.debug('editAccountSaga', 'removeAccount', 'Removing account', address)
   // TODO [MOB-3913] cleanup account artifacts in native-land (i.e. keystore)
   yield* put(removeInStore(address))
   yield* call(disconnectWCForAccount, address)
@@ -157,7 +157,7 @@ function* addBackupMethod(params: AddBackupMethodParams, account: Account) {
     })
   )
 
-  logger.info(
+  logger.debug(
     'editAccountSaga',
     'addBackupMethod',
     'Adding backup method',
@@ -192,7 +192,7 @@ function* removeBackupMethod(params: RemoveBackupMethodParams, account: Account)
     })
   )
 
-  logger.info(
+  logger.debug(
     'editAccountSaga',
     'removeBackupMethod',
     'Removing backup method',
@@ -202,7 +202,7 @@ function* removeBackupMethod(params: RemoveBackupMethodParams, account: Account)
 
 function* toggleShowSmallBalances(params: ToggleShowSmallBalancesParams, account: Account) {
   const { address, enabled } = params
-  logger.info('editAccountSaga', 'toggleShowSmallBalances', address, 'to', enabled)
+  logger.debug('editAccountSaga', 'toggleShowSmallBalances', address, 'to', enabled)
   yield* put(
     editInStore({
       address,
@@ -216,7 +216,7 @@ function* toggleShowSmallBalances(params: ToggleShowSmallBalancesParams, account
 
 function* toggleShowSpamTokens(params: ToggleShowSpamTokensParams, account: Account) {
   const { address, enabled } = params
-  logger.info('editAccountSaga', 'toggleShowSpamTokens', address, 'to', enabled)
+  logger.debug('editAccountSaga', 'toggleShowSpamTokens', address, 'to', enabled)
   yield* put(
     editInStore({
       address,

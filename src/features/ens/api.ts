@@ -57,7 +57,7 @@ export const ensApi = createApi({
 
           return { data: address }
         } catch (e: unknown) {
-          logger.error('ens/api', 'name', 'Error getting ens address', e)
+          logger.error('ens/api', 'address', 'Error getting ens address', e)
           return { error: { status: 500, data: e } }
         }
       },
@@ -78,7 +78,7 @@ export const ensApi = createApi({
           const avatarURL = checkedName ? await provider.getAvatar(checkedName) : null
           return { data: avatarURL }
         } catch (e: unknown) {
-          logger.error('ens/api', 'name', 'Error getting ens avatar', e)
+          logger.error('ens/api', 'avatar', 'Error getting ens avatar', e)
           return { error: { status: 500, data: e } }
         }
       },

@@ -119,7 +119,7 @@ function* onAccountImport(account: Account, ignoreActivate?: boolean) {
     yield* put(activateAccount(account.address))
   }
   yield* put(unlockWallet())
-  logger.info('importAccount', '', `New ${account.type} account imported: ${account.address}`)
+  logger.debug('importAccount', '', `New ${account.type} account imported: ${account.address}`)
 }
 
 export const {

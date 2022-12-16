@@ -159,24 +159,6 @@ export const enum MarkNames {
   // alphabetize additional values.
 }
 
-/**
- * Context to pass down to our logMessage and logExceptions methods.
- *
- * This can be any context you think its helpful to identify
- * where these methods are called from (e.g. component name, function name, file name).
- */
-export const enum LogContext {
-  Analytics = 'Analytics',
-  ErrorBoundary = 'ErrorBoundary',
-  ImageUtils = 'ImageUtils',
-  Marks = 'Marks',
-  OpenUri = 'OpenUri',
-  ProviderManager = 'ProviderManager',
-  SecurityConcern = 'SecurityConcern',
-  ValidateAddress = 'ValidateAddress',
-  // alphabetize additional values.
-}
-
 export enum UserPropertyName {
   ActiveWalletAddress = 'active_wallet_address',
   ActiveWalletType = 'active_wallet_type',

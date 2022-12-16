@@ -1,16 +1,11 @@
 import { useFocusEffect } from '@react-navigation/core'
 import React, { createContext, memo, PropsWithChildren, useEffect, useMemo, useRef } from 'react'
 import { useIsPartOfNavigationTree } from 'src/app/navigation/hooks'
-import { logMessage, sendAnalyticsEvent } from 'src/features/telemetry'
-import {
-  EventName,
-  LogContext,
-  MarkNames,
-  ModalName,
-  SectionName,
-} from 'src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { EventName, MarkNames, ModalName, SectionName } from 'src/features/telemetry/constants'
 import { useTrace } from 'src/features/telemetry/hooks'
 import { AppScreen } from 'src/screens/Screens'
+import { logger } from 'src/utils/logger'
 
 export interface ITraceContext {
   screen?: AppScreen
@@ -117,7 +112,7 @@ function _Trace({
     }
 
     const markDuration = Date.now() - markStartTime
-    logMessage(LogContext.Marks, `${endMark}: ${markDuration}ms`)
+    logger.info('telemetry', 'Trace', `${endMark}: ${markDuration}ms`)
   }, [combinedProps, endMark, parentTrace.marks])
 
   if (!isPartOfNavigationTree) {

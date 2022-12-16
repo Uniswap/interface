@@ -57,7 +57,7 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     const errorMessage = error?.message
-    logger.error('handleDeepLink', 'handleDeepLink', errorMessage)
+    logger.error('handleDeepLink', 'handleDeepLink', 'Error handling deep link', errorMessage)
     yield* call(logEvent, 'deeplink', { coldStart, success: false, error: errorMessage })
   }
 }

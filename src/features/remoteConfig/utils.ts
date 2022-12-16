@@ -8,14 +8,14 @@ import { logger } from 'src/utils/logger'
 export function printDebugLogs() {
   const values = Object.entries(remoteConfig().getAll())
 
-  logger.info(
+  logger.debug(
     'remoteConfig',
     'initializeRemoteConfig',
     `Remote config fetched and activated (${values.length})`
   )
 
   values.forEach(([key, entry]) => {
-    logger.info(
+    logger.debug(
       'remoteConfig',
       'initializeRemoteConfig',
       `${key} [${entry.getSource()}]: ${entry.asString()}`

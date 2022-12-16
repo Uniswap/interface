@@ -1,6 +1,4 @@
-import { utils } from 'ethers'
-import { logMessage } from 'src/features/telemetry'
-import { LogContext } from 'src/features/telemetry/constants'
+import { logger, utils } from 'ethers'
 
 export enum AddressStringFormat {
   Lowercase,
@@ -48,7 +46,7 @@ export function getValidAddress(
       return utils.getAddress(address)
     } catch (error) {
       if (log) {
-        logMessage(LogContext.ValidateAddress, `Invalid address at checksum: ${address}`)
+        logger.warn('utils/addresses', 'getValidAddress', `Invalid address at checksum: ${address}`)
       }
       return null
     }
@@ -56,7 +54,7 @@ export function getValidAddress(
 
   if (address.length !== 42 || !address.startsWith('0x')) {
     if (log) {
-      logMessage(LogContext.ValidateAddress, `Address has an invalid format. Address: ${address}`)
+      logger.warn('utils/addresses', 'getValidAddress', `Address has an invalid format: ${address}`)
     }
     return null
   }

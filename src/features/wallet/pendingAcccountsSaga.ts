@@ -25,7 +25,7 @@ export function* managePendingAccounts(pendingAccountAction: PendingAccountActio
       }
     })
   )
-  logger.info('pendingAccountsSaga', '', 'Updated pending accounts.')
+  logger.debug('pendingAccountsSaga', 'managePendingAccounts', 'Updated pending accounts.')
 }
 
 export const {

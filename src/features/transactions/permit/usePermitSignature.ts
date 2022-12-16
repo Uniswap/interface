@@ -115,7 +115,7 @@ async function getPermitSignature(
   const permitInfo = PERMITTABLE_TOKENS[chainId]?.[tokenAddress]
 
   if (!permitInfo) {
-    logger.info('permitSaga', 'signPermitMessage', 'Permit not needed or not possible')
+    logger.debug('permitSaga', 'signPermitMessage', 'Permit not needed or not possible')
     return null
   }
 

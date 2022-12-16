@@ -30,7 +30,7 @@ export function* createAccount() {
     })
   )
   yield* put(activateAccount(address))
-  logger.info('createAccountSaga', '', 'New account created:', address)
+  logger.debug('createAccountSaga', '', 'New account created:', address)
 }
 
 async function getNewAccountParams(sortedAccounts: SignerMnemonicAccount[]): Promise<{
