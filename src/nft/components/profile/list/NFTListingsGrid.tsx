@@ -57,9 +57,19 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
           NFT
         </Column>
         <Row flex={{ sm: '1.5', md: '3' }}>
+          <Column
+            className={bodySmall}
+            color="textSecondary"
+            style={{ flex: '1.5' }}
+            display={{ sm: 'none', md: 'flex' }}
+            // textAlign="right"
+          >
+            Floor price
+          </Column>
           <Column className={subheadSmall} flex="1.5">
             <SortDropdown dropDownOptions={priceDropdownOptions} mini miniPrompt="Set price by" />
           </Column>
+
           <Column
             className={bodySmall}
             color="textSecondary"
@@ -411,7 +421,16 @@ const MarketplaceRow = ({
           />
         </Column>
       )}
-      <Column style={{ flex: '1.5' }}>
+      <Column
+        className={bodySmall}
+        color="textSecondary"
+        textAlign="center"
+        style={{ flex: '1' }}
+        display={{ sm: 'none', md: 'flex' }}
+      >
+        {asset.floorPrice ? asset.floorPrice.toFixed(2) : '-'}
+      </Column>
+      <Column style={{ flex: '1' }}>
         {globalPriceMethod === SetPriceMethod.SAME_PRICE && !globalOverride ? (
           <PriceTextInput
             listPrice={globalPrice}
@@ -485,6 +504,8 @@ const NFTListRow = ({ asset, globalPriceMethod, globalPrice, setGlobalPrice, sel
     setLocalMarkets(JSON.parse(JSON.stringify(selectedMarkets)))
     selectedMarkets.length < 2 && setExpandMarketplaceRows(false)
   }, [selectedMarkets])
+
+  console.log(asset)
 
   return (
     <Row marginTop="24" marginBottom="24">
