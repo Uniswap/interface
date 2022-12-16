@@ -29,7 +29,7 @@ import UserUpdater from './state/user/updater'
 import ThemeProvider, { ThemedGlobalStyle } from './theme'
 import RadialGradientByChainUpdater from './theme/components/RadialGradientByChainUpdater'
 
-if (!!window.ethereum) {
+if (window.ethereum) {
   window.ethereum.autoRefreshOnNetworkChange = false
 }
 

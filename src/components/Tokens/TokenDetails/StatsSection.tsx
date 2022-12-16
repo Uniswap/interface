@@ -51,24 +51,13 @@ export const StatsWrapper = styled.div`
 
 type NumericStat = number | undefined | null
 
-function Stat({
-  value,
-  title,
-  description,
-  isPrice = false,
-}: {
-  value: NumericStat
-  title: ReactNode
-  description?: ReactNode
-  isPrice?: boolean
-}) {
+function Stat({ value, title, description }: { value: NumericStat; title: ReactNode; description?: ReactNode }) {
   return (
     <StatWrapper>
       <StatTitle>
         {title}
         {description && <InfoTip text={description}></InfoTip>}
       </StatTitle>
-
       <StatPrice>{formatNumber(value, NumberType.FiatTokenStats)}</StatPrice>
     </StatWrapper>
   )

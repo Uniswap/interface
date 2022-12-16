@@ -36,7 +36,7 @@ const V2_SWAP_HOP_GAS_ESTIMATE = 50_000
  * https://github.com/Uniswap/smart-order-router/blob/main/src/routers/alpha-router/gas-models/v2/v2-heuristic-gas-model.ts
  */
 function guesstimateGas(trade: Trade<Currency, Currency, TradeType> | undefined): number | undefined {
-  if (!!trade) {
+  if (trade) {
     let gas = 0
     for (const { route } of trade.swaps) {
       if (route.protocol === Protocol.V2) {
