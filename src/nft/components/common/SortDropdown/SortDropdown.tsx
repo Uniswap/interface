@@ -56,8 +56,7 @@ export const SortDropdown = ({
       borderRadius="12"
       borderBottomLeftRadius={isOpen ? '0' : undefined}
       borderBottomRightRadius={isOpen ? '0' : undefined}
-      style={{ width, justifyContent: 'start' }}
-      display="flex"
+      style={{ width }}
     >
       <Box
         as="button"
