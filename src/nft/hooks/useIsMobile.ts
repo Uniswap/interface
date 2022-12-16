@@ -1,28 +1,9 @@
-import { breakpoints } from 'nft/css/sprinkles.css'
-import { useEffect, useState } from 'react'
-
-const isClient = typeof window !== 'undefined'
-
-export function getIsMobile() {
-  return isClient ? window.innerWidth < breakpoints.sm : false
-}
+// @deprecated in favor of useScreenSize
+import { useScreenSize } from 'hooks/useScreenSize'
 
 export function useIsMobile(): boolean {
-  const [isMobile, setIsMobile] = useState(getIsMobile)
-
-  useEffect(() => {
-    function handleResize() {
-      setIsMobile(getIsMobile())
-    }
-
-    if (isClient) {
-      window.addEventListener('resize', handleResize)
-      return () => {
-        window.removeEventListener('resize', handleResize)
-      }
-    }
-    return undefined
-  }, [])
+  const isScreenSize = useScreenSize()
+  const isMobile = !isScreenSize['sm']
 
   return isMobile
 }

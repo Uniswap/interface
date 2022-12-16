@@ -1,7 +1,8 @@
-import { Trace } from '@uniswap/analytics'
-import { PageName } from '@uniswap/analytics-events'
+import { Trace, TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName, PageName } from '@uniswap/analytics-events'
 import { ButtonOutlined } from 'components/Button'
 import { useLayoutEffect, useRef, useState } from 'react'
+import { BookOpen, Globe, Heart, Twitter } from 'react-feather'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
@@ -27,13 +28,13 @@ const PageBackground = styled.div<{ isDarkMode: boolean }>`
   position: absolute;
   width: 100%;
   height: 100vh;
-  top: 0;
+  top: -${({ theme }) => theme.navHeight}px;
   left: 0;
   opacity: ${({ isDarkMode }) => (isDarkMode ? 0.4 : 0.2)};
   background: ${({ isDarkMode }) => (isDarkMode ? `url(${backgroundImgSrcDark})` : `url(${backgroundImgSrcLight})`)};
   -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
   mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
-  background-size: auto 100vh;
+  background-size: cover;
   background-repeat: no-repeat;
 `
 
@@ -76,32 +77,43 @@ const Content = styled.div`
 
 const CardGrid = styled.div`
   display: grid;
-  gap: 36px;
+  gap: 12px;
   width: 100%;
   grid-template-columns: 1fr;
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     grid-template-columns: 1fr 1fr;
+    gap: 32px;
   }
 `
 
 const InfoButton = styled(ButtonOutlined)`
-  font-size: 20px;
-  line-height: 24px;
+  font-size: 16px;
+  line-height: 20px;
   padding: 12px;
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    font-size: 20px;
+    line-height: 24px;
+  }
 `
 
 const ActionsContainer = styled.span`
   display: flex;
-  gap: 24px;
+  gap: 16px;
   width: 100%;
 
   & > * {
     flex: 1;
   }
 
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    gap: 24px;
+  }
+
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     flex-direction: column;
+    gap: 24px;
   }
 
   @media screen and (min-width: ${BREAKPOINTS.lg}px) {
@@ -134,12 +146,47 @@ const Thumbnail = styled.img`
   width: 100%;
 `
 
-const SocialRow = styled.div`
-  display: flex;
-  gap: 24px;
+const FooterLinks = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
 
-  & > * {
-    flex: 1;
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+`
+
+const FooterLink = styled.a`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  color: ${({ theme }) => theme.textPrimary};
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+
+  svg {
+    color: ${({ theme }) => theme.textSecondary};
+    stroke-width: 1.5;
+  }
+
+  &:hover {
+    border: 1px solid ${({ theme }) => theme.textTertiary};
+  }
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    font-size: 20px;
+    line-height: 24px;
   }
 `
 
@@ -158,6 +205,7 @@ const Copyright = styled.span`
 
 const WrappedExternalArrow = styled.span`
   color: ${({ theme }) => theme.textTertiary};
+  margin-left: 4px;
 `
 
 export default function About() {
@@ -180,7 +228,7 @@ export default function About() {
       <Page isDarkMode={isDarkMode} titleHeight={titleHeight}>
         <Content>
           <Title ref={titleRef} isDarkMode={isDarkMode}>
-            Uniswap is the leading on-chain marketplace for tokens and NFTs.
+            Uniswap is the leading on-chain marketplace for tokens and NFTs
           </Title>
           <Panels>
             <div>
@@ -189,21 +237,33 @@ export default function About() {
             <Intro>
               <IntroCopy>The leading decentralized crypto trading protocol, governed by a global community</IntroCopy>
               <ActionsContainer>
-                <InfoButton as="a" rel="noopener noreferrer" href="https://uniswap.org" target="_blank">
-                  Learn more<WrappedExternalArrow> ↗</WrappedExternalArrow>
-                </InfoButton>
-                <InfoButton as="a" rel="noopener noreferrer" href="https://docs.uniswap.org" target="_blank">
-                  Read the docs<WrappedExternalArrow> ↗</WrappedExternalArrow>
-                </InfoButton>
+                <TraceEvent
+                  events={[BrowserEvent.onClick]}
+                  name={EventName.ELEMENT_CLICKED}
+                  element={ElementName.LEGACY_LANDING_PAGE_LINK}
+                >
+                  <InfoButton as="a" rel="noopener noreferrer" href="https://uniswap.org" target="_blank">
+                    Learn more<WrappedExternalArrow> ↗</WrappedExternalArrow>
+                  </InfoButton>
+                </TraceEvent>
+                <TraceEvent
+                  events={[BrowserEvent.onClick]}
+                  name={EventName.ELEMENT_CLICKED}
+                  element={ElementName.DOCS_LINK}
+                >
+                  <InfoButton as="a" rel="noopener noreferrer" href="https://docs.uniswap.org" target="_blank">
+                    Read docs<WrappedExternalArrow> ↗</WrappedExternalArrow>
+                  </InfoButton>
+                </TraceEvent>
               </ActionsContainer>
             </Intro>
           </Panels>
           <CardGrid>
             {CARDS.map(({ darkBackgroundImgSrc, lightBackgroundImgSrc, ...card }) => (
               <Card
-                key={card.title}
                 {...card}
                 backgroundImgSrc={isDarkMode ? darkBackgroundImgSrc : lightBackgroundImgSrc}
+                key={card.title}
               />
             ))}
           </CardGrid>
@@ -227,12 +287,44 @@ export default function About() {
             </Panels>
           </div>
           <Footer>
-            <SocialRow>
-              <button>button</button>
-              <button>button</button>
-              <button>button</button>
-              <button>button</button>
-            </SocialRow>
+            <FooterLinks>
+              <TraceEvent
+                events={[BrowserEvent.onClick]}
+                name={EventName.ELEMENT_CLICKED}
+                element={ElementName.SUPPORT_LINK}
+              >
+                <FooterLink rel="noopener noreferrer" target="_blank" href="https://support.uniswap.org">
+                  <Globe /> Support
+                </FooterLink>
+              </TraceEvent>
+              <TraceEvent
+                events={[BrowserEvent.onClick]}
+                name={EventName.ELEMENT_CLICKED}
+                element={ElementName.TWITTER_LINK}
+              >
+                <FooterLink rel="noopener noreferrer" target="_blank" href="https://twitter.com/uniswap">
+                  <Twitter /> Twitter
+                </FooterLink>
+              </TraceEvent>
+              <TraceEvent
+                events={[BrowserEvent.onClick]}
+                name={EventName.ELEMENT_CLICKED}
+                element={ElementName.BLOG_LINK}
+              >
+                <FooterLink rel="noopener noreferrer" target="_blank" href="https://uniswap.org/blog">
+                  <BookOpen /> Blog
+                </FooterLink>
+              </TraceEvent>
+              <TraceEvent
+                events={[BrowserEvent.onClick]}
+                name={EventName.ELEMENT_CLICKED}
+                element={ElementName.CAREERS_LINK}
+              >
+                <FooterLink rel="noopener noreferrer" target="_blank" href="https://boards.greenhouse.io/uniswaplabs">
+                  <Heart /> Careers
+                </FooterLink>
+              </TraceEvent>
+            </FooterLinks>
             <Copyright>© {new Date().getFullYear()} Uniswap Labs</Copyright>
           </Footer>
         </Content>

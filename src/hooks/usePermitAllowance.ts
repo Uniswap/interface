@@ -8,6 +8,7 @@ import {
 } from '@uniswap/permit2-sdk'
 import { Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import useBlockNumber from 'lib/hooks/useBlockNumber'
 import ms from 'ms.macro'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
@@ -22,6 +23,10 @@ export function usePermitAllowance(token?: Token, spender?: string) {
   const { account, provider } = useWeb3React()
   const allowanceProvider = useMemo(() => provider && new AllowanceProvider(provider, PERMIT2_ADDRESS), [provider])
   const [allowanceData, setAllowanceData] = useState<AllowanceData>()
+
+  // If there is no allowanceData, recheck every block so a submitted allowance is immediately observed.
+  const blockNumber = useBlockNumber()
+  const shouldUpdate = allowanceData ? false : blockNumber
 
   useEffect(() => {
     if (!account || !token || !spender) return
@@ -40,7 +45,7 @@ export function usePermitAllowance(token?: Token, spender?: string) {
     return () => {
       stale = true
     }
-  }, [account, allowanceProvider, spender, token])
+  }, [account, allowanceProvider, shouldUpdate, spender, token])
 
   return allowanceData
 }

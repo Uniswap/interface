@@ -1,10 +1,11 @@
 import { getDeltaArrow } from 'components/Tokens/TokenDetails/PriceChart'
+import { useScreenSize } from 'hooks/useScreenSize'
 import { Box, BoxProps } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { body, bodySmall, headlineMedium, headlineSmall } from 'nft/css/common.css'
 import { loadingAsset } from 'nft/css/loading.css'
 import { themeVars } from 'nft/css/sprinkles.css'
-import { useIsMobile } from 'nft/hooks'
+import { useBag, useIsMobile } from 'nft/hooks'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { GenieCollection, TokenType } from 'nft/types'
 import { floorFormatter, quantityFormatter, roundWholePercentage, volumeFormatter } from 'nft/utils/numbers'
@@ -353,6 +354,10 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
   const floorChangeStr = Math.round(Math.abs(stats?.stats?.one_day_floor_change ?? 0))
   const arrow = stats?.stats?.one_day_floor_change ? getDeltaArrow(stats.stats.one_day_floor_change) : undefined
 
+  const isBagExpanded = useBag((state) => state.bagExpanded)
+  const isScreenSize = useScreenSize()
+  const isSmallContainer = isMobile || (!isScreenSize['lg'] && isBagExpanded)
+
   return (
     <Row gap={{ sm: '24', md: '36', lg: '48', xl: '60' }} {...props}>
       {isCollectionStatsLoading ? (
@@ -383,13 +388,13 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
             </StatsItem>
           ) : null}
           {Boolean(uniqueOwnersPercentage && stats.standard !== TokenType.ERC1155) ? (
-            <StatsItem label="Unique owners" shouldHide={isMobile ?? false}>
+            <StatsItem label="Unique owners" shouldHide={isSmallContainer ?? false}>
               {uniqueOwnersPercentage}%
             </StatsItem>
           ) : null}
 
           {stats.stats?.total_listings && stats.standard !== TokenType.ERC1155 ? (
-            <StatsItem label="Listed" shouldHide={isMobile ?? false}>
+            <StatsItem label="Listed" shouldHide={isSmallContainer ?? false}>
               {listedPercentageStr}%
             </StatsItem>
           ) : null}
@@ -463,7 +468,7 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
         {(stats.description || isCollectionStatsLoading) && !isMobile && (
           <CollectionDescription description={stats.description ?? ''} />
         )}
-        <StatsRow display={{ sm: 'none', md: 'flex' }} stats={stats} marginTop="20" />
+        <StatsRow display={{ sm: 'none', md: 'flex' }} overflow="hidden" stats={stats} marginTop="20" />
       </Box>
       {(stats.description || isCollectionStatsLoading) && isMobile && (
         <CollectionDescription description={stats.description ?? ''} />
