@@ -52,11 +52,11 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
           transition="500"
           className={bodySmall}
           color="textSecondary"
-          flex="1.5"
+          flex={{ sm: '2', md: '1.5' }}
         >
           NFT
         </Column>
-        <Row flex={{ sm: '1.5', md: '3' }}>
+        <Row flex={{ sm: '1', md: '3' }}>
           <Column
             className={bodySmall}
             color="textSecondary"
@@ -75,7 +75,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
           >
             Last
           </Column>
-          <Column className={subheadSmall} flex="1.5">
+          <Column className={subheadSmall} flex={{ sm: '1', md: '1', lg: '1.5' }}>
             <SortDropdown dropDownOptions={priceDropdownOptions} mini miniPrompt="Set price by" />
           </Column>
 
@@ -450,7 +450,7 @@ const MarketplaceRow = ({
         {asset.lastPrice ? `${asset.floorPrice.toFixed(2)} ETH` : '-'}
       </Column>
 
-      <Column flex="3">
+      <Column flex="1">
         {globalPriceMethod === SetPriceMethod.SAME_PRICE && !globalOverride ? (
           <PriceTextInput
             listPrice={globalPrice}
@@ -527,7 +527,7 @@ const NFTListRow = ({ asset, globalPriceMethod, globalPrice, setGlobalPrice, sel
 
   return (
     <Row marginTop="24" marginBottom="24">
-      <Row flexWrap="nowrap" flex={{ sm: '1', md: '1.5' }} marginTop="0" marginBottom="auto" minWidth="0">
+      <Row flexWrap="nowrap" flex={{ sm: '2', md: '1.5' }} marginTop="0" marginBottom="auto" minWidth="0">
         <Box
           transition="500"
           style={{
