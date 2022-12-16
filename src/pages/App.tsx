@@ -111,7 +111,7 @@ const HeaderWrapper = styled.div<{ transparent?: boolean }>`
   justify-content: space-between;
   position: fixed;
   top: 0;
-  z-index: ${Z_INDEX.sticky};
+  z-index: ${Z_INDEX.dropdown};
 `
 
 const Marginer = styled.div`

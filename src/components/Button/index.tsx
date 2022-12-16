@@ -5,6 +5,8 @@ import styled, { DefaultTheme, useTheme } from 'styled-components/macro'
 
 import { RowBetween } from '../Row'
 
+export { default as LoadingButtonSpinner } from './LoadingButtonSpinner'
+
 type ButtonProps = Omit<ButtonPropsOriginal, 'css'>
 
 export const BaseButton = styled(RebassButton)<
@@ -362,18 +364,6 @@ export function ButtonRadioChecked({ active = false, children, ...rest }: { acti
   }
 }
 
-const ButtonOverlay = styled.div`
-  background-color: transparent;
-  bottom: 0;
-  border-radius: 16px;
-  height: 100%;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  transition: 150ms ease background-color;
-  width: 100%;
-`
 export enum ButtonSize {
   small,
   medium,
@@ -466,7 +456,18 @@ function pickThemeButtonTextColor({ theme, emphasis }: { theme: DefaultTheme; em
       return theme.textPrimary
   }
 }
-
+const ButtonOverlay = styled.div`
+  background-color: transparent;
+  bottom: 0;
+  border-radius: inherit;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: 150ms ease background-color;
+  width: 100%;
+`
 const BaseThemeButton = styled.button<BaseButtonProps>`
   align-items: center;
   background-color: ${pickThemeButtonBackgroundColor};
@@ -484,15 +485,12 @@ const BaseThemeButton = styled.button<BaseButtonProps>`
   padding: ${pickThemeButtonPadding};
   position: relative;
   transition: 150ms ease opacity;
+  user-select: none;
 
   :active {
     ${ButtonOverlay} {
       background-color: ${({ theme }) => theme.stateOverlayPressed};
     }
-  }
-  :disabled {
-    cursor: default;
-    opacity: 0.6;
   }
   :focus {
     ${ButtonOverlay} {
@@ -502,6 +500,17 @@ const BaseThemeButton = styled.button<BaseButtonProps>`
   :hover {
     ${ButtonOverlay} {
       background-color: ${({ theme }) => theme.stateOverlayHover};
+    }
+  }
+  :disabled {
+    cursor: default;
+    opacity: 0.6;
+  }
+  :disabled:active,
+  :disabled:focus,
+  :disabled:hover {
+    ${ButtonOverlay} {
+      background-color: transparent;
     }
   }
 `

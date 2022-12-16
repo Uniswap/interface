@@ -1,4 +1,5 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
+import { useFiatOnrampFlag } from 'featureFlags/flags/fiatOnramp'
 import { Permit2Variant, usePermit2Flag } from 'featureFlags/flags/permit2'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
@@ -207,6 +208,12 @@ export default function FeatureFlagModal() {
         value={usePermit2Flag()}
         featureFlag={FeatureFlag.permit2}
         label="Permit 2 / Universal Router"
+      />
+      <FeatureFlagOption
+        variant={BaseVariant}
+        value={useFiatOnrampFlag()}
+        featureFlag={FeatureFlag.fiatOnramp}
+        label="Fiat on-ramp"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption
