@@ -265,7 +265,7 @@ const Image = () => {
         objectFit="contain"
         draggable={false}
         onError={() => setNoContent(true)}
-        onLoad={(e) => {
+        onLoad={() => {
           setLoaded(true)
         }}
         className={clsx(hovered && !isMobile && styles.cardImageHover, !loaded && styles.loadingBackground)}
@@ -404,7 +404,7 @@ const Audio = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
           objectFit="contain"
           draggable={false}
           onError={() => setNoContent(true)}
-          onLoad={(e) => {
+          onLoad={() => {
             setImageLoaded(true)
           }}
           className={clsx(hovered && !isMobile && styles.cardImageHover, !imageLoaded && styles.loadingBackground)}
@@ -504,7 +504,7 @@ interface ProfileNftDetailsProps {
 const ProfileNftDetails = ({ asset, hideDetails }: ProfileNftDetailsProps) => {
   const assetName = () => {
     if (!asset.name && !asset.tokenId) return
-    return !!asset.name ? asset.name : `#${asset.tokenId}`
+    return asset.name ? asset.name : `#${asset.tokenId}`
   }
 
   const shouldShowUserListedPrice =

@@ -137,12 +137,11 @@ export const syncLocalFiltersWithURL = (state: CollectionFilters) => {
   const query: Record<string, any> = {}
   urlFilterItems.forEach((key) => {
     switch (key) {
-      case 'traits':
+      case 'traits': {
         const traits = state.traits.map(({ trait_type, trait_value }) => `("${trait_type}","${trait_value}")`)
-
         query['traits'] = traits
         break
-
+      }
       case 'all':
         query['all'] = !state.buyNow
         break

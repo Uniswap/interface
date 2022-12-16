@@ -316,7 +316,7 @@ interface RankingProps {
   details?: boolean
 }
 
-const Ranking = ({ details, rarity, collectionName, rarityVerified }: RankingProps) => {
+const Ranking = ({ rarity, collectionName, rarityVerified }: RankingProps) => {
   const rarityProviderLogo = getRarityProviderLogo(rarity.source)
 
   return (

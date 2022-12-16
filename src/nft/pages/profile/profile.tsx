@@ -49,7 +49,7 @@ const ProfileContent = () => {
         {/* <Head> TODO: figure out metadata tagging
           <title>Genie | Sell</title>
         </Head> */}
-        {!!account ? (
+        {account ? (
           <Box style={{ width: `calc(100% - ${cartExpanded ? SHOPPING_BAG_WIDTH : 0}px)` }}>
             {sellPageState === ProfilePageStateType.VIEWING ? <ProfilePage /> : <ListPage />}
           </Box>

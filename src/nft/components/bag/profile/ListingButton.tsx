@@ -186,7 +186,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
           <Box marginLeft="4" marginRight="8">
             {warningMessage}
           </Box>
-          {!!disableListButton ? (
+          {disableListButton ? (
             <Box paddingTop="6">
               <XMarkIcon fill={themeVars.colors.textSecondary} height="20" width="20" />
             </Box>
