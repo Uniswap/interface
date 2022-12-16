@@ -57,15 +57,24 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
           NFT
         </Column>
         <Row flex={{ sm: '1.5', md: '3' }}>
-          {/* <Column
+          <Column
             className={bodySmall}
             color="textSecondary"
-            style={{ flex: '1.5' }}
-            display={{ sm: 'none', md: 'flex' }}
-            // textAlign="right"
+            flex="1"
+            display={{ sm: 'none', md: 'none', xl: 'flex' }}
+            textAlign="left"
           >
-            Floor price
-          </Column> */}
+            Floor
+          </Column>
+          <Column
+            className={bodySmall}
+            color="textSecondary"
+            flex="1"
+            display={{ sm: 'none', md: 'none', xl: 'flex' }}
+            textAlign="left"
+          >
+            Last
+          </Column>
           <Column className={subheadSmall} flex="1.5">
             <SortDropdown dropDownOptions={priceDropdownOptions} mini miniPrompt="Set price by" />
           </Column>
@@ -79,13 +88,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
           >
             Fees
           </Column>
-          <Column
-            className={bodySmall}
-            color="textSecondary"
-            style={{ flex: '1.5' }}
-            display={{ sm: 'none', md: 'flex' }}
-            textAlign="right"
-          >
+          <Column className={bodySmall} color="textSecondary" flex="1.5" textAlign="right">
             You receive
           </Column>
         </Row>
@@ -160,6 +163,7 @@ const PriceTextInput = ({
         borderRadius="8"
         borderWidth="1px"
         borderStyle="solid"
+        marginRight="auto"
         borderColor={
           warningType !== WarningType.NONE && !focused
             ? 'orange'
@@ -421,16 +425,26 @@ const MarketplaceRow = ({
           />
         </Column>
       )}
-      {/* <Column
+      <Column
         className={bodySmall}
         color="textSecondary"
-        textAlign="center"
-        style={{ flex: '1' }}
-        display={{ sm: 'none', md: 'flex' }}
+        textAlign="left"
+        flex="1"
+        display={{ sm: 'none', md: 'none', xl: 'flex' }}
       >
-        {asset.floorPrice ? asset.floorPrice.toFixed(2) : '-'}
-      </Column> */}
-      <Column style={{ flex: '1' }}>
+        {asset.floorPrice ? `${asset.floorPrice.toFixed(2)} ETH` : '-'}
+      </Column>
+      <Column
+        className={bodySmall}
+        color="textSecondary"
+        textAlign="left"
+        flex="1"
+        display={{ sm: 'none', md: 'none', xl: 'flex' }}
+      >
+        {asset.lastPrice ? `${asset.floorPrice.toFixed(2)} ETH` : '-'}
+      </Column>
+
+      <Column flex="1.5">
         {globalPriceMethod === SetPriceMethod.SAME_PRICE && !globalOverride ? (
           <PriceTextInput
             listPrice={globalPrice}
@@ -454,7 +468,7 @@ const MarketplaceRow = ({
         )}
       </Column>
 
-      <Row flex="1" display={{ sm: 'none', md: 'flex' }}>
+      <Column flex="1">
         <Box className={body} color="textSecondary" width="full" textAlign="right">
           <MouseoverTooltip
             text={
@@ -474,13 +488,13 @@ const MarketplaceRow = ({
             {fees > 0 ? `${fees} ${selectedMarkets.length > 1 ? '% max' : '%'}` : '--%'}
           </MouseoverTooltip>
         </Box>
-      </Row>
+      </Column>
 
-      <Row style={{ flex: '1.5' }} display={{ sm: 'none', md: 'flex' }}>
+      <Column flex="1.5">
         <Column width="full">
           <EthPriceDisplay ethPrice={userReceives} />
         </Column>
-      </Row>
+      </Column>
     </Row>
   )
 }
@@ -504,8 +518,6 @@ const NFTListRow = ({ asset, globalPriceMethod, globalPrice, setGlobalPrice, sel
     setLocalMarkets(JSON.parse(JSON.stringify(selectedMarkets)))
     selectedMarkets.length < 2 && setExpandMarketplaceRows(false)
   }, [selectedMarkets])
-
-  console.log(asset)
 
   return (
     <Row marginTop="24" marginBottom="24">
