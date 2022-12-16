@@ -53,6 +53,7 @@ export default class ErrorBoundary extends React.Component<PropsWithChildren<unk
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    if (error.name === 'ChunkLoadError') return window.location.reload()
     const e = new Error(`[${error.name}] ${error.message}`, {
       cause: error,
     })
