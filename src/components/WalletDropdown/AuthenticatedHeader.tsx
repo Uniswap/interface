@@ -207,7 +207,12 @@ const AuthenticatedHeader = () => {
           </Text>
           <USDText>${amountUSD.toFixed(2)} USD</USDText>
         </BalanceWrapper>
-        <ProfileButton onClick={navigateToProfile} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
+        <ProfileButton
+          data-testid="nft-view-self-nfts"
+          onClick={navigateToProfile}
+          size={ButtonSize.medium}
+          emphasis={ButtonEmphasis.medium}
+        >
           <Trans>View and sell NFTs</Trans>
         </ProfileButton>
         {isUnclaimed && (

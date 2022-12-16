@@ -4,11 +4,11 @@ import { TokenPriceQuery, tokenPriceQuery } from 'graphql/data/TokenPrice'
 import { isPricePoint, PricePoint } from 'graphql/data/util'
 import { TimePeriod } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
-import { startTransition, Suspense, useMemo, useState } from 'react'
+import { pageTimePeriodAtom } from 'pages/TokenDetails'
+import { startTransition, Suspense, useMemo } from 'react'
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
 
-import { filterTimeAtom } from '../state'
-import PriceChart from './PriceChart'
+import { PriceChart } from './PriceChart'
 import TimePeriodSelector from './TimeSelector'
 
 function usePreloadedTokenPriceQuery(priceQueryReference: PreloadedQuery<TokenPriceQuery>): PricePoint[] | undefined {
@@ -58,7 +58,7 @@ function Chart({
 }) {
   const prices = usePreloadedTokenPriceQuery(priceQueryReference)
   // Initializes time period to global & maintain separate time period for subsequent changes
-  const [timePeriod, setTimePeriod] = useState(useAtomValue(filterTimeAtom))
+  const timePeriod = useAtomValue(pageTimePeriodAtom)
 
   return (
     <ChartContainer>
@@ -69,7 +69,6 @@ function Chart({
         currentTimePeriod={timePeriod}
         onTimeChange={(t: TimePeriod) => {
           startTransition(() => refetchTokenPrices(t))
-          setTimePeriod(t)
         }}
       />
     </ChartContainer>

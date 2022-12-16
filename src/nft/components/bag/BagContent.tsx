@@ -96,7 +96,7 @@ export const BagContent = () => {
           />
         ))}
       </Column>
-      <Column gap="8">
+      <Column>
         {unchangedAssets
           .slice(0)
           .reverse()

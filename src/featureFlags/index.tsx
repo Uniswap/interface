@@ -55,12 +55,13 @@ export enum BaseVariant {
   Enabled = 'enabled',
 }
 
-export function useBaseFlag(flag: string): BaseVariant {
+export function useBaseFlag(flag: string, defaultValue = BaseVariant.Control): BaseVariant {
   switch (useFeatureFlagsContext().flags[flag]) {
     case 'enabled':
       return BaseVariant.Enabled
     case 'control':
-    default:
       return BaseVariant.Control
+    default:
+      return defaultValue
   }
 }
