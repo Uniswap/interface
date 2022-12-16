@@ -69,9 +69,17 @@ export function useTrade(
 ): TradeWithStatus {
   const [debouncedAmountSpecified, isDebouncing] = useDebounceWithStatus(amountSpecified)
 
-  // if user clears input (amountSpecified is null or undefined), immediately use that
-  // instead of the debounced value so that there's no lingering loading state on empty inputs
-  const amount = !amountSpecified ? amountSpecified : debouncedAmountSpecified
+  /*
+    1. if user clears input (amountSpecified is null or undefined), immediately use that
+    instead of the debounced value so that there's no lingering loading state on empty inputs
+    
+    2. if user changes networks, also immediately use that so there's no mismatch between
+    chains for input/output currencies
+  */
+  const shouldDebounce =
+    amountSpecified && debouncedAmountSpecified?.currency.chainId === otherCurrency?.chainId
+
+  const amount = shouldDebounce ? debouncedAmountSpecified : amountSpecified
 
   const { isLoading, isFetching, error, data } = useRouterQuote({
     amountSpecified: amount,
