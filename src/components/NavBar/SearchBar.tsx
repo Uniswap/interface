@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-restricted-imports
-import { t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from '@uniswap/analytics'
 import { BrowserEvent, ElementName, EventName, SectionName } from '@uniswap/analytics-events'
 import clsx from 'clsx'
@@ -156,9 +156,9 @@ export const SearchBar = () => {
       >
         <Row
           className={clsx(
-            ` ${styles.nftSearchBar} ${!isOpen && !isMobile && magicalGradientOnHover} ${
-              isMobileOrTablet && (isOpen ? styles.visible : styles.hidden)
-            } `
+            styles.nftSearchBar,
+            !isOpen && !isMobile && magicalGradientOnHover,
+            isMobileOrTablet && (isOpen ? styles.visible : styles.hidden)
           )}
           borderRadius={isOpen || isMobileOrTablet ? undefined : '12'}
           borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
@@ -182,18 +182,23 @@ export const SearchBar = () => {
             element={ElementName.NAVBAR_SEARCH_INPUT}
             properties={{ ...trace }}
           >
-            <Box
-              as="input"
-              placeholder={placeholderText}
-              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                !isOpen && toggleOpen()
-                setSearchValue(event.target.value)
-              }}
-              onBlur={() => sendAnalyticsEvent(EventName.NAVBAR_SEARCH_EXITED, navbarSearchEventProperties)}
-              className={`${styles.searchBarInput} ${styles.searchContentLeftAlign}`}
-              value={searchValue}
-              ref={inputRef}
-              width="full"
+            <Trans
+              id={placeholderText}
+              render={({ translation }) => (
+                <Box
+                  as="input"
+                  placeholder={translation as string}
+                  onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                    !isOpen && toggleOpen()
+                    setSearchValue(event.target.value)
+                  }}
+                  onBlur={() => sendAnalyticsEvent(EventName.NAVBAR_SEARCH_EXITED, navbarSearchEventProperties)}
+                  className={`${styles.searchBarInput} ${styles.searchContentLeftAlign}`}
+                  value={searchValue}
+                  ref={inputRef}
+                  width="full"
+                />
+              )}
             />
           </TraceEvent>
           {!isOpen && <KeyShortCut>/</KeyShortCut>}
