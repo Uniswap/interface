@@ -394,6 +394,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       </AssetPriceDetailsContainer>
       {asset.traits && (
         <InfoContainer
+          data-testid="nft-details-traits"
           primaryHeader="Traits"
           defaultOpen
           secondaryHeader={
@@ -423,6 +424,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
         primaryHeader="Activity"
         defaultOpen
         secondaryHeader={formattedPrice ? `Last Sale: ${formattedPrice} ETH` : undefined}
+        data-testid="nft-details-activity"
       >
         <>
           <ActivitySelectContainer $isHorizontalScroll>
@@ -460,7 +462,12 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
           )}
         </>
       </InfoContainer>
-      <InfoContainer primaryHeader="Description" defaultOpen secondaryHeader={null}>
+      <InfoContainer
+        primaryHeader="Description"
+        defaultOpen
+        secondaryHeader={null}
+        data-testid="nft-details-description"
+      >
         <>
           <ByText>By </ByText>
           {asset?.creator && asset.creator?.address && (
@@ -473,7 +480,9 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
             </AddressTextLink>
           )}
 
-          <DescriptionText>{collection.collectionDescription}</DescriptionText>
+          <DescriptionText data-testid="nft-details-description-text">
+            {collection.collectionDescription}
+          </DescriptionText>
           <SocialsContainer>
             {collection.externalUrl && <Resource name="Website" link={`${collection.externalUrl}`} />}
             {collection.twitterUrl && <Resource name="Twitter" link={`https://twitter.com/${collection.twitterUrl}`} />}
@@ -481,7 +490,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
           </SocialsContainer>
         </>
       </InfoContainer>
-      <InfoContainer primaryHeader="Details" defaultOpen secondaryHeader={null}>
+      <InfoContainer primaryHeader="Details" defaultOpen secondaryHeader={null} data-testid="nft-details-asset-details">
         <DetailsContainer asset={asset} collection={collection} />
       </InfoContainer>
     </Column>
