@@ -441,7 +441,6 @@ export default function Swap({ className }: { className?: string }) {
   ])
 
   // errors
-  const [showInverted, setShowInverted] = useState<boolean>(false)
   const [swapQuoteReceivedDate, setSwapQuoteReceivedDate] = useState<Date | undefined>()
 
   // warnings on the greater of fiat value price impact and execution price impact
@@ -663,8 +662,6 @@ export default function Swap({ className }: { className?: string }) {
                       trade={trade}
                       syncing={routeIsSyncing}
                       loading={routeIsLoading}
-                      showInverted={showInverted}
-                      setShowInverted={setShowInverted}
                       allowedSlippage={allowedSlippage}
                     />
                   </DetailsSwapSection>
