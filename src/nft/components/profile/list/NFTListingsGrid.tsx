@@ -65,9 +65,9 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
             display={{ sm: 'none', md: 'flex' }}
             textAlign="right"
           >
-            Marketplace fee
+            Fees
           </Column>
-          <Column
+          {/* <Column
             className={bodySmall}
             color="textSecondary"
             flex="1"
@@ -75,7 +75,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
             textAlign="right"
           >
             Royalties
-          </Column>
+          </Column> */}
           <Column
             className={bodySmall}
             color="textSecondary"
@@ -381,6 +381,8 @@ const MarketplaceRow = ({
     }
   }
 
+  const fees = royalties + marketplaceFee
+
   return (
     <Row transition="500" marginLeft={selectedMarkets.length > 1 ? '20' : '0'}>
       {showMarketplaceLogo && (
@@ -436,12 +438,7 @@ const MarketplaceRow = ({
       </Column>
       <Row flex="1" display={{ sm: 'none', md: 'flex' }}>
         <Box className={body} color="textSecondary" width="full" textAlign="right">
-          {marketplaceFee > 0 ? marketplaceFee + (selectedMarkets.length > 1 ? '% MAX' : '%') : '--%'}
-        </Box>
-      </Row>
-      <Row flex="1" display={{ sm: 'none', md: 'flex' }}>
-        <Box className={body} color="textSecondary" width="full" textAlign="right">
-          {royalties.toFixed(1)}%
+          {fees > 0 ? `${fees} ${selectedMarkets.length > 1 ? '% max' : '%'}` : '--%'}
         </Box>
       </Row>
       <Row style={{ flex: '1.5' }} display={{ sm: 'none', md: 'flex' }}>
