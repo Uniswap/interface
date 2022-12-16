@@ -52,7 +52,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
           transition="500"
           className={bodySmall}
           color="textSecondary"
-          flex="2"
+          flex="1.5"
         >
           NFT
         </Column>
@@ -521,7 +521,7 @@ const NFTListRow = ({ asset, globalPriceMethod, globalPrice, setGlobalPrice, sel
 
   return (
     <Row marginTop="24" marginBottom="24">
-      <Row flexWrap="nowrap" flex="2" marginTop="0" marginBottom="auto" minWidth="0">
+      <Row flexWrap="nowrap" flex="1.5" marginTop="0" marginBottom="auto" minWidth="0">
         <Box
           transition="500"
           style={{
