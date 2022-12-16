@@ -3,7 +3,7 @@ import Web3Status from 'components/Web3Status'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
-import { UniIcon } from 'nft/components/icons'
+import { UniScrollIcon } from 'nft/components/icons'
 import { ReactNode } from 'react'
 import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -102,9 +102,9 @@ const Navbar = () => {
         <Box display="flex" height="full" flexWrap="nowrap" alignItems="center">
           <Box className={styles.leftSideContainer}>
             <Box className={styles.logoContainer}>
-              <UniIcon
-                width="48"
-                height="48"
+              <UniScrollIcon
+                width="38"
+                height="38"
                 className={styles.logo}
                 onClick={() => {
                   navigate('/')
