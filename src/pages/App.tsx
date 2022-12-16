@@ -203,9 +203,6 @@ export default function App() {
           <Suspense fallback={<Loader />}>
             {isLoaded ? (
               <Routes>
-                <Route path="*" element={<Navigate to="/not-found" replace />} />
-                <Route path="/not-found" element={<NotFound />} />
-
                 <Route path="/" element={<Landing />} />
 
                 <Route path="tokens" element={<Tokens />}>
@@ -300,6 +297,9 @@ export default function App() {
                     </Suspense>
                   }
                 />
+
+                <Route path="*" element={<Navigate to="/not-found" replace />} />
+                <Route path="/not-found" element={<NotFound />} />
               </Routes>
             ) : (
               <Loader />

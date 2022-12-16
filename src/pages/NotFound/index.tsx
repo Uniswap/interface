@@ -33,7 +33,7 @@ const PageWrapper = styled(Container)`
 
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
     justify-content: space-between;
-    padding-top: 65px;
+    padding-top: 64px;
   }
 `
 
@@ -54,7 +54,7 @@ export default function NotFound() {
               <Trans>Page not found!</Trans>
             </Paragraph>
           </Container>
-          <Image src={isDarkMode ? darkImage : lightImage} alt="404 page" />
+          <Image src={isDarkMode ? darkImage : lightImage} alt="Liluni" />
         </Header>
         <SmallButtonPrimary as={Link} to="/">
           <Trans>Oops, take me back to Swap</Trans>
