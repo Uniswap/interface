@@ -12,6 +12,7 @@ import { Text } from 'src/components/Text'
 import { PollingInterval } from 'src/constants/misc'
 import { isNonPollingRequestInFlight } from 'src/data/utils'
 import { useAccountListQuery } from 'src/data/__generated__/types-and-hooks'
+import { ElementName } from 'src/features/telemetry/constants'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { spacing } from 'src/styles/sizing'
@@ -76,6 +77,7 @@ export function AccountList({ accounts, onAddWallet, onPressEdit, onPress }: Acc
           borderRadius="full"
           borderWidth={1}
           mr="md"
+          name={ElementName.ImportAccount}
           p="xs"
           onPress={onAddWallet}>
           <PlusIcon

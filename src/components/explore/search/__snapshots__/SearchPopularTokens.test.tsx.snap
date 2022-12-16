@@ -552,6 +552,7 @@ exports[`SearchPopularTokens renders without error 2`] = `
             "opacity": 1,
           }
         }
+        testID="search-token-item"
       >
         <View
           style={
@@ -720,6 +721,7 @@ exports[`SearchPopularTokens renders without error 2`] = `
             "opacity": 1,
           }
         }
+        testID="search-token-item"
       >
         <View
           style={
@@ -888,6 +890,7 @@ exports[`SearchPopularTokens renders without error 2`] = `
             "opacity": 1,
           }
         }
+        testID="search-token-item"
       >
         <View
           style={

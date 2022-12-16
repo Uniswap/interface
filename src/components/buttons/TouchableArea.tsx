@@ -49,10 +49,11 @@ export function TouchableArea({
     [onPress, hapticStyle, hapticFeedback]
   )
 
-  const baseProps = {
+  const baseProps: ComponentProps<typeof TouchableBox> = {
     onPress: onPressHandler,
     activeOpacity,
     hitSlop: defaultHitslopInset,
+    testID: elementName,
     ...rest,
   }
 

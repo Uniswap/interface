@@ -42,6 +42,7 @@ exports[`AccountList renders without error 1`] = `
           borderRadius="full"
           borderWidth={1}
           mr="md"
+          name="import"
           onPress={[Function]}
           p="xs"
         >
@@ -182,6 +183,7 @@ exports[`AccountList renders without error 1`] = `
                 "padding": 8,
               }
             }
+            testID="import"
           >
             <svg
               color="#505A78"
