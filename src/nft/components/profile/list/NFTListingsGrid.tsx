@@ -88,7 +88,13 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
           >
             Fees
           </Column>
-          <Column className={bodySmall} color="textSecondary" flex="1.5" textAlign="right">
+          <Column
+            className={bodySmall}
+            display={{ sm: 'none', md: 'flex' }}
+            color="textSecondary"
+            flex="1.5"
+            textAlign="right"
+          >
             You receive
           </Column>
         </Row>
@@ -444,7 +450,7 @@ const MarketplaceRow = ({
         {asset.lastPrice ? `${asset.floorPrice.toFixed(2)} ETH` : '-'}
       </Column>
 
-      <Column flex="1.5">
+      <Column flex="3">
         {globalPriceMethod === SetPriceMethod.SAME_PRICE && !globalOverride ? (
           <PriceTextInput
             listPrice={globalPrice}
@@ -490,7 +496,7 @@ const MarketplaceRow = ({
         </Box>
       </Column>
 
-      <Column flex="1.5">
+      <Column flex="1.5" display={{ sm: 'none', md: 'flex' }}>
         <Column width="full">
           <EthPriceDisplay ethPrice={userReceives} />
         </Column>
