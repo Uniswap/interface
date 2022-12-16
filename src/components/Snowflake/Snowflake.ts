@@ -45,7 +45,7 @@ export interface SnowflakeProps {
    * An array of images that will be rendered as the snowflakes instead
    * of the default circle shapes.
    */
-  images?: CanvasImageSource[]
+  images?: HTMLImageElement[]
   /**
    * The minimum and maximum rotation speed of the snowflake (in degrees of
    * rotation per frame).
@@ -89,12 +89,12 @@ interface SnowflakeParams {
  * and draw itself to the canvas every call to `draw`.
  */
 class Snowflake {
-  static offscreenCanvases = new WeakMap<CanvasImageSource, Record<number, HTMLCanvasElement>>()
+  static offscreenCanvases = new WeakMap<HTMLImageElement, Record<number, HTMLCanvasElement>>()
 
   private config!: SnowflakeProps
   private params: SnowflakeParams
   private framesSinceLastUpdate: number
-  private image?: CanvasImageSource
+  private image?: HTMLImageElement
 
   public constructor(canvas: HTMLCanvasElement, config: SnowflakeConfig = {}) {
     // Set custom config
@@ -175,8 +175,8 @@ class Snowflake {
     }
   }
 
-  private getImageOffscreenCanvas(image: CanvasImageSource, size: number): CanvasImageSource {
-    if (image instanceof HTMLImageElement && image.loading) return image
+  private getImageOffscreenCanvas(image: HTMLImageElement, size: number): CanvasImageSource {
+    if (image.loading) return image
     let sizes = Snowflake.offscreenCanvases.get(image)
 
     if (!sizes) {
@@ -196,7 +196,8 @@ class Snowflake {
   }
 
   public draw(ctx: CanvasRenderingContext2D): void {
-    if (this.image) {
+    // https://stackoverflow.com/a/1977898/8153505
+    if (this.image?.complete && this.image.naturalWidth) {
       // ctx.save()
       // ctx.translate(this.params.x, this.params.y)
       ctx.setTransform(1, 0, 0, 1, this.params.x, this.params.y)

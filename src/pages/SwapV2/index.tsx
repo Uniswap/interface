@@ -92,6 +92,7 @@ import { useDerivedSwapInfoV2 } from 'state/swap/useAggregator'
 import { useTutorialSwapGuide } from 'state/tutorial/hooks'
 import {
   useExpertModeManager,
+  useHolidayMode,
   useShowLiveChart,
   useShowTokenInfo,
   useShowTradeRoutes,
@@ -100,7 +101,7 @@ import {
   useUserSlippageTolerance,
 } from 'state/user/hooks'
 import { TYPE } from 'theme'
-import { formattedNum, isChristmasTime } from 'utils'
+import { formattedNum } from 'utils'
 import { Aggregator } from 'utils/aggregator'
 import { currencyId } from 'utils/currencyId'
 import { halfAmountSpend, maxAmountSpend } from 'utils/maxAmountSpend'
@@ -184,6 +185,7 @@ export default function Swap() {
   const { account, chainId, networkInfo, isSolana, isEVM } = useActiveWeb3React()
   const [rotate, setRotate] = useState(false)
   const isShowLiveChart = useShowLiveChart()
+  const [holidayMode] = useHolidayMode()
   const toggleProLiveChart = useToggleProLiveChart()
   const isShowTradeRoutes = useShowTradeRoutes()
   const isShowTokenInfoSetting = useShowTokenInfo()
@@ -1064,7 +1066,7 @@ export default function Swap() {
                             )}
                           </Text>
 
-                          {isChristmasTime() && !swapInputError && (
+                          {holidayMode && !swapInputError && (
                             <ChristmasDecor>
                               <img src={christmasImg} width="100%" alt="" />
                             </ChristmasDecor>
