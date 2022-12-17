@@ -91,48 +91,6 @@ export const ButtonPrimary = styled(BaseButton)`
   }
 `
 
-const BaseButtonLight = styled(BaseButton)`
-  background-color: ${({ theme }) => theme.accentActionSoft};
-  color: ${({ theme }) => theme.accentAction};
-  font-size: 20px;
-  font-weight: 600;
-
-  &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && theme.accentActionSoft};
-    background-color: ${({ theme, disabled }) => !disabled && theme.accentActionSoft};
-  }
-  &:hover {
-    background-color: ${({ theme, disabled }) => !disabled && theme.accentActionSoft};
-  }
-  &:active {
-    box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && theme.accentActionSoft};
-    background-color: ${({ theme, disabled }) => !disabled && theme.accentActionSoft};
-  }
-
-  :hover {
-    ${ButtonOverlay} {
-      background-color: ${({ theme }) => theme.stateOverlayHover};
-    }
-  }
-
-  :active {
-    ${ButtonOverlay} {
-      background-color: ${({ theme }) => theme.stateOverlayPressed};
-    }
-  }
-
-  :disabled {
-    opacity: 0.4;
-    :hover {
-      cursor: auto;
-      background-color: transparent;
-      box-shadow: none;
-      border: 1px solid transparent;
-      outline: none;
-    }
-  }
-`
-
 export const ButtonGray = styled(BaseButton)`
   background-color: ${({ theme }) => theme.deprecated_bg1};
   color: ${({ theme }) => theme.deprecated_text2};
@@ -530,11 +488,25 @@ export const ThemeButton = ({ children, ...rest }: ThemeButtonProps) => {
   )
 }
 
+const ThemeButtonLight = styled(ThemeButton)`
+  width: 100%;
+  font-size: 20px;
+  :disabled {
+    opacity: 0.4;
+    :hover {
+      cursor: auto;
+      background-color: transparent;
+      box-shadow: none;
+      border: 1px solid transparent;
+      outline: none;
+    }
+  }
+`
+
 export const ButtonLight = ({ children, ...rest }: BaseButtonProps) => {
   return (
-    <BaseButtonLight {...rest}>
-      <ButtonOverlay />
+    <ThemeButtonLight size={ButtonSize.large} emphasis={ButtonEmphasis.highSoft} {...rest}>
       {children}
-    </BaseButtonLight>
+    </ThemeButtonLight>
   )
 }
