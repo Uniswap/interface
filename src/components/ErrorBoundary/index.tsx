@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import * as Sentry from '@sentry/react'
-import { ButtonLight, ButtonPrimary } from 'components/Button'
+import { ButtonLight, SmallButtonPrimary } from 'components/Button'
 import { ChevronUpIcon } from 'nft/components/icons'
 import { useIsMobile } from 'nft/hooks'
 import React, { PropsWithChildren, useState } from 'react'
@@ -21,13 +21,6 @@ const BodyWrapper = styled.div<{ margin?: string }>`
   max-width: 500px;
   margin: auto;
   padding: 1rem;
-`
-
-const SmallButtonPrimary = styled(ButtonPrimary)`
-  width: auto;
-  font-size: 16px;
-  padding: 10px 16px;
-  border-radius: 12px;
 `
 
 const SmallButtonLight = styled(ButtonLight)`

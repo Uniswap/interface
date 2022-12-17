@@ -91,6 +91,13 @@ export const ButtonPrimary = styled(BaseButton)`
   }
 `
 
+export const SmallButtonPrimary = styled(ButtonPrimary)`
+  width: auto;
+  font-size: 16px;
+  padding: 10px 16px;
+  border-radius: 12px;
+`
+
 const BaseButtonLight = styled(BaseButton)`
   background-color: ${({ theme }) => theme.accentActionSoft};
   color: ${({ theme }) => theme.accentAction};
