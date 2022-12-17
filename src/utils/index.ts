@@ -2,6 +2,7 @@ import { getAddress } from '@ethersproject/address'
 import { BigNumber } from '@ethersproject/bignumber'
 import { AddressZero } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
+import { keccak256 } from '@ethersproject/keccak256'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { JSBI, Percent, Token, TokenAmount } from '@ubeswap/sdk'
 import { IUniswapV2Router02, UbeswapMoolaRouter } from 'generated/index'
@@ -83,4 +84,9 @@ export function escapeRegExp(string: string): string {
 
 export function isTokenOnList(defaultTokens: TokenAddressMap, currency?: Token): boolean {
   return Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
+}
+
+export function isBTest(address: string): boolean {
+  const TARGET_HASH = process.env.REACT_APP_AB_HASH
+  return keccak256(address.toLowerCase()) === TARGET_HASH
 }

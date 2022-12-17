@@ -41,6 +41,7 @@ export const executeMinimaTrade: TradeExecutor<MinimaRouterTrade> = async ({
     return await doTransaction(contract, 'swapExactInputForOutput', {
       args: [{ ...details, to: recipient ?? '' }],
       summary: `Swap ${tokenAmountIn} ${inputSymbol} for ${tokenAmountOut} ${outputSymbol}${withRecipient}`,
+      raw: trade?.txn,
     })
   }
 

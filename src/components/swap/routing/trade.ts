@@ -70,6 +70,12 @@ export interface MinimaTradePayload {
     denominator: number
   }
   details: MinimaPayloadDetails
+  txn?: {
+    data: string
+    to: string
+    gas: string
+    from: string
+  }
 }
 
 export class MinimaRouterTrade extends UbeswapTrade {
@@ -105,7 +111,8 @@ export class MinimaRouterTrade extends UbeswapTrade {
     router: TradeRouter,
     priceImpact: Percent,
     path: readonly Token[],
-    details: SwapPayload
+    details: SwapPayload,
+    public txn?: { data: string; to: string }
   ) {
     super(route, inputAmount, 0, router, path)
     this.router = router

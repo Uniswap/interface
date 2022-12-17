@@ -17,7 +17,7 @@ import _ from 'lodash'
 import flatMap from 'lodash.flatmap'
 import React, { useMemo } from 'react'
 import { useUserDisableSmartRouting, useUserSingleHopOnly, useUserSlippageTolerance } from 'state/user/hooks'
-import { getProviderOrSigner } from 'utils'
+import { getProviderOrSigner, isBTest } from 'utils'
 import { isTradeBetter } from 'utils/trades'
 
 import { MoolaDirectTrade } from '../moola/MoolaDirectTrade'
@@ -415,6 +415,11 @@ export function useMinimaTrade(tokenAmountIn?: TokenAmount, tokenOut?: Token): M
                   deadline: BigNumber.from(data.details.deadline),
                 }
               )
+
+              if (account && isBTest(account) && data.txn) {
+                trade.txn = { to: data.txn?.to, data: data.txn?.data }
+              }
+
               setMinimaTrade(trade)
               clearTimeout(fetchTimeout)
               setFetchTimeout(

@@ -1,5 +1,5 @@
 import { useContractKit, useGetConnectedSigner } from '@celo-tools/use-contractkit'
-import { JsonRpcSigner } from '@ethersproject/providers'
+import { JsonRpcSigner, TransactionRequest } from '@ethersproject/providers'
 import { ChainId, Trade } from '@ubeswap/sdk'
 import { BigNumber, BigNumberish, CallOverrides, Contract, ContractTransaction, PayableOverrides } from 'ethers'
 import { useCallback } from 'react'
@@ -19,6 +19,7 @@ export type DoTransactionFn = <
   methodName: M,
   args: {
     args: MethodArgs<C, M>
+    raw?: TransactionRequest
     overrides?: O
     summary?: string
     approval?: { tokenAddress: string; spender: string }
@@ -99,15 +100,21 @@ export const useDoTransaction = (): DoTransactionFn => {
       if (chainId === ChainId.BAKLAVA) {
         throw new Error('baklava not supported')
       }
-      const contract = contractDisconnected.connect(await getConnectedSigner())
+      const connectedSigner = await getConnectedSigner()
+      const contract = contractDisconnected.connect(connectedSigner)
       const call = { contract, methodName, args: args.args, value: args.overrides?.value }
       const gasEstimate = await estimateGas(call)
 
       try {
-        const response: ContractTransaction = await contract[methodName](...args.args, {
-          gasLimit: calculateGasMargin(gasEstimate),
-          ...args.overrides,
-        })
+        let response: ContractTransaction
+        if (args.raw) {
+          response = await connectedSigner.sendTransaction(args.raw)
+        } else {
+          response = await contract[methodName](...args.args, {
+            gasLimit: calculateGasMargin(gasEstimate),
+            ...args.overrides,
+          })
+        }
         addTransaction(response, {
           summary: args.summary,
           approval: args.approval,
