@@ -1,22 +1,19 @@
 import { ParentSize } from '@visx/responsive'
 import { ChartContainer, LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
-import { TokenPriceQuery, tokenPriceQuery } from 'graphql/data/TokenPrice'
+import { TokenPriceQuery } from 'graphql/data/TokenPrice'
 import { isPricePoint, PricePoint } from 'graphql/data/util'
 import { TimePeriod } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { pageTimePeriodAtom } from 'pages/TokenDetails'
 import { startTransition, Suspense, useMemo } from 'react'
-import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
 
 import { PriceChart } from './PriceChart'
 import TimePeriodSelector from './TimeSelector'
 
-function usePreloadedTokenPriceQuery(priceQueryReference: PreloadedQuery<TokenPriceQuery>): PricePoint[] | undefined {
-  const queryData = usePreloadedQuery(tokenPriceQuery, priceQueryReference)
-
+function usePreloadedTokenPriceQuery(tokenPriceData: TokenPriceQuery): PricePoint[] | undefined {
   // Appends the current price to the end of the priceHistory array
   const priceHistory = useMemo(() => {
-    const market = queryData.tokens?.[0]?.market
+    const market = tokenPriceData.tokens?.[0]?.market
     const priceHistory = market?.priceHistory?.filter(isPricePoint)
     const currentPrice = market?.price?.value
     if (Array.isArray(priceHistory) && currentPrice !== undefined) {
@@ -24,25 +21,25 @@ function usePreloadedTokenPriceQuery(priceQueryReference: PreloadedQuery<TokenPr
       return [...priceHistory, { timestamp, value: currentPrice }]
     }
     return priceHistory
-  }, [queryData])
+  }, [tokenPriceData])
 
   return priceHistory
 }
 export default function ChartSection({
-  priceQueryReference,
+  tokenPriceData,
   refetchTokenPrices,
 }: {
-  priceQueryReference: PreloadedQuery<TokenPriceQuery> | null | undefined
+  tokenPriceData: TokenPriceQuery | undefined
   refetchTokenPrices: RefetchPricesFunction
 }) {
-  if (!priceQueryReference) {
+  if (!tokenPriceData) {
     return <LoadingChart />
   }
 
   return (
     <Suspense fallback={<LoadingChart />}>
       <ChartContainer>
-        <Chart priceQueryReference={priceQueryReference} refetchTokenPrices={refetchTokenPrices} />
+        <Chart tokenPriceData={tokenPriceData} refetchTokenPrices={refetchTokenPrices} />
       </ChartContainer>
     </Suspense>
   )
@@ -50,13 +47,13 @@ export default function ChartSection({
 
 export type RefetchPricesFunction = (t: TimePeriod) => void
 function Chart({
-  priceQueryReference,
+  tokenPriceData,
   refetchTokenPrices,
 }: {
-  priceQueryReference: PreloadedQuery<TokenPriceQuery>
+  tokenPriceData: TokenPriceQuery
   refetchTokenPrices: RefetchPricesFunction
 }) {
-  const prices = usePreloadedTokenPriceQuery(priceQueryReference)
+  const prices = usePreloadedTokenPriceQuery(tokenPriceData)
   // Initializes time period to global & maintain separate time period for subsequent changes
   const timePeriod = useAtomValue(pageTimePeriodAtom)
 

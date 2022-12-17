@@ -27,7 +27,7 @@ import Widget from 'components/Widget'
 import { getChainInfo } from 'constants/chainInfo'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
-import { TokenPriceQuery } from 'graphql/data/__generated__/TokenPriceQuery.graphql'
+import { TokenPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { Chain, TokenQuery, TokenQueryData } from 'graphql/data/Token'
 import { QueryToken } from 'graphql/data/Token'
 import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
@@ -36,7 +36,6 @@ import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { UNKNOWN_TOKEN_SYMBOL, useTokenFromActiveNetwork } from 'lib/hooks/useCurrency'
 import { useCallback, useMemo, useState, useTransition } from 'react'
 import { ArrowLeft } from 'react-feather'
-import { PreloadedQuery } from 'react-relay'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { isAddress } from 'utils'
@@ -91,15 +90,15 @@ function useRelevantToken(
 type TokenDetailsProps = {
   urlAddress: string | undefined
   chain: Chain
-  tokenQuery: TokenQuery
-  priceQueryReference: PreloadedQuery<TokenPriceQuery> | null | undefined
+  tokenData: TokenQuery
+  tokenPriceData: TokenPriceQuery | undefined
   refetchTokenPrices: RefetchPricesFunction
 }
 export default function TokenDetails({
   urlAddress,
   chain,
-  tokenQuery,
-  priceQueryReference,
+  tokenData,
+  tokenPriceData,
   refetchTokenPrices,
 }: TokenDetailsProps) {
   if (!urlAddress) {
@@ -112,7 +111,7 @@ export default function TokenDetails({
 
   const pageChainId = CHAIN_NAME_TO_CHAIN_ID[chain]
 
-  const tokenQueryData = tokenQuery.tokens?.[0]
+  const tokenQueryData = tokenData.tokens?.[0]
   const crossChainMap = useMemo(
     () =>
       tokenQueryData?.project?.tokens.reduce((map, current) => {
@@ -200,7 +199,7 @@ export default function TokenDetails({
                 <ShareButton currency={token} />
               </TokenActions>
             </TokenInfoContainer>
-            <ChartSection priceQueryReference={priceQueryReference} refetchTokenPrices={refetchTokenPrices} />
+            <ChartSection tokenPriceData={tokenPriceData} refetchTokenPrices={refetchTokenPrices} />
             <StatsSection
               TVL={tokenQueryData?.market?.totalValueLocked?.value}
               volume24H={tokenQueryData?.market?.volume24H?.value}

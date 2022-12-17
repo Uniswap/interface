@@ -1,8 +1,8 @@
-import graphql from 'babel-plugin-relay/macro'
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
+import gql from 'graphql-tag'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
-import { TokenQueryQuery } from './__generated__/types-and-hooks'
+import { TokenQuery } from './__generated__/types-and-hooks'
 import { CHAIN_NAME_TO_CHAIN_ID } from './util'
 
 /*
@@ -13,9 +13,8 @@ The difference between Token and TokenProject:
     TokenMarket is per-chain market data for contracts pulled from the graph.
     TokenProjectMarket is aggregated market data (aggregated over multiple dexes and centralized exchanges) that we get from coingecko.
 */
-// eslint-disable-next-line import/no-unused-modules
-export const tokenQuery = graphql`
-  query TokenQuery($contract: ContractInput!) {
+gql`
+  query Token($contract: ContractInput!) {
     tokens(contracts: [$contract]) {
       id
       decimals
@@ -57,9 +56,9 @@ export const tokenQuery = graphql`
   }
 `
 // eslint-disable-next-line import/no-unused-modules
-export type { Chain, TokenQueryQuery as TokenQuery } from './__generated__/types-and-hooks'
+export type { Chain, TokenQuery } from './__generated__/types-and-hooks'
 
-export type TokenQueryData = NonNullable<TokenQueryQuery['tokens']>[number]
+export type TokenQueryData = NonNullable<TokenQuery['tokens']>[number]
 
 // TODO: Return a QueryToken from useTokenQuery instead of TokenQueryData to make it more usable in Currency-centric interfaces.
 export class QueryToken extends WrappedTokenInfo {

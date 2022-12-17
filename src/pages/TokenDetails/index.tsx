@@ -1,13 +1,11 @@
 import TokenDetails from 'components/Tokens/TokenDetails'
 import { TokenDetailsPageSkeleton } from 'components/Tokens/TokenDetails/Skeleton'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
-import { useTokenQueryQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { TokenPriceQuery, tokenPriceQuery } from 'graphql/data/TokenPrice'
+import { useTokenPriceQuery, useTokenQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { CHAIN_NAME_TO_CHAIN_ID, TimePeriod, toHistoryDuration, validateUrlChainParam } from 'graphql/data/util'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { useCallback, useMemo } from 'react'
-import { useQueryLoader } from 'react-relay'
 import { useParams } from 'react-router-dom'
 
 export const pageTimePeriodAtom = atomWithStorage<TimePeriod>('tokenDetailsTimePeriod', TimePeriod.DAY)
@@ -26,30 +24,36 @@ export default function TokenDetailsPage() {
     [chain, isNative, pageChainId, timePeriod, tokenAddress]
   )
 
-  const { data, loading } = useTokenQueryQuery({
+  const { data: tokenData, loading: tokenDataLoading } = useTokenQuery({
     variables: {
       contract,
     },
+    fetchPolicy: 'cache-and-network',
   })
 
-  const [priceQueryReference, loadPriceQuery] = useQueryLoader<TokenPriceQuery>(tokenPriceQuery)
+  const { data: tokenPriceData, loading: tokenPriceDataLoading } = useTokenPriceQuery({
+    variables: {
+      contract,
+      duration,
+    },
+    fetchPolicy: 'cache-and-network',
+  })
 
   const refetchTokenPrices = useCallback(
     (t: TimePeriod) => {
-      loadPriceQuery({ contract, duration: toHistoryDuration(t) })
       setTimePeriod(t)
     },
-    [contract, loadPriceQuery, setTimePeriod]
+    [setTimePeriod]
   )
 
-  return loading || !data ? (
-    <TokenDetailsPageSkeleton />
-  ) : (
+  if (!tokenData || tokenDataLoading) return <TokenDetailsPageSkeleton />
+
+  return (
     <TokenDetails
       urlAddress={tokenAddress}
       chain={chain}
-      tokenQuery={data}
-      priceQueryReference={priceQueryReference}
+      tokenData={tokenData}
+      tokenPriceData={tokenPriceData}
       refetchTokenPrices={refetchTokenPrices}
     />
   )
