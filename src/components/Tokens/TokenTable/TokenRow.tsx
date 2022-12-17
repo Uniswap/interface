@@ -6,8 +6,7 @@ import { ParentSize } from '@visx/responsive'
 import SparklineChart from 'components/Charts/SparklineChart'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import { getChainInfo } from 'constants/chainInfo'
-import { TopTokensSparklineQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { TopToken } from 'graphql/data/TopTokens'
+import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { ForwardedRef, forwardRef } from 'react'
@@ -422,8 +421,7 @@ interface LoadedRowProps {
   tokenListIndex: number
   tokenListLength: number
   token: NonNullable<TopToken>
-  sparklineMap: TopTokensSparklineQuery | undefined
-  loadingSparklines: boolean
+  sparklineMap: SparklineMap
 }
 
 /* Loaded State: row component with token information */
@@ -515,7 +513,6 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
                       tokenData={token}
                       pricePercentChange={token.market?.pricePercentChange?.value}
                       sparklineMap={props.sparklineMap}
-                      loadingSparklines={props.loadingSparklines}
                     />
                   )
                 }

@@ -12,11 +12,10 @@ import { useMemo } from 'react'
 import {
   Chain,
   TopTokens100Query,
-  TopTokensSparklineQuery,
   useTopTokens100Query,
   useTopTokensSparklineQuery,
 } from './__generated__/types-and-hooks'
-import { CHAIN_NAME_TO_CHAIN_ID, toHistoryDuration, unwrapToken } from './util'
+import { CHAIN_NAME_TO_CHAIN_ID, isPricePoint, PricePoint, toHistoryDuration, unwrapToken } from './util'
 
 gql`
   query TopTokens100($duration: HistoryDuration!, $chain: Chain!) {
@@ -115,24 +114,32 @@ function useFilteredTokens(tokens: NonNullable<TopTokens100Query['topTokens']>) 
 
 // Number of items to render in each fetch in infinite scroll.
 export const PAGE_SIZE = 20
-
+export type SparklineMap = { [key: string]: PricePoint[] | undefined }
 export type TopToken = NonNullable<NonNullable<TopTokens100Query>['topTokens']>[number]
 
 interface UseTopTokensReturnValue {
   tokens: TopToken[] | undefined
   loadingTokens: boolean
-  sparklines: TopTokensSparklineQuery | undefined
-  loadingSparklines: boolean
+  sparklines: SparklineMap
 }
 
 export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   const chainId = CHAIN_NAME_TO_CHAIN_ID[chain]
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
 
-  const { data: sparklines, loading: loadingSparklines } = useTopTokensSparklineQuery({
+  const { data: sparklineData } = useTopTokensSparklineQuery({
     variables: { duration, chain },
     fetchPolicy: 'cache-and-network',
   })
+
+  const sparklines = useMemo(() => {
+    const unwrappedTokens = sparklineData?.topTokens?.map((topToken) => unwrapToken(chainId, topToken))
+    const map: SparklineMap = {}
+    unwrappedTokens?.forEach(
+      (current) => current?.address && (map[current.address] = current?.market?.priceHistory?.filter(isPricePoint))
+    )
+    return map
+  }, [chainId, sparklineData?.topTokens])
 
   const { data, loading: loadingTokens } = useTopTokens100Query({
     variables: { duration, chain },
@@ -144,8 +151,5 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   )
   const filteredTokens = useFilteredTokens(mappedTokens)
   const sortedTokens = useSortedTokens(filteredTokens)
-  return useMemo(
-    () => ({ tokens: sortedTokens, loadingTokens, sparklines, loadingSparklines }),
-    [loadingTokens, sortedTokens, sparklines, loadingSparklines]
-  )
+  return useMemo(() => ({ tokens: sortedTokens, loadingTokens, sparklines }), [loadingTokens, sortedTokens, sparklines])
 }

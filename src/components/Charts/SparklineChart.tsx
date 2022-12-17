@@ -1,7 +1,6 @@
 import { SparkLineLoadingBubble } from 'components/Tokens/TokenTable/TokenRow'
 import { curveCardinal, scaleLinear } from 'd3'
-import { TopTokensSparklineQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { TopToken } from 'graphql/data/TopTokens'
+import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { PricePoint } from 'graphql/data/util'
 import { memo } from 'react'
 import styled, { useTheme } from 'styled-components/macro'
@@ -21,26 +20,16 @@ interface SparklineChartProps {
   height: number
   tokenData: TopToken
   pricePercentChange: number | undefined | null
-  sparklineMap: TopTokensSparklineQuery
-  loadingSparklines: boolean
+  sparklineMap: SparklineMap
 }
 
-function _SparklineChart({
-  width,
-  height,
-  tokenData,
-  pricePercentChange,
-  sparklineMap,
-  loadingSparklines,
-}: SparklineChartProps) {
+function _SparklineChart({ width, height, tokenData, pricePercentChange, sparklineMap }: SparklineChartProps) {
   const theme = useTheme()
   // for sparkline
-  const pricePoints = tokenData?.address
-    ? sparklineMap?.topTokens?.find((token) => token.address === tokenData.address)?.market?.priceHistory
-    : null
+  const pricePoints = tokenData?.address ? sparklineMap[tokenData.address] : null
 
   // Don't display if there's one or less pricepoints
-  if (!pricePoints || pricePoints.length <= 1 || loadingSparklines) {
+  if (!pricePoints || pricePoints.length <= 1) {
     return (
       <LoadingContainer>
         <SparkLineLoadingBubble />

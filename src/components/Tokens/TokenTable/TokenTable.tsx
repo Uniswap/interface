@@ -78,7 +78,7 @@ function LoadingTokenTable({ rowCount = PAGE_SIZE }: { rowCount?: number }) {
 export default function TokenTable() {
   // TODO: consider moving prefetched call into app.tsx and passing it here, use a preloaded call & updated on interval every 60s
   const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
-  const { tokens, loadingTokens, sparklines, loadingSparklines } = useTopTokens(chainName)
+  const { tokens, loadingTokens, sparklines } = useTopTokens(chainName)
 
   /* loading and error state */
   if (loadingTokens) return <LoadingTokenTable rowCount={PAGE_SIZE} />
@@ -109,7 +109,6 @@ export default function TokenTable() {
                   tokenListLength={tokens.length}
                   token={token}
                   sparklineMap={sparklines}
-                  loadingSparklines={loadingSparklines}
                 />
               )
           )}
