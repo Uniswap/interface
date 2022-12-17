@@ -65,6 +65,7 @@ const InfoContainer = ({
   primaryHeader,
   secondaryHeader,
   defaultOpen,
+  ...props
 }: {
   children: JSX.Element
   primaryHeader: string
@@ -75,7 +76,7 @@ const InfoContainer = ({
 
   return (
     <div>
-      <Header isOpen={isOpen} onClick={() => setIsOpen(!isOpen)}>
+      <Header {...props} isOpen={isOpen} onClick={() => setIsOpen(!isOpen)}>
         <PrimaryHeader>
           {primaryHeader} <SecondaryHeader>{secondaryHeader}</SecondaryHeader>
         </PrimaryHeader>

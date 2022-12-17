@@ -198,6 +198,7 @@ export function Table<D extends Record<string, unknown>>({
                   {...row.getRowProps()}
                   key={row.id}
                   onClick={() => navigate(`/nfts/collection/${row.original.collection.address}`)}
+                  data-testid="nft-trending-collection"
                 >
                   {row.cells.map((cell, cellIndex) => {
                     return (
