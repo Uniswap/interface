@@ -39,7 +39,7 @@ const StyledDialogContent = styled(AnimatedDialogContent)<StyledDialogProps>`
 
   &[data-reach-dialog-content] {
     margin: auto;
-    background-color: ${({ theme }) => theme.deprecated_bg0};
+    background-color: ${({ theme }) => theme.backgroundSurface};
     border: ${({ theme, $hideBorder }) => !$hideBorder && `1px solid ${theme.deprecated_bg1}`};
     box-shadow: ${({ theme }) => theme.deepShadow};
     padding: 0px;

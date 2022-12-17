@@ -647,7 +647,7 @@ const DetailsLink = () => {
         e.stopPropagation()
       }}
     >
-      <Box>Details</Box>
+      <Box data-testid="nft-details-link">Details</Box>
     </DetailsLinkContainer>
   )
 }

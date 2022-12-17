@@ -757,7 +757,7 @@ export default function AddLiquidity() {
                                 fontSize={14}
                                 style={{ fontWeight: 500 }}
                                 textAlign="left"
-                                color={theme.deprecated_primaryText1}
+                                color={theme.accentAction}
                               >
                                 <Trans>
                                   This pool must be initialized before you can add liquidity. To initialize, select a
