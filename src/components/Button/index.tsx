@@ -7,18 +7,6 @@ import { RowBetween } from '../Row'
 
 type ButtonProps = Omit<ButtonPropsOriginal, 'css'>
 
-const ButtonOverlay = styled.div`
-  background-color: transparent;
-  bottom: 0;
-  border-radius: 16px;
-  height: 100%;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  transition: 150ms ease background-color;
-  width: 100%;
-`
 type BaseButtonProps = {
   padding?: string
   width?: string
@@ -344,6 +332,19 @@ export function ButtonRadioChecked({ active = false, children, ...rest }: { acti
     )
   }
 }
+
+const ButtonOverlay = styled.div`
+  background-color: transparent;
+  bottom: 0;
+  border-radius: 16px;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: 150ms ease background-color;
+  width: 100%;
+`
 
 export enum ButtonSize {
   small,
