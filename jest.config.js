@@ -17,6 +17,7 @@ module.exports = {
       lines: 21.5,
     },
   },
+  clearMocks: true,
   // consider enabling for speed
   // changedSince: 'master',
   // https://github.com/facebook/jest/issues/2663#issuecomment-341384494
