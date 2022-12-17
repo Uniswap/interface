@@ -79,6 +79,13 @@ export const ButtonPrimary = styled(BaseButton)`
   }
 `
 
+export const SmallButtonPrimary = styled(ButtonPrimary)`
+  width: auto;
+  font-size: 16px;
+  padding: 10px 16px;
+  border-radius: 12px;
+`
+
 export const ButtonGray = styled(BaseButton)`
   background-color: ${({ theme }) => theme.deprecated_bg1};
   color: ${({ theme }) => theme.textSecondary};

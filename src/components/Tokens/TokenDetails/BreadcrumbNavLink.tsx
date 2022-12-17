@@ -11,6 +11,7 @@ export const BreadcrumbNavLink = styled(Link)`
   text-decoration: none;
   margin-bottom: 16px;
   transition-duration: ${({ theme }) => theme.transition.duration.fast};
+  width: fit-content;
 
   &:hover {
     color: ${({ theme }) => theme.textTertiary};
