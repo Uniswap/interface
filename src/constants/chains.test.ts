@@ -4,7 +4,7 @@ describe('chains', () => {
   describe('ALL_SUPPORTED_CHAIN_IDS', () => {
     it('contains all the values in the SupportedChainId enum', () => {
       Object.values(SupportedChainId).forEach((chainId) => {
-        if (typeof chainId === 'number') expect(ALL_SUPPORTED_CHAIN_IDS.includes(chainId as number)).toBeTruthy()
+        expect(ALL_SUPPORTED_CHAIN_IDS.includes(chainId as number)).toBeTruthy()
       })
     })
 
