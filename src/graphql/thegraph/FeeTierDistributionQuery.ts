@@ -49,7 +49,6 @@ export default function useFeeTierDistributionQuery(
     },
     pollInterval: interval,
     client: apolloClient,
-    fetchPolicy: 'cache-and-network',
   })
 
   return useMemo(

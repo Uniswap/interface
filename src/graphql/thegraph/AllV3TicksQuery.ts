@@ -31,7 +31,6 @@ export default function useAllV3TicksQuery(poolAddress: string | undefined, skip
     },
     pollInterval: interval,
     client: apolloClient,
-    fetchPolicy: 'cache-and-network',
   })
 
   return useMemo(
