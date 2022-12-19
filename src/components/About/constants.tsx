@@ -7,13 +7,8 @@ import darkArrowImgSrc from './images/aboutArrowDark.png'
 import lightArrowImgSrc from './images/aboutArrowLight.png'
 import darkDollarImgSrc from './images/aboutDollarDark.png'
 import darkTerminalImgSrc from './images/aboutTerminalDark.png'
-import darkSwapSrc from './images/darkSwap.png'
-import darkWalletsSrc from './images/darkWallets.png'
-import lightSwapSrc from './images/lightSwap.png'
-import lightWalletsSrc from './images/lightWallets.png'
 import nftCardImgSrc from './images/nftCard.png'
 import swapCardImgSrc from './images/swapCard.png'
-import tokens from './images/tokens.png'
 
 export const MAIN_CARDS = [
   {
@@ -72,27 +67,5 @@ export const MORE_CARDS = [
     darkIcon: <StyledCardLogo src={darkTerminalImgSrc} alt="Developers" />,
     cta: 'Developer docs',
     elementName: ElementName.ABOUT_PAGE_DEV_DOCS_CARD,
-  },
-]
-
-// eslint-disable-next-line import/no-unused-modules
-export const STEPS = [
-  {
-    title: 'Connect a wallet',
-    description: 'Connect your preferred crypto wallet to the Uniswap Interface.',
-    lightImgSrc: lightWalletsSrc,
-    darkImgSrc: darkWalletsSrc,
-  },
-  {
-    title: 'Transfer crypto',
-    description: 'Trade crypto and NFTs through Uniswap’s platform',
-    lightImgSrc: tokens,
-    darkImgSrc: tokens,
-  },
-  {
-    title: 'Trade tokens and NFTs',
-    description: 'Trade crypto and NFTs through Uniswap’s platform',
-    lightImgSrc: lightSwapSrc,
-    darkImgSrc: darkSwapSrc,
   },
 ]
