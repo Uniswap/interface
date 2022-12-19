@@ -83,14 +83,14 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
             className={bodySmall}
             color="textSecondary"
             flex="1"
-            display={{ sm: 'none', md: 'flex' }}
+            display={{ sm: 'none', md: 'none', lg: 'flex' }}
             textAlign="right"
           >
             Fees
           </Column>
           <Column
             className={bodySmall}
-            display={{ sm: 'none', md: 'flex' }}
+            display={{ sm: 'none', md: 'none', lg: 'flex' }}
             color="textSecondary"
             flex="1.5"
             textAlign="right"
@@ -474,7 +474,7 @@ const MarketplaceRow = ({
         )}
       </Column>
 
-      <Column flex="1" display={{ sm: 'none', md: 'flex' }}>
+      <Column flex="1" display={{ sm: 'none', md: 'none', lg: 'flex' }}>
         <Box className={body} color="textSecondary" width="full" textAlign="right">
           <MouseoverTooltip
             text={
@@ -496,7 +496,7 @@ const MarketplaceRow = ({
         </Box>
       </Column>
 
-      <Column flex="1.5" display={{ sm: 'none', md: 'flex' }}>
+      <Column flex="1.5" display={{ sm: 'none', md: 'none', lg: 'flex' }}>
         <Column width="full">
           <EthPriceDisplay ethPrice={userReceives} />
         </Column>
