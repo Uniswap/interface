@@ -33,7 +33,13 @@ export default function useWrapCallback(
   inputCurrency: Currency | undefined | null,
   outputCurrency: Currency | undefined | null,
   typedValue: string | undefined,
-): { wrapType: WrapType; execute?: undefined | (() => Promise<void>); inputError?: string } {
+  forceWrap = false,
+): {
+  wrapType: WrapType
+  execute?: undefined | (() => Promise<string | undefined>)
+  inputError?: string
+  allowUnwrap?: boolean
+} {
   const { chainId, isEVM, isSolana, account } = useActiveWeb3React()
   const provider = useProvider()
   const wethContract = useWETHContract()
@@ -49,7 +55,7 @@ export default function useWrapCallback(
 
     const nativeTokenSymbol = NativeCurrencies[chainId].symbol
 
-    if (inputCurrency.isNative && WETH[chainId].equals(outputCurrency)) {
+    if ((inputCurrency.isNative && WETH[chainId].equals(outputCurrency)) || (forceWrap && inputCurrency.isNative)) {
       return {
         wrapType: WrapType.WRAP,
         execute:
@@ -87,10 +93,12 @@ export default function useWrapCallback(
                         6,
                       )} W${nativeTokenSymbol}`,
                     })
+                    return hash
                   }
                   throw new Error()
                 } catch (error) {
                   console.error('Could not deposit', error)
+                  return
                 }
               }
             : undefined,
@@ -100,7 +108,8 @@ export default function useWrapCallback(
           ? undefined
           : t`Insufficient ${NativeCurrencies[chainId].symbol} balance`,
       }
-    } else if (WETH[chainId].equals(inputCurrency) && outputCurrency.isNative) {
+    }
+    if (WETH[chainId].equals(inputCurrency) && outputCurrency.isNative) {
       return {
         wrapType: WrapType.UNWRAP,
         execute:
@@ -139,10 +148,12 @@ export default function useWrapCallback(
                         6,
                       )} ${nativeTokenSymbol}`,
                     })
+                    return hash
                   }
                   throw new Error()
                 } catch (error) {
                   console.error('Could not withdraw', error)
+                  return
                 }
               }
             : undefined,
@@ -152,9 +163,8 @@ export default function useWrapCallback(
           ? undefined
           : t`Insufficient W${NativeCurrencies[chainId].symbol} balance`,
       }
-    } else {
-      return NOT_APPLICABLE
     }
+    return NOT_APPLICABLE
   }, [
     wethContract,
     isEVM,
@@ -168,5 +178,6 @@ export default function useWrapCallback(
     account,
     provider,
     addTransactionWithType,
+    forceWrap,
   ])
 }

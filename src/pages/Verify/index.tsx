@@ -142,8 +142,14 @@ function Verify() {
                       Your email have been verified{isVerifyExternal ? null : ' by KyberSwap.com.'}.
                     </Text>{' '}
                     If it has been more than a few days and you still haven’t receive any notification yet, please
-                    contact us through our channels. You will be redirected to{' '}
-                    {isVerifyExternal ? <ExternalLink href={redirectUrl}>{redirectUrl}</ExternalLink> : 'our Swap page'}{' '}
+                    contact us through our channels.
+                    <br />
+                    You will be redirected to{' '}
+                    {isVerifyExternal ? (
+                      <ExternalLink href={redirectUrl}>{redirectUrl}</ExternalLink>
+                    ) : (
+                      'our Swap page'
+                    )}{' '}
                     after{' '}
                     <Text as="span" fontWeight={'500'} color={theme.text}>
                       {time}

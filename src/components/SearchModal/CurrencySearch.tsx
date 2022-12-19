@@ -1,4 +1,4 @@
-import { ChainId, Currency, Token } from '@kyberswap/ks-sdk-core'
+import { ChainId, Currency, Token, WETH } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import axios from 'axios'
 import { rgba } from 'polished'
@@ -15,7 +15,7 @@ import { KS_SETTING_API } from 'constants/env'
 import { Z_INDEXS } from 'constants/styles'
 import { NativeCurrencies } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
-import { fetchTokenByAddress, formatAndCacheToken, useAllTokens } from 'hooks/Tokens'
+import { fetchListTokenByAddresses, fetchTokenByAddress, formatAndCacheToken, useAllTokens } from 'hooks/Tokens'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import usePrevious from 'hooks/usePrevious'
@@ -81,7 +81,7 @@ interface CurrencySearchProps {
   showImportView: () => void
   setImportToken: (token: Token) => void
   customChainId?: ChainId
-  supportNative?: boolean
+  filterWrap?: boolean
 }
 
 const PAGE_SIZE = 20
@@ -136,7 +136,7 @@ export function CurrencySearch({
   showImportView,
   setImportToken,
   customChainId,
-  supportNative = true,
+  filterWrap = false,
 }: CurrencySearchProps) {
   const { chainId: web3ChainId } = useActiveWeb3React()
   const chainId = customChainId || web3ChainId
@@ -159,40 +159,39 @@ export function CurrencySearch({
   const [commonTokens, setCommonTokens] = useState<(Token | Currency)[]>([])
   const [loadingCommon, setLoadingCommon] = useState(true)
 
-  const showETH: boolean = useMemo(() => {
-    if (!supportNative) return false
-    const nativeToken = NativeCurrencies[chainId]
-    const s = debouncedQuery.toLowerCase().trim()
-    return !!nativeToken?.symbol?.toLowerCase().startsWith(s)
-  }, [debouncedQuery, chainId, supportNative])
-
   const tokenImportsFiltered = useMemo(() => {
     return (debouncedQuery ? filterTokens(chainId, tokenImports, debouncedQuery) : tokenImports).sort(tokenComparator)
   }, [debouncedQuery, chainId, tokenImports, tokenComparator])
 
+  // input eth => output filter weth, input weth => output filter eth
+  const filterWrapFunc = useCallback(
+    (token: Currency | undefined) => {
+      if (filterWrap && otherSelectedCurrency?.equals(WETH[chainId])) {
+        return !token?.isNative
+      }
+      if (filterWrap && otherSelectedCurrency?.isNative) {
+        return !token?.equals(WETH[chainId])
+      }
+      return true
+    },
+    [chainId, otherSelectedCurrency, filterWrap],
+  )
+
   const filteredCommonTokens = useMemo(() => {
-    return filterTokens(chainId, commonTokens as Token[], debouncedQuery).filter(e =>
-      supportNative ? true : !e.isNative,
-    )
-  }, [commonTokens, debouncedQuery, supportNative, chainId])
+    return filterTokens(chainId, commonTokens as Token[], debouncedQuery).filter(filterWrapFunc)
+  }, [commonTokens, debouncedQuery, chainId, filterWrapFunc])
 
   const filteredSortedTokens: Token[] = useMemo(() => {
+    const nativeToken = NativeCurrencies[chainId]
+    const tokensWithNative = [nativeToken, ...fetchedTokens] as Token[]
     if (!debouncedQuery) {
-      // only sort whitelist token,  token search we don't sort
-      const sorted = fetchedTokens.sort(tokenComparator)
-      const symbolMatch = debouncedQuery
-        .toLowerCase()
-        .split(/\s+/)
-        .filter(s => s.length > 0)
-      if (symbolMatch.length > 1) return sorted
-      return [
-        // sort any exact symbol matches first
-        ...sorted.filter(token => token.symbol?.toLowerCase() === symbolMatch[0]),
-        ...sorted.filter(token => token.symbol?.toLowerCase() !== symbolMatch[0]),
-      ]
+      // whitelist token
+      return tokensWithNative.sort(tokenComparator).filter(filterWrapFunc)
     }
-    return fetchedTokens
-  }, [fetchedTokens, debouncedQuery, tokenComparator])
+
+    const isMatchNative = nativeToken?.symbol?.toLowerCase().startsWith(debouncedQuery.toLowerCase().trim())
+    return (isMatchNative ? tokensWithNative : fetchedTokens).filter(filterWrapFunc)
+  }, [fetchedTokens, debouncedQuery, tokenComparator, filterWrapFunc, chainId])
 
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
@@ -227,21 +226,16 @@ export function CurrencySearch({
 
   const handleEnter = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter') {
-        const s = searchQuery.toLowerCase().trim()
-        if (
-          s === NativeCurrencies[chainId].symbol?.toLowerCase() ||
-          s === NativeCurrencies[chainId].name?.toLowerCase()
-        ) {
-          handleCurrencySelect(NativeCurrencies[chainId])
-        } else if (filteredSortedTokens.length > 0) {
-          if (
-            filteredSortedTokens[0].symbol?.toLowerCase() === searchQuery.trim().toLowerCase() ||
-            filteredSortedTokens.length === 1
-          ) {
-            handleCurrencySelect(filteredSortedTokens[0])
-          }
-        }
+      if (e.key !== 'Enter') return
+      const s = searchQuery.toLowerCase().trim()
+      const native = NativeCurrencies[chainId]
+      if (s === native.symbol?.toLowerCase() || s === native.name?.toLowerCase()) {
+        handleCurrencySelect(NativeCurrencies[chainId])
+        return
+      }
+      const totalToken = filteredSortedTokens.length
+      if (totalToken && (filteredSortedTokens[0].symbol?.toLowerCase() === s || totalToken === 1)) {
+        handleCurrencySelect(filteredSortedTokens[0])
       }
     },
     [filteredSortedTokens, handleCurrencySelect, searchQuery, chainId],
@@ -289,27 +283,21 @@ export function CurrencySearch({
     try {
       if (!Object.keys(defaultTokens).length) return
       setLoadingCommon(true)
-      const promises: Promise<any>[] = []
-      const result: (Token | Currency)[] = []
+      let result: (Token | Currency)[] = []
       if (favoriteTokens?.includeNativeToken) {
         result.push(NativeCurrencies[chainId])
       }
+      const addressesToFetch: string[] = []
       favoriteTokens?.addresses.forEach(address => {
         if (defaultTokens[address]) {
           result.push(defaultTokens[address])
           return
         }
-        if (chainId) {
-          promises.push(fetchTokenByAddress(address, chainId))
-        }
+        addressesToFetch.push(address)
       })
-      if (promises.length) {
-        const data = await Promise.allSettled(promises)
-        data.forEach(el => {
-          if (el.status !== 'fulfilled') return
-          const tokenResponse = el.value
-          if (tokenResponse) result.push(tokenResponse)
-        })
+      if (addressesToFetch.length) {
+        const tokens = await fetchListTokenByAddresses(addressesToFetch, chainId)
+        result = result.concat(tokens)
       }
       setCommonTokens(result)
     } catch (error) {
@@ -362,22 +350,18 @@ export function CurrencySearch({
     // need call api when only debouncedQuery change
   }, [debouncedQuery, prevQuery, fetchListTokens])
 
-  const combinedTokens = useMemo(() => {
-    const currencies: Currency[] = filteredSortedTokens
-    if (showETH && !currencies.find(e => e.isNative)) currencies.unshift(NativeCurrencies[chainId])
-    return currencies
-  }, [showETH, chainId, filteredSortedTokens])
+  const isImportedTab = activeTab === Tab.Imported
 
   const visibleCurrencies: Currency[] = useMemo(() => {
-    return activeTab === Tab.Imported ? tokenImportsFiltered : combinedTokens
-  }, [activeTab, combinedTokens, tokenImportsFiltered])
+    return isImportedTab ? tokenImportsFiltered : filteredSortedTokens
+  }, [isImportedTab, filteredSortedTokens, tokenImportsFiltered])
 
   const removeToken = useRemoveUserAddedToken()
 
   const removeImportedToken = useCallback(
     (token: Token) => {
       removeToken(chainId, token.address)
-      if (favoriteTokens?.addresses.includes(token.address))
+      if (favoriteTokens?.addresses?.includes(token.address))
         // remove in favorite too
         toggleFavoriteToken({
           chainId,
@@ -388,11 +372,8 @@ export function CurrencySearch({
   )
 
   const removeAllImportToken = () => {
-    if (tokenImports) {
-      tokenImports.forEach(removeImportedToken)
-    }
+    tokenImports?.forEach(removeImportedToken)
   }
-  const isImportedTab = activeTab === Tab.Imported
 
   return (
     <ContentWrapper>

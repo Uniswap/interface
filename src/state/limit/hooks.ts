@@ -60,7 +60,7 @@ export function useLimitActionHandlers() {
     (currencyIn: Currency | undefined, currencyOut: Currency | undefined) => {
       dispatch(
         setLimitCurrency({
-          currencyIn: currencyIn?.isNative ? currencyIn.wrapped : currencyIn,
+          currencyIn,
           currencyOut,
         }),
       )
