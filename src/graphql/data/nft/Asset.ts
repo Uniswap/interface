@@ -14,8 +14,7 @@ import {
   useAssetQuery,
 } from '../__generated__/types-and-hooks'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const assetQuery = gql`
+gql`
   query Asset(
     $address: String!
     $orderBy: NftAssetSortableField
@@ -195,7 +194,6 @@ export function useNftAssets(params: AssetFetcherParams) {
 
   const { data, loading, fetchMore } = useAssetQuery({
     variables,
-    fetchPolicy: 'cache-and-network',
   })
   const hasNext = data?.nftAssets?.pageInfo?.hasNextPage
   const loadMore = useCallback(

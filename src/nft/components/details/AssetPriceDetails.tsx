@@ -3,7 +3,7 @@ import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { EventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { OpacityHoverState } from 'components/Common'
-import { useNftBalanceQuery } from 'graphql/data/nft/NftBalance'
+import { useNftBalance } from 'graphql/data/nft/NftBalance'
 import { CancelListingIcon, VerifiedIcon } from 'nft/components/icons'
 import { useBag, useProfilePageState, useSellAsset } from 'nft/hooks'
 import { CollectionInfoForAsset, GenieAsset, ProfilePageStateType, WalletAsset } from 'nft/types'
@@ -221,7 +221,7 @@ const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
   const expirationDate = listing?.endAt ? new Date(listing.endAt) : undefined
 
   const USDPrice = useMemo(
-    () => (USDValue ? USDValue * asset.floor_sell_order_price : undefined),
+    () => (USDValue && asset.floor_sell_order_price ? USDValue * asset.floor_sell_order_price : undefined),
     [USDValue, asset.floor_sell_order_price]
   )
   const trace = useTrace()
@@ -254,7 +254,7 @@ const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
         {listing ? (
           <>
             <ThemedText.MediumHeader fontSize="28px" lineHeight="36px">
-              {formatEthPrice(asset.priceInfo.ETHPrice)} ETH
+              {formatEthPrice(asset.priceInfo?.ETHPrice)} ETH
             </ThemedText.MediumHeader>
             {USDPrice && (
               <ThemedText.BodySecondary lineHeight="24px">
@@ -331,11 +331,8 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const USDPrice = useUsdPrice(asset)
 
   const assetsFilter = [{ address: asset.address, tokenId: asset.tokenId }]
-  const { walletAssets: ownerAssets } = useNftBalanceQuery(account ?? '', [], assetsFilter, 1)
-  const walletAsset: WalletAsset | undefined = useMemo(
-    () => (ownerAssets?.length > 0 ? ownerAssets[0] : undefined),
-    [ownerAssets]
-  )
+  const { walletAssets: ownerAssets } = useNftBalance(account ?? '', [], assetsFilter, 1)
+  const walletAsset: WalletAsset | undefined = useMemo(() => ownerAssets?.[0], [ownerAssets])
 
   const { assetInBag } = useMemo(() => {
     return {

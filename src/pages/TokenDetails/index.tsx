@@ -28,15 +28,13 @@ export default function TokenDetailsPage() {
     variables: {
       contract,
     },
-    fetchPolicy: 'cache-and-network',
   })
 
-  const { data: tokenPriceData, loading: tokenPriceDataLoading } = useTokenPriceQuery({
+  const { data: tokenPriceData } = useTokenPriceQuery({
     variables: {
       contract,
       duration,
     },
-    fetchPolicy: 'cache-and-network',
   })
 
   const refetchTokenPrices = useCallback(

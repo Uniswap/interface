@@ -129,7 +129,6 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
 
   const { data: sparklineData } = useTopTokensSparklineQuery({
     variables: { duration, chain },
-    fetchPolicy: 'cache-and-network',
   })
 
   const sparklines = useMemo(() => {
@@ -143,7 +142,6 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
 
   const { data, loading: loadingTokens } = useTopTokens100Query({
     variables: { duration, chain },
-    fetchPolicy: 'cache-and-network',
   })
   const mappedTokens = useMemo(
     () => data?.topTokens?.map((token) => unwrapToken(chainId, token)) ?? [],
