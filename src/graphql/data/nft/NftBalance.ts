@@ -2,11 +2,11 @@ import { parseEther } from 'ethers/lib/utils'
 import gql from 'graphql-tag'
 import { GenieCollection, WalletAsset } from 'nft/types'
 import { wrapScientificNotation } from 'nft/utils'
+import { useCallback, useMemo } from 'react'
 
 import { NftAsset, useNftBalanceQuery } from '../__generated__/types-and-hooks'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const nftBalanceQuery = gql`
+gql`
   query NftBalance(
     $ownerAddress: String!
     $filter: NftBalancesFilterInput
@@ -131,12 +131,15 @@ export function useNftBalance(
   })
 
   const hasNext = data?.nftBalances?.pageInfo?.hasNextPage
-  const loadMore = () =>
-    fetchMore({
-      variables: {
-        after: data?.nftBalances?.pageInfo?.endCursor,
-      },
-    })
+  const loadMore = useCallback(
+    () =>
+      fetchMore({
+        variables: {
+          after: data?.nftBalances?.pageInfo?.endCursor,
+        },
+      }),
+    [data?.nftBalances?.pageInfo?.endCursor, fetchMore]
+  )
 
   const walletAssets: WalletAsset[] | undefined = data?.nftBalances?.edges?.map((queryAsset) => {
     const asset = queryAsset?.node.ownedAsset as NonNullable<NftAsset>
@@ -175,5 +178,5 @@ export function useNftBalance(
       floor_sell_order_price: asset?.listings?.edges?.[0]?.node?.price?.value,
     }
   })
-  return { walletAssets, hasNext, loadMore, loading }
+  return useMemo(() => ({ walletAssets, hasNext, loadMore, loading }), [hasNext, loadMore, loading, walletAssets])
 }
