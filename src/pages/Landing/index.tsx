@@ -169,9 +169,6 @@ const Link = styled(NativeLink)`
 export default function Landing() {
   const isDarkMode = useIsDarkMode()
 
-  const location = useLocation()
-  const isOpen = location.pathname === '/'
-
   useEffect(() => {
     document.body.style.overflow = 'hidden'
     return () => {
@@ -183,6 +180,7 @@ export default function Landing() {
   const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
   const landingRedirectFlag = useLandingRedirectFlag()
   const navigate = useNavigate()
+  const location = useLocation()
   const queryParams = parse(location.search, {
     ignoreQueryPrefix: true,
   })
@@ -201,8 +199,6 @@ export default function Landing() {
       setShowContent(true)
     }
   }, [navigate, selectedWallet, landingRedirectFlag, queryParams.intro])
-
-  if (!isOpen) return null
 
   return (
     <Trace page={PageName.LANDING_PAGE} shouldLogImpression>
