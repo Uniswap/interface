@@ -20,7 +20,7 @@
     "ios:smol": "SKIP_BUNDLING=1 react-native run-ios --simulator=\"iPhone SE (3rd generation)\"",
     "ios:dev:release": "react-native run-ios --configuration Dev",
     "ios:beta": "react-native run-ios --configuration Beta",
-    "ios:release": "react-native run-ios --configuration Beta",
+    "ios:release": "react-native run-ios --configuration Release",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx && eslint src/locales/en/translation.json",
     "lmu": "yarn prepare-for-pr",
     "postinstall": "patch-package",
