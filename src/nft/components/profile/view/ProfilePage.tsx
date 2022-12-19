@@ -90,7 +90,7 @@ export const ProfilePage = () => {
     isFetchingNextPage,
     isSuccess,
   } = useInfiniteQuery(['ownerCollections', { address }], getOwnerCollections, {
-    getNextPageParam: (lastGroup, _allGroups) => (lastGroup.data.length === 0 ? undefined : lastGroup.nextPage),
+    getNextPageParam: (lastGroup) => (lastGroup.data.length === 0 ? undefined : lastGroup.nextPage),
     refetchInterval: 15000,
     refetchIntervalInBackground: false,
     refetchOnWindowFocus: false,

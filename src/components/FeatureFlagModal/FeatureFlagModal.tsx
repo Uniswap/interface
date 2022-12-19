@@ -121,7 +121,6 @@ function Variant({ option }: { option: string }) {
 interface FeatureFlagProps {
   variant: Record<string, string>
   featureFlag: FeatureFlag
-  value: string
   label: string
 }
 
@@ -164,7 +163,7 @@ function FeatureFlagGroup({ name, children }: PropsWithChildren<{ name: string }
   )
 }
 
-function FeatureFlagOption({ variant, featureFlag, value, label }: FeatureFlagProps) {
+function FeatureFlagOption({ variant, featureFlag, label }: FeatureFlagProps) {
   const updateFlag = useUpdateFlag()
   const [count, setCount] = useState(0)
   const featureFlags = useAtomValue(featureFlagSettings)
