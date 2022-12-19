@@ -19,7 +19,6 @@ export enum Screens {
   SettingsHelpCenter = 'SettingsHelpCenter',
   SettingsChains = 'SettingsChains',
   SettingsStack = 'SettingsStack',
-  SettingsSupport = 'SettingsSupport',
   SettingsTestConfigs = 'SettingsTestConfigs',
   SettingsBiometricAuth = 'SettingsBiometricAuth',
   SettingsViewSeedPhrase = 'SettingsViewSeedPhrase',

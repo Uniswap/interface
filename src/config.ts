@@ -4,7 +4,6 @@ import {
   AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY,
   DEBUG,
   INFURA_PROJECT_ID,
-  LOG_BUFFER_SIZE,
   MOONPAY_API_KEY,
   MOONPAY_API_URL,
   MOONPAY_WIDGET_API_URL,
@@ -32,7 +31,6 @@ export interface Config {
   uniswapApiKey: string
   uniswapAppUrl: string
   infuraProjectId: string
-  logBufferSize: number
   onesignalAppId: string
   sentryDsn: string
   version: string
@@ -51,7 +49,6 @@ const _config: Config = {
   uniswapApiKey: process.env.UNISWAP_API_KEY || UNISWAP_API_KEY,
   uniswapAppUrl: UNISWAP_APP_URL,
   infuraProjectId: process.env.INFURA_PROJECT_ID || INFURA_PROJECT_ID,
-  logBufferSize: parseInt(LOG_BUFFER_SIZE, 10),
   onesignalAppId: process.env.ONESIGNAL_APP_ID || ONESIGNAL_APP_ID,
   sentryDsn: process.env.SENTRY_DSN || SENTRY_DSN,
   version: VERSION,

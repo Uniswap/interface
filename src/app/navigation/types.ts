@@ -36,7 +36,6 @@ export type SettingsStackParamList = {
   [Screens.SettingsWalletManageConnection]: { address: Address }
   [Screens.SettingsHelpCenter]: undefined
   [Screens.SettingsChains]: undefined
-  [Screens.SettingsSupport]: undefined
   [Screens.SettingsTestConfigs]: undefined
   [Screens.SettingsBiometricAuth]: undefined
   [Screens.WebView]: { headerTitle: string; uriLink: string }

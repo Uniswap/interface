@@ -110,11 +110,6 @@ export function SettingsScreen() {
             icon: <FlashbotsIcon {...iconProps} />,
           },
           {
-            screen: Screens.SettingsSupport,
-            text: t('Support'),
-            icon: <FlashbotsIcon {...iconProps} />,
-          },
-          {
             screen: Screens.SettingsTestConfigs,
             text: 'Test Configs',
             icon: <FlashbotsIcon {...iconProps} />,

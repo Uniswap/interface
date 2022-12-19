@@ -67,7 +67,6 @@ import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
 import { SettingsCloudBackupScreen } from 'src/screens/SettingsCloudBackupScreen'
 import { SettingsCloudBackupStatus } from 'src/screens/SettingsCloudBackupStatus'
 import { SettingsScreen } from 'src/screens/SettingsScreen'
-import { SettingsSupportScreen } from 'src/screens/SettingsSupportScreen'
 import { SettingsTestConfigs } from 'src/screens/SettingsTestConfigs'
 import { SettingsViewSeedPhraseScreen } from 'src/screens/SettingsViewSeedPhraseScreen'
 import { SettingsWallet } from 'src/screens/SettingsWallet'
@@ -183,7 +182,6 @@ function SettingsStackGroup() {
       />
       <SettingsStack.Screen component={WebViewScreen} name={Screens.WebView} />
       <SettingsStack.Screen component={SettingsChainsScreen} name={Screens.SettingsChains} />
-      <SettingsStack.Screen component={SettingsSupportScreen} name={Screens.SettingsSupport} />
       <SettingsStack.Screen component={SettingsTestConfigs} name={Screens.SettingsTestConfigs} />
       <SettingsStack.Screen component={DevScreen} name={Screens.Dev} />
       <SettingsStack.Screen
