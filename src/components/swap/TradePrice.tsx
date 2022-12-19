@@ -2,8 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Currency, Price } from '@uniswap/sdk-core'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import { useCallback, useState } from 'react'
-import { Text } from 'rebass'
-import styled, { useTheme } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { formatDollar, formatTransactionAmount, priceToPreciseFloat } from 'utils/formatNumbers'
 
@@ -29,8 +28,6 @@ const StyledPriceContainer = styled.button`
 `
 
 export default function TradePrice({ price }: TradePriceProps) {
-  const theme = useTheme()
-
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
   const usdcPrice = useStablecoinPrice(showInverted ? price.baseCurrency : price.quoteCurrency)
@@ -58,9 +55,7 @@ export default function TradePrice({ price }: TradePriceProps) {
       }}
       title={text}
     >
-      <Text fontWeight={500} fontSize={14} color={theme.textPrimary}>
-        {text}
-      </Text>{' '}
+      <ThemedText.BodySmall>{text}</ThemedText.BodySmall>{' '}
       {usdcPrice && (
         <ThemedText.DeprecatedDarkGray>
           <Trans>({formatDollar({ num: priceToPreciseFloat(usdcPrice), isPrice: true })})</Trans>
