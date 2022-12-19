@@ -28,7 +28,6 @@
     "postinstall": "patch-package"
   },
   "jest": {
-    "testPathIgnorePatterns": "**/cypress/**",
     "collectCoverageFrom": [
       "src/components/**/*.ts*",
       "src/hooks/**/*.ts*",
