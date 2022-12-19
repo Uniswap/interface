@@ -10,5 +10,6 @@ module.exports = {
     '**/graphql/data/nft/Details.ts',
     '**/graphql/data/nft/Collection.ts',
     '**/graphql/data/nft/Asset.ts',
+    '**/graphql/data/nft/NftBalance.ts',
   ],
 }

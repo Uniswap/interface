@@ -16,6 +16,7 @@ export const apolloClient = new ApolloClient({
     typePolicies: {
       Query: {
         fields: {
+          nftBalances: relayStylePagination(),
           nftAssets: relayStylePagination(),
         },
       },
