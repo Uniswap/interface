@@ -8,7 +8,7 @@ import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 
 import Card from './Card'
-import { CARDS, STEPS } from './constants'
+import { MAIN_CARDS, STEPS } from './constants'
 import backgroundImgSrcDark from './images/About_BG_Dark.jpg'
 import backgroundImgSrcLight from './images/About_BG_Light.jpg'
 import Step from './Step'
@@ -259,7 +259,7 @@ export default function About() {
             </Intro>
           </Panels>
           <CardGrid>
-            {CARDS.map(({ darkBackgroundImgSrc, lightBackgroundImgSrc, ...card }) => (
+            {MAIN_CARDS.map(({ darkBackgroundImgSrc, lightBackgroundImgSrc, ...card }) => (
               <Card
                 {...card}
                 backgroundImgSrc={isDarkMode ? darkBackgroundImgSrc : lightBackgroundImgSrc}
