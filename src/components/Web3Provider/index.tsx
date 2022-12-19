@@ -1,15 +1,22 @@
 import { useWeb3React, Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
-import { Connection } from 'connection'
+import { Connection, setErrorHandler } from 'connection'
 import { getConnectionName } from 'connection/utils'
 import { isSupportedChain } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
+import { dispatch } from 'd3'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import useEagerlyConnect from 'hooks/useEagerlyConnect'
 import useOrderedConnections from 'hooks/useOrderedConnections'
 import { ReactNode, useEffect, useMemo } from 'react'
+import { updateConnectionError } from 'state/connection/reducer'
 
 export default function Web3Provider({ children }: { children: ReactNode }) {
+  useEffect(() => {
+    setErrorHandler((error) => dispatch(updateConnectionError(error.message)))
+  }, [])
+  // NB: Nothing is eagerly-connected on pageload until this component mounts.
+  // If eager connection could be moved earlier, it could be a better UX (ie faster perceived load).
   useEagerlyConnect()
   const connections = useOrderedConnections()
   const connectors: [Connector, Web3ReactHooks][] = connections.map(({ hooks, connector }) => [connector, hooks])

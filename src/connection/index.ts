@@ -25,8 +25,15 @@ export interface Connection {
   type: ConnectionType
 }
 
+let globalErrorHandler
+
+export function setErrorHandler(errorHandler: (error: Error) => void) {
+  globalErrorHandler = errorHandler
+}
+
 function onError(error: Error) {
   console.debug(`web3-react error: ${error}`)
+  globalErrorHandler?.(error)
 }
 
 const [web3Network, web3NetworkHooks] = initializeConnector<Network>(
