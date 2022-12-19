@@ -21,7 +21,7 @@ const StyledCard = styled.div<{ isDarkMode: boolean; backgroundImgSrc?: string; 
   text-decoration: none;
   color: ${({ theme }) => theme.textPrimary};
   padding: 40px;
-  height: 345px;
+  height: 212px;
   border-radius: 24px;
   border: 1px solid ${({ theme, isDarkMode }) => (isDarkMode ? theme.backgroundOutline : 'transparent')};
   box-shadow: 0px 10px 24px 0px rgba(51, 53, 72, 0.04);
@@ -44,11 +44,6 @@ const CardTitle = styled.div`
   font-size: 20px;
   line-height: 28px;
   font-weight: 500;
-
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
-    font-size: 20px;
-    line-height: 28px;
-  }
 
   @media screen and (min-width: ${BREAKPOINTS.lg}px) {
     font-size: 28px;
@@ -73,12 +68,14 @@ const getCardDescriptionColor = (type: CardType, theme: DefaultTheme) => {
 const CardDescription = styled.div<{ type: CardType }>`
   display: flex;
   flex-direction: column;
-  font-size: 20px;
-  line-height: 28px;
+  font-size: 16px;
+  line-height: 20px;
   color: ${({ theme, type }) => getCardDescriptionColor(type, theme)};
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
-    font-size: 14px;
-    line-height: 18px;
+  padding: 0 40px 0 0;
+
+  @media screen and (min-width: ${BREAKPOINTS.xl}px) {
+    font-size: 20px;
+    line-height: 24px;
   }
 `
 

@@ -74,7 +74,7 @@ const BannerButtonContainer = styled.div`
     opacity: 0.6;
   }
 
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
     width: auto;
   }
 `

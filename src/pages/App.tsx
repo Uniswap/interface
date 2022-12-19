@@ -1,11 +1,9 @@
 import { initializeAnalytics, OriginApplication, sendAnalyticsEvent, Trace, user } from '@uniswap/analytics'
 import { CustomUserProperties, EventName, getBrowser, PageName } from '@uniswap/analytics-events'
-import AboutLanding from 'components/AboutLanding'
 import Loader from 'components/Loader'
 import { MenuDropdown } from 'components/NavBar/MenuDropdown'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
-import { LandingPageVariant, useAboutLandingPageFlag } from 'featureFlags/flags/aboutLandingPage'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { Box } from 'nft/components/Box'
 import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
@@ -189,7 +187,6 @@ export default function App() {
   }, [])
 
   const isHeaderTransparent = !scrolledState
-  const aboutLandingPageFlag = useAboutLandingPageFlag()
 
   return (
     <ErrorBoundary>
@@ -206,10 +203,7 @@ export default function App() {
           <Suspense fallback={<Loader />}>
             {isLoaded ? (
               <Routes>
-                <Route
-                  path="/"
-                  element={aboutLandingPageFlag === LandingPageVariant.Enabled ? <AboutLanding /> : <Landing />}
-                />
+                <Route path="/" element={<Landing />} />
 
                 <Route path="tokens" element={<Tokens />}>
                   <Route path=":chainName" />
