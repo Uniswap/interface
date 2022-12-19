@@ -96,7 +96,6 @@ export function useCollection(address: string): useCollectionReturnProps {
     variables: {
       addresses: address,
     },
-    fetchPolicy: 'cache-and-network',
   })
 
   const queryCollection = queryData?.nftCollections?.edges?.[0]?.node as NonNullable<NftCollection>

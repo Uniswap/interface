@@ -194,7 +194,6 @@ export function useNftAssets(params: AssetFetcherParams) {
 
   const { data, loading, fetchMore } = useAssetQuery({
     variables,
-    fetchPolicy: 'cache-and-network',
   })
   const hasNext = data?.nftAssets?.pageInfo?.hasNextPage
   const loadMore = useCallback(

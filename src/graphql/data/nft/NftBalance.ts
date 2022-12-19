@@ -127,7 +127,6 @@ export function useNftBalance(
       last,
       before,
     },
-    fetchPolicy: 'cache-and-network',
   })
 
   const hasNext = data?.nftBalances?.pageInfo?.hasNextPage

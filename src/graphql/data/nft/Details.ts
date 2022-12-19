@@ -100,7 +100,6 @@ export function useNftAssetDetails(
       address,
       tokenId,
     },
-    fetchPolicy: 'cache-and-network',
   })
 
   const asset = queryData?.nftAssets?.edges[0]?.node as NonNullable<NftAsset> | undefined

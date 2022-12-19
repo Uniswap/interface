@@ -22,4 +22,9 @@ export const apolloClient = new ApolloClient({
       },
     },
   }),
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'cache-and-network',
+    },
+  },
 })
