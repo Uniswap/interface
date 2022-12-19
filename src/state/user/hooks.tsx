@@ -4,8 +4,6 @@ import { useWeb3React } from '@web3-react/core'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import { SupportedLocale } from 'constants/locales'
 import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
-import { BaseVariant } from 'featureFlags'
-import { useFiatOnrampFlag } from 'featureFlags/flags/fiatOnramp'
 import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual } from 'react-redux'
@@ -21,8 +19,6 @@ import {
   addSerializedToken,
   updateFiatOnrampAcknowledgments,
   updateHideClosedPositions,
-  updateHideNFTWelcomeModal,
-  updateShowNftPromoBanner,
   updateUserClientSideRouter,
   updateUserDarkMode,
   updateUserDeadline,
@@ -126,15 +122,6 @@ export function useFiatOnrampAck(): [
     [dispatch]
   )
   return [fiatOnrampAcknowledgments, setAcknowledgements]
-}
-export function useHideNFTWelcomeModal(): [boolean | undefined, () => void] {
-  const dispatch = useAppDispatch()
-  const fiatOnrampFlagEnabled = useFiatOnrampFlag() === BaseVariant.Enabled
-  const hideNFTWelcomeModal = useAppSelector((state) => state.user.hideNFTWelcomeModal) || fiatOnrampFlagEnabled
-  const hideModal = useCallback(() => {
-    dispatch(updateHideNFTWelcomeModal({ hideNFTWelcomeModal: true }))
-  }, [dispatch])
-  return [hideNFTWelcomeModal, hideModal]
 }
 
 export function useClientSideRouter(): [boolean, (userClientSideRouter: boolean) => void] {
@@ -279,17 +266,6 @@ export function usePairAdder(): (pair: Pair) => void {
 
 export function useURLWarningVisible(): boolean {
   return useAppSelector((state: AppState) => state.user.URLWarningVisible)
-}
-
-export function useHideNftPromoBanner(): [boolean, () => void] {
-  const dispatch = useAppDispatch()
-  const hideNftPromoBanner = useAppSelector((state) => state.user.hideNFTPromoBanner)
-
-  const toggleHideNftPromoBanner = useCallback(() => {
-    dispatch(updateShowNftPromoBanner({ hideNFTPromoBanner: true }))
-  }, [dispatch])
-
-  return [hideNftPromoBanner, toggleHideNftPromoBanner]
 }
 
 /**

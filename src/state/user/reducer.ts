@@ -126,12 +126,6 @@ const userSlice = createSlice({
     updateHideClosedPositions(state, action) {
       state.userHideClosedPositions = action.payload.userHideClosedPositions
     },
-    updateHideNFTWelcomeModal(state, action) {
-      state.hideNFTWelcomeModal = action.payload.hideNFTWelcomeModal
-    },
-    updateShowNftPromoBanner(state, action) {
-      state.hideNFTPromoBanner = action.payload.hideNFTPromoBanner
-    },
     addSerializedToken(state, { payload: { serializedToken } }) {
       if (!state.tokens) {
         state.tokens = {}
@@ -197,12 +191,10 @@ export const {
   updateHideClosedPositions,
   updateMatchesDarkMode,
   updateUserClientSideRouter,
-  updateHideNFTWelcomeModal,
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
   updateUserLocale,
   updateUserSlippageTolerance,
-  updateShowNftPromoBanner,
 } = userSlice.actions
 export default userSlice.reducer
