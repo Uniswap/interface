@@ -1,10 +1,12 @@
 import { Trace, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, ElementName, EventName, PageName } from '@uniswap/analytics-events'
 import { BaseButton } from 'components/Button'
+import { LandingRedirectVariant, useLandingRedirectFlag } from 'featureFlags/flags/landingRedirect'
 import Swap from 'pages/Swap'
 import { useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Link as NativeLink } from 'react-router-dom'
+import { useAppSelector } from 'state/hooks'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
@@ -175,6 +177,15 @@ export default function Landing() {
       document.body.style.overflow = 'auto'
     }
   }, [])
+
+  const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
+  const landingRedirectFlag = useLandingRedirectFlag()
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (selectedWallet && landingRedirectFlag === LandingRedirectVariant.Enabled) {
+      navigate('/swap')
+    }
+  }, [navigate, selectedWallet, landingRedirectFlag])
 
   if (!isOpen) return null
 
