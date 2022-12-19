@@ -48,6 +48,8 @@ jobs:
         run: yarn contracts:compile
       - name: Jest
         run: yarn test
+        env:
+          DEMO_SEED_PHRASE: ${{ secrets.DEMO_SEED_PHRASE }}
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70
         with:
