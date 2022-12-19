@@ -87,7 +87,7 @@ const ContentContainer = styled.div<{ isDarkMode: boolean }>`
   align-items: center;
   justify-content: end;
   width: 100%;
-  padding: 0 0 32px;
+  padding: 0 0 40px;
   max-width: min(720px, 90%);
   min-height: 500px;
   z-index: ${Z_INDEX.dropdown};
