@@ -40,6 +40,7 @@ const Gradient = styled.div<{ isDarkMode: boolean }>`
   top: 0;
   bottom: 0;
   width: 100%;
+  min-height: 550px;
   background: ${({ isDarkMode }) =>
     isDarkMode
       ? 'linear-gradient(rgba(8, 10, 24, 0) 0%, rgb(8 10 24 / 100%) 45%)'
@@ -80,25 +81,19 @@ const Glow = styled.div`
 `
 
 const ContentContainer = styled.div<{ isDarkMode: boolean }>`
+  position: absolute;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: end;
   width: 100%;
-  max-width: min(720px, 90%);
-  bottom: 0;
-  position: sticky;
-  z-index: ${Z_INDEX.dropdown};
   padding: 0 0 32px;
+  max-width: min(720px, 90%);
+  min-height: 500px;
+  z-index: ${Z_INDEX.dropdown};
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} opacity`};
-
-  margin: 0 0 16px;
-  * {
-    pointer-events: auto;
-  }
-
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
-    padding: 0 0 44px;
-  }
+  height: ${({ theme }) => `calc(100vh - ${theme.navHeight + theme.mobileBottomBarHeight}px)`};
+  pointer-events: none;
 `
 
 const TitleText = styled.h1<{ isDarkMode: boolean }>`
@@ -177,6 +172,7 @@ const ButtonCTAText = styled.p`
 const ActionsContainer = styled.span`
   max-width: 300px;
   width: 100%;
+  pointer-events: auto;
 `
 
 const LearnMoreContainer = styled.div`
@@ -188,7 +184,7 @@ const LearnMoreContainer = styled.div`
   margin: 36px 0 0;
   display: flex;
   visibility: hidden;
-
+  pointer-events: auto;
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     visibility: visible;
   }
@@ -206,7 +202,6 @@ const LearnMoreArrow = styled(ArrowDownCircle)`
 `
 
 const AboutContentContainer = styled.div<{ isDarkMode: boolean }>`
-  margin: 10rem 0 0;
   padding: 0 24px 5rem;
   width: 100%;
   background: ${({ isDarkMode }) =>
@@ -215,7 +210,6 @@ const AboutContentContainer = styled.div<{ isDarkMode: boolean }>`
       : 'linear-gradient(179.82deg, rgba(255, 255, 255, 0) 0.16%, #eaeaea 99.85%)'};
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     padding: 0 96px 5rem;
-    margin: 5rem 0 0;
   }
 `
 
@@ -243,6 +237,14 @@ const CardGrid = styled.div<{ cols: number }>`
         .join(' ')};
     gap: 32px;
   }
+`
+
+const LandingSwapContainer = styled.div`
+  height: ${({ theme }) => `calc(100vh - ${theme.mobileBottomBarHeight}px)`};
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `
 
 const LandingSwap = styled(Swap)`
@@ -275,15 +277,17 @@ export default function AboutLanding() {
   return (
     <Trace page={PageName.LANDING_PAGE} shouldLogImpression>
       <PageContainer isDarkMode={isDarkMode}>
-        <TraceEvent
-          events={[BrowserEvent.onClick]}
-          name={EventName.ELEMENT_CLICKED}
-          element={ElementName.LANDING_PAGE_SWAP_ELEMENT}
-        >
-          <Link to="/swap">
-            <LandingSwap />
-          </Link>
-        </TraceEvent>
+        <LandingSwapContainer>
+          <TraceEvent
+            events={[BrowserEvent.onClick]}
+            name={EventName.ELEMENT_CLICKED}
+            element={ElementName.LANDING_PAGE_SWAP_ELEMENT}
+          >
+            <Link to="/swap">
+              <LandingSwap />
+            </Link>
+          </TraceEvent>
+        </LandingSwapContainer>
         <Gradient isDarkMode={isDarkMode} />
         <GlowContainer>
           <Glow />

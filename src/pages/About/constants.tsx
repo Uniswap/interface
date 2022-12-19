@@ -52,7 +52,7 @@ export const MORE_CARDS = [
     lightIcon: <StyledCardLogo src={lightArrowImgSrc} alt="Analytics" />,
     darkIcon: <StyledCardLogo src={darkArrowImgSrc} alt="Analytics" />,
     cta: 'Explore data',
-    // elementName: ElementName.ABOUT_PAGE_ANALYTICS_CARD, // todo: need to add this to the analytics lib?
+    elementName: ElementName.ABOUT_PAGE_ANALYTICS_CARD,
   },
   {
     to: '/pool',
@@ -61,7 +61,7 @@ export const MORE_CARDS = [
     lightIcon: <DollarSign color={lightTheme.textTertiary} size={48} />,
     darkIcon: <StyledCardLogo src={darkDollarImgSrc} alt="Earn" />,
     cta: 'Provide liquidity',
-    // elementName: ElementName.ABOUT_PAGE_EARN_CARD, // todo: need to add this to the analytics lib?
+    elementName: ElementName.ABOUT_PAGE_EARN_CARD,
   },
   {
     to: 'https://docs.uniswap.org',
@@ -71,7 +71,7 @@ export const MORE_CARDS = [
     lightIcon: <Terminal color={lightTheme.textTertiary} size={48} />,
     darkIcon: <StyledCardLogo src={darkTerminalImgSrc} alt="Developers" />,
     cta: 'Developer docs',
-    // elementName: ElementName.ABOUT_PAGE_DAPPS_CARD, // todo: need to add this to the analytics lib?
+    elementName: ElementName.ABOUT_PAGE_DEV_DOCS_CARD,
   },
 ]
 
