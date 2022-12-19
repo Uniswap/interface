@@ -4,7 +4,7 @@ import { BaseButton } from 'components/Button'
 import { LandingRedirectVariant, useLandingRedirectFlag } from 'featureFlags/flags/landingRedirect'
 import Swap from 'pages/Swap'
 import { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Link as NativeLink } from 'react-router-dom'
 import { useAppSelector } from 'state/hooks'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -182,8 +182,13 @@ export default function Landing() {
   const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
   const landingRedirectFlag = useLandingRedirectFlag()
   const navigate = useNavigate()
+  const params = useParams()
+
+  // This can be simplified significantly once the flag is removed! For now being explicit is clearer.
   useEffect(() => {
-    if (selectedWallet) {
+    if (params.landing) {
+      setShowContent(true)
+    } else if (selectedWallet) {
       if (landingRedirectFlag === LandingRedirectVariant.Enabled) {
         navigate('/swap')
       } else {
