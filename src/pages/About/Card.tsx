@@ -86,6 +86,12 @@ const CardCTA = styled(CardDescription)`
   color: ${({ theme }) => theme.accentAction};
   margin: 24px 0 0;
   cursor: pointer;
+
+  transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} opacity`};
+
+  &:hover {
+    opacity: 0.6;
+  }
 `
 
 const Card = ({

@@ -192,6 +192,12 @@ const LearnMoreContainer = styled.div`
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     visibility: visible;
   }
+
+  transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} opacity`};
+
+  &:hover {
+    opacity: 0.6;
+  }
 `
 
 const LearnMoreArrow = styled(ArrowDownCircle)`

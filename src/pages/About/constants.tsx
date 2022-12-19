@@ -7,13 +7,11 @@ import darkArrowImgSrc from './images/aboutArrowDark.png'
 import lightArrowImgSrc from './images/aboutArrowLight.png'
 import darkDollarImgSrc from './images/aboutDollarDark.png'
 import darkTerminalImgSrc from './images/aboutTerminalDark.png'
-import darkNftCardImgSrc from './images/darkNftCard.png'
+import nftCardImgSrc from './images/darkNftCard.png'
 import darkSwapSrc from './images/darkSwap.png'
-import darkSwapCardImgSrc from './images/darkSwapCard.png'
+import swapCardImgSrc from './images/darkSwapCard.png'
 import darkWalletsSrc from './images/darkWallets.png'
-import lightNftCardImgSrc from './images/lightNftCard.png'
 import lightSwapSrc from './images/lightSwap.png'
-import lightSwapCardImgSrc from './images/lightSwapCard.png'
 import lightWalletsSrc from './images/lightWallets.png'
 import tokens from './images/tokens.png'
 
@@ -23,8 +21,8 @@ export const MAIN_CARDS = [
     title: 'Swap tokens',
     description: 'Buy, sell, and explore tokens on Ethereum, Polygon, Optimism, and more.',
     cta: 'Trade Tokens',
-    darkBackgroundImgSrc: darkSwapCardImgSrc,
-    lightBackgroundImgSrc: lightSwapCardImgSrc,
+    darkBackgroundImgSrc: swapCardImgSrc,
+    lightBackgroundImgSrc: swapCardImgSrc,
     elementName: ElementName.ABOUT_PAGE_SWAP_CARD,
   },
   {
@@ -32,8 +30,8 @@ export const MAIN_CARDS = [
     title: 'Trade NFTs',
     description: 'Buy and sell NFTs across marketplaces to find more listings at better prices.',
     cta: 'Explore NFTs',
-    darkBackgroundImgSrc: darkNftCardImgSrc,
-    lightBackgroundImgSrc: lightNftCardImgSrc,
+    darkBackgroundImgSrc: nftCardImgSrc,
+    lightBackgroundImgSrc: nftCardImgSrc,
     elementName: ElementName.ABOUT_PAGE_NFTS_CARD,
   },
 ]

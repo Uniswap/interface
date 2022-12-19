@@ -68,6 +68,12 @@ const BannerButtonContainer = styled.div`
   display: flex;
   align-items: center;
 
+  transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} opacity`};
+
+  &:hover {
+    opacity: 0.6;
+  }
+
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     width: auto;
   }
