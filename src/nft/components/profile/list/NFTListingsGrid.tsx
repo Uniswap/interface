@@ -60,7 +60,6 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
         </Column>
         <Row flex={{ sm: '1.5', md: '3' }}>
           <Column className={subheadSmall} flex="1.5">
-            {/* <SortDropdown dropDownOptions={priceDropdownOptions} mini miniPrompt="Set price by" /> */}
             <ListingDropdown dropDownOptions={priceDropdownOptions} />
           </Column>
           <Column
@@ -341,6 +340,9 @@ const MarketplaceRow = ({
       setGlobalPrice(asset.lastPrice)
     } else if (globalPriceMethod === SetPriceMethod.SAME_PRICE)
       listPrice && !globalPrice ? setGlobalPrice(listPrice) : setListPrice(globalPrice)
+    else if (globalPriceMethod === undefined) {
+      setListPrice(0)
+    }
 
     setGlobalOverride(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
