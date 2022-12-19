@@ -28,7 +28,7 @@ const Banner = styled.div<{ isDarkMode: boolean }>`
       : `url(${meshSrc}), linear-gradient(93.06deg, #FF00C7 2.66%, #FF9FFB 98.99%);`};
 
   @media screen and (min-width: ${BREAKPOINTS.lg}px) {
-    height: 146px;
+    height: 140px;
     flex-direction: row;
   }
 `
@@ -46,8 +46,8 @@ const HeaderText = styled.div`
   line-height: 36px;
 
   @media screen and (min-width: ${BREAKPOINTS.xl}px) {
-    font-size: 36px;
-    line-height: 44px;
+    font-size: 28px;
+    line-height: 36px;
   }
 `
 

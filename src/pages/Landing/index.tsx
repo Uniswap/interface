@@ -100,7 +100,7 @@ const TitleText = styled.h1<{ isDarkMode: boolean }>`
   color: transparent;
   font-size: 36px;
   line-height: 44px;
-  font-weight: 500;
+  font-weight: 700;
   text-align: center;
   margin: 0 0 24px;
   background: ${({ isDarkMode }) =>

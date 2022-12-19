@@ -20,17 +20,20 @@ const StyledCard = styled.div<{ isDarkMode: boolean; backgroundImgSrc?: string; 
   justify-content: space-between;
   text-decoration: none;
   color: ${({ theme }) => theme.textPrimary};
-  padding: 40px;
+  padding: 24px;
   height: 212px;
   border-radius: 24px;
   border: 1px solid ${({ theme, isDarkMode }) => (isDarkMode ? theme.backgroundOutline : 'transparent')};
   box-shadow: 0px 10px 24px 0px rgba(51, 53, 72, 0.04);
 
   &:hover {
-    border: 1px solid ${({ theme, isDarkMode }) => (isDarkMode ? theme.backgroundOutline : theme.textTertiary)};
+    border: 1px solid ${({ theme, isDarkMode }) => (isDarkMode ? theme.backgroundInteractive : theme.backgroundOutline)};
   }
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     height: ${({ backgroundImgSrc }) => (backgroundImgSrc ? 360 : 260)}px;
+  }
+  @media screen and (min-width: ${BREAKPOINTS.xl}px) {
+    padding: 32px;
   }
 `
 
@@ -43,7 +46,7 @@ const TitleRow = styled.div`
 const CardTitle = styled.div`
   font-size: 20px;
   line-height: 28px;
-  font-weight: 500;
+  font-weight: 600;
 
   @media screen and (min-width: ${BREAKPOINTS.lg}px) {
     font-size: 28px;
@@ -76,11 +79,13 @@ const CardDescription = styled.div<{ type: CardType }>`
   @media screen and (min-width: ${BREAKPOINTS.xl}px) {
     font-size: 20px;
     line-height: 24px;
+    max-width: 480px;
   }
 `
 
 const CardCTA = styled(CardDescription)`
   color: ${({ theme }) => theme.accentAction};
+  font-weight: 500;
   margin: 24px 0 0;
   cursor: pointer;
 
