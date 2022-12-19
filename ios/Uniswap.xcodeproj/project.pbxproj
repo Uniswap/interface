@@ -97,6 +97,7 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Uniswap/main.m; sourceTree = "<group>"; };
 		1834199AFFB04D91B05FFB64 /* InputMono-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "InputMono-Regular.ttf"; path = "../src/assets/fonts/InputMono-Regular.ttf"; sourceTree = "<group>"; };
 		3155C0CF238C4436932B207D /* Inter-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Regular.ttf"; path = "../src/assets/fonts/Inter-Regular.ttf"; sourceTree = "<group>"; };
+		407451BE42C5147EBB181687 /* Pods-Uniswap-UniswapTests.dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap-UniswapTests.dev.xcconfig"; path = "Target Support Files/Pods-Uniswap-UniswapTests/Pods-Uniswap-UniswapTests.dev.xcconfig"; sourceTree = "<group>"; };
 		4DF5F26A06553EFDD4D99214 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Uniswap/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		6C13E36928185E550065DBB1 /* WalletConnectAccountServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletConnectAccountServer.swift; sourceTree = "<group>"; };
 		6C13E36B28185EA10065DBB1 /* WalletConnectSwitchChainHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectSwitchChainHandler.swift; sourceTree = "<group>"; };
@@ -108,6 +109,8 @@
 		6C84F05E283DB7150071FA2E /* MnemonicWordView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MnemonicWordView.swift; path = Uniswap/Onboarding/MnemonicWordView.swift; sourceTree = "<group>"; };
 		6C8EFC2A28909EDF00FBD8EB /* EncryptionHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptionHelper.swift; sourceTree = "<group>"; };
 		6C8EFC2C2891B99100FBD8EB /* EncryptionHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptionHelperTests.swift; sourceTree = "<group>"; };
+		78C41378CE69EDD92DFAD177 /* Pods-OneSignalNotificationServiceExtension.dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.dev.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.dev.xcconfig"; sourceTree = "<group>"; };
+		811E7ED33487936333408382 /* Pods-OneSignalNotificationServiceExtension.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.beta.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.beta.xcconfig"; sourceTree = "<group>"; };
 		816850AA5E2EE808CDC32BCA /* libPods-OneSignalNotificationServiceExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OneSignalNotificationServiceExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A32F9FBC272343C8002CFCDB /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A3F0A5AD272B01C800895B25 /* RNEthersRS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RNEthersRS-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -116,6 +119,7 @@
 		A3F0A5B2272B1E9A00895B25 /* RNEthersRS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNEthersRS.swift; sourceTree = "<group>"; };
 		A87B4C3727F6D91B4DAABF14 /* Pods-Uniswap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.debug.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.debug.xcconfig"; sourceTree = "<group>"; };
 		AD04BDB5970E41149622BF7D /* Inter-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Medium.ttf"; path = "../src/assets/fonts/Inter-Medium.ttf"; sourceTree = "<group>"; };
+		B398F0A4DA17159EA0E2D6DF /* Pods-Uniswap.dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.dev.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.dev.xcconfig"; sourceTree = "<group>"; };
 		B665738960844523B06BB63B /* monospace.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = monospace.ttf; path = ../src/assets/fonts/monospace.ttf; sourceTree = "<group>"; };
 		BF9176E944C84910B1C0B057 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = Uniswap/SplashScreen.storyboard; sourceTree = "<group>"; };
 		C26D739993D5C939C6FBB58A /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Uniswap-UniswapTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
@@ -126,11 +130,13 @@
 		D63928F927D704350004F5CC /* RNWalletConnect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNWalletConnect.swift; sourceTree = "<group>"; };
 		D63928FB27D70B510004F5CC /* RNWalletConnect.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNWalletConnect.m; sourceTree = "<group>"; };
 		D720622E155642CCBAEDD803 /* Inter-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Bold.ttf"; path = "../src/assets/fonts/Inter-Bold.ttf"; sourceTree = "<group>"; };
+		DB423A22FFE9EFFCA11E9E1A /* Pods-Uniswap.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.beta.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.beta.xcconfig"; sourceTree = "<group>"; };
 		E23718F30E2E4B749C40C8F2 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-SemiBold.ttf"; path = "../src/assets/fonts/Inter-SemiBold.ttf"; sourceTree = "<group>"; };
 		E32C49842923F49B003603B4 /* OnboardingDark.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = OnboardingDark.riv; sourceTree = "<group>"; };
 		E32C49852923F49B003603B4 /* OnboardingLight.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = OnboardingLight.riv; sourceTree = "<group>"; };
 		E36F2B9F292290FD00D2730E /* PendingSwap.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = PendingSwap.riv; sourceTree = "<group>"; };
 		E36F2BA0292290FE00D2730E /* PendingSend.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = PendingSend.riv; sourceTree = "<group>"; };
+		E8A8C1523EA65F88E3DC16CD /* Pods-Uniswap-UniswapTests.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap-UniswapTests.beta.xcconfig"; path = "Target Support Files/Pods-Uniswap-UniswapTests/Pods-Uniswap-UniswapTests.beta.xcconfig"; sourceTree = "<group>"; };
 		EC813AD85060898D4DD580C5 /* Pods-Uniswap-UniswapTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap-UniswapTests.debug.xcconfig"; path = "Target Support Files/Pods-Uniswap-UniswapTests/Pods-Uniswap-UniswapTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F35AFD3627EE49230011A725 /* Uniswap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Uniswap.entitlements; path = Uniswap/Uniswap.entitlements; sourceTree = "<group>"; };
@@ -343,6 +349,12 @@
 				FD72162492D6B68BBC15F3ED /* Pods-Uniswap.release.xcconfig */,
 				EC813AD85060898D4DD580C5 /* Pods-Uniswap-UniswapTests.debug.xcconfig */,
 				F5F2751F56BDA3D0330E56BE /* Pods-Uniswap-UniswapTests.release.xcconfig */,
+				78C41378CE69EDD92DFAD177 /* Pods-OneSignalNotificationServiceExtension.dev.xcconfig */,
+				811E7ED33487936333408382 /* Pods-OneSignalNotificationServiceExtension.beta.xcconfig */,
+				B398F0A4DA17159EA0E2D6DF /* Pods-Uniswap.dev.xcconfig */,
+				DB423A22FFE9EFFCA11E9E1A /* Pods-Uniswap.beta.xcconfig */,
+				407451BE42C5147EBB181687 /* Pods-Uniswap-UniswapTests.dev.xcconfig */,
+				E8A8C1523EA65F88E3DC16CD /* Pods-Uniswap-UniswapTests.beta.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -824,6 +836,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUNDLE_ID_SUFFIX = .dev;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Uniswap/Uniswap.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -845,7 +858,7 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
-				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.uniswap.mobile${BUNDLE_ID_SUFFIX}";
 				PRODUCT_NAME = Uniswap;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "RNEthersRS-Bridging-Header.h";
@@ -861,6 +874,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUNDLE_ID_SUFFIX = "";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Uniswap/Uniswap.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
@@ -882,7 +896,7 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
-				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.uniswap.mobile${BUNDLE_ID_SUFFIX}";
 				PRODUCT_NAME = Uniswap;
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.uniswap.mobile";
 				SWIFT_OBJC_BRIDGING_HEADER = "RNEthersRS-Bridging-Header.h";
@@ -1050,7 +1064,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
-				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.OneSignalNotificationServiceExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.dev.OneSignalNotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -1106,6 +1120,342 @@
 			};
 			name = Release;
 		};
+		FDB6FD3C294D3A6E00C7B822 /* Beta */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				DEVELOPMENT_TEAM = CGCYLJG7GA;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					/usr/lib/swift,
+					"$(inherited)",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(SDKROOT)/usr/lib/swift",
+					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
+					"\"$(inherited)\"",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Beta;
+		};
+		FDB6FD3D294D3A6E00C7B822 /* Beta */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DB423A22FFE9EFFCA11E9E1A /* Pods-Uniswap.beta.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUNDLE_ID_SUFFIX = .beta;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Uniswap/Uniswap.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JH3UHGZD75;
+				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+				INFOPLIST_FILE = Uniswap/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.uniswap.mobile${BUNDLE_ID_SUFFIX}";
+				PRODUCT_NAME = Uniswap;
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.uniswap.mobile.beta";
+				SWIFT_OBJC_BRIDGING_HEADER = "RNEthersRS-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Beta;
+		};
+		FDB6FD3E294D3A6E00C7B822 /* Beta */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E8A8C1523EA65F88E3DC16CD /* Pods-Uniswap-UniswapTests.beta.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COPY_PHASE_STRIP = NO;
+				INFOPLIST_FILE = UniswapTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-lc++",
+					"$(inherited)",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Uniswap.app/Uniswap";
+			};
+			name = Beta;
+		};
+		FDB6FD3F294D3A6E00C7B822 /* Beta */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 811E7ED33487936333408382 /* Pods-OneSignalNotificationServiceExtension.beta.xcconfig */;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = OneSignalNotificationServiceExtension/OneSignalNotificationServiceExtension.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = JH3UHGZD75;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = OneSignalNotificationServiceExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				MTL_FAST_MATH = YES;
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
+				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.beta.OneSignalNotificationServiceExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.uniswap.mobile.beta.OneSignalNotificationServiceExtension";
+				SKIP_INSTALL = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Beta;
+		};
+		FDB6FD40294D3A8200C7B822 /* Dev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				DEVELOPMENT_TEAM = CGCYLJG7GA;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					/usr/lib/swift,
+					"$(inherited)",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(SDKROOT)/usr/lib/swift",
+					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
+					"\"$(inherited)\"",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Dev;
+		};
+		FDB6FD41294D3A8200C7B822 /* Dev */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B398F0A4DA17159EA0E2D6DF /* Pods-Uniswap.dev.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUNDLE_ID_SUFFIX = .dev;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Uniswap/Uniswap.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JH3UHGZD75;
+				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+				INFOPLIST_FILE = Uniswap/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.uniswap.mobile${BUNDLE_ID_SUFFIX}";
+				PRODUCT_NAME = Uniswap;
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.uniswap.mobile.dev";
+				SWIFT_OBJC_BRIDGING_HEADER = "RNEthersRS-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Dev;
+		};
+		FDB6FD42294D3A8200C7B822 /* Dev */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 407451BE42C5147EBB181687 /* Pods-Uniswap-UniswapTests.dev.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COPY_PHASE_STRIP = NO;
+				INFOPLIST_FILE = UniswapTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-lc++",
+					"$(inherited)",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Uniswap.app/Uniswap";
+			};
+			name = Dev;
+		};
+		FDB6FD43294D3A8200C7B822 /* Dev */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 78C41378CE69EDD92DFAD177 /* Pods-OneSignalNotificationServiceExtension.dev.xcconfig */;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = OneSignalNotificationServiceExtension/OneSignalNotificationServiceExtension.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = JH3UHGZD75;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = OneSignalNotificationServiceExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				MTL_FAST_MATH = YES;
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
+				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.dev.OneSignalNotificationServiceExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.uniswap.mobile.dev.OneSignalNotificationServiceExtension";
+				SKIP_INSTALL = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Dev;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1114,6 +1464,8 @@
 			buildConfigurations = (
 				00E356F61AD99517003FC87E /* Debug */,
 				00E356F71AD99517003FC87E /* Release */,
+				FDB6FD42294D3A8200C7B822 /* Dev */,
+				FDB6FD3E294D3A6E00C7B822 /* Beta */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1123,6 +1475,8 @@
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
 				13B07F951A680F5B00A75B9A /* Release */,
+				FDB6FD41294D3A8200C7B822 /* Dev */,
+				FDB6FD3D294D3A6E00C7B822 /* Beta */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1132,6 +1486,8 @@
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
 				83CBBA211A601CBA00E9B192 /* Release */,
+				FDB6FD40294D3A8200C7B822 /* Dev */,
+				FDB6FD3C294D3A6E00C7B822 /* Beta */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1141,6 +1497,8 @@
 			buildConfigurations = (
 				F35AFD4427EE49990011A725 /* Debug */,
 				F35AFD4527EE49990011A725 /* Release */,
+				FDB6FD43294D3A8200C7B822 /* Dev */,
+				FDB6FD3F294D3A6E00C7B822 /* Beta */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
