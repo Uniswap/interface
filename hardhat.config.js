@@ -1,5 +1,7 @@
+const { ALCHEMY_API_KEY } = require('react-native-dotenv')
+
 const mainnetFork = {
-  url: 'https://eth-mainnet.alchemyapi.io/v2/lhVWQ3rY2i5_OZtYkU4Lzg_OsDT97Eoz',
+  url: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
   blockNumber: 13582625,
 }
 

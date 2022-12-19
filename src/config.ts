@@ -1,5 +1,6 @@
 import {
   ACTIVE_CHAINS,
+  ALCHEMY_API_KEY,
   AMPLITUDE_API_URL,
   AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY,
   DEBUG,
@@ -21,6 +22,7 @@ import { parseActiveChains } from 'src/utils/chainId'
 
 export interface Config {
   activeChains: ChainIdTo<ChainState>
+  alchemyApiKey: string
   amplitudeExperimentsDeploymentKey: string
   amplitudeApiUrl: string
   debug: boolean
@@ -41,6 +43,7 @@ const _config: Config = {
   amplitudeApiUrl: AMPLITUDE_API_URL,
   amplitudeExperimentsDeploymentKey:
     process.env.AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY || AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY,
+  alchemyApiKey: process.env.ALCHEMY_API_KEY || ALCHEMY_API_KEY,
   debug: parseBoolean(DEBUG),
   moonpayApiKey: process.env.MOONPAY_API_KEY || MOONPAY_API_KEY,
   moonpayApiUrl: process.env.MOONPAY_API_URL || MOONPAY_API_URL,

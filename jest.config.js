@@ -32,6 +32,7 @@ module.exports = {
   ],
   // define environment variables
   globals: {
+    ALCHEMY_API_KEY: 123,
     AMPLITUDE_API_KEY: 123,
     AMPLITUDE_API_TEST_KEY: 123,
     AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY: 123,
