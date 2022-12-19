@@ -11,7 +11,7 @@ const Banner = styled.div<{ isDarkMode: boolean }>`
   height: 340px;
   width: 100%;
   border-radius: 32px;
-
+  max-width: 1440px;
   margin: 80px 0;
 
   display: flex;

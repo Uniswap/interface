@@ -27,7 +27,7 @@ const StyledCard = styled.div<{ isDarkMode: boolean; backgroundImgSrc?: string; 
   box-shadow: 0px 10px 24px 0px rgba(51, 53, 72, 0.04);
 
   &:hover {
-    border: 1px solid ${({ theme, isDarkMode }) => (isDarkMode ? theme.backgroundInteractive : theme.backgroundOutline)};
+    border: 1px solid ${({ theme }) => theme.backgroundInteractive};
   }
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     height: ${({ backgroundImgSrc }) => (backgroundImgSrc ? 360 : 260)}px;
@@ -78,7 +78,7 @@ const CardDescription = styled.div<{ type: CardType }>`
 
   @media screen and (min-width: ${BREAKPOINTS.xl}px) {
     font-size: 20px;
-    line-height: 24px;
+    line-height: 28px;
     max-width: 480px;
   }
 `

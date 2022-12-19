@@ -202,6 +202,9 @@ const LearnMoreArrow = styled(ArrowDownCircle)`
 `
 
 const AboutContentContainer = styled.div<{ isDarkMode: boolean }>`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 0 24px 5rem;
   width: 100%;
   background: ${({ isDarkMode }) =>
@@ -218,6 +221,8 @@ const CardGrid = styled.div<{ cols: number }>`
   gap: 12px;
   width: 100%;
   padding: 24px 0 0;
+  max-width: 1440px;
+  scroll-margin: ${({ theme }) => `${theme.navHeight}px 0 0`};
 
   grid-template-columns: 1fr;
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
