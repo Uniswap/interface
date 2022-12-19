@@ -4,7 +4,7 @@ import { SortDropdown } from 'nft/components/common/SortDropdown'
 import { Column, Row } from 'nft/components/Flex'
 import { AttachPriceIcon, EditPriceIcon, RowsCollpsedIcon, RowsExpandedIcon, VerifiedIcon } from 'nft/components/icons'
 import { NumericInput } from 'nft/components/layout/Input'
-import { badge, body, bodySmall, subheadSmall } from 'nft/css/common.css'
+import { badge, body, bodySmall, subhead, subheadSmall } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { DropDownOption, ListingMarket, ListingWarning, WalletAsset } from 'nft/types'
 import { LOOKS_RARE_CREATOR_BASIS_POINTS } from 'nft/utils'
@@ -273,7 +273,7 @@ const EthPriceDisplay = ({ ethPrice = 0 }: { ethPrice?: number }) => {
 
   return (
     <Column width="full">
-      <Row width="full" justifyContent="flex-end">
+      <Row width="full" justifyContent="flex-end" color={ethPrice !== 0 ? 'textPrimary' : 'textSecondary'}>
         {ethPrice !== 0 ? (
           <>
             <Column>
@@ -564,10 +564,17 @@ const NFTListRow = ({ asset, globalPriceMethod, globalPrice, setGlobalPrice, sel
           />
         </Box>
         <Column gap="4" minWidth="0">
-          <Box paddingRight="8" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap" className={subheadSmall}>
+          <Box paddingRight="8" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap" className={subhead}>
             {asset.name ? asset.name : `#${asset.tokenId}`}
           </Box>
-          <Box paddingRight="8" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap" className={bodySmall}>
+          <Box
+            paddingRight="8"
+            color="textSecondary"
+            overflow="hidden"
+            textOverflow="ellipsis"
+            whiteSpace="nowrap"
+            className={bodySmall}
+          >
             {asset.collection?.name}
             {asset.collectionIsVerified && <VerifiedIcon style={{ marginBottom: '-5px' }} />}
           </Box>
