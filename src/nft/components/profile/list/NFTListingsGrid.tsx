@@ -75,7 +75,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
           >
             Last
           </Column>
-          <Column className={subheadSmall} flex={{ sm: '1', md: '1', lg: '1.5' }}>
+          <Column className={subheadSmall} flex="2">
             <SortDropdown dropDownOptions={priceDropdownOptions} mini miniPrompt="Set price by" />
           </Column>
 
@@ -450,7 +450,7 @@ const MarketplaceRow = ({
         {asset.lastPrice ? `${asset.floorPrice.toFixed(2)} ETH` : '-'}
       </Column>
 
-      <Column flex="1">
+      <Column flex="2">
         {globalPriceMethod === SetPriceMethod.SAME_PRICE && !globalOverride ? (
           <PriceTextInput
             listPrice={globalPrice}
