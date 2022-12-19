@@ -1,10 +1,8 @@
 import graphql from 'babel-plugin-relay/macro'
 import { parseEther } from 'ethers/lib/utils'
-import { DEFAULT_WALLET_ASSET_QUERY_AMOUNT } from 'nft/components/profile/view/ProfilePage'
 import { WalletAsset } from 'nft/types'
 import { wrapScientificNotation } from 'nft/utils'
-import { useEffect } from 'react'
-import { useLazyLoadQuery, usePaginationFragment, useQueryLoader } from 'react-relay'
+import { useLazyLoadQuery, usePaginationFragment } from 'react-relay'
 
 import { NftBalancePaginationQuery } from './__generated__/NftBalancePaginationQuery.graphql'
 import { NftBalanceQuery } from './__generated__/NftBalanceQuery.graphql'
@@ -115,25 +113,6 @@ const nftBalanceQuery = graphql`
 type NftBalanceQueryAsset = NonNullable<
   NonNullable<NonNullable<NftBalanceQuery_nftBalances$data['nftBalances']>['edges']>[number]
 >
-
-export function useLoadNftBalanceQuery(
-  ownerAddress?: string,
-  collectionAddress?: string | string[],
-  tokenId?: string
-): void {
-  const [, loadQuery] = useQueryLoader(nftBalanceQuery)
-  useEffect(() => {
-    if (ownerAddress) {
-      loadQuery({
-        ownerAddress,
-        filter: tokenId
-          ? { assets: [{ address: collectionAddress, tokenId }] }
-          : { addresses: Array.isArray(collectionAddress) ? collectionAddress : [collectionAddress] },
-        first: tokenId ? 1 : DEFAULT_WALLET_ASSET_QUERY_AMOUNT,
-      })
-    }
-  }, [ownerAddress, loadQuery, collectionAddress, tokenId])
-}
 
 export function useNftBalanceQuery(
   ownerAddress: string,
