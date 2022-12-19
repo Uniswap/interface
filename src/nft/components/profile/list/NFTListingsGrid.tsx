@@ -10,8 +10,20 @@ import { LOOKS_RARE_CREATOR_BASIS_POINTS } from 'nft/utils'
 import { formatEth, formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { Dispatch, FormEvent, useEffect, useMemo, useRef, useState } from 'react'
+import styled from 'styled-components/macro'
+import { Z_INDEX } from 'theme/zIndex'
 
 import * as styles from './ListPage.css'
+
+const TableHeader = styled.div`
+  display: flex;
+  position: sticky;
+  top: 72px;
+  padding-top: 24px;
+  padding-bottom: 24px;
+  z-index: ${Z_INDEX.sticky};
+  background-color: ${({ theme }) => theme.backgroundBackdrop};
+`
 
 enum SetPriceMethod {
   SAME_PRICE,
@@ -44,7 +56,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
 
   return (
     <Column>
-      <Row position="sticky" top="72" paddingY="24" zIndex="1" backgroundColor="backgroundBackdrop">
+      <TableHeader>
         <Column
           marginLeft={selectedMarkets.length > 1 ? '36' : '0'}
           transition="500"
@@ -86,7 +98,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
             You receive
           </Column>
         </Row>
-      </Row>
+      </TableHeader>
       {sellAssets.map((asset) => {
         return (
           <>
