@@ -3,7 +3,7 @@ import { BrowserEvent, ElementName, EventName, PageName } from '@uniswap/analyti
 import { BaseButton } from 'components/Button'
 import { LandingRedirectVariant, useLandingRedirectFlag } from 'featureFlags/flags/landingRedirect'
 import Swap from 'pages/Swap'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Link as NativeLink } from 'react-router-dom'
 import { useAppSelector } from 'state/hooks'
@@ -178,12 +178,19 @@ export default function Landing() {
     }
   }, [])
 
+  const [showContent, setShowContent] = useState(false)
   const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
   const landingRedirectFlag = useLandingRedirectFlag()
   const navigate = useNavigate()
   useEffect(() => {
-    if (selectedWallet && landingRedirectFlag === LandingRedirectVariant.Enabled) {
-      navigate('/swap')
+    if (selectedWallet) {
+      if (landingRedirectFlag === LandingRedirectVariant.Enabled) {
+        navigate('/swap')
+      } else {
+        setShowContent(true)
+      }
+    } else {
+      setShowContent(true)
     }
   }, [navigate, selectedWallet, landingRedirectFlag])
 
@@ -191,36 +198,38 @@ export default function Landing() {
 
   return (
     <Trace page={PageName.LANDING_PAGE} shouldLogImpression>
-      <PageContainer>
-        <TraceEvent
-          events={[BrowserEvent.onClick]}
-          name={EventName.ELEMENT_CLICKED}
-          element={ElementName.LANDING_PAGE_SWAP_ELEMENT}
-        >
-          <Link to="/swap">
-            <LandingSwap />
-          </Link>
-        </TraceEvent>
-        <Glow />
-        <Gradient isDarkMode={isDarkMode} />
-        <ContentContainer isDarkMode={isDarkMode}>
-          <TitleText isDarkMode={isDarkMode}>Trade crypto & NFTs with confidence</TitleText>
-          <SubTextContainer>
-            <SubText>Buy, sell, and explore tokens and NFTs</SubText>
-          </SubTextContainer>
-          <ActionsContainer>
-            <TraceEvent
-              events={[BrowserEvent.onClick]}
-              name={EventName.ELEMENT_CLICKED}
-              element={ElementName.CONTINUE_BUTTON}
-            >
-              <ButtonCTA as={Link} to="/swap">
-                <ButtonCTAText>Get started</ButtonCTAText>
-              </ButtonCTA>
-            </TraceEvent>
-          </ActionsContainer>
-        </ContentContainer>
-      </PageContainer>
+      {showContent && (
+        <PageContainer>
+          <TraceEvent
+            events={[BrowserEvent.onClick]}
+            name={EventName.ELEMENT_CLICKED}
+            element={ElementName.LANDING_PAGE_SWAP_ELEMENT}
+          >
+            <Link to="/swap">
+              <LandingSwap />
+            </Link>
+          </TraceEvent>
+          <Glow />
+          <Gradient isDarkMode={isDarkMode} />
+          <ContentContainer isDarkMode={isDarkMode}>
+            <TitleText isDarkMode={isDarkMode}>Trade crypto & NFTs with confidence</TitleText>
+            <SubTextContainer>
+              <SubText>Buy, sell, and explore tokens and NFTs</SubText>
+            </SubTextContainer>
+            <ActionsContainer>
+              <TraceEvent
+                events={[BrowserEvent.onClick]}
+                name={EventName.ELEMENT_CLICKED}
+                element={ElementName.CONTINUE_BUTTON}
+              >
+                <ButtonCTA as={Link} to="/swap">
+                  <ButtonCTAText>Get started</ButtonCTAText>
+                </ButtonCTA>
+              </TraceEvent>
+            </ActionsContainer>
+          </ContentContainer>
+        </PageContainer>
+      )}
     </Trace>
   )
 }
