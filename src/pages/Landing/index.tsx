@@ -189,7 +189,7 @@ export default function Landing() {
 
   // This can be simplified significantly once the flag is removed! For now being explicit is clearer.
   useEffect(() => {
-    if (queryParams.landing) {
+    if (queryParams.intro) {
       setShowContent(true)
     } else if (selectedWallet) {
       if (landingRedirectFlag === LandingRedirectVariant.Enabled) {
