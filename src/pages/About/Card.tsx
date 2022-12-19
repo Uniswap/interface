@@ -40,11 +40,6 @@ const TitleRow = styled.div`
   justify-content: space-between;
 `
 
-const StyledCardLogo = styled.img`
-  width: 40px;
-  height: 40px;
-`
-
 const CardTitle = styled.div`
   font-size: 20px;
   line-height: 28px;
@@ -101,7 +96,7 @@ const Card = ({
   to,
   external,
   backgroundImgSrc,
-  imgSrc,
+  icon,
   elementName,
 }: {
   type?: CardType
@@ -111,7 +106,7 @@ const Card = ({
   to: string
   external?: boolean
   backgroundImgSrc?: string
-  imgSrc?: string
+  icon?: React.ReactNode
   elementName?: string
 }) => {
   const isDarkMode = useIsDarkMode()
@@ -129,7 +124,7 @@ const Card = ({
       >
         <TitleRow>
           <CardTitle>{title}</CardTitle>
-          {imgSrc && <StyledCardLogo src={imgSrc} alt={title} />}
+          {icon}
         </TitleRow>
         <CardDescription type={type}>
           {description}

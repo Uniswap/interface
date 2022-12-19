@@ -88,15 +88,16 @@ const ContentContainer = styled.div<{ isDarkMode: boolean }>`
   bottom: 0;
   position: sticky;
   z-index: ${Z_INDEX.dropdown};
-  padding: 32px 0;
+  padding: 0 0 32px;
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} opacity`};
 
+  margin: 0 0 16px;
   * {
     pointer-events: auto;
   }
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
-    padding: 44px 0;
+    padding: 0 0 44px;
   }
 `
 
@@ -199,13 +200,16 @@ const LearnMoreArrow = styled(ArrowDownCircle)`
 `
 
 const AboutContentContainer = styled.div<{ isDarkMode: boolean }>`
+  margin: 10rem 0 0;
   padding: 0 24px 5rem;
+  width: 100%;
   background: ${({ isDarkMode }) =>
     isDarkMode
       ? 'linear-gradient(179.82deg, rgba(0, 0, 0, 0) 0.16%, #050026 99.85%)'
       : 'linear-gradient(179.82deg, rgba(255, 255, 255, 0) 0.16%, #eaeaea 99.85%)'};
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     padding: 0 96px 5rem;
+    margin: 5rem 0 0;
   }
 `
 
@@ -314,13 +318,8 @@ export default function Landing() {
             ))}
           </CardGrid>
           <CardGrid cols={3}>
-            {MORE_CARDS.map(({ darkImgSrc, lightImgSrc, ...card }) => (
-              <Card
-                {...card}
-                imgSrc={isDarkMode ? darkImgSrc : lightImgSrc}
-                key={card.title}
-                type={CardType.Secondary}
-              />
+            {MORE_CARDS.map(({ darkIcon, lightIcon, ...card }) => (
+              <Card {...card} icon={isDarkMode ? darkIcon : lightIcon} key={card.title} type={CardType.Secondary} />
             ))}
           </CardGrid>
           <ProtocolBanner />

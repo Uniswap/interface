@@ -1,5 +1,12 @@
 import { ElementName } from '@uniswap/analytics-events'
+import { DollarSign, Terminal } from 'react-feather'
+import styled from 'styled-components/macro'
+import { lightTheme } from 'theme/colors'
 
+import darkArrowImgSrc from './images/aboutArrowDark.png'
+import lightArrowImgSrc from './images/aboutArrowLight.png'
+import darkDollarImgSrc from './images/aboutDollarDark.png'
+import darkTerminalImgSrc from './images/aboutTerminalDark.png'
 import darkNftCardImgSrc from './images/darkNftCard.png'
 import darkSwapSrc from './images/darkSwap.png'
 import darkSwapCardImgSrc from './images/darkSwapCard.png'
@@ -31,31 +38,40 @@ export const MAIN_CARDS = [
   },
 ]
 
+const StyledCardLogo = styled.img`
+  min-width: 20px;
+  min-height: 20px;
+  max-height: 48px;
+  max-width: 48px;
+`
+
 export const MORE_CARDS = [
   {
-    to: '/swap', // todo
+    to: 'https://info.uniswap.org',
+    external: true,
     title: 'Analytics',
     description: 'View, track and analyze Uniswap Protocol analytics.',
-    lightImgSrc: lightNftCardImgSrc, // todo
-    darkImgSrc: darkNftCardImgSrc, // todo
+    lightIcon: <StyledCardLogo src={lightArrowImgSrc} alt="Analytics" />,
+    darkIcon: <StyledCardLogo src={darkArrowImgSrc} alt="Analytics" />,
     cta: 'Explore data',
     // elementName: ElementName.ABOUT_PAGE_ANALYTICS_CARD, // todo: need to add this to the analytics lib?
   },
   {
-    to: '/swap', // todo
+    to: '/pool',
     title: 'Earn',
     description: 'Provide liquidity to pools on Uniswap and earn fees on swaps.',
-    lightImgSrc: lightNftCardImgSrc, // todo
-    darkImgSrc: darkNftCardImgSrc, // todo
+    lightIcon: <DollarSign color={lightTheme.textTertiary} size={48} />,
+    darkIcon: <StyledCardLogo src={darkDollarImgSrc} alt="Earn" />,
     cta: 'Provide liquidity',
     // elementName: ElementName.ABOUT_PAGE_EARN_CARD, // todo: need to add this to the analytics lib?
   },
   {
-    to: '/swap', // todo
+    to: 'https://docs.uniswap.org',
+    external: true,
     title: 'Build dApps',
     description: 'Build apps and tools on the largest DeFi protocol on Ethereum.',
-    lightImgSrc: lightNftCardImgSrc, // todo
-    darkImgSrc: darkNftCardImgSrc, // todo
+    lightIcon: <Terminal color={lightTheme.textTertiary} size={48} />,
+    darkIcon: <StyledCardLogo src={darkTerminalImgSrc} alt="Developers" />,
     cta: 'Developer docs',
     // elementName: ElementName.ABOUT_PAGE_DAPPS_CARD, // todo: need to add this to the analytics lib?
   },

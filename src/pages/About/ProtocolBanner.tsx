@@ -1,3 +1,4 @@
+import { ButtonEmpty } from 'components/Button'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
@@ -14,14 +15,13 @@ const Banner = styled.div<{ isDarkMode: boolean }>`
   margin: 80px 0;
 
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 32px;
+  padding: 32px 48px;
 
   visibility: hidden;
   box-shadow: 0px 10px 24px rgba(51, 53, 72, 0.04);
-
-  cursor: pointer;
 
   background: ${({ isDarkMode }) =>
     isDarkMode
@@ -34,21 +34,38 @@ const Banner = styled.div<{ isDarkMode: boolean }>`
 `
 
 const TextContainer = styled.div`
+  color: white;
   display: flex;
+  flex: 1;
   flex-direction: column;
 `
 
 const HeaderText = styled.div`
   font-weight: 700;
-  font-size: 36px;
-  line-height: 44px;
+  font-size: 28px;
+  line-height: 36px;
+
+  @media screen and (min-width: ${BREAKPOINTS.xl}px) {
+    font-size: 36px;
+    line-height: 44px;
+  }
 `
 
 const DescriptionText = styled.div`
   margin: 10px 0 0;
   font-weight: 500;
-  font-size: 20px;
-  line-height: 28px;
+  font-size: 16px;
+  line-height: 20px;
+
+  @media screen and (min-width: ${BREAKPOINTS.xl}px) {
+    font-size: 20px;
+    line-height: 28px;
+  }
+`
+
+const BannerButton = styled(ButtonEmpty)`
+  color: white;
+  border: 1px solid white;
 `
 
 const ProtocolBanner = () => {
@@ -61,6 +78,9 @@ const ProtocolBanner = () => {
           The leading decentralized crypto trading protocol, governed by a global community.
         </DescriptionText>
       </TextContainer>
+      <BannerButton width="200px" as="a" href="https://uniswap.org" rel="noopener noreferrer" target="_blank">
+        Learn more
+      </BannerButton>
     </Banner>
   )
 }
