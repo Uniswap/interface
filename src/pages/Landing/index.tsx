@@ -3,6 +3,7 @@ import { BrowserEvent, ElementName, EventName, PageName } from '@uniswap/analyti
 import { BaseButton } from 'components/Button'
 import { LandingRedirectVariant, useLandingRedirectFlag } from 'featureFlags/flags/landingRedirect'
 import Swap from 'pages/Swap'
+import { parse } from 'qs'
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Link as NativeLink } from 'react-router-dom'
@@ -182,8 +183,15 @@ export default function Landing() {
   const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
   const landingRedirectFlag = useLandingRedirectFlag()
   const navigate = useNavigate()
+  const queryParams = parse(location.search, {
+    ignoreQueryPrefix: true,
+  })
+
+  // This can be simplified significantly once the flag is removed! For now being explicit is clearer.
   useEffect(() => {
-    if (selectedWallet) {
+    if (queryParams.intro) {
+      setShowContent(true)
+    } else if (selectedWallet) {
       if (landingRedirectFlag === LandingRedirectVariant.Enabled) {
         navigate('/swap')
       } else {
@@ -192,7 +200,7 @@ export default function Landing() {
     } else {
       setShowContent(true)
     }
-  }, [navigate, selectedWallet, landingRedirectFlag])
+  }, [navigate, selectedWallet, landingRedirectFlag, queryParams.intro])
 
   if (!isOpen) return null
 
