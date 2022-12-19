@@ -94,7 +94,10 @@ const Navbar = () => {
                 height="48"
                 className={styles.logo}
                 onClick={() => {
-                  navigate(`/${landingRedirectFlag === LandingRedirectVariant.Enabled ? '?intro=true' : ''}`)
+                  navigate({
+                    pathname: '/',
+                    search: landingRedirectFlag === LandingRedirectVariant.Enabled ? '?intro=true' : undefined,
+                  })
                 }}
               />
             </Box>
