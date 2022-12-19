@@ -4,8 +4,7 @@ import { useMemo } from 'react'
 
 import { NftCollection, useCollectionQuery } from '../__generated__/types-and-hooks'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const collectionQuery = gql`
+gql`
   query Collection($addresses: [String!]!) {
     nftCollections(filter: { addresses: $addresses }) {
       edges {

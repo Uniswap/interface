@@ -14,8 +14,7 @@ import {
   useAssetQuery,
 } from '../__generated__/types-and-hooks'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const assetQuery = gql`
+gql`
   query Asset(
     $address: String!
     $orderBy: NftAssetSortableField
