@@ -4,7 +4,6 @@ import { useNftAssetDetails } from 'graphql/data/nft/Details'
 import { AssetDetails } from 'nft/components/details/AssetDetails'
 import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
-import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
@@ -39,7 +38,9 @@ const AssetPage = () => {
   const { tokenId = '', contractAddress = '' } = useParams()
   const { data, loading } = useNftAssetDetails(contractAddress, tokenId)
 
-  const [asset, collection] = useMemo(() => data ?? [], [data])
+  const [asset, collection] = data
+
+  if (loading) return <AssetDetailsLoading />
 
   return (
     <>
@@ -48,18 +49,14 @@ const AssetPage = () => {
         properties={{ collection_address: contractAddress, token_id: tokenId }}
         shouldLogImpression
       >
-        {asset && collection ? (
-          loading ? (
-            <AssetDetailsLoading />
-          ) : (
-            <AssetContainer>
-              <AssetDetails collection={collection} asset={asset} />
-              <AssetPriceDetailsContainer>
-                <AssetPriceDetails collection={collection} asset={asset} />
-              </AssetPriceDetailsContainer>
-            </AssetContainer>
-          )
-        ) : null}
+        {!!asset && !!collection && (
+          <AssetContainer>
+            <AssetDetails collection={collection} asset={asset} />
+            <AssetPriceDetailsContainer>
+              <AssetPriceDetails collection={collection} asset={asset} />
+            </AssetPriceDetailsContainer>
+          </AssetContainer>
+        )}
       </Trace>
     </>
   )
