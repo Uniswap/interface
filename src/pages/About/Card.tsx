@@ -5,17 +5,26 @@ import { useIsDarkMode } from 'state/user/hooks'
 import styled, { DefaultTheme } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 
-const DARK_MODE_GRADIENT = 'linear-gradient(180deg, rgba(19, 22, 27, 0.54) 0%, #13161b 100%)'
+export enum CardType {
+  Primary = 'Primary',
+  Secondary = 'Secondary',
+}
+
+// const DARK_MODE_GRADIENT = 'linear-gradient(180deg, rgba(19, 22, 27, 0.54) 0%, #13161b 100%)'
 
 const StyledCard = styled.div<{ isDarkMode: boolean; backgroundImgSrc?: string; type: CardType }>`
   display: flex;
-  background: ${({ isDarkMode, backgroundImgSrc }) =>
+  background: ${({ isDarkMode, backgroundImgSrc, type, theme }) =>
     isDarkMode
-      ? `${DARK_MODE_GRADIENT} ${backgroundImgSrc ? `, url(${backgroundImgSrc})` : ''}`
-      : `white url(${backgroundImgSrc})`};
+      ? `${type === CardType.Primary ? theme.backgroundModule : theme.backgroundOutline} ${
+          backgroundImgSrc ? ` url(${backgroundImgSrc})` : ''
+        }`
+      : `${type === CardType.Primary ? theme.backgroundModule : 'white'} url(${backgroundImgSrc})`};
   background-size: auto 100%;
   background-position: right;
   background-repeat: no-repeat;
+  background-origin: border-box;
+
   flex-direction: column;
   justify-content: space-between;
   text-decoration: none;
@@ -23,8 +32,9 @@ const StyledCard = styled.div<{ isDarkMode: boolean; backgroundImgSrc?: string; 
   padding: 24px;
   height: 212px;
   border-radius: 24px;
-  border: 1px solid ${({ theme, isDarkMode }) => (isDarkMode ? theme.backgroundOutline : 'transparent')};
+  border: 1px solid ${({ theme, type }) => (type === CardType.Primary ? 'transparent' : theme.backgroundOutline)};
   box-shadow: 0px 10px 24px 0px rgba(51, 53, 72, 0.04);
+  transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} border`};
 
   &:hover {
     border: 1px solid ${({ theme }) => theme.backgroundInteractive};
@@ -53,11 +63,6 @@ const CardTitle = styled.div`
     line-height: 36px;
   }
 `
-
-export enum CardType {
-  Primary = 'Primary',
-  Secondary = 'Secondary',
-}
 
 const getCardDescriptionColor = (type: CardType, theme: DefaultTheme) => {
   switch (type) {
