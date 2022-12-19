@@ -1,11 +1,15 @@
 import { Trans } from '@lingui/macro'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
+import Modal from 'components/Modal'
 import { RowBetween } from 'components/Row'
 import { AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 import { CloseIcon, ThemedText } from 'theme'
+
+import { useModalIsOpen, useToggleMetamaskConnectionErrorModal } from '../../state/application/hooks'
+import { ApplicationModal } from '../../state/application/reducer'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -60,29 +64,34 @@ const onReconnect = () => window.location.reload()
 const header = 'Wallet disconnected'
 const description = 'A Metamask error caused your wallet to disconnect. Reload the page to reconnect.'
 
-export default function MetamaskConnectionWarning() {
+export default function MetamaskConnectionError() {
+  const modalOpen = useModalIsOpen(ApplicationModal.METAMASK_CONNECTION_ERROR)
+  const toggleModal = useToggleMetamaskConnectionErrorModal()
+
   return (
-    <Wrapper>
-      <RowBetween style={{ padding: '1rem' }}>
-        <div />
-        <CloseIcon onClick={() => console.log('closed')} />
-      </RowBetween>
-      <Container>
-        <AutoColumn>
-          <LogoContainer>
-            <WarningIcon />
-          </LogoContainer>
-        </AutoColumn>
-        <ShortColumn>
-          <InfoText>
-            <ThemedText.HeadlineSmall marginBottom="8px">{header}</ThemedText.HeadlineSmall>
-            <ThemedText.BodySmall>{description}</ThemedText.BodySmall>
-          </InfoText>
-        </ShortColumn>
-        <StyledButton onClick={onReconnect}>
-          <Trans>Reload</Trans>
-        </StyledButton>
-      </Container>
-    </Wrapper>
+    <Modal isOpen={modalOpen} onDismiss={toggleModal} minHeight={false} maxHeight={90}>
+      <Wrapper>
+        <RowBetween style={{ padding: '1rem' }}>
+          <div />
+          <CloseIcon onClick={toggleModal} />
+        </RowBetween>
+        <Container>
+          <AutoColumn>
+            <LogoContainer>
+              <WarningIcon />
+            </LogoContainer>
+          </AutoColumn>
+          <ShortColumn>
+            <InfoText>
+              <ThemedText.HeadlineSmall marginBottom="8px">{header}</ThemedText.HeadlineSmall>
+              <ThemedText.BodySmall>{description}</ThemedText.BodySmall>
+            </InfoText>
+          </ShortColumn>
+          <StyledButton onClick={onReconnect}>
+            <Trans>Reload</Trans>
+          </StyledButton>
+        </Container>
+      </Wrapper>
+    </Modal>
   )
 }

@@ -21,6 +21,10 @@ export function useCloseModal(_modal: ApplicationModal): () => void {
   return useCallback(() => dispatch(setOpenModal(null)), [dispatch])
 }
 
+export function useToggleMetamaskConnectionErrorModal(): () => void {
+  return useToggleModal(ApplicationModal.METAMASK_CONNECTION_ERROR)
+}
+
 export function useToggleWalletModal(): () => void {
   return useToggleModal(ApplicationModal.WALLET)
 }
