@@ -52,7 +52,7 @@ const HeaderText = styled.div`
 `
 
 const DescriptionText = styled.div`
-  margin: 10px 0 0;
+  margin: 10px 10px 0 0;
   font-weight: 500;
   font-size: 16px;
   line-height: 20px;
