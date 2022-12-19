@@ -8,19 +8,18 @@ import meshSrc from './images/Mesh.png'
 const DARK_MODE_GRADIENT = 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%)'
 
 const Banner = styled.div<{ isDarkMode: boolean }>`
-  height: 146px;
+  height: 340px;
   width: 100%;
   border-radius: 32px;
 
   margin: 80px 0;
 
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: space-between;
   padding: 32px 48px;
 
-  visibility: hidden;
   box-shadow: 0px 10px 24px rgba(51, 53, 72, 0.04);
 
   background: ${({ isDarkMode }) =>
@@ -29,7 +28,8 @@ const Banner = styled.div<{ isDarkMode: boolean }>`
       : `url(${meshSrc}), linear-gradient(93.06deg, #FF00C7 2.66%, #FF9FFB 98.99%);`};
 
   @media screen and (min-width: ${BREAKPOINTS.lg}px) {
-    visibility: visible;
+    height: 146px;
+    flex-direction: row;
   }
 `
 
@@ -63,6 +63,16 @@ const DescriptionText = styled.div`
   }
 `
 
+const BannerButtonContainer = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    width: auto;
+  }
+`
+
 const BannerButton = styled(ButtonEmpty)`
   color: white;
   border: 1px solid white;
@@ -78,9 +88,11 @@ const ProtocolBanner = () => {
           The leading decentralized crypto trading protocol, governed by a global community.
         </DescriptionText>
       </TextContainer>
-      <BannerButton width="200px" as="a" href="https://uniswap.org" rel="noopener noreferrer" target="_blank">
-        Learn more
-      </BannerButton>
+      <BannerButtonContainer>
+        <BannerButton width="200px" as="a" href="https://uniswap.org" rel="noopener noreferrer" target="_blank">
+          Learn more
+        </BannerButton>
+      </BannerButtonContainer>
     </Banner>
   )
 }
