@@ -11,7 +11,6 @@ import { formatEth, formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { Dispatch, FormEvent, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
-import { Z_INDEX } from 'theme/zIndex'
 
 import * as styles from './ListPage.css'
 
@@ -19,7 +18,7 @@ const TableHeader = styled.div`
   display: flex;
   position: sticky;
   align-items: center;
-  top: 73px;
+  top: 72px;
   padding-top: 24px;
   padding-bottom: 24px;
   z-index: 1;
