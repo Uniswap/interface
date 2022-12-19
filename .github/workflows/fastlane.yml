@@ -34,7 +34,7 @@ jobs:
 
       - uses: maxim-lobanov/setup-xcode@4aa4176a819ae7c019451acfda0bba67bffc6704
         with:
-          xcode-version: 'latest-stable'
+          xcode-version: '14.0.1'
 
       - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
         with:
@@ -123,6 +123,21 @@ jobs:
         run: |
           yarn react-native bundle --platform ios --dev false --entry-file index.js --reset-cache --bundle-output main.jsbundle --sourcemap-output main.jsbundle.map --minify false
 
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@18f7dc018cc2cd597073088f7c7591b9d1c02672
+        with:
+          commit-message: '[bot] Update version number'
+          committer: GitHub <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.github.com>
+          signoff: false
+          branch: chore/version-bump
+          branch-suffix: timestamp
+          delete-branch: true
+          title: 'chore: [bot] Update version number'
+          body: Version number has been updated
+          reviewers: leggechr,justindomingue,spenciefy,thomasthachil,danielcolinjames,ianlapham,tarikbellamine,tinaszheng,unipadmini
+
+
       - name: Create Sentry release with sourcemaps
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
@@ -146,17 +161,3 @@ jobs:
 
           # Create new deploy for this Sentry release
           sentry-cli releases deploys $SENTRY_RELEASE new -e production
-
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@18f7dc018cc2cd597073088f7c7591b9d1c02672
-        with:
-          commit-message: '[bot] Update version number'
-          committer: GitHub <noreply@github.com>
-          author: ${{ github.actor }} <${{ github.actor }}@users.github.com>
-          signoff: false
-          branch: chore/version-bump
-          branch-suffix: timestamp
-          delete-branch: true
-          title: 'chore: [bot] Update version number'
-          body: Version number has been updated
-          reviewers: leggechr,justindomingue,spenciefy,thomasthachil,danielcolinjames,ianlapham,tarikbellamine,tinaszheng,unipadmini

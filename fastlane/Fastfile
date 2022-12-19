@@ -12,19 +12,6 @@ platform :ios do
   before_all do
   end
 
-  private_lane :pushChangesBack do | options |
-    if options[:running_on_ci]
-      repository_uri = sh("git remote show origin | awk 'NR==2{print $3}' | sed 's/git@//g' | sed 's#https://##g'", log: false)
-      push_uri = "https://x-access-token:#{options[:token]}@#{repository_uri.chomp}.git"
-      branches = "HEAD:#{options[:git_branch_name]}"
-
-      sh("git push #{push_uri} #{branches} --tags", log: false)
-    else
-      push_to_git_remote
-    end
-
-  end
-
   private_lane :certificates do | options |
     match_type = options[:match_type]
 
@@ -69,7 +56,7 @@ platform :ios do
       match_type: match_type,
     )
 
-    sh("cd ../ios && pod install && cd ../fastlane")
+    sh("cd ../fastlane") # yarn and pod install should be done by previous step of github actions
 
     build_app(
       scheme: PROJECT_NAME,
@@ -81,10 +68,6 @@ platform :ios do
       output_name: "#{PROJECT_NAME}.ipa",
       export_options: {
         method: export_options_method,
-        provisioningProfiles: {
-          options[:app_identifier][0] => ENV["sigh_#{options[:app_identifier]}_#{match_type}_profile-name"],
-          options[:app_identifier][1] + ".OneSignalNotificationServiceExtension" => ENV["sigh_#{options[:app_identifier]}.OneSignalNotificationServiceExtension_#{match_type}_profile-name"]
-        }
       },
     )
 
@@ -92,7 +75,6 @@ platform :ios do
   end
 
   private_lane :ship do | options |
-    ENV['ITMSTRANSPORTER_FORCE_ITMS_PACKAGE_UPLOAD'] = 'true' #https://github.com/fastlane/fastlane/issues/20741
     pilot(
       ipa: "#{OUTPUT_DIRECTORY}#{PROJECT_NAME}.ipa",
       skip_waiting_for_build_processing: true,
@@ -119,10 +101,6 @@ platform :ios do
       :token => ENV["GITHUB_TOKEN"],
     }
 
-    # specify Xcode version to avoid unexpected changes in our build process as suggested by GH.
-    # chose 13.2.1 since it's what GH has been using before jumping to 14.0.1
-    xcversion(version: "13.2.1")
-
     build_number = increment_build_number(
       xcodeproj: XCODE_PROJECT,
     )
@@ -142,8 +120,6 @@ platform :ios do
       xcodeproj: XCODE_PROJECT,
       force: true
     )
-
-    # pushChangesBack(options)
 
     unless BUILD_ONLY
       ship(

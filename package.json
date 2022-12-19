@@ -12,7 +12,7 @@
     "contracts:compile:v3": "typechain --target ethers-v5 --out-dir src/abis/uniswapV3/types './node_modules/@uniswap/?(v3-core|v3-periphery)/artifacts/contracts/**/*.json'",
     "debug": "react-devtools",
     "deduplicate": "yarn-deduplicate --strategy=highest",
-    "deploy:ios:alpha": "fastlane ios buildAndShip",
+    "deploy:ios:alpha": "yarn && yarn pod && fastlane ios buildAndShip",
     "firestore:deploy:rules": "firebase deploy --only firestore:rules",
     "hardhat": "hardhat node",
     "i18n:extract": "i18next",
