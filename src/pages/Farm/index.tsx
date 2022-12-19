@@ -35,7 +35,7 @@ import { useFarmsData } from 'state/farms/hooks'
 import { isInEnum } from 'utils/string'
 
 const Farm = () => {
-  const { isEVM } = useActiveWeb3React()
+  const { isEVM, chainId } = useActiveWeb3React()
   const { loading } = useFarmsData()
   const theme = useTheme()
   const qs = useParsedQueryString<{ type: string; tab: string }>()
@@ -87,7 +87,8 @@ const Farm = () => {
       )
       .forEach(current => {
         current.rewardTokens.forEach(token => {
-          if (token && !tokenMap[token.wrapped.address]) tokenMap[token.wrapped.address] = token
+          if (token && token.chainId === chainId && !tokenMap[token.wrapped.address])
+            tokenMap[token.wrapped.address] = token
         })
       })
 
@@ -101,7 +102,7 @@ const Farm = () => {
     })
 
     return Object.values(tokenMap)
-  }, [farmsByFairLaunch, blockNumber, elasticFarms])
+  }, [farmsByFairLaunch, blockNumber, elasticFarms, chainId])
 
   const rewardPrice = !!rewardTokens.length && (
     <Flex
