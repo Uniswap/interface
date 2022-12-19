@@ -165,7 +165,7 @@ function useAllV3Ticks(
 ): {
   isLoading: boolean
   error: unknown
-  ticks: readonly TickData[] | undefined
+  ticks: TickData[] | undefined
 } {
   const useSubgraph = currencyA ? !CHAIN_IDS_MISSING_SUBGRAPH_DATA.includes(currencyA.chainId) : true
 
