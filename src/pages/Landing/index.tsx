@@ -32,7 +32,7 @@ const Gradient = styled.div<{ isDarkMode: boolean }>`
     isDarkMode
       ? 'linear-gradient(rgba(8, 10, 24, 0) 0%, rgb(8 10 24 / 100%) 45%)'
       : 'linear-gradient(rgba(255, 255, 255, 0) 0%, rgb(255 255 255 /100%) 45%)'};
-  z-index: ${Z_INDEX.dropdown};
+  z-index: ${Z_INDEX.dropdown - 1};
   pointer-events: none;
 `
 
@@ -55,7 +55,7 @@ const ContentContainer = styled.div<{ isDarkMode: boolean }>`
   max-width: min(720px, 90%);
   position: sticky;
   bottom: 0;
-  z-index: ${Z_INDEX.dropdown};
+  z-index: ${Z_INDEX.dropdown - 1};
   padding: 32px 0 80px;
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} opacity`};
 
