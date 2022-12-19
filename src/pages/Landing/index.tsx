@@ -200,7 +200,7 @@ export default function Landing() {
     } else {
       setShowContent(true)
     }
-  }, [navigate, selectedWallet, landingRedirectFlag])
+  }, [navigate, selectedWallet, landingRedirectFlag, queryParams.intro])
 
   if (!isOpen) return null
 
