@@ -291,7 +291,7 @@ export const ButtonWithInfoHelper = ({
     <BtnInfoWrapper disabled={disabled} altDisabledStyle={loading} confirmed={confirmed} onClick={onClick}>
       <MouseoverTooltip width="300px" text={tooltipMsg} disableTooltip={loading}>
         <Flex
-          sx={{ alignItems: 'center', height: 44, paddingRight: 8, paddingLeft: 2 }}
+          sx={{ alignItems: 'center', height: '44px', paddingRight: '8px', paddingLeft: '2px' }}
           onClick={e => e.stopPropagation()}
         >
           {loading ? <Loader stroke="white" /> : <Info size={20} />}
