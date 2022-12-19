@@ -103,6 +103,7 @@ platform :ios do
 
     build_number = increment_build_number(
       xcodeproj: XCODE_PROJECT,
+      skip_info_plist: true,
     )
 
     version_number = get_version_number(
