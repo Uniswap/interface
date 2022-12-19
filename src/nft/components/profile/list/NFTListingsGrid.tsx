@@ -18,10 +18,11 @@ import * as styles from './ListPage.css'
 const TableHeader = styled.div`
   display: flex;
   position: sticky;
-  top: 72px;
+  align-items: center;
+  top: 73px;
   padding-top: 24px;
   padding-bottom: 24px;
-  z-index: ${Z_INDEX.sticky};
+  z-index: 1;
   background-color: ${({ theme }) => theme.backgroundBackdrop};
 `
 
