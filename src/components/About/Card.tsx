@@ -10,8 +10,6 @@ export enum CardType {
   Secondary = 'Secondary',
 }
 
-// const DARK_MODE_GRADIENT = 'linear-gradient(180deg, rgba(19, 22, 27, 0.54) 0%, #13161b 100%)'
-
 const StyledCard = styled.div<{ isDarkMode: boolean; backgroundImgSrc?: string; type: CardType }>`
   display: flex;
   background: ${({ isDarkMode, backgroundImgSrc, type, theme }) =>
@@ -80,6 +78,7 @@ const CardDescription = styled.div<{ type: CardType }>`
   line-height: 20px;
   color: ${({ theme, type }) => getCardDescriptionColor(type, theme)};
   padding: 0 40px 0 0;
+  max-width: 480px;
 
   @media screen and (min-width: ${BREAKPOINTS.xl}px) {
     font-size: 20px;
