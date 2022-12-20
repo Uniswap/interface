@@ -10,6 +10,7 @@ const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {
   fiatOnrampAcknowledgments: { renderCount: number; system: boolean; user: boolean }
+  fiatOnrampDismissed: boolean
 
   selectedWallet?: ConnectionType
 
@@ -64,6 +65,8 @@ function pairKey(token0Address: string, token1Address: string) {
 
 export const initialState: UserState = {
   fiatOnrampAcknowledgments: { renderCount: 0, system: false, user: false },
+  fiatOnrampDismissed: false,
+
   selectedWallet: undefined,
   matchesDarkMode: false,
   userDarkMode: null,
@@ -92,6 +95,9 @@ const userSlice = createSlice({
       { payload }: { payload: Partial<{ renderCount: number; user: boolean; system: boolean }> }
     ) {
       state.fiatOnrampAcknowledgments = { ...state.fiatOnrampAcknowledgments, ...payload }
+    },
+    updateFiatonrampDismissed(state, { payload: dismissed }) {
+      state.fiatOnrampDismissed = dismissed
     },
     updateSelectedWallet(state, { payload: { wallet } }) {
       state.selectedWallet = wallet
@@ -187,6 +193,7 @@ export const {
   addSerializedPair,
   addSerializedToken,
   updateFiatOnrampAcknowledgments,
+  updateFiatonrampDismissed,
   updateSelectedWallet,
   updateHideClosedPositions,
   updateMatchesDarkMode,

@@ -5,9 +5,11 @@ import { BaseVariant } from 'featureFlags'
 import { useFiatOnrampFlag } from 'featureFlags/flags/fiatOnramp'
 import { useCallback, useEffect, useState } from 'react'
 import { X } from 'react-feather'
+import { useDispatch } from 'react-redux'
 import { useToggleWalletDropdown } from 'state/application/hooks'
 import { useAppSelector } from 'state/hooks'
 import { useFiatOnrampAck } from 'state/user/hooks'
+import { updateFiatonrampDismissed } from 'state/user/reducer'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { isMobile } from 'utils/userAgent'
@@ -91,24 +93,23 @@ const Body = styled(ThemedText.BodySmall)`
   position: relative;
 `
 
-const ANNOUNCEMENT_RENDERED = 'FiatOnrampAnnouncement-rendered'
-const ANNOUNCEMENT_DISMISSED = 'FiatOnrampAnnouncement-dismissed'
-
 const MAX_RENDER_COUNT = 3
+
 export function FiatOnrampAnnouncement() {
   const { account } = useWeb3React()
+  const dispatch = useDispatch()
   const [acks, acknowledge] = useFiatOnrampAck()
+  const fiatOnrampDismissed = useAppSelector((state) => state.user.fiatOnrampDismissed)
   const [locallyDismissed, setLocallyDismissed] = useState(false)
+
   useEffect(() => {
-    if (!localStorage.getItem(ANNOUNCEMENT_RENDERED)) {
-      acknowledge({ renderCount: acks?.renderCount + 1 })
-      localStorage.setItem(ANNOUNCEMENT_RENDERED, 'true')
-    }
-  }, [acknowledge, acks])
+    acknowledge({ renderCount: acks?.renderCount + 1 })
+    // The dependency list is empty so this is only run once on mount
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleClose = useCallback(() => {
     setLocallyDismissed(true)
-    localStorage.setItem(ANNOUNCEMENT_DISMISSED, 'true')
+    dispatch(updateFiatonrampDismissed(true))
   }, [])
 
   const toggleWalletDropdown = useToggleWalletDropdown()
@@ -125,7 +126,7 @@ export function FiatOnrampAnnouncement() {
     acks?.user ||
     fiatOnrampFlag === BaseVariant.Control ||
     locallyDismissed ||
-    localStorage.getItem(ANNOUNCEMENT_DISMISSED) ||
+    fiatOnrampDismissed ||
     acks?.renderCount >= MAX_RENDER_COUNT ||
     isMobile ||
     openModal !== null
