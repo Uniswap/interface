@@ -39,6 +39,7 @@ Cypress.Commands.overwrite(
           options?.onBeforeLoad?.(win)
           win.localStorage.clear()
           win.localStorage.setItem('redux_localstorage_simple_user', '{"selectedWallet":"INJECTED"}')
+          win.localStorage.setItem('FiatOnrampAnnouncement-dismissed', 'true')
 
           if (options?.featureFlags) {
             const featureFlags = options.featureFlags.reduce(
