@@ -12,12 +12,7 @@ import { Wallet } from '@ethersproject/wallet'
 const TEST_PRIVATE_KEY = '0xe580410d7c37d26c6ad1a837bbae46bc27f9066a466fb3a66e770523b4666d19'
 
 // address of the above key
-export const TEST_ADDRESS_NEVER_USE = new Wallet(TEST_PRIVATE_KEY).address
-
-export const TEST_ADDRESS_NEVER_USE_SHORTENED = `${TEST_ADDRESS_NEVER_USE.substr(
-  0,
-  6
-)}...${TEST_ADDRESS_NEVER_USE.substr(-4, 4)}`
+const TEST_ADDRESS_NEVER_USE = new Wallet(TEST_PRIVATE_KEY).address
 
 const provider = new JsonRpcProvider('https://goerli.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847', 4)
 const signer = new Wallet(TEST_PRIVATE_KEY, provider)

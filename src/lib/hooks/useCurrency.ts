@@ -26,7 +26,7 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
 }
 
 export const UNKNOWN_TOKEN_SYMBOL = 'UNKNOWN'
-export const UNKNOWN_TOKEN_NAME = 'Unknown Token'
+const UNKNOWN_TOKEN_NAME = 'Unknown Token'
 
 /**
  * Returns a Token from the tokenAddress.

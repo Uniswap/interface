@@ -22,7 +22,7 @@ export function computeRealizedPriceImpact(trade: Trade<Currency, Currency, Trad
 }
 
 // computes realized lp fee as a percent
-export function computeRealizedLPFeePercent(trade: Trade<Currency, Currency, TradeType>): Percent {
+function computeRealizedLPFeePercent(trade: Trade<Currency, Currency, TradeType>): Percent {
   let percent: Percent
 
   // Since routes are either all v2 or all v3 right now, calculate separately

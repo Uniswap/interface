@@ -76,7 +76,7 @@ function LiquidityInfo({
   const currency1 = unwrappedToken(token1Amount.currency)
 
   return (
-    <AutoColumn gap="8px">
+    <AutoColumn gap="sm">
       <RowBetween>
         <RowFixed>
           <CurrencyLogo size="20px" style={{ marginRight: '8px' }} currency={currency0} />
@@ -435,7 +435,7 @@ function V2PairMigration({
           <FeeSelector feeAmount={feeAmount} handleFeePoolSelect={setFeeAmount} />
           {noLiquidity && (
             <BlueCard style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <AlertCircle color={theme.deprecated_text1} style={{ marginBottom: '12px', opacity: 0.8 }} />
+              <AlertCircle color={theme.textPrimary} style={{ marginBottom: '12px', opacity: 0.8 }} />
               <ThemedText.DeprecatedBody
                 fontSize={14}
                 style={{ marginBottom: 8, fontWeight: 500, opacity: 0.8 }}
@@ -457,7 +457,7 @@ function V2PairMigration({
               </ThemedText.DeprecatedBody>
 
               {v2SpotPrice && (
-                <AutoColumn gap="8px" style={{ marginTop: '12px' }}>
+                <AutoColumn gap="sm" style={{ marginTop: '12px' }}>
                   <RowBetween>
                     <ThemedText.DeprecatedBody fontWeight={500} fontSize={14}>
                       <Trans>
@@ -475,7 +475,7 @@ function V2PairMigration({
 
           {largePriceDifference ? (
             <YellowCard>
-              <AutoColumn gap="8px">
+              <AutoColumn gap="sm">
                 <RowBetween>
                   <ThemedText.DeprecatedBody fontSize={14}>
                     <Trans>
@@ -603,9 +603,9 @@ function V2PairMigration({
             </DarkGrayCard>
           ) : null}
 
-          <AutoColumn gap="12px">
+          <AutoColumn gap="md">
             {!isSuccessfullyMigrated && !isMigrationPending ? (
-              <AutoColumn gap="12px" style={{ flex: '1' }}>
+              <AutoColumn gap="md" style={{ flex: '1' }}>
                 <ButtonConfirmed
                   confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
                   disabled={
@@ -630,7 +630,7 @@ function V2PairMigration({
                 </ButtonConfirmed>
               </AutoColumn>
             ) : null}
-            <AutoColumn gap="12px" style={{ flex: '1' }}>
+            <AutoColumn gap="md" style={{ flex: '1' }}>
               <ButtonConfirmed
                 confirmed={isSuccessfullyMigrated}
                 disabled={

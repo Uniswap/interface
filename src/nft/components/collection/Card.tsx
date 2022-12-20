@@ -493,7 +493,7 @@ const TruncatedTextRow = styled(Row)`
   text-overflow: ellipsis;
   display: block;
   overflow: hidden;
-  flex: 0.98;
+  flex: 1;
 `
 
 interface ProfileNftDetailsProps {
@@ -647,7 +647,7 @@ const DetailsLink = () => {
         e.stopPropagation()
       }}
     >
-      <Box>Details</Box>
+      <Box data-testid="nft-details-link">Details</Box>
     </DetailsLinkContainer>
   )
 }

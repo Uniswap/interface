@@ -157,7 +157,7 @@ const LinkIconWrapper = styled.div`
   display: flex;
 `
 
-export function ExternalLinkIcon() {
+function ExternalLinkIcon() {
   return (
     <LinkIconWrapper>
       <ExplorerLinkIcon />
@@ -183,6 +183,8 @@ function ExplorerView({ token }: { token: Token }) {
 }
 
 const StyledExternalLink = styled(ExternalLink)`
+  color: ${({ theme }) => theme.textSecondary};
+  stroke: currentColor;
   font-weight: 600;
 `
 

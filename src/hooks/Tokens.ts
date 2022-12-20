@@ -133,16 +133,6 @@ export function useSearchInactiveTokenLists(search: string | undefined, minResul
   }, [activeTokens, chainId, inactiveUrls, lists, minResults, search])
 }
 
-export function useIsTokenActive(token: Token | undefined | null): boolean {
-  const activeTokens = useAllTokens()
-
-  if (!activeTokens || !token) {
-    return false
-  }
-
-  return !!activeTokens[token.address]
-}
-
 // Check if currency is included in custom list from user storage
 export function useIsUserAddedToken(currency: Currency | undefined | null): boolean {
   const userAddedTokens = useUserAddedTokens()

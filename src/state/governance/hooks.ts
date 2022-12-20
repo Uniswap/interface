@@ -52,7 +52,7 @@ function useGovernanceBravoContract(): Contract | null {
 
 const useLatestGovernanceContract = useGovernanceBravoContract
 
-export function useUniContract() {
+function useUniContract() {
   const { chainId } = useWeb3React()
   const uniAddress = useMemo(() => (chainId ? UNI[chainId]?.address : undefined), [chainId])
   return useContract(uniAddress, UNI_ABI, true)

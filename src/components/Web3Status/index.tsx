@@ -5,7 +5,6 @@ import { useWeb3React } from '@web3-react/core'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
 import WalletDropdown from 'components/WalletDropdown'
 import { getConnection } from 'connection/utils'
-import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { Portal } from 'nft/components/common/Portal'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { getIsValidSwapQuote } from 'pages/Swap'
@@ -71,13 +70,13 @@ const Web3StatusGeneric = styled(ButtonSecondary)`
   }
 `
 const Web3StatusError = styled(Web3StatusGeneric)`
-  background-color: ${({ theme }) => theme.deprecated_red1};
-  border: 1px solid ${({ theme }) => theme.deprecated_red1};
-  color: ${({ theme }) => theme.deprecated_white};
+  background-color: ${({ theme }) => theme.accentFailure};
+  border: 1px solid ${({ theme }) => theme.accentFailure};
+  color: ${({ theme }) => theme.white};
   font-weight: 500;
   :hover,
   :focus {
-    background-color: ${({ theme }) => darken(0.1, theme.deprecated_red1)};
+    background-color: ${({ theme }) => darken(0.1, theme.accentFailure)};
   }
 `
 
@@ -99,12 +98,11 @@ const Web3StatusConnectWrapper = styled.div<{ faded?: boolean }>`
 
 const Web3StatusConnected = styled(Web3StatusGeneric)<{
   pending?: boolean
-  isNftActive?: boolean
   isClaimAvailable?: boolean
 }>`
-  background-color: ${({ pending, theme }) => (pending ? theme.deprecated_primary1 : theme.deprecated_bg1)};
-  border: 1px solid ${({ pending, theme }) => (pending ? theme.deprecated_primary1 : theme.deprecated_bg1)};
-  color: ${({ pending, theme }) => (pending ? theme.deprecated_white : theme.deprecated_text1)};
+  background-color: ${({ pending, theme }) => (pending ? theme.accentAction : theme.deprecated_bg1)};
+  border: 1px solid ${({ pending, theme }) => (pending ? theme.accentAction : theme.deprecated_bg1)};
+  color: ${({ pending, theme }) => (pending ? theme.white : theme.textPrimary)};
   font-weight: 500;
   border: ${({ isClaimAvailable }) => isClaimAvailable && `1px solid ${colors.purple300}`};
   :hover,
@@ -114,24 +112,24 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{
     :focus {
       border: 1px solid
         ${({ pending, theme }) =>
-          pending ? darken(0.1, theme.deprecated_primary1) : darken(0.1, theme.deprecated_bg2)};
+          pending ? darken(0.1, theme.accentAction) : darken(0.1, theme.backgroundInteractive)};
     }
   }
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
-    width: ${({ isNftActive, pending }) => isNftActive && !pending && '36px'};
+    width: ${({ pending }) => !pending && '36px'};
 
     ${IconWrapper} {
-      margin-right: ${({ isNftActive }) => isNftActive && 0};
+      margin-right: 0;
     }
   }
 `
 
-const AddressAndChevronContainer = styled.div<{ isNftActive?: boolean }>`
+const AddressAndChevronContainer = styled.div`
   display: flex;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
-    display: ${({ isNftActive }) => isNftActive && 'none'};
+    display: none;
   }
 `
 
@@ -212,7 +210,6 @@ function Web3StatusInner() {
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
 
   const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
-  const isNftActive = useNftFlag() === NftVariant.Enabled
 
   const allTransactions = useAllTransactions()
 
@@ -246,7 +243,6 @@ function Web3StatusInner() {
     return (
       <Web3StatusConnected
         data-testid="web3-status-connected"
-        isNftActive={isNftActive}
         onClick={toggleWallet}
         pending={hasPendingTransactions}
         isClaimAvailable={isClaimAvailable}
@@ -260,7 +256,7 @@ function Web3StatusInner() {
             <Loader stroke="white" />
           </RowBetween>
         ) : (
-          <AddressAndChevronContainer isNftActive={isNftActive}>
+          <AddressAndChevronContainer>
             <Text>{ENSName || shortenAddress(account)}</Text>
             {walletIsOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
           </AddressAndChevronContainer>
@@ -285,7 +281,7 @@ function Web3StatusInner() {
             <Trans>Connect</Trans>
           </StyledConnectButton>
           <VerticalDivider />
-          <ChevronWrapper onClick={toggleWalletDropdown}>
+          <ChevronWrapper onClick={toggleWalletDropdown} data-testid="navbar-toggle-dropdown">
             {walletIsOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
           </ChevronWrapper>
         </Web3StatusConnectWrapper>

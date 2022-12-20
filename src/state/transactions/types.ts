@@ -37,7 +37,7 @@ export enum TransactionType {
   EXECUTE,
 }
 
-export interface BaseTransactionInfo {
+interface BaseTransactionInfo {
   type: TransactionType
 }
 

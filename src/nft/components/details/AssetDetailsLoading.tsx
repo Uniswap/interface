@@ -14,7 +14,22 @@ const Title = styled(LoadingBubble)`
 const SubTitle = styled(LoadingBubble)`
   height: 40px;
   width: 200px;
-  margin-top: 12px;
+  margin-top: 8px;
+
+  @media (max-width: ${BREAKPOINT}) {
+    width: 100%;
+  }
+`
+
+const Seller = styled(LoadingBubble)`
+  height: 16px;
+  width: 40px;
+`
+
+const SellerAddress = styled(LoadingBubble)`
+  margin-top: 4px;
+  height: 24px;
+  width: 95px;
 `
 
 const PrimaryBody = styled(LoadingBubble)`
@@ -22,20 +37,20 @@ const PrimaryBody = styled(LoadingBubble)`
   height: 260px;
 `
 
+const ActivityLoader = styled(LoadingBubble)`
+  width: 100%;
+  height: 428px;
+`
+
 const PrimaryContent = styled(Column)`
   max-width: 780px;
   margin-top: 28px;
   width: 100%;
+  gap: 28px;
 
   @media (max-width: ${BREAKPOINT}) {
     max-width: 100%;
   }
-`
-
-const SecondaryContent = styled(LoadingBubble)`
-  width: 100%;
-  height: 60px;
-  margin-top: 28px;
 `
 
 const LoaderContainer = styled.div`
@@ -51,19 +66,9 @@ const LoaderContainer = styled.div`
 const BuyNowContainer = styled(LoadingBubble)`
   height: 180px;
   width: 360px;
-  margin-top: 28px;
 
   @media (max-width: ${BREAKPOINT}) {
     width: 100%;
-  }
-`
-
-const PriceContainer = styled(LoadingBubble)`
-  height: 16px;
-  width: 136px;
-
-  @media (max-width: ${BREAKPOINT}) {
-    margin-top: 20px;
   }
 `
 
@@ -92,29 +97,25 @@ const StyledColumn = styled(Column)`
   }
 `
 
-const BuyNowLoadingDesktop = styled.div`
+const BuyNowLoadingDesktop = styled(Column)`
+  margin-top: 20px;
   padding-left: 60px;
+  gap: 24px;
 
   @media (max-width: ${BREAKPOINT}) {
     display: none;
   }
 `
 
-const BuyNowLoadingMobile = styled.div`
+const BuyNowLoadingMobile = styled(Column)`
   display: none;
   margin-top: 16px;
+  gap: 24px;
 
   @media (max-width: ${BREAKPOINT}) {
-    display: block;
+    display: flex;
   }
 `
-
-const BuyNowLoading = () => (
-  <>
-    <PriceContainer />
-    <BuyNowContainer />
-  </>
-)
 
 export const AssetDetailsLoading = () => {
   const theme = useTheme()
@@ -125,20 +126,34 @@ export const AssetDetailsLoading = () => {
         <LoaderContainer>
           <Loader stroke={theme.accentAction} size="40px" />
         </LoaderContainer>
-        <Title />
-        <SubTitle />
         <BuyNowLoadingMobile>
-          <BuyNowLoading />
+          <Column>
+            <Title />
+            <SubTitle />
+          </Column>
+          <BuyNowContainer />
+          <Column>
+            <Seller />
+            <SellerAddress />
+          </Column>
         </BuyNowLoadingMobile>
         <PrimaryContent>
           <PrimaryBody />
-          <SecondaryContent />
-          <SecondaryContent />
-          <SecondaryContent />
+          <ActivityLoader />
+          <PrimaryBody />
+          <PrimaryBody />
         </PrimaryContent>
       </StyledColumn>
       <BuyNowLoadingDesktop>
-        <BuyNowLoading />
+        <Column>
+          <Title />
+          <SubTitle />
+        </Column>
+        <BuyNowContainer />
+        <Column>
+          <Seller />
+          <SellerAddress />
+        </Column>
       </BuyNowLoadingDesktop>
     </LoadingContainer>
   )

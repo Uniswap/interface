@@ -33,7 +33,7 @@ const StyledExternalCard = styled(Card)`
 
 const HoverText = styled.div`
   text-decoration: none;
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${({ theme }) => theme.textPrimary};
   display: flex;
   align-items: center;
 
@@ -95,7 +95,7 @@ export function PrivacyPolicyModal() {
 
   return (
     <Modal isOpen={open} onDismiss={() => toggle()}>
-      <AutoColumn gap="12px" ref={node as any}>
+      <AutoColumn gap="md" ref={node as any}>
         <RowBetween padding="1rem 1rem 0.5rem 1rem">
           <ThemedText.DeprecatedMediumHeader>
             <Trans>Legal & Privacy</Trans>
@@ -110,7 +110,7 @@ export function PrivacyPolicyModal() {
   )
 }
 
-export function PrivacyPolicy() {
+function PrivacyPolicy() {
   return (
     <Wrapper
       draggable="true"
@@ -122,13 +122,13 @@ export function PrivacyPolicy() {
       }}
     >
       <AutoColumn gap="16px">
-        <AutoColumn gap="8px" style={{ width: '100%' }}>
+        <AutoColumn gap="sm" style={{ width: '100%' }}>
           <StyledExternalCard>
             <ExternalLink href="https://uniswap.org/terms-of-service">
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />
-                  <ThemedText.DeprecatedMain fontSize={14} color="deprecated_primaryText1">
+                  <ThemedText.DeprecatedMain fontSize={14} color="accentAction">
                     <Trans>Uniswap Labs&apos; Terms of Service</Trans>
                   </ThemedText.DeprecatedMain>
                 </AutoRow>
@@ -141,7 +141,7 @@ export function PrivacyPolicy() {
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />
-                  <ThemedText.DeprecatedMain fontSize={14} color="deprecated_primaryText1">
+                  <ThemedText.DeprecatedMain fontSize={14} color="accentAction">
                     <Trans>Privacy Policy</Trans>
                   </ThemedText.DeprecatedMain>
                 </AutoRow>
@@ -153,13 +153,13 @@ export function PrivacyPolicy() {
         <ThemedText.DeprecatedMain fontSize={14}>
           <Trans>This app uses the following third-party APIs:</Trans>
         </ThemedText.DeprecatedMain>
-        <AutoColumn gap="12px">
+        <AutoColumn gap="md">
           {EXTERNAL_APIS.map(({ name, description }, i) => (
             <DarkGrayCard key={i}>
-              <AutoColumn gap="8px">
+              <AutoColumn gap="sm">
                 <AutoRow gap="4px">
                   <Info size={18} />
-                  <ThemedText.DeprecatedMain fontSize={14} color="deprecated_text1">
+                  <ThemedText.DeprecatedMain fontSize={14} color="textPrimary">
                     {name}
                   </ThemedText.DeprecatedMain>
                 </AutoRow>

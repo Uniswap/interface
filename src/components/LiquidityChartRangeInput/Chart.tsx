@@ -9,8 +9,8 @@ import { Line } from './Line'
 import { ChartEntry, LiquidityChartRangeInputProps } from './types'
 import Zoom, { ZoomOverlay } from './Zoom'
 
-export const xAccessor = (d: ChartEntry) => d.price0
-export const yAccessor = (d: ChartEntry) => d.activeLiquidity
+const xAccessor = (d: ChartEntry) => d.price0
+const yAccessor = (d: ChartEntry) => d.activeLiquidity
 
 export function Chart({
   id = 'liquidityChartRangeInput',

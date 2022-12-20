@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from '../hooks'
 import { addListener, removeListener } from './slice'
 import { filterToKey, isHistoricalLog, Log } from './utils'
 
-export enum LogsState {
+enum LogsState {
   // The filter is invalid
   INVALID,
   // The logs are being loaded
@@ -20,7 +20,7 @@ export enum LogsState {
   SYNCED,
 }
 
-export interface UseLogsResult {
+interface UseLogsResult {
   logs: Log[] | undefined
   state: LogsState
 }

@@ -38,7 +38,7 @@ export function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.MA
   }
 }
 
-export function getTokenLogoURI(address: string, chainId: SupportedChainId = SupportedChainId.MAINNET): string | void {
+function getTokenLogoURI(address: string, chainId: SupportedChainId = SupportedChainId.MAINNET): string | void {
   const networkName = chainIdToNetworkName(chainId)
   const networksWithUrls = [SupportedChainId.ARBITRUM_ONE, SupportedChainId.MAINNET, SupportedChainId.OPTIMISM]
   if (networksWithUrls.includes(chainId)) {

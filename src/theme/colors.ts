@@ -95,7 +95,7 @@ export const colors = {
   networkEthereumSoft: 'rgba(98, 126, 234, 0.16)',
 }
 
-export type Theme = typeof darkTheme
+type Theme = typeof darkTheme
 
 const commonTheme = {
   white: colors.white,

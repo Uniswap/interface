@@ -57,7 +57,7 @@ export const AboutHeader = styled(ThemedText.MediumHeader)`
   font-size: 28px !important;
 `
 
-export const ResourcesContainer = styled.div`
+const ResourcesContainer = styled.div`
   display: flex;
   padding-top: 12px;
   gap: 14px;

@@ -196,7 +196,7 @@ interface MarketplaceRowProps {
   listings?: number
 }
 
-export const MarketplaceRow = ({ marketplace, floorInEth, listings }: MarketplaceRowProps) => {
+const MarketplaceRow = ({ marketplace, floorInEth, listings }: MarketplaceRowProps) => {
   return (
     <>
       <TableElement>
@@ -284,7 +284,7 @@ export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
 
 const DEFAULT_TABLE_ELEMENTS = 12
 
-export const LoadingTable = () => {
+const LoadingTable = () => {
   return (
     <>
       {[...Array(DEFAULT_TABLE_ELEMENTS)].map((index) => (

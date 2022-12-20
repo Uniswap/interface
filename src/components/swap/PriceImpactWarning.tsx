@@ -12,7 +12,7 @@ import { formatPriceImpact } from './FormattedPriceImpact'
 
 const StyledCard = styled(OutlineCard)`
   padding: 12px;
-  border: 1px solid ${({ theme }) => opacify(24, theme.deprecated_error)};
+  border: 1px solid ${({ theme }) => opacify(24, theme.accentFailure)};
 `
 
 interface PriceImpactWarningProps {
@@ -24,7 +24,7 @@ export default function PriceImpactWarning({ priceImpact }: PriceImpactWarningPr
 
   return (
     <StyledCard>
-      <AutoColumn gap="8px">
+      <AutoColumn gap="sm">
         <MouseoverTooltip
           text={
             <Trans>
@@ -35,11 +35,11 @@ export default function PriceImpactWarning({ priceImpact }: PriceImpactWarningPr
         >
           <RowBetween>
             <RowFixed>
-              <ThemedText.DeprecatedSubHeader color={theme.deprecated_error}>
+              <ThemedText.DeprecatedSubHeader color={theme.accentFailure}>
                 <Trans>Price impact warning</Trans>
               </ThemedText.DeprecatedSubHeader>
             </RowFixed>
-            <ThemedText.DeprecatedLabel textAlign="right" fontSize={14} color={theme.deprecated_error}>
+            <ThemedText.DeprecatedLabel textAlign="right" fontSize={14} color={theme.accentFailure}>
               {formatPriceImpact(priceImpact)}
             </ThemedText.DeprecatedLabel>
           </RowBetween>

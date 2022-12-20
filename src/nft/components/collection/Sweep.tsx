@@ -136,7 +136,7 @@ interface NftDisplayProps {
   nfts: GenieAsset[]
 }
 
-export const NftDisplay = ({ nfts }: NftDisplayProps) => {
+const NftDisplay = ({ nfts }: NftDisplayProps) => {
   return (
     <NftDisplayContainer>
       {[...Array(3)].map((_, index) => {
@@ -363,7 +363,7 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
   }
 
   return (
-    <SweepContainer>
+    <SweepContainer data-testid="nft-sweep-slider">
       <SweepLeftmostContainer>
         <SweepHeaderContainer>
           <ThemedText.SubHeader color="textPrimary" lineHeight="20px" paddingTop="6px" paddingBottom="6px">

@@ -1,52 +1,155 @@
 import { Trans } from '@lingui/macro'
-import { sendEvent } from 'components/analytics'
-import React, { ErrorInfo, PropsWithChildren } from 'react'
+import * as Sentry from '@sentry/react'
+import { ButtonLight, SmallButtonPrimary } from 'components/Button'
+import { ChevronUpIcon } from 'nft/components/icons'
+import { useIsMobile } from 'nft/hooks'
+import React, { PropsWithChildren, useState } from 'react'
+import { Copy } from 'react-feather'
 import styled from 'styled-components/macro'
 
-import store, { AppState } from '../../state'
-import { ExternalLink, ThemedText } from '../../theme'
-import { userAgent } from '../../utils/userAgent'
-import { AutoColumn } from '../Column'
-import { AutoRow } from '../Row'
+import { CopyToClipboard, ExternalLink, ThemedText } from '../../theme'
+import { Column } from '../Column'
 
 const FallbackWrapper = styled.div`
   display: flex;
-  flex-direction: column;
-  width: 100%;
-  align-items: center;
-  z-index: 1;
+  width: 100vw;
+  height: 100vh;
 `
 
 const BodyWrapper = styled.div<{ margin?: string }>`
-  padding: 1rem;
   width: 100%;
+  max-width: 500px;
+  margin: auto;
+  padding: 1rem;
+`
+
+const SmallButtonLight = styled(ButtonLight)`
+  font-size: 16px;
+  padding: 10px 16px;
+  border-radius: 12px;
+`
+
+const StretchedRow = styled.div`
+  display: flex;
+  gap: 24px;
+
+  > * {
+    display: flex;
+    flex: 1;
+  }
+`
+
+const Code = styled.code`
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 16px;
+  word-wrap: break-word;
+  width: 100%;
+  color: ${({ theme }) => theme.textPrimary};
+  font-family: ${({ theme }) => theme.fonts.code};
+  overflow: scroll;
+  max-height: calc(100vh - 450px);
+`
+
+const Separator = styled.div`
+  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
 `
 
 const CodeBlockWrapper = styled.div`
-  background: ${({ theme }) => theme.deprecated_bg0};
-  overflow: auto;
-  white-space: pre;
+  display: flex;
+  flex-direction: column;
+  background: ${({ theme }) => theme.backgroundModule};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 24px;
-  padding: 18px 24px;
-  color: ${({ theme }) => theme.deprecated_text1};
+  padding: 24px;
+  gap: 10px;
+  color: ${({ theme }) => theme.textPrimary};
 `
 
-const LinkWrapper = styled.div`
-  color: ${({ theme }) => theme.deprecated_blue1};
-  padding: 6px 24px;
+const ShowMoreButton = styled.div`
+  display: flex;
+  cursor: pointer;
+  justify-content: space-between;
 `
 
-const SomethingWentWrongWrapper = styled.div`
-  padding: 6px 24px;
+const CopyIcon = styled(Copy)`
+  stroke: ${({ theme }) => theme.textSecondary};
 `
 
-type ErrorBoundaryState = {
-  error: Error | null
+const ShowMoreIcon = styled(ChevronUpIcon)<{ $isExpanded?: boolean }>`
+  transform: ${({ $isExpanded }) => ($isExpanded ? 'none' : 'rotate(180deg)')};
+`
+
+const CodeTitle = styled.div`
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  word-break: break-word;
+`
+
+const Fallback = ({ error, eventId }: { error: Error; eventId: string | null }) => {
+  const [isExpanded, setExpanded] = useState(false)
+  const isMobile = useIsMobile()
+
+  const errorId = eventId || 'unknown-error'
+
+  // @todo: ThemedText components should be responsive by default
+  const [Title, Description] = isMobile
+    ? [ThemedText.HeadlineSmall, ThemedText.BodySmall]
+    : [ThemedText.HeadlineLarge, ThemedText.BodySecondary]
+
+  return (
+    <FallbackWrapper>
+      <BodyWrapper>
+        <Column gap="xl">
+          <Column gap="sm">
+            <Title textAlign="center">
+              <Trans>Something went wrong</Trans>
+            </Title>
+            <Description textAlign="center" color="textSecondary">
+              <Trans>
+                Sorry, an error occured while processing your request. If you request support, be sure to provide your
+                error ID.
+              </Trans>
+            </Description>
+          </Column>
+          <CodeBlockWrapper>
+            <CodeTitle>
+              <ThemedText.SubHeader fontWeight={500}>Error ID: {errorId}</ThemedText.SubHeader>
+              <CopyToClipboard toCopy={errorId}>
+                <CopyIcon />
+              </CopyToClipboard>
+            </CodeTitle>
+            <Separator />
+            {isExpanded && (
+              <>
+                <Code>{error.stack}</Code>
+                <Separator />
+              </>
+            )}
+            <ShowMoreButton onClick={() => setExpanded((s) => !s)}>
+              <ThemedText.Link color="textSecondary">
+                <Trans>{isExpanded ? 'Show less' : 'Show more'}</Trans>
+              </ThemedText.Link>
+              <ShowMoreIcon $isExpanded={isExpanded} secondaryWidth="20" secondaryHeight="20" />
+            </ShowMoreButton>
+          </CodeBlockWrapper>
+          <StretchedRow>
+            <SmallButtonPrimary onClick={() => window.location.reload()}>
+              <Trans>Reload the app</Trans>
+            </SmallButtonPrimary>
+            <ExternalLink id="get-support-on-discord" href="https://discord.gg/FCfyBSbCU5" target="_blank">
+              <SmallButtonLight>
+                <Trans>Get support</Trans>
+              </SmallButtonLight>
+            </ExternalLink>
+          </StretchedRow>
+        </Column>
+      </BodyWrapper>
+    </FallbackWrapper>
+  )
 }
-
-const IS_UNISWAP = window.location.hostname === 'app.uniswap.org'
 
 async function updateServiceWorker(): Promise<ServiceWorkerRegistration> {
   const ready = await navigator.serviceWorker.ready
@@ -55,157 +158,34 @@ async function updateServiceWorker(): Promise<ServiceWorkerRegistration> {
   return ready.update() as unknown as Promise<ServiceWorkerRegistration>
 }
 
-export default class ErrorBoundary extends React.Component<PropsWithChildren<unknown>, ErrorBoundaryState> {
-  constructor(props: PropsWithChildren<unknown>) {
-    super(props)
-    this.state = { error: null }
-  }
+const updateServiceWorkerInBackground = async () => {
+  try {
+    const registration = await updateServiceWorker()
 
-  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    updateServiceWorker()
-      .then(async (registration) => {
-        // We want to refresh only if we detect a new service worker is waiting to be activated.
-        // See details about it: https://developers.google.com/web/fundamentals/primers/service-workers/lifecycle
-        if (registration?.waiting) {
-          await registration.unregister()
+    // We want to refresh only if we detect a new service worker is waiting to be activated.
+    // See details about it: https://web.dev/service-worker-lifecycle/
+    if (registration?.waiting) {
+      await registration.unregister()
 
-          // Makes Workbox call skipWaiting(). For more info on skipWaiting see: https://developer.chrome.com/docs/workbox/handling-service-worker-updates/
-          registration.waiting.postMessage({ type: 'SKIP_WAITING' })
-
-          // Once the service worker is unregistered, we can reload the page to let
-          // the browser download a fresh copy of our app (invalidating the cache)
-          window.location.reload()
-        }
-      })
-      .catch((error) => {
-        console.error('Failed to update service worker', error)
-      })
-    return { error }
-  }
-
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    sendEvent('exception', {
-      description: error.toString() + errorInfo.toString(),
-      fatal: true,
-    })
-  }
-
-  render() {
-    const { error } = this.state
-
-    if (error !== null) {
-      const encodedBody = encodeURIComponent(issueBody(error))
-      return (
-        <FallbackWrapper>
-          <BodyWrapper>
-            <AutoColumn gap="md">
-              <SomethingWentWrongWrapper>
-                <ThemedText.DeprecatedLabel fontSize={24} fontWeight={600}>
-                  <Trans>Something went wrong</Trans>
-                </ThemedText.DeprecatedLabel>
-              </SomethingWentWrongWrapper>
-              <CodeBlockWrapper>
-                <code>
-                  <ThemedText.DeprecatedMain fontSize={10}>{error.stack}</ThemedText.DeprecatedMain>
-                </code>
-              </CodeBlockWrapper>
-              {IS_UNISWAP ? (
-                <AutoRow>
-                  <LinkWrapper>
-                    <ExternalLink
-                      id="create-github-issue-link"
-                      href={`https://github.com/Uniswap/uniswap-interface/issues/new?assignees=&labels=bug&body=${encodedBody}&title=${encodeURIComponent(
-                        `Crash report: \`${error.name}${error.message && `: ${error.message}`}\``
-                      )}`}
-                      target="_blank"
-                    >
-                      <ThemedText.DeprecatedLink fontSize={16}>
-                        <Trans>Create an issue on GitHub</Trans>
-                        <span>↗</span>
-                      </ThemedText.DeprecatedLink>
-                    </ExternalLink>
-                  </LinkWrapper>
-                  <LinkWrapper>
-                    <ExternalLink id="get-support-on-discord" href="https://discord.gg/FCfyBSbCU5" target="_blank">
-                      <ThemedText.DeprecatedLink fontSize={16}>
-                        <Trans>Get support on Discord</Trans>
-                        <span>↗</span>
-                      </ThemedText.DeprecatedLink>
-                    </ExternalLink>
-                  </LinkWrapper>
-                </AutoRow>
-              ) : null}
-            </AutoColumn>
-          </BodyWrapper>
-        </FallbackWrapper>
-      )
+      // Makes Workbox call skipWaiting().
+      // For more info on skipWaiting see: https://web.dev/service-worker-lifecycle/#skip-the-waiting-phase
+      registration.waiting.postMessage({ type: 'SKIP_WAITING' })
     }
-    return this.props.children
+  } catch (error) {
+    console.error('Failed to update service worker', error)
   }
 }
 
-function getRelevantState(): null | keyof AppState {
-  const path = window.location.hash
-  if (!path.startsWith('#/')) {
-    return null
-  }
-  const pieces = path.substring(2).split(/[/\\?]/)
-  switch (pieces[0]) {
-    case 'swap':
-      return 'swap'
-    case 'add':
-      if (pieces[1] === 'v2') return 'mint'
-      else return 'mintV3'
-    case 'remove':
-      if (pieces[1] === 'v2') return 'burn'
-      else return 'burnV3'
-  }
-  return null
-}
-
-function issueBody(error: Error): string {
-  const relevantState = getRelevantState()
-  const deviceData = userAgent
-  return `## URL
-  
-${window.location.href}
-
-${
-  relevantState
-    ? `## \`${relevantState}\` state
-    
-\`\`\`json
-${JSON.stringify(store.getState()[relevantState], null, 2)}
-\`\`\`
-`
-    : ''
-}
-${
-  error.name &&
-  `## Error
-
-\`\`\`
-${error.name}${error.message && `: ${error.message}`}
-\`\`\`
-`
-}
-${
-  error.stack &&
-  `## Stacktrace
-
-\`\`\`
-${error.stack}
-\`\`\`
-`
-}
-${
-  deviceData &&
-  `## Device data
-
-\`\`\`json
-${JSON.stringify(deviceData, null, 2)}
-\`\`\`
-`
-}
-`
+export default function ErrorBoundary({ children }: PropsWithChildren): JSX.Element {
+  return (
+    <Sentry.ErrorBoundary
+      fallback={({ error, eventId }) => <Fallback error={error} eventId={eventId} />}
+      beforeCapture={(scope) => {
+        scope.setLevel('fatal')
+      }}
+      onError={updateServiceWorkerInBackground}
+    >
+      {children}
+    </Sentry.ErrorBoundary>
+  )
 }

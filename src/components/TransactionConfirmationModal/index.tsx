@@ -73,7 +73,7 @@ function ConfirmationPendingContent({
         <ConfirmedIcon inline={inline}>
           <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
         </ConfirmedIcon>
-        <AutoColumn gap="12px" justify="center">
+        <AutoColumn gap="md" justify="center">
           <Text fontWeight={500} fontSize={20} color={theme.textPrimary} textAlign="center">
             <Trans>Waiting for confirmation</Trans>
           </Text>
@@ -135,7 +135,7 @@ function TransactionSubmittedContent({
         <ConfirmedIcon inline={inline}>
           <ArrowUpCircle strokeWidth={1} size={inline ? '40px' : '75px'} color={theme.accentActive} />
         </ConfirmedIcon>
-        <AutoColumn gap="12px" justify="center" style={{ paddingBottom: '12px' }}>
+        <AutoColumn gap="md" justify="center" style={{ paddingBottom: '12px' }}>
           <ThemedText.MediumHeader textAlign="center">
             <Trans>Transaction submitted</Trans>
           </ThemedText.MediumHeader>
@@ -148,7 +148,7 @@ function TransactionSubmittedContent({
               ) : (
                 <RowFixed>
                   <Trans>Added {currencyToAdd.symbol} </Trans>
-                  <CheckCircle size="16px" stroke={theme.deprecated_green1} style={{ marginLeft: '6px' }} />
+                  <CheckCircle size="16px" stroke={theme.accentSuccess} style={{ marginLeft: '6px' }} />
                 </RowFixed>
               )}
             </ButtonLight>
@@ -267,16 +267,16 @@ function L2Content({
         <ConfirmedIcon inline={inline}>
           {confirmed ? (
             transactionSuccess ? (
-              // <CheckCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.deprecated_green1} />
+              // <CheckCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.accentSuccess} />
               <AnimatedConfirmation />
             ) : (
-              <AlertCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.deprecated_red1} />
+              <AlertCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.accentFailure} />
             )
           ) : (
             <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
           )}
         </ConfirmedIcon>
-        <AutoColumn gap="12px" justify="center">
+        <AutoColumn gap="md" justify="center">
           <Text fontWeight={500} fontSize={20} textAlign="center">
             {!hash ? (
               <Trans>Confirm transaction in wallet</Trans>
@@ -293,20 +293,20 @@ function L2Content({
           </Text>
           {chainId && hash ? (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
-              <Text fontWeight={500} fontSize={14} color={theme.deprecated_primary1}>
+              <Text fontWeight={500} fontSize={14} color={theme.accentAction}>
                 <Trans>View on Explorer</Trans>
               </Text>
             </ExternalLink>
           ) : (
             <div style={{ height: '17px' }} />
           )}
-          <Text color={theme.deprecated_text3} style={{ margin: '20px 0 0 0' }} fontSize="14px">
+          <Text color={theme.textTertiary} style={{ margin: '20px 0 0 0' }} fontSize="14px">
             {!secondsToConfirm ? (
               <div style={{ height: '24px' }} />
             ) : (
               <div>
                 <Trans>Transaction completed in </Trans>
-                <span style={{ fontWeight: 500, marginLeft: '4px', color: theme.deprecated_text1 }}>
+                <span style={{ fontWeight: 500, marginLeft: '4px', color: theme.textPrimary }}>
                   {secondsToConfirm} seconds 🎉
                 </span>
               </div>

@@ -3,6 +3,7 @@ import { sendAnalyticsEvent, Trace, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, ElementName, EventName, PageName, SectionName } from '@uniswap/analytics-events'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
@@ -12,23 +13,26 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { isSupportedChain } from 'constants/chains'
+import { usePermit2Enabled } from 'featureFlags/flags/permit2'
+import usePermit, { PermitState } from 'hooks/usePermit2'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ReactNode } from 'react'
-import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
+import { AlertTriangle, ArrowDown, CheckCircle, HelpCircle, Info } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
+import { useTransactionAdder } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/formatNumbers'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
-import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
+import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary, ButtonYellow } from '../../components/Button'
 import { GrayCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import SwapCurrencyInputPanel from '../../components/CurrencyInputPanel/SwapCurrencyInputPanel'
@@ -140,7 +144,7 @@ function largerPercentValue(a?: Percent, b?: Percent) {
 
 const TRADE_STRING = 'SwapRouter'
 
-export default function Swap() {
+export default function Swap({ className }: { className?: string }) {
   const navigate = useNavigate()
   const { account, chainId } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -189,7 +193,6 @@ export default function Swap() {
 
   // for expert mode
   const [isExpertMode] = useExpertModeManager()
-
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
   const {
@@ -287,14 +290,53 @@ export default function Swap() {
     currencies[Field.INPUT] && currencies[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
   )
 
+  const permit2Enabled = usePermit2Enabled()
+  const maximumAmountIn = useMemo(() => {
+    const maximumAmountIn = trade?.maximumAmountIn(allowedSlippage)
+    return maximumAmountIn?.currency.isToken ? (maximumAmountIn as CurrencyAmount<Token>) : undefined
+  }, [allowedSlippage, trade])
+  const permit = usePermit(
+    permit2Enabled ? maximumAmountIn : undefined,
+    permit2Enabled && chainId ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
+  )
+  const isApprovalLoading = permit.state === PermitState.APPROVAL_LOADING
+  const [isPermitPending, setIsPermitPending] = useState(false)
+  const [isPermitFailed, setIsPermitFailed] = useState(false)
+  const addTransaction = useTransactionAdder()
+  const updatePermit = useCallback(async () => {
+    setIsPermitPending(true)
+    try {
+      const approval = await permit.callback?.()
+      if (approval) {
+        sendAnalyticsEvent(EventName.APPROVE_TOKEN_TXN_SUBMITTED, {
+          chain_id: chainId,
+          token_symbol: maximumAmountIn?.currency.symbol,
+          token_address: maximumAmountIn?.currency.address,
+        })
+
+        const { response, info } = approval
+        addTransaction(response, info)
+      }
+      setIsPermitFailed(false)
+    } catch (e) {
+      console.error(e)
+      setIsPermitFailed(true)
+    } finally {
+      setIsPermitPending(false)
+    }
+  }, [addTransaction, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol, permit])
+
   // check whether the user has approved the router on the input token
-  const [approvalState, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage)
+  const [approvalState, approveCallback] = useApproveCallbackFromTrade(
+    permit2Enabled ? undefined : trade,
+    allowedSlippage
+  )
   const transactionDeadline = useTransactionDeadline()
   const {
     state: signatureState,
     signatureData,
     gatherPermitSignature,
-  } = useERC20PermitFromTrade(trade, allowedSlippage, transactionDeadline)
+  } = useERC20PermitFromTrade(permit2Enabled ? undefined : trade, allowedSlippage, transactionDeadline)
 
   const [approvalPending, setApprovalPending] = useState<boolean>(false)
   const handleApprove = useCallback(async () => {
@@ -344,7 +386,8 @@ export default function Swap() {
     trade,
     allowedSlippage,
     recipient,
-    signatureData
+    signatureData,
+    permit
   )
 
   const handleSwap = useCallback(() => {
@@ -398,7 +441,6 @@ export default function Swap() {
   ])
 
   // errors
-  const [showInverted, setShowInverted] = useState<boolean>(false)
   const [swapQuoteReceivedDate, setSwapQuoteReceivedDate] = useState<Date | undefined>()
 
   // warnings on the greater of fiat value price impact and execution price impact
@@ -413,6 +455,7 @@ export default function Swap() {
   // show approve flow when: no error on inputs, not approved or pending, or approved in current session
   // never show if price impact is above threshold in non expert mode
   const showApproveFlow =
+    !permit2Enabled &&
     !isArgentWallet &&
     !swapInputError &&
     (approvalState === ApprovalState.NOT_APPROVED ||
@@ -509,7 +552,7 @@ export default function Swap() {
           showCancel={true}
         />
         <PageWrapper>
-          <SwapWrapper id="swap-page">
+          <SwapWrapper className={className} id="swap-page">
             <SwapHeader allowedSlippage={allowedSlippage} />
             <ConfirmSwapModal
               isOpen={showConfirm}
@@ -569,16 +612,14 @@ export default function Swap() {
                     <ArrowDown
                       size="16"
                       color={
-                        currencies[Field.INPUT] && currencies[Field.OUTPUT]
-                          ? theme.deprecated_text1
-                          : theme.deprecated_text3
+                        currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.textPrimary : theme.textTertiary
                       }
                     />
                   </ArrowContainer>
                 </TraceEvent>
               </ArrowWrapper>
             </div>
-            <AutoColumn gap="12px">
+            <AutoColumn gap="md">
               <div>
                 <OutputSwapSection showDetailsDropdown={showDetailsDropdown}>
                   <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
@@ -605,7 +646,7 @@ export default function Swap() {
                     <>
                       <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
                         <ArrowWrapper clickable={false}>
-                          <ArrowDown size="16" color={theme.deprecated_text2} />
+                          <ArrowDown size="16" color={theme.textSecondary} />
                         </ArrowWrapper>
                         <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
                           <Trans>- Remove recipient</Trans>
@@ -621,8 +662,6 @@ export default function Swap() {
                       trade={trade}
                       syncing={routeIsSyncing}
                       loading={routeIsLoading}
-                      showInverted={showInverted}
-                      setShowInverted={setShowInverted}
                       allowedSlippage={allowedSlippage}
                     />
                   </DetailsSwapSection>
@@ -677,20 +716,22 @@ export default function Swap() {
                         }
                       >
                         <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }} height="20px">
-                          <ThemedText.SubHeader width="100%" textAlign="center" color="white">
-                            {/* we need to shorten this string on mobile */}
-                            {approvalState === ApprovalState.APPROVED ||
-                            signatureState === UseERC20PermitState.SIGNED ? (
+                          {/* we need to shorten this string on mobile */}
+                          {approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED ? (
+                            <ThemedText.SubHeader width="100%" textAlign="center" color="textSecondary">
                               <Trans>You can now trade {currencies[Field.INPUT]?.symbol}</Trans>
-                            ) : (
+                            </ThemedText.SubHeader>
+                          ) : (
+                            <ThemedText.SubHeader width="100%" textAlign="center" color="white">
                               <Trans>Allow the Uniswap Protocol to use your {currencies[Field.INPUT]?.symbol}</Trans>
-                            )}
-                          </ThemedText.SubHeader>
+                            </ThemedText.SubHeader>
+                          )}
+
                           {approvalPending || approvalState === ApprovalState.PENDING ? (
                             <Loader stroke={theme.white} />
                           ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||
                             signatureState === UseERC20PermitState.SIGNED ? (
-                            <CheckCircle size="20" color={theme.deprecated_green1} />
+                            <CheckCircle size="20" color={theme.accentSuccess} />
                           ) : (
                             <MouseoverTooltip
                               text={
@@ -700,7 +741,7 @@ export default function Swap() {
                                 </Trans>
                               }
                             >
-                              <HelpCircle size="20" color={theme.deprecated_white} style={{ marginLeft: '8px' }} />
+                              <HelpCircle size="20" color={theme.white} style={{ marginLeft: '8px' }} />
                             </MouseoverTooltip>
                           )}
                         </AutoRow>
@@ -742,6 +783,55 @@ export default function Swap() {
                       </ButtonError>
                     </AutoColumn>
                   </AutoRow>
+                ) : isValid &&
+                  (permit.state === PermitState.APPROVAL_OR_PERMIT_NEEDED ||
+                    permit.state === PermitState.APPROVAL_LOADING) ? (
+                  <ButtonYellow
+                    onClick={updatePermit}
+                    disabled={isPermitPending || isApprovalLoading}
+                    style={{ gap: 14 }}
+                  >
+                    {isPermitPending ? (
+                      <>
+                        <Loader size="20px" stroke={theme.accentWarning} />
+                        <ThemedText.SubHeader color="accentWarning">
+                          <Trans>Approve in your wallet</Trans>
+                        </ThemedText.SubHeader>
+                      </>
+                    ) : isPermitFailed ? (
+                      <>
+                        <AlertTriangle size={20} stroke={theme.accentWarning} />
+                        <ThemedText.SubHeader color="accentWarning">
+                          <Trans>Approval failed. Try again.</Trans>
+                        </ThemedText.SubHeader>
+                      </>
+                    ) : isApprovalLoading ? (
+                      <>
+                        <Loader size="20px" stroke={theme.accentWarning} />
+                        <ThemedText.SubHeader color="accentWarning">
+                          <Trans>Approval pending</Trans>
+                        </ThemedText.SubHeader>
+                      </>
+                    ) : (
+                      <>
+                        <div style={{ height: 20 }}>
+                          <MouseoverTooltip
+                            text={
+                              <Trans>
+                                Permission is required for Uniswap to swap each token. This will expire after one month
+                                for your security.
+                              </Trans>
+                            }
+                          >
+                            <Info size={20} color={theme.accentWarning} />
+                          </MouseoverTooltip>
+                        </div>
+                        <ThemedText.SubHeader color="accentWarning">
+                          <Trans>Approve use of {currencies[Field.INPUT]?.symbol}</Trans>
+                        </ThemedText.SubHeader>
+                      </>
+                    )}
+                  </ButtonYellow>
                 ) : (
                   <ButtonError
                     onClick={() => {
@@ -758,18 +848,24 @@ export default function Swap() {
                       }
                     }}
                     id="swap-button"
-                    disabled={!isValid || routeIsSyncing || routeIsLoading || priceImpactTooHigh || !!swapCallbackError}
-                    error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
+                    disabled={
+                      !isValid ||
+                      routeIsSyncing ||
+                      routeIsLoading ||
+                      priceImpactTooHigh ||
+                      (permit2Enabled ? permit.state === PermitState.LOADING : Boolean(swapCallbackError))
+                    }
+                    error={isValid && priceImpactSeverity > 2 && (permit2Enabled || !swapCallbackError)}
                   >
                     <Text fontSize={20} fontWeight={600}>
                       {swapInputError ? (
                         swapInputError
                       ) : routeIsSyncing || routeIsLoading ? (
                         <Trans>Swap</Trans>
-                      ) : priceImpactSeverity > 2 ? (
-                        <Trans>Swap Anyway</Trans>
                       ) : priceImpactTooHigh ? (
                         <Trans>Price Impact Too High</Trans>
+                      ) : priceImpactSeverity > 2 ? (
+                        <Trans>Swap Anyway</Trans>
                       ) : (
                         <Trans>Swap</Trans>
                       )}

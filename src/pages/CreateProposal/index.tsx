@@ -241,12 +241,12 @@ ${bodyValue}
   return (
     <Trace page={PageName.VOTE_PAGE} shouldLogImpression>
       <PageWrapper>
-        <AppBody {...{ maxWidth: '800px' }}>
+        <AppBody $maxWidth="800px">
           <CreateProposalTabs />
           <CreateProposalWrapper>
             <BlueCard>
               <AutoColumn gap="10px">
-                <ThemedText.DeprecatedLink fontWeight={400} color="deprecated_primaryText1">
+                <ThemedText.DeprecatedLink fontWeight={400} color="accentAction">
                   <Trans>
                     <strong>Tip:</strong> Select an action and describe your proposal for the community. The proposal
                     cannot be modified after submission, so please verify all information before submitting. The voting

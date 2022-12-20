@@ -26,6 +26,7 @@ import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList, ListOnItemsRenderedProps } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
 import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 import { TRANSITION_DURATIONS } from 'theme/styles'
 
 import { WALLET_COLLECTIONS_PAGINATION_LIMIT } from './ProfilePage'
@@ -47,6 +48,11 @@ const SmallLoadingBubble = styled(LoadingBubble)`
   height: 20px;
   width: 20px;
   margin-right: 8px;
+`
+
+const MobileMenuHeader = styled(Row)`
+  justify-content: space-between;
+  padding-bottom: 8px;
 `
 
 const LoadingCollectionItem = ({ style }: { style?: CSSProperties }) => {
@@ -117,19 +123,17 @@ export const FilterSidebar = ({
         paddingRight="16"
         width={{ sm: 'full', md: '332', lg: '332' }}
       >
-        <Row width="full" justifyContent="space-between">
-          {isMobile && (
-            <Box
-              as="button"
-              border="none"
-              backgroundColor="transparent"
-              color="textSecondary"
+        {isMobile && (
+          <MobileMenuHeader>
+            <ThemedText.HeadlineSmall>Filter</ThemedText.HeadlineSmall>
+            <XMarkIcon
+              height={28}
+              width={28}
+              fill={themeVars.colors.textPrimary}
               onClick={() => setFiltersExpanded(false)}
-            >
-              <XMarkIcon fill={themeVars.colors.textPrimary} />
-            </Box>
-          )}
-        </Row>
+            />
+          </MobileMenuHeader>
+        )}
         <CollectionSelect
           collections={walletCollections}
           collectionFilters={collectionFilters}

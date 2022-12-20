@@ -89,26 +89,3 @@ export function useColor(token?: Token) {
 
   return color
 }
-
-export function useListColor(listImageUri?: string) {
-  const [color, setColor] = useState('#2172E5')
-
-  useEffect(() => {
-    let stale = false
-
-    if (listImageUri) {
-      getColorFromUriPath(listImageUri).then((color) => {
-        if (!stale && color !== null) {
-          setColor(color)
-        }
-      })
-    }
-
-    return () => {
-      stale = true
-      setColor('#2172E5')
-    }
-  }, [listImageUri])
-
-  return color
-}

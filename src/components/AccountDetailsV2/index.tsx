@@ -4,6 +4,7 @@ import { SupportedChainId } from 'constants/chains'
 import { useMemo } from 'react'
 import { AlertTriangle, CheckCircle } from 'react-feather'
 import styled from 'styled-components/macro'
+import { ExternalLink } from 'theme'
 import { colors } from 'theme/colors'
 
 import { TransactionDetails } from '../../state/transactions/types'
@@ -17,13 +18,14 @@ export enum TransactionState {
   Failed,
 }
 
-const Grid = styled.a`
+const Grid = styled(ExternalLink)<{ isLastTransactionInList?: boolean }>`
   cursor: pointer;
   display: grid;
   grid-template-columns: 44px auto 24px;
   width: 100%;
   text-decoration: none;
-  border-bottom: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
+  border-bottom: ${({ theme, isLastTransactionInList }) =>
+    isLastTransactionInList ? 'none' : `1px solid ${theme.backgroundOutline}`};
   padding: 12px;
 
   &:hover {
@@ -46,7 +48,13 @@ const IconStyleWrap = styled.span`
   height: 16px;
 `
 
-export const TransactionSummary = ({ transactionDetails }: { transactionDetails: TransactionDetails }) => {
+export const TransactionSummary = ({
+  transactionDetails,
+  isLastTransactionInList = false,
+}: {
+  transactionDetails: TransactionDetails
+  isLastTransactionInList?: boolean
+}) => {
   const { chainId = 1 } = useWeb3React()
   const tx = transactionDetails
   const { explorer } = getChainInfoOrDefault(chainId ? chainId : SupportedChainId.MAINNET)
@@ -67,7 +75,7 @@ export const TransactionSummary = ({ transactionDetails }: { transactionDetails:
   const link = `${explorer}tx/${hash}`
 
   return chainId ? (
-    <Grid href={link} target="_blank">
+    <Grid href={link} target="_blank" isLastTransactionInList={isLastTransactionInList}>
       <LogoView info={info} />
       <TextContainer as="span">
         <TransactionBody info={info} transactionState={transactionState} />

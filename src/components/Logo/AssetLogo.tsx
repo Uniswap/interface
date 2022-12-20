@@ -3,7 +3,7 @@ import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import React from 'react'
 import styled from 'styled-components/macro'
 
-export const MissingImageLogo = styled.div<{ size?: string }>`
+const MissingImageLogo = styled.div<{ size?: string }>`
   --size: ${({ size }) => size};
   border-radius: 100px;
   color: ${({ theme }) => theme.textPrimary};

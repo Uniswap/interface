@@ -9,7 +9,7 @@ interface FeatureFlagsContextType {
 
 const FeatureFlagContext = createContext<FeatureFlagsContextType>({ isLoaded: false, flags: {} })
 
-export function useFeatureFlagsContext(): FeatureFlagsContextType {
+function useFeatureFlagsContext(): FeatureFlagsContextType {
   const context = useContext(FeatureFlagContext)
   if (!context) {
     throw Error('Feature flag hooks can only be used by children of FeatureFlagProvider.')
@@ -55,12 +55,13 @@ export enum BaseVariant {
   Enabled = 'enabled',
 }
 
-export function useBaseFlag(flag: string): BaseVariant {
+export function useBaseFlag(flag: string, defaultValue = BaseVariant.Control): BaseVariant {
   switch (useFeatureFlagsContext().flags[flag]) {
     case 'enabled':
       return BaseVariant.Enabled
     case 'control':
-    default:
       return BaseVariant.Control
+    default:
+      return defaultValue
   }
 }

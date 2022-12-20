@@ -5,7 +5,7 @@ import { AssetRow, CollectionRow, ListingMarket, ListingRow, ListingStatus, Wall
 import { approveCollection, LOOKS_RARE_CREATOR_BASIS_POINTS, signListing } from 'nft/utils/listNfts'
 import { Dispatch } from 'react'
 
-export const updateStatus = ({
+const updateStatus = ({
   listing,
   newStatus,
   rows,
@@ -171,7 +171,7 @@ export const getListings = (sellAssets: WalletAsset[]): [CollectionRow[], Listin
   return [newCollectionsToApprove, newListings]
 }
 
-export type ListingState = {
+type ListingState = {
   allListingsPending: boolean
   allListingsDefined: boolean
   allListingsApproved: boolean

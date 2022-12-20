@@ -16,11 +16,6 @@ export function useToggleModal(modal: ApplicationModal): () => void {
   return useCallback(() => dispatch(setOpenModal(isOpen ? null : modal)), [dispatch, modal, isOpen])
 }
 
-export function useOpenModal(modal: ApplicationModal): () => void {
-  const dispatch = useAppDispatch()
-  return useCallback(() => dispatch(setOpenModal(modal)), [dispatch, modal])
-}
-
 export function useCloseModal(_modal: ApplicationModal): () => void {
   const dispatch = useAppDispatch()
   return useCallback(() => dispatch(setOpenModal(null)), [dispatch])
