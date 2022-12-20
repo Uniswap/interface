@@ -389,7 +389,7 @@ describe('list reducer', () => {
         Object.entries(byUrl)
           // We don't expect the Uniswap default list to be prepopulated
           .filter(
-            ([key]) => key !== 'https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json'
+            ([url]) => url !== 'https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json'
           )
           .forEach(([, state]) => {
             expect(state).toEqual({
