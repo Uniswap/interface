@@ -1,61 +1,26 @@
 import { Trans, t } from '@lingui/macro'
-import { darken } from 'polished'
-import { CSSProperties, forwardRef, useState } from 'react'
-import { Repeat } from 'react-feather'
-import { NavLink as BaseNavLink, Link, NavLinkProps, useLocation } from 'react-router-dom'
-import { useMedia } from 'react-use'
-import { Flex, Text } from 'rebass'
-import styled, { css, keyframes } from 'styled-components'
+import { useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import styled, { keyframes } from 'styled-components'
 
-import { ReactComponent as MasterCard } from 'assets/buy-crypto/master-card.svg'
-import { ReactComponent as Visa } from 'assets/buy-crypto/visa.svg'
-import MultichainLogoDark from 'assets/images/multichain_black.png'
-import MultichainLogoLight from 'assets/images/multichain_white.png'
-import { ReactComponent as BridgeIcon } from 'assets/svg/bridge_icon.svg'
-import { ReactComponent as BuyCrypto } from 'assets/svg/buy_crypto.svg'
-import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
-import { ReactComponent as LimitOrderIcon } from 'assets/svg/limit_order.svg'
 import SelectNetwork from 'components/Header/web3/SelectNetwork'
 import SelectWallet from 'components/Header/web3/SelectWallet'
 import DiscoverIcon from 'components/Icons/DiscoverIcon'
-import Menu, { NewLabel } from 'components/Menu'
+import Menu from 'components/Menu'
 import Row, { RowFixed } from 'components/Row'
 import Settings from 'components/Settings'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { TutorialIds } from 'components/Tutorial/TutorialSwap/constant'
-import { AGGREGATOR_ANALYTICS_URL, APP_PATHS, PROMM_ANALYTICS_URL, SUPPORT_LIMIT_ORDER } from 'constants/index'
+import { APP_PATHS } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
-import { useTutorialSwapGuide } from 'state/tutorial/hooks'
 import { useHolidayMode, useIsDarkMode } from 'state/user/hooks'
-import { ExternalLink } from 'theme/components'
 
-interface Props extends NavLinkProps {
-  activeClassName?: string
-  activeStyle?: CSSProperties
-}
-// fix warning of activeClassName: https://reactrouter.com/en/6.4.5/upgrading/v5#remove-activeclassname-and-activestyle-props-from-navlink-
-const NavLink = forwardRef(({ activeClassName, activeStyle, ...props }: Props, ref: any) => {
-  return (
-    <BaseNavLink
-      ref={ref}
-      {...props}
-      className={({ isActive }) => [props.className, isActive ? activeClassName : null].filter(Boolean).join(' ')}
-      style={({ isActive }) => ({
-        ...props.style,
-        ...(isActive ? activeStyle : null),
-      })}
-    />
-  )
-})
-
-NavLink.displayName = 'NavLink'
-
-const VisaSVG = styled(Visa)`
-  path {
-    fill: ${({ theme }) => theme.text};
-  }
-`
+import AboutNavGroup from './groups/AboutNavGroup'
+import AnalyticNavGroup from './groups/AnalyticNavGroup'
+import EarnNavGroup from './groups/EarnNavGroup'
+import SwapNavGroup from './groups/SwapNavGroup'
+import { StyledNavExternalLink, StyledNavLink } from './styleds'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -131,6 +96,7 @@ const HeaderRow = styled(RowFixed)`
 `
 
 const HeaderLinks = styled(Row)`
+  gap: 4px;
   justify-content: center;
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
@@ -152,30 +118,21 @@ const IconImage = styled.img<{ isChristmas?: boolean }>`
   }
 `
 
-const AnalyticsWrapper = styled.span`
-  display: flex;
-  align-items: center;
-  @media (max-width: 1320px) {
-    display: none;
-  }
-`
-
 const DiscoverWrapper = styled.span`
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     display: none;
   `};
 `
 
-const CampaignWrapper = styled.span``
-
-const BlogWrapper = styled.span`
-  @media (max-width: 1440px) {
+const CampaignWrapper = styled.span`
+  /* It's better to break at 420px than at extraSmall */
+  @media (max-width: 420px) {
     display: none;
   }
 `
 
-const AboutWrapper = styled.span`
-  @media (max-width: 1400px) {
+const BlogWrapper = styled.span`
+  @media (max-width: 1440px) {
     display: none;
   }
 `
@@ -208,74 +165,6 @@ const LogoIcon = styled.div`
   `}
 `
 
-const activeClassName = 'ACTIVE'
-
-const StyledNavLink = styled(NavLink).attrs({
-  activeClassName,
-})`
-  ${({ theme }) => theme.flexRowNoWrap}
-  align-items: left;
-  border-radius: 3rem;
-  padding: 8px 12px;
-  outline: none;
-  cursor: pointer;
-  text-decoration: none;
-  color: ${({ theme }) => theme.subText};
-  font-size: 1rem;
-  width: fit-content;
-  font-weight: 500;
-
-  &.${activeClassName} {
-    border-radius: 12px;
-    font-weight: 600;
-    color: ${({ theme }) => theme.primary};
-  }
-
-  :hover {
-    color: ${({ theme }) => darken(0.1, theme.primary)};
-  }
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 8px 6px;
-  `}
-`
-
-const StyledNavExternalLink = styled(ExternalLink).attrs({
-  activeClassName,
-})`
-  ${({ theme }) => theme.flexRowNoWrap}
-  align-items: left;
-  border-radius: 3rem;
-  outline: none;
-  cursor: pointer;
-  text-decoration: none;
-  color: ${({ theme }) => theme.subText};
-  font-size: 1rem;
-  width: fit-content;
-  padding: 8px 12px;
-  font-weight: 500;
-
-  &.${activeClassName} {
-    border-radius: 12px;
-    font-weight: 600;
-    color: ${({ theme }) => theme.subText};
-  }
-
-  :hover {
-    color: ${({ theme }) => darken(0.1, theme.primary)};
-    text-decoration: none;
-  }
-
-  :focus {
-    color: ${({ theme }) => theme.subText};
-    text-decoration: none;
-  }
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-      display: none;
-  `}
-`
-
 const shine = keyframes`
   0% {
     background-position: 0;
@@ -298,82 +187,19 @@ export const SlideToUnlock = styled.div<{ active?: boolean }>`
   animation: ${shine} 1.3s infinite linear;
   animation-fill-mode: forwards;
   background-position: 0;
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   -webkit-text-size-adjust: none;
 `
 
-const Dropdown = styled.div`
-  display: none;
-  position: absolute;
-  background: ${({ theme }) => theme.tableHeader};
-  filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.36));
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0.01), 0 4px 8px rgba(0, 0, 0, 0.04), 0 16px 24px rgba(0, 0, 0, 0.04),
-    0 24px 32px rgba(0, 0, 0, 0.01);
-  border-radius: 16px;
-  padding: 8px;
-  width: max-content;
-  top: 32px;
-`
-const DropdownIcon = styled(DropdownSVG)`
-  transition: transform 300ms;
-`
-const cssDropDown = css`
-  color: ${({ theme }) => darken(0.1, theme.primary)};
-
-  ${Dropdown} {
-    display: flex;
-    flex-direction: column;
-
-    ${StyledNavLink} {
-      margin: 0;
-    }
-  }
-
-  ${DropdownIcon} {
-    transform: rotate(-180deg);
-  }
-`
-const HoverDropdown = styled.div<{ active: boolean; forceShowDropdown?: boolean }>`
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
-
-  color: ${({ theme, active }) => (active ? theme.primary : theme.subText)};
-  font-size: 1rem;
-  width: fit-content;
-  padding: 8px 6px 8px 12px;
-  font-weight: 500;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 8px 2px 8px 6px;
-  `}
-  ${({ forceShowDropdown }) => forceShowDropdown && cssDropDown}
-  :hover {
-    ${cssDropDown}
-  }
-`
-const StyledBridgeIcon = styled(BridgeIcon)`
-  path {
-    fill: currentColor;
-  }
-`
-const StyledBuyCrypto = styled(BuyCrypto)`
-  path {
-    fill: currentColor;
-  }
-`
-
 export default function Header() {
-  const { chainId, isEVM, isSolana, walletKey } = useActiveWeb3React()
-
-  const upTo420 = useMedia('(max-width: 420px)')
+  const { walletKey } = useActiveWeb3React()
   const isDark = useIsDarkMode()
   const { pathname } = useLocation()
   const [isHoverSlide, setIsHoverSlide] = useState(false)
   const [holidayMode] = useHolidayMode()
 
-  const [{ show: isShowTutorial = false, stepInfo }] = useTutorialSwapGuide()
   const { mixpanelHandler } = useMixpanel()
   return (
     <HeaderFrame>
@@ -394,112 +220,15 @@ export default function Header() {
           )}
         </Title>
         <HeaderLinks>
-          <HoverDropdown
-            forceShowDropdown={isShowTutorial && stepInfo?.selector === `#${TutorialIds.BRIDGE_LINKS}`}
-            active={pathname.includes(APP_PATHS.SWAP) || [APP_PATHS.BUY_CRYPTO, APP_PATHS.BRIDGE].includes(pathname)}
-          >
-            <Flex alignItems="center">
-              <Trans>Swap</Trans>
-              <DropdownIcon />
-            </Flex>
+          <SwapNavGroup />
 
-            <Dropdown id={TutorialIds.BRIDGE_LINKS}>
-              <StyledNavLink id={`swapv2-nav-link`} to={APP_PATHS.SWAP} style={{ flexDirection: 'column' }}>
-                <Flex alignItems="center" sx={{ gap: '13px' }}>
-                  <Repeat size={16} />
-                  <Trans>Swap</Trans>
-                </Flex>
-              </StyledNavLink>
+          <EarnNavGroup />
 
-              {SUPPORT_LIMIT_ORDER && (
-                <StyledNavLink to={APP_PATHS.LIMIT} style={{ flexDirection: 'column' }}>
-                  <Flex alignItems="center" sx={{ gap: '13px' }}>
-                    <LimitOrderIcon />
-                    <Trans>Limit Order</Trans>
-                  </Flex>
-                </StyledNavLink>
-              )}
-
-              {isSolana || (
-                <StyledNavLink to={APP_PATHS.BRIDGE} style={{ flexDirection: 'column', width: '100%' }}>
-                  <Flex alignItems="center" sx={{ gap: '10px' }} justifyContent="space-between">
-                    <StyledBridgeIcon height={15} />
-                    <Flex alignItems={'center'} sx={{ flex: 1 }} justifyContent={'space-between'}>
-                      <Text>
-                        <Trans>Bridge</Trans>
-                      </Text>
-                      <img
-                        src={isDark ? MultichainLogoLight : MultichainLogoDark}
-                        alt="kyberswap with multichain"
-                        height={10}
-                      />
-                    </Flex>
-                  </Flex>
-                </StyledNavLink>
-              )}
-              <StyledNavLink
-                id={`buy-crypto-nav-link`}
-                to={'/buy-crypto'}
-                onClick={() => {
-                  mixpanelHandler(MIXPANEL_TYPE.SWAP_BUY_CRYPTO_CLICKED)
-                }}
-              >
-                <Flex alignItems="center" sx={{ gap: '8px' }} justifyContent="space-between">
-                  <Flex sx={{ gap: '10px' }}>
-                    <StyledBuyCrypto />
-                    <Trans>Buy Crypto</Trans>
-                  </Flex>
-                  <Flex sx={{ gap: '8px' }}>
-                    <VisaSVG width="20" height="20" />
-                    <MasterCard width="20" height="20" />
-                  </Flex>
-                </Flex>
-              </StyledNavLink>
-            </Dropdown>
-          </HoverDropdown>
-
-          {isEVM && (
-            <Flex id={TutorialIds.EARNING_LINKS} alignItems="center">
-              <HoverDropdown
-                active={pathname.toLowerCase().includes('pools') || pathname.toLowerCase().startsWith('/farms')}
-              >
-                <Flex alignItems="center">
-                  <Trans>Earn</Trans>
-                  <DropdownIcon />
-                </Flex>
-                <Dropdown>
-                  <StyledNavLink id="pools-nav-link" to={APP_PATHS.POOLS} style={{ width: '100%' }}>
-                    <Trans>Pools</Trans>
-                  </StyledNavLink>
-
-                  <StyledNavLink id="my-pools-nav-link" to={APP_PATHS.MY_POOLS}>
-                    <Trans>My Pools</Trans>
-                  </StyledNavLink>
-
-                  <StyledNavLink
-                    onClick={() => {
-                      mixpanelHandler(MIXPANEL_TYPE.FARM_UNDER_EARN_TAB_CLICK)
-                    }}
-                    id="farms-nav-link"
-                    to="/farms"
-                  >
-                    <Trans>Farms</Trans>
-                    <NewLabel>
-                      <Trans>New</Trans>
-                    </NewLabel>
-                  </StyledNavLink>
-                </Dropdown>
-              </HoverDropdown>
-            </Flex>
-          )}
-
-          {!upTo420 && (
-            <CampaignWrapper id={TutorialIds.CAMPAIGN_LINK}>
-              <StyledNavLink id="campaigns" to={APP_PATHS.CAMPAIGN}>
-                <Trans>Campaigns</Trans>
-              </StyledNavLink>
-            </CampaignWrapper>
-          )}
+          <CampaignWrapper id={TutorialIds.CAMPAIGN_LINK}>
+            <StyledNavLink id="campaigns" to={APP_PATHS.CAMPAIGN}>
+              <Trans>Campaigns</Trans>
+            </StyledNavLink>
+          </CampaignWrapper>
 
           <DiscoverWrapper id={TutorialIds.DISCOVER_LINK}>
             <StyledNavLink to={'/discover?tab=trending_soon'} style={{ alignItems: 'center' }}>
@@ -514,47 +243,8 @@ export default function Header() {
             </StyledNavLink>
           </DiscoverWrapper>
 
-          <AnalyticsWrapper>
-            <HoverDropdown active={false}>
-              <Flex alignItems="center">
-                <Trans>Analytics</Trans>
-                <DropdownIcon />
-              </Flex>
-              <Dropdown>
-                <StyledNavExternalLink
-                  onClick={() => {
-                    mixpanelHandler(MIXPANEL_TYPE.ANALYTICS_MENU_CLICKED)
-                  }}
-                  target="_blank"
-                  href={PROMM_ANALYTICS_URL[chainId] + '/home'}
-                >
-                  <Trans>Liquidity</Trans>
-                </StyledNavExternalLink>
-
-                <StyledNavExternalLink target="_blank" href={AGGREGATOR_ANALYTICS_URL}>
-                  <Trans>Aggregator</Trans>
-                </StyledNavExternalLink>
-              </Dropdown>
-            </HoverDropdown>
-          </AnalyticsWrapper>
-
-          <AboutWrapper>
-            <HoverDropdown active={pathname.toLowerCase().includes('about')}>
-              <Flex alignItems="center">
-                <Trans>About</Trans>
-                <DropdownIcon />
-              </Flex>
-              <Dropdown>
-                <StyledNavLink id={`about-kyberswap`} to={'/about/kyberswap'}>
-                  <Trans>KyberSwap</Trans>
-                </StyledNavLink>
-
-                <StyledNavLink id={`about-knc`} to={'/about/knc'}>
-                  <Trans> KNC</Trans>
-                </StyledNavLink>
-              </Dropdown>
-            </HoverDropdown>
-          </AboutWrapper>
+          <AnalyticNavGroup />
+          <AboutNavGroup />
 
           <BlogWrapper>
             <StyledNavExternalLink
