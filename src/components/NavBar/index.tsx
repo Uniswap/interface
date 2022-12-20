@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import Web3Status from 'components/Web3Status'
+import { LandingRedirectVariant, useLandingRedirectFlag } from 'featureFlags/flags/landingRedirect'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
@@ -80,6 +81,7 @@ export const PageTabs = () => {
 const Navbar = () => {
   const isNftPage = useIsNftPage()
   const navigate = useNavigate()
+  const landingRedirectFlag = useLandingRedirectFlag()
 
   return (
     <>
@@ -92,7 +94,10 @@ const Navbar = () => {
                 height="48"
                 className={styles.logo}
                 onClick={() => {
-                  navigate('/')
+                  navigate({
+                    pathname: '/',
+                    search: landingRedirectFlag === LandingRedirectVariant.Enabled ? '?intro=true' : undefined,
+                  })
                 }}
               />
             </Box>
