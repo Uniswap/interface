@@ -106,7 +106,7 @@ describe('document', () => {
       let fetched: Response
       const FETCHED_ETAGS = 'fetched'
 
-      const assertFetch = () => {
+      const expectFetchToHaveBeenCalledWithRequestUrl = () => {
         expect(fetch).toHaveBeenCalledWith(requestUrl, expect.anything())
       }
 
@@ -132,7 +132,7 @@ describe('document', () => {
             await handleDocument(options)
             const abortSignal = fetch.mock.calls[0][1].signal
             expect(abortSignal.aborted).toBeTruthy()
-            assertFetch()
+            expectFetchToHaveBeenCalledWithRequestUrl()
           })
 
           it('returns the cached response', async () => {
@@ -142,21 +142,21 @@ describe('document', () => {
             expect(await response.text()).toBe(
               '<html><head></head><body><script>window.__isDocumentCached=true</script>mock</body></html>'
             )
-            assertFetch()
+            expectFetchToHaveBeenCalledWithRequestUrl()
           })
         })
 
         it(`returns the fetched response with mismatched etags`, async () => {
           const response = await handleDocument(options)
           expect(response.body).toBe(fetched.body)
-          assertFetch()
+          expectFetchToHaveBeenCalledWithRequestUrl()
         })
       })
 
       it(`returns the fetched response with no cached response`, async () => {
         const response = await handleDocument(options)
         expect(response.body).toBe(fetched.body)
-        assertFetch()
+        expectFetchToHaveBeenCalledWithRequestUrl()
       })
     })
   })
