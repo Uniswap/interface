@@ -90,6 +90,7 @@ const Navbar = () => {
               <UniIcon
                 width="48"
                 height="48"
+                data-testid="uniswap-logo"
                 className={styles.logo}
                 onClick={() => {
                   navigate({

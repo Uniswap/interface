@@ -199,7 +199,7 @@ export default function Landing() {
   return (
     <Trace page={PageName.LANDING_PAGE} shouldLogImpression>
       {showContent && (
-        <PageContainer>
+        <PageContainer data-testid="landing-page">
           <TraceEvent
             events={[BrowserEvent.onClick]}
             name={EventName.ELEMENT_CLICKED}
