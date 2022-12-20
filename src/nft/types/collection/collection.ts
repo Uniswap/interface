@@ -36,12 +36,12 @@ export type CollectionSort = Record<
   'asc' | 'desc' | 1 | -1 | { $gte?: string | number; $lte?: string | number } | string | number
 >
 
-export enum UniformHeights {
+export enum UniformAspectRatios {
   unset,
-  notUniform,
+  square,
 }
 
-export type UniformHeight = UniformHeights | number
+export type UniformAspectRatio = UniformAspectRatios | number
 
 export enum ActivityEventType {
   Listing = 'LISTING',

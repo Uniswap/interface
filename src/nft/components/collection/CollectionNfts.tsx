@@ -35,7 +35,16 @@ import {
 } from 'nft/hooks'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { usePriceRange } from 'nft/hooks/usePriceRange'
-import { DropDownOption, GenieAsset, GenieCollection, isPooledMarket, Markets, TokenType } from 'nft/types'
+import {
+  DropDownOption,
+  GenieAsset,
+  GenieCollection,
+  isPooledMarket,
+  Markets,
+  TokenType,
+  UniformAspectRatio,
+  UniformAspectRatios,
+} from 'nft/types'
 import {
   calcPoolPrice,
   calcSudoSwapPrice,
@@ -169,17 +178,17 @@ const MarketNameWrapper = styled(Row)`
   gap: 8px;
 `
 
-export const LoadingAssets = ({ count }: { count?: number }) => (
+export const LoadingAssets = ({ count, height }: { count?: number; height?: number }) => (
   <>
     {Array.from(Array(count ?? ASSET_PAGE_SIZE), (_, index) => (
-      <CollectionAssetLoading key={index} />
+      <CollectionAssetLoading key={index} height={height} />
     ))}
   </>
 )
 
-const CollectionNftsLoading = () => (
+const CollectionNftsLoading = ({ height }: { height?: number }) => (
   <Box width="full" className={styles.assetList}>
-    <LoadingAssets />
+    <LoadingAssets height={height} />
   </Box>
 )
 
@@ -268,6 +277,9 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const debouncedMinPrice = useDebounce(minPrice, 500)
   const debouncedMaxPrice = useDebounce(maxPrice, 500)
   const debouncedSearchByNameText = useDebounce(searchByNameText, 500)
+
+  const [uniformAspectRatio, setUniformAspectRatio] = useState<UniformAspectRatio>(UniformAspectRatios.unset)
+  const [renderedHeight, setRenderedHeight] = useState<number | undefined>()
 
   const [sweepIsOpen, setSweepOpen] = useState(false)
   // Load all sweep queries. Loading them on the parent allows lazy-loading, but avoids waterfalling requests.
@@ -413,9 +425,13 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
         setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
         rarityVerified={rarityVerified}
+        uniformAspectRatio={uniformAspectRatio}
+        setUniformAspectRatio={setUniformAspectRatio}
+        renderedHeight={renderedHeight}
+        setRenderedHeight={setRenderedHeight}
       />
     ))
-  }, [collectionAssets, currentTokenPlayingMedia, isMobile, rarityVerified])
+  }, [collectionAssets, isMobile, currentTokenPlayingMedia, rarityVerified, uniformAspectRatio, renderedHeight])
 
   const hasNfts = collectionAssets && collectionAssets.length > 0
   const hasErc1155s = hasNfts && collectionAssets[0] && collectionAssets[0].tokenType === TokenType.ERC1155
@@ -460,6 +476,11 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location])
+
+  useEffect(() => {
+    setUniformAspectRatio(UniformAspectRatios.unset)
+    setRenderedHeight(undefined)
+  }, [contractAddress])
 
   useEffect(() => {
     if (collectionStats && collectionStats.stats?.floor_price) {
@@ -601,7 +622,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         <InfiniteScroll
           next={handleNextPageLoad}
           hasMore={hasNext}
-          loader={Boolean(hasNext && hasNfts) && <LoadingAssets />}
+          loader={Boolean(hasNext && hasNfts) && <LoadingAssets height={renderedHeight} />}
           dataLength={collectionAssets?.length ?? 0}
           style={{ overflow: 'unset' }}
           className={hasNfts || isLoadingNext ? styles.assetList : undefined}
@@ -624,7 +645,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
               </EmptyCollectionWrapper>
             </Center>
           ) : (
-            <CollectionNftsLoading />
+            <CollectionNftsLoading height={renderedHeight} />
           )}
         </InfiniteScroll>
       </InfiniteScrollWrapper>
