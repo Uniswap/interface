@@ -1,6 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import fiatMaskUrl from 'assets/svg/fiat_mask.svg'
+import { BaseVariant } from 'featureFlags'
+import { useFiatOnrampFlag } from 'featureFlags/flags/fiatOnramp'
 import { useCallback, useEffect, useState } from 'react'
 import { X } from 'react-feather'
 import { useToggleWalletDropdown } from 'state/application/hooks'
@@ -115,11 +117,13 @@ export function FiatOnrampAnnouncement() {
     acknowledge({ user: true })
   }, [acknowledge, toggleWalletDropdown])
 
+  const fiatOnrampFlag = useFiatOnrampFlag()
   const openModal = useAppSelector((state) => state.application.openModal)
 
   if (
     !account ||
     acks?.user ||
+    fiatOnrampFlag === BaseVariant.Control ||
     locallyDismissed ||
     sessionStorage.getItem(ANNOUNCEMENT_DISMISSED) ||
     acks.renderCount >= MAX_RENDER_COUNT ||

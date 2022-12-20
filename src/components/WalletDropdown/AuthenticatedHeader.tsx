@@ -7,6 +7,8 @@ import Tooltip from 'components/Tooltip'
 import { getConnection } from 'connection/utils'
 import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
+import { BaseVariant } from 'featureFlags'
+import { useFiatOnrampFlag } from 'featureFlags/flags/fiatOnramp'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
@@ -226,6 +228,7 @@ const AuthenticatedHeader = () => {
     closeModal()
   }, [clearCollectionFilters, closeModal, navigate, resetSellAssets, setSellPageState])
 
+  const fiatOnrampFlag = useFiatOnrampFlag()
   // animate the border of the buy crypto button when a user navigates here from the feature announcement
   // can be removed when components/FiatOnrampAnnouncment.tsx is no longer used
   const [acknowledgements, acknowledge] = useFiatOnrampAck()
@@ -312,42 +315,44 @@ const AuthenticatedHeader = () => {
         >
           <Trans>View and sell NFTs</Trans>
         </ProfileButton>
-        <>
-          <BuyCryptoButton
-            $animateBorder={animateBuyCryptoButtonBorder}
-            size={ButtonSize.medium}
-            emphasis={ButtonEmphasis.medium}
-            onClick={handleBuyCryptoClick}
-            disabled={disableBuyCryptoButton}
-          >
-            {error ? (
-              <ThemedText.BodyPrimary>{error}</ThemedText.BodyPrimary>
-            ) : (
-              <>
-                {fiatOnrampAvailabilityLoading ? <StyledLoadingButtonSpinner /> : <CreditCard />}{' '}
-                <Trans>Buy crypto</Trans>
-              </>
-            )}
-          </BuyCryptoButton>
-          {Boolean(!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) && (
-            <FiatOnrampNotAvailableText marginTop="8px">
-              <Trans>Not available in your region</Trans>
-              <Tooltip
-                show={showFiatOnrampUnavailableTooltip}
-                text={<Trans>Moonpay is not available in some regions. Click to learn more.</Trans>}
-              >
-                <FiatOnrampAvailabilityExternalLink
-                  onMouseEnter={openFiatOnrampUnavailableTooltip}
-                  onMouseLeave={closeFiatOnrampUnavailableTooltip}
-                  style={{ color: 'inherit' }}
-                  href="https://support.uniswap.org/hc/en-us/articles/10966551707533-Why-is-MoonPay-not-supported-in-my-region-"
+        {fiatOnrampFlag === BaseVariant.Enabled && (
+          <>
+            <BuyCryptoButton
+              $animateBorder={animateBuyCryptoButtonBorder}
+              size={ButtonSize.medium}
+              emphasis={ButtonEmphasis.medium}
+              onClick={handleBuyCryptoClick}
+              disabled={disableBuyCryptoButton}
+            >
+              {error ? (
+                <ThemedText.BodyPrimary>{error}</ThemedText.BodyPrimary>
+              ) : (
+                <>
+                  {fiatOnrampAvailabilityLoading ? <StyledLoadingButtonSpinner /> : <CreditCard />}{' '}
+                  <Trans>Buy crypto</Trans>
+                </>
+              )}
+            </BuyCryptoButton>
+            {Boolean(!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) && (
+              <FiatOnrampNotAvailableText marginTop="8px">
+                <Trans>Not available in your region</Trans>
+                <Tooltip
+                  show={showFiatOnrampUnavailableTooltip}
+                  text={<Trans>Moonpay is not available in some regions. Click to learn more.</Trans>}
                 >
-                  <StyledInfoIcon />
-                </FiatOnrampAvailabilityExternalLink>
-              </Tooltip>
-            </FiatOnrampNotAvailableText>
-          )}
-        </>
+                  <FiatOnrampAvailabilityExternalLink
+                    onMouseEnter={openFiatOnrampUnavailableTooltip}
+                    onMouseLeave={closeFiatOnrampUnavailableTooltip}
+                    style={{ color: 'inherit' }}
+                    href="https://support.uniswap.org/hc/en-us/articles/10966551707533-Why-is-MoonPay-not-supported-in-my-region-"
+                  >
+                    <StyledInfoIcon />
+                  </FiatOnrampAvailabilityExternalLink>
+                </Tooltip>
+              </FiatOnrampNotAvailableText>
+            )}
+          </>
+        )}
         {isUnclaimed && (
           <UNIButton onClick={openClaimModal} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
             <Trans>Claim</Trans> {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} <Trans>reward</Trans>

@@ -2,6 +2,8 @@ import { useWeb3React } from '@web3-react/core'
 import AddressClaimModal from 'components/claim/AddressClaimModal'
 import ConnectedAccountBlocked from 'components/ConnectedAccountBlocked'
 import FiatOnrampModal from 'components/FiatOnrampModal'
+import { BaseVariant } from 'featureFlags'
+import { useFiatOnrampFlag } from 'featureFlags/flags/fiatOnramp'
 import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
 import { lazy } from 'react'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
@@ -18,6 +20,8 @@ export default function TopLevelModals() {
   const { account } = useWeb3React()
   useAccountRiskCheck(account)
   const accountBlocked = Boolean(blockedAccountModalOpen && account)
+  const fiatOnrampFlagEnabled = useFiatOnrampFlag() === BaseVariant.Enabled
+
   return (
     <>
       <AddressClaimModal isOpen={addressClaimOpen} onDismiss={addressClaimToggle} />
@@ -25,7 +29,7 @@ export default function TopLevelModals() {
       <Bag />
       <TransactionCompleteModal />
       <AirdropModal />
-      <FiatOnrampModal />
+      {fiatOnrampFlagEnabled && <FiatOnrampModal />}
     </>
   )
 }
