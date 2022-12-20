@@ -100,15 +100,15 @@ export function FiatOnrampAnnouncement() {
   const [acks, acknowledge] = useFiatOnrampAck()
   const [locallyDismissed, setLocallyDismissed] = useState(false)
   useEffect(() => {
-    if (!sessionStorage.getItem(ANNOUNCEMENT_RENDERED)) {
+    if (!localStorage.getItem(ANNOUNCEMENT_RENDERED)) {
       acknowledge({ renderCount: acks?.renderCount + 1 })
-      sessionStorage.setItem(ANNOUNCEMENT_RENDERED, 'true')
+      localStorage.setItem(ANNOUNCEMENT_RENDERED, 'true')
     }
   }, [acknowledge, acks])
 
   const handleClose = useCallback(() => {
     setLocallyDismissed(true)
-    sessionStorage.setItem(ANNOUNCEMENT_DISMISSED, 'true')
+    localStorage.setItem(ANNOUNCEMENT_DISMISSED, 'true')
   }, [])
 
   const toggleWalletDropdown = useToggleWalletDropdown()
@@ -125,7 +125,7 @@ export function FiatOnrampAnnouncement() {
     acks?.user ||
     fiatOnrampFlag === BaseVariant.Control ||
     locallyDismissed ||
-    sessionStorage.getItem(ANNOUNCEMENT_DISMISSED) ||
+    localStorage.getItem(ANNOUNCEMENT_DISMISSED) ||
     acks?.renderCount >= MAX_RENDER_COUNT ||
     isMobile ||
     openModal !== null
