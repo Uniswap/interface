@@ -10,6 +10,7 @@ const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {
   fiatOnrampAcknowledgments: { renderCount: number; system: boolean; user: boolean }
+  fiatOnrampDismissed: boolean
 
   selectedWallet?: ConnectionType
 
@@ -50,12 +51,9 @@ export interface UserState {
 
   timestamp: number
   URLWarningVisible: boolean
-  hideNFTPromoBanner: boolean // whether or not we should hide the nft explore promo banner
 
   // undefined means has not gone through A/B split yet
   showSurveyPopup: boolean | undefined
-
-  hideNFTWelcomeModal: boolean
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -64,6 +62,8 @@ function pairKey(token0Address: string, token1Address: string) {
 
 export const initialState: UserState = {
   fiatOnrampAcknowledgments: { renderCount: 0, system: false, user: false },
+  fiatOnrampDismissed: false,
+
   selectedWallet: undefined,
   matchesDarkMode: false,
   userDarkMode: null,
@@ -78,9 +78,7 @@ export const initialState: UserState = {
   pairs: {},
   timestamp: currentTimestamp(),
   URLWarningVisible: true,
-  hideNFTPromoBanner: false,
   showSurveyPopup: undefined,
-  hideNFTWelcomeModal: false,
 }
 
 const userSlice = createSlice({
@@ -92,6 +90,9 @@ const userSlice = createSlice({
       { payload }: { payload: Partial<{ renderCount: number; user: boolean; system: boolean }> }
     ) {
       state.fiatOnrampAcknowledgments = { ...state.fiatOnrampAcknowledgments, ...payload }
+    },
+    dismissFiatOnramp(state) {
+      state.fiatOnrampDismissed = true
     },
     updateSelectedWallet(state, { payload: { wallet } }) {
       state.selectedWallet = wallet
@@ -187,6 +188,7 @@ export const {
   addSerializedPair,
   addSerializedToken,
   updateFiatOnrampAcknowledgments,
+  dismissFiatOnramp,
   updateSelectedWallet,
   updateHideClosedPositions,
   updateMatchesDarkMode,
