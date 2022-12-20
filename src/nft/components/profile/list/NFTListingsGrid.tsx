@@ -48,7 +48,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
     <Column>
       <Row marginTop="20">
         <Column
-          marginLeft={selectedMarkets.length > 1 ? '36' : '0'}
+          marginLeft={selectedMarkets.length > 1 ? '0' : '0'}
           transition="500"
           className={bodySmall}
           color="textSecondary"
@@ -131,6 +131,7 @@ interface PriceTextInputProps {
   globalOverride: boolean
   warning?: ListingWarning
   asset: WalletAsset
+  shrink?: boolean
 }
 
 const PriceTextInput = ({
@@ -141,6 +142,7 @@ const PriceTextInput = ({
   globalOverride,
   warning,
   asset,
+  shrink,
 }: PriceTextInputProps) => {
   const [focused, setFocused] = useState(false)
   const [warningType, setWarningType] = useState(WarningType.NONE)
@@ -167,7 +169,7 @@ const PriceTextInput = ({
         width="min"
         padding="4"
         borderRadius="8"
-        borderWidth="1px"
+        borderWidth="2px"
         borderStyle="solid"
         marginRight="auto"
         borderColor={
@@ -190,7 +192,7 @@ const PriceTextInput = ({
           marginRight="0"
           marginLeft="14"
           backgroundColor="none"
-          style={{ width: '68px' }}
+          style={{ width: shrink ? '54px' : '68px' }}
           onFocus={() => setFocused(true)}
           onBlur={() => {
             setFocused(false)
@@ -308,6 +310,10 @@ const FeeWrap = styled.div`
   color: ${({ theme }) => theme.textPrimary};
 `
 
+const RoyaltyContainer = styled.div`
+  margin-bottom: 8px;
+`
+
 interface MarketplaceRowProps {
   globalPriceMethod?: SetPriceMethod
   globalPrice?: number
@@ -316,6 +322,7 @@ interface MarketplaceRowProps {
   removeMarket?: () => void
   asset: WalletAsset
   showMarketplaceLogo: boolean
+  expandMarketplaceRows?: boolean
 }
 
 const MarketplaceRow = ({
@@ -326,6 +333,7 @@ const MarketplaceRow = ({
   removeMarket = undefined,
   asset,
   showMarketplaceLogo,
+  expandMarketplaceRows,
 }: MarketplaceRowProps) => {
   const [listPrice, setListPrice] = useState<number>()
   const [globalOverride, setGlobalOverride] = useState(false)
@@ -344,6 +352,12 @@ const MarketplaceRow = ({
       : asset.basisPoints) * 0.01
   const feeInEth = price && (price * (royalties + marketplaceFee)) / 100
   const userReceives = price && feeInEth && price - feeInEth
+
+  useMemo(() => {
+    for (const market of selectedMarkets) {
+      market.royalty = (market.name === 'LooksRare' ? LOOKS_RARE_CREATOR_BASIS_POINTS : asset.basisPoints) * 0.01
+    }
+  }, [selectedMarkets])
 
   useEffect(() => {
     if (globalPriceMethod === SetPriceMethod.FLOOR_PRICE) {
@@ -402,35 +416,7 @@ const MarketplaceRow = ({
   const fees = royalties + marketplaceFee
 
   return (
-    <Row transition="500" marginLeft={selectedMarkets.length > 1 ? '20' : '0'}>
-      {showMarketplaceLogo && (
-        <Column
-          position="relative"
-          cursor="pointer"
-          onMouseEnter={handleHover}
-          onMouseLeave={handleHover}
-          style={{ marginLeft: '-28px' }}
-          onClick={(e) => {
-            e.stopPropagation()
-            removeAssetMarketplace(asset, selectedMarkets[0])
-            removeMarket && removeMarket()
-          }}
-        >
-          <Box className={styles.removeMarketplace} visibility={hovered ? 'visible' : 'hidden'} position="absolute">
-            <Box as="img" width="32" src="/nft/svgs/minusCircle.svg" alt="Remove item" />
-          </Box>
-          <Box
-            as="img"
-            alt={selectedMarkets[0].name}
-            width="28"
-            height="28"
-            borderRadius="4"
-            objectFit="cover"
-            src={selectedMarkets[0].icon}
-            marginRight="16"
-          />
-        </Column>
-      )}
+    <Row transition="500" marginLeft="0">
       <Column
         className={bodySmall}
         color="textSecondary"
@@ -450,7 +436,34 @@ const MarketplaceRow = ({
         {asset.lastPrice ? `${asset.floorPrice.toFixed(2)} ETH` : '-'}
       </Column>
 
-      <Column flex="2">
+      <Row flex="2">
+        {showMarketplaceLogo && (
+          <Column
+            position="relative"
+            cursor="pointer"
+            onMouseEnter={handleHover}
+            onMouseLeave={handleHover}
+            onClick={(e) => {
+              e.stopPropagation()
+              removeAssetMarketplace(asset, selectedMarkets[0])
+              removeMarket && removeMarket()
+            }}
+          >
+            <Box className={styles.removeMarketplace} visibility={hovered ? 'visible' : 'hidden'} position="absolute">
+              <Box as="img" width="32" src="/nft/svgs/minusCircle.svg" alt="Remove item" />
+            </Box>
+            <Box
+              as="img"
+              alt={selectedMarkets[0].name}
+              width="28"
+              height="28"
+              borderRadius="4"
+              objectFit="cover"
+              src={selectedMarkets[0].icon}
+              marginRight="16"
+            />
+          </Column>
+        )}
         {globalPriceMethod === SetPriceMethod.SAME_PRICE && !globalOverride ? (
           <PriceTextInput
             listPrice={globalPrice}
@@ -460,6 +473,7 @@ const MarketplaceRow = ({
             globalOverride={globalOverride}
             warning={warning}
             asset={asset}
+            shrink={expandMarketplaceRows}
           />
         ) : (
           <PriceTextInput
@@ -470,9 +484,10 @@ const MarketplaceRow = ({
             globalOverride={globalOverride}
             warning={warning}
             asset={asset}
+            shrink={expandMarketplaceRows}
           />
         )}
-      </Column>
+      </Row>
 
       <Column flex="1" display={{ sm: 'none', md: 'none', lg: 'flex' }}>
         <Box className={body} color="textSecondary" width="full" textAlign="right">
@@ -480,18 +495,22 @@ const MarketplaceRow = ({
             text={
               <Row>
                 <Box width="full" fontSize="14">
-                  {selectedMarkets.map((selectedMarket) => (
-                    <FeeWrap key={selectedMarket.name}>
-                      {selectedMarket.name}: {selectedMarket.fee}%
-                    </FeeWrap>
-                  ))}
-                  <FeeWrap>Creator royalties: {royalties}%</FeeWrap>
+                  {selectedMarkets.map((selectedMarket) => {
+                    return (
+                      <RoyaltyContainer>
+                        <FeeWrap key={selectedMarket.name}>
+                          {selectedMarket.name}: {selectedMarket.fee}%
+                        </FeeWrap>
+                        <FeeWrap>Creator royalties: {selectedMarket.royalty}%</FeeWrap>
+                      </RoyaltyContainer>
+                    )
+                  })}
                 </Box>
               </Row>
             }
             placement="left"
           >
-            {fees > 0 ? `${fees} ${selectedMarkets.length > 1 ? '% max' : '%'}` : '--%'}
+            {fees > 0 ? `${fees}${selectedMarkets.length > 1 ? '% max' : '%'}` : '--%'}
           </MouseoverTooltip>
         </Box>
       </Column>
@@ -526,7 +545,7 @@ const NFTListRow = ({ asset, globalPriceMethod, globalPrice, setGlobalPrice, sel
   }, [selectedMarkets])
 
   return (
-    <Row marginTop="24" marginBottom="24">
+    <Row marginY="24">
       <Row flexWrap="nowrap" flex={{ sm: '2', md: '1.5' }} marginTop="0" marginBottom="auto" minWidth="0">
         <Box
           transition="500"
@@ -593,6 +612,7 @@ const NFTListRow = ({ asset, globalPriceMethod, globalPrice, setGlobalPrice, sel
                 asset={asset}
                 showMarketplaceLogo={true}
                 key={index}
+                expandMarketplaceRows={expandMarketplaceRows}
               />
             )
           })
