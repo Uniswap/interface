@@ -24,7 +24,7 @@ export default function TokenDetailsPage() {
     [chain, isNative, pageChainId, timePeriod, tokenAddress]
   )
 
-  const { data: tokenQuery, loading: tokenDataLoading } = useTokenQuery({
+  const { data: tokenQuery, loading: tokenQueryLoading } = useTokenQuery({
     variables: {
       contract,
     },
@@ -37,7 +37,7 @@ export default function TokenDetailsPage() {
     },
   })
 
-  if (!tokenQuery || tokenDataLoading) return <TokenDetailsPageSkeleton />
+  if (!tokenQuery || tokenQueryLoading) return <TokenDetailsPageSkeleton />
 
   return (
     <TokenDetails
