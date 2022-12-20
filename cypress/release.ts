@@ -1,5 +1,3 @@
-/* eslint cypress/no-unnecessary-waiting: 1 */
-
 const ONE_MINUTE = 60_000
 
 describe(
@@ -10,8 +8,8 @@ describe(
   },
   () => {
     it('loads swap page', () => {
-      // We *must* wait in order to space out the retry attempts.
-      // TODO: find a better way to do this
+      // TODO: We *must* wait in order to space out the retry attempts. Find a better way to do this.
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(ONE_MINUTE)
         .visit('/', {
           retryOnStatusCodeFailure: true,
