@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux'
 import { useToggleWalletDropdown } from 'state/application/hooks'
 import { useAppSelector } from 'state/hooks'
 import { useFiatOnrampAck } from 'state/user/hooks'
-import { updateFiatonrampDismissed } from 'state/user/reducer'
+import { dismissFiatOnramp } from 'state/user/reducer'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { isMobile } from 'utils/userAgent'
@@ -97,7 +97,6 @@ const MAX_RENDER_COUNT = 3
 
 export function FiatOnrampAnnouncement() {
   const { account } = useWeb3React()
-  const dispatch = useDispatch()
   const [acks, acknowledge] = useFiatOnrampAck()
   const fiatOnrampDismissed = useAppSelector((state) => state.user.fiatOnrampDismissed)
 
@@ -106,8 +105,9 @@ export function FiatOnrampAnnouncement() {
     // The dependency list is empty so this is only run once on mount
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  const dispatch = useDispatch()
   const handleClose = useCallback(() => {
-    dispatch(updateFiatonrampDismissed(true))
+    dispatch(dismissFiatOnramp())
   }, [dispatch])
 
   const toggleWalletDropdown = useToggleWalletDropdown()

@@ -96,8 +96,8 @@ const userSlice = createSlice({
     ) {
       state.fiatOnrampAcknowledgments = { ...state.fiatOnrampAcknowledgments, ...payload }
     },
-    updateFiatonrampDismissed(state, { payload: dismissed }) {
-      state.fiatOnrampDismissed = dismissed
+    dismissFiatOnramp(state) {
+      state.fiatOnrampDismissed = true
     },
     updateSelectedWallet(state, { payload: { wallet } }) {
       state.selectedWallet = wallet
@@ -193,7 +193,7 @@ export const {
   addSerializedPair,
   addSerializedToken,
   updateFiatOnrampAcknowledgments,
-  updateFiatonrampDismissed,
+  dismissFiatOnramp,
   updateSelectedWallet,
   updateHideClosedPositions,
   updateMatchesDarkMode,
