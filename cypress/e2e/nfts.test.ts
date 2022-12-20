@@ -6,6 +6,9 @@ describe('Testing nfts', () => {
   before(() => {
     cy.visit('/')
   })
+  beforeEach(() => {
+    sessionStorage.clear()
+  })
 
   it('should load nft leaderboard', () => {
     cy.get(getTestSelector('nft-nav')).first().click()
@@ -22,7 +25,8 @@ describe('Testing nfts', () => {
     cy.get(getTestSelector('nft-collection-filter-buy-now')).should('exist')
   })
 
-  xit('should be able to open bag and open sweep', () => {
+  it('should be able to open bag and open sweep', () => {
+    cy.get(getTestSelector('FiatOnrampAnnouncement-dismiss-x')).click()
     cy.get(getTestSelector('nft-sweep-button')).first().click()
     cy.get(getTestSelector('nft-empty-bag')).should('exist')
     cy.get(getTestSelector('nft-sweep-slider')).should('exist')
@@ -52,13 +56,13 @@ describe('Testing nfts', () => {
     cy.get(getTestSelector('nft-bag')).should('exist')
   })
 
-  xit('should go view my nfts', () => {
+  it('should go view my nfts', () => {
+    cy.get(getTestSelector('FiatOnrampAnnouncement-dismiss-x')).click()
     cy.get(getTestSelector('web3-status-connected')).click()
     cy.get(getTestSelector('nft-view-self-nfts')).click()
     cy.get(getTestSelector('nft-explore-nfts-button')).should('exist')
     cy.get(getTestSelector('nft-no-nfts-selected')).should('exist')
     cy.get(getTestSelector('nft-bag-close-icon')).click()
     cy.get(getTestSelector('nft-explore-nfts-button')).click()
-    cy.get(getTestSelector('nft-welcome-modal')).should('exist')
   })
 })

@@ -101,7 +101,8 @@ export function FiatOnrampAnnouncement() {
   const [locallyDismissed, setLocallyDismissed] = useState(false)
   useEffect(() => {
     if (!sessionStorage.getItem(ANNOUNCEMENT_RENDERED)) {
-      acknowledge({ renderCount: acks?.renderCount + 1 })
+      const count = acks?.renderCount || 0
+      acknowledge({ renderCount: count + 1 })
       sessionStorage.setItem(ANNOUNCEMENT_RENDERED, 'true')
     }
   }, [acknowledge, acks])
@@ -135,7 +136,7 @@ export function FiatOnrampAnnouncement() {
   return (
     <ArrowWrapper>
       <Arrow />
-      <CloseIcon onClick={handleClose} />
+      <CloseIcon onClick={handleClose} data-testid="FiatOnrampAnnouncement-dismiss-x" />
       <Wrapper onClick={handleClick}>
         <Header>
           <Trans>Buy crypto</Trans>
