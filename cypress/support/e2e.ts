@@ -20,7 +20,7 @@ declare global {
     interface VisitOptions {
       serviceWorker?: true
       featureFlags?: Array<FeatureFlag>
-      selectedWallet?: string | null;
+      selectedWallet?: string | null
     }
   }
 }
@@ -40,7 +40,10 @@ Cypress.Commands.overwrite(
           options?.onBeforeLoad?.(win)
           win.localStorage.clear()
           if (options?.selectedWallet != null) {
-            win.localStorage.setItem('redux_localstorage_simple_user', `{"selectedWallet":"${options?.selectedWallet || 'INJECTED'}"}`)
+            win.localStorage.setItem(
+              'redux_localstorage_simple_user',
+              `{"selectedWallet":"${options?.selectedWallet || 'INJECTED'}"}`
+            )
           }
 
           if (options?.featureFlags) {
