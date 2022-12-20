@@ -357,7 +357,7 @@ const MarketplaceRow = ({
     for (const market of selectedMarkets) {
       market.royalty = (market.name === 'LooksRare' ? LOOKS_RARE_CREATOR_BASIS_POINTS : asset.basisPoints) * 0.01
     }
-  }, [selectedMarkets])
+  }, [asset.basisPoints, selectedMarkets])
 
   useEffect(() => {
     if (globalPriceMethod === SetPriceMethod.FLOOR_PRICE) {
@@ -497,8 +497,8 @@ const MarketplaceRow = ({
                 <Box width="full" fontSize="14">
                   {selectedMarkets.map((selectedMarket) => {
                     return (
-                      <RoyaltyContainer>
-                        <FeeWrap key={selectedMarket.name}>
+                      <RoyaltyContainer key={selectedMarket.name}>
+                        <FeeWrap>
                           {selectedMarket.name}: {selectedMarket.fee}%
                         </FeeWrap>
                         <FeeWrap>Creator royalties: {selectedMarket.royalty}%</FeeWrap>
