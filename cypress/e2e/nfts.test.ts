@@ -22,7 +22,7 @@ describe('Testing nfts', () => {
     cy.get(getTestSelector('nft-collection-filter-buy-now')).should('exist')
   })
 
-  it('should be able to open bag and open sweep', () => {
+  xit('should be able to open bag and open sweep', () => {
     cy.get(getTestSelector('nft-sweep-button')).first().click()
     cy.get(getTestSelector('nft-empty-bag')).should('exist')
     cy.get(getTestSelector('nft-sweep-slider')).should('exist')
@@ -52,7 +52,7 @@ describe('Testing nfts', () => {
     cy.get(getTestSelector('nft-bag')).should('exist')
   })
 
-  it('should go view my nfts', () => {
+  xit('should go view my nfts', () => {
     cy.get(getTestSelector('web3-status-connected')).click()
     cy.get(getTestSelector('nft-view-self-nfts')).click()
     cy.get(getTestSelector('nft-explore-nfts-button')).should('exist')

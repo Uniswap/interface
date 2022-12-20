@@ -15,6 +15,17 @@ import styled from 'styled-components/macro'
 
 import * as styles from './ListPage.css'
 
+const TableHeader = styled.div`
+  display: flex;
+  position: sticky;
+  align-items: center;
+  top: 72px;
+  padding-top: 24px;
+  padding-bottom: 24px;
+  z-index: 1;
+  background-color: ${({ theme }) => theme.backgroundBackdrop};
+`
+
 enum SetPriceMethod {
   SAME_PRICE,
   FLOOR_PRICE,
@@ -46,7 +57,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
 
   return (
     <Column>
-      <Row marginTop="20">
+      <TableHeader>
         <Column
           marginLeft={selectedMarkets.length > 1 ? '0' : '0'}
           transition="500"
@@ -98,7 +109,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
             You receive
           </Column>
         </Row>
-      </Row>
+      </TableHeader>
       {sellAssets.map((asset) => {
         return (
           <>

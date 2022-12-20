@@ -1,18 +1,28 @@
 import { useWeb3React } from '@web3-react/core'
 import useDebounce from 'hooks/useDebounce'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useAppDispatch } from 'state/hooks'
 import { supportedChainId } from 'utils/supportedChainId'
 
-import { updateChainId } from './reducer'
+import { useCloseModal } from './hooks'
+import { ApplicationModal, updateChainId } from './reducer'
 
 export default function Updater(): null {
-  const { chainId, provider } = useWeb3React()
+  const { account, chainId, provider } = useWeb3React()
   const dispatch = useAppDispatch()
   const windowVisible = useIsWindowVisible()
 
   const [activeChainId, setActiveChainId] = useState(chainId)
+
+  const closeModal = useCloseModal(ApplicationModal.WALLET_DROPDOWN)
+  const previousAccountValue = useRef(account)
+  useEffect(() => {
+    if (account && account !== previousAccountValue.current) {
+      previousAccountValue.current = account
+      closeModal()
+    }
+  }, [account, closeModal])
 
   useEffect(() => {
     if (provider && chainId && windowVisible) {
