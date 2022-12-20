@@ -1,6 +1,6 @@
 import { rootCssString } from 'nft/css/cssStringFromTheme'
 import React, { useMemo } from 'react'
-import { createGlobalStyle, css, ThemeProvider as StyledComponentsThemeProvider } from 'styled-components/macro'
+import { createGlobalStyle, css, DefaultTheme, ThemedCssFunction, ThemeProvider as StyledComponentsThemeProvider } from 'styled-components/macro'
 
 import { useIsDarkMode } from '../state/user/hooks'
 import { darkTheme, lightTheme } from './colors'
@@ -17,21 +17,16 @@ export const MEDIA_WIDTHS = {
   deprecated_upToLarge: 1280,
 }
 
-const makeMediaQuery =
-  (size: number) =>
-  (...args: Parameters<typeof css>) =>
-    css`
-      @media (max-width: ${size}px) {
-        ${css(...args)}
-      }
-    `
-
-const deprecated_mediaWidthTemplates = {
-  deprecated_upToExtraSmall: makeMediaQuery(MEDIA_WIDTHS.deprecated_upToExtraSmall),
-  deprecated_upToSmall: makeMediaQuery(MEDIA_WIDTHS.deprecated_upToSmall),
-  deprecated_upToMedium: makeMediaQuery(MEDIA_WIDTHS.deprecated_upToMedium),
-  deprecated_upToLarge: makeMediaQuery(MEDIA_WIDTHS.deprecated_upToLarge),
-}
+const deprecated_mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(
+  MEDIA_WIDTHS
+).reduce((acc, size) => {
+  acc[size] = (a: any, b: any, c: any) => css`
+    @media (max-width: ${(MEDIA_WIDTHS as any)[size]}px) {
+      ${css(a, b, c)}
+    }
+  `
+  return acc
+}, {} as any)
 
 export const BREAKPOINTS = {
   xs: 396,
