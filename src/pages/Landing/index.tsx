@@ -6,7 +6,6 @@ import Card, { CardType } from 'components/About/Card'
 import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
 import ProtocolBanner from 'components/About/ProtocolBanner'
 import { BaseButton } from 'components/Button'
-import { LandingRedirectVariant, useLandingRedirectFlag } from 'featureFlags/flags/landingRedirect'
 import Swap from 'pages/Swap'
 import { parse } from 'qs'
 import { useEffect, useRef, useState } from 'react'
@@ -285,7 +284,6 @@ export default function Landing() {
 
   const [showContent, setShowContent] = useState(false)
   const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
-  const landingRedirectFlag = useLandingRedirectFlag()
   const navigate = useNavigate()
   const queryParams = parse(location.search, {
     ignoreQueryPrefix: true,
@@ -293,25 +291,19 @@ export default function Landing() {
 
   // This can be simplified significantly once the flag is removed! For now being explicit is clearer.
   useEffect(() => {
-    if (queryParams.intro) {
+    if (queryParams.intro || !selectedWallet) {
       setShowContent(true)
-    } else if (selectedWallet) {
-      if (landingRedirectFlag === LandingRedirectVariant.Enabled) {
-        navigate('/swap')
-      } else {
-        setShowContent(true)
-      }
     } else {
-      setShowContent(true)
+      navigate('/swap')
     }
-  }, [navigate, selectedWallet, landingRedirectFlag, queryParams.intro])
+  }, [navigate, selectedWallet, queryParams.intro])
 
   if (!isOpen) return null
 
   return (
     <Trace page={PageName.LANDING_PAGE} shouldLogImpression>
       {showContent && (
-        <PageContainer isDarkMode={isDarkMode}>
+        <PageContainer isDarkMode={isDarkMode} data-testid="landing-page">
           <LandingSwapContainer>
             <TraceEvent
               events={[BrowserEvent.onClick]}
