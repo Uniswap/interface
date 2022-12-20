@@ -100,7 +100,6 @@ export function FiatOnrampAnnouncement() {
   const dispatch = useDispatch()
   const [acks, acknowledge] = useFiatOnrampAck()
   const fiatOnrampDismissed = useAppSelector((state) => state.user.fiatOnrampDismissed)
-  const [locallyDismissed, setLocallyDismissed] = useState(false)
 
   useEffect(() => {
     acknowledge({ renderCount: acks?.renderCount + 1 })
@@ -108,7 +107,6 @@ export function FiatOnrampAnnouncement() {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleClose = useCallback(() => {
-    setLocallyDismissed(true)
     dispatch(updateFiatonrampDismissed(true))
   }, [])
 
@@ -125,7 +123,6 @@ export function FiatOnrampAnnouncement() {
     !account ||
     acks?.user ||
     fiatOnrampFlag === BaseVariant.Control ||
-    locallyDismissed ||
     fiatOnrampDismissed ||
     acks?.renderCount >= MAX_RENDER_COUNT ||
     isMobile ||
