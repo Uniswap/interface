@@ -1,4 +1,5 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
+import { useFiatOnrampFlag } from 'featureFlags/flags/fiatOnramp'
 import { LandingRedirectVariant, useLandingRedirectFlag } from 'featureFlags/flags/landingRedirect'
 import { Permit2Variant, usePermit2Flag } from 'featureFlags/flags/permit2'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
@@ -214,6 +215,12 @@ export default function FeatureFlagModal() {
         value={useLandingRedirectFlag()}
         featureFlag={FeatureFlag.landingRedirect}
         label="Landing Page Redirect"
+      />
+      <FeatureFlagOption
+        variant={BaseVariant}
+        value={useFiatOnrampFlag()}
+        featureFlag={FeatureFlag.fiatOnramp}
+        label="Fiat on-ramp"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption
