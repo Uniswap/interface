@@ -6,7 +6,7 @@ import { useAppDispatch } from 'state/hooks'
 import { supportedChainId } from 'utils/supportedChainId'
 
 import { useCloseModal } from './hooks'
-import { ApplicationModal, updateChainId } from './reducer'
+import { updateChainId } from './reducer'
 
 export default function Updater(): null {
   const { account, chainId, provider } = useWeb3React()
