@@ -39,7 +39,7 @@ const EarnNavGroup = () => {
             flexDirection: 'column',
           }}
         >
-          <StyledNavLink id="pools-nav-link" to={APP_PATHS.MY_POOLS} style={{ width: '100%' }}>
+          <StyledNavLink id="pools-nav-link" to={APP_PATHS.POOLS} style={{ width: '100%' }}>
             <Trans>Pools</Trans>
           </StyledNavLink>
 
