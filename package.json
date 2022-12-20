@@ -90,7 +90,7 @@
     "@types/ua-parser-js": "^0.7.35",
     "@types/uuid": "^8.3.4",
     "@types/wcag-contrast": "^3.0.0",
-    "@uniswap/eslint-config": "^1.1.0",
+    "@uniswap/eslint-config": "^1.1.1",
     "@vanilla-extract/babel-plugin": "^1.1.7",
     "@vanilla-extract/webpack-plugin": "^2.1.11",
     "babel-plugin-relay": "^14.1.0",
