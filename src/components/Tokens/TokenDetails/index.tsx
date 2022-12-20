@@ -40,7 +40,7 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { isAddress } from 'utils'
 
-import { RefetchPricesFunction } from './ChartSection'
+import { OnChangeTimePeriod } from './ChartSection'
 import InvalidTokenDetails from './InvalidTokenDetails'
 
 const TokenSymbol = styled.span`
@@ -92,7 +92,7 @@ type TokenDetailsProps = {
   chain: Chain
   tokenQuery: TokenQuery
   tokenPriceQuery: TokenPriceQuery | undefined
-  onChangeTimePeriod: RefetchPricesFunction
+  onChangeTimePeriod: OnChangeTimePeriod
 }
 export default function TokenDetails({
   urlAddress,

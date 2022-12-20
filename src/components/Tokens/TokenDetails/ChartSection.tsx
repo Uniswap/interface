@@ -30,7 +30,7 @@ export default function ChartSection({
   onChangeTimePeriod,
 }: {
   tokenPriceQuery?: TokenPriceQuery
-  onChangeTimePeriod: RefetchPricesFunction
+  onChangeTimePeriod: OnChangeTimePeriod
 }) {
   if (!tokenPriceQuery) {
     return <LoadingChart />
@@ -45,13 +45,13 @@ export default function ChartSection({
   )
 }
 
-export type RefetchPricesFunction = (t: TimePeriod) => void
+export type OnChangeTimePeriod = (t: TimePeriod) => void
 function Chart({
   tokenPriceQuery,
   onChangeTimePeriod,
 }: {
   tokenPriceQuery: TokenPriceQuery
-  onChangeTimePeriod: RefetchPricesFunction
+  onChangeTimePeriod: OnChangeTimePeriod
 }) {
   const prices = usePriceHistory(tokenPriceQuery)
   // Initializes time period to global & maintain separate time period for subsequent changes
