@@ -1,6 +1,6 @@
 /* eslint-env node */
 
-const defaultConfig = require('./relay.config')
+const defaultConfig = require('./graphql.config')
 
 module.exports = {
   src: defaultConfig.src,

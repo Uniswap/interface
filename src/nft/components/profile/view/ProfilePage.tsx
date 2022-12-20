@@ -1,4 +1,4 @@
-import { useNftBalanceQuery } from 'graphql/data/nft/NftBalance'
+import { useNftBalance } from 'graphql/data/nft/NftBalance'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { ClearAllButton, LoadingAssets } from 'nft/components/collection/CollectionNfts'
 import { assetList } from 'nft/components/collection/CollectionNfts.css'
@@ -198,10 +198,10 @@ const ProfilePageNfts = ({
 
   const {
     walletAssets: ownerAssets,
-    loadNext,
+    loading,
     hasNext,
-    isLoadingNext,
-  } = useNftBalanceQuery(address, collectionFilters, [], DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
+    loadMore,
+  } = useNftBalance(address, collectionFilters, [], DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
 
   const { gridX } = useSpring({
     gridX: isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING,
@@ -210,6 +210,8 @@ const ProfilePageNfts = ({
       easing: easings.easeOutSine,
     },
   })
+
+  if (loading) return <ProfileBodyLoadingSkeleton />
 
   return (
     <Column width="full">
@@ -242,13 +244,13 @@ const ProfilePageNfts = ({
             />
           </Row>
           <InfiniteScroll
-            next={() => loadNext(DEFAULT_WALLET_ASSET_QUERY_AMOUNT)}
-            hasMore={hasNext}
+            next={loadMore}
+            hasMore={hasNext ?? false}
             loader={
               Boolean(hasNext && ownerAssets?.length) && <LoadingAssets count={DEFAULT_WALLET_ASSET_QUERY_AMOUNT} />
             }
             dataLength={ownerAssets?.length ?? 0}
-            className={ownerAssets?.length || isLoadingNext ? assetList : undefined}
+            className={ownerAssets?.length ? assetList : undefined}
             style={{ overflow: 'unset' }}
           >
             {ownerAssets?.length

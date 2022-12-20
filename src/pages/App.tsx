@@ -6,9 +6,6 @@ import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { Box } from 'nft/components/Box'
-import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
-import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
-import { ProfilePageLoadingSkeleton } from 'nft/components/profile/view/ProfilePageLoadingSkeleton'
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -251,7 +248,6 @@ export default function App() {
                 <Route
                   path="/nfts"
                   element={
-                    // TODO: replace loading state during Apollo migration
                     <Suspense fallback={null}>
                       <NftExplore />
                     </Suspense>
@@ -260,7 +256,7 @@ export default function App() {
                 <Route
                   path="/nfts/asset/:contractAddress/:tokenId"
                   element={
-                    <Suspense fallback={<AssetDetailsLoading />}>
+                    <Suspense fallback={null}>
                       <Asset />
                     </Suspense>
                   }
@@ -268,7 +264,7 @@ export default function App() {
                 <Route
                   path="/nfts/profile"
                   element={
-                    <Suspense fallback={<ProfilePageLoadingSkeleton />}>
+                    <Suspense fallback={null}>
                       <Profile />
                     </Suspense>
                   }
@@ -276,7 +272,7 @@ export default function App() {
                 <Route
                   path="/nfts/collection/:contractAddress"
                   element={
-                    <Suspense fallback={<CollectionPageSkeleton />}>
+                    <Suspense fallback={null}>
                       <Collection />
                     </Suspense>
                   }
@@ -284,7 +280,7 @@ export default function App() {
                 <Route
                   path="/nfts/collection/:contractAddress/activity"
                   element={
-                    <Suspense fallback={<CollectionPageSkeleton />}>
+                    <Suspense fallback={null}>
                       <Collection />
                     </Suspense>
                   }

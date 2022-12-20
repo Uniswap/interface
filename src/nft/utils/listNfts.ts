@@ -62,7 +62,7 @@ const getConsiderationItems = (
   creatorFee?: ConsiderationInputItem
 } => {
   const openSeaBasisPoints = OPENSEA_DEFAULT_FEE * INVERSE_BASIS_POINTS
-  const creatorFeeBasisPoints = asset.basisPoints
+  const creatorFeeBasisPoints = asset?.basisPoints ?? 0
   const sellerBasisPoints = INVERSE_BASIS_POINTS - openSeaBasisPoints - creatorFeeBasisPoints
 
   const openseaFee = price.mul(BigNumber.from(openSeaBasisPoints)).div(BigNumber.from(INVERSE_BASIS_POINTS)).toString()
@@ -76,7 +76,9 @@ const getConsiderationItems = (
     sellerFee: createConsiderationItem(sellerFee, signerAddress),
     openseaFee: createConsiderationItem(openseaFee, OPENSEA_FEE_ADDRESS),
     creatorFee:
-      creatorFeeBasisPoints > 0 ? createConsiderationItem(creatorFee, asset.asset_contract.payout_address) : undefined,
+      creatorFeeBasisPoints > 0
+        ? createConsiderationItem(creatorFee, asset?.asset_contract?.payout_address ?? '')
+        : undefined,
   }
 }
 
@@ -128,7 +130,7 @@ export async function signListing(
 
   const signerAddress = await signer.getAddress()
   const listingPrice = asset.newListings?.find((listing) => listing.marketplace.name === marketplace.name)?.price
-  if (!listingPrice || !asset.expirationTime) return false
+  if (!listingPrice || !asset.expirationTime || !asset.asset_contract.address || !asset.tokenId) return false
   switch (marketplace.name) {
     case 'OpenSea':
       try {

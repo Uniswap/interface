@@ -3,8 +3,8 @@
 require('dotenv').config({ path: '.env.production' })
 
 const { exec } = require('child_process')
-const dataConfig = require('./relay.config')
-const thegraphConfig = require('./relay_thegraph.config')
+const dataConfig = require('./graphql.config')
+const thegraphConfig = require('./graphql_thegraph.config')
 
 function fetchSchema(url, outputFile) {
   exec(
