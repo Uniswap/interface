@@ -9,7 +9,7 @@ import { isMobile } from '../../utils/userAgent'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
 
-const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ scrollOverlay?: boolean }>`
+const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ $scrollOverlay?: boolean }>`
   &[data-reach-dialog-overlay] {
     z-index: ${Z_INDEX.modalBackdrop};
     background-color: transparent;
@@ -17,7 +17,7 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ scrollOverlay?: bool
 
     display: flex;
     align-items: center;
-    overflow-y: ${({ scrollOverlay }) => scrollOverlay && 'scroll'};
+    overflow-y: ${({ $scrollOverlay }) => $scrollOverlay && 'scroll'};
     justify-content: center;
 
     background-color: ${({ theme }) => theme.backgroundScrim};
@@ -89,7 +89,7 @@ interface ModalProps {
   maxWidth?: number
   initialFocusRef?: React.RefObject<any>
   children?: React.ReactNode
-  scrollOverlay?: boolean
+  $scrollOverlay?: boolean
   hideBorder?: boolean
   isBottomSheet?: boolean
 }
@@ -103,7 +103,7 @@ export default function Modal({
   initialFocusRef,
   children,
   onSwipe = onDismiss,
-  scrollOverlay,
+  $scrollOverlay,
   isBottomSheet = isMobile,
   hideBorder = false,
 }: ModalProps) {
@@ -136,7 +136,7 @@ export default function Modal({
               onDismiss={onDismiss}
               initialFocusRef={initialFocusRef}
               unstable_lockFocusAcrossFrames={false}
-              scrollOverlay={scrollOverlay}
+              $scrollOverlay={$scrollOverlay}
             >
               <StyledDialogContent
                 {...(isMobile
@@ -149,7 +149,7 @@ export default function Modal({
                 $minHeight={minHeight}
                 $maxHeight={maxHeight}
                 $isBottomSheet={isBottomSheet}
-                $scrollOverlay={scrollOverlay}
+                $scrollOverlay={$scrollOverlay}
                 $hideBorder={hideBorder}
                 $maxWidth={maxWidth}
               >
