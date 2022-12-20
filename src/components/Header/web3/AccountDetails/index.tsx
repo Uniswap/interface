@@ -27,7 +27,7 @@ import {
 import { TransactionDetails } from 'state/transactions/type'
 import { useIsDarkMode, useIsUserManuallyDisconnect } from 'state/user/hooks'
 import { ButtonText, ExternalLink, LinkStyledButton, TYPE } from 'theme'
-import { getEtherscanLink, shortenAddress } from 'utils'
+import { getEtherscanLink, isEVMWallet, isSolanaWallet, shortenAddress } from 'utils'
 
 import Transaction from './Transaction'
 import TransactionGroup from './TransactionGroup'
@@ -219,6 +219,14 @@ export default function AccountDetails({ toggleWalletModal, openOptions }: Accou
   const [, setIsUserManuallyDisconnect] = useIsUserManuallyDisconnect()
 
   const handleDisconnect = () => {
+    const wallet = walletKey && SUPPORTED_WALLETS[walletKey]
+    //If wallet support both network, disconnect to both
+    if (wallet && isEVMWallet(wallet) && isSolanaWallet(wallet)) {
+      deactivate()
+      disconnect()
+      return
+    }
+
     if (isEVM) {
       deactivate()
       // @ts-expect-error close can be returned by wallet

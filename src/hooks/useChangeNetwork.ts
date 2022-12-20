@@ -26,7 +26,7 @@ const getEVMAddNetworkParams = (chainId: EVM_NETWORK) => ({
 })
 
 export function useChangeNetwork() {
-  const { chainId, walletKey, walletEVM } = useActiveWeb3React()
+  const { chainId, walletKey, walletEVM, walletSolana } = useActiveWeb3React()
   const { library, error } = useWeb3React()
   const { tryActivationEVM, tryActivationSolana } = useActivationWallet()
 
@@ -49,12 +49,12 @@ export function useChangeNetwork() {
       }
 
       const wallet = walletKey && SUPPORTED_WALLETS[walletKey]
-      if (wallet && isEVMWallet(wallet) && !isSolana(desiredChainId)) {
+      if (wallet && isEVMWallet(wallet) && walletSolana.isConnected && !isSolana(desiredChainId)) {
         try {
           tryActivationEVM(wallet.connector)
         } catch {}
       }
-      if (wallet && isSolanaWallet(wallet) && !isEVM(desiredChainId)) {
+      if (wallet && isSolanaWallet(wallet) && walletEVM.isConnected && !isEVM(desiredChainId)) {
         try {
           tryActivationSolana(wallet.adapter)
         } catch {}
@@ -128,6 +128,7 @@ export function useChangeNetwork() {
       walletKey,
       walletEVM.isConnected,
       walletEVM.chainId,
+      walletSolana.isConnected,
       chainId,
     ],
   )
