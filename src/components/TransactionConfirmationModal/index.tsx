@@ -348,7 +348,7 @@ export default function TransactionConfirmationModal({
 
   // confirmation screen
   return (
-    <Modal isOpen={isOpen} scrollOverlay={true} onDismiss={onDismiss} maxHeight={90}>
+    <Modal isOpen={isOpen} $scrollOverlay={true} onDismiss={onDismiss} maxHeight={90}>
       {isL2ChainId(chainId) && (hash || attemptingTxn) ? (
         <L2Content chainId={chainId} hash={hash} onDismiss={onDismiss} pendingText={pendingText} />
       ) : attemptingTxn ? (
