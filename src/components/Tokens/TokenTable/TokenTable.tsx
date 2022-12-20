@@ -81,8 +81,9 @@ export default function TokenTable() {
   const { tokens, loadingTokens, sparklines } = useTopTokens(chainName)
 
   /* loading and error state */
-  if (loadingTokens) return <LoadingTokenTable rowCount={PAGE_SIZE} />
-  else if (!tokens) {
+  if (loadingTokens) {
+    return <LoadingTokenTable rowCount={PAGE_SIZE} />
+  } else if (!tokens) {
     return (
       <NoTokensState
         message={
