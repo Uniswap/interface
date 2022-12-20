@@ -95,8 +95,8 @@ export default function StatsSection(props: StatsSectionProps) {
             />
           </StatPair>
           <StatPair>
-            <Stat value={priceLow52W} title={<Trans>52W low</Trans>} isPrice={true} />
-            <Stat value={priceHigh52W} title={<Trans>52W high</Trans>} isPrice={true} />
+            <Stat value={priceLow52W} title={<Trans>52W low</Trans>} />
+            <Stat value={priceHigh52W} title={<Trans>52W high</Trans>} />
           </StatPair>
         </TokenStatsSection>
       </StatsWrapper>

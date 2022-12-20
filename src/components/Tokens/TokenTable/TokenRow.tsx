@@ -512,7 +512,6 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
                       height={height}
                       tokenData={token}
                       pricePercentChange={token.market?.pricePercentChange?.value}
-                      timePeriod={timePeriod}
                       sparklineMap={props.sparklineMap}
                     />
                   )
