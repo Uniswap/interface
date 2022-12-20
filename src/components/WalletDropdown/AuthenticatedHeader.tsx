@@ -344,7 +344,7 @@ const AuthenticatedHeader = () => {
                     onMouseEnter={openFiatOnrampUnavailableTooltip}
                     onMouseLeave={closeFiatOnrampUnavailableTooltip}
                     style={{ color: 'inherit' }}
-                    href="https://support.uniswap.org/hc/en-us/articles/10966551707533-Why-is-MoonPay-not-supported-in-my-region-"
+                    href="https://support.uniswap.org/hc/en-us/categories/11302011603341-Buying-Crypto"
                   >
                     <StyledInfoIcon />
                   </FiatOnrampAvailabilityExternalLink>
