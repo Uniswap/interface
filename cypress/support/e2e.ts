@@ -40,12 +40,12 @@ Cypress.Commands.overwrite(
         onBeforeLoad(win) {
           options?.onBeforeLoad?.(win)
           win.localStorage.clear()
-          if (options?.noWallet !== true) {
-            win.localStorage.setItem(
-              'redux_localstorage_simple_user',
-              `{"selectedWallet":"${options?.selectedWallet || 'INJECTED'}"}`
-            )
+
+          const userState = {
+            selectedWallet: options?.noWallet !== true ? options?.selectedWallet || 'INJECTED' : undefined,
+            fiatOnrampDismissed: true,
           }
+          win.localStorage.setItem('redux_localstorage_simple_user', JSON.stringify(userState))
 
           if (options?.featureFlags) {
             const featureFlags = options.featureFlags.reduce(
