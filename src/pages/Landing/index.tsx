@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Trace, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, ElementName, EventName, PageName } from '@uniswap/analytics-events'
+import { AboutFooter } from 'components/About/AboutFooter'
 import Card, { CardType } from 'components/About/Card'
 import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
 import ProtocolBanner from 'components/About/ProtocolBanner'
@@ -366,6 +367,7 @@ export default function Landing() {
               ))}
             </CardGrid>
             <ProtocolBanner />
+            <AboutFooter />
           </AboutContentContainer>
         </PageContainer>
       )}
