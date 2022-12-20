@@ -31,7 +31,7 @@ import {
   TokenPairContainer,
 } from 'components/PoolList/styled'
 import { MouseoverTooltip } from 'components/Tooltip'
-import FarmingPoolAPRCell from 'components/YieldPools/FarmingPoolAPRCell'
+import { ClassicFarmingPoolAPRCell } from 'components/YieldPools/FarmingPoolAPRCell'
 import { MAX_ALLOW_APY } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
@@ -138,6 +138,7 @@ const ListItemGroup = ({
 
   const { data: uniqueAndActiveFarms } = useActiveAndUniqueFarmsData()
   const farm = uniqueAndActiveFarms.find(f => f.id.toLowerCase() === poolData.id.toLowerCase())
+
   const isFarmingPool = !!farm
 
   // Shorten address with 0x + 3 characters at start and end
@@ -189,9 +190,7 @@ const ListItemGroup = ({
     }
 
     if (isFarmingPool) {
-      return (
-        <FarmingPoolAPRCell poolAPR={Number(oneYearFL)} fairlaunchAddress={farm.fairLaunchAddress} pid={farm.pid} />
-      )
+      return <ClassicFarmingPoolAPRCell poolAPR={Number(oneYearFL)} farm={farm} />
     }
 
     return (
@@ -368,5 +367,4 @@ const ListItemGroup = ({
     </>
   )
 }
-
 export default ListItem

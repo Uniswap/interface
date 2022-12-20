@@ -48,7 +48,7 @@ const optimismInfo: EVMNetworkInfo = {
     dynamic: NOT_SUPPORT,
     claimReward: NOT_SUPPORT,
     fairlaunch: EMPTY_ARRAY,
-    fairlaunchV2: EMPTY_ARRAY,
+    fairlaunchV2: ['0x715Cc6C0d591CA3FA8EA6e4Cb445adA0DC79069A'],
   },
   elastic: {
     coreFactory: '0x5F1dddbf348aC2fbe22a163e30F99F9ECE3DD50a',

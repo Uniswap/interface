@@ -1,5 +1,8 @@
+import { Fraction } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import { Placement } from '@popperjs/core'
+import { parseUnits } from 'ethers/lib/utils'
+import JSBI from 'jsbi'
 import { useMedia } from 'react-use'
 import { Box, Flex, Text } from 'rebass'
 
@@ -7,8 +10,10 @@ import { MoneyBag } from 'components/Icons'
 import { MouseoverTooltip } from 'components/Tooltip'
 import useTheme from 'hooks/useTheme'
 import { useElasticFarms } from 'state/farms/elastic/hooks'
+import { Farm } from 'state/farms/types'
 import { useTokenPrices } from 'state/tokenPrices/hooks'
 import { MEDIA_WIDTHS } from 'theme'
+import { useFarmApr } from 'utils/dmm'
 
 type Props = {
   poolAPR: number
@@ -133,6 +138,32 @@ const FarmingPoolAPRCell: React.FC<Props> = ({ poolAPR, fairlaunchAddress, pid, 
         placement={tooltipPlacement}
         text={<APRTooltipContent farmAPR={farmAPR} poolAPR={poolAPR} />}
       >
+        <MoneyBag size={16} color={theme.apr} />
+      </MouseoverTooltip>
+    </Flex>
+  )
+}
+
+export const ClassicFarmingPoolAPRCell = ({ poolAPR, farm }: { poolAPR: number; farm: Farm }) => {
+  const theme = useTheme()
+  const lpTokenRatio = new Fraction(
+    farm.totalStake.toString(),
+    JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18)),
+  ).divide(
+    new Fraction(parseUnits(farm.totalSupply, 18).toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))),
+  )
+  const liquidity = parseFloat(lpTokenRatio.toSignificant(6)) * parseFloat(farm.reserveUSD)
+  const farmAPR = useFarmApr(farm, liquidity.toString())
+
+  return (
+    <Flex
+      alignItems={'center'}
+      sx={{
+        gap: '4px',
+      }}
+    >
+      <Text as="span">{(poolAPR + farmAPR).toFixed(2)}%</Text>
+      <MouseoverTooltip width="fit-content" text={<APRTooltipContent farmAPR={farmAPR} poolAPR={poolAPR} />}>
         <MoneyBag size={16} color={theme.apr} />
       </MouseoverTooltip>
     </Flex>

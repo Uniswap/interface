@@ -49,7 +49,7 @@ const useGetElasticFarms = () => {
     : ''
 
   return useSWR<Response>(endpoint, (url: string) => fetch(url).then(resp => resp.json()), {
-    refreshInterval: 15_000,
+    refreshInterval: 10_000,
   })
 }
 

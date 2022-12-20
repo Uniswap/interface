@@ -26,8 +26,8 @@ import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
 import { TokenWrapper } from 'pages/AddLiquidity/styled'
 import { IconWrapper } from 'pages/Pools/styleds'
-import { useETHPrice, useTokensPrice } from 'state/application/hooks'
-import { Farm } from 'state/farms/types'
+import { useBlockNumber, useETHPrice, useTokensPrice } from 'state/application/hooks'
+import { FairLaunchVersion, Farm } from 'state/farms/types'
 import { UserLiquidityPosition, useSinglePoolData } from 'state/pools/hooks'
 import { useTokenBalance } from 'state/wallet/hooks'
 import { ExternalLink, MEDIA_WIDTHS, UppercaseText } from 'theme'
@@ -378,7 +378,15 @@ export default function FullPositionCard({
 
   const upToSmall = useMedia(`(max-width: ${MEDIA_WIDTHS.upToSmall}px)`)
 
-  const farmStatus = !farm ? 'NO_FARM' : farm.isEnded ? 'FARM_ENDED' : 'FARM_ACTIVE'
+  const blockNumber = useBlockNumber()
+  const currentTimestamp = Math.round(Date.now() / 1000)
+  const isEnded =
+    farm &&
+    (farm.version === FairLaunchVersion.V1
+      ? farm.endBlock <= (blockNumber || Number.MAX_SAFE_INTEGER)
+      : farm.endTime <= currentTimestamp)
+
+  const farmStatus = !farm ? 'NO_FARM' : isEnded ? 'FARM_ENDED' : 'FARM_ACTIVE'
   const ethPrice = useETHPrice()
 
   const { data: poolData } = useSinglePoolData(pair.address.toLowerCase(), ethPrice.currentPrice)

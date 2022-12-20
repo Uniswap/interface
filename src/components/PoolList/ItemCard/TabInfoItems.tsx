@@ -2,7 +2,7 @@ import { Trans, t } from '@lingui/macro'
 import { Flex, Text } from 'rebass'
 
 import InfoHelper from 'components/InfoHelper'
-import FarmingPoolAPRCell from 'components/YieldPools/FarmingPoolAPRCell'
+import { ClassicFarmingPoolAPRCell } from 'components/YieldPools/FarmingPoolAPRCell'
 import { MAX_ALLOW_APY } from 'constants/index'
 import useTheme from 'hooks/useTheme'
 import { useActiveAndUniqueFarmsData } from 'state/farms/hooks'
@@ -35,14 +35,7 @@ export default function TabInfoItems({
     }
 
     if (isFarmingPool) {
-      return (
-        <FarmingPoolAPRCell
-          tooltipPlacement="top"
-          poolAPR={Number(oneYearFL)}
-          fairlaunchAddress={farm.fairLaunchAddress}
-          pid={farm.pid}
-        />
-      )
+      return <ClassicFarmingPoolAPRCell poolAPR={Number(oneYearFL)} farm={farm} />
     }
 
     return <Value>{oneYearFL}%</Value>

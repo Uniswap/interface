@@ -13,6 +13,7 @@ export enum RewardLockerVersion {
 
 export interface FarmV1 {
   fairLaunchAddress: string
+  version: FairLaunchVersion
   pid: number
   id: string
   rewardTokens: Token[]
@@ -39,11 +40,11 @@ export interface FarmV1 {
     rewards?: string[]
   }
   time: string
-  isEnded?: boolean
 }
 
 export interface FarmV2 {
   fairLaunchAddress: string
+  version: FairLaunchVersion
   pid: number
   id: string
   rewardTokens: Token[]

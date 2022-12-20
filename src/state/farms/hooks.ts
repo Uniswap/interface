@@ -92,7 +92,6 @@ export const useFarmsData = (isIncludeOutsideFarms = true) => {
   const fairLaunchContracts = useFairLaunchContracts()
   const ethPrice = useETHPrice()
   const allTokens = useAllTokens()
-  const blockNumber = useBlockNumber()
 
   const farmsData = useSelector((state: AppState) => state.farms.data)
   const loading = useSelector((state: AppState) => state.farms.loading)
@@ -113,7 +112,6 @@ export const useFarmsData = (isIncludeOutsideFarms = true) => {
     if (!isEVM) return
     const apolloClient = (networkInfo as EVMNetworkInfo).classicClient
     let cancelled = false
-    const currentTimestamp = Math.round(Date.now() / 1000)
 
     async function getListFarmsForContract(contract: Contract): Promise<Farm[]> {
       if (!isEVM) return []
@@ -192,10 +190,6 @@ export const useFarmsData = (isIncludeOutsideFarms = true) => {
                   )
                 : pendingRewards[index],
           },
-          isEnded:
-            poolInfo.fairLaunchVersion === FairLaunchVersion.V2
-              ? poolInfo.endTime <= currentTimestamp
-              : poolInfo.endBlock <= (blockNumber || Number.MAX_SAFE_INTEGER),
         }
       })
 
@@ -283,8 +277,13 @@ export const useFarmsData = (isIncludeOutsideFarms = true) => {
 
     checkForFarms()
 
+    const i = setInterval(() => {
+      checkForFarms()
+    }, 15_000)
+
     return () => {
       cancelled = true
+      clearInterval(i)
     }
   }, [
     dispatch,
@@ -292,7 +291,6 @@ export const useFarmsData = (isIncludeOutsideFarms = true) => {
     chainId,
     fairLaunchContracts,
     account,
-    blockNumber,
     allTokens,
     isIncludeOutsideFarms,
     isEVM,
@@ -304,14 +302,18 @@ export const useFarmsData = (isIncludeOutsideFarms = true) => {
 
 export const useActiveAndUniqueFarmsData = (): { loading: boolean; error: string; data: Farm[] } => {
   const farmsData = useFarmsData(false)
+  const blockNumber = useBlockNumber()
 
   return useMemo(() => {
+    const currentTimestamp = Math.round(Date.now() / 1000)
     const { loading, error, data: farms } = farmsData
 
     const existedPairs: { [key: string]: boolean } = {}
     const uniqueAndActiveFarms = Object.values(farms)
       .flat()
-      .filter(farm => !farm.isEnded)
+      .filter(farm =>
+        farm.version === FairLaunchVersion.V1 ? farm.endBlock > (blockNumber || -1) : farm.endTime > currentTimestamp,
+      )
       .filter(farm => {
         const pairKey = `${farm.token0?.symbol} - ${farm.token1?.symbol}`
         if (existedPairs[pairKey]) return false
@@ -324,7 +326,7 @@ export const useActiveAndUniqueFarmsData = (): { loading: boolean; error: string
       error,
       data: uniqueAndActiveFarms,
     }
-  }, [farmsData])
+  }, [blockNumber, farmsData])
 }
 
 export const useYieldHistories = (isModalOpen: boolean) => {

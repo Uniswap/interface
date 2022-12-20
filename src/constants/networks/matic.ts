@@ -5,7 +5,6 @@ import { AGGREGATOR_API, KS_SETTING_API } from 'constants/env'
 import { EVMNetworkInfo } from 'constants/networks/type'
 import { createClient } from 'utils/client'
 
-const EMPTY_ARRAY: any[] = []
 const NOT_SUPPORT = null
 
 const maticInfo: EVMNetworkInfo = {
@@ -57,7 +56,7 @@ const maticInfo: EVMNetworkInfo = {
       '0x829c27fd3013b944cbE76E92c3D6c45767c0C789',
       '0x3aDd3034Fcf921F20c74c6149FB44921709595B1',
     ],
-    fairlaunchV2: EMPTY_ARRAY,
+    fairlaunchV2: ['0xFFD22921947D75342BFE1f8efAcEE4B8B3b5183F'],
   },
   elastic: {
     coreFactory: '0x5F1dddbf348aC2fbe22a163e30F99F9ECE3DD50a',
