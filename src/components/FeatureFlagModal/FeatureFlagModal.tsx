@@ -122,6 +122,7 @@ function Variant({ option }: { option: string }) {
 interface FeatureFlagProps {
   variant: Record<string, string>
   featureFlag: FeatureFlag
+  value: string
   label: string
 }
 
