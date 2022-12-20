@@ -229,7 +229,6 @@ const AuthenticatedHeader = () => {
   }, [clearCollectionFilters, closeModal, navigate, resetSellAssets, setSellPageState])
 
   const fiatOnrampFlag = useFiatOnrampFlag()
-
   // animate the border of the buy crypto button when a user navigates here from the feature announcement
   // can be removed when components/FiatOnrampAnnouncment.tsx is no longer used
   const [acknowledgements, acknowledge] = useFiatOnrampAck()
