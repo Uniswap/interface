@@ -14,6 +14,11 @@ describe('Landing Page', () => {
     cy.screenshot()
   })
 
+  it('shows landing page when selectedWallet is INJECTED and ?intro=true is in query', () => {
+    cy.visit('/?intro=true', { selectedWallet: 'INJECTED' })
+    cy.get(getTestSelector('landing-page'))
+  })
+
   it('shows landing page when the unicorn icon in nav is selected', () => {
     cy.get(getTestSelector('uniswap-logo')).click()
     cy.get(getTestSelector('landing-page'))
