@@ -831,36 +831,36 @@ export enum TransactionStatus {
   Pending = 'PENDING'
 }
 
-export type TokenQueryQueryVariables = Exact<{
+export type TokenQueryVariables = Exact<{
   contract: ContractInput;
 }>;
 
 
-export type TokenQueryQuery = { __typename?: 'Query', tokens?: Array<{ __typename?: 'Token', id: string, decimals?: number, name?: string, chain: Chain, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', totalValueLocked?: { __typename?: 'Amount', value: number, currency?: Currency }, price?: { __typename?: 'Amount', value: number, currency?: Currency }, volume24H?: { __typename?: 'Amount', value: number, currency?: Currency }, priceHigh52W?: { __typename?: 'Amount', value: number }, priceLow52W?: { __typename?: 'Amount', value: number } }, project?: { __typename?: 'TokenProject', description?: string, homepageUrl?: string, twitterName?: string, logoUrl?: string, tokens: Array<{ __typename?: 'Token', chain: Chain, address?: string }> } }> };
+export type TokenQuery = { __typename?: 'Query', tokens?: Array<{ __typename?: 'Token', id: string, decimals?: number, name?: string, chain: Chain, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', totalValueLocked?: { __typename?: 'Amount', value: number, currency?: Currency }, price?: { __typename?: 'Amount', value: number, currency?: Currency }, volume24H?: { __typename?: 'Amount', value: number, currency?: Currency }, priceHigh52W?: { __typename?: 'Amount', value: number }, priceLow52W?: { __typename?: 'Amount', value: number } }, project?: { __typename?: 'TokenProject', description?: string, homepageUrl?: string, twitterName?: string, logoUrl?: string, tokens: Array<{ __typename?: 'Token', chain: Chain, address?: string }> } }> };
 
-export type TokenPriceQueryQueryVariables = Exact<{
+export type TokenPriceQueryVariables = Exact<{
   contract: ContractInput;
   duration: HistoryDuration;
 }>;
 
 
-export type TokenPriceQueryQuery = { __typename?: 'Query', tokens?: Array<{ __typename?: 'Token', market?: { __typename?: 'TokenMarket', price?: { __typename?: 'Amount', value: number }, priceHistory?: Array<{ __typename?: 'TimestampedAmount', timestamp: number, value: number }> } }> };
+export type TokenPriceQuery = { __typename?: 'Query', tokens?: Array<{ __typename?: 'Token', market?: { __typename?: 'TokenMarket', price?: { __typename?: 'Amount', value: number }, priceHistory?: Array<{ __typename?: 'TimestampedAmount', timestamp: number, value: number }> } }> };
 
-export type TopTokens100QueryQueryVariables = Exact<{
+export type TopTokens100QueryVariables = Exact<{
   duration: HistoryDuration;
   chain: Chain;
 }>;
 
 
-export type TopTokens100QueryQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', id: string, name?: string, chain: Chain, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', totalValueLocked?: { __typename?: 'Amount', value: number, currency?: Currency }, price?: { __typename?: 'Amount', value: number, currency?: Currency }, pricePercentChange?: { __typename?: 'Amount', currency?: Currency, value: number }, volume?: { __typename?: 'Amount', value: number, currency?: Currency } }, project?: { __typename?: 'TokenProject', logoUrl?: string } }> };
+export type TopTokens100Query = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', id: string, name?: string, chain: Chain, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', totalValueLocked?: { __typename?: 'Amount', value: number, currency?: Currency }, price?: { __typename?: 'Amount', value: number, currency?: Currency }, pricePercentChange?: { __typename?: 'Amount', currency?: Currency, value: number }, volume?: { __typename?: 'Amount', value: number, currency?: Currency } }, project?: { __typename?: 'TokenProject', logoUrl?: string } }> };
 
-export type TopTokensSparklineQueryQueryVariables = Exact<{
+export type TopTokensSparklineQueryVariables = Exact<{
   duration: HistoryDuration;
   chain: Chain;
 }>;
 
 
-export type TopTokensSparklineQueryQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', address?: string, market?: { __typename?: 'TokenMarket', priceHistory?: Array<{ __typename?: 'TimestampedAmount', timestamp: number, value: number }> } }> };
+export type TopTokensSparklineQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', address?: string, market?: { __typename?: 'TokenMarket', priceHistory?: Array<{ __typename?: 'TimestampedAmount', timestamp: number, value: number }> } }> };
 
 export type AssetQueryVariables = Exact<{
   address: Scalars['String'];
@@ -904,14 +904,14 @@ export type NftBalanceQueryVariables = Exact<{
 export type NftBalanceQuery = { __typename?: 'Query', nftBalances?: { __typename?: 'NftBalanceConnection', edges: Array<{ __typename?: 'NftBalanceEdge', node: { __typename?: 'NftBalance', listedMarketplaces?: Array<NftMarketplace>, ownedAsset?: { __typename?: 'NftAsset', id: string, animationUrl?: string, description?: string, flaggedBy?: string, name?: string, ownerAddress?: string, suspiciousFlag?: boolean, tokenId: string, collection?: { __typename?: 'NftCollection', isVerified?: boolean, name?: string, image?: { __typename?: 'Image', url: string }, nftContracts?: Array<{ __typename?: 'NftContract', address: string, chain: Chain, name?: string, standard?: NftStandard, symbol?: string, totalSupply?: number }>, markets?: Array<{ __typename?: 'NftCollectionMarket', floorPrice?: { __typename?: 'TimestampedAmount', value: number } }> }, image?: { __typename?: 'Image', url: string }, originalImage?: { __typename?: 'Image', url: string }, smallImage?: { __typename?: 'Image', url: string }, thumbnail?: { __typename?: 'Image', url: string }, listings?: { __typename?: 'NftOrderConnection', edges: Array<{ __typename?: 'NftOrderEdge', node: { __typename?: 'NftOrder', createdAt: number, marketplace: NftMarketplace, endAt?: number, price: { __typename?: 'Amount', value: number, currency?: Currency } } }> } }, listingFees?: Array<{ __typename?: 'NftFee', payoutAddress: string, basisPoints: number }>, lastPrice?: { __typename?: 'TimestampedAmount', currency?: Currency, timestamp: number, value: number } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string, hasNextPage?: boolean, hasPreviousPage?: boolean, startCursor?: string } } };
 
 
-export const TokenQueryDocument = gql`
-    query TokenQuery($contract: ContractInput!) {
+export const TokenDocument = gql`
+    query Token($contract: ContractInput!) {
   tokens(contracts: [$contract]) {
-    id @required(action: LOG)
+    id
     decimals
     name
-    chain @required(action: LOG)
-    address @required(action: LOG)
+    chain
+    address
     symbol
     market(currency: USD) {
       totalValueLocked {
@@ -939,8 +939,8 @@ export const TokenQueryDocument = gql`
       twitterName
       logoUrl
       tokens {
-        chain @required(action: LOG)
-        address @required(action: LOG)
+        chain
+        address
       }
     }
   }
@@ -948,42 +948,42 @@ export const TokenQueryDocument = gql`
     `;
 
 /**
- * __useTokenQueryQuery__
+ * __useTokenQuery__
  *
- * To run a query within a React component, call `useTokenQueryQuery` and pass it any options that fit your needs.
- * When your component renders, `useTokenQueryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useTokenQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTokenQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useTokenQueryQuery({
+ * const { data, loading, error } = useTokenQuery({
  *   variables: {
  *      contract: // value for 'contract'
  *   },
  * });
  */
-export function useTokenQueryQuery(baseOptions: Apollo.QueryHookOptions<TokenQueryQuery, TokenQueryQueryVariables>) {
+export function useTokenQuery(baseOptions: Apollo.QueryHookOptions<TokenQuery, TokenQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<TokenQueryQuery, TokenQueryQueryVariables>(TokenQueryDocument, options);
+        return Apollo.useQuery<TokenQuery, TokenQueryVariables>(TokenDocument, options);
       }
-export function useTokenQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TokenQueryQuery, TokenQueryQueryVariables>) {
+export function useTokenLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TokenQuery, TokenQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<TokenQueryQuery, TokenQueryQueryVariables>(TokenQueryDocument, options);
+          return Apollo.useLazyQuery<TokenQuery, TokenQueryVariables>(TokenDocument, options);
         }
-export type TokenQueryQueryHookResult = ReturnType<typeof useTokenQueryQuery>;
-export type TokenQueryLazyQueryHookResult = ReturnType<typeof useTokenQueryLazyQuery>;
-export type TokenQueryQueryResult = Apollo.QueryResult<TokenQueryQuery, TokenQueryQueryVariables>;
-export const TokenPriceQueryDocument = gql`
-    query TokenPriceQuery($contract: ContractInput!, $duration: HistoryDuration!) {
+export type TokenQueryHookResult = ReturnType<typeof useTokenQuery>;
+export type TokenLazyQueryHookResult = ReturnType<typeof useTokenLazyQuery>;
+export type TokenQueryResult = Apollo.QueryResult<TokenQuery, TokenQueryVariables>;
+export const TokenPriceDocument = gql`
+    query TokenPrice($contract: ContractInput!, $duration: HistoryDuration!) {
   tokens(contracts: [$contract]) {
-    market(currency: USD) @required(action: LOG) {
+    market(currency: USD) {
       price {
-        value @required(action: LOG)
+        value
       }
       priceHistory(duration: $duration) {
-        timestamp @required(action: LOG)
-        value @required(action: LOG)
+        timestamp
+        value
       }
     }
   }
@@ -991,40 +991,40 @@ export const TokenPriceQueryDocument = gql`
     `;
 
 /**
- * __useTokenPriceQueryQuery__
+ * __useTokenPriceQuery__
  *
- * To run a query within a React component, call `useTokenPriceQueryQuery` and pass it any options that fit your needs.
- * When your component renders, `useTokenPriceQueryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useTokenPriceQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTokenPriceQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useTokenPriceQueryQuery({
+ * const { data, loading, error } = useTokenPriceQuery({
  *   variables: {
  *      contract: // value for 'contract'
  *      duration: // value for 'duration'
  *   },
  * });
  */
-export function useTokenPriceQueryQuery(baseOptions: Apollo.QueryHookOptions<TokenPriceQueryQuery, TokenPriceQueryQueryVariables>) {
+export function useTokenPriceQuery(baseOptions: Apollo.QueryHookOptions<TokenPriceQuery, TokenPriceQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<TokenPriceQueryQuery, TokenPriceQueryQueryVariables>(TokenPriceQueryDocument, options);
+        return Apollo.useQuery<TokenPriceQuery, TokenPriceQueryVariables>(TokenPriceDocument, options);
       }
-export function useTokenPriceQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TokenPriceQueryQuery, TokenPriceQueryQueryVariables>) {
+export function useTokenPriceLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TokenPriceQuery, TokenPriceQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<TokenPriceQueryQuery, TokenPriceQueryQueryVariables>(TokenPriceQueryDocument, options);
+          return Apollo.useLazyQuery<TokenPriceQuery, TokenPriceQueryVariables>(TokenPriceDocument, options);
         }
-export type TokenPriceQueryQueryHookResult = ReturnType<typeof useTokenPriceQueryQuery>;
-export type TokenPriceQueryLazyQueryHookResult = ReturnType<typeof useTokenPriceQueryLazyQuery>;
-export type TokenPriceQueryQueryResult = Apollo.QueryResult<TokenPriceQueryQuery, TokenPriceQueryQueryVariables>;
-export const TopTokens100QueryDocument = gql`
-    query TopTokens100Query($duration: HistoryDuration!, $chain: Chain!) {
+export type TokenPriceQueryHookResult = ReturnType<typeof useTokenPriceQuery>;
+export type TokenPriceLazyQueryHookResult = ReturnType<typeof useTokenPriceLazyQuery>;
+export type TokenPriceQueryResult = Apollo.QueryResult<TokenPriceQuery, TokenPriceQueryVariables>;
+export const TopTokens100Document = gql`
+    query TopTokens100($duration: HistoryDuration!, $chain: Chain!) {
   topTokens(pageSize: 100, page: 1, chain: $chain) {
-    id @required(action: LOG)
+    id
     name
-    chain @required(action: LOG)
-    address @required(action: LOG)
+    chain
+    address
     symbol
     market(currency: USD) {
       totalValueLocked {
@@ -1052,41 +1052,41 @@ export const TopTokens100QueryDocument = gql`
     `;
 
 /**
- * __useTopTokens100QueryQuery__
+ * __useTopTokens100Query__
  *
- * To run a query within a React component, call `useTopTokens100QueryQuery` and pass it any options that fit your needs.
- * When your component renders, `useTopTokens100QueryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useTopTokens100Query` and pass it any options that fit your needs.
+ * When your component renders, `useTopTokens100Query` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useTopTokens100QueryQuery({
+ * const { data, loading, error } = useTopTokens100Query({
  *   variables: {
  *      duration: // value for 'duration'
  *      chain: // value for 'chain'
  *   },
  * });
  */
-export function useTopTokens100QueryQuery(baseOptions: Apollo.QueryHookOptions<TopTokens100QueryQuery, TopTokens100QueryQueryVariables>) {
+export function useTopTokens100Query(baseOptions: Apollo.QueryHookOptions<TopTokens100Query, TopTokens100QueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<TopTokens100QueryQuery, TopTokens100QueryQueryVariables>(TopTokens100QueryDocument, options);
+        return Apollo.useQuery<TopTokens100Query, TopTokens100QueryVariables>(TopTokens100Document, options);
       }
-export function useTopTokens100QueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TopTokens100QueryQuery, TopTokens100QueryQueryVariables>) {
+export function useTopTokens100LazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TopTokens100Query, TopTokens100QueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<TopTokens100QueryQuery, TopTokens100QueryQueryVariables>(TopTokens100QueryDocument, options);
+          return Apollo.useLazyQuery<TopTokens100Query, TopTokens100QueryVariables>(TopTokens100Document, options);
         }
-export type TopTokens100QueryQueryHookResult = ReturnType<typeof useTopTokens100QueryQuery>;
-export type TopTokens100QueryLazyQueryHookResult = ReturnType<typeof useTopTokens100QueryLazyQuery>;
-export type TopTokens100QueryQueryResult = Apollo.QueryResult<TopTokens100QueryQuery, TopTokens100QueryQueryVariables>;
-export const TopTokensSparklineQueryDocument = gql`
-    query TopTokensSparklineQuery($duration: HistoryDuration!, $chain: Chain!) {
+export type TopTokens100QueryHookResult = ReturnType<typeof useTopTokens100Query>;
+export type TopTokens100LazyQueryHookResult = ReturnType<typeof useTopTokens100LazyQuery>;
+export type TopTokens100QueryResult = Apollo.QueryResult<TopTokens100Query, TopTokens100QueryVariables>;
+export const TopTokensSparklineDocument = gql`
+    query TopTokensSparkline($duration: HistoryDuration!, $chain: Chain!) {
   topTokens(pageSize: 100, page: 1, chain: $chain) {
     address
     market(currency: USD) {
       priceHistory(duration: $duration) {
-        timestamp @required(action: LOG)
-        value @required(action: LOG)
+        timestamp
+        value
       }
     }
   }
@@ -1094,33 +1094,33 @@ export const TopTokensSparklineQueryDocument = gql`
     `;
 
 /**
- * __useTopTokensSparklineQueryQuery__
+ * __useTopTokensSparklineQuery__
  *
- * To run a query within a React component, call `useTopTokensSparklineQueryQuery` and pass it any options that fit your needs.
- * When your component renders, `useTopTokensSparklineQueryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useTopTokensSparklineQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTopTokensSparklineQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useTopTokensSparklineQueryQuery({
+ * const { data, loading, error } = useTopTokensSparklineQuery({
  *   variables: {
  *      duration: // value for 'duration'
  *      chain: // value for 'chain'
  *   },
  * });
  */
-export function useTopTokensSparklineQueryQuery(baseOptions: Apollo.QueryHookOptions<TopTokensSparklineQueryQuery, TopTokensSparklineQueryQueryVariables>) {
+export function useTopTokensSparklineQuery(baseOptions: Apollo.QueryHookOptions<TopTokensSparklineQuery, TopTokensSparklineQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<TopTokensSparklineQueryQuery, TopTokensSparklineQueryQueryVariables>(TopTokensSparklineQueryDocument, options);
+        return Apollo.useQuery<TopTokensSparklineQuery, TopTokensSparklineQueryVariables>(TopTokensSparklineDocument, options);
       }
-export function useTopTokensSparklineQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TopTokensSparklineQueryQuery, TopTokensSparklineQueryQueryVariables>) {
+export function useTopTokensSparklineLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TopTokensSparklineQuery, TopTokensSparklineQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<TopTokensSparklineQueryQuery, TopTokensSparklineQueryQueryVariables>(TopTokensSparklineQueryDocument, options);
+          return Apollo.useLazyQuery<TopTokensSparklineQuery, TopTokensSparklineQueryVariables>(TopTokensSparklineDocument, options);
         }
-export type TopTokensSparklineQueryQueryHookResult = ReturnType<typeof useTopTokensSparklineQueryQuery>;
-export type TopTokensSparklineQueryLazyQueryHookResult = ReturnType<typeof useTopTokensSparklineQueryLazyQuery>;
-export type TopTokensSparklineQueryQueryResult = Apollo.QueryResult<TopTokensSparklineQueryQuery, TopTokensSparklineQueryQueryVariables>;
+export type TopTokensSparklineQueryHookResult = ReturnType<typeof useTopTokensSparklineQuery>;
+export type TopTokensSparklineLazyQueryHookResult = ReturnType<typeof useTopTokensSparklineLazyQuery>;
+export type TopTokensSparklineQueryResult = Apollo.QueryResult<TopTokensSparklineQuery, TopTokensSparklineQueryVariables>;
 export const AssetDocument = gql`
     query Asset($address: String!, $orderBy: NftAssetSortableField, $asc: Boolean, $filter: NftAssetsFilterInput, $first: Int, $after: String, $last: Int, $before: String) {
   nftAssets(

@@ -1,4 +1,3 @@
-import graphql from 'babel-plugin-relay/macro'
 import {
   filterStringAtom,
   filterTimeAtom,
@@ -6,22 +5,25 @@ import {
   sortMethodAtom,
   TokenSortMethod,
 } from 'components/Tokens/state'
+import gql from 'graphql-tag'
 import { useAtomValue } from 'jotai/utils'
-import { useEffect, useMemo, useState } from 'react'
-import { fetchQuery, useLazyLoadQuery, useRelayEnvironment } from 'react-relay'
+import { useMemo } from 'react'
 
-import type { Chain, TopTokens100Query } from './__generated__/TopTokens100Query.graphql'
-import { TopTokensSparklineQuery } from './__generated__/TopTokensSparklineQuery.graphql'
-import { isPricePoint, PricePoint } from './util'
-import { CHAIN_NAME_TO_CHAIN_ID, toHistoryDuration, unwrapToken } from './util'
+import {
+  Chain,
+  TopTokens100Query,
+  useTopTokens100Query,
+  useTopTokensSparklineQuery,
+} from './__generated__/types-and-hooks'
+import { CHAIN_NAME_TO_CHAIN_ID, isPricePoint, PricePoint, toHistoryDuration, unwrapToken } from './util'
 
-const topTokens100Query = graphql`
-  query TopTokens100Query($duration: HistoryDuration!, $chain: Chain!) {
+gql`
+  query TopTokens100($duration: HistoryDuration!, $chain: Chain!) {
     topTokens(pageSize: 100, page: 1, chain: $chain) {
-      id @required(action: LOG)
+      id
       name
-      chain @required(action: LOG)
-      address @required(action: LOG)
+      chain
+      address
       symbol
       market(currency: USD) {
         totalValueLocked {
@@ -48,21 +50,21 @@ const topTokens100Query = graphql`
   }
 `
 
-const tokenSparklineQuery = graphql`
-  query TopTokensSparklineQuery($duration: HistoryDuration!, $chain: Chain!) {
+gql`
+  query TopTokensSparkline($duration: HistoryDuration!, $chain: Chain!) {
     topTokens(pageSize: 100, page: 1, chain: $chain) {
       address
       market(currency: USD) {
         priceHistory(duration: $duration) {
-          timestamp @required(action: LOG)
-          value @required(action: LOG)
+          timestamp
+          value
         }
       }
     }
   }
 `
 
-function useSortedTokens(tokens: NonNullable<TopTokens100Query['response']['topTokens']>) {
+function useSortedTokens(tokens: NonNullable<TopTokens100Query['topTokens']>) {
   const sortMethod = useAtomValue(sortMethodAtom)
   const sortAscending = useAtomValue(sortAscendingAtom)
 
@@ -91,7 +93,7 @@ function useSortedTokens(tokens: NonNullable<TopTokens100Query['response']['topT
   }, [tokens, sortMethod, sortAscending])
 }
 
-function useFilteredTokens(tokens: NonNullable<TopTokens100Query['response']['topTokens']>) {
+function useFilteredTokens(tokens: NonNullable<TopTokens100Query['topTokens']>) {
   const filterString = useAtomValue(filterStringAtom)
 
   const lowercaseFilterString = useMemo(() => filterString.toLowerCase(), [filterString])
@@ -112,11 +114,12 @@ function useFilteredTokens(tokens: NonNullable<TopTokens100Query['response']['to
 
 // Number of items to render in each fetch in infinite scroll.
 export const PAGE_SIZE = 20
-
-export type TopToken = NonNullable<NonNullable<TopTokens100Query['response']>['topTokens']>[number]
 export type SparklineMap = { [key: string]: PricePoint[] | undefined }
+export type TopToken = NonNullable<NonNullable<TopTokens100Query>['topTokens']>[number]
+
 interface UseTopTokensReturnValue {
   tokens: TopToken[] | undefined
+  loadingTokens: boolean
   sparklines: SparklineMap
 }
 
@@ -124,33 +127,27 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   const chainId = CHAIN_NAME_TO_CHAIN_ID[chain]
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
 
-  const environment = useRelayEnvironment()
-  const [sparklines, setSparklines] = useState<SparklineMap>({})
-  useEffect(() => {
-    const subscription = fetchQuery<TopTokensSparklineQuery>(environment, tokenSparklineQuery, { duration, chain })
-      .map((data) => ({
-        topTokens: data.topTokens?.map((token) => unwrapToken(chainId, token)),
-      }))
-      .subscribe({
-        next(data) {
-          const map: SparklineMap = {}
-          data.topTokens?.forEach(
-            (current) =>
-              current?.address && (map[current.address] = current?.market?.priceHistory?.filter(isPricePoint))
-          )
-          setSparklines(map)
-        },
-      })
-    return () => subscription.unsubscribe()
-  }, [chain, chainId, duration, environment])
+  const { data: sparklineQuery } = useTopTokensSparklineQuery({
+    variables: { duration, chain },
+  })
 
-  useEffect(() => {
-    setSparklines({})
-  }, [duration])
+  const sparklines = useMemo(() => {
+    const unwrappedTokens = sparklineQuery?.topTokens?.map((topToken) => unwrapToken(chainId, topToken))
+    const map: SparklineMap = {}
+    unwrappedTokens?.forEach(
+      (current) => current?.address && (map[current.address] = current?.market?.priceHistory?.filter(isPricePoint))
+    )
+    return map
+  }, [chainId, sparklineQuery?.topTokens])
 
-  const { topTokens } = useLazyLoadQuery<TopTokens100Query>(topTokens100Query, { duration, chain })
-  const mappedTokens = useMemo(() => topTokens?.map((token) => unwrapToken(chainId, token)) ?? [], [chainId, topTokens])
+  const { data, loading: loadingTokens } = useTopTokens100Query({
+    variables: { duration, chain },
+  })
+  const mappedTokens = useMemo(
+    () => data?.topTokens?.map((token) => unwrapToken(chainId, token)) ?? [],
+    [chainId, data]
+  )
   const filteredTokens = useFilteredTokens(mappedTokens)
   const sortedTokens = useSortedTokens(filteredTokens)
-  return useMemo(() => ({ tokens: sortedTokens, sparklines }), [sortedTokens, sparklines])
+  return useMemo(() => ({ tokens: sortedTokens, loadingTokens, sparklines }), [loadingTokens, sortedTokens, sparklines])
 }
