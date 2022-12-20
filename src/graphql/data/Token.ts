@@ -65,7 +65,7 @@ export class QueryToken extends WrappedTokenInfo {
   constructor(address: string, data: NonNullable<TokenQueryData>, logoSrc?: string) {
     super({
       chainId: CHAIN_NAME_TO_CHAIN_ID[data.chain],
-      address: data.address ?? address,
+      address,
       decimals: data.decimals ?? DEFAULT_ERC20_DECIMALS,
       symbol: data.symbol ?? '',
       name: data.name ?? '',
