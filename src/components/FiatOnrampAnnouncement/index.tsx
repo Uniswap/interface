@@ -108,7 +108,7 @@ export function FiatOnrampAnnouncement() {
 
   const handleClose = useCallback(() => {
     dispatch(updateFiatonrampDismissed(true))
-  }, [])
+  }, [dispatch])
 
   const toggleWalletDropdown = useToggleWalletDropdown()
   const handleClick = useCallback(() => {
