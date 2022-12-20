@@ -5,7 +5,7 @@ describe.skip('fetchTokenList', () => {
 
   it('throws on an invalid list url', async () => {
     const url = 'https://example.com'
-    await expect(fetchTokenList(url, resolver)).rejects.toThrowError(`failed to fetch list: ${url}`)
+    await expect(fetchTokenList(url, resolver)).rejects.toThrow(`failed to fetch list: ${url}`)
     expect(resolver).not.toHaveBeenCalled()
   })
 

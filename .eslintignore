@@ -2,3 +2,4 @@
 *.d.ts
 /src/graphql/data/__generated__/types-and-hooks.ts
 /src/graphql/thegraph/__generated__/types-and-hooks.ts
+/src/schema/schema.graphql

@@ -70,7 +70,7 @@ export const SetDurationModal = () => {
   const [errorState, setErrorState] = useState(ErrorState.valid)
   const setGlobalExpiration = useSellAsset((state) => state.setGlobalExpiration)
   const setCustomExpiration = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAmount(!!event.target.value.length ? event.target.value : '')
+    setAmount(event.target.value.length ? event.target.value : '')
     setDuration(displayDuration)
   }
   const selectDuration = (duration: Duration) => {

@@ -263,7 +263,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       return MediaType.Audio
     } else if (isVideo(asset.animationUrl ?? '')) {
       return MediaType.Video
-    } else if (!!asset.animationUrl) {
+    } else if (asset.animationUrl) {
       return MediaType.Embed
     }
     return MediaType.Image

@@ -64,8 +64,7 @@ export function useFiatOnrampAvailability(shouldCheck: boolean, callback?: () =>
         setError('Error, try again later.')
         dispatch(setFiatOnrampAvailability(false))
       } finally {
-        if (stale) return
-        setLoading(false)
+        if (!stale) setLoading(false)
       }
     }
 
@@ -88,7 +87,7 @@ export function useToggleModal(modal: ApplicationModal): () => void {
   return useCallback(() => dispatch(setOpenModal(isOpen ? null : modal)), [dispatch, modal, isOpen])
 }
 
-export function useCloseModal(_modal: ApplicationModal): () => void {
+export function useCloseModal(): () => void {
   const dispatch = useAppDispatch()
   return useCallback(() => dispatch(setOpenModal(null)), [dispatch])
 }

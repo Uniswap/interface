@@ -1,9 +1,10 @@
-/* eslint-disable */
+/* eslint-env node */
+
 require('dotenv').config({ path: '.env.production' })
+
 const { exec } = require('child_process')
 const dataConfig = require('./graphql.config')
 const thegraphConfig = require('./graphql_thegraph.config')
-/* eslint-enable */
 
 function fetchSchema(url, outputFile) {
   exec(

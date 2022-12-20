@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react'
 import { Token } from '@uniswap/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 import uriToHttp from 'lib/utils/uriToHttp'
@@ -37,7 +38,9 @@ async function getColorFromToken(token: Token): Promise<string | null> {
     try {
       logoURI = URIForEthToken(address)
       return await getColorFromUriPath(logoURI)
-    } catch (e) {}
+    } catch (error) {
+      Sentry.captureMessage(error.toString())
+    }
   }
 
   return null

@@ -15,7 +15,7 @@ export function swapErrorToUserReadableMessage(error: any): string {
     }
   }
 
-  while (Boolean(error)) {
+  while (error) {
     reason = error.reason ?? error.message ?? reason
     error = error.error ?? error.data?.originalError
   }

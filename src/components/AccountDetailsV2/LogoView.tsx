@@ -39,26 +39,32 @@ const getCurrency = ({ info, chainId }: { info: TransactionInfo; chainId: number
   switch (info.type) {
     case TransactionType.ADD_LIQUIDITY_V3_POOL:
     case TransactionType.REMOVE_LIQUIDITY_V3:
-    case TransactionType.CREATE_V3_POOL:
+    case TransactionType.CREATE_V3_POOL: {
       const { baseCurrencyId, quoteCurrencyId } = info
       return { currencyId0: baseCurrencyId, currencyId1: quoteCurrencyId }
-    case TransactionType.SWAP:
+    }
+    case TransactionType.SWAP: {
       const { inputCurrencyId, outputCurrencyId } = info
       return { currencyId0: inputCurrencyId, currencyId1: outputCurrencyId }
-    case TransactionType.WRAP:
+    }
+    case TransactionType.WRAP: {
       const { unwrapped } = info
       const native = info.chainId ? nativeOnChain(info.chainId) : undefined
       const base = 'ETH'
       const wrappedCurrency = native?.wrapped.address ?? 'WETH'
       return { currencyId0: unwrapped ? wrappedCurrency : base, currencyId1: unwrapped ? base : wrappedCurrency }
-    case TransactionType.COLLECT_FEES:
+    }
+    case TransactionType.COLLECT_FEES: {
       const { currencyId0, currencyId1 } = info
       return { currencyId0, currencyId1 }
-    case TransactionType.APPROVAL:
+    }
+    case TransactionType.APPROVAL: {
       return { currencyId0: info.tokenAddress, currencyId1: undefined }
-    case TransactionType.CLAIM:
+    }
+    case TransactionType.CLAIM: {
       const uniAddress = chainId ? UNI_ADDRESS[chainId] : undefined
       return { currencyId0: uniAddress, currencyId1: undefined }
+    }
     default:
       return { currencyId0: undefined, currencyId1: undefined }
   }

@@ -168,7 +168,7 @@ export async function signListing(
         else setStatus(ListingStatus.FAILED)
         return false
       }
-    case 'LooksRare':
+    case 'LooksRare': {
       const addresses = addressesByNetwork[SupportedChainId.MAINNET]
       const currentTime = Math.round(Date.now() / 1000)
       const makerOrder: MakerOrder = {
@@ -235,8 +235,8 @@ export async function signListing(
         else setStatus(ListingStatus.FAILED)
         return false
       }
-
-    case 'X2Y2':
+    }
+    case 'X2Y2': {
       const orderItem: OfferItem = {
         price: parseEther(listingPrice.toString()),
         tokens: [
@@ -269,7 +269,7 @@ export async function signListing(
         else setStatus(ListingStatus.FAILED)
         return false
       }
-
+    }
     default:
       return false
   }

@@ -67,7 +67,7 @@ const MOONPAY_SUPPORTED_CURRENCY_CODES = [
 export default function FiatOnrampModal() {
   const { account } = useWeb3React()
   const theme = useTheme()
-  const closeModal = useCloseModal(ApplicationModal.FIAT_ONRAMP)
+  const closeModal = useCloseModal()
   const fiatOnrampModalOpen = useModalIsOpen(ApplicationModal.FIAT_ONRAMP)
 
   const [signedIframeUrl, setSignedIframeUrl] = useState<string | null>(null)

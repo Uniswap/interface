@@ -577,7 +577,7 @@ interface ProfileNftDetailsProps {
 const ProfileNftDetails = ({ asset, hideDetails }: ProfileNftDetailsProps) => {
   const assetName = () => {
     if (!asset.name && !asset.tokenId) return
-    return !!asset.name ? asset.name : `#${asset.tokenId}`
+    return asset.name ? asset.name : `#${asset.tokenId}`
   }
 
   const shouldShowUserListedPrice = !asset.notForSale && asset.asset_contract.tokenType !== NftStandard.Erc1155

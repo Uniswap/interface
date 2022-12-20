@@ -39,7 +39,7 @@ export const useWalletCollections = create<WalletCollectionState>()(
       setCollectionFilters: (address) =>
         set(({ collectionFilters }) => {
           if (collectionFilters.length === 0) return { collectionFilters: [address] }
-          else if (!!collectionFilters.find((x) => x === address))
+          else if (collectionFilters.some((x) => x === address))
             return { collectionFilters: collectionFilters.filter((n) => n !== address) }
           else return { collectionFilters: [...collectionFilters, address] }
         }),
