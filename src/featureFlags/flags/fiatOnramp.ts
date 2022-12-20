@@ -1,5 +1,6 @@
-import { BaseVariant, FeatureFlag, useBaseFlag } from '../index'
+import { BaseVariant } from '../index'
 
 export function useFiatOnrampFlag(): BaseVariant {
-  return useBaseFlag(FeatureFlag.fiatOnramp)
+  return BaseVariant.Enabled
+  // return useBaseFlag(FeatureFlag.fiatOnramp)
 }
