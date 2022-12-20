@@ -98,6 +98,9 @@ const ContentContainer = styled.div<{ isDarkMode: boolean }>`
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} opacity`};
   height: ${({ theme }) => `calc(100vh - ${theme.navHeight + theme.mobileBottomBarHeight}px)`};
   pointer-events: none;
+  * {
+    pointer-events: auto;
+  }
 `
 
 const TitleText = styled.h1<{ isDarkMode: boolean }>`
@@ -111,7 +114,6 @@ const TitleText = styled.h1<{ isDarkMode: boolean }>`
     isDarkMode
       ? 'linear-gradient(20deg, rgba(255, 244, 207, 1) 10%, rgba(255, 87, 218, 1) 100%)'
       : 'linear-gradient(10deg, rgba(255,79,184,1) 0%, rgba(255,159,251,1) 100%)'};
-  pointer-events: auto;
   background-clip: text;
   -webkit-background-clip: text;
 
@@ -134,7 +136,6 @@ const SubText = styled.h3`
   text-align: center;
   max-width: 600px;
   margin: 0 0 32px;
-  pointer-events: auto;
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     font-size: 20px;
