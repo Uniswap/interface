@@ -9,9 +9,6 @@
 /src/locales/**/pseudo.po
 
 # generated graphql types
-# TODO: after apollo migration is finished, simplify gitignore
-/src/**/__generated__/*
-!/src/**/__generated__/types-and-hooks.ts
 schema.graphql
 
 # dependencies

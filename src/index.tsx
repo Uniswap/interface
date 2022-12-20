@@ -7,14 +7,12 @@ import { ApolloProvider } from '@apollo/client'
 import * as Sentry from '@sentry/react'
 import { FeatureFlagsProvider } from 'featureFlags'
 import { apolloClient } from 'graphql/data/apollo'
-import RelayEnvironment from 'graphql/data/RelayEnvironment'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { MulticallUpdater } from 'lib/state/multicall'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
-import { RelayEnvironmentProvider } from 'react-relay'
 import { HashRouter } from 'react-router-dom'
 import { isProductionEnv } from 'utils/env'
 
@@ -69,15 +67,13 @@ createRoot(container).render(
             <LanguageProvider>
               <Web3Provider>
                 <ApolloProvider client={apolloClient}>
-                  <RelayEnvironmentProvider environment={RelayEnvironment}>
-                    <BlockNumberProvider>
-                      <Updaters />
-                      <ThemeProvider>
-                        <ThemedGlobalStyle />
-                        <App />
-                      </ThemeProvider>
-                    </BlockNumberProvider>
-                  </RelayEnvironmentProvider>
+                  <BlockNumberProvider>
+                    <Updaters />
+                    <ThemeProvider>
+                      <ThemedGlobalStyle />
+                      <App />
+                    </ThemeProvider>
+                  </BlockNumberProvider>
                 </ApolloProvider>
               </Web3Provider>
             </LanguageProvider>
