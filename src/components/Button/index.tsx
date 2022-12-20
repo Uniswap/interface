@@ -5,12 +5,14 @@ import styled, { DefaultTheme, useTheme } from 'styled-components/macro'
 
 import { RowBetween } from '../Row'
 
+export { default as LoadingButtonSpinner } from './LoadingButtonSpinner'
+
 type ButtonProps = Omit<ButtonPropsOriginal, 'css'>
 
 const ButtonOverlay = styled.div`
   background-color: transparent;
   bottom: 0;
-  border-radius: 16px;
+  border-radius: inherit;
   height: 100%;
   left: 0;
   position: absolute;
@@ -19,6 +21,7 @@ const ButtonOverlay = styled.div`
   transition: 150ms ease background-color;
   width: 100%;
 `
+
 type BaseButtonProps = {
   padding?: string
   width?: string
@@ -504,15 +507,12 @@ const BaseThemeButton = styled.button<BaseThemeButtonProps>`
   padding: ${pickThemeButtonPadding};
   position: relative;
   transition: 150ms ease opacity;
+  user-select: none;
 
   :active {
     ${ButtonOverlay} {
       background-color: ${({ theme }) => theme.stateOverlayPressed};
     }
-  }
-  :disabled {
-    cursor: default;
-    opacity: 0.6;
   }
   :focus {
     ${ButtonOverlay} {
@@ -522,6 +522,17 @@ const BaseThemeButton = styled.button<BaseThemeButtonProps>`
   :hover {
     ${ButtonOverlay} {
       background-color: ${({ theme }) => theme.stateOverlayHover};
+    }
+  }
+  :disabled {
+    cursor: default;
+    opacity: 0.6;
+  }
+  :disabled:active,
+  :disabled:focus,
+  :disabled:hover {
+    ${ButtonOverlay} {
+      background-color: transparent;
     }
   }
 `
