@@ -9,7 +9,6 @@
     "contracts:compile:v3": "typechain --target ethers-v5 --out-dir src/types/v3 \"./node_modules/@uniswap/**/artifacts/contracts/**/*[!dbg].json\"",
     "contracts:compile": "yarn contracts:compile:abi && yarn contracts:compile:v3",
     "graphql:fetch": "node fetch-schema.js",
-    "graphql:generate": "yarn relay && yarn relay-thegraph",
     "apollo:generate:data": "graphql-codegen --config apollo-codegen.ts",
     "apollo:generate:thegraph": "graphql-codegen --config apollo-codegen_thegraph.ts",
     "apollo:generate": "yarn apollo:generate:data && yarn apollo:generate:thegraph",
