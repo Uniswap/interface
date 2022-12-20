@@ -127,18 +127,18 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   const chainId = CHAIN_NAME_TO_CHAIN_ID[chain]
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
 
-  const { data: sparklineData } = useTopTokensSparklineQuery({
+  const { data: sparklineQuery } = useTopTokensSparklineQuery({
     variables: { duration, chain },
   })
 
   const sparklines = useMemo(() => {
-    const unwrappedTokens = sparklineData?.topTokens?.map((topToken) => unwrapToken(chainId, topToken))
+    const unwrappedTokens = sparklineQuery?.topTokens?.map((topToken) => unwrapToken(chainId, topToken))
     const map: SparklineMap = {}
     unwrappedTokens?.forEach(
       (current) => current?.address && (map[current.address] = current?.market?.priceHistory?.filter(isPricePoint))
     )
     return map
-  }, [chainId, sparklineData?.topTokens])
+  }, [chainId, sparklineQuery?.topTokens])
 
   const { data, loading: loadingTokens } = useTopTokens100Query({
     variables: { duration, chain },
