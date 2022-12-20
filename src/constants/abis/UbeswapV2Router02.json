@@ -1,0 +1,23 @@
+[
+  {
+    "type": "event",
+    "name": "Deployed",
+    "inputs": [
+      { "type": "address", "name": "addr", "internalType": "address", "indexed": false },
+      { "type": "uint256", "name": "salt", "internalType": "uint256", "indexed": false }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [],
+    "name": "deploy",
+    "inputs": [
+      { "type": "bytes", "name": "code", "internalType": "bytes" },
+      { "type": "uint256", "name": "salt", "internalType": "uint256" }
+    ],
+    "constant": false
+  }
+]

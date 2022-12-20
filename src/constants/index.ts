@@ -1,4 +1,11 @@
 import { CELO, ChainId, cUSD, JSBI, Percent, Token } from '@ubeswap/sdk'
+import ERC20Abi from 'constants/abis/erc20.json'
+import TimelockAbi from 'constants/abis/ITimelock.json'
+import MultiSig from 'constants/abis/MultiSig.json'
+import PoolManager from 'constants/abis/pool-manager.json'
+import UbeswapFactory from 'constants/abis/UbeswapFactory.json'
+import { BigNumber } from 'ethers'
+import { Fragment } from 'ethers/lib/utils'
 
 import { UBE } from './tokens'
 
@@ -12,6 +19,7 @@ export const MINIMA_ROUTER_ADDRESS = '0xa730B463395f5ca07EcE5cefeccF7f45e1E2C9Bf
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
+export const BIG_ZERO = BigNumber.from(0)
 // a list of tokens by chain
 type ChainTokenList = {
   // readonly [chainId in ChainId]: Token[]
@@ -204,6 +212,69 @@ export const IMPORTED_FARMS = 'imported_farms'
 export const MINIMA_API_URL = 'https://router.nodefinance.org/routes'
 
 export const FETCH_MINIMA_ROUTER_TIMER = 5000
+
+export const ubeGovernanceAddresses = {
+  [ChainId.MAINNET]: '0xa7581d8E26007f4D2374507736327f5b46Dd6bA8',
+  [ChainId.ALFAJORES]: '0xa7581d8E26007f4D2374507736327f5b46Dd6bA8',
+  [ChainId.BAKLAVA]: '0xa7581d8E26007f4D2374507736327f5b46Dd6bA8',
+}
+
+export const KNOWN_ADDRESSES: Record<
+  string,
+  {
+    name: string
+    abi?: Fragment[]
+  }
+> = {
+  // Ubeswap
+  // https://docs.ubeswap.org/code-and-contracts/contract-addresses
+  '0x00Be915B9dCf56a3CBE739D9B9c202ca692409EC': {
+    name: 'UBE Token',
+    abi: ERC20Abi as unknown as Fragment[],
+  },
+  '0x471EcE3750Da237f93B8E339c536989b8978a438': {
+    name: 'CELO',
+    abi: ERC20Abi as unknown as Fragment[],
+  },
+  '0x918146359264C492BD6934071c6Bd31C854EDBc3': {
+    name: 'mcUSD',
+    abi: ERC20Abi as unknown as Fragment[],
+  },
+  '0x5Ed248077bD07eE9B530f7C40BE0c1dAE4c131C0': {
+    name: 'Release UBE',
+  },
+  '0x62d5b84bE28a183aBB507E125B384122D2C25fAE': {
+    name: 'Ubeswap Factory',
+    abi: UbeswapFactory as unknown as Fragment[],
+  },
+  '0x9Ee3600543eCcc85020D6bc77EB553d1747a65D2': {
+    name: 'Ubeswap Pool Manager',
+    abi: PoolManager as unknown as Fragment[],
+  },
+  '0x1BDB37DAA42E37bFCa4C5536AcF93b1173588981': {
+    name: 'Ubeswap Executive Timelock',
+    abi: TimelockAbi as unknown as Fragment[],
+  },
+  '0x177B042b284dD9B830d4eb179695bCC14044fD1A': {
+    name: 'Ubeswap Community Timelock',
+    abi: TimelockAbi as unknown as Fragment[],
+  },
+  '0xC45Cc58205132Fe29e0F96BAA3f4FA2BD88cD6D9': {
+    name: 'Ubeswap Celo Reserve Timelock',
+    abi: TimelockAbi as unknown as Fragment[],
+  },
+  '0x489AAc7Cb9A3B233e4a289Ec92284C8d83d49c6f': {
+    name: 'Ubeswap Founding Operator',
+  },
+  '0x97A9681612482A22b7877afbF8430EDC76159Cae': {
+    name: 'Ubeswap Governance Fees Timelock',
+    abi: TimelockAbi as unknown as Fragment[],
+  },
+  '0xB58DA472Fd4ba76696DbF8Ba3cC23580C26093dA': {
+    name: 'Ubeswap Multisig 1',
+    abi: MultiSig as unknown as Fragment[],
+  },
+}
 
 export const DEXES_TO_EXCLUDE = [
   'sushiswap',

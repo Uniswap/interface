@@ -1,28 +1,38 @@
 import { useContractKit, useGetConnectedSigner } from '@celo-tools/use-contractkit'
 import { TokenAmount } from '@ubeswap/sdk'
 import { ButtonEmpty, ButtonLight, ButtonPrimary, ButtonRadio } from 'components/Button'
-import { GreyCard, LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { CardNoise, CardSection, DataCard } from 'components/earn/styled'
 import Loader from 'components/Loader'
 import { AutoRow, RowBetween } from 'components/Row'
+import ChangeDelegateModal from 'components/Stake/ChangeDelegateModal'
+import { Proposals } from 'components/Stake/Proposals'
+import { InformationWrapper } from 'components/Stake/Proposals/ProposalCard'
+import StakeCollapseCard from 'components/Stake/StakeCollapseCard'
 import StakeInputField from 'components/Stake/StakeInputField'
+import { ViewProposalModal } from 'components/Stake/ViewProposalModal'
 import { useDoTransaction } from 'components/swap/routing'
 import { VotableStakingRewards__factory } from 'generated/factories/VotableStakingRewards__factory'
+import { useRomulus } from 'hooks/romulus/useRomulus'
+import { useVotingTokens } from 'hooks/romulus/useVotingTokens'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { useVotableStakingContract } from 'hooks/useContract'
+import { useLatestBlockNumber } from 'hooks/useLatestBlockNumber'
 import { BodyWrapper } from 'pages/AppBody'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router'
+import { Text } from 'rebass'
 import { WrappedTokenInfo } from 'state/lists/hooks'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { tryParseAmount } from 'state/swap/hooks'
 import { useCurrencyBalance } from 'state/wallet/hooks'
-import styled, { useTheme } from 'styled-components'
+import styled from 'styled-components'
 import { ExternalLink, TYPE } from 'theme'
+import { shortenAddress } from 'utils'
 
-import { BIG_INT_SECONDS_IN_WEEK, BIG_INT_SECONDS_IN_YEAR } from '../../constants'
+import { BIG_INT_SECONDS_IN_WEEK, BIG_INT_SECONDS_IN_YEAR, BIG_INT_ZERO, ubeGovernanceAddresses } from '../../constants'
 
 enum DelegateIdx {
   ABSTAIN,
@@ -46,11 +56,6 @@ const Wrapper = styled.div({
   margin: '0px 24px',
 })
 
-const DescriptionWrapper = styled.div({
-  display: 'flex',
-  justifyContent: 'space-between',
-})
-
 const ube = new WrappedTokenInfo(
   {
     address: '0x00be915b9dcf56a3cbe739d9b9c202ca692409ec',
@@ -63,30 +68,16 @@ const ube = new WrappedTokenInfo(
   []
 )
 
-const CommunityWrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
-  border-radius: 12px;
-  width: 100%;
-  overflow: hidden;
-  position: relative;
-  padding: 1.25rem;
-  display: grid;
-  grid-gap: 24px;
-  margin-bottom: 1rem;
-  background: ${({ bgColor }) => `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%, #212429 100%) `};
-  color: ${({ theme, showBackground }) => (showBackground ? theme.white : theme.text1)} !important;
-  ${({ showBackground }) =>
-    showBackground &&
-    `  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);`}
-`
-
 export const Stake: React.FC = () => {
   const { t } = useTranslation()
-  const theme = useTheme()
 
-  const { address, connect } = useContractKit()
+  const history = useHistory()
+  const { address, connect, network } = useContractKit()
   const getConnectedSigner = useGetConnectedSigner()
   const [amount, setAmount] = useState('')
+  const [showChangeDelegateModal, setShowChangeDelegateModal] = useState(false)
+  const [showViewProposalModal, setShowViewProposalModal] = useState(false)
+  const [selectedProposal, setSelectedProposal] = useState('')
   const tokenAmount = tryParseAmount(amount === '' ? '0' : amount, ube)
   const [approvalState, approve] = useApproveCallback(tokenAmount, VOTABLE_STAKING_REWARDS_ADDRESS)
   const [staking, setStaking] = useState(true)
@@ -107,6 +98,17 @@ export const Stake: React.FC = () => {
 
   const apy = totalSupply.greaterThan('0') ? rewardRate.multiply(BIG_INT_SECONDS_IN_YEAR).divide(totalSupply) : null
   const userRewardRate = totalSupply.greaterThan('0') ? stakeBalance.multiply(rewardRate).divide(totalSupply) : null
+
+  const romulusAddress = ubeGovernanceAddresses[network.chainId]
+
+  const { tokenDelegate, quorumVotes, proposalThreshold } = useRomulus((romulusAddress as string) || '')
+  const [latestBlockNumber] = useLatestBlockNumber()
+  const { votingPower, releaseVotingPower } = useVotingTokens(latestBlockNumber)
+  const totalVotingPower = votingPower?.add(releaseVotingPower ?? new TokenAmount(ube, BIG_INT_ZERO))
+
+  // const disablePropose = !totalVotingPower || !proposalThreshold || totalVotingPower?.lessThan(proposalThreshold?.raw)
+  const disablePropose = false
+
   const doTransaction = useDoTransaction()
   const onStakeClick = useCallback(async () => {
     const c = VotableStakingRewards__factory.connect(VOTABLE_STAKING_REWARDS_ADDRESS, await getConnectedSigner())
@@ -164,7 +166,7 @@ export const Stake: React.FC = () => {
                 Approving <Loader stroke="white" />
               </AutoRow>
             ) : (
-              'Approve UBE'
+              `${t('approve')} UBE`
             )}
           </ButtonPrimary>
         )
@@ -186,161 +188,224 @@ export const Stake: React.FC = () => {
 
   return (
     <>
-      <TopSection gap="md">
+      <TopSection gap="lg" justify="center">
         <DataCard style={{ marginBottom: '2px' }}>
           <CardNoise />
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={600}>UBE Staking</TYPE.white>
+                <TYPE.white fontWeight={600}>{t('UBEStakingAndGovernance')}</TYPE.white>
               </RowBetween>
               <RowBetween>
-                <TYPE.white fontSize={14}>
-                  Stake UBE to automatically participate in governance and earn UBE rewards. You can check all
-                  governance proposals&nbsp;
-                  <ExternalLink
-                    style={{ color: 'white', textDecoration: 'underline' }}
-                    target="_blank"
-                    href="https://romulus.page/romulus/0xa7581d8E26007f4D2374507736327f5b46Dd6bA8"
-                  >
-                    here
-                  </ExternalLink>
-                </TYPE.white>
+                <TYPE.white fontSize={14}>{t('StakeUBEToParticipateInGovernanceAndEarnUbeRewards')}</TYPE.white>
               </RowBetween>
             </AutoColumn>
           </CardSection>
           <CardNoise />
         </DataCard>
-        <div style={{ textAlign: 'center' }}>
-          {/* <h2>Your UBE stake: {stakeBalance ? stakeBalance.toFixed(2, { groupSeparator: ',' }) : '--'} UBE</h2> */}
-          {userRewardRate?.greaterThan('0') ? (
-            <>
-              <LightCard style={{ marginBottom: '16px' }}>
-                <DescriptionWrapper>
-                  <h4 style={{ margin: '12px 0' }}>Your Weekly Rewards</h4>
-                  <h4 style={{ margin: '12px 0' }}>
-                    {userRewardRate
-                      ? userRewardRate.multiply(BIG_INT_SECONDS_IN_WEEK).toFixed(2, { groupSeparator: ',' })
-                      : '--'}
-                    {'  '}
-                  </h4>
-                </DescriptionWrapper>
-                <DescriptionWrapper>
-                  <h4 style={{ margin: '12px 0' }}>Annual Stake APR</h4>
-                  <h4 style={{ margin: '12px 0' }}>
-                    {apy?.multiply('100').toFixed(2, { groupSeparator: ',' }) ?? '--'}%{' '}
-                  </h4>
-                </DescriptionWrapper>
-                <DescriptionWrapper>
-                  <h4 style={{ margin: '12px 0' }}>Unclaimed Rewards</h4>
-                  <div style={{ display: 'flex' }}>
-                    <ButtonEmpty padding="8px" borderRadius="8px" width="fit-content" onClick={onClaimClick}>
-                      {t('claim')}
-                    </ButtonEmpty>
-                    <h4 style={{ margin: '12px 0' }}>
-                      {userRewardRate ? earned.toFixed(4, { groupSeparator: ',' }) : '--'}
-                    </h4>
-                  </div>
-                </DescriptionWrapper>
-              </LightCard>
-              <CommunityWrapper showBackground={true} bgColor={theme.primary1}>
-                <h3 style={{ margin: 'unset' }}>Community UBE Stake</h3>
-                <DescriptionWrapper>
-                  <h4 style={{ margin: 'unset' }}>Total UBE Staked</h4>
-                  <h4 style={{ margin: 'unset' }}>{Number(totalSupply?.toSignificant(4)).toLocaleString('en-US')}</h4>
-                </DescriptionWrapper>
-                <DescriptionWrapper>
-                  <h4 style={{ margin: 'unset' }}>Your UBE Stake Pool Share</h4>
-                  <h4 style={{ margin: 'unset' }}>{stakeBalance?.toSignificant(4)}</h4>
-                </DescriptionWrapper>
-                <ExternalLink
-                  style={{ color: 'white', textDecoration: 'underline', textAlign: 'left', fontSize: '15px' }}
-                  target="_blank"
-                  href="https://explorer.celo.org/address/0x00Be915B9dCf56a3CBE739D9B9c202ca692409EC/transactions"
-                >
-                  View UBE Contract
-                </ExternalLink>
-                <ExternalLink
-                  style={{ color: 'white', textDecoration: 'underline', textAlign: 'left', fontSize: '15px' }}
-                  target="_blank"
-                  href="https://info.ubeswap.org/token/0x00be915b9dcf56a3cbe739d9b9c202ca692409ec"
-                >
-                  View UBE Chart
-                </ExternalLink>
-              </CommunityWrapper>
-            </>
-          ) : (
-            <h3>
-              Weekly rewards:{' '}
-              {rewardRate ? rewardRate.multiply(BIG_INT_SECONDS_IN_WEEK).toFixed(0, { groupSeparator: ',' }) : '--'} UBE
-              / week ({apy?.multiply('100').toFixed(2, { groupSeparator: ',' }) ?? '--'}% APR)
-            </h3>
-          )}
+        <BodyWrapper>
+          <CurrencyLogo
+            currency={ube}
+            size={'42px'}
+            style={{ position: 'absolute', top: '30px', right: 'calc(50% + 112px)' }}
+          />
+          <h2 style={{ textAlign: 'center', margin: '15px 0px 15px 6px' }}>{t('YourUBEStake')}</h2>
+          <div style={{ margin: '10px 0 0 6px', display: 'flex', justifyContent: 'center' }}>
+            <div style={{ width: '100px' }}>
+              <StyledButtonRadio active={staking} onClick={() => setStaking(true)}>
+                {t('stake')}
+              </StyledButtonRadio>
+            </div>
+            <div style={{ width: '100px' }}>
+              <StyledButtonRadio active={!staking} onClick={() => setStaking(false)}>
+                {t('unstake')}
+              </StyledButtonRadio>
+            </div>
+          </div>
+
+          <Wrapper>
+            <div style={{ margin: '24px 0' }}>
+              <StakeInputField
+                id="stake-currency"
+                value={amount}
+                onUserInput={setAmount}
+                onMax={() => {
+                  if (staking) {
+                    ubeBalance && setAmount(ubeBalance.toSignificant(18))
+                  } else {
+                    stakeBalance && setAmount(stakeBalance.toSignificant(18))
+                  }
+                }}
+                currency={ube}
+                stakeBalance={stakeBalance}
+                walletBalance={ubeBalance}
+              />
+            </div>
+            {userRewardRate?.greaterThan('0') && (
+              <InformationWrapper style={{ margin: '0px 8px 0px 8px' }}>
+                <Text fontWeight={500} fontSize={16}>
+                  {t('UnclaimedRewards')}
+                </Text>
+                <div style={{ display: 'flex' }}>
+                  <ButtonEmpty padding="0 8px" borderRadius="8px" width="fit-content" onClick={onClaimClick}>
+                    {t('claim')}
+                  </ButtonEmpty>
+                  <Text fontWeight={500} fontSize={16}>
+                    {userRewardRate ? earned.toFixed(4, { groupSeparator: ',' }) : '--'}
+                  </Text>
+                </div>
+              </InformationWrapper>
+            )}
+            <div style={{ margin: '24px 0 16px 0' }}>{button}</div>
+          </Wrapper>
+        </BodyWrapper>
+
+        {!userRewardRate?.greaterThan('0') && (
+          <Text fontSize={20} fontWeight={500}>
+            {t('WeeklyRewards') + ' '}
+            {rewardRate ? rewardRate.multiply(BIG_INT_SECONDS_IN_WEEK).toFixed(0, { groupSeparator: ',' }) : '--'} UBE /
+            week ({apy?.multiply('100').toFixed(2, { groupSeparator: ',' }) ?? '--'}% APR)
+          </Text>
+        )}
+
+        <StakeCollapseCard title={t('Governance')} gap={'12px'}>
+          <Text fontSize={14}>{t('CreateAndViewProposalsDelegateVotesAndParticipateInProtocolGovernance')}</Text>
+          <InformationWrapper>
+            <Text fontWeight={500} fontSize={16} marginTop={12}>
+              {t('UserDetails')}
+            </Text>
+            <ButtonPrimary
+              padding="6px"
+              borderRadius="8px"
+              width="120px"
+              marginTop="8px"
+              fontSize={14}
+              disabled={disablePropose}
+              onClick={() => {
+                history.push('/add-proposal')
+              }}
+            >
+              Propose
+            </ButtonPrimary>
+          </InformationWrapper>
+          <InformationWrapper fontWeight={400}>
+            <Text>{t('TokenBalance')}</Text>
+            <Text>{ubeBalance ? `${ubeBalance?.toFixed(2, { groupSeparator: ',' })} UBE` : '-'} </Text>
+          </InformationWrapper>
+          <InformationWrapper fontWeight={400}>
+            <Text>{t('VotingPower')}</Text>
+            <Text>{totalVotingPower ? totalVotingPower?.toFixed(2, { groupSeparator: ',' }) : '-'}</Text>
+          </InformationWrapper>
+          <InformationWrapper fontWeight={400}>
+            <Text>{t('TokenDelegate')}</Text>
+            <div style={{ display: 'flex' }}>
+              {tokenDelegate ? (
+                <>
+                  <ButtonEmpty
+                    padding="0 8px"
+                    borderRadius="8px"
+                    width="fit-content"
+                    onClick={() => {
+                      setShowChangeDelegateModal(true)
+                    }}
+                    style={{ lineHeight: '15px' }}
+                  >
+                    {t('change')}
+                  </ButtonEmpty>
+                  <Text>{shortenAddress(tokenDelegate)}</Text>
+                </>
+              ) : (
+                '-'
+              )}
+            </div>
+          </InformationWrapper>
+          <InformationWrapper fontWeight={400}>
+            <Text>{t('Quorum')}</Text>
+            <Text>{quorumVotes ? `${quorumVotes?.toFixed(2, { groupSeparator: ',' })} UBE` : '-'}</Text>
+          </InformationWrapper>
+          <InformationWrapper fontWeight={400}>
+            <Text>{t('ProposalThreshold')}</Text>
+            <Text>{proposalThreshold ? `${proposalThreshold?.toFixed(2, { groupSeparator: ',' })} UBE` : '-'}</Text>
+          </InformationWrapper>
+
           {stakeBalance.greaterThan('0') && (
-            <GreyCard>
-              <h3 style={{ margin: '0px 0px 12px 0px' }}>
-                Your{' '}
-                <ExternalLink href={'https://romulus.page/romulus/0xa7581d8E26007f4D2374507736327f5b46Dd6bA8'}>
-                  governance
-                </ExternalLink>{' '}
-                selection:
-              </h3>
+            <>
+              <Text fontWeight={500} fontSize={16} marginTop={12}>
+                {t('YourGovernanceSelection')}
+              </Text>
               <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <StyledButtonRadio active={userDelegateIdx === 1} onClick={() => changeDelegateIdx(1)}>
-                  For
+                  {t('For')}
                 </StyledButtonRadio>
                 <StyledButtonRadio active={userDelegateIdx === 0} onClick={() => changeDelegateIdx(0)}>
-                  Abstain
+                  {t('Abstain')}
                 </StyledButtonRadio>
                 <StyledButtonRadio active={userDelegateIdx === 2} onClick={() => changeDelegateIdx(2)}>
-                  Against
+                  {t('Against')}
                 </StyledButtonRadio>
               </div>
-            </GreyCard>
+            </>
           )}
-        </div>
-      </TopSection>
-      <BodyWrapper style={{ marginTop: '16px' }}>
-        <CurrencyLogo
-          currency={ube}
-          size={'42px'}
-          style={{ position: 'absolute', top: '30px', right: 'calc(50% + 112px)' }}
-        />
-        <h2 style={{ textAlign: 'center', margin: '15px 0px 15px 6px' }}>Your UBE Stake</h2>
-        <div style={{ margin: '10px 0 0 6px', display: 'flex', justifyContent: 'center' }}>
-          <div style={{ width: '100px' }}>
-            <StyledButtonRadio active={staking} onClick={() => setStaking(true)}>
-              Stake
-            </StyledButtonRadio>
-          </div>
-          <div style={{ width: '100px' }}>
-            <StyledButtonRadio active={!staking} onClick={() => setStaking(false)}>
-              Unstake
-            </StyledButtonRadio>
-          </div>
-        </div>
-
-        <Wrapper>
-          <div style={{ margin: '32px 0px' }}>
-            <StakeInputField
-              id="stake-currency"
-              value={amount}
-              onUserInput={setAmount}
-              onMax={() => {
-                if (staking) {
-                  ubeBalance && setAmount(ubeBalance.toSignificant(18))
-                } else {
-                  stakeBalance && setAmount(stakeBalance.toSignificant(18))
-                }
+          <Text fontWeight={500} fontSize={16} marginTop={12}>
+            {t('GovernanceProposals')}
+            <Proposals
+              onClickProposal={(url) => {
+                setSelectedProposal(url)
+                setShowViewProposalModal(true)
               }}
-              currency={ube}
-              stakeBalance={stakeBalance}
-              walletBalance={ubeBalance}
             />
-          </div>
-          <div style={{ marginBottom: '16px' }}>{button}</div>
-        </Wrapper>
-      </BodyWrapper>
+          </Text>
+        </StakeCollapseCard>
+        {userRewardRate?.greaterThan('0') && (
+          <StakeCollapseCard title={t('StakingStatistics')} gap={'16px'}>
+            <InformationWrapper>
+              <Text>{t('TotalUBEStaked')}</Text>
+              <Text>{Number(totalSupply?.toSignificant(4)).toLocaleString('en-US')}</Text>
+            </InformationWrapper>
+            <InformationWrapper>
+              <Text>{t('YourUBEStakePoolShare')}</Text>
+              <Text>{stakeBalance?.toSignificant(4)}</Text>
+            </InformationWrapper>
+            <InformationWrapper>
+              <Text>{t('YourWeeklyRewards')}</Text>
+              <Text>
+                {userRewardRate
+                  ? userRewardRate.multiply(BIG_INT_SECONDS_IN_WEEK).toFixed(4, { groupSeparator: ',' })
+                  : '--'}
+                {'  '}
+              </Text>
+            </InformationWrapper>
+            <InformationWrapper>
+              <Text>{t('AnnualStakeAPR')}</Text>
+              <Text>{apy?.multiply('100').toFixed(2, { groupSeparator: ',' }) ?? '--'}% </Text>
+            </InformationWrapper>
+            <ExternalLink
+              style={{ textDecoration: 'underline', textAlign: 'left' }}
+              target="_blank"
+              href="https://explorer.celo.org/address/0x00Be915B9dCf56a3CBE739D9B9c202ca692409EC/transactions"
+            >
+              <Text fontSize={14} fontWeight={600}>
+                {t('ViewUBEContract')}
+              </Text>
+            </ExternalLink>
+            <ExternalLink
+              style={{ textDecoration: 'underline', textAlign: 'left' }}
+              target="_blank"
+              href="https://info.ubeswap.org/token/0x00be915b9dcf56a3cbe739d9b9c202ca692409ec"
+            >
+              <Text fontSize={14} fontWeight={600}>
+                {t('ViewUBEChart')}
+              </Text>
+            </ExternalLink>
+          </StakeCollapseCard>
+        )}
+      </TopSection>
+      <ChangeDelegateModal isOpen={showChangeDelegateModal} onDismiss={() => setShowChangeDelegateModal(false)} />
+      <ViewProposalModal
+        isOpen={showViewProposalModal}
+        proposalId={selectedProposal}
+        onDismiss={() => setShowViewProposalModal(false)}
+      />
     </>
   )
 }

@@ -11,8 +11,10 @@ import LIMIT_ORDER_PROTOCOL_ABI from '../constants/abis/limit/LimitOrderProtocol
 import ORDER_BOOK_ABI from '../constants/abis/limit/OrderBook.json'
 import ORDER_BOOK_REWARD_DISTRUBUTOR_ABI from '../constants/abis/limit/OrderBookRewardDistributor.json'
 import DUAL_REWARDS_ABI from '../constants/abis/moola/MoolaStakingRewards.json'
+import POOF_TOKEN_ABI from '../constants/abis/poof/PoofToken.json'
 import POOL_MANAGER_ABI from '../constants/abis/pool-manager.json'
 import RELEASE_UBE_ABI from '../constants/abis/ReleaseUbe.json'
+import ROMULUS_DELEGATE_ABI from '../constants/abis/romulus/RomulusDelegate.json'
 import STAKING_REWARDS_ABI from '../constants/abis/StakingRewards.json'
 import VOTABLE_STAKING_REWARDS_ABI from '../constants/abis/VotableStakingRewards.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
@@ -22,7 +24,9 @@ import {
   MoolaStakingRewards,
   OrderBook,
   OrderBookRewardDistributor,
+  PoofToken,
   PoolManager,
+  RomulusDelegate,
   StakingRewards,
 } from '../generated'
 import { getContract } from '../utils'
@@ -151,4 +155,12 @@ export function useLimitOrderProtocolContract(
   withSignerIfPossible?: boolean
 ): LimitOrderProtocol | null {
   return useContract(address, LIMIT_ORDER_PROTOCOL_ABI, withSignerIfPossible) as LimitOrderProtocol | null
+}
+
+export function useRomulusDelegateContract(address?: string, withSignerIfPossible?: boolean): RomulusDelegate | null {
+  return useContract(address, ROMULUS_DELEGATE_ABI, withSignerIfPossible) as RomulusDelegate | null
+}
+
+export function usePoofTokenContract(address?: string, withSignerIfPossible?: boolean): PoofToken | null {
+  return useContract(address, POOF_TOKEN_ABI, withSignerIfPossible) as PoofToken | null
 }

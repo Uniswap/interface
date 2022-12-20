@@ -53,7 +53,7 @@ const OrderToFill = styled.div`
   margin-top: 0.25rem;
 `
 
-const StyledControlButton = styled.button`
+export const StyledControlButton = styled.button`
   height: 24px;
   background-color: ${({ theme }) => theme.red1};
   border: 1px solid ${({ theme }) => theme.red2};
@@ -66,9 +66,11 @@ const StyledControlButton = styled.button`
   color: white;
   :hover {
     border: 1px solid ${({ theme }) => theme.red3};
+    box-shadow: 0px 0px 10px 0px ${({ theme }) => theme.red3};
   }
   :focus {
     border: 1px solid ${({ theme }) => theme.red3};
+    box-shadow: 0px 0px 10px 0px ${({ theme }) => theme.red3};
     outline: none;
   }
 

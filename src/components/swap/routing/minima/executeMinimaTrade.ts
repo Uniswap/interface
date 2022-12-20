@@ -30,14 +30,6 @@ export const executeMinimaTrade: TradeExecutor<MinimaRouterTrade> = async ({
     const tokenAmountIn = inputAmount.toSignificant(3)
     const tokenAmountOut = outputAmount.toSignificant(3)
 
-    await contract.callStatic
-      .swapExactInputForOutput({ ...details, to: recipient ?? '' })
-      .then((data) => {
-        console.log(data)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
     return await doTransaction(contract, 'swapExactInputForOutput', {
       args: [{ ...details, to: recipient ?? '' }],
       summary: `Swap ${tokenAmountIn} ${inputSymbol} for ${tokenAmountOut} ${outputSymbol}${withRecipient}`,
