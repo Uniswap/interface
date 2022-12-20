@@ -50,12 +50,9 @@ export interface UserState {
 
   timestamp: number
   URLWarningVisible: boolean
-  hideNFTPromoBanner: boolean // whether or not we should hide the nft explore promo banner
 
   // undefined means has not gone through A/B split yet
   showSurveyPopup: boolean | undefined
-
-  hideNFTWelcomeModal: boolean
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -78,9 +75,7 @@ export const initialState: UserState = {
   pairs: {},
   timestamp: currentTimestamp(),
   URLWarningVisible: true,
-  hideNFTPromoBanner: false,
   showSurveyPopup: undefined,
-  hideNFTWelcomeModal: false,
 }
 
 const userSlice = createSlice({
