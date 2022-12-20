@@ -15,7 +15,7 @@ export default function Updater(): null {
 
   const [activeChainId, setActiveChainId] = useState(chainId)
 
-  const closeModal = useCloseModal(ApplicationModal.WALLET_DROPDOWN)
+  const closeModal = useCloseModal()
   const previousAccountValue = useRef(account)
   useEffect(() => {
     if (account && account !== previousAccountValue.current) {
