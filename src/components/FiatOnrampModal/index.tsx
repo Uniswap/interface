@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback, useEffect, useState } from 'react'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
@@ -10,7 +11,7 @@ import Circle from '../../assets/images/blue-loader.svg'
 import Modal from '../Modal'
 
 const Wrapper = styled.div`
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme }) => theme.white};
   border-radius: 20px;
   box-shadow: ${({ theme }) => theme.deepShadow};
   display: flex;
@@ -73,6 +74,10 @@ export default function FiatOnrampModal() {
   const [signedIframeUrl, setSignedIframeUrl] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (fiatOnrampModalOpen) sendAnalyticsEvent('Fiat OnRamp Widget Opened')
+  }, [fiatOnrampModalOpen])
 
   const fetchSignedIframeUrl = useCallback(async () => {
     if (!account) {
