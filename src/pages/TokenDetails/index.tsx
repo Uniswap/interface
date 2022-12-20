@@ -5,7 +5,7 @@ import { useTokenPriceQuery, useTokenQuery } from 'graphql/data/__generated__/ty
 import { CHAIN_NAME_TO_CHAIN_ID, TimePeriod, toHistoryDuration, validateUrlChainParam } from 'graphql/data/util'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 
 export const pageTimePeriodAtom = atomWithStorage<TimePeriod>('tokenDetailsTimePeriod', TimePeriod.DAY)
@@ -37,13 +37,6 @@ export default function TokenDetailsPage() {
     },
   })
 
-  const refetchTokenPrices = useCallback(
-    (t: TimePeriod) => {
-      setTimePeriod(t)
-    },
-    [setTimePeriod]
-  )
-
   if (!tokenData || tokenDataLoading) return <TokenDetailsPageSkeleton />
 
   return (
@@ -52,7 +45,7 @@ export default function TokenDetailsPage() {
       chain={chain}
       tokenData={tokenData}
       tokenPriceData={tokenPriceData}
-      refetchTokenPrices={refetchTokenPrices}
+      onChangeTimePeriod={setTimePeriod}
     />
   )
 }

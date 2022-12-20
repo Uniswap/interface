@@ -92,14 +92,14 @@ type TokenDetailsProps = {
   chain: Chain
   tokenData: TokenQuery
   tokenPriceData: TokenPriceQuery | undefined
-  refetchTokenPrices: RefetchPricesFunction
+  onChangeTimePeriod: RefetchPricesFunction
 }
 export default function TokenDetails({
   urlAddress,
   chain,
   tokenData,
   tokenPriceData,
-  refetchTokenPrices,
+  onChangeTimePeriod,
 }: TokenDetailsProps) {
   if (!urlAddress) {
     throw new Error('Invalid token details route: tokenAddress param is undefined')
@@ -199,7 +199,7 @@ export default function TokenDetails({
                 <ShareButton currency={token} />
               </TokenActions>
             </TokenInfoContainer>
-            <ChartSection tokenPriceData={tokenPriceData} refetchTokenPrices={refetchTokenPrices} />
+            <ChartSection tokenPriceData={tokenPriceData} onChangeTimePeriod={onChangeTimePeriod} />
             <StatsSection
               TVL={tokenQueryData?.market?.totalValueLocked?.value}
               volume24H={tokenQueryData?.market?.volume24H?.value}
