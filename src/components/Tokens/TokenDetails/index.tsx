@@ -74,7 +74,7 @@ function useRelevantToken(
   const queryToken = useMemo(() => {
     if (!address) return undefined
     if (address === NATIVE_CHAIN_ID) return nativeOnChain(pageChainId)
-    if (tokenQueryData) return new QueryToken(tokenQueryData)
+    if (tokenQueryData) return new QueryToken(address, tokenQueryData)
     return undefined
   }, [pageChainId, address, tokenQueryData])
   // fetches on-chain token if query data is missing and page chain matches global chain (else fetch won't work)
