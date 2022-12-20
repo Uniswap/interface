@@ -3,7 +3,7 @@ import { providers } from 'ethers'
 import { getProvider, getSignerManager } from 'src/app/walletContext'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { isFlashbotsSupportedChainId } from 'src/features/providers/flashbotsProvider'
-import { logEvent, sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { EventName } from 'src/features/telemetry/constants'
 import { transactionActions } from 'src/features/transactions/slice'
 import { Trade } from 'src/features/transactions/swap/useTrade'
@@ -145,5 +145,5 @@ function* addTransaction(
     })
   }
   yield* put(transactionActions.addTransaction(transaction))
-  yield* call(logEvent, EventName.Transaction, { chainId, ...typeInfo })
+  logger.debug('sendTransaction', 'addTransaction', 'Tx added:', { chainId, ...typeInfo })
 }

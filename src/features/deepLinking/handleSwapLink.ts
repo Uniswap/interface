@@ -46,7 +46,7 @@ export function* handleSwapLink(url: URL) {
     yield put(openModal({ name: ModalName.Swap, initialState: swapFormState }))
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    logger.debug('handleSwapLink', 'handleSwapLink', error?.message)
+    logger.error('handleSwapLink', 'handleSwapLink', error?.message)
     yield put(openModal({ name: ModalName.Swap }))
   }
 }

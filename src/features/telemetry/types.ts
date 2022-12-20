@@ -29,6 +29,11 @@ export type MoonpayTransactionEventProperties = BaseEventProperty &
 
 export type EventProperties = {
   [EventName.AppLoaded]: BaseEventProperty
+  [EventName.DeepLinkOpened]: {
+    url: string
+    screen: 'swap' | 'transaction'
+    is_cold_start: boolean
+  }
   [EventName.FiatOnRampRegionCheck]: { networkStatus: 'success' | 'failed' } & Pick<
     MoonpayIPAddressesResponse,
     'isBuyAllowed' | 'isAllowed' | 'isSellAllowed' | 'alpha3'
@@ -49,7 +54,6 @@ export type EventProperties = {
     wallet_type?: ImportType
     accounts_imported_count: number
   } & BaseEventProperty
-  [EventName.Transaction]: BaseEventProperty
   [EventName.SwapSubmitButtonPressed]: {
     estimated_network_fee_wei?: string
     gas_limit?: string

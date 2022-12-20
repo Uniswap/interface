@@ -3,7 +3,8 @@ import { URL } from 'react-native-url-polyfill'
 import { appSelect } from 'src/app/hooks'
 import { handleSwapLink } from 'src/features/deepLinking/handleSwapLink'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLink'
-import { logEvent } from 'src/features/telemetry'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { EventName } from 'src/features/telemetry/constants'
 import { selectAccounts } from 'src/features/wallet/selectors'
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { connectToApp, isValidWCUrl } from 'src/features/walletConnect/WalletConnect'
@@ -53,12 +54,20 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
         throw new Error('Invalid or unsupported screen')
     }
 
-    yield* call(logEvent, 'deeplink', { coldStart, success: true })
+    yield* call(sendAnalyticsEvent, EventName.DeepLinkOpened, {
+      url: url.toString(),
+      screen,
+      is_cold_start: coldStart,
+    })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     const errorMessage = error?.message
-    logger.error('handleDeepLink', 'handleDeepLink', 'Error handling deep link', errorMessage)
-    yield* call(logEvent, 'deeplink', { coldStart, success: false, error: errorMessage })
+    yield* call(
+      logger.error,
+      'handleDeepLink',
+      'handleDeepLink',
+      `Error handling deep link ${action.payload.url}: ${errorMessage}`
+    )
   }
 }
 

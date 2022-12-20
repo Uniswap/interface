@@ -1,19 +1,17 @@
-import { URL } from 'react-native-url-polyfill'
 import { expectSaga } from 'redux-saga-test-plan'
-import { call } from 'redux-saga/effects'
 import {
   handleDeepLink,
   parseAndValidateUserAddress,
 } from 'src/features/deepLinking/handleDeepLink'
-import { handleSwapLink } from 'src/features/deepLinking/handleSwapLink'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLink'
-import { logEvent } from 'src/features/telemetry'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { EventName } from 'src/features/telemetry/constants'
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { account } from 'src/test/fixtures'
+import { logger } from 'src/utils/logger'
 
 const swapUrl = `https://uniswap.org/app?screen=swap&userAddress=${account.address}`
 const transactionUrl = `https://uniswap.org/app?screen=transaction&userAddress=${account.address}`
-const swapUrlObj = new URL(swapUrl)
 const swapDeepLinkPayload = { url: swapUrl, coldStart: false }
 const transactionDeepLinkPayload = { url: transactionUrl, coldStart: false }
 const unsupportedScreenDeepLinkPayload = {
@@ -22,8 +20,8 @@ const unsupportedScreenDeepLinkPayload = {
 }
 
 describe(handleDeepLink, () => {
-  it('Routes to the swap deep link handler if screen=swap and userAddress is valid', async () => {
-    await expectSaga(handleDeepLink, { payload: swapDeepLinkPayload, type: '' })
+  it('Routes to the swap deep link handler if screen=swap and userAddress is valid', () => {
+    return expectSaga(handleDeepLink, { payload: swapDeepLinkPayload, type: '' })
       .withState({
         wallet: {
           accounts: {
@@ -31,15 +29,13 @@ describe(handleDeepLink, () => {
           },
         },
       })
-      .provide([
-        [call(handleSwapLink, swapUrlObj), undefined],
-        [
-          call(logEvent, 'deeplink', { coldStart: swapDeepLinkPayload.coldStart, success: true }),
-          undefined,
-        ],
-      ])
       .call(parseAndValidateUserAddress, account.address)
       .put(activateAccount(account.address))
+      .call(sendAnalyticsEvent, EventName.DeepLinkOpened, {
+        url: swapDeepLinkPayload.url,
+        screen: 'swap',
+        is_cold_start: swapDeepLinkPayload.coldStart,
+      })
       .silentRun()
   })
 
@@ -52,18 +48,12 @@ describe(handleDeepLink, () => {
           },
         },
       })
-      .provide([
-        [call(handleTransactionLink), undefined],
-        [
-          call(logEvent, 'deeplink', {
-            coldStart: transactionDeepLinkPayload.coldStart,
-            success: true,
-          }),
-          undefined,
-        ],
-      ])
-      .call(parseAndValidateUserAddress, account.address)
-      .put(activateAccount(account.address))
+      .call(handleTransactionLink)
+      .call(sendAnalyticsEvent, EventName.DeepLinkOpened, {
+        url: transactionDeepLinkPayload.url,
+        screen: 'transaction',
+        is_cold_start: transactionDeepLinkPayload.coldStart,
+      })
       .silentRun()
   })
 
@@ -76,28 +66,28 @@ describe(handleDeepLink, () => {
           },
         },
       })
-      .provide([
-        [
-          call(logEvent, 'deeplink', {
-            coldStart: unsupportedScreenDeepLinkPayload.coldStart,
-            success: false,
-          }),
-          undefined,
-        ],
-      ])
-      .call(parseAndValidateUserAddress, account.address)
-      .put(activateAccount(account.address))
+      .call(
+        logger.error,
+        'handleDeepLink',
+        'handleDeepLink',
+        `Error handling deep link ${unsupportedScreenDeepLinkPayload.url}: Invalid or unsupported screen`
+      )
       .silentRun()
   })
 
   it('Fails if the userAddress does not exist in the wallet', () => {
     return expectSaga(handleDeepLink, { payload: swapDeepLinkPayload, type: '' })
-      .provide([
-        [
-          call(logEvent, 'deeplink', { coldStart: swapDeepLinkPayload.coldStart, success: false }),
-          undefined,
-        ],
-      ])
+      .withState({
+        wallet: {
+          accounts: {},
+        },
+      })
+      .call(
+        logger.error,
+        'handleDeepLink',
+        'handleDeepLink',
+        `Error handling deep link ${swapDeepLinkPayload.url}: User address supplied in path does not exist in wallet`
+      )
       .silentRun()
   })
 })
