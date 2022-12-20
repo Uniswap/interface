@@ -279,12 +279,10 @@ export default function Landing() {
 
   const cardsRef = useRef<HTMLDivElement>(null)
 
-  const location = useLocation()
-  const isOpen = location.pathname === '/'
-
   const [showContent, setShowContent] = useState(false)
   const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
   const navigate = useNavigate()
+  const location = useLocation()
   const queryParams = parse(location.search, {
     ignoreQueryPrefix: true,
   })
@@ -297,8 +295,6 @@ export default function Landing() {
       navigate('/swap')
     }
   }, [navigate, selectedWallet, queryParams.intro])
-
-  if (!isOpen) return null
 
   return (
     <Trace page={PageName.LANDING_PAGE} shouldLogImpression>
