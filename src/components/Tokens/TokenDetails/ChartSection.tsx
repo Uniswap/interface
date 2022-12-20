@@ -29,7 +29,7 @@ export default function ChartSection({
   tokenPriceData,
   onChangeTimePeriod,
 }: {
-  tokenPriceData: TokenPriceQuery | undefined
+  tokenPriceData?: TokenPriceQuery
   onChangeTimePeriod: RefetchPricesFunction
 }) {
   if (!tokenPriceData) {
