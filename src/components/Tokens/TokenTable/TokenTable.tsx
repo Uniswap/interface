@@ -101,7 +101,7 @@ export default function TokenTable() {
       <GridContainer>
         <HeaderRow />
         <TokenDataContainer>
-          {tokens?.map(
+          {tokens.map(
             (token, index) =>
               token && (
                 <LoadedRow
