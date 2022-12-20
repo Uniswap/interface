@@ -2,7 +2,7 @@ import { getTestSelector } from '../utils'
 
 describe('Landing Page', () => {
   it('shows landing page when no selectedWallet', () => {
-    cy.visit('/', { selectedWallet: null })
+    cy.visit('/', { noWallet: true })
     cy.get(getTestSelector('landing-page'))
     cy.screenshot()
   })

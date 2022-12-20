@@ -20,7 +20,8 @@ declare global {
     interface VisitOptions {
       serviceWorker?: true
       featureFlags?: Array<FeatureFlag>
-      selectedWallet?: string | null
+      selectedWallet?: string
+      noWallet?: boolean
     }
   }
 }
@@ -39,7 +40,7 @@ Cypress.Commands.overwrite(
         onBeforeLoad(win) {
           options?.onBeforeLoad?.(win)
           win.localStorage.clear()
-          if (options?.selectedWallet != null) {
+          if (options?.noWallet !== true) {
             win.localStorage.setItem(
               'redux_localstorage_simple_user',
               `{"selectedWallet":"${options?.selectedWallet || 'INJECTED'}"}`
