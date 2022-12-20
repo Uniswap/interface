@@ -36,6 +36,7 @@ module.exports = {
     AMPLITUDE_API_KEY: 123,
     AMPLITUDE_API_TEST_KEY: 123,
     AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY: 123,
+    DEMO_SEED_PHRASE: 'test',
     MOONPAY_API_KEY: 123,
     MOONPAY_API_URL: 'https://api.moonpay.com',
     MOONPAY_WIDGET_API_URL: 'https://api.moonpay.com',
