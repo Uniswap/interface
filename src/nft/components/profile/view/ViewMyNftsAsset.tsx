@@ -10,7 +10,7 @@ import { AssetMediaType } from 'nft/components/collection/Card'
 import { bodySmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile, useSellAsset } from 'nft/hooks'
-import { TokenType, UniformAspectRatios, WalletAsset } from 'nft/types'
+import { TokenType, WalletAsset } from 'nft/types'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 const TOOLTIP_TIMEOUT = 2000
@@ -29,23 +29,11 @@ const getNftDisplayComponent = (
 ) => {
   switch (assetMediaType) {
     case AssetMediaType.Image:
-      return <Card.Image uniformAspectRatio={UniformAspectRatios.square} />
+      return <Card.Image />
     case AssetMediaType.Video:
-      return (
-        <Card.Video
-          shouldPlay={mediaShouldBePlaying}
-          setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-          uniformAspectRatio={UniformAspectRatios.square}
-        />
-      )
+      return <Card.Video shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
     case AssetMediaType.Audio:
-      return (
-        <Card.Audio
-          shouldPlay={mediaShouldBePlaying}
-          setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-          uniformAspectRatio={UniformAspectRatios.square}
-        />
-      )
+      return <Card.Audio shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
   }
 }
 

@@ -250,11 +250,11 @@ const handleUniformAspectRatio = (
   if (uniformAspectRatio !== UniformAspectRatios.square && setUniformAspectRatio) {
     const height = e.currentTarget.clientHeight
     const width = e.currentTarget.clientWidth
-    const ar = parseFloat((width / height).toFixed(1))
+    const aspectRatio = width / height
 
     if (
       (!renderedHeight || renderedHeight !== height) &&
-      ar < 1 &&
+      aspectRatio < 1 &&
       uniformAspectRatio !== UniformAspectRatios.square &&
       setRenderedHeight
     ) {
@@ -262,37 +262,40 @@ const handleUniformAspectRatio = (
     }
 
     if (uniformAspectRatio === UniformAspectRatios.unset) {
-      setUniformAspectRatio(ar >= 1 ? UniformAspectRatios.square : ar)
-    } else if (uniformAspectRatio !== ar) {
+      setUniformAspectRatio(aspectRatio >= 1 ? UniformAspectRatios.square : aspectRatio)
+    } else if (uniformAspectRatio !== aspectRatio) {
       setUniformAspectRatio(UniformAspectRatios.square)
       setRenderedHeight && setRenderedHeight(undefined)
     }
   }
 }
 
+function getHeightFromAspectRatio(uniformAspectRatio: UniformAspectRatio, renderedHeight?: number): number | undefined {
+  return uniformAspectRatio === UniformAspectRatios.square || uniformAspectRatio === UniformAspectRatios.unset
+    ? undefined
+    : renderedHeight
+}
+
 interface ImageProps {
-  uniformAspectRatio: UniformAspectRatio
+  uniformAspectRatio?: UniformAspectRatio
   setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void
   renderedHeight?: number
   setRenderedHeight?: (renderedHeight: number | undefined) => void
 }
 
-const Image = ({ uniformAspectRatio, setUniformAspectRatio, renderedHeight, setRenderedHeight }: ImageProps) => {
+const Image = ({
+  uniformAspectRatio = UniformAspectRatios.square,
+  setUniformAspectRatio,
+  renderedHeight,
+  setRenderedHeight,
+}: ImageProps) => {
   const { hovered, asset } = useCardContext()
   const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
   const [loaded, setLoaded] = useState(false)
   const isMobile = useIsMobile()
 
   if (noContent) {
-    return (
-      <NoContentContainer
-        height={
-          uniformAspectRatio === UniformAspectRatios.square || uniformAspectRatio === UniformAspectRatios.unset
-            ? undefined
-            : renderedHeight
-        }
-      />
-    )
+    return <NoContentContainer height={getHeightFromAspectRatio(uniformAspectRatio, renderedHeight)} />
   }
 
   return (
@@ -318,13 +321,20 @@ const Image = ({ uniformAspectRatio, setUniformAspectRatio, renderedHeight, setR
   )
 }
 
+function getMediaAspectRatio(
+  uniformAspectRatio: UniformAspectRatio,
+  setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void
+): string {
+  return uniformAspectRatio === UniformAspectRatios.square || !setUniformAspectRatio ? '1' : 'auto'
+}
+
 interface MediaProps {
   shouldPlay: boolean
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
 }
 
 const Video = ({
-  uniformAspectRatio,
+  uniformAspectRatio = UniformAspectRatios.square,
   setUniformAspectRatio,
   renderedHeight,
   setRenderedHeight,
@@ -344,15 +354,7 @@ const Video = ({
   }
 
   if (noContent) {
-    return (
-      <NoContentContainer
-        height={
-          uniformAspectRatio === UniformAspectRatios.square || uniformAspectRatio === UniformAspectRatios.unset
-            ? undefined
-            : renderedHeight
-        }
-      />
-    )
+    return <NoContentContainer height={getHeightFromAspectRatio(uniformAspectRatio, renderedHeight)} />
   }
 
   return (
@@ -363,9 +365,7 @@ const Video = ({
           alt={asset.name || asset.tokenId}
           width="full"
           style={{
-            aspectRatio: `${
-              uniformAspectRatio === UniformAspectRatios.square || !setUniformAspectRatio ? '1' : 'auto'
-            }`,
+            aspectRatio: getMediaAspectRatio(uniformAspectRatio, setUniformAspectRatio),
             transition: 'transform 0.25s ease 0s',
             willChange: 'transform',
           }}
@@ -437,7 +437,7 @@ const Video = ({
 }
 
 const Audio = ({
-  uniformAspectRatio,
+  uniformAspectRatio = UniformAspectRatios.square,
   setUniformAspectRatio,
   renderedHeight,
   setRenderedHeight,
@@ -457,15 +457,7 @@ const Audio = ({
   }
 
   if (noContent) {
-    return (
-      <NoContentContainer
-        height={
-          uniformAspectRatio === UniformAspectRatios.square || uniformAspectRatio === UniformAspectRatios.unset
-            ? undefined
-            : renderedHeight
-        }
-      />
-    )
+    return <NoContentContainer height={getHeightFromAspectRatio(uniformAspectRatio, renderedHeight)} />
   }
 
   return (
@@ -476,9 +468,7 @@ const Audio = ({
           alt={asset.name || asset.tokenId}
           width="full"
           style={{
-            aspectRatio: `${
-              uniformAspectRatio === UniformAspectRatios.square || !setUniformAspectRatio ? '1' : 'auto'
-            }`,
+            aspectRatio: getMediaAspectRatio(uniformAspectRatio, setUniformAspectRatio),
             transition: 'transform 0.4s ease 0s',
           }}
           src={asset.imageUrl || asset.smallImageUrl}
