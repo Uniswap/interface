@@ -34,7 +34,7 @@ const ListingHeader = styled(Row)`
   margin-top: 18px;
 
   @media screen and (min-width: ${SMALL_MEDIA_BREAKPOINT}) {
-    margin-top: 40px;
+    margin-top: 16px;
   }
 `
 

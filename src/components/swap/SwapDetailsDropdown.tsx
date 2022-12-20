@@ -110,19 +110,10 @@ interface SwapDetailsInlineProps {
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
   syncing: boolean
   loading: boolean
-  showInverted: boolean
-  setShowInverted: React.Dispatch<React.SetStateAction<boolean>>
   allowedSlippage: Percent
 }
 
-export default function SwapDetailsDropdown({
-  trade,
-  syncing,
-  loading,
-  showInverted,
-  setShowInverted,
-  allowedSlippage,
-}: SwapDetailsInlineProps) {
+export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSlippage }: SwapDetailsInlineProps) {
   const theme = useTheme()
   const { chainId } = useWeb3React()
   const [showDetails, setShowDetails] = useState(false)
@@ -169,11 +160,7 @@ export default function SwapDetailsDropdown({
               )}
               {trade ? (
                 <LoadingOpacityContainer $loading={syncing}>
-                  <TradePrice
-                    price={trade.executionPrice}
-                    showInverted={showInverted}
-                    setShowInverted={setShowInverted}
-                  />
+                  <TradePrice price={trade.executionPrice} />
                 </LoadingOpacityContainer>
               ) : loading || syncing ? (
                 <ThemedText.DeprecatedMain fontSize={14}>
