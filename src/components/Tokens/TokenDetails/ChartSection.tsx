@@ -10,7 +10,7 @@ import { startTransition, Suspense, useMemo } from 'react'
 import { PriceChart } from './PriceChart'
 import TimePeriodSelector from './TimeSelector'
 
-function usePreloadedTokenPriceQuery(tokenPriceData: TokenPriceQuery): PricePoint[] | undefined {
+function usePriceHistory(tokenPriceData: TokenPriceQuery): PricePoint[] | undefined {
   // Appends the current price to the end of the priceHistory array
   const priceHistory = useMemo(() => {
     const market = tokenPriceData.tokens?.[0]?.market
@@ -53,7 +53,7 @@ function Chart({
   tokenPriceQuery: TokenPriceQuery
   onChangeTimePeriod: RefetchPricesFunction
 }) {
-  const prices = usePreloadedTokenPriceQuery(tokenPriceQuery)
+  const prices = usePriceHistory(tokenPriceQuery)
   // Initializes time period to global & maintain separate time period for subsequent changes
   const timePeriod = useAtomValue(pageTimePeriodAtom)
 
