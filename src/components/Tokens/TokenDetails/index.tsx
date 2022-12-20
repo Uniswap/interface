@@ -27,21 +27,20 @@ import Widget from 'components/Widget'
 import { getChainInfo } from 'constants/chainInfo'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
-import { TokenPriceQuery } from 'graphql/data/__generated__/TokenPriceQuery.graphql'
+import { TokenPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { Chain, TokenQuery, TokenQueryData } from 'graphql/data/Token'
-import { QueryToken, tokenQuery } from 'graphql/data/Token'
+import { QueryToken } from 'graphql/data/Token'
 import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
 import { useIsUserAddedTokenOnChain } from 'hooks/Tokens'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { UNKNOWN_TOKEN_SYMBOL, useTokenFromActiveNetwork } from 'lib/hooks/useCurrency'
 import { useCallback, useMemo, useState, useTransition } from 'react'
 import { ArrowLeft } from 'react-feather'
-import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { isAddress } from 'utils'
 
-import { RefetchPricesFunction } from './ChartSection'
+import { OnChangeTimePeriod } from './ChartSection'
 import InvalidTokenDetails from './InvalidTokenDetails'
 
 const TokenSymbol = styled.span`
@@ -75,7 +74,7 @@ function useRelevantToken(
   const queryToken = useMemo(() => {
     if (!address) return undefined
     if (address === NATIVE_CHAIN_ID) return nativeOnChain(pageChainId)
-    if (tokenQueryData) return new QueryToken(tokenQueryData)
+    if (tokenQueryData) return new QueryToken(address, tokenQueryData)
     return undefined
   }, [pageChainId, address, tokenQueryData])
   // fetches on-chain token if query data is missing and page chain matches global chain (else fetch won't work)
@@ -91,16 +90,16 @@ function useRelevantToken(
 type TokenDetailsProps = {
   urlAddress: string | undefined
   chain: Chain
-  tokenQueryReference: PreloadedQuery<TokenQuery>
-  priceQueryReference: PreloadedQuery<TokenPriceQuery> | null | undefined
-  refetchTokenPrices: RefetchPricesFunction
+  tokenQuery: TokenQuery
+  tokenPriceQuery: TokenPriceQuery | undefined
+  onChangeTimePeriod: OnChangeTimePeriod
 }
 export default function TokenDetails({
   urlAddress,
   chain,
-  tokenQueryReference,
-  priceQueryReference,
-  refetchTokenPrices,
+  tokenQuery,
+  tokenPriceQuery,
+  onChangeTimePeriod,
 }: TokenDetailsProps) {
   if (!urlAddress) {
     throw new Error('Invalid token details route: tokenAddress param is undefined')
@@ -112,7 +111,7 @@ export default function TokenDetails({
 
   const pageChainId = CHAIN_NAME_TO_CHAIN_ID[chain]
 
-  const tokenQueryData = usePreloadedQuery(tokenQuery, tokenQueryReference).tokens?.[0]
+  const tokenQueryData = tokenQuery.tokens?.[0]
   const crossChainMap = useMemo(
     () =>
       tokenQueryData?.project?.tokens.reduce((map, current) => {
@@ -200,7 +199,7 @@ export default function TokenDetails({
                 <ShareButton currency={token} />
               </TokenActions>
             </TokenInfoContainer>
-            <ChartSection priceQueryReference={priceQueryReference} refetchTokenPrices={refetchTokenPrices} />
+            <ChartSection tokenPriceQuery={tokenPriceQuery} onChangeTimePeriod={onChangeTimePeriod} />
             <StatsSection
               TVL={tokenQueryData?.market?.totalValueLocked?.value}
               volume24H={tokenQueryData?.market?.volume24H?.value}

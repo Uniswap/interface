@@ -2,6 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import clsx from 'clsx'
 import { OpacityHoverState } from 'components/Common'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import {
@@ -16,7 +17,7 @@ import {
 import { body, bodySmall, buttonTextMedium, subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
-import { GenieAsset, Rarity, TokenType, UniformAspectRatio, UniformAspectRatios, WalletAsset } from 'nft/types'
+import { GenieAsset, Rarity, UniformAspectRatio, UniformAspectRatios, WalletAsset } from 'nft/types'
 import { fallbackProvider, isAudio, isVideo, putCommas } from 'nft/utils'
 import { floorFormatter } from 'nft/utils/numbers'
 import {
@@ -579,8 +580,7 @@ const ProfileNftDetails = ({ asset, hideDetails }: ProfileNftDetailsProps) => {
     return !!asset.name ? asset.name : `#${asset.tokenId}`
   }
 
-  const shouldShowUserListedPrice =
-    !!asset.floor_sell_order_price && !asset.notForSale && asset.asset_contract.tokenType !== TokenType.ERC1155
+  const shouldShowUserListedPrice = !asset.notForSale && asset.asset_contract.tokenType !== NftStandard.Erc1155
 
   return (
     <Box overflow="hidden" width="full" flexWrap="nowrap">
@@ -605,7 +605,9 @@ const ProfileNftDetails = ({ asset, hideDetails }: ProfileNftDetailsProps) => {
         {asset.susFlag && <Suspicious />}
       </Row>
       <TruncatedTextRow className={buttonTextMedium} style={{ color: themeVars.colors.textPrimary }}>
-        {shouldShowUserListedPrice ? `${floorFormatter(asset.floor_sell_order_price)} ETH` : ' '}
+        {shouldShowUserListedPrice && asset.floor_sell_order_price
+          ? `${floorFormatter(asset.floor_sell_order_price)} ETH`
+          : ' '}
       </TruncatedTextRow>
     </Box>
   )

@@ -1,13 +1,9 @@
 import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
-import { useWeb3React } from '@web3-react/core'
-import { useDetailsQuery, useLoadDetailsQuery } from 'graphql/data/nft/Details'
-import { useLoadNftBalanceQuery } from 'graphql/data/nft/NftBalance'
+import { useNftAssetDetails } from 'graphql/data/nft/Details'
 import { AssetDetails } from 'nft/components/details/AssetDetails'
 import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
-import { useBag } from 'nft/hooks'
-import { Suspense, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
@@ -38,11 +34,13 @@ const AssetPriceDetailsContainer = styled.div`
   }
 `
 
-const Asset = () => {
+const AssetPage = () => {
   const { tokenId = '', contractAddress = '' } = useParams()
-  const data = useDetailsQuery(contractAddress, tokenId)
+  const { data, loading } = useNftAssetDetails(contractAddress, tokenId)
 
-  const [asset, collection] = useMemo(() => data ?? [], [data])
+  const [asset, collection] = data
+
+  if (loading) return <AssetDetailsLoading />
 
   return (
     <>
@@ -51,34 +49,16 @@ const Asset = () => {
         properties={{ collection_address: contractAddress, token_id: tokenId }}
         shouldLogImpression
       >
-        {asset && collection ? (
+        {!!asset && !!collection && (
           <AssetContainer>
             <AssetDetails collection={collection} asset={asset} />
             <AssetPriceDetailsContainer>
               <AssetPriceDetails collection={collection} asset={asset} />
             </AssetPriceDetailsContainer>
           </AssetContainer>
-        ) : null}
+        )}
       </Trace>
     </>
-  )
-}
-
-const AssetPage = () => {
-  const { tokenId, contractAddress } = useParams()
-  const { account } = useWeb3React()
-  const setBagExpanded = useBag((state) => state.setBagExpanded)
-  useLoadDetailsQuery(contractAddress, tokenId)
-  useLoadNftBalanceQuery(account, contractAddress, tokenId)
-
-  useEffect(() => {
-    setBagExpanded({ bagExpanded: false, manualClose: false })
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
-  return (
-    <Suspense fallback={<AssetDetailsLoading />}>
-      <Asset />
-    </Suspense>
   )
 }
 
