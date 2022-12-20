@@ -138,8 +138,8 @@
     "@types/react-relay": "^13.0.2",
     "@types/react-window-infinite-loader": "^1.0.6",
     "@uniswap/analytics": "1.2.0",
-    "@uniswap/conedison": "^1.1.1",
     "@uniswap/analytics-events": "^1.4.0",
+    "@uniswap/conedison": "^1.1.1",
     "@uniswap/governance": "^1.0.2",
     "@uniswap/liquidity-staker": "^1.0.2",
     "@uniswap/merkle-distributor": "1.0.1",
@@ -194,6 +194,7 @@
     "immer": "^9.0.6",
     "inter-ui": "^3.13.1",
     "jotai": "^1.3.7",
+    "jotai-immer": "^0.1.0",
     "jsbi": "^3.1.4",
     "make-plural": "^7.0.0",
     "multicodec": "^3.0.1",
@@ -247,5 +248,9 @@
     "npm": "please-use-yarn",
     "node": "14",
     "yarn": ">=1.22"
+  },
+  "volta": {
+    "node": "14.21.2",
+    "yarn": "1.22.19"
   }
 }

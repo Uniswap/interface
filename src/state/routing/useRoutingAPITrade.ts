@@ -11,6 +11,7 @@ import { useMemo } from 'react'
 import { RouterPreference, useGetQuoteQuery } from 'state/routing/slice'
 
 import { GetQuoteResult, InterfaceTrade, TradeState } from './types'
+import { useFloodAPI } from './useFloodAPI'
 import { computeRoutes, transformRoutesToTrade } from './utils'
 
 /**
@@ -44,12 +45,23 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     routerPreference,
   })
 
-  const { isLoading, isError, data, currentData } = useGetQuoteQuery(queryArgs ?? skipToken, {
+  const uniswapQuery = useGetQuoteQuery(queryArgs ?? skipToken, {
     // Price-fetching is informational and costly, so it's done less frequently.
     pollingInterval: routerPreference === RouterPreference.PRICE ? ms`2m` : AVERAGE_L1_BLOCK_TIME,
   })
 
-  const quoteResult: GetQuoteResult | undefined = useIsValidBlock(Number(data?.blockNumber) || 0) ? data : undefined
+  console.log('uniswapQuery', uniswapQuery)
+
+  const { isLoading, isError, data, isPreviousData } = useFloodAPI(
+    currencyIn?.wrapped.address,
+    currencyOut?.wrapped.address,
+    amountSpecified?.quotient.toString(),
+    currencyIn?.wrapped.chainId
+  )
+
+  const quoteResult: GetQuoteResult | undefined = useIsValidBlock(Number(data?.blockNumber) || 0)
+    ? (data as any as GetQuoteResult)
+    : undefined
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),
@@ -59,7 +71,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   // get USD gas cost of trade in active chains stablecoin amount
   const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(quoteResult?.gasUseEstimateUSD) ?? null
 
-  const isSyncing = currentData !== data
+  const isSyncing = isLoading && isPreviousData
 
   return useMemo(() => {
     if (!currencyIn || !currencyOut) {

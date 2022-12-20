@@ -18,7 +18,9 @@ export function computeRoutes(
   if (!quoteResult || !quoteResult.route || !currencyIn || !currencyOut) return undefined
 
   if (quoteResult.route.length === 0) return []
-
+  console.log(quoteResult.route[0][0].tokenIn)
+  console.log(quoteResult.route[0])
+  console.log(quoteResult)
   const parsedTokenIn = parseToken(quoteResult.route[0][0].tokenIn)
   const parsedTokenOut = parseToken(quoteResult.route[0][quoteResult.route[0].length - 1].tokenOut)
 
