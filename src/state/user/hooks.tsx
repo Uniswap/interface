@@ -17,9 +17,8 @@ import { AppState } from '../index'
 import {
   addSerializedPair,
   addSerializedToken,
+  updateFiatOnrampAcknowledgments,
   updateHideClosedPositions,
-  updateHideNFTWelcomeModal,
-  updateShowNftPromoBanner,
   updateUserClientSideRouter,
   updateUserDarkMode,
   updateUserDeadline,
@@ -105,13 +104,24 @@ export function useExpertModeManager(): [boolean, () => void] {
   return [expertMode, toggleSetExpertMode]
 }
 
-export function useHideNFTWelcomeModal(): [boolean | undefined, () => void] {
+interface FiatOnrampAcknowledgements {
+  renderCount: number
+  system: boolean
+  user: boolean
+}
+export function useFiatOnrampAck(): [
+  FiatOnrampAcknowledgements,
+  (acknowledgements: Partial<FiatOnrampAcknowledgements>) => void
+] {
   const dispatch = useAppDispatch()
-  const hideNFTWelcomeModal = useAppSelector((state) => state.user.hideNFTWelcomeModal)
-  const hideModal = useCallback(() => {
-    dispatch(updateHideNFTWelcomeModal({ hideNFTWelcomeModal: true }))
-  }, [dispatch])
-  return [hideNFTWelcomeModal, hideModal]
+  const fiatOnrampAcknowledgments = useAppSelector((state) => state.user.fiatOnrampAcknowledgments)
+  const setAcknowledgements = useCallback(
+    (acks: Partial<FiatOnrampAcknowledgements>) => {
+      dispatch(updateFiatOnrampAcknowledgments(acks))
+    },
+    [dispatch]
+  )
+  return [fiatOnrampAcknowledgments, setAcknowledgements]
 }
 
 export function useClientSideRouter(): [boolean, (userClientSideRouter: boolean) => void] {
@@ -256,17 +266,6 @@ export function usePairAdder(): (pair: Pair) => void {
 
 export function useURLWarningVisible(): boolean {
   return useAppSelector((state: AppState) => state.user.URLWarningVisible)
-}
-
-export function useHideNftPromoBanner(): [boolean, () => void] {
-  const dispatch = useAppDispatch()
-  const hideNftPromoBanner = useAppSelector((state) => state.user.hideNFTPromoBanner)
-
-  const toggleHideNftPromoBanner = useCallback(() => {
-    dispatch(updateShowNftPromoBanner({ hideNFTPromoBanner: true }))
-  }, [dispatch])
-
-  return [hideNftPromoBanner, toggleHideNftPromoBanner]
 }
 
 /**

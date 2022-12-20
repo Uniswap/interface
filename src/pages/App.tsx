@@ -24,7 +24,6 @@ import Polling from '../components/Polling'
 import Popups from '../components/Popups'
 import { useIsExpertMode } from '../state/user/hooks'
 import DarkModeQueryParamReader from '../theme/components/DarkModeQueryParamReader'
-import About from './About'
 import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
@@ -97,7 +96,7 @@ const HeaderWrapper = styled.div<{ transparent?: boolean }>`
   justify-content: space-between;
   position: fixed;
   top: 0;
-  z-index: ${Z_INDEX.sticky};
+  z-index: ${Z_INDEX.dropdown};
 `
 
 function getCurrentPageFromLocation(locationPathname: string): PageName | undefined {
@@ -245,8 +244,6 @@ export default function App() {
 
                 <Route path="migrate/v2" element={<MigrateV2 />} />
                 <Route path="migrate/v2/:address" element={<MigrateV2Pair />} />
-
-                <Route path="about" element={<About />} />
 
                 <Route
                   path="/nfts"
