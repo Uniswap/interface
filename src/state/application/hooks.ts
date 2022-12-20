@@ -64,8 +64,7 @@ export function useFiatOnrampAvailability(shouldCheck: boolean, callback?: () =>
         setError('Error, try again later.')
         dispatch(setFiatOnrampAvailability(false))
       } finally {
-        if (stale) return
-        setLoading(false)
+        if (!stale) setLoading(false)
       }
     }
 
