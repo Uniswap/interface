@@ -99,10 +99,10 @@ export function FiatOnrampAnnouncement() {
   const [locallyDismissed, setLocallyDismissed] = useState(false)
   useEffect(() => {
     if (!sessionStorage.getItem(ANNOUNCEMENT_RENDERED)) {
-      acknowledge({ renderCount: acks.renderCount + 1 })
+      acknowledge({ renderCount: acks?.renderCount + 1 })
       sessionStorage.setItem(ANNOUNCEMENT_RENDERED, 'true')
     }
-  }, [acknowledge, acks.renderCount])
+  }, [acknowledge, acks])
 
   const handleClose = useCallback(() => {
     setLocallyDismissed(true)
@@ -122,7 +122,7 @@ export function FiatOnrampAnnouncement() {
     acks?.user ||
     locallyDismissed ||
     sessionStorage.getItem(ANNOUNCEMENT_DISMISSED) ||
-    acks.renderCount >= MAX_RENDER_COUNT ||
+    acks?.renderCount >= MAX_RENDER_COUNT ||
     isMobile ||
     openModal !== null
   ) {
