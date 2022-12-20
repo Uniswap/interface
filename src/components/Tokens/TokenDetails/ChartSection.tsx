@@ -26,20 +26,20 @@ function usePreloadedTokenPriceQuery(tokenPriceData: TokenPriceQuery): PricePoin
   return priceHistory
 }
 export default function ChartSection({
-  tokenPriceData,
+  tokenPriceQuery,
   onChangeTimePeriod,
 }: {
-  tokenPriceData?: TokenPriceQuery
+  tokenPriceQuery?: TokenPriceQuery
   onChangeTimePeriod: RefetchPricesFunction
 }) {
-  if (!tokenPriceData) {
+  if (!tokenPriceQuery) {
     return <LoadingChart />
   }
 
   return (
     <Suspense fallback={<LoadingChart />}>
       <ChartContainer>
-        <Chart tokenPriceData={tokenPriceData} onChangeTimePeriod={onChangeTimePeriod} />
+        <Chart tokenPriceQuery={tokenPriceQuery} onChangeTimePeriod={onChangeTimePeriod} />
       </ChartContainer>
     </Suspense>
   )
@@ -47,13 +47,13 @@ export default function ChartSection({
 
 export type RefetchPricesFunction = (t: TimePeriod) => void
 function Chart({
-  tokenPriceData,
+  tokenPriceQuery,
   onChangeTimePeriod,
 }: {
-  tokenPriceData: TokenPriceQuery
+  tokenPriceQuery: TokenPriceQuery
   onChangeTimePeriod: RefetchPricesFunction
 }) {
-  const prices = usePreloadedTokenPriceQuery(tokenPriceData)
+  const prices = usePreloadedTokenPriceQuery(tokenPriceQuery)
   // Initializes time period to global & maintain separate time period for subsequent changes
   const timePeriod = useAtomValue(pageTimePeriodAtom)
 

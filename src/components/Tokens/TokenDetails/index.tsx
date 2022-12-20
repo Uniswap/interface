@@ -90,15 +90,15 @@ function useRelevantToken(
 type TokenDetailsProps = {
   urlAddress: string | undefined
   chain: Chain
-  tokenData: TokenQuery
-  tokenPriceData: TokenPriceQuery | undefined
+  tokenQuery: TokenQuery
+  tokenPriceQuery: TokenPriceQuery | undefined
   onChangeTimePeriod: RefetchPricesFunction
 }
 export default function TokenDetails({
   urlAddress,
   chain,
-  tokenData,
-  tokenPriceData,
+  tokenQuery,
+  tokenPriceQuery,
   onChangeTimePeriod,
 }: TokenDetailsProps) {
   if (!urlAddress) {
@@ -111,7 +111,7 @@ export default function TokenDetails({
 
   const pageChainId = CHAIN_NAME_TO_CHAIN_ID[chain]
 
-  const tokenQueryData = tokenData.tokens?.[0]
+  const tokenQueryData = tokenQuery.tokens?.[0]
   const crossChainMap = useMemo(
     () =>
       tokenQueryData?.project?.tokens.reduce((map, current) => {
@@ -199,7 +199,7 @@ export default function TokenDetails({
                 <ShareButton currency={token} />
               </TokenActions>
             </TokenInfoContainer>
-            <ChartSection tokenPriceData={tokenPriceData} onChangeTimePeriod={onChangeTimePeriod} />
+            <ChartSection tokenPriceQuery={tokenPriceQuery} onChangeTimePeriod={onChangeTimePeriod} />
             <StatsSection
               TVL={tokenQueryData?.market?.totalValueLocked?.value}
               volume24H={tokenQueryData?.market?.volume24H?.value}
