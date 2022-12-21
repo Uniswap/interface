@@ -28,11 +28,11 @@ const DropdownOptionButton = styled.span`
   user-select: none;
 `
 
-const DropdownOptionsContainer = styled.div`
+const RelativeDropdownOptionsContainer = styled.div`
   position: relative;
 `
 
-const DropdownOptionsContainerTwo = styled.div`
+const DropdownOptionsContainer = styled.div`
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -98,8 +98,8 @@ const ListingDropdown = ({ dropDownOptions }: { dropDownOptions: DropDownOption[
       </DropdownContainer>
 
       {isOpen && (
-        <DropdownOptionsContainer>
-          <DropdownOptionsContainerTwo>
+        <RelativeDropdownOptionsContainer>
+          <DropdownOptionsContainer>
             {dropDownOptions.map((dropdownOption) => (
               <DropdownOption
                 key={dropdownOption.displayText}
@@ -112,8 +112,8 @@ const ListingDropdown = ({ dropDownOptions }: { dropDownOptions: DropDownOption[
                 {dropdownOption.displayText} {dropdownText === dropdownOption.displayText && <StyledCheckmark />}
               </DropdownOption>
             ))}
-          </DropdownOptionsContainerTwo>
-        </DropdownOptionsContainer>
+          </DropdownOptionsContainer>
+        </RelativeDropdownOptionsContainer>
       )}
     </div>
   )
