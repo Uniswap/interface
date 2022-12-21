@@ -99,12 +99,12 @@ end
 
   private_lane :ship do | options |
     pilot(
+      api_key: options[:api_key],
       ipa: "#{OUTPUT_DIRECTORY}#{PROJECT_NAME}.ipa",
       skip_waiting_for_build_processing: true,
       verbose: false,
       uses_non_exempt_encryption: true,
       notify_external_testers: false,
-      username: options[:apple_id],
       team_id: options[:apple_team_id],
       apple_id: options[:apple_app_id],
       itc_provider: ENV["sigh_#{options[:app_identifier]}_#{options[:match_type]}_team-id"],
@@ -113,18 +113,24 @@ end
 
   lane :buildAndShip do
     running_on_ci = ENV["CI"] || false
+
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+      key_content: ENV["APP_STORE_CONNECT_KEY_CONTENT"],
+    )
+
     options = {
-      :build_for_development_only => BUILD_FOR_DEVELOPMENT_ONLY,
       :running_on_ci => running_on_ci,
       :git_branch_name => running_on_ci ? "#{ENV['GIT_BRANCH_NAME']}"  : sh("git", "rev-parse", "--abbrev-ref", "HEAD", log: false),
       :app_identifier => ENV["APP_IDENTIFIER"],
-      :apple_id => ENV["APPLE_ID"],
       :apple_team_id => ENV["APPLE_TEAM_ID"],
       :apple_app_id => ENV["APPLE_APP_ID"],
+      :api_key => api_key,
       :token => ENV["GITHUB_TOKEN"],
     }
 
-    build_number= update_build_numbers_for_configuration()
+    build_number = update_build_numbers_for_configuration()
 
     version_number = get_version_number(
       xcodeproj: XCODE_PROJECT,
@@ -144,7 +150,7 @@ end
 
     unless BUILD_ONLY
       ship(
-        apple_id: options[:apple_id],
+        api_key: api_key,
         apple_team_id: options[:apple_team_id],
         apple_app_id: options[:apple_app_id],
         app_identifier: options[:app_identifier],
