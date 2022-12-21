@@ -2,6 +2,7 @@ opt_out_usage
 
 # Global variables to simplify the individual adjustment
 PROJECT_NAME = "Uniswap"
+ONE_SIGNAL_TARGET_NAME = "OneSignalNotificationServiceExtension"
 XCODE_PROJECT = "./ios/#{PROJECT_NAME}.xcodeproj"
 XCODE_WORKSPACE = "./ios/#{PROJECT_NAME}.xcworkspace"
 OUTPUT_DIRECTORY = "./fastlane/builds/"
@@ -44,6 +45,28 @@ platform :ios do
     end
 
   end
+
+  lane :update_build_numbers_for_configuration do |option|
+        
+    fastlane_require 'Xcodeproj'
+    
+    buildConfiguration = option[:buildConfiguration] || 'Release'
+    CUSTOM_BUILD_NUMBER = ''
+    
+    project = Xcodeproj::Project.open("../" + XCODE_PROJECT)
+    project.targets.each do |mtarget|
+        if mtarget.name == PROJECT_NAME || mtarget.name == ONE_SIGNAL_TARGET_NAME
+            mtarget.build_configurations.each do |mbuild|
+                if mbuild.name == buildConfiguration
+                    CUSTOM_BUILD_NUMBER = mbuild.build_settings['CURRENT_PROJECT_VERSION']
+                    mbuild.build_settings['CURRENT_PROJECT_VERSION'] = CUSTOM_BUILD_NUMBER.to_i + 1
+                end
+            end
+        end
+    end
+    project.save()
+    CUSTOM_BUILD_NUMBER.to_i + 1
+end
 
   lane :build do | options |
     build_for_development_only = options[:build_for_development_only]
@@ -101,10 +124,7 @@ platform :ios do
       :token => ENV["GITHUB_TOKEN"],
     }
 
-    build_number = increment_build_number(
-      xcodeproj: XCODE_PROJECT,
-      skip_info_plist: true,
-    )
+    build_number= update_build_numbers_for_configuration()
 
     version_number = get_version_number(
       xcodeproj: XCODE_PROJECT,

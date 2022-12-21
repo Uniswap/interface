@@ -102,7 +102,7 @@ jobs:
           export CCACHE_INODECACHE=true
           ccache -s
           set -o pipefail
-          yarn deploy:ios:alpha
+          fastlane ios buildAndShip
           ccache -s
         shell: bash
         env:
