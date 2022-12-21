@@ -13,7 +13,7 @@ export enum TradeState {
 
 // from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts
 
-export type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
+type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
 
 export type V3PoolInRoute = {
   type: 'v3-pool'
@@ -30,7 +30,7 @@ export type V3PoolInRoute = {
   address?: string
 }
 
-export type V2Reserve = {
+type V2Reserve = {
   token: TokenInRoute
   quotient: string
 }

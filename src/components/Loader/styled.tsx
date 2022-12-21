@@ -18,7 +18,7 @@ export const LoadingRows = styled.div`
     background: linear-gradient(
       to left,
       ${({ theme }) => theme.deprecated_bg1} 25%,
-      ${({ theme }) => theme.deprecated_bg2} 50%,
+      ${({ theme }) => theme.backgroundInteractive} 50%,
       ${({ theme }) => theme.deprecated_bg1} 75%
     );
     background-size: 400%;

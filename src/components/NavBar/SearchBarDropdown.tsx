@@ -34,7 +34,7 @@ interface SearchBarDropdownSectionProps {
   eventProperties: Record<string, unknown>
 }
 
-export const SearchBarDropdownSection = ({
+const SearchBarDropdownSection = ({
   toggleOpen,
   suggestions,
   header,

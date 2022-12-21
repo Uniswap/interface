@@ -1,11 +1,16 @@
-import React from 'react'
+import React, { PropsWithChildren } from 'react'
 import styled from 'styled-components/macro'
 import { Z_INDEX } from 'theme/zIndex'
 
-export const BodyWrapper = styled.main<{ margin?: string; maxWidth?: string }>`
+interface BodyWrapperProps {
+  $margin?: string
+  $maxWidth?: string
+}
+
+export const BodyWrapper = styled.main<BodyWrapperProps>`
   position: relative;
-  margin-top: ${({ margin }) => margin ?? '0px'};
-  max-width: ${({ maxWidth }) => maxWidth ?? '420px'};
+  margin-top: ${({ $margin }) => $margin ?? '0px'};
+  max-width: ${({ $maxWidth }) => $maxWidth ?? '420px'};
   width: 100%;
   background: ${({ theme }) => theme.backgroundSurface};
   border-radius: 16px;
@@ -20,6 +25,6 @@ export const BodyWrapper = styled.main<{ margin?: string; maxWidth?: string }>`
 /**
  * The styled container element that wraps the content of most pages and the tabs.
  */
-export default function AppBody({ children, ...rest }: { children: React.ReactNode }) {
-  return <BodyWrapper {...rest}>{children}</BodyWrapper>
+export default function AppBody(props: PropsWithChildren<BodyWrapperProps>) {
+  return <BodyWrapper {...props} />
 }

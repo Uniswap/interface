@@ -5,7 +5,7 @@ import { Route } from 'workbox-routing'
 import { isDevelopment } from './utils'
 
 const fileExtensionRegexp = new RegExp('/[^/?]+\\.[^/]+$')
-export const DOCUMENT = process.env.PUBLIC_URL + '/index.html'
+const DOCUMENT = process.env.PUBLIC_URL + '/index.html'
 
 /**
  * Matches with App Shell-style routing, so that navigation requests are fulfilled with an index.html shell.
@@ -49,7 +49,7 @@ type HandlerContext = {
  *
  * In addition, this handler may serve an offline document if there is no internet connection.
  */
-export async function handleDocument(this: HandlerContext, { event, request }: RouteHandlerCallbackOptions) {
+export async function handleDocument(this: HandlerContext, { request }: RouteHandlerCallbackOptions) {
   // If we are offline, serve the offline document.
   if ('onLine' in navigator && !navigator.onLine) return this?.offlineDocument?.clone() || fetch(request)
 

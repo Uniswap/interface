@@ -6,8 +6,6 @@ import { useMemo } from 'react'
 
 import { useApproval } from '../useApproval'
 
-export { ApprovalState } from '../useApproval'
-
 // wraps useApproveCallback in the context of a swap
 export default function useSwapApproval(
   trade: Trade<Currency, Currency, TradeType> | undefined,

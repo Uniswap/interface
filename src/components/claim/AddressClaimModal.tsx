@@ -156,7 +156,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
             )}
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify="center">
-            <AutoColumn gap="12px" justify="center">
+            <AutoColumn gap="md" justify="center">
               <ThemedText.DeprecatedLargeHeader fontWeight={600} color="black">
                 {claimConfirmed ? <Trans>Claimed</Trans> : <Trans>Claiming</Trans>}
               </ThemedText.DeprecatedLargeHeader>

@@ -11,6 +11,7 @@ import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsInjected, g
 import usePrevious from 'hooks/usePrevious'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { updateConnectionError } from 'state/connection/reducer'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
@@ -61,7 +62,7 @@ const HeaderRow = styled.div`
   padding: 1rem 1rem;
   font-weight: 600;
   size: 16px;
-  color: ${(props) => (props.color === 'blue' ? ({ theme }) => theme.deprecated_primary1 : 'inherit')};
+  color: ${(props) => (props.color === 'blue' ? ({ theme }) => theme.accentAction : 'inherit')};
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     padding: 1rem;
   `};
@@ -103,7 +104,7 @@ const OptionGrid = styled.div`
 
 const HoverText = styled.div`
   text-decoration: none;
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${({ theme }) => theme.textPrimary};
   display: flex;
   align-items: center;
 
@@ -151,6 +152,9 @@ export default function WalletModal({
   const { connector, account, chainId } = useWeb3React()
   const previousAccount = usePrevious(account)
 
+  const location = useLocation()
+  const navigate = useNavigate()
+
   const [connectedWallets, addWalletToConnectedWallets] = useConnectedWallets()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
@@ -177,8 +181,11 @@ export default function WalletModal({
   useEffect(() => {
     if (account && account !== previousAccount && walletModalOpen) {
       toggleWalletModal()
+      if (location.pathname === '/') {
+        navigate('/swap')
+      }
     }
-  }, [account, previousAccount, toggleWalletModal, walletModalOpen])
+  }, [account, previousAccount, toggleWalletModal, walletModalOpen, location.pathname, navigate])
 
   useEffect(() => {
     if (pendingConnector && walletView !== WALLET_VIEWS.PENDING) {

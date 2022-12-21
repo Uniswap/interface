@@ -3,22 +3,11 @@ import { style } from '@vanilla-extract/css'
 import { subhead } from '../../nft/css/common.css'
 import { sprinkles, vars } from '../../nft/css/sprinkles.css'
 
-export const nav = style([
-  sprinkles({
-    paddingX: '20',
-    paddingY: '12',
-    width: 'full',
-    height: '72',
-    zIndex: '2',
-    background: 'backgroundFloating',
-  }),
-])
-
 export const logoContainer = style([
   sprinkles({
     display: 'flex',
     marginRight: { sm: '12', xxl: '20' },
-    alignItems: 'center',
+    cursor: 'pointer',
   }),
 ])
 
@@ -41,16 +30,19 @@ export const baseSideContainer = style([
 export const leftSideContainer = style([
   baseSideContainer,
   sprinkles({
+    alignItems: 'center',
     justifyContent: 'flex-start',
   }),
 ])
 
-export const middleContainer = style([
+export const searchContainer = style([
   sprinkles({
     flex: '1',
     flexShrink: '1',
     justifyContent: { lg: 'flex-end', xl: 'center' },
     display: { sm: 'none', xl: 'flex' },
+    alignSelf: 'center',
+    height: '48',
     alignItems: 'flex-start',
   }),
 ])
@@ -58,6 +50,7 @@ export const middleContainer = style([
 export const rightSideContainer = style([
   baseSideContainer,
   sprinkles({
+    alignItems: 'center',
     justifyContent: 'flex-end',
   }),
 ])

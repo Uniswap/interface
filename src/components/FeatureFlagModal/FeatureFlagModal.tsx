@@ -1,5 +1,6 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
-import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
+import { useFiatOnrampFlag } from 'featureFlags/flags/fiatOnramp'
+import { Permit2Variant, usePermit2Flag } from 'featureFlags/flags/permit2'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
@@ -163,7 +164,7 @@ function FeatureFlagGroup({ name, children }: PropsWithChildren<{ name: string }
   )
 }
 
-function FeatureFlagOption({ variant, featureFlag, value, label }: FeatureFlagProps) {
+function FeatureFlagOption({ variant, featureFlag, label }: FeatureFlagProps) {
   const updateFlag = useUpdateFlag()
   const [count, setCount] = useState(0)
   const featureFlags = useAtomValue(featureFlagSettings)
@@ -202,20 +203,24 @@ export default function FeatureFlagModal() {
           <X size={24} />
         </CloseButton>
       </Header>
+      <FeatureFlagOption
+        variant={Permit2Variant}
+        value={usePermit2Flag()}
+        featureFlag={FeatureFlag.permit2}
+        label="Permit 2 / Universal Router"
+      />
+      <FeatureFlagOption
+        variant={BaseVariant}
+        value={useFiatOnrampFlag()}
+        featureFlag={FeatureFlag.fiatOnramp}
+        label="Fiat on-ramp"
+      />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption
           variant={TraceJsonRpcVariant}
           value={useTraceJsonRpcFlag()}
           featureFlag={FeatureFlag.traceJsonRpc}
           label="Enables JSON-RPC tracing"
-        />
-      </FeatureFlagGroup>
-      <FeatureFlagGroup name="Tokens">
-        <FeatureFlagOption
-          variant={LandingPageVariant}
-          value={useLandingPageFlag()}
-          featureFlag={FeatureFlag.landingPage}
-          label="Landing Page"
         />
       </FeatureFlagGroup>
       <SaveButton onClick={() => window.location.reload()}>Reload</SaveButton>

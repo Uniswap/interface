@@ -1,7 +1,8 @@
 import { Trans } from '@lingui/macro'
-import { TraceEvent } from '@uniswap/analytics'
+import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { FiatOnrampAnnouncement } from 'components/FiatOnrampAnnouncement'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
 import WalletDropdown from 'components/WalletDropdown'
 import { getConnection } from 'connection/utils'
@@ -9,7 +10,7 @@ import { Portal } from 'nft/components/common/Portal'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { getIsValidSwapQuote } from 'pages/Swap'
 import { darken } from 'polished'
-import { useMemo, useRef } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
 import { useAppSelector } from 'state/hooks'
 import { useDerivedSwapInfo } from 'state/swap/hooks'
@@ -70,13 +71,13 @@ const Web3StatusGeneric = styled(ButtonSecondary)`
   }
 `
 const Web3StatusError = styled(Web3StatusGeneric)`
-  background-color: ${({ theme }) => theme.deprecated_red1};
-  border: 1px solid ${({ theme }) => theme.deprecated_red1};
-  color: ${({ theme }) => theme.deprecated_white};
+  background-color: ${({ theme }) => theme.accentFailure};
+  border: 1px solid ${({ theme }) => theme.accentFailure};
+  color: ${({ theme }) => theme.white};
   font-weight: 500;
   :hover,
   :focus {
-    background-color: ${({ theme }) => darken(0.1, theme.deprecated_red1)};
+    background-color: ${({ theme }) => darken(0.1, theme.accentFailure)};
   }
 `
 
@@ -100,9 +101,9 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{
   pending?: boolean
   isClaimAvailable?: boolean
 }>`
-  background-color: ${({ pending, theme }) => (pending ? theme.deprecated_primary1 : theme.deprecated_bg1)};
-  border: 1px solid ${({ pending, theme }) => (pending ? theme.deprecated_primary1 : theme.deprecated_bg1)};
-  color: ${({ pending, theme }) => (pending ? theme.deprecated_white : theme.deprecated_text1)};
+  background-color: ${({ pending, theme }) => (pending ? theme.accentAction : theme.deprecated_bg1)};
+  border: 1px solid ${({ pending, theme }) => (pending ? theme.accentAction : theme.deprecated_bg1)};
+  color: ${({ pending, theme }) => (pending ? theme.white : theme.textPrimary)};
   font-weight: 500;
   border: ${({ isClaimAvailable }) => isClaimAvailable && `1px solid ${colors.purple300}`};
   :hover,
@@ -112,7 +113,7 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{
     :focus {
       border: 1px solid
         ${({ pending, theme }) =>
-          pending ? darken(0.1, theme.deprecated_primary1) : darken(0.1, theme.deprecated_bg2)};
+          pending ? darken(0.1, theme.accentAction) : darken(0.1, theme.backgroundInteractive)};
     }
   }
 
@@ -205,6 +206,10 @@ function Web3StatusInner() {
   const validSwapQuote = getIsValidSwapQuote(trade, tradeState, swapInputError)
   const theme = useTheme()
   const toggleWalletDropdown = useToggleWalletDropdown()
+  const handleWalletDropdownClick = useCallback(() => {
+    sendAnalyticsEvent('FOR Account Dropdown Button Clicks')
+    toggleWalletDropdown()
+  }, [toggleWalletDropdown])
   const toggleWalletModal = useToggleWalletModal()
   const walletIsOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
@@ -221,13 +226,12 @@ function Web3StatusInner() {
   const pending = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
 
   const hasPendingTransactions = !!pending.length
-  const toggleWallet = toggleWalletDropdown
 
   if (!chainId) {
     return null
   } else if (error) {
     return (
-      <Web3StatusError onClick={toggleWallet}>
+      <Web3StatusError onClick={handleWalletDropdownClick}>
         <NetworkIcon />
         <Text>
           <Trans>Error</Trans>
@@ -243,7 +247,7 @@ function Web3StatusInner() {
     return (
       <Web3StatusConnected
         data-testid="web3-status-connected"
-        onClick={toggleWallet}
+        onClick={handleWalletDropdownClick}
         pending={hasPendingTransactions}
         isClaimAvailable={isClaimAvailable}
       >
@@ -281,7 +285,7 @@ function Web3StatusInner() {
             <Trans>Connect</Trans>
           </StyledConnectButton>
           <VerticalDivider />
-          <ChevronWrapper onClick={toggleWalletDropdown}>
+          <ChevronWrapper onClick={handleWalletDropdownClick} data-testid="navbar-toggle-dropdown">
             {walletIsOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
           </ChevronWrapper>
         </Web3StatusConnectWrapper>
@@ -296,7 +300,7 @@ export default function Web3Status() {
   const allTransactions = useAllTransactions()
   const ref = useRef<HTMLDivElement>(null)
   const walletRef = useRef<HTMLDivElement>(null)
-  const closeModal = useCloseModal(ApplicationModal.WALLET_DROPDOWN)
+  const closeModal = useCloseModal()
   const isOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
 
   useOnClickOutside(ref, isOpen ? closeModal : undefined, [walletRef])
@@ -312,6 +316,7 @@ export default function Web3Status() {
   return (
     <span ref={ref}>
       <Web3StatusInner />
+      <FiatOnrampAnnouncement />
       <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
       <Portal>
         <span ref={walletRef}>

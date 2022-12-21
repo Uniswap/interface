@@ -75,7 +75,6 @@ export default function SwapModalHeader({
 }) {
   const theme = useTheme()
 
-  const [showInverted, setShowInverted] = useState<boolean>(false)
   const [lastExecutionPrice, setLastExecutionPrice] = useState(trade.executionPrice)
   const [priceUpdate, setPriceUpdate] = useState<number | undefined>()
 
@@ -101,13 +100,13 @@ export default function SwapModalHeader({
   return (
     <AutoColumn gap="4px" style={{ marginTop: '1rem' }}>
       <LightCard padding="0.75rem 1rem">
-        <AutoColumn gap="8px">
+        <AutoColumn gap="sm">
           <RowBetween align="center">
             <RowFixed gap="0px">
               <TruncatedText
                 fontSize={24}
                 fontWeight={500}
-                color={showAcceptChanges && trade.tradeType === TradeType.EXACT_OUTPUT ? theme.deprecated_primary1 : ''}
+                color={showAcceptChanges && trade.tradeType === TradeType.EXACT_OUTPUT ? theme.accentAction : ''}
               >
                 {trade.inputAmount.toSignificant(6)}
               </TruncatedText>
@@ -128,7 +127,7 @@ export default function SwapModalHeader({
         <ArrowDown size="16" color={theme.textPrimary} />
       </ArrowWrapper>
       <LightCard padding="0.75rem 1rem" style={{ marginBottom: '0.25rem' }}>
-        <AutoColumn gap="8px">
+        <AutoColumn gap="sm">
           <RowBetween align="flex-end">
             <RowFixed gap="0px">
               <TruncatedText fontSize={24} fontWeight={500}>
@@ -143,7 +142,7 @@ export default function SwapModalHeader({
             </RowFixed>
           </RowBetween>
           <RowBetween>
-            <ThemedText.DeprecatedBody fontSize={14} color={theme.deprecated_text3}>
+            <ThemedText.DeprecatedBody fontSize={14} color={theme.textTertiary}>
               <FiatValue
                 fiatValue={fiatValueOutput}
                 priceImpact={computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)}
@@ -153,7 +152,7 @@ export default function SwapModalHeader({
         </AutoColumn>
       </LightCard>
       <RowBetween style={{ marginTop: '0.25rem', padding: '0 1rem' }}>
-        <TradePrice price={trade.executionPrice} showInverted={showInverted} setShowInverted={setShowInverted} />
+        <TradePrice price={trade.executionPrice} />
       </RowBetween>
       <LightCard style={{ padding: '.75rem', marginTop: '0.5rem' }}>
         <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} />
@@ -163,7 +162,7 @@ export default function SwapModalHeader({
           <RowBetween>
             <RowFixed>
               <AlertTriangle size={20} style={{ marginRight: '8px', minWidth: 24 }} />
-              <ThemedText.DeprecatedMain color={theme.deprecated_primary1}>
+              <ThemedText.DeprecatedMain color={theme.accentAction}>
                 <Trans>Price Updated</Trans>
               </ThemedText.DeprecatedMain>
             </RowFixed>

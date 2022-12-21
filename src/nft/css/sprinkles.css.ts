@@ -51,11 +51,6 @@ const themeContractValues = {
 
 export type Theme = typeof themeContractValues
 
-type DeepPartial<T> = {
-  [P in keyof T]?: DeepPartial<T[P]>
-}
-export type ThemePartial = DeepPartial<Theme>
-
 export const themeVars = createGlobalThemeContract(themeContractValues, (_, path) => `genie-${path.join('-')}`)
 
 const dimensions = {
@@ -422,8 +417,6 @@ const unresponsiveProperties = defineProperties({
     animationDuration: vars.time,
   },
 })
-
-export type UnresponsiveProperties = keyof typeof unresponsiveProperties
 
 export const sprinkles = createSprinkles(layoutStyles, colorStyles, unresponsiveProperties)
 export type Sprinkles = Parameters<typeof sprinkles>[0]

@@ -25,22 +25,22 @@ function useApprovalStateForSpender(
   const { account } = useWeb3React()
   const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
 
-  const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
+  const { tokenAllowance } = useTokenAllowance(token, account ?? undefined, spender)
   const pendingApproval = useIsPendingApproval(token, spender)
 
   return useMemo(() => {
     if (!amountToApprove || !spender) return ApprovalState.UNKNOWN
     if (amountToApprove.currency.isNative) return ApprovalState.APPROVED
     // we might not have enough data to know whether or not we need to approve
-    if (!currentAllowance) return ApprovalState.UNKNOWN
+    if (!tokenAllowance) return ApprovalState.UNKNOWN
 
-    // amountToApprove will be defined if currentAllowance is
-    return currentAllowance.lessThan(amountToApprove)
+    // amountToApprove will be defined if tokenAllowance is
+    return tokenAllowance.lessThan(amountToApprove)
       ? pendingApproval
         ? ApprovalState.PENDING
         : ApprovalState.NOT_APPROVED
       : ApprovalState.APPROVED
-  }, [amountToApprove, currentAllowance, pendingApproval, spender])
+  }, [amountToApprove, pendingApproval, spender, tokenAllowance])
 }
 
 export function useApproval(

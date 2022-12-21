@@ -227,12 +227,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         </RowBetween>
         {feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) ? (
           <>
-            <ThemedText.DeprecatedItalic
-              fontSize={12}
-              color={theme.deprecated_text2}
-              textAlign="left"
-              padding="8px 0 0 0"
-            >
+            <ThemedText.DeprecatedItalic fontSize={12} color={theme.textSecondary} textAlign="left" padding="8px 0 0 0">
               <Trans>You will also collect fees earned from this position.</Trans>
             </ThemedText.DeprecatedItalic>
             <RowBetween>
@@ -290,7 +285,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         )}
         pendingText={pendingText}
       />
-      <AppBody>
+      <AppBody $maxWidth="unset">
         <AddRemoveTabs
           creating={false}
           adding={false}
@@ -410,7 +405,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               )}
 
               <div style={{ display: 'flex' }}>
-                <AutoColumn gap="12px" style={{ flex: '1' }}>
+                <AutoColumn gap="md" style={{ flex: '1' }}>
                   <ButtonConfirmed
                     confirmed={false}
                     disabled={removed || percent === 0 || !liquidityValue0}
