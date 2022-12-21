@@ -25,7 +25,7 @@ export const TokenDetailsLayout = styled.div`
 
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
     gap: 16px;
-    padding: 0 16px;
+    padding: 0 16px 52px;
   }
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
     gap: 40px;
