@@ -41,28 +41,30 @@ const DropdownOptionsContainerTwo = styled.div`
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   z-index: 1;
   width: 160px;
-  justify-content: center;
   border-radius: 12px;
   margin-top: 8px;
   border-radius: 12px;
 `
 
 const StyledCheckmark = styled(CheckMarkIcon)`
-  height: 16px;
-  width: 16px;
+  height: 20px;
+  width: 20px;
   margin-left: 8px;
   color: ${({ theme }) => theme.accentAction};
 `
 
 const DropdownOption = styled.div`
   display: flex;
-  padding-top: 12px;
-  padding-bottom: 12px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   cursor: pointer;
   font-size: 16px;
   line-height: 24px;
   padding-left: 16px;
   padding-right: 16px;
+  user-select: none;
+  justify-content: space-between;
+  align-items: center;
 
   &:hover {
     background-color: ${({ theme }) => theme.backgroundInteractive};

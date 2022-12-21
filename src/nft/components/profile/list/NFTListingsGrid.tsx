@@ -43,16 +43,16 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
         onClick: () => setGlobalPriceMethod(undefined),
       },
       {
-        displayText: 'Same price',
-        onClick: () => setGlobalPriceMethod(SetPriceMethod.SAME_PRICE),
-      },
-      {
         displayText: 'Floor price',
         onClick: () => setGlobalPriceMethod(SetPriceMethod.FLOOR_PRICE),
       },
       {
-        displayText: 'Prev. listing',
+        displayText: 'Last price',
         onClick: () => setGlobalPriceMethod(SetPriceMethod.PREV_LISTING),
+      },
+      {
+        displayText: 'Same price',
+        onClick: () => setGlobalPriceMethod(SetPriceMethod.SAME_PRICE),
       },
     ],
     []
