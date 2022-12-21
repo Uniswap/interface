@@ -306,16 +306,6 @@ const EthPriceDisplay = ({ ethPrice = 0 }: { ethPrice?: number }) => {
   )
 }
 
-function maxMarketFee(markets: ListingMarket[]): number {
-  let max = -1
-  markets.forEach((market) => {
-    if (market.fee > max) {
-      max = market.fee
-    }
-  })
-  return max
-}
-
 const FeeWrap = styled.div`
   margin-bottom: 4px;
   color: ${({ theme }) => theme.textPrimary};
@@ -336,6 +326,13 @@ interface MarketplaceRowProps {
   expandMarketplaceRows?: boolean
 }
 
+const getRoyalty = (listingMarket: ListingMarket, asset: WalletAsset) => {
+  // LooksRare is a unique case where royalties for creators are a flat 0.5% or 50 basis points
+  const baesFee = listingMarket.name === 'LooksRare' ? LOOKS_RARE_CREATOR_BASIS_POINTS : asset.basisPoints
+
+  return baesFee * 0.01
+}
+
 const MarketplaceRow = ({
   globalPriceMethod,
   globalPrice,
@@ -354,14 +351,23 @@ const MarketplaceRow = ({
   const [hovered, setHovered] = useState(false)
   const handleHover = () => setHovered(!hovered)
 
-  const marketplaceFee = selectedMarkets.length > 0 ? maxMarketFee(selectedMarkets) : 0
   const price = showGlobalPrice ? globalPrice : listPrice
-  // LooksRare is a unique case where royalties for creators are a flat 0.5% or 50 basis points
-  const royalties =
-    (selectedMarkets.length === 1 && selectedMarkets[0].name === 'LooksRare'
-      ? LOOKS_RARE_CREATOR_BASIS_POINTS
-      : asset.basisPoints) * 0.01
-  const feeInEth = price && (price * (royalties + marketplaceFee)) / 100
+
+  const fees = useMemo(() => {
+    if (selectedMarkets.length === 1) {
+      return getRoyalty(selectedMarkets[0], asset) + selectedMarkets[0].fee
+    } else {
+      let max = 0
+      for (const selectedMarket of selectedMarkets) {
+        const fee = selectedMarket.fee + getRoyalty(selectedMarket, asset)
+        max = Math.max(fee, max)
+      }
+
+      return max
+    }
+  }, [asset, selectedMarkets])
+
+  const feeInEth = price && (price * fees) / 100
   const userReceives = price && feeInEth && price - feeInEth
 
   useMemo(() => {
@@ -423,8 +429,6 @@ const MarketplaceRow = ({
       warning = asset.listingWarnings[0]
     }
   }
-
-  const fees = royalties + marketplaceFee
 
   return (
     <Row transition="500" marginLeft="0">
