@@ -20,7 +20,7 @@ const DropdownOptionButton = styled.span`
   font-size: 12px;
   display: flex;
   align-items: center;
-  width: 92px;
+  padding-right: 8px;
   margin-left: 4px;
   height: 20px;
   cursor: pointer;
