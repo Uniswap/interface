@@ -31,11 +31,17 @@ export const ThemedText = {
   HeadlineSmall(props: TextProps) {
     return <TextWrapper fontWeight={600} fontSize={20} lineHeight="28px" color="textPrimary" {...props} />
   },
+  HeadlineMedium(props: TextProps) {
+    return <TextWrapper fontWeight={500} fontSize={28} color="textPrimary" {...props} />
+  },
   HeadlineLarge(props: TextProps) {
-    return <TextWrapper fontWeight={600} fontSize={36} lineHeight="44px" color="textPrimary" {...props} />
+    return <TextWrapper fontWeight={600} fontSize={36} lineHeight="36px" color="textPrimary" {...props} />
   },
   LargeHeader(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={36} color="textPrimary" {...props} />
+  },
+  Hero(props: TextProps) {
+    return <TextWrapper fontWeight={500} fontSize={48} color="textPrimary" {...props} />
   },
   Link(props: TextProps) {
     return <TextWrapper fontWeight={600} fontSize={14} color="accentAction" {...props} />

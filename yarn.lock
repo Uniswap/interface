@@ -4195,10 +4195,10 @@
     "@typescript-eslint/types" "4.33.0"
     eslint-visitor-keys "^2.0.0"
 
-"@uniswap/analytics-events@1.3.1":
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/@uniswap/analytics-events/-/analytics-events-1.3.1.tgz#e1ad912001646268ea16f64622c683ca2a63002d"
-  integrity sha512-EzYLBU123TpTCNPfa8cN7cI3Ap8D5Rn0771/bAtjSElZROR6YnGFNj0cjnaHwo8SIUr5Ema7JLoXbMVUyreFXQ==
+"@uniswap/analytics-events@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/analytics-events/-/analytics-events-1.5.0.tgz#1f5a6e0fedb46e551745c2b4d2b791fe44964cfa"
+  integrity sha512-grrPk71hoBeXiBivlqgeh97lY7TmKEYhzzOLXdMXjXX/mcGOM9HLV0XR1olr/WPwuhBFx9GefaiB3GJU9+/sOQ==
 
 "@uniswap/analytics@1.2.0":
   version "1.2.0"
@@ -4209,10 +4209,10 @@
     react "^18.2.0"
     react-dom "^18.2.0"
 
-"@uniswap/conedison@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/conedison/-/conedison-1.1.0.tgz#462a1e7dcfc70a653e765c145655faa207fd53f7"
-  integrity sha512-mHnYkvy+xKfWDzWsqzgWKFl/V8C/KmSrj/2PCgT1R2ASxPzMCU/wzTW29HtIxf1cJ+A6sPwH2HqDZsbnNhKqNQ==
+"@uniswap/conedison@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/conedison/-/conedison-1.1.1.tgz#affec246613d1f52da3cdd0571ef8195b7b54d17"
+  integrity sha512-xFHAcWRrU+/+/BInXy6SRiiNwUG0vxLWsoYgod66wWifUvnjfpItzlvJHUer1OOpLDsz0CL5Fb70vFJOGAGi8w==
 
 "@uniswap/default-token-list@^2.0.0":
   version "2.2.0"
@@ -4438,10 +4438,10 @@
     "@uniswap/v3-core" "1.0.0"
     "@uniswap/v3-periphery" "^1.0.1"
 
-"@uniswap/widgets@2.22.10":
-  version "2.22.10"
-  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.22.10.tgz#3b4fbe3ca607c8b096aae58bd6e6d4188af7ddd5"
-  integrity sha512-wFw68p9fiVt06rernsWWqlB3lccgfyCuHTGNFT2NPBQ1lnpxudpa6MKlsMih5gaWiZM1pT8jd3LYbgCX9OeOTw==
+"@uniswap/widgets@2.22.11":
+  version "2.22.11"
+  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.22.11.tgz#d64179e58d3923af1b80f63bd8fb44804fc047bd"
+  integrity sha512-eBG7L/inLLHY2+cLKFsqqCK8rhoIzHWsUDm0glpLUyqs6NiZssoKHgIPWzjT2cNwupCYol08ruKM+JR1wBVdTQ==
   dependencies:
     "@babel/runtime" ">=7.17.0"
     "@fontsource/ibm-plex-mono" "^4.5.1"

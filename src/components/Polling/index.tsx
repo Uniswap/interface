@@ -4,6 +4,7 @@ import { RowFixed } from 'components/Row'
 import { getChainInfo } from 'constants/chainInfo'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import useGasPrice from 'hooks/useGasPrice'
+import { useIsLandingPage } from 'hooks/useIsLandingPage'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import useMachineTimeMs from 'hooks/useMachineTime'
 import JSBI from 'jsbi'
@@ -120,6 +121,7 @@ export default function Polling() {
   const machineTime = useMachineTimeMs(NETWORK_HEALTH_CHECK_MS)
   const blockTime = useCurrentBlockTimestamp()
   const isNftPage = useIsNftPage()
+  const isLandingPage = useIsLandingPage()
 
   const ethGasPrice = useGasPrice()
   const priceGwei = ethGasPrice ? JSBI.divide(ethGasPrice, JSBI.BigInt(1000000000)) : undefined
@@ -154,7 +156,7 @@ export default function Polling() {
     return getExplorerLink(chainId, blockNumber.toString(), ExplorerDataType.BLOCK)
   }, [blockNumber, chainId])
 
-  if (isNftPage) {
+  if (isNftPage || isLandingPage) {
     return null
   }
 

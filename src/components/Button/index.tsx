@@ -5,16 +5,31 @@ import styled, { DefaultTheme, useTheme } from 'styled-components/macro'
 
 import { RowBetween } from '../Row'
 
+export { default as LoadingButtonSpinner } from './LoadingButtonSpinner'
+
 type ButtonProps = Omit<ButtonPropsOriginal, 'css'>
 
-export const BaseButton = styled(RebassButton)<
-  {
-    padding?: string
-    width?: string
-    $borderRadius?: string
-    altDisabledStyle?: boolean
-  } & ButtonProps
->`
+const ButtonOverlay = styled.div`
+  background-color: transparent;
+  bottom: 0;
+  border-radius: inherit;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: 150ms ease background-color;
+  width: 100%;
+`
+
+type BaseButtonProps = {
+  padding?: string
+  width?: string
+  $borderRadius?: string
+  altDisabledStyle?: boolean
+} & ButtonProps
+
+export const BaseButton = styled(RebassButton)<BaseButtonProps>`
   padding: ${({ padding }) => padding ?? '16px'};
   width: ${({ width }) => width ?? '100%'};
   font-weight: 500;
@@ -79,7 +94,14 @@ export const ButtonPrimary = styled(BaseButton)`
   }
 `
 
-export const ButtonLight = styled(BaseButton)`
+export const SmallButtonPrimary = styled(ButtonPrimary)`
+  width: auto;
+  font-size: 16px;
+  padding: 10px 16px;
+  border-radius: 12px;
+`
+
+const BaseButtonLight = styled(BaseButton)`
   background-color: ${({ theme }) => theme.accentActionSoft};
   color: ${({ theme }) => theme.accentAction};
   font-size: 20px;
@@ -96,6 +118,19 @@ export const ButtonLight = styled(BaseButton)`
     box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && theme.accentActionSoft};
     background-color: ${({ theme, disabled }) => !disabled && theme.accentActionSoft};
   }
+
+  :hover {
+    ${ButtonOverlay} {
+      background-color: ${({ theme }) => theme.stateOverlayHover};
+    }
+  }
+
+  :active {
+    ${ButtonOverlay} {
+      background-color: ${({ theme }) => theme.stateOverlayPressed};
+    }
+  }
+
   :disabled {
     opacity: 0.4;
     :hover {
@@ -362,18 +397,6 @@ export function ButtonRadioChecked({ active = false, children, ...rest }: { acti
   }
 }
 
-const ButtonOverlay = styled.div`
-  background-color: transparent;
-  bottom: 0;
-  border-radius: 16px;
-  height: 100%;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  transition: 150ms ease background-color;
-  width: 100%;
-`
 export enum ButtonSize {
   small,
   medium,
@@ -388,7 +411,7 @@ export enum ButtonEmphasis {
   warning,
   destructive,
 }
-interface BaseButtonProps {
+interface BaseThemeButtonProps {
   size: ButtonSize
   emphasis: ButtonEmphasis
 }
@@ -467,7 +490,7 @@ function pickThemeButtonTextColor({ theme, emphasis }: { theme: DefaultTheme; em
   }
 }
 
-const BaseThemeButton = styled.button<BaseButtonProps>`
+const BaseThemeButton = styled.button<BaseThemeButtonProps>`
   align-items: center;
   background-color: ${pickThemeButtonBackgroundColor};
   border-radius: 16px;
@@ -484,15 +507,12 @@ const BaseThemeButton = styled.button<BaseButtonProps>`
   padding: ${pickThemeButtonPadding};
   position: relative;
   transition: 150ms ease opacity;
+  user-select: none;
 
   :active {
     ${ButtonOverlay} {
       background-color: ${({ theme }) => theme.stateOverlayPressed};
     }
-  }
-  :disabled {
-    cursor: default;
-    opacity: 0.6;
   }
   :focus {
     ${ButtonOverlay} {
@@ -504,9 +524,20 @@ const BaseThemeButton = styled.button<BaseButtonProps>`
       background-color: ${({ theme }) => theme.stateOverlayHover};
     }
   }
+  :disabled {
+    cursor: default;
+    opacity: 0.6;
+  }
+  :disabled:active,
+  :disabled:focus,
+  :disabled:hover {
+    ${ButtonOverlay} {
+      background-color: transparent;
+    }
+  }
 `
 
-interface ThemeButtonProps extends React.ComponentPropsWithoutRef<'button'>, BaseButtonProps {}
+interface ThemeButtonProps extends React.ComponentPropsWithoutRef<'button'>, BaseThemeButtonProps {}
 
 export const ThemeButton = ({ children, ...rest }: ThemeButtonProps) => {
   return (
@@ -514,5 +545,14 @@ export const ThemeButton = ({ children, ...rest }: ThemeButtonProps) => {
       <ButtonOverlay />
       {children}
     </BaseThemeButton>
+  )
+}
+
+export const ButtonLight = ({ children, ...rest }: BaseButtonProps) => {
+  return (
+    <BaseButtonLight {...rest}>
+      <ButtonOverlay />
+      {children}
+    </BaseButtonLight>
   )
 }
