@@ -9,7 +9,7 @@ import { Portal } from 'nft/components/common/Portal'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { getIsValidSwapQuote } from 'pages/Swap'
 import { darken } from 'polished'
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
 import { useAppSelector } from 'state/hooks'
 import { useDerivedSwapInfo } from 'state/swap/hooks'
@@ -213,7 +213,9 @@ function Web3StatusInner() {
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
 
   const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
-  if (getIsMetaMask() && error) toggleMetamaskConnectionErrorModal()
+  useEffect(() => {
+    if (getIsMetaMask() && error) toggleMetamaskConnectionErrorModal()
+  }, [error, toggleMetamaskConnectionErrorModal])
 
   const allTransactions = useAllTransactions()
 

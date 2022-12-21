@@ -25,10 +25,10 @@ export interface Connection {
   type: ConnectionType
 }
 
-let metamaskErrorHandler: (error: Error) => void | undefined
+let metaMaskErrorHandler: (error: Error) => void | undefined
 
-export function setErrorHandler(errorHandler: (error: Error) => void) {
-  metamaskErrorHandler = errorHandler
+export function setMetMaskErrorHandler(errorHandler: (error: Error) => void) {
+  metaMaskErrorHandler = errorHandler
 }
 
 function onError(error: Error) {
@@ -37,7 +37,7 @@ function onError(error: Error) {
 
 function onMetamaskError(error: Error) {
   onError(error)
-  metamaskErrorHandler?.(error)
+  metaMaskErrorHandler?.(error)
 }
 
 const [web3Network, web3NetworkHooks] = initializeConnector<Network>(

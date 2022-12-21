@@ -1,7 +1,7 @@
 import { useWeb3React, Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { Connection } from 'connection'
-import { ConnectionType, setErrorHandler } from 'connection'
+import { ConnectionType, setMetMaskErrorHandler } from 'connection'
 import { getConnectionName } from 'connection/utils'
 import { isSupportedChain } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
@@ -17,7 +17,7 @@ export default function Web3Provider({ children }: { children: ReactNode }) {
 
   // Set metamask error handler for metamask disconnection warning modal.
   useEffect(() => {
-    setErrorHandler((error: Error) =>
+    setMetMaskErrorHandler((error: Error) =>
       dispatch(updateConnectionError({ connectionType: ConnectionType.INJECTED, error: error.message }))
     )
   }, [dispatch])
