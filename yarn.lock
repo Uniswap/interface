@@ -4921,9 +4921,10 @@
     "@typescript-eslint/types" "5.47.0"
     eslint-visitor-keys "^3.3.0"
 
-"@uniswap/analytics-events@file:uniswap-analytics-events-dev.tgz":
-  version "0.0.1"
-  resolved "file:uniswap-analytics-events-dev.tgz#77f8f477945e265d7c465c67bac188809a1ea504"
+"@uniswap/analytics-events@2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/analytics-events/-/analytics-events-2.0.0.tgz#5370421c916f900900965a5f8da5316dbb39c674"
+  integrity sha512-Cmr+1H0VJX+vdxGwpZpL5hOkRw49j8hu2uLddiXChP64HHihjiYljC3tckkCJpkpW6NHHlfX9U+D2Wy0MiVaDw==
 
 "@uniswap/analytics@1.2.0":
   version "1.2.0"
