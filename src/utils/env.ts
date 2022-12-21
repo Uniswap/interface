@@ -15,5 +15,5 @@ export function isProductionEnv(): boolean {
 }
 
 export function isSentryEnabled(): boolean {
-  return process.env.REACT_APP_SENTRY_DISABLED !== 'true'
+  return process.env.REACT_APP_SENTRY_ENABLED === 'true'
 }
