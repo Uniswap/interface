@@ -141,18 +141,19 @@ export const SearchBarDropdown = ({
     [isNFTPage, trendingCollectionResults]
   )
 
-  const { data: trendingTokenResults, isLoading: trendingTokensAreLoading } = useQuery(
-    ['trendingTokens'],
-    () => fetchTrendingTokens(4),
-    {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-    }
+  // TODO(lynnshaoyu): investigate if we should be swapping this out for the same data source as token explore
+  // and token details page.
+  const { data: trendingTokenResults, isLoading: trendingTokensAreLoading } = useQuery(['trendingTokens'], () =>
+    fetchTrendingTokens(4)
   )
+
   useEffect(() => {
     trendingTokenResults?.forEach(updateSearchHistory)
   }, [trendingTokenResults, updateSearchHistory])
+
+  useEffect(() => {
+    trendingCollectionResults?.forEach(updateSearchHistory)
+  }, [trendingCollectionResults, updateSearchHistory])
 
   const trendingTokensLength = isTokenPage ? 3 : 2
   const trendingTokens = useMemo(

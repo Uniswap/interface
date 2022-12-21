@@ -115,21 +115,13 @@ const TRENDING_COLLECTION_SIZE = 5
 const Banner = () => {
   const navigate = useNavigate()
 
-  const { data } = useQuery(
-    ['trendingCollections'],
-    () => {
-      return fetchTrendingCollections({
-        volumeType: 'eth',
-        timePeriod: TimePeriod.OneDay,
-        size: TRENDING_COLLECTION_SIZE + EXCLUDED_COLLECTIONS.length,
-      })
-    },
-    {
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-    }
-  )
+  const { data } = useQuery(['trendingCollections'], () => {
+    return fetchTrendingCollections({
+      volumeType: 'eth',
+      timePeriod: TimePeriod.OneDay,
+      size: TRENDING_COLLECTION_SIZE + EXCLUDED_COLLECTIONS.length,
+    })
+  })
 
   const collections = useMemo(
     () => data?.filter((collection) => !EXCLUDED_COLLECTIONS.includes(collection.address)).slice(0, 5),

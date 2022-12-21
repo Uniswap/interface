@@ -79,9 +79,6 @@ const TrendingCollections = () => {
       return fetchTrendingCollections({ volumeType: 'eth', timePeriod, size: 100 })
     },
     {
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
       refetchInterval: 5000,
     }
   )
