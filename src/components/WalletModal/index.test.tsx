@@ -1,6 +1,4 @@
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import * as connectionUtils from 'connection/utils'
-import { ApplicationModal } from 'state/application/reducer'
 
 import { nativeOnChain } from '../../constants/tokens'
 import { render, screen } from '../../test-utils'
@@ -20,7 +18,7 @@ jest.mock('utils/userAgent', () => ({
 
 jest.mock('.../../state/application/hooks', () => {
   return {
-    useModalIsOpen: (_modal: ApplicationModal) => true,
+    useModalIsOpen: () => true,
     useToggleWalletModal: () => {
       return
     },
@@ -29,7 +27,7 @@ jest.mock('.../../state/application/hooks', () => {
 
 jest.mock('hooks/useStablecoinPrice', () => {
   return {
-    useStablecoinValue: (_currencyAmount: CurrencyAmount<Currency> | undefined | null) => {
+    useStablecoinValue: () => {
       return
     },
   }
@@ -38,10 +36,10 @@ jest.mock('hooks/useStablecoinPrice', () => {
 jest.mock('lib/hooks/useCurrencyBalance', () => {
   return {
     __esModule: true,
-    default: (account?: string, currency?: Currency) => {
+    default: () => {
       return
     },
-    useTokenBalance: (account?: string, token?: Token) => {
+    useTokenBalance: () => {
       return
     },
   }

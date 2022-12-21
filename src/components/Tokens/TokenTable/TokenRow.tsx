@@ -459,7 +459,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   return (
     <div ref={ref} data-testid={`token-table-row-${tokenName}`}>
       <StyledLink
-        to={getTokenDetailsURL(token.address, token.chain)}
+        to={getTokenDetailsURL(token.address ?? '', token.chain)}
         onClick={() => sendAnalyticsEvent(EventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)}
       >
         <TokenRow
@@ -512,7 +512,6 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
                       height={height}
                       tokenData={token}
                       pricePercentChange={token.market?.pricePercentChange?.value}
-                      timePeriod={timePeriod}
                       sparklineMap={props.sparklineMap}
                     />
                   )

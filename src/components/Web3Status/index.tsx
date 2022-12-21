@@ -1,7 +1,8 @@
 import { Trans } from '@lingui/macro'
-import { TraceEvent } from '@uniswap/analytics'
+import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { FiatOnrampAnnouncement } from 'components/FiatOnrampAnnouncement'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
 import WalletDropdown from 'components/WalletDropdown'
 import { getConnection, getIsMetaMask } from 'connection/utils'
@@ -10,6 +11,7 @@ import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { getIsValidSwapQuote } from 'pages/Swap'
 import { darken } from 'polished'
 import { useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
 import { useAppSelector } from 'state/hooks'
 import { useDerivedSwapInfo } from 'state/swap/hooks'
@@ -207,6 +209,10 @@ function Web3StatusInner() {
   const validSwapQuote = getIsValidSwapQuote(trade, tradeState, swapInputError)
   const theme = useTheme()
   const toggleWalletDropdown = useToggleWalletDropdown()
+  const handleWalletDropdownClick = useCallback(() => {
+    sendAnalyticsEvent('FOR Account Dropdown Button Clicks')
+    toggleWalletDropdown()
+  }, [toggleWalletDropdown])
   const toggleWalletModal = useToggleWalletModal()
   const toggleMetamaskConnectionErrorModal = useToggleMetamaskConnectionErrorModal()
   const walletIsOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
@@ -227,13 +233,12 @@ function Web3StatusInner() {
   const pending = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
 
   const hasPendingTransactions = !!pending.length
-  const toggleWallet = toggleWalletDropdown
 
   if (!chainId) {
     return null
   } else if (error) {
     return (
-      <Web3StatusError onClick={toggleWallet}>
+      <Web3StatusError onClick={handleWalletDropdownClick}>
         <NetworkIcon />
         <Text>
           <Trans>Error</Trans>
@@ -249,7 +254,7 @@ function Web3StatusInner() {
     return (
       <Web3StatusConnected
         data-testid="web3-status-connected"
-        onClick={toggleWallet}
+        onClick={handleWalletDropdownClick}
         pending={hasPendingTransactions}
         isClaimAvailable={isClaimAvailable}
       >
@@ -287,7 +292,7 @@ function Web3StatusInner() {
             <Trans>Connect</Trans>
           </StyledConnectButton>
           <VerticalDivider />
-          <ChevronWrapper onClick={toggleWalletDropdown} data-testid="navbar-toggle-dropdown">
+          <ChevronWrapper onClick={handleWalletDropdownClick} data-testid="navbar-toggle-dropdown">
             {walletIsOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
           </ChevronWrapper>
         </Web3StatusConnectWrapper>
@@ -302,7 +307,7 @@ export default function Web3Status() {
   const allTransactions = useAllTransactions()
   const ref = useRef<HTMLDivElement>(null)
   const walletRef = useRef<HTMLDivElement>(null)
-  const closeModal = useCloseModal(ApplicationModal.WALLET_DROPDOWN)
+  const closeModal = useCloseModal()
   const isOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
 
   useOnClickOutside(ref, isOpen ? closeModal : undefined, [walletRef])
@@ -318,6 +323,7 @@ export default function Web3Status() {
   return (
     <span ref={ref}>
       <Web3StatusInner />
+      <FiatOnrampAnnouncement />
       <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
       <MetamaskConnectionError />
       <Portal>

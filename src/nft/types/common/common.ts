@@ -1,3 +1,4 @@
+import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { SortBy } from 'nft/hooks'
 
 import { SellOrder } from '../sell'
@@ -81,7 +82,7 @@ export interface Trait {
 export interface GenieAsset {
   id?: string // This would be a random id created and assigned by front end
   address: string
-  notForSale: boolean
+  notForSale?: boolean
   collectionName?: string
   collectionSymbol?: string
   imageUrl?: string
@@ -93,17 +94,15 @@ export interface GenieAsset {
   sellorders?: SellOrder[]
   smallImageUrl?: string
   tokenId: string
-  tokenType: TokenType
+  tokenType?: NftStandard
   totalCount?: number // The totalCount from the query to /assets
   collectionIsVerified?: boolean
   rarity?: Rarity
-  owner: {
-    address: string
-  }
-  metadataUrl: string
+  ownerAddress?: string
+  metadataUrl?: string
   creator: {
-    address: string
-    profile_img_url: string
+    address?: string
+    profile_img_url?: string
   }
   traits?: Trait[]
 }

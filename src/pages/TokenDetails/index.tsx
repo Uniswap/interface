@@ -1,13 +1,11 @@
 import TokenDetails from 'components/Tokens/TokenDetails'
 import { TokenDetailsPageSkeleton } from 'components/Tokens/TokenDetails/Skeleton'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
-import { TokenQuery, tokenQuery } from 'graphql/data/Token'
-import { TokenPriceQuery, tokenPriceQuery } from 'graphql/data/TokenPrice'
+import { useTokenPriceQuery, useTokenQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { CHAIN_NAME_TO_CHAIN_ID, TimePeriod, toHistoryDuration, validateUrlChainParam } from 'graphql/data/util'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
-import { Suspense, useCallback, useEffect, useMemo } from 'react'
-import { useQueryLoader } from 'react-relay'
+import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 
 export const pageTimePeriodAtom = atomWithStorage<TimePeriod>('tokenDetailsTimePeriod', TimePeriod.DAY)
@@ -26,35 +24,28 @@ export default function TokenDetailsPage() {
     [chain, isNative, pageChainId, timePeriod, tokenAddress]
   )
 
-  const [tokenQueryReference, loadTokenQuery] = useQueryLoader<TokenQuery>(tokenQuery)
-  const [priceQueryReference, loadPriceQuery] = useQueryLoader<TokenPriceQuery>(tokenPriceQuery)
-
-  useEffect(() => {
-    loadTokenQuery({ contract })
-    loadPriceQuery({ contract, duration })
-  }, [contract, duration, loadPriceQuery, loadTokenQuery, timePeriod])
-
-  const refetchTokenPrices = useCallback(
-    (t: TimePeriod) => {
-      loadPriceQuery({ contract, duration: toHistoryDuration(t) })
-      setTimePeriod(t)
+  const { data: tokenQuery, loading: tokenQueryLoading } = useTokenQuery({
+    variables: {
+      contract,
     },
-    [contract, loadPriceQuery, setTimePeriod]
-  )
+  })
 
-  if (!tokenQueryReference) {
-    return <TokenDetailsPageSkeleton />
-  }
+  const { data: tokenPriceQuery } = useTokenPriceQuery({
+    variables: {
+      contract,
+      duration,
+    },
+  })
+
+  if (!tokenQuery || tokenQueryLoading) return <TokenDetailsPageSkeleton />
 
   return (
-    <Suspense fallback={<TokenDetailsPageSkeleton />}>
-      <TokenDetails
-        urlAddress={tokenAddress}
-        chain={chain}
-        tokenQueryReference={tokenQueryReference}
-        priceQueryReference={priceQueryReference}
-        refetchTokenPrices={refetchTokenPrices}
-      />
-    </Suspense>
+    <TokenDetails
+      urlAddress={tokenAddress}
+      chain={chain}
+      tokenQuery={tokenQuery}
+      tokenPriceQuery={tokenPriceQuery}
+      onChangeTimePeriod={setTimePeriod}
+    />
   )
 }

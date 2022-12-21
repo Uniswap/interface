@@ -3,7 +3,7 @@ import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { EventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { OpacityHoverState } from 'components/Common'
-import { useNftBalanceQuery } from 'graphql/data/nft/NftBalance'
+import { useNftBalance } from 'graphql/data/nft/NftBalance'
 import { CancelListingIcon, VerifiedIcon } from 'nft/components/icons'
 import { useBag, useProfilePageState, useSellAsset } from 'nft/hooks'
 import { CollectionInfoForAsset, GenieAsset, ProfilePageStateType, WalletAsset } from 'nft/types'
@@ -218,10 +218,10 @@ const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
   const resetSellAssets = useSellAsset((state) => state.reset)
 
   const listing = asset.sellOrders && asset.sellOrders.length > 0 ? asset.sellOrders[0] : undefined
-  const expirationDate = listing ? new Date(listing.endAt) : undefined
+  const expirationDate = listing?.endAt ? new Date(listing.endAt) : undefined
 
   const USDPrice = useMemo(
-    () => (USDValue ? USDValue * asset.floor_sell_order_price : undefined),
+    () => (USDValue && asset.floor_sell_order_price ? USDValue * asset.floor_sell_order_price : undefined),
     [USDValue, asset.floor_sell_order_price]
   )
   const trace = useTrace()
@@ -254,7 +254,7 @@ const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
         {listing ? (
           <>
             <ThemedText.MediumHeader fontSize="28px" lineHeight="36px">
-              {formatEthPrice(asset.priceInfo.ETHPrice)} ETH
+              {formatEthPrice(asset.priceInfo?.ETHPrice)} ETH
             </ThemedText.MediumHeader>
             {USDPrice && (
               <ThemedText.BodySecondary lineHeight="24px">
@@ -320,7 +320,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const { account } = useWeb3React()
 
   const cheapestOrder = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
-  const expirationDate = cheapestOrder ? new Date(cheapestOrder.endAt) : undefined
+  const expirationDate = cheapestOrder?.endAt ? new Date(cheapestOrder.endAt) : undefined
 
   const itemsInBag = useBag((s) => s.itemsInBag)
   const addAssetsToBag = useBag((s) => s.addAssetsToBag)
@@ -331,11 +331,8 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const USDPrice = useUsdPrice(asset)
 
   const assetsFilter = [{ address: asset.address, tokenId: asset.tokenId }]
-  const { walletAssets: ownerAssets } = useNftBalanceQuery(account ?? '', [], assetsFilter, 1)
-  const walletAsset: WalletAsset | undefined = useMemo(
-    () => (ownerAssets?.length > 0 ? ownerAssets[0] : undefined),
-    [ownerAssets]
-  )
+  const { walletAssets: ownerAssets } = useNftBalance(account ?? '', [], assetsFilter, 1)
+  const walletAsset: WalletAsset | undefined = useMemo(() => ownerAssets?.[0], [ownerAssets])
 
   const { assetInBag } = useMemo(() => {
     return {
@@ -355,7 +352,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
     )
   }
 
-  const isOwner = asset.owner && !!walletAsset && account?.toLowerCase() === asset.owner?.address?.toLowerCase()
+  const isOwner = asset.ownerAddress && !!walletAsset && account?.toLowerCase() === asset.ownerAddress?.toLowerCase()
   const isForSale = cheapestOrder && asset.priceInfo
 
   return (
@@ -424,20 +421,20 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
       )}
       {isForSale && (
         <OwnerInformationContainer>
-          {asset.tokenType !== 'ERC1155' && asset.owner.address && (
+          {asset.tokenType !== 'ERC1155' && asset.ownerAddress && (
             <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
               Seller:
             </ThemedText.BodySmall>
           )}
           <OwnerText
             target="_blank"
-            href={`https://etherscan.io/address/${asset.owner.address}`}
+            href={`https://etherscan.io/address/${asset.ownerAddress}`}
             rel="noopener noreferrer"
           >
             {asset.tokenType === 'ERC1155' ? (
               ''
             ) : (
-              <span> {isOwner ? 'You' : asset.owner.address && shortenAddress(asset.owner.address, 2, 4)}</span>
+              <span> {isOwner ? 'You' : asset.ownerAddress && shortenAddress(asset.ownerAddress, 2, 4)}</span>
             )}
           </OwnerText>
         </OwnerInformationContainer>

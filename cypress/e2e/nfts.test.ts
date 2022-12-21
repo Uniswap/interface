@@ -59,6 +59,5 @@ describe('Testing nfts', () => {
     cy.get(getTestSelector('nft-no-nfts-selected')).should('exist')
     cy.get(getTestSelector('nft-bag-close-icon')).click()
     cy.get(getTestSelector('nft-explore-nfts-button')).click()
-    cy.get(getTestSelector('nft-welcome-modal')).should('exist')
   })
 })

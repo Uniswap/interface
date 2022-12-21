@@ -6,9 +6,6 @@ import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { Box } from 'nft/components/Box'
-import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
-import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
-import { ProfilePageLoadingSkeleton } from 'nft/components/profile/view/ProfilePageLoadingSkeleton'
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -27,12 +24,9 @@ import Polling from '../components/Polling'
 import Popups from '../components/Popups'
 import { useIsExpertMode } from '../state/user/hooks'
 import DarkModeQueryParamReader from '../theme/components/DarkModeQueryParamReader'
-import About from './About'
 import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
-import Earn from './Earn'
-import Manage from './Earn/Manage'
 import Landing from './Landing'
 import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
@@ -44,7 +38,7 @@ import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import Swap from './Swap'
-import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly } from './Swap/redirects'
+import { RedirectPathToSwapOnly } from './Swap/redirects'
 import Tokens from './Tokens'
 
 const TokenDetails = lazy(() => import('./TokenDetails'))
@@ -102,7 +96,7 @@ const HeaderWrapper = styled.div<{ transparent?: boolean }>`
   justify-content: space-between;
   position: fixed;
   top: 0;
-  z-index: ${Z_INDEX.sticky};
+  z-index: ${Z_INDEX.dropdown};
 `
 
 function getCurrentPageFromLocation(locationPathname: string): PageName | undefined {
@@ -218,9 +212,6 @@ export default function App() {
                   }
                 />
                 <Route path="create-proposal" element={<Navigate to="/vote/create-proposal" replace />} />
-                <Route path="claim" element={<OpenClaimAddressModalAndRedirectToSwap />} />
-                <Route path="uni" element={<Earn />} />
-                <Route path="uni/:currencyIdA/:currencyIdB" element={<Manage />} />
 
                 <Route path="send" element={<RedirectPathToSwapOnly />} />
                 <Route path="swap" element={<Swap />} />
@@ -254,12 +245,9 @@ export default function App() {
                 <Route path="migrate/v2" element={<MigrateV2 />} />
                 <Route path="migrate/v2/:address" element={<MigrateV2Pair />} />
 
-                <Route path="about" element={<About />} />
-
                 <Route
                   path="/nfts"
                   element={
-                    // TODO: replace loading state during Apollo migration
                     <Suspense fallback={null}>
                       <NftExplore />
                     </Suspense>
@@ -268,7 +256,7 @@ export default function App() {
                 <Route
                   path="/nfts/asset/:contractAddress/:tokenId"
                   element={
-                    <Suspense fallback={<AssetDetailsLoading />}>
+                    <Suspense fallback={null}>
                       <Asset />
                     </Suspense>
                   }
@@ -276,7 +264,7 @@ export default function App() {
                 <Route
                   path="/nfts/profile"
                   element={
-                    <Suspense fallback={<ProfilePageLoadingSkeleton />}>
+                    <Suspense fallback={null}>
                       <Profile />
                     </Suspense>
                   }
@@ -284,7 +272,7 @@ export default function App() {
                 <Route
                   path="/nfts/collection/:contractAddress"
                   element={
-                    <Suspense fallback={<CollectionPageSkeleton />}>
+                    <Suspense fallback={null}>
                       <Collection />
                     </Suspense>
                   }
@@ -292,7 +280,7 @@ export default function App() {
                 <Route
                   path="/nfts/collection/:contractAddress/activity"
                   element={
-                    <Suspense fallback={<CollectionPageSkeleton />}>
+                    <Suspense fallback={null}>
                       <Collection />
                     </Suspense>
                   }
