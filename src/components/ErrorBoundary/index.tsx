@@ -138,7 +138,9 @@ const Fallback = ({ error, eventId }: { error: Error; eventId: string | null }) 
               </Column>
               <CodeBlockWrapper>
                 <CodeTitle>
-                  <ThemedText.SubHeader fontWeight={500}>Error ID: {eventId}</ThemedText.SubHeader>
+                  <ThemedText.SubHeader fontWeight={500}>
+                    <Trans>Error ID: {eventId}</Trans>
+                  </ThemedText.SubHeader>
                   <CopyToClipboard toCopy={eventId}>
                     <CopyIcon />
                   </CopyToClipboard>
