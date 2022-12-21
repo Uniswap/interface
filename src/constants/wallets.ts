@@ -60,7 +60,7 @@ const detectCoin98 = (): WalletReadyState => {
 const detectCoinbase = (): WalletReadyState => {
   if (isMobile) return WalletReadyState.Unsupported
   // in NotDetected case, Coinbase show install link itself
-  if (window.ethereum?.isCoinbaseWallet || window.ethereum?.providers?.some(p => p.isCoinbaseWallet))
+  if (window.ethereum?.isCoinbaseWallet || window.ethereum?.providers?.some(p => p?.isCoinbaseWallet))
     return WalletReadyState.Installed
   if (window.coinbaseWalletExtension) return WalletReadyState.Loadable
   return WalletReadyState.NotDetected
