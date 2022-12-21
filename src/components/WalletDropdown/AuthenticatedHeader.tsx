@@ -192,7 +192,7 @@ const AuthenticatedHeader = () => {
     explorer,
   } = getChainInfoOrDefault(chainId ? chainId : SupportedChainId.MAINNET)
   const navigate = useNavigate()
-  const closeModal = useCloseModal(ApplicationModal.WALLET_DROPDOWN)
+  const closeModal = useCloseModal()
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const resetSellAssets = useSellAsset((state) => state.reset)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)

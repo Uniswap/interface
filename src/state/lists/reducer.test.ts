@@ -386,18 +386,19 @@ describe('list reducer', () => {
 
       it('each of those initialized lists is empty', () => {
         const byUrl = store.getState().byUrl
-        // note we don't expect the uniswap default list to be prepopulated
-        // this is ok.
-        Object.keys(byUrl).forEach((url) => {
-          if (url !== 'https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json') {
-            expect(byUrl[url]).toEqual({
+        Object.entries(byUrl)
+          // We don't expect the Uniswap default list to be prepopulated
+          .filter(
+            ([url]) => url !== 'https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json'
+          )
+          .forEach(([, state]) => {
+            expect(state).toEqual({
               error: null,
               current: null,
               loadingRequestId: null,
               pendingUpdate: null,
             })
-          }
-        })
+          })
       })
 
       it('sets initialized lists', () => {

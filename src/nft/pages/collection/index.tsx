@@ -5,8 +5,7 @@ import Column from 'components/Column'
 import { OpacityHoverState } from 'components/Common'
 import Row from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
-import { useLoadAssetsQuery } from 'graphql/data/nft/Asset'
-import { useCollectionQuery, useLoadCollectionQuery } from 'graphql/data/nft/Collection'
+import { useCollection } from 'graphql/data/nft/Collection'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { BAG_WIDTH, XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
@@ -16,7 +15,6 @@ import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPage
 import { BagCloseIcon } from 'nft/components/icons'
 import { useBag, useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
-import { GenieCollection } from 'nft/types'
 import { Suspense, useEffect } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { animated, easings, useSpring } from 'react-spring'
@@ -26,6 +24,7 @@ import { TRANSITION_DURATIONS } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 
 const FILTER_WIDTH = 332
+const EMPTY_TRAIT_OBJ = {}
 
 export const CollectionBannerLoading = styled(LoadingBubble)`
   width: 100%;
@@ -133,7 +132,7 @@ const Collection = () => {
   const { chainId } = useWeb3React()
   const screenSize = useScreenSize()
 
-  const collectionStats = useCollectionQuery(contractAddress as string)
+  const { data: collectionStats, loading } = useCollection(contractAddress as string)
 
   const { CollectionContainerWidthChange } = useSpring({
     CollectionContainerWidthChange:
@@ -169,6 +168,8 @@ const Collection = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  if (loading) return <CollectionPageSkeleton />
+
   const toggleActivity = () => {
     isActivityToggled
       ? navigate(`/nfts/collection/${contractAddress}`)
@@ -197,9 +198,7 @@ const Collection = () => {
                 />
               </BannerWrapper>
               <CollectionDescriptionSection>
-                {collectionStats && (
-                  <CollectionStats stats={collectionStats || ({} as GenieCollection)} isMobile={isMobile} />
-                )}
+                {collectionStats && <CollectionStats stats={collectionStats} isMobile={isMobile} />}
                 <div id="nft-anchor" />
                 <ActivitySwitcher
                   showActivity={isActivityToggled}
@@ -221,7 +220,7 @@ const Collection = () => {
                           </IconWrapper>
                         </MobileFilterHeader>
                       )}
-                      <Filters traitsByGroup={collectionStats?.traits ?? {}} />
+                      <Filters traitsByGroup={collectionStats?.traits ?? EMPTY_TRAIT_OBJ} />
                     </>
                   )}
                 </FiltersContainer>
@@ -246,7 +245,7 @@ const Collection = () => {
                       collectionStats && (
                         <Suspense fallback={<CollectionNftsAndMenuLoading />}>
                           <CollectionNfts
-                            collectionStats={collectionStats || ({} as GenieCollection)}
+                            collectionStats={collectionStats}
                             contractAddress={contractAddress}
                             rarityVerified={collectionStats?.rarityVerified}
                           />
@@ -265,21 +264,4 @@ const Collection = () => {
   )
 }
 
-// The page is responsible for any queries that must be run on initial load.
-// Triggering query load from the page prevents waterfalled requests, as lazy-loading them in components would prevent
-// any children from rendering.
-const CollectionPage = () => {
-  const { contractAddress } = useParams()
-  useLoadCollectionQuery(contractAddress)
-  useLoadAssetsQuery(contractAddress)
-
-  // The Collection must be wrapped in suspense so that it does not suspend the CollectionPage,
-  // which is needed to trigger query loads.
-  return (
-    <Suspense fallback={<CollectionPageSkeleton />}>
-      <Collection />
-    </Suspense>
-  )
-}
-
-export default CollectionPage
+export default Collection

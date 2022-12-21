@@ -300,7 +300,7 @@ export default function Web3Status() {
   const allTransactions = useAllTransactions()
   const ref = useRef<HTMLDivElement>(null)
   const walletRef = useRef<HTMLDivElement>(null)
-  const closeModal = useCloseModal(ApplicationModal.WALLET_DROPDOWN)
+  const closeModal = useCloseModal()
   const isOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
 
   useOnClickOutside(ref, isOpen ? closeModal : undefined, [walletRef])

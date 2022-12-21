@@ -165,7 +165,7 @@ const PriceTextInput = ({
     inputRef.current.value = listPrice !== undefined ? `${listPrice}` : ''
     setWarningType(WarningType.NONE)
     if (!warning && listPrice) {
-      if (listPrice < asset.floorPrice) setWarningType(WarningType.BELOW_FLOOR)
+      if (listPrice < (asset?.floorPrice ?? 0)) setWarningType(WarningType.BELOW_FLOOR)
       else if (asset.floor_sell_order_price && listPrice >= asset.floor_sell_order_price)
         setWarningType(WarningType.ALREADY_LISTED)
     } else if (warning && listPrice && listPrice >= 0) removeMarketplaceWarning(asset, warning)
@@ -240,10 +240,14 @@ const PriceTextInput = ({
       >
         {focused ? (
           <>
-            <Row display={asset.lastPrice ? 'flex' : 'none'} marginRight="8">
-              LAST: {formatEth(asset.lastPrice)} ETH
-            </Row>
-            <Row display={asset.floorPrice ? 'flex' : 'none'}>FLOOR: {formatEth(asset.floorPrice)} ETH</Row>
+            {!!asset.lastPrice && (
+              <Row display={asset.lastPrice ? 'flex' : 'none'} marginRight="8">
+                LAST: {formatEth(asset.lastPrice)} ETH
+              </Row>
+            )}
+            {!!asset.floorPrice && (
+              <Row display={asset.floorPrice ? 'flex' : 'none'}>FLOOR: {formatEth(asset.floorPrice)} ETH</Row>
+            )}
           </>
         ) : (
           <>
@@ -253,8 +257,8 @@ const PriceTextInput = ({
                   <>
                     {warningType}
                     {warningType === WarningType.BELOW_FLOOR
-                      ? formatEth(asset.floorPrice)
-                      : formatEth(asset.floor_sell_order_price)}
+                      ? formatEth(asset?.floorPrice ?? 0)
+                      : formatEth(asset?.floor_sell_order_price ?? 0)}
                     ETH
                     <Box
                       color={warningType === WarningType.BELOW_FLOOR ? 'accentAction' : 'orange'}
@@ -372,7 +376,10 @@ const MarketplaceRow = ({
 
   useMemo(() => {
     for (const market of selectedMarkets) {
-      market.royalty = (market.name === 'LooksRare' ? LOOKS_RARE_CREATOR_BASIS_POINTS : asset.basisPoints) * 0.01
+      if(market && asset && asset.basisPoints) {
+        market.royalty = (market.name === 'LooksRare' ? LOOKS_RARE_CREATOR_BASIS_POINTS : asset?.basisPoints) * 0.01
+      }
+   
     }
   }, [asset.basisPoints, selectedMarkets])
 

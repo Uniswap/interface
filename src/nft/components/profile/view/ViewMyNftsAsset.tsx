@@ -4,13 +4,14 @@ import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { EventName } from '@uniswap/analytics-events'
 import { MouseoverTooltip } from 'components/Tooltip'
 import Tooltip from 'components/Tooltip'
+import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { Box } from 'nft/components/Box'
 import * as Card from 'nft/components/collection/Card'
 import { AssetMediaType } from 'nft/components/collection/Card'
 import { bodySmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile, useSellAsset } from 'nft/hooks'
-import { TokenType, WalletAsset } from 'nft/types'
+import { WalletAsset } from 'nft/types'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 const TOOLTIP_TIMEOUT = 2000
@@ -39,7 +40,7 @@ const getNftDisplayComponent = (
 
 const getUnsupportedNftTextComponent = (asset: WalletAsset) => (
   <Box as="span" className={bodySmall} style={{ color: themeVars.colors.textPrimary }}>
-    {asset.asset_contract.tokenType === TokenType.ERC1155 ? (
+    {asset.asset_contract.tokenType === NftStandard.Erc1155 ? (
       <Trans>Selling ERC-1155s coming soon</Trans>
     ) : (
       <Trans>Blocked from trading</Trans>
@@ -109,7 +110,7 @@ export const ViewMyNftsAsset = ({
   }, [isSelected, isSelectedRef])
 
   const assetMediaType = Card.useAssetMediaType(asset)
-  const isDisabled = asset.asset_contract.tokenType === TokenType.ERC1155 || asset.susFlag
+  const isDisabled = asset.asset_contract.tokenType === NftStandard.Erc1155 || asset.susFlag
 
   return (
     <Card.Container

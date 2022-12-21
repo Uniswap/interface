@@ -1,6 +1,5 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { useFiatOnrampFlag } from 'featureFlags/flags/fiatOnramp'
-import { LandingRedirectVariant, useLandingRedirectFlag } from 'featureFlags/flags/landingRedirect'
 import { Permit2Variant, usePermit2Flag } from 'featureFlags/flags/permit2'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
@@ -165,7 +164,7 @@ function FeatureFlagGroup({ name, children }: PropsWithChildren<{ name: string }
   )
 }
 
-function FeatureFlagOption({ variant, featureFlag, value, label }: FeatureFlagProps) {
+function FeatureFlagOption({ variant, featureFlag, label }: FeatureFlagProps) {
   const updateFlag = useUpdateFlag()
   const [count, setCount] = useState(0)
   const featureFlags = useAtomValue(featureFlagSettings)
@@ -209,12 +208,6 @@ export default function FeatureFlagModal() {
         value={usePermit2Flag()}
         featureFlag={FeatureFlag.permit2}
         label="Permit 2 / Universal Router"
-      />
-      <FeatureFlagOption
-        variant={LandingRedirectVariant}
-        value={useLandingRedirectFlag()}
-        featureFlag={FeatureFlag.landingRedirect}
-        label="Landing Page Redirect"
       />
       <FeatureFlagOption
         variant={BaseVariant}

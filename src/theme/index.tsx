@@ -17,6 +17,17 @@ export const MEDIA_WIDTHS = {
   deprecated_upToLarge: 1280,
 }
 
+const deprecated_mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(
+  MEDIA_WIDTHS
+).reduce((acc, size) => {
+  acc[size] = (a: any, b: any, c: any) => css`
+    @media (max-width: ${(MEDIA_WIDTHS as any)[size]}px) {
+      ${css(a, b, c)}
+    }
+  `
+  return acc
+}, {} as any)
+
 export const BREAKPOINTS = {
   xs: 396,
   sm: 640,
@@ -52,17 +63,6 @@ const opacities = {
 const fonts = {
   code: 'courier, courier new, serif',
 }
-
-const deprecated_mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(
-  MEDIA_WIDTHS
-).reduce((accumulator, size) => {
-  ;(accumulator as any)[size] = (a: any, b: any, c: any) => css`
-    @media (max-width: ${(MEDIA_WIDTHS as any)[size]}px) {
-      ${css(a, b, c)}
-    }
-  `
-  return accumulator
-}, {}) as any
 
 function getSettings(darkMode: boolean) {
   return {

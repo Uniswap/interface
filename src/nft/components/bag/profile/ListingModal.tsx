@@ -62,12 +62,6 @@ const ListingModal = () => {
     ...trace,
   }
 
-  const approvalEventProperties = {
-    list_quantity: listings.length,
-    usd_value: ethPriceInUSD * totalEthListingValue,
-    ...trace,
-  }
-
   // when all collections have been approved, auto start the signing process
   useEffect(() => {
     collectionsRequiringApproval?.length &&
@@ -174,10 +168,11 @@ const ListingModal = () => {
     } else if (!paused) {
       setListingStatus(ListingStatus.FAILED)
     }
-    sendAnalyticsEvent(EventName.NFT_LISTING_COMPLETED, {
-      signatures_requested: listings.length,
+    sendAnalyticsEvent(EventName.NFT_LISTING_SIGNED, {
       signatures_approved: listings.filter((asset) => asset.status === ListingStatus.APPROVED),
-      ...approvalEventProperties,
+      list_quantity: listings.length,
+      usd_value: ethPriceInUSD * totalEthListingValue,
+      ...trace,
     })
     await logListing(listings, (await signer?.getAddress()) ?? '')
   }
@@ -241,6 +236,7 @@ const ListingModal = () => {
             <Trace
               name={EventName.NFT_LISTING_COMPLETED}
               properties={{ list_quantity: listings.length, usd_value: ethPriceInUSD * totalEthListingValue, ...trace }}
+              shouldLogImpression
             >
               <ListingSection
                 sectionTitle={`Listed ${listings.length} item${pluralize(listings.length)} for sale`}

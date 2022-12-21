@@ -5,13 +5,8 @@ import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import { OpacityHoverState } from 'components/Common'
 import { parseEther } from 'ethers/lib/utils'
-import { NftAssetTraitInput, NftMarketplace } from 'graphql/data/nft/__generated__/AssetQuery.graphql'
-import {
-  ASSET_PAGE_SIZE,
-  AssetFetcherParams,
-  useLazyLoadAssetsQuery,
-  useLoadSweepAssetsQuery,
-} from 'graphql/data/nft/Asset'
+import { NftAssetTraitInput, NftMarketplace, NftStandard } from 'graphql/data/__generated__/types-and-hooks'
+import { ASSET_PAGE_SIZE, AssetFetcherParams, useNftAssets } from 'graphql/data/nft/Asset'
 import useDebounce from 'hooks/useDebounce'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { AnimatedBox, Box } from 'nft/components/Box'
@@ -41,7 +36,6 @@ import {
   GenieCollection,
   isPooledMarket,
   Markets,
-  TokenType,
   UniformAspectRatio,
   UniformAspectRatios,
 } from 'nft/types'
@@ -63,7 +57,7 @@ import { ThemedText } from 'theme'
 
 import { CollectionAssetLoading } from './CollectionAssetLoading'
 import { MARKETPLACE_ITEMS, MarketplaceLogo } from './MarketplaceSelect'
-import { Sweep, useSweepFetcherParams } from './Sweep'
+import { Sweep } from './Sweep'
 import { TraitChip } from './TraitChip'
 
 interface CollectionNftsProps {
@@ -282,15 +276,6 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const [renderedHeight, setRenderedHeight] = useState<number | undefined>()
 
   const [sweepIsOpen, setSweepOpen] = useState(false)
-  // Load all sweep queries. Loading them on the parent allows lazy-loading, but avoids waterfalling requests.
-  const collectionParams = useSweepFetcherParams(contractAddress, 'others', debouncedMinPrice, debouncedMaxPrice)
-  const sudoSwapParams = useSweepFetcherParams(contractAddress, Markets.Sudoswap, debouncedMinPrice, debouncedMaxPrice)
-  const nftxParams = useSweepFetcherParams(contractAddress, Markets.NFTX, debouncedMinPrice, debouncedMaxPrice)
-  const nft20Params = useSweepFetcherParams(contractAddress, Markets.NFT20, debouncedMinPrice, debouncedMaxPrice)
-  useLoadSweepAssetsQuery(collectionParams, sweepIsOpen)
-  useLoadSweepAssetsQuery(sudoSwapParams, sweepIsOpen)
-  useLoadSweepAssetsQuery(nftxParams, sweepIsOpen)
-  useLoadSweepAssetsQuery(nft20Params, sweepIsOpen)
 
   const assetQueryParams: AssetFetcherParams = {
     address: contractAddress,
@@ -312,8 +297,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
     first: ASSET_PAGE_SIZE,
   }
 
-  const { assets: collectionNfts, loadNext, hasNext, isLoadingNext } = useLazyLoadAssetsQuery(assetQueryParams)
-  const handleNextPageLoad = useCallback(() => loadNext(ASSET_PAGE_SIZE), [loadNext])
+  const { data: collectionNfts, loading, hasNext, loadMore } = useNftAssets(assetQueryParams)
 
   const getPoolPosition = useCallback(
     (asset: GenieAsset) => {
@@ -394,8 +378,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const screenSize = useScreenSize()
 
   useEffect(() => {
-    setIsCollectionNftsLoading(isLoadingNext)
-  }, [isLoadingNext, setIsCollectionNftsLoading])
+    setIsCollectionNftsLoading(loading)
+  }, [loading, setIsCollectionNftsLoading])
 
   const hasRarity = useMemo(() => {
     const hasRarity = getRarityStatus(rarityStatusCache, collectionStats?.address, collectionAssets) ?? false
@@ -434,7 +418,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   }, [collectionAssets, isMobile, currentTokenPlayingMedia, rarityVerified, uniformAspectRatio, renderedHeight])
 
   const hasNfts = collectionAssets && collectionAssets.length > 0
-  const hasErc1155s = hasNfts && collectionAssets[0] && collectionAssets[0].tokenType === TokenType.ERC1155
+  const hasErc1155s = hasNfts && collectionAssets[0] && collectionAssets[0]?.tokenType === NftStandard.Erc1155
 
   const minMaxPriceChipText: string | undefined = useMemo(() => {
     if (debouncedMinPrice && debouncedMaxPrice) {
@@ -619,35 +603,37 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         </InfiniteScrollWrapper>
       </AnimatedBox>
       <InfiniteScrollWrapper>
-        <InfiniteScroll
-          next={handleNextPageLoad}
-          hasMore={hasNext}
-          loader={Boolean(hasNext && hasNfts) && <LoadingAssets height={renderedHeight} />}
-          dataLength={collectionAssets?.length ?? 0}
-          style={{ overflow: 'unset' }}
-          className={hasNfts || isLoadingNext ? styles.assetList : undefined}
-        >
-          {hasNfts ? (
-            assets
-          ) : collectionAssets?.length === 0 ? (
-            <Center width="full" color="textSecondary" textAlign="center" style={{ height: '60vh' }}>
-              <EmptyCollectionWrapper>
-                <p className={headlineMedium}>No NFTS found</p>
-                <Box
-                  onClick={reset}
-                  type="button"
-                  className={clsx(bodySmall, buttonTextMedium)}
-                  color="accentAction"
-                  cursor="pointer"
-                >
-                  <ViewFullCollection>View full collection</ViewFullCollection>
-                </Box>
-              </EmptyCollectionWrapper>
-            </Center>
-          ) : (
-            <CollectionNftsLoading height={renderedHeight} />
-          )}
-        </InfiniteScroll>
+        {loading ? (
+          <CollectionNftsLoading height={renderedHeight} />
+        ) : (
+          <InfiniteScroll
+            next={loadMore}
+            hasMore={hasNext ?? false}
+            loader={Boolean(hasNext && hasNfts) && <LoadingAssets />}
+            dataLength={collectionAssets?.length ?? 0}
+            style={{ overflow: 'unset' }}
+            className={hasNfts ? styles.assetList : undefined}
+          >
+            {!hasNfts ? (
+              <Center width="full" color="textSecondary" textAlign="center" style={{ height: '60vh' }}>
+                <EmptyCollectionWrapper>
+                  <p className={headlineMedium}>No NFTS found</p>
+                  <Box
+                    onClick={reset}
+                    type="button"
+                    className={clsx(bodySmall, buttonTextMedium)}
+                    color="accentAction"
+                    cursor="pointer"
+                  >
+                    <ViewFullCollection>View full collection</ViewFullCollection>
+                  </Box>
+                </EmptyCollectionWrapper>
+              </Center>
+            ) : (
+              assets
+            )}
+          </InfiniteScroll>
+        )}
       </InfiniteScrollWrapper>
     </>
   )
