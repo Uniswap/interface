@@ -103,8 +103,8 @@ const Navbar = () => {
           <Box className={styles.leftSideContainer}>
             <Box className={styles.logoContainer}>
               <UniScrollIcon
-                // width="38"
-                height="38"
+                // width="auto"
+                height="32"
                 className={styles.logo}
                 onClick={() => {
                   navigate('/')

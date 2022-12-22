@@ -156,7 +156,30 @@ export function NetworkAlert() {
   const [darkMode] = useDarkModeManager()
 
   if (!shouldShowAlert(chainId)) {
-    return null
+
+    const textColor = TEXT_COLORS[SupportedChainId.ARBITRUM_ONE]
+
+    return (
+    <RootWrapper>
+      <ContentWrapper chainId={SupportedChainId.ARBITRUM_ONE} darkMode={darkMode} logoUrl="">
+        <LinkOutToBridge href="https://gov.uniswap.org/t/temperature-check-deploy-uniswap-v3-on-scroll/18114">
+          <BodyText color={darkMode ? textColor : "black"}>
+            <AlertTriangle size={24} style={{marginRight: "16px"}} />
+            <AutoRow>
+              <Header>
+                <Trans>Intended for Demo Purposes Only</Trans>
+              </Header>
+              <HideSmall>
+                <Trans>This is not an official Uniswap release.</Trans>
+              </HideSmall>
+            </AutoRow>
+          </BodyText>
+          <StyledArrowUpRight color={darkMode ? textColor : "black"} />
+        </LinkOutToBridge>
+      </ContentWrapper>
+    </RootWrapper>
+
+  )
   }
 
   const { label, logoUrl, bridge } = getChainInfo(chainId)

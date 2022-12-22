@@ -18,7 +18,7 @@ export const UniIcon = (props: SVGProps) => (
 )
 
 export const UniScrollIcon = (props: SVGProps) => (
-  <svg {...props} height="34" fill="auto" style={{marginLeft:"6px"}} xmlns="http://www.w3.org/2000/svg"  x="0px" y="0px" viewBox="0 0 90.51 48">
+  <svg {...props} fill="auto" style={{marginLeft:"6px"}} xmlns="http://www.w3.org/2000/svg"  x="0px" y="0px" viewBox="0 0 90.51 48">
     <path fill="currentColor" style={{fillRule:"evenodd",clipRule:"evenodd"}} d="M64.41,17.47c-0.42,1.58-2.11,2.36-3.62,2.52c-0.86-0.02-1.75,0.41-1.96,1.3
 	c-0.25,1.66-0.22,3.42-1.06,4.95c-1.51,2.56-1.64,4.85,1.18,6.53c4.68,2.88,0.76,6.88-5.01,7.66c0.16-0.02,0.1-0.29-0.02-0.6
 	c-0.35-0.81-0.54-1.06-0.86-1.54h0c-2.19-2.9-2.27-6.86,0.45-9.45l0,0c1.45-1.74,2.94-3.9,3.12-6.24l0,0l0,0
