@@ -1,10 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { useState } from 'react'
-import { isMobile } from 'react-device-detect'
-import { ChevronDown } from 'react-feather'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
+import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
 import { ReactComponent as ZicZac } from 'assets/svg/ziczac.svg'
 import { BestPrice, LowestSlippage, MoneyBagOutline } from 'components/Icons'
 import AntiSnippingAttack from 'components/Icons/AntiSnippingAttack'
@@ -110,16 +109,16 @@ export const Instruction = () => {
 
   const theme = useTheme()
 
-  const [show, setShow] = useState(!isMobile) // hide by default on mobile
+  const [show, setShow] = useState(false)
 
   return (
     <InstructionItem>
-      <Flex justifyContent="space-between" alignItems="center">
+      <Flex alignItems="center">
         <Text lineHeight="24px">
           {tab === VERSION.ELASTIC ? (
             <Trans>Add liquidity to our Elastic Pools and earn trading fees automatically.</Trans>
           ) : (
-            <Trans>Add liquidity to our Classic Pools & earn trading fees automatically.</Trans>
+            <Trans>Add liquidity to our Classic Pools and earn trading fees automatically.</Trans>
           )}
           &nbsp;
           <ExternalLink
@@ -133,7 +132,7 @@ export const Instruction = () => {
           </ExternalLink>
         </Text>
         <ShowDetailBtn isOpen={show} onClick={() => setShow(prev => !prev)}>
-          <ChevronDown size={24} />
+          <DropdownSVG />
         </ShowDetailBtn>
       </Flex>
 
@@ -209,10 +208,7 @@ const GlobalDataItemValue = styled.span`
 `
 
 const InstructionItem = styled.div`
-  padding: 1rem 0;
   font-size: 12px;
   color: ${({ theme }) => theme.subText};
   line-height: 1.5;
-  border-top: 1px solid ${({ theme }) => theme.border};
-  border-bottom: 1px solid ${({ theme }) => theme.border};
 `

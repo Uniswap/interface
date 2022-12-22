@@ -8,7 +8,6 @@ import { Link } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
-import bgimg from 'assets/images/card-background.png'
 import { ReactComponent as DropIcon } from 'assets/svg/drop.svg'
 import { ButtonEmpty, ButtonLight } from 'components/Button'
 import CopyHelper from 'components/Copy'
@@ -33,36 +32,7 @@ import { APRTooltipContent } from '../FarmingPoolAPRCell'
 import { useSharePoolContext } from '../SharePoolContext'
 import FeeTarget from './FeeTarget'
 import PositionDetail from './PostionDetail'
-import { FeeTag } from './styleds'
-
-const FlipCard = styled.div<{ flip: boolean }>`
-  border-radius: 20px;
-  padding: 16px;
-  background-image: url(${bgimg});
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-color: ${({ theme }) => theme.buttonBlack};
-  position: relative;
-  transition: transform 0.6s;
-  transform-style: preserve-3d;
-
-  transform: rotateY(${({ flip }) => (flip ? '-180deg' : '0')});
-`
-
-const FlipCardFront = styled.div`
-  display: flex;
-  height: 100%;
-  flex-direction: column;
-  backface-visibility: hidden;
-`
-
-const FlipCardBack = styled.div`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  backface-visibility: hidden;
-  transform: rotateY(180deg);
-`
+import { FeeTag, FlipCard, FlipCardBack, FlipCardFront } from './styleds'
 
 const Button = styled(ButtonLight)<{ color: string }>`
   background: ${({ color }) => color + '33'};

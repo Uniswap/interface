@@ -7,9 +7,6 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 
-import { ReactComponent as GridViewIcon } from 'assets/svg/grid_view.svg'
-import { ReactComponent as ListViewIcon } from 'assets/svg/list_view.svg'
-import { ButtonEmpty } from 'components/Button'
 import FarmIssueAnnouncement from 'components/FarmIssueAnnouncement'
 import LocalLoader from 'components/LocalLoader'
 import ShareModal from 'components/ShareModal'
@@ -24,8 +21,6 @@ import useTheme from 'hooks/useTheme'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useOpenModal } from 'state/application/hooks'
 import { useElasticFarms, useFailedNFTs } from 'state/farms/elastic/hooks'
-import { useViewMode } from 'state/user/hooks'
-import { VIEW_MODE } from 'state/user/reducer'
 import { StyledInternalLink } from 'theme'
 import { isAddressString } from 'utils'
 
@@ -33,7 +28,8 @@ import ElasticFarmGroup from './ElasticFarmGroup'
 import { DepositModal, StakeUnstakeModal } from './ElasticFarmModals'
 import HarvestModal from './ElasticFarmModals/HarvestModal'
 import WithdrawModal from './ElasticFarmModals/WithdrawModal'
-import FarmSort from './FarmSort'
+import FarmSort from './FarmPoolSort'
+import ListGridViewGroup from './ListGridViewGroup'
 import { SharePoolContext } from './SharePoolContext'
 import {
   HeadingContainer,
@@ -49,7 +45,6 @@ type ModalType = 'deposit' | 'withdraw' | 'stake' | 'unstake' | 'harvest' | 'for
 function ElasticFarms() {
   const theme = useTheme()
   const { isEVM, networkInfo, chainId } = useActiveWeb3React()
-  const [viewMode, setViewMode] = useViewMode()
 
   const [searchParams] = useSearchParams()
 
@@ -212,25 +207,6 @@ function ElasticFarms() {
     })
   }, [isShareModalOpen, setSharePoolAddress])
 
-  const gridListViewGroup = (
-    <Flex sx={{ gap: '0.5rem' }} marginRight="0.75rem">
-      <ButtonEmpty
-        padding="0"
-        style={{ color: viewMode === VIEW_MODE.GRID ? theme.subText : theme.primary }}
-        onClick={() => setViewMode(VIEW_MODE.LIST)}
-      >
-        <ListViewIcon />
-      </ButtonEmpty>
-      <ButtonEmpty
-        padding="0"
-        style={{ color: viewMode === VIEW_MODE.LIST ? theme.subText : theme.primary }}
-        onClick={() => setViewMode(VIEW_MODE.GRID)}
-      >
-        <GridViewIcon />
-      </ButtonEmpty>
-    </Flex>
-  )
-
   return (
     <SharePoolContext.Provider value={setSharePoolAddress}>
       {selectedFarm && selectedModal === 'deposit' && (
@@ -262,7 +238,11 @@ function ElasticFarms() {
 
       <HeadingContainer>
         <StakedOnlyToggleWrapper>
-          {above1000 && gridListViewGroup}
+          {above1000 && (
+            <Flex marginRight="0.75rem">
+              <ListGridViewGroup />
+            </Flex>
+          )}
 
           {activeTab !== FARM_TAB.MY_FARMS && (
             <>

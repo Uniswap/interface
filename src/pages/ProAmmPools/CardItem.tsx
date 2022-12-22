@@ -1,20 +1,21 @@
 import { ChainId, Token, WETH } from '@kyberswap/ks-sdk-core'
-import { Trans, t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { rgba } from 'polished'
-import { useState } from 'react'
-import { ChevronUp, Share2 } from 'react-feather'
+import { BarChart2, Plus, Share2 } from 'react-feather'
 import { Link, useNavigate } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
-import { ButtonEmpty, ButtonOutlined, ButtonPrimary } from 'components/Button'
+import bgimg from 'assets/images/card-background.png'
+import { ReactComponent as ViewPositionIcon } from 'assets/svg/view_positions.svg'
+import { ButtonLight, ButtonOutlined } from 'components/Button'
 import CopyHelper from 'components/Copy'
 import Divider from 'components/Divider'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import { MoneyBagOutline } from 'components/Icons'
-import InfoHelper from 'components/InfoHelper'
+import { MoneyBag } from 'components/Icons'
 import { MouseoverTooltip } from 'components/Tooltip'
-import FarmingPoolAPRCell from 'components/YieldPools/FarmingPoolAPRCell'
+import { FeeTag } from 'components/YieldPools/ElasticFarmGroup/styleds'
+import { APRTooltipContent } from 'components/YieldPools/FarmingPoolAPRCell'
 import { ELASTIC_BASE_FEE_UNIT, PROMM_ANALYTICS_URL } from 'constants/index'
 import { NativeCurrencies } from 'constants/tokens'
 import { VERSION } from 'constants/v2'
@@ -30,9 +31,14 @@ import { ElasticPoolDetail } from 'types/pool'
 import { isAddressString, shortenAddress } from 'utils'
 import { formatDollarAmount } from 'utils/numbers'
 
+const StyledLink = styled(ExternalLink)`
+  :hover {
+    text-decoration: none;
+  }
+`
+
 interface ListItemProps {
-  pair: ElasticPoolDetail[]
-  idx: number
+  pool: ElasticPoolDetail
   onShared: (id: string) => void
   userPositions: { [key: string]: number }
 }
@@ -43,36 +49,16 @@ const getPrommAnalyticLink = (chainId: ChainId | undefined, poolAddress: string)
 }
 
 const Wrapper = styled.div`
-  position: relative;
-  padding: 20px 16px;
-  font-size: 12px;
-  background-color: ${({ theme }) => theme.background};
   border-radius: 20px;
-  margin-bottom: 20px;
+  padding: 16px;
+  background-image: url(${bgimg});
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: ${({ theme }) => theme.buttonBlack};
 `
-
-const DataText = styled(Flex)`
-  color: ${({ theme }) => theme.text};
-  flex-direction: column;
-`
-
-const PoolAddressContainer = styled(Flex)`
-  align-items: center;
-`
-
-const ButtonIcon = styled(ButtonEmpty)`
-  background: ${({ theme }) => rgba(theme.subText, 0.2)};
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  padding: 0;
-  color: ${({ theme }) => theme.subText};
-`
-
-export default function ProAmmPoolCardItem({ pair, onShared, userPositions, idx }: ListItemProps) {
-  const { chainId } = useActiveWeb3React()
+export default function ProAmmPoolCardItem({ pool, onShared, userPositions }: ListItemProps) {
+  const { chainId, networkInfo } = useActiveWeb3React()
   const theme = useTheme()
-  const [isOpen, setIsOpen] = useState(true)
   const navigate = useNavigate()
   const [, setUrlOnEthPoWAck] = useUrlOnEthPowAck()
   const toggleEthPowAckModal = useToggleEthPowAckModal()
@@ -81,11 +67,11 @@ export default function ProAmmPoolCardItem({ pair, onShared, userPositions, idx 
   const { farms } = useElasticFarms()
 
   const token0 =
-    allTokens[isAddressString(chainId, pair[0].token0.address)] ||
-    new Token(chainId, pair[0].token0.address, pair[0].token0.decimals, pair[0].token0.symbol)
+    allTokens[isAddressString(chainId, pool.token0.address)] ||
+    new Token(chainId, pool.token0.address, pool.token0.decimals, pool.token0.symbol)
   const token1 =
-    allTokens[isAddressString(chainId, pair[0].token1.address)] ||
-    new Token(chainId, pair[0].token1.address, pair[0].token1.decimals, pair[0].token1.symbol)
+    allTokens[isAddressString(chainId, pool.token1.address)] ||
+    new Token(chainId, pool.token1.address, pool.token1.decimals, pool.token1.symbol)
 
   const nativeToken = NativeCurrencies[chainId]
 
@@ -98,208 +84,191 @@ export default function ProAmmPoolCardItem({ pair, onShared, userPositions, idx 
   const token1Slug = isToken1WETH ? nativeToken.symbol : token1.address
   const token1Symbol = isToken1WETH ? nativeToken.symbol : token1.symbol
 
+  const myLiquidity = userPositions[pool.address]
+  const hasLiquidity = pool.address in userPositions
+
+  let fairlaunchAddress = ''
+  let pid = -1
+
+  farms?.forEach(farm => {
+    const p = farm.pools
+      .filter(item => item.endTime > Date.now() / 1000)
+      .find(item => item.poolAddress.toLowerCase() === pool.address.toLowerCase())
+
+    if (p) {
+      fairlaunchAddress = farm.id
+      pid = Number(p.pid)
+    }
+  })
+
+  const isFarmingPool = !!fairlaunchAddress && pid !== -1
+
   return (
-    <>
-      <Flex justifyContent="space-between" marginBottom="20px" marginTop={idx === 0 ? 0 : '20px'}>
+    <Wrapper key={pool.address}>
+      <Link
+        to={`/elastic/add/${token0Slug}/${token1Slug}/${pool.feeTier}`}
+        style={{
+          textDecoration: 'none',
+        }}
+      >
         <Flex alignItems="center">
           <DoubleCurrencyLogo
-            size={24}
+            size={20}
             currency0={isToken0WETH ? nativeToken : token0}
             currency1={isToken1WETH ? nativeToken : token1}
           />
-          <Text fontSize={20} fontWeight="500">
+          <Text fontSize={16} fontWeight="500">
             {token0Symbol} - {token1Symbol}
           </Text>
+          <FeeTag style={{ fontSize: '12px', marginRight: '4px' }}>
+            Fee {(pool.feeTier * 100) / ELASTIC_BASE_FEE_UNIT}%
+          </FeeTag>
+
+          {isFarmingPool && (
+            <MouseoverTooltip
+              noArrow
+              text={
+                <Text>
+                  <Trans>
+                    Available for yield farming. Click{' '}
+                    <Link to={`/farms?tab=elastic&type=active&search=${pool.address}`}>here</Link> to go to the farm.
+                  </Trans>
+                </Text>
+              }
+            >
+              <IconWrapper style={{ background: rgba(theme.primary, 0.2), width: '20px', height: '20px' }}>
+                <MoneyBag size={12} color={theme.apr} />
+              </IconWrapper>
+            </MouseoverTooltip>
+          )}
         </Flex>
-        <ButtonIcon
-          disabled={pair.length === 1}
+      </Link>
+
+      <Flex
+        marginTop="0.75rem"
+        alignItems="center"
+        sx={{ gap: '6px' }}
+        fontSize="12px"
+        color={theme.subText}
+        width="max-content"
+        fontWeight="500"
+      >
+        <Flex alignItems="center" sx={{ gap: '4px' }}>
+          <CopyHelper toCopy={pool.address} />
+          <Text>{shortenAddress(chainId, pool.address, 2)}</Text>
+        </Flex>
+
+        <Flex
+          marginLeft="12px"
           onClick={() => {
-            pair.length > 1 && setIsOpen(prev => !prev)
+            onShared(pool.address)
+          }}
+          sx={{
+            cursor: 'pointer',
+            gap: '4px',
+          }}
+          role="button"
+          color={theme.subText}
+        >
+          <Share2 size="14px" color={theme.subText} />
+          <Trans>Share</Trans>
+        </Flex>
+      </Flex>
+
+      <Text
+        width="fit-content"
+        lineHeight="16px"
+        fontSize="12px"
+        fontWeight="500"
+        color={theme.subText}
+        sx={{ borderBottom: `1px dashed ${theme.border}` }}
+        marginTop="16px"
+      >
+        <MouseoverTooltip
+          width="fit-content"
+          placement="right"
+          text={<APRTooltipContent farmAPR={pool.farmAPR || 0} poolAPR={pool.apr} />}
+        >
+          <Trans>Avg APR</Trans>
+        </MouseoverTooltip>
+      </Text>
+
+      <Flex justifyContent="space-between" alignItems="center">
+        <Text fontSize="28px" fontWeight="500" color={theme.apr}>
+          {((pool.farmAPR || 0) + pool.apr).toFixed(2)}%
+        </Text>
+
+        <StyledLink href={getPrommAnalyticLink(chainId, pool.address)}>
+          <Flex alignItems="flex-end">
+            <BarChart2 size="16px" color={theme.subText} />
+            <Text fontSize="12px" fontWeight="500" marginLeft="4px" color={theme.subText}>
+              Pool Analytics ↗
+            </Text>
+          </Flex>
+        </StyledLink>
+      </Flex>
+
+      <Flex justifyContent="space-between" color={theme.subText} fontSize="12px" fontWeight="500" marginTop="1rem">
+        <Text>
+          <Trans>Volume (24H)</Trans>
+        </Text>
+        <Text>
+          <Trans>Fees (24H)</Trans>
+        </Text>
+      </Flex>
+
+      <Flex justifyContent="space-between" fontSize="16px" fontWeight="500" marginTop="0.25rem" marginBottom="1rem">
+        <Text>{formatDollarAmount(pool.volumeUSDLast24h)}</Text>
+        <Text>{formatDollarAmount(pool.volumeUSDLast24h * (pool.feeTier / ELASTIC_BASE_FEE_UNIT))}</Text>
+      </Flex>
+
+      <Divider />
+
+      <Flex justifyContent="space-between" color={theme.subText} fontSize="12px" fontWeight="500" marginTop="1rem">
+        <Text>TVL</Text>
+        <Text>My Liquidity</Text>
+      </Flex>
+
+      <Flex justifyContent="space-between" fontSize="16px" fontWeight="500" marginTop="0.25rem" marginBottom="1rem">
+        <Text>{formatDollarAmount(pool.tvlUSD)}</Text>
+        <Text>{myLiquidity ? formatDollarAmount(Number(myLiquidity)) : '-'}</Text>
+      </Flex>
+
+      <Flex marginTop="20px" justifyContent="space-between" fontSize="14px" style={{ gap: '16px' }}>
+        {hasLiquidity && (
+          <ButtonOutlined
+            as={Link}
+            to={`/myPools/${networkInfo.route}?tab=${VERSION.ELASTIC}&search=${pool.address}`}
+            padding="10px"
+            style={{ height: '36px' }}
+          >
+            <ViewPositionIcon />
+            <Text width="max-content" fontSize="14px">
+              <Trans>View Positions</Trans>
+            </Text>
+          </ButtonOutlined>
+        )}
+
+        <ButtonLight
+          padding="10px"
+          style={{ height: '36px' }}
+          onClick={() => {
+            const url = `/elastic/add/${token0Slug}/${token1Slug}/${pool.feeTier}`
+
+            if (chainId === ChainId.ETHW) {
+              setUrlOnEthPoWAck(url)
+              toggleEthPowAckModal()
+            } else {
+              navigate(url)
+            }
           }}
         >
-          <ChevronUp
-            size="20px"
-            color={theme.subText}
-            style={{
-              transition: 'transform 0.2s',
-              transform: `rotate(${isOpen && pair.length > 1 ? '0' : '180deg'})`,
-            }}
-          />
-        </ButtonIcon>
+          <Plus size={16} />
+          <Text width="max-content" fontSize="14px" marginLeft="4px">
+            <Trans>Add Liquidity</Trans>
+          </Text>
+        </ButtonLight>
       </Flex>
-      {pair.map((pool, index) => {
-        const myLiquidity = userPositions[pool.address]
-        const hasLiquidity = pool.address in userPositions
-        if (pair.length > 1 && index !== 0 && !isOpen) return null
-
-        let fairlaunchAddress = ''
-        let pid = -1
-
-        farms?.forEach(farm => {
-          const p = farm.pools
-            .filter(item => item.endTime > Date.now() / 1000)
-            .find(item => item.poolAddress.toLowerCase() === pool.address.toLowerCase())
-
-          if (p) {
-            fairlaunchAddress = farm.id
-            pid = Number(p.pid)
-          }
-        })
-
-        const isFarmingPool = !!fairlaunchAddress && pid !== -1
-
-        return (
-          <Wrapper key={pool.address}>
-            {isFarmingPool && (
-              <div
-                style={{
-                  overflow: 'hidden',
-                  position: 'absolute',
-                  top: '16px',
-                  right: '16px',
-                }}
-              >
-                <MouseoverTooltip
-                  noArrow
-                  text={
-                    <Text>
-                      <Trans>
-                        Available for yield farming. Click{' '}
-                        <Link to={`/farms?tab=elastic&type=active&search=${pool.address}`}>here</Link> to go to the
-                        farm.
-                      </Trans>
-                    </Text>
-                  }
-                >
-                  <IconWrapper style={{ width: '24px', height: '24px' }}>
-                    <MoneyBagOutline size={16} color={theme.textReverse} />
-                  </IconWrapper>
-                </MouseoverTooltip>
-              </div>
-            )}
-            <DataText justifyContent="center" marginBottom="1rem">
-              <PoolAddressContainer>
-                <Text color={theme.text} fontSize="16px">
-                  {shortenAddress(chainId, pool.address, 3)}
-                </Text>
-                <CopyHelper toCopy={pool.address} />
-              </PoolAddressContainer>
-              <Flex marginTop={'4px'}>
-                <Text color={theme.subText} fontSize={12}>
-                  Fee = {(pool.feeTier * 100) / ELASTIC_BASE_FEE_UNIT}%
-                </Text>
-                <InfoHelper
-                  text={t`A token pair can have multiple pools, each with a different swap fee. Your swap fee earnings will be automatically reinvested in your pool`}
-                />
-              </Flex>
-            </DataText>
-            <Divider />
-
-            <Flex marginTop="20px" justifyContent="space-between">
-              <Text color={theme.subText} fontWeight="500">
-                <Trans>Total Value Locked</Trans>
-              </Text>
-              <Text>{formatDollarAmount(pool.tvlUSD)}</Text>
-            </Flex>
-
-            <Flex marginTop="16px" justifyContent="space-between">
-              <Text color={theme.subText} fontWeight="500">
-                AVG APR
-                <InfoHelper size={14} text={t`Average estimated return based on yearly fees of the pool`} />
-              </Text>
-              <DataText alignItems="flex-end" color={theme.apr}>
-                {isFarmingPool ? (
-                  <FarmingPoolAPRCell
-                    tooltipPlacement="top"
-                    poolAPR={pool.apr}
-                    fairlaunchAddress={fairlaunchAddress}
-                    pid={pid}
-                  />
-                ) : (
-                  <Flex
-                    sx={{
-                      alignItems: 'center',
-                    }}
-                  >
-                    {pool.apr.toFixed(2)}%
-                  </Flex>
-                )}
-              </DataText>
-            </Flex>
-
-            <Flex marginTop="16px" justifyContent="space-between">
-              <Text color={theme.subText} fontWeight="500">
-                <Trans>Volume (24H)</Trans>
-              </Text>
-              <Text>{formatDollarAmount(pool.volumeUSDLast24h)}</Text>
-            </Flex>
-
-            <Flex marginTop="16px" justifyContent="space-between">
-              <Text color={theme.subText} fontWeight="500">
-                <Trans>Fees (24H)</Trans>
-              </Text>
-              <Text>{formatDollarAmount(pool.volumeUSDLast24h * (pool.feeTier / ELASTIC_BASE_FEE_UNIT))}</Text>
-            </Flex>
-
-            <Flex marginTop="16px" justifyContent="space-between">
-              <Text color={theme.subText} fontWeight="500">
-                <Trans>Your Liquidity Balance</Trans>
-              </Text>
-              <Text>{myLiquidity ? formatDollarAmount(Number(myLiquidity)) : '-'}</Text>
-            </Flex>
-
-            <Flex marginY="20px" justifyContent="space-between" fontSize="14px" style={{ gap: '16px' }}>
-              {hasLiquidity && (
-                <ButtonOutlined as={Link} to={`/myPools?tab=${VERSION.ELASTIC}search=${pool.address}`} padding="10px">
-                  <Text width="max-content" fontSize="14px">
-                    <Trans>View Positions</Trans>
-                  </Text>
-                </ButtonOutlined>
-              )}
-
-              <ButtonPrimary
-                padding="10px"
-                onClick={() => {
-                  const url = myLiquidity
-                    ? `/myPools?tab=${VERSION.ELASTIC}&search=${pool.address}`
-                    : `/elastic/add/${token0Slug}/${token1Slug}/${pool.feeTier}`
-
-                  if (chainId === ChainId.ETHW) {
-                    setUrlOnEthPoWAck(url)
-                    toggleEthPowAckModal()
-                  } else {
-                    navigate(url)
-                  }
-                }}
-              >
-                <Text width="max-content" fontSize="14px">
-                  <Trans>Add Liquidity</Trans>
-                </Text>
-              </ButtonPrimary>
-            </Flex>
-
-            <Divider />
-
-            <Flex marginTop="16px" fontSize="14px" justifyContent="space-between">
-              <ExternalLink href={getPrommAnalyticLink(chainId, pool.address)}>Analytics ↗</ExternalLink>
-
-              <ButtonEmpty
-                width="max-content"
-                padding="0"
-                onClick={e => {
-                  e.stopPropagation()
-                  onShared(pool.address)
-                }}
-              >
-                <Text marginRight="4px">
-                  <Trans>Share</Trans>
-                </Text>
-                <Share2 size="14px" color={theme.primary} />
-              </ButtonEmpty>
-            </Flex>
-          </Wrapper>
-        )
-      })}
-    </>
+    </Wrapper>
   )
 }

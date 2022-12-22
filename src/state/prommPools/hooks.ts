@@ -90,6 +90,40 @@ export interface UserPosition {
 
 const PROMM_USER_POSITIONS = gql`
   query positions($owner: Bytes!) {
+    depositedPositions(where: { user: $owner }) {
+      id
+      position {
+        id
+        owner
+        liquidity
+        tickLower {
+          tickIdx
+        }
+        tickUpper {
+          tickIdx
+        }
+        pool {
+          id
+          feeTier
+          tick
+          liquidity
+          reinvestL
+          sqrtPrice
+          token0 {
+            id
+            derivedETH
+            symbol
+            decimals
+          }
+          token1 {
+            id
+            derivedETH
+            symbol
+            decimals
+          }
+        }
+      }
+    }
     bundles {
       ethPriceUSD
     }
@@ -154,7 +188,8 @@ export function useUserProMMPositions(): UserPositionResult {
   const ethPriceUSD = Number(data?.bundles?.[0]?.ethPriceUSD)
 
   const positions = useMemo(() => {
-    return (data?.positions || []).map((p: UserPosition) => {
+    const farmPositions = data?.depositedPositions?.map((p: any) => p.position) || []
+    return farmPositions.concat(data?.positions || []).map((p: UserPosition) => {
       const token0 = new Token(chainId, p.pool.token0.id, Number(p.pool.token0.decimals), p.pool.token0.symbol)
       const token1 = new Token(chainId, p.pool.token1.id, Number(p.pool.token1.decimals), p.pool.token1.symbol)
 

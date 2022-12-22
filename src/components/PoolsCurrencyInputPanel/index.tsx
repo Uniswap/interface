@@ -1,15 +1,16 @@
 import { Pair } from '@kyberswap/ks-sdk-classic'
 import { Currency } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
-import { darken } from 'polished'
 import React, { useCallback, useState } from 'react'
 import { X } from 'react-feather'
+import { Text } from 'rebass'
 import styled from 'styled-components'
 
-import { ReactComponent as DropDown } from 'assets/images/dropdown.svg'
+import { ReactComponent as DropDown } from 'assets/svg/down.svg'
 import CurrencyLogo from 'components/CurrencyLogo'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
+import useTheme from 'hooks/useTheme'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 
 const InputRow = styled.div<{ selected: boolean }>`
@@ -37,7 +38,7 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
   padding: 0 0.5rem;
 
   :hover {
-    background-color: ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.primary))};
+    background-color: ${({ theme }) => theme.bg2};
   }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -60,8 +61,8 @@ const StyledDropDown = styled(DropDown)`
   height: 35%;
 
   path {
-    stroke: ${({ theme }) => theme.text};
-    stroke-width: 1.5px;
+    stroke: ${({ theme }) => theme.subText};
+    fill: ${({ theme }) => theme.subText};
   }
 `
 
@@ -124,6 +125,7 @@ export default function PoolsCurrencyInputPanel({
   showCommonBases,
 }: CurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
+  const theme = useTheme()
 
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
@@ -166,7 +168,11 @@ export default function PoolsCurrencyInputPanel({
                       ? nativeCurrency.symbol.slice(0, 4) +
                         '...' +
                         nativeCurrency.symbol.slice(nativeCurrency.symbol.length - 5, nativeCurrency.symbol.length)
-                      : nativeCurrency?.symbol) || <Trans>All Tokens</Trans>}
+                      : nativeCurrency?.symbol) || (
+                      <Text color={theme.subText}>
+                        <Trans>Select Token</Trans>
+                      </Text>
+                    )}
                   </StyledTokenName>
                 )}
               </LogoNameWrapper>

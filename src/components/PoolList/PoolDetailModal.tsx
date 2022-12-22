@@ -1,6 +1,7 @@
+import { Flex } from 'rebass'
+
 import Modal from 'components/Modal'
 import ItemCard from 'components/PoolList/ItemCard'
-import useTheme from 'hooks/useTheme'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, usePoolDetailModalToggle } from 'state/application/hooks'
 import { useSelectedPool } from 'state/pools/hooks'
@@ -9,7 +10,6 @@ export default function PoolDetailModal() {
   const poolDetailModalOpen = useModalOpen(ApplicationModal.POOL_DETAIL)
   const togglePoolDetailModal = usePoolDetailModalToggle()
   const selectedPool = useSelectedPool()
-  const theme = useTheme()
 
   if (!selectedPool) {
     return null
@@ -22,14 +22,9 @@ export default function PoolDetailModal() {
       maxWidth="fit-content"
       maxHeight="fit-content"
     >
-      <ItemCard
-        style={{ background: theme.tableHeader }}
-        poolData={selectedPool.poolData}
-        myLiquidity={selectedPool.myLiquidity}
-        isShowExpandedPools={false}
-        isFirstPoolInGroup={true}
-        isDisableShowTwoPools={false}
-      />
+      <Flex minWidth="375px" style={{ boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.04)' }}>
+        <ItemCard poolData={selectedPool.poolData} myLiquidity={selectedPool.myLiquidity} />
+      </Flex>
     </Modal>
   )
 }

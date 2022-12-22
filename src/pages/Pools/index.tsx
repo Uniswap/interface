@@ -1,24 +1,24 @@
 import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
-import { stringify } from 'querystring'
 import { useCallback, useMemo, useState } from 'react'
-import { Plus } from 'react-feather'
+import { Plus, Share2 } from 'react-feather'
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 import styled, { DefaultTheme, keyframes } from 'styled-components'
 
+import { ReactComponent as TutorialIcon } from 'assets/svg/play_circle_outline.svg'
 import { ReactComponent as StableIcon } from 'assets/svg/stable.svg'
 import { ButtonPrimary } from 'components/Button'
 import ClassicElasticTab from 'components/ClassicElasticTab'
+import { MoneyBag } from 'components/Icons'
 import PoolList from 'components/PoolList'
 import PoolsCurrencyInputPanel from 'components/PoolsCurrencyInputPanel'
 import Search from 'components/Search'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
-import Toggle from 'components/Toggle'
-import { MouseoverTooltip } from 'components/Tooltip'
 import Tutorial, { TutorialType } from 'components/Tutorial'
-import { APP_PATHS } from 'constants/index'
+import FarmPoolSort from 'components/YieldPools/FarmPoolSort'
+import ListGridViewGroup from 'components/YieldPools/ListGridViewGroup'
 import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
@@ -27,16 +27,27 @@ import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useSyncNetworkParamWithStore } from 'hooks/useSyncNetworkParamWithStore'
 import useTheme from 'hooks/useTheme'
-import FarmingPoolsMarquee from 'pages/Pools/FarmingPoolsMarquee'
-import { GlobalData, Instruction } from 'pages/Pools/InstructionAndGlobalData'
+import { Instruction } from 'pages/Pools/InstructionAndGlobalData'
 import ProAmmPoolList from 'pages/ProAmmPools'
-import { useToggleEthPowAckModal } from 'state/application/hooks'
+import { ApplicationModal } from 'state/application/actions'
+import { useOpenModal, useToggleEthPowAckModal } from 'state/application/hooks'
 import { Field } from 'state/pair/actions'
 import { useUrlOnEthPowAck } from 'state/pools/hooks'
+import { MEDIA_WIDTHS } from 'theme'
 import { currencyId } from 'utils/currencyId'
 
 import ModalEthPoWAck from './ModalEthPoWAck'
-import { CurrencyWrapper, PoolsPageWrapper, ToolbarWrapper } from './styleds'
+import { CurrencyWrapper, PoolsPageWrapper, Tab } from './styleds'
+
+const PoolSort = styled(FarmPoolSort)`
+  height: 36px;
+  min-width: 140px;
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    min-width: fit-content;
+    padding: 10px;
+  `};
+`
 
 const highlight = (theme: DefaultTheme) => keyframes`
   0%{
@@ -58,33 +69,21 @@ const ButtonPrimaryWithHighlight = styled(ButtonPrimary)`
   }
 `
 
-const TextWithTooltip = styled(Text)`
-  position: relative;
-  cursor: pointer;
-
-  ::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: calc(100% - 2px);
-    height: 0;
-    border-bottom: ${({ theme }) => `1px dashed ${theme.subText}`};
-  }
-`
-
 const Pools = () => {
   const { currencyIdA, currencyIdB } = useParams()
   const navigate = useNavigate()
   const location = useLocation()
+  const openShareModal = useOpenModal(ApplicationModal.SHARE)
   const theme = useTheme()
+
   const { chainId, isEVM, networkInfo } = useActiveWeb3React()
-  const above1000 = useMedia('(min-width: 1000px)')
-  const above1260 = useMedia('(min-width: 1260px)')
-  const below1124 = useMedia('(max-width: 1124px)')
+
+  const upToSmall = useMedia(`(max-width: ${MEDIA_WIDTHS.upToSmall}px)`) // 768
+  const upToExtraSmall = useMedia(`(max-width: ${MEDIA_WIDTHS.upToExtraSmall}px)`) // 576
+  const upToXL = useMedia(`(max-width: ${MEDIA_WIDTHS.upToXL}px)`) // 1400
+  const upToMedium = useMedia(`(max-width: ${MEDIA_WIDTHS.upToMedium}px)`) // 992
+
   const [isShowOnlyActiveFarmPools, setIsShowOnlyActiveFarmPools] = useState(false)
-  const [shouldShowLowTVLPools, setShowLowTVLPools] = useState(false)
   const {
     search: searchValueInQs = '',
     tab = VERSION.ELASTIC,
@@ -177,232 +176,185 @@ const Pools = () => {
     }
   }
 
-  const onClickSwap = () => {
-    const inputCurrency = currencyId(currencies[Field.CURRENCY_A], chainId)
-    const outputCurrency = currencyId(currencies[Field.CURRENCY_B], chainId)
-    const params: { [key: string]: string } = {}
-    if (inputCurrency) params.inputCurrency = inputCurrency
-    if (outputCurrency) params.outputCurrency = outputCurrency
-    if (!Object.keys(params).length) return
-    navigate(`${APP_PATHS.SWAP}/${networkInfo.route}?${stringify(params)} `)
-  }
-
   if (!isEVM) return <Navigate to="/" />
+
+  const TutorialAndShare = (
+    <Flex sx={{ gap: '24px' }}>
+      <Tutorial
+        type={tab === VERSION.ELASTIC ? TutorialType.ELASTIC_POOLS : TutorialType.CLASSIC_POOLS}
+        customIcon={
+          <Flex
+            sx={{ gap: '4px', cursor: 'pointer' }}
+            fontSize="14px"
+            alignItems="center"
+            fontWeight="500"
+            color={theme.subText}
+            role="button"
+          >
+            <TutorialIcon />
+            {!upToSmall && <Trans>Video Tutorial</Trans>}
+          </Flex>
+        }
+      />
+
+      <Flex
+        sx={{ gap: '4px', cursor: 'pointer' }}
+        fontSize="14px"
+        alignItems="center"
+        fontWeight="500"
+        color={theme.subText}
+        onClick={() => openShareModal()}
+      >
+        <Share2 size={20} />
+        {!upToSmall && <Trans>Share</Trans>}
+      </Flex>
+    </Flex>
+  )
+
+  const selectTokenFilter = (
+    <CurrencyWrapper>
+      <PoolsCurrencyInputPanel
+        onCurrencySelect={handleCurrencyASelect}
+        onClearCurrency={handleClearCurrencyA}
+        currency={currencies[Field.CURRENCY_A]}
+        id="input-tokena"
+        showCommonBases
+      />
+      <span style={{ margin: '0 6px' }}>-</span>
+      <PoolsCurrencyInputPanel
+        onCurrencySelect={handleCurrencyBSelect}
+        onClearCurrency={handleClearCurrencyB}
+        currency={currencies[Field.CURRENCY_B]}
+        id="input-tokenb"
+        showCommonBases
+      />
+    </CurrencyWrapper>
+  )
+
+  const searchFilter = (
+    <Search
+      searchValue={searchValueInQs}
+      onSearch={onSearch}
+      placeholder={t`Search by token name or pool address`}
+      minWidth={'280px'}
+    />
+  )
+
+  const createPoolBtn = (
+    <ButtonPrimaryWithHighlight
+      onClick={handleClickCreatePoolButton}
+      data-highlight={shouldHighlightCreatePoolButton}
+      style={{
+        width: upToExtraSmall ? '36px' : 'fit-content',
+        height: '36px',
+        padding: upToExtraSmall ? '0' : '0px 12px',
+      }}
+    >
+      <Plus width="16" height="16" />
+      {!upToExtraSmall && (
+        <Text as="span" sx={{ marginLeft: '4px' }}>
+          <Trans>Create Pool</Trans>
+        </Text>
+      )}
+    </ButtonPrimaryWithHighlight>
+  )
+
   return (
     <>
       <PoolsPageWrapper>
         <Flex justifyContent="space-between">
           <ClassicElasticTab />
-          <GlobalData />
+          {!upToSmall && TutorialAndShare}
         </Flex>
 
         <Instruction />
 
-        <Flex justifyContent="space-between" alignItems="center">
-          <Flex sx={{ gap: '24px', cursor: 'pointer' }} alignItems="center">
-            <Text
-              role="button"
-              color={onlyShowStable ? theme.subText : theme.primary}
-              fontWeight="500"
-              fontSize={[16, 20]}
-              onClick={() => setOnlyShowStable(false)}
-            >
-              <Trans>All</Trans>
-            </Text>
-
-            <Flex
-              role="button"
-              alignItems="center"
-              onClick={() => setOnlyShowStable(true)}
-              color={!onlyShowStable ? theme.subText : theme.primary}
-            >
-              <StableIcon />
-              <Text marginLeft="4px" fontWeight="500" fontSize={[16, 20]}>
-                <Trans>Stablecoins</Trans>
-              </Text>
-            </Flex>
-          </Flex>
-
-          <Tutorial type={tab === VERSION.ELASTIC ? TutorialType.ELASTIC_POOLS : TutorialType.CLASSIC_POOLS} />
-        </Flex>
-
-        <FarmingPoolsMarquee tab={tab} />
-
-        {(tab === VERSION.ELASTIC ? above1260 : above1000) ? (
-          <ToolbarWrapper>
-            <CurrencyWrapper>
-              <PoolsCurrencyInputPanel
-                onCurrencySelect={handleCurrencyASelect}
-                onClearCurrency={handleClearCurrencyA}
-                currency={currencies[Field.CURRENCY_A]}
-                id="input-tokena"
-                showCommonBases
-              />
-              <span style={{ margin: '0 8px' }}>-</span>
-              <PoolsCurrencyInputPanel
-                onCurrencySelect={handleCurrencyBSelect}
-                onClearCurrency={handleClearCurrencyB}
-                currency={currencies[Field.CURRENCY_B]}
-                id="input-tokenb"
-                showCommonBases
-              />
-              <ButtonPrimary
-                padding="9px 13px"
-                width="fit-content"
-                style={{ marginLeft: '16px', borderRadius: '40px', fontSize: '14px' }}
-                onClick={onClickSwap}
-                disabled={!currencies[Field.CURRENCY_A] && !currencies[Field.CURRENCY_B]}
-              >
-                <Trans>Swap</Trans>
-              </ButtonPrimary>
-            </CurrencyWrapper>
-
-            <Flex style={{ gap: '10px' }}>
-              <Flex alignItems="center" style={{ gap: '8px' }}>
-                <Text fontSize="14px" color={theme.subText} fontWeight={500}>
-                  <MouseoverTooltip placement="top" width="fit-content" text={t`Total Value Locked is less than $1`}>
-                    <TextWithTooltip>
-                      <Trans>Low TVL Pools</Trans>
-                    </TextWithTooltip>
-                  </MouseoverTooltip>
-                </Text>
-
-                <Toggle isActive={shouldShowLowTVLPools} toggle={() => setShowLowTVLPools(prev => !prev)} />
-              </Flex>
-
-              <Flex alignItems="center" style={{ gap: '8px' }}>
-                <Text fontSize="14px" color={theme.subText} fontWeight={500}>
-                  <Trans>Farming Pools</Trans>
-                </Text>
-
-                <Toggle
-                  isActive={isShowOnlyActiveFarmPools}
-                  toggle={() => setIsShowOnlyActiveFarmPools(prev => !prev)}
-                />
-              </Flex>
-
-              <Search
-                searchValue={searchValueInQs}
-                onSearch={onSearch}
-                placeholder={t`Search by token name or pool address`}
-                minWidth={below1124 ? '260px' : '360px'}
-              />
-
-              <ToolbarWrapper style={{ marginBottom: '0px' }}>
-                <ButtonPrimaryWithHighlight
-                  onClick={handleClickCreatePoolButton}
-                  data-highlight={shouldHighlightCreatePoolButton}
-                  style={{
-                    height: '38px',
-                    padding: '0px 12px',
-                  }}
-                >
-                  <Plus width="22" height="22" />
-                  <Text as="span" sx={{ marginLeft: '4px' }}>
-                    <Trans>Create Pool</Trans>
-                  </Text>
-                </ButtonPrimaryWithHighlight>
-              </ToolbarWrapper>
-            </Flex>
-          </ToolbarWrapper>
-        ) : (
-          <>
-            <Flex sx={{ gap: '12px' }}>
-              <Search
-                style={{ flex: 1 }}
-                searchValue={searchValueInQs}
-                onSearch={onSearch}
-                placeholder={t`Search by token name or pool address`}
-              />
-              {tab === VERSION.ELASTIC && (
-                <ButtonPrimaryWithHighlight
-                  onClick={handleClickCreatePoolButton}
-                  data-highlight={shouldHighlightCreatePoolButton}
-                  style={{
-                    width: '38px',
-                    height: '38px',
-                    padding: '0',
-                  }}
-                >
-                  <Plus width="24px" height="24px" />
-                </ButtonPrimaryWithHighlight>
-              )}
-              {tab === VERSION.CLASSIC && (
-                <ButtonPrimaryWithHighlight
-                  onClick={handleClickCreatePoolButton}
-                  data-highlight={shouldHighlightCreatePoolButton}
-                  style={{
-                    width: '38px',
-                    height: '38px',
-                    padding: '0',
-                  }}
-                >
-                  <Plus width="24px" height="24px" />
-                </ButtonPrimaryWithHighlight>
-              )}
-            </Flex>
-            <Flex justifyContent="space-between">
-              <CurrencyWrapper>
-                <PoolsCurrencyInputPanel
-                  showCommonBases
-                  onCurrencySelect={handleCurrencyASelect}
-                  onClearCurrency={handleClearCurrencyA}
-                  currency={currencies[Field.CURRENCY_A]}
-                  otherCurrency={currencies[Field.CURRENCY_B]}
-                  id="input-tokena"
-                />
-                <span style={{ margin: '0 8px' }}>-</span>
-                <PoolsCurrencyInputPanel
-                  showCommonBases
-                  onCurrencySelect={handleCurrencyBSelect}
-                  onClearCurrency={handleClearCurrencyB}
-                  currency={currencies[Field.CURRENCY_B]}
-                  otherCurrency={currencies[Field.CURRENCY_A]}
-                  id="input-tokenb"
-                />
-              </CurrencyWrapper>
-              <ButtonPrimary
-                padding="9px 13px"
-                width="fit-content"
-                style={{ marginLeft: '8px', borderRadius: '40px', fontSize: '14px' }}
-                onClick={onClickSwap}
-                disabled={!currencies[Field.CURRENCY_A] && !currencies[Field.CURRENCY_B]}
-              >
-                <Trans>Swap</Trans>
-              </ButtonPrimary>
-            </Flex>
-
-            <Flex justifyContent="space-between" alignItems="center">
-              <Flex
-                alignItems={'center'}
-                sx={{
-                  columnGap: '8px',
+        <Flex justifyContent="space-between" flexDirection={upToXL ? 'column' : 'row'} sx={{ gap: '24px' }}>
+          <Flex justifyContent="space-between">
+            <Flex sx={{ gap: '8px' }}>
+              <Tab
+                role="button"
+                active={!onlyShowStable && !isShowOnlyActiveFarmPools}
+                onClick={() => {
+                  setOnlyShowStable(false)
+                  setIsShowOnlyActiveFarmPools(false)
                 }}
               >
-                <Text fontSize="14px" color={theme.subText} fontWeight={500}>
-                  <Trans>Farming Pools</Trans>
+                <Trans>All</Trans>
+              </Tab>
+
+              <Tab
+                role="button"
+                onClick={() => {
+                  setOnlyShowStable(true)
+                  setIsShowOnlyActiveFarmPools(false)
+                }}
+                active={onlyShowStable}
+              >
+                <StableIcon style={{ width: '16px' }} />
+                <Text marginLeft="4px">
+                  <Trans>Stablecoins</Trans>
                 </Text>
+              </Tab>
 
-                <Toggle
-                  isActive={isShowOnlyActiveFarmPools}
-                  toggle={() => setIsShowOnlyActiveFarmPools(prev => !prev)}
-                />
-              </Flex>
-
-              <Flex alignItems="center" style={{ gap: '8px' }}>
-                <Text fontSize="14px" color={theme.subText} fontWeight={500}>
-                  <MouseoverTooltip placement="top" width="fit-content" text={t`Total Value Locked is less than $1`}>
-                    <TextWithTooltip>
-                      <Trans>Low TVL Pools</Trans>
-                    </TextWithTooltip>
-                  </MouseoverTooltip>
+              <Tab
+                role="button"
+                onClick={() => {
+                  setIsShowOnlyActiveFarmPools(true)
+                  setOnlyShowStable(false)
+                }}
+                active={isShowOnlyActiveFarmPools}
+              >
+                <MoneyBag size={16} />
+                <Text marginLeft="4px">
+                  <Trans>Farming</Trans>
                 </Text>
-
-                <Toggle isActive={shouldShowLowTVLPools} toggle={() => setShowLowTVLPools(prev => !prev)} />
-              </Flex>
+              </Tab>
             </Flex>
-          </>
-        )}
+
+            {upToSmall && createPoolBtn}
+          </Flex>
+
+          {(() => {
+            if (upToMedium)
+              return (
+                <>
+                  <Flex sx={{ gap: '1rem' }} justifyContent="space-between">
+                    {selectTokenFilter}
+                    {upToSmall ? TutorialAndShare : createPoolBtn}
+                  </Flex>
+                  <Flex sx={{ gap: '1rem' }} justifyContent="space-between">
+                    <PoolSort />
+                    {searchFilter}
+                  </Flex>
+                </>
+              )
+
+            if (upToXL)
+              return (
+                <Flex sx={{ gap: '1rem' }} justifyContent="space-between">
+                  {selectTokenFilter}
+
+                  <Flex sx={{ gap: '1rem' }}>
+                    <ListGridViewGroup />
+                    <PoolSort />
+                    {searchFilter}
+                    {createPoolBtn}
+                  </Flex>
+                </Flex>
+              )
+
+            return (
+              <Flex sx={{ gap: '1rem' }}>
+                <ListGridViewGroup />
+                <PoolSort />
+                {selectTokenFilter}
+                {searchFilter}
+                {createPoolBtn}
+              </Flex>
+            )
+          })()}
+        </Flex>
 
         {tab === VERSION.CLASSIC ? (
           <PoolList
@@ -410,7 +362,6 @@ const Pools = () => {
             searchValue={debouncedSearchValue}
             isShowOnlyActiveFarmPools={isShowOnlyActiveFarmPools}
             onlyShowStable={onlyShowStable}
-            shouldShowLowTVLPools={shouldShowLowTVLPools}
           />
         ) : (
           <ProAmmPoolList
@@ -418,7 +369,6 @@ const Pools = () => {
             searchValue={debouncedSearchValue}
             isShowOnlyActiveFarmPools={isShowOnlyActiveFarmPools}
             onlyShowStable={onlyShowStable}
-            shouldShowLowTVLPools={shouldShowLowTVLPools}
           />
         )}
       </PoolsPageWrapper>

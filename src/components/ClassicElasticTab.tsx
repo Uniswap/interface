@@ -45,12 +45,13 @@ function ClassicElasticTab() {
             navigate({ search: stringify(newQs) }, { replace: true })
           }}
         >
+          <PoolElasticIcon size={20} color={tab === VERSION.ELASTIC ? theme.primary : theme.subText} />
           <Text
             fontWeight={500}
             fontSize={[18, 20, 24]}
             color={tab === VERSION.ELASTIC ? (!!notSupportedMsg ? theme.disableText : theme.primary) : theme.subText}
             width={'auto'}
-            marginRight={'5px'}
+            marginLeft="4px"
             role="button"
             style={{
               cursor: !!notSupportedMsg ? 'not-allowed' : 'pointer',
@@ -58,7 +59,6 @@ function ClassicElasticTab() {
           >
             {isFarmpage ? <Trans>Elastic Farms</Trans> : <Trans>Elastic Pools</Trans>}
           </Text>
-          <PoolElasticIcon size={20} color={tab === VERSION.ELASTIC ? theme.primary : theme.subText} />
         </Flex>
       </MouseoverTooltip>
       <Text fontWeight={500} fontSize={[18, 20, 24]} color={theme.subText} marginX={'12px'}>
@@ -72,18 +72,18 @@ function ClassicElasticTab() {
           navigate({ search: stringify(newQs) }, { replace: true })
         }}
       >
+        <PoolClassicIcon size={20} color={tab === VERSION.ELASTIC ? theme.subText : theme.primary} />
         <Text
           fontWeight={500}
           fontSize={[18, 20, 24]}
           color={tab === VERSION.CLASSIC ? theme.primary : theme.subText}
           width={'auto'}
-          marginRight={'5px'}
+          marginLeft="4px"
           style={{ cursor: 'pointer' }}
           role="button"
         >
           {isFarmpage ? <Trans>Classic Farms</Trans> : <Trans>Classic Pools</Trans>}
         </Text>
-        <PoolClassicIcon size={20} color={tab === VERSION.ELASTIC ? theme.subText : theme.primary} />
       </Flex>
     </Flex>
   )

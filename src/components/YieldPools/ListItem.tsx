@@ -22,12 +22,7 @@ import InfoHelper from 'components/InfoHelper'
 import Modal from 'components/Modal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Dots } from 'components/swap/styleds'
-import {
-  DMM_ANALYTICS_URL,
-  MAX_ALLOW_APY,
-  OUTSIDE_FAIRLAUNCH_ADDRESSES,
-  TOBE_EXTENDED_FARMING_POOLS,
-} from 'constants/index'
+import { DMM_ANALYTICS_URL, MAX_ALLOW_APY, OUTSIDE_FAIRLAUNCH_ADDRESSES } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import { useToken } from 'hooks/Tokens'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
@@ -277,11 +272,6 @@ const ListItem = ({ farm, setSharedPoolAddress }: ListItemProps) => {
 
   const theme = useTheme()
 
-  const now = +new Date() / 1000
-  const toBeExtendTime = TOBE_EXTENDED_FARMING_POOLS[isAddressString(chainId, farm.id)]
-  // only show if it will be ended less than 2 day
-  const tobeExtended = toBeExtendTime && farm.endTime - now < 172800 && farm.endTime < toBeExtendTime
-
   const [modalType, setModalType] = useState<'stake' | 'unstake' | 'harvest' | null>(null)
   const modalTitle = () => {
     switch (modalType) {
@@ -527,12 +517,8 @@ const ListItem = ({ farm, setSharedPoolAddress }: ListItemProps) => {
                     {farm.token0?.symbol} - {farm.token1?.symbol}
                   </Link>
 
-                  {(tobeExtended || farm.startTime > currentTimestamp) && (
-                    <MouseoverTooltip
-                      text={tobeExtended ? t`To be extended` : farm.time}
-                      width="fit-content"
-                      placement="top"
-                    >
+                  {farm.startTime > currentTimestamp && (
+                    <MouseoverTooltip text={farm.time} width="fit-content" placement="top">
                       <Clock size={14} style={{ marginLeft: '6px' }} />
                     </MouseoverTooltip>
                   )}
@@ -672,13 +658,8 @@ const ListItem = ({ farm, setSharedPoolAddress }: ListItemProps) => {
                   {farm.token0?.symbol} - {farm.token1?.symbol}
                 </Text>
               </Link>
-
-              {(tobeExtended || farm.startTime > currentTimestamp) && (
-                <MouseoverTooltip
-                  text={tobeExtended ? t`To be extended` : farm.time}
-                  width="fit-content"
-                  placement="top"
-                >
+              {farm.startTime > currentTimestamp && (
+                <MouseoverTooltip text={farm.time} width="fit-content" placement="top">
                   <Clock size={14} style={{ marginLeft: '6px' }} />
                 </MouseoverTooltip>
               )}
@@ -705,11 +686,6 @@ const ListItem = ({ farm, setSharedPoolAddress }: ListItemProps) => {
 
               <Text fontSize="12px">
                 {farm.time}
-                {tobeExtended && (
-                  <Text color={theme.subText} fontSize="12px" marginTop="6px">
-                    <Trans>To be extended</Trans>
-                  </Text>
-                )}
               </Text>
             </Flex>
             */}

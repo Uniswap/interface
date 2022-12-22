@@ -44,6 +44,7 @@ export const useTokenPrices = (addresses: Array<string>) => {
           return {
             address,
             chainId: chainId,
+
             price: price?.marketPrice || price?.price || 0,
           }
         })

@@ -47,7 +47,7 @@ export const Input = styled.input`
   font-size: 12px;
 
   ::placeholder {
-    color: ${({ theme }) => theme.border};
+    color: ${({ theme }) => theme.subText};
     font-size: 12px;
   }
 `
@@ -79,7 +79,7 @@ const Search = ({ searchValue, onSearch, placeholder, minWidth, style }: SearchP
             <X color={theme.subText} size={14} style={{ minWidth: '14px' }} />
           </ButtonEmpty>
         )}
-        <SearchIcon color={theme.border} />
+        <SearchIcon color={theme.subText} />
       </Wrapper>
     </Container>
   )

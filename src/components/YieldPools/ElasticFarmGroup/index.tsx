@@ -82,8 +82,8 @@ const ProMMFarmGroup: React.FC<Props> = ({ address, onOpenModal, pools, userInfo
   const above1000 = useMedia('(min-width: 1000px)')
 
   const [searchParams, setSearchParams] = useSearchParams()
-  const sortField = searchParams.get('orderBy') || 'my_deposit'
-  const sortDirection = searchParams.get('orderDirection') || 'desc'
+  const sortField = searchParams.get('orderBy') || SORT_FIELD.MY_DEPOSIT
+  const sortDirection = searchParams.get('orderDirection') || SORT_DIRECTION.DESC
 
   const { poolFeeLast24h } = useElasticFarms()
 

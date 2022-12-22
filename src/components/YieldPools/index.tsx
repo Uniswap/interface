@@ -12,7 +12,7 @@ import LocalLoader from 'components/LocalLoader'
 import SearchInput from 'components/SearchInput'
 import Toggle from 'components/Toggle'
 import FairLaunchPools from 'components/YieldPools/FairLaunchPools'
-import { AMP_HINT, FARM_TAB, TOBE_EXTENDED_FARMING_POOLS } from 'constants/index'
+import { AMP_HINT, FARM_TAB } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -21,7 +21,6 @@ import useTheme from 'hooks/useTheme'
 import { useBlockNumber } from 'state/application/hooks'
 import { useFarmsData } from 'state/farms/hooks'
 import { Farm } from 'state/farms/types'
-import { isAddressString } from 'utils'
 
 import ConfirmHarvestingModal from './ConfirmHarvestingModal'
 import {
@@ -76,12 +75,6 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
         farm.fairLaunchAddress.toLowerCase() === '0xc0601973451d9369252Aee01397c0270CD2Ecd60'.toLowerCase() &&
         chainId === ChainId.MAINNET
 
-      // Keep to be extended farm in active tab
-      const now = +new Date() / 1000
-      const toBeExtendTime = TOBE_EXTENDED_FARMING_POOLS[isAddressString(chainId, farm.id)]
-      // only show if it will be ended less than 2 day
-      const tobeExtended = toBeExtendTime && farm.endTime - now < 172800 && farm.endTime < toBeExtendTime
-
       if (farm.rewardPerSeconds) {
         // for active/ended farms
         return (
@@ -89,7 +82,7 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
           (qs.type === FARM_TAB.MY_FARMS
             ? true
             : active
-            ? farm.endTime >= currentTimestamp || tobeExtended
+            ? farm.endTime >= currentTimestamp
             : farm.endTime < currentTimestamp) &&
           // search farms
           (debouncedSearchText
@@ -111,7 +104,7 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
             : isSipherFarm
             ? active
             : active
-            ? farm.endBlock >= blockNumber || tobeExtended
+            ? farm.endBlock >= blockNumber
             : farm.endBlock < blockNumber) &&
           // search farms
           (debouncedSearchText

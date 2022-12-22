@@ -1,6 +1,8 @@
 import { rgba } from 'polished'
 import styled, { css } from 'styled-components'
 
+import bgimg from 'assets/images/card-background.png'
+
 export const RewardAndDepositInfo = styled.div`
   display: flex;
   margin: 0 1.5rem;
@@ -151,4 +153,35 @@ export const Dot = styled.div<{ isCurrentPrice?: boolean; outOfRange?: boolean }
   border-radius: 50%;
   background: ${({ theme, outOfRange, isCurrentPrice }) =>
     isCurrentPrice ? theme.text : outOfRange ? theme.warning : theme.primary};
+`
+
+export const FlipCard = styled.div<{ flip: boolean }>`
+  border-radius: 20px;
+  padding: 16px;
+  width: 100%;
+  min-height: 380px;
+  background-image: url(${bgimg});
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: ${({ theme }) => theme.buttonBlack};
+  position: relative;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+
+  transform: rotateY(${({ flip }) => (flip ? '-180deg' : '0')});
+`
+
+export const FlipCardFront = styled.div`
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  backface-visibility: hidden;
+`
+
+export const FlipCardBack = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
 `

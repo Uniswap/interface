@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useRef, useState } from 'react'
 import { X } from 'react-feather'
-import { useSearchParams } from 'react-router-dom'
+import { useLocation, useSearchParams } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
@@ -11,8 +11,8 @@ import { ButtonEmpty } from 'components/Button'
 import { Swap as SwapIcon } from 'components/Icons'
 import Modal from 'components/Modal'
 import { Z_INDEXS } from 'constants/styles'
+import { VERSION } from 'constants/v2'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import useParsedQueryString from 'hooks/useParsedQueryString'
 import useTheme from 'hooks/useTheme'
 
 const Wrapper = styled.div`
@@ -55,8 +55,60 @@ const Row = styled.div`
     background: ${({ theme }) => theme.buttonBlack};
   }
 `
+const poolSortOptions = (tab: string) => [
+  {
+    orderBy: 'apr',
+    orderDirection: 'asc',
+    label: <Trans>AVG APR ↑</Trans>,
+  },
+  {
+    orderBy: 'apr',
+    orderDirection: 'desc',
+    label: <Trans>AVG APR ↓</Trans>,
+  },
+  {
+    orderBy: 'tvl',
+    orderDirection: 'asc',
+    label: tab === VERSION.CLASSIC ? <Trans>AMP LIQUIDITY ↑</Trans> : <Trans>TVL ↑</Trans>,
+  },
+  {
+    orderBy: 'tvl',
+    orderDirection: 'desc',
+    label: tab === VERSION.CLASSIC ? <Trans>AMP LIQUIDITY ↓</Trans> : <Trans>TVL ↓</Trans>,
+  },
+  {
+    orderBy: 'volume',
+    orderDirection: 'asc',
+    label: <Trans>VOLUME ↑</Trans>,
+  },
+  {
+    orderBy: 'volume',
+    orderDirection: 'desc',
+    label: <Trans>VOLUME ↓</Trans>,
+  },
+  {
+    orderBy: 'fee',
+    orderDirection: 'asc',
+    label: <Trans>FEES ↑</Trans>,
+  },
+  {
+    orderBy: 'fee',
+    orderDirection: 'desc',
+    label: <Trans>FEES ↓</Trans>,
+  },
+  {
+    orderBy: 'my_liquidity',
+    orderDirection: 'asc',
+    label: <Trans>MY LIQUIDITY ↑</Trans>,
+  },
+  {
+    orderBy: 'my_liquidity',
+    orderDirection: 'desc',
+    label: <Trans>MY LIQUIDITY ↓</Trans>,
+  },
+]
 
-const sortOptions = [
+const farmSortOptions = [
   {
     orderBy: 'apr',
     orderDirection: 'asc',
@@ -109,25 +161,30 @@ const sortOptions = [
   },
 ]
 
-const FarmSort = () => {
+const FarmSort = ({ className }: { className?: string }) => {
+  const { pathname } = useLocation()
   const [searchParams, setSearchParams] = useSearchParams()
-  const { orderBy, orderDirection } = useParsedQueryString()
+  const orderDirection = searchParams.get('orderDirection') || 'desc'
+  const orderBy = searchParams.get('orderBy') || (pathname.startsWith('/farms') ? 'my_deposit' : 'tvl')
   const ref = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, () => {
     setShow(false)
   })
 
+  const tab = searchParams.get('tab') || VERSION.ELASTIC
+
+  const sortOptions = pathname.startsWith('/farms') ? farmSortOptions : poolSortOptions(tab)
+
   const theme = useTheme()
-  const selectedOption =
-    sortOptions.find(item => item.orderBy === orderBy && item.orderDirection === orderDirection) || sortOptions[7]
+  const selectedOption = sortOptions.find(item => item.orderBy === orderBy && item.orderDirection === orderDirection)
 
   const [show, setShow] = useState(false)
-
   const upToExtraSmall = useMedia('(max-width: 576px)')
 
   return (
     <>
       <Wrapper
+        className={className}
         role="button"
         ref={ref}
         onClick={e => {
@@ -137,7 +194,7 @@ const FarmSort = () => {
       >
         <Flex alignItems="center">
           <SwapIcon size={20} />
-          {!upToExtraSmall && <Text marginLeft="4px">{selectedOption.label}</Text>}
+          {!upToExtraSmall && <Text marginLeft="4px">{selectedOption?.label}</Text>}
         </Flex>
         {!upToExtraSmall && <DropdownIcon style={{ transform: `rotate(${show ? '180deg' : '0'})` }} />}
 
