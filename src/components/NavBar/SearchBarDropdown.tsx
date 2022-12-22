@@ -129,11 +129,11 @@ export const SearchBarDropdown = ({
     }))
   )
 
-  const shortenedHistoryIsLoading = shortenedHistoryUpdatedPrices.some(
+  const shortenedHistoryUpdatedPricesIsLoading = shortenedHistoryUpdatedPrices.some(
     (shortenedHistoryUpdatedPrice) => shortenedHistoryUpdatedPrice.isLoading
   )
 
-  const shortenedHistory = !shortenedHistoryIsLoading
+  const shortenedHistory = !shortenedHistoryUpdatedPricesIsLoading
     ? shortenedHistoryUpdatedPrices.flatMap((elem) => (elem.data !== undefined ? [elem.data[0]] : []))
     : shortenedHistoryStalePrices
 
@@ -316,7 +316,7 @@ export const SearchBarDropdown = ({
                 }}
                 header={<Trans>Recent searches</Trans>}
                 headerIcon={<ClockIcon />}
-                isLoading={shortenedHistoryIsLoading}
+                isLoading={shortenedHistoryUpdatedPricesIsLoading}
               />
             )}
             {!isNFTPage && (
