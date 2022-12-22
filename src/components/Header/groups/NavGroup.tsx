@@ -1,3 +1,4 @@
+import { darken } from 'polished'
 import { Flex } from 'rebass'
 import styled, { css } from 'styled-components'
 
@@ -44,6 +45,10 @@ const cssDropDown = css`
 
   ${DropdownIcon} {
     transform: rotate(-180deg);
+  }
+
+  :hover {
+    color: ${({ theme }) => darken(0.1, theme.primary)};
   }
 `
 const HoverDropdown = styled.div<{ active: boolean; forceShowDropdown?: boolean }>`

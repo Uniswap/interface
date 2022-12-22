@@ -29,7 +29,7 @@ const EarnNavGroup = () => {
       id={TutorialIds.EARNING_LINKS}
       isActive={isActive}
       anchor={
-        <DropdownTextAnchor active={isActive}>
+        <DropdownTextAnchor>
           <Trans>Earn</Trans>
         </DropdownTextAnchor>
       }

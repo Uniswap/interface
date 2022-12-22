@@ -24,7 +24,7 @@ const AboutNavGroup = () => {
       <NavGroup
         isActive={isActive}
         anchor={
-          <DropdownTextAnchor active={isActive}>
+          <DropdownTextAnchor>
             <Trans>About</Trans>
           </DropdownTextAnchor>
         }

@@ -1,11 +1,9 @@
 import { Trans, t } from '@lingui/macro'
-import { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import styled, { keyframes } from 'styled-components'
+import { Link } from 'react-router-dom'
+import styled from 'styled-components'
 
 import SelectNetwork from 'components/Header/web3/SelectNetwork'
 import SelectWallet from 'components/Header/web3/SelectWallet'
-import DiscoverIcon from 'components/Icons/DiscoverIcon'
 import Menu from 'components/Menu'
 import Row, { RowFixed } from 'components/Row'
 import Settings from 'components/Settings'
@@ -16,6 +14,7 @@ import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { useHolidayMode, useIsDarkMode } from 'state/user/hooks'
 
+import DiscoverNavItem from './DiscoverNavItem'
 import AboutNavGroup from './groups/AboutNavGroup'
 import AnalyticNavGroup from './groups/AnalyticNavGroup'
 import EarnNavGroup from './groups/EarnNavGroup'
@@ -119,12 +118,6 @@ const IconImage = styled.img<{ isChristmas?: boolean }>`
   }
 `
 
-const DiscoverWrapper = styled.span`
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    display: none;
-  `};
-`
-
 const CampaignWrapper = styled.span`
   /* It's better to break at 420px than at extraSmall */
   @media (max-width: 420px) {
@@ -166,40 +159,9 @@ const LogoIcon = styled.div`
   `}
 `
 
-const shine = keyframes`
-  0% {
-    background-position: 0;
-  }
-  60% {
-    background-position: 40px;
-  }
-  100% {
-    background-position: 65px;
-  }
-`
-
-export const SlideToUnlock = styled.div<{ active?: boolean }>`
-  background: linear-gradient(
-    to right,
-    ${props => (props.active ? props.theme.primary : props.theme.subText)} 0,
-    white 10%,
-    ${props => (props.active ? props.theme.primary : props.theme.subText)} 20%
-  );
-  animation: ${shine} 1.3s infinite linear;
-  animation-fill-mode: forwards;
-  background-position: 0;
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  -webkit-text-size-adjust: none;
-  font-weight: 600;
-`
-
 export default function Header() {
   const { walletKey } = useActiveWeb3React()
   const isDark = useIsDarkMode()
-  const { pathname } = useLocation()
-  const [isHoverSlide, setIsHoverSlide] = useState(false)
   const [holidayMode] = useHolidayMode()
 
   const { mixpanelHandler } = useMixpanel()
@@ -232,19 +194,9 @@ export default function Header() {
             </StyledNavLink>
           </CampaignWrapper>
 
-          <DiscoverWrapper id={TutorialIds.DISCOVER_LINK}>
-            <StyledNavLink to={'/discover?tab=trending_soon'} style={{ alignItems: 'center' }}>
-              <SlideToUnlock
-                active={pathname.includes('discover') || isHoverSlide}
-                onMouseEnter={() => setIsHoverSlide(true)}
-                onMouseLeave={() => setIsHoverSlide(false)}
-              >
-                <Trans>Discover</Trans>
-              </SlideToUnlock>
-              <DiscoverIcon size={14} style={{ marginTop: '-8px' }} />
-            </StyledNavLink>
-          </DiscoverWrapper>
+          <DiscoverNavItem />
           <KyberDAONavGroup />
+
           <AnalyticNavGroup />
           <AboutNavGroup />
           <BlogWrapper>

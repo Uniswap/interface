@@ -94,14 +94,13 @@ export const StyledNavExternalLink = styled(ExternalLink).attrs({
   `}
 `
 
-export const DropdownTextAnchor = styled.div<{ active: boolean }>`
+export const DropdownTextAnchor = styled.div`
   display: inline-block;
-  cursor: pointer;
-
-  color: ${({ theme, active }) => (active ? theme.primary : theme.subText)};
-  font-size: 1rem;
   width: fit-content;
   padding: 8px 6px;
   padding-right: 0px;
+
+  cursor: pointer;
+  font-size: 1rem;
   font-weight: 500;
 `

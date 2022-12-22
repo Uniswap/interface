@@ -66,7 +66,7 @@ const SwapNavGroup = () => {
       isActive={isActive}
       forceOpen={isShowTutorial && stepInfo?.selector === `#${TutorialIds.BRIDGE_LINKS}`}
       anchor={
-        <DropdownTextAnchor active={isActive}>
+        <DropdownTextAnchor>
           <Trans>Swap</Trans>
         </DropdownTextAnchor>
       }

@@ -28,7 +28,7 @@ const AnalyticNavGroup = () => {
         isActive={false}
         forceOpen={false}
         anchor={
-          <DropdownTextAnchor active={false}>
+          <DropdownTextAnchor>
             <Trans>Analytics</Trans>
           </DropdownTextAnchor>
         }
