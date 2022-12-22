@@ -137,12 +137,21 @@ export const TRUESIGHT_NETWORK_TO_CHAINID: NetToChain = SUPPORTED_NETWORKS.reduc
 
 export const FAUCET_NETWORKS = [ChainId.BTTC]
 export const CHAINS_SUPPORT_NEW_POOL_FARM_API: ChainId[] = [
-  // ChainId.OPTIMISM,
-  // ChainId.AVAXMAINNET,
-  // ChainId.ARBITRUM,
-  // ChainId.MAINNET,
-  // ChainId.CRONOS,
-  // ChainId.BTTC,
+  ChainId.MAINNET,
+  // ChainId.ETHW,
+  // ChainId.MUMBAI,
+  // ChainId.MATIC,
+  // ChainId.BSCTESTNET,
+  ChainId.BSCMAINNET,
+  // ChainId.AVAXTESTNET,
+  ChainId.AVAXMAINNET,
+  ChainId.FANTOM,
+  ChainId.CRONOS,
+  ChainId.BTTC,
+  ChainId.ARBITRUM,
+  // ChainId.ARBITRUM_TESTNET,
+  ChainId.AURORA,
   // ChainId.VELAS,
-  // ChainId.FANTOM,
+  // ChainId.OASIS,
+  ChainId.OPTIMISM,
 ]
