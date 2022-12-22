@@ -320,6 +320,20 @@ const RoyaltyContainer = styled.div`
   margin-bottom: 8px;
 `
 
+const IconWrap = styled.div<{ hovered: boolean }>`
+  position: absolute;
+  left: 50%;
+  top: 30px;
+  transform: translateX(-50%);
+  width: 32px;
+  visibility: ${({ hovered }) => (hovered ? 'visible' : 'hidden')};
+`
+
+const StyledImg = styled.img`
+  width: 32px;
+  height: 32px;
+`
+
 interface MarketplaceRowProps {
   globalPriceMethod?: SetPriceMethod
   globalPrice?: number
@@ -588,6 +602,7 @@ const NFTListRow = ({ asset, globalPriceMethod, globalPrice, setGlobalPrice, sel
             opacity: localMarkets.length > 1 ? '1' : '0',
           }}
           cursor="pointer"
+          marginRight="8"
           onClick={() => setExpandMarketplaceRows(!expandMarketplaceRows)}
         >
           {expandMarketplaceRows ? <RowsExpandedIcon /> : <RowsCollpsedIcon />}
@@ -597,20 +612,22 @@ const NFTListRow = ({ asset, globalPriceMethod, globalPrice, setGlobalPrice, sel
           cursor="pointer"
           onMouseEnter={handleHover}
           onMouseLeave={handleHover}
+          width="48"
+          height="48"
+          marginRight="8"
           onClick={() => {
             removeAsset(asset)
           }}
         >
-          <Box className={styles.removeAsset} visibility={hovered ? 'visible' : 'hidden'} position="absolute">
-            <Box as="img" width="32" src="/nft/svgs/minusCircle.svg" alt="Remove item" />
-          </Box>
+          <IconWrap hovered={hovered}>
+            <StyledImg src="/nft/svgs/minusCircle.svg" alt="Remove item" />
+          </IconWrap>
           <Box
             as="img"
             alt={asset.name}
             width="48"
             height="48"
             borderRadius="8"
-            marginLeft={localMarkets.length > 1 ? '8' : '0'}
             marginRight="8"
             transition="500"
             src={asset.imageUrl || '/nft/svgs/image-placeholder.svg'}
