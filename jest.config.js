@@ -1,7 +1,7 @@
 module.exports = {
   preset: 'jest-expo',
   setupFiles: ['./jest-setup.js', './node_modules/react-native-gesture-handler/jestSetup.js'],
-  collectCoverage: false,
+  collectCoverage: false, // only collect in CI
   collectCoverageFrom: [
     'src/**/*.{js,ts,tsx}',
     '!src/test/**', // test helpers

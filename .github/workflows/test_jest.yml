@@ -47,7 +47,7 @@ jobs:
       - name: Typechain
         run: yarn contracts:compile
       - name: Jest
-        run: yarn test
+        run: yarn test --collectCoverage=true
         env:
           DEMO_SEED_PHRASE: ${{ secrets.DEMO_SEED_PHRASE }}
       - name: Upload coverage to Codecov
