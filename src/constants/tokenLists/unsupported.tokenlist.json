@@ -1171,6 +1171,13 @@
       "name": "GOLD1",
       "symbol": "GOLD1",
       "decimals": 18
+    },  `
+    {
+      "chainId": 1,
+      "address": "0x50D1c9771902476076eCFc8B2A83Ad6b9355a4c9",
+      "name": "FTX Token",
+      "symbol": "FTT",
+      "decimals": 18
     }
   ]
 }
