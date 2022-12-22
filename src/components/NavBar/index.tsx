@@ -103,7 +103,7 @@ const Navbar = () => {
           <Box className={styles.leftSideContainer}>
             <Box className={styles.logoContainer}>
               <UniScrollIcon
-                width="38"
+                // width="38"
                 height="38"
                 className={styles.logo}
                 onClick={() => {
