@@ -14,7 +14,7 @@ import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
 import { vars } from 'nft/css/sprinkles.css'
-import { useSearchHistory } from 'nft/hooks'
+import { SearchHistoryItem, SearchHistoryType, useSearchHistory } from 'nft/hooks'
 import { FungibleToken, GenieCollection } from 'nft/types'
 import { ethNumberStandardFormatter } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
@@ -63,13 +63,15 @@ export const CollectionRow = ({
 }: CollectionRowProps) => {
   const [brokenImage, setBrokenImage] = useState(false)
   const [loaded, setLoaded] = useState(false)
-  const addToSearchHistory = useSearchHistory(
-    (state: { addItem: (item: FungibleToken | GenieCollection) => void }) => state.addItem
-  )
+  const addToSearchHistory = useSearchHistory((state: { addItem: (item: SearchHistoryItem) => void }) => state.addItem)
   const navigate = useNavigate()
 
   const handleClick = useCallback(() => {
-    addToSearchHistory(collection)
+    addToSearchHistory({
+      address: collection.address,
+      type: SearchHistoryType.GenieCollection,
+      name: collection.name ?? '',
+    })
     toggleOpen()
     sendAnalyticsEvent(EventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
   }, [addToSearchHistory, collection, toggleOpen, eventProperties])
@@ -149,13 +151,11 @@ interface TokenRowProps {
 }
 
 export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index, eventProperties }: TokenRowProps) => {
-  const addToSearchHistory = useSearchHistory(
-    (state: { addItem: (item: FungibleToken | GenieCollection) => void }) => state.addItem
-  )
+  const addToSearchHistory = useSearchHistory((state: { addItem: (item: SearchHistoryItem) => void }) => state.addItem)
   const navigate = useNavigate()
 
   const handleClick = useCallback(() => {
-    addToSearchHistory(token)
+    addToSearchHistory({ address: token.address, type: SearchHistoryType.FungibleToken, name: token.name })
     toggleOpen()
     sendAnalyticsEvent(EventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
   }, [addToSearchHistory, toggleOpen, token, eventProperties])

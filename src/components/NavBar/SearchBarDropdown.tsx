@@ -5,7 +5,7 @@ import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { subheadSmall } from 'nft/css/common.css'
-import { useSearchHistory } from 'nft/hooks'
+import { SearchHistoryItem, SearchHistoryType, useSearchHistory } from 'nft/hooks'
 import { fetchSearchCollections } from 'nft/queries'
 import { fetchTrendingCollections } from 'nft/queries'
 import { fetchSearchTokens } from 'nft/queries/genie/SearchTokensFetcher'
@@ -20,7 +20,7 @@ import { ClockIcon, TrendingArrow } from '../../nft/components/icons'
 import * as styles from './SearchBar.css'
 import { CollectionRow, SkeletonRow, TokenRow } from './SuggestionRow'
 
-function isCollection(suggestion: GenieCollection | FungibleToken | TrendingCollection) {
+export function isCollection(suggestion: GenieCollection | FungibleToken | TrendingCollection) {
   return (suggestion as FungibleToken).decimals === undefined
 }
 
@@ -112,35 +112,27 @@ export const SearchBarDropdown = ({
   isLoading,
 }: SearchBarDropdownProps) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(0)
-  const { history: searchHistory, updateItem: updateSearchHistory } = useSearchHistory()
-  const shortenedHistoryStalePrices = useMemo(() => searchHistory.slice(0, 2), [searchHistory])
-
-  // TODO(lynnshaoyu): possible to fetchSearchTokens by address instead of just by name?
-  const shortenedHistoryUpdatedPrices = useQueries(
-    shortenedHistoryStalePrices.map((tokenOrCollection) => ({
-      queryKey: ['tokenOrCollectionAddress', tokenOrCollection.address],
-      queryFn: () =>
-        isCollection(tokenOrCollection)
-          ? fetchSearchCollections(tokenOrCollection.address)
-          : fetchSearchTokens(tokenOrCollection.name ?? ''),
-      enabled: isCollection(tokenOrCollection) ? !!tokenOrCollection.address : !!tokenOrCollection.name,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-    }))
+  const { history } = useSearchHistory()
+  const shortenedHistory = history.slice(0,2)
+  const historyLatestPricesQueries = useQueries(
+    shortenedHistory.map((tokenOrCollection) => ({
+        queryKey: ['address', tokenOrCollection.address],
+        queryFn: () =>
+        tokenOrCollection.type === SearchHistoryType.GenieCollection
+            ? fetchSearchCollections(tokenOrCollection.address)
+            : fetchSearchTokens(tokenOrCollection.name ?? ''),
+        enabled: tokenOrCollection.type === SearchHistoryType.GenieCollection ? !!tokenOrCollection.address : !!tokenOrCollection.name,
+        refetchOnMount: false,
+        refetchOnReconnect: false,
+        refetchOnWindowFocus: false,
+      }))
+    )
+  const shortenedHistoryLatestPricesIsLoading = historyLatestPricesQueries.some(
+    (historyLatestPricesQuery) => historyLatestPricesQuery.isLoading
   )
-
-  const shortenedHistoryUpdatedPricesIsLoading = shortenedHistoryUpdatedPrices.some(
-    (shortenedHistoryUpdatedPrice) => shortenedHistoryUpdatedPrice.isLoading
-  )
-
-  const shortenedHistory = !shortenedHistoryUpdatedPricesIsLoading
-    ? shortenedHistoryUpdatedPrices.flatMap((elem) => (elem.data !== undefined ? [elem.data[0]] : []))
-    : shortenedHistoryStalePrices
-
-  useEffect(() => {
-    shortenedHistory?.forEach(updateSearchHistory)
-  }, [shortenedHistory, updateSearchHistory])
-
+  const shortenedHistoryLatestPrices = !shortenedHistoryLatestPricesIsLoading ? 
+  historyLatestPricesQueries.flatMap((elem) => (elem.data !== undefined ? [elem.data[0]] : [])) : []
+  
   const { pathname } = useLocation()
   const isNFTPage = useIsNftPage()
   const isTokenPage = pathname.includes('/tokens')
@@ -184,14 +176,6 @@ export const SearchBarDropdown = ({
       refetchOnWindowFocus: false,
     }
   )
-
-  useEffect(() => {
-    trendingTokenResults?.forEach(updateSearchHistory)
-  }, [trendingTokenResults, updateSearchHistory])
-
-  useEffect(() => {
-    trendingCollectionResults?.forEach(updateSearchHistory)
-  }, [trendingCollectionResults, updateSearchHistory])
 
   const trendingTokensLength = isTokenPage ? 3 : 2
   const trendingTokens = useMemo(
@@ -309,14 +293,14 @@ export const SearchBarDropdown = ({
                 startingIndex={0}
                 setHoveredIndex={setHoveredIndex}
                 toggleOpen={toggleOpen}
-                suggestions={shortenedHistory}
+                suggestions={shortenedHistoryLatestPrices}
                 eventProperties={{
                   suggestion_type: NavBarSearchTypes.RECENT_SEARCH,
                   ...eventProperties,
                 }}
                 header={<Trans>Recent searches</Trans>}
                 headerIcon={<ClockIcon />}
-                isLoading={shortenedHistoryUpdatedPricesIsLoading}
+                isLoading={shortenedHistoryLatestPricesIsLoading}
               />
             )}
             {!isNFTPage && (
@@ -366,7 +350,8 @@ export const SearchBarDropdown = ({
     trendingTokensAreLoading,
     hoveredIndex,
     toggleOpen,
-    shortenedHistory,
+    shortenedHistoryLatestPricesIsLoading,
+    shortenedHistoryLatestPrices,
     hasInput,
     isNFTPage,
     isTokenPage,
@@ -374,7 +359,6 @@ export const SearchBarDropdown = ({
     queryText,
     totalSuggestions,
     trace,
-    shortenedHistoryUpdatedPricesIsLoading,
   ])
 
   return (
