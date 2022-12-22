@@ -127,12 +127,8 @@ export default function NftExploreBanner() {
           <div className={bodySmall}>
             <Trans>We&rsquo;re scaling Ethereum with the power of zero-knowledge proofs and open-source community.</Trans>{' '}
             <Link href="https://scroll.io" title="Scroll.io">
-              <Trans>Join us.</Trans>
+              <Trans>Learn more.</Trans>
             </Link>{' '}
-          </div>
-          <div className={bodySmall}>
-
-            <Trans><em>This site is for demonstration purposes only.</em></Trans>{' '}
           </div>
         </TextContainer>
         {/* </Description> */}
