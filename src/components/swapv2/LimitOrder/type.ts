@@ -24,6 +24,8 @@ export type LimitOrder = {
   takerAssetSymbol: string
   makerAssetLogoURL: string
   takerAssetLogoURL: string
+  makerAssetDecimals: number
+  takerAssetDecimals: number
   makingAmount: string
   takingAmount: string
   filledMakingAmount: string

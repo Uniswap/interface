@@ -37,7 +37,7 @@ import TradePrice from '../TradePrice'
 import DeltaRate from './DeltaRate'
 import ExpirePicker from './ExpirePicker'
 import ConfirmOrderModal from './Modals/ConfirmOrderModal'
-import { DEFAULT_EXPIRED, EXPIRED_OPTIONS, LIMIT_ORDER_CONTRACT } from './const'
+import { DEFAULT_EXPIRED, EXPIRED_OPTIONS } from './const'
 import { calcInvert, calcOutput, calcPercentFilledOrder, calcRate, formatAmountOrder, formatUsdPrice } from './helpers'
 import { getTotalActiveMakingAmount, hashOrder, submitOrder } from './request'
 import { CreateOrderParam, LimitOrder, LimitOrderStatus, RateInfo } from './type'
@@ -96,7 +96,7 @@ const LimitOrderForm = function LimitOrderForm({
   onDismissModalEdit,
   isEdit = false, // else create
 }: Props) {
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId, networkInfo } = useActiveWeb3React()
 
   const toggleWalletModal = useWalletModalToggle()
   const theme = useTheme()
@@ -244,7 +244,7 @@ const LimitOrderForm = function LimitOrderForm({
   const currentAllowance = useTokenAllowance(
     currencyIn as Token,
     account ?? undefined,
-    LIMIT_ORDER_CONTRACT,
+    networkInfo.limitOrder ?? '',
   ) as CurrencyAmount<Currency>
 
   const parsedActiveOrderMakingAmount = useMemo(() => {
@@ -269,7 +269,11 @@ const LimitOrderForm = function LimitOrderForm({
     )
   }, [currencyIn?.isNative, currentAllowance, parseInputAmount, parsedActiveOrderMakingAmount])
 
-  const [approval, approveCallback] = useApproveCallback(parseInputAmount, LIMIT_ORDER_CONTRACT, !enoughAllowance)
+  const [approval, approveCallback] = useApproveCallback(
+    parseInputAmount,
+    networkInfo.limitOrder ?? '',
+    !enoughAllowance,
+  )
 
   const balance = useCurrencyBalance(currencyIn ?? undefined)
   const inputError = useMemo(() => {
@@ -427,9 +431,9 @@ const LimitOrderForm = function LimitOrderForm({
     const { hash: orderHash } = await hashOrder(payload)
     setFlowState(state => ({
       ...state,
-      pendingText: `Sign limit order: ${formatAmountOrder(inputAmount, false)} ${
-        currencyIn.symbol
-      } to ${formatAmountOrder(outputAmount, false)} ${currencyOut.symbol}`,
+      pendingText: `Sign limit order: ${formatAmountOrder(inputAmount)} ${currencyIn.symbol} to ${formatAmountOrder(
+        outputAmount,
+      )} ${currencyOut.symbol}`,
     }))
     const signature = await library.getSigner().signMessage(ethers.utils.arrayify(orderHash))
     return { signature, orderHash }
@@ -477,11 +481,11 @@ const LimitOrderForm = function LimitOrderForm({
               <Trans>
                 You have successfully placed an order to pay{' '}
                 <Text as="span" fontWeight={500}>
-                  {formatAmountOrder(inputAmount, false)} {currencyIn.symbol}
+                  {formatAmountOrder(inputAmount)} {currencyIn.symbol}
                 </Text>{' '}
                 and receive{' '}
                 <Text as="span" fontWeight={500}>
-                  {formatAmountOrder(outputAmount, false)} {currencyOut.symbol}{' '}
+                  {formatAmountOrder(outputAmount)} {currencyOut.symbol}{' '}
                 </Text>
                 <Text as="span" color={theme.subText}>
                   when 1 {currencyIn.symbol} is equal to {calcRate(inputAmount, outputAmount, currencyOut.decimals)}{' '}
@@ -493,7 +497,11 @@ const LimitOrderForm = function LimitOrderForm({
                   const isPartialFilled = orderInfo?.status === LimitOrderStatus.PARTIALLY_FILLED
                   const filledPercent =
                     orderInfo && isPartialFilled
-                      ? calcPercentFilledOrder(orderInfo?.filledTakingAmount, orderInfo?.takingAmount)
+                      ? calcPercentFilledOrder(
+                          orderInfo?.filledTakingAmount,
+                          orderInfo?.takingAmount,
+                          orderInfo.takerAssetDecimals,
+                        )
                       : ''
                   return (
                     <>
@@ -556,9 +564,8 @@ const LimitOrderForm = function LimitOrderForm({
         ...state,
         attemptingTxn: true,
         showConfirm: true,
-        pendingText: t`Wrapping ${formatAmountOrder(inputAmount, false)} ${currencyIn?.symbol} to ${formatAmountOrder(
+        pendingText: t`Wrapping ${formatAmountOrder(inputAmount)} ${currencyIn?.symbol} to ${formatAmountOrder(
           inputAmount,
-          false,
         )} ${WETH[chainId].symbol}`,
       }))
       const hash = await onWrap?.()

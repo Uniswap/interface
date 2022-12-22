@@ -79,6 +79,7 @@ const SingleAmountInfo = ({
   symbol,
   plus = true,
   hideLogo = false,
+  decimals,
 }: {
   amount: string
   color: string
@@ -86,26 +87,38 @@ const SingleAmountInfo = ({
   logoUrl: string
   plus?: boolean
   hideLogo?: boolean
+  decimals: number
 }) => (
   <Flex alignItems={'center'}>
     {!hideLogo && <TokenLogo srcs={[logoUrl]} />}
     <DeltaAmount color={color}>
-      {plus ? '+' : '-'} {formatAmountOrder(amount)} {symbol || '???'}
+      {plus ? '+' : '-'} {formatAmountOrder(amount, decimals)} {symbol || '???'}
     </DeltaAmount>
   </Flex>
 )
 const AmountInfo = ({ order }: { order: LimitOrder }) => {
-  const { makerAssetSymbol, makerAssetLogoURL, takerAssetLogoURL, takerAssetSymbol, makingAmount, takingAmount } = order
+  const {
+    makerAssetSymbol,
+    makerAssetLogoURL,
+    takerAssetLogoURL,
+    takerAssetSymbol,
+    makingAmount,
+    takingAmount,
+    makerAssetDecimals,
+    takerAssetDecimals,
+  } = order
   const theme = useTheme()
   return (
     <Colum>
       <SingleAmountInfo
+        decimals={takerAssetDecimals}
         color={theme.primary}
         logoUrl={takerAssetLogoURL}
         amount={takingAmount}
         symbol={takerAssetSymbol}
       />
       <SingleAmountInfo
+        decimals={makerAssetDecimals}
         plus={false}
         color={theme.border}
         logoUrl={makerAssetLogoURL}
@@ -176,9 +189,11 @@ export default function OrderItem({
     filledTakingAmount,
     transactions = [],
     takerAssetSymbol,
+    makerAssetDecimals,
+    takerAssetDecimals,
   } = order
   const status = isCancelling ? LimitOrderStatus.CANCELLING : order.status
-  const filledPercent = calcPercentFilledOrder(filledTakingAmount, takingAmount)
+  const filledPercent = calcPercentFilledOrder(filledTakingAmount, takingAmount, takerAssetDecimals)
   const theme = useTheme()
   const partiallyFilled = status === LimitOrderStatus.PARTIALLY_FILLED
   const colorStatus = getColorStatus(status, theme)
@@ -230,6 +245,7 @@ export default function OrderItem({
               return (
                 <Flex key={txs.txHash} style={{ justifyContent: 'space-between' }}>
                   <SingleAmountInfo
+                    decimals={makerAssetDecimals}
                     color={theme.subText}
                     logoUrl={order.takerAssetLogoURL}
                     amount={txs.takingAmount}
@@ -290,7 +306,7 @@ export default function OrderItem({
       {expand && (
         <Flex flexDirection="column" style={{ paddingBottom: 10, borderBottom: `1px solid ${theme.border}` }}>
           {transactions.map((txs, i) => {
-            const filledPercent = calcPercentFilledOrder(txs.takingAmount, takingAmount)
+            const filledPercent = calcPercentFilledOrder(txs.takingAmount, takingAmount, takerAssetDecimals)
             return (
               <ItemWrapper key={txs.txHash} hasBorder={false} style={{ paddingTop: 0, paddingBottom: 0 }}>
                 <Flex alignItems={'center'} style={{ gap: 10 }}>
@@ -298,7 +314,7 @@ export default function OrderItem({
                   <Flex>
                     <div style={{ width: LOGO_SIZE, marginRight: 8 }} />
                     <DeltaAmount color={theme.subText}>
-                      + {formatAmountOrder(txs.takingAmount)} {takerAssetSymbol}
+                      + {formatAmountOrder(txs.takingAmount, takerAssetDecimals)} {takerAssetSymbol}
                     </DeltaAmount>
                   </Flex>
                 </Flex>

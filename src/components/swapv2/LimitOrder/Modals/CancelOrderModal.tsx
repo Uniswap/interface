@@ -39,6 +39,8 @@ function ContentCancel({
     takingAmount,
     filledTakingAmount,
     status,
+    makerAssetDecimals,
+    takerAssetDecimals,
   } = order ?? ({} as LimitOrder)
   const renderContentCancelAll = () => {
     return (
@@ -61,7 +63,7 @@ function ContentCancel({
               <Value>
                 <Logo srcs={[makerAssetLogoURL]} style={styleLogo} />
                 <Text>
-                  {formatAmountOrder(makingAmount)} {makerAssetSymbol}
+                  {formatAmountOrder(makingAmount, makerAssetDecimals)} {makerAssetSymbol}
                 </Text>
               </Value>
             ),
@@ -72,7 +74,7 @@ function ContentCancel({
               <Value>
                 <Logo srcs={[takerAssetLogoURL]} style={styleLogo} />
                 <Text>
-                  {formatAmountOrder(takingAmount)} {takerAssetSymbol}
+                  {formatAmountOrder(takingAmount, takerAssetDecimals)} {takerAssetSymbol}
                 </Text>
               </Value>
             ),
@@ -82,7 +84,17 @@ function ContentCancel({
             content: <Rate order={order} />,
           },
         ]
-  }, [makerAssetLogoURL, makerAssetSymbol, makingAmount, takerAssetLogoURL, takerAssetSymbol, takingAmount, order])
+  }, [
+    makerAssetLogoURL,
+    makerAssetSymbol,
+    makingAmount,
+    takerAssetLogoURL,
+    takerAssetSymbol,
+    takingAmount,
+    order,
+    makerAssetDecimals,
+    takerAssetDecimals,
+  ])
   return (
     <Container>
       <Header title={t`Cancel Order`} onDismiss={onDismiss} />
@@ -97,7 +109,11 @@ function ContentCancel({
       <Note
         note={t`Note: Cancelling an order will cost gas fees. ${
           status === LimitOrderStatus.PARTIALLY_FILLED
-            ? `Your currently existing order is ${calcPercentFilledOrder(filledTakingAmount, takingAmount)}% filled`
+            ? `Your currently existing order is ${calcPercentFilledOrder(
+                filledTakingAmount,
+                takingAmount,
+                takerAssetDecimals,
+              )}% filled`
             : null
         }`}
       />

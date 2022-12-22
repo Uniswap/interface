@@ -22,8 +22,6 @@ export const EXPIRED_OPTIONS = [
   { label: '30 Days', value: 30 * TIMES_IN_SECS.ONE_DAY },
 ]
 
-export const LIMIT_ORDER_CONTRACT = '0x2892e28b58ab329741f27fd1ea56dca0192a3884'
-
 export const ACTIVE_ORDER_OPTIONS = [
   {
     label: t`All Active Orders`,

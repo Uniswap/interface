@@ -63,6 +63,7 @@ const görliInfo: EVMNetworkInfo = {
     routers: '0x45a5B8Cf524EC574b40e80274F0F3856A679C5c4',
     farms: [],
   },
+  limitOrder: '0x973B1847407C579a58E610e5f12003996C5a4f16',
   averageBlockTimeInSeconds: 13.13,
   coingeckoNetworkId: 'ethereum',
   coingeckoNativeTokenId: 'ethereum',

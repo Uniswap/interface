@@ -14,8 +14,6 @@ import { formatAmountOrder } from '../helpers'
 import { RateInfo } from '../type'
 import { Container, Header, ListInfo, MarketInfo, Note, Rate, Value } from './styled'
 
-const formatValue = (amount: string) => (!amount ? '' : formatAmountOrder(amount, false))
-
 const styleLogo = { width: 20, height: 20 }
 
 export default memo(function ConfirmOrderModal({
@@ -49,22 +47,22 @@ export default memo(function ConfirmOrderModal({
     return [
       {
         label: t`I want to pay`,
-        content: currencyIn && (
+        content: currencyIn && inputAmount && (
           <Value>
             <CurrencyLogo currency={currencyIn} style={styleLogo} />
             <Text>
-              {formatValue(inputAmount)} {currencyIn?.symbol}
+              {formatAmountOrder(inputAmount)} {currencyIn?.symbol}
             </Text>
           </Value>
         ),
       },
       {
         label: t`and receive at least`,
-        content: currencyOut && (
+        content: currencyOut && outputAmount && (
           <Value>
             <CurrencyLogo currency={currencyOut} style={styleLogo} />
             <Text>
-              {formatValue(outputAmount?.toString())} {currencyOut?.symbol}
+              {formatAmountOrder(outputAmount)} {currencyOut?.symbol}
             </Text>
           </Value>
         ),

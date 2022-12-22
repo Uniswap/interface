@@ -54,7 +54,7 @@ export default function EditOrderModal({
   const defaultExpire = new Date(expiredAt * 1000)
   const rate = currencyOut ? calcRate(formatIn, formatOut, currencyOut.decimals) : ''
   const defaultRate: RateInfo = { rate, invertRate: calcInvert(rate), invert: false }
-  const filled = calcPercentFilledOrder(filledTakingAmount, takingAmount)
+  const filled = currencyOut ? calcPercentFilledOrder(filledTakingAmount, takingAmount, currencyOut.decimals) : 0
   return (
     <Modal isOpen={isOpen && !!currencyIn && !!currencyOut} onDismiss={onDismiss}>
       <Wrapper>

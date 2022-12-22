@@ -125,7 +125,7 @@ export const Rate = ({
     if (!currencyIn || !currencyOut || !rateInfo) return null
     symbolIn = currencyIn?.symbol
     symbolOut = currencyOut?.symbol
-    rateStr = formatAmountOrder(invertRate ? rateInfo.invertRate : rateInfo.rate, false)
+    rateStr = formatAmountOrder(invertRate ? rateInfo.invertRate : rateInfo.rate)
   }
   return (
     <Value

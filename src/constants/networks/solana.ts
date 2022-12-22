@@ -41,6 +41,7 @@ const solanaInfo: SolanaNetworkInfo = {
   //   pool: 'EKdy97aMrjjxtq4CJh9vN24WuHVsuLz4qtDjyYqttviN',
   //   router: '6VdLuZvVxdgFYQiCQ1VDBBdE27RahXzv2wCxwG4FAzAn',
   // },
+  limitOrder: NOT_SUPPORT,
   coingeckoNetworkId: 'solana',
   coingeckoNativeTokenId: 'solana',
   tokenListUrl: `${KS_SETTING_API}/v1/tokens?chainIds=${ChainId.SOLANA}&isWhitelisted=${true}`,

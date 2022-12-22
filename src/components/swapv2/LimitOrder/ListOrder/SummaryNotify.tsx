@@ -18,19 +18,26 @@ export default function SummaryNotify({
 }) {
   const isMultiOrder = orders.length > 1
   const order = orders[0]
-  const { makingAmount, makerAssetSymbol, takingAmount, takerAssetSymbol, filledTakingAmount } =
-    order || ({} as LimitOrder)
+  const {
+    makingAmount,
+    makerAssetSymbol,
+    takingAmount,
+    takerAssetSymbol,
+    filledTakingAmount,
+    makerAssetDecimals,
+    takerAssetDecimals,
+  } = order || ({} as LimitOrder)
   const theme = useTheme()
   const rate = order ? formatRateOrder(order, false) : ''
-  const filledPercent = order ? calcPercentFilledOrder(filledTakingAmount, takingAmount) : 0
+  const filledPercent = order ? calcPercentFilledOrder(filledTakingAmount, takingAmount, takerAssetDecimals) : 0
   const mainMsg = order ? (
     <Trans>
       <Text as="span" fontWeight={500}>
-        {formatAmountOrder(makingAmount)} {makerAssetSymbol}
+        {formatAmountOrder(makingAmount, makerAssetDecimals)} {makerAssetSymbol}
       </Text>{' '}
       and receive{' '}
       <Text as="span" fontWeight={500}>
-        {formatAmountOrder(takingAmount)} {takerAssetSymbol}
+        {formatAmountOrder(takingAmount, takerAssetDecimals)} {takerAssetSymbol}
       </Text>{' '}
       <Text as="span" color={theme.subText}>
         when 1 {takerAssetSymbol} is equal to {rate} {makerAssetSymbol}
@@ -48,9 +55,9 @@ export default function SummaryNotify({
     >
       {orders.map(order => (
         <li key={order.id}>
-          {t`${formatAmountOrder(order.makingAmount)} ${order.makerAssetSymbol} to ${formatAmountOrder(
-            order.takingAmount,
-          )} ${order.takerAssetSymbol}`}
+          {t`${formatAmountOrder(order.makingAmount, order.makerAssetDecimals)} ${
+            order.makerAssetSymbol
+          } to ${formatAmountOrder(order.takingAmount, order.takerAssetDecimals)} ${order.takerAssetSymbol}`}
         </li>
       ))}
     </ul>
