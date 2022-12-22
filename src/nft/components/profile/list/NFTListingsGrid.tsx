@@ -12,6 +12,7 @@ import { formatEth, formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { Dispatch, FormEvent, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
+import { Trans } from '@lingui/macro'
 
 import * as styles from './ListPage.css'
 
@@ -65,7 +66,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
           color="textSecondary"
           flex={{ sm: '2', md: '1.5' }}
         >
-          NFT
+         <Trans>NFT</Trans> 
         </Column>
         <Row flex={{ sm: '1', md: '3' }}>
           <Column
@@ -75,7 +76,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
             display={{ sm: 'none', md: 'none', xl: 'flex' }}
             textAlign="left"
           >
-            Floor
+          <Trans>Floor</Trans>
           </Column>
           <Column
             className={bodySmall}
@@ -84,7 +85,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
             display={{ sm: 'none', md: 'none', xl: 'flex' }}
             textAlign="left"
           >
-            Last
+            <Trans>Last</Trans>
           </Column>
           <Column className={subheadSmall} flex="2">
             <SortDropdown dropDownOptions={priceDropdownOptions} mini miniPrompt="Set price by" />
@@ -97,7 +98,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
             display={{ sm: 'none', md: 'none', lg: 'flex' }}
             textAlign="right"
           >
-            Fees
+            <Trans>Fees</Trans>
           </Column>
           <Column
             className={bodySmall}
@@ -106,7 +107,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
             flex="1.5"
             textAlign="right"
           >
-            You receive
+            <Trans>You receive</Trans>
           </Column>
         </Row>
       </TableHeader>
@@ -294,10 +295,10 @@ const EthPriceDisplay = ({ ethPrice = 0 }: { ethPrice?: number }) => {
         {ethPrice !== 0 ? (
           <>
             <Column>
-              <Box className={body} color="textPrimary" marginLeft="12" marginRight="0">
+              <Box className={body} color="textPrimary" textAlign="right" marginLeft="12" marginRight="0">
                 {ethPrice} ETH
               </Box>
-              <Box className={body} color="textSecondary" marginLeft="12" marginRight="0">
+              <Box className={body} color="textSecondary" textAlign="right" marginLeft="12" marginRight="0">
                 {formatUsdPrice(ethPrice * ethConversion)}
               </Box>
             </Column>
@@ -445,7 +446,7 @@ const MarketplaceRow = ({
         flex="1"
         display={{ sm: 'none', md: 'none', xl: 'flex' }}
       >
-        {asset.floorPrice ? `${asset.floorPrice.toFixed(2)} ETH` : '-'}
+        {asset.floorPrice ? `${asset.floorPrice.toFixed(3)} ETH` : '-'}
       </Column>
       <Column
         className={bodySmall}
@@ -454,7 +455,7 @@ const MarketplaceRow = ({
         flex="1"
         display={{ sm: 'none', md: 'none', xl: 'flex' }}
       >
-        {asset.lastPrice ? `${asset.lastPrice.toFixed(2)} ETH` : '-'}
+        {asset.lastPrice ? `${asset.lastPrice.toFixed(3)} ETH` : '-'}
       </Column>
 
       <Row flex="2">
@@ -522,7 +523,7 @@ const MarketplaceRow = ({
                         <FeeWrap>
                           {selectedMarket.name}: {selectedMarket.fee}%
                         </FeeWrap>
-                        <FeeWrap>Creator royalties: {selectedMarket.royalty}%</FeeWrap>
+                        <FeeWrap><Trans>Creator royalties</Trans>: {selectedMarket.royalty}%</FeeWrap>
                       </RoyaltyContainer>
                     )
                   })}
@@ -531,7 +532,7 @@ const MarketplaceRow = ({
             }
             placement="left"
           >
-            {fees > 0 ? `${fees}${selectedMarkets.length > 1 ? '% max' : '%'}` : '--%'}
+            {fees > 0 ? `${fees}${selectedMarkets.length > 1 ? <span>%<Trans>max</Trans></span> : '%'}` : '--%'}
           </MouseoverTooltip>
         </Box>
       </Column>
