@@ -332,7 +332,7 @@ interface MarketplaceRowProps {
 
 const getRoyalty = (listingMarket: ListingMarket, asset: WalletAsset) => {
   // LooksRare is a unique case where royalties for creators are a flat 0.5% or 50 basis points
-  const baesFee = listingMarket.name === 'LooksRare' ? LOOKS_RARE_CREATOR_BASIS_POINTS : asset.basisPoints
+  const baesFee = listingMarket.name === 'LooksRare' ? LOOKS_RARE_CREATOR_BASIS_POINTS : asset.basisPoints ?? 0
 
   return baesFee * 0.01
 }
@@ -376,16 +376,15 @@ const MarketplaceRow = ({
 
   useMemo(() => {
     for (const market of selectedMarkets) {
-      if(market && asset && asset.basisPoints) {
-        market.royalty = (market.name === 'LooksRare' ? LOOKS_RARE_CREATOR_BASIS_POINTS : asset?.basisPoints) * 0.01
+      if (market && asset && asset.basisPoints) {
+        market.royalty = (market.name === 'LooksRare' ? LOOKS_RARE_CREATOR_BASIS_POINTS : asset.basisPoints) * 0.01
       }
-   
     }
-  }, [asset.basisPoints, selectedMarkets])
+  }, [asset, selectedMarkets])
 
   useEffect(() => {
     if (globalPriceMethod === SetPriceMethod.FLOOR_PRICE) {
-      setListPrice(asset.floorPrice)
+      setListPrice(asset?.floorPrice)
       setGlobalPrice(asset.floorPrice)
     } else if (globalPriceMethod === SetPriceMethod.PREV_LISTING) {
       setListPrice(asset.lastPrice)
@@ -455,7 +454,7 @@ const MarketplaceRow = ({
         flex="1"
         display={{ sm: 'none', md: 'none', xl: 'flex' }}
       >
-        {asset.lastPrice ? `${asset.floorPrice.toFixed(2)} ETH` : '-'}
+        {asset.lastPrice ? `${asset.lastPrice.toFixed(2)} ETH` : '-'}
       </Column>
 
       <Row flex="2">
