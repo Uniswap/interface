@@ -18,8 +18,8 @@ import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
-import { ChevronLeftIcon, MagnifyingGlassIcon, NavMagnifyingGlassIcon } from '../../nft/components/icons'
-import { NavIcon } from './NavIcon'
+import { ChevronLeftIcon, MagnifyingGlassIcon } from '../../nft/components/icons'
+// import { NavIcon } from './NavIcon'
 import * as styles from './SearchBar.css'
 import { SearchBarDropdown } from './SearchBarDropdown'
 
@@ -211,11 +211,11 @@ export const SearchBar = () => {
           )}
         </Box>
       </Box>
-      {isMobileOrTablet && (
+      {/* {isMobileOrTablet && (
         <NavIcon onClick={toggleOpen}>
           <NavMagnifyingGlassIcon />
         </NavIcon>
-      )}
+      )} */}
     </Trace>
   )
 }
