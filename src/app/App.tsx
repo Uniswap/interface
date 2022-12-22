@@ -134,10 +134,9 @@ function NavStack({ isDarkMode }: { isDarkMode: boolean }) {
         routingInstrumentation.registerNavigationContainer(navigationRef)
       }}>
       <OfflineBanner />
-      <NotificationToastWrapper>
-        <DrawerNavigator />
-        <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      </NotificationToastWrapper>
+      <NotificationToastWrapper />
+      <DrawerNavigator />
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
     </NavigationContainer>
   )
 }

@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from 'react'
+import React from 'react'
 import { useAppSelector } from 'src/app/hooks'
 import { AssetType } from 'src/entities/assets'
 import {
@@ -18,15 +18,13 @@ import { selectActiveAccountNotifications } from 'src/features/notifications/sel
 import { AppNotification, AppNotificationType } from 'src/features/notifications/types'
 import { TransactionType } from 'src/features/transactions/types'
 
-export function NotificationToastWrapper({ children }: PropsWithChildren<unknown>) {
+export function NotificationToastWrapper() {
   const notifications = useAppSelector(selectActiveAccountNotifications)
   const notification = notifications[0]
-  return (
-    <>
-      {notification && <NotificationToastRouter notification={notification} />}
-      {children}
-    </>
-  )
+
+  if (!notification) return null
+
+  return <NotificationToastRouter notification={notification} />
 }
 
 export function NotificationToastRouter({ notification }: { notification: AppNotification }) {
