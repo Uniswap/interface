@@ -23,7 +23,6 @@ const Template: ComponentStory<typeof BaseCard.Container> = ({ children }) => (
 
 export const Primary = Template.bind({})
 Primary.args = {
-  ...Primary.args,
   children: (
     <Flex>
       <BaseCard.Header subtitle="$124.34" title="Tokens" onPress={() => undefined} />
@@ -34,7 +33,6 @@ Primary.args = {
 
 export const EmptyState = Template.bind({})
 EmptyState.args = {
-  ...EmptyState.args,
   children: (
     <BaseCard.EmptyState
       buttonLabel="Explore"

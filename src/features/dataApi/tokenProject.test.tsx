@@ -31,7 +31,7 @@ describe(useTokenProjects, () => {
       mocks: [emptyMock],
     })
 
-    await sleep(100)
+    await sleep(1000)
 
     expect(result.current.loading).toEqual(false)
     expect(result.current.data).toBe(undefined)
@@ -42,7 +42,7 @@ describe(useTokenProjects, () => {
       mocks: [mock],
     })
 
-    await sleep(100)
+    await sleep(1000)
 
     const data = result.current.data
     expect(data).toEqual(tokenProjectToCurrencyInfos(TokenProjects))

@@ -42,7 +42,7 @@ export const account: Account = {
 }
 
 const mockSigner = new (class {
-  signTransaction = jest.fn(() => '0x1234567890abcdef')
+  signTransaction = () => '0x1234567890abcdef'
   connect = () => this
 })()
 
@@ -57,15 +57,15 @@ const mockFeeData = {
 }
 
 export const mockProvider = {
-  getBalance: jest.fn(() => BigNumber.from('1000000000000000000')),
-  getGasPrice: jest.fn(() => BigNumber.from('100000000000')),
-  getTransactionCount: jest.fn(() => 1000),
-  estimateGas: jest.fn(() => BigNumber.from('30000')),
-  sendTransaction: jest.fn(() => ({ hash: '0xabcdef' })),
-  detectNetwork: jest.fn(() => ({ name: 'mainnet', chainId: 1 })),
-  getTransactionReceipt: jest.fn(() => txReceipt),
-  waitForTransaction: jest.fn(() => txReceipt),
-  getFeeData: jest.fn(() => mockFeeData),
+  getBalance: () => BigNumber.from('1000000000000000000'),
+  getGasPrice: () => BigNumber.from('100000000000'),
+  getTransactionCount: () => 1000,
+  estimateGas: () => BigNumber.from('30000'),
+  sendTransaction: () => ({ hash: '0xabcdef' }),
+  detectNetwork: () => ({ name: 'mainnet', chainId: 1 }),
+  getTransactionReceipt: () => txReceipt,
+  waitForTransaction: () => txReceipt,
+  getFeeData: () => mockFeeData,
 }
 
 export const mockProviderManager = {
@@ -80,15 +80,15 @@ export const providerManager = {
 }
 
 export const mockContractManager = {
-  getOrCreateContract: jest.fn(() => mockTokenContract),
+  getOrCreateContract: () => mockTokenContract,
 }
 
 export const mockTokenContract = {
-  balanceOf: jest.fn(() => BigNumber.from('1000000000000000000')),
+  balanceOf: () => BigNumber.from('1000000000000000000'),
   populateTransaction: {
-    transfer: jest.fn(() => txRequest),
-    transferFrom: jest.fn(() => txRequest),
-    safeTransferFrom: jest.fn(() => txRequest),
+    transfer: () => txRequest,
+    transferFrom: () => txRequest,
+    safeTransferFrom: () => txRequest,
   },
 }
 
@@ -129,7 +129,7 @@ export const txReceipt = {
 
 export const txResponse = {
   hash: '0x123',
-  wait: jest.fn(() => txReceipt),
+  wait: () => txReceipt,
 }
 
 export const txTypeInfo: ApproveTransactionInfo = {

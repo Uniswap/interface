@@ -9,6 +9,7 @@ const complexityRules = {
 module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
+  ignorePatterns: ["!.storybook"],
   extends: [
     'eslint:recommended',
     '@react-native-community',

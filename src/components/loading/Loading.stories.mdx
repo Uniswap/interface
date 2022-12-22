@@ -1,12 +1,11 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs'
 
-import { HeaderLoader } from './HeaderLoader'
 import { BoxLoader } from './BoxLoader'
 import { GraphLoader } from './BoxLoader'
 
 <Meta title="WIP/Components/Loading" component={BoxLoader} />
 
-export const Template = (args) => <HeaderLoader {...args} />
+export const Template = (args) => <BoxLoader {...args} />
 
 # Loading
 
@@ -15,12 +14,6 @@ export const Template = (args) => <HeaderLoader {...args} />
 <Canvas>
   <Story name="default" args={{}}>
     <BoxLoader height={50} />
-  </Story>
-</Canvas>
-
-<Canvas>
-  <Story name="header" args={{}}>
-    <HeaderLoader />
   </Story>
 </Canvas>
 

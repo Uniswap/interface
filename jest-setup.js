@@ -5,8 +5,6 @@ import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/asy
 import mockRNCNetInfo from '@react-native-community/netinfo/jest/netinfo-mock.js'
 // required polyfill for rtk-query baseQueryFn
 import 'cross-fetch/polyfill'
-import { createElement } from 'react'
-import { View } from 'react-native'
 import mockRNDeviceInfo from 'react-native-device-info/jest/react-native-device-info-mock'
 
 // avoids polutting console in test runs, while keeping important log levels
@@ -59,7 +57,10 @@ jest.mock('redux-persist', () => {
 jest.mock('react-native-vision-camera', () => ({}))
 
 // Mock expo clipboard lib due to native deps
-jest.mock('expo-clipboard', () => ({}))
+jest.mock('expo-clipboard', () => ({
+  setString: jest.fn(),
+  getStringAsync: () => Promise.resolve(),
+}))
 jest.mock('expo-blur', () => ({ BlurView: {} }))
 jest.mock('expo-av', () => ({}))
 jest.mock('expo-haptics', () => ({ impactAsync: jest.fn(), ImpactFeedbackStyle: jest.fn() }))
@@ -75,18 +76,6 @@ require('react-native-reanimated/lib/reanimated2/jestUtils').setUpTests()
 jest.mock('src/features/providers/providerSaga')
 
 jest.mock('src/lib/RNEthersRs')
-
-// Mock Firebase packages
-jest.mock('@react-native-firebase/remote-config', () => ({}))
-jest.mock('@react-native-firebase/app', () => ({
-  app: jest.fn(() => ({
-    auth: jest.fn(() => ({
-      signInAnonymously: jest.fn(),
-    })),
-  })),
-}))
-jest.mock('@react-native-firebase/auth', () => ({}))
-jest.mock('@react-native-firebase/firestore', () => ({}))
 
 // Mock OneSignal package
 jest.mock('react-native-onesignal', () => {
@@ -147,20 +136,3 @@ jest.mock('@amplitude/experiment-react-native-client', () => {
 
 global.__reanimatedWorkletInit = () => ({})
 jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'))
-
-// react-native-skia
-const PlainView = ({ children, ...props }) => createElement(View, props, children)
-const noop = () => null
-jest.mock('@shopify/react-native-skia', () => {
-  return {
-    Canvas: PlainView,
-    BlurMask: PlainView,
-    Circle: PlainView,
-    Group: PlainView,
-    LinearGradient: PlainView,
-    Mask: PlainView,
-    Path: PlainView,
-    Rect: PlainView,
-    vec: noop,
-  }
-})

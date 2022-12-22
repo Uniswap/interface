@@ -1,9 +1,8 @@
-import { render } from '@testing-library/react-native'
 import React from 'react'
 import { UniconAttributes } from 'src/components/unicons/types'
 import { Unicon } from 'src/components/unicons/Unicon'
 import { deriveUniconAttributeIndices, isEthAddress } from 'src/components/unicons/utils'
-import { renderWithTheme } from 'src/test/render'
+import { render } from 'src/test/test-utils'
 
 it('renders a Unicon', () => {
   const tree = render(
@@ -13,7 +12,7 @@ it('renders a Unicon', () => {
 })
 
 it('fails to render a Unicon if given an invalid eth address', () => {
-  const tree = renderWithTheme(<Unicon address="mymoneydontjigglejiggle" size={36} />)
+  const tree = render(<Unicon address="mymoneydontjigglejiggle" size={36} />)
   expect(tree).toMatchSnapshot()
 })
 

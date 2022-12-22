@@ -1,37 +1,29 @@
-import { configureStore, createSlice } from '@reduxjs/toolkit'
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 import React from 'react'
 import { Provider } from 'react-redux'
-import { rootReducer } from 'src/app/rootReducer'
+import { setupStore } from 'src/app/store'
 import { Box } from 'src/components/layout'
 import { config } from 'src/config'
 import { ChainId } from 'src/constants/chains'
 import { NotificationToastRouter } from 'src/features/notifications/NotificationToastWrapper'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
-import { DynamicThemeProvider } from 'src/styles/DynamicThemeProvider'
+import { account } from 'src/test/fixtures'
 
-const mockAddress = '0x000000'
-
-const notificationsSlice = createSlice({
-  name: 'notifications',
-  initialState: { notificationQueue: [{ address: mockAddress }] },
-  reducers: {},
-})
-
-const walletSlice = createSlice({
-  name: 'wallet',
-  initialState: {
-    activeAccountAddress: mockAddress,
-    accounts: { [mockAddress]: {} },
+const store = setupStore({
+  wallet: {
+    activeAccountAddress: account.address,
+    accounts: { [account.address]: account },
+    flashbotsEnabled: false,
+    isUnlocked: true,
+    settings: {},
   },
-  reducers: {},
-})
-
-const store = configureStore<typeof rootReducer>({
-  reducer: {
-    notifications: notificationsSlice.reducer,
-    wallet: walletSlice.reducer,
+  notifications: {
+    notificationQueue: [
+      { type: AppNotificationType.Default, title: 'My notification', address: account.address },
+    ],
+    notificationStatus: {},
+    lastTxNotificationUpdate: {},
   },
 })
 
@@ -41,11 +33,9 @@ export default {
   decorators: [
     (Story) => (
       <Provider store={store}>
-        <DynamicThemeProvider>
-          <Box width={300}>
-            <Story />
-          </Box>
-        </DynamicThemeProvider>
+        <Box width={300}>
+          <Story />
+        </Box>
       </Provider>
     ),
   ],

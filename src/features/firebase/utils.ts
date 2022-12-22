@@ -1,4 +1,4 @@
-import { ReactNativeFirebase } from '@react-native-firebase/app'
+import type { ReactNativeFirebase } from '@react-native-firebase/app'
 import '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 import OneSignal from 'react-native-onesignal'

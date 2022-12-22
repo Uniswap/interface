@@ -19,8 +19,8 @@ export const NavigationDecorator = (story) => {
     <NavigationContainer independent>
       <StoryBookStack.Navigator>
         <StoryBookStack.Screen
-          name="MyStorybookScreen"
           component={Screen}
+          name="MyStorybookScreen"
           options={{ header: () => null }}
         />
       </StoryBookStack.Navigator>
