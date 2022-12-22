@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { formatUSDPrice } from '@uniswap/conedison/format'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
@@ -250,21 +251,26 @@ const AuthenticatedHeader = () => {
   }, [acknowledge, animateBuyCryptoButtonBorder])
 
   const openFiatOnrampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
+  const openFoRModalWithAnalytics = useCallback(() => {
+    sendAnalyticsEvent('Fiat OnRamp Widget Opened')
+    openFiatOnrampModal()
+  }, [openFiatOnrampModal])
+
   const [shouldCheck, setShouldCheck] = useState(false)
   const {
     available: fiatOnrampAvailable,
     availabilityChecked: fiatOnrampAvailabilityChecked,
     error,
     loading: fiatOnrampAvailabilityLoading,
-  } = useFiatOnrampAvailability(shouldCheck, openFiatOnrampModal)
+  } = useFiatOnrampAvailability(shouldCheck, openFoRModalWithAnalytics)
 
   const handleBuyCryptoClick = useCallback(() => {
     if (!fiatOnrampAvailabilityChecked) {
       setShouldCheck(true)
     } else if (fiatOnrampAvailable) {
-      openFiatOnrampModal()
+      openFoRModalWithAnalytics()
     }
-  }, [fiatOnrampAvailabilityChecked, fiatOnrampAvailable, openFiatOnrampModal])
+  }, [fiatOnrampAvailabilityChecked, fiatOnrampAvailable, openFoRModalWithAnalytics])
   const disableBuyCryptoButton = Boolean(
     error || (!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) || fiatOnrampAvailabilityLoading
   )

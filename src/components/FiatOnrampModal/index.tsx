@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback, useEffect, useState } from 'react'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
@@ -74,10 +73,6 @@ export default function FiatOnrampModal() {
   const [signedIframeUrl, setSignedIframeUrl] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
-
-  useEffect(() => {
-    if (fiatOnrampModalOpen) sendAnalyticsEvent('Fiat OnRamp Widget Opened')
-  }, [fiatOnrampModalOpen])
 
   const fetchSignedIframeUrl = useCallback(async () => {
     if (!account) {
