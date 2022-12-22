@@ -13,7 +13,6 @@ export const fetchSearchTokens = async (tokenQuery: string): Promise<FungibleTok
   })
 
   const data = await r.json()
-  console.log('data avail', data.data)
 
   // TODO Undo favoritism
   return data.data
