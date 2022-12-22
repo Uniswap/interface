@@ -112,6 +112,7 @@ jobs:
         env:
           CI: false
           REACT_APP_TAG: ${{ needs.prepare.outputs.image_tag }}
+          NODE_OPTIONS: "--max_old_space_size=4096"
         run: yarn build-dev
 
       - name: Docker build and push

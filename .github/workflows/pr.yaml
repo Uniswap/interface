@@ -1,4 +1,4 @@
-name: "Auto Deploy PR"
+name: 'Auto Deploy PR'
 
 concurrency:
   group: pr-workflow-${{ github.ref }}
@@ -20,7 +20,7 @@ jobs:
     outputs:
       current_branch: ${{ steps.current_branch.outputs.value }}
       head_sha: ${{ github.event.pull_request.head.sha }}
-      image_name: "asia.gcr.io/kyber-operation/core/${{ env.SERVICE }}"
+      image_name: 'asia.gcr.io/kyber-operation/core/${{ env.SERVICE }}'
       image_tag: ${{ steps.get_tag.outputs.image_tag }}
       repository: ${{ github.repository	}}
       pr_number: ${{github.event.number}}
@@ -59,8 +59,8 @@ jobs:
         env:
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
-            short_sha="$(echo $HEAD_SHA | head -c7)"
-            echo "::set-output name=image_tag::adpr-$short_sha"
+          short_sha="$(echo $HEAD_SHA | head -c7)"
+          echo "::set-output name=image_tag::adpr-$short_sha"
 
   build:
     runs-on: ubuntu-18.04
@@ -112,6 +112,7 @@ jobs:
           CI: false
           REACT_APP_TAG: ${{ needs.prepare.outputs.image_tag }}
           CURRENT_BRANCH: ${{ needs.prepare.outputs.current_branch }}
+          NODE_OPTIONS: '--max_old_space_size=4096'
         run: yarn build
 
       - name: Docker build and push
