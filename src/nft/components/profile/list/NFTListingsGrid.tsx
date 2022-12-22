@@ -59,7 +59,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
     <Column>
       <TableHeader>
         <Column
-          marginLeft={selectedMarkets.length > 1 ? '0' : '0'}
+          marginLeft="0"
           transition="500"
           className={bodySmall}
           color="textSecondary"
