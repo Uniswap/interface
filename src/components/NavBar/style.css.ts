@@ -6,6 +6,7 @@ import { sprinkles, vars } from '../../nft/css/sprinkles.css'
 export const logoContainer = style([
   sprinkles({
     display: 'flex',
+    alignItems: 'center',
     marginRight: { sm: '12', xxl: '20' },
     cursor: 'pointer',
   }),
@@ -17,6 +18,14 @@ export const logo = style([
     color: 'textPrimary',
   }),
 ])
+
+export const uniFloodHandshake = style({
+  marginRight: 7,
+})
+
+export const floodLogo = style({
+  marginTop: 6,
+})
 
 export const baseSideContainer = style([
   sprinkles({
