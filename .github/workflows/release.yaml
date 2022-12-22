@@ -121,4 +121,4 @@ jobs:
         with:
           environment: production
           sourcemaps: './build/static/js'
-          url_prefix: '/static/js'
+          url_prefix: '~/static/js'
