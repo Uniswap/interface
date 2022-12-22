@@ -13,7 +13,7 @@ export function TokenDetailsFavoriteButton({ currencyId }: { currencyId: string 
   const onFavoritePress = useToggleFavoriteCallback(id)
 
   return (
-    <TouchableArea hapticFeedback px="xxxs" py="sm" onPress={onFavoritePress}>
+    <TouchableArea hapticFeedback onPress={onFavoritePress}>
       <HeartIcon
         fill={isFavoriteToken ? theme.colors.accentAction : theme.colors.none}
         height={theme.iconSizes.lg}

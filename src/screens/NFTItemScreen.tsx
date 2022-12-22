@@ -10,7 +10,6 @@ import { LinkButton } from 'src/components/buttons/LinkButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Box, Flex } from 'src/components/layout'
-import { BackHeader } from 'src/components/layout/BackHeader'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { Loader } from 'src/components/loading'
@@ -64,30 +63,6 @@ export function NFTItemScreen({
     }
   }, [asset?.nftContract, asset?.tokenId])
 
-  const FixedHeader = useMemo(
-    () => (
-      <BackHeader
-        endAdornment={
-          <TouchableArea onPress={onShare}>
-            <ShareIcon
-              color={theme.colors.textSecondary}
-              height={iconSizes.lg}
-              width={iconSizes.lg}
-            />
-          </TouchableArea>
-        }
-        pb="sm"
-        pt="md">
-        <Flex shrink>
-          <Text color="textPrimary" numberOfLines={1} variant="bodyLarge">
-            {asset?.name}
-          </Text>
-        </Flex>
-      </BackHeader>
-    ),
-    [theme.colors.textSecondary, onShare, asset]
-  )
-
   const creatorInfo = useMemo(() => {
     const creator = asset?.creator
 
@@ -119,23 +94,20 @@ export function NFTItemScreen({
   return (
     <>
       <HeaderScrollScreen
-        contentHeader={
-          <BackHeader
-            endAdornment={
-              <TouchableOpacity onPress={onShare}>
-                <ShareIcon
-                  color={theme.colors.textSecondary}
-                  height={iconSizes.lg}
-                  width={iconSizes.lg}
-                />
-              </TouchableOpacity>
-            }
-            pb="sm"
-            pt="md"
-            px="md"
-          />
+        centerElement={
+          <Text color="textPrimary" numberOfLines={1} variant="bodyLarge">
+            {asset?.name}
+          </Text>
         }
-        fixedHeader={FixedHeader}>
+        rightElement={
+          <TouchableOpacity onPress={onShare}>
+            <ShareIcon
+              color={theme.colors.textSecondary}
+              height={iconSizes.lg}
+              width={iconSizes.lg}
+            />
+          </TouchableOpacity>
+        }>
         <Flex gap="lg" mb="xxl" mt="md" mx="lg" pb="xxl">
           <Flex gap="lg">
             <Flex centered borderRadius="lg" overflow="hidden">

@@ -1,19 +1,21 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 import React from 'react'
+import HeartIcon from 'src/assets/icons/heart.svg'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { Text } from 'src/components/Text'
+import { theme } from 'src/styles/theme'
 import { Box, Flex } from '../index'
 
-const ContentHeader = (
-  <Flex row alignItems="center" gap="xs" my="xs">
-    <Text variant="headlineLarge">Screen Title</Text>
-  </Flex>
-)
+const CenterElement = <Text variant="headlineLarge">Screen Title</Text>
 
-const FixedHeader = (
-  <Flex row alignItems="center" gap="xs" my="xs">
-    <Text variant="headlineLarge">Fixed Screen Title</Text>
-  </Flex>
+const RightElement = (
+  <HeartIcon
+    fill={theme.colors.none}
+    height={theme.iconSizes.lg}
+    stroke={theme.colors.textSecondary}
+    strokeWidth={2}
+    width={theme.iconSizes.lg}
+  />
 )
 
 export default {
@@ -40,6 +42,6 @@ const Template: ComponentStory<typeof HeaderScrollScreen> = (args) => {
 
 export const Primary = Template.bind({})
 Primary.args = {
-  contentHeader: ContentHeader,
-  fixedHeader: FixedHeader,
+  centerElement: CenterElement,
+  rightElement: RightElement,
 }

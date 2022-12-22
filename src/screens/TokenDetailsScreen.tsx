@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
-import { BackButton } from 'src/components/buttons/BackButton'
 import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
 import { AnimatedBox, AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
@@ -14,7 +13,6 @@ import { Text } from 'src/components/Text'
 import { useCrossChainBalances } from 'src/components/TokenDetails/hooks'
 import { TokenBalances } from 'src/components/TokenDetails/TokenBalances'
 import { TokenDetailsActionButtons } from 'src/components/TokenDetails/TokenDetailsActionButton'
-import { TokenDetailsBackButtonRow } from 'src/components/TokenDetails/TokenDetailsBackButtonRow'
 import { TokenDetailsFavoriteButton } from 'src/components/TokenDetails/TokenDetailsFavoriteButton'
 import { TokenDetailsHeader } from 'src/components/TokenDetails/TokenDetailsHeader'
 import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
@@ -68,7 +66,7 @@ function HeaderTitleElement({ data }: { data: TokenDetailsScreenQuery | undefine
   const tokenProject = token?.project
 
   return (
-    <Flex alignItems="center" gap="none" justifyContent="space-between" mb="xxs">
+    <Flex alignItems="center" gap="none" justifyContent="space-between">
       <HeaderPriceLabel price={tokenProject?.markets?.[0]?.price} />
       <Flex centered row gap="xxs">
         <TokenLogo
@@ -77,7 +75,7 @@ function HeaderTitleElement({ data }: { data: TokenDetailsScreenQuery | undefine
           symbol={token?.symbol ?? undefined}
           url={tokenProject?.logoUrl ?? undefined}
         />
-        <Text color="textSecondary" variant="subheadSmall">
+        <Text color="textSecondary" variant="buttonLabelMicro">
           {token?.symbol ?? t('Unknown token')}
         </Text>
       </Flex>
@@ -261,15 +259,9 @@ function TokenDetails({
   return (
     <AnimatedBox flexGrow={1} pb={pb}>
       <HeaderScrollScreen
-        contentHeader={<TokenDetailsBackButtonRow currencyId={_currencyId} />}
-        fixedHeader={
-          <Flex row alignItems="center" justifyContent="space-between" pt="xxs" px="none">
-            <BackButton />
-            <HeaderTitleElement data={data} />
-            <TokenDetailsFavoriteButton currencyId={_currencyId} />
-          </Flex>
-        }>
-        <Flex gap="xl" my="md">
+        centerElement={<HeaderTitleElement data={data} />}
+        rightElement={<TokenDetailsFavoriteButton currencyId={_currencyId} />}>
+        <Flex gap="xl" my="xs">
           <Flex gap="xxs">
             <TokenDetailsHeader
               data={data}

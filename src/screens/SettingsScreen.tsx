@@ -16,7 +16,6 @@ import { AddressDisplay } from 'src/components/AddressDisplay'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
-import { BackHeader } from 'src/components/layout/BackHeader'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import {
   SettingsRow,
@@ -142,17 +141,9 @@ export function SettingsScreen() {
 
   return (
     <HeaderScrollScreen
-      contentHeader={
-        <BackHeader alignment="center" mx="md" pt="md">
-          <Text variant="bodyLarge">{t('Settings')}</Text>
-        </BackHeader>
-      }
-      fixedHeader={
-        <BackHeader mb="xxs">
-          <Text variant="bodyLarge">{t('Settings')}</Text>
-        </BackHeader>
-      }>
-      <Flex px="lg" py="lg">
+      alwaysShowCenterElement
+      centerElement={<Text variant="bodyLarge">{t('Settings')}</Text>}>
+      <Flex px="lg" py="sm">
         <SectionList
           ItemSeparatorComponent={() => <Flex pt="xs" />}
           ListFooterComponent={<FooterSettings />}
