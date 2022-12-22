@@ -3,6 +3,7 @@ import { useWeb3React } from '@web3-react/core'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { ArrowUpRight } from 'react-feather'
+import { AlertTriangle } from 'react-feather'
 import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ExternalLink, HideSmall } from 'theme'
@@ -173,6 +174,24 @@ export function NetworkAlert() {
               </Header>
               <HideSmall>
                 <Trans>Deposit tokens to the {label} network.</Trans>
+              </HideSmall>
+            </AutoRow>
+          </BodyText>
+          <StyledArrowUpRight color={textColor} />
+        </LinkOutToBridge>
+      </ContentWrapper>
+<div style={{height:"16px"}} />
+      <ContentWrapper chainId={chainId} darkMode={darkMode} logoUrl={logoUrl}>
+        <LinkOutToBridge href="https://gov.uniswap.org/t/temperature-check-deploy-uniswap-v3-on-scroll/18114">
+          <BodyText color={textColor}>
+            {/* <L2Icon src={logoUrl} /> */}
+            <AlertTriangle size={24} style={{marginRight: "16px"}} />
+            <AutoRow>
+              <Header>
+                <Trans>Intended for Demo Purposes Only</Trans>
+              </Header>
+              <HideSmall>
+                <Trans>This is not an official Uniswap release.</Trans>
               </HideSmall>
             </AutoRow>
           </BodyText>
