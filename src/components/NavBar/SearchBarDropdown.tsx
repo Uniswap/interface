@@ -112,26 +112,8 @@ export const SearchBarDropdown = ({
   isLoading,
 }: SearchBarDropdownProps) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(0)
-  const { history } = useSearchHistory()
-  const shortenedHistory = history.slice(0,2)
-  const historyLatestPricesQueries = useQueries(
-    shortenedHistory.map((tokenOrCollection) => ({
-        queryKey: ['address', tokenOrCollection.address],
-        queryFn: () =>
-        tokenOrCollection.type === SearchHistoryType.GenieCollection
-            ? fetchSearchCollections(tokenOrCollection.address)
-            : fetchSearchTokens(tokenOrCollection.name ?? ''),
-        enabled: tokenOrCollection.type === SearchHistoryType.GenieCollection ? !!tokenOrCollection.address : !!tokenOrCollection.name,
-        refetchOnMount: false,
-        refetchOnReconnect: false,
-        refetchOnWindowFocus: false,
-      }))
-    )
-  const shortenedHistoryLatestPricesIsLoading = historyLatestPricesQueries.some(
-    (historyLatestPricesQuery) => historyLatestPricesQuery.isLoading
-  )
-  const shortenedHistoryLatestPrices = !shortenedHistoryLatestPricesIsLoading ? 
-  historyLatestPricesQueries.flatMap((elem) => (elem.data !== undefined ? [elem.data[0]] : [])) : []
+  const { history: searchHistory } = useSearchHistory()
+  const shortenedHistory = useMemo(() => searchHistory.slice(0, 2), [searchHistory])
   
   const { pathname } = useLocation()
   const isNFTPage = useIsNftPage()
@@ -146,6 +128,27 @@ export const SearchBarDropdown = ({
       refetchOnWindowFocus: false,
     }
   )
+
+  const historyLatestPricesQueries = useQueries(
+    shortenedHistory.map((tokenOrCollection) => ({
+        queryKey: ['address', tokenOrCollection.address],
+        queryFn: () =>
+        tokenOrCollection.type === SearchHistoryType.GenieCollection
+            ? fetchSearchCollections(tokenOrCollection.address)
+            : fetchSearchTokens(tokenOrCollection.name ?? ''),
+        enabled: tokenOrCollection.type === SearchHistoryType.GenieCollection ? !!tokenOrCollection.address : !!tokenOrCollection.name,
+        refetchOnMount: false,
+        refetchOnReconnect: false,
+        refetchOnWindowFocus: false,
+      }))
+    )
+
+  const shortenedHistoryLatestPricesIsLoading = useMemo(() => historyLatestPricesQueries.some(
+    (historyLatestPricesQuery) => historyLatestPricesQuery.isLoading
+  ), [historyLatestPricesQueries])
+  const shortenedHistoryLatestPrices = useMemo(() => !shortenedHistoryLatestPricesIsLoading ? 
+  historyLatestPricesQueries.flatMap((elem) => (elem.data !== undefined ? [elem.data[0]] : [])) : [], 
+  [shortenedHistoryLatestPricesIsLoading, historyLatestPricesQueries]) 
 
   const trendingCollections = useMemo(
     () =>
@@ -172,8 +175,8 @@ export const SearchBarDropdown = ({
     ['trendingTokens'],
     () => fetchTrendingTokens(4),
     {
-      refetchOnReconnect: false,
       refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
     }
   )
 
