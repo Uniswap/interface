@@ -6,12 +6,14 @@ import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { subheadSmall } from 'nft/css/common.css'
 import { useSearchHistory } from 'nft/hooks'
+import { fetchSearchCollections } from 'nft/queries'
 import { fetchTrendingCollections } from 'nft/queries'
+import { fetchSearchTokens } from 'nft/queries/genie/SearchTokensFetcher'
 import { fetchTrendingTokens } from 'nft/queries/genie/TrendingTokensFetcher'
 import { FungibleToken, GenieCollection, TimePeriod, TrendingCollection } from 'nft/types'
 import { formatEthPrice } from 'nft/utils/currency'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
-import { useQuery } from 'react-query'
+import { useQueries, useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
 
 import { ClockIcon, TrendingArrow } from '../../nft/components/icons'
@@ -111,7 +113,34 @@ export const SearchBarDropdown = ({
 }: SearchBarDropdownProps) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(0)
   const { history: searchHistory, updateItem: updateSearchHistory } = useSearchHistory()
-  const shortenedHistory = useMemo(() => searchHistory.slice(0, 2), [searchHistory])
+  const shortenedHistoryStalePrices = useMemo(() => searchHistory.slice(0, 2), [searchHistory])
+
+  // TODO(lynnshaoyu): possible to fetchSearchTokens by address instead of just by name?
+  const shortenedHistoryUpdatedPrices = useQueries(
+    shortenedHistoryStalePrices.map((tokenOrCollection) => ({
+      queryKey: ['tokenOrCollectionAddress', tokenOrCollection.address],
+      queryFn: () =>
+        isCollection(tokenOrCollection)
+          ? fetchSearchCollections(tokenOrCollection.address)
+          : fetchSearchTokens(tokenOrCollection.name ?? ''),
+      enabled: isCollection(tokenOrCollection) ? !!tokenOrCollection.address : !!tokenOrCollection.name,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    }))
+  )
+
+  const shortenedHistoryIsLoading = shortenedHistoryUpdatedPrices.some(
+    (shortenedHistoryUpdatedPrice) => shortenedHistoryUpdatedPrice.isLoading
+  )
+
+  const shortenedHistory = !shortenedHistoryIsLoading
+    ? shortenedHistoryUpdatedPrices.flatMap((elem) => (elem.data !== undefined ? [elem.data[0]] : []))
+    : shortenedHistoryStalePrices
+
+  useEffect(() => {
+    shortenedHistory?.forEach(updateSearchHistory)
+  }, [shortenedHistory, updateSearchHistory])
+
   const { pathname } = useLocation()
   const isNFTPage = useIsNftPage()
   const isTokenPage = pathname.includes('/tokens')
@@ -119,7 +148,11 @@ export const SearchBarDropdown = ({
 
   const { data: trendingCollectionResults, isLoading: trendingCollectionsAreLoading } = useQuery(
     ['trendingCollections', 'eth', 'twenty_four_hours'],
-    () => fetchTrendingCollections({ volumeType: 'eth', timePeriod: 'ONE_DAY' as TimePeriod, size: 3 })
+    () => fetchTrendingCollections({ volumeType: 'eth', timePeriod: 'ONE_DAY' as TimePeriod, size: 3 }),
+    {
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    }
   )
 
   const trendingCollections = useMemo(
@@ -143,8 +176,13 @@ export const SearchBarDropdown = ({
 
   // TODO(lynnshaoyu): investigate if we should be swapping this out for the same data source as token explore
   // and token details page.
-  const { data: trendingTokenResults, isLoading: trendingTokensAreLoading } = useQuery(['trendingTokens'], () =>
-    fetchTrendingTokens(4)
+  const { data: trendingTokenResults, isLoading: trendingTokensAreLoading } = useQuery(
+    ['trendingTokens'],
+    () => fetchTrendingTokens(4),
+    {
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    }
   )
 
   useEffect(() => {
@@ -278,6 +316,7 @@ export const SearchBarDropdown = ({
                 }}
                 header={<Trans>Recent searches</Trans>}
                 headerIcon={<ClockIcon />}
+                isLoading={shortenedHistoryIsLoading}
               />
             )}
             {!isNFTPage && (
@@ -335,6 +374,7 @@ export const SearchBarDropdown = ({
     queryText,
     totalSuggestions,
     trace,
+    shortenedHistoryIsLoading,
   ])
 
   return (
