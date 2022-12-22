@@ -2,10 +2,10 @@ import { SupportedChainId } from '../constants/chains'
 
 const DEFAULT_NETWORKS = [
   SupportedChainId.MAINNET,
-  SupportedChainId.ROPSTEN,
-  SupportedChainId.RINKEBY,
-  SupportedChainId.GOERLI,
-  SupportedChainId.KOVAN,
+  // SupportedChainId.ROPSTEN,
+  // SupportedChainId.RINKEBY,
+  // SupportedChainId.GOERLI,
+  // SupportedChainId.KOVAN,
 ]
 
 export function constructSameAddressMap<T extends string>(

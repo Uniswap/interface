@@ -35,15 +35,15 @@ export function isPricePoint(p: PricePoint | null): p is PricePoint {
 
 export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
   [SupportedChainId.MAINNET]: 'ETHEREUM',
-  [SupportedChainId.GOERLI]: 'ETHEREUM_GOERLI',
-  [SupportedChainId.POLYGON]: 'POLYGON',
-  [SupportedChainId.POLYGON_MUMBAI]: 'POLYGON',
-  [SupportedChainId.CELO]: 'CELO',
-  [SupportedChainId.CELO_ALFAJORES]: 'CELO',
-  [SupportedChainId.ARBITRUM_ONE]: 'ARBITRUM',
-  [SupportedChainId.ARBITRUM_RINKEBY]: 'ARBITRUM',
-  [SupportedChainId.OPTIMISM]: 'OPTIMISM',
-  [SupportedChainId.OPTIMISM_GOERLI]: 'OPTIMISM',
+  // [SupportedChainId.GOERLI]: 'ETHEREUM_GOERLI',
+  // [SupportedChainId.POLYGON]: 'POLYGON',
+  // [SupportedChainId.POLYGON_MUMBAI]: 'POLYGON',
+  // [SupportedChainId.CELO]: 'CELO',
+  // [SupportedChainId.CELO_ALFAJORES]: 'CELO',
+  // [SupportedChainId.ARBITRUM_ONE]: 'ARBITRUM',
+  // [SupportedChainId.ARBITRUM_RINKEBY]: 'ARBITRUM',
+  // [SupportedChainId.OPTIMISM]: 'OPTIMISM',
+  // [SupportedChainId.OPTIMISM_GOERLI]: 'OPTIMISM',
 }
 
 export function chainIdToBackendName(chainId: number | undefined) {
@@ -66,10 +66,10 @@ export function validateUrlChainParam(chainName: string | undefined) {
 
 export const CHAIN_NAME_TO_CHAIN_ID: { [key: string]: SupportedChainId } = {
   ETHEREUM: SupportedChainId.MAINNET,
-  POLYGON: SupportedChainId.POLYGON,
-  CELO: SupportedChainId.CELO,
-  ARBITRUM: SupportedChainId.ARBITRUM_ONE,
-  OPTIMISM: SupportedChainId.OPTIMISM,
+  // POLYGON: SupportedChainId.POLYGON,
+  // CELO: SupportedChainId.CELO,
+  // ARBITRUM: SupportedChainId.ARBITRUM_ONE,
+  // OPTIMISM: SupportedChainId.OPTIMISM,
 }
 
 export const BACKEND_CHAIN_NAMES: Chain[] = ['ETHEREUM', 'POLYGON', 'OPTIMISM', 'ARBITRUM', 'CELO']

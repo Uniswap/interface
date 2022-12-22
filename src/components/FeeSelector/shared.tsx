@@ -12,11 +12,11 @@ export const FEE_AMOUNT_DETAIL: Record<
     description: <Trans>Best for very stable pairs.</Trans>,
     supportedChains: [
       SupportedChainId.MAINNET,
-      SupportedChainId.POLYGON,
-      SupportedChainId.POLYGON_MUMBAI,
-      SupportedChainId.CELO,
-      SupportedChainId.CELO_ALFAJORES,
-      SupportedChainId.OPTIMISM,
+      // SupportedChainId.POLYGON,
+      // SupportedChainId.POLYGON_MUMBAI,
+      // SupportedChainId.CELO,
+      // SupportedChainId.CELO_ALFAJORES,
+      // SupportedChainId.OPTIMISM,
     ],
   },
   [FeeAmount.LOW]: {

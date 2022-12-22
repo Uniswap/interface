@@ -1,6 +1,5 @@
 import { createMulticall, ListenerOptions } from '@uniswap/redux-multicall'
 import { useWeb3React } from '@web3-react/core'
-import { SupportedChainId } from 'constants/chains'
 import { useInterfaceMulticall } from 'hooks/useContract'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useMemo } from 'react'
@@ -11,12 +10,12 @@ export default multicall
 
 function getBlocksPerFetchForChainId(chainId: number | undefined): number {
   switch (chainId) {
-    case SupportedChainId.ARBITRUM_ONE:
-    case SupportedChainId.OPTIMISM:
-      return 15
-    case SupportedChainId.CELO:
-    case SupportedChainId.CELO_ALFAJORES:
-      return 5
+    // case SupportedChainId.ARBITRUM_ONE:
+    // case SupportedChainId.OPTIMISM:
+    //   return 15
+    // case SupportedChainId.CELO:
+    // case SupportedChainId.CELO_ALFAJORES:
+    //   return 5
     default:
       return 1
   }
