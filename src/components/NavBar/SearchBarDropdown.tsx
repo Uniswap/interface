@@ -374,7 +374,7 @@ export const SearchBarDropdown = ({
     queryText,
     totalSuggestions,
     trace,
-    shortenedHistoryIsLoading,
+    shortenedHistoryUpdatedPricesIsLoading,
   ])
 
   return (
