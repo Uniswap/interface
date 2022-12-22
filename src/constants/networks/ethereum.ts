@@ -2,7 +2,7 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 
 import EthereumLogo from 'assets/images/ethereum-logo.png'
 import Mainnet from 'assets/networks/mainnet-network.svg'
-import { AGGREGATOR_API, KS_SETTING_API } from 'constants/env'
+import { AGGREGATOR_API, KS_SETTING_API, KYBER_DAO_STATS_API } from 'constants/env'
 import { EVMNetworkInfo } from 'constants/networks/type'
 import { createClient } from 'utils/client'
 
@@ -74,6 +74,14 @@ const ethereumInfo: EVMNetworkInfo = {
   deBankSlug: 'eth',
   trueSightId: 'eth',
   dexToCompare: 'uniswapv3',
+  kyberDAO: {
+    staking: '0xeadb96F1623176144EBa2B24e35325220972b3bD',
+    dao: '0x7Ec8FcC26bE7e9E85B57E73083E5Fe0550d8A7fE',
+    rewardsDistributor: '0x5ec0dcf4f6f55f28550c70b854082993fdc0d3b2',
+    daoStatsApi: KYBER_DAO_STATS_API,
+    KNCAddress: '0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202',
+    KNCLAddress: '0xdd974D5C2e2928deA5F71b9825b8b646686BD200',
+  },
 }
 
 export default ethereumInfo

@@ -1,0 +1,228 @@
+[
+  {
+    "inputs": [
+      { "internalType": "contract IERC20", "name": "_kncToken", "type": "address" },
+      { "internalType": "uint256", "name": "_epochPeriod", "type": "uint256" },
+      { "internalType": "uint256", "name": "_startTimestamp", "type": "uint256" },
+      { "internalType": "contract IKyberDao", "name": "_kyberDao", "type": "address" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "staker", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "representative", "type": "address" },
+      { "indexed": true, "internalType": "uint256", "name": "epoch", "type": "uint256" },
+      { "indexed": false, "internalType": "bool", "name": "isDelegated", "type": "bool" }
+    ],
+    "name": "Delegated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "uint256", "name": "curEpoch", "type": "uint256" },
+      { "indexed": true, "internalType": "address", "name": "staker", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
+    "name": "Deposited",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "uint256", "name": "curEpoch", "type": "uint256" },
+      { "indexed": true, "internalType": "address", "name": "staker", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
+    "name": "Withdraw",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "uint256", "name": "curEpoch", "type": "uint256" },
+      { "indexed": false, "internalType": "address", "name": "staker", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
+    "name": "WithdrawDataUpdateFailed",
+    "type": "event"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "newRepresentative", "type": "address" }],
+    "name": "delegate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "amount", "type": "uint256" }],
+    "name": "deposit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "epochPeriodInSeconds",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "firstEpochStartTimestamp",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getCurrentEpochNumber",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "staker", "type": "address" },
+      { "internalType": "uint256", "name": "epoch", "type": "uint256" }
+    ],
+    "name": "getDelegatedStake",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "timestamp", "type": "uint256" }],
+    "name": "getEpochNumber",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "staker", "type": "address" }],
+    "name": "getLatestDelegatedStake",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "staker", "type": "address" }],
+    "name": "getLatestRepresentative",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "staker", "type": "address" }],
+    "name": "getLatestStakeBalance",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "staker", "type": "address" }],
+    "name": "getLatestStakerData",
+    "outputs": [
+      { "internalType": "uint256", "name": "stake", "type": "uint256" },
+      { "internalType": "uint256", "name": "delegatedStake", "type": "uint256" },
+      { "internalType": "address", "name": "representative", "type": "address" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "staker", "type": "address" },
+      { "internalType": "uint256", "name": "epoch", "type": "uint256" }
+    ],
+    "name": "getRepresentative",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "staker", "type": "address" },
+      { "internalType": "uint256", "name": "epoch", "type": "uint256" }
+    ],
+    "name": "getStake",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "staker", "type": "address" },
+      { "internalType": "uint256", "name": "epoch", "type": "uint256" }
+    ],
+    "name": "getStakerData",
+    "outputs": [
+      { "internalType": "uint256", "name": "stake", "type": "uint256" },
+      { "internalType": "uint256", "name": "delegatedStake", "type": "uint256" },
+      { "internalType": "address", "name": "representative", "type": "address" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "staker", "type": "address" },
+      { "internalType": "uint256", "name": "epoch", "type": "uint256" }
+    ],
+    "name": "getStakerRawData",
+    "outputs": [
+      { "internalType": "uint256", "name": "stake", "type": "uint256" },
+      { "internalType": "uint256", "name": "delegatedStake", "type": "uint256" },
+      { "internalType": "address", "name": "representative", "type": "address" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "staker", "type": "address" },
+      { "internalType": "uint256", "name": "amount", "type": "uint256" },
+      { "internalType": "uint256", "name": "curEpoch", "type": "uint256" }
+    ],
+    "name": "handleWithdrawal",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "staker", "type": "address" }],
+    "name": "initAndReturnStakerDataForCurrentEpoch",
+    "outputs": [
+      { "internalType": "uint256", "name": "stake", "type": "uint256" },
+      { "internalType": "uint256", "name": "delegatedStake", "type": "uint256" },
+      { "internalType": "address", "name": "representative", "type": "address" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "kncToken",
+    "outputs": [{ "internalType": "contract IERC20", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "kyberDao",
+    "outputs": [{ "internalType": "contract IKyberDao", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "amount", "type": "uint256" }],
+    "name": "withdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

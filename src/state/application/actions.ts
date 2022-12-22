@@ -57,6 +57,13 @@ export enum ApplicationModal {
   NOTIFICATION_SUBSCRIPTION,
   YOUR_CAMPAIGN_TRANSACTIONS,
   ETH_POW_ACK,
+
+  // KyberDAO
+  SWITCH_TO_ETHEREUM,
+  DELEGATE_CONFIRM,
+  YOUR_TRANSACTIONS_STAKE_KNC,
+  MIGRATE_KNC,
+  KYBER_DAO_CLAIM,
 }
 
 export const updateBlockNumber = createAction<{ chainId: number; blockNumber: number }>('application/updateBlockNumber')

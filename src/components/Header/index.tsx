@@ -19,6 +19,7 @@ import { useHolidayMode, useIsDarkMode } from 'state/user/hooks'
 import AboutNavGroup from './groups/AboutNavGroup'
 import AnalyticNavGroup from './groups/AnalyticNavGroup'
 import EarnNavGroup from './groups/EarnNavGroup'
+import KyberDAONavGroup from './groups/KyberDaoGroup'
 import SwapNavGroup from './groups/SwapNavGroup'
 import { StyledNavExternalLink, StyledNavLink } from './styleds'
 
@@ -191,6 +192,7 @@ export const SlideToUnlock = styled.div<{ active?: boolean }>`
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   -webkit-text-size-adjust: none;
+  font-weight: 600;
 `
 
 export default function Header() {
@@ -239,13 +241,12 @@ export default function Header() {
               >
                 <Trans>Discover</Trans>
               </SlideToUnlock>
-              <DiscoverIcon size={14} style={{ marginTop: '-20px', marginLeft: '4px' }} />
+              <DiscoverIcon size={14} style={{ marginTop: '-8px' }} />
             </StyledNavLink>
           </DiscoverWrapper>
-
+          <KyberDAONavGroup />
           <AnalyticNavGroup />
           <AboutNavGroup />
-
           <BlogWrapper>
             <StyledNavExternalLink
               onClick={() => {

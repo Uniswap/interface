@@ -346,14 +346,21 @@ export default function WalletModal() {
               style={{ marginRight: '12px', height: '14px', width: '14px', cursor: 'pointer' }}
             />
             <Text color={theme.subText}>
-              <Trans>By connecting a wallet, you agree to KyberSwap&lsquo;s </Trans>{' '}
-              <ExternalLink href="/15022022KyberSwapTermsofUse.pdf" onClick={e => e.stopPropagation()}>
-                <Trans>Terms of Use</Trans>
+              <Trans>Accept </Trans>{' '}
+              <ExternalLink href="/files/15022022KyberSwapTermsofUse.pdf" onClick={e => e.stopPropagation()}>
+                <Trans>KyberSwap&lsquo;s Terms of Use</Trans>
               </ExternalLink>{' '}
               <Trans>and</Trans>{' '}
-              <ExternalLink href="http://files.dmm.exchange/privacy.pdf" onClick={e => e.stopPropagation()}>
+              <ExternalLink href="/files/privacy.pdf" onClick={e => e.stopPropagation()}>
                 <Trans>Privacy Policy</Trans>
+              </ExternalLink>{' '}
+              <Trans>and</Trans>{' '}
+              <ExternalLink href="/files/dao-tac.pdf" onClick={e => e.stopPropagation()}>
+                <Trans>KyberDAO&lsquo;s Terms of Use.</Trans>
               </ExternalLink>
+              <Text fontSize={10}>
+                <Trans>Last updated: 15 Dec 2022</Trans>
+              </Text>
             </Text>
           </TermAndCondition>
         )}

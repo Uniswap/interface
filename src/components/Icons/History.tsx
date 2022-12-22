@@ -1,6 +1,6 @@
-function History() {
+function History({ size }: { size?: number | string }) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 22 20">
+    <svg xmlns="http://www.w3.org/2000/svg" width={size || '16'} height={size || '16'} viewBox="0 0 22 20">
       <g fill="none" fillRule="evenodd">
         <g>
           <g>

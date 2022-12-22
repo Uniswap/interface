@@ -49,5 +49,12 @@ export enum TRANSACTION_TYPE {
   WITHDRAW = 'Withdraw',
   FORCE_WITHDRAW = 'ForceWithdraw',
   SETUP = 'Setting up your swap',
+  KYBERDAO_STAKE = 'KyberDAO Stake',
+  KYBERDAO_UNSTAKE = 'KyberDAO Unstake',
+  KYBERDAO_DELEGATE = 'KyberDAO Delegate',
+  KYBERDAO_UNDELEGATE = 'KyberDAO Undelegate',
+  KYBERDAO_MIGRATE = 'KyberDAO Migrate',
+  KYBERDAO_VOTE = 'KyberDAO Vote',
+  KYBERDAO_CLAIM = 'KyberDAO Claim',
   CANCEL_LIMIT_ORDER = 'Cancel Limit Order',
 }

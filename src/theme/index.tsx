@@ -1,3 +1,4 @@
+import { lighten } from 'polished'
 import React, { useMemo } from 'react'
 import { Text, TextProps } from 'rebass'
 import styled, {
@@ -15,6 +16,7 @@ import { Colors } from './styled'
 export * from './components'
 
 export const MEDIA_WIDTHS = {
+  upToXXSmall: 420,
   upToExtraSmall: 576,
   upToSmall: 768,
   upToMedium: 992,
@@ -124,7 +126,7 @@ function colors(darkMode: boolean): Colors {
     warning: '#FF9901',
     apr: '#0faaa2',
     lightGreen: '#98E5CE',
-
+    darkerGreen: '#1D7A5F',
     red1: '#FF6871',
     red2: '#F82D3A',
     red3: '#D60000',
@@ -255,7 +257,11 @@ export const FixedGlobalStyle = createGlobalStyle`
   }
 
   a {
-    color: ${colors(false).blue1};
+    color: ${colors(false).primary};
+    text-decoration: none;
+    :hover{
+      color: ${lighten(0.2, colors(false).primary)};
+    }
   }
 
   * {
@@ -414,5 +420,15 @@ export const ThemedGlobalStyle = createGlobalStyle`
 
   .grecaptcha-badge {
     visibility: hidden;
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0; 
+  }
+
+  input[type=number] {
+    -moz-appearance: textfield; /* Firefox */
   }
 `

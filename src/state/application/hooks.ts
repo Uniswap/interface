@@ -136,6 +136,10 @@ export function useToggleEthPowAckModal(): () => void {
   return useToggleModal(ApplicationModal.ETH_POW_ACK)
 }
 
+export function useToggleSwitchEthereumModal(): () => void {
+  return useToggleModal(ApplicationModal.SWITCH_TO_ETHEREUM)
+}
+
 // returns a function that allows adding a popup
 function useAddPopup(): (
   content: PopupContent,
@@ -200,7 +204,7 @@ export function useActivePopups(): AppState['application']['popupList'] {
 /**
  * Gets the current price  of ETH, 24 hour price, and % change between them
  */
-const getEthPrice = async (chainId: ChainId, apolloClient: ApolloClient<NormalizedCacheObject>) => {
+export const getEthPrice = async (chainId: ChainId, apolloClient: ApolloClient<NormalizedCacheObject>) => {
   const utcCurrentTime = dayjs()
   const utcOneDayBack = utcCurrentTime.subtract(1, 'day').startOf('minute').unix()
 
@@ -305,7 +309,7 @@ export function useETHPrice(version: string = VERSION.CLASSIC): AppState['applic
 /**
  * Gets the current price of KNC by ETH
  */
-const getKNCPriceByETH = async (chainId: ChainId, apolloClient: ApolloClient<NormalizedCacheObject>) => {
+export const getKNCPriceByETH = async (chainId: ChainId, apolloClient: ApolloClient<NormalizedCacheObject>) => {
   let kncPriceByETH = 0
 
   try {

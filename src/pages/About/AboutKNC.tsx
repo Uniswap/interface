@@ -20,8 +20,9 @@ import TrophyIcon from 'assets/svg/trophy.svg'
 import {
   Binance,
   Bithumb,
+  Bitrue,
+  Coinbase,
   Etoro,
-  FTX,
   Gate,
   Gemini,
   Huobi,
@@ -29,10 +30,10 @@ import {
   Krystal,
   Kucoin,
   KyberSwap,
-  Okex,
+  Mexc,
+  Okx,
   TokyoCrypto,
   Upbit,
-  Wazirx,
 } from 'components/ExchangeIcons'
 import { FooterSocialLink } from 'components/Footer/Footer'
 import {
@@ -45,6 +46,7 @@ import {
   OptimismLogo,
   Polygon,
 } from 'components/Icons'
+import { APP_PATHS } from 'constants/index'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { useDarkModeManager } from 'state/user/hooks'
@@ -69,18 +71,19 @@ const LIST_EXCHANGES = [
   { name: 'KyberSwap', logo: <KyberSwap /> },
   { name: 'Krystal', logo: <Krystal /> },
   { name: 'Binance', logo: <Binance /> },
-  { name: 'FTX', logo: <FTX /> },
+  { name: 'Mexc', logo: <Mexc /> },
   { name: 'Etoro', logo: <Etoro /> },
   { name: 'Huobi', logo: <Huobi /> },
   { name: 'Upbit', logo: <Upbit /> },
   { name: 'Kraken', logo: <Kraken /> },
   { name: 'Kucoin', logo: <Kucoin /> },
   { name: 'Gate', logo: <Gate /> },
-  { name: 'Okex', logo: <Okex /> },
+  { name: 'Coinbase', logo: <Coinbase width={160} /> },
   { name: 'Bithumb', logo: <Bithumb /> },
   { name: 'Gemini', logo: <Gemini /> },
-  { name: 'Wazirx', logo: <Wazirx /> },
+  { name: 'Okx', logo: <Okx /> },
   { name: 'TokyoCrypto', logo: <TokyoCrypto /> },
+  { name: 'Bitrue', logo: <Bitrue /> },
 ]
 
 const LIST_WALLETS = [
@@ -317,21 +320,19 @@ function AboutKNC() {
                 alt="KyberDao"
                 style={{ display: above768 ? 'none' : 'block', marginTop: '40px' }}
               />
-              <ExternalLink href="https://kyber.org/vote">
-                <Flex
-                  width={above768 ? '236px' : '100%'}
-                  marginTop={['40px', '48px']}
-                  sx={{ gap: above768 ? '24px' : '16px' }}
-                  justifyContent="center"
-                >
-                  <BtnPrimary>
-                    <Archive />
-                    <Text fontSize="16px" marginLeft="8px">
-                      <Trans>Stake KNC</Trans>
-                    </Text>
-                  </BtnPrimary>
-                </Flex>
-              </ExternalLink>
+
+              <BtnPrimary
+                width={above768 ? '236px' : '100%'}
+                margin="40px 0 0"
+                as={Link}
+                to={APP_PATHS.KYBERDAO_VOTE}
+                onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_STAKE_KNC_CLICKED)}
+              >
+                <Archive />
+                <Text fontSize="16px" marginLeft="8px">
+                  <Trans>Stake KNC</Trans>
+                </Text>
+              </BtnPrimary>
             </Flex>
           </Flex>
           <Text

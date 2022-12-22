@@ -71,6 +71,7 @@ export enum MIXPANEL_TYPE {
   ABOUT_START_EARNING_CLICKED,
   ABOUT_VIEW_FARMS_CLICKED,
   ABOUT_CREATE_NEW_POOL_CLICKED,
+  ABOUT_STAKE_KNC_CLICKED,
   ANALYTICS_MENU_CLICKED,
   BLOG_MENU_CLICKED,
   CREATE_REFERRAL_CLICKED,
@@ -145,6 +146,12 @@ export enum MIXPANEL_TYPE {
   BRIDGE_CLICK_TRANSFER,
   BRIDGE_TRANSACTION_SUBMIT,
   BRIDGE_CLICK_HISTORY_TRANSFER_TAB,
+
+  //Kyber DAO
+  KYBER_DAO_STAKE_CLICK,
+  KYBER_DAO_UNSTAKE_CLICK,
+  KYBER_DAO_DELEGATE_CLICK,
+  KYBER_DAO_VOTE_CLICK,
 }
 
 export const NEED_CHECK_SUBGRAPH_TRANSACTION_TYPES = [
@@ -424,6 +431,10 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
         }
         case MIXPANEL_TYPE.ABOUT_CREATE_NEW_POOL_CLICKED: {
           mixpanel.track('About - Create New Pool Clicked')
+          break
+        }
+        case MIXPANEL_TYPE.ABOUT_STAKE_KNC_CLICKED: {
+          mixpanel.track('About - Stake KNC Clicked')
           break
         }
         case MIXPANEL_TYPE.ANALYTICS_MENU_CLICKED: {
@@ -727,6 +738,22 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
             to_network,
             trade_qty,
           })
+          break
+        }
+        case MIXPANEL_TYPE.KYBER_DAO_STAKE_CLICK: {
+          mixpanel.track('KyberDAO - Stake Click', payload)
+          break
+        }
+        case MIXPANEL_TYPE.KYBER_DAO_UNSTAKE_CLICK: {
+          mixpanel.track('KyberDAO - Unstake Click', payload)
+          break
+        }
+        case MIXPANEL_TYPE.KYBER_DAO_DELEGATE_CLICK: {
+          mixpanel.track('KyberDAO - Delegate Click', payload)
+          break
+        }
+        case MIXPANEL_TYPE.KYBER_DAO_VOTE_CLICK: {
+          mixpanel.track('KyberDAO - Vote Click', payload)
           break
         }
       }
@@ -1052,6 +1079,12 @@ export const useGlobalMixpanelEvents = () => {
           break
         case 'bridge':
           pageName = 'Bridge'
+          break
+        case 'kyberdao/stake-knc':
+          pageName = 'KyberDAO Stake'
+          break
+        case 'kyberdao/vote':
+          pageName = 'KyberDAO Vote'
           break
         default:
           break

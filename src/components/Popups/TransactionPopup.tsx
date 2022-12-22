@@ -129,11 +129,45 @@ export const SUMMARY: {
     pending: summary => 'Withdrawing ' + summary,
     failure: summary => 'Error withdrawing ' + summary,
   },
-
   [TRANSACTION_TYPE.FORCE_WITHDRAW]: {
     success: () => 'Force Withdrawn ',
     pending: () => 'Force Withdrawing ',
     failure: () => 'Error Force withdrawing ',
+  },
+  [TRANSACTION_TYPE.KYBERDAO_STAKE]: {
+    success: summary => `${summary}`,
+    pending: summary => `${summary}`,
+    failure: summary => `${summary}`,
+  },
+  [TRANSACTION_TYPE.KYBERDAO_UNSTAKE]: {
+    success: summary => `${summary}`,
+    pending: summary => `${summary}`,
+    failure: summary => `${summary}`,
+  },
+  [TRANSACTION_TYPE.KYBERDAO_DELEGATE]: {
+    success: summary => `${summary}`,
+    pending: summary => `${summary}`,
+    failure: summary => `${summary}`,
+  },
+  [TRANSACTION_TYPE.KYBERDAO_UNDELEGATE]: {
+    success: summary => `${summary}`,
+    pending: summary => `${summary}`,
+    failure: summary => `${summary}`,
+  },
+  [TRANSACTION_TYPE.KYBERDAO_MIGRATE]: {
+    success: summary => `${summary}`,
+    pending: summary => `${summary}`,
+    failure: summary => `${summary}`,
+  },
+  [TRANSACTION_TYPE.KYBERDAO_CLAIM]: {
+    success: summary => `${summary}`,
+    pending: summary => `${summary}`,
+    failure: summary => `${summary}`,
+  },
+  [TRANSACTION_TYPE.KYBERDAO_VOTE]: {
+    success: summary => `${summary}`,
+    pending: summary => `${summary}`,
+    failure: summary => `${summary}`,
   },
   [TRANSACTION_TYPE.SETUP]: {
     success: (summary, isShort) => (isShort ? 'Setting up transaction' : 'Setting up some stuff to ' + summary),

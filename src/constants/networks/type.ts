@@ -75,6 +75,14 @@ export interface EVMNetworkInfo extends NetworkInfo {
   }
   readonly averageBlockTimeInSeconds: number
   readonly deBankSlug: string
+  readonly kyberDAO?: {
+    readonly staking: string
+    readonly dao: string
+    readonly rewardsDistributor: string
+    readonly daoStatsApi: string
+    readonly KNCAddress: string
+    readonly KNCLAddress: string
+  }
 }
 
 export interface SolanaNetworkInfo extends NetworkInfo {

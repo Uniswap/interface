@@ -1,15 +1,19 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Currency, CurrencyAmount, Fraction } from '@kyberswap/ks-sdk-core'
+import { formatUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
 import Numeral from 'numeral'
 
 export const getFullDisplayBalance = (balance: BigNumber, decimals = 18, significant = 6): string => {
+  if (!balance) {
+    return '0'
+  }
   const amount = new Fraction(balance.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals)))
   if (amount.lessThan(new Fraction('1'))) {
     return amount.toSignificant(significant)
   }
-
-  return amount.toFixed(significant)
+  // parseFloat here help 10.0000 KNC => 10 KNC
+  return parseFloat(amount.toFixed(significant)).toString()
 }
 
 export const getFullDisplayBalanceSignificant = (balance: BigNumber, decimals = 18, significant = 6): string => {
@@ -89,4 +93,7 @@ export const formatCurrencyAmount = (amount: CurrencyAmount<Currency>): string =
   }
 
   return amount.toFixed(3)
+}
+export const formatUnitsToFixed = (amount: BigNumber, decimals?: number, decimalPlaces?: number) => {
+  return (+(+formatUnits(amount, decimals)).toFixed(decimalPlaces || 3)).toString()
 }

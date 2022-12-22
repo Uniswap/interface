@@ -363,7 +363,7 @@ export const KNC: { [chainId in ChainId]: Token } = {
   [ChainId.ETHW]: new Token(ChainId.ETHW, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
   [ChainId.GÖRLI]: new Token(
     ChainId.GÖRLI,
-    '0x4f6519025e6de0edb6e4901827c1956ce18c39d3',
+    '0xd19e5119Efc73FeA1e70f9fbbc105DaB89D914e4',
     18,
     'KNC',
     'Kyber Network Crystal',

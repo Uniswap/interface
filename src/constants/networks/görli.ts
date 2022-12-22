@@ -69,6 +69,14 @@ const görliInfo: EVMNetworkInfo = {
   deBankSlug: EMPTY,
   trueSightId: NOT_SUPPORT,
   dexToCompare: NOT_SUPPORT,
+  kyberDAO: {
+    staking: '0x9bc1214E28005e9c3f5E99Ff01C23D42796702CF',
+    dao: '0x583c0A1a49CdC99f4709337fa5500844316366dc',
+    rewardsDistributor: '0x62D82BC6aa44a4340F29E629b43859b7e0C1E915',
+    daoStatsApi: 'https://kyberswap-dao-stats.dev.kyberengineering.io',
+    KNCAddress: '0xd19e5119Efc73FeA1e70f9fbbc105DaB89D914e4',
+    KNCLAddress: '0x03010458f00F1B9fEb6Ad5d67A065971126fBBc1',
+  },
 }
 
 export default görliInfo

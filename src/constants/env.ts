@@ -58,3 +58,4 @@ export const ENV_LEVEL = !process.env.REACT_APP_TAG
   : ENV_TYPE.PROD
 export const LIMIT_ORDER_API_READ = required('LIMIT_ORDER_API_READ')
 export const LIMIT_ORDER_API_WRITE = required('LIMIT_ORDER_API_WRITE')
+export const KYBER_DAO_STATS_API = required('KYBER_DAO_STATS_API')

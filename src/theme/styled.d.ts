@@ -87,6 +87,7 @@ export interface Colors {
   darkBlue: Color
   blue: Color
   lightGreen: Color
+  darkerGreen: Color
   apr: Color
   shadow: Color
 }
@@ -106,6 +107,7 @@ declare module 'styled-components' {
 
     // media queries
     mediaWidth: {
+      upToXXSmall: ThemedCssFunction<DefaultTheme>
       upToExtraSmall: ThemedCssFunction<DefaultTheme>
       upToSmall: ThemedCssFunction<DefaultTheme>
       upToMedium: ThemedCssFunction<DefaultTheme>

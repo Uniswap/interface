@@ -1,15 +1,25 @@
 import { Trans } from '@lingui/macro'
 import React, { ReactNode, useState } from 'react'
-import { ChevronDown } from 'react-feather'
+import { Text } from 'rebass'
 import styled from 'styled-components'
 
+import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
 import { ApplicationModal } from 'state/application/actions'
 import { useToggleModal } from 'state/application/hooks'
 
 import { ExternalNavMenuItem, NavMenuItem } from '.'
 
-const LinkContainer = styled.div`
-  padding-left: 20px;
+const Wrapper = styled.div`
+  transition: all 0.2s ease;
+  overflow: hidden;
+`
+const LinkContainer = styled.div<{ isShow?: boolean }>`
+  padding-left: 24px;
+  ${({ isShow }) => (isShow ? 'max-height: 500px;' : 'max-height: 0px;')}
+`
+const DropdownIcon = styled(DropdownSVG)<{ isShow?: boolean }>`
+  transition: all 0.2s ease;
+  ${({ isShow }) => isShow && 'transform: rotate(180deg);'}
 `
 
 export default function NavDropDown({
@@ -32,27 +42,27 @@ export default function NavDropDown({
   }
 
   return (
-    <div>
+    <Wrapper>
       <NavMenuItem to={link} onClick={handleClick}>
         {icon}
-        <Trans>{title}</Trans>
-        <ChevronDown size={16} style={{ marginLeft: '6px' }} />
+        <Text flex={1}>
+          <Trans>{title}</Trans>
+        </Text>
+        <DropdownIcon isShow={isShowOptions} />
       </NavMenuItem>
-      {isShowOptions && (
-        <LinkContainer>
-          {options.map(item =>
-            item.external ? (
-              <ExternalNavMenuItem key={item.link} href={item.link} onClick={toggle}>
-                <Trans>{item.label}</Trans>
-              </ExternalNavMenuItem>
-            ) : (
-              <NavMenuItem to={item.link} key={item.link} onClick={toggle}>
-                <Trans>{item.label}</Trans>
-              </NavMenuItem>
-            ),
-          )}
-        </LinkContainer>
-      )}
-    </div>
+      <LinkContainer isShow={isShowOptions}>
+        {options.map(item =>
+          item.external ? (
+            <ExternalNavMenuItem key={item.link} href={item.link} onClick={toggle}>
+              <Trans>{item.label}</Trans>
+            </ExternalNavMenuItem>
+          ) : (
+            <NavMenuItem to={item.link} key={item.link} onClick={toggle}>
+              <Trans>{item.label}</Trans>
+            </NavMenuItem>
+          ),
+        )}
+      </LinkContainer>
+    </Wrapper>
   )
 }

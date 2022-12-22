@@ -68,6 +68,8 @@ const IncreaseLiquidity = lazy(() => import(/* webpackChunkName: 'add-liquidity-
 
 const RemoveLiquidity = lazy(() => import(/* webpackChunkName: 'remove-liquidity-page' */ './RemoveLiquidity'))
 
+const KyberDAOStakeKNC = lazy(() => import(/* webpackChunkName: 'stake-knc' */ './KyberDAO/StakeKNC'))
+const KyberDAOVote = lazy(() => import(/* webpackChunkName: 'vote' */ './KyberDAO/Vote'))
 const AboutKyberSwap = lazy(() => import(/* webpackChunkName: 'about-page' */ './About/AboutKyberSwap'))
 const AboutKNC = lazy(() => import(/* webpackChunkName: 'about-knc' */ './About/AboutKNC'))
 
@@ -274,6 +276,8 @@ export default function App() {
                       path={`${APP_PATHS.ELASTIC_INCREASE_LIQ}/:currencyIdA/:currencyIdB/:feeAmount/:tokenId`}
                       element={<IncreaseLiquidity />}
                     />
+                    <Route path={`${APP_PATHS.KYBERDAO_STAKE}`} element={<KyberDAOStakeKNC />} />
+                    <Route path={`${APP_PATHS.KYBERDAO_VOTE}`} element={<KyberDAOVote />} />
                     <Route path={`${APP_PATHS.ABOUT}/kyberswap`} element={<AboutKyberSwap />} />
                     <Route path={`${APP_PATHS.ABOUT}/knc`} element={<AboutKNC />} />
                     <Route path={`${APP_PATHS.REFERRAL}`} element={<CreateReferral />} />
