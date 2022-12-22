@@ -1,23 +1,19 @@
 import { Currency } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { Repeat } from 'react-feather'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import ProChartToggle from 'components/LiveChart/ProChartToggle'
 import Loader from 'components/LocalLoader'
-import ProLiveChart from 'components/TradingViewChart'
-import { checkPairHasDextoolsData } from 'components/TradingViewChart/datafeed'
 import { useActiveWeb3React } from 'hooks'
 import useBasicChartData, { LiveDataTimeframeEnum } from 'hooks/useBasicChartData'
-import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import usePrevious from 'hooks/usePrevious'
 import useTheme from 'hooks/useTheme'
 import { Field } from 'state/swap/actions'
-import { useShowProLiveChart, useToggleProLiveChart } from 'state/user/hooks'
+import { useShowProLiveChart } from 'state/user/hooks'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 
 import AnimatingNumber from './AnimatingNumber'
@@ -67,11 +63,11 @@ const SwitchButtonWrapper = styled.div`
   }
 `
 
-const ProLiveChartCustom = styled(ProLiveChart)<{ $isShowProChart: boolean }>`
-  margin: ${() => (isMobile ? '0' : '16px 0 0 0 !important')};
-  display: ${({ $isShowProChart }) => ($isShowProChart ? 'block' : 'none')};
-  background: ${({ theme }) => (theme.darkMode ? theme.buttonBlack : theme.background)};
-`
+// const ProLiveChartCustom = styled(ProLiveChart)<{ $isShowProChart: boolean }>`
+//   margin: ${() => (isMobile ? '0' : '16px 0 0 0 !important')};
+//   display: ${({ $isShowProChart }) => ($isShowProChart ? 'block' : 'none')};
+//   background: ${({ theme }) => (theme.darkMode ? theme.buttonBlack : theme.background)};
+// `
 
 const getDifferentValues = (chartData: any, hoverValue: number | null) => {
   if (chartData && chartData.length > 0) {
@@ -116,7 +112,7 @@ function LiveChart({
   currencies: { [field in Field]?: Currency }
   onRotateClick?: () => void
 }) {
-  const { chainId, isSolana } = useActiveWeb3React()
+  const { isSolana } = useActiveWeb3React()
   const theme = useTheme()
   const prevCurrencies = usePrevious(currencies)
   const [currenciesState, setCurrenciesState] = useState(currencies)
@@ -132,27 +128,27 @@ function LiveChart({
   const isUnwrapingWSOL = isSolana && isWrappedToken && currencies[Field.INPUT]?.isToken
   const [hoverValue, setHoverValue] = useState<number | null>(null)
   const [timeFrame, setTimeFrame] = useState<LiveDataTimeframeEnum>(LiveDataTimeframeEnum.DAY)
-  const [stateProChart, setStateProChart] = useState({
-    hasProChart: false,
-    pairAddress: '',
-    apiVersion: '',
-    loading: true,
-  })
+  // const [stateProChart, setStateProChart] = useState({
+  //   hasProChart: false,
+  //   pairAddress: '',
+  //   apiVersion: '',
+  //   loading: true,
+  // })
   const { data: chartData, error: basicChartError, loading: basicChartLoading } = useBasicChartData(tokens, timeFrame)
-  const isProchartError = !stateProChart.hasProChart && !stateProChart.loading
+  // const isProchartError = !stateProChart.hasProChart && !stateProChart.loading
   const isBasicchartError = basicChartError && !basicChartLoading
-  const bothChartError = isProchartError && isBasicchartError
+  // const bothChartError = isProchartError && isBasicchartError
   const showProChartStore = useShowProLiveChart()
-  const toggleProLiveChart = useToggleProLiveChart()
-  const { mixpanelHandler } = useMixpanel()
+  // const toggleProLiveChart = useToggleProLiveChart()
+  // const { mixpanelHandler } = useMixpanel()
 
-  const handleSetLoading = useCallback(
-    (loading: boolean) =>
-      setStateProChart(prev => {
-        return { ...prev, loading: loading }
-      }),
-    [],
-  )
+  // const handleSetLoading = useCallback(
+  //   (loading: boolean) =>
+  //     setStateProChart(prev => {
+  //       return { ...prev, loading: loading }
+  //     }),
+  //   [],
+  // )
   useEffect(() => {
     if (hoverValue !== null) {
       setHoverValue(null)
@@ -161,7 +157,7 @@ function LiveChart({
   }, [chartData])
 
   useEffect(() => {
-    let currenciesChanged = false
+    // let currenciesChanged = false
     if (!currencies.INPUT || !currencies.OUTPUT) return
 
     setCurrenciesState(prev => {
@@ -179,23 +175,23 @@ function LiveChart({
       return currencies
     })
 
-    setStateProChart({ hasProChart: false, pairAddress: '', apiVersion: '', loading: true })
-    checkPairHasDextoolsData(currencies, chainId)
-      .then((res: any) => {
-        if (currenciesChanged) return
-        if ((res.ver || res.ver === 0) && res.pairAddress) {
-          setStateProChart({ hasProChart: true, pairAddress: res.pairAddress, apiVersion: res.ver, loading: true })
-        } else {
-          setStateProChart({ hasProChart: false, pairAddress: '', apiVersion: '', loading: false })
-        }
-      })
-      .catch(error => {
-        console.log(error)
-        setStateProChart({ hasProChart: false, pairAddress: '', apiVersion: '', loading: false })
-      })
-    return () => {
-      currenciesChanged = true
-    }
+    // setStateProChart({ hasProChart: false, pairAddress: '', apiVersion: '', loading: true })
+    // checkPairHasDextoolsData(currencies, chainId)
+    //   .then((res: any) => {
+    //     if (currenciesChanged) return
+    //     if ((res.ver || res.ver === 0) && res.pairAddress) {
+    //       setStateProChart({ hasProChart: true, pairAddress: res.pairAddress, apiVersion: res.ver, loading: true })
+    //     } else {
+    //       setStateProChart({ hasProChart: false, pairAddress: '', apiVersion: '', loading: false })
+    //     }
+    //   })
+    //   .catch(error => {
+    //     console.log(error)
+    //     setStateProChart({ hasProChart: false, pairAddress: '', apiVersion: '', loading: false })
+    //   })
+    // return () => {
+    //   currenciesChanged = true
+    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(currencies)])
 
@@ -203,23 +199,23 @@ function LiveChart({
 
   const { chartColor, different, differentPercent } = getDifferentValues(chartData, hoverValue)
 
-  const [isShowProChart, setIsShowProChart] = useState(showProChartStore && !isProchartError)
+  //const [isShowProChart, setIsShowProChart] = useState(showProChartStore && !isProchartError)
 
-  useEffect(() => {
-    setIsShowProChart(showProChartStore && !isProchartError)
-    let timeout: NodeJS.Timeout
-    if (showProChartStore && stateProChart.loading) {
-      timeout = setTimeout(() => {
-        // Switch to Basic chart after loading over 5 seconds
-        toggleProLiveChart()
-      }, 5000)
-    }
-    return () => {
-      if (timeout) {
-        clearTimeout(timeout)
-      }
-    }
-  }, [showProChartStore, isProchartError, stateProChart.loading, toggleProLiveChart])
+  // useEffect(() => {
+  //   setIsShowProChart(showProChartStore && !isProchartError)
+  //   let timeout: NodeJS.Timeout
+  //   if (showProChartStore && stateProChart.loading) {
+  //     timeout = setTimeout(() => {
+  //       // Switch to Basic chart after loading over 5 seconds
+  //       toggleProLiveChart()
+  //     }, 5000)
+  //   }
+  //   return () => {
+  //     if (timeout) {
+  //       clearTimeout(timeout)
+  //     }
+  //   }
+  // }, [showProChartStore, isProchartError, stateProChart.loading, toggleProLiveChart])
 
   const renderTimeframes = () => {
     return (
@@ -235,34 +231,34 @@ function LiveChart({
     )
   }
 
-  const toggle = useMemo(() => {
-    return (
-      <ProChartToggle
-        activeName={isShowProChart ? 'pro' : 'basic'}
-        toggle={(name: string) => {
-          if (!bothChartError) {
-            if (name !== (isShowProChart ? 'pro' : 'basic')) {
-              if (name === 'pro') {
-                mixpanelHandler(MIXPANEL_TYPE.PRO_CHART_CLICKED)
-              } else {
-                mixpanelHandler(MIXPANEL_TYPE.BASIC_CHART_CLICKED)
-              }
-              toggleProLiveChart()
-            }
-          }
-        }}
-        buttons={[
-          { name: 'basic', title: 'Basic', disabled: isBasicchartError },
-          { name: 'pro', title: 'Pro', disabled: isProchartError },
-        ]}
-      />
-    )
-  }, [isBasicchartError, isProchartError, isShowProChart, bothChartError, toggleProLiveChart, mixpanelHandler])
+  // const toggle = useMemo(() => {
+  //   return (
+  //     <ProChartToggle
+  //       activeName={isShowProChart ? 'pro' : 'basic'}
+  //       toggle={(name: string) => {
+  //         if (!bothChartError) {
+  //           if (name !== (isShowProChart ? 'pro' : 'basic')) {
+  //             if (name === 'pro') {
+  //               mixpanelHandler(MIXPANEL_TYPE.PRO_CHART_CLICKED)
+  //             } else {
+  //               mixpanelHandler(MIXPANEL_TYPE.BASIC_CHART_CLICKED)
+  //             }
+  //             toggleProLiveChart()
+  //           }
+  //         }
+  //       }}
+  //       buttons={[
+  //         { name: 'basic', title: 'Basic', disabled: isBasicchartError },
+  //         { name: 'pro', title: 'Pro', disabled: isProchartError },
+  //       ]}
+  //     />
+  //   )
+  // }, [isBasicchartError, isProchartError, isShowProChart, bothChartError, toggleProLiveChart, mixpanelHandler])
 
-  const currenciesList = useMemo(
-    () => [currenciesState.INPUT, currenciesState.OUTPUT],
-    [currenciesState.INPUT, currenciesState.OUTPUT],
-  )
+  // const currenciesList = useMemo(
+  //   () => [currenciesState.INPUT, currenciesState.OUTPUT],
+  //   [currenciesState.INPUT, currenciesState.OUTPUT],
+  // )
 
   return (
     <LiveChartWrapper>
@@ -319,89 +315,89 @@ function LiveChart({
                 </SwitchButtonWrapper>
               </Flex>
             </Flex>
-            <Flex flex={1} justifyContent="flex-end">
+            {/* <Flex flex={1} justifyContent="flex-end">
               {toggle}
-            </Flex>
+            </Flex> */}
           </Flex>
 
-          <ProLiveChartCustom
+          {/* <ProLiveChartCustom
             currencies={currenciesList}
             stateProChart={stateProChart}
             $isShowProChart={isShowProChart}
             setLoading={handleSetLoading}
-          />
-          {!isShowProChart && (
-            <>
-              <Flex justifyContent="space-between" alignItems="flex-start" marginTop="12px">
-                <Flex flexDirection="column" alignItems="flex-start">
-                  {showingValue === 0 || basicChartError ? (
-                    <Text fontSize={28} color={theme.subText}>
-                      --
-                    </Text>
-                  ) : (
-                    <AnimatingNumber
-                      value={showingValue}
-                      symbol={nativeOutputCurrency?.symbol}
-                      fontSize={isMobile ? 24 : 28}
-                    />
-                  )}
-                  <Flex marginTop="2px">
-                    {showingValue === 0 || basicChartError ? (
-                      <Text fontSize={12} color={theme.disableText}>
-                        --
-                      </Text>
-                    ) : (
-                      <>
-                        <Text fontSize={12} color={different >= 0 ? '#31CB9E' : '#FF537B'} marginRight="5px">
-                          {different} ({differentPercent}%)
-                        </Text>
-                        {!hoverValue && (
-                          <Text fontSize={12} color={theme.disableText}>
-                            {getTimeFrameText(timeFrame)}
-                          </Text>
-                        )}
-                      </>
-                    )}
-                  </Flex>
-                </Flex>
-                {!isMobile && renderTimeframes()}
-              </Flex>
-              {isMobile && !showProChartStore && renderTimeframes()}
-              <div style={{ flex: 1, marginTop: '12px' }}>
-                {basicChartLoading || isBasicchartError ? (
-                  <Flex
-                    minHeight={isMobile ? '300px' : '370px'}
-                    flexDirection={'column'}
-                    alignItems={'center'}
-                    justifyContent={'center'}
-                    color={theme.disableText}
-                    style={{ gap: '16px' }}
-                  >
-                    {basicChartLoading ? (
-                      <Loader />
-                    ) : (
-                      isBasicchartError && (
-                        <>
-                          <WarningIcon />
-                          <Text fontSize={16}>
-                            <Trans>Chart is unavailable right now</Trans>
-                          </Text>
-                        </>
-                      )
-                    )}
-                  </Flex>
+          /> */}
+          {/* {!isShowProChart && (
+            <> */}
+          <Flex justifyContent="space-between" alignItems="flex-start" marginTop="12px">
+            <Flex flexDirection="column" alignItems="flex-start">
+              {showingValue === 0 || basicChartError ? (
+                <Text fontSize={28} color={theme.subText}>
+                  --
+                </Text>
+              ) : (
+                <AnimatingNumber
+                  value={showingValue}
+                  symbol={nativeOutputCurrency?.symbol}
+                  fontSize={isMobile ? 24 : 28}
+                />
+              )}
+              <Flex marginTop="2px">
+                {showingValue === 0 || basicChartError ? (
+                  <Text fontSize={12} color={theme.disableText}>
+                    --
+                  </Text>
                 ) : (
-                  <LineChart
-                    data={chartData}
-                    setHoverValue={setHoverValue}
-                    color={chartColor}
-                    timeFrame={timeFrame}
-                    minHeight={370}
-                  />
+                  <>
+                    <Text fontSize={12} color={different >= 0 ? '#31CB9E' : '#FF537B'} marginRight="5px">
+                      {different} ({differentPercent}%)
+                    </Text>
+                    {!hoverValue && (
+                      <Text fontSize={12} color={theme.disableText}>
+                        {getTimeFrameText(timeFrame)}
+                      </Text>
+                    )}
+                  </>
                 )}
-              </div>
-            </>
-          )}
+              </Flex>
+            </Flex>
+            {!isMobile && renderTimeframes()}
+          </Flex>
+          {isMobile && !showProChartStore && renderTimeframes()}
+          <div style={{ flex: 1, marginTop: '12px' }}>
+            {basicChartLoading || isBasicchartError ? (
+              <Flex
+                minHeight={isMobile ? '300px' : '370px'}
+                flexDirection={'column'}
+                alignItems={'center'}
+                justifyContent={'center'}
+                color={theme.disableText}
+                style={{ gap: '16px' }}
+              >
+                {basicChartLoading ? (
+                  <Loader />
+                ) : (
+                  isBasicchartError && (
+                    <>
+                      <WarningIcon />
+                      <Text fontSize={16}>
+                        <Trans>Chart is unavailable right now</Trans>
+                      </Text>
+                    </>
+                  )
+                )}
+              </Flex>
+            ) : (
+              <LineChart
+                data={chartData}
+                setHoverValue={setHoverValue}
+                color={chartColor}
+                timeFrame={timeFrame}
+                minHeight={370}
+              />
+            )}
+          </div>
+          {/* </>
+          )} */}
         </>
       )}
     </LiveChartWrapper>

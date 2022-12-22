@@ -6,7 +6,7 @@ import { Activity } from 'react-feather'
 import { useMedia } from 'react-use'
 import styled from 'styled-components'
 
-import { ButtonLight, ButtonSecondary } from 'components/Button'
+import { ButtonLight } from 'components/Button'
 import WalletModal from 'components/Header/web3/WalletModal'
 import Loader from 'components/Loader'
 import { RowBetween } from 'components/Row'
@@ -30,7 +30,7 @@ const IconWrapper = styled.div<{ size?: number }>`
   }
 `
 
-const Web3StatusGeneric = styled(ButtonSecondary)`
+const Web3StatusGeneric = styled.button`
   ${({ theme }) => theme.flexRowNoWrap}
   width: 100%;
   align-items: center;
@@ -62,11 +62,7 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
   :focus {
     background-color: ${({ pending, theme }) =>
       pending ? darken(0.05, theme.primary) : lighten(0.05, theme.buttonGray)};
-
-    :focus {
-      border: 1px solid
-        ${({ pending, theme }) => (pending ? darken(0.1, theme.primary) : darken(0.1, theme.buttonGray))};
-    }
+    border: 1px solid ${({ theme }) => theme.primary};
   }
 `
 
@@ -88,16 +84,16 @@ const NetworkIcon = styled(Activity)`
   height: 16px;
 `
 
-const AccountElement = styled.div<{ active: boolean }>`
+const AccountElement = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: ${({ theme, active }) => (!active ? theme.background : theme.buttonGray)};
   border-radius: 999px;
   white-space: nowrap;
   width: 100%;
   cursor: pointer;
   pointer-events: auto;
+  height: 42px;
 `
 
 function Web3StatusInner() {
@@ -169,10 +165,8 @@ function Web3StatusInner() {
 }
 
 export default function SelectWallet() {
-  const { account } = useActiveWeb3React()
-
   return (
-    <AccountElement active={!!account}>
+    <AccountElement>
       <Web3StatusInner />
       <WalletModal />
     </AccountElement>

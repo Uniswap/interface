@@ -1121,10 +1121,7 @@ export default function Swap() {
                       />
                     }
                   >
-                    <LiveChart
-                      onRotateClick={handleRotateClick}
-                      currencies={isSwapPage ? currencies : currenciesLimit}
-                    />
+                    <LiveChart currencies={isSwapPage ? currencies : currenciesLimit} />
                   </Suspense>
                 </LiveChartWrapper>
               )}
