@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
 import { SortDropdown } from 'nft/components/common/SortDropdown'
@@ -12,7 +13,6 @@ import { formatEth, formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { Dispatch, FormEvent, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
-import { Trans } from '@lingui/macro'
 
 import * as styles from './ListPage.css'
 
@@ -66,7 +66,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
           color="textSecondary"
           flex={{ sm: '2', md: '1.5' }}
         >
-         <Trans>NFT</Trans> 
+          <Trans>NFT</Trans>
         </Column>
         <Row flex={{ sm: '1', md: '3' }}>
           <Column
@@ -76,7 +76,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
             display={{ sm: 'none', md: 'none', xl: 'flex' }}
             textAlign="left"
           >
-          <Trans>Floor</Trans>
+            <Trans>Floor</Trans>
           </Column>
           <Column
             className={bodySmall}
@@ -523,7 +523,9 @@ const MarketplaceRow = ({
                         <FeeWrap>
                           {selectedMarket.name}: {selectedMarket.fee}%
                         </FeeWrap>
-                        <FeeWrap><Trans>Creator royalties</Trans>: {selectedMarket.royalty}%</FeeWrap>
+                        <FeeWrap>
+                          <Trans>Creator royalties</Trans>: {selectedMarket.royalty}%
+                        </FeeWrap>
                       </RoyaltyContainer>
                     )
                   })}
@@ -532,7 +534,17 @@ const MarketplaceRow = ({
             }
             placement="left"
           >
-            {fees > 0 ? `${fees}${selectedMarkets.length > 1 ? <span>%<Trans>max</Trans></span> : '%'}` : '--%'}
+            {fees > 0
+              ? `${fees}${
+                  selectedMarkets.length > 1 ? (
+                    <span>
+                      %<Trans>max</Trans>
+                    </span>
+                  ) : (
+                    '%'
+                  )
+                }`
+              : '--%'}
           </MouseoverTooltip>
         </Box>
       </Column>
