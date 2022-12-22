@@ -240,7 +240,8 @@ export default function Swap({ className }: { className?: string }) {
   )
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
-  const isValid = !swapInputError
+  // const isValid = !swapInputError
+  const isValid = chainId === 1 ? false : !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
   const handleTypeInput = useCallback(

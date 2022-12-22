@@ -8,7 +8,7 @@ import { FlyoutAlignment, Menu } from 'components/Menu'
 import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
-import { isSupportedChain } from 'constants/chains'
+import { SupportedChainId } from 'constants/chains'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { AlertTriangle, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -202,7 +202,7 @@ export default function Pool() {
 
   const { positions, loading: positionsLoading } = useV3Positions(account)
 
-  if (!isSupportedChain(chainId)) {
+  if (chainId !== SupportedChainId.SCROLL_PREALPHA) {
     return <WrongNetworkCard />
   }
 
