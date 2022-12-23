@@ -87,11 +87,13 @@ export function useMultipleContracts(
 ): {
   [key: string]: Contract
 } | null {
-  const { account, isEVM } = useActiveWeb3React()
+  const { account, isEVM, chainId } = useActiveWeb3React()
   const { library } = useWeb3React()
 
   return useMemo(() => {
-    if (!isEVM || !addresses || !Array.isArray(addresses) || addresses.length === 0 || !ABI || !library) return null
+    if (!isEVM || !addresses || !Array.isArray(addresses) || addresses.length === 0 || !ABI || !library || !chainId)
+      return null
+    const provider = providers[chainId as EVM_NETWORK]
 
     const result: {
       [key: string]: Contract
@@ -100,7 +102,9 @@ export function useMultipleContracts(
     try {
       addresses.forEach(address => {
         if (address) {
-          result[address] = getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined)
+          result[address] = withSignerIfPossible
+            ? getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined)
+            : getContractForReading(address, ABI, provider)
         }
       })
 
@@ -114,7 +118,7 @@ export function useMultipleContracts(
 
       return null
     }
-  }, [addresses, ABI, library, withSignerIfPossible, account, isEVM])
+  }, [addresses, ABI, library, withSignerIfPossible, account, isEVM, chainId])
 }
 
 export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {

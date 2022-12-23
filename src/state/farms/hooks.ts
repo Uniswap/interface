@@ -89,7 +89,7 @@ export const useRewardTokenPrices = (tokens: (Token | undefined | null)[], versi
 export const useFarmsData = (isIncludeOutsideFarms = true) => {
   const dispatch = useAppDispatch()
   const { chainId, account, isEVM, networkInfo } = useActiveWeb3React()
-  const fairLaunchContracts = useFairLaunchContracts()
+  const fairLaunchContracts = useFairLaunchContracts(false)
   const ethPrice = useETHPrice()
   const allTokens = useAllTokens()
 

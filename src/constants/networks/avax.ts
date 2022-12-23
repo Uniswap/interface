@@ -59,6 +59,7 @@ const avaxInfo: EVMNetworkInfo = {
       '0x845d1d0d9b344fba8a205461b9e94aefe258b918',
       '0xa107e6466Be74361840059a11e390200371a7538',
       '0x89929Bc485cE72D2Af7b7283B40b921e9F4f80b3',
+      '0xc9B4001F0f858D2679CF6BBf4C1CE626B1390c0B',
     ],
   },
   elastic: {
