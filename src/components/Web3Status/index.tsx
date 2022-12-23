@@ -176,6 +176,7 @@ const StyledConnectButton = styled.button`
   font-weight: 600;
   font-size: 16px;
   padding: 10px 8px 10px 12px;
+  word-break: keep-all;
 
   transition: ${({
     theme: {
