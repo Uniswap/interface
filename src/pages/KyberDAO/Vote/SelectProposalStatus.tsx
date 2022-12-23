@@ -21,7 +21,7 @@ const Select = styled.div`
   font-size: 14px;
   font-weight: 500;
   padding: 8px 12px;
-  width: 140px;
+  width: min(140px, 30vw);
   height: 36px;
   z-index: 101;
   position: inherit;

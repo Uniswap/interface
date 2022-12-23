@@ -367,9 +367,9 @@ export default function Vote() {
               </RowBetween>
               <RowBetween>
                 <Text fontSize={12} color={theme.subText}>
-                  {totalStakedAmount ? totalStakedAmount + ' KNC Staked' : '--'}
+                  {totalStakedAmount ? (+totalStakedAmount.toFixed(2)).toLocaleString() + ' KNC Staked' : '--'}
                 </Text>
-                <StyledInternalLink to="/kyberdao/stake-knc" style={{ fontSize: '12px' }}>
+                <StyledInternalLink to="/kyberdao/stake-knc" style={{ fontSize: '12px', whiteSpace: 'nowrap' }}>
                   <Trans>Stake KNC ↗</Trans>
                 </StyledInternalLink>
               </RowBetween>
