@@ -363,7 +363,8 @@ export function useFloodAPI(
   tokenOut?: string,
   amountIn?: string,
   chainId?: number,
-  enabledExt = true
+  enabledExt = true,
+  refetchInterval = AVERAGE_L1_BLOCK_TIME
 ) {
   const enabled =
     enabledExt &&
@@ -375,7 +376,13 @@ export function useFloodAPI(
     ['flood', tokenIn, tokenOut, amountIn, chainId],
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     () => getFloodAPIQuote(tokenIn!, tokenOut!, amountIn!, chainId!),
-    { enabled, refetchInterval: AVERAGE_L1_BLOCK_TIME }
+    { enabled, refetchInterval, staleTime: AVERAGE_L1_BLOCK_TIME, keepPreviousData: true }
   )
   return result
+}
+
+export function isFloodQuote(quote: GetQuoteResult | FloodQuoteResult | undefined): quote is FloodQuoteResult {
+  if (!quote) return false
+  if ('routeString' in quote) return false
+  return true
 }

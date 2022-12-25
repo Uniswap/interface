@@ -73,24 +73,28 @@ export function transformRoutesToTrade<TTradeType extends TradeType>(
   route: ReturnType<typeof computeRoutes>,
   tradeType: TTradeType,
   blockNumber?: string | null,
-  gasUseEstimateUSD?: CurrencyAmount<Token> | null
+  gasUseEstimateUSD?: CurrencyAmount<Token> | null,
+  isUsingFlood = false
 ): InterfaceTrade<Currency, Currency, TTradeType> {
+  const v2Routes =
+    route
+      ?.filter((r): r is typeof route[0] & { routev2: NonNullable<typeof route[0]['routev2']> } => r.routev2 !== null)
+      .map(({ routev2, inputAmount, outputAmount }) => ({ routev2, inputAmount, outputAmount })) ?? []
+  const v3Routes =
+    route
+      ?.filter((r): r is typeof route[0] & { routev3: NonNullable<typeof route[0]['routev3']> } => r.routev3 !== null)
+      .map(({ routev3, inputAmount, outputAmount }) => ({ routev3, inputAmount, outputAmount })) ?? []
+
+  const mixedRoutes =
+    route
+      ?.filter(
+        (r): r is typeof route[0] & { mixedRoute: NonNullable<typeof route[0]['mixedRoute']> } => r.mixedRoute !== null
+      )
+      .map(({ mixedRoute, inputAmount, outputAmount }) => ({ mixedRoute, inputAmount, outputAmount })) ?? []
   return new InterfaceTrade({
-    v2Routes:
-      route
-        ?.filter((r): r is typeof route[0] & { routev2: NonNullable<typeof route[0]['routev2']> } => r.routev2 !== null)
-        .map(({ routev2, inputAmount, outputAmount }) => ({ routev2, inputAmount, outputAmount })) ?? [],
-    v3Routes:
-      route
-        ?.filter((r): r is typeof route[0] & { routev3: NonNullable<typeof route[0]['routev3']> } => r.routev3 !== null)
-        .map(({ routev3, inputAmount, outputAmount }) => ({ routev3, inputAmount, outputAmount })) ?? [],
-    mixedRoutes:
-      route
-        ?.filter(
-          (r): r is typeof route[0] & { mixedRoute: NonNullable<typeof route[0]['mixedRoute']> } =>
-            r.mixedRoute !== null
-        )
-        .map(({ mixedRoute, inputAmount, outputAmount }) => ({ mixedRoute, inputAmount, outputAmount })) ?? [],
+    v2Routes,
+    v3Routes,
+    mixedRoutes,
     tradeType,
     gasUseEstimateUSD,
     blockNumber,

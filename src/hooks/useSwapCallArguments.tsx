@@ -72,6 +72,9 @@ export function useSwapCallArguments(
       deadlineOrPreviousBlockhash: deadline.toString(),
     })
 
+    console.log(value)
+    console.log(calldata)
+
     if (argentWalletContract && trade.inputAmount.currency.isToken) {
       return [
         {
