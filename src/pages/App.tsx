@@ -1,5 +1,5 @@
-import { sendAnalyticsEvent, Trace, user } from '@uniswap/analytics'
-import { CustomUserProperties, EventName, getBrowser, PageName } from '@uniswap/analytics-events'
+import { Trace, user } from '@uniswap/analytics'
+import { CustomUserProperties, PageName } from '@uniswap/analytics-events'
 import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
@@ -10,9 +10,7 @@ import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
-import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
-import { useAnalyticsReporter } from '../components/analytics'
 import ErrorBoundary from '../components/ErrorBoundary'
 import { PageTabs } from '../components/NavBar'
 import NavBar from '../components/NavBar'
@@ -100,24 +98,10 @@ export default function App() {
   const isExpertMode = useIsExpertMode()
   const [scrolledState, setScrolledState] = useState(false)
 
-  useAnalyticsReporter()
-
   useEffect(() => {
     window.scrollTo(0, 0)
     setScrolledState(false)
   }, [pathname])
-
-  useEffect(() => {
-    sendAnalyticsEvent(EventName.APP_LOADED)
-    user.set(CustomUserProperties.USER_AGENT, navigator.userAgent)
-    user.set(CustomUserProperties.BROWSER, getBrowser())
-    user.set(CustomUserProperties.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
-    user.set(CustomUserProperties.SCREEN_RESOLUTION_WIDTH, window.screen.width)
-    getCLS(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { cumulative_layout_shift: delta }))
-    getFCP(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { first_contentful_paint_ms: delta }))
-    getFID(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { first_input_delay_ms: delta }))
-    getLCP(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { largest_contentful_paint_ms: delta }))
-  }, [])
 
   useEffect(() => {
     user.set(CustomUserProperties.DARK_MODE, isDarkMode)

@@ -11,8 +11,8 @@ import { useMemo } from 'react'
 import { RouterPreference, useGetQuoteQuery } from 'state/routing/slice'
 
 import { GetQuoteResult, InterfaceTrade, TradeState } from './types'
+import { FloodQuoteResult, useFloodAPI } from './useFloodAPI'
 import { computeRoutes, transformRoutesToTrade } from './utils'
-
 /**
  * Returns the best trade by invoking the routing api or the smart order router on the client
  * @param tradeType whether the swap is an exact in/out
@@ -27,6 +27,8 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
 ): {
   state: TradeState
   trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined
+  uniswapQuote: GetQuoteResult | undefined
+  floodQuote: FloodQuoteResult | undefined
 } {
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>
@@ -44,12 +46,27 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     routerPreference,
   })
 
-  const { isLoading, isError, data, currentData } = useGetQuoteQuery(queryArgs ?? skipToken, {
+  const uniswapQuery = useGetQuoteQuery(queryArgs ?? skipToken, {
     // Price-fetching is informational and costly, so it's done less frequently.
     pollingInterval: routerPreference === RouterPreference.PRICE ? ms`2m` : AVERAGE_L1_BLOCK_TIME,
   })
+  const shouldUseFlood = routerPreference === RouterPreference.API && tradeType === TradeType.EXACT_INPUT
+  const floodQuery = useFloodAPI(
+    currencyIn?.wrapped.address,
+    currencyOut?.wrapped.address,
+    amountSpecified?.quotient.toString(),
+    currencyIn?.chainId,
+    shouldUseFlood
+  )
 
-  const quoteResult: GetQuoteResult | undefined = useIsValidBlock(Number(data?.blockNumber) || 0) ? data : undefined
+  const isLoading = uniswapQuery.isLoading || floodQuery.isLoading
+  const isError = uniswapQuery.isError && floodQuery.isError
+  const isUniswapSyncing = uniswapQuery.currentData !== uniswapQuery.data
+  const isFloodSyncing = floodQuery.isFetching && floodQuery.data !== undefined
+
+  const quoteResult: GetQuoteResult | undefined = useIsValidBlock(Number(uniswapQuery.data?.blockNumber) || 0)
+    ? uniswapQuery.data
+    : undefined
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),
@@ -59,13 +76,15 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   // get USD gas cost of trade in active chains stablecoin amount
   const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(quoteResult?.gasUseEstimateUSD) ?? null
 
-  const isSyncing = currentData !== data
+  const isSyncing = isFloodSyncing || isUniswapSyncing
 
   return useMemo(() => {
     if (!currencyIn || !currencyOut) {
       return {
         state: TradeState.INVALID,
         trade: undefined,
+        uniswapQuote: undefined,
+        floodQuote: undefined,
       }
     }
 
@@ -74,6 +93,8 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       return {
         state: TradeState.LOADING,
         trade: undefined,
+        uniswapQuote: undefined,
+        floodQuote: undefined,
       }
     }
 
@@ -92,6 +113,8 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       return {
         state: TradeState.NO_ROUTE_FOUND,
         trade: undefined,
+        uniswapQuote: undefined,
+        floodQuote: undefined,
       }
     }
 
@@ -101,21 +124,25 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
         // always return VALID regardless of isFetching status
         state: isSyncing ? TradeState.SYNCING : TradeState.VALID,
         trade,
+        uniswapQuote: uniswapQuery.data,
+        floodQuote: floodQuery.data,
       }
     } catch (e) {
-      return { state: TradeState.INVALID, trade: undefined }
+      return { state: TradeState.INVALID, trade: undefined, uniswapQuote: undefined, floodQuote: undefined }
     }
   }, [
     currencyIn,
     currencyOut,
-    quoteResult,
     isLoading,
-    tradeType,
+    quoteResult,
     isError,
     route,
     queryArgs,
+    tradeType,
     gasUseEstimateUSD,
     isSyncing,
+    uniswapQuery.data,
+    floodQuery.data,
   ])
 }
 

@@ -1,7 +1,8 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { RouterPreference } from 'state/routing/slice'
-import { InterfaceTrade, TradeState } from 'state/routing/types'
+import { GetQuoteResult, InterfaceTrade, TradeState } from 'state/routing/types'
+import { FloodQuoteResult } from 'state/routing/useFloodAPI'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { useClientSideRouter } from 'state/user/hooks'
 
@@ -23,6 +24,8 @@ export function useBestTrade(
 ): {
   state: TradeState
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
+  uniswapQuote: GetQuoteResult | undefined
+  floodQuote: FloodQuoteResult | undefined
 } {
   const autoRouterSupported = useAutoRouterSupported()
   const isWindowVisible = useIsWindowVisible()
@@ -53,7 +56,7 @@ export function useBestTrade(
   // only return gas estimate from api if routing api trade is used
   return useMemo(
     () => ({
-      ...(useFallback ? bestV3Trade : routingAPITrade),
+      ...(useFallback ? { ...bestV3Trade, uniswapQuote: undefined, floodQuote: undefined } : routingAPITrade),
       ...(isLoading ? { state: TradeState.LOADING } : {}),
     }),
     [bestV3Trade, isLoading, routingAPITrade, useFallback]

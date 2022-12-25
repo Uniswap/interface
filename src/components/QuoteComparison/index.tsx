@@ -1,4 +1,5 @@
-import { formatCurrencyAmount } from '@uniswap/conedison/format'
+import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { UniIcon } from 'nft/components/icons'
 import { useDerivedSwapInfo } from 'state/swap/hooks'
@@ -36,19 +37,25 @@ const QuoteRowContainer = styled.div`
 `
 
 export default function QuoteComparison() {
-  // TODO: use values from the state
   const {
     trade,
     currencies: { OUTPUT },
   } = useDerivedSwapInfo()
 
-  // const floodQuoteStablecoinPrice = useStablecoinValue(
-  //   OUTPUT && floodQuote ? CurrencyAmount.fromRawAmount(OUTPUT, floodQuote) : null
-  // )
-  const uniswapQuoteStablecoinPrice = useStablecoinValue(trade.trade?.outputAmount)
+  const floodQuote = trade.floodQuote?.quote
+  const uniswapQuote = trade.uniswapQuote?.quote
 
-  const formattedFloodQuote = '$1.23'
-  const formattedUniswapQuote = formatCurrencyAmount(uniswapQuoteStablecoinPrice)
+  const floodQuoteStablecoinPrice = useStablecoinValue(
+    OUTPUT && floodQuote ? CurrencyAmount.fromRawAmount(OUTPUT, floodQuote) : null
+  )
+  const uniswapQuoteStablecoinPrice = useStablecoinValue(
+    OUTPUT && uniswapQuote ? CurrencyAmount.fromRawAmount(OUTPUT, uniswapQuote) : null
+  )
+
+  const isFloodBetter = floodQuoteStablecoinPrice?.greaterThan(uniswapQuoteStablecoinPrice ?? 0)
+
+  const formattedFloodQuote = formatCurrencyAmount(floodQuoteStablecoinPrice, NumberType.FiatTokenPrice)
+  const formattedUniswapQuote = formatCurrencyAmount(uniswapQuoteStablecoinPrice, NumberType.FiatTokenPrice)
 
   return (
     <ComparisonCard>
@@ -78,7 +85,12 @@ export default function QuoteComparison() {
         <ThemedText.DeprecatedBlack fontWeight={400} fontSize={13}>
           Uniswap Router
         </ThemedText.DeprecatedBlack>
-        <ThemedText.DeprecatedBlack fontWeight={400} fontSize={13} style={{ textAlign: 'right' }}>
+        <ThemedText.DeprecatedBlack
+          fontWeight={400}
+          fontSize={13}
+          // usa actual uniswap error colors
+          style={{ textAlign: 'right', color: isFloodBetter != null && isFloodBetter ? 'red' : 'textPrimary' }}
+        >
           {formattedUniswapQuote || '—'}
         </ThemedText.DeprecatedBlack>
       </QuoteRowContainer>
