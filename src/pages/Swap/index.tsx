@@ -37,6 +37,7 @@ import { GrayCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import SwapCurrencyInputPanel from '../../components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import Loader from '../../components/Loader'
+import QuoteComparison from '../../components/QuoteComparison'
 import { AutoRow } from '../../components/Row'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
@@ -876,6 +877,7 @@ export default function Swap({ className }: { className?: string }) {
               </div>
             </AutoColumn>
           </SwapWrapper>
+          <QuoteComparison />
           <NetworkAlert />
         </PageWrapper>
         <SwitchLocaleLink />

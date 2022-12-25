@@ -13,7 +13,8 @@ export function computeRoutes(
   currencyIn: Currency | undefined,
   currencyOut: Currency | undefined,
   tradeType: TradeType,
-  quoteResult: Pick<GetQuoteResult, 'route'> | undefined
+  quoteResult: Pick<GetQuoteResult, 'route'> | undefined,
+  isFloodQuote = false
 ) {
   if (!quoteResult || !quoteResult.route || !currencyIn || !currencyOut) return undefined
 
@@ -22,8 +23,8 @@ export function computeRoutes(
   const parsedTokenIn = parseToken(quoteResult.route[0][0].tokenIn)
   const parsedTokenOut = parseToken(quoteResult.route[0][quoteResult.route[0].length - 1].tokenOut)
 
-  if (parsedTokenIn.address !== currencyIn.wrapped.address) return undefined
-  if (parsedTokenOut.address !== currencyOut.wrapped.address) return undefined
+  if (parsedTokenIn.address !== currencyIn.wrapped.address && !isFloodQuote) return undefined
+  if (parsedTokenOut.address !== currencyOut.wrapped.address && !isFloodQuote) return undefined
 
   try {
     return quoteResult.route.map((route) => {
@@ -32,6 +33,9 @@ export function computeRoutes(
       }
       const rawAmountIn = route[0].amountIn
       const rawAmountOut = route[route.length - 1].amountOut
+
+      const routeTokenIn = isFloodQuote ? parseToken(route[0].tokenIn) : currencyIn
+      const routeTokenOut = isFloodQuote ? parseToken(route[route.length - 1].tokenOut) : currencyOut
 
       if (!rawAmountIn || !rawAmountOut) {
         throw new Error('Expected both amountIn and amountOut to be present')
@@ -42,15 +46,15 @@ export function computeRoutes(
       return {
         routev3:
           routeProtocol === Protocol.V3
-            ? new V3Route(route.map(genericPoolPairParser) as Pool[], currencyIn, currencyOut)
+            ? new V3Route(route.map(genericPoolPairParser) as Pool[], routeTokenIn, routeTokenOut)
             : null,
         routev2:
           routeProtocol === Protocol.V2
-            ? new V2Route(route.map(genericPoolPairParser) as Pair[], currencyIn, currencyOut)
+            ? new V2Route(route.map(genericPoolPairParser) as Pair[], routeTokenIn, routeTokenOut)
             : null,
         mixedRoute:
           routeProtocol === Protocol.MIXED
-            ? new MixedRouteSDK(route.map(genericPoolPairParser), currencyIn, currencyOut)
+            ? new MixedRouteSDK(route.map(genericPoolPairParser), routeTokenIn, routeTokenOut)
             : null,
         inputAmount: CurrencyAmount.fromRawAmount(currencyIn, rawAmountIn),
         outputAmount: CurrencyAmount.fromRawAmount(currencyOut, rawAmountOut),

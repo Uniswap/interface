@@ -240,5 +240,9 @@
     "npm": "please-use-yarn",
     "node": "14",
     "yarn": ">=1.22"
+  },
+  "volta": {
+    "node": "14.21.2",
+    "yarn": "1.22.19"
   }
 }

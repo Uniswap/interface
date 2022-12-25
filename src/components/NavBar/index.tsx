@@ -12,7 +12,6 @@ import styled from 'styled-components/macro'
 
 import { Bag } from './Bag'
 import { ChainSelector } from './ChainSelector'
-import { MenuDropdown } from './MenuDropdown'
 import { SearchBar } from './SearchBar'
 import * as styles from './style.css'
 
@@ -50,15 +49,6 @@ export const PageTabs = () => {
   const { chainId: connectedChainId } = useWeb3React()
   const chainName = chainIdToBackendName(connectedChainId)
 
-  const isPoolActive =
-    pathname.startsWith('/pool') ||
-    pathname.startsWith('/add') ||
-    pathname.startsWith('/remove') ||
-    pathname.startsWith('/increase') ||
-    pathname.startsWith('/find')
-
-  const isNftPage = useIsNftPage()
-
   return (
     <>
       <MenuItem href="/swap" isActive={pathname.startsWith('/swap')}>
@@ -66,12 +56,6 @@ export const PageTabs = () => {
       </MenuItem>
       <MenuItem href={`/tokens/${chainName.toLowerCase()}`} isActive={pathname.startsWith('/tokens')}>
         <Trans>Tokens</Trans>
-      </MenuItem>
-      <MenuItem dataTestId="nft-nav" href="/nfts" isActive={isNftPage}>
-        <Trans>NFTs</Trans>
-      </MenuItem>
-      <MenuItem href="/pool" id="pool-nav-link" isActive={isPoolActive}>
-        <Trans>Pool</Trans>
       </MenuItem>
     </>
   )
@@ -132,9 +116,6 @@ const Navbar = () => {
             <Row gap="12">
               <Box position="relative" display={{ sm: 'flex', xl: 'none' }}>
                 <SearchBar />
-              </Box>
-              <Box display={{ sm: 'none', lg: 'flex' }}>
-                <MenuDropdown />
               </Box>
               {isNftPage && <Bag />}
               {!isNftPage && (

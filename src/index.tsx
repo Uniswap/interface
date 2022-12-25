@@ -29,6 +29,10 @@ import UserUpdater from './state/user/updater'
 import ThemeProvider, { ThemedGlobalStyle } from './theme'
 import RadialGradientByChainUpdater from './theme/components/RadialGradientByChainUpdater'
 
+// Suppress jotai warning
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+console.warn = () => {}
+
 if (window.ethereum) {
   window.ethereum.autoRefreshOnNetworkChange = false
 }

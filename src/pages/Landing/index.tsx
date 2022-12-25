@@ -1,10 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Trace, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, ElementName, EventName, PageName } from '@uniswap/analytics-events'
-import { AboutFooter } from 'components/About/AboutFooter'
-import Card, { CardType } from 'components/About/Card'
-import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
-import ProtocolBanner from 'components/About/ProtocolBanner'
 import { BaseButton } from 'components/Button'
 import Swap from 'pages/Swap'
 import { parse } from 'qs'
@@ -206,49 +202,6 @@ const LearnMoreArrow = styled(ArrowDownCircle)`
   size: 20px;
 `
 
-const AboutContentContainer = styled.div<{ isDarkMode: boolean }>`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0 24px 5rem;
-  width: 100%;
-  background: ${({ isDarkMode }) =>
-    isDarkMode
-      ? 'linear-gradient(179.82deg, rgba(0, 0, 0, 0) 0.16%, #050026 99.85%)'
-      : 'linear-gradient(179.82deg, rgba(255, 255, 255, 0) 0.16%, #eaeaea 99.85%)'};
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
-    padding: 0 96px 5rem;
-  }
-`
-
-const CardGrid = styled.div<{ cols: number }>`
-  display: grid;
-  gap: 12px;
-  width: 100%;
-  padding: 24px 0 0;
-  max-width: 1440px;
-  scroll-margin: ${({ theme }) => `${theme.navHeight}px 0 0`};
-
-  grid-template-columns: 1fr;
-  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
-    // At this screen size, we show up to 2 columns.
-    grid-template-columns: ${({ cols }) =>
-      Array.from(Array(cols === 2 ? 2 : 1))
-        .map(() => '1fr')
-        .join(' ')};
-    gap: 32px;
-  }
-
-  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
-    // at this screen size, always show the max number of columns
-    grid-template-columns: ${({ cols }) =>
-      Array.from(Array(cols))
-        .map(() => '1fr')
-        .join(' ')};
-    gap: 32px;
-  }
-`
-
 const LandingSwapContainer = styled.div`
   height: ${({ theme }) => `calc(100vh - ${theme.mobileBottomBarHeight}px)`};
   width: 100%;
@@ -340,24 +293,6 @@ export default function Landing() {
               <LearnMoreArrow />
             </LearnMoreContainer>
           </ContentContainer>
-          <AboutContentContainer isDarkMode={isDarkMode}>
-            <CardGrid cols={2} ref={cardsRef}>
-              {MAIN_CARDS.map(({ darkBackgroundImgSrc, lightBackgroundImgSrc, ...card }) => (
-                <Card
-                  {...card}
-                  backgroundImgSrc={isDarkMode ? darkBackgroundImgSrc : lightBackgroundImgSrc}
-                  key={card.title}
-                />
-              ))}
-            </CardGrid>
-            <CardGrid cols={3}>
-              {MORE_CARDS.map(({ darkIcon, lightIcon, ...card }) => (
-                <Card {...card} icon={isDarkMode ? darkIcon : lightIcon} key={card.title} type={CardType.Secondary} />
-              ))}
-            </CardGrid>
-            <ProtocolBanner />
-            <AboutFooter />
-          </AboutContentContainer>
         </PageContainer>
       )}
     </Trace>
