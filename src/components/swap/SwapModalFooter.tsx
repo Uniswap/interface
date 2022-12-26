@@ -85,7 +85,9 @@ const formatAnalyticsEventProperties = ({
   token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
   token_in_amount_usd: fiatValueInput ? parseFloat(fiatValueInput.toFixed(2)) : undefined,
   token_out_amount_usd: fiatValueOutput ? parseFloat(fiatValueOutput.toFixed(2)) : undefined,
-  price_impact_basis_points: formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)),
+  price_impact_basis_points: formatPercentInBasisPointsNumber(
+    computeRealizedPriceImpact(trade) ?? new Percent(1, 1000)
+  ),
   allowed_slippage_basis_points: formatPercentInBasisPointsNumber(allowedSlippage),
   is_auto_router_api: isAutoRouterApi,
   is_auto_slippage: isAutoSlippage,

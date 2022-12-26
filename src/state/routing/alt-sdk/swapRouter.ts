@@ -19,28 +19,21 @@ import {
 import { Currency, CurrencyAmount, Percent, TradeType, validateAndParseAddress } from '@uniswap/sdk-core'
 import { abi } from '@uniswap/swap-router-contracts/artifacts/contracts/interfaces/ISwapRouter02.sol/ISwapRouter02.json'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import {
-  encodeRouteToPath,
-  MethodParameters,
-  Payments,
-  Pool,
-  SelfPermit,
-  toHex,
-  Trade as V3Trade,
-} from '@uniswap/v3-sdk'
+import { encodeRouteToPath, MethodParameters, Payments, Pool, SelfPermit, toHex } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
 import invariant from 'tiny-invariant'
 
 import { FloodTrade } from './trade'
+import { V3FloodTrade } from './v3trade'
 
 type AnyFloodTradeType =
   | FloodTrade<Currency, Currency, TradeType>
   | V2Trade<Currency, Currency, TradeType>
-  | V3Trade<Currency, Currency, TradeType>
+  | V3FloodTrade<Currency, Currency, TradeType>
   | MixedRouteTrade<Currency, Currency, TradeType>
   | (
       | V2Trade<Currency, Currency, TradeType>
-      | V3Trade<Currency, Currency, TradeType>
+      | V3FloodTrade<Currency, Currency, TradeType>
       | MixedRouteTrade<Currency, Currency, TradeType>
     )[]
 
@@ -95,14 +88,14 @@ export abstract class SwapRouterFlood {
 
   /**
    * @notice Generates the calldata for a Swap with a V3 Route.
-   * @param trade The V3Trade to encode.
+   * @param trade The V3FloodTrade to encode.
    * @param options SwapOptions to use for the trade.
    * @param routerMustCustody Flag for whether funds should be sent to the router
    * @param performAggregatedSlippageCheck Flag for whether we want to perform an aggregated slippage check
    * @returns A string array of calldatas for the trade.
    */
   private static encodeV3Swap(
-    trade: V3Trade<Currency, Currency, TradeType>,
+    trade: V3FloodTrade<Currency, Currency, TradeType>,
     options: SwapOptions,
     routerMustCustody: boolean,
     performAggregatedSlippageCheck: boolean
@@ -214,7 +207,7 @@ export abstract class SwapRouterFlood {
 
       if (singleHop) {
         /// For single hop, since it isn't really a mixedRoute, we'll just mimic behavior of V3 or V2
-        /// We don't use encodeV3Swap() or encodeV2Swap() because casting the trade to a V3Trade or V2Trade is overcomplex
+        /// We don't use encodeV3Swap() or encodeV2Swap() because casting the trade to a V3FloodTrade or V2Trade is overcomplex
         if (mixedRouteIsAllV3(route)) {
           const exactInputSingleParams = {
             tokenIn: route.path[0].address,
@@ -297,7 +290,7 @@ export abstract class SwapRouterFlood {
     calldatas: string[]
     sampleTrade:
       | V2Trade<Currency, Currency, TradeType>
-      | V3Trade<Currency, Currency, TradeType>
+      | V3FloodTrade<Currency, Currency, TradeType>
       | MixedRouteTrade<Currency, Currency, TradeType>
     routerMustCustody: boolean
     inputIsNative: boolean
@@ -320,7 +313,7 @@ export abstract class SwapRouterFlood {
 
       const individualTrades: (
         | V2Trade<Currency, Currency, TradeType>
-        | V3Trade<Currency, Currency, TradeType>
+        | V3FloodTrade<Currency, Currency, TradeType>
         | MixedRouteTrade<Currency, Currency, TradeType>
       )[] = []
 
@@ -334,8 +327,10 @@ export abstract class SwapRouterFlood {
             )
           )
         } else if (route.protocol == Protocol.V3) {
+          console.log('using flood router v3 trade')
+          console.log(route)
           individualTrades.push(
-            V3Trade.createUncheckedTrade({
+            V3FloodTrade.createUncheckedTrade({
               route: route as RouteV3<Currency, Currency>,
               inputAmount,
               outputAmount,
@@ -365,7 +360,7 @@ export abstract class SwapRouterFlood {
 
     const numberOfTrades = trades.reduce(
       (numberOfTrades, trade) =>
-        numberOfTrades + (trade instanceof V3Trade || trade instanceof MixedRouteTrade ? trade.swaps.length : 1),
+        numberOfTrades + (trade instanceof V3FloodTrade || trade instanceof MixedRouteTrade ? trade.swaps.length : 1),
       0
     )
 
@@ -411,7 +406,7 @@ export abstract class SwapRouterFlood {
     for (const trade of trades) {
       if (trade instanceof V2Trade) {
         calldatas.push(SwapRouterFlood.encodeV2Swap(trade, options, routerMustCustody, performAggregatedSlippageCheck))
-      } else if (trade instanceof V3Trade) {
+      } else if (trade instanceof V3FloodTrade) {
         for (const calldata of SwapRouterFlood.encodeV3Swap(
           trade,
           options,
@@ -473,11 +468,11 @@ export abstract class SwapRouterFlood {
     trades:
       | FloodTrade<Currency, Currency, TradeType>
       | V2Trade<Currency, Currency, TradeType>
-      | V3Trade<Currency, Currency, TradeType>
+      | V3FloodTrade<Currency, Currency, TradeType>
       | MixedRouteTrade<Currency, Currency, TradeType>
       | (
           | V2Trade<Currency, Currency, TradeType>
-          | V3Trade<Currency, Currency, TradeType>
+          | V3FloodTrade<Currency, Currency, TradeType>
           | MixedRouteTrade<Currency, Currency, TradeType>
         )[],
     options: SwapOptions
@@ -538,7 +533,7 @@ export abstract class SwapRouterFlood {
     trade:
       | FloodTrade<Currency, Currency, TradeType>
       | V2Trade<Currency, Currency, TradeType>
-      | V3Trade<Currency, Currency, TradeType>
+      | V3FloodTrade<Currency, Currency, TradeType>
       | MixedRouteTrade<Currency, Currency, TradeType>
   ): boolean {
     // return !(trade instanceof V2Trade) && trade.priceImpact.greaterThan(REFUND_ETH_PRICE_IMPACT_THRESHOLD)

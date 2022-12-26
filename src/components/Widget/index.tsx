@@ -1,7 +1,7 @@
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { EventName, SectionName, SwapPriceUpdateUserResponse } from '@uniswap/analytics-events'
 import { Trade } from '@uniswap/router-sdk'
-import { Currency, TradeType } from '@uniswap/sdk-core'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import {
   AddEthereumChainParameter,
   EMPTY_TOKEN_LIST,
@@ -118,7 +118,9 @@ export default function Widget({ token, onTokenChange, onReviewSwapClick }: Widg
         token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
         token_in_amount_usd: undefined,
         token_out_amount_usd: undefined,
-        price_impact_basis_points: formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)),
+        price_impact_basis_points: formatPercentInBasisPointsNumber(
+          computeRealizedPriceImpact(trade) ?? new Percent(1, 100)
+        ),
         allowed_slippage_basis_points: undefined,
         is_auto_router_api: undefined,
         is_auto_slippage: undefined,

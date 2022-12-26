@@ -447,10 +447,14 @@ export default function Swap({ className }: { className?: string }) {
 
   // warnings on the greater of fiat value price impact and execution price impact
   const { priceImpactSeverity, largerPriceImpact } = useMemo(() => {
-    const marketPriceImpact = trade?.priceImpact ? computeRealizedPriceImpact(trade) : undefined
+    const marketPriceImpact = isUsingFlood
+      ? undefined
+      : (trade as Trade<Currency, Currency, TradeType>)?.priceImpact
+      ? computeRealizedPriceImpact(trade as Trade<Currency, Currency, TradeType>)
+      : undefined
     const largerPriceImpact = largerPercentValue(marketPriceImpact, stablecoinPriceImpact)
     return { priceImpactSeverity: warningSeverity(largerPriceImpact), largerPriceImpact }
-  }, [stablecoinPriceImpact, trade])
+  }, [isUsingFlood, stablecoinPriceImpact, trade])
 
   const isArgentWallet = useIsArgentWallet()
 

@@ -49,7 +49,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   token_out_symbol: trade.outputAmount.currency.symbol,
   token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
   token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
-  price_impact_basis_points: formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)),
+  price_impact_basis_points: formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade) ?? new Percent(1, 100)),
   chain_id:
     trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
       ? trade.inputAmount.currency.chainId
@@ -66,7 +66,9 @@ export const formatSwapQuoteReceivedEventProperties = (
     token_out_symbol: trade.outputAmount.currency.symbol,
     token_in_address: getTokenAddress(trade.inputAmount.currency),
     token_out_address: getTokenAddress(trade.outputAmount.currency),
-    price_impact_basis_points: trade ? formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)) : undefined,
+    price_impact_basis_points: trade
+      ? formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade) ?? new Percent(1, 100))
+      : undefined,
     estimated_network_fee_usd: gasUseEstimateUSD ? formatToDecimal(gasUseEstimateUSD, 2) : undefined,
     chain_id:
       trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
