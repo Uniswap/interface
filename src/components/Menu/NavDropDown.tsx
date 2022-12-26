@@ -1,25 +1,44 @@
 import { Trans } from '@lingui/macro'
-import React, { ReactNode, useState } from 'react'
+import React, { ReactNode, useRef, useState } from 'react'
+import { NavLink } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 
 import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
 import { ApplicationModal } from 'state/application/actions'
 import { useToggleModal } from 'state/application/hooks'
-
-import { ExternalNavMenuItem, NavMenuItem } from '.'
+import { ExternalLink } from 'theme'
 
 const Wrapper = styled.div`
   transition: all 0.2s ease;
   overflow: hidden;
+  flex: 1;
 `
-const LinkContainer = styled.div<{ isShow?: boolean }>`
+const LinkContainer = styled.div<{ isShow?: boolean; $height: number }>`
   padding-left: 24px;
-  ${({ isShow }) => (isShow ? 'max-height: 500px;' : 'max-height: 0px;')}
+  transition: all 0.3s ease;
+  ${({ isShow, $height }) => (isShow ? `height: ${$height}px;` : 'height: 0px;')}
+  > * {
+    padding: 12px 0;
+  }
+
+  > *:first-child {
+    padding-top: 24px;
+  }
+  > *:last-child {
+    padding-bottom: 0;
+  }
 `
 const DropdownIcon = styled(DropdownSVG)<{ isShow?: boolean }>`
   transition: all 0.2s ease;
+  height: 24px !important;
+  width: 24px !important;
   ${({ isShow }) => isShow && 'transform: rotate(180deg);'}
+`
+
+const TitleWrapper = styled(NavLink)`
+  display: flex;
+  justify-content: space-between;
 `
 
 export default function NavDropDown({
@@ -41,25 +60,27 @@ export default function NavDropDown({
     setIsShowOptions(prev => !prev)
   }
 
+  const ref = useRef<HTMLDivElement>(null)
+
   return (
     <Wrapper>
-      <NavMenuItem to={link} onClick={handleClick}>
+      <TitleWrapper to={link} onClick={handleClick}>
         {icon}
         <Text flex={1}>
           <Trans>{title}</Trans>
         </Text>
         <DropdownIcon isShow={isShowOptions} />
-      </NavMenuItem>
-      <LinkContainer isShow={isShowOptions}>
+      </TitleWrapper>
+      <LinkContainer isShow={isShowOptions} ref={ref} $height={ref.current?.scrollHeight || 0}>
         {options.map(item =>
           item.external ? (
-            <ExternalNavMenuItem key={item.link} href={item.link} onClick={toggle}>
+            <ExternalLink key={item.link} href={item.link} onClick={toggle}>
               <Trans>{item.label}</Trans>
-            </ExternalNavMenuItem>
+            </ExternalLink>
           ) : (
-            <NavMenuItem to={item.link} key={item.link} onClick={toggle}>
+            <NavLink to={item.link} key={item.link} onClick={toggle}>
               <Trans>{item.label}</Trans>
-            </NavMenuItem>
+            </NavLink>
           ),
         )}
       </LinkContainer>

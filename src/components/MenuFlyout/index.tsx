@@ -119,18 +119,18 @@ const CloseIcon = styled.div`
   position: absolute;
   right: 20px;
   top: 17px;
+  color: ${({ theme }) => theme.text4};
   &:hover {
     cursor: pointer;
     opacity: 0.6;
   }
 `
 
-const CloseColor = styled(Close)`
-  path {
-    stroke: ${({ theme }) => theme.text4};
-  }
+const MenuWrapper = styled.ul`
+  list-style-type: none;
+  padding-left: 0px;
+  margin: 0px;
 `
-
 const MenuTitleWrapper = (props: {
   toggle: () => void
   translatedTitle?: string
@@ -145,13 +145,13 @@ const MenuTitleWrapper = (props: {
     <AutoColumn gap={isMobile ? '14px' : '10px'}>
       {isMobile && (
         <CloseIcon onClick={props.toggle}>
-          <CloseColor />
+          <Close />
         </CloseIcon>
       )}
       <Text fontWeight={500} fontSize={props.fontSize || 16} color={theme.text}>
         {props.translatedTitle}
       </Text>
-      <AutoColumn>{props.children}</AutoColumn>
+      <MenuWrapper>{props.children}</MenuWrapper>
     </AutoColumn>
   )
 }

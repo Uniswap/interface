@@ -20,11 +20,10 @@ import { Text } from 'rebass'
 import styled, { css } from 'styled-components'
 
 import { ReactComponent as BlogIcon } from 'assets/svg/blog.svg'
-import { ReactComponent as LightIcon } from 'assets/svg/light.svg'
+import { ReactComponent as DiscoverIconSvg } from 'assets/svg/discover_icon.svg'
 import { ReactComponent as RoadMapIcon } from 'assets/svg/roadmap.svg'
 import { ButtonPrimary } from 'components/Button'
 import SlideToUnlock from 'components/Header/SlideToUnlock'
-import DiscoverIcon from 'components/Icons/DiscoverIcon'
 import Faucet from 'components/Icons/Faucet'
 import Loader from 'components/Loader'
 import MenuFlyout from 'components/MenuFlyout'
@@ -45,7 +44,7 @@ import ClaimRewardModal from './ClaimRewardModal'
 import FaucetModal from './FaucetModal'
 import NavDropDown from './NavDropDown'
 
-const sharedStylesMenuItem = css`
+const MenuItem = styled.li`
   flex: 1;
   padding: 0.75rem 0;
   text-decoration: none;
@@ -58,11 +57,25 @@ const sharedStylesMenuItem = css`
   :hover {
     color: ${({ theme }) => theme.text};
     cursor: pointer;
-    text-decoration: none;
+    a {
+      color: ${({ theme }) => theme.text};
+    }
   }
 
-  > svg {
+  svg {
     margin-right: 8px;
+    height: 16px;
+    width: 16px;
+  }
+
+  a {
+    color: ${({ theme }) => theme.subText};
+    display: flex;
+    align-items: center;
+    :hover {
+      text-decoration: none;
+      color: ${({ theme }) => theme.text};
+    }
   }
 `
 
@@ -72,38 +85,20 @@ const StyledMenuIcon = styled(MenuIcon)`
   }
 `
 
-const StyledRoadMapIcon = styled(RoadMapIcon)`
-  path {
-    stroke: ${({ theme }) => theme.subText};
-  }
-`
-
-const StyledBlogIcon = styled(BlogIcon)`
-  path {
-    fill: ${({ theme }) => theme.subText};
-  }
-`
-
-const StyledLightIcon = styled(LightIcon)`
-  path {
-    stroke: ${({ theme }) => theme.subText};
-  }
-`
-
-const DiscoverWrapper = styled.span`
+const DiscoverWrapper = styled(MenuItem)`
   display: none;
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    display: inline-flex;
+    display: flex;
   `};
 `
 
-const CampaignWrapper = styled.span`
+const CampaignWrapper = styled(MenuItem)`
   display: none;
 
   /* It's better to break at 420px than at extraSmall */
   @media (max-width: 420px) {
-    display: inline-flex;
+    display: flex;
   }
 `
 
@@ -147,35 +142,15 @@ const StyledMenu = styled.div`
   text-align: left;
 `
 
-export const NavMenuItem = styled(NavLink)`
-  ${sharedStylesMenuItem}
-`
-
-export const ExternalNavMenuItem = styled(ExternalLink)`
-  ${sharedStylesMenuItem}
-`
-
-const MenuButton = styled.div`
-  ${sharedStylesMenuItem}
-`
-
 const MenuFlyoutBrowserStyle = css`
   min-width: unset;
   right: -8px;
-
-  & ${ExternalNavMenuItem}:nth-child(1),
-  & ${NavMenuItem}:nth-child(1) {
-    padding-top: 0.75rem;
-  }
 `
 
 const MenuFlyoutMobileStyle = css`
   overflow-y: scroll;
-  & ${ExternalNavMenuItem}:nth-child(1),
-  & ${NavMenuItem}:nth-child(1) {
-    padding-top: 0.75rem;
-  }
 `
+
 const ClaimRewardButton = styled(ButtonPrimary)`
   margin-top: 20px;
   padding: 11px;
@@ -223,7 +198,7 @@ export default function Menu() {
         hasArrow
       >
         {FAUCET_NETWORKS.includes(chainId) && (
-          <MenuButton
+          <MenuItem
             onClick={() => {
               toggleFaucetPopup()
               mixpanelHandler(MIXPANEL_TYPE.FAUCET_MENU_CLICKED)
@@ -233,123 +208,137 @@ export default function Menu() {
             <Text width="max-content">
               <Trans>Faucet</Trans>
             </Text>
-          </MenuButton>
+          </MenuItem>
         )}
 
         {bridgeLink && (
-          <ExternalNavMenuItem href={bridgeLink}>
-            <Share2 size={14} />
-            <Text width="max-content">
+          <MenuItem>
+            <ExternalLink href={bridgeLink}>
+              <Share2 />
               <Trans>Bridge Assets</Trans>
-            </Text>
-          </ExternalNavMenuItem>
+            </ExternalLink>
+          </MenuItem>
         )}
 
         <DiscoverWrapper>
-          <NavMenuItem to={'/discover?tab=trending_soon'} onClick={toggle}>
-            <DiscoverIcon size={16} />
+          <NavLink to={'/discover?tab=trending_soon'} onClick={toggle}>
+            <DiscoverIconSvg />
             <SlideToUnlock>
-              <Text width="max-content">
-                <Trans>Discover</Trans>
-              </Text>
+              <Trans>Discover</Trans>
             </SlideToUnlock>
             <NewLabel>
               <Trans>New</Trans>
             </NewLabel>
-          </NavMenuItem>
+          </NavLink>
         </DiscoverWrapper>
 
         <CampaignWrapper>
-          <NavMenuItem to="/campaigns" onClick={toggle}>
-            <Award size={14} />
+          <NavLink to="/campaigns" onClick={toggle}>
+            <Award />
             <Trans>Campaigns</Trans>
-          </NavMenuItem>
+          </NavLink>
         </CampaignWrapper>
 
         {under1440 && (
-          <NavDropDown
-            icon={<Info size={16} />}
-            title={'About'}
-            link={'/about'}
-            options={[
-              { link: '/about/kyberswap', label: 'Kyberswap' },
-              { link: '/about/knc', label: 'KNC' },
-            ]}
-          />
-        )}
-
-        <NavMenuItem to="/referral" onClick={toggle}>
-          <UserPlus size={16} />
-          <Trans>Referral</Trans>
-        </NavMenuItem>
-        {under1200 && (
-          <>
+          <MenuItem>
             <NavDropDown
-              icon={<Info size={16} />}
+              icon={<Info />}
+              title={'About'}
+              link={'/about'}
+              options={[
+                { link: '/about/kyberswap', label: 'Kyberswap' },
+                { link: '/about/knc', label: 'KNC' },
+              ]}
+            />
+          </MenuItem>
+        )}
+        <MenuItem>
+          <NavLink to="/referral" onClick={toggle}>
+            <UserPlus />
+            <Trans>Referral</Trans>
+          </NavLink>
+        </MenuItem>
+        {under1200 && (
+          <MenuItem>
+            <NavDropDown
+              icon={<Info />}
               title={'KyberDAO'}
               link={'/kyberdao/stake-knc'}
               options={[
                 { link: '/kyberdao/stake-knc', label: 'Stake KNC' },
                 { link: '/kyberdao/vote', label: 'Vote' },
+                { link: 'https://kyberswap.canny.io/feature-request', label: 'Feature Request', external: true },
               ]}
             />
-            <ExternalNavMenuItem href="https://kyberswap.canny.io/feature-request" onClick={toggle}>
-              <StyledLightIcon />
-              <Trans>Feature Request</Trans>
-            </ExternalNavMenuItem>
-          </>
+          </MenuItem>
         )}
         {!above1321 && (
-          <NavDropDown
-            icon={<PieChart size={16} />}
-            link="#"
-            title={'Analytics'}
-            options={[
-              { link: DMM_ANALYTICS_URL[chainId], label: t`Liquidity`, external: true },
-              {
-                link: AGGREGATOR_ANALYTICS_URL,
-                label: t`Aggregator`,
-                external: true,
-              },
-            ]}
-          />
+          <MenuItem>
+            <NavDropDown
+              icon={<PieChart />}
+              link="#"
+              title={'Analytics'}
+              options={[
+                { link: DMM_ANALYTICS_URL[chainId], label: t`Liquidity`, external: true },
+                {
+                  link: AGGREGATOR_ANALYTICS_URL,
+                  label: t`Aggregator`,
+                  external: true,
+                },
+              ]}
+            />
+          </MenuItem>
         )}
-        <ExternalNavMenuItem href="https://docs.kyberswap.com">
-          <BookOpen size={16} />
-          <Trans>Docs</Trans>
-        </ExternalNavMenuItem>
+        <MenuItem>
+          <ExternalLink href="https://docs.kyberswap.com">
+            <BookOpen />
+            <Trans>Docs</Trans>
+          </ExternalLink>
+        </MenuItem>
 
-        <ExternalNavMenuItem href="https://kyberswap.canny.io/" onClick={toggle}>
-          <StyledRoadMapIcon />
-          <Trans>Roadmap</Trans>
-        </ExternalNavMenuItem>
+        <MenuItem>
+          <ExternalLink href="https://kyberswap.canny.io/" onClick={toggle}>
+            <RoadMapIcon />
+            <Trans>Roadmap</Trans>
+          </ExternalLink>
+        </MenuItem>
 
-        <ExternalNavMenuItem href="https://gov.kyber.org">
-          <MessageCircle size={16} />
-          <Trans>Forum</Trans>
-        </ExternalNavMenuItem>
+        <MenuItem>
+          <ExternalLink href="https://gov.kyber.org">
+            <MessageCircle />
+            <Trans>Forum</Trans>
+          </ExternalLink>
+        </MenuItem>
 
         {under1440 && (
-          <ExternalNavMenuItem href="https://blog.kyberswap.com">
-            <StyledBlogIcon />
-            <Trans>Blog</Trans>
-          </ExternalNavMenuItem>
+          <MenuItem>
+            <ExternalLink href="https://blog.kyberswap.com">
+              <BlogIcon />
+              <Trans>Blog</Trans>
+            </ExternalLink>
+          </MenuItem>
         )}
 
-        <ExternalNavMenuItem href="/15022022KyberSwapTermsofUse.pdf">
-          <FileText size={16} />
-          <Trans>Terms</Trans>
-        </ExternalNavMenuItem>
+        <MenuItem>
+          <ExternalLink href="/15022022KyberSwapTermsofUse.pdf">
+            <FileText />
+            <Trans>Terms</Trans>
+          </ExternalLink>
+        </MenuItem>
         {ENV_LEVEL < ENV_TYPE.PROD && (
-          <NavMenuItem to="/swap-legacy" onClick={toggle}>
-            <Triangle size={14} />
-            <Trans>Swap Legacy</Trans>
-          </NavMenuItem>
+          <MenuItem>
+            <NavLink to="/swap-legacy" onClick={toggle}>
+              <Triangle size={14} />
+              <Trans>Swap Legacy</Trans>
+            </NavLink>
+          </MenuItem>
         )}
-        <ExternalNavMenuItem href="https://forms.gle/gLiNsi7iUzHws2BY8">
-          <Edit size={16} />
-          <Trans>Business Enquiries</Trans>
-        </ExternalNavMenuItem>
+        <MenuItem>
+          <ExternalLink href="https://forms.gle/gLiNsi7iUzHws2BY8">
+            <Edit />
+            <Trans>Business Enquiries</Trans>
+          </ExternalLink>
+        </MenuItem>
         <AutoRow justify="center">
           <ClaimRewardButton
             disabled={!account || !isEVM || !(networkInfo as EVMNetworkInfo).classic.claimReward || pendingTx}
