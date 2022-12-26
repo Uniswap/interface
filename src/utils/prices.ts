@@ -19,9 +19,13 @@ const INPUT_FRACTION_AFTER_FEE = ONE_HUNDRED_PERCENT.subtract(THIRTY_BIPS_FEE)
 
 export function computeRealizedPriceImpact(
   trade: Trade<Currency, Currency, TradeType> | FloodTrade<Currency, Currency, TradeType>
-): Percent {
-  const realizedLpFeePercent = computeRealizedLPFeePercent(trade)
-  return trade.priceImpact.subtract(realizedLpFeePercent)
+): Percent | undefined {
+  if (trade instanceof Trade) {
+    const realizedLpFeePercent = computeRealizedLPFeePercent(trade)
+    return trade.priceImpact.subtract(realizedLpFeePercent) as Percent
+  } else {
+    return undefined
+  }
 }
 
 // computes realized lp fee as a percent
@@ -86,7 +90,6 @@ const IMPACT_TIERS = [
   ALLOWED_PRICE_IMPACT_MEDIUM,
   ALLOWED_PRICE_IMPACT_LOW,
 ]
-
 type WarningSeverity = 0 | 1 | 2 | 3 | 4
 export function warningSeverity(priceImpact: Percent | undefined): WarningSeverity {
   if (!priceImpact) return 4

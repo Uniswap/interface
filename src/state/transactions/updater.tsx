@@ -7,7 +7,7 @@ import LibUpdater from 'lib/hooks/transactions/updater'
 import { formatPercentInBasisPointsNumber, formatToDecimal, getTokenAddress } from 'lib/utils/analytics'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { InterfaceTrade } from 'state/routing/types'
+import { InterfaceFloodTrade, InterfaceTrade } from 'state/routing/types'
 import { TransactionType } from 'state/transactions/types'
 import { computeRealizedPriceImpact } from 'utils/prices'
 
@@ -18,7 +18,7 @@ import { checkedTransaction, finalizeTransaction } from './reducer'
 import { SerializableTransactionReceipt } from './types'
 
 interface AnalyticsEventProps {
-  trade: InterfaceTrade<Currency, Currency, TradeType>
+  trade: InterfaceTrade<Currency, Currency, TradeType> | InterfaceFloodTrade<Currency, Currency, TradeType>
   hash: string | undefined
   allowedSlippage: Percent
   succeeded: boolean
@@ -33,7 +33,7 @@ const formatAnalyticsEventProperties = ({ trade, hash, allowedSlippage, succeede
   token_out_symbol: trade.outputAmount.currency.symbol,
   token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
   token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
-  price_impact_basis_points: formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)),
+  price_impact_basis_points: formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade) ?? new Percent(1, 100)),
   allowed_slippage_basis_points: formatPercentInBasisPointsNumber(allowedSlippage),
   chain_id:
     trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId

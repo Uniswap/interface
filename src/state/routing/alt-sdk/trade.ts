@@ -170,26 +170,26 @@ export class FloodTrade<TInput extends Currency, TOutput extends Currency, TTrad
    * The cached result of the price impact computation
    * @private
    */
-  private _priceImpact: Percent | undefined
+  //  private _priceImpact: Percent | undefined
   /**
+   * Not possible to estimate price impact for a flood trade. TBD on how to handle this.
    * Returns the percent difference between the route's mid price and the price impact
    */
-  public get priceImpact(): Percent {
-    if (this._priceImpact) {
-      return this._priceImpact
-    }
+  // public get priceImpact(): Percent {
+  //   if (this._priceImpact) {
+  //     return this._priceImpact
+  //   }
 
-    // let spotOutputAmount = CurrencyAmount.fromRawAmount(this.outputAmount.currency, 0)
-    // for (const { route, inputAmount } of this.swaps) {
-    //   const midPrice = route.midPrice
-    //   spotOutputAmount = spotOutputAmount.add(midPrice.quote(inputAmount))
-    // }
+  //   let spotOutputAmount = CurrencyAmount.fromRawAmount(this.outputAmount.currency, 0)
+  //   for (const { route, inputAmount } of this.swaps) {
+  //     const midPrice = route.midPrice
+  //     spotOutputAmount = spotOutputAmount.add(midPrice.quote(inputAmount))
+  //   }
 
-    // const priceImpact = spotOutputAmount.subtract(this.outputAmount).divide(spotOutputAmount)
-    //this._priceImpact = new Percent(priceImpact.numerator, priceImpact.denominator)
-    this._priceImpact = new Percent(5, 100)
-    return this._priceImpact
-  }
+  //   const priceImpact = spotOutputAmount.subtract(this.outputAmount).divide(spotOutputAmount)
+  //   this._priceImpact = new Percent(priceImpact.numerator, priceImpact.denominator)
+  //   return this._priceImpact
+  // }
 
   /**
    * Get the minimum amount that must be received from this trade for the given slippage tolerance

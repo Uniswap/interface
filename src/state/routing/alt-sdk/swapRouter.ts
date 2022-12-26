@@ -541,6 +541,8 @@ export abstract class SwapRouterFlood {
       | V3Trade<Currency, Currency, TradeType>
       | MixedRouteTrade<Currency, Currency, TradeType>
   ): boolean {
-    return !(trade instanceof V2Trade) && trade.priceImpact.greaterThan(REFUND_ETH_PRICE_IMPACT_THRESHOLD)
+    // return !(trade instanceof V2Trade) && trade.priceImpact.greaterThan(REFUND_ETH_PRICE_IMPACT_THRESHOLD)
+    // tbd how price impact should be calculated for flood trades
+    return false
   }
 }
