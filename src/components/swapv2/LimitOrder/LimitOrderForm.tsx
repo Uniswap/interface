@@ -170,9 +170,8 @@ const LimitOrderForm = function LimitOrderForm({
 
   const setPriceRateMarket = () => {
     try {
-      if (!loadingTrade && currencyIn && tradeInfo) {
-        onSetRate(tradeInfo?.price?.toSignificant(6) ?? '', tradeInfo?.price?.invert().toSignificant(6) ?? '')
-      }
+      if (loadingTrade || !tradeInfo) return
+      onSetRate(tradeInfo?.price?.toSignificant(6) ?? '', tradeInfo?.price?.invert().toSignificant(6) ?? '')
     } catch (error) {}
   }
 

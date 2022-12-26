@@ -68,7 +68,7 @@ import {
   TabWrapper,
   Wrapper,
 } from 'components/swapv2/styleds'
-import { AGGREGATOR_WAITING_TIME, APP_PATHS, SUPPORT_LIMIT_ORDER, TIME_TO_REFRESH_SWAP_RATE } from 'constants/index'
+import { AGGREGATOR_WAITING_TIME, APP_PATHS, TIME_TO_REFRESH_SWAP_RATE } from 'constants/index'
 import { STABLE_COINS_ADDRESS } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
 import { useAllTokens, useIsLoadedTokenDefault } from 'hooks/Tokens'
@@ -101,7 +101,7 @@ import {
   useUserSlippageTolerance,
 } from 'state/user/hooks'
 import { TYPE } from 'theme'
-import { formattedNum } from 'utils'
+import { formattedNum, isSupportLimitOrder } from 'utils'
 import { Aggregator } from 'utils/aggregator'
 import { currencyId } from 'utils/currencyId'
 import { halfAmountSpend, maxAmountSpend } from 'utils/maxAmountSpend'
@@ -686,7 +686,7 @@ export default function Swap() {
                       <Trans>Swap</Trans>
                     </Text>
                   </Tab>
-                  {SUPPORT_LIMIT_ORDER && (
+                  {isSupportLimitOrder(chainId) && (
                     <Tab onClick={() => onClickTab(TAB.LIMIT)} isActive={isLimitPage}>
                       <Text fontSize={20} fontWeight={500}>
                         <Trans>Limit</Trans>

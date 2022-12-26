@@ -5,8 +5,9 @@ import JSBI from 'jsbi'
 import Numeral from 'numeral'
 
 import { GET_BLOCK, GET_BLOCKS } from 'apollo/queries'
+import { ENV_LEVEL, ENV_TYPE } from 'constants/env'
 import { DEFAULT_GAS_LIMIT_MARGIN, ZERO_ADDRESS } from 'constants/index'
-import { NETWORKS_INFO, isEVM } from 'constants/networks'
+import { NETWORKS_INFO, NETWORKS_INFO_CONFIG, isEVM } from 'constants/networks'
 import { KNC, KNCL_ADDRESS } from 'constants/tokens'
 import { EVMWalletInfo, SUPPORTED_WALLET, SolanaWalletInfo, WalletInfo } from 'constants/wallets'
 import store from 'state'
@@ -419,3 +420,6 @@ export const isChristmasTime = () => {
   const currentTime = dayjs()
   return currentTime.month() === 11 && currentTime.date() >= 15
 }
+
+export const isSupportLimitOrder = (chainId: ChainId) =>
+  ENV_LEVEL < ENV_TYPE.PROD && NETWORKS_INFO_CONFIG[chainId].limitOrder
