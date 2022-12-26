@@ -7,7 +7,7 @@ import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { GetQuoteResult, InterfaceTrade, TradeState } from 'state/routing/types'
+import { GetQuoteResult, InterfaceFloodTrade, InterfaceTrade, TradeState } from 'state/routing/types'
 import { FloodQuoteResult } from 'state/routing/useFloodAPI'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 
@@ -83,10 +83,14 @@ export function useDerivedSwapInfo(): {
   parsedAmount: CurrencyAmount<Currency> | undefined
   inputError?: ReactNode
   trade: {
-    trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
+    trade:
+      | InterfaceTrade<Currency, Currency, TradeType>
+      | InterfaceFloodTrade<Currency, Currency, TradeType>
+      | undefined
     state: TradeState
     uniswapQuote: GetQuoteResult | undefined
     floodQuote: FloodQuoteResult | undefined
+    isUsingFlood: boolean
   }
   allowedSlippage: Percent
 } {

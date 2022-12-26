@@ -4,7 +4,8 @@ import { ModalName } from '@uniswap/analytics-events'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
+import { FloodTrade } from 'state/routing/alt-sdk/trade'
+import { InterfaceFloodTrade, InterfaceTrade } from 'state/routing/types'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
 import TransactionConfirmationModal, {
@@ -31,8 +32,8 @@ export default function ConfirmSwapModal({
   fiatValueOutput,
 }: {
   isOpen: boolean
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
-  originalTrade: Trade<Currency, Currency, TradeType> | undefined
+  trade: InterfaceTrade<Currency, Currency, TradeType> | InterfaceFloodTrade<Currency, Currency, TradeType> | undefined
+  originalTrade: Trade<Currency, Currency, TradeType> | FloodTrade<Currency, Currency, TradeType> | undefined
   attemptingTxn: boolean
   txHash: string | undefined
   recipient: string | null

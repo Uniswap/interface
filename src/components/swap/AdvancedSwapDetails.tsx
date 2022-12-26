@@ -6,7 +6,7 @@ import { LoadingRows } from 'components/Loader/styled'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useMemo } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
+import { InterfaceFloodTrade, InterfaceTrade } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 
 import { Separator, ThemedText } from '../../theme'
@@ -21,7 +21,7 @@ const StyledCard = styled(Card)`
 `
 
 interface AdvancedSwapDetailsProps {
-  trade?: InterfaceTrade<Currency, Currency, TradeType>
+  trade?: InterfaceTrade<Currency, Currency, TradeType> | InterfaceFloodTrade<Currency, Currency, TradeType>
   allowedSlippage: Percent
   syncing?: boolean
   hideInfoTooltips?: boolean

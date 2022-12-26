@@ -90,9 +90,10 @@ export class FloodTrade<TInput extends Currency, TOutput extends Currency, TTrad
     }
     this.tradeType = tradeType
 
+    // we disable this check as we allow routes to have different input and output currencies
     // each route must have the same input and output currency
-    const inputCurrency = this.swaps[0].inputAmount.currency
-    const outputCurrency = this.swaps[0].outputAmount.currency
+    // const inputCurrency = this.swaps[0].inputAmount.currency
+    // const outputCurrency = this.swaps[0].outputAmount.currency
     // invariant(
     //   this.swaps.every(({ route }) => inputCurrency.wrapped.equals(route.input.wrapped)),
     //   'INPUT_CURRENCY_MATCH'
@@ -178,15 +179,15 @@ export class FloodTrade<TInput extends Currency, TOutput extends Currency, TTrad
       return this._priceImpact
     }
 
-    let spotOutputAmount = CurrencyAmount.fromRawAmount(this.outputAmount.currency, 0)
-    for (const { route, inputAmount } of this.swaps) {
-      const midPrice = route.midPrice
-      spotOutputAmount = spotOutputAmount.add(midPrice.quote(inputAmount))
-    }
+    // let spotOutputAmount = CurrencyAmount.fromRawAmount(this.outputAmount.currency, 0)
+    // for (const { route, inputAmount } of this.swaps) {
+    //   const midPrice = route.midPrice
+    //   spotOutputAmount = spotOutputAmount.add(midPrice.quote(inputAmount))
+    // }
 
-    const priceImpact = spotOutputAmount.subtract(this.outputAmount).divide(spotOutputAmount)
-    this._priceImpact = new Percent(priceImpact.numerator, priceImpact.denominator)
-
+    // const priceImpact = spotOutputAmount.subtract(this.outputAmount).divide(spotOutputAmount)
+    //this._priceImpact = new Percent(priceImpact.numerator, priceImpact.denominator)
+    this._priceImpact = new Percent(5, 100)
     return this._priceImpact
   }
 

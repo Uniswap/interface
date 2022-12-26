@@ -10,6 +10,7 @@ import useENS from 'hooks/useENS'
 import { SignatureData } from 'hooks/useERC20Permit'
 import { useSwapCallArguments } from 'hooks/useSwapCallArguments'
 import { ReactNode, useMemo } from 'react'
+import { FloodTrade } from 'state/routing/alt-sdk/trade'
 
 import useSendSwapTransaction from './useSendSwapTransaction'
 
@@ -25,12 +26,13 @@ interface UseSwapCallbackReturns {
   error?: ReactNode
 }
 interface UseSwapCallbackArgs {
-  trade: Trade<Currency, Currency, TradeType> | undefined // trade to execute, required
+  trade: Trade<Currency, Currency, TradeType> | FloodTrade<Currency, Currency, TradeType> | undefined // trade to execute, required
   allowedSlippage: Percent // in bips
   recipientAddressOrName: string | null | undefined // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
   signatureData: SignatureData | null | undefined
   deadline: BigNumber | undefined
   feeOptions?: FeeOptions
+  isUsingFlood: boolean
 }
 
 // returns a function that will execute a swap, if the parameters are all valid
@@ -42,6 +44,7 @@ export function useSwapCallback({
   signatureData,
   deadline,
   feeOptions,
+  isUsingFlood = false,
 }: UseSwapCallbackArgs): UseSwapCallbackReturns {
   const { account, chainId, provider } = useWeb3React()
 
@@ -51,7 +54,8 @@ export function useSwapCallback({
     recipientAddressOrName,
     signatureData,
     deadline,
-    feeOptions
+    feeOptions,
+    isUsingFlood
   )
   const { callback } = useSendSwapTransaction(account, chainId, provider, trade, swapCalls)
 

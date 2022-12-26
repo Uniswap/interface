@@ -11,7 +11,7 @@ import ms from 'ms.macro'
 import { useMemo } from 'react'
 import { RouterPreference, useGetQuoteQuery } from 'state/routing/slice'
 
-import { GetQuoteResult, InterfaceTrade, TradeState } from './types'
+import { GetQuoteResult, InterfaceFloodTrade, InterfaceTrade, TradeState } from './types'
 import { FloodQuoteResult, isFloodQuote, useFloodAPI } from './useFloodAPI'
 import { computeRoutes, transformRoutesToTrade } from './utils'
 /**
@@ -27,9 +27,13 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   routerPreference: RouterPreference
 ): {
   state: TradeState
-  trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined
+  trade:
+    | InterfaceTrade<Currency, Currency, TTradeType>
+    | InterfaceFloodTrade<Currency, Currency, TTradeType>
+    | undefined
   uniswapQuote: GetQuoteResult | undefined
   floodQuote: FloodQuoteResult | undefined
+  isUsingFlood: boolean
 } {
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>
@@ -91,6 +95,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
         trade: undefined,
         uniswapQuote: undefined,
         floodQuote: undefined,
+        isUsingFlood: false,
       }
     }
 
@@ -101,6 +106,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
         trade: undefined,
         uniswapQuote: undefined,
         floodQuote: undefined,
+        isUsingFlood,
       }
     }
 
@@ -121,6 +127,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
         trade: undefined,
         uniswapQuote: undefined,
         floodQuote: undefined,
+        isUsingFlood,
       }
     }
 
@@ -132,9 +139,16 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
         trade,
         uniswapQuote: uniswapQuery.data,
         floodQuote: floodQuery.data,
+        isUsingFlood,
       }
     } catch (e) {
-      return { state: TradeState.INVALID, trade: undefined, uniswapQuote: undefined, floodQuote: undefined }
+      return {
+        state: TradeState.INVALID,
+        trade: undefined,
+        uniswapQuote: undefined,
+        floodQuote: undefined,
+        isUsingFlood: false,
+      }
     }
   }, [
     currencyIn,

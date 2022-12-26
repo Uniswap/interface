@@ -12,7 +12,7 @@ import { MouseoverTooltipContent } from 'components/Tooltip'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { useState } from 'react'
 import { ChevronDown, Info } from 'react-feather'
-import { InterfaceTrade } from 'state/routing/types'
+import { InterfaceFloodTrade, InterfaceTrade } from 'state/routing/types'
 import styled, { keyframes, useTheme } from 'styled-components/macro'
 import { HideSmall, ThemedText } from 'theme'
 
@@ -107,7 +107,7 @@ const Spinner = styled.div`
 `
 
 interface SwapDetailsInlineProps {
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
+  trade: InterfaceTrade<Currency, Currency, TradeType> | InterfaceFloodTrade<Currency, Currency, TradeType> | undefined
   syncing: boolean
   loading: boolean
   allowedSlippage: Percent

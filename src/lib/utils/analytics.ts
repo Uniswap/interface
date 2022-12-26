@@ -39,6 +39,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   txHash,
 }: {
   trade: InterfaceTrade<Currency, Currency, TradeType> | Trade<Currency, Currency, TradeType>
+
   txHash: string
 }) => ({
   transaction_hash: txHash,

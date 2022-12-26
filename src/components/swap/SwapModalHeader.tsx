@@ -1,12 +1,10 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent } from '@uniswap/analytics'
-import { EventName, SwapPriceUpdateUserResponse } from '@uniswap/analytics-events'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useEffect, useState } from 'react'
 import { AlertTriangle, ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
-import { InterfaceTrade } from 'state/routing/types'
+import { InterfaceFloodTrade, InterfaceTrade } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 
 import { useStablecoinValue } from '../../hooks/useStablecoinPrice'
@@ -41,21 +39,6 @@ const ArrowWrapper = styled.div`
   z-index: 2;
 `
 
-const formatAnalyticsEventProperties = (
-  trade: InterfaceTrade<Currency, Currency, TradeType>,
-  priceUpdate: number | undefined,
-  response: SwapPriceUpdateUserResponse
-) => ({
-  chain_id:
-    trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
-      ? trade.inputAmount.currency.chainId
-      : undefined,
-  response,
-  token_in_symbol: trade.inputAmount.currency.symbol,
-  token_out_symbol: trade.outputAmount.currency.symbol,
-  price_update_basis_points: priceUpdate,
-})
-
 export default function SwapModalHeader({
   trade,
   shouldLogModalCloseEvent,
@@ -65,7 +48,7 @@ export default function SwapModalHeader({
   showAcceptChanges,
   onAcceptChanges,
 }: {
-  trade: InterfaceTrade<Currency, Currency, TradeType>
+  trade: InterfaceTrade<Currency, Currency, TradeType> | InterfaceFloodTrade<Currency, Currency, TradeType>
   shouldLogModalCloseEvent: boolean
   setShouldLogModalCloseEvent: (shouldLog: boolean) => void
   allowedSlippage: Percent
@@ -89,12 +72,7 @@ export default function SwapModalHeader({
   }, [lastExecutionPrice, setLastExecutionPrice, trade.executionPrice])
 
   useEffect(() => {
-    if (shouldLogModalCloseEvent && showAcceptChanges)
-      sendAnalyticsEvent(
-        EventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED,
-        formatAnalyticsEventProperties(trade, priceUpdate, SwapPriceUpdateUserResponse.REJECTED)
-      )
-    setShouldLogModalCloseEvent(false)
+    if (shouldLogModalCloseEvent && showAcceptChanges) setShouldLogModalCloseEvent(false)
   }, [shouldLogModalCloseEvent, showAcceptChanges, setShouldLogModalCloseEvent, trade, priceUpdate])
 
   return (

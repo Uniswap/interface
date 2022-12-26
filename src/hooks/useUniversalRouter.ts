@@ -6,6 +6,7 @@ import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback } from 'react'
+import { FloodTrade } from 'state/routing/alt-sdk/trade'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import isZero from 'utils/isZero'
 import { swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
@@ -20,7 +21,7 @@ interface SwapOptions {
 }
 
 export function useUniversalRouterSwapCallback(
-  trade: Trade<Currency, Currency, TradeType> | undefined,
+  trade: Trade<Currency, Currency, TradeType> | FloodTrade<Currency, Currency, TradeType> | undefined,
   options: SwapOptions
 ) {
   const { account, chainId, provider } = useWeb3React()
@@ -32,12 +33,15 @@ export function useUniversalRouterSwapCallback(
       if (!provider) throw new Error('missing provider')
       if (!trade) throw new Error('missing trade')
 
-      const { calldata: data, value } = SwapRouter.swapERC20CallParameters(trade, {
-        slippageTolerance: options.slippageTolerance,
-        deadlineOrPreviousBlockhash: options.deadline?.toString(),
-        inputTokenPermit: options.permit,
-        fee: options.feeOptions,
-      })
+      const { calldata: data, value } = SwapRouter.swapERC20CallParameters(
+        trade as Trade<Currency, Currency, TradeType>,
+        {
+          slippageTolerance: options.slippageTolerance,
+          deadlineOrPreviousBlockhash: options.deadline?.toString(),
+          inputTokenPermit: options.permit,
+          fee: options.feeOptions,
+        }
+      )
       const tx = {
         from: account,
         to: UNIVERSAL_ROUTER_ADDRESS(chainId),

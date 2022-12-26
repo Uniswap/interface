@@ -4,6 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import { usePermit2Enabled } from 'featureFlags/flags/permit2'
 import { SwapCallbackState, useSwapCallback as useLibSwapCallBack } from 'lib/hooks/swap/useSwapCallback'
 import { ReactNode, useMemo } from 'react'
+import { FloodTrade } from 'state/routing/alt-sdk/trade'
 
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { TransactionType } from '../state/transactions/types'
@@ -17,11 +18,12 @@ import { useUniversalRouterSwapCallback } from './useUniversalRouter'
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
 export function useSwapCallback(
-  trade: Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
+  trade: Trade<Currency, Currency, TradeType> | FloodTrade<Currency, Currency, TradeType> | undefined, // trade to execute, required
   allowedSlippage: Percent, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
   signatureData: SignatureData | undefined | null,
-  permit: Permit | undefined
+  permit: Permit | undefined,
+  isUsingFlood: boolean
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: ReactNode | null } {
   const { account } = useWeb3React()
 
@@ -43,6 +45,7 @@ export function useSwapCallback(
     recipientAddressOrName: recipient,
     signatureData,
     deadline,
+    isUsingFlood,
   })
   const universalRouterSwapCallback = useUniversalRouterSwapCallback(permit2Enabled ? trade : undefined, {
     slippageTolerance: allowedSlippage,

@@ -8,7 +8,8 @@ import { L2_CHAIN_IDS } from 'constants/chains'
 import JSBI from 'jsbi'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useMemo } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
+import { FloodTrade } from 'state/routing/alt-sdk/trade'
+import { InterfaceFloodTrade, InterfaceTrade } from 'state/routing/types'
 
 import useGasPrice from './useGasPrice'
 import useStablecoinPrice, { useStablecoinValue } from './useStablecoinPrice'
@@ -35,7 +36,9 @@ const V2_SWAP_HOP_GAS_ESTIMATE = 50_000
  * V2 logic is inspired by:
  * https://github.com/Uniswap/smart-order-router/blob/main/src/routers/alpha-router/gas-models/v2/v2-heuristic-gas-model.ts
  */
-function guesstimateGas(trade: Trade<Currency, Currency, TradeType> | undefined): number | undefined {
+function guesstimateGas(
+  trade: Trade<Currency, Currency, TradeType> | FloodTrade<Currency, Currency, TradeType> | undefined
+): number | undefined {
   if (trade) {
     let gas = 0
     for (const { route } of trade.swaps) {
@@ -74,7 +77,7 @@ const MAX_AUTO_SLIPPAGE_TOLERANCE = new Percent(25, 100) // 25%
  * Returns slippage tolerance based on values from current trade, gas estimates from api, and active network.
  */
 export default function useAutoSlippageTolerance(
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
+  trade: InterfaceTrade<Currency, Currency, TradeType> | InterfaceFloodTrade<Currency, Currency, TradeType> | undefined
 ): Percent {
   const { chainId } = useWeb3React()
   const onL2 = chainId && L2_CHAIN_IDS.includes(chainId)

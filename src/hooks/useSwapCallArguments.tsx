@@ -5,6 +5,8 @@ import { FeeOptions } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
 import { useMemo } from 'react'
+import { SwapRouterFlood } from 'state/routing/alt-sdk/swapRouter'
+import { FloodTrade } from 'state/routing/alt-sdk/trade'
 import approveAmountCalldata from 'utils/approveAmountCalldata'
 
 import { useArgentWalletContract } from './useArgentWalletContract'
@@ -25,12 +27,13 @@ interface SwapCall {
  * @param signatureData the signature data of the permit of the input token amount, if available
  */
 export function useSwapCallArguments(
-  trade: Trade<Currency, Currency, TradeType> | undefined,
+  trade: Trade<Currency, Currency, TradeType> | FloodTrade<Currency, Currency, TradeType> | undefined,
   allowedSlippage: Percent,
   recipientAddressOrName: string | null | undefined,
   signatureData: SignatureData | null | undefined,
   deadline: BigNumber | undefined,
-  feeOptions: FeeOptions | undefined
+  feeOptions: FeeOptions | undefined,
+  usingFlood: boolean
 ): SwapCall[] {
   const { account, chainId, provider } = useWeb3React()
 
@@ -44,36 +47,61 @@ export function useSwapCallArguments(
     const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
     if (!swapRouterAddress) return []
 
-    const { value, calldata } = SwapRouter.swapCallParameters(trade, {
-      fee: feeOptions,
-      recipient,
-      slippageTolerance: allowedSlippage,
-      ...(signatureData
-        ? {
-            inputTokenPermit:
-              'allowed' in signatureData
-                ? {
-                    expiry: signatureData.deadline,
-                    nonce: signatureData.nonce,
-                    s: signatureData.s,
-                    r: signatureData.r,
-                    v: signatureData.v as any,
-                  }
-                : {
-                    deadline: signatureData.deadline,
-                    amount: signatureData.amount,
-                    s: signatureData.s,
-                    r: signatureData.r,
-                    v: signatureData.v as any,
-                  },
-          }
-        : {}),
+    const { value, calldata } =
+      trade instanceof Trade && !usingFlood
+        ? SwapRouter.swapCallParameters(trade, {
+            fee: feeOptions,
+            recipient,
+            slippageTolerance: allowedSlippage,
+            ...(signatureData
+              ? {
+                  inputTokenPermit:
+                    'allowed' in signatureData
+                      ? {
+                          expiry: signatureData.deadline,
+                          nonce: signatureData.nonce,
+                          s: signatureData.s,
+                          r: signatureData.r,
+                          v: signatureData.v as any,
+                        }
+                      : {
+                          deadline: signatureData.deadline,
+                          amount: signatureData.amount,
+                          s: signatureData.s,
+                          r: signatureData.r,
+                          v: signatureData.v as any,
+                        },
+                }
+              : {}),
+            deadlineOrPreviousBlockhash: deadline.toString(),
+          })
+        : SwapRouterFlood.swapCallParameters(trade as FloodTrade<Currency, Currency, TradeType>, {
+            fee: feeOptions,
+            recipient,
+            slippageTolerance: allowedSlippage,
+            ...(signatureData
+              ? {
+                  inputTokenPermit:
+                    'allowed' in signatureData
+                      ? {
+                          expiry: signatureData.deadline,
+                          nonce: signatureData.nonce,
+                          s: signatureData.s,
+                          r: signatureData.r,
+                          v: signatureData.v as any,
+                        }
+                      : {
+                          deadline: signatureData.deadline,
+                          amount: signatureData.amount,
+                          s: signatureData.s,
+                          r: signatureData.r,
+                          v: signatureData.v as any,
+                        },
+                }
+              : {}),
 
-      deadlineOrPreviousBlockhash: deadline.toString(),
-    })
-
-    console.log(value)
-    console.log(calldata)
+            deadlineOrPreviousBlockhash: deadline.toString(),
+          })
 
     if (argentWalletContract && trade.inputAmount.currency.isToken) {
       return [
@@ -111,5 +139,6 @@ export function useSwapCallArguments(
     recipient,
     signatureData,
     trade,
+    usingFlood,
   ])
 }

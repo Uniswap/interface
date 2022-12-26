@@ -15,7 +15,7 @@ import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
 import { memo, useState } from 'react'
 import { Plus } from 'react-feather'
-import { InterfaceTrade } from 'state/routing/types'
+import { InterfaceFloodTrade, InterfaceTrade } from 'state/routing/types'
 import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { Separator, ThemedText } from 'theme'
@@ -43,7 +43,7 @@ const OpenCloseIcon = styled(Plus)<{ open?: boolean }>`
 `
 
 interface SwapRouteProps extends React.HTMLAttributes<HTMLDivElement> {
-  trade: InterfaceTrade<Currency, Currency, TradeType>
+  trade: InterfaceTrade<Currency, Currency, TradeType> | InterfaceFloodTrade<Currency, Currency, TradeType>
   syncing: boolean
   fixedOpen?: boolean // fixed in open state, hide open/close icon
 }
@@ -129,7 +129,9 @@ const V2_DEFAULT_FEE_TIER = 3000
 /**
  * Loops through all routes on a trade and returns an array of diagram entries.
  */
-export function getTokenPath(trade: InterfaceTrade<Currency, Currency, TradeType>): RoutingDiagramEntry[] {
+export function getTokenPath(
+  trade: InterfaceTrade<Currency, Currency, TradeType> | InterfaceFloodTrade<Currency, Currency, TradeType>
+): RoutingDiagramEntry[] {
   return trade.swaps.map(({ route: { path: tokenPath, pools, protocol }, inputAmount, outputAmount }) => {
     const portion =
       trade.tradeType === TradeType.EXACT_INPUT

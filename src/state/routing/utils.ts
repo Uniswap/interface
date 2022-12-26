@@ -3,7 +3,7 @@ import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 
-import { GetQuoteResult, InterfaceTrade, V2PoolInRoute, V3PoolInRoute } from './types'
+import { GetQuoteResult, InterfaceFloodTrade, InterfaceTrade, V2PoolInRoute, V3PoolInRoute } from './types'
 
 /**
  * Transforms a Routing API quote into an array of routes that can be used to create
@@ -75,7 +75,7 @@ export function transformRoutesToTrade<TTradeType extends TradeType>(
   blockNumber?: string | null,
   gasUseEstimateUSD?: CurrencyAmount<Token> | null,
   isUsingFlood = false
-): InterfaceTrade<Currency, Currency, TTradeType> {
+): InterfaceTrade<Currency, Currency, TTradeType> | InterfaceFloodTrade<Currency, Currency, TTradeType> {
   const v2Routes =
     route
       ?.filter((r): r is typeof route[0] & { routev2: NonNullable<typeof route[0]['routev2']> } => r.routev2 !== null)
@@ -91,14 +91,19 @@ export function transformRoutesToTrade<TTradeType extends TradeType>(
         (r): r is typeof route[0] & { mixedRoute: NonNullable<typeof route[0]['mixedRoute']> } => r.mixedRoute !== null
       )
       .map(({ mixedRoute, inputAmount, outputAmount }) => ({ mixedRoute, inputAmount, outputAmount })) ?? []
-  return new InterfaceTrade({
-    v2Routes,
-    v3Routes,
-    mixedRoutes,
-    tradeType,
-    gasUseEstimateUSD,
-    blockNumber,
-  })
+
+  const trade = isUsingFlood
+    ? new InterfaceFloodTrade({ v2Routes, v3Routes, mixedRoutes, tradeType, gasUseEstimateUSD, blockNumber })
+    : new InterfaceTrade({
+        v2Routes,
+        v3Routes,
+        mixedRoutes,
+        tradeType,
+        gasUseEstimateUSD,
+        blockNumber,
+      })
+
+  return trade
 }
 
 const parseToken = ({ address, chainId, decimals, symbol }: GetQuoteResult['route'][0][0]['tokenIn']): Token => {

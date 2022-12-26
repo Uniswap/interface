@@ -6,6 +6,7 @@ import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo, useState } from 'react'
+import { FloodTrade } from 'state/routing/alt-sdk/trade'
 
 import { SWAP_ROUTER_ADDRESSES } from '../constants/addresses'
 import { DAI, UNI, USDC_MAINNET } from '../constants/tokens'
@@ -259,7 +260,7 @@ export function useERC20Permit(
 }
 
 export function useERC20PermitFromTrade(
-  trade: Trade<Currency, Currency, TradeType> | undefined,
+  trade: Trade<Currency, Currency, TradeType> | FloodTrade<Currency, Currency, TradeType> | undefined,
   allowedSlippage: Percent,
   transactionDeadline: BigNumber | undefined
 ) {

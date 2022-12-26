@@ -18,14 +18,14 @@ import usePermit, { PermitState } from 'hooks/usePermit2'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
-import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ReactNode } from 'react'
 import { AlertTriangle, ArrowDown, CheckCircle, HelpCircle, Info } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useToggleWalletModal } from 'state/application/hooks'
-import { InterfaceTrade } from 'state/routing/types'
+import { FloodTrade } from 'state/routing/alt-sdk/trade'
+import { InterfaceFloodTrade, InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components/macro'
@@ -125,7 +125,7 @@ const DetailsSwapSection = styled(SwapSection)`
 `
 
 export function getIsValidSwapQuote(
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined,
+  trade: InterfaceTrade<Currency, Currency, TradeType> | InterfaceFloodTrade<Currency, Currency, TradeType> | undefined,
   tradeState: TradeState,
   swapInputError?: ReactNode
 ): boolean {
@@ -197,7 +197,7 @@ export default function Swap({ className }: { className?: string }) {
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
   const {
-    trade: { state: tradeState, trade },
+    trade: { state: tradeState, trade, isUsingFlood },
     allowedSlippage,
     currencyBalances,
     parsedAmount,
@@ -265,7 +265,7 @@ export default function Swap({ className }: { className?: string }) {
   // modal and loading
   const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
     showConfirm: boolean
-    tradeToConfirm: Trade<Currency, Currency, TradeType> | undefined
+    tradeToConfirm: Trade<Currency, Currency, TradeType> | FloodTrade<Currency, Currency, TradeType> | undefined
     attemptingTxn: boolean
     swapErrorMessage: string | undefined
     txHash: string | undefined
@@ -388,7 +388,8 @@ export default function Swap({ className }: { className?: string }) {
     allowedSlippage,
     recipient,
     signatureData,
-    permit
+    permit,
+    isUsingFlood
   )
 
   const handleSwap = useCallback(() => {
@@ -510,10 +511,7 @@ export default function Swap({ className }: { className?: string }) {
       // Set the current datetime as the time of receipt of latest swap quote.
       setSwapQuoteReceivedDate(now)
       // Log swap quote.
-      sendAnalyticsEvent(
-        EventName.SWAP_QUOTE_RECEIVED,
-        formatSwapQuoteReceivedEventProperties(trade, trade.gasUseEstimateUSD ?? undefined, fetchingSwapQuoteStartTime)
-      )
+
       // Latest swap quote has just been logged, so we don't need to log the current trade anymore
       // unless user inputs change again and a new trade is in the process of being generated.
       setNewSwapQuoteNeedsLogging(false)

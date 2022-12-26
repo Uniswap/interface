@@ -3,6 +3,7 @@ import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import useSwapApproval from 'lib/hooks/swap/useSwapApproval'
 import { ApprovalState, useApproval } from 'lib/hooks/useApproval'
 import { useCallback } from 'react'
+import { FloodTrade } from 'state/routing/alt-sdk/trade'
 
 import { useHasPendingApproval, useTransactionAdder } from '../state/transactions/hooks'
 import { TransactionType } from '../state/transactions/types'
@@ -30,7 +31,7 @@ export function useApproveCallback(
 }
 
 export function useApproveCallbackFromTrade(
-  trade: Trade<Currency, Currency, TradeType> | undefined,
+  trade: Trade<Currency, Currency, TradeType> | FloodTrade<Currency, Currency, TradeType> | undefined,
   allowedSlippage: Percent
 ): [ApprovalState, () => Promise<void>] {
   const [approval, getApproval] = useSwapApproval(trade, allowedSlippage, useHasPendingApproval)

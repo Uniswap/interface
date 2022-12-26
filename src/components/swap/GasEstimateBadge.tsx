@@ -5,7 +5,7 @@ import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { RowFixed } from 'components/Row'
 import { MouseoverTooltipContent } from 'components/Tooltip'
-import { InterfaceTrade } from 'state/routing/types'
+import { InterfaceFloodTrade, InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -37,7 +37,11 @@ export default function GasEstimateBadge({
   showRoute,
   disableHover,
 }: {
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined | null // dollar amount in active chain's stablecoin
+  trade:
+    | InterfaceTrade<Currency, Currency, TradeType>
+    | InterfaceFloodTrade<Currency, Currency, TradeType>
+    | undefined
+    | null // dollar amount in active chain's stablecoin
   loading: boolean
   showRoute?: boolean // show route instead of gas estimation summary
   disableHover?: boolean

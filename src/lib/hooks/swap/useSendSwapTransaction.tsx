@@ -6,8 +6,8 @@ import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { EventName } from '@uniswap/analytics-events'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useMemo } from 'react'
+import { FloodTrade } from 'state/routing/alt-sdk/trade'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import isZero from 'utils/isZero'
 import { swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
@@ -39,7 +39,7 @@ export default function useSendSwapTransaction(
   account: string | null | undefined,
   chainId: number | undefined,
   provider: JsonRpcProvider | undefined,
-  trade: Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
+  trade: Trade<Currency, Currency, TradeType> | FloodTrade<Currency, Currency, TradeType> | undefined, // trade to execute, required
   swapCalls: SwapCall[]
 ): { callback: null | (() => Promise<TransactionResponse>) } {
   return useMemo(() => {
@@ -119,10 +119,6 @@ export default function useSendSwapTransaction(
             ...(value && !isZero(value) ? { value } : {}),
           })
           .then((response) => {
-            sendAnalyticsEvent(
-              EventName.SWAP_SIGNED,
-              formatSwapSignedAnalyticsEventProperties({ trade, txHash: response.hash })
-            )
             if (calldata !== response.data) {
               sendAnalyticsEvent(EventName.SWAP_MODIFIED_IN_WALLET, { txHash: response.hash })
               throw new InvalidSwapError(

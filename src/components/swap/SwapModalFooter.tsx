@@ -13,7 +13,7 @@ import {
 } from 'lib/utils/analytics'
 import { ReactNode } from 'react'
 import { Text } from 'rebass'
-import { InterfaceTrade } from 'state/routing/types'
+import { InterfaceFloodTrade, InterfaceTrade } from 'state/routing/types'
 import { useClientSideRouter, useUserSlippageTolerance } from 'state/user/hooks'
 import { computeRealizedPriceImpact } from 'utils/prices'
 
@@ -23,7 +23,7 @@ import { SwapCallbackError } from './styleds'
 import { getTokenPath, RoutingDiagramEntry } from './SwapRoute'
 
 interface AnalyticsEventProps {
-  trade: InterfaceTrade<Currency, Currency, TradeType>
+  trade: InterfaceTrade<Currency, Currency, TradeType> | InterfaceFloodTrade<Currency, Currency, TradeType>
   hash: string | undefined
   allowedSlippage: Percent
   transactionDeadlineSecondsSinceEpoch: number | undefined
@@ -111,7 +111,7 @@ export default function SwapModalFooter({
   fiatValueInput,
   fiatValueOutput,
 }: {
-  trade: InterfaceTrade<Currency, Currency, TradeType>
+  trade: InterfaceTrade<Currency, Currency, TradeType> | InterfaceFloodTrade<Currency, Currency, TradeType>
   hash: string | undefined
   allowedSlippage: Percent
   onConfirm: () => void

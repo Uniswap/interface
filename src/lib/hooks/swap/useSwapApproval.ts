@@ -3,12 +3,13 @@ import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sd
 import { useWeb3React } from '@web3-react/core'
 import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
 import { useMemo } from 'react'
+import { FloodTrade } from 'state/routing/alt-sdk/trade'
 
 import { useApproval } from '../useApproval'
 
 // wraps useApproveCallback in the context of a swap
 export default function useSwapApproval(
-  trade: Trade<Currency, Currency, TradeType> | undefined,
+  trade: Trade<Currency, Currency, TradeType> | FloodTrade<Currency, Currency, TradeType> | undefined,
   allowedSlippage: Percent,
   useIsPendingApproval: (token?: Token, spender?: string) => boolean,
   amount?: CurrencyAmount<Currency> // defaults to trade.maximumAmountIn(allowedSlippage)
