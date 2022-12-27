@@ -121,7 +121,6 @@ const PositionRow = ({
   return (
     <StakeTableRow isUnstake={type === 'unstake'}>
       <Checkbox
-        type="checkbox"
         onChange={e => {
           onChange(e.currentTarget.checked)
         }}
@@ -389,7 +388,6 @@ function StakeModal({
           <>
             <StakeTableHeader isUnstake={type === 'unstake'}>
               <Checkbox
-                type="checkbox"
                 ref={checkboxGroupRef}
                 onChange={e => {
                   if (e.currentTarget.checked) {

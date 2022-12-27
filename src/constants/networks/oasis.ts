@@ -30,7 +30,7 @@ const oasisInfo: EVMNetworkInfo = {
   etherscanUrl: 'https://explorer.emerald.oasis.dev',
   etherscanName: 'Oasis Emerald Explorer',
   tokenListUrl: `${KS_SETTING_API}/v1/tokens?chainIds=${ChainId.OASIS}&isWhitelisted=${true}`,
-  bridgeURL: 'https://oasisprotocol.org/b-ridges',
+  bridgeURL: EMPTY,
   nativeToken: {
     symbol: 'ROSE',
     name: 'ROSE',

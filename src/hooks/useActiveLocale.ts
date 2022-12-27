@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react'
 
-import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
+import { DEFAULT_LOCALE, LOCALE_INFO, SupportedLocale } from 'constants/locales'
 import { useUserLocale, useUserLocaleManager } from 'state/user/hooks'
 
 import useParsedQueryString from './useParsedQueryString'
@@ -11,9 +11,9 @@ import useParsedQueryString from './useParsedQueryString'
  */
 function parseLocale(maybeSupportedLocale: string): SupportedLocale | undefined {
   const lowerMaybeSupportedLocale = maybeSupportedLocale.toLowerCase()
-  return SUPPORTED_LOCALES.find(
+  return Object.keys(LOCALE_INFO).find(
     locale => locale.toLowerCase() === lowerMaybeSupportedLocale || locale.split('-')[0] === lowerMaybeSupportedLocale,
-  )
+  ) as SupportedLocale
 }
 
 /**

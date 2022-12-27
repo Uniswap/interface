@@ -1,12 +1,12 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
-import { Trans, t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 
 import SubscribeNotificationButton from 'components/SubscribeButton'
-import { NOTIFICATION_TOPICS } from 'hooks/useNotification'
+import { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import useTheme from 'hooks/useTheme'
 import TrendingHero from 'pages/TrueSight/TrendingHero'
@@ -92,13 +92,7 @@ export default function TrueSight() {
         <br />
         <Text fontWeight="500">Subscribe now to receive email notifications!</Text>
       </Text>
-      <SubscribeNotificationButton
-        topicId={NOTIFICATION_TOPICS.TRENDING_SOON}
-        subscribeModalContent={t`You can subscribe to email notifications for tokens that could be trending soon. We will send out notifications periodically on the top 3 tokens that could be trending soon`}
-        unsubscribeTooltip={t`Unsubscribe to stop receiving notifications on the latest tokens that could be trending soon`}
-        unsubscribeModalContent={t`Are you sure you want to unsubscribe? You will stop receiving notifications on latest tokens that could
-        be trending soon!`}
-      />
+      <SubscribeNotificationButton trackingEvent={MIXPANEL_TYPE.DISCOVER_CLICK_SUBSCRIBE_TRENDING_SOON} />
     </Flex>
   )
 

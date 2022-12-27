@@ -99,10 +99,9 @@ const PositionRow = ({
   return (
     <TableRow>
       {forced ? (
-        <Checkbox type="checkbox" disabled checked />
+        <Checkbox disabled checked />
       ) : !position.stakedLiquidity.gt(BigNumber.from(0)) ? (
         <Checkbox
-          type="checkbox"
           onChange={e => {
             onChange(e.currentTarget.checked)
           }}
@@ -347,7 +346,6 @@ function WithdrawModal({
         <TableHeader>
           <Checkbox
             disabled={forced}
-            type="checkbox"
             ref={checkboxGroupRef}
             onChange={e => {
               if (e.currentTarget.checked) {

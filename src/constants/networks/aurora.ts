@@ -6,6 +6,7 @@ import { AGGREGATOR_API, KS_SETTING_API } from 'constants/env'
 import { EVMNetworkInfo } from 'constants/networks/type'
 import { createClient } from 'utils/client'
 
+const EMPTY = ''
 const EMPTY_ARRAY: any[] = []
 const NOT_SUPPORT = null
 
@@ -26,7 +27,7 @@ const auroraInfo: EVMNetworkInfo = {
   etherscanUrl: 'https://aurorascan.dev',
   etherscanName: 'Aurora Explorer',
   tokenListUrl: `${KS_SETTING_API}/v1/tokens?chainIds=${ChainId.AURORA}&isWhitelisted=${true}`,
-  bridgeURL: 'https://rainbowbridge.app',
+  bridgeURL: EMPTY,
   nativeToken: {
     symbol: 'ETH',
     name: 'ETH',

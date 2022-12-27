@@ -1,6 +1,7 @@
 import { createAction } from '@reduxjs/toolkit'
 import { ReactNode } from 'react'
 
+import { Topic } from 'hooks/useNotification'
 import { TRANSACTION_TYPE } from 'state/transactions/type'
 
 import { NotificationType } from './hooks'
@@ -15,6 +16,7 @@ export type PopupContentTxn = {
 export type PopupContentSimple = {
   title: string
   summary?: ReactNode
+  icon?: ReactNode
   type: NotificationType
 }
 
@@ -92,13 +94,8 @@ export const updateKNCPrice = createAction<string | undefined>('application/upda
 export const updateServiceWorker = createAction<ServiceWorkerRegistration>('application/updateServiceWorker')
 
 export const setSubscribedNotificationTopic = createAction<{
-  isSubscribed: boolean
-  isVerified: boolean
-  topicId: number
-  verifiedEmail?: string
+  topicGroups: Topic[]
+  userInfo: { email: string; telegram: string }
 }>('application/setSubscribedNotificationTopic')
 
 export const setLoadingNotification = createAction<boolean>('application/setLoadingNotification')
-export const setNeedShowModalSubscribeNotificationAfterLogin = createAction<boolean>(
-  'application/setNeedShowModalSubscribeNotificationAfterLogin',
-)

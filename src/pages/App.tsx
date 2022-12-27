@@ -286,7 +286,6 @@ export default function App() {
                     <Route path={`${APP_PATHS.CAMPAIGN}`} element={<Campaign />} />
                     <Route path={`${APP_PATHS.CAMPAIGN}/:slug`} element={<Campaign />} />
                     <Route path={`${APP_PATHS.BRIDGE}`} element={<Bridge />} />
-                    <Route path={`${APP_PATHS.VERIFY}`} element={<Verify />} />
                     <Route path={`${APP_PATHS.VERIFY_EXTERNAL}`} element={<Verify />} />
                     <Route path={`${APP_PATHS.GRANT_PROGRAMS}`} element={<GrantProgramPage />} />
                     <Route path={`${APP_PATHS.GRANT_PROGRAMS}/:slug`} element={<GrantProgramPage />} />

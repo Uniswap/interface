@@ -5,6 +5,7 @@ import { AGGREGATOR_API, KS_SETTING_API } from 'constants/env'
 import { EVMNetworkInfo } from 'constants/networks/type'
 import { createClient } from 'utils/client'
 
+const EMPTY = ''
 const NOT_SUPPORT = null
 
 const avaxInfo: EVMNetworkInfo = {
@@ -24,7 +25,7 @@ const avaxInfo: EVMNetworkInfo = {
   etherscanUrl: 'https://snowtrace.io',
   etherscanName: 'Snowtrace',
   tokenListUrl: `${KS_SETTING_API}/v1/tokens?chainIds=${ChainId.AVAXMAINNET}&isWhitelisted=${true}`,
-  bridgeURL: 'https://bridge.avax.network',
+  bridgeURL: EMPTY,
   nativeToken: {
     symbol: 'AVAX',
     name: 'AVAX',

@@ -26,7 +26,7 @@ const mumbaiInfo: EVMNetworkInfo = {
   etherscanUrl: 'https://mumbai.polygonscan.com/',
   etherscanName: 'Polygonscan',
   tokenListUrl: `${KS_SETTING_API}/v1/tokens?chainIds=${ChainId.MUMBAI}&isWhitelisted=${true}`,
-  bridgeURL: 'https://wallet.matic.network/bridge',
+  bridgeURL: EMPTY,
   nativeToken: {
     symbol: 'MATIC',
     name: 'Polygon',

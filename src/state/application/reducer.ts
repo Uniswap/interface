@@ -1,5 +1,7 @@
 import { createReducer, nanoid } from '@reduxjs/toolkit'
 
+import { Topic } from 'hooks/useNotification'
+
 import {
   ApplicationModal,
   PopupContent,
@@ -7,7 +9,6 @@ import {
   addPopup,
   removePopup,
   setLoadingNotification,
-  setNeedShowModalSubscribeNotificationAfterLogin,
   setOpenModal,
   setSubscribedNotificationTopic,
   updateBlockNumber,
@@ -41,13 +42,11 @@ export interface ApplicationState {
   readonly serviceWorkerRegistration: ServiceWorkerRegistration | null
   readonly notification: {
     isLoading: boolean
-    needShowModalSubscribe: boolean
-    mapTopic: {
-      [topicId: number]: { isSubscribed: boolean; isVerified: boolean; verifiedEmail?: string }
-    }
+    topicGroups: Topic[]
+    userInfo: { email: string; telegram: string }
   }
 }
-const initialStateNotification = { isLoading: false, needShowModalSubscribe: false, mapTopic: {} }
+const initialStateNotification = { isLoading: false, topicGroups: [], userInfo: { email: '', telegram: '' } }
 const initialState: ApplicationState = {
   blockNumber: {},
   popupList: [],
@@ -113,18 +112,12 @@ export default createReducer(initialState, builder =>
       const notification = state.notification ?? initialStateNotification
       state.notification = { ...notification, isLoading }
     })
-    .addCase(setNeedShowModalSubscribeNotificationAfterLogin, (state, { payload: needShowModalSubscribe }) => {
+    .addCase(setSubscribedNotificationTopic, (state, { payload: { topicGroups, userInfo } }) => {
       const notification = state.notification ?? initialStateNotification
-      state.notification = { ...notification, needShowModalSubscribe }
-    })
-    .addCase(
-      setSubscribedNotificationTopic,
-      (state, { payload: { isSubscribed, isVerified, topicId, verifiedEmail } }) => {
-        const notification = state.notification ?? initialStateNotification
-        state.notification = {
-          ...notification,
-          mapTopic: { ...notification.mapTopic, [topicId]: { isSubscribed, isVerified, verifiedEmail } },
-        }
-      },
-    ),
+      state.notification = {
+        ...notification,
+        topicGroups: topicGroups ?? notification.topicGroups,
+        userInfo: userInfo ?? notification.userInfo,
+      }
+    }),
 )

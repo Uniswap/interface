@@ -5,6 +5,7 @@ import { AGGREGATOR_API, KS_SETTING_API } from 'constants/env'
 import { EVMNetworkInfo } from 'constants/networks/type'
 import { createClient } from 'utils/client'
 
+const EMPTY = ''
 const NOT_SUPPORT = null
 
 const maticInfo: EVMNetworkInfo = {
@@ -24,7 +25,7 @@ const maticInfo: EVMNetworkInfo = {
   etherscanUrl: 'https://polygonscan.com',
   etherscanName: 'Polygonscan',
   tokenListUrl: `${KS_SETTING_API}/v1/tokens?chainIds=${ChainId.MATIC}&isWhitelisted=${true}`,
-  bridgeURL: 'https://wallet.matic.network/bridge',
+  bridgeURL: EMPTY,
   nativeToken: {
     symbol: 'MATIC',
     name: 'Polygon',

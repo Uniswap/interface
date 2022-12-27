@@ -139,9 +139,9 @@ export default function PopupItem({
   let popupContent
   switch (popupType) {
     case PopupType.SIMPLE: {
-      const { title, summary, type = NotificationType.ERROR } = content as PopupContentSimple
+      const { title, summary, type = NotificationType.ERROR, icon } = content as PopupContentSimple
       notiType = type
-      popupContent = <SimplePopup title={title} type={type} summary={summary} />
+      popupContent = <SimplePopup title={title} type={type} summary={summary} icon={icon} />
       break
     }
     case PopupType.TRANSACTION: {

@@ -6,7 +6,6 @@ import SelectNetwork from 'components/Header/web3/SelectNetwork'
 import SelectWallet from 'components/Header/web3/SelectWallet'
 import Menu from 'components/Menu'
 import Row, { RowFixed } from 'components/Row'
-import Settings from 'components/Settings'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { TutorialIds } from 'components/Tutorial/TutorialSwap/constant'
 import { APP_PATHS } from 'constants/index'
@@ -223,7 +222,6 @@ export default function Header() {
           <SelectWallet />
         </HeaderElement>
         <HeaderElementWrap>
-          <Settings />
           <Menu />
         </HeaderElementWrap>
       </HeaderControls>

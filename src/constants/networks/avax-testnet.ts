@@ -26,7 +26,7 @@ const avaxTestnetInfo: EVMNetworkInfo = {
   etherscanUrl: 'https://testnet.snowtrace.io',
   etherscanName: 'Snowtrace',
   tokenListUrl: `${KS_SETTING_API}/v1/tokens?chainIds=${ChainId.AVAXTESTNET}&isWhitelisted=${true}`,
-  bridgeURL: 'https://bridge.avax.network',
+  bridgeURL: EMPTY,
   nativeToken: {
     symbol: 'AVAX',
     name: 'AVAX',

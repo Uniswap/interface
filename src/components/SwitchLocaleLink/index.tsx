@@ -3,7 +3,7 @@ import React, { useMemo } from 'react'
 import { useLocation } from 'react-router'
 import styled from 'styled-components'
 
-import { DEFAULT_LOCALE, LOCALE_LABEL, SupportedLocale } from 'constants/locales'
+import { DEFAULT_LOCALE, SupportedLocale, getLocaleLabel } from 'constants/locales'
 import { navigatorLocale, useActiveLocale } from 'hooks/useActiveLocale'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { StyledInternalLink, TYPE } from 'theme'
@@ -41,7 +41,7 @@ export function SwitchLocaleLink() {
 
     return (
       <Container>
-        KyberSwap available in: {<StyledInternalLink to={target}>{LOCALE_LABEL[targetLocale]}</StyledInternalLink>}
+        KyberSwap available in: {<StyledInternalLink to={target}>{getLocaleLabel(targetLocale)}</StyledInternalLink>}
       </Container>
     )
   }

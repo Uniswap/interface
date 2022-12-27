@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { ButtonEmpty } from 'components/Button'
-import { LOCALE_LABEL, SupportedLocale } from 'constants/locales'
+import { LOCALE_INFO, SupportedLocale, getLocaleLabel } from 'constants/locales'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import useTheme from 'hooks/useTheme'
 import { useUserLocale } from 'state/user/hooks'
@@ -24,7 +24,7 @@ const OptionTitle = styled.div<{ isSelected?: boolean }>`
 
 const GridWrapper = styled.div`
   display: grid;
-  grid-gap: 1rem 3rem;
+  grid-gap: 1.5rem 3rem;
   grid-template-columns: 1fr ${isMobile ? '1fr' : ''};
   width: 100%;
 `
@@ -61,22 +61,20 @@ export default function LanguageSelector({
         <ArrowLeft />
       </ButtonEmpty>
       <GridWrapper>
-        {Object.entries(LOCALE_LABEL).map(([locale, label], index) => {
-          const isLastItem = index + 1 === Object.keys(LOCALE_LABEL).length
-
+        {Object.keys(LOCALE_INFO).map(element => {
+          const locale = element as SupportedLocale
           return (
             <ButtonEmpty
               key={locale}
               padding="0"
-              onClick={() => handleSelectLanguage(locale as SupportedLocale)}
+              onClick={() => handleSelectLanguage(locale)}
               style={{
                 textDecoration: 'none',
-                marginBottom: isLastItem ? '0' : '16px',
                 display: 'flex',
                 justifyContent: 'space-between',
               }}
             >
-              <OptionTitle isSelected={locale === userLocale}>{label}</OptionTitle>
+              <OptionTitle isSelected={locale === userLocale}>{getLocaleLabel(locale)}</OptionTitle>
 
               {locale === userLocale && <Check color={theme.primary}></Check>}
             </ButtonEmpty>

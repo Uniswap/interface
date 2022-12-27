@@ -6,6 +6,7 @@ import { AGGREGATOR_API, KS_SETTING_API } from 'constants/env'
 import { EVMNetworkInfo } from 'constants/networks/type'
 import { createClient } from 'utils/client'
 
+const EMPTY = ''
 const NOT_SUPPORT = null
 
 const bnbInfo: EVMNetworkInfo = {
@@ -25,7 +26,7 @@ const bnbInfo: EVMNetworkInfo = {
   etherscanUrl: 'https://bscscan.com',
   etherscanName: 'BscScan',
   tokenListUrl: `${KS_SETTING_API}/v1/tokens?chainIds=${ChainId.BSCMAINNET}&isWhitelisted=${true}`,
-  bridgeURL: 'https://www.binance.org/en/bridge',
+  bridgeURL: EMPTY,
   nativeToken: {
     symbol: 'BNB',
     name: 'BNB',

@@ -6,7 +6,7 @@ import { AGGREGATOR_API, KS_SETTING_API } from 'constants/env'
 import { EVMNetworkInfo } from 'constants/networks/type'
 import { createClient } from 'utils/client'
 
-// const EMPTY = ''
+const EMPTY = ''
 const EMPTY_ARRAY: any[] = []
 const NOT_SUPPORT = null
 
@@ -27,7 +27,7 @@ const optimismInfo: EVMNetworkInfo = {
   etherscanUrl: 'https://optimistic.etherscan.io',
   etherscanName: 'Optimistic Ethereum Explorer',
   tokenListUrl: `${KS_SETTING_API}/v1/tokens?chainIds=${ChainId.OPTIMISM}&isWhitelisted=${true}`,
-  bridgeURL: 'https://app.optimism.io/bridge',
+  bridgeURL: EMPTY,
   nativeToken: {
     symbol: 'ETH',
     name: 'ETH',

@@ -13,6 +13,7 @@ import LocalLoader from 'components/LocalLoader'
 import Pagination from 'components/Pagination'
 import SearchInput from 'components/SearchInput'
 import Select from 'components/Select'
+import SubscribeNotificationButton from 'components/SubscribeButton'
 import LIMIT_ORDER_ABI from 'constants/abis/limit_order.json'
 import { useActiveWeb3React, useWeb3React } from 'hooks'
 import { useContract } from 'hooks/useContract'
@@ -468,6 +469,7 @@ export default forwardRef<ListOrderHandle>(function ListLimitOrder(props, ref) {
           setActiveTab={onSelectTab}
           activeTab={isTabActive ? LimitOrderStatus.ACTIVE : LimitOrderStatus.CLOSED}
         />
+        <SubscribeNotificationButton subscribeTooltip={t`Subscribe to receive notifications on your limit orders`} />
       </Flex>
 
       <Flex flexDirection={'column'} style={{ gap: '1rem' }}>

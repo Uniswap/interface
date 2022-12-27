@@ -22,10 +22,12 @@ export default function SimplePopup({
   title,
   summary,
   type = NotificationType.ERROR,
+  icon,
 }: {
   title: string
   type?: NotificationType
   summary?: ReactNode
+  icon?: ReactNode
 }) {
   const theme = useTheme()
   const mapColor = {
@@ -37,7 +39,7 @@ export default function SimplePopup({
     <Box>
       <RowNoFlex>
         <div style={{ paddingRight: 10 }}>
-          <img src={mapIcon[type]} alt="Icon" style={{ display: 'block' }} />
+          {icon || <img src={mapIcon[type]} alt="Icon" style={{ display: 'block' }} />}
         </div>
         <AutoColumn gap="8px">
           <Text fontSize="16px" fontWeight={500} color={mapColor[type]}>

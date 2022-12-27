@@ -25,7 +25,7 @@ export const TutorialIds = {
   SWAP_FORM_CONTENT: 'swap-page',
   TRADING_SETTING_CONTENT: 'tradingSettingContent',
 
-  BUTTON_SETTING: 'open-settings-dialog-button',
+  BUTTON_MENU_HEADER: 'open-settings-dialog-button',
   BUTTON_SETTING_SWAP_FORM: 'btnSettingSwapForm',
 
   EARNING_LINKS: 'earningLinks',

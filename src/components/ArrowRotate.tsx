@@ -47,9 +47,9 @@ export default function ArrowRotate({
   )
 }
 
-const StyledIcon = styled.div<{ rotate?: boolean; size?: number; color?: string }>`
+const StyledIcon = styled.div<{ $rotate?: boolean; size?: number; color?: string }>`
   transition: transform 300ms;
-  transform: rotate(${({ rotate }) => (rotate ? '-180deg' : '0')});
+  transform: rotate(${({ $rotate }) => ($rotate ? '-180deg' : '0')});
   path {
     fill: ${({ color }) => color || 'currentColor'};
   }
@@ -65,7 +65,7 @@ export const DropdownArrowIcon = ({
   color?: string
 }) => {
   return (
-    <StyledIcon rotate={rotate} style={{ width: size, height: size }} color={color}>
+    <StyledIcon $rotate={rotate} style={{ width: size, height: size }} color={color}>
       <DropdownSVG width={size} />
     </StyledIcon>
   )

@@ -30,7 +30,7 @@ const bttcInfo: EVMNetworkInfo = {
   etherscanUrl: 'https://bttcscan.com',
   etherscanName: 'Bttcscan',
   tokenListUrl: `${KS_SETTING_API}/v1/tokens?chainIds=${ChainId.BTTC}&isWhitelisted=${true}`,
-  bridgeURL: 'https://wallet.bt.io/bridge',
+  bridgeURL: EMPTY,
   nativeToken: {
     symbol: 'BTT',
     name: 'BTT',

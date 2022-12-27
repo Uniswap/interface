@@ -391,7 +391,7 @@ const getListSteps = (isLogin: boolean, isSolana: boolean) => {
       title: LIST_TITLE.VIEW_GUIDE,
       stepNumber: stepNumber++,
       maskPadding: 10,
-      requiredClickSelector: '#' + TutorialIds.BUTTON_SETTING,
+      requiredClickSelector: '#' + TutorialIds.BUTTON_MENU_HEADER,
       stopPropagationMouseDown: true,
       lastStep: true,
       description: (

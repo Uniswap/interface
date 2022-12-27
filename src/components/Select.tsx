@@ -54,7 +54,7 @@ type SelectOption = { value?: string | number; label: string | number; onSelect?
 
 const getOptionValue = (option: SelectOption | undefined) => {
   if (!option) return ''
-  return typeof option !== 'object' ? option : option.value || option.label
+  return typeof option !== 'object' ? option : option.value ?? option.label
 }
 const getOptionLabel = (option: SelectOption | undefined) => {
   if (!option) return ''
@@ -124,22 +124,28 @@ function Select({
         <SelectMenu style={{ ...menuStyle, ...(menuPlacementTop ? { bottom: 40, top: 'unset' } : {}) }} ref={refMenu}>
           {options.map(item => {
             const value = getOptionValue(item)
-            if (optionRender) return optionRender(item)
+            const onClick = (e: React.MouseEvent<HTMLDivElement>) => {
+              e.stopPropagation()
+              e.preventDefault()
+              setShowMenu(prev => !prev)
+              if (item.onSelect) item.onSelect?.()
+              else {
+                setSelected(value)
+                onChange(value)
+              }
+            }
+            if (optionRender)
+              return (
+                <div key={value} onClick={onClick}>
+                  {optionRender(item)}
+                </div>
+              )
             return (
               <Option
                 key={value}
                 role="button"
                 $selected={value === selectedValue || value === getOptionValue(selectedInfo)}
-                onClick={e => {
-                  e.stopPropagation()
-                  e.preventDefault()
-                  setShowMenu(prev => !prev)
-                  if (item.onSelect) item.onSelect?.()
-                  else {
-                    setSelected(value)
-                    onChange(value)
-                  }
-                }}
+                onClick={onClick}
               >
                 {getOptionLabel(item)}
               </Option>

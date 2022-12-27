@@ -1,14 +1,12 @@
 import { Trans } from '@lingui/macro'
 import axios from 'axios'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
 import { CheckCircle, XCircle } from 'components/Icons'
 import Loader from 'components/Loader'
 import { NOTIFICATION_API } from 'constants/env'
-import { APP_PATHS } from 'constants/index'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import useTheme from 'hooks/useTheme'
 import { ExternalLink } from 'theme'
@@ -47,6 +45,7 @@ function validateUrl(url: string) {
   if (whitelistDomain.some(e => url.startsWith(e))) return url
   return ''
 }
+// this page to verify email for external site
 function Verify() {
   const [status, setStatus] = useState(STATUS.VERIFYING)
   const [isExpireError, setIsExpireError] = useState(false)
@@ -54,11 +53,7 @@ function Verify() {
   const qs = useParsedQueryString()
   const theme = useTheme()
   const refTimeoutCountDown = useRef<NodeJS.Timeout>()
-  const navigate = useNavigate()
 
-  const { pathname } = useLocation()
-
-  const isVerifyExternal = pathname.startsWith(APP_PATHS.VERIFY_EXTERNAL)
   const redirectUrl = validateUrl(qs.redirectUrl as string)
 
   const refTime = useRef(time)
@@ -70,12 +65,8 @@ function Verify() {
       return
     }
     refTimeoutCountDown.current && clearInterval(refTimeoutCountDown.current)
-    if (isVerifyExternal) {
-      if (redirectUrl) window.location.href = redirectUrl
-    } else {
-      navigate(APP_PATHS.SWAP)
-    }
-  }, [isVerifyExternal, navigate, redirectUrl])
+    if (redirectUrl) window.location.href = redirectUrl
+  }, [redirectUrl])
 
   useEffect(() => {
     return () => refTimeoutCountDown.current && clearInterval(refTimeoutCountDown.current)
@@ -85,7 +76,7 @@ function Verify() {
   useEffect(() => {
     if (!qs?.confirmation || calledApi.current) return
     calledApi.current = true
-    const apiUrl = `${NOTIFICATION_API}/v1/${isVerifyExternal ? 'external' : 'topics'}/verify`
+    const apiUrl = `${NOTIFICATION_API}/v1/external/verify`
     axios
       .get(apiUrl, {
         params: { confirmation: qs.confirmation },
@@ -97,10 +88,10 @@ function Verify() {
       .catch(e => {
         const code = e?.response?.data?.code
         console.error(e)
-        if (code === '4001' && isVerifyExternal) setIsExpireError(true)
+        if (code === '4001') setIsExpireError(true)
         setStatus(STATUS.ERROR)
       })
-  }, [qs?.confirmation, isVerifyExternal, time, handleCountDown])
+  }, [qs?.confirmation, time, handleCountDown])
 
   const icon = (() => {
     switch (status) {
@@ -138,19 +129,10 @@ function Verify() {
                   </Trans>
                 ) : (
                   <Trans>
-                    <Text fontWeight={'500'}>
-                      Your email have been verified{isVerifyExternal ? null : ' by KyberSwap.com.'}.
-                    </Text>{' '}
-                    If it has been more than a few days and you still haven’t receive any notification yet, please
-                    contact us through our channels.
+                    <Text fontWeight={'500'}>Your email have been verified.</Text> If it has been more than a few days
+                    and you still haven’t receive any notification yet, please contact us through our channels.
                     <br />
-                    You will be redirected to{' '}
-                    {isVerifyExternal ? (
-                      <ExternalLink href={redirectUrl}>{redirectUrl}</ExternalLink>
-                    ) : (
-                      'our Swap page'
-                    )}{' '}
-                    after{' '}
+                    You will be redirected to <ExternalLink href={redirectUrl}>{redirectUrl}</ExternalLink> after{' '}
                     <Text as="span" fontWeight={'500'} color={theme.text}>
                       {time}
                     </Text>
