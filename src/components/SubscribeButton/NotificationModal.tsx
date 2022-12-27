@@ -277,7 +277,7 @@ export default function NotificationModal() {
 
   const hasTopicSubscribed = topicGroups.some(e => e.isSubscribed)
   const isVerifiedTelegram = userInfo?.telegram && hasTopicSubscribed
-
+  const disableCheckbox = !account || !inputAccount || !!errorInput
   const renderButton = () => (
     <ActionWrapper>
       {!account ? (
@@ -392,7 +392,7 @@ export default function NotificationModal() {
         <div>
           <TopicItemHeader>
             <Checkbox
-              disabled={!account}
+              disabled={disableCheckbox}
               id="selectAll"
               borderStyle
               onChange={onToggleAllTopic}
@@ -406,7 +406,7 @@ export default function NotificationModal() {
           {topicGroups.map(topic => (
             <TopicItem key={topic.id}>
               <Checkbox
-                disabled={!account}
+                disabled={disableCheckbox}
                 borderStyle
                 checked={selectedTopic.includes(topic.id)}
                 id={`topic${topic.id}`}
