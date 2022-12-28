@@ -943,8 +943,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                                   </MouseoverTooltip>
                                 )}
                               </AutoRow>
-                            </ButtonConfirmed>
-                
+                            </ButtonConfirmed>            
                             <ButtonError
                               onClick={() => {
                                 setSwapState({
