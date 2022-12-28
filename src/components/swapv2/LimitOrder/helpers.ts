@@ -1,4 +1,4 @@
-import { Fraction } from '@kyberswap/ks-sdk-core'
+import { Currency, Fraction } from '@kyberswap/ks-sdk-core'
 import { ethers } from 'ethers'
 import JSBI from 'jsbi'
 
@@ -56,19 +56,36 @@ export function calcInvert(value: string) {
   }
 }
 
-function calcPriceUsd(input: string, price: number) {
+export const calcUsdPrices = ({
+  inputAmount,
+  outputAmount,
+  priceUsdIn,
+  priceUsdOut,
+  currencyIn,
+  currencyOut,
+}: {
+  inputAmount: string
+  outputAmount: string
+  priceUsdIn: number | undefined
+  priceUsdOut: number | undefined
+  currencyIn: Currency | undefined
+  currencyOut: Currency | undefined
+}) => {
+  const empty = { input: '', output: '' }
+  if (!inputAmount || !priceUsdIn || !priceUsdOut || !outputAmount || !currencyIn || !currencyOut) return empty
   try {
-    const value = parseFraction(input).multiply(parseFraction(price.toString()))
-    return value.toFixed(16)
-  } catch (error) {
-    return
-  }
-}
+    const inputAmountInUsd = parseFraction(priceUsdIn.toString()) // 1 knc = ??? usd
+    const outputAmountInUsd = parseFraction(priceUsdOut.toString())
 
-export const formatUsdPrice = (input: string, price: number | undefined) => {
-  if (!price || !input) return
-  const calcPrice = calcPriceUsd(input, price)
-  return calcPrice ? `${formattedNum(calcPrice, true)}` : undefined
+    const input = parseFraction(inputAmount, currencyIn.decimals).multiply(inputAmountInUsd)
+    const output = parseFraction(outputAmount, currencyOut.decimals).multiply(outputAmountInUsd)
+    return {
+      input: input ? `${formattedNum(input.toFixed(16), true)}` : undefined,
+      output: output ? `${formattedNum(output.toFixed(16), true)}` : undefined,
+    }
+  } catch (error) {
+    return empty
+  }
 }
 
 export const formatAmountOrder = (value: string, decimals?: number) => {

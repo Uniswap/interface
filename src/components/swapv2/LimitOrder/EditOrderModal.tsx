@@ -1,16 +1,19 @@
 import { Trans } from '@lingui/macro'
 import { ethers } from 'ethers'
+import { useEffect, useState } from 'react'
 import { X } from 'react-feather'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
 import Modal from 'components/Modal'
 import { Z_INDEXS } from 'constants/styles'
+import { useActiveWeb3React } from 'hooks'
 import { useCurrencyV2 } from 'hooks/Tokens'
 import { TransactionFlowState } from 'types'
 
 import LimitOrderForm, { Label } from './LimitOrderForm'
 import { calcInvert, calcPercentFilledOrder, calcRate, removeTrailingZero } from './helpers'
+import { getTotalActiveMakingAmount } from './request'
 import { LimitOrder, LimitOrderStatus, RateInfo } from './type'
 
 const Wrapper = styled.div`
@@ -43,6 +46,8 @@ export default function EditOrderModal({
   setFlowState: React.Dispatch<React.SetStateAction<TransactionFlowState>>
   refreshListOrder: () => void
 }) {
+  const { chainId, account } = useActiveWeb3React()
+
   const { status, makingAmount, takingAmount, makerAsset, takerAsset, filledTakingAmount, expiredAt } = order
   const currencyIn = useCurrencyV2(makerAsset) ?? undefined
   const currencyOut = useCurrencyV2(takerAsset) ?? undefined
@@ -55,8 +60,19 @@ export default function EditOrderModal({
   const rate = currencyOut ? calcRate(formatIn, formatOut, currencyOut.decimals) : ''
   const defaultRate: RateInfo = { rate, invertRate: calcInvert(rate), invert: false }
   const filled = currencyOut ? calcPercentFilledOrder(filledTakingAmount, takingAmount, currencyOut.decimals) : 0
+
+  const [defaultActiveMakingAmount, setDefaultActiveMakingAmount] = useState('')
+
+  // prefetch
+  useEffect(() => {
+    if (!currencyIn || !account) return
+    getTotalActiveMakingAmount(chainId, currencyIn.wrapped.address, account)
+      .then(({ activeMakingAmount }) => setDefaultActiveMakingAmount(activeMakingAmount))
+      .catch(console.error)
+  }, [currencyIn, account, chainId])
+
   return (
-    <Modal isOpen={isOpen && !!currencyIn && !!currencyOut} onDismiss={onDismiss}>
+    <Modal isOpen={isOpen && !!currencyIn && !!currencyOut && !!defaultActiveMakingAmount} onDismiss={onDismiss}>
       <Wrapper>
         <Flex justifyContent={'space-between'} alignItems="center">
           <Text>
@@ -85,6 +101,7 @@ export default function EditOrderModal({
           isEdit
           defaultInputAmount={formatIn}
           defaultOutputAmount={formatOut}
+          defaultActiveMakingAmount={defaultActiveMakingAmount}
           defaultRate={defaultRate}
           onDismissModalEdit={onDismiss}
           onCancelOrder={onCancelOrder}

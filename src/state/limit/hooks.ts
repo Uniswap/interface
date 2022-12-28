@@ -13,7 +13,7 @@ import { AppDispatch, AppState } from 'state/index'
 import { Field } from 'state/swap/actions'
 import { queryParametersToSwapState } from 'state/swap/hooks'
 
-import { removeCurrentOrderUpdate, setCurrentOrderUpdate, setLimitCurrency } from './actions'
+import { removeCurrentOrderUpdate, setCurrentOrderUpdate, setInputAmount, setLimitCurrency } from './actions'
 import { LimitState } from './reducer'
 
 export function useLimitState(): LimitState {
@@ -56,16 +56,30 @@ export function useLimitActionHandlers() {
   const { currencyIn, currencyOut } = useLimitState()
   const { inputCurrency, outputCurrency } = useDefaultsTokenFromURLSearch()
 
+  const setInputValue = useCallback(
+    (inputAmount: string) => {
+      dispatch(setInputAmount(inputAmount))
+    },
+    [dispatch],
+  )
+
+  const resetState = useCallback(() => {
+    setInputValue('')
+  }, [setInputValue])
+
   const onSelectPair = useCallback(
-    (currencyIn: Currency | undefined, currencyOut: Currency | undefined) => {
+    (currencyIn: Currency | undefined, currencyOut: Currency | undefined, inputAmount?: string) => {
       dispatch(
         setLimitCurrency({
           currencyIn,
           currencyOut,
         }),
       )
+      if (inputAmount !== undefined) {
+        setInputValue(inputAmount)
+      }
     },
-    [dispatch],
+    [dispatch, setInputValue],
   )
 
   useEffect(() => {
@@ -116,5 +130,6 @@ export function useLimitActionHandlers() {
     onSelectPair,
     setCurrentOrder,
     removeCurrentOrder,
+    resetState,
   }
 }

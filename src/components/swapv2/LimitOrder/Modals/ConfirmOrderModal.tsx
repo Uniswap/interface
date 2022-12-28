@@ -68,7 +68,7 @@ export default memo(function ConfirmOrderModal({
         ),
       },
       {
-        label: t`when`,
+        label: t`at`,
         content: account && <Rate rateInfo={rateInfo} currencyIn={currencyIn} currencyOut={currencyOut} />,
       },
       {

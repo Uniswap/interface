@@ -316,6 +316,15 @@ export default function Updater(): null {
                       if (window.location.pathname.startsWith(APP_PATHS.CAMPAIGN)) setClaimingCampaignRewardId(null)
                       break
                     }
+                    case TRANSACTION_TYPE.CANCEL_LIMIT_ORDER: {
+                      if (transaction.arbitrary) {
+                        mixpanelHandler(MIXPANEL_TYPE.LO_CANCEL_ORDER_SUBMITTED, {
+                          ...transaction.arbitrary,
+                          tx_hash: receipt.transactionHash,
+                        })
+                      }
+                      break
+                    }
                     default:
                       break
                   }

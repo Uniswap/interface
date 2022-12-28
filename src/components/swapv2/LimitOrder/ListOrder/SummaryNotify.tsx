@@ -40,7 +40,7 @@ export default function SummaryNotify({
         {formatAmountOrder(takingAmount, takerAssetDecimals)} {takerAssetSymbol}
       </Text>{' '}
       <Text as="span" color={theme.subText}>
-        when 1 {takerAssetSymbol} is equal to {rate} {makerAssetSymbol}
+        at a {takerAssetSymbol} price of {rate} {makerAssetSymbol}
       </Text>
     </Trans>
   ) : null

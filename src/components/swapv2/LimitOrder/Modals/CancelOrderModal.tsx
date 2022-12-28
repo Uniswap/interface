@@ -80,7 +80,7 @@ function ContentCancel({
             ),
           },
           {
-            label: t`when`,
+            label: t`at`,
             content: <Rate order={order} />,
           },
         ]

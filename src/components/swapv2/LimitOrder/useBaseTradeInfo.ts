@@ -1,5 +1,4 @@
-import { Currency, CurrencyAmount, Price, TokenAmount } from '@kyberswap/ks-sdk-core'
-import axios from 'axios'
+import { Currency, Price, TokenAmount } from '@kyberswap/ks-sdk-core'
 import JSBI from 'jsbi'
 import { stringify } from 'querystring'
 import { useRef } from 'react'
@@ -13,8 +12,6 @@ import { tryParseAmount } from 'state/swap/hooks'
 type BaseTradeInfo = {
   price: Price<Currency, Currency>
   amountInUsd: number
-  amountOutUsd: number
-  routerAddress: string
 }
 
 const MAX_RETRY_COUNT = 2
@@ -36,25 +33,27 @@ export default function useBaseTradeInfo(currencyIn: Currency | undefined, curre
         })}`
       : null
   }
+
+  const controller = useRef(new AbortController())
   const fetchData = async (url: string | null): Promise<BaseTradeInfo | undefined> => {
     if (!currencyOut || !currencyIn || !url) return
-    const { data } = await axios.get(url, {
+
+    controller.current.abort()
+    controller.current = new AbortController()
+    const data = await fetch(url, {
+      signal: controller.current.signal,
       headers: {
         'X-Request-Id': sentryRequestId,
       },
-    })
-    const toCurrencyAmount = function (value: string, currency: Currency): CurrencyAmount<Currency> {
-      return TokenAmount.fromRawAmount(currency, JSBI.BigInt(value))
-    }
-    const { outputAmount, amountInUsd, amountOutUsd, routerAddress } = data
-    const amountOut = toCurrencyAmount(outputAmount, currencyOut)
+    }).then(data => data.json())
+
+    const { outputAmount, amountInUsd } = data
+    const amountOut = TokenAmount.fromRawAmount(currencyOut, JSBI.BigInt(outputAmount))
 
     if (amountIn?.quotient && amountOut?.quotient) {
       return {
         price: new Price(currencyIn, currencyOut, amountIn?.quotient, amountOut?.quotient),
         amountInUsd,
-        amountOutUsd,
-        routerAddress,
       }
     }
     return

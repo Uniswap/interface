@@ -22,6 +22,7 @@ import { Z_INDEXS } from 'constants/styles'
 import { useTokenAllowance } from 'data/Allowances'
 import { useActiveWeb3React, useWeb3React } from 'hooks'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import useWrapCallback from 'hooks/useWrapCallback'
 import { NotificationType, useNotify, useWalletModalToggle } from 'state/application/hooks'
@@ -38,8 +39,8 @@ import DeltaRate from './DeltaRate'
 import ExpirePicker from './ExpirePicker'
 import ConfirmOrderModal from './Modals/ConfirmOrderModal'
 import { DEFAULT_EXPIRED, EXPIRED_OPTIONS } from './const'
-import { calcInvert, calcOutput, calcPercentFilledOrder, calcRate, formatAmountOrder, formatUsdPrice } from './helpers'
-import { getTotalActiveMakingAmount, hashOrder, submitOrder } from './request'
+import { calcInvert, calcOutput, calcPercentFilledOrder, calcRate, calcUsdPrices, formatAmountOrder } from './helpers'
+import { clearCacheActiveMakingAmount, getTotalActiveMakingAmount, hashOrder, submitOrder } from './request'
 import { CreateOrderParam, LimitOrder, LimitOrderStatus, RateInfo } from './type'
 import useBaseTradeInfo from './useBaseTradeInfo'
 import useWrapEthStatus from './useWrapEthStatus'
@@ -65,6 +66,7 @@ type Props = {
   currencyOut: Currency | undefined
   defaultInputAmount?: string
   defaultOutputAmount?: string
+  defaultActiveMakingAmount?: string
   defaultExpire?: Date
   setIsSelectCurrencyManual?: (val: boolean) => void
   note?: string
@@ -85,6 +87,7 @@ const LimitOrderForm = function LimitOrderForm({
   currencyOut,
   defaultInputAmount = '',
   defaultOutputAmount = '',
+  defaultActiveMakingAmount = '',
   defaultExpire,
   defaultRate = { rate: '', invertRate: '', invert: false },
   setIsSelectCurrencyManual,
@@ -101,14 +104,15 @@ const LimitOrderForm = function LimitOrderForm({
   const toggleWalletModal = useWalletModalToggle()
   const theme = useTheme()
   const notify = useNotify()
+  const { mixpanelHandler } = useMixpanel()
 
-  const { setCurrencyIn, setCurrencyOut, switchCurrency, setCurrentOrder, removeCurrentOrder } =
+  const { setCurrencyIn, setCurrencyOut, switchCurrency, setCurrentOrder, removeCurrentOrder, resetState } =
     useLimitActionHandlers()
-  const { ordersUpdating } = useLimitState()
+  const { ordersUpdating, inputAmount: inputAmountGlobal } = useLimitState()
 
   const [inputAmount, setInputAmount] = useState(defaultInputAmount)
   const [outputAmount, setOuputAmount] = useState(defaultOutputAmount)
-  const [activeOrderMakingAmount, setActiveOrderMakingAmount] = useState('')
+  const [activeOrderMakingAmount, setActiveOrderMakingAmount] = useState(defaultActiveMakingAmount)
 
   const [rateInfo, setRateInfo] = useState<RateInfo>(defaultRate)
   const displayRate = rateInfo.invert ? rateInfo.invertRate : rateInfo.rate
@@ -122,6 +126,7 @@ const LimitOrderForm = function LimitOrderForm({
   const { library } = useWeb3React()
 
   const { loading: loadingTrade, tradeInfo } = useBaseTradeInfo(currencyIn, currencyOut)
+  const { tradeInfo: tradeInfoInvert } = useBaseTradeInfo(currencyOut, currencyIn)
 
   const { execute: onWrap, inputError: wrapInputError } = useWrapCallback(currencyIn, currencyOut, inputAmount, true)
   const showWrap = !!currencyIn?.isNative
@@ -170,6 +175,7 @@ const LimitOrderForm = function LimitOrderForm({
 
   const setPriceRateMarket = () => {
     try {
+      mixpanelHandler(MIXPANEL_TYPE.LO_ENTER_DETAIL, 'set price')
       if (loadingTrade || !tradeInfo) return
       onSetRate(tradeInfo?.price?.toSignificant(6) ?? '', tradeInfo?.price?.invert().toSignificant(6) ?? '')
     } catch (error) {}
@@ -199,17 +205,6 @@ const LimitOrderForm = function LimitOrderForm({
   const onInvertRate = (invert: boolean) => {
     setRateInfo({ ...rateInfo, invert })
   }
-
-  const balances = useCurrencyBalances(useMemo(() => [currencyIn, currencyOut], [currencyIn, currencyOut]))
-
-  const maxAmountInput = maxAmountSpend(balances[0])
-  const handleMaxInput = useCallback(() => {
-    maxAmountInput && onSetInput(maxAmountInput?.toExact())
-  }, [maxAmountInput, onSetInput])
-
-  const handleHalfInput = useCallback(() => {
-    onSetInput(balances[0]?.divide(2).toExact() || '')
-  }, [balances, onSetInput])
 
   const handleInputSelect = useCallback(
     (currency: Currency) => {
@@ -259,13 +254,31 @@ const LimitOrderForm = function LimitOrderForm({
     return undefined
   }, [currencyIn, activeOrderMakingAmount, isEdit, orderInfo])
 
+  const balances = useCurrencyBalances(useMemo(() => [currencyIn, currencyOut], [currencyIn, currencyOut]))
+
+  const maxAmountInput = maxAmountSpend(balances[0])
+
+  const handleMaxInput = useCallback(() => {
+    if (!parsedActiveOrderMakingAmount || !maxAmountInput) return
+    onSetInput(maxAmountInput.subtract(parsedActiveOrderMakingAmount)?.toExact())
+  }, [maxAmountInput, onSetInput, parsedActiveOrderMakingAmount])
+
+  const handleHalfInput = useCallback(() => {
+    if (!balances[0] || !parsedActiveOrderMakingAmount) return
+    onSetInput(balances[0]?.subtract(parsedActiveOrderMakingAmount)?.divide(2).toExact() || '')
+  }, [balances, onSetInput, parsedActiveOrderMakingAmount])
+
   const enoughAllowance = useMemo(() => {
-    return (
-      currencyIn?.isNative ||
-      (parsedActiveOrderMakingAmount &&
-        parseInputAmount &&
-        currentAllowance?.subtract(parsedActiveOrderMakingAmount).greaterThan(parseInputAmount))
-    )
+    try {
+      return (
+        currencyIn?.isNative ||
+        (parsedActiveOrderMakingAmount &&
+          parseInputAmount &&
+          currentAllowance?.subtract(parsedActiveOrderMakingAmount).greaterThan(parseInputAmount))
+      )
+    } catch (error) {
+      return false
+    }
   }, [currencyIn?.isNative, currentAllowance, parseInputAmount, parsedActiveOrderMakingAmount])
 
   const [approval, approveCallback] = useApproveCallback(
@@ -318,9 +331,13 @@ const LimitOrderForm = function LimitOrderForm({
   }, [outputAmount, currencyOut])
 
   const hasInputError = inputError || outPutError
+  const checkingAllowance =
+    !(currencyIn && parsedActiveOrderMakingAmount?.currency?.equals(currencyIn)) ||
+    !(currencyIn && currentAllowance?.currency?.equals(currencyIn))
 
   const isNotFillAllInput = [outputAmount, inputAmount, currencyIn, currencyOut, displayRate].some(e => !e)
   const showApproveFlow =
+    !checkingAllowance &&
     !showWrap &&
     !isNotFillAllInput &&
     !hasInputError &&
@@ -334,6 +351,7 @@ const LimitOrderForm = function LimitOrderForm({
     ((approval !== ApprovalState.NOT_APPROVED || approvalSubmitted || !!hasInputError) && enoughAllowance)
 
   const disableBtnReview =
+    checkingAllowance ||
     isNotFillAllInput ||
     !!hasInputError ||
     approval !== ApprovalState.APPROVED ||
@@ -345,6 +363,13 @@ const LimitOrderForm = function LimitOrderForm({
   const showPreview = () => {
     if (!currencyIn || !currencyOut || !outputAmount || !inputAmount || !displayRate) return
     setFlowState({ ...TRANSACTION_STATE_DEFAULT, showConfirm: true })
+    if (!isEdit)
+      mixpanelHandler(MIXPANEL_TYPE.LO_CLICK_REVIEW_PLACE_ORDER, {
+        from_token: currencyIn.symbol,
+        to_token: currencyOut.symbol,
+        from_network: chainId,
+        trade_qty: inputAmount,
+      })
   }
 
   const hidePreview = useCallback(() => {
@@ -359,6 +384,7 @@ const LimitOrderForm = function LimitOrderForm({
     if (typeof val === 'number') {
       setExpire(val)
       setCustomDateExpire(undefined)
+      mixpanelHandler(MIXPANEL_TYPE.LO_ENTER_DETAIL, 'choose date')
     } else {
       setCustomDateExpire(val)
     }
@@ -367,12 +393,9 @@ const LimitOrderForm = function LimitOrderForm({
   const getActiveMakingAmount = useCallback(
     async (currencyIn: Currency) => {
       try {
-        if (!currencyIn?.wrapped.address || !account) return
-        const { activeMakingAmount } = await getTotalActiveMakingAmount(
-          chainId + '',
-          currencyIn?.wrapped.address,
-          account,
-        )
+        const address = currencyIn?.wrapped.address
+        if (!address || !account) return
+        const { activeMakingAmount } = await getTotalActiveMakingAmount(chainId, address, account)
         setActiveOrderMakingAmount(activeMakingAmount)
       } catch (error) {
         console.log(error)
@@ -387,7 +410,7 @@ const LimitOrderForm = function LimitOrderForm({
     setRateInfo(defaultRate)
     setExpire(DEFAULT_EXPIRED)
     setCustomDateExpire(undefined)
-    currencyIn && getActiveMakingAmount(currencyIn)
+    refreshActiveMakingAmount()
   }
 
   const handleError = useCallback(
@@ -403,7 +426,7 @@ const LimitOrderForm = function LimitOrderForm({
       setFlowState(state => ({
         ...state,
         attemptingTxn: false,
-        errorMessage: msg || 'Error occur. Please try again.',
+        errorMessage: msg?.toString?.() || 'Error occur. Please try again.',
       }))
     },
     [setFlowState],
@@ -435,7 +458,15 @@ const LimitOrderForm = function LimitOrderForm({
       )} ${currencyOut.symbol}`,
     }))
     const signature = await library.getSigner().signMessage(ethers.utils.arrayify(orderHash))
-    return { signature, orderHash }
+
+    const bytes = ethers.utils.arrayify(signature)
+    const lastByte = bytes[64]
+    if (lastByte === 0 || lastByte === 1) {
+      // to support hardware wallet https://ethereum.stackexchange.com/a/113727
+      bytes[64] += 27
+    }
+
+    return { signature: ethers.utils.hexlify(bytes), orderHash }
   }
 
   const onSubmitCreateOrder = async (params: CreateOrderParam) => {
@@ -469,7 +500,7 @@ const LimitOrderForm = function LimitOrderForm({
 
       const payload = getPayloadCreateOrder(params)
       setFlowState(state => ({ ...state, pendingText: t`Placing order` }))
-      await submitOrder({ ...payload, orderHash, signature })
+      const response = await submitOrder({ ...payload, orderHash, signature })
       setFlowState(state => ({ ...state, showConfirm: false }))
       notify(
         {
@@ -487,7 +518,7 @@ const LimitOrderForm = function LimitOrderForm({
                   {formatAmountOrder(outputAmount)} {currencyOut.symbol}{' '}
                 </Text>
                 <Text as="span" color={theme.subText}>
-                  when 1 {currencyIn.symbol} is equal to {calcRate(inputAmount, outputAmount, currencyOut.decimals)}{' '}
+                  at a {currencyIn.symbol} price of {calcRate(inputAmount, outputAmount, currencyOut.decimals)}{' '}
                   {currencyOut.symbol}.
                 </Text>
               </Trans>
@@ -522,6 +553,7 @@ const LimitOrderForm = function LimitOrderForm({
       )
       onResetForm()
       setTimeout(() => refreshListOrder?.(), 500)
+      return response?.id
     } catch (error) {
       handleError(error)
     }
@@ -586,37 +618,100 @@ const LimitOrderForm = function LimitOrderForm({
 
   const refreshActiveMakingAmount = useMemo(
     () =>
-      debounce(data => {
+      debounce(() => {
+        clearCacheActiveMakingAmount()
         if (currencyIn) {
           getActiveMakingAmount(currencyIn)
         }
-      }, 500),
+      }, 100),
     [currencyIn, getActiveMakingAmount],
   )
+
+  const isInit = useRef(false)
+  useEffect(() => {
+    if (isInit.current && currencyIn) getActiveMakingAmount(currencyIn) // skip the first time
+    isInit.current = true
+  }, [currencyIn, getActiveMakingAmount, isEdit])
+
+  // use ref to prevent too many api call when firebase update status
   const refSubmitCreateOrder = useRef(onSubmitCreateOrder)
   refSubmitCreateOrder.current = onSubmitCreateOrder
+  const refRefreshActiveMakingAmount = useRef(refreshActiveMakingAmount)
+  refRefreshActiveMakingAmount.current = refreshActiveMakingAmount
 
   useEffect(() => {
-    if (!account || !chainId || !currencyIn) return
-    // call when currencyIn change or cancel expired/cancelled
+    if (!account || !chainId) return
+    // call when cancel expired/cancelled
     const unsubscribeCancelled = subscribeNotificationOrderCancelled(account, chainId, data => {
       data?.orders.forEach(order => {
         const findInfo = ordersUpdating.find(e => e.orderId === order.id)
-        if (findInfo?.orderId) {
-          removeCurrentOrder(findInfo.orderId)
-          if (order.isSuccessful) refSubmitCreateOrder.current(findInfo)
-        }
+        if (!findInfo?.orderId) return
+        removeCurrentOrder(findInfo.orderId)
+        if (order.isSuccessful) refSubmitCreateOrder.current(findInfo)
       })
-      refreshActiveMakingAmount(data)
+      refRefreshActiveMakingAmount.current()
     })
-    const unsubscribeExpired = subscribeNotificationOrderExpired(account, chainId, refreshActiveMakingAmount)
+    const unsubscribeExpired = subscribeNotificationOrderExpired(account, chainId, refRefreshActiveMakingAmount.current)
     return () => {
       unsubscribeCancelled?.()
       unsubscribeExpired?.()
     }
-  }, [account, chainId, currencyIn, refreshActiveMakingAmount, ordersUpdating, removeCurrentOrder])
+  }, [account, chainId, ordersUpdating, removeCurrentOrder])
+
+  useEffect(() => {
+    if (inputAmountGlobal) onSetInput(inputAmountGlobal)
+  }, [inputAmountGlobal, onSetInput]) // when redux state change, ex: type and swap
+
+  useEffect(() => {
+    return () => {
+      resetState()
+    }
+  }, [resetState])
+
+  const trackingTouchInput = useCallback(() => {
+    mixpanelHandler(MIXPANEL_TYPE.LO_ENTER_DETAIL, 'touch enter amount box')
+  }, [mixpanelHandler])
+
+  const trackingTouchSelectToken = useCallback(() => {
+    mixpanelHandler(MIXPANEL_TYPE.LO_ENTER_DETAIL, 'touch enter token box')
+  }, [mixpanelHandler])
+
+  const trackingPlaceOrder = (data = {}) => {
+    mixpanelHandler(MIXPANEL_TYPE.LO_CLICK_PLACE_ORDER, {
+      from_token: currencyIn?.symbol,
+      to_token: currencyOut?.symbol,
+      from_network: networkInfo.name,
+      trade_qty: inputAmount,
+      ...data,
+    })
+  }
+
+  const onSubmitCreateOrderWithTracking = async () => {
+    trackingPlaceOrder()
+    const order_id = await onSubmitCreateOrder({
+      currencyIn,
+      currencyOut,
+      chainId,
+      account,
+      inputAmount,
+      outputAmount,
+      expiredAt,
+    })
+    if (order_id) trackingPlaceOrder({ order_id })
+  }
 
   const styleTooltip = { maxWidth: '250px', zIndex: zIndexToolTip }
+  const estimateUSD = useMemo(() => {
+    return calcUsdPrices({
+      inputAmount,
+      outputAmount,
+      priceUsdIn: tradeInfo?.amountInUsd,
+      priceUsdOut: tradeInfoInvert?.amountInUsd,
+      currencyIn,
+      currencyOut,
+    })
+  }, [inputAmount, outputAmount, tradeInfo, tradeInfoInvert, currencyIn, currencyOut])
+
   return (
     <>
       <Flex flexDirection={'column'} style={{ gap: '1rem' }}>
@@ -635,6 +730,7 @@ const LimitOrderForm = function LimitOrderForm({
               maxCurrencySymbolLength={6}
               otherCurrency={currencyOut}
               filterWrap
+              onClickSelect={trackingTouchSelectToken}
             />
             <ArrowRotate isVertical rotate={rotate} onClick={handleRotateClick} />
 
@@ -652,6 +748,7 @@ const LimitOrderForm = function LimitOrderForm({
               maxCurrencySymbolLength={6}
               otherCurrency={currencyIn}
               filterWrap
+              onClickSelect={trackingTouchSelectToken}
             />
           </RowBetween>
         )}
@@ -673,7 +770,8 @@ const LimitOrderForm = function LimitOrderForm({
               otherCurrency={currencyOut}
               id="swap-currency-input"
               disableCurrencySelect
-              estimatedUsd={formatUsdPrice(inputAmount, tradeInfo?.amountInUsd)}
+              estimatedUsd={estimateUSD.input}
+              onFocus={trackingTouchInput}
             />
           </Tooltip>
         </Flex>
@@ -693,6 +791,7 @@ const LimitOrderForm = function LimitOrderForm({
                 style={{ borderRadius: 12, padding: '10px 12px', fontSize: 14, height: 48 }}
                 value={displayRate}
                 onUserInput={onChangeRate}
+                onFocus={trackingTouchInput}
               />
               {currencyIn && currencyOut && (
                 <Flex style={{ gap: 6, cursor: 'pointer' }} onClick={() => onInvertRate(!rateInfo.invert)}>
@@ -727,7 +826,8 @@ const LimitOrderForm = function LimitOrderForm({
               id="swap-currency-output"
               onMax={null}
               onHalf={null}
-              estimatedUsd={formatUsdPrice(outputAmount, tradeInfo?.amountOutUsd)}
+              estimatedUsd={estimateUSD.output}
+              onFocus={trackingTouchInput}
             />
           </Tooltip>
         </Flex>
@@ -792,7 +892,7 @@ const LimitOrderForm = function LimitOrderForm({
         {!showApproveFlow && !showWrap && account && (
           <ButtonError onClick={showPreview} disabled={disableBtnReview}>
             <Text fontWeight={500}>
-              <Trans>Review Order</Trans>
+              {checkingAllowance ? <Trans>Checking Allowance...</Trans> : <Trans>Review Order</Trans>}
             </Text>
           </ButtonError>
         )}
@@ -800,12 +900,7 @@ const LimitOrderForm = function LimitOrderForm({
       <ConfirmOrderModal
         flowState={flowState}
         onDismiss={hidePreview}
-        onSubmit={
-          isEdit
-            ? onSubmitEditOrder
-            : () =>
-                onSubmitCreateOrder({ currencyIn, currencyOut, chainId, account, inputAmount, outputAmount, expiredAt })
-        }
+        onSubmit={isEdit ? onSubmitEditOrder : onSubmitCreateOrderWithTracking}
         currencyIn={currencyIn}
         currencyOut={currencyOut}
         inputAmount={inputAmount}

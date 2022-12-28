@@ -24,16 +24,32 @@ export const hashOrder = (data: any) => {
   return axios.post(`${LIMIT_ORDER_API_WRITE}/v1/orders/hash`, data).then(formatData)
 }
 
-export const getTotalActiveMakingAmount = (chainId: string, tokenAddress: string, account: string) => {
+let activeMakingAmountCache: { [address: string]: string } = {}
+export const clearCacheActiveMakingAmount = () => {
+  activeMakingAmountCache = {}
+}
+
+export const getTotalActiveMakingAmount = async (
+  chainId: ChainId,
+  tokenAddress: string,
+  account: string,
+): Promise<{ activeMakingAmount: string }> => {
+  if (activeMakingAmountCache[tokenAddress]) {
+    return { activeMakingAmount: activeMakingAmountCache[tokenAddress] }
+  }
   return axios
     .get(`${LIMIT_ORDER_API_READ}/v1/orders/active-making-amount`, {
       params: {
-        chainId,
+        chainId: chainId + '',
         makerAsset: tokenAddress,
         maker: account,
       },
     })
     .then(formatData)
+    .then(data => {
+      activeMakingAmountCache[tokenAddress] = data.activeMakingAmount
+      return data
+    })
 }
 
 export const getEncodeData = (orderIds: number[], isCancelAll = false) => {

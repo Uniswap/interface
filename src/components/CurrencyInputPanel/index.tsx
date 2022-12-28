@@ -139,6 +139,8 @@ interface CurrencyInputPanelProps {
   onMax: (() => void) | null
   onHalf: (() => void) | null
   onUserInput?: (value: string) => void
+  onFocus?: () => void
+  onClickSelect?: () => void
   positionMax?: 'inline' | 'top'
   label?: string
   onCurrencySelect?: (currency: Currency) => void
@@ -178,6 +180,8 @@ export default function CurrencyInputPanel({
   label = '',
   onCurrencySelect,
   onSwitchCurrency,
+  onFocus,
+  onClickSelect,
   currency,
   disableCurrencySelect = false,
   hideBalance = false,
@@ -288,9 +292,8 @@ export default function CurrencyInputPanel({
                   value={value}
                   disabled={disabledInput}
                   maxLength={maxLength}
-                  onUserInput={val => {
-                    onUserInput(val)
-                  }}
+                  onUserInput={onUserInput}
+                  onFocus={onFocus}
                 />
                 {estimatedUsd ? (
                   <Text fontSize="0.875rem" marginRight="8px" fontWeight="500" color={theme.border}>
@@ -315,11 +318,13 @@ export default function CurrencyInputPanel({
                 selected={!!currency}
                 className="open-currency-select-button"
                 onClick={() => {
-                  if (!disableCurrencySelect && !isSwitchMode) {
+                  if (disableCurrencySelect) return
+                  if (!isSwitchMode) {
                     setModalOpen(true)
-                  } else if (!disableCurrencySelect && isSwitchMode && onSwitchCurrency) {
+                  } else if (isSwitchMode && onSwitchCurrency) {
                     onSwitchCurrency()
                   }
+                  onClickSelect?.()
                 }}
               >
                 <Aligner>

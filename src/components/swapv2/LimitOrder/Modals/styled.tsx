@@ -31,6 +31,7 @@ export const Value = styled.div`
   gap: 5px;
   align-items: center;
   text-align: right;
+  font-size: 14px;
 `
 const Row = styled.div`
   line-height: 20px;
@@ -43,6 +44,7 @@ const Row = styled.div`
 export const Label = styled.div`
   color: ${({ theme }) => theme.subText};
   font-weight: 500;
+  font-size: 14px;
 `
 
 export const Header = ({ title, onDismiss }: { title: string; onDismiss: () => void }) => {
@@ -69,7 +71,7 @@ export const Note = ({ note }: { note?: string }) => {
 type ListDataType = { label: string; content: ReactNode }[]
 export function ListInfo({ listData }: { listData: ListDataType }) {
   return (
-    <Flex style={{ gap: 20 }} flexDirection="column">
+    <Flex style={{ gap: 14 }} flexDirection="column">
       {listData.map(item => (
         <Row key={item.label}>
           <Label>{item.label}</Label>
@@ -134,7 +136,7 @@ export const Rate = ({
     >
       <Text>
         <Trans>
-          1 {invertRate ? symbolOut : symbolIn} is equal to {rateStr} {invertRate ? symbolIn : symbolOut}
+          a {invertRate ? symbolOut : symbolIn} price of {rateStr} {invertRate ? symbolIn : symbolOut}
         </Trans>
       </Text>
       <SwapIcon rotate={90} size={19} />

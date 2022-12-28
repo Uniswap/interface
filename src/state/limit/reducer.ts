@@ -3,15 +3,17 @@ import { createReducer } from '@reduxjs/toolkit'
 
 import { CreateOrderParam } from 'components/swapv2/LimitOrder/type'
 
-import { removeCurrentOrderUpdate, setCurrentOrderUpdate, setLimitCurrency } from './actions'
+import { removeCurrentOrderUpdate, setCurrentOrderUpdate, setInputAmount, setLimitCurrency } from './actions'
 
 export interface LimitState {
+  inputAmount: string
   currencyIn: Currency | undefined
   currencyOut: Currency | undefined
   ordersUpdating: CreateOrderParam[]
 }
 
 const initialState: LimitState = {
+  inputAmount: '',
   currencyIn: undefined,
   currencyOut: undefined,
   ordersUpdating: [],
@@ -19,6 +21,9 @@ const initialState: LimitState = {
 
 export default createReducer<LimitState>(initialState, builder =>
   builder
+    .addCase(setInputAmount, (state, { payload: inputAmount }) => {
+      state.inputAmount = inputAmount
+    })
     .addCase(setLimitCurrency, (state, { payload: { currencyIn, currencyOut } }) => {
       state.currencyIn = currencyIn
       state.currencyOut = currencyOut

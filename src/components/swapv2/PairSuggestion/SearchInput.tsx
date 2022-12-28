@@ -2,9 +2,11 @@ import { t } from '@lingui/macro'
 import React, { RefObject, forwardRef } from 'react'
 import { BrowserView, isMacOs, isMobile } from 'react-device-detect'
 import { Command, Search } from 'react-feather'
+import { useLocation } from 'react-router-dom'
 import { Flex } from 'rebass'
 import styled, { css } from 'styled-components'
 
+import { APP_PATHS } from 'constants/index'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 
 const SearchWrapper = styled.div<{ showList: boolean }>`
@@ -96,10 +98,14 @@ export default forwardRef<HTMLInputElement, Props>(function SearchComponent(
   }
 
   const { mixpanelHandler } = useMixpanel()
+  const { pathname } = useLocation()
 
   const showListViewWithTracking = () => {
     showListView()
     mixpanelHandler(MIXPANEL_TYPE.TAS_PRESS_CTRL_K, 'mouse click')
+    if (pathname.startsWith(APP_PATHS.LIMIT)) {
+      mixpanelHandler(MIXPANEL_TYPE.LO_ENTER_DETAIL, 'touch type and swap box')
+    }
   }
 
   return (

@@ -8,3 +8,5 @@ export const setLimitCurrency = createAction<{ currencyIn: Currency | undefined;
 )
 export const setCurrentOrderUpdate = createAction<CreateOrderParam>('limit/setCurrentOrderUpdate')
 export const removeCurrentOrderUpdate = createAction<number>('limit/removeCurrentOrderUpdate')
+
+export const setInputAmount = createAction<string>('limit/setInputAmount')

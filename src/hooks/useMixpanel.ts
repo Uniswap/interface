@@ -152,6 +152,15 @@ export enum MIXPANEL_TYPE {
   NOTIFICATION_CLICK_MENU,
   NOTIFICATION_SELECT_TOPIC,
   NOTIFICATION_DESELECT_TOPIC,
+
+  // limit order
+  LO_CLICK_PLACE_ORDER,
+  LO_PLACE_ORDER_SUCCESS,
+  LO_ENTER_DETAIL,
+  LO_CLICK_CANCEL_ORDER,
+  LO_CANCEL_ORDER_SUBMITTED,
+  LO_CLICK_REVIEW_PLACE_ORDER,
+  LO_CLICK_EDIT_ORDER,
 }
 
 export const NEED_CHECK_SUBGRAPH_TRANSACTION_TYPES = [
@@ -753,6 +762,35 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
           mixpanel.track('KyberDAO - Vote Click', payload)
           break
         }
+        case MIXPANEL_TYPE.LO_CLICK_PLACE_ORDER: {
+          mixpanel.track('Limit Order -  Place Order Click', payload)
+          break
+        }
+        case MIXPANEL_TYPE.LO_PLACE_ORDER_SUCCESS: {
+          mixpanel.track('Limit Order -  Place Order Submit Success', payload)
+          break
+        }
+        case MIXPANEL_TYPE.LO_ENTER_DETAIL: {
+          mixpanel.track('Limit Order - Enter Detail', { action: payload })
+          break
+        }
+        case MIXPANEL_TYPE.LO_CLICK_CANCEL_ORDER: {
+          mixpanel.track('Limit Order -  Cancel Order Click', payload)
+          break
+        }
+
+        case MIXPANEL_TYPE.LO_CANCEL_ORDER_SUBMITTED: {
+          mixpanel.track('Limit Order -  Cancel Order Submit Success', payload)
+          break
+        }
+        case MIXPANEL_TYPE.LO_CLICK_REVIEW_PLACE_ORDER: {
+          mixpanel.track('Limit Order -  Review Order Click', payload)
+          break
+        }
+        case MIXPANEL_TYPE.LO_CLICK_EDIT_ORDER: {
+          mixpanel.track('Limit Order -  Update Order Click', payload)
+          break
+        }
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1082,6 +1120,9 @@ export const useGlobalMixpanelEvents = () => {
           break
         case 'kyberdao/vote':
           pageName = 'KyberDAO Vote'
+          break
+        case 'limit':
+          pageName = 'Limit Order'
           break
         default:
           break
