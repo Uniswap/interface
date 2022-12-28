@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { isMobile } from 'react-device-detect'
-import { useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 
@@ -14,10 +14,12 @@ import stakevotePNG from 'assets/images/kyberdao/stake_vote.png'
 import { ButtonPrimary } from 'components/Button'
 import Divider from 'components/Divider'
 import { RowBetween, RowFit } from 'components/Row'
+import { APP_PATHS } from 'constants/index'
 import useTotalVotingReward from 'hooks/kyberdao/useTotalVotingRewards'
 import useTheme from 'hooks/useTheme'
 import { ApplicationModal } from 'state/application/actions'
 import { useToggleModal } from 'state/application/hooks'
+import { ExternalLink } from 'theme'
 
 import KNCLogo from '../kncLogo'
 import StakeKNCComponent from './StakeKNCComponent'
@@ -136,6 +138,7 @@ export default function StakeKNC() {
               shape Kyber&lsquo;s future and earn KNC rewards from trading fees.
             </Trans>
           </Text>
+          <NavLink to={APP_PATHS.ABOUT + '/knc'}>Read about KNC ↗</NavLink>
         </Information>
         <KyberImageWrapper>
           <img src={kyberCrystal} alt="KyberDAO" width="186px" />
@@ -148,7 +151,8 @@ export default function StakeKNC() {
                 <Trans>DAO Governance</Trans>
               </Text>
               <Text fontSize={12} lineHeight="16px" fontWeight={500} color={theme.subText}>
-                <Trans>KNC holders can stake their tokens to vote on proposals and receive rewards in KNC</Trans>
+                <Trans>KNC holders can stake their tokens to vote on proposals and receive rewards in KNC. </Trans>{' '}
+                <ExternalLink href={'https://docs.kyberswap.com/kyber-dao/kyber-dao-introduction'}>FAQ ↗</ExternalLink>
               </Text>
             </CardInfo>
           </Card>

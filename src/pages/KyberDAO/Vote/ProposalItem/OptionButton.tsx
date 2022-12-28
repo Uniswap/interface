@@ -1,3 +1,4 @@
+import { rgba } from 'polished'
 import { CheckSquare, Square } from 'react-feather'
 import { Text } from 'rebass'
 import styled, { css, keyframes } from 'styled-components'
@@ -49,7 +50,7 @@ const FinishedProgress = styled.div<{ width: number }>`
   bottom: 0;
   border-radius: 4px;
   width: ${({ width }) => width || 0}%;
-  background-color: ${({ theme }) => theme.border};
+  background-color: ${({ theme }) => rgba(theme.primary, 0.2)};
   z-index: 0;
 `
 const ActiveProgress = styled.div<{ width: number }>`

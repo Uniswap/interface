@@ -325,7 +325,7 @@ function AboutKNC() {
                 width={above768 ? '236px' : '100%'}
                 margin="40px 0 0"
                 as={Link}
-                to={APP_PATHS.KYBERDAO_VOTE}
+                to={APP_PATHS.KYBERDAO_STAKE}
                 onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_STAKE_KNC_CLICKED)}
               >
                 <Archive />

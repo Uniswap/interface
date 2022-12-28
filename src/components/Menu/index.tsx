@@ -235,7 +235,7 @@ export default function Menu() {
   }
   const under1440 = useMedia('(max-width: 1440px)')
   const above1321 = useMedia('(min-width: 1321px)')
-  const under1200 = useMedia('(max-width: 1200px)')
+  const under1040 = useMedia('(max-width: 1040px)')
 
   const bridgeLink = networkInfo.bridgeURL
   const toggleClaimPopup = useToggleModal(ApplicationModal.CLAIM_POPUP)
@@ -330,7 +330,7 @@ export default function Menu() {
                 <Trans>Referral</Trans>
               </NavLink>
             </MenuItem>
-            {under1200 && (
+            {under1040 && (
               <MenuItem>
                 <NavDropDown
                   icon={<Info />}

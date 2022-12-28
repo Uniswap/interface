@@ -13,7 +13,7 @@ import NavGroup from './NavGroup'
 
 const KyberDaoWrapper = styled.span`
   display: inline-flex;
-  @media (max-width: 1440px) {
+  @media (max-width: 1040px) {
     display: none;
   }
 `
