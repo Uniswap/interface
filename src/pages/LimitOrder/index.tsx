@@ -896,6 +896,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                       ) : showApproveFlow ? (
                         <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
                           <AutoColumn style={{ width: '100%' }} gap="12px">
+                            chainId !== 137 && (
                             <ButtonConfirmed
                               onClick={handleApprove}
                               disabled={
@@ -944,6 +945,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                                 )}
                               </AutoRow>
                             </ButtonConfirmed>
+                            )
                             <ButtonError
                               onClick={() => {
                                 setSwapState({
@@ -957,6 +959,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                               width="100%"
                               id="swap-button"
                               disabled={
+                                chainId === 137 ||
                                 !isValid ||
                                 !approvalState ||
                                 (approvalState !== ApprovalState.APPROVED &&
@@ -982,7 +985,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                             })
                           }}
                           id="swap-button"
-                          disabled={!isValid || !!swapCallbackError}
+                          disabled={!isValid || !!swapCallbackError || chainId === 137}
                           error={isValid && !swapCallbackError}
                         >
                           <Text fontSize={20} fontWeight={500}>
@@ -1336,6 +1339,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                 ) : showApproveFlow ? (
                   <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
                     <AutoColumn style={{ width: '100%' }} gap="12px">
+                      chainId !== 137 && (
                       <ButtonConfirmed
                         onClick={handleApprove}
                         disabled={
@@ -1383,6 +1387,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                           )}
                         </AutoRow>
                       </ButtonConfirmed>
+                      )
                       <ButtonError
                         onClick={() => {
                           setSwapState({
@@ -1396,6 +1401,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                         width="100%"
                         id="swap-button"
                         disabled={
+                          chainId === 137 ||
                           !isValid ||
                           (approvalState !== ApprovalState.APPROVED && signatureState !== UseERC20PermitState.SIGNED)
                         }
@@ -1419,7 +1425,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                       })
                     }}
                     id="swap-button"
-                    disabled={!isValid || !!swapCallbackError}
+                    disabled={!isValid || !!swapCallbackError || chainId === 137}
                     error={isValid && !swapCallbackError}
                   >
                     <Text fontSize={20} fontWeight={500}>
