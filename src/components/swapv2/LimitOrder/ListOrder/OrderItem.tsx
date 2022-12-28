@@ -137,7 +137,7 @@ const TradeRateOrder = ({ order, style = {} }: { order: LimitOrder; style?: CSSP
   return (
     <Colum style={style}>
       <Flex style={{ gap: 6, cursor: 'pointer', alignItems: 'center' }} onClick={() => setInvert(!invert)}>
-        <Text color={theme.subText}>{invert ? `${symbolOut}/${symbolIn}` : `${symbolIn}/${symbolOut}`}</Text>
+        <Text color={theme.subText}>{!invert ? `${symbolOut}/${symbolIn}` : `${symbolIn}/${symbolOut}`}</Text>
         <Repeat color={theme.subText} size={12} />
       </Flex>
       <Text color={theme.text}>{formatRateOrder(order, invert)}</Text>

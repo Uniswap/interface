@@ -166,7 +166,10 @@ export default function NotificationModal() {
     setTimeout(
       () => {
         setSelectedTopic(isOpen ? topicGroups.filter(e => e.isSubscribed).map(e => e.id) : [])
-        if (!isOpen) setErrorInput('')
+        if (!isOpen) {
+          setErrorInput('')
+          setIsSubmit(false)
+        }
       },
       isOpen ? 0 : 400,
     )
@@ -203,6 +206,7 @@ export default function NotificationModal() {
     }
   }, [topicGroups, selectedTopic])
 
+  const [isSubmit, setIsSubmit] = useState(false)
   const onSave = async () => {
     try {
       if (isEmailTab) validateInput(inputAccount, true)
@@ -217,6 +221,7 @@ export default function NotificationModal() {
       }
       const data = await handleSubscribe(subscribeIds, unsubscribeIds, inputAccount, isEmailTab)
       const verificationUrl = data?.[0]?.verificationUrl
+      setIsSubmit(true)
       if (isTelegramTab && verificationUrl) {
         window.open(`https://${verificationUrl}`)
         return
@@ -272,8 +277,8 @@ export default function NotificationModal() {
   }, [isNewUserQualified, topicGroups])
 
   const disableButtonSave = useMemo(() => {
-    return isLoading || !inputAccount || !!errorInput || !getDiffChangeTopics().hasChanged
-  }, [getDiffChangeTopics, isLoading, inputAccount, errorInput])
+    return isLoading || isSubmit || !inputAccount || !!errorInput || !getDiffChangeTopics().hasChanged
+  }, [getDiffChangeTopics, isSubmit, isLoading, inputAccount, errorInput])
 
   const hasTopicSubscribed = topicGroups.some(e => e.isSubscribed)
   const isVerifiedTelegram = userInfo?.telegram && hasTopicSubscribed
