@@ -4,7 +4,7 @@ import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
@@ -22,9 +22,6 @@ import Landing from './Landing'
 import NotFound from './NotFound'
 import Swap from './Swap'
 import { RedirectPathToSwapOnly } from './Swap/redirects'
-import Tokens from './Tokens'
-
-const TokenDetails = lazy(() => import('./TokenDetails'))
 
 const BodyWrapper = styled.div`
   display: flex;
@@ -137,10 +134,6 @@ export default function App() {
             {isLoaded ? (
               <Routes>
                 <Route path="/" element={<Landing />} />
-                <Route path="tokens" element={<Tokens />}>
-                  <Route path=":chainName" />
-                </Route>
-                <Route path="tokens/:chainName/:tokenAddress" element={<TokenDetails />} />
                 <Route path="send" element={<RedirectPathToSwapOnly />} />
                 <Route path="swap" element={<Swap />} />
                 <Route path="*" element={<Navigate to="/not-found" replace />} />

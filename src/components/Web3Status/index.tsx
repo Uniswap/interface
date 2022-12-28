@@ -7,7 +7,6 @@ import { IconWrapper } from 'components/Identicon/StatusIcon'
 import WalletDropdown from 'components/WalletDropdown'
 import { getConnection, getIsMetaMask } from 'connection/utils'
 import { Portal } from 'nft/components/common/Portal'
-import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { getIsValidSwapQuote } from 'pages/Swap'
 import { darken } from 'polished'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
@@ -215,7 +214,6 @@ function Web3StatusInner() {
   const toggleWalletModal = useToggleWalletModal()
   const toggleMetamaskConnectionErrorModal = useToggleMetamaskConnectionErrorModal()
   const walletIsOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
-  const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
 
   const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
   useEffect(() => {
@@ -257,7 +255,6 @@ function Web3StatusInner() {
         data-testid="web3-status-connected"
         onClick={handleWalletDropdownClick}
         pending={hasPendingTransactions}
-        isClaimAvailable={isClaimAvailable}
       >
         {!hasPendingTransactions && <StatusIcon size={24} connectionType={connectionType} />}
         {hasPendingTransactions ? (

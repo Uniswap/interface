@@ -4,9 +4,6 @@ import { ReactNode } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Link as HistoryLink, useLocation } from 'react-router-dom'
 import { Box } from 'rebass'
-import { useAppDispatch } from 'state/hooks'
-import { resetMintState } from 'state/mint/actions'
-import { resetMintState as resetMintV3State } from 'state/mint/v3/actions'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { flexRowNoWrap } from 'theme/styles'
@@ -69,8 +66,7 @@ export function AddRemoveTabs({
   children?: ReactNode | undefined
 }) {
   const theme = useTheme()
-  // reset states on back
-  const dispatch = useAppDispatch()
+
   const location = useLocation()
 
   // detect if back should redirect to v3 or v2 pool page
@@ -81,17 +77,7 @@ export function AddRemoveTabs({
   return (
     <Tabs>
       <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
-        <StyledHistoryLink
-          to={poolLink}
-          onClick={() => {
-            if (adding) {
-              // not 100% sure both of these are needed
-              dispatch(resetMintState())
-              dispatch(resetMintV3State())
-            }
-          }}
-          flex={children ? '1' : undefined}
-        >
+        <StyledHistoryLink to={poolLink} flex={children ? '1' : undefined}>
           <StyledArrowLeft stroke={theme.textSecondary} />
         </StyledHistoryLink>
         <ThemedText.DeprecatedMediumHeader

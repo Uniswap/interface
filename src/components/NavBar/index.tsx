@@ -10,9 +10,7 @@ import { ReactNode } from 'react'
 import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
-import { Bag } from './Bag'
 import { ChainSelector } from './ChainSelector'
-import { SearchBar } from './SearchBar'
 import * as styles from './style.css'
 
 const Nav = styled.nav`
@@ -109,21 +107,12 @@ const Navbar = () => {
               <PageTabs />
             </Row>
           </Box>
-          <Box className={styles.searchContainer}>
-            <SearchBar />
-          </Box>
+          <Box className={styles.searchContainer}></Box>
           <Box className={styles.rightSideContainer}>
             <Row gap="12">
-              <Box position="relative" display={{ sm: 'flex', xl: 'none' }}>
-                <SearchBar />
+              <Box display={{ sm: 'none', lg: 'flex' }}>
+                <ChainSelector />
               </Box>
-              {isNftPage && <Bag />}
-              {!isNftPage && (
-                <Box display={{ sm: 'none', lg: 'flex' }}>
-                  <ChainSelector />
-                </Box>
-              )}
-
               <Web3Status />
             </Row>
           </Box>

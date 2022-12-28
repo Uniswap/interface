@@ -11,7 +11,6 @@ import styled, { useTheme } from 'styled-components/macro'
 
 import { ThemedText } from '../../theme'
 import { AutoColumn } from '../Column'
-import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
 
 enum SlippageError {
@@ -174,11 +173,6 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
           <ThemedText.DeprecatedBlack fontWeight={400} fontSize={14} color={theme.textSecondary}>
             <Trans>Slippage tolerance</Trans>
           </ThemedText.DeprecatedBlack>
-          <QuestionHelper
-            text={
-              <Trans>Your transaction will revert if the price changes unfavorably by more than this percentage.</Trans>
-            }
-          />
         </RowFixed>
         <RowBetween>
           <Option
@@ -243,9 +237,6 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
             <ThemedText.DeprecatedBlack fontSize={14} fontWeight={400} color={theme.textSecondary}>
               <Trans>Transaction deadline</Trans>
             </ThemedText.DeprecatedBlack>
-            <QuestionHelper
-              text={<Trans>Your transaction will revert if it is pending for more than this period of time.</Trans>}
-            />
           </RowFixed>
           <RowFixed>
             <OptionCustom style={{ width: '80px' }} warning={!!deadlineError} tabIndex={-1}>

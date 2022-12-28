@@ -185,12 +185,10 @@ const userSlice = createSlice({
 })
 
 export const {
-  addSerializedPair,
   addSerializedToken,
   updateFiatOnrampAcknowledgments,
   dismissFiatOnramp,
   updateSelectedWallet,
-  updateHideClosedPositions,
   updateMatchesDarkMode,
   updateUserClientSideRouter,
   updateUserDarkMode,

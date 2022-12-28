@@ -17,7 +17,6 @@ import { ThemedText } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'
-import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
@@ -211,7 +210,6 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                   <ThemedText.DeprecatedBlack fontWeight={400} fontSize={14} color={theme.textSecondary}>
                     <Trans>Auto Router API</Trans>
                   </ThemedText.DeprecatedBlack>
-                  <QuestionHelper text={<Trans>Use the Uniswap Labs API to get faster quotes.</Trans>} />
                 </RowFixed>
                 <Toggle
                   id="toggle-optimized-router-button"
@@ -231,11 +229,6 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                 <ThemedText.DeprecatedBlack fontWeight={400} fontSize={14} color={theme.textSecondary}>
                   <Trans>Expert Mode</Trans>
                 </ThemedText.DeprecatedBlack>
-                <QuestionHelper
-                  text={
-                    <Trans>Allow high price impact trades and skip the confirm screen. Use at your own risk.</Trans>
-                  }
-                />
               </RowFixed>
               <Toggle
                 id="toggle-expert-mode-button"
