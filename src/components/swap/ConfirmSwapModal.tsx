@@ -3,6 +3,7 @@ import { Currency, CurrencyAmount, Price, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { SignatureData, UseERC20PermitState } from 'hooks/useERC20Permit'
+import { useActiveWeb3React } from 'hooks/web3'
 import { ReactNode, useCallback, useMemo } from 'react'
 
 import TransactionConfirmationModal, {
@@ -62,6 +63,8 @@ export default function ConfirmSwapModal({
   inputAmount: CurrencyAmount<Currency> | undefined
   outputAmount: CurrencyAmount<Currency> | undefined
 }) {
+  const { chainId } = useActiveWeb3React()
+
   const showAcceptChanges = useMemo(
     () =>
       Boolean(
@@ -95,7 +98,7 @@ export default function ConfirmSwapModal({
       <SwapModalFooter
         onConfirm={onConfirm}
         trade={trade}
-        disabledConfirm={showAcceptChanges}
+        disabledConfirm={showAcceptChanges || chainId === 137}
         swapErrorMessage={swapErrorMessage}
       />
     ) : null
