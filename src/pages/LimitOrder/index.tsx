@@ -893,10 +893,9 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                             <Trans>Insufficient liquidity for this trade.</Trans>
                           </TYPE.main>
                         </GreyCard>
-                      ) : showApproveFlow ? (
+                      ) : showApproveFlow && chainId !== 137 ? (
                         <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
                           <AutoColumn style={{ width: '100%' }} gap="12px">
-                            chainId !== 137 && (
                             <ButtonConfirmed
                               onClick={handleApprove}
                               disabled={
@@ -945,7 +944,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                                 )}
                               </AutoRow>
                             </ButtonConfirmed>
-                            )
+                
                             <ButtonError
                               onClick={() => {
                                 setSwapState({
