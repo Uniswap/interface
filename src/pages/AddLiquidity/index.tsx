@@ -320,31 +320,29 @@ export default function AddLiquidity({
       </ButtonLight>
     ) : (
       <AutoColumn gap={'md'}>
-        {(approvalA === ApprovalState.NOT_APPROVED || approvalA === ApprovalState.PENDING) && isValid && (
-          <RowBetween>
-            {showApprovalA && (
-              <ButtonPrimary onClick={approveACallback} disabled={approvalA === ApprovalState.PENDING} width={'100%'}>
-                {approvalA === ApprovalState.PENDING ? (
-                  <Dots>
-                    <Trans>Approving {currencies[Field.CURRENCY_A]?.symbol}</Trans>
-                  </Dots>
-                ) : (
-                  <Trans>Approve {currencies[Field.CURRENCY_A]?.symbol}</Trans>
-                )}
-              </ButtonPrimary>
-            )}
-          </RowBetween>
-        )}
+        {(approvalA === ApprovalState.NOT_APPROVED || approvalA === ApprovalState.PENDING) &&
+          isValid &&
+          chainId !== 137 && (
+            <RowBetween>
+              {showApprovalA && (
+                <ButtonPrimary onClick={approveACallback} disabled={approvalA === ApprovalState.PENDING} width={'100%'}>
+                  {approvalA === ApprovalState.PENDING ? (
+                    <Dots>
+                      <Trans>Approving {currencies[Field.CURRENCY_A]?.symbol}</Trans>
+                    </Dots>
+                  ) : (
+                    <Trans>Approve {currencies[Field.CURRENCY_A]?.symbol}</Trans>
+                  )}
+                </ButtonPrimary>
+              )}
+            </RowBetween>
+          )}
         <ButtonError
           style={{ marginTop: '8px' }}
           onClick={() => {
             setShowConfirm(true)
           }}
-          disabled={
-            !isValid ||
-            (!argentWalletContract && approvalA !== ApprovalState.APPROVED && !depositADisabled) ||
-            chainId == 137
-          }
+          disabled={!isValid || (!argentWalletContract && approvalA !== ApprovalState.APPROVED && !depositADisabled)}
           error={!isValid && !!parsedAmounts[Field.CURRENCY_A]}
         >
           <Text fontWeight={500}>{errorMessage ? errorMessage : <Trans>Preview</Trans>}</Text>
