@@ -22,10 +22,4 @@ describe('Remove Liquidity', () => {
     cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'WETH')
     cy.get('#remove-liquidity-tokenb-symbol').should('contain.text', 'WETH')
   })
-
-  it.skip('token not in storage is loaded', () => {
-    cy.visit('/remove/v2/0xb290b2f9f8f108d03ff2af3ac5c8de6de31cdf6d/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85')
-    cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'SKL')
-    cy.get('#remove-liquidity-tokenb-symbol').should('contain.text', 'MKR')
-  })
 })

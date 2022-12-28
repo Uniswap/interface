@@ -10,8 +10,20 @@ import { LOOKS_RARE_CREATOR_BASIS_POINTS } from 'nft/utils'
 import { formatEth, formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { Dispatch, FormEvent, useEffect, useMemo, useRef, useState } from 'react'
+import styled from 'styled-components/macro'
 
 import * as styles from './ListPage.css'
+
+const TableHeader = styled.div`
+  display: flex;
+  position: sticky;
+  align-items: center;
+  top: 72px;
+  padding-top: 24px;
+  padding-bottom: 24px;
+  z-index: 1;
+  background-color: ${({ theme }) => theme.backgroundBackdrop};
+`
 
 enum SetPriceMethod {
   SAME_PRICE,
@@ -44,7 +56,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
 
   return (
     <Column>
-      <Row marginTop="20">
+      <TableHeader>
         <Column
           marginLeft={selectedMarkets.length > 1 ? '36' : '0'}
           transition="500"
@@ -86,7 +98,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
             You receive
           </Column>
         </Row>
-      </Row>
+      </TableHeader>
       {sellAssets.map((asset) => {
         return (
           <>
@@ -140,7 +152,7 @@ const PriceTextInput = ({
     inputRef.current.value = listPrice !== undefined ? `${listPrice}` : ''
     setWarningType(WarningType.NONE)
     if (!warning && listPrice) {
-      if (listPrice < asset.floorPrice) setWarningType(WarningType.BELOW_FLOOR)
+      if (listPrice < (asset?.floorPrice ?? 0)) setWarningType(WarningType.BELOW_FLOOR)
       else if (asset.floor_sell_order_price && listPrice >= asset.floor_sell_order_price)
         setWarningType(WarningType.ALREADY_LISTED)
     } else if (warning && listPrice && listPrice >= 0) removeMarketplaceWarning(asset, warning)
@@ -214,10 +226,14 @@ const PriceTextInput = ({
       >
         {focused ? (
           <>
-            <Row display={asset.lastPrice ? 'flex' : 'none'} marginRight="8">
-              LAST: {formatEth(asset.lastPrice)} ETH
-            </Row>
-            <Row display={asset.floorPrice ? 'flex' : 'none'}>FLOOR: {formatEth(asset.floorPrice)} ETH</Row>
+            {!!asset.lastPrice && (
+              <Row display={asset.lastPrice ? 'flex' : 'none'} marginRight="8">
+                LAST: {formatEth(asset.lastPrice)} ETH
+              </Row>
+            )}
+            {!!asset.floorPrice && (
+              <Row display={asset.floorPrice ? 'flex' : 'none'}>FLOOR: {formatEth(asset.floorPrice)} ETH</Row>
+            )}
           </>
         ) : (
           <>
@@ -227,8 +243,8 @@ const PriceTextInput = ({
                   <>
                     {warningType}
                     {warningType === WarningType.BELOW_FLOOR
-                      ? formatEth(asset.floorPrice)
-                      : formatEth(asset.floor_sell_order_price)}
+                      ? formatEth(asset?.floorPrice ?? 0)
+                      : formatEth(asset?.floor_sell_order_price ?? 0)}
                     ETH
                     <Box
                       color={warningType === WarningType.BELOW_FLOOR ? 'accentAction' : 'orange'}
@@ -323,7 +339,7 @@ const MarketplaceRow = ({
   const royalties =
     (selectedMarkets.length === 1 && selectedMarkets[0].name === 'LooksRare'
       ? LOOKS_RARE_CREATOR_BASIS_POINTS
-      : asset.basisPoints) * 0.01
+      : asset?.basisPoints ?? 0) * 0.01
   const feeInEth = price && (price * (royalties + marketplaceFee)) / 100
   const userReceives = price && feeInEth && price - feeInEth
 

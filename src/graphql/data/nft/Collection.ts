@@ -1,12 +1,11 @@
-import graphql from 'babel-plugin-relay/macro'
+import gql from 'graphql-tag'
 import { GenieCollection, Trait } from 'nft/types'
-import { useEffect } from 'react'
-import { useLazyLoadQuery, useQueryLoader } from 'react-relay'
+import { useMemo } from 'react'
 
-import { CollectionQuery } from './__generated__/CollectionQuery.graphql'
+import { NftCollection, useCollectionQuery } from '../__generated__/types-and-hooks'
 
-const collectionQuery = graphql`
-  query CollectionQuery($addresses: [String!]!) {
+gql`
+  query Collection($addresses: [String!]!) {
     nftCollections(filter: { addresses: $addresses }) {
       edges {
         cursor
@@ -87,28 +86,23 @@ const collectionQuery = graphql`
   }
 `
 
-export function useLoadCollectionQuery(address?: string | string[]): void {
-  const [, loadQuery] = useQueryLoader(collectionQuery)
-  useEffect(() => {
-    if (address) {
-      loadQuery({ addresses: Array.isArray(address) ? address : [address] })
-    }
-  }, [address, loadQuery])
+interface useCollectionReturnProps {
+  data: GenieCollection
+  loading: boolean
 }
 
-// Lazy-loads an already loaded CollectionQuery.
-// This will *not* trigger a query - that must be done from a parent component to ensure proper query coalescing and to
-// prevent waterfalling. Use useLoadCollectionQuery to trigger the query.
-export function useCollectionQuery(address: string): GenieCollection {
-  const queryData = useLazyLoadQuery<CollectionQuery>( // this will suspend if not yet loaded
-    collectionQuery,
-    { addresses: [address] },
-    { fetchPolicy: 'store-or-network' }
-  )
+export function useCollection(address: string): useCollectionReturnProps {
+  const { data: queryData, loading } = useCollectionQuery({
+    variables: {
+      addresses: address,
+    },
+  })
 
-  const queryCollection = queryData.nftCollections?.edges[0]?.node
-  const market = queryCollection?.markets && queryCollection?.markets[0]
-  const traits = {} as Record<string, Trait[]>
+  const queryCollection = queryData?.nftCollections?.edges?.[0]?.node as NonNullable<NftCollection>
+  const market = queryCollection?.markets?.[0]
+  const traits = useMemo(() => {
+    return {} as Record<string, Trait[]>
+  }, [])
   if (queryCollection?.traits) {
     queryCollection?.traits.forEach((trait) => {
       if (trait.name && trait.stats) {
@@ -122,42 +116,43 @@ export function useCollectionQuery(address: string): GenieCollection {
       }
     })
   }
-  return {
-    address,
-    isVerified: queryCollection?.isVerified ?? undefined,
-    name: queryCollection?.name ?? undefined,
-    description: queryCollection?.description ?? undefined,
-    standard: queryCollection?.nftContracts ? queryCollection?.nftContracts[0]?.standard ?? undefined : undefined,
-    bannerImageUrl: queryCollection?.bannerImage?.url ?? undefined,
-    stats: queryCollection?.markets
-      ? {
-          num_owners: market?.owners ?? undefined,
-          floor_price: market?.floorPrice?.value ?? undefined,
-          one_day_volume: market?.volume?.value ?? undefined,
-          one_day_change: market?.volumePercentChange?.value ?? undefined,
-          one_day_floor_change: market?.floorPricePercentChange?.value ?? undefined,
-          banner_image_url: queryCollection?.bannerImage?.url ?? undefined,
-          total_supply: queryCollection?.numAssets ?? undefined,
-          total_listings: market?.listings?.value ?? undefined,
-          total_volume: market?.totalVolume?.value ?? undefined,
-        }
-      : {},
-    traits,
-    marketplaceCount: queryCollection?.markets
-      ? market?.marketplaces?.map((market) => {
+  return useMemo(() => {
+    return {
+      data: {
+        address,
+        isVerified: queryCollection?.isVerified,
+        name: queryCollection?.name,
+        description: queryCollection?.description,
+        standard: queryCollection?.nftContracts?.[0]?.standard,
+        bannerImageUrl: queryCollection?.bannerImage?.url,
+        stats: {
+          num_owners: market?.owners,
+          floor_price: market?.floorPrice?.value,
+          one_day_volume: market?.volume?.value,
+          one_day_change: market?.volumePercentChange?.value,
+          one_day_floor_change: market?.floorPricePercentChange?.value,
+          banner_image_url: queryCollection?.bannerImage?.url,
+          total_supply: queryCollection?.numAssets,
+          total_listings: market?.listings?.value,
+          total_volume: market?.totalVolume?.value,
+        },
+        traits,
+        marketplaceCount: market?.marketplaces?.map((market) => {
           return {
             marketplace: market.marketplace?.toLowerCase() ?? '',
             count: market.listings ?? 0,
             floorPrice: market.floorPrice ?? 0,
           }
-        })
-      : undefined,
-    imageUrl: queryCollection?.image?.url ?? '',
-    twitterUrl: queryCollection?.twitterName ?? '',
-    instagram: queryCollection?.instagramName ?? undefined,
-    discordUrl: queryCollection?.discordUrl ?? undefined,
-    externalUrl: queryCollection?.homepageUrl ?? undefined,
-    rarityVerified: false, // TODO update when backend supports
-    // isFoundation: boolean, // TODO ask backend to add
-  }
+        }),
+        imageUrl: queryCollection?.image?.url ?? '',
+        twitterUrl: queryCollection?.twitterName,
+        instagram: queryCollection?.instagramName,
+        discordUrl: queryCollection?.discordUrl,
+        externalUrl: queryCollection?.homepageUrl,
+        rarityVerified: false, // TODO update when backend supports
+        // isFoundation: boolean, // TODO ask backend to add
+      },
+      loading,
+    }
+  }, [address, loading, market, queryCollection, traits])
 }

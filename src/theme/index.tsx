@@ -17,7 +17,18 @@ export const MEDIA_WIDTHS = {
   deprecated_upToLarge: 1280,
 }
 
-const BREAKPOINTS = {
+const deprecated_mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(
+  MEDIA_WIDTHS
+).reduce((acc, size) => {
+  acc[size] = (a: any, b: any, c: any) => css`
+    @media (max-width: ${(MEDIA_WIDTHS as any)[size]}px) {
+      ${css(a, b, c)}
+    }
+  `
+  return acc
+}, {} as any)
+
+export const BREAKPOINTS = {
   xs: 396,
   sm: 640,
   md: 768,
@@ -53,17 +64,6 @@ const fonts = {
   code: 'courier, courier new, serif',
 }
 
-const deprecated_mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(
-  MEDIA_WIDTHS
-).reduce((accumulator, size) => {
-  ;(accumulator as any)[size] = (a: any, b: any, c: any) => css`
-    @media (max-width: ${(MEDIA_WIDTHS as any)[size]}px) {
-      ${css(a, b, c)}
-    }
-  `
-  return accumulator
-}, {}) as any
-
 function getSettings(darkMode: boolean) {
   return {
     grids: {
@@ -80,6 +80,9 @@ function getSettings(darkMode: boolean) {
     // media queries
     deprecated_mediaWidth: deprecated_mediaWidthTemplates,
 
+    navHeight: 72,
+    mobileBottomBarHeight: 52,
+
     // deprecated - please use hardcoded exported values instead of
     // adding to the theme object
     breakpoint: BREAKPOINTS,
@@ -88,7 +91,8 @@ function getSettings(darkMode: boolean) {
   }
 }
 
-function getTheme(darkMode: boolean) {
+// eslint-disable-next-line import/no-unused-modules -- used in styled.d.ts
+export function getTheme(darkMode: boolean) {
   return {
     darkMode,
     ...(darkMode ? darkTheme : lightTheme),
@@ -105,7 +109,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
 
 export const ThemedGlobalStyle = createGlobalStyle`
   html {
-    color: ${({ theme }) => theme.deprecated_text1};
+    color: ${({ theme }) => theme.textPrimary};
     background-color: ${({ theme }) => theme.background} !important;
   }
 
@@ -114,7 +118,7 @@ export const ThemedGlobalStyle = createGlobalStyle`
   }
 
   a {
-    color: ${({ theme }) => theme.deprecated_blue1}; 
+    color: ${({ theme }) => theme.accentAction}; 
   }
 
   :root {

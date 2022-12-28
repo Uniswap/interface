@@ -1164,6 +1164,13 @@
       "name": "Synth sXRP",
       "symbol": "sXRP",
       "decimals": 18
+    },
+    {
+      "chainId": 1,
+      "address": "0x0Ec72CD6690db40B16be166858299F19D4f8E5B0",
+      "name": "GOLD1",
+      "symbol": "GOLD1",
+      "decimals": 18
     }
   ]
 }

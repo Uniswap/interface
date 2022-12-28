@@ -7,7 +7,7 @@ import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { UniIcon } from 'nft/components/icons'
 import { ReactNode } from 'react'
-import { NavLink, NavLinkProps, useLocation } from 'react-router-dom'
+import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { Bag } from './Bag'
@@ -16,21 +16,11 @@ import { MenuDropdown } from './MenuDropdown'
 import { SearchBar } from './SearchBar'
 import * as styles from './style.css'
 
-const MobileBottomBar = styled.div`
-  position: fixed;
-  display: flex;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  justify-content: space-between;
-  padding: 4px 8px;
-  height: 56px;
-  background: ${({ theme }) => theme.backgroundSurface};
-  border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
-
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
-    display: none;
-  }
+const Nav = styled.nav`
+  padding: 20px 12px;
+  width: 100%;
+  height: ${({ theme }) => theme.navHeight}px;
+  z-index: 2;
 `
 
 interface MenuItemProps {
@@ -38,22 +28,24 @@ interface MenuItemProps {
   id?: NavLinkProps['id']
   isActive?: boolean
   children: ReactNode
+  dataTestId?: string
 }
 
-const MenuItem = ({ href, id, isActive, children }: MenuItemProps) => {
+const MenuItem = ({ href, dataTestId, id, isActive, children }: MenuItemProps) => {
   return (
     <NavLink
       to={href}
       className={isActive ? styles.activeMenuItem : styles.menuItem}
       id={id}
       style={{ textDecoration: 'none' }}
+      data-testid={dataTestId}
     >
       {children}
     </NavLink>
   )
 }
 
-const PageTabs = () => {
+export const PageTabs = () => {
   const { pathname } = useLocation()
   const { chainId: connectedChainId } = useWeb3React()
   const chainName = chainIdToBackendName(connectedChainId)
@@ -75,7 +67,7 @@ const PageTabs = () => {
       <MenuItem href={`/tokens/${chainName.toLowerCase()}`} isActive={pathname.startsWith('/tokens')}>
         <Trans>Tokens</Trans>
       </MenuItem>
-      <MenuItem href="/nfts" isActive={isNftPage}>
+      <MenuItem dataTestId="nft-nav" href="/nfts" isActive={isNftPage}>
         <Trans>NFTs</Trans>
       </MenuItem>
       <MenuItem href="/pool" id="pool-nav-link" isActive={isPoolActive}>
@@ -87,14 +79,26 @@ const PageTabs = () => {
 
 const Navbar = () => {
   const isNftPage = useIsNftPage()
+  const navigate = useNavigate()
 
   return (
     <>
-      <nav className={styles.nav}>
-        <Box display="flex" height="full" flexWrap="nowrap" alignItems="stretch">
+      <Nav>
+        <Box display="flex" height="full" flexWrap="nowrap">
           <Box className={styles.leftSideContainer}>
-            <Box as="a" href="#/swap" className={styles.logoContainer}>
-              <UniIcon width="48" height="48" className={styles.logo} />
+            <Box className={styles.logoContainer}>
+              <UniIcon
+                width="48"
+                height="48"
+                data-testid="uniswap-logo"
+                className={styles.logo}
+                onClick={() => {
+                  navigate({
+                    pathname: '/',
+                    search: '?intro=true',
+                  })
+                }}
+              />
             </Box>
             {!isNftPage && (
               <Box display={{ sm: 'flex', lg: 'none' }}>
@@ -105,7 +109,7 @@ const Navbar = () => {
               <PageTabs />
             </Row>
           </Box>
-          <Box className={styles.middleContainer} alignItems="flex-start">
+          <Box className={styles.searchContainer}>
             <SearchBar />
           </Box>
           <Box className={styles.rightSideContainer}>
@@ -127,13 +131,7 @@ const Navbar = () => {
             </Row>
           </Box>
         </Box>
-      </nav>
-      <MobileBottomBar>
-        <PageTabs />
-        <Box marginY="4">
-          <MenuDropdown />
-        </Box>
-      </MobileBottomBar>
+      </Nav>
     </>
   )
 }

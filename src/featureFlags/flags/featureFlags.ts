@@ -1,6 +1,5 @@
 export enum FeatureFlag {
-  favoriteTokens = 'favoriteTokens',
+  fiatOnramp = 'fiatOnramp',
   traceJsonRpc = 'traceJsonRpc',
-  multiNetworkBalances = 'multiNetworkBalances',
-  landingPage = 'landingPage',
+  permit2 = 'permit2',
 }

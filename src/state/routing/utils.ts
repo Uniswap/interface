@@ -3,7 +3,6 @@ import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 
-import { nativeOnChain } from '../../constants/tokens'
 import { GetQuoteResult, InterfaceTrade, V2PoolInRoute, V3PoolInRoute } from './types'
 
 /**
@@ -26,9 +25,6 @@ export function computeRoutes(
   if (parsedTokenIn.address !== currencyIn.wrapped.address) return undefined
   if (parsedTokenOut.address !== currencyOut.wrapped.address) return undefined
 
-  const parsedCurrencyIn = currencyIn.isNative ? nativeOnChain(currencyIn.chainId) : parsedTokenIn
-  const parsedCurrencyOut = currencyOut.isNative ? nativeOnChain(currencyOut.chainId) : parsedTokenOut
-
   try {
     return quoteResult.route.map((route) => {
       if (route.length === 0) {
@@ -46,18 +42,18 @@ export function computeRoutes(
       return {
         routev3:
           routeProtocol === Protocol.V3
-            ? new V3Route(route.map(genericPoolPairParser) as Pool[], parsedCurrencyIn, parsedCurrencyOut)
+            ? new V3Route(route.map(genericPoolPairParser) as Pool[], currencyIn, currencyOut)
             : null,
         routev2:
           routeProtocol === Protocol.V2
-            ? new V2Route(route.map(genericPoolPairParser) as Pair[], parsedCurrencyIn, parsedCurrencyOut)
+            ? new V2Route(route.map(genericPoolPairParser) as Pair[], currencyIn, currencyOut)
             : null,
         mixedRoute:
           routeProtocol === Protocol.MIXED
-            ? new MixedRouteSDK(route.map(genericPoolPairParser), parsedCurrencyIn, parsedCurrencyOut)
+            ? new MixedRouteSDK(route.map(genericPoolPairParser), currencyIn, currencyOut)
             : null,
-        inputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyIn, rawAmountIn),
-        outputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyOut, rawAmountOut),
+        inputAmount: CurrencyAmount.fromRawAmount(currencyIn, rawAmountIn),
+        outputAmount: CurrencyAmount.fromRawAmount(currencyOut, rawAmountOut),
       }
     })
   } catch (e) {

@@ -7,15 +7,10 @@ describe('#anonymizeLink', () => {
   it('anonymizes any addresses in etherscan urls', () => {
     expect(anonymizeLink('https://etherscan.io/address/0xabcd')).toEqual('https://etherscan.io/address/***')
   })
-  it('anonymizes any addresses in etherscan urls', () => {
-    expect(anonymizeLink('https://etherscan.io/address/0xabcd')).toEqual('https://etherscan.io/address/***')
-  })
   it('anonymizes any addresses in testnet etherscan urls', () => {
     expect(anonymizeLink('https://goerli.etherscan.io/address/0xabcd')).toEqual(
       'https://goerli.etherscan.io/address/***'
     )
-  })
-  it('anonymizes any addresses in testnet etherscan urls', () => {
     expect(anonymizeLink('https://ropsten.etherscan.io/address/0xabcd')).toEqual(
       'https://ropsten.etherscan.io/address/***'
     )

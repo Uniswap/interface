@@ -3,15 +3,10 @@ import { deepCopy } from '@ethersproject/properties'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { StaticJsonRpcProvider } from '@ethersproject/providers'
 import { isPlain } from '@reduxjs/toolkit'
-import ms from 'ms.macro'
 
+import { AVERAGE_L1_BLOCK_TIME } from './chainInfo'
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from './chains'
 import { RPC_URLS } from './networks'
-
-// NB: Third-party providers (eg MetaMask) will have their own polling intervals,
-// which should be left as-is to allow operations (eg transaction confirmation) to resolve faster.
-// Network providers (eg AppJsonRpcProvider) need to update less frequently to be considered responsive.
-export const POLLING_INTERVAL = ms`12s` // mainnet block frequency - ok for other chains as it is a sane refresh rate
 
 class AppJsonRpcProvider extends StaticJsonRpcProvider {
   private _blockCache = new Map<string, Promise<any>>()
@@ -27,7 +22,11 @@ class AppJsonRpcProvider extends StaticJsonRpcProvider {
   constructor(chainId: SupportedChainId) {
     // Including networkish allows ethers to skip the initial detectNetwork call.
     super(RPC_URLS[chainId][0], /* networkish= */ { chainId, name: CHAIN_IDS_TO_NAMES[chainId] })
-    this.pollingInterval = POLLING_INTERVAL
+
+    // NB: Third-party providers (eg MetaMask) will have their own polling intervals,
+    // which should be left as-is to allow operations (eg transaction confirmation) to resolve faster.
+    // Network providers (eg AppJsonRpcProvider) need to update less frequently to be considered responsive.
+    this.pollingInterval = AVERAGE_L1_BLOCK_TIME
   }
 
   send(method: string, params: Array<any>): Promise<any> {
