@@ -3,6 +3,7 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Trade as V3Trade } from '@uniswap/v3-sdk'
 import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
+import LimitWarningModal from 'components/LimitWarning/LimitWarningModal'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import PositionList from 'components/PositionList'
@@ -379,6 +380,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
     useCurrency(loadedUrlParams?.outputCurrencyId),
   ]
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
+  const [isPolygonWarningModalOpen, setIsPolygonWarningModalOpen] = useState<boolean>(true)
   const urlLoadedTokens: Token[] = useMemo(
     () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c?.isToken ?? false) ?? [],
     [loadedInputCurrency, loadedOutputCurrency]
@@ -611,6 +613,10 @@ export default function LimitOrder({ history }: RouteComponentProps) {
     [onCurrencySelection]
   )
 
+  const handleDismissPolygonWarning = () => {
+    setIsPolygonWarningModalOpen(false)
+  }
+
   const handleMaxInput = useCallback(() => {
     maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
   }, [maxInputAmount, onUserInput])
@@ -626,6 +632,12 @@ export default function LimitOrder({ history }: RouteComponentProps) {
   if (expertMode) {
     return (
       <>
+        <LimitWarningModal
+          isOpen={
+            localStorage.getItem('KromPolyLimitWarningTicked') == null && chainId == 137 && isPolygonWarningModalOpen
+          }
+          onDismiss={handleDismissPolygonWarning}
+        />
         <FlexContainer>
           <FlexItemLeft>
             <MemoizedCandleSticks networkName={networkName} poolAddress={poolAddress} />
@@ -1047,6 +1059,12 @@ export default function LimitOrder({ history }: RouteComponentProps) {
 
   return (
     <DivWrapperNoPro>
+      <LimitWarningModal
+        isOpen={
+          localStorage.getItem('KromPolyLimitWarningTicked') == null && chainId == 137 && isPolygonWarningModalOpen
+        }
+        onDismiss={handleDismissPolygonWarning}
+      />
       <TokenWarningModal
         isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
         tokens={importTokensNotInDefault}
