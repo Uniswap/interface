@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import useScrollPosition from '@react-hook/window-scroll'
+import LimitWarningModal from 'components/LimitWarning/LimitWarningModal'
 import PerpModal from 'components/Perpetual/PerpModal'
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import { KROM } from 'constants/tokens'
@@ -385,9 +386,25 @@ export default function Header() {
       nativeCurrency: { symbol: nativeCurrencySymbol },
     },
   } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
+
+  const [isPolygonWarningModalOpen, setIsPolygonWarningModalOpen] = useState<boolean>(true)
+
+  const handleDismissPolygonWarning = () => {
+    setIsPolygonWarningModalOpen(false)
+  }
+
+  const hasClickedOnNavbarElement = () => {
+    setIsPolygonWarningModalOpen(true)
+  }
   return (
     <>
       <HeaderFrame showBackground={true}>
+        <LimitWarningModal
+          isOpen={
+            localStorage.getItem('KromPolyLimitWarningTicked') == null && chainId == 137 && isPolygonWarningModalOpen
+          }
+          onDismiss={handleDismissPolygonWarning}
+        />
         <ClaimModal />
         <Title href=".">
           <UniIcon>
@@ -418,13 +435,14 @@ export default function Header() {
               pathname.startsWith('/increase') ||
               pathname.startsWith('/find')
             }
+            onClick={() => hasClickedOnNavbarElement()}
           >
             <Trans>Dashboard</Trans>
           </StyledNavLink>
-          <StyledNavLink id={`swap-nav-link`} to={'/limitorder'}>
+          <StyledNavLink id={`swap-nav-link`} to={'/limitorder'} onClick={() => hasClickedOnNavbarElement()}>
             <Trans>Limit</Trans>
           </StyledNavLink>
-          <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+          <StyledNavLink id={`swap-nav-link`} to={'/swap'} onClick={() => hasClickedOnNavbarElement()}>
             <Trans>Swap</Trans>
           </StyledNavLink>
           <StyledNavLinkAlt

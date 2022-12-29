@@ -71,6 +71,7 @@ export default function LimitWarningModal({ isOpen, onDismiss }: { isOpen: boole
             <Trans>
               FOR POLYGON KROMATIKA LIMIT ORDERS USERS - ACTION REQUIRED:
               <br />
+              <br />
               <Trans>a) Cancel Polygon chain limit orders</Trans>
               <br />
               <Trans>b) Withdraw deposited KROM on polygon</Trans>
@@ -86,6 +87,11 @@ export default function LimitWarningModal({ isOpen, onDismiss }: { isOpen: boole
           </TYPE.white>
         </AutoColumn>
         <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
+          <TYPE.subHeader fontWeight={500}>
+            <input type="checkbox" checked={checked} onChange={handleChange} />
+            Don&apos;t show this message again.
+          </TYPE.subHeader>
+
           <ButtonPrimary
             // disabled={!isAddress(account ?? '')}
             padding="16px 16px"
