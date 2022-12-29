@@ -86,23 +86,6 @@ export default function LimitWarningModal({ isOpen, onDismiss }: { isOpen: boole
           </TYPE.white>
         </AutoColumn>
         <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
-          <TYPE.subHeader fontWeight={500}>
-            <input type="checkbox" checked={checked} onChange={handleChange} />
-            Don&apos;t show this message again.
-            <Trans>
-              <br />
-              <br />
-              By clicking &quot;Agree&quot; you accept the&nbsp;
-              <ExternalLink href="https://kromatika.finance/terms-of-use" target="_blank">
-                Terms and Conditions&nbsp;
-              </ExternalLink>
-              by Kromatika.Finance
-              <br />
-              <br />
-              {/* <ExternalLink href="">Read our Terms and Conditions</ExternalLink> */}
-            </Trans>
-          </TYPE.subHeader>
-
           <ButtonPrimary
             // disabled={!isAddress(account ?? '')}
             padding="16px 16px"
