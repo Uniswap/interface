@@ -2,9 +2,10 @@ import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { UniIcon } from 'nft/components/icons'
-import { useDerivedSwapInfo } from 'state/swap/hooks'
+import { useDerivedSwapInfo, useSwapState } from 'state/swap/hooks'
 import styled from 'styled-components/macro'
 
+import { Field } from '../../state/swap/actions'
 import { ThemedText } from '../../theme'
 import { Z_INDEX } from '../../theme/zIndex'
 
@@ -38,18 +39,18 @@ const QuoteRowContainer = styled.div`
 
 export default function QuoteComparison() {
   const {
-    trade,
-    currencies: { OUTPUT },
+    trade: { trade, uniswapQuote },
+    currencies: { OUTPUT, INPUT },
   } = useDerivedSwapInfo()
 
-  const floodQuote = trade.floodQuote?.quote
-  const uniswapQuote = trade.uniswapQuote?.quote
+  const { independentField } = useSwapState()
+  const isExactIn = independentField === Field.INPUT
 
-  const floodQuoteStablecoinPrice = useStablecoinValue(
-    OUTPUT && floodQuote ? CurrencyAmount.fromRawAmount(OUTPUT, floodQuote) : null
-  )
+  const floodQuoteStablecoinPrice = useStablecoinValue(trade?.outputAmount)
   const uniswapQuoteStablecoinPrice = useStablecoinValue(
-    OUTPUT && uniswapQuote ? CurrencyAmount.fromRawAmount(OUTPUT, uniswapQuote) : null
+    INPUT && OUTPUT && uniswapQuote
+      ? CurrencyAmount.fromRawAmount(isExactIn ? OUTPUT : INPUT, uniswapQuote?.quote)
+      : null
   )
 
   const isFloodBetter = floodQuoteStablecoinPrice?.greaterThan(uniswapQuoteStablecoinPrice ?? 0)
