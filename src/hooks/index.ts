@@ -14,7 +14,7 @@ import { EVM_NETWORK, EVM_NETWORKS, NETWORKS_INFO, isEVM } from 'constants/netwo
 import { NetworkInfo } from 'constants/networks/type'
 import { SUPPORTED_WALLET, SUPPORTED_WALLETS, WALLETLINK_LOCALSTORAGE_NAME } from 'constants/wallets'
 import { AppState } from 'state'
-import { useIsUserManuallyDisconnect } from 'state/user/hooks'
+import { useIsAcceptedTerm, useIsUserManuallyDisconnect } from 'state/user/hooks'
 import { detectInjectedType, isEVMWallet, isSolanaWallet } from 'utils'
 
 export const providers: {
@@ -156,11 +156,19 @@ async function isAuthorized(): Promise<boolean> {
 
 export function useEagerConnect() {
   const { activate, active } = useWeb3React()
+  const { disconnect } = useWallet()
   const [tried, setTried] = useState(false)
   const [isManuallyDisconnect] = useIsUserManuallyDisconnect()
+  const [isAcceptedTerm] = useIsAcceptedTerm()
 
   useEffect(() => {
     try {
+      // If not accepted Terms or Terms changed: block eager connect for EVM wallets and disconnect manualy for Solana wallet
+      if (!isAcceptedTerm) {
+        setTried(true)
+        disconnect()
+        return
+      }
       isAuthorized()
         .then(isAuthorized => {
           setTried(true)

@@ -22,8 +22,8 @@ import {
   toggleTokenInfo,
   toggleTopTrendingTokens,
   toggleTradeRoutes,
+  updateAcceptedTermVersion,
   updateChainId,
-  updateIsAcceptedTerm,
   updateIsUserManuallyDisconnect,
   updateMatchesDarkMode,
   updateUserDarkMode,
@@ -90,7 +90,7 @@ export interface UserState {
   >
   readonly chainId: ChainId
   isUserManuallyDisconnect: boolean
-  isAcceptedTerm: boolean
+  acceptedTermVersion: number | null
   viewMode: VIEW_MODE
   holidayMode: boolean
 }
@@ -145,7 +145,7 @@ const initialState: UserState = {
   favoriteTokensByChainId: {},
   chainId: ChainId.MAINNET,
   isUserManuallyDisconnect: false,
-  isAcceptedTerm: false,
+  acceptedTermVersion: null,
   viewMode: VIEW_MODE.GRID,
   holidayMode: true,
 }
@@ -271,8 +271,8 @@ export default createReducer(initialState, builder =>
     .addCase(updateIsUserManuallyDisconnect, (state, { payload: isUserManuallyDisconnect }) => {
       state.isUserManuallyDisconnect = isUserManuallyDisconnect
     })
-    .addCase(updateIsAcceptedTerm, (state, { payload: isAcceptedTerm }) => {
-      state.isAcceptedTerm = isAcceptedTerm
+    .addCase(updateAcceptedTermVersion, (state, { payload: acceptedTermVersion }) => {
+      state.acceptedTermVersion = acceptedTermVersion
     })
     .addCase(changeViewMode, (state, { payload: viewType }) => {
       state.viewMode = viewType

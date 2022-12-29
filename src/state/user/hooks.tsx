@@ -2,6 +2,7 @@ import { ChainId, Token } from '@kyberswap/ks-sdk-core'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { TERM_FILES_PATH } from 'constants/index'
 import { SupportedLocale } from 'constants/locales'
 import { PINNED_PAIRS } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
@@ -30,7 +31,7 @@ import {
   toggleTokenInfo,
   toggleTopTrendingTokens,
   toggleTradeRoutes,
-  updateIsAcceptedTerm,
+  updateAcceptedTermVersion,
   updateIsUserManuallyDisconnect,
   updateUserDarkMode,
   updateUserDeadline,
@@ -125,11 +126,15 @@ export function useIsUserManuallyDisconnect(): [boolean, (isUserManuallyDisconne
 
 export function useIsAcceptedTerm(): [boolean, (isAcceptedTerm: boolean) => void] {
   const dispatch = useAppDispatch()
-  const isAcceptedTerm = useSelector<AppState, AppState['user']['isAcceptedTerm']>(state => state.user.isAcceptedTerm)
+  const acceptedTermVersion = useSelector<AppState, AppState['user']['acceptedTermVersion']>(
+    state => state.user.acceptedTermVersion,
+  )
+
+  const isAcceptedTerm = !!acceptedTermVersion && acceptedTermVersion === TERM_FILES_PATH.VERSION
 
   const setIsAcceptedTerm = useCallback(
     (isAcceptedTerm: boolean) => {
-      dispatch(updateIsAcceptedTerm(isAcceptedTerm))
+      dispatch(updateAcceptedTermVersion(isAcceptedTerm ? TERM_FILES_PATH.VERSION : null))
     },
     [dispatch],
   )
