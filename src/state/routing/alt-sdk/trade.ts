@@ -1,33 +1,26 @@
-import {
-  IRoute,
-  MixedRoute,
-  MixedRouteSDK,
-  MixedRouteTrade as MixedRouteTradeSDK,
-  ONE,
-  RouteV2,
-  RouteV3,
-  ZERO,
-} from '@uniswap/router-sdk'
+import { IRoute, MixedRoute, MixedRouteSDK, ONE, RouteV2, RouteV3, ZERO } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Fraction, Percent, Price, TradeType } from '@uniswap/sdk-core'
-import { Pair, Route as V2RouteSDK, Trade as V2TradeSDK } from '@uniswap/v2-sdk'
-import { Pool, Route as V3RouteSDK, Trade as V3TradeSDK } from '@uniswap/v3-sdk'
+import { Pair, Route as V2RouteSDK } from '@uniswap/v2-sdk'
+import { Pool, Route as V3RouteSDK } from '@uniswap/v3-sdk'
 import invariant from 'tiny-invariant'
 
 // Fork of @uniswap/router-sdk/src/entities/trade.ts to allow routes to have different input and output currencies
 export class FloodTrade<TInput extends Currency, TOutput extends Currency, TTradeType extends TradeType> {
-  public readonly routes: IRoute<TInput, TOutput, Pair | Pool>[]
+  public readonly routes: IRoute<Currency, Currency, Pair | Pool>[]
   public readonly tradeType: TTradeType
   private _outputAmount: CurrencyAmount<TOutput> | undefined
   private _inputAmount: CurrencyAmount<TInput> | undefined
+  private _outputCurrency: TOutput
+  private _inputCurrency: TInput
 
   /**
    * The swaps of the trade, i.e. which routes and how much is swapped in each that
    * make up the trade. May consist of swaps in v2 or v3.
    */
   public readonly swaps: {
-    route: IRoute<TInput, TOutput, Pair | Pool>
-    inputAmount: CurrencyAmount<TInput>
-    outputAmount: CurrencyAmount<TOutput>
+    route: IRoute<Currency, Currency, Pair | Pool>
+    inputAmount: CurrencyAmount<Currency>
+    outputAmount: CurrencyAmount<Currency>
   }[]
 
   //  construct a trade across v2 and v3 routes from pre-computed amounts
@@ -36,24 +29,31 @@ export class FloodTrade<TInput extends Currency, TOutput extends Currency, TTrad
     v3Routes,
     tradeType,
     mixedRoutes,
+    inputCurrency,
+    outputCurrency,
   }: {
     v2Routes: {
-      routev2: V2RouteSDK<TInput, TOutput>
-      inputAmount: CurrencyAmount<TInput>
-      outputAmount: CurrencyAmount<TOutput>
+      routev2: V2RouteSDK<Currency, Currency>
+      inputAmount: CurrencyAmount<Currency>
+      outputAmount: CurrencyAmount<Currency>
     }[]
     v3Routes: {
-      routev3: V3RouteSDK<TInput, TOutput>
-      inputAmount: CurrencyAmount<TInput>
-      outputAmount: CurrencyAmount<TOutput>
+      routev3: V3RouteSDK<Currency, Currency>
+      inputAmount: CurrencyAmount<Currency>
+      outputAmount: CurrencyAmount<Currency>
     }[]
     tradeType: TTradeType
     mixedRoutes?: {
-      mixedRoute: MixedRouteSDK<TInput, TOutput>
-      inputAmount: CurrencyAmount<TInput>
-      outputAmount: CurrencyAmount<TOutput>
+      mixedRoute: MixedRouteSDK<Currency, Currency>
+      inputAmount: CurrencyAmount<Currency>
+      outputAmount: CurrencyAmount<Currency>
     }[]
+    inputCurrency: TInput
+    outputCurrency: TOutput
   }) {
+    this._inputCurrency = inputCurrency
+    this._outputCurrency = outputCurrency
+
     this.swaps = []
     this.routes = []
     // wrap v2 routes
@@ -126,12 +126,32 @@ export class FloodTrade<TInput extends Currency, TOutput extends Currency, TTrad
       return this._inputAmount
     }
 
-    const inputCurrency = this.swaps[0].inputAmount.currency
-    const totalInputFromRoutes = this.swaps
-      .map(({ inputAmount }) => inputAmount)
-      .reduce((total, cur) => total.add(cur), CurrencyAmount.fromRawAmount(inputCurrency, 0))
+    let inputAmount = CurrencyAmount.fromRawAmount(this._inputCurrency, 0)
 
-    this._inputAmount = totalInputFromRoutes
+    for (const swap of this.swaps) {
+      if (swap.inputAmount.currency.wrapped.equals(this._inputCurrency.wrapped)) {
+        // convert to output currency to support wrapped tokens
+        inputAmount = inputAmount.add(
+          CurrencyAmount.fromFractionalAmount(
+            this._inputCurrency,
+            swap.inputAmount.numerator,
+            swap.inputAmount.denominator
+          )
+        )
+      }
+      if (swap.outputAmount.currency.wrapped.equals(this._inputCurrency.wrapped)) {
+        // convert to output currency to support wrapped tokens
+        inputAmount = inputAmount.subtract(
+          CurrencyAmount.fromFractionalAmount(
+            this._inputCurrency,
+            swap.outputAmount.numerator,
+            swap.outputAmount.denominator
+          )
+        )
+      }
+    }
+
+    this._inputAmount = inputAmount
     return this._inputAmount
   }
 
@@ -139,13 +159,32 @@ export class FloodTrade<TInput extends Currency, TOutput extends Currency, TTrad
     if (this._outputAmount) {
       return this._outputAmount
     }
+    let outputAmount = CurrencyAmount.fromRawAmount(this._outputCurrency, 0)
 
-    const outputCurrency = this.swaps[0].outputAmount.currency
-    const totalOutputFromRoutes = this.swaps
-      .map(({ outputAmount }) => outputAmount)
-      .reduce((total, cur) => total.add(cur), CurrencyAmount.fromRawAmount(outputCurrency, 0))
+    for (const swap of this.swaps) {
+      if (swap.outputAmount.currency.wrapped.equals(this._outputCurrency.wrapped)) {
+        // convert to output currency to support wrapped tokens
+        outputAmount = outputAmount.add(
+          CurrencyAmount.fromFractionalAmount(
+            this._outputCurrency,
+            swap.outputAmount.numerator,
+            swap.outputAmount.denominator
+          )
+        )
+      }
+      if (swap.inputAmount.currency.wrapped.equals(this._outputCurrency.wrapped)) {
+        // convert to output currency to support wrapped tokens
+        outputAmount = outputAmount.subtract(
+          CurrencyAmount.fromFractionalAmount(
+            this._outputCurrency,
+            swap.inputAmount.numerator,
+            swap.inputAmount.denominator
+          )
+        )
+      }
+    }
 
-    this._outputAmount = totalOutputFromRoutes
+    this._outputAmount = outputAmount
     return this._outputAmount
   }
 
@@ -238,126 +277,126 @@ export class FloodTrade<TInput extends Currency, TOutput extends Currency, TTrad
     )
   }
 
-  public static async fromRoutes<TInput extends Currency, TOutput extends Currency, TTradeType extends TradeType>(
-    v2Routes: {
-      routev2: V2RouteSDK<TInput, TOutput>
-      amount: TTradeType extends TradeType.EXACT_INPUT ? CurrencyAmount<TInput> : CurrencyAmount<TOutput>
-    }[],
-    v3Routes: {
-      routev3: V3RouteSDK<TInput, TOutput>
-      amount: TTradeType extends TradeType.EXACT_INPUT ? CurrencyAmount<TInput> : CurrencyAmount<TOutput>
-    }[],
-    tradeType: TTradeType,
-    mixedRoutes?: {
-      mixedRoute: MixedRouteSDK<TInput, TOutput>
-      amount: TTradeType extends TradeType.EXACT_INPUT ? CurrencyAmount<TInput> : CurrencyAmount<TOutput>
-    }[]
-  ): Promise<FloodTrade<TInput, TOutput, TTradeType>> {
-    const populatedV2Routes: {
-      routev2: V2RouteSDK<TInput, TOutput>
-      inputAmount: CurrencyAmount<TInput>
-      outputAmount: CurrencyAmount<TOutput>
-    }[] = []
-
-    const populatedV3Routes: {
-      routev3: V3RouteSDK<TInput, TOutput>
-      inputAmount: CurrencyAmount<TInput>
-      outputAmount: CurrencyAmount<TOutput>
-    }[] = []
-
-    const populatedMixedRoutes: {
-      mixedRoute: MixedRouteSDK<TInput, TOutput>
-      inputAmount: CurrencyAmount<TInput>
-      outputAmount: CurrencyAmount<TOutput>
-    }[] = []
-
-    for (const { routev2, amount } of v2Routes) {
-      const v2Trade = new V2TradeSDK(routev2, amount, tradeType)
-      const { inputAmount, outputAmount } = v2Trade
-
-      populatedV2Routes.push({
-        routev2,
-        inputAmount,
-        outputAmount,
-      })
-    }
-
-    for (const { routev3, amount } of v3Routes) {
-      const v3Trade = await V3TradeSDK.fromRoute(routev3, amount, tradeType)
-      const { inputAmount, outputAmount } = v3Trade
-
-      populatedV3Routes.push({
-        routev3,
-        inputAmount,
-        outputAmount,
-      })
-    }
-
-    if (mixedRoutes) {
-      for (const { mixedRoute, amount } of mixedRoutes) {
-        const mixedRouteTrade = await MixedRouteTradeSDK.fromRoute(mixedRoute, amount, tradeType)
-        const { inputAmount, outputAmount } = mixedRouteTrade
-
-        populatedMixedRoutes.push({
-          mixedRoute,
-          inputAmount,
-          outputAmount,
-        })
-      }
-    }
-
-    return new FloodTrade({
-      v2Routes: populatedV2Routes,
-      v3Routes: populatedV3Routes,
-      mixedRoutes: populatedMixedRoutes,
-      tradeType,
-    })
-  }
-
-  public static async fromRoute<TInput extends Currency, TOutput extends Currency, TTradeType extends TradeType>(
-    route: V2RouteSDK<TInput, TOutput> | V3RouteSDK<TInput, TOutput> | MixedRouteSDK<TInput, TOutput>,
-    amount: TTradeType extends TradeType.EXACT_INPUT ? CurrencyAmount<TInput> : CurrencyAmount<TOutput>,
-    tradeType: TTradeType
-  ): Promise<FloodTrade<TInput, TOutput, TTradeType>> {
-    let v2Routes: {
-      routev2: V2RouteSDK<TInput, TOutput>
-      inputAmount: CurrencyAmount<TInput>
-      outputAmount: CurrencyAmount<TOutput>
-    }[] = []
-
-    let v3Routes: {
-      routev3: V3RouteSDK<TInput, TOutput>
-      inputAmount: CurrencyAmount<TInput>
-      outputAmount: CurrencyAmount<TOutput>
-    }[] = []
-
-    let mixedRoutes: {
-      mixedRoute: MixedRouteSDK<TInput, TOutput>
-      inputAmount: CurrencyAmount<TInput>
-      outputAmount: CurrencyAmount<TOutput>
-    }[] = []
-
-    if (route instanceof V2RouteSDK) {
-      const v2Trade = new V2TradeSDK(route, amount, tradeType)
-      const { inputAmount, outputAmount } = v2Trade
-      v2Routes = [{ routev2: route, inputAmount, outputAmount }]
-    } else if (route instanceof V3RouteSDK) {
-      const v3Trade = await V3TradeSDK.fromRoute(route, amount, tradeType)
-      const { inputAmount, outputAmount } = v3Trade
-      v3Routes = [{ routev3: route, inputAmount, outputAmount }]
-    } else if (route instanceof MixedRouteSDK) {
-      const mixedRouteTrade = await MixedRouteTradeSDK.fromRoute(route, amount, tradeType)
-      const { inputAmount, outputAmount } = mixedRouteTrade
-      mixedRoutes = [{ mixedRoute: route, inputAmount, outputAmount }]
-    } else {
-      throw new Error('Invalid route type')
-    }
-
-    return new FloodTrade({
-      v2Routes,
-      v3Routes,
-      mixedRoutes,
-      tradeType,
-    })
-  }
+  // public static async fromRoutes<TInput extends Currency, TOutput extends Currency, TTradeType extends TradeType>(
+  //   v2Routes: {
+  //     routev2: V2RouteSDK<TInput, TOutput>
+  //     amount: TTradeType extends TradeType.EXACT_INPUT ? CurrencyAmount<TInput> : CurrencyAmount<TOutput>
+  //   }[],
+  //   v3Routes: {
+  //     routev3: V3RouteSDK<TInput, TOutput>
+  //     amount: TTradeType extends TradeType.EXACT_INPUT ? CurrencyAmount<TInput> : CurrencyAmount<TOutput>
+  //   }[],
+  //   tradeType: TTradeType,
+  //   mixedRoutes?: {
+  //     mixedRoute: MixedRouteSDK<TInput, TOutput>
+  //     amount: TTradeType extends TradeType.EXACT_INPUT ? CurrencyAmount<TInput> : CurrencyAmount<TOutput>
+  //   }[]
+  // ): Promise<FloodTrade<TInput, TOutput, TTradeType>> {
+  //   const populatedV2Routes: {
+  //     routev2: V2RouteSDK<TInput, TOutput>
+  //     inputAmount: CurrencyAmount<TInput>
+  //     outputAmount: CurrencyAmount<TOutput>
+  //   }[] = []
+  //
+  //   const populatedV3Routes: {
+  //     routev3: V3RouteSDK<TInput, TOutput>
+  //     inputAmount: CurrencyAmount<TInput>
+  //     outputAmount: CurrencyAmount<TOutput>
+  //   }[] = []
+  //
+  //   const populatedMixedRoutes: {
+  //     mixedRoute: MixedRouteSDK<TInput, TOutput>
+  //     inputAmount: CurrencyAmount<TInput>
+  //     outputAmount: CurrencyAmount<TOutput>
+  //   }[] = []
+  //
+  //   for (const { routev2, amount } of v2Routes) {
+  //     const v2Trade = new V2TradeSDK(routev2, amount, tradeType)
+  //     const { inputAmount, outputAmount } = v2Trade
+  //
+  //     populatedV2Routes.push({
+  //       routev2,
+  //       inputAmount,
+  //       outputAmount,
+  //     })
+  //   }
+  //
+  //   for (const { routev3, amount } of v3Routes) {
+  //     const v3Trade = await V3TradeSDK.fromRoute(routev3, amount, tradeType)
+  //     const { inputAmount, outputAmount } = v3Trade
+  //
+  //     populatedV3Routes.push({
+  //       routev3,
+  //       inputAmount,
+  //       outputAmount,
+  //     })
+  //   }
+  //
+  //   if (mixedRoutes) {
+  //     for (const { mixedRoute, amount } of mixedRoutes) {
+  //       const mixedRouteTrade = await MixedRouteTradeSDK.fromRoute(mixedRoute, amount, tradeType)
+  //       const { inputAmount, outputAmount } = mixedRouteTrade
+  //
+  //       populatedMixedRoutes.push({
+  //         mixedRoute,
+  //         inputAmount,
+  //         outputAmount,
+  //       })
+  //     }
+  //   }
+  //
+  //   return new FloodTrade({
+  //     v2Routes: populatedV2Routes,
+  //     v3Routes: populatedV3Routes,
+  //     mixedRoutes: populatedMixedRoutes,
+  //     tradeType,
+  //   })
+  // }
+  //
+  // public static async fromRoute<TInput extends Currency, TOutput extends Currency, TTradeType extends TradeType>(
+  //   route: V2RouteSDK<TInput, TOutput> | V3RouteSDK<TInput, TOutput> | MixedRouteSDK<TInput, TOutput>,
+  //   amount: TTradeType extends TradeType.EXACT_INPUT ? CurrencyAmount<TInput> : CurrencyAmount<TOutput>,
+  //   tradeType: TTradeType
+  // ): Promise<FloodTrade<TInput, TOutput, TTradeType>> {
+  //   let v2Routes: {
+  //     routev2: V2RouteSDK<TInput, TOutput>
+  //     inputAmount: CurrencyAmount<TInput>
+  //     outputAmount: CurrencyAmount<TOutput>
+  //   }[] = []
+  //
+  //   let v3Routes: {
+  //     routev3: V3RouteSDK<TInput, TOutput>
+  //     inputAmount: CurrencyAmount<TInput>
+  //     outputAmount: CurrencyAmount<TOutput>
+  //   }[] = []
+  //
+  //   let mixedRoutes: {
+  //     mixedRoute: MixedRouteSDK<TInput, TOutput>
+  //     inputAmount: CurrencyAmount<TInput>
+  //     outputAmount: CurrencyAmount<TOutput>
+  //   }[] = []
+  //
+  //   if (route instanceof V2RouteSDK) {
+  //     const v2Trade = new V2TradeSDK(route, amount, tradeType)
+  //     const { inputAmount, outputAmount } = v2Trade
+  //     v2Routes = [{ routev2: route, inputAmount, outputAmount }]
+  //   } else if (route instanceof V3RouteSDK) {
+  //     const v3Trade = await V3TradeSDK.fromRoute(route, amount, tradeType)
+  //     const { inputAmount, outputAmount } = v3Trade
+  //     v3Routes = [{ routev3: route, inputAmount, outputAmount }]
+  //   } else if (route instanceof MixedRouteSDK) {
+  //     const mixedRouteTrade = await MixedRouteTradeSDK.fromRoute(route, amount, tradeType)
+  //     const { inputAmount, outputAmount } = mixedRouteTrade
+  //     mixedRoutes = [{ mixedRoute: route, inputAmount, outputAmount }]
+  //   } else {
+  //     throw new Error('Invalid route type')
+  //   }
+  //
+  //   return new FloodTrade({
+  //     v2Routes,
+  //     v3Routes,
+  //     mixedRoutes,
+  //     tradeType,
+  //   })
+  // }
 }

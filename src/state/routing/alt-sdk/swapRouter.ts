@@ -31,11 +31,6 @@ type AnyFloodTradeType =
   | V2Trade<Currency, Currency, TradeType>
   | V3FloodTrade<Currency, Currency, TradeType>
   | MixedRouteTrade<Currency, Currency, TradeType>
-  | (
-      | V2Trade<Currency, Currency, TradeType>
-      | V3FloodTrade<Currency, Currency, TradeType>
-      | MixedRouteTrade<Currency, Currency, TradeType>
-    )[]
 
 const REFUND_ETH_PRICE_IMPACT_THRESHOLD = new Percent(JSBI.BigInt(50), JSBI.BigInt(100))
 /**
@@ -283,7 +278,7 @@ export abstract class SwapRouterFlood {
   }
 
   private static encodeSwaps(
-    trades: AnyFloodTradeType,
+    trade: AnyFloodTradeType,
     options: SwapOptions,
     isSwapAndAdd?: boolean
   ): {
@@ -299,10 +294,16 @@ export abstract class SwapRouterFlood {
     minimumAmountOut: CurrencyAmount<Currency>
     quoteAmountOut: CurrencyAmount<Currency>
   } {
+    const individualTrades: (
+      | V2Trade<Currency, Currency, TradeType>
+      | V3FloodTrade<Currency, Currency, TradeType>
+      | MixedRouteTrade<Currency, Currency, TradeType>
+    )[] = []
+
     // If dealing with an instance of the aggregated Trade object, unbundle it to individual trade objects.
-    if (trades instanceof FloodTrade) {
+    if (trade instanceof FloodTrade) {
       invariant(
-        trades.swaps.every(
+        trade.swaps.every(
           (swap) =>
             swap.route.protocol == Protocol.V3 ||
             swap.route.protocol == Protocol.V2 ||
@@ -311,19 +312,13 @@ export abstract class SwapRouterFlood {
         'UNSUPPORTED_PROTOCOL'
       )
 
-      const individualTrades: (
-        | V2Trade<Currency, Currency, TradeType>
-        | V3FloodTrade<Currency, Currency, TradeType>
-        | MixedRouteTrade<Currency, Currency, TradeType>
-      )[] = []
-
-      for (const { route, inputAmount, outputAmount } of trades.swaps) {
+      for (const { route, inputAmount, outputAmount } of trade.swaps) {
         if (route.protocol == Protocol.V2) {
           individualTrades.push(
             new V2Trade(
               route as RouteV2<Currency, Currency>,
-              trades.tradeType == TradeType.EXACT_INPUT ? inputAmount : outputAmount,
-              trades.tradeType
+              trade.tradeType == TradeType.EXACT_INPUT ? inputAmount : outputAmount,
+              trade.tradeType
             )
           )
         } else if (route.protocol == Protocol.V3) {
@@ -334,7 +329,7 @@ export abstract class SwapRouterFlood {
               route: route as RouteV3<Currency, Currency>,
               inputAmount,
               outputAmount,
-              tradeType: trades.tradeType,
+              tradeType: trade.tradeType,
             })
           )
         } else if (route.protocol == Protocol.MIXED) {
@@ -344,52 +339,47 @@ export abstract class SwapRouterFlood {
               route: route as MixedRoute<Currency, Currency>,
               inputAmount,
               outputAmount,
-              tradeType: trades.tradeType,
+              tradeType: trade.tradeType,
             })
           )
         } else {
           throw new Error('UNSUPPORTED_TRADE_PROTOCOL')
         }
       }
-      trades = individualTrades
+    } else {
+      individualTrades.push(trade)
     }
 
-    if (!Array.isArray(trades)) {
-      trades = [trades]
-    }
-
-    const numberOfTrades = trades.reduce(
+    const numberOfTrades = individualTrades.reduce(
       (numberOfTrades, trade) =>
         numberOfTrades + (trade instanceof V3FloodTrade || trade instanceof MixedRouteTrade ? trade.swaps.length : 1),
       0
     )
 
-    const sampleTrade = trades[0]
-
     // All trades should have the same starting/ending currency and trade type
-    invariant(
-      trades.every((trade) => trade.inputAmount.currency.equals(sampleTrade.inputAmount.currency)),
-      'TOKEN_IN_DIFF'
-    )
-    invariant(
-      trades.every((trade) => trade.outputAmount.currency.equals(sampleTrade.outputAmount.currency)),
-      'TOKEN_OUT_DIFF'
-    )
-    invariant(
-      trades.every((trade) => trade.tradeType === sampleTrade.tradeType),
-      'TRADE_TYPE_DIFF'
-    )
+    // invariant(
+    //   trades.every((trade) => trade.inputAmount.currency.equals(sampleTrade.inputAmount.currency)),
+    //   'TOKEN_IN_DIFF'
+    // )
+    // invariant(
+    //   trades.every((trade) => trade.outputAmount.currency.equals(sampleTrade.outputAmount.currency)),
+    //   'TOKEN_OUT_DIFF'
+    // )
+    // invariant(
+    //   trade.every((trade) => trade.tradeType === sampleTrade.tradeType),
+    //   'TRADE_TYPE_DIFF'
+    // )
 
     const calldatas: string[] = []
 
-    const inputIsNative = sampleTrade.inputAmount.currency.isNative
-    const outputIsNative = sampleTrade.outputAmount.currency.isNative
+    const inputIsNative = trade.inputAmount.currency.isNative
+    const outputIsNative = trade.outputAmount.currency.isNative
 
     // flag for whether we want to perform an aggregated slippage check
     //   1. when there are >2 exact input trades. this is only a heuristic,
     //      as it's still more gas-expensive even in this case, but has benefits
     //      in that the reversion probability is lower
-    const performAggregatedSlippageCheck = sampleTrade.tradeType === TradeType.EXACT_INPUT && numberOfTrades > 2
+    const performAggregatedSlippageCheck = trade.tradeType === TradeType.EXACT_INPUT && numberOfTrades > 2
     // flag for whether funds should be send first to the router
     //   1. when receiving ETH (which much be unwrapped from WETH)
     //   2. when a fee on the output is being taken
@@ -399,11 +389,11 @@ export abstract class SwapRouterFlood {
 
     // encode permit if necessary
     if (options.inputTokenPermit) {
-      invariant(sampleTrade.inputAmount.currency.isToken, 'NON_TOKEN_PERMIT')
-      calldatas.push(SelfPermit.encodePermit(sampleTrade.inputAmount.currency, options.inputTokenPermit))
+      invariant(trade.inputAmount.currency.isToken, 'NON_TOKEN_PERMIT')
+      calldatas.push(SelfPermit.encodePermit(trade.inputAmount.currency, options.inputTokenPermit))
     }
 
-    for (const trade of trades) {
+    for (const trade of individualTrades) {
       if (trade instanceof V2Trade) {
         calldatas.push(SwapRouterFlood.encodeV2Swap(trade, options, routerMustCustody, performAggregatedSlippageCheck))
       } else if (trade instanceof V3FloodTrade) {
@@ -429,27 +419,13 @@ export abstract class SwapRouterFlood {
       }
     }
 
-    const ZERO_IN: CurrencyAmount<Currency> = CurrencyAmount.fromRawAmount(sampleTrade.inputAmount.currency, 0)
-    const ZERO_OUT: CurrencyAmount<Currency> = CurrencyAmount.fromRawAmount(sampleTrade.outputAmount.currency, 0)
-
-    const minimumAmountOut: CurrencyAmount<Currency> = trades.reduce(
-      (sum, trade) => sum.add(trade.minimumAmountOut(options.slippageTolerance)),
-      ZERO_OUT
-    )
-
-    const quoteAmountOut: CurrencyAmount<Currency> = trades.reduce(
-      (sum, trade) => sum.add(trade.outputAmount),
-      ZERO_OUT
-    )
-
-    const totalAmountIn: CurrencyAmount<Currency> = trades.reduce(
-      (sum, trade) => sum.add(trade.maximumAmountIn(options.slippageTolerance)),
-      ZERO_IN
-    )
+    const totalAmountIn = trade.inputAmount
+    const minimumAmountOut: CurrencyAmount<Currency> = trade.minimumAmountOut(options.slippageTolerance)
+    const quoteAmountOut: CurrencyAmount<Currency> = trade.outputAmount
 
     return {
       calldatas,
-      sampleTrade,
+      sampleTrade: individualTrades[0],
       routerMustCustody,
       inputIsNative,
       outputIsNative,
@@ -461,20 +437,15 @@ export abstract class SwapRouterFlood {
 
   /**
    * Produces the on-chain method name to call and the hex encoded parameters to pass as arguments for a given trade.
-   * @param trades to produce call parameters for
+   * @param trade to produce call parameters for
    * @param options options for the call parameters
    */
   public static swapCallParameters(
-    trades:
+    trade:
       | FloodTrade<Currency, Currency, TradeType>
       | V2Trade<Currency, Currency, TradeType>
       | V3FloodTrade<Currency, Currency, TradeType>
-      | MixedRouteTrade<Currency, Currency, TradeType>
-      | (
-          | V2Trade<Currency, Currency, TradeType>
-          | V3FloodTrade<Currency, Currency, TradeType>
-          | MixedRouteTrade<Currency, Currency, TradeType>
-        )[],
+      | MixedRouteTrade<Currency, Currency, TradeType>,
     options: SwapOptions
   ): MethodParameters {
     const {
@@ -485,7 +456,7 @@ export abstract class SwapRouterFlood {
       outputIsNative,
       totalAmountIn,
       minimumAmountOut,
-    } = SwapRouterFlood.encodeSwaps(trades, options)
+    } = SwapRouterFlood.encodeSwaps(trade, options)
 
     // unwrap or sweep
     if (routerMustCustody) {
@@ -507,7 +478,7 @@ export abstract class SwapRouterFlood {
     // unlike ERC20's, the full ETH value must be sent in the transaction, so the rest must be refunded.
     if (
       inputIsNative &&
-      (sampleTrade.tradeType === TradeType.EXACT_OUTPUT || SwapRouterFlood.riskOfPartialFill(trades))
+      (sampleTrade.tradeType === TradeType.EXACT_OUTPUT || SwapRouterFlood.riskOfPartialFill(trade))
     ) {
       calldatas.push(Payments.encodeRefundETH())
     }

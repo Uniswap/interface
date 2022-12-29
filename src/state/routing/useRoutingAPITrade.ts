@@ -132,7 +132,15 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     }
 
     try {
-      const trade = transformRoutesToTrade(route, tradeType, quoteResult?.blockNumber, gasUseEstimateUSD, isUsingFlood)
+      const trade = transformRoutesToTrade(
+        route,
+        tradeType,
+        quoteResult?.blockNumber,
+        gasUseEstimateUSD,
+        isUsingFlood,
+        currencyIn,
+        currencyOut
+      )
       return {
         // always return VALID regardless of isFetching status
         state: TradeState.VALID,

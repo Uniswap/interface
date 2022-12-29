@@ -123,21 +123,23 @@ export class InterfaceFloodTrade<
   }: {
     gasUseEstimateUSD?: CurrencyAmount<Token> | undefined | null
     blockNumber?: string | null | undefined
+    inputCurrency: TInput
+    outputCurrency: TOutput
     v2Routes: {
-      routev2: V2Route<TInput, TOutput>
-      inputAmount: CurrencyAmount<TInput>
-      outputAmount: CurrencyAmount<TOutput>
+      routev2: V2Route<Currency, Currency>
+      inputAmount: CurrencyAmount<Currency>
+      outputAmount: CurrencyAmount<Currency>
     }[]
     v3Routes: {
-      routev3: V3Route<TInput, TOutput>
-      inputAmount: CurrencyAmount<TInput>
-      outputAmount: CurrencyAmount<TOutput>
+      routev3: V3Route<Currency, Currency>
+      inputAmount: CurrencyAmount<Currency>
+      outputAmount: CurrencyAmount<Currency>
     }[]
     tradeType: TTradeType
     mixedRoutes?: {
-      mixedRoute: MixedRouteSDK<TInput, TOutput>
-      inputAmount: CurrencyAmount<TInput>
-      outputAmount: CurrencyAmount<TOutput>
+      mixedRoute: MixedRouteSDK<Currency, Currency>
+      inputAmount: CurrencyAmount<Currency>
+      outputAmount: CurrencyAmount<Currency>
     }[]
   }) {
     super(routes)

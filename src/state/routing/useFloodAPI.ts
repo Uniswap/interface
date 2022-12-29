@@ -376,7 +376,7 @@ export function useFloodAPI(
     ['flood', tokenIn, tokenOut, amountIn, chainId],
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     () => getFloodAPIQuote(tokenIn!, tokenOut!, amountIn!, chainId!),
-    { enabled, refetchInterval, staleTime: AVERAGE_L1_BLOCK_TIME, keepPreviousData: true }
+    { enabled, refetchInterval, staleTime: AVERAGE_L1_BLOCK_TIME }
   )
   return result
 }

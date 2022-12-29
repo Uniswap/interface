@@ -2,6 +2,7 @@ import { MixedRouteSDK, Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
+import invariant from 'tiny-invariant'
 
 import { GetQuoteResult, InterfaceFloodTrade, InterfaceTrade, V2PoolInRoute, V3PoolInRoute } from './types'
 
@@ -56,8 +57,8 @@ export function computeRoutes(
           routeProtocol === Protocol.MIXED
             ? new MixedRouteSDK(route.map(genericPoolPairParser), routeTokenIn, routeTokenOut)
             : null,
-        inputAmount: CurrencyAmount.fromRawAmount(currencyIn, rawAmountIn),
-        outputAmount: CurrencyAmount.fromRawAmount(currencyOut, rawAmountOut),
+        inputAmount: CurrencyAmount.fromRawAmount(routeTokenIn, rawAmountIn),
+        outputAmount: CurrencyAmount.fromRawAmount(routeTokenOut, rawAmountOut),
       }
     })
   } catch (e) {
@@ -74,7 +75,9 @@ export function transformRoutesToTrade<TTradeType extends TradeType>(
   tradeType: TTradeType,
   blockNumber?: string | null,
   gasUseEstimateUSD?: CurrencyAmount<Token> | null,
-  isUsingFlood = false
+  isUsingFlood = false,
+  inputCurrency?: Currency,
+  outputCurrency?: Currency
 ): InterfaceTrade<Currency, Currency, TTradeType> | InterfaceFloodTrade<Currency, Currency, TTradeType> {
   const v2Routes =
     route
@@ -92,8 +95,21 @@ export function transformRoutesToTrade<TTradeType extends TradeType>(
       )
       .map(({ mixedRoute, inputAmount, outputAmount }) => ({ mixedRoute, inputAmount, outputAmount })) ?? []
 
+  invariant(!isUsingFlood || (!!inputCurrency && !!outputCurrency))
+
   const trade = isUsingFlood
-    ? new InterfaceFloodTrade({ v2Routes, v3Routes, mixedRoutes, tradeType, gasUseEstimateUSD, blockNumber })
+    ? new InterfaceFloodTrade({
+        v2Routes,
+        v3Routes,
+        mixedRoutes,
+        tradeType,
+        gasUseEstimateUSD,
+        blockNumber,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        inputCurrency: inputCurrency!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        outputCurrency: outputCurrency!,
+      })
     : new InterfaceTrade({
         v2Routes,
         v3Routes,
