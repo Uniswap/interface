@@ -11,7 +11,7 @@ import { Break, CardSection, DataCard } from '../earn/styled'
 import Modal from '../Modal'
 import { RowBetween } from '../Row'
 
-export default function PerpModal({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) {
+export default function LimitWarningModal({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) {
   function wrappedOnDismiss() {
     onDismiss()
   }
@@ -25,14 +25,13 @@ export default function PerpModal({ isOpen, onDismiss }: { isOpen: boolean; onDi
     width: 100%;
   `
 
-  const PerpRedirectionHandler = () => {
+  const LimitWarningHandler = () => {
     // Check if checkbox is ticked
     if (checked) {
-      // We need to write into localStorage the date of the checkbox checking event
-      localStorage.setItem('KromTOUTicked', Date.now().toString())
+      // We need to write into localStorage
+      localStorage.setItem('KromPolyLimitWarningTicked', 'true')
     }
-    // External redirection
-    window.open('https://perp.kromatika.finance/', '_blank')
+    wrappedOnDismiss()
   }
 
   const [checked, setChecked] = useState(false)
@@ -47,7 +46,7 @@ export default function PerpModal({ isOpen, onDismiss }: { isOpen: boolean; onDi
           <CardSection gap="md">
             <RowBetween>
               <TYPE.white fontWeight={500}>
-                <Trans>Launch Perpetual Trading</Trans>
+                <Trans> Polygon User Warning </Trans>
               </TYPE.white>
               <CloseIcon onClick={wrappedOnDismiss} style={{ zIndex: 99 }} stroke="white" />
             </RowBetween>
@@ -55,36 +54,48 @@ export default function PerpModal({ isOpen, onDismiss }: { isOpen: boolean; onDi
         </ModalUpper>
 
         <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
-          <TYPE.white fontWeight={500}>
+          <TYPE.white fontWeight={500} fontSize={14}>
             <Trans>
-              You are leaving Kromatika.Finance and will be redirected to an independent third-party website.
+              Due to the recent LastPass breach, there may be a potential security breach on Kromatika&apos;s Limit
+              Order Contract on <b>Polygon Network only</b>.
             </Trans>
             <br />
             <br />
-            <Trans>The Perpetual Trading is currently in beta-stage. Trade at your own risk.</Trans>
-            <br />
-            <br />
             <Trans>
-              Some countries may not be allowed to use perpetual trading - see the details under section 2 within our
-              terms of use.
+              <strong>ALL OTHER CHAINS</strong> and <strong>FEATURES ARE SECURE</strong> (Polygon swaps & gasless swaps
+              are also secure).
+              <br /> <br />
+              As a security measure, Limit Order UI is paused on <b>Polygon Network only</b>.
+            </Trans>
+            <br />
+            <br />
+
+            <Trans>
+              FOR POLYGON KROMATIKA LIMIT ORDERS USERS -{' '}
+              <strong>
+                <span style={{ color: 'red' }}>ACTION REQUIRED</span>
+              </strong>
+              :
+              <br />
+              <Trans>a) Cancel Polygon chain limit orders</Trans>
+              <br />
+              <Trans>b) Withdraw deposited KROM on polygon</Trans>
+              <br />
+              <Trans>
+                c) Revoke approval to old limit order manager contract:
+                &quot;0xd1fdf0144be118c30a53e1d08cc1e61d600e508e&quot;{' '}
+                <a href="https://www.youtube.com/watch?v=_gTz5QQdCXI" target="_blank" rel="noreferrer">
+                  CLICK HERE
+                </a>{' '}
+                and follow the guide.
+              </Trans>
             </Trans>
           </TYPE.white>
         </AutoColumn>
         <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
           <TYPE.subHeader fontWeight={500}>
             <input type="checkbox" checked={checked} onChange={handleChange} />
-            Don&apos;t show this message again for the next 30 days.
-            <Trans>
-              <br />
-              <br />
-              By clicking &quot;Agree&quot; you accept the&nbsp;
-              <ExternalLink href="https://kromatika.finance/terms-of-use" target="_blank">
-                Terms and Conditions&nbsp;
-              </ExternalLink>
-              by Kromatika.Finance
-              <br />
-              <br />
-            </Trans>
+            Don&apos;t show this message again.
           </TYPE.subHeader>
 
           <ButtonPrimary
@@ -92,7 +103,7 @@ export default function PerpModal({ isOpen, onDismiss }: { isOpen: boolean; onDi
             width="100%"
             $borderRadius="12px"
             mt="1rem"
-            onClick={() => PerpRedirectionHandler()}
+            onClick={() => LimitWarningHandler()}
           >
             <Trans>Agree</Trans>
           </ButtonPrimary>
