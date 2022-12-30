@@ -14291,10 +14291,10 @@ messageformat-parser@^4.1.3:
   resolved "https://registry.npmjs.org/messageformat-parser/-/messageformat-parser-4.1.3.tgz"
   integrity sha512-2fU3XDCanRqeOCkn7R5zW5VQHWf+T3hH65SzuqRvjatBK7r4uyFa5mEX+k6F9Bd04LVM5G4/BHBTUJsOdW7uyg==
 
-metamocks@0.7.9:
-  version "0.7.9"
-  resolved "https://registry.yarnpkg.com/metamocks/-/metamocks-0.7.9.tgz#7ea7d943952f90496cb1d9429dca39bd37baea83"
-  integrity sha512-qysjNjpA9jhkuMr8Hxr4E08VF5YFgHTdunWmWGQHfLH7bKpLoxKeShvReHDVMOXfwp4tcRStY//PkU7elbykTQ==
+metamocks@0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/metamocks/-/metamocks-0.8.0.tgz#91f970674943d3880ff519f0564f3d3ca5ee79e6"
+  integrity sha512-zTW3sEaH8DcinyUmaYiXmV1rgVQ2uLtuUSpuxbugvTj1YrSCUlT4AHufvTM9cVW234gY93wTW9tsZrUXqkk2eg==
   dependencies:
     "@ethersproject/bignumber" "^5.7.0"
     "@ethersproject/bytes" "^5.7.0"

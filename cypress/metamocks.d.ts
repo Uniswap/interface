@@ -9,8 +9,8 @@ export interface EthereumProvider {
 declare global {
   namespace Cypress {
     interface Chainable {
-      registerAbiHandler: (
-        ...args: Parameters<MetaMocks["registerAbiHandler"]>
+      registerMockContract: (
+        ...args: Parameters<MetaMocks["registerMockContract"]>
       ) => void;
 
       setupMetamocks(): void;

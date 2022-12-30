@@ -1,16 +1,13 @@
-import { EnsRegistrar, Weth } from "../../src/abis/types";
+import { UniswapInterfaceMulticallMockContract } from "metamocks";
+
 import {
-  ENS_REGISTRAR_ADDRESSES,
   MULTICALL_ADDRESS,
   SWAP_ROUTER_ADDRESSES,
 } from "../../src/constants/addresses";
 import { SupportedChainId } from "../../src/constants/chains";
 import { SwapRouter02, UniswapInterfaceMulticall } from "../../src/types/v3";
 import { getTestSelector } from "../utils";
-import EnsRegistrarMockContract from "../utils/abihandlers/EnsRegistrar";
-import MulticallUniswapAbiHandler from "../utils/abihandlers/MulticallUniswapInterface";
 import SwapRouter02Handler from "../utils/abihandlers/SwapRouter02";
-import WethMockContract from "../utils/abihandlers/Weth";
 
 describe("Swap", () => {
   before(() => {
@@ -69,27 +66,23 @@ describe("Swap", () => {
   });
 
   const UNI = "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984";
-  const WETH_ADDRESS = "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984";
+  const WETH_ADDRESS = "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6";
 
   it.only("can swap ETH for UNI", function () {
     cy.fixture("swapQuote.json").then((swapQuote) => {
-      const swapHandler = this.metamocks.registerAbiHandler<SwapRouter02>(
-        SWAP_ROUTER_ADDRESSES[SupportedChainId.GOERLI],
-        SwapRouter02Handler
-      );
-      this.metamocks.registerAbiHandler<EnsRegistrar>(
-        ENS_REGISTRAR_ADDRESSES[SupportedChainId.GOERLI],
-        EnsRegistrarMockContract
-      );
-      this.metamocks.registerAbiHandler<UniswapInterfaceMulticall>(
+      const swapRouterHandler =
+        this.metamocks.registerMockContract<SwapRouter02>(
+          SWAP_ROUTER_ADDRESSES[SupportedChainId.GOERLI],
+          SwapRouter02Handler
+        );
+      this.metamocks.registerMockContract<UniswapInterfaceMulticall>(
         MULTICALL_ADDRESS[SupportedChainId.GOERLI],
-        MulticallUniswapAbiHandler
+        UniswapInterfaceMulticallMockContract
       );
-      this.metamocks.registerAbiHandler<Weth>(WETH_ADDRESS, WethMockContract);
-      cy.spy(swapHandler, "multicall(uint256,bytes[])");
-      cy.spy(swapHandler, "swapExactTokensForTokens");
-      cy.spy(swapHandler, "exactInputSingle");
-      cy.spy(swapHandler, "sweepToken(address,uint256,address)");
+      cy.spy(swapRouterHandler, "multicall(uint256,bytes[])");
+      cy.spy(swapRouterHandler, "swapExactTokensForTokens");
+      cy.spy(swapRouterHandler, "exactInputSingle");
+      cy.spy(swapRouterHandler, "sweepToken(address,uint256,address)");
       cy.intercept(
         {
           method: "GET",
@@ -108,7 +101,7 @@ describe("Swap", () => {
       cy.intercept(
         {
           method: "GET",
-          url: `https://api.uniswap.org/v1/quote?protocols=v2%2Cv3%2Cmixed&tokenInAddress=0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6&tokenInChainId=5&tokenOutAddress=${WETH_ADDRESS}&tokenOutChainId=5&amount=1000000000000000&type=exactIn`,
+          url: `https://api.uniswap.org/v1/quote?protocols=v2%2Cv3%2Cmixed&tokenInAddress=${WETH_ADDRESS}&tokenInChainId=5&tokenOutAddress=${UNI}&tokenOutChainId=5&amount=1000000000000000&type=exactIn`,
         },
         {
           body: swapQuote,
@@ -131,12 +124,14 @@ describe("Swap", () => {
         .should("contain", "Confirm Swap")
         .click()
         .then(() => {
-          expect(swapHandler["multicall(uint256,bytes[])"]).to.have.called;
-          expect(swapHandler["swapExactTokensForTokens"]).to.have.called;
-          expect(swapHandler["exactInputSingle"]).to.have.called;
-          expect(swapHandler["sweepToken(address,uint256,address)"]).to.have
+          expect(swapRouterHandler["multicall(uint256,bytes[])"]).to.have
             .called;
+          expect(swapRouterHandler["swapExactTokensForTokens"]).to.have.called;
+          expect(swapRouterHandler["exactInputSingle"]).to.have.called;
+          expect(swapRouterHandler["sweepToken(address,uint256,address)"]).to
+            .have.called;
         });
+      cy.get(getTestSelector("transaction-submitted")).should("exist");
     });
   });
 
