@@ -27,7 +27,7 @@ const ComparisonCard = styled.div`
 
 const ComparisonHeader = styled.div`
   color: ${({ theme }) => theme.textSecondary};
-  padding-bottom: 4px;
+  padding-bottom: 12px;
 `
 
 const QuoteRowContainer = styled.div`
@@ -61,7 +61,7 @@ export default function QuoteComparison() {
   return (
     <ComparisonCard>
       <ComparisonHeader>
-        <ThemedText.DeprecatedBlack fontWeight={500} fontSize={16} style={{ marginRight: '8px' }}>
+        <ThemedText.DeprecatedBlack fontWeight={500} fontSize={16}>
           Comparison
         </ThemedText.DeprecatedBlack>
       </ComparisonHeader>
@@ -82,15 +82,15 @@ export default function QuoteComparison() {
         </ThemedText.DeprecatedBlack>
       </QuoteRowContainer>
       <QuoteRowContainer>
-        <UniIcon width={24} height={24} viewBox="0 0 48 48" />
+        <UniIcon width={24} height={24} viewBox="0 0 48 48" style={{ marginLeft: -2 }} />
         <ThemedText.DeprecatedBlack fontWeight={400} fontSize={13}>
           Uniswap Router
         </ThemedText.DeprecatedBlack>
         <ThemedText.DeprecatedBlack
           fontWeight={400}
           fontSize={13}
-          // usa actual uniswap error colors
-          style={{ textAlign: 'right', color: isFloodBetter != null && isFloodBetter ? 'red' : 'textPrimary' }}
+          color={isFloodBetter ? 'accentFailure' : 'textPrimary'}
+          style={{ textAlign: 'right' }}
         >
           {formattedUniswapQuote || '—'}
         </ThemedText.DeprecatedBlack>
