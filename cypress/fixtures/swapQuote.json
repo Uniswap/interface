@@ -1,0 +1,130 @@
+{
+  "blockNumber": "8214847",
+  "amount": "100000000000000000000",
+  "amountDecimals": "100",
+  "quote": "135803295819884001451",
+  "quoteDecimals": "135.803295819884001451",
+  "quoteGasAdjusted": "135802733341155270781",
+  "quoteGasAdjustedDecimals": "135.802733341155270781",
+  "gasUseEstimateQuote": "562478728730669",
+  "gasUseEstimateQuoteDecimals": "0.000562478728730669",
+  "gasUseEstimate": "629000",
+  "gasUseEstimateUSD": "0.548854756712338173",
+  "simulationStatus": "UNATTEMPTED",
+  "simulationError": false,
+  "gasPriceWei": "651760054",
+  "route": [
+    [
+      {
+        "type": "v3-pool",
+        "address": "0xd2cD8bba98B51D18bA7C9bd2782E460aab5BBDe4",
+        "tokenIn": {
+          "chainId": 5,
+          "decimals": "18",
+          "address": "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
+          "symbol": "WETH"
+        },
+        "tokenOut": {
+          "chainId": 5,
+          "decimals": "18",
+          "address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+          "symbol": "UNI"
+        },
+        "fee": "10000",
+        "liquidity": "46136052615946040167317",
+        "sqrtRatioX96": "67587791111652213884328363795",
+        "tickCurrent": "-3179",
+        "amountIn": "65000000000000000000",
+        "amountOut": "88279876719219940990"
+      }
+    ],
+    [
+      {
+        "type": "v2-pool",
+        "address": "0x28cee28a7C4b4022AC92685C07d2f33Ab1A0e122",
+        "tokenIn": {
+          "chainId": 5,
+          "decimals": "18",
+          "address": "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
+          "symbol": "WETH"
+        },
+        "tokenOut": {
+          "chainId": 5,
+          "decimals": "18",
+          "address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+          "symbol": "UNI"
+        },
+        "reserve0": {
+          "token": {
+            "chainId": 5,
+            "decimals": "18",
+            "address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+            "symbol": "UNI"
+          },
+          "quotient": "19186431132829311137761"
+        },
+        "reserve1": {
+          "token": {
+            "chainId": 5,
+            "decimals": "18",
+            "address": "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
+            "symbol": "WETH"
+          },
+          "quotient": "14061496404621267083145"
+        },
+        "amountIn": "25000000000000000000",
+        "amountOut": "33949133158041301287"
+      }
+    ],
+    [
+      {
+        "type": "v3-pool",
+        "address": "0x07A4f63f643fE39261140DF5E613b9469eccEC86",
+        "tokenIn": {
+          "chainId": 5,
+          "decimals": "18",
+          "address": "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
+          "symbol": "WETH"
+        },
+        "tokenOut": {
+          "chainId": 5,
+          "decimals": "18",
+          "address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+          "symbol": "UNI"
+        },
+        "fee": "500",
+        "liquidity": "1278179947446671757831",
+        "sqrtRatioX96": "67893888806631999232303541938",
+        "tickCurrent": "-3088",
+        "amountIn": "5000000000000000000",
+        "amountOut": "6783000264299659764"
+      }
+    ],
+    [
+      {
+        "type": "v3-pool",
+        "address": "0x4d1892f15B03db24b55E73F9801826a56d6f0755",
+        "tokenIn": {
+          "chainId": 5,
+          "decimals": "18",
+          "address": "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
+          "symbol": "WETH"
+        },
+        "tokenOut": {
+          "chainId": 5,
+          "decimals": "18",
+          "address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+          "symbol": "UNI"
+        },
+        "fee": "3000",
+        "liquidity": "3911817869975244677362",
+        "sqrtRatioX96": "67828650859982818597782251718",
+        "tickCurrent": "-3108",
+        "amountIn": "5000000000000000000",
+        "amountOut": "6791285678323099410"
+      }
+    ]
+  ],
+  "routeString": "[V3] 65.00% = WETH -- 1% [0xd2cD8bba98B51D18bA7C9bd2782E460aab5BBDe4] --> UNI, [V2] 25.00% = WETH -- [0x28cee28a7C4b4022AC92685C07d2f33Ab1A0e122] --> UNI, [V3] 5.00% = WETH -- 0.05% [0x07A4f63f643fE39261140DF5E613b9469eccEC86] --> UNI, [V3] 5.00% = WETH -- 0.3% [0x4d1892f15B03db24b55E73F9801826a56d6f0755] --> UNI",
+  "quoteId": "b51ef"
+}

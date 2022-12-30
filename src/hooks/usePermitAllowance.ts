@@ -6,11 +6,11 @@ import {
   PERMIT2_ADDRESS,
   PermitSingle,
 } from '@uniswap/permit2-sdk'
-import { Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+import {Token} from '@uniswap/sdk-core'
+import {useWeb3React} from '@web3-react/core'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import ms from 'ms.macro'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 
 const PERMIT_EXPIRATION = ms`30d`
 const PERMIT_SIG_EXPIRATION = ms`30m`
@@ -20,7 +20,8 @@ function toDeadline(expiration: number): number {
 }
 
 export function usePermitAllowance(token?: Token, spender?: string) {
-  const { account, provider } = useWeb3React()
+  const {account, provider} = useWeb3React()
+  // @ts-ignore
   const allowanceProvider = useMemo(() => provider && new AllowanceProvider(provider, PERMIT2_ADDRESS), [provider])
   const [allowanceData, setAllowanceData] = useState<AllowanceData>()
 
@@ -64,7 +65,7 @@ export function useUpdatePermitAllowance(
   nonce: number | undefined,
   onPermitSignature: (signature: PermitSignature) => void
 ) {
-  const { account, chainId, provider } = useWeb3React()
+  const {account, chainId, provider} = useWeb3React()
 
   return useCallback(async () => {
     try {
@@ -85,9 +86,9 @@ export function useUpdatePermitAllowance(
         sigDeadline: toDeadline(PERMIT_SIG_EXPIRATION),
       }
 
-      const { domain, types, values } = AllowanceTransfer.getPermitData(permit, PERMIT2_ADDRESS, chainId)
+      const {domain, types, values} = AllowanceTransfer.getPermitData(permit, PERMIT2_ADDRESS, chainId)
       const signature = await provider.getSigner(account)._signTypedData(domain, types, values)
-      onPermitSignature?.({ ...permit, signature })
+      onPermitSignature?.({...permit, signature})
       return
     } catch (e: unknown) {
       const symbol = token?.symbol ?? 'Token'

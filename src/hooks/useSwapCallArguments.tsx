@@ -1,20 +1,20 @@
-import { BigNumber } from '@ethersproject/bignumber'
-import { SwapRouter, Trade } from '@uniswap/router-sdk'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { FeeOptions } from '@uniswap/v3-sdk'
-import { useWeb3React } from '@web3-react/core'
-import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
-import { useMemo } from 'react'
-import approveAmountCalldata from 'utils/approveAmountCalldata'
+import { BigNumber } from "@ethersproject/bignumber";
+import { SwapRouter, Trade } from "@uniswap/router-sdk";
+import { Currency, Percent, TradeType } from "@uniswap/sdk-core";
+import { FeeOptions } from "@uniswap/v3-sdk";
+import { useWeb3React } from "@web3-react/core";
+import { SWAP_ROUTER_ADDRESSES } from "constants/addresses";
+import { useMemo } from "react";
+import approveAmountCalldata from "utils/approveAmountCalldata";
 
-import { useArgentWalletContract } from './useArgentWalletContract'
-import useENS from './useENS'
-import { SignatureData } from './useERC20Permit'
+import { useArgentWalletContract } from "./useArgentWalletContract";
+import useENS from "./useENS";
+import { SignatureData } from "./useERC20Permit";
 
 interface SwapCall {
-  address: string
-  calldata: string
-  value: string
+  address: string;
+  calldata: string;
+  value: string;
 }
 
 /**
@@ -32,17 +32,22 @@ export function useSwapCallArguments(
   deadline: BigNumber | undefined,
   feeOptions: FeeOptions | undefined
 ): SwapCall[] {
-  const { account, chainId, provider } = useWeb3React()
+  const { account, chainId, provider } = useWeb3React();
 
-  const { address: recipientAddress } = useENS(recipientAddressOrName)
-  const recipient = recipientAddressOrName === null ? account : recipientAddress
-  const argentWalletContract = useArgentWalletContract()
+  const { address: recipientAddress } = useENS(recipientAddressOrName);
+  const recipient =
+    recipientAddressOrName === null ? account : recipientAddress;
+  const argentWalletContract = useArgentWalletContract();
 
   return useMemo(() => {
-    if (!trade || !recipient || !provider || !account || !chainId || !deadline) return []
+    // console.log({trade, recipient, provider, account, chainId, deadline})
+    if (!trade || !recipient || !provider || !account || !chainId || !deadline)
+      return [];
 
-    const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
-    if (!swapRouterAddress) return []
+    const swapRouterAddress = chainId
+      ? SWAP_ROUTER_ADDRESSES[chainId]
+      : undefined;
+    if (!swapRouterAddress) return [];
 
     const { value, calldata } = SwapRouter.swapCallParameters(trade, {
       fee: feeOptions,
@@ -51,7 +56,7 @@ export function useSwapCallArguments(
       ...(signatureData
         ? {
             inputTokenPermit:
-              'allowed' in signatureData
+              "allowed" in signatureData
                 ? {
                     expiry: signatureData.deadline,
                     nonce: signatureData.nonce,
@@ -70,25 +75,31 @@ export function useSwapCallArguments(
         : {}),
 
       deadlineOrPreviousBlockhash: deadline.toString(),
-    })
+    });
 
     if (argentWalletContract && trade.inputAmount.currency.isToken) {
       return [
         {
           address: argentWalletContract.address,
-          calldata: argentWalletContract.interface.encodeFunctionData('wc_multiCall', [
+          calldata: argentWalletContract.interface.encodeFunctionData(
+            "wc_multiCall",
             [
-              approveAmountCalldata(trade.maximumAmountIn(allowedSlippage), swapRouterAddress),
-              {
-                to: swapRouterAddress,
-                value,
-                data: calldata,
-              },
-            ],
-          ]),
-          value: '0x0',
+              [
+                approveAmountCalldata(
+                  trade.maximumAmountIn(allowedSlippage),
+                  swapRouterAddress
+                ),
+                {
+                  to: swapRouterAddress,
+                  value,
+                  data: calldata,
+                },
+              ],
+            ]
+          ),
+          value: "0x0",
         },
-      ]
+      ];
     }
     return [
       {
@@ -96,7 +107,7 @@ export function useSwapCallArguments(
         calldata,
         value,
       },
-    ]
+    ];
   }, [
     account,
     allowedSlippage,
@@ -108,5 +119,5 @@ export function useSwapCallArguments(
     recipient,
     signatureData,
     trade,
-  ])
+  ]);
 }
