@@ -1,9 +1,9 @@
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { CallOverrides } from "ethers";
+import { AbiHandler, AbiHandlerInterface } from "metamocks";
 
 import { Weth } from "../../../src/abis/types";
 import WETH_ABI from "../../../src/abis/weth.json";
-import { AbiHandler, AbiHandlerInterface } from "../../metamocks/index";
 
 export default class WethMockContract
   extends AbiHandler<Weth>

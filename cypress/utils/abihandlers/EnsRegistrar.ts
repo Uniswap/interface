@@ -1,11 +1,11 @@
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { BytesLike } from "@ethersproject/bytes";
 import { CallOverrides } from "ethers";
+import { AbiHandler, AbiHandlerInterface } from "metamocks";
 
 import ENS_ABI from "../../../src/abis/ens-registrar.json";
 import { EnsRegistrar } from "../../../src/abis/types";
-import { AbiHandler, AbiHandlerInterface } from "../../metamocks/index";
-import { TEST_ADDRESS_NEVER_USE } from "../../metamocks/test-utils/data";
+import { TEST_ADDRESS_NEVER_USE } from "../../support/ethereum";
 
 export default class EnsRegistrarMockContract
   extends AbiHandler<EnsRegistrar>

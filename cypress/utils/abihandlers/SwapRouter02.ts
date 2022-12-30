@@ -2,9 +2,9 @@ import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { BytesLike } from "@ethersproject/bytes";
 import SwapRouter02Json from "@uniswap/swap-router-contracts/artifacts/contracts/SwapRouter02.sol/SwapRouter02.json";
 import { CallOverrides } from "ethers";
+import { AbiHandler, AbiHandlerInterface } from "metamocks";
 
 import { SwapRouter02 } from "../../../src/types/v3/SwapRouter02";
-import { AbiHandler, AbiHandlerInterface } from "../../metamocks/index";
 
 export default class SwapRouter02Handler
   extends AbiHandler<SwapRouter02>

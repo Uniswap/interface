@@ -1,13 +1,9 @@
 import { BigNumber } from "@ethersproject/bignumber";
 import MulticallJson from "@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json";
 import { CallOverrides } from "ethers";
+import { AbiHandler, AbiHandlerInterface, isTheSameAddress } from "metamocks";
 
 import { UniswapInterfaceMulticall } from "../../../src/types/v3";
-import {
-  AbiHandler,
-  AbiHandlerInterface,
-  isTheSameAddress,
-} from "../../metamocks/index";
 
 const { abi: MulticallABI } = MulticallJson;
 

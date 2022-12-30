@@ -1883,7 +1883,7 @@
     bech32 "1.1.4"
     ws "7.4.6"
 
-"@ethersproject/providers@5.7.2", "@ethersproject/providers@^5.7.0":
+"@ethersproject/providers@5.7.2":
   version "5.7.2"
   resolved "https://registry.yarnpkg.com/@ethersproject/providers/-/providers-5.7.2.tgz#f8b1a4f275d7ce58cf0a2eec222269a08beb18cb"
   integrity sha512-g34EWZ1WWAVgr4aptGlVBF8mhl3VWjv+8hoAnzStu8Ah22VHBsuGzP17eb6xDVRzw895G4W7vvx60lFFur/1Rg==
@@ -14322,15 +14322,14 @@ messageformat-parser@^4.1.3:
   resolved "https://registry.npmjs.org/messageformat-parser/-/messageformat-parser-4.1.3.tgz"
   integrity sha512-2fU3XDCanRqeOCkn7R5zW5VQHWf+T3hH65SzuqRvjatBK7r4uyFa5mEX+k6F9Bd04LVM5G4/BHBTUJsOdW7uyg==
 
-metamocks@0.7.5:
-  version "0.7.5"
-  resolved "https://registry.yarnpkg.com/metamocks/-/metamocks-0.7.5.tgz#0fe8be40238a9f0f58a669eb36e03b9af80d202b"
-  integrity sha512-1YZo1ieW2B3jESt35Ya5JZ8/LkbXqUGB+FtIiH0/+Fx591eOL4ob14SYVcgT/U6nk4CooUL5N0T8chvhbx7ofA==
+metamocks@0.7.9:
+  version "0.7.9"
+  resolved "https://registry.yarnpkg.com/metamocks/-/metamocks-0.7.9.tgz#7ea7d943952f90496cb1d9429dca39bd37baea83"
+  integrity sha512-qysjNjpA9jhkuMr8Hxr4E08VF5YFgHTdunWmWGQHfLH7bKpLoxKeShvReHDVMOXfwp4tcRStY//PkU7elbykTQ==
   dependencies:
     "@ethersproject/bignumber" "^5.7.0"
     "@ethersproject/bytes" "^5.7.0"
     "@ethersproject/experimental" "^5.7.0"
-    "@ethersproject/providers" "^5.7.0"
     ethereum-input-data-decoder "^0.4.2"
     ethers "^5.7.0"
 
