@@ -61,7 +61,7 @@ const StyledHeader = styled.th<{ disabled?: boolean }>`
 const StyledLoadingHolder = styled.div`
   display: flex;
   width: 100%;
-  justify-content: end;
+  justify-content: flex-end;
   align-items: center;
 `
 
