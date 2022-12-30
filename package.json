@@ -62,7 +62,6 @@
   "devDependencies": {
     "@craco/craco": "6.4.3",
     "@ethersproject/experimental": "^5.4.0",
-    "@ethersproject/providers": "5.7.0",
     "@lingui/cli": "^3.9.0",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.1",
