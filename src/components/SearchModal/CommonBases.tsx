@@ -76,7 +76,6 @@ export default function CommonBases({
               key={currencyId(currency)}
             >
               <BaseWrapper
-                data-testid={`common-base-${currencyId(currency)}`}
                 tabIndex={0}
                 onKeyPress={(e) => !isSelected && e.key === 'Enter' && onSelect(currency)}
                 onClick={() => !isSelected && onSelect(currency)}
