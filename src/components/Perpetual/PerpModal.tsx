@@ -84,12 +84,10 @@ export default function PerpModal({ isOpen, onDismiss }: { isOpen: boolean; onDi
               by Kromatika.Finance
               <br />
               <br />
-              {/* <ExternalLink href="">Read our Terms and Conditions</ExternalLink> */}
             </Trans>
           </TYPE.subHeader>
 
           <ButtonPrimary
-            // disabled={!isAddress(account ?? '')}
             padding="16px 16px"
             width="100%"
             $borderRadius="12px"
