@@ -39,14 +39,14 @@ const QuoteRowContainer = styled.div`
 
 export default function QuoteComparison() {
   const {
-    trade: { trade, uniswapQuote },
+    trade: { trade, floodQuote, uniswapQuote },
     currencies: { OUTPUT, INPUT },
   } = useDerivedSwapInfo()
 
   const { independentField } = useSwapState()
   const isExactIn = independentField === Field.INPUT
 
-  const floodQuoteStablecoinPrice = useStablecoinValue(trade?.outputAmount)
+  const floodQuoteStablecoinPrice = useStablecoinValue(floodQuote && trade?.outputAmount)
   const uniswapQuoteStablecoinPrice = useStablecoinValue(
     INPUT && OUTPUT && uniswapQuote
       ? CurrencyAmount.fromRawAmount(isExactIn ? OUTPUT : INPUT, uniswapQuote?.quote)
