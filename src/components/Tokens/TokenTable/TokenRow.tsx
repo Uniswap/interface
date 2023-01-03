@@ -81,17 +81,14 @@ const StyledTokenRow = styled.div<{
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
     grid-template-columns: 1fr 6.5fr 4.5fr 4.5fr 4.5fr 4.5fr 1.7fr;
-    width: fit-content;
   }
 
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
     grid-template-columns: 1fr 7.5fr 4.5fr 4.5fr 4.5fr 1.7fr;
-    width: fit-content;
   }
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
     grid-template-columns: 1fr 10fr 5fr 5fr 1.2fr;
-    width: fit-content;
   }
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
@@ -354,7 +351,7 @@ function HeaderCell({
 }
 
 /* Token Row: skeleton row component */
-export function TokenRow({
+function TokenRow({
   header,
   listNumber,
   tokenInfo,
@@ -472,9 +469,9 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
 
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
-    <div ref={ref}>
+    <div ref={ref} data-testid={`token-table-row-${tokenName}`}>
       <StyledLink
-        to={getTokenDetailsURL(token.address, token.chain)}
+        to={getTokenDetailsURL(token.address ?? '', token.chain)}
         onClick={() => sendAnalyticsEvent(EventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)}
       >
         <TokenRow
@@ -527,7 +524,6 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
                       height={height}
                       tokenData={token}
                       pricePercentChange={token.market?.pricePercentChange?.value}
-                      timePeriod={timePeriod}
                       sparklineMap={props.sparklineMap}
                     />
                   )

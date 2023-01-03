@@ -2,11 +2,13 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { EventName, PageName } from '@uniswap/analytics-events'
+import { MouseoverTooltip } from 'components/Tooltip'
 import Tooltip from 'components/Tooltip'
+import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { Box } from 'nft/components/Box'
 import { bodySmall } from 'nft/css/common.css'
 import { useBag } from 'nft/hooks'
-import { GenieAsset, isPooledMarket, TokenType } from 'nft/types'
+import { GenieAsset, isPooledMarket, UniformAspectRatio } from 'nft/types'
 import { formatWeiToDecimal, rarityProviderLogo } from 'nft/utils'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
@@ -21,6 +23,10 @@ interface CollectionAssetProps {
   mediaShouldBePlaying: boolean
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
   rarityVerified?: boolean
+  uniformAspectRatio: UniformAspectRatio
+  setUniformAspectRatio: (uniformAspectRatio: UniformAspectRatio) => void
+  renderedHeight?: number
+  setRenderedHeight: (renderedHeight: number | undefined) => void
 }
 
 const TOOLTIP_TIMEOUT = 2000
@@ -42,6 +48,10 @@ export const CollectionAsset = ({
   mediaShouldBePlaying,
   setCurrentTokenPlayingMedia,
   rarityVerified,
+  uniformAspectRatio,
+  setUniformAspectRatio,
+  renderedHeight,
+  setRenderedHeight,
 }: CollectionAssetProps) => {
   const bagManuallyClosed = useBag((state) => state.bagManuallyClosed)
   const addAssetsToBag = useBag((state) => state.addAssetsToBag)
@@ -120,8 +130,8 @@ export const CollectionAsset = ({
       addAssetToBag={handleAddAssetToBag}
       removeAssetFromBag={handleRemoveAssetFromBag}
     >
-      <Card.ImageContainer>
-        <StyledContainer>
+      <Card.ImageContainer isDisabled={asset.notForSale}>
+        <StyledContainer data-testid="nft-collection-asset">
           <Tooltip
             text={
               <Box as="span" className={bodySmall} color="textPrimary">
@@ -145,13 +155,47 @@ export const CollectionAsset = ({
             rarityLogo={rarityLogo}
           />
         )}
-        {assetMediaType === AssetMediaType.Image ? (
-          <Card.Image />
-        ) : assetMediaType === AssetMediaType.Video ? (
-          <Card.Video shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
-        ) : (
-          <Card.Audio shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
-        )}
+        <MouseoverTooltip
+          text={
+            <Box as="span" className={bodySmall} color="textPrimary">
+              <Trans>This item is not for sale</Trans>
+            </Box>
+          }
+          placement="bottom"
+          offsetX={0}
+          offsetY={-50}
+          style={{ display: 'block' }}
+          hideArrow={true}
+          disableHover={!asset.notForSale}
+          timeout={isMobile ? TOOLTIP_TIMEOUT : undefined}
+        >
+          {assetMediaType === AssetMediaType.Image ? (
+            <Card.Image
+              uniformAspectRatio={uniformAspectRatio}
+              setUniformAspectRatio={setUniformAspectRatio}
+              renderedHeight={renderedHeight}
+              setRenderedHeight={setRenderedHeight}
+            />
+          ) : assetMediaType === AssetMediaType.Video ? (
+            <Card.Video
+              shouldPlay={mediaShouldBePlaying}
+              setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+              uniformAspectRatio={uniformAspectRatio}
+              setUniformAspectRatio={setUniformAspectRatio}
+              renderedHeight={renderedHeight}
+              setRenderedHeight={setRenderedHeight}
+            />
+          ) : (
+            <Card.Audio
+              shouldPlay={mediaShouldBePlaying}
+              setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+              uniformAspectRatio={uniformAspectRatio}
+              setUniformAspectRatio={setUniformAspectRatio}
+              renderedHeight={renderedHeight}
+              setRenderedHeight={setRenderedHeight}
+            />
+          )}
+        </MouseoverTooltip>
       </Card.ImageContainer>
       <Card.DetailsContainer>
         <Card.InfoContainer>
@@ -169,7 +213,7 @@ export const CollectionAsset = ({
               </Card.SecondaryInfo>
               {isPooledMarket(asset.marketplace) && <Card.Pool />}
             </Card.SecondaryDetails>
-            {asset.tokenType !== TokenType.ERC1155 && asset.marketplace && (
+            {asset.tokenType !== NftStandard.Erc1155 && asset.marketplace && (
               <Card.MarketplaceIcon marketplace={asset.marketplace} />
             )}
           </Card.SecondaryRow>

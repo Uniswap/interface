@@ -131,13 +131,13 @@ export const buyCell = style([
     selectors: {
       '&:enabled': {
         cursor: 'pointer',
-        color: vars.color.blue400,
+        color: vars.color.accentAction,
       },
       '&:disabled': {
         color: themeVars.colors.textTertiary,
       },
       '&:hover&:enabled': {
-        background: vars.color.blue400,
+        background: vars.color.accentAction,
         color: themeVars.colors.explicitWhite,
       },
     },
@@ -171,15 +171,6 @@ export const filter = style([
   {
     boxSizing: 'border-box',
   },
-])
-
-export const activeFilter = style([
-  filter,
-  sprinkles({
-    borderWidth: '1px',
-    borderStyle: 'solid',
-    borderColor: 'genieBlue',
-  }),
 ])
 
 export const marketplaceIcon = style([

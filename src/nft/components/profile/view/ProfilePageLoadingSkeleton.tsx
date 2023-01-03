@@ -56,13 +56,13 @@ const SellButtonSkeleton = styled.div`
   border-radius: 12px;
 `
 
-export const ProfileAssetCardSkeleton = styled.div`
+const ProfileAssetCardSkeleton = styled.div`
   width: 100%;
   height: 330px;
   border-radius: 20px;
 `
 
-export const ProfileAssetCardDisplaySectionSkeleton = () => {
+const ProfileAssetCardDisplaySectionSkeleton = () => {
   return (
     <Box width="full" className={assetList}>
       {Array.from(Array(DEFAULT_WALLET_ASSET_QUERY_AMOUNT), (_, index) => (

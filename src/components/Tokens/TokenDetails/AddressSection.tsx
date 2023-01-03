@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import styled from 'styled-components/macro'
 import { CopyContractAddress, ThemedText } from 'theme'
 
-export const ContractAddressSection = styled.div`
+const ContractAddressSection = styled.div`
   display: flex;
   flex-direction: column;
   color: ${({ theme }) => theme.textSecondary};

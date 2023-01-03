@@ -1,6 +1,7 @@
 import { useWeb3React, Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { Connection } from 'connection'
+import { ConnectionType, setMetMaskErrorHandler } from 'connection'
 import { getConnectionName } from 'connection/utils'
 import { isSupportedChain } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
@@ -8,8 +9,19 @@ import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/tra
 import useEagerlyConnect from 'hooks/useEagerlyConnect'
 import useOrderedConnections from 'hooks/useOrderedConnections'
 import { ReactNode, useEffect, useMemo } from 'react'
+import { updateConnectionError } from 'state/connection/reducer'
+import { useAppDispatch } from 'state/hooks'
 
 export default function Web3Provider({ children }: { children: ReactNode }) {
+  const dispatch = useAppDispatch()
+
+  // Set metamask error handler for metamask disconnection warning modal.
+  useEffect(() => {
+    setMetMaskErrorHandler((error: Error) =>
+      dispatch(updateConnectionError({ connectionType: ConnectionType.INJECTED, error: error.message }))
+    )
+  }, [dispatch])
+
   useEagerlyConnect()
   const connections = useOrderedConnections()
   const connectors: [Connector, Web3ReactHooks][] = connections.map(({ hooks, connector }) => [connector, hooks])

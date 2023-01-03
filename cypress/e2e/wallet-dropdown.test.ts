@@ -1,9 +1,8 @@
-import { FeatureFlag } from '../../src/featureFlags/flags/featureFlags'
 import { getTestSelector } from '../utils'
 
 describe('Wallet Dropdown', () => {
   before(() => {
-    cy.visit('/', { featureFlags: [FeatureFlag.navBar, FeatureFlag.tokenSafety] })
+    cy.visit('/pool')
   })
 
   it('should change the theme', () => {
@@ -31,6 +30,8 @@ describe('Wallet Dropdown', () => {
     cy.get(getTestSelector('wallet-disconnect')).click()
     cy.get(getTestSelector('wallet-select-theme')).click()
     cy.get(getTestSelector('wallet-select-theme')).contains('Dark theme').should('exist')
+    cy.get(getTestSelector('wallet-select-theme')).click()
+    cy.get(getTestSelector('wallet-select-theme')).contains('Light theme').should('exist')
   })
 
   it('should select a language when not connected', () => {

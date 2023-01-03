@@ -19,7 +19,7 @@ interface CurrencySearchModalProps {
   disableNonToken?: boolean
 }
 
-export enum CurrencyModalView {
+enum CurrencyModalView {
   search,
   importToken,
   tokenSafety,

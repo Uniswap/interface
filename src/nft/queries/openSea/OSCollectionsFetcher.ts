@@ -14,10 +14,7 @@ export const OSCollectionsFetcher = async ({ params }: any): Promise<WalletColle
   const walletCollections = await r.json()
   if (walletCollections) {
     return walletCollections
-      .filter(
-        (collection: any) =>
-          collection.primary_asset_contracts.length && collection.primary_asset_contracts[0].schema_name === 'ERC721'
-      )
+      .filter((collection: any) => collection.primary_asset_contracts.length)
       .map((collection: any) => ({
         address: collection.primary_asset_contracts[0].address,
         name: collection.name,

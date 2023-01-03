@@ -48,7 +48,7 @@ const CurrencyName = styled(Text)`
 
 const Tag = styled.div`
   background-color: ${({ theme }) => theme.deprecated_bg3};
-  color: ${({ theme }) => theme.deprecated_text2};
+  color: ${({ theme }) => theme.textSecondary};
   font-size: 14px;
   border-radius: 4px;
   padding: 0.25rem 0.3rem 0.25rem 0.3rem;
@@ -60,7 +60,7 @@ const Tag = styled.div`
   margin-right: 4px;
 `
 
-export const WarningContainer = styled.div`
+const WarningContainer = styled.div`
   margin-left: 0.3em;
 `
 

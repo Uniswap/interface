@@ -1,11 +1,15 @@
+import { useTrace } from '@uniswap/analytics'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { EventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { OpacityHoverState } from 'components/Common'
-import { useNftBalanceQuery } from 'graphql/data/nft/NftBalance'
+import { useNftBalance } from 'graphql/data/nft/NftBalance'
 import { CancelListingIcon, VerifiedIcon } from 'nft/components/icons'
 import { useBag, useProfilePageState, useSellAsset } from 'nft/hooks'
 import { CollectionInfoForAsset, GenieAsset, ProfilePageStateType, WalletAsset } from 'nft/types'
 import {
   ethNumberStandardFormatter,
+  fetchPrice,
   formatEthPrice,
   generateTweetForAsset,
   getMarketplaceIcon,
@@ -15,6 +19,7 @@ import {
 import { shortenAddress } from 'nft/utils/address'
 import { useMemo } from 'react'
 import { Upload } from 'react-feather'
+import { useQuery } from 'react-query'
 import { Link, useNavigate } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
@@ -184,8 +189,6 @@ const CollectionNameContainer = styled.div`
 `
 
 const CollectionHeader = styled.span`
-  display: flex;
-  align-items: center;
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
@@ -194,29 +197,44 @@ const CollectionHeader = styled.span`
   ${OpacityHoverState};
 `
 
+const VerifiedIconContainer = styled.span`
+  position: relative;
+`
+
+const StyledVerifiedIcon = styled(VerifiedIcon)`
+  position: absolute;
+  top: 0px;
+`
+
 const DefaultLink = styled(Link)`
   text-decoration: none;
 `
 
-export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
+const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
   const navigate = useNavigate()
-  const USDPrice = useUsdPrice(asset)
+  const { data: USDValue } = useQuery(['fetchPrice', {}], () => fetchPrice(), {})
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const selectSellAsset = useSellAsset((state) => state.selectSellAsset)
   const resetSellAssets = useSellAsset((state) => state.reset)
-  const { account } = useWeb3React()
-  const assetsFilter = [{ address: asset.address, tokenId: asset.tokenId }]
-  const { walletAssets: ownerAssets } = useNftBalanceQuery(account ?? '', [], assetsFilter, 1)
-  const walletAsset: WalletAsset = useMemo(() => ownerAssets[0], [ownerAssets])
 
-  const listing = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
-  const cheapestOrder = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
-  const expirationDate = cheapestOrder ? new Date(cheapestOrder.endAt) : undefined
+  const listing = asset.sellOrders && asset.sellOrders.length > 0 ? asset.sellOrders[0] : undefined
+  const expirationDate = listing?.endAt ? new Date(listing.endAt) : undefined
+
+  const USDPrice = useMemo(
+    () => (USDValue && asset.floor_sell_order_price ? USDValue * asset.floor_sell_order_price : undefined),
+    [USDValue, asset.floor_sell_order_price]
+  )
+  const trace = useTrace()
 
   const goToListPage = () => {
     resetSellAssets()
     navigate('/nfts/profile')
-    selectSellAsset(walletAsset)
+    selectSellAsset(asset)
+    sendAnalyticsEvent(EventName.NFT_SELL_ITEM_ADDED, {
+      collection_address: asset.asset_contract.address,
+      token_id: asset.tokenId,
+      ...trace,
+    })
     setSellPageState(ProfilePageStateType.LISTING)
   }
 
@@ -236,7 +254,7 @@ export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
         {listing ? (
           <>
             <ThemedText.MediumHeader fontSize="28px" lineHeight="36px">
-              {formatEthPrice(asset.priceInfo.ETHPrice)}
+              {formatEthPrice(asset.priceInfo?.ETHPrice)} ETH
             </ThemedText.MediumHeader>
             {USDPrice && (
               <ThemedText.BodySecondary lineHeight="24px">
@@ -255,7 +273,9 @@ export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
       )}
       {!listing ? (
         <BuyNowButton assetInBag={false} margin={true} useAccentColor={true} onClick={goToListPage}>
-          <ThemedText.SubHeader lineHeight="20px">List</ThemedText.SubHeader>
+          <ThemedText.SubHeader lineHeight="20px" color="white">
+            List
+          </ThemedText.SubHeader>
         </BuyNowButton>
       ) : (
         <>
@@ -273,7 +293,7 @@ const StyledLink = styled(Link)`
   ${OpacityHoverState}
 `
 
-export const NotForSale = ({ collectionName, collectionUrl }: { collectionName: string; collectionUrl: string }) => {
+const NotForSale = ({ collectionName, collectionUrl }: { collectionName: string; collectionUrl: string }) => {
   const theme = useTheme()
 
   return (
@@ -300,7 +320,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const { account } = useWeb3React()
 
   const cheapestOrder = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
-  const expirationDate = cheapestOrder ? new Date(cheapestOrder.endAt) : undefined
+  const expirationDate = cheapestOrder?.endAt ? new Date(cheapestOrder.endAt) : undefined
 
   const itemsInBag = useBag((s) => s.itemsInBag)
   const addAssetsToBag = useBag((s) => s.addAssetsToBag)
@@ -309,6 +329,10 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const bagExpanded = useBag((s) => s.bagExpanded)
 
   const USDPrice = useUsdPrice(asset)
+
+  const assetsFilter = [{ address: asset.address, tokenId: asset.tokenId }]
+  const { walletAssets: ownerAssets } = useNftBalance(account ?? '', [], assetsFilter, 1)
+  const walletAsset: WalletAsset | undefined = useMemo(() => ownerAssets?.[0], [ownerAssets])
 
   const { assetInBag } = useMemo(() => {
     return {
@@ -328,7 +352,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
     )
   }
 
-  const isOwner = asset.owner ? account?.toLowerCase() === asset.owner?.address?.toLowerCase() : false
+  const isOwner = asset.ownerAddress && !!walletAsset && account?.toLowerCase() === asset.ownerAddress?.toLowerCase()
   const isForSale = cheapestOrder && asset.priceInfo
 
   return (
@@ -337,7 +361,8 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
         <CollectionNameContainer>
           <DefaultLink to={`/nfts/collection/${asset.address}`}>
             <CollectionHeader>
-              {collection.collectionName} {collection.isVerified && <VerifiedIcon />}
+              {collection.collectionName}
+              <VerifiedIconContainer>{collection.isVerified && <StyledVerifiedIcon />}</VerifiedIconContainer>
             </CollectionHeader>
           </DefaultLink>
           <UploadLink onClick={shareTweet} target="_blank">
@@ -347,7 +372,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
         <AssetHeader>{asset.name ?? `${asset.collectionName} #${asset.tokenId}`}</AssetHeader>
       </AssetInfoContainer>
       {isOwner ? (
-        <OwnerContainer asset={asset} />
+        <OwnerContainer asset={walletAsset} />
       ) : isForSale ? (
         <BestPriceContainer>
           <HeaderRow>
@@ -385,7 +410,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
                 }}
               >
                 <ThemedText.SubHeader color="white" lineHeight="20px">
-                  <span>{assetInBag ? 'Remove' : 'Add to Bag'}</span>
+                  <span data-testid="nft-details-toggle-bag">{assetInBag ? 'Remove' : 'Add to Bag'}</span>
                 </ThemedText.SubHeader>
               </BuyNowButton>
             </BuyNowButtonContainer>
@@ -396,20 +421,20 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
       )}
       {isForSale && (
         <OwnerInformationContainer>
-          {asset.tokenType !== 'ERC1155' && asset.owner.address && (
+          {asset.tokenType !== 'ERC1155' && asset.ownerAddress && (
             <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
               Seller:
             </ThemedText.BodySmall>
           )}
           <OwnerText
             target="_blank"
-            href={`https://etherscan.io/address/${asset.owner.address}`}
+            href={`https://etherscan.io/address/${asset.ownerAddress}`}
             rel="noopener noreferrer"
           >
             {asset.tokenType === 'ERC1155' ? (
               ''
             ) : (
-              <span> {isOwner ? 'You' : asset.owner.address && shortenAddress(asset.owner.address, 2, 4)}</span>
+              <span> {isOwner ? 'You' : asset.ownerAddress && shortenAddress(asset.ownerAddress, 2, 4)}</span>
             )}
           </OwnerText>
         </OwnerInformationContainer>

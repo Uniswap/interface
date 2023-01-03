@@ -28,12 +28,6 @@ export const monthDayFormatter = (locale: string) => (timestamp: NumberValue) =>
     day: 'numeric',
   })
 
-export const monthYearFormatter = (locale: string) => (timestamp: NumberValue) =>
-  createDateFormatter(timestamp, locale, {
-    month: 'long',
-    year: 'numeric',
-  })
-
 export const monthYearDayFormatter = (locale: string) => (timestamp: NumberValue) =>
   createDateFormatter(timestamp, locale, {
     month: 'short',

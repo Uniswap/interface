@@ -16,7 +16,7 @@ export const StatWrapper = styled.div`
   flex: 1;
   padding: 24px 0px;
 `
-export const TokenStatsSection = styled.div`
+const TokenStatsSection = styled.div`
   display: flex;
   flex-wrap: wrap;
 `
@@ -45,21 +45,10 @@ export const StatsWrapper = styled.div`
 
 type NumericStat = number | undefined | null
 
-function Stat({
-  value,
-  title,
-  description,
-  isPrice = false,
-}: {
-  value: NumericStat
-  title: ReactNode
-  description?: ReactNode
-  isPrice?: boolean
-}) {
+function Stat({ value, title, description }: { value: NumericStat; title: ReactNode; description?: ReactNode }) {
   return (
     <StatWrapper>
       <MouseoverTooltip text={description}>{title}</MouseoverTooltip>
-
       <StatPrice>{formatNumber(value, NumberType.FiatTokenStats)}</StatPrice>
     </StatWrapper>
   )
@@ -75,7 +64,7 @@ export default function StatsSection(props: StatsSectionProps) {
   const { priceLow52W, priceHigh52W, TVL, volume24H } = props
   if (TVL || volume24H || priceLow52W || priceHigh52W) {
     return (
-      <StatsWrapper>
+      <StatsWrapper data-testid="token-details-stats">
         <Header>
           <Trans>Stats</Trans>
         </Header>
@@ -97,8 +86,8 @@ export default function StatsSection(props: StatsSectionProps) {
             />
           </StatPair>
           <StatPair>
-            <Stat value={priceLow52W} title={<Trans>52W low</Trans>} isPrice={true} />
-            <Stat value={priceHigh52W} title={<Trans>52W high</Trans>} isPrice={true} />
+            <Stat value={priceLow52W} title={<Trans>52W low</Trans>} />
+            <Stat value={priceHigh52W} title={<Trans>52W high</Trans>} />
           </StatPair>
         </TokenStatsSection>
       </StatsWrapper>

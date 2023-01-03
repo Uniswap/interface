@@ -14,7 +14,7 @@ export const CollectionSearch = () => {
     <Box
       as="input"
       flex="1"
-      borderColor={{ default: 'backgroundOutline', focus: 'genieBlue' }}
+      borderColor={{ default: 'backgroundOutline', focus: 'accentAction' }}
       borderWidth="1.5px"
       borderStyle="solid"
       borderRadius="12"

@@ -5,7 +5,7 @@ import { AssetRow, CollectionRow, ListingMarket, ListingRow, ListingStatus, Wall
 import { approveCollection, LOOKS_RARE_CREATOR_BASIS_POINTS, signListing } from 'nft/utils/listNfts'
 import { Dispatch } from 'react'
 
-export const updateStatus = ({
+const updateStatus = ({
   listing,
   newStatus,
   rows,
@@ -58,14 +58,15 @@ export async function approveCollectionRow(
       : marketplace.name === 'X2Y2'
       ? X2Y2_TRANSFER_CONTRACT
       : looksRareAddress
-  await approveCollection(spender ?? '', collectionAddress, signer, (newStatus: ListingStatus) =>
-    updateStatus({
-      listing: collectionRow,
-      newStatus,
-      rows: collectionsRequiringApproval,
-      setRows: setCollectionsRequiringApproval as Dispatch<AssetRow[]>,
-    })
-  )
+  !!collectionAddress &&
+    (await approveCollection(spender, collectionAddress, signer, (newStatus: ListingStatus) =>
+      updateStatus({
+        listing: collectionRow,
+        newStatus,
+        rows: collectionsRequiringApproval,
+        setRows: setCollectionsRequiringApproval as Dispatch<AssetRow[]>,
+      })
+    ))
   if (collectionRow.status === ListingStatus.REJECTED || collectionRow.status === ListingStatus.FAILED) pauseAllRows()
 }
 
@@ -127,7 +128,7 @@ export const getTotalEthValue = (sellAssets: WalletAsset[]) => {
       // LooksRare is a unique case where creator royalties are a flat 0.5% or 50 basis points
       const maxFee =
         maxListing.marketplace.fee +
-        (maxListing.marketplace.name === 'LooksRare' ? LOOKS_RARE_CREATOR_BASIS_POINTS : asset.basisPoints) / 100
+        (maxListing.marketplace.name === 'LooksRare' ? LOOKS_RARE_CREATOR_BASIS_POINTS : asset?.basisPoints ?? 0) / 100
       return total + (maxListing.price ?? 0) - (maxListing.price ?? 0) * (maxFee / 100)
     }
     return total
@@ -171,7 +172,7 @@ export const getListings = (sellAssets: WalletAsset[]): [CollectionRow[], Listin
   return [newCollectionsToApprove, newListings]
 }
 
-export type ListingState = {
+type ListingState = {
   allListingsPending: boolean
   allListingsDefined: boolean
   allListingsApproved: boolean

@@ -20,6 +20,8 @@ declare global {
     interface VisitOptions {
       serviceWorker?: true
       featureFlags?: Array<FeatureFlag>
+      selectedWallet?: string
+      noWallet?: boolean
     }
   }
 }
@@ -38,7 +40,12 @@ Cypress.Commands.overwrite(
         onBeforeLoad(win) {
           options?.onBeforeLoad?.(win)
           win.localStorage.clear()
-          win.localStorage.setItem('redux_localstorage_simple_user', '{"selectedWallet":"INJECTED"}')
+
+          const userState = {
+            selectedWallet: options?.noWallet !== true ? options?.selectedWallet || 'INJECTED' : undefined,
+            fiatOnrampDismissed: true,
+          }
+          win.localStorage.setItem('redux_localstorage_simple_user', JSON.stringify(userState))
 
           if (options?.featureFlags) {
             const featureFlags = options.featureFlags.reduce(
@@ -65,10 +72,20 @@ beforeEach(() => {
     res.headers['origin'] = 'http://localhost:3000'
     res.continue()
   })
+
+  // Graphql security policies are based on Origin headers.
+  // These are stripped by cypress because chromeWebSecurity === false; this adds them back in.
+  cy.intercept('https://api.uniswap.org/v1/graphql', (res) => {
+    res.headers['origin'] = 'https://app.uniswap.org'
+    res.continue()
+  })
+  cy.intercept('https://beta.api.uniswap.org/v1/graphql', (res) => {
+    res.headers['origin'] = 'https://app.uniswap.org'
+    res.continue()
+  })
 })
 
-Cypress.on('uncaught:exception', (_err, _runnable) => {
-  // returning false here prevents Cypress from
-  // failing the test
+Cypress.on('uncaught:exception', () => {
+  // returning false here prevents Cypress from failing the test
   return false
 })

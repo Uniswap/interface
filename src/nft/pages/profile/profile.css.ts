@@ -1,8 +1,6 @@
 import { style } from '@vanilla-extract/css'
 import { sprinkles } from 'nft/css/sprinkles.css'
 
-export const NAVBAR_HEIGHT = '72px'
-
 export const section = style([
   sprinkles({
     paddingLeft: { sm: '16', lg: '0' },
