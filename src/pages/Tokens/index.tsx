@@ -8,6 +8,7 @@ import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
 import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
 import TokenTable from 'components/Tokens/TokenTable/TokenTable'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { chainIdToBackendName, isValidBackendChainName } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useResetAtom } from 'jotai/utils'
@@ -46,8 +47,8 @@ const FiltersContainer = styled.div`
   }
 `
 const SearchContainer = styled(FiltersContainer)`
-  width: 100%;
   margin-left: 8px;
+  width: 100%;
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
     margin: 0px;
@@ -59,6 +60,8 @@ const FiltersWrapper = styled.div`
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   margin: 0 auto;
   margin-bottom: 20px;
+  color: ${({ theme }) => theme.textTertiary};
+  flex-direction: row;
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
     flex-direction: column;
@@ -94,9 +97,14 @@ const Tokens = () => {
     <Trace page={PageName.TOKENS_PAGE} shouldLogImpression>
       <ExploreContainer>
         <TitleContainer>
-          <ThemedText.LargeHeader>
-            <Trans>Top tokens on Uniswap</Trans>
-          </ThemedText.LargeHeader>
+          <MouseoverTooltip
+            text={<Trans>This table contains the top tokens by Uniswap volume, sorted based on your input.</Trans>}
+            placement="bottom"
+          >
+            <ThemedText.LargeHeader>
+              <Trans>Top tokens on Uniswap</Trans>
+            </ThemedText.LargeHeader>
+          </MouseoverTooltip>
         </TitleContainer>
         <FiltersWrapper>
           <FiltersContainer>

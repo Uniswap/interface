@@ -8,7 +8,11 @@ export const TooltipContainer = styled.div`
   max-width: 256px;
   cursor: default;
   padding: 0.6rem 1rem;
+
+  color: ${({ theme }) => theme.textPrimary};
   font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
   word-break: break-word;
 
   background: ${({ theme }) => theme.backgroundSurface};
@@ -56,7 +60,7 @@ function TooltipContent({ content, wrap = false, ...rest }: TooltipContentProps)
 /** Standard text tooltip. */
 export function MouseoverTooltip({ text, disableHover, children, timeout, ...rest }: Omit<TooltipProps, 'show'>) {
   const [show, setShow] = useState(false)
-  const open = useCallback(() => setShow(true), [setShow])
+  const open = useCallback(() => text && setShow(true), [text, setShow])
   const close = useCallback(() => setShow(false), [setShow])
 
   useEffect(() => {

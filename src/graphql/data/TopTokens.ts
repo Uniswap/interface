@@ -19,7 +19,7 @@ import { CHAIN_NAME_TO_CHAIN_ID, isPricePoint, PricePoint, toHistoryDuration, un
 
 gql`
   query TopTokens100($duration: HistoryDuration!, $chain: Chain!) {
-    topTokens(pageSize: 100, page: 1, chain: $chain) {
+    topTokens(pageSize: 100, page: 1, chain: $chain, orderBy: VOLUME) {
       id
       name
       chain
