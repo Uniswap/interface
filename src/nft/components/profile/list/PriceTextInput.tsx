@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { AttachPriceIcon, EditPriceIcon } from 'nft/components/icons'
@@ -9,9 +10,22 @@ import { formatEth } from 'nft/utils/currency'
 import { Dispatch, FormEvent, useEffect, useRef, useState } from 'react'
 
 enum WarningType {
-  BELOW_FLOOR = 'LISTING BELOW FLOOR ',
-  ALREADY_LISTED = 'ALREADY LISTED FOR ',
-  NONE = '',
+  BELOW_FLOOR,
+  ALREADY_LISTED,
+  NONE,
+}
+
+const getWarningMessage = (warning: WarningType) => {
+  let message = <></>
+  switch (warning) {
+    case WarningType.BELOW_FLOOR:
+      message = <Trans>LISTING BELOW FLOOR </Trans>
+      break
+    case WarningType.ALREADY_LISTED:
+      message = <Trans>ALREADY LISTED FOR </Trans>
+      break
+  }
+  return message
 }
 
 interface PriceTextInputProps {
@@ -118,43 +132,29 @@ export const PriceTextInput = ({
         color={warningType === WarningType.BELOW_FLOOR && !focused ? 'orange' : 'textSecondary'}
         position="absolute"
       >
-        {focused ? (
-          <>
-            {!!asset.lastPrice && (
-              <Row display={asset.lastPrice ? 'flex' : 'none'} marginRight="8">
-                LAST: {formatEth(asset.lastPrice)} ETH
-              </Row>
+        {warning
+          ? warning.message
+          : warningType !== WarningType.NONE && (
+              <>
+                {getWarningMessage(warningType)}
+                &nbsp;
+                {warningType === WarningType.BELOW_FLOOR
+                  ? formatEth(asset?.floorPrice ?? 0)
+                  : formatEth(asset?.floor_sell_order_price ?? 0)}
+                ETH
+                <Box
+                  color={warningType === WarningType.BELOW_FLOOR ? 'accentAction' : 'orange'}
+                  marginLeft="8"
+                  cursor="pointer"
+                  onClick={() => {
+                    warningType === WarningType.ALREADY_LISTED && removeSellAsset(asset)
+                    setWarningType(WarningType.NONE)
+                  }}
+                >
+                  {warningType === WarningType.BELOW_FLOOR ? <Trans>DISMISS</Trans> : <Trans>REMOVE ITEM</Trans>}
+                </Box>
+              </>
             )}
-            {!!asset.floorPrice && (
-              <Row display={asset.floorPrice ? 'flex' : 'none'}>FLOOR: {formatEth(asset.floorPrice)} ETH</Row>
-            )}
-          </>
-        ) : (
-          <>
-            {warning
-              ? warning.message
-              : warningType !== WarningType.NONE && (
-                  <>
-                    {warningType}
-                    {warningType === WarningType.BELOW_FLOOR
-                      ? formatEth(asset?.floorPrice ?? 0)
-                      : formatEth(asset?.floor_sell_order_price ?? 0)}
-                    ETH
-                    <Box
-                      color={warningType === WarningType.BELOW_FLOOR ? 'accentAction' : 'orange'}
-                      marginLeft="8"
-                      cursor="pointer"
-                      onClick={() => {
-                        warningType === WarningType.ALREADY_LISTED && removeSellAsset(asset)
-                        setWarningType(WarningType.NONE)
-                      }}
-                    >
-                      {warningType === WarningType.BELOW_FLOOR ? 'DISMISS' : 'REMOVE ITEM'}
-                    </Box>
-                  </>
-                )}
-          </>
-        )}
       </Row>
     </Column>
   )
