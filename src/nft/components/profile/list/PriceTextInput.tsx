@@ -131,6 +131,7 @@ export const PriceTextInput = ({
         className={badge}
         color={warningType === WarningType.BELOW_FLOOR && !focused ? 'orange' : 'textSecondary'}
         position="absolute"
+        right={{ sm: '0', md: 'unset' }}
       >
         {warning
           ? warning.message
