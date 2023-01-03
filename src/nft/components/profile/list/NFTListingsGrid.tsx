@@ -314,15 +314,6 @@ const EthPriceDisplay = ({ ethPrice = 0 }: { ethPrice?: number }) => {
   )
 }
 
-const FeeWrap = styled.div`
-  margin-bottom: 4px;
-  color: ${({ theme }) => theme.textPrimary};
-`
-
-const RoyaltyContainer = styled.div`
-  margin-bottom: 8px;
-`
-
 const IconWrap = styled.div<{ hovered: boolean }>`
   position: absolute;
   left: 50%;
