@@ -88,7 +88,7 @@ const ContentContainer = styled.div<{ isDarkMode: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: end;
+  justify-content: flex-end;
   width: 100%;
   padding: 0 0 40px;
   max-width: min(720px, 90%);

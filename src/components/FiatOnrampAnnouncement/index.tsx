@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { useWeb3React } from '@web3-react/core'
 import fiatMaskUrl from 'assets/svg/fiat_mask.svg'
 import { BaseVariant } from 'featureFlags'
@@ -112,6 +113,7 @@ export function FiatOnrampAnnouncement() {
 
   const toggleWalletDropdown = useToggleWalletDropdown()
   const handleClick = useCallback(() => {
+    sendAnalyticsEvent('FOR Banner Click')
     toggleWalletDropdown()
     acknowledge({ user: true })
   }, [acknowledge, toggleWalletDropdown])
