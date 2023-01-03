@@ -272,7 +272,7 @@ const MarketplaceRow = ({
         color="textSecondary"
         textAlign="left"
         flex="1"
-        display={{ sm: 'none', md: 'none', xl: 'flex' }}
+        display={{ sm: 'none', xxl: 'flex' }}
       >
         {asset.floorPrice ? `${asset.floorPrice.toFixed(3)} ETH` : '-'}
       </Column>
@@ -281,7 +281,7 @@ const MarketplaceRow = ({
         color="textSecondary"
         textAlign="left"
         flex="1"
-        display={{ sm: 'none', md: 'none', xl: 'flex' }}
+        display={{ sm: 'none', xxl: 'flex' }}
       >
         {asset.lastPrice ? `${asset.lastPrice.toFixed(3)} ETH` : '-'}
       </Column>
@@ -339,7 +339,7 @@ const MarketplaceRow = ({
         )}
       </Row>
 
-      <Column flex="1" display={{ sm: 'none', md: 'none', lg: 'flex' }}>
+      <Column flex="1" display={{ sm: 'none', lg: 'flex' }}>
         <Box className={body} color="textSecondary" width="full" textAlign="right">
           <MouseoverTooltip
             text={
@@ -358,7 +358,7 @@ const MarketplaceRow = ({
         </Box>
       </Column>
 
-      <Column flex="1.5" display={{ sm: 'none', md: 'none', lg: 'flex' }}>
+      <Column flex="1.5" display={{ sm: 'none', lg: 'flex' }}>
         <Column width="full">
           <EthPriceDisplay ethPrice={userReceives} />
         </Column>

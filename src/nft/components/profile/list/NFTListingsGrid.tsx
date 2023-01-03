@@ -69,7 +69,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
             className={bodySmall}
             color="textSecondary"
             flex="1"
-            display={{ sm: 'none', md: 'none', xl: 'flex' }}
+            display={{ sm: 'none', xxl: 'flex' }}
             textAlign="left"
           >
             <Trans>Floor</Trans>
@@ -78,7 +78,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
             className={bodySmall}
             color="textSecondary"
             flex="1"
-            display={{ sm: 'none', md: 'none', xl: 'flex' }}
+            display={{ sm: 'none', xxl: 'flex' }}
             textAlign="left"
           >
             <Trans>Last</Trans>
@@ -91,14 +91,14 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
             className={bodySmall}
             color="textSecondary"
             flex="1"
-            display={{ sm: 'none', md: 'none', lg: 'flex' }}
+            display={{ sm: 'none', lg: 'flex' }}
             textAlign="right"
           >
             <Trans>Fees</Trans>
           </Column>
           <Column
             className={bodySmall}
-            display={{ sm: 'none', md: 'none', lg: 'flex' }}
+            display={{ sm: 'none', lg: 'flex' }}
             color="textSecondary"
             flex="1.5"
             textAlign="right"
