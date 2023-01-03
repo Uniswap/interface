@@ -169,7 +169,6 @@ export const AboutFooter = () => {
           <ExternalTextLink href="https://boards.greenhouse.io/uniswaplabs" target="_blank" rel="noopener noreferrer">
             Careers
           </ExternalTextLink>
-          <TextLink to="/?intro=true">About</TextLink>
           <ExternalTextLink href="https://uniswap.org/blog" target="_blank" rel="noopener noreferrer">
             Blog
           </ExternalTextLink>
