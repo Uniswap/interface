@@ -1,4 +1,6 @@
 import { Trans } from '@lingui/macro'
+// eslint-disable-next-line no-restricted-imports
+import { t } from '@lingui/macro'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
 import { SortDropdown } from 'nft/components/common/SortDropdown'
@@ -88,7 +90,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
             <Trans>Last</Trans>
           </Column>
           <Column className={subheadSmall} flex="2">
-            <SortDropdown dropDownOptions={priceDropdownOptions} mini miniPrompt="Set price by" />
+            <SortDropdown dropDownOptions={priceDropdownOptions} mini miniPrompt={t`Set price by`} />
           </Column>
 
           <Column
