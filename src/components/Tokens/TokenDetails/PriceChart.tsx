@@ -126,9 +126,10 @@ interface PriceChartProps {
   height: number
   prices: PricePoint[] | undefined | null
   timePeriod: TimePeriod
+  color: string
 }
 
-export function PriceChart({ width, height, prices: originalPrices, timePeriod }: PriceChartProps) {
+export function PriceChart({ width, height, prices: originalPrices, timePeriod, color }: PriceChartProps) {
   const locale = useActiveLocale()
   const theme = useTheme()
 
@@ -302,6 +303,7 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
             marginTop={margin.top}
             curve={curve}
             strokeWidth={2}
+            color={color}
           />
           {blanks.map((blank, index) => (
             <FadedInLineChart
@@ -356,7 +358,7 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
                 left={crosshair}
                 top={rdScale(displayPrice.value) + margin.top}
                 size={50}
-                fill={theme.accentAction}
+                fill={color}
                 stroke={theme.backgroundOutline}
                 strokeWidth={0.5}
               />

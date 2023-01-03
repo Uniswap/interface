@@ -1,6 +1,6 @@
 import { SupportedChainId } from 'constants/chains'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components/macro'
 
 const MissingImageLogo = styled.div<{ size?: string }>`
@@ -29,6 +29,7 @@ export type AssetLogoBaseProps = {
   backupImg?: string | null
   size?: string
   style?: React.CSSProperties
+  updateUrl?: (s: string) => void
 }
 type AssetLogoProps = AssetLogoBaseProps & { isNative?: boolean; address?: string | null; chainId?: number }
 
@@ -44,6 +45,7 @@ export default function AssetLogo({
   backupImg,
   size = '24px',
   style,
+  updateUrl,
   ...rest
 }: AssetLogoProps) {
   const imageProps = {
@@ -54,6 +56,10 @@ export default function AssetLogo({
   }
 
   const [src, nextSrc] = useTokenLogoSource(address, chainId, isNative, backupImg)
+
+  useEffect(() => {
+    src && updateUrl?.(src)
+  }, [src])
 
   if (src) {
     return <LogoImage {...imageProps} src={src} onError={nextSrc} />

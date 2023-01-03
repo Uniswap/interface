@@ -34,7 +34,7 @@ import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
 import { useIsUserAddedTokenOnChain } from 'hooks/Tokens'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { UNKNOWN_TOKEN_SYMBOL, useTokenFromActiveNetwork } from 'lib/hooks/useCurrency'
-import { useCallback, useMemo, useState, useTransition } from 'react'
+import { useCallback, useEffect, useMemo, useState, useTransition } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -42,6 +42,7 @@ import { isAddress } from 'utils'
 
 import { OnChangeTimePeriod } from './ChartSection'
 import InvalidTokenDetails from './InvalidTokenDetails'
+import { useColorFromURI } from 'hooks/useColor'
 
 const TokenSymbol = styled.span`
   text-transform: uppercase;
@@ -168,6 +169,10 @@ export default function TokenDetails({
     [continueSwap, setContinueSwap]
   )
 
+  const [logoUrl, setLogoUrl] = useState<string>()
+  const color = useColorFromURI(logoUrl)
+  const color2 = useColorFromURI("https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xEd04915c23f00A313a544955524EB7DBD823143d/logo.png")
+  console.log(color2)
   const L2Icon = getChainInfo(pageChainId)?.circleLogoUrl
 
   // address will never be undefined if token is defined; address is checked here to appease typechecker
@@ -189,7 +194,7 @@ export default function TokenDetails({
             <TokenInfoContainer>
               <TokenNameCell>
                 <LogoContainer>
-                  <CurrencyLogo currency={token} size="32px" />
+                  <CurrencyLogo currency={token} updateUrl={setLogoUrl} size="32px" />
                   <L2NetworkLogo networkUrl={L2Icon} size="16px" />
                 </LogoContainer>
                 {token.name ?? <Trans>Name not found</Trans>}
@@ -199,7 +204,7 @@ export default function TokenDetails({
                 <ShareButton currency={token} />
               </TokenActions>
             </TokenInfoContainer>
-            <ChartSection tokenPriceQuery={tokenPriceQuery} onChangeTimePeriod={onChangeTimePeriod} />
+            <ChartSection tokenPriceQuery={tokenPriceQuery} onChangeTimePeriod={onChangeTimePeriod} color={color}/>
             <StatsSection
               TVL={tokenQueryData?.market?.totalValueLocked?.value}
               volume24H={tokenQueryData?.market?.volume24H?.value}

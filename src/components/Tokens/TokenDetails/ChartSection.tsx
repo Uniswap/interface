@@ -28,9 +28,11 @@ function usePriceHistory(tokenPriceData: TokenPriceQuery): PricePoint[] | undefi
 export default function ChartSection({
   tokenPriceQuery,
   onChangeTimePeriod,
+  color,
 }: {
   tokenPriceQuery?: TokenPriceQuery
   onChangeTimePeriod: OnChangeTimePeriod
+  color: string,
 }) {
   if (!tokenPriceQuery) {
     return <LoadingChart />
@@ -39,7 +41,7 @@ export default function ChartSection({
   return (
     <Suspense fallback={<LoadingChart />}>
       <ChartContainer>
-        <Chart tokenPriceQuery={tokenPriceQuery} onChangeTimePeriod={onChangeTimePeriod} />
+        <Chart tokenPriceQuery={tokenPriceQuery} onChangeTimePeriod={onChangeTimePeriod} color={color} />
       </ChartContainer>
     </Suspense>
   )
@@ -49,9 +51,11 @@ export type OnChangeTimePeriod = (t: TimePeriod) => void
 function Chart({
   tokenPriceQuery,
   onChangeTimePeriod,
+  color
 }: {
   tokenPriceQuery: TokenPriceQuery
   onChangeTimePeriod: OnChangeTimePeriod
+  color: string,
 }) {
   const prices = usePriceHistory(tokenPriceQuery)
   // Initializes time period to global & maintain separate time period for subsequent changes
@@ -60,7 +64,7 @@ function Chart({
   return (
     <ChartContainer>
       <ParentSize>
-        {({ width }) => <PriceChart prices={prices ?? null} width={width} height={436} timePeriod={timePeriod} />}
+        {({ width }) => <PriceChart prices={prices ?? null} width={width} height={436} timePeriod={timePeriod} color={color} />}
       </ParentSize>
       <TimePeriodSelector
         currentTimePeriod={timePeriod}
