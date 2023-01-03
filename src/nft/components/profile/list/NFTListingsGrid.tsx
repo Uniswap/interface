@@ -17,6 +17,7 @@ import { Dispatch, FormEvent, useEffect, useMemo, useRef, useState } from 'react
 import styled from 'styled-components/macro'
 
 import * as styles from './ListPage.css'
+import { RoyaltyTooltip } from './RoyaltyTooltip'
 
 const TableHeader = styled.div`
   display: flex;
@@ -533,34 +534,15 @@ const MarketplaceRow = ({
             text={
               <Row>
                 <Box width="full" fontSize="14">
-                  {selectedMarkets.map((selectedMarket) => {
-                    return (
-                      <RoyaltyContainer key={selectedMarket.name}>
-                        <FeeWrap>
-                          {selectedMarket.name}: {selectedMarket.fee}%
-                        </FeeWrap>
-                        <FeeWrap>
-                          <Trans>Creator royalties</Trans>: {selectedMarket.royalty}%
-                        </FeeWrap>
-                      </RoyaltyContainer>
-                    )
+                  {selectedMarkets.map((selectedMarket, index) => {
+                    return <RoyaltyTooltip selectedMarket={selectedMarket} key={index} />
                   })}
                 </Box>
               </Row>
             }
             placement="left"
           >
-            {fees > 0
-              ? `${fees}${
-                  selectedMarkets.length > 1 ? (
-                    <span>
-                      %<Trans>max</Trans>
-                    </span>
-                  ) : (
-                    '%'
-                  )
-                }`
-              : '--%'}
+            {fees > 0 ? `${fees}${selectedMarkets.length > 1 ? t`% max` : '%'}` : '--%'}
           </MouseoverTooltip>
         </Box>
       </Column>
