@@ -60,7 +60,7 @@ function TooltipContent({ content, wrap = false, ...rest }: TooltipContentProps)
 /** Standard text tooltip. */
 export function MouseoverTooltip({ text, disableHover, children, timeout, ...rest }: Omit<TooltipProps, 'show'>) {
   const [show, setShow] = useState(false)
-  const open = useCallback(() => text && setShow(true), [text])
+  const open = useCallback(() => text && setShow(true), [text, setShow])
   const close = useCallback(() => setShow(false), [setShow])
 
   useEffect(() => {
