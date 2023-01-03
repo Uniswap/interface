@@ -4,7 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import fiatMaskUrl from 'assets/svg/fiat_mask.svg'
 import { BaseVariant } from 'featureFlags'
 import { useFiatOnrampFlag } from 'featureFlags/flags/fiatOnramp'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 import { X } from 'react-feather'
 import { useToggleWalletDropdown } from 'state/application/hooks'
 import { useAppSelector } from 'state/hooks'
@@ -129,7 +129,7 @@ export function FiatOnrampAnnouncement() {
     isMobile ||
     openModal !== null
   ) {
-    return null;
+    return null
   }
   return (
     <ArrowWrapper>
