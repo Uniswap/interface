@@ -99,7 +99,6 @@ const MAX_RENDER_COUNT = 3
 export function FiatOnrampAnnouncement() {
   const { account } = useWeb3React()
   const [acks, acknowledge] = useFiatOnrampAck()
-  const [locallyDismissed, setLocallyDismissed] = useState(false)
   useEffect(() => {
     if (!sessionStorage.getItem(ANNOUNCEMENT_RENDERED)) {
       acknowledge({ renderCount: acks?.renderCount + 1 })
@@ -108,8 +107,7 @@ export function FiatOnrampAnnouncement() {
   }, [acknowledge, acks])
 
   const handleClose = useCallback(() => {
-    setLocallyDismissed(true)
-    sessionStorage.setItem(ANNOUNCEMENT_DISMISSED, 'true')
+    localStorage.setItem(ANNOUNCEMENT_DISMISSED, 'true')
   }, [])
 
   const toggleWalletDropdown = useToggleWalletDropdown()
@@ -126,13 +124,12 @@ export function FiatOnrampAnnouncement() {
     !account ||
     acks?.user ||
     fiatOnrampFlag === BaseVariant.Control ||
-    locallyDismissed ||
-    sessionStorage.getItem(ANNOUNCEMENT_DISMISSED) ||
+    localStorage.getItem(ANNOUNCEMENT_DISMISSED) ||
     acks?.renderCount >= MAX_RENDER_COUNT ||
     isMobile ||
     openModal !== null
   ) {
-    return null
+    return null;
   }
   return (
     <ArrowWrapper>
