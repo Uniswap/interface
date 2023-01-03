@@ -1,7 +1,5 @@
 name: Release
 on:
-  schedule:
-    - cron: '0 12 * * 1-4' # every day 12:00 UTC Monday-Thursday
   # manual trigger
   workflow_dispatch:
 
@@ -121,4 +119,4 @@ jobs:
         with:
           environment: production
           sourcemaps: './build/static/js'
-          url_prefix: '/static/js'
+          url_prefix: '~/static/js'

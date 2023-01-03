@@ -51,14 +51,14 @@ const RoundedImage = styled.div<{ src?: string }>`
 const ChangeCellContainer = styled.div<{ change: number }>`
   display: flex;
   color: ${({ theme, change }) => (change >= 0 ? theme.accentSuccess : theme.accentFailure)};
-  justify-content: end;
+  justify-content: flex-end;
   align-items: center;
   gap: 2px;
 `
 
 const EthContainer = styled.div`
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
 `
 
 interface CellProps {

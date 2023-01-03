@@ -10,14 +10,15 @@ const EmptyWalletContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 190px;
-  flex: none;
+  justify-content: center;
+  margin: 190px 0px;
+  flex-wrap: wrap;
 `
 
 const EmptyWalletText = styled.div`
-  width: min-content;
-  white-space: nowrap;
+  white-space: normal;
   margin-top: 12px;
+  text-align: center;
 `
 
 const ExploreNFTsButton = styled.button`
@@ -37,16 +38,16 @@ const ExploreNFTsButton = styled.button`
 `
 
 export const EmptyWalletContent = () => {
-  const { account } = useWeb3React()
+  const { account, ENSName } = useWeb3React()
   const navigate = useNavigate()
   return (
     <EmptyWalletContainer>
       <EmptyNFTWalletIcon />
       <EmptyWalletText className={headlineMedium}>
-        <Trans>No NFTs in</Trans>&nbsp;{shortenAddress(account ?? '')}
+        <Trans>No NFTs in</Trans>&nbsp;{ENSName || shortenAddress(account ?? '')}
       </EmptyWalletText>
       <ExploreNFTsButton data-testid="nft-explore-nfts-button" onClick={() => navigate('/nfts')}>
-        Explore NFTs
+        <Trans>Explore NFTs</Trans>
       </ExploreNFTsButton>
     </EmptyWalletContainer>
   )

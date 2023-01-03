@@ -10,7 +10,7 @@ import Circle from '../../assets/images/blue-loader.svg'
 import Modal from '../Modal'
 
 const Wrapper = styled.div`
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme }) => theme.white};
   border-radius: 20px;
   box-shadow: ${({ theme }) => theme.deepShadow};
   display: flex;
