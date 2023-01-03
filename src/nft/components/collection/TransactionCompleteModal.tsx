@@ -1,4 +1,5 @@
 import { formatEther } from '@ethersproject/units'
+import { Trans } from '@lingui/macro'
 import { Trace, useTrace } from '@uniswap/analytics'
 import { EventName, ModalName } from '@uniswap/analytics-events'
 import clsx from 'clsx'
@@ -6,9 +7,9 @@ import { OpacityHoverState } from 'components/Common'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
 import { Row } from 'nft/components/Flex'
-import { BackArrowIcon, ChevronUpIcon, LightningBoltIcon, UniIcon } from 'nft/components/icons'
+import { BackArrowIcon, ChevronUpIcon, LightningBoltIcon, TwitterIcon, UniIcon } from 'nft/components/icons'
 import { Overlay, stopPropagation } from 'nft/components/modals/Overlay'
-import { vars } from 'nft/css/sprinkles.css'
+import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { useIsMobile, useSendTransaction, useTransactionResponse } from 'nft/hooks'
 import { TxResponse, TxStateType } from 'nft/types'
 import {
@@ -22,7 +23,6 @@ import {
 } from 'nft/utils'
 import { formatAssetEventProperties } from 'nft/utils/formatEventProperties'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Upload } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -123,11 +123,15 @@ const TxCompleteModal = () => {
                 <Box className={styles.successModal} onClick={stopPropagation}>
                   <UniIcon color={vars.color.pink400} width="36" height="36" className={styles.uniLogo} />
                   <Box display="flex" flexWrap="wrap" width="full" height="min">
-                    <h1 className={styles.title}>Complete!</h1>
-                    <p className={styles.subHeading}>Uniswap has granted your wish!</p>
+                    <h1 className={styles.title}>
+                      <Trans>Complete!</Trans>
+                    </h1>
+                    <p className={styles.subHeading}>
+                      <Trans>Uniswap has granted your wish!</Trans>
+                    </p>
                   </Box>
                   <UploadLink onClick={shareTweet} target="_blank">
-                    <Upload size={24} strokeWidth={2} />
+                    <TwitterIcon width={32} height={32} color={themeVars.colors.textSecondary} />
                   </UploadLink>
                   <Box
                     className={styles.successAssetsContainer}
@@ -173,7 +177,7 @@ const TxCompleteModal = () => {
                     </Row>
                     <a href={txHashUrl} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
                       <Box color="textSecondary" fontWeight="normal">
-                        View on Etherscan
+                        <Trans>View on Etherscan</Trans>
                       </Box>
                     </a>
                   </Box>
