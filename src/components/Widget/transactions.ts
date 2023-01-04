@@ -1,5 +1,5 @@
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
-import { EventName, SectionName } from '@uniswap/analytics-events'
+import { InterfaceEventName, InterfaceSectionName, SwapEventName } from '@uniswap/analytics-events'
 import {
   TradeType,
   Transaction,
@@ -22,7 +22,7 @@ import { currencyId } from 'utils/currencyId'
 
 /** Integrates the Widget's transactions, showing the widget's transactions in the app. */
 export function useSyncWidgetTransactions() {
-  const trace = useTrace({ section: SectionName.WIDGET })
+  const trace = useTrace({ section: InterfaceSectionName.WIDGET })
 
   const { chainId } = useWeb3React()
   const addTransaction = useTransactionAdder()
@@ -49,7 +49,7 @@ export function useSyncWidgetTransactions() {
           type: type === WidgetTransactionType.WRAP ? WrapType.WRAP : WrapType.UNWRAP,
           ...trace,
         }
-        sendAnalyticsEvent(EventName.WRAP_TOKEN_TXN_SUBMITTED, eventProperties)
+        sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, eventProperties)
         const { amount } = transaction.info
         addTransaction(response, {
           type: AppTransactionType.WRAP,
@@ -67,7 +67,7 @@ export function useSyncWidgetTransactions() {
           }),
           ...trace,
         }
-        sendAnalyticsEvent(EventName.SWAP_SIGNED, eventProperties)
+        sendAnalyticsEvent(SwapEventName.SWAP_SIGNED, eventProperties)
         const baseTxInfo = {
           type: AppTransactionType.SWAP,
           tradeType,

@@ -1,6 +1,13 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, Trace, TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, ElementName, EventName, PageName, SectionName } from '@uniswap/analytics-events'
+import {
+  BrowserEvent,
+  InterfaceElementName,
+  InterfaceEventName,
+  InterfacePageName,
+  InterfaceSectionName,
+  SwapEventName,
+} from '@uniswap/analytics-events'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
@@ -308,7 +315,7 @@ export default function Swap({ className }: { className?: string }) {
     try {
       const approval = await permit.callback?.()
       if (approval) {
-        sendAnalyticsEvent(EventName.APPROVE_TOKEN_TXN_SUBMITTED, {
+        sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
           chain_id: chainId,
           token_symbol: maximumAmountIn?.currency.symbol,
           token_address: maximumAmountIn?.currency.address,
@@ -510,7 +517,7 @@ export default function Swap({ className }: { className?: string }) {
       setSwapQuoteReceivedDate(now)
       // Log swap quote.
       sendAnalyticsEvent(
-        EventName.SWAP_QUOTE_RECEIVED,
+        SwapEventName.SWAP_QUOTE_RECEIVED,
         formatSwapQuoteReceivedEventProperties(trade, trade.gasUseEstimateUSD ?? undefined, fetchingSwapQuoteStartTime)
       )
       // Latest swap quote has just been logged, so we don't need to log the current trade anymore
@@ -541,7 +548,7 @@ export default function Swap({ className }: { className?: string }) {
   )
 
   return (
-    <Trace page={PageName.SWAP_PAGE} shouldLogImpression>
+    <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
       <>
         <TokenSafetyModal
           isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
@@ -573,7 +580,7 @@ export default function Swap({ className }: { className?: string }) {
 
             <div style={{ display: 'relative' }}>
               <SwapSection>
-                <Trace section={SectionName.CURRENCY_INPUT_PANEL}>
+                <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
                   <SwapCurrencyInputPanel
                     label={
                       independentField === Field.OUTPUT && !showWrap ? (
@@ -591,7 +598,7 @@ export default function Swap({ className }: { className?: string }) {
                     onCurrencySelect={handleInputSelect}
                     otherCurrency={currencies[Field.OUTPUT]}
                     showCommonBases={true}
-                    id={SectionName.CURRENCY_INPUT_PANEL}
+                    id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
                     loading={independentField === Field.OUTPUT && routeIsSyncing}
                   />
                 </Trace>
@@ -599,8 +606,8 @@ export default function Swap({ className }: { className?: string }) {
               <ArrowWrapper clickable={isSupportedChain(chainId)}>
                 <TraceEvent
                   events={[BrowserEvent.onClick]}
-                  name={EventName.SWAP_TOKENS_REVERSED}
-                  element={ElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON}
+                  name={SwapEventName.SWAP_TOKENS_REVERSED}
+                  element={InterfaceElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON}
                 >
                   <ArrowContainer
                     onClick={() => {
@@ -622,7 +629,7 @@ export default function Swap({ className }: { className?: string }) {
             <AutoColumn gap="md">
               <div>
                 <OutputSwapSection showDetailsDropdown={showDetailsDropdown}>
-                  <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
+                  <Trace section={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}>
                     <SwapCurrencyInputPanel
                       value={formattedAmounts[Field.OUTPUT]}
                       onUserInput={handleTypeOutput}
@@ -637,7 +644,7 @@ export default function Swap({ className }: { className?: string }) {
                       onCurrencySelect={handleOutputSelect}
                       otherCurrency={currencies[Field.INPUT]}
                       showCommonBases={true}
-                      id={SectionName.CURRENCY_OUTPUT_PANEL}
+                      id={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}
                       loading={independentField === Field.INPUT && routeIsSyncing}
                     />
                   </Trace>
@@ -678,9 +685,9 @@ export default function Swap({ className }: { className?: string }) {
                 ) : !account ? (
                   <TraceEvent
                     events={[BrowserEvent.onClick]}
-                    name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
+                    name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
                     properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
-                    element={ElementName.CONNECT_WALLET_BUTTON}
+                    element={InterfaceElementName.CONNECT_WALLET_BUTTON}
                   >
                     <ButtonLight onClick={toggleWalletModal} fontWeight={600}>
                       <Trans>Connect Wallet</Trans>

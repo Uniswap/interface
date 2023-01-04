@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, user } from '@uniswap/analytics'
-import { CustomUserProperties, EventName, WalletConnectionResult } from '@uniswap/analytics-events'
+import { CustomUserProperties, InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { sendEvent } from 'components/analytics'
@@ -125,7 +125,7 @@ const sendAnalyticsEventAndUserInfo = (
   chainId: number | undefined,
   isReconnect: boolean
 ) => {
-  sendAnalyticsEvent(EventName.WALLET_CONNECT_TXN_COMPLETED, {
+  sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
     result: WalletConnectionResult.SUCCEEDED,
     wallet_address: account,
     wallet_type: walletType,
@@ -236,7 +236,7 @@ export default function WalletModal({
         console.debug(`web3-react connection error: ${error}`)
         dispatch(updateConnectionError({ connectionType, error: error.message }))
 
-        sendAnalyticsEvent(EventName.WALLET_CONNECT_TXN_COMPLETED, {
+        sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
           result: WalletConnectionResult.FAILED,
           wallet_type: getConnectionName(connectionType, getIsMetaMask()),
         })

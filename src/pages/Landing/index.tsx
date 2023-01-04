@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Trace, TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, ElementName, EventName, PageName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
 import { AboutFooter } from 'components/About/AboutFooter'
 import Card, { CardType } from 'components/About/Card'
 import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
@@ -297,14 +297,14 @@ export default function Landing() {
   }, [navigate, selectedWallet, queryParams.intro])
 
   return (
-    <Trace page={PageName.LANDING_PAGE} shouldLogImpression>
+    <Trace page={InterfacePageName.LANDING_PAGE} shouldLogImpression>
       {showContent && (
         <PageContainer isDarkMode={isDarkMode} data-testid="landing-page">
           <LandingSwapContainer>
             <TraceEvent
               events={[BrowserEvent.onClick]}
-              name={EventName.ELEMENT_CLICKED}
-              element={ElementName.LANDING_PAGE_SWAP_ELEMENT}
+              name={SharedEventName.ELEMENT_CLICKED}
+              element={InterfaceElementName.LANDING_PAGE_SWAP_ELEMENT}
             >
               <Link to="/swap">
                 <LandingSwap />
@@ -323,8 +323,8 @@ export default function Landing() {
             <ActionsContainer>
               <TraceEvent
                 events={[BrowserEvent.onClick]}
-                name={EventName.ELEMENT_CLICKED}
-                element={ElementName.CONTINUE_BUTTON}
+                name={SharedEventName.ELEMENT_CLICKED}
+                element={InterfaceElementName.CONTINUE_BUTTON}
               >
                 <ButtonCTA as={Link} to="/swap">
                   <ButtonCTAText>Get started</ButtonCTAText>

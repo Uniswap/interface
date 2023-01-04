@@ -1,5 +1,5 @@
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
-import { EventName, PageName } from '@uniswap/analytics-events'
+import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
 import { ChainId } from '@uniswap/smart-order-router'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
@@ -101,7 +101,7 @@ export const BuyCell = ({
     return itemsInBag.some((item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address)
   }, [asset, itemsInBag])
 
-  const trace = useTrace({ page: PageName.NFT_COLLECTION_PAGE })
+  const trace = useTrace({ page: InterfacePageName.NFT_COLLECTION_PAGE })
 
   const eventProperties = {
     collection_address: asset.address,
@@ -120,7 +120,7 @@ export const BuyCell = ({
             e.preventDefault()
             isSelected ? removeAsset([asset]) : selectAsset([asset])
             !isSelected && !cartExpanded && !isMobile && toggleCart()
-            !isSelected && sendAnalyticsEvent(EventName.NFT_BUY_ADDED, { eventProperties })
+            !isSelected && sendAnalyticsEvent(NFTEventName.NFT_BUY_ADDED, { eventProperties })
           }}
           disabled={event.orderStatus !== OrderStatus.VALID}
         >

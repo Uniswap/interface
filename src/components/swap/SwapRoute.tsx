@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
@@ -66,8 +66,8 @@ export default memo(function SwapRoute({ trade, syncing, fixedOpen = false, ...r
     <Wrapper {...rest} darkMode={darkMode} fixedOpen={fixedOpen}>
       <TraceEvent
         events={[BrowserEvent.onClick]}
-        name={EventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED}
-        element={ElementName.AUTOROUTER_VISUALIZATION_ROW}
+        name={SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED}
+        element={InterfaceElementName.AUTOROUTER_VISUALIZATION_ROW}
         shouldLogImpression={!open}
       >
         <RowBetween onClick={() => setOpen(!open)}>

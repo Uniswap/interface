@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import AnimatedDropdown from 'components/AnimatedDropdown'
@@ -123,8 +123,8 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
       <AutoColumn gap="sm" style={{ width: '100%', marginBottom: '-8px' }}>
         <TraceEvent
           events={[BrowserEvent.onClick]}
-          name={EventName.SWAP_DETAILS_EXPANDED}
-          element={ElementName.SWAP_DETAILS_DROPDOWN}
+          name={SwapEventName.SWAP_DETAILS_EXPANDED}
+          element={InterfaceElementName.SWAP_DETAILS_DROPDOWN}
           shouldLogImpression={!showDetails}
         >
           <StyledHeaderRow onClick={() => setShowDetails(!showDetails)} disabled={!trade} open={showDetails}>

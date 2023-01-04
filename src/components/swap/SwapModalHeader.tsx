@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
-import { EventName, SwapPriceUpdateUserResponse } from '@uniswap/analytics-events'
+import { SwapEventName, SwapPriceUpdateUserResponse } from '@uniswap/analytics-events'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useEffect, useState } from 'react'
@@ -91,7 +91,7 @@ export default function SwapModalHeader({
   useEffect(() => {
     if (shouldLogModalCloseEvent && showAcceptChanges)
       sendAnalyticsEvent(
-        EventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED,
+        SwapEventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED,
         formatAnalyticsEventProperties(trade, priceUpdate, SwapPriceUpdateUserResponse.REJECTED)
       )
     setShouldLogModalCloseEvent(false)

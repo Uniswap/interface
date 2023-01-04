@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
@@ -437,9 +437,9 @@ export default function AddLiquidity() {
             ) : !account ? (
               <TraceEvent
                 events={[BrowserEvent.onClick]}
-                name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
+                name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
                 properties={{ received_swap_quote: false }}
-                element={ElementName.CONNECT_WALLET_BUTTON}
+                element={InterfaceElementName.CONNECT_WALLET_BUTTON}
               >
                 <ButtonLight onClick={toggleWalletModal}>
                   <Trans>Connect Wallet</Trans>

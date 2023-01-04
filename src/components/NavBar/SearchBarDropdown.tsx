@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useTrace } from '@uniswap/analytics'
-import { NavBarSearchTypes, SectionName } from '@uniswap/analytics-events'
+import { InterfaceSectionName, NavBarSearchTypes } from '@uniswap/analytics-events'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -202,7 +202,7 @@ export const SearchBarDropdown = ({
     (isNFTPage && (hasVerifiedCollection || !hasVerifiedToken)) ||
     (!isNFTPage && !hasVerifiedToken && hasVerifiedCollection)
 
-  const trace = JSON.stringify(useTrace({ section: SectionName.NAVBAR_SEARCH }))
+  const trace = JSON.stringify(useTrace({ section: InterfaceSectionName.NAVBAR_SEARCH }))
 
   useEffect(() => {
     const eventProperties = { total_suggestions: totalSuggestions, query_text: queryText, ...JSON.parse(trace) }

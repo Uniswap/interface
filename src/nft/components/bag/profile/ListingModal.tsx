@@ -1,6 +1,6 @@
 import { addressesByNetwork, SupportedChainId } from '@looksrare/sdk'
 import { sendAnalyticsEvent, Trace, useTrace } from '@uniswap/analytics'
-import { EventName, ModalName } from '@uniswap/analytics-events'
+import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -37,7 +37,7 @@ const ListingModal = () => {
   const toggleCart = useBag((state) => state.toggleBag)
   const looksRareNonceRef = useRef(looksRareNonce)
   const isMobile = useIsMobile()
-  const trace = useTrace({ modal: ModalName.NFT_LISTING })
+  const trace = useTrace({ modal: InterfaceModalName.NFT_LISTING })
 
   useEffect(() => {
     useNFTList.subscribe((state) => (looksRareNonceRef.current = state.looksRareNonce))
@@ -107,7 +107,7 @@ const ListingModal = () => {
   // handles the modal wide listing state based on conglomeration of the wallet, collection, and listing states
   const startListingFlow = async () => {
     if (!signer) return
-    sendAnalyticsEvent(EventName.NFT_SELL_START_LISTING, { ...startListingEventProperties })
+    sendAnalyticsEvent(NFTEventName.NFT_SELL_START_LISTING, { ...startListingEventProperties })
     setListingStatus(ListingStatus.SIGNING)
     const addresses = addressesByNetwork[SupportedChainId.MAINNET]
     const signerAddress = await signer.getAddress()
@@ -168,7 +168,7 @@ const ListingModal = () => {
     } else if (!paused) {
       setListingStatus(ListingStatus.FAILED)
     }
-    sendAnalyticsEvent(EventName.NFT_LISTING_SIGNED, {
+    sendAnalyticsEvent(NFTEventName.NFT_LISTING_COMPLETED, {
       signatures_approved: listings.filter((asset) => asset.status === ListingStatus.APPROVED),
       list_quantity: listings.length,
       usd_value: ethPriceInUSD * totalEthListingValue,
@@ -207,7 +207,7 @@ const ListingModal = () => {
   const showSuccessScreen = useMemo(() => listingStatus === ListingStatus.APPROVED, [listingStatus])
 
   return (
-    <Trace modal={ModalName.NFT_LISTING}>
+    <Trace modal={InterfaceModalName.NFT_LISTING}>
       <Column paddingTop="20" paddingBottom="20" paddingLeft="12" paddingRight="12">
         <Row className={headlineSmall} marginBottom="10">
           {isMobile && !showSuccessScreen && (
@@ -234,7 +234,7 @@ const ListingModal = () => {
         <Column overflowX="hidden" overflowY="auto" style={{ maxHeight: '60vh' }}>
           {showSuccessScreen ? (
             <Trace
-              name={EventName.NFT_LISTING_COMPLETED}
+              name={NFTEventName.NFT_LISTING_COMPLETED}
               properties={{ list_quantity: listings.length, usd_value: ethPriceInUSD * totalEthListingValue, ...trace }}
               shouldLogImpression
             >

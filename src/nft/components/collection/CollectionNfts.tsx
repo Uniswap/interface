@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import { OpacityHoverState } from 'components/Common'
@@ -512,8 +512,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
           <ActionsSubContainer>
             <TraceEvent
               events={[BrowserEvent.onClick]}
-              element={ElementName.NFT_FILTER_BUTTON}
-              name={EventName.NFT_FILTER_OPENED}
+              element={InterfaceElementName.NFT_FILTER_BUTTON}
+              name={NFTEventName.NFT_FILTER_OPENED}
               shouldLogImpression={!isFiltersExpanded}
               properties={{ collection_address: contractAddress, chain_id: chainId }}
             >
