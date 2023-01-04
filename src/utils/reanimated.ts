@@ -8,6 +8,8 @@
  * https://github.com/willsp/polyfill-Number.toLocaleString-with-Locales/blob/master/polyfill.number.toLocaleString.js
  */
 
+import { round } from 'react-native-redash'
+
 function replaceSeparators(
   sNum: string,
   separators: { decimal: string; thousands: string }
@@ -342,4 +344,54 @@ export function numberToLocaleStringWorklet(
   }
 
   return sNum
+}
+
+const DEFAULT_PRECISION = 2
+const DEFAULT_ABSOLUTE = false
+
+export function numberToPercentWorklet(
+  value: number,
+  options: {
+    precision?: number
+    absolute?: boolean
+  }
+): string {
+  'worklet'
+
+  const precision = options.precision ?? DEFAULT_PRECISION
+  const absolute = options.absolute || DEFAULT_ABSOLUTE
+
+  if (precision < 0) {
+    throw new Error('numberToPercentWorklet does not handle negative precision values')
+  }
+
+  if (isNaN(value)) {
+    return '-'
+  }
+
+  // Round and absolute value as needed
+  let shapedValue = round(value, precision)
+  if (absolute) {
+    shapedValue = Math.abs(shapedValue)
+  }
+
+  // return raw value when precision is zero
+  if (precision === 0) {
+    return `${shapedValue}%`
+  }
+
+  // Add trailing zeros when value has no decimal
+  if (Number.isInteger(shapedValue)) {
+    return `${shapedValue}.${'0'.repeat(precision)}%`
+  }
+
+  let endingZeros = ''
+  const shiftedValue = shapedValue * Math.pow(10, precision)
+  for (let d = 0; d < precision; d++) {
+    if (shiftedValue % Math.pow(10, d + 1) === 0) {
+      endingZeros += '0'
+    }
+  }
+
+  return `${shapedValue}${endingZeros}%`
 }

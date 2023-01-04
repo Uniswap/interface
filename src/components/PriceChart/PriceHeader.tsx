@@ -11,14 +11,14 @@ import {
 import React from 'react'
 import { useWindowDimensions } from 'react-native'
 import { SharedValue, useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
-import { ReText, round } from 'react-native-redash'
+import { ReText } from 'react-native-redash'
 import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout'
 import { Flex } from 'src/components/layout/Flex'
 import { DEFAULT_FONT_SCALE, Text } from 'src/components/Text'
 import { textVariants } from 'src/styles/font'
 import { Theme } from 'src/styles/theme'
-import { numberToLocaleStringWorklet } from 'src/utils/reanimated'
+import { numberToLocaleStringWorklet, numberToPercentWorklet } from 'src/utils/reanimated'
 
 interface HeaderProps {
   price: SharedValue<number>
@@ -62,9 +62,9 @@ export const PriceHeader = ({ price, percentChange, date, loading }: HeaderProps
     })
   })
 
-  const percentChangeFormatted = useDerivedValue(() =>
-    isNaN(percentChange.value) ? '-' : `${Math.abs(round(percentChange.value, 2))}%`
-  )
+  const percentChangeFormatted = useDerivedValue(() => {
+    return numberToPercentWorklet(percentChange.value, { precision: 2, absolute: true })
+  })
 
   const percentChangeStyles = useAnimatedStyle(() => ({
     color: percentChange.value > 0 ? theme.colors.accentSuccess : theme.colors.accentCritical,

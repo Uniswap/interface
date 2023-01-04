@@ -1,4 +1,4 @@
-import { Language, numberToLocaleStringWorklet } from 'src/utils/reanimated'
+import { Language, numberToLocaleStringWorklet, numberToPercentWorklet } from 'src/utils/reanimated'
 
 describe('reanimated numberToLocaleStringWorklet', function () {
   'use strict'
@@ -165,5 +165,31 @@ describe('reanimated numberToLocaleStringWorklet', function () {
         currency: 'NOK',
       })
     ).toBe('1\u00A0234,56 kr')
+  })
+
+  it('format percentages with rounding and zero padding', function () {
+    const num = -1234.56
+
+    expect(numberToPercentWorklet(num, { precision: 0, absolute: true })).toBe('1235%')
+    expect(numberToPercentWorklet(num, { precision: 1, absolute: true })).toBe('1234.6%')
+    expect(numberToPercentWorklet(num, { precision: 2, absolute: true })).toBe('1234.56%')
+    expect(numberToPercentWorklet(num, { precision: 3, absolute: true })).toBe('1234.560%')
+    expect(numberToPercentWorklet(num, { precision: 4, absolute: true })).toBe('1234.5600%')
+    expect(numberToPercentWorklet(num, { precision: 4, absolute: false })).toBe('-1234.5600%')
+  })
+
+  it('format zero value percentages with zero padding', function () {
+    expect(numberToPercentWorklet(0, { precision: 0, absolute: true })).toBe('0%')
+    expect(numberToPercentWorklet(0, { precision: 1, absolute: true })).toBe('0.0%')
+    expect(numberToPercentWorklet(0, { precision: 2, absolute: true })).toBe('0.00%')
+    expect(numberToPercentWorklet(0.001, { precision: 2, absolute: true })).toBe('0.00%')
+  })
+
+  it('format integer values with zero padding', function () {
+    const intNum = -10
+
+    expect(numberToPercentWorklet(intNum, { precision: 0, absolute: true })).toBe('10%')
+    expect(numberToPercentWorklet(intNum, { precision: 1, absolute: true })).toBe('10.0%')
+    expect(numberToPercentWorklet(intNum, { precision: 2, absolute: true })).toBe('10.00%')
   })
 })

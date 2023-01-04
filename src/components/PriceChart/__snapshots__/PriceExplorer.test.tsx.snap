@@ -118,7 +118,7 @@ exports[`renders correctly 1`] = `
           allowFontScaling={true}
           animatedProps={
             Object {
-              "text": "50%",
+              "text": "50.00%",
             }
           }
           editable={false}
@@ -142,7 +142,7 @@ exports[`renders correctly 1`] = `
             ]
           }
           underlineColorAndroid="transparent"
-          value="50%"
+          value="50.00%"
         />
       </View>
       <View
