@@ -3,7 +3,6 @@ import { Trans } from '@lingui/macro'
 import { t } from '@lingui/macro'
 import { Box } from 'nft/components/Box'
 import { SortDropdown } from 'nft/components/common/SortDropdown'
-import { Row } from 'nft/components/Flex'
 import { useSellAsset } from 'nft/hooks'
 import { DropDownOption, ListingMarket } from 'nft/types'
 import { useMemo, useState } from 'react'
@@ -41,6 +40,16 @@ const NFTHeader = styled.div`
   }
 `
 
+const PriceHeaders = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    flex: 3;
+  }
+`
+
 const PriceInfoHeader = styled.div`
   display: none;
   flex: 1;
@@ -48,6 +57,10 @@ const PriceInfoHeader = styled.div`
   @media screen and (min-width: ${BREAKPOINTS.xl}px) {
     display: flex;
   }
+`
+
+const DropdownWrapper = styled.div`
+  flex: 2;
 `
 
 export enum SetPriceMethod {
@@ -85,16 +98,16 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
         <NFTHeader>
           <Trans>NFT</Trans>
         </NFTHeader>
-        <Row flex={{ sm: '1', md: '3' }}>
+        <PriceHeaders>
           <PriceInfoHeader>
             <Trans>Floor</Trans>
           </PriceInfoHeader>
           <PriceInfoHeader>
             <Trans>Last</Trans>
           </PriceInfoHeader>
-          <Box flex="2">
+          <DropdownWrapper>
             <SortDropdown dropDownOptions={priceDropdownOptions} mini miniPrompt={t`Set price by`} />
-          </Box>
+          </DropdownWrapper>
 
           <Box flex="1" display={{ sm: 'none', lg: 'flex' }} justifyContent="flex-end">
             <Trans>Fees</Trans>
@@ -102,7 +115,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
           <Box flex="1.5" display={{ sm: 'none', lg: 'flex' }} justifyContent="flex-end">
             <Trans>You receive</Trans>
           </Box>
-        </Row>
+        </PriceHeaders>
       </TableHeader>
       {sellAssets.map((asset) => {
         return (
