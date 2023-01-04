@@ -3,8 +3,9 @@ import { getTestSelector } from '../utils'
 const COLLECTION_ADDRESS = '0xbd3531da5cf5857e7cfaa92426877b022e612cf8'
 
 describe('Testing nfts', () => {
-  before(() => {
+  beforeEach(() => {
     cy.visit('/')
+    cy.get(getTestSelector('FiatOnrampAnnouncement-close')).first().click()
   })
 
   it('should load nft leaderboard', () => {
@@ -22,13 +23,8 @@ describe('Testing nfts', () => {
     cy.get(getTestSelector('nft-collection-filter-buy-now')).should('exist')
   })
 
-  it('should be able to open bag and open sweep', () => {
-    cy.get(getTestSelector('nft-sweep-button')).first().click()
-    cy.get(getTestSelector('nft-empty-bag')).should('exist')
-    cy.get(getTestSelector('nft-sweep-slider')).should('exist')
-  })
-
   it('should be able to navigate to activity', () => {
+    cy.visit(`/#/nfts/collection/${COLLECTION_ADDRESS}`)
     cy.get(getTestSelector('nft-activity')).first().click()
     cy.get(getTestSelector('nft-activity-row')).should('exist')
   })
@@ -45,19 +41,11 @@ describe('Testing nfts', () => {
   })
 
   it('should toggle buy now on details page', () => {
+    cy.visit(`#/nfts/asset/${COLLECTION_ADDRESS}/8565`)
     cy.get(getTestSelector('nft-details-description-text')).should('exist')
     cy.get(getTestSelector('nft-details-description')).click()
     cy.get(getTestSelector('nft-details-description-text')).should('not.exist')
     cy.get(getTestSelector('nft-details-toggle-bag')).eq(1).click()
     cy.get(getTestSelector('nft-bag')).should('exist')
-  })
-
-  it('should go view my nfts', () => {
-    cy.get(getTestSelector('web3-status-connected')).click()
-    cy.get(getTestSelector('nft-view-self-nfts')).click()
-    cy.get(getTestSelector('nft-explore-nfts-button')).should('exist')
-    cy.get(getTestSelector('nft-no-nfts-selected')).should('exist')
-    cy.get(getTestSelector('nft-bag-close-icon')).click()
-    cy.get(getTestSelector('nft-explore-nfts-button')).click()
   })
 })

@@ -134,7 +134,7 @@ export function FiatOnrampAnnouncement() {
   return (
     <ArrowWrapper>
       <Arrow />
-      <CloseIcon onClick={handleClose} />
+      <CloseIcon onClick={handleClose} data-testid="FiatOnrampAnnouncement-close" />
       <Wrapper onClick={handleClick}>
         <Header>
           <Trans>Buy crypto</Trans>
