@@ -8,6 +8,7 @@ import { useSellAsset } from 'nft/hooks'
 import { DropDownOption, ListingMarket } from 'nft/types'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components/macro'
+import { BREAKPOINTS } from 'theme'
 
 import * as styles from './ListPage.css'
 import { NFTListRow } from './NFTListRow'
@@ -30,6 +31,23 @@ const TableHeader = styled.div`
   font-size: 14px;
   font-weight: normal;
   line-height: 20px;
+`
+
+const NFTHeader = styled.div`
+  flex: 2;
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    flex: 1.5;
+  }
+`
+
+const PriceInfoHeader = styled.div`
+  display: none;
+  flex: 1;
+
+  @media screen and (min-width: ${BREAKPOINTS.xl}px) {
+    display: flex;
+  }
 `
 
 export enum SetPriceMethod {
@@ -64,16 +82,16 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
   return (
     <GridWrapper>
       <TableHeader>
-        <Box flex={{ sm: '2', md: '1.5' }}>
+        <NFTHeader>
           <Trans>NFT</Trans>
-        </Box>
+        </NFTHeader>
         <Row flex={{ sm: '1', md: '3' }}>
-          <Box flex="1" display={{ sm: 'none', xxl: 'flex' }} textAlign="left">
+          <PriceInfoHeader>
             <Trans>Floor</Trans>
-          </Box>
-          <Box flex="1" display={{ sm: 'none', xxl: 'flex' }} textAlign="left">
+          </PriceInfoHeader>
+          <PriceInfoHeader>
             <Trans>Last</Trans>
-          </Box>
+          </PriceInfoHeader>
           <Box flex="2">
             <SortDropdown dropDownOptions={priceDropdownOptions} mini miniPrompt={t`Set price by`} />
           </Box>
@@ -81,7 +99,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
           <Box flex="1" display={{ sm: 'none', lg: 'flex' }} justifyContent="flex-end">
             <Trans>Fees</Trans>
           </Box>
-          <Box display={{ sm: 'none', lg: 'flex' }} flex="1.5" justifyContent="flex-end">
+          <Box flex="1.5" display={{ sm: 'none', lg: 'flex' }} justifyContent="flex-end">
             <Trans>You receive</Trans>
           </Box>
         </Row>
