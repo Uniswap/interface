@@ -1,11 +1,12 @@
 import { Box } from 'nft/components/Box'
-import { Column, Row } from 'nft/components/Flex'
+import { Column } from 'nft/components/Flex'
 import { RowsCollpsedIcon, RowsExpandedIcon, VerifiedIcon } from 'nft/components/icons'
 import { bodySmall, subhead } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { ListingMarket, WalletAsset } from 'nft/types'
 import { Dispatch, useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
+import { BREAKPOINTS } from 'theme'
 
 import { MarketplaceRow } from './MarketplaceRow'
 import { SetPriceMethod } from './NFTListingsGrid'
@@ -15,6 +16,18 @@ const NFTListRowWrapper = styled.div`
   flex-direction: row;
   margin: 24px 0px;
   align-items: center;
+`
+
+const NFTInfoWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-width: 0px;
+  flex: 2;
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    flex: 1.5;
+  }
 `
 
 const IconWrap = styled.div<{ hovered: boolean }>`
@@ -63,7 +76,7 @@ export const NFTListRow = ({
 
   return (
     <NFTListRowWrapper>
-      <Row flexWrap="nowrap" flex={{ sm: '2', md: '1.5' }} marginTop="0" marginBottom="auto" minWidth="0">
+      <NFTInfoWrapper>
         {localMarkets.length > 1 && (
           <Box cursor="pointer" marginRight="8" onClick={() => setExpandMarketplaceRows(!expandMarketplaceRows)}>
             {expandMarketplaceRows ? <RowsExpandedIcon /> : <RowsCollpsedIcon />}
@@ -108,7 +121,7 @@ export const NFTListRow = ({
             {asset.collectionIsVerified && <VerifiedIcon style={{ marginBottom: '-5px' }} />}
           </Box>
         </Column>
-      </Row>
+      </NFTInfoWrapper>
       <Column flex={{ sm: '1', md: '3' }} gap="24">
         {expandMarketplaceRows ? (
           localMarkets.map((market, index) => {
