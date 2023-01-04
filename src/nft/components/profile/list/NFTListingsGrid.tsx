@@ -1,6 +1,8 @@
 import { Trans } from '@lingui/macro'
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
+import Column from 'components/Column'
+import Row from 'components/Row'
 import { SortDropdown } from 'nft/components/common/SortDropdown'
 import { useSellAsset } from 'nft/hooks'
 import { DropDownOption, ListingMarket } from 'nft/types'
@@ -9,11 +11,6 @@ import styled, { css } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 
 import { NFTListRow } from './NFTListRow'
-
-const GridWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-`
 
 const TableHeader = styled.div`
   display: flex;
@@ -38,10 +35,8 @@ const NFTHeader = styled.div`
   }
 `
 
-const PriceHeaders = styled.div`
-  display: flex;
+const PriceHeaders = styled(Row)`
   flex: 1;
-  flex-direction: row;
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     flex: 3;
@@ -118,7 +113,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
   )
 
   return (
-    <GridWrapper>
+    <Column>
       <TableHeader>
         <NFTHeader>
           <Trans>NFT</Trans>
@@ -157,6 +152,6 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
           </>
         )
       })}
-    </GridWrapper>
+    </Column>
   )
 }
