@@ -79,6 +79,15 @@ const UserReceivesHeader = styled.div`
   ${FeeUserReceivesSharedStyles}
 `
 
+const RowDivider = styled.hr`
+  height: 0px;
+  width: 100%;
+  border-radius: 20px;
+  border-width: 0.5px;
+  border-style: solid;
+  border-color: ${({ theme }) => theme.backgroundInteractive};
+`
+
 export enum SetPriceMethod {
   SAME_PRICE,
   FLOOR_PRICE,
@@ -144,7 +153,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
               setGlobalPrice={setGlobalPrice}
               selectedMarkets={selectedMarkets}
             />
-            {sellAssets.indexOf(asset) < sellAssets.length - 1 && <hr className={styles.nftDivider} />}
+            {sellAssets.indexOf(asset) < sellAssets.length - 1 && <RowDivider />}
           </>
         )
       })}

@@ -1,16 +1,5 @@
 import { style } from '@vanilla-extract/css'
-import { sprinkles, themeVars } from 'nft/css/sprinkles.css'
-
-export const nftDivider = style([
-  sprinkles({
-    height: '0',
-    width: 'full',
-    borderRadius: '20',
-    borderWidth: '0.5px',
-    borderStyle: 'solid',
-    borderColor: 'backgroundOutline',
-  }),
-])
+import { themeVars } from 'nft/css/sprinkles.css'
 
 export const chevronDown = style({
   transform: 'rotate(180deg)',
