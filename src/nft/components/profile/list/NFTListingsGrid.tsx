@@ -8,7 +8,6 @@ import { useMemo, useState } from 'react'
 import styled, { css } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 
-import * as styles from './ListPage.css'
 import { NFTListRow } from './NFTListRow'
 
 const GridWrapper = styled.div`
