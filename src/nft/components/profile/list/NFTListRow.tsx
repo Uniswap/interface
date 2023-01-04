@@ -1,4 +1,3 @@
-import { Column } from 'nft/components/Flex'
 import { RowsCollpsedIcon, RowsExpandedIcon, VerifiedIcon } from 'nft/components/icons'
 import { useSellAsset } from 'nft/hooks'
 import { ListingMarket, WalletAsset } from 'nft/types'
@@ -67,6 +66,14 @@ const HideTextOverflow = css`
   white-space: nowrap;
 `
 
+const TokenInfoWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-right: 8px;
+  min-width: 0px;
+`
+
 const TokenName = styled.div`
   font-weight: 500;
   font-size: 16px;
@@ -78,6 +85,17 @@ const CollectionName = styled(ThemedText.BodySmall)`
   color: ${({ theme }) => theme.textSecondary};
   line-height: 20px;
   ${HideTextOverflow};
+`
+
+const MarketPlaceRowWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  flex: 1;
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    flex: 3;
+  }
 `
 
 interface NFTListRowProps {
@@ -130,15 +148,15 @@ export const NFTListRow = ({
           </RemoveIconWrap>
           <NFTImage alt={asset.name} src={asset.imageUrl || '/nft/svgs/image-placeholder.svg'} />
         </NFTImageWrapper>
-        <Column gap="4" marginRight="8" minWidth="0">
+        <TokenInfoWrapper>
           <TokenName>{asset.name ? asset.name : `#${asset.tokenId}`}</TokenName>
           <CollectionName>
             {asset.collection?.name}
             {asset.collectionIsVerified && <VerifiedIcon style={{ marginBottom: '-5px' }} />}
           </CollectionName>
-        </Column>
+        </TokenInfoWrapper>
       </NFTInfoWrapper>
-      <Column flex={{ sm: '1', md: '3' }} gap="24">
+      <MarketPlaceRowWrapper>
         {expandMarketplaceRows ? (
           localMarkets.map((market, index) => {
             return (
@@ -165,7 +183,7 @@ export const NFTListRow = ({
             showMarketplaceLogo={false}
           />
         )}
-      </Column>
+      </MarketPlaceRowWrapper>
     </NFTListRowWrapper>
   )
 }
