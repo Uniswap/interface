@@ -364,7 +364,7 @@ PODS:
     - ExpoModulesCore
   - experiment-react-native-client (1.0.0):
     - React-Core
-  - Expo (47.0.8):
+  - Expo (47.0.11):
     - ExpoModulesCore
   - ExpoHaptics (12.0.1):
     - ExpoModulesCore
@@ -1264,7 +1264,7 @@ SPEC CHECKSUMS:
   EXClipboard: ead52260683fc856e58f5cc70f5ea5999bb9c049
   EXLocalAuthentication: 4c7166ed3133d2c75586093833936652e7d2c7fc
   experiment-react-native-client: c2af8630b6209c5d4dcebdcd71ba7ad38abdcc38
-  Expo: 36b5f625d36728adbdd1934d4d57182f319ab832
+  Expo: dedd83acfd4d70cbec6ac2f1b4433462d95c70bc
   ExpoHaptics: 5a56d30a87ea213dd00b09566dc4b441a4dff97f
   ExpoLinearGradient: b40c2133ad57ae105b1b12a319e314463c817f6b
   ExpoModulesCore: b5d21c8880afda6fb6ee95469f9ac2ec9b98e995
