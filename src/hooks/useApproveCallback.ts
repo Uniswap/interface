@@ -151,5 +151,6 @@ export function useApproveCallbackFromTradeV2(
     () => (trade ? computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT] : undefined),
     [trade, allowedSlippage],
   )
-  return useApproveCallback(amountToApprove, trade?.routerAddress || undefined)
+
+  return useApproveCallback(amountToApprove, trade?.routerAddress)
 }

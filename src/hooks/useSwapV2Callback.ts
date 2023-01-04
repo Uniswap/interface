@@ -3,6 +3,7 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { SignerWalletAdapter } from '@solana/wallet-adapter-base'
 import { useCallback, useMemo } from 'react'
 
+import { ZERO_ADDRESS_SOLANA } from 'constants/index'
 import { useActiveWeb3React, useWeb3React } from 'hooks/index'
 import useENS from 'hooks/useENS'
 import { useEncodeSolana, useSwapState } from 'state/swap/hooks'
@@ -14,7 +15,6 @@ import { Aggregator } from 'utils/aggregator'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { sendEVMTransaction, sendSolanaTransactions } from 'utils/sendTransaction'
 
-import { ZERO_ADDRESS_SOLANA } from './../constants/index'
 import useProvider from './solana/useProvider'
 
 enum SwapCallbackState {
