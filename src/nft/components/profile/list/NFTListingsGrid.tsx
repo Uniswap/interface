@@ -1,8 +1,9 @@
 import { Trans } from '@lingui/macro'
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
+import { Box } from 'nft/components/Box'
 import { SortDropdown } from 'nft/components/common/SortDropdown'
-import { Column, Row } from 'nft/components/Flex'
+import { Row } from 'nft/components/Flex'
 import { useSellAsset } from 'nft/hooks'
 import { DropDownOption, ListingMarket } from 'nft/types'
 import { useMemo, useState } from 'react'
@@ -63,26 +64,26 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
   return (
     <GridWrapper>
       <TableHeader>
-        <Column flex={{ sm: '2', md: '1.5' }}>
+        <Box flex={{ sm: '2', md: '1.5' }}>
           <Trans>NFT</Trans>
-        </Column>
+        </Box>
         <Row flex={{ sm: '1', md: '3' }}>
-          <Column flex="1" display={{ sm: 'none', xxl: 'flex' }} textAlign="left">
+          <Box flex="1" display={{ sm: 'none', xxl: 'flex' }} textAlign="left">
             <Trans>Floor</Trans>
-          </Column>
-          <Column flex="1" display={{ sm: 'none', xxl: 'flex' }} textAlign="left">
+          </Box>
+          <Box flex="1" display={{ sm: 'none', xxl: 'flex' }} textAlign="left">
             <Trans>Last</Trans>
-          </Column>
-          <Column flex="2">
+          </Box>
+          <Box flex="2">
             <SortDropdown dropDownOptions={priceDropdownOptions} mini miniPrompt={t`Set price by`} />
-          </Column>
+          </Box>
 
-          <Column flex="1" display={{ sm: 'none', lg: 'flex' }} textAlign="right">
+          <Box flex="1" display={{ sm: 'none', lg: 'flex' }} justifyContent="flex-end">
             <Trans>Fees</Trans>
-          </Column>
-          <Column display={{ sm: 'none', lg: 'flex' }} flex="1.5" textAlign="right">
+          </Box>
+          <Box display={{ sm: 'none', lg: 'flex' }} flex="1.5" justifyContent="flex-end">
             <Trans>You receive</Trans>
-          </Column>
+          </Box>
         </Row>
       </TableHeader>
       {sellAssets.map((asset) => {
