@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "strict": true,
-    "target": "es5",
-    "lib": ["es5", "dom"],
+    "target": "es6",
+    "lib": ["es6", "dom"],
     "types": ["cypress"]
   },
   "include": ["**/*.ts"]

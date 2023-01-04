@@ -84,7 +84,7 @@ const Buttons = ({
 }) => {
   return warning.canProceed ? (
     <>
-      <StyledButton onClick={onContinue}>
+      <StyledButton data-testid="token-safety-confirm" onClick={onContinue}>
         <Trans>I understand</Trans>
       </StyledButton>
       {showCancel && <StyledCancelButton onClick={onCancel}>Cancel</StyledCancelButton>}

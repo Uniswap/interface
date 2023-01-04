@@ -10,13 +10,11 @@ import { injected } from './ethereum'
 import assert = require('assert')
 
 import { FeatureFlag } from '../../src/featureFlags/flags/featureFlags'
+import { getTestSelector } from '../utils'
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
-    interface ApplicationWindow {
-      ethereum: typeof injected
-    }
     interface VisitOptions {
       serviceWorker?: true
       featureFlags?: Array<FeatureFlag>
@@ -26,13 +24,19 @@ declare global {
   }
 }
 
+Cypress.Commands.add('setupMetamocks', () => {
+  cy.on('window:before:load', (win) => {
+    win.ethereum = injected
+  })
+})
+
 // sets up the injected provider to be a mock ethereum provider with the given mnemonic/index
 // eslint-disable-next-line no-undef
 Cypress.Commands.overwrite(
   'visit',
   (original, url: string | Partial<Cypress.VisitOptions>, options?: Partial<Cypress.VisitOptions>) => {
     assert(typeof url === 'string')
-
+    cy.setupMetamocks()
     cy.intercept('/service-worker.js', options?.serviceWorker ? undefined : { statusCode: 404 }).then(() => {
       original({
         ...options,
@@ -57,13 +61,17 @@ Cypress.Commands.overwrite(
             )
             win.localStorage.setItem('featureFlags', JSON.stringify(featureFlags))
           }
-
-          win.ethereum = injected
         },
       })
+      cy.get(getTestSelector('navbar-connect-wallet')).click()
+      cy.get('#injected').click()
     })
   }
 )
+
+before(() => {
+  cy.wrap(injected).as('metamocks')
+})
 
 beforeEach(() => {
   // Infura security policies are based on Origin headers.

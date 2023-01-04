@@ -136,7 +136,7 @@ function TransactionSubmittedContent({
           <ArrowUpCircle strokeWidth={1} size={inline ? '40px' : '75px'} color={theme.accentActive} />
         </ConfirmedIcon>
         <AutoColumn gap="md" justify="center" style={{ paddingBottom: '12px' }}>
-          <ThemedText.MediumHeader textAlign="center">
+          <ThemedText.MediumHeader data-testid="transaction-submitted" textAlign="center">
             <Trans>Transaction submitted</Trans>
           </ThemedText.MediumHeader>
           {currencyToAdd && connector.watchAsset && (
