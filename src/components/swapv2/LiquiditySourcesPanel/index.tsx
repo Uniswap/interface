@@ -116,7 +116,7 @@ const LiquiditySourcesPanel: React.FC<Props> = ({ onBack }) => {
   const dexes = useAllDexes()
   const [excludeDexes, setExcludeDexes] = useExcludeDexes()
 
-  const checkAllRef = useRef<HTMLInputElement>(null)
+  const checkAllRef = useRef<HTMLInputElement | null>(null)
   const kyberSwapRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {

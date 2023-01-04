@@ -1,3 +1,4 @@
+import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import { rgba } from 'polished'
 import { ChevronDown, ChevronUp } from 'react-feather'
@@ -16,6 +17,15 @@ export default function ApproveMessage({ routerAddress = '' }: { routerAddress?:
   const theme = useTheme()
   const [showApproveMsgDetails, toggleShowApproveMsgDetails] = useToggle(false)
   const timeout = 1673913600000 // Tuesday, January 17, 2023 0:00:00
+
+  if (
+    chainId !== ChainId.BSCMAINNET &&
+    chainId !== ChainId.BTTC &&
+    chainId !== ChainId.VELAS &&
+    chainId !== ChainId.CRONOS
+  ) {
+    return null
+  }
 
   if (Date.now() > timeout || !isAddress(chainId, routerAddress) || !account) {
     return null
