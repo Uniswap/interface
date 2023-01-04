@@ -1,6 +1,6 @@
 import React, { ComponentProps, useMemo } from 'react'
 import { useAppTheme } from 'src/app/hooks'
-import SwapArrowSVG from 'src/assets/icons/swap-direction.svg'
+import SwapArrow from 'src/assets/icons/swap-arrow.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box } from 'src/components/layout'
 
@@ -15,6 +15,7 @@ export function SwapArrowButton(props: SwapArrowButtonProps) {
   return useMemo(
     () => (
       <TouchableArea
+        hapticFeedback
         alignItems="center"
         alignSelf="center"
         bg={bg}
@@ -30,7 +31,7 @@ export function SwapArrowButton(props: SwapArrowButtonProps) {
         {...rest}>
         {/* hack to add 2px more padding without adjusting design system values */}
         <Box alignItems="center" justifyContent="center" p="xxxs">
-          <SwapArrowSVG color={theme.colors.textSecondary} height={size} width={size} />
+          <SwapArrow color={theme.colors.textSecondary} height={size} width={size} />
         </Box>
       </TouchableArea>
     ),
