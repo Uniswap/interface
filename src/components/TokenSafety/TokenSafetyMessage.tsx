@@ -1,15 +1,15 @@
 import { Trans } from '@lingui/macro'
 import { getWarningCopy, TOKEN_SAFETY_ARTICLE, Warning } from 'constants/tokenSafety'
-import { useTokenWarningColor } from 'hooks/useTokenWarningColor'
+import { useTokenWarningColor, useTokenWarningTextColor } from 'hooks/useTokenWarningColor'
 import { AlertTriangle, Slash } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 import { ExternalLink } from 'theme'
 
-const Label = styled.div<{ color: string }>`
+const Label = styled.div<{ color: string; backgroundColor: string }>`
   width: 100%;
   padding: 12px 20px 16px;
-  background-color: ${({ color }) => color + '1F'};
+  background-color: ${({ backgroundColor }) => backgroundColor};
   border-radius: 16px;
   color: ${({ color }) => color};
 `
@@ -39,17 +39,18 @@ const StyledLink = styled(ExternalLink)`
   font-weight: 700;
 `
 
-type TokenWarningMessageProps = {
+type TokenSafetyMessageProps = {
   warning: Warning
   tokenAddress: string
 }
 
-export default function TokenWarningMessage({ warning, tokenAddress }: TokenWarningMessageProps) {
-  const color = useTokenWarningColor(warning.level)
+export default function TokenSafetyMessage({ warning, tokenAddress }: TokenSafetyMessageProps) {
+  const backgroundColor = useTokenWarningColor(warning.level)
+  const textColor = useTokenWarningTextColor(warning.level)
   const { heading, description } = getWarningCopy(warning)
 
   return (
-    <Label color={color}>
+    <Label color={textColor} backgroundColor={backgroundColor}>
       <TitleRow>
         {warning.canProceed ? <AlertTriangle size="16px" /> : <Slash size="16px" />}
         <Title marginLeft="7px">{warning.message}</Title>
