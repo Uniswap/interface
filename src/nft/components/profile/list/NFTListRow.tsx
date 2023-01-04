@@ -10,6 +10,13 @@ import styled from 'styled-components/macro'
 import { MarketplaceRow } from './MarketplaceRow'
 import { SetPriceMethod } from './NFTListingsGrid'
 
+const NFTListRowWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin: 24px 0px;
+  align-items: center;
+`
+
 const IconWrap = styled.div<{ hovered: boolean }>`
   position: absolute;
   left: 50%;
@@ -19,7 +26,7 @@ const IconWrap = styled.div<{ hovered: boolean }>`
   visibility: ${({ hovered }) => (hovered ? 'visible' : 'hidden')};
 `
 
-const StyledImg = styled.img`
+const RemoveIcon = styled.img`
   width: 32px;
   height: 32px;
 `
@@ -55,26 +62,18 @@ export const NFTListRow = ({
   }, [selectedMarkets])
 
   return (
-    <Row marginY="24">
+    <NFTListRowWrapper>
       <Row flexWrap="nowrap" flex={{ sm: '2', md: '1.5' }} marginTop="0" marginBottom="auto" minWidth="0">
-        <Box
-          transition="500"
-          style={{
-            maxWidth: localMarkets.length > 1 ? '28px' : '0',
-            opacity: localMarkets.length > 1 ? '1' : '0',
-          }}
-          cursor="pointer"
-          marginRight="8"
-          onClick={() => setExpandMarketplaceRows(!expandMarketplaceRows)}
-        >
-          {expandMarketplaceRows ? <RowsExpandedIcon /> : <RowsCollpsedIcon />}
-        </Box>
+        {localMarkets.length > 1 && (
+          <Box cursor="pointer" marginRight="8" onClick={() => setExpandMarketplaceRows(!expandMarketplaceRows)}>
+            {expandMarketplaceRows ? <RowsExpandedIcon /> : <RowsCollpsedIcon />}
+          </Box>
+        )}
         <Box
           position="relative"
           cursor="pointer"
           onMouseEnter={handleHover}
           onMouseLeave={handleHover}
-          width="48"
           height="48"
           marginRight="8"
           onClick={() => {
@@ -82,7 +81,7 @@ export const NFTListRow = ({
           }}
         >
           <IconWrap hovered={hovered}>
-            <StyledImg src="/nft/svgs/minusCircle.svg" alt="Remove item" />
+            <RemoveIcon src="/nft/svgs/minusCircle.svg" alt="Remove item" />
           </IconWrap>
           <Box
             as="img"
@@ -90,8 +89,6 @@ export const NFTListRow = ({
             width="48"
             height="48"
             borderRadius="8"
-            marginRight="8"
-            transition="500"
             src={asset.imageUrl || '/nft/svgs/image-placeholder.svg'}
           />
         </Box>
@@ -140,6 +137,6 @@ export const NFTListRow = ({
           />
         )}
       </Column>
-    </Row>
+    </NFTListRowWrapper>
   )
 }
