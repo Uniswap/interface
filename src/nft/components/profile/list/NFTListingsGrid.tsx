@@ -1,12 +1,11 @@
 import { Trans } from '@lingui/macro'
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
-import { Box } from 'nft/components/Box'
 import { SortDropdown } from 'nft/components/common/SortDropdown'
 import { useSellAsset } from 'nft/hooks'
 import { DropDownOption, ListingMarket } from 'nft/types'
 import { useMemo, useState } from 'react'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 
 import * as styles from './ListPage.css'
@@ -63,6 +62,24 @@ const DropdownWrapper = styled.div`
   flex: 2;
 `
 
+const FeeUserReceivesSharedStyles = css`
+  display: none;
+  justify-content: flex-end;
+  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
+    display: flex;
+  }
+`
+
+const FeeHeader = styled.div`
+  flex: 1;
+  ${FeeUserReceivesSharedStyles}
+`
+
+const UserReceivesHeader = styled.div`
+  flex: 1.5;
+  ${FeeUserReceivesSharedStyles}
+`
+
 export enum SetPriceMethod {
   SAME_PRICE,
   FLOOR_PRICE,
@@ -105,16 +122,17 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
           <PriceInfoHeader>
             <Trans>Last</Trans>
           </PriceInfoHeader>
+
           <DropdownWrapper>
             <SortDropdown dropDownOptions={priceDropdownOptions} mini miniPrompt={t`Set price by`} />
           </DropdownWrapper>
 
-          <Box flex="1" display={{ sm: 'none', lg: 'flex' }} justifyContent="flex-end">
+          <FeeHeader>
             <Trans>Fees</Trans>
-          </Box>
-          <Box flex="1.5" display={{ sm: 'none', lg: 'flex' }} justifyContent="flex-end">
+          </FeeHeader>
+          <UserReceivesHeader>
             <Trans>You receive</Trans>
-          </Box>
+          </UserReceivesHeader>
         </PriceHeaders>
       </TableHeader>
       {sellAssets.map((asset) => {
