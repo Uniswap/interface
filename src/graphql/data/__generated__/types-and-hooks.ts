@@ -1020,7 +1020,7 @@ export type TokenPriceLazyQueryHookResult = ReturnType<typeof useTokenPriceLazyQ
 export type TokenPriceQueryResult = Apollo.QueryResult<TokenPriceQuery, TokenPriceQueryVariables>;
 export const TopTokens100Document = gql`
     query TopTokens100($duration: HistoryDuration!, $chain: Chain!) {
-  topTokens(pageSize: 100, page: 1) {
+  topTokens(pageSize: 100, page: 1, chain: $chain) {
     id
     name
     chain
