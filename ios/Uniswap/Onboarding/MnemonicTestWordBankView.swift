@@ -7,36 +7,51 @@
 
 import SwiftUI
 
+struct BankWord: Hashable {
+  var word: String = ""
+  var used: Bool = false
+}
+
 struct MnemonicTestWordBankView: View {
   
   let smallFont = UIFont(name: "Inter-Regular", size: 14)
   let mediumFont = UIFont(name: "Inter-Regular", size: 16)
-  
-  let words: [String]
-  let usedWords: [String]
-  var groupedWords: [[String]] = [[String]]()
+
+  var groupedWords: [[BankWord]] = [[BankWord]]()
   let screenWidth = UIScreen.main.bounds.width // Used to calculate max number of tags per row
   var labelCallback: ((String) -> Void)?
   let shouldShowSmallText: Bool
   
   init(words: [String], usedWords: [String], labelCallback: @escaping (String) -> Void, shouldShowSmallText: Bool) {
-    self.words = words
-    self.usedWords = usedWords
     self.labelCallback = labelCallback
     self.shouldShowSmallText = shouldShowSmallText
-    self.groupedWords = createGroupedWords(words)
+    
+    // Mark words as used individually to handle case of duplicate words
+    var wordStructs = words.map { word in BankWord(word: word) }
+    // Use used words to mark used
+    usedWords.forEach{ usedWord in
+      for idx in 0...wordStructs.count-1 {
+        if (usedWord == wordStructs[idx].word && !wordStructs[idx].used) {
+          wordStructs[idx].used = true
+          return
+        }
+      }
+    }
+    
+    // Set up grouped words
+    self.groupedWords = createGroupedWords(wordStructs)
   }
   
-  private func createGroupedWords(_ items: [String]) -> [[String]] {
+  private func createGroupedWords(_ items: [BankWord]) -> [[BankWord]] {
     
-    var groupedItems: [[String]] = [[String]]()
-    var tempItems: [String] =  [String]()
+    var groupedItems: [[BankWord]] = [[BankWord]]()
+    var tempItems: [BankWord] = [BankWord]()
     var width: CGFloat = 0
     
     for word in items {
       
       let label = UILabel()
-      label.text = word
+      label.text = word.word
       label.sizeToFit()
       
       let labelWidth = label.frame.size.width + 32
@@ -63,23 +78,18 @@ struct MnemonicTestWordBankView: View {
     VStack(alignment: .center) {
       ForEach(groupedWords, id: \.self) { subItems in
         HStack(spacing: 8) {
-          ForEach(subItems, id: \.self) { word in
-            let text = Text(word)
+          ForEach(subItems, id: \.self) { bankWord in
+            Text(bankWord.word)
               .font(Font((shouldShowSmallText ? smallFont : mediumFont)!))
-              .fixedSize()
+              .fixedSize()g
               .padding(shouldShowSmallText ? EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12) : EdgeInsets(top: 6, leading: 12, bottom: 6, trailing: 12))
               .background(Colors.background1)
               .foregroundColor(Colors.textPrimary)
               .clipShape(RoundedRectangle(cornerRadius: 100, style: .continuous))
               .onTapGesture {
-                labelCallback?(word)
+                labelCallback?(bankWord.word)
               }
-            
-            if (usedWords.contains(word)) {
-              text.opacity(0.60)
-            } else {
-              text
-            }
+              .opacity(bankWord.used ? 0.60 : 1)
           }
         }
       }
