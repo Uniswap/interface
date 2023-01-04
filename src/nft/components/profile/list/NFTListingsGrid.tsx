@@ -1,15 +1,15 @@
 import { Trans } from '@lingui/macro'
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
+import Column from 'components/Column'
+import Row from 'components/Row'
 import { SortDropdown } from 'nft/components/common/SortDropdown'
-import { Column, Row } from 'nft/components/Flex'
-import { bodySmall, subheadSmall } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { DropDownOption, ListingMarket } from 'nft/types'
 import { useMemo, useState } from 'react'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
+import { BREAKPOINTS } from 'theme'
 
-import * as styles from './ListPage.css'
 import { NFTListRow } from './NFTListRow'
 
 const TableHeader = styled.div`
@@ -21,6 +21,66 @@ const TableHeader = styled.div`
   padding-bottom: 24px;
   z-index: 1;
   background-color: ${({ theme }) => theme.backgroundBackdrop};
+  color: ${({ theme }) => theme.textSecondary};
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 20px;
+`
+
+const NFTHeader = styled.div`
+  flex: 2;
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    flex: 1.5;
+  }
+`
+
+const PriceHeaders = styled(Row)`
+  flex: 1;
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    flex: 3;
+  }
+`
+
+const PriceInfoHeader = styled.div`
+  display: none;
+  flex: 1;
+
+  @media screen and (min-width: ${BREAKPOINTS.xl}px) {
+    display: flex;
+  }
+`
+
+const DropdownWrapper = styled.div`
+  flex: 2;
+`
+
+const FeeUserReceivesSharedStyles = css`
+  display: none;
+  justify-content: flex-end;
+  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
+    display: flex;
+  }
+`
+
+const FeeHeader = styled.div`
+  flex: 1;
+  ${FeeUserReceivesSharedStyles}
+`
+
+const UserReceivesHeader = styled.div`
+  flex: 1.5;
+  ${FeeUserReceivesSharedStyles}
+`
+
+const RowDivider = styled.hr`
+  height: 0px;
+  width: 100%;
+  border-radius: 20px;
+  border-width: 0.5px;
+  border-style: solid;
+  border-color: ${({ theme }) => theme.backgroundInteractive};
 `
 
 export enum SetPriceMethod {
@@ -55,57 +115,28 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
   return (
     <Column>
       <TableHeader>
-        <Column
-          marginLeft="0"
-          transition="500"
-          className={bodySmall}
-          color="textSecondary"
-          flex={{ sm: '2', md: '1.5' }}
-        >
+        <NFTHeader>
           <Trans>NFT</Trans>
-        </Column>
-        <Row flex={{ sm: '1', md: '3' }}>
-          <Column
-            className={bodySmall}
-            color="textSecondary"
-            flex="1"
-            display={{ sm: 'none', xxl: 'flex' }}
-            textAlign="left"
-          >
+        </NFTHeader>
+        <PriceHeaders>
+          <PriceInfoHeader>
             <Trans>Floor</Trans>
-          </Column>
-          <Column
-            className={bodySmall}
-            color="textSecondary"
-            flex="1"
-            display={{ sm: 'none', xxl: 'flex' }}
-            textAlign="left"
-          >
+          </PriceInfoHeader>
+          <PriceInfoHeader>
             <Trans>Last</Trans>
-          </Column>
-          <Column className={subheadSmall} flex="2">
-            <SortDropdown dropDownOptions={priceDropdownOptions} mini miniPrompt={t`Set price by`} />
-          </Column>
+          </PriceInfoHeader>
 
-          <Column
-            className={bodySmall}
-            color="textSecondary"
-            flex="1"
-            display={{ sm: 'none', lg: 'flex' }}
-            textAlign="right"
-          >
+          <DropdownWrapper>
+            <SortDropdown dropDownOptions={priceDropdownOptions} mini miniPrompt={t`Set price by`} />
+          </DropdownWrapper>
+
+          <FeeHeader>
             <Trans>Fees</Trans>
-          </Column>
-          <Column
-            className={bodySmall}
-            display={{ sm: 'none', lg: 'flex' }}
-            color="textSecondary"
-            flex="1.5"
-            textAlign="right"
-          >
+          </FeeHeader>
+          <UserReceivesHeader>
             <Trans>You receive</Trans>
-          </Column>
-        </Row>
+          </UserReceivesHeader>
+        </PriceHeaders>
       </TableHeader>
       {sellAssets.map((asset) => {
         return (
@@ -117,7 +148,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
               setGlobalPrice={setGlobalPrice}
               selectedMarkets={selectedMarkets}
             />
-            {sellAssets.indexOf(asset) < sellAssets.length - 1 && <hr className={styles.nftDivider} />}
+            {sellAssets.indexOf(asset) < sellAssets.length - 1 && <RowDivider />}
           </>
         )
       })}
