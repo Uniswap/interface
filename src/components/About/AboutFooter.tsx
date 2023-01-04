@@ -170,25 +170,49 @@ export const AboutFooter = () => {
         </LinkGroup>
         <LinkGroup>
           <LinkGroupTitle>Company</LinkGroupTitle>
-          <ExternalTextLink href="https://boards.greenhouse.io/uniswaplabs" target="_blank" rel="noopener noreferrer">
-            Careers
-          </ExternalTextLink>
-          <ExternalTextLink href="https://uniswap.org/blog" target="_blank" rel="noopener noreferrer">
-            Blog
-          </ExternalTextLink>
+          <TraceEvent
+            events={[BrowserEvent.onClick]}
+            name={SharedEventName.ELEMENT_CLICKED}
+            element={InterfaceElementName.CAREERS_LINK}
+          >
+            <ExternalTextLink href="https://boards.greenhouse.io/uniswaplabs" target="_blank" rel="noopener noreferrer">
+              Careers
+            </ExternalTextLink>
+          </TraceEvent>
+          <TraceEvent
+            events={[BrowserEvent.onClick]}
+            name={SharedEventName.ELEMENT_CLICKED}
+            element={InterfaceElementName.BLOG_LINK}
+          >
+            <ExternalTextLink href="https://uniswap.org/blog" target="_blank" rel="noopener noreferrer">
+              Blog
+            </ExternalTextLink>
+          </TraceEvent>
         </LinkGroup>
         <LinkGroup>
           <LinkGroupTitle>Get Help</LinkGroupTitle>
-          <ExternalTextLink
-            href="https://support.uniswap.org/hc/en-us/requests/new"
-            target="_blank"
-            rel="noopener noreferrer"
+          <TraceEvent
+            events={[BrowserEvent.onClick]}
+            name={SharedEventName.ELEMENT_CLICKED}
+            element={InterfaceElementName.SUPPORT_LINK}
           >
-            Contact Us
-          </ExternalTextLink>
-          <ExternalTextLink href="https://support.uniswap.org/hc/en-us" target="_blank" rel="noopener noreferrer">
-            Help Center
-          </ExternalTextLink>
+            <ExternalTextLink
+              href="https://support.uniswap.org/hc/en-us/requests/new"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Contact Us
+            </ExternalTextLink>
+          </TraceEvent>
+          <TraceEvent
+            events={[BrowserEvent.onClick]}
+            name={SharedEventName.ELEMENT_CLICKED}
+            element={InterfaceElementName.SUPPORT_LINK}
+          >
+            <ExternalTextLink href="https://support.uniswap.org/hc/en-us" target="_blank" rel="noopener noreferrer">
+              Help Center
+            </ExternalTextLink>
+          </TraceEvent>
         </LinkGroup>
       </FooterLinks>
 
