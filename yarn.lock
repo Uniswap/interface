@@ -4921,7 +4921,7 @@
     "@typescript-eslint/types" "5.47.0"
     eslint-visitor-keys "^3.3.0"
 
-"@uniswap/analytics-events@2.1.0":
+"@uniswap/analytics-events@^2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@uniswap/analytics-events/-/analytics-events-2.1.0.tgz#0a112f642d0121fdf69b5dc9a17639f06aa63085"
   integrity sha512-HkWyri7PxnIS6B5sysym1LCMPnenkeAFyI41fYGDUNq3a5aEDuD77jyyFSwdW4yZfUOxq3zBUTmeQOIf/GT+tQ==

@@ -133,7 +133,7 @@
     "@sentry/react": "7.20.1",
     "@types/react-window-infinite-loader": "^1.0.6",
     "@uniswap/analytics": "1.2.0",
-    "@uniswap/analytics-events": "2.1.0",
+    "@uniswap/analytics-events": "^2.1.0",
     "@uniswap/conedison": "^1.1.1",
     "@uniswap/governance": "^1.0.2",
     "@uniswap/liquidity-staker": "^1.0.2",
