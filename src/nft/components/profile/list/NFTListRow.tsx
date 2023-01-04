@@ -24,13 +24,19 @@ const NFTInfoWrapper = styled.div`
   align-items: center;
   min-width: 0px;
   flex: 2;
+  margin-bottom: auto;
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     flex: 1.5;
   }
 `
 
-const IconWrap = styled.div<{ hovered: boolean }>`
+const ExpandMarketIconWrapper = styled.div`
+  cursor: pointer;
+  margin-right: 8px;
+`
+
+const RemoveIconWrap = styled.div<{ hovered: boolean }>`
   position: absolute;
   left: 50%;
   top: 30px;
@@ -78,9 +84,9 @@ export const NFTListRow = ({
     <NFTListRowWrapper>
       <NFTInfoWrapper>
         {localMarkets.length > 1 && (
-          <Box cursor="pointer" marginRight="8" onClick={() => setExpandMarketplaceRows(!expandMarketplaceRows)}>
+          <ExpandMarketIconWrapper onClick={() => setExpandMarketplaceRows(!expandMarketplaceRows)}>
             {expandMarketplaceRows ? <RowsExpandedIcon /> : <RowsCollpsedIcon />}
-          </Box>
+          </ExpandMarketIconWrapper>
         )}
         <Box
           position="relative"
@@ -93,9 +99,9 @@ export const NFTListRow = ({
             removeAsset(asset)
           }}
         >
-          <IconWrap hovered={hovered}>
+          <RemoveIconWrap hovered={hovered}>
             <RemoveIcon src="/nft/svgs/minusCircle.svg" alt="Remove item" />
-          </IconWrap>
+          </RemoveIconWrap>
           <Box
             as="img"
             alt={asset.name}
