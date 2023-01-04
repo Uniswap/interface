@@ -1,12 +1,10 @@
-import { Box } from 'nft/components/Box'
 import { Column } from 'nft/components/Flex'
 import { RowsCollpsedIcon, RowsExpandedIcon, VerifiedIcon } from 'nft/components/icons'
-import { bodySmall, subhead } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { ListingMarket, WalletAsset } from 'nft/types'
 import { Dispatch, useEffect, useState } from 'react'
-import styled from 'styled-components/macro'
-import { BREAKPOINTS } from 'theme'
+import styled, { css } from 'styled-components/macro'
+import { BREAKPOINTS, ThemedText } from 'theme'
 
 import { MarketplaceRow } from './MarketplaceRow'
 import { SetPriceMethod } from './NFTListingsGrid'
@@ -63,6 +61,25 @@ const RemoveIcon = styled.img`
   height: 32px;
 `
 
+const HideTextOverflow = css`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
+
+const TokenName = styled.div`
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  ${HideTextOverflow}
+`
+
+const CollectionName = styled(ThemedText.BodySmall)`
+  color: ${({ theme }) => theme.textSecondary};
+  line-height: 20px;
+  ${HideTextOverflow};
+`
+
 interface NFTListRowProps {
   asset: WalletAsset
   globalPriceMethod?: SetPriceMethod
@@ -113,21 +130,12 @@ export const NFTListRow = ({
           </RemoveIconWrap>
           <NFTImage alt={asset.name} src={asset.imageUrl || '/nft/svgs/image-placeholder.svg'} />
         </NFTImageWrapper>
-        <Column gap="4" minWidth="0">
-          <Box paddingRight="8" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap" className={subhead}>
-            {asset.name ? asset.name : `#${asset.tokenId}`}
-          </Box>
-          <Box
-            paddingRight="8"
-            color="textSecondary"
-            overflow="hidden"
-            textOverflow="ellipsis"
-            whiteSpace="nowrap"
-            className={bodySmall}
-          >
+        <Column gap="4" marginRight="8" minWidth="0">
+          <TokenName>{asset.name ? asset.name : `#${asset.tokenId}`}</TokenName>
+          <CollectionName>
             {asset.collection?.name}
             {asset.collectionIsVerified && <VerifiedIcon style={{ marginBottom: '-5px' }} />}
-          </Box>
+          </CollectionName>
         </Column>
       </NFTInfoWrapper>
       <Column flex={{ sm: '1', md: '3' }} gap="24">
