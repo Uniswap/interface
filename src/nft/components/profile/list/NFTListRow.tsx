@@ -1,3 +1,5 @@
+import Column from 'components/Column'
+import Row from 'components/Row'
 import { RowsCollpsedIcon, RowsExpandedIcon, VerifiedIcon } from 'nft/components/icons'
 import { useSellAsset } from 'nft/hooks'
 import { ListingMarket, WalletAsset } from 'nft/types'
@@ -8,16 +10,12 @@ import { BREAKPOINTS, ThemedText } from 'theme'
 import { MarketplaceRow } from './MarketplaceRow'
 import { SetPriceMethod } from './NFTListingsGrid'
 
-const NFTListRowWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
+const NFTListRowWrapper = styled(Row)`
   margin: 24px 0px;
   align-items: center;
 `
 
-const NFTInfoWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
+const NFTInfoWrapper = styled(Row)`
   align-items: center;
   min-width: 0px;
   flex: 2;
@@ -66,9 +64,7 @@ const HideTextOverflow = css`
   white-space: nowrap;
 `
 
-const TokenInfoWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
+const TokenInfoWrapper = styled(Column)`
   gap: 4px;
   margin-right: 8px;
   min-width: 0px;
@@ -87,9 +83,7 @@ const CollectionName = styled(ThemedText.BodySmall)`
   ${HideTextOverflow};
 `
 
-const MarketPlaceRowWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
+const MarketPlaceRowWrapper = styled(Column)`
   gap: 24px;
   flex: 1;
 
