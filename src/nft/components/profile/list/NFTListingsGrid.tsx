@@ -3,7 +3,6 @@ import { Trans } from '@lingui/macro'
 import { t } from '@lingui/macro'
 import { SortDropdown } from 'nft/components/common/SortDropdown'
 import { Column, Row } from 'nft/components/Flex'
-import { bodySmall, subheadSmall } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { DropDownOption, ListingMarket } from 'nft/types'
 import { useMemo, useState } from 'react'
@@ -11,6 +10,11 @@ import styled from 'styled-components/macro'
 
 import * as styles from './ListPage.css'
 import { NFTListRow } from './NFTListRow'
+
+const GridWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`
 
 const TableHeader = styled.div`
   display: flex;
@@ -21,6 +25,10 @@ const TableHeader = styled.div`
   padding-bottom: 24px;
   z-index: 1;
   background-color: ${({ theme }) => theme.backgroundBackdrop};
+  color: ${({ theme }) => theme.textSecondary};
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 20px;
 `
 
 export enum SetPriceMethod {
@@ -53,56 +61,26 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
   )
 
   return (
-    <Column>
+    <GridWrapper>
       <TableHeader>
-        <Column
-          marginLeft="0"
-          transition="500"
-          className={bodySmall}
-          color="textSecondary"
-          flex={{ sm: '2', md: '1.5' }}
-        >
+        <Column flex={{ sm: '2', md: '1.5' }}>
           <Trans>NFT</Trans>
         </Column>
         <Row flex={{ sm: '1', md: '3' }}>
-          <Column
-            className={bodySmall}
-            color="textSecondary"
-            flex="1"
-            display={{ sm: 'none', xxl: 'flex' }}
-            textAlign="left"
-          >
+          <Column flex="1" display={{ sm: 'none', xxl: 'flex' }} textAlign="left">
             <Trans>Floor</Trans>
           </Column>
-          <Column
-            className={bodySmall}
-            color="textSecondary"
-            flex="1"
-            display={{ sm: 'none', xxl: 'flex' }}
-            textAlign="left"
-          >
+          <Column flex="1" display={{ sm: 'none', xxl: 'flex' }} textAlign="left">
             <Trans>Last</Trans>
           </Column>
-          <Column className={subheadSmall} flex="2">
+          <Column flex="2">
             <SortDropdown dropDownOptions={priceDropdownOptions} mini miniPrompt={t`Set price by`} />
           </Column>
 
-          <Column
-            className={bodySmall}
-            color="textSecondary"
-            flex="1"
-            display={{ sm: 'none', lg: 'flex' }}
-            textAlign="right"
-          >
+          <Column flex="1" display={{ sm: 'none', lg: 'flex' }} textAlign="right">
             <Trans>Fees</Trans>
           </Column>
-          <Column
-            className={bodySmall}
-            display={{ sm: 'none', lg: 'flex' }}
-            color="textSecondary"
-            flex="1.5"
-            textAlign="right"
-          >
+          <Column display={{ sm: 'none', lg: 'flex' }} flex="1.5" textAlign="right">
             <Trans>You receive</Trans>
           </Column>
         </Row>
@@ -121,6 +99,6 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
           </>
         )
       })}
-    </Column>
+    </GridWrapper>
   )
 }
