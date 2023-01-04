@@ -81,7 +81,7 @@ struct MnemonicTestWordBankView: View {
           ForEach(subItems, id: \.self) { bankWord in
             Text(bankWord.word)
               .font(Font((shouldShowSmallText ? smallFont : mediumFont)!))
-              .fixedSize()g
+              .fixedSize()
               .padding(shouldShowSmallText ? EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12) : EdgeInsets(top: 6, leading: 12, bottom: 6, trailing: 12))
               .background(Colors.background1)
               .foregroundColor(Colors.textPrimary)
