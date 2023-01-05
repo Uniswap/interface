@@ -12,7 +12,13 @@
     "contracts:compile:v3": "typechain --target ethers-v5 --out-dir src/abis/uniswapV3/types './node_modules/@uniswap/?(v3-core|v3-periphery)/artifacts/contracts/**/*.json'",
     "debug": "react-devtools",
     "deduplicate": "yarn-deduplicate --strategy=highest",
-    "deploy:ios:release": "yarn && yarn pod && fastlane ios buildAndShip",
+    "deploy:ios:local:dev": "yarn prepare-for-pr && fastlane ios buildAndShip --env dev",
+    "deploy:ios:local:beta": "yarn prepare-for-pr && fastlane ios buildAndShip --env beta",
+    "deploy:ios:local:prod": "yarn prepare-for-pr && fastlane ios buildAndShip --env prod",
+    "env:fastlane:download": "bash ./scripts/downloadFastlaneEnv.sh",
+    "env:fastlane:upload": "bash ./scripts/uploadFastlaneEnv.sh",
+    "env:local:download": "bash ./scripts/downloadEnvLocal.sh",
+    "env:local:upload": "bash ./scripts/uploadEnvLocal.sh",
     "firestore:deploy:rules": "firebase deploy --only firestore:rules",
     "hardhat": "hardhat node",
     "i18n:extract": "i18next",
@@ -36,9 +42,7 @@
     "test:e2e:run": "RN_SRC_EXT=e2e.js detox test -c ios.sim.debug",
     "tsc:compile": "tsc --project .",
     "unicons": "cd scripts && python3 populate_svgs.py && cd .. && yarn lint --fix",
-    "pod": "./scripts/podinstall.sh",
-    "upload-env-local": "bash ./scripts/uploadEnvLocal.sh",
-    "download-env-local": "bash ./scripts/downloadEnvLocal.sh"
+    "pod": "./scripts/podinstall.sh"
   },
   "dependencies": {
     "@amplitude/analytics-react-native": "0.5.0",

@@ -54,6 +54,9 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
 fastlane/.env
+fastlane/.env.dev
+fastlane/.env.beta
+fastlane/.env.prod
 fastlane/builds
 
 # Bundle artifact
