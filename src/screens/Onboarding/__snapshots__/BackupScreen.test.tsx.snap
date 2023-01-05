@@ -1,0 +1,780 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BackupScreen renders backup options when none are completed 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "backgroundColor": "#FFFFFF",
+        "display": "flex",
+        "flex": 1,
+      },
+      Object {
+        "paddingTop": 200,
+      },
+    ]
+  }
+>
+  <View
+    onLayout={[Function]}
+    style={
+      Array [
+        Array [
+          Object {
+            "flex": 1,
+            "justifyContent": "flex-end",
+          },
+          Object {
+            "marginBottom": undefined,
+          },
+        ],
+        Object {
+          "paddingBottom": 0,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        Array [
+          Object {
+            "alignItems": "stretch",
+            "display": "flex",
+            "flexDirection": "column",
+            "flexGrow": 1,
+            "justifyContent": "flex-start",
+            "paddingBottom": 16,
+            "paddingHorizontal": 16,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+              "flexDirection": "column",
+              "justifyContent": "center",
+              "margin": 12,
+            },
+          ]
+        }
+      >
+        <Text
+          allowFontScaling={false}
+          maxFontSizeMultiplier={1.2}
+          style={
+            Array [
+              Object {
+                "color": "#0D111C",
+                "display": "flex",
+                "fontFamily": "Inter-Medium",
+                "fontSize": 24,
+                "lineHeight": 28,
+                "paddingTop": 0,
+                "textAlign": "center",
+              },
+            ]
+          }
+        >
+          Back up your recovery phrase
+        </Text>
+        <View
+          style={
+            Array [
+              Object {
+                "display": "flex",
+                "flexGrow": 0,
+                "flexShrink": 0,
+                "height": 12,
+              },
+            ]
+          }
+        />
+        <Text
+          allowFontScaling={true}
+          maxFontSizeMultiplier={1.4}
+          style={
+            Array [
+              Object {
+                "color": "#505A78",
+                "display": "flex",
+                "fontFamily": "Inter-Regular",
+                "fontSize": 14,
+                "lineHeight": 20,
+                "textAlign": "center",
+              },
+            ]
+          }
+        >
+          Your recovery phrase is the key to your wallet. Back it up so you can restore your wallet if you lose or damage your device.
+        </Text>
+      </View>
+      <View
+        style={
+          Array [
+            Object {
+              "display": "flex",
+              "flexGrow": 0,
+              "flexShrink": 0,
+              "height": 16,
+            },
+          ]
+        }
+      />
+      <View
+        style={
+          Array [
+            Object {
+              "alignItems": "stretch",
+              "display": "flex",
+              "flex": 1,
+              "flexDirection": "column",
+              "flexGrow": 1,
+              "justifyContent": "space-between",
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {
+                "alignItems": "stretch",
+                "display": "flex",
+                "flexDirection": "column",
+                "flexGrow": 1,
+                "justifyContent": "flex-start",
+              },
+            ]
+          }
+        >
+          <View
+            style={
+              Array [
+                Object {
+                  "alignItems": "stretch",
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "justifyContent": "flex-start",
+                },
+              ]
+            }
+          >
+            <View
+              style={
+                Array [
+                  Object {
+                    "alignItems": "center",
+                    "display": "flex",
+                    "flexDirection": "row",
+                    "justifyContent": "flex-start",
+                    "paddingVertical": 16,
+                  },
+                ]
+              }
+            >
+              <View
+                style={
+                  Array [
+                    Object {
+                      "alignItems": "center",
+                      "borderColor": "#FC72FF",
+                      "borderRadius": 12,
+                      "borderWidth": 1.25,
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "height": 32,
+                      "justifyContent": "center",
+                      "padding": 16,
+                      "width": 32,
+                    },
+                  ]
+                }
+              >
+                <svg
+                  color="#0D111C"
+                  data-file-name="SvgCloud"
+                  height={16}
+                  strokeWidth={1.5}
+                  width={16}
+                />
+              </View>
+              <View
+                style={
+                  Array [
+                    Object {
+                      "display": "flex",
+                      "flexGrow": 0,
+                      "flexShrink": 0,
+                      "height": 16,
+                      "width": 16,
+                    },
+                  ]
+                }
+              />
+              <Text
+                allowFontScaling={true}
+                maxFontSizeMultiplier={1.4}
+                style={
+                  Array [
+                    Object {
+                      "color": "#0D111C",
+                      "display": "flex",
+                      "fontFamily": "Inter-Medium",
+                      "fontSize": 14,
+                      "lineHeight": 20,
+                    },
+                  ]
+                }
+              >
+                iCloud backup
+              </Text>
+              <View
+                style={
+                  Array [
+                    Object {
+                      "display": "flex",
+                      "flexGrow": 0,
+                      "flexShrink": 0,
+                      "height": 16,
+                      "width": 16,
+                    },
+                  ]
+                }
+              />
+              <View
+                style={
+                  Array [
+                    Object {
+                      "alignItems": "flex-end",
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "flexGrow": 1,
+                      "justifyContent": "flex-start",
+                    },
+                  ]
+                }
+              >
+                <View
+                  accessible={true}
+                  collapsable={false}
+                  focusable={true}
+                  hitSlop={
+                    Object {
+                      "bottom": 5,
+                      "left": 5,
+                      "right": 5,
+                      "top": 5,
+                    }
+                  }
+                  onClick={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  style={
+                    Object {
+                      "backgroundColor": "#FC72FF1f",
+                      "borderRadius": 999999,
+                      "display": "flex",
+                      "opacity": 1,
+                      "padding": 12,
+                    }
+                  }
+                  testID="add-icloud-backup"
+                >
+                  <View
+                    style={
+                      Array [
+                        Object {
+                          "alignItems": "stretch",
+                          "display": "flex",
+                          "flexDirection": "row",
+                          "justifyContent": "flex-start",
+                        },
+                      ]
+                    }
+                  >
+                    <Text
+                      allowFontScaling={true}
+                      maxFontSizeMultiplier={1.2}
+                      style={
+                        Array [
+                          Object {
+                            "color": "#FC72FF",
+                            "display": "flex",
+                            "fontFamily": "Inter-SemiBold",
+                            "fontSize": 12,
+                            "lineHeight": 16,
+                          },
+                        ]
+                      }
+                    >
+                      + 
+                      ADD
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+            <View
+              style={
+                Array [
+                  Object {
+                    "borderBottomColor": "#D2D9EE",
+                    "borderBottomWidth": 0.5,
+                    "display": "flex",
+                    "flexGrow": 0,
+                    "flexShrink": 0,
+                    "height": 0,
+                  },
+                ]
+              }
+            />
+            <View
+              style={
+                Array [
+                  Object {
+                    "alignItems": "center",
+                    "display": "flex",
+                    "flexDirection": "row",
+                    "justifyContent": "flex-start",
+                    "paddingVertical": 16,
+                  },
+                ]
+              }
+            >
+              <View
+                style={
+                  Array [
+                    Object {
+                      "alignItems": "center",
+                      "borderColor": "#FC72FF",
+                      "borderRadius": 12,
+                      "borderWidth": 1.25,
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "height": 32,
+                      "justifyContent": "center",
+                      "padding": 16,
+                      "width": 32,
+                    },
+                  ]
+                }
+              >
+                <svg
+                  color="#0D111C"
+                  data-file-name="SvgPencil"
+                  height={16}
+                  strokeWidth={1.5}
+                  width={16}
+                />
+              </View>
+              <View
+                style={
+                  Array [
+                    Object {
+                      "display": "flex",
+                      "flexGrow": 0,
+                      "flexShrink": 0,
+                      "height": 16,
+                      "width": 16,
+                    },
+                  ]
+                }
+              />
+              <Text
+                allowFontScaling={true}
+                maxFontSizeMultiplier={1.4}
+                style={
+                  Array [
+                    Object {
+                      "color": "#0D111C",
+                      "display": "flex",
+                      "fontFamily": "Inter-Medium",
+                      "fontSize": 14,
+                      "lineHeight": 20,
+                    },
+                  ]
+                }
+              >
+                Manual backup
+              </Text>
+              <View
+                style={
+                  Array [
+                    Object {
+                      "display": "flex",
+                      "flexGrow": 0,
+                      "flexShrink": 0,
+                      "height": 16,
+                      "width": 16,
+                    },
+                  ]
+                }
+              />
+              <View
+                style={
+                  Array [
+                    Object {
+                      "alignItems": "flex-end",
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "flexGrow": 1,
+                      "justifyContent": "flex-start",
+                    },
+                  ]
+                }
+              >
+                <View
+                  accessible={true}
+                  collapsable={false}
+                  focusable={true}
+                  hitSlop={
+                    Object {
+                      "bottom": 5,
+                      "left": 5,
+                      "right": 5,
+                      "top": 5,
+                    }
+                  }
+                  onClick={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  style={
+                    Object {
+                      "backgroundColor": "#FC72FF1f",
+                      "borderRadius": 999999,
+                      "display": "flex",
+                      "opacity": 1,
+                      "padding": 12,
+                    }
+                  }
+                  testID="add-manual-backup"
+                >
+                  <View
+                    style={
+                      Array [
+                        Object {
+                          "alignItems": "stretch",
+                          "display": "flex",
+                          "flexDirection": "row",
+                          "justifyContent": "flex-start",
+                        },
+                      ]
+                    }
+                  >
+                    <Text
+                      allowFontScaling={true}
+                      maxFontSizeMultiplier={1.2}
+                      style={
+                        Array [
+                          Object {
+                            "color": "#FC72FF",
+                            "display": "flex",
+                            "fontFamily": "Inter-SemiBold",
+                            "fontSize": 12,
+                            "lineHeight": 16,
+                          },
+                        ]
+                      }
+                    >
+                      + 
+                      ADD
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+          <View
+            style={
+              Array [
+                Object {
+                  "display": "flex",
+                  "flexGrow": 0,
+                  "flexShrink": 0,
+                  "height": 16,
+                },
+              ]
+            }
+          />
+          <View
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            hitSlop={
+              Object {
+                "bottom": 5,
+                "left": 5,
+                "right": 5,
+                "top": 5,
+              }
+            }
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              Object {
+                "alignSelf": "flex-start",
+                "display": "flex",
+                "opacity": 1,
+                "paddingVertical": 0,
+              }
+            }
+          >
+            <View
+              style={
+                Array [
+                  Object {
+                    "alignItems": "center",
+                    "display": "flex",
+                    "flexDirection": "row",
+                    "justifyContent": "center",
+                  },
+                ]
+              }
+            >
+              <View
+                style={
+                  Array [
+                    Object {
+                      "display": "flex",
+                      "paddingHorizontal": 4,
+                    },
+                  ]
+                }
+              >
+                <svg
+                  color="#505A78"
+                  data-file-name="SvgInfoCircle"
+                  height={24}
+                  width={24}
+                />
+              </View>
+              <View
+                style={
+                  Array [
+                    Object {
+                      "display": "flex",
+                      "flexGrow": 0,
+                      "flexShrink": 0,
+                      "height": 4,
+                      "width": 4,
+                    },
+                  ]
+                }
+              />
+              <Text
+                allowFontScaling={true}
+                maxFontSizeMultiplier={1.4}
+                style={
+                  Array [
+                    Object {
+                      "color": "#0D111C",
+                      "display": "flex",
+                      "fontFamily": "Inter-Medium",
+                      "fontSize": 14,
+                      "lineHeight": 20,
+                    },
+                  ]
+                }
+              >
+                What’s a recovery phrase?
+              </Text>
+            </View>
+          </View>
+          <View
+            style={
+              Array [
+                Object {
+                  "display": "flex",
+                  "flexGrow": 0,
+                  "flexShrink": 0,
+                  "height": 16,
+                },
+              ]
+            }
+          />
+          <View
+            style={
+              Array [
+                Object {
+                  "alignItems": "stretch",
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "flexGrow": 1,
+                  "justifyContent": "flex-end",
+                },
+              ]
+            }
+          >
+            <View
+              accessibilityState={
+                Object {
+                  "disabled": true,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              hitSlop={
+                Object {
+                  "bottom": 5,
+                  "left": 5,
+                  "right": 5,
+                  "top": 5,
+                }
+              }
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                Object {
+                  "alignItems": "center",
+                  "backgroundColor": "#FC72FF",
+                  "borderColor": "transparent",
+                  "borderRadius": 12,
+                  "borderWidth": 1,
+                  "display": "flex",
+                  "opacity": 0.4,
+                }
+              }
+              testID="next"
+            >
+              <View
+                style={
+                  Array [
+                    Object {
+                      "alignItems": "stretch",
+                      "borderRadius": 12,
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "height": "100%",
+                      "justifyContent": "flex-start",
+                      "overflow": "hidden",
+                      "position": "absolute",
+                      "width": "100%",
+                    },
+                  ]
+                }
+              >
+                <RNSVGSvgView
+                  bbHeight="100%"
+                  bbWidth="100%"
+                  focusable={false}
+                  height="100%"
+                  style={
+                    Array [
+                      Object {
+                        "backgroundColor": "transparent",
+                        "borderWidth": 0,
+                      },
+                      Object {
+                        "flex": 0,
+                        "height": "100%",
+                        "width": "100%",
+                      },
+                    ]
+                  }
+                  width="100%"
+                >
+                  <RNSVGGroup>
+                    <RNSVGDefs>
+                      <RNSVGLinearGradient
+                        gradient={
+                          Array [
+                            0,
+                            -958215,
+                            1,
+                            -313648,
+                          ]
+                        }
+                        gradientTransform={null}
+                        gradientUnits={0}
+                        name="background"
+                        x1="0%"
+                        x2="0%"
+                        y1="0%"
+                        y2="100%"
+                      />
+                    </RNSVGDefs>
+                    <RNSVGRect
+                      fill={
+                        Array [
+                          1,
+                          "background",
+                        ]
+                      }
+                      height="150%"
+                      opacity={1}
+                      propList={
+                        Array [
+                          "fill",
+                        ]
+                      }
+                      width="100%"
+                      x="0"
+                      y="0"
+                    />
+                  </RNSVGGroup>
+                </RNSVGSvgView>
+              </View>
+              <View
+                style={
+                  Array [
+                    Object {
+                      "alignItems": "center",
+                      "display": "flex",
+                      "flexDirection": "row",
+                      "justifyContent": "center",
+                      "paddingHorizontal": 12,
+                      "paddingVertical": 12,
+                    },
+                  ]
+                }
+              >
+                <Text
+                  allowFontScaling={true}
+                  maxFontSizeMultiplier={1.2}
+                  style={
+                    Array [
+                      Object {
+                        "color": "#FFFFFF",
+                        "display": "flex",
+                        "fontFamily": "Inter-SemiBold",
+                        "fontSize": 16,
+                        "lineHeight": 20,
+                        "textAlign": "center",
+                      },
+                    ]
+                  }
+                >
+                  Add backup to continue
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;

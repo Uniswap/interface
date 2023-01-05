@@ -2,9 +2,10 @@ import { CompositeScreenProps } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useResponsiveProp } from '@shopify/restyle'
-import React, { ReactNode, useEffect, useState } from 'react'
+import React, { ComponentProps, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
+import { SvgProps } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
 import {
   AppStackParamList,
@@ -20,7 +21,6 @@ import { BackButton } from 'src/components/buttons/BackButton'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { EducationContentType } from 'src/components/education'
-import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { isICloudAvailable } from 'src/features/CloudBackup/RNICloudBackupsManager'
@@ -36,6 +36,11 @@ type Props = CompositeScreenProps<
   StackScreenProps<OnboardingStackParamList, OnboardingScreens.Backup>,
   NativeStackScreenProps<AppStackParamList, Screens.Education>
 >
+
+const spacerProps: ComponentProps<typeof Box> = {
+  borderBottomColor: 'backgroundOutline',
+  borderBottomWidth: 0.5,
+}
 
 export function BackupScreen({ navigation, route: { params } }: Props) {
   const { t } = useTranslation()
@@ -74,18 +79,20 @@ export function BackupScreen({ navigation, route: { params } }: Props) {
   return (
     <OnboardingScreen
       subtitle={t(
-        'Backups let you restore your wallet if you lose or damage your device. We recommend both backup types.'
+        'Your recovery phrase is the key to your wallet. Back it up so you can restore your wallet if you lose or damage your device.'
       )}
       title={t('Back up your recovery phrase')}>
       <Flex grow>
         <BackupOptions backupMethods={activeAccountBackups} params={params} />
         <TouchableArea alignSelf="flex-start" py="none" onPress={onPressEducationButton}>
           <Flex centered row gap="xxs">
-            <InfoCircle
-              color={theme.colors.textSecondary}
-              height={theme.iconSizes.lg}
-              width={theme.iconSizes.lg}
-            />
+            <Box px="xxs">
+              <InfoCircle
+                color={theme.colors.textSecondary}
+                height={theme.iconSizes.lg}
+                width={theme.iconSizes.lg}
+              />
+            </Box>
             <Text color="textPrimary" variant="subheadSmall">
               {t('What’s a recovery phrase?')}
             </Text>
@@ -121,7 +128,6 @@ function BackupOptions({
   params: Readonly<OnboardingStackBaseParams>
 }) {
   const { t } = useTranslation()
-  const theme = useAppTheme()
   const [iCloudAvailable, setICloudAvailable] = useState<boolean>()
 
   const { navigate } = useOnboardingStackNavigation()
@@ -135,22 +141,10 @@ function BackupOptions({
   }, [])
 
   return (
-    <Flex gap="xs">
+    <Flex gap="none" spacerProps={spacerProps}>
       <BackupOptionButton
-        caption={t('Back your phrase up to iCloud and encrypt it with a password.')}
+        Icon={CloudIcon}
         completed={backupMethods?.includes(BackupType.Cloud)}
-        icon={
-          <Flex
-            centered
-            borderColor="accentBranded"
-            borderRadius="md"
-            borderWidth={1.25}
-            height={32}
-            padding="md"
-            width={32}>
-            <CloudIcon color={theme.colors.textPrimary} height={16} strokeWidth={1.5} width={16} />
-          </Flex>
-        }
         label={t('iCloud backup')}
         name={ElementName.AddiCloudBackup}
         onPress={() => {
@@ -176,20 +170,8 @@ function BackupOptions({
         }}
       />
       <BackupOptionButton
-        caption={t('Write your phrase down and store it in a safe place.')}
+        Icon={PencilIcon}
         completed={backupMethods?.includes(BackupType.Manual)}
-        icon={
-          <Flex
-            centered
-            borderColor="accentBranded"
-            borderRadius="md"
-            borderWidth={1.25}
-            height={32}
-            padding="md"
-            width={32}>
-            <PencilIcon color={theme.colors.textPrimary} height={16} strokeWidth={1.5} width={16} />
-          </Flex>
-        }
         label={t('Manual backup')}
         name={ElementName.AddManualBackup}
         onPress={() => {
@@ -202,70 +184,64 @@ function BackupOptions({
 
 interface BackupOptionButtonProps {
   completed?: boolean
-  icon: ReactNode
+  Icon: React.FC<SvgProps>
   label: string
-  caption: string
-  name?: ElementName
+  name: ElementName
   onPress: () => void
 }
 
-function BackupOptionButton({
-  icon,
-  label,
-  name,
-  caption,
-  onPress,
-  completed,
-}: BackupOptionButtonProps) {
+function BackupOptionButton({ Icon, label, name, onPress, completed }: BackupOptionButtonProps) {
   const theme = useAppTheme()
+  const { t } = useTranslation()
 
   const labelMaxFontSizeMultiplier = useResponsiveProp({
     xs: 1.2,
     sm: theme.textVariants.subheadSmall.maxFontSizeMultiplier,
   })
 
-  const captionMaxFontSizeMultiplier = useResponsiveProp({
-    xs: 1.2,
-    sm: theme.textVariants.bodySmall.maxFontSizeMultiplier,
-  })
-
   return (
-    <Box>
-      <TouchableArea
-        backgroundColor="background1"
-        borderColor={completed ? 'background3' : 'backgroundOutline'}
+    <Flex row alignItems="center" py="md">
+      <Flex
+        centered
+        borderColor="accentBranded"
         borderRadius="md"
-        borderWidth={1}
-        disabled={completed}
-        name={name}
-        px="md"
-        py="sm"
-        testID={name}
-        onPress={onPress}>
-        <Flex row alignItems="center" gap="xs" justifyContent="space-between">
-          <Flex row alignItems="center" flexShrink={1} gap="sm" opacity={completed ? 0.4 : 1}>
-            <Box>{icon}</Box>
-            <Flex flexShrink={1} gap="xxxs">
-              <Text maxFontSizeMultiplier={labelMaxFontSizeMultiplier} variant="subheadSmall">
-                {label}
-              </Text>
-              <Text
-                color="textSecondary"
-                maxFontSizeMultiplier={captionMaxFontSizeMultiplier}
-                variant="bodySmall">
-                {caption}
+        borderWidth={1.25}
+        height={32}
+        padding="md"
+        width={32}>
+        <Icon color={theme.colors.textPrimary} height={16} strokeWidth={1.5} width={16} />
+      </Flex>
+      <Text maxFontSizeMultiplier={labelMaxFontSizeMultiplier} variant="subheadSmall">
+        {label}
+      </Text>
+      <Flex grow alignItems="flex-end">
+        {completed ? (
+          <Flex row alignItems="center" gap="xxs">
+            <Check
+              color={theme.colors.accentSuccess}
+              height={theme.iconSizes.md}
+              width={theme.iconSizes.md}
+            />
+            <Text fontWeight="600" variant="bodyMicro">
+              {t('Completed')}
+            </Text>
+          </Flex>
+        ) : (
+          <TouchableArea
+            hapticFeedback
+            backgroundColor="magentaDark"
+            borderRadius="full"
+            p="sm"
+            testID={name}
+            onPress={onPress}>
+            <Flex row>
+              <Text color="magentaVibrant" variant="buttonLabelMicro">
+                + {t('ADD')}
               </Text>
             </Flex>
-          </Flex>
-          <Flex grow alignItems="flex-end">
-            {completed ? (
-              <Check color={theme.colors.accentSuccess} height="24" width="24" />
-            ) : (
-              <Chevron color={theme.colors.textSecondary} direction="e" height="24" width="24" />
-            )}
-          </Flex>
-        </Flex>
-      </TouchableArea>
-    </Box>
+          </TouchableArea>
+        )}
+      </Flex>
+    </Flex>
   )
 }

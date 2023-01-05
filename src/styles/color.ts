@@ -381,6 +381,7 @@ export interface Palette {
   blue300: string
   brandedAccentSoft: string
   magentaVibrant: string
+  magentaDark: string
 
   chain_1: string
   chain_3: string
@@ -447,6 +448,7 @@ export const colorsLight: Palette = {
   blue300: colors.blue300,
   brandedAccentSoft: colors.magenta100,
   magentaVibrant: colors.magentaVibrant,
+  magentaDark: opacify(12, colors.magentaVibrant),
 
   chain_1: colors.networkEthereum,
   chain_3: colors.yellow400,
@@ -513,6 +515,7 @@ export const colorsDark: Palette = {
   blue300: colors.blue300,
   brandedAccentSoft: '#46244F', // git blame Chelsy
   magentaVibrant: colors.magentaVibrant,
+  magentaDark: opacify(12, colors.magentaVibrant),
 
   chain_1: colors.networkEthereum,
   chain_3: colors.yellow400,
