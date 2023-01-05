@@ -76,8 +76,8 @@
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
       }
 
+      /* Use this to apply network-specific gradient backgrounds, in RadialGradientByChainUpdater.ts */
       #background-radial-gradient {
-        background: linear-gradient(180deg, #202738 0%, #070816 100%);
         position: fixed;
         top: 0;
         left: 0;
@@ -97,13 +97,13 @@
 
       @media (prefers-color-scheme: dark) {
         html {
-          background-color: #212429;
+          background: linear-gradient(180deg, #202738 0%, #070816 100%);
         }
       }
 
       @media (prefers-color-scheme: light) {
         html {
-          background-color: #f7f8fa;
+          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0.51) 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF
         }
       }
     </style>
