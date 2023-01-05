@@ -39,7 +39,7 @@ const QuoteRowContainer = styled.div`
 
 export default function QuoteComparison() {
   const {
-    trade: { trade, floodQuote, uniswapQuote },
+    trade: { trade, floodQuote, uniswapQuote, tradeSource },
     currencies: { OUTPUT, INPUT },
   } = useDerivedSwapInfo()
 
@@ -77,7 +77,11 @@ export default function QuoteComparison() {
         <ThemedText.DeprecatedBlack fontWeight={400} fontSize={13}>
           Flood Router
         </ThemedText.DeprecatedBlack>
-        <ThemedText.DeprecatedBlack fontWeight={400} fontSize={13} style={{ textAlign: 'right' }}>
+        <ThemedText.DeprecatedBlack
+          fontWeight={tradeSource === 'floodApi' ? 700 : 400}
+          fontSize={13}
+          style={{ textAlign: 'right' }}
+        >
           {formattedFloodQuote || '—'}
         </ThemedText.DeprecatedBlack>
       </QuoteRowContainer>
@@ -87,7 +91,7 @@ export default function QuoteComparison() {
           Uniswap Router
         </ThemedText.DeprecatedBlack>
         <ThemedText.DeprecatedBlack
-          fontWeight={400}
+          fontWeight={tradeSource === 'uniswapApi' ? 700 : 400}
           fontSize={13}
           color={isFloodBetter ? 'accentFailure' : 'textPrimary'}
           style={{ textAlign: 'right' }}

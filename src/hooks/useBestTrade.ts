@@ -26,7 +26,7 @@ export function useBestTrade(
   trade: InterfaceTrade<Currency, Currency, TradeType> | InterfaceFloodTrade<Currency, Currency, TradeType> | undefined
   uniswapQuote: GetQuoteResult | undefined
   floodQuote: FloodQuoteResult | undefined
-  isUsingFlood: boolean
+  tradeSource: 'uniswapApi' | 'floodApi' | 'clientSide' | null
 } {
   const autoRouterSupported = useAutoRouterSupported()
   const isWindowVisible = useIsWindowVisible()
@@ -45,7 +45,10 @@ export function useBestTrade(
   )
 
   const isLoading = routingAPITrade.state === TradeState.LOADING
-  const useFallback = !autoRouterSupported || routingAPITrade.state === TradeState.NO_ROUTE_FOUND
+  const useFallback =
+    !autoRouterSupported ||
+    routingAPITrade.state === TradeState.NO_ROUTE_FOUND ||
+    routingAPITrade.state === TradeState.INVALID
 
   // only use client side router if routing api trade failed or is not supported
   const bestV3Trade = useClientSideV3Trade(
@@ -58,9 +61,9 @@ export function useBestTrade(
   return useMemo(
     () => ({
       ...(useFallback
-        ? { ...bestV3Trade, uniswapQuote: undefined, floodQuote: undefined, isUsingFlood: routingAPITrade.isUsingFlood }
-        : routingAPITrade),
-      ...(isLoading ? { state: TradeState.LOADING, isUsingFlood: false } : { isUsingFlood: false }),
+        ? { ...bestV3Trade, uniswapQuote: undefined, floodQuote: undefined, tradeSource: 'clientSide' }
+        : { ...routingAPITrade, tradeSource: routingAPITrade.isUsingFlood ? 'floodApi' : 'uniswapApi' }),
+      ...(isLoading ? { state: TradeState.LOADING, tradeSource: null } : {}),
     }),
     [bestV3Trade, isLoading, routingAPITrade, useFallback]
   )

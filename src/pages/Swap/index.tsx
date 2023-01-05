@@ -197,13 +197,14 @@ export default function Swap({ className }: { className?: string }) {
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
   const {
-    trade: { state: tradeState, trade, isUsingFlood },
+    trade: { state: tradeState, trade, tradeSource },
     allowedSlippage,
     currencyBalances,
     parsedAmount,
     currencies,
     inputError: swapInputError,
   } = useDerivedSwapInfo()
+  const isUsingFlood = tradeSource === 'floodApi'
 
   const {
     wrapType,

@@ -90,7 +90,7 @@ export function useDerivedSwapInfo(): {
     state: TradeState
     uniswapQuote: GetQuoteResult | undefined
     floodQuote: FloodQuoteResult | undefined
-    isUsingFlood: boolean
+    tradeSource: 'uniswapApi' | 'floodApi' | 'clientSide' | null
   }
   allowedSlippage: Percent
 } {

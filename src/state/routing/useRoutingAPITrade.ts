@@ -1,3 +1,4 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order-router'
@@ -69,7 +70,17 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   const isError = uniswapQuery.isError && floodQuery.isError
   const isUniswapSyncing = uniswapQuery.currentData !== uniswapQuery.data
   const isFloodSyncing = floodQuery.isPreviousData
-  const data = floodQuery.data ?? uniswapQuery.data
+
+  let data = floodQuery.data ?? uniswapQuery.data
+  if (floodQuery.data && uniswapQuery.data) {
+    const floodQuote = BigNumber.from(floodQuery.data.quote)
+    const uniswapQuote = BigNumber.from(uniswapQuery.data.quote)
+
+    if (uniswapQuote.gt(floodQuote)) {
+      data = uniswapQuery.data
+    }
+  }
+
   const isUsingFlood = isFloodQuote(data)
   const currentBlock = useBlockNumber()
   const isValidBlock = useIsValidBlock(Number(data?.blockNumber) || 0)
