@@ -27,14 +27,18 @@ import {
 } from 'src/features/transactions/types'
 import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
+import { initialWalletState } from 'src/features/wallet/walletSlice'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import { currencyId } from 'src/utils/currencyId'
 
 export const MainnetEth = NativeCurrency.onChain(ChainId.Mainnet)
 
+export const ACCOUNT_ADDRESS_ONE = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
+export const ACCOUNT_ADDRESS_TWO = '0x1234567890123456789012345678901234567890'
+
 export const account: Account = {
   type: AccountType.SignerMnemonic,
-  address: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+  address: ACCOUNT_ADDRESS_ONE,
   derivationIndex: 0,
   name: 'Test Account',
   timeImportedMs: 10,
@@ -297,4 +301,13 @@ export const arbitrumDaiCurrencyInfo: CurrencyInfo = {
   logoUrl:
     'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png',
   safetyLevel: SafetyLevel.Verified,
+}
+
+// Useful when passing in preloaded state where active account is required
+export const mockWalletPreloadedState = {
+  wallet: {
+    ...initialWalletState,
+    accounts: { [account.address]: account },
+    activeAccountAddress: account.address,
+  },
 }

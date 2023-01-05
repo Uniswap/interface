@@ -1,15 +1,27 @@
 import { faker } from '@faker-js/faker'
 import { ChainId } from 'src/constants/chains'
-import { USDC, WBTC, WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
+import { DAI, USDC, WBTC, WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import {
+  ActivityType,
   Amount,
+  AssetActivity,
+  AssetChange,
   Chain,
   Currency,
   Portfolio,
   SafetyLevel,
   Token,
+  TokenApproval,
   TokenProject,
+  TokenStandard,
+  TokenTransfer,
+  TransactionDirection,
+  TransactionStatus,
 } from 'src/data/__generated__/types-and-hooks'
+import { ACCOUNT_ADDRESS_ONE, ACCOUNT_ADDRESS_TWO } from 'src/test/fixtures'
+
+const FAKER_SEED = 123
+faker.seed(FAKER_SEED)
 
 export const Amounts: Record<'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl', Amount> = {
   none: {
@@ -44,26 +56,124 @@ export const Amounts: Record<'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl', Amount> 
   },
 }
 
-export const Portfolios: [Portfolio, Portfolio] = [
+export const DaiAsset: Token = {
+  id: faker.datatype.uuid(),
+  name: DAI.name,
+  symbol: DAI.symbol,
+  decimals: DAI.decimals,
+  chain: Chain.Ethereum,
+  address: DAI.address,
+  project: {
+    id: faker.datatype.uuid(),
+    isSpam: false,
+    logoUrl: faker.datatype.string(),
+    tokens: [],
+    safetyLevel: SafetyLevel.Verified,
+  },
+}
+
+/**
+ * Must explicitly define the returned typename in order
+ * for MockedReponse to infer correct assetActivity response type.
+ */
+
+type RequiredAssetActivity = AssetActivity & {
+  assetChanges: (AssetChange & { __typename: 'TokenApproval' | 'TokenTransfer' })[]
+}
+type PortfolioWithActivity = Portfolio & {
+  assetActivities: RequiredAssetActivity[]
+}
+
+const AssetActivityBase = {
+  __typeName: 'AssetActivity',
+  timestamp: faker.datatype.number(),
+  chain: Chain.Ethereum,
+  transaction: {
+    id: 'base_tranaction_id',
+    status: TransactionStatus.Confirmed,
+    to: ACCOUNT_ADDRESS_TWO,
+    from: ACCOUNT_ADDRESS_ONE,
+    nonce: faker.datatype.number(),
+    blockNumber: 1,
+  },
+}
+
+const Erc20TransferOutAssetChange: TokenTransfer & { __typename: 'TokenTransfer' } = {
+  __typename: 'TokenTransfer',
+  id: faker.datatype.uuid(),
+  asset: DaiAsset,
+  tokenStandard: TokenStandard.Erc20,
+  quantity: '1',
+  sender: ACCOUNT_ADDRESS_ONE,
+  recipient: ACCOUNT_ADDRESS_TWO,
+  direction: TransactionDirection.Out,
+  transactedValue: {
+    id: faker.datatype.uuid(),
+    currency: Currency.Usd,
+    value: 1,
+  },
+}
+
+const Erc20TransferInAssetChange: TokenTransfer & { __typename: 'TokenTransfer' } = {
+  ...Erc20TransferOutAssetChange,
+  __typename: 'TokenTransfer',
+  id: faker.datatype.uuid(),
+  direction: TransactionDirection.In,
+}
+
+const Erc20ApproveAssetChange: TokenApproval & { __typename: 'TokenApproval' } = {
+  __typename: 'TokenApproval',
+  id: faker.datatype.uuid(),
+  asset: DaiAsset,
+  tokenStandard: TokenStandard.Erc20,
+  approvedAddress: ACCOUNT_ADDRESS_TWO,
+  quantity: '1',
+}
+
+const ApproveAssetActivty: RequiredAssetActivity = {
+  ...AssetActivityBase,
+  id: faker.datatype.uuid(),
+  transaction: {
+    ...AssetActivityBase.transaction, // need unique ID
+    hash: faker.finance.ethereumAddress(),
+  },
+  type: ActivityType.Approve,
+  assetChanges: [Erc20ApproveAssetChange],
+}
+
+export const Erc20SwapAssetActivity: RequiredAssetActivity = {
+  ...AssetActivityBase,
+  id: faker.datatype.uuid(),
+  transaction: {
+    ...AssetActivityBase.transaction,
+    hash: faker.finance.ethereumAddress(), // need unique ID
+  },
+  type: ActivityType.Swap,
+  assetChanges: [Erc20TransferInAssetChange, Erc20TransferOutAssetChange],
+}
+
+export const Portfolios: [PortfolioWithActivity, PortfolioWithActivity] = [
   {
     id: faker.datatype.uuid(),
-    ownerAddress: faker.finance.ethereumAddress(),
+    ownerAddress: ACCOUNT_ADDRESS_ONE,
     tokensTotalDenominatedValue: Amounts.md,
     tokensTotalDenominatedValueChange: {
       id: faker.datatype.uuid(),
       absolute: Amounts.sm,
       percentage: Amounts.xs,
     },
+    assetActivities: [ApproveAssetActivty, Erc20SwapAssetActivity],
   },
   {
     id: faker.datatype.uuid(),
-    ownerAddress: faker.finance.ethereumAddress(),
+    ownerAddress: ACCOUNT_ADDRESS_TWO,
     tokensTotalDenominatedValue: Amounts.md,
     tokensTotalDenominatedValueChange: {
       id: faker.datatype.uuid(),
       absolute: Amounts.sm,
       percentage: Amounts.xs,
     },
+    assetActivities: [ApproveAssetActivty, Erc20SwapAssetActivity],
   },
 ]
 

@@ -630,8 +630,8 @@ export type QueryTokensArgs = {
 export type QueryTopTokensArgs = {
   chain?: InputMaybe<Chain>;
   orderBy?: InputMaybe<TokenSortableField>;
-  page: Scalars['Int'];
-  pageSize: Scalars['Int'];
+  page?: InputMaybe<Scalars['Int']>;
+  pageSize?: InputMaybe<Scalars['Int']>;
 };
 
 export enum SafetyLevel {
