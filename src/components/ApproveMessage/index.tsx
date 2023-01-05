@@ -18,12 +18,7 @@ export default function ApproveMessage({ routerAddress = '' }: { routerAddress?:
   const [showApproveMsgDetails, toggleShowApproveMsgDetails] = useToggle(false)
   const timeout = 1673913600000 // Tuesday, January 17, 2023 0:00:00
 
-  if (
-    chainId !== ChainId.BSCMAINNET &&
-    chainId !== ChainId.BTTC &&
-    chainId !== ChainId.VELAS &&
-    chainId !== ChainId.CRONOS
-  ) {
+  if (![ChainId.BSCMAINNET, ChainId.BTTC, ChainId.VELAS, ChainId.CRONOS, ChainId.ARBITRUM].includes(chainId)) {
     return null
   }
 
