@@ -9,7 +9,7 @@ import {
   renderHook as RNRenderHook,
   RenderOptions,
 } from '@testing-library/react-native'
-import React, { PropsWithChildren, ReactElement } from 'react'
+import React, { PropsWithChildren } from 'react'
 import { Provider } from 'react-redux'
 import type { RootState } from 'src/app/rootReducer'
 import type { AppStore } from 'src/app/store'
@@ -104,10 +104,3 @@ export function renderHookWithProviders(
     }),
   }
 }
-
-export const WithTheme = ({ component }: { component: ReactElement }) => {
-  return <ThemeProvider theme={theme}>{component}</ThemeProvider>
-}
-
-export const renderWithTheme = (element: ReactElement) =>
-  RNRender(<WithTheme component={element} />).toJSON()

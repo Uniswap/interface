@@ -3,7 +3,7 @@ import 'react-native'
 import 'react-native-gesture-handler'
 import { PriceExplorer } from 'src/components/PriceChart/PriceExplorer'
 import { buildGraph } from 'src/components/PriceChart/utils'
-import { renderWithTheme } from 'src/test/render'
+import { render } from 'src/test/test-utils'
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const graphDatapoints = buildGraph(
@@ -36,6 +36,6 @@ const graphs = [
 ] as const
 
 it('renders correctly', () => {
-  const tree = renderWithTheme(<PriceExplorer graphs={graphs} />)
+  const tree = render(<PriceExplorer graphs={graphs} />)
   expect(tree).toMatchSnapshot()
 })
