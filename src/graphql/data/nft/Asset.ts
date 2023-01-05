@@ -1,7 +1,7 @@
 import { parseEther } from 'ethers/lib/utils'
 import gql from 'graphql-tag'
 import { GenieAsset, Markets, Trait } from 'nft/types'
-import { wrapScientificNotation } from 'nft/utils'
+import { isNotXYKPool, wrapScientificNotation } from 'nft/utils'
 import { useCallback, useMemo } from 'react'
 
 import {
@@ -219,7 +219,7 @@ export function useNftAssets(params: AssetFetcherParams) {
 
   return useMemo(() => {
     return {
-      data: assets,
+      data: assets?.filter((asset) => isNotXYKPool(asset)),
       hasNext,
       loading,
       loadMore,
@@ -279,5 +279,5 @@ export function useSweepNftAssets(params: SweepFetcherParams) {
       }),
     [data?.nftAssets?.edges, data?.nftAssets?.totalCount]
   )
-  return useMemo(() => ({ data: assets, loading }), [assets, loading])
+  return useMemo(() => ({ data: assets?.filter((asset) => isNotXYKPool(asset)), loading }), [assets, loading])
 }

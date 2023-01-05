@@ -342,7 +342,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
       (asset) =>
         asset.marketplace &&
         isPooledMarket(asset.marketplace) &&
-        (asset.priceInfo.ETHPrice = calculatePrice(asset) ?? '')
+        (asset.priceInfo.ETHPrice = calculatePrice(asset) ?? '0')
     )
 
     if (sortBy === SortBy.HighToLow || sortBy === SortBy.LowToHigh) {
