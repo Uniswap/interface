@@ -1,5 +1,6 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const defaultConfig = require('./relay.config')
+/* eslint-env node */
+
+const defaultConfig = require('./graphql.config')
 
 module.exports = {
   src: defaultConfig.src,

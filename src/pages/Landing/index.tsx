@@ -1,12 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { Trace, TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, ElementName, EventName, PageName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
 import { AboutFooter } from 'components/About/AboutFooter'
 import Card, { CardType } from 'components/About/Card'
 import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
 import ProtocolBanner from 'components/About/ProtocolBanner'
 import { BaseButton } from 'components/Button'
-import { LandingRedirectVariant, useLandingRedirectFlag } from 'featureFlags/flags/landingRedirect'
 import Swap from 'pages/Swap'
 import { parse } from 'qs'
 import { useEffect, useRef, useState } from 'react'
@@ -89,7 +88,7 @@ const ContentContainer = styled.div<{ isDarkMode: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: end;
+  justify-content: flex-end;
   width: 100%;
   padding: 0 0 40px;
   max-width: min(720px, 90%);
@@ -280,43 +279,32 @@ export default function Landing() {
 
   const cardsRef = useRef<HTMLDivElement>(null)
 
-  const location = useLocation()
-  const isOpen = location.pathname === '/'
-
   const [showContent, setShowContent] = useState(false)
   const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
-  const landingRedirectFlag = useLandingRedirectFlag()
   const navigate = useNavigate()
+  const location = useLocation()
   const queryParams = parse(location.search, {
     ignoreQueryPrefix: true,
   })
 
   // This can be simplified significantly once the flag is removed! For now being explicit is clearer.
   useEffect(() => {
-    if (queryParams.intro) {
+    if (queryParams.intro || !selectedWallet) {
       setShowContent(true)
-    } else if (selectedWallet) {
-      if (landingRedirectFlag === LandingRedirectVariant.Enabled) {
-        navigate('/swap')
-      } else {
-        setShowContent(true)
-      }
     } else {
-      setShowContent(true)
+      navigate('/swap')
     }
-  }, [navigate, selectedWallet, landingRedirectFlag, queryParams.intro])
-
-  if (!isOpen) return null
+  }, [navigate, selectedWallet, queryParams.intro])
 
   return (
-    <Trace page={PageName.LANDING_PAGE} shouldLogImpression>
+    <Trace page={InterfacePageName.LANDING_PAGE} shouldLogImpression>
       {showContent && (
-        <PageContainer isDarkMode={isDarkMode}>
+        <PageContainer isDarkMode={isDarkMode} data-testid="landing-page">
           <LandingSwapContainer>
             <TraceEvent
               events={[BrowserEvent.onClick]}
-              name={EventName.ELEMENT_CLICKED}
-              element={ElementName.LANDING_PAGE_SWAP_ELEMENT}
+              name={SharedEventName.ELEMENT_CLICKED}
+              element={InterfaceElementName.LANDING_PAGE_SWAP_ELEMENT}
             >
               <Link to="/swap">
                 <LandingSwap />
@@ -335,8 +323,8 @@ export default function Landing() {
             <ActionsContainer>
               <TraceEvent
                 events={[BrowserEvent.onClick]}
-                name={EventName.ELEMENT_CLICKED}
-                element={ElementName.CONTINUE_BUTTON}
+                name={SharedEventName.ELEMENT_CLICKED}
+                element={InterfaceElementName.CONTINUE_BUTTON}
               >
                 <ButtonCTA as={Link} to="/swap">
                   <ButtonCTAText>Get started</ButtonCTAText>

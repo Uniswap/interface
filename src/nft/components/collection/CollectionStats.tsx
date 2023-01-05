@@ -387,12 +387,11 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
               {totalSupplyStr}
             </StatsItem>
           ) : null}
-          {Boolean(uniqueOwnersPercentage && stats.standard !== TokenType.ERC1155) ? (
+          {uniqueOwnersPercentage && stats.standard !== TokenType.ERC1155 ? (
             <StatsItem label="Unique owners" shouldHide={isSmallContainer ?? false}>
               {uniqueOwnersPercentage}%
             </StatsItem>
           ) : null}
-
           {stats.stats?.total_listings && stats.standard !== TokenType.ERC1155 ? (
             <StatsItem label="Listed" shouldHide={isSmallContainer ?? false}>
               {listedPercentageStr}%

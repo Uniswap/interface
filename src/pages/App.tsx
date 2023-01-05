@@ -1,14 +1,11 @@
 import { initializeAnalytics, OriginApplication, sendAnalyticsEvent, Trace, user } from '@uniswap/analytics'
-import { CustomUserProperties, EventName, getBrowser, PageName } from '@uniswap/analytics-events'
+import { CustomUserProperties, getBrowser, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
 import Loader from 'components/Loader'
 import { MenuDropdown } from 'components/NavBar/MenuDropdown'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { Box } from 'nft/components/Box'
-import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
-import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
-import { ProfilePageLoadingSkeleton } from 'nft/components/profile/view/ProfilePageLoadingSkeleton'
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -57,7 +54,7 @@ const ANALYTICS_PROXY_URL = process.env.REACT_APP_AMPLITUDE_PROXY_URL
 const COMMIT_HASH = process.env.REACT_APP_GIT_COMMIT_HASH
 initializeAnalytics(ANALYTICS_DUMMY_KEY, OriginApplication.INTERFACE, {
   proxyUrl: ANALYTICS_PROXY_URL,
-  defaultEventName: EventName.PAGE_VIEWED,
+  defaultEventName: SharedEventName.PAGE_VIEWED,
   commitHash: COMMIT_HASH,
   isProductionEnv: isProductionEnv(),
 })
@@ -102,24 +99,24 @@ const HeaderWrapper = styled.div<{ transparent?: boolean }>`
   z-index: ${Z_INDEX.dropdown};
 `
 
-function getCurrentPageFromLocation(locationPathname: string): PageName | undefined {
+function getCurrentPageFromLocation(locationPathname: string): InterfacePageName | undefined {
   switch (true) {
     case locationPathname.startsWith('/swap'):
-      return PageName.SWAP_PAGE
+      return InterfacePageName.SWAP_PAGE
     case locationPathname.startsWith('/vote'):
-      return PageName.VOTE_PAGE
+      return InterfacePageName.VOTE_PAGE
     case locationPathname.startsWith('/pool'):
-      return PageName.POOL_PAGE
+      return InterfacePageName.POOL_PAGE
     case locationPathname.startsWith('/tokens'):
-      return PageName.TOKENS_PAGE
+      return InterfacePageName.TOKENS_PAGE
     case locationPathname.startsWith('/nfts/profile'):
-      return PageName.NFT_PROFILE_PAGE
+      return InterfacePageName.NFT_PROFILE_PAGE
     case locationPathname.startsWith('/nfts/asset'):
-      return PageName.NFT_DETAILS_PAGE
+      return InterfacePageName.NFT_DETAILS_PAGE
     case locationPathname.startsWith('/nfts/collection'):
-      return PageName.NFT_COLLECTION_PAGE
+      return InterfacePageName.NFT_COLLECTION_PAGE
     case locationPathname.startsWith('/nfts'):
-      return PageName.NFT_EXPLORE_PAGE
+      return InterfacePageName.NFT_EXPLORE_PAGE
     default:
       return undefined
   }
@@ -156,15 +153,17 @@ export default function App() {
   }, [pathname])
 
   useEffect(() => {
-    sendAnalyticsEvent(EventName.APP_LOADED)
+    sendAnalyticsEvent(SharedEventName.APP_LOADED)
     user.set(CustomUserProperties.USER_AGENT, navigator.userAgent)
     user.set(CustomUserProperties.BROWSER, getBrowser())
     user.set(CustomUserProperties.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
     user.set(CustomUserProperties.SCREEN_RESOLUTION_WIDTH, window.screen.width)
-    getCLS(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { cumulative_layout_shift: delta }))
-    getFCP(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { first_contentful_paint_ms: delta }))
-    getFID(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { first_input_delay_ms: delta }))
-    getLCP(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { largest_contentful_paint_ms: delta }))
+    getCLS(({ delta }: Metric) => sendAnalyticsEvent(SharedEventName.WEB_VITALS, { cumulative_layout_shift: delta }))
+    getFCP(({ delta }: Metric) => sendAnalyticsEvent(SharedEventName.WEB_VITALS, { first_contentful_paint_ms: delta }))
+    getFID(({ delta }: Metric) => sendAnalyticsEvent(SharedEventName.WEB_VITALS, { first_input_delay_ms: delta }))
+    getLCP(({ delta }: Metric) =>
+      sendAnalyticsEvent(SharedEventName.WEB_VITALS, { largest_contentful_paint_ms: delta })
+    )
   }, [])
 
   useEffect(() => {
@@ -251,7 +250,6 @@ export default function App() {
                 <Route
                   path="/nfts"
                   element={
-                    // TODO: replace loading state during Apollo migration
                     <Suspense fallback={null}>
                       <NftExplore />
                     </Suspense>
@@ -260,7 +258,7 @@ export default function App() {
                 <Route
                   path="/nfts/asset/:contractAddress/:tokenId"
                   element={
-                    <Suspense fallback={<AssetDetailsLoading />}>
+                    <Suspense fallback={null}>
                       <Asset />
                     </Suspense>
                   }
@@ -268,7 +266,7 @@ export default function App() {
                 <Route
                   path="/nfts/profile"
                   element={
-                    <Suspense fallback={<ProfilePageLoadingSkeleton />}>
+                    <Suspense fallback={null}>
                       <Profile />
                     </Suspense>
                   }
@@ -276,7 +274,7 @@ export default function App() {
                 <Route
                   path="/nfts/collection/:contractAddress"
                   element={
-                    <Suspense fallback={<CollectionPageSkeleton />}>
+                    <Suspense fallback={null}>
                       <Collection />
                     </Suspense>
                   }
@@ -284,7 +282,7 @@ export default function App() {
                 <Route
                   path="/nfts/collection/:contractAddress/activity"
                   element={
-                    <Suspense fallback={<CollectionPageSkeleton />}>
+                    <Suspense fallback={null}>
                       <Collection />
                     </Suspense>
                   }

@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -7,16 +8,12 @@ import { textFadeIn } from 'theme/styles'
 
 import { TokenSortMethod } from '../state'
 import { HEADER_DESCRIPTIONS } from '../TokenTable/TokenRow'
-import InfoTip from './InfoTip'
 
 export const StatWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
   color: ${({ theme }) => theme.textSecondary};
   font-size: 14px;
   min-width: 168px;
   flex: 1;
-  gap: 4px;
   padding: 24px 0px;
 `
 const TokenStatsSection = styled.div`
@@ -32,12 +29,9 @@ export const StatPair = styled.div`
 const Header = styled(ThemedText.MediumHeader)`
   font-size: 28px !important;
 `
-const StatTitle = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 4px;
-`
-const StatPrice = styled.span`
+
+const StatPrice = styled.div`
+  margin-top: 4px;
   font-size: 28px;
   color: ${({ theme }) => theme.textPrimary};
 `
@@ -51,24 +45,10 @@ export const StatsWrapper = styled.div`
 
 type NumericStat = number | undefined | null
 
-function Stat({
-  value,
-  title,
-  description,
-  isPrice = false,
-}: {
-  value: NumericStat
-  title: ReactNode
-  description?: ReactNode
-  isPrice?: boolean
-}) {
+function Stat({ value, title, description }: { value: NumericStat; title: ReactNode; description?: ReactNode }) {
   return (
     <StatWrapper>
-      <StatTitle>
-        {title}
-        {description && <InfoTip text={description}></InfoTip>}
-      </StatTitle>
-
+      <MouseoverTooltip text={description}>{title}</MouseoverTooltip>
       <StatPrice>{formatNumber(value, NumberType.FiatTokenStats)}</StatPrice>
     </StatWrapper>
   )
@@ -106,8 +86,8 @@ export default function StatsSection(props: StatsSectionProps) {
             />
           </StatPair>
           <StatPair>
-            <Stat value={priceLow52W} title={<Trans>52W low</Trans>} isPrice={true} />
-            <Stat value={priceHigh52W} title={<Trans>52W high</Trans>} isPrice={true} />
+            <Stat value={priceLow52W} title={<Trans>52W low</Trans>} />
+            <Stat value={priceHigh52W} title={<Trans>52W high</Trans>} />
           </StatPair>
         </TokenStatsSection>
       </StatsWrapper>

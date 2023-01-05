@@ -1,25 +1,30 @@
-import graphql from 'babel-plugin-relay/macro'
 import { parseEther } from 'ethers/lib/utils'
-import useInterval from 'lib/hooks/useInterval'
-import ms from 'ms.macro'
-import { GenieAsset, Trait } from 'nft/types'
+import gql from 'graphql-tag'
+import { GenieAsset, Markets, Trait } from 'nft/types'
 import { wrapScientificNotation } from 'nft/utils'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { fetchQuery, useLazyLoadQuery, usePaginationFragment, useQueryLoader, useRelayEnvironment } from 'react-relay'
+import { useCallback, useMemo } from 'react'
 
-import { AssetPaginationQuery } from './__generated__/AssetPaginationQuery.graphql'
 import {
-  AssetQuery,
-  AssetQuery$variables,
+  AssetQueryVariables,
+  NftAssetEdge,
   NftAssetsFilterInput,
   NftAssetSortableField,
   NftAssetTraitInput,
   NftMarketplace,
-} from './__generated__/AssetQuery.graphql'
-import { AssetQuery_nftAssets$data } from './__generated__/AssetQuery_nftAssets.graphql'
+  useAssetQuery,
+} from '../__generated__/types-and-hooks'
 
-const assetPaginationQuery = graphql`
-  fragment AssetQuery_nftAssets on Query @refetchable(queryName: "AssetPaginationQuery") {
+gql`
+  query Asset(
+    $address: String!
+    $orderBy: NftAssetSortableField
+    $asc: Boolean
+    $filter: NftAssetsFilterInput
+    $first: Int
+    $after: String
+    $last: Int
+    $before: String
+  ) {
     nftAssets(
       address: $address
       orderBy: $orderBy
@@ -29,7 +34,7 @@ const assetPaginationQuery = graphql`
       after: $after
       last: $last
       before: $before
-    ) @connection(key: "AssetQuery_nftAssets") {
+    ) {
       edges {
         node {
           id
@@ -99,52 +104,38 @@ const assetPaginationQuery = graphql`
           }
           metadataUrl
         }
+        cursor
       }
       totalCount
+      pageInfo {
+        endCursor
+        hasNextPage
+        hasPreviousPage
+        startCursor
+      }
     }
   }
 `
 
-const assetQuery = graphql`
-  query AssetQuery(
-    $address: String!
-    $orderBy: NftAssetSortableField
-    $asc: Boolean
-    $filter: NftAssetsFilterInput
-    $first: Int
-    $after: String
-    $last: Int
-    $before: String
-  ) {
-    ...AssetQuery_nftAssets
-  }
-`
-
-type NftAssetsQueryAsset = NonNullable<
-  NonNullable<NonNullable<AssetQuery_nftAssets$data['nftAssets']>['edges']>[number]
->
-
-function formatAssetQueryData(queryAsset: NftAssetsQueryAsset, totalCount?: number) {
+function formatAssetQueryData(queryAsset: NftAssetEdge, totalCount?: number) {
   const asset = queryAsset.node
   const ethPrice = parseEther(wrapScientificNotation(asset.listings?.edges[0]?.node.price.value ?? 0)).toString()
   return {
     id: asset.id,
-    address: asset?.collection?.nftContracts?.[0]?.address,
+    address: asset?.collection?.nftContracts?.[0]?.address ?? '',
     notForSale: asset.listings?.edges?.length === 0,
     collectionName: asset.collection?.name,
     collectionSymbol: asset.collection?.image?.url,
     imageUrl: asset.image?.url,
     animationUrl: asset.animationUrl,
-    marketplace: asset.listings?.edges[0]?.node?.marketplace?.toLowerCase(),
+    marketplace: asset.listings?.edges[0]?.node?.marketplace?.toLowerCase() as unknown as Markets,
     name: asset.name,
-    priceInfo: asset.listings
-      ? {
-          ETHPrice: ethPrice,
-          baseAsset: 'ETH',
-          baseDecimals: '18',
-          basePrice: ethPrice,
-        }
-      : undefined,
+    priceInfo: {
+      ETHPrice: ethPrice,
+      baseAsset: 'ETH',
+      baseDecimals: '18',
+      basePrice: ethPrice,
+    },
     susFlag: asset.suspiciousFlag,
     sellorders: asset.listings?.edges.map((listingNode) => {
       return {
@@ -155,7 +146,7 @@ function formatAssetQueryData(queryAsset: NftAssetsQueryAsset, totalCount?: numb
       }
     }),
     smallImageUrl: asset.smallImage?.url,
-    tokenId: asset.tokenId,
+    tokenId: asset.tokenId ?? '',
     tokenType: asset.collection?.nftContracts?.[0]?.standard,
     totalCount,
     collectionIsVerified: asset.collection?.isVerified,
@@ -168,7 +159,7 @@ function formatAssetQueryData(queryAsset: NftAssetsQueryAsset, totalCount?: numb
         }
       }),
     },
-    owner: asset.ownerAddress,
+    ownerAddress: asset.ownerAddress,
     creator: {
       profile_img_url: asset.collection?.creator?.profileImage?.url,
       address: asset.collection?.creator?.address,
@@ -190,57 +181,50 @@ export interface AssetFetcherParams {
   before?: string
 }
 
-const defaultAssetFetcherParams: Omit<AssetQuery$variables, 'address'> = {
-  orderBy: 'PRICE',
+const defaultAssetFetcherParams: Omit<AssetQueryVariables, 'address'> = {
+  orderBy: NftAssetSortableField.Price,
   asc: true,
   // tokenSearchQuery must be specified so that this exactly matches the initial query.
   filter: { listed: false, tokenSearchQuery: '' },
   first: ASSET_PAGE_SIZE,
 }
 
-export function useLoadAssetsQuery(address?: string) {
-  const [, loadQuery] = useQueryLoader<AssetQuery>(assetQuery)
-  useEffect(() => {
-    if (address) {
-      loadQuery({ ...defaultAssetFetcherParams, address })
-    }
-  }, [address, loadQuery])
-}
+export function useNftAssets(params: AssetFetcherParams) {
+  const variables = useMemo(() => ({ ...defaultAssetFetcherParams, ...params }), [params])
 
-export function useLazyLoadAssetsQuery(params: AssetFetcherParams) {
-  const vars = useMemo(() => ({ ...defaultAssetFetcherParams, ...params }), [params])
-  const [fetchKey, setFetchKey] = useState(0)
-  // Use the store if it is available (eg from polling), or the network if it is not (eg from an incorrect preload).
-  const fetchPolicy = 'store-or-network'
-  const queryData = useLazyLoadQuery<AssetQuery>(assetQuery, vars, { fetchKey, fetchPolicy }) // this will suspend if not yet loaded
-
-  const { data, hasNext, loadNext, isLoadingNext } = usePaginationFragment<AssetPaginationQuery, any>(
-    assetPaginationQuery,
-    queryData
+  const { data, loading, fetchMore } = useAssetQuery({
+    variables,
+  })
+  const hasNext = data?.nftAssets?.pageInfo?.hasNextPage
+  const loadMore = useCallback(
+    () =>
+      fetchMore({
+        variables: {
+          after: data?.nftAssets?.pageInfo?.endCursor,
+        },
+      }),
+    [data, fetchMore]
   )
 
-  // Poll for updates.
-  const POLLING_INTERVAL = ms`5s`
-  const environment = useRelayEnvironment()
-  const poll = useCallback(async () => {
-    if (data.nftAssets?.edges?.length > ASSET_PAGE_SIZE) return
-    // Initiate a network request. When it resolves, refresh the UI from store (to avoid re-triggering Suspense);
-    // see: https://relay.dev/docs/guided-tour/refetching/refreshing-queries/#if-you-need-to-avoid-suspense-1.
-    await fetchQuery<AssetQuery>(environment, assetQuery, { ...vars }).toPromise()
-    setFetchKey((fetchKey) => fetchKey + 1)
-  }, [data.nftAssets?.edges?.length, environment, vars])
-  useInterval(poll, isLoadingNext ? null : POLLING_INTERVAL, /* leading= */ false)
+  // TODO: setup polling while handling pagination
 
   // It is especially important for this to be memoized to avoid re-rendering from polling if data is unchanged.
-  const assets: GenieAsset[] = useMemo(
+  const assets: GenieAsset[] | undefined = useMemo(
     () =>
-      data.nftAssets?.edges?.map((queryAsset: NftAssetsQueryAsset) => {
-        return formatAssetQueryData(queryAsset, data.nftAssets?.totalCount)
+      data?.nftAssets?.edges?.map((queryAsset) => {
+        return formatAssetQueryData(queryAsset as NonNullable<NftAssetEdge>, data.nftAssets?.totalCount)
       }),
-    [data.nftAssets?.edges, data.nftAssets?.totalCount]
+    [data?.nftAssets?.edges, data?.nftAssets?.totalCount]
   )
 
-  return { assets, hasNext, isLoadingNext, loadNext }
+  return useMemo(() => {
+    return {
+      data: assets,
+      hasNext,
+      loading,
+      loadMore,
+    }
+  }, [assets, hasNext, loadMore, loading])
 }
 
 const DEFAULT_SWEEP_AMOUNT = 50
@@ -252,7 +236,7 @@ export interface SweepFetcherParams {
   traits?: Trait[]
 }
 
-function useSweepFetcherVars({ contractAddress, markets, price, traits }: SweepFetcherParams): AssetQuery$variables {
+function useSweepFetcherVars({ contractAddress, markets, price, traits }: SweepFetcherParams): AssetQueryVariables {
   const filter: NftAssetsFilterInput = useMemo(
     () => ({
       listed: true,
@@ -272,7 +256,7 @@ function useSweepFetcherVars({ contractAddress, markets, price, traits }: SweepF
   return useMemo(
     () => ({
       address: contractAddress,
-      orderBy: 'PRICE',
+      orderBy: NftAssetSortableField.Price,
       asc: true,
       first: DEFAULT_SWEEP_AMOUNT,
       filter,
@@ -281,28 +265,19 @@ function useSweepFetcherVars({ contractAddress, markets, price, traits }: SweepF
   )
 }
 
-export function useLoadSweepAssetsQuery(params: SweepFetcherParams, enabled = true) {
-  const [, loadQuery] = useQueryLoader<AssetQuery>(assetQuery)
-  const vars = useSweepFetcherVars(params)
-  useEffect(() => {
-    if (enabled) {
-      loadQuery(vars)
-    }
-  }, [loadQuery, enabled, vars])
-}
-
-// Lazy-loads an already loaded AssetsQuery.
-// This will *not* trigger a query - that must be done from a parent component to ensure proper query coalescing and to
-// prevent waterfalling. Use useLoadSweepAssetsQuery to trigger the query.
-export function useLazyLoadSweepAssetsQuery(params: SweepFetcherParams): GenieAsset[] {
-  const vars = useSweepFetcherVars(params)
-  const queryData = useLazyLoadQuery(assetQuery, vars, { fetchPolicy: 'store-only' }) // this will suspend if not yet loaded
-  const { data } = usePaginationFragment<AssetPaginationQuery, any>(assetPaginationQuery, queryData)
-  return useMemo<GenieAsset[]>(
+export function useSweepNftAssets(params: SweepFetcherParams) {
+  const variables = useSweepFetcherVars(params)
+  const { data, loading } = useAssetQuery({
+    variables,
+    // This prevents overwriting the page's call to assets for cards shown
+    fetchPolicy: 'no-cache',
+  })
+  const assets = useMemo<GenieAsset[] | undefined>(
     () =>
-      data.nftAssets?.edges?.map((queryAsset: NftAssetsQueryAsset) => {
-        return formatAssetQueryData(queryAsset, data.nftAssets?.totalCount)
+      data?.nftAssets?.edges?.map((queryAsset) => {
+        return formatAssetQueryData(queryAsset as NonNullable<NftAssetEdge>, data.nftAssets?.totalCount)
       }),
-    [data.nftAssets?.edges, data.nftAssets?.totalCount]
+    [data?.nftAssets?.edges, data?.nftAssets?.totalCount]
   )
+  return useMemo(() => ({ data: assets, loading }), [assets, loading])
 }

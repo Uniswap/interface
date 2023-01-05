@@ -88,6 +88,7 @@ describe('formatTransactionAmount', () => {
     expect(formatTransactionAmount(1234567.8901)).toEqual('1,234,567.89')
   })
   it('Number ≥ 1M extra long', () => {
+    // eslint-disable-next-line @typescript-eslint/no-loss-of-precision
     expect(formatTransactionAmount(1234567890123456.789)).toEqual('1.234568e+15')
   })
 })

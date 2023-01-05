@@ -1,17 +1,18 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
-import { EventName } from '@uniswap/analytics-events'
+import { InterfaceEventName } from '@uniswap/analytics-events'
 import { formatNumber, formatUSDPrice, NumberType } from '@uniswap/conedison/format'
 import { ParentSize } from '@visx/responsive'
 import SparklineChart from 'components/Charts/SparklineChart'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { getChainInfo } from 'constants/chainInfo'
 import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { ForwardedRef, forwardRef } from 'react'
 import { CSSProperties, ReactNode } from 'react'
-import { ArrowDown, ArrowUp } from 'react-feather'
+import { ArrowDown, ArrowUp, Info } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
@@ -31,7 +32,6 @@ import {
   TokenSortMethod,
   useSetSortMethod,
 } from '../state'
-import InfoTip from '../TokenDetails/InfoTip'
 import { ArrowCell, DeltaText, formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
 
 const Cell = styled.div`
@@ -200,7 +200,6 @@ const HeaderCellWrapper = styled.span<{ onClick?: () => void }>`
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'unset')};
   display: flex;
   gap: 4px;
-  height: 100%;
   justify-content: flex-end;
   width: 100%;
 
@@ -297,6 +296,13 @@ export const LogoContainer = styled.div`
   display: flex;
 `
 
+const InfoIconContainer = styled.div`
+  margin-left: 2px;
+  display: flex;
+  align-items: center;
+  cursor: help;
+`
+
 export const HEADER_DESCRIPTIONS: Record<TokenSortMethod, ReactNode | undefined> = {
   [TokenSortMethod.PRICE]: undefined,
   [TokenSortMethod.PERCENT_CHANGE]: undefined,
@@ -333,7 +339,13 @@ function HeaderCell({
         </>
       )}
       {category}
-      {description && <InfoTip text={description}></InfoTip>}
+      {description && (
+        <MouseoverTooltip text={description} placement="right">
+          <InfoIconContainer>
+            <Info size={14} />
+          </InfoIconContainer>
+        </MouseoverTooltip>
+      )}
     </HeaderCellWrapper>
   )
 }
@@ -459,8 +471,10 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   return (
     <div ref={ref} data-testid={`token-table-row-${tokenName}`}>
       <StyledLink
-        to={getTokenDetailsURL(token.address, token.chain)}
-        onClick={() => sendAnalyticsEvent(EventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)}
+        to={getTokenDetailsURL(token.address ?? '', token.chain)}
+        onClick={() =>
+          sendAnalyticsEvent(InterfaceEventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)
+        }
       >
         <TokenRow
           header={false}
@@ -512,7 +526,6 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
                       height={height}
                       tokenData={token}
                       pricePercentChange={token.market?.pricePercentChange?.value}
-                      timePeriod={timePeriod}
                       sparklineMap={props.sparklineMap}
                     />
                   )

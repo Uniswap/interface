@@ -1,5 +1,5 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
-import { EventName } from '@uniswap/analytics-events'
+import { SwapEventName } from '@uniswap/analytics-events'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS } from 'constants/misc'
@@ -83,7 +83,7 @@ export default function Updater() {
 
       if (tx.info.type === TransactionType.SWAP && trade) {
         sendAnalyticsEvent(
-          EventName.SWAP_TRANSACTION_COMPLETED,
+          SwapEventName.SWAP_TRANSACTION_COMPLETED,
           formatAnalyticsEventProperties({
             trade,
             hash,

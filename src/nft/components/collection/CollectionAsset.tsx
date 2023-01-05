@@ -1,13 +1,14 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
-import { EventName, PageName } from '@uniswap/analytics-events'
+import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
 import { MouseoverTooltip } from 'components/Tooltip'
 import Tooltip from 'components/Tooltip'
+import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { Box } from 'nft/components/Box'
 import { bodySmall } from 'nft/css/common.css'
 import { useBag } from 'nft/hooks'
-import { GenieAsset, isPooledMarket, TokenType, UniformAspectRatio } from 'nft/types'
+import { GenieAsset, isPooledMarket, UniformAspectRatio } from 'nft/types'
 import { formatWeiToDecimal, rarityProviderLogo } from 'nft/utils'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
@@ -59,7 +60,7 @@ export const CollectionAsset = ({
   const itemsInBag = useBag((state) => state.itemsInBag)
   const bagExpanded = useBag((state) => state.bagExpanded)
   const setBagExpanded = useBag((state) => state.setBagExpanded)
-  const trace = useTrace({ page: PageName.NFT_COLLECTION_PAGE })
+  const trace = useTrace({ page: InterfacePageName.NFT_COLLECTION_PAGE })
 
   const { isSelected } = useMemo(() => {
     const matchingItems = itemsInBag.filter(
@@ -93,7 +94,7 @@ export const CollectionAsset = ({
       if (!bagExpanded && !isMobile && !bagManuallyClosed) {
         setBagExpanded({ bagExpanded: true })
       }
-      sendAnalyticsEvent(EventName.NFT_BUY_ADDED, {
+      sendAnalyticsEvent(NFTEventName.NFT_BUY_ADDED, {
         collection_address: asset.address,
         token_id: asset.tokenId,
         token_type: asset.tokenType,
@@ -212,7 +213,7 @@ export const CollectionAsset = ({
               </Card.SecondaryInfo>
               {isPooledMarket(asset.marketplace) && <Card.Pool />}
             </Card.SecondaryDetails>
-            {asset.tokenType !== TokenType.ERC1155 && asset.marketplace && (
+            {asset.tokenType !== NftStandard.Erc1155 && asset.marketplace && (
               <Card.MarketplaceIcon marketplace={asset.marketplace} />
             )}
           </Card.SecondaryRow>

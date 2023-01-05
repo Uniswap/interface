@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { BagItem, BagItemStatus, BagStatus, TokenType, UpdatedGenieAsset } from 'nft/types'
+import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
+import { BagItem, BagItemStatus, BagStatus, UpdatedGenieAsset } from 'nft/types'
 import { v4 as uuidv4 } from 'uuid'
 import create from 'zustand'
 import { devtools } from 'zustand/middleware'
@@ -88,7 +89,7 @@ export const useBag = create<BagState>()(
           const itemsInBagCopy = [...itemsInBag]
           assets.forEach((asset) => {
             let index = -1
-            if (asset.tokenType !== TokenType.ERC1155) {
+            if (asset.tokenType !== NftStandard.Erc1155) {
               index = itemsInBag.findIndex(
                 (n) => n.asset.tokenId === asset.tokenId && n.asset.address === asset.address
               )

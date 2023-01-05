@@ -6,7 +6,7 @@ import { useAppDispatch } from 'state/hooks'
 import { supportedChainId } from 'utils/supportedChainId'
 
 import { useCloseModal } from './hooks'
-import { ApplicationModal, updateChainId } from './reducer'
+import { updateChainId } from './reducer'
 
 export default function Updater(): null {
   const { account, chainId, provider } = useWeb3React()
@@ -15,7 +15,7 @@ export default function Updater(): null {
 
   const [activeChainId, setActiveChainId] = useState(chainId)
 
-  const closeModal = useCloseModal(ApplicationModal.WALLET_DROPDOWN)
+  const closeModal = useCloseModal()
   const previousAccountValue = useRef(account)
   useEffect(() => {
     if (account && account !== previousAccountValue.current) {

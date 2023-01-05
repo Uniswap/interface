@@ -1,6 +1,6 @@
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
-import { render } from '@testing-library/react'
+import { render, renderHook } from '@testing-library/react'
 import Web3Provider from 'components/Web3Provider'
 import { DEFAULT_LOCALE } from 'constants/locales'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
@@ -44,6 +44,9 @@ const WithProviders = ({ children }: { children?: ReactNode }) => {
 }
 
 const customRender = (ui: ReactElement) => render(ui, { wrapper: WithProviders })
+const customRenderHook = <Result, Props>(hook: (initialProps: Props) => Result) =>
+  renderHook(hook, { wrapper: WithProviders })
 
 export * from '@testing-library/react'
 export { customRender as render }
+export { customRenderHook as renderHook }

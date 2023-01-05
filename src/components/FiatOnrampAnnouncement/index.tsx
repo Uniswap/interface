@@ -1,9 +1,11 @@
 import { Trans } from '@lingui/macro'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { InterfaceEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import fiatMaskUrl from 'assets/svg/fiat_mask.svg'
 import { BaseVariant } from 'featureFlags'
 import { useFiatOnrampFlag } from 'featureFlags/flags/fiatOnramp'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 import { X } from 'react-feather'
 import { useToggleWalletDropdown } from 'state/application/hooks'
 import { useAppSelector } from 'state/hooks'
@@ -98,7 +100,6 @@ const MAX_RENDER_COUNT = 3
 export function FiatOnrampAnnouncement() {
   const { account } = useWeb3React()
   const [acks, acknowledge] = useFiatOnrampAck()
-  const [locallyDismissed, setLocallyDismissed] = useState(false)
   useEffect(() => {
     if (!sessionStorage.getItem(ANNOUNCEMENT_RENDERED)) {
       acknowledge({ renderCount: acks?.renderCount + 1 })
@@ -107,12 +108,12 @@ export function FiatOnrampAnnouncement() {
   }, [acknowledge, acks])
 
   const handleClose = useCallback(() => {
-    setLocallyDismissed(true)
-    sessionStorage.setItem(ANNOUNCEMENT_DISMISSED, 'true')
+    localStorage.setItem(ANNOUNCEMENT_DISMISSED, 'true')
   }, [])
 
   const toggleWalletDropdown = useToggleWalletDropdown()
   const handleClick = useCallback(() => {
+    sendAnalyticsEvent(InterfaceEventName.FIAT_ONRAMP_BANNER_CLICKED)
     toggleWalletDropdown()
     acknowledge({ user: true })
   }, [acknowledge, toggleWalletDropdown])
@@ -124,8 +125,7 @@ export function FiatOnrampAnnouncement() {
     !account ||
     acks?.user ||
     fiatOnrampFlag === BaseVariant.Control ||
-    locallyDismissed ||
-    sessionStorage.getItem(ANNOUNCEMENT_DISMISSED) ||
+    localStorage.getItem(ANNOUNCEMENT_DISMISSED) ||
     acks?.renderCount >= MAX_RENDER_COUNT ||
     isMobile ||
     openModal !== null
@@ -135,7 +135,7 @@ export function FiatOnrampAnnouncement() {
   return (
     <ArrowWrapper>
       <Arrow />
-      <CloseIcon onClick={handleClose} />
+      <CloseIcon onClick={handleClose} data-testid="FiatOnrampAnnouncement-close" />
       <Wrapper onClick={handleClick}>
         <Header>
           <Trans>Buy crypto</Trans>
