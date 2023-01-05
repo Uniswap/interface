@@ -47,7 +47,8 @@ export const generateTweetForPurchase = (assets: UpdatedGenieAsset[], txHashUrl:
   return `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`
 }
 
-export const isValidAsset = (asset: GenieAsset): boolean => {
+// TODO: remove when BE supports SudoSwap XYK pools
+export const isNotXYKPool = (asset: GenieAsset): boolean => {
   if (asset.marketplace !== Markets.Sudoswap) return true
   if (calcSudoSwapPrice(asset) === undefined) return false
 
