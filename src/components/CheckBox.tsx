@@ -41,7 +41,7 @@ const CheckboxBorder = styled.input`
   border-radius: 0.15em;
   display: grid;
   place-content: center;
-  border: 2px solid ${({ theme }) => theme.text};
+  border: 1.5px solid ${({ theme }) => theme.text};
   ::before {
     content: '';
     width: 13px;

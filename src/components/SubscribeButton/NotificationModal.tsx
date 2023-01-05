@@ -1,4 +1,5 @@
 import { Trans, t } from '@lingui/macro'
+import axios from 'axios'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Check, X } from 'react-feather'
 import { Flex, Text } from 'rebass'
@@ -12,6 +13,7 @@ import MailIcon from 'components/Icons/MailIcon'
 import Loader from 'components/Loader'
 import Modal from 'components/Modal'
 import Row, { RowBetween } from 'components/Row'
+import { NOTIFICATION_API } from 'constants/env'
 import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useNotification, { Topic } from 'hooks/useNotification'
@@ -25,6 +27,7 @@ import {
   useWalletModalToggle,
 } from 'state/application/hooks'
 import { pushUnique } from 'utils'
+import { subscribeTelegramSubscription } from 'utils/firebase'
 
 const Wrapper = styled.div`
   margin: 0;
@@ -91,11 +94,15 @@ const ButtonTextt = styled.div`
   font-weight: 500;
 `
 
-const TopicItem = styled(Row)`
-  padding: 14px;
+const TopicItem = styled.label`
+  display: flex;
+  padding: 0px 14px;
   gap: 14px;
   font-weight: 500;
-  align-items: flex-start;
+  align-items: center;
+  :last-child {
+    margin-bottom: 10px;
+  }
 `
 const TopicItemHeader = styled(TopicItem)`
   background: ${({ theme }) => theme.buttonBlack};
@@ -131,12 +138,16 @@ enum TAB {
 //   },
 // ]
 
+const ackTelegramSubscriptionStatus = async (wallet: string) => {
+  return axios.delete(`${NOTIFICATION_API}/v1/subscription-result/telegram`, { data: { wallet } })
+}
+
 export default function NotificationModal() {
   const toggleModal = useNotificationModalToggle()
   const isOpen = useModalOpen(ApplicationModal.NOTIFICATION_SUBSCRIPTION)
   const theme = useTheme()
   const { account } = useActiveWeb3React()
-  const { isLoading, handleSubscribe, topicGroups, userInfo } = useNotification()
+  const { isLoading, handleSubscribe, refreshTopics, topicGroups, userInfo } = useNotification()
   const notify = useNotify()
   const toggleWalletModal = useWalletModalToggle()
   const { mixpanelHandler } = useMixpanel()
@@ -149,11 +160,25 @@ export default function NotificationModal() {
   const isEmailTab = activeTab === TAB.EMAIL
   const isTelegramTab = activeTab === TAB.TELEGRAM
 
+  const isNewUserQualified = !userInfo.email && !userInfo.telegram && !!inputAccount && !errorInput
+  const notFillEmail = !inputAccount && isEmailTab
+
   const validateInput = useCallback((value: string, required = false) => {
     const isValid = value.match(/\S+@\S+\.\S+/)
     const errMsg = t`Please input a valid email address`
     setErrorInput((value.length && !isValid) || (required && !value.length) ? errMsg : '')
   }, [])
+
+  useEffect(() => {
+    if (!account) return
+    const unsubscribe = subscribeTelegramSubscription(account, data => {
+      if (data?.isSuccessfully) {
+        refreshTopics()
+        ackTelegramSubscriptionStatus(account).catch(console.error)
+      }
+    })
+    return () => unsubscribe?.()
+  }, [account, refreshTopics])
 
   useEffect(() => {
     if (isOpen) {
@@ -210,7 +235,7 @@ export default function NotificationModal() {
   const onSave = async () => {
     try {
       if (isEmailTab) validateInput(inputAccount, true)
-      if (isLoading || errorInput || (!inputAccount && isEmailTab)) return
+      if (isLoading || errorInput || notFillEmail) return
 
       const { unsubscribeIds, subscribeIds, subscribeNames, unsubscribeNames } = getDiffChangeTopics()
       if (subscribeNames.length) {
@@ -264,8 +289,6 @@ export default function NotificationModal() {
     setSelectedTopic(selectedTopic.length === topicGroups.length ? [] : topicGroups.map(e => e.id))
   }
 
-  const isNewUserQualified = !userInfo.email && !userInfo.telegram && !!inputAccount && !errorInput
-
   const autoSelect = useRef(false)
   useEffect(() => {
     if (isNewUserQualified && !autoSelect.current) {
@@ -276,13 +299,18 @@ export default function NotificationModal() {
     }
   }, [isNewUserQualified, topicGroups])
 
-  const disableButtonSave = useMemo(() => {
-    return isLoading || isSubmit || !inputAccount || !!errorInput || !getDiffChangeTopics().hasChanged
-  }, [getDiffChangeTopics, isSubmit, isLoading, inputAccount, errorInput])
-
+  const isVerifiedEmail = userInfo?.email && inputAccount === userInfo?.email
+  const isVerifiedTelegram = userInfo?.telegram
   const hasTopicSubscribed = topicGroups.some(e => e.isSubscribed)
-  const isVerifiedTelegram = userInfo?.telegram && hasTopicSubscribed
-  const disableCheckbox = !account || !inputAccount || !!errorInput
+
+  const disableButtonSave = useMemo(() => {
+    if (isTelegramTab) return isLoading
+    const value = isLoading || isSubmit || notFillEmail || errorInput || !getDiffChangeTopics().hasChanged
+    return Boolean(value)
+  }, [getDiffChangeTopics, isSubmit, isLoading, notFillEmail, errorInput, isTelegramTab])
+
+  const disableCheckbox = !account || notFillEmail || !!errorInput
+
   const renderButton = () => (
     <ActionWrapper>
       {!account ? (
@@ -295,17 +323,16 @@ export default function NotificationModal() {
         <ButtonPrimary disabled={disableButtonSave} borderRadius="46px" height="44px" onClick={onSave}>
           <ButtonTextt>
             {(() => {
-              const isGenerateVerifyLink = isTelegramTab && !isVerifiedTelegram
               if (isLoading) {
                 return (
                   <Row>
                     <Loader />
                     &nbsp;
-                    {isGenerateVerifyLink ? <Trans>Generating Verification Link ...</Trans> : <Trans>Saving ...</Trans>}
+                    {isTelegramTab ? <Trans>Generating Verification Link ...</Trans> : <Trans>Saving ...</Trans>}
                   </Row>
                 )
               }
-              return isGenerateVerifyLink ? <Trans>Get Started</Trans> : <Trans>Save</Trans>
+              return isTelegramTab ? <Trans>Get Started</Trans> : <Trans>Save</Trans>
             })()}
           </ButtonTextt>
         </ButtonPrimary>
@@ -354,15 +381,8 @@ export default function NotificationModal() {
               <Trans>Enter your email address to receive notifications</Trans>
             </Label>
             <InputWrapper>
-              <Input
-                error={errorInput}
-                value={inputAccount}
-                placeholder={isEmailTab ? 'example@gmail.com' : '@example'}
-                onChange={onChangeInput}
-              />
-              {userInfo?.email && inputAccount === userInfo?.email && hasTopicSubscribed && (
-                <CheckIcon color={theme.primary} />
-              )}
+              <Input error={errorInput} value={inputAccount} placeholder="example@gmail.com" onChange={onChangeInput} />
+              {isVerifiedEmail && hasTopicSubscribed && <CheckIcon color={theme.primary} />}
             </InputWrapper>
             <Label style={{ color: theme.red, opacity: errorInput ? 1 : 0, margin: '7px 0px 0px 0px' }}>
               {errorInput || 'No data'}
@@ -378,14 +398,17 @@ export default function NotificationModal() {
             <Telegram size={24} />
 
             {isVerifiedTelegram ? (
-              <Text fontSize={15}>
-                <Trans>
-                  Your verified telegram:{' '}
-                  <Text as="span" color={theme.text}>
-                    @{userInfo?.telegram}
-                  </Text>
-                </Trans>
-              </Text>
+              <Row align="center" justify="center" gap="3px">
+                <Text fontSize={15}>
+                  <Trans>
+                    Your Verified Account:{' '}
+                    <Text as="span" color={theme.text}>
+                      @{userInfo?.telegram}
+                    </Text>
+                  </Trans>
+                </Text>
+                <Check color={theme.primary} />
+              </Row>
             ) : (
               <Text fontSize={15}>
                 <Trans>Click Get Started to subscribe to Telegram</Trans>
@@ -394,41 +417,36 @@ export default function NotificationModal() {
           </Flex>
         )}
 
-        <div>
-          <TopicItemHeader>
+        <Column gap="16px">
+          <TopicItemHeader htmlFor="selectAll">
             <Checkbox
               disabled={disableCheckbox}
               id="selectAll"
               borderStyle
               onChange={onToggleAllTopic}
-              style={{ width: 17, height: 17 }}
+              style={{ width: 14, height: 14 }}
               checked={topicGroups.length === selectedTopic.length}
             />
-            <Text as="label" htmlFor="selectAll" fontSize={12} color={theme.subText}>
+            <Text fontSize={12} color={theme.subText}>
               <Trans>NOTIFICATION PREFERENCES</Trans>
             </Text>
           </TopicItemHeader>
           {topicGroups.map(topic => (
-            <TopicItem key={topic.id}>
+            <TopicItem key={topic.id} htmlFor={`topic${topic.id}`}>
               <Checkbox
                 disabled={disableCheckbox}
                 borderStyle
                 checked={selectedTopic.includes(topic.id)}
                 id={`topic${topic.id}`}
-                style={{ width: 17, height: 17, minWidth: 17 }}
+                style={{ width: 14, height: 14, minWidth: 14 }}
                 onChange={() => onChangeTopic(topic.id)}
               />
-              <label htmlFor={`topic${topic.id}`}>
-                <Text color={theme.text} fontSize={14}>
-                  <Trans>{topic.name}</Trans>
-                </Text>
-                <Text color={theme.subText} fontSize={12} marginTop={'5px'}>
-                  <Trans>{topic.description}</Trans>
-                </Text>
-              </label>
+              <Text color={theme.text} fontSize={14}>
+                <Trans>{topic.name}</Trans>
+              </Text>
             </TopicItem>
           ))}
-        </div>
+        </Column>
         {renderButton()}
       </Wrapper>
     </Modal>

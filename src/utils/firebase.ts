@@ -25,10 +25,12 @@ const firebaseApp = firebase.initializeApp(firebaseConfig)
 const db = getFirestore(firebaseApp)
 
 const COLLECTIONS = {
-  CANCELLING_ORDERS: 'cancellingOrders',
-  CANCELLED_ORDERS: 'cancelledEvents',
-  EXPIRED_ORDERS: 'expiredEvents',
-  FILLED_ORDERS: 'filledEvents',
+  LO_CANCELLING_ORDERS: 'cancellingOrders',
+  LO_CANCELLED_ORDERS: 'cancelledEvents',
+  LO_EXPIRED_ORDERS: 'expiredEvents',
+  LO_FILLED_ORDERS: 'filledEvents',
+
+  TELEGRAM_SUBSCRIPTION: 'telegramSubscription',
 }
 
 function subscribeDocument(collectionName: string, paths: string[], callback: (data: any) => void) {
@@ -82,7 +84,7 @@ export function subscribeCancellingOrders(
   chainId: ChainId,
   callback: (data: { orderIds: number[]; nonces: number[] }) => void,
 ) {
-  return subscribeDocument(COLLECTIONS.CANCELLING_ORDERS, [`${account.toLowerCase()}:${chainId}`], callback)
+  return subscribeDocument(COLLECTIONS.LO_CANCELLING_ORDERS, [`${account.toLowerCase()}:${chainId}`], callback)
 }
 
 export function subscribeNotificationOrderCancelled(
@@ -90,7 +92,7 @@ export function subscribeNotificationOrderCancelled(
   chainId: ChainId,
   callback: (data: ListOrderResponse) => void,
 ) {
-  return subscribeListLimitOrder(COLLECTIONS.CANCELLED_ORDERS, account, chainId, callback)
+  return subscribeListLimitOrder(COLLECTIONS.LO_CANCELLED_ORDERS, account, chainId, callback)
 }
 
 export function subscribeNotificationOrderFilled(
@@ -98,7 +100,7 @@ export function subscribeNotificationOrderFilled(
   chainId: ChainId,
   callback: (data: ListOrderResponse) => void,
 ) {
-  return subscribeListLimitOrder(COLLECTIONS.FILLED_ORDERS, account, chainId, callback)
+  return subscribeListLimitOrder(COLLECTIONS.LO_FILLED_ORDERS, account, chainId, callback)
 }
 
 export function subscribeNotificationOrderExpired(
@@ -106,5 +108,9 @@ export function subscribeNotificationOrderExpired(
   chainId: ChainId,
   callback: (data: ListOrderResponse) => void,
 ) {
-  return subscribeListLimitOrder(COLLECTIONS.EXPIRED_ORDERS, account, chainId, callback)
+  return subscribeListLimitOrder(COLLECTIONS.LO_EXPIRED_ORDERS, account, chainId, callback)
+}
+
+export function subscribeTelegramSubscription(account: string, callback: (data: { isSuccessfully: boolean }) => void) {
+  return subscribeDocument(COLLECTIONS.TELEGRAM_SUBSCRIPTION, [account.toLowerCase()], callback)
 }

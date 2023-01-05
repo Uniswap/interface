@@ -8,6 +8,7 @@ import { KS_SETTING_API, NOTIFICATION_API } from 'constants/env'
 import { useActiveWeb3React } from 'hooks'
 import { AppState } from 'state'
 import { setLoadingNotification, setSubscribedNotificationTopic } from 'state/application/actions'
+import { useNotificationModalToggle } from 'state/application/hooks'
 
 const getAllTopicUrl = (account: string | null | undefined) =>
   `${KS_SETTING_API}/v1/notification/topic-groups${account ? `?walletAddress=${account}` : ''}`
@@ -30,6 +31,7 @@ const useNotification = () => {
   const { isLoading, topicGroups, userInfo } = useSelector((state: AppState) => state.application.notification)
 
   const { account, chainId } = useActiveWeb3React()
+  const toggleSubscribeModal = useNotificationModalToggle()
   const dispatch = useDispatch()
 
   const setLoading = useCallback(
@@ -94,7 +96,7 @@ const useNotification = () => {
             axios.post(`${NOTIFICATION_API}/v1/topics/build-verification/telegram`, {
               chainId: chainId + '',
               wallet: account,
-              subscribe: unsubIds,
+              subscribe: subIds,
               unsubscribe: unsubIds,
             }),
           )
@@ -111,16 +113,21 @@ const useNotification = () => {
       } finally {
         setLoading(false)
       }
-      return
     },
     [setLoading, account, refreshTopics, chainId],
   )
 
+  const showNotificationModal = useCallback(() => {
+    refreshTopics()
+    toggleSubscribeModal()
+  }, [refreshTopics, toggleSubscribeModal])
+
   return {
     topicGroups,
     isLoading,
-    handleSubscribe,
     userInfo,
+    handleSubscribe,
+    showNotificationModal,
     refreshTopics,
   }
 }

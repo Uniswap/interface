@@ -6,16 +6,17 @@ import { useNavigate } from 'react-router-dom'
 
 import MailIcon from 'components/Icons/MailIcon'
 import { NOTIFICATION_API } from 'constants/env'
+import useNotification from 'hooks/useNotification'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import useTheme from 'hooks/useTheme'
-import { NotificationType, useNotificationModalToggle, useNotify } from 'state/application/hooks'
+import { NotificationType, useNotify } from 'state/application/hooks'
 
 // this component to verify email/telegram
 function VerifyComponent() {
   const qs = useParsedQueryString()
   const notify = useNotify()
   const calledApi = useRef(false)
-  const toggleSubscribeModal = useNotificationModalToggle()
+  const { showNotificationModal } = useNotification()
   const navigate = useNavigate()
   const theme = useTheme()
 
@@ -37,7 +38,7 @@ function VerifyComponent() {
           10000,
         )
         setTimeout(() => {
-          toggleSubscribeModal()
+          showNotificationModal()
         }, 1000)
         const { confirmation, email, ...rest } = qs
         navigate({ search: stringify(rest) })
@@ -55,7 +56,7 @@ function VerifyComponent() {
             : t`Error occur, please try again.`,
         })
       })
-  }, [qs, notify, navigate, toggleSubscribeModal, theme])
+  }, [qs, notify, navigate, showNotificationModal, theme])
 
   return null
 }

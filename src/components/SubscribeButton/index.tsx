@@ -8,7 +8,6 @@ import { useWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useNotification from 'hooks/useNotification'
 import useTheme from 'hooks/useTheme'
-import { useNotificationModalToggle } from 'state/application/hooks'
 
 import { ButtonPrimary } from '../Button'
 import { MouseoverTooltipDesktopOnly } from '../Tooltip'
@@ -61,24 +60,22 @@ export default function SubscribeNotificationButton({
   trackingEvent?: MIXPANEL_TYPE
 }) {
   const theme = useTheme()
-  const toggleSubscribeModal = useNotificationModalToggle()
   const { account } = useWeb3React()
 
   const { mixpanelHandler } = useMixpanel()
-  const { refreshTopics } = useNotification()
+  const { showNotificationModal } = useNotification()
 
   const showModalWhenConnected = useRef(false)
 
   useEffect(() => {
     if (account && showModalWhenConnected.current) {
-      toggleSubscribeModal()
+      showNotificationModal()
       showModalWhenConnected.current = false
     }
-  }, [account, toggleSubscribeModal])
+  }, [account, showNotificationModal])
 
   const onClickBtn = () => {
-    refreshTopics()
-    toggleSubscribeModal()
+    showNotificationModal()
     if (trackingEvent)
       setTimeout(() => {
         mixpanelHandler(trackingEvent)

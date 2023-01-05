@@ -44,9 +44,10 @@ import { EVMNetworkInfo } from 'constants/networks/type'
 import { useActiveWeb3React } from 'hooks'
 import useClaimReward from 'hooks/useClaimReward'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import useNotification from 'hooks/useNotification'
 import useTheme from 'hooks/useTheme'
 import { ApplicationModal } from 'state/application/actions'
-import { useModalOpen, useNotificationModalToggle, useToggleModal } from 'state/application/hooks'
+import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { useTutorialSwapGuide } from 'state/tutorial/hooks'
 import { useDarkModeManager, useHolidayMode, useUserLocale } from 'state/user/hooks'
 import { ExternalLink } from 'theme'
@@ -216,8 +217,7 @@ export default function Menu() {
 
   const open = useModalOpen(ApplicationModal.MENU)
   const toggle = useToggleModal(ApplicationModal.MENU)
-  const toggleNotificationModal = useNotificationModalToggle()
-
+  const { showNotificationModal } = useNotification()
   const [darkMode, toggleSetDarkMode] = useDarkModeManager()
   const [holidayMode, toggleHolidayMode] = useHolidayMode()
   const [isSelectingLanguage, setIsSelectingLanguage] = useState(false)
@@ -438,7 +438,7 @@ export default function Menu() {
             </NavLinkBetween>
             <NavLinkBetween
               onClick={() => {
-                toggleNotificationModal()
+                showNotificationModal()
                 mixpanelHandler(MIXPANEL_TYPE.NOTIFICATION_CLICK_MENU)
               }}
             >

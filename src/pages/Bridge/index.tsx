@@ -109,10 +109,7 @@ export default function Bridge() {
           setBridgeLocalstorage(BridgeLocalStorageKeys.TOKEN_VERSION, version)
         }
 
-        const data = await Promise.allSettled([
-          getChainlist(isStaleData),
-          chainId ? getTokenlist(chainId, isStaleData) : Promise.reject(),
-        ])
+        const data = await Promise.allSettled([getChainlist(isStaleData), getTokenlist(chainId, isStaleData)])
         if (data[0].status === 'fulfilled') {
           const listChainIn = data[0].value
           setBridgeState({ listChainIn })
