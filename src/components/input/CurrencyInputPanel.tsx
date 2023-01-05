@@ -154,6 +154,17 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
     [onSetFontSize, onSetAmount]
   )
 
+  const handleSetMax = useCallback(
+    (amount: string) => {
+      if (!onSetMax) {
+        return
+      }
+      onSetMax(amount)
+      onChangeText(amount)
+    },
+    [onChangeText, onSetMax]
+  )
+
   const onSelectionChange = useCallback(
     ({
       nativeEvent: {
@@ -241,7 +252,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
               <MaxAmountButton
                 currencyAmount={currencyAmount}
                 currencyBalance={currencyBalance}
-                onSetMax={onSetMax}
+                onSetMax={handleSetMax}
               />
             )}
           </Flex>
