@@ -9,7 +9,7 @@ import { isMobile } from '../../utils/userAgent'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
 
-const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ $scrollOverlay?: boolean }>`
+const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ $scrollOverlay?: boolean; isFloodStyle?: boolean }>`
   &[data-reach-dialog-overlay] {
     z-index: ${Z_INDEX.modalBackdrop};
     background-color: transparent;
@@ -20,7 +20,10 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ $scrollOverlay?: boo
     overflow-y: ${({ $scrollOverlay }) => $scrollOverlay && 'scroll'};
     justify-content: center;
 
-    background-color: ${({ theme }) => theme.backgroundScrim};
+    background: ${({ theme, isFloodStyle }) =>
+      isFloodStyle
+        ? 'linear-gradient(180deg, rgba(19, 24, 37, 0.75) 0%, rgba(6, 8, 22, 0.75) 60.42%);'
+        : theme.backgroundScrim};
   }
 `
 
@@ -92,6 +95,8 @@ interface ModalProps {
   $scrollOverlay?: boolean
   hideBorder?: boolean
   isBottomSheet?: boolean
+  className?: string
+  isFloodStyle?: boolean
 }
 
 export default function Modal({
@@ -106,6 +111,8 @@ export default function Modal({
   $scrollOverlay,
   isBottomSheet = isMobile,
   hideBorder = false,
+  className,
+  isFloodStyle = false,
 }: ModalProps) {
   const fadeTransition = useTransition(isOpen, {
     config: { duration: 200 },
@@ -137,6 +144,7 @@ export default function Modal({
               initialFocusRef={initialFocusRef}
               unstable_lockFocusAcrossFrames={false}
               $scrollOverlay={$scrollOverlay}
+              isFloodStyle={isFloodStyle}
             >
               <StyledDialogContent
                 {...(isMobile
@@ -152,6 +160,7 @@ export default function Modal({
                 $scrollOverlay={$scrollOverlay}
                 $hideBorder={hideBorder}
                 $maxWidth={maxWidth}
+                className={className}
               >
                 {/* prevents the automatic focusing of inputs on mobile by the reach dialog */}
                 {!initialFocusRef && isMobile ? <div tabIndex={1} /> : null}
