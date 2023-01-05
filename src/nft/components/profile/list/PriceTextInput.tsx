@@ -16,6 +16,11 @@ const PriceTextInputWrapper = styled(Column)`
   position: relative;
 `
 
+const CurrencyWrapper = styled.div<{ listPrice: number | undefined }>`
+  margin-right: 16px;
+  color: ${({ listPrice, theme }) => (listPrice && listPrice >= 0 ? theme.textPrimary : theme.textSecondary)};
+`
+
 enum WarningType {
   BELOW_FLOOR,
   ALREADY_LISTED,
@@ -118,9 +123,7 @@ export const PriceTextInput = ({
             setListPrice(isNaN(val) ? undefined : val)
           }}
         />
-        <Box color={listPrice && listPrice >= 0 ? 'textPrimary' : 'textSecondary'} marginRight="16">
-          &nbsp;ETH
-        </Box>
+        <CurrencyWrapper listPrice={listPrice}>&nbsp;ETH</CurrencyWrapper>
         <Box
           cursor="pointer"
           display={isGlobalPrice || globalOverride ? 'block' : 'none'}
