@@ -81,15 +81,23 @@ describe(getNativeCurrencyAddressForChain, () => {
 
 describe(isNativeCurrencyAddress, () => {
   it('returns true for native address', () => {
-    expect(isNativeCurrencyAddress(NATIVE_ADDRESS)).toEqual(true)
+    expect(isNativeCurrencyAddress(ChainId.Mainnet, NATIVE_ADDRESS)).toEqual(true)
   })
 
   it('returns true for matic native address', () => {
-    expect(isNativeCurrencyAddress(NATIVE_ADDRESS_ALT)).toEqual(true)
+    expect(isNativeCurrencyAddress(ChainId.Polygon, NATIVE_ADDRESS_ALT)).toEqual(true)
+  })
+
+  it('returns true for null currency addresses', () => {
+    expect(isNativeCurrencyAddress(ChainId.Mainnet, null)).toEqual(true)
+  })
+
+  it('returns false for mainnet with mative native address', () => {
+    expect(isNativeCurrencyAddress(ChainId.Mainnet, NATIVE_ADDRESS_ALT)).toEqual(false)
   })
 
   it('returns false for token address', () => {
-    expect(isNativeCurrencyAddress(DAI.address)).toEqual(false)
+    expect(isNativeCurrencyAddress(ChainId.Mainnet, DAI.address)).toEqual(false)
   })
 })
 

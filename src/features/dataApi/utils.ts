@@ -1,8 +1,7 @@
 import { ApolloError } from '@apollo/client'
 import { Token } from '@uniswap/sdk-core'
 import { useEffect, useState } from 'react'
-import { NATIVE_ADDRESS, NATIVE_ADDRESS_ALT } from 'src/constants/addresses'
-import { ChainId, isPolygonChain } from 'src/constants/chains'
+import { ChainId } from 'src/constants/chains'
 import {
   Chain,
   ContractInput,
@@ -17,6 +16,7 @@ import {
   CurrencyId,
   currencyIdToChain,
   currencyIdToGraphQLAddress,
+  isNativeCurrencyAddress,
 } from 'src/utils/currencyId'
 
 // Converts CurrencyId to ContractInput format for GQL token queries
@@ -59,9 +59,7 @@ export function tokenProjectToCurrencyInfos(
 
 // use inverse check here (instead of isNativeAddress) so we can typeguard address as must be string if this is true
 function isNonNativeAddress(chainId: ChainId, address: NullUndefined<string>): address is string {
-  if (!address) return false
-
-  return isPolygonChain(chainId) ? address !== NATIVE_ADDRESS_ALT : address !== NATIVE_ADDRESS
+  return !isNativeCurrencyAddress(chainId, address)
 }
 
 export function gqlTokenToCurrencyInfo(

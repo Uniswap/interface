@@ -81,7 +81,7 @@ export function* validateTransfer(transferTokenParams: TransferTokenParams) {
       return
     }
     case AssetType.Currency: {
-      if (isNativeCurrencyAddress(tokenAddress)) {
+      if (isNativeCurrencyAddress(chainId, tokenAddress)) {
         const balance = yield* call([provider, provider.getBalance], account.address)
         validateTransferAmount(transferTokenParams.amountInWei, balance)
         return

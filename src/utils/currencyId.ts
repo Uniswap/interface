@@ -44,16 +44,19 @@ export function currencyAddress(currency: Currency): string {
   return currency.address
 }
 
-export function getNativeCurrencyAddressForChain(
-  chainId: ChainId
-): typeof NATIVE_ADDRESS | typeof NATIVE_ADDRESS_ALT {
-  if (chainId === ChainId.Polygon) return NATIVE_ADDRESS_ALT
+export function getNativeCurrencyAddressForChain(chainId: ChainId) {
+  if (isPolygonChain(chainId)) return NATIVE_ADDRESS_ALT
 
   return NATIVE_ADDRESS
 }
 
-export const isNativeCurrencyAddress = (address: Address): boolean =>
-  areAddressesEqual(address, NATIVE_ADDRESS) || areAddressesEqual(address, NATIVE_ADDRESS_ALT)
+export const isNativeCurrencyAddress = (chainId: ChainId, address: NullUndefined<Address>) => {
+  if (!address) return true
+
+  return isPolygonChain(chainId)
+    ? areAddressesEqual(address, NATIVE_ADDRESS_ALT)
+    : areAddressesEqual(address, NATIVE_ADDRESS)
+}
 
 // Currency ids are formatted as `chainId-tokenaddress`
 export function currencyIdToAddress(_currencyId: string): Address {

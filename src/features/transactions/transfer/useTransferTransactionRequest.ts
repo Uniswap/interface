@@ -63,14 +63,14 @@ async function getTransferTransaction(
   const params = getTransferParams(account, derivedTransferInfo)
   if (!params) return
 
-  const { type, tokenAddress } = params
+  const { type, tokenAddress, chainId } = params
   switch (type) {
     case AssetType.ERC1155:
       return getErc1155TransferRequest(params, provider, contractManager)
     case AssetType.ERC721:
       return getErc721TransferRequest(params, provider, contractManager)
     case AssetType.Currency:
-      return isNativeCurrencyAddress(tokenAddress)
+      return isNativeCurrencyAddress(chainId, tokenAddress)
         ? getNativeTransferRequest(params)
         : getTokenTransferRequest(params, provider, contractManager)
   }

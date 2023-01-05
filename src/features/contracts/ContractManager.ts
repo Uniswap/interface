@@ -14,7 +14,7 @@ export class ContractManager {
     provider: providers.Provider,
     ABI: ContractInterface
   ) {
-    if (isNativeCurrencyAddress(address) || !getValidAddress(address, true)) {
+    if (isNativeCurrencyAddress(chainId, address) || !getValidAddress(address, true)) {
       throw Error(`Invalid address for contract: ${address}`)
     }
     this._contracts[chainId] ??= {}
