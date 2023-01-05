@@ -210,7 +210,7 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
               .filter((sweepAsset) => isInSameSudoSwapPool(asset, sweepAsset))
               .findIndex((sweepAsset) => sweepAsset.tokenId === asset.tokenId)
           )
-          asset.priceInfo.ETHPrice = poolPrice ?? ''
+          asset.priceInfo.ETHPrice = poolPrice ?? '0'
         } else {
           const isNFTX = asset.marketplace === Markets.NFTX
           const poolPrice = calcPoolPrice(asset, isNFTX ? counterNFTX : counterNFT20)
