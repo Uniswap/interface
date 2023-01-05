@@ -81,7 +81,7 @@
     "@uniswap/permit2-sdk": "1.0.0",
     "@uniswap/router-sdk": "1.4.0",
     "@uniswap/sdk-core": "3.1.0",
-    "@uniswap/universal-router-sdk": "1.1.1",
+    "@uniswap/universal-router-sdk": "1.1.2",
     "@uniswap/v2-sdk": "3.0.1",
     "@uniswap/v3-periphery": "1.4.1",
     "@uniswap/v3-sdk": "3.9.0",

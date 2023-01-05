@@ -6241,24 +6241,24 @@
     dotenv "^14.2.0"
     hardhat-watcher "^2.1.1"
 
-"@uniswap/universal-router-sdk@1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@uniswap/universal-router-sdk/-/universal-router-sdk-1.1.1.tgz#7963afbdf58f49c82f6b243507959719280548a0"
-  integrity sha512-LSBGCzLKHvy7Wekz0mJTFDDRQPQoRL8eflOZWig2fhGPqY4NCULbCXpWxgvynZT0l00Sp0S1V/TKzPByyg1Vug==
+"@uniswap/universal-router-sdk@1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@uniswap/universal-router-sdk/-/universal-router-sdk-1.1.2.tgz#2a6e3fd38a0fae8a99b57a0fc25bc8570ad1247f"
+  integrity sha512-wbUedJDcrBV/We0OaDrToHogmrXJFp3cjV8wO+jL5/xYU9R2ljPt7DE/go87Y7NT9UCjJaPmgDRWjFkyxalNdg==
   dependencies:
     "@uniswap/permit2-sdk" "^0.4.0"
     "@uniswap/router-sdk" "^1.4.0"
     "@uniswap/sdk-core" "^3.1.0"
-    "@uniswap/universal-router" "1.0.1"
+    "@uniswap/universal-router" "1.1.1"
     "@uniswap/v2-sdk" "^3.0.1"
     "@uniswap/v3-sdk" "^3.9.0"
     bignumber.js "^9.0.2"
     ethers "^5.3.1"
 
-"@uniswap/universal-router@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@uniswap/universal-router/-/universal-router-1.0.1.tgz#130931db4c7c91222430c9706f3d6707f195fc74"
-  integrity sha512-knzmHmvDAaUKQRpATmJroPi7Ig76WAsI/nelkPDjRzk+dCm5jacyImjt6BjnzsPrjzHc97NgDJAMmSrosi7Idg==
+"@uniswap/universal-router@1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/universal-router/-/universal-router-1.1.1.tgz#9d197e20fe830aaccca468a1d7b178a6c4c30e26"
+  integrity sha512-bDdFuzKiuvatCH5RENEEQuS7IhD2TjAS6TEFtWGCF+uOTf23TJCQA0pA9PuPyN2qMPNsNNcQlHVdcyIUD+IkWg==
 
 "@uniswap/v2-core@1.0.1":
   version "1.0.1"
