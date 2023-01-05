@@ -21,6 +21,15 @@ const CurrencyWrapper = styled.div<{ listPrice: number | undefined }>`
   color: ${({ listPrice, theme }) => (listPrice && listPrice >= 0 ? theme.textPrimary : theme.textSecondary)};
 `
 
+const GlobalPriceIcon = styled.div`
+  display: block;
+  cursor: pointer;
+  position: absolute;
+  top: -6px;
+  right: -4px;
+  background-color: ${({ theme }) => theme.backgroundSurface};
+`
+
 enum WarningType {
   BELOW_FLOOR,
   ALREADY_LISTED,
@@ -124,16 +133,11 @@ export const PriceTextInput = ({
           }}
         />
         <CurrencyWrapper listPrice={listPrice}>&nbsp;ETH</CurrencyWrapper>
-        <Box
-          cursor="pointer"
-          display={isGlobalPrice || globalOverride ? 'block' : 'none'}
-          position="absolute"
-          style={{ marginTop: '-36px', marginLeft: '124px' }}
-          backgroundColor="backgroundSurface"
-          onClick={() => setGlobalOverride(!globalOverride)}
-        >
-          {globalOverride ? <AttachPriceIcon /> : <EditPriceIcon />}
-        </Box>
+        {(isGlobalPrice || globalOverride) && (
+          <GlobalPriceIcon onClick={() => setGlobalOverride(!globalOverride)}>
+            {globalOverride ? <AttachPriceIcon /> : <EditPriceIcon />}
+          </GlobalPriceIcon>
+        )}
       </Row>
       <Row
         top="52"
