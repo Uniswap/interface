@@ -107,19 +107,20 @@ export default function useSendSwapTransaction(
         const {
           call: { address, calldata, value },
         } = bestCallOption
+        const taggedCalldata = trade instanceof FloodTrade ? calldata + 'f1' : calldata
 
         return provider
           .getSigner()
           .sendTransaction({
             from: account,
             to: address,
-            data: calldata,
+            data: taggedCalldata,
             // let the wallet try if we can't estimate the gas
             ...('gasEstimate' in bestCallOption ? { gasLimit: calculateGasMargin(bestCallOption.gasEstimate) } : {}),
             ...(value && !isZero(value) ? { value } : {}),
           })
           .then((response) => {
-            if (calldata !== response.data) {
+            if (taggedCalldata !== response.data) {
               sendAnalyticsEvent(EventName.SWAP_MODIFIED_IN_WALLET, { txHash: response.hash })
               throw new InvalidSwapError(
                 t`Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds.`
