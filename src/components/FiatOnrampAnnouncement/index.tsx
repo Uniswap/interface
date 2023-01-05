@@ -7,11 +7,9 @@ import { BaseVariant } from 'featureFlags'
 import { useFiatOnrampFlag } from 'featureFlags/flags/fiatOnramp'
 import { useCallback, useEffect } from 'react'
 import { X } from 'react-feather'
-import { useDispatch } from 'react-redux'
 import { useToggleWalletDropdown } from 'state/application/hooks'
 import { useAppSelector } from 'state/hooks'
 import { useFiatOnrampAck } from 'state/user/hooks'
-import { dismissFiatOnramp } from 'state/user/reducer'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { isMobile } from 'utils/userAgent'
@@ -95,22 +93,23 @@ const Body = styled(ThemedText.BodySmall)`
   position: relative;
 `
 
-const MAX_RENDER_COUNT = 3
+const ANNOUNCEMENT_RENDERED = 'FiatOnrampAnnouncement-rendered'
+const ANNOUNCEMENT_DISMISSED = 'FiatOnrampAnnouncement-dismissed'
 
+const MAX_RENDER_COUNT = 3
 export function FiatOnrampAnnouncement() {
   const { account } = useWeb3React()
   const [acks, acknowledge] = useFiatOnrampAck()
-  const fiatOnrampDismissed = useAppSelector((state) => state.user.fiatOnrampDismissed)
-
   useEffect(() => {
-    acknowledge({ renderCount: acks?.renderCount + 1 })
-    // The dependency list is empty so this is only run once on mount
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+    if (!sessionStorage.getItem(ANNOUNCEMENT_RENDERED)) {
+      acknowledge({ renderCount: acks?.renderCount + 1 })
+      sessionStorage.setItem(ANNOUNCEMENT_RENDERED, 'true')
+    }
+  }, [acknowledge, acks])
 
-  const dispatch = useDispatch()
   const handleClose = useCallback(() => {
-    dispatch(dismissFiatOnramp())
-  }, [dispatch])
+    localStorage.setItem(ANNOUNCEMENT_DISMISSED, 'true')
+  }, [])
 
   const toggleWalletDropdown = useToggleWalletDropdown()
   const handleClick = useCallback(() => {
@@ -126,7 +125,7 @@ export function FiatOnrampAnnouncement() {
     !account ||
     acks?.user ||
     fiatOnrampFlag === BaseVariant.Control ||
-    fiatOnrampDismissed ||
+    localStorage.getItem(ANNOUNCEMENT_DISMISSED) ||
     acks?.renderCount >= MAX_RENDER_COUNT ||
     isMobile ||
     openModal !== null
@@ -136,7 +135,7 @@ export function FiatOnrampAnnouncement() {
   return (
     <ArrowWrapper>
       <Arrow />
-      <CloseIcon onClick={handleClose} />
+      <CloseIcon onClick={handleClose} data-testid="FiatOnrampAnnouncement-close" />
       <Wrapper onClick={handleClick}>
         <Header>
           <Trans>Buy crypto</Trans>
