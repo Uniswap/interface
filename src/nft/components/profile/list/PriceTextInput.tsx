@@ -9,6 +9,7 @@ import { ListingWarning, WalletAsset } from 'nft/types'
 import { formatEth } from 'nft/utils/currency'
 import { Dispatch, FormEvent, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
+import { colors } from 'theme/colors'
 
 const PriceTextInputWrapper = styled(Column)`
   gap: 12px;
@@ -29,11 +30,10 @@ const GlobalPriceIcon = styled.div`
   background-color: ${({ theme }) => theme.backgroundSurface};
 `
 
-const WarningMessage = styled.div<{ warningType: WarningType }>`
+const WarningAction = styled.div<{ warningType: WarningType }>`
   margin-left: 8px;
   cursor: pointer;
-  color: ${({ warningType, theme }) =>
-    warningType === WarningType.BELOW_FLOOR ? theme.accentAction : theme.accentCritical};
+  color: ${({ warningType, theme }) => (warningType === WarningType.BELOW_FLOOR ? theme.accentAction : colors.red400)};
 `
 
 enum WarningType {
@@ -163,7 +163,7 @@ export const PriceTextInput = ({
                   ? formatEth(asset?.floorPrice ?? 0)
                   : formatEth(asset?.floor_sell_order_price ?? 0)}
                 ETH
-                <WarningMessage
+                <WarningAction
                   warningType={warningType}
                   onClick={() => {
                     warningType === WarningType.ALREADY_LISTED && removeSellAsset(asset)
@@ -171,7 +171,7 @@ export const PriceTextInput = ({
                   }}
                 >
                   {warningType === WarningType.BELOW_FLOOR ? <Trans>DISMISS</Trans> : <Trans>REMOVE ITEM</Trans>}
-                </WarningMessage>
+                </WarningAction>
               </>
             )}
       </Row>
