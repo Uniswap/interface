@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
-import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { AttachPriceIcon, EditPriceIcon } from 'nft/components/icons'
 import { NumericInput } from 'nft/components/layout/Input'
@@ -28,6 +27,13 @@ const GlobalPriceIcon = styled.div`
   top: -6px;
   right: -4px;
   background-color: ${({ theme }) => theme.backgroundSurface};
+`
+
+const WarningMessage = styled.div<{ warningType: WarningType }>`
+  margin-left: 8px;
+  cursor: pointer;
+  color: ${({ warningType, theme }) =>
+    warningType === WarningType.BELOW_FLOOR ? theme.accentAction : theme.accentCritical};
 `
 
 enum WarningType {
@@ -157,17 +163,15 @@ export const PriceTextInput = ({
                   ? formatEth(asset?.floorPrice ?? 0)
                   : formatEth(asset?.floor_sell_order_price ?? 0)}
                 ETH
-                <Box
-                  color={warningType === WarningType.BELOW_FLOOR ? 'accentAction' : 'orange'}
-                  marginLeft="8"
-                  cursor="pointer"
+                <WarningMessage
+                  warningType={warningType}
                   onClick={() => {
                     warningType === WarningType.ALREADY_LISTED && removeSellAsset(asset)
                     setWarningType(WarningType.NONE)
                   }}
                 >
                   {warningType === WarningType.BELOW_FLOOR ? <Trans>DISMISS</Trans> : <Trans>REMOVE ITEM</Trans>}
-                </Box>
+                </WarningMessage>
               </>
             )}
       </Row>
