@@ -29,11 +29,11 @@ type OpenModalParams =
   | ExperimentsModalParams
 
 export interface ModalsState {
-  [ModalName.FiatOnRamp]: AppModalState<undefined>
-  [ModalName.WalletConnectScan]: AppModalState<ScannerModalState>
-  [ModalName.Swap]: AppModalState<TransactionState>
-  [ModalName.Send]: AppModalState<TransactionState>
   [ModalName.Experiments]: AppModalState<undefined>
+  [ModalName.FiatOnRamp]: AppModalState<undefined>
+  [ModalName.Send]: AppModalState<TransactionState>
+  [ModalName.Swap]: AppModalState<TransactionState>
+  [ModalName.WalletConnectScan]: AppModalState<ScannerModalState>
 }
 
 export const initialModalState: ModalsState = {
@@ -77,24 +77,14 @@ const slice = createSlice({
   },
 })
 
-// TODO: [MOB-3891] combine all of these using a selector factory while preserving return types
-export const selectFiatOnRampModalState = (state: RootState): AppModalState<undefined> => {
-  return state.modals[ModalName.FiatOnRamp]
+export function selectModalState<T extends keyof ModalsState>(
+  name: T
+): (state: RootState) => ModalsState[T] {
+  return (state) => state.modals[name]
 }
-export const selectSwapModalState = (state: RootState): AppModalState<TransactionState> => {
-  return state.modals[ModalName.Swap]
-}
-export const selectSendModalState = (state: RootState): AppModalState<TransactionState> => {
-  return state.modals[ModalName.Send]
-}
-export const selectWCModalState = (state: RootState): AppModalState<ScannerModalState> => {
-  return state.modals[ModalName.WalletConnectScan]
-}
-export const selectExperimentsState = (state: RootState): AppModalState<undefined> => {
-  return state.modals[ModalName.Experiments]
-}
-export const selectModalsState = (state: RootState): ModalsState => {
-  return state.modals
+
+export function selectSomeModalOpen(state: RootState) {
+  return Object.values(state).some((modalState) => modalState.isOpen)
 }
 
 export const { openModal, closeModal } = slice.actions

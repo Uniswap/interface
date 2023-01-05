@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import InfoCircle from 'src/assets/icons/info-circle.svg'
 import { TabsAwareBottomBanner } from 'src/components/banners/TabsAwareBottomBanner'
-import { selectModalsState } from 'src/features/modals/modalSlice'
+import { selectSomeModalOpen } from 'src/features/modals/modalSlice'
 import { selectFinishedOnboarding } from 'src/features/wallet/selectors'
 
 export function OfflineBanner() {
@@ -14,8 +14,7 @@ export function OfflineBanner() {
 
   // don't show the offline banner in onboarding
   const finishedOnboarding = useAppSelector(selectFinishedOnboarding)
-  const modalStates = useAppSelector(selectModalsState)
-  const isModalOpen = Object.values(modalStates).some((state) => state.isOpen)
+  const isModalOpen = useAppSelector(selectSomeModalOpen)
 
   // Needs to explicity check for false since `netInfo.isConnected` may be null
   const showBanner = netInfo.isConnected === false && finishedOnboarding && !isModalOpen

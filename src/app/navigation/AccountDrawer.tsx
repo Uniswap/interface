@@ -390,7 +390,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
 
       <ActionSheetModal
         isVisible={showEditAccountModal}
-        name={ModalName.Account}
+        name={ModalName.AccountEdit}
         options={editAccountOptions}
         onClose={() => setShowEditAccountModal(false)}
       />

@@ -42,7 +42,7 @@ export const PendingConnectionSwitchAccountModal = ({
         </Flex>
       }
       isVisible={true}
-      name={ModalName.Account}
+      name={ModalName.AccountEdit}
       options={options}
       onClose={onClose}
     />

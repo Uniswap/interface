@@ -58,7 +58,7 @@ export const enum SectionName {
 
 /** Known modals for telemetry purposes. */
 export const enum ModalName {
-  Account = 'account-modal',
+  AccountEdit = 'account-edit-modal',
   AddWallet = 'add-wallet-modal',
   BlockedAddress = 'blocked-address',
   Experiments = 'experiments',

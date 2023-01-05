@@ -19,14 +19,14 @@ import {
   resetExperimentOverrides,
   resetFeatureFlagOverrides,
 } from 'src/features/experiments/slice'
-import { closeModal, selectExperimentsState } from 'src/features/modals/modalSlice'
+import { closeModal, selectModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useAsyncData } from 'src/utils/hooks'
 
 export function ExperimentsModal() {
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
-  const modalState = useAppSelector(selectExperimentsState)
+  const modalState = useAppSelector(selectModalState(ModalName.Experiments))
 
   const featureFlags = useAppSelector(selectFeatureFlagOverrides)
   const experiments = useAppSelector(selectExperimentOverrides)

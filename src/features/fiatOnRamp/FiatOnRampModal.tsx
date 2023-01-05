@@ -16,7 +16,7 @@ import {
   useIsFiatOnRampBuyAllowedQuery,
 } from 'src/features/fiatOnRamp/api'
 import { useFiatOnRampTransactionCreator } from 'src/features/fiatOnRamp/hooks'
-import { closeModal, selectFiatOnRampModalState } from 'src/features/modals/modalSlice'
+import { closeModal, selectModalState } from 'src/features/modals/modalSlice'
 import { ElementName, EventName, ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { openUri } from 'src/utils/linking'
@@ -25,7 +25,7 @@ const MOONPAY_UNSUPPORTED_REGION_HELP_URL =
   'https://support.uniswap.org/hc/en-us/articles/10966551707533-Why-is-MoonPay-not-supported-in-my-region'
 
 export function FiatOnRampModal() {
-  const modalState = useAppSelector(selectFiatOnRampModalState)
+  const modalState = useAppSelector(selectModalState(ModalName.FiatOnRamp))
 
   if (!modalState.isOpen) {
     // avoid doing any work until the modal needs to be open
