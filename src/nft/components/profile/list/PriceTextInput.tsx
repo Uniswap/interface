@@ -3,12 +3,13 @@ import Column from 'components/Column'
 import { Row } from 'nft/components/Flex'
 import { AttachPriceIcon, EditPriceIcon } from 'nft/components/icons'
 import { NumericInput } from 'nft/components/layout/Input'
-import { badge, body } from 'nft/css/common.css'
+import { body } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { ListingWarning, WalletAsset } from 'nft/types'
 import { formatEth } from 'nft/utils/currency'
 import { Dispatch, FormEvent, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
+import { BREAKPOINTS } from 'theme'
 import { colors } from 'theme/colors'
 
 const PriceTextInputWrapper = styled(Column)`
@@ -28,6 +29,21 @@ const GlobalPriceIcon = styled.div`
   top: -6px;
   right: -4px;
   background-color: ${({ theme }) => theme.backgroundSurface};
+`
+
+const WarningMessage = styled(Row)<{ warningType: WarningType }>`
+  top: 52px;
+  width: max-content;
+  position: absolute;
+  right: 0;
+  font-weight: 600;
+  font-size: 10px;
+  line-height: 12px;
+  color: ${({ warningType, theme }) => (warningType === WarningType.BELOW_FLOOR ? colors.red400 : theme.textSecondary)};
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    right: unset;
+  }
 `
 
 const WarningAction = styled.div<{ warningType: WarningType }>`
@@ -145,14 +161,7 @@ export const PriceTextInput = ({
           </GlobalPriceIcon>
         )}
       </Row>
-      <Row
-        top="52"
-        width="max"
-        className={badge}
-        color={warningType === WarningType.BELOW_FLOOR && !focused ? 'orange' : 'textSecondary'}
-        position="absolute"
-        right={{ sm: '0', md: 'unset' }}
-      >
+      <WarningMessage warningType={warningType}>
         {warning
           ? warning.message
           : warningType !== WarningType.NONE && (
@@ -174,7 +183,7 @@ export const PriceTextInput = ({
                 </WarningAction>
               </>
             )}
-      </Row>
+      </WarningMessage>
     </PriceTextInputWrapper>
   )
 }
