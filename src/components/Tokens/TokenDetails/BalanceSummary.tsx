@@ -1,11 +1,14 @@
 import { Trans } from '@lingui/macro'
 import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, SupportedChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import { getChainInfo } from 'constants/chainInfo'
+import { isSupportedChain } from 'constants/chains'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
 const BalancesCard = styled.div`
   box-shadow: ${({ theme }) => theme.shallowShadow};
@@ -14,9 +17,7 @@ const BalancesCard = styled.div`
   border-radius: 16px;
   color: ${({ theme }) => theme.textPrimary};
   display: none;
-  font-size: 12px;
   height: fit-content;
-  line-height: 16px;
   padding: 20px;
   width: 100%;
 
@@ -35,33 +36,65 @@ const BalanceRow = styled.div`
   align-items: center;
   display: flex;
   flex-direction: row;
-  font-size: 20px;
-  justify-content: space-between;
-  line-height: 28px;
-  margin-top: 12px;
+  margin-top: 20px;
 `
 const BalanceItem = styled.div`
   display: flex;
   align-items: center;
 `
 
+const BalanceContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-left: 8px;
+  flex: 1;
+`
+
+const BalanceAmountsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`
+
+const StyledNetworkLabel = styled.div`
+  color: ${({ color }) => color};
+  font-size: 12px;
+  line-height: 16px;
+`
+
 export default function BalanceSummary({ token }: { token: Currency }) {
-  const { account } = useWeb3React()
+  const { account, chainId } = useWeb3React()
+  const theme = useTheme()
+  const { label, color } = getChainInfo(isSupportedChain(chainId) ? chainId : SupportedChainId.MAINNET)
   const balance = useCurrencyBalance(account, token)
   const formattedBalance = formatCurrencyAmount(balance, NumberType.TokenNonTx)
   const formattedUsdValue = formatCurrencyAmount(useStablecoinValue(balance), NumberType.FiatTokenStats)
 
-  if (!account || !balance) return null
+  if (!account || !balance) {
+    return null
+  }
   return (
     <BalancesCard>
       <BalanceSection>
-        <Trans>Your balance</Trans>
+        <ThemedText.SubHeaderSmall color={theme.textPrimary}>
+          <Trans>Your balance on {label}</Trans>
+        </ThemedText.SubHeaderSmall>
         <BalanceRow>
-          <BalanceItem>
-            <CurrencyLogo currency={token} />
-            &nbsp;{formattedBalance} {token.symbol}
-          </BalanceItem>
-          <BalanceItem>{formattedUsdValue}</BalanceItem>
+          <CurrencyLogo currency={token} size="2rem" />
+          <BalanceContainer>
+            <BalanceAmountsContainer>
+              <BalanceItem>
+                <ThemedText.SubHeader>
+                  {formattedBalance} {token.symbol}
+                </ThemedText.SubHeader>
+              </BalanceItem>
+              <BalanceItem>
+                <ThemedText.BodyPrimary>{formattedUsdValue}</ThemedText.BodyPrimary>
+              </BalanceItem>
+            </BalanceAmountsContainer>
+            <StyledNetworkLabel color={color}>{label}</StyledNetworkLabel>
+          </BalanceContainer>
         </BalanceRow>
       </BalanceSection>
     </BalancesCard>
