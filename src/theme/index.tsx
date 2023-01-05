@@ -67,6 +67,7 @@ const fonts = {
 function getSettings(darkMode: boolean) {
   return {
     grids: {
+      xs: '4px',
       sm: '8px',
       md: '12px',
       lg: '24px',

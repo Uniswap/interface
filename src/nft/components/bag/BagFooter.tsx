@@ -4,11 +4,10 @@ import { Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import Column from 'components/Column'
 import Loader from 'components/Loader'
+import Row from 'components/Row'
 import { SupportedChainId } from 'constants/chains'
-import { Box } from 'nft/components/Box'
-import { Column, Row } from 'nft/components/Flex'
-import { bodySmall } from 'nft/css/common.css'
 import { useBag } from 'nft/hooks/useBag'
 import { useWalletBalance } from 'nft/hooks/useWalletBalance'
 import { BagStatus } from 'nft/types'
@@ -19,8 +18,6 @@ import { useToggleWalletModal } from 'state/application/hooks'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { switchChain } from 'utils/switchChain'
-
-import * as styles from './BagFooter.css'
 
 const FooterContainer = styled.div`
   padding: 0px 12px;
@@ -37,6 +34,11 @@ const Footer = styled.div`
   border-bottom-right-radius: 12px;
 `
 
+const FooterHeader = styled(Column)<{ warningText?: boolean }>`
+  padding-top: 8px;
+  padding-bottom: ${({ warningText }) => (warningText ? '8px' : '20px')};
+`
+
 const WarningIcon = styled(AlertTriangle)`
   width: 14px;
   margin-right: 4px;
@@ -51,6 +53,21 @@ const WarningText = styled(ThemedText.BodyPrimary)`
   text-align: center;
 `
 
+const PayButton = styled(Row)<{ disabled?: boolean }>`
+  background: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.accentTextLightPrimary};
+  font-weight: 600;
+  line-height: 24px;
+  font-size: 16px;
+  gap: 16px;
+  justify-content: center;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 0px;
+  opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
+  cursor: ${({ disabled }) => (disabled ? 'auto' : 'pointer')};
+`
+
 interface ActionButtonProps {
   disabled?: boolean
   onClick: () => void
@@ -58,9 +75,9 @@ interface ActionButtonProps {
 
 const ActionButton = ({ disabled, children, onClick }: PropsWithChildren<ActionButtonProps>) => {
   return (
-    <Row as="button" color="explicitWhite" className={styles.payButton} disabled={disabled} onClick={onClick}>
+    <PayButton disabled={disabled} onClick={onClick}>
       {children}
-    </Row>
+    </PayButton>
   )
 }
 
@@ -155,21 +172,24 @@ export const BagFooter = ({
   return (
     <FooterContainer>
       <Footer>
-        <Column gap="4" paddingTop="8" paddingBottom={warningText ? '8' : '20'}>
-          <Row justifyContent="space-between">
-            <Box>
+        <FooterHeader gap="xs" warningText={!!warningText}>
+          <Row justify="space-between">
+            <div>
               <ThemedText.HeadlineSmall>Total</ThemedText.HeadlineSmall>
-            </Box>
-            <Box>
+            </div>
+            <div>
               <ThemedText.HeadlineSmall>
                 {formatWeiToDecimal(totalEthPrice.toString())}&nbsp;ETH
               </ThemedText.HeadlineSmall>
-            </Box>
+            </div>
           </Row>
-          <Row justifyContent="flex-end" color="textSecondary" className={bodySmall}>
-            {`${ethNumberStandardFormatter(totalUsdPrice, true)}`}
+          <Row justify="flex-end">
+            <ThemedText.BodySmall color="textSecondary" lineHeight="20px">{`${ethNumberStandardFormatter(
+              totalUsdPrice,
+              true
+            )}`}</ThemedText.BodySmall>
           </Row>
-        </Column>
+        </FooterHeader>
         <TraceEvent
           events={[BrowserEvent.onClick]}
           name={NFTEventName.NFT_BUY_BAG_PAY}
