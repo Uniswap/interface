@@ -1,5 +1,4 @@
 export const Z_INDEXS = {
-  ICON_SUPPORT: 99,
   LIVE_CHART: 99999,
   MODAL: 999999,
 

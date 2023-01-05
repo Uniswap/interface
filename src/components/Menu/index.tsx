@@ -6,6 +6,7 @@ import {
   BookOpen,
   Edit,
   FileText,
+  HelpCircle,
   Info,
   Menu as MenuIcon,
   MessageCircle,
@@ -401,6 +402,12 @@ export default function Menu() {
               <ExternalLink href="https://forms.gle/gLiNsi7iUzHws2BY8">
                 <Edit />
                 <Trans>Business Enquiries</Trans>
+              </ExternalLink>
+            </MenuItem>
+            <MenuItem>
+              <ExternalLink href="https://support.kyberswap.com">
+                <HelpCircle size={20} />
+                <Trans>Help</Trans>
               </ExternalLink>
             </MenuItem>
 

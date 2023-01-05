@@ -271,6 +271,22 @@
       })()
     </script>
     <script src="/charting_library/charting_library.standalone.js"></script>
+    <script>
+      // customer support widget
+      window.zESettings = {
+        webWidget: {
+          offset: {
+            vertical: window.innerWidth > 1200 ? '0px' : '75px',
+            mobile: {
+              vertical: '65px',
+              horizontal: '-5px',
+            },
+          },
+          zIndex: 3,
+        },
+      }
+    </script>
+    <script async src="/libs/zenddesk.js?key=a73faacd-ba50-493a-8bf5-4b6878035346" id="ze-snippet"></script>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

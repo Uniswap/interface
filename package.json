@@ -60,7 +60,6 @@
     "@solana/wallet-adapter-react": "0.15.18",
     "@solana/wallet-adapter-wallets": "^0.19.5",
     "@solana/web3.js": "^1.66.2",
-    "@typeform/embed-react": "^1.21.0",
     "@web3-react/core": "^6.1.9",
     "@web3-react/injected-connector": "^6.0.7",
     "@web3-react/walletconnect-connector": "^7.0.2-alpha.0",
