@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
+import Column from 'components/Column'
 import { Box } from 'nft/components/Box'
-import { Column, Row } from 'nft/components/Flex'
+import { Row } from 'nft/components/Flex'
 import { AttachPriceIcon, EditPriceIcon } from 'nft/components/icons'
 import { NumericInput } from 'nft/components/layout/Input'
 import { badge, body } from 'nft/css/common.css'
@@ -8,6 +9,12 @@ import { useSellAsset } from 'nft/hooks'
 import { ListingWarning, WalletAsset } from 'nft/types'
 import { formatEth } from 'nft/utils/currency'
 import { Dispatch, FormEvent, useEffect, useRef, useState } from 'react'
+import styled from 'styled-components/macro'
+
+const PriceTextInputWrapper = styled(Column)`
+  gap: 12px;
+  position: relative;
+`
 
 enum WarningType {
   BELOW_FLOOR,
@@ -67,7 +74,7 @@ export const PriceTextInput = ({
   }, [listPrice])
 
   return (
-    <Column gap="12" position="relative">
+    <PriceTextInputWrapper>
       <Row
         color="textTertiary"
         height="44"
@@ -157,6 +164,6 @@ export const PriceTextInput = ({
               </>
             )}
       </Row>
-    </Column>
+    </PriceTextInputWrapper>
   )
 }
