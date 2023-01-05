@@ -42,7 +42,7 @@ export function useTokenPriceGraphs(currencyId: string): GqlResult<GraphMetadata
       !priceHistory1M ||
       !priceHistory1Y
     ) {
-      logger.debug('TokenModel', 'useTokenPriceGraphs', 'Token prices error')
+      logger.debug('TokenModel', 'useTokenPriceGraphs', 'Token price history error')
       return
     }
 

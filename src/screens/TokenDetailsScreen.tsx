@@ -9,6 +9,7 @@ import { AnimatedBox, AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { CurrencyPriceChart } from 'src/components/PriceChart'
+import { useTokenPriceGraphs } from 'src/components/PriceChart/TokenModel'
 import { Text } from 'src/components/Text'
 import { useCrossChainBalances } from 'src/components/TokenDetails/hooks'
 import { TokenBalances } from 'src/components/TokenDetails/TokenBalances'
@@ -132,6 +133,8 @@ function TokenDetails({
 }) {
   const dispatch = useAppDispatch()
 
+  const theme = useAppTheme()
+
   const currencyChainId = currencyIdToChain(_currencyId) ?? ChainId.Mainnet
   const currencyAddress = currencyIdToAddress(_currencyId)
 
@@ -140,7 +143,9 @@ function TokenDetails({
     _currencyId,
     crossChainTokens
   )
-  const theme = useAppTheme()
+
+  const tokenPriceGraphResponse = useTokenPriceGraphs(_currencyId)
+  const priceGraphError = tokenPriceGraphResponse.error !== undefined
 
   const token = data?.tokens?.[0]
   const tokenLogoUrl = token?.project?.logoUrl
@@ -150,6 +155,12 @@ function TokenDetails({
     theme.colors.background0,
     theme.colors.textTertiary
   )
+
+  const onPriceChartRetry = () => {
+    if (error) {
+      retry()
+    }
+  }
 
   // set if attempting buy or sell, use for warning modal
   const [activeTransactionType, setActiveTransactionType] = useState<TransactionType | undefined>(
@@ -272,9 +283,11 @@ function TokenDetails({
               currencyId={_currencyId}
               tokenColor={tokenColor}
               tokenColorLoading={tokenColorLoading}
+              tokenPriceGraphResult={tokenPriceGraphResponse}
+              onRetry={onPriceChartRetry}
             />
           </Flex>
-          {error ? (
+          {error && !priceGraphError ? (
             <AnimatedBox entering={FadeInDown} exiting={FadeOutDown} paddingHorizontal="lg">
               <BaseCard.InlineErrorState onRetry={retry} />
             </AnimatedBox>

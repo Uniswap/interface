@@ -166,7 +166,7 @@ function ErrorState(props: ErrorStateProps) {
   const theme = useAppTheme()
   const {
     title,
-    description = t('Something went wrong on our side'),
+    description = t('Something went wrong'),
     retryButtonLabel,
     onRetry,
     icon = (

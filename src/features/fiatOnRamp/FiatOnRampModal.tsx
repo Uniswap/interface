@@ -133,7 +133,7 @@ function FiatOnRampModalInner() {
               />
               {isError ? (
                 <Text color="textSecondary" textAlign="center" variant="bodyMicro">
-                  {t('Something went wrong on our side.')}
+                  {t('Something went wrong.')}
                 </Text>
               ) : null}
             </Flex>

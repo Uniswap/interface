@@ -6,8 +6,9 @@ import { CHART_HEIGHT } from 'src/components/PriceChart/utils'
 import { Text } from 'src/components/Text'
 
 export function PriceChartError({
+  showRetry,
   onRetry,
-}: Pick<ComponentProps<typeof BaseCard.ErrorState>, 'onRetry'>) {
+}: Pick<ComponentProps<typeof BaseCard.ErrorState>, 'onRetry'> & { showRetry: boolean }) {
   const { t } = useTranslation()
   return (
     <Flex gap="md" mx="lg">
@@ -29,8 +30,8 @@ export function PriceChartError({
         justifyContent="center"
         overflow="hidden">
         <BaseCard.ErrorState
-          description={t('Something went wrong on our side.')}
-          retryButtonLabel={t('Retry')}
+          description={t('Something went wrong.')}
+          retryButtonLabel={showRetry ? t('Retry') : undefined}
           title={t("Couldn't load price chart")}
           onRetry={onRetry}
         />

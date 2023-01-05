@@ -192,7 +192,7 @@ export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
       return (
         <Flex grow style={containerProps?.loadingContainerStyle}>
           <BaseCard.ErrorState
-            description={t('Something went wrong on our side.')}
+            description={t('Something went wrong.')}
             retryButtonLabel={t('Retry')}
             title={t('Couldn’t load NFTs')}
             onRetry={onRetry}
