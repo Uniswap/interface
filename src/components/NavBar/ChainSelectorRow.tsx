@@ -76,7 +76,7 @@ export default function ChainSelectorRow({
   const theme = useTheme()
 
   return (
-    <Container onClick={() => onSelectChain(targetChain)}>
+    <Container onClick={() => onSelectChain(targetChain)} data-testid={`chain-selector-option-${label.toLowerCase()}`}>
       <Logo src={logoUrl} alt={label} />
       <Label>{label}</Label>
       {isPending && <ApproveText>Approve in wallet</ApproveText>}

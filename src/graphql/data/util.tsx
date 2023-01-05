@@ -74,14 +74,6 @@ export const CHAIN_NAME_TO_CHAIN_ID: { [key: string]: SupportedChainId } = {
 
 export const BACKEND_CHAIN_NAMES: Chain[] = [Chain.Ethereum, Chain.Polygon, Chain.Optimism, Chain.Arbitrum, Chain.Celo]
 
-export function isValidBackendChainName(chainName: string | undefined): chainName is Chain {
-  if (!chainName) return false
-  for (let i = 0; i < BACKEND_CHAIN_NAMES.length; i++) {
-    if (chainName === BACKEND_CHAIN_NAMES[i]) return true
-  }
-  return false
-}
-
 export function getTokenDetailsURL(address: string, chainName?: Chain, chainId?: number) {
   if (address === ZERO_ADDRESS && chainId && chainId === SupportedChainId.MAINNET) {
     return `/tokens/${CHAIN_ID_TO_BACKEND_NAME[chainId].toLowerCase()}/${NATIVE_CHAIN_ID}`

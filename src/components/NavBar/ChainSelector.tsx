@@ -93,6 +93,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
         gap="8"
         className={styles.ChainSelector}
         background={isOpen ? 'accentActiveSoft' : 'none'}
+        data-testid="chain-selector"
         onClick={() => setIsOpen(!isOpen)}
       >
         {!isSupported ? (
