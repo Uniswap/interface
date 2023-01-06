@@ -43,8 +43,8 @@ const IntroModal = styled(Modal)`
     position: relative;
     background: #131727;
     border: none;
-    border-radius: 0;
     translate: calc(var(--removed-body-scroll-bar-size) / 2 * -1);
+    margin: 140px auto;
   }
 `
 
@@ -53,12 +53,14 @@ const IntroModalBackground = styled.div`
   top: 0;
   left: 0;
   right: 0;
-  height: 100px;
+  height: 110px;
 `
 
 const BallsTopImage = styled.img`
   width: 100%;
   display: block;
+  filter: blur(1.5px) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  aspect-ratio: 4.286;
 `
 
 const BallsLogosImage = styled.img`
@@ -66,6 +68,7 @@ const BallsLogosImage = styled.img`
   display: block;
   margin-top: -10px;
   margin-bottom: 23px;
+  aspect-ratio: 1.35;
 `
 
 const BallsOverlay = styled.div`
@@ -89,6 +92,7 @@ const IntroModalTitle = styled.h4`
   font-weight: 700;
   color: #0a98fe;
   margin: 0;
+  text-align: center;
 `
 
 const IntroModalDescription = styled.p`

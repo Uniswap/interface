@@ -16,7 +16,7 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ $scrollOverlay?: boo
     overflow: hidden;
 
     display: flex;
-    align-items: center;
+    align-items: ${({ isFloodStyle }) => (isFloodStyle ? 'flex-start' : 'center')};
     overflow-y: ${({ $scrollOverlay }) => $scrollOverlay && 'scroll'};
     justify-content: center;
 
