@@ -84,7 +84,7 @@ export const USDC_MAINNET = new Token(
 // )
 const USDC_SCROLL_PREALPHA = new Token(
   SupportedChainId.SCROLL_PREALPHA,
-  '0x80732890c93c6D9c6C23E06F888eD0CB88A06018',
+  '0x6c7211F2d7e8b5a89Bea818ac6a8e7240906e53D',
   6,
   'USDC',
   'USD//C'
@@ -387,7 +387,7 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
   // ),
   [SupportedChainId.SCROLL_PREALPHA]: new Token(
     SupportedChainId.SCROLL_PREALPHA,
-    '0xb1eA5EaAaC5a4eF08499caE4b587CaF3DD2a0Bdb',
+    '0x6b29C65597Fa2aC80Ab181989969092971f1Fa4e',
     18,
     'WETH',
     'Wrapped Ether'
