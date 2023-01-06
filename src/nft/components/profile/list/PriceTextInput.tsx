@@ -30,7 +30,7 @@ const InputWrapper = styled(Row)<{ borderColor: string }>`
 
 const CurrencyWrapper = styled.div<{ listPrice: number | undefined }>`
   margin-right: 16px;
-  color: ${({ listPrice, theme }) => (listPrice && listPrice >= 0 ? theme.textPrimary : theme.textSecondary)};
+  color: ${({ listPrice, theme }) => (listPrice ? theme.textPrimary : theme.textSecondary)};
 `
 
 const GlobalPriceIcon = styled.div`
