@@ -7,7 +7,7 @@ import { body } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { ListingWarning, WalletAsset } from 'nft/types'
 import { formatEth } from 'nft/utils/currency'
-import { Dispatch, FormEvent, useEffect, useMemo, useRef, useState } from 'react'
+import { Dispatch, FormEvent, useEffect, useRef, useState } from 'react'
 import styled, { useTheme } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 import { colors } from 'theme/colors'
@@ -121,17 +121,14 @@ export const PriceTextInput = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listPrice])
 
-  const borderColor = useMemo(
-    () =>
-      warningType !== WarningType.NONE && !focused
-        ? colors.red400
-        : isGlobalPrice
-        ? theme.accentAction
-        : listPrice != null
-        ? theme.textSecondary
-        : theme.accentAction,
-    [focused, isGlobalPrice, listPrice, theme.accentAction, theme.textSecondary, warningType]
-  )
+  const borderColor =
+    warningType !== WarningType.NONE && !focused
+      ? colors.red400
+      : isGlobalPrice
+      ? theme.accentAction
+      : listPrice != null
+      ? theme.textSecondary
+      : theme.accentAction
 
   return (
     <PriceTextInputWrapper>
