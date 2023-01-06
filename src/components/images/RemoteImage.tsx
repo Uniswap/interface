@@ -10,16 +10,24 @@ type Props = {
   uri: string
   height: number
   width: number
+  fallback?: JSX.Element
 }
 
 const RESIZE_MODE_CONTAIN: ImageResizeMode = 'contain'
 
-export function RemoteImage({ backgroundColor, borderRadius, uri, height, width }: Props) {
+export function RemoteImage({
+  backgroundColor,
+  borderRadius,
+  uri,
+  height,
+  width,
+  fallback,
+}: Props) {
   const imageHttpUrl = uriToHttp(uri)[0]
 
   if (!imageHttpUrl) {
-    logger.error('RemoteImage', '', `Could not retrieve and format remote image for uri: ${uri}`)
-    return null
+    logger.warn('RemoteImage', '', `Could not retrieve and format remote image for uri: ${uri}`)
+    return fallback ?? null
   }
 
   if (imageHttpUrl.endsWith('.svg')) {

@@ -43,6 +43,13 @@ export function AccountIcon({
 
   const isDarkMode = useColorScheme() === 'dark'
 
+  const defaultImage = (
+    <>
+      <Unicon address={address} size={adjustedIconSize} />
+      {showBackground ? <UniconGradient color={uniconColor} size={size} /> : null}
+    </>
+  )
+
   return (
     <Box
       backgroundColor={showBackground ? 'background0' : 'none'}
@@ -56,15 +63,13 @@ export function AccountIcon({
       {avatarUri ? (
         <RemoteImage
           borderRadius={adjustedIconSize}
+          fallback={defaultImage}
           height={adjustedIconSize}
           uri={avatarUri}
           width={adjustedIconSize}
         />
       ) : (
-        <>
-          <Unicon address={address} size={adjustedIconSize} />
-          {showBackground ? <UniconGradient color={uniconColor} size={size} /> : null}
-        </>
+        defaultImage
       )}
       {showViewOnlyBadge && (
         <Box
