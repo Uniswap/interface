@@ -10,6 +10,7 @@ import { LOOKS_RARE_CREATOR_BASIS_POINTS } from 'nft/utils'
 import { formatEth, formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { Dispatch, useEffect, useMemo, useState } from 'react'
+import { ThemedText } from 'theme'
 
 import * as styles from './ListPage.css'
 import { SetPriceMethod } from './NFTListingsGrid'
@@ -244,23 +245,33 @@ const EthPriceDisplay = ({ ethPrice = 0 }: { ethPrice?: number }) => {
   }, [])
 
   return (
-    <Column width="full">
-      <Row width="full" justifyContent="flex-end" color={ethPrice !== 0 ? 'textPrimary' : 'textSecondary'}>
-        {ethPrice !== 0 ? (
-          <>
-            <Column>
-              <Box className={body} color="textPrimary" textAlign="right" marginLeft="12" marginRight="0">
-                {formatEth(ethPrice)} ETH
-              </Box>
-              <Box className={body} color="textSecondary" textAlign="right" marginLeft="12" marginRight="0">
-                {formatUsdPrice(ethPrice * ethConversion)}
-              </Box>
-            </Column>
-          </>
-        ) : (
-          '- ETH'
-        )}
-      </Row>
-    </Column>
+    <Row width="full" justifyContent="flex-end" color={ethPrice !== 0 ? 'textPrimary' : 'textSecondary'}>
+      {ethPrice !== 0 ? (
+        <>
+          <Column>
+            <ThemedText.BodyPrimary
+              lineHeight="24px"
+              color="textPrimary"
+              textAlign="right"
+              marginLeft="12"
+              marginRight="0"
+            >
+              {formatEth(ethPrice)} ETH
+            </ThemedText.BodyPrimary>
+            <ThemedText.BodyPrimary
+              lineHeight="24px"
+              color="textSecondary"
+              textAlign="right"
+              marginLeft="12"
+              marginRight="0"
+            >
+              {formatUsdPrice(ethPrice * ethConversion)}
+            </ThemedText.BodyPrimary>
+          </Column>
+        </>
+      ) : (
+        '- ETH'
+      )}
+    </Row>
   )
 }
