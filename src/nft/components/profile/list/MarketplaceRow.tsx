@@ -1,8 +1,8 @@
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
+import Column from 'components/Column'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { Column } from 'nft/components/Flex'
 import { useSellAsset } from 'nft/hooks'
 import { ListingMarket, ListingWarning, WalletAsset } from 'nft/types'
 import { LOOKS_RARE_CREATOR_BASIS_POINTS } from 'nft/utils'
@@ -31,7 +31,7 @@ const RemoveMarketplaceWrap = styled(RemoveIconWrap)`
   top: 11px;
 `
 
-const MarketIconWrapper = styled.div`
+const MarketIconWrapper = styled(Column)`
   position: relative;
   cursor: pointer;
   margin-right: 16px;
