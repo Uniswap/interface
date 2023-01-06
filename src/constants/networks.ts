@@ -89,7 +89,7 @@ export const FALLBACK_URLS: { [key in SupportedChainId]: string[] } = {
   // ],
   [SupportedChainId.SCROLL_PREALPHA]: [
     // "Safe" URLs
-    'https://prealpha.scroll.io/l2',
+    'https://prealpha-rpc.scroll.io/l2',
   ],
 }
 
