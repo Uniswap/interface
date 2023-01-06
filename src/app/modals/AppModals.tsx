@@ -2,20 +2,36 @@ import React from 'react'
 import { ExperimentsModal } from 'src/app/modals/ExperimentsModal'
 import { SwapModal } from 'src/app/modals/SwapModal'
 import { TransferTokenModal } from 'src/app/modals/TransferTokenModal'
+import { LazyModalRenderer } from 'src/app/modals/utils'
 import { ForceUpgradeModal } from 'src/components/forceUpgrade/ForceUpgradeModal'
 import { WalletConnectModals } from 'src/components/WalletConnect/WalletConnectModals'
 import { LockScreenModal } from 'src/features/authentication/LockScreenModal'
 import { FiatOnRampModal } from 'src/features/fiatOnRamp/FiatOnRampModal'
+import { ModalName } from 'src/features/telemetry/constants'
 
 export function AppModals() {
   return (
     <>
-      <ExperimentsModal />
-      <FiatOnRampModal />
+      <LazyModalRenderer name={ModalName.Experiments}>
+        <ExperimentsModal />
+      </LazyModalRenderer>
+
+      <LazyModalRenderer name={ModalName.FiatOnRamp}>
+        <FiatOnRampModal />
+      </LazyModalRenderer>
+
       <ForceUpgradeModal />
+
       <LockScreenModal />
-      <SwapModal />
-      <TransferTokenModal />
+
+      <LazyModalRenderer name={ModalName.Swap}>
+        <SwapModal />
+      </LazyModalRenderer>
+
+      <LazyModalRenderer name={ModalName.Send}>
+        <TransferTokenModal />
+      </LazyModalRenderer>
+
       <WalletConnectModals />
     </>
   )

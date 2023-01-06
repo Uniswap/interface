@@ -13,6 +13,6 @@ export function useFeatureFlag(flagName: FEATURE_FLAGS, defaultValue: boolean): 
   return useAppSelector(selectFeatureFlag(flagName)) ?? defaultValue
 }
 
-export function useFiatOnRampEnabled() {
+export function useFiatOnRampEnabled(): boolean {
   return useFeatureFlag(FEATURE_FLAGS.FiatOnRamp, false)
 }

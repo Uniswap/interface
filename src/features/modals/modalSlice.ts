@@ -9,6 +9,8 @@ export interface AppModalState<T> {
   initialState?: T
 }
 
+type ExperimentsModalParams = { name: ModalName.Experiments; initialState?: undefined }
+
 type FiatOnRampModalParams = { name: ModalName.FiatOnRamp; initialState?: undefined }
 
 type WalletConnectModalParams = {
@@ -19,14 +21,12 @@ type SwapModalParams = { name: ModalName.Swap; initialState?: TransactionState }
 
 type SendModalParams = { name: ModalName.Send; initialState?: TransactionState }
 
-type ExperimentsModalParams = { name: ModalName.Experiments; initialState?: undefined }
-
 type OpenModalParams =
-  | FiatOnRampModalParams
-  | WalletConnectModalParams
-  | SwapModalParams
-  | SendModalParams
   | ExperimentsModalParams
+  | FiatOnRampModalParams
+  | SendModalParams
+  | SwapModalParams
+  | WalletConnectModalParams
 
 export interface ModalsState {
   [ModalName.Experiments]: AppModalState<undefined>

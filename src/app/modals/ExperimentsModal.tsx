@@ -19,20 +19,17 @@ import {
   resetExperimentOverrides,
   resetFeatureFlagOverrides,
 } from 'src/features/experiments/slice'
-import { closeModal, selectModalState } from 'src/features/modals/modalSlice'
+import { closeModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useAsyncData } from 'src/utils/hooks'
 
 export function ExperimentsModal() {
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
-  const modalState = useAppSelector(selectModalState(ModalName.Experiments))
 
   const featureFlags = useAppSelector(selectFeatureFlagOverrides)
   const experiments = useAppSelector(selectExperimentOverrides)
   const remoteConfig = useAsyncData(retrieveRemoteExperiments).data
-
-  if (!modalState.isOpen) return null
 
   return (
     <BottomSheetModal
