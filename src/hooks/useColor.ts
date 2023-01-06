@@ -55,6 +55,7 @@ async function getColorFromUriPath(uri: string): Promise<string | null> {
   try {
     palette = await Vibrant.from(formattedPath).getPalette()
   } catch (err) {
+    console.log("ERROR", uri, err.message)
     return null
   }
   if (!palette?.Vibrant) {
@@ -104,7 +105,14 @@ export function useColorFromURI(uri?: string) {
     let stale = false
 
     if (uri) {
-      getColorFromUriPath(uri).then((tokenColor) => {
+      let parsedURI = uri
+      // const lastChar = uri.charAt(uri.length - 1)
+      // if (uri.includes("coingecko") && lastChar >= '0' && lastChar <= '9') {
+      //   parsedURI = uri.replace(/\d+$/, "")
+      //   parsedURI = parsedURI.substring(0, parsedURI.length - 1)
+      //   parsedURI = parsedURI.replace("large", "thumb")
+      // }
+      getColorFromUriPath(parsedURI).then((tokenColor) => {
         if (!stale && tokenColor !== null) {
           setColor(tokenColor)
         }

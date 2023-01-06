@@ -57,7 +57,8 @@ export const AboutHeader = styled(ThemedText.MediumHeader)`
   font-size: 28px !important;
 `
 
-const ResourcesContainer = styled.div`
+const ResourcesContainer = styled.div<{color: string}>`
+  color: ${({ color }) => color};
   display: flex;
   padding-top: 12px;
   gap: 14px;
@@ -68,9 +69,10 @@ type AboutSectionProps = {
   description?: string | null | undefined
   homepageUrl?: string | null | undefined
   twitterName?: string | null | undefined
+  color: string
 }
 
-export function AboutSection({ address, description, homepageUrl, twitterName }: AboutSectionProps) {
+export function AboutSection({ address, description, homepageUrl, twitterName, color }: AboutSectionProps) {
   const [isDescriptionTruncated, setIsDescriptionTruncated] = useState(true)
   const shouldTruncate = !!description && description.length > TRUNCATE_CHARACTER_COUNT
 
@@ -98,7 +100,7 @@ export function AboutSection({ address, description, homepageUrl, twitterName }:
       <ThemedText.SubHeaderSmall>
         <Trans>Links</Trans>
       </ThemedText.SubHeaderSmall>
-      <ResourcesContainer>
+      <ResourcesContainer color={color}>
         <Resource name="Etherscan" link={`https://etherscan.io/address/${address}`} />
         <Resource name="More analytics" link={`https://info.uniswap.org/#/tokens/${address}`} />
         {homepageUrl && <Resource name="Website" link={homepageUrl} />}

@@ -44,9 +44,9 @@ import { OnChangeTimePeriod } from './ChartSection'
 import InvalidTokenDetails from './InvalidTokenDetails'
 import { useColorFromURI } from 'hooks/useColor'
 
-const TokenSymbol = styled.span`
+const TokenSymbol = styled.span<{color: string}>`
   text-transform: uppercase;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme, color }) => color ?? theme.textSecondary};
 `
 const TokenActions = styled.div`
   display: flex;
@@ -171,8 +171,6 @@ export default function TokenDetails({
 
   const [logoUrl, setLogoUrl] = useState<string>()
   const color = useColorFromURI(logoUrl)
-  const color2 = useColorFromURI("https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xEd04915c23f00A313a544955524EB7DBD823143d/logo.png")
-  console.log(color2)
   const L2Icon = getChainInfo(pageChainId)?.circleLogoUrl
 
   // address will never be undefined if token is defined; address is checked here to appease typechecker
@@ -198,7 +196,7 @@ export default function TokenDetails({
                   <L2NetworkLogo networkUrl={L2Icon} size="16px" />
                 </LogoContainer>
                 {token.name ?? <Trans>Name not found</Trans>}
-                <TokenSymbol>{token.symbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
+                <TokenSymbol color={color}>{token.symbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
               </TokenNameCell>
               <TokenActions>
                 <ShareButton currency={token} />
@@ -219,6 +217,7 @@ export default function TokenDetails({
                   description={tokenQueryData?.project?.description}
                   homepageUrl={tokenQueryData?.project?.homepageUrl}
                   twitterName={tokenQueryData?.project?.twitterName}
+                  color={color}
                 />
                 <AddressSection address={address} />
               </>
@@ -233,6 +232,7 @@ export default function TokenDetails({
             token={token ?? undefined}
             onTokenChange={navigateToWidgetSelectedToken}
             onReviewSwapClick={onReviewSwapClick}
+            accentColor={color}
           />
           {tokenWarning && <TokenSafetyMessage tokenAddress={address} warning={tokenWarning} />}
           {token && <BalanceSummary token={token} />}

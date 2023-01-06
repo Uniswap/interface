@@ -4,16 +4,16 @@ import { ExternalLink } from 'theme'
 
 const ResourceLink = styled(ExternalLink)`
   display: flex;
-  color: ${({ theme }) => theme.accentAction};
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
   gap: 4px;
   text-decoration: none;
+  color: inherit;
 
   &:hover,
   &:focus {
-    color: ${({ theme }) => darken(0.1, theme.accentAction)};
+    /* color: ${({ theme }) => darken(0.1, theme.accentAction)}; */
     text-decoration: none;
   }
 `

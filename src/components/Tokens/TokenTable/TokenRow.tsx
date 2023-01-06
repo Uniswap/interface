@@ -8,10 +8,11 @@ import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
+import { useColorFromURI } from 'hooks/useColor'
 import { useAtomValue } from 'jotai/utils'
-import { ForwardedRef, forwardRef } from 'react'
+import { ForwardedRef, forwardRef, useState } from 'react'
 import { CSSProperties, ReactNode } from 'react'
-import { ArrowDown, ArrowUp } from 'react-feather'
+import { ArrowDown, ArrowUp, CheckCircle } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
@@ -455,6 +456,11 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
     search_token_address_input: filterString,
   }
 
+  const [logoUrl, setLogoUrl] = useState<string>()
+  const color = useColorFromURI(logoUrl)
+  //  /const color2 = useColorFromURI("https://assets.coingecko.com/coins/images/1/thumb/bitcoin.png?1547033579")
+  // console.log(color2)
+
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
     <div ref={ref} data-testid={`token-table-row-${tokenName}`}>
@@ -468,9 +474,11 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           tokenInfo={
             <ClickableName>
               <LogoContainer>
-                <QueryTokenLogo token={token} />
+                <QueryTokenLogo token={token} updateUrl={setLogoUrl}/>
                 <L2NetworkLogo networkUrl={L2Icon} />
               </LogoContainer>
+              <div style={{width: '24px', height: '24px', borderRadius: '24px', backgroundColor: color}} />
+              {logoUrl?.includes("coingecko") && <CheckCircle color={"green"} />}
               <TokenInfoCell>
                 <TokenName>{tokenName}</TokenName>
                 <TokenSymbol>{tokenSymbol}</TokenSymbol>

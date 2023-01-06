@@ -39,12 +39,13 @@ function useWidgetTheme() {
 }
 
 interface WidgetProps {
-  token?: Currency
+  token?: (Currency & { logoURI?: string | undefined })
   onTokenChange?: (token: Currency) => void
   onReviewSwapClick?: OnReviewSwapClick
+  accentColor: string
 }
 
-export default function Widget({ token, onTokenChange, onReviewSwapClick }: WidgetProps) {
+export default function Widget({ token, onTokenChange, onReviewSwapClick, accentColor }: WidgetProps) {
   const { connector, provider } = useWeb3React()
   const locale = useActiveLocale()
   const theme = useWidgetTheme()
@@ -146,7 +147,7 @@ export default function Widget({ token, onTokenChange, onReviewSwapClick }: Widg
         permit2={permit2Enabled}
         routerUrl={WIDGET_ROUTER_URL}
         locale={locale}
-        theme={theme}
+        theme={{...theme, accent: accentColor} }
         width={WIDGET_WIDTH}
         // defaultChainId is excluded - it is always inferred from the passed provider
         provider={provider}

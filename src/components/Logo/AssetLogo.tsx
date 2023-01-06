@@ -1,6 +1,7 @@
 import { SupportedChainId } from 'constants/chains'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
-import React, { useEffect } from 'react'
+import Vibrant from 'node-vibrant/lib/config'
+import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components/macro'
 
 const MissingImageLogo = styled.div<{ size?: string }>`
@@ -55,6 +56,7 @@ export default function AssetLogo({
     ...rest,
   }
 
+  const ref = useRef<HTMLImageElement>(null)
   const [src, nextSrc] = useTokenLogoSource(address, chainId, isNative, backupImg)
 
   useEffect(() => {
@@ -62,7 +64,15 @@ export default function AssetLogo({
   }, [src])
 
   if (src) {
-    return <LogoImage {...imageProps} src={src} onError={nextSrc} />
+    return <LogoImage ref={ref} {...imageProps} src={src} onError={nextSrc} onLoad={(test) => {
+      try {
+        if (ref.current) {
+        const vibrant = new Vibrant(ref.current)
+        console.log(vibrant.getPalette())
+      }
+      } catch {}
+      
+    }} />
   } else {
     return (
       <MissingImageLogo size={size}>
