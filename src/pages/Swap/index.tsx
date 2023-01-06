@@ -29,6 +29,7 @@ import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ReactNode } from 'react'
 import { AlertTriangle, ArrowDown, CheckCircle, HelpCircle, Info } from 'react-feather'
+import { Helmet } from 'react-helmet-async'
 import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useToggleWalletModal } from 'state/application/hooks'
@@ -550,6 +551,9 @@ export default function Swap({ className }: { className?: string }) {
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
       <>
+        <Helmet>
+          <title>Swap | Uniswap</title>
+        </Helmet>
         <TokenSafetyModal
           isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
           tokenAddress={importTokensNotInDefault[0]?.address}

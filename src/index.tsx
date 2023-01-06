@@ -11,6 +11,7 @@ import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { MulticallUpdater } from 'lib/state/multicall'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { HelmetProvider } from 'react-helmet-async'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
@@ -71,7 +72,9 @@ createRoot(container).render(
                     <Updaters />
                     <ThemeProvider>
                       <ThemedGlobalStyle />
-                      <App />
+                      <HelmetProvider>
+                        <App />
+                      </HelmetProvider>
                     </ThemeProvider>
                   </BlockNumberProvider>
                 </ApolloProvider>
