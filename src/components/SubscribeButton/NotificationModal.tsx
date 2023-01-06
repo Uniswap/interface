@@ -305,9 +305,24 @@ export default function NotificationModal() {
 
   const disableButtonSave = useMemo(() => {
     if (isTelegramTab) return isLoading
-    const value = isLoading || isSubmit || notFillEmail || errorInput || !getDiffChangeTopics().hasChanged
+    const value =
+      isLoading ||
+      isSubmit ||
+      notFillEmail ||
+      errorInput ||
+      (!getDiffChangeTopics().hasChanged && isVerifiedEmail && inputAccount === userInfo.email)
     return Boolean(value)
-  }, [getDiffChangeTopics, isSubmit, isLoading, notFillEmail, errorInput, isTelegramTab])
+  }, [
+    getDiffChangeTopics,
+    isSubmit,
+    isLoading,
+    notFillEmail,
+    errorInput,
+    isTelegramTab,
+    isVerifiedEmail,
+    inputAccount,
+    userInfo,
+  ])
 
   const disableCheckbox = !account || notFillEmail || !!errorInput
 
