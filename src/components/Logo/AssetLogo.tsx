@@ -68,9 +68,11 @@ export default function AssetLogo({
       try {
         if (ref.current) {
         const vibrant = new Vibrant(ref.current)
-        console.log(vibrant.getPalette())
+        console.log(vibrant)
       }
-      } catch {}
+      } catch(e) {
+        console.log(e)
+      }
       
     }} />
   } else {
