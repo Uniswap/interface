@@ -836,7 +836,7 @@ export type SearchTokensQueryVariables = Exact<{
 }>;
 
 
-export type SearchTokensQuery = { __typename?: 'Query', searchTokenProjects?: Array<{ __typename?: 'TokenProject', logoUrl?: string, tokens: Array<{ __typename?: 'Token', id: string, decimals?: number, name?: string, chain: Chain, standard?: TokenStandard, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', price?: { __typename?: 'Amount', value: number, currency?: Currency }, pricePercentChange?: { __typename?: 'Amount', value: number }, volume24H?: { __typename?: 'Amount', value: number, currency?: Currency } } }> }> };
+export type SearchTokensQuery = { __typename?: 'Query', searchTokens?: Array<{ __typename?: 'Token', decimals?: number, name?: string, chain: Chain, standard?: TokenStandard, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', price?: { __typename?: 'Amount', value: number, currency?: Currency }, pricePercentChange?: { __typename?: 'Amount', value: number }, volume24H?: { __typename?: 'Amount', value: number, currency?: Currency } }, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string } }> };
 
 export type TokenQueryVariables = Exact<{
   contract: ContractInput;
@@ -913,30 +913,30 @@ export type NftBalanceQuery = { __typename?: 'Query', nftBalances?: { __typename
 
 export const SearchTokensDocument = gql`
     query SearchTokens($searchQuery: String!) {
-  searchTokenProjects(searchQuery: $searchQuery) {
-    tokens {
-      id @required(action: LOG)
-      decimals @required(action: LOG)
-      name @required(action: LOG)
-      chain @required(action: LOG)
-      standard @required(action: LOG)
-      address
-      symbol @required(action: LOG)
-      market(currency: USD) {
-        price {
-          value
-          currency
-        }
-        pricePercentChange(duration: DAY) {
-          value
-        }
-        volume24H: volume(duration: DAY) {
-          value
-          currency
-        }
+  searchTokens(searchQuery: $searchQuery) {
+    decimals @required(action: LOG)
+    name @required(action: LOG)
+    chain @required(action: LOG)
+    standard @required(action: LOG)
+    address
+    symbol @required(action: LOG)
+    market(currency: USD) {
+      price {
+        value
+        currency
+      }
+      pricePercentChange(duration: DAY) {
+        value
+      }
+      volume24H: volume(duration: DAY) {
+        value
+        currency
       }
     }
-    logoUrl
+    project @required(action: LOG) {
+      id @required(action: LOG)
+      logoUrl
+    }
   }
 }
     `;

@@ -2,7 +2,10 @@
 import { t, Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
+import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
+import { useSearchTokens } from 'graphql/data/SearchTokens'
+import { useSearchTokensQuery } from 'graphql/data/__generated__/types-and-hooks'
 import useDebounce from 'hooks/useDebounce'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -12,7 +15,6 @@ import { Row } from 'nft/components/Flex'
 import { magicalGradientOnHover } from 'nft/css/common.css'
 import { useIsMobile, useIsTablet } from 'nft/hooks'
 import { fetchSearchCollections } from 'nft/queries'
-import { fetchSearchTokens } from 'nft/queries/genie/SearchTokensFetcher'
 import { ChangeEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
@@ -64,16 +66,21 @@ export const SearchBar = () => {
     }
   )
 
-  const { data: tokens, isLoading: tokensAreLoading } = useQuery(
-    ['searchTokens', debouncedSearchValue],
-    () => fetchSearchTokens(debouncedSearchValue),
-    {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      enabled: !!debouncedSearchValue.length,
-    }
-  )
+  // const { data: tokens, isLoading: tokensAreLoading } = useQuery(
+  //   ['searchTokens', debouncedSearchValue],
+  //   () => fetchSearchTokens(debouncedSearchValue),
+  //   {
+  //     refetchOnWindowFocus: false,
+  //     refetchOnMount: false,
+  //     refetchOnReconnect: false,
+  //     enabled: !!debouncedSearchValue.length,
+  //   }
+  // )
+
+  const { chainId } = useWeb3React()
+  const { data: searchTokensQueryData, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue, chainId ?? 1)
+
+  const tokens = useMemo(() => searchTokensQueryData?.searchTokens.map((token => )) )
 
   const isNFTPage = useIsNftPage()
 
