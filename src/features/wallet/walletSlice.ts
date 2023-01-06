@@ -6,7 +6,7 @@ import { areAddressesEqual, getChecksumAddress } from 'src/utils/addresses'
 
 export const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
 
-interface Wallet {
+export interface WalletState {
   accounts: Record<Address, Account>
   activeAccountAddress: Address | null
   finishedOnboarding?: boolean
@@ -15,13 +15,12 @@ interface Wallet {
   // Persisted UI configs set by the user through interaction with filters and settings
   settings: {
     nftViewType?: NFTViewType
-
     // Settings used in the top tokens list
     tokensOrderBy?: TokensOrderBy
   }
 }
 
-export const initialWalletState: Wallet = {
+export const initialWalletState: WalletState = {
   accounts: {},
   activeAccountAddress: null,
   flashbotsEnabled: false,
@@ -43,11 +42,10 @@ const slice = createSlice({
       const id = getChecksumAddress(address)
       if (!state.accounts[id]) throw new Error(`Cannot remove missing account ${id}`)
       delete state.accounts[id]
-      // If removed account was active, activate first one
+      // If removed account was active, reset active account to first account if it exists
       if (state.activeAccountAddress && areAddressesEqual(state.activeAccountAddress, address)) {
         const firstAccountId = Object.keys(state.accounts)[0]
-        if (!firstAccountId) throw new Error(`No accounts available to activate`)
-        state.activeAccountAddress = firstAccountId
+        state.activeAccountAddress = firstAccountId ?? null
       }
     },
     markAsNonPending: (state, action: PayloadAction<Address>) => {
