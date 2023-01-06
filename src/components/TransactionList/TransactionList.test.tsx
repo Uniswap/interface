@@ -11,6 +11,7 @@ import {
 import { ACCOUNT_ADDRESS_ONE, mockWalletPreloadedState } from 'src/test/fixtures'
 import { DaiAsset, Portfolios } from 'src/test/gqlFixtures'
 import { render, screen } from 'src/test/test-utils'
+import { sleep } from 'src/utils/timing'
 
 const TransactionListMock: MockedResponse<TransactionListQuery> = {
   request: {
@@ -79,6 +80,8 @@ describe(TransactionList, () => {
     expect(tree.toJSON()).toMatchSnapshot()
 
     // Render items
+    await sleep(1000) // Wait for the loading to complete
+
     expect(await screen.findByText('Approved')).toBeDefined()
     expect(tree.toJSON()).toMatchSnapshot()
   })

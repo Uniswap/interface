@@ -26,7 +26,7 @@ import {
   TransactionType,
 } from 'src/features/transactions/types'
 import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
-import { Account, AccountType } from 'src/features/wallet/accounts/types'
+import { Account, AccountType, BackupType } from 'src/features/wallet/accounts/types'
 import { initialWalletState } from 'src/features/wallet/walletSlice'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import { currencyId } from 'src/utils/currencyId'
@@ -43,6 +43,7 @@ export const account: Account = {
   name: 'Test Account',
   timeImportedMs: 10,
   mnemonicId: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+  backups: [BackupType.Cloud],
 }
 
 const mockSigner = new (class {
