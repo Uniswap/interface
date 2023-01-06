@@ -78,8 +78,6 @@ export function getTransferWarnings(
     })
   }
 
-  // TODO: [MOB-3912] Add warning for insufficient gas for transfer
-
   return warnings
 }
 

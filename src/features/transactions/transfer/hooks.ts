@@ -25,13 +25,13 @@ import { tryParseExactAmount } from 'src/utils/tryParseAmount'
 export type DerivedTransferInfo = BaseDerivedInfo<CurrencyInfo | GQLNftAsset> & {
   currencyTypes: { [CurrencyField.INPUT]?: AssetType }
   currencyInInfo?: CurrencyInfo | null
-  nftIn: GQLNftAsset | undefined
   chainId: ChainId
-  exactCurrencyField: CurrencyField.INPUT
-  recipient?: string
-  isUSDInput?: boolean
-  txId?: string
   exactAmountUSD: string
+  exactCurrencyField: CurrencyField.INPUT
+  isUSDInput?: boolean
+  nftIn: GQLNftAsset | undefined
+  recipient?: string
+  txId?: string
 }
 
 export function useDerivedTransferInfo(state: TransactionState): DerivedTransferInfo {
@@ -98,17 +98,17 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
   )
   return useMemo(
     () => ({
+      chainId,
       currencies,
       currencyAmounts,
       currencyBalances,
       currencyTypes: { [CurrencyField.INPUT]: tradeableAsset?.type },
       currencyInInfo,
-      chainId,
-      nftIn: nftIn ?? undefined,
-      exactAmountUSD: exactAmountUSD ?? '',
       exactAmountToken,
+      exactAmountUSD: exactAmountUSD ?? '',
       exactCurrencyField: CurrencyField.INPUT,
       isUSDInput,
+      nftIn: nftIn ?? undefined,
       recipient,
       txId,
     }),

@@ -8,7 +8,7 @@ import {
   useSwapActionHandlers,
   useSwapTxAndGasInfo,
 } from 'src/features/transactions/swap/hooks'
-import { useSwapGasWarning, useSwapWarnings } from 'src/features/transactions/swap/useSwapWarnings'
+import { useSwapWarnings } from 'src/features/transactions/swap/useSwapWarnings'
 import { TransactionFlow, TransactionStep } from 'src/features/transactions/TransactionFlow'
 import {
   CurrencyField,
@@ -16,6 +16,7 @@ import {
   TransactionState,
   transactionStateReducer,
 } from 'src/features/transactions/transactionState/transactionState'
+import { useTransactionGasWarning } from 'src/features/transactions/useTransactionGasWarning'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 
 interface SwapFormProps {
@@ -42,7 +43,7 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
     step === TransactionStep.SUBMITTED ||
       warnings.some((warning) => warning.action === WarningAction.DisableReview)
   )
-  const gasWarning = useSwapGasWarning(derivedSwapInfo, totalGasFee)
+  const gasWarning = useTransactionGasWarning(derivedSwapInfo, totalGasFee)
 
   const allWarnings = useMemo(() => {
     return !gasWarning ? warnings : [...warnings, gasWarning]

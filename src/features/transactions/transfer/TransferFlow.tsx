@@ -21,6 +21,7 @@ import {
   createOnSelectRecipient,
   createOnToggleShowRecipientSelector,
 } from 'src/features/transactions/transfer/utils'
+import { useTransactionGasWarning } from 'src/features/transactions/useTransactionGasWarning'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 
 interface TransferFormProps {
@@ -51,6 +52,12 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
     return gasFeeInfo ? { ...txRequest, ...gasFeeInfo.params } : txRequest
   }, [gasFeeInfo, txRequest])
 
+  const gasWarning = useTransactionGasWarning(derivedTransferInfo, gasFeeInfo?.gasFee)
+
+  const allWarnings = useMemo(() => {
+    return !gasWarning ? warnings : [...warnings, gasWarning]
+  }, [warnings, gasWarning])
+
   return (
     <TransactionFlow
       showUSDToggle
@@ -79,7 +86,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
       }
       totalGasFee={gasFeeInfo?.gasFee}
       txRequest={transferTxWithGasSettings}
-      warnings={warnings}
+      warnings={allWarnings}
       onClose={onClose}
     />
   )

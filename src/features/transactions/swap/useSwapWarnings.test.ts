@@ -45,7 +45,6 @@ const swapState: DerivedSwapInfo = {
   },
   exactCurrencyField: CurrencyField.INPUT,
   trade: { loading: false, error: undefined, trade: null },
-  nativeCurrencyBalance: CurrencyAmount.fromRawAmount(ETH, '11000'),
 }
 
 const insufficientBalanceState: DerivedSwapInfo = {
@@ -64,7 +63,6 @@ const insufficientBalanceState: DerivedSwapInfo = {
   },
   exactCurrencyField: CurrencyField.INPUT,
   trade: { loading: false, error: undefined, trade: null },
-  nativeCurrencyBalance: CurrencyAmount.fromRawAmount(ETH, '11000'),
 }
 
 const tradeErrorState: DerivedSwapInfo = {
@@ -87,7 +85,6 @@ const tradeErrorState: DerivedSwapInfo = {
     error: { status: 404, data: { errorCode: 'GENERIC_ERROR' } },
     trade: null,
   },
-  nativeCurrencyBalance: CurrencyAmount.fromRawAmount(ETH, '0'),
 }
 
 const mockTranslate = jest.fn()

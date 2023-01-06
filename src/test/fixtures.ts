@@ -264,7 +264,7 @@ export const networkDown: NetInfoNoConnectionState = {
   details: null,
 }
 
-const ETH = NativeCurrency.onChain(ChainId.Mainnet)
+export const ETH = NativeCurrency.onChain(ChainId.Mainnet)
 
 export const networkUp: NetInfoState = {
   isConnected: true,

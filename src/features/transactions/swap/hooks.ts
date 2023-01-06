@@ -3,7 +3,7 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { SwapRouter } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, NativeCurrency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import {
   SwapRouter as UniversalSwapRouter,
   UNIVERSAL_ROUTER_ADDRESS,
@@ -19,10 +19,7 @@ import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/misc'
 import { AssetType } from 'src/entities/assets'
-import {
-  useOnChainCurrencyBalance,
-  useOnChainNativeCurrencyBalance,
-} from 'src/features/balances/api'
+import { useOnChainCurrencyBalance } from 'src/features/balances/api'
 import { ContractManager } from 'src/features/contracts/ContractManager'
 import { CurrencyInfo } from 'src/features/dataApi/types'
 import { FEATURE_FLAGS } from 'src/features/experiments/constants'
@@ -84,7 +81,6 @@ export type DerivedSwapInfo<
   focusOnCurrencyField: CurrencyField
   trade: ReturnType<typeof useTrade>
   wrapType: WrapType
-  nativeCurrencyBalance?: CurrencyAmount<NativeCurrency>
   selectingCurrencyField?: CurrencyField
   txId?: string
 }
@@ -129,11 +125,6 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
   const { balance: tokenInBalance } = useOnChainCurrencyBalance(currencyIn, activeAccount?.address)
   const { balance: tokenOutBalance } = useOnChainCurrencyBalance(
     currencyOut,
-    activeAccount?.address
-  )
-
-  const { balance: nativeCurrencyBalance } = useOnChainNativeCurrencyBalance(
-    chainId,
     activeAccount?.address
   )
 
@@ -201,7 +192,6 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
       focusOnCurrencyField,
       trade,
       wrapType,
-      nativeCurrencyBalance,
       selectingCurrencyField,
       txId,
     }
@@ -214,7 +204,6 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     exactAmountUSD,
     exactCurrencyField,
     focusOnCurrencyField,
-    nativeCurrencyBalance,
     selectingCurrencyField,
     trade,
     txId,
