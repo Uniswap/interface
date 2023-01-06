@@ -8,6 +8,7 @@ import { atomWithStorage } from 'jotai/utils'
 import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
+import { Helmet } from 'react-helmet-async'
 
 export const pageTimePeriodAtom = atomWithStorage<TimePeriod>('tokenDetailsTimePeriod', TimePeriod.DAY)
 
@@ -38,7 +39,16 @@ export default function TokenDetailsPage() {
     },
   })
 
-  if (!tokenQuery || tokenQueryLoading) return <TokenDetailsPageSkeleton />
+  if (!tokenQuery || tokenQueryLoading) {
+    return (
+      <>
+        <Helmet>
+          <title>Uniswap</title>
+        </Helmet>
+        <TokenDetailsPageSkeleton />
+      </>
+    )
+  }
 
   return (
     <TokenDetails

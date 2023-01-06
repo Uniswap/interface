@@ -10,6 +10,7 @@ import TokenTable from 'components/Tokens/TokenTable/TokenTable'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useResetAtom } from 'jotai/utils'
 import { useEffect } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -76,6 +77,9 @@ const Tokens = () => {
 
   return (
     <Trace page={InterfacePageName.TOKENS_PAGE} shouldLogImpression>
+      <Helmet>
+        <title>Tokens | Uniswap</title>
+      </Helmet>
       <ExploreContainer>
         <TitleContainer>
           <MouseoverTooltip
