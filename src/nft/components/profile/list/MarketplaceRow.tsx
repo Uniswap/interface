@@ -33,6 +33,13 @@ const RemoveMarketplaceWrap = styled(RemoveIconWrap)`
   top: 11px;
 `
 
+const MarketIcon = styled.img`
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  object-fit: cover;
+`
+
 const getRoyalty = (listingMarket: ListingMarket, asset: WalletAsset) => {
   // LooksRare is a unique case where royalties for creators are a flat 0.5% or 50 basis points
   const baseFee = listingMarket.name === 'LooksRare' ? LOOKS_RARE_CREATOR_BASIS_POINTS : asset.basisPoints ?? 0
@@ -180,15 +187,7 @@ export const MarketplaceRow = ({
             <RemoveMarketplaceWrap hovered={hovered}>
               <img width="32px" src="/nft/svgs/minusCircle.svg" alt="Remove item" />
             </RemoveMarketplaceWrap>
-            <Box
-              as="img"
-              alt={selectedMarkets[0].name}
-              width="28"
-              height="28"
-              borderRadius="4"
-              objectFit="cover"
-              src={selectedMarkets[0].icon}
-            />
+            <MarketIcon alt={selectedMarkets[0].name} src={selectedMarkets[0].icon} />
           </Column>
         )}
         {globalPriceMethod === SetPriceMethod.SAME_PRICE && !globalOverride ? (
