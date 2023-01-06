@@ -6,7 +6,7 @@ import Vibrant from 'node-vibrant/lib/bundle.js'
 import { shade } from 'polished'
 import { useEffect, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
-import { useTheme } from 'styled-components'
+import { useTheme } from 'styled-components/macro'
 import { hex } from 'wcag-contrast'
 
 function URIForEthToken(address: string) {
@@ -55,7 +55,7 @@ async function getColorFromUriPath(uri: string): Promise<string | null> {
   try {
     palette = await Vibrant.from(formattedPath).getPalette()
   } catch (err) {
-    console.log("ERROR", uri, err.message)
+    console.log('ERROR', uri, err.message)
     return null
   }
   if (!palette?.Vibrant) {
@@ -91,11 +91,10 @@ export function useColor(token?: Token) {
       stale = true
       setColor(theme.accentActive)
     }
-  }, [token])
+  }, [theme.accentActive, token])
 
   return color
 }
-
 
 export function useColorFromURI(uri?: string) {
   const theme = useTheme()
@@ -105,14 +104,14 @@ export function useColorFromURI(uri?: string) {
     let stale = false
 
     if (uri) {
-      let parsedURI = uri
-      // const lastChar = uri.charAt(uri.length - 1)
-      // if (uri.includes("coingecko") && lastChar >= '0' && lastChar <= '9') {
-      //   parsedURI = uri.replace(/\d+$/, "")
-      //   parsedURI = parsedURI.substring(0, parsedURI.length - 1)
-      //   parsedURI = parsedURI.replace("large", "thumb")
-      // }
-      getColorFromUriPath(parsedURI).then((tokenColor) => {
+      // let parsedURI = uri
+      // // const lastChar = uri.charAt(uri.length - 1)
+      // // if (uri.includes("coingecko") && lastChar >= '0' && lastChar <= '9') {
+      // //   parsedURI = uri.replace(/\d+$/, "")
+      // //   parsedURI = parsedURI.substring(0, parsedURI.length - 1)
+      // //   parsedURI = parsedURI.replace("large", "thumb")
+      // // }
+      getColorFromUriPath(uri).then((tokenColor) => {
         if (!stale && tokenColor !== null) {
           setColor(tokenColor)
         }
@@ -123,7 +122,7 @@ export function useColorFromURI(uri?: string) {
       stale = true
       setColor(theme.accentAction)
     }
-  }, [uri])
+  }, [theme.accentAction, uri])
 
   return color
 }

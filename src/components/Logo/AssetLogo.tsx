@@ -61,20 +61,27 @@ export default function AssetLogo({
 
   useEffect(() => {
     src && updateUrl?.(src)
-  }, [src])
+  }, [src, updateUrl])
 
   if (src) {
-    return <LogoImage ref={ref} {...imageProps} src={src} onError={nextSrc} onLoad={(test) => {
-      try {
-        if (ref.current) {
-        const vibrant = new Vibrant(ref.current)
-        console.log(vibrant)
-      }
-      } catch(e) {
-        console.log(e)
-      }
-      
-    }} />
+    return (
+      <LogoImage
+        ref={ref}
+        {...imageProps}
+        src={src}
+        onError={nextSrc}
+        onLoad={() => {
+          try {
+            if (ref.current) {
+              const vibrant = new Vibrant(ref.current)
+              console.log(vibrant)
+            }
+          } catch (e) {
+            console.log(e)
+          }
+        }}
+      />
+    )
   } else {
     return (
       <MissingImageLogo size={size}>

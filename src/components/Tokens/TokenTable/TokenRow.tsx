@@ -474,11 +474,11 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           tokenInfo={
             <ClickableName>
               <LogoContainer>
-                <QueryTokenLogo token={token} updateUrl={setLogoUrl}/>
+                <QueryTokenLogo token={token} updateUrl={setLogoUrl} />
                 <L2NetworkLogo networkUrl={L2Icon} />
               </LogoContainer>
-              <div style={{width: '24px', height: '24px', borderRadius: '24px', backgroundColor: color}} />
-              {logoUrl?.includes("coingecko") && <CheckCircle color={"green"} />}
+              <div style={{ width: '24px', height: '24px', borderRadius: '24px', backgroundColor: color }} />
+              {logoUrl?.includes('coingecko') && <CheckCircle color="green" />}
               <TokenInfoCell>
                 <TokenName>{tokenName}</TokenName>
                 <TokenSymbol>{tokenSymbol}</TokenSymbol>

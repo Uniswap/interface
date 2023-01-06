@@ -57,7 +57,7 @@ export const AboutHeader = styled(ThemedText.MediumHeader)`
   font-size: 28px !important;
 `
 
-const ResourcesContainer = styled.div<{color: string}>`
+const ResourcesContainer = styled.div<{ color: string }>`
   color: ${({ color }) => color};
   display: flex;
   padding-top: 12px;

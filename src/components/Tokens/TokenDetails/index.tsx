@@ -32,9 +32,10 @@ import { Chain, TokenQuery, TokenQueryData } from 'graphql/data/Token'
 import { QueryToken } from 'graphql/data/Token'
 import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
 import { useIsUserAddedTokenOnChain } from 'hooks/Tokens'
+import { useColorFromURI } from 'hooks/useColor'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { UNKNOWN_TOKEN_SYMBOL, useTokenFromActiveNetwork } from 'lib/hooks/useCurrency'
-import { useCallback, useEffect, useMemo, useState, useTransition } from 'react'
+import { useCallback, useMemo, useState, useTransition } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -42,9 +43,8 @@ import { isAddress } from 'utils'
 
 import { OnChangeTimePeriod } from './ChartSection'
 import InvalidTokenDetails from './InvalidTokenDetails'
-import { useColorFromURI } from 'hooks/useColor'
 
-const TokenSymbol = styled.span<{color: string}>`
+const TokenSymbol = styled.span<{ color: string }>`
   text-transform: uppercase;
   color: ${({ theme, color }) => color ?? theme.textSecondary};
 `
@@ -202,7 +202,7 @@ export default function TokenDetails({
                 <ShareButton currency={token} />
               </TokenActions>
             </TokenInfoContainer>
-            <ChartSection tokenPriceQuery={tokenPriceQuery} onChangeTimePeriod={onChangeTimePeriod} color={color}/>
+            <ChartSection tokenPriceQuery={tokenPriceQuery} onChangeTimePeriod={onChangeTimePeriod} color={color} />
             <StatsSection
               TVL={tokenQueryData?.market?.totalValueLocked?.value}
               volume24H={tokenQueryData?.market?.volume24H?.value}

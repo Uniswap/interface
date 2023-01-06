@@ -39,7 +39,7 @@ function useWidgetTheme() {
 }
 
 interface WidgetProps {
-  token?: (Currency & { logoURI?: string | undefined })
+  token?: Currency
   onTokenChange?: (token: Currency) => void
   onReviewSwapClick?: OnReviewSwapClick
   accentColor: string
@@ -147,7 +147,7 @@ export default function Widget({ token, onTokenChange, onReviewSwapClick, accent
         permit2={permit2Enabled}
         routerUrl={WIDGET_ROUTER_URL}
         locale={locale}
-        theme={{...theme, accent: accentColor} }
+        theme={{ ...theme, accent: accentColor }}
         width={WIDGET_WIDTH}
         // defaultChainId is excluded - it is always inferred from the passed provider
         provider={provider}
