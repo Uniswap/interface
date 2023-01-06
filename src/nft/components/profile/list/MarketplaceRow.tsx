@@ -31,6 +31,12 @@ const RemoveMarketplaceWrap = styled(RemoveIconWrap)`
   top: 11px;
 `
 
+const MarketIconWrapper = styled.div`
+  position: relative;
+  cursor: pointer;
+  margin-right: 16px;
+`
+
 const MarketIcon = styled.img`
   width: 28px;
   height: 28px;
@@ -194,10 +200,7 @@ export const MarketplaceRow = ({
 
       <Row flex="2">
         {showMarketplaceLogo && (
-          <Column
-            position="relative"
-            cursor="pointer"
-            marginRight="16"
+          <MarketIconWrapper
             onMouseEnter={handleHover}
             onMouseLeave={handleHover}
             onClick={(e) => {
@@ -206,11 +209,11 @@ export const MarketplaceRow = ({
               removeMarket && removeMarket()
             }}
           >
+            <MarketIcon alt={selectedMarkets[0].name} src={selectedMarkets[0].icon} />
             <RemoveMarketplaceWrap hovered={hovered}>
               <img width="32px" src="/nft/svgs/minusCircle.svg" alt="Remove item" />
             </RemoveMarketplaceWrap>
-            <MarketIcon alt={selectedMarkets[0].name} src={selectedMarkets[0].icon} />
-          </Column>
+          </MarketIconWrapper>
         )}
         {globalPriceMethod === SetPriceMethod.SAME_PRICE && !globalOverride ? (
           <PriceTextInput
