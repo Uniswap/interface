@@ -928,8 +928,10 @@ export default function Swap() {
                         </Trans>
                       </PriceImpactHigh>
                     )}
-
-                    <ApproveMessage routerAddress={trade?.routerAddress} />
+                    <ApproveMessage
+                      routerAddress={trade?.routerAddress}
+                      isCurrencyInNative={Boolean(currencyIn?.isNative)}
+                    />
 
                     <BottomGrouping>
                       {!account ? (
