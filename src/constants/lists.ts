@@ -16,7 +16,7 @@ const WRAPPED_LIST = 'wrapped.tokensoft.eth'
 // export const ARBITRUM_LIST = 'https://bridge.arbitrum.io/token-list-42161.json'
 // export const CELO_LIST = 'https://celo-org.github.io/celo-token-list/celo.tokenlist.json'
 export const SCROLL_PREALPHA_LIST =
-  'https://raw.githubusercontent.com/dghelm/uniswap-v3-interface/scroll-testground/src/constants/tokenLists/scroll-alpha.tokenlist.json'
+  'https://raw.githubusercontent.com/dghelm/uniswap-v3-interface/scroll-showcase/src/constants/tokenLists/scroll-alpha.tokenlist.json'
 
 export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST, UNI_UNSUPPORTED_LIST]
 
