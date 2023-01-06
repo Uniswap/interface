@@ -1,21 +1,33 @@
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
+import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
-import { Column, Row } from 'nft/components/Flex'
-import { body, bodySmall } from 'nft/css/common.css'
+import { Column } from 'nft/components/Flex'
+import { body } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { ListingMarket, ListingWarning, WalletAsset } from 'nft/types'
 import { LOOKS_RARE_CREATOR_BASIS_POINTS } from 'nft/utils'
 import { formatEth, formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { Dispatch, useEffect, useMemo, useState } from 'react'
-import { ThemedText } from 'theme'
+import styled from 'styled-components/macro'
+import { BREAKPOINTS, ThemedText } from 'theme'
 
 import * as styles from './ListPage.css'
 import { SetPriceMethod } from './NFTListingsGrid'
 import { PriceTextInput } from './PriceTextInput'
 import { RoyaltyTooltip } from './RoyaltyTooltip'
+
+const PastPriceInfo = styled(Column)`
+  text-align: left;
+  display: none;
+  flex: 1;
+
+  @media screen and (min-width: ${BREAKPOINTS.xxl}px) {
+    display: flex;
+  }
+`
 
 const getRoyalty = (listingMarket: ListingMarket, asset: WalletAsset) => {
   // LooksRare is a unique case where royalties for creators are a flat 0.5% or 50 basis points
@@ -135,25 +147,17 @@ export const MarketplaceRow = ({
   }
 
   return (
-    <Row transition="500" marginLeft="0">
-      <Column
-        className={bodySmall}
-        color="textSecondary"
-        textAlign="left"
-        flex="1"
-        display={{ sm: 'none', xxl: 'flex' }}
-      >
-        {asset.floorPrice ? `${asset.floorPrice.toFixed(3)} ETH` : '-'}
-      </Column>
-      <Column
-        className={bodySmall}
-        color="textSecondary"
-        textAlign="left"
-        flex="1"
-        display={{ sm: 'none', xxl: 'flex' }}
-      >
-        {asset.lastPrice ? `${asset.lastPrice.toFixed(3)} ETH` : '-'}
-      </Column>
+    <Row marginLeft="0">
+      <PastPriceInfo>
+        <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
+          {asset.floorPrice ? `${asset.floorPrice.toFixed(3)} ETH` : '-'}
+        </ThemedText.BodySmall>
+      </PastPriceInfo>
+      <PastPriceInfo>
+        <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
+          {asset.lastPrice ? `${asset.lastPrice.toFixed(3)} ETH` : '-'}
+        </ThemedText.BodySmall>
+      </PastPriceInfo>
 
       <Row flex="2">
         {showMarketplaceLogo && (
@@ -245,33 +249,19 @@ const EthPriceDisplay = ({ ethPrice = 0 }: { ethPrice?: number }) => {
   }, [])
 
   return (
-    <Row width="full" justifyContent="flex-end" color={ethPrice !== 0 ? 'textPrimary' : 'textSecondary'}>
-      {ethPrice !== 0 ? (
-        <>
+    <Row width="100%" justify="flex-end">
+      <ThemedText.BodyPrimary lineHeight="24px" color={ethPrice ? 'textPrimary' : 'textSecondary'} textAlign="right">
+        {ethPrice !== 0 ? (
           <Column>
-            <ThemedText.BodyPrimary
-              lineHeight="24px"
-              color="textPrimary"
-              textAlign="right"
-              marginLeft="12"
-              marginRight="0"
-            >
-              {formatEth(ethPrice)} ETH
-            </ThemedText.BodyPrimary>
-            <ThemedText.BodyPrimary
-              lineHeight="24px"
-              color="textSecondary"
-              textAlign="right"
-              marginLeft="12"
-              marginRight="0"
-            >
+            <span>{formatEth(ethPrice)} ETH</span>
+            <ThemedText.BodyPrimary color="textSecondary">
               {formatUsdPrice(ethPrice * ethConversion)}
             </ThemedText.BodyPrimary>
           </Column>
-        </>
-      ) : (
-        '- ETH'
-      )}
+        ) : (
+          '- ETH'
+        )}
+      </ThemedText.BodyPrimary>
     </Row>
   )
 }
