@@ -14,10 +14,10 @@ import { Dispatch, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
 
-import * as styles from './ListPage.css'
 import { SetPriceMethod } from './NFTListingsGrid'
 import { PriceTextInput } from './PriceTextInput'
 import { RoyaltyTooltip } from './RoyaltyTooltip'
+import { RemoveIconWrap } from './shared'
 
 const PastPriceInfo = styled(Column)`
   text-align: left;
@@ -27,6 +27,10 @@ const PastPriceInfo = styled(Column)`
   @media screen and (min-width: ${BREAKPOINTS.xxl}px) {
     display: flex;
   }
+`
+
+const RemoveMarketplaceWrap = styled(RemoveIconWrap)`
+  top: 11px;
 `
 
 const getRoyalty = (listingMarket: ListingMarket, asset: WalletAsset) => {
@@ -164,6 +168,7 @@ export const MarketplaceRow = ({
           <Column
             position="relative"
             cursor="pointer"
+            marginRight="16"
             onMouseEnter={handleHover}
             onMouseLeave={handleHover}
             onClick={(e) => {
@@ -172,9 +177,9 @@ export const MarketplaceRow = ({
               removeMarket && removeMarket()
             }}
           >
-            <Box className={styles.removeMarketplace} visibility={hovered ? 'visible' : 'hidden'} position="absolute">
-              <Box as="img" width="32" src="/nft/svgs/minusCircle.svg" alt="Remove item" />
-            </Box>
+            <RemoveMarketplaceWrap hovered={hovered}>
+              <img width="32px" src="/nft/svgs/minusCircle.svg" alt="Remove item" />
+            </RemoveMarketplaceWrap>
             <Box
               as="img"
               alt={selectedMarkets[0].name}
@@ -183,7 +188,6 @@ export const MarketplaceRow = ({
               borderRadius="4"
               objectFit="cover"
               src={selectedMarkets[0].icon}
-              marginRight="16"
             />
           </Column>
         )}
