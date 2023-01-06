@@ -53,6 +53,15 @@ const FeeWrapper = styled.div`
   white-space: nowrap;
 `
 
+const ReturnColumn = styled(Column)`
+  flex: 1.5;
+  display: none;
+
+  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
+    display: flex;
+  }
+`
+
 const getRoyalty = (listingMarket: ListingMarket, asset: WalletAsset) => {
   // LooksRare is a unique case where royalties for creators are a flat 0.5% or 50 basis points
   const baseFee = listingMarket.name === 'LooksRare' ? LOOKS_RARE_CREATOR_BASIS_POINTS : asset.basisPoints ?? 0
@@ -171,7 +180,7 @@ export const MarketplaceRow = ({
   }
 
   return (
-    <Row marginLeft="0">
+    <Row>
       <PastPriceInfo>
         <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
           {asset.floorPrice ? `${asset.floorPrice.toFixed(3)} ETH` : '-'}
@@ -243,11 +252,9 @@ export const MarketplaceRow = ({
         </MouseoverTooltip>
       </FeeColumnWrapper>
 
-      <Column flex="1.5" display={{ sm: 'none', lg: 'flex' }}>
-        <Column width="full">
-          <EthPriceDisplay ethPrice={userReceives} />
-        </Column>
-      </Column>
+      <ReturnColumn>
+        <EthPriceDisplay ethPrice={userReceives} />
+      </ReturnColumn>
     </Row>
   )
 }
