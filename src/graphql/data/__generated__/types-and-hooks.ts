@@ -831,6 +831,13 @@ export enum TransactionStatus {
   Pending = 'PENDING'
 }
 
+export type SearchTokensQueryVariables = Exact<{
+  searchQuery: Scalars['String'];
+}>;
+
+
+export type SearchTokensQuery = { __typename?: 'Query', searchTokenProjects?: Array<{ __typename?: 'TokenProject', logoUrl?: string, tokens: Array<{ __typename?: 'Token', id: string, decimals?: number, name?: string, chain: Chain, standard?: TokenStandard, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', price?: { __typename?: 'Amount', value: number, currency?: Currency }, pricePercentChange?: { __typename?: 'Amount', value: number }, volume24H?: { __typename?: 'Amount', value: number, currency?: Currency } } }> }> };
+
 export type TokenQueryVariables = Exact<{
   contract: ContractInput;
 }>;
@@ -904,6 +911,63 @@ export type NftBalanceQueryVariables = Exact<{
 export type NftBalanceQuery = { __typename?: 'Query', nftBalances?: { __typename?: 'NftBalanceConnection', edges: Array<{ __typename?: 'NftBalanceEdge', node: { __typename?: 'NftBalance', listedMarketplaces?: Array<NftMarketplace>, ownedAsset?: { __typename?: 'NftAsset', id: string, animationUrl?: string, description?: string, flaggedBy?: string, name?: string, ownerAddress?: string, suspiciousFlag?: boolean, tokenId: string, collection?: { __typename?: 'NftCollection', isVerified?: boolean, name?: string, image?: { __typename?: 'Image', url: string }, nftContracts?: Array<{ __typename?: 'NftContract', address: string, chain: Chain, name?: string, standard?: NftStandard, symbol?: string, totalSupply?: number }>, markets?: Array<{ __typename?: 'NftCollectionMarket', floorPrice?: { __typename?: 'TimestampedAmount', value: number } }> }, image?: { __typename?: 'Image', url: string }, originalImage?: { __typename?: 'Image', url: string }, smallImage?: { __typename?: 'Image', url: string }, thumbnail?: { __typename?: 'Image', url: string }, listings?: { __typename?: 'NftOrderConnection', edges: Array<{ __typename?: 'NftOrderEdge', node: { __typename?: 'NftOrder', createdAt: number, marketplace: NftMarketplace, endAt?: number, price: { __typename?: 'Amount', value: number, currency?: Currency } } }> } }, listingFees?: Array<{ __typename?: 'NftFee', payoutAddress: string, basisPoints: number }>, lastPrice?: { __typename?: 'TimestampedAmount', currency?: Currency, timestamp: number, value: number } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string, hasNextPage?: boolean, hasPreviousPage?: boolean, startCursor?: string } } };
 
 
+export const SearchTokensDocument = gql`
+    query SearchTokens($searchQuery: String!) {
+  searchTokenProjects(searchQuery: $searchQuery) {
+    tokens {
+      id @required(action: LOG)
+      decimals @required(action: LOG)
+      name @required(action: LOG)
+      chain @required(action: LOG)
+      standard @required(action: LOG)
+      address
+      symbol @required(action: LOG)
+      market(currency: USD) {
+        price {
+          value
+          currency
+        }
+        pricePercentChange(duration: DAY) {
+          value
+        }
+        volume24H: volume(duration: DAY) {
+          value
+          currency
+        }
+      }
+    }
+    logoUrl
+  }
+}
+    `;
+
+/**
+ * __useSearchTokensQuery__
+ *
+ * To run a query within a React component, call `useSearchTokensQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchTokensQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchTokensQuery({
+ *   variables: {
+ *      searchQuery: // value for 'searchQuery'
+ *   },
+ * });
+ */
+export function useSearchTokensQuery(baseOptions: Apollo.QueryHookOptions<SearchTokensQuery, SearchTokensQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchTokensQuery, SearchTokensQueryVariables>(SearchTokensDocument, options);
+      }
+export function useSearchTokensLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchTokensQuery, SearchTokensQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchTokensQuery, SearchTokensQueryVariables>(SearchTokensDocument, options);
+        }
+export type SearchTokensQueryHookResult = ReturnType<typeof useSearchTokensQuery>;
+export type SearchTokensLazyQueryHookResult = ReturnType<typeof useSearchTokensLazyQuery>;
+export type SearchTokensQueryResult = Apollo.QueryResult<SearchTokensQuery, SearchTokensQueryVariables>;
 export const TokenDocument = gql`
     query Token($contract: ContractInput!) {
   tokens(contracts: [$contract]) {
