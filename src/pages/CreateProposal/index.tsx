@@ -12,6 +12,7 @@ import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { Wrapper } from 'pages/Pool/styleds'
 import { useCallback, useMemo, useState } from 'react'
+import { Helmet } from 'react-helmet-async'
 import {
   CreateProposalData,
   ProposalState,
@@ -240,6 +241,9 @@ ${bodyValue}
 
   return (
     <Trace page={InterfacePageName.VOTE_PAGE} shouldLogImpression>
+      <Helmet>
+        <title>Vote | Uniswap</title>
+      </Helmet>
       <PageWrapper>
         <AppBody $maxWidth="800px">
           <CreateProposalTabs />

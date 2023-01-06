@@ -13,6 +13,7 @@ import useBlockNumber from 'lib/hooks/useBlockNumber'
 import ms from 'ms.macro'
 import { useState } from 'react'
 import { ArrowLeft } from 'react-feather'
+import { Helmet } from 'react-helmet-async'
 import ReactMarkdown from 'react-markdown'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -273,6 +274,9 @@ export default function VotePage() {
   return (
     <Trace page={InterfacePageName.VOTE_PAGE} shouldLogImpression>
       <>
+        <Helmet>
+          <title>Vote | Uniswap</title>
+        </Helmet>
         <PageWrapper gap="lg" justify="center">
           <VoteModal
             isOpen={showVoteModal}

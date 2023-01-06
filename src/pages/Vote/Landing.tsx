@@ -16,6 +16,7 @@ import ProposalEmptyState from 'components/vote/ProposalEmptyState'
 import JSBI from 'jsbi'
 import { darken } from 'polished'
 import { useState } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
 import { Button } from 'rebass/styled-components'
 import { useModalIsOpen, useToggleDelegateModal } from 'state/application/hooks'
@@ -146,6 +147,9 @@ export default function Landing() {
   return (
     <>
       <Trace page={InterfacePageName.VOTE_PAGE} shouldLogImpression>
+        <Helmet>
+          <title>Vote | Uniswap</title>
+        </Helmet>
         <PageWrapper gap="lg" justify="center">
           <DelegateModal
             isOpen={showDelegateModal}
