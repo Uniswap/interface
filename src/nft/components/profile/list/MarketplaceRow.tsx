@@ -2,9 +2,7 @@
 import { t } from '@lingui/macro'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { Box } from 'nft/components/Box'
 import { Column } from 'nft/components/Flex'
-import { body } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { ListingMarket, ListingWarning, WalletAsset } from 'nft/types'
 import { LOOKS_RARE_CREATOR_BASIS_POINTS } from 'nft/utils'
@@ -38,6 +36,21 @@ const MarketIcon = styled.img`
   height: 28px;
   border-radius: 4px;
   object-fit: cover;
+`
+
+const FeeColumnWrapper = styled(Column)`
+  flex: 1;
+  align-items: flex-end;
+  display: none;
+
+  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
+    display: flex;
+  }
+`
+
+const FeeWrapper = styled.div`
+  width: min-content;
+  white-space: nowrap;
 `
 
 const getRoyalty = (listingMarket: ListingMarket, asset: WalletAsset) => {
@@ -215,24 +228,20 @@ export const MarketplaceRow = ({
         )}
       </Row>
 
-      <Column flex="1" display={{ sm: 'none', lg: 'flex' }}>
-        <Box className={body} color="textSecondary" width="full" textAlign="right">
-          <MouseoverTooltip
-            text={
-              <Row>
-                <Box width="full" fontSize="14">
-                  {selectedMarkets.map((selectedMarket, index) => {
-                    return <RoyaltyTooltip selectedMarket={selectedMarket} key={index} />
-                  })}
-                </Box>
-              </Row>
-            }
-            placement="left"
-          >
-            {fees > 0 ? `${fees}${selectedMarkets.length > 1 ? t`% max` : '%'}` : '--%'}
-          </MouseoverTooltip>
-        </Box>
-      </Column>
+      <FeeColumnWrapper>
+        <MouseoverTooltip
+          text={selectedMarkets.map((selectedMarket, index) => {
+            return <RoyaltyTooltip selectedMarket={selectedMarket} key={index} />
+          })}
+          placement="left"
+        >
+          <FeeWrapper>
+            <ThemedText.BodyPrimary color="textSecondary">
+              {fees > 0 ? `${fees}${selectedMarkets.length > 1 ? t`% max` : '%'}` : '--%'}
+            </ThemedText.BodyPrimary>
+          </FeeWrapper>
+        </MouseoverTooltip>
+      </FeeColumnWrapper>
 
       <Column flex="1.5" display={{ sm: 'none', lg: 'flex' }}>
         <Column width="full">
