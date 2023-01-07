@@ -37,7 +37,7 @@ const CollapsibleToggler = styled(BaseButton)<{ isOpen: boolean }>`
 
 const CollapsibleContentContainer = styled.div<{ isOpen: boolean }>`
   display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
-  background: transparent;
+  background-color: ${({ theme }) => theme.bg1};
   position: relative;
   top: -10px;
   border-left: 3px solid ${({ theme }) => theme.shadow3};
