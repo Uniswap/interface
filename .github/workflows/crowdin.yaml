@@ -1,0 +1,52 @@
+name: Crowdin Upload
+
+# on any push to main, we upload the translations to be translated
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  synchronize-with-crowdin:
+    name: Upload sources to Crowdin
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+          registry-url: https://registry.npmjs.org
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Extract translations
+        run: "yarn i18n:extract"
+
+      - name: Synchronize
+        uses: crowdin/github-action@1.1.0
+        with:
+          upload_sources: true
+          download_translations: false
+          project_id: 458284
+          token: ${{ secrets.CROWDIN_PERSONAL_TOKEN_SECRET }}
+          source: 'src/locales/en-US.po'
+          translation: 'src/locales/%locale%.po'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

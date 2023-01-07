@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "baseUrl": "src"
+  },
+  "exclude": ["node_modules", "cypress"],
+  "include": ["src/**/*"]
+}
