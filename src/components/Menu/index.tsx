@@ -33,8 +33,8 @@ const StyledMenuButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${({ theme }) => (theme.darkMode ? theme.bg2 : 'inherit')};
-  border: 1px solid ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => (theme.darkMode ? theme.bg1 : theme.bg3)};
+  border: 1px solid ${({ theme }) => (theme.darkMode ? theme.bg1 : theme.bg0)};
   border-radius: 20px;
   margin: 0;
   padding: 8px;
@@ -43,8 +43,8 @@ const StyledMenuButton = styled.button`
   :focus {
     cursor: pointer;
     outline: none;
-    border: 1px solid ${({ theme }) => (theme.darkMode ? theme.bg2 : theme.bg0)};
-    background-color: ${({ theme }) => (theme.darkMode ? theme.bg2 : theme.bg0)};
+    background-color: ${({ theme }) => (theme.darkMode ? theme.bg1 : theme.bg0)};
+    border: 1px solid ${({ theme }) => theme.bg3};
 
     path {
       fill: ${({ theme }) => theme.text1};
