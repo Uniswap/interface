@@ -43,8 +43,8 @@ const NavLinks = styled(Row)`
     bottom: 0; right: 50%;
     transform: translate(50%,-50%);
     margin: 0 auto;
-    background-color: ${({ theme }) => theme.bg2};
-    border: 1px solid ${({ theme }) => theme.bg2};
+    background-color: ${({ theme }) => (theme.darkMode ? theme.bg1 : theme.bg0)};
+    border: 1px solid ${({ theme }) => (theme.darkMode ? theme.bg1 : theme.bg3)};
     box-shadow: 0px 6px 10px rgb(0 0 0 / 2%);
     width: fit-content;
   `};
@@ -59,7 +59,10 @@ const StyledNavLink = styled(NavLink).attrs({
   activeClassName,
 })`
   ${({ theme }) => theme.flexRowNoWrap}
-  align-items: baseline;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
   border-radius: 20px;
   outline: none;
   cursor: pointer;
@@ -71,11 +74,11 @@ const StyledNavLink = styled(NavLink).attrs({
   word-break: break-word;
   white-space: nowrap;
   color: ${({ theme }) => theme.text2};
-  gap: 10px;
+  height: 44px;
 
   &.${activeClassName} {
-    background-color: ${({ theme }) => (theme.darkMode ? theme.bg2 : theme.bg0)};
-
+    box-shadow: 0 0 2px 1px ${({ theme }) => (theme.darkMode ? theme.bg3 : theme.bg0)};
+    background-color: ${({ theme }) => (theme.darkMode ? theme.bg2 : theme.bg3)};
     div {
       font-weight: 700;
     }
@@ -99,8 +102,9 @@ const StyledNavLink = styled(NavLink).attrs({
 
 const StyledNavLinkAlt = styled.button`
   display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 10px;
-  align-items: baseline;
   background-color: transparent;
   border-color: transparent;
   border-width: 0px;
@@ -114,8 +118,10 @@ const StyledNavLinkAlt = styled.button`
   padding: 8px 16px;
   word-break: break-word;
   white-space: nowrap;
+  height: 44px;
 
   &.${activeClassName} {
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg3};
     border-radius: 20px;
     font-weight: 600;
     color: ${({ theme }) => theme.text1};
