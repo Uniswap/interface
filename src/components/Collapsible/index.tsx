@@ -72,7 +72,7 @@ const CollapsibleContentContainer = styled.div<{ isOpen: boolean }>`
 
 const StyledArrow = styled(ArrowDownCircle)<{ isOpen: boolean }>`
   transform: ${({ isOpen }) => (isOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
-  transition: all 0.25s ease-in;
+  transition: transform 0.3s linear;
 `
 
 interface CollapsibleProps {
