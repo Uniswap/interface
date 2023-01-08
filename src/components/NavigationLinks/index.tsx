@@ -44,7 +44,7 @@ const NavLinks = styled(Row)`
     transform: translate(50%,-50%);
     margin: 0 auto;
     background-color: ${({ theme }) => (theme.darkMode ? theme.bg1 : theme.bg0)};
-    border: 1px solid ${({ theme }) => (theme.darkMode ? theme.bg1 : theme.bg3)};
+    border: 1px solid ${({ theme }) => theme.primary1};
     box-shadow: 0px 6px 10px rgb(0 0 0 / 2%);
     width: fit-content;
   `};
