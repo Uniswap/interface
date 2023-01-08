@@ -7,6 +7,7 @@ const StyledIframe = styled.iframe`
   border-radius: 20px;
   width: 100%;
   height: 100%;
+  box-shadow: 0 0 12px 6px ${({ theme }) => theme.shadow2};
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
     height: 75vh;
