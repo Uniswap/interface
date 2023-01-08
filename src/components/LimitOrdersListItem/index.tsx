@@ -58,6 +58,7 @@ const TextValue = styled(Text)`
   text-align: right;
   flex: 1;
   padding-left: 1rem;
+  font-size: 14px;
 `
 
 interface OrderDetails {
@@ -299,7 +300,7 @@ export default function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }
             <Trans>Status:</Trans>
           </TYPE.darkGray>
         </TextLabel>
-        <TextValue>
+        <TextValue fontWeight={700}>
           <Trans>{renderStatus()}</Trans>
         </TextValue>
       </RowFixedHeight>
