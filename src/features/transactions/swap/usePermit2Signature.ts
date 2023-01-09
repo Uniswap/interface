@@ -1,6 +1,7 @@
 import {
   AllowanceProvider,
   AllowanceTransfer,
+  MaxUint160,
   PERMIT2_ADDRESS,
   PermitSingle,
 } from '@uniswap/permit2-sdk'
@@ -27,9 +28,7 @@ function getPermitStruct(
   return {
     details: {
       token: tokenAddress,
-      // TODO: [MOB-3905] import constant from permit2-sdk
-      // this is BigUInt160
-      amount: BigNumber.from('0xffffffffffffffffffffffffffffffffffffffff'),
+      amount: MaxUint160,
       // expiration specifies when the allowance will need to be re-set
       expiration: dayjs().add(1, 'month').unix(),
       nonce,
