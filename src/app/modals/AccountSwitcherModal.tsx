@@ -1,61 +1,69 @@
-import { DrawerContentComponentProps, useDrawerStatus } from '@react-navigation/drawer'
 import { useResponsiveProp } from '@shopify/restyle'
-import { default as React, useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import 'react-native-gesture-handler'
-import { Edge } from 'react-native-safe-area-context'
-import { SvgProps } from 'react-native-svg'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import GlobalIcon from 'src/assets/icons/global.svg'
-import HelpIcon from 'src/assets/icons/help.svg'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import InformationIcon from 'src/assets/icons/i-icon.svg'
 import PlusIcon from 'src/assets/icons/plus.svg'
 import SettingsIcon from 'src/assets/icons/settings.svg'
 import { AccountList } from 'src/components/accounts/AccountList'
-import { AddressDisplay } from 'src/components/AddressDisplay'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Separator } from 'src/components/layout/Separator'
 import { ActionSheetModal, MenuItemProp } from 'src/components/modals/ActionSheetModal'
+import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal, {
   captionForAccountRemovalWarning,
 } from 'src/components/modals/WarningModal/WarningModal'
 import { Text } from 'src/components/Text'
-import { uniswapUrls } from 'src/constants/urls'
-import { useFiatOnRampEnabled } from 'src/features/experiments/hooks'
-import { FiatOnRampBanner } from 'src/features/fiatOnRamp/FiatOnRampBanner'
+import { closeModal } from 'src/features/modals/modalSlice'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { useDrawerStatusLogging } from 'src/features/telemetry/hooks'
 import { Account, AccountType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
 import { createAccountActions } from 'src/features/wallet/createAccountSaga'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
-import { useAccounts, useActiveAccount, useNativeAccountExists } from 'src/features/wallet/hooks'
+import {
+  useAccounts,
+  useActiveAccountWithThrow,
+  useNativeAccountExists,
+} from 'src/features/wallet/hooks'
 import {
   PendingAccountActions,
   pendingAccountActions,
 } from 'src/features/wallet/pendingAcccountsSaga'
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
-import { iconSizes } from 'src/styles/sizing'
 import { setClipboard } from 'src/utils/clipboard'
-import { openUri } from 'src/utils/linking'
 
-const onPressGetHelp = () => {
-  openUri(uniswapUrls.helpUrl)
+export function AccountSwitcherModal() {
+  const dispatch = useAppDispatch()
+
+  return (
+    <BottomSheetModal
+      disableSwipe
+      name={ModalName.AccountSwitcher}
+      onClose={() => dispatch(closeModal({ name: ModalName.AccountSwitcher }))}>
+      <Screen edges={['bottom']}>
+        <AccountSwitcher
+          onClose={() => {
+            dispatch(closeModal({ name: ModalName.AccountSwitcher }))
+          }}
+        />
+      </Screen>
+    </BottomSheetModal>
+  )
 }
 
-const UNICON_SIZE = iconSizes.xxxl
-
-export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
+function AccountSwitcher({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
-  const activeAccount = useActiveAccount()
+  const activeAccount = useActiveAccountWithThrow()
   const addressToAccount = useAccounts()
   const dispatch = useAppDispatch()
   const hasImportedSeedPhrase = useNativeAccountExists()
@@ -65,9 +73,6 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
   const [showUninstallToImportModal, setShowUninstallToImportModal] = useState(false)
   const [pendingEditAddress, setPendingEditAddress] = useState<Address | null>(null)
   const [pendingRemoveAccount, setPendingRemoveAccount] = useState<Account | null>(null)
-
-  useDrawerStatusLogging()
-  const isDrawerOpen = useDrawerStatus() === 'open'
 
   const addAccountBottomMargin = useResponsiveProp({ xs: 'md', sm: 'none' })
 
@@ -91,10 +96,6 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
       mnemonicWallets: _mnemonicWallets,
     }
   }, [addressToAccount])
-
-  // hide fiat onramp banner when active account isn't a signer account.
-  const fiatOnRampShown =
-    useFiatOnRampEnabled() && activeAccount?.type === AccountType.SignerMnemonic
 
   const onPressEdit = useCallback((address: Address) => {
     setShowEditAccountModal(true)
@@ -125,10 +126,10 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
 
   const onPressAccount = useCallback(
     (address: Address) => {
-      navigation.closeDrawer()
+      dispatch(closeModal({ name: ModalName.AccountSwitcher }))
       dispatch(activateAccount(address))
     },
-    [navigation, dispatch]
+    [dispatch]
   )
 
   const onPressAddWallet = () => {
@@ -140,19 +141,15 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
   }
 
   const onPressSettings = () => {
-    navigation.navigate(Screens.SettingsStack, { screen: Screens.Settings })
+    navigate(Screens.SettingsStack, { screen: Screens.Settings })
+    onClose()
   }
-
-  const onPressManageConnections = useCallback(() => {
-    navigation.navigate(Screens.SettingsWalletManageConnection, { address: activeAccount?.address })
-  }, [navigation, activeAccount])
 
   const editAccountOptions = useMemo<MenuItemProp[]>(() => {
     const onPressWalletSettings = () => {
       setShowEditAccountModal(false)
-      navigation.closeDrawer()
       if (!pendingEditAddress) return
-      navigation.navigate(Screens.SettingsStack, {
+      navigate(Screens.SettingsStack, {
         screen: Screens.SettingsWallet,
         params: { address: pendingEditAddress },
       })
@@ -228,7 +225,6 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     mnemonicWallets.length,
     pendingEditAddress,
     addressToAccount,
-    navigation,
     dispatch,
     t,
   ])
@@ -239,27 +235,27 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
       dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
       dispatch(createAccountActions.trigger())
 
-      navigation.navigate(Screens.OnboardingStack, {
+      navigate(Screens.OnboardingStack, {
         screen: OnboardingScreens.EditName,
         params: {
           importType: hasImportedSeedPhrase ? ImportType.CreateAdditional : ImportType.CreateNew,
           entryPoint: OnboardingEntryPoint.Sidebar,
         },
-        merge: false,
       })
       setShowAddWalletModal(false)
+      onClose()
     }
 
     const onPressAddViewOnlyWallet = () => {
-      navigation.navigate(Screens.OnboardingStack, {
+      navigate(Screens.OnboardingStack, {
         screen: OnboardingScreens.WatchWallet,
         params: {
           importType: ImportType.Watch,
           entryPoint: OnboardingEntryPoint.Sidebar,
         },
-        merge: false,
       })
       setShowAddWalletModal(false)
+      onClose()
     }
 
     const onPressImportWallet = () => {
@@ -269,13 +265,13 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
         return
       }
 
-      navigation.navigate(Screens.OnboardingStack, {
+      navigate(Screens.OnboardingStack, {
         screen: OnboardingScreens.ImportMethod,
         params: { entryPoint: OnboardingEntryPoint.Sidebar },
-        merge: false,
       })
 
       setShowAddWalletModal(false)
+      onClose()
     }
 
     return [
@@ -311,57 +307,24 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
         ),
       },
     ]
-  }, [hasImportedSeedPhrase, dispatch, navigation, t])
+  }, [dispatch, hasImportedSeedPhrase, onClose, t])
 
-  const screenEdges: Edge[] = useMemo(
-    () => (accountsData.length <= 1 ? ['top', 'bottom'] : ['top']),
-    [accountsData.length]
-  )
-
-  if (!activeAccount?.address) {
+  if (!activeAccount.address) {
     return null
   }
 
   return (
-    <Screen bg="background0" edges={screenEdges}>
-      <Flex pt="lg" px="lg">
-        <AddressDisplay
-          showCopy
-          address={activeAccount.address}
-          captionVariant="subheadSmall"
-          size={UNICON_SIZE}
-          variant="subheadLarge"
-        />
-      </Flex>
-
-      {fiatOnRampShown ? <FiatOnRampBanner mx="md" my="lg" /> : <Separator my="md" />}
-
-      <Flex gap="lg" pb="lg" px="md">
-        <SettingsButton
-          Icon={GlobalIcon}
-          label={t('Manage connections')}
-          name={ElementName.ManageConnections}
-          onPress={onPressManageConnections}
-        />
-        <SettingsButton
-          Icon={SettingsIcon}
-          label={t('Settings')}
-          name={ElementName.Settings}
-          onPress={onPressSettings}
-        />
-        <SettingsButton
-          Icon={HelpIcon}
-          label={t('Get help')}
-          name={ElementName.GetHelp}
-          onPress={onPressGetHelp}
-        />
-      </Flex>
-
-      <Box flexGrow={1} />
+    <Box mt="sm">
+      <AccountList
+        accounts={accountsData}
+        onAddWallet={onPressAddWallet}
+        onPress={onPressAccount}
+        onPressEdit={onPressEdit}
+      />
 
       <Separator mb="md" />
 
-      {accountsData.length <= 1 ? (
+      <Flex gap="sm">
         <TouchableArea mb={addAccountBottomMargin} ml="lg" onPress={onPressAddWallet}>
           <Flex row alignItems="center">
             <Box
@@ -377,18 +340,26 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
                 width={theme.iconSizes.xs}
               />
             </Box>
-            <Text variant="bodyLarge">{t('Add another wallet')}</Text>
+            <Text color="textSecondary" variant="bodyLarge">
+              {t('Add another wallet')}
+            </Text>
           </Flex>
         </TouchableArea>
-      ) : (
-        <AccountList
-          accounts={accountsData}
-          isVisible={isDrawerOpen}
-          onAddWallet={onPressAddWallet}
-          onPress={onPressAccount}
-          onPressEdit={onPressEdit}
-        />
-      )}
+        <TouchableArea mb={addAccountBottomMargin} ml="lg" onPress={onPressSettings}>
+          <Flex row alignItems="center">
+            <Box p="xxs">
+              <SettingsIcon
+                color={theme.colors.textSecondary}
+                height={theme.iconSizes.md}
+                width={theme.iconSizes.md}
+              />
+            </Box>
+            <Text color="textSecondary" variant="bodyLarge">
+              {t('Settings')}
+            </Text>
+          </Flex>
+        </TouchableArea>
+      </Flex>
 
       <ActionSheetModal
         isVisible={showEditAccountModal}
@@ -428,37 +399,6 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
           onClose={() => setShowUninstallToImportModal(false)}
         />
       )}
-    </Screen>
-  )
-}
-
-function SettingsButton({
-  name,
-  Icon,
-  onPress,
-  label,
-}: {
-  name: ElementName
-  Icon: React.FC<SvgProps>
-  label: string
-  onPress: () => void
-}) {
-  const theme = useAppTheme()
-
-  return (
-    <TouchableArea name={name} testID={name} onPress={onPress}>
-      <Flex row alignItems="center" gap="xs">
-        <Box alignItems="center" width={UNICON_SIZE}>
-          <Icon
-            color={theme.colors.textSecondary}
-            height={theme.iconSizes.lg}
-            width={theme.iconSizes.lg}
-          />
-        </Box>
-        <Text color="textPrimary" variant="bodyLarge">
-          {label}
-        </Text>
-      </Flex>
-    </TouchableArea>
+    </Box>
   )
 }

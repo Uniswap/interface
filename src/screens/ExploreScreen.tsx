@@ -17,6 +17,8 @@ import {
   panSidebarContainerGestureAction,
 } from 'src/components/layout/TabHelpers'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
+import { FEATURE_FLAGS } from 'src/features/experiments/constants'
+import { useFeatureFlag } from 'src/features/experiments/hooks'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { EventName, SectionName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
@@ -31,6 +33,8 @@ type Props = NativeStackScreenProps<ExploreStackParamList, Screens.Explore>
 export function ExploreScreen({ navigation }: Props) {
   const { t } = useTranslation()
   const isDarkMode = useColorScheme() === 'dark'
+
+  const renderSidebarGesture = useFeatureFlag(FEATURE_FLAGS.AccountSwitcherModal, false)
 
   const listRef = useRef(null)
   useScrollToTop(listRef)
@@ -119,16 +123,18 @@ export function ExploreScreen({ navigation }: Props) {
         )}
       </KeyboardAvoidingView>
 
-      <GestureDetector gesture={panSidebarContainerGesture}>
-        <Box
-          bottom={0}
-          height="100%"
-          left={0}
-          position="absolute"
-          top={0}
-          width={SIDEBAR_SWIPE_CONTAINER_WIDTH} // Roughly 1/2 icon width on tokens tab
-        />
-      </GestureDetector>
+      {renderSidebarGesture ? (
+        <GestureDetector gesture={panSidebarContainerGesture}>
+          <Box
+            bottom={0}
+            height="100%"
+            left={0}
+            position="absolute"
+            top={0}
+            width={SIDEBAR_SWIPE_CONTAINER_WIDTH} // Roughly 1/2 icon width on tokens tab
+          />
+        </GestureDetector>
+      ) : null}
     </Screen>
   )
 }

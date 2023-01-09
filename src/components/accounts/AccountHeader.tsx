@@ -12,6 +12,8 @@ import { TxHistoryIconWithStatus } from 'src/components/icons/TxHistoryIconWithS
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
+import { FEATURE_FLAGS } from 'src/features/experiments/constants'
+import { useFeatureFlag } from 'src/features/experiments/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { PendingNotificationBadge } from 'src/features/notifications/PendingNotificationBadge'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
@@ -44,9 +46,14 @@ export function AccountHeader() {
 
   const sortedPendingTransactions = useSortedPendingTransactions(activeAddress)
 
+  const accountSwitcherModalEnabled = useFeatureFlag(FEATURE_FLAGS.AccountSwitcherModal, false)
   const onPressAccountHeader = useCallback(() => {
-    navigation.dispatch(DrawerActions.openDrawer())
-  }, [navigation])
+    if (accountSwitcherModalEnabled) {
+      dispatch(openModal({ name: ModalName.AccountSwitcher }))
+    } else {
+      navigation.dispatch(DrawerActions.openDrawer())
+    }
+  }, [accountSwitcherModalEnabled, dispatch, navigation])
 
   const onPressNotifications = useCallback(() => {
     if (activeAddress) {

@@ -1,4 +1,5 @@
 import React from 'react'
+import { AccountSwitcherModal } from 'src/app/modals/AccountSwitcherModal'
 import { ExperimentsModal } from 'src/app/modals/ExperimentsModal'
 import { SwapModal } from 'src/app/modals/SwapModal'
 import { TransferTokenModal } from 'src/app/modals/TransferTokenModal'
@@ -33,6 +34,10 @@ export function AppModals() {
       </LazyModalRenderer>
 
       <WalletConnectModals />
+
+      <LazyModalRenderer name={ModalName.AccountSwitcher}>
+        <AccountSwitcherModal />
+      </LazyModalRenderer>
     </>
   )
 }

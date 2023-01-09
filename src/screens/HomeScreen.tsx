@@ -44,7 +44,8 @@ import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import TraceTabView from 'src/components/telemetry/TraceTabView'
 import { Text } from 'src/components/Text'
 import { PortfolioBalance } from 'src/features/balances/PortfolioBalance'
-import { useFiatOnRampEnabled } from 'src/features/experiments/hooks'
+import { FEATURE_FLAGS } from 'src/features/experiments/constants'
+import { useFeatureFlag, useFiatOnRampEnabled } from 'src/features/experiments/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, EventName, ModalName, SectionName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
@@ -69,6 +70,8 @@ export function HomeScreen() {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const insets = useSafeAreaInsets()
+
+  const renderSidebarGesture = useFeatureFlag(FEATURE_FLAGS.AccountSwitcherModal, false)
 
   const [tabIndex, setTabIndex] = useState(0)
   const routes = useMemo(
@@ -325,15 +328,17 @@ export function HomeScreen() {
         width="100%"
         zIndex="sticky"
       />
-      <GestureDetector gesture={panSidebarContainerGestureAction(openSidebar)}>
-        <Box
-          bottom={0}
-          left={0}
-          position="absolute"
-          top={headerHeight}
-          width={SIDEBAR_SWIPE_CONTAINER_WIDTH} // Roughly 1/2 icon width on tokens tab
-        />
-      </GestureDetector>
+      {renderSidebarGesture ? (
+        <GestureDetector gesture={panSidebarContainerGestureAction(openSidebar)}>
+          <Box
+            bottom={0}
+            left={0}
+            position="absolute"
+            top={headerHeight}
+            width={SIDEBAR_SWIPE_CONTAINER_WIDTH} // Roughly 1/2 icon width on tokens tab
+          />
+        </GestureDetector>
+      ) : null}
     </Screen>
   )
 }

@@ -9,6 +9,8 @@ export interface AppModalState<T> {
   initialState?: T
 }
 
+type AccountSwitcherModalParams = { name: ModalName.AccountSwitcher; initialState?: undefined }
+
 type ExperimentsModalParams = { name: ModalName.Experiments; initialState?: undefined }
 
 type FiatOnRampModalParams = { name: ModalName.FiatOnRamp; initialState?: undefined }
@@ -22,6 +24,7 @@ type SwapModalParams = { name: ModalName.Swap; initialState?: TransactionState }
 type SendModalParams = { name: ModalName.Send; initialState?: TransactionState }
 
 type OpenModalParams =
+  | AccountSwitcherModalParams
   | ExperimentsModalParams
   | FiatOnRampModalParams
   | SendModalParams
@@ -29,6 +32,7 @@ type OpenModalParams =
   | WalletConnectModalParams
 
 export interface ModalsState {
+  [ModalName.AccountSwitcher]: AppModalState<undefined>
   [ModalName.Experiments]: AppModalState<undefined>
   [ModalName.FiatOnRamp]: AppModalState<undefined>
   [ModalName.Send]: AppModalState<TransactionState>
@@ -54,6 +58,10 @@ export const initialModalState: ModalsState = {
     initialState: undefined,
   },
   [ModalName.Experiments]: {
+    isOpen: false,
+    initialState: undefined,
+  },
+  [ModalName.AccountSwitcher]: {
     isOpen: false,
     initialState: undefined,
   },
