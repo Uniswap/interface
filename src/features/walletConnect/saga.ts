@@ -1,7 +1,5 @@
-import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
 import { Action } from '@reduxjs/toolkit'
-import { providers, Wallet } from 'ethers'
-import { arrayify, isHexString } from 'ethers/lib/utils'
+import { providers } from 'ethers'
 import { NativeEventEmitter, NativeModules } from 'react-native'
 import { eventChannel } from 'redux-saga'
 import { i18n } from 'src/app/i18n'
@@ -11,9 +9,12 @@ import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { sendTransaction, SendTransactionParams } from 'src/features/transactions/sendTransaction'
 import { TransactionType } from 'src/features/transactions/types'
-import { NativeSigner } from 'src/features/wallet/accounts/NativeSigner'
-import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
 import { Account } from 'src/features/wallet/accounts/types'
+import {
+  signMessage,
+  signTransaction,
+  signTypedDataMessage,
+} from 'src/features/wallet/signing/signing'
 import {
   deregisterWcPushNotifications,
   registerWcPushNotifications,
@@ -46,7 +47,6 @@ import {
   removeSession,
   updateSession,
 } from 'src/features/walletConnect/walletConnectSlice'
-import { ensureLeading0x } from 'src/utils/addresses'
 import { logger } from 'src/utils/logger'
 import { createSaga } from 'src/utils/saga'
 import { call, fork, put, take } from 'typed-redux-saga'
@@ -268,12 +268,6 @@ type SignTransactionParams = {
   dapp: DappInfo
 }
 
-type EthTypedMessage = {
-  domain: TypedDataDomain
-  types: Record<string, Array<TypedDataField>>
-  message: Record<string, unknown>
-}
-
 export function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
   const { requestInternalId, account, method } = params
   try {
@@ -316,81 +310,6 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
     )
     logger.error('wcSaga', 'signMessage', 'signing error:', err)
   }
-}
-
-// If the message to be signed is a hex string, it must be converted to an array:
-// https://docs.ethers.io/v5/api/signer/#Signer--signing-methods
-async function signMessage(message: string, account: Account, signerManager: SignerManager) {
-  const signer = await signerManager.getSignerForAccount(account)
-  if (!signer) {
-    logger.error('signers', 'signMessage', `no signer found for ${account}`)
-    return ''
-  }
-
-  let signature
-  if (isHexString(ensureLeading0x(message))) {
-    signature = await signer.signMessage(arrayify(ensureLeading0x(message)))
-  } else {
-    signature = await signer.signMessage(message)
-  }
-
-  return ensureLeading0x(signature)
-}
-
-async function signTransaction(
-  transaction: providers.TransactionRequest,
-  account: Account,
-  signerManager: SignerManager
-) {
-  const signer = await signerManager.getSignerForAccount(account)
-  if (!signer) {
-    logger.error('signers', 'signTransaction', `no signer found for ${account}`)
-    return ''
-  }
-
-  const signature = await signer.signTransaction(transaction)
-  return ensureLeading0x(signature)
-}
-
-export async function signTypedData(
-  domain: TypedDataDomain,
-  types: Record<string, TypedDataField[]>,
-  value: Record<string, unknown>,
-  account: Account,
-  signerManager: SignerManager
-) {
-  const signer = await signerManager.getSignerForAccount(account)
-
-  // https://github.com/LedgerHQ/ledgerjs/issues/86
-  // Ledger does not support signTypedData yet
-  if (!(signer instanceof NativeSigner) && !(signer instanceof Wallet)) {
-    logger.error('signers', 'signTypedData', 'cannot sign typed data')
-    return ''
-  }
-
-  const signature = await signer._signTypedData(domain, types, value)
-
-  return ensureLeading0x(signature)
-}
-
-export async function signTypedDataMessage(
-  message: string,
-  account: Account,
-  signerManager: SignerManager
-) {
-  const parsedData: EthTypedMessage = JSON.parse(message)
-  // ethers computes EIP712Domain type for you, so we should not pass it in directly
-  // or else ethers will get confused about which type is the primary type
-  // https://github.com/ethers-io/ethers.js/issues/687#issuecomment-714069471
-  delete parsedData.types.EIP712Domain
-
-  return signTypedData(
-    parsedData.domain,
-    parsedData.types,
-    parsedData.message,
-    account,
-    signerManager
-  )
 }
 
 export const { wrappedSaga: signWcRequestSaga, actions: signWcRequestActions } = createSaga(

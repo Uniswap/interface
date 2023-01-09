@@ -25,8 +25,8 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
-import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
 import { Account, AccountType, BackupType } from 'src/features/wallet/accounts/types'
+import { SignerManager } from 'src/features/wallet/signing/SignerManager'
 import { initialWalletState } from 'src/features/wallet/walletSlice'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import { currencyId } from 'src/utils/currencyId'

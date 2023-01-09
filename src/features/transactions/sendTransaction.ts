@@ -19,9 +19,9 @@ import {
   createTransactionId,
   getSerializableTransactionRequest,
 } from 'src/features/transactions/utils'
-import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { selectFlashbotsEnabled } from 'src/features/wallet/selectors'
+import { SignerManager } from 'src/features/wallet/signing/SignerManager'
 import { formatCurrencyAmount, NumberType } from 'src/utils/format'
 import { logger } from 'src/utils/logger'
 import { call, put, select } from 'typed-redux-saga'

@@ -1,6 +1,6 @@
 import { Signer } from 'ethers'
-import { NativeSigner } from 'src/features/wallet/accounts/NativeSigner'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
+import { NativeSigner } from 'src/features/wallet/signing/NativeSigner'
 import { getAddressesForStoredPrivateKeys } from 'src/lib/RNEthersRs'
 
 export class SignerManager {
