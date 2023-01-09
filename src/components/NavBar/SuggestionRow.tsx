@@ -8,12 +8,13 @@ import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { getChainInfo } from 'constants/chainInfo'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
-import { getTokenDetailsURL } from 'graphql/data/util'
+import { Chain } from 'graphql/data/__generated__/types-and-hooks'
+import { chainIdToBackendName, getTokenDetailsURL } from 'graphql/data/util'
+import { useAtom } from 'jotai'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
 import { vars } from 'nft/css/sprinkles.css'
-import { useSearchHistory } from 'nft/hooks'
 import { FungibleToken, GenieCollection } from 'nft/types'
 import { ethNumberStandardFormatter } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
@@ -22,6 +23,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { getDeltaArrow } from '../Tokens/TokenDetails/PriceChart'
+import { recentlySearchedAssetsAtom } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
 
 const StyledLogoContainer = styled(LogoContainer)`
@@ -62,16 +64,15 @@ export const CollectionRow = ({
 }: CollectionRowProps) => {
   const [brokenImage, setBrokenImage] = useState(false)
   const [loaded, setLoaded] = useState(false)
-  const addToSearchHistory = useSearchHistory(
-    (state: { addItem: (item: FungibleToken | GenieCollection) => void }) => state.addItem
-  )
+
+  const [searchHistory, updateSearchHistory] = useAtom(recentlySearchedAssetsAtom)
   const navigate = useNavigate()
 
   const handleClick = useCallback(() => {
-    addToSearchHistory(collection)
+    updateSearchHistory([{ isNft: true, address: collection.address, chain: Chain.Ethereum }, ...searchHistory])
     toggleOpen()
     sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
-  }, [addToSearchHistory, collection, toggleOpen, eventProperties])
+  }, [updateSearchHistory, collection.address, searchHistory, toggleOpen, eventProperties])
 
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
@@ -139,16 +140,17 @@ interface TokenRowProps {
 }
 
 export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index, eventProperties }: TokenRowProps) => {
-  const addToSearchHistory = useSearchHistory(
-    (state: { addItem: (item: FungibleToken | GenieCollection) => void }) => state.addItem
-  )
+  const [searchHistory, updateSearchHistory] = useAtom(recentlySearchedAssetsAtom)
   const navigate = useNavigate()
 
   const handleClick = useCallback(() => {
-    addToSearchHistory(token)
+    updateSearchHistory([
+      { isNft: false, address: token.address, chain: chainIdToBackendName(token.chainId) },
+      ...searchHistory,
+    ])
     toggleOpen()
     sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
-  }, [addToSearchHistory, toggleOpen, token, eventProperties])
+  }, [updateSearchHistory, token.address, token.chainId, searchHistory, toggleOpen, eventProperties])
 
   const L2Icon = getChainInfo(token.chainId)?.circleLogoUrl
   const tokenDetailsPath = getTokenDetailsURL(token.address, undefined, token.chainId)

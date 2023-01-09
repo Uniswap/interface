@@ -1,9 +1,7 @@
 import gql from 'graphql-tag'
 
-import { TrendingTokensQuery } from './__generated__/types-and-hooks'
-
 gql`
-  query RecentlySearchedTokens($contracts: ContractInput![]!) {
+  query RecentlySearchedTokens($contracts: [ContractInput!]!) {
     tokens(contracts: $contracts) {
       decimals
       name
@@ -32,5 +30,3 @@ gql`
     }
   }
 `
-
-export type TrendingToken = NonNullable<NonNullable<TrendingTokensQuery['topTokens']>[number]>

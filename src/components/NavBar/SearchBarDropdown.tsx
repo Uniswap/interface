@@ -8,7 +8,6 @@ import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { subheadSmall } from 'nft/css/common.css'
-import { useSearchHistory } from 'nft/hooks'
 import { fetchTrendingCollections } from 'nft/queries'
 import { FungibleToken, GenieCollection, parseFungibleTokens, TimePeriod, TrendingCollection } from 'nft/types'
 import { formatEthPrice } from 'nft/utils/currency'
@@ -112,8 +111,13 @@ export const SearchBarDropdown = ({
   isLoading,
 }: SearchBarDropdownProps) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(0)
-  const { history: searchHistory, updateItem: updateSearchHistory } = useSearchHistory()
+
+  // const { data: searchHistory, loading: recentlySearchedLoading } = useRecentlySearchedAssets()
+  const searchHistory: FungibleToken[] = []
+  const recentlySearchedLoading = false
+
   const shortenedHistory = useMemo(() => searchHistory.slice(0, 2), [searchHistory])
+
   const { pathname } = useLocation()
   const isNFTPage = useIsNftPage()
   const isTokenPage = pathname.includes('/tokens')
@@ -154,10 +158,6 @@ export const SearchBarDropdown = ({
     () => trendingTokenData?.topTokens && parseFungibleTokens(trendingTokenData.topTokens),
     [trendingTokenData]
   )
-
-  useEffect(() => {
-    trendingTokenResults?.forEach(updateSearchHistory)
-  }, [trendingTokenResults, updateSearchHistory])
 
   const trendingTokensLength = isTokenPage ? 3 : 2
   const trendingTokens = useMemo(
@@ -282,6 +282,7 @@ export const SearchBarDropdown = ({
                 }}
                 header={<Trans>Recent searches</Trans>}
                 headerIcon={<ClockIcon />}
+                isLoading={recentlySearchedLoading}
               />
             )}
             {!isNFTPage && (
