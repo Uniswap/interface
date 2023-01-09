@@ -79,7 +79,7 @@ export function AboutSection({ address, chainId, description, homepageUrl, twitt
 
   const tokenDescription = shouldTruncate && isDescriptionTruncated ? truncateDescription(description) : description
 
-  const baseExplorerUrl = getChainInfo(chainId).explorer
+  const chainInfo = getChainInfo(chainId)
 
   return (
     <AboutContainer data-testid="token-details-about-section">
@@ -104,11 +104,13 @@ export function AboutSection({ address, chainId, description, homepageUrl, twitt
         <Trans>Links</Trans>
       </ThemedText.SubHeaderSmall>
       <ResourcesContainer>
-        <Resource
-          data-testid="token-details-about-section-explorer-link"
-          name={chainId === SupportedChainId.MAINNET ? 'Etherscan' : 'Block Explorer'}
-          link={`${baseExplorerUrl}${address === 'NATIVE' ? '' : 'address/' + address}`}
-        />
+        {chainInfo && (
+          <Resource
+            data-testid="token-details-about-section-explorer-link"
+            name={chainId === SupportedChainId.MAINNET ? 'Etherscan' : 'Block Explorer'}
+            link={`${chainInfo.explorer}${address === 'NATIVE' ? '' : 'address/' + address}`}
+          />
+        )}
         <Resource name="More analytics" link={`https://info.uniswap.org/#/tokens/${address}`} />
         {homepageUrl && <Resource name="Website" link={homepageUrl} />}
         {twitterName && <Resource name="Twitter" link={`https://twitter.com/${twitterName}`} />}
