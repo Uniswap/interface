@@ -29,6 +29,7 @@ gql`
       project {
         id
         logoUrl
+        safetyLevel
       }
     }
   }

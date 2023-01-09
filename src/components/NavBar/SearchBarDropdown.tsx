@@ -197,7 +197,7 @@ export const SearchBarDropdown = ({
   }, [toggleOpen, hoveredIndex, totalSuggestions])
 
   const hasVerifiedCollection = collections.some((collection) => collection.isVerified)
-  const hasVerifiedToken = tokens.some((token) => token.onDefaultList)
+  const hasVerifiedToken = tokens.some((token) => token.isVerified)
   const showCollectionsFirst =
     (isNFTPage && (hasVerifiedCollection || !hasVerifiedToken)) ||
     (!isNFTPage && !hasVerifiedToken && hasVerifiedCollection)

@@ -1,5 +1,5 @@
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { checkWarning } from 'constants/tokenSafety'
+import { SafetyLevel } from 'graphql/data/__generated__/types-and-hooks'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
 
@@ -19,23 +19,30 @@ export interface FungibleToken {
   priceUsd?: number | null
   price24hChange?: number | null
   volume24h?: number | null
-  onDefaultList?: boolean
+  isVerified?: boolean
 }
 
-export function parseFungibleToken(tokens: SearchToken[]) {
-  return tokens.map(
-    (t): FungibleToken => ({
-      ...t,
-      name: t.name ?? '',
-      symbol: t.symbol ?? '',
-      decimals: t.decimals ?? 0,
-      address: t.address ?? NATIVE_CHAIN_ID,
-      chainId: CHAIN_NAME_TO_CHAIN_ID[t?.chain],
-      priceUsd: t.market?.price?.value ?? undefined,
-      price24hChange: t.market?.pricePercentChange?.value,
-      volume24h: t.market?.volume24H?.value,
-      onDefaultList: t.address ? !checkWarning(t.address) : true,
-      logoURI: t.project?.logoUrl,
-    })
-  )
+export function parseFungibleTokens(tokens: SearchToken[]) {
+  const fungibleTokens: FungibleToken[] = []
+  tokens.forEach((token) => {
+    if (token.name && token.symbol && token.decimals && token.chain && (token.address || token.standard === 'NATIVE')) {
+      // Consider both default & extended list tokens as verified, as there are more "verified" nfts than tokens on the default list
+      const isVerified =
+        token.project?.safetyLevel == SafetyLevel.Verified || token.project?.safetyLevel == SafetyLevel.MediumWarning
+      fungibleTokens.push({
+        ...token,
+        name: token.name,
+        symbol: token.symbol,
+        decimals: token.decimals,
+        address: token.address ?? NATIVE_CHAIN_ID,
+        chainId: CHAIN_NAME_TO_CHAIN_ID[token.chain],
+        priceUsd: token.market?.price?.value ?? undefined,
+        price24hChange: token.market?.pricePercentChange?.value,
+        volume24h: token.market?.volume24H?.value,
+        logoURI: token.project?.logoUrl,
+        isVerified,
+      })
+    }
+  })
+  return fungibleTokens
 }
