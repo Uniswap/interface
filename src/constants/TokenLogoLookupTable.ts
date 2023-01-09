@@ -13,11 +13,11 @@ class TokenLogoLookupTable {
       store.getState().lists.byUrl[list].current?.tokens.forEach((token) => {
         if (token.logoURI) {
           const lowercaseAddress = token.address.toLowerCase()
-          const currentEntry = dict[lowercaseAddress]
+          const currentEntry = dict[lowercaseAddress + ':' + token.chainId]
           if (currentEntry) {
             currentEntry.push(token.logoURI)
           } else {
-            dict[lowercaseAddress] = [token.logoURI]
+            dict[lowercaseAddress + ':' + token.chainId] = [token.logoURI]
           }
         }
       })
@@ -25,13 +25,14 @@ class TokenLogoLookupTable {
     this.dict = dict
     this.initialized = true
   }
-  getIcons(address?: string | null) {
+  getIcons(address?: string | null, chainId: number | null = 1) {
     if (!address) return undefined
 
     if (!this.initialized) {
       this.initialize()
     }
-    return this.dict[address.toLowerCase()]
+
+    return this.dict[address.toLowerCase() + ':' + chainId]
   }
 }
 

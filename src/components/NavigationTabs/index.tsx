@@ -36,7 +36,7 @@ const ActiveText = styled.div`
 `
 
 const StyledArrowLeft = styled(ArrowLeft)`
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${({ theme }) => theme.textPrimary};
 `
 
 export function FindPoolTabs({ origin }: { origin: string }) {
@@ -76,7 +76,7 @@ export function AddRemoveTabs({
   // detect if back should redirect to v3 or v2 pool page
   const poolLink = location.pathname.includes('add/v2')
     ? '/pool/v2'
-    : '/pool' + (!!positionID ? `/${positionID.toString()}` : '')
+    : '/pool' + (positionID ? `/${positionID.toString()}` : '')
 
   return (
     <Tabs>
@@ -92,7 +92,7 @@ export function AddRemoveTabs({
           }}
           flex={children ? '1' : undefined}
         >
-          <StyledArrowLeft stroke={theme.deprecated_text2} />
+          <StyledArrowLeft stroke={theme.textSecondary} />
         </StyledHistoryLink>
         <ThemedText.DeprecatedMediumHeader
           fontWeight={500}

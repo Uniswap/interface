@@ -62,7 +62,7 @@ const getConsiderationItems = (
   creatorFee?: ConsiderationInputItem
 } => {
   const openSeaBasisPoints = OPENSEA_DEFAULT_FEE * INVERSE_BASIS_POINTS
-  const creatorFeeBasisPoints = asset.basisPoints
+  const creatorFeeBasisPoints = asset?.basisPoints ?? 0
   const sellerBasisPoints = INVERSE_BASIS_POINTS - openSeaBasisPoints - creatorFeeBasisPoints
 
   const openseaFee = price.mul(BigNumber.from(openSeaBasisPoints)).div(BigNumber.from(INVERSE_BASIS_POINTS)).toString()
@@ -76,7 +76,9 @@ const getConsiderationItems = (
     sellerFee: createConsiderationItem(sellerFee, signerAddress),
     openseaFee: createConsiderationItem(openseaFee, OPENSEA_FEE_ADDRESS),
     creatorFee:
-      creatorFeeBasisPoints > 0 ? createConsiderationItem(creatorFee, asset.asset_contract.payout_address) : undefined,
+      creatorFeeBasisPoints > 0
+        ? createConsiderationItem(creatorFee, asset?.asset_contract?.payout_address ?? '')
+        : undefined,
   }
 }
 
@@ -128,7 +130,7 @@ export async function signListing(
 
   const signerAddress = await signer.getAddress()
   const listingPrice = asset.newListings?.find((listing) => listing.marketplace.name === marketplace.name)?.price
-  if (!listingPrice || !asset.expirationTime) return false
+  if (!listingPrice || !asset.expirationTime || !asset.asset_contract.address || !asset.tokenId) return false
   switch (marketplace.name) {
     case 'OpenSea':
       try {
@@ -166,7 +168,7 @@ export async function signListing(
         else setStatus(ListingStatus.FAILED)
         return false
       }
-    case 'LooksRare':
+    case 'LooksRare': {
       const addresses = addressesByNetwork[SupportedChainId.MAINNET]
       const currentTime = Math.round(Date.now() / 1000)
       const makerOrder: MakerOrder = {
@@ -233,8 +235,8 @@ export async function signListing(
         else setStatus(ListingStatus.FAILED)
         return false
       }
-
-    case 'X2Y2':
+    }
+    case 'X2Y2': {
       const orderItem: OfferItem = {
         price: parseEther(listingPrice.toString()),
         tokens: [
@@ -267,7 +269,7 @@ export async function signListing(
         else setStatus(ListingStatus.FAILED)
         return false
       }
-
+    }
     default:
       return false
   }

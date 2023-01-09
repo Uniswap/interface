@@ -25,7 +25,7 @@ export const TokenDetailsLayout = styled.div`
 
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
     gap: 16px;
-    padding: 0 16px;
+    padding: 0 16px 52px;
   }
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
     gap: 40px;
@@ -72,6 +72,8 @@ export const TokenInfoContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 4px;
+  ${textFadeIn};
+  animation-duration: ${({ theme }) => theme.transition.duration.medium};
 `
 export const TokenNameCell = styled.div`
   display: flex;
@@ -79,7 +81,6 @@ export const TokenNameCell = styled.div`
   font-size: 20px;
   line-height: 28px;
   align-items: center;
-  ${textFadeIn}
 `
 /* Loading state bubbles */
 const DetailBubble = styled(LoadingBubble)`
@@ -221,7 +222,7 @@ export default function TokenDetailsSkeleton() {
   const { chainName } = useParams<{ chainName?: string }>()
   return (
     <LeftPanel>
-      <BreadcrumbNavLink to={{ chainName } ? `/tokens/${chainName}` : `/explore`}>
+      <BreadcrumbNavLink to={chainName ? `/tokens/${chainName}` : `/explore`}>
         <ArrowLeft size={14} /> Tokens
       </BreadcrumbNavLink>
       <TokenInfoContainer>

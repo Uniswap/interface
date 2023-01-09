@@ -1,5 +1,5 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
-import { EventName } from '@uniswap/analytics-events'
+import { InterfaceEventName } from '@uniswap/analytics-events'
 import { formatUSDPrice } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
@@ -71,7 +71,7 @@ export const CollectionRow = ({
   const handleClick = useCallback(() => {
     addToSearchHistory(collection)
     toggleOpen()
-    sendAnalyticsEvent(EventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
+    sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
   }, [addToSearchHistory, collection, toggleOpen, eventProperties])
 
   useEffect(() => {
@@ -157,7 +157,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
   const handleClick = useCallback(() => {
     addToSearchHistory(token)
     toggleOpen()
-    sendAnalyticsEvent(EventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
+    sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
   }, [addToSearchHistory, toggleOpen, token, eventProperties])
 
   const [bridgedAddress, bridgedChain, L2Icon] = useBridgedAddress(token)

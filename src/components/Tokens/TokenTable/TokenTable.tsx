@@ -64,7 +64,7 @@ const LoadingRows = ({ rowCount }: { rowCount: number }) => (
   </>
 )
 
-export function LoadingTokenTable({ rowCount = PAGE_SIZE }: { rowCount?: number }) {
+function LoadingTokenTable({ rowCount = PAGE_SIZE }: { rowCount?: number }) {
   return (
     <GridContainer>
       <HeaderRow />
@@ -75,14 +75,15 @@ export function LoadingTokenTable({ rowCount = PAGE_SIZE }: { rowCount?: number 
   )
 }
 
-export default function TokenTable({ setRowCount }: { setRowCount: (c: number) => void }) {
+export default function TokenTable() {
   // TODO: consider moving prefetched call into app.tsx and passing it here, use a preloaded call & updated on interval every 60s
   const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
-  const { tokens, sparklines } = useTopTokens(chainName)
-  setRowCount(tokens?.length ?? PAGE_SIZE)
+  const { tokens, loadingTokens, sparklines } = useTopTokens(chainName)
 
   /* loading and error state */
-  if (!tokens) {
+  if (loadingTokens) {
+    return <LoadingTokenTable rowCount={PAGE_SIZE} />
+  } else if (!tokens) {
     return (
       <NoTokensState
         message={

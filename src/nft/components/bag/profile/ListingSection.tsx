@@ -88,7 +88,7 @@ export const ListingSection = ({
               return (
                 <Column key={index} gap="8">
                   <Row>
-                    {row.images.map((image, index) => {
+                    {row.images?.map((image, index) => {
                       return (
                         <Box
                           as="img"

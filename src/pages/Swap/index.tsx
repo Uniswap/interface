@@ -1,7 +1,13 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, Trace, TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, ElementName, EventName, PageName, SectionName } from '@uniswap/analytics-events'
-import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
+import {
+  BrowserEvent,
+  InterfaceElementName,
+  InterfaceEventName,
+  InterfacePageName,
+  InterfaceSectionName,
+  SwapEventName,
+} from '@uniswap/analytics-events'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
@@ -14,7 +20,6 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { isSupportedChain } from 'constants/chains'
-import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
 import { usePermit2Enabled } from 'featureFlags/flags/permit2'
 import usePermit, { PermitState } from 'hooks/usePermit2'
 import { useSwapCallback } from 'hooks/useSwapCallback'
@@ -24,12 +29,12 @@ import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ReactNode } from 'react'
 import { AlertTriangle, ArrowDown, CheckCircle, HelpCircle, Info } from 'react-feather'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
-import { useHasPendingApproval, useTransactionAdder } from 'state/transactions/hooks'
+import { useTransactionAdder } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/formatNumbers'
 
@@ -146,7 +151,7 @@ function largerPercentValue(a?: Percent, b?: Percent) {
 
 const TRADE_STRING = 'SwapRouter'
 
-export default function Swap() {
+export default function Swap({ className }: { className?: string }) {
   const navigate = useNavigate()
   const { account, chainId } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -174,7 +179,7 @@ export default function Swap() {
       urlLoadedTokens &&
       urlLoadedTokens
         .filter((token: Token) => {
-          return !Boolean(token.address in defaultTokens)
+          return !(token.address in defaultTokens)
         })
         .filter((token: Token) => {
           // Any token addresses that are loaded from the shorthands map do not need to show the import URL
@@ -301,16 +306,16 @@ export default function Swap() {
     permit2Enabled ? maximumAmountIn : undefined,
     permit2Enabled && chainId ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
   )
+  const isApprovalLoading = permit.state === PermitState.APPROVAL_LOADING
   const [isPermitPending, setIsPermitPending] = useState(false)
   const [isPermitFailed, setIsPermitFailed] = useState(false)
   const addTransaction = useTransactionAdder()
-  const isApprovalPending = useHasPendingApproval(maximumAmountIn?.currency, PERMIT2_ADDRESS)
   const updatePermit = useCallback(async () => {
     setIsPermitPending(true)
     try {
-      const approval = await permit.callback?.(isApprovalPending)
+      const approval = await permit.callback?.()
       if (approval) {
-        sendAnalyticsEvent(EventName.APPROVE_TOKEN_TXN_SUBMITTED, {
+        sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
           chain_id: chainId,
           token_symbol: maximumAmountIn?.currency.symbol,
           token_address: maximumAmountIn?.currency.address,
@@ -326,14 +331,7 @@ export default function Swap() {
     } finally {
       setIsPermitPending(false)
     }
-  }, [
-    addTransaction,
-    chainId,
-    isApprovalPending,
-    maximumAmountIn?.currency.address,
-    maximumAmountIn?.currency.symbol,
-    permit,
-  ])
+  }, [addTransaction, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol, permit])
 
   // check whether the user has approved the router on the input token
   const [approvalState, approveCallback] = useApproveCallbackFromTrade(
@@ -450,7 +448,6 @@ export default function Swap() {
   ])
 
   // errors
-  const [showInverted, setShowInverted] = useState<boolean>(false)
   const [swapQuoteReceivedDate, setSwapQuoteReceivedDate] = useState<Date | undefined>()
 
   // warnings on the greater of fiat value price impact and execution price impact
@@ -520,7 +517,7 @@ export default function Swap() {
       setSwapQuoteReceivedDate(now)
       // Log swap quote.
       sendAnalyticsEvent(
-        EventName.SWAP_QUOTE_RECEIVED,
+        SwapEventName.SWAP_QUOTE_RECEIVED,
         formatSwapQuoteReceivedEventProperties(trade, trade.gasUseEstimateUSD ?? undefined, fetchingSwapQuoteStartTime)
       )
       // Latest swap quote has just been logged, so we don't need to log the current trade anymore
@@ -550,12 +547,8 @@ export default function Swap() {
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
   )
 
-  const location = useLocation()
-
-  const landingPageFlag = useLandingPageFlag()
-
   return (
-    <Trace page={PageName.SWAP_PAGE} shouldLogImpression>
+    <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
       <>
         <TokenSafetyModal
           isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
@@ -566,11 +559,7 @@ export default function Swap() {
           showCancel={true}
         />
         <PageWrapper>
-          <SwapWrapper
-            onClick={() => landingPageFlag === LandingPageVariant.Enabled && navigate('/swap')}
-            open={landingPageFlag === LandingPageVariant.Enabled && location.pathname === '/'}
-            id="swap-page"
-          >
+          <SwapWrapper className={className} id="swap-page">
             <SwapHeader allowedSlippage={allowedSlippage} />
             <ConfirmSwapModal
               isOpen={showConfirm}
@@ -591,7 +580,7 @@ export default function Swap() {
 
             <div style={{ display: 'relative' }}>
               <SwapSection>
-                <Trace section={SectionName.CURRENCY_INPUT_PANEL}>
+                <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
                   <SwapCurrencyInputPanel
                     label={
                       independentField === Field.OUTPUT && !showWrap ? (
@@ -609,7 +598,7 @@ export default function Swap() {
                     onCurrencySelect={handleInputSelect}
                     otherCurrency={currencies[Field.OUTPUT]}
                     showCommonBases={true}
-                    id={SectionName.CURRENCY_INPUT_PANEL}
+                    id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
                     loading={independentField === Field.OUTPUT && routeIsSyncing}
                   />
                 </Trace>
@@ -617,8 +606,8 @@ export default function Swap() {
               <ArrowWrapper clickable={isSupportedChain(chainId)}>
                 <TraceEvent
                   events={[BrowserEvent.onClick]}
-                  name={EventName.SWAP_TOKENS_REVERSED}
-                  element={ElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON}
+                  name={SwapEventName.SWAP_TOKENS_REVERSED}
+                  element={InterfaceElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON}
                 >
                   <ArrowContainer
                     onClick={() => {
@@ -630,9 +619,7 @@ export default function Swap() {
                     <ArrowDown
                       size="16"
                       color={
-                        currencies[Field.INPUT] && currencies[Field.OUTPUT]
-                          ? theme.deprecated_text1
-                          : theme.deprecated_text3
+                        currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.textPrimary : theme.textTertiary
                       }
                     />
                   </ArrowContainer>
@@ -642,7 +629,7 @@ export default function Swap() {
             <AutoColumn gap="md">
               <div>
                 <OutputSwapSection showDetailsDropdown={showDetailsDropdown}>
-                  <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
+                  <Trace section={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}>
                     <SwapCurrencyInputPanel
                       value={formattedAmounts[Field.OUTPUT]}
                       onUserInput={handleTypeOutput}
@@ -657,7 +644,7 @@ export default function Swap() {
                       onCurrencySelect={handleOutputSelect}
                       otherCurrency={currencies[Field.INPUT]}
                       showCommonBases={true}
-                      id={SectionName.CURRENCY_OUTPUT_PANEL}
+                      id={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}
                       loading={independentField === Field.INPUT && routeIsSyncing}
                     />
                   </Trace>
@@ -666,7 +653,7 @@ export default function Swap() {
                     <>
                       <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
                         <ArrowWrapper clickable={false}>
-                          <ArrowDown size="16" color={theme.deprecated_text2} />
+                          <ArrowDown size="16" color={theme.textSecondary} />
                         </ArrowWrapper>
                         <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
                           <Trans>- Remove recipient</Trans>
@@ -682,8 +669,6 @@ export default function Swap() {
                       trade={trade}
                       syncing={routeIsSyncing}
                       loading={routeIsLoading}
-                      showInverted={showInverted}
-                      setShowInverted={setShowInverted}
                       allowedSlippage={allowedSlippage}
                     />
                   </DetailsSwapSection>
@@ -700,9 +685,9 @@ export default function Swap() {
                 ) : !account ? (
                   <TraceEvent
                     events={[BrowserEvent.onClick]}
-                    name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
+                    name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
                     properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
-                    element={ElementName.CONNECT_WALLET_BUTTON}
+                    element={InterfaceElementName.CONNECT_WALLET_BUTTON}
                   >
                     <ButtonLight onClick={toggleWalletModal} fontWeight={600}>
                       <Trans>Connect Wallet</Trans>
@@ -753,7 +738,7 @@ export default function Swap() {
                             <Loader stroke={theme.white} />
                           ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||
                             signatureState === UseERC20PermitState.SIGNED ? (
-                            <CheckCircle size="20" color={theme.deprecated_green1} />
+                            <CheckCircle size="20" color={theme.accentSuccess} />
                           ) : (
                             <MouseoverTooltip
                               text={
@@ -763,7 +748,7 @@ export default function Swap() {
                                 </Trans>
                               }
                             >
-                              <HelpCircle size="20" color={theme.deprecated_white} style={{ marginLeft: '8px' }} />
+                              <HelpCircle size="20" color={theme.white} style={{ marginLeft: '8px' }} />
                             </MouseoverTooltip>
                           )}
                         </AutoRow>
@@ -805,10 +790,12 @@ export default function Swap() {
                       </ButtonError>
                     </AutoColumn>
                   </AutoRow>
-                ) : permit.state === PermitState.PERMIT_NEEDED ? (
+                ) : isValid &&
+                  (permit.state === PermitState.APPROVAL_OR_PERMIT_NEEDED ||
+                    permit.state === PermitState.APPROVAL_LOADING) ? (
                   <ButtonYellow
                     onClick={updatePermit}
-                    disabled={isPermitPending || isApprovalPending}
+                    disabled={isPermitPending || isApprovalLoading}
                     style={{ gap: 14 }}
                   >
                     {isPermitPending ? (
@@ -825,7 +812,7 @@ export default function Swap() {
                           <Trans>Approval failed. Try again.</Trans>
                         </ThemedText.SubHeader>
                       </>
-                    ) : isApprovalPending ? (
+                    ) : isApprovalLoading ? (
                       <>
                         <Loader size="20px" stroke={theme.accentWarning} />
                         <ThemedText.SubHeader color="accentWarning">
@@ -882,10 +869,10 @@ export default function Swap() {
                         swapInputError
                       ) : routeIsSyncing || routeIsLoading ? (
                         <Trans>Swap</Trans>
-                      ) : priceImpactSeverity > 2 ? (
-                        <Trans>Swap Anyway</Trans>
                       ) : priceImpactTooHigh ? (
                         <Trans>Price Impact Too High</Trans>
+                      ) : priceImpactSeverity > 2 ? (
+                        <Trans>Swap Anyway</Trans>
                       ) : (
                         <Trans>Swap</Trans>
                       )}

@@ -1,5 +1,5 @@
 export enum FeatureFlag {
+  fiatOnramp = 'fiatOnramp',
   traceJsonRpc = 'traceJsonRpc',
-  landingPage = 'landingPage',
   permit2 = 'permit2',
 }

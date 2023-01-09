@@ -137,11 +137,7 @@ export const PositionPreview = ({
                   {quoteCurrency.symbol} per {baseCurrency.symbol}
                 </Trans>
               </ThemedText.DeprecatedMain>
-              <ThemedText.DeprecatedSmall
-                textAlign="center"
-                color={theme.deprecated_text3}
-                style={{ marginTop: '4px' }}
-              >
+              <ThemedText.DeprecatedSmall textAlign="center" color={theme.textTertiary} style={{ marginTop: '4px' }}>
                 <Trans>Your position will be 100% composed of {baseCurrency?.symbol} at this price</Trans>
               </ThemedText.DeprecatedSmall>
             </AutoColumn>
@@ -163,11 +159,7 @@ export const PositionPreview = ({
                   {quoteCurrency.symbol} per {baseCurrency.symbol}
                 </Trans>
               </ThemedText.DeprecatedMain>
-              <ThemedText.DeprecatedSmall
-                textAlign="center"
-                color={theme.deprecated_text3}
-                style={{ marginTop: '4px' }}
-              >
+              <ThemedText.DeprecatedSmall textAlign="center" color={theme.textTertiary} style={{ marginTop: '4px' }}>
                 <Trans>Your position will be 100% composed of {quoteCurrency?.symbol} at this price</Trans>
               </ThemedText.DeprecatedSmall>
             </AutoColumn>

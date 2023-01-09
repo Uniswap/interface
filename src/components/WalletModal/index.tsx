@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, user } from '@uniswap/analytics'
-import { CustomUserProperties, EventName, WalletConnectionResult } from '@uniswap/analytics-events'
+import { CustomUserProperties, InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { sendEvent } from 'components/analytics'
@@ -11,6 +11,7 @@ import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsInjected, g
 import usePrevious from 'hooks/usePrevious'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { updateConnectionError } from 'state/connection/reducer'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
@@ -61,7 +62,7 @@ const HeaderRow = styled.div`
   padding: 1rem 1rem;
   font-weight: 600;
   size: 16px;
-  color: ${(props) => (props.color === 'blue' ? ({ theme }) => theme.deprecated_primary1 : 'inherit')};
+  color: ${(props) => (props.color === 'blue' ? ({ theme }) => theme.accentAction : 'inherit')};
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     padding: 1rem;
   `};
@@ -103,7 +104,7 @@ const OptionGrid = styled.div`
 
 const HoverText = styled.div`
   text-decoration: none;
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${({ theme }) => theme.textPrimary};
   display: flex;
   align-items: center;
 
@@ -124,7 +125,7 @@ const sendAnalyticsEventAndUserInfo = (
   chainId: number | undefined,
   isReconnect: boolean
 ) => {
-  sendAnalyticsEvent(EventName.WALLET_CONNECT_TXN_COMPLETED, {
+  sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
     result: WalletConnectionResult.SUCCEEDED,
     wallet_address: account,
     wallet_type: walletType,
@@ -150,6 +151,9 @@ export default function WalletModal({
   const dispatch = useAppDispatch()
   const { connector, account, chainId } = useWeb3React()
   const previousAccount = usePrevious(account)
+
+  const location = useLocation()
+  const navigate = useNavigate()
 
   const [connectedWallets, addWalletToConnectedWallets] = useConnectedWallets()
 
@@ -177,8 +181,11 @@ export default function WalletModal({
   useEffect(() => {
     if (account && account !== previousAccount && walletModalOpen) {
       toggleWalletModal()
+      if (location.pathname === '/') {
+        navigate('/swap')
+      }
     }
-  }, [account, previousAccount, toggleWalletModal, walletModalOpen])
+  }, [account, previousAccount, toggleWalletModal, walletModalOpen, location.pathname, navigate])
 
   useEffect(() => {
     if (pendingConnector && walletView !== WALLET_VIEWS.PENDING) {
@@ -229,7 +236,7 @@ export default function WalletModal({
         console.debug(`web3-react connection error: ${error}`)
         dispatch(updateConnectionError({ connectionType, error: error.message }))
 
-        sendAnalyticsEvent(EventName.WALLET_CONNECT_TXN_COMPLETED, {
+        sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
           result: WalletConnectionResult.FAILED,
           wallet_type: getConnectionName(connectionType, getIsMetaMask()),
         })

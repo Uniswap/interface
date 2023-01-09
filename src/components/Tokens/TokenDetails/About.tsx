@@ -1,4 +1,6 @@
 import { Trans } from '@lingui/macro'
+import { SupportedChainId } from '@uniswap/sdk-core'
+import { getChainInfo } from 'constants/chainInfo'
 import { darken } from 'polished'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
@@ -65,19 +67,22 @@ const ResourcesContainer = styled.div`
 
 type AboutSectionProps = {
   address: string
+  chainId: SupportedChainId
   description?: string | null | undefined
   homepageUrl?: string | null | undefined
   twitterName?: string | null | undefined
 }
 
-export function AboutSection({ address, description, homepageUrl, twitterName }: AboutSectionProps) {
+export function AboutSection({ address, chainId, description, homepageUrl, twitterName }: AboutSectionProps) {
   const [isDescriptionTruncated, setIsDescriptionTruncated] = useState(true)
   const shouldTruncate = !!description && description.length > TRUNCATE_CHARACTER_COUNT
 
   const tokenDescription = shouldTruncate && isDescriptionTruncated ? truncateDescription(description) : description
 
+  const baseExplorerUrl = getChainInfo(chainId).explorer
+
   return (
-    <AboutContainer>
+    <AboutContainer data-testid="token-details-about-section">
       <AboutHeader>
         <Trans>About</Trans>
       </AboutHeader>
@@ -99,7 +104,11 @@ export function AboutSection({ address, description, homepageUrl, twitterName }:
         <Trans>Links</Trans>
       </ThemedText.SubHeaderSmall>
       <ResourcesContainer>
-        <Resource name="Etherscan" link={`https://etherscan.io/address/${address}`} />
+        <Resource
+          data-testid="token-details-about-section-explorer-link"
+          name={chainId === SupportedChainId.MAINNET ? 'Etherscan' : 'Block Explorer'}
+          link={`${baseExplorerUrl}${address === 'NATIVE' ? '' : 'address/' + address}`}
+        />
         <Resource name="More analytics" link={`https://info.uniswap.org/#/tokens/${address}`} />
         {homepageUrl && <Resource name="Website" link={homepageUrl} />}
         {twitterName && <Resource name="Twitter" link={`https://twitter.com/${twitterName}`} />}

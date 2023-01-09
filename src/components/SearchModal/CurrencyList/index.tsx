@@ -1,5 +1,5 @@
 import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
@@ -48,7 +48,7 @@ const CurrencyName = styled(Text)`
 
 const Tag = styled.div`
   background-color: ${({ theme }) => theme.deprecated_bg3};
-  color: ${({ theme }) => theme.deprecated_text2};
+  color: ${({ theme }) => theme.textSecondary};
   font-size: 14px;
   border-radius: 4px;
   padding: 0.25rem 0.3rem 0.25rem 0.3rem;
@@ -131,9 +131,9 @@ export function CurrencyRow({
   return (
     <TraceEvent
       events={[BrowserEvent.onClick, BrowserEvent.onKeyPress]}
-      name={EventName.TOKEN_SELECTED}
+      name={InterfaceEventName.TOKEN_SELECTED}
       properties={{ is_imported_by_user: customAdded, ...eventProperties }}
-      element={ElementName.TOKEN_SELECTOR_ROW}
+      element={InterfaceElementName.TOKEN_SELECTOR_ROW}
     >
       <MenuItem
         tabIndex={0}
