@@ -219,7 +219,7 @@ const CHAIN_INFO: ChainInfoMap = {
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Scroll Pre-Alpha',
     logoUrl: scrollLogo,
-    nativeCurrency: { name: 'Scroll Prealpha Ether', symbol: 'TSETH', decimals: 18 },
+    nativeCurrency: { name: 'Scroll Pre-Alpha Ether', symbol: 'TSETH', decimals: 18 },
     //TODO: Add Scroll Brand Color
     color: darkTheme.chain_5,
 
