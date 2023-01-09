@@ -1,4 +1,12 @@
-export default function LightBulbEffect({ size, color }: { size?: number | string; color?: string }) {
+export default function LightBulbEffect({
+  size,
+  color,
+  className,
+}: {
+  size?: number | string
+  color?: string
+  className?: string
+}) {
   return (
     <svg
       width={size || '16'}
@@ -6,6 +14,7 @@ export default function LightBulbEffect({ size, color }: { size?: number | strin
       viewBox="0 0 19 19"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className={className}
       style={{ minWidth: size || '16px', minHeight: size || '16px' }}
     >
       <path
