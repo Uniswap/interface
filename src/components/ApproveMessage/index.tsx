@@ -25,7 +25,19 @@ export default function ApproveMessage({
   const [showApproveMsgDetails, toggleShowApproveMsgDetails] = useToggle(false)
   const timeout = 1673913600000 // Tuesday, January 17, 2023 0:00:00
 
-  if (![ChainId.BSCMAINNET, ChainId.BTTC, ChainId.VELAS, ChainId.CRONOS, ChainId.ARBITRUM].includes(chainId)) {
+  if (
+    ![
+      ChainId.BSCMAINNET,
+      ChainId.BTTC,
+      ChainId.VELAS,
+      ChainId.CRONOS,
+      ChainId.ARBITRUM,
+      ChainId.MATIC,
+      ChainId.FANTOM,
+      ChainId.OPTIMISM,
+      ChainId.AURORA,
+    ].includes(chainId)
+  ) {
     return null
   }
 
