@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { NumberType } from '@uniswap/conedison/format'
 import { Percent, Price, Token } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge'
@@ -236,8 +235,7 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
               {formatTickPrice({
                 price: priceLower,
                 atLimit: tickAtLimit,
-                direction: Bound.LOWER,
-                numberType: NumberType.TokenNonTx,
+                direction: Bound.LOWER
               })}{' '}
               <HoverInlineText text={currencyQuote?.symbol} /> per <HoverInlineText text={currencyBase?.symbol ?? ''} />
             </Trans>
@@ -256,8 +254,7 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
               {formatTickPrice({
                 price: priceUpper,
                 atLimit: tickAtLimit,
-                direction: Bound.UPPER,
-                numberType: NumberType.TokenNonTx,
+                direction: Bound.UPPER
               })}{' '}
               <HoverInlineText text={currencyQuote?.symbol} /> per{' '}
               <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />

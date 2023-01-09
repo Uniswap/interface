@@ -7,11 +7,10 @@ interface FormatTickPriceArgs {
   price: Price<Token, Token> | undefined
   atLimit: { [bound in Bound]?: boolean | undefined }
   direction: Bound
-  numberType: NumberType
   placeholder?: string
 }
 
-export function formatTickPrice({ price, atLimit, direction, numberType, placeholder }: FormatTickPriceArgs) {
+export function formatTickPrice({ price, atLimit, direction, placeholder }: FormatTickPriceArgs) {
   if (atLimit[direction]) {
     return direction === Bound.LOWER ? '0' : '∞'
   }
@@ -20,5 +19,5 @@ export function formatTickPrice({ price, atLimit, direction, numberType, placeho
     return placeholder
   }
 
-  return formatPrice(price, numberType)
+  return formatPrice(price, NumberType.TokenNonTx)
 }

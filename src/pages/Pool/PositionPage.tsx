@@ -887,7 +887,6 @@ export function PositionPage() {
                           price: priceLower,
                           atLimit: tickAtLimit,
                           direction: Bound.LOWER,
-                          numberType: NumberType.TokenNonTx,
                         })}
                       </ThemedText.DeprecatedMediumHeader>
                       <ExtentsText>
@@ -916,7 +915,6 @@ export function PositionPage() {
                           price: priceUpper,
                           atLimit: tickAtLimit,
                           direction: Bound.UPPER,
-                          numberType: NumberType.TokenNonTx,
                         })}
                       </ThemedText.DeprecatedMediumHeader>
                       <ExtentsText>
