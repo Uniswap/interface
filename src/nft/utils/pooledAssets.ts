@@ -58,7 +58,7 @@ export const calcSudoSwapPrice = (asset: GenieAsset, position = 0): string | und
       virtualTokenBalance = virtualTokenBalance.add(currentPrice)
       virtualNFTBalance = virtualNFTBalance.sub(BigNumber.from(1))
 
-      if (!virtualNFTBalance.sub(1).isZero()) {
+      if (!virtualNFTBalance.sub(BigNumber.from(1)).isZero()) {
         currentPrice = virtualTokenBalance.div(virtualNFTBalance.sub(BigNumber.from(1)))
       }
     }
