@@ -63,7 +63,6 @@ export const persistConfig = {
     'notifications',
     'passwordLockout',
     'searchHistory',
-    'tokenLists',
     'tokens',
     'transactions',
     'wallet',
