@@ -287,6 +287,11 @@ export abstract class SwapRouterFlood {
       | V2Trade<Currency, Currency, TradeType>
       | V3FloodTrade<Currency, Currency, TradeType>
       | MixedRouteTrade<Currency, Currency, TradeType>
+    allTrades: (
+      | V2Trade<Currency, Currency, TradeType>
+      | V3FloodTrade<Currency, Currency, TradeType>
+      | MixedRouteTrade<Currency, Currency, TradeType>
+    )[]
     routerMustCustody: boolean
     inputIsNative: boolean
     outputIsNative: boolean
@@ -322,8 +327,6 @@ export abstract class SwapRouterFlood {
             )
           )
         } else if (route.protocol == Protocol.V3) {
-          console.log('using flood router v3 trade')
-          console.log(route)
           individualTrades.push(
             V3FloodTrade.createUncheckedTrade({
               route: route as RouteV3<Currency, Currency>,
@@ -426,6 +429,7 @@ export abstract class SwapRouterFlood {
     return {
       calldatas,
       sampleTrade: individualTrades[0],
+      allTrades: individualTrades,
       routerMustCustody,
       inputIsNative,
       outputIsNative,
@@ -451,6 +455,7 @@ export abstract class SwapRouterFlood {
     const {
       calldatas,
       sampleTrade,
+      allTrades,
       routerMustCustody,
       inputIsNative,
       outputIsNative,
@@ -460,18 +465,40 @@ export abstract class SwapRouterFlood {
 
     // unwrap or sweep
     if (routerMustCustody) {
-      if (outputIsNative) {
-        calldatas.push(PaymentsExtended.encodeUnwrapWETH9(minimumAmountOut.quotient, options.recipient, options.fee))
-      } else {
-        calldatas.push(
-          PaymentsExtended.encodeSweepToken(
-            sampleTrade.outputAmount.currency.wrapped,
-            minimumAmountOut.quotient,
-            options.recipient,
-            options.fee
-          )
-        )
-      }
+      //  for all the tokens at the end of a path, we either need to unwrap WETH9 or sweep the token
+      // we first calculate the netfllows of the trade, that is, how much of each token is bought / sold.
+      const netflows = allTrades.reduce((netflows, trade) => {
+        const input = trade.inputAmount.currency.wrapped
+        const output = trade.outputAmount.currency.wrapped
+        netflows.set(input, netflows.get(input)?.subtract(trade.inputAmount) ?? trade.inputAmount.multiply(-1))
+        netflows.set(output, netflows.get(output)?.add(trade.outputAmount) ?? trade.outputAmount)
+        return netflows
+      }, new Map<Currency, CurrencyAmount<Currency>>())
+
+      const sweepCalls = [...netflows.entries()].flatMap(([token, amount]) => {
+        // no need to sweep if we are not receiving any of the token
+        if (JSBI.lessThanOrEqual(amount.quotient, ZERO)) {
+          return []
+        }
+        if (token.isNative) {
+          return [PaymentsExtended.encodeUnwrapWETH9(amount.quotient, options.recipient, options.fee)]
+        } else {
+          return [PaymentsExtended.encodeSweepToken(token.wrapped, amount.quotient, options.recipient, options.fee)]
+        }
+      })
+      calldatas.push(...sweepCalls)
+      // if (outputIsNative) {
+      //   calldatas.push(PaymentsExtended.encodeUnwrapWETH9(minimumAmountOut.quotient, options.recipient, options.fee))
+      // } else {
+      //   calldatas.push(
+      //     PaymentsExtended.encodeSweepToken(
+      //       sampleTrade.outputAmount.currency.wrapped,
+      //       minimumAmountOut.quotient,
+      //       options.recipient,
+      //       options.fee
+      //     )
+      //   )
+      // }
     }
 
     // must refund when paying in ETH: either with an uncertain input amount OR if there's a chance of a partial fill.
