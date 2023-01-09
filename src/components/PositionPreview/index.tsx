@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { NumberType } from '@uniswap/conedison/format'
 import { Currency } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
 import RangeBadge from 'components/Badge/RangeBadge'
@@ -126,11 +125,13 @@ export const PositionPreview = ({
               <ThemedText.DeprecatedMain fontSize="12px">
                 <Trans>Min Price</Trans>
               </ThemedText.DeprecatedMain>
-              <ThemedText.DeprecatedMediumHeader textAlign="center">{formatTickPrice({
-                price: priceLower,
-                atLimit: ticksAtLimit,
-                direction: Bound.LOWER,
-              })}</ThemedText.DeprecatedMediumHeader>
+              <ThemedText.DeprecatedMediumHeader textAlign="center">
+                {formatTickPrice({
+                  price: priceLower,
+                  atLimit: ticksAtLimit,
+                  direction: Bound.LOWER,
+                })}
+              </ThemedText.DeprecatedMediumHeader>
               <ThemedText.DeprecatedMain textAlign="center" fontSize="12px">
                 <Trans>
                   {quoteCurrency.symbol} per {baseCurrency.symbol}
@@ -147,11 +148,13 @@ export const PositionPreview = ({
               <ThemedText.DeprecatedMain fontSize="12px">
                 <Trans>Max Price</Trans>
               </ThemedText.DeprecatedMain>
-              <ThemedText.DeprecatedMediumHeader textAlign="center">{formatTickPrice({
-                price: priceUpper,
-                atLimit: ticksAtLimit,
-                direction: Bound.UPPER,
-              })}</ThemedText.DeprecatedMediumHeader>
+              <ThemedText.DeprecatedMediumHeader textAlign="center">
+                {formatTickPrice({
+                  price: priceUpper,
+                  atLimit: ticksAtLimit,
+                  direction: Bound.UPPER,
+                })}
+              </ThemedText.DeprecatedMediumHeader>
               <ThemedText.DeprecatedMain textAlign="center" fontSize="12px">
                 <Trans>
                   {quoteCurrency.symbol} per {baseCurrency.symbol}
