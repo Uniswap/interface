@@ -1,5 +1,6 @@
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import gql from 'graphql-tag'
+import { useMemo } from 'react'
 
 import { Chain, SearchTokensQuery, useSearchTokensQuery } from './__generated__/types-and-hooks'
 import { chainIdToBackendName } from './util'
@@ -67,27 +68,29 @@ function searchTokenSortFunction(
 }
 
 export function useSearchTokens(searchQuery: string, chainId: number) {
-  const searchChain = chainIdToBackendName(chainId)
-
   const { data, loading, error } = useSearchTokensQuery({
     variables: {
       searchQuery,
     },
   })
 
-  // Stores results, allowing overwriting cross-chain tokens w/ more 'relevant token'
-  const selectionMap: { [projectId: string]: SearchToken } = {}
-  data?.searchTokens?.forEach((token) => {
-    if (token.project?.id) {
-      const existing = selectionMap[token.project.id]
-      if (isMoreRevelantToken(token, existing, searchChain)) selectionMap[token.project.id] = token
-    }
-  })
+  const sortedTokens = useMemo(() => {
+    const searchChain = chainIdToBackendName(chainId)
+    // Stores results, allowing overwriting cross-chain tokens w/ more 'relevant token'
+    const selectionMap: { [projectId: string]: SearchToken } = {}
+    data?.searchTokens?.forEach((token) => {
+      if (token.project?.id) {
+        const existing = selectionMap[token.project.id]
+        if (isMoreRevelantToken(token, existing, searchChain)) selectionMap[token.project.id] = token
+      }
+    })
+    return Object.values(selectionMap).sort(
+      searchTokenSortFunction.bind(null, searchChain, WRAPPED_NATIVE_CURRENCY[chainId]?.address)
+    )
+  }, [data, chainId])
 
   return {
-    data: Object.values(selectionMap).sort(
-      searchTokenSortFunction.bind(null, searchChain, WRAPPED_NATIVE_CURRENCY[chainId]?.address)
-    ),
+    data: sortedTokens,
     loading,
     error,
   }
