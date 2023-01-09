@@ -1,9 +1,4 @@
-import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import gql from 'graphql-tag'
-import { useMemo } from 'react'
-
-import { Chain, SearchTokensQuery, TrendingTokensQuery, useSearchTokensQuery } from './__generated__/types-and-hooks'
-import { chainIdToBackendName } from './util'
 
 gql`
   query TrendingTokens($chain: Chain!) {
@@ -35,5 +30,3 @@ gql`
     }
   }
 `
-
-export type TrendingToken = NonNullable<NonNullable<TrendingTokensQuery['topTokens']>[number]>
