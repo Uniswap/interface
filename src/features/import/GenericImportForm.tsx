@@ -129,7 +129,7 @@ export function GenericImportForm({
               selectionColor={theme.colors.textPrimary}
               spellCheck={false}
               testID="import_account_form/input"
-              textAlign={inputAlignment === 'center' || !value ? 'center' : 'left'}
+              textAlign={inputAlignment === 'center' || !value ? 'left' : 'center'}
               value={value}
               width={value ? 'auto' : (layout?.width || 0) + theme.spacing.xs}
               onBlur={handleBlur}

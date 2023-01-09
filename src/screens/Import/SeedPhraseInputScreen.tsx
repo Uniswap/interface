@@ -115,7 +115,6 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props) 
           afterPasteButtonPress={() => setPastePermissionModalOpen(false)}
           beforePasteButtonPress={() => setPastePermissionModalOpen(true)}
           errorMessage={errorMessage}
-          inputAlignment="flex-start"
           placeholderLabel={t('recovery phrase')}
           showSuccess={showSuccess}
           value={value}
