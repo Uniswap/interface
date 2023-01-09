@@ -147,27 +147,46 @@ export default function NotificationModal() {
   const isOpen = useModalOpen(ApplicationModal.NOTIFICATION_SUBSCRIPTION)
   const theme = useTheme()
   const { account } = useActiveWeb3React()
-  const { isLoading, handleSubscribe, refreshTopics, topicGroups, userInfo } = useNotification()
+  const { isLoading, saveNotification, refreshTopics, topicGroups: topicGroupsGlobal, userInfo } = useNotification()
+
+  const [topicGroups, setTopicGroups] = useState<Topic[]>([])
+
   const notify = useNotify()
   const toggleWalletModal = useWalletModalToggle()
   const { mixpanelHandler } = useMixpanel()
 
-  const [inputAccount, setAccount] = useState('')
+  const [inputEmail, setInputEmail] = useState('')
+  const [emailPendingVerified, setEmailPendingVerified] = useState('')
   const [errorInput, setErrorInput] = useState('')
+
   const [activeTab] = useState<TAB>(TAB.EMAIL)
   const [selectedTopic, setSelectedTopic] = useState<number[]>([])
 
   const isEmailTab = activeTab === TAB.EMAIL
   const isTelegramTab = activeTab === TAB.TELEGRAM
 
-  const isNewUserQualified = !userInfo.email && !userInfo.telegram && !!inputAccount && !errorInput
-  const notFillEmail = !inputAccount && isEmailTab
+  const isNewUserQualified = !userInfo.email && !userInfo.telegram && !!inputEmail && !errorInput
+  const notFillEmail = !inputEmail && isEmailTab
 
   const validateInput = useCallback((value: string, required = false) => {
     const isValid = value.match(/\S+@\S+\.\S+/)
     const errMsg = t`Please input a valid email address`
     setErrorInput((value.length && !isValid) || (required && !value.length) ? errMsg : '')
   }, [])
+
+  const updateTopicGroupsLocal = useCallback(
+    (subIds: number[], unsubIds: number[]) => {
+      const newTopicGroups = topicGroupsGlobal.map(group => {
+        const newTopics = group.topics.map((topic: Topic) => ({
+          ...topic,
+          isSubscribed: subIds.includes(topic.id) ? true : unsubIds.includes(topic.id) ? false : topic.isSubscribed,
+        }))
+        return { ...group, topics: newTopics, isSubscribed: newTopics?.every(e => e.isSubscribed) }
+      })
+      setTopicGroups(newTopicGroups)
+    },
+    [topicGroupsGlobal],
+  )
 
   useEffect(() => {
     if (!account) return
@@ -182,85 +201,103 @@ export default function NotificationModal() {
 
   useEffect(() => {
     if (isOpen) {
+      setEmailPendingVerified('')
       setErrorInput('')
-      setAccount(userInfo.email)
+      setInputEmail(userInfo.email)
     }
   }, [userInfo, activeTab, isOpen])
 
   useEffect(() => {
     setTimeout(
       () => {
-        setSelectedTopic(isOpen ? topicGroups.filter(e => e.isSubscribed).map(e => e.id) : [])
-        if (!isOpen) {
-          setErrorInput('')
-          setIsSubmit(false)
+        setSelectedTopic(isOpen ? topicGroupsGlobal.filter(e => e.isSubscribed).map(e => e.id) : [])
+        if (isOpen) {
+          setTopicGroups(topicGroupsGlobal)
         }
       },
       isOpen ? 0 : 400,
     )
-  }, [isOpen, topicGroups])
+  }, [isOpen, topicGroupsGlobal])
 
-  const getDiffChangeTopics = useCallback(() => {
-    let unsubscribeIds: number[] = []
-    let subscribeIds: number[] = []
-    let unsubscribeNames: string[] = []
-    let subscribeNames: string[] = []
-    topicGroups.forEach(group => {
-      const isChecked = selectedTopic.includes(group.id)
-      // unsubscribe
-      if (group.isSubscribed && !isChecked) {
-        group.topics.forEach((topic: Topic) => {
-          unsubscribeIds = pushUnique(unsubscribeIds, topic.id)
-          unsubscribeNames = pushUnique(unsubscribeNames, topic.code)
-        })
-      }
-      // subscribe
-      if (!group.isSubscribed && isChecked) {
-        group.topics.forEach((topic: Topic) => {
-          subscribeIds = pushUnique(subscribeIds, topic.id)
-          subscribeNames = pushUnique(subscribeNames, topic.code)
-        })
-      }
-    })
-    return {
-      subscribeIds,
-      unsubscribeIds,
-      unsubscribeNames,
-      subscribeNames,
-      hasChanged: subscribeIds.length + unsubscribeIds.length !== 0,
-    }
-  }, [topicGroups, selectedTopic])
+  const getDiffChangeTopics = useCallback(
+    (topicGroups: Topic[]) => {
+      let unsubscribeIds: number[] = []
+      let subscribeIds: number[] = []
+      let unsubscribeNames: string[] = []
+      let subscribeNames: string[] = []
+      topicGroups.forEach(group => {
+        const isChecked = selectedTopic.includes(group.id)
+        // unsubscribe
+        if (group.isSubscribed && !isChecked) {
+          group.topics.forEach((topic: Topic) => {
+            unsubscribeIds = pushUnique(unsubscribeIds, topic.id)
+            unsubscribeNames = pushUnique(unsubscribeNames, topic.code)
+          })
+        }
+        // subscribe
+        if (!group.isSubscribed && isChecked) {
+          group.topics.forEach((topic: Topic) => {
+            subscribeIds = pushUnique(subscribeIds, topic.id)
+            subscribeNames = pushUnique(subscribeNames, topic.code)
+          })
+        }
+      })
 
-  const [isSubmit, setIsSubmit] = useState(false)
+      const isChangeEmail =
+        !errorInput &&
+        inputEmail &&
+        userInfo.email !== inputEmail &&
+        selectedTopic.length &&
+        inputEmail !== emailPendingVerified
+      return {
+        subscribeIds,
+        unsubscribeIds,
+        unsubscribeNames,
+        subscribeNames,
+        hasChanged: subscribeIds.length + unsubscribeIds.length !== 0 || Boolean(isChangeEmail),
+      }
+    },
+    [selectedTopic, inputEmail, userInfo, errorInput, emailPendingVerified],
+  )
+
   const onSave = async () => {
     try {
-      if (isEmailTab) validateInput(inputAccount, true)
+      if (isEmailTab) validateInput(inputEmail, true)
       if (isLoading || errorInput || notFillEmail) return
 
-      const { unsubscribeIds, subscribeIds, subscribeNames, unsubscribeNames } = getDiffChangeTopics()
+      const { unsubscribeIds, subscribeIds, subscribeNames, unsubscribeNames } = getDiffChangeTopics(topicGroupsGlobal)
       if (subscribeNames.length) {
         mixpanelHandler(MIXPANEL_TYPE.NOTIFICATION_SELECT_TOPIC, { topics: subscribeNames })
       }
       if (unsubscribeNames.length) {
         mixpanelHandler(MIXPANEL_TYPE.NOTIFICATION_DESELECT_TOPIC, { topics: unsubscribeNames })
       }
-      const data = await handleSubscribe(subscribeIds, unsubscribeIds, inputAccount, isEmailTab)
-      const verificationUrl = data?.[0]?.verificationUrl
-      setIsSubmit(true)
+      const isChangeEmailOnly = !unsubscribeIds.length && !subscribeIds.length && inputEmail !== userInfo.email
+      if (inputEmail !== userInfo.email) setEmailPendingVerified(inputEmail)
+      const resp = await saveNotification({
+        subscribeIds,
+        unsubscribeIds,
+        email: inputEmail,
+        isEmail: isEmailTab,
+        isChangeEmailOnly,
+        isTelegram: isTelegramTab,
+      })
+      const verificationUrl = resp?.verificationUrl
+      updateTopicGroupsLocal(subscribeIds, unsubscribeIds)
       if (isTelegramTab && verificationUrl) {
         window.open(`https://${verificationUrl}`)
         return
       }
 
-      const hasSubscribe = subscribeIds.length
+      const needVerify = subscribeIds.length || (userInfo.email && userInfo.email !== inputEmail)
       notify(
         {
-          title: hasSubscribe ? t`Verify Your Email Address` : t`Notification Preferences`,
-          summary: hasSubscribe
+          title: needVerify ? t`Verify Your Email Address` : t`Notification Preferences`,
+          summary: needVerify
             ? t`A verification email has been sent to your email address. Please check your inbox to verify your email.`
             : t`Your notification preferences have been saved successfully`,
-          type: hasSubscribe ? NotificationType.WARNING : NotificationType.SUCCESS,
-          icon: <MailIcon color={hasSubscribe ? theme.warning : theme.primary} />,
+          type: needVerify ? NotificationType.WARNING : NotificationType.SUCCESS,
+          icon: <MailIcon color={needVerify ? theme.warning : theme.primary} />,
         },
         10000,
       )
@@ -275,7 +312,7 @@ export default function NotificationModal() {
   }
 
   const onChangeInput = (e: React.FormEvent<HTMLInputElement>) => {
-    setAccount(e.currentTarget.value)
+    setInputEmail(e.currentTarget.value)
     validateInput(e.currentTarget.value)
   }
 
@@ -299,30 +336,15 @@ export default function NotificationModal() {
     }
   }, [isNewUserQualified, topicGroups])
 
-  const isVerifiedEmail = userInfo?.email && inputAccount === userInfo?.email
+  const isVerifiedEmail = userInfo?.email && inputEmail === userInfo?.email
   const isVerifiedTelegram = userInfo?.telegram
   const hasTopicSubscribed = topicGroups.some(e => e.isSubscribed)
 
   const disableButtonSave = useMemo(() => {
     if (isTelegramTab) return isLoading
-    const value =
-      isLoading ||
-      isSubmit ||
-      notFillEmail ||
-      errorInput ||
-      (!getDiffChangeTopics().hasChanged && isVerifiedEmail && inputAccount === userInfo.email)
-    return Boolean(value)
-  }, [
-    getDiffChangeTopics,
-    isSubmit,
-    isLoading,
-    notFillEmail,
-    errorInput,
-    isTelegramTab,
-    isVerifiedEmail,
-    inputAccount,
-    userInfo,
-  ])
+    if (isLoading || notFillEmail || errorInput) return true
+    return !getDiffChangeTopics(topicGroups).hasChanged
+  }, [getDiffChangeTopics, isLoading, notFillEmail, errorInput, isTelegramTab, topicGroups])
 
   const disableCheckbox = !account || notFillEmail || !!errorInput
 
@@ -396,7 +418,7 @@ export default function NotificationModal() {
               <Trans>Enter your email address to receive notifications</Trans>
             </Label>
             <InputWrapper>
-              <Input error={errorInput} value={inputAccount} placeholder="example@gmail.com" onChange={onChangeInput} />
+              <Input error={errorInput} value={inputEmail} placeholder="example@gmail.com" onChange={onChangeInput} />
               {isVerifiedEmail && hasTopicSubscribed && <CheckIcon color={theme.primary} />}
             </InputWrapper>
             <Label style={{ color: theme.red, opacity: errorInput ? 1 : 0, margin: '7px 0px 0px 0px' }}>
