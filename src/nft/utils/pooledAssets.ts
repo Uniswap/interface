@@ -8,6 +8,7 @@ const PROTOCOL_FEE_MULTIPLIER = BigNumber.from('5000000000000000')
 enum BondingCurve {
   Linear = 'LINEAR',
   Exponential = 'EXPONENTIAL',
+  Xyk = 'XYK',
 }
 
 interface Pool {
@@ -50,6 +51,16 @@ export const calcSudoSwapPrice = (asset: GenieAsset, position = 0): string | und
       currentPrice = currentPrice.add(delta)
     } else if (sudoSwapPool.bondingCurve === BondingCurve.Exponential) {
       currentPrice = currentPrice.mul(delta).div(BigNumber.from(PRECISION))
+    } else if (sudoSwapPool.bondingCurve === BondingCurve.Xyk) {
+      let virtualTokenBalance = BigNumber.from(sudoSwapPool.spotPrice)
+      let virtualNFTBalance = BigNumber.from(sudoSwapPool.delta)
+
+      virtualTokenBalance = virtualTokenBalance.add(currentPrice)
+      virtualNFTBalance = virtualNFTBalance.sub(BigNumber.from(1))
+
+      if (!virtualNFTBalance.sub(1).isZero()) {
+        currentPrice = virtualTokenBalance.div(virtualNFTBalance.sub(BigNumber.from(1)))
+      }
     }
   }
 
