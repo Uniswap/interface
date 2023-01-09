@@ -1,7 +1,6 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { formatUSDPrice } from '@uniswap/conedison/format'
-import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import AssetLogo from 'components/Logo/AssetLogo'
 import { L2NetworkLogo, LogoContainer } from 'components/Tokens/TokenTable/TokenRow'
@@ -130,15 +129,6 @@ export const CollectionRow = ({
   )
 }
 
-function useBridgedAddress(token: FungibleToken): [string | undefined, number | undefined, string | undefined] {
-  const { chainId: connectedChainId } = useWeb3React()
-  const bridgedAddress = connectedChainId ? token.extensions?.bridgeInfo?.[connectedChainId]?.tokenAddress : undefined
-  if (bridgedAddress && connectedChainId) {
-    return [bridgedAddress, connectedChainId, getChainInfo(connectedChainId)?.circleLogoUrl]
-  }
-  return [undefined, undefined, undefined]
-}
-
 interface TokenRowProps {
   token: FungibleToken
   isHovered: boolean
@@ -160,8 +150,8 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
     sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
   }, [addToSearchHistory, toggleOpen, token, eventProperties])
 
-  const [bridgedAddress, bridgedChain, L2Icon] = useBridgedAddress(token)
-  const tokenDetailsPath = getTokenDetailsURL(bridgedAddress ?? token.address, undefined, bridgedChain ?? token.chainId)
+  const L2Icon = getChainInfo(token.chainId)?.circleLogoUrl
+  const tokenDetailsPath = getTokenDetailsURL(token.address, undefined, token.chainId)
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {

@@ -4,8 +4,10 @@ import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from '@uniswap/analyt
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { checkWarning } from 'constants/tokenSafety'
 import { useSearchTokens } from 'graphql/data/SearchTokens'
-import { useSearchTokensQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
 import useDebounce from 'hooks/useDebounce'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -15,6 +17,7 @@ import { Row } from 'nft/components/Flex'
 import { magicalGradientOnHover } from 'nft/css/common.css'
 import { useIsMobile, useIsTablet } from 'nft/hooks'
 import { fetchSearchCollections } from 'nft/queries'
+import { FungibleToken } from 'nft/types'
 import { ChangeEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
@@ -78,9 +81,27 @@ export const SearchBar = () => {
   // )
 
   const { chainId } = useWeb3React()
-  const { data: searchTokensQueryData, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue, chainId ?? 1)
+  const { data: searchQueryTokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue, chainId ?? 1)
 
-  const tokens = useMemo(() => searchTokensQueryData?.searchTokens.map((token => )) )
+  const tokens = useMemo(
+    () =>
+      searchQueryTokens.map(
+        (t): FungibleToken => ({
+          ...t,
+          name: t.name ?? '',
+          symbol: t.symbol ?? '',
+          decimals: t.decimals ?? 0,
+          address: t.address ?? NATIVE_CHAIN_ID,
+          chainId: CHAIN_NAME_TO_CHAIN_ID[t?.chain],
+          priceUsd: t.market?.price?.value ?? undefined,
+          price24hChange: t.market?.pricePercentChange?.value,
+          volume24h: t.market?.volume24H?.value,
+          onDefaultList: t.address ? !checkWarning(t.address) : true,
+          logoURI: t.project?.logoUrl,
+        })
+      ),
+    [searchQueryTokens]
+  )
 
   const isNFTPage = useIsNftPage()
 

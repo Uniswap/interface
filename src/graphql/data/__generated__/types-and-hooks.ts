@@ -914,12 +914,12 @@ export type NftBalanceQuery = { __typename?: 'Query', nftBalances?: { __typename
 export const SearchTokensDocument = gql`
     query SearchTokens($searchQuery: String!) {
   searchTokens(searchQuery: $searchQuery) {
-    decimals @required(action: LOG)
-    name @required(action: LOG)
-    chain @required(action: LOG)
-    standard @required(action: LOG)
+    decimals
+    name
+    chain
+    standard
     address
-    symbol @required(action: LOG)
+    symbol
     market(currency: USD) {
       price {
         value
@@ -933,8 +933,8 @@ export const SearchTokensDocument = gql`
         currency
       }
     }
-    project @required(action: LOG) {
-      id @required(action: LOG)
+    project {
+      id
       logoUrl
     }
   }
