@@ -1,5 +1,6 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { useFiatOnrampFlag } from 'featureFlags/flags/fiatOnramp'
+import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
 import { Permit2Variant, usePermit2Flag } from 'featureFlags/flags/permit2'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
@@ -214,6 +215,12 @@ export default function FeatureFlagModal() {
         value={useFiatOnrampFlag()}
         featureFlag={FeatureFlag.fiatOnramp}
         label="Fiat on-ramp"
+      />
+      <FeatureFlagOption
+        variant={NftListV2Variant}
+        value={useNftListV2Flag()}
+        featureFlag={FeatureFlag.nftListV2}
+        label="NFT Listing Page v2"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption
