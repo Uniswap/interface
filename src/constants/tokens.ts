@@ -84,7 +84,7 @@ export const USDC_MAINNET = new Token(
 // )
 const USDC_SCROLL_PREALPHA = new Token(
   SupportedChainId.SCROLL_PREALPHA,
-  '0x6c7211F2d7e8b5a89Bea818ac6a8e7240906e53D',
+  '0x38BA9a208F34Ddc9332f6DfC0E9d567f098958A4',
   6,
   'USDC',
   'USD//C'
