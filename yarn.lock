@@ -5133,9 +5133,9 @@
     ethers "^5.3.1"
 
 "@uniswap/universal-router@1.2.1", "@uniswap/universal-router@^1.0.1":
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@uniswap/universal-router/-/universal-router-1.2.2.tgz#7b3704a307fad53ba2a80718362b1b7718ada4cc"
-  integrity sha512-ipQQpo3xO21EIS5pBjJazZbh9Vth6wzeta85Xva2HKoJ0uBvnugCjqvjkJMqiiz+osBnC12yemitjTOOxcqXjA==
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/universal-router/-/universal-router-1.2.1.tgz#5fe4aa21d6bc89314d99f26407f28154f8e16f42"
+  integrity sha512-F3S1wKylncuvIG2qwC1ciXXc1z1QmKsalo4p6H2A90LSRylEEhNp7ITxs7qCcnfRh+ZNkGJ0yQ0zmuVJSBezOQ==
   dependencies:
     "@openzeppelin/contracts" "4.7.0"
     "@uniswap/v2-core" "1.0.1"
@@ -5143,7 +5143,7 @@
 
 "@uniswap/v2-core@1.0.0":
   version "1.0.0"
-  resolved "https://registry.npmjs.org/@uniswap/v2-core/-/v2-core-1.0.0.tgz"
+  resolved "https://registry.yarnpkg.com/@uniswap/v2-core/-/v2-core-1.0.0.tgz#e0fab91a7d53e8cafb5326ae4ca18351116b0844"
   integrity sha512-BJiXrBGnN8mti7saW49MXwxDBRFiWemGetE58q8zgfnPPzQKq55ADltEILqOt6VFZ22kVeVKbF8gVd8aY3l7pA==
 
 "@uniswap/v2-core@1.0.1":
