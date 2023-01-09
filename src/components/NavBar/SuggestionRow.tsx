@@ -205,7 +205,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
             <Box className={styles.primaryText}>{formatUSDPrice(token.priceUsd)}</Box>
           </Row>
         )}
-        {token.price24hChange && (
+        {token.price24hChange && token.price24hChange !== 0 && (
           <PriceChangeContainer>
             <ArrowCell>{arrow}</ArrowCell>
             <PriceChangeText isNegative={token.price24hChange < 0}>

@@ -1,14 +1,16 @@
 import { Trans } from '@lingui/macro'
 import { useTrace } from '@uniswap/analytics'
 import { InterfaceSectionName, NavBarSearchTypes } from '@uniswap/analytics-events'
+import { useWeb3React } from '@web3-react/core'
+import { useTrendingTokensQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { chainIdToBackendName } from 'graphql/data/util'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { subheadSmall } from 'nft/css/common.css'
 import { useSearchHistory } from 'nft/hooks'
 import { fetchTrendingCollections } from 'nft/queries'
-import { fetchTrendingTokens } from 'nft/queries/genie/TrendingTokensFetcher'
-import { FungibleToken, GenieCollection, TimePeriod, TrendingCollection } from 'nft/types'
+import { FungibleToken, GenieCollection, parseFungibleTokens, TimePeriod, TrendingCollection } from 'nft/types'
 import { formatEthPrice } from 'nft/utils/currency'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
@@ -141,15 +143,18 @@ export const SearchBarDropdown = ({
     [isNFTPage, trendingCollectionResults]
   )
 
-  const { data: trendingTokenResults, isLoading: trendingTokensAreLoading } = useQuery(
-    ['trendingTokens'],
-    () => fetchTrendingTokens(4),
-    {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-    }
+  const { chainId } = useWeb3React()
+  const { data: trendingTokenData, loading: trendingTokensAreLoading } = useTrendingTokensQuery({
+    variables: { chain: chainIdToBackendName(chainId) },
+    fetchPolicy: 'network-only', // Used for first execution
+    nextFetchPolicy: 'cache-first', // Used for subsequent executions
+  })
+
+  const trendingTokenResults = useMemo(
+    () => trendingTokenData?.topTokens && parseFungibleTokens(trendingTokenData.topTokens),
+    [trendingTokenData]
   )
+
   useEffect(() => {
     trendingTokenResults?.forEach(updateSearchHistory)
   }, [trendingTokenResults, updateSearchHistory])

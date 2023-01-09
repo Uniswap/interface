@@ -869,6 +869,13 @@ export type TopTokensSparklineQueryVariables = Exact<{
 
 export type TopTokensSparklineQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', address?: string, market?: { __typename?: 'TokenMarket', priceHistory?: Array<{ __typename?: 'TimestampedAmount', timestamp: number, value: number }> } }> };
 
+export type TrendingTokensQueryVariables = Exact<{
+  chain: Chain;
+}>;
+
+
+export type TrendingTokensQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', decimals?: number, name?: string, chain: Chain, standard?: TokenStandard, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', price?: { __typename?: 'Amount', value: number, currency?: Currency }, pricePercentChange?: { __typename?: 'Amount', value: number }, volume24H?: { __typename?: 'Amount', value: number, currency?: Currency } }, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string, safetyLevel?: SafetyLevel } }> };
+
 export type AssetQueryVariables = Exact<{
   address: Scalars['String'];
   orderBy?: InputMaybe<NftAssetSortableField>;
@@ -1186,6 +1193,64 @@ export function useTopTokensSparklineLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type TopTokensSparklineQueryHookResult = ReturnType<typeof useTopTokensSparklineQuery>;
 export type TopTokensSparklineLazyQueryHookResult = ReturnType<typeof useTopTokensSparklineLazyQuery>;
 export type TopTokensSparklineQueryResult = Apollo.QueryResult<TopTokensSparklineQuery, TopTokensSparklineQueryVariables>;
+export const TrendingTokensDocument = gql`
+    query TrendingTokens($chain: Chain!) {
+  topTokens(pageSize: 4, page: 1, chain: $chain, orderBy: VOLUME) {
+    decimals
+    name
+    chain
+    standard
+    address
+    symbol
+    market(currency: USD) {
+      price {
+        value
+        currency
+      }
+      pricePercentChange(duration: DAY) {
+        value
+      }
+      volume24H: volume(duration: DAY) {
+        value
+        currency
+      }
+    }
+    project {
+      id
+      logoUrl
+      safetyLevel
+    }
+  }
+}
+    `;
+
+/**
+ * __useTrendingTokensQuery__
+ *
+ * To run a query within a React component, call `useTrendingTokensQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTrendingTokensQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTrendingTokensQuery({
+ *   variables: {
+ *      chain: // value for 'chain'
+ *   },
+ * });
+ */
+export function useTrendingTokensQuery(baseOptions: Apollo.QueryHookOptions<TrendingTokensQuery, TrendingTokensQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TrendingTokensQuery, TrendingTokensQueryVariables>(TrendingTokensDocument, options);
+      }
+export function useTrendingTokensLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TrendingTokensQuery, TrendingTokensQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TrendingTokensQuery, TrendingTokensQueryVariables>(TrendingTokensDocument, options);
+        }
+export type TrendingTokensQueryHookResult = ReturnType<typeof useTrendingTokensQuery>;
+export type TrendingTokensLazyQueryHookResult = ReturnType<typeof useTrendingTokensLazyQuery>;
+export type TrendingTokensQueryResult = Apollo.QueryResult<TrendingTokensQuery, TrendingTokensQueryVariables>;
 export const AssetDocument = gql`
     query Asset($address: String!, $orderBy: NftAssetSortableField, $asc: Boolean, $filter: NftAssetsFilterInput, $first: Int, $after: String, $last: Int, $before: String) {
   nftAssets(
