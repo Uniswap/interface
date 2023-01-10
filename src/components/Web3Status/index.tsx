@@ -22,7 +22,7 @@ import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import {
   useCloseModal,
   useModalIsOpen,
-  useToggleMetamaskConnectionErrorModal,
+  useOpenMetamaskConnectionErrorModal,
   useToggleWalletDropdown,
   useToggleWalletModal,
 } from '../../state/application/hooks'
@@ -213,16 +213,16 @@ function Web3StatusInner() {
     toggleWalletDropdown()
   }, [toggleWalletDropdown])
   const toggleWalletModal = useToggleWalletModal()
-  const toggleMetamaskConnectionErrorModal = useToggleMetamaskConnectionErrorModal()
+  const openMetamaskConnectionErrorModal = useOpenMetamaskConnectionErrorModal()
   const walletIsOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
 
   const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
   useEffect(() => {
     if (getIsMetaMask() && error) {
-      toggleMetamaskConnectionErrorModal()
+      openMetamaskConnectionErrorModal()
     }
-  }, [error, toggleMetamaskConnectionErrorModal])
+  }, [error, openMetamaskConnectionErrorModal])
 
   const allTransactions = useAllTransactions()
 
