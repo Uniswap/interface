@@ -1,4 +1,6 @@
-import React, { Fragment, ReactElement, useEffect, useMemo } from 'react'
+import dayjs from 'dayjs'
+import React, { ReactElement, useEffect, useMemo } from 'react'
+import { View } from 'react-native'
 import { batch } from 'react-redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { PollingInterval } from 'src/constants/misc'
@@ -13,6 +15,7 @@ import {
 } from 'src/features/notifications/notificationSlice'
 import { selectLastTxNotificationUpdate } from 'src/features/notifications/selectors'
 import { useAccounts } from 'src/features/wallet/hooks'
+import { ONE_SECOND_MS } from 'src/utils/time'
 
 /**
  * For all imported accounts, checks for new transactions and updates
@@ -35,12 +38,14 @@ export function TransactionHistoryUpdater() {
         if (!portfolio?.ownerAddress || !portfolio?.assetActivities) return null
 
         return (
-          <Fragment key={portfolio.ownerAddress}>
+          <View
+            key={portfolio.ownerAddress}
+            testID={`AddressTransactionHistoryUpdater/${portfolio.ownerAddress}`}>
             <AddressTransactionHistoryUpdater
               activities={portfolio.assetActivities}
               address={portfolio.ownerAddress}
             />
-          </Fragment>
+          </View>
         )
       }) ?? null}
     </>
@@ -67,27 +72,33 @@ function AddressTransactionHistoryUpdater({
 
   useEffect(() => {
     batch(() => {
+      let shouldRefetchQueries = false
+
       // parse txns and address from portfolio
       activities.map((activity) => {
         if (!activity) return
 
         if (!lastTxNotificationUpdateTimestamp) {
-          dispatch(setLastTxNotificationUpdate({ address, timestamp: Date.now() })) // Note this is in ms
+          dispatch(setLastTxNotificationUpdate({ address, timestamp: dayjs().valueOf() })) // Note this is in ms
           return
         }
 
-        const updatedTimestampMs = activity.timestamp * 1000 // convert api response from s -> ms
+        const updatedTimestampMs = activity.timestamp * ONE_SECOND_MS // convert api response from s -> ms
         const hasNewTransactions = updatedTimestampMs > lastTxNotificationUpdateTimestamp
 
         if (hasNewTransactions) {
           dispatch(setLastTxNotificationUpdate({ address, timestamp: updatedTimestampMs }))
           dispatch(setNotificationStatus({ address, hasNotifications: true }))
           // full send refetch all active (mounted) queries
-          // NOTE: every wallet may call this on new transaction.
-          // It may be better to batch this action, or target specific queries.
-          refetchQueries()
+          shouldRefetchQueries = true
         }
       })
+
+      if (shouldRefetchQueries) {
+        // NOTE: every wallet may call this on new transaction.
+        // It may be better to batch this action, or target specific queries.
+        refetchQueries()
+      }
     })
   }, [activities, address, dispatch, lastTxNotificationUpdateTimestamp, refetchQueries])
 

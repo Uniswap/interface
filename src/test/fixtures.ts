@@ -46,6 +46,13 @@ export const account: Account = {
   backups: [BackupType.Cloud],
 }
 
+export const account2: Account = {
+  type: AccountType.Readonly,
+  address: '0xe1d494bc8690b1ef2f0a13b6672c4f2ee5c2d2b7',
+  name: 'Test Account',
+  timeImportedMs: 10,
+}
+
 const mockSigner = new (class {
   signTransaction = () => '0x1234567890abcdef'
   connect = () => this
