@@ -78,7 +78,7 @@ function useAvatarFromNFT(nftUri = '', enforceOwnership: boolean): { avatar?: st
   const isERC721 = protocol === 'eip155' && erc === 'erc721'
   const isERC1155 = protocol === 'eip155' && erc === 'erc1155'
   const erc721 = useERC721Uri(isERC721 ? contractAddress : undefined, isERC721 ? id : undefined, enforceOwnership)
-  const erc1155 = useERC1155Uri(isERC1155 ? contractAddress : undefined, isERC1155 ? id : undefined, false)
+  const erc1155 = useERC1155Uri(isERC1155 ? contractAddress : undefined, isERC1155 ? id : undefined, enforceOwnership)
   const uri = erc721.uri || erc1155.uri
   const http = uri && uriToHttp(uri)[0]
 
