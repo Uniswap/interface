@@ -20,9 +20,11 @@ interface TransactionDetailsProps {
   banner?: ReactNode
   chainId: ChainId
   gasFee?: string
+  gasFallbackUsed?: boolean
   showWarning?: boolean
   warning?: Warning
   onShowWarning?: () => void
+  onShowGasWarning?: () => void
 }
 
 export const TRANSACTION_DETAILS_SPACER: { color: keyof Theme['colors']; width: number } = {
@@ -35,8 +37,10 @@ export function TransactionDetails({
   children,
   chainId,
   gasFee,
+  gasFallbackUsed,
   showWarning,
   warning,
+  onShowGasWarning,
   onShowWarning,
 }: PropsWithChildren<TransactionDetailsProps>) {
   const theme = useAppTheme()
@@ -76,7 +80,12 @@ export function TransactionDetails({
       {!showWarning && <Box mb="xs">{banner}</Box>}
       <Flex backgroundColor="background2" borderRadius="lg" gap="none">
         {children}
-        <NetworkFee chainId={chainId} gasFee={gasFee} />
+        <NetworkFee
+          chainId={chainId}
+          gasFallbackUsed={gasFallbackUsed}
+          gasFee={gasFee}
+          onShowGasWarning={onShowGasWarning}
+        />
         <Box
           borderTopColor={TRANSACTION_DETAILS_SPACER.color}
           borderTopWidth={TRANSACTION_DETAILS_SPACER.width}

@@ -192,6 +192,7 @@ module.exports = {
               'Onboarding',
               'Uniswap',
               'We’ll',
+              'we’re',
               'What’s',
               'aren’t',
               'can’t',

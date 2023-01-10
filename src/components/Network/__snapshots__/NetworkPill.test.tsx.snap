@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders a NetworkPill with border 1`] = `
+exports[`NetworkPill renders a NetworkPill with border 1`] = `
 <View
   style={
     Array [
@@ -93,7 +93,7 @@ exports[`renders a NetworkPill with border 1`] = `
 </View>
 `;
 
-exports[`renders a NetworkPill without image 1`] = `
+exports[`NetworkPill renders a NetworkPill without image 1`] = `
 <View
   style={
     Array [
@@ -186,7 +186,7 @@ exports[`renders a NetworkPill without image 1`] = `
 </View>
 `;
 
-exports[`renders an InlineNetworkPill 1`] = `
+exports[`NetworkPill renders an InlineNetworkPill 1`] = `
 <View
   style={
     Array [

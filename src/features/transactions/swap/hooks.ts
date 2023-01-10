@@ -373,13 +373,22 @@ type TokenApprovalInfo =
       txRequest: providers.TransactionRequest
     }
 
+interface TransactionRequestInfo {
+  transactionRequest: providers.TransactionRequest | undefined
+  gasFallbackUsed: boolean
+}
+
 export function useTransactionRequest(
   derivedSwapInfo: DerivedSwapInfo,
   tokenApprovalInfo?: TokenApprovalInfo
-): providers.TransactionRequest | undefined {
+): TransactionRequestInfo {
   const wrapTxRequest = useWrapTransactionRequest(derivedSwapInfo)
   const swapTxRequest = useSwapTransactionRequest(derivedSwapInfo, tokenApprovalInfo)
-  return derivedSwapInfo.wrapType === WrapType.NotApplicable ? swapTxRequest : wrapTxRequest
+  const isWrapApplicable = derivedSwapInfo.wrapType !== WrapType.NotApplicable
+  return {
+    transactionRequest: isWrapApplicable ? wrapTxRequest : swapTxRequest.transactionRequest,
+    gasFallbackUsed: !isWrapApplicable && swapTxRequest.gasFallbackUsed,
+  }
 }
 
 function useWrapTransactionRequest(derivedSwapInfo: DerivedSwapInfo) {
@@ -561,7 +570,7 @@ const getTokenApprovalInfo = async (
 export function useSwapTransactionRequest(
   derivedSwapInfo: DerivedSwapInfo,
   tokenApprovalInfo?: TokenApprovalInfo
-): providers.TransactionRequest | undefined {
+): TransactionRequestInfo {
   const {
     chainId,
     trade: { trade },
@@ -598,7 +607,11 @@ export function useSwapTransactionRequest(
     tokenApprovalInfo?.action === ApprovalAction.Approve ||
     tokenApprovalInfo?.action === ApprovalAction.Permit2Approve
 
-  const { isLoading: simulatedGasLimitLoading, simulatedGasLimit } = useSimulatedGasLimit(
+  const {
+    isLoading: simulatedGasLimitLoading,
+    simulatedGasLimit,
+    gasFallbackUsed,
+  } = useSimulatedGasLimit(
     chainId,
     currencyAmounts[exactCurrencyField],
     otherCurrency,
@@ -618,7 +631,7 @@ export function useSwapTransactionRequest(
       permit2InfoLoading ||
       !trade
     ) {
-      return
+      return { transactionRequest: undefined, gasFallbackUsed }
     }
 
     const baseSwapTx = {
@@ -634,7 +647,10 @@ export function useSwapTransactionRequest(
         inputTokenPermit: permitInfo,
       })
 
-      return { ...baseSwapTx, data: calldata, value }
+      return {
+        transactionRequest: { ...baseSwapTx, data: calldata, value },
+        gasFallbackUsed,
+      }
     }
 
     if (permit2Signature) {
@@ -648,10 +664,13 @@ export function useSwapTransactionRequest(
       })
 
       return {
-        ...baseSwapTx,
-        data: calldata,
-        value,
-        gasLimit: shouldFetchSimulatedGasLimit ? simulatedGasLimit : undefined,
+        transactionRequest: {
+          ...baseSwapTx,
+          data: calldata,
+          value,
+          gasLimit: shouldFetchSimulatedGasLimit ? simulatedGasLimit : undefined,
+        },
+        gasFallbackUsed,
       }
     }
 
@@ -661,18 +680,22 @@ export function useSwapTransactionRequest(
     }
 
     return {
-      ...baseSwapTx,
-      data: methodParameters.calldata,
-      value: methodParameters.value,
+      transactionRequest: {
+        ...baseSwapTx,
+        data: methodParameters.calldata,
+        value: methodParameters.value,
 
-      // if the swap transaction does not require a Tenderly gas limit simulation, submit "undefined" here
-      // so that ethers can calculate the gasLimit later using .estimateGas(tx) instead
-      gasLimit: shouldFetchSimulatedGasLimit ? simulatedGasLimit : undefined,
+        // if the swap transaction does not require a Tenderly gas limit simulation, submit "undefined" here
+        // so that ethers can calculate the gasLimit later using .estimateGas(tx) instead
+        gasLimit: shouldFetchSimulatedGasLimit ? simulatedGasLimit : undefined,
+      },
+      gasFallbackUsed,
     }
   }, [
     address,
     chainId,
     currencyAmountIn,
+    gasFallbackUsed,
     permit2InfoLoading,
     permit2Signature,
     permitInfo,
@@ -703,7 +726,11 @@ export function useSwapTxAndGasInfo(derivedSwapInfo: DerivedSwapInfo, skipGasFee
     GasSpeed.Urgent,
     skipGasFeeQuery
   )
-  const txFeeInfo = useTransactionGasFee(txRequest, GasSpeed.Urgent, skipGasFeeQuery)
+  const txFeeInfo = useTransactionGasFee(
+    txRequest.transactionRequest,
+    GasSpeed.Urgent,
+    skipGasFeeQuery
+  )
   const totalGasFee = sumGasFees(approveFeeInfo?.gasFee, txFeeInfo?.gasFee)
 
   const txWithGasSettings = useMemo(() => {
@@ -725,6 +752,7 @@ export function useSwapTxAndGasInfo(derivedSwapInfo: DerivedSwapInfo, skipGasFee
     txRequest: txWithGasSettings,
     approveTxRequest: approveTxWithGasSettings,
     totalGasFee,
+    gasFallbackUsed: txRequest.gasFallbackUsed,
     isLoading: approveLoading,
   }
 }

@@ -1,6 +1,8 @@
 import { providers } from 'ethers'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useAppTheme } from 'src/app/hooks'
+import InfoCircleSVG from 'src/assets/icons/info-circle.svg'
 import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { useUSDCValue } from 'src/features/routing/useUSDCPrice'
@@ -30,6 +32,7 @@ interface SwapFormProps {
   approveTxRequest?: providers.TransactionRequest
   txRequest?: providers.TransactionRequest
   totalGasFee?: string
+  gasFallbackUsed?: boolean
   warnings: Warning[]
   exactValue: string
 }
@@ -41,11 +44,14 @@ export function SwapReview({
   approveTxRequest,
   txRequest,
   totalGasFee,
+  gasFallbackUsed,
   warnings,
   exactValue,
 }: SwapFormProps) {
   const { t } = useTranslation()
+  const theme = useAppTheme()
   const [showWarningModal, setShowWarningModal] = useState(false)
+  const [showGasWarningModal, setShowGasWarningModal] = useState(false)
   const [warningAcknowledged, setWarningAcknowledged] = useState(false)
   const [shouldSubmitTx, setShouldSubmitTx] = useState(false)
 
@@ -117,6 +123,14 @@ export function SwapReview({
     setShowWarningModal(false)
   }, [])
 
+  const onShowGasWarning = useCallback(() => {
+    setShowGasWarningModal(true)
+  }, [])
+
+  const onCloseGasWarning = useCallback(() => {
+    setShowGasWarningModal(false)
+  }, [])
+
   const actionButtonProps = {
     disabled: noValidSwap || blockingWarning || newTradeToAccept || !totalGasFee || !txRequest,
     label: getActionName(t, wrapType),
@@ -134,8 +148,10 @@ export function SwapReview({
       return (
         <TransactionDetails
           chainId={chainId}
+          gasFallbackUsed={gasFallbackUsed}
           gasFee={totalGasFee}
           warning={swapWarning}
+          onShowGasWarning={onShowGasWarning}
           onShowWarning={onShowWarning}
         />
       )
@@ -146,11 +162,13 @@ export function SwapReview({
     return (
       <SwapDetails
         acceptedTrade={acceptedTrade}
+        gasFallbackUsed={gasFallbackUsed}
         gasFee={totalGasFee}
         newTradeToAccept={newTradeToAccept}
         trade={trade}
         warning={swapWarning}
         onAcceptTrade={onAcceptTrade}
+        onShowGasWarning={onShowGasWarning}
         onShowWarning={onShowWarning}
       />
     )
@@ -193,6 +211,25 @@ export function SwapReview({
           onCancel={onCancelWarning}
           onClose={onCloseWarning}
           onConfirm={onConfirmWarning}
+        />
+      )}
+      {showGasWarningModal && (
+        <WarningModal
+          caption={t(
+            'This maximum network fee estimate is more conservative than usual—we’re unable to provide a more accurate figure at this time.'
+          )}
+          closeText={t('Dismiss')}
+          icon={
+            <InfoCircleSVG
+              color={theme.colors.accentWarning}
+              height={theme.iconSizes.lg}
+              width={theme.iconSizes.lg}
+            />
+          }
+          modalName={ModalName.GasEstimateWarning}
+          severity={WarningSeverity.Medium}
+          title={t('Conservative network fee estimate')}
+          onClose={onCloseGasWarning}
         />
       )}
       <TransactionReview

@@ -315,6 +315,8 @@
   "You need to import this wallet via recovery phrase to swap tokens.": "You need to import this wallet via recovery phrase to swap tokens.",
   "Not enough {{ nativeCurrency }} to pay network fee": "Not enough {{ nativeCurrency }} to pay network fee",
   "Network fees are paid in the native token. Buy more {{ nativeCurrency }}.": "Network fees are paid in the native token. Buy more {{ nativeCurrency }}.",
+  "Conservative network fee estimate": "Conservative network fee estimate",
+  "This maximum network fee estimate is more conservative than usual—we’re unable to provide a more accurate figure at this time.": "This maximum network fee estimate is more conservative than usual—we’re unable to provide a more accurate figure at this time.",
   "Review unwrap": "Review unwrap",
   "Review wrap": "Review wrap",
   "Review swap": "Review swap",

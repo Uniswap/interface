@@ -19,20 +19,24 @@ interface SwapDetailsProps {
   acceptedTrade: Trade<Currency, Currency, TradeType>
   trade: Trade<Currency, Currency, TradeType>
   gasFee?: string
+  gasFallbackUsed?: boolean
   newTradeToAccept: boolean
   warning?: Warning
   onAcceptTrade: () => void
   onShowWarning?: () => void
+  onShowGasWarning: () => void
 }
 
 export function SwapDetails({
   acceptedTrade,
   gasFee,
+  gasFallbackUsed,
   newTradeToAccept,
   trade,
   warning,
   onAcceptTrade,
   onShowWarning,
+  onShowGasWarning,
 }: SwapDetailsProps) {
   const { t } = useTranslation()
   const [showInverseRate, setShowInverseRate] = useState(false)
@@ -89,9 +93,11 @@ export function SwapDetails({
         ) : null
       }
       chainId={acceptedTrade.inputAmount.currency.chainId}
+      gasFallbackUsed={gasFallbackUsed}
       gasFee={gasFee}
       showWarning={warning && !newTradeToAccept}
       warning={warning}
+      onShowGasWarning={onShowGasWarning}
       onShowWarning={onShowWarning}>
       <Flex
         row

@@ -38,7 +38,7 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
   const [step, setStep] = useState<TransactionStep>(TransactionStep.FORM)
 
   const warnings = useSwapWarnings(t, account, derivedSwapInfo)
-  const { txRequest, approveTxRequest, totalGasFee } = useSwapTxAndGasInfo(
+  const { txRequest, approveTxRequest, totalGasFee, gasFallbackUsed } = useSwapTxAndGasInfo(
     derivedSwapInfo,
     step === TransactionStep.SUBMITTED ||
       warnings.some((warning) => warning.action === WarningAction.DisableReview)
@@ -87,6 +87,7 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
       dispatch={dispatch}
       exactValue={exactValue ?? ''}
       flowName={t('Swap')}
+      gasFallbackUsed={gasFallbackUsed}
       setStep={setStep}
       showTokenSelector={!!selectingCurrencyField}
       step={step}

@@ -65,6 +65,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
       dispatch={dispatch}
       exactValue={isUSDInput ? exactAmountUSD : exactAmountToken}
       flowName={t('Send')}
+      gasFallbackUsed={false}
       isUSDInput={derivedTransferInfo.isUSDInput}
       recipientSelector={
         <RecipientSelect

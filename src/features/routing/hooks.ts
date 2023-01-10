@@ -1,4 +1,5 @@
-import { skipToken } from '@reduxjs/toolkit/dist/query'
+import { SerializedError } from '@reduxjs/toolkit'
+import { FetchBaseQueryError, skipToken } from '@reduxjs/toolkit/dist/query'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { ChainId } from 'src/constants/chains'
@@ -94,7 +95,12 @@ export function useSimulatedGasLimit(
   tradeType: TradeType,
   skip: boolean,
   permitSignatureInfo?: PermitSignatureInfo | null
-) {
+): {
+  isLoading: boolean
+  error?: boolean | FetchBaseQueryError | SerializedError
+  simulatedGasLimit: string
+  gasFallbackUsed: boolean
+} {
   const [debouncedAmountSpecified, isDebouncing] = useDebounceWithStatus(amountSpecified)
 
   const { isLoading, error, data } = useRouterQuote({
@@ -115,7 +121,8 @@ export function useSimulatedGasLimit(
       // instead, fall back to one of our hard-coded estimates
       simulatedGasLimit:
         (data && !data.simulationError && data.gasUseEstimate) || SWAP_GAS_LIMIT_FALLBACKS[chainId],
+      gasFallbackUsed: !skip && !!data?.simulationError,
     }),
-    [data, error, isDebouncing, isLoading, chainId]
+    [isLoading, isDebouncing, error, data, chainId, skip]
   )
 }

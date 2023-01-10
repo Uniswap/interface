@@ -41,6 +41,7 @@ interface TransactionFlowProps {
   approveTxRequest?: providers.TransactionRequest
   txRequest?: providers.TransactionRequest
   totalGasFee?: string
+  gasFallbackUsed?: boolean
   step: TransactionStep
   setStep: (newStep: TransactionStep) => void
   warnings: Warning[]
@@ -55,6 +56,7 @@ type InnerContentProps = Pick<
   | 'onClose'
   | 'dispatch'
   | 'totalGasFee'
+  | 'gasFallbackUsed'
   | 'txRequest'
   | 'approveTxRequest'
   | 'warnings'
@@ -81,6 +83,7 @@ export function TransactionFlow({
   approveTxRequest,
   txRequest,
   totalGasFee,
+  gasFallbackUsed,
   step,
   setStep,
   onClose,
@@ -142,6 +145,7 @@ export function TransactionFlow({
             derivedInfo={derivedInfo}
             dispatch={dispatch}
             exactValue={exactValue}
+            gasFallbackUsed={gasFallbackUsed}
             setStep={setStep}
             showingSelectorScreen={showRecipientSelector || showTokenSelector}
             step={step}
@@ -202,6 +206,7 @@ function SwapInnerContent({
   onClose,
   dispatch,
   totalGasFee,
+  gasFallbackUsed,
   approveTxRequest,
   txRequest,
   warnings,
@@ -245,6 +250,7 @@ function SwapInnerContent({
             approveTxRequest={approveTxRequest}
             derivedSwapInfo={derivedSwapInfo}
             exactValue={exactValue}
+            gasFallbackUsed={gasFallbackUsed}
             totalGasFee={totalGasFee}
             txRequest={txRequest}
             warnings={warnings}

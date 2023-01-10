@@ -1,7 +1,7 @@
 import React from 'react'
 import 'react-native'
 import App from 'src/app/App'
-import { renderWithProviders } from 'src/test/render'
+import { render } from 'src/test/test-utils'
 
 jest.mock('src/data/hooks', () => {
   return {
@@ -10,5 +10,5 @@ jest.mock('src/data/hooks', () => {
 })
 
 it('renders correctly', () => {
-  renderWithProviders(<App />)
+  render(<App />)
 })
