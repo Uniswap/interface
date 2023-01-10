@@ -1,4 +1,5 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import { ApolloQueryResult } from '@apollo/client'
+import React, { ReactElement, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Share } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -19,7 +20,7 @@ import { LongText } from 'src/components/text/LongText'
 import { CHAIN_INFO } from 'src/constants/chains'
 import { PollingInterval } from 'src/constants/misc'
 import { uniswapUrls } from 'src/constants/urls'
-import { useNftItemScreenQuery } from 'src/data/__generated__/types-and-hooks'
+import { NftItemScreenQuery, useNftItemScreenQuery } from 'src/data/__generated__/types-and-hooks'
 import { useDisplayName } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { iconSizes, imageSizes } from 'src/styles/sizing'
@@ -33,7 +34,7 @@ export function NFTItemScreen({
   route: {
     params: { owner, address, tokenId },
   },
-}: AppStackScreenProp<Screens.NFTItem>) {
+}: AppStackScreenProp<Screens.NFTItem>): ReactElement {
   const theme = useAppTheme()
   const { t } = useTranslation()
 
@@ -88,8 +89,8 @@ export function NFTItemScreen({
     }
   }, [asset, assetChainId])
 
-  const onPressCollection = () => setShowCollectionModal(true)
-  const onCloseCollectionModal = () => setShowCollectionModal(false)
+  const onPressCollection = (): void => setShowCollectionModal(true)
+  const onCloseCollectionModal = (): void => setShowCollectionModal(false)
 
   return (
     <>
@@ -122,7 +123,7 @@ export function NFTItemScreen({
                   <BaseCard.ErrorState
                     retryButtonLabel="Retry"
                     title={t("Couldn't load NFT details")}
-                    onRetry={() => refetch?.()}
+                    onRetry={(): Promise<ApolloQueryResult<NftItemScreenQuery>> => refetch?.()}
                   />
                 </Box>
               )}
@@ -262,7 +263,15 @@ export function NFTItemScreen({
   )
 }
 
-function AssetMetadata({ header, value, link }: { header: string; value?: string; link?: string }) {
+function AssetMetadata({
+  header,
+  value,
+  link,
+}: {
+  header: string
+  value?: string
+  link?: string
+}): ReactElement {
   const itemWidth = '45%' // works with flexWrap to make 2 columns. It needs to be slightly less than 50% to account for padding on the entire section
 
   return (

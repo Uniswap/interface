@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
@@ -21,24 +21,24 @@ import { trimToLength } from 'src/utils/string'
 
 const ENS_TRIM_LENGTH = 8
 
-export function useAccounts() {
-  return useAppSelector(selectNonPendingAccounts)
+export function useAccounts(): Record<string, Account> {
+  return useAppSelector<Record<string, Account>>(selectNonPendingAccounts)
 }
 
 export function usePendingAccounts(): AddressTo<Account> {
-  return useAppSelector(selectPendingAccounts)
+  return useAppSelector<AddressTo<Account>>(selectPendingAccounts)
 }
 
-export function useSignerAccounts() {
-  return useAppSelector(selectSignerAccounts)
+export function useSignerAccounts(): Account[] {
+  return useAppSelector<Account[]>(selectSignerAccounts)
 }
 
-export function useNonPendingSignerAccounts() {
-  return useAppSelector(selectNonPendingSignerAccounts)
+export function useNonPendingSignerAccounts(): Account[] {
+  return useAppSelector<Account[]>(selectNonPendingSignerAccounts)
 }
 
-export function useViewOnlyAccounts() {
-  return useAppSelector(selectViewOnlyAccounts)
+export function useViewOnlyAccounts(): Account[] {
+  return useAppSelector<Account[]>(selectViewOnlyAccounts)
 }
 
 export function useActiveAccount(): Account | null {
@@ -65,7 +65,7 @@ export function useActiveAccountWithThrow(): Account {
   return activeAccount
 }
 
-export function useSelectAccountNotificationSetting(address: Address) {
+export function useSelectAccountNotificationSetting(address: Address): boolean {
   return useAppSelector(makeSelectAccountNotificationSetting(address))
 }
 
@@ -105,7 +105,12 @@ export function useDisplayName(
 export function useWCTimeoutError(
   pendingSession: WalletConnectSession | null,
   timeoutDurationInMs: number
-) {
+): {
+  hasScanError: boolean
+  setHasScanError: Dispatch<SetStateAction<boolean>>
+  shouldFreezeCamera: boolean
+  setShouldFreezeCamera: Dispatch<SetStateAction<boolean>>
+} {
   // hook used in WalletConnectModal for WC timeout error logic
   const { t } = useTranslation()
   const [hasScanError, setHasScanError] = useState<boolean>(false)
@@ -140,14 +145,14 @@ export function useWCTimeoutError(
         [
           {
             text: t('Try again'),
-            onPress: () => {
+            onPress: (): void => {
               setHasScanError(false)
             },
           },
         ]
       )
     }, timeoutDurationInMs)
-    return () => clearTimeout(timer)
+    return (): void => clearTimeout(timer)
   }, [shouldFreezeCamera, t, timeoutDurationInMs])
 
   return { hasScanError, setHasScanError, shouldFreezeCamera, setShouldFreezeCamera }

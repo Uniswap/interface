@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
+import React, { Dispatch, ReactElement, SetStateAction, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, TextInput as NativeTextInput } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
@@ -27,7 +27,7 @@ import { shortenAddress } from 'src/utils/addresses'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.EditName>
 
-export function EditNameScreen({ navigation, route: { params } }: Props) {
+export function EditNameScreen({ navigation, route: { params } }: Props): ReactElement {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const theme = useAppTheme()
@@ -54,7 +54,7 @@ export function EditNameScreen({ navigation, route: { params } }: Props) {
   }, [pendingAccount, hasDefaultName, t])
 
   useEffect(() => {
-    const beforeRemoveListener = () => {
+    const beforeRemoveListener = (): void => {
       dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
     }
     navigation.addListener('beforeRemove', beforeRemoveListener)
@@ -64,7 +64,7 @@ export function EditNameScreen({ navigation, route: { params } }: Props) {
       navigation.setOptions({
         headerLeft: () => (
           <BackButton
-            onPressBack={() => {
+            onPressBack={(): void => {
               navigation.goBack()
             }}
           />
@@ -74,7 +74,7 @@ export function EditNameScreen({ navigation, route: { params } }: Props) {
     return () => navigation.removeListener('beforeRemove', beforeRemoveListener)
   }, [dispatch, navigation, theme.colors.textPrimary])
 
-  const onPressNext = () => {
+  const onPressNext = (): void => {
     navigation.navigate({
       name:
         params?.importType === ImportType.CreateNew
@@ -133,11 +133,11 @@ function CustomizationSection({
   setAccountName: Dispatch<SetStateAction<string>>
   focused: boolean
   setFocused: Dispatch<SetStateAction<boolean>>
-}) {
+}): ReactElement {
   const theme = useAppTheme()
   const textInputRef = useRef<NativeTextInput>(null)
 
-  const focusInputWithKeyboard = () => {
+  const focusInputWithKeyboard = (): void => {
     textInputRef.current?.focus()
   }
 
@@ -157,9 +157,9 @@ function CustomizationSection({
             testID="customize/name"
             textAlign="center"
             value={accountName}
-            onBlur={() => setFocused(false)}
-            onChangeText={(newName) => setAccountName(newName)}
-            onFocus={() => setFocused(true)}
+            onBlur={(): void => setFocused(false)}
+            onChangeText={(newName): void => setAccountName(newName)}
+            onFocus={(): void => setFocused(true)}
           />
           {!focused && (
             <AnimatedButton

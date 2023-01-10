@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
@@ -13,7 +13,7 @@ import { useActiveChainIds } from 'src/features/chains/utils'
 import { flex } from 'src/styles/flex'
 import { theme } from 'src/styles/theme'
 
-export function SettingsChainsScreen() {
+export function SettingsChainsScreen(): ReactElement {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
@@ -39,7 +39,7 @@ export function SettingsChainsScreen() {
                 <Text variant="bodyLarge">{CHAIN_INFO[chainId].label}</Text>
                 <Switch
                   value={isActive}
-                  onValueChange={(newValue: boolean) => {
+                  onValueChange={(newValue: boolean): void => {
                     dispatch(setChainActiveStatus({ chainId, isActive: newValue }))
                   }}
                 />

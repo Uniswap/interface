@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useResponsiveProp } from '@shopify/restyle'
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useColorScheme } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
@@ -21,13 +21,13 @@ import { openUri } from 'src/utils/linking'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Landing>
 
-export function LandingScreen({ navigation }: Props) {
+export function LandingScreen({ navigation }: Props): ReactElement {
   const dispatch = useAppDispatch()
 
   const { t } = useTranslation()
   const isDarkMode = useColorScheme() === 'dark'
 
-  const onPressGetStarted = () => {
+  const onPressGetStarted = (): void => {
     dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
     navigation.navigate(OnboardingScreens.ImportMethod)
   }
@@ -58,14 +58,14 @@ export function LandingScreen({ navigation }: Props) {
                 <Text
                   color={isDarkMode ? 'accentActive' : 'accentAction'}
                   variant="buttonLabelMicro"
-                  onPress={() => openUri(uniswapUrls.termsOfServiceUrl)}>
+                  onPress={(): Promise<void> => openUri(uniswapUrls.termsOfServiceUrl)}>
                   Terms of Service
                 </Text>{' '}
                 and consent to the{' '}
                 <Text
                   color={isDarkMode ? 'accentActive' : 'accentAction'}
                   variant="buttonLabelMicro"
-                  onPress={() => openUri(uniswapUrls.privacyPolicyUrl)}>
+                  onPress={(): Promise<void> => openUri(uniswapUrls.privacyPolicyUrl)}>
                   Privacy Policy
                 </Text>
                 .

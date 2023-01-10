@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -29,7 +29,7 @@ export function SettingsCloudBackupScreen({
   route: {
     params: { address },
   },
-}: Props) {
+}: Props): ReactElement {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
@@ -39,7 +39,7 @@ export function SettingsCloudBackupScreen({
   const accounts = useAccounts()
   const accountBackups = accounts[address]?.backups
 
-  const onPressNext = async (password: string) => {
+  const onPressNext = async (password: string): Promise<void> => {
     try {
       const mnemonicId = (accounts[address] as SignerMnemonicAccount)?.mnemonicId
       if (!mnemonicId) return
@@ -111,13 +111,13 @@ export function SettingsCloudBackupScreen({
                 fill
                 emphasis={ButtonEmphasis.Tertiary}
                 label={t('Cancel')}
-                onPress={() => navigation.goBack()}
+                onPress={(): void => navigation.goBack()}
               />
               <Button
                 fill
                 label={t('Back up')}
                 name={ElementName.Confirm}
-                onPress={() => setShowCloudBackupInfoModal(false)}
+                onPress={(): void => setShowCloudBackupInfoModal(false)}
               />
             </Flex>
           </Flex>

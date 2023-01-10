@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
+import React, { ReactElement, useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
 import { useAppDispatch } from 'src/app/hooks'
@@ -29,7 +29,7 @@ import { useSagaStatus } from 'src/utils/useSagaStatus'
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.SelectWallet>
 
 const FALLBACK_ID = 'fallback'
-export function SelectWalletScreen({ navigation, route: { params } }: Props) {
+export function SelectWalletScreen({ navigation, route: { params } }: Props): ReactElement {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const { status } = useSagaStatus(importAccountSagaName)
@@ -91,7 +91,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
   )
 
   useEffect(() => {
-    const beforeRemoveListener = () => {
+    const beforeRemoveListener = (): void => {
       dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
     }
     navigation.addListener('beforeRemove', beforeRemoveListener)
@@ -108,7 +108,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
       .map((a) => setSelectedAddresses(a.ownerAddress))
   }, [initialShownAccounts, isLoadingAccounts, loading, selectedAddresses.length])
 
-  const onPress = (address: string) => {
+  const onPress = (address: string): void => {
     if (initialShownAccounts?.length === 1 && selectedAddresses.length === 1) return
     setSelectedAddresses(address)
   }

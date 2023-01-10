@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useTheme } from '@shopify/restyle'
-import React, { useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
@@ -26,7 +26,7 @@ export function SettingsWalletEdit({
   route: {
     params: { address },
   },
-}: Props) {
+}: Props): ReactElement {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const theme = useTheme()
@@ -35,7 +35,7 @@ export function SettingsWalletEdit({
   const [nickname, setNickname] = useState(ensName || activeAccount?.name)
   const [showEditInput, setShowEditInput] = useState(false)
 
-  const handleNicknameUpdate = () => {
+  const handleNicknameUpdate = (): void => {
     Keyboard.dismiss()
     setShowEditInput(false)
     dispatch(
@@ -47,7 +47,7 @@ export function SettingsWalletEdit({
     )
   }
 
-  const onPressShowEditInput = () => {
+  const onPressShowEditInput = (): void => {
     setShowEditInput(true)
   }
 

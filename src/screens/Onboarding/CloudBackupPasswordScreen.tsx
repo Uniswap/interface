@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { CloudBackupSetPassword } from 'src/features/onboarding/CloudBackupSetPassword'
@@ -11,10 +11,10 @@ export type Props = NativeStackScreenProps<
   OnboardingScreens.BackupCloudPassword
 >
 
-export function CloudBackupPasswordScreen({ navigation, route: { params } }: Props) {
+export function CloudBackupPasswordScreen({ navigation, route: { params } }: Props): ReactElement {
   const { t } = useTranslation()
 
-  const onPressNext = (password: string) => {
+  const onPressNext = (password: string): void => {
     navigation.navigate({
       name: OnboardingScreens.BackupCloudProcessing,
       params: {

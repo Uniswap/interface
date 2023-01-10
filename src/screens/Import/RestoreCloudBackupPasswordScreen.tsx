@@ -1,6 +1,6 @@
 import { useFocusEffect } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback, useRef, useState } from 'react'
+import React, { ReactElement, useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, TextInput } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
@@ -66,7 +66,10 @@ function getLockoutTimeMessage(remainingLockoutTime: number): string {
   return minutes === 1 ? '1 minute' : `${minutes} minutes`
 }
 
-export function RestoreCloudBackupPasswordScreen({ navigation, route: { params } }: Props) {
+export function RestoreCloudBackupPasswordScreen({
+  navigation,
+  route: { params },
+}: Props): ReactElement {
   const { t } = useTranslation()
   const inputRef = useRef<TextInput>(null)
   const dispatch = useAppDispatch()
@@ -100,11 +103,11 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
     }, [isLockedOut, t, dispatch, remainingLockoutTime])
   )
 
-  const onPasswordSubmit = () => {
+  const onPasswordSubmit = (): void => {
     if (isLockedOut || enteredPassword.length === 0) return
 
     // Atttempt to restore backup with encrypted mnemonic using password
-    async function checkCorrectPassword() {
+    async function checkCorrectPassword(): Promise<void> {
       try {
         await restoreMnemonicFromICloud(params.mnemonicId, enteredPassword)
         dispatch(
@@ -133,7 +136,7 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
     Keyboard.dismiss()
   }
 
-  const onContinuePress = () => {
+  const onContinuePress = (): void => {
     onPasswordSubmit()
   }
 
@@ -148,7 +151,7 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
           editable={!isLockedOut}
           placeholder={t('Enter password')}
           value={enteredPassword}
-          onChangeText={(newValue: string) => {
+          onChangeText={(newValue: string): void => {
             if (!isLockedOut) {
               setErrorMessage(undefined)
             }

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
@@ -18,7 +18,7 @@ import { useActiveAccountWithThrow, useNativeAccountExists } from 'src/features/
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 
-export function ActivityScreen() {
+export function ActivityScreen(): ReactElement {
   const dispatch = useAppDispatch()
   const navigation = useAppStackNavigation()
   const { t } = useTranslation()
@@ -27,7 +27,7 @@ export function ActivityScreen() {
   const hasImportedSeedPhrase = useNativeAccountExists()
 
   // TODO: [MOB-3918] remove when buy flow ready
-  const onPressScan = () => {
+  const onPressScan = (): void => {
     // in case we received a pending session from a previous scan after closing modal
     dispatch(removePendingSession())
     dispatch(
@@ -35,7 +35,7 @@ export function ActivityScreen() {
     )
   }
 
-  const onPressImport = () => {
+  const onPressImport = (): void => {
     navigation.navigate(Screens.OnboardingStack, {
       screen: OnboardingScreens.ImportMethod,
     })

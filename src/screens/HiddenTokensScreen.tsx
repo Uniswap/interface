@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback, useMemo } from 'react'
+import React, { ReactElement, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SectionList } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
@@ -29,11 +29,11 @@ export function HiddenTokensScreen({
   route: {
     params: { address },
   },
-}: Props) {
+}: Props): ReactElement {
   const { t } = useTranslation()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
-  const hideSmallBalances = useAppSelector(makeSelectAccountHideSmallBalances(address))
-  const hideSpamTokens = useAppSelector(makeSelectAccountHideSpamTokens(address))
+  const hideSmallBalances = useAppSelector<boolean>(makeSelectAccountHideSmallBalances(address))
+  const hideSpamTokens = useAppSelector<boolean>(makeSelectAccountHideSpamTokens(address))
 
   const { data, networkStatus, refetch } = useSortedPortfolioBalances(
     address,
@@ -76,20 +76,22 @@ export function HiddenTokensScreen({
             <BaseCard.ErrorState
               retryButtonLabel="Retry"
               title={t("Couldn't load token balances")}
-              onRetry={() => refetch?.()}
+              onRetry={(): void => refetch?.()}
             />
           )
         ) : (
           <SectionList
             keyExtractor={key}
-            renderItem={({ item }: { item: PortfolioBalance }) => (
+            renderItem={({ item }: { item: PortfolioBalance }): ReactElement => (
               <TokenBalanceItem
                 isWarmLoading={false}
                 portfolioBalance={item}
                 onPressToken={onPressToken}
               />
             )}
-            renderSectionHeader={({ section: { title } }) => <SectionHeader title={title} />}
+            renderSectionHeader={({ section: { title } }): ReactElement => (
+              <SectionHeader title={title} />
+            )}
             sections={sections}
             showsVerticalScrollIndicator={false}
             windowSize={5}
@@ -100,7 +102,7 @@ export function HiddenTokensScreen({
   )
 }
 
-function SectionHeader({ title }: { title: string }) {
+function SectionHeader({ title }: { title: string }): ReactElement {
   return (
     <Flex backgroundColor="background0" py="sm">
       <Text color="textSecondary" variant="subheadSmall">
@@ -110,6 +112,6 @@ function SectionHeader({ title }: { title: string }) {
   )
 }
 
-function key({ currencyInfo }: PortfolioBalance) {
+function key({ currencyInfo }: PortfolioBalance): CurrencyId {
   return currencyInfo.currencyId
 }

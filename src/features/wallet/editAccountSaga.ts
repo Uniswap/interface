@@ -1,3 +1,5 @@
+import { Action } from '@reduxjs/toolkit'
+import { AllEffect, CallEffect, PutEffect, SelectEffect } from 'redux-saga/effects'
 import { appSelect } from 'src/app/hooks'
 import { Account, AccountType, BackupType } from 'src/features/wallet/accounts/types'
 import { selectAccounts } from 'src/features/wallet/selectors'
@@ -9,7 +11,7 @@ import { disconnectWCForAccount } from 'src/features/walletConnect/WalletConnect
 import { unique } from 'src/utils/array'
 import { logger } from 'src/utils/logger'
 import { createMonitoredSaga } from 'src/utils/saga'
-import { all, call, put } from 'typed-redux-saga'
+import { all, call, put, SagaGenerator } from 'typed-redux-saga'
 
 export enum EditAccountAction {
   AddBackupMethod = 'AddBackupMethod',
@@ -75,7 +77,31 @@ export type EditAccountParams =
   | ToggleShowSmallBalancesParams
   | ToggleShowSpamTokensParams
 
-function* editAccount(params: EditAccountParams) {
+function* editAccount(params: EditAccountParams): Generator<
+  | SelectEffect
+  | CallEffect<void>
+  | CallEffect<
+      Generator<
+        | SelectEffect
+        | AllEffect<
+            SagaGenerator<
+              {
+                payload: {
+                  address: string
+                  updatedAccount: Account
+                }
+                type: string
+              },
+              PutEffect<Action<unknown>>
+            >
+          >,
+        void,
+        unknown
+      >
+    >,
+  void,
+  unknown
+> {
   const { type, address } = params
 
   const accounts = yield* appSelect(selectAccounts)
@@ -109,7 +135,20 @@ function* editAccount(params: EditAccountParams) {
   logger.debug('editAccountSaga', 'editAccount', 'Account updated:', address)
 }
 
-function* renameAccount(params: RenameParams, account: Account) {
+function* renameAccount(
+  params: RenameParams,
+  account: Account
+): Generator<
+  PutEffect<{
+    payload: {
+      address: string
+      updatedAccount: Account
+    }
+    type: string
+  }>,
+  void,
+  unknown
+> {
   const { address, newName } = params
   logger.debug('editAccountSaga', 'renameAccount', 'Renaming account', address, 'to ', newName)
   yield* put(
@@ -123,7 +162,15 @@ function* renameAccount(params: RenameParams, account: Account) {
   )
 }
 
-function* removeAccount(params: RemoveParams) {
+function* removeAccount(params: RemoveParams): Generator<
+  | CallEffect<void>
+  | PutEffect<{
+      payload: string
+      type: string
+    }>,
+  void,
+  unknown
+> {
   const { address } = params
   logger.debug('editAccountSaga', 'removeAccount', 'Removing account', address)
   // TODO [MOB-3913] cleanup account artifacts in native-land (i.e. keystore)
@@ -132,7 +179,32 @@ function* removeAccount(params: RemoveParams) {
 }
 
 // Adds the backup to all accounts that share the same seed phrase
-function* addBackupMethod(params: AddBackupMethodParams, account: Account) {
+function* addBackupMethod(
+  params: AddBackupMethodParams,
+  account: Account
+): Generator<
+  | SelectEffect
+  | AllEffect<
+      SagaGenerator<
+        {
+          payload: {
+            address: string
+            updatedAccount: Account
+          }
+          type: string
+        },
+        PutEffect<{
+          payload: {
+            address: string
+            updatedAccount: Account
+          }
+          type: string
+        }>
+      >
+    >,
+  void,
+  unknown
+> {
   if (account.type !== AccountType.SignerMnemonic) return
 
   const { backupMethod } = params
@@ -166,7 +238,32 @@ function* addBackupMethod(params: AddBackupMethodParams, account: Account) {
 }
 
 // Removes the backup method from all accounts that share the same seed phrase
-function* removeBackupMethod(params: RemoveBackupMethodParams, account: Account) {
+function* removeBackupMethod(
+  params: RemoveBackupMethodParams,
+  account: Account
+): Generator<
+  | SelectEffect
+  | AllEffect<
+      SagaGenerator<
+        {
+          payload: {
+            address: string
+            updatedAccount: Account
+          }
+          type: string
+        },
+        PutEffect<{
+          payload: {
+            address: string
+            updatedAccount: Account
+          }
+          type: string
+        }>
+      >
+    >,
+  void,
+  unknown
+> {
   if (account.type !== AccountType.SignerMnemonic) return
 
   const { backupMethod } = params
@@ -200,7 +297,20 @@ function* removeBackupMethod(params: RemoveBackupMethodParams, account: Account)
   )
 }
 
-function* toggleShowSmallBalances(params: ToggleShowSmallBalancesParams, account: Account) {
+function* toggleShowSmallBalances(
+  params: ToggleShowSmallBalancesParams,
+  account: Account
+): Generator<
+  PutEffect<{
+    payload: {
+      address: string
+      updatedAccount: Account
+    }
+    type: string
+  }>,
+  void,
+  unknown
+> {
   const { address, enabled } = params
   logger.debug('editAccountSaga', 'toggleShowSmallBalances', address, 'to', enabled)
   yield* put(
@@ -214,7 +324,20 @@ function* toggleShowSmallBalances(params: ToggleShowSmallBalancesParams, account
   )
 }
 
-function* toggleShowSpamTokens(params: ToggleShowSpamTokensParams, account: Account) {
+function* toggleShowSpamTokens(
+  params: ToggleShowSpamTokensParams,
+  account: Account
+): Generator<
+  PutEffect<{
+    payload: {
+      address: string
+      updatedAccount: Account
+    }
+    type: string
+  }>,
+  void,
+  unknown
+> {
   const { address, enabled } = params
   logger.debug('editAccountSaga', 'toggleShowSpamTokens', address, 'to', enabled)
   yield* put(

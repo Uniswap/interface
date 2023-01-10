@@ -1,5 +1,5 @@
 import { useResponsiveProp } from '@shopify/restyle'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { ReactElement, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -50,7 +50,7 @@ type Price = NonNullable<
   >[0]
 >['price']
 
-function HeaderPriceLabel({ price }: { price: Price }) {
+function HeaderPriceLabel({ price }: { price: Price }): ReactElement {
   const { t } = useTranslation()
 
   return (
@@ -60,7 +60,7 @@ function HeaderPriceLabel({ price }: { price: Price }) {
   )
 }
 
-function HeaderTitleElement({ data }: { data: TokenDetailsScreenQuery | undefined }) {
+function HeaderTitleElement({ data }: { data: TokenDetailsScreenQuery | undefined }): ReactElement {
   const { t } = useTranslation()
 
   const token = data?.tokens?.[0]
@@ -90,7 +90,9 @@ enum TransactionType {
   SEND,
 }
 
-export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDetails>) {
+export function TokenDetailsScreen({
+  route,
+}: AppStackScreenProp<Screens.TokenDetails>): ReactElement {
   const { currencyId: _currencyId } = route.params
 
   const { data, refetch, networkStatus } = useTokenDetailsScreenQuery({
@@ -130,7 +132,7 @@ function TokenDetails({
   error: boolean
   retry: () => void
   loading: boolean
-}) {
+}): ReactElement {
   const dispatch = useAppDispatch()
 
   const theme = useAppTheme()
@@ -277,7 +279,7 @@ function TokenDetails({
             <TokenDetailsHeader
               data={data}
               loading={loading}
-              onPressWarningIcon={() => setShowWarningModal(true)}
+              onPressWarningIcon={(): void => setShowWarningModal(true)}
             />
             <CurrencyPriceChart
               currencyId={_currencyId}
@@ -313,7 +315,7 @@ function TokenDetails({
             onPressSwap={
               safetyLevel === SafetyLevel.Blocked
                 ? undefined
-                : () =>
+                : (): void =>
                     onPressSwap(currentChainBalance ? TransactionType.SELL : TransactionType.BUY)
             }
           />
@@ -326,7 +328,7 @@ function TokenDetails({
         isVisible={showWarningModal}
         safetyLevel={safetyLevel}
         onAccept={onAcceptWarning}
-        onClose={() => {
+        onClose={(): void => {
           setActiveTransactionType(undefined)
           setShowWarningModal(false)
         }}

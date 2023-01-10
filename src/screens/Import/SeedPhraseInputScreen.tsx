@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
@@ -21,7 +21,7 @@ import {
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.ImportMethod>
 
-export function SeedPhraseInputScreen({ navigation, route: { params } }: Props) {
+export function SeedPhraseInputScreen({ navigation, route: { params } }: Props): ReactElement {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
@@ -77,7 +77,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props) 
     navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })
   }, [dispatch, navigation, params, t, value])
 
-  const onChange = (text: string | undefined) => {
+  const onChange = (text: string | undefined): void => {
     const { error, invalidWord, isValidLength } = validateSetOfWords(text)
 
     // always show success UI if phrase is valid length
@@ -112,8 +112,8 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props) 
           autoCorrect
           blurOnSubmit
           liveCheck
-          afterPasteButtonPress={() => setPastePermissionModalOpen(false)}
-          beforePasteButtonPress={() => setPastePermissionModalOpen(true)}
+          afterPasteButtonPress={(): void => setPastePermissionModalOpen(false)}
+          beforePasteButtonPress={(): void => setPastePermissionModalOpen(true)}
           errorMessage={errorMessage}
           placeholderLabel={t('recovery phrase')}
           showSuccess={showSuccess}

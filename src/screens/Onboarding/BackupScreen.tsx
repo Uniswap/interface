@@ -2,7 +2,7 @@ import { CompositeScreenProps } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useResponsiveProp } from '@shopify/restyle'
-import React, { ComponentProps, useEffect, useState } from 'react'
+import React, { ComponentProps, ReactElement, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import { SvgProps } from 'react-native-svg'
@@ -54,7 +54,7 @@ export function BackupScreen({ navigation, route: { params } }: Props) {
       navigation.setOptions({
         headerLeft: () => (
           <BackButton
-            onPressBack={() => {
+            onPressBack={(): void => {
               navigation.pop(2)
             }}
           />
@@ -63,11 +63,11 @@ export function BackupScreen({ navigation, route: { params } }: Props) {
     }
   })
 
-  const onPressNext = () => {
+  const onPressNext = (): void => {
     navigation.navigate({ name: OnboardingScreens.Notifications, params, merge: true })
   }
 
-  const onPressEducationButton = () => {
+  const onPressEducationButton = (): void => {
     navigation.navigate(Screens.Education, { type: EducationContentType.SeedPhrase })
   }
 
@@ -126,14 +126,14 @@ function BackupOptions({
 }: {
   backupMethods?: BackupType[]
   params: Readonly<OnboardingStackBaseParams>
-}) {
+}): ReactElement {
   const { t } = useTranslation()
   const [iCloudAvailable, setICloudAvailable] = useState<boolean>()
 
   const { navigate } = useOnboardingStackNavigation()
 
   useEffect(() => {
-    async function checkICloudAvailable() {
+    async function checkICloudAvailable(): Promise<void> {
       const available = await isICloudAvailable()
       setICloudAvailable(available)
     }
@@ -147,7 +147,7 @@ function BackupOptions({
         completed={backupMethods?.includes(BackupType.Cloud)}
         label={t('iCloud backup')}
         name={ElementName.AddiCloudBackup}
-        onPress={() => {
+        onPress={(): void => {
           if (!iCloudAvailable) {
             Alert.alert(
               t('iCloud Drive not available'),
@@ -174,7 +174,7 @@ function BackupOptions({
         completed={backupMethods?.includes(BackupType.Manual)}
         label={t('Manual backup')}
         name={ElementName.AddManualBackup}
-        onPress={() => {
+        onPress={(): void => {
           navigate({ name: OnboardingScreens.BackupManual, params, merge: true })
         }}
       />
@@ -190,7 +190,13 @@ interface BackupOptionButtonProps {
   onPress: () => void
 }
 
-function BackupOptionButton({ Icon, label, name, onPress, completed }: BackupOptionButtonProps) {
+function BackupOptionButton({
+  Icon,
+  label,
+  name,
+  onPress,
+  completed,
+}: BackupOptionButtonProps): ReactElement {
   const theme = useAppTheme()
   const { t } = useTranslation()
 

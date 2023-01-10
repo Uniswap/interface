@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { addScreenshotListener } from 'expo-screen-capture'
-import React, { useEffect, useReducer, useState } from 'react'
+import React, { ReactElement, useEffect, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
@@ -27,7 +27,7 @@ enum View {
   Test,
 }
 
-export function ManualBackupScreen({ navigation, route: { params } }: Props) {
+export function ManualBackupScreen({ navigation, route: { params } }: Props): ReactElement | null {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 
@@ -42,7 +42,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
 
   const [continueButtonEnabled, setContinueButtonEnabled] = useState(false)
 
-  const onValidationSuccessful = () => {
+  const onValidationSuccessful = (): void => {
     if (activeAccount) {
       dispatch(
         editAccountActions.trigger({
@@ -82,7 +82,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
               text={t(
                 'I understand that if I lose my recovery phrase, Uniswap Labs cannot restore it.'
               )}
-              onCheckPressed={() => setHasConsent(!hasConsent)}
+              onCheckPressed={(): void => setHasConsent(!hasConsent)}
             />
             <Button
               disabled={!hasConsent}
@@ -106,7 +106,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
               confirmText={t('OK')}
               modalName={ModalName.ScreenshotWarning}
               title={t('Screenshots aren’t secure')}
-              onConfirm={() => setShowScreenShotWarningModal(false)}
+              onConfirm={(): void => setShowScreenShotWarningModal(false)}
             />
           )}
           <Flex grow justifyContent="space-between">
@@ -128,7 +128,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
           <Flex grow>
             <MnemonicTest
               mnemonicId={mnemonicId}
-              onTestComplete={() => setContinueButtonEnabled(true)}
+              onTestComplete={(): void => setContinueButtonEnabled(true)}
             />
           </Flex>
           <Flex justifyContent="flex-end">

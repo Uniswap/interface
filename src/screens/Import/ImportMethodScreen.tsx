@@ -1,7 +1,7 @@
 import { useFocusEffect } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { TFunction } from 'i18next'
-import React, { useEffect, useRef } from 'react'
+import React, { ReactElement, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -74,7 +74,7 @@ const options: ImportMethodOption[] = [
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.ImportMethod>
 
-export function ImportMethodScreen({ navigation, route: { params } }: Props) {
+export function ImportMethodScreen({ navigation, route: { params } }: Props): ReactElement {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
@@ -96,7 +96,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props) {
      * it overwrites the view-only wallet.)
      */
 
-    const unmodifiedWalletCleanup = () => {
+    const unmodifiedWalletCleanup = (): void => {
       if (!initialViewOnlyWallets.current) return
       const pendingAccountAddresses = Object.keys(pendingAccounts)
       for (const viewOnlyWallet of initialViewOnlyWallets.current) {
@@ -124,7 +124,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props) {
     }
   }, [navigation, theme.colors.textPrimary])
 
-  const handleOnPressRestoreBackup = async () => {
+  const handleOnPressRestoreBackup = async (): Promise<void> => {
     const iCloudAvailable = await isICloudAvailable()
 
     if (!iCloudAvailable) {
@@ -148,7 +148,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props) {
     })
   }
 
-  const handleOnPress = (nav: OnboardingScreens, importType: ImportType) => {
+  const handleOnPress = (nav: OnboardingScreens, importType: ImportType): void => {
     // Delete any pending accounts before entering flow.
     dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
     if (importType === ImportType.CreateNew) {
@@ -182,7 +182,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props) {
             icon={icon(theme)}
             name={name}
             title={title(t)}
-            onPress={() => handleOnPress(nav, importType)}
+            onPress={(): void => handleOnPress(nav, importType)}
           />
         ))}
       </Flex>
@@ -190,7 +190,9 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props) {
         <Text
           color="accentAction"
           variant="buttonLabelMedium"
-          onPress={() => handleOnPress(OnboardingScreens.RestoreCloudBackup, ImportType.Restore)}>
+          onPress={(): void =>
+            handleOnPress(OnboardingScreens.RestoreCloudBackup, ImportType.Restore)
+          }>
           Restore from iCloud
         </Text>
       </Flex>
@@ -214,7 +216,7 @@ function OptionCard({
   name: ElementName
   disabled?: boolean
   opacity?: number
-}) {
+}): ReactElement {
   return (
     <TouchableArea
       backgroundColor="background2"

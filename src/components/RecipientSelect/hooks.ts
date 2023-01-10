@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { SectionListData } from 'react-native'
+import { DefaultSectionT, SectionListData } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
 import { SearchableRecipient } from 'src/components/RecipientSelect/types'
 import { uniqueAddressesOnly } from 'src/components/RecipientSelect/utils'
@@ -13,7 +13,10 @@ import { getValidAddress } from 'src/utils/addresses'
 
 const MAX_RECENT_RECIPIENTS = 15
 
-export function useFullAddressRecipient(searchTerm: string | null) {
+export function useFullAddressRecipient(searchTerm: string | null): {
+  recipient: [{ address: string; name: string }] | typeof EMPTY_ARRAY
+  loading: boolean
+} {
   const { loading, address: ensAddress, name } = useENS(ChainId.Mainnet, searchTerm, true)
   return useMemo(() => {
     const address =
@@ -24,20 +27,32 @@ export function useFullAddressRecipient(searchTerm: string | null) {
   }, [name, loading, searchTerm, ensAddress])
 }
 
-export function useRecipients() {
+export function useRecipients(): {
+  sections: SectionListData<SearchableRecipient, DefaultSectionT>[]
+  searchableRecipientOptions: {
+    data: SearchableRecipient
+    key: string
+  }[]
+  pattern: string | null
+  onChangePattern: (newPattern: string | null) => void
+  loading: boolean
+} {
   const { t } = useTranslation()
 
   const [pattern, setPattern] = useState<string | null>(null)
 
   const inactiveLocalAccounts = useAppSelector(selectInactiveAccounts) as SearchableRecipient[]
-  const recentRecipients = useAppSelector(selectRecipientsByRecency).slice(0, MAX_RECENT_RECIPIENTS)
+  const recentRecipients = useAppSelector<SearchableRecipient[]>(selectRecipientsByRecency).slice(
+    0,
+    MAX_RECENT_RECIPIENTS
+  )
 
   const { recipient: validatedAddressRecipient, loading } = useFullAddressRecipient(pattern)
 
   const sections = useMemo(
     () =>
       [
-        ...(validatedAddressRecipient.length > 0
+        ...(validatedAddressRecipient?.length > 0
           ? [
               {
                 title: t('Search Results'),
@@ -75,7 +90,7 @@ export function useRecipients() {
     [recentRecipients, validatedAddressRecipient, inactiveLocalAccounts]
   )
 
-  const onChangePattern = useCallback((newPattern) => setPattern(newPattern), [])
+  const onChangePattern = useCallback((newPattern: string | null) => setPattern(newPattern), [])
 
   return useMemo(
     () => ({

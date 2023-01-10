@@ -17,7 +17,9 @@ export type DeregisterWcPushNotificationParams = {
   topic: string
 }
 
-export async function registerWcPushNotifications(params: RegisterWcPushNotificationParams) {
+export async function registerWcPushNotifications(
+  params: RegisterWcPushNotificationParams
+): Promise<void> {
   const request = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -36,7 +38,9 @@ export async function registerWcPushNotifications(params: RegisterWcPushNotifica
   }
 }
 
-export async function deregisterWcPushNotifications(params: DeregisterWcPushNotificationParams) {
+export async function deregisterWcPushNotifications(
+  params: DeregisterWcPushNotificationParams
+): Promise<void> {
   const request = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

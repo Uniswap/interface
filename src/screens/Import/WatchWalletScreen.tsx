@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -25,7 +25,7 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 
 const LIVE_CHECK_DELAY = 1000
 
-export function WatchWalletScreen({ navigation, route: { params } }: Props) {
+export function WatchWalletScreen({ navigation, route: { params } }: Props): ReactElement {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const theme = useAppTheme()
@@ -90,14 +90,14 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props) {
     }
   }, [dispatch, isValid, navigation, normalizedValue, params, resolvedAddress, value])
 
-  const onChange = (text: string | undefined) => {
+  const onChange = (text: string | undefined): void => {
     if (value !== text?.trim()) {
       setShowLiveCheck(false)
     }
     setValue(text?.trim())
   }
 
-  const onPressDemoWallet = () => {
+  const onPressDemoWallet = (): void => {
     setValue('uniswapdemo')
     setShowLiveCheck(false)
   }
@@ -128,7 +128,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props) {
           showSuccess={Boolean(isValid)}
           value={value}
           onChange={onChange}
-          onSubmit={() => {
+          onSubmit={(): void => {
             isValid && Keyboard.dismiss()
           }}
         />

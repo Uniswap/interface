@@ -1,12 +1,13 @@
 import { createSelector } from '@reduxjs/toolkit'
 import type { RootState } from 'src/app/rootReducer'
 import { TokenSortableField } from 'src/data/__generated__/types-and-hooks'
+import { TokensOrderBy } from 'src/features/explore/types'
 import { DEMO_ACCOUNT_ADDRESS } from 'src/features/wallet/accounts/useTestAccount'
-import { AccountType, SignerMnemonicAccount } from './accounts/types'
+import { Account, AccountType, SignerMnemonicAccount } from './accounts/types'
 
 const DEFAULT_TOKENS_ORDER_BY = TokenSortableField.Volume
 
-export const selectAccounts = (state: RootState) => state.wallet.accounts
+export const selectAccounts = (state: RootState): Record<string, Account> => state.wallet.accounts
 
 export const selectNonPendingAccounts = createSelector(selectAccounts, (accounts) =>
   Object.fromEntries(Object.entries(accounts).filter((a) => !a[1].pending))
@@ -51,7 +52,8 @@ export const selectSignerMnemonicAccountExists = createSelector(
     }) >= 0
 )
 
-export const selectActiveAccountAddress = (state: RootState) => state.wallet.activeAccountAddress
+export const selectActiveAccountAddress = (state: RootState): string | null =>
+  state.wallet.activeAccountAddress
 export const selectActiveAccount = createSelector(
   selectAccounts,
   selectActiveAccountAddress,
@@ -64,10 +66,11 @@ export const selectUserPalette = createSelector(
   (activeAccount) => activeAccount?.customizations?.palette
 )
 
-export const selectFinishedOnboarding = (state: RootState) => state.wallet.finishedOnboarding
-export const selectFlashbotsEnabled = (state: RootState) => state.wallet.flashbotsEnabled
+export const selectFinishedOnboarding = (state: RootState): boolean | undefined =>
+  state.wallet.finishedOnboarding
+export const selectFlashbotsEnabled = (state: RootState): boolean => state.wallet.flashbotsEnabled
 
-export const selectTokensOrderBy = (state: RootState) =>
+export const selectTokensOrderBy = (state: RootState): TokensOrderBy =>
   state.wallet.settings.tokensOrderBy ?? DEFAULT_TOKENS_ORDER_BY
 
 export const selectInactiveAccounts = createSelector(
@@ -77,11 +80,17 @@ export const selectInactiveAccounts = createSelector(
     Object.values(accounts).filter((account) => account.address !== activeAddress)
 )
 
-export const makeSelectAccountNotificationSetting = (address: Address) =>
+export const makeSelectAccountNotificationSetting = (
+  address: Address
+): ((state: RootState) => boolean) =>
   createSelector(selectAccounts, (accounts) => !!accounts[address]?.pushNotificationsEnabled)
 
-export const makeSelectAccountHideSmallBalances = (address: Address) =>
+export const makeSelectAccountHideSmallBalances = (
+  address: Address
+): ((state: RootState) => boolean) =>
   createSelector(selectAccounts, (accounts) => !accounts[address]?.showSmallBalances)
 
-export const makeSelectAccountHideSpamTokens = (address: Address) =>
+export const makeSelectAccountHideSpamTokens = (
+  address: Address
+): ((state: RootState) => boolean) =>
   createSelector(selectAccounts, (accounts) => !accounts[address]?.showSpamTokens)

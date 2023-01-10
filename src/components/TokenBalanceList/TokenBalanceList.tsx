@@ -44,7 +44,7 @@ export const TokenBalanceList = forwardRef<Animated.FlatList<any>, TokenBalanceL
 
     // This function gets passed down through:
     // useSortedPortfolioBalances -> usePortfolioBalances -> the usePortfolioBalancesQuery query's onCompleted argument.
-    const onCompleted = function () {
+    const onCompleted = function (): void {
       // This is better than using network status to check, because doing it that way we would have to wait
       // for the network status to go back to "ready", which results in the numbers updating, and _then_ the
       // shimmer disappearing. Using onCompleted it disappears at the same time as the data loads in.
@@ -85,7 +85,7 @@ export const TokenBalanceList = forwardRef<Animated.FlatList<any>, TokenBalanceL
           <BaseCard.ErrorState
             retryButtonLabel="Retry"
             title={t("Couldn't load token balances")}
-            onRetry={() => refetch?.()}
+            onRetry={(): void | undefined => refetch?.()}
           />
         </Box>
       )
@@ -116,7 +116,7 @@ export const TokenBalanceList = forwardRef<Animated.FlatList<any>, TokenBalanceL
         }
         data={balances}
         keyExtractor={key}
-        renderItem={(item) => (
+        renderItem={(item): ReactElement => (
           <TokenBalanceItem
             isWarmLoading={isWarmLoading}
             portfolioBalance={item?.item}
@@ -133,7 +133,7 @@ export const TokenBalanceList = forwardRef<Animated.FlatList<any>, TokenBalanceL
   }
 )
 
-function key({ currencyInfo }: PortfolioBalance) {
+function key({ currencyInfo }: PortfolioBalance): CurrencyId {
   return currencyInfo.currencyId
 }
 
@@ -141,7 +141,7 @@ function HiddenTokensRow({
   numHidden,
   address,
   ...props
-}: { numHidden: number; address: Address } & SpacingShorthandProps<Theme>) {
+}: { numHidden: number; address: Address } & SpacingShorthandProps<Theme>): ReactElement | null {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const navigation = useAppStackNavigation()

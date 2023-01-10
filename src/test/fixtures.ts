@@ -54,12 +54,12 @@ export const account2: Account = {
 }
 
 const mockSigner = new (class {
-  signTransaction = () => '0x1234567890abcdef'
-  connect = () => this
+  signTransaction = (): string => '0x1234567890abcdef'
+  connect = (): this => this
 })()
 
 export const mockSignerManager = {
-  getSignerForAccount: async () => mockSigner,
+  getSignerForAccount: async (): Promise<typeof mockSigner> => mockSigner,
 }
 
 const mockFeeData = {
@@ -69,38 +69,38 @@ const mockFeeData = {
 }
 
 export const mockProvider = {
-  getBalance: () => BigNumber.from('1000000000000000000'),
-  getGasPrice: () => BigNumber.from('100000000000'),
-  getTransactionCount: () => 1000,
-  estimateGas: () => BigNumber.from('30000'),
-  sendTransaction: () => ({ hash: '0xabcdef' }),
-  detectNetwork: () => ({ name: 'mainnet', chainId: 1 }),
-  getTransactionReceipt: () => txReceipt,
-  waitForTransaction: () => txReceipt,
-  getFeeData: () => mockFeeData,
+  getBalance: (): BigNumber => BigNumber.from('1000000000000000000'),
+  getGasPrice: (): BigNumber => BigNumber.from('100000000000'),
+  getTransactionCount: (): number => 1000,
+  estimateGas: (): BigNumber => BigNumber.from('30000'),
+  sendTransaction: (): { hash: string } => ({ hash: '0xabcdef' }),
+  detectNetwork: (): { name: string; chainId: ChainId } => ({ name: 'mainnet', chainId: 1 }),
+  getTransactionReceipt: (): typeof txReceipt => txReceipt,
+  waitForTransaction: (): typeof txReceipt => txReceipt,
+  getFeeData: (): typeof mockFeeData => mockFeeData,
 }
 
 export const mockProviderManager = {
-  getProvider: () => mockProvider,
+  getProvider: (): typeof mockProvider => mockProvider,
 }
 
 export const signerManager = new SignerManager()
 
 export const provider = new providers.JsonRpcProvider()
 export const providerManager = {
-  getProvider: () => provider,
+  getProvider: (): typeof provider => provider,
 }
 
 export const mockContractManager = {
-  getOrCreateContract: () => mockTokenContract,
+  getOrCreateContract: (): typeof mockTokenContract => mockTokenContract,
 }
 
 export const mockTokenContract = {
-  balanceOf: () => BigNumber.from('1000000000000000000'),
+  balanceOf: (): BigNumber => BigNumber.from('1000000000000000000'),
   populateTransaction: {
-    transfer: () => txRequest,
-    transferFrom: () => txRequest,
-    safeTransferFrom: () => txRequest,
+    transfer: (): typeof txRequest => txRequest,
+    transferFrom: (): typeof txRequest => txRequest,
+    safeTransferFrom: (): typeof txRequest => txRequest,
   },
 }
 
@@ -141,7 +141,7 @@ export const txReceipt = {
 
 export const txResponse = {
   hash: '0x123',
-  wait: () => txReceipt,
+  wait: (): typeof txReceipt => txReceipt,
 }
 
 export const txTypeInfo: ApproveTransactionInfo = {

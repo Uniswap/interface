@@ -1,7 +1,15 @@
 import { DrawerActions } from '@react-navigation/core'
 import { useScrollToTop } from '@react-navigation/native'
 import { FlashList } from '@shopify/flash-list'
-import { default as React, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  default as React,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, StyleProp, useColorScheme, View, ViewProps, ViewStyle } from 'react-native'
 import { GestureDetector } from 'react-native-gesture-handler'
@@ -62,7 +70,7 @@ const SIDEBAR_SWIPE_CONTAINER_WIDTH = 50
  * Manages TokensTabs and NftsTab scroll offsets when header is collapsed
  * Borrowed from: https://stormotion.io/blog/how-to-create-collapsing-tab-header-using-react-native/
  */
-export function HomeScreen() {
+export function HomeScreen(): ReactElement {
   // imports test account for easy development/testing
   useTestAccount()
   const activeAccount = useActiveAccountWithThrow()
@@ -343,17 +351,17 @@ export function HomeScreen() {
   )
 }
 
-function QuickActions() {
+function QuickActions(): ReactElement {
   const dispatch = useAppDispatch()
   const activeAccount = useActiveAccountWithThrow()
 
   const { t } = useTranslation()
 
-  const onPressBuy = () => {
+  const onPressBuy = (): void => {
     dispatch(openModal({ name: ModalName.FiatOnRamp }))
   }
 
-  const onPressReceive = () => {
+  const onPressReceive = (): void => {
     dispatch(
       openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
     )
@@ -406,7 +414,7 @@ function ActionButton({
   label: string
   Icon: React.FC<SvgProps>
   onPress: () => void
-}) {
+}): ReactElement {
   const theme = useAppTheme()
   const isDarkMode = useColorScheme() === 'dark'
 

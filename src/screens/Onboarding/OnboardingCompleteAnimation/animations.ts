@@ -156,7 +156,7 @@ export const flashWipeAnimation: EntryExitAnimationFunction = () => {
 
 // 5. Video fade out
 // Fades out video after flash wipe has covered etching video
-export const videoFadeOut = () => {
+export const videoFadeOut: EntryExitAnimationFunction = () => {
   'worklet'
   const animations = {
     opacity: withDelay(
@@ -175,7 +175,7 @@ export const videoFadeOut = () => {
 
 // 6. QR top glow fade in
 // Fades in glow on top of real QR code and unicon after flash wipe
-export const realQrTopGlowFadeIn = () => {
+export const realQrTopGlowFadeIn: EntryExitAnimationFunction = () => {
   'worklet'
   const animations = {
     opacity: withDelay(
@@ -197,7 +197,7 @@ export const realQrTopGlowFadeIn = () => {
 
 // 7. Real QR code fade in
 // Show the real QR code and Unicon after the flash wipe
-export const realQrFadeIn = () => {
+export const realQrFadeIn: EntryExitAnimationFunction = () => {
   'worklet'
   const animations = {
     opacity: withDelay(
@@ -269,7 +269,7 @@ export const textSlideUpAtEnd: EntryExitAnimationFunction = () => {
 }
 
 // 9. Button slide up and fade in
-export const letsGoButtonFadeIn = () => {
+export const letsGoButtonFadeIn: EntryExitAnimationFunction = () => {
   'worklet'
   const animations = {
     opacity: withDelay(

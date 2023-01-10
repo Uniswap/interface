@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
@@ -17,14 +17,14 @@ export function SettingsViewSeedPhraseScreen({
   route: {
     params: { address },
   },
-}: Props) {
+}: Props): ReactElement {
   const { t } = useTranslation()
 
   const accounts = useAccounts()
   const account = accounts[address]
   const mnemonicId = (account as SignerMnemonicAccount)?.mnemonicId
 
-  const navigateBack = () => {
+  const navigateBack = (): void => {
     navigation.goBack()
   }
 

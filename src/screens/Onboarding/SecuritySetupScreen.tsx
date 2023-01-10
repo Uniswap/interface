@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback, useState } from 'react'
+import React, { ReactElement, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, StyleSheet } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -23,7 +23,7 @@ import { openSettings } from 'src/utils/linking'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Security>
 
-export function SecuritySetupScreen({ navigation, route: { params } }: Props) {
+export function SecuritySetupScreen({ navigation, route: { params } }: Props): ReactElement {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const dispatch = useAppDispatch()

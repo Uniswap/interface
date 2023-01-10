@@ -1,7 +1,7 @@
 import { useFocusEffect } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useTheme } from '@shopify/restyle'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
 import { SvgProps } from 'react-native-svg'
@@ -55,7 +55,7 @@ export function SettingsWallet({
   route: {
     params: { address },
   },
-}: Props) {
+}: Props): ReactElement {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const theme = useTheme()
@@ -72,8 +72,8 @@ export function SettingsWallet({
     Object.values(addressToAccount).length === 1 ||
     (mnemonicWallets.length === 1 && currentAccount?.type === AccountType.SignerMnemonic)
 
-  const hideSmallBalances = useAppSelector(makeSelectAccountHideSmallBalances(address))
-  const hideSpamTokens = useAppSelector(makeSelectAccountHideSpamTokens(address))
+  const hideSmallBalances: boolean = useAppSelector(makeSelectAccountHideSmallBalances(address))
+  const hideSpamTokens: boolean = useAppSelector(makeSelectAccountHideSpamTokens(address))
   const notificationOSPermission = useNotificationOSPermissionsEnabled()
   const notificationsEnabledOnFirebase = useSelectAccountNotificationSetting(address)
   const [notificationSwitchEnabled, setNotificationSwitchEnabled] = useState<boolean>(
@@ -98,7 +98,7 @@ export function SettingsWallet({
     return () => setShowRemoveWalletModal(false)
   }, [])
 
-  const onChangeNotificationSettings = (enabled: boolean) => {
+  const onChangeNotificationSettings = (enabled: boolean): void => {
     if (notificationOSPermission === NotificationPermission.Enabled) {
       dispatch(
         editAccountActions.trigger({
@@ -122,7 +122,7 @@ export function SettingsWallet({
     }
   }
 
-  const removeWallet = () => {
+  const removeWallet = (): void => {
     dispatch(
       editAccountActions.trigger({
         type: EditAccountAction.Remove,
@@ -133,11 +133,11 @@ export function SettingsWallet({
     navigation.goBack()
   }
 
-  const cancelWalletRemove = () => {
+  const cancelWalletRemove = (): void => {
     setShowRemoveWalletModal(false)
   }
 
-  const toggleHideSmallBalances = () => {
+  const toggleHideSmallBalances = (): void => {
     dispatch(
       editAccountActions.trigger({
         type: EditAccountAction.ToggleShowSmallBalances,
@@ -147,7 +147,7 @@ export function SettingsWallet({
     )
   }
 
-  const toggleHideSpamTokens = () => {
+  const toggleHideSpamTokens = (): void => {
     dispatch(
       editAccountActions.trigger({
         type: EditAccountAction.ToggleShowSpamTokens,
@@ -232,7 +232,9 @@ export function SettingsWallet({
 
   const renderItem = ({
     item,
-  }: ListRenderItemInfo<SettingsSectionItem | SettingsSectionItemComponent>) => {
+  }: ListRenderItemInfo<
+    SettingsSectionItem | SettingsSectionItemComponent
+  >): ReactElement | null => {
     if ('component' in item) {
       return item.component
     }
@@ -256,11 +258,11 @@ export function SettingsWallet({
       <Flex fill p="lg">
         <Box flex={1}>
           <SectionList
-            ItemSeparatorComponent={() => <Flex pt="xs" />}
-            keyExtractor={(_item, index) => 'wallet_settings' + index}
+            ItemSeparatorComponent={(): ReactElement => <Flex pt="xs" />}
+            keyExtractor={(_item, index): string => 'wallet_settings' + index}
             renderItem={renderItem}
-            renderSectionFooter={() => <Flex pt="lg" />}
-            renderSectionHeader={({ section: { subTitle } }) => (
+            renderSectionFooter={(): ReactElement => <Flex pt="lg" />}
+            renderSectionHeader={({ section: { subTitle } }): ReactElement => (
               <Box bg="background0" pb="sm">
                 <Text color="textSecondary" variant="bodyLarge">
                   {subTitle}
@@ -277,7 +279,7 @@ export function SettingsWallet({
             emphasis={ButtonEmphasis.Detrimental}
             label={t('Remove wallet')}
             name={ElementName.Remove}
-            onPress={() => setShowRemoveWalletModal(true)}
+            onPress={(): void => setShowRemoveWalletModal(true)}
           />
         )}
 

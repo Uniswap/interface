@@ -1,6 +1,6 @@
 import { DrawerActions, useScrollToTop } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView, TextInput, useColorScheme } from 'react-native'
 import { GestureDetector } from 'react-native-gesture-handler'
@@ -30,7 +30,7 @@ const SIDEBAR_SWIPE_CONTAINER_WIDTH = 45
 
 type Props = NativeStackScreenProps<ExploreStackParamList, Screens.Explore>
 
-export function ExploreScreen({ navigation }: Props) {
+export function ExploreScreen({ navigation }: Props): ReactElement {
   const { t } = useTranslation()
   const isDarkMode = useColorScheme() === 'dark'
 
@@ -44,11 +44,11 @@ export function ExploreScreen({ navigation }: Props) {
   const [isSearchMode, setIsSearchMode] = useState<boolean>(false)
   const textInputRef = useRef<TextInput>(null)
 
-  const onChangeSearchFilter = (newSearchFilter: string) => {
+  const onChangeSearchFilter = (newSearchFilter: string): void => {
     setSearchQuery(newSearchFilter)
   }
 
-  const onSearchFocus = () => {
+  const onSearchFocus = (): void => {
     setIsSearchMode(true)
     sendAnalyticsEvent(EventName.Impression, {
       section: SectionName.ExploreSearch,
@@ -56,7 +56,7 @@ export function ExploreScreen({ navigation }: Props) {
     })
   }
 
-  const onSearchCancel = () => {
+  const onSearchCancel = (): void => {
     setIsSearchMode(false)
   }
 

@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback, useEffect, useReducer } from 'react'
+import React, { ReactElement, useCallback, useEffect, useReducer } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Alert } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -29,7 +29,7 @@ export function CloudBackupProcessingScreen({
   route: {
     params: { password, importType },
   },
-}: Props) {
+}: Props): ReactElement {
   const { t } = useTranslation()
   const activeAccount = useActiveAccount()
   const dispatch = useAppDispatch()
@@ -49,7 +49,7 @@ export function CloudBackupProcessingScreen({
           {
             text: t('OK'),
             style: 'default',
-            onPress: () => {
+            onPress: (): void => {
               navigation.goBack()
             },
           },
@@ -80,7 +80,7 @@ export function CloudBackupProcessingScreen({
   useEffect(() => {
     if (!activeAccount?.address) return
 
-    const backup = async () => {
+    const backup = async (): Promise<void> => {
       try {
         // Ensure processing state is shown for at least 1s
         await promiseMinDelay(

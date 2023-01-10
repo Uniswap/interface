@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { memo, ReactElement, useCallback, useEffect, useMemo, useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
@@ -26,6 +26,7 @@ import {
   makeSelectAccountHideSpamTokens,
 } from 'src/features/wallet/selectors'
 import { differenceWith } from 'src/utils/array'
+import { CurrencyId } from 'src/utils/currencyId'
 import { useDebounce } from 'src/utils/timing'
 
 interface TokenSearchResultListProps {
@@ -36,12 +37,15 @@ interface TokenSearchResultListProps {
   variation: TokenSelectorVariation
 }
 
-const tokenOptionComparator = (tokenOption: TokenOption, otherTokenOption: TokenOption) => {
+const tokenOptionComparator = (
+  tokenOption: TokenOption,
+  otherTokenOption: TokenOption
+): boolean => {
   return tokenOption.currencyInfo.currencyId === otherTokenOption.currencyInfo.currencyId
 }
 // get items in `currencies` that are not in `without`
 // e.g. difference([B, C, D], [A, B, C]) would return ([D])
-const difference = (currencies: TokenOption[], without: TokenOption[]) => {
+const difference = (currencies: TokenOption[], without: TokenOption[]): TokenOption[] => {
   return differenceWith(currencies, without, tokenOptionComparator)
 }
 
@@ -63,10 +67,12 @@ export function useTokenSectionsByVariation(
 ): GqlResult<TokenSection[]> {
   const { t } = useTranslation()
   const activeAccount = useActiveAccountWithThrow()
-  const hideSmallBalances = useAppSelector(
+  const hideSmallBalances = useAppSelector<boolean>(
     makeSelectAccountHideSmallBalances(activeAccount.address)
   )
-  const hideSpamTokens = useAppSelector(makeSelectAccountHideSpamTokens(activeAccount.address))
+  const hideSpamTokens = useAppSelector<boolean>(
+    makeSelectAccountHideSpamTokens(activeAccount.address)
+  )
 
   const {
     data: popularTokens,
@@ -263,7 +269,7 @@ function _TokenSearchResultList({
   chainFilter,
   searchFilter,
   variation,
-}: TokenSearchResultListProps) {
+}: TokenSearchResultListProps): ReactElement {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const sectionListRef = useRef<SectionList<TokenOption>>(null)
@@ -287,7 +293,7 @@ function _TokenSearchResultList({
         <TokenOptionItem
           option={item}
           showNetworkPill={!chainFilter && item.currencyInfo.currency.chainId !== ChainId.Mainnet}
-          onPress={() => onSelectCurrency?.(item.currencyInfo.currency)}
+          onPress={(): void => onSelectCurrency?.(item.currencyInfo.currency)}
         />
       )
     },
@@ -319,7 +325,7 @@ function _TokenSearchResultList({
           }
           retryButtonLabel="Retry"
           title={t("Couldn't load search results")}
-          onRetry={() => refetch?.()}
+          onRetry={(): void => refetch?.()}
         />
       </Box>
     )
@@ -355,7 +361,9 @@ function _TokenSearchResultList({
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="always"
         renderItem={renderItem}
-        renderSectionHeader={({ section: { title } }) => <SectionHeader title={title} />}
+        renderSectionHeader={({ section: { title } }): ReactElement => (
+          <SectionHeader title={title} />
+        )}
         sections={sections ?? EMPTY_ARRAY}
         showsVerticalScrollIndicator={false}
         windowSize={5}
@@ -367,7 +375,7 @@ function _TokenSearchResultList({
   )
 }
 
-function SectionHeader({ title }: { title: string }) {
+function SectionHeader({ title }: { title: string }): ReactElement {
   return (
     <Flex backgroundColor="background1" py="md">
       <Text color="textSecondary" variant="subheadSmall">
@@ -377,7 +385,7 @@ function SectionHeader({ title }: { title: string }) {
   )
 }
 
-function Footer() {
+function Footer(): ReactElement {
   return (
     <Inset all="xxl">
       <Inset all="md" />
@@ -385,7 +393,7 @@ function Footer() {
   )
 }
 
-function key(item: TokenOption) {
+function key(item: TokenOption): CurrencyId {
   return item.currencyInfo.currencyId
 }
 

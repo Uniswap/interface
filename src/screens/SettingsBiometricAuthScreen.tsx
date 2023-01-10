@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { ReactElement, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, ListRenderItemInfo } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
@@ -36,7 +36,7 @@ type BiometricPromptTriggerArgs = {
   newValue: boolean
 }
 
-export function SettingsBiometricAuthScreen() {
+export function SettingsBiometricAuthScreen(): ReactElement {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 
@@ -67,7 +67,7 @@ export function SettingsBiometricAuthScreen() {
   )
 
   const options: BiometricAuthSetting[] = useMemo((): BiometricAuthSetting[] => {
-    const handleFaceIdTurnedOff = () => {
+    const handleFaceIdTurnedOff = (): void => {
       Alert.alert(
         t(
           '{{authenticationTypeName}} ID is currently turned off for Uniswap Wallet—you can turn it on in your system settings.',
@@ -85,7 +85,7 @@ export function SettingsBiometricAuthScreen() {
 
     return [
       {
-        onValueChange: (newRequiredForAppAccessValue) => {
+        onValueChange: (newRequiredForAppAccessValue): void => {
           if (!newRequiredForAppAccessValue && !requiredForTransactions) {
             setShowUnsafeWarningModal(true)
             setUnsafeWarningModalType(BiometricSettingType.RequiredForAppAccess)
@@ -103,7 +103,7 @@ export function SettingsBiometricAuthScreen() {
         subText: t('Require {{authenticationTypeName}} ID to open app', { authenticationTypeName }),
       },
       {
-        onValueChange: (newRequiredForTransactionsValue) => {
+        onValueChange: (newRequiredForTransactionsValue): void => {
           if (!newRequiredForTransactionsValue && !requiredForAppAccess) {
             setShowUnsafeWarningModal(true)
             setUnsafeWarningModalType(BiometricSettingType.RequiredForTransactions)
@@ -132,7 +132,7 @@ export function SettingsBiometricAuthScreen() {
 
   const renderItem = ({
     item: { text, subText, value, onValueChange },
-  }: ListRenderItemInfo<BiometricAuthSetting>) => {
+  }: ListRenderItemInfo<BiometricAuthSetting>): ReactElement => {
     return (
       <Box alignItems="center" flexDirection="row" justifyContent="space-between">
         <Flex row>
@@ -145,7 +145,7 @@ export function SettingsBiometricAuthScreen() {
         </Flex>
         <TouchableArea
           activeOpacity={1}
-          onPress={() => {
+          onPress={(): void => {
             onValueChange(!value)
           }}>
           <Switch pointerEvents="none" value={value} onValueChange={onValueChange} />
@@ -160,7 +160,7 @@ export function SettingsBiometricAuthScreen() {
         <BiometricAuthWarningModal
           isTouchIdDevice={touchId}
           onClose={onCloseModal}
-          onConfirm={() => {
+          onConfirm={(): void => {
             trigger({
               biometricAppSettingType: unsafeWarningModalType,
               // flip the bit
@@ -181,7 +181,9 @@ export function SettingsBiometricAuthScreen() {
         </BackHeader>
         <Box p="lg">
           <FlatList
-            ItemSeparatorComponent={() => <Box bg="backgroundOutline" height={1} my="md" />}
+            ItemSeparatorComponent={(): ReactElement => (
+              <Box bg="backgroundOutline" height={1} my="md" />
+            )}
             data={options}
             renderItem={renderItem}
             scrollEnabled={false}

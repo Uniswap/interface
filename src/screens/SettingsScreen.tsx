@@ -1,5 +1,5 @@
 import { useTheme } from '@shopify/restyle'
-import { default as React, useMemo, useState } from 'react'
+import { default as React, ReactElement, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, ListRenderItemInfo, SectionList, StyleSheet, useColorScheme } from 'react-native'
 import { FadeInDown, FadeOutUp } from 'react-native-reanimated'
@@ -36,7 +36,7 @@ import { ONE_SECOND_MS } from 'src/utils/time'
 import { useTimeout } from 'src/utils/timing'
 import { getFullAppVersion } from 'src/utils/version'
 
-export function SettingsScreen() {
+export function SettingsScreen(): ReactElement {
   const navigation = useSettingsStackNavigation()
   const theme = useTheme()
   const { t } = useTranslation()
@@ -133,7 +133,9 @@ export function SettingsScreen() {
 
   const renderItem = ({
     item,
-  }: ListRenderItemInfo<SettingsSectionItem | SettingsSectionItemComponent>) => {
+  }: ListRenderItemInfo<
+    SettingsSectionItem | SettingsSectionItemComponent
+  >): ReactElement | null => {
     if (item.isHidden) return null
     if ('component' in item) return item.component
     return <SettingsRow key={item.screen} navigation={navigation} page={item} theme={theme} />
@@ -145,13 +147,13 @@ export function SettingsScreen() {
       centerElement={<Text variant="bodyLarge">{t('Settings')}</Text>}>
       <Flex px="lg" py="sm">
         <SectionList
-          ItemSeparatorComponent={() => <Flex pt="xs" />}
+          ItemSeparatorComponent={(): ReactElement => <Flex pt="xs" />}
           ListFooterComponent={<FooterSettings />}
           ListHeaderComponent={<WalletSettings />}
-          keyExtractor={(_item, index) => 'settings' + index}
+          keyExtractor={(_item, index): string => 'settings' + index}
           renderItem={renderItem}
-          renderSectionFooter={() => <Flex pt="lg" />}
-          renderSectionHeader={({ section: { subTitle } }) => (
+          renderSectionFooter={(): ReactElement => <Flex pt="lg" />}
+          renderSectionHeader={({ section: { subTitle } }): ReactElement => (
             <Box bg="background0" pb="sm">
               <Text color="textSecondary" variant="bodyLarge">
                 {subTitle}
@@ -166,7 +168,7 @@ export function SettingsScreen() {
   )
 }
 
-function OnboardingRow({ iconProps }: { iconProps: SvgProps }) {
+function OnboardingRow({ iconProps }: { iconProps: SvgProps }): ReactElement {
   const theme = useTheme()
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -174,7 +176,7 @@ function OnboardingRow({ iconProps }: { iconProps: SvgProps }) {
 
   return (
     <TouchableArea
-      onPress={() => {
+      onPress={(): void => {
         navigation.goBack()
         dispatch(resetWallet())
         dispatch(setFinishedOnboarding({ finishedOnboarding: false }))
@@ -194,7 +196,7 @@ function OnboardingRow({ iconProps }: { iconProps: SvgProps }) {
   )
 }
 
-function WalletSettings() {
+function WalletSettings(): ReactElement {
   const DEFAULT_ACCOUNTS_TO_DISPLAY = 5
 
   const { t } = useTranslation()
@@ -218,11 +220,11 @@ function WalletSettings() {
     return [..._mnemonicWallets, ..._viewOnlyWallets]
   }, [addressToAccount])
 
-  const toggleViewAll = () => {
+  const toggleViewAll = (): void => {
     setShowAll(!showAll)
   }
 
-  const handleNavigation = (address: string) => {
+  const handleNavigation = (address: string): void => {
     navigation.navigate(Screens.SettingsWallet, { address })
   }
 
@@ -247,7 +249,7 @@ function WalletSettings() {
             key={account.address}
             pl="xxs"
             py="sm"
-            onPress={() => handleNavigation(account.address)}>
+            onPress={(): void => handleNavigation(account.address)}>
             <Box alignItems="center" flexDirection="row" justifyContent="space-between">
               <Flex shrink>
                 <AddressDisplay
@@ -265,7 +267,7 @@ function WalletSettings() {
   )
 }
 
-function FooterSettings() {
+function FooterSettings(): ReactElement {
   const { t } = useTranslation()
   const [showSignature, setShowSignature] = useState(false)
   const isDarkMode = useColorScheme() === 'dark'
@@ -273,10 +275,10 @@ function FooterSettings() {
   // Fade out signature after duration
   useTimeout(
     showSignature
-      ? () => {
+      ? (): void => {
           setShowSignature(false)
         }
-      : () => undefined,
+      : (): void => undefined,
     SIGNATURE_VISIBLE_DURATION
   )
 
@@ -308,7 +310,7 @@ function FooterSettings() {
         color="textTertiary"
         marginTop="xs"
         variant="bodySmall"
-        onLongPress={() => {
+        onLongPress={(): void => {
           setShowSignature(true)
         }}>
         {`Version ${getFullAppVersion()}`}

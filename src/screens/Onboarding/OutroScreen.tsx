@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
@@ -18,14 +18,14 @@ import { OnboardingScreens, Screens } from 'src/screens/Screens'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Outro>
 
-export function OutroScreen({ navigation, route: { params } }: Props) {
+export function OutroScreen({ navigation, route: { params } }: Props): ReactElement {
   const dispatch = useAppDispatch()
 
   const activeAddress = useActiveAccount()?.address
   const pendingAccounts = usePendingAccounts()
   const parentTrace = useTrace()
 
-  const onPressNext = () => {
+  const onPressNext = (): void => {
     sendAnalyticsEvent(
       params?.entryPoint === OnboardingEntryPoint.Sidebar
         ? EventName.WalletAdded

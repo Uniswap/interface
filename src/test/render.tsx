@@ -1,7 +1,7 @@
 import { ApolloLink } from '@apollo/client'
 import { MockedProvider, MockedResponse, MockLink } from '@apollo/client/testing'
 import { NavigationContainer } from '@react-navigation/native'
-import type { PreloadedState } from '@reduxjs/toolkit'
+import type { EnhancedStore, PreloadedState } from '@reduxjs/toolkit'
 import { configureStore } from '@reduxjs/toolkit'
 import { ThemeProvider } from '@shopify/restyle'
 import {
@@ -9,8 +9,9 @@ import {
   renderHook as RNRenderHook,
   RenderOptions,
 } from '@testing-library/react-native'
-import React, { PropsWithChildren } from 'react'
+import React, { PropsWithChildren, ReactElement } from 'react'
 import { Provider } from 'react-redux'
+import { ReactTestRendererJSON } from 'react-test-renderer'
 import type { RootState } from 'src/app/rootReducer'
 import type { AppStore } from 'src/app/store'
 import { persistedReducer } from 'src/app/store'
@@ -42,8 +43,12 @@ export function renderWithProviders(
     store = configureStore({ reducer: persistedReducer, preloadedState }),
     ...renderOptions
   }: ExtendedRenderOptions = {}
-) {
-  function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
+): // TODO (MOB-3857): add more specific types
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+Record<string, any> & {
+  store: EnhancedStore
+} {
+  function Wrapper({ children }: PropsWithChildren<unknown>): ReactElement {
     // Helps expose errors in MockedProvider
     const link = ApolloLink.from([setupErrorLink(1, 1), new MockLink(mocks)])
 
@@ -80,8 +85,12 @@ export function renderHookWithProviders(
     store = configureStore({ reducer: persistedReducer, preloadedState }),
     ...renderOptions
   }: ExtendedRenderOptions = {}
-) {
-  function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
+): // TODO (MOB-3857): add more specific types
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+Record<string, any> & {
+  store: EnhancedStore
+} {
+  function Wrapper({ children }: PropsWithChildren<unknown>): ReactElement {
     // Helps expose errors in MockedProvider
     const link = ApolloLink.from([setupErrorLink(1, 1), new MockLink(mocks)])
 
@@ -104,3 +113,12 @@ export function renderHookWithProviders(
     }),
   }
 }
+
+export const WithTheme = ({ component }: { component: ReactElement }): ReactElement => {
+  return <ThemeProvider theme={theme}>{component}</ThemeProvider>
+}
+
+export const renderWithTheme = (
+  element: ReactElement
+): ReactTestRendererJSON | ReactTestRendererJSON[] | null =>
+  RNRender(<WithTheme component={element} />).toJSON()

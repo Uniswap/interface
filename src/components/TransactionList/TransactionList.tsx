@@ -26,9 +26,9 @@ import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { makeSelectAccountHideSpamTokens } from 'src/features/wallet/selectors'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
 
-const PENDING_TITLE = (t: TFunction) => t('Pending')
-const TODAY_TITLE = (t: TFunction) => t('Today')
-const MONTH_TITLE = (t: TFunction) => t('This Month')
+const PENDING_TITLE = (t: TFunction): string => t('Pending')
+const TODAY_TITLE = (t: TFunction): string => t('Today')
+const MONTH_TITLE = (t: TFunction): string => t('This Month')
 
 const LOADING_ITEM_TITLE = 'Section Title'
 const LOADING_ITEM = { type: 'loading' }
@@ -45,7 +45,7 @@ const LOADING_DATA = [
   { title: LOADING_ITEM_TITLE, data: [LOADING_ITEM] },
 ]
 
-const key = (info: TransactionDetails) => info.id
+const key = (info: TransactionDetails): string => info.id
 
 const SectionTitle: SectionList['props']['renderSectionHeader'] = ({ section: { title } }) => (
   <Box pb="xxxs" pt="sm" px="sm">
@@ -69,7 +69,7 @@ interface TransactionListProps {
   emptyStateContent: ReactElement | null
 }
 
-export default function TransactionList(props: TransactionListProps) {
+export default function TransactionList(props: TransactionListProps): ReactElement {
   const { t } = useTranslation()
 
   const {
@@ -126,12 +126,14 @@ function TransactionListInner({
 }: TransactionListProps & {
   data?: TransactionListQuery
   showLoading: boolean
-}) {
+}): ReactElement | null {
   const { t } = useTranslation()
 
   // Hide all spam transactions if active wallet has enabled setting.
   const activeAccount = useActiveAccountWithThrow()
-  const hideSpamTokens = useAppSelector(makeSelectAccountHideSpamTokens(activeAccount.address))
+  const hideSpamTokens = useAppSelector<boolean>(
+    makeSelectAccountHideSpamTokens(activeAccount.address)
+  )
 
   // Parse remote txn data from query and merge with local txn data
   const formattedTransactions = useMemo(() => {

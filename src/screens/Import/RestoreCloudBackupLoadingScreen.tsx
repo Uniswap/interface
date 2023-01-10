@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
@@ -28,7 +28,10 @@ const MIN_LOADING_UI_MS = ONE_SECOND_MS
 // 10s timeout time for query for backups, since we don't know when the query completes
 const MAX_LOADING_TIMEOUT_MS = ONE_SECOND_MS * 10
 
-export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } }: Props) {
+export function RestoreCloudBackupLoadingScreen({
+  navigation,
+  route: { params },
+}: Props): ReactElement {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const entryPoint = params?.entryPoint
@@ -46,7 +49,7 @@ export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } 
     }
   }, [])
 
-  const fetchICloudBackupsWithTimeout = () => {
+  const fetchICloudBackupsWithTimeout = (): NodeJS.Timeout => {
     // Show loading state for max 10s, then show no backups found
     setIsLoading(true)
     startFetchingICloudBackups()
@@ -65,7 +68,7 @@ export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } 
   // After finding backups, show loading state for minimum 1s to prevent screen changing too quickly
   useTimeout(
     backups.length > 0
-      ? () => {
+      ? (): void => {
           if (backups.length === 1 && backups[0]) {
             navigation.replace(OnboardingScreens.RestoreCloudBackupPassword, {
               importType: ImportType.Restore,
@@ -79,7 +82,7 @@ export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } 
             })
           }
         }
-      : () => undefined,
+      : (): undefined => undefined,
     MIN_LOADING_UI_MS
   )
 

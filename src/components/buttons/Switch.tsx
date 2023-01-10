@@ -1,5 +1,5 @@
 import { SpacingProps, SpacingShorthandProps } from '@shopify/restyle'
-import React, { PropsWithChildren } from 'react'
+import React, { PropsWithChildren, ReactElement } from 'react'
 import { Switch as BaseSwitch, SwitchProps, ViewProps } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout/Box'
@@ -16,7 +16,12 @@ type Props = {
   SwitchProps
 
 // A themed switch toggle
-export function Switch({ value, onValueChange, disabled, ...rest }: PropsWithChildren<Props>) {
+export function Switch({
+  value,
+  onValueChange,
+  disabled,
+  ...rest
+}: PropsWithChildren<Props>): ReactElement {
   const theme = useAppTheme()
 
   return (

@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { ReactElement, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { useAppTheme } from 'src/app/hooks'
@@ -21,7 +21,7 @@ export function ExternalProfileScreen({
   route: {
     params: { address },
   },
-}: Props) {
+}: Props): ReactElement {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const [tabIndex, setIndex] = useState(0)

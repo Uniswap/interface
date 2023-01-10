@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { ScrollView } from 'react-native'
 import { Switch } from 'src/components/buttons/Switch'
 import { Flex } from 'src/components/layout'
@@ -9,7 +9,7 @@ import { isEnabled, useTestConfigManager } from 'src/features/remoteConfig'
 import { flex } from 'src/styles/flex'
 import { theme } from 'src/styles/theme'
 
-export function SettingsTestConfigs() {
+export function SettingsTestConfigs(): ReactElement {
   const [testConfigs, toggleLocalConfig] = useTestConfigManager()
 
   return (
@@ -34,7 +34,9 @@ export function SettingsTestConfigs() {
                   {configValue.getSource() === 'default' ? (
                     <Switch
                       value={enabled}
-                      onValueChange={() => toggleLocalConfig({ config: name, enabled: !enabled })}
+                      onValueChange={(): Promise<void> =>
+                        toggleLocalConfig({ config: name, enabled: !enabled })
+                      }
                     />
                   ) : (
                     <Text variant="bodySmall">Remote only</Text>

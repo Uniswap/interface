@@ -1,11 +1,11 @@
 import { providers, utils, Wallet } from 'ethers'
 
-const pathFromIndex = (index: number) => `m/44'/60'/0'/0/${index}`
+const pathFromIndex = (index: number): string => `m/44'/60'/0'/0/${index}`
 
 const mnemonics: { [id: string]: string } = {}
 const privateKeys: { [id: string]: string } = {}
 
-export function getMnemonicIds() {
+export function getMnemonicIds(): Promise<string[]> {
   return Promise.resolve(Object.keys(mnemonics))
 }
 

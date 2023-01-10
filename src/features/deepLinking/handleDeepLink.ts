@@ -1,5 +1,6 @@
 import { createAction } from '@reduxjs/toolkit'
 import { URL } from 'react-native-url-polyfill'
+import { CallEffect, ForkEffect, PutEffect, SelectEffect } from 'redux-saga/effects'
 import { appSelect } from 'src/app/hooks'
 import { handleSwapLink } from 'src/features/deepLinking/handleSwapLink'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLink'
@@ -18,11 +19,22 @@ export interface DeepLink {
 
 export const openDeepLink = createAction<DeepLink>('deeplink/open')
 
-export function* deepLinkWatcher() {
+export function* deepLinkWatcher(): Generator<ForkEffect<never>, void, unknown> {
   yield* takeLatest(openDeepLink.type, handleDeepLink)
 }
 
-export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
+export function* handleDeepLink(action: ReturnType<typeof openDeepLink>): Generator<
+  | CallEffect<boolean>
+  | CallEffect<string>
+  | ForkEffect<void>
+  | PutEffect<{
+      payload: string
+      type: string
+    }>
+  | CallEffect<unknown>,
+  void,
+  unknown
+> {
   const { coldStart } = action.payload
   try {
     const url = new URL(action.payload.url)
@@ -71,7 +83,9 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
   }
 }
 
-export function* parseAndValidateUserAddress(userAddress: string | null) {
+export function* parseAndValidateUserAddress(
+  userAddress: string | null
+): Generator<SelectEffect, string, unknown> {
   if (!userAddress) {
     throw new Error('No `userAddress` provided')
   }

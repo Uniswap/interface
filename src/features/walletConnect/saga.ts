@@ -1,7 +1,8 @@
 import { Action } from '@reduxjs/toolkit'
 import { providers } from 'ethers'
 import { NativeEventEmitter, NativeModules } from 'react-native'
-import { eventChannel } from 'redux-saga'
+import { EventChannel, eventChannel } from 'redux-saga'
+import { CallEffect, ChannelTakeEffect, ForkEffect, PutEffect } from 'redux-saga/effects'
 import { i18n } from 'src/app/i18n'
 import { getSignerManager } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
@@ -10,6 +11,7 @@ import { AppNotificationType } from 'src/features/notifications/types'
 import { sendTransaction, SendTransactionParams } from 'src/features/transactions/sendTransaction'
 import { TransactionType } from 'src/features/transactions/types'
 import { Account } from 'src/features/wallet/accounts/types'
+import { SignerManager } from 'src/features/wallet/signing/SignerManager'
 import {
   signMessage,
   signTransaction,
@@ -59,9 +61,11 @@ export enum WalletConnectEvent {
   TransactionFailed,
 }
 
-function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
+function createWalletConnectChannel(
+  wcEventEmitter: NativeEventEmitter
+): EventChannel<Action<unknown>> {
   return eventChannel<Action>((emit) => {
-    const sessionConnectedHandler = (req: SessionConnectedEvent) => {
+    const sessionConnectedHandler = (req: SessionConnectedEvent): void => {
       emit(
         addSession({
           wcSession: { id: req.session_id, dapp: req.dapp },
@@ -92,7 +96,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
       }
     }
 
-    const networkChangedHandler = (req: SessionUpdatedEvent) => {
+    const networkChangedHandler = (req: SessionUpdatedEvent): void => {
       emit(
         updateSession({ wcSession: { id: req.session_id, dapp: req.dapp }, account: req.account })
       )
@@ -109,7 +113,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
       )
     }
 
-    const sessionDisconnectedHandler = (req: SessionDisconnectedEvent) => {
+    const sessionDisconnectedHandler = (req: SessionDisconnectedEvent): void => {
       emit(removeSession({ sessionId: req.session_id, account: req.account }))
       emit(
         pushNotification({
@@ -127,7 +131,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
       })
     }
 
-    const sessionPendingHandler = (req: SessionPendingEvent) => {
+    const sessionPendingHandler = (req: SessionPendingEvent): void => {
       emit(
         addPendingSession({
           wcSession: { id: req.session_id, dapp: req.dapp },
@@ -135,7 +139,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
       )
     }
 
-    const signRequestHandler = (req: SignRequestEvent) => {
+    const signRequestHandler = (req: SignRequestEvent): void => {
       emit(
         addRequest({
           account: req.account,
@@ -151,7 +155,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
       )
     }
 
-    const transactionRequestHandler = (req: TransactionRequestEvent) => {
+    const transactionRequestHandler = (req: TransactionRequestEvent): void => {
       const { to, from, value, data, gas, gas_price: gasPrice, nonce } = req.transaction
       emit(
         addRequest({
@@ -175,7 +179,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
       )
     }
 
-    const switchChainHandler = (req: SwitchChainRequestEvent) => {
+    const switchChainHandler = (req: SwitchChainRequestEvent): void => {
       emit(
         addRequest({
           account: req.account,
@@ -191,7 +195,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
       )
     }
 
-    const errorHandler = (req: WCError) => {
+    const errorHandler = (req: WCError): void => {
       switch (req.type) {
         case WCErrorType.UnsupportedChainError:
           emit(
@@ -222,7 +226,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
       wcEventEmitter.addListener(type, handler)
     }
 
-    const unsubscribe = () => {
+    const unsubscribe = (): void => {
       for (const { type } of eventEmitters) {
         wcEventEmitter.removeAllListeners(type)
       }
@@ -232,13 +236,23 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
   })
 }
 
-export function* walletConnectSaga() {
+export function* walletConnectSaga(): Generator<
+  CallEffect<void> | ForkEffect<void>,
+  void,
+  unknown
+> {
   yield* call(initializeWalletConnect)
   yield* call(reconnectAccountSessions)
   yield* fork(watchWalletConnectEvents)
 }
 
-export function* watchWalletConnectEvents() {
+export function* watchWalletConnectEvents(): Generator<
+  | CallEffect<EventChannel<Action<unknown>>>
+  | ChannelTakeEffect<Action<unknown>>
+  | PutEffect<Action<unknown>>,
+  void,
+  unknown
+> {
   const wcEvents = new NativeEventEmitter(NativeModules.RNWalletConnect)
   const wcChannel = yield* call(createWalletConnectChannel, wcEvents)
 
@@ -268,7 +282,17 @@ type SignTransactionParams = {
   dapp: DappInfo
 }
 
-export function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
+export function* signWcRequest(params: SignMessageParams | SignTransactionParams): Generator<
+  | CallEffect<void>
+  | CallEffect<string>
+  | CallEffect<SignerManager>
+  | CallEffect<{
+      transactionResponse: providers.TransactionResponse
+    }>
+  | PutEffect<Action<unknown>>,
+  void,
+  unknown
+> {
   const { requestInternalId, account, method } = params
   try {
     const signerManager = yield* call(getSignerManager)

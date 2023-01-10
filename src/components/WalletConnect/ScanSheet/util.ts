@@ -44,7 +44,7 @@ export async function getSupportedURI(uri: string): Promise<URIFormat | undefine
   }
 }
 
-async function getCustomUniswapWcCode(uri: string) {
+async function getCustomUniswapWcCode(uri: string): Promise<string | null> {
   if (uri.indexOf(CUSTOM_UNI_QR_CODE_PREFIX) !== 0) {
     return null
   }
@@ -58,7 +58,7 @@ async function getCustomUniswapWcCode(uri: string) {
 }
 
 // metamask QR code values have the format "ethereum:<address>"
-function getMetamaskAddress(uri: string) {
+function getMetamaskAddress(uri: string): Nullable<string> {
   const uriParts = uri.split(':')
   if (uriParts.length < 2) {
     return null

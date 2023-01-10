@@ -10,7 +10,7 @@ import {
 } from '@shopify/react-native-skia'
 import { useResponsiveProp } from '@shopify/restyle'
 import { ResizeMode, Video } from 'expo-av'
-import React, { useEffect, useRef } from 'react'
+import React, { ReactElement, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, StyleSheet, useColorScheme, View, ViewStyle } from 'react-native'
 import Animated, {
@@ -54,12 +54,12 @@ export function OnboardingCompleteAnimation({
   activeAddress: string
   isNewWallet: boolean
   onPressNext: () => void
-}) {
+}): ReactElement {
   const theme = useAppTheme()
   const { t } = useTranslation()
   const video = useRef<Video>(null)
 
-  const playEtchingAfterSlideIn = () => {
+  const playEtchingAfterSlideIn = (): void => {
     video.current?.playAsync()
   }
 
@@ -99,7 +99,7 @@ export function OnboardingCompleteAnimation({
       opacity: qrSlideUpAndFadeInConfig.opacity.startValue,
       transform: [{ translateY: qrSlideUpAndFadeInConfig.translateY.startValue }],
     }
-    const callback = (finished: boolean) => {
+    const callback = (finished: boolean): void => {
       if (finished) {
         runOnJS(playEtchingAfterSlideIn)()
       }

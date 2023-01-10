@@ -5,7 +5,7 @@ import { render } from 'src/test/test-utils'
 
 jest.mock('src/data/hooks', () => {
   return {
-    usePersistedApolloClient: () => undefined,
+    usePersistedApolloClient: (): undefined => undefined,
   }
 })
 

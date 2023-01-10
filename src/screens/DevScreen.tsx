@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { ScrollView } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
@@ -22,36 +22,36 @@ import { resetWallet, toggleFlashbots } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
 import { logger } from 'src/utils/logger'
 
-export function DevScreen() {
+export function DevScreen(): ReactElement {
   const dispatch = useAppDispatch()
   const activeAccount = useActiveAccount()
   const [currentChain] = useState(ChainId.Goerli)
   const flashbotsEnabled = useAppSelector(selectFlashbotsEnabled)
 
-  const onPressResetTokenWarnings = () => {
+  const onPressResetTokenWarnings = (): void => {
     dispatch(resetDismissedWarnings())
   }
 
-  const onPressCreate = () => {
+  const onPressCreate = (): void => {
     dispatch(createAccountActions.trigger())
   }
 
-  const activateWormhole = (s: Screens) => {
+  const activateWormhole = (s: Screens): void => {
     navigate(s)
   }
 
   const activeChains = useActiveChainIds()
-  const onPressToggleTestnets = () => {
+  const onPressToggleTestnets = (): void => {
     // always rely on the state of goerli
     const isGoerliActive = activeChains.includes(ChainId.Goerli)
     dispatch(setChainActiveStatus({ chainId: ChainId.Goerli, isActive: !isGoerliActive }))
   }
 
-  const onToggleFlashbots = (enabled: boolean) => {
+  const onToggleFlashbots = (enabled: boolean): void => {
     dispatch(toggleFlashbots(enabled))
   }
 
-  const onPressShowError = () => {
+  const onPressShowError = (): void => {
     const address = activeAccount?.address
     if (!address) {
       logger.error(
@@ -71,7 +71,7 @@ export function DevScreen() {
     )
   }
 
-  const onPressResetOnboarding = () => {
+  const onPressResetOnboarding = (): void => {
     if (!activeAccount) return
 
     dispatch(resetWallet())
@@ -96,7 +96,7 @@ export function DevScreen() {
                 key={s}
                 m="xs"
                 testID={`dev_screen/${s}`}
-                onPress={() => activateWormhole(s)}>
+                onPress={(): void => activateWormhole(s)}>
                 <Text color="textPrimary">{s}</Text>
               </TouchableArea>
             ))}
@@ -108,7 +108,7 @@ export function DevScreen() {
             <Text variant="bodyLarge">Use flashbots for transactions</Text>
             <Switch
               value={flashbotsEnabled}
-              onValueChange={() => onToggleFlashbots(!flashbotsEnabled)}
+              onValueChange={(): void => onToggleFlashbots(!flashbotsEnabled)}
             />
           </Flex>
           <TouchableArea mt="md" onPress={onPressCreate}>

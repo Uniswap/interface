@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -28,7 +28,7 @@ export function SettingsCloudBackupStatus({
   route: {
     params: { address },
   },
-}: Props) {
+}: Props): ReactElement {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
@@ -40,7 +40,7 @@ export function SettingsCloudBackupStatus({
   )
 
   const [showBackupDeleteWarning, setShowBackupDeleteWarning] = useState(false)
-  const onConfirmDeleteBackup = () => {
+  const onConfirmDeleteBackup = (): void => {
     if (requiredForTransactions) {
       biometricTrigger()
     } else {
@@ -48,7 +48,7 @@ export function SettingsCloudBackupStatus({
     }
   }
 
-  const deleteBackup = async () => {
+  const deleteBackup = async (): Promise<void> => {
     try {
       await deleteICloudMnemonicBackup(mnemonicId)
       dispatch(
@@ -105,7 +105,7 @@ export function SettingsCloudBackupStatus({
           emphasis={ButtonEmphasis.Detrimental}
           label={t('Delete iCloud backup')}
           name={ElementName.Remove}
-          onPress={() => {
+          onPress={(): void => {
             setShowBackupDeleteWarning(true)
           }}
         />
@@ -120,7 +120,7 @@ export function SettingsCloudBackupStatus({
           confirmText={t('Delete')}
           modalName={ModalName.ViewSeedPhraseWarning}
           title={t('Are you sure?')}
-          onClose={() => {
+          onClose={(): void => {
             setShowBackupDeleteWarning(false)
           }}
           onConfirm={onConfirmDeleteBackup}>

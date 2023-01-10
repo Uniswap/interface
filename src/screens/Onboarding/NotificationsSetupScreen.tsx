@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
@@ -21,7 +21,7 @@ import { openSettings } from 'src/utils/linking'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Notifications>
 
-export const showNotificationSettingsAlert = () => {
+export const showNotificationSettingsAlert = (): void => {
   Alert.alert(
     i18n.t(
       "To receive notifications, turn on notifications for Uniswap Wallet in your device's settings."
@@ -36,7 +36,7 @@ export const showNotificationSettingsAlert = () => {
   )
 }
 
-export function NotificationsSetupScreen({ navigation, route: { params } }: Props) {
+export function NotificationsSetupScreen({ navigation, route: { params } }: Props): ReactElement {
   const { t } = useTranslation()
   const { requiredForTransactions: isBiometricAuthEnabled } = useBiometricAppSettings()
   const accounts = useAppSelector(selectAccounts)
@@ -44,11 +44,11 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
   const addresses = Object.keys(accounts)
   const hasSeedPhrase = useNativeAccountExists()
 
-  const onPressNext = () => {
+  const onPressNext = (): void => {
     navigateToNextScreen()
   }
 
-  const onPressEnableNotifications = () => {
+  const onPressEnableNotifications = (): void => {
     promptPushPermission(() => {
       addresses.forEach((address) =>
         dispatch(
@@ -63,7 +63,7 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
     }, showNotificationSettingsAlert)
   }
 
-  const navigateToNextScreen = () => {
+  const navigateToNextScreen = (): void => {
     if (
       isBiometricAuthEnabled ||
       (params?.entryPoint === OnboardingEntryPoint.Sidebar && hasSeedPhrase)

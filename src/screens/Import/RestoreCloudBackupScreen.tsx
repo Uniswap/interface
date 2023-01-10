@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -22,14 +22,14 @@ import { formatDate } from 'src/utils/format'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.RestoreCloudBackup>
 
-export function RestoreCloudBackupScreen({ navigation, route: { params } }: Props) {
+export function RestoreCloudBackupScreen({ navigation, route: { params } }: Props): ReactElement {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const backups = useCloudBackups()
   const sortedBackups = backups.slice().sort((a, b) => a.createdAt - b.createdAt)
 
-  const onPressRestoreBackup = async (backup: ICloudMnemonicBackup) => {
+  const onPressRestoreBackup = async (backup: ICloudMnemonicBackup): Promise<void> => {
     // Clear any existing pending accounts
     dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
 
@@ -56,7 +56,7 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
                 borderRadius="lg"
                 borderWidth={1}
                 p="md"
-                onPress={() => onPressRestoreBackup(backup)}>
+                onPress={(): Promise<void> => onPressRestoreBackup(backup)}>
                 <Flex row alignItems="center" justifyContent="space-between">
                   <Flex centered row gap="sm">
                     <Unicon address={mnemonicId} size={32} />
