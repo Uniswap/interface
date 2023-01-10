@@ -225,7 +225,7 @@ const CHAIN_INFO: ChainInfoMap = {
 
     // Required for L2 networks
     blockWaitMsBeforeWarning: ms`10m`,
-    bridge: 'https://prealpha.scroll.io/bridge/',
+    bridge: 'https://scroll.io/prealpha/bridge/',
     defaultListUrl: SCROLL_PREALPHA_LIST,
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
   },
