@@ -1,10 +1,9 @@
-name: Fastlane deploy iOS
-# referenced from https://github.com/invertase/react-native-firebase/blob/master/.github/workflows/tests_e2e_ios.yml
+name: Fastlane deploy beta (iOS)
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: '0 2 * * 1,2,3,4,5' # run at 2 AM UTC MWF
+  push:
+    branches:
+      - releases/beta
 
 jobs:
   ios:
@@ -21,7 +20,7 @@ jobs:
       MOONPAY_API_KEY: ${{ secrets.MOONPAY_API_KEY }}
       MOONPAY_API_URL: ${{ secrets.MOONPAY_API_URL }}
       MOONPAY_WIDGET_API_URL: ${{ secrets.MOONPAY_WIDGET_API_URL }}
-      ONESIGNAL_APP_ID: ${{ secrets.ONESIGNAL_APP_ID }}
+      ONESIGNAL_APP_ID: ${{ secrets.ONESIGNAL_APP_ID_BETA }}
     steps:
       - uses: styfle/cancel-workflow-action@860d4c7374d6e4a1c482e80897cb913ae46692ac
         with:
@@ -39,6 +38,7 @@ jobs:
       - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
         with:
           fetch-depth: 0
+          ref: releases/beta
 
       # Set path variables needed for caches
       - name: Set workflow variables
@@ -93,7 +93,7 @@ jobs:
           max_attempts: 3
           command: cd ios && pod install && cd ..
 
-      - name: Build and ship iOS App
+      - name: Build + deploy beta iOS app
         run: |
           export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
           export CCACHE_SLOPPINESS=clang_index_store,file_stat_matches,include_file_ctime,include_file_mtime,ivfsoverlay,pch_defines,modules,system_headers,time_macros
@@ -106,19 +106,18 @@ jobs:
           ccache -s
         shell: bash
         env:
-          APP_IDENTIFIER: ${{ secrets.APP_IDENTIFIER_PROD }}
+          APP_IDENTIFIER: ${{ secrets.APP_IDENTIFIER_BETA }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_APP_ID: ${{ secrets.APPLE_APP_ID_PROD }}
+          APPLE_APP_ID: ${{ secrets.APPLE_APP_ID_BETA }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
           APP_STORE_CONNECT_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_KEY_CONTENT }}
-
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-
           CI: true
           CI_KEYCHAIN_NAME: 'CI_KEYCHAIN'
           CI_KEYCHAIN_PASSWORD: ${{ secrets.CI_KEYCHAIN_PASSWORD }}
+          CONFIGURATION: "Beta"
           GIT_BRANCH_NAME: ${{ github.ref }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           URL_TO_FASTLANE_CERTIFICATES_REPO: ${{ secrets.URL_TO_FASTLANE_CERTIFICATES_REPO }}
@@ -127,27 +126,13 @@ jobs:
         run: |
           yarn react-native bundle --platform ios --dev false --entry-file index.js --reset-cache --bundle-output main.jsbundle --sourcemap-output main.jsbundle.map --minify false
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@18f7dc018cc2cd597073088f7c7591b9d1c02672
-        with:
-          commit-message: '[bot] Update version number'
-          committer: GitHub <noreply@github.com>
-          author: ${{ github.actor }} <${{ github.actor }}@users.github.com>
-          signoff: false
-          branch: chore/version-bump
-          branch-suffix: timestamp
-          delete-branch: true
-          title: 'chore: [bot] Update version number'
-          body: Version number has been updated
-          reviewers: leggechr,justindomingue,spenciefy,thomasthachil,danielcolinjames,ianlapham,tarikbellamine,tinaszheng,unipadmini
-
 
       - name: Create Sentry release with sourcemaps
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-          APP_IDENTIFIER: ${{ secrets.APP_IDENTIFIER_PROD }}
+          APP_IDENTIFIER: ${{ secrets.APP_IDENTIFIER_BETA }}
         run: |
           # Install Sentry CLI
           curl -sL https://sentry.io/get-cli/ | bash
@@ -164,4 +149,4 @@ jobs:
           sentry-cli releases finalize $SENTRY_RELEASE --log-level=info
 
           # Create new deploy for this Sentry release
-          sentry-cli releases deploys $SENTRY_RELEASE new -e production
+          sentry-cli releases deploys $SENTRY_RELEASE new -e beta

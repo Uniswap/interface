@@ -1,0 +1,152 @@
+name: Fastlane deploy prod (iOS)
+# referenced from https://github.com/invertase/react-native-firebase/blob/master/.github/workflows/tests_e2e_ios.yml
+
+on:
+  push:
+    branches:
+      - releases/prod
+
+jobs:
+  ios:
+    name: iOS
+    runs-on: macos-latest
+    timeout-minutes: 180
+    env:
+      UNISWAP_API_KEY: ${{ secrets.UNISWAP_API_KEY }}
+      SHAKE_CLIENT_ID: ${{ secrets.SHAKE_CLIENT_ID }}
+      SHAKE_CLIENT_SECRET: ${{ secrets.SHAKE_CLIENT_SECRET }}
+      SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+      AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY: ${{ secrets.AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY }}
+      INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
+      MOONPAY_API_KEY: ${{ secrets.MOONPAY_API_KEY }}
+      MOONPAY_API_URL: ${{ secrets.MOONPAY_API_URL }}
+      MOONPAY_WIDGET_API_URL: ${{ secrets.MOONPAY_WIDGET_API_URL }}
+      ONESIGNAL_APP_ID: ${{ secrets.ONESIGNAL_APP_ID }}
+    steps:
+      - uses: styfle/cancel-workflow-action@860d4c7374d6e4a1c482e80897cb913ae46692ac
+        with:
+          all_but_latest: true
+
+      # Set up tool versions
+      - uses: actions/setup-node@1f8c6b94b26d0feae1e387ca63ccbdc44d27b561
+        with:
+          node-version: 16
+
+      - uses: maxim-lobanov/setup-xcode@4aa4176a819ae7c019451acfda0bba67bffc6704
+        with:
+          xcode-version: '14.0.1'
+
+      - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
+        with:
+          fetch-depth: 0
+          ref: releases/prod
+
+      # Set path variables needed for caches
+      - name: Set workflow variables
+        id: workflow-variables
+        run: |
+          echo "::set-output name=xcode-version::$(xcodebuild -version|tail -1|cut -f3 -d' ')"
+          echo "::set-output name=yarn-cache-dir::$(yarn cache dir)"
+      - uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed
+        name: Yarn Cache
+        id: yarn-cache
+        with:
+          path: ${{ steps.workflow-variables.outputs.yarn-cache-dir }}
+          key: ${{ runner.os }}-yarn-v1-${{ hashFiles('**/package.json') }}
+          restore-keys: ${{ runner.os }}-yarn-v1
+
+      # Detox is compiled during yarn install, using Xcode, set up cache first
+      - uses: hendrikmuhs/ccache-action@ed038da2f2f09b0c8387c00e1498290a4808da2e
+        name: Xcode Compile Cache
+        with:
+          key: ${{ runner.os }}-v2 # makes a unique key w/related restore key internally
+          max-size: 400M
+
+      - name: Yarn Install
+        uses: nick-fields/retry@7d4a37704547a311dbb66ebdf5b23ec19374a767
+        with:
+          timeout_minutes: 10
+          retry_wait_seconds: 2
+          max_attempts: 3
+          command: yarn
+
+      - name: Update Ruby build tools
+        uses: nick-fields/retry@7d4a37704547a311dbb66ebdf5b23ec19374a767
+        with:
+          timeout_minutes: 2
+          retry_wait_seconds: 2
+          max_attempts: 3
+          command: gem update cocoapods xcodeproj
+
+      - uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed
+        name: Cache Pods
+        id: pods-cache
+        with:
+          path: tests/ios/Pods
+          key: ${{ runner.os }}-pods-v2-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: ${{ runner.os }}-pods-v2
+
+      - name: Pod Install
+        uses: nick-fields/retry@7d4a37704547a311dbb66ebdf5b23ec19374a767
+        with:
+          timeout_minutes: 20
+          retry_wait_seconds: 2
+          max_attempts: 3
+          command: cd ios && pod install && cd ..
+
+      - name: Build + deploy prod iOS app
+        run: |
+          export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
+          export CCACHE_SLOPPINESS=clang_index_store,file_stat_matches,include_file_ctime,include_file_mtime,ivfsoverlay,pch_defines,modules,system_headers,time_macros
+          export CCACHE_FILECLONE=true
+          export CCACHE_DEPEND=true
+          export CCACHE_INODECACHE=true
+          ccache -s
+          set -o pipefail
+          fastlane ios buildAndShip
+          ccache -s
+        shell: bash
+        env:
+          APP_IDENTIFIER: ${{ secrets.APP_IDENTIFIER_PROD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_ID: ${{ secrets.APPLE_APP_ID_PROD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_KEY_CONTENT }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          CI: true
+          CI_KEYCHAIN_NAME: 'CI_KEYCHAIN'
+          CI_KEYCHAIN_PASSWORD: ${{ secrets.CI_KEYCHAIN_PASSWORD }}
+          CONFIGURATION: "Release"
+          GIT_BRANCH_NAME: ${{ github.ref }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          URL_TO_FASTLANE_CERTIFICATES_REPO: ${{ secrets.URL_TO_FASTLANE_CERTIFICATES_REPO }}
+
+      - name: Generate iOS bundle and sourcemaps
+        run: |
+          yarn react-native bundle --platform ios --dev false --entry-file index.js --reset-cache --bundle-output main.jsbundle --sourcemap-output main.jsbundle.map --minify false
+
+      - name: Create Sentry release with sourcemaps
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          APP_IDENTIFIER: ${{ secrets.APP_IDENTIFIER_PROD }}
+        run: |
+          # Install Sentry CLI
+          curl -sL https://sentry.io/get-cli/ | bash
+
+          # Create new Sentry release
+          export SENTRY_RELEASE="$APP_IDENTIFIER@$IOS_VERSION_NUMBER+$IOS_BUILD_NUMBER"
+          sentry-cli releases new -p $SENTRY_PROJECT $SENTRY_RELEASE --log-level=info
+          sentry-cli releases set-commits $SENTRY_RELEASE --auto --ignore-missing --log-level=info
+
+          #Upload sourcemaps
+          sentry-cli releases files $SENTRY_RELEASE upload-sourcemaps main.jsbundle.map --dist $IOS_BUILD_NUMBER --log-level=info
+          sentry-cli releases files $SENTRY_RELEASE upload main.jsbundle '~/main.jsbundle' --dist $IOS_BUILD_NUMBER --log-level=info
+
+          sentry-cli releases finalize $SENTRY_RELEASE --log-level=info
+
+          # Create new deploy for this Sentry release
+          sentry-cli releases deploys $SENTRY_RELEASE new -e prod

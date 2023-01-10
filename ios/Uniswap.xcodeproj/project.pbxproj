@@ -45,6 +45,7 @@
 		E6063F6CDE8D4D9F84B2945E /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D720622E155642CCBAEDD803 /* Inter-Bold.ttf */; };
 		F35AFD3E27EE49990011A725 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35AFD3D27EE49990011A725 /* NotificationService.swift */; };
 		F35AFD4227EE49990011A725 /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F35AFD3B27EE49990011A725 /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FD54D51D296C79A4007A37E9 /* GoogleServiceInfo in Resources */ = {isa = PBXBuildFile; fileRef = FD54D51C296C79A4007A37E9 /* GoogleServiceInfo */; };
 		FD7304CA28A364E70085BDEA /* MnemonicTestWordBankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD7304C928A364E70085BDEA /* MnemonicTestWordBankView.swift */; };
 		FD7304CC28A364EF0085BDEA /* MnemonicTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD7304CB28A364EF0085BDEA /* MnemonicTextField.swift */; };
 		FD7304CE28A364FC0085BDEA /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD7304CD28A364FC0085BDEA /* Colors.xcassets */; };
@@ -145,6 +146,7 @@
 		F35AFD3F27EE49990011A725 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F35AFD4727EE4B400011A725 /* OneSignalNotificationServiceExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OneSignalNotificationServiceExtension.entitlements; sourceTree = "<group>"; };
 		F5F2751F56BDA3D0330E56BE /* Pods-Uniswap-UniswapTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap-UniswapTests.release.xcconfig"; path = "Target Support Files/Pods-Uniswap-UniswapTests/Pods-Uniswap-UniswapTests.release.xcconfig"; sourceTree = "<group>"; };
+		FD54D51C296C79A4007A37E9 /* GoogleServiceInfo */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GoogleServiceInfo; sourceTree = SOURCE_ROOT; };
 		FD72162492D6B68BBC15F3ED /* Pods-Uniswap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.release.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.release.xcconfig"; sourceTree = "<group>"; };
 		FD7304C928A364E70085BDEA /* MnemonicTestWordBankView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MnemonicTestWordBankView.swift; path = Uniswap/Onboarding/MnemonicTestWordBankView.swift; sourceTree = "<group>"; };
 		FD7304CB28A364EF0085BDEA /* MnemonicTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MnemonicTextField.swift; path = Uniswap/Onboarding/MnemonicTextField.swift; sourceTree = "<group>"; };
@@ -294,6 +296,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				FD54D51C296C79A4007A37E9 /* GoogleServiceInfo */,
 				13B07FAE1A68108700A75B9A /* Uniswap */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* UniswapTests */,
@@ -411,6 +414,7 @@
 				7053AB6470927D4AFEB0A4F6 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
+				FD54D51B296C780A007A37E9 /* Copy configuration-specific GoogleServices-Info.plist */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
@@ -520,6 +524,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FD54D51D296C79A4007A37E9 /* GoogleServiceInfo in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -705,6 +710,27 @@
 			shellPath = /bin/sh;
 			shellScript = "export RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\necho \"export RCT_METRO_PORT=${RCT_METRO_PORT}\" > \"${SRCROOT}/../node_modules/react-native/scripts/.packager.env\"\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    if ! curl -s \"http://localhost:${RCT_METRO_PORT}/status\" | grep -q \"packager-status:running\" ; then\n      echo \"Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly\"\n      exit 2\n    fi\n  else\n    open \"$SRCROOT/../node_modules/react-native/scripts/launchPackager.command\" || echo \"Can't start packager automatically\"\n  fi\nfi\n";
 			showEnvVarsInLog = 0;
+		};
+		FD54D51B296C780A007A37E9 /* Copy configuration-specific GoogleServices-Info.plist */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Copy configuration-specific GoogleServices-Info.plist";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"",
+				"$(SRCROOT)/GoogleService-Info.plist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\nif [ $CONFIGURATION == \"Release\" ]\nthen\n    cp \"${SRCROOT}/GoogleServiceInfo/GoogleService-Info-Prod.plist\" \"${SRCROOT}/GoogleService-Info.plist\"\nelif [ $CONFIGURATION == 'Debug' ]\nthen\n    cp \"${SRCROOT}/GoogleServiceInfo/GoogleService-Info-Dev.plist\" \"${SRCROOT}/GoogleService-Info.plist\"\nelse\n    cp \"${SRCROOT}/GoogleServiceInfo/GoogleService-Info-$CONFIGURATION.plist\" \"${SRCROOT}/GoogleService-Info.plist\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

@@ -6,7 +6,6 @@ ONE_SIGNAL_TARGET_NAME = "OneSignalNotificationServiceExtension"
 XCODE_PROJECT = "./ios/#{PROJECT_NAME}.xcodeproj"
 XCODE_WORKSPACE = "./ios/#{PROJECT_NAME}.xcworkspace"
 OUTPUT_DIRECTORY = "./fastlane/builds/"
-BUILD_FOR_DEVELOPMENT_ONLY = false # true = Build for Development | false = Build to create a release
 BUILD_ONLY = false
 
 platform :ios do
@@ -50,29 +49,25 @@ platform :ios do
         
     fastlane_require 'Xcodeproj'
     
-    buildConfiguration = option[:buildConfiguration] || 'Release'
-    CUSTOM_BUILD_NUMBER = ''
+    configuration = option[:configuration]
+    new_build_number = option[:new_build_number]
     
     project = Xcodeproj::Project.open("../" + XCODE_PROJECT)
     project.targets.each do |mtarget|
-        if mtarget.name == PROJECT_NAME || mtarget.name == ONE_SIGNAL_TARGET_NAME
-            mtarget.build_configurations.each do |mbuild|
-                if mbuild.name == buildConfiguration
-                    CUSTOM_BUILD_NUMBER = mbuild.build_settings['CURRENT_PROJECT_VERSION']
-                    mbuild.build_settings['CURRENT_PROJECT_VERSION'] = CUSTOM_BUILD_NUMBER.to_i + 1
-                end
+      if mtarget.name == PROJECT_NAME || mtarget.name == ONE_SIGNAL_TARGET_NAME
+          mtarget.build_configurations.each do |mbuild|
+            if mbuild.name == configuration
+                mbuild.build_settings['CURRENT_PROJECT_VERSION'] = new_build_number
             end
-        end
+          end
+      end
     end
     project.save()
-    CUSTOM_BUILD_NUMBER.to_i + 1
+    new_build_number
 end
 
   lane :build do | options |
-    build_for_development_only = options[:build_for_development_only]
-    configuration_name = build_for_development_only ? "Development" : "Release"
-    export_options_method = build_for_development_only ? "development" : "app-store"
-    match_type = build_for_development_only ? "development" : "appstore"
+    match_type = "appstore"
 
     certificates(
       ci: options[:running_on_ci],
@@ -86,12 +81,10 @@ end
       workspace: XCODE_WORKSPACE,
       silent: true,
       clean: true,
-      configuration: configuration_name,
+      configuration: options[:configuration],
       output_directory: OUTPUT_DIRECTORY,
       output_name: "#{PROJECT_NAME}.ipa",
-      export_options: {
-        method: export_options_method,
-      },
+      export_method: "app-store",
     )
 
     match_type
@@ -113,6 +106,7 @@ end
 
   lane :buildAndShip do
     running_on_ci = ENV["CI"] || false
+    configuration = ENV["CONFIGURATION"] || "Dev"
 
     api_key = app_store_connect_api_key(
       key_id: ENV["APP_STORE_CONNECT_KEY_ID"],
@@ -121,25 +115,37 @@ end
     )
 
     options = {
-      :running_on_ci => running_on_ci,
-      :git_branch_name => running_on_ci ? "#{ENV['GIT_BRANCH_NAME']}"  : sh("git", "rev-parse", "--abbrev-ref", "HEAD", log: false),
-      :app_identifier => ENV["APP_IDENTIFIER"],
-      :apple_team_id => ENV["APPLE_TEAM_ID"],
-      :apple_app_id => ENV["APPLE_APP_ID"],
       :api_key => api_key,
-      :token => ENV["GITHUB_TOKEN"],
+      :app_identifier => ENV["APP_IDENTIFIER"], # app identifier depends on configuration
+      :apple_team_id => ENV["APPLE_TEAM_ID"],
+      :apple_app_id => ENV["APPLE_APP_ID"], # app id depends on configuration
+      :configuration => configuration,
+      :git_branch_name => running_on_ci ? "#{ENV['GIT_BRANCH_NAME']}"  : sh("git", "rev-parse", "--abbrev-ref", "HEAD", log: false),
+      :running_on_ci => running_on_ci,
     }
 
-    build_number = update_build_numbers_for_configuration()
-
-    version_number = get_version_number(
+    current_marketing_version = get_version_number(
       xcodeproj: XCODE_PROJECT,
-      target: PROJECT_NAME
+      target: PROJECT_NAME,
+      configuration: configuration
+    )
+
+    current_build_number = latest_testflight_build_number(
+      api_key: api_key,
+      version: current_marketing_version,
+      app_identifier: ENV["APP_IDENTIFIER"],
+      )
+
+    new_build_number = update_build_numbers_for_configuration(
+      configuration: configuration,
+      new_build_number: current_build_number + 1
     )
 
     # Setting env variables to be used in the next step of the workflow
-    sh "echo IOS_BUILD_NUMBER=#{build_number} >> $GITHUB_ENV"
-    sh "echo IOS_VERSION_NUMBER=#{version_number} >> $GITHUB_ENV"
+    if running_on_ci
+      sh "echo IOS_BUILD_NUMBER=#{new_build_number} >> $GITHUB_ENV"
+      sh "echo IOS_VERSION_NUMBER=#{current_marketing_version} >> $GITHUB_ENV"
+    end
 
     match_type = build(options)
 
