@@ -234,6 +234,7 @@ query Token($chain: Chain!, $address: String) {
 query TokenDetailsScreen($contract: ContractInput!) {
   tokens(contracts: [$contract]) {
     id
+    address
     chain
     name
     symbol
@@ -281,10 +282,7 @@ query TokenDetailsScreen($contract: ContractInput!) {
         }
       }
       tokens {
-        # intentionally exclude id so tokens data gets attached to the query itself
-        # this prevents caching issues where tokens get overriden
-        # we could also consider using type policies
-        # id
+        id
         chain
         address
       }
@@ -524,6 +522,7 @@ fragment TopTokenParts on Token {
   chain
   address
   market {
+    id
     totalValueLocked {
       id
       value

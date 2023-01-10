@@ -75,6 +75,10 @@ export function setupCache(): InMemoryCache {
       },
       Token: {
         // key by chain, address combination so that Token(chain, address) endpoint can read from cache
+        /**
+         * NOTE: In any query for `token` or `tokens`, you must include the `chain` and `address` fields
+         * in order for result to normalize properly in the cache.
+         */
         keyFields: ['chain', 'address'],
         fields: {
           address: {
