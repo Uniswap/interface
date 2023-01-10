@@ -45,22 +45,33 @@ export const calcSudoSwapPrice = (asset: GenieAsset, position = 0): string | und
   let currentPrice = BigNumber.from(sudoSwapPool.spotPrice)
   const delta = BigNumber.from(sudoSwapPool.delta)
   const poolFee = BigNumber.from(sudoSwapPool.fee)
+  let virtualTokenBalance = BigNumber.from(sudoSwapPool.spotPrice)
+  let virtualNFTBalance = BigNumber.from(sudoSwapPool.delta)
 
-  for (let i = 0; i <= position; i++) {
+  if (sudoSwapPool.bondingCurve === BondingCurve.Xyk) {
+    if (virtualNFTBalance.sub(BigNumber.from(1)).gt(BigNumber.from(0))) {
+      currentPrice = virtualTokenBalance.div(virtualNFTBalance.sub(BigNumber.from(1)))
+    } else {
+      return undefined
+    }
+  }
+
+  for (let i = sudoSwapPool.bondingCurve === BondingCurve.Xyk ? 1 : 0; i <= position; i++) {
     if (sudoSwapPool.bondingCurve === BondingCurve.Linear) {
       currentPrice = currentPrice.add(delta)
     } else if (sudoSwapPool.bondingCurve === BondingCurve.Exponential) {
       currentPrice = currentPrice.mul(delta).div(BigNumber.from(PRECISION))
     } else if (sudoSwapPool.bondingCurve === BondingCurve.Xyk) {
-      let virtualTokenBalance = BigNumber.from(sudoSwapPool.spotPrice)
-      let virtualNFTBalance = BigNumber.from(sudoSwapPool.delta)
-
       virtualTokenBalance = virtualTokenBalance.add(currentPrice)
       virtualNFTBalance = virtualNFTBalance.sub(BigNumber.from(1))
 
       if (!virtualNFTBalance.sub(BigNumber.from(1)).isZero()) {
         currentPrice = virtualTokenBalance.div(virtualNFTBalance.sub(BigNumber.from(1)))
+      } else {
+        return undefined
       }
+    } else {
+      return undefined
     }
   }
 
