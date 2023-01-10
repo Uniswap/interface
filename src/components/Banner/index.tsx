@@ -6,6 +6,8 @@ import styled from 'styled-components'
 import { Autoplay, Navigation, Pagination } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react/swiper-react'
 
+import TradingGrantCampaignDesktop from 'assets/banners/trading_grant_program_desktop.png'
+import TradingGrantCampaignMobile from 'assets/banners/trading_grant_program_mobile.png'
 import WorkYourAssetsDesktop from 'assets/banners/work_your_assets_desktop.png'
 import WorkYourAssetsMobile from 'assets/banners/work_your_assets_mobile.png'
 import WorkYourAssetsTablet from 'assets/banners/work_your_assets_tablet.png'
@@ -102,6 +104,19 @@ function Banner({
 
   const ALL_BANNERS = useMemo(
     () => [
+      {
+        // KyberSwap Work Your Assets
+        id: 'Trading-Grant-Campaign',
+        name: 'Trading Grant Campaign',
+        start: new Date('2023-01-06T00:00:00.000Z'),
+        end: new Date('2023-02-06T23:59:59.000Z'),
+        img: isInModal
+          ? TradingGrantCampaignMobile
+          : w > 768
+          ? TradingGrantCampaignDesktop
+          : TradingGrantCampaignMobile,
+        link: 'https://kyberswap.com/campaigns/optimism?utm_source=kn_website&utm_medium=banner&utm_campaign=trading_grant_1',
+      },
       {
         // KyberSwap Work Your Assets
         id: 'KyberSwap-Work-Your-Assets',
