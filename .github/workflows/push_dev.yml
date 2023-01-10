@@ -8,7 +8,7 @@ name: Push changes to releases/dev
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 2 * * 1,2,3,4,5' # run at 2 AM UTC MWF
+    - cron: '0 2 * * 1,2,3,4,5' # run at 2 AM UTC MTWRF
 
 # https://stackoverflow.com/questions/57921401/push-to-origin-from-github-action
 jobs:
