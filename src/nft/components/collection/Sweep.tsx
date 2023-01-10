@@ -229,7 +229,7 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
     })
 
     let validAssets = jointCollections.filter(
-      (asset) => BigNumber.from(asset.priceInfo.ETHPrice).gte(0) && !asset.susFlag
+      (asset) => BigNumber.from(asset.priceInfo.ETHPrice).gt(0) && !asset.susFlag
     )
 
     validAssets = validAssets.slice(
