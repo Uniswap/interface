@@ -42,6 +42,7 @@ import {
 } from '../../components/swap/styleds'
 import SwapHeader from '../../components/swap/SwapHeader'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
+import Toggle from '../../components/Toggle'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
@@ -544,7 +545,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                     <CurrencyInputPanel
                       value={formattedAmounts.price}
                       onUserInput={handleTypePrice}
-                      label={<Trans>Target Price</Trans>}
+                      label={<Trans>Target Price+++</Trans>}
                       showMaxButton={false}
                       hideBalance={true}
                       currency={currencies[Field.OUTPUT] ?? null}
@@ -554,7 +555,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                       locked={false}
                       showCurrencySelector={false}
                       showRate={true}
-                      isInvertedRate={false}
+                      isInvertedRate={showInverted}
                       price={price}
                       loading={independentField === Field.INPUT && routeIsSyncing}
                     />
@@ -604,6 +605,17 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                   ) : null}
                   {!showWrap && trade && minPrice && (
                     <>
+                      <Row justify={'flex-end'}>
+                        <RowFixed style={{ position: 'relative' }}>
+                          <Toggle
+                            id="toggle-buy-sell"
+                            isActive={showInverted}
+                            toggle={() => setShowInverted((showInverted) => !showInverted)}
+                            checked={<Trans>Buy</Trans>}
+                            unchecked={<Trans>Sell</Trans>}
+                          />
+                        </RowFixed>
+                      </Row>
                       <Row justify={!trade ? 'center' : 'space-between'}>
                         <RowFixed style={{ position: 'relative' }}>
                           <MouseoverTooltipContent
@@ -692,6 +704,17 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                   )}
                   {!trade && !minPrice && (
                     <>
+                      <Row justify={'flex-end'}>
+                        <RowFixed style={{ position: 'relative' }}>
+                          <Toggle
+                            id="toggle-buy-sell"
+                            isActive={showInverted}
+                            toggle={() => setShowInverted((showInverted) => !showInverted)}
+                            checked={<Trans>Buy</Trans>}
+                            unchecked={<Trans>Sell</Trans>}
+                          />
+                        </RowFixed>
+                      </Row>
                       <Row justify={'end'} style={{ height: '24px' }}>
                         <RowFixed style={{ position: 'relative' }} />
                         <RowFixed style={{ position: 'relative' }}>
@@ -932,7 +955,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
               <CurrencyInputPanel
                 value={formattedAmounts.price}
                 onUserInput={handleTypePrice}
-                label={<Trans>Target Price</Trans>}
+                label={<Trans>Target Price---</Trans>}
                 showMaxButton={false}
                 hideBalance={true}
                 currency={currencies[Field.OUTPUT] ?? null}
@@ -942,7 +965,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                 locked={false}
                 showCurrencySelector={false}
                 showRate={true}
-                isInvertedRate={false}
+                isInvertedRate={showInverted}
                 price={price}
                 loading={independentField === Field.INPUT && routeIsSyncing}
               />
@@ -990,6 +1013,17 @@ export default function LimitOrder({ history }: RouteComponentProps) {
             ) : null}
             {!showWrap && trade && minPrice && (
               <>
+                <Row justify={'flex-end'}>
+                  <RowFixed style={{ position: 'relative' }}>
+                    <Toggle
+                      id="toggle-buy-sell"
+                      isActive={showInverted}
+                      toggle={() => setShowInverted((showInverted) => !showInverted)}
+                      checked={<Trans>Buy</Trans>}
+                      unchecked={<Trans>Sell</Trans>}
+                    />
+                  </RowFixed>
+                </Row>
                 <Row justify={!trade ? 'center' : 'space-between'}>
                   <RowFixed style={{ position: 'relative' }}>
                     <MouseoverTooltipContent
@@ -1072,6 +1106,17 @@ export default function LimitOrder({ history }: RouteComponentProps) {
             )}
             {!trade && !minPrice && (
               <>
+                <Row justify={'flex-end'}>
+                  <RowFixed style={{ position: 'relative' }}>
+                    <Toggle
+                      id="toggle-buy-sell"
+                      isActive={showInverted}
+                      toggle={() => setShowInverted((showInverted) => !showInverted)}
+                      checked={<Trans>Buy</Trans>}
+                      unchecked={<Trans>Sell</Trans>}
+                    />
+                  </RowFixed>
+                </Row>
                 <Row justify={'end'} style={{ height: '24px' }}>
                   <RowFixed style={{ position: 'relative' }}>
                     <TYPE.body color={theme.text2} fontWeight={400} fontSize={14}>

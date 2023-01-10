@@ -50,7 +50,7 @@ export default function Toggle({
       <ToggleElement isActive={isActive} isOnSwitch={true}>
         {checked}
       </ToggleElement>
-      <ToggleElement isActive={!isActive} isOnSwitch={false}>
+      <ToggleElement isActive={!isActive} isOnSwitch={true}>
         {unchecked}
       </ToggleElement>
     </StyledToggle>

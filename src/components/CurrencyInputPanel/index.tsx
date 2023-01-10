@@ -230,7 +230,7 @@ export default function CurrencyInputPanel({
     setModalOpen(false)
   }, [setModalOpen])
 
-  const [showInverted, setShowInverted] = useState<boolean>(true)
+  const [showInverted, setShowInverted] = useState<boolean>(isInvertedRate)
 
   return (
     <InputPanel id={id} hideInput={hideInput} {...rest}>
@@ -351,7 +351,7 @@ export default function CurrencyInputPanel({
           <Fragment>
             <FiatRow>
               <RowBetween>
-                <TradePrice price={price} showInverted={showInverted} setShowInverted={setShowInverted} />
+                <TradePrice price={price} showInverted={isInvertedRate} setShowInverted={setShowInverted} />
               </RowBetween>
             </FiatRow>
           </Fragment>
