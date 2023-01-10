@@ -1,0 +1,29 @@
+name: Push changes to releases/dev
+
+# This CI job is responsible for pushing the current contents of the `main` branch to the
+# releases/dev branch, which will in turn kick off a Fastlane build for the Dev app
+# version. It is configured to run every day at 2AM UTC and can also be triggered via a
+# GitHub action button press in the GitHub UI.
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * 1,2,3,4,5' # run at 2 AM UTC MWF
+
+# https://stackoverflow.com/questions/57921401/push-to-origin-from-github-action
+jobs:
+  dev-branch-push:
+    name: 'Push to dev branch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
+        with:
+          token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
+          ref: main
+      - name: Setup Git
+        run: |
+          git config user.name "UL Mobile Service Account"
+          git config user.email "hello-happy-puppy@users.noreply.github.com"
+      - name: Push to releases/dev branch
+        run: |
+          git push -u origin main:releases/dev --force
