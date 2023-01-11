@@ -82,6 +82,10 @@ const FloatingConfirmationBar = styled(Row)`
   white-space: nowrap;
   justify-content: space-between;
   background: ${({ theme }) => theme.backgroundSurface};
+  position: absolute;
+  bottom: 32px;
+  margin: 0px 60px;
+  width: calc(100vw - 120px);
 `
 
 const ProceedsWrapper = styled(Row)`
@@ -156,36 +160,33 @@ export const ListPage = () => {
         </ListingHeader>
         <GridWrapper>
           <NFTListingsGrid selectedMarkets={selectedMarkets} />
-          {isNftListV2 && (
-            <FloatingConfirmationBar>
-              <ThemedText.HeadlineSmall lineHeight="28px">
-                <Trans>Proceeds if sold</Trans>
-              </ThemedText.HeadlineSmall>
-              <ProceedsWrapper>
-                <Row>
-                  <ThemedText.HeadlineSmall
-                    lineHeight="28px"
-                    color={totalEthListingValue ? 'textPrimary' : 'textTertiary'}
-                  >
-                    {totalEthListingValue > 0 ? formatEth(totalEthListingValue) : '-'} ETH
-                  </ThemedText.HeadlineSmall>
-                  {!!totalEthListingValue && !!ethPriceInUSD && (
-                    <ThemedText.HeadlineSmall lineHeight="28px" color="textSecondary" marginLeft="16px">
-                      {formatUsdPrice(totalEthListingValue * ethPriceInUSD)}
-                    </ThemedText.HeadlineSmall>
-                  )}
-                </Row>
-                <ListingButtonWrapper>
-                  <ListingButton
-                    onClick={toggleBag}
-                    buttonText={anyListingsMissingPrice ? t`Set prices to continue` : t`Start listing`}
-                  />
-                </ListingButtonWrapper>
-              </ProceedsWrapper>
-            </FloatingConfirmationBar>
-          )}
         </GridWrapper>
       </MarketWrap>
+      {isNftListV2 && (
+        <FloatingConfirmationBar>
+          <ThemedText.HeadlineSmall lineHeight="28px">
+            <Trans>Proceeds if sold</Trans>
+          </ThemedText.HeadlineSmall>
+          <ProceedsWrapper>
+            <Row>
+              <ThemedText.HeadlineSmall lineHeight="28px" color={totalEthListingValue ? 'textPrimary' : 'textTertiary'}>
+                {totalEthListingValue > 0 ? formatEth(totalEthListingValue) : '-'} ETH
+              </ThemedText.HeadlineSmall>
+              {!!totalEthListingValue && !!ethPriceInUSD && (
+                <ThemedText.HeadlineSmall lineHeight="28px" color="textSecondary" marginLeft="16px">
+                  {formatUsdPrice(totalEthListingValue * ethPriceInUSD)}
+                </ThemedText.HeadlineSmall>
+              )}
+            </Row>
+            <ListingButtonWrapper>
+              <ListingButton
+                onClick={toggleBag}
+                buttonText={anyListingsMissingPrice ? t`Set prices to continue` : t`Start listing`}
+              />
+            </ListingButtonWrapper>
+          </ProceedsWrapper>
+        </FloatingConfirmationBar>
+      )}
       {!isNftListV2 && (
         <MobileListButtonWrapper>
           <ListingButton onClick={toggleBag} buttonText="Continue listing" />
