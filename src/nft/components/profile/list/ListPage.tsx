@@ -126,6 +126,7 @@ export const ListPage = () => {
   const isNftListV2 = useNftListV2Flag() === NftListV2Variant.Enabled
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
+  console.log(totalEthListingValue)
   const anyListingsMissingPrice = useMemo(() => !!listings.find((listing) => !listing.price), [listings])
   const [ethPriceInUSD, setEthPriceInUSD] = useState(0)
 

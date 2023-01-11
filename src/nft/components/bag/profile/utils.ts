@@ -133,7 +133,7 @@ export const getTotalEthValue = (sellAssets: WalletAsset[]) => {
     }
     return total
   }, 0)
-  return total ? Math.round(total * 100 + Number.EPSILON) / 100 : 0
+  return total ? Math.round(total * 10000 + Number.EPSILON) / 10000 : 0
 }
 
 export const getListings = (sellAssets: WalletAsset[]): [CollectionRow[], ListingRow[]] => {
