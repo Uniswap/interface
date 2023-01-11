@@ -945,14 +945,12 @@ PODS:
   - RNScreens (3.18.2):
     - React-Core
     - React-RCTImage
-  - RNSentry (4.6.1):
+  - RNSentry (4.13.0):
     - React-Core
-    - Sentry (= 7.27.1)
+    - Sentry/HybridSDK (= 7.31.5)
   - RNSVG (12.4.4):
     - React-Core
-  - Sentry (7.27.1):
-    - Sentry/Core (= 7.27.1)
-  - Sentry/Core (7.27.1)
+  - Sentry/HybridSDK (7.31.5)
   - Starscream (3.1.1)
   - vision-camera-code-scanner (0.1.6):
     - GoogleMLKit/BarcodeScanning
@@ -1357,9 +1355,9 @@ SPEC CHECKSUMS:
   RNPermissions: de7b7c3fe1680d974ac7a85e3e97aa539c0e68ea
   RNReanimated: ce445c233a6ff5600223484a88ad5704945d972a
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
-  RNSentry: f8591057d48d4f6d64196a76cbca67895667b033
+  RNSentry: acebe4104a6f5915ae871eb59dc73f13dcc92ef7
   RNSVG: ecd661f380a07ba690c9c5929c475a44f432d674
-  Sentry: bc644307e2eb6a4c9c55cf117a80b895bb2a25a7
+  Sentry: 4c9babff9034785067c896fd580b1f7de44da020
   Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
   vision-camera-code-scanner: 75a4ac3c9ce9b4605f5d87cc0f0001bb64bfb4de
   VisionCamera: 4cfd685b1e671fea4aa0400905ab397f0e972210
