@@ -115,7 +115,7 @@ function Banner({
           : w > 768
           ? TradingGrantCampaignDesktop
           : TradingGrantCampaignMobile,
-        link: 'https://kyberswap.com/campaigns/optimism?utm_source=kn_website&utm_medium=banner&utm_campaign=trading_grant_1',
+        link: 'https://kyberswap.com/campaigns/?utm_source=kn_website&utm_medium=banner&utm_campaign=trading_grant_1',
       },
       {
         // KyberSwap Work Your Assets
