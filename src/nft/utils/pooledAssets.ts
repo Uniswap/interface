@@ -108,10 +108,8 @@ export const calcSudoSwapPrice = (asset: GenieAsset, position = 0): string | und
   return calculateScaledPrice(currentPrice, poolFee).toString()
 }
 
-// TODO: a lot of the below typecasting logic can be simplified when GraphQL migration is complete
-export const calcPoolPrice = (asset: GenieAsset, position = 0) => {
+const calcAmmBasedPoolprice = (asset: GenieAsset, position = 0): string => {
   if (!asset.sellorders) return ''
-  if (asset.marketplace === Markets.Sudoswap) return calcSudoSwapPrice(asset, position) ?? '0'
 
   let amountToBuy: BigNumber = BigNumber.from(0)
   let marginalBuy: BigNumber = BigNumber.from(0)
@@ -171,6 +169,13 @@ export const calcPoolPrice = (asset: GenieAsset, position = 0) => {
   price = price.mul(101).div(100)
 
   return price.toString()
+}
+
+// TODO: a lot of the below typecasting logic can be simplified when GraphQL migration is complete
+export const calcPoolPrice = (asset: GenieAsset, position = 0): string => {
+  if (!asset.sellorders) return ''
+  if (asset.marketplace === Markets.Sudoswap) return calcSudoSwapPrice(asset, position) ?? '0'
+  return calcAmmBasedPoolprice(asset, position)
 }
 
 export const calcAvgGroupPoolPrice = (asset: GenieAsset, numberOfAssets: number) => {
