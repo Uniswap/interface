@@ -134,5 +134,13 @@ jest.mock('@amplitude/experiment-react-native-client', () => {
   }
 })
 
+jest.mock('react-native-safe-area-context', () => ({
+  useSafeAreaInsets: jest.fn().mockImplementation(() => ({})),
+}))
+
+jest.mock('@react-navigation/elements', () => ({
+  useHeaderHeight: jest.fn().mockImplementation(() => 200),
+}))
+
 global.__reanimatedWorkletInit = () => ({})
 jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'))

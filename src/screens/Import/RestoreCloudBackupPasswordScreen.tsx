@@ -23,6 +23,7 @@ import { PasswordError } from 'src/features/onboarding/PasswordError'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { ONE_HOUR_MS, ONE_MINUTE_MS } from 'src/utils/time'
+import { useAddBackButton } from 'src/utils/useAddBackButton'
 
 type Props = NativeStackScreenProps<
   OnboardingStackParamList,
@@ -102,6 +103,8 @@ export function RestoreCloudBackupPasswordScreen({
       }
     }, [isLockedOut, t, dispatch, remainingLockoutTime])
   )
+
+  useAddBackButton(navigation)
 
   const onPasswordSubmit = (): void => {
     if (isLockedOut || enteredPassword.length === 0) return

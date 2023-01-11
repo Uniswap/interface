@@ -30,7 +30,6 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 export function EditNameScreen({ navigation, route: { params } }: Props): ReactElement {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
-  const theme = useAppTheme()
 
   // Reference pending accounts to avoid any lag in saga import.
   const pendingAccount = Object.values(usePendingAccounts())?.[0]
@@ -62,17 +61,11 @@ export function EditNameScreen({ navigation, route: { params } }: Props): ReactE
     const shouldRenderBackButton = navigation.getState().index === 0
     if (shouldRenderBackButton) {
       navigation.setOptions({
-        headerLeft: () => (
-          <BackButton
-            onPressBack={(): void => {
-              navigation.goBack()
-            }}
-          />
-        ),
+        headerLeft: () => <BackButton />,
       })
     }
     return () => navigation.removeListener('beforeRemove', beforeRemoveListener)
-  }, [dispatch, navigation, theme.colors.textPrimary])
+  }, [dispatch, navigation])
 
   const onPressNext = (): void => {
     navigation.navigate({

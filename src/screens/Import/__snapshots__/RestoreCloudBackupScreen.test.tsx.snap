@@ -1,0 +1,174 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RestoreCloudBackupScreen renders correctly 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "backgroundColor": "#FFFFFF",
+        "display": "flex",
+        "flex": 1,
+      },
+      Object {
+        "paddingTop": 200,
+      },
+    ]
+  }
+>
+  <View
+    onLayout={[Function]}
+    style={
+      Array [
+        Array [
+          Object {
+            "flex": 1,
+            "justifyContent": "flex-end",
+          },
+          Object {
+            "marginBottom": undefined,
+          },
+        ],
+        Object {
+          "paddingBottom": 0,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        Array [
+          Object {
+            "alignItems": "stretch",
+            "display": "flex",
+            "flexDirection": "column",
+            "flexGrow": 1,
+            "justifyContent": "flex-start",
+            "paddingBottom": 16,
+            "paddingHorizontal": 16,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+              "flexDirection": "column",
+              "justifyContent": "center",
+              "margin": 12,
+            },
+          ]
+        }
+      >
+        <Text
+          allowFontScaling={false}
+          maxFontSizeMultiplier={1.2}
+          style={
+            Array [
+              Object {
+                "color": "#0D111C",
+                "display": "flex",
+                "fontFamily": "Inter-Medium",
+                "fontSize": 24,
+                "lineHeight": 28,
+                "paddingTop": 0,
+                "textAlign": "center",
+              },
+            ]
+          }
+        >
+          Select backup to restore
+        </Text>
+        <View
+          style={
+            Array [
+              Object {
+                "display": "flex",
+                "flexGrow": 0,
+                "flexShrink": 0,
+                "height": 12,
+              },
+            ]
+          }
+        />
+        <Text
+          allowFontScaling={true}
+          maxFontSizeMultiplier={1.4}
+          style={
+            Array [
+              Object {
+                "color": "#505A78",
+                "display": "flex",
+                "fontFamily": "Inter-Regular",
+                "fontSize": 14,
+                "lineHeight": 20,
+                "textAlign": "center",
+              },
+            ]
+          }
+        >
+          There are multiple recovery phrases backed up to your iCloud.
+        </Text>
+      </View>
+      <View
+        style={
+          Array [
+            Object {
+              "display": "flex",
+              "flexGrow": 0,
+              "flexShrink": 0,
+              "height": 16,
+            },
+          ]
+        }
+      />
+      <View
+        style={
+          Array [
+            Object {
+              "alignItems": "stretch",
+              "display": "flex",
+              "flex": 1,
+              "flexDirection": "column",
+              "flexGrow": 1,
+              "justifyContent": "space-between",
+            },
+          ]
+        }
+      >
+        <RCTScrollView
+          collapsable={false}
+          handlerTag={1}
+          handlerType="NativeViewGestureHandler"
+          onGestureHandlerEvent={[Function]}
+          onGestureHandlerStateChange={[Function]}
+          waitFor={
+            Array [
+              Object {
+                "current": null,
+              },
+            ]
+          }
+        >
+          <View>
+            <View
+              style={
+                Array [
+                  Object {
+                    "alignItems": "stretch",
+                    "display": "flex",
+                    "flexDirection": "column",
+                    "justifyContent": "flex-start",
+                  },
+                ]
+              }
+            />
+          </View>
+        </RCTScrollView>
+      </View>
+    </View>
+  </View>
+</View>
+`;

@@ -131,6 +131,7 @@ export const enum ElementName {
   QRCodeModalToggle = 'qr-code-modal-toggle',
   Receive = 'receive',
   Remove = 'remove',
+  RestoreFromICloud = 'restore-from-icloud',
   ReviewSwap = 'review-swap',
   ReviewTransfer = 'review-transfer',
   SearchEtherscanItem = 'search-etherscan-item',

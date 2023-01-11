@@ -18,6 +18,7 @@ import { OnboardingScreens } from 'src/screens/Screens'
 import { logger } from 'src/utils/logger'
 import { ONE_SECOND_MS } from 'src/utils/time'
 import { useTimeout } from 'src/utils/timing'
+import { useAddBackButton } from 'src/utils/useAddBackButton'
 
 type Props = NativeStackScreenProps<
   OnboardingStackParamList,
@@ -38,6 +39,8 @@ export function RestoreCloudBackupLoadingScreen({
 
   const [isLoading, setIsLoading] = useState(true)
   const backups = useCloudBackups()
+
+  useAddBackButton(navigation)
 
   // Starts query for iCloud backup files, backup files found are streamed into Redux
   useEffect(() => {

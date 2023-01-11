@@ -1,0 +1,756 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AccountDrawer renders correctly 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "backgroundColor": "#FFFFFF",
+        "display": "flex",
+        "flex": 1,
+      },
+      Object {
+        "paddingBottom": undefined,
+        "paddingTop": undefined,
+      },
+    ]
+  }
+>
+  <View
+    style={
+      Array [
+        Object {
+          "alignItems": "stretch",
+          "display": "flex",
+          "flexDirection": "column",
+          "justifyContent": "flex-start",
+          "paddingHorizontal": 24,
+          "paddingTop": 24,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        Array [
+          Object {
+            "alignItems": "center",
+            "display": "flex",
+            "flexDirection": "row",
+            "justifyContent": "flex-start",
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          Array [
+            Object {
+              "backgroundColor": "transparent",
+              "borderColor": "transparent",
+              "borderRadius": 999999,
+              "borderWidth": 0,
+              "display": "flex",
+              "position": "relative",
+            },
+            Object {
+              "padding": 0,
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {
+                "display": "flex",
+                "height": 40,
+                "width": 40,
+              },
+            ]
+          }
+        >
+          <View
+            style={
+              Object {
+                "flex": 1,
+              }
+            }
+          >
+            <View
+              clip={true}
+              mask={
+                <UniconMask
+                  attributeData={
+                    Object {
+                      "0": "#5CFE9D",
+                      "1": "#B8C3B7",
+                      "2": Array [
+                        Object {
+                          "path": "M34 20C34 28.8366 26.8366 36 18 36C9.16344 36 2 28.8366 2 20L2 -3.8147e-06L34 -1.01717e-06V20Z",
+                        },
+                      ],
+                      "3": Array [
+                        Object {
+                          "fillType": "evenOdd",
+                          "path": "M16 8C12.2937 6.62854 9.37146 3.70632 8 0C6.62854 3.70632 3.70632 6.62854 0 8C3.70632 9.37146 6.62854 12.2937 8 16C9.37146 12.2937 12.2937 9.37146 16 8ZM8 11C9.65685 11 11 9.65685 11 8C11 6.34315 9.65685 5 8 5C6.34315 5 5 6.34315 5 8C5 9.65685 6.34315 11 8 11Z",
+                        },
+                      ],
+                    }
+                  }
+                  size={40}
+                />
+              }
+            >
+              <View
+                transform={
+                  Array [
+                    Object {
+                      "scale": 1.0810810810810811,
+                    },
+                  ]
+                }
+              >
+                <View
+                  height={37}
+                  width={37}
+                  x={0}
+                  y={0}
+                >
+                  <View
+                    colors={
+                      Array [
+                        "#5CFE9D",
+                        "#B8C3B7",
+                      ]
+                    }
+                    end={null}
+                    start={null}
+                  />
+                </View>
+                <View
+                  color="#EDE590"
+                  cx={18.5}
+                  cy={-13.36111111111111}
+                  r={30.833333333333336}
+                >
+                  <View
+                    blur={15}
+                  />
+                </View>
+              </View>
+            </View>
+            <View
+              clip={true}
+              mask={
+                <UniconMask
+                  attributeData={
+                    Object {
+                      "0": "#5CFE9D",
+                      "1": "#B8C3B7",
+                      "2": Array [
+                        Object {
+                          "path": "M34 20C34 28.8366 26.8366 36 18 36C9.16344 36 2 28.8366 2 20L2 -3.8147e-06L34 -1.01717e-06V20Z",
+                        },
+                      ],
+                      "3": Array [
+                        Object {
+                          "fillType": "evenOdd",
+                          "path": "M16 8C12.2937 6.62854 9.37146 3.70632 8 0C6.62854 3.70632 3.70632 6.62854 0 8C3.70632 9.37146 6.62854 12.2937 8 16C9.37146 12.2937 12.2937 9.37146 16 8ZM8 11C9.65685 11 11 9.65685 11 8C11 6.34315 9.65685 5 8 5C6.34315 5 5 6.34315 5 8C5 9.65685 6.34315 11 8 11Z",
+                        },
+                      ],
+                    }
+                  }
+                  overlay={true}
+                  size={40}
+                />
+              }
+            >
+              <View
+                color="#000000"
+                height={37}
+                opacity={0.08}
+                width={37}
+                x={0}
+                y={0}
+              />
+            </View>
+          </View>
+        </View>
+      </View>
+      <View
+        style={
+          Array [
+            Object {
+              "display": "flex",
+              "flexGrow": 0,
+              "flexShrink": 0,
+              "width": 12,
+            },
+          ]
+        }
+      />
+      <View
+        style={
+          Array [
+            Object {
+              "alignItems": "flex-start",
+              "display": "flex",
+              "flexShrink": 1,
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {
+                "alignItems": "center",
+                "display": "flex",
+                "flexDirection": "row",
+                "justifyContent": "center",
+              },
+            ]
+          }
+        >
+          <Text
+            allowFontScaling={true}
+            ellipsizeMode="tail"
+            maxFontSizeMultiplier={1.4}
+            numberOfLines={1}
+            style={
+              Array [
+                Object {
+                  "color": "#0D111C",
+                  "display": "flex",
+                  "fontFamily": "Inter-Medium",
+                  "fontSize": 20,
+                  "lineHeight": 24,
+                },
+              ]
+            }
+            testID="address-display/name/Test Account"
+          >
+            Test Account
+          </Text>
+        </View>
+        <View
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          hitSlop={
+            Object {
+              "bottom": 5,
+              "left": 5,
+              "right": 5,
+              "top": 5,
+            }
+          }
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "display": "flex",
+              "opacity": 1,
+            }
+          }
+          testID="copy"
+        >
+          <View
+            style={
+              Array [
+                Object {
+                  "alignItems": "center",
+                  "display": "flex",
+                  "flexDirection": "row",
+                  "justifyContent": "center",
+                },
+              ]
+            }
+          >
+            <Text
+              allowFontScaling={true}
+              maxFontSizeMultiplier={1.4}
+              style={
+                Array [
+                  Object {
+                    "color": "#505A78",
+                    "display": "flex",
+                    "fontFamily": "Inter-Medium",
+                    "fontSize": 14,
+                    "lineHeight": 20,
+                  },
+                ]
+              }
+            >
+              0x​f39F...2266
+            </Text>
+            <View
+              style={
+                Array [
+                  Object {
+                    "display": "flex",
+                    "flexGrow": 0,
+                    "flexShrink": 0,
+                    "height": 4,
+                    "width": 4,
+                  },
+                ]
+              }
+            />
+            <svg
+              color="#505A78"
+              data-file-name="SvgCopySheets"
+              height={14}
+              width={14}
+            />
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>
+  <View
+    style={
+      Array [
+        Object {
+          "borderBottomColor": "#D2D9EE",
+          "borderBottomWidth": 0.25,
+          "display": "flex",
+          "height": 1,
+          "marginVertical": 16,
+          "overflow": "visible",
+        },
+      ]
+    }
+  />
+  <View
+    style={
+      Array [
+        Object {
+          "alignItems": "stretch",
+          "display": "flex",
+          "flexDirection": "column",
+          "justifyContent": "flex-start",
+          "paddingBottom": 24,
+          "paddingHorizontal": 16,
+        },
+      ]
+    }
+  >
+    <View
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      hitSlop={
+        Object {
+          "bottom": 5,
+          "left": 5,
+          "right": 5,
+          "top": 5,
+        }
+      }
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "display": "flex",
+          "opacity": 1,
+        }
+      }
+      testID="manage-connections"
+    >
+      <View
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+              "flexDirection": "row",
+              "justifyContent": "flex-start",
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {
+                "alignItems": "center",
+                "display": "flex",
+                "width": 40,
+              },
+            ]
+          }
+        >
+          <svg
+            color="#505A78"
+            data-file-name="SvgGlobal"
+            height={24}
+            width={24}
+          />
+        </View>
+        <View
+          style={
+            Array [
+              Object {
+                "display": "flex",
+                "flexGrow": 0,
+                "flexShrink": 0,
+                "height": 8,
+                "width": 8,
+              },
+            ]
+          }
+        />
+        <Text
+          allowFontScaling={true}
+          maxFontSizeMultiplier={1.4}
+          style={
+            Array [
+              Object {
+                "color": "#0D111C",
+                "display": "flex",
+                "fontFamily": "Inter-Medium",
+                "fontSize": 16,
+                "lineHeight": 24,
+              },
+            ]
+          }
+        >
+          Manage connections
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        Array [
+          Object {
+            "display": "flex",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "height": 24,
+          },
+        ]
+      }
+    />
+    <View
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      hitSlop={
+        Object {
+          "bottom": 5,
+          "left": 5,
+          "right": 5,
+          "top": 5,
+        }
+      }
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "display": "flex",
+          "opacity": 1,
+        }
+      }
+      testID="settings"
+    >
+      <View
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+              "flexDirection": "row",
+              "justifyContent": "flex-start",
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {
+                "alignItems": "center",
+                "display": "flex",
+                "width": 40,
+              },
+            ]
+          }
+        >
+          <svg
+            color="#505A78"
+            data-file-name="SvgSettings"
+            height={24}
+            width={24}
+          />
+        </View>
+        <View
+          style={
+            Array [
+              Object {
+                "display": "flex",
+                "flexGrow": 0,
+                "flexShrink": 0,
+                "height": 8,
+                "width": 8,
+              },
+            ]
+          }
+        />
+        <Text
+          allowFontScaling={true}
+          maxFontSizeMultiplier={1.4}
+          style={
+            Array [
+              Object {
+                "color": "#0D111C",
+                "display": "flex",
+                "fontFamily": "Inter-Medium",
+                "fontSize": 16,
+                "lineHeight": 24,
+              },
+            ]
+          }
+        >
+          Settings
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        Array [
+          Object {
+            "display": "flex",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "height": 24,
+          },
+        ]
+      }
+    />
+    <View
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      hitSlop={
+        Object {
+          "bottom": 5,
+          "left": 5,
+          "right": 5,
+          "top": 5,
+        }
+      }
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "display": "flex",
+          "opacity": 1,
+        }
+      }
+      testID="get-help"
+    >
+      <View
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+              "flexDirection": "row",
+              "justifyContent": "flex-start",
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {
+                "alignItems": "center",
+                "display": "flex",
+                "width": 40,
+              },
+            ]
+          }
+        >
+          <svg
+            color="#505A78"
+            data-file-name="SvgHelp"
+            height={24}
+            width={24}
+          />
+        </View>
+        <View
+          style={
+            Array [
+              Object {
+                "display": "flex",
+                "flexGrow": 0,
+                "flexShrink": 0,
+                "height": 8,
+                "width": 8,
+              },
+            ]
+          }
+        />
+        <Text
+          allowFontScaling={true}
+          maxFontSizeMultiplier={1.4}
+          style={
+            Array [
+              Object {
+                "color": "#0D111C",
+                "display": "flex",
+                "fontFamily": "Inter-Medium",
+                "fontSize": 16,
+                "lineHeight": 24,
+              },
+            ]
+          }
+        >
+          Get help
+        </Text>
+      </View>
+    </View>
+  </View>
+  <View
+    style={
+      Array [
+        Object {
+          "display": "flex",
+          "flexGrow": 1,
+        },
+      ]
+    }
+  />
+  <View
+    style={
+      Array [
+        Object {
+          "borderBottomColor": "#D2D9EE",
+          "borderBottomWidth": 0.25,
+          "display": "flex",
+          "height": 1,
+          "marginBottom": 16,
+          "overflow": "visible",
+        },
+      ]
+    }
+  />
+  <View
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    hitSlop={
+      Object {
+        "bottom": 5,
+        "left": 5,
+        "right": 5,
+        "top": 5,
+      }
+    }
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "display": "flex",
+        "marginBottom": 0,
+        "marginLeft": 24,
+        "opacity": 1,
+      }
+    }
+  >
+    <View
+      style={
+        Array [
+          Object {
+            "alignItems": "center",
+            "display": "flex",
+            "flexDirection": "row",
+            "justifyContent": "flex-start",
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "borderColor": "#D2D9EE",
+              "borderRadius": 999999,
+              "borderWidth": 1,
+              "display": "flex",
+              "justifyContent": "center",
+              "padding": 8,
+            },
+          ]
+        }
+      >
+        <svg
+          color="#505A78"
+          data-file-name="SvgPlus"
+          height={12}
+          width={12}
+        />
+      </View>
+      <View
+        style={
+          Array [
+            Object {
+              "display": "flex",
+              "flexGrow": 0,
+              "flexShrink": 0,
+              "height": 16,
+              "width": 16,
+            },
+          ]
+        }
+      />
+      <Text
+        allowFontScaling={true}
+        maxFontSizeMultiplier={1.4}
+        style={
+          Array [
+            Object {
+              "color": "#0D111C",
+              "display": "flex",
+              "fontFamily": "Inter-Medium",
+              "fontSize": 16,
+              "lineHeight": 24,
+            },
+          ]
+        }
+      >
+        Add another wallet
+      </Text>
+    </View>
+  </View>
+</View>
+`;

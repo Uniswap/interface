@@ -1,6 +1,7 @@
 import { useResponsiveProp } from '@shopify/restyle'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Alert } from 'react-native'
 import 'react-native-gesture-handler'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
@@ -19,6 +20,7 @@ import WarningModal, {
   captionForAccountRemovalWarning,
 } from 'src/components/modals/WarningModal/WarningModal'
 import { Text } from 'src/components/Text'
+import { isICloudAvailable } from 'src/features/CloudBackup/RNICloudBackupsManager'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
@@ -39,6 +41,7 @@ import {
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { setClipboard } from 'src/utils/clipboard'
+import { openSettings } from 'src/utils/linking'
 
 export function AccountSwitcherModal() {
   const dispatch = useAppDispatch()
@@ -59,7 +62,11 @@ export function AccountSwitcherModal() {
   )
 }
 
-function AccountSwitcher({ onClose }: { onClose: () => void }) {
+/**
+ * Exported for testing only.
+ * TODO [MOB-3961] Once testing works with the BottomSheetModal stop exporting this component.
+ */
+export function AccountSwitcher({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
@@ -266,15 +273,40 @@ function AccountSwitcher({ onClose }: { onClose: () => void }) {
       }
 
       navigate(Screens.OnboardingStack, {
-        screen: OnboardingScreens.ImportMethod,
-        params: { entryPoint: OnboardingEntryPoint.Sidebar },
+        screen: OnboardingScreens.SeedPhraseInput,
+        params: { importType: ImportType.SeedPhrase, entryPoint: OnboardingEntryPoint.Sidebar },
       })
 
       setShowAddWalletModal(false)
       onClose()
     }
 
-    return [
+    const onPressRestore = async () => {
+      const iCloudAvailable = await isICloudAvailable()
+
+      if (!iCloudAvailable) {
+        Alert.alert(
+          t('iCloud Drive not available'),
+          t(
+            'Please verify that you are logged in to an Apple ID with iCloud Drive enabled on this device and try again.'
+          ),
+          [
+            { text: t('Go to settings'), onPress: openSettings, style: 'default' },
+            { text: t('Not now'), style: 'cancel' },
+          ]
+        )
+        return
+      }
+
+      navigate(Screens.OnboardingStack, {
+        screen: OnboardingScreens.RestoreCloudBackupLoading,
+        params: { importType: ImportType.Restore, entryPoint: OnboardingEntryPoint.Sidebar },
+      })
+      setShowAddWalletModal(false)
+      onClose()
+    }
+
+    const options = [
       {
         key: ElementName.CreateAccount,
         onPress: onPressCreateNewWallet,
@@ -307,6 +339,20 @@ function AccountSwitcher({ onClose }: { onClose: () => void }) {
         ),
       },
     ]
+
+    if (!hasImportedSeedPhrase) {
+      options.push({
+        key: ElementName.RestoreFromICloud,
+        onPress: onPressRestore,
+        render: () => (
+          <Box alignItems="center" borderTopColor="backgroundOutline" borderTopWidth={1} p="md">
+            <Text variant="bodyLarge">{t('Restore from iCloud')}</Text>
+          </Box>
+        ),
+      })
+    }
+
+    return options
   }, [dispatch, hasImportedSeedPhrase, onClose, t])
 
   if (!activeAccount.address) {

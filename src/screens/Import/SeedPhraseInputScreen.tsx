@@ -18,6 +18,7 @@ import {
   validateMnemonic,
   validateSetOfWords,
 } from 'src/utils/mnemonics'
+import { useAddBackButton } from 'src/utils/useAddBackButton'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.ImportMethod>
 
@@ -47,6 +48,8 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
       setSubmitEnabled(false)
     }
   }, [errorMessage, setSubmitEnabled])
+
+  useAddBackButton(navigation)
 
   // Add all accounts from mnemonic.
   const onSubmit = useCallback(() => {

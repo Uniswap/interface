@@ -2,6 +2,7 @@ import { DrawerContentComponentProps, useDrawerStatus } from '@react-navigation/
 import { useResponsiveProp } from '@shopify/restyle'
 import { default as React, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Alert } from 'react-native'
 import 'react-native-gesture-handler'
 import { Edge } from 'react-native-safe-area-context'
 import { SvgProps } from 'react-native-svg'
@@ -24,6 +25,7 @@ import WarningModal, {
 } from 'src/components/modals/WarningModal/WarningModal'
 import { Text } from 'src/components/Text'
 import { uniswapUrls } from 'src/constants/urls'
+import { isICloudAvailable } from 'src/features/CloudBackup/RNICloudBackupsManager'
 import { useFiatOnRampEnabled } from 'src/features/experiments/hooks'
 import { FiatOnRampBanner } from 'src/features/fiatOnRamp/FiatOnRampBanner'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
@@ -43,7 +45,7 @@ import { activateAccount } from 'src/features/wallet/walletSlice'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { iconSizes } from 'src/styles/sizing'
 import { setClipboard } from 'src/utils/clipboard'
-import { openUri } from 'src/utils/linking'
+import { openSettings, openUri } from 'src/utils/linking'
 
 const onPressGetHelp = () => {
   openUri(uniswapUrls.helpUrl)
@@ -245,7 +247,6 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
           importType: hasImportedSeedPhrase ? ImportType.CreateAdditional : ImportType.CreateNew,
           entryPoint: OnboardingEntryPoint.Sidebar,
         },
-        merge: false,
       })
       setShowAddWalletModal(false)
     }
@@ -257,7 +258,6 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
           importType: ImportType.Watch,
           entryPoint: OnboardingEntryPoint.Sidebar,
         },
-        merge: false,
       })
       setShowAddWalletModal(false)
     }
@@ -270,15 +270,37 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
       }
 
       navigation.navigate(Screens.OnboardingStack, {
-        screen: OnboardingScreens.ImportMethod,
-        params: { entryPoint: OnboardingEntryPoint.Sidebar },
-        merge: false,
+        screen: OnboardingScreens.SeedPhraseInput,
+        params: { importType: ImportType.SeedPhrase, entryPoint: OnboardingEntryPoint.Sidebar },
       })
-
       setShowAddWalletModal(false)
     }
 
-    return [
+    const onPressRestore = async () => {
+      const iCloudAvailable = await isICloudAvailable()
+
+      if (!iCloudAvailable) {
+        Alert.alert(
+          t('iCloud Drive not available'),
+          t(
+            'Please verify that you are logged in to an Apple ID with iCloud Drive enabled on this device and try again.'
+          ),
+          [
+            { text: t('Go to settings'), onPress: openSettings, style: 'default' },
+            { text: t('Not now'), style: 'cancel' },
+          ]
+        )
+        return
+      }
+
+      navigation.navigate(Screens.OnboardingStack, {
+        screen: OnboardingScreens.RestoreCloudBackupLoading,
+        params: { importType: ImportType.Restore, entryPoint: OnboardingEntryPoint.Sidebar },
+      })
+      setShowAddWalletModal(false)
+    }
+
+    const options = [
       {
         key: ElementName.CreateAccount,
         onPress: onPressCreateNewWallet,
@@ -311,6 +333,20 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
         ),
       },
     ]
+
+    if (!hasImportedSeedPhrase) {
+      options.push({
+        key: ElementName.RestoreFromICloud,
+        onPress: onPressRestore,
+        render: () => (
+          <Box alignItems="center" borderTopColor="backgroundOutline" borderTopWidth={1} p="md">
+            <Text variant="bodyLarge">{t('Restore from iCloud')}</Text>
+          </Box>
+        ),
+      })
+    }
+
+    return options
   }, [hasImportedSeedPhrase, dispatch, navigation, t])
 
   const screenEdges: Edge[] = useMemo(

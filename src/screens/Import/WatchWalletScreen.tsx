@@ -2,9 +2,8 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -20,6 +19,7 @@ import { useAccounts } from 'src/features/wallet/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { getValidAddress } from 'src/utils/addresses'
 import { normalizeTextInput } from 'src/utils/string'
+import { useAddBackButton } from 'src/utils/useAddBackButton'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.WatchWallet>
 
@@ -28,18 +28,10 @@ const LIVE_CHECK_DELAY = 1000
 export function WatchWalletScreen({ navigation, route: { params } }: Props): ReactElement {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
-  const theme = useAppTheme()
   const accounts = useAccounts()
   const importedAddresses = Object.keys(accounts)
 
-  useEffect(() => {
-    const shouldRenderBackButton = navigation.getState().index === 0
-    if (shouldRenderBackButton) {
-      navigation.setOptions({
-        headerLeft: () => <BackButton />,
-      })
-    }
-  }, [navigation, theme.colors.textPrimary])
+  useAddBackButton(navigation)
 
   // Form values.
   const [value, setValue] = useState<string | undefined>(undefined)

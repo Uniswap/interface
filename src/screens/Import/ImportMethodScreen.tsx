@@ -1,7 +1,7 @@
 import { useFocusEffect } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { TFunction } from 'i18next'
-import React, { ReactElement, useEffect, useRef } from 'react'
+import React, { ReactElement, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -9,7 +9,6 @@ import { OnboardingStackParamList } from 'src/app/navigation/types'
 import ImportIcon from 'src/assets/icons/arrow-rightwards-down.svg'
 import EyeIcon from 'src/assets/icons/eye.svg'
 import SeedPhraseIcon from 'src/assets/icons/pencil.svg'
-import { BackButton } from 'src/components/buttons/BackButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -29,6 +28,7 @@ import {
 import { OnboardingScreens } from 'src/screens/Screens'
 import { Theme } from 'src/styles/theme'
 import { openSettings } from 'src/utils/linking'
+import { useAddBackButton } from 'src/utils/useAddBackButton'
 
 interface ImportMethodOption {
   title: (t: TFunction) => string
@@ -115,14 +115,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): Re
     return () => navigation.removeListener('beforeRemove', unmodifiedWalletCleanup)
   })
 
-  useEffect(() => {
-    const shouldRenderBackButton = navigation.getState().index === 0
-    if (shouldRenderBackButton) {
-      navigation.setOptions({
-        headerLeft: () => <BackButton />,
-      })
-    }
-  }, [navigation, theme.colors.textPrimary])
+  useAddBackButton(navigation)
 
   const handleOnPressRestoreBackup = async (): Promise<void> => {
     const iCloudAvailable = await isICloudAvailable()

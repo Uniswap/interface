@@ -19,6 +19,7 @@ import {
 import { OnboardingScreens } from 'src/screens/Screens'
 import { shortenAddress } from 'src/utils/addresses'
 import { formatDate } from 'src/utils/format'
+import { useAddBackButton } from 'src/utils/useAddBackButton'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.RestoreCloudBackup>
 
@@ -39,6 +40,8 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
       merge: true,
     })
   }
+
+  useAddBackButton(navigation)
 
   return (
     <OnboardingScreen

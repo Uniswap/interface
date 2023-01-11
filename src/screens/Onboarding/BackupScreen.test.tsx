@@ -9,14 +9,6 @@ import { mockWalletPreloadedState } from 'src/test/fixtures'
 import { renderWithProviders } from 'src/test/render'
 import { render, screen } from 'src/test/test-utils'
 
-jest.mock('@react-navigation/elements', () => ({
-  useHeaderHeight: jest.fn().mockImplementation(() => 200),
-}))
-
-jest.mock('react-native-safe-area-context', () => ({
-  useSafeAreaInsets: jest.fn().mockImplementation(() => ({})),
-}))
-
 const navigationProp = {} as CompositeNavigationProp<
   StackNavigationProp<OnboardingStackParamList, OnboardingScreens.Backup, undefined>,
   NativeStackNavigationProp<AppStackParamList, Screens.Education, undefined>

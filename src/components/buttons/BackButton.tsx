@@ -23,7 +23,7 @@ export function BackButton({ onPressBack, size, color, showButtonLabel, ...rest 
         navigation.goBack()
       }
   return (
-    <TouchableArea onPress={goBack} {...rest} name={ElementName.Back}>
+    <TouchableArea testID="buttons/back-button" onPress={goBack} {...rest} name={ElementName.Back}>
       <BackButtonView color={color} showButtonLabel={showButtonLabel} size={size} />
     </TouchableArea>
   )
