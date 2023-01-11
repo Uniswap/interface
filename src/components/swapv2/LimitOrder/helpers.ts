@@ -125,12 +125,13 @@ export const calcPercentFilledOrder = (value: string, total: string, decimals: n
 }
 
 export const getErrorMessage = (error: any) => {
-  console.error(`Limit order error: `, error)
+  console.error('Limit order error: ', error)
   const errorCode: string = error?.response?.data?.code || error.code || ''
   const mapErrorMessageByErrCode: { [code: string]: string } = {
     4001: t`User denied message signature`,
     4002: t`You don't have sufficient fund for this transaction.`,
     4004: t`Invalid signature`,
+    '-32603': t`Error occurred. Please check your device.`,
   }
   const msg = mapErrorMessageByErrCode[errorCode]
   return msg?.toString?.() || error?.message || 'Error occur. Please try again.'

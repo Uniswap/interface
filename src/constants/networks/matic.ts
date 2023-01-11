@@ -68,7 +68,7 @@ const maticInfo: EVMNetworkInfo = {
     routers: '0xC1e7dFE73E1598E3910EF4C7845B68A9Ab6F4c83',
     farms: ['0xBdEc4a045446F583dc564C0A227FFd475b329bf0', '0x5C503D4b7DE0633f031229bbAA6A5e4A31cc35d8'],
   },
-  limitOrder: '0x9D3092C088136Deea96e86dC5aE2DFA7EE2A2EAf',
+  limitOrder: '0xcf250078b2ac5cb5Bd3d4Dce793638B9C24da6c7',
   averageBlockTimeInSeconds: 2.6,
   coingeckoNetworkId: 'polygon-pos',
   coingeckoNativeTokenId: 'matic-network',

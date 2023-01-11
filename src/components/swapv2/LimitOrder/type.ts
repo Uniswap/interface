@@ -66,5 +66,5 @@ export type CreateOrderParam = {
   expiredAt: number
   orderId?: number
   signature?: string
-  orderHash?: string
+  salt?: string
 }

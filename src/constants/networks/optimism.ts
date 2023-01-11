@@ -59,7 +59,7 @@ const optimismInfo: EVMNetworkInfo = {
     routers: '0xC1e7dFE73E1598E3910EF4C7845B68A9Ab6F4c83',
     farms: ['0xb85ebE2e4eA27526f817FF33fb55fB240057C03F'],
   },
-  limitOrder: NOT_SUPPORT,
+  limitOrder: '0x921c324A2cE0C315B1ec4Ca1Ac6b6E94A8838A7c',
   averageBlockTimeInSeconds: 120,
   coingeckoNetworkId: 'optimistic-ethereum',
   coingeckoNativeTokenId: 'ethereum',

@@ -50,7 +50,7 @@ import {
   getErrorMessage,
   getPayloadCreateOrder,
 } from './helpers'
-import { clearCacheActiveMakingAmount, getTotalActiveMakingAmount, hashOrder, submitOrder } from './request'
+import { clearCacheActiveMakingAmount, getMessageSignature, getTotalActiveMakingAmount, submitOrder } from './request'
 import { CreateOrderParam, LimitOrder, RateInfo } from './type'
 
 export const Label = styled.div`
@@ -412,12 +412,11 @@ const LimitOrderForm = function LimitOrderForm({
   )
 
   const signOrder = async (params: CreateOrderParam) => {
-    const { currencyIn, currencyOut, inputAmount, outputAmount, signature, orderHash } = params
-    if (signature && orderHash) return { signature, orderHash }
-    if (!library || !currencyIn || !currencyOut) return { signature: '', orderHash: '' }
+    const { currencyIn, currencyOut, inputAmount, outputAmount, signature, salt } = params
+    if (signature && salt) return { signature, salt }
+    if (!library || !currencyIn || !currencyOut) return { signature: '', salt: '' }
 
     const payload = getPayloadCreateOrder(params)
-    const { hash } = await hashOrder(payload)
     setFlowState(state => ({
       ...state,
       attemptingTxn: true,
@@ -425,7 +424,9 @@ const LimitOrderForm = function LimitOrderForm({
         outputAmount,
       )} ${currencyOut.symbol}`,
     }))
-    const rawSignature = await library.getSigner().signMessage(ethers.utils.arrayify(hash))
+    const messagePayload = await getMessageSignature(payload)
+
+    const rawSignature = await library.send('eth_signTypedData_v4', [account, JSON.stringify(messagePayload)])
 
     const bytes = ethers.utils.arrayify(rawSignature)
     const lastByte = bytes[64]
@@ -434,7 +435,7 @@ const LimitOrderForm = function LimitOrderForm({
       bytes[64] += 27
     }
 
-    return { signature: ethers.utils.hexlify(bytes), orderHash: hash }
+    return { signature: ethers.utils.hexlify(bytes), salt: messagePayload?.message?.salt }
   }
 
   const onSubmitCreateOrder = async (params: CreateOrderParam) => {
@@ -453,10 +454,10 @@ const LimitOrderForm = function LimitOrderForm({
         throw new Error('wrong input')
       }
 
-      const { signature, orderHash } = await signOrder(params)
+      const { signature, salt } = await signOrder(params)
       const payload = getPayloadCreateOrder(params)
       setFlowState(state => ({ ...state, pendingText: t`Placing order` }))
-      const response = await submitOrder({ ...payload, orderHash, signature })
+      const response = await submitOrder({ ...payload, salt, signature })
       setFlowState(state => ({ ...state, showConfirm: false }))
       notify(
         {
@@ -506,8 +507,8 @@ const LimitOrderForm = function LimitOrderForm({
           outputAmount,
           expiredAt,
         }
-        const { signature, orderHash } = await signOrder(param)
-        setCurrentOrder({ ...param, orderHash, signature })
+        const { signature, salt } = await signOrder(param)
+        setCurrentOrder({ ...param, salt, signature })
       }
       onDismissModalEdit?.()
     } catch (error) {

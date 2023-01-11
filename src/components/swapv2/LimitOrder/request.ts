@@ -20,8 +20,8 @@ export const submitOrder = (data: any) => {
   return axios.post(`${LIMIT_ORDER_API_WRITE}/v1/orders`, data).then(formatData)
 }
 
-export const hashOrder = (data: any) => {
-  return axios.post(`${LIMIT_ORDER_API_WRITE}/v1/orders/hash`, data).then(formatData)
+export const getMessageSignature = (data: any) => {
+  return axios.post(`${LIMIT_ORDER_API_WRITE}/v1/orders/sign-message`, data).then(formatData)
 }
 
 let activeMakingAmountCache: { [address: string]: string } = {}
