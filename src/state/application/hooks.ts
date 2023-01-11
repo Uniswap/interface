@@ -93,11 +93,11 @@ export function useCloseModal(): () => void {
   return useCallback(() => dispatch(setOpenModal(null)), [dispatch])
 }
 
-export function useToggleMetamaskConnectionErrorModal(): () => void {
+export function useToggleMetaMaskConnectionErrorModal(): () => void {
   return useToggleModal(ApplicationModal.METAMASK_CONNECTION_ERROR)
 }
 
-export function useOpenMetamaskConnectionErrorModal(): () => void {
+export function useOpenMetaMaskConnectionErrorModal(): () => void {
   return useOpenModal(ApplicationModal.METAMASK_CONNECTION_ERROR)
 }
 

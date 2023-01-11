@@ -9,11 +9,11 @@ import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/tra
 import useEagerlyConnect from 'hooks/useEagerlyConnect'
 import useOrderedConnections from 'hooks/useOrderedConnections'
 import { ReactNode, useEffect, useMemo } from 'react'
-import { useToggleMetamaskConnectionErrorModal } from 'state/application/hooks'
+import { useToggleMetaMaskConnectionErrorModal } from 'state/application/hooks'
 
 export default function Web3Provider({ children }: { children: ReactNode }) {
   // https://github.com/MetaMask/metamask-extension/issues/13375
-  const toggleMetaMaskConnectionErrorModal = useToggleMetamaskConnectionErrorModal()
+  const toggleMetaMaskConnectionErrorModal = useToggleMetaMaskConnectionErrorModal()
   useEffect(() => {
     setMetMaskErrorHandler((error) => {
       if (error.code === 1013) {
