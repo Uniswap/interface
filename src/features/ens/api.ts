@@ -3,7 +3,7 @@ import { walletContextValue } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { areAddressesEqual } from 'src/utils/addresses'
 import { logger } from 'src/utils/logger'
-import { ONE_DAY_MS, ONE_SECOND_MS } from 'src/utils/time'
+import { ONE_MINUTE_MS } from 'src/utils/time'
 
 export type EnslookupParams = {
   nameOrAddress: NullUndefined<string>
@@ -19,7 +19,7 @@ const staggeredBaseQuery = retry(fetchBaseQuery({ baseUrl: '/' }), {
 export const ensApi = createApi({
   reducerPath: ENS_REDUCER_NAME,
   baseQuery: staggeredBaseQuery,
-  keepUnusedDataFor: ONE_DAY_MS / ONE_SECOND_MS, // one day in seconds
+  keepUnusedDataFor: 5 * ONE_MINUTE_MS,
   endpoints: (builder) => ({
     // takes an address "0xasdf..." and converts it to the ENS "x.eth"
     name: builder.query<string | null, EnslookupParams>({
