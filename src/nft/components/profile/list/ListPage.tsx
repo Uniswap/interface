@@ -95,7 +95,7 @@ const Overlay = styled.div`
   bottom: 0px;
   height: 158px;
   width: 100vw;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
+  background: ${({ theme }) => `linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, ${theme.backgroundBackdrop} 100%)`};
 `
 
 const ProceedsWrapper = styled(Row)`
