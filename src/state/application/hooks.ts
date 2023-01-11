@@ -97,10 +97,6 @@ export function useToggleMetaMaskConnectionErrorModal(): () => void {
   return useToggleModal(ApplicationModal.METAMASK_CONNECTION_ERROR)
 }
 
-export function useOpenMetaMaskConnectionErrorModal(): () => void {
-  return useOpenModal(ApplicationModal.METAMASK_CONNECTION_ERROR)
-}
-
 export function useOpenModal(modal: ApplicationModal): () => void {
   const dispatch = useAppDispatch()
   return useCallback(() => dispatch(setOpenModal(modal)), [dispatch, modal])
