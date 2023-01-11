@@ -163,6 +163,7 @@ export function GenericImportForm({
               row
               gap="xs"
               position="absolute"
+              pt="xxs"
               onLayout={(event: LayoutChangeEvent) => setLayout(event.nativeEvent.layout)}>
               <Text
                 adjustsFontSizeToFit

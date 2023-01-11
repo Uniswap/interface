@@ -107,6 +107,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
             "flexDirection": "row",
             "flexGrow": 1,
             "justifyContent": "center",
+            "paddingTop": 4,
             "position": "absolute",
           },
         ]
