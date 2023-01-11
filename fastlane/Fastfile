@@ -164,4 +164,36 @@ end
       )
     end
   end
+
+  # bulk action to update build numbers for all configurations pulled from TestFlight
+  lane :update_build_numbers do
+
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+      key_content: ENV["APP_STORE_CONNECT_KEY_CONTENT"],
+    )
+
+    current_marketing_version = get_version_number(
+      xcodeproj: XCODE_PROJECT,
+      target: PROJECT_NAME,
+      configuration: ENV["CONFIGURATION"]
+    )
+
+    current_build_number = latest_testflight_build_number(
+      api_key: api_key,
+      version: current_marketing_version,
+      app_identifier: ENV["APP_IDENTIFIER"],
+      )
+
+    new_build_number = update_build_numbers_for_configuration(
+      configuration: ENV["CONFIGURATION"],
+      new_build_number: current_build_number + 1
+    )
+
+    commit_version_bump(
+      xcodeproj: XCODE_PROJECT,
+      force: true
+    )
+  end
 end
