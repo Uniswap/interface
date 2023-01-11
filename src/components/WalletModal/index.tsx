@@ -210,7 +210,7 @@ export default function WalletModal({
   // When new wallet is successfully set by the user, trigger logging of Amplitude analytics event.
   useEffect(() => {
     if (account && account !== lastActiveWalletAddress) {
-      const walletType = getConnectionName(getConnection(connector).type, getHasMetaMaskExtensionInstalled())
+      const walletType = getConnectionName(getConnection(connector).type)
       const isReconnect =
         connectedWallets.filter((wallet) => wallet.account === account && wallet.walletType === walletType).length > 0
       sendAnalyticsEventAndUserInfo(account, walletType, chainId, isReconnect)
