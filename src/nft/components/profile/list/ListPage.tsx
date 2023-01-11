@@ -87,7 +87,7 @@ const FloatingConfirmationBar = styled(Row)`
   bottom: 32px;
   margin: 0px 60px;
   width: calc(100vw - 120px);
-  z-index: ${Z_INDEX.modal};
+  z-index: ${Z_INDEX.under_dropdown};
 `
 
 const Overlay = styled.div`
@@ -98,9 +98,14 @@ const Overlay = styled.div`
   background: ${({ theme }) => `linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, ${theme.backgroundBackdrop} 100%)`};
 `
 
-const ProceedsWrapper = styled(Row)`
+const ProceedsAndButtonWrapper = styled(Row)`
   width: min-content;
   gap: 40px;
+`
+
+const ProceedsWrapper = styled(Row)`
+  width: min-content;
+  gap: 16px;
 `
 
 const ListingButtonWrapper = styled.div`
@@ -178,8 +183,8 @@ export const ListPage = () => {
             <ThemedText.HeadlineSmall lineHeight="28px">
               <Trans>Proceeds if sold</Trans>
             </ThemedText.HeadlineSmall>
-            <ProceedsWrapper>
-              <Row>
+            <ProceedsAndButtonWrapper>
+              <ProceedsWrapper>
                 <ThemedText.HeadlineSmall
                   lineHeight="28px"
                   color={totalEthListingValue ? 'textPrimary' : 'textTertiary'}
@@ -187,18 +192,18 @@ export const ListPage = () => {
                   {totalEthListingValue > 0 ? formatEth(totalEthListingValue) : '-'} ETH
                 </ThemedText.HeadlineSmall>
                 {!!totalEthListingValue && !!ethPriceInUSD && (
-                  <ThemedText.HeadlineSmall lineHeight="28px" color="textSecondary" marginLeft="16px">
+                  <ThemedText.HeadlineSmall lineHeight="28px" color="textSecondary">
                     {formatUsdPrice(totalEthListingValue * ethPriceInUSD)}
                   </ThemedText.HeadlineSmall>
                 )}
-              </Row>
+              </ProceedsWrapper>
               <ListingButtonWrapper>
                 <ListingButton
                   onClick={toggleBag}
                   buttonText={anyListingsMissingPrice ? t`Set prices to continue` : t`Start listing`}
                 />
               </ListingButtonWrapper>
-            </ProceedsWrapper>
+            </ProceedsAndButtonWrapper>
           </FloatingConfirmationBar>
           <Overlay />
         </>
