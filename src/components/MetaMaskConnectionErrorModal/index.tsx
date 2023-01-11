@@ -64,7 +64,7 @@ const onReconnect = () => window.location.reload()
 const header = 'Wallet disconnected'
 const description = 'A Metamask error caused your wallet to disconnect. Reload the page to reconnect.'
 
-export default function MetamaskConnectionError() {
+export default function MetamaskConnectionErrorModal() {
   const modalOpen = useModalIsOpen(ApplicationModal.METAMASK_CONNECTION_ERROR)
   const toggleModal = useToggleMetamaskConnectionErrorModal()
 
