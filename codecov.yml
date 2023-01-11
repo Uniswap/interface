@@ -3,7 +3,12 @@ coverage:
     project:
       default:
         target: auto # each pr must increase coverage
-        threshold: 1% # adjust for flakiness
+        threshold: 0.5% # adjust for flakiness
+    patch:
+      default:
+        target: auto
+        threshold: 0%
+        informational: true # pass coverage no matter coverage
 
 comment:
   layout: "reach, diff, files"
