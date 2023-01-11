@@ -1,17 +1,18 @@
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { SMALL_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
 import { ListingButton } from 'nft/components/bag/profile/ListingButton'
-import { getListingState } from 'nft/components/bag/profile/utils'
+import { getListingState, getTotalEthValue } from 'nft/components/bag/profile/utils'
 import { BackArrowIcon } from 'nft/components/icons'
 import { headlineLarge, headlineSmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile, useNFTList, useProfilePageState, useSellAsset } from 'nft/hooks'
 import { ListingStatus, ProfilePageStateType } from 'nft/types'
+import { fetchPrice, formatEth, formatUsdPrice } from 'nft/utils'
 import { ListingMarkets } from 'nft/utils/listNfts'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -101,8 +102,19 @@ export const ListPage = () => {
   const collectionsRequiringApproval = useNFTList((state) => state.collectionsRequiringApproval)
   const listingStatus = useNFTList((state) => state.listingStatus)
   const setListingStatus = useNFTList((state) => state.setListingStatus)
+  const sellAssets = useSellAsset((state) => state.sellAssets)
   const isMobile = useIsMobile()
   const isNftListV2 = useNftListV2Flag() === NftListV2Variant.Enabled
+
+  const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
+  const anyListingsMissingPrice = useMemo(() => !!listings.find((listing) => !listing.price), [listings])
+  const [ethPriceInUSD, setEthPriceInUSD] = useState(0)
+
+  useEffect(() => {
+    fetchPrice().then((price) => {
+      setEthPriceInUSD(price || 0)
+    })
+  }, [])
 
   useEffect(() => {
     const state = getListingState(collectionsRequiringApproval, listings)
@@ -150,11 +162,24 @@ export const ListPage = () => {
                 <Trans>Proceeds if sold</Trans>
               </ThemedText.HeadlineSmall>
               <ProceedsWrapper>
-                <ThemedText.HeadlineSmall lineHeight="28px" color="textTertiary">
-                  - ETH
-                </ThemedText.HeadlineSmall>
+                <Row>
+                  <ThemedText.HeadlineSmall
+                    lineHeight="28px"
+                    color={totalEthListingValue ? 'textPrimary' : 'textTertiary'}
+                  >
+                    {totalEthListingValue > 0 ? formatEth(totalEthListingValue) : '-'} ETH
+                  </ThemedText.HeadlineSmall>
+                  {!!totalEthListingValue && !!ethPriceInUSD && (
+                    <ThemedText.HeadlineSmall lineHeight="28px" color="textSecondary" marginLeft="16px">
+                      {formatUsdPrice(totalEthListingValue * ethPriceInUSD)}
+                    </ThemedText.HeadlineSmall>
+                  )}
+                </Row>
                 <ListingButtonWrapper>
-                  <ListingButton onClick={toggleBag} buttonText="Set prices to continue" />
+                  <ListingButton
+                    onClick={toggleBag}
+                    buttonText={anyListingsMissingPrice ? t`Set prices to continue` : t`Start listing`}
+                  />
                 </ListingButtonWrapper>
               </ProceedsWrapper>
             </FloatingConfirmationBar>
