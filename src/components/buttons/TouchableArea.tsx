@@ -1,7 +1,8 @@
 import { createBox } from '@shopify/restyle'
 import { impactAsync, ImpactFeedbackStyle } from 'expo-haptics'
-import React, { ComponentProps, PropsWithChildren, useCallback } from 'react'
+import React, { ComponentProps, PropsWithChildren, useCallback, useMemo } from 'react'
 import { GestureResponderEvent, TouchableOpacity, TouchableOpacityProps } from 'react-native'
+import { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { withAnimated } from 'src/components/animated'
 import { TraceEvent } from 'src/components/telemetry/TraceEvent'
 import { ReactNativeEvent } from 'src/features/telemetry/constants'
@@ -9,12 +10,16 @@ import { TelemetryEventProps } from 'src/features/telemetry/types'
 import { defaultHitslopInset } from 'src/styles/sizing'
 import { Theme } from 'src/styles/theme'
 
-export const TouchableBox = createBox<Theme, TouchableOpacityProps>(TouchableOpacity)
+const TouchableBox = createBox<Theme, TouchableOpacityProps>(TouchableOpacity)
+const AnimatedTouchableBox = withAnimated(TouchableBox)
+
+const ScaleTimingConfig = { duration: 100, easing: Easing.inOut(Easing.quad) }
 
 export type BaseButtonProps = PropsWithChildren<
   ComponentProps<typeof TouchableBox> & {
     hapticFeedback?: boolean
     hapticStyle?: ImpactFeedbackStyle
+    scaleTo?: number
   } & TelemetryEventProps
 >
 
@@ -28,6 +33,7 @@ export type BaseButtonProps = PropsWithChildren<
 export function TouchableArea({
   hapticFeedback = false,
   hapticStyle,
+  scaleTo,
   onPress,
   children,
   name: elementName,
@@ -37,28 +43,60 @@ export function TouchableArea({
   activeOpacity = 0.75,
   ...rest
 }: BaseButtonProps) {
+  const scale = useSharedValue(1)
+
   const onPressHandler = useCallback(
     (event: GestureResponderEvent) => {
       if (!onPress) return
 
+      onPress(event)
+    },
+    [onPress]
+  )
+
+  const onPressInHandler = useMemo(() => {
+    if (!hapticFeedback && !scaleTo) return
+
+    return () => {
       if (hapticFeedback) {
         impactAsync(hapticStyle)
       }
-      onPress(event)
-    },
-    [onPress, hapticStyle, hapticFeedback]
-  )
+
+      if (scaleTo) {
+        scale.value = withTiming(scaleTo, ScaleTimingConfig)
+      }
+    }
+  }, [scale, scaleTo, hapticStyle, hapticFeedback])
+
+  const onPressOutHandler = useMemo(() => {
+    if (!scaleTo) return
+    return () => {
+      scale.value = withTiming(1, ScaleTimingConfig)
+    }
+  }, [scale, scaleTo])
 
   const baseProps: ComponentProps<typeof TouchableBox> = {
     onPress: onPressHandler,
+    onPressIn: scaleTo || hapticFeedback ? onPressInHandler : undefined,
+    onPressOut: onPressOutHandler,
     activeOpacity,
     hitSlop: defaultHitslopInset,
     testID: elementName,
     ...rest,
   }
 
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: scale.value }],
+    }
+  })
+
   if (!eventName) {
-    return <TouchableBox {...baseProps}>{children}</TouchableBox>
+    return (
+      <AnimatedTouchableBox style={scaleTo ? animatedStyle : undefined} {...baseProps}>
+        {children}
+      </AnimatedTouchableBox>
+    )
   }
 
   return (
@@ -67,7 +105,9 @@ export function TouchableArea({
       eventName={eventName}
       events={[ReactNativeEvent.OnPress, ...(events || [])]}
       properties={properties}>
-      <TouchableBox {...baseProps}>{children}</TouchableBox>
+      <AnimatedTouchableBox {...baseProps} style={scaleTo ? animatedStyle : undefined}>
+        {children}
+      </AnimatedTouchableBox>
     </TraceEvent>
   )
 }

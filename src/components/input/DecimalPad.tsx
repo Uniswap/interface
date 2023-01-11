@@ -1,3 +1,4 @@
+import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { useMemo } from 'react'
 import { TextInputProps } from 'react-native'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -45,7 +46,7 @@ export function DecimalPad({
       {
         label: '1',
         action: KeyAction.Insert,
-        align: 'flex-start',
+        align: 'center',
         paddingTop: 'sm',
         disabled: () => disabled,
       },
@@ -59,42 +60,43 @@ export function DecimalPad({
       {
         label: '3',
         action: KeyAction.Insert,
-        align: 'flex-end',
+        align: 'center',
         paddingTop: 'sm',
         disabled: () => disabled,
       },
-      { label: '4', action: KeyAction.Insert, align: 'flex-start', disabled: () => disabled },
+      { label: '4', action: KeyAction.Insert, align: 'center', disabled: () => disabled },
       { label: '5', action: KeyAction.Insert, align: 'center', disabled: () => disabled },
-      { label: '6', action: KeyAction.Insert, align: 'flex-end', disabled: () => disabled },
-      { label: '7', action: KeyAction.Insert, align: 'flex-start', disabled: () => disabled },
+      { label: '6', action: KeyAction.Insert, align: 'center', disabled: () => disabled },
+      { label: '7', action: KeyAction.Insert, align: 'center', disabled: () => disabled },
       { label: '8', action: KeyAction.Insert, align: 'center', disabled: () => disabled },
-      { label: '9', action: KeyAction.Insert, align: 'flex-end', disabled: () => disabled },
+      { label: '9', action: KeyAction.Insert, align: 'center', disabled: () => disabled },
       {
         label: '.',
         action: KeyAction.Insert,
         disabled: (v: string) => v.includes('.') || disabled,
         hidden: hideDecimal,
-        align: 'flex-start',
+        align: 'center',
       },
       { label: '0', action: KeyAction.Insert, align: 'center', disabled: () => disabled },
       {
         label: '←',
         action: KeyAction.Delete,
         disabled: (v: string) => cursorAtStart || v.length === 0 || disabled,
-        align: 'flex-end',
+        align: 'center',
       },
     ]
   }, [disabled, hideDecimal, cursorAtStart])
   return (
-    <AnimatedBox flexDirection="row" flexWrap="wrap" px="md">
+    <AnimatedBox flexDirection="row" flexWrap="wrap">
       {keys.map((key, i) =>
         key.hidden ? (
-          <Box key={i} alignItems={key.align} height="25%" width="33%" />
+          <Box key={i} alignItems={key.align} height="25%" width={i % 3 === 1 ? '50%' : '25%'} />
         ) : (
           <KeyButton
             {...key}
             key={i}
             hasCurrencyPrefix={hasCurrencyPrefix}
+            index={i}
             resetSelection={resetSelection}
             selection={selection}
             setValue={setValue}
@@ -107,6 +109,7 @@ export function DecimalPad({
 }
 
 type KeyButtonProps = KeyProps & {
+  index: number
   setValue: (newValue: string) => void
   value: string
   selection?: TextInputProps['selection']
@@ -115,6 +118,7 @@ type KeyButtonProps = KeyProps & {
 }
 
 function KeyButton({
+  index,
   action,
   disabled,
   label,
@@ -181,13 +185,16 @@ function KeyButton({
 
   return (
     <TouchableArea
+      hapticFeedback
       alignItems={align}
       disabled={isDisabled}
+      hapticStyle={ImpactFeedbackStyle.Light}
       justifyContent="center"
       padding="md"
       paddingTop={paddingTop}
+      scaleTo={1.5}
       testID={'decimal-pad-' + label}
-      width="33%"
+      width={index % 3 === 1 ? '50%' : '25%'}
       onLongPress={onLongPress}
       onPress={onPress}>
       <Text
