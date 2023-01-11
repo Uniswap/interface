@@ -171,7 +171,6 @@ const calcAmmBasedPoolprice = (asset: GenieAsset, position = 0): string => {
   return price.toString()
 }
 
-// TODO: a lot of the below typecasting logic can be simplified when GraphQL migration is complete
 export const calcPoolPrice = (asset: GenieAsset, position = 0): string => {
   if (!asset.sellorders) return ''
   if (asset.marketplace === Markets.Sudoswap) return calcSudoSwapPrice(asset, position) ?? '0'
