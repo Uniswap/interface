@@ -1,16 +1,16 @@
-import { createApi, fetchBaseQuery, retry } from '@reduxjs/toolkit/query/react'
+import { createApi, fetchBaseQuery, retry, skipToken } from '@reduxjs/toolkit/query/react'
 import { walletContextValue } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { areAddressesEqual } from 'src/utils/addresses'
 import { logger } from 'src/utils/logger'
-import { ONE_MINUTE_MS } from 'src/utils/time'
-
+import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'src/utils/time'
 export type EnslookupParams = {
-  nameOrAddress: NullUndefined<string>
+  nameOrAddress: string
   chainId: ChainId
 }
 
 const ENS_REDUCER_NAME = 'ENS'
+const ENS_TTL_MS = 5 * ONE_MINUTE_MS
 
 const staggeredBaseQuery = retry(fetchBaseQuery({ baseUrl: '/' }), {
   maxRetries: 5,
@@ -19,15 +19,14 @@ const staggeredBaseQuery = retry(fetchBaseQuery({ baseUrl: '/' }), {
 export const ensApi = createApi({
   reducerPath: ENS_REDUCER_NAME,
   baseQuery: staggeredBaseQuery,
-  keepUnusedDataFor: 5 * ONE_MINUTE_MS,
+  // given we do not purge entries, acts as TTL
+  refetchOnMountOrArgChange: ENS_TTL_MS / ONE_SECOND_MS,
   endpoints: (builder) => ({
     // takes an address "0xasdf..." and converts it to the ENS "x.eth"
     name: builder.query<string | null, EnslookupParams>({
       queryFn: async (params: EnslookupParams) => {
         const { nameOrAddress: address } = params
         try {
-          if (!address) return { data: null }
-
           const provider = walletContextValue.providers.getProvider(ChainId.Mainnet)
           const name = await provider.lookupAddress(address)
 
@@ -51,7 +50,6 @@ export const ensApi = createApi({
       queryFn: async (params: EnslookupParams) => {
         const { nameOrAddress: name } = params
         try {
-          if (!name) return { data: null }
           const provider = walletContextValue.providers.getProvider(ChainId.Mainnet)
           const address = await provider.resolveName(name)
 
@@ -69,8 +67,6 @@ export const ensApi = createApi({
       queryFn: async (params: EnslookupParams) => {
         const { nameOrAddress: address } = params
         try {
-          if (!address) return { data: null }
-
           const provider = walletContextValue.providers.getProvider(ChainId.Mainnet)
           const name = await provider.lookupAddress(address)
           const fwdAddr = name ? await provider.resolveName(name) : null
@@ -89,13 +85,13 @@ export const ensApi = createApi({
 const { useNameQuery, useAddressQuery, useAvatarQuery } = ensApi
 
 export function useENSName(address?: Address, chainId: ChainId = ChainId.Mainnet) {
-  return useNameQuery({ nameOrAddress: address, chainId })
+  return useNameQuery(address ? { nameOrAddress: address, chainId } : skipToken)
 }
 
 export function useAddressFromEns(maybeName: string | null, chainId: ChainId = ChainId.Mainnet) {
-  return useAddressQuery({ nameOrAddress: maybeName, chainId })
+  return useAddressQuery(maybeName ? { nameOrAddress: maybeName, chainId } : skipToken)
 }
 
 export function useENSAvatar(address?: string | null, chainId: ChainId = ChainId.Mainnet) {
-  return useAvatarQuery({ nameOrAddress: address, chainId })
+  return useAvatarQuery(address ? { nameOrAddress: address, chainId } : skipToken)
 }
