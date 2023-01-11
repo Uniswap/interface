@@ -111,6 +111,7 @@ export const calcSudoSwapPrice = (asset: GenieAsset, position = 0): string | und
 // TODO: a lot of the below typecasting logic can be simplified when GraphQL migration is complete
 export const calcPoolPrice = (asset: GenieAsset, position = 0) => {
   if (!asset.sellorders) return ''
+  if (asset.marketplace === Markets.Sudoswap) return calcSudoSwapPrice(asset, position) ?? '0'
 
   let amountToBuy: BigNumber = BigNumber.from(0)
   let marginalBuy: BigNumber = BigNumber.from(0)
