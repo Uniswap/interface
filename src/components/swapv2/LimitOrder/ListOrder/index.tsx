@@ -9,6 +9,7 @@ import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
 import { ButtonEmpty } from 'components/Button'
+import Column from 'components/Column'
 import LocalLoader from 'components/LocalLoader'
 import Pagination from 'components/Pagination'
 import SearchInput from 'components/SearchInput'
@@ -34,7 +35,7 @@ import { sendEVMTransaction } from 'utils/sendTransaction'
 import EditOrderModal from '../EditOrderModal'
 import CancelOrderModal from '../Modals/CancelOrderModal'
 import { ACTIVE_ORDER_OPTIONS, CLOSE_ORDER_OPTIONS } from '../const'
-import { calcPercentFilledOrder, formatAmountOrder, isActiveStatus } from '../helpers'
+import { calcPercentFilledOrder, formatAmountOrder, getErrorMessage, isActiveStatus } from '../helpers'
 import { ackNotificationOrder, getEncodeData, getListOrder, insertCancellingOrder } from '../request'
 import { LimitOrder, LimitOrderStatus, ListOrderHandle } from '../type'
 import useCancellingOrders from '../useCancellingOrders'
@@ -42,11 +43,6 @@ import OrderItem from './OrderItem'
 import SummaryNotify from './SummaryNotify'
 import TabSelector from './TabSelector'
 import TableHeader from './TableHeader'
-
-const ListWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-`
 
 const ButtonCancelAll = styled(ButtonEmpty)`
   background-color: ${({ theme }) => rgba(theme.red, 0.2)};
@@ -449,9 +445,9 @@ export default forwardRef<ListOrderHandle>(function ListLimitOrder(props, ref) {
         ...response,
         type: TRANSACTION_TYPE.CANCEL_LIMIT_ORDER,
         summary: order
-          ? t`Order ${formatAmountOrder(order.makingAmount, order.makerAssetDecimals)} ${
+          ? t`order to pay ${formatAmountOrder(order.makingAmount, order.makerAssetDecimals)} ${
               order.makerAssetSymbol
-            } to ${formatAmountOrder(order.takingAmount, order.takerAssetDecimals)} ${order.takerAssetSymbol}`
+            } and receive ${formatAmountOrder(order.takingAmount, order.takerAssetDecimals)} ${order.takerAssetSymbol}`
           : t`all orders`,
         arbitrary: order ? getPayloadTracking(order) : undefined,
       })
@@ -463,11 +459,10 @@ export default forwardRef<ListOrderHandle>(function ListLimitOrder(props, ref) {
       await requestCancelOrder(order)
       setFlowState(state => ({ ...state, showConfirm: false }))
     } catch (error) {
-      console.error(error)
       setFlowState(state => ({
         ...state,
         attemptingTxn: false,
-        errorMessage: 'Error occur. Please try again.',
+        errorMessage: getErrorMessage(error),
       }))
     }
   }
@@ -520,7 +515,7 @@ export default forwardRef<ListOrderHandle>(function ListLimitOrder(props, ref) {
           <>
             <div>
               <TableHeader />
-              <ListWrapper>
+              <Column>
                 {orders.map((order, index) => (
                   <OrderItem
                     isOrderCancelling={isOrderCancelling}
@@ -531,7 +526,7 @@ export default forwardRef<ListOrderHandle>(function ListLimitOrder(props, ref) {
                     onEditOrder={showEditOrderModal}
                   />
                 ))}
-              </ListWrapper>
+              </Column>
             </div>
             {orders.length === 0 && (
               <NoResultWrapper>

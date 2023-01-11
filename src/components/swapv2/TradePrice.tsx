@@ -11,9 +11,11 @@ import { StyledBalanceMaxMini } from './styleds'
 interface TradePriceProps {
   price?: Price<Currency, Currency>
   style?: CSSProperties
+  label?: string
+  color?: string
 }
 
-export default function TradePrice({ price, style = {} }: TradePriceProps) {
+export default function TradePrice({ price, style = {}, label, color }: TradePriceProps) {
   const theme = useTheme()
   const [showInverted, setShowInverted] = useState<boolean>(false)
   let formattedPrice
@@ -21,10 +23,10 @@ export default function TradePrice({ price, style = {} }: TradePriceProps) {
     formattedPrice = showInverted ? price?.toSignificant(6) : price?.invert()?.toSignificant(6)
   } catch (error) {}
 
-  const show = Boolean(price?.baseCurrency && price?.quoteCurrency)
+  const show = Boolean(price?.baseCurrency && price?.quoteCurrency && formattedPrice)
   const nativeQuote = useCurrencyConvertedToNative(price?.quoteCurrency)
   const nativeBase = useCurrencyConvertedToNative(price?.baseCurrency)
-  const label = showInverted
+  const value = showInverted
     ? `${nativeQuote?.symbol} = 1 ${nativeBase?.symbol}`
     : `${nativeBase?.symbol} = 1 ${nativeQuote?.symbol}`
 
@@ -39,7 +41,10 @@ export default function TradePrice({ price, style = {} }: TradePriceProps) {
     >
       {show ? (
         <>
-          {formattedPrice ?? '-'} {label}
+          {label && <>{label}&nbsp;</>}
+          <Text color={color}>
+            {formattedPrice} {value}
+          </Text>
           <StyledBalanceMaxMini>
             <Repeat size={12} />
           </StyledBalanceMaxMini>

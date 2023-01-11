@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { CSSProperties } from 'styled-components'
 
 import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
 import { Swap as SwapIcon } from 'components/Icons'
@@ -34,14 +34,16 @@ export default function ArrowRotate({
   rotate,
   onClick,
   isVertical = false,
+  style = {},
 }: {
   rotate: boolean
   onClick: () => void
   isVertical?: boolean
+  style?: CSSProperties
 }) {
   const theme = useTheme()
   return (
-    <ArrowWrapper rotated={rotate} isVertical={isVertical} onClick={onClick}>
+    <ArrowWrapper rotated={rotate} isVertical={isVertical} onClick={onClick} style={style}>
       <SwapIcon size={24} color={theme.subText} />
     </ArrowWrapper>
   )

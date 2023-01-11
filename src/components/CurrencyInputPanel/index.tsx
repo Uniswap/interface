@@ -1,9 +1,8 @@
-import { Pair } from '@kyberswap/ks-sdk-classic'
 import { Currency } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import { darken, lighten, rgba } from 'polished'
 import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
-import { Flex, Text } from 'rebass'
+import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
 import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
@@ -11,7 +10,6 @@ import { ReactComponent as Lock } from 'assets/svg/ic_lock.svg'
 import { ReactComponent as SwitchIcon } from 'assets/svg/switch.svg'
 import Card from 'components/Card'
 import CurrencyLogo from 'components/CurrencyLogo'
-import DoubleCurrencyLogo from 'components/DoubleLogo'
 import Wallet from 'components/Icons/Wallet'
 import { Input as NumericalInput } from 'components/NumericalInput'
 import { RowFixed } from 'components/Row'
@@ -129,10 +127,26 @@ const StyledBalanceMax = styled.button`
   }
 `
 
-const Card2 = styled(Card)<{ balancePosition: string }>`
+const StyledCard = styled(Card)`
   padding: 0 0.25rem 0.5rem;
-  text-align: ${({ balancePosition }) => `${balancePosition}`};
+  text-align: right;
 `
+
+const PoolLockContent = (
+  <FixedContainer>
+    <Flex padding={'0 20px'} sx={{ gap: '16px' }}>
+      <Box margin="auto" width="26px">
+        <Lock />
+      </Box>
+      <Text fontSize="12px" textAlign="left" padding="8px 16px" lineHeight={'16px'}>
+        <Trans>
+          The price of the pool is outside your selected price range and hence you can only deposit a single token. To
+          see more options, update the price range.
+        </Trans>
+      </Text>
+    </Flex>
+  </FixedContainer>
+)
 
 interface CurrencyInputPanelProps {
   value: string
@@ -142,20 +156,19 @@ interface CurrencyInputPanelProps {
   onFocus?: () => void
   onClickSelect?: () => void
   positionMax?: 'inline' | 'top'
-  label?: string
+  label?: ReactNode
+  positionLabel?: 'in' | 'out'
   onCurrencySelect?: (currency: Currency) => void
   onSwitchCurrency?: () => void
   currency?: Currency | null
   disableCurrencySelect?: boolean
   hideBalance?: boolean
-  pair?: Pair | null
   hideInput?: boolean
   disabledInput?: boolean
   otherCurrency?: Currency | null
   id: string
   showCommonBases?: boolean
   customBalanceText?: string
-  balancePosition?: string
   hideLogo?: boolean
   fontSize?: string
   customCurrencySelect?: ReactNode
@@ -166,18 +179,18 @@ interface CurrencyInputPanelProps {
   error?: boolean
   maxLength?: number
   filterWrap?: boolean
+  lockIcon?: boolean
 }
 
 export default function CurrencyInputPanel({
   value,
   error,
-  onUserInput = (value: string) => {
-    //
-  },
+  onUserInput,
   onMax,
   onHalf,
   positionMax = 'inline',
   label = '',
+  positionLabel = 'out',
   onCurrencySelect,
   onSwitchCurrency,
   onFocus,
@@ -185,14 +198,12 @@ export default function CurrencyInputPanel({
   currency,
   disableCurrencySelect = false,
   hideBalance = false,
-  pair = null, // used for double token logo
   hideInput = false,
   disabledInput = false,
   otherCurrency,
   id,
   showCommonBases,
   customBalanceText,
-  balancePosition = 'right',
   hideLogo = false,
   fontSize,
   customCurrencySelect,
@@ -202,6 +213,7 @@ export default function CurrencyInputPanel({
   maxCurrencySymbolLength,
   maxLength,
   filterWrap,
+  lockIcon = false, // lock when need approve
 }: CurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
   const { chainId, account } = useActiveWeb3React()
@@ -229,37 +241,23 @@ export default function CurrencyInputPanel({
 
   return (
     <div style={{ width: '100%' }}>
-      {label && (
-        <Card2 borderRadius={'20px'} balancePosition={balancePosition}>
-          <Flex justifyContent={label ? 'space-between' : 'end'} alignItems="center">
-            {label && (
-              <Text fontSize={12} color={theme.subText} fontWeight={500}>
-                {label}:
-              </Text>
-            )}
+      {label && positionLabel === 'out' && (
+        <StyledCard borderRadius={'20px'}>
+          <Flex justifyContent={'space-between'} alignItems="center">
+            <Text fontSize={12} color={theme.subText} fontWeight={500}>
+              {label}:
+            </Text>
           </Flex>
-        </Card2>
+        </StyledCard>
       )}
       <InputPanel id={id} hideInput={hideInput}>
-        {locked && (
-          <FixedContainer>
-            <Flex padding={'0 20px'} sx={{ gap: '16px' }}>
-              <div style={{ width: '26px', margin: 'auto' }}>
-                <Lock />
-              </div>
-              <Text fontSize="12px" textAlign="left" padding="8px 16px" lineHeight={'16px'}>
-                <Trans>
-                  The price of the pool is outside your selected price range and hence you can only deposit a single
-                  token. To see more options, update the price range.
-                </Trans>
-              </Text>
-            </Flex>
-          </FixedContainer>
-        )}
+        {locked && PoolLockContent}
         <Container hideInput={hideInput} selected={disableCurrencySelect} error={error}>
           {!hideBalance && (
             <Flex justifyContent="space-between" fontSize="12px" marginBottom="12px" alignItems="center">
-              {(onMax || onHalf) && positionMax === 'top' && currency && account ? (
+              {label && positionLabel === 'in' ? (
+                label
+              ) : (onMax || onHalf) && positionMax === 'top' && currency && account ? (
                 <Flex alignItems="center" sx={{ gap: '4px' }}>
                   {onMax && (
                     <StyledBalanceMax onClick={onMax}>
@@ -309,6 +307,7 @@ export default function CurrencyInputPanel({
                     </StyledBalanceMax>
                   )
                 )}
+                {lockIcon && <Lock color={theme.subText} style={{ marginRight: 8 }} />}
               </>
             )}
             {customCurrencySelect || (
@@ -329,27 +328,17 @@ export default function CurrencyInputPanel({
               >
                 <Aligner>
                   <RowFixed>
-                    {hideLogo ? null : pair ? (
-                      <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={20} margin={true} />
-                    ) : currency ? (
-                      <CurrencyLogo currency={currency || undefined} size={'20px'} />
-                    ) : null}
-                    {pair ? (
-                      <StyledTokenName className="pair-name-container">
-                        {pair?.token0.symbol}:{pair?.token1.symbol}
-                      </StyledTokenName>
-                    ) : (
-                      <StyledTokenName
-                        className="token-symbol-container"
-                        active={Boolean(currency && currency.symbol)}
-                        fontSize={fontSize}
-                        style={{ paddingRight: disableCurrencySelect ? '8px' : 0 }}
-                      >
-                        {(nativeCurrency?.symbol && maxCurrencySymbolLength
-                          ? shortString(nativeCurrency.symbol, maxCurrencySymbolLength)
-                          : nativeCurrency?.symbol) || <Trans>Select a token</Trans>}
-                      </StyledTokenName>
-                    )}
+                    {currency && !hideLogo ? <CurrencyLogo currency={currency} size={'20px'} /> : null}
+                    <StyledTokenName
+                      className="token-symbol-container"
+                      active={Boolean(currency && currency.symbol)}
+                      fontSize={fontSize}
+                      style={{ paddingRight: disableCurrencySelect ? '8px' : 0 }}
+                    >
+                      {(nativeCurrency?.symbol && maxCurrencySymbolLength
+                        ? shortString(nativeCurrency.symbol, maxCurrencySymbolLength)
+                        : nativeCurrency?.symbol) || <Trans>Select a token</Trans>}
+                    </StyledTokenName>
                   </RowFixed>
                   {!disableCurrencySelect && !isSwitchMode && <DropdownSVG />}
                   {!disableCurrencySelect && isSwitchMode && <StyledSwitchIcon selected={!!currency} />}

@@ -1,19 +1,21 @@
 import { Currency, Price } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
-import { Flex, Text } from 'rebass'
+import { Text } from 'rebass'
 
 import InfoHelper from 'components/InfoHelper'
+import { Label } from 'components/swapv2/LimitOrder/LimitOrderForm'
 import useTheme from 'hooks/useTheme'
 
-import { Label } from '.'
 import { RateInfo } from './type'
 
 const DeltaRate = ({
   marketPrice,
   rateInfo,
+  symbolIn,
 }: {
   marketPrice: Price<Currency, Currency> | undefined
   rateInfo: RateInfo
+  symbolIn: string
 }) => {
   const theme = useTheme()
   let percent: number | string = ''
@@ -29,23 +31,25 @@ const DeltaRate = ({
   }
 
   const delta = Number(percent)
-  const deltaText = `${delta > 0 ? '+' : ''}${delta.toFixed(5)}%`
+  const sign = delta > 0 ? '+' : ''
+  const deltaText = `${Math.abs(delta) > 100 ? '>100' : `${sign}${delta.toFixed(2)}`}%`
   const color = delta > 0 ? theme.apr : theme.red
+  console.log(delta)
 
   return (
-    <Label style={{ marginBottom: 0, display: 'flex', alignItems: 'center' }}>
-      <Trans>
-        Price&nbsp;
-        {Math.abs(delta) > 0.0005 && percent ? (
-          <Flex alignItems={'center'} color={color}>
-            <Text>{deltaText} </Text>
-            <InfoHelper
-              color={color}
-              text={t`Your selected price is ${deltaText} ${delta > 0 ? `above` : `below`} the current market price.`}
-            />
-          </Flex>
-        ) : null}
-      </Trans>
+    <Label style={{ display: 'flex', alignItems: 'center', whiteSpace: 'nowrap' }}>
+      <Trans>Sell {symbolIn} at rate</Trans>
+      {Math.abs(delta) > 0.009 && percent ? (
+        <>
+          <Text as="span" color={color}>
+            &nbsp;{deltaText}
+          </Text>
+          <InfoHelper
+            color={color}
+            text={t`Your selected price is ${deltaText} ${delta > 0 ? `above` : `below`} the current market price.`}
+          />
+        </>
+      ) : null}
     </Label>
   )
 }

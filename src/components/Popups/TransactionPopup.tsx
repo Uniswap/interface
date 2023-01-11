@@ -176,21 +176,21 @@ export const SUMMARY: {
       isShort ? 'Setting up transaction' : 'There was an issue while setting up your swap. Please try again.',
   },
   [TRANSACTION_TYPE.CANCEL_LIMIT_ORDER]: {
-    success: summary => `Cancel ${summary}`,
+    success: summary => `Your cancellation ${summary} has been submitted`,
     pending: summary => 'Cancelling ' + summary,
     failure: summary => 'Error Cancel ' + summary,
   },
 }
 
 const MAP_STATUS: { [key in string]: string } = {
-  [TRANSACTION_TYPE.BRIDGE]: 'Processing',
+  [TRANSACTION_TYPE.BRIDGE]: '- Processing',
   [TRANSACTION_TYPE.CANCEL_LIMIT_ORDER]: 'Submitted',
 }
 const getTitle = (type: string, success: boolean) => {
-  let statusText = success ? 'Success' : 'Error'
-  if (success) {
+  const statusText = success ? 'Success' : 'Error'
+  if (success && MAP_STATUS[type]) {
     // custom
-    statusText = MAP_STATUS[type] || statusText
+    return `${type} ${MAP_STATUS[type] || statusText}!`
   }
   return `${type} - ${statusText}!`
 }

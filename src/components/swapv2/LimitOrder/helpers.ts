@@ -1,10 +1,12 @@
 import { Currency, Fraction } from '@kyberswap/ks-sdk-core'
+import { t } from '@lingui/macro'
 import { ethers } from 'ethers'
 import JSBI from 'jsbi'
 
+import { tryParseAmount } from 'state/swap/hooks'
 import { formatNumberWithPrecisionRange, formattedNum } from 'utils'
 
-import { LimitOrder, LimitOrderStatus } from './type'
+import { CreateOrderParam, LimitOrder, LimitOrderStatus } from './type'
 
 export const isActiveStatus = (status: LimitOrderStatus) =>
   [LimitOrderStatus.ACTIVE, LimitOrderStatus.OPEN, LimitOrderStatus.PARTIALLY_FILLED].includes(status)
@@ -119,5 +121,31 @@ export const calcPercentFilledOrder = (value: string, total: string, decimals: n
   } catch (error) {
     console.log(error)
     return '0'
+  }
+}
+
+export const getErrorMessage = (error: any) => {
+  console.error(`Limit order error: `, error)
+  const errorCode: string = error?.response?.data?.code || error.code || ''
+  const mapErrorMessageByErrCode: { [code: string]: string } = {
+    4001: t`User denied message signature`,
+    4002: t`You don't have sufficient fund for this transaction.`,
+    4004: t`Invalid signature`,
+  }
+  const msg = mapErrorMessageByErrCode[errorCode]
+  return msg?.toString?.() || error?.message || 'Error occur. Please try again.'
+}
+
+export const getPayloadCreateOrder = (params: CreateOrderParam) => {
+  const { currencyIn, currencyOut, chainId, account, inputAmount, outputAmount, expiredAt } = params
+  const parseInputAmount = tryParseAmount(inputAmount, currencyIn ?? undefined)
+  return {
+    chainId: chainId.toString(),
+    makerAsset: currencyIn?.wrapped.address,
+    takerAsset: currencyOut?.wrapped.address,
+    maker: account,
+    makingAmount: parseInputAmount?.quotient?.toString(),
+    takingAmount: tryParseAmount(outputAmount, currencyOut)?.quotient?.toString(),
+    expiredAt: Math.floor(expiredAt / 1000),
   }
 }

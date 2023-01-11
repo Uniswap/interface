@@ -54,7 +54,7 @@ const TabSelector = ({
           setActiveTab(LimitOrderStatus.CLOSED)
         }}
       >
-        <Trans>Orders History</Trans>
+        <Trans>Order History</Trans>
       </TabItem>
     </Flex>
   )

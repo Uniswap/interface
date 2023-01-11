@@ -56,5 +56,5 @@ export enum TRANSACTION_TYPE {
   KYBERDAO_MIGRATE = 'KyberDAO Migrate',
   KYBERDAO_VOTE = 'KyberDAO Vote',
   KYBERDAO_CLAIM = 'KyberDAO Claim',
-  CANCEL_LIMIT_ORDER = 'Cancel Limit Order',
+  CANCEL_LIMIT_ORDER = 'Cancel Order',
 }

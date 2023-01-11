@@ -16,7 +16,6 @@ const SelectWrapper = styled.div`
   font-size: 12px;
   color: ${({ theme }) => theme.subText};
   padding: 12px;
-  gap: 10px;
 `
 
 const SelectMenu = styled.div`

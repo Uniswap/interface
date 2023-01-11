@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/macro'
+import { Trans, t } from '@lingui/macro'
 import { CheckCircle, Triangle } from 'react-feather'
 import styled from 'styled-components'
 
@@ -46,13 +46,15 @@ export default function Transaction({ transaction, step }: { transaction: Transa
     !pending && transaction && (transaction.receipt?.status === 1 || typeof transaction.receipt?.status === 'undefined')
   const type = transaction?.type
   const summary = transaction?.summary
-  const parsedSummary = type
+  let parsedSummary = type
     ? SUMMARY[type]?.[pending ? 'pending' : success ? 'success' : 'failure'](
         summary,
         !!(step && type === TRANSACTION_TYPE.SETUP),
       )
     : summary ?? 'Hash: ' + transaction.hash.slice(0, 8) + '...' + transaction.hash.slice(58, 65)
-
+  if (success && type === TRANSACTION_TYPE.CANCEL_LIMIT_ORDER) {
+    parsedSummary = t`Cancel ${transaction.summary}` // already have pr wallet ui refactor it
+  }
   return (
     <TransactionWrapper>
       <TransactionState

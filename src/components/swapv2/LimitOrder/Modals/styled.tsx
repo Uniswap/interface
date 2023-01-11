@@ -136,7 +136,7 @@ export const Rate = ({
     >
       <Text>
         <Trans>
-          a {invertRate ? symbolOut : symbolIn} price of {rateStr} {invertRate ? symbolIn : symbolOut}
+          {invertRate ? symbolOut : symbolIn} price of {rateStr} {invertRate ? symbolIn : symbolOut}
         </Trans>
       </Text>
       <SwapIcon rotate={90} size={19} />
