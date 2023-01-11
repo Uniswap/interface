@@ -1,6 +1,6 @@
 import React from 'react'
-import { Image } from 'react-native'
-import { UNISWAP_LOGO } from 'src/assets'
+import { Image, StyleSheet } from 'react-native'
+import { UNISWAP_LOGO_LARGE } from 'src/assets'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { Modal } from 'src/components/modals/Modal'
@@ -35,9 +35,16 @@ export function LockScreenModal() {
             width: dimensions.fullWidth,
             height: dimensions.fullHeight,
           }}>
-          <Image source={UNISWAP_LOGO} />
+          <Image source={UNISWAP_LOGO_LARGE} style={style.logoStyle} />
         </Flex>
       </TouchableArea>
     </Modal>
   )
 }
+
+const style = StyleSheet.create({
+  logoStyle: {
+    height: 180,
+    width: 165,
+  },
+})
