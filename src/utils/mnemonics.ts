@@ -1,4 +1,5 @@
 import { utils, wordlists } from 'ethers'
+import { TFunction } from 'i18next'
 import { MNEMONIC_LENGTH_MAX, MNEMONIC_LENGTH_MIN } from 'src/constants/accounts'
 import { normalizeTextInput } from 'src/utils/string'
 
@@ -7,6 +8,24 @@ export enum MnemonicValidationError {
   NotEnoughWords = 'NotEnoughWords',
   TooManyWords = 'TooManyWords',
   InvalidPhrase = 'InvalidPhrase',
+}
+
+export function translateMnemonicErrorMessage(
+  error: MnemonicValidationError,
+  invalidWord: string | undefined,
+  t: TFunction
+): string {
+  switch (error) {
+    case MnemonicValidationError.InvalidPhrase:
+      return t('Invalid phrase')
+    case MnemonicValidationError.InvalidWord:
+      return t('Invalid word: {{word}}', { word: invalidWord })
+    case MnemonicValidationError.TooManyWords:
+    case MnemonicValidationError.NotEnoughWords:
+      return t('Recovery phrase must be 12-24 words')
+    default:
+      throw new Error(`Unhandled MnemonicValidationError case: ${error}`)
+  }
 }
 
 // Validate if word is part of the BIP-39 word set [https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki]

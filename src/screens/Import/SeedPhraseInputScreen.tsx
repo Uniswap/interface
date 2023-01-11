@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { ReactElement, useCallback, useEffect, useState } from 'react'
+import React, { ReactElement, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
@@ -14,6 +14,7 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import {
   MnemonicValidationError,
+  translateMnemonicErrorMessage,
   userFinishedTypingWord,
   validateMnemonic,
   validateSetOfWords,
@@ -37,17 +38,8 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
   useLockScreenOnBlur(pastePermissionModalOpen)
 
   const [value, setValue] = useState<string | undefined>(undefined)
-  const [submitEnabled, setSubmitEnabled] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string | undefined>()
-
-  useEffect(() => {
-    if (!errorMessage) {
-      setSubmitEnabled(true)
-    } else {
-      setSubmitEnabled(false)
-    }
-  }, [errorMessage, setSubmitEnabled])
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
 
   useAddBackButton(navigation)
 
@@ -55,18 +47,9 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
   const onSubmit = useCallback(() => {
     // Check phrase validation
     const { validMnemonic, error, invalidWord } = validateMnemonic(value)
-    if (!validMnemonic) {
-      setShowSuccess(false)
-      if (error === MnemonicValidationError.InvalidPhrase) {
-        setErrorMessage(t('Invalid phrase'))
-      } else if (error === MnemonicValidationError.InvalidWord) {
-        setErrorMessage(t('Invalid word: {{word}}', { word: invalidWord }))
-      } else if (
-        error === MnemonicValidationError.TooManyWords ||
-        error === MnemonicValidationError.NotEnoughWords
-      ) {
-        setErrorMessage(t('Recovery phrase must be 12-24 words'))
-      }
+
+    if (error) {
+      setErrorMessage(translateMnemonicErrorMessage(error, invalidWord, t))
       return
     }
 
@@ -78,7 +61,15 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
       })
     )
     navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })
-  }, [dispatch, navigation, params, t, value])
+  }, [value, t, dispatch, navigation, params])
+
+  const onBlur = useCallback(() => {
+    const { error, invalidWord } = validateMnemonic(value)
+    if (error) {
+      setShowSuccess(false)
+      setErrorMessage(translateMnemonicErrorMessage(error, invalidWord, t))
+    }
+  }, [t, value])
 
   const onChange = (text: string | undefined): void => {
     const { error, invalidWord, isValidLength } = validateSetOfWords(text)
@@ -96,11 +87,9 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
       error === MnemonicValidationError.NotEnoughWords
 
     if (!error || suppressError) {
-      setErrorMessage('')
-    } else if (error === MnemonicValidationError.InvalidWord) {
-      setErrorMessage(t('Invalid word: {{word}}', { word: invalidWord }))
-    } else if (error === MnemonicValidationError.TooManyWords) {
-      setErrorMessage(t('Recovery phrase must be 12-24 words'))
+      setErrorMessage(undefined)
+    } else {
+      setErrorMessage(translateMnemonicErrorMessage(error, invalidWord, t))
     }
 
     setValue(text)
@@ -121,11 +110,12 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
           placeholderLabel={t('recovery phrase')}
           showSuccess={showSuccess}
           value={value}
+          onBlur={onBlur}
           onChange={onChange}
         />
       </Flex>
       <Button
-        disabled={!submitEnabled}
+        disabled={!!errorMessage}
         label={t('Continue')}
         name={ElementName.Next}
         onPress={onSubmit}
