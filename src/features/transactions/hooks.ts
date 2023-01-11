@@ -20,6 +20,7 @@ import {
   TransactionType,
 } from 'src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
+import { theme } from 'src/styles/theme'
 
 export function usePendingTransactions(
   address: Address | null,
@@ -174,7 +175,7 @@ export function useAllTransactionsBetweenAddresses(
   }, [recipient, sender, txnsToSearch])
 }
 
-const MIN_INPUT_DECIMALPAD_GAP = 50
+const MIN_INPUT_DECIMALPAD_GAP = theme.spacing.sm
 
 export function useShouldShowNativeKeyboard() {
   const [containerHeight, setContainerHeight] = useState<number>()
