@@ -1,7 +1,10 @@
+import { Trans } from '@lingui/macro'
+import Column from 'components/Column'
+import Row from 'components/Row'
 import { SMALL_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
+import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
 import { ListingButton } from 'nft/components/bag/profile/ListingButton'
 import { getListingState } from 'nft/components/bag/profile/utils'
-import { Column, Row } from 'nft/components/Flex'
 import { BackArrowIcon } from 'nft/components/icons'
 import { headlineLarge, headlineSmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
@@ -10,10 +13,27 @@ import { ListingStatus, ProfilePageStateType } from 'nft/types'
 import { ListingMarkets } from 'nft/utils/listNfts'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
 import { NFTListingsGrid } from './NFTListingsGrid'
 import { SelectMarketplacesDropdown } from './SelectMarketplacesDropdown'
 import { SetDurationModal } from './SetDurationModal'
+
+const TitleWrapper = styled(Row)`
+  gap: 4px;
+  margin-bottom: 18px;
+  white-space: nowrap;
+  width: min-content;
+
+  @media screen and (min-width: ${SMALL_MEDIA_BREAKPOINT}) {
+    margin-bottom: 0px;
+  }
+`
+
+const ButtonsWrapper = styled(Row)`
+  gap: 12px;
+  width: min-content;
+`
 
 const MarketWrap = styled.section`
   gap: 48px;
@@ -55,6 +75,23 @@ const MobileListButtonWrapper = styled.div`
   }
 `
 
+const FloatingConfirmationBar = styled(Row)`
+  padding: 20px 32px;
+  border-radius: 20px;
+  white-space: nowrap;
+  justify-content: space-between;
+  background: ${({ theme }) => theme.backgroundSurface};
+`
+
+const ProceedsWrapper = styled(Row)`
+  width: min-content;
+  gap: 40px;
+`
+
+const ListingButtonWrapper = styled.div`
+  width: 170px;
+`
+
 export const ListPage = () => {
   const { setProfilePageState: setSellPageState } = useProfilePageState()
   const setGlobalMarketplaces = useSellAsset((state) => state.setGlobalMarketplaces)
@@ -65,6 +102,7 @@ export const ListPage = () => {
   const listingStatus = useNFTList((state) => state.listingStatus)
   const setListingStatus = useNFTList((state) => state.setListingStatus)
   const isMobile = useIsMobile()
+  const isNftListV2 = useNftListV2Flag() === NftListV2Variant.Enabled
 
   useEffect(() => {
     const state = getListingState(collectionsRequiringApproval, listings)
@@ -89,7 +127,7 @@ export const ListPage = () => {
     <Column>
       <MarketWrap>
         <ListingHeader>
-          <Row gap="4" marginBottom={{ sm: '18', md: '0' }}>
+          <TitleWrapper>
             <BackArrowIcon
               height={isMobile ? 20 : 32}
               width={isMobile ? 20 : 32}
@@ -98,19 +136,36 @@ export const ListPage = () => {
               cursor="pointer"
             />
             <div className={isMobile ? headlineSmall : headlineLarge}>Sell NFTs</div>
-          </Row>
-          <Row gap="12">
+          </TitleWrapper>
+          <ButtonsWrapper>
             <SelectMarketplacesDropdown setSelectedMarkets={setSelectedMarkets} selectedMarkets={selectedMarkets} />
             <SetDurationModal />
-          </Row>
+          </ButtonsWrapper>
         </ListingHeader>
         <GridWrapper>
           <NFTListingsGrid selectedMarkets={selectedMarkets} />
+          {isNftListV2 && (
+            <FloatingConfirmationBar>
+              <ThemedText.HeadlineSmall lineHeight="28px">
+                <Trans>Proceeds if sold</Trans>
+              </ThemedText.HeadlineSmall>
+              <ProceedsWrapper>
+                <ThemedText.HeadlineSmall lineHeight="28px" color="textTertiary">
+                  - ETH
+                </ThemedText.HeadlineSmall>
+                <ListingButtonWrapper>
+                  <ListingButton onClick={toggleBag} buttonText="Set prices to continue" />
+                </ListingButtonWrapper>
+              </ProceedsWrapper>
+            </FloatingConfirmationBar>
+          )}
         </GridWrapper>
       </MarketWrap>
-      <MobileListButtonWrapper>
-        <ListingButton onClick={toggleBag} buttonText="Continue listing" />
-      </MobileListButtonWrapper>
+      {!isNftListV2 && (
+        <MobileListButtonWrapper>
+          <ListingButton onClick={toggleBag} buttonText="Continue listing" />
+        </MobileListButtonWrapper>
+      )}
     </Column>
   )
 }
