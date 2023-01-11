@@ -41,7 +41,6 @@ import {
 } from 'nft/types'
 import {
   calcPoolPrice,
-  calcSudoSwapPrice,
   getRarityStatus,
   isInSameMarketplaceCollection,
   isInSameSudoSwapPool,
@@ -307,7 +306,6 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   const calculatePrice = useCallback(
     (asset: GenieAsset) => {
-      if (asset.marketplace === Markets.Sudoswap) return calcSudoSwapPrice(asset, getPoolPosition(asset))
       return calcPoolPrice(asset, getPoolPosition(asset))
     },
     [getPoolPosition]
