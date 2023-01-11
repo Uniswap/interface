@@ -85,8 +85,8 @@ const FloatingConfirmationBar = styled(Row)`
   background: ${({ theme }) => theme.backgroundSurface};
   position: fixed;
   bottom: 32px;
-  margin: 0px 60px;
-  width: calc(100vw - 120px);
+  margin: 0px 156px;
+  width: calc(100vw - 312px);
   z-index: ${Z_INDEX.under_dropdown};
 `
 
