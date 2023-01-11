@@ -111,7 +111,7 @@ export default function TimeSelector() {
 
   return (
     <StyledMenu ref={node}>
-      <FilterOption onClick={toggleMenu} aria-label="timeSelector" active={open}>
+      <FilterOption onClick={toggleMenu} aria-label="timeSelector" active={open} data-testid="time-selector">
         <StyledMenuContent>
           {DISPLAYS[activeTime]}
           <Chevron open={open}>
@@ -128,6 +128,7 @@ export default function TimeSelector() {
           {ORDERED_TIMES.map((time) => (
             <InternalLinkMenuItem
               key={DISPLAYS[time]}
+              data-testid={DISPLAYS[time]}
               onClick={() => {
                 setTime(time)
                 toggleMenu()

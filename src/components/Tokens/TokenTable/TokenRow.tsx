@@ -378,15 +378,23 @@ function TokenRow({
   const rowCells = (
     <>
       <ListNumberCell header={header}>{listNumber}</ListNumberCell>
-      <NameCell>{tokenInfo}</NameCell>
-      <PriceCell sortable={header}>{price}</PriceCell>
-      <PercentChangeCell sortable={header}>{percentChange}</PercentChangeCell>
-      <TvlCell sortable={header}>{tvl}</TvlCell>
-      <VolumeCell sortable={header}>{volume}</VolumeCell>
+      <NameCell data-testid="name-cell">{tokenInfo}</NameCell>
+      <PriceCell data-testid="price-cell" sortable={header}>
+        {price}
+      </PriceCell>
+      <PercentChangeCell data-testid="percent-change-cell" sortable={header}>
+        {percentChange}
+      </PercentChangeCell>
+      <TvlCell data-testid="tvl-cell" sortable={header}>
+        {tvl}
+      </TvlCell>
+      <VolumeCell data-testid="volume-cell" sortable={header}>
+        {volume}
+      </VolumeCell>
       <SparkLineCell>{sparkLine}</SparkLineCell>
     </>
   )
-  if (header) return <StyledHeaderRow>{rowCells}</StyledHeaderRow>
+  if (header) return <StyledHeaderRow data-testid="header-row">{rowCells}</StyledHeaderRow>
   return <StyledTokenRow {...rest}>{rowCells}</StyledTokenRow>
 }
 
@@ -469,7 +477,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
 
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
-    <div ref={ref} data-testid={`token-table-row-${tokenName}`}>
+    <div ref={ref} data-testid={`token-table-row-${tokenName?.split(' ').join('-')}`}>
       <StyledLink
         to={getTokenDetailsURL(token.address ?? '', token.chain)}
         onClick={() =>
