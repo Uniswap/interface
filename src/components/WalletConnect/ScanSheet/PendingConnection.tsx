@@ -3,7 +3,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import Checkmark from 'src/assets/icons/check.svg'
 import X from 'src/assets/icons/x.svg'
-import { AddressDisplay } from 'src/components/AddressDisplay'
+import { AccountDetails } from 'src/components/accounts/AccountDetails'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { LinkButton } from 'src/components/buttons/LinkButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -30,7 +30,6 @@ import {
   removePendingSession,
   WalletConnectSession,
 } from 'src/features/walletConnect/walletConnectSlice'
-import { shortenAddress } from 'src/utils/addresses'
 import { toSupportedChainId } from 'src/utils/chainId'
 
 type Props = {
@@ -120,7 +119,6 @@ type SwitchAccountProps = {
 }
 
 const SwitchAccountRow = ({ activeAddress, setModalState }: SwitchAccountProps) => {
-  const theme = useAppTheme()
   const signerAccounts = useSignerAccounts()
   const accountIsSwitchable = signerAccounts.length > 1
 
@@ -133,24 +131,9 @@ const SwitchAccountRow = ({ activeAddress, setModalState }: SwitchAccountProps) 
       disabled={!accountIsSwitchable}
       m="none"
       name={ElementName.WCDappSwitchAccount}
-      p="none"
+      p="sm"
       onPress={onPress}>
-      <Flex row shrink gap="sm" justifyContent="space-between" p="sm">
-        <AddressDisplay
-          hideAddressInSubtitle
-          address={activeAddress}
-          size={20}
-          variant="subheadSmall"
-        />
-        <Flex centered row shrink gap="xs">
-          <Text color="textSecondary" variant="bodySmall">
-            {shortenAddress(activeAddress)}
-          </Text>
-          {accountIsSwitchable && (
-            <Chevron color={theme.colors.textSecondary} direction="e" height="20" width="20" />
-          )}
-        </Flex>
-      </Flex>
+      <AccountDetails address={activeAddress} chevron={accountIsSwitchable} />
     </TouchableArea>
   )
 }

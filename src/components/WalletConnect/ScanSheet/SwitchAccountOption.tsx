@@ -25,9 +25,10 @@ export const SwitchAccountOption = ({ account, activeAccount }: Props) => {
       <Separator />
       <Flex row alignItems="center" justifyContent="space-between" px="lg" py="xs">
         <Unicon address={account.address} size={ICON_SIZE} />
-        <Flex alignItems="center" gap="none" p="none">
+        <Flex shrink alignItems="center" gap="none" p="none">
           <Text
             color="textPrimary"
+            numberOfLines={1}
             testID={`address-display/name/${displayName?.name}`}
             variant="bodyLarge">
             {displayName?.name}

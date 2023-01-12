@@ -87,6 +87,7 @@ export function AccountHeader() {
         alignItems="center"
         flex={1}
         flexDirection="row"
+        mr="sm"
         name={ElementName.Manage}
         testID={ElementName.Manage}
         onLongPress={() => {

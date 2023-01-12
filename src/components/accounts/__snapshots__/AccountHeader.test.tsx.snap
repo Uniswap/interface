@@ -40,6 +40,7 @@ exports[`AccountHeader renders without error 1`] = `
         "display": "flex",
         "flex": 1,
         "flexDirection": "row",
+        "marginRight": 12,
         "opacity": 1,
       }
     }
