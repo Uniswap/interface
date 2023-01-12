@@ -69,7 +69,7 @@ const DeltaRate = ({
             text={
               profit
                 ? t`Your selected price is ${percent} better than the current market price.`
-                : t`Your selected price is ${percent} worse the current market price.`
+                : t`Your selected price is ${percent} worse than the current market price.`
             }
           />
         </>
