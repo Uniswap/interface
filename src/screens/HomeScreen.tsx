@@ -11,7 +11,7 @@ import {
   useState,
 } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FlatList, StyleProp, useColorScheme, View, ViewProps, ViewStyle } from 'react-native'
+import { StyleProp, useColorScheme, View, ViewProps, ViewStyle } from 'react-native'
 import { GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   interpolateColor,
@@ -115,7 +115,8 @@ export function HomeScreen(): ReactElement {
     (event) => (nftsTabScrollValue.value = event.contentOffset.y)
   )
 
-  const tokensTabScrollRef = useAnimatedRef<FlatList>()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const tokensTabScrollRef = useAnimatedRef<FlashList<any>>()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const nftsTabScrollRef = useAnimatedRef<FlashList<any>>()
 
