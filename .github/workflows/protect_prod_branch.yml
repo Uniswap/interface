@@ -1,0 +1,26 @@
+name: Prod Pipeline
+
+# This CI job will review the contents of any PR that is targeting the releases/prod branch
+# for merging. It reviews all of the commits in the PR in question and confirms that each of
+# those commits exists on the releases/beta branch. Thus
+
+on:
+  pull_request:
+    branches:
+      - 'releases/prod'
+
+jobs:
+  prod-test-commits:
+    name: 'Check that commits exist on releases/beta branch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
+        with:
+          token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
+          ref: releases/beta
+          fetch-depth: 0
+      - name: 'Test for presence of commits on releases/beta branch'
+        env:
+          GH_TOKEN: ${{ secrets.SERVICE_ACCOUNT_PAT }}
+        run: |
+          gh pr view ${{github.event.number}} --json commits | jq '.commits[].oid' | sed 's/"//g' | xargs -I % sh -c 'echo "Testing for presence of commit % on releases/beta branch..." && git branch --contains % | grep releases/beta && echo "Found commit % on releases/beta branch" || echo "Could not find commit % on releases/beta branch - failing!" && exit 1'

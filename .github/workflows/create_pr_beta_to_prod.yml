@@ -1,0 +1,39 @@
+name: Prod Pipeline
+
+# This CI job is responsible for generating PRs that bring the HEAD of releases/beta into releases/prod.
+# These PRs are meant to be the only (standard) way that code is merged into the releases/prod
+# branch.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  prod-gen-pr:
+    name: 'Generate PR for Merging to Releases/Prod Branch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
+        with:
+          token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
+          ref: releases/beta
+      - name: Setup Git
+        run: |
+          git config user.name "UL Mobile Service Account"
+          git config user.email "hello-happy-puppy@users.noreply.github.com"
+      - name: Set Env Variables
+        run: |
+          echo "TIME=$(date +"%Y-%m-%d %H:%M:%S")" >> $GITHUB_ENV
+          echo "TIME_S=$(date +"%s")" >> $GITHUB_ENV
+          echo "BETA_REV=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+      - uses: peter-evans/create-pull-request@ea54357f43e3d1cf1125471d0814f4d02cc0d364
+        id: cpr
+        with:
+          token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
+          commit-message: "This PR merges latest commits of `releases/beta` to `releases/prod'. Upon approval and successful merge, a Github action associated with the prod Fastlane setup will deploy to TestFlight, where the app can be submitted to Apple."
+          base: 'releases/prod'
+          title: 'ci: Release Beta to Prod'
+          delete-branch: 'true'
+          committer: 'UL Service Account <hello-happy-puppy@users.noreply.github.com>'
+          author: 'UL Service Account <hello-happy-puppy@users.noreply.github.com>'
+          branch: 'approvals/betaToProd'
+#          body: ${{ gh pr view --json commits | jq '.commits[] | [.oid, .messageHeadline] | @tsv' | sed 's/"//g' | sed 's/\\\t/ - /g' }}
