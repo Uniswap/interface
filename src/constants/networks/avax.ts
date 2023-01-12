@@ -72,7 +72,7 @@ const avaxInfo: EVMNetworkInfo = {
     routers: '0xC1e7dFE73E1598E3910EF4C7845B68A9Ab6F4c83',
     farms: ['0xBdEc4a045446F583dc564C0A227FFd475b329bf0', '0x5C503D4b7DE0633f031229bbAA6A5e4A31cc35d8'],
   },
-  limitOrder: '0xB3c8F4Aa9bA403EDB6e890E4dA78F8ef7c9FC463',
+  limitOrder: '0x1877Ec0770901cc6886FDA7E7525a78c2Ed4e975',
   averageBlockTimeInSeconds: 1.85,
   coingeckoNetworkId: 'avalanche',
   coingeckoNativeTokenId: 'avalanche-2',
