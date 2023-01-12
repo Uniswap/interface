@@ -1,19 +1,41 @@
+import { t, Trans } from '@lingui/macro'
+import Column from 'components/Column'
+import Row from 'components/Row'
 import { SMALL_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
+import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
 import { ListingButton } from 'nft/components/bag/profile/ListingButton'
-import { getListingState } from 'nft/components/bag/profile/utils'
-import { Column, Row } from 'nft/components/Flex'
+import { getListingState, getTotalEthValue } from 'nft/components/bag/profile/utils'
 import { BackArrowIcon } from 'nft/components/icons'
 import { headlineLarge, headlineSmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile, useNFTList, useProfilePageState, useSellAsset } from 'nft/hooks'
 import { ListingStatus, ProfilePageStateType } from 'nft/types'
+import { fetchPrice, formatEth, formatUsdPrice } from 'nft/utils'
 import { ListingMarkets } from 'nft/utils/listNfts'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
+import { Z_INDEX } from 'theme/zIndex'
 
 import { NFTListingsGrid } from './NFTListingsGrid'
 import { SelectMarketplacesDropdown } from './SelectMarketplacesDropdown'
 import { SetDurationModal } from './SetDurationModal'
+
+const TitleWrapper = styled(Row)`
+  gap: 4px;
+  margin-bottom: 18px;
+  white-space: nowrap;
+  width: min-content;
+
+  @media screen and (min-width: ${SMALL_MEDIA_BREAKPOINT}) {
+    margin-bottom: 0px;
+  }
+`
+
+const ButtonsWrapper = styled(Row)`
+  gap: 12px;
+  width: min-content;
+`
 
 const MarketWrap = styled.section`
   gap: 48px;
@@ -55,6 +77,43 @@ const MobileListButtonWrapper = styled.div`
   }
 `
 
+const FloatingConfirmationBar = styled(Row)`
+  padding: 20px 32px;
+  border: 1px solid;
+  border-color: ${({ theme }) => theme.backgroundOutline};
+  border-radius: 20px;
+  white-space: nowrap;
+  justify-content: space-between;
+  background: ${({ theme }) => theme.backgroundSurface};
+  position: fixed;
+  bottom: 32px;
+  margin: 0px 156px;
+  width: calc(100vw - 312px);
+  z-index: ${Z_INDEX.under_dropdown};
+`
+
+const Overlay = styled.div`
+  position: fixed;
+  bottom: 0px;
+  height: 158px;
+  width: 100vw;
+  background: ${({ theme }) => `linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, ${theme.backgroundBackdrop} 100%)`};
+`
+
+const ProceedsAndButtonWrapper = styled(Row)`
+  width: min-content;
+  gap: 40px;
+`
+
+const ProceedsWrapper = styled(Row)`
+  width: min-content;
+  gap: 16px;
+`
+
+const ListingButtonWrapper = styled.div`
+  width: 170px;
+`
+
 export const ListPage = () => {
   const { setProfilePageState: setSellPageState } = useProfilePageState()
   const setGlobalMarketplaces = useSellAsset((state) => state.setGlobalMarketplaces)
@@ -64,7 +123,19 @@ export const ListPage = () => {
   const collectionsRequiringApproval = useNFTList((state) => state.collectionsRequiringApproval)
   const listingStatus = useNFTList((state) => state.listingStatus)
   const setListingStatus = useNFTList((state) => state.setListingStatus)
+  const sellAssets = useSellAsset((state) => state.sellAssets)
   const isMobile = useIsMobile()
+  const isNftListV2 = useNftListV2Flag() === NftListV2Variant.Enabled
+
+  const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
+  const anyListingsMissingPrice = useMemo(() => !!listings.find((listing) => !listing.price), [listings])
+  const [ethPriceInUSD, setEthPriceInUSD] = useState(0)
+
+  useEffect(() => {
+    fetchPrice().then((price) => {
+      setEthPriceInUSD(price ?? 0)
+    })
+  }, [])
 
   useEffect(() => {
     const state = getListingState(collectionsRequiringApproval, listings)
@@ -89,7 +160,7 @@ export const ListPage = () => {
     <Column>
       <MarketWrap>
         <ListingHeader>
-          <Row gap="4" marginBottom={{ sm: '18', md: '0' }}>
+          <TitleWrapper>
             <BackArrowIcon
               height={isMobile ? 20 : 32}
               width={isMobile ? 20 : 32}
@@ -98,19 +169,52 @@ export const ListPage = () => {
               cursor="pointer"
             />
             <div className={isMobile ? headlineSmall : headlineLarge}>Sell NFTs</div>
-          </Row>
-          <Row gap="12">
+          </TitleWrapper>
+          <ButtonsWrapper>
             <SelectMarketplacesDropdown setSelectedMarkets={setSelectedMarkets} selectedMarkets={selectedMarkets} />
             <SetDurationModal />
-          </Row>
+          </ButtonsWrapper>
         </ListingHeader>
         <GridWrapper>
           <NFTListingsGrid selectedMarkets={selectedMarkets} />
         </GridWrapper>
       </MarketWrap>
-      <MobileListButtonWrapper>
-        <ListingButton onClick={toggleBag} buttonText="Continue listing" />
-      </MobileListButtonWrapper>
+      {isNftListV2 && (
+        <>
+          <FloatingConfirmationBar>
+            <ThemedText.HeadlineSmall lineHeight="28px">
+              <Trans>Proceeds if sold</Trans>
+            </ThemedText.HeadlineSmall>
+            <ProceedsAndButtonWrapper>
+              <ProceedsWrapper>
+                <ThemedText.HeadlineSmall
+                  lineHeight="28px"
+                  color={totalEthListingValue ? 'textPrimary' : 'textTertiary'}
+                >
+                  {totalEthListingValue > 0 ? formatEth(totalEthListingValue) : '-'} ETH
+                </ThemedText.HeadlineSmall>
+                {!!totalEthListingValue && !!ethPriceInUSD && (
+                  <ThemedText.HeadlineSmall lineHeight="28px" color="textSecondary">
+                    {formatUsdPrice(totalEthListingValue * ethPriceInUSD)}
+                  </ThemedText.HeadlineSmall>
+                )}
+              </ProceedsWrapper>
+              <ListingButtonWrapper>
+                <ListingButton
+                  onClick={toggleBag}
+                  buttonText={anyListingsMissingPrice ? t`Set prices to continue` : t`Start listing`}
+                />
+              </ListingButtonWrapper>
+            </ProceedsAndButtonWrapper>
+          </FloatingConfirmationBar>
+          <Overlay />
+        </>
+      )}
+      {!isNftListV2 && (
+        <MobileListButtonWrapper>
+          <ListingButton onClick={toggleBag} buttonText="Continue listing" />
+        </MobileListButtonWrapper>
+      )}
     </Column>
   )
 }
