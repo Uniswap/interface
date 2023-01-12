@@ -187,10 +187,10 @@ export const BagFooter = ({
 
   const isPending = PENDING_BAG_STATUSES.includes(bagStatus)
 
-  if (shouldUsePayWithAnyToken) {
-    return (
-      <FooterContainer>
-        <Footer>
+  return (
+    <FooterContainer>
+      <Footer>
+        {shouldUsePayWithAnyToken && (
           <CurrencyRow>
             <Column gap="xs">
               <ThemedText.SubHeaderSmall textAlign="start">
@@ -218,45 +218,27 @@ export const BagFooter = ({
               >{`${ethNumberStandardFormatter(totalUsdPrice, true)}`}</ThemedText.BodySmall>
             </Column>
           </CurrencyRow>
-          <TraceEvent
-            events={[BrowserEvent.onClick]}
-            name={NFTEventName.NFT_BUY_BAG_PAY}
-            element={InterfaceElementName.NFT_BUY_BAG_PAY_BUTTON}
-            properties={{ ...eventProperties }}
-            shouldLogImpression={connected && !disabled}
-          >
-            <Warning>{warningText}</Warning>
-            <ActionButton onClick={handleClick} disabled={disabled}>
-              {isPending && <Loader size="20px" stroke="white" />}
-              {buttonText}
-            </ActionButton>
-          </TraceEvent>
-        </Footer>
-      </FooterContainer>
-    )
-  }
-
-  return (
-    <FooterContainer>
-      <Footer>
-        <FooterHeader gap="xs" warningText={!!warningText}>
-          <Row justify="space-between">
-            <div>
-              <ThemedText.HeadlineSmall>Total</ThemedText.HeadlineSmall>
-            </div>
-            <div>
-              <ThemedText.HeadlineSmall>
-                {formatWeiToDecimal(totalEthPrice.toString())}&nbsp;ETH
-              </ThemedText.HeadlineSmall>
-            </div>
-          </Row>
-          <Row justify="flex-end">
-            <ThemedText.BodySmall color="textSecondary" lineHeight="20px">{`${ethNumberStandardFormatter(
-              totalUsdPrice,
-              true
-            )}`}</ThemedText.BodySmall>
-          </Row>
-        </FooterHeader>
+        )}
+        {!shouldUsePayWithAnyToken && (
+          <FooterHeader gap="xs" warningText={!!warningText}>
+            <Row justify="space-between">
+              <div>
+                <ThemedText.HeadlineSmall>Total</ThemedText.HeadlineSmall>
+              </div>
+              <div>
+                <ThemedText.HeadlineSmall>
+                  {formatWeiToDecimal(totalEthPrice.toString())}&nbsp;ETH
+                </ThemedText.HeadlineSmall>
+              </div>
+            </Row>
+            <Row justify="flex-end">
+              <ThemedText.BodySmall color="textSecondary" lineHeight="20px">{`${ethNumberStandardFormatter(
+                totalUsdPrice,
+                true
+              )}`}</ThemedText.BodySmall>
+            </Row>
+          </FooterHeader>
+        )}
         <TraceEvent
           events={[BrowserEvent.onClick]}
           name={NFTEventName.NFT_BUY_BAG_PAY}
