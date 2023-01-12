@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { PAGE_SIZE, useTopTokens } from 'graphql/data/TopTokens'
 import { validateUrlChainParam } from 'graphql/data/util'
-import { ReactNode, useMemo } from 'react'
+import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -78,23 +78,7 @@ function LoadingTokenTable({ rowCount = PAGE_SIZE }: { rowCount?: number }) {
 export default function TokenTable() {
   // TODO: consider moving prefetched call into app.tsx and passing it here, use a preloaded call & updated on interval every 60s
   const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
-  const { tokens, loadingTokens, sparklines } = useTopTokens(chainName)
-
-  const tokenVolumeRankMap: Record<string, number> = useMemo(() => {
-    if (!tokens) return {}
-    return [...tokens]
-      .sort((a, b) => {
-        if (!a.market?.volume || !b.market?.volume) return 0
-        return a.market.volume.value > b.market.volume.value ? -1 : 1
-      })
-      .reduce((acc, cur, i) => {
-        if (!cur.address) return acc
-        return {
-          ...acc,
-          [cur.address]: i + 1,
-        }
-      }, {})
-  }, [tokens])
+  const { tokens, tokenVolumeRank, loadingTokens, sparklines } = useTopTokens(chainName)
 
   /* loading and error state */
   if (loadingTokens) {
@@ -126,7 +110,7 @@ export default function TokenTable() {
                   tokenListLength={tokens.length}
                   token={token}
                   sparklineMap={sparklines}
-                  volumeRank={tokenVolumeRankMap[token.address]}
+                  volumeRank={tokenVolumeRank[token.address]}
                 />
               )
           )}
