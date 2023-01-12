@@ -96,7 +96,7 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
     return () => {
       cancels.forEach((cancel) => cancel())
     }
-  }, [chainId, provider, lastBlockNumber, getReceipt, onReceipt, onCheck, pendingTransactions])
+  }, [chainId, provider, lastBlockNumber, getReceipt, onReceipt, onCheck, pendingTransactions, fastForwardBlockNumber])
 
   return null
 }

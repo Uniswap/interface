@@ -20,14 +20,14 @@ export enum AllowanceState {
   ALLOWED,
 }
 
-export interface AllowanceRequired {
+interface AllowanceRequired {
   state: AllowanceState.REQUIRED
   token: Token
   isApprovalLoading: boolean
   approveAndPermit: () => Promise<void>
 }
 
-export type Allowance =
+type Allowance =
   | { state: AllowanceState.LOADING }
   | {
       state: AllowanceState.ALLOWED
