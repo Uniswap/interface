@@ -782,7 +782,7 @@ const LimitOrderForm = function LimitOrderForm({
         {showWarningRate && (
           <ErrorWarningPanel
             type="error"
-            title={t`Limit order price is ${deltaRate.percent} lower than the market. You will be selling your ${currencyIn?.symbol} exceedingly cheap.`}
+            title={t`Your limit order price is ${deltaRate.percent} lower than the current market price`}
           />
         )}
 

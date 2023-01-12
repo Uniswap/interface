@@ -23,6 +23,9 @@ const Container = styled.div`
   padding: 24px 20px;
   font-weight: 500;
   width: 100%;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+     padding: 16px 10px;
+  `}
 `
 
 const DefaultOptionContainer = styled.div`

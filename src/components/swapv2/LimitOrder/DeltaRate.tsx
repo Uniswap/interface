@@ -38,7 +38,7 @@ export function useGetDeltaRateLimitOrder({
   const percentText = Math.abs(Number(percent)) > 0.009 ? deltaText : ''
   return {
     percent: percentText,
-    profit: percentText && Number(percent) > 0,
+    profit: percent && Number(percent) > 0,
   }
 }
 
@@ -68,8 +68,8 @@ const DeltaRate = ({
             color={color}
             text={
               profit
-                ? t`Your selected price is ${percent} above the current market price.`
-                : t`Your selected price is ${percent} below the current market price.`
+                ? t`Your selected price is ${percent} better than the current market price.`
+                : t`Your selected price is ${percent} worse the current market price.`
             }
           />
         </>
