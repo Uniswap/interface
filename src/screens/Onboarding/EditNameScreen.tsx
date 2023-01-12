@@ -27,6 +27,8 @@ import { shortenAddress } from 'src/utils/addresses'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.EditName>
 
+const renderHeaderLeft = () => <BackButton />
+
 export function EditNameScreen({ navigation, route: { params } }: Props): ReactElement {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
@@ -61,7 +63,7 @@ export function EditNameScreen({ navigation, route: { params } }: Props): ReactE
     const shouldRenderBackButton = navigation.getState().index === 0
     if (shouldRenderBackButton) {
       navigation.setOptions({
-        headerLeft: () => <BackButton />,
+        headerLeft: renderHeaderLeft,
       })
     }
     return () => navigation.removeListener('beforeRemove', beforeRemoveListener)

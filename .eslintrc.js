@@ -116,8 +116,7 @@ module.exports = {
       2,
       { props: 'never', children: 'never', propElementValues: 'always' },
     ],
-    // TODO: consider re-enabling this as part of perf assessment
-    'react/no-unstable-nested-components': 'off',
+    'react/no-unstable-nested-components': 'error',
     // React-Native Plugin
     // Overrides rules from @react-native-community:
     // https://github.com/facebook/react-native/blob/3cf0291008dfeed4d967ebb95bdccbe2d52c5b81/packages/eslint-config-react-native-community/index.js#L313

@@ -181,9 +181,7 @@ export function SettingsBiometricAuthScreen(): ReactElement {
         </BackHeader>
         <Box p="lg">
           <FlatList
-            ItemSeparatorComponent={(): ReactElement => (
-              <Box bg="backgroundOutline" height={1} my="md" />
-            )}
+            ItemSeparatorComponent={renderItemSeparator}
             data={options}
             renderItem={renderItem}
             scrollEnabled={false}
@@ -193,3 +191,5 @@ export function SettingsBiometricAuthScreen(): ReactElement {
     </>
   )
 }
+
+const renderItemSeparator = (): ReactElement => <Box bg="backgroundOutline" height={1} my="md" />

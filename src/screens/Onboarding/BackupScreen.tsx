@@ -2,7 +2,7 @@ import { CompositeScreenProps } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useResponsiveProp } from '@shopify/restyle'
-import React, { ComponentProps, ReactElement, useEffect, useState } from 'react'
+import React, { ComponentProps, ReactElement, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import { SvgProps } from 'react-native-svg'
@@ -48,17 +48,22 @@ export function BackupScreen({ navigation, route: { params } }: Props) {
 
   const activeAccountBackups = useActiveAccount()?.backups
 
+  const renderHeaderLeft = useCallback(
+    () => (
+      <BackButton
+        onPressBack={(): void => {
+          navigation.pop(2)
+        }}
+      />
+    ),
+    [navigation]
+  )
+
   useEffect(() => {
     const shouldOverrideBackButton = params?.importType === ImportType.SeedPhrase
     if (shouldOverrideBackButton) {
       navigation.setOptions({
-        headerLeft: () => (
-          <BackButton
-            onPressBack={(): void => {
-              navigation.pop(2)
-            }}
-          />
-        ),
+        headerLeft: renderHeaderLeft,
       })
     }
   })

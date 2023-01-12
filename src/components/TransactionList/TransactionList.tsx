@@ -201,8 +201,8 @@ function TransactionListInner({
     showLoading,
   ])
 
-  const renderItem = useMemo(() => {
-    return ({ item }: { item: TransactionDetails }) => {
+  const renderItem = useCallback(
+    ({ item }: { item: TransactionDetails }) => {
       if (isLoadingItem(item)) {
         return (
           <Box p="sm">
@@ -210,7 +210,6 @@ function TransactionListInner({
           </Box>
         )
       }
-
       return (
         <TransactionSummaryRouter
           readonly={readonly}
@@ -220,8 +219,9 @@ function TransactionListInner({
           transaction={item}
         />
       )
-    }
-  }, [readonly])
+    },
+    [readonly]
+  )
 
   if (!showLoading && !hasTransactions) {
     return emptyStateContent

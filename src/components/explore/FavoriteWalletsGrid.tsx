@@ -58,7 +58,7 @@ export function FavoriteWalletsGrid({
         <FavoriteWalletsGridLoader />
       ) : (
         <FlatList
-          ItemSeparatorComponent={() => <Box height={GAP_SIZE} />}
+          ItemSeparatorComponent={renderItemSeparator}
           data={watchedWalletsList}
           keyExtractor={(address) => address}
           listKey="explore-favorite-wallets"
@@ -71,6 +71,8 @@ export function FavoriteWalletsGrid({
     </AnimatedBox>
   )
 }
+
+const renderItemSeparator = () => <Box height={GAP_SIZE} />
 
 function FavoriteWalletsGridLoader() {
   return (

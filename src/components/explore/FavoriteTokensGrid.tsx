@@ -18,6 +18,8 @@ const NUM_COLUMNS = 2
 const GAP_SIZE = FixedTheme.spacing.xs
 const ITEM_FLEX = { flex: 1 / NUM_COLUMNS }
 
+const renderItemSeparator = () => <Box height={GAP_SIZE} />
+
 /** Renders the favorite tokens section on the Explore tab */
 export function FavoriteTokensGrid({
   isEditing,
@@ -62,7 +64,7 @@ export function FavoriteTokensGrid({
         <FavoriteTokensGridLoader />
       ) : (
         <FlatList
-          ItemSeparatorComponent={() => <Box height={GAP_SIZE} />}
+          ItemSeparatorComponent={renderItemSeparator}
           contentContainerStyle={flex.grow}
           data={currencyIds}
           listKey="explore-favorite-tokens"

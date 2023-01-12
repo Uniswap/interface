@@ -1,5 +1,5 @@
 import { LinearGradient } from 'expo-linear-gradient'
-import { ComponentProps, default as React, useEffect, useMemo } from 'react'
+import { ComponentProps, default as React, useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo, StyleSheet } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
@@ -106,21 +106,20 @@ export function AccountList({
     [isAccountSwitcherModalEnabled, t, onAddWallet, theme]
   )
 
-  const renderItem = useMemo(
-    () =>
-      ({ item }: ListRenderItemInfo<AccountWithPortfolioValue>) => {
-        return (
-          <AccountCardItem
-            address={item.account.address}
-            isActive={!!activeAccount && activeAccount.address === item.account.address}
-            isPortfolioValueLoading={item.isPortfolioValueLoading}
-            isViewOnly={item.account.type === AccountType.Readonly}
-            portfolioValue={item.portfolioValue}
-            onPress={onPress}
-            onPressEdit={onPressEdit}
-          />
-        )
-      },
+  const renderItem = useCallback(
+    ({ item }: ListRenderItemInfo<AccountWithPortfolioValue>) => {
+      return (
+        <AccountCardItem
+          address={item.account.address}
+          isActive={!!activeAccount && activeAccount.address === item.account.address}
+          isPortfolioValueLoading={item.isPortfolioValueLoading}
+          isViewOnly={item.account.type === AccountType.Readonly}
+          portfolioValue={item.portfolioValue}
+          onPress={onPress}
+          onPressEdit={onPressEdit}
+        />
+      )
+    },
     [activeAccount, onPress, onPressEdit]
   )
 

@@ -147,7 +147,7 @@ export function SettingsScreen(): ReactElement {
       centerElement={<Text variant="bodyLarge">{t('Settings')}</Text>}>
       <Flex px="lg" py="sm">
         <SectionList
-          ItemSeparatorComponent={(): ReactElement => <Flex pt="xs" />}
+          ItemSeparatorComponent={renderItemSeparator}
           ListFooterComponent={<FooterSettings />}
           ListHeaderComponent={<WalletSettings />}
           keyExtractor={(_item, index): string => 'settings' + index}
@@ -168,7 +168,9 @@ export function SettingsScreen(): ReactElement {
   )
 }
 
-function OnboardingRow({ iconProps }: { iconProps: SvgProps }): ReactElement {
+const renderItemSeparator = (): ReactElement => <Flex pt="xs" />
+
+function OnboardingRow({ iconProps }: { iconProps: SvgProps }) {
   const theme = useTheme()
   const { t } = useTranslation()
   const dispatch = useDispatch()

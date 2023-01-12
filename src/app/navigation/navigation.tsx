@@ -1,9 +1,14 @@
-import { BottomTabBar, createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { createDrawerNavigator } from '@react-navigation/drawer'
+import {
+  BottomTabBar,
+  BottomTabBarProps,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs'
+import { createDrawerNavigator, DrawerContentComponentProps } from '@react-navigation/drawer'
+import { HeaderTitleProps } from '@react-navigation/elements'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createStackNavigator } from '@react-navigation/stack'
 import { useResponsiveProp } from '@shopify/restyle'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
@@ -90,6 +95,31 @@ const NullComponent = () => {
   return null
 }
 
+const renderTabBar = (props: BottomTabBarProps) => (
+  <Box bottom={0} left={0} position="absolute" right={0}>
+    <BottomTabBar {...props} />
+  </Box>
+)
+const renderTabBarWalletIcon = ({ focused }: { focused: boolean }) => (
+  <TabBarButton
+    Icon={WalletIcon}
+    IconFilled={WalletIconFilled}
+    focused={focused}
+    // swap takes `xxs` more space than other buttons
+    pl="lg"
+  />
+)
+const renderTabBarSearchIcon = ({ focused }: { focused: boolean }) => (
+  <TabBarButton
+    Icon={SearchIcon}
+    IconFilled={SearchIconFocused}
+    focused={focused}
+    // swap takes `xxs` more space than other buttons
+    pr="lg"
+  />
+)
+const renderSwapTabBarButton = () => <SwapTabBarButton />
+
 function TabNavigator() {
   const { t } = useTranslation()
   const theme = useAppTheme()
@@ -121,32 +151,20 @@ function TabNavigator() {
           justifyContent: 'center',
         },
       }}
-      tabBar={(props) => (
-        <Box bottom={0} left={0} position="absolute" right={0}>
-          <BottomTabBar {...props} />
-        </Box>
-      )}>
+      tabBar={renderTabBar}>
       <Tab.Screen
         component={HomeStackNavigator}
         name={Tabs.Home}
         options={{
           tabBarLabel: t('Home'),
-          tabBarIcon: ({ focused }) => (
-            <TabBarButton
-              Icon={WalletIcon}
-              IconFilled={WalletIconFilled}
-              focused={focused}
-              // swap takes `xxs` more space than other buttons
-              pl="lg"
-            />
-          ),
+          tabBarIcon: renderTabBarWalletIcon,
         }}
       />
       <Tab.Screen
         component={NullComponent}
         name={Tabs.SwapButton}
         options={{
-          tabBarButton: () => <SwapTabBarButton />,
+          tabBarButton: renderSwapTabBarButton,
         }}
       />
       <Tab.Screen
@@ -155,15 +173,7 @@ function TabNavigator() {
         options={{
           tabBarLabel: t('Explore'),
           tabBarShowLabel: false,
-          tabBarIcon: ({ focused }) => (
-            <TabBarButton
-              Icon={SearchIcon}
-              IconFilled={SearchIconFocused}
-              focused={focused}
-              // swap takes `xxs` more space than other buttons
-              pr="lg"
-            />
-          ),
+          tabBarIcon: renderTabBarSearchIcon,
         }}
       />
     </Tab.Navigator>
@@ -204,6 +214,10 @@ function SettingsStackGroup() {
   )
 }
 
+const renderAccountDrawerContent = (props: DrawerContentComponentProps) => (
+  <AccountDrawer {...props} />
+)
+
 export function DrawerNavigator() {
   return (
     <Drawer.Navigator
@@ -211,7 +225,7 @@ export function DrawerNavigator() {
       // closing twice, or sometimes not opening the first time you tap on it
       // https://stackoverflow.com/questions/71703096/drawer-reopen-sometime-when-change-screen
       useLegacyImplementation
-      drawerContent={(props) => <AccountDrawer {...props} />}
+      drawerContent={renderAccountDrawerContent}
       screenOptions={{
         drawerStyle: {
           width: SIDEBAR_WIDTH,
@@ -264,19 +278,26 @@ export function ExploreStackNavigator() {
   )
 }
 
+const renderHeaderTitle = (props: HeaderTitleProps) => <OnboardingHeader {...props} />
+const renderEmptyBackImage = () => <></>
+
 export function OnboardingStackNavigator() {
   const theme = useAppTheme()
   const insets = useSafeAreaInsets()
+
+  const renderHeaderBackImage = useCallback(
+    () => <Chevron color={theme.colors.textSecondary} height={28} width={28} />,
+    [theme.colors.textSecondary]
+  )
+
   return (
     <OnboardingStack.Navigator>
       <OnboardingStack.Group
         screenOptions={{
           headerMode: 'float',
-          headerTitle: (props) => <OnboardingHeader {...props} />,
+          headerTitle: renderHeaderTitle,
           headerBackTitleVisible: false,
-          headerBackImage: () => (
-            <Chevron color={theme.colors.textSecondary} height={28} width={28} />
-          ),
+          headerBackImage: renderHeaderBackImage,
           headerStatusBarHeight: insets.top + theme.spacing.xs,
           headerTransparent: true,
           headerTintColor: theme.colors.textSecondary,
@@ -307,7 +328,11 @@ export function OnboardingStackNavigator() {
           // header.
           // To fix this the header is shown but the backImage is hidden so it appears as if there is no header. This is v hacky but
           // I think it's a react navigation bug and I couldn't find a better solution. Feel free to debug if you're bored.
-          options={{ headerShown: true, gestureEnabled: false, headerBackImage: () => <></> }}
+          options={{
+            headerShown: true,
+            gestureEnabled: false,
+            headerBackImage: renderEmptyBackImage,
+          }}
         />
         <OnboardingStack.Screen
           component={CloudBackupProcessingScreen}
