@@ -16,7 +16,7 @@ const WBTC_CURRENCY_ID = idFromCurrency(WBTC).toLowerCase()
 const ETH_CURRENCY_ID = idFromCurrency(Ether.onChain(ChainId.Mainnet)).toLowerCase()
 
 const VITALIK_ETH_ADDRESS = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
-const HAYDEN_ETH_ADDRESS = '0x11E4857Bb9993a50c685A79AFad4E6F65D518DDa'
+const HAYDEN_ETH_ADDRESS = '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3'
 
 export const initialFavoritesState: FavoritesState = {
   tokens: [ETH_CURRENCY_ID, WBTC_CURRENCY_ID],
