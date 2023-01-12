@@ -23,4 +23,4 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.SERVICE_ACCOUNT_PAT }}
         run: |
-          gh pr view ${{github.event.number}} --json commits | jq '.commits[].oid' | sed 's/"//g' | xargs -I % sh -c 'echo "Testing for presence of commit % on releases/beta branch..." && git branch --contains % | grep releases/beta && echo "Found commit % on releases/beta branch" || echo "Could not find commit % on releases/beta branch - failing!" && exit 1'
+          gh pr view ${{github.event.number}} --json commits | jq '.commits[].oid' | sed 's/"//g' | xargs -I % sh -c 'echo "Testing for presence of commit % on releases/beta branch..." && git branch --contains % | grep releases/beta && echo "Found commit % on releases/beta branch" && exit 0 || echo "Could not find commit % on releases/beta branch - failing!" && exit 1'

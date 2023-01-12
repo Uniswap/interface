@@ -3,6 +3,8 @@ name: Prod Pipeline
 # This CI job is responsible for generating PRs that bring the HEAD of releases/beta into releases/prod.
 # These PRs are meant to be the only (standard) way that code is merged into the releases/prod
 # branch.
+#
+# https://github.com/peter-evans/create-pull-request/blob/main/docs/examples.md#keep-a-branch-up-to-date-with-another
 
 on:
   workflow_dispatch:
@@ -15,7 +17,11 @@ jobs:
       - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
         with:
           token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
-          ref: releases/beta
+          ref: releases/prod
+      - name: Reset promotion branch
+        run: |
+          git fetch origin releases/beta:releases/beta
+          git reset --hard releases/beta
       - name: Setup Git
         run: |
           git config user.name "UL Mobile Service Account"
