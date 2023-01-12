@@ -49,24 +49,22 @@ export function TouchableArea({
     (event: GestureResponderEvent) => {
       if (!onPress) return
 
-      onPress(event)
-    },
-    [onPress]
-  )
-
-  const onPressInHandler = useMemo(() => {
-    if (!hapticFeedback && !scaleTo) return
-
-    return () => {
       if (hapticFeedback) {
         impactAsync(hapticStyle)
       }
 
-      if (scaleTo) {
-        scale.value = withTiming(scaleTo, ScaleTimingConfig)
-      }
+      onPress(event)
+    },
+    [onPress, hapticFeedback, hapticStyle]
+  )
+
+  const onPressInHandler = useMemo(() => {
+    if (!scaleTo) return
+
+    return () => {
+      scale.value = withTiming(scaleTo, ScaleTimingConfig)
     }
-  }, [scale, scaleTo, hapticStyle, hapticFeedback])
+  }, [scale, scaleTo])
 
   const onPressOutHandler = useMemo(() => {
     if (!scaleTo) return
