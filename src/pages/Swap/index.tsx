@@ -21,7 +21,7 @@ import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { isSupportedChain } from 'constants/chains'
 import { usePermit2Enabled } from 'featureFlags/flags/permit2'
-import usePermit, { PermitState } from 'hooks/usePermit2'
+import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
@@ -34,8 +34,8 @@ import { Text } from 'rebass'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
-import { useTransactionAdder } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components/macro'
+import invariant from 'tiny-invariant'
 import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/formatNumbers'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
@@ -302,36 +302,31 @@ export default function Swap({ className }: { className?: string }) {
     const maximumAmountIn = trade?.maximumAmountIn(allowedSlippage)
     return maximumAmountIn?.currency.isToken ? (maximumAmountIn as CurrencyAmount<Token>) : undefined
   }, [allowedSlippage, trade])
-  const permit = usePermit(
+  const allowance = usePermit2Allowance(
     permit2Enabled ? maximumAmountIn : undefined,
     permit2Enabled && chainId ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
   )
-  const isApprovalLoading = permit.state === PermitState.APPROVAL_LOADING
-  const [isPermitPending, setIsPermitPending] = useState(false)
-  const [isPermitFailed, setIsPermitFailed] = useState(false)
-  const addTransaction = useTransactionAdder()
-  const updatePermit = useCallback(async () => {
-    setIsPermitPending(true)
+  const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
+  const [isAllowancePending, setIsAllowancePending] = useState(false)
+  const [isAllowanceFailed, setIsAllowanceFailed] = useState(false)
+  const updateAllowance = useCallback(async () => {
+    invariant(allowance.state === AllowanceState.REQUIRED)
+    setIsAllowancePending(true)
     try {
-      const approval = await permit.callback?.()
-      if (approval) {
-        sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
-          chain_id: chainId,
-          token_symbol: maximumAmountIn?.currency.symbol,
-          token_address: maximumAmountIn?.currency.address,
-        })
-
-        const { response, info } = approval
-        addTransaction(response, info)
-      }
-      setIsPermitFailed(false)
+      await allowance.approveAndPermit()
+      sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
+        chain_id: chainId,
+        token_symbol: maximumAmountIn?.currency.symbol,
+        token_address: maximumAmountIn?.currency.address,
+      })
+      setIsAllowanceFailed(false)
     } catch (e) {
       console.error(e)
-      setIsPermitFailed(true)
+      setIsAllowanceFailed(true)
     } finally {
-      setIsPermitPending(false)
+      setIsAllowancePending(false)
     }
-  }, [addTransaction, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol, permit])
+  }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol])
 
   // check whether the user has approved the router on the input token
   const [approvalState, approveCallback] = useApproveCallbackFromTrade(
@@ -394,7 +389,7 @@ export default function Swap({ className }: { className?: string }) {
     allowedSlippage,
     recipient,
     signatureData,
-    permit
+    allowance.state === AllowanceState.ALLOWED ? allowance.permitSignature : undefined
   )
 
   const handleSwap = useCallback(() => {
@@ -790,22 +785,20 @@ export default function Swap({ className }: { className?: string }) {
                       </ButtonError>
                     </AutoColumn>
                   </AutoRow>
-                ) : isValid &&
-                  (permit.state === PermitState.APPROVAL_OR_PERMIT_NEEDED ||
-                    permit.state === PermitState.APPROVAL_LOADING) ? (
+                ) : isValid && allowance.state === AllowanceState.REQUIRED ? (
                   <ButtonYellow
-                    onClick={updatePermit}
-                    disabled={isPermitPending || isApprovalLoading}
+                    onClick={updateAllowance}
+                    disabled={isAllowancePending || isApprovalLoading}
                     style={{ gap: 14 }}
                   >
-                    {isPermitPending ? (
+                    {isAllowancePending ? (
                       <>
                         <Loader size="20px" stroke={theme.accentWarning} />
                         <ThemedText.SubHeader color="accentWarning">
                           <Trans>Approve in your wallet</Trans>
                         </ThemedText.SubHeader>
                       </>
-                    ) : isPermitFailed ? (
+                    ) : isAllowanceFailed ? (
                       <>
                         <AlertTriangle size={20} stroke={theme.accentWarning} />
                         <ThemedText.SubHeader color="accentWarning">
@@ -860,7 +853,7 @@ export default function Swap({ className }: { className?: string }) {
                       routeIsSyncing ||
                       routeIsLoading ||
                       priceImpactTooHigh ||
-                      (permit2Enabled ? permit.state === PermitState.LOADING : Boolean(swapCallbackError))
+                      (permit2Enabled ? allowance.state !== AllowanceState.ALLOWED : Boolean(swapCallbackError))
                     }
                     error={isValid && priceImpactSeverity > 2 && (permit2Enabled || !swapCallbackError)}
                   >
