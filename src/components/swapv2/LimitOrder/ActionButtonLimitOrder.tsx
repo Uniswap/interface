@@ -24,6 +24,7 @@ export default function ActionButtonLimitOrder({
   hasInputError,
   approvalSubmitted,
   showApproveFlow,
+  showWarningRate,
 }: {
   currencyIn: Currency | undefined
   approval: ApprovalState
@@ -36,6 +37,7 @@ export default function ActionButtonLimitOrder({
   checkingAllowance: boolean
   showApproveFlow: boolean
   wrapInputError: any
+  showWarningRate: boolean
   approveCallback: () => Promise<void>
   onWrapToken: () => Promise<void>
   showPreview: () => void
@@ -94,7 +96,7 @@ export default function ActionButtonLimitOrder({
     )
 
   return (
-    <ButtonError onClick={showPreview} disabled={disableBtnReview}>
+    <ButtonError onClick={showPreview} disabled={disableBtnReview} error={showWarningRate}>
       <Text fontWeight={500}>
         {checkingAllowance ? <Trans>Checking Allowance...</Trans> : <Trans>Review Order</Trans>}
       </Text>

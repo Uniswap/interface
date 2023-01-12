@@ -58,6 +58,7 @@ export const Tab = styled(ButtonEmpty)<{ isActive: boolean }>`
   padding: 0;
   padding-bottom: 4px;
   color: ${({ theme, isActive }) => (isActive ? theme.primary : theme.subText)};
+  position: relative;
   border-radius: 0;
 
   &:hover {
@@ -75,6 +76,17 @@ export const Tab = styled(ButtonEmpty)<{ isActive: boolean }>`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     margin-right: 12px;
   `}
+`
+
+export const BetaTag = styled.span`
+  font-size: 10px;
+  color: ${({ theme }) => theme.subText};
+  position: absolute;
+  top: 4px;
+  right: -38px;
+  padding: 2px 6px;
+  background-color: ${({ theme }) => theme.buttonGray};
+  border-radius: 10px;
 `
 
 export const Container = styled.div`

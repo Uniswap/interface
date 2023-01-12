@@ -19,9 +19,9 @@ const ErrorWarningPanel = ({ title, type }: { title: string; type: 'error' | 'wa
     return (
       <Flex color={theme.red} alignItems="center" style={{ background: rgba(theme.red, 0.25), ...style }}>
         <div>
-          <AlertTriangle size={15} />
+          <AlertTriangle size={16} />
         </div>
-        <Text fontWeight={500} fontSize={13}>
+        <Text fontWeight={400} fontSize={12} color={theme.text}>
           {title}
         </Text>
       </Flex>
@@ -35,7 +35,7 @@ const ErrorWarningPanel = ({ title, type }: { title: string; type: 'error' | 'wa
           <div>
             <AlertTriangle size={15} />
           </div>
-          <Text fontWeight={500} fontSize={13}>
+          <Text fontWeight={500} fontSize={12}>
             {title}
           </Text>
         </Flex>

@@ -18,7 +18,7 @@ import Select from 'components/Select'
 import Tooltip from 'components/Tooltip'
 import TrendingSoonTokenBanner from 'components/TrendingSoonTokenBanner'
 import ActionButtonLimitOrder from 'components/swapv2/LimitOrder/ActionButtonLimitOrder'
-import DeltaRate from 'components/swapv2/LimitOrder/DeltaRate'
+import DeltaRate, { useGetDeltaRateLimitOrder } from 'components/swapv2/LimitOrder/DeltaRate'
 import ConfirmOrderModal from 'components/swapv2/LimitOrder/Modals/ConfirmOrderModal'
 import useBaseTradeInfo from 'components/swapv2/LimitOrder/useBaseTradeInfo'
 import useWrapEthStatus from 'components/swapv2/LimitOrder/useWrapEthStatus'
@@ -30,6 +30,7 @@ import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import useWrapCallback from 'hooks/useWrapCallback'
+import ErrorWarningPanel from 'pages/Bridge/ErrorWarning'
 import { NotificationType, useNotify } from 'state/application/hooks'
 import { useLimitActionHandlers, useLimitState } from 'state/limit/hooks'
 import { tryParseAmount } from 'state/swap/hooks'
@@ -141,6 +142,7 @@ const LimitOrderForm = function LimitOrderForm({
 
   const { loading: loadingTrade, tradeInfo } = useBaseTradeInfo(currencyIn, currencyOut)
   const { tradeInfo: tradeInfoInvert } = useBaseTradeInfo(currencyOut, currencyIn)
+  const deltaRate = useGetDeltaRateLimitOrder({ marketPrice: tradeInfo?.price, rateInfo })
 
   const { execute: onWrap, inputError: wrapInputError } = useWrapCallback(currencyIn, currencyOut, inputAmount, true)
   const showWrap = !!currencyIn?.isNative
@@ -650,6 +652,8 @@ const LimitOrderForm = function LimitOrderForm({
       !enoughAllowance ||
       (approvalSubmitted && approval === ApprovalState.APPROVED))
 
+  const showWarningRate = Boolean(currencyIn && displayRate && !deltaRate.profit && deltaRate.percent)
+
   return (
     <>
       <Flex flexDirection={'column'} style={{ gap: '1rem' }}>
@@ -716,9 +720,10 @@ const LimitOrderForm = function LimitOrderForm({
               <Trans>Expires In</Trans>
             </Label>
             <Select
-              forceMenuPlacementTop={isEdit}
               value={expire}
               onChange={onChangeExpire}
+              optionStyle={isEdit ? { paddingTop: 8, paddingBottom: 8 } : {}}
+              menuStyle={isEdit ? { paddingTop: 8, paddingBottom: 8 } : {}}
               style={{ width: '100%', padding: 0, height: INPUT_HEIGHT }}
               options={[...EXPIRED_OPTIONS, { label: 'Custom', onSelect: toggleDatePicker }]}
               activeRender={item => (
@@ -739,7 +744,7 @@ const LimitOrderForm = function LimitOrderForm({
           />
           <ArrowRotate
             rotate={rotate}
-            onClick={handleRotateClick}
+            onClick={isEdit ? undefined : handleRotateClick}
             style={{ width: 25, height: 25, padding: 4, background: theme.buttonGray }}
           />
         </RowBetween>
@@ -774,6 +779,13 @@ const LimitOrderForm = function LimitOrderForm({
 
         {chainId !== ChainId.ETHW && <TrendingSoonTokenBanner currencyIn={currencyIn} currencyOut={currencyOut} />}
 
+        {showWarningRate && (
+          <ErrorWarningPanel
+            type="error"
+            title={t`Limit order price is ${deltaRate.percent} lower than the market. You will be selling your ${currencyIn?.symbol} exceedingly cheap.`}
+          />
+        )}
+
         <ActionButtonLimitOrder
           {...{
             currencyIn,
@@ -790,6 +802,7 @@ const LimitOrderForm = function LimitOrderForm({
             onWrapToken,
             showPreview,
             showApproveFlow,
+            showWarningRate,
           }}
         />
       </Flex>

@@ -29,6 +29,7 @@ const SelectMenu = styled.div`
   z-index: 2;
   background: ${({ theme }) => theme.tabActive};
   padding: 10px 0px;
+  width: max-content;
 `
 
 const Option = styled.div<{ $selected: boolean }>`
@@ -71,6 +72,7 @@ function Select({
   optionRender,
   style = {},
   menuStyle = {},
+  optionStyle = {},
   onChange,
   value: selectedValue,
   className,
@@ -83,6 +85,7 @@ function Select({
   optionRender?: (option: SelectOption | undefined) => ReactNode
   style?: CSSProperties
   menuStyle?: CSSProperties
+  optionStyle?: CSSProperties
   onChange: (value: any) => void
   forceMenuPlacementTop?: boolean
 }) {
@@ -145,6 +148,7 @@ function Select({
                 role="button"
                 $selected={value === selectedValue || value === getOptionValue(selectedInfo)}
                 onClick={onClick}
+                style={optionStyle}
               >
                 {getOptionLabel(item)}
               </Option>

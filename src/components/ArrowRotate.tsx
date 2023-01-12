@@ -1,10 +1,10 @@
-import styled, { CSSProperties } from 'styled-components'
+import styled, { CSSProperties, css } from 'styled-components'
 
 import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
 import { Swap as SwapIcon } from 'components/Icons'
 import useTheme from 'hooks/useTheme'
 
-export const ArrowWrapper = styled.div<{ rotated?: boolean; isVertical?: boolean }>`
+export const ArrowWrapper = styled.div<{ rotated?: boolean; isVertical?: boolean; disable?: boolean }>`
   padding: 8px;
   display: flex;
   justify-content: center;
@@ -12,7 +12,6 @@ export const ArrowWrapper = styled.div<{ rotated?: boolean; isVertical?: boolean
   background: ${({ theme }) => theme.buttonBlack};
   width: fit-content;
   height: fit-content;
-  cursor: pointer;
   border-radius: 999px;
 
   transform: rotate(
@@ -24,9 +23,14 @@ export const ArrowWrapper = styled.div<{ rotated?: boolean; isVertical?: boolean
   transition: transform 300ms;
   width: 40px;
   height: 40px;
-  :hover {
-    opacity: 0.8;
-  }
+  ${({ disable }) =>
+    !disable &&
+    css`
+      cursor: pointer;
+      :hover {
+        opacity: 0.8;
+      }
+    `};
 `
 
 // arrow can rotate
@@ -37,13 +41,13 @@ export default function ArrowRotate({
   style = {},
 }: {
   rotate: boolean
-  onClick: () => void
+  onClick?: () => void
   isVertical?: boolean
   style?: CSSProperties
 }) {
   const theme = useTheme()
   return (
-    <ArrowWrapper rotated={rotate} isVertical={isVertical} onClick={onClick} style={style}>
+    <ArrowWrapper disable={!onClick} rotated={rotate} isVertical={isVertical} onClick={onClick} style={style}>
       <SwapIcon size={24} color={theme.subText} />
     </ArrowWrapper>
   )
