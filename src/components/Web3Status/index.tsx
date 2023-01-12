@@ -217,12 +217,12 @@ function Web3StatusInner() {
   const walletIsOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
 
-  const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
+  const error = useAppSelector((state) => state.connection.errorByConnectionType[connectionType])
   useEffect(() => {
-    if (getIsMetaMask() && error) {
+    if (getIsMetaMask(connectionType) && error) {
       openMetamaskConnectionErrorModal()
     }
-  }, [error, openMetamaskConnectionErrorModal])
+  }, [error, connectionType, openMetamaskConnectionErrorModal])
 
   const allTransactions = useAllTransactions()
 

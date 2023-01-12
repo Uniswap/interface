@@ -12,12 +12,16 @@ export function getIsInjected(): boolean {
   return Boolean(window.ethereum)
 }
 
-export function getIsMetaMask(): boolean {
+export function getHasMetaMaskExtensionInstalled(): boolean {
   return window.ethereum?.isMetaMask ?? false
 }
 
-export function getIsCoinbaseWallet(): boolean {
+export function getHasCoinbaseExtensionInstalled(): boolean {
   return window.ethereum?.isCoinbaseWallet ?? false
+}
+
+export function getIsMetaMask(connectionType: ConnectionType): boolean {
+  return connectionType === ConnectionType.INJECTED && getHasMetaMaskExtensionInstalled()
 }
 
 const CONNECTIONS = [
@@ -50,10 +54,13 @@ export function getConnection(c: Connector | ConnectionType) {
   }
 }
 
-export function getConnectionName(connectionType: ConnectionType, isMetaMask?: boolean) {
+export function getConnectionName(
+  connectionType: ConnectionType,
+  hasMetaMaskExtension: boolean = getHasMetaMaskExtensionInstalled()
+) {
   switch (connectionType) {
     case ConnectionType.INJECTED:
-      return isMetaMask ? 'MetaMask' : 'Browser Wallet'
+      return hasMetaMaskExtension ? 'MetaMask' : 'Browser Wallet'
     case ConnectionType.COINBASE_WALLET:
       return 'Coinbase Wallet'
     case ConnectionType.WALLET_CONNECT:

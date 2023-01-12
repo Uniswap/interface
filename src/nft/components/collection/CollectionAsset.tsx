@@ -89,7 +89,7 @@ export const CollectionAsset = ({
   }, [asset])
 
   const handleAddAssetToBag = useCallback(() => {
-    if (BigNumber.from(asset.priceInfo?.ETHPrice ?? 0).gte(0)) {
+    if (BigNumber.from(asset.priceInfo?.ETHPrice ?? 0).gt(0)) {
       addAssetsToBag([asset])
       if (!bagExpanded && !isMobile && !bagManuallyClosed) {
         setBagExpanded({ bagExpanded: true })

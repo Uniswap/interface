@@ -1,6 +1,7 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { useFiatOnrampFlag } from 'featureFlags/flags/fiatOnramp'
 import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
+import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
 import { Permit2Variant, usePermit2Flag } from 'featureFlags/flags/permit2'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
@@ -221,6 +222,12 @@ export default function FeatureFlagModal() {
         value={useNftListV2Flag()}
         featureFlag={FeatureFlag.nftListV2}
         label="NFT Listing Page v2"
+      />
+      <FeatureFlagOption
+        variant={PayWithAnyTokenVariant}
+        value={usePayWithAnyTokenFlag()}
+        featureFlag={FeatureFlag.payWithAnyToken}
+        label="Pay With Any Token"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption
