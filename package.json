@@ -96,6 +96,7 @@
     "cypress": "^10.3.1",
     "env-cmd": "^10.1.0",
     "eslint": "^7.11.0",
+    "jest-fetch-mock": "^3.0.3",
     "jest-styled-components": "^7.0.8",
     "ms.macro": "^2.0.0",
     "patch-package": "^6.4.7",
