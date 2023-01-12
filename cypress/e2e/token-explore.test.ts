@@ -46,7 +46,7 @@ describe('Testing tokens on uniswap page', () => {
     cy.get(getTestSelector('token-details-stats')).should('exist')
     cy.get(getTestSelector('token-info-container')).should('exist')
     cy.get(getTestSelector('chart-container')).should('exist')
-    cy.contains('UNI is the governance token for Uniswap').should('exist')
+    cy.contains('Ethereum is a smart contract platform that enables developers to build tokens').should('exist')
     cy.contains('Etherscan').should('exist')
   })
 
@@ -67,9 +67,8 @@ describe('Testing tokens on uniswap page', () => {
     cy.get(getTestSelector('tokens-network-filter-selected')).click()
     cy.get(getTestSelector('tokens-network-filter-option-optimism')).click()
     cy.get(getTestSelector('tokens-network-filter-selected')).should('contain', 'Optimism')
-    // global network and bg dont change
-    // if you refresh explore network should persist
     cy.reload()
     cy.get(getTestSelector('tokens-network-filter-selected')).should('contain', 'Optimism')
+    cy.get(getTestSelector('chain-selector')).last().should('contain', 'Ethereum')
   })
 })
