@@ -21,6 +21,7 @@ import { useSortedPendingTransactions } from 'src/features/transactions/hooks'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { iconSizes } from 'src/styles/sizing'
+import { isDevBuild } from 'src/utils/version'
 
 function QRScannerIconButton({ onPress }: { onPress: () => void }) {
   const theme = useAppTheme()
@@ -89,7 +90,7 @@ export function AccountHeader() {
         name={ElementName.Manage}
         testID={ElementName.Manage}
         onLongPress={() => {
-          if (__DEV__) {
+          if (isDevBuild()) {
             selectionAsync()
             dispatch(openModal({ name: ModalName.Experiments }))
           }

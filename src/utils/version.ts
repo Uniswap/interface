@@ -15,3 +15,7 @@ export function getFullAppVersion(): string {
   }
   return version
 }
+
+export function isDevBuild(): boolean {
+  return DeviceInfo.getBundleId().endsWith('.dev')
+}
