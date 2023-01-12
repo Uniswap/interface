@@ -1,6 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsMetaMask } from 'connection/utils'
+import {
+  getConnection,
+  getConnectionName,
+  getHasCoinbaseExtensionInstalled,
+  getHasMetaMaskExtensionInstalled,
+} from 'connection/utils'
 import { useCallback } from 'react'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { useAppDispatch } from 'state/hooks'
@@ -210,14 +215,14 @@ export default function AccountDetails({
   const theme = useTheme()
   const dispatch = useAppDispatch()
 
-  const isMetaMask = getIsMetaMask()
-  const isCoinbaseWallet = getIsCoinbaseWallet()
-  const isInjectedMobileBrowser = (isMetaMask || isCoinbaseWallet) && isMobile
+  const hasMetaMaskExtension = getHasMetaMaskExtensionInstalled()
+  const hasCoinbaseExtension = getHasCoinbaseExtensionInstalled()
+  const isInjectedMobileBrowser = (hasMetaMaskExtension || hasCoinbaseExtension) && isMobile
 
   function formatConnectorName() {
     return (
       <WalletName>
-        <Trans>Connected with</Trans> {getConnectionName(connectionType, isMetaMask)}
+        <Trans>Connected with</Trans> {getConnectionName(connectionType, hasMetaMaskExtension)}
       </WalletName>
     )
   }
@@ -246,7 +251,7 @@ export default function AccountDetails({
                       <WalletAction
                         style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
                         onClick={() => {
-                          const walletType = getConnectionName(getConnection(connector).type, getIsMetaMask())
+                          const walletType = getConnectionName(getConnection(connector).type)
                           if (connector.deactivate) {
                             connector.deactivate()
                           } else {
