@@ -10,7 +10,7 @@ import { TransactionType } from '../state/transactions/types'
 import { currencyId } from '../utils/currencyId'
 import useENS from './useENS'
 import { SignatureData } from './useERC20Permit'
-import { Permit } from './usePermit2'
+import { Permit } from './usePermit2Allowance'
 import useTransactionDeadline from './useTransactionDeadline'
 import { useUniversalRouterSwapCallback } from './useUniversalRouter'
 
