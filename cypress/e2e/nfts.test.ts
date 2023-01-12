@@ -41,7 +41,7 @@ describe('Testing nfts', () => {
   })
 
   it('should toggle buy now on details page', () => {
-    cy.visit(`#/nfts/asset/${COLLECTION_ADDRESS}/8565`)
+    cy.visit(`#/nfts/asset/${COLLECTION_ADDRESS}/2043`)
     cy.get(getTestSelector('nft-details-description-text')).should('exist')
     cy.get(getTestSelector('nft-details-description')).click()
     cy.get(getTestSelector('nft-details-description-text')).should('not.exist')
