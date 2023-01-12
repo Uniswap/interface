@@ -131,8 +131,11 @@ export const BagFooter = ({
   eventProperties,
 }: BagFooterProps) => {
   const toggleWalletModal = useToggleWalletModal()
+  const theme = useTheme()
   const { account, chainId, connector } = useWeb3React()
   const connected = Boolean(account && chainId)
+  const shouldUsePayWithAnyToken = usePayWithAnyTokenFlag() === PayWithAnyTokenVariant.Enabled
+  const inputCurrency = useCurrency('ETH')
 
   const setBagExpanded = useBag((state) => state.setBagExpanded)
 
@@ -183,9 +186,6 @@ export const BagFooter = ({
   }, [bagStatus, chainId, connected, connector, fetchAssets, setBagExpanded, sufficientBalance, toggleWalletModal])
 
   const isPending = PENDING_BAG_STATUSES.includes(bagStatus)
-  const shouldUsePayWithAnyToken = usePayWithAnyTokenFlag() === PayWithAnyTokenVariant.Enabled
-  const inputCurrency = useCurrency('ETH')
-  const theme = useTheme()
 
   if (shouldUsePayWithAnyToken) {
     return (
