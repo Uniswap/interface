@@ -12,6 +12,7 @@ import { EVMWalletInfo, SUPPORTED_WALLET, SolanaWalletInfo, WalletInfo } from 'c
 import store from 'state'
 import { GroupedTxsByHash, TransactionDetails } from 'state/transactions/type'
 
+import { ENV_LEVEL, ENV_TYPE } from '../constants/env'
 import checkForBraveBrowser from './checkForBraveBrowser'
 
 // returns the checksummed address if the address is valid, otherwise returns false
@@ -420,4 +421,5 @@ export const isChristmasTime = () => {
   return currentTime.month() === 11 && currentTime.date() >= 15
 }
 
-export const isSupportLimitOrder = (chainId: ChainId) => NETWORKS_INFO_CONFIG[chainId].limitOrder
+export const isSupportLimitOrder = (chainId: ChainId) =>
+  ENV_LEVEL < ENV_TYPE.PROD && NETWORKS_INFO_CONFIG[chainId].limitOrder
