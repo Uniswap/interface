@@ -11,6 +11,7 @@ import {
   TransactionType,
 } from 'src/features/transactions/types'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
+import { DEMO_ACCOUNT_ADDRESS } from 'src/features/wallet/accounts/useTestAccount'
 import { toSupportedChainId } from 'src/utils/chainId'
 
 export const migrations = {
@@ -139,8 +140,6 @@ export const migrations = {
   },
 
   10: (state: any) => {
-    const DEMO_ACCOUNT_ADDRESS = '0xE1d494bC8690b1EF2F0A13B6672C4F2EE5c2D2B7'
-
     const newState = { ...state }
     const accounts = newState?.wallet?.accounts ?? {}
 

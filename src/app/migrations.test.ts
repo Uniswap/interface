@@ -60,6 +60,7 @@ import {
   TransactionType,
 } from 'src/features/transactions/types'
 import { Account, AccountType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
+import { DEMO_ACCOUNT_ADDRESS } from 'src/features/wallet/accounts/useTestAccount'
 import { initialWalletState } from 'src/features/wallet/walletSlice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
 import { account, txDetailsConfirmed } from 'src/test/fixtures'
@@ -440,7 +441,6 @@ describe('Redux state migrations', () => {
   })
 
   it('migrates from v9 to v10', () => {
-    const DEMO_ACCOUNT_ADDRESS = '0xE1d494bC8690b1EF2F0A13B6672C4F2EE5c2D2B7'
     const TEST_ADDRESSES = ['0xTest', DEMO_ACCOUNT_ADDRESS, '0xTest2', '0xTest3']
     const TEST_IMPORT_TIME_MS = 12345678912345
 

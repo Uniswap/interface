@@ -12,7 +12,7 @@ I (@judo) recommend setting up your M1 Mac without Rosetta: [link](https://mediu
 
 #### Download environment variables
 
-API keys are stored in [GitHub secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets) and included in GitHub actions. To run the app locally you need to download the environment variables onto your machine. You first need to make sure you have access to the 1password engineer vault and you need to [download the 1Password CLI](https://developer.1password.com/docs/cli/get-started#install). Then you can copy the local environment variables onto your own computer by running `yarn download-env-local`.
+API keys are stored in [GitHub secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets) and included in GitHub actions. To run the app locally you need to download the environment variables onto your machine. You first need to make sure you have access to the 1password engineer vault and you need to [download the 1Password CLI](https://developer.1password.com/docs/cli/get-started#install). Then you can copy the local environment variables onto your own computer by running `yarn env:local:download`.
 
 For instructions on how to update environment variables see [Updating Secret Env Variables section](#updating-secret-env-variables).
 
@@ -22,14 +22,14 @@ Things like API keys must not be checked into GitHub. They should be stored as a
 
 1. The variable is accessed with `process.env.SECRET_VARIABLE` ([example](https://github.com/Uniswap/mobile/blob/main/src/config.ts#L54))
 2. The variable is added to the Fastlane workflow file ([example](https://github.com/Uniswap/mobile/blob/main/.github/workflows/fastlane.yml#L14))
-3. Finally you should add them into your own .env.local file and then upload them to 1Password using the command `yarn upload-env-local`.
+3. Finally you should add them into your own .env.local file and then upload them to 1Password using the command `yarn env:local:upload`.
 
 To understand why these steps are needed some additional reading is:
 
 - [Using encrypted secrets in a workflow](https://docs.github.com/en/actions/security-guides/encrypted-secrets#using-encrypted-secrets-in-a-workflow)
 - Then they are made available to the bundled code with [this Babel plugin](https://babeljs.io/docs/en/babel-plugin-transform-inline-environment-variables/)
 
-Developers will need to redownload the new file using `yarn download-env-local`.
+Developers will need to redownload the new file using `yarn env:local:download`.
 
 #### React Native
 

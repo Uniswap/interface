@@ -7,7 +7,7 @@ import { isEnabled } from 'src/features/remoteConfig'
 import { TestConfig } from 'src/features/remoteConfig/testConfigs'
 
 const MNEMONIC_TEST_ONLY = DEMO_SEED_PHRASE
-export const DEMO_ACCOUNT_ADDRESS = '0xE1d494bC8690b1EF2F0A13B6672C4F2EE5c2D2B7'
+export const DEMO_ACCOUNT_ADDRESS = '0xdd0E380579dF30E38524F9477808d9eE37E2dEa6'
 
 export function useTestAccount() {
   const dispatch = useAppDispatch()
