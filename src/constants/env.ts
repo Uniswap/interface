@@ -51,10 +51,10 @@ export const ENV_LEVEL = !process.env.REACT_APP_TAG
   ? ENV_TYPE.LOCAL
   : process.env.REACT_APP_TAG.startsWith('adpr')
   ? ENV_TYPE.ADPR
-  : process.env.REACT_APP_TAG.startsWith('main')
-  ? ENV_TYPE.DEV
   : process.env.REACT_APP_TAG.startsWith('main-stg')
   ? ENV_TYPE.STG
+  : process.env.REACT_APP_TAG.startsWith('main')
+  ? ENV_TYPE.DEV
   : ENV_TYPE.PROD
 export const LIMIT_ORDER_API_READ = required('LIMIT_ORDER_API_READ')
 export const LIMIT_ORDER_API_WRITE = required('LIMIT_ORDER_API_WRITE')
