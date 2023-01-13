@@ -3,6 +3,7 @@ import { formatEther } from '@ethersproject/units'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
 import { useIsNftDetailsPage, useIsNftPage, useIsNftProfilePage } from 'hooks/useIsNftPage'
 import { BagFooter } from 'nft/components/bag/BagFooter'
 import ListingModal from 'nft/components/bag/profile/ListingModal'
@@ -135,6 +136,7 @@ const Bag = () => {
   const isDetailsPage = useIsNftDetailsPage()
   const isNFTPage = useIsNftPage()
   const isMobile = useIsMobile()
+  const isNftListV2 = useNftListV2Flag() === NftListV2Variant.Enabled
 
   const sendTransaction = useSendTransaction((state) => state.sendTransaction)
   const transactionState = useSendTransaction((state) => state.state)
@@ -349,7 +351,7 @@ const Bag = () => {
                 color="white"
                 textAlign="center"
                 onClick={() => {
-                  isMobile && toggleBag()
+                  ;(isMobile || isNftListV2) && toggleBag()
                   setProfilePageState(ProfilePageStateType.LISTING)
                   sendAnalyticsEvent(NFTEventName.NFT_PROFILE_PAGE_START_SELL, {
                     list_quantity: sellAssets.length,

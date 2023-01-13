@@ -5,7 +5,7 @@ import { formatEther, parseEther } from '@ethersproject/units'
 import { SweepFetcherParams, useSweepNftAssets } from 'graphql/data/nft/Asset'
 import { useBag, useCollectionFilters } from 'nft/hooks'
 import { GenieAsset, isPooledMarket, Markets } from 'nft/types'
-import { calcPoolPrice, calcSudoSwapPrice, formatWeiToDecimal, isInSameSudoSwapPool } from 'nft/utils'
+import { calcPoolPrice, formatWeiToDecimal, isInSameSudoSwapPool } from 'nft/utils'
 import { default as Slider } from 'rc-slider'
 import { useEffect, useMemo, useReducer, useState } from 'react'
 import styled, { useTheme } from 'styled-components/macro'
@@ -204,7 +204,7 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
     jointCollections.forEach((asset) => {
       if (!asset.susFlag) {
         if (asset.marketplace === Markets.Sudoswap) {
-          const poolPrice = calcSudoSwapPrice(
+          const poolPrice = calcPoolPrice(
             asset,
             sudoSwapAssetsInJointCollections
               .filter((sweepAsset) => isInSameSudoSwapPool(asset, sweepAsset))
@@ -229,7 +229,7 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
     })
 
     let validAssets = jointCollections.filter(
-      (asset) => BigNumber.from(asset.priceInfo.ETHPrice).gte(0) && !asset.susFlag
+      (asset) => BigNumber.from(asset.priceInfo.ETHPrice).gt(0) && !asset.susFlag
     )
 
     validAssets = validAssets.slice(

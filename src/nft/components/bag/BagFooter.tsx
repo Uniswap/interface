@@ -6,16 +6,19 @@ import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analy
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import Loader from 'components/Loader'
+import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
 import { SupportedChainId } from 'constants/chains'
+import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
+import { useCurrency } from 'hooks/Tokens'
 import { useBag } from 'nft/hooks/useBag'
 import { useWalletBalance } from 'nft/hooks/useWalletBalance'
 import { BagStatus } from 'nft/types'
 import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils'
 import { PropsWithChildren, useMemo } from 'react'
-import { AlertTriangle } from 'react-feather'
+import { AlertTriangle, ChevronDown } from 'react-feather'
 import { useToggleWalletModal } from 'state/application/hooks'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { switchChain } from 'utils/switchChain'
 
@@ -39,6 +42,17 @@ const FooterHeader = styled(Column)<{ warningText?: boolean }>`
   padding-bottom: ${({ warningText }) => (warningText ? '8px' : '20px')};
 `
 
+const CurrencyRow = styled(Row)<{ warningText?: boolean }>`
+  padding-top: 4px;
+  padding-bottom: ${({ warningText }) => (warningText ? '8px' : '20px')};
+  justify-content: space-between;
+  align-items: start;
+`
+
+const TotalColumn = styled(Column)`
+  text-align: end;
+`
+
 const WarningIcon = styled(AlertTriangle)`
   width: 14px;
   margin-right: 4px;
@@ -51,6 +65,11 @@ const WarningText = styled(ThemedText.BodyPrimary)`
   justify-content: center;
   margin: 12px 0 !important;
   text-align: center;
+`
+
+const CurrencyInput = styled(Row)`
+  gap: 8px;
+  cursor: pointer;
 `
 
 const PayButton = styled(Row)<{ disabled?: boolean }>`
@@ -116,8 +135,11 @@ export const BagFooter = ({
   eventProperties,
 }: BagFooterProps) => {
   const toggleWalletModal = useToggleWalletModal()
+  const theme = useTheme()
   const { account, chainId, connector } = useWeb3React()
   const connected = Boolean(account && chainId)
+  const shouldUsePayWithAnyToken = usePayWithAnyTokenFlag() === PayWithAnyTokenVariant.Enabled
+  const inputCurrency = useCurrency('ETH')
 
   const setBagExpanded = useBag((state) => state.setBagExpanded)
 
@@ -172,24 +194,54 @@ export const BagFooter = ({
   return (
     <FooterContainer>
       <Footer>
-        <FooterHeader gap="xs" warningText={!!warningText}>
-          <Row justify="space-between">
-            <div>
-              <ThemedText.HeadlineSmall>Total</ThemedText.HeadlineSmall>
-            </div>
-            <div>
+        {shouldUsePayWithAnyToken && (
+          <CurrencyRow>
+            <Column gap="xs">
+              <ThemedText.SubHeaderSmall>
+                <Trans>Pay with</Trans>
+              </ThemedText.SubHeaderSmall>
+              <CurrencyInput>
+                <CurrencyLogo currency={inputCurrency} size="24px" />
+                <ThemedText.HeadlineSmall fontWeight={500} lineHeight="24px">
+                  {inputCurrency?.symbol}
+                </ThemedText.HeadlineSmall>
+                <ChevronDown size={20} color={theme.textSecondary} />
+              </CurrencyInput>
+            </Column>
+            <TotalColumn gap="xs">
+              <ThemedText.SubHeaderSmall marginBottom="4px">
+                <Trans>Total</Trans>
+              </ThemedText.SubHeaderSmall>
               <ThemedText.HeadlineSmall>
                 {formatWeiToDecimal(totalEthPrice.toString())}&nbsp;ETH
               </ThemedText.HeadlineSmall>
-            </div>
-          </Row>
-          <Row justify="flex-end">
-            <ThemedText.BodySmall color="textSecondary" lineHeight="20px">{`${ethNumberStandardFormatter(
-              totalUsdPrice,
-              true
-            )}`}</ThemedText.BodySmall>
-          </Row>
-        </FooterHeader>
+              <ThemedText.BodySmall color="textSecondary" lineHeight="20px">{`${ethNumberStandardFormatter(
+                totalUsdPrice,
+                true
+              )}`}</ThemedText.BodySmall>
+            </TotalColumn>
+          </CurrencyRow>
+        )}
+        {!shouldUsePayWithAnyToken && (
+          <FooterHeader gap="xs" warningText={!!warningText}>
+            <Row justify="space-between">
+              <div>
+                <ThemedText.HeadlineSmall>Total</ThemedText.HeadlineSmall>
+              </div>
+              <div>
+                <ThemedText.HeadlineSmall>
+                  {formatWeiToDecimal(totalEthPrice.toString())}&nbsp;ETH
+                </ThemedText.HeadlineSmall>
+              </div>
+            </Row>
+            <Row justify="flex-end">
+              <ThemedText.BodySmall color="textSecondary" lineHeight="20px">{`${ethNumberStandardFormatter(
+                totalUsdPrice,
+                true
+              )}`}</ThemedText.BodySmall>
+            </Row>
+          </FooterHeader>
+        )}
         <TraceEvent
           events={[BrowserEvent.onClick]}
           name={NFTEventName.NFT_BUY_BAG_PAY}
