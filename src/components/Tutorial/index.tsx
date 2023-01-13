@@ -55,6 +55,7 @@ export enum TutorialType {
   CLASSIC_MY_POOLS = 'classic_my_pools',
 
   SWAP = 'swap',
+  LIMIT_ORDER = 'limit_order',
 }
 
 interface Props {
@@ -71,6 +72,7 @@ const mapVideoId = {
   [TutorialType.ELASTIC_REMOVE_LIQUIDITY]: 'VE58XeRVXgQ',
   [TutorialType.ELASTIC_INCREASE_LIQUIDITY]: 'goMNh3hsjt4',
   [TutorialType.SWAP]: '1cW_IhT4_dw',
+  [TutorialType.LIMIT_ORDER]: 'N9pLtZHjCuw',
   [TutorialType.ELASTIC_FARMS]: 'zvq62WtE_YA',
   [TutorialType.CLASSIC_FARMS]: 'FoQRGcf5tJc',
   [TutorialType.CLASSIC_CREATE_POOL]: 'wIMzSIKXUbs',

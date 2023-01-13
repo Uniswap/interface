@@ -68,7 +68,7 @@ const ethereumInfo: EVMNetworkInfo = {
     routers: '0xC1e7dFE73E1598E3910EF4C7845B68A9Ab6F4c83',
     farms: ['0xb85ebE2e4eA27526f817FF33fb55fB240057C03F'],
   },
-  limitOrder: NOT_SUPPORT,
+  limitOrder: { development: NOT_SUPPORT, production: NOT_SUPPORT },
   averageBlockTimeInSeconds: 13.13,
   coingeckoNetworkId: 'ethereum',
   coingeckoNativeTokenId: 'ethereum',

@@ -66,7 +66,10 @@ const velasInfo: EVMNetworkInfo = {
     routers: '0xC1e7dFE73E1598E3910EF4C7845B68A9Ab6F4c83',
     farms: [],
   },
-  limitOrder: NOT_SUPPORT,
+  limitOrder: {
+    development: NOT_SUPPORT,
+    production: '0x227B0c196eA8db17A665EA6824D972A64202E936',
+  },
   averageBlockTimeInSeconds: 0.4,
   coingeckoNetworkId: 'velas',
   coingeckoNativeTokenId: 'velas',

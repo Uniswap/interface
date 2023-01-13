@@ -24,7 +24,7 @@ import { useLimitState } from 'state/limit/hooks'
 import { useAllTransactions, useTransactionAdder } from 'state/transactions/hooks'
 import { TRANSACTION_TYPE } from 'state/transactions/type'
 import { TRANSACTION_STATE_DEFAULT, TransactionFlowState } from 'types'
-import { findTx } from 'utils'
+import { findTx, getLimitOrderContract } from 'utils'
 import {
   subscribeNotificationOrderCancelled,
   subscribeNotificationOrderExpired,
@@ -115,7 +115,7 @@ export default forwardRef<ListOrderHandle>(function ListLimitOrder(props, ref) {
   const [isOpenCancel, setIsOpenCancel] = useState(false)
   const [isOpenEdit, setIsOpenEdit] = useState(false)
 
-  const limitOrderContract = useContract(networkInfo.limitOrder ?? '', LIMIT_ORDER_ABI)
+  const limitOrderContract = useContract(getLimitOrderContract(chainId) ?? '', LIMIT_ORDER_ABI)
   const notify = useNotify()
   const { ordersUpdating } = useLimitState()
   const addTransactionWithType = useTransactionAdder()
@@ -420,7 +420,7 @@ export default forwardRef<ListOrderHandle>(function ListLimitOrder(props, ref) {
     const response = await sendEVMTransaction(
       account,
       library,
-      networkInfo.limitOrder ?? '',
+      getLimitOrderContract(chainId) ?? '',
       encodedData,
       BigNumber.from(0),
     )

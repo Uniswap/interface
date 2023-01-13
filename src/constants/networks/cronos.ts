@@ -68,7 +68,10 @@ const cronosInfo: EVMNetworkInfo = {
     routers: '0xC1e7dFE73E1598E3910EF4C7845B68A9Ab6F4c83',
     farms: [],
   },
-  limitOrder: NOT_SUPPORT,
+  limitOrder: {
+    production: '0x227B0c196eA8db17A665EA6824D972A64202E936',
+    development: NOT_SUPPORT,
+  },
   averageBlockTimeInSeconds: 6,
   coingeckoNetworkId: 'cronos',
   coingeckoNativeTokenId: 'crypto-com-chain',

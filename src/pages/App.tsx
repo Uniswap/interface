@@ -25,7 +25,7 @@ import { useGlobalMixpanelEvents } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { useHolidayMode } from 'state/user/hooks'
 import DarkModeQueryParamReader from 'theme/DarkModeQueryParamReader'
-import { isAddressString, isSupportLimitOrder, shortenAddress } from 'utils'
+import { getLimitOrderContract, isAddressString, shortenAddress } from 'utils'
 
 import { RedirectDuplicateTokenIds } from './AddLiquidityV2/redirects'
 import { RedirectPathToFarmNetwork } from './Farm/redirect'
@@ -204,7 +204,7 @@ export default function App() {
                     <Route path={`${APP_PATHS.SWAP}/:network/:fromCurrency`} element={<SwapV2 />} />
                     <Route path={`${APP_PATHS.SWAP}/:network`} element={<SwapV2 />} />
 
-                    {isSupportLimitOrder(chainId) && (
+                    {getLimitOrderContract(chainId) && (
                       <>
                         <Route path={`${APP_PATHS.LIMIT}/:network/:fromCurrency-to-:toCurrency`} element={<SwapV2 />} />
                         <Route path={`${APP_PATHS.LIMIT}/:network/:fromCurrency`} element={<SwapV2 />} />

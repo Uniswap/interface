@@ -421,5 +421,8 @@ export const isChristmasTime = () => {
   return currentTime.month() === 11 && currentTime.date() >= 15
 }
 
-export const isSupportLimitOrder = (chainId: ChainId) =>
-  ENV_LEVEL < ENV_TYPE.PROD && NETWORKS_INFO_CONFIG[chainId].limitOrder
+export const getLimitOrderContract = (chainId: ChainId) => {
+  const { production, development } = NETWORKS_INFO_CONFIG[chainId]?.limitOrder ?? {}
+  // return ENV_LEVEL >= ENV_TYPE.STG ? production : development
+  return ENV_LEVEL === ENV_TYPE.PROD ? '' : ENV_LEVEL === ENV_TYPE.STG ? production : development // for testing on stg
+}

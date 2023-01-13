@@ -36,7 +36,7 @@ import { useLimitActionHandlers, useLimitState } from 'state/limit/hooks'
 import { tryParseAmount } from 'state/swap/hooks'
 import { useCurrencyBalance } from 'state/wallet/hooks'
 import { TRANSACTION_STATE_DEFAULT, TransactionFlowState } from 'types'
-import { formatNumberWithPrecisionRange } from 'utils'
+import { formatNumberWithPrecisionRange, getLimitOrderContract } from 'utils'
 import { subscribeNotificationOrderCancelled, subscribeNotificationOrderExpired } from 'utils/firebase'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 
@@ -255,7 +255,7 @@ const LimitOrderForm = function LimitOrderForm({
   const currentAllowance = useTokenAllowance(
     currencyIn as Token,
     account ?? undefined,
-    networkInfo.limitOrder ?? '',
+    getLimitOrderContract(chainId) ?? '',
   ) as CurrencyAmount<Currency>
 
   const parsedActiveOrderMakingAmount = useMemo(() => {
@@ -294,7 +294,7 @@ const LimitOrderForm = function LimitOrderForm({
 
   const [approval, approveCallback] = useApproveCallback(
     parseInputAmount,
-    networkInfo.limitOrder ?? '',
+    getLimitOrderContract(chainId) ?? '',
     !enoughAllowance,
   )
 

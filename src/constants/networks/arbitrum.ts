@@ -65,7 +65,10 @@ const arbitrumInfo: EVMNetworkInfo = {
     routers: '0xC1e7dFE73E1598E3910EF4C7845B68A9Ab6F4c83',
     farms: ['0xBdEc4a045446F583dc564C0A227FFd475b329bf0'],
   },
-  limitOrder: '0x9deCa89E0934a5E0F187a1865299a9a586550864',
+  limitOrder: {
+    production: '0x227B0c196eA8db17A665EA6824D972A64202E936',
+    development: '0x9deCa89E0934a5E0F187a1865299a9a586550864',
+  },
   averageBlockTimeInSeconds: 1, // TODO: check these info
   coingeckoNetworkId: 'arbitrum-one',
   coingeckoNativeTokenId: 'ethereum',

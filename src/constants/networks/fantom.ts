@@ -62,7 +62,10 @@ const fantomInfo: EVMNetworkInfo = {
     routers: '0xC1e7dFE73E1598E3910EF4C7845B68A9Ab6F4c83',
     farms: [],
   },
-  limitOrder: '0x15a7e4A0BD7B96ada9db1219fA62c521bDCd8F81',
+  limitOrder: {
+    development: '0x15a7e4A0BD7B96ada9db1219fA62c521bDCd8F81',
+    production: '0x227B0c196eA8db17A665EA6824D972A64202E936',
+  },
   averageBlockTimeInSeconds: 1,
   coingeckoNetworkId: 'fantom',
   coingeckoNativeTokenId: 'fantom',

@@ -103,7 +103,7 @@ import {
   useUserSlippageTolerance,
 } from 'state/user/hooks'
 import { TYPE } from 'theme'
-import { formattedNum, isSupportLimitOrder } from 'utils'
+import { formattedNum, getLimitOrderContract } from 'utils'
 import { Aggregator } from 'utils/aggregator'
 import { currencyId } from 'utils/currencyId'
 import { halfAmountSpend, maxAmountSpend } from 'utils/maxAmountSpend'
@@ -689,7 +689,7 @@ export default function Swap() {
                       <Trans>Swap</Trans>
                     </Text>
                   </Tab>
-                  {isSupportLimitOrder(chainId) && (
+                  {getLimitOrderContract(chainId) && (
                     <Tab onClick={() => onClickTab(TAB.LIMIT)} isActive={isLimitPage}>
                       <Text fontSize={20} fontWeight={500}>
                         <Trans>Limit</Trans>
@@ -704,7 +704,7 @@ export default function Swap() {
 
               <SwapFormActions>
                 <Tutorial
-                  type={TutorialType.SWAP}
+                  type={isSwapPage ? TutorialType.SWAP : TutorialType.LIMIT_ORDER}
                   customIcon={
                     <StyledActionButtonSwapForm>
                       <TutorialIcon />
