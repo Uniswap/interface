@@ -49,6 +49,10 @@ const CurrencyRow = styled(Row)<{ warningText?: boolean }>`
   align-items: start;
 `
 
+const TotalColumn = styled(Column)`
+  text-align: end;
+`
+
 const WarningIcon = styled(AlertTriangle)`
   width: 14px;
   margin-right: 4px;
@@ -193,7 +197,7 @@ export const BagFooter = ({
         {shouldUsePayWithAnyToken && (
           <CurrencyRow>
             <Column gap="xs">
-              <ThemedText.SubHeaderSmall textAlign="start">
+              <ThemedText.SubHeaderSmall>
                 <Trans>Pay with</Trans>
               </ThemedText.SubHeaderSmall>
               <CurrencyInput>
@@ -204,19 +208,18 @@ export const BagFooter = ({
                 <ChevronDown size={20} color={theme.textSecondary} />
               </CurrencyInput>
             </Column>
-            <Column gap="xs">
-              <ThemedText.SubHeaderSmall marginBottom="4px" textAlign="end">
+            <TotalColumn gap="xs">
+              <ThemedText.SubHeaderSmall marginBottom="4px">
                 <Trans>Total</Trans>
               </ThemedText.SubHeaderSmall>
-              <ThemedText.HeadlineSmall textAlign="end">
+              <ThemedText.HeadlineSmall>
                 {formatWeiToDecimal(totalEthPrice.toString())}&nbsp;ETH
               </ThemedText.HeadlineSmall>
-              <ThemedText.BodySmall
-                color="textSecondary"
-                lineHeight="20px"
-                textAlign="end"
-              >{`${ethNumberStandardFormatter(totalUsdPrice, true)}`}</ThemedText.BodySmall>
-            </Column>
+              <ThemedText.BodySmall color="textSecondary" lineHeight="20px">{`${ethNumberStandardFormatter(
+                totalUsdPrice,
+                true
+              )}`}</ThemedText.BodySmall>
+            </TotalColumn>
           </CurrencyRow>
         )}
         {!shouldUsePayWithAnyToken && (
