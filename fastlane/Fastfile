@@ -149,11 +149,6 @@ end
 
     match_type = build(options)
 
-    commit_version_bump(
-      xcodeproj: XCODE_PROJECT,
-      force: true
-    )
-
     unless BUILD_ONLY
       ship(
         api_key: api_key,
@@ -188,7 +183,7 @@ end
 
     new_build_number = update_build_numbers_for_configuration(
       configuration: ENV["CONFIGURATION"],
-      new_build_number: current_build_number + 1
+      new_build_number: current_build_number
     )
 
     commit_version_bump(
