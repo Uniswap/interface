@@ -5,6 +5,7 @@ import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 
 // import { InjectedConnector } from '@pangolindex/web3-react-injected-connector'
 import { EVM_NETWORK, EVM_NETWORKS, NETWORKS_INFO, WALLET_CONNECT_SUPPORTED_CHAIN_IDS } from 'constants/networks'
+import store from 'state'
 
 import { NetworkConnector } from './NetworkConnector'
 
@@ -25,7 +26,8 @@ const NETWORK_URL = NETWORKS_INFO[ChainId.MAINNET].rpcUrl
 export const NETWORK_CHAIN_ID = 1
 
 export const network = new NetworkConnector({
-  urls: { [NETWORK_CHAIN_ID]: NETWORK_URL },
+  urls: NETWORK_URLS,
+  defaultChainId: store.getState().user.chainId || NETWORK_CHAIN_ID,
 })
 
 const injectedConnectorParam = {

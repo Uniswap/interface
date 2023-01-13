@@ -1,7 +1,7 @@
-import { Currency } from '@kyberswap/ks-sdk-core'
 import React, { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import * as ReactDOMServer from 'react-dom/server'
+import { PoolResponse } from 'services/geckoTermial'
 import styled from 'styled-components'
 
 import { ReactComponent as FullscreenOff } from 'assets/svg/fullscreen_off.svg'
@@ -15,7 +15,6 @@ import { ChartingLibraryWidgetOptions, LanguageCode, ResolutionString, Timezone 
 import { useDatafeed } from './datafeed'
 
 const ProLiveChartWrapper = styled.div<{ fullscreen: boolean }>`
-  margin-top: 10px;
   height: ${isMobile ? '100%' : 'calc(100% - 0px)'};
   ${({ theme }) => `border: 1px solid ${theme.background};`}
   overflow: hidden;
@@ -100,26 +99,25 @@ function closeFullscreen() {
 }
 
 function ProLiveChart({
-  currencies,
-  stateProChart,
+  poolDetail,
+  tokenId,
   className,
-  setLoading,
 }: {
-  currencies: Array<Currency | undefined>
-  stateProChart?: any
+  poolDetail: PoolResponse
+  // base token id
+  tokenId: string
   className?: string
-  setLoading: (loading: boolean) => void
 }) {
+  const [loading, setLoading] = useState(false)
   const theme = useTheme()
   const userLocale = useUserLocale()
-  const { hasProChart, apiVersion, pairAddress, loading } = stateProChart
   const [ref, setRef] = useState<HTMLDivElement | null>(null)
   const [fullscreen, setFullscreen] = useState(false)
 
-  const datafeed = useDatafeed(currencies, pairAddress, apiVersion)
+  const datafeed = useDatafeed(poolDetail, tokenId)
 
   useEffect(() => {
-    if (!ref || !hasProChart || !window.TradingView) {
+    if (!ref || !window.TradingView) {
       return
     }
     setLoading(true)
@@ -132,7 +130,7 @@ function ProLiveChart({
 
     const widgetOptions: ChartingLibraryWidgetOptions = {
       symbol: 'KNC',
-      datafeed: datafeed,
+      datafeed,
       interval: '1H' as ResolutionString,
       container: ref,
       library_path: '/charting_library/',
@@ -155,7 +153,7 @@ function ProLiveChart({
       studies_overrides: {},
       theme: theme.darkMode ? 'Dark' : 'Light',
       custom_css_url: '/charting_library/style.css',
-      timeframe: '2w',
+      timeframe: '2d',
       time_frames: [
         { text: '6m', resolution: '4H' as ResolutionString, description: '6 Months' },
         { text: '1m', resolution: '1H' as ResolutionString, description: '1 Month' },
@@ -213,8 +211,7 @@ function ProLiveChart({
         tvWidget.remove()
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [theme, userLocale, ref, pairAddress, currencies, hasProChart])
+  }, [theme, userLocale, ref, datafeed])
 
   return (
     <ProLiveChartWrapper fullscreen={fullscreen} onClick={() => setFullscreen(false)} className={className}>

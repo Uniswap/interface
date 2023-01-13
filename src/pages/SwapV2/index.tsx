@@ -99,7 +99,6 @@ import {
   useShowLiveChart,
   useShowTokenInfo,
   useShowTradeRoutes,
-  useToggleProLiveChart,
   useUserAddedTokens,
   useUserSlippageTolerance,
 } from 'state/user/hooks'
@@ -191,7 +190,6 @@ export default function Swap() {
   const [rotate, setRotate] = useState(false)
   const isShowLiveChart = useShowLiveChart()
   const [holidayMode] = useHolidayMode()
-  const toggleProLiveChart = useToggleProLiveChart()
   const isShowTradeRoutes = useShowTradeRoutes()
   const isShowTokenInfoSetting = useShowTokenInfo()
   const qs = useParsedQueryString<{
@@ -656,7 +654,6 @@ export default function Swap() {
   const onClickTab = (tab: TAB) => {
     setActiveTab(tab)
     const isLimit = tab === TAB.LIMIT
-    isLimit && toggleProLiveChart(true)
     const { inputCurrency, outputCurrency, ...newQs } = qs
     navigateFn({
       pathname: `${isLimit ? APP_PATHS.LIMIT : APP_PATHS.SWAP}/${networkInfo.route}`,

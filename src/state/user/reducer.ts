@@ -1,6 +1,5 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { createReducer } from '@reduxjs/toolkit'
-import { isMobile } from 'react-device-detect'
 
 import { SUGGESTED_BASES } from 'constants/bases'
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from 'constants/index'
@@ -18,7 +17,6 @@ import {
   toggleFavoriteToken,
   toggleHolidayMode,
   toggleLiveChart,
-  toggleProLiveChart,
   toggleTokenInfo,
   toggleTopTrendingTokens,
   toggleTradeRoutes,
@@ -74,7 +72,6 @@ export interface UserState {
   showLiveCharts: {
     [chainId: number]: boolean
   }
-  showProLiveChart: boolean
   showTradeRoutes: boolean
   showTokenInfo: boolean
   showTopTrendingSoonTokens: boolean
@@ -138,7 +135,6 @@ const initialState: UserState = {
   pairs: {},
   timestamp: currentTimestamp(),
   showLiveCharts: { ...defaultShowLiveCharts },
-  showProLiveChart: !isMobile,
   showTradeRoutes: true,
   showTokenInfo: true,
   showTopTrendingSoonTokens: true,
@@ -225,9 +221,6 @@ export default createReducer(initialState, builder =>
         state.showLiveCharts = { ...defaultShowLiveCharts }
       }
       state.showLiveCharts[chainId] = !state.showLiveCharts[chainId]
-    })
-    .addCase(toggleProLiveChart, (state, { payload: showProLiveChart }) => {
-      state.showProLiveChart = showProLiveChart !== undefined ? showProLiveChart : !state.showProLiveChart
     })
     .addCase(toggleTradeRoutes, state => {
       state.showTradeRoutes = !state.showTradeRoutes
