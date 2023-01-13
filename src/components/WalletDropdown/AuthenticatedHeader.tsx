@@ -177,10 +177,6 @@ const HeaderWrapper = styled.div`
   justify-content: space-between;
 `
 
-const AuthenticatedHeaderWrapper = styled.div`
-  padding: 0 16px;
-`
-
 const AuthenticatedHeader = () => {
   const { account, chainId, connector, ENSName } = useWeb3React()
   const [isCopied, setCopied] = useCopyClipboard()
@@ -280,7 +276,7 @@ const AuthenticatedHeader = () => {
   const closeFiatOnrampUnavailableTooltip = useCallback(() => setShow(false), [setShow])
 
   return (
-    <AuthenticatedHeaderWrapper>
+    <>
       <HeaderWrapper>
         <StatusWrapper>
           <FlexContainer>
@@ -371,7 +367,7 @@ const AuthenticatedHeader = () => {
           </UNIButton>
         )}
       </Column>
-    </AuthenticatedHeaderWrapper>
+    </>
   )
 }
 
