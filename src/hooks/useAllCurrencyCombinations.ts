@@ -19,7 +19,7 @@ export function useAllCurrencyCombinations(currencyA?: Currency, currencyB?: Cur
   return useMemo(() => {
     const tokenA = currencyA?.wrapped
     const tokenB = currencyB?.wrapped
-    const bases: Token[] = chainId ? BASES_TO_CHECK_TRADES_AGAINST[chainId] : []
+    const bases: Token[] = BASES_TO_CHECK_TRADES_AGAINST[chainId] || []
 
     const basePairs: [Token, Token][] = []
     for (let i = 0; i < bases.length - 1; i++) {
