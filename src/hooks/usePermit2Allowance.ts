@@ -68,9 +68,12 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
   }, [isApprovalPending, isApprovalSyncing])
 
   // Signature and PermitAllowance will expire, so they should be rechecked at an interval.
-  const [now, setNow] = useState(Date.now())
   // Calculate now such that the signature will still be valid for the submitting block.
-  useInterval(() => setNow((Date.now() + AVERAGE_L1_BLOCK_TIME) / 1000), AVERAGE_L1_BLOCK_TIME, true)
+  const [now, setNow] = useState(Date.now() + AVERAGE_L1_BLOCK_TIME)
+  useInterval(
+    useCallback(() => setNow((Date.now() + AVERAGE_L1_BLOCK_TIME) / 1000), []),
+    AVERAGE_L1_BLOCK_TIME
+  )
 
   const [signature, setSignature] = useState<PermitSignature>()
   const isSigned = useMemo(() => {
