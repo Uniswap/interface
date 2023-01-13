@@ -1,7 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { load, save } from 'redux-localstorage-simple'
 
-import { ENV_LEVEL, ENV_TYPE } from 'constants/env'
+import { ENV_LEVEL } from 'constants/env'
+import { ENV_TYPE } from 'constants/type'
 
 import geckoTerminalApi from '../services/geckoTermial'
 import application from './application/reducer'

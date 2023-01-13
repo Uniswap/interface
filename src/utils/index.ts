@@ -5,15 +5,15 @@ import JSBI from 'jsbi'
 import Numeral from 'numeral'
 
 import { GET_BLOCK, GET_BLOCKS } from 'apollo/queries'
+import { ENV_LEVEL } from 'constants/env'
 import { DEFAULT_GAS_LIMIT_MARGIN, ZERO_ADDRESS } from 'constants/index'
 import { NETWORKS_INFO, NETWORKS_INFO_CONFIG, isEVM } from 'constants/networks'
 import { KNC, KNCL_ADDRESS } from 'constants/tokens'
+import { ENV_TYPE } from 'constants/type'
 import { EVMWalletInfo, SUPPORTED_WALLET, SolanaWalletInfo, WalletInfo } from 'constants/wallets'
 import store from 'state'
 import { GroupedTxsByHash, TransactionDetails } from 'state/transactions/type'
-
-import { ENV_LEVEL, ENV_TYPE } from '../constants/env'
-import checkForBraveBrowser from './checkForBraveBrowser'
+import checkForBraveBrowser from 'utils/checkForBraveBrowser'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(chainId: ChainId, value: any): string | false {

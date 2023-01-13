@@ -18,8 +18,9 @@ import 'swiper/swiper-bundle.min.css'
 import 'swiper/swiper.min.css'
 
 import SolanaWalletContext from 'components/SolanaWalletContext'
-import { ENV_LEVEL, ENV_TYPE, GTM_ID, MIXPANEL_PROJECT_TOKEN, SENTRY_DNS, TAG } from 'constants/env'
+import { ENV_LEVEL, GTM_ID, MIXPANEL_PROJECT_TOKEN, SENTRY_DNS, TAG } from 'constants/env'
 import * as ENV from 'constants/env'
+import { ENV_TYPE } from 'constants/type'
 // import { updateServiceWorker } from 'state/application/actions'
 import CampaignsUpdater from 'state/campaigns/updater'
 

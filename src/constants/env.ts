@@ -1,12 +1,6 @@
 import invariant from 'tiny-invariant'
 
-export enum ENV_TYPE {
-  LOCAL,
-  ADPR,
-  DEV,
-  STG,
-  PROD,
-}
+import { ENV_TYPE } from './type'
 
 const required = (envKey: string): string => {
   const key = 'REACT_APP_' + envKey

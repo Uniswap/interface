@@ -3,8 +3,9 @@ import { Currency, CurrencyAmount, Token, TradeType } from '@kyberswap/ks-sdk-co
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { ENV_LEVEL, ENV_TYPE } from 'constants/env'
+import { ENV_LEVEL } from 'constants/env'
 import { ZERO_ADDRESS, ZERO_ADDRESS_SOLANA } from 'constants/index'
+import { ENV_TYPE } from 'constants/type'
 import { PairState, usePairs } from 'data/Reserves'
 import { useActiveWeb3React } from 'hooks/index'
 import { useAllCurrencyCombinations } from 'hooks/useAllCurrencyCombinations'
