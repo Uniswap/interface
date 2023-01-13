@@ -7,6 +7,7 @@ import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
+import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
 export const pageTimePeriodAtom = atomWithStorage<TimePeriod>('tokenDetailsTimePeriod', TimePeriod.DAY)
 
@@ -26,7 +27,7 @@ export default function TokenDetailsPage() {
 
   const { data: tokenQuery, loading: tokenQueryLoading } = useTokenQuery({
     variables: {
-      contract,
+      contract: isNative ? { address: getNativeTokenDBAddress(chain), chain } : contract,
     },
   })
 

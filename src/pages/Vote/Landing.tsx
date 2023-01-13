@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
-import { PageName } from '@uniswap/analytics-events'
+import { InterfacePageName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { ButtonPrimary } from 'components/Button'
@@ -145,7 +145,7 @@ export default function Landing() {
   )
   return (
     <>
-      <Trace page={PageName.VOTE_PAGE} shouldLogImpression>
+      <Trace page={InterfacePageName.VOTE_PAGE} shouldLogImpression>
         <PageWrapper gap="lg" justify="center">
           <DelegateModal
             isOpen={showDelegateModal}

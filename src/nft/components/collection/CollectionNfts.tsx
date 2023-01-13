@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import { OpacityHoverState } from 'components/Common'
@@ -41,7 +41,6 @@ import {
 } from 'nft/types'
 import {
   calcPoolPrice,
-  calcSudoSwapPrice,
   getRarityStatus,
   isInSameMarketplaceCollection,
   isInSameSudoSwapPool,
@@ -55,8 +54,9 @@ import { useLocation } from 'react-router-dom'
 import styled, { css } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-import { CollectionAssetLoading } from './CollectionAssetLoading'
+import { LoadingAssets } from './CollectionAssetLoading'
 import { MARKETPLACE_ITEMS, MarketplaceLogo } from './MarketplaceSelect'
+import { ClearAllButton } from './shared'
 import { Sweep } from './Sweep'
 import { TraitChip } from './TraitChip'
 
@@ -120,17 +120,6 @@ const ViewFullCollection = styled.span`
   ${OpacityHoverState}
 `
 
-export const ClearAllButton = styled.button`
-  color: ${({ theme }) => theme.textTertiary};
-  padding-left: 8px;
-  padding-right: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  background: none;
-`
-
 const InfiniteScrollWrapper = styled.div`
   ${InfiniteScrollWrapperCss}
 `
@@ -171,14 +160,6 @@ const SweepText = styled(ThemedText.BodyPrimary)`
 const MarketNameWrapper = styled(Row)`
   gap: 8px;
 `
-
-export const LoadingAssets = ({ count, height }: { count?: number; height?: number }) => (
-  <>
-    {Array.from(Array(count ?? ASSET_PAGE_SIZE), (_, index) => (
-      <CollectionAssetLoading key={index} height={height} />
-    ))}
-  </>
-)
 
 const CollectionNftsLoading = ({ height }: { height?: number }) => (
   <Box width="full" className={styles.assetList}>
@@ -325,7 +306,6 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   const calculatePrice = useCallback(
     (asset: GenieAsset) => {
-      if (asset.marketplace === Markets.Sudoswap) return calcSudoSwapPrice(asset, getPoolPosition(asset))
       return calcPoolPrice(asset, getPoolPosition(asset))
     },
     [getPoolPosition]
@@ -342,7 +322,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
       (asset) =>
         asset.marketplace &&
         isPooledMarket(asset.marketplace) &&
-        (asset.priceInfo.ETHPrice = calculatePrice(asset) ?? '')
+        (asset.priceInfo.ETHPrice = calculatePrice(asset) ?? '0')
     )
 
     if (sortBy === SortBy.HighToLow || sortBy === SortBy.LowToHigh) {
@@ -512,8 +492,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
           <ActionsSubContainer>
             <TraceEvent
               events={[BrowserEvent.onClick]}
-              element={ElementName.NFT_FILTER_BUTTON}
-              name={EventName.NFT_FILTER_OPENED}
+              element={InterfaceElementName.NFT_FILTER_BUTTON}
+              name={NFTEventName.NFT_FILTER_OPENED}
               shouldLogImpression={!isFiltersExpanded}
               properties={{ collection_address: contractAddress, chain_id: chainId }}
             >

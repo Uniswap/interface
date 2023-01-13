@@ -103,7 +103,12 @@ export default function NetworkFilter() {
 
   return (
     <StyledMenu ref={node}>
-      <NetworkFilterOption onClick={toggleMenu} aria-label="networkFilter" active={open}>
+      <NetworkFilterOption
+        onClick={toggleMenu}
+        aria-label="networkFilter"
+        active={open}
+        data-testid="tokens-network-filter-selected"
+      >
         <StyledMenuContent>
           <NetworkLabel>
             <Logo src={chainInfo?.logoUrl} /> {chainInfo?.label}
@@ -125,6 +130,7 @@ export default function NetworkFilter() {
             return (
               <InternalLinkMenuItem
                 key={network}
+                data-testid={`tokens-network-filter-option-${network.toLowerCase()}`}
                 onClick={() => {
                   navigate(`/tokens/${network.toLowerCase()}`)
                   toggleMenu()

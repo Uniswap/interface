@@ -1,13 +1,19 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, user } from '@uniswap/analytics'
-import { CustomUserProperties, EventName, WalletConnectionResult } from '@uniswap/analytics-events'
+import { CustomUserProperties, InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { networkConnection } from 'connection'
-import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsInjected, getIsMetaMask } from 'connection/utils'
+import {
+  getConnection,
+  getConnectionName,
+  getHasCoinbaseExtensionInstalled,
+  getHasMetaMaskExtensionInstalled,
+  getIsInjected,
+} from 'connection/utils'
 import usePrevious from 'hooks/usePrevious'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
@@ -125,7 +131,7 @@ const sendAnalyticsEventAndUserInfo = (
   chainId: number | undefined,
   isReconnect: boolean
 ) => {
-  sendAnalyticsEvent(EventName.WALLET_CONNECT_TXN_COMPLETED, {
+  sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
     result: WalletConnectionResult.SUCCEEDED,
     wallet_address: account,
     wallet_type: walletType,
@@ -204,7 +210,7 @@ export default function WalletModal({
   // When new wallet is successfully set by the user, trigger logging of Amplitude analytics event.
   useEffect(() => {
     if (account && account !== lastActiveWalletAddress) {
-      const walletType = getConnectionName(getConnection(connector).type, getIsMetaMask())
+      const walletType = getConnectionName(getConnection(connector).type)
       const isReconnect =
         connectedWallets.filter((wallet) => wallet.account === account && wallet.walletType === walletType).length > 0
       sendAnalyticsEventAndUserInfo(account, walletType, chainId, isReconnect)
@@ -236,9 +242,9 @@ export default function WalletModal({
         console.debug(`web3-react connection error: ${error}`)
         dispatch(updateConnectionError({ connectionType, error: error.message }))
 
-        sendAnalyticsEvent(EventName.WALLET_CONNECT_TXN_COMPLETED, {
+        sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
           result: WalletConnectionResult.FAILED,
-          wallet_type: getConnectionName(connectionType, getIsMetaMask()),
+          wallet_type: getConnectionName(connectionType),
         })
       }
     },
@@ -247,11 +253,11 @@ export default function WalletModal({
 
   function getOptions() {
     const isInjected = getIsInjected()
-    const isMetaMask = getIsMetaMask()
-    const isCoinbaseWallet = getIsCoinbaseWallet()
+    const hasMetaMaskExtension = getHasMetaMaskExtensionInstalled()
+    const hasCoinbaseExtension = getHasCoinbaseExtensionInstalled()
 
-    const isCoinbaseWalletBrowser = isMobile && isCoinbaseWallet
-    const isMetaMaskBrowser = isMobile && isMetaMask
+    const isCoinbaseWalletBrowser = isMobile && hasCoinbaseExtension
+    const isMetaMaskBrowser = isMobile && hasMetaMaskExtension
     const isInjectedMobileBrowser = isCoinbaseWalletBrowser || isMetaMaskBrowser
 
     let injectedOption
@@ -259,8 +265,8 @@ export default function WalletModal({
       if (!isMobile) {
         injectedOption = <InstallMetaMaskOption />
       }
-    } else if (!isCoinbaseWallet) {
-      if (isMetaMask) {
+    } else if (!hasCoinbaseExtension) {
+      if (hasMetaMaskExtension) {
         injectedOption = <MetaMaskOption tryActivation={tryActivation} />
       } else {
         injectedOption = <InjectedOption tryActivation={tryActivation} />

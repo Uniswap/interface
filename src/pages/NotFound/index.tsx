@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
+import { InterfacePageName } from '@uniswap/analytics-events'
 import { SmallButtonPrimary } from 'components/Button'
 import { useIsMobile } from 'nft/hooks'
 import { Link } from 'react-router-dom'
@@ -46,7 +47,7 @@ export default function NotFound() {
 
   return (
     <PageWrapper>
-      <Trace page="404-page" shouldLogImpression>
+      <Trace page={InterfacePageName.NOT_FOUND} shouldLogImpression>
         <Header>
           <Container>
             <Title>404</Title>

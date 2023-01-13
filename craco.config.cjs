@@ -9,6 +9,16 @@ module.exports = {
   babel: {
     plugins: ['@vanilla-extract/babel-plugin'],
   },
+  jest: {
+    configure(jestConfig) {
+      return Object.assign({}, jestConfig, {
+        transformIgnorePatterns: ['@uniswap/conedison/format'],
+        moduleNameMapper: {
+          '@uniswap/conedison/format': '@uniswap/conedison/dist/format',
+        },
+      })
+    },
+  },
   webpack: {
     plugins: [
       new VanillaExtractPlugin(),

@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
-import { PageName } from '@uniswap/analytics-events'
+import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
@@ -176,7 +176,7 @@ export default function TokenDetails({
   }
   return (
     <Trace
-      page={PageName.TOKEN_DETAILS_PAGE}
+      page={InterfacePageName.TOKEN_DETAILS_PAGE}
       properties={{ tokenAddress: address, tokenName: token?.name }}
       shouldLogImpression
     >
@@ -206,18 +206,15 @@ export default function TokenDetails({
               priceHigh52W={tokenQueryData?.market?.priceHigh52W?.value}
               priceLow52W={tokenQueryData?.market?.priceLow52W?.value}
             />
-            {!token.isNative && (
-              <>
-                <Hr />
-                <AboutSection
-                  address={address}
-                  description={tokenQueryData?.project?.description}
-                  homepageUrl={tokenQueryData?.project?.homepageUrl}
-                  twitterName={tokenQueryData?.project?.twitterName}
-                />
-                <AddressSection address={address} />
-              </>
-            )}
+            <Hr />
+            <AboutSection
+              address={address}
+              chainId={pageChainId}
+              description={tokenQueryData?.project?.description}
+              homepageUrl={tokenQueryData?.project?.homepageUrl}
+              twitterName={tokenQueryData?.project?.twitterName}
+            />
+            {!token.isNative && <AddressSection address={address} />}
           </LeftPanel>
         ) : (
           <TokenDetailsSkeleton />

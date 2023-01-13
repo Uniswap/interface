@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
-import { EventName } from '@uniswap/analytics-events'
+import { InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
@@ -104,7 +104,7 @@ export default function useWrapCallback(
                     network.chainId !== chainId ||
                     wethContract.address !== WRAPPED_NATIVE_CURRENCY[network.chainId]?.address
                   ) {
-                    sendAnalyticsEvent(EventName.WRAP_TOKEN_TXN_INVALIDATED, {
+                    sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_INVALIDATED, {
                       ...eventProperties,
                       contract_address: wethContract.address,
                       contract_chain_id: network.chainId,
@@ -122,7 +122,10 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
                     currencyAmountRaw: inputAmount?.quotient.toString(),
                     chainId,
                   })
-                  sendAnalyticsEvent(EventName.WRAP_TOKEN_TXN_SUBMITTED, { ...eventProperties, type: WrapType.WRAP })
+                  sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
+                    ...eventProperties,
+                    type: WrapType.WRAP,
+                  })
                 } catch (error) {
                   console.error('Could not deposit', error)
                 }
@@ -148,7 +151,10 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
                     currencyAmountRaw: inputAmount?.quotient.toString(),
                     chainId,
                   })
-                  sendAnalyticsEvent(EventName.WRAP_TOKEN_TXN_SUBMITTED, { ...eventProperties, type: WrapType.UNWRAP })
+                  sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
+                    ...eventProperties,
+                    type: WrapType.UNWRAP,
+                  })
                 } catch (error) {
                   console.error('Could not withdraw', error)
                 }
