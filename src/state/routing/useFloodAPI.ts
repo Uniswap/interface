@@ -70,6 +70,7 @@ const SupportedFloodChainId = {
 type FloodConfig = {
   [key in SupportedFloodChainId]: FloodChainConfig
 }
+const baseDomainAPI = 'uni.flood.bid'
 const floodConfig: FloodConfig = {
   [SupportedFloodChainId.MAINNET]: {
     tokens: {
@@ -122,7 +123,7 @@ const floodConfig: FloodConfig = {
         chainId: 1,
       },
     },
-    apiUrl: 'http://localhost:8080',
+    apiUrl: `https://mainnet.${baseDomainAPI}`,
   },
   [SupportedFloodChainId.OPTIMISM]: {
     tokens: {
@@ -181,7 +182,7 @@ const floodConfig: FloodConfig = {
         chainId: 10,
       },
     },
-    apiUrl: 'http://localhost:8080',
+    apiUrl: `https://optimism.${baseDomainAPI}`,
   },
   [SupportedFloodChainId.POLYGON]: {
     tokens: {
@@ -228,7 +229,7 @@ const floodConfig: FloodConfig = {
         chainId: 137,
       },
     },
-    apiUrl: 'http://localhost:8080',
+    apiUrl: `https://polygon.${baseDomainAPI}`,
   },
   [SupportedFloodChainId.ARBITRUM_ONE]: {
     tokens: {
@@ -275,7 +276,7 @@ const floodConfig: FloodConfig = {
         chainId: 42161,
       },
     },
-    apiUrl: 'http://localhost:8080',
+    apiUrl: `https://arbitrum.${baseDomainAPI}`,
   },
 }
 
