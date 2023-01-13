@@ -6,7 +6,6 @@ const MISSING_PROVIDER = Symbol()
 const BlockNumberContext = createContext<
   | {
       value?: number
-      fastForward(block: number): void
     }
   | typeof MISSING_PROVIDER
 >(MISSING_PROVIDER)
@@ -22,10 +21,6 @@ function useBlockNumberContext() {
 /** Requires that BlockUpdater be installed in the DOM tree. */
 export default function useBlockNumber(): number | undefined {
   return useBlockNumberContext().value
-}
-
-export function useFastForwardBlockNumber(): (block: number) => void {
-  return useBlockNumberContext().fastForward
 }
 
 export function BlockNumberProvider({ children }: { children: ReactNode }) {
@@ -73,16 +68,7 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
     return void 0
   }, [activeChainId, provider, onBlock, setChainBlock, windowVisible])
 
-  const value = useMemo(
-    () => ({
-      value: chainId === activeChainId ? block : undefined,
-      fastForward: (update: number) => {
-        if (block && update > block) {
-          setChainBlock({ chainId: activeChainId, block: update })
-        }
-      },
-    }),
-    [activeChainId, block, chainId]
-  )
+  const blockValue = useMemo(() => (chainId === activeChainId ? block : undefined), [activeChainId, block, chainId])
+  const value = useMemo(() => ({ value: blockValue }), [blockValue])
   return <BlockNumberContext.Provider value={value}>{children}</BlockNumberContext.Provider>
 }
