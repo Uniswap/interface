@@ -1,6 +1,7 @@
 import { DrawerActions } from '@react-navigation/core'
 import { useScrollToTop } from '@react-navigation/native'
 import { FlashList } from '@shopify/flash-list'
+import * as SplashScreen from 'expo-splash-screen'
 import {
   default as React,
   ReactElement,
@@ -61,6 +62,7 @@ import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { dimensions } from 'src/styles/sizing'
+import { useTimeout } from 'src/utils/timing'
 
 const CONTENT_HEADER_HEIGHT_ESTIMATE = 270
 const SIDEBAR_SWIPE_CONTAINER_WIDTH = 50
@@ -313,6 +315,9 @@ export function HomeScreen(): ReactElement {
       tokensTabScrollRef,
     ]
   )
+
+  // Hides lock screen on next js render cycle, ensuring this component is loaded when the screen is hidden
+  useTimeout(SplashScreen.hideAsync, 1)
 
   return (
     <Screen edges={['left', 'right']}>

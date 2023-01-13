@@ -1,6 +1,7 @@
 import { ApolloProvider } from '@apollo/client'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import * as Sentry from '@sentry/react-native'
+import * as SplashScreen from 'expo-splash-screen'
 import React, { StrictMode, useCallback, useEffect } from 'react'
 import { StatusBar, useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
@@ -30,6 +31,10 @@ import { useTrmPrefetch } from 'src/features/trm/api'
 import { useSignerAccounts } from 'src/features/wallet/hooks'
 import { DynamicThemeProvider } from 'src/styles/DynamicThemeProvider'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
+
+// Keep the splash screen visible while we fetch resources until one of our landing pages loads
+SplashScreen.preventAutoHideAsync()
+
 // Construct a new instrumentation instance. This is needed to communicate between the integration and React
 const routingInstrumentation = new Sentry.ReactNavigationInstrumentation()
 

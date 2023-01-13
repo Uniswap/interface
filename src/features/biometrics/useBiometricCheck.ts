@@ -1,3 +1,4 @@
+import * as SplashScreen from 'expo-splash-screen'
 import { useEffect } from 'react'
 import { useLockScreenContext } from 'src/features/authentication/lockScreenContext'
 import { BiometricAuthenticationStatus } from 'src/features/biometrics'
@@ -37,6 +38,7 @@ export function useBiometricCheck() {
   })
 
   useAppStateTrigger('inactive', 'active', () => {
+    SplashScreen.hideAsync() // In case of a race condition where splash screen is not hidden, we want to hide when FaceID forces an app state change
     if (
       requiredForAppAccess &&
       authenticationStatus !== BiometricAuthenticationStatus.Authenticating &&
@@ -47,6 +49,7 @@ export function useBiometricCheck() {
   })
 
   useAppStateTrigger('active', 'inactive', () => {
+    SplashScreen.hideAsync() // In case of a race condition where splash screen is not hidden, we want to hide when FaceID forces an app state change
     if (
       requiredForAppAccess &&
       authenticationStatus !== BiometricAuthenticationStatus.Authenticating

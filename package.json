@@ -103,6 +103,7 @@
     "expo-local-authentication": "12.1.0",
     "expo-modules-core": "1.0.3",
     "expo-screen-capture": "4.2.0",
+    "expo-splash-screen": "0.17.5",
     "expo-web-browser": "12.0.0",
     "formik": "2.2.9",
     "fuse.js": "6.5.3",
