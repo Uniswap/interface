@@ -5017,19 +5017,7 @@
     "@uniswap/v2-sdk" "^3.0.1"
     "@uniswap/v3-sdk" "^3.8.3"
 
-"@uniswap/sdk-core@^3.0.0-alpha.3", "@uniswap/sdk-core@^3.0.1", "@uniswap/sdk-core@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/sdk-core/-/sdk-core-3.1.0.tgz#595b6396763fd2553531423c8eec83bfb4840a27"
-  integrity sha512-YRrp6vYAbYmi3uDXQGkvj2eT8BMpNnUdCFb8GifDG0Ei+ohIpC4RNAB+5/ru3zR2Byhx8VahGrSKuvdd6BVMyA==
-  dependencies:
-    "@ethersproject/address" "^5.0.2"
-    big.js "^5.2.2"
-    decimal.js-light "^2.5.0"
-    jsbi "^3.1.4"
-    tiny-invariant "^1.1.0"
-    toformat "^2.0.0"
-
-"@uniswap/sdk-core@^3.1.1":
+"@uniswap/sdk-core@^3.0.0-alpha.3", "@uniswap/sdk-core@^3.0.1", "@uniswap/sdk-core@^3.1.0", "@uniswap/sdk-core@^3.1.1":
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/@uniswap/sdk-core/-/sdk-core-3.1.1.tgz#3ab3376ce8df49fe46018d913c2a92d4736a3479"
   integrity sha512-afXn3R2ICf1mAZU+Ug8MmPbuXG7PYjoUYr0+sKLApyOPuhlxpwV4tR4ba8w4jSXoFhqOWxZ9qh44isWoScK96w==
@@ -5042,9 +5030,9 @@
     toformat "^2.0.0"
 
 "@uniswap/smart-order-router@^2.10.0":
-  version "2.10.2"
-  resolved "https://registry.yarnpkg.com/@uniswap/smart-order-router/-/smart-order-router-2.10.2.tgz#c6aabe890d096f4c4727011ecfe6f37a401f99a5"
-  integrity sha512-Nq/O5p5vUxcGL2PpdB4/mjq0cgfpisPA8Q29dPs3+dgYJ3PNgIasCoENMHgauTvCFCNyql+GwanfeW/DtEcd5A==
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/smart-order-router/-/smart-order-router-2.10.0.tgz#f9f13bd9a940fc2ee123a6dbe6c64a6fab19a365"
+  integrity sha512-7dfFlPbg36goZOWlRowTDDrRc1vWwKLhAuhftf6sN+ECJ4CeqRgDDZgxw/ZJhfDSl1RC6IYN71CfEcmhnbRDlw==
   dependencies:
     "@uniswap/default-token-list" "^2.0.0"
     "@uniswap/router-sdk" "^1.3.0"
@@ -5058,33 +5046,6 @@
     bunyan "^1.8.15"
     bunyan-blackhole "^1.1.1"
     ethers "^5.6.1"
-    graphql "^15.5.0"
-    graphql-request "^3.4.0"
-    lodash "^4.17.21"
-    mnemonist "^0.38.3"
-    node-cache "^5.1.2"
-    stats-lite "^2.2.0"
-
-"@uniswap/smart-order-router@^3.4.0":
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/smart-order-router/-/smart-order-router-3.4.0.tgz#12adbf68b39d05df60f710c4b36c328b989dfb3b"
-  integrity sha512-h9I+AFak32I0dh/05Bnnp8PEo9TFgLxwmMeers0msjaDx/vaQyTtmV6c7/C/dNSz/goat4zaAYdU2sLzGbzMVA==
-  dependencies:
-    "@uniswap/default-token-list" "^2.0.0"
-    "@uniswap/permit2-sdk" "^1.2.0"
-    "@uniswap/router-sdk" "^1.3.0"
-    "@uniswap/swap-router-contracts" "^1.3.0"
-    "@uniswap/token-lists" "^1.0.0-beta.25"
-    "@uniswap/universal-router" "^1.0.1"
-    "@uniswap/universal-router-sdk" "^1.3.0"
-    "@uniswap/v2-sdk" "^3.0.1"
-    "@uniswap/v3-sdk" "^3.7.0"
-    async-retry "^1.3.1"
-    await-timeout "^1.1.1"
-    axios "^0.21.1"
-    bunyan "^1.8.15"
-    bunyan-blackhole "^1.1.1"
-    ethers "^5.7.2"
     graphql "^15.5.0"
     graphql-request "^3.4.0"
     lodash "^4.17.21"
@@ -5138,15 +5099,6 @@
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/@uniswap/universal-router/-/universal-router-1.2.1.tgz#5fe4aa21d6bc89314d99f26407f28154f8e16f42"
   integrity sha512-F3S1wKylncuvIG2qwC1ciXXc1z1QmKsalo4p6H2A90LSRylEEhNp7ITxs7qCcnfRh+ZNkGJ0yQ0zmuVJSBezOQ==
-  dependencies:
-    "@openzeppelin/contracts" "4.7.0"
-    "@uniswap/v2-core" "1.0.1"
-    "@uniswap/v3-core" "1.0.0"
-
-"@uniswap/universal-router@^1.0.1":
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@uniswap/universal-router/-/universal-router-1.2.2.tgz#7b3704a307fad53ba2a80718362b1b7718ada4cc"
-  integrity sha512-ipQQpo3xO21EIS5pBjJazZbh9Vth6wzeta85Xva2HKoJ0uBvnugCjqvjkJMqiiz+osBnC12yemitjTOOxcqXjA==
   dependencies:
     "@openzeppelin/contracts" "4.7.0"
     "@uniswap/v2-core" "1.0.1"
@@ -10248,7 +10200,7 @@ ethereumjs-util@^7.1.0:
     ethereum-cryptography "^0.1.3"
     rlp "^2.2.4"
 
-ethers@^5.1.4, ethers@^5.3.1, ethers@^5.5.2, ethers@^5.6.0, ethers@^5.6.1, ethers@^5.6.7, ethers@^5.6.8, ethers@^5.7.2:
+ethers@^5.1.4, ethers@^5.3.1, ethers@^5.5.2, ethers@^5.6.0, ethers@^5.6.1, ethers@^5.6.7, ethers@^5.6.8:
   version "5.7.2"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.7.2.tgz#3a7deeabbb8c030d4126b24f84e525466145872e"
   integrity sha512-wswUsmWo1aOK8rR7DIKiWSw9DbLWe6x98Jrn8wcTflTVvaXhAMaB5zGAXy0GYQEQp9iO1iSHWVyARQm11zUtyg==
