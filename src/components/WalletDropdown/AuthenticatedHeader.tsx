@@ -334,7 +334,11 @@ const AuthenticatedHeader = () => {
                 <ThemedText.BodyPrimary>{error}</ThemedText.BodyPrimary>
               ) : (
                 <>
-                  {fiatOnrampAvailabilityLoading ? <StyledLoadingButtonSpinner /> : <CreditCard />}{' '}
+                  {fiatOnrampAvailabilityLoading ? (
+                    <StyledLoadingButtonSpinner />
+                  ) : (
+                    <CreditCard height="20px" width="20px" />
+                  )}{' '}
                   <Trans>Buy crypto</Trans>
                 </>
               )}
