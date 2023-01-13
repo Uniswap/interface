@@ -1,11 +1,12 @@
 import { BigNumberish } from '@ethersproject/bignumber'
 import { ContractTransaction } from '@ethersproject/contracts'
 import { CurrencyAmount, MaxUint256, Token } from '@uniswap/sdk-core'
-import { useTokenContract } from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { ApproveTransactionInfo, TransactionType } from 'state/transactions/types'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
+
+import { useTokenContract } from './useContract'
 
 export function useTokenAllowance(
   token?: Token,
@@ -16,33 +17,23 @@ export function useTokenAllowance(
   isSyncing: boolean
 } {
   const contract = useTokenContract(token?.address, false)
+
   const inputs = useMemo(() => [owner, spender], [owner, spender])
+  const { result, syncing: isSyncing } = useSingleCallResult(contract, 'allowance', inputs)
 
-  // If there is no allowance yet, re-check next observed block.
-  // This guarantees that the tokenAllowance is marked isSyncing upon approval and updated upon being synced.
-  const [blocksPerFetch, setBlocksPerFetch] = useState<1>()
-  const { result, syncing: isSyncing } = useSingleCallResult(contract, 'allowance', inputs, { blocksPerFetch }) as {
-    result: Awaited<ReturnType<NonNullable<typeof contract>['allowance']>> | undefined
-    syncing: boolean
-  }
-
-  const rawAmount = result?.toString() // convert to a string before using in a hook, to avoid spurious rerenders
-  const allowance = useMemo(
-    () => (token && rawAmount ? CurrencyAmount.fromRawAmount(token, rawAmount) : undefined),
-    [token, rawAmount]
-  )
-  useEffect(() => setBlocksPerFetch(allowance?.equalTo(0) ? 1 : undefined), [allowance])
-
-  return useMemo(() => ({ tokenAllowance: allowance, isSyncing }), [allowance, isSyncing])
+  return useMemo(() => {
+    const tokenAllowance = token && result && CurrencyAmount.fromRawAmount(token, result.toString())
+    return { tokenAllowance, isSyncing }
+  }, [isSyncing, result, token])
 }
 
-export function useUpdateTokenAllowance(
-  amount: CurrencyAmount<Token> | undefined,
-  spender: string
-): () => Promise<{ response: ContractTransaction; info: ApproveTransactionInfo }> {
+export function useUpdateTokenAllowance(amount: CurrencyAmount<Token> | undefined, spender: string) {
   const contract = useTokenContract(amount?.currency.address)
 
-  return useCallback(async () => {
+  return useCallback(async (): Promise<{
+    response: ContractTransaction
+    info: ApproveTransactionInfo
+  }> => {
     try {
       if (!amount) throw new Error('missing amount')
       if (!contract) throw new Error('missing contract')
@@ -67,7 +58,7 @@ export function useUpdateTokenAllowance(
       }
     } catch (e: unknown) {
       const symbol = amount?.currency.symbol ?? 'Token'
-      throw new Error(`${symbol} token allowance failed: ${e instanceof Error ? e.message : e}`)
+      throw new Error(`${symbol} approval failed: ${e instanceof Error ? e.message : e}`)
     }
   }, [amount, contract, spender])
 }
