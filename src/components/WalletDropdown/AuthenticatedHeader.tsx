@@ -21,7 +21,6 @@ import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Copy, CreditCard, ExternalLink as ExternalLinkIcon, Info, Power } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
-import { Text } from 'rebass'
 import { useCurrencyBalanceString } from 'state/connection/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { useFiatOnrampAck } from 'state/user/hooks'
@@ -57,7 +56,7 @@ const BuyCryptoButton = styled(ThemeButton)<{ $animateBorder: boolean }>`
   border-style: solid;
   border-width: 1px;
   height: 40px;
-  margin-top: 12px;
+  margin-top: 8px;
   animation-direction: alternate;
   animation-duration: ${({ theme }) => theme.transition.duration.slow};
   animation-fill-mode: none;
@@ -70,7 +69,7 @@ const WalletButton = styled(ThemeButton)`
   border-radius: 12px;
   padding-top: 10px;
   padding-bottom: 10px;
-  margin-top: 12px;
+  margin-top: 4px;
   color: white;
   border: none;
 `
@@ -168,6 +167,9 @@ const StyledLoadingButtonSpinner = styled(LoadingButtonSpinner)`
   fill: ${({ theme }) => theme.accentAction};
 `
 const BalanceWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   padding: 16px 0;
 `
 
@@ -175,10 +177,6 @@ const HeaderWrapper = styled.div`
   margin-bottom: 12px;
   display: flex;
   justify-content: space-between;
-`
-
-const AuthenticatedHeaderWrapper = styled.div`
-  padding: 0 16px;
 `
 
 const AuthenticatedHeader = () => {
@@ -280,7 +278,7 @@ const AuthenticatedHeader = () => {
   const closeFiatOnrampUnavailableTooltip = useCallback(() => setShow(false), [setShow])
 
   return (
-    <AuthenticatedHeaderWrapper>
+    <>
       <HeaderWrapper>
         <StatusWrapper>
           <FlexContainer>
@@ -309,9 +307,10 @@ const AuthenticatedHeader = () => {
       </HeaderWrapper>
       <Column>
         <BalanceWrapper>
-          <Text fontSize={36} fontWeight={400}>
+          <ThemedText.SubHeaderSmall>ETH Balance</ThemedText.SubHeaderSmall>
+          <ThemedText.HeadlineLarge fontSize={36} fontWeight={400}>
             {balanceString} {nativeCurrencySymbol}
-          </Text>
+          </ThemedText.HeadlineLarge>
           {amountUSD !== undefined && <USDText>{formatUSDPrice(amountUSD)} USD</USDText>}
         </BalanceWrapper>
         <ProfileButton
@@ -335,7 +334,11 @@ const AuthenticatedHeader = () => {
                 <ThemedText.BodyPrimary>{error}</ThemedText.BodyPrimary>
               ) : (
                 <>
-                  {fiatOnrampAvailabilityLoading ? <StyledLoadingButtonSpinner /> : <CreditCard />}{' '}
+                  {fiatOnrampAvailabilityLoading ? (
+                    <StyledLoadingButtonSpinner />
+                  ) : (
+                    <CreditCard height="20px" width="20px" />
+                  )}{' '}
                   <Trans>Buy crypto</Trans>
                 </>
               )}
@@ -371,7 +374,7 @@ const AuthenticatedHeader = () => {
           </UNIButton>
         )}
       </Column>
-    </AuthenticatedHeaderWrapper>
+    </>
   )
 }
 
