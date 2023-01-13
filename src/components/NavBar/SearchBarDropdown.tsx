@@ -16,6 +16,7 @@ import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
 
 import { ClockIcon, TrendingArrow } from '../../nft/components/icons'
+import { useRecentlySearchedAssets } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
 import { CollectionRow, SkeletonRow, TokenRow } from './SuggestionRow'
 
@@ -112,10 +113,7 @@ export const SearchBarDropdown = ({
 }: SearchBarDropdownProps) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(0)
 
-  // const { data: searchHistory, loading: recentlySearchedLoading } = useRecentlySearchedAssets()
-  const searchHistory: FungibleToken[] = []
-  const recentlySearchedLoading = false
-
+  const { data: searchHistory, loading: recentlySearchedLoading } = useRecentlySearchedAssets()
   const shortenedHistory = useMemo(() => searchHistory.slice(0, 2), [searchHistory])
 
   const { pathname } = useLocation()
@@ -269,7 +267,7 @@ export const SearchBarDropdown = ({
         ) : (
           // Recent Searches, Trending Tokens, Trending Collections
           <Column gap="20">
-            {shortenedHistory.length > 0 && (
+            {(shortenedHistory.length > 0 || recentlySearchedLoading) && (
               <SearchBarDropdownSection
                 hoveredIndex={hoveredIndex}
                 startingIndex={0}
@@ -340,6 +338,7 @@ export const SearchBarDropdown = ({
     queryText,
     totalSuggestions,
     trace,
+    recentlySearchedLoading,
   ])
 
   return (

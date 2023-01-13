@@ -249,7 +249,11 @@ export function useRecentlySearchedCollections(addresses: string[]): {
     },
   })
 
-  const queryCollections = queryData?.nftCollections?.edges.map((edge) => edge.node as NonNullable<NftCollection>)
+  const queryCollections = useMemo(
+    () => queryData?.nftCollections?.edges.map((edge) => edge.node as NonNullable<NftCollection>),
+    [queryData]
+  )
+
   const collections = useMemo(
     () =>
       queryCollections?.filter(Boolean).map(

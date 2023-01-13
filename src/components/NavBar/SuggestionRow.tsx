@@ -8,9 +8,7 @@ import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { getChainInfo } from 'constants/chainInfo'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
-import { Chain } from 'graphql/data/__generated__/types-and-hooks'
-import { chainIdToBackendName, getTokenDetailsURL } from 'graphql/data/util'
-import { useAtom } from 'jotai'
+import { getTokenDetailsURL } from 'graphql/data/util'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
@@ -23,7 +21,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { getDeltaArrow } from '../Tokens/TokenDetails/PriceChart'
-import { recentlySearchedAssetsAtom } from './RecentlySearchedAssets'
+import { useAddRecentlySearchedNFT, useAddRecentlySearchedToken } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
 
 const StyledLogoContainer = styled(LogoContainer)`
@@ -65,14 +63,14 @@ export const CollectionRow = ({
   const [brokenImage, setBrokenImage] = useState(false)
   const [loaded, setLoaded] = useState(false)
 
-  const [searchHistory, updateSearchHistory] = useAtom(recentlySearchedAssetsAtom)
+  const addRecentlySearchedNFT = useAddRecentlySearchedNFT()
   const navigate = useNavigate()
 
   const handleClick = useCallback(() => {
-    updateSearchHistory([{ isNft: true, address: collection.address, chain: Chain.Ethereum }, ...searchHistory])
+    addRecentlySearchedNFT(collection)
     toggleOpen()
     sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
-  }, [updateSearchHistory, collection.address, searchHistory, toggleOpen, eventProperties])
+  }, [addRecentlySearchedNFT, collection, toggleOpen, eventProperties])
 
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
@@ -140,17 +138,14 @@ interface TokenRowProps {
 }
 
 export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index, eventProperties }: TokenRowProps) => {
-  const [searchHistory, updateSearchHistory] = useAtom(recentlySearchedAssetsAtom)
+  const addRecentlySearchedToken = useAddRecentlySearchedToken()
   const navigate = useNavigate()
 
   const handleClick = useCallback(() => {
-    updateSearchHistory([
-      { isNft: false, address: token.address, chain: chainIdToBackendName(token.chainId) },
-      ...searchHistory,
-    ])
+    addRecentlySearchedToken(token)
     toggleOpen()
     sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
-  }, [updateSearchHistory, token.address, token.chainId, searchHistory, toggleOpen, eventProperties])
+  }, [addRecentlySearchedToken, token, toggleOpen, eventProperties])
 
   const L2Icon = getChainInfo(token.chainId)?.circleLogoUrl
   const tokenDetailsPath = getTokenDetailsURL(token.address, undefined, token.chainId)
