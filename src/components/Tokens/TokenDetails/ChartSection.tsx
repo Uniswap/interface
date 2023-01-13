@@ -58,7 +58,7 @@ function Chart({
   const timePeriod = useAtomValue(pageTimePeriodAtom)
 
   return (
-    <ChartContainer>
+    <ChartContainer data-testid="chart-container">
       <ParentSize>
         {({ width }) => <PriceChart prices={prices ?? null} width={width} height={436} timePeriod={timePeriod} />}
       </ParentSize>
