@@ -21,7 +21,6 @@ import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Copy, CreditCard, ExternalLink as ExternalLinkIcon, Info, Power } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
-import { Text } from 'rebass'
 import { useCurrencyBalanceString } from 'state/connection/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { useFiatOnrampAck } from 'state/user/hooks'
@@ -168,6 +167,9 @@ const StyledLoadingButtonSpinner = styled(LoadingButtonSpinner)`
   fill: ${({ theme }) => theme.accentAction};
 `
 const BalanceWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   padding: 16px 0;
 `
 
@@ -305,9 +307,10 @@ const AuthenticatedHeader = () => {
       </HeaderWrapper>
       <Column>
         <BalanceWrapper>
-          <Text fontSize={36} fontWeight={400}>
+          <ThemedText.SubHeaderSmall>ETH Balance</ThemedText.SubHeaderSmall>
+          <ThemedText.HeadlineLarge fontSize={36} fontWeight={400}>
             {balanceString} {nativeCurrencySymbol}
-          </Text>
+          </ThemedText.HeadlineLarge>
           {amountUSD !== undefined && <USDText>{formatUSDPrice(amountUSD)} USD</USDText>}
         </BalanceWrapper>
         <ProfileButton
