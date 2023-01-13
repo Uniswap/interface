@@ -355,14 +355,6 @@ diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/on-
 index c5ae71e..7fc9825 100644
 --- a/node_modules/@uniswap/smart-order-router/build/module/providers/on-chain-quote-provider.js
 +++ b/node_modules/@uniswap/smart-order-router/build/module/providers/on-chain-quote-provider.js
-@@ -219,6 +219,7 @@ export class OnChainQuoteProvider {
-                         },
-                     });
-                     const successRateError = this.validateSuccessRate(results.results, haveRetriedForSuccessRate);
-+                    console.log(results)
-                     if (successRateError) {
-                         return {
-                             status: 'failed',
 @@ -370,7 +371,8 @@ export class OnChainQuoteProvider {
                  // To work around this and avoid throwing errors when really we just couldn't get a quote, we catch this
                  // case and return 0 quotes found.
@@ -447,16 +439,6 @@ index 17eefc9..ae07c6d 100644
              this.l2GasDataProvider =
                  arbitrumGasDataProvider !== null && arbitrumGasDataProvider !== void 0 ? arbitrumGasDataProvider : new ArbitrumGasDataProvider(chainId, this.provider);
          }
-@@ -387,6 +388,9 @@ export class AlphaRouter {
-             ];
-             allCandidatePools = [...allCandidatePools, candidatePools];
-         }
-+        console.log(1234)
-+        console.log(allRoutesWithValidQuotes)
-+        console.log(allCandidatePools)
-         if (allRoutesWithValidQuotes.length == 0) {
-             log.info({ allRoutesWithValidQuotes }, 'Received no valid quotes');
-             return null;
 diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/config.js b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/config.js
 index 657f665..a3af23a 100644
 --- a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/config.js
