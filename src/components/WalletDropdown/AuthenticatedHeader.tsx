@@ -57,7 +57,7 @@ const BuyCryptoButton = styled(ThemeButton)<{ $animateBorder: boolean }>`
   border-style: solid;
   border-width: 1px;
   height: 40px;
-  margin-top: 12px;
+  margin-top: 8px;
   animation-direction: alternate;
   animation-duration: ${({ theme }) => theme.transition.duration.slow};
   animation-fill-mode: none;
