@@ -70,7 +70,7 @@ const WalletButton = styled(ThemeButton)`
   border-radius: 12px;
   padding-top: 10px;
   padding-bottom: 10px;
-  margin-top: 12px;
+  margin-top: 4px;
   color: white;
   border: none;
 `
