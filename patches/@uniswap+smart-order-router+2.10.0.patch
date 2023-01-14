@@ -32,7 +32,7 @@ index a164918..6ca1834 100644
  exports.USDT_ARBITRUM_RINKEBY = new sdk_core_1.Token(util_1.ChainId.ARBITRUM_RINKEBY, '0x920b9301c2de92186299cd2abc7199e25b9728b3', 6, 'UDST', 'Tether USD');
  exports.USDC_ARBITRUM_RINKEBY = new sdk_core_1.Token(util_1.ChainId.ARBITRUM_RINKEBY, '0x09b98f8b2395d076514037ff7d39a091a536206c', 6, 'USDC', 'USD//C');
  exports.UNI_ARBITRUM_RINKEBY = new sdk_core_1.Token(util_1.ChainId.ARBITRUM_RINKEBY, '0x049251a7175071316e089d0616d8b6aacd2c93b8', 18, 'UNI', 'Uni token');
-+exports.USDC_ARBITRUM_GOERLI = new sdk_core_1.Token(util_1.ChainId.ARBITRUM_GOERLI, '0x8FB1E3fC51F3b789dED7557E680551d93Ea9d892', 6, 'USDC', 'USD//C'); // This is the AAVE Test USDC
++exports.USDC_ARBITRUM_GOERLI = new sdk_core_1.Token(util_1.ChainId.ARBITRUM_GOERLI, '0x8FB1E3fC51F3b789dED7557E680551d93Ea9d892', 6, 'USDC', 'USD//C');
  //polygon tokens
  exports.WMATIC_POLYGON = new sdk_core_1.Token(util_1.ChainId.POLYGON, '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270', 18, 'WMATIC', 'Wrapped MATIC');
  exports.WETH_POLYGON = new sdk_core_1.Token(util_1.ChainId.POLYGON, '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619', 18, 'WETH', 'Wrapped Ether');
@@ -385,7 +385,7 @@ index 18d7f76..43ae748 100644
  export const USDT_ARBITRUM_RINKEBY = new Token(ChainId.ARBITRUM_RINKEBY, '0x920b9301c2de92186299cd2abc7199e25b9728b3', 6, 'UDST', 'Tether USD');
  export const USDC_ARBITRUM_RINKEBY = new Token(ChainId.ARBITRUM_RINKEBY, '0x09b98f8b2395d076514037ff7d39a091a536206c', 6, 'USDC', 'USD//C');
  export const UNI_ARBITRUM_RINKEBY = new Token(ChainId.ARBITRUM_RINKEBY, '0x049251a7175071316e089d0616d8b6aacd2c93b8', 18, 'UNI', 'Uni token');
-+export const USDC_ARBITRUM_GOERLI = new Token(ChainId.ARBITRUM_GOERLI, '0x8FB1E3fC51F3b789dED7557E680551d93Ea9d892', 6, 'USDC', 'USD//C'); // This is the AAVE Test USDC
++export const USDC_ARBITRUM_GOERLI = new Token(ChainId.ARBITRUM_GOERLI, '0x8FB1E3fC51F3b789dED7557E680551d93Ea9d892', 6, 'USDC', 'USD//C');
  //polygon tokens
  export const WMATIC_POLYGON = new Token(ChainId.POLYGON, '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270', 18, 'WMATIC', 'Wrapped MATIC');
  export const WETH_POLYGON = new Token(ChainId.POLYGON, '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619', 18, 'WETH', 'Wrapped Ether');
