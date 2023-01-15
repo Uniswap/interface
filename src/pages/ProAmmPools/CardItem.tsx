@@ -16,7 +16,7 @@ import { MoneyBag } from 'components/Icons'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { FeeTag } from 'components/YieldPools/ElasticFarmGroup/styleds'
 import { APRTooltipContent } from 'components/YieldPools/FarmingPoolAPRCell'
-import { ELASTIC_BASE_FEE_UNIT, PROMM_ANALYTICS_URL } from 'constants/index'
+import { APP_PATHS, ELASTIC_BASE_FEE_UNIT, PROMM_ANALYTICS_URL } from 'constants/index'
 import { NativeCurrencies } from 'constants/tokens'
 import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
@@ -131,7 +131,10 @@ export default function ProAmmPoolCardItem({ pool, onShared, userPositions }: Li
                 <Text>
                   <Trans>
                     Available for yield farming. Click{' '}
-                    <Link to={`/farms?tab=elastic&type=active&search=${pool.address}`}>here</Link> to go to the farm.
+                    <Link to={`${APP_PATHS.FARMS}/${networkInfo.route}?tab=elastic&type=active&search=${pool.address}`}>
+                      here
+                    </Link>{' '}
+                    to go to the farm.
                   </Trans>
                 </Text>
               }
@@ -238,7 +241,7 @@ export default function ProAmmPoolCardItem({ pool, onShared, userPositions }: Li
         {hasLiquidity && (
           <ButtonOutlined
             as={Link}
-            to={`/myPools/${networkInfo.route}?tab=${VERSION.ELASTIC}&search=${pool.address}`}
+            to={`${APP_PATHS.MY_POOLS}/${networkInfo.route}?tab=${VERSION.ELASTIC}&search=${pool.address}`}
             padding="10px"
             style={{ height: '36px' }}
           >

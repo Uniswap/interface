@@ -51,6 +51,7 @@ import {
 } from 'components/Icons'
 import AntiSnippingAttack from 'components/Icons/AntiSnippingAttack'
 import Loader from 'components/Loader'
+import { APP_PATHS } from 'constants/index'
 import { MAINNET_NETWORKS, NETWORKS_INFO } from 'constants/networks'
 import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
@@ -176,7 +177,7 @@ export const KSStatistic = () => {
 }
 
 function AboutKyberSwap() {
-  const { isSolana } = useActiveWeb3React()
+  const { isSolana, networkInfo } = useActiveWeb3React()
   const theme = useTheme()
   const [isDarkMode] = useDarkModeManager()
   const above992 = useMedia('(min-width: 992px)')
@@ -442,7 +443,7 @@ function AboutKyberSwap() {
     ) : (
       <BtnPrimary
         as={Link}
-        to={'/pools?tab=elastic&highlightCreateButton=true'}
+        to={`${APP_PATHS.POOLS}/${networkInfo.route}?tab=elastic&highlightCreateButton=true`}
         onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_CREATE_NEW_POOL_CLICKED)}
         style={{ flex: '0 0 216px', padding: '12px' }}
       >
@@ -778,8 +779,8 @@ function AboutKyberSwap() {
                   as={Link}
                   to={
                     activeTab === VERSION.ELASTIC
-                      ? '/pools?tab=elastic'
-                      : '/pools?tab=classic&highlightCreateButton=true'
+                      ? `${APP_PATHS.POOLS}/${networkInfo.route}?tab=elastic`
+                      : `${APP_PATHS.POOLS}/${networkInfo.route}?tab=classic&highlightCreateButton=true`
                   }
                   onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_START_EARNING_CLICKED)}
                 >
@@ -790,7 +791,11 @@ function AboutKyberSwap() {
                 </BtnPrimary>
                 <ButtonLight
                   as={Link}
-                  to={activeTab === VERSION.ELASTIC ? '/farms?tab=elastic' : '/farms?tab=classic'}
+                  to={
+                    activeTab === VERSION.ELASTIC
+                      ? `${APP_PATHS.FARMS}/${networkInfo.route}?tab=elastic`
+                      : `${APP_PATHS.FARMS}/${networkInfo.route}?tab=classic`
+                  }
                   onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_VIEW_FARMS_CLICKED)}
                   style={{
                     flex: 1,

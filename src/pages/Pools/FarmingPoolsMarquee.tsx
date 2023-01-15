@@ -8,6 +8,7 @@ import { FadeInAnimation } from 'components/Animation'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { MoneyBag } from 'components/Icons'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { APP_PATHS } from 'constants/index'
 import { NativeCurrencies } from 'constants/tokens'
 import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
@@ -54,7 +55,7 @@ const MarqueeItem = ({ token0: address0, token1: address1 }: { token0: string; t
   const token1Address = currency1.isNative ? currency1.symbol : token1.address
 
   return (
-    <StyledLink to={`/pools/${networkInfo.route}/${token0Address}/${token1Address}?tab=${tab}`}>
+    <StyledLink to={`${APP_PATHS.POOLS}/${networkInfo.route}/${token0Address}/${token1Address}?tab=${tab}`}>
       <CurrencyLogo currency={currency0} size="16px" />
       <Text fontSize="12px">
         {currency0.symbol} - {currency1.symbol}

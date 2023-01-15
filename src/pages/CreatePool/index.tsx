@@ -22,6 +22,7 @@ import Row, { AutoRow, RowBetween, RowFlat } from 'components/Row'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { TutorialType } from 'components/Tutorial'
 import {
+  APP_PATHS,
   CREATE_POOL_AMP_HINT,
   ONLY_DYNAMIC_FEE_CHAINS,
   ONLY_STATIC_FEE_CHAINS,
@@ -482,7 +483,7 @@ export default function CreatePool() {
                   {isPoolExisted && (
                     <TYPE.link fontSize="14px" lineHeight="22px" color={'text1'} fontWeight="normal">
                       <Trans>Note: There are existing pools for this token pair. Please check</Trans>{' '}
-                      <Link to={`/pools/${networkInfo.route}/${currencyIdA}/${currencyIdB}?tab=classic`}>
+                      <Link to={`${APP_PATHS.POOLS}/${networkInfo.route}/${currencyIdA}/${currencyIdB}?tab=classic`}>
                         <Trans>here</Trans>
                       </Link>
                     </TYPE.link>

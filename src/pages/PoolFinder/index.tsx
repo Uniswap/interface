@@ -15,6 +15,7 @@ import { FindPoolTabs } from 'components/NavigationTabs'
 import { NarrowPositionCard } from 'components/PositionCard'
 import Row from 'components/Row'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
+import { APP_PATHS } from 'constants/index'
 import { NativeCurrencies } from 'constants/tokens'
 import { PairState, usePair } from 'data/Reserves'
 import { useActiveWeb3React } from 'hooks'
@@ -162,7 +163,7 @@ export default function PoolFinder() {
           )}
         </ButtonDropdownLight>
         <StyledInternalLink
-          to={`/pools/${networkInfo.route}/${!!currency0 ? currencyId(currency0, chainId) : undefined}/${
+          to={`${APP_PATHS.POOLS}/${networkInfo.route}/${!!currency0 ? currencyId(currency0, chainId) : undefined}/${
             !!currency1 ? currencyId(currency1, chainId) : undefined
           }?tab=classic`}
         >
@@ -190,7 +191,7 @@ export default function PoolFinder() {
                   <Text textAlign="center" fontWeight={500}>
                     <Trans>Pool Found!</Trans>
                   </Text>
-                  <StyledInternalLink to={`/myPools?tab=classic`}>
+                  <StyledInternalLink to={`${APP_PATHS.MY_POOLS}/${networkInfo.route}?tab=classic`}>
                     <Text textAlign="center">
                       <Trans>Manage your pools.</Trans>
                     </Text>

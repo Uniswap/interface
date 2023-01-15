@@ -20,7 +20,7 @@ import { FarmingIcon } from 'components/Icons'
 import InfoHelper from 'components/InfoHelper'
 import { RowBetween, RowFixed } from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { DMM_ANALYTICS_URL, ONE_BIPS } from 'constants/index'
+import { APP_PATHS, DMM_ANALYTICS_URL, ONE_BIPS } from 'constants/index'
 import { useTotalSupply } from 'data/TotalSupply'
 import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
@@ -374,7 +374,7 @@ export default function FullPositionCard({
   farm,
   farmAPR = 0,
 }: PositionCardProps) {
-  const { chainId } = useActiveWeb3React()
+  const { chainId, networkInfo } = useActiveWeb3React()
 
   const upToSmall = useMedia(`(max-width: ${MEDIA_WIDTHS.upToSmall}px)`)
 
@@ -474,7 +474,9 @@ export default function FullPositionCard({
 
   const goToFarmPath =
     farmStatus !== 'NO_FARM'
-      ? `/farms?tab=classic&type=${farmStatus === 'FARM_ACTIVE' ? 'active' : 'ended'}&search=${pair.address}`
+      ? `${APP_PATHS.FARMS}/${networkInfo.route}?tab=classic&type=${
+          farmStatus === 'FARM_ACTIVE' ? 'active' : 'ended'
+        }&search=${pair.address}`
       : ''
 
   const renderFarmIcon = () => {

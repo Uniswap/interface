@@ -30,6 +30,7 @@ import Row, { RowBetween, RowFixed } from 'components/Row'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { TutorialType } from 'components/Tutorial'
 import { Dots } from 'components/swapv2/styleds'
+import { APP_PATHS } from 'constants/index'
 import { EVMNetworkInfo } from 'constants/networks/type'
 import { NativeCurrencies } from 'constants/tokens'
 import { useActiveWeb3React, useWeb3React } from 'hooks'
@@ -395,10 +396,10 @@ export default function AddLiquidity() {
     if (txHash) {
       onFieldAInput('')
       // dont jump to pool page if creating
-      navigate('/myPools?tab=elastic')
+      navigate(`${APP_PATHS.MY_POOLS}/${networkInfo.route}?tab=elastic`)
     }
     setTxHash('')
-  }, [navigate, onFieldAInput, txHash])
+  }, [navigate, networkInfo.route, onFieldAInput, txHash])
 
   const addIsUnsupported = false
 

@@ -11,7 +11,7 @@ import Copy from 'components/Copy'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { FarmingIcon } from 'components/Icons'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { ELASTIC_BASE_FEE_UNIT } from 'constants/index'
+import { APP_PATHS, ELASTIC_BASE_FEE_UNIT } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useProAmmPoolInfo from 'hooks/useProAmmPoolInfo'
 import useTheme from 'hooks/useTheme'
@@ -28,7 +28,7 @@ export default function ProAmmPoolInfo({
   position: Position
   tokenId?: string
 }) {
-  const { chainId } = useActiveWeb3React()
+  const { chainId, networkInfo } = useActiveWeb3React()
   const upToSmall = useMedia(`(max-width: ${MEDIA_WIDTHS.upToSmall}px)`)
   const theme = useTheme()
   const poolAddress = useProAmmPoolInfo(position.pool.token0, position.pool.token1, position.pool.fee as FeeAmount)
@@ -53,7 +53,10 @@ export default function ProAmmPoolInfo({
             <Text>
               <Trans>
                 Available for yield farming. Click{' '}
-                <Link to={`/farms?tab=elastic&type=active&search=${poolAddress}`}>here</Link> to go to the farm.
+                <Link to={`${APP_PATHS.FARMS}/${networkInfo.route}?tab=elastic&type=active&search=${poolAddress}`}>
+                  here
+                </Link>{' '}
+                to go to the farm.
               </Trans>
             </Text>
           }
@@ -65,7 +68,7 @@ export default function ProAmmPoolInfo({
 
     return (
       <MouseoverTooltip width="fit-content" placement="top" text={t`Available for yield farming`}>
-        <Link to={`/farms?tab=elastic&type=active&search=${poolAddress}`}>
+        <Link to={`${APP_PATHS.FARMS}/${networkInfo.route}?tab=elastic&type=active&search=${poolAddress}`}>
           <FarmingIcon />
         </Link>
       </MouseoverTooltip>

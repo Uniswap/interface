@@ -11,6 +11,8 @@ import DoubleCurrencyLogo from 'components/DoubleLogo'
 import HoverInlineText from 'components/HoverInlineText'
 import Modal from 'components/Modal'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { APP_PATHS } from 'constants/index'
+import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { useElasticFarms, useFarmAction } from 'state/farms/elastic/hooks'
@@ -51,6 +53,7 @@ function HarvestModal({
   poolId: number | null
   onDismiss: () => void
 }) {
+  const { networkInfo } = useActiveWeb3React()
   const theme = useTheme()
   const { farms, userFarmInfo } = useElasticFarms()
   const selectedFarm = farms?.find(farm => farm.id.toLowerCase() === farmsAddress.toLowerCase())
@@ -153,8 +156,11 @@ function HarvestModal({
             <br />
             <br />
             To claim your rewards, go to the{' '}
-            <StyledInternalLink to="/farms?type=vesting&tab=elastic"> Vesting</StyledInternalLink> tab and click
-            &apos;Claim&apos;.
+            <StyledInternalLink to={`${APP_PATHS.FARMS}/${networkInfo.route}?type=vesting&tab=elastic`}>
+              {' '}
+              Vesting
+            </StyledInternalLink>{' '}
+            tab and click &apos;Claim&apos;.
           </Trans>
         </HarvestInfo>
 

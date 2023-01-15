@@ -11,7 +11,7 @@ import FarmIssueAnnouncement from 'components/FarmIssueAnnouncement'
 import LocalLoader from 'components/LocalLoader'
 import ShareModal from 'components/ShareModal'
 import Toggle from 'components/Toggle'
-import { FARM_TAB } from 'constants/index'
+import { APP_PATHS, FARM_TAB } from 'constants/index'
 import { EVMNetworkInfo } from 'constants/networks/type'
 import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
@@ -276,7 +276,8 @@ function ElasticFarms() {
         <Text fontStyle="italic" fontSize={12} marginBottom="1rem" color={theme.subText}>
           <Trans>
             Your rewards may be automatically harvested a few days after the farm ends. Please check the{' '}
-            <StyledInternalLink to="/farms?type=vesting">Vesting</StyledInternalLink> tab to see your rewards
+            <StyledInternalLink to={`${APP_PATHS.FARMS}/${networkInfo.route}?type=vesting`}>Vesting</StyledInternalLink>{' '}
+            tab to see your rewards
           </Trans>
         </Text>
       )}
@@ -289,8 +290,8 @@ function ElasticFarms() {
               multiple phases
             </Text>
             . Once the current phase ends, you can harvest your rewards from the farm in the{' '}
-            <StyledInternalLink to="/farms?type=ended">Ended</StyledInternalLink> tab. To continue earning rewards in
-            the new phase, you must restake your NFT position into the active farm
+            <StyledInternalLink to={`${APP_PATHS.FARMS}/${networkInfo.route}?type=ended`}>Ended</StyledInternalLink>{' '}
+            tab. To continue earning rewards in the new phase, you must restake your NFT position into the active farm
           </Trans>
         </Text>
       )}

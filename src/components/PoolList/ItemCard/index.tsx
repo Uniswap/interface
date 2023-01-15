@@ -147,7 +147,10 @@ const ItemCard = ({ poolData, myLiquidity }: ListItemProps) => {
             <Text>
               <Trans>
                 Available for yield farming. Click{' '}
-                <Link to={`/farms?tab=classic&type=active&search=${poolData.id}`}>here</Link> to go to the farm.
+                <Link to={`${APP_PATHS.FARMS}/${networkInfo.route}?tab=classic&type=active&search=${poolData.id}`}>
+                  here
+                </Link>{' '}
+                to go to the farm.
               </Trans>
             </Text>
           }

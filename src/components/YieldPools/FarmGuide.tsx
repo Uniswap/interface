@@ -55,7 +55,7 @@ const guideStepByVersion: Record<
           {<StyledInternalLink to="/pools?tab=elastic">Elastic pool</StyledInternalLink>} and receive a NFT token for
           your liquidity position
         </Trans>
-      ),
+      ), // todo: add network route
       icon: <Drop size={20} />,
       title: 'Step 2',
     },
@@ -95,7 +95,7 @@ const guideStepByVersion: Record<
           <StyledInternalLink to="/farms?type=vesting&tab=elastic">Vesting</StyledInternalLink> tab! Note: some farms
           may have a vesting period
         </Trans>
-      ),
+      ), //todo: add network route
       icon: <MoneyBagOutline size={20} />,
       title: 'Step 6',
     },
@@ -113,7 +113,7 @@ const guideStepByVersion: Record<
           <StyledInternalLink to="/pools?tab=classic">Classic pool</StyledInternalLink> to receive Liquidity Provider
           (LP) tokens
         </Trans>
-      ),
+      ), //todo: add network route
       icon: <Drop size={20} />,
       title: 'Step 2',
     },

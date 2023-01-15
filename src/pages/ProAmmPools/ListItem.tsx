@@ -14,7 +14,7 @@ import { MoneyBag } from 'components/Icons'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { FeeTag } from 'components/YieldPools/ElasticFarmGroup/styleds'
 import FarmingPoolAPRCell, { APRTooltipContent } from 'components/YieldPools/FarmingPoolAPRCell'
-import { ELASTIC_BASE_FEE_UNIT, PROMM_ANALYTICS_URL } from 'constants/index'
+import { APP_PATHS, ELASTIC_BASE_FEE_UNIT, PROMM_ANALYTICS_URL } from 'constants/index'
 import { NativeCurrencies } from 'constants/tokens'
 import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
@@ -77,7 +77,7 @@ const ButtonWrapper = styled(Flex)`
 `
 
 export default function ProAmmPoolListItem({ pool, onShared, userPositions }: ListItemProps) {
-  const { chainId } = useActiveWeb3React()
+  const { chainId, networkInfo } = useActiveWeb3React()
   const theme = useTheme()
   const navigate = useNavigate()
   const [, setUrlOnEthPoWAck] = useUrlOnEthPowAck()
@@ -257,7 +257,10 @@ export default function ProAmmPoolListItem({ pool, onShared, userPositions }: Li
         </MouseoverTooltip>
         {hasLiquidity && (
           <MouseoverTooltip text={t`View positions`} placement={'top'} width={'fit-content'}>
-            <ButtonIcon as={Link} to={`/myPools?tab=${VERSION.ELASTIC}&search=${pool.address}`}>
+            <ButtonIcon
+              as={Link}
+              to={`${APP_PATHS.MY_POOLS}/${networkInfo.route}?tab=${VERSION.ELASTIC}&search=${pool.address}`}
+            >
               <ViewPositionIcon />
             </ButtonIcon>
           </MouseoverTooltip>

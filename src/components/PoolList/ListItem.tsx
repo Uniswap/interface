@@ -17,7 +17,7 @@ import { AMPLiquidityAndTVLContainer, ButtonWrapper, DataText, TableRow, TextTVL
 import { MouseoverTooltip } from 'components/Tooltip'
 import { FeeTag } from 'components/YieldPools/ElasticFarmGroup/styleds'
 import { ClassicFarmingPoolAPRCell } from 'components/YieldPools/FarmingPoolAPRCell'
-import { MAX_ALLOW_APY } from 'constants/index'
+import { APP_PATHS, MAX_ALLOW_APY } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
 import { IconWrapper } from 'pages/Pools/styleds'
@@ -37,7 +37,7 @@ export interface ListItemGroupProps {
 const ListItem = ({ poolData, userLiquidityPositions }: ListItemGroupProps) => {
   const myLiquidity = userLiquidityPositions[poolData.id]
 
-  const { chainId } = useActiveWeb3React()
+  const { chainId, networkInfo } = useActiveWeb3React()
   const dispatch = useDispatch()
   const togglePoolDetailModal = usePoolDetailModalToggle()
 
@@ -127,7 +127,7 @@ const ListItem = ({ poolData, userLiquidityPositions }: ListItemGroupProps) => {
           <FeeTag style={{ padding: '4px 6px' }}>AMP {formattedNum(amp.toSignificant(5))}</FeeTag>
           {isFarmingPool && (
             <MouseoverTooltip placement="top" text={t`Available for yield farming`}>
-              <Link to={`/farms?tab=classic&type=active&search=${poolData.id}`}>
+              <Link to={`${APP_PATHS.FARMS}/${networkInfo.route}?tab=classic&type=active&search=${poolData.id}`}>
                 <IconWrapper style={{ marginLeft: '6px', background: theme.apr + '33', width: '20px', height: '20px' }}>
                   <MoneyBag size={12} color={theme.apr} />
                 </IconWrapper>

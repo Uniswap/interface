@@ -17,7 +17,7 @@ import Search from 'components/Search'
 import SubscribeNotificationButton from 'components/SubscribeButton'
 import Toggle from 'components/Toggle'
 import Tutorial, { TutorialType } from 'components/Tutorial'
-import { PROMM_ANALYTICS_URL } from 'constants/index'
+import { APP_PATHS, PROMM_ANALYTICS_URL } from 'constants/index'
 import { EVMNetworkInfo } from 'constants/networks/type'
 import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
@@ -344,7 +344,9 @@ export default function ProAmmPool() {
               <Text fontSize={16} lineHeight={1.5} color={theme.subText} textAlign="center" marginTop="1rem">
                 <Trans>
                   No liquidity found. Check out our{' '}
-                  <StyledInternalLink to="/pools?tab=elastic">Pools.</StyledInternalLink>
+                  <StyledInternalLink to={`${APP_PATHS.POOLS}/${networkInfo.route}?tab=elastic`}>
+                    Pools.
+                  </StyledInternalLink>
                 </Trans>
               </Text>
             </Flex>

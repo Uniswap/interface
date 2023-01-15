@@ -79,7 +79,7 @@ const KyberSwapGeneralIntro = ({ isSolana }: { isSolana: boolean }) => {
     return (
       <ButtonLight
         as={Link}
-        to={'/pools?tab=elastic'}
+        to={`${APP_PATHS.POOLS}/${networkInfo.route}?tab=elastic`}
         onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_START_EARNING_CLICKED)}
         style={{
           width: '216px',
