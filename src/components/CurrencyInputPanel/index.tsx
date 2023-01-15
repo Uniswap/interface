@@ -5,8 +5,8 @@ import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
 import TradePrice from 'components/swap/TradePrice'
 import { darken } from 'polished'
-import { Fragment, ReactNode, useCallback, useState } from 'react'
-import { Lock } from 'react-feather'
+import { Fragment, ReactNode, useCallback, useEffect, useState } from 'react'
+import { Lock, Minus, Plus } from 'react-feather'
 import styled from 'styled-components/macro'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
@@ -139,7 +139,7 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
 
 const StyledTokenName = styled.span<{ active?: boolean }>`
   ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.25rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
-  font-size:  ${({ active }) => (active ? '18px' : '18px')};
+  font-size: ${({ active }) => (active ? '18px' : '18px')};
 `
 
 const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
@@ -168,8 +168,29 @@ const StyledNumericalInput = styled(NumericalInput)<{ $loading: boolean }>`
   ${loadingOpacityMixin}
 `
 
+const SmallButton = styled(ButtonGray)`
+  background-color: ${({ theme }) => theme.primary1};
+  border-radius: 8px;
+  padding: 4px;
+
+  :hover {
+    background-color: ${({ theme }) => darken(0.05, theme.primary1)};
+  }
+`
+
+const ButtonLabel = styled(TYPE.white)<{ disabled: boolean }>`
+  color: ${({ theme, disabled }) => (disabled ? theme.text2 : theme.white)} !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
 interface CurrencyInputPanelProps {
   value: string
+  decrement?: () => string
+  increment?: () => string
+  decrementDisabled?: boolean
+  incrementDisabled?: boolean
   onUserInput: (value: string) => void
   onMax?: () => void
   showMaxButton: boolean
@@ -232,6 +253,24 @@ export default function CurrencyInputPanel({
 
   const [showInverted, setShowInverted] = useState<boolean>(isInvertedRate)
 
+  const [localValue, setLocalValue] = useState(value)
+
+  useEffect(() => {
+    setLocalValue(value)
+  }, [value])
+
+  const handleIncrement = () => {
+    const newValue = Number(localValue) + Number(localValue) / 100
+    onUserInput(newValue.toString())
+    setLocalValue(newValue.toString())
+  }
+
+  const handleDecrement = () => {
+    const newValue = Number(localValue) - Number(localValue) / 100
+    onUserInput(newValue.toString())
+    setLocalValue(newValue.toString())
+  }
+
   return (
     <InputPanel id={id} hideInput={hideInput} {...rest}>
       {locked && (
@@ -293,7 +332,7 @@ export default function CurrencyInputPanel({
           {!hideInput && (
             <StyledNumericalInput
               className="token-amount-input"
-              value={value}
+              value={localValue}
               onUserInput={onUserInput}
               $loading={loading}
             />
@@ -352,6 +391,18 @@ export default function CurrencyInputPanel({
             <FiatRow>
               <RowBetween>
                 <TradePrice price={price} showInverted={isInvertedRate} setShowInverted={setShowInverted} />
+                <RowFixed gap={'sm'}>
+                  <SmallButton onClick={handleDecrement} disabled={false}>
+                    <ButtonLabel disabled={false} fontSize="12px">
+                      <Minus size={18} />
+                    </ButtonLabel>
+                  </SmallButton>
+                  <SmallButton onClick={handleIncrement} disabled={false}>
+                    <ButtonLabel disabled={false} fontSize="12px">
+                      <Plus size={18} />
+                    </ButtonLabel>
+                  </SmallButton>
+                </RowFixed>
               </RowBetween>
             </FiatRow>
           </Fragment>
