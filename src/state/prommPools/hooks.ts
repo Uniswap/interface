@@ -177,7 +177,7 @@ export function useUserProMMPositions(): UserPositionResult {
   const { chainId, account, isEVM, networkInfo } = useActiveWeb3React()
 
   const { loading, error, data } = useQuery(PROMM_USER_POSITIONS, {
-    client: isEVM ? (networkInfo as EVMNetworkInfo).elasticClient : NETWORKS_INFO[ChainId.MAINNET].elasticClient,
+    client: isEVM ? (networkInfo as EVMNetworkInfo).elastic.client : NETWORKS_INFO[ChainId.MAINNET].elastic.client,
     variables: {
       owner: account?.toLowerCase(),
     },
@@ -361,8 +361,8 @@ export function usePoolDatas(poolAddresses: string[]): {
 } {
   const { isEVM, networkInfo } = useActiveWeb3React()
   const dataClient = isEVM
-    ? (networkInfo as EVMNetworkInfo).elasticClient
-    : NETWORKS_INFO[ChainId.MAINNET].elasticClient
+    ? (networkInfo as EVMNetworkInfo).elastic.client
+    : NETWORKS_INFO[ChainId.MAINNET].elastic.client
 
   const { blockLast24h } = usePoolBlocks()
 
@@ -444,8 +444,8 @@ export function useTopPoolAddresses(): {
 } {
   const { isEVM, networkInfo } = useActiveWeb3React()
   const dataClient = isEVM
-    ? (networkInfo as EVMNetworkInfo).elasticClient
-    : NETWORKS_INFO[ChainId.MAINNET].elasticClient
+    ? (networkInfo as EVMNetworkInfo).elastic.client
+    : NETWORKS_INFO[ChainId.MAINNET].elastic.client
 
   const { loading, error, data } = useQuery<TopPoolsResponse>(TOP_POOLS, {
     client: dataClient,

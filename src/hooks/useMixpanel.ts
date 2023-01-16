@@ -799,8 +799,8 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
   const subgraphMixpanelHandler = useCallback(
     async (transaction: TransactionDetails) => {
       if (!isEVM || !chainId) return
-      const apolloClient = (networkInfo as EVMNetworkInfo).classicClient
-      const apolloProMMClient = (networkInfo as EVMNetworkInfo).elasticClient
+      const apolloClient = (networkInfo as EVMNetworkInfo).classic.client
+      const apolloProMMClient = (networkInfo as EVMNetworkInfo).elastic.client
 
       const hash = transaction.hash
       switch (transaction.type) {

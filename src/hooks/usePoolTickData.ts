@@ -31,7 +31,7 @@ const getActiveTick = (tickCurrent: number | undefined, feeAmount: FeeAmount | u
 
 const useAllTicks = (poolAddress: string) => {
   const { isEVM, networkInfo } = useActiveWeb3React()
-  const client = isEVM ? (networkInfo as EVMNetworkInfo).elasticClient : NETWORKS_INFO[ChainId.MAINNET].elasticClient
+  const client = isEVM ? (networkInfo as EVMNetworkInfo).elastic.client : NETWORKS_INFO[ChainId.MAINNET].elastic.client
 
   return useQuery(ALL_TICKS(poolAddress?.toLowerCase()), {
     client,

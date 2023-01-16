@@ -20,8 +20,6 @@ const avaxTestnetInfo: EVMNetworkInfo = {
   iconDark: NOT_SUPPORT,
   iconSelected: NOT_SUPPORT,
   iconDarkSelected: NOT_SUPPORT,
-  classicClient: createClient('https://api.thegraph.com/subgraphs/name/ducquangkstn/dmm-exchange-fuij'),
-  elasticClient: createClient('https://api.thegraph.com/subgraphs/name/viet-nv/elastic-fuji'),
   blockClient: createClient('https://api.thegraph.com/subgraphs/name/ducquangkstn/ethereum-block-fuji'),
   etherscanUrl: 'https://testnet.snowtrace.io',
   etherscanName: 'Snowtrace',
@@ -38,6 +36,7 @@ const avaxTestnetInfo: EVMNetworkInfo = {
   routerUri: `https://aggregator-api.stg.kyberengineering.io/fuji/route/encode`,
   multicall: '0x5D605e78bc699fB565E6E6a1fa2d940C40F8ce25',
   classic: {
+    client: createClient('https://api.thegraph.com/subgraphs/name/ducquangkstn/dmm-exchange-fuij'),
     static: {
       zap: EMPTY,
       router: EMPTY,
@@ -54,6 +53,7 @@ const avaxTestnetInfo: EVMNetworkInfo = {
     fairlaunchV2: EMPTY_ARRAY,
   },
   elastic: {
+    client: createClient('https://api.thegraph.com/subgraphs/name/viet-nv/elastic-fuji'),
     coreFactory: '0x6992a3c0613485644a634bfe22ea97b04f0916aa',
     nonfungiblePositionManager: '0x0C1f1B3608C10DD4E95EBca5a776f004B7EDFdb2',
     tickReader: '0xe3AC3fd66EB31cAf4EE0831b262D837c479FFCe5',

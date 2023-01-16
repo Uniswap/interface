@@ -106,7 +106,7 @@ export default function useTotalVotingReward(): {
       try {
         const rewards = await Promise.all([
           (async () => {
-            const poolsQuery = ethereumInfo.classicClient.query({
+            const poolsQuery = ethereumInfo.classic.client.query({
               query: POOLS_BULK,
               variables: {
                 allPools: LP_ADDRESSES,
@@ -126,7 +126,7 @@ export default function useTotalVotingReward(): {
             return balancesNum.reduce((a: number, b: number) => a + b, 0)
           })(),
           (async () => {
-            const poolsMaticQuery = maticInfo.classicClient.query({
+            const poolsMaticQuery = maticInfo.classic.client.query({
               query: POOLS_BULK,
               variables: {
                 allPools: MATIC_LP_ADDRESSES,
@@ -148,7 +148,7 @@ export default function useTotalVotingReward(): {
           })(),
           (async () => {
             const ethBalanceQuery = providers[ChainId.MAINNET].getBalance(TRESUARY_ADDRESS)
-            const ethPrice = await ethereumInfo.classicClient.query({
+            const ethPrice = await ethereumInfo.classic.client.query({
               query: ETH_PRICE,
               fetchPolicy: 'network-only',
             })
@@ -160,7 +160,7 @@ export default function useTotalVotingReward(): {
           })(),
           (async () => {
             const maticBalanceQuery = providers[ChainId.MATIC].getBalance(MATIC_TRESUARY_ADDRESS)
-            const maticPrice = await maticInfo.classicClient.query({
+            const maticPrice = await maticInfo.classic.client.query({
               query: ETH_PRICE,
               fetchPolicy: 'network-only',
             })
@@ -186,8 +186,8 @@ export default function useTotalVotingReward(): {
 
   useEffect(() => {
     async function checkForKNCPrice() {
-      const kncPriceByETH = await getKNCPriceByETH(ChainId.MAINNET, NETWORKS_INFO[ChainId.MAINNET].classicClient)
-      const ethPrice = await getEthPrice(ChainId.MAINNET, NETWORKS_INFO[ChainId.MAINNET].classicClient)
+      const kncPriceByETH = await getKNCPriceByETH(ChainId.MAINNET, NETWORKS_INFO[ChainId.MAINNET].classic.client)
+      const ethPrice = await getEthPrice(ChainId.MAINNET, NETWORKS_INFO[ChainId.MAINNET].classic.client)
       const kncPrice = kncPriceByETH * ethPrice[0] || 0
       setKncPriceETH(kncPrice)
     }

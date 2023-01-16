@@ -145,7 +145,7 @@ const FarmUpdaterV1: React.FC<CommonProps> = ({ interval }) => {
   const elasticFarm = useAppSelector(state => state.elasticFarm)[chainId || 1] || defaultChainData
 
   const [getElasticFarms, { data, error }] = useLazyQuery(ELASTIC_FARM_QUERY, {
-    client: isEVM(chainId) ? NETWORKS_INFO[chainId].elasticClient : NETWORKS_INFO[ChainId.MAINNET].elasticClient,
+    client: isEVM(chainId) ? NETWORKS_INFO[chainId].elastic.client : NETWORKS_INFO[ChainId.MAINNET].elastic.client,
     fetchPolicy: 'network-only',
   })
 

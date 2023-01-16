@@ -38,7 +38,7 @@ export const useFeeTierDistribution = (
 
   useEffect(() => {
     if (!isEVM) return
-    ;(networkInfo as EVMNetworkInfo).elasticClient
+    ;(networkInfo as EVMNetworkInfo).elastic.client
       .query({
         query: POOL_POSITION_COUNT(poolIds),
       })

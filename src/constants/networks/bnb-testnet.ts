@@ -21,8 +21,6 @@ const bnbTestnetInfo: EVMNetworkInfo = {
   iconDark: NOT_SUPPORT,
   iconSelected: NOT_SUPPORT,
   iconDarkSelected: NOT_SUPPORT,
-  classicClient: createClient('https://api.thegraph.com/subgraphs/name/ducquangkstn/dynamic-amm-bsc-staging'),
-  elasticClient: createClient('https://api.thegraph.com/subgraphs/name/viet-nv/promm-bsc-testnet'),
   blockClient: createClient('https://api.thegraph.com/subgraphs/name/ducquangkstn/ethereum-blocks-bsctestnet'),
   etherscanUrl: 'https://testnet.bscscan.com',
   etherscanName: 'BscScan',
@@ -39,6 +37,7 @@ const bnbTestnetInfo: EVMNetworkInfo = {
   routerUri: EMPTY,
   multicall: '0x8F3273Fb89B075b1645095ABaC6ed17B2d4Bc576',
   classic: {
+    client: createClient('https://api.thegraph.com/subgraphs/name/ducquangkstn/dynamic-amm-bsc-staging'),
     static: {
       zap: EMPTY,
       router: EMPTY,
@@ -60,6 +59,7 @@ const bnbTestnetInfo: EVMNetworkInfo = {
     fairlaunchV2: EMPTY_ARRAY,
   },
   elastic: {
+    client: createClient('https://api.thegraph.com/subgraphs/name/viet-nv/promm-bsc-testnet'),
     coreFactory: '0x2D2B8D5093d0288Da2473459545FE7a2f057bd7D',
     nonfungiblePositionManager: '0xe0a4C2a9343A79A1F5b1505C036d033C8A178F90',
     tickReader: '0xe3AC3fd66EB31cAf4EE0831b262D837c479FFCe5',

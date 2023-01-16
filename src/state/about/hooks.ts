@@ -54,7 +54,7 @@ export function useGlobalData() {
       const elasticChains = chainIds.filter(isEVM).filter(id => !ELASTIC_NOT_SUPPORTED[id])
 
       const elasticPromises = elasticChains.map(chain =>
-        NETWORKS_INFO[chain].elasticClient.query({
+        NETWORKS_INFO[chain].elastic.client.query({
           query: GLOBAL_DATA_ELASTIC(),
           fetchPolicy: 'cache-first',
         }),
@@ -69,7 +69,7 @@ export function useGlobalData() {
       }, 0)
 
       const allChainPromises = chainIds.filter(isEVM).map(chain =>
-        NETWORKS_INFO[chain].classicClient.query({
+        NETWORKS_INFO[chain].classic.client.query({
           query: GLOBAL_DATA(),
           fetchPolicy: 'cache-first',
         }),

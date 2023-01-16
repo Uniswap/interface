@@ -21,12 +21,6 @@ const görliInfo: EVMNetworkInfo = {
   iconDark: NOT_SUPPORT,
   iconSelected: NOT_SUPPORT,
   iconDarkSelected: NOT_SUPPORT,
-  classicClient: createClient(
-    'https://ethereum-graph.dev.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-classic-goerli',
-  ),
-  elasticClient: createClient(
-    'https://ethereum-graph.dev.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-elastic-goerli',
-  ),
   blockClient: createClient('https://ethereum-graph.dev.kyberengineering.io/subgraphs/name/kybernetwork/goerli-blocks'),
   etherscanUrl: 'https://goerli.etherscan.io',
   etherscanName: 'Goerli Explorer',
@@ -43,6 +37,9 @@ const görliInfo: EVMNetworkInfo = {
   routerUri: EMPTY,
   multicall: '0xD9bfE9979e9CA4b2fe84bA5d4Cf963bBcB376974',
   classic: {
+    client: createClient(
+      'https://ethereum-graph.dev.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-classic-goerli',
+    ),
     static: {
       zap: EMPTY,
       router: '0x4F4994415B72FE87E01345f522D0A62A584D19b4',
@@ -55,6 +52,9 @@ const görliInfo: EVMNetworkInfo = {
     fairlaunchV2: EMPTY_ARRAY,
   },
   elastic: {
+    client: createClient(
+      'https://ethereum-graph.dev.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-elastic-goerli',
+    ),
     coreFactory: '0x1a91f5ADc7cB5763d35A26e98A18520CB9b67e70',
     nonfungiblePositionManager: '0x8B76f8e008570686aD5933e5669045c5B01DB7bE',
     tickReader: '0x24F40B8a021d5442B97459A336D1363E4D0f1388',

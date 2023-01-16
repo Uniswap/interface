@@ -253,7 +253,7 @@ const useGetUserFarmingInfo = (interval?: boolean) => {
 
   const { blockLast24h } = usePoolBlocks()
   const [getPoolInfo, { data: poolFeeData }] = useLazyQuery(POOL_FEE_HISTORY, {
-    client: isEVM(chainId) ? NETWORKS_INFO[chainId].elasticClient : NETWORKS_INFO[ChainId.MAINNET].elasticClient,
+    client: isEVM(chainId) ? NETWORKS_INFO[chainId].elastic.client : NETWORKS_INFO[ChainId.MAINNET].elastic.client,
     fetchPolicy: 'network-only',
   })
 

@@ -20,8 +20,6 @@ const mumbaiInfo: EVMNetworkInfo = {
   iconDark: NOT_SUPPORT,
   iconSelected: NOT_SUPPORT,
   iconDarkSelected: NOT_SUPPORT,
-  classicClient: createClient('https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-mumbai'),
-  elasticClient: createClient('https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-elastic-matic'), //todo: not exits yet
   blockClient: createClient('https://api.thegraph.com/subgraphs/name/piavgh/mumbai-blocks'),
   etherscanUrl: 'https://mumbai.polygonscan.com/',
   etherscanName: 'Polygonscan',
@@ -38,6 +36,7 @@ const mumbaiInfo: EVMNetworkInfo = {
   routerUri: EMPTY,
   multicall: '0xc535D6463D5Bf9843aFa73bBF49bF4644a3988bA',
   classic: {
+    client: createClient('https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-mumbai'),
     static: {
       zap: EMPTY,
       router: EMPTY,
@@ -54,6 +53,7 @@ const mumbaiInfo: EVMNetworkInfo = {
     fairlaunchV2: EMPTY_ARRAY,
   },
   elastic: {
+    client: createClient('https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-elastic-matic'), //todo: not exits yet
     coreFactory: '0x5F1dddbf348aC2fbe22a163e30F99F9ECE3DD50a',
     nonfungiblePositionManager: '0x2B1c7b41f6A8F2b2bc45C3233a5d5FB3cD6dC9A8',
     tickReader: '0xe3AC3fd66EB31cAf4EE0831b262D837c479FFCe5',

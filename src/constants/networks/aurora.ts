@@ -21,8 +21,6 @@ const auroraInfo: EVMNetworkInfo = {
   iconDark: NOT_SUPPORT,
   iconSelected: NOT_SUPPORT,
   iconDarkSelected: NOT_SUPPORT,
-  classicClient: createClient('https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-exchange-aurora'),
-  elasticClient: createClient('https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-elastic-aurora'),
   blockClient: createClient('https://aurora-graph.kyberengineering.io/subgraphs/name/kybernetwork/aurora-blocks'),
   etherscanUrl: 'https://aurorascan.dev',
   etherscanName: 'Aurora Explorer',
@@ -39,6 +37,7 @@ const auroraInfo: EVMNetworkInfo = {
   routerUri: `${AGGREGATOR_API}/aurora/route/encode`,
   multicall: '0xBF69a56D35B8d6f5A8e0e96B245a72F735751e54',
   classic: {
+    client: createClient('https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-exchange-aurora'),
     static: {
       zap: '0x2abE8750e4a65584d7452316356128C936273e0D',
       router: '0x5649B4DD00780e99Bab7Abb4A3d581Ea1aEB23D0',
@@ -55,6 +54,7 @@ const auroraInfo: EVMNetworkInfo = {
     fairlaunchV2: EMPTY_ARRAY,
   },
   elastic: {
+    client: createClient('https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-elastic-aurora'),
     coreFactory: '0x5F1dddbf348aC2fbe22a163e30F99F9ECE3DD50a',
     nonfungiblePositionManager: '0x2B1c7b41f6A8F2b2bc45C3233a5d5FB3cD6dC9A8',
     tickReader: '0x165c68077ac06c83800d19200e6E2B08D02dE75D',

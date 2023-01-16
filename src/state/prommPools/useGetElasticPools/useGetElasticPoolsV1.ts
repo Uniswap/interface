@@ -126,8 +126,8 @@ const parsedPoolData = (
 const useGetElasticPoolsV1 = (poolAddresses: string[], skip?: boolean): CommonReturn => {
   const { chainId } = useActiveWeb3React()
   const dataClient = isEVM(chainId)
-    ? NETWORKS_INFO[chainId].elasticClient
-    : NETWORKS_INFO[ChainId.MAINNET].elasticClient
+    ? NETWORKS_INFO[chainId].elastic.client
+    : NETWORKS_INFO[ChainId.MAINNET].elastic.client
 
   const { blockLast24h } = usePoolBlocks()
 

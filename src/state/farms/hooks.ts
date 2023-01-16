@@ -110,7 +110,7 @@ export const useFarmsData = (isIncludeOutsideFarms = true) => {
 
   useEffect(() => {
     if (!isEVM) return
-    const apolloClient = (networkInfo as EVMNetworkInfo).classicClient
+    const apolloClient = (networkInfo as EVMNetworkInfo).classic.client
     let cancelled = false
 
     async function getListFarmsForContract(contract: Contract): Promise<Farm[]> {
@@ -336,7 +336,7 @@ export const useYieldHistories = (isModalOpen: boolean) => {
 
   useEffect(() => {
     if (!isEVM) return
-    const apolloClient = (networkInfo as EVMNetworkInfo).classicClient
+    const apolloClient = (networkInfo as EVMNetworkInfo).classic.client
     async function fetchFarmHistories() {
       if (!account || !isModalOpen) {
         return

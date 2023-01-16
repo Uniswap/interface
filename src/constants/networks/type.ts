@@ -43,12 +43,11 @@ export interface NetworkInfo {
 
 export interface EVMNetworkInfo extends NetworkInfo {
   readonly poolFarmRoute: string // use this to get data from our internal BE
-  readonly classicClient: ApolloClient<NormalizedCacheObject>
-  readonly elasticClient: ApolloClient<NormalizedCacheObject>
   readonly blockClient: ApolloClient<NormalizedCacheObject>
   readonly rpcUrl: string
   readonly multicall: string
   readonly classic: {
+    readonly client: ApolloClient<NormalizedCacheObject>
     readonly static: {
       readonly zap: string
       readonly router: string
@@ -69,6 +68,7 @@ export interface EVMNetworkInfo extends NetworkInfo {
     readonly fairlaunchV2: string[]
   }
   readonly elastic: {
+    readonly client: ApolloClient<NormalizedCacheObject>
     readonly coreFactory: string
     readonly nonfungiblePositionManager: string
     readonly tickReader: string

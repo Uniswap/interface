@@ -278,8 +278,8 @@ export function useETHPrice(version: string = VERSION.CLASSIC): AppState['applic
 
   useEffect(() => {
     if (!isEVM) return
-    const apolloProMMClient = (networkInfo as EVMNetworkInfo).elasticClient
-    const apolloClient = (networkInfo as EVMNetworkInfo).classicClient
+    const apolloProMMClient = (networkInfo as EVMNetworkInfo).elastic.client
+    const apolloClient = (networkInfo as EVMNetworkInfo).classic.client
 
     async function checkForEthPrice() {
       const [newPrice, oneDayBackPrice, pricePercentChange] = await (version === VERSION.ELASTIC && apolloProMMClient
@@ -338,7 +338,7 @@ export function useKNCPrice(): AppState['application']['kncPrice'] {
 
   useEffect(() => {
     if (!isEVM) return
-    const apolloClient = (networkInfo as EVMNetworkInfo).classicClient
+    const apolloClient = (networkInfo as EVMNetworkInfo).classic.client
     async function checkForKNCPrice() {
       const kncPriceByETH = await getKNCPriceByETH(chainId, apolloClient)
       const kncPrice = ethPrice.currentPrice && kncPriceByETH * parseFloat(ethPrice.currentPrice)
@@ -396,8 +396,8 @@ export function useTokensPrice(tokens: (Token | NativeCurrency | null | undefine
 
   useDeepCompareEffect(() => {
     if (!isEVM) return
-    const apolloClient = (networkInfo as EVMNetworkInfo).classicClient
-    const client = version !== VERSION.ELASTIC ? apolloClient : (networkInfo as EVMNetworkInfo).elasticClient
+    const apolloClient = (networkInfo as EVMNetworkInfo).classic.client
+    const client = version !== VERSION.ELASTIC ? apolloClient : (networkInfo as EVMNetworkInfo).elastic.client
 
     async function checkForTokenPrice() {
       const tokensPrice = tokens.map(async token => {
