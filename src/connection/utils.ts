@@ -12,16 +12,16 @@ export function getIsInjected(): boolean {
   return Boolean(window.ethereum)
 }
 
+export function getIsBraveWallet(): boolean {
+  return window.ethereum?.isBraveWallet ?? false
+}
+
 export function getHasMetaMaskExtensionInstalled(): boolean {
-  return window.ethereum?.isMetaMask ?? false
+  return (window.ethereum?.isMetaMask ?? false) && !getIsBraveWallet()
 }
 
 export function getHasCoinbaseExtensionInstalled(): boolean {
   return window.ethereum?.isCoinbaseWallet ?? false
-}
-
-export function getIsMetaMask(connectionType: ConnectionType): boolean {
-  return connectionType === ConnectionType.INJECTED && getHasMetaMaskExtensionInstalled()
 }
 
 const CONNECTIONS = [
