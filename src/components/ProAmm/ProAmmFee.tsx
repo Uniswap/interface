@@ -58,6 +58,7 @@ export default function ProAmmFee({
 
   const [allowedSlippage] = useUserSlippageTolerance()
 
+  const liquidity = position.liquidity.toString()
   const collect = useCallback(() => {
     if (
       !chainId ||
@@ -84,6 +85,7 @@ export default function ProAmmFee({
       recipient: account,
       deadline: deadline.toString(),
       havingFee: true,
+      isPositionClosed: liquidity === '0',
     })
 
     const txn = {
@@ -142,6 +144,7 @@ export default function ProAmmFee({
     token1Shown,
     mixpanelHandler,
     allowedSlippage,
+    liquidity,
   ])
   const hasNoFeeToCollect = !(feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0))
 

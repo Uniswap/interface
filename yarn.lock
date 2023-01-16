@@ -2691,10 +2691,10 @@
     tiny-invariant "^1.1.0"
     toformat "^2.0.0"
 
-"@kyberswap/ks-sdk-elastic@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@kyberswap/ks-sdk-elastic/-/ks-sdk-elastic-1.0.1.tgz#dd072e7ddf278f7ee4c8b8e0250d38f0e1d6ed63"
-  integrity sha512-uSu0/UDjaL8YZckCsf1/VEYckZ5W+qfI3QcT7zU8n546MELiQzwgcQ0fET5PNVnvgdEg9tSXY95FiQwXthdWew==
+"@kyberswap/ks-sdk-elastic@^1.0.2-rc":
+  version "1.0.2-rc"
+  resolved "https://registry.yarnpkg.com/@kyberswap/ks-sdk-elastic/-/ks-sdk-elastic-1.0.2-rc.tgz#91a8b019bd180556d6e50893fd0a78d21ca0e563"
+  integrity sha512-e3rufxw7rlKzl76+kw9d2UqP8hkrw9IAUnXsyKlyX6q3hmb6piqYzgNYnvPMfkcVih4O2e4k3XzmGsaDuYTfIw==
   dependencies:
     "@ethersproject/abi" "^5.0.12"
     "@ethersproject/solidity" "^5.0.9"
