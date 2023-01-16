@@ -16,6 +16,7 @@ export function RedirectPathToSwapNetwork() {
           pathname.startsWith(APP_PATHS.LIMIT) && getLimitOrderContract(chainId) ? APP_PATHS.LIMIT : APP_PATHS.SWAP
         }/${networkInfo.route}`,
       }}
+      replace
     />
   )
 }

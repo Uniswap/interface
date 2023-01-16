@@ -6,5 +6,5 @@ import { useActiveWeb3React } from 'hooks'
 export function RedirectPathToMyPoolsNetwork() {
   const location = useLocation()
   const { networkInfo } = useActiveWeb3React()
-  return <Navigate to={{ ...location, pathname: `${APP_PATHS.MY_POOLS}/` + networkInfo.route }} />
+  return <Navigate to={{ ...location, pathname: `${APP_PATHS.MY_POOLS}/` + networkInfo.route }} replace />
 }

@@ -19,7 +19,7 @@ export function RedirectDuplicateTokenIds() {
     currencyIdB &&
     (currencyIdA.toLowerCase() === currencyIdB.toLowerCase() || (isETHOrWETHA && isETHOrWETHB))
   ) {
-    return <Navigate to={`/elastic/add/${currencyIdA}`} />
+    return <Navigate to={`/elastic/add/${currencyIdA}`} replace />
   }
   return <ProAmmAddLiquidity />
 }

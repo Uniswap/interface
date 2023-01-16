@@ -8,7 +8,7 @@ export default function RedirectOldCreatePoolPathStructure() {
 
   const match = currencyIdA?.match(OLD_PATH_STRUCTURE)
   if (match?.length) {
-    return <Navigate to={`/create/${match[1]}/${match[2]}`} />
+    return <Navigate to={`/create/${match[1]}/${match[2]}`} replace />
   }
 
   return <CreatePool />
