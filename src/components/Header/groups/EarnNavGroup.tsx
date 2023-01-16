@@ -13,7 +13,7 @@ import { DropdownTextAnchor, StyledNavLink } from '../styleds'
 import NavGroup from './NavGroup'
 
 const EarnNavGroup = () => {
-  const { isEVM } = useActiveWeb3React()
+  const { isEVM, networkInfo } = useActiveWeb3React()
   const upTo420 = useMedia('(max-width: 420px)')
   const { pathname } = useLocation()
   const { mixpanelHandler } = useMixpanel()
@@ -39,11 +39,11 @@ const EarnNavGroup = () => {
             flexDirection: 'column',
           }}
         >
-          <StyledNavLink id="pools-nav-link" to={APP_PATHS.POOLS} style={{ width: '100%' }}>
+          <StyledNavLink id="pools-nav-link" to={`${APP_PATHS.POOLS}/${networkInfo.route}`} style={{ width: '100%' }}>
             <Trans>Pools</Trans>
           </StyledNavLink>
 
-          <StyledNavLink id="my-pools-nav-link" to={APP_PATHS.MY_POOLS}>
+          <StyledNavLink id="my-pools-nav-link" to={`${APP_PATHS.MY_POOLS}/${networkInfo.route}`}>
             <Trans>My Pools</Trans>
           </StyledNavLink>
 
@@ -52,7 +52,7 @@ const EarnNavGroup = () => {
               mixpanelHandler(MIXPANEL_TYPE.FARM_UNDER_EARN_TAB_CLICK)
             }}
             id="farms-nav-link"
-            to={APP_PATHS.FARMS}
+            to={`${APP_PATHS.FARMS}/${networkInfo.route}`}
           >
             <Trans>Farms</Trans>
             <NewLabel>

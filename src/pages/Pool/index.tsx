@@ -494,7 +494,8 @@ function Pool() {
                 <Info size={48} color={theme.subText} />
                 <Text fontSize={16} lineHeight={1.5} color={theme.subText} textAlign="center" marginTop="1rem">
                   <Trans>
-                    No staked liquidity found. Check out our <StyledInternalLink to="/farms">Farms.</StyledInternalLink>
+                    No staked liquidity found. Check out our{' '}
+                    <StyledInternalLink to={`${APP_PATHS.FARMS}/${networkInfo.route}`}>Farms.</StyledInternalLink>
                   </Trans>
                 </Text>
               </Flex>

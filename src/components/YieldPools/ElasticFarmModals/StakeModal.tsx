@@ -15,6 +15,7 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import Modal from 'components/Modal'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { APP_PATHS } from 'constants/index'
 import { NETWORKS_INFO, isEVM } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
@@ -220,7 +221,7 @@ function StakeModal({
 }) {
   const theme = useTheme()
   const checkboxGroupRef = useRef<any>()
-  const { chainId } = useActiveWeb3React()
+  const { chainId, networkInfo } = useActiveWeb3React()
 
   const { farms, userFarmInfo } = useElasticFarms()
   const selectedFarm = farms?.find(farm => farm.id.toLowerCase() === selectedFarmAddress.toLowerCase())
@@ -372,10 +373,9 @@ function StakeModal({
                   You haven&apos;t deposited any liquidity positions (NFT tokens) for this farming pair yet.
                   <br />
                   <br />
-                  Add liquidity to this pool first in our <StyledInternalLink to="/pools">
-                    Pools
-                  </StyledInternalLink>{' '}
-                  page. If you&apos;ve done that, deposit your liquidity position (NFT tokens) before you stake
+                  Add liquidity to this pool first in our{' '}
+                  <StyledInternalLink to={`${APP_PATHS.POOLS}/${networkInfo.route}`}>Pools</StyledInternalLink> page. If
+                  you&apos;ve done that, deposit your liquidity position (NFT tokens) before you stake
                 </Trans>
               </Text>
             </Flex>

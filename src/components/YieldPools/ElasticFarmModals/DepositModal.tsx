@@ -14,6 +14,7 @@ import DoubleCurrencyLogo from 'components/DoubleLogo'
 import HoverDropdown from 'components/HoverDropdown'
 import LocalLoader from 'components/LocalLoader'
 import Modal from 'components/Modal'
+import { APP_PATHS } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import { useToken } from 'hooks/Tokens'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
@@ -149,7 +150,7 @@ function ProMMDepositNFTModal({
 }) {
   const { type: tab = 'active' } = useParsedQueryString<{ type: string }>()
 
-  const { account } = useActiveWeb3React()
+  const { account, networkInfo } = useActiveWeb3React()
   const theme = useTheme()
   const checkboxGroupRef = useRef<any>()
   const above768 = useMedia('(min-width: 768px)')
@@ -278,7 +279,7 @@ function ProMMDepositNFTModal({
               <Trans>
                 You dont have any relevant liquidity positions yet.
                 <br /> Add liquidity to the farming pools first. Check out our{' '}
-                <StyledInternalLink to="/pools">Pools.</StyledInternalLink>
+                <StyledInternalLink to={`${APP_PATHS.POOLS}/${networkInfo.route}`}>Pools.</StyledInternalLink>
               </Trans>
             </Text>
           </Flex>
