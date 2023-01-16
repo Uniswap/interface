@@ -1,0 +1,32 @@
+version: '3.3'
+services:
+
+  ingress:
+    build: ./ingress/
+    ports:
+      - "443:443"
+    image: ingress
+    volumes:
+      - /opt/ssl:/ssl
+    restart: on-failure
+    depends_on:
+      - app
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_AMPLITUDE_PROXY_URL: '${REACT_APP_AMPLITUDE_PROXY_URL}'
+        REACT_APP_AWS_API_ENDPOINT: '${REACT_APP_AWS_API_ENDPOINT}'
+        REACT_APP_FORTMATIC_KEY: '${REACT_APP_FORTMATIC_KEY}'
+        REACT_APP_INFURA_KEY: '${REACT_APP_INFURA_KEY}'
+        REACT_APP_MOONPAY_API: '${REACT_APP_MOONPAY_API}'
+        REACT_APP_MOONPAY_LINK: '${REACT_APP_MOONPAY_LINK}'
+        REACT_APP_MOONPAY_PUBLISHABLE_KEY: '${REACT_APP_MOONPAY_PUBLISHABLE_KEY}'
+        REACT_APP_FIREBASE_KEY: '${REACT_APP_FIREBASE_KEY}'
+        THE_GRAPH_SCHEMA_ENDPOINT: '${REACT_APP_SENTRY_DSN}'
+        REACT_APP_SENTRY_ENABLED: '${REACT_APP_SENTRY_ENABLED}'       
+        
+    image: app
+    restart: always
