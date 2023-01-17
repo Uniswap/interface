@@ -25,7 +25,6 @@ async function fetchChunk(
   chunk: Call[],
   blockNumber: number
 ): Promise<{ success: boolean; returnData: string }[]> {
-  console.debug('Fetching chunk', chunk, blockNumber)
   try {
     const { returnData } = await multicall.callStatic.multicall(
       chunk.map((obj) => ({
@@ -231,7 +230,7 @@ export default function Updater(): null {
               if (process.env.NODE_ENV === 'development') {
                 returnData.forEach((returnData, ix) => {
                   if (!returnData.success) {
-                    console.debug('Call failed', chunk[ix], returnData)
+                    // ignore
                   }
                 })
               } else {

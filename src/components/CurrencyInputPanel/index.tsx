@@ -253,22 +253,28 @@ export default function CurrencyInputPanel({
 
   const [showInverted, setShowInverted] = useState<boolean>(isInvertedRate)
 
-  const [localValue, setLocalValue] = useState(value)
+  const [localValue, setLocalValue] = useState('0')
 
   useEffect(() => {
     setLocalValue(value)
   }, [value])
 
+  const calculateChange = (increment?: boolean) => {
+    const numValue = Number(localValue)
+    const step = numValue / 100
+    return increment ? (numValue + step).toFixed(8) : (numValue - step).toFixed(8)
+  }
+
   const handleIncrement = () => {
-    const newValue = Number(localValue) + Number(localValue) / 100
-    onUserInput(newValue.toString())
-    setLocalValue(newValue.toString())
+    const newValue = calculateChange(true)
+    onUserInput(newValue)
+    setLocalValue(newValue)
   }
 
   const handleDecrement = () => {
-    const newValue = Number(localValue) - Number(localValue) / 100
-    onUserInput(newValue.toString())
-    setLocalValue(newValue.toString())
+    const newValue = calculateChange()
+    onUserInput(newValue)
+    setLocalValue(newValue)
   }
 
   return (
