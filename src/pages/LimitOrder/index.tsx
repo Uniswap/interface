@@ -611,8 +611,8 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                             id="toggle-buy-sell"
                             isActive={showInverted}
                             toggle={() => setShowInverted((showInverted) => !showInverted)}
-                            checked={<Trans>Buy</Trans>}
-                            unchecked={<Trans>Sell</Trans>}
+                            checked={<Trans>Input</Trans>}
+                            unchecked={<Trans>Output</Trans>}
                           />
                         </RowFixed>
                       </Row>
@@ -710,8 +710,8 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                             id="toggle-buy-sell"
                             isActive={showInverted}
                             toggle={() => setShowInverted((showInverted) => !showInverted)}
-                            checked={<Trans>Buy</Trans>}
-                            unchecked={<Trans>Sell</Trans>}
+                            checked={<Trans>Input</Trans>}
+                            unchecked={<Trans>Output</Trans>}
                           />
                         </RowFixed>
                       </Row>
@@ -1019,8 +1019,8 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                       id="toggle-buy-sell"
                       isActive={showInverted}
                       toggle={() => setShowInverted((showInverted) => !showInverted)}
-                      checked={<Trans>Buy</Trans>}
-                      unchecked={<Trans>Sell</Trans>}
+                      checked={<Trans>Input</Trans>}
+                      unchecked={<Trans>Output</Trans>}
                     />
                   </RowFixed>
                 </Row>
@@ -1112,8 +1112,8 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                       id="toggle-buy-sell"
                       isActive={showInverted}
                       toggle={() => setShowInverted((showInverted) => !showInverted)}
-                      checked={<Trans>Buy</Trans>}
-                      unchecked={<Trans>Sell</Trans>}
+                      checked={<Trans>Input</Trans>}
+                      unchecked={<Trans>Output</Trans>}
                     />
                   </RowFixed>
                 </Row>
