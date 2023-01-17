@@ -111,7 +111,10 @@ export const FeeTag = styled.div`
   padding: 2px 4px;
   margin-left: 6px;
   min-width: 36px;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: max-content;
 `
 
 export const NFTWrapper = styled.div`

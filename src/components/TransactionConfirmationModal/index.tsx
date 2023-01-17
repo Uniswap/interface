@@ -236,7 +236,7 @@ const StyledAlert = styled(Alert)`
 `
 export function TransactionErrorContent({ message, onDismiss }: { message: string; onDismiss: () => void }) {
   const theme = useTheme()
-  const [showDetail, setShowDetail] = useState<boolean>(false)
+  const [showDetail, setShowDetail] = useState<boolean>(true)
   return (
     <Wrapper>
       <Section>

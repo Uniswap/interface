@@ -50,7 +50,7 @@ const ButtonBack = styled(ButtonEmpty)`
   }
 `
 
-const StyledMenuButton = styled.button<{ active?: boolean }>`
+export const StyledMenuButton = styled.button<{ active?: boolean }>`
   position: relative;
   width: 100%;
   height: 100%;

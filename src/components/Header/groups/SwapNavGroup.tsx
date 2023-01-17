@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Repeat } from 'react-feather'
 import { useLocation } from 'react-router-dom'
 import { useMedia } from 'react-use'
-import { Flex, Text } from 'rebass'
+import { Flex } from 'rebass'
 import styled from 'styled-components'
 
 import { ReactComponent as MasterCard } from 'assets/buy-crypto/master-card.svg'
@@ -121,9 +121,8 @@ const SwapNavGroup = () => {
                   <StyledBridgeIcon height={15} />
                 </IconWrapper>
                 <Flex alignItems={'center'} sx={{ flex: 1 }} justifyContent={'space-between'}>
-                  <Text>
-                    <Trans>Bridge</Trans>
-                  </Text>
+                  <Trans>Bridge</Trans>
+
                   <img
                     src={isDark ? MultichainLogoLight : MultichainLogoDark}
                     alt="kyberswap with multichain"

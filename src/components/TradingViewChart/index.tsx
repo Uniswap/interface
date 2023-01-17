@@ -153,7 +153,7 @@ function ProLiveChart({
       studies_overrides: {},
       theme: theme.darkMode ? 'Dark' : 'Light',
       custom_css_url: '/charting_library/style.css',
-      timeframe: '2d',
+      timeframe: '2w',
       time_frames: [
         { text: '6m', resolution: '4H' as ResolutionString, description: '6 Months' },
         { text: '1m', resolution: '1H' as ResolutionString, description: '1 Month' },

@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
+import { ChainId } from '@kyberswap/ks-sdk-core'
 import { t } from '@lingui/macro'
 import { captureException } from '@sentry/react'
 import { SignerWalletAdapter } from '@solana/wallet-adapter-base'
@@ -20,6 +21,7 @@ export async function sendEVMTransaction(
   encodedData: string,
   value: BigNumber,
   handler?: (response: TransactionResponse) => void,
+  chainId?: ChainId,
 ): Promise<TransactionResponse | undefined> {
   if (!account || !library) return
 
@@ -62,7 +64,7 @@ export async function sendEVMTransaction(
     from: account,
     to: contractAddress,
     data: encodedData,
-    gasLimit: calculateGasMargin(gasEstimate),
+    gasLimit: calculateGasMargin(gasEstimate, chainId),
     ...(value.eq('0') ? {} : { value }),
   }
 
