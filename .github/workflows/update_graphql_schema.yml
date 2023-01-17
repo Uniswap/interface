@@ -43,6 +43,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
         with:
+          token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
           commit-message: '[bot] Update GraphQL Schema'
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.github.com>

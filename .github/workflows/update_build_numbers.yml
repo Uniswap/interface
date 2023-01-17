@@ -2,8 +2,8 @@ name: Update build numbers
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 12 * * 0' # “At 12:00 UTC on Sunday.”
-    
+    - cron: "0 12 * * 0" # “At 12:00 UTC on Sunday.”
+
 jobs:
   update-build-numbers:
     runs-on: macos-latest
@@ -19,9 +19,9 @@ jobs:
           APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
           APP_STORE_CONNECT_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_KEY_CONTENT }}
-          CONFIGURATION: "Dev"      
+          CONFIGURATION: "Dev"
         run: fastlane ios update_build_numbers
-      
+
       - name: Update Beta configuration build numbers
         env:
           APP_IDENTIFIER: ${{ secrets.APP_IDENTIFIER_BETA }}
@@ -30,7 +30,7 @@ jobs:
           APP_STORE_CONNECT_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_KEY_CONTENT }}
           CONFIGURATION: "Beta"
         run: fastlane ios update_build_numbers
-      
+
       - name: Update Prod configuration build numbers
         env:
           APP_IDENTIFIER: ${{ secrets.APP_IDENTIFIER_PROD }}
@@ -43,11 +43,12 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
         with:
-          commit-message: '[bot] Update build numbers'
+          token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
+          commit-message: "[bot] Update build numbers"
           committer: UL Mobile Service Account <hello-happy-puppy@users.noreply.github.com>
           author: UL Mobile Service Account <hello-happy-puppy@users.noreply.github.com>
           signoff: false
           branch: chore/update-build-numbers
           delete-branch: true
-          title: 'chore: [bot] Update build numbers'
-          body: Build numbers for dev, beta, and/or prod have been updated. 
+          title: "chore: [bot] Update build numbers"
+          body: Build numbers for dev, beta, and/or prod have been updated.
