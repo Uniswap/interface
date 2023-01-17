@@ -3,6 +3,7 @@
 import dayjs from 'dayjs'
 import { ChainId } from 'src/constants/chains'
 import { ChainsState } from 'src/features/chains/chainsSlice'
+import { ensApi } from 'src/features/ens/api'
 import { ModalName } from 'src/features/telemetry/constants'
 import { TransactionState } from 'src/features/transactions/slice'
 import {
@@ -450,5 +451,13 @@ export const migrations = {
   31: function emptyMigration(state: any) {
     // no persisted state removed but need to update schema
     return state
+  },
+
+  32: function resetEnsApi(state: any) {
+    const newState = { ...state }
+
+    delete newState[ensApi.reducerPath]
+
+    return newState
   },
 }

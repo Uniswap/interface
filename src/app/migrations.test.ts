@@ -29,6 +29,7 @@ import {
   v28Schema,
   v29Schema,
   v2Schema,
+  v31Schema,
   v3Schema,
   v4Schema,
   v5Schema,
@@ -45,6 +46,7 @@ import { initialBiometricsSettingsState } from 'src/features/biometrics/slice'
 import { ChainsState, initialChainsState } from 'src/features/chains/chainsSlice'
 import { initialCloudBackupState } from 'src/features/CloudBackup/cloudBackupSlice'
 import { initialPasswordLockoutState } from 'src/features/CloudBackup/passwordLockoutSlice'
+import { ensApi } from 'src/features/ens/api'
 import { initialExperimentsState } from 'src/features/experiments/slice'
 import { initialSearchHistoryState } from 'src/features/explore/searchHistorySlice'
 import { initialFavoritesState } from 'src/features/favorites/slice'
@@ -954,5 +956,13 @@ describe('Redux state migrations', () => {
     expect(v30.transactions['0xshadowySuperCoder'][ChainId.Optimism]['2']).toEqual(
       txDetailsConfirmed
     )
+  })
+
+  it('migrates from v31 to 32', () => {
+    const v31Stub = { ...v31Schema, [ensApi.reducerPath]: 'defined' }
+
+    const v32 = migrations[32](v31Stub)
+
+    expect(v32[ensApi.reducerPath]).toBe(undefined)
   })
 })
