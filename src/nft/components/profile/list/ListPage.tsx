@@ -12,11 +12,12 @@ import { useBag, useIsMobile, useNFTList, useProfilePageState, useSellAsset } fr
 import { ListingStatus, ProfilePageStateType } from 'nft/types'
 import { fetchPrice, formatEth, formatUsdPrice } from 'nft/utils'
 import { ListingMarkets } from 'nft/utils/listNfts'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useReducer, useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 
+import { ListModal } from './ListModal'
 import { NFTListingsGrid } from './NFTListingsGrid'
 import { SelectMarketplacesDropdown } from './SelectMarketplacesDropdown'
 import { SetDurationModal } from './SetDurationModal'
@@ -127,6 +128,7 @@ export const ListPage = () => {
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
   const anyListingsMissingPrice = useMemo(() => !!listings.find((listing) => !listing.price), [listings])
   const [ethPriceInUSD, setEthPriceInUSD] = useState(0)
+  const [showListModal, toggleShowListModal] = useReducer((s) => !s, false)
 
   useEffect(() => {
     fetchPrice().then((price) => {
@@ -198,7 +200,7 @@ export const ListPage = () => {
               </ProceedsWrapper>
               <ListingButtonWrapper>
                 <ListingButton
-                  onClick={toggleBag}
+                  onClick={isNftListV2 ? toggleShowListModal : toggleBag}
                   buttonText={anyListingsMissingPrice ? t`Set prices to continue` : t`Start listing`}
                 />
               </ListingButtonWrapper>
@@ -211,6 +213,11 @@ export const ListPage = () => {
         <MobileListButtonWrapper>
           <ListingButton onClick={toggleBag} buttonText="Continue listing" />
         </MobileListButtonWrapper>
+      )}
+      {isNftListV2 && showListModal && (
+        <>
+          <ListModal />
+        </>
       )}
     </Column>
   )

@@ -61,7 +61,7 @@ const ProfileContent = () => {
                   ? 312
                   : 0
               }px)`,
-              margin: '0px 156px',
+              margin: isNftListV2 ? '0px 156px' : 'unset',
             }}
           >
             {sellPageState === ProfilePageStateType.VIEWING ? <ProfilePage /> : <ListPage />}
