@@ -216,7 +216,7 @@ export const ListPage = () => {
       )}
       {isNftListV2 && showListModal && (
         <>
-          <ListModal />
+          <ListModal overlayClick={toggleShowListModal} />
         </>
       )}
     </Column>

@@ -1,5 +1,6 @@
 import ListingModal from 'nft/components/bag/profile/ListingModal'
 import { Portal } from 'nft/components/common/Portal'
+import { Overlay } from 'nft/components/modals/Overlay'
 import styled from 'styled-components/macro'
 import { Z_INDEX } from 'theme/zIndex'
 
@@ -17,12 +18,13 @@ const ListModalWrapper = styled.div`
   padding: 0px 12px 4px;
 `
 
-export const ListModal = () => {
+export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
   return (
     <Portal>
       <ListModalWrapper>
         <ListingModal />
       </ListModalWrapper>
+      <Overlay onClick={overlayClick} />
     </Portal>
   )
 }
