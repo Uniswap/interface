@@ -1,6 +1,7 @@
 import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
 import { Box } from 'nft/components/Box'
 import { Center, Column } from 'nft/components/Flex'
 import { ListPage } from 'nft/components/profile/list/ListPage'
@@ -42,6 +43,7 @@ const ProfileContent = () => {
     }
   }, [account, resetSellAssets, setSellPageState, clearCollectionFilters])
   const cartExpanded = useBag((state) => state.bagExpanded)
+  const isNftListV2 = useNftListV2Flag() === NftListV2Variant.Enabled
 
   return (
     <Trace page={InterfacePageName.NFT_PROFILE_PAGE} shouldLogImpression>
@@ -53,7 +55,9 @@ const ProfileContent = () => {
           <Box
             style={{
               width: `calc(100% - ${
-                cartExpanded && sellPageState === ProfilePageStateType.VIEWING ? SHOPPING_BAG_WIDTH : 0
+                cartExpanded && (!isNftListV2 || sellPageState === ProfilePageStateType.VIEWING)
+                  ? SHOPPING_BAG_WIDTH
+                  : 0
               }px)`,
             }}
           >
