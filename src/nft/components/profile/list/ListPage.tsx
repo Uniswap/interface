@@ -40,13 +40,8 @@ const ButtonsWrapper = styled(Row)`
 const MarketWrap = styled.section`
   gap: 48px;
   margin: 0px auto;
-  padding: 0px 16px;
-  max-width: 1200px;
   width: 100%;
-
-  @media screen and (min-width: ${SMALL_MEDIA_BREAKPOINT}) {
-    padding: 0px 44px;
-  }
+  max-width: 1200px;
 `
 
 const ListingHeader = styled(Row)`
@@ -87,8 +82,10 @@ const FloatingConfirmationBar = styled(Row)`
   background: ${({ theme }) => theme.backgroundSurface};
   position: fixed;
   bottom: 32px;
-  margin: 0px 156px;
   width: calc(100vw - 312px);
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 1200px;
   z-index: ${Z_INDEX.under_dropdown};
 `
 

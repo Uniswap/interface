@@ -57,8 +57,11 @@ const ProfileContent = () => {
               width: `calc(100% - ${
                 cartExpanded && (!isNftListV2 || sellPageState === ProfilePageStateType.VIEWING)
                   ? SHOPPING_BAG_WIDTH
+                  : isNftListV2
+                  ? 312
                   : 0
               }px)`,
+              margin: '0px 156px',
             }}
           >
             {sellPageState === ProfilePageStateType.VIEWING ? <ProfilePage /> : <ListPage />}
