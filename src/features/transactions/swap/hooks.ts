@@ -378,7 +378,7 @@ interface TransactionRequestInfo {
   gasFallbackUsed: boolean
 }
 
-export function useTransactionRequest(
+export function useTransactionRequestInfo(
   derivedSwapInfo: DerivedSwapInfo,
   tokenApprovalInfo?: TokenApprovalInfo
 ): TransactionRequestInfo {
@@ -719,40 +719,39 @@ export function useSwapTxAndGasInfo(derivedSwapInfo: DerivedSwapInfo, skipGasFee
     currencyAmounts[CurrencyField.INPUT]
   )
 
-  const txRequest = useTransactionRequest(derivedSwapInfo, tokenApprovalInfo)
+  const { transactionRequest, gasFallbackUsed } = useTransactionRequestInfo(
+    derivedSwapInfo,
+    tokenApprovalInfo
+  )
 
   const approveFeeInfo = useTransactionGasFee(
     tokenApprovalInfo?.txRequest,
     GasSpeed.Urgent,
     skipGasFeeQuery
   )
-  const txFeeInfo = useTransactionGasFee(
-    txRequest.transactionRequest,
-    GasSpeed.Urgent,
-    skipGasFeeQuery
-  )
+  const txFeeInfo = useTransactionGasFee(transactionRequest, GasSpeed.Urgent, skipGasFeeQuery)
   const totalGasFee = sumGasFees(approveFeeInfo?.gasFee, txFeeInfo?.gasFee)
 
-  const txWithGasSettings = useMemo(() => {
-    if (!txRequest || !txFeeInfo) return
+  const txRequestWithGasSettings: providers.TransactionRequest | undefined = useMemo(() => {
+    if (!transactionRequest || !txFeeInfo) return
 
-    return { ...txRequest, ...txFeeInfo.params }
-  }, [txRequest, txFeeInfo])
+    return { ...transactionRequest, ...txFeeInfo.params }
+  }, [transactionRequest, txFeeInfo])
 
   const approveLoading =
     !tokenApprovalInfo || Boolean(tokenApprovalInfo.txRequest && !approveFeeInfo)
 
-  const approveTxWithGasSettings = useMemo(() => {
+  const approveTxWithGasSettings: providers.TransactionRequest | undefined = useMemo(() => {
     if (approveLoading || !tokenApprovalInfo?.txRequest) return
 
     return { ...tokenApprovalInfo.txRequest, ...approveFeeInfo?.params }
   }, [approveLoading, tokenApprovalInfo?.txRequest, approveFeeInfo?.params])
 
   return {
-    txRequest: txWithGasSettings,
+    txRequest: txRequestWithGasSettings,
     approveTxRequest: approveTxWithGasSettings,
     totalGasFee,
-    gasFallbackUsed: txRequest.gasFallbackUsed,
+    gasFallbackUsed,
     isLoading: approveLoading,
   }
 }
