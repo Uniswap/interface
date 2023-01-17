@@ -138,7 +138,7 @@ export default function SwapModalFooter({
         <RowBetween>
           <RowFixed>
             <TYPE.black fontSize={14} fontWeight={400} color={theme.subText}>
-              <Trans>Slippage</Trans>
+              <Trans>Max Slippage</Trans>
             </TYPE.black>
           </RowFixed>
           <TYPE.black fontSize={14}>{allowedSlippage / 100}%</TYPE.black>
