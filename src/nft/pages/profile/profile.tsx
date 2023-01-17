@@ -15,6 +15,8 @@ import { useToggleWalletModal } from 'state/application/hooks'
 
 import * as styles from './profile.css'
 
+export const LIST_PAGE_MARGIN = 156
+
 const SHOPPING_BAG_WIDTH = 360
 
 const ProfileContent = () => {
@@ -58,10 +60,10 @@ const ProfileContent = () => {
                 cartExpanded && (!isNftListV2 || sellPageState === ProfilePageStateType.VIEWING)
                   ? SHOPPING_BAG_WIDTH
                   : isNftListV2
-                  ? 312
+                  ? LIST_PAGE_MARGIN * 2
                   : 0
               }px)`,
-              margin: isNftListV2 ? '0px 156px' : 'unset',
+              margin: isNftListV2 ? `0px ${LIST_PAGE_MARGIN}px` : 'unset',
             }}
           >
             {sellPageState === ProfilePageStateType.VIEWING ? <ProfilePage /> : <ListPage />}
