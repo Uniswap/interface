@@ -3,24 +3,63 @@ describe('Token explore filter', () => {
     cy.visit('/')
   })
 
-  it('should filter tokens correctly based on user input', () => {
+  it('should filter correctly by uni search term', () => {
     cy.visit('/tokens/ethereum')
     cy.get('[data-cy="token-name"]').then(($els) => {
       const tokenNames = Array.from($els, (el) => el.innerText)
       const filteredByUni = tokenNames.filter((tokenName) => tokenName.toLowerCase().includes('uni'))
-      const filteredByDao = tokenNames.filter((tokenName) => tokenName.toLowerCase().includes('dao'))
-      const filteredByUsd = tokenNames.filter((tokenName) => tokenName.toLowerCase().includes('usd'))
-      cy.wrap(tokenNames).as('tokenNames')
       cy.wrap(filteredByUni).as('filteredByUni')
-      cy.wrap(filteredByDao).as('filteredByDao')
-      cy.wrap(filteredByUsd).as('filteredByUsd')
-      cy.get('@tokenNames').its('length').should('be.eq', 100)
     })
 
-    // todo: filter for UNI
+    cy.get('[data-cy="explore-tokens-search-input"]').clear().type('uni').type('{enter}')
+    cy.get('@filteredByUni').then((filteredByUni) => {
+      cy.get('[data-cy="token-name"]').then(($els) => {
+        const tokenNames = Array.from($els, (el) => el.innerText)
+        expect(tokenNames.length).to.equal(filteredByUni.length)
+        tokenNames.forEach((tokenName) => {
+          expect(filteredByUni).to.include(tokenName)
+        })
+      })
+    })
+  })
 
-    // todo: filter for DAO
+  it('should filter correctly by dao search term', () => {
+    cy.visit('/tokens/ethereum')
+    cy.get('[data-cy="token-name"]').then(($els) => {
+      const tokenNames = Array.from($els, (el) => el.innerText)
+      const filteredByDao = tokenNames.filter((tokenName) => tokenName.toLowerCase().includes('dao'))
+      cy.wrap(filteredByDao).as('filteredByDao')
+    })
 
-    // todo: filter for USD
+    cy.get('[data-cy="explore-tokens-search-input"]').clear().type('dao').type('{enter}')
+    cy.get('@filteredByDao').then((filteredByDao) => {
+      cy.get('[data-cy="token-name"]').then(($els) => {
+        const tokenNames = Array.from($els, (el) => el.innerText)
+        expect(tokenNames.length).to.equal(filteredByDao.length)
+        tokenNames.forEach((tokenName) => {
+          expect(filteredByDao).to.include(tokenName)
+        })
+      })
+    })
+  })
+
+  it('should filter correctly by ax search term', () => {
+    cy.visit('/tokens/ethereum')
+    cy.get('[data-cy="token-name"]').then(($els) => {
+      const tokenNames = Array.from($els, (el) => el.innerText)
+      const filteredByAx = tokenNames.filter((tokenName) => tokenName.toLowerCase().includes('ax'))
+      cy.wrap(filteredByAx).as('filteredByAx')
+    })
+
+    cy.get('[data-cy="explore-tokens-search-input"]').clear().type('ax').type('{enter}')
+    cy.get('@filteredByAx').then((filteredByAx) => {
+      cy.get('[data-cy="token-name"]').then(($els) => {
+        const tokenNames = Array.from($els, (el) => el.innerText)
+        expect(tokenNames.length).to.equal(filteredByAx.length)
+        tokenNames.forEach((tokenName) => {
+          expect(filteredByAx).to.include(tokenName)
+        })
+      })
+    })
   })
 })

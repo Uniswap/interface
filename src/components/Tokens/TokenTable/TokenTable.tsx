@@ -100,7 +100,7 @@ export default function TokenTable() {
     return (
       <GridContainer>
         <HeaderRow />
-        <TokenDataContainer>
+        <TokenDataContainer data-cy="loaded-token-table">
           {tokens.map(
             (token, index) =>
               token?.address && (
