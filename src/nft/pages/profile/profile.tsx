@@ -50,7 +50,13 @@ const ProfileContent = () => {
           <title>Genie | Sell</title>
         </Head> */}
         {account ? (
-          <Box style={{ width: `calc(100% - ${cartExpanded ? SHOPPING_BAG_WIDTH : 0}px)` }}>
+          <Box
+            style={{
+              width: `calc(100% - ${
+                cartExpanded && sellPageState === ProfilePageStateType.VIEWING ? SHOPPING_BAG_WIDTH : 0
+              }px)`,
+            }}
+          >
             {sellPageState === ProfilePageStateType.VIEWING ? <ProfilePage /> : <ListPage />}
           </Box>
         ) : (
