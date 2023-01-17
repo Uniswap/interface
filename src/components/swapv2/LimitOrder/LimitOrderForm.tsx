@@ -16,12 +16,12 @@ import NumericalInput from 'components/NumericalInput'
 import { RowBetween } from 'components/Row'
 import Select from 'components/Select'
 import Tooltip from 'components/Tooltip'
-import TrendingSoonTokenBanner from 'components/TrendingSoonTokenBanner'
 import ActionButtonLimitOrder from 'components/swapv2/LimitOrder/ActionButtonLimitOrder'
 import DeltaRate, { useGetDeltaRateLimitOrder } from 'components/swapv2/LimitOrder/DeltaRate'
 import ConfirmOrderModal from 'components/swapv2/LimitOrder/Modals/ConfirmOrderModal'
 import TradePrice from 'components/swapv2/LimitOrder/TradePrice'
 import useBaseTradeInfo from 'components/swapv2/LimitOrder/useBaseTradeInfo'
+import useValidateInputError from 'components/swapv2/LimitOrder/useValidateInputError'
 import useWrapEthStatus from 'components/swapv2/LimitOrder/useWrapEthStatus'
 import { Z_INDEXS } from 'constants/styles'
 import { useTokenAllowance } from 'data/Allowances'
@@ -36,7 +36,7 @@ import { useLimitActionHandlers, useLimitState } from 'state/limit/hooks'
 import { tryParseAmount } from 'state/swap/hooks'
 import { useCurrencyBalance } from 'state/wallet/hooks'
 import { TRANSACTION_STATE_DEFAULT, TransactionFlowState } from 'types'
-import { formatNumberWithPrecisionRange, getLimitOrderContract } from 'utils'
+import { getLimitOrderContract } from 'utils'
 import { subscribeNotificationOrderCancelled, subscribeNotificationOrderExpired } from 'utils/firebase'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { toFixed } from 'utils/numbers'
@@ -277,11 +277,15 @@ const LimitOrderForm = function LimitOrderForm({
   }, [currencyIn, activeOrderMakingAmount, isEdit, orderInfo])
 
   const balance = useCurrencyBalance(currencyIn)
-  const maxAmountInput = maxAmountSpend(balance)
+  const maxAmountInput = useMemo(() => {
+    return maxAmountSpend(balance)
+  }, [balance])
 
   const handleMaxInput = useCallback(() => {
     if (!parsedActiveOrderMakingAmount || !maxAmountInput) return
-    onSetInput(maxAmountInput.subtract(parsedActiveOrderMakingAmount)?.toExact())
+    try {
+      onSetInput(maxAmountInput.subtract(parsedActiveOrderMakingAmount)?.toExact())
+    } catch (error) {}
   }, [maxAmountInput, onSetInput, parsedActiveOrderMakingAmount])
 
   const enoughAllowance = useMemo(() => {
@@ -303,47 +307,17 @@ const LimitOrderForm = function LimitOrderForm({
     !enoughAllowance,
   )
 
-  const inputError = useMemo(() => {
-    if (!inputAmount) return
-    if (parseFloat(inputAmount) === 0 && (parseFloat(outputAmount) === 0 || parseFloat(displayRate) === 0)) {
-      return t`Invalid input amount`
-    }
-    if (balance && parseInputAmount?.greaterThan(balance)) {
-      return t`Insufficient ${currencyIn?.symbol} balance`
-    }
-
-    const remainBalance = parsedActiveOrderMakingAmount ? balance?.subtract(parsedActiveOrderMakingAmount) : undefined
-    if (parseInputAmount && remainBalance?.lessThan(parseInputAmount)) {
-      const formatNum = formatNumberWithPrecisionRange(parseFloat(remainBalance.toFixed(3)), 0, 10)
-      return t`You don't have sufficient ${currencyIn?.symbol} balance. After your active orders, you have ${
-        Number(formatNum) !== 0 ? '~' : ''
-      }${formatNum} ${currencyIn?.symbol} left.`
-    }
-
-    if (!parseInputAmount) {
-      return t`Your input amount is invalid.`
-    }
-
-    if (showWrap && wrapInputError) return wrapInputError
-    return
-  }, [
-    currencyIn,
-    balance,
+  const { inputError, outPutError } = useValidateInputError({
     inputAmount,
     outputAmount,
+    balance,
     displayRate,
     parsedActiveOrderMakingAmount,
-    parseInputAmount,
-    showWrap,
+    currencyIn,
     wrapInputError,
-  ])
-
-  const outPutError = useMemo(() => {
-    if (outputAmount && !tryParseAmount(outputAmount, currencyOut)) {
-      return t`Your output amount is invalid.`
-    }
-    return
-  }, [outputAmount, currencyOut])
+    showWrap,
+    currencyOut,
+  })
 
   const hasInputError = Boolean(inputError || outPutError)
   const checkingAllowance =
@@ -657,8 +631,47 @@ const LimitOrderForm = function LimitOrderForm({
       !enoughAllowance ||
       (approvalSubmitted && approval === ApprovalState.APPROVED))
 
-  const showWarningRate = Boolean(currencyIn && displayRate && !deltaRate.profit && deltaRate.percent)
-
+  const warningMessage = useMemo(() => {
+    const messages = []
+    if (currencyIn && displayRate && !deltaRate.profit && deltaRate.percent) {
+      messages.push(
+        <Text>
+          <Trans>
+            Your limit order price is{' '}
+            <Text as="span" fontWeight={'500'} color={theme.warning}>
+              {deltaRate.percent}
+            </Text>{' '}
+            lower than the current market price
+          </Trans>
+        </Text>,
+      )
+    }
+    const thresHold = chainId === ChainId.MAINNET ? 300 : 10
+    if (outputAmount && estimateUSD.rawInput && estimateUSD.rawInput < thresHold) {
+      messages.push(
+        <Text>
+          {chainId === ChainId.MAINNET ? (
+            <Trans>
+              We suggest you increase the value of your limit order to at least{' '}
+              <Text as="span" fontWeight={'500'} color={theme.warning}>
+                ${thresHold}
+              </Text>{' '}
+              due to high gas fees on Ethereum chain. This will increase the odds of your order being filled.
+            </Trans>
+          ) : (
+            <Trans>
+              We suggest you increase the value of your limit order to at least{' '}
+              <Text as="span" fontWeight={'500'} color={theme.warning}>
+                ${thresHold}
+              </Text>
+              . This will increase the odds of your order being filled.
+            </Trans>
+          )}
+        </Text>,
+      )
+    }
+    return messages
+  }, [currencyIn, displayRate, deltaRate, estimateUSD, outputAmount, chainId, theme])
   return (
     <>
       <Flex flexDirection={'column'} style={{ gap: '1rem' }}>
@@ -682,6 +695,7 @@ const LimitOrderForm = function LimitOrderForm({
             filterWrap
             onClickSelect={trackingTouchSelectToken}
             lockIcon={showApproveFlow}
+            disableCurrencySelect={isEdit}
             label={
               <Label>
                 <Trans>You Pay</Trans>
@@ -748,7 +762,7 @@ const LimitOrderForm = function LimitOrderForm({
               price={tradeInfo}
               style={{ width: 'fit-content', fontStyle: 'italic' }}
               color={theme.text}
-              label={t`Estimated Market Price:`}
+              label={t`Est. Market Price:`}
               loading={loadingTrade}
               symbolIn={currencyIn?.symbol}
               symbolOut={currencyOut?.symbol}
@@ -780,6 +794,7 @@ const LimitOrderForm = function LimitOrderForm({
             maxCurrencySymbolLength={6}
             filterWrap
             onClickSelect={trackingTouchSelectToken}
+            disableCurrencySelect={isEdit}
             label={
               <Label>
                 <Trans>You Receive</Trans>
@@ -789,14 +804,9 @@ const LimitOrderForm = function LimitOrderForm({
           />
         </Tooltip>
 
-        {chainId !== ChainId.ETHW && <TrendingSoonTokenBanner currencyIn={currencyIn} currencyOut={currencyOut} />}
-
-        {showWarningRate && (
-          <ErrorWarningPanel
-            type="error"
-            title={t`Your limit order price is ${deltaRate.percent} lower than the current market price`}
-          />
-        )}
+        {warningMessage.map((mess, i) => (
+          <ErrorWarningPanel type="warn" key={i} title={mess} />
+        ))}
 
         <ActionButtonLimitOrder
           {...{
@@ -814,7 +824,7 @@ const LimitOrderForm = function LimitOrderForm({
             onWrapToken,
             showPreview,
             showApproveFlow,
-            showWarningRate,
+            showWarning: warningMessage.length > 0,
           }}
         />
       </Flex>
@@ -831,6 +841,7 @@ const LimitOrderForm = function LimitOrderForm({
         rateInfo={rateInfo}
         marketPrice={tradeInfo}
         note={note}
+        warningMessage={warningMessage}
       />
 
       <ExpirePicker

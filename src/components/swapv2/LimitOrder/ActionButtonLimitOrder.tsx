@@ -2,7 +2,14 @@ import { Currency } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import { Text } from 'rebass'
 
-import { ButtonApprove, ButtonError, ButtonLight, ButtonWithInfoHelper } from 'components/Button'
+import {
+  ButtonApprove,
+  ButtonError,
+  ButtonLight,
+  ButtonPrimary,
+  ButtonWarning,
+  ButtonWithInfoHelper,
+} from 'components/Button'
 import ProgressSteps from 'components/ProgressSteps'
 import { RowBetween } from 'components/Row'
 import { useActiveWeb3React } from 'hooks'
@@ -24,7 +31,7 @@ export default function ActionButtonLimitOrder({
   hasInputError,
   approvalSubmitted,
   showApproveFlow,
-  showWarningRate,
+  showWarning,
 }: {
   currencyIn: Currency | undefined
   approval: ApprovalState
@@ -37,7 +44,7 @@ export default function ActionButtonLimitOrder({
   checkingAllowance: boolean
   showApproveFlow: boolean
   wrapInputError: any
-  showWarningRate: boolean
+  showWarning: boolean
   approveCallback: () => Promise<void>
   onWrapToken: () => Promise<void>
   showPreview: () => void
@@ -95,11 +102,20 @@ export default function ActionButtonLimitOrder({
       </>
     )
 
+  const contentButton = (
+    <Text fontWeight={500}>
+      {checkingAllowance ? <Trans>Checking Allowance...</Trans> : <Trans>Review Order</Trans>}
+    </Text>
+  )
+  if (showWarning)
+    return (
+      <ButtonWarning onClick={showPreview} disabled={disableBtnReview}>
+        {contentButton}
+      </ButtonWarning>
+    )
   return (
-    <ButtonError onClick={showPreview} disabled={disableBtnReview} error={showWarningRate}>
-      <Text fontWeight={500}>
-        {checkingAllowance ? <Trans>Checking Allowance...</Trans> : <Trans>Review Order</Trans>}
-      </Text>
-    </ButtonError>
+    <ButtonPrimary onClick={showPreview} disabled={disableBtnReview}>
+      {contentButton}
+    </ButtonPrimary>
   )
 }

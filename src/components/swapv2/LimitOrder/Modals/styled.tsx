@@ -97,17 +97,15 @@ export const MarketInfo = ({
       flexDirection={'column'}
       style={{
         borderRadius: 16,
-        padding: '14px 18px',
+        padding: '14px 16px',
         border: `1px solid ${theme.border}`,
-        gap: 8,
-        fontSize: 13,
       }}
     >
       <Row>
-        <Label>
-          <Trans>Current Market Price</Trans>
+        <Label style={{ fontSize: 12 }}>
+          <Trans>Estimated Market Price</Trans>
         </Label>
-        <Value>
+        <Value style={{ maxWidth: '60%' }}>
           <TradePrice
             price={marketPrice}
             loading={false}

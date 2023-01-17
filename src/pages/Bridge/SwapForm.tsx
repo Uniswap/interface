@@ -2,7 +2,7 @@ import { ChainId, Fraction } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import { isAddress } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
@@ -204,7 +204,7 @@ export default function SwapForm() {
     tokenInfoOut?.type === 'swapin' ? tokenInfoOut?.DepositAddress : account,
   )
 
-  const inputError: string | undefined | { state: 'warn' | 'error'; tip: string } = useMemo(() => {
+  const inputError: string | undefined | { state: 'warn' | 'error'; tip: string; desc?: ReactNode } = useMemo(() => {
     if (!listTokenOut.length && !listTokenIn.length && !loadingToken) {
       return { state: 'error', tip: t`Cannot get token info. Please try again later.` }
     }
@@ -236,6 +236,23 @@ export default function SwapForm() {
           tip: t`Note: Your transfer amount (${formattedNum(inputAmount, false, 5)} ${
             tokenInfoIn.symbol
           }) is more than ${100 * ratio}% of the available liquidity (${poolLiquidity} ${tokenInfoOut.symbol})!`,
+          desc: (
+            <>
+              <Text as="p" fontSize={12} lineHeight={'16px'} marginTop={'5px'}>
+                <Trans>
+                  There is a chance that during your transfer another high volume transaction utilizes the available
+                  liquidity. As a result, for the unavailable liquidity, you may receive ‘anyToken’ from Multichain. You
+                  can exchange your ‘anyToken’ when the Multichain pool has sufficient liquidity.
+                </Trans>
+              </Text>
+              <ExternalLink
+                style={{ fontSize: 12 }}
+                href="https://multichain.zendesk.com/hc/en-us/articles/4410379722639-Redeem-Remove-Pool-Token-Anyassets-e-g-anyUSDC-anyUSDT-anyDAI-anyETH-anyFTM-etc-into-Native-Token-Tutorial"
+              >
+                See here ↗
+              </ExternalLink>
+            </>
+          ),
         }
       }
     }
@@ -431,7 +448,7 @@ export default function SwapForm() {
             <PoolInfo chainId={chainIdOut} tokenIn={tokenInfoIn} poolValue={poolValue.poolValueOut} />
 
             {typeof inputError !== 'string' && inputError?.state && (
-              <ErrorWarningPanel title={inputError?.tip} type={inputError?.state} />
+              <ErrorWarningPanel title={inputError?.tip} type={inputError?.state} desc={inputError?.desc} />
             )}
             {!account ? (
               <ButtonLight onClick={toggleWalletModal}>

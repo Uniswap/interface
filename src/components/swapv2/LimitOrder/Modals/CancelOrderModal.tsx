@@ -158,6 +158,7 @@ export default function CancelOrderModal({
   )
   return (
     <TransactionConfirmationModal
+      maxWidth={450}
       hash={flowState.txHash}
       isOpen={flowState.showConfirm && isOpen}
       onDismiss={onDismiss}

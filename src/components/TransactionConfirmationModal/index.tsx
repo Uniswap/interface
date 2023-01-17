@@ -293,6 +293,7 @@ interface ConfirmationModalProps {
   tokenAddToMetaMask?: Currency
   showTxBanner?: boolean
   startedTime?: number
+  maxWidth?: number
 }
 
 export default function TransactionConfirmationModal({
@@ -305,13 +306,14 @@ export default function TransactionConfirmationModal({
   tokenAddToMetaMask,
   showTxBanner,
   startedTime,
+  maxWidth = 420,
 }: ConfirmationModalProps) {
   const { chainId } = useActiveWeb3React()
 
   if (!chainId) return null
 
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
+    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90} maxWidth={maxWidth}>
       {attemptingTxn ? (
         <ConfirmationPendingContent onDismiss={onDismiss} pendingText={pendingText} startedTime={startedTime} />
       ) : hash ? (

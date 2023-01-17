@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro'
 import { memo, useState } from 'react'
 
 import useSyncTokenSymbolToUrl from 'hooks/useSyncTokenSymbolToUrl'
@@ -30,6 +31,11 @@ function LimitOrderComp({ refreshListOrder, setIsSelectCurrencyManual, isSelectC
       currencyIn={currencyIn}
       currencyOut={currencyOut}
       setIsSelectCurrencyManual={setIsSelectCurrencyManual}
+      note={
+        currencyOut?.isNative
+          ? t`Note: Once your order is filled, you will receive ${currencyOut?.wrapped.name} (${currencyOut?.wrapped.symbol})`
+          : undefined
+      }
     />
   )
 }

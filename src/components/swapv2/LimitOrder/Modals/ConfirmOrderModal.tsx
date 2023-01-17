@@ -1,14 +1,16 @@
 import { Currency } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import dayjs from 'dayjs'
-import { memo, useCallback, useMemo } from 'react'
+import { ReactNode, memo, useCallback, useMemo } from 'react'
 import { Flex, Text } from 'rebass'
 
-import { ButtonPrimary } from 'components/Button'
+import { ButtonPrimary, ButtonWarning } from 'components/Button'
+import Column from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import TransactionConfirmationModal, { TransactionErrorContent } from 'components/TransactionConfirmationModal'
 import { BaseTradeInfo } from 'components/swapv2/LimitOrder/useBaseTradeInfo'
 import { useActiveWeb3React } from 'hooks'
+import ErrorWarningPanel from 'pages/Bridge/ErrorWarning'
 import { TransactionFlowState } from 'types'
 
 import { formatAmountOrder } from '../helpers'
@@ -29,6 +31,7 @@ export default memo(function ConfirmOrderModal({
   marketPrice,
   rateInfo,
   note,
+  warningMessage,
 }: {
   onSubmit: () => void
   onDismiss: () => void
@@ -41,8 +44,13 @@ export default memo(function ConfirmOrderModal({
   marketPrice: BaseTradeInfo | undefined
   rateInfo: RateInfo
   note?: string
+  warningMessage: ReactNode[]
 }) {
   const { account } = useActiveWeb3React()
+
+  const displayCurrencyOut = useMemo(() => {
+    return currencyOut?.isNative ? currencyOut.wrapped : currencyOut
+  }, [currencyOut])
 
   const listData = useMemo(() => {
     return [
@@ -59,18 +67,18 @@ export default memo(function ConfirmOrderModal({
       },
       {
         label: t`and receive at least`,
-        content: currencyOut && outputAmount && (
+        content: displayCurrencyOut && outputAmount && (
           <Value>
-            <CurrencyLogo currency={currencyOut} style={styleLogo} />
+            <CurrencyLogo currency={displayCurrencyOut} style={styleLogo} />
             <Text>
-              {formatAmountOrder(outputAmount)} {currencyOut?.symbol}
+              {formatAmountOrder(outputAmount)} {displayCurrencyOut?.symbol}
             </Text>
           </Value>
         ),
       },
       {
         label: t`at`,
-        content: account && <Rate rateInfo={rateInfo} currencyIn={currencyIn} currencyOut={currencyOut} />,
+        content: account && <Rate rateInfo={rateInfo} currencyIn={currencyIn} currencyOut={displayCurrencyOut} />,
       },
       {
         label: t`before the order expires on`,
@@ -81,7 +89,7 @@ export default memo(function ConfirmOrderModal({
         ),
       },
     ]
-  }, [account, currencyIn, currencyOut, inputAmount, rateInfo, outputAmount, expireAt])
+  }, [account, currencyIn, displayCurrencyOut, inputAmount, rateInfo, outputAmount, expireAt])
 
   const confirmationContent = useCallback(() => {
     return (
@@ -93,20 +101,50 @@ export default memo(function ConfirmOrderModal({
             <Container>
               <Header title={t`Review your order`} onDismiss={onDismiss} />
               <ListInfo listData={listData} />
-              <MarketInfo marketPrice={marketPrice} symbolIn={currencyIn?.symbol} symbolOut={currencyOut?.symbol} />
+              <MarketInfo
+                marketPrice={marketPrice}
+                symbolIn={currencyIn?.symbol}
+                symbolOut={displayCurrencyOut?.symbol}
+              />
               <Note note={note} />
-              <ButtonPrimary onClick={onSubmit}>
-                <Trans>Place Order</Trans>
-              </ButtonPrimary>
+
+              {warningMessage?.length > 0 && (
+                <Column gap="16px">
+                  {warningMessage?.map((mess, i) => (
+                    <ErrorWarningPanel key={i} type="warn" title={mess} />
+                  ))}
+                </Column>
+              )}
+
+              {warningMessage?.length ? (
+                <ButtonWarning onClick={onSubmit}>
+                  <Trans>Place Order</Trans>
+                </ButtonWarning>
+              ) : (
+                <ButtonPrimary onClick={onSubmit}>
+                  <Trans>Place Order</Trans>
+                </ButtonPrimary>
+              )}
             </Container>
           )}
         </div>
       </Flex>
     )
-  }, [onDismiss, flowState.errorMessage, listData, onSubmit, marketPrice, note, currencyIn, currencyOut])
+  }, [
+    onDismiss,
+    flowState.errorMessage,
+    listData,
+    onSubmit,
+    marketPrice,
+    note,
+    currencyIn,
+    displayCurrencyOut,
+    warningMessage,
+  ])
 
   return (
     <TransactionConfirmationModal
+      maxWidth={450}
       hash={flowState.txHash}
       isOpen={flowState.showConfirm}
       onDismiss={onDismiss}

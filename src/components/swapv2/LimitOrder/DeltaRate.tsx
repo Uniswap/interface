@@ -54,7 +54,7 @@ const DeltaRate = ({
   const theme = useTheme()
 
   const { percent, profit } = useGetDeltaRateLimitOrder({ marketPrice, rateInfo })
-  const color = profit ? theme.apr : theme.red
+  const color = profit ? theme.apr : theme.warning
 
   return (
     <Label style={{ display: 'flex', alignItems: 'center', whiteSpace: 'nowrap' }}>

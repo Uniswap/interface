@@ -49,8 +49,9 @@ const StyledBuyCrypto = styled(BuyCrypto)`
 `
 
 const BetaTag = styled.span`
-  right: -40px;
-  top: 0px;
+  position: absolute;
+  right: 14px;
+  top: -2px;
   font-size: 10px;
   border-radius: 10px;
   background-color: ${({ theme }) => theme.buttonGray};
@@ -105,7 +106,7 @@ const SwapNavGroup = () => {
                 <IconWrapper>
                   <LimitOrderIcon />
                 </IconWrapper>
-                <Flex alignItems={'center'} sx={{ flex: 1 }} justifyContent={'space-between'}>
+                <Flex alignItems={'center'} sx={{ flex: 1, position: 'relative' }} justifyContent={'space-between'}>
                   <Trans>Limit Order</Trans>
                   <BetaTag>Beta</BetaTag>
                 </Flex>

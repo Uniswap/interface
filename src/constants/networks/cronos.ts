@@ -69,7 +69,7 @@ const cronosInfo: EVMNetworkInfo = {
     farms: [],
   },
   limitOrder: {
-    production: '0x227B0c196eA8db17A665EA6824D972A64202E936',
+    production: NOT_SUPPORT,
     development: NOT_SUPPORT,
   },
   averageBlockTimeInSeconds: 6,
