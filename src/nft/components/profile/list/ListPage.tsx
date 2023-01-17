@@ -13,7 +13,7 @@ import { ListingStatus, ProfilePageStateType } from 'nft/types'
 import { fetchPrice, formatEth, formatUsdPrice } from 'nft/utils'
 import { ListingMarkets } from 'nft/utils/listNfts'
 import { useEffect, useMemo, useReducer, useState } from 'react'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 
@@ -38,11 +38,20 @@ const ButtonsWrapper = styled(Row)`
   width: min-content;
 `
 
-const MarketWrap = styled.section`
+const MarketWrap = styled.section<{ isNftListV2: boolean }>`
   gap: 48px;
   margin: 0px auto;
   width: 100%;
   max-width: 1200px;
+  ${({ isNftListV2 }) => !isNftListV2 && v1Padding}
+`
+
+const v1Padding = css`
+  padding: 0px 16px;
+
+  @media screen and (min-width: ${SMALL_MEDIA_BREAKPOINT}) {
+    padding: 0px 44px;
+  }
 `
 
 const ListingHeader = styled(Row)`
@@ -157,7 +166,7 @@ export const ListPage = () => {
 
   return (
     <Column>
-      <MarketWrap>
+      <MarketWrap isNftListV2={isNftListV2}>
         <ListingHeader>
           <TitleWrapper>
             <BackArrowIcon
