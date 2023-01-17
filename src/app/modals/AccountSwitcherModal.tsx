@@ -45,10 +45,12 @@ import { openSettings } from 'src/utils/linking'
 
 export function AccountSwitcherModal() {
   const dispatch = useAppDispatch()
+  const theme = useAppTheme()
 
   return (
     <BottomSheetModal
       disableSwipe
+      backgroundColor={theme.colors.background0}
       name={ModalName.AccountSwitcher}
       onClose={() => dispatch(closeModal({ name: ModalName.AccountSwitcher }))}>
       <Screen edges={['bottom']}>
