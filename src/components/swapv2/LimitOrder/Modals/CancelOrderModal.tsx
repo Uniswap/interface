@@ -1,4 +1,3 @@
-import { Currency, Price } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import { useCallback, useMemo } from 'react'
 import { Text } from 'rebass'
@@ -12,7 +11,7 @@ import { TransactionFlowState } from 'types'
 
 import { calcPercentFilledOrder, formatAmountOrder } from '../helpers'
 import { LimitOrder, LimitOrderStatus } from '../type'
-import useBaseTradeInfo from '../useBaseTradeInfo'
+import useBaseTradeInfo, { BaseTradeInfo } from '../useBaseTradeInfo'
 import { Container, Header, Label, ListInfo, MarketInfo, Note, Rate, Value } from './styled'
 
 const styleLogo = { width: 20, height: 20 }
@@ -25,7 +24,7 @@ function ContentCancel({
 }: {
   isCancelAll: boolean
   order: LimitOrder | undefined
-  marketPrice: Price<Currency, Currency> | undefined
+  marketPrice: BaseTradeInfo | undefined
   onSubmit: () => void
   onDismiss: () => void
 }) {
@@ -103,7 +102,7 @@ function ContentCancel({
       ) : (
         <>
           <ListInfo listData={listData} />
-          <MarketInfo marketPrice={marketPrice} />
+          <MarketInfo marketPrice={marketPrice} symbolIn={makerAssetSymbol} symbolOut={takerAssetSymbol} />
         </>
       )}
       <Note
@@ -150,12 +149,12 @@ export default function CancelOrderModal({
         <ContentCancel
           onSubmit={onSubmit}
           onDismiss={onDismiss}
-          marketPrice={tradeInfo?.price}
+          marketPrice={tradeInfo}
           isCancelAll={isCancelAll}
           order={order}
         />
       ),
-    [onDismiss, flowState.errorMessage, onSubmit, order, tradeInfo?.price, isCancelAll],
+    [onDismiss, flowState.errorMessage, onSubmit, order, tradeInfo, isCancelAll],
   )
   return (
     <TransactionConfirmationModal

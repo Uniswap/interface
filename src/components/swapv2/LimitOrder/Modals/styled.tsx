@@ -1,4 +1,4 @@
-import { Currency, Price } from '@kyberswap/ks-sdk-core'
+import { Currency } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import { ReactNode, useState } from 'react'
 import { X } from 'react-feather'
@@ -6,7 +6,8 @@ import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
 import { Swap as SwapIcon } from 'components/Icons'
-import TradePrice from 'components/swapv2/TradePrice'
+import TradePrice from 'components/swapv2/LimitOrder/TradePrice'
+import { BaseTradeInfo } from 'components/swapv2/LimitOrder/useBaseTradeInfo'
 import useTheme from 'hooks/useTheme'
 
 import { formatAmountOrder, formatRateOrder } from '../helpers'
@@ -81,7 +82,15 @@ export function ListInfo({ listData }: { listData: ListDataType }) {
     </Flex>
   )
 }
-export const MarketInfo = ({ marketPrice }: { marketPrice: Price<Currency, Currency> | undefined }) => {
+export const MarketInfo = ({
+  marketPrice,
+  symbolIn,
+  symbolOut,
+}: {
+  marketPrice: BaseTradeInfo | undefined
+  symbolIn: string | undefined
+  symbolOut: string | undefined
+}) => {
   const theme = useTheme()
   return (
     <Flex
@@ -99,7 +108,13 @@ export const MarketInfo = ({ marketPrice }: { marketPrice: Price<Currency, Curre
           <Trans>Current Market Price</Trans>
         </Label>
         <Value>
-          <TradePrice price={marketPrice} style={{ color: theme.text }} />
+          <TradePrice
+            price={marketPrice}
+            loading={false}
+            style={{ color: theme.text }}
+            symbolIn={symbolIn}
+            symbolOut={symbolOut}
+          />
         </Value>
       </Row>
     </Flex>

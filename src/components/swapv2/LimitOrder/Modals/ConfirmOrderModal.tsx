@@ -1,4 +1,4 @@
-import { Currency, Price } from '@kyberswap/ks-sdk-core'
+import { Currency } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import dayjs from 'dayjs'
 import { memo, useCallback, useMemo } from 'react'
@@ -7,6 +7,7 @@ import { Flex, Text } from 'rebass'
 import { ButtonPrimary } from 'components/Button'
 import CurrencyLogo from 'components/CurrencyLogo'
 import TransactionConfirmationModal, { TransactionErrorContent } from 'components/TransactionConfirmationModal'
+import { BaseTradeInfo } from 'components/swapv2/LimitOrder/useBaseTradeInfo'
 import { useActiveWeb3React } from 'hooks'
 import { TransactionFlowState } from 'types'
 
@@ -37,7 +38,7 @@ export default memo(function ConfirmOrderModal({
   inputAmount: string
   outputAmount: string
   expireAt: number
-  marketPrice: Price<Currency, Currency> | undefined
+  marketPrice: BaseTradeInfo | undefined
   rateInfo: RateInfo
   note?: string
 }) {
@@ -92,7 +93,7 @@ export default memo(function ConfirmOrderModal({
             <Container>
               <Header title={t`Review your order`} onDismiss={onDismiss} />
               <ListInfo listData={listData} />
-              <MarketInfo marketPrice={marketPrice} />
+              <MarketInfo marketPrice={marketPrice} symbolIn={currencyIn?.symbol} symbolOut={currencyOut?.symbol} />
               <Note note={note} />
               <ButtonPrimary onClick={onSubmit}>
                 <Trans>Place Order</Trans>
@@ -102,7 +103,7 @@ export default memo(function ConfirmOrderModal({
         </div>
       </Flex>
     )
-  }, [onDismiss, flowState.errorMessage, listData, onSubmit, marketPrice, note])
+  }, [onDismiss, flowState.errorMessage, listData, onSubmit, marketPrice, note, currencyIn, currencyOut])
 
   return (
     <TransactionConfirmationModal

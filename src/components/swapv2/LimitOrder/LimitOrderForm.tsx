@@ -20,9 +20,9 @@ import TrendingSoonTokenBanner from 'components/TrendingSoonTokenBanner'
 import ActionButtonLimitOrder from 'components/swapv2/LimitOrder/ActionButtonLimitOrder'
 import DeltaRate, { useGetDeltaRateLimitOrder } from 'components/swapv2/LimitOrder/DeltaRate'
 import ConfirmOrderModal from 'components/swapv2/LimitOrder/Modals/ConfirmOrderModal'
+import TradePrice from 'components/swapv2/LimitOrder/TradePrice'
 import useBaseTradeInfo from 'components/swapv2/LimitOrder/useBaseTradeInfo'
 import useWrapEthStatus from 'components/swapv2/LimitOrder/useWrapEthStatus'
-import TradePrice from 'components/swapv2/TradePrice'
 import { Z_INDEXS } from 'constants/styles'
 import { useTokenAllowance } from 'data/Allowances'
 import { useActiveWeb3React, useWeb3React } from 'hooks'
@@ -39,6 +39,7 @@ import { TRANSACTION_STATE_DEFAULT, TransactionFlowState } from 'types'
 import { formatNumberWithPrecisionRange, getLimitOrderContract } from 'utils'
 import { subscribeNotificationOrderCancelled, subscribeNotificationOrderExpired } from 'utils/firebase'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
+import { toFixed } from 'utils/numbers'
 
 import ExpirePicker from './ExpirePicker'
 import { DEFAULT_EXPIRED, EXPIRED_OPTIONS } from './const'
@@ -141,8 +142,7 @@ const LimitOrderForm = function LimitOrderForm({
   const { library } = useWeb3React()
 
   const { loading: loadingTrade, tradeInfo } = useBaseTradeInfo(currencyIn, currencyOut)
-  const { tradeInfo: tradeInfoInvert } = useBaseTradeInfo(currencyOut, currencyIn)
-  const deltaRate = useGetDeltaRateLimitOrder({ marketPrice: tradeInfo?.price, rateInfo })
+  const deltaRate = useGetDeltaRateLimitOrder({ marketPrice: tradeInfo, rateInfo })
 
   const { execute: onWrap, inputError: wrapInputError } = useWrapCallback(currencyIn, currencyOut, inputAmount, true)
   const showWrap = !!currencyIn?.isNative
@@ -193,7 +193,10 @@ const LimitOrderForm = function LimitOrderForm({
     try {
       mixpanelHandler(MIXPANEL_TYPE.LO_ENTER_DETAIL, 'set price')
       if (loadingTrade || !tradeInfo) return
-      onSetRate(tradeInfo?.price?.toSignificant(6) ?? '', tradeInfo?.price?.invert().toSignificant(6) ?? '')
+      onSetRate(
+        toFixed(parseFloat(tradeInfo.marketRate.toFixed(16))) ?? '',
+        toFixed(parseFloat(tradeInfo.invertRate.toFixed(16))) ?? '',
+      )
     } catch (error) {}
   }
 
@@ -227,8 +230,9 @@ const LimitOrderForm = function LimitOrderForm({
       if (currencyOut && currency?.equals(currencyOut)) return
       setCurrencyIn(currency)
       setIsSelectCurrencyManual?.(true)
+      setRateInfo({ ...rateInfo, invertRate: '', rate: '' })
     },
-    [currencyOut, setCurrencyIn, setIsSelectCurrencyManual],
+    [currencyOut, setCurrencyIn, setIsSelectCurrencyManual, rateInfo],
   )
 
   const switchToWeth = useCallback(() => {
@@ -241,6 +245,7 @@ const LimitOrderForm = function LimitOrderForm({
     if (currencyIn && currency?.equals(currencyIn)) return
     setCurrencyOut(currency)
     setIsSelectCurrencyManual?.(true)
+    setRateInfo({ ...rateInfo, invertRate: '', rate: '' })
   }
 
   const [rotate, setRotate] = useState(false)
@@ -635,12 +640,12 @@ const LimitOrderForm = function LimitOrderForm({
     return calcUsdPrices({
       inputAmount,
       outputAmount,
-      priceUsdIn: tradeInfo?.amountInUsd,
-      priceUsdOut: tradeInfoInvert?.amountInUsd,
+      priceUsdIn: tradeInfo?.priceUsdIn,
+      priceUsdOut: tradeInfo?.priceUsdOut,
       currencyIn,
       currencyOut,
     })
-  }, [inputAmount, outputAmount, tradeInfo, tradeInfoInvert, currencyIn, currencyOut])
+  }, [inputAmount, outputAmount, tradeInfo, currencyIn, currencyOut])
 
   const showApproveFlow =
     !checkingAllowance &&
@@ -689,10 +694,12 @@ const LimitOrderForm = function LimitOrderForm({
         <RowBetween gap="1rem">
           <InputWrapper>
             <Flex justifyContent={'space-between'} alignItems="center">
-              <DeltaRate symbolIn={currencyIn?.symbol ?? ''} marketPrice={tradeInfo?.price} rateInfo={rateInfo} />
-              <Set2Market onClick={setPriceRateMarket}>
-                <Trans>Market</Trans>
-              </Set2Market>
+              <DeltaRate symbolIn={currencyIn?.symbol ?? ''} marketPrice={tradeInfo} rateInfo={rateInfo} />
+              {tradeInfo && (
+                <Set2Market onClick={setPriceRateMarket}>
+                  <Trans>Market</Trans>
+                </Set2Market>
+              )}
             </Flex>
             <Flex alignItems={'center'} style={{ background: theme.buttonBlack, borderRadius: 12 }}>
               <NumericalInput
@@ -736,12 +743,17 @@ const LimitOrderForm = function LimitOrderForm({
         </RowBetween>
 
         <RowBetween>
-          <TradePrice
-            price={tradeInfo?.price}
-            style={{ width: 'fit-content', fontStyle: 'italic' }}
-            color={theme.text}
-            label={t`Market Price is`}
-          />
+          {currencyIn && currencyOut ? (
+            <TradePrice
+              price={tradeInfo}
+              style={{ width: 'fit-content', fontStyle: 'italic' }}
+              color={theme.text}
+              label={t`Estimated Market Price:`}
+              loading={loadingTrade}
+              symbolIn={currencyIn?.symbol}
+              symbolOut={currencyOut?.symbol}
+            />
+          ) : null}
           <ArrowRotate
             rotate={rotate}
             onClick={isEdit ? undefined : handleRotateClick}
@@ -817,7 +829,7 @@ const LimitOrderForm = function LimitOrderForm({
         outputAmount={outputAmount}
         expireAt={expiredAt}
         rateInfo={rateInfo}
-        marketPrice={tradeInfo?.price}
+        marketPrice={tradeInfo}
         note={note}
       />
 

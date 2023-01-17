@@ -5,6 +5,7 @@ import JSBI from 'jsbi'
 
 import { tryParseAmount } from 'state/swap/hooks'
 import { formatNumberWithPrecisionRange, formattedNum } from 'utils'
+import { toFixed } from 'utils/numbers'
 
 import { CreateOrderParam, LimitOrder, LimitOrderStatus } from './type'
 
@@ -32,7 +33,7 @@ export const uint256ToFraction = (value: string, decimals?: number) =>
 export function calcOutput(input: string, rate: string, decimalsIn: number, decimalsOut: number) {
   try {
     const value = parseFraction(input, decimalsIn).multiply(parseFraction(rate))
-    return removeTrailingZero(value.toFixed(decimalsOut))
+    return toFixed(parseFloat(value.toFixed(decimalsOut)))
   } catch (error) {
     return ''
   }
@@ -42,7 +43,7 @@ export function calcRate(input: string, output: string, decimalsOut: number) {
   try {
     if (input && input === output) return '1'
     const rate = parseFraction(output, decimalsOut).divide(parseFraction(input))
-    return removeTrailingZero(rate.toFixed(16))
+    return toFixed(parseFloat(rate.toFixed(16)))
   } catch (error) {
     return ''
   }
@@ -52,7 +53,7 @@ export function calcRate(input: string, output: string, decimalsOut: number) {
 export function calcInvert(value: string) {
   try {
     if (parseFloat(value) === 1) return '1'
-    return removeTrailingZero(new Fraction(1).divide(parseFraction(value)).toFixed(16))
+    return toFixed(parseFloat(new Fraction(1).divide(parseFraction(value)).toFixed(16)))
   } catch (error) {
     return ''
   }
