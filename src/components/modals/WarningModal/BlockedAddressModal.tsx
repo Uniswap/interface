@@ -4,7 +4,7 @@ import { WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { ModalName } from 'src/features/telemetry/constants'
 
-export function BlockedAddressModal({ onClose }: { onClose: () => void }) {
+export function BlockedAddressModal({ onClose }: { onClose: () => void }): JSX.Element {
   const { t } = useTranslation()
 
   return (

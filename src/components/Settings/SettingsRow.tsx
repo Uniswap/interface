@@ -45,8 +45,8 @@ export function SettingsRow({
   page: { screen, screenProps, externalLink, action, icon, text, subText },
   navigation,
   theme,
-}: SettingsRowProps) {
-  const handleRow = () => {
+}: SettingsRowProps): JSX.Element {
+  const handleRow = (): void => {
     if (screen) {
       navigation.navigate(screen, screenProps)
     } else if (externalLink) {

@@ -5,7 +5,15 @@ import {
   WarningSeverity,
 } from 'src/components/modals/WarningModal/types'
 
-export const getNetworkWarning = (t: TFunction) => ({
+export const getNetworkWarning = (
+  t: TFunction
+): {
+  type: WarningLabel
+  severity: WarningSeverity
+  action: WarningAction
+  title: string
+  message: string
+} => ({
   type: WarningLabel.NetworkError,
   severity: WarningSeverity.Medium,
   action: WarningAction.DisableReview,

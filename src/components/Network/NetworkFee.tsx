@@ -20,7 +20,7 @@ export function NetworkFee({
   gasFee?: string
   gasFallbackUsed?: boolean
   onShowGasWarning?: () => void
-}) {
+}): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const gasFeeUSD = useUSDValue(chainId, gasFee)

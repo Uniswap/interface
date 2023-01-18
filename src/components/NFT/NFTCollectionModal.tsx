@@ -27,7 +27,7 @@ export function NFTCollectionModal({
     >['collection']
   >
   onClose: () => void
-}) {
+}): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
 

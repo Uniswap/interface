@@ -6,7 +6,11 @@ import { BaseCard } from 'src/components/layout/BaseCard'
 import TransactionList from 'src/components/TransactionList/TransactionList'
 import { theme } from 'src/styles/theme'
 
-export default function ProfileActivityTab({ ownerAddress }: { ownerAddress: Address }) {
+export default function ProfileActivityTab({
+  ownerAddress,
+}: {
+  ownerAddress: Address
+}): JSX.Element {
   const { t } = useTranslation()
   return (
     <Flex grow style={{ paddingHorizontal: theme.spacing.sm }}>

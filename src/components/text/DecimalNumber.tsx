@@ -17,7 +17,7 @@ export function DecimalNumber({
   separator = '.',
   variant,
   ...rest
-}: DecimalNumberProps) {
+}: DecimalNumberProps): JSX.Element {
   const [pre, post] = number.split(separator)
 
   return (

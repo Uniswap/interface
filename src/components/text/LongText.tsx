@@ -22,7 +22,7 @@ type LongTextProps = {
   'children' | 'numberOfLines' | 'onTextLayout' | 'color' | 'variant'
 >
 
-export function LongText(props: LongTextProps) {
+export function LongText(props: LongTextProps): JSX.Element {
   const theme = useAppTheme()
   const {
     initialDisplayedLines = 3,
@@ -97,7 +97,7 @@ export function LongText(props: LongTextProps) {
                 lineHeight: theme.textVariants.bodySmall.lineHeight,
               },
             }}
-            onLinkPress={(url) => {
+            onLinkPress={(url): false => {
               // add our own custom link handler since it has security checks that only open http/https links
               openUri(url)
               return false

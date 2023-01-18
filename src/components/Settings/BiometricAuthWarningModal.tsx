@@ -10,7 +10,11 @@ type Props = {
   onClose: WarningModalProps['onClose']
 }
 
-export function BiometricAuthWarningModal({ isTouchIdDevice, onConfirm, onClose }: Props) {
+export function BiometricAuthWarningModal({
+  isTouchIdDevice,
+  onConfirm,
+  onClose,
+}: Props): JSX.Element {
   const { t } = useTranslation()
   const authenticationTypeName = isTouchIdDevice ? 'Touch' : 'Face'
   return (

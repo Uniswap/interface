@@ -8,8 +8,8 @@ import { ActionSheetModalContent } from './ActionSheetModal'
 const options = [
   {
     key: '1',
-    onPress: () => undefined,
-    render: () => (
+    onPress: (): undefined => undefined,
+    render: (): JSX.Element => (
       <Flex row flex={1} justifyContent="space-between" p="md">
         <Text variant="bodyLarge">Market Cap</Text>
         <Check height={18} width={18} />
@@ -18,8 +18,8 @@ const options = [
   },
   {
     key: '2',
-    onPress: () => undefined,
-    render: () => (
+    onPress: (): undefined => undefined,
+    render: (): JSX.Element => (
       <Box p="md">
         <Text variant="bodyLarge">Volume</Text>
       </Box>
@@ -27,8 +27,8 @@ const options = [
   },
   {
     key: '3',
-    onPress: () => undefined,
-    render: () => (
+    onPress: (): undefined => undefined,
+    render: (): JSX.Element => (
       <Box p="md">
         <Text variant="bodyLarge">Percent Change</Text>
       </Box>
@@ -40,7 +40,7 @@ export default {
   title: 'WIP/Modals/Action Sheet',
   component: ActionSheetModalContent,
   decorators: [
-    (Story) => (
+    (Story): JSX.Element => (
       <Box bg="background0" p="lg" width={300}>
         <Story />
       </Box>

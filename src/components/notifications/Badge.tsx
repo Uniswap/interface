@@ -9,7 +9,11 @@ type Props = PropsWithChildren<{
   borderColor?: keyof Theme['colors']
 }>
 
-function _NotificationBadge({ borderColor = 'background0', children, showIndicator }: Props) {
+function _NotificationBadge({
+  borderColor = 'background0',
+  children,
+  showIndicator,
+}: Props): JSX.Element {
   return (
     <Box position="relative">
       {showIndicator && (

@@ -28,7 +28,7 @@ type Props = PropsWithChildren<{
 }> &
   TelemetryTraceProps
 
-const HandleBar = () => {
+const HandleBar = (): JSX.Element => {
   return (
     <Box
       alignSelf="center"
@@ -42,7 +42,7 @@ const HandleBar = () => {
   )
 }
 
-const Backdrop = (props: BottomSheetBackdropProps) => {
+const Backdrop = (props: BottomSheetBackdropProps): JSX.Element => {
   return <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} opacity={0.4} />
 }
 
@@ -60,7 +60,7 @@ export function BottomSheetModal({
   hideHandlebar,
   backgroundColor,
   isDismissible = true,
-}: Props) {
+}: Props): JSX.Element {
   const insets = useSafeAreaInsets()
   const modalRef = useRef<BaseModal>(null)
   const { animatedHandleHeight, animatedSnapPoints, animatedContentHeight, handleContentLayout } =
@@ -122,7 +122,7 @@ export function BottomSheetDetachedModal({
   fullScreen,
   hideHandlebar,
   backgroundColor,
-}: Props) {
+}: Props): JSX.Element {
   const insets = useSafeAreaInsets()
   const modalRef = useRef<BaseModal>(null)
   const { animatedHandleHeight, animatedSnapPoints, animatedContentHeight, handleContentLayout } =

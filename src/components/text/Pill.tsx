@@ -25,7 +25,7 @@ export function Pill({
   py = 'xs',
   textVariant = 'bodySmall',
   ...rest
-}: PillProps) {
+}: PillProps): JSX.Element {
   return (
     <Flex
       alignItems="center"

@@ -18,7 +18,7 @@ export function NetworkPill({
   showBorder,
   showIcon = true,
   ...rest
-}: NetworkPillProps) {
+}: NetworkPillProps): JSX.Element {
   const info = CHAIN_INFO[chainId]
   const colors = useNetworkColors(chainId)
 
@@ -34,7 +34,7 @@ export function NetworkPill({
   )
 }
 
-export function InlineNetworkPill(props: NetworkPillProps) {
+export function InlineNetworkPill(props: NetworkPillProps): JSX.Element {
   return (
     <NetworkPill
       borderRadius="xs"

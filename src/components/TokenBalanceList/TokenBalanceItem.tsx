@@ -22,7 +22,7 @@ export const TokenBalanceItem = memo(
     const { quantity, currencyInfo, relativeChange24 } = portfolioBalance
     const { currency } = currencyInfo
 
-    const onPress = () => {
+    const onPress = (): void => {
       onPressToken?.(currencyInfo.currencyId)
     }
 

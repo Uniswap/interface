@@ -17,7 +17,7 @@ export function TextWithFuseMatches({
   text,
   variant = 'bodyLarge',
   numberOfLines = 1,
-}: TextWithFuseMatchesProps & TextProps) {
+}: TextWithFuseMatchesProps & TextProps): JSX.Element {
   if (!matches || matches.length === 0) {
     return (
       <Text color="textPrimary" numberOfLines={numberOfLines} variant={variant}>

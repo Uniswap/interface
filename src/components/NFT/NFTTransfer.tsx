@@ -4,7 +4,13 @@ import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
 
-export function NFTTransfer({ asset, nftSize }: { asset: GQLNftAsset; nftSize?: number }) {
+export function NFTTransfer({
+  asset,
+  nftSize,
+}: {
+  asset: GQLNftAsset
+  nftSize?: number
+}): JSX.Element {
   return (
     <Flex centered>
       <Box borderRadius="lg" height={nftSize} overflow="hidden" width={nftSize}>

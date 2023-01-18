@@ -18,7 +18,7 @@ export function uniqueAddressesOnly<T extends HasAddress>(objectsWithAddress: T[
 export function filterSections(
   sections: SectionListData<SearchableRecipient>[],
   filteredAddresses: string[]
-) {
+): { title: string; data: SearchableRecipient[] }[] {
   return sections
     .map((section) => {
       const { title, data } = section

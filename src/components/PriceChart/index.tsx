@@ -19,7 +19,7 @@ export function CurrencyPriceChart({
   tokenColorLoading?: boolean
   tokenPriceGraphResult: GqlResult<GraphMetadatas>
   onRetry: () => void
-}) {
+}): JSX.Element {
   const { data: graphs, loading, error, refetch } = tokenPriceGraphResult
   // using a separate query for spot price because
   // 1/ most likely already cached
@@ -29,7 +29,7 @@ export function CurrencyPriceChart({
   const isLoading = loading || tokenColorLoading
   if (!isLoading && !graphs) {
     // Propagate retry up while refetching, if available
-    const refetchAndRetry = () => {
+    const refetchAndRetry = (): void => {
       if (refetch) refetch()
       onRetry()
     }
@@ -54,7 +54,10 @@ export function PriceChart({
 }: {
   graphs?: GraphMetadatas
   tokenColor?: NullUndefined<string>
-} & Pick<ComponentProps<typeof PriceExplorer>, 'headerCustomPrice' | 'headerCustomPercentChange'>) {
+} & Pick<
+  ComponentProps<typeof PriceExplorer>,
+  'headerCustomPrice' | 'headerCustomPercentChange'
+>): JSX.Element {
   // require all graphs to be loaded before rendering the chart
   // TODO: [MOB-3875] improve loading state by lazy loading time ranges
   const loading = useMemo(() => graphs?.some((g) => !g.data), [graphs]) || graphs === undefined

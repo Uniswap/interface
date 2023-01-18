@@ -14,12 +14,14 @@ interface RecipientListProps {
   onPress: (recipient: string) => void
 }
 
-export function RecipientList({ onPress, sections }: RecipientListProps) {
-  const renderItem = ({ item }: ListRenderItemInfo<SearchableRecipient>) => (
-    <AnimatedFlex entering={FadeIn} exiting={FadeOut} py="sm">
-      <RecipientRow recipient={item} onPress={onPress} />
-    </AnimatedFlex>
-  )
+export function RecipientList({ onPress, sections }: RecipientListProps): JSX.Element {
+  const renderItem = function ({ item }: ListRenderItemInfo<SearchableRecipient>) {
+    return (
+      <AnimatedFlex entering={FadeIn} exiting={FadeOut} py="sm">
+        <RecipientRow recipient={item} onPress={onPress} />
+      </AnimatedFlex>
+    )
+  }
 
   return (
     <SectionList
@@ -32,7 +34,7 @@ export function RecipientList({ onPress, sections }: RecipientListProps) {
   )
 }
 
-function SectionHeader(info: { section: SectionListData<SearchableRecipient> }) {
+function SectionHeader(info: { section: SectionListData<SearchableRecipient> }): JSX.Element {
   return (
     <AnimatedFlex backgroundColor="background1" entering={FadeIn} exiting={FadeOut} py="xs">
       <Text color="textSecondary" variant="subheadSmall">
@@ -42,7 +44,7 @@ function SectionHeader(info: { section: SectionListData<SearchableRecipient> }) 
   )
 }
 
-function key(recipient: SearchableRecipient) {
+function key(recipient: SearchableRecipient): string {
   return `recipient-${recipient.address}`
 }
 
@@ -51,15 +53,15 @@ interface RecipientProps {
   onPress: (recipient: string) => void
 }
 
-export function RecipientRow({ recipient, onPress }: RecipientProps) {
+export function RecipientRow({ recipient, onPress }: RecipientProps): JSX.Element {
   return (
-    <TouchableArea onPress={() => onPress(recipient.address)}>
+    <TouchableArea onPress={(): void => onPress(recipient.address)}>
       <AddressDisplay address={recipient.address} size={35} />
     </TouchableArea>
   )
 }
 
-export function RecipientLoadingRow() {
+export function RecipientLoadingRow(): JSX.Element {
   const { t } = useTranslation()
   return (
     <AnimatedFlex entering={FadeIn} exiting={FadeOut} mx="xs">

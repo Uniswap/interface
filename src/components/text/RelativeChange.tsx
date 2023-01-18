@@ -17,7 +17,7 @@ interface RelativeChangeProps {
   loading?: boolean
 }
 
-export function RelativeChange(props: RelativeChangeProps) {
+export function RelativeChange(props: RelativeChangeProps): JSX.Element {
   const theme = useAppTheme()
   const {
     absoluteChange,

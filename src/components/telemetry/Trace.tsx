@@ -62,7 +62,7 @@ function _Trace({
   startMark,
   endMark,
   properties,
-}: PropsWithChildren<TraceProps>) {
+}: PropsWithChildren<TraceProps>): JSX.Element {
   const initialRenderTimestamp = useRef<number>(Date.now())
   const isPartOfNavigationTree = useIsPartOfNavigationTree()
 

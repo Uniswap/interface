@@ -26,7 +26,7 @@ export const AddressQRCode = ({
   color,
   safeAreaSize,
   safeAreaColor,
-}: AddressQRCodeProps) => {
+}: AddressQRCodeProps): JSX.Element => {
   const theme = useAppTheme()
   const backgroundColorValue = theme.colors[backgroundColor]
   const gradientData = useUniconColors(address)
@@ -105,7 +105,7 @@ const _QRCodeDisplay = ({
   overlayOpacityPercent,
   logoSize = 32,
   safeAreaColor,
-}: QRCodeDisplayProps) => {
+}: QRCodeDisplayProps): JSX.Element => {
   const theme = useAppTheme()
 
   return (

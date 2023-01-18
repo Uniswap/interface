@@ -30,7 +30,7 @@ export type WarningModalProps = {
 export function captionForAccountRemovalWarning(
   accountType: AccountType,
   t: TFunction<'translation'>
-) {
+): string {
   switch (accountType) {
     case AccountType.Readonly:
       return t('This action will remove this view-only wallet from appearing in your app.')
@@ -56,11 +56,11 @@ export default function WarningModal({
   isDismissible = true,
   hideHandlebar = false,
   icon,
-}: PropsWithChildren<WarningModalProps>) {
+}: PropsWithChildren<WarningModalProps>): JSX.Element {
   const { requiredForTransactions } = useBiometricAppSettings()
   const { trigger } = useBiometricPrompt(onConfirm)
 
-  const onPressConfirm = () => {
+  const onPressConfirm = (): void => {
     if (requiredForTransactions && useBiometric) {
       trigger()
     } else {

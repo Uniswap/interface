@@ -5,13 +5,13 @@ import { render } from 'src/test/test-utils'
 
 jest.mock('src/features/wallet/hooks', () => {
   return {
-    useActiveAccount: () => undefined,
+    useActiveAccount: (): undefined => undefined,
   }
 })
 
 jest.mock('src/features/experiments/hooks', () => {
   return {
-    useFeatureFlag: () => undefined,
+    useFeatureFlag: (): undefined => undefined,
   }
 })
 

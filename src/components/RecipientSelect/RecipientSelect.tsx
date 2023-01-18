@@ -21,7 +21,7 @@ interface RecipientSelectProps {
   recipient?: string
 }
 
-function QRScannerIconButton({ onPress }: { onPress: () => void }) {
+function QRScannerIconButton({ onPress }: { onPress: () => void }): JSX.Element {
   const theme = useAppTheme()
 
   return (
@@ -39,7 +39,7 @@ export function RecipientSelect({
   onSelectRecipient,
   onToggleShowRecipientSelector,
   recipient,
-}: RecipientSelectProps) {
+}: RecipientSelectProps): JSX.Element {
   const { t } = useTranslation()
   const [showQRScanner, setShowQRScanner] = useState(false)
   const { sections, searchableRecipientOptions, pattern, onChangePattern, loading } =

@@ -14,7 +14,7 @@ import { iconSizes } from 'src/styles/sizing'
 export function useNetworkOptions(
   selectedChain: ChainId | null,
   onPress: (chainId: ChainId | null) => void
-) {
+): { key: string; onPress: () => void; render: () => JSX.Element }[] {
   const theme = useAppTheme()
   const activeChains = useActiveChainIds()
 

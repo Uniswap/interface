@@ -38,7 +38,7 @@ function isWalletConnect(props: QRCodeScannerProps | WCScannerProps): props is W
 const SCAN_ICON_WIDTH_RATIO = 0.7
 const SCAN_ICON_MASK_OFFSET = 10 // used for mask to match spacing in CameraScan SVG
 
-export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps) {
+export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.Element {
   const { onScanCode, shouldFreezeCamera } = props
   const isWalletConnectModal = isWalletConnect(props)
 
@@ -60,7 +60,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps) {
   const [connectionLayout, setConnectionLayout] = useState<LayoutRectangle | null>()
 
   useEffect(() => {
-    async function getPermissionStatuses() {
+    async function getPermissionStatuses(): Promise<void> {
       const status = await Camera.getCameraPermissionStatus()
 
       if (status === 'not-determined') {
@@ -141,7 +141,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps) {
             }}
             top={0}
             width="100%"
-            onLayout={(event: LayoutChangeEvent) => setInfoLayout(event.nativeEvent.layout)}>
+            onLayout={(event: LayoutChangeEvent): void => setInfoLayout(event.nativeEvent.layout)}>
             <Text color="textPrimary" variant="subheadLarge">
               {t('Scan a QR code')}
             </Text>
@@ -180,7 +180,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps) {
                   },
                 ],
               }}
-              onLayout={(event: LayoutChangeEvent) =>
+              onLayout={(event: LayoutChangeEvent): void =>
                 setConnectionLayout(event.nativeEvent.layout)
               }>
               <Button

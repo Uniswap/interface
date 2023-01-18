@@ -13,7 +13,7 @@ import * as versionUtils from 'src/utils/version'
 
 // `any` is the actual type used by `jest.spyOn`
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mockFn(module: any, func: string, returnValue: any) {
+function mockFn(module: any, func: string, returnValue: any): jest.SpyInstance<any, unknown[]> {
   return jest.spyOn(module, func).mockImplementation(() => returnValue)
 }
 

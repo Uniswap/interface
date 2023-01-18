@@ -26,13 +26,13 @@ export type TraceEventProps = {
  *    <Button onPress={() => console.log('pressed')}>Push me</Button>
  *  </TraceEvent>
  */
-function _TraceEvent(props: PropsWithChildren<TraceEventProps>) {
+function _TraceEvent(props: PropsWithChildren<TraceEventProps>): JSX.Element {
   const { elementName, eventName, events, properties, children, ...logEventProps } = props
 
   return (
     <Trace {...logEventProps}>
       <TraceContext.Consumer>
-        {(consumedProps) =>
+        {(consumedProps): Record<string, unknown>[] | null | undefined =>
           React.Children.map(children, (child) => {
             if (!React.isValidElement(child)) {
               return child
@@ -63,13 +63,13 @@ function getEventHandlers(
   eventName: EventName,
   elementName?: ElementName,
   properties?: Record<string, unknown>
-) {
+): Partial<Record<ReactNativeEvent, (e: NativeSyntheticEvent<NativeTouchEvent>) => void>> {
   const eventHandlers: Partial<
     Record<ReactNativeEvent, (e: NativeSyntheticEvent<NativeTouchEvent>) => void>
   > = {}
 
   for (const event of Object.values(events)) {
-    eventHandlers[event] = (eventHandlerArgs: unknown) => {
+    eventHandlers[event] = (eventHandlerArgs: unknown): void => {
       // call child event handler with original arguments
       child.props[event]?.apply(child, eventHandlerArgs)
 

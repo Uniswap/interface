@@ -16,7 +16,7 @@ import {
 import { getFullAppVersion } from 'src/utils/version'
 
 /** Component that tracks UserProperties during the lifetime of the app */
-export function TraceUserProperties() {
+export function TraceUserProperties(): null {
   const isDarkMode = useColorScheme() === 'dark'
   const viewOnlyAccounts = useViewOnlyAccounts()
   const activeAccount = useActiveAccount()

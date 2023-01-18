@@ -20,12 +20,12 @@ interface Props {
   address?: Address
 }
 
-export function WalletQRCode({ address }: Props) {
+export function WalletQRCode({ address }: Props): JSX.Element | null {
   const { t } = useTranslation()
 
   const gradientData = useUniconColors(address)
 
-  const onShare = async () => {
+  const onShare = async (): Promise<void> => {
     if (!address) return
     try {
       await Share.share({

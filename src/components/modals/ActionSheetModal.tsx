@@ -22,7 +22,7 @@ interface ActionSheetModalContentProps {
   header?: ReactNode | string
 }
 
-export function ActionSheetModalContent(props: ActionSheetModalContentProps) {
+export function ActionSheetModalContent(props: ActionSheetModalContentProps): JSX.Element {
   const { t } = useTranslation()
 
   const { header, closeButtonLabel = t('Cancel'), options, onClose } = props
@@ -68,7 +68,12 @@ interface ActionSheetModalProps extends ActionSheetModalContentProps {
   name: ModalName
 }
 
-export function ActionSheetModal({ isVisible, onClose, name, ...rest }: ActionSheetModalProps) {
+export function ActionSheetModal({
+  isVisible,
+  onClose,
+  name,
+  ...rest
+}: ActionSheetModalProps): JSX.Element | null {
   if (!isVisible) return null
 
   return (

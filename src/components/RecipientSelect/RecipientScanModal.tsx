@@ -24,7 +24,7 @@ type Props = {
   onSelectRecipient: (address: string) => void
 }
 
-export function RecipientScanModal({ onSelectRecipient, onClose }: Props) {
+export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const activeAddress = useAppSelector(selectActiveAccountAddress)
@@ -35,7 +35,7 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props) {
   const [hasScanError, setHasScanError] = useState(false)
   const [shouldFreezeCamera, setShouldFreezeCamera] = useState(false)
 
-  const onScanCode = async (uri: string) => {
+  const onScanCode = async (uri: string): Promise<void> => {
     // don't scan any QR codes if there is an error popup open or camera is frozen
     if (hasScanError || shouldFreezeCamera) return
     selectionAsync()
@@ -51,7 +51,7 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props) {
         [
           {
             text: t('Try again'),
-            onPress: () => {
+            onPress: (): void => {
               setHasScanError(false)
             },
           },
@@ -60,7 +60,7 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props) {
     }
   }
 
-  const onPressBottomToggle = () => {
+  const onPressBottomToggle = (): void => {
     if (currentScreenState === ScannerModalState.ScanQr) {
       setCurrentScreenState(ScannerModalState.WalletQr)
     } else {
