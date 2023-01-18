@@ -144,11 +144,6 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
           .getSigner()
           .sendTransaction(newTxn)
           .then((response: TransactionResponse) => {
-            ReactGA.event({
-              category: 'Liquidity',
-              action: 'RemoveV3',
-              label: [liquidityValue0.currency.symbol, liquidityValue1.currency.symbol].join('/'),
-            })
             setTxnHash(response.hash)
             setAttemptingTxn(false)
             addTransaction(response, {

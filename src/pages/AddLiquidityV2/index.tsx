@@ -199,12 +199,6 @@ export default function AddLiquidity({
           })
 
           setTxHash(response.hash)
-
-          ReactGA.event({
-            category: 'Liquidity',
-            action: 'Add',
-            label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/'),
-          })
         })
       )
       .catch((error) => {

@@ -245,14 +245,9 @@ export default function AddLiquidity({
                   : `Add ${currencyA?.symbol}/${currencyB?.symbol} V3 liquidity`,
               })
               setTxHash(response.hash)
-              ReactGA.event({
-                category: 'Liquidity',
-                action: 'Add',
-                label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/'),
-              })
             })
         })
-        .catch((error) => {
+        .catch((error: { code: number }) => {
           setAttemptingTxn(false)
           // we only care if the error is something _other_ than the user rejected the tx
           if (error?.code !== 4001) {

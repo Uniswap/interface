@@ -399,12 +399,6 @@ export function PositionPage({
             setCollectMigrationHash(response.hash)
             setCollecting(false)
 
-            ReactGA.event({
-              category: 'Liquidity',
-              action: 'CollectV3',
-              label: [feeValue0.currency.symbol, feeValue1.currency.symbol].join('/'),
-            })
-
             addTransaction(response, {
               summary: `Collect ${feeValue0.currency.symbol}/${feeValue1.currency.symbol} fees`,
             })

@@ -351,12 +351,6 @@ function V2PairMigration({
         return migrator
           .multicall(data, { gasLimit: calculateGasMargin(gasEstimate) })
           .then((response: TransactionResponse) => {
-            ReactGA.event({
-              category: 'Migrate',
-              action: `${isNotUniswap ? 'SushiSwap' : 'V2'}->V3`,
-              label: `${currency0.symbol}/${currency1.symbol}`,
-            })
-
             addTransaction(response, {
               summary: `Migrate ${currency0.symbol}/${currency1.symbol} liquidity to V3`,
             })

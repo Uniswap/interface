@@ -84,18 +84,7 @@ export function CurrencySearch({
 
   const searchTokenIsAdded = useIsUserAddedToken(searchToken)
 
-  useEffect(() => {
-    if (isAddressSearch) {
-      ReactGA.event({
-        category: 'Currency Select',
-        action: 'Search by address',
-        label: isAddressSearch,
-      })
-    }
-  }, [isAddressSearch])
-
-  const tokenComparator = useTokenComparator(invertSearchOrder)
-
+  const defaultTokens = useAllTokens()
   const filteredTokens: Token[] = useMemo(() => {
     return filterTokens(Object.values(allTokens), debouncedQuery)
   }, [allTokens, debouncedQuery])

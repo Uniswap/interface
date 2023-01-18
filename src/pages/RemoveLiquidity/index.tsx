@@ -279,12 +279,6 @@ export default function RemoveLiquidity({
           })
 
           setTxHash(response.hash)
-
-          ReactGA.event({
-            category: 'Liquidity',
-            action: 'Remove',
-            label: [currencyA?.symbol, currencyB?.symbol].join('/'),
-          })
         })
         .catch((error: Error) => {
           setAttemptingTxn(false)

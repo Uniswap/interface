@@ -65,7 +65,40 @@ const StyledInfo = styled(Info)`
   }
 `
 
-export default function Swap({ history }: RouteComponentProps) {
+const OutputSwapSection = styled(SwapSection)<{ showDetailsDropdown: boolean }>`
+  border-bottom: ${({ theme }) => `1px solid ${theme.backgroundSurface}`};
+  border-bottom-left-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
+  border-bottom-right-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
+`
+
+const DetailsSwapSection = styled(SwapSection)`
+  padding: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+`
+
+export function getIsValidSwapQuote(
+  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined,
+  tradeState: TradeState,
+  swapInputError?: ReactNode
+): boolean {
+  return !!swapInputError && !!trade && (tradeState === TradeState.VALID || tradeState === TradeState.SYNCING)
+}
+
+function largerPercentValue(a?: Percent, b?: Percent) {
+  if (a && b) {
+    return a.greaterThan(b) ? a : b
+  } else if (a) {
+    return a
+  } else if (b) {
+    return b
+  }
+  return undefined
+}
+
+export default function Swap({ className }: { className?: string }) {
+  const navigate = useNavigate()
+  const { account, chainId } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   // token warning stuff
@@ -121,7 +154,6 @@ export default function Swap({ history }: RouteComponentProps) {
     typedValue
   )
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
-  const { address: recipientAddress } = useENSAddress(recipient)
 
   const parsedAmounts = useMemo(
     () =>
@@ -208,11 +240,13 @@ export default function Swap({ history }: RouteComponentProps) {
         if (error?.code !== 4001) {
           await approveCallback()
         }
+      } else {
+        await approveCallback()
       }
     } else {
       await approveCallback()
     }
-  }, [approveCallback, gatherPermitSignature, signatureState])
+  }, [signatureState, gatherPermitSignature, approveCallback])
 
   // check if user has gone through approval process, used to show two step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
@@ -248,22 +282,6 @@ export default function Swap({ history }: RouteComponentProps) {
     swapCallback()
       .then((hash) => {
         setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
-
-        ReactGA.event({
-          category: 'Swap',
-          action:
-            recipient === null
-              ? 'Swap w/o Send'
-              : (recipientAddress ?? recipient) === account
-              ? 'Swap w/o Send + recipient'
-              : 'Swap w/ Send',
-          label: [
-            trade?.inputAmount?.currency?.symbol,
-            trade?.outputAmount?.currency?.symbol,
-            getTradeVersion(trade),
-            singleHopOnly ? 'SH' : 'MH',
-          ].join('/'),
-        })
       })
       .catch((error) => {
         setSwapState({
@@ -274,17 +292,7 @@ export default function Swap({ history }: RouteComponentProps) {
           txHash: undefined,
         })
       })
-  }, [
-    priceImpact,
-    swapCallback,
-    tradeToConfirm,
-    showConfirm,
-    recipient,
-    recipientAddress,
-    account,
-    trade,
-    singleHopOnly,
-  ])
+  }, [swapCallback, stablecoinPriceImpact, tradeToConfirm, showConfirm])
 
   // errors
   const [showInverted, setShowInverted] = useState<boolean>(false)
