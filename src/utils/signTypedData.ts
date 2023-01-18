@@ -12,17 +12,19 @@ JsonRpcSigner.prototype._signTypedData = async function signTypedDataWithFallbac
     return this.provider.resolveName(name) as Promise<string>
   })
 
-  const address = (await this.getAddress()).toLowerCase()
-  const payload = JSON.stringify(_TypedDataEncoder.getPayload(populated.domain, types, populated.value))
+  const address = await this.getAddress()
 
-  return this.provider.send('eth_signTypedData_v4', [address, payload]).catch((e) => {
-    if (!('message' in e && e.message.match(/not found/i))) throw e
-
-    console.warn('eth_signTypedData_v4 failed, falling back to eth_sign:', e)
-    const hash = _TypedDataEncoder.hash(populated.domain, types, populated.value)
-    return this.provider.send('eth_sign', [address, hash]).catch((e) => {
-      console.warn('eth_sign failed:', e)
-      throw e
-    })
-  })
+  try {
+    return await this.provider.send('eth_signTypedData_v4', [
+      address.toLowerCase(),
+      JSON.stringify(_TypedDataEncoder.getPayload(populated.domain, types, populated.value)),
+    ])
+  } catch (error) {
+    if (typeof error.message === 'string' && error.message.match(/not found/i)) {
+      console.warn('eth_signTypedData_v4 failed, falling back to eth_sign:', error)
+      const hash = _TypedDataEncoder.hash(populated.domain, types, populated.value)
+      return await this.provider.send('eth_sign', [address, hash])
+    }
+    throw error
+  }
 }
