@@ -12,7 +12,7 @@ describe('Universal search bar', () => {
     cy.visit('/')
   })
 
-  it('should show no results found when contract address is search term', () => {
+  it('should yield no results found when contract address is search term', () => {
     // **Action**: Type in token contract address
 
     // **Expectation**: Result box should say “No tokens found.”
@@ -21,18 +21,19 @@ describe('Universal search bar', () => {
       .then(($navIcon) => {
         $navIcon.click()
       })
+    // search for uni token contract address
     cy.get('[data-cy="search-bar-input"]').last().type('0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')
     cy.get('[data-cy="search-bar"]')
       .should('contain.text', 'No tokens found.')
       .and('contain.text', 'No NFT collections found.')
   })
 
-  it('should show no results found when contract address is search term', () => {
+  it('should yield clickable result for regular token or nft collection search term', () => {
     // **Action**: Click on token from results menu
     // **Expectation**: Land on Token Details page of that token, with all info filled in
   })
 
-  it('should show no results found when contract address is search term', () => {
+  it('should show blocked badge when blocked token is searched for', () => {
     /// **Action**: Search for blocked token
     // **Expectation**: Token should show in results, but have a blocked badge next to it (
   })
