@@ -1,4 +1,5 @@
 // **Action**: Click on search bar
+import { getTestSelector } from '../utils'
 
 // **Expectation**: See top 4 tokens (”popular” = by uniswap volume) of the global network
 
@@ -21,7 +22,7 @@ describe('Universal search bar', () => {
       .then(($navIcon) => {
         $navIcon.click()
       })
-    // search for uni token contract address
+    // Search for uni token contract address
     cy.get('[data-cy="search-bar-input"]').last().type('0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')
     cy.get('[data-cy="search-bar"]')
       .should('contain.text', 'No tokens found.')
@@ -31,10 +32,34 @@ describe('Universal search bar', () => {
   it('should yield clickable result for regular token or nft collection search term', () => {
     // **Action**: Click on token from results menu
     // **Expectation**: Land on Token Details page of that token, with all info filled in
+
+    // Search for uni token by name
+    cy.get('[data-cy="search-bar-input"]').last().clear().type('uni')
+    cy.get('[data-cy="searchbar-token-row-UNI"]').click()
+
+    cy.get('div').contains('Uniswap').should('exist')
+    // Stats should have: TVL, 24H Volume, 52W low, 52W high
+    cy.get(getTestSelector('token-details-stats')).should('exist')
+    cy.get(getTestSelector('token-details-stats')).within(() => {
+      cy.get('[data-cy="tvl"]').should('include.text', '$')
+      cy.get('[data-cy="volume-24h"]').should('include.text', '$')
+      cy.get('[data-cy="52w-low"]').should('include.text', '$')
+      cy.get('[data-cy="52w-high"]').should('include.text', '$')
+    })
+
+    // About section should have description of token
+    cy.get(getTestSelector('token-details-about-section')).should('exist')
+    cy.contains('UNI is the governance token for Uniswap').should('exist')
   })
 
   it('should show blocked badge when blocked token is searched for', () => {
-    /// **Action**: Search for blocked token
-    // **Expectation**: Token should show in results, but have a blocked badge next to it (
+    cy.get('[data-cy="magnifying-icon"]')
+      .parent()
+      .then(($navIcon) => {
+        $navIcon.click()
+      })
+    // Search for mTSLA, which is a blocked token.
+    cy.get('[data-cy="search-bar-input"]').last().clear().type('mtsla')
+    cy.get('[data-cy="searchbar-token-row-mTSLA"]').find('[data-cy="blocked-icon"]').should('exist')
   })
 })
