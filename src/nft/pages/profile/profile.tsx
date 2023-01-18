@@ -78,15 +78,16 @@ const ProfileContent = () => {
   }, [account, resetSellAssets, setSellPageState, clearCollectionFilters])
   const cartExpanded = useBag((state) => state.bagExpanded)
   const isNftListV2 = useNftListV2Flag() === NftListV2Variant.Enabled
+  const isListingNfts = sellPageState === ProfilePageStateType.LISTING
 
   const pageWidthAdjustment =
-    cartExpanded && (!isNftListV2 || sellPageState === ProfilePageStateType.VIEWING)
+    cartExpanded && (!isNftListV2 || !isListingNfts)
       ? SHOPPING_BAG_WIDTH
       : isNftListV2 && sellPageState !== ProfilePageStateType.VIEWING
       ? LIST_PAGE_MARGIN * 2
       : 0
 
-  const pageMargin = isNftListV2 && sellPageState !== ProfilePageStateType.VIEWING ? LIST_PAGE_MARGIN : 0
+  const pageMargin = isNftListV2 && isListingNfts ? LIST_PAGE_MARGIN : 0
 
   return (
     <Trace page={InterfacePageName.NFT_PROFILE_PAGE} shouldLogImpression>
@@ -96,7 +97,7 @@ const ProfileContent = () => {
         </Head> */}
         {account ? (
           <LoadedAccountPage pageWidthAdjustment={pageWidthAdjustment} pageMargin={pageMargin}>
-            {sellPageState === ProfilePageStateType.VIEWING ? <ProfilePage /> : <ListPage />}
+            {!isListingNfts ? <ProfilePage /> : <ListPage />}
           </LoadedAccountPage>
         ) : (
           <Center>
