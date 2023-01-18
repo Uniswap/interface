@@ -14,8 +14,7 @@ import { Suspense, useEffect, useRef } from 'react'
 import { useToggleWalletModal } from 'state/application/hooks'
 
 import * as styles from './profile.css'
-
-export const LIST_PAGE_MARGIN = 156
+import { LIST_PAGE_MARGIN } from './shared'
 
 const SHOPPING_BAG_WIDTH = 360
 
