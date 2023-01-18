@@ -186,7 +186,7 @@ export default function TokenDetails({
             <BreadcrumbNavLink to={`/tokens/${chain.toLowerCase()}`}>
               <ArrowLeft data-testid="token-details-return-button" size={14} /> Tokens
             </BreadcrumbNavLink>
-            <TokenInfoContainer>
+            <TokenInfoContainer data-testid="token-info-container">
               <TokenNameCell>
                 <LogoContainer>
                   <CurrencyLogo currency={token} size="32px" />
