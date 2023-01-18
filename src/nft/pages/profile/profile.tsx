@@ -3,6 +3,7 @@ import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { ButtonPrimary } from 'components/Button'
 import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
+import { XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
 import { ListPage } from 'nft/components/profile/list/ListPage'
 import { ProfilePage } from 'nft/components/profile/view/ProfilePage'
 import { ProfilePageLoadingSkeleton } from 'nft/components/profile/view/ProfilePageLoadingSkeleton'
@@ -14,8 +15,6 @@ import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
 
 import { LIST_PAGE_MARGIN } from './shared'
-
-const SHOPPING_BAG_WIDTH = 360
 
 const ProfilePageWrapper = styled.div`
   height: 100%;
@@ -31,7 +30,7 @@ const LoadedAccountPage = styled.div<{ cartExpanded: boolean; isOnV2ListPage: bo
   width: calc(
     100% -
       ${({ cartExpanded, isOnV2ListPage }) =>
-        isOnV2ListPage ? LIST_PAGE_MARGIN * 2 : cartExpanded ? SHOPPING_BAG_WIDTH : 0}px
+        isOnV2ListPage ? LIST_PAGE_MARGIN * 2 : cartExpanded ? XXXL_BAG_WIDTH : 0}px
   );
   margin: 0px ${({ isOnV2ListPage }) => (isOnV2ListPage ? LIST_PAGE_MARGIN : 0)}px;
 `
