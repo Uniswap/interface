@@ -3,7 +3,11 @@ import {
   BottomTabBarProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs'
-import { createDrawerNavigator, DrawerContentComponentProps } from '@react-navigation/drawer'
+import {
+  createDrawerNavigator,
+  DrawerContentComponentProps,
+  DrawerNavigationOptions,
+} from '@react-navigation/drawer'
 import { HeaderTitleProps } from '@react-navigation/elements'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createStackNavigator } from '@react-navigation/stack'
@@ -91,16 +95,16 @@ const SettingsStack = createNativeStackNavigator<SettingsStackParamList>()
 
 const Drawer = createDrawerNavigator()
 
-const NullComponent = () => {
+const NullComponent = (): null => {
   return null
 }
 
-const renderTabBar = (props: BottomTabBarProps) => (
+const renderTabBar = (props: BottomTabBarProps): JSX.Element => (
   <Box bottom={0} left={0} position="absolute" right={0}>
     <BottomTabBar {...props} />
   </Box>
 )
-const renderTabBarWalletIcon = ({ focused }: { focused: boolean }) => (
+const renderTabBarWalletIcon = ({ focused }: { focused: boolean }): JSX.Element => (
   <TabBarButton
     Icon={WalletIcon}
     IconFilled={WalletIconFilled}
@@ -109,7 +113,7 @@ const renderTabBarWalletIcon = ({ focused }: { focused: boolean }) => (
     pl="lg"
   />
 )
-const renderTabBarSearchIcon = ({ focused }: { focused: boolean }) => (
+const renderTabBarSearchIcon = ({ focused }: { focused: boolean }): JSX.Element => (
   <TabBarButton
     Icon={SearchIcon}
     IconFilled={SearchIconFocused}
@@ -118,9 +122,9 @@ const renderTabBarSearchIcon = ({ focused }: { focused: boolean }) => (
     pr="lg"
   />
 )
-const renderSwapTabBarButton = () => <SwapTabBarButton />
+const renderSwapTabBarButton = (): JSX.Element => <SwapTabBarButton />
 
-function TabNavigator() {
+function TabNavigator(): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
   useBiometricCheck()
@@ -180,7 +184,7 @@ function TabNavigator() {
   )
 }
 
-function SettingsStackGroup() {
+function SettingsStackGroup(): JSX.Element {
   return (
     <SettingsStack.Navigator screenOptions={navOptions.noHeader}>
       <SettingsStack.Screen component={SettingsScreen} name={Screens.Settings} />
@@ -214,11 +218,11 @@ function SettingsStackGroup() {
   )
 }
 
-const renderAccountDrawerContent = (props: DrawerContentComponentProps) => (
+const renderAccountDrawerContent = (props: DrawerContentComponentProps): JSX.Element => (
   <AccountDrawer {...props} />
 )
 
-export function DrawerNavigator() {
+export function DrawerNavigator(): JSX.Element {
   return (
     <Drawer.Navigator
       // useLegacyImplementation seems to fix a bug with the drawer sometimes opening or
@@ -236,7 +240,7 @@ export function DrawerNavigator() {
       <Drawer.Screen
         component={AppStackNavigator}
         name={Stacks.AppStack}
-        options={() => ({
+        options={(): DrawerNavigationOptions => ({
           swipeEnabled: getDrawerEnabled(),
           swipeEdgeWidth: SWIPE_WIDTH,
         })}
@@ -245,7 +249,7 @@ export function DrawerNavigator() {
   )
 }
 
-function getDrawerEnabled() {
+function getDrawerEnabled(): boolean {
   if (!navigationRef.isReady()) {
     return false
   }
@@ -254,7 +258,7 @@ function getDrawerEnabled() {
   return routeName ? DRAWER_ENABLED_SCREENS.includes(routeName) : false
 }
 
-export function HomeStackNavigator() {
+export function HomeStackNavigator(): JSX.Element {
   return (
     <HomeStack.Navigator
       initialRouteName={Screens.Home}
@@ -266,7 +270,7 @@ export function HomeStackNavigator() {
   )
 }
 
-export function ExploreStackNavigator() {
+export function ExploreStackNavigator(): JSX.Element {
   return (
     <ExploreStack.Navigator
       initialRouteName={Screens.Explore}
@@ -278,10 +282,10 @@ export function ExploreStackNavigator() {
   )
 }
 
-const renderHeaderTitle = (props: HeaderTitleProps) => <OnboardingHeader {...props} />
-const renderEmptyBackImage = () => <></>
+const renderHeaderTitle = (props: HeaderTitleProps): JSX.Element => <OnboardingHeader {...props} />
+const renderEmptyBackImage = (): JSX.Element => <></>
 
-export function OnboardingStackNavigator() {
+export function OnboardingStackNavigator(): JSX.Element {
   const theme = useAppTheme()
   const insets = useSafeAreaInsets()
 
@@ -375,7 +379,7 @@ export function OnboardingStackNavigator() {
   )
 }
 
-export function AppStackNavigator() {
+export function AppStackNavigator(): JSX.Element {
   const finishedOnboarding = useAppSelector(selectFinishedOnboarding)
 
   // preload home screen queries before `finishedOnboarding` is truthy

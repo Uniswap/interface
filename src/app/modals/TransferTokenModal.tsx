@@ -5,12 +5,12 @@ import { closeModal, selectModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { TransferFlow } from 'src/features/transactions/transfer/TransferFlow'
 
-export function TransferTokenModal() {
+export function TransferTokenModal(): JSX.Element {
   const theme = useAppTheme()
   const appDispatch = useAppDispatch()
   const modalState = useAppSelector(selectModalState(ModalName.Send))
 
-  const onClose = () => {
+  const onClose = (): void => {
     appDispatch(closeModal({ name: ModalName.Send }))
   }
 

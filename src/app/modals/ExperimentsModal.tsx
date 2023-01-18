@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Action } from 'redux'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { Switch } from 'src/components/buttons/Switch'
@@ -23,7 +24,7 @@ import { closeModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useAsyncData } from 'src/utils/hooks'
 
-export function ExperimentsModal() {
+export function ExperimentsModal(): JSX.Element {
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
 
@@ -37,7 +38,7 @@ export function ExperimentsModal() {
         featureFlags['modal-color-test'] ? theme.colors.accentBranded : theme.colors.background1
       }
       name={ModalName.Experiments}
-      onClose={() => dispatch(closeModal({ name: ModalName.Experiments }))}>
+      onClose={(): Action => dispatch(closeModal({ name: ModalName.Experiments }))}>
       <Flex gap="lg" justifyContent="flex-start" pb="xl">
         <Flex>
           <Text color="textPrimary" px="lg">
@@ -51,7 +52,7 @@ export function ExperimentsModal() {
           <SectionHeader
             emoji="🏴"
             title="Feature Flags"
-            onResetPress={() => {
+            onResetPress={(): void => {
               if (!remoteConfig) return
               dispatch(resetFeatureFlagOverrides(remoteConfig.featureFlags))
             }}
@@ -72,7 +73,7 @@ export function ExperimentsModal() {
           <SectionHeader
             emoji="🧪"
             title="Experiments"
-            onResetPress={() => {
+            onResetPress={(): void => {
               dispatch(resetExperimentOverrides(remoteConfig?.experiments || {}))
             }}
           />
@@ -102,7 +103,7 @@ function SectionHeader({
   title: string
   emoji: string
   onResetPress: () => void
-}) {
+}): JSX.Element {
   return (
     <Flex
       row
@@ -134,7 +135,7 @@ function ExperimentRow({
   name: string
   localExperiments: ExperimentsMap
   remoteExperiments?: ExperimentsMap
-}) {
+}): JSX.Element {
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const [textInput, setTextInput] = useState<string | undefined>()
@@ -155,13 +156,13 @@ function ExperimentRow({
             placeholderTextColor={
               isExperimentOverridden ? theme.colors.accentAction : theme.colors.textPrimary
             }
-            onChangeText={(text) => setTextInput(text)}
+            onChangeText={(text): void => setTextInput(text)}
           />
           <Button
             emphasis={ButtonEmphasis.Secondary}
             label="Override"
             size={ButtonSize.Small}
-            onPress={() => {
+            onPress={(): void => {
               if (!textInput) return
               dispatch(addExperimentOverride({ name, variant: textInput }))
             }}
@@ -180,7 +181,7 @@ function FeatureFlagRow({
   name: string
   localFeatureFlags: FeatureFlagsMap
   remoteFeatureFlags?: FeatureFlagsMap
-}) {
+}): JSX.Element {
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const isExperimentOverridden = localFeatureFlags[name] !== remoteFeatureFlags?.[name]
@@ -191,7 +192,7 @@ function FeatureFlagRow({
       <Switch
         thumbColor={isExperimentOverridden ? theme.colors.accentAction : theme.colors.accentActive}
         value={localFeatureFlags[name] ?? false}
-        onValueChange={(newValue: boolean) => {
+        onValueChange={(newValue: boolean): void => {
           dispatch(addFeatureFlagOverride({ name, enabled: newValue }))
         }}
       />

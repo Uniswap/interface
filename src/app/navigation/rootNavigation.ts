@@ -9,7 +9,7 @@ export type RootNavigationArgs<RouteName extends keyof RootParamList> =
 
 export async function navigate<RouteName extends keyof RootParamList>(
   ...args: RootNavigationArgs<RouteName>
-) {
+): Promise<void> {
   const [routeName, params] = args
   if (!navigationRef.isReady()) {
     logger.error('rootNavigation', 'navigate', 'Navigator was called before it was initialized')
@@ -21,7 +21,7 @@ export async function navigate<RouteName extends keyof RootParamList>(
   navigationRef.navigate(routeName as never, params as never)
 }
 
-export async function goBack() {
+export async function goBack(): Promise<void> {
   if (!navigationRef.isReady()) {
     logger.error('rootNavigation', 'navigate', 'Navigator was called before it was initialized')
     return

@@ -47,13 +47,13 @@ import { iconSizes } from 'src/styles/sizing'
 import { setClipboard } from 'src/utils/clipboard'
 import { openSettings, openUri } from 'src/utils/linking'
 
-const onPressGetHelp = () => {
+const onPressGetHelp = (): void => {
   openUri(uniswapUrls.helpUrl)
 }
 
 const UNICON_SIZE = iconSizes.xxxl
 
-export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
+export function AccountDrawer({ navigation }: DrawerContentComponentProps): JSX.Element | null {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
@@ -103,15 +103,15 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     setPendingEditAddress(address)
   }, [])
 
-  const onPressEditCancel = () => {
+  const onPressEditCancel = (): void => {
     setShowEditAccountModal(false)
     setPendingEditAddress(null)
   }
 
-  const onPressRemoveCancel = () => {
+  const onPressRemoveCancel = (): void => {
     setPendingRemoveAccount(null)
   }
-  const onPressRemoveConfirm = () => {
+  const onPressRemoveConfirm = (): void => {
     if (!pendingRemoveAccount) return
     dispatch(
       editAccountActions.trigger({
@@ -133,15 +133,15 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     [navigation, dispatch]
   )
 
-  const onPressAddWallet = () => {
+  const onPressAddWallet = (): void => {
     setShowAddWalletModal(true)
   }
 
-  const onCloseAddWallet = () => {
+  const onCloseAddWallet = (): void => {
     setShowAddWalletModal(false)
   }
 
-  const onPressSettings = () => {
+  const onPressSettings = (): void => {
     navigation.navigate(Screens.SettingsStack, { screen: Screens.Settings })
   }
 
@@ -150,7 +150,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
   }, [navigation, activeAccount])
 
   const editAccountOptions = useMemo<MenuItemProp[]>(() => {
-    const onPressWalletSettings = () => {
+    const onPressWalletSettings = (): void => {
       setShowEditAccountModal(false)
       navigation.closeDrawer()
       if (!pendingEditAddress) return
@@ -160,14 +160,14 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
       })
     }
 
-    const onPressCopyAddress = () => {
+    const onPressCopyAddress = (): void => {
       if (!pendingEditAddress) return
       setClipboard(pendingEditAddress)
       dispatch(pushNotification({ type: AppNotificationType.Copied }))
       setShowEditAccountModal(false)
     }
 
-    const onPressRemove = () => {
+    const onPressRemove = (): void => {
       if (!pendingEditAddress) return
       const account = addressToAccount[pendingEditAddress]
       if (!account) return
@@ -236,7 +236,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
   ])
 
   const addWalletOptions = useMemo<MenuItemProp[]>(() => {
-    const onPressCreateNewWallet = () => {
+    const onPressCreateNewWallet = (): void => {
       // Clear any existing pending accounts first.
       dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
       dispatch(createAccountActions.trigger())
@@ -251,7 +251,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
       setShowAddWalletModal(false)
     }
 
-    const onPressAddViewOnlyWallet = () => {
+    const onPressAddViewOnlyWallet = (): void => {
       navigation.navigate(Screens.OnboardingStack, {
         screen: OnboardingScreens.WatchWallet,
         params: {
@@ -262,7 +262,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
       setShowAddWalletModal(false)
     }
 
-    const onPressImportWallet = () => {
+    const onPressImportWallet = (): void => {
       if (hasImportedSeedPhrase) {
         // Show warning modal that the only way to reimport seed phrase is to uninstall and reinstall app
         setShowUninstallToImportModal(true)
@@ -276,7 +276,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
       setShowAddWalletModal(false)
     }
 
-    const onPressRestore = async () => {
+    const onPressRestore = async (): Promise<void> => {
       const iCloudAvailable = await isICloudAvailable()
 
       if (!iCloudAvailable) {
@@ -430,7 +430,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
         isVisible={showEditAccountModal}
         name={ModalName.AccountEdit}
         options={editAccountOptions}
-        onClose={() => setShowEditAccountModal(false)}
+        onClose={(): void => setShowEditAccountModal(false)}
       />
       <ActionSheetModal
         isVisible={showAddWalletModal}
@@ -461,7 +461,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
           modalName={ModalName.ReimportUninstall}
           severity={WarningSeverity.None}
           title={t('Import a Wallet')}
-          onClose={() => setShowUninstallToImportModal(false)}
+          onClose={(): void => setShowUninstallToImportModal(false)}
         />
       )}
     </Screen>
@@ -478,7 +478,7 @@ function SettingsButton({
   Icon: React.FC<SvgProps>
   label: string
   onPress: () => void
-}) {
+}): JSX.Element {
   const theme = useAppTheme()
 
   return (

@@ -20,7 +20,7 @@ describe(AccountSwitcher, () => {
   it('renders correctly', () => {
     const tree = render(
       <AccountSwitcher
-        onClose={() => {
+        onClose={(): void => {
           return
         }}
       />,

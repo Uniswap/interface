@@ -23,7 +23,10 @@ import { Screens } from 'src/screens/Screens'
  * Utility hook to simplify navigating to Activity screen.
  * Preloads query needed to render transaction list.
  */
-export function useEagerActivityNavigation() {
+export function useEagerActivityNavigation(): {
+  preload: (address: string) => void
+  navigate: () => void
+} {
   const navigation = useAppStackNavigation()
   const [load] = useTransactionListLazyQuery()
 
@@ -47,7 +50,10 @@ export function useEagerActivityNavigation() {
  * Utility hook to simplify navigating to Activity screen.
  * Preloads query needed to render transaction list.
  */
-export function useEagerExternalProfileNavigation() {
+export function useEagerExternalProfileNavigation(): {
+  preload: (address: string) => void
+  navigate: (address: string) => void
+} {
   const navigation = useExploreStackNavigation()
 
   const [load] = useTransactionListLazyQuery()
@@ -67,7 +73,10 @@ export function useEagerExternalProfileNavigation() {
   return { preload, navigate }
 }
 
-export function useEagerExternalProfileRootNavigation() {
+export function useEagerExternalProfileRootNavigation(): {
+  preload: (address: string) => void
+  navigate: (address: string, callback: () => void) => void
+} {
   const [load] = useTransactionListLazyQuery()
 
   const preload = useCallback(
@@ -91,7 +100,7 @@ export function useEagerExternalProfileRootNavigation() {
 }
 
 /** Preloaded home screen queries that reload on active account change */
-export function usePreloadedHomeScreenQueries() {
+export function usePreloadedHomeScreenQueries(): void {
   const [loadPortfolioBalance] = usePortfolioBalanceLazyQuery()
   const [loadPortfolioBalances] = usePortfolioBalancesLazyQuery()
   const [loadTransactionHistory] = useTransactionListLazyQuery()
@@ -110,7 +119,7 @@ export function usePreloadedHomeScreenQueries() {
 }
 
 /** Set of queries that should be preloaded, but can wait for idle time. */
-export function useLowPriorityPreloadedQueries() {
+export function useLowPriorityPreloadedQueries(): void {
   // Explore screen
   const [loadExploreTokens] = useExploreTokensTabLazyQuery()
   const orderBy = useAppSelector(selectTokensOrderBy)
@@ -144,7 +153,7 @@ export function useLowPriorityPreloadedQueries() {
  * Inspired by how the navigation library checks if the the navigation object exists.
  * https://github.com/react-navigation/react-navigation/blob/d7032ba8bb6ae24030a47f0724b61b561132fca6/packages/core/src/useNavigation.tsx#L18
  */
-export function useIsPartOfNavigationTree() {
+export function useIsPartOfNavigationTree(): boolean {
   const root = useContext(NavigationContainerRefContext)
   const navigation = useContext(NavigationContext)
 

@@ -5,12 +5,12 @@ import { closeModal, selectModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { SwapFlow } from 'src/features/transactions/swap/SwapFlow'
 
-export function SwapModal() {
+export function SwapModal(): JSX.Element {
   const theme = useAppTheme()
   const appDispatch = useAppDispatch()
   const modalState = useAppSelector(selectModalState(ModalName.Swap))
 
-  const onClose = () => {
+  const onClose = (): void => {
     appDispatch(closeModal({ name: ModalName.Swap }))
   }
 

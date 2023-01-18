@@ -40,7 +40,7 @@ export const NavigationContainer: FC<Props> = ({ children, onReady }) => {
         ...DefaultTheme,
         colors: { ...DefaultTheme.colors, background: theme.colors.background0 },
       }}
-      onReady={() => {
+      onReady={(): void => {
         onReady(navigationRef)
         sendAnalyticsEvent(EventName.AppLoaded)
 
@@ -48,7 +48,7 @@ export const NavigationContainer: FC<Props> = ({ children, onReady }) => {
         const initialRoute = navigationRef.getCurrentRoute()?.name as AppScreen
         setRouteName(initialRoute)
       }}
-      onStateChange={() => {
+      onStateChange={(): void => {
         const previousRouteName = routeName
         const currentRouteName: AppScreen = navigationRef.getCurrentRoute()?.name as AppScreen
 
@@ -71,13 +71,13 @@ export const NavigationContainer: FC<Props> = ({ children, onReady }) => {
   )
 }
 
-export const useManageDeepLinks = (dispatch: Dispatch<AnyAction | AnyAction>) =>
+export const useManageDeepLinks = (dispatch: Dispatch<AnyAction | AnyAction>): void =>
   useEffect(() => {
-    const handleDeepLink = (payload: DeepLink) => dispatch(openDeepLink(payload))
+    const handleDeepLink = (payload: DeepLink): void => dispatch(openDeepLink(payload))
     const urlListener = Linking.addEventListener('url', (event: { url: string }) =>
       handleDeepLink({ url: event.url, coldStart: false })
     )
-    const handleDeepLinkColdStart = async () => {
+    const handleDeepLinkColdStart = async (): Promise<void> => {
       const url = await Linking.getInitialURL()
       if (url) handleDeepLink({ url, coldStart: true })
     }

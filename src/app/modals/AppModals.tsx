@@ -10,7 +10,7 @@ import { LockScreenModal } from 'src/features/authentication/LockScreenModal'
 import { FiatOnRampModal } from 'src/features/fiatOnRamp/FiatOnRampModal'
 import { ModalName } from 'src/features/telemetry/constants'
 
-export function AppModals() {
+export function AppModals(): JSX.Element {
   return (
     <>
       <LazyModalRenderer name={ModalName.Experiments}>

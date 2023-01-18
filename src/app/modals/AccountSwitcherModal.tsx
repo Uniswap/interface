@@ -3,6 +3,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import 'react-native-gesture-handler'
+import { Action } from 'redux'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import InformationIcon from 'src/assets/icons/i-icon.svg'
@@ -43,7 +44,7 @@ import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { setClipboard } from 'src/utils/clipboard'
 import { openSettings } from 'src/utils/linking'
 
-export function AccountSwitcherModal() {
+export function AccountSwitcherModal(): JSX.Element {
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
 
@@ -52,10 +53,10 @@ export function AccountSwitcherModal() {
       disableSwipe
       backgroundColor={theme.colors.background0}
       name={ModalName.AccountSwitcher}
-      onClose={() => dispatch(closeModal({ name: ModalName.AccountSwitcher }))}>
+      onClose={(): Action => dispatch(closeModal({ name: ModalName.AccountSwitcher }))}>
       <Screen edges={['bottom']}>
         <AccountSwitcher
-          onClose={() => {
+          onClose={(): void => {
             dispatch(closeModal({ name: ModalName.AccountSwitcher }))
           }}
         />
@@ -68,7 +69,7 @@ export function AccountSwitcherModal() {
  * Exported for testing only.
  * TODO [MOB-3961] Once testing works with the BottomSheetModal stop exporting this component.
  */
-export function AccountSwitcher({ onClose }: { onClose: () => void }) {
+export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Element | null {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
@@ -111,15 +112,15 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }) {
     setPendingEditAddress(address)
   }, [])
 
-  const onPressEditCancel = () => {
+  const onPressEditCancel = (): void => {
     setShowEditAccountModal(false)
     setPendingEditAddress(null)
   }
 
-  const onPressRemoveCancel = () => {
+  const onPressRemoveCancel = (): void => {
     setPendingRemoveAccount(null)
   }
-  const onPressRemoveConfirm = () => {
+  const onPressRemoveConfirm = (): void => {
     if (!pendingRemoveAccount) return
     dispatch(
       editAccountActions.trigger({
@@ -141,21 +142,21 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }) {
     [dispatch]
   )
 
-  const onPressAddWallet = () => {
+  const onPressAddWallet = (): void => {
     setShowAddWalletModal(true)
   }
 
-  const onCloseAddWallet = () => {
+  const onCloseAddWallet = (): void => {
     setShowAddWalletModal(false)
   }
 
-  const onPressSettings = () => {
+  const onPressSettings = (): void => {
     navigate(Screens.SettingsStack, { screen: Screens.Settings })
     onClose()
   }
 
   const editAccountOptions = useMemo<MenuItemProp[]>(() => {
-    const onPressWalletSettings = () => {
+    const onPressWalletSettings = (): void => {
       setShowEditAccountModal(false)
       if (!pendingEditAddress) return
       navigate(Screens.SettingsStack, {
@@ -164,14 +165,14 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }) {
       })
     }
 
-    const onPressCopyAddress = () => {
+    const onPressCopyAddress = (): void => {
       if (!pendingEditAddress) return
       setClipboard(pendingEditAddress)
       dispatch(pushNotification({ type: AppNotificationType.Copied }))
       setShowEditAccountModal(false)
     }
 
-    const onPressRemove = () => {
+    const onPressRemove = (): void => {
       if (!pendingEditAddress) return
       const account = addressToAccount[pendingEditAddress]
       if (!account) return
@@ -239,7 +240,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }) {
   ])
 
   const addWalletOptions = useMemo<MenuItemProp[]>(() => {
-    const onPressCreateNewWallet = () => {
+    const onPressCreateNewWallet = (): void => {
       // Clear any existing pending accounts first.
       dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
       dispatch(createAccountActions.trigger())
@@ -255,7 +256,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }) {
       onClose()
     }
 
-    const onPressAddViewOnlyWallet = () => {
+    const onPressAddViewOnlyWallet = (): void => {
       navigate(Screens.OnboardingStack, {
         screen: OnboardingScreens.WatchWallet,
         params: {
@@ -267,7 +268,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }) {
       onClose()
     }
 
-    const onPressImportWallet = () => {
+    const onPressImportWallet = (): void => {
       if (hasImportedSeedPhrase) {
         // Show warning modal that the only way to reimport seed phrase is to uninstall and reinstall app
         setShowUninstallToImportModal(true)
@@ -283,7 +284,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }) {
       onClose()
     }
 
-    const onPressRestore = async () => {
+    const onPressRestore = async (): Promise<void> => {
       const iCloudAvailable = await isICloudAvailable()
 
       if (!iCloudAvailable) {
@@ -413,7 +414,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }) {
         isVisible={showEditAccountModal}
         name={ModalName.AccountEdit}
         options={editAccountOptions}
-        onClose={() => setShowEditAccountModal(false)}
+        onClose={(): void => setShowEditAccountModal(false)}
       />
       <ActionSheetModal
         isVisible={showAddWalletModal}
@@ -444,7 +445,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }) {
           modalName={ModalName.ReimportUninstall}
           severity={WarningSeverity.None}
           title={t('Import a Wallet')}
-          onClose={() => setShowUninstallToImportModal(false)}
+          onClose={(): void => setShowUninstallToImportModal(false)}
         />
       )}
     </Box>
