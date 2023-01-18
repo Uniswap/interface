@@ -81,13 +81,13 @@ export default function StatsSection(props: StatsSectionProps) {
         <TokenStatsSection>
           <StatPair>
             <Stat
-              testId="tvl"
+              dataCy="tvl"
               value={TVL}
               description={HEADER_DESCRIPTIONS[TokenSortMethod.TOTAL_VALUE_LOCKED]}
               title={<Trans>TVL</Trans>}
             />
             <Stat
-              testId="volume-24h"
+              dataCy="volume-24h"
               value={volume24H}
               description={
                 <Trans>
