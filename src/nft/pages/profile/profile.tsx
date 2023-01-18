@@ -92,9 +92,6 @@ const ProfileContent = () => {
   return (
     <Trace page={InterfacePageName.NFT_PROFILE_PAGE} shouldLogImpression>
       <ProfilePageWrapper>
-        {/* <Head> TODO: figure out metadata tagging
-          <title>Genie | Sell</title>
-        </Head> */}
         {account ? (
           <LoadedAccountPage pageWidthAdjustment={pageWidthAdjustment} pageMargin={pageMargin}>
             {!isListingNfts ? <ProfilePage /> : <ListPage />}
