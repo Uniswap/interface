@@ -1,0 +1,56 @@
+{
+  "name": "Popular Goerli Tokens",
+  "timestamp": "2023-01-18T08:10:26.867Z",
+  "version": {
+    "major": 0,
+    "minor": 1,
+    "patch": 0
+  },
+  "tags": {},
+  "logoURI": "ipfs://QmNa8mQkrNKp1WEEeGjFezDmDeodkWRevGFN8JCV7b4Xir",
+  "keywords": [
+    "test"
+  ],
+  "tokens": [
+    {
+      "chainId": 5,
+      "address": "0xcc7bb2d219a0fc08033e130629c2b854b7ba9195",
+      "name": "Zeta",
+      "symbol": "ZETA",
+      "decimals": 18,
+      "logoURI": "https://assets.coingecko.com/coins/images/18692/large/LOGO1_%287%29.png?1635230502"
+    },
+    {
+      "chainId": 5,
+      "address": "0x5a94dc6cc85fda49d8e9a8b85dde8629025c42be",
+      "name": "Georli TestNet Bit Token",
+      "symbol": "BIT",
+      "decimals": 18,
+      "logoURI": "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1A4b46696b2bB4794Eb3D4c26f1c55F9170fa4C5/logo.png"
+    },
+    {
+      "chainId": 5,
+      "address": "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
+      "name": "Wrapped Ether",
+      "symbol": "WETH",
+      "decimals": 18,
+      "logoURI": "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+    },
+    {
+      "chainId": 5,
+      "address": "0x9c556b18d2370d4c44f3b3153d340d9abfd8d995",
+      "name": "Wrapped Bitcoin",
+      "symbol": "WBTC",
+      "decimals": 8,
+      "logoURI": "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png"
+    },
+    {
+      "chainId": 5,
+      "address": "0x242aa4858284e53d8b657e12a610fb5f03043cfa",
+      "name": "Mocked USDT",
+      "symbol": "USDT",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"
+    }
+  ]
+}
