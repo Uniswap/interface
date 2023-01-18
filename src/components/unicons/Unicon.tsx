@@ -41,7 +41,7 @@ const GradientBlur = ({
   gradientStart: Color
   gradientEnd: Color
   blurColor: Color
-}) => {
+}): JSX.Element => {
   return (
     <Group transform={[{ scale: size / ORIGINAL_SVG_SIZE }]}>
       <Rect height={ORIGINAL_SVG_SIZE} width={ORIGINAL_SVG_SIZE} x={0} y={0}>
@@ -70,7 +70,7 @@ function UniconMask({
   size: number
   attributeData: UniconAttributeData
   overlay?: boolean
-}) {
+}): JSX.Element {
   return (
     <Group
       blendMode={overlay ? 'multiply' : 'xor'}
@@ -97,7 +97,7 @@ function UniconSvg({
   attributeIndices: UniconAttributesToIndices
   size: number
   lightModeOverlay?: boolean
-}) {
+}): JSX.Element | null {
   // UniconSvg is used in the Unicon component or for testing specific shapes/containers
   // UniconSvg canvases will grow to fit their container
   // For best results, wrap in a Box with width and height set to size
@@ -145,7 +145,7 @@ interface Props {
 
 export const Unicon = memo(_Unicon)
 
-export function _Unicon({ address, size, randomSeed = 0 }: Props) {
+export function _Unicon({ address, size, randomSeed = 0 }: Props): JSX.Element | null {
   // TODO(MOB-2992): move this into a mandatory boolean prop for the Unicon component (e.g. `lightModeOverlay`) so that any consumer of the Unicon component has to decide whether or not to show the light mode overlay (presumably based on whether the current theme is light or dark)
   const isLightMode = useColorScheme() === 'light'
 

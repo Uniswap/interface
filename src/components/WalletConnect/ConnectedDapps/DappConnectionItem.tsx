@@ -21,7 +21,7 @@ export function DappConnectionItem({
 }: {
   wrapped: ListRenderItemInfo<WalletConnectSession>
   onPressChangeNetwork: () => void
-}) {
+}): JSX.Element {
   const theme = useAppTheme()
   const isDarkMode = useColorScheme() === 'dark'
   const { t } = useTranslation()
@@ -38,7 +38,7 @@ export function DappConnectionItem({
       mb="sm"
       p="md"
       width="48%">
-      <TouchableArea name={ElementName.WCOpenDapp} onPress={() => openUri(dapp.url)}>
+      <TouchableArea name={ElementName.WCOpenDapp} onPress={(): Promise<void> => openUri(dapp.url)}>
         <Flex centered gap="xs">
           {dapp.icon ? (
             <Flex>

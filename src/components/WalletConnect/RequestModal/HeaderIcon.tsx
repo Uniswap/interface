@@ -17,7 +17,7 @@ export function HeaderIcon({
   dapp: DappInfo
   permitCurrencyInfo?: CurrencyInfo | null
   showChain?: boolean
-}) {
+}): JSX.Element {
   if (permitCurrencyInfo) {
     return <CurrencyLogo currencyInfo={permitCurrencyInfo} />
   }

@@ -1,3 +1,4 @@
+import { Currency } from '@uniswap/sdk-core'
 import { filter } from 'src/components/TokenSelector/filter'
 import { TokenOption } from 'src/components/TokenSelector/types'
 import { ChainId } from 'src/constants/chains'
@@ -44,7 +45,7 @@ const filterAndGetCurrencies = (
   currencies: TokenOption[],
   chainFilter: ChainId | null,
   searchFilter?: string
-) => filter(currencies, chainFilter, searchFilter).map((cm) => cm.currencyInfo.currency)
+): Currency[] => filter(currencies, chainFilter, searchFilter).map((cm) => cm.currencyInfo.currency)
 
 describe(filter, () => {
   it('returns the entire input flattened if chainFilter and searchFilter are null', () => {

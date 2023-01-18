@@ -16,12 +16,12 @@ type InfoButtonProps = {
 } & SpacingProps<Theme> &
   SpacingShorthandProps<Theme>
 
-export function TooltipInfoButton({ size, content, ...rest }: InfoButtonProps) {
+export function TooltipInfoButton({ size, content, ...rest }: InfoButtonProps): JSX.Element {
   const theme = useAppTheme()
   const [showModal, setShowModal] = useState(false)
   return (
     <>
-      <TouchableArea onPress={() => setShowModal(true)} {...rest}>
+      <TouchableArea onPress={(): void => setShowModal(true)} {...rest}>
         <InfoCircle
           color={theme.colors.textSecondary}
           height={size ?? DEFAULT_ICON_SIZE}
@@ -32,7 +32,7 @@ export function TooltipInfoButton({ size, content, ...rest }: InfoButtonProps) {
         <BottomSheetDetachedModal
           backgroundColor={theme.colors.background1}
           name={ModalName.TooltipContent}
-          onClose={() => setShowModal(false)}>
+          onClose={(): void => setShowModal(false)}>
           <Text p="md" variant="bodyLarge">
             {content}
           </Text>

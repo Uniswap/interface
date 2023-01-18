@@ -17,7 +17,7 @@ type ConnectedDappsProps = {
   backButton?: ReactElement
 }
 
-export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps) {
+export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
@@ -47,12 +47,12 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
           <FlatList
             columnWrapperStyle={ColumnStyle.base}
             data={sessions}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item): string => item.id}
             numColumns={2}
-            renderItem={(item) => (
+            renderItem={(item): JSX.Element => (
               <DappConnectionItem
                 wrapped={item}
-                onPressChangeNetwork={() => {
+                onPressChangeNetwork={(): void => {
                   setSelectedSession(item.item)
                 }}
               />
@@ -72,7 +72,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
       {selectedSession && (
         <DappSwitchNetworkModal
           selectedSession={selectedSession}
-          onClose={() => setSelectedSession(undefined)}
+          onClose={(): void => setSelectedSession(undefined)}
         />
       )}
     </>

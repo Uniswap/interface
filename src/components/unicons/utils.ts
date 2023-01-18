@@ -15,7 +15,7 @@ import {
 
 const NUM_CHARS_TO_USE_PER_ATTRIBUTE = 2
 
-export const isEthAddress = (address: string) => {
+export const isEthAddress = (address: string): boolean => {
   return address.startsWith('0x') && isAddress(address.toLowerCase())
 }
 

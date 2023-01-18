@@ -18,7 +18,7 @@ export const PendingConnectionSwitchAccountModal = ({
   activeAccount,
   onPressAccount,
   onClose,
-}: Props) => {
+}: Props): JSX.Element => {
   const { t } = useTranslation()
   const signerAccounts = useSignerAccounts()
 

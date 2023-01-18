@@ -14,7 +14,7 @@ export function HeaderText({
   request: WalletConnectRequest
   permitAmount?: number
   permitCurrency?: Currency | null
-}) {
+}): JSX.Element {
   const { t } = useTranslation()
   const { dapp, type: method } = request
 
@@ -41,7 +41,7 @@ export function HeaderText({
     )
   }
 
-  const getReadableMethodName = (ethMethod: EthMethod) => {
+  const getReadableMethodName = (ethMethod: EthMethod): string => {
     switch (ethMethod) {
       case EthMethod.PersonalSign:
       case EthMethod.EthSign:

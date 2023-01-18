@@ -18,7 +18,7 @@ export function ClientDetails({
 }: {
   request: WalletConnectRequest
   permitInfo?: PermitInfo
-}) {
+}): JSX.Element {
   const { dapp } = request
   const theme = useAppTheme()
 

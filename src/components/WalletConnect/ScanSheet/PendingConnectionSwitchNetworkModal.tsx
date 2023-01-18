@@ -22,7 +22,7 @@ export const PendingConnectionSwitchNetworkModal = ({
   selectedChainId,
   onPressChain,
   onClose,
-}: Props) => {
+}: Props): JSX.Element => {
   const activeChains = useActiveChainIds()
   const theme = useAppTheme()
   const { t } = useTranslation()

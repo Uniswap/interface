@@ -16,7 +16,7 @@ export default function WarningIcon({
   safetyLevel,
   strokeColorOverride,
   ...rest
-}: Props & SvgProps) {
+}: Props & SvgProps): JSX.Element | null {
   const colorKey = useTokenSafetyLevelColors(safetyLevel)
   const theme = useAppTheme()
   if (safetyLevel === SafetyLevel.MediumWarning || safetyLevel === SafetyLevel.StrongWarning) {

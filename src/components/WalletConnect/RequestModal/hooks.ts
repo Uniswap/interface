@@ -16,7 +16,7 @@ export function useHasSufficientFunds({
   chainId?: ChainId
   gasFeeInfo?: TransactionGasFeeInfo
   value?: string
-}) {
+}): boolean {
   const nativeCurrency = NativeCurrency.onChain(chainId || ChainId.Mainnet)
   const { balance: nativeBalance } = useOnChainNativeCurrencyBalance(
     chainId ?? ChainId.Mainnet,

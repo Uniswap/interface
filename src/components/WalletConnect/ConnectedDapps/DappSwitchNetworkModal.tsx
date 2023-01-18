@@ -17,7 +17,10 @@ interface DappSwitchNetworkModalProps {
   onClose: () => void
 }
 
-export function DappSwitchNetworkModal({ selectedSession, onClose }: DappSwitchNetworkModalProps) {
+export function DappSwitchNetworkModal({
+  selectedSession,
+  onClose,
+}: DappSwitchNetworkModalProps): JSX.Element {
   const { t } = useTranslation()
 
   const onPress = useCallback(
@@ -40,7 +43,7 @@ export function DappSwitchNetworkModal({ selectedSession, onClose }: DappSwitchN
       networkOptions.concat([
         {
           key: ElementName.Disconnect,
-          onPress: () => {
+          onPress: (): void => {
             notificationAsync()
             disconnectFromApp(selectedSession.id)
             onClose()

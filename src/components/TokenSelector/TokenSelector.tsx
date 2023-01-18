@@ -31,7 +31,7 @@ function _TokenSelector({
   otherCurrency,
   onBack,
   variation,
-}: TokenSelectorProps) {
+}: TokenSelectorProps): JSX.Element {
   const { onChangeChainFilter, onChangeText, searchFilter, chainFilter } = useFilterCallbacks(
     otherCurrency?.chainId ?? null
   )

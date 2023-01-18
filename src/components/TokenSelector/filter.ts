@@ -16,25 +16,41 @@ const searchOptions: Fuse.IFuseOptions<TokenOption> = {
   useExtendedSearch: true,
 }
 
-const getChainSearchPattern = (chain: ChainId | null) =>
+const getChainSearchPattern = (
+  chain: ChainId | null
+): {
+  'currencyInfo.currency.chainId': string
+} | null =>
   chain
     ? // exact match chain
       { 'currencyInfo.currency.chainId': `=${chain}` }
     : null
 
-const getAddressSearchPattern = (addressPrefix?: string) =>
+const getAddressSearchPattern = (
+  addressPrefix?: string
+): {
+  'currencyInfo.currency.address': string
+} | null =>
   addressPrefix && addressPrefix.startsWith('0x') && addressPrefix.length > 5
     ? // prefix-exact match address
       { 'currencyInfo.currency.address': `^${addressPrefix}` }
     : null
 
-const getSymbolSearchPattern = (symbol?: string) =>
+const getSymbolSearchPattern = (
+  symbol?: string
+): {
+  'currencyInfo.currency.symbol': string
+} | null =>
   symbol
     ? // include-match symbol
       { 'currencyInfo.currency.symbol': `'${symbol}` }
     : null
 
-const getNameSearchPattern = (name?: string) =>
+const getNameSearchPattern = (
+  name?: string
+): {
+  'currencyInfo.currency.name': string
+} | null =>
   name
     ? // include-match name
       { 'currencyInfo.currency.name': `'${name}` }

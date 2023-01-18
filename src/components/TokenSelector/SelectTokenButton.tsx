@@ -21,7 +21,7 @@ export function SelectTokenButton({
   showNonZeroBalancesOnly,
   selectedCurrencyInfo,
   onPress,
-}: SelectTokenButtonProps) {
+}: SelectTokenButtonProps): JSX.Element {
   const { t } = useTranslation()
   const theme = useTheme<Theme>()
 

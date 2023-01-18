@@ -50,7 +50,7 @@ interface Props {
   request: SignRequest | TransactionRequest
 }
 
-const isPotentiallyUnsafe = (request: WalletConnectRequest) =>
+const isPotentiallyUnsafe = (request: WalletConnectRequest): boolean =>
   request.type !== EthMethod.PersonalSign
 
 const methodCostsGas = (request: WalletConnectRequest): request is TransactionRequest =>
@@ -91,7 +91,7 @@ const VALID_REQUEST_TYPES = [
 function SectionContainer({
   children,
   style,
-}: PropsWithChildren<{ style?: StyleProp<ViewStyle> }>) {
+}: PropsWithChildren<{ style?: StyleProp<ViewStyle> }>): JSX.Element | null {
   return children ? (
     <Box p="md" style={style}>
       {children}
@@ -104,7 +104,7 @@ const spacerProps: ComponentProps<typeof Box> = {
   borderBottomWidth: 1,
 }
 
-export function WalletConnectRequestModal({ onClose, request }: Props) {
+export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Element | null {
   const theme = useAppTheme()
   const netInfo = useNetInfo()
   const chainId = toSupportedChainId(request.dapp.chain_id) ?? undefined
@@ -129,7 +129,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props) {
 
   const { isBlocked, isBlockedLoading } = useIsBlocked(request.account)
 
-  const checkConfirmEnabled = () => {
+  const checkConfirmEnabled = (): boolean => {
     if (!netInfo.isInternetReachable) return false
 
     if (!signerAccount) return false
@@ -153,7 +153,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props) {
    */
   const rejectOnCloseRef = useRef(true)
 
-  const onReject = () => {
+  const onReject = (): void => {
     rejectRequest(request.internalId)
     rejectOnCloseRef.current = false
 
@@ -171,7 +171,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props) {
     onClose()
   }
 
-  const onConfirm = async () => {
+  const onConfirm = async (): Promise<void> => {
     if (!confirmEnabled || !signerAccount) return
     if (
       request.type === EthMethod.EthSignTransaction ||
@@ -224,7 +224,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props) {
     return null
   }
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     if (rejectOnCloseRef.current) {
       onReject()
     } else {
@@ -305,7 +305,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props) {
               label={isTransactionRequest(request) ? t('Accept') : t('Sign')}
               name={ElementName.Confirm}
               size={ButtonSize.Medium}
-              onPress={() => {
+              onPress={(): void => {
                 if (requiredForTransactions) {
                   actionButtonTrigger()
                 } else {
@@ -328,7 +328,7 @@ function WarningSection({
   request: WalletConnectRequest
   showUnsafeWarning: boolean
   isBlockedAddress: boolean
-}) {
+}): JSX.Element | null {
   const theme = useAppTheme()
   const { t } = useTranslation()
 

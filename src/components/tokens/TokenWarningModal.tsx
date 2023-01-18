@@ -18,7 +18,7 @@ import { opacify } from 'src/utils/colors'
 import { currencyIdToAddress, currencyIdToChain } from 'src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink, openUri } from 'src/utils/linking'
 
-function getTokenSafetyBodyText(safetyLevel: NullUndefined<SafetyLevel>, t: TFunction) {
+function getTokenSafetyBodyText(safetyLevel: NullUndefined<SafetyLevel>, t: TFunction): string {
   switch (safetyLevel) {
     case SafetyLevel.MediumWarning:
       return t(
@@ -54,7 +54,7 @@ export default function TokenWarningModal({
   disableAccept,
   onClose,
   onAccept,
-}: Props) {
+}: Props): JSX.Element | null {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const warningColor = useTokenSafetyLevelColors(safetyLevel)
@@ -69,7 +69,7 @@ export default function TokenWarningModal({
 
   const closeButtonText = hideAcceptButton ? t('Close') : t('Back')
 
-  const onPressLearnMore = () => {
+  const onPressLearnMore = (): void => {
     openUri(TOKEN_WARNING_HELP_PAGE_URL)
   }
 
@@ -107,7 +107,7 @@ export default function TokenWarningModal({
           mx="xxl"
           px="sm"
           py="xs"
-          onPress={() => openUri(explorerLink)}>
+          onPress={(): Promise<void> => openUri(explorerLink)}>
           <Text
             color="accentActive"
             ellipsizeMode="tail"
@@ -141,7 +141,7 @@ export default function TokenWarningModal({
   )
 }
 
-function getButtonEmphasis(safetyLevel: NullUndefined<SafetyLevel>) {
+function getButtonEmphasis(safetyLevel: NullUndefined<SafetyLevel>): ButtonEmphasis | undefined {
   switch (safetyLevel) {
     case SafetyLevel.MediumWarning:
       return ButtonEmphasis.Warning

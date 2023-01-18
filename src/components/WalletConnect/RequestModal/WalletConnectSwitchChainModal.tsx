@@ -25,7 +25,7 @@ const spacerProps: ComponentProps<typeof Box> = {
   borderBottomWidth: 1,
 }
 
-export function WalletConnectSwitchChainModal({ onClose, request }: Props) {
+export function WalletConnectSwitchChainModal({ onClose, request }: Props): JSX.Element | null {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
@@ -42,19 +42,19 @@ export function WalletConnectSwitchChainModal({ onClose, request }: Props) {
   const newChainName = CHAIN_INFO[newChainId].label
   const { dapp } = request
 
-  const onReject = () => {
+  const onReject = (): void => {
     rejectRequest(request.internalId)
     rejectOnCloseRef.current = false
     onClose()
   }
 
-  const onConfirm = async () => {
+  const onConfirm = async (): Promise<void> => {
     confirmSwitchChainRequest(request.internalId)
     rejectOnCloseRef.current = false
     onClose()
   }
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     if (rejectOnCloseRef.current) {
       onReject()
     } else {

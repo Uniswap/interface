@@ -22,7 +22,7 @@ interface NetworkFilterProps {
   onPressChain: (chainId: ChainId | null) => void
 }
 
-export function NetworkFilter({ selectedChain, onPressChain }: NetworkFilterProps) {
+export function NetworkFilter({ selectedChain, onPressChain }: NetworkFilterProps): JSX.Element {
   const theme = useAppTheme()
   const { t } = useTranslation()
   const [showModal, setShowModal] = useState(false)
@@ -43,7 +43,7 @@ export function NetworkFilter({ selectedChain, onPressChain }: NetworkFilterProp
       [
         {
           key: `${ElementName.NetworkButton}-all`,
-          onPress: () => {
+          onPress: (): void => {
             setShowModal(false)
             onPressChain(null)
           },
@@ -76,7 +76,7 @@ export function NetworkFilter({ selectedChain, onPressChain }: NetworkFilterProp
     <>
       <TouchableArea
         py="xs"
-        onPress={() => {
+        onPress={(): void => {
           Keyboard.dismiss()
           setShowModal(true)
         }}>
@@ -98,7 +98,7 @@ export function NetworkFilter({ selectedChain, onPressChain }: NetworkFilterProp
         isVisible={showModal}
         name={ModalName.NetworkSelector}
         options={options}
-        onClose={() => setShowModal(false)}
+        onClose={(): void => setShowModal(false)}
       />
     </>
   )

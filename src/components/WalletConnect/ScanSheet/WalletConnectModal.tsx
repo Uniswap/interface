@@ -37,7 +37,7 @@ export function WalletConnectModal({
   initialScreenState = ScannerModalState.ScanQr,
   pendingSession,
   onClose,
-}: Props) {
+}: Props): JSX.Element | null {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const activeAddress = useAppSelector(selectActiveAccountAddress)
@@ -66,7 +66,7 @@ export function WalletConnectModal({
           [
             {
               text: t('Try again'),
-              onPress: () => {
+              onPress: (): void => {
                 setHasScanError(false)
               },
             },
@@ -92,7 +92,7 @@ export function WalletConnectModal({
         Alert.alert('Have you tried full-sending lately?', 'Highly recommend it', [
           {
             text: 'Bye',
-            onPress: () => {
+            onPress: (): void => {
               onClose()
             },
           },
@@ -112,7 +112,7 @@ export function WalletConnectModal({
     ]
   )
 
-  const onPressBottomToggle = () => {
+  const onPressBottomToggle = (): void => {
     if (currentScreenState === ScannerModalState.ScanQr) {
       setCurrentScreenState(ScannerModalState.WalletQr)
     } else {
@@ -120,11 +120,11 @@ export function WalletConnectModal({
     }
   }
 
-  const onPressShowConnectedDapps = () => {
+  const onPressShowConnectedDapps = (): void => {
     setCurrentScreenState(ScannerModalState.ConnectedDapps)
   }
 
-  const onPressShowScanQr = () => {
+  const onPressShowScanQr = (): void => {
     setCurrentScreenState(ScannerModalState.ScanQr)
   }
 

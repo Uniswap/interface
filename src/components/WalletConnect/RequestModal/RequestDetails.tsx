@@ -20,7 +20,7 @@ import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
 import { logger } from 'src/utils/logger'
 import { useNoYoloParser } from 'src/utils/useNoYoloParser'
 
-const getStrMessage = (request: WalletConnectRequest) => {
+const getStrMessage = (request: WalletConnectRequest): string => {
   if (request.type === EthMethod.PersonalSign || request.type === EthMethod.EthSign) {
     return request.message || request.rawMessage
   }
@@ -34,7 +34,7 @@ type AddressButtonProps = {
   textVariant?: keyof Theme['textVariants']
 }
 
-const AddressButton = ({ address, chainId, ...rest }: AddressButtonProps) => {
+const AddressButton = ({ address, chainId, ...rest }: AddressButtonProps): JSX.Element => {
   const { name } = useENS(chainId, address, false)
   return (
     <LinkButton
@@ -54,7 +54,7 @@ const MAX_TYPED_DATA_PARSE_DEPTH = 3
 
 // recursively parses typed data objects and adds margin to left
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0) => {
+const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0): JSX.Element => {
   if (depth === MAX_TYPED_DATA_PARSE_DEPTH + 1) {
     return <Text variant="monospace">...</Text>
   }
@@ -107,7 +107,7 @@ function TransactionDetails({
 }: {
   chainId: ChainId
   transaction: EthTransaction
-}) {
+}): JSX.Element {
   const { t } = useTranslation()
   const parser = useNoYoloParser(chainId)
 
@@ -117,7 +117,7 @@ function TransactionDetails({
   const { from, to, value, data } = transaction
 
   useEffect(() => {
-    const parseResult = async () => {
+    const parseResult = async (): Promise<TransactionDescription | undefined> => {
       // no-yolo-parser library expects these fields to be defined
       if (!from || !to || !value || !data) return
       return parser.parseAsResult(transaction as Transaction).then((result) => {
@@ -177,7 +177,7 @@ type Props = {
   request: WalletConnectRequest
 }
 
-function RequestDetailsContent({ request }: Props) {
+function RequestDetailsContent({ request }: Props): JSX.Element {
   const { t } = useTranslation()
 
   if (request.type === EthMethod.SignTypedData) {
@@ -204,7 +204,7 @@ function RequestDetailsContent({ request }: Props) {
   )
 }
 
-export function RequestDetails({ request }: Props) {
+export function RequestDetails({ request }: Props): JSX.Element {
   return (
     <ScrollView>
       <RequestDetailsContent request={request} />

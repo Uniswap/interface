@@ -20,7 +20,7 @@ interface OptionProps {
   onPress: () => void
 }
 
-export function TokenOptionItem({ option, showNetworkPill, onPress }: OptionProps) {
+export function TokenOptionItem({ option, showNetworkPill, onPress }: OptionProps): JSX.Element {
   const theme = useAppTheme()
 
   const { currencyInfo, quantity, balanceUSD } = option
@@ -107,7 +107,7 @@ export function TokenOptionItem({ option, showNetworkPill, onPress }: OptionProp
           currencyId={currencyId}
           safetyLevel={safetyLevel}
           onAccept={onAcceptTokenWarning}
-          onClose={() => setShowWarningModal(false)}
+          onClose={(): void => setShowWarningModal(false)}
         />
       ) : null}
     </>

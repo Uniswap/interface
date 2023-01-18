@@ -43,7 +43,7 @@ enum PendingConnectionModalState {
   SwitchAccount,
 }
 
-const SitePermissions = () => {
+const SitePermissions = (): JSX.Element => {
   const theme = useAppTheme()
   const { t } = useTranslation()
 
@@ -91,7 +91,7 @@ type SwitchNetworkProps = {
   setModalState: (state: PendingConnectionModalState.SwitchNetwork) => void
 }
 
-const SwitchNetworkRow = ({ selectedChainId, setModalState }: SwitchNetworkProps) => {
+const SwitchNetworkRow = ({ selectedChainId, setModalState }: SwitchNetworkProps): JSX.Element => {
   const theme = useAppTheme()
 
   const onPress = useCallback(() => {
@@ -118,7 +118,7 @@ type SwitchAccountProps = {
   setModalState: (state: PendingConnectionModalState.SwitchAccount) => void
 }
 
-const SwitchAccountRow = ({ activeAddress, setModalState }: SwitchAccountProps) => {
+const SwitchAccountRow = ({ activeAddress, setModalState }: SwitchAccountProps): JSX.Element => {
   const signerAccounts = useSignerAccounts()
   const accountIsSwitchable = signerAccounts.length > 1
 
@@ -138,7 +138,7 @@ const SwitchAccountRow = ({ activeAddress, setModalState }: SwitchAccountProps) 
   )
 }
 
-export const PendingConnection = ({ pendingSession, onClose }: Props) => {
+export const PendingConnection = ({ pendingSession, onClose }: Props): JSX.Element => {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const activeAddress = useActiveAccountAddressWithThrow()
@@ -220,16 +220,16 @@ export const PendingConnection = ({ pendingSession, onClose }: Props) => {
             fill
             emphasis={ButtonEmphasis.Secondary}
             label={t('Cancel')}
-            onPress={() => onPressSettleConnection(false)}
+            onPress={(): void => onPressSettleConnection(false)}
           />
-          <Button fill label={t('Connect')} onPress={() => onPressSettleConnection(true)} />
+          <Button fill label={t('Connect')} onPress={(): void => onPressSettleConnection(true)} />
         </Flex>
       </AnimatedFlex>
       {modalState === PendingConnectionModalState.SwitchNetwork && (
         <PendingConnectionSwitchNetworkModal
           selectedChainId={selectedChainId}
-          onClose={() => setModalState(PendingConnectionModalState.Hidden)}
-          onPressChain={(chainId) => {
+          onClose={(): void => setModalState(PendingConnectionModalState.Hidden)}
+          onPressChain={(chainId): void => {
             setSelectedChainId(chainId)
             setModalState(PendingConnectionModalState.Hidden)
           }}
@@ -238,8 +238,8 @@ export const PendingConnection = ({ pendingSession, onClose }: Props) => {
       {modalState === PendingConnectionModalState.SwitchAccount && (
         <PendingConnectionSwitchAccountModal
           activeAccount={activeAccount}
-          onClose={() => setModalState(PendingConnectionModalState.Hidden)}
-          onPressAccount={(account) => {
+          onClose={(): void => setModalState(PendingConnectionModalState.Hidden)}
+          onPressAccount={(account): void => {
             dispatch(activateAccount(account.address))
             setModalState(PendingConnectionModalState.Hidden)
           }}

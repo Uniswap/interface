@@ -10,7 +10,13 @@ import { iconSizes } from 'src/styles/sizing'
 import { formatCurrencyAmount, formatUSDPrice, NumberType } from 'src/utils/format'
 import { tryParseRawAmount } from 'src/utils/tryParseAmount'
 
-export function SpendingDetails({ value, chainId }: { value: string; chainId: ChainId }) {
+export function SpendingDetails({
+  value,
+  chainId,
+}: {
+  value: string
+  chainId: ChainId
+}): JSX.Element {
   const { t } = useTranslation()
 
   const nativeCurrencyInfo = useNativeCurrencyInfo(chainId)

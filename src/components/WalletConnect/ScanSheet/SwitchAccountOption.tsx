@@ -16,7 +16,7 @@ type Props = {
 
 const ICON_SIZE = 24
 
-export const SwitchAccountOption = ({ account, activeAccount }: Props) => {
+export const SwitchAccountOption = ({ account, activeAccount }: Props): JSX.Element => {
   const theme = useAppTheme()
 
   const displayName = useDisplayName(account.address)

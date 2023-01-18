@@ -38,7 +38,13 @@ export function useAllCommonBaseCurrencies(): GqlResult<CurrencyInfo[]> {
   return { data: filteredBaseCurrencyInfos, loading, error: persistedError, refetch }
 }
 
-export function useFilterCallbacks(chainId: ChainId | null) {
+export function useFilterCallbacks(chainId: ChainId | null): {
+  chainFilter: ChainId | null
+  searchFilter: string | null
+  onChangeChainFilter: (newChainFilter: ChainId | null) => void
+  onClearSearchFilter: () => void
+  onChangeText: (newSearchFilter: string) => void
+} {
   const [chainFilter, setChainFilter] = useState<ChainId | null>(chainId)
   const [searchFilter, setSearchFilter] = useState<string | null>(null)
 

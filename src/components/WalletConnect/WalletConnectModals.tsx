@@ -25,7 +25,7 @@ import {
   WalletConnectRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 
-export function WalletConnectModals() {
+export function WalletConnectModals(): JSX.Element {
   const activeAccount = useActiveAccount()
   const dispatch = useAppDispatch()
 
@@ -56,14 +56,14 @@ type RequestModalProps = {
   currRequest: WalletConnectRequest
 }
 
-function RequestModal({ currRequest }: RequestModalProps) {
+function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
   const signerAccounts = useSignerAccounts()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
 
-  const onClose = () => {
+  const onClose = (): void => {
     dispatch(
       removeRequest({ requestInternalId: currRequest.internalId, account: activeAccountAddress })
     )
