@@ -16,6 +16,8 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 
+import { CurrencyRow } from './CurrencyRow'
+
 const ModalWrapper = styled(Column)`
   position: fixed;
   left: 50%;
@@ -47,23 +49,6 @@ const TokenSelectorContainer = styled(Column)`
   }
 `
 
-const TokenRow = styled(Row)`
-  padding: 8px 0px;
-  justify-content: space-between;
-`
-
-const TokenInfoRow = styled(Row)`
-  gap: 8px;
-`
-
-const StyledBalanceText = styled(ThemedText.SubHeader)`
-  white-space: nowrap;
-  overflow: hidden;
-  width: 100%;
-  text-overflow: ellipsis;
-  text-align: right;
-`
-
 export const BagTokenSelectorModal = ({ overlayClick }: { overlayClick: () => void }) => {
   const defaultTokens = useAllTokens()
   const [balances, balancesAreLoading] = useAllTokenBalances()
@@ -84,9 +69,17 @@ export const BagTokenSelectorModal = ({ overlayClick }: { overlayClick: () => vo
 
   const currencies: Currency[] = useMemo(() => {
     const tokens = sortedTokens.filter((t) => !t.equals(wrapped))
-    const natives = native.equals(wrapped) ? [wrapped] : [native, wrapped]
+    const natives: Currency[] = []
+    if (native.equals(wrapped)) {
+      natives.push(wrapped)
+    } else {
+      natives.push(native)
+      if (balances[wrapped.address]?.greaterThan(0)) {
+        natives.push(wrapped)
+      }
+    }
     return [...natives, ...tokens]
-  }, [sortedTokens, native, wrapped])
+  }, [sortedTokens, native, wrapped, balances])
 
   return (
     <Portal>
@@ -105,35 +98,5 @@ export const BagTokenSelectorModal = ({ overlayClick }: { overlayClick: () => vo
       </ModalWrapper>
       <Overlay onClick={overlayClick} />
     </Portal>
-  )
-}
-
-const CurrencyRow = ({ currency }: { currency: Currency }) => {
-  const { account } = useWeb3React()
-  const balance = useCurrencyBalance(account ?? undefined, currency)
-
-  return (
-    <TokenRow>
-      <TokenInfoRow>
-        <CurrencyLogo currency={currency} size="36px" />
-        <Column>
-          <ThemedText.SubHeader fontWeight={500} lineHeight="24px">
-            {currency.name}
-          </ThemedText.SubHeader>
-          <ThemedText.BodySmall lineHeight="20px" color="textSecondary">
-            {currency.symbol}
-          </ThemedText.BodySmall>
-        </Column>
-      </TokenInfoRow>
-      {balance && <Balance balance={balance} />}
-    </TokenRow>
-  )
-}
-
-const Balance = ({ balance }: { balance: CurrencyAmount<Currency> }) => {
-  return (
-    <StyledBalanceText fontWeight={500} lineHeight="24px">
-      {balance.toSignificant(4)}
-    </StyledBalanceText>
   )
 }

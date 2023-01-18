@@ -22,7 +22,7 @@ import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { switchChain } from 'utils/switchChain'
 
-import { BagTokenSelectorModal } from './BagTokenSelectorModal'
+import { BagTokenSelectorModal } from './tokenSelector/BagTokenSelectorModal'
 
 const FooterContainer = styled.div`
   padding: 0px 12px;
