@@ -1,19 +1,18 @@
 import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { ButtonPrimary } from 'components/Button'
 import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
-import { Box } from 'nft/components/Box'
 import { Center, Column } from 'nft/components/Flex'
 import { ListPage } from 'nft/components/profile/list/ListPage'
 import { ProfilePage } from 'nft/components/profile/view/ProfilePage'
 import { ProfilePageLoadingSkeleton } from 'nft/components/profile/view/ProfilePageLoadingSkeleton'
-import { buttonMedium, headlineMedium } from 'nft/css/common.css'
 import { useBag, useNFTList, useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { ListingStatus, ProfilePageStateType } from 'nft/types'
 import { Suspense, useEffect, useRef } from 'react'
 import { useToggleWalletModal } from 'state/application/hooks'
 import styled from 'styled-components/macro'
-import { BREAKPOINTS } from 'theme'
+import { BREAKPOINTS, ThemedText } from 'theme'
 
 import * as styles from './profile.css'
 import { LIST_PAGE_MARGIN } from './shared'
@@ -33,6 +32,14 @@ const ProfilePageWrapper = styled.div`
 const LoadedAccountPage = styled.div<{ pageWidthAdjustment: number; isNftListV2: boolean }>`
   width: ${({ pageWidthAdjustment }) => `calc(100% - ${pageWidthAdjustment}px)`};
   margin: ${({ isNftListV2 }) => (isNftListV2 ? `0px ${LIST_PAGE_MARGIN}px` : 'unset')};
+`
+
+const ConnectWalletButton = styled(ButtonPrimary)`
+  width: min-content;
+  white-space: nowrap;
+  border-radius: 12px;
+  padding: 14px 18px;
+  border: none;
 `
 
 const ProfileContent = () => {
@@ -84,12 +91,12 @@ const ProfileContent = () => {
           <Column as="section" gap="60" className={styles.section}>
             <div style={{ minHeight: '70vh' }}>
               <Center className={styles.notConnected} flexDirection="column">
-                <Box as="span" className={headlineMedium} color="textSecondary" marginBottom="24" display="block">
+                <ThemedText.HeadlineMedium lineHeight="36px" color="textSecondary" fontWeight="600" marginBottom="24px">
                   No items to display
-                </Box>
-                <Box as="button" className={buttonMedium} onClick={toggleWalletModal}>
-                  Connect Wallet
-                </Box>
+                </ThemedText.HeadlineMedium>
+                <ConnectWalletButton onClick={toggleWalletModal}>
+                  <ThemedText.SubHeader lineHeight="20px">Connect Wallet</ThemedText.SubHeader>
+                </ConnectWalletButton>
               </Center>
             </div>
           </Column>
