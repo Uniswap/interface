@@ -22,7 +22,7 @@ import { trmApi } from 'src/features/trm/api'
 import { walletReducer } from 'src/features/wallet/walletSlice'
 import { walletConnectReducer } from 'src/features/walletConnect/walletConnectSlice'
 
-export const rootReducer = combineReducers({
+const reducers = {
   [ensApi.reducerPath]: ensApi.reducer,
   [fiatOnRampApi.reducerPath]: fiatOnRampApi.reducer,
   [forceUpgradeApi.reducerPath]: forceUpgradeApi.reducer,
@@ -32,6 +32,8 @@ export const rootReducer = combineReducers({
   [trmApi.reducerPath]: trmApi.reducer,
   biometricSettings: biometricSettingsReducer,
   chains: chainsReducer,
+  cloudBackup: cloudBackupReducer,
+  experiments: experimentsReducer,
   favorites: favoritesReducer,
   modals: modalsReducer,
   notifications: notificationReducer,
@@ -43,8 +45,8 @@ export const rootReducer = combineReducers({
   transactions: transactionReducer,
   wallet: walletReducer,
   walletConnect: walletConnectReducer,
-  cloudBackup: cloudBackupReducer,
-  experiments: experimentsReducer,
-})
+} as const
+export const rootReducer = combineReducers(reducers)
 
 export type RootState = ReturnType<typeof rootReducer>
+export type ReducerNames = keyof typeof reducers

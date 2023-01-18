@@ -5,7 +5,7 @@ import { persistReducer, persistStore, Storage } from 'redux-persist'
 import createSagaMiddleware from 'redux-saga'
 import createMigrate from 'src/app/createMigrate'
 import { migrations } from 'src/app/migrations'
-import { rootReducer, RootState } from 'src/app/rootReducer'
+import { ReducerNames, rootReducer, RootState } from 'src/app/rootReducer'
 import { rootSaga } from 'src/app/rootSaga'
 import { walletContextValue } from 'src/app/walletContext'
 import { config } from 'src/config'
@@ -52,24 +52,25 @@ const rtkQueryErrorLogger: Middleware = () => (next) => (action) => {
   return next(action)
 }
 
+const whitelist: Array<ReducerNames> = [
+  'biometricSettings',
+  'chains',
+  'experiments',
+  'favorites',
+  'notifications',
+  'passwordLockout',
+  'searchHistory',
+  'tokens',
+  'transactions',
+  'wallet',
+  ensApi.reducerPath,
+  trmApi.reducerPath,
+]
+
 export const persistConfig = {
   key: 'root',
   storage: reduxStorage,
-  whitelist: [
-    'biometricSettings',
-    'chains',
-    'experiments',
-    'favorites',
-    'notifications',
-    'passwordLockout',
-    'searchHistory',
-    'tokens',
-    'transactions',
-    'wallet',
-    onChainBalanceApi.reducerPath,
-    ensApi.reducerPath,
-    trmApi.reducerPath,
-  ],
+  whitelist,
   version: 32,
   migrate: createMigrate(migrations),
 }
