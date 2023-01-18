@@ -10,7 +10,6 @@ import { lazy, Suspense, useEffect, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
-import { SpinnerSVG } from 'theme/components'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 import { isProductionEnv } from 'utils/env'
@@ -28,15 +27,10 @@ import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import Landing from './Landing'
-import MigrateV2 from './MigrateV2'
-import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
 import NotFound from './NotFound'
-import Pool from './Pool'
-import { PositionPage } from './Pool/PositionPage'
 import PoolV2 from './Pool/v2'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
-import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import Swap from './Swap'
 import { RedirectPathToSwapOnly } from './Swap/redirects'
 import Tokens from './Tokens'
@@ -113,14 +107,6 @@ function getCurrentPageFromLocation(locationPathname: string): InterfacePageName
       return InterfacePageName.POOL_PAGE
     case locationPathname.startsWith('/tokens'):
       return InterfacePageName.TOKENS_PAGE
-    case locationPathname.startsWith('/nfts/profile'):
-      return InterfacePageName.NFT_PROFILE_PAGE
-    case locationPathname.startsWith('/nfts/asset'):
-      return InterfacePageName.NFT_DETAILS_PAGE
-    case locationPathname.startsWith('/nfts/collection'):
-      return InterfacePageName.NFT_COLLECTION_PAGE
-    case locationPathname.startsWith('/nfts'):
-      return InterfacePageName.NFT_EXPLORE_PAGE
     default:
       return undefined
   }
@@ -128,17 +114,19 @@ function getCurrentPageFromLocation(locationPathname: string): InterfacePageName
 
 // this is the same svg defined in assets/images/blue-loader.svg
 // it is defined here because the remote asset may not have had time to load when this file is executing
-const LazyLoadSpinner = () => (
-  <SpinnerSVG width="94" height="94" viewBox="0 0 94 94" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M92 47C92 22.1472 71.8528 2 47 2C22.1472 2 2 22.1472 2 47C2 71.8528 22.1472 92 47 92"
-      stroke="#2172E5"
-      strokeWidth="3"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </SpinnerSVG>
-)
+
+// 1.2 Could be usefull later
+// const LazyLoadSpinner = () => (
+//   <SpinnerSVG width="94" height="94" viewBox="0 0 94 94" fill="none" xmlns="http://www.w3.org/2000/svg">
+//     <path
+//       d="M92 47C92 22.1472 71.8528 2 47 2C22.1472 2 2 22.1472 2 47C2 71.8528 22.1472 92 47 92"
+//       stroke="#2172E5"
+//       strokeWidth="3"
+//       strokeLinecap="round"
+//       strokeLinejoin="round"
+//     />
+//   </SpinnerSVG>
+// )
 
 export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
@@ -213,12 +201,13 @@ export default function App() {
                 <Route path="send" element={<RedirectPathToSwapOnly />} />
                 <Route path="swap" element={<Swap />} />
 
-                <Route path="pool/v2/find" element={<PoolFinder />} />
-                <Route path="pool/v2" element={<PoolV2 />} />
-                <Route path="pool" element={<Pool />} />
-                <Route path="pool/:tokenId" element={<PositionPage />} />
+                <Route path="pool/find" element={<PoolFinder />} />
+                <Route path="pool" element={<PoolV2 />} />
 
-                <Route path="add/v2" element={<RedirectDuplicateTokenIdsV2 />}>
+                {/* // Check what this route do */}
+                {/* <Route path="pool/:tokenId" element={<PositionPage />} /> */}
+
+                <Route path="add" element={<RedirectDuplicateTokenIdsV2 />}>
                   <Route path=":currencyIdA" />
                   <Route path=":currencyIdA/:currencyIdB" />
                 </Route>
@@ -236,11 +225,7 @@ export default function App() {
                   <Route path=":currencyIdA/:currencyIdB/:feeAmount/:tokenId" />
                 </Route>
 
-                <Route path="remove/v2/:currencyIdA/:currencyIdB" element={<RemoveLiquidity />} />
-                <Route path="remove/:tokenId" element={<RemoveLiquidityV3 />} />
-
-                <Route path="migrate/v2" element={<MigrateV2 />} />
-                <Route path="migrate/v2/:address" element={<MigrateV2Pair />} />
+                <Route path="remove/:currencyIdA/:currencyIdB" element={<RemoveLiquidity />} />
 
                 <Route path="*" element={<Navigate to="/not-found" replace />} />
                 <Route path="/not-found" element={<NotFound />} />

@@ -283,9 +283,9 @@ export default function AddLiquidity() {
     (currencyA: Currency) => {
       const newCurrencyIdA = currencyId(currencyA)
       if (newCurrencyIdA === currencyIdB) {
-        navigate(`/add/v2/${currencyIdB}/${currencyIdA}`)
+        navigate(`/add/${currencyIdB}/${currencyIdA}`)
       } else {
-        navigate(`/add/v2/${newCurrencyIdA}/${currencyIdB}`)
+        navigate(`/add/${newCurrencyIdA}/${currencyIdB}`)
       }
     },
     [currencyIdB, navigate, currencyIdA]
@@ -295,12 +295,12 @@ export default function AddLiquidity() {
       const newCurrencyIdB = currencyId(currencyB)
       if (currencyIdA === newCurrencyIdB) {
         if (currencyIdB) {
-          navigate(`/add/v2/${currencyIdB}/${newCurrencyIdB}`)
+          navigate(`/add/${currencyIdB}/${newCurrencyIdB}`)
         } else {
-          navigate(`/add/v2/${newCurrencyIdB}`)
+          navigate(`/add/${newCurrencyIdB}`)
         }
       } else {
-        navigate(`/add/v2/${currencyIdA ? currencyIdA : 'ETH'}/${newCurrencyIdB}`)
+        navigate(`/add/${currencyIdA ? currencyIdA : 'ETH'}/${newCurrencyIdB}`)
       }
     },
     [currencyIdA, navigate, currencyIdB]
