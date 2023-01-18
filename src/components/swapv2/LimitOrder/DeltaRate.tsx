@@ -1,4 +1,4 @@
-import { Trans, t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { useMemo } from 'react'
 import { Text } from 'rebass'
 
@@ -55,7 +55,11 @@ const DeltaRate = ({
 
   const { percent, profit } = useGetDeltaRateLimitOrder({ marketPrice, rateInfo })
   const color = profit ? theme.apr : theme.warning
-
+  const styledPercent = (
+    <Text as="span" color={color} fontWeight="500">
+      {percent}
+    </Text>
+  )
   return (
     <Label style={{ display: 'flex', alignItems: 'center', whiteSpace: 'nowrap' }}>
       <Trans>Sell {symbolIn} at rate</Trans>
@@ -67,9 +71,11 @@ const DeltaRate = ({
           <InfoHelper
             color={color}
             text={
-              profit
-                ? t`Your selected price is ${percent} better than the current market price.`
-                : t`Your selected price is ${percent} worse than the current market price.`
+              profit ? (
+                <Trans>Your selected price is {styledPercent} better than the current market price.</Trans>
+              ) : (
+                <Trans>Your selected price is {styledPercent} worse than the current market price.</Trans>
+              )
             }
           />
         </>

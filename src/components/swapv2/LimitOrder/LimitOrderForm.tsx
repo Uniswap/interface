@@ -209,11 +209,6 @@ const LimitOrderForm = function LimitOrderForm({
   const onSetInput = useCallback(
     (input: string) => {
       setInputAmount(input)
-      if (!input) {
-        setOuputAmount('')
-        setRateInfo({ ...rateInfo, rate: '', invertRate: '' })
-        return
-      }
       if (rateInfo.rate && currencyIn && currencyOut && input) {
         setOuputAmount(calcOutput(input, rateInfo.rate, currencyIn.decimals, currencyOut.decimals))
       }
@@ -379,6 +374,7 @@ const LimitOrderForm = function LimitOrderForm({
     setExpire(DEFAULT_EXPIRED)
     setCustomDateExpire(undefined)
     refreshActiveMakingAmount()
+    resetState()
   }
 
   const handleError = useCallback(
@@ -641,7 +637,7 @@ const LimitOrderForm = function LimitOrderForm({
             <Text as="span" fontWeight={'500'} color={theme.warning}>
               {deltaRate.percent}
             </Text>{' '}
-            lower than the current market price
+            worse than the current market price
           </Trans>
         </Text>,
       )
