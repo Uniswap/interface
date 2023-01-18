@@ -378,15 +378,23 @@ function TokenRow({
   const rowCells = (
     <>
       <ListNumberCell header={header}>{listNumber}</ListNumberCell>
-      <NameCell>{tokenInfo}</NameCell>
-      <PriceCell sortable={header}>{price}</PriceCell>
-      <PercentChangeCell sortable={header}>{percentChange}</PercentChangeCell>
-      <TvlCell sortable={header}>{tvl}</TvlCell>
-      <VolumeCell sortable={header}>{volume}</VolumeCell>
+      <NameCell data-testid="name-cell">{tokenInfo}</NameCell>
+      <PriceCell data-testid="price-cell" sortable={header}>
+        {price}
+      </PriceCell>
+      <PercentChangeCell data-testid="percent-change-cell" sortable={header}>
+        {percentChange}
+      </PercentChangeCell>
+      <TvlCell data-testid="tvl-cell" sortable={header}>
+        {tvl}
+      </TvlCell>
+      <VolumeCell data-testid="volume-cell" sortable={header}>
+        {volume}
+      </VolumeCell>
       <SparkLineCell>{sparkLine}</SparkLineCell>
     </>
   )
-  if (header) return <StyledHeaderRow>{rowCells}</StyledHeaderRow>
+  if (header) return <StyledHeaderRow data-testid="header-row">{rowCells}</StyledHeaderRow>
   return <StyledTokenRow {...rest}>{rowCells}</StyledTokenRow>
 }
 
@@ -440,9 +448,6 @@ interface LoadedRowProps {
 /* Loaded State: row component with token information */
 export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HTMLDivElement>) => {
   const { tokenListIndex, tokenListLength, token, volumeRank } = props
-  const tokenAddress = token.address
-  const tokenName = token.name
-  const tokenSymbol = token.symbol
   const filterString = useAtomValue(filterStringAtom)
 
   const lowercaseChainName = useParams<{ chainName?: string }>().chainName?.toUpperCase() ?? 'ethereum'
@@ -457,8 +462,8 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
 
   const exploreTokenSelectedEventProperties = {
     chain_id: chainId,
-    token_address: tokenAddress,
-    token_symbol: tokenSymbol,
+    token_address: token.address,
+    token_symbol: token.symbol,
     token_list_index: tokenListIndex,
     token_list_rank: volumeRank,
     token_list_length: tokenListLength,
@@ -468,7 +473,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
 
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
-    <div ref={ref} data-testid={`token-table-row-${tokenName}`}>
+    <div ref={ref} data-testid={`token-table-row-${token.symbol}`}>
       <StyledLink
         to={getTokenDetailsURL(token.address ?? '', token.chain)}
         onClick={() =>
@@ -485,8 +490,8 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
                 <L2NetworkLogo networkUrl={L2Icon} />
               </LogoContainer>
               <TokenInfoCell>
-                <TokenName>{tokenName}</TokenName>
-                <TokenSymbol>{tokenSymbol}</TokenSymbol>
+                <TokenName>{token.name}</TokenName>
+                <TokenSymbol>{token.symbol}</TokenSymbol>
               </TokenInfoCell>
             </ClickableName>
           }
