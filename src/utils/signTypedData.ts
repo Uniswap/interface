@@ -2,8 +2,8 @@ import { _TypedDataEncoder } from '@ethersproject/hash'
 import { JsonRpcSigner } from '@ethersproject/providers'
 
 /**
- * Overrides the _signTypedData method to add support for wallets without EIP-712 support (eg Zerion),
- * by adding a fallback to eth_sign.
+ * Overrides the _signTypedData method to add support for wallets without EIP-712 support (eg Zerion) by adding a fallback to eth_sign.
+ * The implementation is copied from ethers (and linted), except for the catch statement, which removes the logger and adds the fallback.
  * @see https://github.com/ethers-io/ethers.js/blob/c80fcddf50a9023486e9f9acb1848aba4c19f7b6/packages/providers/src.ts/json-rpc-provider.ts#L334
  */
 JsonRpcSigner.prototype._signTypedData = async function signTypedDataWithFallbacks(this, domain, types, value) {
