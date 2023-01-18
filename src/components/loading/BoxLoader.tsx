@@ -1,10 +1,8 @@
-import { BoxProps } from '@shopify/restyle'
 import React from 'react'
 import { ViewProps } from 'react-native'
-import { Box } from 'src/components/layout'
-import { Theme } from 'src/styles/theme'
+import { Box, BoxProps } from 'src/components/layout'
 
-export type BoxLoaderProps = { repeat?: number } & BoxProps<Theme, true> & ViewProps
+export type BoxLoaderProps = { repeat?: number } & BoxProps & ViewProps
 export function BoxLoader({
   repeat = 1,
   backgroundColor = 'background3',

@@ -1,10 +1,10 @@
-import React, { ComponentProps, ReactNode } from 'react'
-import { Box } from 'src/components/layout'
+import React, { ReactNode } from 'react'
+import { Box, BoxProps } from 'src/components/layout'
 
 type Props = {
   icon: ReactNode
   overlay: ReactNode
-} & Pick<ComponentProps<typeof Box>, 'top' | 'bottom' | 'left' | 'right'>
+} & Pick<BoxProps, 'top' | 'bottom' | 'left' | 'right'>
 
 // For overlaying icons in JSX
 export default function OverlayIcon({ icon, overlay, ...props }: Props): JSX.Element {

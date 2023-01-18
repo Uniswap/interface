@@ -1,4 +1,4 @@
-import { BoxProps, ShadowProps } from '@shopify/restyle'
+import { ShadowProps } from '@shopify/restyle'
 import React, { ComponentProps, PropsWithChildren, ReactElement, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useColorScheme } from 'react-native'
@@ -7,7 +7,7 @@ import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import ErrorLoadingIcon from 'src/assets/icons/error-loading.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
-import { Box, Flex } from 'src/components/layout'
+import { Box, BoxProps, Flex } from 'src/components/layout'
 import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
 import { Theme } from 'src/styles/theme'
@@ -38,10 +38,7 @@ export function Container({
   )
 }
 
-export function Shadow({
-  children,
-  ...rest
-}: PropsWithChildren<BoxProps<Theme, true>>): JSX.Element {
+export function Shadow({ children, ...rest }: BoxProps): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark'
   return (
     <Box

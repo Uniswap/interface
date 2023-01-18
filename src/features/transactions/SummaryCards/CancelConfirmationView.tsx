@@ -1,12 +1,12 @@
 import { providers } from 'ethers'
 import { notificationAsync } from 'expo-haptics'
-import { ComponentProps, default as React, useCallback } from 'react'
+import { default as React, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator } from 'react-native'
 import SlashCircleIcon from 'src/assets/icons/slash-circle.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
-import { Box, Flex } from 'src/components/layout'
+import { BoxProps, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { useCancelationGasFeeInfo, useUSDValue } from 'src/features/gas/hooks'
@@ -16,7 +16,7 @@ import { useActiveAccount } from 'src/features/wallet/hooks'
 import { shortenAddress } from 'src/utils/addresses'
 import { formatUSDPrice, NumberType } from 'src/utils/format'
 
-const spacerProps: ComponentProps<typeof Box> = {
+const spacerProps: BoxProps = {
   borderBottomColor: 'backgroundOutline',
   borderBottomWidth: 1,
 }

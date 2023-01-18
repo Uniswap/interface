@@ -1,13 +1,13 @@
 import { useNetInfo } from '@react-native-community/netinfo'
 import { providers } from 'ethers'
-import React, { ComponentProps, PropsWithChildren, useMemo, useRef } from 'react'
+import React, { PropsWithChildren, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, ViewStyle } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import { AccountDetails } from 'src/components/accounts/AccountDetails'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
-import { Box, Flex } from 'src/components/layout'
+import { Box, BoxProps, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { NetworkFee } from 'src/components/Network/NetworkFee'
@@ -99,7 +99,7 @@ function SectionContainer({
   ) : null
 }
 
-const spacerProps: ComponentProps<typeof Box> = {
+const spacerProps: BoxProps = {
   borderBottomColor: 'backgroundOutline',
   borderBottomWidth: 1,
 }

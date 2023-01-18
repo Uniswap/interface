@@ -1,8 +1,8 @@
 import { BackgroundColorShorthandProps, createBox } from '@shopify/restyle'
-import React, { ComponentProps, PropsWithChildren, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { View } from 'react-native'
 import { NativeSafeAreaViewProps, useSafeAreaInsets } from 'react-native-safe-area-context'
-import { Box } from 'src/components/layout/Box'
+import { BoxProps } from 'src/components/layout/Box'
 import { Theme } from 'src/styles/theme'
 
 const SafeAreaBox = createBox<Theme>(View)
@@ -12,13 +12,9 @@ type ScreenProps = BackgroundColorShorthandProps<Theme> &
   //  lets you choose if `edges` are added as margin or padding, but we don’t use that so
   // our Screen component doesn't need to support it
   Omit<NativeSafeAreaViewProps, 'mode'> &
-  ComponentProps<typeof Box>
+  BoxProps
 
-function SafeAreaWithInsets({
-  children,
-  edges,
-  ...rest
-}: PropsWithChildren<ScreenProps>): JSX.Element {
+function SafeAreaWithInsets({ children, edges, ...rest }: ScreenProps): JSX.Element {
   // Safe area insets are wrong (0 when they shouldn't be) when using the <SafeAreaView>
   // component from react-native-safe-area-context, because when the initial screen is
   // outside the viewport (as is the case with a screen slide-in animation on navigation)
@@ -61,11 +57,7 @@ function SafeAreaWithInsets({
   )
 }
 
-export function Screen({
-  bg = 'background0',
-  children,
-  ...rest
-}: PropsWithChildren<ScreenProps>): JSX.Element {
+export function Screen({ bg = 'background0', children, ...rest }: ScreenProps): JSX.Element {
   return (
     <SafeAreaWithInsets bg={bg} flex={1} {...rest}>
       {children}

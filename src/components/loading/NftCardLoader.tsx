@@ -1,8 +1,8 @@
-import React, { ComponentProps } from 'react'
-import { Box, Flex } from 'src/components/layout'
+import React from 'react'
+import { Box, BoxProps, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 
-export function NftCardLoader({ ...props }: ComponentProps<typeof Box>): JSX.Element {
+export function NftCardLoader({ ...props }: BoxProps): JSX.Element {
   return (
     <Box flex={1} justifyContent="flex-start" m="xs" {...props}>
       <Box aspectRatio={1} backgroundColor="background3" borderRadius="md" width="100%" />

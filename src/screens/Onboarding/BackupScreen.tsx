@@ -2,7 +2,7 @@ import { CompositeScreenProps } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useResponsiveProp } from '@shopify/restyle'
-import React, { ComponentProps, ReactElement, useCallback, useEffect, useState } from 'react'
+import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import { SvgProps } from 'react-native-svg'
@@ -21,7 +21,7 @@ import { BackButton } from 'src/components/buttons/BackButton'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { EducationContentType } from 'src/components/education'
-import { Box, Flex } from 'src/components/layout'
+import { Box, BoxProps, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { isICloudAvailable } from 'src/features/CloudBackup/RNICloudBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
@@ -37,7 +37,7 @@ type Props = CompositeScreenProps<
   NativeStackScreenProps<AppStackParamList, Screens.Education>
 >
 
-const spacerProps: ComponentProps<typeof Box> = {
+const spacerProps: BoxProps = {
   borderBottomColor: 'backgroundOutline',
   borderBottomWidth: 0.5,
 }

@@ -1,6 +1,6 @@
 import { ShadowProps, useResponsiveProp } from '@shopify/restyle'
 import { selectionAsync } from 'expo-haptics'
-import React, { ComponentProps, memo, useCallback } from 'react'
+import React, { memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useColorScheme } from 'react-native'
 import { TapGestureHandler, TapGestureHandlerGestureEvent } from 'react-native-gesture-handler'
@@ -15,7 +15,7 @@ import {
 } from 'react-native-reanimated'
 import Svg, { Defs, LinearGradient, Rect, Stop, SvgProps } from 'react-native-svg'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import { AnimatedBox, Box } from 'src/components/layout'
+import { AnimatedBox, Box, BoxProps } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
@@ -41,7 +41,7 @@ export const TabBarButton = memo(
     focused: boolean
     IconFilled: React.FC<SvgProps>
     Icon: React.FC<SvgProps>
-  } & ComponentProps<typeof Box>) => {
+  } & BoxProps) => {
     const appTheme = useAppTheme()
 
     return (

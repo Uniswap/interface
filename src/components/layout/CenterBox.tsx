@@ -1,11 +1,7 @@
-import { BoxProps } from '@shopify/restyle'
-import React, { PropsWithChildren } from 'react'
+import React from 'react'
 import { ViewProps } from 'react-native'
-import { Box } from 'src/components/layout/Box'
-import { Theme } from 'src/styles/theme'
+import { Box, BoxProps } from 'src/components/layout/Box'
 
-export const CenterBox = (
-  props: PropsWithChildren<BoxProps<Theme, true> & ViewProps>
-): JSX.Element => {
+export const CenterBox = (props: BoxProps & ViewProps): JSX.Element => {
   return <Box alignItems="center" justifyContent="center" {...props} />
 }

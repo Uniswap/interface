@@ -1,10 +1,10 @@
-import React, { ComponentProps, useRef } from 'react'
+import React, { useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import { AccountDetails } from 'src/components/accounts/AccountDetails'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { LinkButton } from 'src/components/buttons/LinkButton'
-import { Box, Flex } from 'src/components/layout'
+import { Box, BoxProps, Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
 import { Text } from 'src/components/Text'
@@ -20,7 +20,7 @@ interface Props {
   request: SwitchChainRequest
 }
 
-const spacerProps: ComponentProps<typeof Box> = {
+const spacerProps: BoxProps = {
   borderBottomColor: 'backgroundOutline',
   borderBottomWidth: 1,
 }

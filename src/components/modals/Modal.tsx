@@ -34,7 +34,7 @@ export function Modal({
   transparent = true,
   presentationStyle = 'overFullScreen',
 }: // ...rest (TODO above)
-React.PropsWithChildren<Props>): JSX.Element {
+Props): JSX.Element {
   let justifyContent: ResponsiveValue<'center' | 'flex-start' | 'flex-end', Theme> = 'center'
   if (position === 'top') justifyContent = 'flex-start'
   if (position === 'bottom') justifyContent = 'flex-end'

@@ -1,9 +1,9 @@
-import React, { ComponentProps } from 'react'
+import React from 'react'
 import { useAppTheme } from 'src/app/hooks'
-import { Box } from 'src/components/layout/Box'
+import { Box, BoxProps } from 'src/components/layout/Box'
 import { Theme } from 'src/styles/theme'
 
-type SpacerProps = ComponentProps<typeof Box> & {
+export type SpacerProps = BoxProps & {
   x?: keyof Theme['spacing']
   y?: keyof Theme['spacing']
 }
