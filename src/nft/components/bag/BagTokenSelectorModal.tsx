@@ -31,18 +31,19 @@ const ModalWrapper = styled(Column)`
 `
 
 const TitleRow = styled(Row)`
-  padding: 20px 20px;
+  padding: 20px;
   justify-content: space-between;
 `
 
 const TokenSelectorContainer = styled(Column)`
   border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
-  padding: 20px 20px;
+  padding: 20px;
   height: 100%;
   overflow-y: scroll;
   gap: 8px;
   ::-webkit-scrollbar {
-    display: none;
+    width: 0px;
+    height: 0px;
   }
 `
 
@@ -54,8 +55,6 @@ const TokenRow = styled(Row)`
 const TokenInfoRow = styled(Row)`
   gap: 8px;
 `
-
-const TokenNameColumn = styled(Column)``
 
 const StyledBalanceText = styled(ThemedText.SubHeader)`
   white-space: nowrap;
@@ -117,14 +116,14 @@ const CurrencyRow = ({ currency }: { currency: Currency }) => {
     <TokenRow>
       <TokenInfoRow>
         <CurrencyLogo currency={currency} size="36px" />
-        <TokenNameColumn>
+        <Column>
           <ThemedText.SubHeader fontWeight={500} lineHeight="24px">
             {currency.name}
           </ThemedText.SubHeader>
           <ThemedText.BodySmall lineHeight="20px" color="textSecondary">
             {currency.symbol}
           </ThemedText.BodySmall>
-        </TokenNameColumn>
+        </Column>
       </TokenInfoRow>
       {balance && <Balance balance={balance} />}
     </TokenRow>
