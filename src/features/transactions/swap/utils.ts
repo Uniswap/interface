@@ -17,7 +17,7 @@ import { formatPrice, NumberType } from 'src/utils/format'
 
 export function serializeQueryParams(
   params: Record<string, Parameters<typeof encodeURIComponent>[0]>
-) {
+): string {
   const queryString = []
   for (const [param, value] of Object.entries(params)) {
     queryString.push(`${encodeURIComponent(param)}=${encodeURIComponent(value)}`)
@@ -79,11 +79,11 @@ export function tradeToTransactionInfo(
 export function requireAcceptNewTrade(
   oldTrade: NullUndefined<Trade>,
   newTrade: NullUndefined<Trade>
-) {
+): boolean {
   return oldTrade?.quote?.methodParameters?.calldata !== newTrade?.quote?.methodParameters?.calldata
 }
 
-export const getRateToDisplay = (trade: Trade, showInverseRate: boolean) => {
+export const getRateToDisplay = (trade: Trade, showInverseRate: boolean): string => {
   const price = showInverseRate ? trade.executionPrice.invert() : trade.executionPrice
   const formattedPrice = formatPrice(price, NumberType.TokenTx)
   const { quoteCurrency, baseCurrency } = trade.executionPrice
@@ -92,10 +92,10 @@ export const getRateToDisplay = (trade: Trade, showInverseRate: boolean) => {
   return showInverseRate ? rate : inverseRate
 }
 
-export const formatAsHexString = (input?: BigNumberish) =>
+export const formatAsHexString = (input?: BigNumberish): string | undefined =>
   input !== undefined ? BigNumber.from(input).toHexString() : input
 
-export const getActionName = (t: TFunction, wrapType: WrapType) => {
+export const getActionName = (t: TFunction, wrapType: WrapType): string => {
   switch (wrapType) {
     case WrapType.Unwrap:
       return t('Unwrap')
@@ -106,7 +106,7 @@ export const getActionName = (t: TFunction, wrapType: WrapType) => {
   }
 }
 
-export const getReviewActionName = (t: TFunction, wrapType: WrapType) => {
+export const getReviewActionName = (t: TFunction, wrapType: WrapType): string => {
   switch (wrapType) {
     case WrapType.Unwrap:
       return t('Review unwrap')

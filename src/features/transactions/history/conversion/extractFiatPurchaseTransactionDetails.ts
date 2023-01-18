@@ -76,7 +76,10 @@ function moonpayStatusToTransactionInfoStatus(
 // MoonPay does not always (ever?) return the transaction id inside `returnUrl`
 //  returnUrl": "https://buy-sandbox.moonpay.com/transaction_receipt
 // This adds `transactinId` param if required
-function formatReturnUrl(providedReturnUrl: string | undefined, id: string | undefined) {
+function formatReturnUrl(
+  providedReturnUrl: string | undefined,
+  id: string | undefined
+): string | undefined {
   if (!providedReturnUrl || !id) return
 
   if (providedReturnUrl.includes('?transactionId=')) {

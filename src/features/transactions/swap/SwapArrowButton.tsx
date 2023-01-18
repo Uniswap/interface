@@ -1,4 +1,4 @@
-import React, { ComponentProps, useMemo } from 'react'
+import React, { ComponentProps, ReactElement, useMemo } from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import SwapArrow from 'src/assets/icons/swap-arrow.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -9,7 +9,7 @@ type SwapArrowButtonProps = Pick<
   'disabled' | 'name' | 'onPress' | 'borderColor' | 'bg'
 > & { size?: number }
 
-export function SwapArrowButton(props: SwapArrowButtonProps) {
+export function SwapArrowButton(props: SwapArrowButtonProps): ReactElement {
   const theme = useAppTheme()
   const { name, onPress, disabled, bg = 'background1', size = theme.iconSizes.md, ...rest } = props
   return useMemo(

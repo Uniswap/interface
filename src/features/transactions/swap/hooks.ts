@@ -217,7 +217,7 @@ export function useUSDTokenUpdater(
   exactAmountToken: string,
   exactAmountUSD: string,
   exactCurrency?: Currency
-) {
+): void {
   const price = useUSDCPrice(exactCurrency)
   const shouldUseUSDRef = useRef(isUSDInput)
 
@@ -251,7 +251,18 @@ export function useUSDTokenUpdater(
 }
 
 /** Set of handlers wrapping actions involving user input */
-export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
+export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>): {
+  onCreateTxId: (txId: string) => void
+  onFocusInput: () => void
+  onFocusOutput: () => void
+  onHideTokenSelector: () => void
+  onSelectCurrency: (field: CurrencyField, currency: Currency) => void
+  onSwitchCurrencies: () => void
+  onToggleUSDInput: (isUSDInput: boolean) => void
+  onSetAmount: (field: CurrencyField, value: string, isUSDInput?: boolean) => void
+  onSetMax: (amount: string) => void
+  onShowTokenSelector: (field: CurrencyField) => void
+} {
   const onHideTokenSelector = useCallback(
     () => dispatch(transactionStateActions.showTokenSelector(undefined)),
     [dispatch]
@@ -391,7 +402,9 @@ export function useTransactionRequestInfo(
   }
 }
 
-function useWrapTransactionRequest(derivedSwapInfo: DerivedSwapInfo) {
+function useWrapTransactionRequest(
+  derivedSwapInfo: DerivedSwapInfo
+): providers.TransactionRequest | undefined {
   const address = useActiveAccountAddressWithThrow()
   const { chainId, wrapType, currencyAmounts } = derivedSwapInfo
   const provider = useProvider(chainId)
@@ -710,7 +723,12 @@ export function useSwapTransactionRequest(
   ])
 }
 
-export function useSwapTxAndGasInfo(derivedSwapInfo: DerivedSwapInfo, skipGasFeeQuery: boolean) {
+export function useSwapTxAndGasInfo(
+  derivedSwapInfo: DerivedSwapInfo,
+  skipGasFeeQuery: boolean
+  // TODO(MOB-3968): Add more specific types to transaction return types
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+) {
   const { chainId, wrapType, currencyAmounts } = derivedSwapInfo
 
   const tokenApprovalInfo = useTokenApprovalInfo(
@@ -732,7 +750,7 @@ export function useSwapTxAndGasInfo(derivedSwapInfo: DerivedSwapInfo, skipGasFee
   const txFeeInfo = useTransactionGasFee(transactionRequest, GasSpeed.Urgent, skipGasFeeQuery)
   const totalGasFee = sumGasFees(approveFeeInfo?.gasFee, txFeeInfo?.gasFee)
 
-  const txRequestWithGasSettings: providers.TransactionRequest | undefined = useMemo(() => {
+  const txRequestWithGasSettings = useMemo(() => {
     if (!transactionRequest || !txFeeInfo) return
 
     return { ...transactionRequest, ...txFeeInfo.params }
@@ -804,21 +822,23 @@ export function useWrapCallback(
   onSuccess: () => void,
   txRequest?: providers.TransactionRequest,
   txId?: string
-) {
+): {
+  wrapCallback: () => void
+} {
   const appDispatch = useAppDispatch()
   const account = useActiveAccount()
 
   return useMemo(() => {
     if (!isWrapAction(wrapType)) {
       return {
-        wrapCallback: () =>
+        wrapCallback: (): void =>
           logger.error('hooks', 'useWrapCallback', 'Wrap callback invoked for non-wrap actions'),
       }
     }
 
     if (!account || !inputCurrencyAmount || !txRequest) {
       return {
-        wrapCallback: () =>
+        wrapCallback: (): void =>
           logger.error(
             'hooks',
             'useWrapCallback',
@@ -828,7 +848,7 @@ export function useWrapCallback(
     }
 
     return {
-      wrapCallback: () => {
+      wrapCallback: (): void => {
         appDispatch(
           tokenWrapActions.trigger({
             account,
@@ -845,7 +865,10 @@ export function useWrapCallback(
 
 // The first trade shown to the user is implicitly accepted but every subsequent update to
 // the trade params require an explicit user approval
-export function useAcceptedTrade(trade: NullUndefined<Trade>) {
+export function useAcceptedTrade(trade: NullUndefined<Trade>): {
+  onAcceptTrade: () => undefined
+  acceptedTrade: Trade<Currency, Currency, TradeType> | undefined
+} {
   const [latestTradeAccepted, setLatestTradeAccepted] = useState<boolean>(false)
   const prevTradeRef = useRef<Trade>()
   useEffect(() => {
@@ -855,7 +878,7 @@ export function useAcceptedTrade(trade: NullUndefined<Trade>) {
 
   const acceptedTrade = prevTradeRef.current ?? trade ?? undefined
 
-  const onAcceptTrade = () => {
+  const onAcceptTrade = (): undefined => {
     if (!trade) return undefined
     setLatestTradeAccepted(true)
     prevTradeRef.current = trade
@@ -864,7 +887,7 @@ export function useAcceptedTrade(trade: NullUndefined<Trade>) {
   return { onAcceptTrade, acceptedTrade }
 }
 
-export function useShowSwapNetworkNotification(chainId?: ChainId) {
+export function useShowSwapNetworkNotification(chainId?: ChainId): void {
   const prevChainId = usePrevious(chainId)
   const appDispatch = useAppDispatch()
   useEffect(() => {

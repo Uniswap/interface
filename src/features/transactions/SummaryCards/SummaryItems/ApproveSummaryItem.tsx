@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { AssetType } from 'src/entities/assets'
@@ -18,7 +18,9 @@ export default function ApproveSummaryItem({
   transaction,
   readonly,
   ...rest
-}: BaseTransactionSummaryProps & { transaction: { typeInfo: ApproveTransactionInfo } }) {
+}: BaseTransactionSummaryProps & {
+  transaction: { typeInfo: ApproveTransactionInfo }
+}): ReactElement {
   const { t } = useTranslation()
   const currencyInfo = useCurrencyInfo(
     buildCurrencyId(transaction.chainId, transaction.typeInfo.tokenAddress)

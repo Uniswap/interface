@@ -1,7 +1,7 @@
 // TODO(MOB-3866): reduce component complexity
 /* eslint-disable complexity */
 import { AnyAction } from '@reduxjs/toolkit'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
@@ -55,7 +55,7 @@ export function TransferTokenForm({
   onNext,
   warnings,
   showingSelectorScreen,
-}: TransferTokenProps) {
+}: TransferTokenProps): ReactElement {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
@@ -169,7 +169,7 @@ export function TransferTokenForm({
     exactAmountUSD,
   ])
 
-  const onTransferWarningClick = () => {
+  const onTransferWarningClick = (): void => {
     Keyboard.dismiss()
     setShowWarningModal(true)
   }
@@ -201,8 +201,8 @@ export function TransferTokenForm({
           modalName={ModalName.SendWarning}
           severity={transferWarning.severity}
           title={transferWarning.title}
-          onClose={() => setShowWarningModal(false)}
-          onConfirm={() => setShowWarningModal(false)}
+          onClose={(): void => setShowWarningModal(false)}
+          onConfirm={(): void => setShowWarningModal(false)}
         />
       )}
       <TransferFormSpeedbumps
@@ -233,11 +233,13 @@ export function TransferTokenForm({
                 value={isUSDInput ? exactAmountUSD : exactAmountToken}
                 warnings={warnings}
                 onSelectionChange={
-                  showNativeKeyboard ? undefined : (start, end) => setInputSelection({ start, end })
+                  showNativeKeyboard
+                    ? undefined
+                    : (start, end): void => setInputSelection({ start, end })
                 }
-                onSetAmount={(value) => onSetAmount(CurrencyField.INPUT, value, isUSDInput)}
+                onSetAmount={(value): void => onSetAmount(CurrencyField.INPUT, value, isUSDInput)}
                 onSetMax={onSetMax}
-                onShowTokenSelector={() => onShowTokenSelector(CurrencyField.INPUT)}
+                onShowTokenSelector={(): void => onShowTokenSelector(CurrencyField.INPUT)}
               />
             </Box>
           )}
@@ -336,7 +338,7 @@ export function TransferTokenForm({
               hasCurrencyPrefix={isUSDInput}
               resetSelection={resetSelection}
               selection={inputSelection}
-              setValue={(newValue) => onSetAmount(CurrencyField.INPUT, newValue, isUSDInput)}
+              setValue={(newValue): void => onSetAmount(CurrencyField.INPUT, newValue, isUSDInput)}
               value={isUSDInput ? exactAmountUSD : exactAmountToken}
             />
           )}

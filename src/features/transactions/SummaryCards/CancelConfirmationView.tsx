@@ -29,7 +29,7 @@ export function CancelConfirmationView({
   onBack: () => void
   onCancel: (txRequest: providers.TransactionRequest) => void
   transactionDetails: TransactionDetails
-}) {
+}): JSX.Element {
   const { t } = useTranslation()
   const accountAddress = useActiveAccount()?.address
 

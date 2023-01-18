@@ -1,5 +1,6 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Contract, providers } from 'ethers'
+import { CallEffect } from 'redux-saga/effects'
 import { Weth } from 'src/abis/types'
 import WETH_ABI from 'src/abis/weth.json'
 import { ChainId } from 'src/constants/chains'
@@ -34,7 +35,13 @@ export async function getWethContract(
   return new Contract(WRAPPED_NATIVE_CURRENCY[chainId].address, WETH_ABI, provider) as Weth
 }
 
-export function* wrap(params: Params) {
+export function* wrap(params: Params): Generator<
+  CallEffect<{
+    transactionResponse: providers.TransactionResponse
+  }>,
+  void,
+  unknown
+> {
   const { account, inputCurrencyAmount, txRequest, txId } = params
   let typeInfo: TransactionTypeInfo
 

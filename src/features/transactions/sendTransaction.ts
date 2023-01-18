@@ -1,5 +1,7 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import { providers } from 'ethers'
+import { BigNumberish, BytesLike, providers } from 'ethers'
+import { AccessListish } from 'ethers/lib/utils'
+import { CallEffect, PutEffect } from 'redux-saga/effects'
 import { getProvider, getSignerManager } from 'src/app/walletContext'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { isFlashbotsSupportedChainId } from 'src/features/providers/flashbotsProvider'
@@ -40,7 +42,9 @@ export interface SendTransactionParams {
 
 // A utility for sagas to send transactions
 // All outgoing transactions should go through here
-export function* sendTransaction(params: SendTransactionParams) {
+// TODO(MOB-3857): Add more specific return type definition
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function* sendTransaction(params: SendTransactionParams): Generator<any> {
   const { chainId, account, options } = params
   const request = options.request
 
@@ -74,7 +78,10 @@ export async function signAndSendTransaction(
   account: Account,
   provider: providers.Provider,
   signerManager: SignerManager
-) {
+): Promise<{
+  transactionResponse: providers.TransactionResponse
+  populatedRequest: providers.TransactionRequest
+}> {
   const signer = await signerManager.getSignerForAccount(account)
   if (!signer) return Promise.reject(`No signer found for ${account}`)
 
@@ -87,7 +94,22 @@ export async function signAndSendTransaction(
 }
 
 // hexlifyTransaction is idemnpotent so it's safe to call more than once on a singular transaction request
-function hexlifyTransaction(transferTxRequest: providers.TransactionRequest) {
+function hexlifyTransaction(transferTxRequest: providers.TransactionRequest): {
+  maxPriorityFeePerGas?: BigNumberish | undefined
+  maxFeePerGas?: BigNumberish | undefined
+  gasPrice?: BigNumberish | undefined
+  nonce: string | undefined
+  value: string | undefined
+  gasLimit: string | undefined
+  to?: string | undefined
+  from?: string | undefined
+  data?: BytesLike | undefined
+  chainId?: number | undefined
+  type?: number | undefined
+  accessList?: AccessListish | undefined
+  customData?: Record<string, unknown> | undefined
+  ccipReadEnabled?: boolean | undefined
+} {
   const { value, nonce, gasLimit, gasPrice, maxPriorityFeePerGas, maxFeePerGas } = transferTxRequest
   return {
     ...transferTxRequest,
@@ -113,7 +135,15 @@ function* addTransaction(
   hash: string,
   populatedRequest: providers.TransactionRequest,
   isFlashbots?: boolean
-) {
+): Generator<
+  | CallEffect<never>
+  | PutEffect<{
+      payload: TransactionDetails
+      type: string
+    }>,
+  void,
+  unknown
+> {
   const id = txId ?? createTransactionId()
   const request = getSerializableTransactionRequest(populatedRequest, chainId)
 

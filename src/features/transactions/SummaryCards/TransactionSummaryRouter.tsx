@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { BaseButtonProps } from 'src/components/buttons/TouchableArea'
 import ApproveSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/ApproveSummaryItem'
 import FiatPurchaseSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/FiatPurchaseSummaryItem'
@@ -38,7 +38,7 @@ export default function TransactionSummaryRouter({
   transaction,
   showInlineWarning,
   ...rest
-}: BaseTransactionSummaryProps) {
+}: BaseTransactionSummaryProps): ReactElement {
   switch (transaction.typeInfo.type) {
     case TransactionType.Approve:
       return (

@@ -67,7 +67,10 @@ export function usePermitSignature(
   currencyInAmount: NullUndefined<CurrencyAmount<Currency>>,
   wrapType: WrapType,
   approvalAction?: ApprovalAction
-) {
+): {
+  isLoading: boolean
+  data: PermitOptions | null | undefined
+} {
   const provider = useProvider(chainId)
   const signerManager = useWalletSigners()
   const account = useActiveAccountWithThrow()
@@ -109,7 +112,7 @@ async function getPermitSignature(
   provider: providers.Provider,
   signerManager: SignerManager,
   params: PermitTokenParams
-) {
+): Promise<PermitOptions | null> {
   const { account, chainId, tokenAddress, spender } = params
   const { address } = account
   const permitInfo = PERMITTABLE_TOKENS[chainId]?.[tokenAddress]

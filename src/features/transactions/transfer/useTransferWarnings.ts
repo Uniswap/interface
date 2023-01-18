@@ -21,7 +21,7 @@ export function getTransferWarnings(
   account: Account,
   derivedTransferInfo: DerivedTransferInfo,
   networkStatus: NetInfoState
-) {
+): Warning[] {
   const warnings: Warning[] = []
   if (!networkStatus.isConnected) {
     warnings.push(getNetworkWarning(t))
@@ -73,7 +73,7 @@ export function useTransferWarnings(
   t: TFunction,
   account: Account,
   derivedTransferInfo: DerivedTransferInfo
-) {
+): Warning[] {
   const networkStatus = useNetInfo()
   return useMemo(() => {
     return getTransferWarnings(t, account, derivedTransferInfo, networkStatus)
@@ -87,7 +87,7 @@ const checkIsMissingRequiredParams = (
   recipient: Address | undefined,
   hasCurrencyAmount: boolean,
   hasCurrencyBalance: boolean
-) => {
+): boolean => {
   const tokenAddress = currencyInInfo
     ? currencyAddress(currencyInInfo.currency)
     : nftIn?.nftContract?.address

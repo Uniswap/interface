@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
+import React, { ReactElement, useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { WarningAction } from 'src/components/modals/WarningModal/types'
 import { TokenSelector, TokenSelectorVariation } from 'src/components/TokenSelector/TokenSelector'
@@ -28,7 +28,7 @@ function otherCurrencyField(field: CurrencyField): CurrencyField {
   return field === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
 }
 
-export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
+export function SwapFlow({ prefilledState, onClose }: SwapFormProps): ReactElement {
   const { t } = useTranslation()
   const account = useActiveAccountWithThrow()
   const [state, dispatch] = useReducer(transactionStateReducer, prefilledState || emptyState)

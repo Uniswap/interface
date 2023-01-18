@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { AssetType } from 'src/entities/assets'
@@ -15,7 +15,9 @@ export default function NFTApproveSummaryItem({
   transaction,
   readonly,
   ...rest
-}: BaseTransactionSummaryProps & { transaction: { typeInfo: NFTApproveTransactionInfo } }) {
+}: BaseTransactionSummaryProps & {
+  transaction: { typeInfo: NFTApproveTransactionInfo }
+}): ReactElement {
   const { t } = useTranslation()
   const title = getTransactionTitle(transaction.status, t('Approve'), t('Approved'), t)
   return (

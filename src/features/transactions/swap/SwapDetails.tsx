@@ -1,5 +1,5 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import React, { useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -37,7 +37,7 @@ export function SwapDetails({
   onAcceptTrade,
   onShowWarning,
   onShowGasWarning,
-}: SwapDetailsProps) {
+}: SwapDetailsProps): ReactElement {
   const { t } = useTranslation()
   const [showInverseRate, setShowInverseRate] = useState(false)
 
@@ -66,7 +66,7 @@ export function SwapDetails({
               </Text>
             </Flex>
             <Flex row flex={1} flexBasis="100%" flexShrink={1} gap="none" justifyContent="flex-end">
-              <TouchableOpacity onPress={() => setShowInverseRate(!showInverseRate)}>
+              <TouchableOpacity onPress={(): void => setShowInverseRate(!showInverseRate)}>
                 <Text
                   adjustsFontSizeToFit
                   color="accentActive"
@@ -109,7 +109,7 @@ export function SwapDetails({
         p="md">
         <Text variant="subheadSmall">{t('Rate')}</Text>
         <Flex row flex={1} flexBasis="100%" flexShrink={1} gap="none" justifyContent="flex-end">
-          <TouchableOpacity onPress={() => setShowInverseRate(!showInverseRate)}>
+          <TouchableOpacity onPress={(): void => setShowInverseRate(!showInverseRate)}>
             <Text adjustsFontSizeToFit numberOfLines={1} variant="subheadSmall">
               {acceptedRate}
               <Text color="textSecondary" variant="subheadSmall">

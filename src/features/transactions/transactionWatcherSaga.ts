@@ -1,4 +1,5 @@
 import { providers } from 'ethers'
+import { PutEffect, TakeEffect } from 'redux-saga/effects'
 import { appSelect } from 'src/app/hooks'
 import { i18n } from 'src/app/i18n'
 import { getProvider } from 'src/app/walletContext'
@@ -21,7 +22,9 @@ import {
   upsertFiatOnRampTransaction,
 } from 'src/features/transactions/slice'
 import {
+  FinalizedTransactionDetails,
   TransactionDetails,
+  TransactionId,
   TransactionReceipt,
   TransactionStatus,
   TransactionType,
@@ -33,6 +36,7 @@ import { call, fork, put, race, take } from 'typed-redux-saga'
 
 const FLASHBOTS_POLLING_INTERVAL = ONE_SECOND_MS * 5
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function* transactionWatcher() {
   // Delay execution until providers are ready
   yield* call(waitForProvidersInitialized)
@@ -83,7 +87,8 @@ export function* transactionWatcher() {
   }
 }
 
-export function* getFlashbotsTxConfirmation(txHash: string, chainId: ChainId) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function* getFlashbotsTxConfirmation(txHash: string, chainId: ChainId): Generator<any> {
   while (true) {
     const status = yield* call(fetchTransactionStatus, txHash, chainId)
     if (status !== TransactionStatus.Pending) {
@@ -94,7 +99,8 @@ export function* getFlashbotsTxConfirmation(txHash: string, chainId: ChainId) {
   }
 }
 
-export function* watchFlashbotsTransaction(transaction: TransactionDetails) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function* watchFlashbotsTransaction(transaction: TransactionDetails): Generator<any> {
   const { chainId, hash, from } = transaction
 
   const txStatus = yield* call(getFlashbotsTxConfirmation, hash, chainId)
@@ -115,7 +121,8 @@ export function* watchFlashbotsTransaction(transaction: TransactionDetails) {
   yield* call(finalizeTransaction, transaction, receipt, txStatus)
 }
 
-export function* watchFiatOnRampTransaction(transaction: TransactionDetails) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function* watchFiatOnRampTransaction(transaction: TransactionDetails): Generator<any> {
   // id represents `externalTransactionId` sent to Moonpay
   const { id } = transaction
 
@@ -169,7 +176,8 @@ export function* watchFiatOnRampTransaction(transaction: TransactionDetails) {
   }
 }
 
-export function* watchTransaction(transaction: TransactionDetails) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function* watchTransaction(transaction: TransactionDetails): Generator<any> {
   const { chainId, id, hash } = transaction
 
   logger.debug('transactionWatcherSaga', 'watchTransaction', 'Watching for updates for tx:', hash)
@@ -195,7 +203,10 @@ export function* watchTransaction(transaction: TransactionDetails) {
   yield* call(finalizeTransaction, transaction, receipt)
 }
 
-export async function waitForReceipt(hash: string, provider: providers.Provider) {
+export async function waitForReceipt(
+  hash: string,
+  provider: providers.Provider
+): Promise<providers.TransactionReceipt> {
   const txReceipt = await provider.waitForTransaction(hash)
   if (txReceipt) {
     logger.debug('transactionWatcherSaga', 'waitForTransactionReceipt', 'Tx receipt received', hash)
@@ -203,14 +214,28 @@ export async function waitForReceipt(hash: string, provider: providers.Provider)
   return txReceipt
 }
 
-function* waitForCancellation(chainId: ChainId, id: string) {
+function* waitForCancellation(
+  chainId: ChainId,
+  id: string
+): Generator<TakeEffect, boolean, unknown> {
   while (true) {
     const { payload } = yield* take<ReturnType<typeof cancelTransaction>>(cancelTransaction.type)
     if (payload.cancelRequest && payload.chainId === chainId && payload.id === id) return true
   }
 }
 
-function* waitForReplacement(chainId: ChainId, id: string) {
+function* waitForReplacement(
+  chainId: ChainId,
+  id: string
+): Generator<
+  TakeEffect,
+  TransactionId & {
+    newTxParams: providers.TransactionRequest
+  } & {
+    address: string
+  },
+  unknown
+> {
   while (true) {
     const { payload } = yield* take<ReturnType<typeof replaceTransaction>>(replaceTransaction.type)
     if (payload.chainId === chainId && payload.id === id) return payload
@@ -224,7 +249,14 @@ function* finalizeTransaction(
     | TransactionStatus.Success
     | TransactionStatus.Failed
     | TransactionStatus.Cancelled
-) {
+): Generator<
+  PutEffect<{
+    payload: FinalizedTransactionDetails
+    type: string
+  }>,
+  void,
+  unknown
+> {
   const status =
     statusOverride ??
     (ethersReceipt?.status

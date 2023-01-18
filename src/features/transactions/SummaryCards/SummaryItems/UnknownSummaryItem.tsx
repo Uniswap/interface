@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { ReactElement, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import UnknownStatus from 'src/assets/icons/question-in-circle.svg'
@@ -14,7 +14,9 @@ export default function UnknownSummaryItem({
   transaction,
   readonly,
   ...rest
-}: BaseTransactionSummaryProps & { transaction: { typeInfo: UnknownTransactionInfo } }) {
+}: BaseTransactionSummaryProps & {
+  transaction: { typeInfo: UnknownTransactionInfo }
+}): ReactElement {
   const { t } = useTranslation()
   const theme = useAppTheme()
 

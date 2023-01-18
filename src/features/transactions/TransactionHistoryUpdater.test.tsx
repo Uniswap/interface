@@ -15,7 +15,7 @@ import { render } from 'src/test/test-utils'
 
 const mockedRefetchQueries = jest.fn()
 jest.mock('src/data/hooks', () => ({
-  useRefetchQueries: () => mockedRefetchQueries,
+  useRefetchQueries: (): jest.Mock => mockedRefetchQueries,
 }))
 
 const present = dayjs('2022-02-01')

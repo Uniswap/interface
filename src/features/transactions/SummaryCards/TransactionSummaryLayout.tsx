@@ -44,7 +44,7 @@ function TransactionSummaryLayout({
   readonly: boolean
   endAdornment?: ReactElement
   icon?: ReactElement
-} & BaseButtonProps) {
+} & BaseButtonProps): ReactElement {
   const { t } = useTranslation()
 
   const [showActionsModal, setShowActionsModal] = useState(false)
@@ -70,7 +70,7 @@ function TransactionSummaryLayout({
     !readonly &&
     Object.keys(transaction.options?.request).length > 0
 
-  function handleCancel(txRequest: providers.TransactionRequest) {
+  function handleCancel(txRequest: providers.TransactionRequest): void {
     if (!transaction) return
     dispatch(
       cancelTransaction({
@@ -90,7 +90,7 @@ function TransactionSummaryLayout({
     }
   }, [status])
 
-  const onPress = () => {
+  const onPress = (): void => {
     if (readonly) {
       openTransactionLink(hash, chainId)
     } else {
@@ -157,17 +157,17 @@ function TransactionSummaryLayout({
           msTimestampAdded={addedTime}
           showCancelButton={isCancelable}
           transactionDetails={transaction}
-          onCancel={() => {
+          onCancel={(): void => {
             setShowActionsModal(false)
             setShowCancelModal(true)
           }}
-          onClose={() => setShowActionsModal(false)}
-          onExplore={() => openTransactionLink(hash, chainId)}
+          onClose={(): void => setShowActionsModal(false)}
+          onExplore={(): Promise<void> => openTransactionLink(hash, chainId)}
           onViewMoonpay={
             transaction.typeInfo.type === TransactionType.FiatPurchase &&
             // only display `View on Moonpay` when an explorer url was provided by Moonpay
             transaction.typeInfo.explorerUrl
-              ? () =>
+              ? (): Promise<void> | undefined =>
                   // avoids type casting
                   transaction.typeInfo.type === TransactionType.FiatPurchase
                     ? openMoonpayTransactionLink(transaction.typeInfo)
@@ -181,11 +181,11 @@ function TransactionSummaryLayout({
         <BottomSheetModal
           hideHandlebar={false}
           name={ModalName.TransactionActions}
-          onClose={() => setShowCancelModal(false)}>
+          onClose={(): void => setShowCancelModal(false)}>
           {transaction && (
             <CancelConfirmationView
               transactionDetails={transaction}
-              onBack={() => {
+              onBack={(): void => {
                 setShowActionsModal(true)
                 setShowCancelModal(false)
               }}
@@ -206,7 +206,7 @@ export function AssetUpdateLayout({
 }: {
   title: string | undefined
   caption?: string | undefined
-}) {
+}): ReactElement {
   return (
     <Flex grow alignItems="flex-end" gap="none">
       <Text numberOfLines={1} variant="bodyLarge">

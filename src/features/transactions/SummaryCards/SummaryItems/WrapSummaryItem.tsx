@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { ReactElement, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SwapLogoOrLogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import {
@@ -18,7 +18,7 @@ export default function WrapSummaryItem({
   showInlineWarning,
   readonly,
   ...rest
-}: BaseTransactionSummaryProps & { transaction: { typeInfo: WrapTransactionInfo } }) {
+}: BaseTransactionSummaryProps & { transaction: { typeInfo: WrapTransactionInfo } }): ReactElement {
   const { t } = useTranslation()
   const { unwrapped } = transaction.typeInfo
 

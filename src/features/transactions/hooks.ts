@@ -14,6 +14,7 @@ import {
   createSwapFromStateFromDetails,
   createWrapFormStateFromDetails,
 } from 'src/features/transactions/swap/createSwapFromStateFromDetails'
+import { TransactionState } from 'src/features/transactions/transactionState/transactionState'
 import {
   TransactionDetails,
   TransactionStatus,
@@ -25,12 +26,14 @@ import { theme } from 'src/styles/theme'
 export function usePendingTransactions(
   address: Address | null,
   ignoreTransactionTypes = [TransactionType.FiatPurchase]
+  // TODO(MOB-3968): Add more specific type definition here
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 ) {
   const transactions = useSelectAddressTransactions(address)
   return useMemo(() => {
     if (!transactions) return
     return transactions.filter(
-      (tx) =>
+      (tx: { status: TransactionStatus; typeInfo: { type: TransactionType } }) =>
         tx.status === TransactionStatus.Pending &&
         !ignoreTransactionTypes.includes(tx.typeInfo.type)
     )
@@ -38,11 +41,15 @@ export function usePendingTransactions(
 }
 
 // sorted oldest to newest
+// TODO(MOB-3968): Add more specific type definition here
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function useSortedPendingTransactions(address: Address | null) {
   const transactions = usePendingTransactions(address)
   return useMemo(() => {
     if (!transactions) return
-    return transactions.sort((a, b) => a.addedTime - b.addedTime)
+    return transactions.sort(
+      (a: TransactionDetails, b: TransactionDetails) => a.addedTime - b.addedTime
+    )
   }, [transactions])
 }
 
@@ -54,7 +61,7 @@ export function useSelectTransaction(
   return useAppSelector(makeSelectTransaction(address, chainId, txId))
 }
 
-export function useSelectAddressTransactions(address: Address | null) {
+export function useSelectAddressTransactions(address: Address | null): TransactionDetails[] {
   return useAppSelector(makeSelectAddressTransactions(address))
 }
 
@@ -62,7 +69,7 @@ export function useCreateSwapFormState(
   address: Address | undefined,
   chainId: ChainId | undefined,
   txId: string | undefined
-) {
+): TransactionState | undefined {
   const transaction = useSelectTransaction(address, chainId, txId)
 
   const inputCurrencyId =
@@ -97,7 +104,7 @@ export function useCreateWrapFormState(
   txId: string | undefined,
   inputCurrency: NullUndefined<Currency>,
   outputCurrency: NullUndefined<Currency>
-) {
+): TransactionState | undefined {
   const transaction = useSelectTransaction(address, chainId, txId)
 
   return useMemo(() => {
@@ -119,6 +126,8 @@ export function useCreateWrapFormState(
 export function useMergeLocalAndRemoteTransactions(
   address: string,
   remoteTransactions: TransactionDetails[]
+  // TODO(MOB-3968): Add more specific type definition here
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 ) {
   const localTransactions = useSelectAddressTransactions(address)
 
@@ -126,7 +135,7 @@ export function useMergeLocalAndRemoteTransactions(
   const combinedTransactionList = useMemo(() => {
     if (!address) return EMPTY_ARRAY
     const localHashes: Set<string> = new Set()
-    localTransactions?.map((t) => {
+    localTransactions?.map((t: { hash: string }) => {
       localHashes.add(t.hash)
     })
     const formattedRemote = remoteTransactions.reduce((accum: TransactionDetails[], txn) => {
@@ -135,20 +144,20 @@ export function useMergeLocalAndRemoteTransactions(
     }, [])
     return (localTransactions ?? [])
       .concat(formattedRemote)
-      .sort((a, b) => (a.addedTime > b.addedTime ? -1 : 1))
+      .sort((a: TransactionDetails, b: TransactionDetails) => (a.addedTime > b.addedTime ? -1 : 1))
   }, [address, localTransactions, remoteTransactions])
 
   return combinedTransactionList
 }
 
-export function useLowestPendingNonce() {
+export function useLowestPendingNonce(): BigNumberish | undefined {
   const activeAccountAddress = useActiveAccountAddressWithThrow()
   const pending = usePendingTransactions(activeAccountAddress)
 
   return useMemo(() => {
     let min: BigNumberish | undefined
     if (!pending) return
-    pending.map((txn) => {
+    pending.map((txn: TransactionDetails) => {
       const currentNonce = txn.options?.request?.nonce
       min = min ? (currentNonce ? (min < currentNonce ? min : currentNonce) : min) : currentNonce
     })
@@ -165,11 +174,13 @@ export function useAllTransactionsBetweenAddresses(
   sender: Address,
   recipient: string | undefined | null
 ): TransactionDetails[] {
+  // TODO(MOB-3968): Add more specific type definition here
   const txnsToSearch = useSelectAddressTransactions(sender)
   return useMemo(() => {
     if (!sender || !recipient || !txnsToSearch) return EMPTY_ARRAY
     const commonTxs = txnsToSearch.filter(
-      (tx) => tx.typeInfo.type === TransactionType.Send && tx.typeInfo.recipient === recipient
+      (tx: TransactionDetails) =>
+        tx.typeInfo.type === TransactionType.Send && tx.typeInfo.recipient === recipient
     )
     return commonTxs.length ? commonTxs : EMPTY_ARRAY
   }, [recipient, sender, txnsToSearch])
@@ -177,17 +188,22 @@ export function useAllTransactionsBetweenAddresses(
 
 const MIN_INPUT_DECIMALPAD_GAP = theme.spacing.sm
 
-export function useShouldShowNativeKeyboard() {
+export function useShouldShowNativeKeyboard(): {
+  onInputPanelLayout: (event: LayoutChangeEvent) => void
+  onDecimalPadLayout: (event: LayoutChangeEvent) => void
+  isLayoutPending: boolean
+  showNativeKeyboard: boolean
+} {
   const [containerHeight, setContainerHeight] = useState<number>()
   const [decimalPadY, setDecimalPadY] = useState<number>()
 
-  const onInputPanelLayout = (event: LayoutChangeEvent) => {
+  const onInputPanelLayout = (event: LayoutChangeEvent): void => {
     if (containerHeight === undefined) {
       setContainerHeight(event.nativeEvent.layout.height)
     }
   }
 
-  const onDecimalPadLayout = (event: LayoutChangeEvent) => {
+  const onDecimalPadLayout = (event: LayoutChangeEvent): void => {
     if (decimalPadY === undefined) {
       setDecimalPadY(event.nativeEvent.layout.y)
     }
@@ -212,7 +228,11 @@ export function useDynamicFontSizing(
   maxCharWidthAtMaxFontSize: number,
   maxFontSize: number,
   minFontSize: number
-) {
+): {
+  onLayout: (event: LayoutChangeEvent) => void
+  fontSize: number
+  onSetFontSize: (amount: string) => void
+} {
   const [fontSize, setFontSize] = useState(maxFontSize)
   const [textInputElementWidth, setTextInputElementWidth] = useState<number>(0)
 
@@ -245,7 +265,7 @@ const getStringWidth = (
   maxCharWidthAtMaxFontSize: number,
   currentFontSize: number,
   maxFontSize: number
-) => {
+): number => {
   const widthAtMaxFontSize = value.length * maxCharWidthAtMaxFontSize
   return widthAtMaxFontSize * (currentFontSize / maxFontSize)
 }

@@ -1,10 +1,12 @@
 import { BigNumber, BigNumberish, providers } from 'ethers'
+import { CallEffect } from 'redux-saga/effects'
 import ERC1155_ABI from 'src/abis/erc1155.json'
 import ERC20_ABI from 'src/abis/erc20.json'
 import ERC721_ABI from 'src/abis/erc721.json'
 import { Erc1155, Erc20, Erc721 } from 'src/abis/types'
 import { getContractManager, getProvider } from 'src/app/walletContext'
 import { AssetType } from 'src/entities/assets'
+import { ContractManager } from 'src/features/contracts/ContractManager'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import { TransferTokenParams } from 'src/features/transactions/transfer/useTransferTransactionRequest'
 import { SendTokenTransactionInfo, TransactionType } from 'src/features/transactions/types'
@@ -18,7 +20,14 @@ type Params = {
   txRequest: providers.TransactionRequest
 }
 
-export function* transferToken(params: Params) {
+export function* transferToken(params: Params): Generator<
+  | CallEffect<void>
+  | CallEffect<{
+      transactionResponse: providers.TransactionResponse
+    }>,
+  void,
+  unknown
+> {
   const { transferTokenParams, txRequest } = params
   const { txId, account, chainId } = transferTokenParams
   const typeInfo = getTransferTypeInfo(transferTokenParams)
@@ -34,7 +43,7 @@ export function* transferToken(params: Params) {
   logger.debug('transferToken', '', 'Transfer complete')
 }
 
-function validateTransferAmount(amountInWei: string, currentBalance: BigNumberish) {
+function validateTransferAmount(amountInWei: string, currentBalance: BigNumberish): void {
   const amount = BigNumber.from(amountInWei)
   if (amount.lte(0)) {
     logger.error('transferToken', 'validateTransferAmount', 'Invalid transfer amount')
@@ -46,7 +55,13 @@ function validateTransferAmount(amountInWei: string, currentBalance: BigNumberis
   }
 }
 
-export function* validateTransfer(transferTokenParams: TransferTokenParams) {
+export function* validateTransfer(
+  transferTokenParams: TransferTokenParams
+): Generator<
+  CallEffect<providers.JsonRpcProvider> | CallEffect<ContractManager> | CallEffect<BigNumber>,
+  void,
+  unknown
+> {
   const { type, chainId, tokenAddress, account } = transferTokenParams
   const contractManager = yield* call(getContractManager)
   const provider = yield* call(getProvider, chainId)
@@ -99,7 +114,7 @@ export function* validateTransfer(transferTokenParams: TransferTokenParams) {
   }
 }
 
-function getTransferTypeInfo(params: TransferTokenParams) {
+function getTransferTypeInfo(params: TransferTokenParams): SendTokenTransactionInfo {
   const { type: assetType, toAddress, tokenAddress } = params
   const typeInfo: SendTokenTransactionInfo = {
     assetType,

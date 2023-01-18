@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { default as React, useCallback, useMemo } from 'react'
+import { default as React, ReactElement, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { Flex } from 'src/components/layout'
@@ -15,8 +15,11 @@ import { Theme } from 'src/styles/theme'
 import { setClipboard } from 'src/utils/clipboard'
 import { openMoonpayHelpLink, openUniswapHelpLink } from 'src/utils/linking'
 
-function renderOptionItem(label: string, textColorOverride?: keyof Theme['colors']) {
-  return () => (
+function renderOptionItem(
+  label: string,
+  textColorOverride?: keyof Theme['colors']
+): () => ReactElement {
+  return (): ReactElement => (
     <>
       <Separator />
       <Text
@@ -49,7 +52,7 @@ export default function TransactionActionsModal({
   onViewMoonpay,
   showCancelButton,
   transactionDetails,
-}: TransactionActionModalProps) {
+}: TransactionActionModalProps): ReactElement {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 
@@ -88,7 +91,7 @@ export default function TransactionActionsModal({
       ...maybeViewOnEtherscanOption,
       {
         key: ElementName.Copy,
-        onPress: () => {
+        onPress: (): void => {
           // for fiat onramp, pending: id==externalTxId, complete: id==hash
           // else, id==hash
           setClipboard(transactionDetails.id)
@@ -101,7 +104,7 @@ export default function TransactionActionsModal({
       },
       {
         key: ElementName.GetHelp,
-        onPress: () => {
+        onPress: (): void => {
           if (isFiatOnRampTransaction) {
             openMoonpayHelpLink()
           } else {

@@ -23,7 +23,7 @@ export function getSwapWarnings(
   account: Account,
   derivedSwapInfo: DerivedSwapInfo,
   networkStatus: NetInfoState
-) {
+): Warning[] {
   const warnings: Warning[] = []
   if (!networkStatus.isConnected) {
     warnings.push(getNetworkWarning(t))
@@ -119,14 +119,18 @@ export function getSwapWarnings(
   return warnings
 }
 
-export function useSwapWarnings(t: TFunction, account: Account, derivedSwapInfo: DerivedSwapInfo) {
+export function useSwapWarnings(
+  t: TFunction,
+  account: Account,
+  derivedSwapInfo: DerivedSwapInfo
+): Warning[] {
   const networkStatus = useNetInfo()
   return useMemo(() => {
     return getSwapWarnings(t, account, derivedSwapInfo, networkStatus)
   }, [account, derivedSwapInfo, t, networkStatus])
 }
 
-const formIncomplete = (derivedSwapInfo: DerivedSwapInfo) => {
+const formIncomplete = (derivedSwapInfo: DerivedSwapInfo): boolean => {
   const { currencyAmounts, currencies, exactCurrencyField } = derivedSwapInfo
 
   if (
@@ -141,7 +145,7 @@ const formIncomplete = (derivedSwapInfo: DerivedSwapInfo) => {
   return false
 }
 
-export function isPriceImpactWarning(warning: Warning) {
+export function isPriceImpactWarning(warning: Warning): boolean {
   return (
     warning.type === WarningLabel.PriceImpactMedium || warning.type === WarningLabel.PriceImpactHigh
   )

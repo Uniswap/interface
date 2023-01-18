@@ -17,6 +17,8 @@ export type SwapParams = {
   swapTxRequest: providers.TransactionRequest
 }
 
+// TODO(MOB-3857): Add more specific return type
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function* approveAndSwap(params: SwapParams) {
   try {
     const { account, approveTxRequest, swapTxRequest, txId, trade } = params

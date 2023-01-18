@@ -6,7 +6,7 @@ export function getTransactionTitle(
   presentText: string, // present tense form of the title
   pastText: string | undefined, // past tense form of the title
   t: TFunction
-) {
+): string {
   const prefixFail = status === TransactionStatus.Failed ? 'Failed ' : ''
 
   // For items with pending or alert banner UI (see AlertBanner.tsx), use present tense.

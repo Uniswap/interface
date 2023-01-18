@@ -21,7 +21,7 @@ import { ONE_SECOND_MS } from 'src/utils/time'
  * For all imported accounts, checks for new transactions and updates
  * the notification status in redux.
  */
-export function TransactionHistoryUpdater() {
+export function TransactionHistoryUpdater(): ReactElement {
   const accounts = useAccounts()
   const addresses = useMemo(() => {
     return Object.keys(accounts)

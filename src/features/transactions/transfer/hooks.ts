@@ -138,7 +138,7 @@ export function useTransferERC20Callback(
   amountInWei?: string,
   transferTxWithGasSettings?: providers.TransactionRequest,
   onSubmit?: () => void
-) {
+): (() => void) | null {
   const account = useActiveAccount()
 
   return useTransferCallback(
@@ -167,7 +167,7 @@ export function useTransferNFTCallback(
   tokenId?: string,
   txRequest?: providers.TransactionRequest,
   onSubmit?: () => void
-) {
+): (() => void) | null {
   const account = useActiveAccount()
 
   return useTransferCallback(
@@ -205,7 +205,13 @@ function useTransferCallback(
   }, [transferTokenParams, dispatch, txRequest, onSubmit])
 }
 
-export function useIsSmartContractAddress(address: string | undefined, chainId: ChainId) {
+export function useIsSmartContractAddress(
+  address: string | undefined,
+  chainId: ChainId
+): {
+  loading: boolean
+  isSmartContractAddress: boolean
+} {
   const provider = useProvider(chainId)
   const [state, setState] = useState<{ loading: boolean; isSmartContractAddress: boolean }>({
     loading: true,

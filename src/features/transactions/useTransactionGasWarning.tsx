@@ -16,7 +16,15 @@ import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 export function useTransactionGasWarning(
   { chainId, currencyAmounts, currencyBalances }: DerivedSwapInfo | DerivedTransferInfo,
   gasFee?: string
-) {
+):
+  | {
+      type: WarningLabel
+      severity: WarningSeverity
+      action: WarningAction
+      title: string
+      message: string
+    }
+  | undefined {
   const { t } = useTranslation()
   const address = useActiveAccountAddressWithThrow()
   const { balance: nativeCurrencyBalance } = useOnChainNativeCurrencyBalance(chainId, address)

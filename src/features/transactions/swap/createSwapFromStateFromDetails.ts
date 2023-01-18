@@ -22,7 +22,7 @@ export function createSwapFromStateFromDetails({
   transactionDetails,
   inputCurrency,
   outputCurrency,
-}: Props) {
+}: Props): TransactionState | undefined {
   const txHash = transactionDetails?.hash
   const chainId = transactionDetails?.chainId
 
@@ -91,7 +91,7 @@ export function createWrapFormStateFromDetails({
   transactionDetails,
   inputCurrency,
   outputCurrency,
-}: Props) {
+}: Props): TransactionState | undefined {
   const txHash = transactionDetails?.hash
   const chainId = transactionDetails?.chainId
 

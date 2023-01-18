@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, ReactNode } from 'react'
+import React, { PropsWithChildren, ReactElement, ReactNode } from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import InfoCircle from 'src/assets/icons/info-circle.svg'
@@ -42,7 +42,7 @@ export function TransactionDetails({
   warning,
   onShowGasWarning,
   onShowWarning,
-}: PropsWithChildren<TransactionDetailsProps>) {
+}: PropsWithChildren<TransactionDetailsProps>): ReactElement {
   const theme = useAppTheme()
   const userAddress = useActiveAccountAddressWithThrow()
   const warningColor = getAlertColor(warning?.severity)

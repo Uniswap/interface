@@ -1,5 +1,5 @@
 import { TFunction } from 'i18next'
-import React, { useCallback, useMemo } from 'react'
+import React, { ReactElement, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { goBack } from 'src/app/navigation/rootNavigation'
 import { useSelectTransaction } from 'src/features/transactions/hooks'
@@ -25,7 +25,10 @@ const getTextFromTransferStatus = (
   derivedTransferInfo: DerivedTransferInfo,
   recipient: string | undefined,
   transactionDetails?: TransactionDetails
-) => {
+): {
+  title: string
+  description: string
+} => {
   const { currencyInInfo, nftIn, currencyAmounts, isUSDInput, exactAmountUSD } = derivedTransferInfo
   if (
     !transactionDetails ||
@@ -72,7 +75,11 @@ const getTextFromTransferStatus = (
   }
 }
 
-export function TransferStatus({ derivedTransferInfo, onNext, onTryAgain }: TransferStatusProps) {
+export function TransferStatus({
+  derivedTransferInfo,
+  onNext,
+  onTryAgain,
+}: TransferStatusProps): ReactElement | null {
   const { t } = useTranslation()
   const activeAddress = useActiveAccountAddressWithThrow()
 

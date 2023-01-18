@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { useMemo, useReducer, useState } from 'react'
+import React, { ReactElement, useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { WarningAction } from 'src/components/modals/WarningModal/types'
 import { RecipientSelect } from 'src/components/RecipientSelect/RecipientSelect'
@@ -29,7 +29,7 @@ interface TransferFormProps {
   onClose: () => void
 }
 
-export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
+export function TransferFlow({ prefilledState, onClose }: TransferFormProps): ReactElement {
   const [state, dispatch] = useReducer(transactionStateReducer, prefilledState || emptyState)
   const { t } = useTranslation()
   const account = useActiveAccountWithThrow()
@@ -82,7 +82,9 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
         <TokenSelector
           variation={TokenSelectorVariation.BalancesOnly}
           onBack={onHideTokenSelector}
-          onSelectCurrency={(currency: Currency) => onSelectCurrency(CurrencyField.INPUT, currency)}
+          onSelectCurrency={(currency: Currency): void =>
+            onSelectCurrency(CurrencyField.INPUT, currency)
+          }
         />
       }
       totalGasFee={gasFeeInfo?.gasFee}

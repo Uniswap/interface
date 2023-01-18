@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { AssetType } from 'src/entities/assets'
@@ -15,7 +15,9 @@ export default function NFTTradeSummaryItem({
   transaction,
   readonly,
   ...rest
-}: BaseTransactionSummaryProps & { transaction: { typeInfo: NFTTradeTransactionInfo } }) {
+}: BaseTransactionSummaryProps & {
+  transaction: { typeInfo: NFTTradeTransactionInfo }
+}): ReactElement {
   const { t } = useTranslation()
 
   const purchaseCurrencyInfo = useCurrencyInfo(transaction.typeInfo.purchaseCurrencyId)

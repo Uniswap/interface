@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
@@ -21,7 +21,7 @@ type TransactionStatusProps = {
   transactionType: 'swap' | 'send'
 }
 
-function isFinalizedState(status: TransactionStatus) {
+function isFinalizedState(status: TransactionStatus): boolean {
   return status === TransactionStatus.Success || status === TransactionStatus.Failed
 }
 
@@ -32,10 +32,10 @@ export function TransactionPending({
   onNext,
   onTryAgain,
   transactionType,
-}: TransactionStatusProps) {
+}: TransactionStatusProps): ReactElement {
   const { t } = useTranslation()
 
-  const onPressViewTransaction = () => {
+  const onPressViewTransaction = (): void => {
     navigate(Screens.Activity)
     onNext()
   }

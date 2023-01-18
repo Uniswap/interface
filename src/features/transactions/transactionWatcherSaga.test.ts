@@ -175,7 +175,7 @@ describe(watchFiatOnRampTransaction, () => {
       expectSaga(watchFiatOnRampTransaction, tx)
         .provide([
           {
-            call(effect) {
+            call(effect): TransactionDetails | undefined {
               if (effect.fn === fetchFiatOnRampTransaction) {
                 switch (fetchCalledCount++) {
                   case 0:

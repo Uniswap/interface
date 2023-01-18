@@ -11,7 +11,7 @@ const MKR = new Token(1, '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 6, 'MKR')
 const ETH = NativeCurrency.onChain(1)
 
 // helper function to make amounts more readable
-const amount = (raw: TemplateStringsArray) => BigNumber.from(raw[0]).mul(1e6).toString()
+const amount = (raw: TemplateStringsArray): string => BigNumber.from(raw[0]).mul(1e6).toString()
 
 describe('#useRoute', () => {
   it('handles an undefined payload', () => {

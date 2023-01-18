@@ -1,6 +1,6 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { TFunction } from 'i18next'
-import React, { useMemo } from 'react'
+import React, { ReactElement, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ChainId } from 'src/constants/chains'
 import { getFormattedCurrencyAmount } from 'src/features/notifications/utils'
@@ -24,11 +24,16 @@ type SwapStatusProps = {
   onTryAgain: () => void
 }
 
+type SwapStatusText = {
+  title: string
+  description: string
+}
+
 const getTextFromTxStatus = (
   t: TFunction,
   derivedSwapInfo: DerivedSwapInfo,
   transactionDetails?: TransactionDetails
-) => {
+): SwapStatusText => {
   if (derivedSwapInfo.wrapType === WrapType.NotApplicable) {
     return getTextFromSwapStatus(t, derivedSwapInfo, transactionDetails)
   }
@@ -40,7 +45,7 @@ const getTextFromWrapStatus = (
   t: TFunction,
   derivedSwapInfo: DerivedSwapInfo,
   transactionDetails?: TransactionDetails
-) => {
+): SwapStatusText => {
   const { wrapType } = derivedSwapInfo
 
   // transactionDetails may not been added to the store yet
@@ -121,7 +126,7 @@ const getTextFromSwapStatus = (
   t: TFunction,
   derivedSwapInfo: DerivedSwapInfo,
   transactionDetails?: TransactionDetails
-) => {
+): SwapStatusText => {
   // transactionDetails may not been added to the store yet
   if (!transactionDetails || transactionDetails.status === TransactionStatus.Pending) {
     return {
@@ -182,7 +187,7 @@ const getTextFromSwapStatus = (
   throw new Error('swap transaction status is in an unhandled state')
 }
 
-export function SwapStatus({ derivedSwapInfo, onNext, onTryAgain }: SwapStatusProps) {
+export function SwapStatus({ derivedSwapInfo, onNext, onTryAgain }: SwapStatusProps): ReactElement {
   const { t } = useTranslation()
   const { txId, currencies } = derivedSwapInfo
   const chainId =

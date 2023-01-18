@@ -1,7 +1,7 @@
 import { useResponsiveProp } from '@shopify/restyle'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { notificationAsync } from 'expo-haptics'
-import React, { ReactNode } from 'react'
+import React, { ReactElement, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeInUp, FadeOut } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
@@ -65,7 +65,7 @@ export function TransactionReview({
   transactionDetails,
   usdTokenEquivalentAmount,
   onPrev,
-}: TransactionReviewProps) {
+}: TransactionReviewProps): ReactElement {
   const theme = useAppTheme()
   const { t } = useTranslation()
 
@@ -221,7 +221,7 @@ export function TransactionReview({
             label={actionButtonProps.label}
             name={actionButtonProps.name}
             size={ButtonSize.Large}
-            onPress={() => {
+            onPress={(): void => {
               notificationAsync()
               if (requiredForTransactions) {
                 actionButtonTrigger()
@@ -236,7 +236,7 @@ export function TransactionReview({
   )
 }
 
-function CurrencyLogoWithLabel({ currencyInfo }: { currencyInfo: CurrencyInfo }) {
+function CurrencyLogoWithLabel({ currencyInfo }: { currencyInfo: CurrencyInfo }): ReactElement {
   const gap = useResponsiveProp({ xs: 'xxs', sm: 'xs' })
   const size = useResponsiveProp({ xs: iconSizes.md, sm: iconSizes.xl })
   return (

@@ -96,7 +96,10 @@ async function getPermit2PermitSignature(
 export function usePermit2Signature(
   currencyInAmount: NullUndefined<CurrencyAmount<Currency>>,
   skip: boolean
-) {
+): {
+  isLoading: boolean
+  data: PermitSignatureInfo | undefined
+} {
   const signerManager = useWalletSigners()
   const account = useActiveAccountWithThrow()
   const currencyIn = currencyInAmount?.currency

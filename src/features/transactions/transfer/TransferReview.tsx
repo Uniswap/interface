@@ -1,5 +1,5 @@
 import { providers } from 'ethers'
-import React, { useCallback, useState } from 'react'
+import React, { ReactElement, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
@@ -34,7 +34,7 @@ export function TransferReview({
   onPrev,
   txRequest,
   warnings,
-}: TransferFormProps) {
+}: TransferFormProps): ReactElement | null {
   const { t } = useTranslation()
   const account = useActiveAccountWithThrow()
   const [showWarningModal, setShowWarningModal] = useState(false)
@@ -89,7 +89,7 @@ export function TransferReview({
     onNext
   )
 
-  const submitCallback = () => {
+  const submitCallback = (): void => {
     onNext()
     nftIn ? transferNFTCallback?.() : transferERC20Callback?.()
   }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { AssetType } from 'src/entities/assets'
@@ -15,7 +15,9 @@ export default function NFTMintSummaryItem({
   transaction,
   readonly,
   ...rest
-}: BaseTransactionSummaryProps & { transaction: { typeInfo: NFTMintTransactionInfo } }) {
+}: BaseTransactionSummaryProps & {
+  transaction: { typeInfo: NFTMintTransactionInfo }
+}): ReactElement {
   const { t } = useTranslation()
   const title = getTransactionTitle(transaction.status, t('Mint'), t('Minted'), t)
   const currencyInfo = useCurrencyInfo(transaction.typeInfo.purchaseCurrencyId)

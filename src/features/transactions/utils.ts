@@ -44,7 +44,7 @@ export function hasSufficientFundsIncludingGas(params: {
   transactionAmount?: CurrencyAmount<NativeCurrency>
   gasFee?: string
   nativeCurrencyBalance?: CurrencyAmount<NativeCurrency>
-}) {
+}): boolean {
   const { transactionAmount, gasFee, nativeCurrencyBalance } = params
   const totalSpend = getNativeCurrencyTotalSpend(
     transactionAmount,
@@ -54,13 +54,13 @@ export function hasSufficientFundsIncludingGas(params: {
   return !totalSpend || !nativeCurrencyBalance?.lessThan(totalSpend)
 }
 
-export function createTransactionId() {
+export function createTransactionId(): string {
   return uuid()
 }
 
 export function getInputAmountFromTrade(
   typeInfo: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo
-) {
+): string {
   return typeInfo.tradeType === TradeType.EXACT_INPUT
     ? typeInfo.inputCurrencyAmountRaw
     : typeInfo.expectedInputCurrencyAmountRaw
@@ -68,7 +68,7 @@ export function getInputAmountFromTrade(
 
 export function getOutputAmountFromTrade(
   typeInfo: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo
-) {
+): string {
   return typeInfo.tradeType === TradeType.EXACT_OUTPUT
     ? typeInfo.outputCurrencyAmountRaw
     : typeInfo.expectedOutputCurrencyAmountRaw

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { ReactElement, useEffect, useRef } from 'react'
 import Rive, { Alignment, Fit, RiveRef } from 'rive-react-native'
 import { TransactionStatus } from 'src/features/transactions/types'
 
@@ -12,7 +12,7 @@ export function StatusAnimation({
 }: {
   status?: TransactionStatus
   transactionType: 'swap' | 'send'
-}) {
+}): ReactElement {
   const animationRef = useRef<RiveRef>(null)
 
   useEffect(() => {

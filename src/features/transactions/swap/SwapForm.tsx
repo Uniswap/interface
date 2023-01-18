@@ -1,7 +1,7 @@
 // TODO(MOB-3866): reduce component complexity
 /* eslint-disable complexity */
 import { AnyAction } from '@reduxjs/toolkit'
-import React, { Dispatch, memo, useCallback, useMemo, useState } from 'react'
+import React, { Dispatch, memo, ReactElement, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, StyleSheet, TextInputProps } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
@@ -57,7 +57,7 @@ function _SwapForm({
   warnings,
   exactValue,
   showingSelectorScreen,
-}: SwapFormProps) {
+}: SwapFormProps): ReactElement {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
@@ -102,12 +102,12 @@ function _SwapForm({
   const swapWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Low)
   const swapWarningColor = getAlertColor(swapWarning?.severity)
 
-  const onSwapWarningClick = () => {
+  const onSwapWarningClick = (): void => {
     Keyboard.dismiss()
     setShowWarningModal(true)
   }
 
-  const onReview = () => {
+  const onReview = (): void => {
     const txId = createTransactionId()
     onCreateTxId(txId)
     onNext()
@@ -171,8 +171,8 @@ function _SwapForm({
           modalName={ModalName.SwapWarning}
           severity={swapWarning.severity}
           title={swapWarning.title}
-          onClose={() => setShowWarningModal(false)}
-          onConfirm={() => setShowWarningModal(false)}
+          onClose={(): void => setShowWarningModal(false)}
+          onConfirm={(): void => setShowWarningModal(false)}
         />
       )}
       <Flex grow gap="xs" justifyContent="space-between">
@@ -195,11 +195,13 @@ function _SwapForm({
                 warnings={warnings}
                 onPressIn={onFocusInput}
                 onSelectionChange={
-                  showNativeKeyboard ? undefined : (start, end) => setInputSelection({ start, end })
+                  showNativeKeyboard
+                    ? undefined
+                    : (start, end): void => setInputSelection({ start, end })
                 }
-                onSetAmount={(value) => onSetAmount(CurrencyField.INPUT, value)}
+                onSetAmount={(value): void => onSetAmount(CurrencyField.INPUT, value)}
                 onSetMax={onSetMax}
-                onShowTokenSelector={() => onShowTokenSelector(CurrencyField.INPUT)}
+                onShowTokenSelector={(): void => onShowTokenSelector(CurrencyField.INPUT)}
               />
             </Flex>
           </Trace>
@@ -260,10 +262,10 @@ function _SwapForm({
                   onSelectionChange={
                     showNativeKeyboard
                       ? undefined
-                      : (start, end) => setOutputSelection({ start, end })
+                      : (start, end): void => setOutputSelection({ start, end })
                   }
-                  onSetAmount={(value) => onSetAmount(CurrencyField.OUTPUT, value)}
-                  onShowTokenSelector={() => onShowTokenSelector(CurrencyField.OUTPUT)}
+                  onSetAmount={(value): void => onSetAmount(CurrencyField.OUTPUT, value)}
+                  onShowTokenSelector={(): void => onShowTokenSelector(CurrencyField.OUTPUT)}
                 />
               </Flex>
               {swapWarning && !isBlocked ? (
@@ -316,7 +318,7 @@ function _SwapForm({
                 />
               )}
               {showRate && !isBlocked ? (
-                <TouchableArea onPress={() => setShowInverseRate(!showInverseRate)}>
+                <TouchableArea onPress={(): void => setShowInverseRate(!showInverseRate)}>
                   <Flex
                     row
                     alignItems="center"
@@ -373,7 +375,7 @@ function _SwapForm({
             <DecimalPad
               resetSelection={resetSelection}
               selection={selection[focusOnCurrencyField]}
-              setValue={(value: string) => onSetAmount(focusOnCurrencyField, value)}
+              setValue={(value: string): void => onSetAmount(focusOnCurrencyField, value)}
               value={
                 focusOnCurrencyField === exactCurrencyField ? exactValue : formattedDerivedValue
               }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DappLogoWithWCBadge } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import TransactionSummaryLayout, {
@@ -12,7 +12,7 @@ export default function WCSummaryItem({
   transaction,
   readonly,
   ...rest
-}: BaseTransactionSummaryProps & { transaction: { typeInfo: WCConfirmInfo } }) {
+}: BaseTransactionSummaryProps & { transaction: { typeInfo: WCConfirmInfo } }): ReactElement {
   const { t } = useTranslation()
   const title = getTransactionTitle(
     transaction.status,

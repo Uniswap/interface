@@ -101,7 +101,7 @@ export function formatTransactionsByDate(
 export function parseDataResponseToTransactionDetails(
   data: TransactionListQuery,
   hideSpamTokens?: boolean
-) {
+): TransactionDetails[] {
   if (data.portfolios?.[0]?.assetActivities) {
     return data.portfolios[0].assetActivities.reduce((accum: TransactionDetails[], t) => {
       const parsed = extractTransactionDetails(t)
@@ -131,7 +131,7 @@ export function deriveCurrencyAmountFromAssetResponse(
   tokenStandard: TokenStandard,
   quantity: string,
   decimals: NullUndefined<number>
-) {
+): string {
   return parseUnits(
     quantity,
     tokenStandard === TokenStandard.Native
@@ -155,7 +155,7 @@ export function getAddressFromAsset({
   tokenStandard: TokenStandard
   chain: Chain | undefined
   address: NullUndefined<string>
-}) {
+}): NullUndefined<string> {
   const supportedChainId = fromGraphQLChain(chain)
   if (!supportedChainId) {
     return null
@@ -171,6 +171,8 @@ export function getAddressFromAsset({
  * @param transactedValue Transacted value amount from TokenTransfer API response
  * @returns parsed USD value as a number if currency is of type USD
  */
-export function parseUSDValueFromAssetChange(transactedValue: NullUndefined<Partial<Amount>>) {
+export function parseUSDValueFromAssetChange(
+  transactedValue: NullUndefined<Partial<Amount>>
+): number | undefined {
   return transactedValue?.currency === Currency.Usd ? transactedValue.value ?? undefined : undefined
 }

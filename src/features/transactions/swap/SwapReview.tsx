@@ -1,5 +1,5 @@
 import { providers } from 'ethers'
-import React, { useCallback, useState } from 'react'
+import React, { ReactElement, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import InfoCircleSVG from 'src/assets/icons/info-circle.svg'
@@ -49,7 +49,7 @@ export function SwapReview({
   gasFallbackUsed,
   warnings,
   exactValue,
-}: SwapFormProps) {
+}: SwapFormProps): ReactElement | null {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const account = useActiveAccountWithThrow()
@@ -154,7 +154,7 @@ export function SwapReview({
     onPress,
   }
 
-  const getTransactionDetails = () => {
+  const getTransactionDetails = (): ReactElement | null => {
     if (isWrapAction(wrapType)) {
       return (
         <TransactionDetails

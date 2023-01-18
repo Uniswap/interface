@@ -48,7 +48,7 @@
     "esModuleInterop": true /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */,
     // "preserveSymlinks": true,              /* Do not resolve the real path of symlinks. */
     "skipLibCheck": true /* Skip type checking of declaration files. */,
-    "resolveJsonModule": true /* Allows importing modules with a ‘.json’ extension, which is a common practice in node projects. */
+    "resolveJsonModule": true /* Allows importing modules with a ‘.json’ extension, which is a common practice in node projects. */,
 
     /* Source Map Options */
     // "sourceRoot": "./",                    /* Specify the location where debugger should locate TypeScript files instead of source locations. */
@@ -59,6 +59,10 @@
     /* Experimental Options */
     // "experimentalDecorators": true,        /* Enables experimental support for ES7 decorators. */
     // "emitDecoratorMetadata": true,         /* Enables experimental support for emitting type metadata for decorators. */
+    
+    /* Other Options */
+    "noErrorTruncation": true,                /* This setting also truncates inferred return types when you hover over things in VS Code, so disabling it helps us type better. */
+
   },
   "exclude": [
     "node_modules",
