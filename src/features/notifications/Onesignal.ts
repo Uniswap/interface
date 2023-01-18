@@ -4,7 +4,7 @@ import { config } from 'src/config'
 import { getOneSignalUserIdOrError } from 'src/features/firebase/utils'
 import { logger } from 'src/utils/logger'
 
-export const initOneSignal = () => {
+export const initOneSignal = (): void => {
   OneSignal.setLogLevel(6, 0)
   OneSignal.setAppId(config.onesignalAppId)
 
@@ -45,7 +45,7 @@ export const initOneSignal = () => {
 export const promptPushPermission = (
   successCallback?: () => void,
   failureCallback?: () => void
-) => {
+): void => {
   OneSignal.promptForPushNotificationsWithUserResponse((response) => {
     logger.debug(
       'Onesignal',

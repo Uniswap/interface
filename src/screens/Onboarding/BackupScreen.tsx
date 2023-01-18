@@ -42,7 +42,7 @@ const spacerProps: BoxProps = {
   borderBottomWidth: 0.5,
 }
 
-export function BackupScreen({ navigation, route: { params } }: Props) {
+export function BackupScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
 

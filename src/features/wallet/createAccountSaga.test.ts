@@ -4,7 +4,14 @@ import { rootReducer } from 'src/app/rootReducer'
 import { Account, AccountType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
 import { createAccount } from 'src/features/wallet/createAccountSaga'
 
-const createNativeAccount = async (initialAccounts = {}, timeout = 250) => {
+const createNativeAccount = async (
+  initialAccounts = {},
+  timeout = 250
+): Promise<{
+  wallet: {
+    accounts: Account
+  }
+}> => {
   const { storeState } = await expectSaga(createAccount)
     .withReducer(rootReducer)
     .withState({

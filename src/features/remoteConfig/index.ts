@@ -9,7 +9,7 @@ import { printDebugLogs } from 'src/features/remoteConfig/utils'
  *  - Source may be local or remote depending on fetch+activation status
  *  - Values are cached for 12 hours by Firebase
  */
-export function isEnabled(config: string) {
+export function isEnabled(config: string): boolean {
   return remoteConfig().getValue(config).asString() === 'enabled'
 }
 
@@ -35,14 +35,18 @@ type LocalConfig = {
 }
 
 /** Toggles a local config to the given value. */
-function toggleLocalConfig({ config, enabled, configDefaults = TestConfigValues }: LocalConfig) {
+function toggleLocalConfig({
+  config,
+  enabled,
+  configDefaults = TestConfigValues,
+}: LocalConfig): Promise<void> {
   return initializeRemoteConfig({
     ...configDefaults,
     [config]: enabled ? 'enabled' : 'disabled',
   })
 }
 /** Initializes Firebase Remote Config with default values. */
-export async function initializeRemoteConfig(configDefaults = TestConfigValues) {
+export async function initializeRemoteConfig(configDefaults = TestConfigValues): Promise<void> {
   await remoteConfig().setDefaults(configDefaults)
   await remoteConfig().fetchAndActivate()
 

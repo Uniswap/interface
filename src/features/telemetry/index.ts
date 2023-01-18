@@ -13,7 +13,7 @@ type LogTags = {
 
 const DUMMY_KEY = '00000000000000000000000000000000'
 
-export async function initAnalytics() {
+export async function initAnalytics(): Promise<void> {
   try {
     init(
       // reporting to test project until we add the proxy in a comming PR
@@ -39,7 +39,7 @@ export async function initAnalytics() {
 }
 
 /** Logs a generic event with payload. */
-export async function logEvent(name: string, params: Record<string, unknown>) {
+export async function logEvent(name: string, params: Record<string, unknown>): Promise<void> {
   if (__DEV__) {
     logger.debug('telemetry', 'logEvent', `${name}: ${JSON.stringify(params)}`)
     return
@@ -56,7 +56,7 @@ export async function logEvent(name: string, params: Record<string, unknown>) {
  * @param extraTags Key/value pairs to enrich logging and allow filtering.
  *                  More info here: https://docs.sentry.io/platforms/react-native/enriching-events/tags/
  */
-export function captureException(context: string, error: unknown, extraTags?: LogTags) {
+export function captureException(context: string, error: unknown, extraTags?: LogTags): void {
   Sentry.captureException(error, { tags: { ...(extraTags || {}), mobileContext: context } })
 }
 
@@ -74,7 +74,7 @@ export function captureMessage(
   context: string,
   message: string,
   extraTags?: LogTags
-) {
+): void {
   Sentry.captureMessage(message, { level, tags: { ...(extraTags || {}), mobileContext: context } })
 }
 
@@ -89,7 +89,7 @@ export function sendAnalyticsEvent<EventName extends keyof EventProperties>(
   ...args: undefined extends EventProperties[EventName]
     ? [EventName] | [EventName, EventProperties[EventName]]
     : [EventName, EventProperties[EventName]]
-) {
+): void {
   const [eventName, eventProperties] = args
   if (__DEV__) {
     logger.debug(
@@ -102,7 +102,7 @@ export function sendAnalyticsEvent<EventName extends keyof EventProperties>(
   track(eventName, eventProperties)
 }
 
-export function flushAnalyticsEvents() {
+export function flushAnalyticsEvents(): void {
   if (__DEV__) {
     logger.debug('telemetry', 'flushAnalyticsEvents', 'flushing analytics events')
   }
@@ -112,7 +112,7 @@ export function flushAnalyticsEvents() {
 // didn't want to set it to Amplitude's type to keep it loose from their implementation
 type ValidPropertyValue = number | string | boolean | Array<string | number>
 
-export function setUserProperty(property: UserPropertyName, value: ValidPropertyValue) {
+export function setUserProperty(property: UserPropertyName, value: ValidPropertyValue): void {
   if (__DEV__) {
     logger.debug('telemetry', 'setUserProperty', `property: ${property}, value: ${value}`)
   }

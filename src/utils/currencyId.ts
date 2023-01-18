@@ -54,13 +54,16 @@ export function getCurrencyAddressForAnalytics(currency: Currency): string {
   return currency.address
 }
 
-export function getNativeCurrencyAddressForChain(chainId: ChainId) {
+export function getNativeCurrencyAddressForChain(chainId: ChainId): string {
   if (isPolygonChain(chainId)) return NATIVE_ADDRESS_ALT
 
   return NATIVE_ADDRESS
 }
 
-export const isNativeCurrencyAddress = (chainId: ChainId, address: NullUndefined<Address>) => {
+export const isNativeCurrencyAddress = (
+  chainId: ChainId,
+  address: NullUndefined<Address>
+): boolean => {
   if (!address) return true
 
   return isPolygonChain(chainId)

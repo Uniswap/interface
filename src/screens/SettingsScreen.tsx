@@ -170,7 +170,7 @@ export function SettingsScreen(): ReactElement {
 
 const renderItemSeparator = (): ReactElement => <Flex pt="xs" />
 
-function OnboardingRow({ iconProps }: { iconProps: SvgProps }) {
+function OnboardingRow({ iconProps }: { iconProps: SvgProps }): JSX.Element {
   const theme = useTheme()
   const { t } = useTranslation()
   const dispatch = useDispatch()

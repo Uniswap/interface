@@ -21,7 +21,10 @@ interface Props {
   sortedPendingTransactions: TransactionDetails[]
 }
 
-export function PendingNotificationBadge({ size = 24, sortedPendingTransactions }: Props) {
+export function PendingNotificationBadge({
+  size = 24,
+  sortedPendingTransactions,
+}: Props): JSX.Element {
   const theme = useAppTheme()
   const activeAccountAddress = useAppSelector(selectActiveAccountAddress)
   const notifications = useAppSelector(selectActiveAccountNotifications)
@@ -60,8 +63,8 @@ export function PendingNotificationBadge({ size = 24, sortedPendingTransactions 
   return (
     <TouchableArea
       position="relative"
-      onPress={activeAccountAddress ? navigate : () => undefined}
-      onPressIn={() => (activeAccountAddress ? preload(activeAccountAddress) : null)}>
+      onPress={activeAccountAddress ? navigate : (): void => undefined}
+      onPressIn={(): void | null => (activeAccountAddress ? preload(activeAccountAddress) : null)}>
       <Box
         alignItems="center"
         height={size}

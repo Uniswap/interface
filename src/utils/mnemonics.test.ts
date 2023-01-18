@@ -1,7 +1,7 @@
 import { MnemonicValidationError, translateMnemonicErrorMessage } from 'src/utils/mnemonics'
 
 describe(translateMnemonicErrorMessage, () => {
-  const t = (str: string) => str
+  const t = (str: string): string => str
 
   it('correct invalid phrase message', () => {
     expect(translateMnemonicErrorMessage(MnemonicValidationError.InvalidPhrase, undefined, t)).toBe(

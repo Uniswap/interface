@@ -49,7 +49,7 @@ export function NotificationToast({
   actionButton,
   address,
   useSmallDisplay,
-}: NotificationToastProps) {
+}: NotificationToastProps): JSX.Element {
   const dispatch = useAppDispatch()
   const notifications = useAppSelector(selectActiveAccountNotifications)
   const currentNotification = notifications[0]
@@ -80,14 +80,14 @@ export function NotificationToast({
   const delay = hasQueuedNotification ? 0 : hideDelay ?? DEFAULT_HIDE_DELAY
   const cancelDismiss = useTimeout(dismissLatest, delay)
 
-  const onFling = ({ nativeEvent }: FlingGestureHandlerGestureEvent) => {
+  const onFling = ({ nativeEvent }: FlingGestureHandlerGestureEvent): void => {
     if (nativeEvent.state === State.ACTIVE) {
       cancelDismiss?.()
       dismissLatest()
     }
   }
 
-  const onNotificationPress = () => {
+  const onNotificationPress = (): void => {
     cancelDismiss?.()
     if (onPress) {
       dispatch(popNotification({ address }))
@@ -97,7 +97,7 @@ export function NotificationToast({
     }
   }
 
-  const onActionButtonPress = () => {
+  const onActionButtonPress = (): void => {
     cancelDismiss?.()
     dismissLatest()
     actionButton?.onPress()
@@ -147,7 +147,7 @@ export function NotificationContent({
   actionButton,
   onPress,
   onPressIn,
-}: NotificationContentProps) {
+}: NotificationContentProps): JSX.Element {
   const endAdornment = balanceUpdate || actionButton
   return (
     <TouchableArea
@@ -197,7 +197,7 @@ export function NotificationContentSmall({
   icon,
   onPress,
   onPressIn,
-}: NotificationContentProps) {
+}: NotificationContentProps): JSX.Element {
   return (
     <Flex row flexShrink={1} justifyContent="center" pointerEvents="box-none">
       <TouchableArea

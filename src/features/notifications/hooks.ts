@@ -11,15 +11,15 @@ export enum NotificationPermission {
   Loading = 'loading',
 }
 
-export function useSelectAddressHasNotifications(address: Address | null) {
+export function useSelectAddressHasNotifications(address: Address | null): boolean | undefined {
   return useAppSelector(makeSelectHasNotifications(address))
 }
 
-export function useNotificationOSPermissionsEnabled() {
+export function useNotificationOSPermissionsEnabled(): NotificationPermission {
   const [notificationPermissionsEnabled, setNotificationPermissionsEnabled] =
     useState<NotificationPermission>(NotificationPermission.Loading)
   useFocusEffect(() => {
-    const checkNotificationPermissions = async () => {
+    const checkNotificationPermissions = async (): Promise<void> => {
       const { status } = await checkNotifications()
       const permission =
         status === 'granted' ? NotificationPermission.Enabled : NotificationPermission.Disabled
@@ -29,7 +29,7 @@ export function useNotificationOSPermissionsEnabled() {
   })
 
   useAppStateTrigger('background', 'active', () => {
-    const checkNotificationPermissions = async () => {
+    const checkNotificationPermissions = async (): Promise<void> => {
       const { status } = await checkNotifications()
       const permission =
         status === 'granted' ? NotificationPermission.Enabled : NotificationPermission.Disabled

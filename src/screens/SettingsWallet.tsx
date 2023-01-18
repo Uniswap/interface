@@ -259,7 +259,7 @@ export function SettingsWallet({
         <Box flex={1}>
           <SectionList
             ItemSeparatorComponent={renderItemSeparator}
-            keyExtractor={(_item, index) => 'wallet_settings' + index}
+            keyExtractor={(_item, index): string => 'wallet_settings' + index}
             renderItem={renderItem}
             renderSectionFooter={(): ReactElement => <Flex pt="lg" />}
             renderSectionHeader={({ section: { subTitle } }): ReactElement => (

@@ -33,5 +33,8 @@ export const { resetTokens, addDismissedWarningToken, resetDismissedWarnings } =
 export const tokensReducer = slice.reducer
 
 // selectors
-export const dismissedWarningTokensSelector = (state: RootState) =>
-  state.tokens.dismissedWarningTokens
+export const dismissedWarningTokensSelector = (
+  state: RootState
+): {
+  [currencyId: string]: boolean
+} => state.tokens.dismissedWarningTokens

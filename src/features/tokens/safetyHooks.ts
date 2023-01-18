@@ -5,6 +5,7 @@ import {
   addDismissedWarningToken,
   dismissedWarningTokensSelector,
 } from 'src/features/tokens/tokensSlice'
+import { Theme } from 'src/styles/theme'
 import { CurrencyId } from 'src/utils/currencyId'
 
 export function useTokenWarningDismissed(currencyId: NullUndefined<CurrencyId>): {
@@ -30,7 +31,9 @@ export function useTokenWarningDismissed(currencyId: NullUndefined<CurrencyId>):
   }
 }
 
-export function useTokenSafetyLevelColors(safetyLevel: NullUndefined<SafetyLevel>) {
+export function useTokenSafetyLevelColors(
+  safetyLevel: NullUndefined<SafetyLevel>
+): keyof Theme['colors'] {
   switch (safetyLevel) {
     case SafetyLevel.MediumWarning:
       return 'accentWarning'

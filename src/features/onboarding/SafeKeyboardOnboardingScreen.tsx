@@ -24,7 +24,7 @@ export function SafeKeyboardOnboardingScreen({
   subtitle,
   children,
   paddingTop = 'none',
-}: PropsWithChildren<OnboardingScreenProps>) {
+}: PropsWithChildren<OnboardingScreenProps>): JSX.Element {
   const headerHeight = useHeaderHeight()
   const theme = useAppTheme()
   const insets = useSafeAreaInsets()

@@ -12,7 +12,7 @@ import { currencyIdToAddress } from 'src/utils/currencyId'
 import { formatCurrencyAmount, formatUSDPrice, NumberType } from 'src/utils/format'
 import { logger } from 'src/utils/logger'
 
-export const formWCNotificationTitle = (appNotification: WalletConnectNotification) => {
+export const formWCNotificationTitle = (appNotification: WalletConnectNotification): string => {
   const { event, dappName, chainId } = appNotification
 
   switch (event) {
@@ -34,7 +34,7 @@ export const formApproveNotificationTitle = (
   currency: NullUndefined<Currency>,
   tokenAddress: Address,
   spender: Address
-) => {
+): string => {
   const currencySymbol = getCurrencySymbol(currency, tokenAddress)
   const address = shortenAddress(spender)
   return txStatus === TransactionStatus.Success
@@ -62,7 +62,7 @@ export const formSwapNotificationTitle = (
   outputCurrencyId: string,
   inputCurrencyAmountRaw: string,
   outputCurrencyAmountRaw: string
-) => {
+): string => {
   const inputCurrencySymbol = getCurrencySymbol(inputCurrency, currencyIdToAddress(inputCurrencyId))
   const outputCurrencySymbol = getCurrencySymbol(
     outputCurrency,
@@ -105,7 +105,7 @@ export const formWrapNotificationTitle = (
   outputCurrency: NullUndefined<Currency>,
   currencyAmountRaw: string,
   unwrapped: boolean
-) => {
+): string => {
   const inputCurrencySymbol = inputCurrency?.symbol
   const outputCurrencySymbol = outputCurrency?.symbol
 
@@ -150,7 +150,7 @@ export const formTransferCurrencyNotificationTitle = (
   tokenAddress: string,
   currencyAmountRaw: string,
   senderOrRecipient: string
-) => {
+): string => {
   const currencySymbol = getCurrencySymbol(currency, tokenAddress)
   const amount = getFormattedCurrencyAmount(currency, currencyAmountRaw)
   const shortenedAddressOrENS = getShortenedAddressOrEns(senderOrRecipient)
@@ -164,7 +164,7 @@ export const formTransferNFTNotificationTitle = (
   tokenAddress: Address,
   tokenId: string,
   senderOrRecipient: string
-) => {
+): string => {
   const nftName = nft?.name ?? `NFT ${shortenAddress(tokenAddress)} #${tokenId}`
   const shortenedAddressOrENS = getShortenedAddressOrEns(senderOrRecipient)
   return formTransferTxTitle(txType, txStatus, nftName, shortenedAddressOrENS)
@@ -174,7 +174,7 @@ export const formUnknownTxTitle = (
   txStatus: TransactionStatus,
   tokenAddress: Address | undefined,
   ensName: string | null
-) => {
+): string => {
   let addressText
   if (ensName) {
     addressText = i18n.t(' with {{ensName}}', { ensName })
@@ -195,7 +195,7 @@ const formTransferTxTitle = (
   txStatus: TransactionStatus,
   assetInfo: string,
   senderOrRecipient: string
-) => {
+): string => {
   if (txType === TransactionType.Send) {
     return txStatus === TransactionStatus.Success
       ? i18n.t('Sent {{assetInfo}} to {{senderOrRecipient}}.', { assetInfo, senderOrRecipient })
@@ -265,7 +265,7 @@ export const createBalanceUpdate = ({
   }
 }
 
-export function convertScientificNotationToNumber(value: string) {
+export function convertScientificNotationToNumber(value: string): string | JSBI {
   let convertedValue: string | BigintIsh = value
 
   // Convert scientific notation into number format so it can be parsed by BigInt properly
@@ -303,7 +303,7 @@ export const getFormattedCurrencyAmount = (
   currency: NullUndefined<Currency>,
   currencyAmountRaw: string,
   isApproximateAmount = false
-) => {
+): string => {
   if (!currency) return ''
 
   try {
@@ -324,7 +324,7 @@ const getUSDValue = (
   spotPrice: SpotPrice | undefined,
   currencyAmountRaw: string,
   currency: NullUndefined<Currency>
-) => {
+): string | undefined => {
   const price = spotPrice?.price?.value
   if (!currency || !price) return undefined
 
@@ -335,7 +335,7 @@ const getUSDValue = (
 export const getCurrencySymbol = (
   currency: NullUndefined<Currency>,
   tokenAddressString: Address | undefined
-) => {
+): string | undefined => {
   return currency?.symbol
     ? currency.symbol
     : tokenAddressString && getValidAddress(tokenAddressString, true)
@@ -343,6 +343,6 @@ export const getCurrencySymbol = (
     : tokenAddressString
 }
 
-const getShortenedAddressOrEns = (addressOrENS: string) => {
+const getShortenedAddressOrEns = (addressOrENS: string): string => {
   return getValidAddress(addressOrENS) ? shortenAddress(addressOrENS) : addressOrENS
 }

@@ -7,7 +7,7 @@ import { getFlow, getStepNumber, OnboardingEntryPoint } from 'src/features/onboa
 import { useNativeAccountExists } from 'src/features/wallet/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
 
-export const OnboardingHeader = ({ children: routeName }: HeaderTitleProps) => {
+export const OnboardingHeader = ({ children: routeName }: HeaderTitleProps): JSX.Element | null => {
   const navigation = useOnboardingStackNavigation()
   const navigationState = navigation.getState()
   const importType = navigationState.routes[navigationState.index]?.params?.importType

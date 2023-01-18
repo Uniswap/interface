@@ -5,7 +5,7 @@ import { logger } from 'src/utils/logger'
  * Simple logging util to display enabled experiments.
  * TODO: [MOB-3896] display experiments on dev screen.
  */
-export function printDebugLogs() {
+export function printDebugLogs(): void {
   const values = Object.entries(remoteConfig().getAll())
 
   logger.debug(

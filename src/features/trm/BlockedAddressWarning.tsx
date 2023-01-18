@@ -8,7 +8,7 @@ import { Flex, FlexProps } from 'src/components/layout'
 import { BlockedAddressModal } from 'src/components/modals/WarningModal/BlockedAddressModal'
 import { Text } from 'src/components/Text'
 
-export function BlockedAddressWarning(props: FlexProps) {
+export function BlockedAddressWarning(props: FlexProps): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
@@ -17,10 +17,10 @@ export function BlockedAddressWarning(props: FlexProps) {
   return (
     <>
       {showBlockedAddressModal && (
-        <BlockedAddressModal onClose={() => setShowBlockedAddressModal(false)} />
+        <BlockedAddressModal onClose={(): void => setShowBlockedAddressModal(false)} />
       )}
       <TouchableArea
-        onPress={() => {
+        onPress={(): void => {
           Keyboard.dismiss()
           setShowBlockedAddressModal(true)
         }}>

@@ -51,7 +51,9 @@ export function useUSDCPrice(
   }, [currency, stablecoin, currencyIsStablecoin, quoteAmount, trade])
 }
 
-export function useUSDCValue(currencyAmount: CurrencyAmount<Currency> | undefined | null) {
+export function useUSDCValue(
+  currencyAmount: CurrencyAmount<Currency> | undefined | null
+): CurrencyAmount<Currency> | null {
   const price = useUSDCPrice(currencyAmount?.currency)
 
   return useMemo(() => {

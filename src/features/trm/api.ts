@@ -1,3 +1,4 @@
+import { PrefetchOptions } from '@reduxjs/toolkit/dist/query/core/module'
 import { createApi, fetchBaseQuery, skipToken } from '@reduxjs/toolkit/query/react'
 import { config } from 'src/config'
 import { uniswapUrls } from 'src/constants/urls'
@@ -29,9 +30,11 @@ export const trmApi = createApi({
 })
 
 const { useTrmQuery, usePrefetch } = trmApi
-export const useTrmPrefetch = () => usePrefetch('trm')
+export const useTrmPrefetch = (): ((arg: string, options?: PrefetchOptions | undefined) => void) =>
+  usePrefetch('trm')
 
 /** Calls the TRM screen query if there is a defined non-readonly account. */
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function useTrmQueryResult(accountAddress?: string | undefined, isViewOnly = false) {
   return useTrmQuery(accountAddress && !isViewOnly ? accountAddress : skipToken)
 }

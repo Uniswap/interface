@@ -7,7 +7,7 @@ export function getAuthMethod(
   isSettingEnabled: boolean,
   isTouchIdSupported: boolean,
   isFaceIdSupported: boolean
-) {
+): AuthMethod {
   if (!isSettingEnabled) return AuthMethod.None
 
   // both cannot be true since no iOS device supports both

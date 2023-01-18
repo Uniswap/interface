@@ -31,7 +31,7 @@ export default {
   title: 'WIP/Notifications/NotificationToasts',
   component: NotificationToastRouter,
   decorators: [
-    (Story) => (
+    (Story): JSX.Element => (
       <Provider store={store}>
         <Box width={300}>
           <Story />

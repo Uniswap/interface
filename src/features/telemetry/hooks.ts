@@ -9,7 +9,7 @@ export function useTrace(trace?: ITraceContext): ITraceContext {
   return useMemo(() => ({ ...parentTrace, ...trace }), [parentTrace, trace])
 }
 
-export function useDrawerStatusLogging() {
+export function useDrawerStatusLogging(): void {
   const isDrawerOpen = useDrawerStatus() === 'open'
 
   useEffect(() => {

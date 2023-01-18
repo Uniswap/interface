@@ -22,7 +22,7 @@ type Props = {
 export function CloudBackupSetPassword({
   onPressDone: onDoneButtonPressed,
   doneButtonText,
-}: Props) {
+}: Props): JSX.Element {
   const { t } = useTranslation()
   const confirmPasswordRef = useRef<TextInput>(null)
 
@@ -35,11 +35,11 @@ export function CloudBackupSetPassword({
   const isButtonDisabled =
     !consentChecked || !!error || password.length === 0 || confirmPassword.length === 0
 
-  const onPressConsent = () => {
+  const onPressConsent = (): void => {
     setConsentChecked(!consentChecked)
   }
 
-  const onPasswordSubmitEditing = () => {
+  const onPasswordSubmitEditing = (): void => {
     if (!isValidPassword(password)) {
       setError(PasswordErrors.InvalidPassword)
       return
@@ -49,14 +49,14 @@ export function CloudBackupSetPassword({
     confirmPasswordRef.current?.focus()
   }
 
-  const onConfirmPasswordChangeText = (newConfirmPassword: string) => {
+  const onConfirmPasswordChangeText = (newConfirmPassword: string): void => {
     if (isValidPassword(password) && newConfirmPassword === password) {
       setError(undefined)
     }
     setConfirmPassword(newConfirmPassword)
   }
 
-  const onConfirmPasswordSubmitEditing = () => {
+  const onConfirmPasswordSubmitEditing = (): void => {
     if (confirmPassword !== password) {
       setError(PasswordErrors.PasswordsDoNotMatch)
       return
@@ -66,7 +66,7 @@ export function CloudBackupSetPassword({
     Keyboard.dismiss()
   }
 
-  const onPressNext = () => {
+  const onPressNext = (): void => {
     if (!isValidPassword(password)) {
       setError(PasswordErrors.InvalidPassword)
       return
@@ -90,7 +90,7 @@ export function CloudBackupSetPassword({
             placeholder={t('Enter password')}
             returnKeyType="next"
             value={password}
-            onChangeText={(newText: string) => {
+            onChangeText={(newText: string): void => {
               setError(undefined)
               setPassword(newText)
             }}
@@ -100,7 +100,7 @@ export function CloudBackupSetPassword({
             ref={confirmPasswordRef}
             placeholder={t('Confirm password')}
             value={confirmPassword}
-            onChangeText={(newText: string) => {
+            onChangeText={(newText: string): void => {
               setError(undefined)
               onConfirmPasswordChangeText(newText)
             }}

@@ -26,7 +26,7 @@ export class NativeCurrency implements NativeCurrencyClass {
 
   address = NATIVE_ADDRESS
 
-  equals(currency: Currency) {
+  equals(currency: Currency): boolean {
     return currency.isNative && currency.chainId === this.chainId
   }
 

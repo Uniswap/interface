@@ -27,7 +27,7 @@ import { shortenAddress } from 'src/utils/addresses'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.EditName>
 
-const renderHeaderLeft = () => <BackButton />
+const renderHeaderLeft = (): JSX.Element => <BackButton />
 
 export function EditNameScreen({ navigation, route: { params } }: Props): ReactElement {
   const dispatch = useAppDispatch()

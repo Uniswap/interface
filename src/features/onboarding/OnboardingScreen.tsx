@@ -24,7 +24,7 @@ export function OnboardingScreen({
   children,
   paddingTop = 'none',
   keyboardAvoidingViewEnabled = true,
-}: PropsWithChildren<OnboardingScreenProps>) {
+}: PropsWithChildren<OnboardingScreenProps>): JSX.Element {
   const headerHeight = useHeaderHeight()
   const insets = useSafeAreaInsets()
   const theme = useAppTheme()

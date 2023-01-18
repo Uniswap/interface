@@ -8,7 +8,7 @@ import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { render } from 'src/test/test-utils'
 
 jest.mock('src/utils/useAddBackButton', () => ({
-  useAddBackButton: () => jest.fn(),
+  useAddBackButton: (): jest.Mock => jest.fn(),
 }))
 
 const navigationProp = {} as CompositeNavigationProp<

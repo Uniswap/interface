@@ -25,6 +25,7 @@ export interface UseQuoteProps {
 /**
  * Fetches quote from Routing API
  */
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function useRouterQuote(params: UseQuoteProps) {
   const recipient = useActiveAccount()
   const enableUniversalRouter = useFeatureFlag(FEATURE_FLAGS.SwapPermit2, false)

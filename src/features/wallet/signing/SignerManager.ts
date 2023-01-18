@@ -6,7 +6,7 @@ import { getAddressesForStoredPrivateKeys } from 'src/lib/RNEthersRs'
 export class SignerManager {
   private readonly _signers: Record<Address, Signer> = {}
 
-  async getSignerForAccount(account: Account) {
+  async getSignerForAccount(account: Account): Promise<Signer | undefined> {
     if (this._signers[account.address]) {
       return this._signers[account.address]
     }

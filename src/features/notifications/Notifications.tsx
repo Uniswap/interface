@@ -60,15 +60,20 @@ import { buildCurrencyId } from 'src/utils/currencyId'
 export const NOTIFICATION_ICON_SIZE = iconSizes.xxl
 
 // Helpers to preload profile data, and dismiss swap and navigate
-const useNavigateToProfileTab = (address: string | undefined) => {
+const useNavigateToProfileTab = (
+  address: string | undefined
+): {
+  onPressIn: () => void
+  onPress: () => void
+} => {
   const { preload, navigate } = useEagerActivityNavigation()
 
-  const onPressIn = () => {
+  const onPressIn = (): void => {
     if (!address) return
     preload(address)
   }
 
-  const onPress = () => {
+  const onPress = (): void => {
     if (!address) return
     store.dispatch(closeModal({ name: ModalName.Swap }))
     navigate()
@@ -80,7 +85,11 @@ const useNavigateToProfileTab = (address: string | undefined) => {
   }
 }
 
-export function WCNotification({ notification }: { notification: WalletConnectNotification }) {
+export function WCNotification({
+  notification,
+}: {
+  notification: WalletConnectNotification
+}): JSX.Element {
   const { imageUrl, chainId, address, event, hideDelay } = notification
   const dispatch = useAppDispatch()
   const validChainId = toSupportedChainId(chainId)
@@ -102,7 +111,7 @@ export function WCNotification({ notification }: { notification: WalletConnectNo
     />
   )
 
-  const onPressNotification = () => {
+  const onPressNotification = (): void => {
     dispatch(
       openModal({
         name: ModalName.WalletConnectScan,
@@ -127,7 +136,7 @@ export function ApproveNotification({
   notification: { address, chainId, tokenAddress, spender, txStatus, txType, hideDelay },
 }: {
   notification: ApproveTxNotification
-}) {
+}): JSX.Element {
   const { onPress, onPressIn } = useNavigateToProfileTab(address)
 
   const currencyInfo = useCurrencyInfo(buildCurrencyId(chainId, tokenAddress))
@@ -175,7 +184,7 @@ export function SwapNotification({
   },
 }: {
   notification: SwapTxNotification
-}) {
+}): JSX.Element {
   const inputCurrencyInfo = useCurrencyInfo(inputCurrencyId)
   const outputCurrencyInfo = useCurrencyInfo(outputCurrencyId)
   const title = formSwapNotificationTitle(
@@ -196,7 +205,7 @@ export function SwapNotification({
     txStatus === TransactionStatus.Failed
       ? {
           title: t('Retry'),
-          onPress: () => {
+          onPress: (): void => {
             dispatch(closeModal({ name: ModalName.Swap }))
             dispatch(openModal({ name: ModalName.Swap, initialState: swapFormState ?? undefined }))
           },
@@ -248,7 +257,7 @@ export function WrapNotification({
   },
 }: {
   notification: WrapTxNotification
-}) {
+}): JSX.Element {
   const nativeCurrencyInfo = useNativeCurrencyInfo(chainId)
   const wrappedCurrencyInfo = useWrappedNativeCurrencyInfo(chainId)
   const inputCurrencyInfo = unwrapped ? wrappedCurrencyInfo : nativeCurrencyInfo
@@ -276,7 +285,7 @@ export function WrapNotification({
     txStatus === TransactionStatus.Failed
       ? {
           title: t('Retry'),
-          onPress: () => {
+          onPress: (): void => {
             dispatch(closeModal({ name: ModalName.Swap }))
             dispatch(openModal({ name: ModalName.Swap, initialState: wrapFormState ?? undefined }))
           },
@@ -319,7 +328,7 @@ export function TransferCurrencyNotification({
   notification,
 }: {
   notification: TransferCurrencyTxNotification
-}) {
+}): JSX.Element {
   const {
     address,
     assetType,
@@ -380,7 +389,7 @@ export function TransferNFTNotification({
   notification,
 }: {
   notification: TransferNFTTxNotification
-}) {
+}): JSX.Element {
   const { address, assetType, chainId, tokenAddress, tokenId, txType, txStatus, hideDelay } =
     notification
   const userAddress = useAppSelector(selectActiveAccountAddress) || ''
@@ -426,7 +435,7 @@ export function UnknownTxNotification({
   notification: { address, chainId, tokenAddress, txStatus, txType, hideDelay },
 }: {
   notification: TransactionNotificationBase
-}) {
+}): JSX.Element {
   const { name: ensName } = useENS(chainId, tokenAddress)
   const currencyInfo = useCurrencyInfo(buildCurrencyId(chainId, tokenAddress ?? ''))
   const title = formUnknownTxTitle(txStatus, tokenAddress, ensName)
@@ -458,7 +467,7 @@ export function ErrorNotification({
   notification: { address, errorMessage, hideDelay },
 }: {
   notification: AppErrorNotification
-}) {
+}): JSX.Element {
   return <NotificationToast address={address} hideDelay={hideDelay} title={errorMessage} />
 }
 
@@ -466,7 +475,7 @@ export function DefaultNotification({
   notification: { address, title, hideDelay },
 }: {
   notification: AppNotificationDefault
-}) {
+}): JSX.Element {
   return <NotificationToast address={address} hideDelay={hideDelay} title={title} />
 }
 
@@ -474,7 +483,7 @@ export function CopiedNotification({
   notification: { hideDelay = 2000 },
 }: {
   notification: CopyNotification
-}) {
+}): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
@@ -498,7 +507,7 @@ export function SwapNetworkNotification({
   notification: { chainId, hideDelay },
 }: {
   notification: SwapNetworkNotificationType
-}) {
+}): JSX.Element {
   const { t } = useTranslation()
   const network = CHAIN_INFO[chainId].label
 

@@ -10,7 +10,7 @@ interface PasswordErrorProps {
   style?: StyleProp<ViewStyle>
 }
 
-export function PasswordError({ errorText, style }: PasswordErrorProps) {
+export function PasswordError({ errorText, style }: PasswordErrorProps): JSX.Element {
   const theme = useAppTheme()
 
   return (

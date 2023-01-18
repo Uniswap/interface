@@ -18,7 +18,7 @@ export default function BalanceUpdate({
   amountRaw,
   transactionType,
   transactionStatus,
-}: BalanceUpdateProps) {
+}: BalanceUpdateProps): JSX.Element | null {
   const _currencyId = currency ? currencyId(currency) : null
   const { data: spotPrice, loading } = useSpotPrice(_currencyId)
   return useMemo(() => {

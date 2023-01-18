@@ -13,6 +13,7 @@ export enum PendingAccountActions {
 /**
  * Manage all pending accounts. Useful within onboarding enable or delete in bulk.
  */
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function* managePendingAccounts(pendingAccountAction: PendingAccountActions) {
   const pendingAccounts = yield* appSelect(selectPendingAccounts)
   yield* all(

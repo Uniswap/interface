@@ -18,7 +18,7 @@ import { selectActiveAccountNotifications } from 'src/features/notifications/sel
 import { AppNotification, AppNotificationType } from 'src/features/notifications/types'
 import { TransactionType } from 'src/features/transactions/types'
 
-export function NotificationToastWrapper() {
+export function NotificationToastWrapper(): JSX.Element | null {
   const notifications = useAppSelector(selectActiveAccountNotifications)
   const notification = notifications[0]
 
@@ -27,7 +27,11 @@ export function NotificationToastWrapper() {
   return <NotificationToastRouter notification={notification} />
 }
 
-export function NotificationToastRouter({ notification }: { notification: AppNotification }) {
+export function NotificationToastRouter({
+  notification,
+}: {
+  notification: AppNotification
+}): JSX.Element | null {
   switch (notification.type) {
     case AppNotificationType.WalletConnect:
       return <WCNotification notification={notification} />

@@ -3,7 +3,7 @@ import { Mutex } from 'async-mutex'
 import { providers as ethersProviders } from 'ethers'
 import { Task } from 'redux-saga'
 import { config } from 'src/config'
-import { ChainId, CHAIN_INFO } from 'src/constants/chains'
+import { ChainId, CHAIN_INFO, L1ChainInfo, L2ChainInfo } from 'src/constants/chains'
 import { FLASHBOTS_URLS } from 'src/features/providers/constants'
 import { FLASHBOTS_SUPPORTED_CHAINS } from 'src/features/providers/flashbotsProvider'
 import { getEthersProvider } from 'src/features/providers/getEthersProvider'
@@ -27,7 +27,7 @@ interface ProviderDetails {
 export type ChainIdToProvider = Partial<Record<ChainId, ProviderDetails>>
 export type ChainIdToMutex = Partial<Record<ChainId, Mutex>>
 
-const getChainDetails = (chainId: ChainId) => {
+const getChainDetails = (chainId: ChainId): L1ChainInfo | L2ChainInfo => {
   const chainDetails = CHAIN_INFO[chainId]
   if (!chainDetails) {
     const error = new Error(`Cannot create provider for invalid chain details for ${chainId}`)
@@ -44,7 +44,7 @@ export class ProviderManager {
   private readonly _mutex: ChainIdToMutex = {}
   private onUpdate: (() => void) | null = null
 
-  setOnUpdate(onUpdate: () => void) {
+  setOnUpdate(onUpdate: () => void): void {
     this.onUpdate = onUpdate
   }
 
@@ -80,7 +80,7 @@ export class ProviderManager {
     return provider
   }
 
-  private getFlashbotsProvider(chainId: ChainId) {
+  private getFlashbotsProvider(chainId: ChainId): ethersProviders.JsonRpcProvider {
     if (!FLASHBOTS_SUPPORTED_CHAINS.includes(chainId.toString())) {
       throw new Error(`${chainId} is not supported by flashbots`)
     }
@@ -89,7 +89,7 @@ export class ProviderManager {
     return new ethersProviders.JsonRpcProvider(flashbotsUrl)
   }
 
-  removeProvider(chainId: ChainId) {
+  removeProvider(chainId: ChainId): void {
     if (!this._providers[chainId]) {
       logger.warn(
         'ProviderManager',
@@ -103,11 +103,11 @@ export class ProviderManager {
     this.onUpdate?.()
   }
 
-  hasProvider(chainId: ChainId) {
+  hasProvider(chainId: ChainId): boolean {
     return !!this._providers[chainId]
   }
 
-  tryGetProvider(chainId: ChainId) {
+  tryGetProvider(chainId: ChainId): ethersProviders.JsonRpcProvider | null {
     if (!this._providers[chainId]) return null
     const provider = this._providers[chainId]
     if (provider?.status !== ProviderStatus.Connected) return null
@@ -137,11 +137,11 @@ export class ProviderManager {
     }
   }
 
-  getAllProviders() {
+  getAllProviders(): Partial<Record<ChainId, ProviderDetails>> {
     return this._providers
   }
 
-  private async initProvider(chainId: ChainId) {
+  private async initProvider(chainId: ChainId): Promise<ethersProviders.JsonRpcProvider | null> {
     try {
       logger.debug(
         'ProviderManager',

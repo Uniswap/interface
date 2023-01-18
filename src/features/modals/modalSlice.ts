@@ -91,7 +91,7 @@ export function selectModalState<T extends keyof ModalsState>(
   return (state) => state.modals[name]
 }
 
-export function selectSomeModalOpen(state: RootState) {
+export function selectSomeModalOpen(state: RootState): boolean {
   return Object.values(state).some((modalState) => modalState.isOpen)
 }
 

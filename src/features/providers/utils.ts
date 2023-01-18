@@ -1,6 +1,8 @@
 import { ChainId } from 'src/constants/chains'
 
-export function getInfuraChainName(chainId: ChainId) {
+export function getInfuraChainName(
+  chainId: ChainId
+): 'homestead' | 'goerli' | 'arbitrum' | 'optimism' | 'matic' | 'maticmum' {
   switch (chainId) {
     case ChainId.Mainnet:
       return 'homestead'

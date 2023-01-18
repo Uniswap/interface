@@ -132,7 +132,7 @@ function TokenDetails({
   error: boolean
   retry: () => void
   loading: boolean
-}): ReactElement {
+}): JSX.Element {
   const dispatch = useAppDispatch()
 
   const theme = useAppTheme()
@@ -158,7 +158,7 @@ function TokenDetails({
     theme.colors.textTertiary
   )
 
-  const onPriceChartRetry = () => {
+  const onPriceChartRetry = (): void => {
     if (error) {
       retry()
     }

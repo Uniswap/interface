@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { ReactElement, useCallback, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
@@ -23,7 +23,7 @@ import { useAddBackButton } from 'src/utils/useAddBackButton'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.ImportMethod>
 
-export function SeedPhraseInputScreen({ navigation, route: { params } }: Props): ReactElement {
+export function SeedPhraseInputScreen({ navigation, route: { params } }: Props): JSX.Element {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 

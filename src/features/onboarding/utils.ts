@@ -56,7 +56,10 @@ export function getFlow(
 }
 
 // Reference the flow description to detect the index within total steps based on screen name.
-export function getStepNumber(flow: OnboardingScreens[], screenName?: OnboardingScreens) {
+export function getStepNumber(
+  flow: OnboardingScreens[],
+  screenName?: OnboardingScreens
+): number | undefined {
   if (!screenName) return undefined
   const stepNumber = flow.indexOf(screenName)
   return stepNumber === -1 ? undefined : stepNumber
