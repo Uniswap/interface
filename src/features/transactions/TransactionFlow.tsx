@@ -1,17 +1,20 @@
 import { AnyAction } from '@reduxjs/toolkit'
 import { providers } from 'ethers'
-import React, { Dispatch, ReactElement, useCallback, useEffect } from 'react'
+import React, { Dispatch, ReactElement, useCallback, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { TouchableWithoutFeedback } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppTheme } from 'src/app/hooks'
+import EyeIcon from 'src/assets/icons/eye.svg'
 import SortIcon from 'src/assets/icons/sort.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex, Flex } from 'src/components/layout'
-import { Warning } from 'src/components/modals/WarningModal/types'
+import { Warning, WarningSeverity } from 'src/components/modals/WarningModal/types'
+import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
-import { SectionName } from 'src/features/telemetry/constants'
+import { ModalName, SectionName } from 'src/features/telemetry/constants'
 import { DerivedSwapInfo, useSwapActionHandlers } from 'src/features/transactions/swap/hooks'
 import { SwapForm } from 'src/features/transactions/swap/SwapForm'
 import { SwapReview } from 'src/features/transactions/swap/SwapReview'
@@ -21,6 +24,8 @@ import { TransferReview } from 'src/features/transactions/transfer/TransferRevie
 import { TransferStatus } from 'src/features/transactions/transfer/TransferStatus'
 import { TransferTokenForm } from 'src/features/transactions/transfer/TransferTokenForm'
 import { ANIMATE_SPRING_CONFIG } from 'src/features/transactions/utils'
+import { AccountType } from 'src/features/wallet/accounts/types'
+import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { dimensions } from 'src/styles/sizing'
 
 export enum TransactionStep {
@@ -95,6 +100,11 @@ export function TransactionFlow({
 }: TransactionFlowProps) {
   const theme = useAppTheme()
   const insets = useSafeAreaInsets()
+  const account = useActiveAccountWithThrow()
+  const { t } = useTranslation()
+
+  const [showViewOnlyModal, setShowViewOnlyModal] = useState(false)
+  const isSwap = isSwapInfo(derivedInfo)
 
   const screenXOffset = useSharedValue(showTokenSelector || showRecipientSelector ? 1 : 0)
   useEffect(() => {
@@ -111,33 +121,56 @@ export function TransactionFlow({
   return (
     <TouchableWithoutFeedback>
       <AnimatedFlex grow row gap="none" height="100%" style={wrapperStyle}>
-        <Flex gap="sm" pb="md" px="md" style={{ marginBottom: insets.bottom }} width="100%">
+        <Flex gap="md" pb="md" px="md" style={{ marginBottom: insets.bottom }} width="100%">
           {step !== TransactionStep.SUBMITTED && (
-            <Flex row alignItems="center" justifyContent="space-between" px="sm">
-              <Text pt="xs" textAlign="left" variant={{ xs: 'subheadSmall', sm: 'subheadLarge' }}>
+            <Flex row alignItems="center" justifyContent="space-between" pt="xs" px="sm">
+              <Text textAlign="left" variant={{ xs: 'subheadSmall', sm: 'subheadLarge' }}>
                 {flowName}
               </Text>
-              {step === TransactionStep.FORM && showUSDToggle && (
-                <TouchableArea
-                  bg={isUSDInput ? 'background2' : 'none'}
-                  borderRadius="xl"
-                  px="sm"
-                  py="xs"
-                  onPress={() => onToggleUSDInput(!isUSDInput)}>
-                  <Flex row alignItems="center" gap="xxxs">
-                    <SortIcon
-                      color={theme.colors.textSecondary}
-                      height={theme.iconSizes.sm}
-                      width={theme.iconSizes.sm}
-                    />
-                    <Text
-                      color={isUSDInput ? 'textPrimary' : 'textSecondary'}
-                      variant="buttonLabelSmall">
-                      USD
-                    </Text>
-                  </Flex>
-                </TouchableArea>
-              )}
+              <Flex row gap="xxs">
+                {step === TransactionStep.FORM && showUSDToggle ? (
+                  <TouchableArea
+                    hapticFeedback
+                    bg={isUSDInput ? 'background3' : 'none'}
+                    borderRadius="sm"
+                    px="sm"
+                    py="xxs"
+                    onPress={() => onToggleUSDInput(!isUSDInput)}>
+                    <Flex row alignItems="center" gap="xxxs">
+                      <SortIcon
+                        color={theme.colors.textSecondary}
+                        height={theme.iconSizes.sm}
+                        width={theme.iconSizes.sm}
+                      />
+                      <Text
+                        color={isUSDInput ? 'textSecondary' : 'textSecondary'}
+                        variant="buttonLabelSmall">
+                        {t('USD')}
+                      </Text>
+                    </Flex>
+                  </TouchableArea>
+                ) : null}
+                {account?.type === AccountType.Readonly ? (
+                  <TouchableArea
+                    bg="background3"
+                    borderRadius="sm"
+                    justifyContent="center"
+                    px="xs"
+                    py="xxs"
+                    onPress={() => setShowViewOnlyModal(true)}>
+                    <Flex row alignItems="center" gap="xxs">
+                      <EyeIcon
+                        color={theme.colors.textSecondary}
+                        height={theme.iconSizes.sm}
+                        width={theme.iconSizes.sm}
+                      />
+                      <Text color="textSecondary" variant="buttonLabelSmall">
+                        {t('View-only')}
+                      </Text>
+                    </Flex>
+                  </TouchableArea>
+                ) : null}
+              </Flex>
             </Flex>
           )}
           <InnerContentRouter
@@ -155,6 +188,29 @@ export function TransactionFlow({
             onClose={onClose}
           />
         </Flex>
+        {showViewOnlyModal && (
+          <WarningModal
+            caption={
+              isSwap
+                ? t('You need to import this wallet via recovery phrase to swap tokens.')
+                : t('You need to import this wallet via recovery phrase to send assets.')
+            }
+            confirmText={t('Dismiss')}
+            icon={
+              <EyeIcon
+                color={theme.colors.textSecondary}
+                height={theme.iconSizes.lg}
+                width={theme.iconSizes.lg}
+              />
+            }
+            modalName={ModalName.SwapWarning}
+            severity={WarningSeverity.Low}
+            title={t('This wallet is view-only')}
+            onClose={() => setShowViewOnlyModal(false)}
+            onConfirm={() => setShowViewOnlyModal(false)}
+          />
+        )}
+
         {showTokenSelector ? tokenSelector : null}
         {showRecipientSelector && recipientSelector ? recipientSelector : null}
       </AnimatedFlex>

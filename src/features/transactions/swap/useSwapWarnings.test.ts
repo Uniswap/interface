@@ -7,7 +7,6 @@ import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { getSwapWarnings } from 'src/features/transactions/swap/useSwapWarnings'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
-import { theme } from 'src/styles/theme'
 import {
   account,
   daiCurrencyInfo,
@@ -91,7 +90,7 @@ const mockTranslate = jest.fn()
 
 describe(getSwapWarnings, () => {
   it('catches incomplete form errors', async () => {
-    const warnings = getSwapWarnings(mockTranslate, theme, account, swapState, networkUp)
+    const warnings = getSwapWarnings(mockTranslate, account, swapState, networkUp)
     expect(warnings.length).toBe(1)
     expect(warnings[0]?.type).toEqual(WarningLabel.FormIncomplete)
   })
@@ -99,7 +98,7 @@ describe(getSwapWarnings, () => {
   it('catches insufficient balance errors', () => {
     const warnings = getSwapWarnings(
       mockTranslate,
-      theme,
+
       account,
       insufficientBalanceState,
       networkUp
@@ -119,7 +118,7 @@ describe(getSwapWarnings, () => {
 
     const warnings = getSwapWarnings(
       mockTranslate,
-      theme,
+
       account,
       incompleteAndInsufficientBalanceState,
       networkUp
@@ -128,12 +127,12 @@ describe(getSwapWarnings, () => {
   })
 
   it('catches errors returned by the routing api', () => {
-    const warnings = getSwapWarnings(mockTranslate, theme, account, tradeErrorState, networkUp)
+    const warnings = getSwapWarnings(mockTranslate, account, tradeErrorState, networkUp)
     expect(warnings.find((warning) => warning.type === WarningLabel.SwapRouterError)).toBeTruthy()
   })
 
   it('errors if there is no internet', () => {
-    const warnings = getSwapWarnings(mockTranslate, theme, account, tradeErrorState, networkDown)
+    const warnings = getSwapWarnings(mockTranslate, account, tradeErrorState, networkDown)
     expect(warnings.find((warning) => warning.type === WarningLabel.NetworkError)).toBeTruthy()
   })
 })

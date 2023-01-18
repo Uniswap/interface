@@ -13,6 +13,8 @@ import {
   useTransferERC20Callback,
   useTransferNFTCallback,
 } from 'src/features/transactions/transfer/hooks'
+import { AccountType } from 'src/features/wallet/accounts/types'
+import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { currencyAddress } from 'src/utils/currencyId'
 import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'src/utils/format'
 
@@ -34,6 +36,7 @@ export function TransferReview({
   warnings,
 }: TransferFormProps) {
   const { t } = useTranslation()
+  const account = useActiveAccountWithThrow()
   const [showWarningModal, setShowWarningModal] = useState(false)
 
   const onShowWarning = useCallback(() => {
@@ -63,7 +66,8 @@ export function TransferReview({
       warning.action === WarningAction.DisableReview
   )
 
-  const actionButtonDisabled = blockingWarning || !totalGasFee || !txRequest
+  const actionButtonDisabled =
+    blockingWarning || !totalGasFee || !txRequest || account.type === AccountType.Readonly
 
   const transferERC20Callback = useTransferERC20Callback(
     txId,

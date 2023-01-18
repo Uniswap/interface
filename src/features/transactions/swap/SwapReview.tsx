@@ -23,6 +23,8 @@ import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { TransactionReview } from 'src/features/transactions/TransactionReview'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
+import { AccountType } from 'src/features/wallet/accounts/types'
+import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'src/utils/format'
 
 interface SwapFormProps {
@@ -50,6 +52,7 @@ export function SwapReview({
 }: SwapFormProps) {
   const { t } = useTranslation()
   const theme = useAppTheme()
+  const account = useActiveAccountWithThrow()
   const [showWarningModal, setShowWarningModal] = useState(false)
   const [showGasWarningModal, setShowGasWarningModal] = useState(false)
   const [warningAcknowledged, setWarningAcknowledged] = useState(false)
@@ -131,8 +134,16 @@ export function SwapReview({
     setShowGasWarningModal(false)
   }, [])
 
+  const actionButtonDisabled =
+    noValidSwap ||
+    blockingWarning ||
+    newTradeToAccept ||
+    !totalGasFee ||
+    !txRequest ||
+    account.type === AccountType.Readonly
+
   const actionButtonProps = {
-    disabled: noValidSwap || blockingWarning || newTradeToAccept || !totalGasFee || !txRequest,
+    disabled: actionButtonDisabled,
     label: getActionName(t, wrapType),
     name:
       wrapType === WrapType.Wrap
