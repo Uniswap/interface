@@ -21,11 +21,11 @@ if (isNonJestDev()) {
 }
 
 // ONLY for use once in App.tsx! If you add this in other places you will go to JAIL!
-export const usePersistedApolloClient = () => {
+export const usePersistedApolloClient = (): ApolloClient<NormalizedCacheObject> | undefined => {
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>()
 
   useEffect(() => {
-    async function init() {
+    async function init(): Promise<void> {
       const cache = setupCache()
 
       try {
@@ -79,7 +79,9 @@ export const usePersistedApolloClient = () => {
   return client
 }
 
-export function useRefetchQueries() {
+export function useRefetchQueries(): (
+  include?: Parameters<ApolloClient<NormalizedCacheObject>['refetchQueries']>[0]['include']
+) => void {
   const client = useApolloClient()
 
   return useCallback(

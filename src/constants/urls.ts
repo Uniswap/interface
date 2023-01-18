@@ -14,27 +14,27 @@ export const uniswapUrls = {
   nftUrl: 'https://app.uniswap.org/#/nfts',
 }
 
-function getUniswapApiBaseUrl() {
+function getUniswapApiBaseUrl(): string {
   return config.uniswapApiBaseUrl
 }
 
-function getUniswapRoutingApiUrl() {
+function getUniswapRoutingApiUrl(): string {
   return `${config.uniswapApiBaseUrl}/v1`
 }
 
-function getUniswapGasServiceUrl() {
+function getUniswapGasServiceUrl(): string {
   return `${config.uniswapApiBaseUrl}/v1/gas-fee`
 }
 
-function getUniswapGraphQLUrl() {
+function getUniswapGraphQLUrl(): string {
   return `${config.uniswapApiBaseUrl}/v1/graphql`
 }
 
-function getUniswapTrmUrl() {
+function getUniswapTrmUrl(): string {
   return `${config.uniswapApiBaseUrl}/v1/screen`
 }
 
-function getUniswapAmplitudeProxyUrl() {
+function getUniswapAmplitudeProxyUrl(): string {
   return `${config.uniswapApiBaseUrl}/v1/amplitude-proxy`
 }
 

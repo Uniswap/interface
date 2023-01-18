@@ -52,8 +52,8 @@ export const L2_CHAIN_IDS = [
 // Renamed from SupportedL2ChainId in web app
 export type L2ChainId = typeof L2_CHAIN_IDS[number]
 
-export const isL2Chain = (chainId?: ChainId) =>
-  chainId && L2_CHAIN_IDS.includes(chainId as L2ChainId)
+export const isL2Chain = (chainId?: ChainId): boolean =>
+  Boolean(chainId && L2_CHAIN_IDS.includes(chainId as L2ChainId))
 
 export interface L1ChainInfo {
   readonly blockWaitMsBeforeWarning?: number

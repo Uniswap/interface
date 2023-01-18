@@ -1,9 +1,9 @@
-import { InMemoryCache, NetworkStatus } from '@apollo/client'
+import { ApolloLink, InMemoryCache, NetworkStatus } from '@apollo/client'
 import { onError } from '@apollo/client/link/error'
-import { relayStylePagination } from '@apollo/client/utilities'
+import { Reference, relayStylePagination } from '@apollo/client/utilities'
 import { logger } from 'src/utils/logger'
 
-export function isNonPollingRequestInFlight(networkStatus: NetworkStatus) {
+export function isNonPollingRequestInFlight(networkStatus: NetworkStatus): boolean {
   return (
     networkStatus === NetworkStatus.loading ||
     networkStatus === NetworkStatus.setVariables ||
@@ -11,7 +11,7 @@ export function isNonPollingRequestInFlight(networkStatus: NetworkStatus) {
   )
 }
 
-export function isWarmLoadingStatus(networkStatus: NetworkStatus) {
+export function isWarmLoadingStatus(networkStatus: NetworkStatus): boolean {
   return networkStatus === NetworkStatus.loading
 }
 
@@ -19,7 +19,7 @@ export function isWarmLoadingStatus(networkStatus: NetworkStatus) {
  * Consider a query in an error state for UI purposes if query has no data, and
  * query has been loading at least once.
  */
-export function isError(networkStatus: NetworkStatus, hasData: boolean) {
+export function isError(networkStatus: NetworkStatus, hasData: boolean): boolean {
   return !hasData && networkStatus !== NetworkStatus.loading
 }
 
@@ -31,7 +31,7 @@ const APOLLO_NETWORK_ERROR_SAMPLING_RATE = 0.01
 export function setupErrorLink(
   graphqlErrorSamplingRate = APOLLO_GRAPHQL_ERROR_SAMPLING_RATE,
   networkErrorSamplingRate = APOLLO_NETWORK_ERROR_SAMPLING_RATE
-) {
+): ApolloLink {
   // Log any GraphQL errors or network error that occurred
   const errorLink = onError(({ graphQLErrors, networkError }) => {
     if (graphQLErrors) {
@@ -63,7 +63,7 @@ export function setupCache(): InMemoryCache {
 
           // tell apollo client how to reference Token items in the cache after being fetched by queries that return Token[]
           token: {
-            read(_, { args, toReference }) {
+            read(_, { args, toReference }): Reference | undefined {
               return toReference({
                 __typename: 'Token',
                 chain: args?.chain,
@@ -82,7 +82,7 @@ export function setupCache(): InMemoryCache {
         keyFields: ['chain', 'address'],
         fields: {
           address: {
-            read(address: string | null) {
+            read(address: string | null): string | null {
               // backend endpoint sometimes returns checksummed, sometimes lowercased addresses
               // always use lowercased addresses in our app for consistency
               return address?.toLowerCase() ?? null
