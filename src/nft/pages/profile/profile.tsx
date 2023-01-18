@@ -27,9 +27,9 @@ const ProfilePageWrapper = styled.div`
   }
 `
 
-const LoadedAccountPage = styled.div<{ pageWidthAdjustment: number; isNftListV2: boolean }>`
+const LoadedAccountPage = styled.div<{ pageWidthAdjustment: number; pageMargin: number }>`
   width: ${({ pageWidthAdjustment }) => `calc(100% - ${pageWidthAdjustment}px)`};
-  margin: ${({ isNftListV2 }) => (isNftListV2 ? `0px ${LIST_PAGE_MARGIN}px` : 'unset')};
+  margin: ${({ pageMargin }) => `0px ${pageMargin}px`};
 `
 
 const Center = styled.div`
@@ -86,6 +86,8 @@ const ProfileContent = () => {
       ? LIST_PAGE_MARGIN * 2
       : 0
 
+  const pageMargin = isNftListV2 && sellPageState !== ProfilePageStateType.VIEWING ? LIST_PAGE_MARGIN : 0
+
   return (
     <Trace page={InterfacePageName.NFT_PROFILE_PAGE} shouldLogImpression>
       <ProfilePageWrapper>
@@ -93,7 +95,7 @@ const ProfileContent = () => {
           <title>Genie | Sell</title>
         </Head> */}
         {account ? (
-          <LoadedAccountPage pageWidthAdjustment={pageWidthAdjustment} isNftListV2={isNftListV2}>
+          <LoadedAccountPage pageWidthAdjustment={pageWidthAdjustment} pageMargin={pageMargin}>
             {sellPageState === ProfilePageStateType.VIEWING ? <ProfilePage /> : <ListPage />}
           </LoadedAccountPage>
         ) : (
