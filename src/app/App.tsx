@@ -56,7 +56,7 @@ if (!__DEV__) {
 initializeRemoteConfig()
 initOneSignal()
 
-function App() {
+function App(): JSX.Element | null {
   const client = usePersistedApolloClient()
 
   if (!client) {
@@ -95,7 +95,7 @@ function App() {
   )
 }
 
-function AppInner() {
+function AppInner(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark'
 
   return (
@@ -109,7 +109,7 @@ const PREFETCH_OPTIONS = {
   ifOlderThan: 60 * 15, // cache results for 15 minutes
 }
 
-function DataUpdaters() {
+function DataUpdaters(): JSX.Element {
   const signerAccounts = useSignerAccounts()
   const prefetchTrm = useTrmPrefetch()
 
@@ -134,11 +134,11 @@ function DataUpdaters() {
   )
 }
 
-function NavStack({ isDarkMode }: { isDarkMode: boolean }) {
+function NavStack({ isDarkMode }: { isDarkMode: boolean }): JSX.Element {
   const renderDrawerNavigator = !useFeatureFlag(FEATURE_FLAGS.AccountSwitcherModal, false)
   return (
     <NavigationContainer
-      onReady={(navigationRef) => {
+      onReady={(navigationRef): void => {
         routingInstrumentation.registerNavigationContainer(navigationRef)
       }}>
       <OfflineBanner />
@@ -149,6 +149,7 @@ function NavStack({ isDarkMode }: { isDarkMode: boolean }) {
   )
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function getApp() {
   return __DEV__ ? App : Sentry.wrap(App)
 }

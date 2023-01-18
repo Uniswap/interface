@@ -24,11 +24,11 @@ export class ErrorBoundary extends React.Component<unknown, ErrorBoundaryState> 
     return { error }
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     logger.error('ErrorBoundary', 'componentDidCatch', 'Error caught by boundary', error, errorInfo)
   }
 
-  render() {
+  render(): React.ReactNode {
     const { error } = this.state
     if (error !== null) {
       return <ErrorScreen error={error} />
@@ -38,7 +38,7 @@ export class ErrorBoundary extends React.Component<unknown, ErrorBoundaryState> 
   }
 }
 
-function ErrorScreen({ error }: { error: Error }) {
+function ErrorScreen({ error }: { error: Error }): JSX.Element {
   const { t } = useTranslation()
   return (
     <Flex alignItems="center" flex={1} justifyContent="center" px="md" py="xxl">
@@ -53,7 +53,7 @@ function ErrorScreen({ error }: { error: Error }) {
       <Box alignSelf="stretch">
         <Button
           label={t('Restart app')}
-          onPress={() => {
+          onPress={(): void => {
             RNRestart.Restart()
           }}
         />

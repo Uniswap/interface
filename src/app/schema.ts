@@ -204,4 +204,4 @@ export const v32Schema = { ...v31Schema }
 
 // TODO: [MOB-3864] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = () => v32Schema
+export const getSchema = (): typeof v32Schema => v32Schema

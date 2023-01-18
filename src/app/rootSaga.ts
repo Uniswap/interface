@@ -131,6 +131,7 @@ export const monitoredSagaReducers: MonitoredSagaReducer = combineReducers(
   )
 )
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function* rootSaga() {
   for (const s of sagas) {
     yield spawn(s)

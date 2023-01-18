@@ -83,7 +83,10 @@ if (isNonJestDev()) {
   middlewares.push(createDebugger())
 }
 
-export const setupStore = (preloadedState?: PreloadedState<RootState>) => {
+// eslint-disable-next-line prettier/prettier, @typescript-eslint/explicit-function-return-type
+export const setupStore = (
+  preloadedState?: PreloadedState<RootState>
+) => {
   return configureStore({
     reducer: persistedReducer,
     preloadedState,
