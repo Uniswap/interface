@@ -413,7 +413,13 @@ export default function AddLiquidity({
                 <TYPE.main mb="4px">Unsupported Asset</TYPE.main>
               </ButtonPrimary>
             ) : !account ? (
+<<<<<<< HEAD
               <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+=======
+              <ButtonLight onClick={toggleWalletModal}>
+                <Trans>Connect Wallet</Trans>
+              </ButtonLight>
+>>>>>>> 195c6b264 (chore: remove uniswap analytics)
             ) : (
               <AutoColumn gap={'md'}>
                 {(approvalA === ApprovalState.NOT_APPROVED ||

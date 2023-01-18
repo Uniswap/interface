@@ -1,4 +1,9 @@
 import React from 'react'
+import { Currency } from '@uniswap/sdk-core'
+import { AutoColumn } from 'components/Column'
+import { AutoRow } from 'components/Row'
+import { COMMON_BASES } from 'constants/routing'
+import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 import { Text } from 'rebass'
 import { ChainId, Currency, currencyEquals, Token, ETHER } from '@uniswap/sdk-core'
 import styled from 'styled-components/macro'
@@ -8,6 +13,8 @@ import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import { AutoRow } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
+import { currencyId } from 'utils/currencyId'
+
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
   border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.bg3)};
@@ -56,13 +63,19 @@ export default function CommonBases({
             ETH
           </Text>
         </BaseWrapper>
-        {(typeof chainId === 'number' ? SUGGESTED_BASES[chainId] ?? [] : []).map((token: Token) => {
-          const selected = selectedCurrency?.isToken && selectedCurrency.address === token.address
+        {(typeof chainId === 'number' ? COMMON_BASES[chainId] ?? [] : []).map((currency: Currency) => {
+          const isSelected = selectedCurrency?.equals(currency)
           return (
-            <BaseWrapper onClick={() => !selected && onSelect(token)} disable={selected} key={token.address}>
-              <CurrencyLogo currency={token} style={{ marginRight: 8 }} />
+            <BaseWrapper
+              tabIndex={0}
+              onKeyPress={(e) => !isSelected && e.key === 'Enter' && onSelect(currency)}
+              onClick={() => !isSelected && onSelect(currency)}
+              disable={isSelected}
+              key={currencyId(currency)}
+            >
+              <CurrencyLogoFromList currency={currency} />
               <Text fontWeight={500} fontSize={16}>
-                {token.symbol}
+                {currency.symbol}
               </Text>
             </BaseWrapper>
           )

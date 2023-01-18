@@ -1,7 +1,9 @@
 import { Currency, currencyEquals, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import React, { useCallback, useMemo } from 'react'
+import { useCallback, useMemo,useState } from 'react'
+import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
+
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent,
@@ -40,6 +42,7 @@ export default function ConfirmSwapModal({
   isOpen,
   attemptingTxn,
   txHash,
+  swapQuoteReceivedDate,
 }: {
   isOpen: boolean
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
@@ -51,6 +54,7 @@ export default function ConfirmSwapModal({
   onAcceptChanges: () => void
   onConfirm: () => void
   swapErrorMessage: string | undefined
+  swapQuoteReceivedDate: Date | undefined
   onDismiss: () => void
 }) {
   const showAcceptChanges = useMemo(
@@ -65,6 +69,13 @@ export default function ConfirmSwapModal({
       ),
     [originalTrade, trade]
   )
+
+  const [shouldLogModalCloseEvent, setShouldLogModalCloseEvent] = useState(false)
+
+  const onModalDismiss = useCallback(() => {
+    if (isOpen) setShouldLogModalCloseEvent(true)
+    onDismiss()
+  }, [isOpen, onDismiss])
 
   const modalHeader = useCallback(() => {
     return trade ? (
@@ -82,12 +93,12 @@ export default function ConfirmSwapModal({
     return trade ? (
       <SwapModalFooter
         onConfirm={onConfirm}
-        trade={trade}
         disabledConfirm={showAcceptChanges}
         swapErrorMessage={swapErrorMessage}
+        swapQuoteReceivedDate={swapQuoteReceivedDate}
       />
     ) : null
-  }, [onConfirm, showAcceptChanges, swapErrorMessage, trade])
+  }, [onConfirm, showAcceptChanges, swapErrorMessage, trade, swapQuoteReceivedDate])
 
   // text to show while loading
   const pendingText = `Swapping ${trade?.inputAmount?.toSignificant(6)} ${
@@ -112,7 +123,7 @@ export default function ConfirmSwapModal({
   return (
     <TransactionConfirmationModal
       isOpen={isOpen}
-      onDismiss={onDismiss}
+      onDismiss={onModalDismiss}
       attemptingTxn={attemptingTxn}
       hash={txHash}
       content={confirmationContent}

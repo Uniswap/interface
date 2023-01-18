@@ -1,6 +1,5 @@
 FROM node:14.21-buster-slim as build-app
 RUN apt-get update && apt-get install -y git
-ARG REACT_APP_AMPLITUDE_PROXY_URL
 ARG REACT_APP_AWS_API_ENDPOINT
 ARG REACT_APP_FORTMATIC_KEY
 ARG REACT_APP_INFURA_KEY

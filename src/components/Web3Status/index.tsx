@@ -1,19 +1,27 @@
-import { AbstractConnector } from '@web3-react/abstract-connector'
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
-import { darken, lighten } from 'polished'
-import React, { useMemo } from 'react'
-import { Activity } from 'react-feather'
-import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
-import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
-import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
-import PortisIcon from '../../assets/images/portisIcon.png'
-import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
-import { fortmatic, injected, portis, walletconnect, walletlink } from '../../connectors'
-import { NetworkContextName } from '../../constants/misc'
-import useENSName from '../../hooks/useENSName'
-import { useHasSocks } from '../../hooks/useSocksBalance'
-import { useWalletModalToggle } from '../../state/application/hooks'
+import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
+import { FiatOnrampAnnouncement } from 'components/FiatOnrampAnnouncement'
+import { IconWrapper } from 'components/Identicon/StatusIcon'
+import WalletDropdown from 'components/WalletDropdown'
+import { getConnection } from 'connection/utils'
+import { Portal } from 'nft/components/common/Portal'
+import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
+import { darken } from 'polished'
+import { useCallback, useMemo, useRef } from 'react'
+import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
+import { useAppSelector } from 'state/hooks'
+import styled, { useTheme } from 'styled-components/macro'
+import { colors } from 'theme/colors'
+import { flexRowNoWrap } from 'theme/styles'
+
+import { useOnClickOutside } from '../../hooks/useOnClickOutside'
+import {
+  useCloseModal,
+  useModalIsOpen,
+  useToggleWalletDropdown,
+  useToggleWalletModal,
+} from '../../state/application/hooks'
+import { ApplicationModal } from '../../state/application/reducer'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import { TransactionDetails } from '../../state/transactions/reducer'
 import { shortenAddress } from '../../utils'
@@ -162,8 +170,16 @@ function StatusIcon({ connector }: { connector: AbstractConnector }) {
 }
 
 function Web3StatusInner() {
-  const { t } = useTranslation()
-  const { account, connector, error } = useWeb3React()
+  const { account, connector, chainId, ENSName } = useWeb3React()
+  const connectionType = getConnection(connector).type
+  const theme = useTheme()
+  const toggleWalletDropdown = useToggleWalletDropdown()
+  const handleWalletDropdownClick = useCallback(() => {
+    toggleWalletDropdown()
+  }, [toggleWalletDropdown])
+  const toggleWalletModal = useToggleWalletModal()
+  const walletIsOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
+  const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
 
   const { ENSName } = useENSName(account ?? undefined)
 
@@ -198,16 +214,15 @@ function Web3StatusInner() {
     )
   } else if (error) {
     return (
-      <Web3StatusError onClick={toggleWalletModal}>
-        <NetworkIcon />
-        <Text>{error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error'}</Text>
-      </Web3StatusError>
-    )
-  } else {
-    return (
-      <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
-        <Text>{t('Connect to a wallet')}</Text>
-      </Web3StatusConnect>
+      <Web3StatusConnectWrapper faded={!account}>
+        <StyledConnectButton data-testid="navbar-connect-wallet" onClick={toggleWalletModal}>
+          <Trans>Connect</Trans>
+        </StyledConnectButton>
+        <VerticalDivider />
+        <ChevronWrapper onClick={handleWalletDropdownClick} data-testid="navbar-toggle-dropdown">
+          {walletIsOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
+        </ChevronWrapper>
+      </Web3StatusConnectWrapper>
     )
   }
 }

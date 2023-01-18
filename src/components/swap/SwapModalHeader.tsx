@@ -1,7 +1,7 @@
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { ArrowDown, AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
@@ -15,6 +15,7 @@ import { FiatValue } from '../CurrencyInputPanel/FiatValue'
 import CurrencyLogo from '../CurrencyLogo'
 import { RowBetween, RowFixed } from '../Row'
 import { TruncatedText, SwapShowAcceptChanges } from './styleds'
+import { useStablecoinValue } from '../../hooks/useStablecoinPrice'
 
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import { LightCard } from '../Card'
@@ -54,9 +55,22 @@ export default function SwapModalHeader({
   const theme = useContext(ThemeContext)
 
   const [showInverted, setShowInverted] = useState<boolean>(false)
+  const [lastExecutionPrice, setLastExecutionPrice] = useState(trade.executionPrice)
+  const [priceUpdate, setPriceUpdate] = useState<number | undefined>()
 
-  const fiatValueInput = useUSDCValue(trade.inputAmount)
-  const fiatValueOutput = useUSDCValue(trade.outputAmount)
+  const fiatValueInput = useStablecoinValue(trade.inputAmount)
+  const fiatValueOutput = useStablecoinValue(trade.outputAmount)
+
+  useEffect(() => {
+    if (!trade.executionPrice.equalTo(lastExecutionPrice)) {
+      setPriceUpdate(getPriceUpdateBasisPoints(lastExecutionPrice, trade.executionPrice))
+      setLastExecutionPrice(trade.executionPrice)
+    }
+  }, [lastExecutionPrice, setLastExecutionPrice, trade.executionPrice])
+
+  useEffect(() => {
+    if (shouldLogModalCloseEvent && showAcceptChanges) setShouldLogModalCloseEvent(false)
+  }, [shouldLogModalCloseEvent, showAcceptChanges, setShouldLogModalCloseEvent, trade, priceUpdate])
 
   return (
     <AutoColumn gap={'4px'} style={{ marginTop: '1rem' }}>

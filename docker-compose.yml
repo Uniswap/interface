@@ -17,7 +17,6 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        REACT_APP_AMPLITUDE_PROXY_URL: '${REACT_APP_AMPLITUDE_PROXY_URL}'
         REACT_APP_AWS_API_ENDPOINT: '${REACT_APP_AWS_API_ENDPOINT}'
         REACT_APP_FORTMATIC_KEY: '${REACT_APP_FORTMATIC_KEY}'
         REACT_APP_INFURA_KEY: '${REACT_APP_INFURA_KEY}'
