@@ -18,7 +18,7 @@ export function MaxAmountButton({
   currencyBalance,
   onSetMax,
   style,
-}: MaxAmountButtonProps) {
+}: MaxAmountButtonProps): JSX.Element {
   const { t } = useTranslation()
 
   const maxInputAmount = maxAmountSpend(currencyBalance)
@@ -29,7 +29,7 @@ export function MaxAmountButton({
     !maxInputAmount.greaterThan(0) ||
     currencyAmount?.toExact() === maxInputAmount.toExact()
 
-  const onPress = () => {
+  const onPress = (): void => {
     if (disableMaxButton) return
 
     onSetMax(maxInputAmount.toExact())

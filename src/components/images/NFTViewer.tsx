@@ -24,7 +24,7 @@ export function NFTViewer({
   maxHeight,
   uri,
   placeholderContent,
-}: Props) {
+}: Props): JSX.Element {
   const { t } = useTranslation()
   const imageHttpUri = useMemo(() => (uri ? uriToHttp(uri)[0] : undefined), [uri])
 

@@ -7,7 +7,7 @@ export default {
   title: 'WIP/Inputs/DecimalPad',
   component: DecimalPad,
   decorators: [
-    (Story) => (
+    (Story): JSX.Element => (
       <Box bg="background3" height={300} width={300}>
         <Story />
       </Box>

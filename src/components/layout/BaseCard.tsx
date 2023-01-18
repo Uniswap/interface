@@ -16,7 +16,10 @@ const SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 4, height: 8 
 export const SHADOW_OFFSET_SMALL: ShadowProps<Theme>['shadowOffset'] = { width: 0, height: 2 }
 
 // Container
-export function Container({ children, ...trace }: PropsWithChildren<ComponentProps<typeof Trace>>) {
+export function Container({
+  children,
+  ...trace
+}: PropsWithChildren<ComponentProps<typeof Trace>>): JSX.Element {
   return (
     <Trace {...trace}>
       <Box
@@ -35,7 +38,10 @@ export function Container({ children, ...trace }: PropsWithChildren<ComponentPro
   )
 }
 
-export function Shadow({ children, ...rest }: PropsWithChildren<BoxProps<Theme, true>>) {
+export function Shadow({
+  children,
+  ...rest
+}: PropsWithChildren<BoxProps<Theme, true>>): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark'
   return (
     <Box
@@ -60,7 +66,7 @@ type HeaderProps = {
   icon?: ReactElement
 } & ComponentProps<typeof TouchableArea>
 
-function Header({ title, subtitle, onPress, icon, ...buttonProps }: HeaderProps) {
+function Header({ title, subtitle, onPress, icon, ...buttonProps }: HeaderProps): JSX.Element {
   const theme = useAppTheme()
 
   return (
@@ -116,7 +122,7 @@ function EmptyState({
   onPressAdditional,
   title,
   icon,
-}: EmptyStateProps) {
+}: EmptyStateProps): JSX.Element {
   return (
     <Flex centered gap="lg" p="sm" width="100%">
       <Flex centered>
@@ -161,7 +167,7 @@ type ErrorStateProps = {
   icon?: ReactNode
 }
 
-function ErrorState(props: ErrorStateProps) {
+function ErrorState(props: ErrorStateProps): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const {
@@ -210,7 +216,7 @@ type InlineErrorStateProps = {
   textColor?: keyof Theme['colors']
 } & Pick<ErrorStateProps, 'icon' | 'title' | 'onRetry' | 'retryButtonLabel'>
 
-function InlineErrorState(props: InlineErrorStateProps) {
+function InlineErrorState(props: InlineErrorStateProps): JSX.Element {
   const theme = useAppTheme()
   const { t } = useTranslation()
   const {

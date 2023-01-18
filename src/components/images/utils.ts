@@ -35,7 +35,7 @@ export async function fetchSVG(
   return { content: formatted, aspectRatio }
 }
 
-function freezeSvgAnimations(svg: string) {
+function freezeSvgAnimations(svg: string): string {
   // Replaces `<animate>` tag with a 'hidden' presentation group
   //      which shouldn't affect the SVG validity
   // NOTE: `fill="freeze"` on `<animate>` tags had no effect

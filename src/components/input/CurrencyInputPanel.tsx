@@ -56,7 +56,10 @@ interface DynamicSwapPanelPaddingValues {
   paddingHorizontal?: keyof Theme['spacing']
 }
 
-const getSwapPanelPaddingValues = (isOutputBox: boolean, hasCurrencyValue: boolean) => {
+const getSwapPanelPaddingValues = (
+  isOutputBox: boolean,
+  hasCurrencyValue: boolean
+): { outerPadding: DynamicSwapPanelPaddingValues; innerPadding: DynamicSwapPanelPaddingValues } => {
   const outerPadding: DynamicSwapPanelPaddingValues = hasCurrencyValue
     ? {
         // when there is a currency value, and the box is on the top, add a bit more
@@ -85,7 +88,7 @@ const getSwapPanelPaddingValues = (isOutputBox: boolean, hasCurrencyValue: boole
 }
 
 /** Input panel for a single side of a transfer action. */
-export function CurrencyInputPanel(props: CurrentInputPanelProps) {
+export function CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element {
   const {
     currencyAmount,
     currencyBalance,

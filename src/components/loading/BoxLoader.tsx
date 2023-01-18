@@ -12,7 +12,7 @@ export function BoxLoader({
   width = '100%',
   height,
   ...props
-}: BoxLoaderProps) {
+}: BoxLoaderProps): JSX.Element {
   return (
     <Box>
       {new Array(repeat).fill(null).map((_, i) => (

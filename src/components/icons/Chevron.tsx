@@ -19,7 +19,13 @@ type Props = {
   SpacingProps<Theme> &
   SpacingShorthandProps<Theme>
 
-function _Chevron({ width = 24, height = 24, direction = 'w', color, ...rest }: Props) {
+function _Chevron({
+  width = 24,
+  height = 24,
+  direction = 'w',
+  color,
+  ...rest
+}: Props): JSX.Element {
   let degree: string
   switch (direction) {
     case 'n':

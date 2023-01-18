@@ -36,13 +36,13 @@ export const TokensTab = forwardRef<FlashList<any>, TokensTabProps>(
     const isFiatOnRampEnabled =
       useFiatOnRampEnabled() && ownerAccount?.type === AccountType.SignerMnemonic
 
-    const onPressToken = (currencyId: CurrencyId) => {
+    const onPressToken = (currencyId: CurrencyId): void => {
       tokenDetailsNavigation.navigate(currencyId)
     }
 
     // when fiat on ramp is enabled for owner account, trigger buy flow
     // otherwise, trigger scan flow
-    const onPressAction = () => {
+    const onPressAction = (): void => {
       if (isFiatOnRampEnabled) {
         dispatch(openModal({ name: ModalName.FiatOnRamp }))
       } else {

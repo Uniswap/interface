@@ -29,7 +29,7 @@ export function HeaderScrollScreen({
   rightElement = <Box width={theme.iconSizes.lg} />,
   alwaysShowCenterElement,
   children,
-}: PropsWithChildren<HeaderScrollScreenProps>) {
+}: PropsWithChildren<HeaderScrollScreenProps>): JSX.Element {
   // difficult to properly type
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const listRef = useRef<any>(null)

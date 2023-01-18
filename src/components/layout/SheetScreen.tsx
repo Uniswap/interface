@@ -8,7 +8,7 @@ type Props = ComponentProps<typeof Box>
 // I.e. under a presentation: modal nav setting
 // It doesn't use SafeAreaView which would create inconsistent
 // top-bottom padding appearance on different iOS devices
-export function SheetScreen(props: PropsWithChildren<Props>) {
+export function SheetScreen(props: PropsWithChildren<Props>): JSX.Element {
   return (
     <Box bg="background0" flex={1} py="lg" {...props}>
       {/* Need to include toast here because nothing can be rendered on top of `SheetScreen` */}

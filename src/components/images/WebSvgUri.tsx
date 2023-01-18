@@ -7,7 +7,7 @@ import { logger } from 'src/utils/logger'
 
 const heightUnits = Platform.OS === 'ios' ? 'vh' : '%'
 
-const getHTML = (svgContent: string) => `
+const getHTML = (svgContent: string): string => `
 <html>
   <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no">
@@ -46,7 +46,7 @@ type SvgUriProps = {
 }
 
 /* Re-implementation of `react-native-svg#SvgUri` that has better SVG support (animations, text, etc.) */
-export function WebSvgUri({ autoplay, maxHeight, uri }: SvgUriProps) {
+export function WebSvgUri({ autoplay, maxHeight, uri }: SvgUriProps): JSX.Element {
   const [svgContent, setSvgContent] = useState<string | null>(null)
   const [aspectRatio, setDimensions] = useState<number | null>(null)
 
@@ -54,7 +54,7 @@ export function WebSvgUri({ autoplay, maxHeight, uri }: SvgUriProps) {
     const controller = new AbortController()
     const signal = controller.signal
 
-    async function fetchSvg() {
+    async function fetchSvg(): Promise<void> {
       try {
         const { content, aspectRatio: _aspectRatio } = await fetchSVG(uri, autoplay, signal)
 

@@ -10,7 +10,11 @@ import Animated, { ILayoutAnimationBuilder } from 'react-native-reanimated'
 const ReanimatedFlatList = Animated.createAnimatedComponent(FlatList as any) as any
 const AnimatedView = Animated.createAnimatedComponent(View)
 
-const createCellRenderer = (itemLayoutAnimation?: ILayoutAnimationBuilder) => {
+const createCellRenderer = (
+  itemLayoutAnimation?: ILayoutAnimationBuilder
+): React.FC<{
+  onLayout: (event: LayoutChangeEvent) => void
+}> => {
   const cellRenderer: React.FC<{
     onLayout: (event: LayoutChangeEvent) => void
   }> = (props) => {

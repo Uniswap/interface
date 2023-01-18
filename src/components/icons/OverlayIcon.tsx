@@ -7,7 +7,7 @@ type Props = {
 } & Pick<ComponentProps<typeof Box>, 'top' | 'bottom' | 'left' | 'right'>
 
 // For overlaying icons in JSX
-export default function OverlayIcon({ icon, overlay, ...props }: Props) {
+export default function OverlayIcon({ icon, overlay, ...props }: Props): JSX.Element {
   return (
     <>
       {icon}

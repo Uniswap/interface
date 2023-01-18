@@ -14,7 +14,11 @@ type ScreenProps = BackgroundColorShorthandProps<Theme> &
   Omit<NativeSafeAreaViewProps, 'mode'> &
   ComponentProps<typeof Box>
 
-function SafeAreaWithInsets({ children, edges, ...rest }: PropsWithChildren<ScreenProps>) {
+function SafeAreaWithInsets({
+  children,
+  edges,
+  ...rest
+}: PropsWithChildren<ScreenProps>): JSX.Element {
   // Safe area insets are wrong (0 when they shouldn't be) when using the <SafeAreaView>
   // component from react-native-safe-area-context, because when the initial screen is
   // outside the viewport (as is the case with a screen slide-in animation on navigation)
@@ -57,7 +61,11 @@ function SafeAreaWithInsets({ children, edges, ...rest }: PropsWithChildren<Scre
   )
 }
 
-export function Screen({ bg = 'background0', children, ...rest }: PropsWithChildren<ScreenProps>) {
+export function Screen({
+  bg = 'background0',
+  children,
+  ...rest
+}: PropsWithChildren<ScreenProps>): JSX.Element {
   return (
     <SafeAreaWithInsets bg={bg} flex={1} {...rest}>
       {children}

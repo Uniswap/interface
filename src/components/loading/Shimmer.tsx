@@ -17,7 +17,7 @@ type Props = {
   children: ReactElement<unknown, string | JSXElementConstructor<unknown>>
 }
 // inspired by tutorial found here: https://github.com/kadikraman/skeleton-loader
-export function Shimmer({ children }: Props) {
+export function Shimmer({ children }: Props): JSX.Element {
   const [layout, setLayout] = useState<LayoutRectangle | null>()
   const xPosition = useSharedValue(0)
 
@@ -42,7 +42,7 @@ export function Shimmer({ children }: Props) {
   }))
 
   if (!layout) {
-    return <View onLayout={(event) => setLayout(event.nativeEvent.layout)}>{children}</View>
+    return <View onLayout={(event): void => setLayout(event.nativeEvent.layout)}>{children}</View>
   }
 
   return (

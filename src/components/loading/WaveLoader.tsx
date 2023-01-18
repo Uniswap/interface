@@ -15,7 +15,7 @@ import { CHART_HEIGHT } from 'src/components/PriceChart/utils'
 const WAVE_WIDTH = 416
 const WAVE_DURATION = 2000
 
-export function WaveLoader() {
+export function WaveLoader(): JSX.Element {
   const theme = useAppTheme()
   const yPosition = useSharedValue(0)
 

@@ -5,7 +5,7 @@ import { Text } from 'src/components/Text'
 
 const LEFT_COLUMN_INDEXES = [1, 2, 3, 4, 5, 6]
 const RIGHT_COLUMN_INDEXES = [7, 8, 9, 10, 11, 12]
-export function HiddenMnemonicWordView() {
+export function HiddenMnemonicWordView(): JSX.Element {
   return (
     <Flex
       row
@@ -25,7 +25,7 @@ export function HiddenMnemonicWordView() {
   )
 }
 
-function HiddenWordViewColumn({ indexes }: { indexes: number[] }) {
+function HiddenWordViewColumn({ indexes }: { indexes: number[] }): JSX.Element {
   return (
     <>
       {indexes.map((value) => (

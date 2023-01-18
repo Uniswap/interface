@@ -58,7 +58,7 @@ export function Flex({
   shrink,
   spacerProps,
   ...boxProps
-}: FlexProps) {
+}: FlexProps): JSX.Element {
   const childrenArr = useMemo(() => React.Children.toArray(children).filter(Boolean), [children])
 
   const x = row || flexDirection === 'row' || flexDirection === 'row-reverse' ? gap : undefined

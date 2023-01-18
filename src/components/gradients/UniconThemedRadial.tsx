@@ -13,7 +13,7 @@ function _UniconThemedRadial({
   gradientEndColor: string
   borderRadius: keyof Theme['borderRadii']
   opacity?: number
-}) {
+}): JSX.Element {
   const theme = useAppTheme()
 
   return (

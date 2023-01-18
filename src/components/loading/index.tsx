@@ -7,7 +7,7 @@ import { TokenLoader } from 'src/components/loading/TokenLoader'
 import { WalletLoader } from 'src/components/loading/WalletLoader'
 import { WaveLoader } from 'src/components/loading/WaveLoader'
 
-function Graph() {
+function Graph(): JSX.Element {
   return (
     <Shimmer>
       <WaveLoader />
@@ -15,7 +15,7 @@ function Graph() {
   )
 }
 
-function Wallets({ repeat = 1 }: { repeat?: number }) {
+function Wallets({ repeat = 1 }: { repeat?: number }): JSX.Element {
   return (
     <Shimmer>
       <Flex gap="sm">
@@ -29,7 +29,7 @@ function Wallets({ repeat = 1 }: { repeat?: number }) {
   )
 }
 
-function Token({ repeat = 1 }: { repeat?: number }) {
+function Token({ repeat = 1 }: { repeat?: number }): JSX.Element {
   return (
     <Shimmer>
       <Flex>
@@ -43,7 +43,7 @@ function Token({ repeat = 1 }: { repeat?: number }) {
   )
 }
 
-function NFT({ repeat = 1 }: { repeat?: number }) {
+function NFT({ repeat = 1 }: { repeat?: number }): JSX.Element {
   const loader = useMemo(
     () =>
       repeat === 1 ? (
@@ -70,7 +70,7 @@ function NFT({ repeat = 1 }: { repeat?: number }) {
   return <Shimmer>{loader}</Shimmer>
 }
 
-function Box(props: BoxLoaderProps) {
+function Box(props: BoxLoaderProps): JSX.Element {
   return (
     <Shimmer>
       <BoxLoader {...props} />
@@ -78,7 +78,7 @@ function Box(props: BoxLoaderProps) {
   )
 }
 
-function Image() {
+function Image(): JSX.Element {
   return (
     <Shimmer>
       <BoxLoader aspectRatio={1} borderRadius="none" />
@@ -86,7 +86,7 @@ function Image() {
   )
 }
 
-function Favorite({ height }: { height?: number }) {
+function Favorite({ height }: { height?: number }): JSX.Element {
   return (
     <Shimmer>
       <BoxLoader backgroundColor="backgroundOutline" borderRadius="lg" height={height ?? 50} />

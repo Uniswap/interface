@@ -21,7 +21,10 @@ type WarmLoadingShimmerProps = {
 }
 
 // TODO(MOB-3553): bake this component's functionality into the Shimmer component
-export function WarmLoadingShimmer({ children, isWarmLoading = true }: WarmLoadingShimmerProps) {
+export function WarmLoadingShimmer({
+  children,
+  isWarmLoading = true,
+}: WarmLoadingShimmerProps): JSX.Element {
   const theme = useAppTheme()
 
   const [layout, setLayout] = useState<LayoutRectangle | null>()
@@ -47,7 +50,7 @@ export function WarmLoadingShimmer({ children, isWarmLoading = true }: WarmLoadi
   }))
 
   if (!layout) {
-    return <View onLayout={(event) => setLayout(event.nativeEvent.layout)}>{children}</View>
+    return <View onLayout={(event): void => setLayout(event.nativeEvent.layout)}>{children}</View>
   }
 
   if (isWarmLoading) {

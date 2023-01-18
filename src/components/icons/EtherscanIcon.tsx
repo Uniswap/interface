@@ -7,7 +7,7 @@ type Props = {
   size: number
 }
 
-export function EtherscanIcon({ size }: Props) {
+export function EtherscanIcon({ size }: Props): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark'
 
   return isDarkMode ? (

@@ -8,7 +8,7 @@ interface TokenLoaderProps {
   opacity: number
 }
 
-export function TokenLoader({ opacity }: TokenLoaderProps) {
+export function TokenLoader({ opacity }: TokenLoaderProps): JSX.Element {
   return (
     <Flex
       row

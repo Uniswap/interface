@@ -8,7 +8,7 @@ import MapIcon from 'src/assets/icons/map.svg'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 
-export function ManualBackupEducationSection() {
+export function ManualBackupEducationSection(): JSX.Element {
   const { t } = useTranslation()
   const spacer = <Box borderTopColor="backgroundOutline" borderTopWidth={0.5} />
   const theme = useAppTheme()
@@ -58,7 +58,7 @@ interface EducationRowProps {
   sublabel: string
 }
 
-function EducationRow({ icon, label, sublabel }: EducationRowProps) {
+function EducationRow({ icon, label, sublabel }: EducationRowProps): JSX.Element {
   const theme = useAppTheme()
   const labelMaxFontSizeMultiplier = useResponsiveProp({
     xs: 1.2,

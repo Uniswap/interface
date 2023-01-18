@@ -18,7 +18,7 @@ import { SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { openUri } from 'src/utils/linking'
 
-export function ForceUpgradeModal() {
+export function ForceUpgradeModal(): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
@@ -38,19 +38,19 @@ export function ForceUpgradeModal() {
     }
   }, [isSuccess, upgradeStatus])
 
-  const onPressConfirm = () => {
+  const onPressConfirm = (): void => {
     openUri(APP_STORE_LINK, /*openExternalBrowser=*/ true, /*isSafeUri=*/ true)
   }
 
-  const onClose = () => {
+  const onClose = (): void => {
     setIsVisible(false)
   }
 
-  const onPressViewRecovery = () => {
+  const onPressViewRecovery = (): void => {
     setShowSeedPhrase(true)
   }
 
-  const onDismiss = () => {
+  const onDismiss = (): void => {
     setShowSeedPhrase(false)
   }
 

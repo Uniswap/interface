@@ -7,7 +7,7 @@ type Props = {
   color?: string
 }
 
-export function _Arrow({ size = 24, color = '#000000', direction = 'e' }: Props) {
+export function _Arrow({ size = 24, color = '#000000', direction = 'e' }: Props): JSX.Element {
   let degree: string
   switch (direction) {
     case 's':

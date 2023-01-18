@@ -12,7 +12,7 @@ export const VirtualizedList = React.forwardRef<any, VirtualizedListProps>(
       ref={ref}
       ListHeaderComponent={<>{children}</>}
       data={[]}
-      keyExtractor={() => 'key'}
+      keyExtractor={(): string => 'key'}
       keyboardShouldPersistTaps="always"
       renderItem={null}
       scrollEventThrottle={16}

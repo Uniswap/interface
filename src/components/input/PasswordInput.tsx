@@ -13,7 +13,7 @@ export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>((props,
 
   const { value, placeholder, onChangeText, returnKeyType, onSubmitEditing, ...rest } = props
 
-  const onPressEyeIcon = () => {
+  const onPressEyeIcon = (): void => {
     setShowPassword(!showPassword)
   }
 

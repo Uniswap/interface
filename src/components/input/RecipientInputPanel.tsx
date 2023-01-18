@@ -22,7 +22,7 @@ interface RecipientInputPanelProps {
 export function RecipientInputPanel({
   recipientAddress,
   onToggleShowRecipientSelector,
-}: RecipientInputPanelProps) {
+}: RecipientInputPanelProps): JSX.Element {
   const theme = useAppTheme()
 
   return (
@@ -45,7 +45,7 @@ export function RecipientInputPanel({
   )
 }
 
-export function RecipientPrevTransfers({ recipient }: { recipient: string }) {
+export function RecipientPrevTransfers({ recipient }: { recipient: string }): JSX.Element {
   const { t } = useTranslation()
   const activeAddress = useActiveAccountAddressWithThrow()
   const prevTxns = useAllTransactionsBetweenAddresses(activeAddress, recipient).length

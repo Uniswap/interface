@@ -20,7 +20,7 @@ type Props = {
   SpacingProps<Theme> &
   SpacingShorthandProps<Theme>
 
-function _CheckmarkCircle({ color, size, ...rest }: Props) {
+function _CheckmarkCircle({ color, size, ...rest }: Props): JSX.Element {
   const theme = useAppTheme()
   return (
     <Box

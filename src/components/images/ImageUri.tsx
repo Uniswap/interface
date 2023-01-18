@@ -14,7 +14,7 @@ export function ImageUri({
   fallback?: ReactElement
   imageStyle?: ImageStyle
   resizeMode?: ImageResizeMode
-}) {
+}): JSX.Element | null {
   const [height, setHeight] = useState<number | null>(null)
   const [width, setWidth] = useState<number | null>(null)
   const [isError, setIsError] = useState(false)

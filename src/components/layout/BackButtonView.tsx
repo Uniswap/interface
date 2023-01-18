@@ -12,7 +12,7 @@ type Props = {
   showButtonLabel?: boolean
 }
 
-export function BackButtonView({ size, color, showButtonLabel }: Props) {
+export function BackButtonView({ size, color, showButtonLabel }: Props): JSX.Element {
   const { t } = useTranslation()
   const theme = useTheme<Theme>()
 

@@ -7,7 +7,7 @@ interface Props {
   opacity: number
 }
 
-export function WalletLoader({ opacity }: Props) {
+export function WalletLoader({ opacity }: Props): JSX.Element {
   return (
     <Flex
       row

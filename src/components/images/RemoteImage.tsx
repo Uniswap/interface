@@ -22,7 +22,7 @@ export function RemoteImage({
   height,
   width,
   fallback,
-}: Props) {
+}: Props): JSX.Element | null {
   const imageHttpUrl = uriToHttp(uri)[0]
 
   if (!imageHttpUrl) {

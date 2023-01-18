@@ -61,7 +61,7 @@ function formatNftItems(data: NftsTabQuery | undefined): NFTItem[] {
   return nfts
 }
 
-const keyExtractor = (item: NFTItem | string) =>
+const keyExtractor = (item: NFTItem | string): string =>
   typeof item === 'string'
     ? LOADING_ITEM
     : getNFTAssetKey(item.contractAddress ?? '', item.tokenId ?? '')
@@ -109,7 +109,7 @@ export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
       [navigation, owner]
     )
 
-    const onPressScan = () => {
+    const onPressScan = (): void => {
       // in case we received a pending session from a previous scan after closing modal
       dispatch(removePendingSession())
       dispatch(
@@ -127,7 +127,7 @@ export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
               hapticFeedback
               activeOpacity={1}
               hapticStyle={ImpactFeedbackStyle.Light}
-              onPress={() => onPressItem(item)}>
+              onPress={(): void => onPressItem(item)}>
               <Box
                 alignItems="center"
                 aspectRatio={1}

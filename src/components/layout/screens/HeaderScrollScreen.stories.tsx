@@ -22,7 +22,7 @@ export default {
   title: 'WIP/Layout/HeaderScrollScreen',
   component: HeaderScrollScreen,
   decorators: [
-    (Story) => (
+    (Story): JSX.Element => (
       <Box borderColor="background2" borderWidth={1} height={812} width={375}>
         <Story />
       </Box>

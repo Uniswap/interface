@@ -61,7 +61,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
   const showClearButton = useSharedValue(value.length > 0 && !disableClearable)
   const cancelButtonWidth = useSharedValue(showCancelButton ? 40 : 0)
 
-  const onPressCancel = () => {
+  const onPressCancel = (): void => {
     isFocus.value = false
     showClearButton.value = false
     Keyboard.dismiss()
@@ -76,17 +76,17 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
     [cancelButtonWidth]
   )
 
-  const onClear = () => {
+  const onClear = (): void => {
     onChangeText?.('')
     showClearButton.value = false
   }
 
-  const onTextInputFocus = () => {
+  const onTextInputFocus = (): void => {
     onFocus?.()
     isFocus.value = true
   }
 
-  const onTextInputSubmitEditing = () => {
+  const onTextInputSubmitEditing = (): void => {
     Keyboard.dismiss()
   }
 
@@ -215,7 +215,7 @@ interface ClearButtonProps {
   onPress: () => void
 }
 
-function ClearButton(props: ClearButtonProps) {
+function ClearButton(props: ClearButtonProps): JSX.Element {
   const theme = useAppTheme()
 
   const { onPress, clearIcon = <X color={theme.colors.textSecondary} height={16} width={16} /> } =

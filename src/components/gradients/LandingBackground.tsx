@@ -15,7 +15,7 @@ const animationStyles: ViewStyle = {
   top: 0,
 }
 
-const OnboardingAnimation = () => {
+const OnboardingAnimation = (): JSX.Element => {
   const isDarkMode = useColorScheme() === 'dark'
   const animationRef = useRef<RiveRef>(null)
   const fitValue = useResponsiveProp({ xs: Fit.FitWidth, sm: Fit.FitHeight })
@@ -34,7 +34,7 @@ const OnboardingAnimation = () => {
   )
 }
 
-export const LandingBackground = () => {
+export const LandingBackground = (): JSX.Element | null => {
   const navigation = useAppStackNavigation()
   const [blurred, setBlurred] = useState(false)
   const [hideAnimation, setHideAnimation] = useState(false)

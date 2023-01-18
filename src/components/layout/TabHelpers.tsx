@@ -1,8 +1,16 @@
 /* eslint-disable react-native/no-unused-styles */
 import { FlashList, FlashListProps } from '@shopify/flash-list'
 import React, { RefObject } from 'react'
-import { FlatList, FlatListProps, StyleProp, StyleSheet, ViewStyle } from 'react-native'
-import { Gesture } from 'react-native-gesture-handler'
+import {
+  FlatList,
+  FlatListProps,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  StyleProp,
+  StyleSheet,
+  ViewStyle,
+} from 'react-native'
+import { Gesture, PanGesture } from 'react-native-gesture-handler'
 import Animated, { runOnJS } from 'react-native-reanimated'
 import { Route } from 'react-native-tab-view/lib/typescript/types'
 import { Text } from 'src/components/Text'
@@ -76,7 +84,13 @@ export type TabContentProps = Partial<FlatListProps<unknown>> & {
   estimatedItemSize?: number
 }
 
-export const renderTabLabel = ({ route, focused }: { route: Route; focused: boolean }) => {
+export const renderTabLabel = ({
+  route,
+  focused,
+}: {
+  route: Route
+  focused: boolean
+}): JSX.Element => {
   return (
     <Text color={focused ? 'textPrimary' : 'textTertiary'} variant="buttonLabelMedium">
       {route.title}
@@ -84,7 +98,7 @@ export const renderTabLabel = ({ route, focused }: { route: Route; focused: bool
   )
 }
 
-export const panSidebarContainerGestureAction = (openSidebar: () => void) =>
+export const panSidebarContainerGestureAction = (openSidebar: () => void): PanGesture =>
   Gesture.Pan().onStart(({ translationX }) => {
     // only register as a side swipe above a certain threshold
     if (Math.abs(translationX) < SWIPE_THRESHOLD) {
@@ -96,7 +110,7 @@ export const panSidebarContainerGestureAction = (openSidebar: () => void) =>
     }
   })
 
-export const panHeaderGestureAction = (openSidebar: () => void) =>
+export const panHeaderGestureAction = (openSidebar: () => void): PanGesture =>
   Gesture.Pan().onStart(({ translationX }) => {
     // only register as a side swipe above a certain threshold
     if (Math.abs(translationX) < SWIPE_THRESHOLD || translationX < 0) {
@@ -113,7 +127,7 @@ export const useScrollSync = (
   currentTabIndex: number,
   scrollPairs: ScrollPair[],
   headerConfig: HeaderConfig
-) => {
+): { sync: (event: NativeSyntheticEvent<NativeScrollEvent>) => void } => {
   const sync:
     | FlatListProps<unknown>['onMomentumScrollEnd']
     | FlashListProps<unknown>['onMomentumScrollEnd'] = (event) => {

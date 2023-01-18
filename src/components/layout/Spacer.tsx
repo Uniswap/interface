@@ -12,7 +12,7 @@ type SpacerProps = ComponentProps<typeof Box> & {
  * Layout component to render physical spacing.
  * Useful to avoid using margin props which break component isolation
  */
-export function Spacer({ x, y, ...rest }: SpacerProps) {
+export function Spacer({ x, y, ...rest }: SpacerProps): JSX.Element {
   const theme = useAppTheme()
   return (
     <Box

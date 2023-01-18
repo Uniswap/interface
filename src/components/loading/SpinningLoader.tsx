@@ -21,7 +21,7 @@ export function SpinningLoader({
   size?: number
   disabled?: boolean
   color?: keyof Theme['colors']
-}) {
+}): JSX.Element {
   const theme = useTheme()
   const rotation = useSharedValue(0)
 

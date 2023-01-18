@@ -1,5 +1,6 @@
 import React from 'react'
-import { requireNativeComponent, ViewProps } from 'react-native'
+import { requireNativeComponent, StyleProp, ViewProps } from 'react-native'
+import { BoxProps } from 'src/components/layout/Box'
 import { dimensions } from 'src/styles/sizing'
 
 interface NativeMnemonicTestProps {
@@ -15,7 +16,7 @@ type MnemonicTestProps = ViewProps & {
   onTestComplete: () => void
 }
 
-const mnemonicTestStyle = (shouldShowSmallVersion: boolean) => {
+const mnemonicTestStyle = (shouldShowSmallVersion: boolean): StyleProp<BoxProps> => {
   return {
     // This is the min height needed for native component to function correctly.
     // We handle padding separately wherever the component is placed.
@@ -23,7 +24,7 @@ const mnemonicTestStyle = (shouldShowSmallVersion: boolean) => {
   }
 }
 
-export function MnemonicTest(props: MnemonicTestProps) {
+export function MnemonicTest(props: MnemonicTestProps): JSX.Element {
   const shouldShowSmallText = dimensions.fullHeight < 700
 
   return (

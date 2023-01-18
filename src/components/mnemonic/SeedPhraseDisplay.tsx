@@ -14,18 +14,18 @@ type Props = {
   onDismiss?: () => void
 }
 
-export function SeedPhraseDisplay({ mnemonicId, onDismiss }: Props) {
+export function SeedPhraseDisplay({ mnemonicId, onDismiss }: Props): JSX.Element {
   const { t } = useTranslation()
   const [showScreenShotWarningModal, setShowScreenShotWarningModal] = useState(false)
   const [showSeedPhrase, setShowSeedPhrase] = useState(false)
   const [showSeedPhraseViewWarningModal, setShowSeedPhraseViewWarningModal] = useState(true)
 
-  const onShowSeedPhraseConfirmed = () => {
+  const onShowSeedPhraseConfirmed = (): void => {
     setShowSeedPhrase(true)
     setShowSeedPhraseViewWarningModal(false)
   }
 
-  const onConfirmWarning = () => {
+  const onConfirmWarning = (): void => {
     if (biometricAuthRequiredForAppAccess || biometricAuthRequiredForTransactions) {
       biometricTrigger()
     } else {
@@ -63,7 +63,7 @@ export function SeedPhraseDisplay({ mnemonicId, onDismiss }: Props) {
               emphasis={ButtonEmphasis.Secondary}
               label={t('Hide recovery phrase')}
               name={ElementName.Next}
-              onPress={() => {
+              onPress={(): void => {
                 setShowSeedPhrase(false)
               }}
             />
@@ -84,7 +84,7 @@ export function SeedPhraseDisplay({ mnemonicId, onDismiss }: Props) {
           isDismissible={false}
           modalName={ModalName.ViewSeedPhraseWarning}
           title={t('Be careful')}
-          onClose={() => {
+          onClose={(): void => {
             setShowSeedPhraseViewWarningModal(false)
           }}
           onConfirm={onConfirmWarning}
@@ -98,7 +98,7 @@ export function SeedPhraseDisplay({ mnemonicId, onDismiss }: Props) {
           confirmText={t('OK')}
           modalName={ModalName.ScreenshotWarning}
           title={t('Screenshots aren’t secure')}
-          onConfirm={() => setShowScreenShotWarningModal(false)}
+          onConfirm={(): void => setShowScreenShotWarningModal(false)}
         />
       )}
     </>

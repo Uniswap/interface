@@ -9,7 +9,7 @@ export default {
   title: 'WIP/Layout/BaseCard',
   component: BaseCard.Container,
   decorators: [
-    (Story) => (
+    (Story): JSX.Element => (
       <Box bg="background3" width={300}>
         <Story />
       </Box>
@@ -25,7 +25,7 @@ export const Primary = Template.bind({})
 Primary.args = {
   children: (
     <Flex>
-      <BaseCard.Header subtitle="$124.34" title="Tokens" onPress={() => undefined} />
+      <BaseCard.Header subtitle="$124.34" title="Tokens" onPress={(): undefined => undefined} />
       <Text variant="bodyLarge">My Content</Text>
     </Flex>
   ),
@@ -38,7 +38,7 @@ EmptyState.args = {
       buttonLabel="Explore"
       description="Buy tokens on any Uniswap supported chains to start building your all-in-one portfolio and wallet."
       title="Explore NFTs"
-      onPress={() => undefined}
+      onPress={(): undefined => undefined}
     />
   ),
 }
