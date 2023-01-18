@@ -2,7 +2,13 @@ import { createBox } from '@shopify/restyle'
 import { impactAsync, ImpactFeedbackStyle } from 'expo-haptics'
 import React, { ComponentProps, PropsWithChildren, useCallback, useMemo } from 'react'
 import { GestureResponderEvent, TouchableOpacity, TouchableOpacityProps } from 'react-native'
-import { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withTiming,
+} from 'react-native-reanimated'
 import { withAnimated } from 'src/components/animated'
 import { TraceEvent } from 'src/components/telemetry/TraceEvent'
 import { ReactNativeEvent } from 'src/features/telemetry/constants'
@@ -13,7 +19,7 @@ import { Theme } from 'src/styles/theme'
 const TouchableBox = createBox<Theme, TouchableOpacityProps>(TouchableOpacity)
 const AnimatedTouchableBox = withAnimated(TouchableBox)
 
-const ScaleTimingConfig = { duration: 100, easing: Easing.inOut(Easing.quad) }
+const ScaleTimingConfig = { duration: 50, easing: Easing.inOut(Easing.quad) }
 
 export type BaseButtonProps = PropsWithChildren<
   ComponentProps<typeof TouchableBox> & {
@@ -60,7 +66,6 @@ export function TouchableArea({
 
   const onPressInHandler = useMemo(() => {
     if (!scaleTo) return
-
     return () => {
       scale.value = withTiming(scaleTo, ScaleTimingConfig)
     }
@@ -69,7 +74,7 @@ export function TouchableArea({
   const onPressOutHandler = useMemo(() => {
     if (!scaleTo) return
     return () => {
-      scale.value = withTiming(1, ScaleTimingConfig)
+      scale.value = withDelay(100, withTiming(1, ScaleTimingConfig))
     }
   }, [scale, scaleTo])
 
