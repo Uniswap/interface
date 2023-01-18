@@ -23,7 +23,7 @@ import { removePendingSession } from 'src/features/walletConnect/walletConnectSl
 import { iconSizes } from 'src/styles/sizing'
 import { isDevBuild } from 'src/utils/version'
 
-function QRScannerIconButton({ onPress }: { onPress: () => void }) {
+function QRScannerIconButton({ onPress }: { onPress: () => void }): JSX.Element {
   const theme = useAppTheme()
 
   return (
@@ -37,7 +37,7 @@ function QRScannerIconButton({ onPress }: { onPress: () => void }) {
   )
 }
 
-export function AccountHeader() {
+export function AccountHeader(): JSX.Element {
   const theme = useAppTheme()
   const navigation = useAppStackNavigation()
   const activeAddress = useAppSelector(selectActiveAccountAddress)
@@ -90,7 +90,7 @@ export function AccountHeader() {
         mr="sm"
         name={ElementName.Manage}
         testID={ElementName.Manage}
-        onLongPress={() => {
+        onLongPress={(): void => {
           if (isDevBuild()) {
             selectionAsync()
             dispatch(openModal({ name: ModalName.Experiments }))

@@ -17,7 +17,7 @@ export function FavoriteHeaderRow({
   editingTitle: string
   isEditing: boolean
   onPress: () => void
-}) {
+}): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
   return (

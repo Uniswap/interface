@@ -29,7 +29,7 @@ export function LinkButton({
   size = iconSizes.md,
   justifyContent = 'center',
   ...rest
-}: LinkButtonProps) {
+}: LinkButtonProps): JSX.Element {
   const theme = useAppTheme()
   const colorStyles = useMemo(() => {
     return color
@@ -39,7 +39,9 @@ export function LinkButton({
   }, [color])
 
   return (
-    <TouchableArea onPress={() => openUri(url, openExternalBrowser, isSafeUri)} {...rest}>
+    <TouchableArea
+      onPress={(): Promise<void> => openUri(url, openExternalBrowser, isSafeUri)}
+      {...rest}>
       <Flex row alignItems="center" gap="xxxs" justifyContent={justifyContent}>
         <Text {...colorStyles} variant={textVariant}>
           {label}

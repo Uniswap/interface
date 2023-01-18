@@ -29,7 +29,7 @@ export default function FavoriteWalletCard({
   isEditing,
   setIsEditing,
   ...rest
-}: FavoriteWalletCardProps) {
+}: FavoriteWalletCardProps): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const { preload, navigate } = useEagerExternalProfileNavigation()
@@ -71,7 +71,7 @@ export default function FavoriteWalletCard({
       actions={menuActions}
       disabled={isEditing}
       style={{ borderRadius: theme.borderRadii.lg }}
-      onPress={(e) => {
+      onPress={(e): void => {
         // Emitted index based on order of menu action array
         // remove favorite action
         if (e.nativeEvent.index === 0) {
@@ -87,7 +87,7 @@ export default function FavoriteWalletCard({
         hapticFeedback
         borderRadius="lg"
         hapticStyle={ImpactFeedbackStyle.Light}
-        onPress={() => {
+        onPress={(): void => {
           preload(address)
           navigate(address)
         }}>

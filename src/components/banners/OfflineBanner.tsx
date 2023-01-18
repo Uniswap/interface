@@ -7,7 +7,7 @@ import { TabsAwareBottomBanner } from 'src/components/banners/TabsAwareBottomBan
 import { selectSomeModalOpen } from 'src/features/modals/modalSlice'
 import { selectFinishedOnboarding } from 'src/features/wallet/selectors'
 
-export function OfflineBanner() {
+export function OfflineBanner(): JSX.Element | null {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const netInfo = useNetInfo()

@@ -12,8 +12,8 @@ export default function PasteButton({
   onPress: (text: string) => void
   beforePress?: () => void
   afterClipboardReceived?: () => void
-}) {
-  const onPressButton = async () => {
+}): JSX.Element {
+  const onPressButton = async (): Promise<void> => {
     const clipboard = await getClipboard()
     // Since paste may trigger OS permission modal, the following callback is used to control other behavior such as blocking views that need to be shown/hidden.
     afterClipboardReceived?.()

@@ -45,7 +45,7 @@ function FavoriteTokenCard({
   isEditing,
   setIsEditing,
   ...rest
-}: FavoriteTokenCardProps) {
+}: FavoriteTokenCardProps): JSX.Element {
   const theme = useAppTheme()
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
@@ -108,7 +108,7 @@ function FavoriteTokenCard({
     ]
   }, [t])
 
-  const onPress = () => {
+  const onPress = (): void => {
     if (isEditing || !currencyId) return
     tokenDetailsNavigation.preload(currencyId)
     tokenDetailsNavigation.navigate(currencyId)
@@ -123,7 +123,7 @@ function FavoriteTokenCard({
       actions={menuActions}
       disabled={isEditing}
       style={{ borderRadius: theme.borderRadii.lg }}
-      onPress={(e) => {
+      onPress={(e): void => {
         // Emitted index based on order of menu action array
         // remove favorite action
         if (e.nativeEvent.index === 0) {

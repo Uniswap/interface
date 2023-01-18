@@ -16,7 +16,7 @@ type SearchWalletItemProps = {
   wallet: WalletSearchResult
 }
 
-export function SearchWalletItem({ wallet }: SearchWalletItemProps) {
+export function SearchWalletItem({ wallet }: SearchWalletItemProps): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
@@ -26,7 +26,7 @@ export function SearchWalletItem({ wallet }: SearchWalletItemProps) {
 
   const isFavorited = useAppSelector(selectWatchedAddressSet).has(address)
 
-  const onPress = () => {
+  const onPress = (): void => {
     preload(address)
     navigate(address)
     dispatch(addToSearchHistory({ searchResult: wallet }))

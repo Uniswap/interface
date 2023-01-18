@@ -18,7 +18,7 @@ export function TransferArrowButton({
   bg = 'background1',
   padding = 'sm',
   ...rest
-}: ArrowDownButtonProps) {
+}: ArrowDownButtonProps): JSX.Element {
   const theme = useAppTheme()
   return (
     <TouchableArea

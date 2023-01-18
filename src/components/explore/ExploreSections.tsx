@@ -42,7 +42,7 @@ type ExploreSectionsProps = {
   listRef?: React.MutableRefObject<null>
 }
 
-export function ExploreSections({ listRef }: ExploreSectionsProps) {
+export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
@@ -216,7 +216,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps) {
   )
 }
 
-const tokenKey = (token: TokenItemData) => {
+const tokenKey = (token: TokenItemData): string => {
   return token.address
     ? buildCurrencyId(token.chainId, token.address)
     : buildNativeCurrencyId(token.chainId)
@@ -224,7 +224,7 @@ const tokenKey = (token: TokenItemData) => {
 
 function gqlTokenToTokenItemData(
   token: NullUndefined<NonNullable<NonNullable<ExploreTokensTabQuery['topTokens']>[0]>>
-) {
+): TokenItemData | null {
   if (!token || !token.project) return null
 
   const { name, symbol, address, chain, project, market } = token

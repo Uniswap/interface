@@ -20,7 +20,7 @@ export function NetworkLogo({
   borderWidth = 0,
   size = iconSizes.md,
   ...rest
-}: NetworkLogoProps) {
+}: NetworkLogoProps): JSX.Element {
   const { logo } = CHAIN_INFO[chainId]
   const { foreground } = useNetworkColors(chainId)
 

@@ -22,7 +22,7 @@ export function TokenLogo({
   chainId,
   size = iconSizes.xxxl,
   hideNetworkLogo,
-}: TokenLogoProps) {
+}: TokenLogoProps): JSX.Element {
   const theme = useAppTheme()
   const showNetworkLogo = !hideNetworkLogo && chainId && chainId !== ChainId.Mainnet
 

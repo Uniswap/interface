@@ -59,7 +59,7 @@ const _Button = ({
   onPress,
   onPressIn,
   size = ButtonSize.Medium,
-}: ButtonProps) => {
+}: ButtonProps): JSX.Element => {
   const theme = useAppTheme()
 
   const {
@@ -74,7 +74,7 @@ const _Button = ({
     iconSize,
   } = getButtonProperties(emphasis, size)
 
-  const onPressHandler = () => {
+  const onPressHandler = (): void => {
     if (!onPress) return
 
     if (hapticFeedback) {

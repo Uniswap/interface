@@ -28,7 +28,10 @@ type PortfolioValueProps = {
   portfolioValue: number | undefined
 }
 
-function PortfolioValue({ isPortfolioValueLoading, portfolioValue }: PortfolioValueProps) {
+function PortfolioValue({
+  isPortfolioValueLoading,
+  portfolioValue,
+}: PortfolioValueProps): JSX.Element {
   const isLoading = isPortfolioValueLoading && portfolioValue === undefined
 
   return (
@@ -49,7 +52,7 @@ export function AccountCardItem({
   portfolioValue,
   onPress,
   onPressEdit,
-}: AccountCardItemProps) {
+}: AccountCardItemProps): JSX.Element {
   const theme = useAppTheme()
   const displayName = useDisplayName(address)
   const { data: avatar } = useENSAvatar(address)
@@ -67,7 +70,7 @@ export function AccountCardItem({
   }, [address, avatar, isViewOnly])
 
   return (
-    <TouchableArea hapticFeedback pb="sm" pt="xs" px="lg" onPress={() => onPress?.(address)}>
+    <TouchableArea hapticFeedback pb="sm" pt="xs" px="lg" onPress={(): void => onPress?.(address)}>
       <Flex row alignItems="center" testID={`account_item/${address}`}>
         <Flex row shrink alignItems="center">
           <NotificationBadge showIndicator={hasNotifications}>{icon}</NotificationBadge>
@@ -90,7 +93,7 @@ export function AccountCardItem({
             />
           )}
           {onPressEdit && (
-            <TouchableArea name={ElementName.Edit} onPress={() => onPressEdit(address)}>
+            <TouchableArea name={ElementName.Edit} onPress={(): void => onPressEdit(address)}>
               <TripleDots
                 color={theme.colors.textTertiary}
                 height={iconSizes.xs}

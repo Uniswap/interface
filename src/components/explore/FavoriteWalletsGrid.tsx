@@ -23,7 +23,7 @@ export function FavoriteWalletsGrid({
   isEditing: boolean
   setIsEditing: (update: boolean) => void
   showLoading: boolean
-}) {
+}): JSX.Element {
   const { t } = useTranslation()
   const watchedWalletsSet = useAppSelector(selectWatchedAddressSet)
   const watchedWalletsList = useMemo(() => Array.from(watchedWalletsSet), [watchedWalletsSet])
@@ -52,7 +52,7 @@ export function FavoriteWalletsGrid({
         editingTitle={t('Edit favorite wallets')}
         isEditing={isEditing}
         title={t('Favorite wallets')}
-        onPress={() => setIsEditing(!isEditing)}
+        onPress={(): void => setIsEditing(!isEditing)}
       />
       {showLoading ? (
         <FavoriteWalletsGridLoader />
@@ -60,7 +60,7 @@ export function FavoriteWalletsGrid({
         <FlatList
           ItemSeparatorComponent={renderItemSeparator}
           data={watchedWalletsList}
-          keyExtractor={(address) => address}
+          keyExtractor={(address): string => address}
           listKey="explore-favorite-wallets"
           numColumns={NUM_COLUMNS}
           renderItem={renderItem}
@@ -72,9 +72,9 @@ export function FavoriteWalletsGrid({
   )
 }
 
-const renderItemSeparator = () => <Box height={GAP_SIZE} />
+const renderItemSeparator = (): JSX.Element => <Box height={GAP_SIZE} />
 
-function FavoriteWalletsGridLoader() {
+function FavoriteWalletsGridLoader(): JSX.Element {
   return (
     <Flex row gap="xs">
       <Box style={ITEM_FLEX}>

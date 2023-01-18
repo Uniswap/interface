@@ -16,7 +16,7 @@ import { areAddressesEqual } from 'src/utils/addresses'
 import { fromGraphQLChain } from 'src/utils/chainId'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 
-export function SearchPopularTokens() {
+export function SearchPopularTokens(): JSX.Element {
   // Load popular tokens by top Uniswap trading volume
   const { data, loading } = useSearchPopularTokensQuery()
 
@@ -66,7 +66,7 @@ export function SearchPopularTokens() {
 
 function gqlTokenToTokenSearchResult(
   token: NullUndefined<NonNullable<NonNullable<SearchPopularTokensQuery['topTokens']>[0]>>
-) {
+): TokenSearchResult | null {
   if (!token || !token.project) return null
 
   const { chain, address, symbol, name, project } = token
@@ -83,11 +83,11 @@ function gqlTokenToTokenSearchResult(
   } as TokenSearchResult
 }
 
-const renderTokenItem = ({ item }: ListRenderItemInfo<TokenSearchResult>) => (
+const renderTokenItem = ({ item }: ListRenderItemInfo<TokenSearchResult>): JSX.Element => (
   <SearchTokenItem token={item} />
 )
 
-const tokenKey = (token: TokenSearchResult) => {
+const tokenKey = (token: TokenSearchResult): string => {
   return token.address
     ? buildCurrencyId(token.chainId, token.address)
     : buildNativeCurrencyId(token.chainId)

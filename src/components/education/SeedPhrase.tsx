@@ -11,17 +11,17 @@ import { dimensions } from 'src/styles/sizing'
 
 const { fullWidth } = dimensions
 
-function Page({ text }: { text: ReactNode }) {
+function Page({ text }: { text: ReactNode }): JSX.Element {
   const navigation = useOnboardingStackNavigation()
-  const onDismiss = () => {
+  const onDismiss = (): void => {
     navigation.navigate(OnboardingScreens.Backup)
   }
 
   return (
     <CarouselContext.Consumer>
-      {(context) => (
+      {(context): JSX.Element => (
         <Pressable
-          onPress={(event) =>
+          onPress={(event): void =>
             event.nativeEvent.locationX < fullWidth * 0.33 ? context.goToPrev() : context.goToNext()
           }>
           <Flex centered>
@@ -44,7 +44,7 @@ function Page({ text }: { text: ReactNode }) {
   )
 }
 
-export const SeedPhraseEducationContent = () => [
+export const SeedPhraseEducationContent = (): JSX.Element[] => [
   <Page
     text={
       <Text fontSize={28} lineHeight={34} variant="headlineMedium">

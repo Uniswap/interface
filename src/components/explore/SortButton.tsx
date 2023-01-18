@@ -18,7 +18,7 @@ interface FilterGroupProps {
   orderBy: TokensOrderBy
 }
 
-function _SortButton({ orderBy }: FilterGroupProps) {
+function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
@@ -57,7 +57,7 @@ function _SortButton({ orderBy }: FilterGroupProps) {
     <ContextMenu
       actions={menuActions}
       dropdownMenuMode={true}
-      onPress={(e) => {
+      onPress={(e): void => {
         const selectedMenuAction = menuActions[e.nativeEvent.index]
         // Handle switching selected sort option
         if (!selectedMenuAction) {

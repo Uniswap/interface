@@ -18,7 +18,7 @@ const NUM_COLUMNS = 2
 const GAP_SIZE = FixedTheme.spacing.xs
 const ITEM_FLEX = { flex: 1 / NUM_COLUMNS }
 
-const renderItemSeparator = () => <Box height={GAP_SIZE} />
+const renderItemSeparator = (): JSX.Element => <Box height={GAP_SIZE} />
 
 /** Renders the favorite tokens section on the Explore tab */
 export function FavoriteTokensGrid({
@@ -29,7 +29,7 @@ export function FavoriteTokensGrid({
   isEditing: boolean
   setIsEditing: (update: boolean) => void
   showLoading: boolean
-}) {
+}): JSX.Element {
   const { t } = useTranslation()
   const favoriteCurrencyIdsSet = useAppSelector(selectFavoriteTokensSet)
   const currencyIds = useMemo(() => Array.from(favoriteCurrencyIdsSet), [favoriteCurrencyIdsSet])
@@ -58,7 +58,7 @@ export function FavoriteTokensGrid({
         editingTitle={t('Edit favorite tokens')}
         isEditing={isEditing}
         title={t('Favorite tokens')}
-        onPress={() => setIsEditing(!isEditing)}
+        onPress={(): void => setIsEditing(!isEditing)}
       />
       {showLoading ? (
         <FavoriteTokensGridLoader />
@@ -78,7 +78,7 @@ export function FavoriteTokensGrid({
   )
 }
 
-function FavoriteTokensGridLoader() {
+function FavoriteTokensGridLoader(): JSX.Element {
   return (
     <Flex row gap="xs">
       <Box style={ITEM_FLEX}>

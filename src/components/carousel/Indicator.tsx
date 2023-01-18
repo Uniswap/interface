@@ -6,7 +6,13 @@ import { dimensions } from 'src/styles/sizing'
 const { fullWidth } = dimensions
 const INDICATOR_WIDTH = (200 / 375) * fullWidth
 
-export function Indicator({ stepCount, currentStep }: { stepCount: number; currentStep: number }) {
+export function Indicator({
+  stepCount,
+  currentStep,
+}: {
+  stepCount: number
+  currentStep: number
+}): JSX.Element {
   return (
     <Flex row alignItems="center" gap="xs" justifyContent="space-evenly" width={INDICATOR_WIDTH}>
       {[...Array(stepCount)].map((_, i) => (
@@ -29,7 +35,7 @@ export function AnimatedIndicator({
 }: {
   scroll: SharedValue<number>
   stepCount: number
-}) {
+}): JSX.Element {
   return (
     <Flex centered row gap="sm" px="lg">
       {[...Array(stepCount)].map((_, i) => (
@@ -39,7 +45,13 @@ export function AnimatedIndicator({
   )
 }
 
-function AnimatedIndicatorPill({ index, scroll }: { index: number; scroll: SharedValue<number> }) {
+function AnimatedIndicatorPill({
+  index,
+  scroll,
+}: {
+  index: number
+  scroll: SharedValue<number>
+}): JSX.Element {
   const style = useAnimatedStyle(() => {
     const inputRange = [(index - 1) * fullWidth, index * fullWidth, (index + 1) * fullWidth]
     return {

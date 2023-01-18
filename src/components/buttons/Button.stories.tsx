@@ -8,7 +8,7 @@ export default {
   title: 'Components/Button',
   component: Button,
   decorators: [
-    (Story) => (
+    (Story): JSX.Element => (
       <Box m="lg">
         <Story />
       </Box>

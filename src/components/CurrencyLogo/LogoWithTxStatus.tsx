@@ -53,7 +53,7 @@ interface NFTStatusProps extends LogoWithTxStatusProps {
   nftTradeType?: NFTTradeType
 }
 
-export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps) {
+export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps): JSX.Element {
   const { assetType, txType, txStatus, size } = props
   const theme = useAppTheme()
 
@@ -82,7 +82,7 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps) {
   const green = theme.colors.accentSuccess
   const yellow = theme.colors.accentWarning
 
-  const getTxStatusIcon = () => {
+  const getTxStatusIcon = (): JSX.Element | null => {
     if (txStatus === TransactionStatus.Failed) {
       return <AlertTriangle color={yellow} fill={fill} height={statusSize} width={statusSize} />
     }
@@ -143,7 +143,7 @@ export function SwapLogoOrLogoWithTxStatus({
   outputCurrencyInfo,
   txStatus,
   showCancelIcon,
-}: SwapLogoOrLogoWithTxStatusProps) {
+}: SwapLogoOrLogoWithTxStatusProps): JSX.Element {
   if (
     txStatus === TransactionStatus.Failed ||
     (showCancelIcon && txStatus === TransactionStatus.Cancelled)
@@ -176,7 +176,7 @@ export function DappLogoWithTxStatus({
   event,
   size,
   chainId,
-}: DappLogoWithTxStatusProps) {
+}: DappLogoWithTxStatusProps): JSX.Element | null {
   const theme = useAppTheme()
   const green = theme.colors.accentSuccess
   const yellow = theme.colors.accentWarning
@@ -186,7 +186,7 @@ export function DappLogoWithTxStatus({
   const statusSize = dappImageSize * (2 / 3)
   const totalSize = dappImageSize + statusSize * (1 / 3)
 
-  const getStatusIcon = () => {
+  const getStatusIcon = (): JSX.Element | undefined => {
     switch (event) {
       case WalletConnectEvent.NetworkChanged:
         return chainId ? <NetworkLogo chainId={chainId} size={statusSize} /> : undefined
@@ -239,7 +239,7 @@ export function DappLogoWithWCBadge({
 }: {
   dappImageUrl: string | null
   size: number
-}) {
+}): JSX.Element {
   const theme = useAppTheme()
   const fill = theme.colors.background0
   const gray = theme.colors.textSecondary

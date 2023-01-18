@@ -14,7 +14,7 @@ export function AccountDetails({
   address: string
   iconSize?: number
   chevron?: boolean
-}) {
+}): JSX.Element {
   const theme = useAppTheme()
 
   return (

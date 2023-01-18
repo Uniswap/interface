@@ -102,7 +102,7 @@ export const TokenItem = memo(
           ]
     }, [isFavorited, t])
 
-    const getMetadataSubtitle = () => {
+    const getMetadataSubtitle = (): string | undefined => {
       switch (metadataDisplayType) {
         case TokenMetadataDisplayType.MarketCap:
           return t('{{num}} MCap', { num: formatNumber(marketCap, NumberType.FiatTokenStats) })
@@ -122,7 +122,7 @@ export const TokenItem = memo(
     return (
       <ContextMenu
         actions={menuActions}
-        onPress={(e) => {
+        onPress={(e): void => {
           // Emitted native index is based on order of options in the action array
           // Toggle favorite action
           if (e.nativeEvent.index === 0) {
@@ -138,7 +138,7 @@ export const TokenItem = memo(
           disabled={isEditing}
           hapticStyle={ImpactFeedbackStyle.Light}
           testID={`token-item-${name}`}
-          onPress={() => {
+          onPress={(): void => {
             if (isEditing) return
             tokenDetailsNavigation.preload(_currencyId)
             tokenDetailsNavigation.navigate(_currencyId)

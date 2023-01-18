@@ -13,7 +13,12 @@ export type BottomBannerProps = {
   translateY?: number
 }
 
-export function BottomBanner({ text, icon, backgroundColor, translateY }: BottomBannerProps) {
+export function BottomBanner({
+  text,
+  icon,
+  backgroundColor,
+  translateY,
+}: BottomBannerProps): JSX.Element {
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
       {

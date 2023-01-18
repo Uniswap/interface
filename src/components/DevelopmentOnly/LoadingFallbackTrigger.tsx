@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { DevelopmentOnly } from 'src/components/DevelopmentOnly/DevelopmentOnly'
 import { useInterval } from 'src/utils/timing'
 
-const PromiseThrower = ({ ms }: { ms: number }) => {
+const PromiseThrower = ({ ms }: { ms: number }): null => {
   const [isLoading, setIsLoading] = useState(false)
   const frequency = ms
 
@@ -15,7 +15,7 @@ const PromiseThrower = ({ ms }: { ms: number }) => {
 }
 
 // make this componpent a child of a Suspense component to toggle its fallback every [ms] milliseconds
-export const LoadingFallbackTrigger = ({ ms = 2000 }: { ms?: number }) => {
+export const LoadingFallbackTrigger = ({ ms = 2000 }: { ms?: number }): JSX.Element => {
   return (
     // this should never be checked in but just in case
     <DevelopmentOnly>
@@ -24,7 +24,7 @@ export const LoadingFallbackTrigger = ({ ms = 2000 }: { ms?: number }) => {
   )
 }
 
-export const useLoadingTrigger = (ms = 2000) => {
+export const useLoadingTrigger = (ms = 2000): boolean => {
   const [isLoading, setIsLoading] = useState(false)
   const frequency = ms
 

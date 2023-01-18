@@ -20,7 +20,7 @@ type SearchTokenItemProps = {
   token: TokenSearchResult
 }
 
-export function SearchTokenItem({ token }: SearchTokenItemProps) {
+export function SearchTokenItem({ token }: SearchTokenItemProps): JSX.Element {
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
@@ -28,7 +28,7 @@ export function SearchTokenItem({ token }: SearchTokenItemProps) {
   const { chainId, address, name, symbol, logoUrl, safetyLevel } = token
   const currencyId = address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId)
 
-  const onPress = () => {
+  const onPress = (): void => {
     tokenDetailsNavigation.preload(currencyId)
     tokenDetailsNavigation.navigate(currencyId)
     dispatch(

@@ -42,7 +42,7 @@ export function TouchableArea({
   properties,
   activeOpacity = 0.75,
   ...rest
-}: BaseButtonProps) {
+}: BaseButtonProps): JSX.Element {
   const scale = useSharedValue(1)
 
   const onPressHandler = useCallback(

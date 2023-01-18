@@ -34,12 +34,12 @@ export const SUGGESTED_WALLETS: WalletSearchResult[] = [
   },
 ]
 
-export function SearchEmptySection() {
+export function SearchEmptySection(): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const searchHistory = useAppSelector(selectSearchHistory)
 
-  const onPressClearSearchHistory = () => {
+  const onPressClearSearchHistory = (): void => {
     dispatch(clearSearchHistory())
   }
 
@@ -87,7 +87,9 @@ export function SearchEmptySection() {
   )
 }
 
-const renderSearchHistoryItem = ({ item: searchResult }: ListRenderItemInfo<SearchResult>) => {
+const renderSearchHistoryItem = ({
+  item: searchResult,
+}: ListRenderItemInfo<SearchResult>): JSX.Element => {
   if (searchResult.type === SearchResultType.Token) {
     return <SearchTokenItem token={searchResult} />
   } else if (searchResult.type === SearchResultType.Wallet) {
@@ -97,10 +99,10 @@ const renderSearchHistoryItem = ({ item: searchResult }: ListRenderItemInfo<Sear
   }
 }
 
-const renderWalletItem = ({ item }: ListRenderItemInfo<WalletSearchResult>) => (
+const renderWalletItem = ({ item }: ListRenderItemInfo<WalletSearchResult>): JSX.Element => (
   <SearchWalletItem wallet={item} />
 )
 
-const walletKey = (wallet: WalletSearchResult) => {
+const walletKey = (wallet: WalletSearchResult): string => {
   return wallet.address
 }

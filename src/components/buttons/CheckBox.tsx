@@ -11,10 +11,10 @@ export type CheckBoxProps = {
   onCheckPressed?: (currentState: boolean) => void
 }
 
-export function CheckBox({ text, checked, onCheckPressed }: CheckBoxProps) {
+export function CheckBox({ text, checked, onCheckPressed }: CheckBoxProps): JSX.Element {
   const theme = useAppTheme()
 
-  const onPress = () => {
+  const onPress = (): void => {
     onCheckPressed?.(checked)
   }
 

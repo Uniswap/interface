@@ -14,12 +14,18 @@ type Props = {
 } & SpacingProps<Theme> &
   SpacingShorthandProps<Theme>
 
-export function BackButton({ onPressBack, size, color, showButtonLabel, ...rest }: Props) {
+export function BackButton({
+  onPressBack,
+  size,
+  color,
+  showButtonLabel,
+  ...rest
+}: Props): JSX.Element {
   const navigation = useNavigation()
 
   const goBack = onPressBack
     ? onPressBack
-    : () => {
+    : (): void => {
         navigation.goBack()
       }
   return (

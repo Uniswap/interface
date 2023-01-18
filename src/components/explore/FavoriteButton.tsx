@@ -5,7 +5,10 @@ import PlusIcon from 'src/assets/icons/plus.svg'
 import { AnimatedTouchableArea, BaseButtonProps } from 'src/components/buttons/TouchableArea'
 import { Box } from 'src/components/layout/Box'
 
-export function FavoriteButton({ disabled, ...rest }: { disabled: boolean } & BaseButtonProps) {
+export function FavoriteButton({
+  disabled,
+  ...rest
+}: { disabled: boolean } & BaseButtonProps): JSX.Element {
   const theme = useAppTheme()
   return (
     <Box opacity={disabled ? 0 : 1}>

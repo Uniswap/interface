@@ -19,7 +19,7 @@ const NO_NAV_SCREENS = [
   Screens.NFTItem,
 ]
 
-export function TabsAwareBottomBanner({ icon, text, ...rest }: BottomBannerProps) {
+export function TabsAwareBottomBanner({ icon, text, ...rest }: BottomBannerProps): JSX.Element {
   const routes = useNavigationState((state) => state?.routes)
 
   const [bannerTranslateY, setBannerTranslateY] = React.useState(0)

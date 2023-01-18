@@ -18,14 +18,14 @@ type SearchEtherscanItemProps = {
   etherscanResult: EtherscanSearchResult
 }
 
-export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProps) {
+export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProps): JSX.Element {
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const navigation = useExploreStackNavigation()
 
   const { address } = etherscanResult
 
-  const onPressViewEtherscan = () => {
+  const onPressViewEtherscan = (): void => {
     const explorerLink = getExplorerLink(ChainId.Mainnet, address, ExplorerDataType.ADDRESS)
     navigation.navigate(Screens.WebView, {
       headerTitle: shortenAddress(address),

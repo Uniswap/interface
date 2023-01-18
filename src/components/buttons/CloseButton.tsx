@@ -13,7 +13,7 @@ type Props = {
 } & SpacingProps<Theme> &
   SpacingShorthandProps<Theme>
 
-export function CloseButton({ onPress, size, strokeWidth, color, ...rest }: Props) {
+export function CloseButton({ onPress, size, strokeWidth, color, ...rest }: Props): JSX.Element {
   const theme = useAppTheme()
   return (
     <TouchableArea onPress={onPress} {...rest}>

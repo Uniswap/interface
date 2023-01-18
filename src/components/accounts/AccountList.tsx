@@ -38,7 +38,7 @@ export function AccountList({
   onPressEdit,
   onPress,
   isVisible,
-}: AccountListProps) {
+}: AccountListProps): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const activeAccount = useActiveAccount()
@@ -145,7 +145,7 @@ export function AccountList({
   )
 }
 
-const key = (a: AccountWithPortfolioValue) => a.account.address
+const key = (a: AccountWithPortfolioValue): string => a.account.address
 
 const ListSheet = StyleSheet.create({
   gradient: {

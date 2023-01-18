@@ -32,7 +32,7 @@ type CarouselProps = {
   slides: ReactElement[]
 } & Pick<ComponentProps<typeof Animated.FlatList>, 'scrollEnabled'>
 
-export const Carousel = ({ slides, ...flatListProps }: CarouselProps) => {
+export const Carousel = ({ slides, ...flatListProps }: CarouselProps): JSX.Element => {
   const scroll = useSharedValue(0)
   const myRef = useRef<Animated.FlatList<unknown>>(null)
 
@@ -67,7 +67,7 @@ export const Carousel = ({ slides, ...flatListProps }: CarouselProps) => {
           keyExtractor={key}
           {...flatListProps}
           ref={myRef}
-          renderItem={({ item }: ListRenderItemInfo<ReactNode>) => (
+          renderItem={({ item }: ListRenderItemInfo<ReactNode>): JSX.Element => (
             <Flex centered grow p="lg" pt="none" width={fullWidth}>
               {item}
             </Flex>
@@ -82,4 +82,4 @@ export const Carousel = ({ slides, ...flatListProps }: CarouselProps) => {
   )
 }
 
-const key = (_: ReactElement, index: number) => index.toString()
+const key = (_: ReactElement, index: number): string => index.toString()

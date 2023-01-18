@@ -11,7 +11,7 @@ interface Props {
   copyText?: string
 }
 
-export function CopyTextButton({ copyText }: Props) {
+export function CopyTextButton({ copyText }: Props): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
@@ -27,7 +27,7 @@ export function CopyTextButton({ copyText }: Props) {
     <CheckCircle color={theme.colors.accentSuccess} height={ICON_SIZE} width={ICON_SIZE} />
   )
 
-  const onPress = () => {
+  const onPress = (): void => {
     if (copyText) setClipboard(copyText)
     setIsCopied(true)
   }

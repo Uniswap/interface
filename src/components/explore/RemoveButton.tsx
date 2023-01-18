@@ -4,7 +4,7 @@ import { useAppTheme } from 'src/app/hooks'
 import { AnimatedTouchableArea, BaseButtonProps } from 'src/components/buttons/TouchableArea'
 import { Box } from 'src/components/layout/Box'
 
-export default function RemoveButton(props: BaseButtonProps) {
+export default function RemoveButton(props: BaseButtonProps): JSX.Element {
   const theme = useAppTheme()
   return (
     <AnimatedTouchableArea

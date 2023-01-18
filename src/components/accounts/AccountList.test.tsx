@@ -51,7 +51,11 @@ describe(AccountList, () => {
   it('handles press on card items', async () => {
     const onPressSpy = jest.fn()
     render(
-      <AccountList accounts={[account]} onAddWallet={() => undefined} onPress={onPressSpy} />,
+      <AccountList
+        accounts={[account]}
+        onAddWallet={(): undefined => undefined}
+        onPress={onPressSpy}
+      />,
       { mocks: [mock] }
     )
     // go to success state
@@ -88,7 +92,11 @@ describe(AccountList, () => {
   it('handles press on edit account', async () => {
     const onPressSpy = jest.fn()
     render(
-      <AccountList accounts={[account]} onAddWallet={() => undefined} onPressEdit={onPressSpy} />,
+      <AccountList
+        accounts={[account]}
+        onAddWallet={(): undefined => undefined}
+        onPressEdit={onPressSpy}
+      />,
       { mocks: [mock] }
     )
     // go to success state

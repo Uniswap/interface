@@ -13,7 +13,7 @@ export function CurrencyLogo({
   currencyInfo,
   size = iconSizes.xxxl,
   hideNetworkLogo,
-}: CurrencyLogoProps) {
+}: CurrencyLogoProps): JSX.Element | null {
   if (!currencyInfo) return null
 
   const { currency, logoUrl } = currencyInfo

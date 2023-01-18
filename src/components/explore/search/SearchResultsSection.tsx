@@ -21,7 +21,7 @@ import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 
 const MAX_TOKEN_RESULTS_COUNT = 5
 
-export function SearchResultsSection({ searchQuery }: { searchQuery: string }) {
+export function SearchResultsSection({ searchQuery }: { searchQuery: string }): JSX.Element {
   const { t } = useTranslation()
 
   // Search for matching tokens
@@ -167,7 +167,7 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }) {
   )
 }
 
-const SearchResultsLoader = () => {
+const SearchResultsLoader = (): JSX.Element => {
   const { t } = useTranslation()
   return (
     <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="md" mx="xs">
@@ -187,11 +187,11 @@ const SearchResultsLoader = () => {
   )
 }
 
-const renderTokenItem = ({ item }: ListRenderItemInfo<TokenSearchResult>) => (
+const renderTokenItem = ({ item }: ListRenderItemInfo<TokenSearchResult>): JSX.Element => (
   <SearchTokenItem token={item} />
 )
 
-const tokenKey = (token: TokenSearchResult) => {
+const tokenKey = (token: TokenSearchResult): string => {
   return token.address
     ? buildCurrencyId(token.chainId, token.address)
     : buildNativeCurrencyId(token.chainId)
