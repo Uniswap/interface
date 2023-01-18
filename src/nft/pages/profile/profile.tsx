@@ -12,11 +12,28 @@ import { useBag, useNFTList, useProfilePageState, useSellAsset, useWalletCollect
 import { ListingStatus, ProfilePageStateType } from 'nft/types'
 import { Suspense, useEffect, useRef } from 'react'
 import { useToggleWalletModal } from 'state/application/hooks'
+import styled from 'styled-components/macro'
+import { BREAKPOINTS } from 'theme'
 
 import * as styles from './profile.css'
 import { LIST_PAGE_MARGIN } from './shared'
 
 const SHOPPING_BAG_WIDTH = 360
+
+const ProfilePageWrapper = styled.div`
+  height: 100%;
+  width: 100%;
+  scrollbar-width: none;
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    height: auto;
+  }
+`
+
+const LoadedAccountPage = styled.div<{ pageWidthAdjustment: number; isNftListV2: boolean }>`
+  width: ${({ pageWidthAdjustment }) => `calc(100% - ${pageWidthAdjustment}px)`};
+  margin: ${({ isNftListV2 }) => (isNftListV2 ? `0px ${LIST_PAGE_MARGIN}px` : 'unset')};
+`
 
 const ProfileContent = () => {
   const sellPageState = useProfilePageState((state) => state.state)
@@ -46,27 +63,23 @@ const ProfileContent = () => {
   const cartExpanded = useBag((state) => state.bagExpanded)
   const isNftListV2 = useNftListV2Flag() === NftListV2Variant.Enabled
 
+  const pageWidthAdjustment =
+    cartExpanded && (!isNftListV2 || sellPageState === ProfilePageStateType.VIEWING)
+      ? SHOPPING_BAG_WIDTH
+      : isNftListV2 && sellPageState !== ProfilePageStateType.VIEWING
+      ? LIST_PAGE_MARGIN * 2
+      : 0
+
   return (
     <Trace page={InterfacePageName.NFT_PROFILE_PAGE} shouldLogImpression>
-      <Box className={styles.profileWrapper}>
+      <ProfilePageWrapper>
         {/* <Head> TODO: figure out metadata tagging
           <title>Genie | Sell</title>
         </Head> */}
         {account ? (
-          <Box
-            style={{
-              width: `calc(100% - ${
-                cartExpanded && (!isNftListV2 || sellPageState === ProfilePageStateType.VIEWING)
-                  ? SHOPPING_BAG_WIDTH
-                  : isNftListV2
-                  ? LIST_PAGE_MARGIN * 2
-                  : 0
-              }px)`,
-              margin: isNftListV2 ? `0px ${LIST_PAGE_MARGIN}px` : 'unset',
-            }}
-          >
+          <LoadedAccountPage pageWidthAdjustment={pageWidthAdjustment} isNftListV2={isNftListV2}>
             {sellPageState === ProfilePageStateType.VIEWING ? <ProfilePage /> : <ListPage />}
-          </Box>
+          </LoadedAccountPage>
         ) : (
           <Column as="section" gap="60" className={styles.section}>
             <div style={{ minHeight: '70vh' }}>
@@ -81,7 +94,7 @@ const ProfileContent = () => {
             </div>
           </Column>
         )}
-      </Box>
+      </ProfilePageWrapper>
     </Trace>
   )
 }

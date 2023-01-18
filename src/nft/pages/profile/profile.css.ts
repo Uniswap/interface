@@ -12,13 +12,3 @@ export const section = style([
 export const notConnected = style({
   height: '70vh',
 })
-
-export const profileWrapper = style([
-  sprinkles({
-    height: { sm: 'full', md: 'auto' },
-    width: 'full',
-  }),
-  {
-    scrollbarWidth: 'none',
-  },
-])
