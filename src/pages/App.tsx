@@ -42,11 +42,15 @@ import { RedirectPathToSwapOnly } from './Swap/redirects'
 import Tokens from './Tokens'
 
 const TokenDetails = lazy(() => import('./TokenDetails'))
-const Vote = lazy(() => import('./Vote'))
-const NftExplore = lazy(() => import('nft/pages/explore'))
-const Collection = lazy(() => import('nft/pages/collection'))
-const Profile = lazy(() => import('nft/pages/profile/profile'))
-const Asset = lazy(() => import('nft/pages/asset/Asset'))
+
+// COMPONENTS BELOW IN 1.1 IS COMMENTED TO CHECK NESTED CODES AND REMOVE THEM
+
+// 1.1
+// const Vote = lazy(() => import('./Vote'))
+// const NftExplore = lazy(() => import('nft/pages/explore'))
+// const Collection = lazy(() => import('nft/pages/collection'))
+// const Profile = lazy(() => import('nft/pages/profile/profile'))
+// const Asset = lazy(() => import('nft/pages/asset/Asset'))
 
 // Placeholder API key. Actual API key used in the proxy server
 const ANALYTICS_DUMMY_KEY = '00000000000000000000000000000000'
@@ -205,15 +209,6 @@ export default function App() {
                   <Route path=":chainName" />
                 </Route>
                 <Route path="tokens/:chainName/:tokenAddress" element={<TokenDetails />} />
-                <Route
-                  path="vote/*"
-                  element={
-                    <Suspense fallback={<LazyLoadSpinner />}>
-                      <Vote />
-                    </Suspense>
-                  }
-                />
-                <Route path="create-proposal" element={<Navigate to="/vote/create-proposal" replace />} />
 
                 <Route path="send" element={<RedirectPathToSwapOnly />} />
                 <Route path="swap" element={<Swap />} />
@@ -246,47 +241,6 @@ export default function App() {
 
                 <Route path="migrate/v2" element={<MigrateV2 />} />
                 <Route path="migrate/v2/:address" element={<MigrateV2Pair />} />
-
-                <Route
-                  path="/nfts"
-                  element={
-                    <Suspense fallback={null}>
-                      <NftExplore />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/nfts/asset/:contractAddress/:tokenId"
-                  element={
-                    <Suspense fallback={null}>
-                      <Asset />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/nfts/profile"
-                  element={
-                    <Suspense fallback={null}>
-                      <Profile />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/nfts/collection/:contractAddress"
-                  element={
-                    <Suspense fallback={null}>
-                      <Collection />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/nfts/collection/:contractAddress/activity"
-                  element={
-                    <Suspense fallback={null}>
-                      <Collection />
-                    </Suspense>
-                  }
-                />
 
                 <Route path="*" element={<Navigate to="/not-found" replace />} />
                 <Route path="/not-found" element={<NotFound />} />
