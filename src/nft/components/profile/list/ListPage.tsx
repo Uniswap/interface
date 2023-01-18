@@ -9,14 +9,16 @@ import { BackArrowIcon } from 'nft/components/icons'
 import { headlineLarge, headlineSmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile, useNFTList, useProfilePageState, useSellAsset } from 'nft/hooks'
+import { LIST_PAGE_MARGIN } from 'nft/pages/profile/profile'
 import { ListingStatus, ProfilePageStateType } from 'nft/types'
 import { fetchPrice, formatEth, formatUsdPrice } from 'nft/utils'
 import { ListingMarkets } from 'nft/utils/listNfts'
-import { useEffect, useMemo, useState } from 'react'
-import styled from 'styled-components/macro'
+import { useEffect, useMemo, useReducer, useState } from 'react'
+import styled, { css } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 
+import { ListModal } from './ListModal'
 import { NFTListingsGrid } from './NFTListingsGrid'
 import { SelectMarketplacesDropdown } from './SelectMarketplacesDropdown'
 import { SetDurationModal } from './SetDurationModal'
@@ -37,12 +39,16 @@ const ButtonsWrapper = styled(Row)`
   width: min-content;
 `
 
-const MarketWrap = styled.section`
+const MarketWrap = styled.section<{ isNftListV2: boolean }>`
   gap: 48px;
   margin: 0px auto;
-  padding: 0px 16px;
-  max-width: 1200px;
   width: 100%;
+  max-width: 1200px;
+  ${({ isNftListV2 }) => !isNftListV2 && v1Padding}
+`
+
+const v1Padding = css`
+  padding: 0px 16px;
 
   @media screen and (min-width: ${SMALL_MEDIA_BREAKPOINT}) {
     padding: 0px 44px;
@@ -87,8 +93,10 @@ const FloatingConfirmationBar = styled(Row)`
   background: ${({ theme }) => theme.backgroundSurface};
   position: fixed;
   bottom: 32px;
-  margin: 0px 156px;
-  width: calc(100vw - 312px);
+  width: calc(100vw - ${LIST_PAGE_MARGIN * 2}px);
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 1200px;
   z-index: ${Z_INDEX.under_dropdown};
 `
 
@@ -130,6 +138,7 @@ export const ListPage = () => {
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
   const anyListingsMissingPrice = useMemo(() => !!listings.find((listing) => !listing.price), [listings])
   const [ethPriceInUSD, setEthPriceInUSD] = useState(0)
+  const [showListModal, toggleShowListModal] = useReducer((s) => !s, false)
 
   useEffect(() => {
     fetchPrice().then((price) => {
@@ -158,7 +167,7 @@ export const ListPage = () => {
 
   return (
     <Column>
-      <MarketWrap>
+      <MarketWrap isNftListV2={isNftListV2}>
         <ListingHeader>
           <TitleWrapper>
             <BackArrowIcon
@@ -201,7 +210,7 @@ export const ListPage = () => {
               </ProceedsWrapper>
               <ListingButtonWrapper>
                 <ListingButton
-                  onClick={toggleBag}
+                  onClick={isNftListV2 ? toggleShowListModal : toggleBag}
                   buttonText={anyListingsMissingPrice ? t`Set prices to continue` : t`Start listing`}
                 />
               </ListingButtonWrapper>
@@ -214,6 +223,11 @@ export const ListPage = () => {
         <MobileListButtonWrapper>
           <ListingButton onClick={toggleBag} buttonText="Continue listing" />
         </MobileListButtonWrapper>
+      )}
+      {isNftListV2 && showListModal && (
+        <>
+          <ListModal overlayClick={toggleShowListModal} />
+        </>
       )}
     </Column>
   )
