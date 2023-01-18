@@ -186,9 +186,13 @@ end
       new_build_number: current_build_number
     )
 
-    commit_version_bump(
-      xcodeproj: XCODE_PROJECT,
-      force: true
-    )
+    begin
+      commit_version_bump(
+        xcodeproj: XCODE_PROJECT,
+      )
+    rescue => e
+      # no-op if there is nothing to commit
+    end
+
   end
 end
