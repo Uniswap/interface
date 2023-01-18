@@ -15,7 +15,7 @@ export const NATIVE_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
 
 export const MATIC_MAINNET_ADDRESS = '0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0'
 
-/** Alternative addres used to denote a native currency (e.g. MATIC on Polygon) */
+/** Alternative address used to denote a native currency (e.g. MATIC on Polygon) */
 export const NATIVE_ADDRESS_ALT = '0x0000000000000000000000000000000000001010'
 
 export const UNI_ADDRESS = constructSameAddressMap(

@@ -12,8 +12,10 @@ import {
   currencyIdToAddress,
   currencyIdToChain,
   currencyIdToGraphQLAddress,
+  getCurrencyAddressForAnalytics,
   getNativeCurrencyAddressForChain,
   isNativeCurrencyAddress,
+  NATIVE_ANALYTICS_ADDRESS_VALUE,
   SwapRouterNativeAssets,
 } from 'src/utils/currencyId'
 
@@ -66,6 +68,16 @@ describe(currencyAddress, () => {
 
   it('returns correct address for token', () => {
     expect(currencyAddress(DAI)).toEqual(DAI.address)
+  })
+})
+
+describe(getCurrencyAddressForAnalytics, () => {
+  it('returns correct address for native asset', () => {
+    expect(getCurrencyAddressForAnalytics(ETH)).toEqual(NATIVE_ANALYTICS_ADDRESS_VALUE)
+  })
+
+  it('returns correct address for token', () => {
+    expect(getCurrencyAddressForAnalytics(DAI)).toEqual(DAI.address)
   })
 })
 

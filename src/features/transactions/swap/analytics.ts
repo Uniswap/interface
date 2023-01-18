@@ -6,7 +6,7 @@ import { EventName } from 'src/features/telemetry/constants'
 import { SwapTradeBaseProperties } from 'src/features/telemetry/types'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { Trade } from 'src/features/transactions/swap/useTrade'
-import { currencyAddress } from 'src/utils/currencyId'
+import { currencyAddress, getCurrencyAddressForAnalytics } from 'src/utils/currencyId'
 import { formatCurrencyAmount, NumberType } from 'src/utils/format'
 
 // hook-based analytics because this one is data-lifecycle dependent
@@ -49,8 +49,8 @@ export function getBaseTradeAnalyticsProperties(
   return {
     token_in_symbol: trade.inputAmount.currency.symbol,
     token_out_symbol: trade.outputAmount.currency.symbol,
-    token_in_address: currencyAddress(trade.inputAmount.currency),
-    token_out_address: currencyAddress(trade.outputAmount.currency),
+    token_in_address: getCurrencyAddressForAnalytics(trade.inputAmount.currency),
+    token_out_address: getCurrencyAddressForAnalytics(trade.outputAmount.currency),
     price_impact_basis_points: trade.priceImpact.multiply(100).toSignificant(),
     // TODO: [MOB-3904] add gas fee in USD here once we calculate USD value of `totalGasFee` on swap form instead of just on review
     estimated_network_fee_usd: undefined,

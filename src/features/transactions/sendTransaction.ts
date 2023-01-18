@@ -22,6 +22,7 @@ import {
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { selectFlashbotsEnabled } from 'src/features/wallet/selectors'
 import { SignerManager } from 'src/features/wallet/signing/SignerManager'
+import { getCurrencyAddressForAnalytics } from 'src/utils/currencyId'
 import { formatCurrencyAmount, NumberType } from 'src/utils/format'
 import { logger } from 'src/utils/logger'
 import { call, put, select } from 'typed-redux-saga'
@@ -139,9 +140,9 @@ function* addTransaction(
       token_in_amount: trade.inputAmount.toExact(),
       token_out_amount: formatCurrencyAmount(trade.outputAmount, NumberType.SwapTradeAmount),
       token_in_symbol: trade.inputAmount.currency.symbol,
-      token_in_address: account.address,
+      token_in_address: getCurrencyAddressForAnalytics(trade.inputAmount.currency),
       token_out_symbol: trade.outputAmount.currency.symbol,
-      token_out_address: account.address,
+      token_out_address: getCurrencyAddressForAnalytics(trade.outputAmount.currency),
     })
   }
   yield* put(transactionActions.addTransaction(transaction))
