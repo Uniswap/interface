@@ -27,9 +27,13 @@ const ProfilePageWrapper = styled.div`
   }
 `
 
-const LoadedAccountPage = styled.div<{ pageWidthAdjustment: number; pageMargin: number }>`
-  width: ${({ pageWidthAdjustment }) => `calc(100% - ${pageWidthAdjustment}px)`};
-  margin: ${({ pageMargin }) => `0px ${pageMargin}px`};
+const LoadedAccountPage = styled.div<{ cartExpanded: boolean; isOnV2ListPage: boolean }>`
+  width: calc(
+    100% -
+      ${({ cartExpanded, isOnV2ListPage }) =>
+        isOnV2ListPage ? LIST_PAGE_MARGIN * 2 : cartExpanded ? SHOPPING_BAG_WIDTH : 0}px
+  );
+  margin: 0px ${({ isOnV2ListPage }) => (isOnV2ListPage ? LIST_PAGE_MARGIN : 0)}px;
 `
 
 const Center = styled.div`
@@ -79,21 +83,13 @@ const ProfileContent = () => {
   const cartExpanded = useBag((state) => state.bagExpanded)
   const isNftListV2 = useNftListV2Flag() === NftListV2Variant.Enabled
   const isListingNfts = sellPageState === ProfilePageStateType.LISTING
-
-  const pageWidthAdjustment =
-    cartExpanded && (!isNftListV2 || !isListingNfts)
-      ? SHOPPING_BAG_WIDTH
-      : isNftListV2 && sellPageState !== ProfilePageStateType.VIEWING
-      ? LIST_PAGE_MARGIN * 2
-      : 0
-
-  const pageMargin = isNftListV2 && isListingNfts ? LIST_PAGE_MARGIN : 0
+  const isOnV2ListPage = isNftListV2 && isListingNfts
 
   return (
     <Trace page={InterfacePageName.NFT_PROFILE_PAGE} shouldLogImpression>
       <ProfilePageWrapper>
         {account ? (
-          <LoadedAccountPage pageWidthAdjustment={pageWidthAdjustment} pageMargin={pageMargin}>
+          <LoadedAccountPage cartExpanded={cartExpanded} isOnV2ListPage={isOnV2ListPage}>
             {!isListingNfts ? <ProfilePage /> : <ListPage />}
           </LoadedAccountPage>
         ) : (
