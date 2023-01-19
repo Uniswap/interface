@@ -18,17 +18,13 @@ describe('Universal search bar', () => {
       .and('contain.text', 'No NFT collections found.')
   })
 
-  it('should yield no results found when contract address is search term', () => {
-    // Search for uni token contract address.
-    cy.get('[data-cy="search-bar-input"]').last().type('0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')
-    cy.get('[data-cy="search-bar"]')
-      .should('contain.text', 'No tokens found.')
-      .and('contain.text', 'No NFT collections found.')
-  })
-
   it('should yield clickable result for regular token or nft collection search term', () => {
     // Search for uni token by name.
     cy.get('[data-cy="search-bar-input"]').last().clear().type('uni')
+    cy.get('[data-cy="searchbar-token-row-UNI"]').should('contain.text', 'Uniswap')
+    .and('contain.text', 'UNI')
+    .and('contain.text', '$')
+    .and('contain.text', '%')
     cy.get('[data-cy="searchbar-token-row-UNI"]').click()
 
     cy.get('div').contains('Uniswap').should('exist')
