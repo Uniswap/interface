@@ -1,16 +1,22 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { BigNumber } from '@ethersproject/bignumber'
+import { t } from '@lingui/macro'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { SwapEventName } from '@uniswap/analytics-events'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import isZero from 'utils/isZero'
 import { swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
 import { PermitSignature } from './usePermitAllowance'
+
+class InvalidSwapError extends Error {}
 
 interface SwapOptions {
   slippageTolerance: Percent
@@ -55,11 +61,26 @@ export function useUniversalRouterSwapCallback(
         gasEstimate = await provider.estimateGas(tx)
       }
       const gasLimit = calculateGasMargin(gasEstimate)
-      const response = await provider.getSigner().sendTransaction({ ...tx, gasLimit })
+      const response = await provider
+        .getSigner()
+        .sendTransaction({ ...tx, gasLimit })
+        .then((response) => {
+          sendAnalyticsEvent(
+            SwapEventName.SWAP_SIGNED,
+            formatSwapSignedAnalyticsEventProperties({ trade, txHash: response.hash })
+          )
+          if (tx.data !== response.data) {
+            sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, { txHash: response.hash })
+            throw new InvalidSwapError(
+              t`Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds.`
+            )
+          }
+          return response
+        })
       return response
     } catch (swapError: unknown) {
-      const message = swapErrorToUserReadableMessage(swapError)
-      throw new Error(message)
+      if (swapError instanceof InvalidSwapError) throw swapError
+      throw new Error(swapErrorToUserReadableMessage(swapError))
     }
   }, [
     account,
