@@ -1,7 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { RootState } from 'src/app/rootReducer'
 
-const selectFavoriteTokens = (state: RootState) => state.favorites.tokens
+const selectFavoriteTokens = (state: RootState): string[] => state.favorites.tokens
 
 export const selectFavoriteTokensSet = createSelector(
   selectFavoriteTokens,
@@ -11,7 +11,7 @@ export const selectHasFavoriteTokens = createSelector(selectFavoriteTokens, (tok
   Boolean(tokens?.length > 0)
 )
 
-const selectWatchedAddresses = (state: RootState) => state.favorites.watchedAddresses
+const selectWatchedAddresses = (state: RootState): string[] => state.favorites.watchedAddresses
 export const selectWatchedAddressSet = createSelector(
   selectWatchedAddresses,
   (watched) => new Set(watched)

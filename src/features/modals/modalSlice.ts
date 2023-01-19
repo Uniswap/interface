@@ -23,7 +23,7 @@ type SwapModalParams = { name: ModalName.Swap; initialState?: TransactionState }
 
 type SendModalParams = { name: ModalName.Send; initialState?: TransactionState }
 
-type OpenModalParams =
+export type OpenModalParams =
   | AccountSwitcherModalParams
   | ExperimentsModalParams
   | FiatOnRampModalParams

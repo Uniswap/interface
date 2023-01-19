@@ -28,7 +28,7 @@ interface ProfileHeaderProps {
   address: Address
 }
 
-export default function ProfileHeader({ address }: ProfileHeaderProps) {
+export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Element {
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const isFavorited = useAppSelector(selectWatchedAddressSet).has(address)
@@ -60,7 +60,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps) {
     uniconGradientStart,
   ])
 
-  const onPressFavorite = () => {
+  const onPressFavorite = (): void => {
     if (isFavorited) {
       dispatch(removeWatchedAddress({ address }))
     } else {
@@ -171,7 +171,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps) {
   )
 }
 
-const HeartIconEmpty = () => {
+const HeartIconEmpty = (): JSX.Element => {
   const theme = useAppTheme()
   return (
     <HeartIcon
@@ -183,7 +183,7 @@ const HeartIconEmpty = () => {
   )
 }
 
-const HeartIconFilled = () => {
+const HeartIconFilled = (): JSX.Element => {
   const theme = useAppTheme()
   return (
     <HeartIcon
@@ -196,7 +196,7 @@ const HeartIconFilled = () => {
   )
 }
 
-function _HeaderRadial({ color }: { color: string }) {
+function _HeaderRadial({ color }: { color: string }): JSX.Element {
   return (
     <Svg height="100%" width="100%">
       <Defs>

@@ -13,7 +13,7 @@ interface PortfolioBalanceProps {
   owner: Address
 }
 
-export function PortfolioBalance({ owner }: PortfolioBalanceProps) {
+export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element {
   const { data, loading, networkStatus } = usePortfolioBalanceQuery({
     variables: { owner },
     pollInterval: PollingInterval.Fast,

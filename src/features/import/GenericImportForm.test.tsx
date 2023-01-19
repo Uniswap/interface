@@ -9,7 +9,7 @@ describe(GenericImportForm, () => {
         errorMessage={undefined}
         placeholderLabel="seed phrase"
         value={undefined}
-        onChange={() => {
+        onChange={(): void => {
           return
         }}
       />
@@ -25,7 +25,7 @@ describe(GenericImportForm, () => {
         errorMessage={undefined}
         placeholderLabel="seed phrase"
         value="hello"
-        onChange={() => {
+        onChange={(): void => {
           return
         }}
       />
@@ -41,7 +41,7 @@ describe(GenericImportForm, () => {
         errorMessage="there is an error"
         placeholderLabel="seed phrase"
         value="wrong value"
-        onChange={() => {
+        onChange={(): void => {
           return
         }}
       />

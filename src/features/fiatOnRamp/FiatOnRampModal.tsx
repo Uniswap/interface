@@ -24,12 +24,12 @@ import { openUri } from 'src/utils/linking'
 const MOONPAY_UNSUPPORTED_REGION_HELP_URL =
   'https://support.uniswap.org/hc/en-us/articles/10966551707533-Why-is-MoonPay-not-supported-in-my-region'
 
-export function FiatOnRampModal() {
+export function FiatOnRampModal(): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
   const dispatch = useAppDispatch()
-  const onClose = () => {
+  const onClose = (): void => {
     dispatch(closeModal({ name: ModalName.FiatOnRamp }))
   }
 
@@ -59,7 +59,7 @@ export function FiatOnRampModal() {
     }
   )
 
-  const onPress = () => {
+  const onPress = (): void => {
     if (!fiatOnRampHostUrl) return
 
     // ideally, we would keep users inside our app and open an inapp browser
@@ -100,7 +100,8 @@ export function FiatOnRampModal() {
                   isLoading ? (
                     <SpinningLoader color="textOnBrightPrimary" />
                   ) : eligible === false ? (
-                    <TouchableArea onPress={() => openUri(MOONPAY_UNSUPPORTED_REGION_HELP_URL)}>
+                    <TouchableArea
+                      onPress={(): Promise<void> => openUri(MOONPAY_UNSUPPORTED_REGION_HELP_URL)}>
                       <InformationIcon color={theme.colors.white} width={theme.iconSizes.md} />
                     </TouchableArea>
                   ) : undefined

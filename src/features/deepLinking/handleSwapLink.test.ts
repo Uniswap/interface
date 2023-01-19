@@ -21,7 +21,7 @@ const formSwapUrl = (
   outputAddress?: string,
   currencyField?: string,
   amount?: string
-) =>
+): URL =>
   new URL(
     `https://uniswap.org/app?screen=swap
 &userAddress=${userAddress}
@@ -37,7 +37,20 @@ const formTransactionState = (
   outputAddress?: string,
   currencyField?: string,
   amount?: string
-) => ({
+): {
+  input: {
+    address: string | undefined
+    chainId: ChainId | undefined
+    type: AssetType
+  }
+  output: {
+    address: string | undefined
+    chainId: ChainId | undefined
+    type: AssetType
+  }
+  exactCurrencyField: string | undefined
+  exactAmountToken: string | undefined
+} => ({
   [CurrencyField.INPUT]: {
     address: inputAddress,
     chainId: chain,

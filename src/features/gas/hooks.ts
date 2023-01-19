@@ -46,7 +46,7 @@ export function useTransactionGasFee(
   }, [data, speed])
 }
 
-export function useUSDValue(chainId?: ChainId, ethValueInWei?: string) {
+export function useUSDValue(chainId?: ChainId, ethValueInWei?: string): string | undefined {
   const currencyAmount =
     ethValueInWei && chainId
       ? CurrencyAmount.fromRawAmount(NativeCurrency.onChain(chainId), ethValueInWei)
@@ -99,7 +99,7 @@ export function useCancelationGasFeeInfo(
   }, [baseTxGasFee, cancelationRequest, transaction.options.request])
 }
 
-function getCancelationGasFee(adjustedFeeDetails: FeeDetails, gasLimit: string) {
+function getCancelationGasFee(adjustedFeeDetails: FeeDetails, gasLimit: string): string {
   // doing object destructuring here loses ts checks based on FeeDetails.type >:(
   if (adjustedFeeDetails.type === FeeType.Legacy) {
     return BigNumber.from(gasLimit).mul(adjustedFeeDetails.params.gasPrice).toString()

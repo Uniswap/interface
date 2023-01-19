@@ -10,12 +10,12 @@ import { Text } from 'src/components/Text'
 import { openModal } from 'src/features/modals/modalSlice'
 import { EventName, ModalName } from 'src/features/telemetry/constants'
 
-export function FiatOnRampBanner(props: BoxProps) {
+export function FiatOnRampBanner(props: BoxProps): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
 
-  const onPress = () => {
+  const onPress = (): void => {
     dispatch(openModal({ name: ModalName.FiatOnRamp }))
   }
 

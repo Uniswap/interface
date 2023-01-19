@@ -37,5 +37,5 @@ export function useENS(
   }
 }
 
-const getCompletedENSName = (name: string | null) =>
+const getCompletedENSName = (name: string | null): string | null =>
   name?.concat(name ? (!name?.endsWith('.eth') ? '.eth' : '') : '') ?? null

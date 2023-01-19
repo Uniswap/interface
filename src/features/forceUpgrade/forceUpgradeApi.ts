@@ -58,7 +58,7 @@ const fetchUpgradeStatus = async (): Promise<UpgradeStatusReponse> => {
   }
 }
 
-const transformResponse = (data: UpgradeStatusReponse) => {
+const transformResponse = (data: UpgradeStatusReponse): UpgradeStatus => {
   const flagObj = data.force_upgrade
 
   if (flagObj?.key !== 'on') {

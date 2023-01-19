@@ -48,7 +48,7 @@ export interface EtherscanSearchResult extends SearchResultBase {
 
 export type SearchResult = TokenSearchResult | WalletSearchResult | EtherscanSearchResult
 
-export function searchResultId(searchResult: SearchResult) {
+export function searchResultId(searchResult: SearchResult): string {
   switch (searchResult.type) {
     case SearchResultType.Token:
       return `token-${searchResult.chainId}-${searchResult.address}`

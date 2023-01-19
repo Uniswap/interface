@@ -14,10 +14,14 @@ import { useAsyncData } from 'src/utils/hooks'
  * Hook shortcut to use the biometric prompt.
  * @returns trigger Trigger the OS biometric flow and invokes successCallback on success.
  */
-export function useBiometricPrompt<T = undefined>(successCallback?: (params?: T) => void) {
+export function useBiometricPrompt<T = undefined>(
+  successCallback?: (params?: T) => void
+): {
+  trigger: (params?: T) => Promise<void>
+} {
   const { setAuthenticationStatus } = useBiometricContext()
 
-  const trigger = async (params?: T) => {
+  const trigger = async (params?: T): Promise<void> => {
     setAuthenticationStatus(BiometricAuthenticationStatus.Authenticating)
     const authStatus = await tryLocalAuthenticate()
 
@@ -34,11 +38,13 @@ export function useBiometricPrompt<T = undefined>(successCallback?: (params?: T)
   return { trigger }
 }
 
-export function biometricAuthenticationSuccessful(status: BiometricAuthenticationStatus) {
+export function biometricAuthenticationSuccessful(status: BiometricAuthenticationStatus): boolean {
   return status === BiometricAuthenticationStatus.Authenticated
 }
 
-export function biometricAuthenticationDisabledByOS(status: BiometricAuthenticationStatus) {
+export function biometricAuthenticationDisabledByOS(
+  status: BiometricAuthenticationStatus
+): boolean {
   return (
     status === BiometricAuthenticationStatus.Unsupported ||
     status === BiometricAuthenticationStatus.MissingEnrollment
@@ -49,7 +55,7 @@ export function biometricAuthenticationDisabledByOS(status: BiometricAuthenticat
  * Check function of biometric device support
  * @returns object representing biometric auth support by type
  */
-export function useDeviceSupportsBiometricAuth() {
+export function useDeviceSupportsBiometricAuth(): { touchId: boolean; faceId: boolean } {
   // check if device supports biometric authentication
   const authenticationTypes = useAsyncData(supportedAuthenticationTypesAsync).data
   return {
@@ -58,7 +64,7 @@ export function useDeviceSupportsBiometricAuth() {
   }
 }
 
-const checkOsBiometricAuthEnabled = async () => {
+const checkOsBiometricAuthEnabled = async (): Promise<boolean> => {
   const [compatible, enrolled] = await Promise.all([hasHardwareAsync(), isEnrolledAsync()])
   return compatible && enrolled
 }
@@ -67,7 +73,7 @@ const checkOsBiometricAuthEnabled = async () => {
  * Hook to determine whether biometric auth is enabled in OS settings
  * @returns if Face ID or Touch ID is enabled
  */
-export function useOsBiometricAuthEnabled() {
+export function useOsBiometricAuthEnabled(): boolean | undefined {
   return useAsyncData(checkOsBiometricAuthEnabled).data
 }
 

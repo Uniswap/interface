@@ -21,16 +21,18 @@ const lockScreenContextValue: LockScreenContextValue = {
 
 const LockScreenContext = createContext<LockScreenContextValue>(lockScreenContextValue)
 
-export const LockScreenContextProvider = ({ children }: PropsWithChildren<unknown>) => {
+export const LockScreenContextProvider = ({
+  children,
+}: PropsWithChildren<unknown>): JSX.Element => {
   const { requiredForAppAccess } = useBiometricAppSettings()
   const [isVisible, setIsVisible] = useState(requiredForAppAccess)
   const [animation, setAnimation] = useState<AnimationType>('none')
 
-  const setIsLockScreenVisible = (value: boolean) => {
+  const setIsLockScreenVisible = (value: boolean): void => {
     setIsVisible(value)
   }
 
-  const setAnimationType = (value: AnimationType) => {
+  const setAnimationType = (value: AnimationType): void => {
     setAnimation(value)
   }
 
@@ -51,7 +53,7 @@ export function useLockScreenContext(): LockScreenContextValue {
   return useContext(LockScreenContext)
 }
 
-export function useLockScreenOnBlur(isDisabled?: boolean) {
+export function useLockScreenOnBlur(isDisabled?: boolean): void {
   // Show splash screen if app switcher is opened
   const { setIsLockScreenVisible } = useLockScreenContext()
   const isFocused = useIsFocused()

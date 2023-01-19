@@ -8,7 +8,7 @@ import { useLockScreenContext } from 'src/features/authentication/lockScreenCont
 import { useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { dimensions } from 'src/styles/sizing'
 
-export function LockScreenModal() {
+export function LockScreenModal(): JSX.Element | null {
   const { isLockScreenVisible, animationType, setIsLockScreenVisible } = useLockScreenContext()
   const { trigger } = useBiometricPrompt(() => setIsLockScreenVisible(false))
 
@@ -25,7 +25,7 @@ export function LockScreenModal() {
       presentationStyle="fullScreen"
       showCloseButton={false}
       transparent={false}>
-      <TouchableArea onPress={() => trigger()}>
+      <TouchableArea onPress={(): Promise<void> => trigger()}>
         <Flex
           centered
           alignItems="center"

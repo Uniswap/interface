@@ -34,5 +34,5 @@ export const { setChainActiveStatus, resetNetwork } = slice.actions
 export const chainsReducer = slice.reducer
 
 // always rely on the state of Goerli
-export const selectTestnetsAreEnabled = (state: RootState) =>
+export const selectTestnetsAreEnabled = (state: RootState): boolean =>
   !!state.chains.byChainId[ChainId.Goerli]?.isActive

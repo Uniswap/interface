@@ -42,7 +42,9 @@ export function getTokensOrderByValues(orderBy: TokensOrderBy): {
 /**
  * Returns a compare function to sort tokens client side.
  */
-export function getClientTokensOrderByCompareFn(orderBy: ClientTokensOrderBy) {
+export function getClientTokensOrderByCompareFn(
+  orderBy: ClientTokensOrderBy
+): (a: TokenItemData, b: TokenItemData) => number {
   let compareField: keyof TokenItemData
   let direction = 0
 
@@ -87,7 +89,7 @@ export function getTokenMetadataDisplayType(orderBy: TokensOrderBy): TokenMetada
 }
 
 // Label shown in the popover context menu.
-export function getTokensOrderByMenuLabel(orderBy: TokensOrderBy, t: TFunction) {
+export function getTokensOrderByMenuLabel(orderBy: TokensOrderBy, t: TFunction): string {
   switch (orderBy) {
     case TokenSortableField.MarketCap:
       return t('Market cap')
@@ -105,7 +107,7 @@ export function getTokensOrderByMenuLabel(orderBy: TokensOrderBy, t: TFunction) 
 }
 
 // Label shown when option is selected in dropdown.
-export function getTokensOrderBySelectedLabel(orderBy: TokensOrderBy, t: TFunction) {
+export function getTokensOrderBySelectedLabel(orderBy: TokensOrderBy, t: TFunction): string {
   switch (orderBy) {
     case TokenSortableField.MarketCap:
       return t('Market cap')

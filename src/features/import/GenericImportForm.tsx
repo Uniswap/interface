@@ -52,7 +52,7 @@ export function GenericImportForm({
   afterPasteButtonPress,
   blurOnSubmit,
   inputAlignment = 'center',
-}: Props) {
+}: Props): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const [focused, setFocused] = useState(false)
@@ -66,19 +66,19 @@ export function GenericImportForm({
   const px = useResponsiveProp({ xs: 'lg', sm: 'xl' })
   const py = useResponsiveProp({ xs: 'xs', sm: 'md' })
 
-  const handleBlur = () => {
+  const handleBlur = (): void => {
     setFocused(false)
     onBlur?.()
   }
 
-  const handleFocus = () => {
+  const handleFocus = (): void => {
     setFocused(true)
     onFocus?.()
     // Need this to allow for focus on click on container.
     textInputRef?.current?.focus()
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = (): void => {
     onSubmit && onSubmit()
   }
 
@@ -164,7 +164,7 @@ export function GenericImportForm({
               gap="xs"
               position="absolute"
               pt="xxs"
-              onLayout={(event: LayoutChangeEvent) => setLayout(event.nativeEvent.layout)}>
+              onLayout={(event: LayoutChangeEvent): void => setLayout(event.nativeEvent.layout)}>
               <Text
                 adjustsFontSizeToFit
                 color="textSecondary"

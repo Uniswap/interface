@@ -26,7 +26,7 @@ export default function WalletPreviewCard({
   balance,
   onSelect,
   ...rest
-}: Props) {
+}: Props): JSX.Element {
   return (
     <TouchableArea
       backgroundColor={selected ? 'background3' : 'background1'}
@@ -35,7 +35,7 @@ export default function WalletPreviewCard({
       borderWidth={1}
       px="md"
       py="sm"
-      onPress={() => onSelect(address)}
+      onPress={(): void => onSelect(address)}
       {...rest}>
       <Flex row alignItems="center" justifyContent="space-between">
         <Flex

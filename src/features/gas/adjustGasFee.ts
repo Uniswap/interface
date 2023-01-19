@@ -53,7 +53,7 @@ function multiplyByFactor(
   value: BigNumberish,
   minValue: BigNumberish | null,
   adjustmentFactor: number
-) {
+): string {
   const baseValue = BigNumberMax(BigNumber.from(value), BigNumber.from(minValue ?? 0))
   return Math.floor(baseValue.toNumber() * adjustmentFactor).toString()
 }

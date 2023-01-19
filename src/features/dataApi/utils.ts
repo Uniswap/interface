@@ -96,7 +96,7 @@ until the network request returns.
 
 Feature request to enable persisted errors: https://github.com/apollographql/apollo-feature-requests/issues/348
 */
-export function usePersistedError(loading: boolean, error?: ApolloError) {
+export function usePersistedError(loading: boolean, error?: ApolloError): ApolloError | undefined {
   const [persistedError, setPersistedError] = useState<ApolloError>()
 
   useEffect(() => {

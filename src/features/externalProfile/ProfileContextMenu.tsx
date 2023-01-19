@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import ContextMenu from 'react-native-context-menu-view'
+import { NativeSyntheticEvent } from 'react-native'
+import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TripleDot } from 'src/components/icons/TripleDot'
@@ -11,7 +12,7 @@ import { AppNotificationType } from 'src/features/notifications/types'
 import { setClipboard } from 'src/utils/clipboard'
 import { ExplorerDataType, getExplorerLink, openUri } from 'src/utils/linking'
 
-export function ProfileContextMenu({ address }: { address: Address }) {
+export function ProfileContextMenu({ address }: { address: Address }): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
@@ -46,7 +47,7 @@ export function ProfileContextMenu({ address }: { address: Address }) {
     <ContextMenu
       actions={menuActions}
       dropdownMenuMode={true}
-      onPress={(e) => {
+      onPress={(e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>): void => {
         menuActions[e.nativeEvent.index]?.action()
       }}>
       <TouchableArea

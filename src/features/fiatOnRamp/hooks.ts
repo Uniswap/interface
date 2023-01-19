@@ -10,7 +10,10 @@ import {
 import { createTransactionId } from 'src/features/transactions/utils'
 
 /** Returns a new externalTransactionId and a callback to store the transaction. */
-export function useFiatOnRampTransactionCreator(ownerAddress: string) {
+export function useFiatOnRampTransactionCreator(ownerAddress: string): {
+  externalTransactionId: string
+  dispatchAddTransaction: () => void
+} {
   const dispatch = useAppDispatch()
 
   const externalTransactionId = useRef(createTransactionId())

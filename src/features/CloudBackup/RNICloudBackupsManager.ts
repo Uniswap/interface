@@ -10,11 +10,11 @@ export function deleteICloudMnemonicBackup(mnemonicId: string): Promise<boolean>
   return RNICloudBackupsManager.deleteICloudMnemonicBackup(mnemonicId)
 }
 
-export function startFetchingICloudBackups() {
+export function startFetchingICloudBackups(): Promise<void> {
   return RNICloudBackupsManager.startFetchingICloudBackups()
 }
 
-export function stopFetchingICloudBackups() {
+export function stopFetchingICloudBackups(): Promise<void> {
   return RNICloudBackupsManager.stopFetchingICloudBackups()
 }
 

@@ -178,7 +178,7 @@ export function useSortedPortfolioBalances(
  * Helper function to stable sort balances by descending balanceUSD,
  * followed by balances with null balanceUSD values sorted alphabetically
  * */
-export function sortPortfolioBalances(balances: PortfolioBalance[]) {
+export function sortPortfolioBalances(balances: PortfolioBalance[]): PortfolioBalance[] {
   const balancesWithUSDValue = balances.filter((b) => b.balanceUSD)
   const balancesWithoutUSDValue = balances.filter((b) => !b.balanceUSD)
 

@@ -6,6 +6,7 @@ import {
   FiatOnRampWidgetUrlQueryParameters,
   FiatOnRampWidgetUrlQueryResponse,
   MoonpayIPAddressesResponse,
+  MoonpayTransactionResponseItem,
   MoonpayTransactionsResponse,
 } from 'src/features/fiatOnRamp/types'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
@@ -153,7 +154,10 @@ export function fetchFiatOnRampTransaction(
 
 // Logs an Amplitude event whenever we process a tx update from Moonpay
 // NOTE: this will not attempt to dedupe by externalTxId
-function logMoonpayEvent(moonpayTransactionResponse?: MoonpayTransactionsResponse[0]) {
+// TODO: Add ESLint ignore rule here when enabling explicit return types rule
+function logMoonpayEvent(
+  moonpayTransactionResponse?: MoonpayTransactionsResponse[0]
+): MoonpayTransactionResponseItem | undefined {
   const extractProperties: (
     response: MoonpayTransactionsResponse[0]
   ) => MoonpayTransactionEventProperties = ({

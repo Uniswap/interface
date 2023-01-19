@@ -32,6 +32,6 @@ export function useContract<T extends Contract = Contract>(
   }, [chainId, addressOrAddressMap, ABI, provider, contractsManager]) as T
 }
 
-export function useTokenContract(chainId: ChainId, tokenAddress?: Address) {
+export function useTokenContract(chainId: ChainId, tokenAddress?: Address): Erc20 | null {
   return useContract<Erc20>(chainId, tokenAddress, ERC20_ABI)
 }

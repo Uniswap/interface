@@ -1,8 +1,9 @@
 import { BigNumber } from 'ethers'
-import { put } from 'redux-saga/effects'
+import { CallEffect, put, PutEffect } from 'redux-saga/effects'
+import { ChainId } from 'src/constants/chains'
 import { AssetType, CurrencyAsset } from 'src/entities/assets'
 import { selectActiveChainIds } from 'src/features/chains/utils'
-import { openModal } from 'src/features/modals/modalSlice'
+import { openModal, OpenModalParams } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import {
   CurrencyField,
@@ -13,7 +14,22 @@ import { currencyIdToAddress, currencyIdToChain } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { call } from 'typed-redux-saga'
 
-export function* handleSwapLink(url: URL) {
+export function* handleSwapLink(url: URL): Generator<
+  | CallEffect<{
+      inputChain: ChainId
+      inputAddress: string
+      outputChain: ChainId
+      outputAddress: string
+      exactCurrencyField: CurrencyField
+      exactAmountToken: string
+    }>
+  | PutEffect<{
+      payload: OpenModalParams
+      type: string
+    }>,
+  void,
+  unknown
+> {
   try {
     const {
       inputChain,
@@ -51,7 +67,18 @@ export function* handleSwapLink(url: URL) {
   }
 }
 
-export function* parseAndValidateSwapParams(url: URL) {
+export function* parseAndValidateSwapParams(url: URL): Generator<
+  CallEffect<ChainId[]>,
+  {
+    inputChain: ChainId
+    inputAddress: string
+    outputChain: ChainId
+    outputAddress: string
+    exactCurrencyField: CurrencyField
+    exactAmountToken: string
+  },
+  unknown
+> {
   const inputCurrencyId = url.searchParams.get('inputCurrencyId')
   const outputCurrencyId = url.searchParams.get('outputCurrencyId')
   const currencyField = url.searchParams.get('currencyField')

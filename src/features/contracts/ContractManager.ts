@@ -13,7 +13,7 @@ export class ContractManager {
     address: Address,
     provider: providers.Provider,
     ABI: ContractInterface
-  ) {
+  ): Contract {
     if (isNativeCurrencyAddress(chainId, address) || !getValidAddress(address, true)) {
       throw Error(`Invalid address for contract: ${address}`)
     }
@@ -32,7 +32,7 @@ export class ContractManager {
     }
   }
 
-  removeContract(chainId: ChainId, address: Address) {
+  removeContract(chainId: ChainId, address: Address): void {
     if (!this._contracts[chainId]?.[address]) {
       logger.warn(
         'ContractManager',
@@ -44,12 +44,12 @@ export class ContractManager {
     delete this._contracts[chainId]![address]
   }
 
-  reset() {
+  reset(): void {
     this._contracts = {}
   }
 
   // Returns contract or null
-  getContract<T extends Contract>(chainId: ChainId, address: Address) {
+  getContract<T extends Contract>(chainId: ChainId, address: Address): T | null {
     return (this._contracts[chainId]?.[address] as T | undefined) ?? null
   }
 
@@ -58,7 +58,7 @@ export class ContractManager {
     address: Address,
     provider: providers.Provider,
     ABI: ContractInterface
-  ) {
+  ): T {
     const cachedContract = this.getContract<T>(chainId, address)
     return (cachedContract ?? this.createContract(chainId, address, provider, ABI)) as T
   }

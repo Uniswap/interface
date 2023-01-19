@@ -9,7 +9,7 @@ import {
 } from 'src/features/favorites/slice'
 import { CurrencyId } from 'src/utils/currencyId'
 
-export function useToggleFavoriteCallback(id: CurrencyId) {
+export function useToggleFavoriteCallback(id: CurrencyId): () => void {
   const dispatch = useAppDispatch()
   const isFavoriteToken = useAppSelector(selectFavoriteTokensSet).has(id)
 
@@ -22,7 +22,7 @@ export function useToggleFavoriteCallback(id: CurrencyId) {
   }, [dispatch, id, isFavoriteToken])
 }
 
-export function useToggleWatchedWalletCallback(address: Address) {
+export function useToggleWatchedWalletCallback(address: Address): () => void {
   const dispatch = useAppDispatch()
   const isFavoriteWallet = useAppSelector(selectWatchedAddressSet).has(address)
 

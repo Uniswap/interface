@@ -13,10 +13,10 @@ const biomericContextValue: BiometricContextValue = {
 
 const BiometricContext = createContext<BiometricContextValue>(biomericContextValue)
 
-export const BiometricContextProvider = ({ children }: PropsWithChildren<unknown>) => {
+export const BiometricContextProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
   // global authenticationStatus
   const [status, setStatus] = useState<NullUndefined<BiometricAuthenticationStatus>>()
-  const setAuthenticationStatus = (value: NullUndefined<BiometricAuthenticationStatus>) => {
+  const setAuthenticationStatus = (value: NullUndefined<BiometricAuthenticationStatus>): void => {
     setStatus(value)
   }
 

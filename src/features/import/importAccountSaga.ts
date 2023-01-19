@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import { AllEffect, CallEffect, PutEffect } from 'redux-saga/effects'
 import { ImportAccountParams, ImportAccountType } from 'src/features/import/types'
 import { Account, AccountType, BackupType } from 'src/features/wallet/accounts/types'
 import { activateAccount, addAccount, unlockWallet } from 'src/features/wallet/walletSlice'
@@ -6,11 +7,36 @@ import { generateAndStorePrivateKey, importMnemonic } from 'src/lib/RNEthersRs'
 import { getChecksumAddress } from 'src/utils/addresses'
 import { logger } from 'src/utils/logger'
 import { createMonitoredSaga } from 'src/utils/saga'
-import { all, call, put } from 'typed-redux-saga'
+import { all, call, put, SagaGenerator } from 'typed-redux-saga'
 
 export const IMPORT_WALLET_AMOUNT = 10
 
-export function* importAccount(params: ImportAccountParams) {
+export function* importAccount(params: ImportAccountParams): Generator<
+  | CallEffect<void>
+  | CallEffect<
+      Generator<
+        | CallEffect<string>
+        | AllEffect<SagaGenerator<string, CallEffect<string>>>
+        | CallEffect<void>
+        | AllEffect<
+            SagaGenerator<
+              {
+                payload: Account
+                type: string
+              },
+              PutEffect<{
+                payload: Account
+                type: string
+              }>
+            >
+          >,
+        void,
+        unknown
+      >
+    >,
+  void,
+  unknown
+> {
   const { type, name } = params
   logger.debug('importAccountSaga', 'importAccount', 'Importing type:', type)
 
@@ -32,7 +58,11 @@ export function* importAccount(params: ImportAccountParams) {
   }
 }
 
-function* importAddressAccount(address: string, name?: string, ignoreActivate?: boolean) {
+function* importAddressAccount(
+  address: string,
+  name?: string,
+  ignoreActivate?: boolean
+): Generator<CallEffect<void>, void, unknown> {
   const formattedAddress = getChecksumAddress(address)
   const account: Account = {
     type: AccountType.Readonly,
@@ -50,7 +80,25 @@ function* importMnemonicAccounts(
   indexes = [0],
   markAsActive?: boolean,
   ignoreActivate?: boolean
-) {
+): Generator<
+  | CallEffect<void>
+  | CallEffect<string>
+  | AllEffect<SagaGenerator<string, CallEffect<string>>>
+  | AllEffect<
+      SagaGenerator<
+        {
+          payload: Account
+          type: string
+        },
+        PutEffect<{
+          payload: Account
+          type: string
+        }>
+      >
+    >,
+  void,
+  unknown
+> {
   const mnemonicId = yield* call(importMnemonic, validatedMnemonic)
   // generate private keys and return addresses for all derivation indexes
   const addresses = yield* all(
@@ -90,7 +138,26 @@ function* importMnemonicAccounts(
   yield* call(onAccountImport, activeAccount, ignoreActivate)
 }
 
-function* importRestoreBackupAccounts(mnemonicId: string, indexes = [0]) {
+function* importRestoreBackupAccounts(
+  mnemonicId: string,
+  indexes = [0]
+): Generator<
+  | AllEffect<SagaGenerator<string, CallEffect<string>>>
+  | AllEffect<
+      SagaGenerator<
+        {
+          payload: Account
+          type: string
+        },
+        PutEffect<{
+          payload: Account
+          type: string
+        }>
+      >
+    >,
+  void,
+  unknown
+> {
   // generate private keys and return addresses for all derivation indexes
   const addresses = yield* all(
     indexes.map((index) => {
@@ -113,7 +180,25 @@ function* importRestoreBackupAccounts(mnemonicId: string, indexes = [0]) {
   )
 }
 
-function* onAccountImport(account: Account, ignoreActivate?: boolean) {
+function* onAccountImport(
+  account: Account,
+  ignoreActivate?: boolean
+): Generator<
+  | PutEffect<{
+      payload: Account
+      type: string
+    }>
+  | PutEffect<{
+      payload: string
+      type: string
+    }>
+  | PutEffect<{
+      payload: undefined
+      type: string
+    }>,
+  void,
+  unknown
+> {
   yield* put(addAccount(account))
   if (!ignoreActivate) {
     yield* put(activateAccount(account.address))

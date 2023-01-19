@@ -1,5 +1,6 @@
 import { Experiment } from '@amplitude/experiment-react-native-client'
 import { getUniqueId } from 'react-native-device-info'
+import { CallEffect, PutEffect } from 'redux-saga/effects'
 import { config } from 'src/config'
 import { ExperimentsMap, FeatureFlagsMap, mergeRemoteConfig } from 'src/features/experiments/slice'
 import { initAnalytics } from 'src/features/telemetry'
@@ -8,7 +9,7 @@ import { call, put } from 'typed-redux-saga'
 
 const experimentClient = Experiment.initialize(config.amplitudeExperimentsDeploymentKey)
 
-async function initializeExperiments() {
+async function initializeExperiments(): Promise<void> {
   try {
     const uniqueID = await getUniqueId()
     const user = {
@@ -21,7 +22,10 @@ async function initializeExperiments() {
   }
 }
 
-export async function retrieveRemoteExperiments() {
+export async function retrieveRemoteExperiments(): Promise<{
+  experiments: ExperimentsMap
+  featureFlags: FeatureFlagsMap
+}> {
   const fetchedAmplitudeExperiments = experimentClient.all()
 
   const fetchedFeatureFlags: FeatureFlagsMap = {}
@@ -38,13 +42,24 @@ export async function retrieveRemoteExperiments() {
   return { experiments: fetchedExperiments, featureFlags: fetchedFeatureFlags }
 }
 
-function* retrieveAndSyncRemoteExperiments() {
+function* retrieveAndSyncRemoteExperiments(): Generator<
+  | CallEffect<unknown>
+  | PutEffect<{
+      payload: {
+        featureFlags: FeatureFlagsMap
+        experiments: ExperimentsMap
+      }
+      type: string
+    }>,
+  void,
+  unknown
+> {
   const remoteExperiments = yield* call(retrieveRemoteExperiments)
   // sync remote config with reducer
   yield* put(mergeRemoteConfig(remoteExperiments))
 }
 
-export function* amplitudeSaga() {
+export function* amplitudeSaga(): Generator<CallEffect<void>, void, unknown> {
   yield* call(initAnalytics)
   yield* call(initializeExperiments)
   yield* call(retrieveAndSyncRemoteExperiments)
