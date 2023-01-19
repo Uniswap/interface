@@ -16,11 +16,13 @@ JsonRpcSigner.prototype._signTypedData = async function signTypedDataWithFallbac
 
   try {
     try {
+      // We must try the unversioned eth_signTypedData first, because some wallets (eg SafePal) will hang on _v4.
       return await this.provider.send('eth_signTypedData', [
         address.toLowerCase(),
         JSON.stringify(_TypedDataEncoder.getPayload(populated.domain, types, populated.value)),
       ])
     } catch (error) {
+      // MetaMask complains that the unversioned eth_signTypedData is formatted incorrectly (32602) - it prefers _v4.
       if (typeof error.code === 'number' && error.code === -32602) {
         return await this.provider.send('eth_signTypedData_v4', [
           address.toLowerCase(),
@@ -30,7 +32,7 @@ JsonRpcSigner.prototype._signTypedData = async function signTypedDataWithFallbac
       throw error
     }
   } catch (error) {
-    console.log(error)
+    // If neither other method are available (eg Zerion), fallback to eth_sign.
     if (typeof error.message === 'string' && error.message.match(/not found/i)) {
       console.warn('eth_signTypedData_v4 failed, falling back to eth_sign:', error)
       const hash = _TypedDataEncoder.hash(populated.domain, types, populated.value)
