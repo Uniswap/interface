@@ -21,7 +21,7 @@ export default function parseNFTMintTransaction(
 
   const name = nftChange.asset.name
   const collectionName = nftChange.asset.collection?.name
-  const imageURL = nftChange.asset.imageUrl
+  const imageURL = nftChange.asset.image?.url
   const tokenId = nftChange.asset.tokenId
   let transactedUSDValue: number | undefined
 

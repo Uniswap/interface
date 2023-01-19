@@ -35,7 +35,7 @@ export default function parseReceiveTransaction(
       const name = change.asset?.name
       const tokenAddress = change.asset.nftContract?.address
       const collectionName = change.asset?.collection?.name
-      const imageURL = change.asset.imageUrl
+      const imageURL = change.asset.image?.url
       const tokenId = change.asset.tokenId
       if (!(sender && tokenAddress && collectionName && imageURL && name && tokenId))
         return undefined

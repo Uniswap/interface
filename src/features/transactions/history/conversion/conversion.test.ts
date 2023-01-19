@@ -118,7 +118,10 @@ const ERC721_TRANSFER_IN_ASSET_CHANGE = {
       address: 'nft_contract_address',
     },
     tokenId: 'token_id',
-    imageUrl: 'image_url',
+    image: {
+      id: 'nft_image_id',
+      url: 'image_url',
+    },
     collection: {
       id: 'collection_id',
       name: 'collection_name',

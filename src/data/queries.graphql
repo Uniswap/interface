@@ -402,7 +402,10 @@ query TransactionList($address: String!) {
               address
             }
             tokenId
-            imageUrl
+            image {
+              id
+              url
+            }
             collection {
               id
               name
