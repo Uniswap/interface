@@ -21,7 +21,10 @@ import { buildReceiveNotification } from 'src/features/notifications/utils'
 import { parseDataResponseToTransactionDetails } from 'src/features/transactions/history/utils'
 import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { useAccounts } from 'src/features/wallet/hooks'
-import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
+import {
+  makeSelectAccountHideSpamTokens,
+  selectActiveAccountAddress,
+} from 'src/features/wallet/selectors'
 import { ONE_SECOND_MS } from 'src/utils/time'
 
 /**
@@ -79,6 +82,8 @@ function AddressTransactionHistoryUpdater({
   const lastTxNotificationUpdateTimestamp = useAppSelector(selectLastTxNotificationUpdate)[address]
 
   const fetchAndDispatchReceiveNotification = useFetchAndDispatchReceiveNotification()
+  // dont show notifications on spam tokens if setting enabled
+  const hideSpamTokens = useAppSelector<boolean>(makeSelectAccountHideSpamTokens(address))
 
   const refetchQueries = useRefetchQueries()
 
@@ -113,7 +118,11 @@ function AddressTransactionHistoryUpdater({
 
         // Fetch full recent txn history and dispatch receive notification if needed.
         if (address === activeAccountAddress) {
-          await fetchAndDispatchReceiveNotification(address, lastTxNotificationUpdateTimestamp)
+          await fetchAndDispatchReceiveNotification(
+            address,
+            lastTxNotificationUpdateTimestamp,
+            hideSpamTokens
+          )
         }
       }
     })
@@ -123,6 +132,7 @@ function AddressTransactionHistoryUpdater({
     address,
     dispatch,
     fetchAndDispatchReceiveNotification,
+    hideSpamTokens,
     lastTxNotificationUpdateTimestamp,
     refetchQueries,
   ])
@@ -140,14 +150,16 @@ function AddressTransactionHistoryUpdater({
  */
 export function useFetchAndDispatchReceiveNotification(): (
   address: string,
-  lastTxNotificationUpdateTimestamp: number | undefined
+  lastTxNotificationUpdateTimestamp: number | undefined,
+  hideSpamTokens: boolean
 ) => Promise<void> {
   const [fetchFullTransactionData] = useTransactionListLazyQuery()
   const dispatch = useAppDispatch()
 
   return async (
     address: string,
-    lastTxNotificationUpdateTimestamp: number | undefined
+    lastTxNotificationUpdateTimestamp: number | undefined,
+    hideSpamTokens = false
   ): Promise<void> => {
     // Fetch full transaction history for user address.
     const { data: fullTransactionData } = await fetchFullTransactionData({
@@ -158,7 +170,8 @@ export function useFetchAndDispatchReceiveNotification(): (
     const notification = getReceiveNotificationFromData(
       fullTransactionData,
       address,
-      lastTxNotificationUpdateTimestamp
+      lastTxNotificationUpdateTimestamp,
+      hideSpamTokens
     )
 
     if (notification) {
@@ -170,11 +183,12 @@ export function useFetchAndDispatchReceiveNotification(): (
 export function getReceiveNotificationFromData(
   data: TransactionListQuery | undefined,
   address: Address,
-  lastTxNotificationUpdateTimestamp: number | undefined
+  lastTxNotificationUpdateTimestamp: number | undefined,
+  hideSpamTokens = false
 ) {
   if (!data || !lastTxNotificationUpdateTimestamp) return
 
-  const parsedTxHistory = parseDataResponseToTransactionDetails(data, /*hideSpamTokens=*/ true)
+  const parsedTxHistory = parseDataResponseToTransactionDetails(data, hideSpamTokens)
 
   const latestReceivedTx = parsedTxHistory
     .sort((a, b) => a.addedTime - b.addedTime)
