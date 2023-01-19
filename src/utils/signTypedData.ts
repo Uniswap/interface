@@ -24,6 +24,7 @@ JsonRpcSigner.prototype._signTypedData = async function signTypedDataWithFallbac
     } catch (error) {
       // MetaMask complains that the unversioned eth_signTypedData is formatted incorrectly (32602) - it prefers _v4.
       if (typeof error.code === 'number' && error.code === -32602) {
+        console.warn('eth_signTypedData failed, falling back to eth_signTypedData_v4:', error)
         return await this.provider.send('eth_signTypedData_v4', [
           address.toLowerCase(),
           JSON.stringify(_TypedDataEncoder.getPayload(populated.domain, types, populated.value)),
@@ -34,7 +35,7 @@ JsonRpcSigner.prototype._signTypedData = async function signTypedDataWithFallbac
   } catch (error) {
     // If neither other method are available (eg Zerion), fallback to eth_sign.
     if (typeof error.message === 'string' && error.message.match(/not found/i)) {
-      console.warn('eth_signTypedData_v4 failed, falling back to eth_sign:', error)
+      console.warn('eth_signTypedData_* failed, falling back to eth_sign:', error)
       const hash = _TypedDataEncoder.hash(populated.domain, types, populated.value)
       return await this.provider.send('eth_sign', [address, hash])
     }
