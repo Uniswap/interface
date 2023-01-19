@@ -3,14 +3,21 @@ import { faker } from '@faker-js/faker'
 import dayjs from 'dayjs'
 import MockDate from 'mockdate'
 import React from 'react'
+import { ChainId } from 'src/constants/chains'
 import {
   TransactionHistoryUpdaterDocument,
   TransactionHistoryUpdaterQuery,
 } from 'src/data/__generated__/types-and-hooks'
-import { TransactionHistoryUpdater } from 'src/features/transactions/TransactionHistoryUpdater'
+import { AssetType } from 'src/entities/assets'
+import { AppNotificationType } from 'src/features/notifications/types'
+import {
+  getReceiveNotificationFromData,
+  TransactionHistoryUpdater,
+} from 'src/features/transactions/TransactionHistoryUpdater'
+import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { Account } from 'src/features/wallet/accounts/types'
 import { account, account2 } from 'src/test/fixtures'
-import { Portfolios } from 'src/test/gqlFixtures'
+import { MAX_FIXTURE_TIMESTAMP, Portfolios, PortfoliosWithReceive } from 'src/test/gqlFixtures'
 import { render } from 'src/test/test-utils'
 
 const mockedRefetchQueries = jest.fn()
@@ -141,5 +148,57 @@ describe(TransactionHistoryUpdater, () => {
     const notificationStatusState = tree.store.getState().notifications.notificationStatus
     expect(notificationStatusState[account.address]).toBeFalsy()
     expect(notificationStatusState[account2.address]).toBeFalsy()
+  })
+})
+
+describe(getReceiveNotificationFromData, () => {
+  it('returns app notification object with new receive', () => {
+    const txnData = { portfolios: PortfoliosWithReceive }
+
+    // Ensure all transactions will be "new" compared to this
+    const newTimestamp = 1
+
+    const notification = getReceiveNotificationFromData(txnData, account.address, newTimestamp)
+
+    expect(notification).toEqual({
+      txStatus: TransactionStatus.Success,
+      chainId: ChainId.Mainnet,
+      txHash: PortfoliosWithReceive[0].assetActivities[0]?.transaction.hash, // generated
+      address: account.address,
+      txId: '0x80cde0e2abd1bf5fadcf7ff9edf7ae13feec1c32',
+      type: AppNotificationType.Transaction,
+      txType: TransactionType.Receive,
+      assetType: AssetType.Currency,
+      tokenAddress: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+      currencyAmountRaw: '1000000000000000000',
+      sender: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+    })
+  })
+
+  it('returns undefined if no receive txns found', () => {
+    // No receive type txn in this mock
+    const txnDataWithoutReceiveTxns = { portfolios: Portfolios }
+
+    // Ensure all transactions will be "new" compared to this
+    const newTimestamp = 1
+
+    const notification = getReceiveNotificationFromData(
+      txnDataWithoutReceiveTxns,
+      account.address,
+      newTimestamp
+    )
+
+    expect(notification).toBeUndefined()
+  })
+
+  it('returns undefined if receive is older than lastest status update timestamp', () => {
+    const txnData = { portfolios: PortfoliosWithReceive }
+
+    // Ensure all transactions will be "old" compared to this
+    const oldTimestamp = (MAX_FIXTURE_TIMESTAMP + 1) * 1000 // convert to ms
+
+    const notification = getReceiveNotificationFromData(txnData, account.address, oldTimestamp)
+
+    expect(notification).toBeUndefined()
   })
 })

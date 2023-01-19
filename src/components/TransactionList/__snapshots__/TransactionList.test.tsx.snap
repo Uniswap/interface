@@ -1488,7 +1488,7 @@ exports[`TransactionList renders without error 2`] = `
       Object {
         "data": Array [
           Object {
-            "addedTime": 39437000,
+            "addedTime": 634722508000,
             "chainId": 1,
             "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
             "hash": "0xaef17b4b697be91ab3d7eca4b92fa53efeb2da6b",
@@ -1505,7 +1505,7 @@ exports[`TransactionList renders without error 2`] = `
             },
           },
           Object {
-            "addedTime": 39437000,
+            "addedTime": 634722508000,
             "chainId": 1,
             "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
             "hash": "0x8123abfa76b2bd459df69d4cffefde0e51b81cf2",
@@ -1526,7 +1526,7 @@ exports[`TransactionList renders without error 2`] = `
             },
           },
         ],
-        "title": "January 1970",
+        "title": "February 1990",
       },
     ]
   }
@@ -1578,7 +1578,7 @@ exports[`TransactionList renders without error 2`] = `
             ]
           }
         >
-          January 1970
+          February 1990
         </Text>
       </View>
     </View>

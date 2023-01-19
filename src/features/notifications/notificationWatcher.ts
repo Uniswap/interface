@@ -4,6 +4,7 @@ import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotification, AppNotificationType } from 'src/features/notifications/types'
+import { buildReceiveNotification } from 'src/features/notifications/utils'
 import { selectTransactions } from 'src/features/transactions/selectors'
 import { finalizeTransaction } from 'src/features/transactions/slice'
 import { TransactionType } from 'src/features/transactions/types'
@@ -109,37 +110,9 @@ export function* pushTransactionNotification(
       )
     }
   } else if (typeInfo.type === TransactionType.Receive) {
-    if (
-      typeInfo?.assetType === AssetType.Currency &&
-      typeInfo?.currencyAmountRaw &&
-      typeInfo?.sender
-    ) {
-      yield* put(
-        pushNotification({
-          ...baseNotificationData,
-          type: AppNotificationType.Transaction,
-          txType: TransactionType.Receive,
-          assetType: typeInfo.assetType,
-          tokenAddress: typeInfo.tokenAddress,
-          currencyAmountRaw: typeInfo.currencyAmountRaw,
-          sender: typeInfo.sender,
-        })
-      )
-    } else if (
-      (typeInfo?.assetType === AssetType.ERC1155 || typeInfo?.assetType === AssetType.ERC721) &&
-      typeInfo?.tokenId
-    ) {
-      yield* put(
-        pushNotification({
-          ...baseNotificationData,
-          type: AppNotificationType.Transaction,
-          txType: TransactionType.Receive,
-          assetType: typeInfo.assetType,
-          tokenAddress: typeInfo.tokenAddress,
-          tokenId: typeInfo.tokenId,
-          sender: typeInfo.sender,
-        })
-      )
+    const receiveNotification = buildReceiveNotification(action.payload, from)
+    if (receiveNotification) {
+      yield* put(pushNotification(receiveNotification))
     }
   } else if (typeInfo.type === TransactionType.WCConfirm) {
     yield* put(

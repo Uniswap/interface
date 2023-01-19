@@ -7,14 +7,21 @@ import { PollingInterval } from 'src/constants/misc'
 import { useRefetchQueries } from 'src/data/hooks'
 import {
   TransactionHistoryUpdaterQueryResult,
+  TransactionListQuery,
   useTransactionHistoryUpdaterQuery,
+  useTransactionListLazyQuery,
 } from 'src/data/__generated__/types-and-hooks'
 import {
+  pushNotification,
   setLastTxNotificationUpdate,
   setNotificationStatus,
 } from 'src/features/notifications/notificationSlice'
 import { selectLastTxNotificationUpdate } from 'src/features/notifications/selectors'
+import { buildReceiveNotification } from 'src/features/notifications/utils'
+import { parseDataResponseToTransactionDetails } from 'src/features/transactions/history/utils'
+import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { useAccounts } from 'src/features/wallet/hooks'
+import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { ONE_SECOND_MS } from 'src/utils/time'
 
 /**
@@ -30,6 +37,7 @@ export function TransactionHistoryUpdater(): ReactElement {
   const { data } = useTransactionHistoryUpdaterQuery({
     variables: { addresses },
     pollInterval: PollingInterval.Fast,
+    fetchPolicy: 'network-only', // Ensure latest data.
   })
 
   return (
@@ -65,16 +73,20 @@ function AddressTransactionHistoryUpdater({
 }): ReactElement | null {
   const dispatch = useAppDispatch()
 
+  const activeAccountAddress = useAppSelector(selectActiveAccountAddress)
+
   // Current txn count for all addresses
   const lastTxNotificationUpdateTimestamp = useAppSelector(selectLastTxNotificationUpdate)[address]
+
+  const fetchAndDispatchReceiveNotification = useFetchAndDispatchReceiveNotification()
 
   const refetchQueries = useRefetchQueries()
 
   useEffect(() => {
-    batch(() => {
-      let shouldRefetchQueries = false
+    batch(async () => {
+      let newTransactionsFound = false
 
-      // parse txns and address from portfolio
+      // Parse txns and address from portfolio.
       activities.map((activity) => {
         if (!activity) return
 
@@ -84,23 +96,97 @@ function AddressTransactionHistoryUpdater({
         }
 
         const updatedTimestampMs = activity.timestamp * ONE_SECOND_MS // convert api response from s -> ms
-        const hasNewTransactions = updatedTimestampMs > lastTxNotificationUpdateTimestamp
+        const hasNewTxn = updatedTimestampMs > lastTxNotificationUpdateTimestamp
 
-        if (hasNewTransactions) {
+        if (hasNewTxn) {
           dispatch(setLastTxNotificationUpdate({ address, timestamp: updatedTimestampMs }))
           dispatch(setNotificationStatus({ address, hasNotifications: true }))
           // full send refetch all active (mounted) queries
-          shouldRefetchQueries = true
+          newTransactionsFound = true
         }
       })
 
-      if (shouldRefetchQueries) {
+      if (newTransactionsFound) {
         // NOTE: every wallet may call this on new transaction.
         // It may be better to batch this action, or target specific queries.
         refetchQueries()
+
+        // Fetch full recent txn history and dispatch receive notification if needed.
+        if (address === activeAccountAddress) {
+          await fetchAndDispatchReceiveNotification(address, lastTxNotificationUpdateTimestamp)
+        }
       }
     })
-  }, [activities, address, dispatch, lastTxNotificationUpdateTimestamp, refetchQueries])
+  }, [
+    activeAccountAddress,
+    activities,
+    address,
+    dispatch,
+    fetchAndDispatchReceiveNotification,
+    lastTxNotificationUpdateTimestamp,
+    refetchQueries,
+  ])
 
   return null
+}
+
+/*
+ * Fetch and search recent transactions for receive txn. If confirmed since the last status update timestamp,
+ * dispatch notification update. We specical case here because receive is never initiated within app.
+ *
+ * Note: we opt for a waterfall request here because full transaction data is a large query that we dont
+ * want to submit every polling interval - only fetch this data if new txn is detected. This ideally gets
+ * replaced with a subcription to new transactions with more full txn data.
+ */
+export function useFetchAndDispatchReceiveNotification(): (
+  address: string,
+  lastTxNotificationUpdateTimestamp: number | undefined
+) => Promise<void> {
+  const [fetchFullTransactionData] = useTransactionListLazyQuery()
+  const dispatch = useAppDispatch()
+
+  return async (
+    address: string,
+    lastTxNotificationUpdateTimestamp: number | undefined
+  ): Promise<void> => {
+    // Fetch full transaction history for user address.
+    const { data: fullTransactionData } = await fetchFullTransactionData({
+      variables: { address },
+      fetchPolicy: 'network-only', // Ensure latest data.
+    })
+
+    const notification = getReceiveNotificationFromData(
+      fullTransactionData,
+      address,
+      lastTxNotificationUpdateTimestamp
+    )
+
+    if (notification) {
+      dispatch(pushNotification(notification))
+    }
+  }
+}
+
+export function getReceiveNotificationFromData(
+  data: TransactionListQuery | undefined,
+  address: Address,
+  lastTxNotificationUpdateTimestamp: number | undefined
+) {
+  if (!data || !lastTxNotificationUpdateTimestamp) return
+
+  const parsedTxHistory = parseDataResponseToTransactionDetails(data, /*hideSpamTokens=*/ true)
+
+  const latestReceivedTx = parsedTxHistory
+    .sort((a, b) => a.addedTime - b.addedTime)
+    .find(
+      (tx) =>
+        tx.addedTime &&
+        tx.addedTime >= lastTxNotificationUpdateTimestamp &&
+        tx.typeInfo.type === TransactionType.Receive &&
+        tx.status === TransactionStatus.Success
+    )
+
+  if (!latestReceivedTx) return
+
+  return buildReceiveNotification(latestReceivedTx, address)
 }

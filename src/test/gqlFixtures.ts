@@ -23,6 +23,8 @@ import { ACCOUNT_ADDRESS_ONE, ACCOUNT_ADDRESS_TWO } from 'src/test/fixtures'
 const FAKER_SEED = 123
 faker.seed(FAKER_SEED)
 
+export const MAX_FIXTURE_TIMESTAMP = 1609459200
+
 export const Amounts: Record<'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl', Amount> = {
   none: {
     id: faker.datatype.uuid(),
@@ -86,7 +88,7 @@ type PortfolioWithActivity = Portfolio & {
 
 const AssetActivityBase = {
   __typeName: 'AssetActivity',
-  timestamp: faker.datatype.number(),
+  timestamp: faker.datatype.number({ max: MAX_FIXTURE_TIMESTAMP }),
   chain: Chain.Ethereum,
   transaction: {
     id: 'base_tranaction_id',
@@ -152,6 +154,17 @@ export const Erc20SwapAssetActivity: RequiredAssetActivity = {
   assetChanges: [Erc20TransferInAssetChange, Erc20TransferOutAssetChange],
 }
 
+export const Erc20ReceiveAssetActivity: RequiredAssetActivity = {
+  ...AssetActivityBase,
+  id: faker.datatype.uuid(),
+  transaction: {
+    ...AssetActivityBase.transaction,
+    hash: faker.finance.ethereumAddress(), // need unique ID
+  },
+  type: ActivityType.Receive,
+  assetChanges: [Erc20TransferInAssetChange],
+}
+
 export const Portfolios: [PortfolioWithActivity, PortfolioWithActivity] = [
   {
     id: faker.datatype.uuid(),
@@ -174,6 +187,20 @@ export const Portfolios: [PortfolioWithActivity, PortfolioWithActivity] = [
       percentage: Amounts.xs,
     },
     assetActivities: [ApproveAssetActivty, Erc20SwapAssetActivity],
+  },
+]
+
+export const PortfoliosWithReceive: [PortfolioWithActivity] = [
+  {
+    id: faker.datatype.uuid(),
+    ownerAddress: ACCOUNT_ADDRESS_ONE,
+    tokensTotalDenominatedValue: Amounts.md,
+    tokensTotalDenominatedValueChange: {
+      id: faker.datatype.uuid(),
+      absolute: Amounts.sm,
+      percentage: Amounts.xs,
+    },
+    assetActivities: [Erc20ReceiveAssetActivity],
   },
 ]
 

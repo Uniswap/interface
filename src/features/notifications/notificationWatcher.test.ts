@@ -20,7 +20,7 @@ import { finalizedTxAction } from 'src/test/fixtures'
 
 const txId = 'uuid-4'
 
-const createFinalizedTxAction = (
+export const createFinalizedTxAction = (
   typeInfo: TransactionTypeInfo
 ): ReturnType<typeof finalizeTransaction> => ({
   payload: {

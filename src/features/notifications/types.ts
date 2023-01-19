@@ -1,7 +1,7 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
-import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
+import { FinalizedTransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 
 export enum AppNotificationType {
@@ -40,11 +40,7 @@ export interface WalletConnectNotification extends AppNotificationBase {
 export interface TransactionNotificationBase extends AppNotificationBase {
   type: AppNotificationType.Transaction
   txType: TransactionType
-  txStatus:
-    | TransactionStatus.Success
-    | TransactionStatus.Failed
-    | TransactionStatus.FailedCancel
-    | TransactionStatus.Cancelled
+  txStatus: FinalizedTransactionStatus
   txHash: string
   txId: string
   chainId: ChainId

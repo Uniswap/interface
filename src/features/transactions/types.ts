@@ -40,14 +40,6 @@ export interface TransactionDetails extends TransactionId {
   cancelRequest?: providers.TransactionRequest
 }
 
-export interface FinalizedTransactionDetails extends TransactionDetails {
-  status:
-    | TransactionStatus.Success
-    | TransactionStatus.Failed
-    | TransactionStatus.Cancelled
-    | TransactionStatus.FailedCancel
-}
-
 export enum TransactionStatus {
   Cancelled = 'cancelled',
   Cancelling = 'cancelling',
@@ -58,6 +50,17 @@ export enum TransactionStatus {
   Replacing = 'replacing',
   Unknown = 'unknown',
   // May want more granular options here later like InMemPool
+}
+
+// Transaction confirmed on chain
+export type FinalizedTransactionStatus =
+  | TransactionStatus.Success
+  | TransactionStatus.Failed
+  | TransactionStatus.Cancelled
+  | TransactionStatus.FailedCancel
+
+export interface FinalizedTransactionDetails extends TransactionDetails {
+  status: FinalizedTransactionStatus
 }
 
 export interface TransactionOptions {

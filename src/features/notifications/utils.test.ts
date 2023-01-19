@@ -1,14 +1,25 @@
 import { TradeType } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
+import { ChainId } from 'src/constants/chains'
 import { DAI, USDC } from 'src/constants/tokens'
+import { AssetType } from 'src/entities/assets'
+import { createFinalizedTxAction } from 'src/features/notifications/notificationWatcher.test'
+import { AppNotificationType } from 'src/features/notifications/types'
 import {
+  buildReceiveNotification,
   convertScientificNotationToNumber,
   createBalanceUpdate,
   formSwapNotificationTitle,
   getCurrencySymbol,
   getFormattedCurrencyAmount,
 } from 'src/features/notifications/utils'
-import { NFTTradeType, TransactionStatus, TransactionType } from 'src/features/transactions/types'
+import {
+  NFTTradeType,
+  ReceiveTokenTransactionInfo,
+  TransactionStatus,
+  TransactionType,
+} from 'src/features/transactions/types'
+import { account } from 'src/test/fixtures'
 
 describe('convertScientificNotationToNumber', () => {
   it('does not do anything to a regular number', () => {
@@ -187,5 +198,74 @@ describe(getCurrencySymbol, () => {
 
   it('handles undefined address with currency', () => {
     expect(getCurrencySymbol(DAI, undefined)).toEqual('DAI')
+  })
+})
+
+const receiveCurrencyTypeInfo: ReceiveTokenTransactionInfo = {
+  type: TransactionType.Receive,
+  assetType: AssetType.Currency,
+  currencyAmountRaw: '1000',
+  sender: '0x000123abc456def',
+  tokenAddress: '0xUniswapToken',
+}
+
+const receiveNftTypeInfo: ReceiveTokenTransactionInfo = {
+  type: TransactionType.Receive,
+  assetType: AssetType.ERC1155,
+  sender: '0x000123abc456def',
+  tokenAddress: '0xUniswapToken',
+  tokenId: '420',
+}
+
+describe(buildReceiveNotification, () => {
+  it('returns undefined if not succesful status', () => {
+    const { payload: testTransaction } = createFinalizedTxAction(receiveCurrencyTypeInfo)
+    testTransaction.status = TransactionStatus.Failed // overwite status to incorrect status
+
+    expect(buildReceiveNotification(testTransaction, account.address)).toBeUndefined()
+  })
+
+  it('returns undefined if not receive', () => {
+    const { payload: testTransaction } = createFinalizedTxAction(receiveCurrencyTypeInfo)
+    testTransaction.typeInfo.type = TransactionType.Send // overwite type to incorrect  type
+
+    expect(buildReceiveNotification(testTransaction, account.address)).toBeUndefined()
+  })
+
+  it('builds correct notification object for nft receive', () => {
+    const { payload: testTransaction } = createFinalizedTxAction(receiveNftTypeInfo)
+
+    expect(buildReceiveNotification(testTransaction, account.address)).toEqual({
+      address: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+      assetType: AssetType.ERC1155,
+      chainId: ChainId.Mainnet,
+      sender: '0x000123abc456def',
+      tokenAddress: '0xUniswapToken',
+      tokenId: '420',
+      txHash: '0x123',
+      txId: 'uuid-4',
+      txStatus: TransactionStatus.Success,
+      txType: TransactionType.Receive,
+      type: AppNotificationType.Transaction,
+    })
+  })
+
+  it('builds correct notification object for currency receive', () => {
+    const { payload: testTransaction } = createFinalizedTxAction(receiveCurrencyTypeInfo)
+    testTransaction.typeInfo.type = TransactionType.Receive // overwrite to correct txn type (default is send)
+
+    expect(buildReceiveNotification(testTransaction, account.address)).toEqual({
+      address: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+      assetType: AssetType.Currency,
+      chainId: ChainId.Mainnet,
+      sender: '0x000123abc456def',
+      tokenAddress: '0xUniswapToken',
+      txHash: '0x123',
+      txId: 'uuid-4',
+      txStatus: TransactionStatus.Success,
+      txType: TransactionType.Receive,
+      type: AppNotificationType.Transaction,
+      currencyAmountRaw: '1000',
+    })
   })
 })
