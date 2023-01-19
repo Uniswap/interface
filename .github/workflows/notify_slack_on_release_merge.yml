@@ -1,0 +1,72 @@
+name: Slack notifications for releases/* merges
+
+# This CI job will push notifications to Slack whenever code is merged into any of the
+# release branches.
+
+on:
+  push:
+    branches:
+      - 'releases/*'
+
+jobs:
+  notify-slack:
+    name: 'Emit Slack notification(s)'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Parse event to Slack messages
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo 'SLACK_COMMITS<<EOF' >> $GITHUB_ENV
+          echo $GITHUB_CONTEXT | jq '.event.commits[] | [.url, .id[0:7], .committer.username, .timestamp, .message] | @tsv' | sed 's/"//g' | sed 's/\\t/;/g' | awk -F';' '{print "• <"$1"|"$2"> (<https://github.com/"$3"|"$3">, "$4") - "$5}' >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
+      - name: Testing
+        run: |
+          echo "${{ env.SLACK_COMMITS }}"
+      - name: Send custom JSON data to Slack workflow
+        id: slack
+        uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
+        with:
+          payload: |
+            {
+              "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
+              "blocks": [
+                {
+                    "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*A merge has been detected into the <https://github.com/Uniswap/mobile/tree/${{ github.ref }}|${{ github.ref }}> branch:*\n"
+                  }
+                },
+                {
+                    "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Actor*: <https://github.com/${{ github.triggering_actor }}/|${{ github.triggering_actor }}>\n*Force Pushed*: ${{ github.event.forced || false }}\n"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "${{ env.SLACK_COMMITS }}"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "<${{ github.event.compare}}|View Diff>"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_SHARED_WEBHOOK }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
