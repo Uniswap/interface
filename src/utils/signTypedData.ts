@@ -23,7 +23,7 @@ JsonRpcSigner.prototype._signTypedData = async function signTypedDataWithFallbac
       ])
     } catch (error) {
       // MetaMask complains that the unversioned eth_signTypedData is formatted incorrectly (32602) - it prefers _v4.
-      if (typeof error.code === 'number' && error.code === -32602) {
+      if (error.code === -32602) {
         console.warn('eth_signTypedData failed, falling back to eth_signTypedData_v4:', error)
         return await this.provider.send('eth_signTypedData_v4', [
           address.toLowerCase(),
