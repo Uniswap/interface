@@ -39,7 +39,7 @@ import invariant from 'tiny-invariant'
 import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/formatNumbers'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
-import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary, ButtonYellow } from '../../components/Button'
+import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { GrayCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import SwapCurrencyInputPanel from '../../components/CurrencyInputPanel/SwapCurrencyInputPanel'
@@ -232,17 +232,20 @@ export default function Swap({ className }: { className?: string }) {
           },
     [independentField, parsedAmount, showWrap, trade]
   )
+  const fiatValueInput = useStablecoinValue(parsedAmounts[Field.INPUT])
+  const fiatValueOutput = useStablecoinValue(parsedAmounts[Field.OUTPUT])
 
   const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
     () => [!trade?.swaps, TradeState.LOADING === tradeState, TradeState.SYNCING === tradeState],
     [trade, tradeState]
   )
 
-  const fiatValueInput = useStablecoinValue(parsedAmounts[Field.INPUT])
-  const fiatValueOutput = useStablecoinValue(parsedAmounts[Field.OUTPUT])
+  const fiatValueTradeInput = useStablecoinValue(trade?.inputAmount)
+  const fiatValueTradeOutput = useStablecoinValue(trade?.outputAmount)
   const stablecoinPriceImpact = useMemo(
-    () => (routeIsSyncing ? undefined : computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)),
-    [fiatValueInput, fiatValueOutput, routeIsSyncing]
+    () =>
+      routeIsSyncing || !trade ? undefined : computeFiatValuePriceImpact(fiatValueTradeInput, fiatValueTradeOutput),
+    [fiatValueTradeInput, fiatValueTradeOutput, routeIsSyncing, trade]
   )
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
@@ -303,7 +306,12 @@ export default function Swap({ className }: { className?: string }) {
     return maximumAmountIn?.currency.isToken ? (maximumAmountIn as CurrencyAmount<Token>) : undefined
   }, [allowedSlippage, trade])
   const allowance = usePermit2Allowance(
-    permit2Enabled ? maximumAmountIn : undefined,
+    permit2Enabled
+      ? maximumAmountIn ??
+          (parsedAmounts[Field.INPUT]?.currency.isToken
+            ? (parsedAmounts[Field.INPUT] as CurrencyAmount<Token>)
+            : undefined)
+      : undefined,
     permit2Enabled && chainId ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
   )
   const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
@@ -569,8 +577,8 @@ export default function Swap({ className }: { className?: string }) {
               swapErrorMessage={swapErrorMessage}
               onDismiss={handleConfirmDismiss}
               swapQuoteReceivedDate={swapQuoteReceivedDate}
-              fiatValueInput={fiatValueInput}
-              fiatValueOutput={fiatValueOutput}
+              fiatValueInput={fiatValueTradeInput}
+              fiatValueOutput={fiatValueTradeOutput}
             />
 
             <div style={{ display: 'relative' }}>
@@ -786,31 +794,25 @@ export default function Swap({ className }: { className?: string }) {
                     </AutoColumn>
                   </AutoRow>
                 ) : isValid && allowance.state === AllowanceState.REQUIRED ? (
-                  <ButtonYellow
+                  <ButtonPrimary
                     onClick={updateAllowance}
                     disabled={isAllowancePending || isApprovalLoading}
                     style={{ gap: 14 }}
                   >
                     {isAllowancePending ? (
                       <>
-                        <Loader size="20px" stroke={theme.accentWarning} />
-                        <ThemedText.SubHeader color="accentWarning">
-                          <Trans>Approve in your wallet</Trans>
-                        </ThemedText.SubHeader>
+                        <Loader size="20px" />
+                        <Trans>Approve in your wallet</Trans>
                       </>
                     ) : isAllowanceFailed ? (
                       <>
-                        <AlertTriangle size={20} stroke={theme.accentWarning} />
-                        <ThemedText.SubHeader color="accentWarning">
-                          <Trans>Approval failed. Try again.</Trans>
-                        </ThemedText.SubHeader>
+                        <AlertTriangle size={20} />
+                        <Trans>Approval failed. Try again.</Trans>
                       </>
                     ) : isApprovalLoading ? (
                       <>
-                        <Loader size="20px" stroke={theme.accentWarning} />
-                        <ThemedText.SubHeader color="accentWarning">
-                          <Trans>Approval pending</Trans>
-                        </ThemedText.SubHeader>
+                        <Loader size="20px" />
+                        <Trans>Approval pending</Trans>
                       </>
                     ) : (
                       <>
@@ -823,15 +825,13 @@ export default function Swap({ className }: { className?: string }) {
                               </Trans>
                             }
                           >
-                            <Info size={20} color={theme.accentWarning} />
+                            <Info size={20} />
                           </MouseoverTooltip>
                         </div>
-                        <ThemedText.SubHeader color="accentWarning">
-                          <Trans>Approve use of {currencies[Field.INPUT]?.symbol}</Trans>
-                        </ThemedText.SubHeader>
+                        <Trans>Approve use of {currencies[Field.INPUT]?.symbol}</Trans>
                       </>
                     )}
-                  </ButtonYellow>
+                  </ButtonPrimary>
                 ) : (
                   <ButtonError
                     onClick={() => {
@@ -855,7 +855,11 @@ export default function Swap({ className }: { className?: string }) {
                       priceImpactTooHigh ||
                       (permit2Enabled ? allowance.state !== AllowanceState.ALLOWED : Boolean(swapCallbackError))
                     }
-                    error={isValid && priceImpactSeverity > 2 && (permit2Enabled || !swapCallbackError)}
+                    error={
+                      isValid &&
+                      priceImpactSeverity > 2 &&
+                      (permit2Enabled ? allowance.state === AllowanceState.ALLOWED : !swapCallbackError)
+                    }
                   >
                     <Text fontSize={20} fontWeight={600}>
                       {swapInputError ? (

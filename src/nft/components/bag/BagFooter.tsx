@@ -15,12 +15,14 @@ import { useBag } from 'nft/hooks/useBag'
 import { useWalletBalance } from 'nft/hooks/useWalletBalance'
 import { BagStatus } from 'nft/types'
 import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils'
-import { PropsWithChildren, useMemo } from 'react'
+import { PropsWithChildren, useMemo, useReducer } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
 import { useToggleWalletModal } from 'state/application/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { switchChain } from 'utils/switchChain'
+
+import { BagTokenSelectorModal } from './tokenSelector/BagTokenSelectorModal'
 
 const FooterContainer = styled.div`
   padding: 0px 12px;
@@ -142,6 +144,7 @@ export const BagFooter = ({
   const inputCurrency = useCurrency('ETH')
 
   const setBagExpanded = useBag((state) => state.setBagExpanded)
+  const [showTokenSelector, toggleTokenSelector] = useReducer((state) => !state, false)
 
   const { balance: balanceInEth } = useWalletBalance()
   const sufficientBalance = useMemo(() => {
@@ -200,7 +203,7 @@ export const BagFooter = ({
               <ThemedText.SubHeaderSmall>
                 <Trans>Pay with</Trans>
               </ThemedText.SubHeaderSmall>
-              <CurrencyInput>
+              <CurrencyInput onClick={toggleTokenSelector}>
                 <CurrencyLogo currency={inputCurrency} size="24px" />
                 <ThemedText.HeadlineSmall fontWeight={500} lineHeight="24px">
                   {inputCurrency?.symbol}
@@ -256,6 +259,7 @@ export const BagFooter = ({
           </ActionButton>
         </TraceEvent>
       </Footer>
+      {showTokenSelector && <BagTokenSelectorModal overlayClick={toggleTokenSelector} />}
     </FooterContainer>
   )
 }

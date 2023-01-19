@@ -1,23 +1,58 @@
 import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { ButtonPrimary } from 'components/Button'
 import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
-import { Box } from 'nft/components/Box'
-import { Center, Column } from 'nft/components/Flex'
+import { XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
 import { ListPage } from 'nft/components/profile/list/ListPage'
 import { ProfilePage } from 'nft/components/profile/view/ProfilePage'
 import { ProfilePageLoadingSkeleton } from 'nft/components/profile/view/ProfilePageLoadingSkeleton'
-import { buttonMedium, headlineMedium } from 'nft/css/common.css'
 import { useBag, useNFTList, useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { ListingStatus, ProfilePageStateType } from 'nft/types'
 import { Suspense, useEffect, useRef } from 'react'
 import { useToggleWalletModal } from 'state/application/hooks'
+import styled from 'styled-components/macro'
+import { BREAKPOINTS, ThemedText } from 'theme'
 
-import * as styles from './profile.css'
+import { LIST_PAGE_MARGIN } from './shared'
 
-export const LIST_PAGE_MARGIN = 156
+const ProfilePageWrapper = styled.div`
+  height: 100%;
+  width: 100%;
+  scrollbar-width: none;
 
-const SHOPPING_BAG_WIDTH = 360
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    height: auto;
+  }
+`
+
+const LoadedAccountPage = styled.div<{ cartExpanded: boolean; isOnV2ListPage: boolean }>`
+  width: calc(
+    100% -
+      ${({ cartExpanded, isOnV2ListPage }) =>
+        isOnV2ListPage ? LIST_PAGE_MARGIN * 2 : cartExpanded ? XXXL_BAG_WIDTH : 0}px
+  );
+  margin: 0px ${({ isOnV2ListPage }) => (isOnV2ListPage ? LIST_PAGE_MARGIN : 0)}px;
+`
+
+const Center = styled.div`
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
+  white-space: nowrap;
+`
+
+const ConnectWalletButton = styled(ButtonPrimary)`
+  width: min-content;
+  white-space: nowrap;
+  border-radius: 12px;
+  padding: 14px 18px;
+  border: none;
+`
 
 const ProfileContent = () => {
   const sellPageState = useProfilePageState((state) => state.state)
@@ -46,43 +81,29 @@ const ProfileContent = () => {
   }, [account, resetSellAssets, setSellPageState, clearCollectionFilters])
   const cartExpanded = useBag((state) => state.bagExpanded)
   const isNftListV2 = useNftListV2Flag() === NftListV2Variant.Enabled
+  const isListingNfts = sellPageState === ProfilePageStateType.LISTING
+  const isOnV2ListPage = isNftListV2 && isListingNfts
 
   return (
     <Trace page={InterfacePageName.NFT_PROFILE_PAGE} shouldLogImpression>
-      <Box className={styles.profileWrapper}>
-        {/* <Head> TODO: figure out metadata tagging
-          <title>Genie | Sell</title>
-        </Head> */}
+      <ProfilePageWrapper>
         {account ? (
-          <Box
-            style={{
-              width: `calc(100% - ${
-                cartExpanded && (!isNftListV2 || sellPageState === ProfilePageStateType.VIEWING)
-                  ? SHOPPING_BAG_WIDTH
-                  : isNftListV2
-                  ? LIST_PAGE_MARGIN * 2
-                  : 0
-              }px)`,
-              margin: isNftListV2 ? `0px ${LIST_PAGE_MARGIN}px` : 'unset',
-            }}
-          >
-            {sellPageState === ProfilePageStateType.VIEWING ? <ProfilePage /> : <ListPage />}
-          </Box>
+          <LoadedAccountPage cartExpanded={cartExpanded} isOnV2ListPage={isOnV2ListPage}>
+            {!isListingNfts ? <ProfilePage /> : <ListPage />}
+          </LoadedAccountPage>
         ) : (
-          <Column as="section" gap="60" className={styles.section}>
-            <div style={{ minHeight: '70vh' }}>
-              <Center className={styles.notConnected} flexDirection="column">
-                <Box as="span" className={headlineMedium} color="textSecondary" marginBottom="24" display="block">
-                  No items to display
-                </Box>
-                <Box as="button" className={buttonMedium} onClick={toggleWalletModal}>
-                  Connect Wallet
-                </Box>
-              </Center>
-            </div>
-          </Column>
+          <Center>
+            <ThemedText.HeadlineMedium lineHeight="36px" color="textSecondary" fontWeight="600" marginBottom="24px">
+              No items to display
+            </ThemedText.HeadlineMedium>
+            <ConnectWalletButton onClick={toggleWalletModal}>
+              <ThemedText.SubHeader color="white" lineHeight="20px">
+                Connect Wallet
+              </ThemedText.SubHeader>
+            </ConnectWalletButton>
+          </Center>
         )}
-      </Box>
+      </ProfilePageWrapper>
     </Trace>
   )
 }
