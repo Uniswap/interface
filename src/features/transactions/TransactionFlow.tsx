@@ -206,8 +206,8 @@ export function TransactionFlow({
             modalName={ModalName.SwapWarning}
             severity={WarningSeverity.Low}
             title={t('This wallet is view-only')}
-            onClose={() => setShowViewOnlyModal(false)}
-            onConfirm={() => setShowViewOnlyModal(false)}
+            onClose={(): void => setShowViewOnlyModal(false)}
+            onConfirm={(): void => setShowViewOnlyModal(false)}
           />
         )}
 

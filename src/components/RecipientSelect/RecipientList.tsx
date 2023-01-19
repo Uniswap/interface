@@ -15,7 +15,7 @@ interface RecipientListProps {
 }
 
 export function RecipientList({ onPress, sections }: RecipientListProps): JSX.Element {
-  const renderItem = function ({ item }: ListRenderItemInfo<SearchableRecipient>) {
+  const renderItem = function ({ item }: ListRenderItemInfo<SearchableRecipient>): JSX.Element {
     return (
       <AnimatedFlex entering={FadeIn} exiting={FadeOut} py="sm">
         <RecipientRow recipient={item} onPress={onPress} />

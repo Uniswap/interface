@@ -6,7 +6,11 @@ type ExampleComponentProps = PropsWithChildren<{
   success: boolean
 }>
 
-export const ExampleComponent = ({ children, header, success }: ExampleComponentProps) => {
+export const ExampleComponent = ({
+  children,
+  header,
+  success,
+}: ExampleComponentProps): JSX.Element => {
   return (
     <Box bg={success ? 'accentSuccessSoft' : 'accentCriticalSoft'} borderRadius="md" p="md">
       <Flex flexDirection="column" gap="md">

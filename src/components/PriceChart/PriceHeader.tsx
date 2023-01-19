@@ -35,7 +35,7 @@ const StyledReText = createRestyleComponent<
   Theme
 >([createVariant({ themeKey: 'textVariants' }), typography, color], ReText)
 
-const ScaledReText = (props: React.ComponentProps<typeof StyledReText>) => {
+const ScaledReText = (props: React.ComponentProps<typeof StyledReText>): JSX.Element => {
   const { fontScale } = useWindowDimensions()
   const enableFontScaling = fontScale > DEFAULT_FONT_SCALE
 
@@ -51,7 +51,7 @@ const ScaledReText = (props: React.ComponentProps<typeof StyledReText>) => {
   )
 }
 
-export const PriceHeader = ({ price, percentChange, date, loading }: HeaderProps) => {
+export const PriceHeader = ({ price, percentChange, date, loading }: HeaderProps): JSX.Element => {
   const theme = useAppTheme()
 
   const priceFormatted = useDerivedValue(() => {

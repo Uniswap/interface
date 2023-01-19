@@ -8,7 +8,9 @@ import { Text } from 'src/components/Text'
 export function PriceChartError({
   showRetry,
   onRetry,
-}: Pick<ComponentProps<typeof BaseCard.ErrorState>, 'onRetry'> & { showRetry: boolean }) {
+}: Pick<ComponentProps<typeof BaseCard.ErrorState>, 'onRetry'> & {
+  showRetry: boolean
+}): JSX.Element {
   const { t } = useTranslation()
   return (
     <Flex gap="md" mx="lg">

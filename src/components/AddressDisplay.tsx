@@ -37,7 +37,10 @@ type CopyButtonWrapperProps = {
   onPress?: () => void
 }
 
-function CopyButtonWrapper({ children, onPress }: PropsWithChildren<CopyButtonWrapperProps>) {
+function CopyButtonWrapper({
+  children,
+  onPress,
+}: PropsWithChildren<CopyButtonWrapperProps>): JSX.Element {
   if (onPress)
     return (
       <TouchableArea
@@ -68,7 +71,7 @@ export function AddressDisplay({
   showIconBackground,
   disableViewOnlyIcon,
   horizontalGap = 'sm',
-}: AddressDisplayProps) {
+}: AddressDisplayProps): JSX.Element {
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
   const displayName = useDisplayName(address)
@@ -79,7 +82,7 @@ export function AddressDisplay({
   const account: Account | undefined = accounts[address]
   const isViewOnly = account?.type === AccountType.Readonly && !disableViewOnlyIcon
 
-  const onPressCopyAddress = () => {
+  const onPressCopyAddress = (): void => {
     if (!address) return
     dispatch(pushNotification({ type: AppNotificationType.Copied }))
     setClipboard(address)

@@ -139,7 +139,7 @@ function NavAwareTrace({
   combinedProps,
   children,
   properties,
-}: { combinedProps: ITraceContext } & PropsWithChildren<NavAwareTraceProps>) {
+}: { combinedProps: ITraceContext } & PropsWithChildren<NavAwareTraceProps>): JSX.Element {
   // this still doesn't captures navigating back from modals
   // analysis will need to be done on the backend to determine the last screen impression
   useFocusEffect(

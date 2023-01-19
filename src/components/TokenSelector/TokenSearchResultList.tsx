@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { memo, ReactElement, useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
@@ -269,7 +269,7 @@ function _TokenSearchResultList({
   chainFilter,
   searchFilter,
   variation,
-}: TokenSearchResultListProps): ReactElement {
+}: TokenSearchResultListProps): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const sectionListRef = useRef<SectionList<TokenOption>>(null)
@@ -361,7 +361,7 @@ function _TokenSearchResultList({
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="always"
         renderItem={renderItem}
-        renderSectionHeader={({ section: { title } }): ReactElement => (
+        renderSectionHeader={({ section: { title } }): JSX.Element => (
           <SectionHeader title={title} />
         )}
         sections={sections ?? EMPTY_ARRAY}
@@ -375,7 +375,7 @@ function _TokenSearchResultList({
   )
 }
 
-function SectionHeader({ title }: { title: string }): ReactElement {
+function SectionHeader({ title }: { title: string }): JSX.Element {
   return (
     <Flex backgroundColor="background1" py="md">
       <Text color="textSecondary" variant="subheadSmall">
@@ -385,7 +385,7 @@ function SectionHeader({ title }: { title: string }): ReactElement {
   )
 }
 
-function Footer(): ReactElement {
+function Footer(): JSX.Element {
   return (
     <Inset all="xxl">
       <Inset all="md" />

@@ -1,4 +1,4 @@
-import React, { forwardRef, ReactElement, useCallback } from 'react'
+import React, { forwardRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Keyboard,
@@ -31,9 +31,9 @@ export type SearchTextInputProps = TextInputProps & {
   value: string
   onFocus?: () => void
   onCancel?: () => void
-  clearIcon?: ReactElement
+  clearIcon?: JSX.Element
   disableClearable?: boolean
-  endAdornment?: ReactElement
+  endAdornment?: JSX.Element
   showCancelButton?: boolean
   showShadow?: boolean
 }

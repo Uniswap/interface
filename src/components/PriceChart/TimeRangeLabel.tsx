@@ -11,7 +11,7 @@ interface Props {
   transition: AnimatedNumber
 }
 
-export function TimeRangeLabel({ index, label, selectedIndex, transition }: Props) {
+export function TimeRangeLabel({ index, label, selectedIndex, transition }: Props): JSX.Element {
   const theme = useAppTheme()
 
   const style = useAnimatedStyle(() => {

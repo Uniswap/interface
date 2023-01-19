@@ -48,7 +48,7 @@ export const PriceExplorer = ({
   chartColor,
   headerCustomPercentChange,
   loading,
-}: GraphProps) => {
+}: GraphProps): JSX.Element => {
   const theme = useAppTheme()
 
   // whether the graph pan gesture is active
@@ -206,7 +206,7 @@ export const PriceExplorer = ({
                   key={graph.label}
                   p="xxs"
                   width={BUTTON_WIDTH}
-                  onPress={() => {
+                  onPress={(): void => {
                     previousGraphIndex.value = currentGraphIndex.value
                     transition.value = 0
                     currentGraphIndex.value = index

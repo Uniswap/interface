@@ -1,11 +1,4 @@
-import React, {
-  ComponentProps,
-  createContext,
-  ReactElement,
-  ReactNode,
-  useCallback,
-  useRef,
-} from 'react'
+import React, { ComponentProps, createContext, ReactNode, useCallback, useRef } from 'react'
 import { ListRenderItemInfo } from 'react-native'
 import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
 import { AnimatedIndicator } from 'src/components/carousel/Indicator'
@@ -29,7 +22,7 @@ export const CarouselContext = createContext<CarouselContextProps>({
 })
 
 type CarouselProps = {
-  slides: ReactElement[]
+  slides: JSX.Element[]
 } & Pick<ComponentProps<typeof Animated.FlatList>, 'scrollEnabled'>
 
 export const Carousel = ({ slides, ...flatListProps }: CarouselProps): JSX.Element => {
@@ -82,4 +75,4 @@ export const Carousel = ({ slides, ...flatListProps }: CarouselProps): JSX.Eleme
   )
 }
 
-const key = (_: ReactElement, index: number): string => index.toString()
+const key = (_: JSX.Element, index: number): string => index.toString()

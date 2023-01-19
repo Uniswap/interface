@@ -22,7 +22,7 @@ export function TokenDetailsMarketData({
   priceLow52W?: number
   priceHight52W?: number
   isLoading?: boolean
-}) {
+}): JSX.Element {
   const { t } = useTranslation()
 
   // Utility component to render formatted values
@@ -79,7 +79,7 @@ export function TokenDetailsStats({
   currencyId: string
   data: TokenDetailsScreenQuery | undefined
   tokenColor?: NullUndefined<string>
-}) {
+}): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
 

@@ -947,7 +947,7 @@ describe('Redux state migrations', () => {
       expectedTypeInfo
     )
     expect(v30.transactions['0xdeleteMe']).toBe(undefined)
-    // expect non-for txdetails to not change
+    // expect non-for txDetails to not change
     expect(v30.transactions[account.address][ChainId.Mainnet]['1']).toEqual(txDetailsConfirmed)
     expect(v30.transactions[account.address][ChainId.Goerli]['1']).toEqual(txDetailsConfirmed)
     expect(v30.transactions['0xshadowySuperCoder'][ChainId.ArbitrumOne]['1']).toEqual(

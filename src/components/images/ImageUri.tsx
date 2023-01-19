@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Image, ImageResizeMode, ImageStyle, StyleSheet } from 'react-native'
 import { Loader } from 'src/components/loading'
 
@@ -11,7 +11,7 @@ export function ImageUri({
 }: {
   maxHeight?: number
   uri?: string
-  fallback?: ReactElement
+  fallback?: JSX.Element
   imageStyle?: ImageStyle
   resizeMode?: ImageResizeMode
 }): JSX.Element | null {

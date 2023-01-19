@@ -20,7 +20,7 @@ export function TokenDetailsActionButtons({
   onPressSend?: () => void
   showSend?: boolean
   tokenColor?: NullUndefined<string>
-}) {
+}): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
 

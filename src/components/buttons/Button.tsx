@@ -1,5 +1,5 @@
 import { impactAsync, ImpactFeedbackStyle } from 'expo-haptics'
-import React, { memo, ReactElement } from 'react'
+import React, { memo } from 'react'
 import Svg, { Defs, LinearGradient, Rect, Stop, SvgProps } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
 import { withAnimated } from 'src/components/animated'
@@ -29,7 +29,7 @@ type ButtonProps = {
   /** this is the preferred way of passing in an icon. It is just the name of the SVG file */
   IconName?: React.FC<SvgProps>
   /** in the event that a custom icon is necessary this prop can be used instead of the IconName */
-  CustomIcon?: ReactElement
+  CustomIcon?: JSX.Element
   emphasis?: ButtonEmphasis
   disabled?: boolean
   fill?: boolean // flex=1

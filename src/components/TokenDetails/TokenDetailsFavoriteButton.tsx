@@ -5,7 +5,7 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { useToggleFavoriteCallback } from 'src/features/favorites/hooks'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 
-export function TokenDetailsFavoriteButton({ currencyId }: { currencyId: string }) {
+export function TokenDetailsFavoriteButton({ currencyId }: { currencyId: string }): JSX.Element {
   const theme = useAppTheme()
 
   const id = currencyId.toLowerCase()

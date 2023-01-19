@@ -11,7 +11,9 @@ const corsHandler = cors({
  * @param {object} params Object of query params
  * @return {string} A serialized string of query params
  */
-function serializeQueryParams(params: Record<string, Parameters<typeof encodeURIComponent>[0]>) {
+function serializeQueryParams(
+  params: Record<string, Parameters<typeof encodeURIComponent>[0]>
+): string {
   const queryString: string[] = []
   for (const [param, paramValue] of Object.entries(params)) {
     queryString.push(`${encodeURIComponent(param)}=${encodeURIComponent(paramValue)}`)

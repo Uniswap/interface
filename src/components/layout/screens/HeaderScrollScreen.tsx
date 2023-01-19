@@ -1,5 +1,5 @@
 import { useScrollToTop } from '@react-navigation/native'
-import React, { PropsWithChildren, ReactElement, useMemo, useRef } from 'react'
+import React, { PropsWithChildren, useMemo, useRef } from 'react'
 import {
   Extrapolate,
   interpolate,
@@ -19,8 +19,8 @@ import { theme } from 'src/styles/theme'
 const SHOW_HEADER_SCROLL_Y_DISTANCE = 50
 
 type HeaderScrollScreenProps = {
-  centerElement?: ReactElement
-  rightElement?: ReactElement
+  centerElement?: JSX.Element
+  rightElement?: JSX.Element
   alwaysShowCenterElement?: boolean
 }
 

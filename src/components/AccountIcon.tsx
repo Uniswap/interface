@@ -25,7 +25,7 @@ export function AccountIcon({
   address,
   avatarUri,
   showBackground,
-}: Props) {
+}: Props): JSX.Element {
   const theme = useAppTheme()
 
   // If background, add padding and center Unicons. Leave ENS avatars as is.
@@ -96,7 +96,7 @@ export function AccountIcon({
 }
 
 // Circle shaped gradient that follows Unicon colors.
-const UniconGradient = ({ color, size }: { color: string; size: number }) => {
+const UniconGradient = ({ color, size }: { color: string; size: number }): JSX.Element => {
   return (
     <Svg height={size} style={UniconGradientStyles.svg} width={size}>
       <Defs>

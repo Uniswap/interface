@@ -13,7 +13,7 @@ export default {
   component: ExampleComponent,
   // Decorators allow you to mock up context around the story component (e.g. a margin)
   decorators: [
-    (Story) => (
+    (Story): JSX.Element => (
       <Box m="lg">
         <Story />
       </Box>

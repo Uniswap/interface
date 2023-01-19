@@ -25,7 +25,7 @@ export function TokenBalances({
 }: {
   currentChainBalance: PortfolioBalance | null
   otherChainBalances: PortfolioBalance[] | null
-}) {
+}): JSX.Element | null {
   const { t } = useTranslation()
 
   const activeAccount = useActiveAccount()
@@ -87,7 +87,7 @@ export function CurrentChainBalance({
   balance: PortfolioBalance
   isReadonly: boolean
   displayName?: string
-}) {
+}): JSX.Element {
   const { t } = useTranslation()
 
   return (
@@ -114,12 +114,12 @@ function OtherChainBalance({
 }: {
   balance: PortfolioBalance
   navigate: (currencyId: CurrencyId) => void
-}) {
+}): JSX.Element {
   return (
     <TouchableArea
       hapticFeedback
       eventName={EventName.TokenDetailsOtherChainButtonPressed}
-      onPress={() => navigate(balance.currencyInfo.currencyId)}>
+      onPress={(): void => navigate(balance.currencyInfo.currencyId)}>
       <Flex row alignItems="center" justifyContent="space-between">
         <Flex row alignItems="center" gap="xxs">
           <TokenLogo

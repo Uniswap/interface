@@ -8,7 +8,7 @@ const BACK_BUTTON_SIZE = 24
 
 type BackButtonRowProps = {
   alignment?: 'left' | 'center'
-  endAdornment?: ReactElement
+  endAdornment?: JSX.Element
 } & SpacingProps<Theme> &
   SpacingShorthandProps<Theme>
 

@@ -1,5 +1,5 @@
 import { BaseTheme } from '@shopify/restyle'
-import React, { ReactElement } from 'react'
+import React from 'react'
 import { ValueOf } from 'react-native-gesture-handler/lib/typescript/typeUtils'
 import {
   AppStackParamList,
@@ -20,7 +20,7 @@ export interface SettingsSection {
 }
 
 export interface SettingsSectionItemComponent {
-  component: ReactElement
+  component: JSX.Element
   isHidden?: boolean
 }
 
@@ -28,10 +28,10 @@ export interface SettingsSectionItem {
   screen?: keyof SettingsStackParamList
   screenProps?: ValueOf<SettingsStackParamList | AppStackParamList>
   externalLink?: string
-  action?: ReactElement
+  action?: JSX.Element
   text: string
   subText?: string
-  icon: ReactElement
+  icon: JSX.Element
   isHidden?: boolean
 }
 

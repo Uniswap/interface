@@ -36,7 +36,13 @@ interface CursorProps {
   cursorColor?: NullUndefined<string>
 }
 
-export const Cursor = ({ graphs, index, isActive, translation, cursorColor }: CursorProps) => {
+export const Cursor = ({
+  graphs,
+  index,
+  isActive,
+  translation,
+  cursorColor,
+}: CursorProps): JSX.Element => {
   const theme = useAppTheme()
 
   const panGesture = Gesture.Pan()

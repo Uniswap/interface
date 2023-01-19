@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React from 'react'
 import { FadeIn, FadeOut, useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import { AnimatedFlex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -8,7 +8,7 @@ export const BANNER_HEIGHT = 45
 
 export type BottomBannerProps = {
   text: string
-  icon?: ReactElement
+  icon?: JSX.Element
   backgroundColor?: keyof Theme['colors']
   translateY?: number
 }

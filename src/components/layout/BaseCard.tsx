@@ -1,5 +1,5 @@
 import { ShadowProps } from '@shopify/restyle'
-import React, { ComponentProps, PropsWithChildren, ReactElement, ReactNode } from 'react'
+import React, { ComponentProps, PropsWithChildren, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useColorScheme } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
@@ -60,7 +60,7 @@ type HeaderProps = {
   title: string | ReactNode
   subtitle?: string | ReactNode
   onPress?: () => void
-  icon?: ReactElement
+  icon?: JSX.Element
 } & ComponentProps<typeof TouchableArea>
 
 function Header({ title, subtitle, onPress, icon, ...buttonProps }: HeaderProps): JSX.Element {

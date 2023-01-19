@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { useHomeStackNavigation } from 'src/app/navigation/types'
 import { Chain, useTokenDetailsScreenLazyQuery } from 'src/data/__generated__/types-and-hooks'
 import { useMultipleBalances, useSingleBalance } from 'src/features/dataApi/balances'
+import { PortfolioBalance } from 'src/features/dataApi/types'
 import { currencyIdToContractInput } from 'src/features/dataApi/utils'
 import { Screens } from 'src/screens/Screens'
 import { getChecksumAddress } from 'src/utils/addresses'
@@ -17,7 +18,10 @@ import {
 export function useCrossChainBalances(
   currencyId: string,
   bridgeInfo: NullUndefined<{ chain: Chain; address?: NullUndefined<string> }[]>
-) {
+): {
+  currentChainBalance: PortfolioBalance | null
+  otherChainBalances: PortfolioBalance[] | null
+} {
   const currentChainBalance = useSingleBalance(currencyId)
   const currentChainId = currencyIdToChain(currencyId)
 
@@ -44,11 +48,15 @@ export function useCrossChainBalances(
 }
 
 /** Utility hook to simplify navigating to token details screen */
-export function useTokenDetailsNavigation() {
+export function useTokenDetailsNavigation(): {
+  preload: (currencyId: CurrencyId) => void
+  navigate: (currencyId: CurrencyId) => void
+  navigateWithPop: (currencyId: CurrencyId) => void
+} {
   const navigation = useHomeStackNavigation()
   const [load] = useTokenDetailsScreenLazyQuery()
 
-  const preload = (currencyId: CurrencyId) => {
+  const preload = (currencyId: CurrencyId): void => {
     load({
       variables: {
         contract: currencyIdToContractInput(currencyId),
@@ -61,14 +69,14 @@ export function useTokenDetailsNavigation() {
   // for that reason, we first `pop` token details from the stack, and then push it.
   //
   // Use whenever we want to avoid nested token details screens in the nav stack.
-  const navigateWithPop = (currencyId: CurrencyId) => {
+  const navigateWithPop = (currencyId: CurrencyId): void => {
     if (navigation.canGoBack()) {
       navigation.pop()
     }
     navigation.push(Screens.TokenDetails, { currencyId })
   }
 
-  const navigate = (currencyId: CurrencyId) => {
+  const navigate = (currencyId: CurrencyId): void => {
     navigation.navigate(Screens.TokenDetails, { currencyId })
   }
 

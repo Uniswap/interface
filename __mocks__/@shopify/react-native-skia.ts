@@ -1,12 +1,15 @@
 import React, { PropsWithChildren } from 'react'
-import { View } from 'react-native'
+import { View, ViewProps } from 'react-native'
 
 // Source: https://github.com/Shopify/react-native-skia/issues/548#issuecomment-1157609472
 
-const PlainView = ({ children, ...props }: PropsWithChildren<unknown>) => {
+const PlainView = ({
+  children,
+  ...props
+}: PropsWithChildren<unknown>): React.CElement<ViewProps, View> => {
   return React.createElement(View, props, children)
 }
-const noop = () => null
+const noop = (): null => null
 
 export const BlurMask = PlainView
 export const Canvas = PlainView

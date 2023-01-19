@@ -23,7 +23,7 @@ export type TextProps = ComponentProps<typeof ThemedText> & {
 const ThemedText = createText<Theme>()
 const ThemedAnimatedText = createText<Theme>(Animated.Text)
 
-const TextLoaderWrapper = ({ children }: PropsWithChildren<unknown>) => {
+const TextLoaderWrapper = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
   return (
     <Shimmer>
       <Box alignItems="center" flexDirection="row">
@@ -56,7 +56,7 @@ export const Text = ({
   allowFontScaling,
   loadingPlaceholderText = '$00.00',
   ...rest
-}: TextProps) => {
+}: TextProps): JSX.Element => {
   const { fontScale } = useWindowDimensions()
   const variant = useResponsiveProp(rest.variant ?? 'bodySmall') as keyof typeof textVariants
   const enableFontScaling = allowFontScaling ?? fontScale > DEFAULT_FONT_SCALE

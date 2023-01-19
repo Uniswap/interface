@@ -84,15 +84,15 @@ export const ensApi = createApi({
 
 const { useNameQuery, useAddressQuery, useAvatarQuery } = ensApi
 
-// TODO: Add ESLint ignore rule here when enabling explicit return types rule
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function useENSName(address?: Address, chainId: ChainId = ChainId.Mainnet) {
   return useNameQuery(address ? { nameOrAddress: address, chainId } : skipToken)
 }
-// TODO: Add ESLint ignore rule here when enabling explicit return types rule
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function useAddressFromEns(maybeName: string | null, chainId: ChainId = ChainId.Mainnet) {
   return useAddressQuery(maybeName ? { nameOrAddress: maybeName, chainId } : skipToken)
 }
-// TODO: Add ESLint ignore rule here when enabling explicit return types rule
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function useENSAvatar(address?: string | null, chainId: ChainId = ChainId.Mainnet) {
   return useAvatarQuery(address ? { nameOrAddress: address, chainId } : skipToken)
 }

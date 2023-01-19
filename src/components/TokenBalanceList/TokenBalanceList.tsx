@@ -1,6 +1,6 @@
 import { FlashList } from '@shopify/flash-list'
 import { SpacingShorthandProps } from '@shopify/restyle'
-import React, { forwardRef, ReactElement, useCallback, useEffect, useState } from 'react'
+import React, { forwardRef, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native'
 import { FadeInDown, FadeOut } from 'react-native-reanimated'
@@ -34,7 +34,7 @@ import { CurrencyId } from 'src/utils/currencyId'
 
 type TokenBalanceListProps = {
   owner: Address
-  empty?: ReactElement | null
+  empty?: JSX.Element | null
   onPressToken: (currencyId: CurrencyId) => void
   containerProps?: TabContentProps
   scrollHandler?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
@@ -139,7 +139,7 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
         data={balances}
         estimatedItemSize={ESTIMATED_TOKEN_ITEM_HEIGHT}
         keyExtractor={key}
-        renderItem={(item): ReactElement => (
+        renderItem={(item): JSX.Element => (
           <TokenBalanceItem
             isWarmLoading={isWarmLoading}
             portfolioBalance={item?.item}
@@ -164,7 +164,7 @@ function HiddenTokensRow({
   numHidden,
   address,
   ...props
-}: { numHidden: number; address: Address } & SpacingShorthandProps<Theme>): ReactElement | null {
+}: { numHidden: number; address: Address } & SpacingShorthandProps<Theme>): JSX.Element | null {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const navigation = useAppStackNavigation()

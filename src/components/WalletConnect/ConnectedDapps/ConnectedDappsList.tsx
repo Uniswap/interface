@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, StyleSheet, ViewStyle } from 'react-native'
 import 'react-native-reanimated'
@@ -14,7 +14,7 @@ import { dimensions } from 'src/styles/sizing'
 
 type ConnectedDappsProps = {
   sessions: WalletConnectSession[]
-  backButton?: ReactElement
+  backButton?: JSX.Element
 }
 
 export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps): JSX.Element {

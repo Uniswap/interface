@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import {
   Directions,
   FlingGestureHandler,
@@ -23,8 +23,8 @@ const SPRING_ANIMATION = { damping: 30, stiffness: 150 }
 
 export interface NotificationContentProps {
   title: string
-  icon?: ReactElement
-  balanceUpdate?: ReactElement
+  icon?: JSX.Element
+  balanceUpdate?: JSX.Element
   actionButton?: {
     title: string
     onPress: () => void

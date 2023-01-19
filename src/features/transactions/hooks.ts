@@ -23,11 +23,11 @@ import {
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { theme } from 'src/styles/theme'
 
+// TODO(MOB-3968): Add more specific type definition here
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function usePendingTransactions(
   address: Address | null,
   ignoreTransactionTypes = [TransactionType.FiatPurchase]
-  // TODO(MOB-3968): Add more specific type definition here
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 ) {
   const transactions = useSelectAddressTransactions(address)
   return useMemo(() => {
@@ -123,11 +123,11 @@ export function useCreateWrapFormState(
 /**
  * Merge local and remote transactions. If duplicated hash found use data from local store.
  */
+// TODO(MOB-3968): Add more specific type definition here
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function useMergeLocalAndRemoteTransactions(
   address: string,
   remoteTransactions: TransactionDetails[]
-  // TODO(MOB-3968): Add more specific type definition here
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 ) {
   const localTransactions = useSelectAddressTransactions(address)
 

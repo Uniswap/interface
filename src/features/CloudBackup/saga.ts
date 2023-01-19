@@ -7,7 +7,7 @@ import { ICloudBackupsManagerEventType, ICloudMnemonicBackup } from 'src/feature
 import { logger } from 'src/utils/logger'
 import { call, fork, put, take } from 'typed-redux-saga'
 
-// TODO: Add ESLint ignore rule here when enabling explicit return types rule
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function createICloudBackupManagerChannel(eventEmitter: NativeEventEmitter) {
   return eventChannel<Action>((emit) => {
     const foundCloudBackupHandler = (backup: ICloudMnemonicBackup): void => {

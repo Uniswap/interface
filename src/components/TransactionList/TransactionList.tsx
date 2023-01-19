@@ -1,6 +1,6 @@
 import { NetworkStatus } from '@apollo/client'
 import { TFunction } from 'i18next'
-import React, { ReactElement, useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SectionList } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
@@ -66,10 +66,10 @@ export type TransactionListQueryResponse = NonNullable<
 interface TransactionListProps {
   ownerAddress: Address
   readonly: boolean
-  emptyStateContent: ReactElement | null
+  emptyStateContent: JSX.Element | null
 }
 
-export default function TransactionList(props: TransactionListProps): ReactElement {
+export default function TransactionList(props: TransactionListProps): JSX.Element {
   const { t } = useTranslation()
 
   const {
@@ -126,7 +126,7 @@ function TransactionListInner({
 }: TransactionListProps & {
   data?: TransactionListQuery
   showLoading: boolean
-}): ReactElement | null {
+}): JSX.Element | null {
   const { t } = useTranslation()
 
   // Hide all spam transactions if active wallet has enabled setting.

@@ -19,7 +19,7 @@ export function TokenDetailsHeader({
   data,
   loading = false,
   onPressWarningIcon,
-}: TokenDetailsHeaderProps) {
+}: TokenDetailsHeaderProps): JSX.Element {
   const token = data?.tokens?.[0]
   const tokenProject = token?.project
 
