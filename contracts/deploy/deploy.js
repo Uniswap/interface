@@ -1,4 +1,4 @@
-export default async function ({ ethers, getNamedAccounts, deployments }) {
+module.exports = async function ({ ethers, getNamedAccounts, deployments }) {
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
   const initialSupply = ethers.utils.parseUnits('1',18)
@@ -16,4 +16,4 @@ export default async function ({ ethers, getNamedAccounts, deployments }) {
   console.log("Token address:", token.address);
 };
 
-export const tags = ["ERC20Token"];
+module.exports.tags = ["ERC20Token"];

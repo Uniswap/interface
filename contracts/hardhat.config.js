@@ -1,9 +1,13 @@
 require("@nomicfoundation/hardhat-toolbox");
+require('hardhat-deploy')
+require("solidity-coverage")
+require("hardhat-deploy")
+require("hardhat-deploy-ethers")
 
 /** @type import('hardhat/config').HardhatUserConfig */
 
 const accounts = {
-  mnemonic: process.env.MNEMONIC || "test test test test test test test test test test test junk",
+  mnemonic: process.env.MNEMONIC || "test test test test test test test test test test test wheel",
 }
 module.exports = {
   solidity: {
@@ -33,23 +37,12 @@ module.exports = {
       tags: ["test", "local"],
     },
 
-    mainnet: {
-      url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
-      accounts,
-      chainId: 1,
-      live: true,
-      saveDeployments: true,
-      gasPrice: 35 * 1000000000,
-    },
-
-
     goerli: {
       chainId: 5,
-      url: "https://goerli.infura.io/v3/309820d3955640ec9cda472d998479ef",
+      url: "https://endpoints.omniatech.io/v1/eth/goerli/public",
       accounts,
       live: true,
       saveDeployments: true,
-      gasPrice: 35 * 1000000000,
     },
   },
 }

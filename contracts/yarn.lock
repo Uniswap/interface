@@ -2541,6 +2541,11 @@
     "ajv" "^6.12.3"
     "har-schema" "^2.0.0"
 
+"hardhat-deploy-ethers@^0.3.0-beta.13":
+  "integrity" "sha512-PdWVcKB9coqWV1L7JTpfXRCI91Cgwsm7KLmBcwZ8f0COSm1xtABHZTyz3fvF6p42cTnz1VM0QnfDvMFlIRkSNw=="
+  "resolved" "https://registry.npmjs.org/hardhat-deploy-ethers/-/hardhat-deploy-ethers-0.3.0-beta.13.tgz"
+  "version" "0.3.0-beta.13"
+
 "hardhat-deploy@^0.11.22":
   "integrity" "sha512-ZhHVNB7Jo2l8Is+KIAk9F8Q3d7pptyiX+nsNbIFXztCz81kaP+6kxNODRBqRCy7SOD3It4+iKCL6tWsPAA/jVQ=="
   "resolved" "https://registry.npmjs.org/hardhat-deploy/-/hardhat-deploy-0.11.22.tgz"

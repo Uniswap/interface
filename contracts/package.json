@@ -17,6 +17,7 @@
     "chai": "^4.3.7",
     "hardhat": "^2.12.6",
     "hardhat-deploy": "^0.11.22",
+    "hardhat-deploy-ethers": "^0.3.0-beta.13",
     "hardhat-gas-reporter": "^1.0.9",
     "solidity-coverage": "^0.8.2"
   },
