@@ -4,7 +4,6 @@ import styled from 'styled-components/macro'
 
 const Menu = styled.div`
   width: 100%;
-  height: 100%;
   font-size: 16px;
   overflow: auto;
   max-height: 450px;
@@ -58,8 +57,9 @@ const StyledChevron = styled(ChevronLeft)`
 const BackSection = styled.div`
   position: absolute;
   background-color: ${({ theme }) => theme.backgroundSurface};
-  width: 99%;
-  padding: 0 16px 16px 16px;
+  width: -webkit-fill-available;
+  margin: 0px 2vw 0px 0px;
+  padding: 0px 0px 2vh 0px;
   color: ${({ theme }) => theme.textSecondary};
   cursor: default;
   display: flex;

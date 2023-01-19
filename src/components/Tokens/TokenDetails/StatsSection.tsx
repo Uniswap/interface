@@ -46,18 +46,18 @@ export const StatsWrapper = styled.div`
 type NumericStat = number | undefined | null
 
 function Stat({
-  testId,
+  dataCy,
   value,
   title,
   description,
 }: {
-  testId: string
+  dataCy: string
   value: NumericStat
   title: ReactNode
   description?: ReactNode
 }) {
   return (
-    <StatWrapper data-cy={`${testId}`}>
+    <StatWrapper data-cy={`${dataCy}`}>
       <MouseoverTooltip text={description}>{title}</MouseoverTooltip>
       <StatPrice>{formatNumber(value, NumberType.FiatTokenStats)}</StatPrice>
     </StatWrapper>
@@ -81,13 +81,13 @@ export default function StatsSection(props: StatsSectionProps) {
         <TokenStatsSection>
           <StatPair>
             <Stat
-              testId="tvl"
+              dataCy="tvl"
               value={TVL}
               description={HEADER_DESCRIPTIONS[TokenSortMethod.TOTAL_VALUE_LOCKED]}
               title={<Trans>TVL</Trans>}
             />
             <Stat
-              testId="volume-24h"
+              dataCy="volume-24h"
               value={volume24H}
               description={
                 <Trans>
@@ -98,8 +98,8 @@ export default function StatsSection(props: StatsSectionProps) {
             />
           </StatPair>
           <StatPair>
-            <Stat testId="52w-low" value={priceLow52W} title={<Trans>52W low</Trans>} />
-            <Stat testId="52w-high" value={priceHigh52W} title={<Trans>52W high</Trans>} />
+            <Stat dataCy="52w-low" value={priceLow52W} title={<Trans>52W low</Trans>} />
+            <Stat dataCy="52w-high" value={priceHigh52W} title={<Trans>52W high</Trans>} />
           </StatPair>
         </TokenStatsSection>
       </StatsWrapper>

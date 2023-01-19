@@ -12,6 +12,7 @@ import { ApplicationModal } from 'state/application/reducer'
 const Bag = lazy(() => import('nft/components/bag/Bag'))
 const TransactionCompleteModal = lazy(() => import('nft/components/collection/TransactionCompleteModal'))
 const AirdropModal = lazy(() => import('components/AirdropModal'))
+const MetaMaskConnectionErrorModal = lazy(() => import('components/MetaMaskConnectionErrorModal'))
 
 export default function TopLevelModals() {
   const addressClaimOpen = useModalIsOpen(ApplicationModal.ADDRESS_CLAIM)
@@ -29,6 +30,7 @@ export default function TopLevelModals() {
       <Bag />
       <TransactionCompleteModal />
       <AirdropModal />
+      <MetaMaskConnectionErrorModal />
       {fiatOnrampFlagEnabled && <FiatOnrampModal />}
     </>
   )

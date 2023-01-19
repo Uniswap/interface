@@ -8,7 +8,7 @@ import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 import { CloseIcon, ThemedText } from 'theme'
 
-import { useModalIsOpen, useToggleMetamaskConnectionErrorModal } from '../../state/application/hooks'
+import { useModalIsOpen, useToggleMetaMaskConnectionErrorModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 
 const Wrapper = styled.div`
@@ -61,12 +61,9 @@ const WarningIcon = styled(AlertTriangle)`
 
 const onReconnect = () => window.location.reload()
 
-const header = 'Wallet disconnected'
-const description = 'A Metamask error caused your wallet to disconnect. Reload the page to reconnect.'
-
-export default function MetamaskConnectionError() {
+export default function MetaMaskConnectionErrorModal() {
   const modalOpen = useModalIsOpen(ApplicationModal.METAMASK_CONNECTION_ERROR)
-  const toggleModal = useToggleMetamaskConnectionErrorModal()
+  const toggleModal = useToggleMetaMaskConnectionErrorModal()
 
   return (
     <Modal isOpen={modalOpen} onDismiss={toggleModal} minHeight={false} maxHeight={90}>
@@ -83,8 +80,12 @@ export default function MetamaskConnectionError() {
           </AutoColumn>
           <ShortColumn>
             <InfoText>
-              <ThemedText.HeadlineSmall marginBottom="8px">{header}</ThemedText.HeadlineSmall>
-              <ThemedText.BodySmall>{description}</ThemedText.BodySmall>
+              <ThemedText.HeadlineSmall marginBottom="8px">
+                <Trans>Wallet disconnected</Trans>
+              </ThemedText.HeadlineSmall>
+              <ThemedText.BodySmall>
+                <Trans>A MetaMask error caused your wallet to disconnect. Reload the page to reconnect.</Trans>
+              </ThemedText.BodySmall>
             </InfoText>
           </ShortColumn>
           <StyledButton onClick={onReconnect}>

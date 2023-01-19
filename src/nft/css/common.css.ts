@@ -40,21 +40,6 @@ export const commonButtonStyles = style([
   },
 ])
 
-export const buttonMedium = style([
-  buttonTextMedium,
-  commonButtonStyles,
-  sprinkles({
-    backgroundColor: 'accentAction',
-    color: 'explicitWhite',
-  }),
-  {
-    padding: '14px 18px',
-    ':disabled': {
-      opacity: '0.3',
-    },
-  },
-])
-
 const magicalGradient = style({
   selectors: {
     '&::before': {
