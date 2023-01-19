@@ -490,7 +490,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
                 <L2NetworkLogo networkUrl={L2Icon} />
               </LogoContainer>
               <TokenInfoCell>
-                <TokenName>{token.name}</TokenName>
+                <TokenName data-cy="token-name">{token.name}</TokenName>
                 <TokenSymbol>{token.symbol}</TokenSymbol>
               </TokenInfoCell>
             </ClickableName>
