@@ -452,7 +452,6 @@ export default function Swap({ className }: { className?: string }) {
   const { priceImpactSeverity, largerPriceImpact } = useMemo(() => {
     const marketPriceImpact = trade?.priceImpact ? computeRealizedPriceImpact(trade) : undefined
     const largerPriceImpact = largerPercentValue(marketPriceImpact, stablecoinPriceImpact)
-    console.log('ZZMP', !!trade, marketPriceImpact?.toFixed(2), stablecoinPriceImpact?.toFixed(2))
     return { priceImpactSeverity: warningSeverity(largerPriceImpact), largerPriceImpact }
   }, [stablecoinPriceImpact, trade])
 
