@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Image, ImageResizeMode, ImageStyle, StyleSheet } from 'react-native'
+import { Image, StyleSheet } from 'react-native'
+import FastImage, { ImageStyle, ResizeMode } from 'react-native-fast-image'
 import { Loader } from 'src/components/loading'
 
 export function ImageUri({
@@ -13,7 +14,7 @@ export function ImageUri({
   uri?: string
   fallback?: JSX.Element
   imageStyle?: ImageStyle
-  resizeMode?: ImageResizeMode
+  resizeMode?: ResizeMode
 }): JSX.Element | null {
   const [height, setHeight] = useState<number | null>(null)
   const [width, setWidth] = useState<number | null>(null)
@@ -44,9 +45,9 @@ export function ImageUri({
   }
 
   return (
-    <Image
-      resizeMode={resizeMode ?? 'contain'}
-      source={{ uri }}
+    <FastImage
+      resizeMode={resizeMode ?? FastImage.resizeMode.contain}
+      source={{ uri, priority: FastImage.priority.high }} // Using priority high since it is referenced from scroll context where most recently scrolled image is highest priority
       style={
         imageStyle ?? [
           {

@@ -112,6 +112,7 @@
     "react-native": "0.70.6",
     "react-native-context-menu-view": "1.6.0",
     "react-native-device-info": "10.0.2",
+    "react-native-fast-image": "8.6.3",
     "react-native-gesture-handler": "2.6.0",
     "react-native-get-random-values": "1.8.0",
     "react-native-image-colors": "1.5.1",

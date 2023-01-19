@@ -30,7 +30,7 @@ import { Screens } from 'src/screens/Screens'
 import { formatNumber, NumberType } from 'src/utils/format'
 
 const MAX_NFT_IMAGE_SIZE = 375
-const ESTIMATED_ITEM_SIZE = 100
+const ESTIMATED_ITEM_SIZE = 251 // heuristic provided by FlashList
 const PREFETCH_ITEMS_THRESHOLD = 0.5
 const LOADING_ITEM = 'loading'
 const FOOTER_HEIGHT = 20
