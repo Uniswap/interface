@@ -4,7 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import { BaseVariant, FeatureFlag, useBaseFlag } from '../index'
 
 export function usePermit2Flag(): BaseVariant {
-  return useBaseFlag(FeatureFlag.permit2, BaseVariant.Enabled)
+  return useBaseFlag(FeatureFlag.permit2)
 }
 
 export function usePermit2Enabled(): boolean {
