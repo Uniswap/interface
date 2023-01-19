@@ -27,6 +27,7 @@ JsonRpcSigner.prototype._signTypedData = async function signTypedDataWithFallbac
           JSON.stringify(_TypedDataEncoder.getPayload(populated.domain, types, populated.value)),
         ])
       }
+      throw error
     }
   } catch (error) {
     console.log(error)
