@@ -221,7 +221,7 @@ export const BagFooter = ({
                 <Trans>Total</Trans>
               </ThemedText.SubHeaderSmall>
               <ThemedText.HeadlineSmall>
-                {formatWeiToDecimal(totalEthPrice.toString())}&nbsp;ETH
+                {formatWeiToDecimal(totalEthPrice.toString())}&nbsp;{activeCurrency?.symbol ?? 'ETH'}
               </ThemedText.HeadlineSmall>
               <ThemedText.BodySmall color="textSecondary" lineHeight="20px">{`${ethNumberStandardFormatter(
                 totalUsdPrice,
