@@ -232,17 +232,20 @@ export default function Swap({ className }: { className?: string }) {
           },
     [independentField, parsedAmount, showWrap, trade]
   )
+  const fiatValueInput = useStablecoinValue(parsedAmounts[Field.INPUT])
+  const fiatValueOutput = useStablecoinValue(parsedAmounts[Field.OUTPUT])
 
   const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
     () => [!trade?.swaps, TradeState.LOADING === tradeState, TradeState.SYNCING === tradeState],
     [trade, tradeState]
   )
 
-  const fiatValueInput = useStablecoinValue(parsedAmounts[Field.INPUT])
-  const fiatValueOutput = useStablecoinValue(parsedAmounts[Field.OUTPUT])
+  const fiatValueTradeInput = useStablecoinValue(trade?.inputAmount)
+  const fiatValueTradeOutput = useStablecoinValue(trade?.outputAmount)
   const stablecoinPriceImpact = useMemo(
-    () => (routeIsSyncing ? undefined : computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)),
-    [fiatValueInput, fiatValueOutput, routeIsSyncing]
+    () =>
+      routeIsSyncing || !trade ? undefined : computeFiatValuePriceImpact(fiatValueTradeInput, fiatValueTradeOutput),
+    [fiatValueTradeInput, fiatValueTradeOutput, routeIsSyncing, trade]
   )
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
@@ -574,8 +577,8 @@ export default function Swap({ className }: { className?: string }) {
               swapErrorMessage={swapErrorMessage}
               onDismiss={handleConfirmDismiss}
               swapQuoteReceivedDate={swapQuoteReceivedDate}
-              fiatValueInput={fiatValueInput}
-              fiatValueOutput={fiatValueOutput}
+              fiatValueInput={fiatValueTradeInput}
+              fiatValueOutput={fiatValueTradeOutput}
             />
 
             <div style={{ display: 'relative' }}>
