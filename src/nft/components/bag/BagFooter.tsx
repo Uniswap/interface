@@ -13,10 +13,11 @@ import { SupportedChainId } from 'constants/chains'
 import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
 import { useCurrency } from 'hooks/Tokens'
 import { useBag } from 'nft/hooks/useBag'
+import { useTokenInput } from 'nft/hooks/useTokenInput'
 import { useWalletBalance } from 'nft/hooks/useWalletBalance'
 import { BagStatus } from 'nft/types'
 import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils'
-import { PropsWithChildren, useMemo, useReducer, useState } from 'react'
+import { PropsWithChildren, useMemo, useReducer } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
 import { useToggleWalletModal } from 'state/application/hooks'
 import styled, { useTheme } from 'styled-components/macro'
@@ -142,7 +143,8 @@ export const BagFooter = ({
   const { account, chainId, connector } = useWeb3React()
   const connected = Boolean(account && chainId)
   const shouldUsePayWithAnyToken = usePayWithAnyTokenFlag() === PayWithAnyTokenVariant.Enabled
-  const [inputCurrency, setInputCurrency] = useState<Currency | undefined>(undefined)
+  const inputCurrency = useTokenInput((state) => state.inputCurrency)
+  const setInputCurrency = useTokenInput((state) => state.setInputCurrency)
   const defaultCurrency = useCurrency('ETH')
 
   const setBagExpanded = useBag((state) => state.setBagExpanded)
