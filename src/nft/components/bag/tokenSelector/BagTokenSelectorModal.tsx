@@ -47,7 +47,17 @@ const TokenSelectorContainer = styled(Column)`
   }
 `
 
-export const BagTokenSelectorModal = ({ overlayClick }: { overlayClick: () => void }) => {
+interface BagTokenSelectorModalProps {
+  selectedCurrency: Currency | undefined
+  handleCurrencySelect: (currency: Currency) => void
+  overlayClick: () => void
+}
+
+export const BagTokenSelectorModal = ({
+  selectedCurrency,
+  handleCurrencySelect,
+  overlayClick,
+}: BagTokenSelectorModalProps) => {
   const defaultTokens = useAllTokens()
   const [balances, balancesAreLoading] = useAllTokenBalances()
   const sortedTokens: Token[] = useMemo(
@@ -90,7 +100,16 @@ export const BagTokenSelectorModal = ({ overlayClick }: { overlayClick: () => vo
         </TitleRow>
         <TokenSelectorContainer>
           {currencies.map((currency) => {
-            return <CurrencyRow key={currency.isToken ? currency.wrapped.address : currency.name} currency={currency} />
+            return (
+              <CurrencyRow
+                key={currency.isToken ? currency.wrapped.address : currency.name}
+                currency={currency}
+                selected={
+                  (!selectedCurrency && currency.isNative) || (!!selectedCurrency && selectedCurrency.equals(currency))
+                }
+                selectCurrency={handleCurrencySelect}
+              />
+            )
           })}
         </TokenSelectorContainer>
       </ModalWrapper>

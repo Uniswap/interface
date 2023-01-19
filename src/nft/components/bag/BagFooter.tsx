@@ -3,6 +3,7 @@ import { parseEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
+import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import Loader from 'components/Loader'
@@ -15,7 +16,7 @@ import { useBag } from 'nft/hooks/useBag'
 import { useWalletBalance } from 'nft/hooks/useWalletBalance'
 import { BagStatus } from 'nft/types'
 import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils'
-import { PropsWithChildren, useMemo, useReducer } from 'react'
+import { PropsWithChildren, useMemo, useReducer, useState } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
 import { useToggleWalletModal } from 'state/application/hooks'
 import styled, { useTheme } from 'styled-components/macro'
@@ -141,7 +142,8 @@ export const BagFooter = ({
   const { account, chainId, connector } = useWeb3React()
   const connected = Boolean(account && chainId)
   const shouldUsePayWithAnyToken = usePayWithAnyTokenFlag() === PayWithAnyTokenVariant.Enabled
-  const inputCurrency = useCurrency('ETH')
+  const [inputCurrency, setInputCurrency] = useState<Currency | undefined>(undefined)
+  const defaultCurrency = useCurrency('ETH')
 
   const setBagExpanded = useBag((state) => state.setBagExpanded)
   const [showTokenSelector, toggleTokenSelector] = useReducer((state) => !state, false)
@@ -193,6 +195,7 @@ export const BagFooter = ({
   }, [bagStatus, chainId, connected, connector, fetchAssets, setBagExpanded, sufficientBalance, toggleWalletModal])
 
   const isPending = PENDING_BAG_STATUSES.includes(bagStatus)
+  const activeCurrency = inputCurrency ?? defaultCurrency
 
   return (
     <FooterContainer>
@@ -204,9 +207,9 @@ export const BagFooter = ({
                 <Trans>Pay with</Trans>
               </ThemedText.SubHeaderSmall>
               <CurrencyInput onClick={toggleTokenSelector}>
-                <CurrencyLogo currency={inputCurrency} size="24px" />
+                <CurrencyLogo currency={activeCurrency} size="24px" />
                 <ThemedText.HeadlineSmall fontWeight={500} lineHeight="24px">
-                  {inputCurrency?.symbol}
+                  {activeCurrency?.symbol}
                 </ThemedText.HeadlineSmall>
                 <ChevronDown size={20} color={theme.textSecondary} />
               </CurrencyInput>
@@ -259,7 +262,16 @@ export const BagFooter = ({
           </ActionButton>
         </TraceEvent>
       </Footer>
-      {showTokenSelector && <BagTokenSelectorModal overlayClick={toggleTokenSelector} />}
+      {showTokenSelector && (
+        <BagTokenSelectorModal
+          selectedCurrency={activeCurrency ?? undefined}
+          handleCurrencySelect={(currency: Currency) => {
+            setInputCurrency(currency)
+            toggleTokenSelector()
+          }}
+          overlayClick={toggleTokenSelector}
+        />
+      )}
     </FooterContainer>
   )
 }
