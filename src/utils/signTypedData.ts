@@ -15,7 +15,7 @@ JsonRpcSigner.prototype._signTypedData = async function signTypedDataWithFallbac
   const address = await this.getAddress()
 
   try {
-    return await this.provider.send('eth_signTypedData_v4', [
+    return await this.provider.send('eth_signTypedData', [
       address.toLowerCase(),
       JSON.stringify(_TypedDataEncoder.getPayload(populated.domain, types, populated.value)),
     ])
