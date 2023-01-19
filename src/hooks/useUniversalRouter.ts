@@ -51,7 +51,8 @@ export function useUniversalRouterSwapCallback(
         gasEstimate = await provider.estimateGas(tx)
       } catch (gasError) {
         await provider.call(tx) // this should throw the actual error
-        throw new Error('unexpected issue with gas estimation; please try again')
+        // If the actual error is not thrown, just try again:
+        gasEstimate = await provider.estimateGas(tx)
       }
       const gasLimit = calculateGasMargin(gasEstimate)
       const response = await provider.getSigner().sendTransaction({ ...tx, gasLimit })
