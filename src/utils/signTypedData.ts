@@ -15,11 +15,21 @@ JsonRpcSigner.prototype._signTypedData = async function signTypedDataWithFallbac
   const address = await this.getAddress()
 
   try {
-    return await this.provider.send('eth_signTypedData', [
-      address.toLowerCase(),
-      JSON.stringify(_TypedDataEncoder.getPayload(populated.domain, types, populated.value)),
-    ])
+    try {
+      return await this.provider.send('eth_signTypedData', [
+        address.toLowerCase(),
+        JSON.stringify(_TypedDataEncoder.getPayload(populated.domain, types, populated.value)),
+      ])
+    } catch (error) {
+      if (typeof error.code === 'number' && error.code === -32602) {
+        return await this.provider.send('eth_signTypedData_v4', [
+          address.toLowerCase(),
+          JSON.stringify(_TypedDataEncoder.getPayload(populated.domain, types, populated.value)),
+        ])
+      }
+    }
   } catch (error) {
+    console.log(error)
     if (typeof error.message === 'string' && error.message.match(/not found/i)) {
       console.warn('eth_signTypedData_v4 failed, falling back to eth_sign:', error)
       const hash = _TypedDataEncoder.hash(populated.domain, types, populated.value)
