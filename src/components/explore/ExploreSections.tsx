@@ -1,7 +1,7 @@
 import { NetworkStatus } from '@apollo/client'
+import { FlashList, ListRenderItem, ListRenderItemInfo } from '@shopify/flash-list'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FlatList, ListRenderItemInfo } from 'react-native'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import { FavoriteTokensGrid } from 'src/components/explore/FavoriteTokensGrid'
 import { FavoriteWalletsGrid } from 'src/components/explore/FavoriteWalletsGrid'
@@ -33,6 +33,7 @@ import {
 } from 'src/features/favorites/selectors'
 import { selectTokensOrderBy } from 'src/features/wallet/selectors'
 import { flex } from 'src/styles/flex'
+import { dimensions } from 'src/styles/sizing'
 import { areAddressesEqual } from 'src/utils/addresses'
 import { fromGraphQLChain } from 'src/utils/chainId'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
@@ -41,6 +42,8 @@ import { usePollOnFocusOnly } from 'src/utils/hooks'
 type ExploreSectionsProps = {
   listRef?: React.MutableRefObject<null>
 }
+
+const ESTIMATED_TOKEN_ITEM_SIZE = 82 // provided from FlashList
 
 export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element {
   const { t } = useTranslation()
@@ -109,7 +112,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
     return topTokens.sort(compareFn)
   }, [data, clientOrderBy])
 
-  const renderItem = useCallback(
+  const renderItem: ListRenderItem<TokenItemData> = useCallback(
     ({ item, index }: ListRenderItemInfo<TokenItemData>) => {
       // Disable the row if editing and already favorited.
       // Avoid doing this within TokenItem so we can memoize
@@ -182,7 +185,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
           ) : null}
         </Flex>
       ) : null}
-      <FlatList
+      <FlashList
         ListEmptyComponent={
           <Box mx="lg" my="sm">
             <Loader.Token repeat={5} />
@@ -206,11 +209,15 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
           </Flex>
         }
         data={showLoading ? EMPTY_ARRAY : topTokenItems}
+        estimatedItemSize={ESTIMATED_TOKEN_ITEM_SIZE}
+        estimatedListSize={{
+          width: dimensions.fullWidth,
+          height: dimensions.fullHeight,
+        }}
         keyExtractor={tokenKey}
         renderItem={renderItem}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        windowSize={5}
       />
     </VirtualizedList>
   )
