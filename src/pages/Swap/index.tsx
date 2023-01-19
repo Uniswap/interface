@@ -28,7 +28,7 @@ import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ReactNode } from 'react'
-import { AlertTriangle, ArrowDown, CheckCircle, HelpCircle, Info } from 'react-feather'
+import { ArrowDown, CheckCircle, HelpCircle, Info } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useToggleWalletModal } from 'state/application/hooks'
@@ -316,7 +316,6 @@ export default function Swap({ className }: { className?: string }) {
   )
   const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
   const [isAllowancePending, setIsAllowancePending] = useState(false)
-  const [isAllowanceFailed, setIsAllowanceFailed] = useState(false)
   const updateAllowance = useCallback(async () => {
     invariant(allowance.state === AllowanceState.REQUIRED)
     setIsAllowancePending(true)
@@ -327,10 +326,8 @@ export default function Swap({ className }: { className?: string }) {
         token_symbol: maximumAmountIn?.currency.symbol,
         token_address: maximumAmountIn?.currency.address,
       })
-      setIsAllowanceFailed(false)
     } catch (e) {
       console.error(e)
-      setIsAllowanceFailed(true)
     } finally {
       setIsAllowancePending(false)
     }
@@ -803,11 +800,6 @@ export default function Swap({ className }: { className?: string }) {
                       <>
                         <Loader size="20px" />
                         <Trans>Approve in your wallet</Trans>
-                      </>
-                    ) : isAllowanceFailed ? (
-                      <>
-                        <AlertTriangle size={20} />
-                        <Trans>Approval failed. Try again.</Trans>
                       </>
                     ) : isApprovalLoading ? (
                       <>
