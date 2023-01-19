@@ -21,10 +21,11 @@ describe('Universal search bar', () => {
   it('should yield clickable result for regular token or nft collection search term', () => {
     // Search for uni token by name.
     cy.get('[data-cy="search-bar-input"]').last().clear().type('uni')
-    cy.get('[data-cy="searchbar-token-row-UNI"]').should('contain.text', 'Uniswap')
-    .and('contain.text', 'UNI')
-    .and('contain.text', '$')
-    .and('contain.text', '%')
+    cy.get('[data-cy="searchbar-token-row-UNI"]')
+      .should('contain.text', 'Uniswap')
+      .and('contain.text', 'UNI')
+      .and('contain.text', '$')
+      .and('contain.text', '%')
     cy.get('[data-cy="searchbar-token-row-UNI"]').click()
 
     cy.get('div').contains('Uniswap').should('exist')
