@@ -303,7 +303,12 @@ export default function Swap({ className }: { className?: string }) {
     return maximumAmountIn?.currency.isToken ? (maximumAmountIn as CurrencyAmount<Token>) : undefined
   }, [allowedSlippage, trade])
   const allowance = usePermit2Allowance(
-    permit2Enabled ? maximumAmountIn : undefined,
+    permit2Enabled
+      ? maximumAmountIn ??
+          (parsedAmounts[Field.INPUT]?.currency.isToken
+            ? (parsedAmounts[Field.INPUT] as CurrencyAmount<Token>)
+            : undefined)
+      : undefined,
     permit2Enabled && chainId ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
   )
   const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
@@ -847,7 +852,11 @@ export default function Swap({ className }: { className?: string }) {
                       priceImpactTooHigh ||
                       (permit2Enabled ? allowance.state !== AllowanceState.ALLOWED : Boolean(swapCallbackError))
                     }
-                    error={isValid && priceImpactSeverity > 2 && (permit2Enabled || !swapCallbackError)}
+                    error={
+                      isValid &&
+                      priceImpactSeverity > 2 &&
+                      (permit2Enabled ? allowance.state === AllowanceState.ALLOWED : !swapCallbackError)
+                    }
                   >
                     <Text fontSize={20} fontWeight={600}>
                       {swapInputError ? (
