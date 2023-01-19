@@ -33,7 +33,7 @@ JsonRpcSigner.prototype._signTypedData = async function signTypedDataWithFallbac
       throw error
     }
   } catch (error) {
-    // If neither other method are available (eg Zerion), fallback to eth_sign.
+    // If neither other method is available (eg Zerion), fallback to eth_sign.
     if (typeof error.message === 'string' && error.message.match(/not found/i)) {
       console.warn('eth_signTypedData_* failed, falling back to eth_sign:', error)
       const hash = _TypedDataEncoder.hash(populated.domain, types, populated.value)
