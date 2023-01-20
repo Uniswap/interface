@@ -57,7 +57,7 @@ export function useUniversalRouterSwapCallback(
         gasEstimate = await provider.estimateGas(tx)
       } catch (gasError) {
         console.warn(gasError)
-        throw new InvalidSwapError('Gas estimation failed. Wait a few minutes and try again.')
+        throw new Error('Your swap is expected to fail')
       }
       const gasLimit = calculateGasMargin(gasEstimate)
       const response = await provider
