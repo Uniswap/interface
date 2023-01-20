@@ -43,3 +43,8 @@ jobs:
           author: 'UL Service Account <hello-happy-puppy@users.noreply.github.com>'
           branch: 'approvals/betaToProd'
 #          body: ${{ gh pr view --json commits | jq '.commits[] | [.oid, .messageHeadline] | @tsv' | sed 's/"//g' | sed 's/\\\t/ - /g' }}
+      - uses: peter-evans/enable-pull-request-automerge@60812ab1c2c6c6a8932b4d6e059becafaf386256
+        with:
+          token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
+          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
+          merge-method: merge
