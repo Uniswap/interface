@@ -1,19 +1,14 @@
-import { Trans } from '@lingui/macro'
 import { formatNumber, formatUSDPrice, NumberType } from '@uniswap/conedison/format'
 import { ParentSize } from '@visx/responsive'
 import SparklineChart from 'components/Charts/SparklineChart'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
-import { MouseoverTooltip } from 'components/Tooltip'
 import { getChainInfo } from 'constants/chainInfo'
 import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
-import { useAtomValue } from 'jotai/utils'
 import { ForwardedRef, forwardRef } from 'react'
 import { CSSProperties, ReactNode } from 'react'
-import { ArrowDown, ArrowUp, Info } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
-import styled, { css, useTheme } from 'styled-components/macro'
-import { ClickableStyle } from 'theme'
+import styled, { css } from 'styled-components/macro'
 
 import {
   LARGE_MEDIA_BREAKPOINT,
@@ -22,7 +17,6 @@ import {
   SMALL_MEDIA_BREAKPOINT,
 } from '../constants'
 import { LoadingBubble } from '../loading'
-import { sortAscendingAtom, sortMethodAtom, TokenSortMethod, useSetSortMethod } from '../state'
 import { ArrowCell, DeltaText, formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
 
 const Cell = styled.div`
@@ -186,18 +180,6 @@ const PriceInfoCell = styled(Cell)`
   }
 `
 
-const HeaderCellWrapper = styled.span<{ onClick?: () => void }>`
-  align-items: center;
-  cursor: ${({ onClick }) => (onClick ? 'pointer' : 'unset')};
-  display: flex;
-  gap: 4px;
-  justify-content: flex-end;
-  width: 100%;
-
-  &:hover {
-    ${ClickableStyle}
-  }
-`
 const SparkLineCell = styled(Cell)`
   padding: 0px 24px;
   min-width: 120px;
@@ -253,19 +235,11 @@ const VolumeCell = styled(DataCell)`
     display: none;
   }
 `
-const SmallLoadingBubble = styled(LoadingBubble)`
-  width: 25%;
-`
-const MediumLoadingBubble = styled(LoadingBubble)`
-  width: 65%;
-`
+
 const LongLoadingBubble = styled(LoadingBubble)`
   width: 90%;
 `
-const IconLoadingBubble = styled(LoadingBubble)`
-  border-radius: 50%;
-  width: 24px;
-`
+
 export const SparkLineLoadingBubble = styled(LongLoadingBubble)`
   height: 4px;
 `
@@ -286,60 +260,6 @@ export const LogoContainer = styled.div`
   align-items: center;
   display: flex;
 `
-
-const InfoIconContainer = styled.div`
-  margin-left: 2px;
-  display: flex;
-  align-items: center;
-  cursor: help;
-`
-
-export const HEADER_DESCRIPTIONS: Record<TokenSortMethod, ReactNode | undefined> = {
-  [TokenSortMethod.PRICE]: undefined,
-  [TokenSortMethod.PERCENT_CHANGE]: undefined,
-  [TokenSortMethod.TOTAL_VALUE_LOCKED]: (
-    <Trans>Total value locked (TVL) is the amount of the asset that’s currently in a Uniswap v3 liquidity pool.</Trans>
-  ),
-  [TokenSortMethod.VOLUME]: (
-    <Trans>Volume is the amount of the asset that has been traded on Uniswap v3 during the selected time frame.</Trans>
-  ),
-}
-
-/* Get singular header cell for header row */
-function HeaderCell({
-  category,
-}: {
-  category: TokenSortMethod // TODO: change this to make it work for trans
-}) {
-  const theme = useTheme()
-  const sortAscending = useAtomValue(sortAscendingAtom)
-  const handleSortCategory = useSetSortMethod(category)
-  const sortMethod = useAtomValue(sortMethodAtom)
-
-  const description = HEADER_DESCRIPTIONS[category]
-
-  return (
-    <HeaderCellWrapper onClick={handleSortCategory}>
-      {sortMethod === category && (
-        <>
-          {sortAscending ? (
-            <ArrowUp size={20} strokeWidth={1.8} color={theme.accentActive} />
-          ) : (
-            <ArrowDown size={20} strokeWidth={1.8} color={theme.accentActive} />
-          )}
-        </>
-      )}
-      {category}
-      {description && (
-        <MouseoverTooltip text={description} placement="right">
-          <InfoIconContainer>
-            <Info size={14} />
-          </InfoIconContainer>
-        </MouseoverTooltip>
-      )}
-    </HeaderCellWrapper>
-  )
-}
 
 /* Token Row: skeleton row component */
 function TokenRow({
@@ -389,45 +309,6 @@ function TokenRow({
   return <StyledTokenRow {...rest}>{rowCells}</StyledTokenRow>
 }
 
-/* Header Row: top header row component for table */
-export function HeaderRow() {
-  return (
-    <TokenRow
-      header={true}
-      listNumber="#"
-      tokenInfo={<Trans>Token name</Trans>}
-      price={<HeaderCell category={TokenSortMethod.PRICE} />}
-      percentChange={<HeaderCell category={TokenSortMethod.PERCENT_CHANGE} />}
-      tvl={<HeaderCell category={TokenSortMethod.TOTAL_VALUE_LOCKED} />}
-      volume={<HeaderCell category={TokenSortMethod.VOLUME} />}
-      sparkLine={null}
-    />
-  )
-}
-
-/* Loading State: row component with loading bubbles */
-export function LoadingRow(props: { first?: boolean; last?: boolean }) {
-  return (
-    <TokenRow
-      header={false}
-      listNumber={<SmallLoadingBubble />}
-      loading
-      tokenInfo={
-        <>
-          <IconLoadingBubble />
-          <MediumLoadingBubble />
-        </>
-      }
-      price={<MediumLoadingBubble />}
-      percentChange={<LoadingBubble />}
-      tvl={<LoadingBubble />}
-      volume={<LoadingBubble />}
-      sparkLine={<SparkLineLoadingBubble />}
-      {...props}
-    />
-  )
-}
-
 interface LoadedRowProps {
   tokenListIndex: number
   tokenListLength: number
@@ -437,7 +318,7 @@ interface LoadedRowProps {
 }
 
 /* Loaded State: row component with token information */
-export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HTMLDivElement>) => {
+const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HTMLDivElement>) => {
   const { tokenListIndex, tokenListLength, token, volumeRank } = props
 
   const lowercaseChainName = useParams<{ chainName?: string }>().chainName?.toUpperCase() ?? 'ethereum'
