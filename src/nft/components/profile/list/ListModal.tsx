@@ -64,9 +64,9 @@ const SectionArrow = styled(ChevronUpIcon)<{ active: boolean }>`
 
 const SectionBody = styled(Column)`
   border-left: 1.5px solid ${colors.gray650};
-  margin: 4px 0px 0px 7px;
-  padding-left: 20px;
+  margin-left: 7px;
   padding-top: 4px;
+  padding-left: 20px;
   max-height: 394px;
   overflow-y: auto;
   ${ScrollBarStyles}
@@ -79,9 +79,12 @@ const StyledInfoIcon = styled(Info)`
   color: ${({ theme }) => theme.textSecondary};
 `
 
+const ContentRowContainer = styled(Column)`
+  gap: 8px;
+`
+
 const ContentRow = styled(Row)`
   padding: 16px;
-  margin-top: 8px;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 12px;
   opacity: 0.6;
@@ -89,6 +92,13 @@ const ContentRow = styled(Row)`
 
 const CollectionIcon = styled.img`
   border-radius: 100px;
+  height: 24px;
+  width: 24px;
+  z-index: 1;
+`
+
+const AssetIcon = styled.img`
+  border-radius: 4px;
   height: 24px;
   width: 24px;
   z-index: 1;
@@ -163,7 +173,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
             </SectionHeader>
             {openSection === Section.APPROVE && (
               <SectionBody>
-                <Row height="16px" marginBottom="8px">
+                <Row height="16px" marginBottom="16px" marginTop="4px">
                   <ThemedText.Caption lineHeight="16px" color="textSecondary">
                     <Trans>Why is a transaction required?</Trans>
                   </ThemedText.Caption>
@@ -175,17 +185,19 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
                     <StyledInfoIcon />
                   </MouseoverTooltip>
                 </Row>
-                {collectionsRequiringApproval.map((collection) => {
-                  return (
-                    <ContentRow key={collection.collectionAddress}>
-                      <CollectionIcon src={collection.images[0]} />
-                      <MarketplaceIcon src={collection.images[1]} />
-                      <CollectionName>{collection.name}</CollectionName>
-                      {collection.isVerified && <StyledVerifiedIcon />}
-                      <StyledLoadingIconBackground />
-                    </ContentRow>
-                  )
-                })}
+                <ContentRowContainer>
+                  {collectionsRequiringApproval.map((collection, index) => {
+                    return (
+                      <ContentRow key={index}>
+                        <CollectionIcon src={collection.images[0]} />
+                        <MarketplaceIcon src={collection.images[1]} />
+                        <CollectionName>{collection.name}</CollectionName>
+                        {collection.isVerified && <StyledVerifiedIcon />}
+                        <StyledLoadingIconBackground />
+                      </ContentRow>
+                    )
+                  })}
+                </ContentRowContainer>
               </SectionBody>
             )}
           </Column>
@@ -203,6 +215,22 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
               onClick={toggleOpenSection}
             />
           </SectionHeader>
+          {openSection === Section.SIGN && (
+            <SectionBody>
+              <ContentRowContainer>
+                {listings.map((listing, index) => {
+                  return (
+                    <ContentRow key={index}>
+                      <AssetIcon src={listing.images[0]} />
+                      <MarketplaceIcon src={listing.images[1]} />
+                      <CollectionName>{listing.name}</CollectionName>
+                      <StyledLoadingIconBackground />
+                    </ContentRow>
+                  )
+                })}
+              </ContentRowContainer>
+            </SectionBody>
+          )}
         </ListModalWrapper>
       </Trace>
       <Overlay onClick={overlayClick} />
