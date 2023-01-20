@@ -113,17 +113,14 @@ export const enum Section {
   SIGN,
 }
 
-export const ListModalSection = ({
-  sectionType,
-  active,
-  content,
-  toggleSection,
-}: {
+interface ListModalSectionProps {
   sectionType: Section
   active: boolean
   content: AssetRow[]
   toggleSection: React.DispatchWithoutAction
-}) => {
+}
+
+export const ListModalSection = ({ sectionType, active, content, toggleSection }: ListModalSectionProps) => {
   const theme = useTheme()
   const isCollectionApprovalSection = sectionType === Section.APPROVE
   return (
