@@ -1,4 +1,4 @@
-import React, { ReactElement, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { ChainId } from 'src/constants/chains'
@@ -22,7 +22,7 @@ export default function ReceiveSummaryItem({
   ...rest
 }: BaseTransactionSummaryProps & {
   transaction: { typeInfo: ReceiveTokenTransactionInfo }
-}): ReactElement {
+}): JSX.Element {
   const { t } = useTranslation()
   const currencyInfo = useCurrencyInfo(
     buildCurrencyId(transaction.chainId, transaction.typeInfo.tokenAddress)

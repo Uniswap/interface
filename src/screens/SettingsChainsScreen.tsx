@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
@@ -13,7 +13,7 @@ import { useActiveChainIds } from 'src/features/chains/utils'
 import { flex } from 'src/styles/flex'
 import { theme } from 'src/styles/theme'
 
-export function SettingsChainsScreen(): ReactElement {
+export function SettingsChainsScreen(): JSX.Element {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 

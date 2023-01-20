@@ -1,5 +1,5 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import React, { ReactElement, useState } from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -37,7 +37,7 @@ export function SwapDetails({
   onAcceptTrade,
   onShowWarning,
   onShowGasWarning,
-}: SwapDetailsProps): ReactElement {
+}: SwapDetailsProps): JSX.Element {
   const { t } = useTranslation()
   const [showInverseRate, setShowInverseRate] = useState(false)
 

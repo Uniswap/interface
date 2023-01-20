@@ -1,6 +1,6 @@
 import { useFocusEffect } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { ReactElement, useCallback, useRef, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, TextInput } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
@@ -70,7 +70,7 @@ function getLockoutTimeMessage(remainingLockoutTime: number): string {
 export function RestoreCloudBackupPasswordScreen({
   navigation,
   route: { params },
-}: Props): ReactElement {
+}: Props): JSX.Element {
   const { t } = useTranslation()
   const inputRef = useRef<TextInput>(null)
   const dispatch = useAppDispatch()

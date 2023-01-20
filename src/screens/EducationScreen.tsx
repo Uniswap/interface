@@ -1,4 +1,4 @@
-import React, { ReactElement, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { Carousel } from 'src/components/carousel/Carousel'
 import { educationContent } from 'src/components/education'
@@ -9,7 +9,7 @@ export function EducationScreen({
   route: {
     params: { type },
   },
-}: AppStackScreenProp<Screens.Education>): ReactElement {
+}: AppStackScreenProp<Screens.Education>): JSX.Element {
   const content = useMemo(() => educationContent[type](), [type])
 
   return (

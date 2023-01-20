@@ -10,7 +10,7 @@ import {
 } from '@shopify/react-native-skia'
 import { useResponsiveProp } from '@shopify/restyle'
 import { ResizeMode, Video } from 'expo-av'
-import React, { ReactElement, useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, StyleSheet, useColorScheme, View, ViewStyle } from 'react-native'
 import Animated, {
@@ -54,7 +54,7 @@ export function OnboardingCompleteAnimation({
   activeAddress: string
   isNewWallet: boolean
   onPressNext: () => void
-}): ReactElement {
+}): JSX.Element {
   const theme = useAppTheme()
   const { t } = useTranslation()
   const video = useRef<Video>(null)

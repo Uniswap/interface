@@ -1,6 +1,6 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { TFunction } from 'i18next'
-import React, { ReactElement, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ChainId } from 'src/constants/chains'
 import { getFormattedCurrencyAmount } from 'src/features/notifications/utils'
@@ -187,7 +187,7 @@ const getTextFromSwapStatus = (
   throw new Error('swap transaction status is in an unhandled state')
 }
 
-export function SwapStatus({ derivedSwapInfo, onNext, onTryAgain }: SwapStatusProps): ReactElement {
+export function SwapStatus({ derivedSwapInfo, onNext, onTryAgain }: SwapStatusProps): JSX.Element {
   const { t } = useTranslation()
   const { txId, currencies } = derivedSwapInfo
   const chainId =

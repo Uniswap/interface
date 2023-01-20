@@ -1,6 +1,6 @@
 import { AnyAction } from '@reduxjs/toolkit'
 import { providers } from 'ethers'
-import React, { Dispatch, ReactElement, useCallback, useEffect, useState } from 'react'
+import React, { Dispatch, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TouchableWithoutFeedback } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
@@ -38,8 +38,8 @@ interface TransactionFlowProps {
   dispatch: Dispatch<AnyAction>
   showTokenSelector: boolean
   showRecipientSelector?: boolean
-  tokenSelector: ReactElement
-  recipientSelector?: ReactElement
+  tokenSelector: JSX.Element
+  recipientSelector?: JSX.Element
   flowName: string
   derivedInfo: DerivedTransferInfo | DerivedSwapInfo
   onClose: () => void
@@ -97,7 +97,7 @@ export function TransactionFlow({
   exactValue,
   isUSDInput,
   showUSDToggle,
-}: TransactionFlowProps): ReactElement {
+}: TransactionFlowProps): JSX.Element {
   const theme = useAppTheme()
   const insets = useSafeAreaInsets()
   const account = useActiveAccountWithThrow()
@@ -218,7 +218,7 @@ export function TransactionFlow({
   )
 }
 
-function InnerContentRouter(props: InnerContentProps): ReactElement {
+function InnerContentRouter(props: InnerContentProps): JSX.Element {
   const { derivedInfo, setStep } = props
   const onFormNext = useCallback(() => setStep(TransactionStep.REVIEW), [setStep])
   const onReviewNext = useCallback(() => setStep(TransactionStep.SUBMITTED), [setStep])
@@ -273,7 +273,7 @@ function SwapInnerContent({
   step,
   exactValue,
   showingSelectorScreen,
-}: SwapInnerContentProps): ReactElement | null {
+}: SwapInnerContentProps): JSX.Element | null {
   switch (step) {
     case TransactionStep.SUBMITTED:
       return (
@@ -341,7 +341,7 @@ function TransferInnerContent({
   onRetrySubmit,
   onReviewNext,
   onReviewPrev,
-}: TransferInnerContentProps): ReactElement | null {
+}: TransferInnerContentProps): JSX.Element | null {
   switch (step) {
     case TransactionStep.SUBMITTED:
       return (

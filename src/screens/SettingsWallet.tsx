@@ -1,7 +1,7 @@
 import { useFocusEffect } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useTheme } from '@shopify/restyle'
-import React, { ReactElement, useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
 import { SvgProps } from 'react-native-svg'
@@ -55,7 +55,7 @@ export function SettingsWallet({
   route: {
     params: { address },
   },
-}: Props): ReactElement {
+}: Props): JSX.Element {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const theme = useTheme()
@@ -234,7 +234,7 @@ export function SettingsWallet({
     item,
   }: ListRenderItemInfo<
     SettingsSectionItem | SettingsSectionItemComponent
-  >): ReactElement | null => {
+  >): JSX.Element | null => {
     if ('component' in item) {
       return item.component
     }
@@ -261,8 +261,8 @@ export function SettingsWallet({
             ItemSeparatorComponent={renderItemSeparator}
             keyExtractor={(_item, index): string => 'wallet_settings' + index}
             renderItem={renderItem}
-            renderSectionFooter={(): ReactElement => <Flex pt="lg" />}
-            renderSectionHeader={({ section: { subTitle } }): ReactElement => (
+            renderSectionFooter={(): JSX.Element => <Flex pt="lg" />}
+            renderSectionHeader={({ section: { subTitle } }): JSX.Element => (
               <Box bg="background0" pb="sm">
                 <Text color="textSecondary" variant="bodyLarge">
                   {subTitle}
@@ -301,4 +301,4 @@ export function SettingsWallet({
   )
 }
 
-const renderItemSeparator = (): ReactElement => <Flex pt="xs" />
+const renderItemSeparator = (): JSX.Element => <Flex pt="xs" />

@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { default as React, ReactElement, useCallback, useMemo } from 'react'
+import { default as React, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { Flex } from 'src/components/layout'
@@ -18,8 +18,8 @@ import { openMoonpayHelpLink, openUniswapHelpLink } from 'src/utils/linking'
 function renderOptionItem(
   label: string,
   textColorOverride?: keyof Theme['colors']
-): () => ReactElement {
-  return (): ReactElement => (
+): () => JSX.Element {
+  return (): JSX.Element => (
     <>
       <Separator />
       <Text
@@ -52,7 +52,7 @@ export default function TransactionActionsModal({
   onViewMoonpay,
   showCancelButton,
   transactionDetails,
-}: TransactionActionModalProps): ReactElement {
+}: TransactionActionModalProps): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 

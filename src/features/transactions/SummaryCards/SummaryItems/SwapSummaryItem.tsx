@@ -1,5 +1,5 @@
 import { TradeType } from '@uniswap/sdk-core'
-import React, { ReactElement, useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { SwapLogoOrLogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
@@ -28,7 +28,7 @@ export default function SwapSummaryItem({
   ...rest
 }: BaseTransactionSummaryProps & {
   transaction: { typeInfo: ExactOutputSwapTransactionInfo | ExactInputSwapTransactionInfo }
-}): ReactElement {
+}): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const { status } = transaction

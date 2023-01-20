@@ -1,6 +1,6 @@
 import MaskedView from '@react-native-masked-view/masked-view'
 import { LinearGradient } from 'expo-linear-gradient'
-import React, { JSXElementConstructor, ReactElement, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { LayoutRectangle, StyleSheet, View } from 'react-native'
 import Reanimated, {
   interpolate,
@@ -17,7 +17,7 @@ const SHIMMER_DURATION = 2000 // 2 seconds
 
 type WarmLoadingShimmerProps = {
   isWarmLoading?: boolean
-  children: ReactElement<unknown, string | JSXElementConstructor<unknown>>
+  children: JSX.Element
 }
 
 // TODO(MOB-3553): bake this component's functionality into the Shimmer component

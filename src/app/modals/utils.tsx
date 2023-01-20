@@ -1,4 +1,3 @@
-import { JSXElementConstructor, ReactElement } from 'react'
 import { useAppSelector } from 'src/app/hooks'
 import { ModalsState, selectModalState } from 'src/features/modals/modalSlice'
 
@@ -12,7 +11,7 @@ export function LazyModalRenderer({
   children,
 }: {
   name: keyof ModalsState
-  children: ReactElement<unknown, string | JSXElementConstructor<unknown>>
+  children: JSX.Element
 }): JSX.Element | null {
   const modalState = useAppSelector(selectModalState(name))
 

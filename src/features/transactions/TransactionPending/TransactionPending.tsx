@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
@@ -32,7 +32,7 @@ export function TransactionPending({
   onNext,
   onTryAgain,
   transactionType,
-}: TransactionStatusProps): ReactElement {
+}: TransactionStatusProps): JSX.Element {
   const { t } = useTranslation()
 
   const onPressViewTransaction = (): void => {

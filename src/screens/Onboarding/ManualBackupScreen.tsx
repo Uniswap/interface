@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { addScreenshotListener } from 'expo-screen-capture'
-import React, { ReactElement, useEffect, useReducer, useState } from 'react'
+import React, { useEffect, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
@@ -27,7 +27,7 @@ enum View {
   Test,
 }
 
-export function ManualBackupScreen({ navigation, route: { params } }: Props): ReactElement | null {
+export function ManualBackupScreen({ navigation, route: { params } }: Props): JSX.Element | null {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 

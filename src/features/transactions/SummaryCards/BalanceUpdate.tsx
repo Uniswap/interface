@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { ReactElement, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { useSpotPrice } from 'src/features/dataApi/spotPricesQuery'
 import { createBalanceUpdate } from 'src/features/notifications/utils'
 import { AssetUpdateLayout } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
@@ -22,7 +22,7 @@ export default function BalanceUpdate({
   transactionStatus,
   nftTradeType,
   transactedUSDValue,
-}: BalanceUpdateProps): ReactElement | null {
+}: BalanceUpdateProps): JSX.Element | null {
   // Skip fetching spot price if known USD transacted value
   const skipQuery = !!transactedUSDValue
   const _currencyId = currencyId(currency)

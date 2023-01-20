@@ -1,7 +1,7 @@
 // TODO(MOB-3866): reduce component complexity
 /* eslint-disable complexity */
 import { providers } from 'ethers'
-import { default as React, ReactElement, useEffect, useState } from 'react'
+import { default as React, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { BaseButtonProps, TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -42,9 +42,9 @@ function TransactionSummaryLayout({
   title: string
   caption: string | undefined
   readonly: boolean
-  endAdornment?: ReactElement
-  icon?: ReactElement
-} & BaseButtonProps): ReactElement {
+  endAdornment?: JSX.Element
+  icon?: JSX.Element
+} & BaseButtonProps): JSX.Element {
   const { t } = useTranslation()
 
   const [showActionsModal, setShowActionsModal] = useState(false)
@@ -206,7 +206,7 @@ export function AssetUpdateLayout({
 }: {
   title: string | undefined
   caption?: string | undefined
-}): ReactElement {
+}): JSX.Element {
   return (
     <Flex grow alignItems="flex-end" gap="none">
       <Text numberOfLines={1} variant="bodyLarge">

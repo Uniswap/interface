@@ -1,15 +1,7 @@
 import { useScrollToTop } from '@react-navigation/native'
 import { FlashList } from '@shopify/flash-list'
 import * as SplashScreen from 'expo-splash-screen'
-import {
-  default as React,
-  ReactElement,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { default as React, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, useColorScheme, View, ViewProps, ViewStyle } from 'react-native'
 import Animated, {
@@ -65,7 +57,7 @@ const CONTENT_HEADER_HEIGHT_ESTIMATE = 270
  * Manages TokensTabs and NftsTab scroll offsets when header is collapsed
  * Borrowed from: https://stormotion.io/blog/how-to-create-collapsing-tab-header-using-react-native/
  */
-export function HomeScreen(): ReactElement {
+export function HomeScreen(): JSX.Element {
   // imports test account for easy development/testing
   useTestAccount()
   const activeAccount = useActiveAccountWithThrow()
@@ -330,7 +322,7 @@ export function HomeScreen(): ReactElement {
   )
 }
 
-function QuickActions(): ReactElement {
+function QuickActions(): JSX.Element {
   const dispatch = useAppDispatch()
   const activeAccount = useActiveAccountWithThrow()
 
@@ -393,7 +385,7 @@ function ActionButton({
   label: string
   Icon: React.FC<SvgProps>
   onPress: () => void
-}): ReactElement {
+}): JSX.Element {
   const theme = useAppTheme()
   const isDarkMode = useColorScheme() === 'dark'
 

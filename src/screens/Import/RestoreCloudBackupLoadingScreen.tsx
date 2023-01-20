@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
@@ -32,7 +32,7 @@ const MAX_LOADING_TIMEOUT_MS = ONE_SECOND_MS * 10
 export function RestoreCloudBackupLoadingScreen({
   navigation,
   route: { params },
-}: Props): ReactElement {
+}: Props): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const entryPoint = params?.entryPoint

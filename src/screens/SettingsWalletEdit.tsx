@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useTheme } from '@shopify/restyle'
-import React, { ReactElement, useState } from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
@@ -26,7 +26,7 @@ export function SettingsWalletEdit({
   route: {
     params: { address },
   },
-}: Props): ReactElement {
+}: Props): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const theme = useTheme()

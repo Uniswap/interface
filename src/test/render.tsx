@@ -9,7 +9,7 @@ import {
   renderHook as RNRenderHook,
   RenderOptions,
 } from '@testing-library/react-native'
-import React, { PropsWithChildren, ReactElement } from 'react'
+import React, { PropsWithChildren } from 'react'
 import { Provider } from 'react-redux'
 import { ReactTestRendererJSON } from 'react-test-renderer'
 import type { RootState } from 'src/app/rootReducer'
@@ -48,7 +48,7 @@ export function renderWithProviders(
 Record<string, any> & {
   store: EnhancedStore
 } {
-  function Wrapper({ children }: PropsWithChildren<unknown>): ReactElement {
+  function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     // Helps expose errors in MockedProvider
     const link = ApolloLink.from([setupErrorLink(1, 1), new MockLink(mocks)])
 
@@ -90,7 +90,7 @@ export function renderHookWithProviders(
 Record<string, any> & {
   store: EnhancedStore
 } {
-  function Wrapper({ children }: PropsWithChildren<unknown>): ReactElement {
+  function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     // Helps expose errors in MockedProvider
     const link = ApolloLink.from([setupErrorLink(1, 1), new MockLink(mocks)])
 
@@ -114,11 +114,11 @@ Record<string, any> & {
   }
 }
 
-export const WithTheme = ({ component }: { component: ReactElement }): ReactElement => {
+export const WithTheme = ({ component }: { component: JSX.Element }): JSX.Element => {
   return <ThemeProvider theme={theme}>{component}</ThemeProvider>
 }
 
 export const renderWithTheme = (
-  element: ReactElement
+  element: JSX.Element
 ): ReactTestRendererJSON | ReactTestRendererJSON[] | null =>
   RNRender(<WithTheme component={element} />).toJSON()

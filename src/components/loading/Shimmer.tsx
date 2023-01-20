@@ -1,6 +1,6 @@
 import MaskedView from '@react-native-masked-view/masked-view'
 import { LinearGradient } from 'expo-linear-gradient'
-import React, { JSXElementConstructor, ReactElement, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { LayoutRectangle, StyleSheet, View } from 'react-native'
 import Reanimated, {
   interpolate,
@@ -14,7 +14,7 @@ import { Box } from 'src/components/layout'
 const SHIMMER_DURATION = 2000 // 2 seconds
 
 type Props = {
-  children: ReactElement<unknown, string | JSXElementConstructor<unknown>>
+  children: JSX.Element
 }
 // inspired by tutorial found here: https://github.com/kadikraman/skeleton-loader
 export function Shimmer({ children }: Props): JSX.Element {

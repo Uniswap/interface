@@ -1,5 +1,5 @@
 import { TFunction } from 'i18next'
-import React, { ReactElement, useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { goBack } from 'src/app/navigation/rootNavigation'
 import { useSelectTransaction } from 'src/features/transactions/hooks'
@@ -79,7 +79,7 @@ export function TransferStatus({
   derivedTransferInfo,
   onNext,
   onTryAgain,
-}: TransferStatusProps): ReactElement | null {
+}: TransferStatusProps): JSX.Element | null {
   const { t } = useTranslation()
   const activeAddress = useActiveAccountAddressWithThrow()
 

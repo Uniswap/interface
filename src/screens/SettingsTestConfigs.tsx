@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React from 'react'
 import { ScrollView } from 'react-native'
 import { Switch } from 'src/components/buttons/Switch'
 import { Flex } from 'src/components/layout'
@@ -9,7 +9,7 @@ import { isEnabled, useTestConfigManager } from 'src/features/remoteConfig'
 import { flex } from 'src/styles/flex'
 import { theme } from 'src/styles/theme'
 
-export function SettingsTestConfigs(): ReactElement {
+export function SettingsTestConfigs(): JSX.Element {
   const [testConfigs, toggleLocalConfig] = useTestConfigManager()
 
   return (

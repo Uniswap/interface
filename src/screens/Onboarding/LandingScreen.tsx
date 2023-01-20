@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useResponsiveProp } from '@shopify/restyle'
 import * as SplashScreen from 'expo-splash-screen'
-import React, { ReactElement } from 'react'
+import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useColorScheme } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
@@ -23,7 +23,7 @@ import { useTimeout } from 'src/utils/timing'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Landing>
 
-export function LandingScreen({ navigation }: Props): ReactElement {
+export function LandingScreen({ navigation }: Props): JSX.Element {
   const dispatch = useAppDispatch()
 
   const { t } = useTranslation()

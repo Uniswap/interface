@@ -1,7 +1,7 @@
 // causing lint job to fail
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import dayjs from 'dayjs'
-import React, { ReactElement, useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { View } from 'react-native'
 import { batch } from 'react-redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
@@ -33,7 +33,7 @@ import { ONE_SECOND_MS } from 'src/utils/time'
  * For all imported accounts, checks for new transactions and updates
  * the notification status in redux.
  */
-export function TransactionHistoryUpdater(): ReactElement {
+export function TransactionHistoryUpdater(): JSX.Element {
   const accounts = useAccounts()
   const addresses = useMemo(() => {
     return Object.keys(accounts)
@@ -75,7 +75,7 @@ function AddressTransactionHistoryUpdater({
       NonNullable<NonNullable<TransactionHistoryUpdaterQueryResult['data']>['portfolios']>[0]
     >['assetActivities']
   >
-}): ReactElement | null {
+}): JSX.Element | null {
   const dispatch = useAppDispatch()
 
   const activeAccountAddress = useAppSelector(selectActiveAccountAddress)

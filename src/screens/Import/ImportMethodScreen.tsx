@@ -1,7 +1,7 @@
 import { useFocusEffect } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { TFunction } from 'i18next'
-import React, { ReactElement, useRef } from 'react'
+import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -74,7 +74,7 @@ const options: ImportMethodOption[] = [
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.ImportMethod>
 
-export function ImportMethodScreen({ navigation, route: { params } }: Props): ReactElement {
+export function ImportMethodScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
@@ -209,7 +209,7 @@ function OptionCard({
   name: ElementName
   disabled?: boolean
   opacity?: number
-}): ReactElement {
+}): JSX.Element {
   return (
     <TouchableArea
       backgroundColor="background2"

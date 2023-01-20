@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react'
+import React, { useState } from 'react'
 import { ScrollView } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
@@ -22,7 +22,7 @@ import { resetWallet, toggleFlashbots } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
 import { logger } from 'src/utils/logger'
 
-export function DevScreen(): ReactElement {
+export function DevScreen(): JSX.Element {
   const dispatch = useAppDispatch()
   const activeAccount = useActiveAccount()
   const [currentChain] = useState(ChainId.Goerli)

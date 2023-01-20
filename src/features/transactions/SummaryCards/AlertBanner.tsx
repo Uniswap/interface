@@ -1,4 +1,4 @@
-import { default as React, ReactElement } from 'react'
+import { default as React } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
@@ -17,7 +17,7 @@ export default function AlertBanner({
     | TransactionStatus.Cancelled
     | TransactionStatus.Cancelling
     | TransactionStatus.FailedCancel
-}): ReactElement {
+}): JSX.Element {
   const theme = useAppTheme()
   const { t } = useTranslation()
 

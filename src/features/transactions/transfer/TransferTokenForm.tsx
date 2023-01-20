@@ -1,7 +1,7 @@
 // TODO(MOB-3866): reduce component complexity
 /* eslint-disable complexity */
 import { AnyAction } from '@reduxjs/toolkit'
-import React, { ReactElement, useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
@@ -55,7 +55,7 @@ export function TransferTokenForm({
   onNext,
   warnings,
   showingSelectorScreen,
-}: TransferTokenProps): ReactElement {
+}: TransferTokenProps): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
 

@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { Dispatch, ReactElement, SetStateAction, useEffect, useRef, useState } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, TextInput as NativeTextInput } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
@@ -29,7 +29,7 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 
 const renderHeaderLeft = (): JSX.Element => <BackButton />
 
-export function EditNameScreen({ navigation, route: { params } }: Props): ReactElement {
+export function EditNameScreen({ navigation, route: { params } }: Props): JSX.Element {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
@@ -128,7 +128,7 @@ function CustomizationSection({
   setAccountName: Dispatch<SetStateAction<string>>
   focused: boolean
   setFocused: Dispatch<SetStateAction<boolean>>
-}): ReactElement {
+}): JSX.Element {
   const theme = useAppTheme()
   const textInputRef = useRef<NativeTextInput>(null)
 

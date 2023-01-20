@@ -1,5 +1,5 @@
 import { useResponsiveProp } from '@shopify/restyle'
-import React, { ReactElement, useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -50,7 +50,7 @@ type Price = NonNullable<
   >[0]
 >['price']
 
-function HeaderPriceLabel({ price }: { price: Price }): ReactElement {
+function HeaderPriceLabel({ price }: { price: Price }): JSX.Element {
   const { t } = useTranslation()
 
   return (
@@ -60,7 +60,7 @@ function HeaderPriceLabel({ price }: { price: Price }): ReactElement {
   )
 }
 
-function HeaderTitleElement({ data }: { data: TokenDetailsScreenQuery | undefined }): ReactElement {
+function HeaderTitleElement({ data }: { data: TokenDetailsScreenQuery | undefined }): JSX.Element {
   const { t } = useTranslation()
 
   const token = data?.tokens?.[0]
@@ -92,7 +92,7 @@ enum TransactionType {
 
 export function TokenDetailsScreen({
   route,
-}: AppStackScreenProp<Screens.TokenDetails>): ReactElement {
+}: AppStackScreenProp<Screens.TokenDetails>): JSX.Element {
   const { currencyId: _currencyId } = route.params
 
   const { data, refetch, networkStatus } = useTokenDetailsScreenQuery({

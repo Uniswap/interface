@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { ReactElement } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
@@ -36,7 +36,7 @@ export const showNotificationSettingsAlert = (): void => {
   )
 }
 
-export function NotificationsSetupScreen({ navigation, route: { params } }: Props): ReactElement {
+export function NotificationsSetupScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
   const { requiredForTransactions: isBiometricAuthEnabled } = useBiometricAppSettings()
   const accounts = useAppSelector(selectAccounts)

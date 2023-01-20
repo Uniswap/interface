@@ -1,6 +1,6 @@
 import { useScrollToTop } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { ReactElement, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView, TextInput, useColorScheme } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
@@ -21,7 +21,7 @@ import { useDebounce } from 'src/utils/timing'
 
 type Props = NativeStackScreenProps<ExploreStackParamList, Screens.Explore>
 
-export function ExploreScreen({ navigation }: Props): ReactElement {
+export function ExploreScreen({ navigation }: Props): JSX.Element {
   const { t } = useTranslation()
   const isDarkMode = useColorScheme() === 'dark'
 

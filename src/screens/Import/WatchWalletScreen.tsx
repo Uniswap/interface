@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { ReactElement, useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
@@ -25,7 +25,7 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 
 const LIVE_CHECK_DELAY = 1000
 
-export function WatchWalletScreen({ navigation, route: { params } }: Props): ReactElement {
+export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX.Element {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const accounts = useAccounts()

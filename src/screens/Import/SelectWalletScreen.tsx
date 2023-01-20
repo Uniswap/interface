@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { ReactElement, useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
 import { useAppDispatch } from 'src/app/hooks'
@@ -29,7 +29,7 @@ import { useSagaStatus } from 'src/utils/useSagaStatus'
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.SelectWallet>
 
 const FALLBACK_ID = 'fallback'
-export function SelectWalletScreen({ navigation, route: { params } }: Props): ReactElement {
+export function SelectWalletScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const { status } = useSagaStatus(importAccountSagaName)

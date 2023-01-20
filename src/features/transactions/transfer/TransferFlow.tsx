@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { ReactElement, useMemo, useReducer, useState } from 'react'
+import React, { useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { WarningAction } from 'src/components/modals/WarningModal/types'
 import { RecipientSelect } from 'src/components/RecipientSelect/RecipientSelect'
@@ -29,7 +29,7 @@ interface TransferFormProps {
   onClose: () => void
 }
 
-export function TransferFlow({ prefilledState, onClose }: TransferFormProps): ReactElement {
+export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JSX.Element {
   const [state, dispatch] = useReducer(transactionStateReducer, prefilledState || emptyState)
   const { t } = useTranslation()
   const account = useActiveAccountWithThrow()

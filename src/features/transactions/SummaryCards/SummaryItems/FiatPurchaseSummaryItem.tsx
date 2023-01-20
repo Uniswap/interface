@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { AssetType } from 'src/entities/assets'
@@ -19,7 +19,7 @@ export default function FiatPurchaseSummaryItem({
   ...rest
 }: BaseTransactionSummaryProps & {
   transaction: { typeInfo: FiatPurchaseTransactionInfo }
-}): ReactElement {
+}): JSX.Element {
   const { t } = useTranslation()
 
   const { chainId, typeInfo } = transaction

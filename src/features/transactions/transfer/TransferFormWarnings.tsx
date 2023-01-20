@@ -1,5 +1,5 @@
 import { AnyAction } from '@reduxjs/toolkit'
-import React, { ReactElement, useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'src/components/layout'
 import { WarningSeverity } from 'src/components/modals/WarningModal/types'
@@ -35,7 +35,7 @@ export function TransferFormSpeedbumps({
   onNext,
   setTransferSpeedbump,
   setShowSpeedbumpModal,
-}: TransferFormWarningProps): ReactElement {
+}: TransferFormWarningProps): JSX.Element {
   const { t } = useTranslation()
 
   const activeAddress = useActiveAccountAddressWithThrow()
@@ -124,7 +124,7 @@ const TransferRecipient = ({
   displayName,
   address,
   type = 'address',
-}: TransferRecipientProps): ReactElement => {
+}: TransferRecipientProps): JSX.Element => {
   return (
     <Flex
       centered

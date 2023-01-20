@@ -1,5 +1,5 @@
 import { useTheme } from '@shopify/restyle'
-import { default as React, ReactElement, useMemo, useState } from 'react'
+import { default as React, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, ListRenderItemInfo, SectionList, StyleSheet, useColorScheme } from 'react-native'
 import { FadeInDown, FadeOutUp } from 'react-native-reanimated'
@@ -36,7 +36,7 @@ import { ONE_SECOND_MS } from 'src/utils/time'
 import { useTimeout } from 'src/utils/timing'
 import { getFullAppVersion } from 'src/utils/version'
 
-export function SettingsScreen(): ReactElement {
+export function SettingsScreen(): JSX.Element {
   const navigation = useSettingsStackNavigation()
   const theme = useTheme()
   const { t } = useTranslation()
@@ -135,7 +135,7 @@ export function SettingsScreen(): ReactElement {
     item,
   }: ListRenderItemInfo<
     SettingsSectionItem | SettingsSectionItemComponent
-  >): ReactElement | null => {
+  >): JSX.Element | null => {
     if (item.isHidden) return null
     if ('component' in item) return item.component
     return <SettingsRow key={item.screen} navigation={navigation} page={item} theme={theme} />
@@ -152,8 +152,8 @@ export function SettingsScreen(): ReactElement {
           ListHeaderComponent={<WalletSettings />}
           keyExtractor={(_item, index): string => 'settings' + index}
           renderItem={renderItem}
-          renderSectionFooter={(): ReactElement => <Flex pt="lg" />}
-          renderSectionHeader={({ section: { subTitle } }): ReactElement => (
+          renderSectionFooter={(): JSX.Element => <Flex pt="lg" />}
+          renderSectionHeader={({ section: { subTitle } }): JSX.Element => (
             <Box bg="background0" pb="sm">
               <Text color="textSecondary" variant="bodyLarge">
                 {subTitle}
@@ -168,7 +168,7 @@ export function SettingsScreen(): ReactElement {
   )
 }
 
-const renderItemSeparator = (): ReactElement => <Flex pt="xs" />
+const renderItemSeparator = (): JSX.Element => <Flex pt="xs" />
 
 function OnboardingRow({ iconProps }: { iconProps: SvgProps }): JSX.Element {
   const theme = useTheme()
@@ -198,7 +198,7 @@ function OnboardingRow({ iconProps }: { iconProps: SvgProps }): JSX.Element {
   )
 }
 
-function WalletSettings(): ReactElement {
+function WalletSettings(): JSX.Element {
   const DEFAULT_ACCOUNTS_TO_DISPLAY = 5
 
   const { t } = useTranslation()
@@ -269,7 +269,7 @@ function WalletSettings(): ReactElement {
   )
 }
 
-function FooterSettings(): ReactElement {
+function FooterSettings(): JSX.Element {
   const { t } = useTranslation()
   const [showSignature, setShowSignature] = useState(false)
   const isDarkMode = useColorScheme() === 'dark'

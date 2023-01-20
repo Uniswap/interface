@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { ReactElement, useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SectionList } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
@@ -29,7 +29,7 @@ export function HiddenTokensScreen({
   route: {
     params: { address },
   },
-}: Props): ReactElement {
+}: Props): JSX.Element {
   const { t } = useTranslation()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
   const hideSmallBalances = useAppSelector<boolean>(makeSelectAccountHideSmallBalances(address))
@@ -82,14 +82,14 @@ export function HiddenTokensScreen({
         ) : (
           <SectionList
             keyExtractor={key}
-            renderItem={({ item }: { item: PortfolioBalance }): ReactElement => (
+            renderItem={({ item }: { item: PortfolioBalance }): JSX.Element => (
               <TokenBalanceItem
                 isWarmLoading={false}
                 portfolioBalance={item}
                 onPressToken={onPressToken}
               />
             )}
-            renderSectionHeader={({ section: { title } }): ReactElement => (
+            renderSectionHeader={({ section: { title } }): JSX.Element => (
               <SectionHeader title={title} />
             )}
             sections={sections}
@@ -102,7 +102,7 @@ export function HiddenTokensScreen({
   )
 }
 
-function SectionHeader({ title }: { title: string }): ReactElement {
+function SectionHeader({ title }: { title: string }): JSX.Element {
   return (
     <Flex backgroundColor="background0" py="sm">
       <Text color="textSecondary" variant="subheadSmall">

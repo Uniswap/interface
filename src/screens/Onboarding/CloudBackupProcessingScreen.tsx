@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { ReactElement, useCallback, useEffect, useReducer } from 'react'
+import React, { useCallback, useEffect, useReducer } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Alert } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -29,7 +29,7 @@ export function CloudBackupProcessingScreen({
   route: {
     params: { password, importType },
   },
-}: Props): ReactElement {
+}: Props): JSX.Element {
   const { t } = useTranslation()
   const activeAccount = useActiveAccount()
   const dispatch = useAppDispatch()

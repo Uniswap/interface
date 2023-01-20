@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { ReactElement } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
@@ -17,7 +17,7 @@ export function SettingsViewSeedPhraseScreen({
   route: {
     params: { address },
   },
-}: Props): ReactElement {
+}: Props): JSX.Element {
   const { t } = useTranslation()
 
   const accounts = useAccounts()

@@ -1,5 +1,5 @@
 import { ApolloQueryResult } from '@apollo/client'
-import React, { ReactElement, useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Share } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -34,7 +34,7 @@ export function NFTItemScreen({
   route: {
     params: { owner, address, tokenId },
   },
-}: AppStackScreenProp<Screens.NFTItem>): ReactElement {
+}: AppStackScreenProp<Screens.NFTItem>): JSX.Element {
   const theme = useAppTheme()
   const { t } = useTranslation()
 
@@ -271,7 +271,7 @@ function AssetMetadata({
   header: string
   value?: string
   link?: string
-}): ReactElement {
+}): JSX.Element {
   const itemWidth = '45%' // works with flexWrap to make 2 columns. It needs to be slightly less than 50% to account for padding on the entire section
 
   return (

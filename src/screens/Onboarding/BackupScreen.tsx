@@ -2,7 +2,7 @@ import { CompositeScreenProps } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useResponsiveProp } from '@shopify/restyle'
-import React, { ReactElement, useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import { SvgProps } from 'react-native-svg'
@@ -131,7 +131,7 @@ function BackupOptions({
 }: {
   backupMethods?: BackupType[]
   params: Readonly<OnboardingStackBaseParams>
-}): ReactElement {
+}): JSX.Element {
   const { t } = useTranslation()
   const [iCloudAvailable, setICloudAvailable] = useState<boolean>()
 
@@ -201,7 +201,7 @@ function BackupOptionButton({
   name,
   onPress,
   completed,
-}: BackupOptionButtonProps): ReactElement {
+}: BackupOptionButtonProps): JSX.Element {
   const theme = useAppTheme()
   const { t } = useTranslation()
 

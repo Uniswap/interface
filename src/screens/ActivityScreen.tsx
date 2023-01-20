@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
@@ -18,7 +18,7 @@ import { useActiveAccountWithThrow, useNativeAccountExists } from 'src/features/
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 
-export function ActivityScreen(): ReactElement {
+export function ActivityScreen(): JSX.Element {
   const dispatch = useAppDispatch()
   const navigation = useAppStackNavigation()
   const { t } = useTranslation()

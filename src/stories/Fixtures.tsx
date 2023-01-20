@@ -1,9 +1,9 @@
-import React, { ComponentProps, ReactElement } from 'react'
+import React, { ComponentProps } from 'react'
 import { Box, Flex, Flex as FlexBase, Inset } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { colorsDark, colorsLight, Palette } from 'src/styles/color'
 
-export function FlexWithChildren(props: ComponentProps<typeof FlexBase>): ReactElement {
+export function FlexWithChildren(props: ComponentProps<typeof FlexBase>): JSX.Element {
   return (
     <FlexBase {...props}>
       <Box bg="accentAction" borderRadius="sm">
@@ -23,7 +23,7 @@ export function FlexWithChildren(props: ComponentProps<typeof FlexBase>): ReactE
 }
 
 export function _Palette(colors: Palette) {
-  return (): ReactElement => (
+  return (): JSX.Element => (
     <Flex gap="none">
       {Object.entries(colors).map(([color, value], i, arr) => (
         <Box

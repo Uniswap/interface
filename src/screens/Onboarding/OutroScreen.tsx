@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { ReactElement } from 'react'
+import React from 'react'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
@@ -18,7 +18,7 @@ import { OnboardingScreens, Screens } from 'src/screens/Screens'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Outro>
 
-export function OutroScreen({ navigation, route: { params } }: Props): ReactElement {
+export function OutroScreen({ navigation, route: { params } }: Props): JSX.Element {
   const dispatch = useAppDispatch()
 
   const activeAddress = useActiveAccount()?.address

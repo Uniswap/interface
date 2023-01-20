@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, ListRenderItemInfo } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
@@ -36,7 +36,7 @@ type BiometricPromptTriggerArgs = {
   newValue: boolean
 }
 
-export function SettingsBiometricAuthScreen(): ReactElement {
+export function SettingsBiometricAuthScreen(): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 
@@ -132,7 +132,7 @@ export function SettingsBiometricAuthScreen(): ReactElement {
 
   const renderItem = ({
     item: { text, subText, value, onValueChange },
-  }: ListRenderItemInfo<BiometricAuthSetting>): ReactElement => {
+  }: ListRenderItemInfo<BiometricAuthSetting>): JSX.Element => {
     return (
       <Box alignItems="center" flexDirection="row" justifyContent="space-between">
         <Flex row>
@@ -192,4 +192,4 @@ export function SettingsBiometricAuthScreen(): ReactElement {
   )
 }
 
-const renderItemSeparator = (): ReactElement => <Box bg="backgroundOutline" height={1} my="md" />
+const renderItemSeparator = (): JSX.Element => <Box bg="backgroundOutline" height={1} my="md" />
