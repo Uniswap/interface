@@ -1,4 +1,4 @@
-name: Prod Pipeline
+name: Commit protection for releases/prod
 
 # This CI job will review the contents of any PR that is targeting the releases/prod branch
 # for merging. It reviews all of the commits in the PR in question and confirms that each of

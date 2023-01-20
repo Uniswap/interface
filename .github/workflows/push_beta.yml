@@ -10,17 +10,17 @@ on:
 # https://stackoverflow.com/questions/57921401/push-to-origin-from-github-action
 jobs:
   beta-branch-push:
-    name: 'Push to releases/beta Branch'
+    name: 'Push to beta branch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
         with:
           token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
           ref: main
-      - name: Setup Git
+      - name: Setup git
         run: |
           git config user.name "UL Mobile Service Account"
           git config user.email "hello-happy-puppy@users.noreply.github.com"
-      - name: Push to Beta Release Branch
+      - name: Push to releases/beta
         run: |
           git push -u origin main:releases/beta --force

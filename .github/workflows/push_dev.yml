@@ -20,10 +20,10 @@ jobs:
         with:
           token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
           ref: main
-      - name: Setup Git
+      - name: Setup git
         run: |
           git config user.name "UL Mobile Service Account"
           git config user.email "hello-happy-puppy@users.noreply.github.com"
-      - name: Push to releases/dev branch
+      - name: Push to releases/dev
         run: |
           git push -u origin main:releases/dev --force
