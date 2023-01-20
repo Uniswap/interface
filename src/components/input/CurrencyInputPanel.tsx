@@ -198,7 +198,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element {
       <Flex
         row
         alignItems="center"
-        gap="xxxs"
+        gap="xs"
         justifyContent={!currencyInfo ? 'center' : 'space-between'}
         paddingBottom={innerPaddingBottom}
         paddingTop={innerPaddingTop}>
@@ -244,9 +244,11 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element {
 
       {currencyInfo && (
         <Flex row alignItems="center" gap="xs" justifyContent="space-between" mb="xxs">
-          <Text color="textSecondary" variant="bodySmall">
-            {!isUSDInput ? formattedUSDValue : formattedCurrencyAmount}
-          </Text>
+          <Flex shrink>
+            <Text color="textSecondary" numberOfLines={1} variant="bodySmall">
+              {!isUSDInput ? formattedUSDValue : formattedCurrencyAmount}
+            </Text>
+          </Flex>
           <Flex row alignItems="center" gap="xs" justifyContent="flex-end">
             {showInsufficientBalanceWarning && (
               <Text color="accentWarning" variant="bodySmall">

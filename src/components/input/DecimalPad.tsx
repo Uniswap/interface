@@ -186,6 +186,7 @@ function KeyButton({
   return (
     <TouchableArea
       hapticFeedback
+      activeOpacity={1}
       alignItems={align}
       disabled={isDisabled}
       hapticStyle={ImpactFeedbackStyle.Light}

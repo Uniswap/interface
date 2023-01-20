@@ -19,7 +19,8 @@ import { Theme } from 'src/styles/theme'
 const TouchableBox = createBox<Theme, TouchableOpacityProps>(TouchableOpacity)
 const AnimatedTouchableBox = withAnimated(TouchableBox)
 
-const ScaleTimingConfig = { duration: 50, easing: Easing.inOut(Easing.quad) }
+const ScaleTimingConfigIn = { duration: 50, easing: Easing.ease }
+const ScaleTimingConfigOut = { duration: 75, easing: Easing.ease }
 
 export type BaseButtonProps = PropsWithChildren<
   ComponentProps<typeof TouchableBox> & {
@@ -67,20 +68,20 @@ export function TouchableArea({
   const onPressInHandler = useMemo(() => {
     if (!scaleTo) return
     return () => {
-      scale.value = withTiming(scaleTo, ScaleTimingConfig)
+      scale.value = withTiming(scaleTo, ScaleTimingConfigIn)
     }
   }, [scale, scaleTo])
 
   const onPressOutHandler = useMemo(() => {
     if (!scaleTo) return
     return () => {
-      scale.value = withDelay(100, withTiming(1, ScaleTimingConfig))
+      scale.value = withDelay(50, withTiming(1, ScaleTimingConfigOut))
     }
   }, [scale, scaleTo])
 
   const baseProps: ComponentProps<typeof TouchableBox> = {
     onPress: onPressHandler,
-    onPressIn: scaleTo || hapticFeedback ? onPressInHandler : undefined,
+    onPressIn: onPressInHandler,
     onPressOut: onPressOutHandler,
     activeOpacity,
     hitSlop: defaultHitslopInset,
