@@ -64,6 +64,7 @@ const SectionArrow = styled(ChevronUpIcon)<{ active: boolean }>`
 
 const SectionBody = styled(Column)`
   border-left: 1.5px solid ${colors.gray650};
+  margin-top: 4px;
   margin-left: 7px;
   padding-top: 4px;
   padding-left: 20px;
@@ -173,7 +174,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
             </SectionHeader>
             {openSection === Section.APPROVE && (
               <SectionBody>
-                <Row height="16px" marginBottom="16px" marginTop="4px">
+                <Row height="16px" marginBottom="16px">
                   <ThemedText.Caption lineHeight="16px" color="textSecondary">
                     <Trans>Why is a transaction required?</Trans>
                   </ThemedText.Caption>
@@ -201,36 +202,38 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
               </SectionBody>
             )}
           </Column>
-          <SectionHeader>
-            <Row>
-              {openSection === Section.SIGN ? <ListingModalWindowActive /> : <ListingModalWindowClosed />}
-              <SectionTitle active={openSection === Section.SIGN} marginLeft="12px">
-                <Trans>Sign</Trans> &nbsp;{listings.length}&nbsp;{' '}
-                <Plural value={listings.length} _1="Listing" other="Listings" />
-              </SectionTitle>
-            </Row>
-            <SectionArrow
-              active={openSection === Section.SIGN}
-              secondaryColor={openSection === Section.SIGN ? theme.textPrimary : theme.textSecondary}
-              onClick={toggleOpenSection}
-            />
-          </SectionHeader>
-          {openSection === Section.SIGN && (
-            <SectionBody>
-              <ContentRowContainer>
-                {listings.map((listing, index) => {
-                  return (
-                    <ContentRow key={index}>
-                      <AssetIcon src={listing.images[0]} />
-                      <MarketplaceIcon src={listing.images[1]} />
-                      <CollectionName>{listing.name}</CollectionName>
-                      <StyledLoadingIconBackground />
-                    </ContentRow>
-                  )
-                })}
-              </ContentRowContainer>
-            </SectionBody>
-          )}
+          <Column>
+            <SectionHeader>
+              <Row>
+                {openSection === Section.SIGN ? <ListingModalWindowActive /> : <ListingModalWindowClosed />}
+                <SectionTitle active={openSection === Section.SIGN} marginLeft="12px">
+                  <Trans>Sign</Trans> &nbsp;{listings.length}&nbsp;{' '}
+                  <Plural value={listings.length} _1="Listing" other="Listings" />
+                </SectionTitle>
+              </Row>
+              <SectionArrow
+                active={openSection === Section.SIGN}
+                secondaryColor={openSection === Section.SIGN ? theme.textPrimary : theme.textSecondary}
+                onClick={toggleOpenSection}
+              />
+            </SectionHeader>
+            {openSection === Section.SIGN && (
+              <SectionBody>
+                <ContentRowContainer>
+                  {listings.map((listing, index) => {
+                    return (
+                      <ContentRow key={index}>
+                        <AssetIcon src={listing.images[0]} />
+                        <MarketplaceIcon src={listing.images[1]} />
+                        <CollectionName>{listing.name}</CollectionName>
+                        <StyledLoadingIconBackground />
+                      </ContentRow>
+                    )
+                  })}
+                </ContentRowContainer>
+              </SectionBody>
+            )}
+          </Column>
         </ListModalWrapper>
       </Trace>
       <Overlay onClick={overlayClick} />
