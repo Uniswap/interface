@@ -22,9 +22,6 @@ jest.mock('.../../state/application/hooks', () => {
     useToggleWalletModal: () => {
       return
     },
-    useToggleMetaMaskConnectionErrorModal: () => {
-      return
-    },
   }
 })
 
