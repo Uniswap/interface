@@ -109,6 +109,7 @@ export interface ListingRow extends AssetRow {
 
 export interface CollectionRow extends AssetRow {
   collectionAddress?: string
+  isVerified?: boolean
   marketplace: ListingMarket
 }
 

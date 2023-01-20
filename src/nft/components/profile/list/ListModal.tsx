@@ -5,7 +5,13 @@ import Column from 'components/Column'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Portal } from 'nft/components/common/Portal'
-import { ChevronUpIcon, ListingModalWindowActive, ListingModalWindowClosed } from 'nft/components/icons'
+import {
+  ChevronUpIcon,
+  ListingModalWindowActive,
+  ListingModalWindowClosed,
+  LoadingIcon,
+  VerifiedIcon,
+} from 'nft/components/icons'
 import { Overlay } from 'nft/components/modals/Overlay'
 import { useNFTList } from 'nft/hooks'
 import { useReducer } from 'react'
@@ -69,7 +75,51 @@ const StyledInfoIcon = styled(Info)`
   color: ${({ theme }) => theme.textSecondary};
 `
 
-enum Section {
+const ContentRow = styled(Row)`
+  padding: 16px;
+  margin-top: 8px;
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-radius: 12px;
+  opacity: 0.6;
+`
+
+const CollectionIcon = styled.img`
+  border-radius: 100px;
+  height: 24px;
+  width: 24px;
+  z-index: 1;
+`
+
+const MarketplaceIcon = styled.img`
+  border-radius: 4px;
+  height: 24px;
+  width: 24px;
+  margin-left: -4px;
+  margin-right: 12px;
+`
+
+const CollectionName = styled(ThemedText.SubHeaderSmall)`
+  color: ${({ theme }) => theme.textPrimary};
+  line-height: 20px;
+  white-space: nowrap;
+  text-overflow: ellipses;
+`
+
+const StyledVerifiedIcon = styled(VerifiedIcon)`
+  height: 16px;
+  width: 16px;
+  margin-left: 4px;
+`
+
+const StyledLoadingIconBackground = styled(LoadingIcon)`
+  height: 14px;
+  width: 14px;
+  stroke: ${({ theme }) => theme.textTertiary};
+  margin-left: auto;
+  margin-right: 0px;
+`
+
+const enum Section {
   APPROVE,
   SIGN,
 }
@@ -109,7 +159,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
             </SectionHeader>
             {openSection === Section.APPROVE && (
               <SectionBody>
-                <Row height="16px">
+                <Row height="16px" marginBottom="8px">
                   <ThemedText.Caption lineHeight="16px" color="textSecondary">
                     <Trans>Why is a transaction required?</Trans>
                   </ThemedText.Caption>
@@ -121,6 +171,17 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
                     <StyledInfoIcon />
                   </MouseoverTooltip>
                 </Row>
+                {collectionsRequiringApproval.map((collection) => {
+                  return (
+                    <ContentRow key={collection.collectionAddress}>
+                      <CollectionIcon src={collection.images[0]} />
+                      <MarketplaceIcon src={collection.images[1]} />
+                      <CollectionName>{collection.name}</CollectionName>
+                      {collection.isVerified && <StyledVerifiedIcon />}
+                      <StyledLoadingIconBackground />
+                    </ContentRow>
+                  )
+                })}
               </SectionBody>
             )}
           </Column>
