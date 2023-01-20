@@ -16,18 +16,6 @@ jest.mock('utils/userAgent', () => ({
   isMobile: false,
 }))
 
-jest.mock('.../../state/application/hooks', () => {
-  return {
-    useModalIsOpen: () => true,
-    useToggleWalletModal: () => {
-      return
-    },
-    useToggleMetaMaskConnectionErrorModal: () => {
-      return
-    },
-  }
-})
-
 jest.mock('hooks/useStablecoinPrice', () => {
   return {
     useStablecoinValue: () => {
