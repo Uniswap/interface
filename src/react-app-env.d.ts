@@ -12,7 +12,7 @@ interface Window {
     isCoinbaseWallet?: true
     // set by the Brave browser when using built-in wallet
     isBraveWallet?: true
-    // set by the MetaMask browser extension (in Brave browser when using built-in wallet too)
+    // set by the MetaMask browser extension (also set by Brave browser when using built-in wallet)
     isMetaMask?: true
     autoRefreshOnNetworkChange?: boolean
   }
