@@ -37,6 +37,13 @@ const slice = createSlice({
       const id = getChecksumAddress(address)
       state.accounts[id] = action.payload
     },
+    addAccounts: (state, action: PayloadAction<Account[]>) => {
+      const accounts = action.payload
+      accounts.forEach((account) => {
+        const id = getChecksumAddress(account.address)
+        state.accounts[id] = account
+      })
+    },
     removeAccount: (state, action: PayloadAction<Address>) => {
       const address = action.payload
       const id = getChecksumAddress(address)
@@ -95,6 +102,7 @@ const slice = createSlice({
 
 export const {
   addAccount,
+  addAccounts,
   removeAccount,
   markAsNonPending,
   editAccount,

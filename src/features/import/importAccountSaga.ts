@@ -2,7 +2,12 @@ import dayjs from 'dayjs'
 import { AllEffect, CallEffect, PutEffect } from 'redux-saga/effects'
 import { ImportAccountParams, ImportAccountType } from 'src/features/import/types'
 import { Account, AccountType, BackupType } from 'src/features/wallet/accounts/types'
-import { activateAccount, addAccount, unlockWallet } from 'src/features/wallet/walletSlice'
+import {
+  activateAccount,
+  addAccount,
+  addAccounts,
+  unlockWallet,
+} from 'src/features/wallet/walletSlice'
 import { generateAndStorePrivateKey, importMnemonic } from 'src/lib/RNEthersRs'
 import { getChecksumAddress } from 'src/utils/addresses'
 import { logger } from 'src/utils/logger'
@@ -15,21 +20,13 @@ export function* importAccount(params: ImportAccountParams): Generator<
   | CallEffect<void>
   | CallEffect<
       Generator<
+        | CallEffect<void>
         | CallEffect<string>
         | AllEffect<SagaGenerator<string, CallEffect<string>>>
-        | CallEffect<void>
-        | AllEffect<
-            SagaGenerator<
-              {
-                payload: Account
-                type: string
-              },
-              PutEffect<{
-                payload: Account
-                type: string
-              }>
-            >
-          >,
+        | PutEffect<{
+            payload: Account[]
+            type: string
+          }>,
         void,
         unknown
       >
@@ -81,21 +78,13 @@ function* importMnemonicAccounts(
   markAsActive?: boolean,
   ignoreActivate?: boolean
 ): Generator<
-  | CallEffect<void>
   | CallEffect<string>
   | AllEffect<SagaGenerator<string, CallEffect<string>>>
-  | AllEffect<
-      SagaGenerator<
-        {
-          payload: Account
-          type: string
-        },
-        PutEffect<{
-          payload: Account
-          type: string
-        }>
-      >
-    >,
+  | PutEffect<{
+      payload: Account[]
+      type: string
+    }>
+  | CallEffect<void>,
   void,
   unknown
 > {
@@ -111,20 +100,19 @@ function* importMnemonicAccounts(
   if (indexes[0] === undefined)
     throw new Error('Cannot import account with undefined derivation index')
 
-  yield* all(
-    addresses.slice(1, addresses.length).map((address, index) => {
-      const account: Account = {
-        type: AccountType.SignerMnemonic,
-        address,
-        name,
-        pending: true,
-        timeImportedMs: dayjs().valueOf(),
-        derivationIndex: index + 1,
-        mnemonicId,
-      }
-      return put(addAccount(account))
-    })
-  )
+  const accounts = addresses.slice(1, addresses.length).map((address, index) => {
+    const account: Account = {
+      type: AccountType.SignerMnemonic,
+      address,
+      name,
+      pending: true,
+      timeImportedMs: dayjs().valueOf(),
+      derivationIndex: index + 1,
+      mnemonicId,
+    }
+    return account
+  })
+  yield* put(addAccounts(accounts))
 
   const activeAccount: Account = {
     type: AccountType.SignerMnemonic,
@@ -143,18 +131,10 @@ function* importRestoreBackupAccounts(
   indexes = [0]
 ): Generator<
   | AllEffect<SagaGenerator<string, CallEffect<string>>>
-  | AllEffect<
-      SagaGenerator<
-        {
-          payload: Account
-          type: string
-        },
-        PutEffect<{
-          payload: Account
-          type: string
-        }>
-      >
-    >,
+  | PutEffect<{
+      payload: Account[]
+      type: string
+    }>,
   void,
   unknown
 > {
@@ -164,20 +144,19 @@ function* importRestoreBackupAccounts(
       return call(generateAndStorePrivateKey, mnemonicId, index)
     })
   )
-  yield* all(
-    addresses.map((address, index) => {
-      const account: Account = {
-        type: AccountType.SignerMnemonic,
-        address,
-        pending: true,
-        timeImportedMs: dayjs().valueOf(),
-        derivationIndex: index,
-        mnemonicId,
-        backups: [BackupType.Cloud],
-      }
-      return put(addAccount(account))
-    })
-  )
+  const accounts = addresses.slice(1, addresses.length).map((address, index) => {
+    const account: Account = {
+      type: AccountType.SignerMnemonic,
+      address,
+      pending: true,
+      timeImportedMs: dayjs().valueOf(),
+      derivationIndex: index,
+      mnemonicId,
+      backups: [BackupType.Cloud],
+    }
+    return account
+  })
+  yield* put(addAccounts(accounts))
 }
 
 function* onAccountImport(
