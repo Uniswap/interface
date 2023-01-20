@@ -19,3 +19,7 @@ export function getFullAppVersion(): string {
 export function isDevBuild(): boolean {
   return DeviceInfo.getBundleId().endsWith('.dev')
 }
+
+export function isBetaBuild(): boolean {
+  return DeviceInfo.getBundleId().endsWith('.beta')
+}
