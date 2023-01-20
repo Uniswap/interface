@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
+import { ChainId, Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import dayjs from 'dayjs'
 import { darken } from 'polished'
@@ -122,6 +122,18 @@ const FarmCard = ({
       ? representedPostion.pool.priceOf(representedPostion.pool.token1)
       : representedPostion.pool.priceOf(representedPostion.pool.token0))
 
+  //TODO namgold/vietnv: remove this hardcode
+  const token0Symbol =
+    chainId === ChainId.OPTIMISM &&
+    pool?.token0?.wrapped?.address.toLowerCase() === '0x4518231a8fdf6ac553b9bbd51bbb86825b583263'.toLowerCase()
+      ? 'mKNC'
+      : pool.token0.symbol
+  const token1Symbol =
+    chainId === ChainId.OPTIMISM &&
+    pool?.token1?.wrapped?.address.toLowerCase() === '0x4518231a8fdf6ac553b9bbd51bbb86825b583263'.toLowerCase()
+      ? 'mKNC'
+      : pool.token1.symbol
+
   return (
     <FlipCard flip={showPosition}>
       {!showPosition && (
@@ -135,7 +147,7 @@ const FarmCard = ({
               }}
             >
               <Text fontSize={16} fontWeight={500}>
-                {pool.token0.symbol} - {pool.token1.symbol}
+                {token0Symbol} - {token1Symbol}
               </Text>
             </Link>
 
@@ -354,7 +366,7 @@ const FarmCard = ({
               }}
             >
               <Text fontSize={16} fontWeight={500}>
-                {pool.token0.symbol} - {pool.token1.symbol}
+                {token0Symbol} - {token1Symbol}
               </Text>
             </Link>
 
