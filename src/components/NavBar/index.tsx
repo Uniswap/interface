@@ -53,15 +53,10 @@ export const PageTabs = () => {
     pathname.startsWith('/increase') ||
     pathname.startsWith('/find')
 
-  const isNftPage = useIsNftPage()
-
   return (
     <>
       <MenuItem href="/swap" isActive={pathname.startsWith('/swap')}>
         <Trans>Swap</Trans>
-      </MenuItem>
-      <MenuItem dataTestId="nft-nav" href="/nfts" isActive={isNftPage}>
-        <Trans>NFTs</Trans>
       </MenuItem>
       <MenuItem href="/pool" id="pool-nav-link" isActive={isPoolActive}>
         <Trans>Pool</Trans>

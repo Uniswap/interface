@@ -4,13 +4,8 @@ import * as styles from 'nft/components/collection/Filters.css'
 import { Column, Row } from 'nft/components/Flex'
 import { ChevronUpIcon } from 'nft/components/icons'
 import { subheadSmall } from 'nft/css/common.css'
-import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
-import { TraitPosition, useTraitsOpen } from 'nft/hooks/useTraitsOpen'
-import { FormEvent, useEffect, useMemo, useReducer, useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
-
-import { Checkbox } from '../layout/Checkbox'
 
 const FilterItemWrapper = styled(Row)`
   justify-content: space-between;
@@ -21,34 +16,6 @@ const FilterItemWrapper = styled(Row)`
     background: ${({ theme }) => theme.backgroundInteractive};
   }
 `
-
-export const MarketplaceLogo = styled.img`
-  height: 16px;
-  width: 16px;
-  border-radius: 4px;
-`
-
-const MarketNameWrapper = styled(Row)`
-  gap: 10px;
-`
-
-export const MARKETPLACE_ITEMS = {
-  x2y2: 'X2Y2',
-  opensea: 'OpenSea',
-  looksrare: 'LooksRare',
-  sudoswap: 'SudoSwap',
-
-  nftx: 'NFTX',
-  nft20: 'NFT20',
-  cryptopunks: 'LarvaLabs',
-}
-
-function getMarketLogoSrc(market: string) {
-  const marketplaceItem = Object.keys(MARKETPLACE_ITEMS).find(
-    (key) => MARKETPLACE_ITEMS[key as keyof typeof MARKETPLACE_ITEMS] === market
-  )
-  return `/nft/svgs/marketplaces/${marketplaceItem}.svg`
-}
 
 export const FilterItem = ({
   title,
@@ -64,59 +31,6 @@ export const FilterItem = ({
       <ThemedText.BodyPrimary>{title}</ThemedText.BodyPrimary>
       <ThemedText.SubHeaderSmall>{element}</ThemedText.SubHeaderSmall>
     </FilterItemWrapper>
-  )
-}
-
-const MarketplaceItem = ({
-  title,
-  value,
-  addMarket,
-  removeMarket,
-  isMarketSelected,
-  count,
-}: {
-  title: string
-  value: string
-  addMarket: (market: string) => void
-  removeMarket: (market: string) => void
-  isMarketSelected: boolean
-  count?: number
-}) => {
-  const [isCheckboxSelected, setCheckboxSelected] = useState(false)
-  const [hovered, toggleHover] = useReducer((state) => !state, false)
-  useEffect(() => {
-    setCheckboxSelected(isMarketSelected)
-  }, [isMarketSelected])
-  const handleCheckbox = (e: FormEvent) => {
-    e.preventDefault()
-    if (!isCheckboxSelected) {
-      addMarket(value)
-      setCheckboxSelected(true)
-    } else {
-      removeMarket(value)
-      setCheckboxSelected(false)
-    }
-  }
-
-  const checkbox = (
-    <Checkbox checked={isCheckboxSelected} hovered={hovered} onChange={handleCheckbox}>
-      <Box as="span" color="textSecondary" marginLeft="4" paddingRight="12">
-        {count}
-      </Box>
-    </Checkbox>
-  )
-
-  const titleWithLogo = (
-    <MarketNameWrapper>
-      <MarketplaceLogo src={getMarketLogoSrc(title)} />
-      {title}
-    </MarketNameWrapper>
-  )
-
-  return (
-    <div key={value} onMouseEnter={toggleHover} onMouseLeave={toggleHover}>
-      <FilterItem title={titleWithLogo} element={checkbox} onClick={handleCheckbox} />
-    </div>
   )
 }
 
@@ -173,43 +87,4 @@ export const FilterDropdown = ({
       </Box>
     </>
   )
-}
-
-export const MarketplaceSelect = () => {
-  const {
-    addMarket,
-    removeMarket,
-    markets: selectedMarkets,
-    marketCount,
-  } = useCollectionFilters(({ markets, marketCount, removeMarket, addMarket }) => ({
-    markets,
-    marketCount,
-    removeMarket,
-    addMarket,
-  }))
-
-  const [isOpen, setOpen] = useState(!!selectedMarkets.length)
-  const setTraitsOpen = useTraitsOpen((state) => state.setTraitsOpen)
-
-  const MarketplaceItems = useMemo(
-    () =>
-      Object.entries(MARKETPLACE_ITEMS).map(([value, title]) => (
-        <MarketplaceItem
-          key={value}
-          title={title}
-          value={value}
-          count={marketCount?.[value] || 0}
-          {...{ addMarket, removeMarket, isMarketSelected: selectedMarkets.includes(value) }}
-        />
-      )),
-    [addMarket, marketCount, removeMarket, selectedMarkets]
-  )
-
-  const onClick: React.MouseEventHandler<HTMLElement> = (e) => {
-    e.preventDefault()
-    setOpen(!isOpen)
-    setTraitsOpen(TraitPosition.MARKPLACE_INDEX, !isOpen)
-  }
-
-  return <FilterDropdown title="Marketplaces" items={MarketplaceItems} onClick={onClick} isOpen={isOpen} />
 }
