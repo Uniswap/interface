@@ -1,4 +1,3 @@
-import { DrawerActions } from '@react-navigation/core'
 import { useScrollToTop } from '@react-navigation/native'
 import { FlashList } from '@shopify/flash-list'
 import * as SplashScreen from 'expo-splash-screen'
@@ -13,7 +12,6 @@ import {
 } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, useColorScheme, View, ViewProps, ViewStyle } from 'react-native'
-import { GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   interpolateColor,
   useAnimatedRef,
@@ -26,7 +24,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { SvgProps } from 'react-native-svg'
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import { useAppStackNavigation } from 'src/app/navigation/types'
 import DollarIcon from 'src/assets/icons/dollar-sign.svg'
 import ReceiveArrow from 'src/assets/icons/receive-arrow.svg'
 import SendIcon from 'src/assets/icons/send.svg'
@@ -39,8 +36,6 @@ import { SHADOW_OFFSET_SMALL } from 'src/components/layout/BaseCard'
 import { Screen } from 'src/components/layout/Screen'
 import {
   HeaderConfig,
-  panHeaderGestureAction,
-  panSidebarContainerGestureAction,
   renderTabLabel,
   ScrollPair,
   TabContentProps,
@@ -53,8 +48,7 @@ import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import TraceTabView from 'src/components/telemetry/TraceTabView'
 import { Text } from 'src/components/Text'
 import { PortfolioBalance } from 'src/features/balances/PortfolioBalance'
-import { FEATURE_FLAGS } from 'src/features/experiments/constants'
-import { useFeatureFlag, useFiatOnRampEnabled } from 'src/features/experiments/hooks'
+import { useFiatOnRampEnabled } from 'src/features/experiments/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, EventName, ModalName, SectionName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
@@ -65,7 +59,6 @@ import { dimensions } from 'src/styles/sizing'
 import { useTimeout } from 'src/utils/timing'
 
 const CONTENT_HEADER_HEIGHT_ESTIMATE = 270
-const SIDEBAR_SWIPE_CONTAINER_WIDTH = 50
 
 /**
  * Home Screen hosts both Tokens and NFTs Tab
@@ -76,12 +69,9 @@ export function HomeScreen(): ReactElement {
   // imports test account for easy development/testing
   useTestAccount()
   const activeAccount = useActiveAccountWithThrow()
-  const navigation = useAppStackNavigation()
   const { t } = useTranslation()
   const theme = useAppTheme()
   const insets = useSafeAreaInsets()
-
-  const renderSidebarGesture = useFeatureFlag(FEATURE_FLAGS.AccountSwitcherModal, false)
 
   const [tabIndex, setTabIndex] = useState(0)
   const routes = useMemo(
@@ -177,25 +167,19 @@ export function HomeScreen(): ReactElement {
 
   const { sync } = useScrollSync(tabIndex, scrollPairs, headerConfig)
 
-  const openSidebar = useCallback(() => {
-    navigation.dispatch(DrawerActions.openDrawer())
-  }, [navigation])
-
   const contentHeader = useMemo(() => {
     return (
-      <GestureDetector gesture={panHeaderGestureAction(openSidebar)}>
-        <Flex bg="backgroundBranded" gap="md" pb="md" px="lg">
-          <Box pb="xxs">
-            <AccountHeader />
-          </Box>
-          <Box pb="xxs">
-            <PortfolioBalance owner={activeAccount.address} />
-          </Box>
-          <QuickActions />
-        </Flex>
-      </GestureDetector>
+      <Flex bg="backgroundBranded" gap="md" pb="md" px="lg">
+        <Box pb="xxs">
+          <AccountHeader />
+        </Box>
+        <Box pb="xxs">
+          <PortfolioBalance owner={activeAccount.address} />
+        </Box>
+        <QuickActions />
+      </Flex>
     )
-  }, [activeAccount.address, openSidebar])
+  }, [activeAccount.address])
 
   const contentContainerStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({
@@ -342,17 +326,6 @@ export function HomeScreen(): ReactElement {
         width="100%"
         zIndex="sticky"
       />
-      {renderSidebarGesture ? (
-        <GestureDetector gesture={panSidebarContainerGestureAction(openSidebar)}>
-          <Box
-            bottom={0}
-            left={0}
-            position="absolute"
-            top={headerHeight}
-            width={SIDEBAR_SWIPE_CONTAINER_WIDTH} // Roughly 1/2 icon width on tokens tab
-          />
-        </GestureDetector>
-      ) : null}
     </Screen>
   )
 }

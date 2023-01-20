@@ -1,19 +1,15 @@
-import { DrawerActions } from '@react-navigation/core'
-import { selectionAsync } from 'expo-haptics'
+import { ImpactFeedbackStyle, selectionAsync } from 'expo-haptics'
 import React, { useCallback } from 'react'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
-import { useAppStackNavigation } from 'src/app/navigation/types'
+import DoubleChevron from 'src/assets/icons/double-chevron.svg'
 import ScanQRWCIcon from 'src/assets/icons/scan-qr-wc.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Chevron } from 'src/components/icons/Chevron'
 import { TxHistoryIconWithStatus } from 'src/components/icons/TxHistoryIconWithStatus'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
-import { FEATURE_FLAGS } from 'src/features/experiments/constants'
-import { useFeatureFlag } from 'src/features/experiments/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { PendingNotificationBadge } from 'src/features/notifications/PendingNotificationBadge'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
@@ -39,7 +35,6 @@ function QRScannerIconButton({ onPress }: { onPress: () => void }): JSX.Element 
 
 export function AccountHeader(): JSX.Element {
   const theme = useAppTheme()
-  const navigation = useAppStackNavigation()
   const activeAddress = useAppSelector(selectActiveAccountAddress)
   const dispatch = useAppDispatch()
 
@@ -47,14 +42,9 @@ export function AccountHeader(): JSX.Element {
 
   const sortedPendingTransactions = useSortedPendingTransactions(activeAddress)
 
-  const accountSwitcherModalEnabled = useFeatureFlag(FEATURE_FLAGS.AccountSwitcherModal, false)
   const onPressAccountHeader = useCallback(() => {
-    if (accountSwitcherModalEnabled) {
-      dispatch(openModal({ name: ModalName.AccountSwitcher }))
-    } else {
-      navigation.dispatch(DrawerActions.openDrawer())
-    }
-  }, [accountSwitcherModalEnabled, dispatch, navigation])
+    dispatch(openModal({ name: ModalName.AccountSwitcher }))
+  }, [dispatch])
 
   const onPressNotifications = useCallback(() => {
     if (activeAddress) {
@@ -84,9 +74,11 @@ export function AccountHeader(): JSX.Element {
       mt="md"
       testID="account-header">
       <TouchableArea
+        hapticFeedback
         alignItems="center"
         flex={1}
         flexDirection="row"
+        hapticStyle={ImpactFeedbackStyle.Medium}
         mr="sm"
         name={ElementName.Manage}
         testID={ElementName.Manage}
@@ -98,7 +90,7 @@ export function AccountHeader(): JSX.Element {
         }}
         onPress={onPressAccountHeader}>
         {activeAddress && (
-          <Flex row gap="xxs">
+          <Flex row alignItems="center" gap="xxs">
             <Flex shrink>
               <AddressDisplay
                 hideAddressInSubtitle
@@ -108,11 +100,10 @@ export function AccountHeader(): JSX.Element {
                 variant="subheadLarge"
               />
             </Flex>
-            <Chevron
+            <DoubleChevron
               color={theme.colors.textSecondary}
-              direction="s"
-              height={iconSizes.lg}
-              width={iconSizes.lg}
+              height={iconSizes.sm}
+              width={iconSizes.sm}
             />
           </Flex>
         )}

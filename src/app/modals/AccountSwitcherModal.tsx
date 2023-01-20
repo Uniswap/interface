@@ -4,10 +4,10 @@ import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import 'react-native-gesture-handler'
 import { Action } from 'redux'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
+import AddButton from 'src/assets/icons/add-button.svg'
 import InformationIcon from 'src/assets/icons/i-icon.svg'
-import PlusIcon from 'src/assets/icons/plus.svg'
 import SettingsIcon from 'src/assets/icons/settings.svg'
 import { AccountList } from 'src/components/accounts/AccountList'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -22,7 +22,7 @@ import WarningModal, {
 } from 'src/components/modals/WarningModal/WarningModal'
 import { Text } from 'src/components/Text'
 import { isICloudAvailable } from 'src/features/CloudBackup/RNICloudBackupsManager'
-import { closeModal } from 'src/features/modals/modalSlice'
+import { closeModal, selectModalState } from 'src/features/modals/modalSlice'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
@@ -77,6 +77,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
   const addressToAccount = useAccounts()
   const dispatch = useAppDispatch()
   const hasImportedSeedPhrase = useNativeAccountExists()
+  const modalState = useAppSelector(selectModalState(ModalName.AccountSwitcher))
 
   const [showAddWalletModal, setShowAddWalletModal] = useState(false)
   const [showEditAccountModal, setShowEditAccountModal] = useState(false)
@@ -158,6 +159,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
   const editAccountOptions = useMemo<MenuItemProp[]>(() => {
     const onPressWalletSettings = (): void => {
       setShowEditAccountModal(false)
+      dispatch(closeModal({ name: ModalName.AccountSwitcher }))
       if (!pendingEditAddress) return
       navigate(Screens.SettingsStack, {
         screen: Screens.SettingsWallet,
@@ -364,33 +366,29 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
 
   return (
     <Box mt="sm">
-      <AccountList
-        accounts={accountsData}
-        onAddWallet={onPressAddWallet}
-        onPress={onPressAccount}
-        onPressEdit={onPressEdit}
-      />
+      <Box maxHeight="80%">
+        <AccountList
+          accounts={accountsData}
+          isVisible={modalState.isOpen}
+          onPress={onPressAccount}
+          onPressEdit={onPressEdit}
+        />
+      </Box>
 
       <Separator mb="md" />
 
       <Flex gap="sm">
         <TouchableArea mb={addAccountBottomMargin} ml="lg" onPress={onPressAddWallet}>
           <Flex row alignItems="center">
-            <Box
-              alignItems="center"
-              borderColor="backgroundOutline"
-              borderRadius="full"
-              borderWidth={1}
-              justifyContent="center"
-              p="xs">
-              <PlusIcon
+            <Box p="xxs">
+              <AddButton
                 color={theme.colors.textSecondary}
-                height={theme.iconSizes.xs}
-                width={theme.iconSizes.xs}
+                height={theme.iconSizes.md}
+                width={theme.iconSizes.md}
               />
             </Box>
             <Text color="textSecondary" variant="bodyLarge">
-              {t('Add another wallet')}
+              {t('Add or create wallet')}
             </Text>
           </Flex>
         </TouchableArea>

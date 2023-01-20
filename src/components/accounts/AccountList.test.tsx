@@ -27,15 +27,7 @@ const mock: MockedResponse<AccountListQuery> = {
 
 describe(AccountList, () => {
   it('renders without error', async () => {
-    const tree = render(
-      <AccountList
-        accounts={[account]}
-        onAddWallet={function (): void {
-          throw new Error('Function not implemented.')
-        }}
-      />,
-      { mocks: [mock] }
-    )
+    const tree = render(<AccountList accounts={[account]} />, { mocks: [mock] })
 
     expect(
       await screen.findByText(
@@ -50,14 +42,7 @@ describe(AccountList, () => {
 
   it('handles press on card items', async () => {
     const onPressSpy = jest.fn()
-    render(
-      <AccountList
-        accounts={[account]}
-        onAddWallet={(): undefined => undefined}
-        onPress={onPressSpy}
-      />,
-      { mocks: [mock] }
-    )
+    render(<AccountList accounts={[account]} onPress={onPressSpy} />, { mocks: [mock] })
     // go to success state
     expect(
       await screen.findByText(
@@ -72,33 +57,9 @@ describe(AccountList, () => {
     expect(onPressSpy).toHaveBeenCalledTimes(1)
   })
 
-  it('handles press on import account', async () => {
-    const onPressSpy = jest.fn()
-    render(<AccountList accounts={[account]} onAddWallet={onPressSpy} />, { mocks: [mock] })
-    // go to success state
-    expect(
-      await screen.findByText(
-        formatUSDPrice(
-          Portfolios[0].tokensTotalDenominatedValue?.value,
-          NumberType.PortfolioBalance
-        )
-      )
-    ).toBeDefined()
-    fireEvent.press(screen.getByTestId(ElementName.ImportAccount))
-
-    expect(onPressSpy).toHaveBeenCalledTimes(1)
-  })
-
   it('handles press on edit account', async () => {
     const onPressSpy = jest.fn()
-    render(
-      <AccountList
-        accounts={[account]}
-        onAddWallet={(): undefined => undefined}
-        onPressEdit={onPressSpy}
-      />,
-      { mocks: [mock] }
-    )
+    render(<AccountList accounts={[account]} onPressEdit={onPressSpy} />, { mocks: [mock] })
     // go to success state
     expect(
       await screen.findByText(

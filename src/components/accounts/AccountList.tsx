@@ -1,27 +1,26 @@
 import { LinearGradient } from 'expo-linear-gradient'
-import { ComponentProps, default as React, useCallback, useEffect, useMemo } from 'react'
+import { ComponentProps, default as React, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FlatList, ListRenderItemInfo, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler'
 import { useAppTheme } from 'src/app/hooks'
-import PlusIcon from 'src/assets/icons/plus.svg'
 import { AccountCardItem } from 'src/components/accounts/AccountCardItem'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box, Flex } from 'src/components/layout'
+import { Spacer } from 'src/components/layout/Spacer'
 import { Text } from 'src/components/Text'
 import { PollingInterval } from 'src/constants/misc'
 import { isNonPollingRequestInFlight } from 'src/data/utils'
 import { useAccountListQuery } from 'src/data/__generated__/types-and-hooks'
-import { FEATURE_FLAGS } from 'src/features/experiments/constants'
-import { useFeatureFlag } from 'src/features/experiments/hooks'
-import { ElementName } from 'src/features/telemetry/constants'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { spacing } from 'src/styles/sizing'
 
+// Most screens can fit more but this is set conservatively
+const MIN_ACCOUNTS_TO_ENABLE_SCROLL = 5
+
 type AccountListProps = Pick<ComponentProps<typeof AccountCardItem>, 'onPress' | 'onPressEdit'> & {
   accounts: Account[]
   isVisible?: boolean
-  onAddWallet: () => void
 }
 
 type AccountWithPortfolioValue = {
@@ -30,28 +29,48 @@ type AccountWithPortfolioValue = {
   portfolioValue: number | undefined
 }
 
-const STICKY_HEADER_INDICES = [0]
+const ListHeader = (): JSX.Element => {
+  const { t } = useTranslation()
+  return (
+    <Flex row alignItems="center" bg="background0" borderBottomColor="backgroundOutline" pb="sm">
+      <Box flex={1} px="lg">
+        <Text color="textPrimary" textAlign="center" variant="bodyLarge">
+          {t('Your wallets')}
+        </Text>
+      </Box>
+    </Flex>
+  )
+}
+
+const ViewOnlyHeader = (): JSX.Element => {
+  const { t } = useTranslation()
+  return (
+    <Flex row alignItems="center" bg="background0" borderBottomColor="backgroundOutline">
+      <Box flex={1} px="lg">
+        <Text color="textSecondary" variant="bodySmall">
+          {t('View only')}
+        </Text>
+      </Box>
+    </Flex>
+  )
+}
 
 export function AccountList({
   accounts,
-  onAddWallet,
   onPressEdit,
   onPress,
   isVisible,
 }: AccountListProps): JSX.Element {
-  const { t } = useTranslation()
   const theme = useAppTheme()
   const activeAccount = useActiveAccount()
   const addresses = accounts.map((a) => a.address)
-
-  const isAccountSwitcherModalEnabled = useFeatureFlag(FEATURE_FLAGS.AccountSwitcherModal, false)
 
   const { data, networkStatus, refetch, startPolling, stopPolling } = useAccountListQuery({
     variables: { addresses },
     notifyOnNetworkStatusChange: true,
   })
 
-  // Only poll account total value when the AccountDrawer is open
+  // Only poll account total values when the account list is visible
   useEffect(() => {
     if (isVisible) {
       refetch()
@@ -73,86 +92,82 @@ export function AccountList({
     })
   }, [accounts, data, isPortfolioValueLoading])
 
-  const ListHeader = useMemo(
-    () => (
-      <Flex row alignItems="center" bg="background0" borderBottomColor="backgroundOutline" pb="sm">
-        <Box flex={1}>
-          <Text
-            color="textPrimary"
-            px="lg"
-            textAlign={isAccountSwitcherModalEnabled ? 'center' : undefined}
-            variant="bodyLarge">
-            {t('Your wallets')}
-          </Text>
-        </Box>
-        {isAccountSwitcherModalEnabled ? null : (
-          <TouchableArea
-            borderColor="backgroundOutline"
-            borderRadius="full"
-            borderWidth={1}
-            mr="md"
-            name={ElementName.ImportAccount}
-            p="xs"
-            onPress={onAddWallet}>
-            <PlusIcon
-              color={theme.colors.textSecondary}
-              height={theme.iconSizes.xs}
-              width={theme.iconSizes.xs}
-            />
-          </TouchableArea>
-        )}
-      </Flex>
-    ),
-    [isAccountSwitcherModalEnabled, t, onAddWallet, theme]
-  )
+  const signerAccounts = useMemo(() => {
+    return accountsWithPortfolioValue.filter(
+      (account) => account.account.type === AccountType.SignerMnemonic
+    )
+  }, [accountsWithPortfolioValue])
 
-  const renderItem = useCallback(
-    ({ item }: ListRenderItemInfo<AccountWithPortfolioValue>) => {
-      return (
-        <AccountCardItem
-          address={item.account.address}
-          isActive={!!activeAccount && activeAccount.address === item.account.address}
-          isPortfolioValueLoading={item.isPortfolioValueLoading}
-          isViewOnly={item.account.type === AccountType.Readonly}
-          portfolioValue={item.portfolioValue}
-          onPress={onPress}
-          onPressEdit={onPressEdit}
-        />
-      )
-    },
-    [activeAccount, onPress, onPressEdit]
+  const viewOnlyAccounts = useMemo(() => {
+    return accountsWithPortfolioValue.filter(
+      (account) => account.account.type === AccountType.Readonly
+    )
+  }, [accountsWithPortfolioValue])
+
+  const hasViewOnlyAccounts = viewOnlyAccounts.length > 0
+
+  const renderAccountCardItem = (item: AccountWithPortfolioValue): JSX.Element => (
+    <AccountCardItem
+      key={item.account.address}
+      address={item.account.address}
+      isActive={!!activeAccount && activeAccount.address === item.account.address}
+      isPortfolioValueLoading={item.isPortfolioValueLoading}
+      isViewOnly={item.account.type === AccountType.Readonly}
+      portfolioValue={item.portfolioValue}
+      onPress={onPress}
+      onPressEdit={onPressEdit}
+    />
   )
 
   return (
     <Box flexShrink={1} position="relative">
-      <FlatList
-        ListFooterComponent={<Box height={theme.spacing.lg} />}
-        ListHeaderComponent={ListHeader}
-        bounces={false}
-        data={accountsWithPortfolioValue}
-        keyExtractor={key}
-        renderItem={renderItem}
-        showsVerticalScrollIndicator={false}
-        stickyHeaderIndices={STICKY_HEADER_INDICES}
-      />
-      <LinearGradient
-        colors={[theme.colors.translucentBackgroundBackdrop, theme.colors.background0]}
-        end={{ x: 0, y: 1 }}
-        start={{ x: 0, y: 0 }}
-        style={ListSheet.gradient}
-      />
+      <ListHeader />
+      <Box flexShrink={1}>
+        {/* TODO: [MOB-3938] attempt to switch gradients to react-native-svg#LinearGradient and avoid new clear color */}
+        <LinearGradient
+          colors={[theme.colors.clearBackgroundBackdrop, theme.colors.background0]}
+          end={{ x: 0, y: 0 }}
+          start={{ x: 0, y: 1 }}
+          style={ListSheet.topGradient}
+        />
+        <ScrollView
+          scrollEnabled={accountsWithPortfolioValue.length >= MIN_ACCOUNTS_TO_ENABLE_SCROLL}
+          showsVerticalScrollIndicator={false}>
+          {signerAccounts.map(renderAccountCardItem)}
+          <Spacer height={theme.spacing.sm} />
+          {hasViewOnlyAccounts && (
+            <>
+              <ViewOnlyHeader />
+              {viewOnlyAccounts.map(renderAccountCardItem)}
+              <Spacer height={theme.spacing.sm} />
+            </>
+          )}
+        </ScrollView>
+        <LinearGradient
+          colors={[theme.colors.clearBackgroundBackdrop, theme.colors.background0]}
+          end={{ x: 0, y: 1 }}
+          start={{ x: 0, y: 0 }}
+          style={ListSheet.bottomGradient}
+        />
+      </Box>
     </Box>
   )
 }
 
-const key = (a: AccountWithPortfolioValue): string => a.account.address
-
 const ListSheet = StyleSheet.create({
-  gradient: {
+  bottomGradient: {
     bottom: 0,
-    height: spacing.lg,
+    height: spacing.md,
     left: 0,
     position: 'absolute',
     width: '100%',
+  },
+  topGradient: {
+    height: spacing.md,
+    left: 0,
+    position: 'absolute',
+    top: 0,
+    width: '100%',
+    zIndex: 1,
   },
 })

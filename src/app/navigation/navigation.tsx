@@ -3,25 +3,20 @@ import {
   BottomTabBarProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs'
-import {
-  createDrawerNavigator,
-  DrawerContentComponentProps,
-  DrawerNavigationOptions,
-} from '@react-navigation/drawer'
 import { HeaderTitleProps } from '@react-navigation/elements'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createStackNavigator } from '@react-navigation/stack'
+import { NavigationRoute } from '@sentry/react-native/dist/js/tracing/reactnavigation'
 import { useResponsiveProp } from '@shopify/restyle'
+import { impactAsync, ImpactFeedbackStyle } from 'expo-haptics'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useAppSelector, useAppTheme } from 'src/app/hooks'
-import { AccountDrawer } from 'src/app/navigation/AccountDrawer'
+import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import {
   useLowPriorityPreloadedQueries,
   usePreloadedHomeScreenQueries,
 } from 'src/app/navigation/hooks'
-import { navigationRef } from 'src/app/navigation/NavigationContainer'
 import {
   SwapTabBarButton,
   TabBarButton,
@@ -43,8 +38,10 @@ import WalletIcon from 'src/assets/icons/wallet.svg'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box } from 'src/components/layout'
 import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
+import { openModal } from 'src/features/modals/modalSlice'
 import { OnboardingHeader } from 'src/features/onboarding/OnboardingHeader'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
+import { ModalName } from 'src/features/telemetry/constants'
 import { selectFinishedOnboarding } from 'src/features/wallet/selectors'
 import { ActivityScreen } from 'src/screens/ActivityScreen'
 import { DevScreen } from 'src/screens/DevScreen'
@@ -70,7 +67,7 @@ import { ManualBackupScreen } from 'src/screens/Onboarding/ManualBackupScreen'
 import { NotificationsSetupScreen } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import { OutroScreen } from 'src/screens/Onboarding/OutroScreen'
 import { SecuritySetupScreen } from 'src/screens/Onboarding/SecuritySetupScreen'
-import { OnboardingScreens, Screens, Stacks, Tabs } from 'src/screens/Screens'
+import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 import { SettingsBiometricAuthScreen } from 'src/screens/SettingsBiometricAuthScreen'
 import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
 import { SettingsCloudBackupScreen } from 'src/screens/SettingsCloudBackupScreen'
@@ -83,8 +80,6 @@ import { SettingsWalletEdit } from 'src/screens/SettingsWalletEdit'
 import { SettingsWalletManageConnection } from 'src/screens/SettingsWalletManageConnection'
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
 import { WebViewScreen } from 'src/screens/WebViewScreen'
-import { dimensions } from 'src/styles/sizing'
-import { darkTheme } from 'src/styles/theme'
 
 const Tab = createBottomTabNavigator<TabParamList>()
 const OnboardingStack = createStackNavigator<OnboardingStackParamList>()
@@ -92,8 +87,6 @@ const AppStack = createNativeStackNavigator<AppStackParamList>()
 const HomeStack = createNativeStackNavigator<HomeStackParamList>()
 const ExploreStack = createNativeStackNavigator<ExploreStackParamList>()
 const SettingsStack = createNativeStackNavigator<SettingsStackParamList>()
-
-const Drawer = createDrawerNavigator()
 
 const NullComponent = (): null => {
   return null
@@ -104,6 +97,7 @@ const renderTabBar = (props: BottomTabBarProps): JSX.Element => (
     <BottomTabBar {...props} />
   </Box>
 )
+
 const renderTabBarWalletIcon = ({ focused }: { focused: boolean }): JSX.Element => (
   <TabBarButton
     Icon={WalletIcon}
@@ -113,6 +107,7 @@ const renderTabBarWalletIcon = ({ focused }: { focused: boolean }): JSX.Element 
     pl="lg"
   />
 )
+
 const renderTabBarSearchIcon = ({ focused }: { focused: boolean }): JSX.Element => (
   <TabBarButton
     Icon={SearchIcon}
@@ -122,11 +117,13 @@ const renderTabBarSearchIcon = ({ focused }: { focused: boolean }): JSX.Element 
     pr="lg"
   />
 )
+
 const renderSwapTabBarButton = (): JSX.Element => <SwapTabBarButton />
 
 function TabNavigator(): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
+  const dispatch = useAppDispatch()
   useBiometricCheck()
   const TAB_NAVIGATOR_HEIGHT =
     useResponsiveProp({
@@ -158,6 +155,19 @@ function TabNavigator(): JSX.Element {
       tabBar={renderTabBar}>
       <Tab.Screen
         component={HomeStackNavigator}
+        listeners={({ navigation }): { tabLongPress: () => void } => ({
+          tabLongPress: (): void => {
+            const currentIndex = navigation.getState().index
+            const homeTabIndex = navigation
+              .getState()
+              .routes.findIndex((r: NavigationRoute) => r.name === Tabs.Home)
+
+            if (currentIndex === homeTabIndex) {
+              impactAsync(ImpactFeedbackStyle.Heavy)
+              dispatch(openModal({ name: ModalName.AccountSwitcher }))
+            }
+          },
+        })}
         name={Tabs.Home}
         options={{
           tabBarLabel: t('Home'),
@@ -216,46 +226,6 @@ function SettingsStackGroup(): JSX.Element {
       />
     </SettingsStack.Navigator>
   )
-}
-
-const renderAccountDrawerContent = (props: DrawerContentComponentProps): JSX.Element => (
-  <AccountDrawer {...props} />
-)
-
-export function DrawerNavigator(): JSX.Element {
-  return (
-    <Drawer.Navigator
-      // useLegacyImplementation seems to fix a bug with the drawer sometimes opening or
-      // closing twice, or sometimes not opening the first time you tap on it
-      // https://stackoverflow.com/questions/71703096/drawer-reopen-sometime-when-change-screen
-      useLegacyImplementation
-      drawerContent={renderAccountDrawerContent}
-      screenOptions={{
-        drawerStyle: {
-          width: SIDEBAR_WIDTH,
-        },
-        headerShown: false,
-        overlayColor: darkTheme.colors.backgroundScrim,
-      }}>
-      <Drawer.Screen
-        component={AppStackNavigator}
-        name={Stacks.AppStack}
-        options={(): DrawerNavigationOptions => ({
-          swipeEnabled: getDrawerEnabled(),
-          swipeEdgeWidth: SWIPE_WIDTH,
-        })}
-      />
-    </Drawer.Navigator>
-  )
-}
-
-function getDrawerEnabled(): boolean {
-  if (!navigationRef.isReady()) {
-    return false
-  }
-
-  const routeName = navigationRef.getCurrentRoute()?.name
-  return routeName ? DRAWER_ENABLED_SCREENS.includes(routeName) : false
 }
 
 export function HomeStackNavigator(): JSX.Element {
@@ -422,12 +392,3 @@ const navOptions = {
   noHeader: { headerShown: false },
   presentationModal: { presentation: 'modal' },
 } as const
-
-// These should remain enabled to support swipe to close. But to prevent swipe to open set SIDEBAR_WIDTH to 0.
-const DRAWER_ENABLED_SCREENS = [
-  Screens.Home.valueOf(),
-  Screens.Explore.valueOf(),
-  Tabs.Explore.valueOf(),
-]
-const SIDEBAR_WIDTH = Math.min(dimensions.fullWidth * 0.8, 320)
-const SWIPE_WIDTH = dimensions.fullWidth * 0.125

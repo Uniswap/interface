@@ -10,8 +10,7 @@ import {
   StyleSheet,
   ViewStyle,
 } from 'react-native'
-import { Gesture, PanGesture } from 'react-native-gesture-handler'
-import Animated, { runOnJS } from 'react-native-reanimated'
+import Animated from 'react-native-reanimated'
 import { Route } from 'react-native-tab-view/lib/typescript/types'
 import { Text } from 'src/components/Text'
 import { theme as FixedTheme } from 'src/styles/theme'
@@ -97,28 +96,6 @@ export const renderTabLabel = ({
     </Text>
   )
 }
-
-export const panSidebarContainerGestureAction = (openSidebar: () => void): PanGesture =>
-  Gesture.Pan().onStart(({ translationX }) => {
-    // only register as a side swipe above a certain threshold
-    if (Math.abs(translationX) < SWIPE_THRESHOLD) {
-      return
-    }
-
-    if (translationX > 0) {
-      runOnJS(openSidebar)()
-    }
-  })
-
-export const panHeaderGestureAction = (openSidebar: () => void): PanGesture =>
-  Gesture.Pan().onStart(({ translationX }) => {
-    // only register as a side swipe above a certain threshold
-    if (Math.abs(translationX) < SWIPE_THRESHOLD || translationX < 0) {
-      return
-    }
-
-    runOnJS(openSidebar)()
-  })
 
 /**
  * Keeps tab content in sync, by scrolling content in case collapsing header height has changed between tabs

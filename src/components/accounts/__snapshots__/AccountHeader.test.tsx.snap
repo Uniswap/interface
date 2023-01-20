@@ -50,7 +50,7 @@ exports[`AccountHeader renders without error 1`] = `
       style={
         Array [
           Object {
-            "alignItems": "stretch",
+            "alignItems": "center",
             "display": "flex",
             "flexDirection": "row",
             "justifyContent": "flex-start",
@@ -291,78 +291,12 @@ exports[`AccountHeader renders without error 1`] = `
           ]
         }
       />
-      <View
-        style={
-          Array [
-            Object {
-              "alignItems": "center",
-              "borderRadius": 999999,
-              "display": "flex",
-              "justifyContent": "center",
-            },
-            Object {
-              "transform": Array [
-                Object {
-                  "rotate": "270deg",
-                },
-              ],
-            },
-          ]
-        }
-      >
-        <RNSVGSvgView
-          align="xMidYMid"
-          bbHeight={24}
-          bbWidth={24}
-          fill="none"
-          focusable={false}
-          height={24}
-          meetOrSlice={0}
-          minX={0}
-          minY={0}
-          style={
-            Array [
-              Object {
-                "backgroundColor": "transparent",
-                "borderWidth": 0,
-              },
-              Object {
-                "flex": 0,
-                "height": 24,
-                "width": 24,
-              },
-            ]
-          }
-          vbHeight={24}
-          vbWidth={26}
-          width={24}
-        >
-          <RNSVGGroup
-            fill={null}
-            propList={
-              Array [
-                "fill",
-              ]
-            }
-          >
-            <RNSVGPath
-              d="M15 6L9 12L15 18"
-              propList={
-                Array [
-                  "stroke",
-                  "strokeWidth",
-                  "strokeLinecap",
-                  "strokeLinejoin",
-                ]
-              }
-              stroke={4283456120}
-              strokeLinecap={1}
-              strokeLinejoin={1}
-              strokeWidth="2"
-            />
-          </RNSVGGroup>
-        </RNSVGSvgView>
-      </View>
+      <svg
+        color="#505A78"
+        data-file-name="SvgDoubleChevron"
+        height={16}
+        width={16}
+      />
     </View>
   </View>
   <View

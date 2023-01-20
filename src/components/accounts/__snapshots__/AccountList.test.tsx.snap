@@ -12,195 +12,80 @@ exports[`AccountList renders without error 1`] = `
     ]
   }
 >
-  <RCTScrollView
-    ListFooterComponent={
-      <ForwardRef
-        height={24}
-      />
-    }
-    ListHeaderComponent={
-      <Flex
-        alignItems="center"
-        bg="background0"
-        borderBottomColor="backgroundOutline"
-        pb="sm"
-        row={true}
-      >
-        <ForwardRef
-          flex={1}
-        >
-          <Text
-            color="textPrimary"
-            px="lg"
-            variant="bodyLarge"
-          >
-            Your wallets
-          </Text>
-        </ForwardRef>
-        <TouchableArea
-          borderColor="backgroundOutline"
-          borderRadius="full"
-          borderWidth={1}
-          mr="md"
-          name="import"
-          onPress={[Function]}
-          p="xs"
-        >
-          <SvgPlus
-            color="#505A78"
-            height={12}
-            width={12}
-          />
-        </TouchableArea>
-      </Flex>
-    }
-    bounces={false}
-    data={
+  <View
+    style={
       Array [
         Object {
-          "account": Object {
-            "address": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-            "backups": Array [
-              "cloud",
-            ],
-            "derivationIndex": 0,
-            "mnemonicId": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-            "name": "Test Account",
-            "timeImportedMs": 10,
-            "type": "signerMnemonic",
-          },
-          "isPortfolioValueLoading": false,
-          "portfolioValue": 55,
+          "alignItems": "center",
+          "backgroundColor": "#FFFFFF",
+          "borderBottomColor": "#D2D9EE",
+          "display": "flex",
+          "flexDirection": "row",
+          "justifyContent": "flex-start",
+          "paddingBottom": 12,
         },
       ]
     }
-    getItem={[Function]}
-    getItemCount={[Function]}
-    keyExtractor={[Function]}
-    onContentSizeChange={[Function]}
-    onLayout={[Function]}
-    onMomentumScrollBegin={[Function]}
-    onMomentumScrollEnd={[Function]}
-    onScroll={[Function]}
-    onScrollBeginDrag={[Function]}
-    onScrollEndDrag={[Function]}
-    removeClippedSubviews={false}
-    renderItem={[Function]}
-    scrollEventThrottle={50}
-    showsVerticalScrollIndicator={false}
-    stickyHeaderIndices={
+  >
+    <View
+      style={
+        Array [
+          Object {
+            "display": "flex",
+            "flex": 1,
+            "paddingHorizontal": 24,
+          },
+        ]
+      }
+    >
+      <Text
+        allowFontScaling={true}
+        maxFontSizeMultiplier={1.4}
+        style={
+          Array [
+            Object {
+              "color": "#0D111C",
+              "display": "flex",
+              "fontFamily": "Inter-Medium",
+              "fontSize": 16,
+              "lineHeight": 24,
+              "textAlign": "center",
+            },
+          ]
+        }
+      >
+        Your wallets
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
       Array [
-        0,
+        Object {
+          "display": "flex",
+          "flexShrink": 1,
+        },
       ]
     }
-    viewabilityConfigCallbackPairs={Array []}
   >
-    <View>
-      <View
-        onLayout={[Function]}
-      >
-        <View
-          style={
-            Array [
-              Object {
-                "alignItems": "center",
-                "backgroundColor": "#FFFFFF",
-                "borderBottomColor": "#D2D9EE",
-                "display": "flex",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "paddingBottom": 12,
-              },
-            ]
-          }
-        >
-          <View
-            style={
-              Array [
-                Object {
-                  "display": "flex",
-                  "flex": 1,
-                },
-              ]
-            }
-          >
-            <Text
-              allowFontScaling={true}
-              maxFontSizeMultiplier={1.4}
-              style={
-                Array [
-                  Object {
-                    "color": "#0D111C",
-                    "display": "flex",
-                    "fontFamily": "Inter-Medium",
-                    "fontSize": 16,
-                    "lineHeight": 24,
-                    "paddingHorizontal": 24,
-                  },
-                ]
-              }
-            >
-              Your wallets
-            </Text>
-          </View>
-          <View
-            style={
-              Array [
-                Object {
-                  "display": "flex",
-                  "flexGrow": 0,
-                  "flexShrink": 0,
-                  "height": 16,
-                  "width": 16,
-                },
-              ]
-            }
-          />
-          <View
-            accessible={true}
-            collapsable={false}
-            focusable={true}
-            hitSlop={
-              Object {
-                "bottom": 5,
-                "left": 5,
-                "right": 5,
-                "top": 5,
-              }
-            }
-            onClick={[Function]}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
-            style={
-              Object {
-                "borderColor": "#D2D9EE",
-                "borderRadius": 999999,
-                "borderWidth": 1,
-                "display": "flex",
-                "marginRight": 16,
-                "opacity": 1,
-                "padding": 8,
-              }
-            }
-            testID="import"
-          >
-            <svg
-              color="#505A78"
-              data-file-name="SvgPlus"
-              height={12}
-              width={12}
-            />
-          </View>
-        </View>
-      </View>
-      <View
-        onLayout={[Function]}
-        style={null}
-      >
+    ExpoLinearGradient
+    <RCTScrollView
+      collapsable={false}
+      handlerTag={1}
+      handlerType="NativeViewGestureHandler"
+      onGestureHandlerEvent={[Function]}
+      onGestureHandlerStateChange={[Function]}
+      scrollEnabled={false}
+      showsVerticalScrollIndicator={false}
+      waitFor={
+        Array [
+          Object {
+            "current": null,
+          },
+        ]
+      }
+    >
+      <View>
         <View
           accessible={true}
           collapsable={false}
@@ -523,23 +408,21 @@ exports[`AccountList renders without error 1`] = `
             />
           </View>
         </View>
-      </View>
-      <View
-        onLayout={[Function]}
-      >
         <View
           style={
             Array [
               Object {
                 "display": "flex",
-                "height": 24,
+                "flexGrow": 0,
+                "flexShrink": 0,
+                "height": 12,
               },
             ]
           }
         />
       </View>
-    </View>
-  </RCTScrollView>
-  ExpoLinearGradient
+    </RCTScrollView>
+    ExpoLinearGradient
+  </View>
 </View>
 `;

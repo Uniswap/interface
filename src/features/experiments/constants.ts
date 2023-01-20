@@ -7,7 +7,6 @@ export enum EXPERIMENTS {
 }
 
 export enum FEATURE_FLAGS {
-  AccountSwitcherModal = 'account-switcher-modal',
   FiatOnRamp = 'fiat-onramp',
   SwapNativeKeyboard = 'swap-native-keyboard',
   SwapPermit2 = 'swap-permit-2',

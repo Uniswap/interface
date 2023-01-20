@@ -9,7 +9,7 @@ import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorBoundary } from 'src/app/ErrorBoundary'
 import { AppModals } from 'src/app/modals/AppModals'
-import { AppStackNavigator, DrawerNavigator } from 'src/app/navigation/navigation'
+import { AppStackNavigator } from 'src/app/navigation/navigation'
 import { NavigationContainer } from 'src/app/navigation/NavigationContainer'
 import { persistor, store } from 'src/app/store'
 import { WalletContextProvider } from 'src/app/walletContext'
@@ -20,8 +20,6 @@ import { config } from 'src/config'
 import { usePersistedApolloClient } from 'src/data/hooks'
 import { LockScreenContextProvider } from 'src/features/authentication/lockScreenContext'
 import { BiometricContextProvider } from 'src/features/biometrics/context'
-import { FEATURE_FLAGS } from 'src/features/experiments/constants'
-import { useFeatureFlag } from 'src/features/experiments/hooks'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
 import { initOneSignal } from 'src/features/notifications/Onesignal'
 import { initializeRemoteConfig } from 'src/features/remoteConfig'
@@ -135,7 +133,6 @@ function DataUpdaters(): JSX.Element {
 }
 
 function NavStack({ isDarkMode }: { isDarkMode: boolean }): JSX.Element {
-  const renderDrawerNavigator = !useFeatureFlag(FEATURE_FLAGS.AccountSwitcherModal, false)
   return (
     <NavigationContainer
       onReady={(navigationRef): void => {
@@ -143,7 +140,7 @@ function NavStack({ isDarkMode }: { isDarkMode: boolean }): JSX.Element {
       }}>
       <OfflineBanner />
       <NotificationToastWrapper />
-      {renderDrawerNavigator ? <DrawerNavigator /> : <AppStackNavigator />}
+      <AppStackNavigator />
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
     </NavigationContainer>
   )
