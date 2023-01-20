@@ -17,9 +17,8 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |
-          echo 'SLACK_COMMITS<<EOF' >> $GITHUB_ENV
-          echo $GITHUB_CONTEXT | jq '.event.commits[] | [.url, .id[0:7], .committer.username, .timestamp, .message] | @tsv' | sed 's/"//g' | sed 's/\\t/;/g' | awk -F';' '{print "• <"$1"|"$2"> (<https://github.com/"$3"|"$3">, "$4") - "$5}' >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_ENV
+          echo $GITHUB_CONTEXT | jq '.event.commits[] | [.url, .id[0:7], .author.username, .timestamp, .message] | @tsv' | sed 's/"//g' | sed 's/\\t/;/g' | sed 's/\\n/;/g' | sed 's/\\//g' | awk -F';' '{print "• <"$1"|"$2"> (<https://github.com/"$3"|"$3">, "$4") - "$5}' | sed 's/$/\\n/g' | tr -d '\n' > /tmp/foo
+          echo "SLACK_COMMITS=$(cat /tmp/foo)" >> $GITHUB_ENV
       - name: Testing
         run: |
           echo "${{ env.SLACK_COMMITS }}"
@@ -38,7 +37,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*A merge has been detected into the <https://github.com/Uniswap/mobile/tree/${{ github.ref }}|${{ github.ref }}> branch:*\n"
+                    "text": "*A merge has been detected into the <https://github.com/Uniswap/mobile/tree/${{ github.ref }}|${{ github.ref_name }}> branch:*\n"
                   }
                 },
                 {

@@ -35,16 +35,27 @@ jobs:
         id: cpr
         with:
           token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
-          commit-message: "This PR merges latest commits of `releases/beta` to `releases/prod'. Upon approval and successful merge, a Github action associated with the prod Fastlane setup will deploy to TestFlight, where the app can be submitted to Apple."
+          commit-message: "This PR merges latest commits of `releases/beta` to `releases/prod`. Upon approval and successful merge, a Github action associated with the prod Fastlane setup will deploy to TestFlight, where the app can be submitted to Apple."
           base: 'releases/prod'
           title: 'ci: Release Beta to Prod'
           delete-branch: 'true'
           committer: 'UL Service Account <hello-happy-puppy@users.noreply.github.com>'
           author: 'UL Service Account <hello-happy-puppy@users.noreply.github.com>'
           branch: 'approvals/betaToProd'
-#          body: ${{ gh pr view --json commits | jq '.commits[] | [.oid, .messageHeadline] | @tsv' | sed 's/"//g' | sed 's/\\\t/ - /g' }}
       - uses: peter-evans/enable-pull-request-automerge@60812ab1c2c6c6a8932b4d6e059becafaf386256
         with:
           token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
           pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
           merge-method: merge
+      - name: Update PR body
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "### Description" > /tmp/foo
+          echo "" >> /tmp/foo
+          echo "This PR promotes the following commits from beta to prod." >> /tmp/foo
+          echo "" >> /tmp/foo
+          gh pr view ${{ steps.cpr.outputs.pull-request-number }} --json commits | jq '.commits[] | [.oid, .messageHeadline] | @tsv' | sed 's/"//g' | sed 's/\\t/ - /g' >> /tmp/foo
+          echo "" >> /tmp/foo
+          echo "**Once approved this PR will automatically merge via a merge commit.**" >> /tmp/foo
+          gh pr edit ${{ steps.cpr.outputs.pull-request-number }} -b "$(cat /tmp/foo)"
