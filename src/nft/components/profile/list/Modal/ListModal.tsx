@@ -10,6 +10,7 @@ import { X } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
+
 import { ListModalSection, Section } from './ListModalSection'
 
 const ListModalWrapper = styled.div`
@@ -51,8 +52,18 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
             </ThemedText.HeadlineSmall>
             <X size={24} cursor="pointer" onClick={overlayClick} />
           </TitleRow>
-          <ListModalSection sectionType={Section.APPROVE} active={openSection === Section.APPROVE } content={collectionsRequiringApproval} toggleSection={toggleOpenSection} />
-          <ListModalSection sectionType={Section.SIGN} active={openSection === Section.SIGN } content={listings} toggleSection={toggleOpenSection} />
+          <ListModalSection
+            sectionType={Section.APPROVE}
+            active={openSection === Section.APPROVE}
+            content={collectionsRequiringApproval}
+            toggleSection={toggleOpenSection}
+          />
+          <ListModalSection
+            sectionType={Section.SIGN}
+            active={openSection === Section.SIGN}
+            content={listings}
+            toggleSection={toggleOpenSection}
+          />
         </ListModalWrapper>
       </Trace>
       <Overlay onClick={overlayClick} />
