@@ -1,4 +1,4 @@
-name: Push changes to releases/beta
+name: 2 | Push changes to releases/beta
 
 # This CI job is responsible for pushing the current contents of the `main` branch to the
 # releases/beta branch, which is the branch where the GitHub action for building the beta

@@ -1,4 +1,4 @@
-name: Fastlane deploy prod (iOS)
+name: 8 | Fastlane deploy prod (iOS)
 # referenced from https://github.com/invertase/react-native-firebase/blob/master/.github/workflows/tests_e2e_ios.yml
 
 on:

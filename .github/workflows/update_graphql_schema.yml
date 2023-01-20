@@ -1,4 +1,4 @@
-name: Update GraphQL Schema
+name: 5 | Update GraphQL Schema
 on:
   schedule:
     # “At 12:00 on Wednesday.”

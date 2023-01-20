@@ -1,4 +1,4 @@
-name: Push changes to releases/dev
+name: 1 | Push changes to releases/dev
 
 # This CI job is responsible for pushing the current contents of the `main` branch to the
 # releases/dev branch, which will in turn kick off a Fastlane build for the Dev app

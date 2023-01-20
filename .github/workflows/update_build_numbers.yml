@@ -1,4 +1,4 @@
-name: Update build numbers
+name: 4 | Update build numbers
 on:
   workflow_dispatch:
   schedule:

@@ -1,4 +1,4 @@
-name: Fastlane deploy dev (iOS)
+name: 6 | Fastlane deploy dev (iOS)
 
 on:
   push:

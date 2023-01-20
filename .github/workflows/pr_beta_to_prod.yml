@@ -1,4 +1,4 @@
-name: Pull request from releases/beta to releases/prod
+name: 3 | Generate PR for releases/beta to releases/prod
 
 # This CI job is responsible for generating PRs that bring the HEAD of releases/beta into releases/prod.
 # These PRs are meant to be the only (standard) way that code is merged into the releases/prod
