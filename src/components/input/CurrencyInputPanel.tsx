@@ -157,6 +157,13 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element {
     [onSetFontSize, onSetAmount]
   )
 
+  // This is needed to ensure that the text resizes when modified from outside the component (e.g. custom numpad)
+  useEffect(() => {
+    if (value) {
+      onChangeText(value)
+    }
+  }, [value, onChangeText])
+
   const handleSetMax = useCallback(
     (amount: string) => {
       if (!onSetMax) {
