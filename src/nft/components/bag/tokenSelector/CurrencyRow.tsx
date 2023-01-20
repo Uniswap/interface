@@ -12,6 +12,7 @@ const TokenRow = styled(Row)`
   padding: 8px 0px;
   gap: 12px;
   justify-content: space-between;
+  cursor: pointer;
 `
 
 const TokenInfoRow = styled(Row)`
