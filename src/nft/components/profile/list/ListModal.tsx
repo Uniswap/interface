@@ -3,12 +3,13 @@ import { Trace } from '@uniswap/analytics'
 import { InterfaceModalName } from '@uniswap/analytics-events'
 import Column from 'components/Column'
 import Row from 'components/Row'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { Portal } from 'nft/components/common/Portal'
 import { ChevronUpIcon, ListingModalWindowActive, ListingModalWindowClosed } from 'nft/components/icons'
 import { Overlay } from 'nft/components/modals/Overlay'
 import { useNFTList } from 'nft/hooks'
 import { useReducer } from 'react'
-import { X } from 'react-feather'
+import { Info, X } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { colors } from 'theme/colors'
@@ -21,7 +22,7 @@ const ListModalWrapper = styled.div`
   top: 50%;
   transform: translate(-50%, -50%);
   width: 420px;
-  z-index: ${Z_INDEX.modalOverTooltip};
+  z-index: ${Z_INDEX.modal};
   background: ${({ theme }) => theme.backgroundSurface};
   border-radius: 20px;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
@@ -55,11 +56,17 @@ const SectionArrow = styled(ChevronUpIcon)<{ active: boolean }>`
 `
 
 const SectionBody = styled(Column)`
-  height: 280px; //TODO make dynamic
   border-left: 1.5px solid ${colors.gray650};
   margin: 4px 0px 0px 7px;
   padding-left: 20px;
   padding-top: 4px;
+`
+
+const StyledInfoIcon = styled(Info)`
+  height: 16px;
+  width: 16px;
+  margin-left: 4px;
+  color: ${({ theme }) => theme.textSecondary};
 `
 
 enum Section {
@@ -102,9 +109,18 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
             </SectionHeader>
             {openSection === Section.APPROVE && (
               <SectionBody>
-                <ThemedText.Caption lineHeight="16px" color="textSecondary">
-                  <Trans>Why is a transaction required?</Trans>
-                </ThemedText.Caption>
+                <Row height="16px">
+                  <ThemedText.Caption lineHeight="16px" color="textSecondary">
+                    <Trans>Why is a transaction required?</Trans>
+                  </ThemedText.Caption>
+                  <MouseoverTooltip
+                    text={
+                      <Trans>Listing an NFT requires a one-time marketplace approval for each NFT collection.</Trans>
+                    }
+                  >
+                    <StyledInfoIcon />
+                  </MouseoverTooltip>
+                </Row>
               </SectionBody>
             )}
           </Column>
