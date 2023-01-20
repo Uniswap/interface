@@ -1,5 +1,4 @@
-import { Chain, useRecentlySearchedTokensQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { useRecentlySearchedCollections } from 'graphql/data/nft/Collection'
+import { Chain, NftCollection, useRecentlySearchedAssetsQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useAtom } from 'jotai'
 import { atomWithStorage, useAtomValue } from 'jotai/utils'
@@ -49,40 +48,52 @@ export function useRecentlySearchedAssets() {
   const history = useAtomValue(recentlySearchedAssetsAtom)
   const shortenedHistory = useMemo(() => history.slice(0, 4), [history])
 
-  const { data: recentlySearchedCollections, loading: collectionsLoading } = useRecentlySearchedCollections(
-    shortenedHistory.filter((asset) => asset.isNft).map((asset) => asset.address)
-  )
-
-  const { data: recentlySearchedTokens, loading: tokensLoading } = useRecentlySearchedTokensQuery({
+  const { data: queryData, loading } = useRecentlySearchedAssetsQuery({
     variables: {
+      collectionAddresses: shortenedHistory.filter((asset) => asset.isNft).map((asset) => asset.address),
       contracts: shortenedHistory
         .filter((asset) => !asset.isNft)
-        .map((token) => ({ address: token.address, chain: token.chain })),
+        .map((token) => ({
+          address: token.address === 'NATIVE' ? (null as unknown as string) : token.address,
+          chain: token.chain,
+        })),
     },
+    fetchPolicy: 'cache-first',
   })
 
-  const data = useMemo(() => {
-    if (!collectionsLoading && !tokensLoading) {
-      const parsedFungibleTokens = recentlySearchedTokens?.tokens && parseFungibleTokens(recentlySearchedTokens?.tokens)
+  return useMemo(() => {
+    if (!loading) {
+      // Collects both tokens and collections in a map, so they can later be returned in original order
       const resultsMap: { [key: string]: GenieCollection | FungibleToken } = {}
-      recentlySearchedCollections?.forEach((collection) => (resultsMap[collection.address] = collection))
-      parsedFungibleTokens?.filter(Boolean).forEach((token) => {
+
+      const tokens = queryData?.tokens && parseFungibleTokens(queryData.tokens)
+      const queryCollections = queryData?.nftCollections?.edges.map((edge) => edge.node as NonNullable<NftCollection>)
+      const collections = queryCollections?.map(
+        (queryCollection): GenieCollection => {
+          return {
+            address: queryCollection.nftContracts?.[0]?.address ?? '',
+            isVerified: queryCollection?.isVerified,
+            name: queryCollection?.name,
+            stats: {
+              floor_price: queryCollection?.markets?.[0]?.floorPrice?.value,
+              total_supply: queryCollection?.numAssets,
+            },
+            imageUrl: queryCollection?.image?.url ?? '',
+          }
+        },
+        [queryCollections]
+      )
+      collections?.forEach((collection) => (resultsMap[collection.address] = collection))
+      tokens?.forEach((token) => {
         if (token.address) resultsMap[token.address] = token
       })
 
-      console.log(recentlySearchedTokens)
-
-      const results: (FungibleToken | GenieCollection)[] = []
+      const data: (FungibleToken | GenieCollection)[] = []
       shortenedHistory.forEach((asset) => {
-        if (resultsMap[asset.address]) results.push(resultsMap[asset.address])
+        if (resultsMap[asset.address]) data.push(resultsMap[asset.address])
       })
-      return results
+      return { data, loading }
     }
-    return []
-  }, [collectionsLoading, tokensLoading, recentlySearchedTokens, recentlySearchedCollections, shortenedHistory])
-
-  return {
-    data: shortenedHistory.length > 0 ? data : [],
-    loading: (collectionsLoading || tokensLoading) && shortenedHistory.length > 0,
-  }
+    return { data: [...Array<FungibleToken>(4)], loading }
+  }, [loading, queryData?.nftCollections?.edges, queryData?.tokens, shortenedHistory])
 }

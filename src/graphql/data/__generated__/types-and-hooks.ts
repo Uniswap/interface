@@ -831,26 +831,27 @@ export enum TransactionStatus {
   Pending = 'PENDING'
 }
 
-export type RecentlySearchedTokensQueryVariables = Exact<{
+export type RecentlySearchedAssetsQueryVariables = Exact<{
+  collectionAddresses: Array<Scalars['String']> | Scalars['String'];
   contracts: Array<ContractInput> | ContractInput;
 }>;
 
 
-export type RecentlySearchedTokensQuery = { __typename?: 'Query', tokens?: Array<{ __typename?: 'Token', decimals?: number, name?: string, chain: Chain, standard?: TokenStandard, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', price?: { __typename?: 'Amount', value: number, currency?: Currency }, pricePercentChange?: { __typename?: 'Amount', value: number }, volume24H?: { __typename?: 'Amount', value: number, currency?: Currency } }, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string, safetyLevel?: SafetyLevel } }> };
+export type RecentlySearchedAssetsQuery = { __typename?: 'Query', nftCollections?: { __typename?: 'NftCollectionConnection', edges: Array<{ __typename?: 'NftCollectionEdge', node: { __typename?: 'NftCollection', collectionId: string, isVerified?: boolean, name?: string, numAssets?: number, image?: { __typename?: 'Image', url: string }, nftContracts?: Array<{ __typename?: 'NftContract', address: string }>, markets?: Array<{ __typename?: 'NftCollectionMarket', floorPrice?: { __typename?: 'TimestampedAmount', currency?: Currency, value: number }, listings?: { __typename?: 'TimestampedAmount', value: number } }> } }> }, tokens?: Array<{ __typename?: 'Token', id: string, decimals?: number, name?: string, chain: Chain, standard?: TokenStandard, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number, currency?: Currency }, pricePercentChange?: { __typename?: 'Amount', id: string, value: number }, volume24H?: { __typename?: 'Amount', id: string, value: number, currency?: Currency } }, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string, safetyLevel?: SafetyLevel } }> };
 
 export type SearchTokensQueryVariables = Exact<{
   searchQuery: Scalars['String'];
 }>;
 
 
-export type SearchTokensQuery = { __typename?: 'Query', searchTokens?: Array<{ __typename?: 'Token', decimals?: number, name?: string, chain: Chain, standard?: TokenStandard, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', price?: { __typename?: 'Amount', value: number, currency?: Currency }, pricePercentChange?: { __typename?: 'Amount', value: number }, volume24H?: { __typename?: 'Amount', value: number, currency?: Currency } }, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string, safetyLevel?: SafetyLevel } }> };
+export type SearchTokensQuery = { __typename?: 'Query', searchTokens?: Array<{ __typename?: 'Token', id: string, decimals?: number, name?: string, chain: Chain, standard?: TokenStandard, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number, currency?: Currency }, pricePercentChange?: { __typename?: 'Amount', id: string, value: number }, volume24H?: { __typename?: 'Amount', id: string, value: number, currency?: Currency } }, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string, safetyLevel?: SafetyLevel } }> };
 
 export type TokenQueryVariables = Exact<{
   contract: ContractInput;
 }>;
 
 
-export type TokenQuery = { __typename?: 'Query', tokens?: Array<{ __typename?: 'Token', id: string, decimals?: number, name?: string, chain: Chain, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', totalValueLocked?: { __typename?: 'Amount', value: number, currency?: Currency }, price?: { __typename?: 'Amount', value: number, currency?: Currency }, volume24H?: { __typename?: 'Amount', value: number, currency?: Currency }, priceHigh52W?: { __typename?: 'Amount', value: number }, priceLow52W?: { __typename?: 'Amount', value: number } }, project?: { __typename?: 'TokenProject', description?: string, homepageUrl?: string, twitterName?: string, logoUrl?: string, tokens: Array<{ __typename?: 'Token', chain: Chain, address?: string }> } }> };
+export type TokenQuery = { __typename?: 'Query', tokens?: Array<{ __typename?: 'Token', id: string, decimals?: number, name?: string, chain: Chain, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', id: string, totalValueLocked?: { __typename?: 'Amount', id: string, value: number, currency?: Currency }, price?: { __typename?: 'Amount', id: string, value: number, currency?: Currency }, volume24H?: { __typename?: 'Amount', id: string, value: number, currency?: Currency }, priceHigh52W?: { __typename?: 'Amount', id: string, value: number }, priceLow52W?: { __typename?: 'Amount', id: string, value: number } }, project?: { __typename?: 'TokenProject', id: string, description?: string, homepageUrl?: string, twitterName?: string, logoUrl?: string, tokens: Array<{ __typename?: 'Token', id: string, chain: Chain, address?: string }> } }> };
 
 export type TokenPriceQueryVariables = Exact<{
   contract: ContractInput;
@@ -858,7 +859,7 @@ export type TokenPriceQueryVariables = Exact<{
 }>;
 
 
-export type TokenPriceQuery = { __typename?: 'Query', tokens?: Array<{ __typename?: 'Token', market?: { __typename?: 'TokenMarket', price?: { __typename?: 'Amount', value: number }, priceHistory?: Array<{ __typename?: 'TimestampedAmount', timestamp: number, value: number }> } }> };
+export type TokenPriceQuery = { __typename?: 'Query', tokens?: Array<{ __typename?: 'Token', id: string, address?: string, chain: Chain, market?: { __typename?: 'TokenMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number }, priceHistory?: Array<{ __typename?: 'TimestampedAmount', id: string, timestamp: number, value: number }> } }> };
 
 export type TopTokens100QueryVariables = Exact<{
   duration: HistoryDuration;
@@ -866,7 +867,7 @@ export type TopTokens100QueryVariables = Exact<{
 }>;
 
 
-export type TopTokens100Query = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', id: string, name?: string, chain: Chain, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', totalValueLocked?: { __typename?: 'Amount', value: number, currency?: Currency }, price?: { __typename?: 'Amount', value: number, currency?: Currency }, pricePercentChange?: { __typename?: 'Amount', currency?: Currency, value: number }, volume?: { __typename?: 'Amount', value: number, currency?: Currency } }, project?: { __typename?: 'TokenProject', logoUrl?: string } }> };
+export type TopTokens100Query = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', id: string, name?: string, chain: Chain, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', id: string, totalValueLocked?: { __typename?: 'Amount', id: string, value: number, currency?: Currency }, price?: { __typename?: 'Amount', id: string, value: number, currency?: Currency }, pricePercentChange?: { __typename?: 'Amount', id: string, currency?: Currency, value: number }, volume?: { __typename?: 'Amount', id: string, value: number, currency?: Currency } }, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string } }> };
 
 export type TopTokensSparklineQueryVariables = Exact<{
   duration: HistoryDuration;
@@ -874,14 +875,14 @@ export type TopTokensSparklineQueryVariables = Exact<{
 }>;
 
 
-export type TopTokensSparklineQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', address?: string, market?: { __typename?: 'TokenMarket', priceHistory?: Array<{ __typename?: 'TimestampedAmount', timestamp: number, value: number }> } }> };
+export type TopTokensSparklineQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', id: string, address?: string, chain: Chain, market?: { __typename?: 'TokenMarket', priceHistory?: Array<{ __typename?: 'TimestampedAmount', timestamp: number, value: number }> } }> };
 
 export type TrendingTokensQueryVariables = Exact<{
   chain: Chain;
 }>;
 
 
-export type TrendingTokensQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', decimals?: number, name?: string, chain: Chain, standard?: TokenStandard, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', price?: { __typename?: 'Amount', value: number, currency?: Currency }, pricePercentChange?: { __typename?: 'Amount', value: number }, volume24H?: { __typename?: 'Amount', value: number, currency?: Currency } }, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string, safetyLevel?: SafetyLevel } }> };
+export type TrendingTokensQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', id: string, decimals?: number, name?: string, chain: Chain, standard?: TokenStandard, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number, currency?: Currency }, pricePercentChange?: { __typename?: 'Amount', id: string, value: number }, volume24H?: { __typename?: 'Amount', id: string, value: number, currency?: Currency } }, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string, safetyLevel?: SafetyLevel, name?: string } }> };
 
 export type AssetQueryVariables = Exact<{
   address: Scalars['String'];
@@ -904,13 +905,6 @@ export type CollectionQueryVariables = Exact<{
 
 export type CollectionQuery = { __typename?: 'Query', nftCollections?: { __typename?: 'NftCollectionConnection', edges: Array<{ __typename?: 'NftCollectionEdge', cursor: string, node: { __typename?: 'NftCollection', collectionId: string, description?: string, discordUrl?: string, homepageUrl?: string, instagramName?: string, isVerified?: boolean, name?: string, numAssets?: number, twitterName?: string, bannerImage?: { __typename?: 'Image', url: string }, image?: { __typename?: 'Image', url: string }, nftContracts?: Array<{ __typename?: 'NftContract', address: string, chain: Chain, name?: string, standard?: NftStandard, symbol?: string, totalSupply?: number }>, traits?: Array<{ __typename?: 'NftCollectionTrait', name?: string, values?: Array<string>, stats?: Array<{ __typename?: 'NftCollectionTraitStats', name?: string, value?: string, assets?: number, listings?: number }> }>, markets?: Array<{ __typename?: 'NftCollectionMarket', owners?: number, floorPrice?: { __typename?: 'TimestampedAmount', currency?: Currency, value: number }, totalVolume?: { __typename?: 'TimestampedAmount', value: number, currency?: Currency }, listings?: { __typename?: 'TimestampedAmount', value: number }, volume?: { __typename?: 'TimestampedAmount', value: number, currency?: Currency }, volumePercentChange?: { __typename?: 'TimestampedAmount', value: number, currency?: Currency }, floorPricePercentChange?: { __typename?: 'TimestampedAmount', value: number, currency?: Currency }, marketplaces?: Array<{ __typename?: 'NftCollectionMarketplace', marketplace?: NftMarketplace, listings?: number, floorPrice?: number }> }> } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string, hasNextPage?: boolean, hasPreviousPage?: boolean, startCursor?: string } } };
 
-export type RecentlySearchedCollectionQueryVariables = Exact<{
-  addresses: Array<Scalars['String']> | Scalars['String'];
-}>;
-
-
-export type RecentlySearchedCollectionQuery = { __typename?: 'Query', nftCollections?: { __typename?: 'NftCollectionConnection', edges: Array<{ __typename?: 'NftCollectionEdge', cursor: string, node: { __typename?: 'NftCollection', collectionId: string, description?: string, discordUrl?: string, homepageUrl?: string, instagramName?: string, isVerified?: boolean, name?: string, numAssets?: number, twitterName?: string, bannerImage?: { __typename?: 'Image', url: string }, image?: { __typename?: 'Image', url: string }, nftContracts?: Array<{ __typename?: 'NftContract', address: string, chain: Chain, name?: string, standard?: NftStandard, symbol?: string, totalSupply?: number }>, traits?: Array<{ __typename?: 'NftCollectionTrait', name?: string, values?: Array<string>, stats?: Array<{ __typename?: 'NftCollectionTraitStats', name?: string, value?: string, assets?: number, listings?: number }> }>, markets?: Array<{ __typename?: 'NftCollectionMarket', owners?: number, floorPrice?: { __typename?: 'TimestampedAmount', currency?: Currency, value: number }, totalVolume?: { __typename?: 'TimestampedAmount', value: number, currency?: Currency }, listings?: { __typename?: 'TimestampedAmount', value: number }, volume?: { __typename?: 'TimestampedAmount', value: number, currency?: Currency }, volumePercentChange?: { __typename?: 'TimestampedAmount', value: number, currency?: Currency }, floorPricePercentChange?: { __typename?: 'TimestampedAmount', value: number, currency?: Currency }, marketplaces?: Array<{ __typename?: 'NftCollectionMarketplace', marketplace?: NftMarketplace, listings?: number, floorPrice?: number }> }> } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string, hasNextPage?: boolean, hasPreviousPage?: boolean, startCursor?: string } } };
-
 export type DetailsQueryVariables = Exact<{
   address: Scalars['String'];
   tokenId: Scalars['String'];
@@ -932,9 +926,35 @@ export type NftBalanceQueryVariables = Exact<{
 export type NftBalanceQuery = { __typename?: 'Query', nftBalances?: { __typename?: 'NftBalanceConnection', edges: Array<{ __typename?: 'NftBalanceEdge', node: { __typename?: 'NftBalance', listedMarketplaces?: Array<NftMarketplace>, ownedAsset?: { __typename?: 'NftAsset', id: string, animationUrl?: string, description?: string, flaggedBy?: string, name?: string, ownerAddress?: string, suspiciousFlag?: boolean, tokenId: string, collection?: { __typename?: 'NftCollection', isVerified?: boolean, name?: string, image?: { __typename?: 'Image', url: string }, nftContracts?: Array<{ __typename?: 'NftContract', address: string, chain: Chain, name?: string, standard?: NftStandard, symbol?: string, totalSupply?: number }>, markets?: Array<{ __typename?: 'NftCollectionMarket', floorPrice?: { __typename?: 'TimestampedAmount', value: number } }> }, image?: { __typename?: 'Image', url: string }, originalImage?: { __typename?: 'Image', url: string }, smallImage?: { __typename?: 'Image', url: string }, thumbnail?: { __typename?: 'Image', url: string }, listings?: { __typename?: 'NftOrderConnection', edges: Array<{ __typename?: 'NftOrderEdge', node: { __typename?: 'NftOrder', createdAt: number, marketplace: NftMarketplace, endAt?: number, price: { __typename?: 'Amount', value: number, currency?: Currency } } }> } }, listingFees?: Array<{ __typename?: 'NftFee', payoutAddress: string, basisPoints: number }>, lastPrice?: { __typename?: 'TimestampedAmount', currency?: Currency, timestamp: number, value: number } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string, hasNextPage?: boolean, hasPreviousPage?: boolean, startCursor?: string } } };
 
 
-export const RecentlySearchedTokensDocument = gql`
-    query RecentlySearchedTokens($contracts: [ContractInput!]!) {
+export const RecentlySearchedAssetsDocument = gql`
+    query RecentlySearchedAssets($collectionAddresses: [String!]!, $contracts: [ContractInput!]!) {
+  nftCollections(filter: {addresses: $collectionAddresses}) {
+    edges {
+      node {
+        collectionId
+        image {
+          url
+        }
+        isVerified
+        name
+        numAssets
+        nftContracts {
+          address
+        }
+        markets(currencies: ETH) {
+          floorPrice {
+            currency
+            value
+          }
+          listings {
+            value
+          }
+        }
+      }
+    }
+  }
   tokens(contracts: $contracts) {
+    id
     decimals
     name
     chain
@@ -942,14 +962,18 @@ export const RecentlySearchedTokensDocument = gql`
     address
     symbol
     market(currency: USD) {
+      id
       price {
+        id
         value
         currency
       }
       pricePercentChange(duration: DAY) {
+        id
         value
       }
       volume24H: volume(duration: DAY) {
+        id
         value
         currency
       }
@@ -964,35 +988,37 @@ export const RecentlySearchedTokensDocument = gql`
     `;
 
 /**
- * __useRecentlySearchedTokensQuery__
+ * __useRecentlySearchedAssetsQuery__
  *
- * To run a query within a React component, call `useRecentlySearchedTokensQuery` and pass it any options that fit your needs.
- * When your component renders, `useRecentlySearchedTokensQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useRecentlySearchedAssetsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRecentlySearchedAssetsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useRecentlySearchedTokensQuery({
+ * const { data, loading, error } = useRecentlySearchedAssetsQuery({
  *   variables: {
+ *      collectionAddresses: // value for 'collectionAddresses'
  *      contracts: // value for 'contracts'
  *   },
  * });
  */
-export function useRecentlySearchedTokensQuery(baseOptions: Apollo.QueryHookOptions<RecentlySearchedTokensQuery, RecentlySearchedTokensQueryVariables>) {
+export function useRecentlySearchedAssetsQuery(baseOptions: Apollo.QueryHookOptions<RecentlySearchedAssetsQuery, RecentlySearchedAssetsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<RecentlySearchedTokensQuery, RecentlySearchedTokensQueryVariables>(RecentlySearchedTokensDocument, options);
+        return Apollo.useQuery<RecentlySearchedAssetsQuery, RecentlySearchedAssetsQueryVariables>(RecentlySearchedAssetsDocument, options);
       }
-export function useRecentlySearchedTokensLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RecentlySearchedTokensQuery, RecentlySearchedTokensQueryVariables>) {
+export function useRecentlySearchedAssetsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RecentlySearchedAssetsQuery, RecentlySearchedAssetsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<RecentlySearchedTokensQuery, RecentlySearchedTokensQueryVariables>(RecentlySearchedTokensDocument, options);
+          return Apollo.useLazyQuery<RecentlySearchedAssetsQuery, RecentlySearchedAssetsQueryVariables>(RecentlySearchedAssetsDocument, options);
         }
-export type RecentlySearchedTokensQueryHookResult = ReturnType<typeof useRecentlySearchedTokensQuery>;
-export type RecentlySearchedTokensLazyQueryHookResult = ReturnType<typeof useRecentlySearchedTokensLazyQuery>;
-export type RecentlySearchedTokensQueryResult = Apollo.QueryResult<RecentlySearchedTokensQuery, RecentlySearchedTokensQueryVariables>;
+export type RecentlySearchedAssetsQueryHookResult = ReturnType<typeof useRecentlySearchedAssetsQuery>;
+export type RecentlySearchedAssetsLazyQueryHookResult = ReturnType<typeof useRecentlySearchedAssetsLazyQuery>;
+export type RecentlySearchedAssetsQueryResult = Apollo.QueryResult<RecentlySearchedAssetsQuery, RecentlySearchedAssetsQueryVariables>;
 export const SearchTokensDocument = gql`
     query SearchTokens($searchQuery: String!) {
   searchTokens(searchQuery: $searchQuery) {
+    id
     decimals
     name
     chain
@@ -1000,14 +1026,18 @@ export const SearchTokensDocument = gql`
     address
     symbol
     market(currency: USD) {
+      id
       price {
+        id
         value
         currency
       }
       pricePercentChange(duration: DAY) {
+        id
         value
       }
       volume24H: volume(duration: DAY) {
+        id
         value
         currency
       }
@@ -1058,31 +1088,39 @@ export const TokenDocument = gql`
     address
     symbol
     market(currency: USD) {
+      id
       totalValueLocked {
+        id
         value
         currency
       }
       price {
+        id
         value
         currency
       }
       volume24H: volume(duration: DAY) {
+        id
         value
         currency
       }
       priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {
+        id
         value
       }
       priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {
+        id
         value
       }
     }
     project {
+      id
       description
       homepageUrl
       twitterName
       logoUrl
       tokens {
+        id
         chain
         address
       }
@@ -1121,11 +1159,17 @@ export type TokenQueryResult = Apollo.QueryResult<TokenQuery, TokenQueryVariable
 export const TokenPriceDocument = gql`
     query TokenPrice($contract: ContractInput!, $duration: HistoryDuration!) {
   tokens(contracts: [$contract]) {
+    id
+    address
+    chain
     market(currency: USD) {
+      id
       price {
+        id
         value
       }
       priceHistory(duration: $duration) {
+        id
         timestamp
         value
       }
@@ -1171,24 +1215,30 @@ export const TopTokens100Document = gql`
     address
     symbol
     market(currency: USD) {
+      id
       totalValueLocked {
+        id
         value
         currency
       }
       price {
+        id
         value
         currency
       }
       pricePercentChange(duration: $duration) {
+        id
         currency
         value
       }
       volume(duration: $duration) {
+        id
         value
         currency
       }
     }
     project {
+      id
       logoUrl
     }
   }
@@ -1226,7 +1276,9 @@ export type TopTokens100QueryResult = Apollo.QueryResult<TopTokens100Query, TopT
 export const TopTokensSparklineDocument = gql`
     query TopTokensSparkline($duration: HistoryDuration!, $chain: Chain!) {
   topTokens(pageSize: 100, page: 1, chain: $chain) {
+    id
     address
+    chain
     market(currency: USD) {
       priceHistory(duration: $duration) {
         timestamp
@@ -1268,6 +1320,7 @@ export type TopTokensSparklineQueryResult = Apollo.QueryResult<TopTokensSparklin
 export const TrendingTokensDocument = gql`
     query TrendingTokens($chain: Chain!) {
   topTokens(pageSize: 4, page: 1, chain: $chain, orderBy: VOLUME) {
+    id
     decimals
     name
     chain
@@ -1275,14 +1328,18 @@ export const TrendingTokensDocument = gql`
     address
     symbol
     market(currency: USD) {
+      id
       price {
+        id
         value
         currency
       }
       pricePercentChange(duration: DAY) {
+        id
         value
       }
       volume24H: volume(duration: DAY) {
+        id
         value
         currency
       }
@@ -1291,6 +1348,7 @@ export const TrendingTokensDocument = gql`
       id
       logoUrl
       safetyLevel
+      name
     }
   }
 }
@@ -1560,115 +1618,6 @@ export function useCollectionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type CollectionQueryHookResult = ReturnType<typeof useCollectionQuery>;
 export type CollectionLazyQueryHookResult = ReturnType<typeof useCollectionLazyQuery>;
 export type CollectionQueryResult = Apollo.QueryResult<CollectionQuery, CollectionQueryVariables>;
-export const RecentlySearchedCollectionDocument = gql`
-    query RecentlySearchedCollection($addresses: [String!]!) {
-  nftCollections(filter: {addresses: $addresses}) {
-    edges {
-      cursor
-      node {
-        bannerImage {
-          url
-        }
-        collectionId
-        description
-        discordUrl
-        homepageUrl
-        image {
-          url
-        }
-        instagramName
-        isVerified
-        name
-        numAssets
-        twitterName
-        nftContracts {
-          address
-          chain
-          name
-          standard
-          symbol
-          totalSupply
-        }
-        traits {
-          name
-          values
-          stats {
-            name
-            value
-            assets
-            listings
-          }
-        }
-        markets(currencies: ETH) {
-          floorPrice {
-            currency
-            value
-          }
-          owners
-          totalVolume {
-            value
-            currency
-          }
-          listings {
-            value
-          }
-          volume(duration: DAY) {
-            value
-            currency
-          }
-          volumePercentChange(duration: DAY) {
-            value
-            currency
-          }
-          floorPricePercentChange(duration: DAY) {
-            value
-            currency
-          }
-          marketplaces {
-            marketplace
-            listings
-            floorPrice
-          }
-        }
-      }
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-      hasPreviousPage
-      startCursor
-    }
-  }
-}
-    `;
-
-/**
- * __useRecentlySearchedCollectionQuery__
- *
- * To run a query within a React component, call `useRecentlySearchedCollectionQuery` and pass it any options that fit your needs.
- * When your component renders, `useRecentlySearchedCollectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useRecentlySearchedCollectionQuery({
- *   variables: {
- *      addresses: // value for 'addresses'
- *   },
- * });
- */
-export function useRecentlySearchedCollectionQuery(baseOptions: Apollo.QueryHookOptions<RecentlySearchedCollectionQuery, RecentlySearchedCollectionQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<RecentlySearchedCollectionQuery, RecentlySearchedCollectionQueryVariables>(RecentlySearchedCollectionDocument, options);
-      }
-export function useRecentlySearchedCollectionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RecentlySearchedCollectionQuery, RecentlySearchedCollectionQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<RecentlySearchedCollectionQuery, RecentlySearchedCollectionQueryVariables>(RecentlySearchedCollectionDocument, options);
-        }
-export type RecentlySearchedCollectionQueryHookResult = ReturnType<typeof useRecentlySearchedCollectionQuery>;
-export type RecentlySearchedCollectionLazyQueryHookResult = ReturnType<typeof useRecentlySearchedCollectionLazyQuery>;
-export type RecentlySearchedCollectionQueryResult = Apollo.QueryResult<RecentlySearchedCollectionQuery, RecentlySearchedCollectionQueryVariables>;
 export const DetailsDocument = gql`
     query Details($address: String!, $tokenId: String!) {
   nftAssets(address: $address, filter: {listed: false, tokenIds: [$tokenId]}) {
