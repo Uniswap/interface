@@ -1,0 +1,54 @@
+{
+  "name": "Custom Goerli Tokens",
+  "timestamp": "2023-01-20T08:10:26.867Z",
+  "tags": {},
+  "version": {
+    "major": 0,
+    "minor": 1,
+    "patch": 0
+  },
+  "logoURI": "https://raw.githubusercontent.com/SetProtocol/uniswap-tokenlist/main/assets/set-logo.svg",
+  "keywords": ["uniswap", "custom"],
+  "tokens": [
+    {
+      "chainId": 5,
+      "address": "0x31f116f6E800863efc7F32aE4AC4E63c67aDF03b",
+      "name": "Token1",
+      "symbol": "TKN",
+      "decimals": 18,
+      "logoURI": "https://raw.githubusercontent.com/SetProtocol/uniswap-tokenlist/main/assets/tokens/yam_house.png"
+    }, 
+    {
+      "chainId": 5,
+      "address": "0xf4Cb436c3F78e8984CBbf49AA4D779e5eE4b1Fb1",
+      "name": "Token2",
+      "symbol": "TKN",
+      "decimals": 18,
+      "logoURI": "https://raw.githubusercontent.com/SetProtocol/uniswap-tokenlist/main/assets/tokens/mvi.png"
+    },
+    {
+      "chainId": 5,
+      "address": "0xF6d8b02D83D01b5879fCB4092B9c285871Ab4Fa1",
+      "name": "Token3",
+      "symbol": "TKN",
+      "decimals": 18,
+      "logoURI": "https://raw.githubusercontent.com/SetProtocol/uniswap-tokenlist/main/assets/tokens/green-indexes-GEX.png"
+    }, 
+    {
+      "chainId": 5,
+      "address": "0x319eE02240D65D1ef7bA744AA25F043218199Db8",
+      "name": "Token4",
+      "symbol": "TKN",
+      "decimals": 18,
+      "logoURI": "https://raw.githubusercontent.com/SetProtocol/uniswap-tokenlist/main/assets/tokens/5aBvPVaM_400x400.jpeg"
+    }, 
+    {
+      "chainId": 5,
+      "address": "0xbF08400Ac26453AD88768505feb900943dC29Fee",
+      "name": "Token5",
+      "symbol": "TKN",
+      "decimals": 18,
+      "logoURI": "https://raw.githubusercontent.com/SetProtocol/uniswap-tokenlist/main/assets/tokens/beverage-linketh.png"
+    }
+  ]
+}
