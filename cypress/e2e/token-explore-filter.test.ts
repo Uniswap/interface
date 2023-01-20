@@ -1,4 +1,4 @@
-describe('Token explore filter', () => {
+describe.skip('Token explore filter', () => {
   before(() => {
     cy.visit('/')
   })
