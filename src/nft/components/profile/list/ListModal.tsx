@@ -2,6 +2,7 @@ import { Plural, Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
 import { InterfaceModalName } from '@uniswap/analytics-events'
 import Column from 'components/Column'
+import { ScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Portal } from 'nft/components/common/Portal'
@@ -66,6 +67,9 @@ const SectionBody = styled(Column)`
   margin: 4px 0px 0px 7px;
   padding-left: 20px;
   padding-top: 4px;
+  max-height: 394px;
+  overflow-y: auto;
+  ${ScrollBarStyles}
 `
 
 const StyledInfoIcon = styled(Info)`
