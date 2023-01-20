@@ -111,7 +111,7 @@ export default function TokenDetails({
 
   const pageChainId = CHAIN_NAME_TO_CHAIN_ID[chain]
 
-  const tokenQueryData = tokenQuery.tokens?.[0]
+  const tokenQueryData = tokenQuery.token
   const crossChainMap = useMemo(
     () =>
       tokenQueryData?.project?.tokens.reduce((map, current) => {

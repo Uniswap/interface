@@ -1,8 +1,30 @@
+import { QueryResult } from '@apollo/client'
 import { SupportedChainId } from 'constants/chains'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import ms from 'ms.macro'
+import { useEffect } from 'react'
 
 import { Chain, HistoryDuration } from './__generated__/types-and-hooks'
+
+export enum PollingInterval {
+  Slow = ms`5m`,
+  Normal = ms`1m`,
+  Fast = ms`12s`, // 12 seconds, block times for mainnet
+  LightningMcQueen = ms`3s`, // 3 seconds, approx block times for polygon
+}
+
+// Polls a query only when the current component is mounted, as useQuery's pollInterval prop will continue to poll after unmount
+export function usePollQueryWhileMounted<T, K>(queryResult: QueryResult<T, K>, interval: PollingInterval) {
+  const { startPolling, stopPolling } = queryResult
+
+  useEffect(() => {
+    startPolling(interval)
+    return stopPolling
+  }, [interval, startPolling, stopPolling])
+
+  return queryResult
+}
 
 export enum TimePeriod {
   HOUR,
