@@ -11,8 +11,8 @@ import {
   getConnection,
   getConnectionName,
   getIsCoinbaseWallet,
-  getIsMetaMaskWallet,
   getIsInjected,
+  getIsMetaMaskWallet,
 } from 'connection/utils'
 import usePrevious from 'hooks/usePrevious'
 import { useCallback, useEffect, useState } from 'react'
