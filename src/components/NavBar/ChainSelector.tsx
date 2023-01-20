@@ -23,7 +23,7 @@ const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.GOERLI,
   SupportedChainId.MAINNET,
   SupportedChainId.POLYGON,
-  SupportedChainId.OPTIMISM, 
+  SupportedChainId.OPTIMISM,
   SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.CELO,
 ]
