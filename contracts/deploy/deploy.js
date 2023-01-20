@@ -3,7 +3,7 @@ module.exports = async function ({ ethers, getNamedAccounts, deployments }) {
   const { deployer } = await getNamedAccounts();
   const initialSupply = ethers.utils.parseUnits('1',18)
 
-  const name = 'Token1'
+  const name = 'Token5'
   const symbol = 'TKN'
 
   token = await deploy("ERC20Token", {
