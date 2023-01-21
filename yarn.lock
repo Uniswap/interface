@@ -4945,12 +4945,7 @@
     react "^18.2.0"
     react-dom "^18.2.0"
 
-"@uniswap/conedison@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@uniswap/conedison/-/conedison-1.1.1.tgz#affec246613d1f52da3cdd0571ef8195b7b54d17"
-  integrity sha512-xFHAcWRrU+/+/BInXy6SRiiNwUG0vxLWsoYgod66wWifUvnjfpItzlvJHUer1OOpLDsz0CL5Fb70vFJOGAGi8w==
-
-"@uniswap/conedison@^1.2.1":
+"@uniswap/conedison@^1.1.1", "@uniswap/conedison@^1.2.1":
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/@uniswap/conedison/-/conedison-1.2.1.tgz#c3dbfe14f4320fc5c60cde23c4bd70ed8a39c782"
   integrity sha512-ir6j7RQOyREXtW5YlmPjskfl7oDeHWtMFai57snThAkKgrb+8KTX5b0a5nbXeIuaW2RNHAaWTGoSoTneIHCAnQ==
