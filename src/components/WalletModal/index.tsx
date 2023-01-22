@@ -10,9 +10,9 @@ import { networkConnection } from 'connection'
 import {
   getConnection,
   getConnectionName,
-  getHasCoinbaseExtensionInstalled,
-  getHasMetaMaskExtensionInstalled,
+  getIsCoinbaseWallet,
   getIsInjected,
+  getIsMetaMaskWallet,
 } from 'connection/utils'
 import usePrevious from 'hooks/usePrevious'
 import { useCallback, useEffect, useState } from 'react'
@@ -253,8 +253,8 @@ export default function WalletModal({
 
   function getOptions() {
     const isInjected = getIsInjected()
-    const hasMetaMaskExtension = getHasMetaMaskExtensionInstalled()
-    const hasCoinbaseExtension = getHasCoinbaseExtensionInstalled()
+    const hasMetaMaskExtension = getIsMetaMaskWallet()
+    const hasCoinbaseExtension = getIsCoinbaseWallet()
 
     const isCoinbaseWalletBrowser = isMobile && hasCoinbaseExtension
     const isMetaMaskBrowser = isMobile && hasMetaMaskExtension

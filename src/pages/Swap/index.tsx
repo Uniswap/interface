@@ -28,7 +28,7 @@ import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ReactNode } from 'react'
-import { AlertTriangle, ArrowDown, CheckCircle, HelpCircle, Info } from 'react-feather'
+import { ArrowDown, CheckCircle, HelpCircle, Info } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useToggleWalletModal } from 'state/application/hooks'
@@ -39,7 +39,7 @@ import invariant from 'tiny-invariant'
 import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/formatNumbers'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
-import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary, ButtonYellow } from '../../components/Button'
+import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { GrayCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import SwapCurrencyInputPanel from '../../components/CurrencyInputPanel/SwapCurrencyInputPanel'
@@ -232,17 +232,20 @@ export default function Swap({ className }: { className?: string }) {
           },
     [independentField, parsedAmount, showWrap, trade]
   )
+  const fiatValueInput = useStablecoinValue(parsedAmounts[Field.INPUT])
+  const fiatValueOutput = useStablecoinValue(parsedAmounts[Field.OUTPUT])
 
   const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
     () => [!trade?.swaps, TradeState.LOADING === tradeState, TradeState.SYNCING === tradeState],
     [trade, tradeState]
   )
 
-  const fiatValueInput = useStablecoinValue(parsedAmounts[Field.INPUT])
-  const fiatValueOutput = useStablecoinValue(parsedAmounts[Field.OUTPUT])
+  const fiatValueTradeInput = useStablecoinValue(trade?.inputAmount)
+  const fiatValueTradeOutput = useStablecoinValue(trade?.outputAmount)
   const stablecoinPriceImpact = useMemo(
-    () => (routeIsSyncing ? undefined : computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)),
-    [fiatValueInput, fiatValueOutput, routeIsSyncing]
+    () =>
+      routeIsSyncing || !trade ? undefined : computeFiatValuePriceImpact(fiatValueTradeInput, fiatValueTradeOutput),
+    [fiatValueTradeInput, fiatValueTradeOutput, routeIsSyncing, trade]
   )
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
@@ -303,12 +306,16 @@ export default function Swap({ className }: { className?: string }) {
     return maximumAmountIn?.currency.isToken ? (maximumAmountIn as CurrencyAmount<Token>) : undefined
   }, [allowedSlippage, trade])
   const allowance = usePermit2Allowance(
-    permit2Enabled ? maximumAmountIn : undefined,
+    permit2Enabled
+      ? maximumAmountIn ??
+          (parsedAmounts[Field.INPUT]?.currency.isToken
+            ? (parsedAmounts[Field.INPUT] as CurrencyAmount<Token>)
+            : undefined)
+      : undefined,
     permit2Enabled && chainId ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
   )
   const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
   const [isAllowancePending, setIsAllowancePending] = useState(false)
-  const [isAllowanceFailed, setIsAllowanceFailed] = useState(false)
   const updateAllowance = useCallback(async () => {
     invariant(allowance.state === AllowanceState.REQUIRED)
     setIsAllowancePending(true)
@@ -319,10 +326,8 @@ export default function Swap({ className }: { className?: string }) {
         token_symbol: maximumAmountIn?.currency.symbol,
         token_address: maximumAmountIn?.currency.address,
       })
-      setIsAllowanceFailed(false)
     } catch (e) {
       console.error(e)
-      setIsAllowanceFailed(true)
     } finally {
       setIsAllowancePending(false)
     }
@@ -569,8 +574,8 @@ export default function Swap({ className }: { className?: string }) {
               swapErrorMessage={swapErrorMessage}
               onDismiss={handleConfirmDismiss}
               swapQuoteReceivedDate={swapQuoteReceivedDate}
-              fiatValueInput={fiatValueInput}
-              fiatValueOutput={fiatValueOutput}
+              fiatValueInput={fiatValueTradeInput}
+              fiatValueOutput={fiatValueTradeOutput}
             />
 
             <div style={{ display: 'relative' }}>
@@ -786,31 +791,20 @@ export default function Swap({ className }: { className?: string }) {
                     </AutoColumn>
                   </AutoRow>
                 ) : isValid && allowance.state === AllowanceState.REQUIRED ? (
-                  <ButtonYellow
+                  <ButtonPrimary
                     onClick={updateAllowance}
                     disabled={isAllowancePending || isApprovalLoading}
                     style={{ gap: 14 }}
                   >
                     {isAllowancePending ? (
                       <>
-                        <Loader size="20px" stroke={theme.accentWarning} />
-                        <ThemedText.SubHeader color="accentWarning">
-                          <Trans>Approve in your wallet</Trans>
-                        </ThemedText.SubHeader>
-                      </>
-                    ) : isAllowanceFailed ? (
-                      <>
-                        <AlertTriangle size={20} stroke={theme.accentWarning} />
-                        <ThemedText.SubHeader color="accentWarning">
-                          <Trans>Approval failed. Try again.</Trans>
-                        </ThemedText.SubHeader>
+                        <Loader size="20px" />
+                        <Trans>Approve in your wallet</Trans>
                       </>
                     ) : isApprovalLoading ? (
                       <>
-                        <Loader size="20px" stroke={theme.accentWarning} />
-                        <ThemedText.SubHeader color="accentWarning">
-                          <Trans>Approval pending</Trans>
-                        </ThemedText.SubHeader>
+                        <Loader size="20px" />
+                        <Trans>Approval pending</Trans>
                       </>
                     ) : (
                       <>
@@ -823,15 +817,13 @@ export default function Swap({ className }: { className?: string }) {
                               </Trans>
                             }
                           >
-                            <Info size={20} color={theme.accentWarning} />
+                            <Info size={20} />
                           </MouseoverTooltip>
                         </div>
-                        <ThemedText.SubHeader color="accentWarning">
-                          <Trans>Approve use of {currencies[Field.INPUT]?.symbol}</Trans>
-                        </ThemedText.SubHeader>
+                        <Trans>Approve use of {currencies[Field.INPUT]?.symbol}</Trans>
                       </>
                     )}
-                  </ButtonYellow>
+                  </ButtonPrimary>
                 ) : (
                   <ButtonError
                     onClick={() => {
@@ -855,7 +847,11 @@ export default function Swap({ className }: { className?: string }) {
                       priceImpactTooHigh ||
                       (permit2Enabled ? allowance.state !== AllowanceState.ALLOWED : Boolean(swapCallbackError))
                     }
-                    error={isValid && priceImpactSeverity > 2 && (permit2Enabled || !swapCallbackError)}
+                    error={
+                      isValid &&
+                      priceImpactSeverity > 2 &&
+                      (permit2Enabled ? allowance.state === AllowanceState.ALLOWED : !swapCallbackError)
+                    }
                   >
                     <Text fontSize={20} fontWeight={600}>
                       {swapInputError ? (
