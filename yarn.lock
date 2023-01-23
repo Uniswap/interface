@@ -5090,10 +5090,10 @@
   resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.30.tgz#2103ca23b8007c59ec71718d34cdc97861c409e5"
   integrity sha512-HwY2VvkQ8lNR6ks5NqQfAtg+4IZqz3KV1T8d2DlI8emIn9uMmaoFbIOg0nzjqAVKKnZSbMTRRtUoAh6mmjRvog==
 
-"@uniswap/universal-router-sdk@1.3.0", "@uniswap/universal-router-sdk@^1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/universal-router-sdk/-/universal-router-sdk-1.3.0.tgz#f44262eafe729651d383f46a647399658d45baf7"
-  integrity sha512-Q7/Gw059JQDO7exxV791QzghEOiWomdvxvqidozDvkiZE7paIlSWq1vDVF4H3zB2GYy5Hu7HM8krl2l0KS9X5g==
+"@uniswap/universal-router-sdk@1.3.4", "@uniswap/universal-router-sdk@^1.3.0":
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/@uniswap/universal-router-sdk/-/universal-router-sdk-1.3.4.tgz#7b6b8e30d6faff812f224d32a832385378568160"
+  integrity sha512-RIWZm48N/fiAssMOj0nMLoeN5JATKOMfbFwyVnCaFHIVMJmKEZtZLKe3QOkl2LMVnQ/nP4LVCDwHU+mdP68jCQ==
   dependencies:
     "@uniswap/permit2-sdk" "^1.2.0"
     "@uniswap/router-sdk" "^1.4.0"
