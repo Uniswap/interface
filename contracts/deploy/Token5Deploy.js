@@ -6,7 +6,7 @@ module.exports = async function ({ ethers, getNamedAccounts, deployments }) {
   const name = 'Token5'
   const symbol = 'TKN'
 
-  token = await deploy("ERC20Token", {
+  token = await deploy("Token5", {
     from: deployer,
     log: true,
     args:[name, symbol, initialSupply],
