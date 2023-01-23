@@ -12,7 +12,7 @@
   "tokens": [
     {
       "chainId": 5,
-      "address": "0x31f116f6E800863efc7F32aE4AC4E63c67aDF03b",
+      "address": "0xE28D4Da1438Cd87734dbcFAB84b23241870b1AA7",
       "name": "Token1",
       "symbol": "TKN",
       "decimals": 18,
@@ -20,7 +20,7 @@
     }, 
     {
       "chainId": 5,
-      "address": "0xf4Cb436c3F78e8984CBbf49AA4D779e5eE4b1Fb1",
+      "address": "0xf28cD7dfB68Ad0Fd49ABFAdCB73ed32EFB64371E",
       "name": "Token2",
       "symbol": "TKN",
       "decimals": 18,
@@ -28,7 +28,7 @@
     },
     {
       "chainId": 5,
-      "address": "0xF6d8b02D83D01b5879fCB4092B9c285871Ab4Fa1",
+      "address": "0xE15317e53B0C7bB3522bf83f26F499aEf7b1a635",
       "name": "Token3",
       "symbol": "TKN",
       "decimals": 18,
@@ -36,7 +36,7 @@
     }, 
     {
       "chainId": 5,
-      "address": "0x319eE02240D65D1ef7bA744AA25F043218199Db8",
+      "address": "0xA380f19431e9dF6Ac599d998B334bBd43f4CA9e8",
       "name": "Token4",
       "symbol": "TKN",
       "decimals": 18,
@@ -44,7 +44,7 @@
     }, 
     {
       "chainId": 5,
-      "address": "0xbF08400Ac26453AD88768505feb900943dC29Fee",
+      "address": "0x88ef4B69E9e481B4166799a8240b65944B26A214",
       "name": "Token5",
       "symbol": "TKN",
       "decimals": 18,
