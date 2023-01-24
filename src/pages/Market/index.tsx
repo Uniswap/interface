@@ -227,7 +227,7 @@ const FlexContainer = styled.div`
   ${({ theme }) => theme.mediaWidth.upToLarge`
     flex-direction: column;
     height: 100%;
-    padding: 1rem 2rem 8rem 2rem;
+    padding: 1rem 1rem 8rem 1rem;
   `};
 `
 
