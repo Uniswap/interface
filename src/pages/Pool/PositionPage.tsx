@@ -566,15 +566,15 @@ export function PositionPage({
 
     async function load() {
       setProcessedBlockDate(undefined) // this is optional
-      if (processedBlockNumber) {
-        const res = await library?.getBlock(processedBlockNumber)
+      if (collectedBlockNumber) {
+        const res = await library?.getBlock(collectedBlockNumber)
         if (!res?.timestamp) {
           return
         }
         setProcessedBlockDate(DateTime.fromSeconds(res?.timestamp))
       }
     }
-  }, [processedBlockNumber, library])
+  }, [collectedBlockNumber, library])
 
   // TODO (pai) fix the target price ; upper or lower ; buy or sell
   const positionSummaryLink = useMemo(() => {
@@ -583,11 +583,11 @@ export function PositionPage({
     return getExplorerLink(chainId, createdTxn, ExplorerDataType.TRANSACTION)
   }, [chainId, createdTxn])
 
-  const processedSummaryLink = useMemo(() => {
-    if (!chainId || !processedTxn) return undefined
+  const collectedSummaryLink = useMemo(() => {
+    if (!chainId || !collectedTxn) return undefined
 
-    return getExplorerLink(chainId, processedTxn, ExplorerDataType.TRANSACTION)
-  }, [chainId, processedTxn])
+    return getExplorerLink(chainId, collectedTxn, ExplorerDataType.TRANSACTION)
+  }, [chainId, collectedTxn])
 
   const sqrtRatioX96Recalc = createdEvent?.sqrtPriceX96
 
@@ -1199,8 +1199,8 @@ export function PositionPage({
               ) : (
                 ''
               )}
-              {serviceFeePaidKrom && processedSummaryLink ? (
-                <LinkRow href={processedSummaryLink}>
+              {collectedSummaryLink ? (
+                <LinkRow href={collectedSummaryLink}>
                   <RangeLineItem>
                     <ExtentsText>
                       <Trans>{processedBlockDate && processedBlockDate.toLocaleString(DateTime.DATETIME_FULL)}</Trans>
@@ -1224,8 +1224,8 @@ export function PositionPage({
                 ''
               )}
 
-              {serviceFeePaidKrom && processedSummaryLink ? (
-                <LinkRow href={processedSummaryLink}>
+              {serviceFeePaidKrom && collectedSummaryLink ? (
+                <LinkRow href={collectedSummaryLink}>
                   <RangeLineItem>
                     <ExtentsText>
                       <Trans>{processedBlockDate && processedBlockDate.toLocaleString(DateTime.DATETIME_FULL)}</Trans>
