@@ -60,7 +60,7 @@ export default function Widget({ token, onTokenChange, onReviewSwapClick }: Widg
 
   const toggleWalletModal = useToggleWalletModal()
   const onConnectWalletClick = useCallback(() => {
-    toggleWalletModal
+    toggleWalletModal()
     return false // prevents the in-widget wallet modal from opening
   }, [toggleWalletModal])
 
