@@ -5,8 +5,9 @@ import COINBASE_ICON_URL from '../assets/images/coinbaseWalletIcon.svg'
 import FORTMATIC_ICON_URL from '../assets/images/fortmaticIcon.png'
 import METAMASK_ICON_URL from '../assets/images/metamask.png'
 import PORTIS_ICON_URL from '../assets/images/portisIcon.png'
+import UNSTOPABBLEDOMAINS_ICON_URL from '../assets/images/unstoppable_domains.png'
 import WALLETCONNECT_ICON_URL from '../assets/images/walletConnectIcon.svg'
-import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
+import { fortmatic, injected, portis, unstopabbledomains, walletconnect, walletlink } from '../connectors'
 
 interface WalletInfo {
   connector?: AbstractConnector
@@ -81,5 +82,13 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     href: null,
     color: '#4A6C9B',
     mobile: true,
+  },
+  UNSTOPABBLEDOMAINS: {
+    connector: unstopabbledomains,
+    name: 'Unstoppable Domains',
+    iconURL: UNSTOPABBLEDOMAINS_ICON_URL,
+    description: 'Unstoppable Domains',
+    href: null,
+    color: '#E8831D',
   },
 }
