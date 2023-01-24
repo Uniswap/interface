@@ -58,7 +58,12 @@ export default function Widget({ token, onTokenChange, onReviewSwapClick }: Widg
   const { settings } = useSyncWidgetSettings()
   const { transactions } = useSyncWidgetTransactions()
 
-  const onConnectWalletClick = useToggleWalletModal()
+  const toggleWalletModal = useToggleWalletModal()
+  const onConnectWalletClick = useCallback(() => {
+    toggleWalletModal
+    return false // prevents the in-widget wallet modal from opening
+  }, [toggleWalletModal])
+
   const onSwitchChain = useCallback(
     // TODO(WEB-1757): Widget should not break if this rejects - upstream the catch to ignore it.
     ({ chainId }: AddEthereumChainParameter) => switchChain(connector, Number(chainId)).catch(() => undefined),
