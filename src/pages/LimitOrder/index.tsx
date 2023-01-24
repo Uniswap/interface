@@ -84,7 +84,7 @@ const ClassicModeContainer = styled.div`
   z-index: 0;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: 1rem 2rem 8rem;
+    padding: 1rem 1rem 8rem;
   `};
 
   :nth-child(4) {
@@ -197,8 +197,22 @@ const GridContainer = styled.div`
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: minmax(min(100%, 475px), 1fr);
-    padding: 1rem 2rem 8rem;
+    padding: 1rem 1rem 8rem;
   `};
+`
+
+const StyledRow = styled.div`
+  display: grid;
+  grid-auto-flow: row dense;
+  grid-auto-columns: 1fr;
+  grid-auto-rows: 1fr;
+  grid-template-columns: 1fr 4fr 24px;
+  grid-template-rows: 1fr;
+  grid-template-areas: '. . .';
+  justify-content: space-between;
+  align-content: space-between;
+  justify-items: stretch;
+  align-items: start;
 `
 
 // we want the latest one to come first, so return negative if a is after b
@@ -616,7 +630,21 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                           />
                         </RowFixed>
                       </Row>
-                      <Row justify={!trade ? 'center' : 'space-between'}>
+                      <StyledRow>
+                        <RowFixed style={{ position: 'relative', marginRight: 'auto' }}>
+                          <TYPE.body color={theme.text2} fontWeight={400} fontSize={14}>
+                            <Trans>Current Price</Trans>
+                          </TYPE.body>
+                        </RowFixed>
+                        <RowFixed style={{ justifySelf: 'end' }}>
+                          <LoadingOpacityContainer $loading={routeIsSyncing}>
+                            <TradePrice
+                              price={trade.route.midPrice}
+                              showInverted={showInverted}
+                              setShowInverted={setShowInverted}
+                            />
+                          </LoadingOpacityContainer>
+                        </RowFixed>
                         <RowFixed style={{ position: 'relative' }}>
                           <MouseoverTooltipContent
                             wrap={false}
@@ -643,22 +671,22 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                             </AutoRow>
                           </MouseoverTooltipContent>
                         </RowFixed>
-                        <RowFixed style={{ position: 'relative', margin: '0 auto 0 12px' }}>
+                      </StyledRow>
+                      <StyledRow>
+                        <RowFixed style={{ position: 'relative', marginRight: 'auto' }}>
                           <TYPE.body color={theme.text2} fontWeight={400} fontSize={14}>
-                            <Trans>Current Price</Trans>
+                            <Trans>Min Price</Trans>
                           </TYPE.body>
                         </RowFixed>
-                        <RowFixed>
+                        <RowFixed style={{ justifySelf: 'end' }}>
                           <LoadingOpacityContainer $loading={routeIsSyncing}>
                             <TradePrice
-                              price={trade.route.midPrice}
+                              price={minPrice}
                               showInverted={showInverted}
                               setShowInverted={setShowInverted}
                             />
                           </LoadingOpacityContainer>
                         </RowFixed>
-                      </Row>
-                      <Row justify={!trade ? 'center' : 'space-between'}>
                         <RowFixed style={{ position: 'relative' }}>
                           {' '}
                           <MouseoverTooltipContent
@@ -685,21 +713,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                             <StyledInfo />
                           </MouseoverTooltipContent>
                         </RowFixed>
-                        <RowFixed style={{ position: 'relative', margin: '0 auto 0 12px' }}>
-                          <TYPE.body color={theme.text2} fontWeight={400} fontSize={14}>
-                            <Trans>Min Price</Trans>
-                          </TYPE.body>
-                        </RowFixed>
-                        <RowFixed>
-                          <LoadingOpacityContainer $loading={routeIsSyncing}>
-                            <TradePrice
-                              price={minPrice}
-                              showInverted={showInverted}
-                              setShowInverted={setShowInverted}
-                            />
-                          </LoadingOpacityContainer>
-                        </RowFixed>
-                      </Row>
+                      </StyledRow>
                     </>
                   )}
                   {!trade && !minPrice && (
@@ -1024,7 +1038,21 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                     />
                   </RowFixed>
                 </Row>
-                <Row justify={!trade ? 'center' : 'space-between'}>
+                <StyledRow>
+                  <RowFixed style={{ position: 'relative', marginRight: 'auto' }}>
+                    <TYPE.body color={theme.text2} fontWeight={400} fontSize={14}>
+                      <Trans>Current Price</Trans>
+                    </TYPE.body>
+                  </RowFixed>
+                  <RowFixed style={{ justifySelf: 'end' }}>
+                    <LoadingOpacityContainer $loading={routeIsSyncing}>
+                      <TradePrice
+                        price={trade.route.midPrice}
+                        showInverted={showInverted}
+                        setShowInverted={setShowInverted}
+                      />
+                    </LoadingOpacityContainer>
+                  </RowFixed>
                   <RowFixed style={{ position: 'relative' }}>
                     <MouseoverTooltipContent
                       wrap={false}
@@ -1049,22 +1077,18 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                       </AutoRow>
                     </MouseoverTooltipContent>
                   </RowFixed>
-                  <RowFixed style={{ position: 'relative', margin: '0 auto 0 12px' }}>
+                </StyledRow>
+                <StyledRow>
+                  <RowFixed style={{ position: 'relative', marginRight: 'auto' }}>
                     <TYPE.body color={theme.text2} fontWeight={400} fontSize={14}>
-                      <Trans>Current Price</Trans>
+                      <Trans>Min Price</Trans>
                     </TYPE.body>
                   </RowFixed>
-                  <RowFixed>
+                  <RowFixed style={{ justifySelf: 'end' }}>
                     <LoadingOpacityContainer $loading={routeIsSyncing}>
-                      <TradePrice
-                        price={trade.route.midPrice}
-                        showInverted={showInverted}
-                        setShowInverted={setShowInverted}
-                      />
+                      <TradePrice price={minPrice} showInverted={showInverted} setShowInverted={setShowInverted} />
                     </LoadingOpacityContainer>
                   </RowFixed>
-                </Row>
-                <Row justify={!trade ? 'center' : 'space-between'}>
                   <RowFixed style={{ position: 'relative' }}>
                     {' '}
                     <MouseoverTooltipContent
@@ -1091,17 +1115,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                       <StyledInfo />
                     </MouseoverTooltipContent>
                   </RowFixed>
-                  <RowFixed style={{ position: 'relative', margin: '0 auto 0 12px' }}>
-                    <TYPE.body color={theme.text2} fontWeight={400} fontSize={14}>
-                      <Trans>Min Price</Trans>
-                    </TYPE.body>
-                  </RowFixed>
-                  <RowFixed>
-                    <LoadingOpacityContainer $loading={routeIsSyncing}>
-                      <TradePrice price={minPrice} showInverted={showInverted} setShowInverted={setShowInverted} />
-                    </LoadingOpacityContainer>
-                  </RowFixed>
-                </Row>
+                </StyledRow>
               </>
             )}
             {!trade && !minPrice && (

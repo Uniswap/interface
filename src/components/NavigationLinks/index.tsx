@@ -119,6 +119,7 @@ const StyledNavLinkAlt = styled.button`
   word-break: break-word;
   white-space: nowrap;
   height: 44px;
+  overflow: hidden;
 
   &.${activeClassName} {
     box-shadow: 0 0 0 1px ${({ theme }) => theme.bg3};
@@ -178,7 +179,16 @@ export default function NavigationLinks() {
             </Text>
           </StyledNavLink>
           <StyledNavLinkAlt id={`perp-nav-link`} onClick={() => handleTogglePerpModal()}>
-            <Text fontSize={16} fontWeight={400}>
+            <Text
+              fontSize={16}
+              fontWeight={400}
+              overflow={'hidden'}
+              style={{
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
               <Trans>Perpetual Trading</Trans>
             </Text>
           </StyledNavLinkAlt>
