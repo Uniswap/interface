@@ -277,7 +277,7 @@ export default function AddLiquidity({
         </LightCard>
         <TYPE.italic>
           {withdraw ? (
-            <Trans>Withdrawing KROM may prevent the system to automatically processing trades</Trans>
+            <Trans>Withdrawing KROM may prevent the system to automatically process trades</Trans>
           ) : (
             <Trans>Depositing KROM will allow the system to automatically process trades</Trans>
           )}

@@ -1,10 +1,12 @@
 import { Trans } from '@lingui/macro'
+import { ButtonGroup } from '@material-ui/core'
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { KROM } from 'constants/tokens'
 import { useNewStakingContract } from 'hooks/useContract'
 import JSBI from 'jsbi'
+import { darken } from 'polished'
 import { useState } from 'react'
 import { HelpCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -19,7 +21,7 @@ import { useActiveWeb3React } from '../../hooks/web3'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
 import { unwrappedToken } from '../../utils/unwrappedToken'
-import { ButtonBlock, ButtonErrorStyle } from '../Button'
+import { BaseButton } from '../Button'
 import { GreyCard, LightCard } from '../Card'
 import { AutoColumn } from '../Column'
 import DoubleCurrencyLogo from '../DoubleLogo'
@@ -51,16 +53,20 @@ const AccountStatusCard = styled(AutoColumn)`
   padding: 24px;
 `
 
-const DepositRequiredButton = styled(ButtonErrorStyle)`
-  border-radius: 10px;
-  margin-top: 5px;
-  padding: 6px 10px;
-`
-
 const StyledHelperCircle = styled(HelpCircle)`
   size: 24px;
   color: ${({ theme }) => theme.text1};
   margin-left: 8px;
+`
+
+const StyledButtonSecondary = styled(BaseButton)`
+  color: ${({ theme }) => theme.text1};
+  background-color: ${({ theme }) => theme.bg1};
+  border: 3px solid ${({ theme }) => theme.shadow3};
+  :hover {
+    background-color: ${({ theme }) => darken(0.05, theme.primary1)};
+    color: ${({ theme }) => theme.white};
+  }
 `
 
 interface PositionCardProps {
@@ -228,13 +234,6 @@ export default function FullPositionCard({ fundingBalance }: FundingCardProps) {
                       <TYPE.error error>KROM deposit required</TYPE.error>
                     </Text>
                   </RowFixed>
-                  <RowFixed>
-                    <DepositRequiredButton as={Link} to={`/add/${kromToken?.address}`}>
-                      <Text fontSize={14} fontWeight={700}>
-                        <Trans>Deposit</Trans>
-                      </Text>
-                    </DepositRequiredButton>
-                  </RowFixed>
                 </AutoColumn>
               ) : (
                 <RowFixed>
@@ -319,11 +318,18 @@ export default function FullPositionCard({ fundingBalance }: FundingCardProps) {
           </AutoColumn>
         </AutoColumn>
       </AccountStatusCard>
-      <ButtonBlock as={Link} to={`/add/${kromToken?.address}/remove`}>
-        <Text fontSize={16} fontWeight={700}>
-          <Trans>Withdraw KROM</Trans>
-        </Text>
-      </ButtonBlock>
+      <ButtonGroup>
+        <StyledButtonSecondary as={Link} to={`/add/${kromToken?.address}`}>
+          <Text fontSize={16} fontWeight={700}>
+            <Trans>Deposit KROM</Trans>
+          </Text>
+        </StyledButtonSecondary>
+        <StyledButtonSecondary as={Link} to={`/add/${kromToken?.address}/remove`}>
+          <Text fontSize={16} fontWeight={700}>
+            <Trans>Withdraw KROM</Trans>
+          </Text>
+        </StyledButtonSecondary>
+      </ButtonGroup>
     </AccountStatusWrapper>
   )
 }
