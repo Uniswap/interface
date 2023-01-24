@@ -4,7 +4,7 @@ import { WETH9 } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { RowFixed } from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { KROM } from 'constants/tokens'
+import { KROM, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { usePool } from 'hooks/usePools'
 import useTheme from 'hooks/useTheme'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
@@ -14,6 +14,7 @@ import { useAppSelector } from 'state/hooks'
 import { useNetworkGasPrice } from 'state/user/hooks'
 import styled, { keyframes } from 'styled-components/macro'
 
+import { CHAIN_INFO, NetworkType, SupportedChainId } from '../../constants/chains'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useBlockNumber } from '../../state/application/hooks'
 import { ExternalLink, TYPE } from '../../theme'
@@ -148,9 +149,11 @@ export default function Polling() {
 
   const kromToken = chainId ? KROM[chainId] : undefined
   const eth = chainId ? WETH9[chainId] : undefined
+  const nativeToken = chainId ? WRAPPED_NATIVE_CURRENCY[chainId] : undefined
   const [, pool] = usePool(kromToken, eth, FeeAmount.MEDIUM)
-
   const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, BigNumber.from('154097'), false)
+  const { networkType, explorer } = CHAIN_INFO[chainId ?? SupportedChainId.MAINNET]
+  const gasTracker = networkType === NetworkType.L1 ? explorer + 'gasTracker' : explorer
 
   return (
     <>
@@ -170,7 +173,7 @@ export default function Polling() {
             </RowFixed>
           </ExternalLink>
         ) : null}
-        <ExternalLink href={'https://etherscan.io/gastracker'}>
+        <ExternalLink href={gasTracker}>
           {priceGwei ? (
             <RowFixed style={{ marginRight: '8px', gap: '8px' }}>
               <StyledPollingText>
@@ -178,7 +181,8 @@ export default function Polling() {
                   text={
                     <Trans>
                       {`The current fast gas amount for sending a transaction on the network.
-                    Gas fees are paid in native currency Ether (ETH) and denominated in gwei. `}
+                    Gas fees are paid in native currency ${nativeToken?.symbol?.substring(1)} 
+                    and denominated in gwei. `}
                     </Trans>
                   }
                 >

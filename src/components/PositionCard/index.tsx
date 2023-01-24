@@ -212,7 +212,7 @@ export default function FullPositionCard({ fundingBalance }: FundingCardProps) {
                   text={
                     <Trans>
                       Please deposit $KROM to process your limit order. Recommendation is to deposit at least twice the
-                      minimum balance required.
+                      minimum balance.
                     </Trans>
                   }
                 >
@@ -259,7 +259,7 @@ export default function FullPositionCard({ fundingBalance }: FundingCardProps) {
                   text={
                     <Trans>
                       Your account is actively processing trades. Recommendation is to deposit at least twice the
-                      minimum minimum balance.
+                      minimum balance.
                     </Trans>
                   }
                 >
@@ -295,7 +295,7 @@ export default function FullPositionCard({ fundingBalance }: FundingCardProps) {
                   text={
                     <Trans>
                       You will need to maintain a minimum KROM balance to cover for the service fees. Recommendation is
-                      is to deposit at least twice the minimum balance.
+                      Recommendation is to deposit at least twice the minimum balance.
                     </Trans>
                   }
                 >
