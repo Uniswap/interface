@@ -13,16 +13,17 @@ interface TradePriceProps {
 }
 
 const StyledPriceContainer = styled.button`
-  align-items: center;
   background-color: transparent;
   border: none;
   cursor: pointer;
-  display: grid;
-  height: 24px;
-  justify-content: center;
   padding: 0;
-  grid-template-columns: 1fr auto;
-  grid-gap: 0.25rem;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px;
+  text-align: left;
 `
 
 export default function TradePrice({ price, showInverted, setShowInverted }: TradePriceProps) {
@@ -49,7 +50,7 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
       </Text>{' '}
       {usdcPrice && (
         <TYPE.darkGray>
-          <Trans>(${usdcPrice.toSignificant(6, { groupSeparator: ',' })})</Trans>{' '}
+          <Trans>${usdcPrice.toSignificant(6, { groupSeparator: ',' })}</Trans>{' '}
         </TYPE.darkGray>
       )}
     </StyledPriceContainer>

@@ -168,10 +168,19 @@ const StyledNumericalInput = styled(NumericalInput)<{ $loading: boolean }>`
   ${loadingOpacityMixin}
 `
 
+const StyledButtonGroup = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+`
+
 const SmallButton = styled(ButtonGray)`
   background-color: ${({ theme }) => theme.primary1};
   border-radius: 8px;
-  padding: 4px;
+  padding: 0;
+  width: 24px;
+  height: 24px;
 
   :hover {
     background-color: ${({ theme }) => darken(0.05, theme.primary1)};
@@ -331,8 +340,8 @@ export default function CurrencyInputPanel({
             </CurrencySelect>
           ) : null}
           {showRate && (
-            <RowFixed style={{ height: '17px' }}>
-              <TYPE.main>{'Target Price'}</TYPE.main>
+            <RowFixed style={{ height: '17px', marginRight: '12px' }}>
+              <TYPE.main>{'Limit Buy Price'}</TYPE.main>
             </RowFixed>
           )}
           {!hideInput && (
@@ -382,33 +391,28 @@ export default function CurrencyInputPanel({
           </FiatRow>
         )}
 
-        {showRate && !value && !price && (
-          <Fragment>
-            <FiatRow>
-              <RowBetween>
-                <StyledPriceContainer> </StyledPriceContainer>
-              </RowBetween>
-            </FiatRow>
-          </Fragment>
-        )}
-
         {showRate && value && price && (
           <Fragment>
             <FiatRow>
               <RowBetween>
                 <TradePrice price={price} showInverted={isInvertedRate} setShowInverted={setShowInverted} />
-                <RowFixed gap={'sm'}>
-                  <SmallButton onClick={handleDecrement} disabled={false}>
-                    <ButtonLabel disabled={false} fontSize="12px">
-                      <Minus size={18} />
-                    </ButtonLabel>
-                  </SmallButton>
-                  <SmallButton onClick={handleIncrement} disabled={false}>
-                    <ButtonLabel disabled={false} fontSize="12px">
-                      <Plus size={18} />
-                    </ButtonLabel>
-                  </SmallButton>
-                </RowFixed>
+                <StyledButtonGroup>
+                  <RowFixed gap={'sm'}>
+                    <TYPE.main fontSize={16} fontWeight={400}>
+                      {'~1%'}
+                    </TYPE.main>
+                    <SmallButton onClick={handleDecrement} disabled={false}>
+                      <ButtonLabel disabled={false} fontSize="12px">
+                        <Minus size={18} />
+                      </ButtonLabel>
+                    </SmallButton>
+                    <SmallButton onClick={handleIncrement} disabled={false}>
+                      <ButtonLabel disabled={false} fontSize="12px">
+                        <Plus size={18} />
+                      </ButtonLabel>
+                    </SmallButton>
+                  </RowFixed>
+                </StyledButtonGroup>
               </RowBetween>
             </FiatRow>
           </Fragment>

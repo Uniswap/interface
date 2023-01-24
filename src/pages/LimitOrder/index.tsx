@@ -643,7 +643,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                             </AutoRow>
                           </MouseoverTooltipContent>
                         </RowFixed>
-                        <RowFixed style={{ position: 'relative' }}>
+                        <RowFixed style={{ position: 'relative', margin: '0 auto 0 12px' }}>
                           <TYPE.body color={theme.text2} fontWeight={400} fontSize={14}>
                             <Trans>Current Price</Trans>
                           </TYPE.body>
@@ -685,7 +685,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                             <StyledInfo />
                           </MouseoverTooltipContent>
                         </RowFixed>
-                        <RowFixed style={{ position: 'relative' }}>
+                        <RowFixed style={{ position: 'relative', margin: '0 auto 0 12px' }}>
                           <TYPE.body color={theme.text2} fontWeight={400} fontSize={14}>
                             <Trans>Min Price</Trans>
                           </TYPE.body>
@@ -875,10 +875,10 @@ export default function LimitOrder({ history }: RouteComponentProps) {
           </StyledSwap>
           <LimitOrdersContainer>
             <LimitOrdersWrapper direction={'row'}>
-              <Collapsible label="Open Orders" initState={true}>
+              <Collapsible label="Open Orders" initState={openPositions.length > 0}>
                 <LimitOrdersList orders={openPositions} fundingBalance={fundingBalance} minBalance={minBalance} />
               </Collapsible>
-              <Collapsible label="Executed Orders" initState={expertMode}>
+              <Collapsible label="Executed Orders" initState={closedPositions.length > 0}>
                 <LimitOrdersList orders={closedPositions} fundingBalance={fundingBalance} minBalance={minBalance} />
               </Collapsible>
             </LimitOrdersWrapper>
@@ -1049,7 +1049,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                       </AutoRow>
                     </MouseoverTooltipContent>
                   </RowFixed>
-                  <RowFixed style={{ position: 'relative' }}>
+                  <RowFixed style={{ position: 'relative', margin: '0 auto 0 12px' }}>
                     <TYPE.body color={theme.text2} fontWeight={400} fontSize={14}>
                       <Trans>Current Price</Trans>
                     </TYPE.body>
@@ -1091,7 +1091,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                       <StyledInfo />
                     </MouseoverTooltipContent>
                   </RowFixed>
-                  <RowFixed style={{ position: 'relative' }}>
+                  <RowFixed style={{ position: 'relative', margin: '0 auto 0 12px' }}>
                     <TYPE.body color={theme.text2} fontWeight={400} fontSize={14}>
                       <Trans>Min Price</Trans>
                     </TYPE.body>
@@ -1274,10 +1274,10 @@ export default function LimitOrder({ history }: RouteComponentProps) {
       )}
       <LimitOrdersContainer>
         <LimitOrdersWrapper direction={'column'}>
-          <Collapsible label="Open Orders" initState={true}>
+          <Collapsible label="Open Orders" initState={openPositions.length > 0}>
             <LimitOrdersList orders={openPositions} fundingBalance={fundingBalance} minBalance={minBalance} />
           </Collapsible>
-          <Collapsible label="Executed Orders">
+          <Collapsible label="Executed Orders" initState={closedPositions.length > 0}>
             <LimitOrdersList orders={closedPositions} fundingBalance={fundingBalance} minBalance={minBalance} />
           </Collapsible>
         </LimitOrdersWrapper>

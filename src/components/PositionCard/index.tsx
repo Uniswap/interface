@@ -14,6 +14,7 @@ import styled from 'styled-components/macro'
 import Web3 from 'web3-utils'
 
 import { useTotalSupply } from '../../hooks/useTotalSupply'
+import { useV3Positions } from '../../hooks/useV3Positions'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
@@ -54,6 +55,12 @@ const DepositRequiredButton = styled(ButtonErrorStyle)`
   border-radius: 10px;
   margin-top: 5px;
   padding: 6px 10px;
+`
+
+const StyledHelperCircle = styled(HelpCircle)`
+  size: 24px;
+  color: ${({ theme }) => theme.text1};
+  margin-left: 8px;
 `
 
 interface PositionCardProps {
@@ -181,8 +188,9 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
   )
 }
 
-export default function FullPositionCard({ fundingBalance, minBalance, gasPrice }: FundingCardProps) {
+export default function FullPositionCard({ fundingBalance }: FundingCardProps) {
   const { account, chainId } = useActiveWeb3React()
+  const { minBalance } = useV3Positions(account)
   const kromToken = chainId ? KROM[chainId] : undefined
   const isUnderfunded = fundingBalance ? !minBalance?.lessThan(fundingBalance?.quotient) : true
 
@@ -208,7 +216,7 @@ export default function FullPositionCard({ fundingBalance, minBalance, gasPrice 
                     </Trans>
                   }
                 >
-                  <HelpCircle size="24" color={'white'} style={{ marginLeft: '8px' }} />
+                  <StyledHelperCircle />
                 </MouseoverTooltip>
               </RowFixed>
             </FixedHeightRow>
@@ -255,7 +263,7 @@ export default function FullPositionCard({ fundingBalance, minBalance, gasPrice 
                     </Trans>
                   }
                 >
-                  <HelpCircle size="24" color={'white'} style={{ marginLeft: '8px' }} />
+                  <StyledHelperCircle />
                 </MouseoverTooltip>
               </RowFixed>
             </FixedHeightRow>
@@ -291,7 +299,7 @@ export default function FullPositionCard({ fundingBalance, minBalance, gasPrice 
                     </Trans>
                   }
                 >
-                  <HelpCircle size="24" color={'white'} style={{ marginLeft: '8px' }} />
+                  <StyledHelperCircle />
                 </MouseoverTooltip>
               </RowFixed>
             </FixedHeightRow>
@@ -302,36 +310,6 @@ export default function FullPositionCard({ fundingBalance, minBalance, gasPrice 
                     <TYPE.body>
                       {minBalance?.toSignificant(6)} {minBalance?.currency.symbol}
                     </TYPE.body>
-                  </Text>
-                </RowFixed>
-              ) : (
-                '-'
-              )}
-            </FixedHeightRow>
-          </AutoColumn>
-          <AutoColumn>
-            <FixedHeightRow>
-              <RowFixed>
-                <Text fontSize={16} fontWeight={400}>
-                  <TYPE.darkGray>
-                    <Trans>Total LP Fees Earned:</Trans>
-                  </TYPE.darkGray>
-                </Text>
-              </RowFixed>
-              <RowFixed>
-                <MouseoverTooltip text={<Trans>The total amount of LP fees earned as a liquidity provider</Trans>}>
-                  <HelpCircle size="24" color={'white'} style={{ marginLeft: '8px' }} />
-                </MouseoverTooltip>
-              </RowFixed>
-            </FixedHeightRow>
-            <FixedHeightRow>
-              {fundingBalance ? (
-                <RowFixed>
-                  <Text fontSize={16} fontWeight={500}>
-                    <TYPE.purple>
-                      {/* TODO: Show Total Fees Earned */}
-                      TODO
-                    </TYPE.purple>
                   </Text>
                 </RowFixed>
               ) : (
@@ -428,7 +406,7 @@ export function StakePositionCard({ fundingBalance, minBalance, gasPrice }: Fund
                       </Trans>
                     }
                   >
-                    <HelpCircle size="24" color={'white'} style={{ marginLeft: '8px' }} />
+                    <StyledHelperCircle />
                   </MouseoverTooltip>
                 </RowFixed>
                 {fundingBalance ? (

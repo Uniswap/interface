@@ -5,7 +5,6 @@ import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 
 import { useTogglePerpModal } from '../../state/application/hooks'
-import Badge, { BadgeVariant } from '../Badge'
 import Row, { AutoRow } from '../Row'
 
 const NavWrapper = styled.div`
@@ -70,7 +69,7 @@ const StyledNavLink = styled(NavLink).attrs({
   font-weight: 400;
   text-align: center;
   text-decoration: none;
-  padding: 8px 16px;
+  padding: 0.5rem 2rem;
   word-break: break-word;
   white-space: nowrap;
   color: ${({ theme }) => theme.text2};
@@ -79,6 +78,7 @@ const StyledNavLink = styled(NavLink).attrs({
   &.${activeClassName} {
     box-shadow: 0 0 2px 1px ${({ theme }) => (theme.darkMode ? theme.bg3 : theme.bg0)};
     background-color: ${({ theme }) => (theme.darkMode ? theme.bg2 : theme.bg3)};
+
     div {
       font-weight: 700;
     }
@@ -169,13 +169,8 @@ export default function NavigationLinks() {
         <NavLinks>
           <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
             <Text fontSize={16} fontWeight={400}>
-              <Trans>Gasless Swap</Trans>
+              <Trans>Swap</Trans>
             </Text>
-            <Badge variant={BadgeVariant.PRIMARY}>
-              <Text fontSize={12} fontWeight={700} color="white">
-                <Trans>New!</Trans>
-              </Text>
-            </Badge>
           </StyledNavLink>
           <StyledNavLink id={`swap-nav-link`} to={'/limitorder'}>
             <Text fontSize={16} fontWeight={400}>
@@ -184,13 +179,8 @@ export default function NavigationLinks() {
           </StyledNavLink>
           <StyledNavLinkAlt id={`perp-nav-link`} onClick={() => handleTogglePerpModal()}>
             <Text fontSize={16} fontWeight={400}>
-              <Trans>Futures</Trans>
+              <Trans>Perpetual Trading</Trans>
             </Text>
-            <Badge variant={BadgeVariant.PRIMARY}>
-              <Text fontSize={12} fontWeight={700} color="white">
-                <Trans>New!</Trans>
-              </Text>
-            </Badge>
           </StyledNavLinkAlt>
         </NavLinks>
       </NavFrame>

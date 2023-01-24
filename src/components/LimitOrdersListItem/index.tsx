@@ -372,7 +372,7 @@ export default function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }
           </TYPE.darkGray>
         </TextLabel>
         <TextValue>
-          <Trans>{targetPriceUSD && !isTokenStable ? <span>(${formatPrice(targetPriceUSD)})</span> : ''}</Trans>
+          <Trans>{targetPriceUSD && !isTokenStable ? <span>${formatPrice(targetPriceUSD)}</span> : ''}</Trans>
         </TextValue>
       </RowFixedHeight>
 

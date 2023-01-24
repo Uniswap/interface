@@ -29,6 +29,8 @@ const CollapsibleToggler = styled(BaseButton)<{ isOpen: boolean }>`
   border-bottom-right-radius: ${({ isOpen }) => (isOpen ? '0px' : '20px')};
   padding: 1rem;
   width: 100%;
+  height: ${({ isOpen }) => !isOpen && 'fit-content'};
+
   &:hover {
     background-color: ${({ theme }) => darken(0.05, theme.primary1)};
     color: ${({ theme }) => theme.white};
