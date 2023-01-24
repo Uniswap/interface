@@ -3,7 +3,10 @@
   "scripts": {
     "test": "hardhat test",
     "deploy:hardhat": "hardhat deploy",
-    "deploy:goerli": "hardhat deploy --network goerli"
+    "deploy:goerli": "hardhat deploy --network goerli",
+    "prettier": "prettier --write test/*.js && prettier --write contracts/*.sol",
+    "solhint": "solhint -c .solhint.json contracts/*.sol",
+    "lint": "yarn prettier && yarn solhint"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.5",
@@ -22,6 +25,9 @@
     "solidity-coverage": "^0.8.2"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.8.1"
+    "@openzeppelin/contracts": "^4.8.1",
+    "prettier": "^2.8.3",
+    "prettier-plugin-solidity": "^1.1.1",
+    "solhint": "^3.3.8"
   }
 }

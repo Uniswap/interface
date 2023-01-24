@@ -1,12 +1,12 @@
 const { expect } = require("chai");
-const { ethers } =  require("hardhat");
+const { ethers } = require("hardhat");
 
 describe("ERC20Token", function () {
   const initialSupply = ethers.utils.parseUnits("1000000");
   beforeEach(async function () {
-    [this.deployer,this.account1,this.account2] = await ethers.getSigners()  
+    [this.deployer, this.account1, this.account2] = await ethers.getSigners();
     this.contract = await ethers.getContractFactory("ERC20Token");
-    this.token = await this.contract.deploy('TOKEN1','TKN',initialSupply);
+    this.token = await this.contract.deploy("TOKEN1", "TKN", initialSupply);
   });
 
   it("has a name", async function () {
