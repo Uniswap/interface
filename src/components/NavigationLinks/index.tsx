@@ -43,8 +43,7 @@ const NavLinks = styled(Row)`
     transform: translate(50%,-50%);
     margin: 0 auto;
     background-color: ${({ theme }) => (theme.darkMode ? theme.bg1 : theme.bg0)};
-    border: 1px solid ${({ theme }) => theme.primary1};
-    box-shadow: 0px 6px 10px rgb(0 0 0 / 2%);
+    box-shadow: 0px 0px 6px -2px ${({ theme }) => theme.primary1};
     width: fit-content;
   `};
 
@@ -76,7 +75,6 @@ const StyledNavLink = styled(NavLink).attrs({
   height: 44px;
 
   &.${activeClassName} {
-    box-shadow: 0 0 2px 1px ${({ theme }) => (theme.darkMode ? theme.bg3 : theme.bg0)};
     background-color: ${({ theme }) => (theme.darkMode ? theme.bg2 : theme.bg3)};
 
     div {

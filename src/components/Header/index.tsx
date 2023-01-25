@@ -36,7 +36,7 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
   background-color: transparent;
   background-position: ${({ showBackground }) => (showBackground ? '0 -100%' : '0 0')};
   background-size: 100% 200%;
-  border-bottom: 3px solid ${({ theme, showBackground }) => (showBackground ? theme.shadow3 : 'transparent;')};
+  border-bottom: 2px solid ${({ theme, showBackground }) => (showBackground ? theme.shadow3 : 'transparent;')};
   transition: background-position 0.1s, box-shadow 0.1s;
   background-blend-mode: hard-light;
 

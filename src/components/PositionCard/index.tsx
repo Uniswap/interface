@@ -62,7 +62,7 @@ const StyledHelperCircle = styled(HelpCircle)`
 const StyledButtonSecondary = styled(BaseButton)`
   color: ${({ theme }) => theme.text1};
   background-color: ${({ theme }) => theme.bg1};
-  border: 3px solid ${({ theme }) => theme.shadow3};
+  border: 2px solid ${({ theme }) => theme.shadow3};
   :hover {
     background-color: ${({ theme }) => darken(0.05, theme.primary1)};
     color: ${({ theme }) => theme.white};

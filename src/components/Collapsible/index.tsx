@@ -22,8 +22,8 @@ const CollapsibleToggler = styled(BaseButton)<{ isOpen: boolean }>`
   color: ${({ theme }) => theme.text1};
   cursor: pointer;
   box-shadow: ${({ theme, isOpen }) => (!isOpen ? '0 0 12px 6px ' + theme.shadow2 : 'none')};
-  border: ${({ theme, isOpen }) => (isOpen ? '3px solid' + theme.shadow3 : 'none')};
-  border-bottom: ${({ theme, isOpen }) => (isOpen ? '3px solid' + theme.shadow3 : 'none')};
+  border: ${({ theme, isOpen }) => (isOpen ? '2px solid' + theme.shadow3 : 'none')};
+  border-bottom: ${({ theme, isOpen }) => (isOpen ? '2px solid' + theme.shadow3 : 'none')};
   border-radius: 20px;
   border-bottom-left-radius: ${({ isOpen }) => (isOpen ? '0px' : '20px')};
   border-bottom-right-radius: ${({ isOpen }) => (isOpen ? '0px' : '20px')};
@@ -42,9 +42,9 @@ const CollapsibleContentContainer = styled.div<{ isOpen: boolean }>`
   background-color: ${({ theme }) => theme.bg1};
   position: relative;
   top: -10px;
-  border-left: 3px solid ${({ theme }) => theme.shadow3};
-  border-bottom: 3px solid ${({ theme }) => theme.shadow3};
-  border-right: 3px solid ${({ theme }) => theme.shadow3};
+  border-left: 2px solid ${({ theme }) => theme.shadow3};
+  border-bottom: 2px solid ${({ theme }) => theme.shadow3};
+  border-right: 2px solid ${({ theme }) => theme.shadow3};
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
   overflow: auto;
