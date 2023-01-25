@@ -216,7 +216,7 @@ const ProfileMethodButton = styled(BaseButton)`
 `
 
 const DropdownWrapper = styled(Column)<{ isOpen: boolean }>`
-  padding: 16px 4px;
+  padding: 12px 8px;
   background-color: ${({ theme }) => theme.backgroundModule};
   display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
   position: absolute;
@@ -233,7 +233,7 @@ const DropdownRow = styled(Row)<{ selected?: boolean }>`
   height: 44px;
   gap: 12px;
   justify-content: space-between;
-  padding: 0px 16px;
+  padding: 0px 12px;
   border-radius: 12px;
   font-size: 16px;
   font-weight: 600;
