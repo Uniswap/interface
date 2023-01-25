@@ -8,7 +8,7 @@ import { assetList } from 'nft/components/collection/CollectionNfts.css'
 import { FilterButton } from 'nft/components/collection/FilterButton'
 import { ClearAllButton } from 'nft/components/collection/shared'
 import { Column, Row } from 'nft/components/Flex'
-import { CrossIcon, EllipsisIcon, TagIcon } from 'nft/components/icons'
+import { CrossIcon, EllipsisIcon, FlameIcon, TagIcon } from 'nft/components/icons'
 import { FilterSidebar } from 'nft/components/profile/view/FilterSidebar'
 import { subhead } from 'nft/css/common.css'
 import {
@@ -35,6 +35,7 @@ import {
   useRef,
   useState
 } from 'react'
+import { Send } from 'react-feather'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
 import { easings, useSpring } from 'react-spring'
@@ -230,7 +231,8 @@ const DropdownWrapper = styled(Column)<{ isOpen: boolean }>`
 const DropdownRow = styled(Row)<{ selected?: boolean }>`
   width: 100%;
   height: 44px;
-  gap: 8px;
+  gap: 12px;
+  justify-content: space-between;
   padding: 0px 16px;
   border-radius: 12px;
   font-size: 16px;
@@ -326,12 +328,14 @@ const ProfilePageNfts = ({
                   onClick={() => handleProfileMethodClick(ProfileMethod.SEND)}
                 >
                   <Trans>Send</Trans>
+                  <Send height={20} width={20} />
                 </DropdownRow>
                 <DropdownRow
                   selected={profileMethod === ProfileMethod.BURN}
                   onClick={() => handleProfileMethodClick(ProfileMethod.BURN)}
                 >
                   <Trans>Burn</Trans>
+                  <FlameIcon height={20} width={20} />
                 </DropdownRow>
               </DropdownWrapper>
             </Column>
