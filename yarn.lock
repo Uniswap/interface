@@ -4945,10 +4945,10 @@
     react "^18.2.0"
     react-dom "^18.2.0"
 
-"@uniswap/conedison@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@uniswap/conedison/-/conedison-1.1.1.tgz#affec246613d1f52da3cdd0571ef8195b7b54d17"
-  integrity sha512-xFHAcWRrU+/+/BInXy6SRiiNwUG0vxLWsoYgod66wWifUvnjfpItzlvJHUer1OOpLDsz0CL5Fb70vFJOGAGi8w==
+"@uniswap/conedison@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/conedison/-/conedison-1.2.1.tgz#c3dbfe14f4320fc5c60cde23c4bd70ed8a39c782"
+  integrity sha512-ir6j7RQOyREXtW5YlmPjskfl7oDeHWtMFai57snThAkKgrb+8KTX5b0a5nbXeIuaW2RNHAaWTGoSoTneIHCAnQ==
 
 "@uniswap/default-token-list@^2.0.0":
   version "2.2.0"
@@ -5090,7 +5090,7 @@
   resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.30.tgz#2103ca23b8007c59ec71718d34cdc97861c409e5"
   integrity sha512-HwY2VvkQ8lNR6ks5NqQfAtg+4IZqz3KV1T8d2DlI8emIn9uMmaoFbIOg0nzjqAVKKnZSbMTRRtUoAh6mmjRvog==
 
-"@uniswap/universal-router-sdk@1.3.4", "@uniswap/universal-router-sdk@^1.3.0":
+"@uniswap/universal-router-sdk@1.3.4", "@uniswap/universal-router-sdk@^1.3.4":
   version "1.3.4"
   resolved "https://registry.yarnpkg.com/@uniswap/universal-router-sdk/-/universal-router-sdk-1.3.4.tgz#7b6b8e30d6faff812f224d32a832385378568160"
   integrity sha512-RIWZm48N/fiAssMOj0nMLoeN5JATKOMfbFwyVnCaFHIVMJmKEZtZLKe3QOkl2LMVnQ/nP4LVCDwHU+mdP68jCQ==
@@ -5194,24 +5194,24 @@
     "@uniswap/v3-core" "1.0.0"
     "@uniswap/v3-periphery" "^1.0.1"
 
-"@uniswap/widgets@2.25.1":
-  version "2.25.1"
-  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.25.1.tgz#53d03da44587c0851d2f39516d7f9037d0c65b9d"
-  integrity sha512-Jth8qd7g58W1SVRpSFNiTKjs0HmcOacpxdSKfRSOIJOcYq8vgjZ0k4W3i/bzjf8PDRtLGh4Nn09VLugtIMUVIw==
+"@uniswap/widgets@^2.26.0":
+  version "2.26.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.26.0.tgz#ed2d2b0965fc2139874a5eaca44c8070184d9e74"
+  integrity sha512-LIfd3wgJxNiPXduyxXAihOzye5LrayyPDt0/OErSr1hF3BIiQqdVc3KyHDFJ4PC0pCp4+dfE2HPH1FrClO54Uw==
   dependencies:
     "@babel/runtime" ">=7.17.0"
     "@fontsource/ibm-plex-mono" "^4.5.1"
     "@fontsource/inter" "^4.5.1"
     "@popperjs/core" "^2.4.4"
     "@reduxjs/toolkit" "^1.6.1"
-    "@uniswap/conedison" "^1.1.1"
+    "@uniswap/conedison" "^1.2.1"
     "@uniswap/permit2-sdk" "^1.2.0"
     "@uniswap/redux-multicall" "^1.1.8"
     "@uniswap/router-sdk" "^1.3.0"
     "@uniswap/sdk-core" "^3.0.1"
     "@uniswap/smart-order-router" "^2.10.0"
     "@uniswap/token-lists" "^1.0.0-beta.30"
-    "@uniswap/universal-router-sdk" "^1.3.0"
+    "@uniswap/universal-router-sdk" "^1.3.4"
     "@uniswap/v2-sdk" "^3.0.1"
     "@uniswap/v3-sdk" "^3.8.2"
     "@web3-react/core" "8.0.35-beta.0"
