@@ -1,14 +1,18 @@
+import { Trans } from '@lingui/macro'
+import { BaseButton } from 'components/Button'
 import { useNftBalance } from 'graphql/data/nft/NftBalance'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { LoadingAssets } from 'nft/components/collection/CollectionAssetLoading'
 import { assetList } from 'nft/components/collection/CollectionNfts.css'
 import { FilterButton } from 'nft/components/collection/FilterButton'
 import { ClearAllButton } from 'nft/components/collection/shared'
 import { Column, Row } from 'nft/components/Flex'
-import { CrossIcon } from 'nft/components/icons'
+import { CrossIcon, EllipsisIcon, TagIcon } from 'nft/components/icons'
 import { FilterSidebar } from 'nft/components/profile/view/FilterSidebar'
 import { subhead } from 'nft/css/common.css'
 import {
+  ProfileMethod,
   useBag,
   useFiltersExpanded,
   useIsMobile,
@@ -19,11 +23,23 @@ import {
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import { OSCollectionsFetcher } from 'nft/queries'
 import { WalletCollection } from 'nft/types'
-import { Dispatch, SetStateAction, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
+import { lighten } from 'polished'
+import {
+  Dispatch,
+  SetStateAction,
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState
+} from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
 import { easings, useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
+import { Z_INDEX } from 'theme/zIndex'
 import shallow from 'zustand/shallow'
 
 import { EmptyWalletContent } from './EmptyWalletContent'
@@ -179,6 +195,54 @@ export const ProfilePage = () => {
   )
 }
 
+const ProfileMethodButton = styled(BaseButton)`
+  background-color: ${({ theme }) => theme.backgroundInteractive};
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20px;
+  padding: 12px;
+  height: 44px;
+  width: min-content;
+  border-radius: 12px;
+  position: relative;
+  color: ${({ theme }) => theme.textPrimary};
+  &:focus {
+    background-color: ${({ theme }) => theme.textTertiary};
+  }
+  &:hover {
+    background-color: ${({ theme }) => lighten(0.05, theme.backgroundInteractive)};
+  }
+`
+
+const DropdownWrapper = styled(Column)<{ isOpen: boolean }>`
+  padding: 16px 4px;
+  background-color: ${({ theme }) => theme.backgroundModule};
+  display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
+  position: absolute;
+  top: 88px;
+  right: 0px;
+  width: min-content;
+  border-radius: 12px;
+  gap: 4px;
+  z-index: ${Z_INDEX.modalBackdrop};
+`
+
+const DropdownRow = styled(Row)<{ selected?: boolean }>`
+  width: 100%;
+  height: 44px;
+  gap: 8px;
+  padding: 0px 16px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20px;
+
+  background-color: ${({ theme, selected }) => selected && theme.textTertiary};
+  &:hover {
+    background-color: ${({ theme }) => theme.backgroundInteractive};
+  }
+`
+
 const ProfilePageNfts = ({
   walletCollections,
   isFiltersExpanded,
@@ -196,6 +260,16 @@ const ProfilePageNfts = ({
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
   const isMobile = useIsMobile()
   const sellAssets = useSellAsset((state) => state.sellAssets)
+  const [profileMethodDropdownOpen, toggleProfileMethodDropdownOpen] = useReducer((s) => !s, false)
+  const profileMethodButtonRef = useRef<HTMLDivElement>()
+  useOnClickOutside(profileMethodButtonRef, () => profileMethodDropdownOpen && toggleProfileMethodDropdownOpen)
+  const profileMethod = useSellAsset((state) => state.profileMethod)
+  const setProfileMethod = useSellAsset((state) => state.setProfileMethod)
+
+  const handleProfileMethodClick = (method: ProfileMethod) => {
+    setProfileMethod(method)
+    toggleProfileMethodDropdownOpen()
+  }
 
   const {
     walletAssets: ownerAssets,
@@ -235,6 +309,32 @@ const ProfilePageNfts = ({
               isFiltersExpanded={isFiltersExpanded}
               onClick={() => setFiltersExpanded(!isFiltersExpanded)}
             />
+            <Column>
+              <ProfileMethodButton onClick={toggleProfileMethodDropdownOpen} ref={profileMethodButtonRef}>
+                <EllipsisIcon viewBox="0 0 20 20" width={24} height={24} />
+              </ProfileMethodButton>
+              <DropdownWrapper isOpen={profileMethodDropdownOpen}>
+                <DropdownRow
+                  selected={profileMethod === ProfileMethod.LIST}
+                  onClick={() => handleProfileMethodClick(ProfileMethod.LIST)}
+                >
+                  <Trans>List</Trans>
+                  <TagIcon height={20} width={20} />
+                </DropdownRow>
+                <DropdownRow
+                  selected={profileMethod === ProfileMethod.SEND}
+                  onClick={() => handleProfileMethodClick(ProfileMethod.SEND)}
+                >
+                  <Trans>Send</Trans>
+                </DropdownRow>
+                <DropdownRow
+                  selected={profileMethod === ProfileMethod.BURN}
+                  onClick={() => handleProfileMethodClick(ProfileMethod.BURN)}
+                >
+                  <Trans>Burn</Trans>
+                </DropdownRow>
+              </DropdownWrapper>
+            </Column>
           </Row>
           <Row>
             <CollectionFiltersRow
