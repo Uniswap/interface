@@ -78,7 +78,9 @@ export const BagHeader = ({ numberOfAssets, closeBag, resetFlow, isProfilePage }
 
   return (
     <Wrapper>
-      <ThemedText.HeadlineSmall>{isProfilePage ? <Trans>Sell</Trans> : <Trans>Bag</Trans>}</ThemedText.HeadlineSmall>
+      <ThemedText.HeadlineSmall>
+        {isProfilePage ? <Trans>Selected</Trans> : <Trans>Bag</Trans>}
+      </ThemedText.HeadlineSmall>
       {numberOfAssets > 0 && (
         <>
           <CounterDot sizing={sizing}>{numberOfAssets}</CounterDot>
