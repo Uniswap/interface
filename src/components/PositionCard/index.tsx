@@ -294,7 +294,7 @@ export default function FullPositionCard({ fundingBalance }: FundingCardProps) {
                   text={
                     <Trans>
                       You will need to maintain a minimum KROM balance to cover for the service fees. Recommendation is
-                      Recommendation is to deposit at least twice the minimum balance.
+                      to deposit at least twice the minimum balance.
                     </Trans>
                   }
                 >
