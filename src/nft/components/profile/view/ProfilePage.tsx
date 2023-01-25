@@ -14,7 +14,7 @@ import {
   useIsMobile,
   useSellAsset,
   useWalletBalance,
-  useWalletCollections,
+  useWalletCollections
 } from 'nft/hooks'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import { OSCollectionsFetcher } from 'nft/queries'

@@ -3,8 +3,15 @@ import { devtools } from 'zustand/middleware'
 
 import { ListingMarket, ListingWarning, WalletAsset } from '../types'
 
+export enum ProfileMethod {
+  LIST,
+  SEND,
+  BURN,
+}
+
 interface SellAssetState {
   sellAssets: WalletAsset[]
+  profileMethod: ProfileMethod
   selectSellAsset: (asset: WalletAsset) => void
   removeSellAsset: (asset: WalletAsset) => void
   reset: () => void
@@ -15,12 +22,14 @@ interface SellAssetState {
   addMarketplaceWarning: (asset: WalletAsset, warning: ListingWarning) => void
   removeMarketplaceWarning: (asset: WalletAsset, warning: ListingWarning, setGlobalOverride?: boolean) => void
   removeAllMarketplaceWarnings: () => void
+  setProfileMethod: (method: ProfileMethod) => void
 }
 
 export const useSellAsset = create<SellAssetState>()(
   devtools(
     (set) => ({
       sellAssets: [],
+      profileMethod: ProfileMethod.LIST,
       selectSellAsset: (asset) =>
         set(({ sellAssets }) => {
           if (sellAssets.length === 0) return { sellAssets: [asset] }
@@ -152,6 +161,10 @@ export const useSellAsset = create<SellAssetState>()(
           return { sellAssets: assetsCopy }
         })
       },
+      setProfileMethod: (method) =>
+        set(() => ({
+          profileMethod: method,
+        })),
     }),
     { name: 'useSelectAsset' }
   )

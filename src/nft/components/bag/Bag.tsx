@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther } from '@ethersproject/units'
+import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
@@ -13,12 +14,13 @@ import { Column } from 'nft/components/Flex'
 import { Overlay } from 'nft/components/modals/Overlay'
 import { buttonTextMedium, commonButtonStyles } from 'nft/css/common.css'
 import {
+  ProfileMethod,
   useBag,
   useIsMobile,
   useProfilePageState,
   useSellAsset,
   useSendTransaction,
-  useTransactionResponse,
+  useTransactionResponse
 } from 'nft/hooks'
 import { fetchRoute } from 'nft/queries'
 import { BagItemStatus, BagStatus, ProfilePageStateType, RouteResponse, TxStateType } from 'nft/types'
@@ -27,7 +29,7 @@ import {
   fetchPrice,
   formatAssetEventProperties,
   recalculateBagUsingPooledAssets,
-  sortUpdatedAssets,
+  sortUpdatedAssets
 } from 'nft/utils'
 import { combineBuyItemsWithTxRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -102,10 +104,11 @@ const ScrollingIndicator = ({ top, show }: SeparatorProps) => (
 const Bag = () => {
   const { account, provider } = useWeb3React()
 
-  const { resetSellAssets, sellAssets } = useSellAsset(
-    ({ reset, sellAssets }) => ({
+  const { resetSellAssets, sellAssets, profileMethod } = useSellAsset(
+    ({ reset, sellAssets, profileMethod }) => ({
       resetSellAssets: reset,
       sellAssets,
+      profileMethod,
     }),
     shallow
   )
@@ -315,6 +318,18 @@ const Bag = () => {
     return null
   }
 
+  let profileButtonText
+  switch (profileMethod) {
+    case ProfileMethod.BURN:
+      profileButtonText = <Trans>Burn NFTs</Trans>
+      break
+    case ProfileMethod.SEND:
+      profileButtonText = <Trans>Send NFTs</Trans>
+      break
+    default:
+      profileButtonText = <Trans>List NFTs</Trans>
+  }
+
   return (
     <Portal>
       <BagContainer data-testid="nft-bag" raiseZIndex={isMobile || isModalOpen}>
@@ -360,7 +375,7 @@ const Bag = () => {
                   })
                 }}
               >
-                Continue
+                {profileButtonText}
               </Box>
             )}
           </>
