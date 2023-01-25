@@ -11,7 +11,7 @@ import { BagFooter } from 'nft/components/bag/BagFooter'
 import ListingModal from 'nft/components/bag/profile/ListingModal'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
-import { Column } from 'nft/components/Flex'
+import { Column, Row } from 'nft/components/Flex'
 import { Overlay } from 'nft/components/modals/Overlay'
 import { buttonTextMedium, commonButtonStyles } from 'nft/css/common.css'
 import {
@@ -33,12 +33,14 @@ import {
   sortUpdatedAssets,
 } from 'nft/utils'
 import { combineBuyItemsWithTxRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from 'react-query'
 import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 import shallow from 'zustand/shallow'
 
+import { Checkbox } from '../layout/Checkbox'
 import * as styles from './Bag.css'
 import { BagContent } from './BagContent'
 import { BagHeader } from './BagHeader'
@@ -129,6 +131,8 @@ const Bag = () => {
     }),
     shallow
   )
+  const [isCheckboxSelected, toggleCheckboxSelected] = useReducer((state) => !state, false)
+  const [hovered, toggleHover] = useReducer((state) => !state, false)
 
   const {
     bagStatus,
@@ -355,6 +359,7 @@ const Bag = () => {
   }
 
   const handleProfileClick = () => {
+    if (disableProfileButton) return
     ;(isMobile || isNftListV2) && toggleBag()
     switch (profileMethod) {
       case ProfileMethod.BURN:
@@ -372,6 +377,8 @@ const Bag = () => {
         })
     }
   }
+
+  const disableProfileButton = profileMethod === ProfileMethod.BURN && !isCheckboxSelected
 
   return (
     <Portal>
@@ -399,19 +406,38 @@ const Bag = () => {
               />
             )}
             {isSellingAssets && isProfilePage && (
-              <Box
-                marginTop="32"
-                marginX="28"
-                marginBottom="16"
-                paddingY="10"
-                className={`${buttonTextMedium} ${commonButtonStyles}`}
-                backgroundColor="accentAction"
-                color="white"
-                textAlign="center"
-                onClick={handleProfileClick}
-              >
-                {profileButtonText}
-              </Box>
+              <Column marginTop="32" marginX="28">
+                {profileMethod === ProfileMethod.BURN && (
+                  <Row justifyContent="space-between" onMouseEnter={toggleHover} onMouseLeave={toggleHover}>
+                    <ThemedText.Caption color="textSecondary">
+                      <Trans>
+                        I understand that burning NFTs
+                        <br />
+                        results in permanent loss of the NFTs
+                      </Trans>
+                    </ThemedText.Caption>
+                    <Checkbox hovered={hovered} checked={isCheckboxSelected} onClick={toggleCheckboxSelected}>
+                      <span />
+                    </Checkbox>
+                  </Row>
+                )}
+                {profileMethod === ProfileMethod.SEND && <span>Send Address</span>}
+                <Box
+                  marginTop="8"
+                  marginBottom="16"
+                  paddingY="10"
+                  className={`${buttonTextMedium} ${commonButtonStyles}`}
+                  backgroundColor="accentAction"
+                  color="white"
+                  textAlign="center"
+                  onClick={handleProfileClick}
+                  disabled={disableProfileButton}
+                  opacity={disableProfileButton ? '0.4' : '1'}
+                  style={{ cursor: disableProfileButton ? 'auto' : 'pointer', userSelect: 'none' }}
+                >
+                  {profileButtonText}
+                </Box>
+              </Column>
             )}
           </>
         ) : (

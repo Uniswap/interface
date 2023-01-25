@@ -348,7 +348,7 @@ const layoutStyles = defineProperties({
     position: ['absolute', 'fixed', 'relative', 'sticky', 'static'],
     objectFit: ['contain', 'cover'],
     order: [0, 1],
-    opacity: ['auto', '0', '0.1', '0.3', '0.5', '0.7', '1'],
+    opacity: ['auto', '0', '0.1', '0.3', '0.4', '0.5', '0.7', '1'],
   } as const,
   shorthands: {
     paddingX: ['paddingLeft', 'paddingRight'],
