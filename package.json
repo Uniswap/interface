@@ -224,7 +224,7 @@
     "setimmediate": "^1.0.5",
     "styled-components": "^5.3.5",
     "tiny-invariant": "^1.2.0",
-    "ua-parser-js": "^0.7.28",
+    "ua-parser-js": "^0.7.33",
     "use-count-up": "^2.2.5",
     "use-resize-observer": "^9.0.2",
     "uuid": "^8.3.2",
