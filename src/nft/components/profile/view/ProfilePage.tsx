@@ -18,7 +18,7 @@ import {
   useIsMobile,
   useSellAsset,
   useWalletBalance,
-  useWalletCollections
+  useWalletCollections,
 } from 'nft/hooks'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import { OSCollectionsFetcher } from 'nft/queries'
@@ -33,7 +33,7 @@ import {
   useMemo,
   useReducer,
   useRef,
-  useState
+  useState,
 } from 'react'
 import { Send } from 'react-feather'
 import InfiniteScroll from 'react-infinite-scroll-component'

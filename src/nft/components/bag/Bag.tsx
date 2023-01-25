@@ -20,7 +20,7 @@ import {
   useProfilePageState,
   useSellAsset,
   useSendTransaction,
-  useTransactionResponse
+  useTransactionResponse,
 } from 'nft/hooks'
 import { fetchRoute } from 'nft/queries'
 import { BagItemStatus, BagStatus, ProfilePageStateType, RouteResponse, TxStateType } from 'nft/types'
@@ -29,7 +29,7 @@ import {
   fetchPrice,
   formatAssetEventProperties,
   recalculateBagUsingPooledAssets,
-  sortUpdatedAssets
+  sortUpdatedAssets,
 } from 'nft/utils'
 import { combineBuyItemsWithTxRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -114,7 +114,10 @@ const Bag = () => {
   )
 
   const { profilePageState, setProfilePageState } = useProfilePageState(
-    ({ setProfilePageState, state }) => ({ profilePageState: state, setProfilePageState }),
+    ({ setProfilePageState, state }) => ({
+      profilePageState: state,
+      setProfilePageState,
+    }),
     shallow
   )
 
@@ -132,8 +135,17 @@ const Bag = () => {
     setTotalEthPrice,
     setTotalUsdPrice,
     setBagExpanded,
-  } = useBag((state) => ({ ...state, bagIsLocked: state.isLocked, uncheckedItemsInBag: state.itemsInBag }), shallow)
-  const { uncheckedItemsInBag } = useBag(({ itemsInBag }) => ({ uncheckedItemsInBag: itemsInBag }))
+  } = useBag(
+    (state) => ({
+      ...state,
+      bagIsLocked: state.isLocked,
+      uncheckedItemsInBag: state.itemsInBag,
+    }),
+    shallow
+  )
+  const { uncheckedItemsInBag } = useBag(({ itemsInBag }) => ({
+    uncheckedItemsInBag: itemsInBag,
+  }))
 
   const isProfilePage = useIsNftProfilePage()
   const isDetailsPage = useIsNftDetailsPage()
@@ -243,7 +255,10 @@ const Bag = () => {
           asset: changedAsset,
           status: BagItemStatus.REVIEWING_PRICE_CHANGE,
         })),
-        ...fetchedUnchangedAssets.map((unchangedAsset) => ({ asset: unchangedAsset, status: BagItemStatus.REVIEWED })),
+        ...fetchedUnchangedAssets.map((unchangedAsset) => ({
+          asset: unchangedAsset,
+          status: BagItemStatus.REVIEWED,
+        })),
       ])
       setLocked(false)
 
