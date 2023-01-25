@@ -1,4 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import type { JsonRpcSigner } from '@ethersproject/providers'
 import { formatEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
@@ -101,12 +102,12 @@ const ScrollingIndicator = ({ top, show }: SeparatorProps) => (
   />
 )
 
-function sendAssets(assets: WalletAsset[]) {
-  console.log(assets)
+function sendAssets(assets: WalletAsset[], signer: JsonRpcSigner) {
+  console.log(assets, signer)
 }
 
-function burnAssets(assets: WalletAsset[]) {
-  console.log(assets)
+function burnAssets(assets: WalletAsset[], signer: JsonRpcSigner) {
+  console.log(assets, signer)
 }
 
 const Bag = () => {
@@ -357,10 +358,10 @@ const Bag = () => {
     ;(isMobile || isNftListV2) && toggleBag()
     switch (profileMethod) {
       case ProfileMethod.BURN:
-        sendAssets(sellAssets)
+        provider && sendAssets(sellAssets, provider.getSigner())
         break
       case ProfileMethod.SEND:
-        burnAssets(sellAssets)
+        provider && burnAssets(sellAssets, provider.getSigner())
         break
       default:
         setProfilePageState(ProfilePageStateType.LISTING)
