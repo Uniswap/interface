@@ -12,9 +12,10 @@ module.exports = {
   jest: {
     configure(jestConfig) {
       return Object.assign({}, jestConfig, {
-        transformIgnorePatterns: ['@uniswap/conedison/format'],
+        transformIgnorePatterns: ['@uniswap/conedison/format', '@uniswap/conedison/provider'],
         moduleNameMapper: {
           '@uniswap/conedison/format': '@uniswap/conedison/dist/format',
+          '@uniswap/conedison/provider': '@uniswap/conedison/dist/provider',
         },
       })
     },
