@@ -23,7 +23,7 @@ import {
   useTransactionResponse,
 } from 'nft/hooks'
 import { fetchRoute } from 'nft/queries'
-import { BagItemStatus, BagStatus, ProfilePageStateType, RouteResponse, TxStateType } from 'nft/types'
+import { BagItemStatus, BagStatus, ProfilePageStateType, RouteResponse, TxStateType, WalletAsset } from 'nft/types'
 import {
   buildSellObject,
   fetchPrice,
@@ -100,6 +100,14 @@ const ScrollingIndicator = ({ top, show }: SeparatorProps) => (
     transition="250"
   />
 )
+
+function sendAssets(assets: WalletAsset[]) {
+  console.log(assets)
+}
+
+function burnAssets(assets: WalletAsset[]) {
+  console.log(assets)
+}
 
 const Bag = () => {
   const { account, provider } = useWeb3React()
@@ -345,6 +353,25 @@ const Bag = () => {
       profileButtonText = <Trans>List NFTs</Trans>
   }
 
+  const handleProfileClick = () => {
+    ;(isMobile || isNftListV2) && toggleBag()
+    switch (profileMethod) {
+      case ProfileMethod.BURN:
+        sendAssets(sellAssets)
+        break
+      case ProfileMethod.SEND:
+        burnAssets(sellAssets)
+        break
+      default:
+        setProfilePageState(ProfilePageStateType.LISTING)
+        sendAnalyticsEvent(NFTEventName.NFT_PROFILE_PAGE_START_SELL, {
+          list_quantity: sellAssets.length,
+          collection_addresses: sellAssets.map((asset) => asset.asset_contract.address),
+          token_ids: sellAssets.map((asset) => asset.tokenId),
+        })
+    }
+  }
+
   return (
     <Portal>
       <BagContainer data-testid="nft-bag" raiseZIndex={isMobile || isModalOpen}>
@@ -380,15 +407,7 @@ const Bag = () => {
                 backgroundColor="accentAction"
                 color="white"
                 textAlign="center"
-                onClick={() => {
-                  ;(isMobile || isNftListV2) && toggleBag()
-                  setProfilePageState(ProfilePageStateType.LISTING)
-                  sendAnalyticsEvent(NFTEventName.NFT_PROFILE_PAGE_START_SELL, {
-                    list_quantity: sellAssets.length,
-                    collection_addresses: sellAssets.map((asset) => asset.asset_contract.address),
-                    token_ids: sellAssets.map((asset) => asset.tokenId),
-                  })
-                }}
+                onClick={handleProfileClick}
               >
                 {profileButtonText}
               </Box>
