@@ -4,7 +4,9 @@ import { ScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import {
+  ApprovedCheckmarkIcon,
   ChevronUpIcon,
+  FailedListingIcon,
   ListingModalWindowActive,
   ListingModalWindowClosed,
   LoadingIcon,
@@ -12,6 +14,7 @@ import {
 } from 'nft/components/icons'
 import { ProfileMethod, useNFTList, useSellAsset } from 'nft/hooks'
 import { AssetRow, CollectionRow, ListingStatus } from 'nft/types'
+import { useEffect, useMemo } from 'react'
 import { Info } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -101,7 +104,7 @@ const StyledVerifiedIcon = styled(VerifiedIcon)`
   margin-left: 4px;
 `
 
-const StyledLoadingIcon = styled(LoadingIcon)`
+const IconWrapper = styled.div`
   margin-left: auto;
   margin-right: 0px;
 `
@@ -120,11 +123,18 @@ interface ListModalSectionProps {
 
 export const SectionHeaderOnly = ({ active }: { active: boolean }) => {
   const listingStatus = useNFTList((state) => state.listingStatus)
+  const collectionsRequiringApproval = useNFTList((state) => state.collectionsRequiringApproval)
   const theme = useTheme()
+  const showSpinner = active && (listingStatus === ListingStatus.SIGNING || listingStatus === ListingStatus.PENDING)
+
+  const allCollectionsApproved = useMemo(
+    () => !collectionsRequiringApproval.some((collection) => collection.status !== ListingStatus.APPROVED),
+    [collectionsRequiringApproval]
+  )
   return (
     <SectionHeader>
       <Row>
-        {active && listingStatus === ListingStatus.SIGNING ? (
+        {active && listingStatus !== ListingStatus.DEFINED ? (
           <ListingModalWindowActive />
         ) : (
           <ListingModalWindowClosed />
@@ -132,13 +142,20 @@ export const SectionHeaderOnly = ({ active }: { active: boolean }) => {
         <SectionTitle active={active && listingStatus !== ListingStatus.DEFINED} marginLeft="12px">
           <Trans>Confirmation Signature</Trans>
         </SectionTitle>
-        {active && listingStatus === ListingStatus.SIGNING && (
-          <StyledLoadingIcon
-            height="24px"
-            width="24px"
-            stroke={listingStatus === ListingStatus.SIGNING ? theme.accentAction : theme.textTertiary}
-          />
-        )}
+        <IconWrapper>
+          {showSpinner && (
+            <LoadingIcon
+              height="24px"
+              width="24px"
+              stroke={listingStatus === ListingStatus.SIGNING ? theme.accentAction : theme.textTertiary}
+            />
+          )}
+          {listingStatus === ListingStatus.APPROVED && allCollectionsApproved && (
+            <ApprovedCheckmarkIcon height="24" width="24" />
+          )}
+          {listingStatus === ListingStatus.FAILED ||
+            (listingStatus === ListingStatus.REJECTED && <FailedListingIcon height="24" width="24" />)}
+        </IconWrapper>
       </Row>
     </SectionHeader>
   )
@@ -148,6 +165,11 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
   const theme = useTheme()
   const isCollectionApprovalSection = sectionType === Section.APPROVE
   const profileMethod = useSellAsset((state) => state.profileMethod)
+
+  useEffect(() => {
+    !content.some((row) => row.status !== ListingStatus.APPROVED) && toggleSection()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [content])
   return (
     <Column>
       <SectionHeader>
@@ -209,11 +231,13 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
                   {profileMethod === ProfileMethod.LIST && <MarketplaceIcon src={row.images[1]} />}
                   <ContentName>{row.name}</ContentName>
                   {isCollectionApprovalSection && (row as CollectionRow).isVerified && <StyledVerifiedIcon />}
-                  <StyledLoadingIcon
-                    height="14px"
-                    width="14px"
-                    stroke={row.status === ListingStatus.SIGNING ? theme.accentAction : theme.textTertiary}
-                  />
+                  <IconWrapper>
+                    <LoadingIcon
+                      height="14px"
+                      width="14px"
+                      stroke={row.status === ListingStatus.SIGNING ? theme.accentAction : theme.textTertiary}
+                    />
+                  </IconWrapper>
                 </ContentRow>
               )
             })}
