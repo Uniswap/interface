@@ -24,9 +24,10 @@ const SectionHeader = styled(Row)`
   justify-content: space-between;
 `
 
-const SectionTitle = styled(ThemedText.SubHeader)<{ active: boolean }>`
+const SectionTitle = styled(ThemedText.SubHeader)<{ active: boolean; approved: boolean }>`
   line-height: 24px;
-  color: ${({ theme, active }) => (active ? theme.textPrimary : theme.textSecondary)};
+  color: ${({ theme, active, approved }) =>
+    approved ? theme.accentSuccess : active ? theme.textPrimary : theme.textSecondary};
 `
 
 const SectionArrow = styled(ChevronUpIcon)<{ active: boolean }>`
@@ -125,7 +126,7 @@ export const SectionHeaderOnly = ({ active }: { active: boolean }) => {
   const collectionsRequiringApproval = useNFTList((state) => state.collectionsRequiringApproval)
   const theme = useTheme()
   const showSpinner = active && (listingStatus === ListingStatus.SIGNING || listingStatus === ListingStatus.PENDING)
-
+  console.log(listingStatus)
   const allCollectionsApproved = useMemo(
     () => !collectionsRequiringApproval.some((collection) => collection.status !== ListingStatus.APPROVED),
     [collectionsRequiringApproval]
@@ -134,11 +135,21 @@ export const SectionHeaderOnly = ({ active }: { active: boolean }) => {
     <SectionHeader>
       <Row>
         {active && listingStatus !== ListingStatus.DEFINED ? (
-          <ListingModalWindowActive />
+          <ListingModalWindowActive
+            fill={
+              listingStatus === ListingStatus.APPROVED && allCollectionsApproved
+                ? theme.accentSuccess
+                : theme.accentAction
+            }
+          />
         ) : (
           <ListingModalWindowClosed />
         )}
-        <SectionTitle active={active && listingStatus !== ListingStatus.DEFINED} marginLeft="12px">
+        <SectionTitle
+          active={active && listingStatus !== ListingStatus.DEFINED}
+          approved={listingStatus === ListingStatus.APPROVED && allCollectionsApproved}
+          marginLeft="12px"
+        >
           <Trans>Confirmation Signature</Trans>
         </SectionTitle>
         <IconWrapper>
@@ -150,10 +161,10 @@ export const SectionHeaderOnly = ({ active }: { active: boolean }) => {
             />
           )}
           {listingStatus === ListingStatus.APPROVED && allCollectionsApproved && (
-            <ApprovedCheckmarkIcon height="24" width="24" />
+            <ApprovedCheckmarkIcon height="24" width="24" fill={theme.accentSuccess} />
           )}
           {(listingStatus === ListingStatus.FAILED || listingStatus === ListingStatus.REJECTED) && (
-            <X height="24" width="24" stroke="red" />
+            <X height="24" width="24" stroke={theme.accentFailure} />
           )}
         </IconWrapper>
       </Row>
@@ -166,17 +177,23 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
   const isCollectionApprovalSection = sectionType === Section.APPROVE
   const profileMethod = useSellAsset((state) => state.profileMethod)
 
+  const allContentApproved = useMemo(() => !content.some((row) => row.status !== ListingStatus.APPROVED), [content])
+
   // auto close section when all rows have been approved
   useEffect(() => {
-    !content.some((row) => row.status !== ListingStatus.APPROVED) && toggleSection()
+    if (allContentApproved) toggleSection()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [content])
+  }, [allContentApproved])
   return (
     <Column>
       <SectionHeader>
         <Row>
-          {active ? <ListingModalWindowActive /> : <ListingModalWindowClosed />}
-          <SectionTitle active={active} marginLeft="12px">
+          {active || allContentApproved ? (
+            <ListingModalWindowActive fill={allContentApproved ? theme.accentSuccess : theme.accentAction} />
+          ) : (
+            <ListingModalWindowClosed />
+          )}
+          <SectionTitle active={active} marginLeft="12px" approved={allContentApproved}>
             {isCollectionApprovalSection ? (
               <>
                 <Trans>Approve</Trans>&nbsp;{content.length}&nbsp;
@@ -190,11 +207,16 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
             )}
           </SectionTitle>
         </Row>
-        <SectionArrow
-          active={active}
-          secondaryColor={active ? theme.textPrimary : theme.textSecondary}
-          onClick={toggleSection}
-        />
+
+        {allContentApproved ? (
+          <ApprovedCheckmarkIcon height="24" width="24" fill={theme.accentSuccess} />
+        ) : (
+          <SectionArrow
+            active={active}
+            secondaryColor={active ? theme.textPrimary : theme.textSecondary}
+            onClick={toggleSection}
+          />
+        )}
       </SectionHeader>
       {active && (
         <SectionBody>
@@ -240,9 +262,11 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
                         stroke={row.status === ListingStatus.SIGNING ? theme.accentAction : theme.textTertiary}
                       />
                     )}
-                    {row.status === ListingStatus.APPROVED && <ApprovedCheckmarkIcon height="14" width="14" />}
+                    {row.status === ListingStatus.APPROVED && (
+                      <ApprovedCheckmarkIcon height="14" width="14" fill={theme.accentSuccess} />
+                    )}
                     {(row.status === ListingStatus.FAILED || row.status === ListingStatus.REJECTED) && (
-                      <X height="14" width="14" stroke="red" />
+                      <X height="14" width="14" stroke={theme.accentFailure} />
                     )}
                   </IconWrapper>
                 </ContentRow>

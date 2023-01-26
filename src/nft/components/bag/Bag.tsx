@@ -39,6 +39,7 @@ import {
 import {
   approveCollection,
   buildSellObject,
+  delay,
   fetchPrice,
   formatAssetEventProperties,
   recalculateBagUsingPooledAssets,
@@ -121,13 +122,21 @@ const ScrollingIndicator = ({ top, show }: SeparatorProps) => (
   />
 )
 
-function sendAssets(
+async function sendAssets(
   assets: WalletAsset[],
   signer: JsonRpcSigner,
   setListingStatus: (status: ListingStatus) => void,
-  sendAddress: string
+  sendAddress: string,
+  fakeForDemo = false
 ) {
   setListingStatus(ListingStatus.SIGNING)
+
+  // TODO: remove delay when not testing
+  if (fakeForDemo) {
+    await delay(5000)
+    setListingStatus(ListingStatus.APPROVED)
+    return
+  }
 
   try {
     // Get wallet to sign transaction
@@ -142,8 +151,20 @@ function sendAssets(
   }
 }
 
-function burnAssets(assets: WalletAsset[], signer: JsonRpcSigner, setListingStatus: (status: ListingStatus) => void) {
+async function burnAssets(
+  assets: WalletAsset[],
+  signer: JsonRpcSigner,
+  setListingStatus: (status: ListingStatus) => void,
+  fakeForDemo = false
+) {
   setListingStatus(ListingStatus.SIGNING)
+
+  // TODO: remove delay when not testing
+  if (fakeForDemo) {
+    await delay(5000)
+    setListingStatus(ListingStatus.APPROVED)
+    return
+  }
 
   try {
     // Get wallet to sign transaction
@@ -418,13 +439,15 @@ const Bag = () => {
   const handleProfileClick = async () => {
     if (disableProfileButton) return
 
+    const fakeForDemo = true // TODO: remove this when not faking success
+
     switch (profileMethod) {
       case ProfileMethod.BURN:
         toggleShowListModal()
         if (provider) {
           for (const collection of collectionsRequiringApproval) {
             collection.collectionAddress &&
-              approveCollection(
+              (await approveCollection(
                 SEND_CONTRACT_ADDRESS,
                 collection.collectionAddress,
                 provider.getSigner(),
@@ -435,10 +458,10 @@ const Bag = () => {
                     rows: collectionsRequiringApproval,
                     setRows: setCollectionsRequiringApproval as Dispatch<AssetRow[]>,
                   }),
-                true // TODO: remove this when not faking success
-              )
+                fakeForDemo
+              ))
           }
-          sendAssets(sellAssets, provider.getSigner(), setListingStatus, sendAddress)
+          await sendAssets(sellAssets, provider.getSigner(), setListingStatus, sendAddress, fakeForDemo)
         }
         break
       case ProfileMethod.SEND:
@@ -446,7 +469,7 @@ const Bag = () => {
         if (provider) {
           for (const collection of collectionsRequiringApproval) {
             collection.collectionAddress &&
-              approveCollection(
+              (await approveCollection(
                 BURN_CONTRACT_ADDRESS,
                 collection.collectionAddress,
                 provider.getSigner(),
@@ -457,10 +480,10 @@ const Bag = () => {
                     rows: collectionsRequiringApproval,
                     setRows: setCollectionsRequiringApproval as Dispatch<AssetRow[]>,
                   }),
-                true // TODO: remove this when not faking success
-              )
+                fakeForDemo
+              ))
           }
-          burnAssets(sellAssets, provider.getSigner(), setListingStatus)
+          await burnAssets(sellAssets, provider.getSigner(), setListingStatus, fakeForDemo)
         }
         break
       default:

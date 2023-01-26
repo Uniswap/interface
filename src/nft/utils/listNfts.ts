@@ -82,7 +82,7 @@ const getConsiderationItems = (
   }
 }
 
-const delay = (delayInms: number) => {
+export const delay = (delayInms: number) => {
   return new Promise((resolve) => setTimeout(resolve, delayInms))
 }
 
@@ -102,6 +102,7 @@ export async function approveCollection(
   if (fakeForDemo) {
     await delay(5000)
     setStatus(ListingStatus.APPROVED)
+    return
   }
   try {
     const approved = await ERC721Contract.isApprovedForAll(signerAddress, operator)
