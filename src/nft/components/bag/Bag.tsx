@@ -6,6 +6,7 @@ import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
+import useENSAddress from 'hooks/useENSAddress'
 import { useIsNftDetailsPage, useIsNftPage, useIsNftProfilePage } from 'hooks/useIsNftPage'
 import { BagFooter } from 'nft/components/bag/BagFooter'
 import ListingModal from 'nft/components/bag/profile/ListingModal'
@@ -133,8 +134,14 @@ const Bag = () => {
     shallow
   )
   const [isCheckboxSelected, toggleCheckboxSelected] = useReducer((state) => !state, false)
-  const [sendAddress, setSendAddress] = useState('')
+  const [sendAddressInput, setSendAddressInput] = useState('')
   const [hovered, toggleHover] = useReducer((state) => !state, false)
+  const lookup = useENSAddress(sendAddressInput)
+
+  const sendAddress = useMemo(
+    () => (isAddress(sendAddressInput) ? sendAddressInput : lookup.address ?? ''),
+    [lookup.address, sendAddressInput]
+  )
 
   const {
     bagStatus,
@@ -382,7 +389,7 @@ const Bag = () => {
 
   const disableProfileButton =
     (profileMethod === ProfileMethod.BURN && !isCheckboxSelected) ||
-    (profileMethod === ProfileMethod.SEND && !isAddress(sendAddress))
+    (profileMethod === ProfileMethod.SEND && !sendAddress)
 
   return (
     <Portal>
@@ -438,10 +445,10 @@ const Bag = () => {
                     fontSize="14"
                     height="44"
                     color={{ placeholder: 'textTertiary', default: 'textPrimary' }}
-                    value={sendAddress}
+                    value={sendAddressInput}
                     placeholder="e.g. 0x50ec... or destination.eth"
                     onChange={(e: FormEvent<HTMLInputElement>) => {
-                      setSendAddress(e.currentTarget.value)
+                      setSendAddressInput(e.currentTarget.value)
                     }}
                   />
                 )}
