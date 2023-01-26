@@ -127,7 +127,7 @@ function sendAssets(
   setListingStatus: (status: ListingStatus) => void,
   sendAddress: string
 ) {
-  setListingStatus(ListingStatus.PENDING)
+  setListingStatus(ListingStatus.SIGNING)
 
   try {
     // Try to send NFTs here
@@ -140,7 +140,7 @@ function sendAssets(
 }
 
 function burnAssets(assets: WalletAsset[], signer: JsonRpcSigner, setListingStatus: (status: ListingStatus) => void) {
-  setListingStatus(ListingStatus.PENDING)
+  setListingStatus(ListingStatus.SIGNING)
 
   try {
     // Try to burn NFTs here

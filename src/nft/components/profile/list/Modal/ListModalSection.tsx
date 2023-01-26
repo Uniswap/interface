@@ -101,8 +101,7 @@ const StyledVerifiedIcon = styled(VerifiedIcon)`
   margin-left: 4px;
 `
 
-const StyledLoadingIconBackground = styled(LoadingIcon)`
-  stroke: ${({ theme }) => theme.textTertiary};
+const StyledLoadingIcon = styled(LoadingIcon)`
   margin-left: auto;
   margin-right: 0px;
 `
@@ -121,6 +120,7 @@ interface ListModalSectionProps {
 
 export const SectionHeaderOnly = ({ active }: { active: boolean }) => {
   const listingStatus = useNFTList((state) => state.listingStatus)
+  const theme = useTheme()
   return (
     <SectionHeader>
       <Row>
@@ -133,7 +133,11 @@ export const SectionHeaderOnly = ({ active }: { active: boolean }) => {
           <Trans>Confirmation Signature</Trans>
         </SectionTitle>
         {active && listingStatus === ListingStatus.SIGNING && (
-          <StyledLoadingIconBackground height="24px" width="24px" />
+          <StyledLoadingIcon
+            height="24px"
+            width="24px"
+            stroke={listingStatus === ListingStatus.SIGNING ? theme.accentAction : theme.textTertiary}
+          />
         )}
       </Row>
     </SectionHeader>
@@ -205,7 +209,11 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
                   {profileMethod === ProfileMethod.LIST && <MarketplaceIcon src={row.images[1]} />}
                   <ContentName>{row.name}</ContentName>
                   {isCollectionApprovalSection && (row as CollectionRow).isVerified && <StyledVerifiedIcon />}
-                  <StyledLoadingIconBackground height="14px" width="14px" />
+                  <StyledLoadingIcon
+                    height="14px"
+                    width="14px"
+                    stroke={row.status === ListingStatus.SIGNING ? theme.accentAction : theme.textTertiary}
+                  />
                 </ContentRow>
               )
             })}
