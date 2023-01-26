@@ -8,6 +8,7 @@ import { NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumberish } from 'ethers'
 import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
+import useENSAddress from 'hooks/useENSAddress'
 import { useIsNftDetailsPage, useIsNftPage, useIsNftProfilePage } from 'hooks/useIsNftPage'
 import { BagFooter } from 'nft/components/bag/BagFooter'
 import ListingModal from 'nft/components/bag/profile/ListingModal'
@@ -40,6 +41,7 @@ import { useQuery, useQueryClient } from 'react-query'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
+import { isAddress } from 'utils'
 import shallow from 'zustand/shallow'
 
 import ERC721 from '../../../abis/erc721.json'
@@ -191,8 +193,14 @@ const Bag = () => {
     shallow
   )
   const [isCheckboxSelected, toggleCheckboxSelected] = useReducer((state) => !state, false)
-  const [sendAddress, setSendAddress] = useState('')
+  const [sendAddressInput, setSendAddressInput] = useState('')
   const [hovered, toggleHover] = useReducer((state) => !state, false)
+  const lookup = useENSAddress(sendAddressInput)
+
+  const sendAddress = useMemo(
+    () => (isAddress(sendAddressInput) ? sendAddressInput : lookup.address ?? ''),
+    [lookup.address, sendAddressInput]
+  )
 
   const {
     bagStatus,
@@ -468,7 +476,7 @@ const Bag = () => {
               />
             )}
             {isSellingAssets && isProfilePage && (
-              <Column marginTop="32" marginX="28">
+              <Column marginTop={profileMethod === ProfileMethod.LIST ? '32' : '16'} marginX="28">
                 {profileMethod === ProfileMethod.BURN && (
                   <Row justifyContent="space-between" onMouseEnter={toggleHover} onMouseLeave={toggleHover}>
                     <ThemedText.Caption color="textSecondary">
@@ -484,24 +492,41 @@ const Bag = () => {
                   </Row>
                 )}
                 {profileMethod === ProfileMethod.SEND && (
-                  <Box
-                    as="input"
-                    flex="1"
-                    borderColor={{ default: 'backgroundOutline', focus: 'accentAction' }}
-                    borderWidth="1.5px"
-                    borderStyle="solid"
-                    borderRadius="12"
-                    padding="12"
-                    backgroundColor="backgroundSurface"
-                    fontSize="14"
-                    height="44"
-                    color={{ placeholder: 'textTertiary', default: 'textPrimary' }}
-                    value={sendAddress}
-                    placeholder="e.g. 0x50ec... or destination.eth"
-                    onChange={(e: FormEvent<HTMLInputElement>) => {
-                      setSendAddress(e.currentTarget.value)
-                    }}
-                  />
+                  <Column gap="8">
+                    <Row
+                      borderColor={{ default: 'backgroundOutline', focus: 'accentAction' }}
+                      borderWidth="1.5px"
+                      borderStyle="solid"
+                      height="44"
+                      borderRadius="12"
+                      padding="12"
+                      backgroundColor="backgroundSurface"
+                      gap="4"
+                    >
+                      <ThemedText.BodySmall fontWeight="600" flexShrink="0">
+                        <Trans>To:&nbsp;</Trans>
+                      </ThemedText.BodySmall>
+                      <Box
+                        as="input"
+                        fontSize="14"
+                        border="none"
+                        backgroundColor="backgroundSurface"
+                        color={{ placeholder: 'textTertiary', default: 'textPrimary' }}
+                        value={sendAddressInput}
+                        placeholder="0x50ec... or destination.eth"
+                        onChange={(e: FormEvent<HTMLInputElement>) => {
+                          setSendAddressInput(e.currentTarget.value)
+                        }}
+                      />
+                    </Row>
+                    <ThemedText.Caption color="textSecondary">
+                      <Trans>
+                        Items sent to an incorrect address may not be
+                        <br />
+                        recovered, double check before sending.
+                      </Trans>
+                    </ThemedText.Caption>
+                  </Column>
                 )}
                 <Box
                   marginTop="8"
