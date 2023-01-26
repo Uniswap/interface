@@ -1,10 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { Contract } from '@ethersproject/contracts'
 import type { JsonRpcSigner } from '@ethersproject/providers'
 import { formatEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { BigNumberish } from 'ethers'
 import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
 import { useIsNftDetailsPage, useIsNftPage, useIsNftProfilePage } from 'hooks/useIsNftPage'
 import { BagFooter } from 'nft/components/bag/BagFooter'
@@ -40,6 +42,9 @@ import { ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 import shallow from 'zustand/shallow'
 
+import ERC721 from '../../../abis/erc721.json'
+import OpenseaTransferHelperAbi from '../../../abis/opensea-transfer-helper.json'
+import { OpenseaTransferHelper as OpenseaTransferHelperContext } from '../../../abis/types/index'
 import { Checkbox } from '../layout/Checkbox'
 import * as styles from './Bag.css'
 import { BagContent } from './BagContent'
@@ -49,6 +54,7 @@ import { ProfileBagContent } from './profile/ProfileBagContent'
 
 export const BAG_WIDTH = 320
 export const XXXL_BAG_WIDTH = 360
+export const OPENSEA_TRANSFER_HELPER_ADDRESS = '0x0000000000c2d145a2526bd8c716263bfebe1a72'
 
 interface SeparatorProps {
   top?: boolean
@@ -104,8 +110,61 @@ const ScrollingIndicator = ({ top, show }: SeparatorProps) => (
   />
 )
 
-function sendAssets(assets: WalletAsset[], signer: JsonRpcSigner, sendAddress: string) {
-  console.log(assets, signer, sendAddress)
+async function sendAssets(assets: WalletAsset[], signer: JsonRpcSigner, sendAddress: string) {
+  if (assets.length == 1) {
+    const asset = assets[0]
+    const collectionAddress = asset.asset_contract.address
+    const tokenId = asset.tokenId
+    if (!collectionAddress || !tokenId) {
+      return
+    }
+    const contract = new Contract(collectionAddress, ERC721, signer)
+    const signerAddress = await signer.getAddress()
+    await contract['safeTransferFrom(address,address,uint256)'](signerAddress, sendAddress, tokenId)
+  } else if (assets.length > 1) {
+    console.log(assets, signer, sendAddress)
+    const contract = new Contract(
+      OPENSEA_TRANSFER_HELPER_ADDRESS,
+      OpenseaTransferHelperAbi,
+      signer
+    ) as OpenseaTransferHelperContext
+
+    const signerAddress = await signer.getAddress()
+
+    const items: {
+      items: {
+        itemType: BigNumberish
+        token: string
+        identifier: BigNumberish
+        amount: BigNumberish
+      }[]
+      recipient: string
+      validateERC721Receiver: boolean
+    }[] = [
+      {
+        items: [],
+        recipient: sendAddress,
+        validateERC721Receiver: true,
+      },
+    ]
+
+    for (const asset of assets) {
+      const collectionAddress = asset.asset_contract.address
+      const tokenId = asset.tokenId
+      if (!collectionAddress || !tokenId) {
+        continue
+      }
+
+      items[0].items.push({
+        itemType: BigNumberish
+        token: string
+        identifier: BigNumberish
+        amount: BigNumberish
+      })
+    }
+    const conduitKey = ''
+    await contract.bulkTransfer(items, conduitKey)
+  }
 }
 
 function burnAssets(assets: WalletAsset[], signer: JsonRpcSigner) {
@@ -364,10 +423,10 @@ const Bag = () => {
     ;(isMobile || isNftListV2) && toggleBag()
     switch (profileMethod) {
       case ProfileMethod.BURN:
-        provider && sendAssets(sellAssets, provider.getSigner(), sendAddress)
+        provider && burnAssets(sellAssets, provider.getSigner())
         break
       case ProfileMethod.SEND:
-        provider && burnAssets(sellAssets, provider.getSigner())
+        provider && sendAssets(sellAssets, provider.getSigner(), sendAddress)
         break
       default:
         setProfilePageState(ProfilePageStateType.LISTING)
