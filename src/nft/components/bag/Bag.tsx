@@ -60,7 +60,7 @@ import { BagContent } from './BagContent'
 import { BagHeader } from './BagHeader'
 import EmptyState from './EmptyContent'
 import { ProfileBagContent } from './profile/ProfileBagContent'
-import { getUniqueCollections, updateStatus } from './profile/utils'
+import { updateStatus } from './profile/utils'
 
 export const BAG_WIDTH = 320
 export const XXXL_BAG_WIDTH = 360
@@ -368,15 +368,6 @@ const Bag = () => {
     setTotalUsdPrice(totalUsdPrice)
   }, [totalEthPrice, totalUsdPrice, setTotalEthPrice, setTotalUsdPrice])
 
-  useEffect(() => {
-    if (isProfilePage && profileMethod !== ProfileMethod.LIST) {
-      const newCollectionsToApprove = getUniqueCollections(sellAssets)
-      setCollectionsRequiringApproval(newCollectionsToApprove)
-      setListingStatus(ListingStatus.DEFINED)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sellAssets])
-
   const hasAssetsToShow = itemsInBag.length > 0
 
   const scrollHandler = (event: React.UIEvent<HTMLDivElement>) => {
@@ -418,7 +409,7 @@ const Bag = () => {
       profileButtonText = <Trans>List NFTs</Trans>
   }
 
-  const handleProfileClick = () => {
+  const handleProfileClick = async () => {
     if (disableProfileButton) return
 
     switch (profileMethod) {

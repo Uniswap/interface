@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { BaseButton } from 'components/Button'
 import { useNftBalance } from 'graphql/data/nft/NftBalance'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { getUniqueCollections } from 'nft/components/bag/profile/utils'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { LoadingAssets } from 'nft/components/collection/CollectionAssetLoading'
 import { assetList } from 'nft/components/collection/CollectionNfts.css'
@@ -16,13 +17,14 @@ import {
   useBag,
   useFiltersExpanded,
   useIsMobile,
+  useNFTList,
   useSellAsset,
   useWalletBalance,
   useWalletCollections,
 } from 'nft/hooks'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import { OSCollectionsFetcher } from 'nft/queries'
-import { WalletCollection } from 'nft/types'
+import { ListingStatus, WalletCollection } from 'nft/types'
 import { lighten } from 'polished'
 import {
   Dispatch,
@@ -268,6 +270,8 @@ const ProfilePageNfts = ({
   useOnClickOutside(profileMethodButtonRef, () => profileMethodDropdownOpen && toggleProfileMethodDropdownOpen)
   const profileMethod = useSellAsset((state) => state.profileMethod)
   const setProfileMethod = useSellAsset((state) => state.setProfileMethod)
+  const setListingStatus = useNFTList((state) => state.setListingStatus)
+  const setCollectionsRequiringApproval = useNFTList((state) => state.setCollectionsRequiringApproval)
 
   const handleProfileMethodClick = (method: ProfileMethod) => {
     setProfileMethod(method)
@@ -289,6 +293,13 @@ const ProfilePageNfts = ({
       easing: easings.easeOutSine,
     },
   })
+
+  useEffect(() => {
+    const newCollectionsToApprove = getUniqueCollections(sellAssets)
+    setCollectionsRequiringApproval(newCollectionsToApprove)
+    setListingStatus(ListingStatus.DEFINED)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sellAssets])
 
   if (loading) return <ProfileBodyLoadingSkeleton />
 
