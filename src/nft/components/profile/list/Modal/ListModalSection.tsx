@@ -83,7 +83,6 @@ const MarketplaceIcon = styled.img`
   height: 24px;
   width: 24px;
   margin-left: -4px;
-  margin-right: 12px;
 `
 
 const ContentName = styled(ThemedText.SubHeaderSmall)`
@@ -93,6 +92,7 @@ const ContentName = styled(ThemedText.SubHeaderSmall)`
   text-overflow: ellipsis;
   overflow: hidden;
   max-width: 50%;
+  margin-left: 12px !important;
 `
 
 const StyledVerifiedIcon = styled(VerifiedIcon)`
@@ -102,8 +102,6 @@ const StyledVerifiedIcon = styled(VerifiedIcon)`
 `
 
 const StyledLoadingIconBackground = styled(LoadingIcon)`
-  height: 14px;
-  width: 14px;
   stroke: ${({ theme }) => theme.textTertiary};
   margin-left: auto;
   margin-right: 0px;
@@ -119,6 +117,22 @@ interface ListModalSectionProps {
   active: boolean
   content: AssetRow[]
   toggleSection: React.DispatchWithoutAction
+}
+
+export const SectionHeaderOnly = ({ active }: { active: boolean }) => {
+  const theme = useTheme()
+  const profileMethod = useSellAsset((state) => state.profileMethod)
+  return (
+    <SectionHeader>
+      <Row>
+        {active ? <ListingModalWindowActive /> : <ListingModalWindowClosed />}
+        <SectionTitle active={active} marginLeft="12px">
+          <Trans>Confirmation Signature</Trans>
+        </SectionTitle>
+        {active && <StyledLoadingIconBackground height="24px" width="24px" />}
+      </Row>
+    </SectionHeader>
+  )
 }
 
 export const ListModalSection = ({ sectionType, active, content, toggleSection }: ListModalSectionProps) => {
@@ -165,8 +179,8 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
                       : profileMethod === ProfileMethod.SEND
                       ? 'Sending'
                       : 'Burning'}{' '}
-                    an NFT requires a one-time {profileMethod === ProfileMethod.LIST && 'marketplace'} approval for each
-                    NFT collection.
+                    an NFT requires a one-time{profileMethod === ProfileMethod.LIST ? ' marketplace' : ''} approval for
+                    each NFT collection.
                   </Trans>
                 }
               >
@@ -183,10 +197,10 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
                   ) : (
                     <AssetIcon src={row.images[0]} />
                   )}
-                  <MarketplaceIcon src={row.images[1]} />
+                  {profileMethod === ProfileMethod.LIST && <MarketplaceIcon src={row.images[1]} />}
                   <ContentName>{row.name}</ContentName>
                   {isCollectionApprovalSection && (row as CollectionRow).isVerified && <StyledVerifiedIcon />}
-                  <StyledLoadingIconBackground />
+                  <StyledLoadingIconBackground height="14px" width="14px" />
                 </ContentRow>
               )
             })}

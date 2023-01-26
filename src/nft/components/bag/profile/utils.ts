@@ -50,14 +50,15 @@ export async function approveCollectionRow(
       ),
   })
   const { marketplace, collectionAddress } = collectionRow
-  const spender =
-    marketplace.name === 'OpenSea'
+  const spender = marketplace
+    ? marketplace.name === 'OpenSea'
       ? OPENSEA_CROSS_CHAIN_CONDUIT
       : marketplace.name === 'Rarible'
       ? LOOKSRARE_MARKETPLACE_CONTRACT
       : marketplace.name === 'X2Y2'
       ? X2Y2_TRANSFER_CONTRACT
       : looksRareAddress
+    : ''
   !!collectionAddress &&
     (await approveCollection(spender, collectionAddress, signer, (newStatus: ListingStatus) =>
       updateStatus({
@@ -155,7 +156,7 @@ export const getListings = (sellAssets: WalletAsset[]): [CollectionRow[], Listin
         !newCollectionsToApprove.some(
           (collectionRow: CollectionRow) =>
             collectionRow.collectionAddress === asset.asset_contract.address &&
-            collectionRow.marketplace.name === marketplace.name
+            collectionRow.marketplace?.name === marketplace.name
         )
       ) {
         const newCollectionRow = {

@@ -43,6 +43,7 @@ import { isAddress } from 'utils'
 import shallow from 'zustand/shallow'
 
 import { Checkbox } from '../layout/Checkbox'
+import { ListModal } from '../profile/list/Modal/ListModal'
 import * as styles from './Bag.css'
 import { BagContent } from './BagContent'
 import { BagHeader } from './BagHeader'
@@ -137,6 +138,7 @@ const Bag = () => {
   const [sendAddressInput, setSendAddressInput] = useState('')
   const [hovered, toggleHover] = useReducer((state) => !state, false)
   const lookup = useENSAddress(sendAddressInput)
+  const [showListModal, toggleShowListModal] = useReducer((s) => !s, false)
 
   const sendAddress = useMemo(
     () => (isAddress(sendAddressInput) ? sendAddressInput : lookup.address ?? ''),
@@ -369,15 +371,18 @@ const Bag = () => {
 
   const handleProfileClick = () => {
     if (disableProfileButton) return
-    ;(isMobile || isNftListV2) && toggleBag()
+
     switch (profileMethod) {
       case ProfileMethod.BURN:
+        toggleShowListModal()
         provider && sendAssets(sellAssets, provider.getSigner(), sendAddress)
         break
       case ProfileMethod.SEND:
+        toggleShowListModal()
         provider && burnAssets(sellAssets, provider.getSigner())
         break
       default:
+        ;(isMobile || isNftListV2) && toggleBag()
         setProfilePageState(ProfilePageStateType.LISTING)
         sendAnalyticsEvent(NFTEventName.NFT_PROFILE_PAGE_START_SELL, {
           list_quantity: sellAssets.length,
@@ -392,112 +397,119 @@ const Bag = () => {
     (profileMethod === ProfileMethod.SEND && !sendAddress)
 
   return (
-    <Portal>
-      <BagContainer data-testid="nft-bag" raiseZIndex={isMobile || isModalOpen}>
-        {!(isProfilePage && profilePageState === ProfilePageStateType.LISTING) ? (
-          <>
-            <BagHeader
-              numberOfAssets={isProfilePage ? sellAssets.length : itemsInBag.length}
-              closeBag={handleCloseBag}
-              resetFlow={isProfilePage ? resetSellAssets : reset}
-              isProfilePage={isProfilePage}
-            />
-            {shouldRenderEmptyState && <EmptyState />}
-            <ScrollingIndicator top show={userCanScroll && scrollProgress > 0} />
-            <Column ref={scrollRef} className={styles.assetsContainer} onScroll={scrollHandler} gap="12">
-              {isProfilePage ? <ProfileBagContent /> : <BagContent />}
-            </Column>
-            {hasAssetsToShow && !isProfilePage && (
-              <BagFooter
-                totalEthPrice={totalEthPrice}
-                totalUsdPrice={totalUsdPrice}
-                bagStatus={bagStatus}
-                fetchAssets={fetchAssets}
-                eventProperties={eventProperties}
+    <>
+      <Portal>
+        <BagContainer data-testid="nft-bag" raiseZIndex={isMobile || isModalOpen}>
+          {!(isProfilePage && profilePageState === ProfilePageStateType.LISTING) ? (
+            <>
+              <BagHeader
+                numberOfAssets={isProfilePage ? sellAssets.length : itemsInBag.length}
+                closeBag={handleCloseBag}
+                resetFlow={isProfilePage ? resetSellAssets : reset}
+                isProfilePage={isProfilePage}
               />
-            )}
-            {isSellingAssets && isProfilePage && (
-              <Column marginTop={profileMethod === ProfileMethod.LIST ? '32' : '16'} marginX="28">
-                {profileMethod === ProfileMethod.BURN && (
-                  <Row justifyContent="space-between" onMouseEnter={toggleHover} onMouseLeave={toggleHover}>
-                    <ThemedText.Caption color="textSecondary">
-                      <Trans>
-                        I understand that burning NFTs
-                        <br />
-                        results in permanent loss of the NFTs
-                      </Trans>
-                    </ThemedText.Caption>
-                    <Checkbox hovered={hovered} checked={isCheckboxSelected} onClick={toggleCheckboxSelected}>
-                      <span />
-                    </Checkbox>
-                  </Row>
-                )}
-                {profileMethod === ProfileMethod.SEND && (
-                  <Column gap="8">
-                    <Row
-                      borderColor={{ default: 'backgroundOutline', focus: 'accentAction' }}
-                      borderWidth="1.5px"
-                      borderStyle="solid"
-                      height="44"
-                      borderRadius="12"
-                      padding="12"
-                      backgroundColor="backgroundSurface"
-                      gap="4"
-                    >
-                      <ThemedText.BodySmall fontWeight="600" flexShrink="0">
-                        <Trans>To:&nbsp;</Trans>
-                      </ThemedText.BodySmall>
-                      <Box
-                        as="input"
-                        fontSize="14"
-                        border="none"
-                        backgroundColor="backgroundSurface"
-                        color={{ placeholder: 'textTertiary', default: 'textPrimary' }}
-                        value={sendAddressInput}
-                        placeholder="0x50ec... or destination.eth"
-                        onChange={(e: FormEvent<HTMLInputElement>) => {
-                          setSendAddressInput(e.currentTarget.value)
-                        }}
-                      />
-                    </Row>
-                    <ThemedText.Caption color="textSecondary">
-                      <Trans>
-                        Items sent to an incorrect address may not be
-                        <br />
-                        recovered, double check before sending.
-                      </Trans>
-                    </ThemedText.Caption>
-                  </Column>
-                )}
-                <Box
-                  marginTop="8"
-                  marginBottom="16"
-                  paddingY="10"
-                  className={`${buttonTextMedium} ${commonButtonStyles}`}
-                  backgroundColor="accentAction"
-                  color="white"
-                  textAlign="center"
-                  onClick={handleProfileClick}
-                  disabled={disableProfileButton}
-                  opacity={disableProfileButton ? '0.4' : '1'}
-                  style={{ cursor: disableProfileButton ? 'auto' : 'pointer', userSelect: 'none' }}
-                >
-                  {profileButtonText}
-                </Box>
+              {shouldRenderEmptyState && <EmptyState />}
+              <ScrollingIndicator top show={userCanScroll && scrollProgress > 0} />
+              <Column ref={scrollRef} className={styles.assetsContainer} onScroll={scrollHandler} gap="12">
+                {isProfilePage ? <ProfileBagContent /> : <BagContent />}
               </Column>
-            )}
-          </>
-        ) : (
-          <ListingModal />
-        )}
-      </BagContainer>
+              {hasAssetsToShow && !isProfilePage && (
+                <BagFooter
+                  totalEthPrice={totalEthPrice}
+                  totalUsdPrice={totalUsdPrice}
+                  bagStatus={bagStatus}
+                  fetchAssets={fetchAssets}
+                  eventProperties={eventProperties}
+                />
+              )}
+              {isSellingAssets && isProfilePage && (
+                <Column marginTop={profileMethod === ProfileMethod.LIST ? '32' : '16'} marginX="28">
+                  {profileMethod === ProfileMethod.BURN && (
+                    <Row justifyContent="space-between" onMouseEnter={toggleHover} onMouseLeave={toggleHover}>
+                      <ThemedText.Caption color="textSecondary">
+                        <Trans>
+                          I understand that burning NFTs
+                          <br />
+                          results in permanent loss of the NFTs
+                        </Trans>
+                      </ThemedText.Caption>
+                      <Checkbox hovered={hovered} checked={isCheckboxSelected} onClick={toggleCheckboxSelected}>
+                        <span />
+                      </Checkbox>
+                    </Row>
+                  )}
+                  {profileMethod === ProfileMethod.SEND && (
+                    <Column gap="8">
+                      <Row
+                        borderColor={{ default: 'backgroundOutline', focus: 'accentAction' }}
+                        borderWidth="1.5px"
+                        borderStyle="solid"
+                        height="44"
+                        borderRadius="12"
+                        padding="12"
+                        backgroundColor="backgroundSurface"
+                        gap="4"
+                      >
+                        <ThemedText.BodySmall fontWeight="600" flexShrink="0">
+                          <Trans>To:&nbsp;</Trans>
+                        </ThemedText.BodySmall>
+                        <Box
+                          as="input"
+                          fontSize="14"
+                          border="none"
+                          backgroundColor="backgroundSurface"
+                          color={{ placeholder: 'textTertiary', default: 'textPrimary' }}
+                          value={sendAddressInput}
+                          placeholder="0x50ec... or destination.eth"
+                          onChange={(e: FormEvent<HTMLInputElement>) => {
+                            setSendAddressInput(e.currentTarget.value)
+                          }}
+                        />
+                      </Row>
+                      <ThemedText.Caption color="textSecondary">
+                        <Trans>
+                          Items sent to an incorrect address may not be
+                          <br />
+                          recovered, double check before sending.
+                        </Trans>
+                      </ThemedText.Caption>
+                    </Column>
+                  )}
+                  <Box
+                    marginTop="8"
+                    marginBottom="16"
+                    paddingY="10"
+                    className={`${buttonTextMedium} ${commonButtonStyles}`}
+                    backgroundColor="accentAction"
+                    color="white"
+                    textAlign="center"
+                    onClick={handleProfileClick}
+                    disabled={disableProfileButton}
+                    opacity={disableProfileButton ? '0.4' : '1'}
+                    style={{ cursor: disableProfileButton ? 'auto' : 'pointer', userSelect: 'none' }}
+                  >
+                    {profileButtonText}
+                  </Box>
+                </Column>
+              )}
+            </>
+          ) : (
+            <ListingModal />
+          )}
+        </BagContainer>
 
-      {isDetailsPage ? (
-        <DetailsPageBackground onClick={toggleBag} />
-      ) : (
-        isModalOpen && <Overlay onClick={() => (!bagIsLocked ? setModalIsOpen(false) : undefined)} />
+        {isDetailsPage ? (
+          <DetailsPageBackground onClick={toggleBag} />
+        ) : (
+          isModalOpen && <Overlay onClick={() => (!bagIsLocked ? setModalIsOpen(false) : undefined)} />
+        )}
+      </Portal>
+      {showListModal && (
+        <>
+          <ListModal overlayClick={toggleShowListModal} />
+        </>
       )}
-    </Portal>
+    </>
   )
 }
 
