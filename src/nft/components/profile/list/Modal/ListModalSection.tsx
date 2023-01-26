@@ -6,7 +6,6 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import {
   ApprovedCheckmarkIcon,
   ChevronUpIcon,
-  FailedListingIcon,
   ListingModalWindowActive,
   ListingModalWindowClosed,
   LoadingIcon,
@@ -15,7 +14,7 @@ import {
 import { ProfileMethod, useNFTList, useSellAsset } from 'nft/hooks'
 import { AssetRow, CollectionRow, ListingStatus } from 'nft/types'
 import { useEffect, useMemo } from 'react'
-import { Info } from 'react-feather'
+import { Info, X } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { colors } from 'theme/colors'
@@ -153,8 +152,9 @@ export const SectionHeaderOnly = ({ active }: { active: boolean }) => {
           {listingStatus === ListingStatus.APPROVED && allCollectionsApproved && (
             <ApprovedCheckmarkIcon height="24" width="24" />
           )}
-          {listingStatus === ListingStatus.FAILED ||
-            (listingStatus === ListingStatus.REJECTED && <FailedListingIcon height="24" width="24" />)}
+          {(listingStatus === ListingStatus.FAILED || listingStatus === ListingStatus.REJECTED) && (
+            <X height="24" width="24" stroke="red" />
+          )}
         </IconWrapper>
       </Row>
     </SectionHeader>
@@ -166,6 +166,7 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
   const isCollectionApprovalSection = sectionType === Section.APPROVE
   const profileMethod = useSellAsset((state) => state.profileMethod)
 
+  // auto close section when all rows have been approved
   useEffect(() => {
     !content.some((row) => row.status !== ListingStatus.APPROVED) && toggleSection()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -232,11 +233,17 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
                   <ContentName>{row.name}</ContentName>
                   {isCollectionApprovalSection && (row as CollectionRow).isVerified && <StyledVerifiedIcon />}
                   <IconWrapper>
-                    <LoadingIcon
-                      height="14px"
-                      width="14px"
-                      stroke={row.status === ListingStatus.SIGNING ? theme.accentAction : theme.textTertiary}
-                    />
+                    {(row.status === ListingStatus.SIGNING || row.status === ListingStatus.PENDING) && (
+                      <LoadingIcon
+                        height="14px"
+                        width="14px"
+                        stroke={row.status === ListingStatus.SIGNING ? theme.accentAction : theme.textTertiary}
+                      />
+                    )}
+                    {row.status === ListingStatus.APPROVED && <ApprovedCheckmarkIcon height="14" width="14" />}
+                    {(row.status === ListingStatus.FAILED || row.status === ListingStatus.REJECTED) && (
+                      <X height="14" width="14" stroke="red" />
+                    )}
                   </IconWrapper>
                 </ContentRow>
               )
