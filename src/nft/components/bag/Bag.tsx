@@ -21,22 +21,34 @@ import {
   ProfileMethod,
   useBag,
   useIsMobile,
+  useNFTList,
   useProfilePageState,
   useSellAsset,
   useSendTransaction,
   useTransactionResponse,
 } from 'nft/hooks'
 import { fetchRoute } from 'nft/queries'
-import { BagItemStatus, BagStatus, ProfilePageStateType, RouteResponse, TxStateType, WalletAsset } from 'nft/types'
 import {
+  AssetRow,
+  BagItemStatus,
+  BagStatus,
+  ListingStatus,
+  ProfilePageStateType,
+  RouteResponse,
+  TxStateType,
+  WalletAsset,
+} from 'nft/types'
+import {
+  approveCollection,
   buildSellObject,
+  delay,
   fetchPrice,
   formatAssetEventProperties,
   recalculateBagUsingPooledAssets,
   sortUpdatedAssets,
 } from 'nft/utils'
 import { combineBuyItemsWithTxRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
-import { FormEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
+import { Dispatch, FormEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from 'react-query'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -56,15 +68,19 @@ import {
 } from 'nft/queries/openSea'
 
 import { Checkbox } from '../layout/Checkbox'
+import { ListModal } from '../profile/list/Modal/ListModal'
 import * as styles from './Bag.css'
 import { BagContent } from './BagContent'
 import { BagHeader } from './BagHeader'
 import EmptyState from './EmptyContent'
 import { ProfileBagContent } from './profile/ProfileBagContent'
+import { updateStatus } from './profile/utils'
 
 export const BAG_WIDTH = 320
 export const XXXL_BAG_WIDTH = 360
 export const OPENSEA_TRANSFER_HELPER_ADDRESS = '0x0000000000c2d145a2526bd8c716263bfebe1a72'
+export const SEND_CONTRACT_ADDRESS = ''
+export const BURN_CONTRACT_ADDRESS = ''
 
 interface SeparatorProps {
   top?: boolean
@@ -120,7 +136,36 @@ const ScrollingIndicator = ({ top, show }: SeparatorProps) => (
   />
 )
 
-async function sendAssets(assets: WalletAsset[], signer: JsonRpcSigner, sendAddress: string) {
+async function sendAssets(
+  assets: WalletAsset[],
+  signer: JsonRpcSigner,
+  setListingStatus: (status: ListingStatus) => void,
+  sendAddress: string,
+  fakeForDemo = false
+) {
+  setListingStatus(ListingStatus.SIGNING)
+
+  // TODO: remove delay when not testing
+  if (fakeForDemo) {
+    await delay(5000)
+    setListingStatus(ListingStatus.APPROVED)
+    return
+  }
+
+  try {
+    // Get wallet to sign transaction
+    console.log(assets, signer, sendAddress)
+    setListingStatus(ListingStatus.PENDING)
+
+    // .wait() for tx to be added to the blockchain
+    setListingStatus(ListingStatus.APPROVED)
+  } catch (error) {
+    if (error.code === 4001) setListingStatus(ListingStatus.REJECTED)
+    else setListingStatus(ListingStatus.FAILED)
+  }
+
+
+
   if (assets.length == 1) {
     const asset = assets[0]
     const collectionAddress = asset.asset_contract.address
@@ -174,11 +219,34 @@ async function sendAssets(assets: WalletAsset[], signer: JsonRpcSigner, sendAddr
     }
     console.log(items)
     await contract.bulkTransfer(items, OPENSEA_DEFAULT_CROSS_CHAIN_CONDUIT_KEY)
-  }
 }
 
-function burnAssets(assets: WalletAsset[], signer: JsonRpcSigner) {
-  console.log(assets, signer)
+async function burnAssets(
+  assets: WalletAsset[],
+  signer: JsonRpcSigner,
+  setListingStatus: (status: ListingStatus) => void,
+  fakeForDemo = false
+) {
+  setListingStatus(ListingStatus.SIGNING)
+
+  // TODO: remove delay when not testing
+  if (fakeForDemo) {
+    await delay(5000)
+    setListingStatus(ListingStatus.APPROVED)
+    return
+  }
+
+  try {
+    // Get wallet to sign transaction
+    console.log(assets, signer)
+    setListingStatus(ListingStatus.PENDING)
+
+    // .wait() for tx to be added to the blockchain
+    setListingStatus(ListingStatus.APPROVED)
+  } catch (error) {
+    if (error.code === 4001) setListingStatus(ListingStatus.REJECTED)
+    else setListingStatus(ListingStatus.FAILED)
+  }
 }
 
 const Bag = () => {
@@ -204,6 +272,10 @@ const Bag = () => {
   const [sendAddressInput, setSendAddressInput] = useState('')
   const [hovered, toggleHover] = useReducer((state) => !state, false)
   const lookup = useENSAddress(sendAddressInput)
+  const [showListModal, toggleShowListModal] = useReducer((s) => !s, false)
+  const setListingStatus = useNFTList((state) => state.setListingStatus)
+  const setCollectionsRequiringApproval = useNFTList((state) => state.setCollectionsRequiringApproval)
+  const collectionsRequiringApproval = useNFTList((state) => state.collectionsRequiringApproval)
 
   const sendAddress = useMemo(
     () => (isAddress(sendAddressInput) ? sendAddressInput : lookup.address ?? ''),
@@ -434,17 +506,58 @@ const Bag = () => {
       profileButtonText = <Trans>List NFTs</Trans>
   }
 
-  const handleProfileClick = () => {
+  const handleProfileClick = async () => {
     if (disableProfileButton) return
-    ;(isMobile || isNftListV2) && toggleBag()
+
+    const fakeForDemo = true // TODO: remove this when not faking success
+
     switch (profileMethod) {
       case ProfileMethod.BURN:
-        provider && burnAssets(sellAssets, provider.getSigner())
+        toggleShowListModal()
+        if (provider) {
+          for (const collection of collectionsRequiringApproval) {
+            collection.collectionAddress &&
+              (await approveCollection(
+                SEND_CONTRACT_ADDRESS,
+                collection.collectionAddress,
+                provider.getSigner(),
+                (newStatus: ListingStatus) =>
+                  updateStatus({
+                    listing: collection,
+                    newStatus,
+                    rows: collectionsRequiringApproval,
+                    setRows: setCollectionsRequiringApproval as Dispatch<AssetRow[]>,
+                  }),
+                fakeForDemo
+              ))
+          }
+          await sendAssets(sellAssets, provider.getSigner(), setListingStatus, sendAddress, fakeForDemo)
+        }
         break
       case ProfileMethod.SEND:
-        provider && sendAssets(sellAssets, provider.getSigner(), sendAddress)
+        toggleShowListModal()
+        if (provider) {
+          for (const collection of collectionsRequiringApproval) {
+            collection.collectionAddress &&
+              (await approveCollection(
+                BURN_CONTRACT_ADDRESS,
+                collection.collectionAddress,
+                provider.getSigner(),
+                (newStatus: ListingStatus) =>
+                  updateStatus({
+                    listing: collection,
+                    newStatus,
+                    rows: collectionsRequiringApproval,
+                    setRows: setCollectionsRequiringApproval as Dispatch<AssetRow[]>,
+                  }),
+                fakeForDemo
+              ))
+          }
+          await burnAssets(sellAssets, provider.getSigner(), setListingStatus, fakeForDemo)
+        }
         break
       default:
+        ;(isMobile || isNftListV2) && toggleBag()
         setProfilePageState(ProfilePageStateType.LISTING)
         sendAnalyticsEvent(NFTEventName.NFT_PROFILE_PAGE_START_SELL, {
           list_quantity: sellAssets.length,
@@ -459,112 +572,119 @@ const Bag = () => {
     (profileMethod === ProfileMethod.SEND && !sendAddress)
 
   return (
-    <Portal>
-      <BagContainer data-testid="nft-bag" raiseZIndex={isMobile || isModalOpen}>
-        {!(isProfilePage && profilePageState === ProfilePageStateType.LISTING) ? (
-          <>
-            <BagHeader
-              numberOfAssets={isProfilePage ? sellAssets.length : itemsInBag.length}
-              closeBag={handleCloseBag}
-              resetFlow={isProfilePage ? resetSellAssets : reset}
-              isProfilePage={isProfilePage}
-            />
-            {shouldRenderEmptyState && <EmptyState />}
-            <ScrollingIndicator top show={userCanScroll && scrollProgress > 0} />
-            <Column ref={scrollRef} className={styles.assetsContainer} onScroll={scrollHandler} gap="12">
-              {isProfilePage ? <ProfileBagContent /> : <BagContent />}
-            </Column>
-            {hasAssetsToShow && !isProfilePage && (
-              <BagFooter
-                totalEthPrice={totalEthPrice}
-                totalUsdPrice={totalUsdPrice}
-                bagStatus={bagStatus}
-                fetchAssets={fetchAssets}
-                eventProperties={eventProperties}
+    <>
+      <Portal>
+        <BagContainer data-testid="nft-bag" raiseZIndex={isMobile || isModalOpen}>
+          {!(isProfilePage && profilePageState === ProfilePageStateType.LISTING) ? (
+            <>
+              <BagHeader
+                numberOfAssets={isProfilePage ? sellAssets.length : itemsInBag.length}
+                closeBag={handleCloseBag}
+                resetFlow={isProfilePage ? resetSellAssets : reset}
+                isProfilePage={isProfilePage}
               />
-            )}
-            {isSellingAssets && isProfilePage && (
-              <Column marginTop={profileMethod === ProfileMethod.LIST ? '32' : '16'} marginX="28">
-                {profileMethod === ProfileMethod.BURN && (
-                  <Row justifyContent="space-between" onMouseEnter={toggleHover} onMouseLeave={toggleHover}>
-                    <ThemedText.Caption color="textSecondary">
-                      <Trans>
-                        I understand that burning NFTs
-                        <br />
-                        results in permanent loss of the NFTs
-                      </Trans>
-                    </ThemedText.Caption>
-                    <Checkbox hovered={hovered} checked={isCheckboxSelected} onClick={toggleCheckboxSelected}>
-                      <span />
-                    </Checkbox>
-                  </Row>
-                )}
-                {profileMethod === ProfileMethod.SEND && (
-                  <Column gap="8">
-                    <Row
-                      borderColor={{ default: 'backgroundOutline', focus: 'accentAction' }}
-                      borderWidth="1.5px"
-                      borderStyle="solid"
-                      height="44"
-                      borderRadius="12"
-                      padding="12"
-                      backgroundColor="backgroundSurface"
-                      gap="4"
-                    >
-                      <ThemedText.BodySmall fontWeight="600" flexShrink="0">
-                        <Trans>To:&nbsp;</Trans>
-                      </ThemedText.BodySmall>
-                      <Box
-                        as="input"
-                        fontSize="14"
-                        border="none"
-                        backgroundColor="backgroundSurface"
-                        color={{ placeholder: 'textTertiary', default: 'textPrimary' }}
-                        value={sendAddressInput}
-                        placeholder="0x50ec... or destination.eth"
-                        onChange={(e: FormEvent<HTMLInputElement>) => {
-                          setSendAddressInput(e.currentTarget.value)
-                        }}
-                      />
-                    </Row>
-                    <ThemedText.Caption color="textSecondary">
-                      <Trans>
-                        Items sent to an incorrect address may not be
-                        <br />
-                        recovered, double check before sending.
-                      </Trans>
-                    </ThemedText.Caption>
-                  </Column>
-                )}
-                <Box
-                  marginTop="8"
-                  marginBottom="16"
-                  paddingY="10"
-                  className={`${buttonTextMedium} ${commonButtonStyles}`}
-                  backgroundColor="accentAction"
-                  color="white"
-                  textAlign="center"
-                  onClick={handleProfileClick}
-                  disabled={disableProfileButton}
-                  opacity={disableProfileButton ? '0.4' : '1'}
-                  style={{ cursor: disableProfileButton ? 'auto' : 'pointer', userSelect: 'none' }}
-                >
-                  {profileButtonText}
-                </Box>
+              {shouldRenderEmptyState && <EmptyState />}
+              <ScrollingIndicator top show={userCanScroll && scrollProgress > 0} />
+              <Column ref={scrollRef} className={styles.assetsContainer} onScroll={scrollHandler} gap="12">
+                {isProfilePage ? <ProfileBagContent /> : <BagContent />}
               </Column>
-            )}
-          </>
-        ) : (
-          <ListingModal />
-        )}
-      </BagContainer>
+              {hasAssetsToShow && !isProfilePage && (
+                <BagFooter
+                  totalEthPrice={totalEthPrice}
+                  totalUsdPrice={totalUsdPrice}
+                  bagStatus={bagStatus}
+                  fetchAssets={fetchAssets}
+                  eventProperties={eventProperties}
+                />
+              )}
+              {isSellingAssets && isProfilePage && (
+                <Column marginTop={profileMethod === ProfileMethod.LIST ? '32' : '16'} marginX="28">
+                  {profileMethod === ProfileMethod.BURN && (
+                    <Row justifyContent="space-between" onMouseEnter={toggleHover} onMouseLeave={toggleHover}>
+                      <ThemedText.Caption color="textSecondary">
+                        <Trans>
+                          I understand that burning NFTs
+                          <br />
+                          results in permanent loss of the NFTs
+                        </Trans>
+                      </ThemedText.Caption>
+                      <Checkbox hovered={hovered} checked={isCheckboxSelected} onClick={toggleCheckboxSelected}>
+                        <span />
+                      </Checkbox>
+                    </Row>
+                  )}
+                  {profileMethod === ProfileMethod.SEND && (
+                    <Column gap="8">
+                      <Row
+                        borderColor={{ default: 'backgroundOutline', focus: 'accentAction' }}
+                        borderWidth="1.5px"
+                        borderStyle="solid"
+                        height="44"
+                        borderRadius="12"
+                        padding="12"
+                        backgroundColor="backgroundSurface"
+                        gap="4"
+                      >
+                        <ThemedText.BodySmall fontWeight="600" flexShrink="0">
+                          <Trans>To:&nbsp;</Trans>
+                        </ThemedText.BodySmall>
+                        <Box
+                          as="input"
+                          fontSize="14"
+                          border="none"
+                          backgroundColor="backgroundSurface"
+                          color={{ placeholder: 'textTertiary', default: 'textPrimary' }}
+                          value={sendAddressInput}
+                          placeholder="0x50ec... or destination.eth"
+                          onChange={(e: FormEvent<HTMLInputElement>) => {
+                            setSendAddressInput(e.currentTarget.value)
+                          }}
+                        />
+                      </Row>
+                      <ThemedText.Caption color="textSecondary">
+                        <Trans>
+                          Items sent to an incorrect address may not be
+                          <br />
+                          recovered, double check before sending.
+                        </Trans>
+                      </ThemedText.Caption>
+                    </Column>
+                  )}
+                  <Box
+                    marginTop="8"
+                    marginBottom="16"
+                    paddingY="10"
+                    className={`${buttonTextMedium} ${commonButtonStyles}`}
+                    backgroundColor="accentAction"
+                    color="white"
+                    textAlign="center"
+                    onClick={handleProfileClick}
+                    disabled={disableProfileButton}
+                    opacity={disableProfileButton ? '0.4' : '1'}
+                    style={{ cursor: disableProfileButton ? 'auto' : 'pointer', userSelect: 'none' }}
+                  >
+                    {profileButtonText}
+                  </Box>
+                </Column>
+              )}
+            </>
+          ) : (
+            <ListingModal />
+          )}
+        </BagContainer>
 
-      {isDetailsPage ? (
-        <DetailsPageBackground onClick={toggleBag} />
-      ) : (
-        isModalOpen && <Overlay onClick={() => (!bagIsLocked ? setModalIsOpen(false) : undefined)} />
+        {isDetailsPage ? (
+          <DetailsPageBackground onClick={toggleBag} />
+        ) : (
+          isModalOpen && <Overlay onClick={() => (!bagIsLocked ? setModalIsOpen(false) : undefined)} />
+        )}
+      </Portal>
+      {showListModal && (
+        <>
+          <ListModal overlayClick={toggleShowListModal} />
+        </>
       )}
-    </Portal>
+    </>
   )
 }
 

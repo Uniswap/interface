@@ -109,7 +109,8 @@ export interface ListingRow extends AssetRow {
 
 export interface CollectionRow extends AssetRow {
   collectionAddress?: string
-  marketplace: ListingMarket
+  isVerified?: boolean
+  marketplace?: ListingMarket
 }
 
 // Creating this as an enum and not boolean as we will likely have a success screen state to show

@@ -5,7 +5,7 @@ import { AssetRow, CollectionRow, ListingMarket, ListingRow, ListingStatus, Wall
 import { approveCollection, LOOKS_RARE_CREATOR_BASIS_POINTS, signListing } from 'nft/utils/listNfts'
 import { Dispatch } from 'react'
 
-const updateStatus = ({
+export const updateStatus = ({
   listing,
   newStatus,
   rows,
@@ -50,14 +50,15 @@ export async function approveCollectionRow(
       ),
   })
   const { marketplace, collectionAddress } = collectionRow
-  const spender =
-    marketplace.name === 'OpenSea'
+  const spender = marketplace
+    ? marketplace.name === 'OpenSea'
       ? OPENSEA_CROSS_CHAIN_CONDUIT
       : marketplace.name === 'Rarible'
       ? LOOKSRARE_MARKETPLACE_CONTRACT
       : marketplace.name === 'X2Y2'
       ? X2Y2_TRANSFER_CONTRACT
       : looksRareAddress
+    : ''
   !!collectionAddress &&
     (await approveCollection(spender, collectionAddress, signer, (newStatus: ListingStatus) =>
       updateStatus({
@@ -136,6 +137,28 @@ export const getTotalEthValue = (sellAssets: WalletAsset[]) => {
   return total ? Math.round(total * 10000 + Number.EPSILON) / 10000 : 0
 }
 
+export const getUniqueCollections = (sellAssets: WalletAsset[]): CollectionRow[] => {
+  const newCollectionsToApprove: CollectionRow[] = []
+
+  sellAssets.forEach((asset) => {
+    if (
+      !newCollectionsToApprove.some(
+        (collectionRow: CollectionRow) => collectionRow.collectionAddress === asset.asset_contract.address
+      )
+    ) {
+      const newCollectionRow = {
+        images: [asset.asset_contract.image_url, ''],
+        name: asset.asset_contract.name,
+        status: ListingStatus.DEFINED,
+        collectionAddress: asset.asset_contract.address,
+        isVerified: asset.collectionIsVerified,
+      }
+      newCollectionsToApprove.push(newCollectionRow)
+    }
+  })
+  return newCollectionsToApprove
+}
+
 export const getListings = (sellAssets: WalletAsset[]): [CollectionRow[], ListingRow[]] => {
   const newCollectionsToApprove: CollectionRow[] = []
 
@@ -155,7 +178,7 @@ export const getListings = (sellAssets: WalletAsset[]): [CollectionRow[], Listin
         !newCollectionsToApprove.some(
           (collectionRow: CollectionRow) =>
             collectionRow.collectionAddress === asset.asset_contract.address &&
-            collectionRow.marketplace.name === marketplace.name
+            collectionRow.marketplace?.name === marketplace.name
         )
       ) {
         const newCollectionRow = {
@@ -163,6 +186,7 @@ export const getListings = (sellAssets: WalletAsset[]): [CollectionRow[], Listin
           name: asset.asset_contract.name,
           status: ListingStatus.DEFINED,
           collectionAddress: asset.asset_contract.address,
+          isVerified: asset.collectionIsVerified,
           marketplace,
         }
         newCollectionsToApprove.push(newCollectionRow)

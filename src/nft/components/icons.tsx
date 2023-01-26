@@ -24,12 +24,12 @@ export const ChevronUpIcon = ({
   ...props
 }: SVGProps & { secondaryWidth?: string; secondaryHeight?: string; secondaryColor?: string }) => (
   <svg
-    {...props}
     width={secondaryWidth || '29'}
     height={secondaryHeight || '28'}
     viewBox="0 0 29 28"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    {...props}
   >
     <g clipPath="url(#clip0_564_11230)">
       <path
@@ -317,7 +317,7 @@ export const ApprovedCheckmarkIcon = (props: SVGProps) => (
   <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
       d="M13.7464 21.1101C13.3792 21.6796 12.8372 22 12.2076 22C11.5607 22 11.0536 21.733 10.5814 21.1101L6.45464 15.9844C6.15738 15.6107 6 15.2191 6 14.792C6 13.9021 6.66448 13.208 7.52131 13.208C8.0459 13.208 8.46557 13.4038 8.88525 13.9555L12.1377 18.1735L19.0448 6.88988C19.412 6.28476 19.8842 6 20.4087 6C21.2306 6 22 6.58732 22 7.4594C22 7.86874 21.7902 8.29588 21.5628 8.66963L13.7464 21.1101Z"
-      fill="currentColor"
+      fill={props.fill ? props.fill : 'currentColor'}
     />
   </svg>
 )
@@ -772,5 +772,18 @@ export const FlameIcon = (props: SVGProps) => (
     {...props}
   >
     <path d="M10.42 3C9.88 9.2 4 9.4 4 14.38c0 2.8 1.7 5.35 4.17 6.62.76-2.1 3.83-3.17 3.83-5.57a7.65 7.65 0 013.92 5.52C24.13 15.88 18.9 6.18 10.42 3z" />
+  </svg>
+)
+
+export const ListingModalWindowActive = (props: SVGProps) => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <circle cx="8" cy="8" r="8" fill={props.fill ? props.fill : themeVars.colors.accentAction} fillOpacity="0.24" />
+    <circle cx="8" cy="8" r="5" fill={props.fill ? props.fill : themeVars.colors.accentAction} />
+  </svg>
+)
+
+export const ListingModalWindowClosed = (props: SVGProps) => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <circle cx="8" cy="8" r="7" stroke="#333D59" strokeWidth="2" />
   </svg>
 )
