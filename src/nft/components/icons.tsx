@@ -24,12 +24,12 @@ export const ChevronUpIcon = ({
   ...props
 }: SVGProps & { secondaryWidth?: string; secondaryHeight?: string; secondaryColor?: string }) => (
   <svg
-    {...props}
     width={secondaryWidth || '29'}
     height={secondaryHeight || '28'}
     viewBox="0 0 29 28"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    {...props}
   >
     <g clipPath="url(#clip0_564_11230)">
       <path
@@ -772,5 +772,18 @@ export const FlameIcon = (props: SVGProps) => (
     {...props}
   >
     <path d="M10.42 3C9.88 9.2 4 9.4 4 14.38c0 2.8 1.7 5.35 4.17 6.62.76-2.1 3.83-3.17 3.83-5.57a7.65 7.65 0 013.92 5.52C24.13 15.88 18.9 6.18 10.42 3z" />
+  </svg>
+)
+
+export const ListingModalWindowActive = (props: SVGProps) => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <circle cx="8" cy="8" r="8" fill={themeVars.colors.accentAction} fillOpacity="0.24" />
+    <circle cx="8" cy="8" r="5" fill={themeVars.colors.accentAction} />
+  </svg>
+)
+
+export const ListingModalWindowClosed = (props: SVGProps) => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <circle cx="8" cy="8" r="7" stroke="#333D59" strokeWidth="2" />
   </svg>
 )
