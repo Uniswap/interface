@@ -60,11 +60,11 @@ const ContentRowContainer = styled(Column)`
   gap: 8px;
 `
 
-const ContentRow = styled(Row)`
+const ContentRow = styled(Row)<{ active: boolean }>`
   padding: 16px;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 12px;
-  opacity: 0.6;
+  opacity: ${({ active }) => (active ? '1' : '0.6')};
 `
 
 const CollectionIcon = styled.img`
@@ -245,7 +245,7 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
           <ContentRowContainer>
             {content.map((row, index) => {
               return (
-                <ContentRow key={index}>
+                <ContentRow key={index} active={row.status === ListingStatus.SIGNING}>
                   {isCollectionApprovalSection ? (
                     <CollectionIcon src={row.images[0]} />
                   ) : (
