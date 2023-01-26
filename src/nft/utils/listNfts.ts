@@ -82,17 +82,27 @@ const getConsiderationItems = (
   }
 }
 
+const delay = (delayInms: number) => {
+  return new Promise((resolve) => setTimeout(resolve, delayInms))
+}
+
 export async function approveCollection(
   operator: string,
   collectionAddress: string,
   signer: Signer,
-  setStatus: (newStatus: ListingStatus) => void
+  setStatus: (newStatus: ListingStatus) => void,
+  fakeForDemo = false
 ): Promise<void> {
   // This will work for both 721s & 1155s because they both have the
   // setApprovalForAll() method
   const ERC721Contract = new Contract(collectionAddress, ERC721, signer)
   const signerAddress = await signer.getAddress()
   setStatus(ListingStatus.PENDING)
+  // TODO: remove delay when not testing
+  if (fakeForDemo) {
+    await delay(5000)
+    setStatus(ListingStatus.APPROVED)
+  }
   try {
     const approved = await ERC721Contract.isApprovedForAll(signerAddress, operator)
     if (approved) {

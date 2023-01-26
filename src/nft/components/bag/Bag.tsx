@@ -434,7 +434,8 @@ const Bag = () => {
                     newStatus,
                     rows: collectionsRequiringApproval,
                     setRows: setCollectionsRequiringApproval as Dispatch<AssetRow[]>,
-                  })
+                  }),
+                true // TODO: remove this when not faking success
               )
           }
           sendAssets(sellAssets, provider.getSigner(), setListingStatus, sendAddress)
@@ -455,7 +456,8 @@ const Bag = () => {
                     newStatus,
                     rows: collectionsRequiringApproval,
                     setRows: setCollectionsRequiringApproval as Dispatch<AssetRow[]>,
-                  })
+                  }),
+                true // TODO: remove this when not faking success
               )
           }
           burnAssets(sellAssets, provider.getSigner(), setListingStatus)
