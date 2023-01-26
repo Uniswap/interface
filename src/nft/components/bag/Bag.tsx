@@ -27,6 +27,7 @@ import {
 } from 'nft/hooks'
 import { fetchRoute } from 'nft/queries'
 import {
+  AssetRow,
   BagItemStatus,
   BagStatus,
   ListingStatus,
@@ -36,6 +37,7 @@ import {
   WalletAsset,
 } from 'nft/types'
 import {
+  approveCollection,
   buildSellObject,
   fetchPrice,
   formatAssetEventProperties,
@@ -43,7 +45,7 @@ import {
   sortUpdatedAssets,
 } from 'nft/utils'
 import { combineBuyItemsWithTxRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
-import { FormEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
+import { Dispatch, FormEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from 'react-query'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -58,10 +60,12 @@ import { BagContent } from './BagContent'
 import { BagHeader } from './BagHeader'
 import EmptyState from './EmptyContent'
 import { ProfileBagContent } from './profile/ProfileBagContent'
-import { getUniqueCollections } from './profile/utils'
+import { getUniqueCollections, updateStatus } from './profile/utils'
 
 export const BAG_WIDTH = 320
 export const XXXL_BAG_WIDTH = 360
+export const SEND_CONTRACT_ADDRESS = ''
+export const BURN_CONTRACT_ADDRESS = ''
 
 interface SeparatorProps {
   top?: boolean
@@ -117,12 +121,35 @@ const ScrollingIndicator = ({ top, show }: SeparatorProps) => (
   />
 )
 
-function sendAssets(assets: WalletAsset[], signer: JsonRpcSigner, sendAddress: string) {
-  console.log(assets, signer, sendAddress)
+function sendAssets(
+  assets: WalletAsset[],
+  signer: JsonRpcSigner,
+  setListingStatus: (status: ListingStatus) => void,
+  sendAddress: string
+) {
+  setListingStatus(ListingStatus.PENDING)
+
+  try {
+    // Try to send NFTs here
+    console.log(assets, signer, sendAddress)
+    setListingStatus(ListingStatus.APPROVED)
+  } catch (error) {
+    if (error.code === 4001) setListingStatus(ListingStatus.REJECTED)
+    else setListingStatus(ListingStatus.FAILED)
+  }
 }
 
-function burnAssets(assets: WalletAsset[], signer: JsonRpcSigner) {
-  console.log(assets, signer)
+function burnAssets(assets: WalletAsset[], signer: JsonRpcSigner, setListingStatus: (status: ListingStatus) => void) {
+  setListingStatus(ListingStatus.PENDING)
+
+  try {
+    // Try to burn NFTs here
+    console.log(assets, signer)
+    setListingStatus(ListingStatus.APPROVED)
+  } catch (error) {
+    if (error.code === 4001) setListingStatus(ListingStatus.REJECTED)
+    else setListingStatus(ListingStatus.FAILED)
+  }
 }
 
 const Bag = () => {
@@ -151,6 +178,7 @@ const Bag = () => {
   const [showListModal, toggleShowListModal] = useReducer((s) => !s, false)
   const setListingStatus = useNFTList((state) => state.setListingStatus)
   const setCollectionsRequiringApproval = useNFTList((state) => state.setCollectionsRequiringApproval)
+  const collectionsRequiringApproval = useNFTList((state) => state.collectionsRequiringApproval)
 
   const sendAddress = useMemo(
     () => (isAddress(sendAddressInput) ? sendAddressInput : lookup.address ?? ''),
@@ -341,7 +369,7 @@ const Bag = () => {
   }, [totalEthPrice, totalUsdPrice, setTotalEthPrice, setTotalUsdPrice])
 
   useEffect(() => {
-    if (profileMethod !== ProfileMethod.LIST) {
+    if (isProfilePage && profileMethod !== ProfileMethod.LIST) {
       const newCollectionsToApprove = getUniqueCollections(sellAssets)
       setCollectionsRequiringApproval(newCollectionsToApprove)
       setListingStatus(ListingStatus.DEFINED)
@@ -396,11 +424,45 @@ const Bag = () => {
     switch (profileMethod) {
       case ProfileMethod.BURN:
         toggleShowListModal()
-        provider && sendAssets(sellAssets, provider.getSigner(), sendAddress)
+        if (provider) {
+          for (const collection of collectionsRequiringApproval) {
+            collection.collectionAddress &&
+              approveCollection(
+                SEND_CONTRACT_ADDRESS,
+                collection.collectionAddress,
+                provider.getSigner(),
+                (newStatus: ListingStatus) =>
+                  updateStatus({
+                    listing: collection,
+                    newStatus,
+                    rows: collectionsRequiringApproval,
+                    setRows: setCollectionsRequiringApproval as Dispatch<AssetRow[]>,
+                  })
+              )
+          }
+          sendAssets(sellAssets, provider.getSigner(), setListingStatus, sendAddress)
+        }
         break
       case ProfileMethod.SEND:
         toggleShowListModal()
-        provider && burnAssets(sellAssets, provider.getSigner())
+        if (provider) {
+          for (const collection of collectionsRequiringApproval) {
+            collection.collectionAddress &&
+              approveCollection(
+                BURN_CONTRACT_ADDRESS,
+                collection.collectionAddress,
+                provider.getSigner(),
+                (newStatus: ListingStatus) =>
+                  updateStatus({
+                    listing: collection,
+                    newStatus,
+                    rows: collectionsRequiringApproval,
+                    setRows: setCollectionsRequiringApproval as Dispatch<AssetRow[]>,
+                  })
+              )
+          }
+          burnAssets(sellAssets, provider.getSigner(), setListingStatus)
+        }
         break
       default:
         ;(isMobile || isNftListV2) && toggleBag()

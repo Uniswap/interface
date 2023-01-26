@@ -5,7 +5,7 @@ import { AssetRow, CollectionRow, ListingMarket, ListingRow, ListingStatus, Wall
 import { approveCollection, LOOKS_RARE_CREATOR_BASIS_POINTS, signListing } from 'nft/utils/listNfts'
 import { Dispatch } from 'react'
 
-const updateStatus = ({
+export const updateStatus = ({
   listing,
   newStatus,
   rows,
