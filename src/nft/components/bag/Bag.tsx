@@ -38,6 +38,7 @@ import { useQuery, useQueryClient } from 'react-query'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
+import { isAddress } from 'utils'
 import shallow from 'zustand/shallow'
 
 import { Checkbox } from '../layout/Checkbox'
@@ -381,7 +382,7 @@ const Bag = () => {
 
   const disableProfileButton =
     (profileMethod === ProfileMethod.BURN && !isCheckboxSelected) ||
-    (profileMethod === ProfileMethod.SEND && !sendAddress)
+    (profileMethod === ProfileMethod.SEND && !isAddress(sendAddress))
 
   return (
     <Portal>
