@@ -10,7 +10,7 @@ import {
   LoadingIcon,
   VerifiedIcon,
 } from 'nft/components/icons'
-import { ProfileMethod, useSellAsset } from 'nft/hooks'
+import { ProfileMethod, useNFTList, useSellAsset } from 'nft/hooks'
 import { AssetRow, CollectionRow, ListingStatus } from 'nft/types'
 import { Info } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
@@ -120,19 +120,19 @@ interface ListModalSectionProps {
 }
 
 export const SectionHeaderOnly = ({ active }: { active: boolean }) => {
-  const profileMethodStatus = useSellAsset((state) => state.profileMethodStatus)
+  const listingStatus = useNFTList((state) => state.listingStatus)
   return (
     <SectionHeader>
       <Row>
-        {active && profileMethodStatus === ListingStatus.SIGNING ? (
+        {active && listingStatus === ListingStatus.SIGNING ? (
           <ListingModalWindowActive />
         ) : (
           <ListingModalWindowClosed />
         )}
-        <SectionTitle active={active && profileMethodStatus !== ListingStatus.DEFINED} marginLeft="12px">
+        <SectionTitle active={active && listingStatus !== ListingStatus.DEFINED} marginLeft="12px">
           <Trans>Confirmation Signature</Trans>
         </SectionTitle>
-        {active && profileMethodStatus === ListingStatus.SIGNING && (
+        {active && listingStatus === ListingStatus.SIGNING && (
           <StyledLoadingIconBackground height="24px" width="24px" />
         )}
       </Row>

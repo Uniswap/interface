@@ -19,13 +19,22 @@ import {
   ProfileMethod,
   useBag,
   useIsMobile,
+  useNFTList,
   useProfilePageState,
   useSellAsset,
   useSendTransaction,
   useTransactionResponse,
 } from 'nft/hooks'
 import { fetchRoute } from 'nft/queries'
-import { BagItemStatus, BagStatus, ProfilePageStateType, RouteResponse, TxStateType, WalletAsset } from 'nft/types'
+import {
+  BagItemStatus,
+  BagStatus,
+  ListingStatus,
+  ProfilePageStateType,
+  RouteResponse,
+  TxStateType,
+  WalletAsset,
+} from 'nft/types'
 import {
   buildSellObject,
   fetchPrice,
@@ -49,6 +58,7 @@ import { BagContent } from './BagContent'
 import { BagHeader } from './BagHeader'
 import EmptyState from './EmptyContent'
 import { ProfileBagContent } from './profile/ProfileBagContent'
+import { getUniqueCollections } from './profile/utils'
 
 export const BAG_WIDTH = 320
 export const XXXL_BAG_WIDTH = 360
@@ -139,6 +149,8 @@ const Bag = () => {
   const [hovered, toggleHover] = useReducer((state) => !state, false)
   const lookup = useENSAddress(sendAddressInput)
   const [showListModal, toggleShowListModal] = useReducer((s) => !s, false)
+  const setListingStatus = useNFTList((state) => state.setListingStatus)
+  const setCollectionsRequiringApproval = useNFTList((state) => state.setCollectionsRequiringApproval)
 
   const sendAddress = useMemo(
     () => (isAddress(sendAddressInput) ? sendAddressInput : lookup.address ?? ''),
@@ -327,6 +339,15 @@ const Bag = () => {
     setTotalEthPrice(totalEthPrice)
     setTotalUsdPrice(totalUsdPrice)
   }, [totalEthPrice, totalUsdPrice, setTotalEthPrice, setTotalUsdPrice])
+
+  useEffect(() => {
+    if (profileMethod !== ProfileMethod.LIST) {
+      const newCollectionsToApprove = getUniqueCollections(sellAssets)
+      setCollectionsRequiringApproval(newCollectionsToApprove)
+      setListingStatus(ListingStatus.DEFINED)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sellAssets])
 
   const hasAssetsToShow = itemsInBag.length > 0
 

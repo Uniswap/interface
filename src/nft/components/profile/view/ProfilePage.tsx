@@ -259,6 +259,7 @@ const ProfilePageNfts = ({
   const collectionFilters = useWalletCollections((state) => state.collectionFilters)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
   const isBagExpanded = useBag((state) => state.bagExpanded)
+  const toggleBag = useBag((state) => state.toggleBag)
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
   const isMobile = useIsMobile()
   const sellAssets = useSellAsset((state) => state.sellAssets)
@@ -271,6 +272,7 @@ const ProfilePageNfts = ({
   const handleProfileMethodClick = (method: ProfileMethod) => {
     setProfileMethod(method)
     toggleProfileMethodDropdownOpen()
+    !isBagExpanded && toggleBag()
   }
 
   const {

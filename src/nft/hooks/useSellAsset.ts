@@ -1,7 +1,7 @@
 import create from 'zustand'
 import { devtools } from 'zustand/middleware'
 
-import { ListingMarket, ListingStatus, ListingWarning, WalletAsset } from '../types'
+import { ListingMarket, ListingWarning, WalletAsset } from '../types'
 
 export enum ProfileMethod {
   LIST,
@@ -12,7 +12,6 @@ export enum ProfileMethod {
 interface SellAssetState {
   sellAssets: WalletAsset[]
   profileMethod: ProfileMethod
-  profileMethodStatus: ListingStatus
   selectSellAsset: (asset: WalletAsset) => void
   removeSellAsset: (asset: WalletAsset) => void
   reset: () => void
@@ -24,7 +23,6 @@ interface SellAssetState {
   removeMarketplaceWarning: (asset: WalletAsset, warning: ListingWarning, setGlobalOverride?: boolean) => void
   removeAllMarketplaceWarnings: () => void
   setProfileMethod: (method: ProfileMethod) => void
-  setProfileMethodStatus: (status: ListingStatus) => void
 }
 
 export const useSellAsset = create<SellAssetState>()(
@@ -32,7 +30,6 @@ export const useSellAsset = create<SellAssetState>()(
     (set) => ({
       sellAssets: [],
       profileMethod: ProfileMethod.LIST,
-      profileMethodStatus: ListingStatus.DEFINED,
       selectSellAsset: (asset) =>
         set(({ sellAssets }) => {
           if (sellAssets.length === 0) return { sellAssets: [asset] }
@@ -167,10 +164,6 @@ export const useSellAsset = create<SellAssetState>()(
       setProfileMethod: (method) =>
         set(() => ({
           profileMethod: method,
-        })),
-      setProfileMethodStatus: (status) =>
-        set(() => ({
-          profileMethodStatus: status,
         })),
     }),
     { name: 'useSelectAsset' }

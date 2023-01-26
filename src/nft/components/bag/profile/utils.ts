@@ -137,6 +137,28 @@ export const getTotalEthValue = (sellAssets: WalletAsset[]) => {
   return total ? Math.round(total * 10000 + Number.EPSILON) / 10000 : 0
 }
 
+export const getUniqueCollections = (sellAssets: WalletAsset[]): CollectionRow[] => {
+  const newCollectionsToApprove: CollectionRow[] = []
+
+  sellAssets.forEach((asset) => {
+    if (
+      !newCollectionsToApprove.some(
+        (collectionRow: CollectionRow) => collectionRow.collectionAddress === asset.asset_contract.address
+      )
+    ) {
+      const newCollectionRow = {
+        images: [asset.asset_contract.image_url, ''],
+        name: asset.asset_contract.name,
+        status: ListingStatus.DEFINED,
+        collectionAddress: asset.asset_contract.address,
+        isVerified: asset.collectionIsVerified,
+      }
+      newCollectionsToApprove.push(newCollectionRow)
+    }
+  })
+  return newCollectionsToApprove
+}
+
 export const getListings = (sellAssets: WalletAsset[]): [CollectionRow[], ListingRow[]] => {
   const newCollectionsToApprove: CollectionRow[] = []
 
