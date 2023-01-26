@@ -130,8 +130,11 @@ function sendAssets(
   setListingStatus(ListingStatus.SIGNING)
 
   try {
-    // Try to send NFTs here
+    // Get wallet to sign transaction
     console.log(assets, signer, sendAddress)
+    setListingStatus(ListingStatus.PENDING)
+
+    // .wait() for tx to be added to the blockchain
     setListingStatus(ListingStatus.APPROVED)
   } catch (error) {
     if (error.code === 4001) setListingStatus(ListingStatus.REJECTED)
@@ -143,8 +146,11 @@ function burnAssets(assets: WalletAsset[], signer: JsonRpcSigner, setListingStat
   setListingStatus(ListingStatus.SIGNING)
 
   try {
-    // Try to burn NFTs here
+    // Get wallet to sign transaction
     console.log(assets, signer)
+    setListingStatus(ListingStatus.PENDING)
+
+    // .wait() for tx to be added to the blockchain
     setListingStatus(ListingStatus.APPROVED)
   } catch (error) {
     if (error.code === 4001) setListingStatus(ListingStatus.REJECTED)
