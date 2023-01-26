@@ -47,6 +47,14 @@ import shallow from 'zustand/shallow'
 import ERC721 from '../../../abis/erc721.json'
 import OpenseaTransferHelperAbi from '../../../abis/opensea-transfer-helper.json'
 import { OpenseaTransferHelper as OpenseaTransferHelperContext } from '../../../abis/types/index'
+import { ItemType } from '@opensea/seaport-js/lib/constants'
+import { ConsiderationInputItem } from '@opensea/seaport-js/lib/types'
+import {
+  OPENSEA_DEFAULT_CROSS_CHAIN_CONDUIT_KEY,
+  OPENSEA_DEFAULT_ZONE,
+  OPENSEA_KEY_TO_CONDUIT,
+} from 'nft/queries/openSea'
+
 import { Checkbox } from '../layout/Checkbox'
 import * as styles from './Bag.css'
 import { BagContent } from './BagContent'
@@ -158,14 +166,14 @@ async function sendAssets(assets: WalletAsset[], signer: JsonRpcSigner, sendAddr
       }
 
       items[0].items.push({
-        itemType: BigNumberish
-        token: string
-        identifier: BigNumberish
-        amount: BigNumberish
+        itemType: ItemType.ERC721,
+        token: collectionAddress,
+        identifier: tokenId,
+        amount: '1',
       })
     }
-    const conduitKey = ''
-    await contract.bulkTransfer(items, conduitKey)
+    console.log(items)
+    await contract.bulkTransfer(items, OPENSEA_DEFAULT_CROSS_CHAIN_CONDUIT_KEY)
   }
 }
 
