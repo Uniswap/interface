@@ -33,7 +33,7 @@ import {
   sortUpdatedAssets,
 } from 'nft/utils'
 import { combineBuyItemsWithTxRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
-import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
+import { FormEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from 'react-query'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -104,8 +104,8 @@ const ScrollingIndicator = ({ top, show }: SeparatorProps) => (
   />
 )
 
-function sendAssets(assets: WalletAsset[], signer: JsonRpcSigner) {
-  console.log(assets, signer)
+function sendAssets(assets: WalletAsset[], signer: JsonRpcSigner, sendAddress: string) {
+  console.log(assets, signer, sendAddress)
 }
 
 function burnAssets(assets: WalletAsset[], signer: JsonRpcSigner) {
@@ -132,6 +132,7 @@ const Bag = () => {
     shallow
   )
   const [isCheckboxSelected, toggleCheckboxSelected] = useReducer((state) => !state, false)
+  const [sendAddress, setSendAddress] = useState('')
   const [hovered, toggleHover] = useReducer((state) => !state, false)
 
   const {
@@ -363,7 +364,7 @@ const Bag = () => {
     ;(isMobile || isNftListV2) && toggleBag()
     switch (profileMethod) {
       case ProfileMethod.BURN:
-        provider && sendAssets(sellAssets, provider.getSigner())
+        provider && sendAssets(sellAssets, provider.getSigner(), sendAddress)
         break
       case ProfileMethod.SEND:
         provider && burnAssets(sellAssets, provider.getSigner())
@@ -378,7 +379,9 @@ const Bag = () => {
     }
   }
 
-  const disableProfileButton = profileMethod === ProfileMethod.BURN && !isCheckboxSelected
+  const disableProfileButton =
+    (profileMethod === ProfileMethod.BURN && !isCheckboxSelected) ||
+    (profileMethod === ProfileMethod.SEND && !sendAddress)
 
   return (
     <Portal>
@@ -421,7 +424,26 @@ const Bag = () => {
                     </Checkbox>
                   </Row>
                 )}
-                {profileMethod === ProfileMethod.SEND && <span>Send Address</span>}
+                {profileMethod === ProfileMethod.SEND && (
+                  <Box
+                    as="input"
+                    flex="1"
+                    borderColor={{ default: 'backgroundOutline', focus: 'accentAction' }}
+                    borderWidth="1.5px"
+                    borderStyle="solid"
+                    borderRadius="12"
+                    padding="12"
+                    backgroundColor="backgroundSurface"
+                    fontSize="14"
+                    height="44"
+                    color={{ placeholder: 'textTertiary', default: 'textPrimary' }}
+                    value={sendAddress}
+                    placeholder="e.g. 0x50ec... or destination.eth"
+                    onChange={(e: FormEvent<HTMLInputElement>) => {
+                      setSendAddress(e.currentTarget.value)
+                    }}
+                  />
+                )}
                 <Box
                   marginTop="8"
                   marginBottom="16"
