@@ -199,7 +199,8 @@ const Bag = () => {
     shallow
   )
   const [isCheckboxSelected, toggleCheckboxSelected] = useReducer((state) => !state, false)
-  const [sendAddressInput, setSendAddressInput] = useState('')
+  const sendAddressInput = useSellAsset((state) => state.sendAddress)
+  const setSendAddressInput = useSellAsset((state) => state.setSendAddress)
   const [hovered, toggleHover] = useReducer((state) => !state, false)
   const lookup = useENSAddress(sendAddressInput)
   const [showListModal, toggleShowListModal] = useReducer((s) => !s, false)

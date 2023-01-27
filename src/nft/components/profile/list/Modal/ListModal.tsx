@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
 import { InterfaceModalName } from '@uniswap/analytics-events'
+import { isAddress } from 'ethers/lib/utils'
 import { Portal } from 'nft/components/common/Portal'
 import { Row } from 'nft/components/Flex'
 import { Overlay } from 'nft/components/modals/Overlay'
@@ -12,6 +13,7 @@ import { X } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
+import { shortenAddress } from 'utils'
 
 import { ListModalSection, Section, SectionHeaderOnly } from './ListModalSection'
 
@@ -47,13 +49,25 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
   const listings = useNFTList((state) => state.listings)
   const listingCollectionsRequiringApproval = useNFTList((state) => state.collectionsRequiringApproval)
   const listingStatus = useNFTList((state) => state.listingStatus)
+  const setListingStatus = useNFTList((state) => state.setListingStatus)
   const [openSection, toggleOpenSection] = useReducer(
     (s) => (s === Section.APPROVE ? Section.SIGN : Section.APPROVE),
     Section.APPROVE
   )
   const sellAssets = useSellAsset((state) => state.sellAssets)
+  const clearSellAssets = useSellAsset((state) => state.reset)
   const profileMethod = useSellAsset((state) => state.profileMethod)
+  const sendAddress = useSellAsset((state) => state.sendAddress)
   const isListing = profileMethod === ProfileMethod.LIST
+
+  const statusCheckedOverlayClick = () => {
+    if (listingStatus === ListingStatus.APPROVED) {
+      clearSellAssets()
+      setListingStatus(ListingStatus.DEFINED)
+      window.location.reload()
+    }
+    overlayClick()
+  }
 
   return (
     <Portal>
@@ -68,7 +82,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
                     {pluralize(sellAssets.length)}
                   </Trans>
                 </ThemedText.HeadlineSmall>
-                <X size={24} cursor="pointer" onClick={overlayClick} />
+                <X size={24} cursor="pointer" onClick={statusCheckedOverlayClick} />
               </TitleRow>
               <ListModalSection
                 sectionType={Section.APPROVE}
@@ -97,9 +111,9 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
                     {pluralize(sellAssets.length)}!
                   </Trans>
                 </ThemedText.HeadlineSmall>
-                <X size={24} cursor="pointer" onClick={overlayClick} />
+                <X size={24} cursor="pointer" onClick={statusCheckedOverlayClick} />
               </TitleRow>
-              <Row flexWrap="wrap" gap="12" justifyContent="center" overflowY="scroll" marginBottom="24">
+              <Row flexWrap="wrap" gap="12" justifyContent="center" overflowY="scroll" marginBottom="16">
                 {sellAssets.map((asset) => (
                   <SuccessImage
                     src={asset.imageUrl}
@@ -108,11 +122,22 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
                   />
                 ))}
               </Row>
+              <Row gap="8" justifyContent="flex-end" marginRight="16" height="full">
+                <ThemedText.BodyPrimary fontWeight="600" style={{ whiteSpace: 'nowrap', flexShrink: '0' }}>
+                  Sent to:&nbsp;
+                </ThemedText.BodyPrimary>
+                <ThemedText.BodyPrimary
+                  color="textSecondary"
+                  style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}
+                >
+                  {isAddress(sendAddress) ? shortenAddress(sendAddress) : sendAddress}{' '}
+                </ThemedText.BodyPrimary>
+              </Row>
             </>
           )}
         </ListModalWrapper>
       </Trace>
-      <Overlay onClick={overlayClick} />
+      <Overlay onClick={statusCheckedOverlayClick} />
     </Portal>
   )
 }

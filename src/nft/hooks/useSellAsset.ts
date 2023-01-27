@@ -12,6 +12,7 @@ export enum ProfileMethod {
 interface SellAssetState {
   sellAssets: WalletAsset[]
   profileMethod: ProfileMethod
+  sendAddress: string
   selectSellAsset: (asset: WalletAsset) => void
   removeSellAsset: (asset: WalletAsset) => void
   reset: () => void
@@ -23,6 +24,7 @@ interface SellAssetState {
   removeMarketplaceWarning: (asset: WalletAsset, warning: ListingWarning, setGlobalOverride?: boolean) => void
   removeAllMarketplaceWarnings: () => void
   setProfileMethod: (method: ProfileMethod) => void
+  setSendAddress: (address: string) => void
 }
 
 export const useSellAsset = create<SellAssetState>()(
@@ -30,6 +32,7 @@ export const useSellAsset = create<SellAssetState>()(
     (set) => ({
       sellAssets: [],
       profileMethod: ProfileMethod.LIST,
+      sendAddress: '',
       selectSellAsset: (asset) =>
         set(({ sellAssets }) => {
           if (sellAssets.length === 0) return { sellAssets: [asset] }
@@ -164,6 +167,10 @@ export const useSellAsset = create<SellAssetState>()(
       setProfileMethod: (method) =>
         set(() => ({
           profileMethod: method,
+        })),
+      setSendAddress: (address) =>
+        set(() => ({
+          sendAddress: address,
         })),
     }),
     { name: 'useSelectAsset' }
