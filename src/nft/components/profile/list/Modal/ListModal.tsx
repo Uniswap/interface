@@ -5,7 +5,7 @@ import { isAddress } from 'ethers/lib/utils'
 import { Portal } from 'nft/components/common/Portal'
 import { Row } from 'nft/components/Flex'
 import { Overlay } from 'nft/components/modals/Overlay'
-import { ProfileMethod, useNFTList, useSellAsset } from 'nft/hooks'
+import { ProfileMethod, useIsMobile, useNFTList, useSellAsset } from 'nft/hooks'
 import { ListingStatus } from 'nft/types'
 import { pluralize } from 'nft/utils'
 import { useEffect, useReducer, useRef } from 'react'
@@ -17,12 +17,12 @@ import { shortenAddress } from 'utils'
 
 import { ListModalSection, Section, SectionHeaderOnly } from './ListModalSection'
 
-const ListModalWrapper = styled.div`
+const ListModalWrapper = styled.div<{ isMobile: boolean }>`
   position: fixed;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 420px;
+  width: ${({ isMobile }) => (isMobile ? '300px' : '420px')};
   z-index: ${Z_INDEX.modal};
   background: ${({ theme }) => theme.backgroundSurface};
   border-radius: 20px;
@@ -115,6 +115,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
   const animationRef = useRef() as React.MutableRefObject<HTMLVideoElement>
   const [animatedNftRight, toggleAnimatedNftRight] = useReducer((s) => !s, true)
   const [animatedNftIndex, updateAnimatedNftIndex] = useReducer((s) => (s === sellAssets.length - 1 ? 0 : (s += 1)), 0)
+  const isMobile = useIsMobile()
 
   const statusCheckedOverlayClick = () => {
     if (listingStatus === ListingStatus.APPROVED) {
@@ -138,9 +139,9 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
   return (
     <Portal>
       <Trace modal={InterfaceModalName.NFT_LISTING}>
-        <ListModalWrapper>
+        <ListModalWrapper isMobile={isMobile}>
           {listingStatus !== ListingStatus.APPROVED ? (
-            listingStatus === ListingStatus.PENDING && profileMethod === ProfileMethod.BURN ? (
+            listingStatus === ListingStatus.PENDING && profileMethod === ProfileMethod.BURN && !isMobile ? (
               <>
                 <AnimationNFTDiv>
                   <AnimationNft src={sellAssets[animatedNftIndex].imageUrl} cardRight={animatedNftRight} />

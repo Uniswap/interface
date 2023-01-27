@@ -14,6 +14,7 @@ interface SellAssetState {
   sellAssets: WalletAsset[]
   profileMethod: ProfileMethod
   sendAddress: string
+  showListModal: boolean
   selectSellAsset: (asset: WalletAsset) => void
   removeSellAsset: (asset: WalletAsset) => void
   reset: () => void
@@ -26,6 +27,7 @@ interface SellAssetState {
   removeAllMarketplaceWarnings: () => void
   setProfileMethod: (method: ProfileMethod) => void
   setSendAddress: (address: string) => void
+  toggleShowListModal: () => void
 }
 
 export const useSellAsset = create<SellAssetState>()(
@@ -34,6 +36,7 @@ export const useSellAsset = create<SellAssetState>()(
       sellAssets: [],
       profileMethod: ProfileMethod.LIST,
       sendAddress: '',
+      showListModal: false,
       selectSellAsset: (asset) =>
         set(({ sellAssets }) => {
           if (sellAssets.length === 0) return { sellAssets: [asset] }
@@ -173,6 +176,9 @@ export const useSellAsset = create<SellAssetState>()(
         set(() => ({
           sendAddress: address,
         })),
+      toggleShowListModal: () => {
+        set(({ showListModal }) => ({ showListModal: !showListModal }))
+      },
     }),
     { name: 'useSelectAsset' }
   )

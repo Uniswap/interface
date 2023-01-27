@@ -45,6 +45,7 @@ import styled from 'styled-components/macro'
 import { Z_INDEX } from 'theme/zIndex'
 import shallow from 'zustand/shallow'
 
+import { ListModal } from '../list/Modal/ListModal'
 import { EmptyWalletContent } from './EmptyWalletContent'
 import * as styles from './ProfilePage.css'
 import { ProfileBodyLoadingSkeleton } from './ProfilePageLoadingSkeleton'
@@ -88,6 +89,9 @@ export const ProfilePage = () => {
   const toggleBag = useBag((state) => state.toggleBag)
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const isMobile = useIsMobile()
+  const profileMethod = useSellAsset((state) => state.profileMethod)
+  const showListModal = useSellAsset((state) => state.showListModal)
+  const toggleShowListModal = useSellAsset((state) => state.toggleShowListModal)
 
   const getOwnerCollections = async ({ pageParam = 0 }) => {
     const res = await OSCollectionsFetcher({
@@ -127,74 +131,81 @@ export const ProfilePage = () => {
   }, [ownerCollections, setWalletCollections])
 
   return (
-    <ProfilePageColumn width="full" paddingTop={{ sm: `${PADDING}`, md: '40' }}>
-      <>
-        <ProfileHeader>My NFTs</ProfileHeader>
-        <Row alignItems="flex-start" position="relative">
-          <FilterSidebar
-            fetchNextPage={fetchNextPage}
-            hasNextPage={hasNextPage}
-            isFetchingNextPage={isFetchingNextPage}
-            walletCollections={walletCollections}
-          />
-          {(!isMobile || !isFiltersExpanded) && (
-            <Suspense fallback={<ProfileBodyLoadingSkeleton />}>
-              <ProfilePageNfts
-                walletCollections={walletCollections}
-                isFiltersExpanded={isFiltersExpanded}
-                setFiltersExpanded={setFiltersExpanded}
-              />
-            </Suspense>
-          )}
-        </Row>
-      </>
-      {sellAssets.length > 0 && (
-        <Row
-          display={{ sm: 'flex', md: 'none' }}
-          position="fixed"
-          left="16"
-          height="56"
-          borderRadius="12"
-          paddingX="16"
-          paddingY="12"
-          background="backgroundModule"
-          borderStyle="solid"
-          borderColor="backgroundOutline"
-          borderWidth="1px"
-          style={{ bottom: '68px', width: 'calc(100% - 32px)', lineHeight: '24px' }}
-          className={subhead}
-        >
-          {sellAssets.length} NFT{sellAssets.length === 1 ? '' : 's'}
-          <Box
-            fontWeight="semibold"
-            fontSize="14"
-            cursor="pointer"
-            color="textSecondary"
-            marginRight="20"
-            marginLeft="auto"
-            onClick={resetSellAssets}
-            lineHeight="16"
-          >
-            Clear
-          </Box>
-          <Box
-            color="white"
-            marginRight="0"
-            fontWeight="medium"
-            fontSize="14"
-            cursor="pointer"
-            backgroundColor="accentAction"
-            onClick={toggleBag}
-            lineHeight="16"
+    <>
+      <ProfilePageColumn width="full" paddingTop={{ sm: `${PADDING}`, md: '40' }}>
+        <>
+          <ProfileHeader>My NFTs</ProfileHeader>
+          <Row alignItems="flex-start" position="relative">
+            <FilterSidebar
+              fetchNextPage={fetchNextPage}
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+              walletCollections={walletCollections}
+            />
+            {(!isMobile || !isFiltersExpanded) && (
+              <Suspense fallback={<ProfileBodyLoadingSkeleton />}>
+                <ProfilePageNfts
+                  walletCollections={walletCollections}
+                  isFiltersExpanded={isFiltersExpanded}
+                  setFiltersExpanded={setFiltersExpanded}
+                />
+              </Suspense>
+            )}
+          </Row>
+        </>
+        {sellAssets.length > 0 && (
+          <Row
+            display={{ sm: 'flex', md: 'none' }}
+            position="fixed"
+            left="16"
+            height="56"
             borderRadius="12"
-            paddingY="8"
-            paddingX="28"
+            paddingX="16"
+            paddingY="12"
+            background="backgroundModule"
+            borderStyle="solid"
+            borderColor="backgroundOutline"
+            borderWidth="1px"
+            style={{ bottom: '68px', width: 'calc(100% - 32px)', lineHeight: '24px' }}
+            className={subhead}
           >
-            List for sale
-          </Box>
-        </Row>
-      )}
-    </ProfilePageColumn>
+            {sellAssets.length} NFT{sellAssets.length === 1 ? '' : 's'}
+            <Box
+              fontWeight="semibold"
+              fontSize="14"
+              cursor="pointer"
+              color="textSecondary"
+              marginRight="20"
+              marginLeft="auto"
+              onClick={resetSellAssets}
+              lineHeight="16"
+            >
+              Clear
+            </Box>
+            <Box
+              color="white"
+              marginRight="0"
+              fontWeight="medium"
+              fontSize="14"
+              cursor="pointer"
+              backgroundColor="accentAction"
+              onClick={toggleBag}
+              lineHeight="16"
+              borderRadius="12"
+              paddingY="8"
+              paddingX="28"
+            >
+              {profileMethod === ProfileMethod.LIST
+                ? 'List for sale'
+                : profileMethod === ProfileMethod.SEND
+                ? 'Send'
+                : 'Burn'}
+            </Box>
+          </Row>
+        )}
+      </ProfilePageColumn>
+      {showListModal && <ListModal overlayClick={toggleShowListModal} />}
+    </>
   )
 }
 
@@ -276,7 +287,7 @@ const ProfilePageNfts = ({
   const handleProfileMethodClick = (method: ProfileMethod) => {
     setProfileMethod(method)
     toggleProfileMethodDropdownOpen()
-    !isBagExpanded && toggleBag()
+    !isBagExpanded && !isMobile && toggleBag()
   }
 
   const {

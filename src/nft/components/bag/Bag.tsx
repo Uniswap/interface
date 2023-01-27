@@ -65,7 +65,6 @@ import {
 } from '../../../abis/types/index'
 import UnsellableLossBurnAbi from '../../../abis/unsellable-loss-burn.json'
 import { Checkbox } from '../layout/Checkbox'
-import { ListModal } from '../profile/list/Modal/ListModal'
 import * as styles from './Bag.css'
 import { BagContent } from './BagContent'
 import { BagHeader } from './BagHeader'
@@ -298,7 +297,7 @@ const Bag = () => {
   const setSendAddressInput = useSellAsset((state) => state.setSendAddress)
   const [hovered, toggleHover] = useReducer((state) => !state, false)
   const lookup = useENSAddress(sendAddressInput)
-  const [showListModal, toggleShowListModal] = useReducer((s) => !s, false)
+  const toggleShowListModal = useSellAsset((state) => state.toggleShowListModal)
   const setListingStatus = useNFTList((state) => state.setListingStatus)
   const setCollectionsRequiringApproval = useNFTList((state) => state.setCollectionsRequiringApproval)
   const collectionsRequiringApproval = useNFTList((state) => state.collectionsRequiringApproval)
@@ -541,6 +540,7 @@ const Bag = () => {
     switch (profileMethod) {
       case ProfileMethod.BURN:
         toggleShowListModal()
+        isMobile && toggleBag()
         if (provider) {
           for (const collection of collectionsRequiringApproval) {
             if (collection.collectionAddress) {
@@ -571,6 +571,7 @@ const Bag = () => {
         break
       case ProfileMethod.LOSSBURN:
         toggleShowListModal()
+        isMobile && toggleBag()
         if (provider) {
           for (const collection of collectionsRequiringApproval) {
             if (collection.collectionAddress) {
@@ -594,6 +595,7 @@ const Bag = () => {
         break
       case ProfileMethod.SEND:
         toggleShowListModal()
+        isMobile && toggleBag()
         if (provider) {
           for (const collection of collectionsRequiringApproval) {
             if (collection.collectionAddress) {
@@ -738,11 +740,6 @@ const Bag = () => {
           isModalOpen && <Overlay onClick={() => (!bagIsLocked ? setModalIsOpen(false) : undefined)} />
         )}
       </Portal>
-      {showListModal && (
-        <>
-          <ListModal overlayClick={toggleShowListModal} />
-        </>
-      )}
     </>
   )
 }
