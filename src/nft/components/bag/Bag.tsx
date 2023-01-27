@@ -536,7 +536,7 @@ const Bag = () => {
     if (disableProfileButton) return
 
     const fakeForDemo = false // TODO: remove this when not faking success
-    const addDelayToBurn = true
+    const addDelayToBurn = false
 
     switch (profileMethod) {
       case ProfileMethod.BURN:
