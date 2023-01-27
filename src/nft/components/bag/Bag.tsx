@@ -133,7 +133,7 @@ async function sendAssets(
 
   // TODO: remove delay when not testing
   if (fakeForDemo) {
-    await delay(5000)
+    await delay(1000)
     setListingStatus(ListingStatus.APPROVED)
     return
   }
@@ -161,7 +161,7 @@ async function burnAssets(
 
   // TODO: remove delay when not testing
   if (fakeForDemo) {
-    await delay(5000)
+    await delay(1000)
     setListingStatus(ListingStatus.APPROVED)
     return
   }
