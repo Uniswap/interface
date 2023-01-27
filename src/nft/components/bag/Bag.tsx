@@ -153,7 +153,6 @@ async function sendAssets(
   //   if (error.code === 4001) setListingStatus(ListingStatus.REJECTED)
   //   else setListingStatus(ListingStatus.FAILED)
   // }
-  setListingStatus(ListingStatus.PENDING)
 
   // TODO: add 1155s. assumption is currently made that the assets inputed are all ERC-721s
   if (assets.length == 1) {
@@ -166,7 +165,9 @@ async function sendAssets(
     }
     const contract = new Contract(collectionAddress, ERC721, signer)
     const signerAddress = await signer.getAddress()
-    await contract['safeTransferFrom(address,address,uint256)'](signerAddress, sendAddress, tokenId)
+    const res = await contract['safeTransferFrom(address,address,uint256)'](signerAddress, sendAddress, tokenId)
+    setListingStatus(ListingStatus.PENDING)
+    await res.wait()
     setListingStatus(ListingStatus.APPROVED)
   } else if (assets.length > 1) {
     const contract = new Contract(
@@ -197,7 +198,9 @@ async function sendAssets(
       items[0].items.push([ItemType.ERC721, collectionAddress, BigNumber.from(tokenId), BigNumber.from(1)])
     }
 
-    await contract.bulkTransfer(items, OPENSEA_DEFAULT_CROSS_CHAIN_CONDUIT_KEY)
+    const res = await contract.bulkTransfer(items, OPENSEA_DEFAULT_CROSS_CHAIN_CONDUIT_KEY)
+    setListingStatus(ListingStatus.PENDING)
+    await res.wait()
     setListingStatus(ListingStatus.APPROVED)
   }
 }
