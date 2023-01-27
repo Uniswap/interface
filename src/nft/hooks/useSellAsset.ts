@@ -7,6 +7,7 @@ export enum ProfileMethod {
   LIST,
   SEND,
   BURN,
+  LOSSBURN = 3,
 }
 
 interface SellAssetState {

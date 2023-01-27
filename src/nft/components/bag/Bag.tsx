@@ -59,7 +59,11 @@ import shallow from 'zustand/shallow'
 
 import ERC721 from '../../../abis/erc721.json'
 import OpenseaTransferHelperAbi from '../../../abis/opensea-transfer-helper.json'
-import { OpenseaTransferHelper as OpenseaTransferHelperContext } from '../../../abis/types/index'
+import {
+  OpenseaTransferHelper as OpenseaTransferHelperContext,
+  UnsellableLossBurn as UnsellableLossBurnContext,
+} from '../../../abis/types/index'
+import UnsellableLossBurnAbi from '../../../abis/unsellable-loss-burn.json'
 import { Checkbox } from '../layout/Checkbox'
 import { ListModal } from '../profile/list/Modal/ListModal'
 import * as styles from './Bag.css'
@@ -73,6 +77,7 @@ export const BAG_WIDTH = 320
 export const XXXL_BAG_WIDTH = 360
 export const SEND_CONTRACT_ADDRESS = '0x0000000000c2d145a2526bd8c716263bfebe1a72'
 export const SEND_CONTRACT_CONDUIT_ADDRESS = '0x1e0049783f008a0085193e00003d00cd54003c71'
+export const LOSSBURN_CONTRACT_ADDRESS = '0x2e5749c2ffe9d4299d8eea18f90e5f6f00adf8b0'
 export const BURN_ADDRESS = '0x0000000000000000000000000000000000000000'
 export const BURN_ADDRESS_HAYDEN = '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3'
 
@@ -147,62 +152,61 @@ async function sendAssets(
     setListingStatus(ListingStatus.APPROVED)
     return
   }
-
-  // try {
-  // } catch (error) {
-  //   if (error.code === 4001) setListingStatus(ListingStatus.REJECTED)
-  //   else setListingStatus(ListingStatus.FAILED)
-  // }
   setListingStatus(ListingStatus.PENDING)
 
-  // TODO: add 1155s. assumption is currently made that the assets inputed are all ERC-721s
-  if (assets.length == 1) {
-    const asset = assets[0]
-    const collectionAddress = asset.asset_contract.address
-    const tokenId = asset.tokenId
-    if (!collectionAddress || !tokenId) {
-      setListingStatus(ListingStatus.REJECTED)
-      return
-    }
-    const contract = new Contract(collectionAddress, ERC721, signer)
-    const signerAddress = await signer.getAddress()
-    await contract['safeTransferFrom(address,address,uint256)'](signerAddress, sendAddress, tokenId)
-    setListingStatus(ListingStatus.APPROVED)
-  } else if (assets.length > 1) {
-    const contract = new Contract(
-      SEND_CONTRACT_ADDRESS,
-      OpenseaTransferHelperAbi,
-      signer
-    ) as OpenseaTransferHelperContext
-
-    const items: {
-      items: any[]
-      recipient: string
-      validateERC721Receiver: boolean
-    }[] = [
-      {
-        items: [],
-        recipient: sendAddress,
-        validateERC721Receiver: true,
-      },
-    ]
-
-    for (const asset of assets) {
+  try {
+    // TODO: add 1155s. assumption is currently made that the assets inputed are all ERC-721s
+    if (assets.length == 1) {
+      const asset = assets[0]
       const collectionAddress = asset.asset_contract.address
       const tokenId = asset.tokenId
       if (!collectionAddress || !tokenId) {
-        continue
+        setListingStatus(ListingStatus.REJECTED)
+        return
+      }
+      const contract = new Contract(collectionAddress, ERC721, signer)
+      const signerAddress = await signer.getAddress()
+      await contract['safeTransferFrom(address,address,uint256)'](signerAddress, sendAddress, tokenId)
+      setListingStatus(ListingStatus.APPROVED)
+    } else if (assets.length > 1) {
+      const contract = new Contract(
+        SEND_CONTRACT_ADDRESS,
+        OpenseaTransferHelperAbi,
+        signer
+      ) as OpenseaTransferHelperContext
+
+      const items: {
+        items: any[]
+        recipient: string
+        validateERC721Receiver: boolean
+      }[] = [
+        {
+          items: [],
+          recipient: sendAddress,
+          validateERC721Receiver: true,
+        },
+      ]
+
+      for (const asset of assets) {
+        const collectionAddress = asset.asset_contract.address
+        const tokenId = asset.tokenId
+        if (!collectionAddress || !tokenId) {
+          continue
+        }
+
+        items[0].items.push([ItemType.ERC721, collectionAddress, BigNumber.from(tokenId), BigNumber.from(1)])
       }
 
-      items[0].items.push([ItemType.ERC721, collectionAddress, BigNumber.from(tokenId), BigNumber.from(1)])
+      await contract.bulkTransfer(items, OPENSEA_DEFAULT_CROSS_CHAIN_CONDUIT_KEY)
+      setListingStatus(ListingStatus.APPROVED)
     }
-
-    await contract.bulkTransfer(items, OPENSEA_DEFAULT_CROSS_CHAIN_CONDUIT_KEY)
-    setListingStatus(ListingStatus.APPROVED)
+  } catch (error) {
+    if (error.code === 4001) setListingStatus(ListingStatus.REJECTED)
+    else setListingStatus(ListingStatus.FAILED)
   }
 }
 
-async function burnAssets(
+async function lossBurnAssets(
   assets: WalletAsset[],
   signer: JsonRpcSigner,
   setListingStatus: (status: ListingStatus) => void,
@@ -218,17 +222,28 @@ async function burnAssets(
     setListingStatus(ListingStatus.APPROVED)
     return
   }
+  setListingStatus(ListingStatus.PENDING)
 
-  try {
-    // Get wallet to sign transaction
-    console.log(assets, signer)
-    setListingStatus(ListingStatus.PENDING)
-
-    // .wait() for tx to be added to the blockchain
+  if (assets.length < 50) {
+    const contract = new Contract(LOSSBURN_CONTRACT_ADDRESS, UnsellableLossBurnAbi, signer) as UnsellableLossBurnContext
+    const addresses: string[] = []
+    const tokens: BigNumber[] = []
+    const amts: BigNumber[] = []
+    for (const asset of assets) {
+      const collectionAddress = asset.asset_contract.address
+      const tokenId = asset.tokenId
+      if (!collectionAddress || !tokenId) {
+        continue
+      }
+      addresses.push(collectionAddress)
+      tokens.push(BigNumber.from(tokenId))
+      amts.push(BigNumber.from(1))
+    }
+    const options = { value: ethers.utils.parseEther('1.0') }
+    await contract.sellNfts(addresses, tokens, amts, options)
     setListingStatus(ListingStatus.APPROVED)
-  } catch (error) {
-    if (error.code === 4001) setListingStatus(ListingStatus.REJECTED)
-    else setListingStatus(ListingStatus.FAILED)
+  } else {
+    setListingStatus(ListingStatus.REJECTED)
   }
 }
 
@@ -496,27 +511,50 @@ const Bag = () => {
     const fakeForDemo = false // TODO: remove this when not faking success
 
     switch (profileMethod) {
+      // case ProfileMethod.BURN:
+      //   toggleShowListModal()
+      //   if (provider) {
+      //     for (const collection of collectionsRequiringApproval) {
+      //       if (collection.collectionAddress) {
+      //         await approveCollection(
+      //           SEND_CONTRACT_CONDUIT_ADDRESS,
+      //           collection.collectionAddress,
+      //           provider.getSigner(),
+      //           (newStatus: ListingStatus) =>
+      //             updateStatus({
+      //               listing: collection,
+      //               newStatus,
+      //               rows: collectionsRequiringApproval,
+      //               setRows: setCollectionsRequiringApproval as Dispatch<AssetRow[]>,
+      //             }),
+      //           fakeForDemo
+      //         )
+      //       }
+      //     }
+      //     await sendAssets(sellAssets, provider.getSigner(), setListingStatus, BURN_ADDRESS_HAYDEN, fakeForDemo)
+      //   }
+      //   break
       case ProfileMethod.BURN:
         toggleShowListModal()
         if (provider) {
-          for (const collection of collectionsRequiringApproval) {
-            if (collection.collectionAddress) {
-              await approveCollection(
-                SEND_CONTRACT_CONDUIT_ADDRESS,
-                collection.collectionAddress,
-                provider.getSigner(),
-                (newStatus: ListingStatus) =>
-                  updateStatus({
-                    listing: collection,
-                    newStatus,
-                    rows: collectionsRequiringApproval,
-                    setRows: setCollectionsRequiringApproval as Dispatch<AssetRow[]>,
-                  }),
-                fakeForDemo
-              )
-            }
-          }
-          await sendAssets(sellAssets, provider.getSigner(), setListingStatus, BURN_ADDRESS_HAYDEN, fakeForDemo)
+          // for (const collection of collectionsRequiringApproval) {
+          //   if (collection.collectionAddress) {
+          //     await approveCollection(
+          //       SEND_CONTRACT_CONDUIT_ADDRESS,
+          //       collection.collectionAddress,
+          //       provider.getSigner(),
+          //       (newStatus: ListingStatus) =>
+          //         updateStatus({
+          //           listing: collection,
+          //           newStatus,
+          //           rows: collectionsRequiringApproval,
+          //           setRows: setCollectionsRequiringApproval as Dispatch<AssetRow[]>,
+          //         }),
+          //       fakeForDemo
+          //     )
+          //   }
+          // }
+          await lossBurnAssets(sellAssets, provider.getSigner(), setListingStatus, fakeForDemo)
         }
         break
       case ProfileMethod.SEND:
