@@ -17,13 +17,14 @@ import { ExternalLink, TYPE } from '../../theme'
 import ClaimModal from '../claim/ClaimModal'
 import { CardNoise } from '../earn/styled'
 import Menu from '../Menu'
+import NavigationLinks from '../NavigationLinks'
 import { Dots } from '../swap/styleds'
 import Web3Status from '../Web3Status'
 import NetworkSelector from './NetworkSelector'
 
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
   display: grid;
-  grid-template-columns: 240px 1fr;
+  grid-template-columns: minmax(240px, 1fr) 1fr 1fr;
   justify-content: space-between;
   align-items: center;
   flex-direction: row;
@@ -41,17 +42,17 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
   background-blend-mode: hard-light;
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    grid-template-columns: 175px 1fr
+    grid-template-columns: minmax(175px, 1fr) 1fr 1fr;
   `};
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem 1rem;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
   `};
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 0.5rem;
-    grid-template-columns: 36px 240px;
+    grid-template-columns: minmax(36px, 1fr) 1fr 1fr;
   `};
 `
 
@@ -211,10 +212,12 @@ const TokenPrice = styled.div`
   background-color: ${({ theme }) => (theme.darkMode ? theme.bg1 : theme.bg3)};
   border: 1px solid ${({ theme }) => (theme.darkMode ? theme.bg1 : theme.bg0)};
   border-radius: 20px;
+
   :hover {
     background-color: ${({ theme }) => (theme.darkMode ? theme.bg1 : theme.bg0)};
     border: 1px solid ${({ theme }) => theme.bg3};
   }
+
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 0.5rem;
   `};
@@ -277,6 +280,7 @@ export default function Header() {
             </PhoneLogo>
           </UniIcon>
         </Title>
+        <NavigationLinks />
         <HeaderControls>
           <HeaderElement>
             {chainId && (

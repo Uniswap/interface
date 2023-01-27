@@ -7,7 +7,6 @@ import AddressClaimModal from '../components/claim/AddressClaimModal'
 import ErrorBoundary from '../components/ErrorBoundary'
 import Header from '../components/Header'
 import Polling from '../components/Header/Polling'
-import NavigationLinks from '../components/NavigationLinks'
 import Popups from '../components/Popups'
 import Web3ReactManager from '../components/Web3ReactManager'
 import { useModalOpen, useToggleModal } from '../state/application/hooks'
@@ -74,7 +73,6 @@ export default function App() {
           <HeaderWrapper>
             <Header />
           </HeaderWrapper>
-          <NavigationLinks />
           <BodyWrapper>
             <Popups />
             <Polling />

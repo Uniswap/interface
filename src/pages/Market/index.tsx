@@ -186,6 +186,7 @@ const ClassicModeContainer = styled.div`
   height: 100%;
   width: 475px;
   padding: 1rem 1rem 8rem 1rem;
+  margin-top: 60px;
   z-index: 0;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     width: 100%;
@@ -220,6 +221,7 @@ const FlexContainer = styled.div`
   gap: 2rem;
   border: none;
   padding: 1rem 4rem;
+  margin-top: 60px;
   width: calc(100% - 1rem);
   height: 100%;
   min-height: 75vh;

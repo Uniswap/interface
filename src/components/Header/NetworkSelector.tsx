@@ -82,6 +82,7 @@ const FlyoutRow = styled.div<{ active: boolean }>`
   margin: 0 auto;
   text-align: left;
   width: calc(100% - 8px);
+
   :hover {
     background-color: ${({ theme }) => theme.bg2};
   }
@@ -123,7 +124,7 @@ const SelectorLabel = styled(NetworkLabel)`
 const SelectorControls = styled.div<{ interactive: boolean }>`
   align-items: center;
   background-color: ${({ theme }) => (theme.darkMode ? theme.bg2 : theme.primary1)};
-  border: 1px solid ${({ theme }) => (theme.darkMode ? theme.bg2 : theme.primary1)};
+  box-shadow: 0 0 0 1px ${({ theme }) => (theme.darkMode ? theme.bg1 : theme.bg0)};
   border-radius: 20px;
   color: ${({ theme }) => theme.white};
   cursor: ${({ interactive }) => (interactive ? 'pointer' : 'auto')};

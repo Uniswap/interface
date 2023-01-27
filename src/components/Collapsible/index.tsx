@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { darken } from 'polished'
-import React, { ReactNode, useState } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 import { ArrowDownCircle, ArrowLeft } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
@@ -84,7 +84,11 @@ interface CollapsibleProps {
 }
 
 export default function Collapsible({ label, children, initState = false }: CollapsibleProps) {
-  const [isOpen, setOpen] = useState(initState)
+  const [isOpen, setOpen] = useState(() => initState)
+
+  useEffect(() => {
+    setOpen(initState)
+  }, [initState])
 
   return (
     <CollapsibleContainer isOpen={isOpen}>

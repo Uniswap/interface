@@ -7,20 +7,10 @@ import styled from 'styled-components/macro'
 import { useTogglePerpModal } from '../../state/application/hooks'
 import Row, { AutoRow } from '../Row'
 
-const NavWrapper = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
-  flex-grow: 0;
-  flex-shrink: 0;
-  flex-basis: auto;
-  order: 0;
-  width: 100%;
-  justify-content: space-between;
-`
-
 const NavFrame = styled(AutoRow)`
-  padding: 2rem 1rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 0;
+    // position: fixed;
   `};
 `
 
@@ -31,8 +21,9 @@ const NavLinks = styled(Row)`
   justify-self: center;
   margin: 0;
   border-radius: 20px;
+  gap: 1rem;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.mediaWidth.upToLarge`
     flex-direction: row;
     justify-content: space-around;
     justify-self: center;
@@ -42,9 +33,8 @@ const NavLinks = styled(Row)`
     bottom: 0; right: 50%;
     transform: translate(50%,-50%);
     margin: 0 auto;
-    background-color: ${({ theme }) => (theme.darkMode ? theme.bg1 : theme.bg0)};
-    box-shadow: 0px 0px 6px -2px ${({ theme }) => theme.primary1};
-    width: fit-content;
+    background-color: ${({ theme }) => (theme.darkMode ? theme.bg1 : theme.bg3)};
+    width: 50%;
   `};
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -75,15 +65,14 @@ const StyledNavLink = styled(NavLink).attrs({
   height: 44px;
 
   &.${activeClassName} {
-    background-color: ${({ theme }) => (theme.darkMode ? theme.bg2 : theme.bg3)};
+    background-color: ${({ theme }) => (theme.darkMode ? theme.bg2 : theme.bg0)};
 
     div {
       font-weight: 700;
     }
   }
 
-  :hover,
-  :focus {
+  :hover {
     color: ${({ theme }) => darken(0.1, theme.text1)};
   }
 
@@ -117,19 +106,16 @@ const StyledNavLinkAlt = styled.button`
   word-break: break-word;
   white-space: nowrap;
   height: 44px;
-  overflow: hidden;
 
   &.${activeClassName} {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg3};
+    background-color: ${({ theme }) => (theme.darkMode ? theme.bg2 : theme.bg0)};
     border-radius: 20px;
     font-weight: 600;
     color: ${({ theme }) => theme.text1};
   }
 
-  :hover,
-  :focus {
+  :hover {
     color: ${({ theme }) => darken(0.1, theme.text1)};
-    text-decoration: none;
   }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -163,35 +149,33 @@ export default function NavigationLinks() {
   }
 
   return (
-    <NavWrapper>
-      <NavFrame>
-        <NavLinks>
-          <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-            <Text fontSize={16} fontWeight={400}>
-              <Trans>Swap</Trans>
-            </Text>
-          </StyledNavLink>
-          <StyledNavLink id={`swap-nav-link`} to={'/limitorder'}>
-            <Text fontSize={16} fontWeight={400}>
-              <Trans>Limit/FELO</Trans>
-            </Text>
-          </StyledNavLink>
-          <StyledNavLinkAlt id={`perp-nav-link`} onClick={() => handleTogglePerpModal()}>
-            <Text
-              fontSize={16}
-              fontWeight={400}
-              overflow={'hidden'}
-              style={{
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-              }}
-            >
-              <Trans>Perpetual Trading</Trans>
-            </Text>
-          </StyledNavLinkAlt>
-        </NavLinks>
-      </NavFrame>
-    </NavWrapper>
+    <NavFrame>
+      <NavLinks>
+        <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+          <Text fontSize={16} fontWeight={400}>
+            <Trans>Swap</Trans>
+          </Text>
+        </StyledNavLink>
+        <StyledNavLink id={`swap-nav-link`} to={'/limitorder'}>
+          <Text fontSize={16} fontWeight={400}>
+            <Trans>Limit/FELO</Trans>
+          </Text>
+        </StyledNavLink>
+        <StyledNavLinkAlt id={`perp-nav-link`} onClick={() => handleTogglePerpModal()}>
+          <Text
+            fontSize={16}
+            fontWeight={400}
+            overflow={'hidden'}
+            style={{
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            <Trans>Perpetuals</Trans>
+          </Text>
+        </StyledNavLinkAlt>
+      </NavLinks>
+    </NavFrame>
   )
 }

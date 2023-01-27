@@ -78,6 +78,7 @@ const ClassicModeContainer = styled.div`
   gap: 2rem;
   border: none;
   padding: 1rem 4rem 8rem;
+  margin-top: 60px;
   width: calc(100% - 1rem);
   height: 100%;
   min-height: 75vh;
@@ -183,6 +184,7 @@ const GridContainer = styled.div`
   grid-template-columns: minmax(min(100%, 475px), 1fr) minmax(min(100%, 475px), 475px);
   row-gap: 2rem;
   column-gap: 2rem;
+  margin-top: 60px;
 
   border: none;
   padding: 1rem 4rem 8rem;
