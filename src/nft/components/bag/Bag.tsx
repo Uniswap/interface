@@ -140,7 +140,8 @@ async function sendAssets(
   signer: JsonRpcSigner,
   setListingStatus: (status: ListingStatus) => void,
   sendAddress: string,
-  fakeForDemo = false
+  fakeForDemo = false,
+  addBurnDelay = false
 ) {
   setListingStatus(ListingStatus.SIGNING)
 
@@ -168,7 +169,12 @@ async function sendAssets(
       const res = await contract['safeTransferFrom(address,address,uint256)'](signerAddress, sendAddress, tokenId)
       setListingStatus(ListingStatus.PENDING)
       await res.wait()
-      setListingStatus(ListingStatus.APPROVED)
+      if (addBurnDelay) {
+        await delay(5000)
+        setListingStatus(ListingStatus.APPROVED)
+      } else {
+        setListingStatus(ListingStatus.APPROVED)
+      }
     } else if (assets.length > 1) {
       const contract = new Contract(
         SEND_CONTRACT_ADDRESS,
@@ -205,8 +211,12 @@ async function sendAssets(
       const res = await contract.bulkTransfer(items, OPENSEA_DEFAULT_CROSS_CHAIN_CONDUIT_KEY)
       setListingStatus(ListingStatus.PENDING)
       await res.wait()
-      await delay(2000)
-      setListingStatus(ListingStatus.APPROVED)
+      if (addBurnDelay) {
+        await delay(5000)
+        setListingStatus(ListingStatus.APPROVED)
+      } else {
+        setListingStatus(ListingStatus.APPROVED)
+      }
     }
   } catch (error) {
     if (error.code === 4001) setListingStatus(ListingStatus.REJECTED)
@@ -526,6 +536,7 @@ const Bag = () => {
     if (disableProfileButton) return
 
     const fakeForDemo = false // TODO: remove this when not faking success
+    const addDelayToBurn = true
 
     switch (profileMethod) {
       case ProfileMethod.BURN:
@@ -548,7 +559,14 @@ const Bag = () => {
               )
             }
           }
-          await sendAssets(sellAssets, provider.getSigner(), setListingStatus, BURN_ADDRESS_HAYDEN, fakeForDemo)
+          await sendAssets(
+            sellAssets,
+            provider.getSigner(),
+            setListingStatus,
+            BURN_ADDRESS_HAYDEN,
+            fakeForDemo,
+            addDelayToBurn
+          )
         }
         break
       case ProfileMethod.LOSSBURN:

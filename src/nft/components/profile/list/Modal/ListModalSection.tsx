@@ -126,7 +126,6 @@ export const SectionHeaderOnly = ({ active }: { active: boolean }) => {
   const collectionsRequiringApproval = useNFTList((state) => state.collectionsRequiringApproval)
   const theme = useTheme()
   const showSpinner = active && (listingStatus === ListingStatus.SIGNING || listingStatus === ListingStatus.PENDING)
-  console.log(listingStatus)
   const allCollectionsApproved = useMemo(
     () => !collectionsRequiringApproval.some((collection) => collection.status !== ListingStatus.APPROVED),
     [collectionsRequiringApproval]
