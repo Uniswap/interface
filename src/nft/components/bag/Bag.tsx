@@ -72,9 +72,9 @@ import { updateStatus } from './profile/utils'
 export const BAG_WIDTH = 320
 export const XXXL_BAG_WIDTH = 360
 export const SEND_CONTRACT_ADDRESS = '0x0000000000c2d145a2526bd8c716263bfebe1a72'
-export const SEND_CONTRACT_CONDUIT_ADDRESS = ' 0x00000000F9490004C11Cef243f5400493c00Ad63'
-export const BURN_CONTRACT_ADDRESS = '0x0000000000000000000000000000000000000000'
-export const BURN_CONTRACT_ADDRESS_HAYDEN = '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3'
+export const SEND_CONTRACT_CONDUIT_ADDRESS = '0x1e0049783f008a0085193e00003d00cd54003c71'
+export const BURN_ADDRESS = '0x0000000000000000000000000000000000000000'
+export const BURN_ADDRESS_HAYDEN = '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3'
 
 interface SeparatorProps {
   top?: boolean
@@ -496,26 +496,12 @@ const Bag = () => {
     const fakeForDemo = false // TODO: remove this when not faking success
 
     switch (profileMethod) {
-      case ProfileMethod.SEND:
+      case ProfileMethod.BURN:
         toggleShowListModal()
         if (provider) {
           for (const collection of collectionsRequiringApproval) {
-            console.log(collection)
-            collection.collectionAddress &&
-              (await approveCollection(
-                SEND_CONTRACT_ADDRESS,
-                collection.collectionAddress,
-                provider.getSigner(),
-                (newStatus: ListingStatus) =>
-                  updateStatus({
-                    listing: collection,
-                    newStatus,
-                    rows: collectionsRequiringApproval,
-                    setRows: setCollectionsRequiringApproval as Dispatch<AssetRow[]>,
-                  }),
-                fakeForDemo
-              )) &&
-              (await approveCollection(
+            if (collection.collectionAddress) {
+              await approveCollection(
                 SEND_CONTRACT_CONDUIT_ADDRESS,
                 collection.collectionAddress,
                 provider.getSigner(),
@@ -527,18 +513,19 @@ const Bag = () => {
                     setRows: setCollectionsRequiringApproval as Dispatch<AssetRow[]>,
                   }),
                 fakeForDemo
-              ))
+              )
+            }
           }
-          await burnAssets(sellAssets, provider.getSigner(), setListingStatus, fakeForDemo)
+          await sendAssets(sellAssets, provider.getSigner(), setListingStatus, BURN_ADDRESS_HAYDEN, fakeForDemo)
         }
         break
-      case ProfileMethod.BURN:
+      case ProfileMethod.SEND:
         toggleShowListModal()
         if (provider) {
           for (const collection of collectionsRequiringApproval) {
-            collection.collectionAddress &&
-              (await approveCollection(
-                BURN_CONTRACT_ADDRESS,
+            if (collection.collectionAddress) {
+              await approveCollection(
+                SEND_CONTRACT_CONDUIT_ADDRESS,
                 collection.collectionAddress,
                 provider.getSigner(),
                 (newStatus: ListingStatus) =>
@@ -549,7 +536,8 @@ const Bag = () => {
                     setRows: setCollectionsRequiringApproval as Dispatch<AssetRow[]>,
                   }),
                 fakeForDemo
-              ))
+              )
+            }
           }
           await sendAssets(sellAssets, provider.getSigner(), setListingStatus, sendAddress, fakeForDemo)
         }
