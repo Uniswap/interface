@@ -3,10 +3,10 @@ import { Contract } from '@ethersproject/contracts'
 import type { JsonRpcSigner } from '@ethersproject/providers'
 import { formatEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
+import { ItemType } from '@opensea/seaport-js/lib/constants'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { BigNumberish } from 'ethers'
 import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
 import useENSAddress from 'hooks/useENSAddress'
 import { useIsNftDetailsPage, useIsNftPage, useIsNftProfilePage } from 'hooks/useIsNftPage'
@@ -28,6 +28,7 @@ import {
   useTransactionResponse,
 } from 'nft/hooks'
 import { fetchRoute } from 'nft/queries'
+import { OPENSEA_DEFAULT_CROSS_CHAIN_CONDUIT_KEY } from 'nft/queries/openSea'
 import {
   AssetRow,
   BagItemStatus,
@@ -59,14 +60,6 @@ import shallow from 'zustand/shallow'
 import ERC721 from '../../../abis/erc721.json'
 import OpenseaTransferHelperAbi from '../../../abis/opensea-transfer-helper.json'
 import { OpenseaTransferHelper as OpenseaTransferHelperContext } from '../../../abis/types/index'
-import { ItemType } from '@opensea/seaport-js/lib/constants'
-import { ConsiderationInputItem } from '@opensea/seaport-js/lib/types'
-import {
-  OPENSEA_DEFAULT_CROSS_CHAIN_CONDUIT_KEY,
-  OPENSEA_DEFAULT_ZONE,
-  OPENSEA_KEY_TO_CONDUIT,
-} from 'nft/queries/openSea'
-
 import { Checkbox } from '../layout/Checkbox'
 import { ListModal } from '../profile/list/Modal/ListModal'
 import * as styles from './Bag.css'
@@ -78,9 +71,10 @@ import { updateStatus } from './profile/utils'
 
 export const BAG_WIDTH = 320
 export const XXXL_BAG_WIDTH = 360
-export const OPENSEA_TRANSFER_HELPER_ADDRESS = '0x0000000000c2d145a2526bd8c716263bfebe1a72'
-export const SEND_CONTRACT_ADDRESS = ''
-export const BURN_CONTRACT_ADDRESS = ''
+export const SEND_CONTRACT_ADDRESS = '0x0000000000c2d145a2526bd8c716263bfebe1a72'
+export const SEND_CONTRACT_CONDUIT_ADDRESS = ' 0x00000000F9490004C11Cef243f5400493c00Ad63'
+export const BURN_CONTRACT_ADDRESS = '0x0000000000000000000000000000000000000000'
+export const BURN_CONTRACT_ADDRESS_HAYDEN = '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3'
 
 interface SeparatorProps {
   top?: boolean
@@ -152,47 +146,35 @@ async function sendAssets(
     return
   }
 
-  try {
-    // Get wallet to sign transaction
-    console.log(assets, signer, sendAddress)
-    setListingStatus(ListingStatus.PENDING)
+  // try {
+  // } catch (error) {
+  //   if (error.code === 4001) setListingStatus(ListingStatus.REJECTED)
+  //   else setListingStatus(ListingStatus.FAILED)
+  // }
+  setListingStatus(ListingStatus.PENDING)
 
-    // .wait() for tx to be added to the blockchain
-    setListingStatus(ListingStatus.APPROVED)
-  } catch (error) {
-    if (error.code === 4001) setListingStatus(ListingStatus.REJECTED)
-    else setListingStatus(ListingStatus.FAILED)
-  }
-
-
-
+  // TODO: add 1155s. assumption is currently made that the assets inputed are all ERC-721s
   if (assets.length == 1) {
     const asset = assets[0]
     const collectionAddress = asset.asset_contract.address
     const tokenId = asset.tokenId
     if (!collectionAddress || !tokenId) {
+      setListingStatus(ListingStatus.REJECTED)
       return
     }
     const contract = new Contract(collectionAddress, ERC721, signer)
     const signerAddress = await signer.getAddress()
     await contract['safeTransferFrom(address,address,uint256)'](signerAddress, sendAddress, tokenId)
+    setListingStatus(ListingStatus.APPROVED)
   } else if (assets.length > 1) {
-    console.log(assets, signer, sendAddress)
     const contract = new Contract(
-      OPENSEA_TRANSFER_HELPER_ADDRESS,
+      SEND_CONTRACT_ADDRESS,
       OpenseaTransferHelperAbi,
       signer
     ) as OpenseaTransferHelperContext
 
-    const signerAddress = await signer.getAddress()
-
     const items: {
-      items: {
-        itemType: BigNumberish
-        token: string
-        identifier: BigNumberish
-        amount: BigNumberish
-      }[]
+      items: any[]
       recipient: string
       validateERC721Receiver: boolean
     }[] = [
@@ -210,15 +192,12 @@ async function sendAssets(
         continue
       }
 
-      items[0].items.push({
-        itemType: ItemType.ERC721,
-        token: collectionAddress,
-        identifier: tokenId,
-        amount: '1',
-      })
+      items[0].items.push([ItemType.ERC721, collectionAddress, BigNumber.from(tokenId), BigNumber.from(1)])
     }
-    console.log(items)
+
     await contract.bulkTransfer(items, OPENSEA_DEFAULT_CROSS_CHAIN_CONDUIT_KEY)
+    setListingStatus(ListingStatus.APPROVED)
+  }
 }
 
 async function burnAssets(
@@ -509,16 +488,30 @@ const Bag = () => {
   const handleProfileClick = async () => {
     if (disableProfileButton) return
 
-    const fakeForDemo = true // TODO: remove this when not faking success
+    const fakeForDemo = false // TODO: remove this when not faking success
 
     switch (profileMethod) {
-      case ProfileMethod.BURN:
+      case ProfileMethod.SEND:
         toggleShowListModal()
         if (provider) {
           for (const collection of collectionsRequiringApproval) {
+            console.log(collection)
             collection.collectionAddress &&
               (await approveCollection(
                 SEND_CONTRACT_ADDRESS,
+                collection.collectionAddress,
+                provider.getSigner(),
+                (newStatus: ListingStatus) =>
+                  updateStatus({
+                    listing: collection,
+                    newStatus,
+                    rows: collectionsRequiringApproval,
+                    setRows: setCollectionsRequiringApproval as Dispatch<AssetRow[]>,
+                  }),
+                fakeForDemo
+              )) &&
+              (await approveCollection(
+                SEND_CONTRACT_CONDUIT_ADDRESS,
                 collection.collectionAddress,
                 provider.getSigner(),
                 (newStatus: ListingStatus) =>
@@ -534,7 +527,7 @@ const Bag = () => {
           await sendAssets(sellAssets, provider.getSigner(), setListingStatus, sendAddress, fakeForDemo)
         }
         break
-      case ProfileMethod.SEND:
+      case ProfileMethod.BURN:
         toggleShowListModal()
         if (provider) {
           for (const collection of collectionsRequiringApproval) {
