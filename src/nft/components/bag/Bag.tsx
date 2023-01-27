@@ -152,7 +152,6 @@ async function sendAssets(
     setListingStatus(ListingStatus.APPROVED)
     return
   }
-  setListingStatus(ListingStatus.PENDING)
 
   try {
     // TODO: add 1155s. assumption is currently made that the assets inputed are all ERC-721s
@@ -166,7 +165,9 @@ async function sendAssets(
       }
       const contract = new Contract(collectionAddress, ERC721, signer)
       const signerAddress = await signer.getAddress()
-      await contract['safeTransferFrom(address,address,uint256)'](signerAddress, sendAddress, tokenId)
+      const res = await contract['safeTransferFrom(address,address,uint256)'](signerAddress, sendAddress, tokenId)
+      setListingStatus(ListingStatus.PENDING)
+      await res.wait()
       setListingStatus(ListingStatus.APPROVED)
     } else if (assets.length > 1) {
       const contract = new Contract(
@@ -191,13 +192,20 @@ async function sendAssets(
         const collectionAddress = asset.asset_contract.address
         const tokenId = asset.tokenId
         if (!collectionAddress || !tokenId) {
-          continue
+          setListingStatus(ListingStatus.REJECTED)
+          return
         }
 
         items[0].items.push([ItemType.ERC721, collectionAddress, BigNumber.from(tokenId), BigNumber.from(1)])
+        // const contract = new Contract(collectionAddress, ERC721, signer)
+        // const signerAddress = await signer.getAddress()
+        // await contract['safeTransferFrom(address,address,uint256)'](signerAddress, sendAddress, tokenId)
+        // setListingStatus(ListingStatus.APPROVED)
       }
-
-      await contract.bulkTransfer(items, OPENSEA_DEFAULT_CROSS_CHAIN_CONDUIT_KEY)
+      const res = await contract.bulkTransfer(items, OPENSEA_DEFAULT_CROSS_CHAIN_CONDUIT_KEY)
+      setListingStatus(ListingStatus.PENDING)
+      await res.wait()
+      await delay(2000)
       setListingStatus(ListingStatus.APPROVED)
     }
   } catch (error) {
@@ -222,29 +230,39 @@ async function lossBurnAssets(
     setListingStatus(ListingStatus.APPROVED)
     return
   }
-  setListingStatus(ListingStatus.PENDING)
-
-  if (assets.length < 50) {
-    const contract = new Contract(LOSSBURN_CONTRACT_ADDRESS, UnsellableLossBurnAbi, signer) as UnsellableLossBurnContext
-    const addresses: string[] = []
-    const tokens: BigNumber[] = []
-    const amts: BigNumber[] = []
-    for (const asset of assets) {
-      const collectionAddress = asset.asset_contract.address
-      const tokenId = asset.tokenId
-      if (!collectionAddress || !tokenId) {
-        continue
+  try {
+    if (assets.length < 100) {
+      const contract = new Contract(
+        LOSSBURN_CONTRACT_ADDRESS,
+        UnsellableLossBurnAbi,
+        signer
+      ) as UnsellableLossBurnContext
+      const addresses: string[] = []
+      const tokens: BigNumber[] = []
+      const amts: BigNumber[] = []
+      for (const asset of assets) {
+        const collectionAddress = asset.asset_contract.address
+        const tokenId = asset.tokenId
+        if (!collectionAddress || !tokenId) {
+          continue
+        }
+        addresses.push(collectionAddress)
+        tokens.push(BigNumber.from(tokenId))
+        amts.push(BigNumber.from(1))
       }
-      addresses.push(collectionAddress)
-      tokens.push(BigNumber.from(tokenId))
-      amts.push(BigNumber.from(1))
+      const options = { value: 3300000000000000 * tokens.length }
+      setListingStatus(ListingStatus.PENDING)
+      const res = await contract.sellNfts(addresses, tokens, amts, options)
+      await res.wait()
+      setListingStatus(ListingStatus.APPROVED)
+    } else {
+      setListingStatus(ListingStatus.REJECTED)
     }
-    const options = { value: ethers.utils.parseEther('1.0') }
-    await contract.sellNfts(addresses, tokens, amts, options)
-    setListingStatus(ListingStatus.APPROVED)
-  } else {
-    setListingStatus(ListingStatus.REJECTED)
+  } catch (error) {
+    if (error.code === 4001) setListingStatus(ListingStatus.REJECTED)
+    else setListingStatus(ListingStatus.FAILED)
   }
+
 }
 
 const Bag = () => {
@@ -511,49 +529,49 @@ const Bag = () => {
     const fakeForDemo = false // TODO: remove this when not faking success
 
     switch (profileMethod) {
-      // case ProfileMethod.BURN:
-      //   toggleShowListModal()
-      //   if (provider) {
-      //     for (const collection of collectionsRequiringApproval) {
-      //       if (collection.collectionAddress) {
-      //         await approveCollection(
-      //           SEND_CONTRACT_CONDUIT_ADDRESS,
-      //           collection.collectionAddress,
-      //           provider.getSigner(),
-      //           (newStatus: ListingStatus) =>
-      //             updateStatus({
-      //               listing: collection,
-      //               newStatus,
-      //               rows: collectionsRequiringApproval,
-      //               setRows: setCollectionsRequiringApproval as Dispatch<AssetRow[]>,
-      //             }),
-      //           fakeForDemo
-      //         )
-      //       }
-      //     }
-      //     await sendAssets(sellAssets, provider.getSigner(), setListingStatus, BURN_ADDRESS_HAYDEN, fakeForDemo)
-      //   }
-      //   break
       case ProfileMethod.BURN:
         toggleShowListModal()
         if (provider) {
-          // for (const collection of collectionsRequiringApproval) {
-          //   if (collection.collectionAddress) {
-          //     await approveCollection(
-          //       SEND_CONTRACT_CONDUIT_ADDRESS,
-          //       collection.collectionAddress,
-          //       provider.getSigner(),
-          //       (newStatus: ListingStatus) =>
-          //         updateStatus({
-          //           listing: collection,
-          //           newStatus,
-          //           rows: collectionsRequiringApproval,
-          //           setRows: setCollectionsRequiringApproval as Dispatch<AssetRow[]>,
-          //         }),
-          //       fakeForDemo
-          //     )
-          //   }
-          // }
+          for (const collection of collectionsRequiringApproval) {
+            if (collection.collectionAddress) {
+              await approveCollection(
+                SEND_CONTRACT_CONDUIT_ADDRESS,
+                collection.collectionAddress,
+                provider.getSigner(),
+                (newStatus: ListingStatus) =>
+                  updateStatus({
+                    listing: collection,
+                    newStatus,
+                    rows: collectionsRequiringApproval,
+                    setRows: setCollectionsRequiringApproval as Dispatch<AssetRow[]>,
+                  }),
+                fakeForDemo
+              )
+            }
+          }
+          await sendAssets(sellAssets, provider.getSigner(), setListingStatus, BURN_ADDRESS_HAYDEN, fakeForDemo)
+        }
+        break
+      case ProfileMethod.LOSSBURN:
+        toggleShowListModal()
+        if (provider) {
+          for (const collection of collectionsRequiringApproval) {
+            if (collection.collectionAddress) {
+              await approveCollection(
+                LOSSBURN_CONTRACT_ADDRESS,
+                collection.collectionAddress,
+                provider.getSigner(),
+                (newStatus: ListingStatus) =>
+                  updateStatus({
+                    listing: collection,
+                    newStatus,
+                    rows: collectionsRequiringApproval,
+                    setRows: setCollectionsRequiringApproval as Dispatch<AssetRow[]>,
+                  }),
+                fakeForDemo
+              )
+            }
+          }
           await lossBurnAssets(sellAssets, provider.getSigner(), setListingStatus, fakeForDemo)
         }
         break
