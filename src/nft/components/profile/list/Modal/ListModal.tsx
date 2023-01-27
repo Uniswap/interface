@@ -10,6 +10,7 @@ import { ListingStatus } from 'nft/types'
 import { pluralize } from 'nft/utils'
 import { useEffect, useReducer, useRef } from 'react'
 import { X } from 'react-feather'
+import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
@@ -116,6 +117,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
   const [animatedNftRight, toggleAnimatedNftRight] = useReducer((s) => !s, true)
   const [animatedNftIndex, updateAnimatedNftIndex] = useReducer((s) => (s === sellAssets.length - 1 ? 0 : (s += 1)), 0)
   const isMobile = useIsMobile()
+  const isDarkMode = useIsDarkMode()
 
   const statusCheckedOverlayClick = () => {
     if (listingStatus === ListingStatus.APPROVED) {
@@ -147,7 +149,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
                   <AnimationNft src={sellAssets[animatedNftIndex].imageUrl} cardRight={animatedNftRight} />
                 </AnimationNFTDiv>
                 <SigningAnimation ref={animationRef} loop>
-                  <source src="/nft/D- Fire Only.mp4" type="video/mp4" />{' '}
+                  <source src={`/nft/${isDarkMode ? 'D' : 'L'}- Fire Only.mp4`} type="video/mp4" />{' '}
                 </SigningAnimation>
               </>
             ) : (
