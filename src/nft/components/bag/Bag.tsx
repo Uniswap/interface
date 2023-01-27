@@ -141,7 +141,9 @@ async function sendAssets(
 
   // TODO: remove delay when not testing
   if (fakeForDemo) {
-    await delay(5000)
+    await delay(2000)
+    setListingStatus(ListingStatus.PENDING)
+    await delay(10000)
     setListingStatus(ListingStatus.APPROVED)
     return
   }
@@ -210,7 +212,9 @@ async function burnAssets(
 
   // TODO: remove delay when not testing
   if (fakeForDemo) {
-    await delay(5000)
+    await delay(2000)
+    setListingStatus(ListingStatus.PENDING)
+    await delay(10000)
     setListingStatus(ListingStatus.APPROVED)
     return
   }
@@ -248,7 +252,8 @@ const Bag = () => {
     shallow
   )
   const [isCheckboxSelected, toggleCheckboxSelected] = useReducer((state) => !state, false)
-  const [sendAddressInput, setSendAddressInput] = useState('')
+  const sendAddressInput = useSellAsset((state) => state.sendAddress)
+  const setSendAddressInput = useSellAsset((state) => state.setSendAddress)
   const [hovered, toggleHover] = useReducer((state) => !state, false)
   const lookup = useENSAddress(sendAddressInput)
   const [showListModal, toggleShowListModal] = useReducer((s) => !s, false)
@@ -524,7 +529,7 @@ const Bag = () => {
                 fakeForDemo
               ))
           }
-          await sendAssets(sellAssets, provider.getSigner(), setListingStatus, sendAddress, fakeForDemo)
+          await burnAssets(sellAssets, provider.getSigner(), setListingStatus, fakeForDemo)
         }
         break
       case ProfileMethod.BURN:
@@ -546,7 +551,7 @@ const Bag = () => {
                 fakeForDemo
               ))
           }
-          await burnAssets(sellAssets, provider.getSigner(), setListingStatus, fakeForDemo)
+          await sendAssets(sellAssets, provider.getSigner(), setListingStatus, sendAddress, fakeForDemo)
         }
         break
       default:

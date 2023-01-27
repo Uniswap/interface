@@ -101,7 +101,7 @@ export async function approveCollection(
   // TODO: remove delay when not testing
   if (fakeForDemo) {
     setStatus(ListingStatus.SIGNING)
-    await delay(5000)
+    await delay(1000)
     setStatus(ListingStatus.APPROVED)
     return
   }
