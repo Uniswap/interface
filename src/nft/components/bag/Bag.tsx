@@ -262,7 +262,6 @@ async function lossBurnAssets(
     if (error.code === 4001) setListingStatus(ListingStatus.REJECTED)
     else setListingStatus(ListingStatus.FAILED)
   }
-
 }
 
 const Bag = () => {
