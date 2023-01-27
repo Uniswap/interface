@@ -122,17 +122,19 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
                   />
                 ))}
               </Row>
-              <Row gap="8" justifyContent="flex-end" marginRight="16" height="full">
-                <ThemedText.BodyPrimary fontWeight="600" style={{ whiteSpace: 'nowrap', flexShrink: '0' }}>
-                  Sent to:&nbsp;
-                </ThemedText.BodyPrimary>
-                <ThemedText.BodyPrimary
-                  color="textSecondary"
-                  style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}
-                >
-                  {isAddress(sendAddress) ? shortenAddress(sendAddress) : sendAddress}{' '}
-                </ThemedText.BodyPrimary>
-              </Row>
+              {profileMethod === ProfileMethod.SEND && (
+                <Row gap="8" justifyContent="flex-end" marginRight="16" height="full">
+                  <ThemedText.BodyPrimary fontWeight="600" style={{ whiteSpace: 'nowrap', flexShrink: '0' }}>
+                    Sent to:&nbsp;
+                  </ThemedText.BodyPrimary>
+                  <ThemedText.BodyPrimary
+                    color="textSecondary"
+                    style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}
+                  >
+                    {isAddress(sendAddress) ? shortenAddress(sendAddress) : sendAddress}{' '}
+                  </ThemedText.BodyPrimary>
+                </Row>
+              )}
             </>
           )}
         </ListModalWrapper>
