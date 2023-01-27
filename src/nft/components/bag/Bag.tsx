@@ -133,7 +133,9 @@ async function sendAssets(
 
   // TODO: remove delay when not testing
   if (fakeForDemo) {
-    await delay(1000)
+    await delay(2000)
+    setListingStatus(ListingStatus.PENDING)
+    await delay(10000)
     setListingStatus(ListingStatus.APPROVED)
     return
   }
@@ -161,7 +163,9 @@ async function burnAssets(
 
   // TODO: remove delay when not testing
   if (fakeForDemo) {
-    await delay(1000)
+    await delay(2000)
+    setListingStatus(ListingStatus.PENDING)
+    await delay(10000)
     setListingStatus(ListingStatus.APPROVED)
     return
   }
@@ -462,7 +466,7 @@ const Bag = () => {
                 fakeForDemo
               ))
           }
-          await sendAssets(sellAssets, provider.getSigner(), setListingStatus, sendAddress, fakeForDemo)
+          await burnAssets(sellAssets, provider.getSigner(), setListingStatus, fakeForDemo)
         }
         break
       case ProfileMethod.SEND:
@@ -484,7 +488,7 @@ const Bag = () => {
                 fakeForDemo
               ))
           }
-          await burnAssets(sellAssets, provider.getSigner(), setListingStatus, fakeForDemo)
+          await sendAssets(sellAssets, provider.getSigner(), setListingStatus, sendAddress, fakeForDemo)
         }
         break
       default:
