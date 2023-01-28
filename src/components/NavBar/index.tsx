@@ -40,7 +40,7 @@ const MenuItem = ({ href, dataTestId, id, isActive, children }: MenuItemProps) =
       to={href}
       className={isActive ? styles.activeMenuItem : styles.menuItem}
       id={id}
-      style={{ textDecoration: 'none' }}
+      style={{ textDecoration: 'none', whiteSpace: 'nowrap' }}
       data-testid={dataTestId}
     >
       {children}
