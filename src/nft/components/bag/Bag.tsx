@@ -21,7 +21,7 @@ import {
   useTransactionResponse,
 } from 'nft/hooks'
 import { fetchRoute } from 'nft/queries'
-import { BagItemStatus, BagStatus, ProfilePageStateType, RouteResponse, TxStateType } from 'nft/types'
+import { BagItem, BagItemStatus, BagStatus, BagView, ProfilePageStateType, RouteResponse, TxStateType } from 'nft/types'
 import {
   buildSellObject,
   fetchPrice,
@@ -41,6 +41,7 @@ import { BagContent } from './BagContent'
 import { BagHeader } from './BagHeader'
 import EmptyState from './EmptyContent'
 import { ProfileBagContent } from './profile/ProfileBagContent'
+import { SaveForLaterContent } from './SaveForLaterContent'
 
 export const BAG_WIDTH = 320
 export const XXXL_BAG_WIDTH = 360
@@ -118,6 +119,8 @@ const Bag = () => {
   const {
     bagStatus,
     setBagStatus,
+    activeBagView,
+    setActiveBagView,
     didOpenUnavailableAssets,
     setDidOpenUnavailableAssets,
     bagIsLocked,
@@ -129,6 +132,7 @@ const Bag = () => {
     setTotalEthPrice,
     setTotalUsdPrice,
     setBagExpanded,
+    removeAssetsFromBag,
   } = useBag((state) => ({ ...state, bagIsLocked: state.isLocked, uncheckedItemsInBag: state.itemsInBag }), shallow)
   const { uncheckedItemsInBag } = useBag(({ itemsInBag }) => ({ uncheckedItemsInBag: itemsInBag }))
 
@@ -163,7 +167,7 @@ const Bag = () => {
   const { totalEthPrice, totalUsdPrice } = useMemo(() => {
     const totalEthPrice = itemsInBag.reduce(
       (total, item) =>
-        item.status !== BagItemStatus.UNAVAILABLE
+        item.status !== BagItemStatus.UNAVAILABLE && BagItemStatus.SAVED_FOR_LATER
           ? total.add(
               BigNumber.from(
                 item.asset.updatedPriceInfo ? item.asset.updatedPriceInfo.ETHPrice : item.asset.priceInfo.ETHPrice
@@ -181,7 +185,9 @@ const Bag = () => {
     if (!provider || !routingData) return
     const purchaseResponse = await sendTransaction(
       provider?.getSigner(),
-      itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset),
+      itemsInBag
+        .filter((item) => item.status !== BagItemStatus.UNAVAILABLE && item.status !== BagItemStatus.SAVED_FOR_LATER)
+        .map((item) => item.asset),
       routingData
     )
     if (
@@ -201,7 +207,9 @@ const Bag = () => {
   }, [setBagExpanded])
 
   const fetchAssets = async () => {
-    const itemsToBuy = itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset)
+    const itemsToBuy = itemsInBag
+      .filter((item) => item.status !== BagItemStatus.UNAVAILABLE && item.status !== BagItemStatus.SAVED_FOR_LATER)
+      .map((item) => item.asset)
     const ethSellObject = buildSellObject(
       itemsToBuy
         .reduce((ethTotal, asset) => ethTotal.add(BigNumber.from(asset.priceInfo.ETHPrice)), BigNumber.from(0))
@@ -241,6 +249,7 @@ const Bag = () => {
           status: BagItemStatus.REVIEWING_PRICE_CHANGE,
         })),
         ...fetchedUnchangedAssets.map((unchangedAsset) => ({ asset: unchangedAsset, status: BagItemStatus.REVIEWED })),
+        ...itemsInBag.filter((item) => item.status === BagItemStatus.SAVED_FOR_LATER),
       ])
       setLocked(false)
 
@@ -286,8 +295,6 @@ const Bag = () => {
     setTotalUsdPrice(totalUsdPrice)
   }, [totalEthPrice, totalUsdPrice, setTotalEthPrice, setTotalUsdPrice])
 
-  const hasAssetsToShow = itemsInBag.length > 0
-
   const scrollHandler = (event: React.UIEvent<HTMLDivElement>) => {
     const scrollTop = event.currentTarget.scrollTop
     const containerHeight = event.currentTarget.clientHeight
@@ -296,12 +303,44 @@ const Bag = () => {
     setScrollProgress(scrollTop ? ((scrollTop + containerHeight) / scrollHeight) * 100 : 0)
   }
 
-  const isBuyingAssets = itemsInBag.length > 0
-  const isSellingAssets = sellAssets.length > 0
+  useEffect(() => {
+    setActiveBagView(isProfilePage ? BagView.SELL : BagView.MAIN)
+  }, [setActiveBagView, isProfilePage])
 
-  const shouldRenderEmptyState = Boolean(
-    (!isProfilePage && !isBuyingAssets && bagStatus === BagStatus.ADDING_TO_BAG) || (isProfilePage && !isSellingAssets)
-  )
+  const isSavedForLater = (item: BagItem) => {
+    return item.status === BagItemStatus.SAVED_FOR_LATER
+  }
+
+  const getNumberOfAssets = () => {
+    switch (activeBagView) {
+      case BagView.SELL:
+        return sellAssets.length
+      case BagView.MAIN:
+        return itemsInBag.filter((item) => !isSavedForLater(item)).length
+      case BagView.SAVE_FOR_LATER:
+        return itemsInBag.filter(isSavedForLater).length
+      default:
+        return 0
+    }
+  }
+
+  const resetFlow = () => {
+    switch (activeBagView) {
+      case BagView.SELL:
+        resetSellAssets()
+        break
+      case BagView.MAIN:
+        removeAssetsFromBag(itemsInBag.filter((item) => !isSavedForLater(item)).map((item) => item.asset))
+        break
+      case BagView.SAVE_FOR_LATER:
+        removeAssetsFromBag(
+          itemsInBag.filter((item) => item.status === BagItemStatus.SAVED_FOR_LATER).map((item) => item.asset)
+        )
+        break
+      default:
+        break
+    }
+  }
 
   const eventProperties = useMemo(
     () => ({
@@ -321,47 +360,60 @@ const Bag = () => {
         {!(isProfilePage && profilePageState === ProfilePageStateType.LISTING) ? (
           <>
             <BagHeader
-              numberOfAssets={isProfilePage ? sellAssets.length : itemsInBag.length}
+              bagViews={isProfilePage ? [BagView.SELL] : [BagView.MAIN, BagView.SAVE_FOR_LATER]}
+              activeBagView={activeBagView}
+              numberOfAssets={getNumberOfAssets()}
+              changeBagView={(view) => setActiveBagView(view)}
               closeBag={handleCloseBag}
-              resetFlow={isProfilePage ? resetSellAssets : reset}
-              isProfilePage={isProfilePage}
+              resetFlow={resetFlow}
             />
-            {shouldRenderEmptyState && <EmptyState />}
             <ScrollingIndicator top show={userCanScroll && scrollProgress > 0} />
-            <Column ref={scrollRef} className={styles.assetsContainer} onScroll={scrollHandler} gap="12">
-              {isProfilePage ? <ProfileBagContent /> : <BagContent />}
-            </Column>
-            {hasAssetsToShow && !isProfilePage && (
-              <BagFooter
-                totalEthPrice={totalEthPrice}
-                totalUsdPrice={totalUsdPrice}
-                bagStatus={bagStatus}
-                fetchAssets={fetchAssets}
-                eventProperties={eventProperties}
-              />
-            )}
-            {isSellingAssets && isProfilePage && (
-              <Box
-                marginTop="32"
-                marginX="28"
-                marginBottom="16"
-                paddingY="10"
-                className={`${buttonTextMedium} ${commonButtonStyles}`}
-                backgroundColor="accentAction"
-                color="white"
-                textAlign="center"
-                onClick={() => {
-                  ;(isMobile || isNftListV2) && toggleBag()
-                  setProfilePageState(ProfilePageStateType.LISTING)
-                  sendAnalyticsEvent(NFTEventName.NFT_PROFILE_PAGE_START_SELL, {
-                    list_quantity: sellAssets.length,
-                    collection_addresses: sellAssets.map((asset) => asset.asset_contract.address),
-                    token_ids: sellAssets.map((asset) => asset.tokenId),
-                  })
-                }}
-              >
-                Continue
-              </Box>
+            {getNumberOfAssets() === 0 ? (
+              <EmptyState />
+            ) : (
+              <>
+                <Column ref={scrollRef} className={styles.assetsContainer} onScroll={scrollHandler} gap="12">
+                  {
+                    {
+                      [BagView.SELL]: <ProfileBagContent />,
+                      [BagView.MAIN]: <BagContent />,
+                      [BagView.SAVE_FOR_LATER]: <SaveForLaterContent />,
+                    }[activeBagView]
+                  }
+                </Column>
+                {(activeBagView === BagView.SELL && (
+                  <Box
+                    marginTop="32"
+                    marginX="28"
+                    marginBottom="16"
+                    paddingY="10"
+                    className={`${buttonTextMedium} ${commonButtonStyles}`}
+                    backgroundColor="accentAction"
+                    color="white"
+                    textAlign="center"
+                    onClick={() => {
+                      ;(isMobile || isNftListV2) && toggleBag()
+                      setProfilePageState(ProfilePageStateType.LISTING)
+                      sendAnalyticsEvent(NFTEventName.NFT_PROFILE_PAGE_START_SELL, {
+                        list_quantity: sellAssets.length,
+                        collection_addresses: sellAssets.map((asset) => asset.asset_contract.address),
+                        token_ids: sellAssets.map((asset) => asset.tokenId),
+                      })
+                    }}
+                  >
+                    Continue
+                  </Box>
+                )) ||
+                  (activeBagView === BagView.MAIN && (
+                    <BagFooter
+                      totalEthPrice={totalEthPrice}
+                      totalUsdPrice={totalUsdPrice}
+                      bagStatus={bagStatus}
+                      fetchAssets={fetchAssets}
+                      eventProperties={eventProperties}
+                    />
+                  ))}
+              </>
             )}
           </>
         ) : (

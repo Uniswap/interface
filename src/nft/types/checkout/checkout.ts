@@ -79,6 +79,7 @@ export enum BagItemStatus {
   REVIEWED = 'Reviewed',
   REVIEWING_PRICE_CHANGE = 'REVIEWING_PRICE_CHANGE',
   UNAVAILABLE = 'UNAVAILABLE',
+  SAVED_FOR_LATER = 'Saved for later',
 }
 
 export type BagItem = {
@@ -96,4 +97,10 @@ export enum BagStatus {
   FETCHING_FINAL_ROUTE = 'Fetching final route',
   CONFIRMING_IN_WALLET = 'Confirming in wallet',
   PROCESSING_TRANSACTION = 'Processing',
+}
+
+export enum BagView {
+  MAIN = 'Bag',
+  SAVE_FOR_LATER = 'Saved',
+  SELL = 'Sell',
 }

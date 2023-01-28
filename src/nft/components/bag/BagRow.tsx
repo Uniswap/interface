@@ -11,13 +11,14 @@ import {
   ChevronUpBagIcon,
   CircularCloseIcon,
   CloseTimerIcon,
+  EllipsisIcon,
   SquareArrowDownIcon,
   SquareArrowUpIcon,
   VerifiedIcon,
 } from 'nft/components/icons'
 import { bodySmall } from 'nft/css/common.css'
 import { loadingBlock } from 'nft/css/loading.css'
-import { GenieAsset, UpdatedGenieAsset } from 'nft/types'
+import { BagItemStatus, BagView, GenieAsset, UpdatedGenieAsset } from 'nft/types'
 import { ethNumberStandardFormatter, formatWeiToDecimal, getAssetHref } from 'nft/utils'
 import { MouseEvent, useCallback, useEffect, useReducer, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -29,8 +30,7 @@ export const RemoveButton = styled(ThemeButton)`
   border-radius: 12px;
   font-size: 14px;
   line-height: 16px;
-  margin-left: 16px;
-  padding: 12px 14px;
+  padding: 12px 8px;
 `
 const ReviewButton = styled(ThemeButton)`
   border-radius: 12px;
@@ -52,10 +52,24 @@ const RemoveAssetOverlay = styled.div`
   align-items: center;
   justify-content: center;
 `
+const Circle = styled.div`
+  width: 16px;
+  height: 16px;
+  background-color: #2b3347;
+  border-radius: 50%;
+`
 
 export const RemoveAssetButton = ({ onClick }: { onClick: (e: MouseEvent<HTMLDivElement>) => void }) => (
   <RemoveAssetOverlay onClick={onClick}>
     <CircularCloseIcon />
+  </RemoveAssetOverlay>
+)
+
+const AssetOptionsButton = ({ onClick }: { onClick: (e: MouseEvent<HTMLDivElement>) => void }) => (
+  <RemoveAssetOverlay onClick={onClick}>
+    <Circle>
+      <EllipsisIcon viewBox="-2 -2 24 24" color="white" />
+    </Circle>
   </RemoveAssetOverlay>
 )
 
@@ -81,28 +95,63 @@ const NoContentContainer = () => (
 )
 
 interface BagRowProps {
+  activeBagView?: BagView
   asset: UpdatedGenieAsset
   usdPrice: number | undefined
+  addAsset: (assets: GenieAsset[], isSweep?: boolean, itemStatus?: BagItemStatus) => void
   removeAsset: (assets: GenieAsset[]) => void
   showRemove?: boolean
   grayscale?: boolean
   isMobile: boolean
 }
 
-export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, isMobile }: BagRowProps) => {
+export const BagRow = ({
+  activeBagView,
+  asset,
+  usdPrice,
+  addAsset,
+  removeAsset,
+  showRemove,
+  grayscale,
+  isMobile,
+}: BagRowProps) => {
   const [loadedImage, setImageLoaded] = useState(false)
   const [noImageAvailable, setNoImageAvailable] = useState(!asset.smallImageUrl)
 
   const [cardHovered, setCardHovered] = useState(false)
   const handleMouseEnter = useCallback(() => setCardHovered(true), [])
   const handleMouseLeave = useCallback(() => setCardHovered(false), [])
-  const showRemoveButton = Boolean(showRemove && cardHovered && !isMobile)
+  const [optionsOpened, setOptionsOpened] = useState(false)
+  const showOptions = Boolean(showRemove && ((cardHovered && !isMobile) || optionsOpened))
 
   const assetEthPrice = asset.updatedPriceInfo ? asset.updatedPriceInfo.ETHPrice : asset.priceInfo.ETHPrice
   const assetEthPriceFormatted = formatWeiToDecimal(assetEthPrice)
   const assetUSDPriceFormatted = ethNumberStandardFormatter(
     usdPrice ? parseFloat(formatEther(assetEthPrice)) * usdPrice : usdPrice,
     true
+  )
+
+  const handleOptionsClick = useCallback(
+    (e: MouseEvent<HTMLElement>) => {
+      e.preventDefault()
+      e.stopPropagation()
+      setOptionsOpened(!optionsOpened)
+    },
+    [optionsOpened]
+  )
+
+  const handleAddClick = useCallback(
+    (e: MouseEvent<HTMLElement>) => {
+      e.preventDefault()
+      e.stopPropagation()
+      removeAsset([asset])
+      addAsset(
+        [asset],
+        false,
+        activeBagView === BagView.MAIN ? BagItemStatus.SAVED_FOR_LATER : BagItemStatus.ADDED_TO_BAG
+      )
+    },
+    [asset, addAsset, removeAsset, activeBagView]
   )
 
   const handleRemoveClick = useCallback(
@@ -118,7 +167,7 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
     <Link to={getAssetHref(asset)} style={{ textDecoration: 'none' }}>
       <Row className={styles.bagRow} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
         <Box position="relative" display="flex">
-          {showRemove && isMobile && <RemoveAssetButton onClick={handleRemoveClick} />}
+          {showRemove && isMobile && <AssetOptionsButton onClick={handleOptionsClick} />}
           {!noImageAvailable && (
             <Box
               as="img"
@@ -137,29 +186,35 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
           {!loadedImage && <Box position="absolute" className={`${styles.bagRowImage} ${loadingBlock}`} />}
           {noImageAvailable && <NoContentContainer />}
         </Box>
-        <Column overflow="hidden" width="full" color={grayscale ? 'textSecondary' : 'textPrimary'}>
-          <Row overflow="hidden" width="full" whiteSpace="nowrap">
-            <Box className={styles.assetName}>{asset.name ?? `#${asset.tokenId}`}</Box>
-            {asset.susFlag && <Suspicious />}
+        {showOptions ? (
+          <Row width="full" justifyContent="flex-end" gap="12">
+            <RemoveButton onClick={handleAddClick} emphasis={ButtonEmphasis.medium} size={ButtonSize.medium}>
+              {activeBagView === BagView.MAIN ? 'Save for later' : 'Move to bag '}
+            </RemoveButton>
+            <RemoveButton onClick={handleRemoveClick} emphasis={ButtonEmphasis.medium} size={ButtonSize.medium}>
+              Remove
+            </RemoveButton>
           </Row>
-          <Row overflow="hidden" whiteSpace="nowrap" gap="2">
-            <Box className={styles.collectionName}>{asset.collectionName}</Box>
-            {asset.collectionIsVerified && <VerifiedIcon className={styles.icon} />}
+        ) : (
+          <Row width="full" overflow="hidden">
+            <Column overflow="hidden" width="full" color={grayscale ? 'textSecondary' : 'textPrimary'}>
+              <Row overflow="hidden" width="full" whiteSpace="nowrap">
+                <Box className={styles.assetName}>{asset.name ?? `#${asset.tokenId}`}</Box>
+                {asset.susFlag && <Suspicious />}
+              </Row>
+              <Row overflow="hidden" whiteSpace="nowrap" gap="2">
+                <Box className={styles.collectionName}>{asset.collectionName}</Box>
+                {asset.collectionIsVerified && <VerifiedIcon className={styles.icon} />}
+              </Row>
+            </Column>
+            <Column flexShrink="0" alignItems="flex-end">
+              <Box className={styles.bagRowPrice}>
+                {assetEthPriceFormatted}
+                &nbsp;ETH
+              </Box>
+              <Box className={styles.collectionName}>{assetUSDPriceFormatted}</Box>
+            </Column>
           </Row>
-        </Column>
-        {showRemoveButton && (
-          <RemoveButton onClick={handleRemoveClick} emphasis={ButtonEmphasis.medium} size={ButtonSize.medium}>
-            Remove
-          </RemoveButton>
-        )}
-        {(!showRemoveButton || isMobile) && (
-          <Column flexShrink="0" alignItems="flex-end">
-            <Box className={styles.bagRowPrice}>
-              {assetEthPriceFormatted}
-              &nbsp;ETH
-            </Box>
-            <Box className={styles.collectionName}>{assetUSDPriceFormatted}</Box>
-          </Column>
         )}
       </Row>
     </Link>
@@ -203,7 +258,13 @@ export const PriceChangeBagRow = ({ asset, usdPrice, markAssetAsReviewed, top, i
         )} ETH`}</Box>
       </Row>
       <Box style={{ marginLeft: '-8px', marginRight: '-8px' }}>
-        <BagRow asset={asset} usdPrice={usdPrice} removeAsset={() => undefined} isMobile={isMobile} />
+        <BagRow
+          asset={asset}
+          usdPrice={usdPrice}
+          addAsset={() => undefined}
+          removeAsset={() => undefined}
+          isMobile={isMobile}
+        />
       </Box>
       <Row gap="8" justifyContent="space-between">
         <ReviewButton onClick={handleRemove} emphasis={ButtonEmphasis.medium} size={ButtonSize.small}>
@@ -335,6 +396,7 @@ export const UnavailableAssetsHeaderRow = ({
                 key={asset.id}
                 asset={asset}
                 usdPrice={usdPrice}
+                addAsset={() => undefined}
                 removeAsset={() => undefined}
                 grayscale
                 isMobile={isMobile}

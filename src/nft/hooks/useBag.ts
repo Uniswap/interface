@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
-import { BagItem, BagItemStatus, BagStatus, UpdatedGenieAsset } from 'nft/types'
+import { BagItem, BagItemStatus, BagStatus, BagView, UpdatedGenieAsset } from 'nft/types'
 import { v4 as uuidv4 } from 'uuid'
 import create from 'zustand'
 import { devtools } from 'zustand/middleware'
@@ -12,11 +12,13 @@ interface BagState {
   setBagStatus: (state: BagStatus) => void
   itemsInBag: BagItem[]
   setItemsInBag: (items: BagItem[]) => void
+  activeBagView: BagView
+  setActiveBagView: (view: BagView) => void
   totalEthPrice: BigNumber
   setTotalEthPrice: (totalEthPrice: BigNumber) => void
   totalUsdPrice: number | undefined
   setTotalUsdPrice: (totalUsdPrice: number | undefined) => void
-  addAssetsToBag: (asset: UpdatedGenieAsset[], fromSweep?: boolean) => void
+  addAssetsToBag: (asset: UpdatedGenieAsset[], fromSweep?: boolean, itemStatus?: BagItemStatus) => void
   removeAssetsFromBag: (assets: UpdatedGenieAsset[], fromSweep?: boolean) => void
   markAssetAsReviewed: (asset: UpdatedGenieAsset, toKeep: boolean) => void
   lockSweepItems: (contractAddress: string) => void
@@ -72,6 +74,11 @@ export const useBag = create<BagState>()(
         set(() => ({
           itemsInBag: items,
         })),
+      activeBagView: BagView.MAIN,
+      setActiveBagView: (newBagView) =>
+        set(() => ({
+          activeBagView: newBagView,
+        })),
       totalEthPrice: BigNumber.from(0),
       setTotalEthPrice: (totalEthPrice) =>
         set(() => ({
@@ -82,7 +89,7 @@ export const useBag = create<BagState>()(
         set(() => ({
           totalUsdPrice,
         })),
-      addAssetsToBag: (assets, fromSweep = false) =>
+      addAssetsToBag: (assets, fromSweep = false, itemStatus = BagItemStatus.ADDED_TO_BAG) =>
         set(({ itemsInBag }) => {
           if (get().isLocked) return { itemsInBag: get().itemsInBag }
           const items: BagItem[] = []
@@ -99,7 +106,7 @@ export const useBag = create<BagState>()(
             } else {
               const assetWithId = {
                 asset: { id: uuidv4(), ...asset },
-                status: BagItemStatus.ADDED_TO_BAG,
+                status: itemStatus,
                 inSweep: fromSweep,
               }
               items.push(assetWithId)

@@ -11,11 +11,13 @@ import { useQuery } from 'react-query'
 export const BagContent = () => {
   const bagStatus = useBag((s) => s.bagStatus)
   const setBagStatus = useBag((s) => s.setBagStatus)
+  const activeBagView = useBag((s) => s.activeBagView)
   const markAssetAsReviewed = useBag((s) => s.markAssetAsReviewed)
   const didOpenUnavailableAssets = useBag((s) => s.didOpenUnavailableAssets)
   const setDidOpenUnavailableAssets = useBag((s) => s.setDidOpenUnavailableAssets)
   const uncheckedItemsInBag = useBag((s) => s.itemsInBag)
   const setItemsInBag = useBag((s) => s.setItemsInBag)
+  const addAssetsToBag = useBag((s) => s.addAssetsToBag)
   const removeAssetsFromBag = useBag((s) => s.removeAssetsFromBag)
 
   const isMobile = useIsMobile()
@@ -103,8 +105,10 @@ export const BagContent = () => {
           .map((asset) => (
             <BagRow
               key={asset.id}
+              activeBagView={activeBagView}
               asset={asset}
               usdPrice={fetchedPriceData}
+              addAsset={addAssetsToBag}
               removeAsset={removeAssetsFromBag}
               showRemove={true}
               isMobile={isMobile}

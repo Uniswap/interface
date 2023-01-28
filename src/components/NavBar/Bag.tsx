@@ -2,6 +2,7 @@ import { NavIcon } from 'components/NavBar/NavIcon'
 import { useIsNftProfilePage } from 'hooks/useIsNftPage'
 import { BagIcon, HundredsOverflowIcon, TagIcon } from 'nft/components/icons'
 import { useBag, useSellAsset } from 'nft/hooks'
+import { BagItemStatus } from 'nft/types'
 import { useCallback } from 'react'
 import styled from 'styled-components/macro'
 import shallow from 'zustand/shallow'
@@ -35,7 +36,9 @@ export const Bag = () => {
     setBagExpanded({ bagExpanded: !bagExpanded })
   }, [bagExpanded, setBagExpanded])
 
-  const bagQuantity = isProfilePage ? sellAssets.length : itemsInBag.length
+  const bagQuantity = isProfilePage
+    ? sellAssets.length
+    : itemsInBag.filter((item) => item.status !== BagItemStatus.SAVED_FOR_LATER).length
   const bagHasItems = bagQuantity > 0
 
   return (
