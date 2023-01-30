@@ -146,8 +146,6 @@ export const SearchBarDropdown = ({
   const { chainId } = useWeb3React()
   const { data: trendingTokenData, loading: trendingTokensAreLoading } = useTrendingTokensQuery({
     variables: { chain: chainIdToBackendName(chainId) },
-    fetchPolicy: 'network-only', // Used for first execution
-    nextFetchPolicy: 'cache-first', // Used for subsequent executions
   })
 
   const trendingTokenResults = useMemo(
