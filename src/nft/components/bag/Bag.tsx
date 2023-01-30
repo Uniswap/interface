@@ -204,7 +204,8 @@ const Bag = () => {
 
   const handleCloseBag = useCallback(() => {
     setBagExpanded({ bagExpanded: false, manualClose: true })
-  }, [setBagExpanded])
+    setActiveBagView(isProfilePage ? BagView.SELL : BagView.MAIN)
+  }, [setBagExpanded, setActiveBagView, isProfilePage])
 
   const fetchAssets = async () => {
     const itemsToBuy = itemsInBag
