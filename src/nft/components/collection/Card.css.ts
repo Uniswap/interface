@@ -1,5 +1,4 @@
 import { style } from '@vanilla-extract/css'
-import { calc } from '@vanilla-extract/css-utils'
 import { sprinkles, themeVars, vars } from 'nft/css/sprinkles.css'
 
 export const card = style([
@@ -108,7 +107,9 @@ export const playbackSwitch = style([
     zIndex: '1',
   }),
   {
-    marginLeft: calc.subtract('100%', '50px'),
-    transform: 'translateY(-56px)',
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
   },
 ])
