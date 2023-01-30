@@ -2,19 +2,19 @@ import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { formatUSDPrice } from '@uniswap/conedison/format'
 import clsx from 'clsx'
-import AssetLogo from 'components/Logo/AssetLogo'
+import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import { L2NetworkLogo, LogoContainer } from 'components/Tokens/TokenTable/TokenRow'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { getChainInfo } from 'constants/chainInfo'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { checkWarning } from 'constants/tokenSafety'
-import { Chain } from 'graphql/data/__generated__/types-and-hooks'
-import { chainIdToBackendName, getTokenDetailsURL } from 'graphql/data/util'
+import { checkSearchTokenWarning } from 'constants/tokenSafety'
+import { Chain, TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
+import { SearchToken } from 'graphql/data/SearchTokens'
+import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
 import { vars } from 'nft/css/sprinkles.css'
-import { FungibleToken, GenieCollection } from 'nft/types'
+import { GenieCollection } from 'nft/types'
 import { ethNumberStandardFormatter } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
 import { useCallback, useEffect, useState } from 'react'
@@ -130,7 +130,7 @@ export const CollectionRow = ({
 }
 
 interface TokenRowProps {
-  token: FungibleToken
+  token: SearchToken
   isHovered: boolean
   setHoveredIndex: (index: number | undefined) => void
   toggleOpen: () => void
@@ -143,13 +143,15 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
   const navigate = useNavigate()
 
   const handleClick = useCallback(() => {
-    addRecentlySearchedAsset({ ...token, chain: chainIdToBackendName(token.chainId) })
+    const address = !token.address && token.standard === TokenStandard.Native ? 'NATIVE' : token.address
+    address && addRecentlySearchedAsset({ address, chain: token.chain })
+
     toggleOpen()
     sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
   }, [addRecentlySearchedAsset, token, toggleOpen, eventProperties])
 
-  const L2Icon = getChainInfo(token.chainId)?.circleLogoUrl
-  const tokenDetailsPath = getTokenDetailsURL(token.address, undefined, token.chainId)
+  const L2Icon = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[token.chain])?.circleLogoUrl
+  const tokenDetailsPath = getTokenDetailsURL(token)
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
@@ -165,7 +167,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
     }
   }, [toggleOpen, isHovered, token, navigate, handleClick, tokenDetailsPath])
 
-  const arrow = getDeltaArrow(token.price24hChange, 18)
+  const arrow = getDeltaArrow(token.market?.pricePercentChange?.value, 18)
 
   return (
     <Link
@@ -179,36 +181,29 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
     >
       <Row style={{ width: '65%' }}>
         <StyledLogoContainer>
-          <AssetLogo
-            isNative={token.address === NATIVE_CHAIN_ID}
-            address={token.address}
-            chainId={token.chainId}
-            symbol={token.symbol}
-            size="36px"
-            backupImg={token.logoURI}
-          />
+          <QueryTokenLogo token={token} symbol={token.symbol} size="36px" backupImg={token.project?.logoUrl} />
           <L2NetworkLogo networkUrl={L2Icon} size="16px" />
         </StyledLogoContainer>
         <Column className={styles.suggestionPrimaryContainer}>
           <Row gap="4" width="full">
             <Box className={styles.primaryText}>{token.name}</Box>
-            <TokenSafetyIcon warning={checkWarning(token.address)} />
+            <TokenSafetyIcon warning={checkSearchTokenWarning(token)} />
           </Row>
           <Box className={styles.secondaryText}>{token.symbol}</Box>
         </Column>
       </Row>
 
       <Column className={styles.suggestionSecondaryContainer}>
-        {token.priceUsd && (
+        {token.market?.price?.value && (
           <Row gap="4">
-            <Box className={styles.primaryText}>{formatUSDPrice(token.priceUsd)}</Box>
+            <Box className={styles.primaryText}>{formatUSDPrice(token.market.price.value)}</Box>
           </Row>
         )}
-        {token.price24hChange && (
+        {token.market?.pricePercentChange?.value && (
           <PriceChangeContainer>
             <ArrowCell>{arrow}</ArrowCell>
-            <PriceChangeText isNegative={token.price24hChange < 0}>
-              {Math.abs(token.price24hChange).toFixed(2)}%
+            <PriceChangeText isNegative={token.market.pricePercentChange.value < 0}>
+              {Math.abs(token.market.pricePercentChange.value).toFixed(2)}%
             </PriceChangeText>
           </PriceChangeContainer>
         )}

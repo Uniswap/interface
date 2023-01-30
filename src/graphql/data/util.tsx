@@ -1,6 +1,5 @@
 import { QueryResult } from '@apollo/client'
 import { SupportedChainId } from 'constants/chains'
-import { ZERO_ADDRESS } from 'constants/misc'
 import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import ms from 'ms.macro'
 import { useEffect } from 'react'
@@ -96,17 +95,8 @@ export const CHAIN_NAME_TO_CHAIN_ID: { [key: string]: SupportedChainId } = {
 
 export const BACKEND_CHAIN_NAMES: Chain[] = [Chain.Ethereum, Chain.Polygon, Chain.Optimism, Chain.Arbitrum, Chain.Celo]
 
-export function getTokenDetailsURL(address: string, chainName?: Chain, chainId?: number) {
-  if (address === ZERO_ADDRESS && chainId && chainId === SupportedChainId.MAINNET) {
-    return `/tokens/${CHAIN_ID_TO_BACKEND_NAME[chainId].toLowerCase()}/${NATIVE_CHAIN_ID}`
-  } else if (chainName) {
-    return `/tokens/${chainName.toLowerCase()}/${address}`
-  } else if (chainId) {
-    const chainName = CHAIN_ID_TO_BACKEND_NAME[chainId]
-    return chainName ? `/tokens/${chainName.toLowerCase()}/${address}` : ''
-  } else {
-    return ''
-  }
+export function getTokenDetailsURL({ address, chain }: { address?: string | null; chain: Chain }) {
+  return `/tokens/${chain.toLowerCase()}/${address ?? NATIVE_CHAIN_ID}`
 }
 
 export function unwrapToken<

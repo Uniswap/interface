@@ -14,7 +14,6 @@ import { Row } from 'nft/components/Flex'
 import { magicalGradientOnHover } from 'nft/css/common.css'
 import { useIsMobile, useIsTablet } from 'nft/hooks'
 import { fetchSearchCollections } from 'nft/queries'
-import { parseFungibleTokens } from 'nft/types/navbar/navbar'
 import { ChangeEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
@@ -67,9 +66,7 @@ export const SearchBar = () => {
   )
 
   const { chainId } = useWeb3React()
-  const { data: searchQueryTokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue, chainId ?? 1)
-
-  const tokens = useMemo(() => parseFungibleTokens(searchQueryTokens), [searchQueryTokens])
+  const { data: tokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue, chainId ?? 1)
 
   const isNFTPage = useIsNftPage()
 

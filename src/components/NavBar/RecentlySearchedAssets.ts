@@ -1,7 +1,8 @@
 import { Chain, NftCollection, useRecentlySearchedAssetsQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { SearchToken } from 'graphql/data/SearchTokens'
 import { useAtom } from 'jotai'
 import { atomWithStorage, useAtomValue } from 'jotai/utils'
-import { FungibleToken, GenieCollection, parseFungibleTokens } from 'nft/types'
+import { GenieCollection } from 'nft/types'
 import { useCallback, useMemo } from 'react'
 
 type RecentlySearchedAsset = {
@@ -18,7 +19,9 @@ export function useAddRecentlySearchedAsset() {
   return useCallback(
     (asset: RecentlySearchedAsset) => {
       // Removes the new asset if it was already in the array
-      const newHistory = searchHistory.filter((oldAsset) => oldAsset.address !== asset.address)
+      const newHistory = searchHistory.filter(
+        (oldAsset) => oldAsset.address !== asset.address || oldAsset.address !== asset.chain
+      )
       newHistory.unshift(asset)
       updateSearchHistory(newHistory)
     },
@@ -29,6 +32,10 @@ export function useAddRecentlySearchedAsset() {
 export function useRecentlySearchedAssets() {
   const history = useAtomValue(recentlySearchedAssetsAtom)
   const shortenedHistory = useMemo(() => history.slice(0, 4), [history])
+  const test = shortenedHistory.map((token) => ({
+    address: token.address === 'NATIVE' ? (null as unknown as string) : token.address,
+    chain: token.chain,
+  }))
 
   const { data: queryData, loading } = useRecentlySearchedAssetsQuery({
     variables: {
@@ -46,9 +53,8 @@ export function useRecentlySearchedAssets() {
     if (shortenedHistory.length === 0) return []
     else if (!queryData) return undefined
     // Collects both tokens and collections in a map, so they can later be returned in original order
-    const resultsMap: { [key: string]: GenieCollection | FungibleToken } = {}
+    const resultsMap: { [key: string]: GenieCollection | SearchToken } = {}
 
-    const tokens = queryData?.tokens && parseFungibleTokens(queryData.tokens)
     const queryCollections = queryData?.nftCollections?.edges.map((edge) => edge.node as NonNullable<NftCollection>)
     const collections = queryCollections?.map(
       (queryCollection): GenieCollection => {
@@ -66,13 +72,14 @@ export function useRecentlySearchedAssets() {
       [queryCollections]
     )
     collections?.forEach((collection) => (resultsMap[collection.address] = collection))
-    tokens?.forEach((token) => {
-      if (token.address) resultsMap[token.address] = token
+    queryData.tokens?.forEach((token) => {
+      resultsMap[token.address ?? `NATIVE-${token.chain}`] = token
     })
 
-    const data: (FungibleToken | GenieCollection)[] = []
+    const data: (SearchToken | GenieCollection)[] = []
     shortenedHistory.forEach((asset) => {
-      if (resultsMap[asset.address]) data.push(resultsMap[asset.address])
+      const address = asset.address === 'NATIVE' ? `NATIVE-${asset.chain}` : asset.address
+      if (resultsMap[address]) data.push(resultsMap[address])
     })
     return data
   }, [queryData, shortenedHistory])
