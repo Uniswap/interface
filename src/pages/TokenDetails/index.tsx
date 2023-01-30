@@ -36,6 +36,7 @@ export default function TokenDetailsPage() {
     },
   })
 
+  // Saves already-loaded chart data into state to display while tokenPriceQuery is undefined timePeriod input changes
   const [currentPriceQuery, setCurrentPriceQuery] = useState(tokenPriceQuery)
   useEffect(() => {
     if (tokenPriceQuery) setCurrentPriceQuery(tokenPriceQuery)
