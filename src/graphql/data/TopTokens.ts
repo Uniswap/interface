@@ -15,7 +15,15 @@ import {
   useTopTokens100Query,
   useTopTokensSparklineQuery,
 } from './__generated__/types-and-hooks'
-import { CHAIN_NAME_TO_CHAIN_ID, isPricePoint, PricePoint, toHistoryDuration, unwrapToken } from './util'
+import {
+  CHAIN_NAME_TO_CHAIN_ID,
+  isPricePoint,
+  PollingInterval,
+  PricePoint,
+  toHistoryDuration,
+  unwrapToken,
+  usePollQueryWhileMounted,
+} from './util'
 
 gql`
   query TopTokens100($duration: HistoryDuration!, $chain: Chain!) {
@@ -26,24 +34,30 @@ gql`
       address
       symbol
       market(currency: USD) {
+        id
         totalValueLocked {
+          id
           value
           currency
         }
         price {
+          id
           value
           currency
         }
         pricePercentChange(duration: $duration) {
+          id
           currency
           value
         }
         volume(duration: $duration) {
+          id
           value
           currency
         }
       }
       project {
+        id
         logoUrl
       }
     }
@@ -53,9 +67,13 @@ gql`
 gql`
   query TopTokensSparkline($duration: HistoryDuration!, $chain: Chain!) {
     topTokens(pageSize: 100, page: 1, chain: $chain) {
+      id
       address
+      chain
       market(currency: USD) {
+        id
         priceHistory(duration: $duration) {
+          id
           timestamp
           value
         }
@@ -64,11 +82,12 @@ gql`
   }
 `
 
-function useSortedTokens(tokens: NonNullable<TopTokens100Query['topTokens']>) {
+function useSortedTokens(tokens: TopTokens100Query['topTokens']) {
   const sortMethod = useAtomValue(sortMethodAtom)
   const sortAscending = useAtomValue(sortAscendingAtom)
 
   return useMemo(() => {
+    if (!tokens) return undefined
     let tokenArray = Array.from(tokens)
     switch (sortMethod) {
       case TokenSortMethod.PRICE:
@@ -93,12 +112,13 @@ function useSortedTokens(tokens: NonNullable<TopTokens100Query['topTokens']>) {
   }, [tokens, sortMethod, sortAscending])
 }
 
-function useFilteredTokens(tokens: NonNullable<TopTokens100Query['topTokens']>) {
+function useFilteredTokens(tokens: TopTokens100Query['topTokens']) {
   const filterString = useAtomValue(filterStringAtom)
 
   const lowercaseFilterString = useMemo(() => filterString.toLowerCase(), [filterString])
 
   return useMemo(() => {
+    if (!tokens) return undefined
     let returnTokens = tokens
     if (lowercaseFilterString) {
       returnTokens = returnTokens?.filter((token) => {
@@ -128,9 +148,12 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   const chainId = CHAIN_NAME_TO_CHAIN_ID[chain]
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
 
-  const { data: sparklineQuery } = useTopTokensSparklineQuery({
-    variables: { duration, chain },
-  })
+  const { data: sparklineQuery } = usePollQueryWhileMounted(
+    useTopTokensSparklineQuery({
+      variables: { duration, chain },
+    }),
+    PollingInterval.Slow
+  )
 
   const sparklines = useMemo(() => {
     const unwrappedTokens = sparklineQuery?.topTokens?.map((topToken) => unwrapToken(chainId, topToken))
@@ -141,17 +164,18 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
     return map
   }, [chainId, sparklineQuery?.topTokens])
 
-  const { data, loading: loadingTokens } = useTopTokens100Query({
-    variables: { duration, chain },
-  })
-  const unwrappedTokens = useMemo(
-    () => data?.topTokens?.map((token) => unwrapToken(chainId, token)) ?? [],
-    [chainId, data]
+  const { data, loading: loadingTokens } = usePollQueryWhileMounted(
+    useTopTokens100Query({
+      variables: { duration, chain },
+    }),
+    PollingInterval.Fast
   )
+
+  const unwrappedTokens = useMemo(() => data?.topTokens?.map((token) => unwrapToken(chainId, token)), [chainId, data])
   const tokenVolumeRank = useMemo(
     () =>
       unwrappedTokens
-        .sort((a, b) => {
+        ?.sort((a, b) => {
           if (!a.market?.volume || !b.market?.volume) return 0
           return a.market.volume.value > b.market.volume.value ? -1 : 1
         })
@@ -161,7 +185,7 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
             ...acc,
             [cur.address]: i + 1,
           }
-        }, {}),
+        }, {}) ?? {},
     [unwrappedTokens]
   )
   const filteredTokens = useFilteredTokens(unwrappedTokens)

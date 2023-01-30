@@ -827,19 +827,21 @@ export enum TransactionStatus {
 }
 
 export type TokenQueryVariables = Exact<{
-  contract: ContractInput;
+  chain: Chain;
+  address?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type TokenQuery = { __typename?: 'Query', tokens?: Array<{ __typename?: 'Token', id: string, decimals?: number, name?: string, chain: Chain, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', totalValueLocked?: { __typename?: 'Amount', value: number, currency?: Currency }, price?: { __typename?: 'Amount', value: number, currency?: Currency }, volume24H?: { __typename?: 'Amount', value: number, currency?: Currency }, priceHigh52W?: { __typename?: 'Amount', value: number }, priceLow52W?: { __typename?: 'Amount', value: number } }, project?: { __typename?: 'TokenProject', description?: string, homepageUrl?: string, twitterName?: string, logoUrl?: string, tokens: Array<{ __typename?: 'Token', chain: Chain, address?: string }> } }> };
+export type TokenQuery = { __typename?: 'Query', token?: { __typename?: 'Token', id: string, decimals?: number, name?: string, chain: Chain, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', id: string, totalValueLocked?: { __typename?: 'Amount', id: string, value: number, currency?: Currency }, price?: { __typename?: 'Amount', id: string, value: number, currency?: Currency }, volume24H?: { __typename?: 'Amount', id: string, value: number, currency?: Currency }, priceHigh52W?: { __typename?: 'Amount', id: string, value: number }, priceLow52W?: { __typename?: 'Amount', id: string, value: number } }, project?: { __typename?: 'TokenProject', id: string, description?: string, homepageUrl?: string, twitterName?: string, logoUrl?: string, tokens: Array<{ __typename?: 'Token', id: string, chain: Chain, address?: string }> } } };
 
 export type TokenPriceQueryVariables = Exact<{
-  contract: ContractInput;
+  chain: Chain;
+  address?: InputMaybe<Scalars['String']>;
   duration: HistoryDuration;
 }>;
 
 
-export type TokenPriceQuery = { __typename?: 'Query', tokens?: Array<{ __typename?: 'Token', market?: { __typename?: 'TokenMarket', price?: { __typename?: 'Amount', value: number }, priceHistory?: Array<{ __typename?: 'TimestampedAmount', timestamp: number, value: number }> } }> };
+export type TokenPriceQuery = { __typename?: 'Query', token?: { __typename?: 'Token', id: string, address?: string, chain: Chain, market?: { __typename?: 'TokenMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number }, priceHistory?: Array<{ __typename?: 'TimestampedAmount', id: string, timestamp: number, value: number }> } } };
 
 export type TopTokens100QueryVariables = Exact<{
   duration: HistoryDuration;
@@ -847,7 +849,7 @@ export type TopTokens100QueryVariables = Exact<{
 }>;
 
 
-export type TopTokens100Query = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', id: string, name?: string, chain: Chain, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', totalValueLocked?: { __typename?: 'Amount', value: number, currency?: Currency }, price?: { __typename?: 'Amount', value: number, currency?: Currency }, pricePercentChange?: { __typename?: 'Amount', currency?: Currency, value: number }, volume?: { __typename?: 'Amount', value: number, currency?: Currency } }, project?: { __typename?: 'TokenProject', logoUrl?: string } }> };
+export type TopTokens100Query = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', id: string, name?: string, chain: Chain, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', id: string, totalValueLocked?: { __typename?: 'Amount', id: string, value: number, currency?: Currency }, price?: { __typename?: 'Amount', id: string, value: number, currency?: Currency }, pricePercentChange?: { __typename?: 'Amount', id: string, currency?: Currency, value: number }, volume?: { __typename?: 'Amount', id: string, value: number, currency?: Currency } }, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string } }> };
 
 export type TopTokensSparklineQueryVariables = Exact<{
   duration: HistoryDuration;
@@ -855,7 +857,7 @@ export type TopTokensSparklineQueryVariables = Exact<{
 }>;
 
 
-export type TopTokensSparklineQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', address?: string, market?: { __typename?: 'TokenMarket', priceHistory?: Array<{ __typename?: 'TimestampedAmount', timestamp: number, value: number }> } }> };
+export type TopTokensSparklineQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', id: string, address?: string, chain: Chain, market?: { __typename?: 'TokenMarket', id: string, priceHistory?: Array<{ __typename?: 'TimestampedAmount', id: string, timestamp: number, value: number }> } }> };
 
 export type AssetQueryVariables = Exact<{
   address: Scalars['String'];
@@ -900,8 +902,8 @@ export type NftBalanceQuery = { __typename?: 'Query', nftBalances?: { __typename
 
 
 export const TokenDocument = gql`
-    query Token($contract: ContractInput!) {
-  tokens(contracts: [$contract]) {
+    query Token($chain: Chain!, $address: String) {
+  token(chain: $chain, address: $address) {
     id
     decimals
     name
@@ -909,31 +911,39 @@ export const TokenDocument = gql`
     address
     symbol
     market(currency: USD) {
+      id
       totalValueLocked {
+        id
         value
         currency
       }
       price {
+        id
         value
         currency
       }
       volume24H: volume(duration: DAY) {
+        id
         value
         currency
       }
       priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {
+        id
         value
       }
       priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {
+        id
         value
       }
     }
     project {
+      id
       description
       homepageUrl
       twitterName
       logoUrl
       tokens {
+        id
         chain
         address
       }
@@ -954,7 +964,8 @@ export const TokenDocument = gql`
  * @example
  * const { data, loading, error } = useTokenQuery({
  *   variables: {
- *      contract: // value for 'contract'
+ *      chain: // value for 'chain'
+ *      address: // value for 'address'
  *   },
  * });
  */
@@ -970,13 +981,19 @@ export type TokenQueryHookResult = ReturnType<typeof useTokenQuery>;
 export type TokenLazyQueryHookResult = ReturnType<typeof useTokenLazyQuery>;
 export type TokenQueryResult = Apollo.QueryResult<TokenQuery, TokenQueryVariables>;
 export const TokenPriceDocument = gql`
-    query TokenPrice($contract: ContractInput!, $duration: HistoryDuration!) {
-  tokens(contracts: [$contract]) {
+    query TokenPrice($chain: Chain!, $address: String, $duration: HistoryDuration!) {
+  token(chain: $chain, address: $address) {
+    id
+    address
+    chain
     market(currency: USD) {
+      id
       price {
+        id
         value
       }
       priceHistory(duration: $duration) {
+        id
         timestamp
         value
       }
@@ -997,7 +1014,8 @@ export const TokenPriceDocument = gql`
  * @example
  * const { data, loading, error } = useTokenPriceQuery({
  *   variables: {
- *      contract: // value for 'contract'
+ *      chain: // value for 'chain'
+ *      address: // value for 'address'
  *      duration: // value for 'duration'
  *   },
  * });
@@ -1022,24 +1040,30 @@ export const TopTokens100Document = gql`
     address
     symbol
     market(currency: USD) {
+      id
       totalValueLocked {
+        id
         value
         currency
       }
       price {
+        id
         value
         currency
       }
       pricePercentChange(duration: $duration) {
+        id
         currency
         value
       }
       volume(duration: $duration) {
+        id
         value
         currency
       }
     }
     project {
+      id
       logoUrl
     }
   }
@@ -1077,9 +1101,13 @@ export type TopTokens100QueryResult = Apollo.QueryResult<TopTokens100Query, TopT
 export const TopTokensSparklineDocument = gql`
     query TopTokensSparkline($duration: HistoryDuration!, $chain: Chain!) {
   topTokens(pageSize: 100, page: 1, chain: $chain) {
+    id
     address
+    chain
     market(currency: USD) {
+      id
       priceHistory(duration: $duration) {
+        id
         timestamp
         value
       }
