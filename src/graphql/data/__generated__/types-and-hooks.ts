@@ -832,7 +832,7 @@ export type RecentlySearchedAssetsQueryVariables = Exact<{
 }>;
 
 
-export type RecentlySearchedAssetsQuery = { __typename?: 'Query', nftCollections?: { __typename?: 'NftCollectionConnection', edges: Array<{ __typename?: 'NftCollectionEdge', node: { __typename?: 'NftCollection', collectionId: string, isVerified?: boolean, name?: string, numAssets?: number, image?: { __typename?: 'Image', url: string }, nftContracts?: Array<{ __typename?: 'NftContract', address: string }>, markets?: Array<{ __typename?: 'NftCollectionMarket', floorPrice?: { __typename?: 'TimestampedAmount', currency?: Currency, value: number }, listings?: { __typename?: 'TimestampedAmount', value: number } }> } }> }, tokens?: Array<{ __typename?: 'Token', id: string, decimals?: number, name?: string, chain: Chain, standard?: TokenStandard, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number, currency?: Currency }, pricePercentChange?: { __typename?: 'Amount', id: string, value: number }, volume24H?: { __typename?: 'Amount', id: string, value: number, currency?: Currency } }, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string, safetyLevel?: SafetyLevel } }> };
+export type RecentlySearchedAssetsQuery = { __typename?: 'Query', nftCollections?: { __typename?: 'NftCollectionConnection', edges: Array<{ __typename?: 'NftCollectionEdge', node: { __typename?: 'NftCollection', collectionId: string, isVerified?: boolean, name?: string, numAssets?: number, image?: { __typename?: 'Image', url: string }, nftContracts?: Array<{ __typename?: 'NftContract', address: string }>, markets?: Array<{ __typename?: 'NftCollectionMarket', floorPrice?: { __typename?: 'TimestampedAmount', currency?: Currency, value: number } }> } }> }, tokens?: Array<{ __typename?: 'Token', id: string, decimals?: number, name?: string, chain: Chain, standard?: TokenStandard, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number, currency?: Currency }, pricePercentChange?: { __typename?: 'Amount', id: string, value: number }, volume24H?: { __typename?: 'Amount', id: string, value: number, currency?: Currency } }, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string, safetyLevel?: SafetyLevel } }> };
 
 export type SearchTokensQueryVariables = Exact<{
   searchQuery: Scalars['String'];
@@ -941,9 +941,6 @@ export const RecentlySearchedAssetsDocument = gql`
         markets(currencies: ETH) {
           floorPrice {
             currency
-            value
-          }
-          listings {
             value
           }
         }

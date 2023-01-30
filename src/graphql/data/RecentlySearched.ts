@@ -20,9 +20,6 @@ gql`
               currency
               value
             }
-            listings {
-              value
-            }
           }
         }
       }
