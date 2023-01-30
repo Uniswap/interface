@@ -61,7 +61,8 @@ export function useRecentlySearchedAssets() {
   })
 
   const data = useMemo(() => {
-    if (!queryData) return undefined
+    if (shortenedHistory.length === 0) return []
+    else if (!queryData) return undefined
     // Collects both tokens and collections in a map, so they can later be returned in original order
     const resultsMap: { [key: string]: GenieCollection | FungibleToken } = {}
 
