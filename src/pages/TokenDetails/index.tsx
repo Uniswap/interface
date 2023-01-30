@@ -36,10 +36,10 @@ export default function TokenDetailsPage() {
     },
   })
 
-  const [currentPriceData, setCurrentPriceData] = useState(tokenPriceQuery)
+  const [currentPriceQuery, setCurrentPriceQuery] = useState(tokenPriceQuery)
   useEffect(() => {
-    if (tokenPriceQuery) setCurrentPriceData(tokenPriceQuery)
-  }, [setCurrentPriceData, tokenPriceQuery])
+    if (tokenPriceQuery) setCurrentPriceQuery(tokenPriceQuery)
+  }, [setCurrentPriceQuery, tokenPriceQuery])
 
   if (!tokenQuery) return <TokenDetailsPageSkeleton />
 
@@ -48,7 +48,7 @@ export default function TokenDetailsPage() {
       urlAddress={tokenAddress}
       chain={chain}
       tokenQuery={tokenQuery}
-      tokenPriceQuery={currentPriceData}
+      tokenPriceQuery={currentPriceQuery}
       onChangeTimePeriod={setTimePeriod}
     />
   )
