@@ -10,7 +10,7 @@
     "contracts:compile": "yarn contracts:compile:abi",
     "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types './src/abis/**/*.json'",
     "debug": "react-devtools",
-    "deduplicate": "yarn-deduplicate --strategy=highest",
+    "deduplicate": "yarn-deduplicate --strategy=fewer",
     "deploy:ios:local:dev": "yarn prepare-for-pr && fastlane ios buildAndShip --env dev",
     "deploy:ios:local:beta": "yarn prepare-for-pr && fastlane ios buildAndShip --env beta",
     "deploy:ios:local:prod": "yarn prepare-for-pr && fastlane ios buildAndShip --env prod",
