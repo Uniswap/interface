@@ -1,6 +1,6 @@
+import { Field } from '@uniswap/widgets'
 import { parse } from 'qs'
 
-import { Field } from './actions'
 import { queryParametersToSwapState } from './hooks'
 
 describe('hooks', () => {

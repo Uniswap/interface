@@ -22,9 +22,11 @@ function includesDefaultToken(tokens: SwapTokens) {
 export function useSyncWidgetInputs({
   token,
   onTokenChange,
+  defaultField,
 }: {
   token?: Currency
   onTokenChange?: (token: Currency) => void
+  defaultField: Field
 }) {
   const trace = useTrace({ section: InterfaceSectionName.WIDGET })
 
@@ -36,11 +38,11 @@ export function useSyncWidgetInputs({
     setTokens((tokens) => {
       const update = { ...tokens, default: token }
       if (!includesDefaultToken(update)) {
-        return { [Field.OUTPUT]: update.default, default: update.default }
+        return { [defaultField]: update.default, default: update.default }
       }
       return update
     })
-  }, [token])
+  }, [token, defaultField])
 
   const onAmountChange = useCallback(
     (field: Field, amount: string, origin?: 'max') => {

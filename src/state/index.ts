@@ -14,7 +14,6 @@ import logs from './logs/slice'
 import mint from './mint/reducer'
 import mintV3 from './mint/v3/reducer'
 import { routingApi } from './routing/slice'
-import swap from './swap/reducer'
 import transactions from './transactions/reducer'
 import user from './user/reducer'
 import wallets from './wallets/reducer'
@@ -28,7 +27,6 @@ const store = configureStore({
     connection,
     transactions,
     wallets,
-    swap,
     mint,
     mintV3,
     burn,
