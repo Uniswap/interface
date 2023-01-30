@@ -109,7 +109,7 @@ const fetchTokens = async (
 
     const response = await axios.get(url)
     const { tokens = [] } = response.data.data
-    return tokens.map(formatAndCacheToken)
+    return filterTruthy(tokens.map(formatAndCacheToken))
   } catch (error) {
     return []
   }
@@ -322,7 +322,7 @@ export function CurrencySearch({
       const fetchId = Date.now()
       fetchingToken.current = fetchId
       const nextPage = (page ?? pageCount) + 1
-      let tokens = []
+      let tokens: WrappedTokenInfo[] = []
       if (debouncedQuery) {
         tokens = await fetchTokens(debouncedQuery, nextPage, chainId)
       } else {
@@ -330,10 +330,9 @@ export function CurrencySearch({
       }
       if (fetchingToken.current === fetchId) {
         // sometimes, API slow, api fetch later has response sooner.
-        const parsedTokenList = filterTruthy(tokens)
         setPageCount(nextPage)
-        setFetchedTokens(current => (nextPage === 1 ? [] : current).concat(parsedTokenList))
-        setHasMoreToken(parsedTokenList.length === PAGE_SIZE && !!debouncedQuery)
+        setFetchedTokens(current => (nextPage === 1 ? [] : current).concat(tokens))
+        setHasMoreToken(tokens.length === PAGE_SIZE && !!debouncedQuery)
         fetchingToken.current = null
       }
     },

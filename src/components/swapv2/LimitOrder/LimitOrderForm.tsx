@@ -157,7 +157,7 @@ const LimitOrderForm = function LimitOrderForm({
 
     if (rate) {
       if (inputAmount) {
-        const output = calcOutput(inputAmount, rate, currencyIn.decimals, currencyOut.decimals)
+        const output = calcOutput(inputAmount, rate, currencyOut.decimals)
         setOuputAmount(output)
       }
       if (!invertRate) {
@@ -169,7 +169,7 @@ const LimitOrderForm = function LimitOrderForm({
     if (invertRate) {
       newRate.rate = calcInvert(invertRate)
       if (inputAmount) {
-        const output = calcOutput(inputAmount, newRate.rate, currencyIn.decimals, currencyOut.decimals)
+        const output = calcOutput(inputAmount, newRate.rate, currencyOut.decimals)
         setOuputAmount(output)
       }
       setRateInfo(newRate)
@@ -210,7 +210,7 @@ const LimitOrderForm = function LimitOrderForm({
     (input: string) => {
       setInputAmount(input)
       if (rateInfo.rate && currencyIn && currencyOut && input) {
-        setOuputAmount(calcOutput(input, rateInfo.rate, currencyIn.decimals, currencyOut.decimals))
+        setOuputAmount(calcOutput(input, rateInfo.rate, currencyOut.decimals))
       }
     },
     [rateInfo, currencyIn, currencyOut],
@@ -221,17 +221,17 @@ const LimitOrderForm = function LimitOrderForm({
   }
 
   const handleInputSelect = useCallback(
-    (currency: Currency) => {
+    (currency: Currency, resetRate = true) => {
       if (currencyOut && currency?.equals(currencyOut)) return
       setCurrencyIn(currency)
       setIsSelectCurrencyManual?.(true)
-      setRateInfo({ ...rateInfo, invertRate: '', rate: '' })
+      resetRate && setRateInfo({ ...rateInfo, invertRate: '', rate: '' })
     },
     [currencyOut, setCurrencyIn, setIsSelectCurrencyManual, rateInfo],
   )
 
   const switchToWeth = useCallback(() => {
-    handleInputSelect(currencyIn?.wrapped as Currency)
+    handleInputSelect(currencyIn?.wrapped as Currency, false)
   }, [currencyIn, handleInputSelect])
 
   const { isWrappingEth, setTxHashWrapped } = useWrapEthStatus(switchToWeth)

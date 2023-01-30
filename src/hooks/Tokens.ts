@@ -17,7 +17,7 @@ import { TokenAddressMap } from 'state/lists/reducer'
 import { TokenInfo, WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { NEVER_RELOAD, useMultipleContractSingleData, useSingleCallResult } from 'state/multicall/hooks'
 import { useUserAddedTokens } from 'state/user/hooks'
-import { isAddress } from 'utils'
+import { filterTruthy, isAddress } from 'utils'
 
 import useDebounce from './useDebounce'
 
@@ -240,16 +240,19 @@ export const fetchTokenByAddress = async (address: string, chainId: ChainId) => 
 export const fetchListTokenByAddresses = async (address: string[], chainId: ChainId) => {
   const response = await axios.get(`${KS_SETTING_API}/v1/tokens?addresses=${address}&chainIds=${chainId}`)
   const tokens = response?.data?.data?.tokens ?? []
-  return tokens.map(formatAndCacheToken)
+  return filterTruthy(tokens.map(formatAndCacheToken)) as WrappedTokenInfo[]
 }
 
 export const formatAndCacheToken = (tokenResponse: TokenInfo) => {
   try {
     const tokenInfo = new WrappedTokenInfo(tokenResponse)
+    if (!tokenInfo.decimals && !tokenInfo.symbol && !tokenInfo.name) {
+      return
+    }
     cacheTokens[tokenResponse.address] = tokenInfo
     return tokenInfo
   } catch (e) {
-    return null
+    return
   }
 }
 
