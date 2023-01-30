@@ -21,7 +21,7 @@ export function useAddRecentlySearchedAsset() {
     (asset: RecentlySearchedAsset) => {
       // Removes the new asset if it was already in the array
       const newHistory = searchHistory.filter(
-        (oldAsset) => oldAsset.address !== asset.address || oldAsset.address !== asset.chain
+        (oldAsset) => !(oldAsset.address === asset.address && oldAsset.address === asset.chain)
       )
       newHistory.unshift(asset)
       updateSearchHistory(newHistory)
