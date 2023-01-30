@@ -882,7 +882,11 @@ export function PositionPage() {
                         <Trans>Min price</Trans>
                       </ExtentsText>
                       <ThemedText.DeprecatedMediumHeader textAlign="center">
-                        {formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)}
+                        {formatTickPrice({
+                          price: priceLower,
+                          atLimit: tickAtLimit,
+                          direction: Bound.LOWER,
+                        })}
                       </ThemedText.DeprecatedMediumHeader>
                       <ExtentsText>
                         {' '}
@@ -906,7 +910,11 @@ export function PositionPage() {
                         <Trans>Max price</Trans>
                       </ExtentsText>
                       <ThemedText.DeprecatedMediumHeader textAlign="center">
-                        {formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)}
+                        {formatTickPrice({
+                          price: priceUpper,
+                          atLimit: tickAtLimit,
+                          direction: Bound.UPPER,
+                        })}
                       </ThemedText.DeprecatedMediumHeader>
                       <ExtentsText>
                         {' '}

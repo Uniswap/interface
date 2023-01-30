@@ -21,25 +21,25 @@ import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { isSupportedChain } from 'constants/chains'
 import { usePermit2Enabled } from 'featureFlags/flags/permit2'
-import usePermit, { PermitState } from 'hooks/usePermit2'
+import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ReactNode } from 'react'
-import { AlertTriangle, ArrowDown, CheckCircle, HelpCircle, Info } from 'react-feather'
+import { ArrowDown, CheckCircle, HelpCircle, Info } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
-import { useTransactionAdder } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components/macro'
+import invariant from 'tiny-invariant'
 import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/formatNumbers'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
-import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary, ButtonYellow } from '../../components/Button'
+import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { GrayCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import SwapCurrencyInputPanel from '../../components/CurrencyInputPanel/SwapCurrencyInputPanel'
@@ -232,17 +232,20 @@ export default function Swap({ className }: { className?: string }) {
           },
     [independentField, parsedAmount, showWrap, trade]
   )
+  const fiatValueInput = useStablecoinValue(parsedAmounts[Field.INPUT])
+  const fiatValueOutput = useStablecoinValue(parsedAmounts[Field.OUTPUT])
 
   const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
     () => [!trade?.swaps, TradeState.LOADING === tradeState, TradeState.SYNCING === tradeState],
     [trade, tradeState]
   )
 
-  const fiatValueInput = useStablecoinValue(parsedAmounts[Field.INPUT])
-  const fiatValueOutput = useStablecoinValue(parsedAmounts[Field.OUTPUT])
+  const fiatValueTradeInput = useStablecoinValue(trade?.inputAmount)
+  const fiatValueTradeOutput = useStablecoinValue(trade?.outputAmount)
   const stablecoinPriceImpact = useMemo(
-    () => (routeIsSyncing ? undefined : computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)),
-    [fiatValueInput, fiatValueOutput, routeIsSyncing]
+    () =>
+      routeIsSyncing || !trade ? undefined : computeFiatValuePriceImpact(fiatValueTradeInput, fiatValueTradeOutput),
+    [fiatValueTradeInput, fiatValueTradeOutput, routeIsSyncing, trade]
   )
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
@@ -302,36 +305,33 @@ export default function Swap({ className }: { className?: string }) {
     const maximumAmountIn = trade?.maximumAmountIn(allowedSlippage)
     return maximumAmountIn?.currency.isToken ? (maximumAmountIn as CurrencyAmount<Token>) : undefined
   }, [allowedSlippage, trade])
-  const permit = usePermit(
-    permit2Enabled ? maximumAmountIn : undefined,
+  const allowance = usePermit2Allowance(
+    permit2Enabled
+      ? maximumAmountIn ??
+          (parsedAmounts[Field.INPUT]?.currency.isToken
+            ? (parsedAmounts[Field.INPUT] as CurrencyAmount<Token>)
+            : undefined)
+      : undefined,
     permit2Enabled && chainId ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
   )
-  const isApprovalLoading = permit.state === PermitState.APPROVAL_LOADING
-  const [isPermitPending, setIsPermitPending] = useState(false)
-  const [isPermitFailed, setIsPermitFailed] = useState(false)
-  const addTransaction = useTransactionAdder()
-  const updatePermit = useCallback(async () => {
-    setIsPermitPending(true)
+  const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
+  const [isAllowancePending, setIsAllowancePending] = useState(false)
+  const updateAllowance = useCallback(async () => {
+    invariant(allowance.state === AllowanceState.REQUIRED)
+    setIsAllowancePending(true)
     try {
-      const approval = await permit.callback?.()
-      if (approval) {
-        sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
-          chain_id: chainId,
-          token_symbol: maximumAmountIn?.currency.symbol,
-          token_address: maximumAmountIn?.currency.address,
-        })
-
-        const { response, info } = approval
-        addTransaction(response, info)
-      }
-      setIsPermitFailed(false)
+      await allowance.approveAndPermit()
+      sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
+        chain_id: chainId,
+        token_symbol: maximumAmountIn?.currency.symbol,
+        token_address: maximumAmountIn?.currency.address,
+      })
     } catch (e) {
       console.error(e)
-      setIsPermitFailed(true)
     } finally {
-      setIsPermitPending(false)
+      setIsAllowancePending(false)
     }
-  }, [addTransaction, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol, permit])
+  }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol])
 
   // check whether the user has approved the router on the input token
   const [approvalState, approveCallback] = useApproveCallbackFromTrade(
@@ -394,7 +394,7 @@ export default function Swap({ className }: { className?: string }) {
     allowedSlippage,
     recipient,
     signatureData,
-    permit
+    allowance.state === AllowanceState.ALLOWED ? allowance.permitSignature : undefined
   )
 
   const handleSwap = useCallback(() => {
@@ -574,8 +574,8 @@ export default function Swap({ className }: { className?: string }) {
               swapErrorMessage={swapErrorMessage}
               onDismiss={handleConfirmDismiss}
               swapQuoteReceivedDate={swapQuoteReceivedDate}
-              fiatValueInput={fiatValueInput}
-              fiatValueOutput={fiatValueOutput}
+              fiatValueInput={fiatValueTradeInput}
+              fiatValueOutput={fiatValueTradeOutput}
             />
 
             <div style={{ display: 'relative' }}>
@@ -790,34 +790,21 @@ export default function Swap({ className }: { className?: string }) {
                       </ButtonError>
                     </AutoColumn>
                   </AutoRow>
-                ) : isValid &&
-                  (permit.state === PermitState.APPROVAL_OR_PERMIT_NEEDED ||
-                    permit.state === PermitState.APPROVAL_LOADING) ? (
-                  <ButtonYellow
-                    onClick={updatePermit}
-                    disabled={isPermitPending || isApprovalLoading}
+                ) : isValid && allowance.state === AllowanceState.REQUIRED ? (
+                  <ButtonPrimary
+                    onClick={updateAllowance}
+                    disabled={isAllowancePending || isApprovalLoading}
                     style={{ gap: 14 }}
                   >
-                    {isPermitPending ? (
+                    {isAllowancePending ? (
                       <>
-                        <Loader size="20px" stroke={theme.accentWarning} />
-                        <ThemedText.SubHeader color="accentWarning">
-                          <Trans>Approve in your wallet</Trans>
-                        </ThemedText.SubHeader>
-                      </>
-                    ) : isPermitFailed ? (
-                      <>
-                        <AlertTriangle size={20} stroke={theme.accentWarning} />
-                        <ThemedText.SubHeader color="accentWarning">
-                          <Trans>Approval failed. Try again.</Trans>
-                        </ThemedText.SubHeader>
+                        <Loader size="20px" />
+                        <Trans>Approve in your wallet</Trans>
                       </>
                     ) : isApprovalLoading ? (
                       <>
-                        <Loader size="20px" stroke={theme.accentWarning} />
-                        <ThemedText.SubHeader color="accentWarning">
-                          <Trans>Approval pending</Trans>
-                        </ThemedText.SubHeader>
+                        <Loader size="20px" />
+                        <Trans>Approval pending</Trans>
                       </>
                     ) : (
                       <>
@@ -830,15 +817,13 @@ export default function Swap({ className }: { className?: string }) {
                               </Trans>
                             }
                           >
-                            <Info size={20} color={theme.accentWarning} />
+                            <Info size={20} />
                           </MouseoverTooltip>
                         </div>
-                        <ThemedText.SubHeader color="accentWarning">
-                          <Trans>Approve use of {currencies[Field.INPUT]?.symbol}</Trans>
-                        </ThemedText.SubHeader>
+                        <Trans>Approve use of {currencies[Field.INPUT]?.symbol}</Trans>
                       </>
                     )}
-                  </ButtonYellow>
+                  </ButtonPrimary>
                 ) : (
                   <ButtonError
                     onClick={() => {
@@ -860,9 +845,13 @@ export default function Swap({ className }: { className?: string }) {
                       routeIsSyncing ||
                       routeIsLoading ||
                       priceImpactTooHigh ||
-                      (permit2Enabled ? permit.state === PermitState.LOADING : Boolean(swapCallbackError))
+                      (permit2Enabled ? allowance.state !== AllowanceState.ALLOWED : Boolean(swapCallbackError))
                     }
-                    error={isValid && priceImpactSeverity > 2 && (permit2Enabled || !swapCallbackError)}
+                    error={
+                      isValid &&
+                      priceImpactSeverity > 2 &&
+                      (permit2Enabled ? allowance.state === AllowanceState.ALLOWED : !swapCallbackError)
+                    }
                   >
                     <Text fontSize={20} fontWeight={600}>
                       {swapInputError ? (

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-11-17 01:33\n"
+"PO-Revision-Date: 2023-01-16 17:04\n"
 "Last-Translator: \n"
 "Language: id_ID\n"
 "Language-Team: Indonesian\n"
@@ -21,12 +21,15 @@ msgstr ""
 msgid "$-"
 msgstr "$-"
 
-#: src/components/earn/PoolCard.tsx
 #: src/components/swap/GasEstimateBadge.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "${0}"
 msgstr "${0}"
+
+#: src/nft/components/profile/list/MarketplaceRow.tsx
+msgid "% max"
+msgstr ""
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "(View on Explorer)"
@@ -47,13 +50,6 @@ msgstr "({0})"
 #: src/pages/Swap/index.tsx
 msgid "- Remove recipient"
 msgstr "- Hapus penerima"
-
-#: src/components/earn/PoolCard.tsx
-#: src/components/earn/PoolCard.tsx
-#: src/pages/Earn/Manage.tsx
-#: src/pages/Earn/Manage.tsx
-msgid "0 UNI / week"
-msgstr "0 UNI / minggu"
 
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "24H volume"
@@ -120,9 +116,9 @@ msgstr "<0>Kiat:</0> Saat menambahkan likuiditas, Anda akan menerima token pool 
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
 msgstr "<0>Buka voting</0> untuk mempersiapkan usulan berikutnya."
 
-#: src/components/claim/ClaimModal.tsx
-msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
-msgstr "<0>🎉</0>Selamat datang di tim Unicorn :) <1>🎉</1>"
+#: src/components/MetaMaskConnectionErrorModal/index.tsx
+msgid "A MetaMask error caused your wallet to disconnect. Reload the page to reconnect."
+msgstr ""
 
 #: src/pages/Vote/Landing.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
@@ -132,7 +128,10 @@ msgstr "Memerlukan minimal 0,25% dari total pasokan UNI untuk mengirimkan propos
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "Pertukaran dengan ukuran ini mungkin memiliki dampak harga yang tinggi, mengingat likuiditas saat ini di kumpulan. Mungkin ada perbedaan besar antara jumlah token yang Anda masukkan dan apa yang akan Anda terima di token keluaran"
 
-#: src/components/Menu/index.tsx
+#: src/nft/components/profile/list/PriceTextInput.tsx
+msgid "ALREADY LISTED FOR"
+msgstr ""
+
 #: src/components/Tokens/TokenDetails/About.tsx
 msgid "About"
 msgstr "Tentang"
@@ -184,10 +183,6 @@ msgstr "Tambahkan lebih banyak likuiditas"
 msgid "Add {0}"
 msgstr "Tambahkan {0}"
 
-#: src/pages/Earn/Manage.tsx
-msgid "Add {0}-{1} liquidity"
-msgstr "Tambahkan {0}-{1} likuiditas"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Tambahkan {0}/{1} likuiditas V3"
@@ -197,6 +192,7 @@ msgid "Added"
 msgstr "Ditambahkan"
 
 #: src/nft/components/collection/CollectionAsset.tsx
+#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
 msgid "Added to bag"
 msgstr ""
 
@@ -253,8 +249,15 @@ msgstr "Terjadi kesalahan saat memuat token. Silakan coba lagi."
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Terjadi kesalahan saat mengeksekusi swap ini. Anda mungkin memerlukan peningkatan toleransi slip Anda. Jika tidak berhasil, kemungkinan token yang anda perdagangkan tidak cocok. Catatan: biaya transfer token rebase tidak cocok dengan Uniswap V3."
 
+#: src/pages/Swap/index.tsx
+msgid "Approval failed. Try again."
+msgstr ""
+
+#: src/pages/Swap/index.tsx
+msgid "Approval pending"
+msgstr "Persetujuan Tertunda"
+
 #: src/components/AccountDetailsV2/TransactionBody.tsx
-#: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "Setujui"
@@ -262,6 +265,14 @@ msgstr "Setujui"
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Approve Token"
 msgstr "Setujui Token"
+
+#: src/pages/Swap/index.tsx
+msgid "Approve in your wallet"
+msgstr "Setujui di dompet Anda"
+
+#: src/pages/Swap/index.tsx
+msgid "Approve use of {0}"
+msgstr ""
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -289,17 +300,9 @@ msgstr "Menyetujui"
 msgid "Approving {0}"
 msgstr "Menyetujui {0}"
 
-#: src/components/DowntimeWarning/index.tsx
-msgid "Arbitrum is in Beta and may experience downtime. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "Arbitrum dalam Beta dan mungkin mengalami downtime. Selama waktu henti, posisi Anda tidak akan mendapatkan biaya dan Anda tidak akan dapat menghapus likuiditas. <0>Baca selengkapnya.</0>"
-
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
 msgstr "Anda yakin?"
-
-#: src/components/claim/ClaimModal.tsx
-msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "Sebagai anggota komunitas Uniswap, Anda dapat mengklaim UNI untuk digunakan dalam voting suara dan pengaturan.<0/><1/><2>Baca selengkapnya tentang UNI</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
@@ -312,10 +315,6 @@ msgstr "Otomatis"
 #: src/components/Settings/index.tsx
 msgid "Auto Router API"
 msgstr "API Router Otomatis"
-
-#: src/components/earn/StakingModal.tsx
-msgid "Available to deposit: {0}"
-msgstr "Tersedia untuk disetor: {0}"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Back to wallet selection"
@@ -358,6 +357,15 @@ msgstr "Alamat yang Diblokir"
 msgid "Blocked from trading"
 msgstr ""
 
+#: src/components/FiatOnrampAnnouncement/index.tsx
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Buy crypto"
+msgstr ""
+
+#: src/nft/components/details/AssetActivity.tsx
+msgid "By"
+msgstr ""
+
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 msgstr "Dengan menambahkan likuiditas, Anda akan mendapatkan 0,3% dari semua perdagangan pada pasangan ini sebanding dengan bagian pool Anda. Biaya ditambahkan ke pool, bertambah secara real time dan dapat diklaim dengan menarik likuiditas Anda."
@@ -388,9 +396,6 @@ msgstr "Lihat panduan migrasi dan tutorial LP v3 kami."
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/pages/Earn/Manage.tsx
 msgid "Claim"
 msgstr "Klaim"
 
@@ -398,10 +403,7 @@ msgstr "Klaim"
 msgid "Claim <0/> for {0}"
 msgstr "Klaim <0/> untuk {0}"
 
-#: src/components/Menu/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
-#: src/components/claim/ClaimModal.tsx
-#: src/components/claim/ClaimModal.tsx
 msgid "Claim UNI"
 msgstr "Klaim UNI"
 
@@ -412,6 +414,10 @@ msgstr "Klaim Token UNI"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Claim UNI reward for {0}"
 msgstr "Klaim hadiah UNI untuk {0}"
+
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Claim Uniswap NFT Airdrop"
+msgstr ""
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -426,29 +432,18 @@ msgstr "Klaim token UNI Anda"
 msgid "Claimed"
 msgstr "Diklaim"
 
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/UnstakingModal.tsx
-msgid "Claimed UNI!"
-msgstr "UNI diklaim!"
-
-#: src/components/claim/ClaimModal.tsx
-msgid "Claimed!"
-msgstr "Diklaim!"
-
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/claim/AddressClaimModal.tsx
-#: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
 msgstr "Mengklaim"
-
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/UnstakingModal.tsx
-msgid "Claiming {0} UNI"
-msgstr "Mengklaim {0} UNI"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Clear All"
 msgstr "Hapus Semua"
+
+#: src/nft/components/bag/BagHeader.tsx
+msgid "Clear all"
+msgstr "Hapus semua"
 
 #: src/components/TokenSafety/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -497,6 +492,10 @@ msgstr "Menagih biaya"
 msgid "Collecting fees will withdraw currently available fees for you."
 msgstr "Biaya pengumpulan akan menarik biaya yang tersedia saat ini untuk Anda."
 
+#: src/nft/components/collection/TransactionCompleteModal.tsx
+msgid "Complete!"
+msgstr ""
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "Konfirmasikan"
@@ -517,7 +516,6 @@ msgstr "Konfirmasikan koneksi ini di dompet Anda"
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
-#: src/components/claim/ClaimModal.tsx
 #: src/components/vote/ExecuteModal.tsx
 #: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
@@ -532,7 +530,6 @@ msgstr "Konfirmasi transaksi di dompet"
 msgid "Connect"
 msgstr "Menghubung"
 
-#: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -541,13 +538,11 @@ msgstr "Menghubung"
 #: src/state/burn/v3/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
-#: src/state/stake/hooks.tsx
 #: src/state/swap/hooks.tsx
 msgid "Connect Wallet"
 msgstr "Hubungkan Dompet"
 
 #: src/components/WalletModal/index.tsx
-#: src/components/earn/UnstakingModal.tsx
 #: src/pages/Pool/index.tsx
 msgid "Connect a wallet"
 msgstr "Hubungkan dompet"
@@ -577,13 +572,11 @@ msgid "Contract address"
 msgstr "Alamat kontrak"
 
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
-#: src/nft/components/profile/view/ProfileAccountDetails.tsx
 #: src/theme/components/index.tsx
 msgid "Copied!"
 msgstr "Disalin!"
 
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
-#: src/nft/components/profile/view/ProfileAccountDetails.tsx
 msgid "Copy"
 msgstr "Salinan"
 
@@ -617,10 +610,6 @@ msgstr "Buat pasangan"
 msgid "Create a pool"
 msgstr "Buat pool"
 
-#: src/components/ErrorBoundary/index.tsx
-msgid "Create an issue on GitHub"
-msgstr "Buat masalah di GitHub"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
 msgstr "Buat pool renang dan tambahkan {0}/{1} likuiditas V3"
@@ -641,6 +630,10 @@ msgstr "Dibuat"
 msgid "Creating"
 msgstr "Membuat"
 
+#: src/nft/components/profile/list/RoyaltyTooltip.tsx
+msgid "Creator royalties"
+msgstr ""
+
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Current price"
@@ -650,9 +643,9 @@ msgstr "Harga saat ini"
 msgid "Current {0} Price:"
 msgstr "Harga {0} saat ini:"
 
-#: src/components/Menu/index.tsx
-msgid "Dark Theme"
-msgstr "Tema gelap"
+#: src/nft/components/profile/list/PriceTextInput.tsx
+msgid "DISMISS"
+msgstr ""
 
 #: src/components/WalletDropdown/DefaultMenu.tsx
 msgid "Dark theme"
@@ -678,20 +671,9 @@ msgstr "Didelegasikan ke:"
 msgid "Delegating votes"
 msgstr "Mendelegasikan suara"
 
-#: src/components/earn/PoolCard.tsx
-#: src/components/earn/StakingModal.tsx
-#: src/components/earn/StakingModal.tsx
-#: src/pages/Earn/Manage.tsx
-msgid "Deposit"
-msgstr "Setoran"
-
 #: src/pages/AddLiquidity/index.tsx
 msgid "Deposit Amounts"
 msgstr "Jumlah Setoran"
-
-#: src/pages/Earn/Manage.tsx
-msgid "Deposit UNI-V2 LP Tokens"
-msgstr "Setor Token LP UNI-V2"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
@@ -701,29 +683,9 @@ msgstr "Setor likuiditas"
 msgid "Deposit tokens to the {label} network."
 msgstr "Setor token ke jaringan {label}"
 
-#: src/pages/Earn/index.tsx
-msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
-msgstr "Setor token Penyedia Likuiditas Anda untuk menerima UNI, yakni token pengaturan protokol Uniswap."
-
-#: src/components/earn/UnstakingModal.tsx
-msgid "Deposited liquidity:"
-msgstr "Likuiditas yang disetor:"
-
-#: src/components/earn/StakingModal.tsx
-msgid "Deposited {0} UNI-V2"
-msgstr "Menyetor {0} UNI-V2"
-
-#: src/components/earn/StakingModal.tsx
-msgid "Depositing Liquidity"
-msgstr "Menyetor Likuiditas"
-
 #: src/pages/Vote/VotePage.tsx
 msgid "Description"
 msgstr "Keterangan"
-
-#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
-msgid "Deselected"
-msgstr ""
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Detailed"
@@ -738,17 +700,9 @@ msgstr "Perincian"
 msgid "Disconnect"
 msgstr "Putuskan"
 
-#: src/components/Menu/index.tsx
-msgid "Discord"
-msgstr "Discord"
-
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Dismiss"
 msgstr "Buang"
-
-#: src/components/Menu/index.tsx
-msgid "Docs"
-msgstr "Docs"
 
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "Documentation"
@@ -757,10 +711,6 @@ msgstr "Dokumentasi"
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
 msgstr "Tidak melihat salah satu posisi v2 Anda? <0> Impor.</0>"
-
-#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
-msgid "ERC-1155 support coming soon"
-msgstr ""
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
@@ -790,12 +740,9 @@ msgstr "Masukkan persentase slippage yang valid"
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
 msgstr "Masukkan alamat untuk memicu klaim UNI. Jika alamat tersebut memiliki UNI yang dapat diklaim, UNI tersebut akan dikirimkan kepada mereka saat diserahkan."
 
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/UnstakingModal.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
-#: src/state/stake/hooks.tsx
 #: src/state/swap/hooks.tsx
 msgid "Enter an amount"
 msgstr "Masukkan jumlah"
@@ -811,6 +758,10 @@ msgstr "Masukkan {0} jumlah"
 msgid "Error"
 msgstr "Kesalahan"
 
+#: src/components/ErrorBoundary/index.tsx
+msgid "Error ID: {eventId}"
+msgstr ""
+
 #: src/components/WalletModal/PendingView.tsx
 msgid "Error connecting"
 msgstr "Terjadi kesalahan saat menyambungkan"
@@ -822,6 +773,10 @@ msgstr "Estimasi mungkin berbeda karena pengaturan gas dompet Anda"
 #: src/components/swap/GasEstimateBadge.tsx
 msgid "Estimated network fee"
 msgstr "Perkiraan biaya jaringan"
+
+#: src/nft/components/details/AssetActivity.tsx
+msgid "Event"
+msgstr ""
 
 #: src/components/vote/ExecuteModal.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -872,13 +827,21 @@ msgstr "kadaluarsa"
 msgid "Explore"
 msgstr "Mengeksplorasi"
 
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "Explore NFTs"
+msgstr ""
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Jelajahi Uniswap Analytics."
 
+#: src/components/Tokens/TokenDetails/InvalidTokenDetails.tsx
+msgid "Explore tokens"
+msgstr ""
+
 #: src/components/Popups/FailedNetworkSwitchPopup.tsx
-msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
-msgstr "Gagal berpindah jaringan dari Antarmuka Uniswap. Untuk menggunakan Uniswap pada {0}, Anda harus mengubah jaringan di dompet Anda."
+msgid "Failed to switch networks"
+msgstr ""
 
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "Feature Flags"
@@ -892,6 +855,10 @@ msgstr "Jenjang Biaya"
 msgid "Fee tier"
 msgstr "Tingkat biaya"
 
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Fees"
+msgstr ""
+
 #: src/components/swap/SwapDetailsDropdown.tsx
 msgid "Fetching best price..."
 msgstr "Mengambil harga terbaik..."
@@ -899,6 +866,10 @@ msgstr "Mengambil harga terbaik..."
 #: src/components/Tokens/TokenTable/SearchBar.tsx
 msgid "Filter tokens"
 msgstr "Filter token"
+
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Floor"
+msgstr ""
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -925,12 +896,12 @@ msgid "Full range positions may earn less fees than concentrated positions. Lear
 msgstr "Posisi rentang penuh dapat memperoleh biaya lebih sedikit daripada posisi terkonsentrasi. Pelajari lebih lanjut <0>di sini</0> ."
 
 #: src/components/ErrorBoundary/index.tsx
-msgid "Get support on Discord"
-msgstr "Dapatkan dukungan di Discord"
+msgid "Get support"
+msgstr ""
 
-#: src/components/Menu/index.tsx
-msgid "Help Center"
-msgstr "Pusat Bantuan"
+#: src/components/FiatOnrampAnnouncement/index.tsx
+msgid "Get tokens at the best prices in web3 on Uniswap, powered by Moonpay."
+msgstr ""
 
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "Help center"
@@ -1032,11 +1003,18 @@ msgstr "Rentang yang tidak valid dipilih. Harga min harus lebih rendah dari harg
 msgid "Invalid recipient"
 msgstr "Penerima tidak valid"
 
-#: src/components/Menu/index.tsx
+#: src/nft/components/profile/list/PriceTextInput.tsx
+msgid "LISTING BELOW FLOOR"
+msgstr ""
+
 #: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/components/WalletDropdown/LanguageMenu.tsx
 msgid "Language"
 msgstr "Bahasa"
+
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Last"
+msgstr ""
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
@@ -1050,18 +1028,14 @@ msgstr "Pelajari tentang menyediakan likuiditas"
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/TokenSafety/TokenSafetyMessage.tsx
 #: src/components/TokenSafety/index.tsx
+#: src/pages/Landing/index.tsx
 msgid "Learn more"
 msgstr "Pelajari lebih lanjut"
 
-#: src/components/Menu/index.tsx
 #: src/components/NavBar/MenuDropdown.tsx
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Legal & Privacy"
 msgstr "Hukum & Privasi"
-
-#: src/components/Menu/index.tsx
-msgid "Light Theme"
-msgstr "Tema Terang"
 
 #: src/components/WalletDropdown/DefaultMenu.tsx
 msgid "Light theme"
@@ -1071,7 +1045,6 @@ msgstr "Tema ringan"
 msgid "Links"
 msgstr "Tautan"
 
-#: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Liquidity"
 msgstr "Likuiditas"
@@ -1106,7 +1079,6 @@ msgstr "MAKSIMAL"
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
-#: src/components/earn/PoolCard.tsx
 msgid "Manage"
 msgstr "Mengelola"
 
@@ -1139,10 +1111,6 @@ msgstr "Maks:"
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Maximum sent"
 msgstr "Maksimum dikirim"
-
-#: src/components/Menu/index.tsx
-msgid "Menu"
-msgstr "Menu"
 
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1191,7 +1159,6 @@ msgid "Minimum received"
 msgstr "Minimum diterima"
 
 #: src/components/Tokens/TokenDetails/PriceChart.tsx
-#: src/components/Tokens/TokenDetails/PriceChart.tsx
 msgid "Missing chart data"
 msgstr "Data bagan tidak ada"
 
@@ -1199,9 +1166,25 @@ msgstr "Data bagan tidak ada"
 msgid "Missing dependencies"
 msgstr "Ketergantungan yang hilang"
 
+#: src/components/Tokens/TokenDetails/PriceChart.tsx
+msgid "Missing price data due to recently low trading volume on Uniswap v3"
+msgstr ""
+
+#: src/components/FiatOnrampModal/index.tsx
+msgid "Moonpay Fiat On-ramp iframe"
+msgstr ""
+
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Moonpay is not available in some regions. Click to learn more."
+msgstr ""
+
 #: src/pages/Pool/index.tsx
 msgid "More"
 msgstr "Lebih"
+
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "NFT"
+msgstr ""
 
 #: src/components/NavBar/SearchBarDropdown.tsx
 msgid "NFT Collections"
@@ -1223,10 +1206,6 @@ msgstr "Biaya Jaringan"
 msgid "Network Warning"
 msgstr "Peringatan Jaringan"
 
-#: src/components/swap/SwapWarningDropdown.tsx
-msgid "Network fees exceed 50% of the swap amount!"
-msgstr "Biaya jaringan melebihi 50% dari jumlah swap!"
-
 #: src/pages/Pool/index.tsx
 msgid "New Position"
 msgstr "Posisi baru"
@@ -1238,11 +1217,6 @@ msgstr "Tidak ada NFT di"
 #: src/pages/MigrateV2/index.tsx
 msgid "No V2 Liquidity found."
 msgstr "Tidak ditemukan Likuiditas V2."
-
-#: src/pages/Earn/index.tsx
-#: src/pages/Earn/index.tsx
-msgid "No active pools"
-msgstr "Tidak ada pangkalan aktif"
 
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "No data"
@@ -1284,6 +1258,10 @@ msgstr "Tidak ada token yang ditemukan."
 msgid "Not Available"
 msgstr "Tidak tersedia"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Not available in your region"
+msgstr ""
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Belum dibuat"
@@ -1300,9 +1278,9 @@ msgstr "Setelah Anda puas dengan penawaran harga klik untuk meninjau."
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
 msgstr "Hanya suara UNI yang didelegasikan sendiri atau didelegasikan ke alamat lain sebelum blok {0} yang memenuhi syarat untuk memberi suara."
 
-#: src/components/DowntimeWarning/index.tsx
-msgid "Optimism is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "Optimisme dalam Beta dan mungkin mengalami downtime. Optimisme mengharapkan downtime yang direncanakan untuk meningkatkan jaringan dalam waktu dekat. Selama waktu henti, posisi Anda tidak akan mendapatkan biaya dan Anda tidak akan dapat menghapus likuiditas. <0>Baca lebih lanjut.</0>"
+#: src/pages/NotFound/index.tsx
+msgid "Oops, take me back to Swap"
+msgstr ""
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1325,19 +1303,27 @@ msgstr "Output akan dikirim ke <0>{0}</0>"
 msgid "Owner"
 msgstr "Pemilik"
 
-#: src/pages/Earn/index.tsx
-msgid "Participating pools"
-msgstr "Kolam yang berpartisipasi"
+#: src/pages/NotFound/index.tsx
+msgid "Page not found!"
+msgstr ""
 
 #: src/nft/components/bag/BagFooter.tsx
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Pay"
 msgstr "Membayar"
 
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Pay with"
+msgstr ""
+
 #: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "Tertunda"
+
+#: src/pages/Swap/index.tsx
+msgid "Permission is required for Uniswap to swap each token. This will expire after one month for your security."
+msgstr ""
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
@@ -1355,14 +1341,6 @@ msgstr "Kolam"
 #: src/pages/PoolFinder/index.tsx
 msgid "Pool Found!"
 msgstr "Pool Ditemukan!"
-
-#: src/pages/Earn/Manage.tsx
-msgid "Pool Rate"
-msgstr "Tarif Pool"
-
-#: src/components/earn/PoolCard.tsx
-msgid "Pool rate"
-msgstr "Tarif pool"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1397,6 +1375,7 @@ msgstr "Token populer"
 msgid "Preview"
 msgstr "Pratinjau"
 
+#: src/nft/components/details/AssetActivity.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
 msgstr "Harga"
@@ -1440,6 +1419,10 @@ msgstr "Kebijakan pribadi"
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Proceed in wallet"
 msgstr "Lanjutkan di dompet"
+
+#: src/nft/components/profile/list/ListPage.tsx
+msgid "Proceeds if sold"
+msgstr ""
 
 #: src/pages/CreateProposal/ProposalEditor.tsx
 msgid "Proposal"
@@ -1490,13 +1473,13 @@ msgstr "Mengantri"
 msgid "Queueing"
 msgstr "mengantri"
 
+#: src/nft/components/profile/list/PriceTextInput.tsx
+msgid "REMOVE ITEM"
+msgstr ""
+
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
 msgstr "Tarif"
-
-#: src/pages/Earn/index.tsx
-msgid "Read more about UNI"
-msgstr "Baca selengkapnya tentang UNI"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Read more about Uniswap governance"
@@ -1521,6 +1504,14 @@ msgstr "Pencarian terkini"
 #: src/components/AddressInputPanel/index.tsx
 msgid "Recipient"
 msgstr "Penerima"
+
+#: src/components/MetaMaskConnectionErrorModal/index.tsx
+msgid "Reload"
+msgstr ""
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Reload the app"
+msgstr ""
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1554,6 +1545,7 @@ msgid "Removed"
 msgstr "DIHAPUS"
 
 #: src/nft/components/collection/CollectionAsset.tsx
+#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
 msgid "Removed from bag"
 msgstr ""
 
@@ -1569,23 +1561,19 @@ msgstr "Menghapus {0} {1} dan {2} {3}"
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "Menghapus {0} {1} dan{2} {3}"
 
-#: src/components/Menu/index.tsx
-msgid "Request Features"
-msgstr "Request Fitur"
-
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
 msgstr "Kembali"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search"
+msgstr ""
+
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
 msgstr "Cari nama atau tempel alamat"
-
-#: src/components/NavBar/SearchBar.tsx
-msgid "Search tokens"
-msgstr "Cari token"
 
 #: src/components/NavBar/SearchBar.tsx
 msgid "Search tokens and NFT collections"
@@ -1615,10 +1603,6 @@ msgstr "Pilih tindakan"
 msgid "Select token"
 msgstr "Pilih token"
 
-#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
-msgid "Selected"
-msgstr ""
-
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
 msgstr "Rentang yang Dipilih"
@@ -1635,6 +1619,10 @@ msgstr "Delegasikan Sendiri"
 msgid "Sell"
 msgstr "Menjual"
 
+#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
+msgid "Selling ERC-1155s coming soon"
+msgstr ""
+
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -1644,6 +1632,14 @@ msgstr "Tetapkan Rentang Harga"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Set Starting Price"
 msgstr "Tetapkan Harga Awal"
+
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Set price by"
+msgstr ""
+
+#: src/nft/components/profile/list/ListPage.tsx
+msgid "Set prices to continue"
+msgstr ""
 
 #: src/components/Settings/index.tsx
 msgid "Settings"
@@ -1688,6 +1684,7 @@ msgid "Some assets are not available through this interface because they may not
 msgstr "Sejumlah aset tidak tersedia melalui antarmuka ini karena mereka mungkin tidak sesuai dengan smart contract atau kami tidak dapat mengizinkan perdagangan karena alasan hukum."
 
 #: src/components/ErrorBoundary/index.tsx
+#: src/components/ErrorBoundary/index.tsx
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Something went wrong"
 msgstr "Ada yang salah"
@@ -1696,13 +1693,21 @@ msgstr "Ada yang salah"
 msgid "Something went wrong. Please try again."
 msgstr "Ada yang salah. Silakan coba lagi."
 
+#: src/components/ErrorBoundary/index.tsx
+msgid "Sorry, an error occured while processing your request. If you request support, be sure to copy the details of this error."
+msgstr ""
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Sorry, an error occured while processing your request. If you request support, be sure to provide your error ID."
+msgstr ""
+
+#: src/nft/components/profile/list/ListPage.tsx
+msgid "Start listing"
+msgstr ""
+
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "Stats"
 msgstr "Statistik"
-
-#: src/pages/Earn/Manage.tsx
-msgid "Step 1. Get UNI-V2 Liquidity tokens"
-msgstr "Langkah 1. Dapatkan token Likuiditas UNI-V2"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Submit new proposal"
@@ -1784,14 +1789,6 @@ msgstr "Simbol tidak ditemukan"
 msgid "TVL"
 msgstr "TVL"
 
-#: src/components/Popups/SurveyPopup.tsx
-msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
-msgstr "Ikuti survei 10 menit untuk membantu kami meningkatkan pengalaman Anda di aplikasi Uniswap."
-
-#: src/components/Popups/SurveyPopup.tsx
-msgid "Tell us what you think ↗"
-msgstr "Beri tahu kami apa pendapatmu ↗"
-
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
 msgstr "Terima kasih telah menjadi bagian dari komunitas Uniswap <0/>"
@@ -1831,10 +1828,6 @@ msgstr "Aplikasi ini dengan aman mengumpulkan alamat dompet Anda dan membagikann
 #: src/components/WalletModal/PendingView.tsx
 msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
 msgstr "Upaya koneksi gagal. Silakan klik coba lagi dan ikuti langkah-langkah untuk terhubung di dompet Anda."
-
-#: src/components/swap/SwapWarningDropdown.tsx
-msgid "The cost of sending this transaction is more than half of the value of the input amount."
-msgstr "Biaya pengiriman transaksi ini lebih dari setengah dari nilai jumlah input."
 
 #: src/components/Polling/index.tsx
 msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in GWEI."
@@ -1905,6 +1898,10 @@ msgstr "Alamat ini diblokir di antarmuka Uniswap Labs karena terkait dengan satu
 msgid "This app uses the following third-party APIs:"
 msgstr "Aplikasi ini menggunakan API pihak ketiga berikut:"
 
+#: src/nft/components/collection/CollectionAsset.tsx
+msgid "This item is not for sale"
+msgstr ""
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Pool ini harus diinisialisasi sebelum Anda dapat menambahkan likuiditas. Untuk menginisialisasi, pilih harga awal untuk pool. Kemudian, masukkan kisaran harga likuiditas dan jumlah deposit Anda. Biaya gas akan lebih tinggi dari biasanya karena transaksi inisialisasi."
@@ -1917,9 +1914,17 @@ msgstr "Proposal ini dapat dieksekusi setelah {0}."
 msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
 msgstr "Rute ini mengoptimalkan total output Anda dengan mempertimbangkan rute terpisah, beberapa lompatan, dan biaya bahan bakar untuk setiap langkah."
 
-#: src/components/Tokens/TokenDetails/PriceChart.tsx
-msgid "This token doesn't have chart data because it hasn't been traded on Uniswap v3"
-msgstr "Token ini tidak memiliki data grafik karena belum diperdagangkan di Uniswap v3"
+#: src/pages/Tokens/index.tsx
+msgid "This table contains the top tokens by Uniswap volume, sorted based on your input."
+msgstr ""
+
+#: src/components/Tokens/TokenDetails/InvalidTokenDetails.tsx
+msgid "This token doesn't exist"
+msgstr ""
+
+#: src/components/Tokens/TokenDetails/InvalidTokenDetails.tsx
+msgid "This token doesn't exist on {chainName}"
+msgstr ""
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
@@ -1933,6 +1938,11 @@ msgstr "Transaksi ini tidak akan berhasil karena pergerakan harga. Coba tingkatk
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "Transaksi ini tidak akan berhasil baik karena pergerakan harga atau biaya transfer. Coba tingkatkan toleransi selip Anda."
 
+#: src/nft/components/details/AssetActivity.tsx
+msgid "Time"
+msgstr ""
+
+#: src/nft/components/details/AssetActivity.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/Swap/index.tsx
@@ -1942,6 +1952,10 @@ msgstr "Untuk"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "Untuk (setidaknya)"
+
+#: src/components/Popups/FailedNetworkSwitchPopup.tsx
+msgid "To use Uniswap on {0}, switch the network in your wallet’s settings."
+msgstr ""
 
 #: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token name"
@@ -1960,13 +1974,9 @@ msgstr "Kolam atas"
 msgid "Top tokens on Uniswap"
 msgstr "Token teratas di Uniswap"
 
-#: src/components/earn/PoolCard.tsx
-msgid "Total deposited"
-msgstr "Total deposit"
-
-#: src/pages/Earn/Manage.tsx
-msgid "Total deposits"
-msgstr "Jumlah simpanan"
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Total"
+msgstr ""
 
 #: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Total value locked (TVL) is the amount of the asset that’s currently in a Uniswap v3 liquidity pool."
@@ -1981,9 +1991,6 @@ msgid "Transaction Settings"
 msgstr "Pengaturan Transaksi"
 
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/StakingModal.tsx
-#: src/components/earn/UnstakingModal.tsx
 #: src/components/vote/DelegateModal.tsx
 #: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
@@ -2004,6 +2011,7 @@ msgstr "Transaksi tertunda"
 
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "Transaction rejected"
 msgstr "Transaksi ditolak"
 
@@ -2040,19 +2048,6 @@ msgstr "Token UNI menunjukkan hak suara dalam pengaturan Uniswap. Anda dapat mem
 msgid "UNI {0}/{1} Burned"
 msgstr "UNI {0}/{1} Terbakar"
 
-#: src/pages/Earn/Manage.tsx
-msgid "UNI-V2 LP tokens are required. Once you've added liquidity to the {0}-{1} pool you can stake your liquidity tokens on this page."
-msgstr "Token UNI-V2 LP diperlukan. Setelah Anda menambahkan likuiditas ke {0}-{1} pool, Anda dapat mempertaruhkan token likuiditas Anda di halaman ini."
-
-#: src/pages/Earn/Manage.tsx
-msgid "UNI-V2 {0}-{1}"
-msgstr "UNI-V2 {0}-{1}"
-
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/UnstakingModal.tsx
-msgid "Unclaimed UNI"
-msgstr "UNI tidak diklaim"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Unclaimed fees"
 msgstr "Biaya yang tidak diklaim"
@@ -2085,9 +2080,9 @@ msgstr "Uniswap tersedia dalam: <0>{0}</0>"
 msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
 msgstr "Tata kelola Uniswap hanya tersedia di Layer 1. Alihkan jaringan Anda ke Ethereum Mainnet untuk melihat Proposal dan Vote."
 
-#: src/pages/Earn/index.tsx
-msgid "Uniswap liquidity mining"
-msgstr "Penambangan likuiditas Uniswap"
+#: src/nft/components/collection/TransactionCompleteModal.tsx
+msgid "Uniswap has granted your wish!"
+msgstr ""
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
@@ -2149,10 +2144,6 @@ msgstr "Perbarui Delegasi"
 msgid "Use the Uniswap Labs API to get faster quotes."
 msgstr "Gunakan Uniswap Labs API untuk mendapatkan penawaran lebih cepat."
 
-#: src/components/claim/ClaimModal.tsx
-msgid "User"
-msgstr "Pengguna"
-
 #: src/pages/Pool/v2.tsx
 msgid "V2 Pool is not available on Layer 2. Switch to Layer 1 Ethereum."
 msgstr "V2 Pool tidak tersedia di Layer 2. Beralih ke Layer 1 Ethereum."
@@ -2179,6 +2170,7 @@ msgid "View more analytics"
 msgstr "Lihat lebih banyak analitik"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/nft/components/collection/TransactionCompleteModal.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "View on Etherscan"
 msgstr "Lihat di Etherscan"
@@ -2190,7 +2182,6 @@ msgstr "Lihat di Explorer"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
-#: src/components/claim/ClaimModal.tsx
 #: src/components/vote/ExecuteModal.tsx
 #: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
@@ -2276,50 +2267,21 @@ msgstr "Menunggu untuk terhubung"
 msgid "Wallet Address or ENS name"
 msgstr "Alamat Dompet atau nama ENS"
 
+#: src/components/MetaMaskConnectionErrorModal/index.tsx
+msgid "Wallet disconnected"
+msgstr ""
+
 #: src/constants/tokenSafety.tsx
 msgid "Warning"
 msgstr "Peringatan"
-
-#: src/components/earn/StakingModal.tsx
-msgid "Weekly Rewards"
-msgstr "Hadiah Mingguan"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Welcome to team Unicorn :)"
 msgstr "Selamat datang di tim Unicorn :)"
 
-#: src/components/earn/ClaimRewardModal.tsx
-msgid "When you claim without withdrawing your liquidity remains in the mining pool."
-msgstr "Ketika mengklaim tanpa menarik, likuiditas Anda tetap berada di pool penambangan."
-
-#: src/pages/Earn/Manage.tsx
-msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
-msgstr "Saat Anda menarik, kontrak akan secara otomatis mengklaim UNI atas nama Anda!"
-
-#: src/components/earn/UnstakingModal.tsx
-msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
-msgstr "Saat Anda menarik, UNI Anda diklaim dan likuiditas Anda dihapus dari pool penambangan."
-
-#: src/components/earn/UnstakingModal.tsx
-#: src/pages/Earn/Manage.tsx
-msgid "Withdraw"
-msgstr "Tarik"
-
-#: src/components/earn/UnstakingModal.tsx
-msgid "Withdraw & Claim"
-msgstr "Tarik & Klaim"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
 msgstr "Tarik likuiditas yang disetor"
-
-#: src/components/earn/UnstakingModal.tsx
-msgid "Withdrawing {0} UNI-V2"
-msgstr "Menarik {0} UNI-V2"
-
-#: src/components/earn/UnstakingModal.tsx
-msgid "Withdrew UNI-V2!"
-msgstr "Menarik UNI-V2!"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Swap/index.tsx
@@ -2378,10 +2340,6 @@ msgstr "Anda belum memiliki likuiditas di pool ini."
 msgid "You may have lost your network connection."
 msgstr "Anda mungkin kehilangan koneksi jaringan."
 
-#: src/components/swap/SwapWarningDropdown.tsx
-msgid "You might consider waiting until the network fees go down to complete this transaction."
-msgstr "Anda mungkin mempertimbangkan untuk menunggu hingga biaya jaringan turun untuk menyelesaikan transaksi ini."
-
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
 msgstr "Anda harus menghubungkan akun."
@@ -2393,6 +2351,10 @@ msgstr "Anda harus memberikan izin smart contract kepada Uniswap untuk menggunak
 #: src/pages/CreateProposal/index.tsx
 msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
 msgstr "Anda harus memiliki {formattedProposalThreshold} suara untuk mengajukan proposal"
+
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "You receive"
+msgstr ""
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
@@ -2416,16 +2378,12 @@ msgid "Your active V3 liquidity positions will appear here."
 msgstr "Posisi likuiditas V3 aktif Anda akan muncul di sini."
 
 #: src/components/Tokens/TokenDetails/BalanceSummary.tsx
-msgid "Your balance"
-msgstr "Keseimbanganmu"
+msgid "Your balance on {label}"
+msgstr ""
 
 #: src/pages/Pool/index.tsx
 msgid "Your connected network is unsupported."
 msgstr "Jaringan Anda yang terhubung tidak didukung."
-
-#: src/pages/Earn/Manage.tsx
-msgid "Your liquidity deposits"
-msgstr "Setoran likuiditas Anda"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -2465,10 +2423,6 @@ msgstr "Posisi Anda tidak akan menghasilkan biaya atau digunakan dalam perdagang
 msgid "Your positions"
 msgstr "Posisi Anda"
 
-#: src/components/earn/PoolCard.tsx
-msgid "Your rate"
-msgstr "Tarif Anda"
-
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds."
@@ -2506,10 +2460,6 @@ msgstr "Transaksi Anda akan muncul di sini"
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
 msgstr "Transaksi Anda akan muncul di sini ..."
-
-#: src/pages/Earn/Manage.tsx
-msgid "Your unclaimed UNI"
-msgstr "UNI Anda yang belum diklaim"
 
 #: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
 msgid "Your {0} balance"
@@ -2566,6 +2516,10 @@ msgstr "menit"
 msgid "reward"
 msgstr "Penghargaan"
 
+#: src/components/FiatOnrampModal/index.tsx
+msgid "something went wrong!"
+msgstr ""
+
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "to"
 msgstr "ke"
@@ -2582,6 +2536,8 @@ msgstr "{0, plural, =1 {Token ini tidak diperdagangkan di bursa terpusat AS terk
 msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
 msgstr "{0, plural, =1 {Anda tidak dapat memperdagangkan token ini menggunakan Aplikasi Uniswap.} other {Anda tidak dapat memperdagangkan token ini menggunakan Aplikasi Uniswap.}}"
 
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/ErrorBoundary/index.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
 msgid "{0}"
@@ -2601,10 +2557,6 @@ msgstr "{0} <0/> per <1/>"
 msgid "{0} Deposited"
 msgstr "{0} Disetor"
 
-#: src/components/earn/PoolCard.tsx
-msgid "{0} ETH"
-msgstr "{0} ETH"
-
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -2618,27 +2570,8 @@ msgstr "{0} Tertunda"
 
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/AddressClaimModal.tsx
-#: src/components/claim/ClaimModal.tsx
-#: src/components/claim/ClaimModal.tsx
-#: src/components/claim/ClaimModal.tsx
 msgid "{0} UNI"
 msgstr "{0} UNI"
-
-#: src/components/earn/PoolCard.tsx
-#: src/components/earn/PoolCard.tsx
-#: src/components/earn/StakingModal.tsx
-#: src/pages/Earn/Manage.tsx
-#: src/pages/Earn/Manage.tsx
-msgid "{0} UNI / week"
-msgstr "{0} UNI / minggu"
-
-#: src/components/earn/StakingModal.tsx
-msgid "{0} UNI-V2"
-msgstr "{0} UNI-V2"
-
-#: src/pages/Earn/Manage.tsx
-msgid "{0} UNI-V2 LP tokens available"
-msgstr "{0} token LP UNI-V2 yang tersedia"
 
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
@@ -2660,7 +2593,6 @@ msgstr "{0} per {1}"
 msgid "{0} {1} Price:"
 msgstr "{0} {1} Harga:"
 
-#: src/components/CurrencyInputPanel/FiatValue.tsx
 #: src/components/FeeSelector/FeeOption.tsx
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionPreview/index.tsx
@@ -2684,10 +2616,6 @@ msgstr "{0}% kumpulan"
 msgid "{0}% select"
 msgstr "{0}% memilih"
 
-#: src/pages/Earn/Manage.tsx
-msgid "{0}-{1} Liquidity Mining"
-msgstr "{0}-{1} Penambangan Likuiditas"
-
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP NFT"
 msgstr "{0}/{1} LP NFT"
@@ -2695,14 +2623,6 @@ msgstr "{0}/{1} LP NFT"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP Tokens"
 msgstr "{0}/{1} Token LP"
-
-#: src/components/claim/ClaimModal.tsx
-msgid "{SOCKS_AMOUNT} UNI"
-msgstr "{SOCKS_AMOUNT} UNI"
-
-#: src/components/claim/ClaimModal.tsx
-msgid "{USER_AMOUNT} UNI"
-msgstr "{USER_AMOUNT} UNI"
 
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "{label} might be down right now, or you may have lost your network connection."

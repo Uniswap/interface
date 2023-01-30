@@ -9,6 +9,7 @@ import { BREAKPOINTS, ThemedText } from 'theme'
 
 import { MarketplaceRow } from './MarketplaceRow'
 import { SetPriceMethod } from './NFTListingsGrid'
+import { RemoveIconWrap } from './shared'
 
 const NFTListRowWrapper = styled(Row)`
   margin: 24px 0px;
@@ -42,15 +43,6 @@ const NFTImage = styled.img`
   width: 48px;
   height: 48px;
   border-radius: 8px;
-`
-
-const RemoveIconWrap = styled.div<{ hovered: boolean }>`
-  position: absolute;
-  left: 50%;
-  top: 30px;
-  transform: translateX(-50%);
-  width: 32px;
-  visibility: ${({ hovered }) => (hovered ? 'visible' : 'hidden')};
 `
 
 const RemoveIcon = styled.img`

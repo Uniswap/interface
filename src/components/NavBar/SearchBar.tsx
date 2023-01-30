@@ -144,6 +144,7 @@ export const SearchBar = () => {
   return (
     <Trace section={InterfaceSectionName.NAVBAR_SEARCH}>
       <Box
+        data-cy="search-bar"
         position={{ sm: 'fixed', md: 'absolute', xl: 'relative' }}
         width={{ sm: isOpen ? 'viewWidth' : 'auto', md: 'auto' }}
         ref={searchRef}
@@ -183,6 +184,7 @@ export const SearchBar = () => {
               render={({ translation }) => (
                 <Box
                   as="input"
+                  data-cy="search-bar-input"
                   placeholder={translation as string}
                   onChange={(event: ChangeEvent<HTMLInputElement>) => {
                     !isOpen && toggleOpen()
