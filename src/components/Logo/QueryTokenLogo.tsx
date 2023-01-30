@@ -1,4 +1,5 @@
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import { TokenQueryData } from 'graphql/data/Token'
 import { TopToken } from 'graphql/data/TopTokens'
@@ -15,7 +16,7 @@ export default function QueryTokenLogo(
 
   return (
     <AssetLogo
-      isNative={props.token?.standard === 'NATIVE' || props.token?.address === NATIVE_CHAIN_ID}
+      isNative={props.token?.standard === TokenStandard.Native || props.token?.address === NATIVE_CHAIN_ID}
       chainId={chainId}
       address={props.token?.address}
       symbol={props.token?.symbol}

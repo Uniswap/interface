@@ -1,3 +1,4 @@
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { Chain, NftCollection, useRecentlySearchedAssetsQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import { useAtom } from 'jotai'
@@ -32,10 +33,6 @@ export function useAddRecentlySearchedAsset() {
 export function useRecentlySearchedAssets() {
   const history = useAtomValue(recentlySearchedAssetsAtom)
   const shortenedHistory = useMemo(() => history.slice(0, 4), [history])
-  const test = shortenedHistory.map((token) => ({
-    address: token.address === 'NATIVE' ? (null as unknown as string) : token.address,
-    chain: token.chain,
-  }))
 
   const { data: queryData, loading } = useRecentlySearchedAssetsQuery({
     variables: {
@@ -43,7 +40,7 @@ export function useRecentlySearchedAssets() {
       contracts: shortenedHistory
         .filter((asset) => !asset.isNft)
         .map((token) => ({
-          address: token.address === 'NATIVE' ? (null as unknown as string) : token.address,
+          address: token.address === NATIVE_CHAIN_ID ? (null as unknown as string) : token.address,
           chain: token.chain,
         })),
     },
