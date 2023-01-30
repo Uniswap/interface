@@ -24,7 +24,7 @@ export interface FungibleToken {
 
 export function parseFungibleTokens(tokens: SearchToken[]) {
   const fungibleTokens: FungibleToken[] = []
-  tokens.filter(Boolean).forEach((token) => {
+  tokens.forEach((token) => {
     if (token.name && token.symbol && token.decimals && token.chain && (token.address || token.standard === 'NATIVE')) {
       // Consider both default & extended list tokens as verified, as there are more "verified" nfts than tokens on the default list
       const isVerified =
