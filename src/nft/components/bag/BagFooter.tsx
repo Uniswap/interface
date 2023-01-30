@@ -208,7 +208,6 @@ export const BagFooter = ({
     return tryParseCurrencyAmount(formatEther(totalEthPrice.toString()), defaultCurrency ?? undefined)
   }, [defaultCurrency, totalEthPrice, inputCurrency])
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { state: swapState, trade: swapTrade } = useBestTrade(
     TradeType.EXACT_OUTPUT,
     parsedAmount,
