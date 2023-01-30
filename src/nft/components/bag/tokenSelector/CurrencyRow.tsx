@@ -1,6 +1,7 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
+import Loader from 'components/Loader'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
@@ -32,18 +33,40 @@ const StyledCheck = styled(Check)`
   flex-shrink: 0;
 `
 
+const StyledLoader = styled(Loader)`
+  stroke: ${({ theme }) => theme.accentAction};
+  flex-shrink: 0;
+`
+
 interface CurrencyRowProps {
   currency: Currency
   selected: boolean
   selectCurrency: (currency: Currency | undefined) => void
+  isWishCurrency: boolean
+  setWishCurrency: (currency: Currency | undefined) => void
 }
 
-export const CurrencyRow = ({ currency, selected, selectCurrency }: CurrencyRowProps) => {
+export const CurrencyRow = ({
+  currency,
+  selected,
+  selectCurrency,
+  isWishCurrency,
+  setWishCurrency,
+}: CurrencyRowProps) => {
   const { account } = useWeb3React()
   const balance = useCurrencyBalance(account ?? undefined, currency)
 
   return (
-    <TokenRow onClick={() => selectCurrency(currency.isNative ? undefined : currency)}>
+    <TokenRow
+      onClick={() => {
+        if (currency.isNative) {
+          selectCurrency(undefined)
+          setWishCurrency(undefined)
+        } else {
+          setWishCurrency(currency)
+        }
+      }}
+    >
       <TokenInfoRow>
         <CurrencyLogo currency={currency} size="36px" />
         <Column>
@@ -57,6 +80,7 @@ export const CurrencyRow = ({ currency, selected, selectCurrency }: CurrencyRowP
       </TokenInfoRow>
       {balance && <Balance balance={balance} />}
       {selected && <StyledCheck size={20} />}
+      {!selected && isWishCurrency && <StyledLoader size="20px" />}
     </TokenRow>
   )
 }

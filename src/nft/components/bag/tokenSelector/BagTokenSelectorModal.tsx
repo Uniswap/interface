@@ -1,15 +1,18 @@
 import { Trans } from '@lingui/macro'
-import { Currency, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, NativeCurrency, Token, TradeType } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { useAllTokens } from 'hooks/Tokens'
+import { useBestTrade } from 'hooks/useBestTrade'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { tokenComparator } from 'lib/hooks/useTokenList/sorting'
 import { Portal } from 'nft/components/common/Portal'
 import { Overlay } from 'nft/components/modals/Overlay'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { X } from 'react-feather'
-import { useAllTokenBalances } from 'state/connection/hooks'
+import { useAllTokenBalances, useCurrencyBalance } from 'state/connection/hooks'
+import { TradeState } from 'state/routing/types'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
@@ -48,18 +51,24 @@ const TokenSelectorContainer = styled(Column)`
 `
 
 interface BagTokenSelectorModalProps {
+  parsedEthAmount: CurrencyAmount<NativeCurrency | Token> | undefined
   selectedCurrency: Currency | undefined
   handleCurrencySelect: (currency: Currency | undefined) => void
   overlayClick: () => void
 }
 
 export const BagTokenSelectorModal = ({
+  parsedEthAmount,
   selectedCurrency,
   handleCurrencySelect,
   overlayClick,
 }: BagTokenSelectorModalProps) => {
   const defaultTokens = useAllTokens()
+  const { account } = useWeb3React()
   const [balances, balancesAreLoading] = useAllTokenBalances()
+  const [wishCurrency, setWishCurrency] = useState<Currency | undefined>(undefined)
+  const wishBalance = useCurrencyBalance(account ?? undefined, wishCurrency)
+
   const sortedTokens: Token[] = useMemo(
     () =>
       !balancesAreLoading
@@ -89,6 +98,20 @@ export const BagTokenSelectorModal = ({
     return [...natives, ...tokens]
   }, [sortedTokens, native, wrapped, balances])
 
+  const { state: swapState, trade: swapTrade } = useBestTrade(TradeType.EXACT_OUTPUT, parsedEthAmount, wishCurrency)
+
+  useEffect(() => {
+    if (swapState !== TradeState.VALID || !wishBalance || !swapTrade || !wishCurrency) {
+      return
+    }
+
+    if (!wishBalance.lessThan(swapTrade.inputAmount)) {
+      handleCurrencySelect(wishCurrency)
+    }
+
+    setWishCurrency(undefined)
+  }, [swapState, wishBalance, setWishCurrency, swapTrade, handleCurrencySelect, wishCurrency])
+
   return (
     <Portal>
       <ModalWrapper>
@@ -108,6 +131,8 @@ export const BagTokenSelectorModal = ({
                   (!selectedCurrency && currency.isNative) || (!!selectedCurrency && selectedCurrency.equals(currency))
                 }
                 selectCurrency={handleCurrencySelect}
+                isWishCurrency={!!wishCurrency && wishCurrency.equals(currency)}
+                setWishCurrency={setWishCurrency}
               />
             )
           })}

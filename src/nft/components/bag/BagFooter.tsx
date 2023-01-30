@@ -20,7 +20,7 @@ import { useTokenInput } from 'nft/hooks/useTokenInput'
 import { useWalletBalance } from 'nft/hooks/useWalletBalance'
 import { BagStatus } from 'nft/types'
 import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils'
-import { PropsWithChildren, useMemo, useReducer } from 'react'
+import { PropsWithChildren, useMemo, useState } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { TradeState } from 'state/routing/types'
@@ -152,7 +152,7 @@ export const BagFooter = ({
   const defaultCurrency = useCurrency('ETH')
 
   const setBagExpanded = useBag((state) => state.setBagExpanded)
-  const [showTokenSelector, toggleTokenSelector] = useReducer((state) => !state, false)
+  const [showTokenSelector, setTokenSelectorVisibility] = useState(false)
 
   const { balance: balanceInEth } = useWalletBalance()
   const sufficientBalance = useMemo(() => {
@@ -204,9 +204,8 @@ export const BagFooter = ({
   const activeCurrency = inputCurrency ?? defaultCurrency
 
   const parsedAmount = useMemo(() => {
-    if (!inputCurrency) return undefined
     return tryParseCurrencyAmount(formatEther(totalEthPrice.toString()), defaultCurrency ?? undefined)
-  }, [defaultCurrency, totalEthPrice, inputCurrency])
+  }, [defaultCurrency, totalEthPrice])
 
   const { state: swapState, trade: swapTrade } = useBestTrade(
     TradeType.EXACT_OUTPUT,
@@ -223,7 +222,7 @@ export const BagFooter = ({
               <ThemedText.SubHeaderSmall>
                 <Trans>Pay with</Trans>
               </ThemedText.SubHeaderSmall>
-              <CurrencyInput onClick={toggleTokenSelector}>
+              <CurrencyInput onClick={() => setTokenSelectorVisibility(true)}>
                 <CurrencyLogo currency={activeCurrency} size="24px" />
                 <ThemedText.HeadlineSmall fontWeight={500} lineHeight="24px">
                   {activeCurrency?.symbol}
@@ -285,12 +284,13 @@ export const BagFooter = ({
       </Footer>
       {showTokenSelector && (
         <BagTokenSelectorModal
+          parsedEthAmount={parsedAmount}
           selectedCurrency={activeCurrency ?? undefined}
           handleCurrencySelect={(currency: Currency | undefined) => {
             setInputCurrency(currency)
-            toggleTokenSelector()
+            setTokenSelectorVisibility(false)
           }}
-          overlayClick={toggleTokenSelector}
+          overlayClick={() => setTokenSelectorVisibility(false)}
         />
       )}
     </FooterContainer>
