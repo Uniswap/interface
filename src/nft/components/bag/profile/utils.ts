@@ -163,6 +163,7 @@ export const getListings = (sellAssets: WalletAsset[]): [CollectionRow[], Listin
           name: asset.asset_contract.name,
           status: ListingStatus.DEFINED,
           collectionAddress: asset.asset_contract.address,
+          isVerified: asset.collectionIsVerified,
           marketplace,
         }
         newCollectionsToApprove.push(newCollectionRow)
