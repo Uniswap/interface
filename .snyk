@@ -32,85 +32,91 @@ ignore:
         reason: 'Internal library, GPL library is ok'
         expires: 2099-01-01T00:00:00.000Z
         created: 2022-10-27T00:13:29.506Z
-  'SNYK-JS-ANSIREGEX-1583908':
-      - '*':
-          reason: 'Initial commit, ignoring all packages without known fixes'
-          expires: 2099-01-01T00:00:00.000Z
-          created: 2022-10-27T00:13:29.506Z
-  'SNYK-JS-DECODEURICOMPONENT-3149970':
-      - '*':
-          reason: 'No known fix, only issue for very specific case'
-          expires: 2099-01-01T00:00:00.000Z
-          created: 2022-11-28T00:13:29.506Z
-  'SNYK-JS-D3COLOR-1076592':
-      - '*':
-          reason: 'Initial commit, ignoring all packages without known fixes'
-          expires: 2099-01-01T00:00:00.000Z
-          created: 2022-10-27T00:13:29.506Z
-  'SNYK-JS-FILETYPE-2958042':
-      - '*':
-          reason: 'Initial commit, ignoring all packages without known fixes'
-          expires: 2099-01-01T00:00:00.000Z
-          created: 2022-10-27T00:13:29.506Z
-  'SNYK-JS-ISTANBULREPORTS-2328088':
-      - '*':
-          reason: 'Initial commit, ignoring all packages without known fixes'
-          expires: 2099-01-01T00:00:00.000Z
-          created: 2022-10-27T00:13:29.506Z
-  'SNYK-JS-LODASHTEMPLATE-1088054':
-      - '*':
-          reason: 'Initial commit, ignoring all packages without known fixes'
-          expires: 2099-01-01T00:00:00.000Z
-          created: 2022-10-27T00:13:29.506Z
-  'SNYK-JS-MARKDOWNIT-2331914':
-      - '*':
-          reason: 'Initial commit, ignoring all packages without known fixes'
-          expires: 2099-01-01T00:00:00.000Z
-          created: 2022-10-27T00:13:29.506Z
-  'SNYK-JS-NWSAPI-2841516':
-      - '*':
-          reason: 'Initial commit, ignoring all packages without known fixes'
-          expires: 2099-01-01T00:00:00.000Z
-          created: 2022-10-27T00:13:29.506Z
-  'SNYK-JS-OPENZEPPELINCONTRACTS-1570170':
-      - '*':
-          reason: 'Initial commit, ignoring all packages without known fixes'
-          expires: 2099-01-01T00:00:00.000Z
-          created: 2022-10-27T00:13:29.506Z
-  'SNYK-JS-OPENZEPPELINCONTRACTS-2320176':
-      - '*':
-          reason: 'Initial commit, ignoring all packages without known fixes'
-          expires: 2099-01-01T00:00:00.000Z
-          created: 2022-10-27T00:13:29.506Z
-  'SNYK-JS-OPENZEPPELINCONTRACTS-2965798':
-      - '*':
-          reason: 'Initial commit, ignoring all packages without known fixes'
-          expires: 2099-01-01T00:00:00.000Z
-          created: 2022-10-27T00:13:29.506Z
-  'SNYK-JS-OPENZEPPELINCONTRACTS-2980279':
-      - '*':
-          reason: 'Initial commit, ignoring all packages without known fixes'
-          expires: 2099-01-01T00:00:00.000Z
-          created: 2022-10-27T00:13:29.506Z
-  'SNYK-JS-PROMPTS-1729737':
-      - '*':
-          reason: 'Initial commit, ignoring all packages without known fixes'
-          expires: 2099-01-01T00:00:00.000Z
-          created: 2022-10-27T00:13:29.506Z
-  'SNYK-JS-SIMPLEPLIST-2413671':
-      - '*':
-          reason: 'Initial commit, ignoring all packages without known fixes'
-          expires: 2099-01-01T00:00:00.000Z
-          created: 2022-10-27T00:13:29.506Z
-  'SNYK-JS-UNSETVALUE-2400660':
-      - '*':
-          reason: 'Initial commit, ignoring all packages without known fixes'
-          expires: 2099-01-01T00:00:00.000Z
-          created: 2022-10-27T00:13:29.506Z
-  'SNYK-JS-XMLDOMXMLDOM-3042243':
-      - '*':
-          reason: 'Initial commit, ignoring all packages without known fixes'
-          expires: 2099-01-01T00:00:00.000Z
-          created: 2022-10-27T00:13:29.506Z
-
+  SNYK-JS-ANSIREGEX-1583908:
+    - '*':
+        reason: 'Initial commit, ignoring all packages without known fixes'
+        expires: 2099-01-01T00:00:00.000Z
+        created: 2022-10-27T00:13:29.506Z
+  SNYK-JS-DECODEURICOMPONENT-3149970:
+    - '*':
+        reason: 'No known fix, only issue for very specific case'
+        expires: 2099-01-01T00:00:00.000Z
+        created: 2022-11-28T00:13:29.506Z
+  SNYK-JS-D3COLOR-1076592:
+    - '*':
+        reason: 'Initial commit, ignoring all packages without known fixes'
+        expires: 2099-01-01T00:00:00.000Z
+        created: 2022-10-27T00:13:29.506Z
+  SNYK-JS-FILETYPE-2958042:
+    - '*':
+        reason: 'Initial commit, ignoring all packages without known fixes'
+        expires: 2099-01-01T00:00:00.000Z
+        created: 2022-10-27T00:13:29.506Z
+  SNYK-JS-ISTANBULREPORTS-2328088:
+    - '*':
+        reason: 'Initial commit, ignoring all packages without known fixes'
+        expires: 2099-01-01T00:00:00.000Z
+        created: 2022-10-27T00:13:29.506Z
+  SNYK-JS-LODASHTEMPLATE-1088054:
+    - '*':
+        reason: 'Initial commit, ignoring all packages without known fixes'
+        expires: 2099-01-01T00:00:00.000Z
+        created: 2022-10-27T00:13:29.506Z
+  SNYK-JS-MARKDOWNIT-2331914:
+    - '*':
+        reason: 'Initial commit, ignoring all packages without known fixes'
+        expires: 2099-01-01T00:00:00.000Z
+        created: 2022-10-27T00:13:29.506Z
+  SNYK-JS-NWSAPI-2841516:
+    - '*':
+        reason: 'Initial commit, ignoring all packages without known fixes'
+        expires: 2099-01-01T00:00:00.000Z
+        created: 2022-10-27T00:13:29.506Z
+  SNYK-JS-OPENZEPPELINCONTRACTS-1570170:
+    - '*':
+        reason: 'Initial commit, ignoring all packages without known fixes'
+        expires: 2099-01-01T00:00:00.000Z
+        created: 2022-10-27T00:13:29.506Z
+  SNYK-JS-OPENZEPPELINCONTRACTS-2320176:
+    - '*':
+        reason: 'Initial commit, ignoring all packages without known fixes'
+        expires: 2099-01-01T00:00:00.000Z
+        created: 2022-10-27T00:13:29.506Z
+  SNYK-JS-OPENZEPPELINCONTRACTS-2965798:
+    - '*':
+        reason: 'Initial commit, ignoring all packages without known fixes'
+        expires: 2099-01-01T00:00:00.000Z
+        created: 2022-10-27T00:13:29.506Z
+  SNYK-JS-OPENZEPPELINCONTRACTS-2980279:
+    - '*':
+        reason: 'Initial commit, ignoring all packages without known fixes'
+        expires: 2099-01-01T00:00:00.000Z
+        created: 2022-10-27T00:13:29.506Z
+  SNYK-JS-PROMPTS-1729737:
+    - '*':
+        reason: 'Initial commit, ignoring all packages without known fixes'
+        expires: 2099-01-01T00:00:00.000Z
+        created: 2022-10-27T00:13:29.506Z
+  SNYK-JS-SIMPLEPLIST-2413671:
+    - '*':
+        reason: 'Initial commit, ignoring all packages without known fixes'
+        expires: 2099-01-01T00:00:00.000Z
+        created: 2022-10-27T00:13:29.506Z
+  SNYK-JS-UNSETVALUE-2400660:
+    - '*':
+        reason: 'Initial commit, ignoring all packages without known fixes'
+        expires: 2099-01-01T00:00:00.000Z
+        created: 2022-10-27T00:13:29.506Z
+  SNYK-JS-XMLDOMXMLDOM-3042243:
+    - '*':
+        reason: 'Initial commit, ignoring all packages without known fixes'
+        expires: 2099-01-01T00:00:00.000Z
+        created: 2022-10-27T00:13:29.506Z
+  SNYK-JS-UAPARSERJS-3244450:
+    - '*':
+        reason: >-
+          Vulnerability just disclosed and no update path available, ignoring
+          for 7 days
+        expires: 2023-02-07T00:00:00.000Z
+        created: 2023-01-30T18:41:14.232Z
 patch: {}
