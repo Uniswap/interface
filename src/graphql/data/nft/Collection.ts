@@ -122,7 +122,11 @@ export function useCollection(address: string): useCollectionReturnProps {
         address,
         isVerified: queryCollection?.isVerified,
         name: queryCollection?.name,
+        description: queryCollection?.description,
+        standard: queryCollection?.nftContracts?.[0]?.standard,
+        bannerImageUrl: queryCollection?.bannerImage?.url,
         stats: {
+          num_owners: market?.owners,
           floor_price: market?.floorPrice?.value,
           one_day_volume: market?.volume?.value,
           one_day_change: market?.volumePercentChange?.value,
