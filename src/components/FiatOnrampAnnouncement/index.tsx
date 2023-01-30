@@ -5,7 +5,7 @@ import { useWeb3React } from '@web3-react/core'
 import fiatMaskUrl from 'assets/svg/fiat_mask.svg'
 import { BaseVariant } from 'featureFlags'
 import { useFiatOnrampFlag } from 'featureFlags/flags/fiatOnramp'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { X } from 'react-feather'
 import { useToggleWalletDropdown } from 'state/application/hooks'
 import { useAppSelector } from 'state/hooks'
@@ -100,6 +100,7 @@ const MAX_RENDER_COUNT = 3
 export function FiatOnrampAnnouncement() {
   const { account } = useWeb3React()
   const [acks, acknowledge] = useFiatOnrampAck()
+  const [localClose, setLocalClose] = useState(false)
   useEffect(() => {
     if (!sessionStorage.getItem(ANNOUNCEMENT_RENDERED)) {
       acknowledge({ renderCount: acks?.renderCount + 1 })
@@ -108,6 +109,7 @@ export function FiatOnrampAnnouncement() {
   }, [acknowledge, acks])
 
   const handleClose = useCallback(() => {
+    setLocalClose(true)
     localStorage.setItem(ANNOUNCEMENT_DISMISSED, 'true')
   }, [])
 
@@ -128,7 +130,8 @@ export function FiatOnrampAnnouncement() {
     localStorage.getItem(ANNOUNCEMENT_DISMISSED) ||
     acks?.renderCount >= MAX_RENDER_COUNT ||
     isMobile ||
-    openModal !== null
+    openModal !== null ||
+    localClose
   ) {
     return null
   }

@@ -1,20 +1,72 @@
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
+import Column from 'components/Column'
+import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { Box } from 'nft/components/Box'
-import { Column, Row } from 'nft/components/Flex'
-import { body, bodySmall } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { ListingMarket, ListingWarning, WalletAsset } from 'nft/types'
 import { LOOKS_RARE_CREATOR_BASIS_POINTS } from 'nft/utils'
 import { formatEth, formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { Dispatch, useEffect, useMemo, useState } from 'react'
+import styled from 'styled-components/macro'
+import { BREAKPOINTS, ThemedText } from 'theme'
 
-import * as styles from './ListPage.css'
 import { SetPriceMethod } from './NFTListingsGrid'
 import { PriceTextInput } from './PriceTextInput'
 import { RoyaltyTooltip } from './RoyaltyTooltip'
+import { RemoveIconWrap } from './shared'
+
+const PastPriceInfo = styled(Column)`
+  text-align: left;
+  display: none;
+  flex: 1;
+
+  @media screen and (min-width: ${BREAKPOINTS.xxl}px) {
+    display: flex;
+  }
+`
+
+const RemoveMarketplaceWrap = styled(RemoveIconWrap)`
+  top: 11px;
+`
+
+const MarketIconWrapper = styled(Column)`
+  position: relative;
+  cursor: pointer;
+  margin-right: 16px;
+`
+
+const MarketIcon = styled.img`
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  object-fit: cover;
+`
+
+const FeeColumnWrapper = styled(Column)`
+  flex: 1;
+  align-items: flex-end;
+  display: none;
+
+  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
+    display: flex;
+  }
+`
+
+const FeeWrapper = styled.div`
+  width: min-content;
+  white-space: nowrap;
+`
+
+const ReturnColumn = styled(Column)`
+  flex: 1.5;
+  display: none;
+
+  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
+    display: flex;
+  }
+`
 
 const getRoyalty = (listingMarket: ListingMarket, asset: WalletAsset) => {
   // LooksRare is a unique case where royalties for creators are a flat 0.5% or 50 basis points
@@ -134,31 +186,21 @@ export const MarketplaceRow = ({
   }
 
   return (
-    <Row transition="500" marginLeft="0">
-      <Column
-        className={bodySmall}
-        color="textSecondary"
-        textAlign="left"
-        flex="1"
-        display={{ sm: 'none', xxl: 'flex' }}
-      >
-        {asset.floorPrice ? `${asset.floorPrice.toFixed(3)} ETH` : '-'}
-      </Column>
-      <Column
-        className={bodySmall}
-        color="textSecondary"
-        textAlign="left"
-        flex="1"
-        display={{ sm: 'none', xxl: 'flex' }}
-      >
-        {asset.lastPrice ? `${asset.lastPrice.toFixed(3)} ETH` : '-'}
-      </Column>
+    <Row>
+      <PastPriceInfo>
+        <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
+          {asset.floorPrice ? `${asset.floorPrice.toFixed(3)} ETH` : '-'}
+        </ThemedText.BodySmall>
+      </PastPriceInfo>
+      <PastPriceInfo>
+        <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
+          {asset.lastPrice ? `${asset.lastPrice.toFixed(3)} ETH` : '-'}
+        </ThemedText.BodySmall>
+      </PastPriceInfo>
 
       <Row flex="2">
         {showMarketplaceLogo && (
-          <Column
-            position="relative"
-            cursor="pointer"
+          <MarketIconWrapper
             onMouseEnter={handleHover}
             onMouseLeave={handleHover}
             onClick={(e) => {
@@ -167,20 +209,11 @@ export const MarketplaceRow = ({
               removeMarket && removeMarket()
             }}
           >
-            <Box className={styles.removeMarketplace} visibility={hovered ? 'visible' : 'hidden'} position="absolute">
-              <Box as="img" width="32" src="/nft/svgs/minusCircle.svg" alt="Remove item" />
-            </Box>
-            <Box
-              as="img"
-              alt={selectedMarkets[0].name}
-              width="28"
-              height="28"
-              borderRadius="4"
-              objectFit="cover"
-              src={selectedMarkets[0].icon}
-              marginRight="16"
-            />
-          </Column>
+            <MarketIcon alt={selectedMarkets[0].name} src={selectedMarkets[0].icon} />
+            <RemoveMarketplaceWrap hovered={hovered}>
+              <img width="32px" src="/nft/svgs/minusCircle.svg" alt="Remove item" />
+            </RemoveMarketplaceWrap>
+          </MarketIconWrapper>
         )}
         {globalPriceMethod === SetPriceMethod.SAME_PRICE && !globalOverride ? (
           <PriceTextInput
@@ -207,30 +240,24 @@ export const MarketplaceRow = ({
         )}
       </Row>
 
-      <Column flex="1" display={{ sm: 'none', lg: 'flex' }}>
-        <Box className={body} color="textSecondary" width="full" textAlign="right">
-          <MouseoverTooltip
-            text={
-              <Row>
-                <Box width="full" fontSize="14">
-                  {selectedMarkets.map((selectedMarket, index) => {
-                    return <RoyaltyTooltip selectedMarket={selectedMarket} key={index} />
-                  })}
-                </Box>
-              </Row>
-            }
-            placement="left"
-          >
-            {fees > 0 ? `${fees}${selectedMarkets.length > 1 ? t`% max` : '%'}` : '--%'}
-          </MouseoverTooltip>
-        </Box>
-      </Column>
+      <FeeColumnWrapper>
+        <MouseoverTooltip
+          text={selectedMarkets.map((selectedMarket, index) => {
+            return <RoyaltyTooltip selectedMarket={selectedMarket} key={index} />
+          })}
+          placement="left"
+        >
+          <FeeWrapper>
+            <ThemedText.BodyPrimary color="textSecondary">
+              {fees > 0 ? `${fees}${selectedMarkets.length > 1 ? t`% max` : '%'}` : '--%'}
+            </ThemedText.BodyPrimary>
+          </FeeWrapper>
+        </MouseoverTooltip>
+      </FeeColumnWrapper>
 
-      <Column flex="1.5" display={{ sm: 'none', lg: 'flex' }}>
-        <Column width="full">
-          <EthPriceDisplay ethPrice={userReceives} />
-        </Column>
-      </Column>
+      <ReturnColumn>
+        <EthPriceDisplay ethPrice={userReceives} />
+      </ReturnColumn>
     </Row>
   )
 }
@@ -244,23 +271,19 @@ const EthPriceDisplay = ({ ethPrice = 0 }: { ethPrice?: number }) => {
   }, [])
 
   return (
-    <Column width="full">
-      <Row width="full" justifyContent="flex-end" color={ethPrice !== 0 ? 'textPrimary' : 'textSecondary'}>
+    <Row width="100%" justify="flex-end">
+      <ThemedText.BodyPrimary lineHeight="24px" color={ethPrice ? 'textPrimary' : 'textSecondary'} textAlign="right">
         {ethPrice !== 0 ? (
-          <>
-            <Column>
-              <Box className={body} color="textPrimary" textAlign="right" marginLeft="12" marginRight="0">
-                {formatEth(ethPrice)} ETH
-              </Box>
-              <Box className={body} color="textSecondary" textAlign="right" marginLeft="12" marginRight="0">
-                {formatUsdPrice(ethPrice * ethConversion)}
-              </Box>
-            </Column>
-          </>
+          <Column>
+            <span>{formatEth(ethPrice)} ETH</span>
+            <ThemedText.BodyPrimary color="textSecondary">
+              {formatUsdPrice(ethPrice * ethConversion)}
+            </ThemedText.BodyPrimary>
+          </Column>
         ) : (
           '- ETH'
         )}
-      </Row>
-    </Column>
+      </ThemedText.BodyPrimary>
+    </Row>
   )
 }
