@@ -163,9 +163,9 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
             </Row>
           )}
           <ContentRowContainer>
-            {content.map((row, index) => {
+            {content.map((row) => {
               return (
-                <ContentRow key={index}>
+                <ContentRow key={row.name}>
                   {isCollectionApprovalSection ? (
                     <CollectionIcon src={row.images[0]} />
                   ) : (
