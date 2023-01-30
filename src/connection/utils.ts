@@ -12,16 +12,19 @@ export function getIsInjected(): boolean {
   return Boolean(window.ethereum)
 }
 
-export function getHasMetaMaskExtensionInstalled(): boolean {
-  return window.ethereum?.isMetaMask ?? false
+export function getIsBraveWallet(): boolean {
+  return window.ethereum?.isBraveWallet ?? false
 }
 
-export function getHasCoinbaseExtensionInstalled(): boolean {
+export function getIsMetaMaskWallet(): boolean {
+  // When using Brave browser, `isMetaMask` is set to true when using the built-in wallet
+  // This function should return true only when using the MetaMask extension
+  // https://wallet-docs.brave.com/ethereum/wallet-detection#compatability-with-metamask
+  return (window.ethereum?.isMetaMask ?? false) && !getIsBraveWallet()
+}
+
+export function getIsCoinbaseWallet(): boolean {
   return window.ethereum?.isCoinbaseWallet ?? false
-}
-
-export function getIsMetaMask(connectionType: ConnectionType): boolean {
-  return connectionType === ConnectionType.INJECTED && getHasMetaMaskExtensionInstalled()
 }
 
 const CONNECTIONS = [
@@ -56,7 +59,7 @@ export function getConnection(c: Connector | ConnectionType) {
 
 export function getConnectionName(
   connectionType: ConnectionType,
-  hasMetaMaskExtension: boolean = getHasMetaMaskExtensionInstalled()
+  hasMetaMaskExtension: boolean = getIsMetaMaskWallet()
 ) {
   switch (connectionType) {
     case ConnectionType.INJECTED:
