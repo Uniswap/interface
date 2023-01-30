@@ -167,7 +167,7 @@ const Bag = () => {
   const { totalEthPrice, totalUsdPrice } = useMemo(() => {
     const totalEthPrice = itemsInBag.reduce(
       (total, item) =>
-        item.status !== BagItemStatus.UNAVAILABLE && BagItemStatus.SAVED_FOR_LATER
+        item.status !== BagItemStatus.UNAVAILABLE && item.status !== BagItemStatus.SAVED_FOR_LATER
           ? total.add(
               BigNumber.from(
                 item.asset.updatedPriceInfo ? item.asset.updatedPriceInfo.ETHPrice : item.asset.priceInfo.ETHPrice

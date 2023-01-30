@@ -136,6 +136,7 @@ export const BagRow = ({
       e.preventDefault()
       e.stopPropagation()
       setOptionsOpened(!optionsOpened)
+      window.addEventListener('click', () => setOptionsOpened(false))
     },
     [optionsOpened]
   )
