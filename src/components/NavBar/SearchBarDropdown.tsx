@@ -144,8 +144,9 @@ export const SearchBarDropdown = ({
   )
 
   const { chainId } = useWeb3React()
-  const { data: trendingTokenData, loading: trendingTokensAreLoading } = useTrendingTokensQuery({
+  const { data: trendingTokenData } = useTrendingTokensQuery({
     variables: { chain: chainIdToBackendName(chainId) },
+    fetchPolicy: 'cache-and-network',
   })
 
   const trendingTokenResults = useMemo(
@@ -295,7 +296,7 @@ export const SearchBarDropdown = ({
                 }}
                 header={<Trans>Popular tokens</Trans>}
                 headerIcon={<TrendingArrow />}
-                isLoading={trendingTokensAreLoading}
+                isLoading={!trendingTokenData}
               />
             )}
             {!isTokenPage && (
@@ -326,7 +327,7 @@ export const SearchBarDropdown = ({
     trendingCollections,
     trendingCollectionsAreLoading,
     trendingTokens,
-    trendingTokensAreLoading,
+    trendingTokenData,
     hoveredIndex,
     toggleOpen,
     shortenedHistory,

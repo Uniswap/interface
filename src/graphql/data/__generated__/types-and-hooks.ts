@@ -871,7 +871,7 @@ export type TrendingTokensQueryVariables = Exact<{
 }>;
 
 
-export type TrendingTokensQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', decimals?: number, name?: string, chain: Chain, standard?: TokenStandard, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', price?: { __typename?: 'Amount', value: number, currency?: Currency }, pricePercentChange?: { __typename?: 'Amount', value: number }, volume24H?: { __typename?: 'Amount', value: number, currency?: Currency } }, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string, safetyLevel?: SafetyLevel } }> };
+export type TrendingTokensQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', id: string, decimals?: number, name?: string, chain: Chain, standard?: TokenStandard, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number, currency?: Currency }, pricePercentChange?: { __typename?: 'Amount', id: string, value: number }, volume24H?: { __typename?: 'Amount', id: string, value: number, currency?: Currency } }, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string, safetyLevel?: SafetyLevel } }> };
 
 export type AssetQueryVariables = Exact<{
   address: Scalars['String'];
@@ -1219,6 +1219,7 @@ export type TopTokensSparklineQueryResult = Apollo.QueryResult<TopTokensSparklin
 export const TrendingTokensDocument = gql`
     query TrendingTokens($chain: Chain!) {
   topTokens(pageSize: 4, page: 1, chain: $chain, orderBy: VOLUME) {
+    id
     decimals
     name
     chain
@@ -1226,14 +1227,18 @@ export const TrendingTokensDocument = gql`
     address
     symbol
     market(currency: USD) {
+      id
       price {
+        id
         value
         currency
       }
       pricePercentChange(duration: DAY) {
+        id
         value
       }
       volume24H: volume(duration: DAY) {
+        id
         value
         currency
       }
