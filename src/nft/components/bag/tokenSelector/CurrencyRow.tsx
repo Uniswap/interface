@@ -35,7 +35,7 @@ const StyledCheck = styled(Check)`
 interface CurrencyRowProps {
   currency: Currency
   selected: boolean
-  selectCurrency: (currency: Currency) => void
+  selectCurrency: (currency: Currency | undefined) => void
 }
 
 export const CurrencyRow = ({ currency, selected, selectCurrency }: CurrencyRowProps) => {
@@ -43,7 +43,7 @@ export const CurrencyRow = ({ currency, selected, selectCurrency }: CurrencyRowP
   const balance = useCurrencyBalance(account ?? undefined, currency)
 
   return (
-    <TokenRow onClick={() => selectCurrency(currency)}>
+    <TokenRow onClick={() => selectCurrency(currency.isNative ? undefined : currency)}>
       <TokenInfoRow>
         <CurrencyLogo currency={currency} size="36px" />
         <Column>
