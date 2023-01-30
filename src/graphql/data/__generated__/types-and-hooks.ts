@@ -831,7 +831,7 @@ export type SearchTokensQueryVariables = Exact<{
 }>;
 
 
-export type SearchTokensQuery = { __typename?: 'Query', searchTokens?: Array<{ __typename?: 'Token', decimals?: number, name?: string, chain: Chain, standard?: TokenStandard, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', price?: { __typename?: 'Amount', value: number, currency?: Currency }, pricePercentChange?: { __typename?: 'Amount', value: number }, volume24H?: { __typename?: 'Amount', value: number, currency?: Currency } }, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string, safetyLevel?: SafetyLevel } }> };
+export type SearchTokensQuery = { __typename?: 'Query', searchTokens?: Array<{ __typename?: 'Token', id: string, decimals?: number, name?: string, chain: Chain, standard?: TokenStandard, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number, currency?: Currency }, pricePercentChange?: { __typename?: 'Amount', id: string, value: number }, volume24H?: { __typename?: 'Amount', id: string, value: number, currency?: Currency } }, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string, safetyLevel?: SafetyLevel } }> };
 
 export type TokenQueryVariables = Exact<{
   chain: Chain;
@@ -911,6 +911,7 @@ export type NftBalanceQuery = { __typename?: 'Query', nftBalances?: { __typename
 export const SearchTokensDocument = gql`
     query SearchTokens($searchQuery: String!) {
   searchTokens(searchQuery: $searchQuery) {
+    id
     decimals
     name
     chain
@@ -918,14 +919,18 @@ export const SearchTokensDocument = gql`
     address
     symbol
     market(currency: USD) {
+      id
       price {
+        id
         value
         currency
       }
       pricePercentChange(duration: DAY) {
+        id
         value
       }
       volume24H: volume(duration: DAY) {
+        id
         value
         currency
       }
