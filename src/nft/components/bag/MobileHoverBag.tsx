@@ -2,11 +2,12 @@ import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { body, bodySmall } from 'nft/css/common.css'
 import { useBag } from 'nft/hooks'
+import { BagItemStatus } from 'nft/types'
 import { ethNumberStandardFormatter, formatWeiToDecimal, roundAndPluralize } from 'nft/utils'
 
 import * as styles from './MobileHoverBag.css'
 export const MobileHoverBag = () => {
-  const itemsInBag = useBag((state) => state.itemsInBag)
+  const itemsInBag = useBag((state) => state.itemsInBag.filter((item) => item.status !== BagItemStatus.SAVED_FOR_LATER))
   const toggleBag = useBag((state) => state.toggleBag)
   const totalEthPrice = useBag((state) => state.totalEthPrice)
   const totalUsdPrice = useBag((state) => state.totalUsdPrice)
