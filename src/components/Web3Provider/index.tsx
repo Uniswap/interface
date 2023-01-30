@@ -1,7 +1,6 @@
 import { useWeb3React, Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { Connection } from 'connection'
-import { setMetMaskErrorHandler } from 'connection'
 import { getConnectionName } from 'connection/utils'
 import { isSupportedChain } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
@@ -9,19 +8,8 @@ import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/tra
 import useEagerlyConnect from 'hooks/useEagerlyConnect'
 import useOrderedConnections from 'hooks/useOrderedConnections'
 import { ReactNode, useEffect, useMemo } from 'react'
-import { useToggleMetaMaskConnectionErrorModal } from 'state/application/hooks'
 
 export default function Web3Provider({ children }: { children: ReactNode }) {
-  // https://github.com/MetaMask/metamask-extension/issues/13375
-  const toggleMetaMaskConnectionErrorModal = useToggleMetaMaskConnectionErrorModal()
-  useEffect(() => {
-    setMetMaskErrorHandler((error) => {
-      if (error.code === 1013) {
-        toggleMetaMaskConnectionErrorModal()
-      }
-    })
-  }, [toggleMetaMaskConnectionErrorModal])
-
   useEagerlyConnect()
   const connections = useOrderedConnections()
   const connectors: [Connector, Web3ReactHooks][] = connections.map(({ hooks, connector }) => [connector, hooks])

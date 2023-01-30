@@ -42,7 +42,7 @@ interface L1ChainInfo extends BaseChainInfo {
   readonly defaultListUrl?: string
 }
 
-export interface L2ChainInfo extends BaseChainInfo {
+interface L2ChainInfo extends BaseChainInfo {
   readonly networkType: NetworkType.L2
   readonly bridge: string
   readonly statusPage?: string

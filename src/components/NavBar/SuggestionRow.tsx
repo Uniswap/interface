@@ -181,6 +181,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
 
   return (
     <Link
+      data-cy={`searchbar-token-row-${token.symbol}`}
       to={tokenDetailsPath}
       onClick={handleClick}
       onMouseEnter={() => !isHovered && setHoveredIndex(index)}

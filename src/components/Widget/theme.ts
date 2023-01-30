@@ -1,21 +1,30 @@
+import { Theme } from '@uniswap/widgets'
 import { darkTheme, lightTheme } from 'theme/colors'
 
 const fonts = {
   fontFamily: 'Inter custom',
 }
 
-export const LIGHT_THEME = {
+export const LIGHT_THEME: Theme = {
   // surface
-  container: lightTheme.backgroundSurface,
-  interactive: lightTheme.backgroundInteractive,
-  module: lightTheme.backgroundModule,
   accent: lightTheme.accentAction,
-  dialog: lightTheme.backgroundBackdrop,
+  accentSoft: lightTheme.accentActionSoft,
+  container: lightTheme.backgroundSurface,
+  module: lightTheme.backgroundModule,
+  interactive: lightTheme.backgroundInteractive,
   outline: lightTheme.backgroundOutline,
+  dialog: lightTheme.backgroundBackdrop,
+  scrim: lightTheme.backgroundScrim,
   // text
+  onAccent: lightTheme.white,
   primary: lightTheme.textPrimary,
   secondary: lightTheme.textSecondary,
+  hint: lightTheme.textTertiary,
   onInteractive: lightTheme.accentTextDarkPrimary,
+  // shadow
+  deepShadow: lightTheme.deepShadow,
+  networkDefaultShadow: lightTheme.networkDefaultShadow,
+
   // state
   success: lightTheme.accentSuccess,
   warning: lightTheme.accentWarning,
@@ -24,18 +33,25 @@ export const LIGHT_THEME = {
   ...fonts,
 }
 
-export const DARK_THEME = {
+export const DARK_THEME: Theme = {
   // surface
-  container: darkTheme.backgroundSurface,
-  interactive: darkTheme.backgroundInteractive,
-  module: darkTheme.backgroundModule,
   accent: darkTheme.accentAction,
-  dialog: darkTheme.backgroundBackdrop,
+  accentSoft: darkTheme.accentActionSoft,
+  container: darkTheme.backgroundSurface,
+  module: darkTheme.backgroundModule,
+  interactive: darkTheme.backgroundInteractive,
   outline: darkTheme.backgroundOutline,
+  dialog: darkTheme.backgroundBackdrop,
+  scrim: darkTheme.backgroundScrim,
   // text
+  onAccent: darkTheme.white,
   primary: darkTheme.textPrimary,
   secondary: darkTheme.textSecondary,
+  hint: darkTheme.textTertiary,
   onInteractive: darkTheme.accentTextLightPrimary,
+  // shadow
+  deepShadow: darkTheme.deepShadow,
+  networkDefaultShadow: darkTheme.networkDefaultShadow,
   // state
   success: darkTheme.accentSuccess,
   warning: darkTheme.accentWarning,
