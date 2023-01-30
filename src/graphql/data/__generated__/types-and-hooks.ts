@@ -386,6 +386,7 @@ export type NftCollectionTraitStats = {
 
 export type NftCollectionsFilterInput = {
   addresses?: InputMaybe<Array<Scalars['String']>>;
+  nameQuery?: InputMaybe<Scalars['String']>;
 };
 
 export type NftContract = IContract & {
@@ -514,7 +515,6 @@ export type Portfolio = {
   tokenBalances?: Maybe<Array<Maybe<TokenBalance>>>;
   tokensTotalDenominatedValue?: Maybe<Amount>;
   tokensTotalDenominatedValueChange?: Maybe<AmountChange>;
-  tokensTotalDenominatedValueHistory?: Maybe<Array<Maybe<TimestampedAmount>>>;
 };
 
 
@@ -525,11 +525,6 @@ export type PortfolioAssetActivitiesArgs = {
 
 
 export type PortfolioTokensTotalDenominatedValueChangeArgs = {
-  duration?: InputMaybe<HistoryDuration>;
-};
-
-
-export type PortfolioTokensTotalDenominatedValueHistoryArgs = {
   duration?: InputMaybe<HistoryDuration>;
 };
 
@@ -847,19 +842,21 @@ export type SearchTokensQueryVariables = Exact<{
 export type SearchTokensQuery = { __typename?: 'Query', searchTokens?: Array<{ __typename?: 'Token', id: string, decimals?: number, name?: string, chain: Chain, standard?: TokenStandard, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number, currency?: Currency }, pricePercentChange?: { __typename?: 'Amount', id: string, value: number }, volume24H?: { __typename?: 'Amount', id: string, value: number, currency?: Currency } }, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string, safetyLevel?: SafetyLevel } }> };
 
 export type TokenQueryVariables = Exact<{
-  contract: ContractInput;
+  chain: Chain;
+  address?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type TokenQuery = { __typename?: 'Query', tokens?: Array<{ __typename?: 'Token', id: string, decimals?: number, name?: string, chain: Chain, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', id: string, totalValueLocked?: { __typename?: 'Amount', id: string, value: number, currency?: Currency }, price?: { __typename?: 'Amount', id: string, value: number, currency?: Currency }, volume24H?: { __typename?: 'Amount', id: string, value: number, currency?: Currency }, priceHigh52W?: { __typename?: 'Amount', id: string, value: number }, priceLow52W?: { __typename?: 'Amount', id: string, value: number } }, project?: { __typename?: 'TokenProject', id: string, description?: string, homepageUrl?: string, twitterName?: string, logoUrl?: string, tokens: Array<{ __typename?: 'Token', id: string, chain: Chain, address?: string }> } }> };
+export type TokenQuery = { __typename?: 'Query', token?: { __typename?: 'Token', id: string, decimals?: number, name?: string, chain: Chain, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', id: string, totalValueLocked?: { __typename?: 'Amount', id: string, value: number, currency?: Currency }, price?: { __typename?: 'Amount', id: string, value: number, currency?: Currency }, volume24H?: { __typename?: 'Amount', id: string, value: number, currency?: Currency }, priceHigh52W?: { __typename?: 'Amount', id: string, value: number }, priceLow52W?: { __typename?: 'Amount', id: string, value: number } }, project?: { __typename?: 'TokenProject', id: string, description?: string, homepageUrl?: string, twitterName?: string, logoUrl?: string, tokens: Array<{ __typename?: 'Token', id: string, chain: Chain, address?: string }> } } };
 
 export type TokenPriceQueryVariables = Exact<{
-  contract: ContractInput;
+  chain: Chain;
+  address?: InputMaybe<Scalars['String']>;
   duration: HistoryDuration;
 }>;
 
 
-export type TokenPriceQuery = { __typename?: 'Query', tokens?: Array<{ __typename?: 'Token', id: string, address?: string, chain: Chain, market?: { __typename?: 'TokenMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number }, priceHistory?: Array<{ __typename?: 'TimestampedAmount', id: string, timestamp: number, value: number }> } }> };
+export type TokenPriceQuery = { __typename?: 'Query', token?: { __typename?: 'Token', id: string, address?: string, chain: Chain, market?: { __typename?: 'TokenMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number }, priceHistory?: Array<{ __typename?: 'TimestampedAmount', id: string, timestamp: number, value: number }> } } };
 
 export type TopTokens100QueryVariables = Exact<{
   duration: HistoryDuration;
@@ -875,14 +872,14 @@ export type TopTokensSparklineQueryVariables = Exact<{
 }>;
 
 
-export type TopTokensSparklineQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', id: string, address?: string, chain: Chain, market?: { __typename?: 'TokenMarket', priceHistory?: Array<{ __typename?: 'TimestampedAmount', timestamp: number, value: number }> } }> };
+export type TopTokensSparklineQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', id: string, address?: string, chain: Chain, market?: { __typename?: 'TokenMarket', id: string, priceHistory?: Array<{ __typename?: 'TimestampedAmount', id: string, timestamp: number, value: number }> } }> };
 
 export type TrendingTokensQueryVariables = Exact<{
   chain: Chain;
 }>;
 
 
-export type TrendingTokensQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', id: string, decimals?: number, name?: string, chain: Chain, standard?: TokenStandard, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number, currency?: Currency }, pricePercentChange?: { __typename?: 'Amount', id: string, value: number }, volume24H?: { __typename?: 'Amount', id: string, value: number, currency?: Currency } }, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string, safetyLevel?: SafetyLevel, name?: string } }> };
+export type TrendingTokensQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', id: string, decimals?: number, name?: string, chain: Chain, standard?: TokenStandard, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number, currency?: Currency }, pricePercentChange?: { __typename?: 'Amount', id: string, value: number }, volume24H?: { __typename?: 'Amount', id: string, value: number, currency?: Currency } }, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string, safetyLevel?: SafetyLevel } }> };
 
 export type AssetQueryVariables = Exact<{
   address: Scalars['String'];
@@ -1079,8 +1076,8 @@ export type SearchTokensQueryHookResult = ReturnType<typeof useSearchTokensQuery
 export type SearchTokensLazyQueryHookResult = ReturnType<typeof useSearchTokensLazyQuery>;
 export type SearchTokensQueryResult = Apollo.QueryResult<SearchTokensQuery, SearchTokensQueryVariables>;
 export const TokenDocument = gql`
-    query Token($contract: ContractInput!) {
-  tokens(contracts: [$contract]) {
+    query Token($chain: Chain!, $address: String) {
+  token(chain: $chain, address: $address) {
     id
     decimals
     name
@@ -1141,7 +1138,8 @@ export const TokenDocument = gql`
  * @example
  * const { data, loading, error } = useTokenQuery({
  *   variables: {
- *      contract: // value for 'contract'
+ *      chain: // value for 'chain'
+ *      address: // value for 'address'
  *   },
  * });
  */
@@ -1157,8 +1155,8 @@ export type TokenQueryHookResult = ReturnType<typeof useTokenQuery>;
 export type TokenLazyQueryHookResult = ReturnType<typeof useTokenLazyQuery>;
 export type TokenQueryResult = Apollo.QueryResult<TokenQuery, TokenQueryVariables>;
 export const TokenPriceDocument = gql`
-    query TokenPrice($contract: ContractInput!, $duration: HistoryDuration!) {
-  tokens(contracts: [$contract]) {
+    query TokenPrice($chain: Chain!, $address: String, $duration: HistoryDuration!) {
+  token(chain: $chain, address: $address) {
     id
     address
     chain
@@ -1190,7 +1188,8 @@ export const TokenPriceDocument = gql`
  * @example
  * const { data, loading, error } = useTokenPriceQuery({
  *   variables: {
- *      contract: // value for 'contract'
+ *      chain: // value for 'chain'
+ *      address: // value for 'address'
  *      duration: // value for 'duration'
  *   },
  * });
@@ -1280,7 +1279,9 @@ export const TopTokensSparklineDocument = gql`
     address
     chain
     market(currency: USD) {
+      id
       priceHistory(duration: $duration) {
+        id
         timestamp
         value
       }
@@ -1348,7 +1349,6 @@ export const TrendingTokensDocument = gql`
       id
       logoUrl
       safetyLevel
-      name
     }
   }
 }

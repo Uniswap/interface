@@ -25,19 +25,8 @@ export interface Connection {
   type: ConnectionType
 }
 
-let metaMaskErrorHandler: (error: Error) => void | undefined
-
-export function setMetMaskErrorHandler(errorHandler: (error: Error) => void) {
-  metaMaskErrorHandler = errorHandler
-}
-
 function onError(error: Error) {
   console.debug(`web3-react error: ${error}`)
-}
-
-function onMetamaskError(error: Error) {
-  onError(error)
-  metaMaskErrorHandler?.(error)
 }
 
 const [web3Network, web3NetworkHooks] = initializeConnector<Network>(
@@ -49,9 +38,7 @@ export const networkConnection: Connection = {
   type: ConnectionType.NETWORK,
 }
 
-const [web3Injected, web3InjectedHooks] = initializeConnector<MetaMask>(
-  (actions) => new MetaMask({ actions, onError: onMetamaskError })
-)
+const [web3Injected, web3InjectedHooks] = initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError }))
 export const injectedConnection: Connection = {
   connector: web3Injected,
   hooks: web3InjectedHooks,

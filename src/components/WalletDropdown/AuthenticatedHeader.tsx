@@ -21,7 +21,6 @@ import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Copy, CreditCard, ExternalLink as ExternalLinkIcon, Info, Power } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
-import { Text } from 'rebass'
 import { useCurrencyBalanceString } from 'state/connection/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { useFiatOnrampAck } from 'state/user/hooks'
@@ -57,7 +56,7 @@ const BuyCryptoButton = styled(ThemeButton)<{ $animateBorder: boolean }>`
   border-style: solid;
   border-width: 1px;
   height: 40px;
-  margin-top: 12px;
+  margin-top: 8px;
   animation-direction: alternate;
   animation-duration: ${({ theme }) => theme.transition.duration.slow};
   animation-fill-mode: none;
@@ -70,7 +69,7 @@ const WalletButton = styled(ThemeButton)`
   border-radius: 12px;
   padding-top: 10px;
   padding-bottom: 10px;
-  margin-top: 12px;
+  margin-top: 4px;
   color: white;
   border: none;
 `
@@ -127,15 +126,6 @@ const FiatOnrampAvailabilityExternalLink = styled(ExternalLink)`
   margin-left: 6px;
   width: 14px;
 `
-const FlexContainer = styled.div`
-  display: flex;
-`
-
-const StatusWrapper = styled.div`
-  display: inline-block;
-  margin-top: 4px;
-  width: 70%;
-`
 
 const TruncatedTextStyle = css`
   text-overflow: ellipsis;
@@ -143,8 +133,14 @@ const TruncatedTextStyle = css`
   white-space: nowrap;
 `
 
-const AccountNamesWrapper = styled.div`
+const FlexContainer = styled.div`
   ${TruncatedTextStyle}
+  padding-right: 4px;
+  display: inline-flex;
+`
+
+const AccountNamesWrapper = styled.div`
+  min-width: 0;
   margin-right: 8px;
 `
 
@@ -168,6 +164,9 @@ const StyledLoadingButtonSpinner = styled(LoadingButtonSpinner)`
   fill: ${({ theme }) => theme.accentAction};
 `
 const BalanceWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   padding: 16px 0;
 `
 
@@ -175,10 +174,6 @@ const HeaderWrapper = styled.div`
   margin-bottom: 12px;
   display: flex;
   justify-content: space-between;
-`
-
-const AuthenticatedHeaderWrapper = styled.div`
-  padding: 0 16px;
 `
 
 const AuthenticatedHeader = () => {
@@ -280,21 +275,19 @@ const AuthenticatedHeader = () => {
   const closeFiatOnrampUnavailableTooltip = useCallback(() => setShow(false), [setShow])
 
   return (
-    <AuthenticatedHeaderWrapper>
+    <>
       <HeaderWrapper>
-        <StatusWrapper>
-          <FlexContainer>
-            <StatusIcon connectionType={connectionType} size={24} />
-            {ENSName ? (
-              <AccountNamesWrapper>
-                <ENSNameContainer>{ENSName}</ENSNameContainer>
-                <AccountContainer>{account && shortenAddress(account, 2, 4)}</AccountContainer>
-              </AccountNamesWrapper>
-            ) : (
-              <ThemedText.SubHeader marginTop="2.5px">{account && shortenAddress(account, 2, 4)}</ThemedText.SubHeader>
-            )}
-          </FlexContainer>
-        </StatusWrapper>
+        <FlexContainer>
+          <StatusIcon connectionType={connectionType} size={24} />
+          {ENSName ? (
+            <AccountNamesWrapper>
+              <ENSNameContainer>{ENSName}</ENSNameContainer>
+              <AccountContainer>{account && shortenAddress(account, 2, 4)}</AccountContainer>
+            </AccountNamesWrapper>
+          ) : (
+            <ThemedText.SubHeader marginTop="2.5px">{account && shortenAddress(account, 2, 4)}</ThemedText.SubHeader>
+          )}
+        </FlexContainer>
         <IconContainer>
           <IconButton onClick={copy} Icon={Copy}>
             {isCopied ? <Trans>Copied!</Trans> : <Trans>Copy</Trans>}
@@ -309,9 +302,10 @@ const AuthenticatedHeader = () => {
       </HeaderWrapper>
       <Column>
         <BalanceWrapper>
-          <Text fontSize={36} fontWeight={400}>
+          <ThemedText.SubHeaderSmall>ETH Balance</ThemedText.SubHeaderSmall>
+          <ThemedText.HeadlineLarge fontSize={36} fontWeight={400}>
             {balanceString} {nativeCurrencySymbol}
-          </Text>
+          </ThemedText.HeadlineLarge>
           {amountUSD !== undefined && <USDText>{formatUSDPrice(amountUSD)} USD</USDText>}
         </BalanceWrapper>
         <ProfileButton
@@ -335,7 +329,11 @@ const AuthenticatedHeader = () => {
                 <ThemedText.BodyPrimary>{error}</ThemedText.BodyPrimary>
               ) : (
                 <>
-                  {fiatOnrampAvailabilityLoading ? <StyledLoadingButtonSpinner /> : <CreditCard />}{' '}
+                  {fiatOnrampAvailabilityLoading ? (
+                    <StyledLoadingButtonSpinner />
+                  ) : (
+                    <CreditCard height="20px" width="20px" />
+                  )}{' '}
                   <Trans>Buy crypto</Trans>
                 </>
               )}
@@ -371,7 +369,7 @@ const AuthenticatedHeader = () => {
           </UNIButton>
         )}
       </Column>
-    </AuthenticatedHeaderWrapper>
+    </>
   )
 }
 

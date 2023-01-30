@@ -48,7 +48,7 @@ const SearchBarDropdownSection = ({
   eventProperties,
 }: SearchBarDropdownSectionProps) => {
   return (
-    <Column gap="12">
+    <Column gap="12" data-cy="searchbar-dropdown">
       <Row paddingX="16" paddingY="4" gap="8" color="gray300" className={subheadSmall} style={{ lineHeight: '20px' }}>
         {headerIcon ? headerIcon : null}
         <Box>{header}</Box>
@@ -113,8 +113,9 @@ export const SearchBarDropdown = ({
 }: SearchBarDropdownProps) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(0)
 
-  const { data: searchHistory, loading: recentlySearchedLoading } = useRecentlySearchedAssets()
-  const shortenedHistory = useMemo(() => searchHistory.slice(0, 2), [searchHistory])
+  const { data: searchHistory } = useRecentlySearchedAssets()
+  const shortenedHistory = useMemo(() => searchHistory?.slice(0, 2) ?? [...Array<FungibleToken>(2)], [searchHistory])
+  console.log(searchHistory)
 
   const { pathname } = useLocation()
   const isNFTPage = useIsNftPage()
@@ -146,9 +147,8 @@ export const SearchBarDropdown = ({
   )
 
   const { chainId } = useWeb3React()
-  const { data: trendingTokenData, loading: trendingTokensAreLoading } = useTrendingTokensQuery({
+  const { data: trendingTokenData } = useTrendingTokensQuery({
     variables: { chain: chainIdToBackendName(chainId) },
-    fetchPolicy: 'cache-first',
   })
 
   const trendingTokenResults = useMemo(
@@ -266,7 +266,7 @@ export const SearchBarDropdown = ({
         ) : (
           // Recent Searches, Trending Tokens, Trending Collections
           <Column gap="20">
-            {(shortenedHistory.length > 0 || recentlySearchedLoading) && (
+            {shortenedHistory.length > 0 && (
               <SearchBarDropdownSection
                 hoveredIndex={hoveredIndex}
                 startingIndex={0}
@@ -279,7 +279,7 @@ export const SearchBarDropdown = ({
                 }}
                 header={<Trans>Recent searches</Trans>}
                 headerIcon={<ClockIcon />}
-                isLoading={recentlySearchedLoading}
+                isLoading={!searchHistory}
               />
             )}
             {!isNFTPage && (
@@ -295,7 +295,7 @@ export const SearchBarDropdown = ({
                 }}
                 header={<Trans>Popular tokens</Trans>}
                 headerIcon={<TrendingArrow />}
-                isLoading={trendingTokensAreLoading}
+                isLoading={!trendingTokenData}
               />
             )}
             {!isTokenPage && (
@@ -326,7 +326,7 @@ export const SearchBarDropdown = ({
     trendingCollections,
     trendingCollectionsAreLoading,
     trendingTokens,
-    trendingTokensAreLoading,
+    trendingTokenData,
     hoveredIndex,
     toggleOpen,
     shortenedHistory,
@@ -337,7 +337,7 @@ export const SearchBarDropdown = ({
     queryText,
     totalSuggestions,
     trace,
-    recentlySearchedLoading,
+    searchHistory,
   ])
 
   return (

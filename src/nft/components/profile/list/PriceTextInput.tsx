@@ -1,13 +1,67 @@
 import { Trans } from '@lingui/macro'
-import { Box } from 'nft/components/Box'
-import { Column, Row } from 'nft/components/Flex'
+import Column from 'components/Column'
+import Row from 'components/Row'
 import { AttachPriceIcon, EditPriceIcon } from 'nft/components/icons'
 import { NumericInput } from 'nft/components/layout/Input'
-import { badge, body } from 'nft/css/common.css'
+import { body } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { ListingWarning, WalletAsset } from 'nft/types'
 import { formatEth } from 'nft/utils/currency'
 import { Dispatch, FormEvent, useEffect, useRef, useState } from 'react'
+import styled, { useTheme } from 'styled-components/macro'
+import { BREAKPOINTS } from 'theme'
+import { colors } from 'theme/colors'
+
+const PriceTextInputWrapper = styled(Column)`
+  gap: 12px;
+  position: relative;
+`
+
+const InputWrapper = styled(Row)<{ borderColor: string }>`
+  height: 44px;
+  color: ${({ theme }) => theme.textTertiary};
+  padding: 4px;
+  border: 2px solid;
+  border-radius: 8px;
+  border-color: ${({ borderColor }) => borderColor};
+  margin-right: auto;
+  box-sizing: border-box;
+`
+
+const CurrencyWrapper = styled.div<{ listPrice: number | undefined }>`
+  margin-right: 16px;
+  color: ${({ listPrice, theme }) => (listPrice ? theme.textPrimary : theme.textSecondary)};
+`
+
+const GlobalPriceIcon = styled.div`
+  display: block;
+  cursor: pointer;
+  position: absolute;
+  top: -6px;
+  right: -4px;
+  background-color: ${({ theme }) => theme.backgroundSurface};
+`
+
+const WarningMessage = styled(Row)<{ warningType: WarningType }>`
+  top: 52px;
+  width: max-content;
+  position: absolute;
+  right: 0;
+  font-weight: 600;
+  font-size: 10px;
+  line-height: 12px;
+  color: ${({ warningType, theme }) => (warningType === WarningType.BELOW_FLOOR ? colors.red400 : theme.textSecondary)};
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    right: unset;
+  }
+`
+
+const WarningAction = styled.div<{ warningType: WarningType }>`
+  margin-left: 8px;
+  cursor: pointer;
+  color: ${({ warningType, theme }) => (warningType === WarningType.BELOW_FLOOR ? theme.accentAction : colors.red400)};
+`
 
 enum WarningType {
   BELOW_FLOOR,
@@ -54,6 +108,7 @@ export const PriceTextInput = ({
   const removeMarketplaceWarning = useSellAsset((state) => state.removeMarketplaceWarning)
   const removeSellAsset = useSellAsset((state) => state.removeSellAsset)
   const inputRef = useRef() as React.MutableRefObject<HTMLInputElement>
+  const theme = useTheme()
 
   useEffect(() => {
     inputRef.current.value = listPrice !== undefined ? `${listPrice}` : ''
@@ -66,27 +121,18 @@ export const PriceTextInput = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listPrice])
 
+  const borderColor =
+    warningType !== WarningType.NONE && !focused
+      ? colors.red400
+      : isGlobalPrice
+      ? theme.accentAction
+      : listPrice != null
+      ? theme.textSecondary
+      : theme.accentAction
+
   return (
-    <Column gap="12" position="relative">
-      <Row
-        color="textTertiary"
-        height="44"
-        width="min"
-        padding="4"
-        borderRadius="8"
-        borderWidth="2px"
-        borderStyle="solid"
-        marginRight="auto"
-        borderColor={
-          warningType !== WarningType.NONE && !focused
-            ? 'orange'
-            : isGlobalPrice
-            ? 'accentAction'
-            : listPrice != null
-            ? 'textSecondary'
-            : 'blue400'
-        }
-      >
+    <PriceTextInputWrapper>
+      <InputWrapper borderColor={borderColor}>
         <NumericInput
           as="input"
           pattern="[0-9]"
@@ -111,28 +157,14 @@ export const PriceTextInput = ({
             setListPrice(isNaN(val) ? undefined : val)
           }}
         />
-        <Box color={listPrice && listPrice >= 0 ? 'textPrimary' : 'textSecondary'} marginRight="16">
-          &nbsp;ETH
-        </Box>
-        <Box
-          cursor="pointer"
-          display={isGlobalPrice || globalOverride ? 'block' : 'none'}
-          position="absolute"
-          style={{ marginTop: '-36px', marginLeft: '124px' }}
-          backgroundColor="backgroundSurface"
-          onClick={() => setGlobalOverride(!globalOverride)}
-        >
-          {globalOverride ? <AttachPriceIcon /> : <EditPriceIcon />}
-        </Box>
-      </Row>
-      <Row
-        top="52"
-        width="max"
-        className={badge}
-        color={warningType === WarningType.BELOW_FLOOR && !focused ? 'orange' : 'textSecondary'}
-        position="absolute"
-        right={{ sm: '0', md: 'unset' }}
-      >
+        <CurrencyWrapper listPrice={listPrice}>&nbsp;ETH</CurrencyWrapper>
+        {(isGlobalPrice || globalOverride) && (
+          <GlobalPriceIcon onClick={() => setGlobalOverride(!globalOverride)}>
+            {globalOverride ? <AttachPriceIcon /> : <EditPriceIcon />}
+          </GlobalPriceIcon>
+        )}
+      </InputWrapper>
+      <WarningMessage warningType={warningType}>
         {warning
           ? warning.message
           : warningType !== WarningType.NONE && (
@@ -143,20 +175,18 @@ export const PriceTextInput = ({
                   ? formatEth(asset?.floorPrice ?? 0)
                   : formatEth(asset?.floor_sell_order_price ?? 0)}
                 ETH
-                <Box
-                  color={warningType === WarningType.BELOW_FLOOR ? 'accentAction' : 'orange'}
-                  marginLeft="8"
-                  cursor="pointer"
+                <WarningAction
+                  warningType={warningType}
                   onClick={() => {
                     warningType === WarningType.ALREADY_LISTED && removeSellAsset(asset)
                     setWarningType(WarningType.NONE)
                   }}
                 >
                   {warningType === WarningType.BELOW_FLOOR ? <Trans>DISMISS</Trans> : <Trans>REMOVE ITEM</Trans>}
-                </Box>
+                </WarningAction>
               </>
             )}
-      </Row>
-    </Column>
+      </WarningMessage>
+    </PriceTextInputWrapper>
   )
 }

@@ -58,42 +58,41 @@ export function useRecentlySearchedAssets() {
           chain: token.chain,
         })),
     },
-    fetchPolicy: 'cache-first',
   })
 
-  return useMemo(() => {
-    if (!loading) {
-      // Collects both tokens and collections in a map, so they can later be returned in original order
-      const resultsMap: { [key: string]: GenieCollection | FungibleToken } = {}
+  const data = useMemo(() => {
+    if (!queryData) return undefined
+    // Collects both tokens and collections in a map, so they can later be returned in original order
+    const resultsMap: { [key: string]: GenieCollection | FungibleToken } = {}
 
-      const tokens = queryData?.tokens && parseFungibleTokens(queryData.tokens)
-      const queryCollections = queryData?.nftCollections?.edges.map((edge) => edge.node as NonNullable<NftCollection>)
-      const collections = queryCollections?.map(
-        (queryCollection): GenieCollection => {
-          return {
-            address: queryCollection.nftContracts?.[0]?.address ?? '',
-            isVerified: queryCollection?.isVerified,
-            name: queryCollection?.name,
-            stats: {
-              floor_price: queryCollection?.markets?.[0]?.floorPrice?.value,
-              total_supply: queryCollection?.numAssets,
-            },
-            imageUrl: queryCollection?.image?.url ?? '',
-          }
-        },
-        [queryCollections]
-      )
-      collections?.forEach((collection) => (resultsMap[collection.address] = collection))
-      tokens?.forEach((token) => {
-        if (token.address) resultsMap[token.address] = token
-      })
+    const tokens = queryData?.tokens && parseFungibleTokens(queryData.tokens)
+    const queryCollections = queryData?.nftCollections?.edges.map((edge) => edge.node as NonNullable<NftCollection>)
+    const collections = queryCollections?.map(
+      (queryCollection): GenieCollection => {
+        return {
+          address: queryCollection.nftContracts?.[0]?.address ?? '',
+          isVerified: queryCollection?.isVerified,
+          name: queryCollection?.name,
+          stats: {
+            floor_price: queryCollection?.markets?.[0]?.floorPrice?.value,
+            total_supply: queryCollection?.numAssets,
+          },
+          imageUrl: queryCollection?.image?.url ?? '',
+        }
+      },
+      [queryCollections]
+    )
+    collections?.forEach((collection) => (resultsMap[collection.address] = collection))
+    tokens?.forEach((token) => {
+      if (token.address) resultsMap[token.address] = token
+    })
 
-      const data: (FungibleToken | GenieCollection)[] = []
-      shortenedHistory.forEach((asset) => {
-        if (resultsMap[asset.address]) data.push(resultsMap[asset.address])
-      })
-      return { data, loading }
-    }
-    return { data: [...Array<FungibleToken>(4)], loading }
-  }, [loading, queryData?.nftCollections?.edges, queryData?.tokens, shortenedHistory])
+    const data: (FungibleToken | GenieCollection)[] = []
+    shortenedHistory.forEach((asset) => {
+      if (resultsMap[asset.address]) data.push(resultsMap[asset.address])
+    })
+    return data
+  }, [queryData, shortenedHistory])
+
+  return { data, loading }
 }

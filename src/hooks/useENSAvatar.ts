@@ -77,8 +77,8 @@ function useAvatarFromNFT(nftUri = '', enforceOwnership: boolean): { avatar?: st
   const [contractAddress, id] = parts[2]?.split('/') ?? []
   const isERC721 = protocol === 'eip155' && erc === 'erc721'
   const isERC1155 = protocol === 'eip155' && erc === 'erc1155'
-  const erc721 = useERC721Uri(isERC721 ? contractAddress : undefined, id, enforceOwnership)
-  const erc1155 = useERC1155Uri(isERC1155 ? contractAddress : undefined, id, enforceOwnership)
+  const erc721 = useERC721Uri(isERC721 ? contractAddress : undefined, isERC721 ? id : undefined, enforceOwnership)
+  const erc1155 = useERC1155Uri(isERC1155 ? contractAddress : undefined, isERC1155 ? id : undefined, enforceOwnership)
   const uri = erc721.uri || erc1155.uri
   const http = uri && uriToHttp(uri)[0]
 
@@ -136,14 +136,18 @@ function useERC1155Uri(
   const contract = useERC1155Contract(contractAddress)
   const balance = useSingleCallResult(contract, 'balanceOf', accountArgument)
   const uri = useSingleCallResult(contract, 'uri', idArgument)
-  // ERC-1155 allows a generic {id} in the URL, so prepare to replace if relevant,
-  //   in lowercase hexadecimal (with no 0x prefix) and leading zero padded to 64 hex characters.
-  const idHex = id ? hexZeroPad(BigNumber.from(id).toHexString(), 32).substring(2) : id
-  return useMemo(
-    () => ({
-      uri: !enforceOwnership || balance.result?.[0] > 0 ? uri.result?.[0]?.replaceAll('{id}', idHex) : undefined,
-      loading: balance.loading || uri.loading,
-    }),
-    [balance.loading, balance.result, enforceOwnership, uri.loading, uri.result, idHex]
-  )
+  return useMemo(() => {
+    try {
+      // ERC-1155 allows a generic {id} in the URL, so prepare to replace if relevant,
+      // in lowercase hexadecimal (with no 0x prefix) and leading zero padded to 64 hex characters.
+      const idHex = id ? hexZeroPad(BigNumber.from(id).toHexString(), 32).substring(2) : id
+      return {
+        uri: !enforceOwnership || balance.result?.[0] > 0 ? uri.result?.[0]?.replaceAll('{id}', idHex) : undefined,
+        loading: balance.loading || uri.loading,
+      }
+    } catch (error) {
+      console.error('Invalid token id', error)
+      return { loading: false }
+    }
+  }, [balance.loading, balance.result, enforceOwnership, uri.loading, uri.result, id])
 }
