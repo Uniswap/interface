@@ -209,13 +209,13 @@ const TokenPrice = styled.div`
   align-items: center;
   justify-content: center;
   padding: 8px 16px;
-  background-color: ${({ theme }) => (theme.darkMode ? theme.bg1 : theme.bg3)};
-  border: 1px solid ${({ theme }) => (theme.darkMode ? theme.bg1 : theme.bg0)};
+  background-color: ${({ theme }) => (theme.darkMode ? theme.bg2 : theme.bg3)};
+  border: 2px solid ${({ theme }) => (theme.darkMode ? theme.bg3 : theme.bg0)};
   border-radius: 20px;
 
   :hover {
-    background-color: ${({ theme }) => (theme.darkMode ? theme.bg1 : theme.bg0)};
-    border: 1px solid ${({ theme }) => theme.bg3};
+    background-color: ${({ theme }) => (theme.darkMode ? theme.bg2 : theme.bg0)};
+    border: 2px solid ${({ theme }) => theme.bg3};
   }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`

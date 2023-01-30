@@ -784,7 +784,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                     </GreyCard>
                   ) : showApproveFlow ? (
                     <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
-                      <AutoColumn style={{ width: '100%' }} gap="12px">
+                      <AutoColumn style={{ width: '100%' }} gap="md">
                         <ButtonConfirmed
                           onClick={handleApprove}
                           disabled={
@@ -1186,7 +1186,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                 </GreyCard>
               ) : showApproveFlow ? (
                 <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
-                  <AutoColumn style={{ width: '100%' }} gap="12px">
+                  <AutoColumn style={{ width: '100%' }} gap="md">
                     <ButtonConfirmed
                       onClick={handleApprove}
                       disabled={

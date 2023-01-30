@@ -26,6 +26,7 @@ import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { useActiveWeb3React } from 'hooks/web3'
 import JSBI from 'jsbi'
 import { DateTime } from 'luxon/src/luxon'
+import { darken } from 'polished'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import ReactGA from 'react-ga'
 import { Link, RouteComponentProps } from 'react-router-dom'
@@ -108,7 +109,7 @@ const LinkRow = styled(ExternalLink)`
   padding: 16px;
   text-decoration: none;
   font-weight: 500;
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.bg6};
 
   &:last-of-type {
     margin: 8px 0 0 0;
@@ -119,7 +120,7 @@ const LinkRow = styled(ExternalLink)`
   }
 
   :hover {
-    background-color: ${({ theme }) => theme.bg2};
+    background-color: ${({ theme }) => darken(0.03, theme.bg6)};};
   }
 
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
@@ -948,7 +949,7 @@ export function PositionPage({
           </AutoColumn>
           <PriceDetails>
             <AutoColumn gap="md">
-              <DarkCard>
+              <DarkCard style={{ padding: '0' }}>
                 <AutoColumn gap="md" style={{ width: '100%' }}>
                   <AutoColumn gap="md">
                     <Label>
@@ -1034,79 +1035,82 @@ export function PositionPage({
                   </LightCard>
                 </AutoColumn>
               </DarkCard>
-              <RowBetween>
-                <RowFixed>
-                  <Label display="flex" style={{ marginRight: '12px' }}>
-                    <Trans>Price Details</Trans>
-                  </Label>
-                </RowFixed>
-              </RowBetween>
-              <RowBetween>
-                <LightCard padding="12px" width="100%">
-                  <AutoColumn gap="8px" justify="center">
-                    <ExtentsText>
-                      <Trans>Current price </Trans>
-                    </ExtentsText>
-                    <TYPE.mediumHeader textAlign="center">
-                      <span onClick={() => setInvert(!invert)}>
-                        {inverted
-                          ? pool && commafy(pool.token1Price?.toSignificant(6))
-                          : pool && commafy(pool.token0Price?.toSignificant(6))}
-                      </span>
-                    </TYPE.mediumHeader>
-                    <TYPE.darkGray>
-                      {!isTokenStable && currentPriceInUSD && numberOfZeros <= 2 ? (
-                        <span>(${formatPrice(currentPriceInUSD)})</span>
-                      ) : (
-                        ''
-                      )}
-                      {numberOfZeros > 2 && !isTokenStable ? (
-                        <span>
-                          ($ 0.0<sub>{numberOfZeros}</sub>
-                          {leftoverDigits.substring(0, 4)})
-                        </span>
-                      ) : (
-                        ''
-                      )}
-                    </TYPE.darkGray>
-                    <ExtentsText>
-                      {' '}
-                      <Trans>
+              <DarkCard style={{ padding: '0' }}>
+                <RowBetween>
+                  <RowFixed>
+                    <Label display="flex" style={{ marginRight: '12px' }}>
+                      <Trans>Price Details</Trans>
+                    </Label>
+                  </RowFixed>
+                </RowBetween>
+                <br />
+                <RowBetween>
+                  <LightCard padding="12px" width="100%">
+                    <AutoColumn gap="8px" justify="center">
+                      <ExtentsText>
+                        <Trans>Current price </Trans>
+                      </ExtentsText>
+                      <TYPE.mediumHeader textAlign="center">
                         <span onClick={() => setInvert(!invert)}>
-                          {invert ? currencyQuote?.symbol : currencyBase?.symbol} per{' '}
-                          {invert ? currencyBase?.symbol : currencyQuote?.symbol}
+                          {inverted
+                            ? pool && commafy(pool.token1Price?.toSignificant(6))
+                            : pool && commafy(pool.token0Price?.toSignificant(6))}
                         </span>
-                      </Trans>
-                    </ExtentsText>
-                  </AutoColumn>
-                </LightCard>
+                      </TYPE.mediumHeader>
+                      <TYPE.darkGray>
+                        {!isTokenStable && currentPriceInUSD && numberOfZeros <= 2 ? (
+                          <span>(${formatPrice(currentPriceInUSD)})</span>
+                        ) : (
+                          ''
+                        )}
+                        {numberOfZeros > 2 && !isTokenStable ? (
+                          <span>
+                            ($ 0.0<sub>{numberOfZeros}</sub>
+                            {leftoverDigits.substring(0, 4)})
+                          </span>
+                        ) : (
+                          ''
+                        )}
+                      </TYPE.darkGray>
+                      <ExtentsText>
+                        {' '}
+                        <Trans>
+                          <span onClick={() => setInvert(!invert)}>
+                            {invert ? currencyQuote?.symbol : currencyBase?.symbol} per{' '}
+                            {invert ? currencyBase?.symbol : currencyQuote?.symbol}
+                          </span>
+                        </Trans>
+                      </ExtentsText>
+                    </AutoColumn>
+                  </LightCard>
 
-                <DoubleArrow>⟷</DoubleArrow>
-                <LightCard padding="12px" width="100%">
-                  <AutoColumn gap="8px" justify="center">
-                    <ExtentsText>
-                      <Trans>Target price</Trans>
-                    </ExtentsText>
-                    <TYPE.mediumHeader textAlign="center">
-                      {priceUpper ? commafy(priceUpper?.toSignificant(6)) : ''}
-                      {''}{' '}
-                    </TYPE.mediumHeader>
-                    <TYPE.darkGray>
-                      {targetPriceUSD && !isTokenStable ? <span>(${formatPrice(targetPriceUSD)})</span> : ''}
-                    </TYPE.darkGray>
+                  <DoubleArrow>⟷</DoubleArrow>
+                  <LightCard padding="12px" width="100%">
+                    <AutoColumn gap="8px" justify="center">
+                      <ExtentsText>
+                        <Trans>Target price</Trans>
+                      </ExtentsText>
+                      <TYPE.mediumHeader textAlign="center">
+                        {priceUpper ? commafy(priceUpper?.toSignificant(6)) : ''}
+                        {''}{' '}
+                      </TYPE.mediumHeader>
+                      <TYPE.darkGray>
+                        {targetPriceUSD && !isTokenStable ? <span>(${formatPrice(targetPriceUSD)})</span> : ''}
+                      </TYPE.darkGray>
 
-                    <ExtentsText>
-                      {' '}
-                      <Trans>
-                        <span onClick={() => setInvert(!invert)}>
-                          {invert ? currencyQuote?.symbol : currencyBase?.symbol} per{' '}
-                          {invert ? currencyBase?.symbol : currencyQuote?.symbol}
-                        </span>
-                      </Trans>
-                    </ExtentsText>
-                  </AutoColumn>
-                </LightCard>
-              </RowBetween>
+                      <ExtentsText>
+                        {' '}
+                        <Trans>
+                          <span onClick={() => setInvert(!invert)}>
+                            {invert ? currencyQuote?.symbol : currencyBase?.symbol} per{' '}
+                            {invert ? currencyBase?.symbol : currencyQuote?.symbol}
+                          </span>
+                        </Trans>
+                      </ExtentsText>
+                    </AutoColumn>
+                  </LightCard>
+                </RowBetween>
+              </DarkCard>
             </AutoColumn>
           </PriceDetails>
           <TradeHistory>
@@ -1130,7 +1134,7 @@ export function PositionPage({
                     <HideSmall>
                       <DoubleArrow>⟷</DoubleArrow>{' '}
                     </HideSmall>
-                    <TYPE.subHeader>
+                    <TYPE.small>
                       <Trans>
                         Created Limit Trade {commafy(currencyCreatedEventAmount?.toSignificant(4))}{' '}
                         {currencyCreatedEventAmount?.currency
@@ -1144,7 +1148,7 @@ export function PositionPage({
                         {targetPrice?.quoteCurrency ? unwrappedToken(targetPrice?.quoteCurrency)?.symbol : ''}
                         {limitOrder1USD ? <span> (${formatPrice(limitOrder1USD)}) </span> : ''}↗
                       </Trans>
-                    </TYPE.subHeader>
+                    </TYPE.small>
                   </RangeLineItem>
                 </LinkRow>
               ) : (
@@ -1159,7 +1163,7 @@ export function PositionPage({
                     <HideSmall>
                       <DoubleArrow>⟷</DoubleArrow>{' '}
                     </HideSmall>
-                    <TYPE.subHeader>
+                    <TYPE.small>
                       <Trans>
                         Collected {collectedValue0 ? commafy(collectedValue0?.toSignificant(3)) : ''}{' '}
                         {collectedValue0?.currency ? unwrappedToken(collectedValue0?.currency)?.symbol : ''}
@@ -1168,7 +1172,7 @@ export function PositionPage({
                         {collectedValue1?.currency ? unwrappedToken(collectedValue1?.currency)?.symbol : ''}
                         {collectedAmount1USD ? <span> (${formatPrice(collectedAmount1USD)})</span> : ''}
                       </Trans>
-                    </TYPE.subHeader>
+                    </TYPE.small>
                   </RangeLineItem>
                 </LinkRow>
               ) : (
@@ -1184,14 +1188,14 @@ export function PositionPage({
                     <HideSmall>
                       <DoubleArrow>⟷</DoubleArrow>{' '}
                     </HideSmall>
-                    <TYPE.subHeader>
+                    <TYPE.small>
                       <Trans>
                         Paid {serviceFeePaidKrom?.toSignificant(2)}{' '}
                         {serviceFeePaidKrom?.currency ? unwrappedToken(serviceFeePaidKrom?.currency)?.symbol : ''}{' '}
                         {serviceFeePaidUSD ? <span>(${formatPrice(serviceFeePaidUSD)}) </span> : ' '}
                         service fees ↗
                       </Trans>
-                    </TYPE.subHeader>
+                    </TYPE.small>
                   </RangeLineItem>
                 </LinkRow>
               ) : (

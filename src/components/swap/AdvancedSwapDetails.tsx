@@ -51,17 +51,17 @@ export function AdvancedSwapDetails({
 
   return trade && priceAmount ? (
     <AutoColumn gap="8px">
-      <TransactionDetailsLabel fontWeight={400} fontSize={16}>
+      <TransactionDetailsLabel fontWeight={400} fontSize={14}>
         <Trans>Transaction Details</Trans>
       </TransactionDetailsLabel>
       <RowBetween>
         <RowFixed>
-          <TYPE.subHeader color={theme.text1}>
+          <TYPE.small color={theme.text1}>
             <Trans>Service Fee</Trans>
-          </TYPE.subHeader>
+          </TYPE.small>
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={65}>
-          <TYPE.black textAlign="right" fontSize={16}>
+          <TYPE.black textAlign="right" fontSize={14}>
             {serviceFee ? `${serviceFee.toSignificant(8)} ${serviceFee.currency.symbol}` : '-'}
           </TYPE.black>
         </TextWithLoadingPlaceholder>
@@ -69,12 +69,12 @@ export function AdvancedSwapDetails({
 
       <RowBetween>
         <RowFixed>
-          <TYPE.subHeader color={theme.text1}>
+          <TYPE.small color={theme.text1}>
             <Trans>Minimum received</Trans>
-          </TYPE.subHeader>
+          </TYPE.small>
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={70}>
-          <TYPE.black textAlign="right" fontSize={16}>
+          <TYPE.black textAlign="right" fontSize={14}>
             {outputAmount?.toSignificant(6)} {outputAmount?.currency.symbol}
           </TYPE.black>
         </TextWithLoadingPlaceholder>

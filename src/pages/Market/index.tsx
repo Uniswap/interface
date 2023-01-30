@@ -688,7 +688,7 @@ export default function Market({ history }: RouteComponentProps) {
                     routeIsNotFound={routeNotFound}
                   />
 
-                  <AutoColumn gap={'sm'}>
+                  <AutoColumn gap={'md'}>
                     <div style={{ display: 'relative' }}>
                       <CurrencyInputPanel
                         label={
@@ -764,11 +764,19 @@ export default function Market({ history }: RouteComponentProps) {
                               content={
                                 <ResponsiveTooltipContainer origin="top right" width={'295px'}>
                                   <Row justify={!trade ? 'center' : 'space-between'}>
-                                    <RowFixed>Allowed Slippage:</RowFixed>
+                                    <RowFixed>
+                                      <Text fontSize={14} fontWeight={400}>
+                                        <Trans>Allowed Slippage:</Trans>
+                                      </Text>
+                                    </RowFixed>
                                     <RowFixed>{allowedSlippage.toSignificant(2)}%</RowFixed>
                                   </Row>
                                   <Row justify={!trade ? 'center' : 'space-between'}>
-                                    <RowFixed>Minimum Received:</RowFixed>
+                                    <RowFixed>
+                                      <Text fontSize={14} fontWeight={400}>
+                                        <Trans>Minimum Received:</Trans>
+                                      </Text>
+                                    </RowFixed>
                                     <RowFixed>
                                       <span style={{ font: '10px' }}>
                                         {isGaslessMode ? (
@@ -941,7 +949,6 @@ export default function Market({ history }: RouteComponentProps) {
                         </span>
                       </PriceImpactWarning>
                     )}
-                    <div></div>
                     <div>
                       {swapIsUnsupported ? (
                         <ButtonPrimary disabled={true}>
@@ -978,7 +985,7 @@ export default function Market({ history }: RouteComponentProps) {
                         </GreyCard>
                       ) : showApproveFlow ? (
                         <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
-                          <AutoColumn style={{ width: '100%' }} gap="12px">
+                          <AutoColumn style={{ width: '100%' }} gap="md">
                             <ButtonConfirmed
                               onClick={handleApprove}
                               disabled={
@@ -1212,7 +1219,7 @@ export default function Market({ history }: RouteComponentProps) {
             routeIsNotFound={routeNotFound}
           />
 
-          <AutoColumn gap={'sm'}>
+          <AutoColumn gap={'md'}>
             <div style={{ display: 'relative' }}>
               <CurrencyInputPanel
                 label={
@@ -1278,11 +1285,19 @@ export default function Market({ history }: RouteComponentProps) {
                       content={
                         <ResponsiveTooltipContainer origin="top right" width={'295px'}>
                           <Row justify={!trade ? 'center' : 'space-between'}>
-                            <RowFixed>Allowed Slippage:</RowFixed>
+                            <RowFixed>
+                              <Text fontSize={14} fontWeight={400}>
+                                <Trans>Allowed Slippage:</Trans>
+                              </Text>
+                            </RowFixed>
                             <RowFixed>{allowedSlippage.toSignificant(2)}%</RowFixed>
                           </Row>
                           <Row justify={!trade ? 'center' : 'space-between'}>
-                            <RowFixed>Minimum Received:</RowFixed>
+                            <RowFixed>
+                              <Text fontSize={14} fontWeight={400}>
+                                <Trans>Minimum Received:</Trans>
+                              </Text>
+                            </RowFixed>
                             <RowFixed>
                               <span style={{ font: '10px' }}>
                                 {isGaslessMode ? (
@@ -1291,8 +1306,11 @@ export default function Market({ history }: RouteComponentProps) {
                                   </span>
                                 ) : (
                                   <span>
-                                    {trade?.minimumAmountOut(allowedSlippage).toSignificant(4)}{' '}
-                                    {trade?.outputAmount.currency.symbol} {trade?.outputAmount.currency.symbol}
+                                    {trade
+                                      ? `${trade?.minimumAmountOut(allowedSlippage).toSignificant(4)} ${
+                                          trade?.outputAmount.currency.symbol
+                                        }`
+                                      : '-'}
                                   </span>
                                 )}
                               </span>
@@ -1484,7 +1502,7 @@ export default function Market({ history }: RouteComponentProps) {
                 </GreyCard>
               ) : showApproveFlow ? (
                 <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
-                  <AutoColumn style={{ width: '100%' }} gap="12px">
+                  <AutoColumn style={{ width: '100%' }} gap="md">
                     <ButtonConfirmed
                       onClick={handleApprove}
                       disabled={

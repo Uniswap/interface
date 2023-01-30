@@ -118,7 +118,7 @@ export default function MarketModalHeader({
   const isGaslessMode = useIsGaslessMode() && chainId == SupportedChainId.POLYGON
 
   return (
-    <AutoColumn gap={'4px'} style={{ marginTop: '1rem' }}>
+    <AutoColumn gap={'6px'} style={{ marginTop: '1rem' }}>
       <LightCard padding="0.75rem 1rem">
         <AutoColumn gap={'8px'}>
           <RowBetween>
@@ -149,7 +149,7 @@ export default function MarketModalHeader({
       <ArrowWrapper>
         <ArrowDown size="16" color={theme.text2} />
       </ArrowWrapper>
-      <LightCard padding="0.75rem 1rem" style={{ marginBottom: '0', borderRadius: '5px 5px 0px 0px' }}>
+      <LightCard padding="0.75rem 1rem" style={{ marginBottom: '0', borderRadius: '20px' }}>
         <AutoColumn gap={'8px'}>
           <RowBetween>
             <TYPE.body color={theme.text3} fontWeight={400} fontSize={16}>
@@ -243,7 +243,7 @@ export default function MarketModalHeader({
 
       <AutoColumn justify="flex-start" gap="sm" style={{ padding: '.75rem 1rem' }}>
         {trade.tradeType === TradeType.EXACT_INPUT ? (
-          <TYPE.italic fontWeight={400} textAlign="left" style={{ width: '100%' }}>
+          <TYPE.italic fontSize={14} fontWeight={400} textAlign="left" style={{ width: '100%' }}>
             <Trans>
               Output is estimated. You will receive at least{' '}
               <b>
@@ -264,7 +264,7 @@ export default function MarketModalHeader({
             </Trans>
           </TYPE.italic>
         ) : (
-          <TYPE.italic fontWeight={400} textAlign="left" style={{ width: '100%' }}>
+          <TYPE.italic fontSize={14} fontWeight={400} textAlign="left" style={{ width: '100%' }}>
             <Trans>
               Input is estimated. You will sell at most{' '}
               <b>

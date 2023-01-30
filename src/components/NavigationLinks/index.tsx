@@ -78,6 +78,9 @@ const StyledNavLink = styled(NavLink).attrs({
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 0.5rem 1rem;
+    &.${activeClassName} {
+      background-color: ${({ theme }) => (theme.darkMode ? theme.bg6 : theme.bg0)};
+    }
   `};
 
   ${({ theme }) => theme.mediaWidth.upToSmall`

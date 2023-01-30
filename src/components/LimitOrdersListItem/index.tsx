@@ -29,7 +29,7 @@ const LimitOrderWrapper = styled(Link)`
   overflow: hidden;
 
   :hover {
-    background-color: ${({ theme }) => theme.bg2};
+    background-color: ${({ theme }) => theme.bg6};
   }
 `
 

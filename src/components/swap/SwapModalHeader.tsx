@@ -64,7 +64,7 @@ export default function SwapModalHeader({
   const fiatValueInput = useUSDCValue(inputAmount)
 
   return (
-    <AutoColumn gap={'4px'} style={{ marginTop: '1rem' }}>
+    <AutoColumn gap={'6px'} style={{ marginTop: '1rem' }}>
       <LightCard padding="0.75rem 1rem">
         <AutoColumn gap={'8px'}>
           <RowBetween>
@@ -137,7 +137,7 @@ export default function SwapModalHeader({
       ) : null}
 
       <AutoColumn justify="flex-start" gap="sm" style={{ padding: '.75rem 1rem' }}>
-        <TYPE.italic fontWeight={400} textAlign="left" style={{ width: '100%' }}>
+        <TYPE.italic fontSize={14} fontWeight={400} textAlign="left" style={{ width: '100%' }}>
           <Trans>
             Output is estimated. You will receive at least{' '}
             <b>
