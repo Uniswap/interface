@@ -8,7 +8,8 @@ import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { getChainInfo } from 'constants/chainInfo'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
-import { getTokenDetailsURL } from 'graphql/data/util'
+import { Chain } from 'graphql/data/__generated__/types-and-hooks'
+import { chainIdToBackendName, getTokenDetailsURL } from 'graphql/data/util'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
@@ -21,7 +22,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { getDeltaArrow } from '../Tokens/TokenDetails/PriceChart'
-import { useAddRecentlySearchedNFT, useAddRecentlySearchedToken } from './RecentlySearchedAssets'
+import { useAddRecentlySearchedAsset } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
 
 const StyledLogoContainer = styled(LogoContainer)`
@@ -63,14 +64,14 @@ export const CollectionRow = ({
   const [brokenImage, setBrokenImage] = useState(false)
   const [loaded, setLoaded] = useState(false)
 
-  const addRecentlySearchedNFT = useAddRecentlySearchedNFT()
+  const addRecentlySearchedAsset = useAddRecentlySearchedAsset()
   const navigate = useNavigate()
 
   const handleClick = useCallback(() => {
-    addRecentlySearchedNFT(collection)
+    addRecentlySearchedAsset({ ...collection, isNft: true, chain: Chain.Ethereum })
     toggleOpen()
     sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
-  }, [addRecentlySearchedNFT, collection, toggleOpen, eventProperties])
+  }, [addRecentlySearchedAsset, collection, toggleOpen, eventProperties])
 
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
@@ -138,14 +139,14 @@ interface TokenRowProps {
 }
 
 export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index, eventProperties }: TokenRowProps) => {
-  const addRecentlySearchedToken = useAddRecentlySearchedToken()
+  const addRecentlySearchedAsset = useAddRecentlySearchedAsset()
   const navigate = useNavigate()
 
   const handleClick = useCallback(() => {
-    addRecentlySearchedToken(token)
+    addRecentlySearchedAsset({ ...token, chain: chainIdToBackendName(token.chainId) })
     toggleOpen()
     sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
-  }, [addRecentlySearchedToken, token, toggleOpen, eventProperties])
+  }, [addRecentlySearchedAsset, token, toggleOpen, eventProperties])
 
   const L2Icon = getChainInfo(token.chainId)?.circleLogoUrl
   const tokenDetailsPath = getTokenDetailsURL(token.address, undefined, token.chainId)

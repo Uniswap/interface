@@ -1,46 +1,28 @@
 import { Chain, NftCollection, useRecentlySearchedAssetsQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { chainIdToBackendName } from 'graphql/data/util'
 import { useAtom } from 'jotai'
 import { atomWithStorage, useAtomValue } from 'jotai/utils'
 import { FungibleToken, GenieCollection, parseFungibleTokens } from 'nft/types'
 import { useCallback, useMemo } from 'react'
 
 type RecentlySearchedAsset = {
-  isNft: boolean
+  isNft?: boolean
   address: string
   chain: Chain
 }
 
 const recentlySearchedAssetsAtom = atomWithStorage<RecentlySearchedAsset[]>('recentlySearchedAssets', [])
 
-function useAddRecentlySearchedAsset() {
+export function useAddRecentlySearchedAsset() {
   const [searchHistory, updateSearchHistory] = useAtom(recentlySearchedAssetsAtom)
 
   return useCallback(
-    (asset: FungibleToken | GenieCollection, isNft: boolean, chain: Chain) => {
+    (asset: RecentlySearchedAsset) => {
       // Removes the new asset if it was already in the array
       const newHistory = searchHistory.filter((oldAsset) => oldAsset.address !== asset.address)
-      newHistory.unshift({ isNft, address: asset.address, chain })
-
+      newHistory.unshift(asset)
       updateSearchHistory(newHistory)
     },
     [searchHistory, updateSearchHistory]
-  )
-}
-
-export function useAddRecentlySearchedNFT() {
-  const addRecentlySearchedAsset = useAddRecentlySearchedAsset()
-  return useCallback(
-    (collection: GenieCollection) => addRecentlySearchedAsset(collection, true, Chain.Ethereum),
-    [addRecentlySearchedAsset]
-  )
-}
-
-export function useAddRecentlySearchedToken() {
-  const addRecentlySearchedAsset = useAddRecentlySearchedAsset()
-  return useCallback(
-    (token: FungibleToken) => addRecentlySearchedAsset(token, false, chainIdToBackendName(token.chainId)),
-    [addRecentlySearchedAsset]
   )
 }
 
