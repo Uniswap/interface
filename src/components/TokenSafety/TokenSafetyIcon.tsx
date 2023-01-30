@@ -28,13 +28,13 @@ export default function TokenSafetyIcon({ warning }: { warning: Warning | null }
     case WARNING_LEVEL.BLOCKED:
       return (
         <WarningContainer>
-          <BlockedIcon strokeWidth={2.5} />
+          <BlockedIcon data-cy="blocked-icon" strokeWidth={2.5} />
         </WarningContainer>
       )
     case WARNING_LEVEL.UNKNOWN:
       return (
         <WarningContainer>
-          <WarningIcon />
+          <WarningIcon data-cy="warning-icon" />
         </WarningContainer>
       )
     default:

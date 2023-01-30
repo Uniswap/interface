@@ -1,16 +1,26 @@
-describe('Swap', () => {
+describe('Swap token selector', () => {
   before(() => {
-    cy.visit('/swap')
+    cy.visit('/#/swap')
   })
 
-  it.skip('can swap ETH for DAI', () => {
+  // **Action**: Search for token by pasting token address
+
+  // **Expectation**: See token associated with that address
+
+  // - If token is unknown, result should display “Unknown Token” with warning label
+  // - If token is on the Warning list, show warning label (⚠️) next to it [[spec](https://www.notion.so/Token-Warnings-spec-Web-Mobile-3f7fce6f93694be08a94a6984d50298e)]
+  // - If token is on the Blocked list, show blocked label (🚫) next to it [[spec](https://www.notion.so/Token-Warnings-spec-Web-Mobile-3f7fce6f93694be08a94a6984d50298e)]
+
+  it('can search for token by exact address', () => {
     cy.get('#swap-currency-input .open-currency-select-button').click()
-    cy.get('.token-item-0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735').click()
-    cy.get('#swap-currency-input .token-amount-input').clear().type('0.0000001')
-    cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
-    cy.get('#swap-button').click()
-    cy.get('#confirm-swap-or-send').should('contain', 'Confirm Swap')
-    cy.get('[data-cy="confirmation-close-icon"]').click()
+    // Type UNI token contract address.
+    cy.get('[data-cy="token-search-input"]').clear().type('0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')
+    cy.get('.token-item-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984').should('exist')
+    cy.get('.token-item-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984').find('[data-cy="warning-icon"]').should('exist')
+
+    // // Type Shiba Ramen token contract address.
+    // cy.get('[data-cy="token-search-input"]').clear().type('0xb2e20502c7593674509b8384ed9240a03869faf3')
+    // cy.get('.token-item-0xb2e20502c7593674509b8384ed9240a03869faf3').find('[data-cy="warning-icon"]').should('exist')
   })
 
   //   **Action**: Open swap component
@@ -23,14 +33,6 @@ describe('Swap', () => {
 
   // **Expectation**: See token(s) with those characters in the name
 
-  // - If token is on the Warning list, show warning label (⚠️) next to it [[spec](https://www.notion.so/Token-Warnings-spec-Web-Mobile-3f7fce6f93694be08a94a6984d50298e)]
-  // - If token is on the Blocked list, show blocked label (🚫) next to it [[spec](https://www.notion.so/Token-Warnings-spec-Web-Mobile-3f7fce6f93694be08a94a6984d50298e)]
-
-  // **Action**: Search for token by pasting token address
-
-  // **Expectation**: See token associated with that address
-
-  // - If token is unknown, result should display “Unknown Token” with warning label
   // - If token is on the Warning list, show warning label (⚠️) next to it [[spec](https://www.notion.so/Token-Warnings-spec-Web-Mobile-3f7fce6f93694be08a94a6984d50298e)]
   // - If token is on the Blocked list, show blocked label (🚫) next to it [[spec](https://www.notion.so/Token-Warnings-spec-Web-Mobile-3f7fce6f93694be08a94a6984d50298e)]
 
