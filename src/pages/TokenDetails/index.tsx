@@ -12,11 +12,13 @@ import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 export const pageTimePeriodAtom = atomWithStorage<TimePeriod>('tokenDetailsTimePeriod', TimePeriod.DAY)
 
 export default function TokenDetailsPage() {
-  const { tokenAddress, chainName } = useParams<{ tokenAddress?: string; chainName?: string }>()
+  const { tokenAddress, chainName } = useParams<{ tokenAddress: string; chainName?: string }>()
   const chain = validateUrlChainParam(chainName)
   const isNative = tokenAddress === NATIVE_CHAIN_ID
   const [timePeriod, setTimePeriod] = useAtom(pageTimePeriodAtom)
   const [address, duration] = useMemo(
+    /* tokenAddress will always be defined in the path for for this page to render, but useParams will always
+      return optional arguments; nullish coalescing operator is present here to appease typechecker */
     () => [isNative ? getNativeTokenDBAddress(chain) : tokenAddress ?? '', toHistoryDuration(timePeriod)],
     [chain, isNative, timePeriod, tokenAddress]
   )
