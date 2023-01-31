@@ -102,16 +102,5 @@ export function checkSearchTokenWarning(token: SearchToken) {
   if (!token.address) {
     return token.standard === TokenStandard.Native ? null : StrongWarning
   }
-  switch (WarningCache.checkToken(token.address.toLowerCase())) {
-    case TOKEN_LIST_TYPES.UNI_DEFAULT:
-      return null
-    case TOKEN_LIST_TYPES.UNI_EXTENDED:
-      return MediumWarning
-    case TOKEN_LIST_TYPES.UNKNOWN:
-      return StrongWarning
-    case TOKEN_LIST_TYPES.BLOCKED:
-      return BlockedWarning
-    case TOKEN_LIST_TYPES.BROKEN:
-      return BlockedWarning
-  }
+  return checkWarning(token.address)
 }
