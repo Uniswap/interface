@@ -48,7 +48,12 @@ export default function useStablecoinPrice(currency?: Currency): Price<Currency,
   }, [currency, stablecoin, trade])
 
   const lastPrice = useRef(price)
-  if (!price || !lastPrice.current || !price.equalTo(lastPrice.current)) {
+  if (
+    !price ||
+    !lastPrice.current ||
+    !price.equalTo(lastPrice.current) ||
+    !price.baseCurrency.equals(lastPrice.current.baseCurrency)
+  ) {
     lastPrice.current = price
   }
   return lastPrice.current
