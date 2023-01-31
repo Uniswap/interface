@@ -279,17 +279,6 @@ export const SparkLineLoadingBubble = styled(LongLoadingBubble)`
   height: 4px;
 `
 
-export const L2NetworkLogo = styled.div<{ networkUrl?: string; size?: string }>`
-  height: ${({ size }) => size ?? '12px'};
-  width: ${({ size }) => size ?? '12px'};
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  background: url(${({ networkUrl }) => networkUrl});
-  background-repeat: no-repeat;
-  background-size: ${({ size }) => (size ? `${size} ${size}` : '12px 12px')};
-  display: ${({ networkUrl }) => !networkUrl && 'none'};
-`
 export const LogoContainer = styled.div`
   position: relative;
   align-items: center;
@@ -485,10 +474,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           listNumber={volumeRank}
           tokenInfo={
             <ClickableName>
-              <LogoContainer>
-                <QueryTokenLogo token={token} />
-                <L2NetworkLogo networkUrl={L2Icon} />
-              </LogoContainer>
+              <QueryTokenLogo token={token} />
               <TokenInfoCell>
                 <TokenName data-cy="token-name">{token.name}</TokenName>
                 <TokenSymbol>{token.symbol}</TokenSymbol>

@@ -167,8 +167,6 @@ export default function TokenDetails({
     [continueSwap, setContinueSwap]
   )
 
-  const L2Icon = getChainInfo(pageChainId)?.circleLogoUrl
-
   // address will never be undefined if token is defined; address is checked here to appease typechecker
   if (token === undefined || !address) {
     return <InvalidTokenDetails chainName={address && getChainInfo(pageChainId)?.label} />

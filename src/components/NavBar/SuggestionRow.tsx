@@ -156,7 +156,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
     sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
   }, [addToSearchHistory, toggleOpen, token, eventProperties])
 
-  const [bridgedAddress, bridgedChain, L2Icon] = useBridgedAddress(token)
+  const [bridgedAddress, bridgedChain] = useBridgedAddress(token)
   const tokenDetailsPath = getTokenDetailsURL(bridgedAddress ?? token.address, undefined, bridgedChain ?? token.chainId)
   // Close the modal on escape
   useEffect(() => {
