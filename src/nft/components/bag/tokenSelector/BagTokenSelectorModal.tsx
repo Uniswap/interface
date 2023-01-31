@@ -49,7 +49,7 @@ const TokenSelectorContainer = styled(Column)`
 
 interface BagTokenSelectorModalProps {
   selectedCurrency: Currency | undefined
-  handleCurrencySelect: (currency: Currency) => void
+  handleCurrencySelect: (currency: Currency | undefined) => void
   overlayClick: () => void
 }
 

@@ -1,9 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { formatEther } from '@ethersproject/units'
 import { parseEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import Loader from 'components/Loader'
@@ -12,6 +13,9 @@ import Row from 'components/Row'
 import { SupportedChainId } from 'constants/chains'
 import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
 import { useCurrency } from 'hooks/Tokens'
+import { useBestTrade } from 'hooks/useBestTrade'
+import { useStablecoinValue } from 'hooks/useStablecoinPrice'
+import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useBag } from 'nft/hooks/useBag'
 import { useTokenInput } from 'nft/hooks/useTokenInput'
 import { useWalletBalance } from 'nft/hooks/useWalletBalance'
@@ -20,6 +24,7 @@ import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils'
 import { PropsWithChildren, useMemo, useReducer } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
 import { useToggleWalletModal } from 'state/application/hooks'
+import { TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { switchChain } from 'utils/switchChain'
@@ -199,6 +204,19 @@ export const BagFooter = ({
   const isPending = PENDING_BAG_STATUSES.includes(bagStatus)
   const activeCurrency = inputCurrency ?? defaultCurrency
 
+  const parsedAmount = useMemo(() => {
+    if (!inputCurrency) return undefined
+    return tryParseCurrencyAmount(formatEther(totalEthPrice.toString()), defaultCurrency ?? undefined)
+  }, [defaultCurrency, totalEthPrice, inputCurrency])
+
+  const { state: swapState, trade: swapTrade } = useBestTrade(
+    TradeType.EXACT_OUTPUT,
+    parsedAmount,
+    inputCurrency ?? undefined
+  )
+
+  const usdcValue = useStablecoinValue(swapTrade?.inputAmount)
+
   return (
     <FooterContainer>
       <Footer>
@@ -221,12 +239,16 @@ export const BagFooter = ({
                 <Trans>Total</Trans>
               </ThemedText.SubHeaderSmall>
               <ThemedText.HeadlineSmall>
-                {formatWeiToDecimal(totalEthPrice.toString())}&nbsp;{activeCurrency?.symbol ?? 'ETH'}
+                {inputCurrency
+                  ? swapState !== TradeState.VALID
+                    ? '-'
+                    : ethNumberStandardFormatter(swapTrade?.inputAmount.toExact())
+                  : formatWeiToDecimal(totalEthPrice.toString())}
+                &nbsp;{activeCurrency?.symbol ?? 'ETH'}
               </ThemedText.HeadlineSmall>
-              <ThemedText.BodySmall color="textSecondary" lineHeight="20px">{`${ethNumberStandardFormatter(
-                totalUsdPrice,
-                true
-              )}`}</ThemedText.BodySmall>
+              <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
+                {`${ethNumberStandardFormatter(inputCurrency ? usdcValue?.toExact() : totalUsdPrice, true)}`}
+              </ThemedText.BodySmall>
             </TotalColumn>
           </CurrencyRow>
         )}
@@ -267,7 +289,7 @@ export const BagFooter = ({
       {showTokenSelector && (
         <BagTokenSelectorModal
           selectedCurrency={activeCurrency ?? undefined}
-          handleCurrencySelect={(currency: Currency) => {
+          handleCurrencySelect={(currency: Currency | undefined) => {
             setInputCurrency(currency)
             toggleTokenSelector()
           }}
