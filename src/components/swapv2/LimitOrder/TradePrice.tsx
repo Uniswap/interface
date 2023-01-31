@@ -31,7 +31,9 @@ export default function TradePrice({ price, style = {}, label, color, symbolIn, 
   } catch (error) {}
 
   const show = Boolean(price?.marketRate && price?.invertRate && formattedPrice)
-  const value = showInverted ? `${symbolIn} = 1 ${symbolOut}` : `${symbolOut} = 1 ${symbolIn}`
+  const value = showInverted
+    ? `1 ${symbolOut} = ${formattedPrice} ${symbolIn}`
+    : `1 ${symbolIn} = ${formattedPrice} ${symbolOut}`
 
   return (
     <Text
@@ -45,7 +47,7 @@ export default function TradePrice({ price, style = {}, label, color, symbolIn, 
       {show ? (
         <>
           {label && <>{label}&nbsp;</>}
-          <Text color={color}>{loading ? null : `${formattedPrice} ${value}`}</Text>
+          <Text color={color}>{loading ? null : `${value}`}</Text>
           <StyledBalanceMaxMini>
             <Repeat size={12} />
           </StyledBalanceMaxMini>

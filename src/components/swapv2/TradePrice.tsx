@@ -17,15 +17,15 @@ export default function TradePrice({ price }: TradePriceProps) {
   const [showInverted, setShowInverted] = useState<boolean>(false)
   let formattedPrice
   try {
-    formattedPrice = showInverted ? price?.toSignificant(6) : price?.invert()?.toSignificant(6)
+    formattedPrice = showInverted ? price?.invert()?.toSignificant(6) : price?.toSignificant(6)
   } catch (error) {}
 
   const show = Boolean(price?.baseCurrency && price?.quoteCurrency && formattedPrice)
   const nativeQuote = useCurrencyConvertedToNative(price?.quoteCurrency)
   const nativeBase = useCurrencyConvertedToNative(price?.baseCurrency)
   const value = showInverted
-    ? `${nativeQuote?.symbol} = 1 ${nativeBase?.symbol}`
-    : `${nativeBase?.symbol} = 1 ${nativeQuote?.symbol}`
+    ? `1 ${nativeQuote?.symbol} = ${formattedPrice} ${nativeBase?.symbol}`
+    : `1 ${nativeBase?.symbol} = ${formattedPrice} ${nativeQuote?.symbol}`
 
   return (
     <Text
@@ -38,9 +38,7 @@ export default function TradePrice({ price }: TradePriceProps) {
     >
       {show ? (
         <>
-          <Text>
-            {formattedPrice} {value}
-          </Text>
+          <Text>{value}</Text>
           <StyledBalanceMaxMini>
             <Repeat size={12} />
           </StyledBalanceMaxMini>
