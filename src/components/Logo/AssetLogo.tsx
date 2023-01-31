@@ -1,3 +1,4 @@
+import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import React from 'react'
@@ -29,6 +30,7 @@ export type AssetLogoBaseProps = {
   backupImg?: string | null
   size?: string
   style?: React.CSSProperties
+  showL2Logo?: boolean
 }
 type AssetLogoProps = AssetLogoBaseProps & { isNative?: boolean; address?: string | null; chainId?: number }
 
@@ -36,6 +38,25 @@ type AssetLogoProps = AssetLogoBaseProps & { isNative?: boolean; address?: strin
 /**
  * Renders an image by prioritizing a list of sources, and then eventually a fallback triangle alert
  */
+
+const LogoContainer = styled.div`
+  position: relative;
+  align-items: center;
+  display: flex;
+`
+
+const L2NetworkLogo = styled.div<{ networkUrl?: string; parentSize: string }>`
+  width: ${({ parentSize }) => `calc(${parentSize} / 2)`};
+  height: ${({ parentSize }) => `calc(${parentSize} / 2)`};
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  background: url(${({ networkUrl }) => networkUrl});
+  background-repeat: no-repeat;
+  background-size: ${({ parentSize }) => `calc(${parentSize} / 2) calc(${parentSize} / 2)`};
+  display: ${({ networkUrl }) => !networkUrl && 'none'};
+`
+
 export default function AssetLogo({
   isNative,
   address,
@@ -44,6 +65,7 @@ export default function AssetLogo({
   backupImg,
   size = '24px',
   style,
+  showL2Logo = true,
   ...rest
 }: AssetLogoProps) {
   const imageProps = {
@@ -54,15 +76,19 @@ export default function AssetLogo({
   }
 
   const [src, nextSrc] = useTokenLogoSource(address, chainId, isNative, backupImg)
+  const L2Icon = getChainInfo(chainId)?.circleLogoUrl
 
-  if (src) {
-    return <LogoImage {...imageProps} src={src} onError={nextSrc} />
-  } else {
-    return (
-      <MissingImageLogo size={size}>
-        {/* use only first 3 characters of Symbol for design reasons */}
-        {symbol?.toUpperCase().replace('$', '').replace(/\s+/g, '').slice(0, 3)}
-      </MissingImageLogo>
-    )
-  }
+  return (
+    <LogoContainer>
+      {src ? (
+        <LogoImage {...imageProps} src={src} onError={nextSrc} />
+      ) : (
+        <MissingImageLogo size={size}>
+          {/* use only first 3 characters of Symbol for design reasons */}
+          {symbol?.toUpperCase().replace('$', '').replace(/\s+/g, '').slice(0, 3)}
+        </MissingImageLogo>
+      )}
+      {showL2Logo && <L2NetworkLogo networkUrl={L2Icon} parentSize={size} />}
+    </LogoContainer>
+  )
 }
