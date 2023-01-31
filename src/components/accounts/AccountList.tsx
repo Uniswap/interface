@@ -29,23 +29,10 @@ type AccountWithPortfolioValue = {
   portfolioValue: number | undefined
 }
 
-const ListHeader = (): JSX.Element => {
-  const { t } = useTranslation()
-  return (
-    <Flex row alignItems="center" bg="background0" borderBottomColor="backgroundOutline" pb="sm">
-      <Box flex={1} px="lg">
-        <Text color="textPrimary" textAlign="center" variant="bodyLarge">
-          {t('Your wallets')}
-        </Text>
-      </Box>
-    </Flex>
-  )
-}
-
 const ViewOnlyHeader = (): JSX.Element => {
   const { t } = useTranslation()
   return (
-    <Flex row alignItems="center" bg="background0" borderBottomColor="backgroundOutline">
+    <Flex row alignItems="center" borderBottomColor="backgroundOutline">
       <Box flex={1} px="lg">
         <Text color="textSecondary" variant="bodySmall">
           {t('View only')}
@@ -121,35 +108,31 @@ export function AccountList({
 
   return (
     <Box flexShrink={1} position="relative">
-      <ListHeader />
-      <Box flexShrink={1}>
-        {/* TODO: [MOB-3938] attempt to switch gradients to react-native-svg#LinearGradient and avoid new clear color */}
-        <LinearGradient
-          colors={[theme.colors.clearBackgroundBackdrop, theme.colors.background0]}
-          end={{ x: 0, y: 0 }}
-          start={{ x: 0, y: 1 }}
-          style={ListSheet.topGradient}
-        />
-        <ScrollView
-          scrollEnabled={accountsWithPortfolioValue.length >= MIN_ACCOUNTS_TO_ENABLE_SCROLL}
-          showsVerticalScrollIndicator={false}>
-          {signerAccounts.map(renderAccountCardItem)}
-          <Spacer height={theme.spacing.sm} />
-          {hasViewOnlyAccounts && (
-            <>
-              <ViewOnlyHeader />
-              {viewOnlyAccounts.map(renderAccountCardItem)}
-              <Spacer height={theme.spacing.sm} />
-            </>
-          )}
-        </ScrollView>
-        <LinearGradient
-          colors={[theme.colors.clearBackgroundBackdrop, theme.colors.background0]}
-          end={{ x: 0, y: 1 }}
-          start={{ x: 0, y: 0 }}
-          style={ListSheet.bottomGradient}
-        />
-      </Box>
+      {/* TODO: [MOB-3938] attempt to switch gradients to react-native-svg#LinearGradient and avoid new clear color */}
+      <LinearGradient
+        colors={[theme.colors.clearBackground1Backdrop, theme.colors.background1]}
+        end={{ x: 0, y: 0 }}
+        start={{ x: 0, y: 1 }}
+        style={ListSheet.topGradient}
+      />
+      <ScrollView
+        scrollEnabled={accountsWithPortfolioValue.length >= MIN_ACCOUNTS_TO_ENABLE_SCROLL}
+        showsVerticalScrollIndicator={false}>
+        {signerAccounts.map(renderAccountCardItem)}
+        {hasViewOnlyAccounts && (
+          <>
+            <Spacer height={theme.spacing.xs} />
+            <ViewOnlyHeader />
+            {viewOnlyAccounts.map(renderAccountCardItem)}
+          </>
+        )}
+      </ScrollView>
+      <LinearGradient
+        colors={[theme.colors.clearBackground1Backdrop, theme.colors.background1]}
+        end={{ x: 0, y: 1 }}
+        start={{ x: 0, y: 0 }}
+        style={ListSheet.bottomGradient}
+      />
     </Box>
   )
 }

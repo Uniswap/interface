@@ -1,4 +1,3 @@
-import { useResponsiveProp } from '@shopify/restyle'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
@@ -6,14 +5,13 @@ import 'react-native-gesture-handler'
 import { Action } from 'redux'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import AddButton from 'src/assets/icons/add-button.svg'
 import InformationIcon from 'src/assets/icons/i-icon.svg'
+import PlusIcon from 'src/assets/icons/plus.svg'
 import SettingsIcon from 'src/assets/icons/settings.svg'
 import { AccountList } from 'src/components/accounts/AccountList'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
-import { Separator } from 'src/components/layout/Separator'
 import { ActionSheetModal, MenuItemProp } from 'src/components/modals/ActionSheetModal'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { WarningSeverity } from 'src/components/modals/WarningModal/types'
@@ -41,6 +39,7 @@ import {
 } from 'src/features/wallet/pendingAcccountsSaga'
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
+import { dimensions } from 'src/styles/sizing'
 import { setClipboard } from 'src/utils/clipboard'
 import { openSettings } from 'src/utils/linking'
 
@@ -51,10 +50,10 @@ export function AccountSwitcherModal(): JSX.Element {
   return (
     <BottomSheetModal
       disableSwipe
-      backgroundColor={theme.colors.background0}
+      backgroundColor={theme.colors.background1}
       name={ModalName.AccountSwitcher}
       onClose={(): Action => dispatch(closeModal({ name: ModalName.AccountSwitcher }))}>
-      <Screen edges={['bottom']}>
+      <Screen bg="background1" edges={[]}>
         <AccountSwitcher
           onClose={(): void => {
             dispatch(closeModal({ name: ModalName.AccountSwitcher }))
@@ -84,8 +83,6 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
   const [showUninstallToImportModal, setShowUninstallToImportModal] = useState(false)
   const [pendingEditAddress, setPendingEditAddress] = useState<Address | null>(null)
   const [pendingRemoveAccount, setPendingRemoveAccount] = useState<Account | null>(null)
-
-  const addAccountBottomMargin = useResponsiveProp({ xs: 'md', sm: 'none' })
 
   const { accountsData, mnemonicWallets } = useMemo(() => {
     const accounts = Object.values(addressToAccount)
@@ -364,49 +361,52 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     return null
   }
 
+  const fullScreenContentHeight = 0.89 * dimensions.fullHeight
+
   return (
-    <Box mt="sm">
-      <Box maxHeight="80%">
-        <AccountList
-          accounts={accountsData}
-          isVisible={modalState.isOpen}
-          onPress={onPressAccount}
-          onPressEdit={onPressEdit}
-        />
-      </Box>
-
-      <Separator mb="md" />
-
-      <Flex gap="sm">
-        <TouchableArea mb={addAccountBottomMargin} ml="lg" onPress={onPressAddWallet}>
+    <Flex fill gap="none" marginBottom="sm" maxHeight={fullScreenContentHeight}>
+      <Flex row alignItems="center" borderBottomColor="backgroundOutline" mb="md">
+        <Box flex={1} pl="lg">
+          <Text color="textPrimary" textAlign="left" variant="bodyLarge">
+            {t('Your wallets')}
+          </Text>
+        </Box>
+        <TouchableArea onPress={onPressSettings}>
           <Flex row alignItems="center">
-            <Box p="xxs">
-              <AddButton
-                color={theme.colors.textSecondary}
-                height={theme.iconSizes.md}
-                width={theme.iconSizes.md}
-              />
+            <Box mr="md">
+              <Box mr="xxs">
+                <Box mr="xxxs">
+                  <SettingsIcon
+                    color={theme.colors.textTertiary}
+                    height={theme.iconSizes.md}
+                    width={theme.iconSizes.md}
+                  />
+                </Box>
+              </Box>
             </Box>
-            <Text color="textSecondary" variant="bodyLarge">
-              {t('Add or create wallet')}
-            </Text>
-          </Flex>
-        </TouchableArea>
-        <TouchableArea mb={addAccountBottomMargin} ml="lg" onPress={onPressSettings}>
-          <Flex row alignItems="center">
-            <Box p="xxs">
-              <SettingsIcon
-                color={theme.colors.textSecondary}
-                height={theme.iconSizes.md}
-                width={theme.iconSizes.md}
-              />
-            </Box>
-            <Text color="textSecondary" variant="bodyLarge">
-              {t('Settings')}
-            </Text>
           </Flex>
         </TouchableArea>
       </Flex>
+      <AccountList
+        accounts={accountsData}
+        isVisible={modalState.isOpen}
+        onPress={onPressAccount}
+        onPressEdit={onPressEdit}
+      />
+      <TouchableArea my="lg" onPress={onPressAddWallet}>
+        <Flex row alignItems="center" ml="lg">
+          <Box borderColor="backgroundOutline" borderRadius="full" borderWidth={1} p="sm">
+            <PlusIcon
+              color={theme.colors.textPrimary}
+              height={theme.iconSizes.sm}
+              width={theme.iconSizes.sm}
+            />
+          </Box>
+          <Text color="textPrimary" variant="bodyLarge">
+            {t('Add wallet')}
+          </Text>
+        </Flex>
+      </TouchableArea>
 
       <ActionSheetModal
         isVisible={showEditAccountModal}
@@ -446,6 +446,6 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
           onClose={(): void => setShowUninstallToImportModal(false)}
         />
       )}
-    </Box>
+    </Flex>
   )
 }

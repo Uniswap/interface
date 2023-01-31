@@ -27,7 +27,10 @@ const mock: MockedResponse<AccountListQuery> = {
 
 describe(AccountList, () => {
   it('renders without error', async () => {
-    const tree = render(<AccountList accounts={[account]} />, { mocks: [mock] })
+    const tree = render(
+      <AccountList accounts={[account]} onPress={jest.fn()} onPressEdit={jest.fn()} />,
+      { mocks: [mock] }
+    )
 
     expect(
       await screen.findByText(
@@ -42,7 +45,9 @@ describe(AccountList, () => {
 
   it('handles press on card items', async () => {
     const onPressSpy = jest.fn()
-    render(<AccountList accounts={[account]} onPress={onPressSpy} />, { mocks: [mock] })
+    render(<AccountList accounts={[account]} onPress={onPressSpy} onPressEdit={jest.fn()} />, {
+      mocks: [mock],
+    })
     // go to success state
     expect(
       await screen.findByText(
@@ -59,7 +64,9 @@ describe(AccountList, () => {
 
   it('handles press on edit account', async () => {
     const onPressSpy = jest.fn()
-    render(<AccountList accounts={[account]} onPressEdit={onPressSpy} />, { mocks: [mock] })
+    render(<AccountList accounts={[account]} onPress={jest.fn()} onPressEdit={onPressSpy} />, {
+      mocks: [mock],
+    })
     // go to success state
     expect(
       await screen.findByText(

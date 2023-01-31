@@ -19,8 +19,8 @@ type AccountCardItemProps = {
   address: Address
   isActive?: boolean
   isViewOnly: boolean
-  onPress?: (address: Address) => void
-  onPressEdit?: (address: Address) => void
+  onPress: (address: Address) => void
+  onPressEdit: (address: Address) => void
 } & PortfolioValueProps
 
 type PortfolioValueProps = {
@@ -64,13 +64,13 @@ export function AccountCardItem({
         address={address}
         avatarUri={avatar}
         showViewOnlyBadge={isViewOnly}
-        size={iconSizes.xl}
+        size={iconSizes.xxxl}
       />
     )
   }, [address, avatar, isViewOnly])
 
   return (
-    <TouchableArea hapticFeedback pb="sm" pt="xs" px="lg" onPress={(): void => onPress?.(address)}>
+    <TouchableArea hapticFeedback pb="sm" pt="xs" px="lg" onPress={(): void => onPress(address)}>
       <Flex row alignItems="center" testID={`account_item/${address}`}>
         <Flex row shrink alignItems="center">
           <NotificationBadge showIndicator={hasNotifications}>{icon}</NotificationBadge>
@@ -84,7 +84,7 @@ export function AccountCardItem({
             />
           </Flex>
         </Flex>
-        <Flex row alignItems="center" gap="xs">
+        <Flex row alignItems="center" gap="none">
           {isActive && (
             <Check
               color={theme.colors.userThemeMagenta}
@@ -92,17 +92,19 @@ export function AccountCardItem({
               width={theme.iconSizes.md}
             />
           )}
-          {onPressEdit && (
-            <TouchableArea name={ElementName.Edit} onPress={(): void => onPressEdit(address)}>
-              <TripleDots
-                color={theme.colors.textTertiary}
-                height={iconSizes.xs}
-                strokeLinecap="round"
-                strokeWidth="1"
-                width={iconSizes.sm}
-              />
-            </TouchableArea>
-          )}
+          <TouchableArea
+            name={ElementName.Edit}
+            pl="sm"
+            py="md"
+            onPress={(): void => onPressEdit(address)}>
+            <TripleDots
+              color={theme.colors.textTertiary}
+              height={iconSizes.xs}
+              strokeLinecap="round"
+              strokeWidth="1"
+              width={iconSizes.sm}
+            />
+          </TouchableArea>
         </Flex>
       </Flex>
     </TouchableArea>
