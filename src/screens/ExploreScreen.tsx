@@ -83,8 +83,8 @@ export function ExploreScreen({ navigation }: Props): JSX.Element {
           onFocus={onSearchFocus}
         />
       </Box>
-      <KeyboardAvoidingView behavior="height" style={flex.fill}>
-        {isSearchMode ? (
+      {isSearchMode ? (
+        <KeyboardAvoidingView behavior="height" style={flex.fill}>
           <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} mx="md">
             <VirtualizedList>
               <Box p="xxs" />
@@ -95,10 +95,10 @@ export function ExploreScreen({ navigation }: Props): JSX.Element {
               )}
             </VirtualizedList>
           </AnimatedFlex>
-        ) : (
-          <ExploreSections listRef={listRef} />
-        )}
-      </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
+      ) : (
+        <ExploreSections listRef={listRef} />
+      )}
     </Screen>
   )
 }
