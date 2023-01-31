@@ -264,6 +264,7 @@ export default function Updater(): null {
                       status: receipt.status,
                     },
                     needCheckSubgraph: NEED_CHECK_SUBGRAPH_TRANSACTION_TYPES.includes(transaction.type || ''),
+                    summary: parseEVMTransactionSummary({ tx: transaction, logs: receipt.logs }),
                   }),
                 )
 

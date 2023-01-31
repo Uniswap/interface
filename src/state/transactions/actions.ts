@@ -23,6 +23,7 @@ export const finalizeTransaction = createAction<{
   hash: string
   receipt: SerializableTransactionReceipt
   needCheckSubgraph?: boolean
+  summary?: string
 }>('transactions/finalizeTransaction')
 export const checkedTransaction = createAction<{
   chainId: ChainId

@@ -61,13 +61,17 @@ export default createReducer(initialState, builder =>
       if (!tx.lastCheckedBlockNumber) tx.lastCheckedBlockNumber = blockNumber
       else tx.lastCheckedBlockNumber = Math.max(blockNumber, tx.lastCheckedBlockNumber)
     })
-    .addCase(finalizeTransaction, (transactions, { payload: { hash, chainId, receipt, needCheckSubgraph } }) => {
-      const tx = findTx(transactions[chainId], hash)
-      if (!tx) return
-      tx.receipt = receipt
-      tx.confirmedTime = now()
-      tx.needCheckSubgraph = needCheckSubgraph
-    })
+    .addCase(
+      finalizeTransaction,
+      (transactions, { payload: { hash, chainId, receipt, needCheckSubgraph, summary } }) => {
+        const tx = findTx(transactions[chainId], hash)
+        if (!tx) return
+        tx.receipt = receipt
+        tx.confirmedTime = now()
+        tx.needCheckSubgraph = needCheckSubgraph
+        if (summary) tx.summary = summary
+      },
+    )
     .addCase(checkedSubgraph, (transactions, { payload: { chainId, hash } }) => {
       const tx = findTx(transactions[chainId], hash)
       if (!tx) return
