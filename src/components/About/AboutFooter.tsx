@@ -1,9 +1,8 @@
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
-import { Link } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
-import { BREAKPOINTS, ExternalLink } from 'theme'
+import { BREAKPOINTS, ExternalLink, StyledRouterLink } from 'theme'
 
 import { DiscordIcon, GithubIcon, TwitterIcon } from './Icons'
 import darkUnicornImgSrc from './images/unicornEmbossDark.png'
@@ -97,14 +96,10 @@ const ExternalTextLink = styled(ExternalLink)`
   color: ${({ theme }) => theme.textSecondary};
 `
 
-const TextLink = styled(Link)`
+const TextLink = styled(StyledRouterLink)`
   font-size: 16px;
   line-height: 20px;
   color: ${({ theme }) => theme.textSecondary};
-  text-decoration: none;
-  &:hover {
-    text-decoration: underline;
-  }
 `
 
 const Copyright = styled.span`
@@ -158,15 +153,9 @@ export const AboutFooter = () => {
         </LinkGroup>
         <LinkGroup>
           <LinkGroupTitle>Protocol</LinkGroupTitle>
-          <ExternalTextLink href="https://uniswap.org/community" target="_blank" rel="noopener noreferrer">
-            Community
-          </ExternalTextLink>
-          <ExternalTextLink href="https://uniswap.org/governance" target="_blank" rel="noopener noreferrer">
-            Governance
-          </ExternalTextLink>
-          <ExternalTextLink href="https://uniswap.org/developers" target="_blank" rel="noopener noreferrer">
-            Developers
-          </ExternalTextLink>
+          <ExternalTextLink href="https://uniswap.org/community">Community</ExternalTextLink>
+          <ExternalTextLink href="https://uniswap.org/governance">Governance</ExternalTextLink>
+          <ExternalTextLink href="https://uniswap.org/developers">Developers</ExternalTextLink>
         </LinkGroup>
         <LinkGroup>
           <LinkGroupTitle>Company</LinkGroupTitle>
@@ -175,18 +164,14 @@ export const AboutFooter = () => {
             name={SharedEventName.ELEMENT_CLICKED}
             element={InterfaceElementName.CAREERS_LINK}
           >
-            <ExternalTextLink href="https://boards.greenhouse.io/uniswaplabs" target="_blank" rel="noopener noreferrer">
-              Careers
-            </ExternalTextLink>
+            <ExternalTextLink href="https://boards.greenhouse.io/uniswaplabs">Careers</ExternalTextLink>
           </TraceEvent>
           <TraceEvent
             events={[BrowserEvent.onClick]}
             name={SharedEventName.ELEMENT_CLICKED}
             element={InterfaceElementName.BLOG_LINK}
           >
-            <ExternalTextLink href="https://uniswap.org/blog" target="_blank" rel="noopener noreferrer">
-              Blog
-            </ExternalTextLink>
+            <ExternalTextLink href="https://uniswap.org/blog">Blog</ExternalTextLink>
           </TraceEvent>
         </LinkGroup>
         <LinkGroup>
@@ -209,9 +194,7 @@ export const AboutFooter = () => {
             name={SharedEventName.ELEMENT_CLICKED}
             element={InterfaceElementName.SUPPORT_LINK}
           >
-            <ExternalTextLink href="https://support.uniswap.org/hc/en-us" target="_blank" rel="noopener noreferrer">
-              Help Center
-            </ExternalTextLink>
+            <ExternalTextLink href="https://support.uniswap.org/hc/en-us">Help Center</ExternalTextLink>
           </TraceEvent>
         </LinkGroup>
       </FooterLinks>
