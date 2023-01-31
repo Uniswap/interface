@@ -92,7 +92,7 @@ export function selectModalState<T extends keyof ModalsState>(
 }
 
 export function selectSomeModalOpen(state: RootState): boolean {
-  return Object.values(state).some((modalState) => modalState.isOpen)
+  return Object.values(state.modals).some((modalState) => modalState.isOpen)
 }
 
 export const { openModal, closeModal } = slice.actions
